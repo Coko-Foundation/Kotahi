@@ -1,0 +1,24 @@
+@import 'variables';
+
+// override bootstrap-sass default variables
+$border-radius-base: 0;
+$icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
+
+@import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
+@import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap-sprockets';
+
+@import 'base';
+@import 'bootstrap_buttons';
+@import 'bootstrap_form';
+@import 'navbar';
+
+.alert.alert-warning {
+  background-color: $very-light-grey;
+  border: 0;
+  color: $black;
+  margin-top: 50px;
+}
+
+.error {
+  color: $brown;
+}

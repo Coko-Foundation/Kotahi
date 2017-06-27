@@ -1,0 +1,26 @@
+@import 'variables';
+
+a {
+  color: $dark-grey;
+  text-decoration: underline;
+}
+
+h1,
+h2,
+h3 {
+  color: $dark-grey;
+  margin-bottom: 5px;
+  margin-top: 5px;
+  padding-bottom: 0;
+  padding-top: 0;
+}
+
+h2 {
+  font-size: 25px;
+  font-weight: bold;
+}
+
+h3 {
+  color: lighten($dark-grey, 10%);
+  font-size: 20px;
+}

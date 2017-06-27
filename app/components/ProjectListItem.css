@@ -1,0 +1,42 @@
+.project-list-item {
+    position: relative;
+    border: 2px solid transparent;
+    cursor: pointer;
+    margin-top: 2em;
+    margin-bottom: 2em;
+}
+
+.project-list-item-link {
+    color: black;
+    text-decoration: none !important;
+}
+
+.project-list-item-title {
+    font-size: 170%;
+    /*font-style: italic;*/
+    line-height: 1.1;
+}
+
+.project-list-item:hover .project-list-item-title {
+    text-decoration: underline;
+    color: black;
+}
+
+.project-list-item-status {
+    text-transform: uppercase;
+    color: rgb(73, 144, 226);
+    font-size: 80%;
+    font-weight: 200;
+}
+
+.project-list-item-role {
+    font-size: 80%
+}
+
+.project-list-item-role-title {
+    color: #4990E2
+}
+
+.project-list-item-role-name {
+    padding: 0 5px
+}

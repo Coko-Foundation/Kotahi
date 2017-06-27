@@ -1,0 +1,31 @@
+@import 'variables';
+
+legend {
+  border: 0;
+  color: $blue;
+  font-weight: bold;
+}
+
+label {
+  color: $blue;
+  font-weight: normal;
+}
+
+input[type='text'],
+input[type='text'].form-control,
+input[type='password'].form-control {
+  border: 2px solid $medium-light-gray;
+
+  &.error {
+    border-right: 4px solid $main-grey;
+  }
+
+  &.success {
+    border-right: 4px solid $dark-grey;
+  }
+}
+
+.form-group {
+  margin-bottom: 15px;
+  margin-top: 15px;
+}

@@ -1,0 +1,19 @@
+.project-title {
+    /*font-style: italic;*/
+    font-size: 200%;
+    text-decoration: underline rgb(170, 170, 170);
+    text-decoration-skip: ink;
+    text-align: center;
+    margin-bottom: 60px;
+    margin-top: 120px;
+    margin-right: 200px;
+    line-height: 1.1;
+}
+
+.project-role {
+    font-size: 120%
+}
+
+.project-role-title {
+    color: #4990E2
+}

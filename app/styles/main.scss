@@ -1,0 +1,18 @@
+@import 'reset';
+@import 'bootstrap';
+@import 'variables';
+@import 'fonts';
+@import 'icons';
+
+html,
+body {
+  color: $black;
+  font-family: 'Fira Sans', sans-serif;
+  line-height: 24px;
+  margin: 0;
+}
+
+.separator {
+  clear: both;
+  height: 1px;
+}

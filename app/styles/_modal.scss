@@ -1,0 +1,68 @@
+$brown: #a52a2a;
+$button-background: #d3d3d3;
+$button-text: #000;
+$grey: #808080;
+$white: #fff;
+
+.modal-content {
+  border: 2px solid $grey;
+  border-radius: 0;
+  font-style: italic;
+  font-weight: 500;
+  padding: 1em;
+}
+
+.modal-header {
+  padding: 0;
+}
+
+.modal-title {
+  font-size: 24px;
+  line-height: 32px;
+}
+
+.modal-body {
+  border: 0;
+  padding: 20px 0;
+}
+
+.modal-footer {
+  border: 0;
+  font-style: normal;
+  font-weight: normal;
+  padding-right: 0;
+  text-align: center;
+}
+
+.modal-buttons-container {
+  float: right;
+}
+
+.modal-button {
+  background-color: $button-background;
+  border: 3px solid transparent;
+  border-radius: 3px;
+  color: $button-text;
+  display: inline-block;
+  margin-bottom: .5em;
+  padding: 4px 40px;
+  text-align: center;
+  text-decoration: none;
+  text-transform: uppercase;
+
+  &:hover {
+    background-color: $grey;
+    color: $white;
+    cursor: pointer;
+    text-decoration: none;
+  }
+}
+
+.modal-discard {
+  color: $brown;
+  margin-right: 20px;
+
+  &:hover {
+    color: $brown;
+  }
+}
