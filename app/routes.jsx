@@ -1,5 +1,6 @@
 import React from 'react'
 import { Redirect, Route } from 'react-router'
+import Loadable from 'react-loadable'
 
 import Login from 'pubsweet-component-login/Login'
 import Signup from 'pubsweet-component-signup/Signup'
@@ -7,9 +8,20 @@ import PasswordReset from 'pubsweet-component-password-reset-frontend/PasswordRe
 import Manage from 'pubsweet-component-manage/Manage'
 import { requireAuthentication } from 'pubsweet-client/src/components/AuthenticatedComponent'
 
-import ProjectList from './components/ProjectList'
-import Editor from './components/Editor'
-import Project from './components/Project'
+const ProjectList = Loadable({
+  loader: () => import('./components/ProjectList'),
+  loading: () => null
+})
+
+const Editor = Loadable({
+  loader: () => import('./components/Editor'),
+  loading: () => null
+})
+
+const Project = Loadable({
+  loader: () => import('./components/Project'),
+  loading: () => null
+})
 
 const AuthenticatedManage = requireAuthentication(Manage, 'view', state => state.collections)
 
