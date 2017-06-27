@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
+import { browserHistory } from 'react-router'
 import actions from 'pubsweet-client/src/actions'
 import SimpleEditor from 'pubsweet-component-wax/src/SimpleEditor'
 
@@ -9,21 +9,14 @@ import './Editor.css'
 
 class Editor extends React.Component {
   componentDidMount () {
-    const { actions, params } = this.props
+    const { getCollection, getFragment, params } = this.props
 
-    actions.getCollection({
-      id: params.project
-    })
-
-    actions.getFragment({
-      id: params.project
-    }, {
-      id: params.snapshot
-    })
+    getCollection({ id: params.project })
+    getFragment({ id: params.project }, { id: params.snapshot })
   }
 
   render () {
-    const { project, snapshot, actions, currentUser } = this.props
+    const { project, snapshot, fileUpload, updateFragment, currentUser } = this.props
 
     if (!snapshot || !project) return null
 
@@ -31,11 +24,11 @@ class Editor extends React.Component {
       <div className="editor">
         <SimpleEditor
           book={project}
-          fileUpload={actions.fileUpload}
+          fileUpload={fileUpload}
           fragment={snapshot}
-          history={history}
-          onSave={({ source }) => actions.updateFragment(project, { source })}
-          update={data => actions.updateFragment(project, data)}
+          history={browserHistory}
+          onSave={({ source }) => updateFragment(project, { id: snapshot.id, source })}
+          update={data => updateFragment(project, { id: snapshot.id, ...data })}
           user={currentUser}
         />
       </div>
@@ -44,7 +37,10 @@ class Editor extends React.Component {
 }
 
 Editor.propTypes = {
-  actions: PropTypes.object.isRequired,
+  fileUpload: PropTypes.func.isRequired,
+  getCollection: PropTypes.func.isRequired,
+  getFragment: PropTypes.func.isRequired,
+  updateFragment: PropTypes.func.isRequired,
   currentUser: PropTypes.object,
   params: PropTypes.object.isRequired,
   project: PropTypes.object,
@@ -57,7 +53,5 @@ export default connect(
     project: state.collections.find(collection => collection.id === ownProps.params.project),
     snapshot: state.fragments[ownProps.params.snapshot]
   }),
-  dispatch => ({
-    actions: bindActionCreators(actions, dispatch)
-  })
+  actions
 )(Editor)
