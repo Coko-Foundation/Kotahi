@@ -5,8 +5,6 @@ import { connect } from 'react-redux'
 import moment from 'moment'
 import { updateCollection } from 'pubsweet-client/src/actions/collections'
 import { updateFragment } from 'pubsweet-client/src/actions/fragments'
-import ProjectDeclarations from './ProjectDeclarations'
-import ProjectDeclarationAnswers from './ProjectDeclarationAnswers'
 
 import './Snapshots.css'
 
@@ -33,31 +31,21 @@ class Snapshots extends React.Component {
     if (!project) return null
     if (!snapshots.length) return null
 
-    // TODO: only display "submit for review" once declarations are complete
-
     return (
       <div>
         {snapshots.map((snapshot, index) => (
-          <div key={snapshot.id} className="snapshot">
-            <div className="snapshot-heading-row">
-              <div className="snapshot-heading content-metadata">
-                <span className="snapshot-status">Version {snapshot.version} – {snapshot.submitted ? `submitted ${formatDate(snapshot.submitted)}` : `imported ${formatDate(snapshot.created)}`}</span>
+          <div key={snapshot.id} className="snapshot content-metadata">
+            <div className="snapshot-status">Version {snapshot.version} – {snapshot.submitted ? `submitted ${formatDate(snapshot.submitted)}` : `imported ${formatDate(snapshot.created)}`}</div>
 
-                <Link to={`/editor/${project.id}/${snapshot.id}`} target="editor" className="snapshot-editor-link">{snapshot.submitted ? 'view your manuscript' : 'edit your manuscript'}</Link>
+            <div className="snapshot-actions">
+              <div>
+                <Link to={`/editor/${project.id}/${snapshot.id}`} target="editor"
+                      className="snapshot-link">{snapshot.submitted ? 'view your manuscript' : 'edit your manuscript'}</Link>
               </div>
-            </div>
 
-            <div style={{ display: 'table-row' }}>
-              <div style={{display: 'table-cell'}}>
-                {snapshot.submitted ? (
-                  <div>
-                    <ProjectDeclarationAnswers project={project}/>
-                  </div>
-                ) : (
-                  <div className="content-metadata">
-                    <ProjectDeclarations project={project} submit={() => this.submit(snapshot)}/>
-                  </div>
-                )}
+              <div>
+                <Link to={`/projects/${project.id}/declarations`}
+                      className="snapshot-link">{snapshot.submitted ? 'view declarations' : 'submit for peer review'}</Link>
               </div>
             </div>
           </div>
@@ -79,7 +67,7 @@ export default connect(
     project: state.collections
       .find(collection => collection.id === ownProps.params.project),
     snapshots: state.collections
-      // TODO: collection id on fragment instead
+    // TODO: collection id on fragment instead
       .find(collection => collection.id === ownProps.params.project)
       .fragments.map(id => state.fragments[id])
       // TODO: there shouldn't be any missing

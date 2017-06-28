@@ -1,12 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import actions from 'pubsweet-client/src/actions'
 import FRC from 'formsy-react-components'
 import { Button } from 'react-bootstrap'
-
-import './ProjectDeclarations.css'
 
 const styles = {
   textarea: {
@@ -18,7 +13,7 @@ const styles = {
   }
 }
 
-class ProjectDeclarations extends React.Component {
+class DeclarationQuestions extends React.Component {
   constructor (props) {
     super(props)
 
@@ -28,21 +23,23 @@ class ProjectDeclarations extends React.Component {
   }
 
   componentDidMount () {
-    const { project } = this.props
+    const { declarations } = this.props
 
-    this.setState({ declarations: project.declarations })
+    this.setState({ declarations })
   }
 
   componentWillReceiveProps (nextProps) {
-    const { project } = nextProps
+    const { declarations } = nextProps
 
-    if (project.id !== this.props.project.id) {
-      this.setState({ declarations: project.declarations })
-    }
+    this.setState({ declarations })
   }
 
   changed = (declarations) => {
     this.setState({ declarations })
+  }
+
+  save = () => {
+    this.props.save(this.state.declarations)
   }
 
   autoresize = name => () => {
@@ -53,18 +50,10 @@ class ProjectDeclarations extends React.Component {
     // window.scrollTo(window.scrollLeft, (textarea.scrollTop + textarea.scrollHeight))
   }
 
-  save = declarations => {
-    const { actions, project, submit } = this.props
-
-    declarations.saved = true
-
-    const id = project.id
-
-    actions.updateCollection({ id, declarations }).then(submit)
-  }
-
   render () {
     const { declarations = {} } = this.state
+
+    // TODO: only display "submit" once declarations are complete
 
     return (
       <div className="questions questions-reset content-metadata">
@@ -147,15 +136,9 @@ class ProjectDeclarations extends React.Component {
   }
 }
 
-ProjectDeclarations.propTypes = {
-  actions: PropTypes.object.isRequired,
-  project: PropTypes.object.isRequired,
-  submit: PropTypes.func.isRequired
+DeclarationQuestions.propTypes = {
+  declarations: PropTypes.object,
+  save: PropTypes.func.isRequired
 }
 
-export default connect(
-  null,
-  dispatch => ({
-    actions: bindActionCreators(actions, dispatch)
-  })
-)(ProjectDeclarations)
+export default DeclarationQuestions

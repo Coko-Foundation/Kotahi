@@ -1,27 +1,21 @@
 .snapshot {
-    display: table;
     margin: 20px auto;
     width: auto;
-}
-
-.snapshot-heading-row {
-    display: table-row;
-}
-
-.snapshot-heading {
-    display: table-cell;
     text-align: center;
     font-size: 120%;
-    padding-bottom: 60px;
     white-space: nowrap;
+}
+
+.snapshot-actions {
+    padding-bottom: 20px;
 }
 
 .snapshot-status {
     text-transform: uppercase;
-    margin-right: 20px;
+    margin: 20px 0;
 }
 
-.snapshot-editor-link {
+.snapshot-link {
     color: #4990E2;
     text-decoration-color: #aaa;
     text-decoration-skip: ink
