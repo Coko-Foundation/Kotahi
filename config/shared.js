@@ -49,6 +49,7 @@ module.exports = {
       title: Joi.string().required()
     },
     fragment: {
+      comments: Joi.object(),
       lock: Joi.object().allow(null),
       progress: Joi.object(),
       published: Joi.date().timestamp(),
