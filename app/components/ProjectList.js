@@ -7,7 +7,10 @@ import Upload from './Upload'
 
 class ProjectList extends React.Component {
   componentDidMount () {
-    this.props.getCollections() // TODO: pagination
+    // TODO: pagination
+    this.props.getCollections({
+      fields: ['status', 'statusDate', 'title', 'owner']
+    })
   }
 
   render () {
