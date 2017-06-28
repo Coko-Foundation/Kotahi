@@ -7,16 +7,16 @@ import { Button } from 'react-bootstrap'
 import uuid from 'uuid'
 
 class Reviewers extends React.Component {
-  addReviewer = data => {
+  addReviewer = user => {
     const { project, updateCollection } = this.props
 
-    const reviewers = project.reviewers || {}
-
-    reviewers[uuid()] = data
+    const { roles } = project
+    roles.reviewer = roles.reviewer || {}
+    roles.reviewer[uuid()] = { user }
 
     updateCollection({
       id: project.id,
-      reviewers
+      roles
     })
   }
 
@@ -25,19 +25,21 @@ class Reviewers extends React.Component {
 
     if (!project) return null
 
+    const { roles } = project
+
     // TODO: only return reviewer details from the server to authorised users
 
     return (
       <div>
         <h1>Reviewers</h1>
 
-        {project.reviewers && (
+        {roles.reviewer && (
           <div>
-            {Object.keys(project.reviewers).map(key => {
-              const reviewer = project.reviewers[key]
+            {Object.keys(roles.reviewer).map(key => {
+              const user = roles.reviewer[key].user
 
               return (
-                <div key={key}>{reviewer.name} &lt;{reviewer.email}&gt;</div>
+                <div key={key}>{user.name} &lt;{user.email}&gt;</div>
               )
             })}
           </div>

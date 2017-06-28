@@ -9,7 +9,7 @@ class ProjectList extends React.Component {
   componentDidMount () {
     // TODO: pagination
     this.props.getCollections({
-      fields: ['created', 'status', 'statusDate', 'title', 'owner']
+      fields: ['created', 'status', 'statusDate', 'title', 'roles']
     })
   }
 

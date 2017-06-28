@@ -38,8 +38,21 @@ class Upload extends React.Component {
         title: extractTitle(source) || generateTitle(inputFile.name),
         status: 'imported',
         statusDate: Date.now(),
-        owner: currentUser.username
+        roles: {
+          owner: [
+            {
+              user: {
+                id: currentUser.id,
+                username: currentUser.username
+              }
+            }
+          ]
+        }
       }).then(({ collection }) => {
+        if (!collection.id) {
+          throw new Error('Failed to create a collection')
+        }
+
         return createFragment(collection, {
           type: 'snapshot',
           version: 1,

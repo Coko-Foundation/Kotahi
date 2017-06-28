@@ -6,6 +6,7 @@ import { Button } from 'react-bootstrap'
 import { deleteCollection, getCollection } from 'pubsweet-client/src/actions/collections'
 import { getFragments } from 'pubsweet-client/src/actions/fragments'
 import './Project.css'
+import Roles from './Roles'
 
 class Project extends React.Component {
   componentDidMount () {
@@ -48,6 +49,8 @@ class Project extends React.Component {
 
     if (!project) return null
 
+    // TODO: how to ensure that user info is loaded for each role?
+
     return (
       <div className="content-text main" style={{paddingBottom: 90}}>
         <div className="container">
@@ -63,21 +66,9 @@ class Project extends React.Component {
             </div>
 
             <div className="content-metadata" style={{ width: 200 }}>
-              <div style={{ display: 'table', margin: 10, borderLeft: '1px solid #ddd' }}>
-                <div style={{ display: 'table-row' }}>
-                  <div style={{ display: 'table-cell', padding: '2px 5px 2px 15px', color: '#4990E2' }}>Owner</div>
-                  <div style={{ display: 'table-cell', padding: '2px 5px' }}>{project.owner}</div>
-                </div>
-
-                {project.status === 'submitted' && (
-                  <div style={{ display: 'table-row' }}>
-                    <div style={{ display: 'table-cell', padding: '2px 5px 2px 15px', color: '#4990E2' }}>Reviewer</div>
-                    <div style={{ display: 'table-cell', padding: '2px 5px' }}>
-                      <Link to={`/projects/${project.id}/reviewers`}>Invite</Link>
-                    </div>
-                  </div>
-                )}
-              </div>
+              {project.roles && (
+                <Roles project={project}/>
+              )}
             </div>
           </div>
         </div>

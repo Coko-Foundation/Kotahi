@@ -14,7 +14,7 @@ const ProjectListItem = ({ project }) => (
 
         <div className="project-list-item-role content-metadata" style={{ display: 'flex' }}>
           <div className="project-list-item-role-title">Owner</div>
-          <div className="project-list-item-role-name">{project.owner}</div>
+          <div className="project-list-item-role-name">{Object.values(project.roles.owner).map(role => role.user.username).join(', ')}</div>
         </div>
       </div>
     </Link>

@@ -43,11 +43,10 @@ module.exports = {
   validations: {
     collection: {
       declarations: Joi.object(),
-      owner: Joi.string().required(),
       status: Joi.string().required(),
       statusDate: Joi.date().timestamp().required(),
       title: Joi.string().required(),
-      reviewers: Joi.object()
+      roles: Joi.object()
     },
     fragment: {
       comments: Joi.object(),
