@@ -26,7 +26,9 @@ class Project extends React.Component {
     const { getCollection, getFragments } = this.props
 
     getCollection({ id })
-    getFragments({ id })
+    getFragments({ id }, {
+      fields: ['version', 'submitted']
+    })
   }
 
   remove = () => {
