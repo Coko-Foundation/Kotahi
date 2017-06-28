@@ -1,15 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import actions from 'pubsweet-client/src/actions'
+import { getCollections } from 'pubsweet-client/src/actions/collections'
 import ProjectListItem from './ProjectListItem'
 import Upload from './Upload'
 
 class ProjectList extends React.Component {
   componentDidMount () {
-    const { actions } = this.props
-    actions.getCollections() // TODO: pagination
+    this.props.getCollections() // TODO: pagination
   }
 
   render () {
@@ -38,7 +36,7 @@ class ProjectList extends React.Component {
 }
 
 ProjectList.propTypes = {
-  actions: PropTypes.object.isRequired,
+  getCollections: PropTypes.func.isRequired,
   projects: PropTypes.array.isRequired
 }
 
@@ -48,7 +46,7 @@ export default connect(
   state => ({
     projects: state.collections.sort(sortDescending('created'))
   }),
-  dispatch => ({
-    actions: bindActionCreators(actions, dispatch)
-  })
+  {
+    getCollections
+  }
 )(ProjectList)

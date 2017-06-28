@@ -1,8 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import actions from 'pubsweet-client/src/actions'
-import { bindActionCreators } from 'redux'
+import { createCollection } from 'pubsweet-client/src/actions/collections'
+import { createFragment } from 'pubsweet-client/src/actions/fragments'
+import { ink as convertToHTML } from 'pubsweet-component-ink-frontend/actions'
 
 const generateTitle = (name) => {
   return name
@@ -20,11 +21,11 @@ const extractTitle = (source) => {
 
 class Upload extends React.Component {
   importFile = () => {
-    const { actions, currentUser } = this.props
+    const { convertToHTML, createCollection, createFragment, currentUser } = this.props
 
     const inputFile = this.fileInput.files[0]
 
-    actions.ink(inputFile).then(response => {
+    convertToHTML(inputFile).then(response => {
       if (!response.converted) {
         console.error('No conversion')
         return
@@ -32,14 +33,14 @@ class Upload extends React.Component {
 
       const source = response.converted
 
-      return actions.createCollection({
+      return createCollection({
         type: 'project',
         title: extractTitle(source) || generateTitle(inputFile.name),
         status: 'imported',
         statusDate: Date.now(),
         owner: currentUser.username
       }).then(({ collection }) => {
-        return actions.createFragment(collection, {
+        return createFragment(collection, {
           type: 'snapshot',
           version: 1,
           source
@@ -84,7 +85,10 @@ class Upload extends React.Component {
 Upload.propTypes = {
   actions: PropTypes.object,
   currentUser: PropTypes.object,
-  ink: PropTypes.object.isRequired
+  ink: PropTypes.object.isRequired,
+  convertToHTML: PropTypes.func.isRequired,
+  createCollection: PropTypes.func.isRequired,
+  createFragment: PropTypes.func.isRequired
 }
 
 export default connect(
@@ -92,7 +96,9 @@ export default connect(
     currentUser: state.currentUser && state.currentUser.isAuthenticated ? state.currentUser.user : null,
     ink: state.ink
   }),
-  dispatch => ({
-    actions: bindActionCreators(actions, dispatch)
-  })
+  {
+    convertToHTML,
+    createCollection,
+    createFragment
+  }
 )(Upload)
