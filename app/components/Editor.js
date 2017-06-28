@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { browserHistory } from 'react-router'
-import actions from 'pubsweet-client/src/actions'
+import { fileUpload, getCollection, getFragment, updateFragment } from 'pubsweet-client/src/actions'
 import SimpleEditor from 'pubsweet-component-wax/src/SimpleEditor'
 
 import './Editor.css'
@@ -53,5 +53,10 @@ export default connect(
     project: state.collections.find(collection => collection.id === ownProps.params.project),
     snapshot: state.fragments[ownProps.params.snapshot]
   }),
-  actions
+  {
+    fileUpload,
+    getCollection,
+    getFragment,
+    updateFragment
+  }
 )(Editor)
