@@ -18,7 +18,6 @@
     "pubsweet-component-ink-backend": "^0.0.9",
     "pubsweet-component-ink-frontend": "^0.0.5",
     "pubsweet-component-login": "^0.2.6",
-    "pubsweet-component-manage": "^0.1.7",
     "pubsweet-component-password-reset-backend": "^0.0.3",
     "pubsweet-component-password-reset-frontend": "^0.0.3",
     "pubsweet-component-signup": "^0.1.5",

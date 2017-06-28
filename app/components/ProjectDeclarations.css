@@ -55,12 +55,12 @@
     padding-left: 60px;
 }
 
-.bootstrap .question .checkbox,
-.bootstrap .question .radio {
+.question .checkbox,
+.question .radio {
     margin-top: 0 !important;
 }
 
-.bootstrap .question .checkbox .control-label {
+.question .checkbox .control-label {
     display: none;
 }
 

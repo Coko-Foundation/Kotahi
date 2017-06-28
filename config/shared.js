@@ -31,7 +31,6 @@ module.exports = {
       'pubsweet-component-password-reset-backend',
       'pubsweet-component-ink-frontend',
       'pubsweet-component-ink-backend',
-      'pubsweet-component-manage',
       'pubsweet-component-wax'
     ]
   },
