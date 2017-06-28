@@ -49,7 +49,7 @@ Editor.propTypes = {
 
 export default connect(
   (state, ownProps) => ({
-    currentUser: state.currentUser && state.currentUser.isAuthenticated ? state.currentUser.user : null,
+    currentUser: state.currentUser.isAuthenticated ? state.currentUser.user : null,
     project: state.collections.find(collection => collection.id === ownProps.params.project),
     snapshot: state.fragments[ownProps.params.snapshot]
   }),

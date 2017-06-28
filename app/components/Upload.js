@@ -93,7 +93,7 @@ Upload.propTypes = {
 
 export default connect(
   state => ({
-    currentUser: state.currentUser && state.currentUser.isAuthenticated ? state.currentUser.user : null,
+    currentUser: state.currentUser.isAuthenticated ? state.currentUser.user : null,
     ink: state.ink
   }),
   {
