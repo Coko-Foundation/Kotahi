@@ -46,7 +46,8 @@ module.exports = {
       owner: Joi.string().required(),
       status: Joi.string().required(),
       statusDate: Joi.date().timestamp().required(),
-      title: Joi.string().required()
+      title: Joi.string().required(),
+      reviewers: Joi.object()
     },
     fragment: {
       comments: Joi.object(),

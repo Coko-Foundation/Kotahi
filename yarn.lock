@@ -5296,18 +5296,6 @@ pubsweet-component-login@^0.2.4, pubsweet-component-login@^0.2.6:
   version "0.2.6"
   resolved "https://registry.yarnpkg.com/pubsweet-component-login/-/pubsweet-component-login-0.2.6.tgz#4018b3399eee792ee6344a622d460b4e2f352ba6"
 
-pubsweet-component-manage@^0.1.7:
-  version "0.1.7"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-manage/-/pubsweet-component-manage-0.1.7.tgz#71a14cc510d6ac863bc3c340313a78893f74c4bf"
-  dependencies:
-    bootstrap-sass "^3.3.7"
-    font-awesome "^4.7.0"
-    pubsweet-component-navigation "^0.2.4"
-
-pubsweet-component-navigation@^0.2.4:
-  version "0.2.4"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-navigation/-/pubsweet-component-navigation-0.2.4.tgz#9e94000c44ac486a616a59b915b5216cd6546ae1"
-
 pubsweet-component-password-reset-backend@^0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/pubsweet-component-password-reset-backend/-/pubsweet-component-password-reset-backend-0.0.3.tgz#0c28f91124d6ce86437257ca8e46fed02e6e9c52"
@@ -6745,7 +6733,7 @@ utils-merge@1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.0.tgz#0294fb922bb9375153541c4f7096231f287c8af8"
 
-uuid@^3.0.0, uuid@^3.0.1:
+uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
 

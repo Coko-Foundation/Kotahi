@@ -1,11 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
-import { browserHistory } from 'react-router'
+import { browserHistory, Link } from 'react-router'
 import { Button } from 'react-bootstrap'
-import actions from 'pubsweet-client/src/actions'
-import Snapshots from './Snapshots'
+import { deleteCollection, getCollection } from 'pubsweet-client/src/actions/collections'
+import { getFragments } from 'pubsweet-client/src/actions/fragments'
 import './Project.css'
 
 class Project extends React.Component {
@@ -24,26 +23,26 @@ class Project extends React.Component {
   }
 
   fetch (id) {
-    const { actions } = this.props
+    const { getCollection, getFragments } = this.props
 
-    actions.getCollection({ id })
-    actions.getFragments({ id })
+    getCollection({ id })
+    getFragments({ id })
   }
 
   remove = () => {
-    const { project, actions } = this.props
+    const { project, deleteCollection } = this.props
 
     if (!window.confirm('Delete this submission?')) {
       return
     }
 
-    actions.deleteCollection(project).then(() => {
+    deleteCollection(project).then(() => {
       browserHistory.push('/')
     })
   }
 
   render () {
-    const { project } = this.props
+    const { project, children } = this.props
 
     if (!project) return null
 
@@ -52,11 +51,13 @@ class Project extends React.Component {
         <div className="container">
           <Button bsSize="small" bsStyle="link" onClick={this.remove} style={{ color: '#eee', background: 'none', position: 'fixed', top: 50, right: 50 }}><span className="fa fa-remove"/></Button>
 
-          <div className="project-title">{project.title}</div>
+          <div className="project-title">
+            <Link to={`/projects/${project.id}`}>{project.title}</Link>
+          </div>
 
           <div style={{ display: 'flex' }}>
             <div style={{ flex: 1 }}>
-              <Snapshots project={project}/>
+              {children}
             </div>
 
             <div className="content-metadata" style={{ width: 200 }}>
@@ -75,16 +76,21 @@ class Project extends React.Component {
 }
 
 Project.propTypes = {
-  actions: PropTypes.object.isRequired,
+  children: PropTypes.node,
   params: PropTypes.object.isRequired,
-  project: PropTypes.object
+  project: PropTypes.object,
+  getFragments: PropTypes.func.isRequired,
+  deleteCollection: PropTypes.func.isRequired,
+  getCollection: PropTypes.func.isRequired
 }
 
 export default connect(
   (state, ownProps) => ({
     project: state.collections.find(collection => collection.id === ownProps.params.project)
   }),
-  dispatch => ({
-    actions: bindActionCreators(actions, dispatch)
-  })
+  {
+    getFragments,
+    deleteCollection,
+    getCollection
+  }
 )(Project)

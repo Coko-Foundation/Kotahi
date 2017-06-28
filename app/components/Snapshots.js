@@ -2,9 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import { bindActionCreators } from 'redux'
 import moment from 'moment'
-import actions from 'pubsweet-client/src/actions'
+import { updateCollection } from 'pubsweet-client/src/actions/collections'
+import { updateFragment } from 'pubsweet-client/src/actions/fragments'
 import ProjectDeclarations from './ProjectDeclarations'
 import ProjectDeclarationAnswers from './ProjectDeclarationAnswers'
 
@@ -14,9 +14,9 @@ const formatDate = date => moment(date).format('YYYY-MM-DD')
 
 class Snapshots extends React.Component {
   submit = (snapshot) => {
-    const { project, actions } = this.props
+    const { project, updateFragment, updateCollection } = this.props
 
-    actions.updateFragment(project, {
+    updateFragment(project, {
       id: snapshot.id,
       submitted: Date.now()
     })
@@ -24,12 +24,13 @@ class Snapshots extends React.Component {
     project.status = 'submitted'
     project.statusDate = Date.now()
 
-    actions.updateCollection(project)
+    updateCollection(project)
   }
 
   render () {
     const { project, snapshots } = this.props
 
+    if (!project) return null
     if (!snapshots.length) return null
 
     // TODO: only display "submit for review" once declarations are complete
@@ -67,16 +68,22 @@ class Snapshots extends React.Component {
 }
 
 Snapshots.propTypes = {
-  actions: PropTypes.object.isRequired,
   project: PropTypes.object.isRequired,
-  snapshots: PropTypes.array.isRequired
+  snapshots: PropTypes.array.isRequired,
+  updateCollection: PropTypes.func.isRequired,
+  updateFragment: PropTypes.func.isRequired
 }
 
 export default connect(
   (state, ownProps) => ({
-    snapshots: ownProps.project.fragments.map(id => state.fragments[id]).filter(fragment => fragment) // TODO: there shouldn't be any missing
+    project: state.collections
+      .find(collection => collection.id === ownProps.params.project),
+    snapshots: state.collections
+      // TODO: collection id on fragment instead
+      .find(collection => collection.id === ownProps.params.project)
+      .fragments.map(id => state.fragments[id])
+      // TODO: there shouldn't be any missing
+      .filter(fragment => fragment)
   }),
-  dispatch => ({
-    actions: bindActionCreators(actions, dispatch)
-  })
+  { updateFragment, updateCollection }
 )(Snapshots)
