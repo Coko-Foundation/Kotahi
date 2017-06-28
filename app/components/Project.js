@@ -66,6 +66,15 @@ class Project extends React.Component {
                   <div style={{ display: 'table-cell', padding: '2px 5px 2px 15px', color: '#4990E2' }}>Owner</div>
                   <div style={{ display: 'table-cell', padding: '2px 5px' }}>{project.owner}</div>
                 </div>
+
+                {project.status === 'submitted' && (
+                  <div style={{ display: 'table-row' }}>
+                    <div style={{ display: 'table-cell', padding: '2px 5px 2px 15px', color: '#4990E2' }}>Reviewer</div>
+                    <div style={{ display: 'table-cell', padding: '2px 5px' }}>
+                      <Link to={`/projects/${project.id}/reviewers`}>Invite</Link>
+                    </div>
+                  </div>
+                )}
               </div>
             </div>
           </div>

@@ -12,9 +12,7 @@ class Reviewers extends React.Component {
 
     const reviewers = project.reviewers || {}
 
-    const id = 'reviewer-' + uuid()
-
-    reviewers[id] = data
+    reviewers[uuid()] = data
 
     updateCollection({
       id: project.id,
@@ -39,7 +37,7 @@ class Reviewers extends React.Component {
               const reviewer = project.reviewers[key]
 
               return (
-                <div key={key}>{reviewer.name} {reviewer.email}</div>
+                <div key={key}>{reviewer.name} &lt;{reviewer.email}&gt;</div>
               )
             })}
           </div>
