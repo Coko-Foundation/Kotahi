@@ -2,13 +2,13 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router'
 import { connect } from 'react-redux'
-import Role from './Role'
+import RolesSummaryItem from './RolesSummaryItem'
 
-const Roles = ({ project: { id, status, roles } }) => (
+const RolesSummary = ({ project: { id, status, roles } }) => (
   <div>
     <div style={{ display: 'table', margin: 10, borderLeft: '1px solid #ddd' }}>
       {roles.owner.map((role, key) => (
-        <Role key={key} label="Owner" role={role}/>
+        <RolesSummaryItem key={key} label="Owner" role={role}/>
       ))}
 
       {roles.reviewer && (
@@ -16,7 +16,7 @@ const Roles = ({ project: { id, status, roles } }) => (
           const role = roles.reviewer[key]
 
           return (
-            <Role key={key} label="Reviewer" role={role}/>
+            <RolesSummaryItem key={key} label="Reviewer" role={role}/>
           )
         })
       )}
@@ -30,8 +30,8 @@ const Roles = ({ project: { id, status, roles } }) => (
   </div>
 )
 
-Roles.propTypes = {
+RolesSummary.propTypes = {
   project: PropTypes.object.isRequired
 }
 
-export default connect()(Roles)
+export default connect()(RolesSummary)

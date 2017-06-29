@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { getUser } from 'pubsweet-client/src/actions/users'
 
-class Role extends React.Component {
+class RolesSummaryItem extends React.Component {
   componentDidMount () {
     const userId = this.props.role.user.id
 
@@ -42,7 +42,7 @@ class Role extends React.Component {
   }
 }
 
-Role.propTypes = {
+RolesSummaryItem.propTypes = {
   getUser: PropTypes.func.isRequired,
   role: PropTypes.object.isRequired,
   label: PropTypes.string.isRequired,
@@ -56,4 +56,4 @@ export default connect(
   {
     getUser
   }
-)(Role)
+)(RolesSummaryItem)
