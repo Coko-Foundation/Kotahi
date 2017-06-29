@@ -6,7 +6,7 @@ import { Button } from 'react-bootstrap'
 import { deleteCollection, getCollection } from 'pubsweet-client/src/actions/collections'
 import { getFragments } from 'pubsweet-client/src/actions/fragments'
 import './Project.css'
-import Roles from './Roles'
+import RolesSummary from './RolesSummary'
 
 class Project extends React.Component {
   componentDidMount () {
@@ -67,7 +67,7 @@ class Project extends React.Component {
 
             <div className="content-metadata" style={{ width: 200 }}>
               {project.roles && (
-                <Roles project={project}/>
+                <RolesSummary project={project}/>
               )}
             </div>
           </div>
