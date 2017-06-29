@@ -4,29 +4,27 @@ import { Link } from 'react-router'
 import { connect } from 'react-redux'
 import RolesSummaryItem from './RolesSummaryItem'
 
-const RolesSummary = ({ project: { id, status, roles } }) => (
+const roleTypes = ['owner', 'editor', 'reviewer']
+
+const RolesSummary = ({ project }) => (
   <div>
     <div style={{ display: 'table', margin: 10, borderLeft: '1px solid #ddd' }}>
-      {roles.owner.map((role, key) => (
-        <RolesSummaryItem key={key} label="Owner" role={role}/>
-      ))}
 
-      {roles.reviewer && (
-        Object.keys(roles.reviewer).map(key => {
-          const role = roles.reviewer[key]
+      {roleTypes.map(roleType => {
+        const roles = project.roles[roleType]
+
+        if (!roles) return null
+
+        return Object.keys(roles).map(id => {
+          const role = roles[id]
 
           return (
-            <RolesSummaryItem key={key} label="Reviewer" role={role}/>
+            <RolesSummaryItem key={id} roleId={id} roleType={roleType} project={project} role={role}/>
           )
         })
-      )}
-    </div>
+      })}
 
-    {status === 'submitted' && (
-      <div style={{margin: 10}}>
-        <Link to={`/projects/${id}/reviewers`}>Invite reviewers</Link>
-      </div>
-    )}
+    </div>
   </div>
 )
 

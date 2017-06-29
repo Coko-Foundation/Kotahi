@@ -6,17 +6,7 @@
     white-space: nowrap;
 }
 
-.snapshot-actions {
-    padding-bottom: 20px;
-}
-
 .snapshot-status {
     text-transform: uppercase;
     margin: 20px 0;
-}
-
-.snapshot-link {
-    color: #4990E2;
-    text-decoration-color: #aaa;
-    text-decoration-skip: ink
 }

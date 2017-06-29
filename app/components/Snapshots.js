@@ -7,6 +7,8 @@ import { updateCollection } from 'pubsweet-client/src/actions/collections'
 import { updateFragment } from 'pubsweet-client/src/actions/fragments'
 
 import './Snapshots.css'
+import SnapshotActions from './SnapshotActions'
+import ProjectActions from './ProjectActions'
 
 const formatDate = date => moment(date).format('YYYY-MM-DD')
 
@@ -32,24 +34,16 @@ class Snapshots extends React.Component {
     if (!snapshots.length) return null
 
     return (
-      <div>
+      <div className="content-metadata">
         {snapshots.map((snapshot, index) => (
-          <div key={snapshot.id} className="snapshot content-metadata">
+          <div key={snapshot.id} className="snapshot">
             <div className="snapshot-status">Version {snapshot.version} – {snapshot.submitted ? `submitted ${formatDate(snapshot.submitted)}` : `imported ${formatDate(snapshot.created)}`}</div>
 
-            <div className="snapshot-actions">
-              <div>
-                <Link to={`/editor/${project.id}/${snapshot.id}`} target="editor"
-                      className="snapshot-link">{snapshot.submitted ? 'view your manuscript' : 'edit your manuscript'}</Link>
-              </div>
-
-              <div>
-                <Link to={`/projects/${project.id}/declarations`}
-                      className="snapshot-link">{snapshot.submitted ? 'view declarations' : 'submit for peer review'}</Link>
-              </div>
-            </div>
+            <SnapshotActions project={project} snapshot={snapshot}/>
           </div>
         ))}
+
+        <ProjectActions project={project}/>
       </div>
     )
   }

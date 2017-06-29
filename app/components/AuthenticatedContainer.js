@@ -2,15 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
-import { getUser } from 'pubsweet-client/src/actions/current_user'
+import { getCurrentUser } from 'pubsweet-client/src/actions/currentUser'
 import { withRouter } from 'react-router'
 
 class AuthenticatedContainer extends React.Component {
   componentDidMount () {
-    const { isAuthenticated, getUser } = this.props
+    const { isAuthenticated, getCurrentUser } = this.props
 
     if (!isAuthenticated) {
-      getUser()
+      getCurrentUser()
     }
   }
 
@@ -37,7 +37,7 @@ class AuthenticatedContainer extends React.Component {
 
 AuthenticatedContainer.propTypes = {
   children: PropTypes.node.isRequired,
-  getUser: PropTypes.func.isRequired,
+  getCurrentUser: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
   isFetching: PropTypes.bool.isRequired,
   location: PropTypes.object.isRequired,
@@ -50,7 +50,7 @@ export default withRouter(connect(
     isFetching: state.currentUser.isFetching
   }),
   {
-    getUser,
+    getCurrentUser,
     push
   }
 )(AuthenticatedContainer))

@@ -5,6 +5,7 @@ import { updateCollection } from 'pubsweet-client/src/actions/collections'
 import FRC from 'formsy-react-components'
 import { Button, ListGroup, ListGroupItem } from 'react-bootstrap'
 import uuid from 'uuid'
+import { LinkContainer } from 'react-router-bootstrap'
 
 class Reviewers extends React.Component {
   addReviewer = user => {
@@ -36,25 +37,9 @@ class Reviewers extends React.Component {
       <div className="content-metadata">
         <h1>Reviewers</h1>
 
-        {roles.reviewer && (
-          <ListGroup>
-            {Object.keys(roles.reviewer).map(key => {
-              const role = roles.reviewer[key]
-
-              return (
-                <ListGroupItem key={key} header={role.user.name}>
-                  <span>{role.user.email}</span>
-                  <span style={{float: 'right'}}>{role.status || 'Pending'}</span>
-                </ListGroupItem>
-              )
-            })}
-          </ListGroup>
-        )}
-
         <div className="content-interactive">
-          <h2>Add a reviewer</h2>
-
-          <FRC.Form ref={form => (this.reviewerForm = form)} onSubmit={this.addReviewer} validateOnSubmit={true} layout="vertical">
+          <FRC.Form ref={form => (this.reviewerForm = form)} onSubmit={this.addReviewer} validateOnSubmit={true}
+                    layout="vertical">
             <div>
               <FRC.Input type="text" name="name" label="Reviewer name"/>
             </div>
@@ -68,6 +53,25 @@ class Reviewers extends React.Component {
             </div>
           </FRC.Form>
         </div>
+
+        {roles.reviewer && (
+          <ListGroup style={{marginTop: 20}}>
+            {Object.keys(roles.reviewer).map(key => {
+              const role = roles.reviewer[key]
+
+              // TODO: use role.id instead of key
+
+              return (
+                <LinkContainer key={key} to={`/projects/${project.id}/roles/reviewer/${key}`} style={{textDecoration: 'none'}}>
+                  <ListGroupItem header={role.user.name} className="clearfix">
+                    <span>{role.user.email}</span>
+                    <span style={{float: 'right'}}>{role.status || 'Pending'}</span>
+                  </ListGroupItem>
+                </LinkContainer>
+              )
+            })}
+          </ListGroup>
+        )}
       </div>
     )
   }
@@ -82,7 +86,9 @@ Reviewers.propTypes = {
 export default connect(
   (state, ownProps) => ({
     // FIXME: not updating
-    project: state.collections.find(collection => collection.id === ownProps.params.project)
+    project: state.collections.find(collection => {
+      return collection.id === ownProps.params.project
+    })
   }),
   {
     updateCollection
