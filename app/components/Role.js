@@ -51,7 +51,7 @@ Role.propTypes = {
 
 export default connect(
   (state, ownProps) => ({
-    user: console.log(ownProps) && ownProps.role.user.id ? state.users.users.find(user => user.id === ownProps.role.user.id) : ownProps.role.user
+    user: ownProps.role.user.id ? state.users.users.find(user => user.id === ownProps.role.user.id) : ownProps.role.user
   }),
   {
     getUser

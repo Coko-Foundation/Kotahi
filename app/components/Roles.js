@@ -11,8 +11,6 @@ const Roles = ({ project: { id, status, roles } }) => (
         <Role key={key} label="Owner" role={role}/>
       ))}
 
-      {console.log(roles)}
-
       {roles.reviewer && (
         Object.keys(roles.reviewer).map(key => {
           const role = roles.reviewer[key]
@@ -25,7 +23,7 @@ const Roles = ({ project: { id, status, roles } }) => (
     </div>
 
     {status === 'submitted' && (
-      <div>
+      <div style={{margin: 10}}>
         <Link to={`/projects/${id}/reviewers`}>Invite reviewers</Link>
       </div>
     )}
