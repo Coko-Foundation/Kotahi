@@ -15,9 +15,9 @@ class AuthenticatedContainer extends React.Component {
   }
 
   componentWillReceiveProps (nextProps) {
-    const { isAuthenticated } = nextProps
+    const { isAuthenticated, isFetching } = nextProps
 
-    if (!isAuthenticated) {
+    if (!isAuthenticated && !isFetching) {
       this.login()
     }
   }
@@ -39,13 +39,15 @@ AuthenticatedContainer.propTypes = {
   children: PropTypes.node.isRequired,
   getUser: PropTypes.func.isRequired,
   isAuthenticated: PropTypes.bool.isRequired,
+  isFetching: PropTypes.bool.isRequired,
   location: PropTypes.object.isRequired,
   push: PropTypes.func.isRequired
 }
 
 export default withRouter(connect(
   state => ({
-    isAuthenticated: state.currentUser.isAuthenticated
+    isAuthenticated: state.currentUser.isAuthenticated,
+    isFetching: state.currentUser.isFetching
   }),
   {
     getUser,
