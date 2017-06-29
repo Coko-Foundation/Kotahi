@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { updateCollection } from 'pubsweet-client/src/actions/collections'
 import FRC from 'formsy-react-components'
-import { Button } from 'react-bootstrap'
+import { Button, ListGroup, ListGroupItem } from 'react-bootstrap'
 import uuid from 'uuid'
 
 class Reviewers extends React.Component {
@@ -18,6 +18,8 @@ class Reviewers extends React.Component {
       id: project.id,
       roles
     })
+
+    this.reviewerForm.reset()
   }
 
   render () {
@@ -28,25 +30,31 @@ class Reviewers extends React.Component {
     const { roles } = project
 
     // TODO: only return reviewer details from the server to authorised users
+    // TODO: implement role status (+ invitations property?)
 
     return (
-      <div>
+      <div className="content-metadata">
         <h1>Reviewers</h1>
 
         {roles.reviewer && (
-          <div>
+          <ListGroup>
             {Object.keys(roles.reviewer).map(key => {
-              const user = roles.reviewer[key].user
+              const role = roles.reviewer[key]
 
               return (
-                <div key={key}>{user.name} &lt;{user.email}&gt;</div>
+                <ListGroupItem key={key} header={role.user.name}>
+                  <span>{role.user.email}</span>
+                  <span style={{float: 'right'}}>{role.status || 'Pending'}</span>
+                </ListGroupItem>
               )
             })}
-          </div>
+          </ListGroup>
         )}
 
         <div className="content-interactive">
-          <FRC.Form onSubmit={this.addReviewer} validateOnSubmit={true} layout="vertical">
+          <h2>Add a reviewer</h2>
+
+          <FRC.Form ref={form => (this.reviewerForm = form)} onSubmit={this.addReviewer} validateOnSubmit={true} layout="vertical">
             <div>
               <FRC.Input type="text" name="name" label="Reviewer name"/>
             </div>
@@ -56,7 +64,7 @@ class Reviewers extends React.Component {
             </div>
 
             <div style={{ marginTop: 20 }}>
-              <Button type="submit" bsStyle="primary">Add reviewer</Button>
+              <Button type="submit" bsStyle="primary">Save</Button>
             </div>
           </FRC.Form>
         </div>
@@ -73,6 +81,7 @@ Reviewers.propTypes = {
 
 export default connect(
   (state, ownProps) => ({
+    // FIXME: not updating
     project: state.collections.find(collection => collection.id === ownProps.params.project)
   }),
   {
