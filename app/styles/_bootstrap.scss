@@ -4,8 +4,8 @@
 $border-radius-base: 0;
 $icon-font-path: '~bootstrap-sass/assets/fonts/bootstrap/';
 
-@import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap';
-@import '../../node_modules/bootstrap-sass/assets/stylesheets/bootstrap-sprockets';
+@import '~bootstrap-sass/assets/stylesheets/bootstrap';
+@import '~bootstrap-sass/assets/stylesheets/bootstrap-sprockets';
 
 @import 'base';
 @import 'bootstrap_buttons';

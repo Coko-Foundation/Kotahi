@@ -6,26 +6,14 @@
 // When you add this file, we won't add the default configurations which is similar
 // to "React Create App". This only has babel loader to load JavaScript.
 
-const rules = require('../webpack/common-rules')
+// const rules = require('../webpack/common-rules.js')
+const rules = require('./rules.js')
 
 module.exports = {
   plugins: [
     // your custom plugins
   ],
   module: {
-    loaders: [
-      {
-        test: /\.js$/,
-        include: ['app'],
-        exclude: /node_modules/,
-        use: {
-          loader: 'babel-loader',
-          options: {
-            presets: ['env', 'react']
-          }
-        }
-      }
-    ],
     rules
   },
 };

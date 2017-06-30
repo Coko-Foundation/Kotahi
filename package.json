@@ -22,7 +22,7 @@
     "pubsweet-component-password-reset-frontend": "^0.0.3",
     "pubsweet-component-signup": "^0.1.5",
     "pubsweet-component-wax": "git+https://gitlab.coko.foundation/editoria/wax-pubsweet.git",
-    "pubsweet-fira": "^0.0.1",
+    "pubsweet-fira": "^0.0.3",
     "pubsweet-server": "^0.9.3",
     "pubsweet-theme-plugin": "^0.0.1",
     "react": "^15.4.4",
