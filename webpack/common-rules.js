@@ -22,7 +22,7 @@ module.exports = [
       presets: [
         ['es2015', { 'modules': false }],
         'react',
-        'stage-2'
+        'env'
       ].map(resolvePreset),
       plugins: [
         'react-hot-loader/babel',
