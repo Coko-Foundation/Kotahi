@@ -1,55 +1,37 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { getCollections } from 'pubsweet-client/src/actions/collections'
-import ProjectListItem from './ProjectListItem'
-import Upload from '../containers/UploadContainer'
+import moment from 'moment'
+import { Link } from 'react-router'
 
-class ProjectList extends React.Component {
-  componentDidMount () {
-    // TODO: pagination
-    this.props.getCollections({
-      fields: ['created', 'status', 'statusDate', 'title', 'roles']
-    })
-  }
+import './ProjectList.css'
 
-  render () {
-    const { projects } = this.props
+const ProjectList = ({ projects }) => (
+  <div>
+    {projects.map(project => (
+      <div className="project-list-item" key={project.id}>
+        <Link to={`/projects/${project.id}`} className="project-list-item-link">
+          <div className="project-list-item-inner">
+            <div className="project-list-item-status content-metadata">
+              <span>{project.status}</span>
+              <span> on </span>
+              <span>{moment(project.statusDate).format('YYYY-MM-DD')}</span>
+            </div>
 
-    return (
-      <div className="content-text main">
-        <div className="container">
-          <div style={{ marginTop: 90, display: 'flex', justifyContent: 'center' }}>
-            <div style={{ width: 800 }}>
-              <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <div className="project-list-item content-interactive">
-                  <Upload/>
-                </div>
-              </div>
+            <div className="project-list-item-title">{project.title}</div>
 
-              {projects.map(project => (
-                <ProjectListItem key={project.id} project={project}/>
-              ))}
+            <div className="project-list-item-role content-metadata" style={{ display: 'flex' }}>
+              <div className="project-list-item-role-title">Owner</div>
+              <div className="project-list-item-role-name">{Object.values(project.roles.owner).map(role => role.user.username).join(', ')}</div>
             </div>
           </div>
-        </div>
+        </Link>
       </div>
-    )
-  }
-}
+    ))}
+  </div>
+)
 
 ProjectList.propTypes = {
-  getCollections: PropTypes.func.isRequired,
-  projects: PropTypes.array.isRequired
+  projects: PropTypes.arrayOf(PropTypes.object).isRequired
 }
 
-const sortDescending = (field) => (a, b) => b[field] - a[field]
-
-export default connect(
-  state => ({
-    projects: state.collections.sort(sortDescending('created'))
-  }),
-  {
-    getCollections
-  }
-)(ProjectList)
+export default ProjectList

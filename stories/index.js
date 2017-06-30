@@ -13,8 +13,7 @@ import { action } from '@storybook/addon-actions'
 import projects from './data/projects'
 
 import Upload from '../app/components/Upload'
-// import ProjectList from '../app/components/ProjectList'
-import ProjectListItem from '../app/components/ProjectListItem'
+import ProjectList from '../app/components/ProjectList'
 
 // storiesOf('Welcome', module)
 //   .add('to Storybook', () => <Welcome showApp={linkTo('Button')} />)
@@ -27,16 +26,7 @@ storiesOf('Upload', module)
     <Upload onDrop={action('dropped')} ink={{ isFetching: true }}/>
   ))
 
-storiesOf('ProjectListItem', module)
-  .add('item', () => (
-    <ProjectListItem project={projects[0]}/>
+storiesOf('ProjectList', module)
+  .add('items', () => (
+    <ProjectList projects={projects}/>
   ))
-
-// storiesOf('ProjectList', module)
-//   .add('empty', () => (
-//     <ProjectList projects={[]}/>
-//   ))
-//   .add('full', () => (
-//     <ProjectList projects={projects}/>
-//   ))
-
