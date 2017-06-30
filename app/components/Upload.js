@@ -1,117 +1,28 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { connect } from 'react-redux'
-import { createCollection } from 'pubsweet-client/src/actions/collections'
-import { createFragment } from 'pubsweet-client/src/actions/fragments'
-import { ink as convertToHTML } from 'pubsweet-component-ink-frontend/actions'
+import Dropzone from 'react-dropzone'
 
-const generateTitle = (name) => {
-  return name
-    .replace(/[_-]+/g, ' ') // convert hyphens/underscores to space
-    .replace(/\.[^.]+$/, '') // remove file extension
-}
+import './Upload.css'
 
-// TODO: preserve italics
-const extractTitle = (source) => {
-  const doc = new DOMParser().parseFromString(source, 'text/html')
-  const heading = doc.querySelector('h1')
-
-  return heading ? heading.textContent : null
-}
-
-class Upload extends React.Component {
-  importFile = () => {
-    const { convertToHTML, createCollection, createFragment, currentUser } = this.props
-
-    const inputFile = this.fileInput.files[0]
-
-    convertToHTML(inputFile).then(response => {
-      if (!response.converted) {
-        console.error('No conversion')
-        return
-      }
-
-      const source = response.converted
-
-      return createCollection({
-        type: 'project',
-        title: extractTitle(source) || generateTitle(inputFile.name),
-        status: 'imported',
-        statusDate: Date.now(),
-        roles: {
-          owner: [
-            {
-              user: {
-                id: currentUser.id,
-                username: currentUser.username
-              }
-            }
-          ]
-        }
-      }).then(({ collection }) => {
-        if (!collection.id) {
-          throw new Error('Failed to create a collection')
-        }
-
-        return createFragment(collection, {
-          type: 'snapshot',
-          version: 1,
-          source
-        })
-      }).catch(error => {
-        console.error('Creation error', error)
-      })
-    }).catch(error => {
-      console.error('INK error', error)
-    })
-  }
-
-  render () {
-    const { ink } = this.props
-
-    return (
+const Upload = ({ ink, onDrop }) => (
+  <Dropzone onDrop={onDrop} accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="dropzone">
+    <div style={{ fontWeight: 200, display: 'flex', paddingTop: 10, paddingBottom: 10 }}>
       <div>
-        <div onClick={() => this.fileInput.click()} style={{ fontWeight: 200, display: 'flex' }}>
-            <div>
-              <span className={`fa fa-fw fa-4x ${ink.isFetching ? 'fa-spinner fa-spin' : 'fa-plus-circle'}`} style={{ color: '#4990E2' }}/>
-            </div>
+        <span className={`fa fa-fw fa-4x ${ink.isFetching ? 'fa-spinner fa-spin' : 'fa-plus-circle'}`} style={{ color: '#4990E2' }}/>
+      </div>
 
-            <div style={{ flex: 1, paddingTop: 10 }}>
-              <div style={{ textTransform: 'uppercase', fontSize: '200%', color: '#4990E2' }}>Submit a new manuscript</div>
+      <div style={{ flex: 1, paddingTop: 10, paddingRight: 10 }}>
+        <div style={{ textTransform: 'uppercase', fontSize: '200%', color: '#4990E2' }}>Submit a new manuscript</div>
 
-              <div style={{ fontSize: '75%', color: '#aaa', lineHeight: 1, marginTop: 5 }}>upload a new Word docx file into xpub to start the submission process</div>
-            </div>
-          </div>
-
-          <form style={{ display: 'none' }}>
-            <input
-              type="file"
-              accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-              ref={input => (this.fileInput = input)}
-              onChange={this.importFile}/>
-          </form>
-        </div>
-    )
-  }
-}
+        <div style={{ fontSize: '75%', color: '#aaa', lineHeight: 1, marginTop: 5 }}>upload a new Word docx file into xpub to start the submission process</div>
+      </div>
+    </div>
+  </Dropzone>
+)
 
 Upload.propTypes = {
-  actions: PropTypes.object,
-  currentUser: PropTypes.object,
-  ink: PropTypes.object.isRequired,
-  convertToHTML: PropTypes.func.isRequired,
-  createCollection: PropTypes.func.isRequired,
-  createFragment: PropTypes.func.isRequired
+  onDrop: PropTypes.func.isRequired,
+  ink: PropTypes.object.isRequired
 }
 
-export default connect(
-  state => ({
-    currentUser: state.currentUser.isAuthenticated ? state.currentUser.user : null,
-    ink: state.ink
-  }),
-  {
-    convertToHTML,
-    createCollection,
-    createFragment
-  }
-)(Upload)
+export default Upload

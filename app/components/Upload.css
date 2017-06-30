@@ -1,0 +1,5 @@
+.dropzone {
+    border: none;
+    display: inline-block;
+    cursor: pointer;
+}

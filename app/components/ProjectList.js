@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { getCollections } from 'pubsweet-client/src/actions/collections'
 import ProjectListItem from './ProjectListItem'
-import Upload from './Upload'
+import Upload from '../containers/UploadContainer'
 
 class ProjectList extends React.Component {
   componentDidMount () {
