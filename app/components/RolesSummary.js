@@ -1,8 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { Link } from 'react-router'
-import { connect } from 'react-redux'
-import RolesSummaryItem from './RolesSummaryItem'
+import RolesSummaryItemContainer from '../containers/RolesSummaryItemContainer'
 
 const roleTypes = ['owner', 'editor', 'reviewer']
 
@@ -19,7 +17,7 @@ const RolesSummary = ({ project }) => (
           const role = roles[id]
 
           return (
-            <RolesSummaryItem key={id} roleId={id} roleType={roleType} project={project} role={role}/>
+            <RolesSummaryItemContainer key={id} roleId={id} roleType={roleType} project={project} role={role}/>
           )
         })
       })}
@@ -32,4 +30,4 @@ RolesSummary.propTypes = {
   project: PropTypes.object.isRequired
 }
 
-export default connect()(RolesSummary)
+export default RolesSummary

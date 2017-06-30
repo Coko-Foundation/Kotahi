@@ -15,9 +15,9 @@ export default (
 
     <Route path="/" component={App}>
       <Route component={AuthenticatedContainer}>
-        <Route path="projects" component={chunk(import('./components/ProjectList'))}/>
+        <Route path="projects" component={chunk(import('./containers/ProjectListContainer'))}/>
 
-        <Route path="projects/:project" component={chunk(import('./components/Project'))}>
+        <Route path="projects/:project" component={chunk(import('./containers/ProjectContainer'))}>
           <IndexRoute component={chunk(import('./components/Snapshots'))}/>
 
           <Route path="declarations" component={chunk(import('./components/Declarations'))}/>
