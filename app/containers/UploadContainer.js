@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { createCollection } from 'pubsweet-client/src/actions/collections'
 import { createFragment } from 'pubsweet-client/src/actions/fragments'
 import { ink as convertToHTML } from 'pubsweet-component-ink-frontend/actions'
+import uuid from 'uuid'
 import Upload from '../components/Upload'
 
 const generateTitle = (name) => {
@@ -34,21 +35,25 @@ class UploadContainer extends React.Component {
 
       const source = response.converted
 
+      const roles = {
+        owner: {},
+        editor: {},
+        reviewer: {}
+      }
+
+      roles.owner[uuid()] = {
+        user: {
+          id: currentUser.id,
+          username: currentUser.username
+        }
+      }
+
       return createCollection({
         type: 'project',
         title: extractTitle(source) || generateTitle(inputFile.name),
         status: 'imported',
         statusDate: Date.now(),
-        roles: {
-          owner: [
-            {
-              user: {
-                id: currentUser.id,
-                username: currentUser.username
-              }
-            }
-          ]
-        }
+        roles
       }).then(({ collection }) => {
         if (!collection.id) {
           throw new Error('Failed to create a collection')
