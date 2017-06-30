@@ -1,0 +1,14 @@
+.project-actions {
+    margin: 20px auto;
+    width: auto;
+    text-align: center;
+    font-size: 120%;
+    white-space: nowrap;
+    padding-bottom: 20px;
+}
+
+.project-action {
+    color: #4990E2;
+    text-decoration-color: #aaa;
+    text-decoration-skip: ink
+}

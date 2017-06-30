@@ -2,6 +2,11 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { getUser } from 'pubsweet-client/src/actions/users'
+import { Link } from 'react-router'
+
+const ucfirst = (text) => {
+  return text.substr(0, 1).toUpperCase() + text.substr(1)
+}
 
 class RolesSummaryItem extends React.Component {
   componentDidMount () {
@@ -25,17 +30,19 @@ class RolesSummaryItem extends React.Component {
   }
 
   render () {
-    const { label, user } = this.props
+    const { project, roleId, roleType, user } = this.props
 
     if (!user) return null
 
     return (
       <div style={{ display: 'table-row' }}>
         <div style={{ display: 'table-cell', padding: '2px 5px 2px 15px', color: '#4990E2' }}>
-          {label}
+          {ucfirst(roleType)}
         </div>
         <div style={{ display: 'table-cell', padding: '2px 5px' }}>
-          {user.name || user.username}
+          <Link to={`/projects/${project.id}/roles/${roleType}/${roleId}`}>
+            {user.name || user.username}
+          </Link>
         </div>
       </div>
     )
@@ -44,8 +51,10 @@ class RolesSummaryItem extends React.Component {
 
 RolesSummaryItem.propTypes = {
   getUser: PropTypes.func.isRequired,
+  roleId: PropTypes.string.isRequired,
+  roleType: PropTypes.string.isRequired,
+  project: PropTypes.object.isRequired,
   role: PropTypes.object.isRequired,
-  label: PropTypes.string.isRequired,
   user: PropTypes.object
 }
 

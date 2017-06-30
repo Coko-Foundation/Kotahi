@@ -88,7 +88,9 @@ Project.propTypes = {
 
 export default connect(
   (state, ownProps) => ({
-    project: state.collections.find(collection => collection.id === ownProps.params.project)
+    project: state.collections.find(collection => {
+      return collection.id === ownProps.params.project
+    })
   }),
   {
     getFragments,

@@ -58,6 +58,10 @@ module.exports = {
       submitted: Joi.date().timestamp(),
       trackChanges: Joi.boolean(),
       version: Joi.number().required()
+    },
+    user: {
+      name: Joi.string(), // TODO: add "name" to the login form
+      editor: Joi.boolean()
     }
   }
 }
