@@ -1,41 +1,39 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Nav, Navbar, NavbarBrand, NavItem } from 'react-bootstrap'
-import UpdateSubscriber from 'pubsweet-client/src/components/UpdateSubscriber'
-import { connect } from 'react-redux'
-import { logoutUser } from 'pubsweet-component-login/actions'
 
 import './Navigation.css'
 
-const Navigation = ({ logoutUser, currentUser }) => (
+const Navigation = ({ appLink, appName, logout, currentUser, updateSubscriber }) => (
   <Navbar fluid fixedTop style={{ minHeight: 0 }}>
     <Navbar.Header>
       <NavbarBrand>
-        <Navbar.Link href="/projects" className="navbar-link">xpub</Navbar.Link>
+        <Navbar.Link href={appLink}>{appName}</Navbar.Link>
       </NavbarBrand>
     </Navbar.Header>
 
-    {currentUser && (
+    {currentUser ? (
       <Nav pullRight>
-        <NavItem><UpdateSubscriber/></NavItem>
+        {updateSubscriber && <NavItem>{updateSubscriber}</NavItem>}
         <NavItem>logged in as {currentUser.username}</NavItem>
-        <NavItem onClick={logoutUser}>logout</NavItem>
+        <NavItem onClick={logout}>logout</NavItem>
+      </Nav>
+    ) : (
+      <Nav pullRight>
+        <NavItem>
+          <Navbar.Link href="/signin">login</Navbar.Link>
+        </NavItem>
       </Nav>
     )}
   </Navbar>
 )
 
 Navigation.propTypes = {
+  appLink: PropTypes.string.isRequired,
+  appName: PropTypes.string.isRequired,
   currentUser: PropTypes.object,
-  logoutUser: PropTypes.func.isRequired
+  logout: PropTypes.func.isRequired,
+  updateSubscriber: PropTypes.node
 }
 
-export default connect(
-  state => ({
-    currentUser: state.currentUser.isAuthenticated ? state.currentUser.user : null
-  }),
-  {
-    logoutUser
-  }
-)(Navigation)
-
+export default Navigation

@@ -29,11 +29,17 @@ import ReviewersList from '../app/components/ReviewersList'
 import ReviewerInvitationForm from '../app/components/ReviewerInvitationForm'
 import DecisionForm from '../app/components/DecisionForm'
 import ReviewForm from '../app/components/ReviewForm'
+import Navigation from '../app/components/Navigation'
 
 // storiesOf('Welcome', module)
 //   .add('to Storybook', () => <Welcome showApp={linkTo('Button')} />)
 
 const [importedProject, submittedProject] = projects
+
+const currentUser = {
+  id: 'foo',
+  username: 'foo'
+}
 
 storiesOf('Declarations', module)
   .add('questions', () => (
@@ -64,6 +70,19 @@ storiesOf('Editors', module)
   .add('list', () => (
     <EditorList project={submittedProject}
                 roles={submittedProject.roles.editor}/>
+  ))
+
+storiesOf('Navigation', module)
+  .add('anonymous', () => (
+    <Navigation appName="xpub"
+                appLink="/projects"
+                logout={action('logout')}/>
+  ))
+  .add('authenticated', () => (
+    <Navigation appName="xpub"
+                appLink="/projects"
+                logout={action('logout')}
+                currentUser={currentUser}/>
   ))
 
 storiesOf('Project', module)

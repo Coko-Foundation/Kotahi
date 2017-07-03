@@ -1,4 +1,5 @@
-.navbar-link {
+.navbar-link,
+.navbar-default .navbar-link {
     color: #4990E2;
     text-decoration: none;
     font-weight: 800;

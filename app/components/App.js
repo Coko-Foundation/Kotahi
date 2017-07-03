@@ -1,10 +1,10 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Navigation from './Navigation'
+import NavigationContainer from '../containers/NavigationContainer'
 
 const App = ({ children }) => (
   <div>
-    <Navigation/>
+    <NavigationContainer/>
     {children}
   </div>
 )
