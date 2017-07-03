@@ -29,7 +29,7 @@ export default (
           <Route path="reviewers"
                  component={chunk(import('./containers/ReviewersContainer'))}/>
           <Route path="roles/:roleType/:role"
-                 component={chunk(import('./components/Role'))}/>
+                 component={chunk(import('./containers/RoleContainer'))}/>
         </Route>
 
         <Route path="editor/:project/:snapshot"
