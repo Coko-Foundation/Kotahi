@@ -31,6 +31,9 @@ import DecisionForm from '../app/components/DecisionForm'
 import ReviewForm from '../app/components/ReviewForm'
 import Navigation from '../app/components/Navigation'
 
+import ColorsStory from './components/ColorsStory'
+import FontsStory from './components/FontsStory'
+
 // storiesOf('Welcome', module)
 //   .add('to Storybook', () => <Welcome showApp={linkTo('Button')} />)
 
@@ -40,6 +43,10 @@ const currentUser = {
   id: 'foo',
   username: 'foo'
 }
+
+storiesOf('Styles', module)
+  .add('colors', () => <ColorsStory/>)
+  .add('fonts', () => <FontsStory/>)
 
 storiesOf('Declarations', module)
   .add('questions', () => (
