@@ -7,9 +7,17 @@ import { getCollection } from 'pubsweet-client/src/actions/collections'
 import { getFragment, updateFragment } from 'pubsweet-client/src/actions/fragments'
 import SimpleEditor from 'pubsweet-component-wax/src/SimpleEditor'
 
-import './ArticleEditor.css'
+const fullscreenStyle = {
+  position: 'fixed',
+  top: 50, // leave room for the navbar
+  left: 0,
+  right: 0,
+  bottom: 0,
+  background: 'white',
+  overflow: 'hidden'
+}
 
-class ArticleEditor extends React.Component {
+class WaxContainer extends React.Component {
   componentDidMount () {
     const { getCollection, getFragment, params } = this.props
 
@@ -23,22 +31,21 @@ class ArticleEditor extends React.Component {
     if (!snapshot || !project) return null
 
     return (
-      <div className="editor">
-        <SimpleEditor
-          book={project}
-          fileUpload={fileUpload}
-          fragment={snapshot}
-          history={browserHistory}
-          onSave={({ source }) => updateFragment(project, { id: snapshot.id, source })}
-          update={data => updateFragment(project, { id: snapshot.id, ...data })}
-          user={currentUser}
-        />
-      </div>
+      <SimpleEditor
+        book={project}
+        fileUpload={fileUpload}
+        fragment={snapshot}
+        history={browserHistory}
+        onSave={({ source }) => updateFragment(project, { id: snapshot.id, source })}
+        update={data => updateFragment(project, { id: snapshot.id, ...data })}
+        user={currentUser}
+        style={fullscreenStyle}
+      />
     )
   }
 }
 
-ArticleEditor.propTypes = {
+WaxContainer.propTypes = {
   fileUpload: PropTypes.func.isRequired,
   getCollection: PropTypes.func.isRequired,
   getFragment: PropTypes.func.isRequired,
@@ -61,4 +68,4 @@ export default connect(
     getFragment,
     updateFragment
   }
-)(ArticleEditor)
+)(WaxContainer)

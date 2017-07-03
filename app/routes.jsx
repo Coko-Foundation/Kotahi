@@ -33,7 +33,7 @@ export default (
         </Route>
 
         <Route path="editor/:project/:snapshot"
-               component={chunk(import('./components/ArticleEditor'))}/>
+               component={chunk(import('./containers/WaxContainer'))}/>
       </Route>
 
       <Route path="signup"
