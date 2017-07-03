@@ -5,14 +5,14 @@ import { browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { configureStore, Root } from 'pubsweet-client'
 
-let store = configureStore(browserHistory, {})
-let history = syncHistoryWithStore(browserHistory, store)
-
 import 'pubsweet-fira'
 import 'typeface-fira-sans-condensed'
 import 'typeface-vollkorn'
 
 import './styles/main.scss'
+
+let store = configureStore(browserHistory, {})
+let history = syncHistoryWithStore(browserHistory, store)
 
 const rootEl = document.getElementById('root')
 
