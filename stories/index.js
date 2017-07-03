@@ -24,6 +24,8 @@ import Snapshots from '../app/components/Snapshots'
 import Upload from '../app/components/Upload'
 import EditorList from '../app/components/EditorList'
 import EditorForm from '../app/components/EditorForm'
+import ReviewersForm from '../app/components/ReviewersForm'
+import ReviewersList from '../app/components/ReviewersList'
 
 // storiesOf('Welcome', module)
 //   .add('to Storybook', () => <Welcome showApp={linkTo('Button')} />)
@@ -32,7 +34,8 @@ const [importedProject, submittedProject] = projects
 
 storiesOf('Declarations', module)
   .add('questions', () => (
-    <DeclarationQuestions declarations={submittedProject.declarations} save={action('saved')}/>
+    <DeclarationQuestions declarations={submittedProject.declarations}
+                          save={action('saved')}/>
   ))
   .add('answers', () => (
     <DeclarationAnswers declarations={submittedProject.declarations}/>
@@ -40,10 +43,12 @@ storiesOf('Declarations', module)
 
 storiesOf('Editors', module)
   .add('form', () => (
-    <EditorForm project={submittedProject} updateCollection={action('update collection')}/>
+    <EditorForm project={submittedProject}
+                updateCollection={action('update editors')}/>
   ))
   .add('list', () => (
-    <EditorList project={submittedProject} roles={submittedProject.roles.editor}/>
+    <EditorList project={submittedProject}
+                roles={submittedProject.roles.editor}/>
   ))
 
 storiesOf('Project', module)
@@ -67,6 +72,16 @@ storiesOf('Project List', module)
 storiesOf('Remove Project', module)
   .add('button', () => (
     <RemoveProject onClick={action('remove')}/>
+  ))
+
+storiesOf('Reviewers', module)
+  .add('form', () => (
+    <ReviewersForm project={submittedProject}
+                   updateCollection={action('update reviewers')}/>
+  ))
+  .add('list', () => (
+    <ReviewersList project={submittedProject}
+                   roles={submittedProject.roles.reviewer}/>
   ))
 
 storiesOf('Roles Summary Item', module)

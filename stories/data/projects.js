@@ -37,6 +37,22 @@ export default [
             name: 'Bar Bar'
           }
         }
+      },
+      reviewer: {
+        'user-baz': {
+          user: {
+            id: 'user-baz',
+            username: 'baz',
+            name: 'Baz Baz'
+          }
+        },
+        'user-qubit': {
+          user: {
+            id: 'user-qubit',
+            username: 'qubit',
+            name: 'Qubit Qubit'
+          }
+        }
       }
     },
     declarations: {
