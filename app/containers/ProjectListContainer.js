@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { getCollections } from 'pubsweet-client/src/actions/collections'
-import sort from '../lib/sort'
+import * as sort from '../lib/sort'
 import ProjectList from '../components/ProjectList'
 import UploadContainer from './UploadContainer'
 

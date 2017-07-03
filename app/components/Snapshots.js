@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import SnapshotActions from './SnapshotActions'
 import ProjectActions from './ProjectActions'
-import date from '../lib/date'
+import * as date from '../lib/date'
 import '../components/Snapshots.css'
 
 const Snapshots = ({ project, snapshots }) => (

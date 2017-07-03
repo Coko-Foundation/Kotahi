@@ -26,6 +26,9 @@ import EditorList from '../app/components/EditorList'
 import EditorForm from '../app/components/EditorForm'
 import ReviewersForm from '../app/components/ReviewersForm'
 import ReviewersList from '../app/components/ReviewersList'
+import ReviewerInvitationForm from '../app/components/ReviewerInvitationForm'
+import DecisionForm from '../app/components/DecisionForm'
+import ReviewForm from '../app/components/ReviewForm'
 
 // storiesOf('Welcome', module)
 //   .add('to Storybook', () => <Welcome showApp={linkTo('Button')} />)
@@ -39,6 +42,18 @@ storiesOf('Declarations', module)
   ))
   .add('answers', () => (
     <DeclarationAnswers declarations={submittedProject.declarations}/>
+  ))
+
+storiesOf('Decision Form', module)
+  .add('new', () => (
+    <DecisionForm
+      role={submittedProject.roles.editor['user-bar']}
+      onSubmit={action('submitted decision')}/>
+  ))
+  .add('invited', () => (
+    <DecisionForm
+      role={submittedProject.roles.editor['user-bar']}
+      onSubmit={action('submitted decision')}/>
   ))
 
 storiesOf('Editors', module)
@@ -82,6 +97,30 @@ storiesOf('Reviewers', module)
   .add('list', () => (
     <ReviewersList project={submittedProject}
                    roles={submittedProject.roles.reviewer}/>
+  ))
+
+storiesOf('Review Form', module)
+  .add('new', () => (
+    <ReviewForm
+      role={submittedProject.roles.reviewer['user-baz']}
+      onSubmit={action('submitted review')}/>
+  ))
+  .add('submitted', () => (
+    <ReviewForm
+      role={submittedProject.roles.reviewer['user-baz']}
+      onSubmit={action('submitted review')}/>
+  ))
+
+storiesOf('Reviewer Invitation Form', module)
+  .add('new', () => (
+    <ReviewerInvitationForm
+          role={submittedProject.roles.reviewer['user-baz']}
+          onSubmit={action('sent reviewer invitation')}/>
+  ))
+  .add('invited', () => (
+    <ReviewerInvitationForm
+      role={submittedProject.roles.reviewer['user-baz']}
+      onSubmit={action('sent reviewer invitation')}/>
   ))
 
 storiesOf('Roles Summary Item', module)
