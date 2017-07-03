@@ -11,17 +11,58 @@ import { action } from '@storybook/addon-actions'
 // import { linkTo } from '@storybook/addon-links'
 
 import projects from './data/projects'
+import snapshots from './data/snapshots'
 
-import Upload from '../app/components/Upload'
-import ProjectList from '../app/components/ProjectList'
 import Project from '../app/components/Project'
+import ProjectActions from '../app/components/ProjectActions'
+import ProjectList from '../app/components/ProjectList'
 import RemoveProject from '../app/components/RemoveProject'
 import RolesSummaryItem from '../app/components/RolesSummaryItem'
+import Snapshots from '../app/components/Snapshots'
+import Upload from '../app/components/Upload'
 
 // storiesOf('Welcome', module)
 //   .add('to Storybook', () => <Welcome showApp={linkTo('Button')} />)
 
-const project = projects[0]
+const [importedProject, submittedProject] = projects
+
+storiesOf('Project', module)
+  .add('title', () => (
+    <Project project={importedProject}/>
+  ))
+
+storiesOf('Project Actions', module)
+  .add('for an imported project', () => (
+    <ProjectActions project={importedProject}/>
+  ))
+  .add('for a submitted project', () => (
+    <ProjectActions project={submittedProject}/>
+  ))
+
+storiesOf('Project List', module)
+  .add('items', () => (
+    <ProjectList projects={projects}/>
+  ))
+
+storiesOf('Remove Project', module)
+  .add('button', () => (
+    <RemoveProject onClick={action('remove')}/>
+  ))
+
+storiesOf('Roles Summary Item', module)
+  .add('item', () => (
+    <RolesSummaryItem label="Owner" url="#" user={{
+      username: 'foo'
+    }}/>
+  ))
+
+storiesOf('Snapshots', module)
+  .add('for an imported project', () => (
+    <Snapshots project={importedProject} snapshots={snapshots}/>
+  ))
+  .add('for a submitted project', () => (
+    <Snapshots project={importedProject} snapshots={snapshots}/>
+  ))
 
 storiesOf('Upload', module)
   .add('dropzone', () => (
@@ -29,26 +70,4 @@ storiesOf('Upload', module)
   ))
   .add('converting', () => (
     <Upload onDrop={action('drop')} ink={{ isFetching: true }}/>
-  ))
-
-storiesOf('ProjectList', module)
-  .add('items', () => (
-    <ProjectList projects={projects}/>
-  ))
-
-storiesOf('Project', module)
-  .add('title', () => (
-    <Project project={project}/>
-  ))
-
-storiesOf('RemoveProject', module)
-  .add('button', () => (
-    <RemoveProject onClick={action('remove')}/>
-  ))
-
-storiesOf('RolesSummaryItem', module)
-  .add('item', () => (
-    <RolesSummaryItem label="Owner" url="#" user={{
-      username: 'foo'
-    }}/>
   ))

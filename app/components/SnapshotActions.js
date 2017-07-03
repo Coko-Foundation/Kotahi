@@ -16,7 +16,7 @@ const SnapshotActions = ({ project, snapshot }) => (
             className="snapshot-action">{snapshot.submitted ? 'view declarations' : 'submit for peer review'}</Link>
     </div>
 
-    <div style={{marginTop:20}}>
+    <div style={{marginTop: 20}}>
       <Link to={`/projects/${project.id}/review`}
             className="snapshot-action">submit your review</Link>
     </div>
