@@ -22,6 +22,8 @@ import RemoveProject from '../app/components/RemoveProject'
 import RolesSummaryItem from '../app/components/RolesSummaryItem'
 import Snapshots from '../app/components/Snapshots'
 import Upload from '../app/components/Upload'
+import EditorList from '../app/components/EditorList'
+import EditorForm from '../app/components/EditorForm'
 
 // storiesOf('Welcome', module)
 //   .add('to Storybook', () => <Welcome showApp={linkTo('Button')} />)
@@ -34,6 +36,14 @@ storiesOf('Declarations', module)
   ))
   .add('answers', () => (
     <DeclarationAnswers declarations={submittedProject.declarations}/>
+  ))
+
+storiesOf('Editors', module)
+  .add('form', () => (
+    <EditorForm project={submittedProject} updateCollection={action('update collection')}/>
+  ))
+  .add('list', () => (
+    <EditorList project={submittedProject} roles={submittedProject.roles.editor}/>
   ))
 
 storiesOf('Project', module)

@@ -1,31 +1,40 @@
 export default [
   {
-    id: 'project-1',
+    id: 'project-imported',
     status: 'imported',
     statusDate: '2017-06-01T12:00:00Z',
     title: 'An imported project',
     roles: {
       owner: {
-        'user-1': {
+        'user-foo': {
           user: {
-            id: 'user-1',
-            username: 'admin'
+            id: 'user-foo',
+            username: 'foo'
           }
         }
       }
     }
   },
   {
-    id: 'project-2',
+    id: 'project-submitted',
     status: 'submitted',
     statusDate: '2017-06-29T12:00:00Z',
     title: 'A submitted project',
     roles: {
       owner: {
-        'user-1': {
+        'user-foo': {
           user: {
-            id: 'user-1',
-            username: 'admin'
+            id: 'user-foo',
+            username: 'foo'
+          }
+        }
+      },
+      editor: {
+        'user-bar': {
+          user: {
+            id: 'user-bar',
+            username: 'bar',
+            name: 'Bar Bar'
           }
         }
       }

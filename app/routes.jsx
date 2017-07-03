@@ -23,9 +23,9 @@ export default (
           <IndexRoute component={chunk(import('./containers/SnapshotsContainer'))}/>
 
           <Route path="declarations"
-                 component={chunk(import('./components/Declarations'))}/>
-          <Route path="editor"
-                 component={chunk(import('./components/Editor'))}/>
+                 component={chunk(import('./containers/DeclarationsContainer'))}/>
+          <Route path="editors"
+                 component={chunk(import('./containers/EditorsContainer'))}/>
           <Route path="reviewers"
                  component={chunk(import('./components/Reviewers'))}/>
           <Route path="roles/:roleType/:role"
