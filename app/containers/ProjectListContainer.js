@@ -16,12 +16,12 @@ class ProjectListContainer extends React.Component {
 
   render () {
     return (
-      <div className="content-text main">
+      <div>
         <div className="container">
           <div style={{ marginTop: 90, display: 'flex', justifyContent: 'center' }}>
             <div style={{ width: 800 }}>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
-                <div className="project-list-item content-interactive">
+                <div className="project-list-item">
                   <UploadContainer/>
                 </div>
               </div>

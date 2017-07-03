@@ -4,7 +4,7 @@ import { ListGroup, ListGroupItem } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 
 const ReviewersList = ({ project, roles }) => (
-  <ListGroup>
+  <ListGroup className="content-metadata">
     {Object.keys(roles).map(id => {
       const role = roles[id]
 

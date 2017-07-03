@@ -15,14 +15,14 @@ class RoleContainer extends React.Component {
         <h1>{ucfirst(roleType)}: {role.user.name || role.user.username}</h1>
 
         {roleType === 'reviewer' && (
-          <div className="content-interactive">
+          <div>
             <ReviewerInvitationForm role={role} onSubmit={inviteReviewer}/>
             <ReviewForm role={role} onSubmit={submitReview}/>
           </div>
           )}
 
         {roleType === 'editor' && (
-          <div className="content-interactive">
+          <div>
             <DecisionForm role={role} onSubmit={submitDecision}/>
           </div>
         )}

@@ -5,24 +5,21 @@ import RolesSummaryItemContainer from '../containers/RolesSummaryItemContainer'
 const roleTypes = ['owner', 'editor', 'reviewer']
 
 const RolesSummary = ({ project }) => (
-  <div>
-    <div style={{ display: 'table', margin: 10, borderLeft: '1px solid #ddd' }}>
+  <div className="content-metadata" style={{ display: 'table', margin: 10, borderLeft: '1px solid #ddd' }}>
 
-      {roleTypes.map(roleType => {
-        const roles = project.roles[roleType]
+    {roleTypes.map(roleType => {
+      const roles = project.roles[roleType]
 
-        if (!roles) return null
+      if (!roles) return null
 
-        return Object.keys(roles).map(id => {
-          const role = roles[id]
+      return Object.keys(roles).map(id => {
+        const role = roles[id]
 
-          return (
-            <RolesSummaryItemContainer key={id} roleId={id} roleType={roleType} project={project} role={role}/>
-          )
-        })
-      })}
-
-    </div>
+        return (
+          <RolesSummaryItemContainer key={id} roleId={id} roleType={roleType} project={project} role={role}/>
+        )
+      })
+    })}
   </div>
 )
 

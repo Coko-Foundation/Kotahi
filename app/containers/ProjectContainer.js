@@ -51,7 +51,7 @@ class ProjectContainer extends React.Component {
     if (!project) return null
 
     return (
-      <div className="content-text main" style={{ paddingBottom: 90 }}>
+      <div style={{ paddingBottom: 90 }}>
         <div className="container">
           <RemoveProject onClick={this.remove}/>
 
@@ -62,7 +62,7 @@ class ProjectContainer extends React.Component {
               </Project>
             </div>
 
-            <div className="content-metadata" style={{ width: 200 }}>
+            <div style={{ width: 200 }}>
               {project.roles && (
                 <RolesSummary project={project}/>
               )}

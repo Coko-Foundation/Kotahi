@@ -4,7 +4,7 @@ import FRC from 'formsy-react-components'
 import { Button } from 'react-bootstrap'
 
 const ReviewerInvitationForm = ({ role, onSubmit }) => (
-  <FRC.Form onSubmit={onSubmit} validateOnSubmit={true} layout="vertical">
+  <FRC.Form onSubmit={onSubmit} validateOnSubmit={true} layout="vertical" className="content-interactive">
     <div>
       <FRC.Textarea name="invitation" label="Invitation" rows={5}/>
     </div>

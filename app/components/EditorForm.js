@@ -24,7 +24,7 @@ class EditorForm extends React.Component {
 
   render () {
     return (
-      <FRC.Form ref={form => (this.editorForm = form)} onSubmit={this.addEditor} validateOnSubmit={true} layout="vertical">
+      <FRC.Form ref={form => (this.editorForm = form)} onSubmit={this.addEditor} validateOnSubmit={true} layout="vertical" className="content-interactive">
         <div>
           <FRC.Input type="text" name="name" label="Editor name"/>
         </div>

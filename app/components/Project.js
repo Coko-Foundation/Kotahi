@@ -5,7 +5,7 @@ import { Link } from 'react-router'
 
 const Project = ({ children, project }) => (
   <div>
-    <div className="project-title">
+    <div className="project-title content-text">
       <Link to={`/projects/${project.id}`}>{project.title}</Link>
     </div>
 

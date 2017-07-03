@@ -17,7 +17,7 @@ const ProjectList = ({ projects }) => (
               <span>{moment(project.statusDate).format('YYYY-MM-DD')}</span>
             </div>
 
-            <div className="project-list-item-title">{project.title}</div>
+            <div className="project-list-item-title content-text">{project.title}</div>
 
             <div className="project-list-item-role content-metadata" style={{ display: 'flex' }}>
               <div className="project-list-item-role-title">Owner</div>

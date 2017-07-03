@@ -4,7 +4,7 @@ import { ListGroup, ListGroupItem } from 'react-bootstrap'
 import { LinkContainer } from 'react-router-bootstrap'
 
 const EditorList = ({ project, roles }) => (
-  <ListGroup style={{ marginTop: 20 }}>
+  <ListGroup style={{ marginTop: 20 }} className="content-metadata">
     {Object.keys(roles).map(id => {
       const role = roles[id]
 

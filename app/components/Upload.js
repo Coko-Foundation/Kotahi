@@ -6,7 +6,7 @@ import './Upload.css'
 
 const Upload = ({ ink, onDrop }) => (
   <Dropzone onDrop={onDrop} accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="dropzone">
-    <div style={{ fontWeight: 200, display: 'flex', paddingTop: 10, paddingBottom: 10 }}>
+    <div className="content-interactive" style={{ fontWeight: 200, display: 'flex', paddingTop: 10, paddingBottom: 10 }}>
       <div>
         <span className={`fa fa-fw fa-4x ${ink.isFetching ? 'fa-spinner fa-spin' : 'fa-plus-circle'}`} style={{ color: '#4990E2' }}/>
       </div>

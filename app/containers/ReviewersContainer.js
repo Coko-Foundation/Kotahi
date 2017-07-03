@@ -17,12 +17,10 @@ class ReviewersContainer extends React.Component {
     // TODO: implement role status (+ invitations property?)
 
     return (
-      <div className="content-metadata">
-        <h1>Reviewers</h1>
+      <div>
+        <h1 className="content-text">Reviewers</h1>
 
-        <div className="content-interactive">
-          <ReviewersForm project={project} updateCollection={updateCollection}/>
-        </div>
+        <ReviewersForm project={project} updateCollection={updateCollection}/>
 
         {roles.reviewer && (
           <ReviewersList project={project} roles={roles.reviewer}

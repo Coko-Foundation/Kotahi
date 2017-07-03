@@ -4,7 +4,7 @@ import FRC from 'formsy-react-components'
 import { Button } from 'react-bootstrap'
 
 const DecisionForm = ({ role, onSubmit }) => (
-  <FRC.Form onSubmit={onSubmit} validateOnSubmit={true} layout="vertical">
+  <FRC.Form onSubmit={onSubmit} validateOnSubmit={true} layout="vertical" className="content-interactive">
     <div>
       <FRC.Textarea name="decision" label="Decision" rows={5}/>
     </div>

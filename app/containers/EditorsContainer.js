@@ -17,17 +17,13 @@ class EditorsContainer extends React.Component {
     // TODO: implement role status (+ invitations property?)
 
     return (
-      <div className="content-metadata">
-        <h1>Editor</h1>
+      <div>
+        <h1 className="content-text">Editor</h1>
 
-        <div className="content-interactive">
-          <EditorForm project={project} updateCollection={updateCollection()}/>
-        </div>
+        <EditorForm project={project} updateCollection={updateCollection()}/>
 
         {roles.editor && (
-          <div className="content-metadata">
-            <EditorList project={project} roles={roles.editor}/>
-          </div>
+          <EditorList project={project} roles={roles.editor}/>
         )}
       </div>
     )

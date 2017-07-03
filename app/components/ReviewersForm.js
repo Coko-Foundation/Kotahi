@@ -22,7 +22,7 @@ class ReviewersForm extends React.Component {
 
   render () {
     return (
-      <FRC.Form ref={form => (this.reviewerForm = form)} onSubmit={this.addReviewer} validateOnSubmit={true} layout="vertical">
+      <FRC.Form ref={form => (this.reviewerForm = form)} onSubmit={this.addReviewer} validateOnSubmit={true} layout="vertical" className="content-interactive">
         <div>
           <FRC.Input type="text" name="name" label="Reviewer name"/>
         </div>
