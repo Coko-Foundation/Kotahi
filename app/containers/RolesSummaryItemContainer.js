@@ -35,7 +35,7 @@ class RolesSummaryItemContainer extends React.Component {
     if (!user) return null
 
     return (
-      <RolesSummaryItem label={ucfirst(roleType)} user={user} link={`/projects/${project.id}/roles/${roleType}/${roleId}`}/>
+      <RolesSummaryItem label={ucfirst(roleType)} user={user} url={`/projects/${project.id}/roles/${roleType}/${roleId}`}/>
     )
   }
 }
@@ -51,7 +51,9 @@ RolesSummaryItemContainer.propTypes = {
 
 export default connect(
   (state, ownProps) => ({
-    user: ownProps.role.user.id ? state.users.users.find(user => user.id === ownProps.role.user.id) : ownProps.role.user
+    user: ownProps.role.user.id
+      ? state.users.users.find(user => user.id === ownProps.role.user.id)
+      : ownProps.role.user
   }),
   {
     getUser
