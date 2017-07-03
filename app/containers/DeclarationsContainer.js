@@ -4,8 +4,8 @@ import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 import { updateCollection } from 'pubsweet-client/src/actions/collections'
 import { updateFragment } from 'pubsweet-client/src/actions/fragments'
-import DeclarationQuestions from './DeclarationQuestions'
-import DeclarationAnswers from './DeclarationAnswers'
+import DeclarationQuestions from '../components/DeclarationQuestions'
+import DeclarationAnswers from '../components/DeclarationAnswers'
 
 import './Declarations.css'
 
@@ -37,8 +37,8 @@ class Declarations extends React.Component {
     if (!project) return null
 
     return project.status === 'submitted'
-      ? <DeclarationAnswers project={project}/>
-      : <DeclarationQuestions project={project} save={this.submit}/>
+      ? <DeclarationAnswers declarations={project.declarations}/>
+      : <DeclarationQuestions declarations={project.declarations} save={this.submit}/>
   }
 }
 

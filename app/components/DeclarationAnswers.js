@@ -1,7 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const DeclarationAnswers = ({ declarations = {} }) => (
+import './Declarations.css'
+
+const DeclarationAnswers = ({ declarations }) => (
   <div className="answers questions-reset content-metadata">
     <div className="question-section">
       <div className="question-section-heading">PART I - Questions about ethics</div>
@@ -32,7 +34,7 @@ const DeclarationAnswers = ({ declarations = {} }) => (
 )
 
 DeclarationAnswers.propTypes = {
-  declarations: PropTypes.object
+  declarations: PropTypes.object.isRequired
 }
 
 export default DeclarationAnswers

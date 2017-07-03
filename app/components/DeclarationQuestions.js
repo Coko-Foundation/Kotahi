@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import FRC from 'formsy-react-components'
 import { Button } from 'react-bootstrap'
 
+import './Declarations.css'
+
 const styles = {
   textarea: {
     paddingLeft: 0,

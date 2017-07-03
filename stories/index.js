@@ -13,6 +13,8 @@ import { action } from '@storybook/addon-actions'
 import projects from './data/projects'
 import snapshots from './data/snapshots'
 
+import DeclarationAnswers from '../app/components/DeclarationAnswers'
+import DeclarationQuestions from '../app/components/DeclarationQuestions'
 import Project from '../app/components/Project'
 import ProjectActions from '../app/components/ProjectActions'
 import ProjectList from '../app/components/ProjectList'
@@ -25,6 +27,14 @@ import Upload from '../app/components/Upload'
 //   .add('to Storybook', () => <Welcome showApp={linkTo('Button')} />)
 
 const [importedProject, submittedProject] = projects
+
+storiesOf('Declarations', module)
+  .add('questions', () => (
+    <DeclarationQuestions declarations={submittedProject.declarations} save={action('saved')}/>
+  ))
+  .add('answers', () => (
+    <DeclarationAnswers declarations={submittedProject.declarations}/>
+  ))
 
 storiesOf('Project', module)
   .add('title', () => (

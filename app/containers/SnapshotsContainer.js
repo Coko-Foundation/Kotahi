@@ -6,29 +6,11 @@ import { updateFragment } from 'pubsweet-client/src/actions/fragments'
 
 import Snapshots from '../components/Snapshots'
 
-class SnapshotsContainer extends React.Component {
-  submit = (snapshot) => {
-    const { project, updateFragment, updateCollection } = this.props
+const SnapshotsContainer = ({ project, snapshots }) => {
+  if (!project) return null
+  if (!snapshots.length) return null
 
-    updateFragment(project, {
-      id: snapshot.id,
-      submitted: Date.now()
-    })
-
-    project.status = 'submitted'
-    project.statusDate = Date.now()
-
-    updateCollection(project)
-  }
-
-  render () {
-    const { project, snapshots } = this.props
-
-    if (!project) return null
-    if (!snapshots.length) return null
-
-    return <Snapshots project={project} snapshots={snapshots} submit={this.submit}/>
-  }
+  return <Snapshots project={project} snapshots={snapshots}/>
 }
 
 SnapshotsContainer.propTypes = {
