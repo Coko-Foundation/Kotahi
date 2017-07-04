@@ -1,6 +1,6 @@
 <!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
   <head>
-    <meta name="expandedItems" content="X1GX6h6Cm X1xlTqp07 X1kNqp6C7 QJo4qpp07 mJkGp3aRQ QJXEp5aA7 mkmksTTAm XJqCtpaRm Q19r6qpRX Qy2j-sTCQ X1j5caTRX Xyi2566CQ XkmY5a6AX QkCDUAaCm XkMDp560X X1r-Tn60m mykgbs6C7 mykfZiaC7 QJv3boaAm myvUFC6C7 Q1N8FRTCm Q1d1wThaCm XkE0p3T0m X1opC2pR7 mkAe36TC7 Xy6TAnT0Q" />
+    <meta name="expandedItems" content="X1GX6h6Cm X1xlTqp07 mJ24-iaRX X1kNqp6C7 QJo4qpp07 mJkGp3aRQ QJXEp5aA7 mkmksTTAm XJqCtpaRm Qy2j-sTCQ X1j5caTRX Xyi2566CQ XkmY5a6AX QkCDUAaCm XkMDp560X X1r-Tn60m mykgbs6C7 XkkksT60X XJAj00TAQ mykfZiaC7 QJv3boaAm myvUFC6C7 Q1N8FRTCm XyiMWjaRm mkFWf1CAX mkGzz1CC7 Q1d1wThaCm XkE0p3T0m X1opC2pR7 mkAe36TC7 Xy6TAnT0Q" />
     <meta charset="UTF-8" />
   </head>
   <body>
@@ -73,9 +73,6 @@
           <li id="QJXEp5aA7">
             <p><b>Project</b></p>
             <ul>
-              <li id="X1ZEh6TR7">
-                <p>title</p>
-              </li>
               <li id="XJ-BMoTRm">
                 <p>files</p>
                 <ul>
@@ -111,6 +108,9 @@
                     </ul>
                   </li>
                 </ul>
+              </li>
+              <li id="X1ZEh6TR7">
+                <p>title</p>
               </li>
               <li id="X14_op6RQ">
                 <p>metadata</p>
@@ -203,20 +203,20 @@
                   <li id="XJylGipCm">
                     <p>created</p>
                   </li>
+                  <li id="Qy-QTapAQ">
+                    <p>file added/removed/updated</p>
+                  </li>
                   <li id="Xy7xGop0X">
                     <p>title changed</p>
+                  </li>
+                  <li id="mJWzfj60Q">
+                    <p>declarations updated</p>
                   </li>
                   <li id="XkFeGoaA7">
                     <p>role added/removed</p>
                   </li>
-                  <li id="Qy-QTapAQ">
-                    <p>file added/removed/updated</p>
-                  </li>
                   <li id="m12xGjaC7">
                     <p>metadata updated</p>
-                  </li>
-                  <li id="mJWzfj60Q">
-                    <p>declarations updated</p>
                   </li>
                 </ul>
               </li>
@@ -231,6 +231,19 @@
                       </li>
                       <li id="XkkksT60X">
                         <p>files</p>
+                        <ul>
+                          <li id="XJAj00TAQ">
+                            <p>manuscript</p>
+                            <ul>
+                              <li id="Qkm20Aa0m">
+                                <p>HTML</p>
+                              </li>
+                              <li id="QJH2CRa0X">
+                                <p>images</p>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
                       </li>
                       <li id="QyYophTCX">
                         <p>metadata</p>
@@ -276,23 +289,36 @@
                       <li id="XyiMWjaRm">
                         <p>notes/messages/tasks</p>
                         <ul>
-                          <li id="QypTopa07">
-                            <p>changes needed</p>
-                          </li>
-                          <li id="mkH0ip6Am">
-                            <p>notes for the editor</p>
-                          </li>
-                          <li id="Xyl1h6a0m">
-                            <p>notes for the reviewers</p>
-                          </li>
-                          <li id="QkKNpT6CX">
-                            <p>review</p>
-                          </li>
-                          <li id="m1jE66pA7">
-                            <p>decision</p>
-                          </li>
-                          <li id="mynNTpaC7">
-                            <p>author response</p>
+                          <li id="mkFWf1CAX">
+                            <p><b>Note</b></p>
+                            <ul>
+                              <li id="mkGzz1CC7">
+                                <p>type</p>
+                                <ul>
+                                  <li id="QypTopa07">
+                                    <p>changes needed</p>
+                                  </li>
+                                  <li id="mkH0ip6Am">
+                                    <p>notes for the editor</p>
+                                  </li>
+                                  <li id="Xyl1h6a0m">
+                                    <p>notes for the reviewers</p>
+                                  </li>
+                                  <li id="QkKNpT6CX">
+                                    <p>review</p>
+                                  </li>
+                                  <li id="m1jE66pA7">
+                                    <p>decision</p>
+                                  </li>
+                                  <li id="mynNTpaC7">
+                                    <p>author response</p>
+                                  </li>
+                                </ul>
+                              </li>
+                              <li id="QkPfzk00m">
+                                <p>attachments (or inline links to uploaded files?)</p>
+                              </li>
+                            </ul>
                           </li>
                         </ul>
                       </li>
@@ -302,22 +328,46 @@
                           <li id="XkJwahaAQ">
                             <p>created</p>
                           </li>
+                          <li id="XkG1J100Q">
+                            <p>declarations saved</p>
+                          </li>
+                          <li id="Q11myJ0AX">
+                            <p>submitted for preprint</p>
+                          </li>
                           <li id="QJVkDa2pCm">
-                            <p>submitted</p>
+                            <p>submitted for peer review</p>
                           </li>
                           <li id="XyM2Fpa07">
                             <p>checked</p>
                           </li>
-                          <li id="Q1bJwahT0Q">
-                            <p>role added/removed</p>
+                          <li id="XJ31k1RA7">
+                            <p>editor assigned</p>
+                          </li>
+                          <li id="QyyeykAR7">
+                            <p>reviewers invited</p>
+                          </li>
+                          <li id="X17xyJR0Q">
+                            <p>reviewers accepted</p>
+                          </li>
+                          <li id="m1leMkA0m">
+                            <p>reviews submitted</p>
+                          </li>
+                          <li id="XyVgz1AA7">
+                            <p>decision sent</p>
+                          </li>
+                          <li id="mkdxM1CCm">
+                            <p>author response received</p>
                           </li>
                           <li id="QkHyvTn6RQ">
                             <p>metadata updated</p>
                           </li>
                           <li id="myvyw62TCQ">
-                            <p>preprint published</p>
+                            <p>preprint approved</p>
                           </li>
                           <li id="Qk8yPp3a07">
+                            <p>publication approved</p>
+                          </li>
+                          <li id="XJ3SG1ACX">
                             <p>published</p>
                           </li>
                         </ul>
