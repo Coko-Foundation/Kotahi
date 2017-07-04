@@ -18,7 +18,6 @@ import DeclarationQuestions from '../app/components/DeclarationQuestions'
 import Project from '../app/components/Project'
 import ProjectActions from '../app/components/ProjectActions'
 import ProjectList from '../app/components/ProjectList'
-import RemoveProject from '../app/components/RemoveProject'
 import RolesSummaryItem from '../app/components/RolesSummaryItem'
 import Snapshots from '../app/components/Snapshots'
 import UploadManuscript from '../app/components/UploadManuscript'
@@ -108,11 +107,6 @@ storiesOf('Project Actions', module)
 storiesOf('Project List', module)
   .add('items', () => (
     <ProjectList projects={projects}/>
-  ))
-
-storiesOf('Remove Project', module)
-  .add('button', () => (
-    <RemoveProject onClick={action('remove')}/>
   ))
 
 storiesOf('Reviewers', module)
