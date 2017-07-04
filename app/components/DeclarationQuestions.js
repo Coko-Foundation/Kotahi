@@ -36,12 +36,9 @@ class DeclarationQuestions extends React.Component {
     this.setState({ declarations })
   }
 
-  changed = (declarations) => {
+  onChange = (declarations) => {
     this.setState({ declarations })
-  }
-
-  save = () => {
-    this.props.save(this.state.declarations)
+    // TODO: save changed declarations automatically?
   }
 
   autoresize = name => () => {
@@ -54,15 +51,16 @@ class DeclarationQuestions extends React.Component {
 
   render () {
     const { declarations = {} } = this.state
+    const { save } = this.props
 
     // TODO: only display "submit" once declarations are complete
 
     return (
       <div className="questions questions-reset content-metadata">
         <FRC.Form
-          onSubmit={this.save}
+          onSubmit={save}
           validateOnSubmit={true}
-          onChange={this.changed}
+          onChange={this.onChange}
           layout="vertical">
           <div className="question-section">
             <div className="question-section-heading">PART I - Questions about ethics</div>
