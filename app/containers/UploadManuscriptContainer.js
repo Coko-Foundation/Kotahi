@@ -5,7 +5,7 @@ import { createCollection } from 'pubsweet-client/src/actions/collections'
 import { createFragment } from 'pubsweet-client/src/actions/fragments'
 import { ink as convertToHTML } from 'pubsweet-component-ink-frontend/actions'
 import uuid from 'uuid'
-import Upload from '../components/Upload'
+import UploadManuscript from '../components/UploadManuscript'
 
 const generateTitle = (name) => {
   return name
@@ -21,7 +21,7 @@ const extractTitle = (source) => {
   return heading ? heading.textContent : null
 }
 
-class UploadContainer extends React.Component {
+class UploadManuscriptContainer extends React.Component {
   onDrop = (acceptedFiles) => {
     const { convertToHTML, createCollection, createFragment, currentUser } = this.props
 
@@ -73,11 +73,11 @@ class UploadContainer extends React.Component {
   }
 
   render () {
-    return <Upload onDrop={this.onDrop} ink={this.props.ink}/>
+    return <UploadManuscript onDrop={this.onDrop} ink={this.props.ink}/>
   }
 }
 
-UploadContainer.propTypes = {
+UploadManuscriptContainer.propTypes = {
   currentUser: PropTypes.object,
   convertToHTML: PropTypes.func.isRequired,
   createCollection: PropTypes.func.isRequired,
@@ -95,4 +95,4 @@ export default connect(
     createCollection,
     createFragment
   }
-)(UploadContainer)
+)(UploadManuscriptContainer)

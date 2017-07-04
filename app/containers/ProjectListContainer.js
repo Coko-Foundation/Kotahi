@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { getCollections } from 'pubsweet-client/src/actions/collections'
 import * as sort from '../lib/sort'
 import ProjectList from '../components/ProjectList'
-import UploadContainer from './UploadContainer'
+import UploadManuscriptContainer from './UploadManuscriptContainer'
 
 class ProjectListContainer extends React.Component {
   componentDidMount () {
@@ -22,7 +22,7 @@ class ProjectListContainer extends React.Component {
             <div style={{ width: 800 }}>
               <div style={{ display: 'flex', justifyContent: 'center' }}>
                 <div className="project-list-item">
-                  <UploadContainer/>
+                  <UploadManuscriptContainer/>
                 </div>
               </div>
 

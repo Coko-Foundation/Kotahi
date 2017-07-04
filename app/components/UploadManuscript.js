@@ -2,9 +2,9 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import Dropzone from 'react-dropzone'
 
-import './Upload.css'
+import './UploadManuscript.css'
 
-const Upload = ({ ink, onDrop }) => (
+const UploadManuscript = ({ ink, onDrop }) => (
   <Dropzone onDrop={onDrop} accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document" className="dropzone">
     <div className="content-interactive" style={{ fontWeight: 200, display: 'flex', paddingTop: 10, paddingBottom: 10 }}>
       <div>
@@ -20,9 +20,9 @@ const Upload = ({ ink, onDrop }) => (
   </Dropzone>
 )
 
-Upload.propTypes = {
+UploadManuscript.propTypes = {
   onDrop: PropTypes.func.isRequired,
   ink: PropTypes.object.isRequired
 }
 
-export default Upload
+export default UploadManuscript

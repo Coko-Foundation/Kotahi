@@ -21,7 +21,7 @@ import ProjectList from '../app/components/ProjectList'
 import RemoveProject from '../app/components/RemoveProject'
 import RolesSummaryItem from '../app/components/RolesSummaryItem'
 import Snapshots from '../app/components/Snapshots'
-import Upload from '../app/components/Upload'
+import UploadManuscript from '../app/components/UploadManuscript'
 import EditorList from '../app/components/EditorList'
 import EditorForm from '../app/components/EditorForm'
 import ReviewersForm from '../app/components/ReviewersForm'
@@ -164,10 +164,10 @@ storiesOf('Snapshots', module)
     <Snapshots project={importedProject} snapshots={snapshots}/>
   ))
 
-storiesOf('Upload', module)
+storiesOf('Upload Manuscript', module)
   .add('dropzone', () => (
-    <Upload onDrop={action('drop')} ink={{ isFetching: false }}/>
+    <UploadManuscript onDrop={action('drop')} ink={{ isFetching: false }}/>
   ))
   .add('converting', () => (
-    <Upload onDrop={action('drop')} ink={{ isFetching: true }}/>
+    <UploadManuscript onDrop={action('drop')} ink={{ isFetching: true }}/>
   ))
