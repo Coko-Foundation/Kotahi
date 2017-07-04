@@ -41,22 +41,29 @@ module.exports = {
     maxRetries: 500
   },
   validations: {
-    collection: {
+    collection: { // project
       declarations: Joi.object(),
+      events: Joi.object,
+      files: Joi.object(),
+      metadata: Joi.object(),
+      roles: Joi.object(),
       status: Joi.string().required(),
       statusDate: Joi.date().timestamp().required(),
-      title: Joi.string().required(),
-      roles: Joi.object()
+      title: Joi.string().required()
     },
-    fragment: {
-      comments: Joi.object(),
-      lock: Joi.object().allow(null),
-      progress: Joi.object(),
+    fragment: { // snapshot
+      comments: Joi.object(), // wax
+      declarations: Joi.object(),
+      events: Joi.object,
+      files: Joi.object(),
+      lock: Joi.object().allow(null), // wax
+      metadata: Joi.object(),
+      progress: Joi.object(), // wax
       published: Joi.date().timestamp(),
-      source: Joi.string().required(),
+      source: Joi.string().required(), // wax (TODO: move to file)
       status: Joi.string(),
       submitted: Joi.date().timestamp(),
-      trackChanges: Joi.boolean(),
+      trackChanges: Joi.boolean(), // wax
       version: Joi.number().required()
     },
     user: {
