@@ -1,0 +1,388 @@
+<!DOCTYPE html><html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta name="expandedItems" content="X1GX6h6Cm X1xlTqp07 X1kNqp6C7 QJo4qpp07 mJkGp3aRQ QJXEp5aA7 mkmksTTAm XJqCtpaRm Q19r6qpRX Qy2j-sTCQ X1j5caTRX Xyi2566CQ XkmY5a6AX QkCDUAaCm XkMDp560X X1r-Tn60m mykgbs6C7 mykfZiaC7 QJv3boaAm myvUFC6C7 Q1N8FRTCm Q1d1wThaCm XkE0p3T0m X1opC2pR7 mkAe36TC7 Xy6TAnT0Q" />
+    <meta charset="UTF-8" />
+  </head>
+  <body>
+    <ul id="FoldingText">
+      <li id="X1GX6h6Cm">
+        <p>journals</p>
+        <ul>
+          <li id="X1xlTqp07">
+            <p><b>Journal</b></p>
+            <ul>
+              <li id="QknM6qaCQ">
+                <p>metadata</p>
+                <ul>
+                  <li id="QyLu-opA7">
+                    <p>title</p>
+                  </li>
+                  <li id="my_dbiaA7">
+                    <p>issn</p>
+                  </li>
+                  <li id="XkltZi6CQ">
+                    <p>url</p>
+                  </li>
+                </ul>
+              </li>
+              <li id="XkMKZoT0m">
+                <p>defaults</p>
+                <ul>
+                  <li id="Q1rqWiTR7">
+                    <p>review deadline</p>
+                  </li>
+                </ul>
+              </li>
+              <li id="mJ24-iaRX">
+                <p>roles</p>
+                <ul>
+                  <li id="XkfsWjTRX">
+                    <p>staff</p>
+                  </li>
+                  <li id="XyUsbipCQ">
+                    <p>editor</p>
+                  </li>
+                </ul>
+              </li>
+              <li id="X1kNqp6C7">
+                <p>declarations</p>
+                <ul>
+                  <li id="QJo4qpp07">
+                    <p><b>Declaration Question</b></p>
+                    <ul>
+                      <li id="QyySc66RX">
+                        <p>key</p>
+                      </li>
+                      <li id="Q1irqTp0Q">
+                        <p>question UI component</p>
+                      </li>
+                      <li id="QJPP9TpRQ">
+                        <p>answer UI component</p>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li id="mJkGp3aRQ">
+        <p>projects</p>
+        <ul>
+          <li id="QJXEp5aA7">
+            <p><b>Project</b></p>
+            <ul>
+              <li id="X1ZEh6TR7">
+                <p>title</p>
+              </li>
+              <li id="XJ-BMoTRm">
+                <p>files</p>
+                <ul>
+                  <li id="mkmksTTAm">
+                    <p><b>File</b></p>
+                    <ul>
+                      <li id="Q1J0qaTAX">
+                        <p>filename</p>
+                      </li>
+                      <li id="QkgC9TTR7">
+                        <p>title</p>
+                      </li>
+                      <li id="mkZR9pa0X">
+                        <p>size</p>
+                      </li>
+                      <li id="XJzCca60X">
+                        <p>MIME type</p>
+                      </li>
+                      <li id="QymAc66R7">
+                        <p>description</p>
+                      </li>
+                      <li id="XJqCtpaRm">
+                        <p>events</p>
+                        <ul>
+                          <li id="Q1nRF660m">
+                            <p>added</p>
+                          </li>
+                          <li id="myybcp6CX">
+                            <p>updated</p>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li id="X14_op6RQ">
+                <p>metadata</p>
+                <ul>
+                  <li id="myBB2pa0Q">
+                    <p>title (with markup)</p>
+                  </li>
+                  <li id="X19_opp0m">
+                    <p>authors/contributors</p>
+                  </li>
+                  <li id="mJsuoTaAQ">
+                    <p>affiliations</p>
+                  </li>
+                  <li id="XJCdsTpCm">
+                    <p>funders</p>
+                  </li>
+                  <li id="XJ7Ks66AQ">
+                    <p>contributions</p>
+                  </li>
+                </ul>
+              </li>
+              <li id="Q19r6qpRX">
+                <p>roles</p>
+                <ul>
+                  <li id="Qy2j-sTCQ">
+                    <p>owner</p>
+                    <ul>
+                      <li id="X1j5caTRX">
+                        <p><b>Role</b></p>
+                        <ul>
+                          <li id="XkJjcTaAX">
+                            <p>type</p>
+                          </li>
+                          <li id="XksXoapCX">
+                            <p>user</p>
+                          </li>
+                          <li id="Xyi2566CQ">
+                            <p>events</p>
+                            <ul>
+                              <li id="XkhgiTaRm">
+                                <p>started</p>
+                              </li>
+                              <li id="myCgsp6A7">
+                                <p>ended</p>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                  <li id="Qypi-jpAQ">
+                    <p>editor</p>
+                  </li>
+                  <li id="myJnZspCQ">
+                    <p>reviewer</p>
+                  </li>
+                </ul>
+              </li>
+              <li id="myRzMsTRX">
+                <p>declarations</p>
+                <ul>
+                  <li id="XkmY5a6AX">
+                    <p><b>Declaration Answer</b></p>
+                    <ul>
+                      <li id="QkhYqp6R7">
+                        <p>question key</p>
+                      </li>
+                      <li id="QkmvLRTR7">
+                        <p>question text?</p>
+                      </li>
+                      <li id="mJ0Y5ap0m">
+                        <p>answer</p>
+                      </li>
+                      <li id="QkCDUAaCm">
+                        <p>events</p>
+                        <ul>
+                          <li id="X1Zd8CTA7">
+                            <p>answered</p>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+              <li id="XkMDp560X">
+                <p>events</p>
+                <ul>
+                  <li id="XJylGipCm">
+                    <p>created</p>
+                  </li>
+                  <li id="Xy7xGop0X">
+                    <p>title changed</p>
+                  </li>
+                  <li id="XkFeGoaA7">
+                    <p>role added/removed</p>
+                  </li>
+                  <li id="Qy-QTapAQ">
+                    <p>file added/removed/updated</p>
+                  </li>
+                  <li id="m12xGjaC7">
+                    <p>metadata updated</p>
+                  </li>
+                  <li id="mJWzfj60Q">
+                    <p>declarations updated</p>
+                  </li>
+                </ul>
+              </li>
+              <li id="X1r-Tn60m">
+                <p>snapshots</p>
+                <ul>
+                  <li id="mykgbs6C7">
+                    <p><b>Snapshot</b></p>
+                    <ul>
+                      <li id="X1dY26pAQ">
+                        <p>declarations</p>
+                      </li>
+                      <li id="XkkksT60X">
+                        <p>files</p>
+                      </li>
+                      <li id="QyYophTCX">
+                        <p>metadata</p>
+                      </li>
+                      <li id="mykfZiaC7">
+                        <p>roles</p>
+                        <ul>
+                          <li id="QJv3boaAm">
+                            <p>reviewer</p>
+                            <ul>
+                              <li id="myvUFC6C7">
+                                <p><b>Role</b></p>
+                                <ul>
+                                  <li id="QJZA-ja0X">
+                                    <p>invitation</p>
+                                  </li>
+                                  <li id="QJGzYApR7">
+                                    <p>project role id</p>
+                                  </li>
+                                  <li id="Q1N8FRTCm">
+                                    <p>events</p>
+                                    <ul>
+                                      <li id="Xk2IFA6RQ">
+                                        <p>invited</p>
+                                      </li>
+                                      <li id="XJA8KApRQ">
+                                        <p>accepted</p>
+                                      </li>
+                                      <li id="QyxPFCTR7">
+                                        <p>declined</p>
+                                      </li>
+                                      <li id="QJUwF0aCm">
+                                        <p>submitted review</p>
+                                      </li>
+                                    </ul>
+                                  </li>
+                                </ul>
+                              </li>
+                            </ul>
+                          </li>
+                        </ul>
+                      </li>
+                      <li id="XyiMWjaRm">
+                        <p>notes/messages/tasks</p>
+                        <ul>
+                          <li id="QypTopa07">
+                            <p>changes needed</p>
+                          </li>
+                          <li id="mkH0ip6Am">
+                            <p>notes for the editor</p>
+                          </li>
+                          <li id="Xyl1h6a0m">
+                            <p>notes for the reviewers</p>
+                          </li>
+                          <li id="QkKNpT6CX">
+                            <p>review</p>
+                          </li>
+                          <li id="m1jE66pA7">
+                            <p>decision</p>
+                          </li>
+                          <li id="mynNTpaC7">
+                            <p>author response</p>
+                          </li>
+                        </ul>
+                      </li>
+                      <li id="Q1d1wThaCm">
+                        <p>events</p>
+                        <ul>
+                          <li id="XkJwahaAQ">
+                            <p>created</p>
+                          </li>
+                          <li id="QJVkDa2pCm">
+                            <p>submitted</p>
+                          </li>
+                          <li id="XyM2Fpa07">
+                            <p>checked</p>
+                          </li>
+                          <li id="Q1bJwahT0Q">
+                            <p>role added/removed</p>
+                          </li>
+                          <li id="QkHyvTn6RQ">
+                            <p>metadata updated</p>
+                          </li>
+                          <li id="myvyw62TCQ">
+                            <p>preprint published</p>
+                          </li>
+                          <li id="Qk8yPp3a07">
+                            <p>published</p>
+                          </li>
+                        </ul>
+                      </li>
+                      <li id="XkE0p3T0m">
+                        <p>links</p>
+                        <ul>
+                          <li id="QyDAT2aCm">
+                            <p>previous published version</p>
+                          </li>
+                          <li id="QysRpnaCQ">
+                            <p>next published version</p>
+                          </li>
+                          <li id="mkTCph6RQ">
+                            <p>latest published version</p>
+                          </li>
+                        </ul>
+                      </li>
+                    </ul>
+                  </li>
+                </ul>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+      <li id="X1opC2pR7">
+        <p>users</p>
+        <ul>
+          <li id="mk-4jTTRm">
+            <p>name (given + family)</p>
+          </li>
+          <li id="Qy4EiaT0X">
+            <p>email address</p>
+          </li>
+          <li id="mkAe36TC7">
+            <p>identifiers</p>
+            <ul>
+              <li id="mk8WnaaCX">
+                <p>ORCID</p>
+              </li>
+              <li id="QJ5Wha6Cm">
+                <p>Twitter</p>
+              </li>
+              <li id="m1yzhTpAQ">
+                <p>Google Scholar</p>
+              </li>
+              <li id="mkMMhppAm">
+                <p>URL</p>
+              </li>
+            </ul>
+          </li>
+          <li id="Xy6TAnT0Q">
+            <p>roles (on journal, project or snapshot)</p>
+            <ul>
+              <li id="myg0RnpA7">
+                <p>staff</p>
+              </li>
+              <li id="Q1M00nT07">
+                <p>editor</p>
+              </li>
+            </ul>
+          </li>
+        </ul>
+      </li>
+    </ul>
+  </body>
+</html>
