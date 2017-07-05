@@ -43,7 +43,7 @@ module.exports = {
   validations: {
     collection: { // project
       declarations: Joi.object(),
-      events: Joi.object,
+      events: Joi.object(),
       files: Joi.object(),
       metadata: Joi.object(),
       roles: Joi.object(),
@@ -54,7 +54,7 @@ module.exports = {
     fragment: { // snapshot
       comments: Joi.object(), // wax
       declarations: Joi.object(),
-      events: Joi.object,
+      events: Joi.object(),
       files: Joi.object(),
       lock: Joi.object().allow(null), // wax
       metadata: Joi.object(),
