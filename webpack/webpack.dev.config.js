@@ -24,7 +24,7 @@ module.exports = [
     },
     devtool: 'cheap-module-source-map',
     module: {
-      rules: require('./common-rules')
+      rules: require('./rules')
     },
     resolve: {
       symlinks: false,
@@ -54,9 +54,7 @@ module.exports = [
       }),
       new CopyWebpackPlugin([
         { from: '../static' }
-      ]),
-      new webpack.optimize.AggressiveMergingPlugin(),
-      new webpack.optimize.OccurrenceOrderPlugin()
+      ])
     ],
     node: {
       fs: 'empty',

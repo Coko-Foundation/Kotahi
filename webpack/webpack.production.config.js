@@ -22,7 +22,7 @@ module.exports = [
       publicPath: '/assets/'
     },
     module: {
-      rules: require('./common-rules')
+      rules: require('./rules')
     },
     resolve: {
       symlinks: false,
