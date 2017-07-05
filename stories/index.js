@@ -30,8 +30,8 @@ import DecisionForm from '../app/components/DecisionForm'
 import ReviewForm from '../app/components/ReviewForm'
 import Navigation from '../app/components/Navigation'
 
-import ColorsStory from './components/ColorsStory'
-import FontsStory from './components/FontsStory'
+import Colors from './components/Colors'
+import Fonts from './components/Fonts'
 
 // storiesOf('Welcome', module)
 //   .add('to Storybook', () => <Welcome showApp={linkTo('Button')} />)
@@ -44,8 +44,8 @@ const currentUser = {
 }
 
 storiesOf('Styles', module)
-  .add('colors', () => <ColorsStory/>)
-  .add('fonts', () => <FontsStory/>)
+  .add('colors', () => <Colors/>)
+  .add('fonts', () => <Fonts/>)
 
 storiesOf('Declarations', module)
   .add('questions', () => (
@@ -57,15 +57,11 @@ storiesOf('Declarations', module)
   ))
 
 storiesOf('Decision Form', module)
-  .add('new', () => (
-    <DecisionForm
-      role={submittedProject.roles.editor['user-bar']}
-      onSubmit={action('submitted decision')}/>
+  .add('unsent', () => (
+    <DecisionForm onSubmit={action('submitted decision')}/>
   ))
-  .add('invited', () => (
-    <DecisionForm
-      role={submittedProject.roles.editor['user-bar']}
-      onSubmit={action('submitted decision')}/>
+  .add('sent', () => (
+    <DecisionForm onSubmit={action('submitted decision')}/>
   ))
 
 storiesOf('Editors', module)

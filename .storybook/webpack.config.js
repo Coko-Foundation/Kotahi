@@ -19,11 +19,12 @@ module.exports = {
           loader: 'babel-loader',
           options: {
             presets: [
-              require('babel-preset-react'),
-              require('babel-preset-env')
+              require.resolve('babel-preset-react'),
+              require.resolve('babel-preset-env')
             ],
             plugins: [
-              require('babel-plugin-transform-class-properties')
+              require.resolve('babel-plugin-react-require'),
+              require.resolve('babel-plugin-transform-class-properties')
             ]
           }
         }

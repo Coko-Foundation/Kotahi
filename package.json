@@ -7,6 +7,7 @@
     "url": "https://gitlab.coko.foundation/xpub/xpub"
   },
   "dependencies": {
+    "babel-plugin-react-require": "^3.0.0",
     "font-awesome": "^4.7.0",
     "formsy-react": "^0.19.2",
     "formsy-react-components": "^0.10.1",
