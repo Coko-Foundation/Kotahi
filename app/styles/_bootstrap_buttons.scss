@@ -1,14 +1,5 @@
 @import 'variables';
 
-.btn {
-  background-color: $dark-grey;
-
-  &:hover,
-  &:focus {
-    background-color: $black;
-  }
-}
-
 .btn-primary {
   background-color: $blue;
   border-color: transparent;
