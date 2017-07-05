@@ -3,6 +3,7 @@ const webpack = require('webpack')
 const ThemePlugin = require('pubsweet-theme-plugin')
 const config = require('../config/dev')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const rules = require('./rules')
 
 module.exports = [
   {
@@ -24,7 +25,7 @@ module.exports = [
     },
     devtool: 'cheap-module-source-map',
     module: {
-      rules: require('./rules')
+      rules
     },
     resolve: {
       symlinks: false,

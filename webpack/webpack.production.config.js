@@ -6,6 +6,7 @@ const ThemePlugin = require('pubsweet-theme-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 const config = require('../config/production')
+const rules = require('./rules')
 
 module.exports = [
   {
@@ -22,7 +23,7 @@ module.exports = [
       publicPath: '/assets/'
     },
     module: {
-      rules: require('./rules')
+      rules
     },
     resolve: {
       symlinks: false,

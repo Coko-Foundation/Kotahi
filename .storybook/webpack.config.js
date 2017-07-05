@@ -23,7 +23,6 @@ module.exports = {
               require.resolve('babel-preset-env')
             ],
             plugins: [
-              require.resolve('babel-plugin-react-require'),
               require.resolve('babel-plugin-transform-class-properties')
             ]
           }

@@ -11,18 +11,16 @@ const include = [
 module.exports = [
   {
     test: /\.(js|jsx)$/,
-    // exclude: /node_modules/,
     include,
     use: {
       loader: 'babel-loader',
       options: {
         presets: [
           require.resolve('babel-preset-stage-2'),
-          // [require.resolve('babel-preset-es2015'), {
-          //   modules: false
-          // }],
           require.resolve('babel-preset-react'),
-          require.resolve('babel-preset-env')
+          [require.resolve('babel-preset-env'), {
+            modules: false
+          }]
         ],
         plugins: [
           'react-hot-loader/babel',
