@@ -1,5 +1,5 @@
 import submitted from './submitted'
 
-export default {
+export default [
   submitted
-}
+]

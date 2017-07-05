@@ -8,7 +8,7 @@ import '../app/styles/main.scss'
 
 import { storiesOf } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
-// import { linkTo } from '@storybook/addon-links'
+import { linkTo } from '@storybook/addon-links'
 
 import projects from './data/projects'
 import snapshots from './data/snapshots'
@@ -34,9 +34,12 @@ import Colors from './components/Colors'
 import Fonts from './components/Fonts'
 
 // storiesOf('Welcome', module)
-//   .add('to Storybook', () => <Welcome showApp={linkTo('Button')} />)
-
-const [importedProject, submittedProject] = projects
+//   .add('to xpub', () => (
+//     <div>
+//       <p>xpub is a journal publishing system that handles submission and peer review.</p>
+//       <p>Firstly, an author will <a href={linkTo('Login')}>sign in</a> and <a href={linkTo('Upload Manuscript')}>upload a DOCX manuscript file</a>.</p>
+//     </div>
+//   ))
 
 const currentUser = {
   id: 'foo',
@@ -49,11 +52,11 @@ storiesOf('Styles', module)
 
 storiesOf('Declarations', module)
   .add('questions', () => (
-    <DeclarationQuestions declarations={submittedProject.declarations}
+    <DeclarationQuestions declarations={projects.submitted.declarations}
                           save={action('saved')}/>
   ))
   .add('answers', () => (
-    <DeclarationAnswers declarations={submittedProject.declarations}/>
+    <DeclarationAnswers declarations={projects.submitted.declarations}/>
   ))
 
 storiesOf('Decision Form', module)
@@ -66,12 +69,12 @@ storiesOf('Decision Form', module)
 
 storiesOf('Editors', module)
   .add('form', () => (
-    <EditorForm project={submittedProject}
+    <EditorForm project={projects.submitted}
                 updateCollection={action('update editors')}/>
   ))
   .add('list', () => (
-    <EditorList project={submittedProject}
-                roles={submittedProject.roles.editor}/>
+    <EditorList project={projects.submitted}
+                roles={projects.submitted.roles.editor}/>
   ))
 
 storiesOf('Navigation', module)
@@ -89,15 +92,15 @@ storiesOf('Navigation', module)
 
 storiesOf('Project', module)
   .add('title', () => (
-    <Project project={importedProject}/>
+    <Project project={projects.imported}/>
   ))
 
 storiesOf('Project Actions', module)
   .add('for an imported project', () => (
-    <ProjectActions project={importedProject}/>
+    <ProjectActions project={projects.imported}/>
   ))
   .add('for a submitted project', () => (
-    <ProjectActions project={submittedProject}/>
+    <ProjectActions project={projects.submitted}/>
   ))
 
 storiesOf('Project List', module)
@@ -107,35 +110,35 @@ storiesOf('Project List', module)
 
 storiesOf('Reviewers', module)
   .add('form', () => (
-    <ReviewersForm project={submittedProject}
+    <ReviewersForm project={projects.submitted}
                    updateCollection={action('update reviewers')}/>
   ))
   .add('list', () => (
-    <ReviewersList project={submittedProject}
-                   roles={submittedProject.roles.reviewer}/>
+    <ReviewersList project={projects.submitted}
+                   roles={projects.submitted.roles.reviewer}/>
   ))
 
 storiesOf('Review Form', module)
   .add('new', () => (
     <ReviewForm
-      role={submittedProject.roles.reviewer['user-baz']}
+      role={projects.submitted.roles.reviewer['user-baz']}
       onSubmit={action('submitted review')}/>
   ))
   .add('submitted', () => (
     <ReviewForm
-      role={submittedProject.roles.reviewer['user-baz']}
+      role={projects.submitted.roles.reviewer['user-baz']}
       onSubmit={action('submitted review')}/>
   ))
 
 storiesOf('Reviewer Invitation Form', module)
   .add('new', () => (
     <ReviewerInvitationForm
-          role={submittedProject.roles.reviewer['user-baz']}
+          role={projects.submitted.roles.reviewer['user-baz']}
           onSubmit={action('sent reviewer invitation')}/>
   ))
   .add('invited', () => (
     <ReviewerInvitationForm
-      role={submittedProject.roles.reviewer['user-baz']}
+      role={projects.submitted.roles.reviewer['user-baz']}
       onSubmit={action('sent reviewer invitation')}/>
   ))
 
@@ -148,10 +151,10 @@ storiesOf('Roles Summary Item', module)
 
 storiesOf('Snapshots', module)
   .add('for an imported project', () => (
-    <Snapshots project={importedProject} snapshots={snapshots}/>
+    <Snapshots project={projects.imported} snapshots={snapshots}/>
   ))
   .add('for a submitted project', () => (
-    <Snapshots project={importedProject} snapshots={snapshots}/>
+    <Snapshots project={projects.imported} snapshots={snapshots}/>
   ))
 
 storiesOf('Upload Manuscript', module)
