@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import FRC from 'formsy-react-components'
 import { Button } from 'react-bootstrap'
 
-const DecisionForm = ({ role, onSubmit }) => (
+const DecisionForm = ({ onSubmit }) => (
   <FRC.Form onSubmit={onSubmit} validateOnSubmit={true} layout="vertical" className="content-interactive">
     <div>
       <FRC.Textarea name="decision" label="Decision" rows={5}/>
@@ -16,7 +16,6 @@ const DecisionForm = ({ role, onSubmit }) => (
 )
 
 DecisionForm.propTypes = {
-  role: PropTypes.object.isRequired,
   onSubmit: PropTypes.func.isRequired
 }
 

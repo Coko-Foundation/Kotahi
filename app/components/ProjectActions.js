@@ -6,7 +6,7 @@ import './ProjectActions.css'
 
 const ProjectActions = ({ project }) => (
   <div className="project-actions content-metadata">
-    {project.status === 'submitted' && (
+    {project.status === 'submitted' ? (
       <div>
         <div>
           <Link to={`/projects/${project.id}/editor`} className="project-action">assign an editor</Link>
@@ -15,6 +15,10 @@ const ProjectActions = ({ project }) => (
         <div>
           <Link to={`/projects/${project.id}/reviewers`} className="project-action">invite reviewers</Link>
         </div>
+      </div>
+    ) : (
+      <div>
+        <Link to={`/editor/${project.id}`} target="editor" className="project-action">edit your manuscript</Link>
       </div>
     )}
   </div>

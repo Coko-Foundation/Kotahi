@@ -7,8 +7,6 @@ import { updateFragment } from 'pubsweet-client/src/actions/fragments'
 import DeclarationQuestions from '../components/DeclarationQuestions'
 import DeclarationAnswers from '../components/DeclarationAnswers'
 
-import './Declarations.css'
-
 class Declarations extends React.Component {
   submit = declarations => {
     const { project, push, updateFragment, updateCollection } = this.props
