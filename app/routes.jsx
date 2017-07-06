@@ -20,7 +20,7 @@ export default (
 
         <Route path="projects/:project"
                component={chunk(import('./containers/ProjectContainer'))}>
-          <IndexRoute component={chunk(import('./containers/SnapshotsContainer'))}/>
+          <IndexRoute component={chunk(import('./containers/VersionsListContainer'))}/>
 
           <Route path="declarations"
                  component={chunk(import('./containers/DeclarationsContainer'))}/>
@@ -32,7 +32,7 @@ export default (
                  component={chunk(import('./containers/RoleContainer'))}/>
         </Route>
 
-        <Route path="editor/:project/:snapshot"
+        <Route path="editor/:project/:version"
                component={chunk(import('./containers/WaxContainer'))}/>
       </Route>
 

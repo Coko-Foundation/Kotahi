@@ -63,6 +63,8 @@ class ProjectContainer extends React.Component {
             </div>
 
             <div style={{ width: 200 }}>
+              <ProjectActions project={project}/>
+
               {project.roles && (
                 <RolesSummary project={project}/>
               )}

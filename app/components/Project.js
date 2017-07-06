@@ -2,6 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import './Project.css'
 import { Link } from 'react-router'
+import ProjectActions from './ProjectActions'
 
 const Project = ({ children, project }) => (
   <div>

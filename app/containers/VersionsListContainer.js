@@ -4,18 +4,18 @@ import { connect } from 'react-redux'
 import { updateCollection } from 'pubsweet-client/src/actions/collections'
 import { updateFragment } from 'pubsweet-client/src/actions/fragments'
 
-import Snapshots from '../components/Snapshots'
+import VersionsList from '../components/VersionsList'
 
-const SnapshotsContainer = ({ project, snapshots }) => {
+const VersionsListContainer = ({ project, versions }) => {
   if (!project) return null
-  if (!snapshots.length) return null
+  if (!versions.length) return null
 
-  return <Snapshots project={project} snapshots={snapshots}/>
+  return <VersionsList project={project} versions={versions}/>
 }
 
-SnapshotsContainer.propTypes = {
+VersionsListContainer.propTypes = {
   project: PropTypes.object.isRequired,
-  snapshots: PropTypes.array.isRequired,
+  versions: PropTypes.array.isRequired,
   updateCollection: PropTypes.func.isRequired,
   updateFragment: PropTypes.func.isRequired
 }
@@ -24,7 +24,7 @@ export default connect(
   (state, ownProps) => ({
     project: state.collections
       .find(collection => collection.id === ownProps.params.project),
-    snapshots: state.collections
+    versions: state.collections
     // TODO: collection id on fragment instead
       .find(collection => collection.id === ownProps.params.project)
       .fragments.map(id => state.fragments[id])
@@ -35,4 +35,4 @@ export default connect(
     updateCollection,
     updateFragment
   }
-)(SnapshotsContainer)
+)(VersionsListContainer)

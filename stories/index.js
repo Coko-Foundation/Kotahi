@@ -6,12 +6,12 @@ import 'typeface-vollkorn'
 
 import '../app/styles/main.scss'
 
-import { storiesOf } from '@storybook/react'
+import { storiesOf, addDecorator } from '@storybook/react'
 import { action } from '@storybook/addon-actions'
 import { linkTo } from '@storybook/addon-links'
 
 import projects from './data/projects'
-import snapshots from './data/snapshots'
+import versions from './data/versions'
 
 import DeclarationAnswers from '../app/components/DeclarationAnswers'
 import DeclarationQuestions from '../app/components/DeclarationQuestions'
@@ -19,7 +19,7 @@ import Project from '../app/components/Project'
 import ProjectActions from '../app/components/ProjectActions'
 import ProjectList from '../app/components/ProjectList'
 import RolesSummaryItem from '../app/components/RolesSummaryItem'
-import Snapshots from '../app/components/Snapshots'
+import VersionsList from '../app/components/VersionsList'
 import UploadManuscript from '../app/components/UploadManuscript'
 import EditorList from '../app/components/EditorList'
 import EditorForm from '../app/components/EditorForm'
@@ -32,14 +32,27 @@ import Navigation from '../app/components/Navigation'
 
 import Colors from './components/Colors'
 import Fonts from './components/Fonts'
+import { Button } from 'react-bootstrap'
 
-// storiesOf('Welcome', module)
-//   .add('to xpub', () => (
-//     <div>
-//       <p>xpub is a journal publishing system that handles submission and peer review.</p>
-//       <p>Firstly, an author will <a href={linkTo('Login')}>sign in</a> and <a href={linkTo('Upload Manuscript')}>upload a DOCX manuscript file</a>.</p>
-//     </div>
-//   ))
+addDecorator(story => (
+  <div style={{margin: 10}}>{story()}</div>
+))
+
+storiesOf('Welcome', module)
+  .add('to xpub', () => (
+    <div>
+      <p>xpub is a journal publishing system that handles submission and peer review.</p>
+
+      <ul>
+        {/* <li>
+          <Button bsStyle="link" onClick={linkTo('Login')}>sign in</Button>
+        </li> */}
+        <li>
+          <Button bsStyle="link" onClick={linkTo('Upload Manuscript')}>upload a DOCX manuscript file</Button>
+        </li>
+      </ul>
+    </div>
+  ))
 
 const currentUser = {
   id: 'foo',
@@ -52,11 +65,32 @@ storiesOf('Styles', module)
 
 storiesOf('Declarations', module)
   .add('questions', () => (
-    <DeclarationQuestions declarations={projects.submitted.declarations}
-                          save={action('saved')}/>
+    <div>
+      <p>The owner must complete all the declarations before they can submit.</p>
+
+      <DeclarationQuestions declarations={projects.submitted.declarations} save={action('saved')}/>
+
+      <ul>
+        <li>
+          <Button bsStyle="link" onClick={linkTo('Declarations', 'answers')}>view declaration answers</Button>
+        </li>
+      </ul>
+    </div>
   ))
   .add('answers', () => (
-    <DeclarationAnswers declarations={projects.submitted.declarations}/>
+    <div>
+      <p>The declaration answers are displayed.</p>
+
+      <p>Staff must check the submission before it can proceed.</p>
+
+      <DeclarationAnswers declarations={projects.submitted.declarations}/>
+
+      <ul>
+        <li>
+          <Button bsStyle="link" onClick={linkTo('Editors', 'form')}>assign an editor</Button>
+        </li>
+      </ul>
+    </div>
   ))
 
 storiesOf('Decision Form', module)
@@ -69,12 +103,24 @@ storiesOf('Decision Form', module)
 
 storiesOf('Editors', module)
   .add('form', () => (
-    <EditorForm project={projects.submitted}
-                updateCollection={action('update editors')}/>
+    <div>
+      <p>Staff pick one of the journal's editors to manage this submission.</p>
+
+      <p>If enough is known about the editors and the submission, it may be possible to make recommendations.</p>
+
+      <p>The editor must not have any conflicts of interest.</p>
+
+      <EditorForm project={projects.submitted} updateCollection={action('update editors')}/>
+
+      <ul>
+        <li>
+          <Button bsStyle="link" onClick={linkTo('Versions')}>view list of versions</Button>
+        </li>
+      </ul>
+    </div>
   ))
   .add('list', () => (
-    <EditorList project={projects.submitted}
-                roles={projects.submitted.roles.editor}/>
+    <EditorList project={projects.submitted} roles={projects.submitted.roles.editor}/>
   ))
 
 storiesOf('Navigation', module)
@@ -92,20 +138,67 @@ storiesOf('Navigation', module)
 
 storiesOf('Project', module)
   .add('title', () => (
-    <Project project={projects.imported}/>
+    <div>
+      <p>At first, the project only has a title.</p>
+
+      <Project project={projects.imported}/>
+
+      <ul>
+        <li>
+          <Button bsStyle="link" onClick={linkTo('Project Actions')}>view project actions</Button>
+        </li>
+      </ul>
+    </div>
   ))
 
 storiesOf('Project Actions', module)
   .add('for an imported project', () => (
-    <ProjectActions project={projects.imported}/>
+    <div>
+      <p>When a project is first imported, the owner can edit the converted manuscript.</p>
+
+      <p>Once the owner is satisfied with the content, they can submit the manuscript for publication, either with or without peer review.</p>
+
+      <p>In order to do so, they must complete the declarations.</p>
+
+      <ProjectActions project={projects.imported}/>
+
+      <ul>
+        {/* <li>
+          <Button bsStyle="link" onClick={linkTo('ArticleEditor')}>edit manuscript</Button>
+        </li> */}
+        <li>
+          <Button bsStyle="link" onClick={linkTo('Declarations', 'questions')}>edit declarations</Button>
+        </li>
+      </ul>
+    </div>
   ))
   .add('for a submitted project', () => (
-    <ProjectActions project={projects.submitted}/>
+    <div>
+      <p>Once a project has been submitted for peer review, staff will check the submission.</p>
+
+      <p>Once the submission has passed checks, staff will assign an editor, who will then assign reviewers.</p>
+
+      <p>For each revision round, the editor will invite some, all or none of the reviewers to submit a review.</p>
+
+      <p>Each reviewer can accept or decline their invitation. If they accept, they are given a deadline within which they should submit their review.</p>
+
+      <ProjectActions project={projects.submitted}/>
+    </div>
   ))
 
 storiesOf('Project List', module)
   .add('items', () => (
-    <ProjectList projects={projects}/>
+    <div>
+      <p>This is a list of projects, which should be filtered by visibility to the current user.</p>
+
+      <ProjectList projects={Object.values(projects)}/>
+
+      <ul>
+        <li>
+          <Button bsStyle="link" onClick={linkTo('Project')}>view a project</Button>
+        </li>
+      </ul>
+    </div>
   ))
 
 storiesOf('Reviewers', module)
@@ -149,18 +242,42 @@ storiesOf('Roles Summary Item', module)
     }}/>
   ))
 
-storiesOf('Snapshots', module)
+storiesOf('VersionsList', module)
   .add('for an imported project', () => (
-    <Snapshots project={projects.imported} snapshots={snapshots}/>
+    <VersionsList project={projects.imported} versions={versions}/>
   ))
   .add('for a submitted project', () => (
-    <Snapshots project={projects.imported} snapshots={snapshots}/>
+    <VersionsList project={projects.imported} versions={versions}/>
   ))
 
 storiesOf('Upload Manuscript', module)
   .add('dropzone', () => (
-    <UploadManuscript onDrop={action('drop')} ink={{ isFetching: false }}/>
+    <div>
+      <p>This is a dropzone: it receives a dragged file or can be clicked to open the system file picker.</p>
+
+      <p>At this point only a single file is uploaded, enforcing the rule that the manuscript must be a single Word DOCX file including metadata, figures and tables.</p>
+
+      <UploadManuscript onDrop={action('drop')} ink={{ isFetching: false }}/>
+
+      <ul>
+        <li>
+          <Button bsStyle="link" onClick={linkTo('Upload Manuscript', 'converting')}>convert manuscript</Button>
+        </li>
+      </ul>
+    </div>
   ))
   .add('converting', () => (
-    <UploadManuscript onDrop={action('drop')} ink={{ isFetching: true }}/>
+    <div>
+      <p>The manuscript DOCX file is passed to an INK service, which converts it to HTML.</p>
+
+      <p>The new project is then created.</p>
+
+      <UploadManuscript onDrop={action('drop')} ink={{ isFetching: true }}/>
+
+      <ul>
+        <li>
+          <Button bsStyle="link" onClick={linkTo('Project List')}>view created projects</Button>
+        </li>
+      </ul>
+    </div>
   ))

@@ -19,7 +19,7 @@ class Declarations extends React.Component {
       statusDate: Date.now()
     })
 
-    // submit the latest snapshot
+    // submit the latest version
     updateFragment(project, {
       id: project.fragments[0], // TODO: sort, get latest
       submitted: Date.now()

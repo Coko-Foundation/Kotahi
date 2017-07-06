@@ -8,7 +8,7 @@ import './ProjectList.css'
 const ProjectList = ({ projects }) => (
   <div>
     {projects.map(project => (
-      <div className="project-list-item" key={project.id}>
+      <div className="project-list-item content-metadata" key={project.id}>
         <Link to={`/projects/${project.id}`} className="project-list-item-link">
           <div className="project-list-item-inner">
             <div className="project-list-item-status content-metadata">

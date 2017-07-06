@@ -1,6 +1,6 @@
 const path = require('path')
 const Joi = require('joi')
-const permissions = require('../permissions')
+const permissions = require('../permissions/index')
 
 module.exports = {
   'pubsweet-server': {
@@ -42,16 +42,13 @@ module.exports = {
   },
   validations: {
     collection: { // project
-      declarations: Joi.object(),
       events: Joi.object(),
-      files: Joi.object(),
-      metadata: Joi.object(),
       roles: Joi.object(),
-      status: Joi.string().required(),
-      statusDate: Joi.date().timestamp().required(),
+      status: Joi.string().required(), // TODO: use the latest workflow event?
+      statusDate: Joi.date().timestamp().required(), // TODO: use the latest workflow event?
       title: Joi.string().required()
     },
-    fragment: { // snapshot
+    fragment: { // version
       comments: Joi.object(), // wax
       declarations: Joi.object(),
       events: Joi.object(),
@@ -60,6 +57,7 @@ module.exports = {
       metadata: Joi.object(),
       progress: Joi.object(), // wax
       published: Joi.date().timestamp(),
+      roles: Joi.object(),
       source: Joi.string().required(), // wax (TODO: move to file)
       status: Joi.string(),
       submitted: Joi.date().timestamp(),

@@ -60,8 +60,8 @@ class UploadManuscriptContainer extends React.Component {
         }
 
         return createFragment(collection, {
-          type: 'snapshot',
-          version: 1,
+          type: 'version',
+          version: 0,
           source
         })
       }).catch(error => {

@@ -22,22 +22,22 @@ class WaxContainer extends React.Component {
     const { getCollection, getFragment, params } = this.props
 
     getCollection({ id: params.project })
-    getFragment({ id: params.project }, { id: params.snapshot })
+    getFragment({ id: params.project }, { id: params.version })
   }
 
   render () {
-    const { project, snapshot, fileUpload, updateFragment, currentUser } = this.props
+    const { project, version, fileUpload, updateFragment, currentUser } = this.props
 
-    if (!snapshot || !project) return null
+    if (!version || !project) return null
 
     return (
       <SimpleEditor
         book={project}
         fileUpload={fileUpload}
-        fragment={snapshot}
+        fragment={version}
         history={browserHistory}
-        onSave={({ source }) => updateFragment(project, { id: snapshot.id, source })}
-        update={data => updateFragment(project, { id: snapshot.id, ...data })}
+        onSave={({ source }) => updateFragment(project, { id: version.id, source })}
+        update={data => updateFragment(project, { id: version.id, ...data })}
         user={currentUser}
         style={fullscreenStyle}
       />
@@ -53,14 +53,14 @@ WaxContainer.propTypes = {
   currentUser: PropTypes.object,
   params: PropTypes.object.isRequired,
   project: PropTypes.object,
-  snapshot: PropTypes.object
+  version: PropTypes.object
 }
 
 export default connect(
   (state, ownProps) => ({
     currentUser: state.currentUser.isAuthenticated ? state.currentUser.user : null,
     project: state.collections.find(collection => collection.id === ownProps.params.project),
-    snapshot: state.fragments[ownProps.params.snapshot]
+    version: state.fragments[ownProps.params.version]
   }),
   {
     fileUpload,
