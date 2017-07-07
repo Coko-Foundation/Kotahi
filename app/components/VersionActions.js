@@ -2,28 +2,36 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Link } from 'react-router'
 
-import './VersionActions.css'
+import './Actions.css'
 
 const VersionActions = ({ project, version }) => (
-  <div className="version-actions">
-    <div>
-      <Link to={`/editor/${project.id}/${version.id}`} target="editor"
-            className="version-action">{version.submitted ? 'view your manuscript' : 'edit your manuscript'}</Link>
+  <div className="actions">
+    <div className="action">
+      <Link to={`/editor/${project.id}/${version.id}`} target="editor">{version.snapshot ? 'view your manuscript' : 'edit your manuscript'}</Link>
     </div>
 
-    <div>
-      <Link to={`/projects/${project.id}/declarations`}
-            className="version-action">{version.submitted ? 'view declarations' : 'submit for peer review'}</Link>
+    <div className="action">
+      <Link to={`/projects/${project.id}/declarations`}>{version.snapshot ? 'view declarations' : 'edit declarations'}</Link>
     </div>
 
-    <div style={{marginTop: 20}}>
-      <Link to={`/projects/${project.id}/review`}
-            className="version-action">submit your review</Link>
+    <div className="action">
+      <Link to={`/projects/${project.id}/check`}>check submission</Link>
     </div>
 
-    <div>
-      <Link to={`/projects/${project.id}/decision`}
-            className="version-action">submit your decision</Link>
+    <div className="action">
+      <Link to={`/projects/${project.id}/submit`}>submit for peer review</Link>
+    </div>
+
+    <div className="action">
+      <Link to={`/projects/${project.id}/submit`}>publish preprint</Link>
+    </div>
+
+    <div className="action">
+      <Link to={`/projects/${project.id}/review`}>submit your review</Link>
+    </div>
+
+    <div className="action">
+      <Link to={`/projects/${project.id}/decision`}>submit your decision</Link>
     </div>
   </div>
 )
