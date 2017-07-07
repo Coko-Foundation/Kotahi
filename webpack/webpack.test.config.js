@@ -4,7 +4,7 @@ const ThemePlugin = require('pubsweet-theme-plugin')
 const config = require('../config/test')
 const CompressionPlugin = require('compression-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const rules = require('./rules')
+const rules = require('./common-rules')
 
 module.exports = [
   {
@@ -45,13 +45,11 @@ module.exports = [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
-        'process.env': {
-          'NODE_ENV': JSON.stringify('test'),
-          'REDUXLOG_OFF': process.env.REDUXLOG_OFF
-        }
+        'process.env.NODE_ENV': JSON.stringify('test'),
+        'process.env.REDUXLOG_OFF': process.env.REDUXLOG_OFF
       }),
       new webpack.ProvidePlugin({
-        'CONFIG': path.resolve(__dirname, '..', 'config', 'test.js')
+        CONFIG: path.resolve(__dirname, '..', 'config', 'test.js')
       }),
       new CopyWebpackPlugin([
         { from: '../static' }

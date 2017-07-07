@@ -1,17 +1,12 @@
 const path = require('path')
-const config = require('../config/shared.js')
+const components = require('./components')
 
 const modulesPath = path.join(__dirname, '..', 'node_modules')
-
-const include = [
-  new RegExp(path.join(modulesPath, 'pubsweet-*')),
-  new RegExp(path.join(__dirname, '..', 'app'))
-]
 
 module.exports = [
   {
     test: /\.(js|jsx)$/,
-    include,
+    exclude: /node_modules\/(?!pubsweet-)/,
     use: {
       loader: 'babel-loader',
       options: {
@@ -82,7 +77,7 @@ module.exports = [
   },
   {
     test: /\.(css|scss)$/,
-    include: /\.local\.s?css/, // Local styles
+    include: /\.local\.s?css$/, // Local styles
     use: [
       {
         loader: 'style-loader'
@@ -103,16 +98,16 @@ module.exports = [
     ]
   },
   {
-    test: /\.(js|jsx)$/,
-    include,
+    test: /\.(js)$/,
+    enforce: 'pre',
+    exclude: /node_modules\/(?!pubsweet-)/,
     use: {
       loader: 'string-replace-loader',
       options: {
         search: 'PUBSWEET_COMPONENTS',
-        replace: '[' + config.pubsweet.components
-          .filter(name => require(name).frontend)
+        replace: '[' + components.frontend
           .map(component => `require('${component}')`)
-          .join(', ') + ']'
+          .join(', ') + ']' // TODO: move the brackets into pubsweet-client
       }
     }
   }

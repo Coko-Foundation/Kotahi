@@ -3,7 +3,7 @@ const webpack = require('webpack')
 const ThemePlugin = require('pubsweet-theme-plugin')
 const config = require('../config/dev')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const rules = require('./rules')
+const rules = require('./common-rules')
 
 module.exports = [
   {
@@ -35,7 +35,9 @@ module.exports = [
         'node_modules'
       ],
       alias: {
-        joi: 'joi-browser'
+        joi: 'joi-browser',
+        Components: 'app/components',
+        Containers: 'app/containers'
       },
       plugins: [new ThemePlugin(config['pubsweet-client'].theme)],
       extensions: ['.js', '.jsx', '.json', '.scss'],
@@ -45,13 +47,11 @@ module.exports = [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
-        'process.env': {
-          'NODE_ENV': JSON.stringify('dev'),
-          'REDUXLOG_OFF': process.env.REDUXLOG_OFF
-        }
+        'process.env.NODE_ENV': JSON.stringify('dev'),
+        'process.env.REDUXLOG_OFF': process.env.REDUXLOG_OFF
       }),
       new webpack.ProvidePlugin({
-        'CONFIG': path.resolve(__dirname, '..', 'config', 'dev.js')
+        CONFIG: path.resolve(__dirname, '..', 'config', 'dev.js')
       }),
       new CopyWebpackPlugin([
         { from: '../static' }

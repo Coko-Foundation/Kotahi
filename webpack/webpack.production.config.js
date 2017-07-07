@@ -6,7 +6,7 @@ const ThemePlugin = require('pubsweet-theme-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 const config = require('../config/production')
-const rules = require('./rules')
+const rules = require('./common-rules')
 
 module.exports = [
   {
@@ -48,7 +48,7 @@ module.exports = [
         'process.env.NODE_ENV': JSON.stringify('production')
       }),
       new webpack.ProvidePlugin({
-        'CONFIG': path.resolve(__dirname, '..', 'config', 'production.js')
+        CONFIG: path.resolve(__dirname, '..', 'config', 'production.js')
       }),
       new ExtractTextPlugin('styles/main.css'),
       new CopyWebpackPlugin([
