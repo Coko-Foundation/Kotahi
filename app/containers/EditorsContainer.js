@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { updateCollection } from 'pubsweet-client/src/actions/collections'
 import EditorForm from '../components/EditorForm'
 import EditorList from '../components/EditorList'
+import { selectCollection } from '../lib/selectors'
 
 class EditorsContainer extends React.Component {
   render () {
@@ -38,9 +39,7 @@ EditorsContainer.propTypes = {
 
 export default connect(
   (state, ownProps) => ({
-    project: state.collections.find(collection => {
-      return collection.id === ownProps.params.project
-    })
+    project: selectCollection(state, ownProps.params.project)
   }),
   {
     updateCollection

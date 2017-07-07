@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { updateCollection } from 'pubsweet-client/src/actions/collections'
 import ReviewersForm from '../components/ReviewersForm'
 import ReviewersList from '../components/ReviewersList'
+import { selectCollection } from '../lib/selectors'
 
 class ReviewersContainer extends React.Component {
   render () {
@@ -40,9 +41,7 @@ ReviewersContainer.propTypes = {
 export default connect(
   (state, ownProps) => ({
     // FIXME: not updating
-    project: state.collections.find(collection => {
-      return collection.id === ownProps.params.project
-    })
+    project: selectCollection(state, ownProps.params.project)
   }),
   {
     updateCollection

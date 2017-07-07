@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { connect } from 'react-redux'
 import { updateCollection } from 'pubsweet-client/src/actions/collections'
 import { updateFragment } from 'pubsweet-client/src/actions/fragments'
-
+import { selectCollection, selectFragments } from '../lib/selectors'
 import VersionsList from '../components/VersionsList'
 
 const VersionsListContainer = ({ project, versions }) => {
@@ -21,16 +21,13 @@ VersionsListContainer.propTypes = {
 }
 
 export default connect(
-  (state, ownProps) => ({
-    project: state.collections
-      .find(collection => collection.id === ownProps.params.project),
-    versions: state.collections
-    // TODO: collection id on fragment instead
-      .find(collection => collection.id === ownProps.params.project)
-      .fragments.map(id => state.fragments[id])
-      // TODO: there shouldn't be any missing
-      .filter(fragment => fragment)
-  }),
+  (state, ownProps) => {
+    const project = selectCollection(state, ownProps.params.project)
+
+    const versions = selectFragments(state, project.fragments)
+
+    return { project, versions }
+  },
   {
     updateCollection,
     updateFragment

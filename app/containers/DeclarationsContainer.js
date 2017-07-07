@@ -6,6 +6,7 @@ import { updateCollection } from 'pubsweet-client/src/actions/collections'
 import { updateFragment } from 'pubsweet-client/src/actions/fragments'
 import DeclarationQuestions from '../components/DeclarationQuestions'
 import DeclarationAnswers from '../components/DeclarationAnswers'
+import { selectCollection } from '../lib/selectors'
 
 class Declarations extends React.Component {
   submit = declarations => {
@@ -49,9 +50,7 @@ Declarations.propTypes = {
 
 export default connect(
   (state, ownProps) => ({
-    project: state.collections.find(collection => {
-      return collection.id === ownProps.params.project
-    })
+    project: selectCollection(state, ownProps.params.project)
   }),
   {
     push,

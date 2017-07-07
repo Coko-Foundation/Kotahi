@@ -5,6 +5,7 @@ import { ucfirst } from '../lib/text'
 import ReviewerInvitationForm from '../components/ReviewerInvitationForm'
 import DecisionForm from '../components/DecisionForm'
 import ReviewForm from '../components/ReviewForm'
+import { selectCollection } from '../lib/selectors'
 
 class RoleContainer extends React.Component {
   render () {
@@ -39,9 +40,7 @@ RoleContainer.propTypes = {
 
 export default connect(
   (state, ownProps) => {
-    const project = state.collections.find(collection => {
-      return collection.id === ownProps.params.project
-    })
+    const project = selectCollection(state, ownProps.params.project)
 
     const { roleType } = ownProps.params
 

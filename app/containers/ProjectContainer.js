@@ -7,6 +7,8 @@ import { getFragments } from 'pubsweet-client/src/actions/fragments'
 import Project from '../components/Project'
 import RemoveProject from '../components/RemoveProject'
 import RolesSummary from '../components/RolesSummary'
+import ProjectActions from '../components/ProjectActions'
+import { selectCollection } from '../lib/selectors'
 
 class ProjectContainer extends React.Component {
   componentDidMount () {
@@ -88,9 +90,7 @@ ProjectContainer.propTypes = {
 
 export default connect(
   (state, ownProps) => ({
-    project: state.collections.find(collection => {
-      return collection.id === ownProps.params.project
-    })
+    project: selectCollection(state, ownProps.params.project)
   }),
   {
     getFragments,

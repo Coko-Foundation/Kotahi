@@ -6,6 +6,7 @@ import { fileUpload } from 'pubsweet-client/src/actions/fileUpload'
 import { getCollection } from 'pubsweet-client/src/actions/collections'
 import { getFragment, updateFragment } from 'pubsweet-client/src/actions/fragments'
 import SimpleEditor from 'pubsweet-component-wax/src/SimpleEditor'
+import { selectCollection, selectCurrentUser } from '../lib/selectors'
 
 const fullscreenStyle = {
   position: 'fixed',
@@ -58,8 +59,8 @@ WaxContainer.propTypes = {
 
 export default connect(
   (state, ownProps) => ({
-    currentUser: state.currentUser.isAuthenticated ? state.currentUser.user : null,
-    project: state.collections.find(collection => collection.id === ownProps.params.project),
+    currentUser: selectCurrentUser(state),
+    project: selectCollection(state, ownProps.params.project),
     version: state.fragments[ownProps.params.version]
   }),
   {

@@ -4,6 +4,7 @@ import UpdateSubscriber from 'pubsweet-client/src/components/UpdateSubscriber'
 import { connect } from 'react-redux'
 import { logoutUser } from 'pubsweet-component-login/actions'
 import Navigation from '../components/Navigation'
+import { selectCurrentUser } from '../lib/selectors'
 
 const NavigationContainer = ({ logoutUser, currentUser }) => (
   <Navigation appName="xpub" // TODO: make configurable
@@ -20,7 +21,7 @@ NavigationContainer.propTypes = {
 
 export default connect(
   state => ({
-    currentUser: state.currentUser.isAuthenticated ? state.currentUser.user : null
+    currentUser: selectCurrentUser(state)
   }),
   {
     logoutUser

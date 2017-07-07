@@ -6,6 +6,7 @@ import { createFragment } from 'pubsweet-client/src/actions/fragments'
 import { ink as convertToHTML } from 'pubsweet-component-ink-frontend/actions'
 import uuid from 'uuid'
 import UploadManuscript from '../components/UploadManuscript'
+import { selectCurrentUser } from '../lib/selectors'
 
 const generateTitle = (name) => {
   return name
@@ -82,12 +83,12 @@ UploadManuscriptContainer.propTypes = {
   convertToHTML: PropTypes.func.isRequired,
   createCollection: PropTypes.func.isRequired,
   createFragment: PropTypes.func.isRequired,
-  ink: PropTypes.func.isRequired
+  ink: PropTypes.object.isRequired
 }
 
 export default connect(
   state => ({
-    currentUser: state.currentUser.isAuthenticated ? state.currentUser.user : null,
+    currentUser: selectCurrentUser(state),
     ink: state.ink
   }),
   {
