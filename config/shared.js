@@ -5,7 +5,7 @@ const permissions = require('../permissions/index')
 module.exports = {
   'pubsweet-server': {
     dbPath: path.join(__dirname, '..', 'api', 'db'),
-    API_ENDPOINT: '/api'
+    API_ENDPOINT: 'http://localhost:3000/api'
   },
   'pubsweet-client': {
     'login-redirect': '/'
