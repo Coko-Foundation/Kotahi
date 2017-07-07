@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import VersionActions from './VersionActions'
 import * as date from '../lib/date'
 import * as sort from '../lib/sort'
-import '../components/Versions.css'
+import './VersionsList.css'
 
 const sortByVersion = sort.descending('version')
 

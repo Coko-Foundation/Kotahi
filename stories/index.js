@@ -15,6 +15,7 @@ import versions from './data/versions'
 
 import DeclarationAnswers from '../app/components/DeclarationAnswers'
 import DeclarationQuestions from '../app/components/DeclarationQuestions'
+import EventsList from '../app/components/EventsList'
 import Project from '../app/components/Project'
 import ProjectActions from '../app/components/ProjectActions'
 import ProjectList from '../app/components/ProjectList'
@@ -121,6 +122,14 @@ storiesOf('Editors', module)
   ))
   .add('list', () => (
     <EditorList project={projects.submitted} roles={projects.submitted.roles.editor}/>
+  ))
+
+storiesOf('Events List', module)
+  .add('project', () => (
+    <div>
+      <EventsList project={projects.submitted}
+                  events={projects.submitted.events}/>
+    </div>
   ))
 
 storiesOf('Navigation', module)

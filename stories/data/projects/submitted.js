@@ -38,5 +38,35 @@ export default {
       }
     }
   },
-  declarations: {}
+  declarations: {
+    human: false,
+    newTaxon: false,
+    financialDisclosure: 'There were no financial conflicts'
+  },
+  events: [
+    {
+      id: 'event-1',
+      type: 'created',
+      date: '2017-06-01T12:00:00Z',
+      user: {
+        id: 'user-foo',
+        username: 'foo' // TODO: populate this later?
+      }
+    },
+    {
+      id: 'event-2',
+      type: 'title:update',
+      date: '2017-06-01T13:00:00Z',
+      user: {
+        id: 'user-foo',
+        username: 'foo'
+      },
+      changes: {
+        title: {
+          from: 'The old title',
+          to: 'The new title'
+        }
+      }
+    }
+  ]
 }
