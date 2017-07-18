@@ -3,8 +3,7 @@ import PropTypes from 'prop-types'
 import UpdateSubscriber from 'pubsweet-client/src/components/UpdateSubscriber'
 import { connect } from 'react-redux'
 import { logoutUser } from 'pubsweet-component-login/actions'
-import Navigation from '../components/Navigation'
-import { selectCurrentUser } from '../lib/selectors'
+import Navigation from './Navigation'
 
 const NavigationContainer = ({ logoutUser, currentUser }) => (
   <Navigation appName="xpub" // TODO: make configurable
@@ -18,6 +17,10 @@ NavigationContainer.propTypes = {
   currentUser: PropTypes.object,
   logoutUser: PropTypes.func.isRequired
 }
+
+const selectCurrentUser = (state) => state.currentUser.isAuthenticated
+  ? state.currentUser.user
+  : null
 
 export default connect(
   state => ({

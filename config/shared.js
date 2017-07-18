@@ -24,15 +24,7 @@ module.exports = {
     }
   },
   pubsweet: {
-    components: [
-      'pubsweet-component-signup',
-      'pubsweet-component-login',
-      'pubsweet-component-password-reset-frontend',
-      'pubsweet-component-password-reset-backend',
-      'pubsweet-component-ink-frontend',
-      'pubsweet-component-ink-backend',
-      'pubsweet-component-wax'
-    ]
+    components: require('./components.json')
   },
   'pubsweet-component-ink-backend': {
     inkEndpoint: process.env.INK_ENDPOINT || 'http://ink-api.coko.foundation',
@@ -42,6 +34,7 @@ module.exports = {
   },
   validations: {
     collection: { // project
+      declarations: Joi.object(),
       events: Joi.object(),
       roles: Joi.object(),
       status: Joi.string().required(), // TODO: use the latest workflow event?

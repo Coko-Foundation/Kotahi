@@ -35,9 +35,7 @@ module.exports = [
         'node_modules'
       ],
       alias: {
-        joi: 'joi-browser',
-        Components: 'app/components',
-        Containers: 'app/containers'
+        joi: 'joi-browser'
       },
       plugins: [new ThemePlugin(config['pubsweet-client'].theme)],
       extensions: ['.js', '.jsx', '.json', '.scss'],

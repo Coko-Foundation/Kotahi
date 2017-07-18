@@ -2,8 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Nav, Navbar, NavbarBrand, NavItem } from 'react-bootstrap'
 
-import './Navigation.css'
-
 const Navigation = ({ appLink, appName, logout, currentUser, updateSubscriber }) => (
   <Navbar fluid fixedTop style={{ minHeight: 0 }}>
     <Navbar.Header>

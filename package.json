@@ -8,27 +8,26 @@
   },
   "dependencies": {
     "font-awesome": "^4.7.0",
-    "formsy-react": "^0.19.2",
-    "formsy-react-components": "^0.10.1",
     "joi": "^10.4.1",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "prop-types": "^15.5.10",
-    "pubsweet-client": "^0.10.0",
-    "pubsweet-component-ink-backend": "^0.0.9",
-    "pubsweet-component-ink-frontend": "^0.0.5",
-    "pubsweet-component-login": "^0.2.6",
-    "pubsweet-component-password-reset-backend": "^0.0.3",
-    "pubsweet-component-password-reset-frontend": "^0.0.3",
-    "pubsweet-component-signup": "^0.1.5",
-    "pubsweet-component-wax": "git+https://gitlab.coko.foundation/editoria/wax-pubsweet.git",
+    "pubsweet-client": "^1.0.0-alpha.1",
+    "pubsweet-component-ink-backend": "0.0.10",
+    "pubsweet-component-ink-frontend": "^0.1.0",
+    "pubsweet-component-login": "^0.3.0",
+    "pubsweet-component-password-reset-backend": "^0.1.0",
+    "pubsweet-component-password-reset-frontend": "^0.1.0",
+    "pubsweet-component-signup": "^0.2.0",
+    "pubsweet-component-wax": "0.0.2",
+    "pubsweet-component-xpub-dashboard": "*",
+    "pubsweet-component-xpub-submission": "*",
     "pubsweet-fira": "^0.0.3",
-    "pubsweet-server": "^0.9.3",
+    "pubsweet-server": "^1.0.0-alpha.1",
     "pubsweet-theme-plugin": "^0.0.1",
     "react": "^15.4.4",
     "react-bootstrap": "^0.31.0",
     "react-dom": "^15.5.4",
-    "react-dropzone": "^3.13.3",
     "react-loadable": "^4.0.3",
     "react-redux": "^5.0.2",
     "react-router": "^3.0.5",
@@ -36,12 +35,10 @@
     "react-router-redux": "^4.0.7",
     "redux": "^3.6.0",
     "redux-logger": "^3.0.1",
-    "typeface-fira-sans-condensed": "^0.0.29",
-    "typeface-vollkorn": "^0.0.29",
-    "uuid": "^3.1.0"
+    "typeface-fira-sans-condensed": "0.0.31",
+    "typeface-vollkorn": "0.0.31"
   },
   "devDependencies": {
-    "@storybook/react": "^3.1.7",
     "app-module-path": "^2.2.0",
     "babel-core": "^6.14.0",
     "babel-eslint": "^7.2.3",
@@ -75,9 +72,5 @@
     "webpack": "^2.6.1",
     "webpack-dev-middleware": "^1.10.2",
     "webpack-hot-middleware": "^2.18.1"
-  },
-  "scripts": {
-    "storybook": "start-storybook -p 6006",
-    "build-storybook": "build-storybook"
   }
 }

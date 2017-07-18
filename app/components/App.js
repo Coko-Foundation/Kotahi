@@ -1,11 +1,13 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import NavigationContainer from '../containers/NavigationContainer'
+import NavigationContainer from './NavigationContainer'
 
 const App = ({ children }) => (
   <div>
     <NavigationContainer/>
-    {children}
+    <div style={{marginTop: 50}}>
+      {children}
+    </div>
   </div>
 )
 
