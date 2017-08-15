@@ -8,7 +8,8 @@ module.exports = {
     API_ENDPOINT: 'http://localhost:3000/api'
   },
   'pubsweet-client': {
-    'login-redirect': '/'
+    'login-redirect': '/',
+    theme: process.env.PUBSWEET_THEME
   },
   'mail-transport': {
     sendmail: true
