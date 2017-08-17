@@ -1,0 +1,12 @@
+{
+  "name": "xpub-fonts",
+  "version": "0.0.2",
+  "description": "Fonts for use in xpub clients",
+  "main": "src",
+  "license": "MIT",
+  "dependencies": {
+    "pubsweet-fira": "^0.0.3",
+    "typeface-fira-sans-condensed": "^0.0.35",
+    "typeface-vollkorn": "^0.0.35"
+  }
+}

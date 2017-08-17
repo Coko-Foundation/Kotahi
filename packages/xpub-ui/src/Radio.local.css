@@ -1,0 +1,13 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.root:not(:last-child) {
+  margin-right: 1rem;
+}
+
+.input {
+  margin-right: 0.25rem;
+}

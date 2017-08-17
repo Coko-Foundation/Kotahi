@@ -1,0 +1,16 @@
+.root {
+  display: flex;
+  justify-content: space-between;
+}
+
+.link {
+  color: cornflowerblue;
+}
+
+.link:hover {
+  text-decoration: underline;
+}
+
+.item {
+  padding: 1rem;
+}

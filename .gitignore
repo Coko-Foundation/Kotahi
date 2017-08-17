@@ -1,5 +1,3 @@
-api
-logs
-node_modules
+*.log
+.env
 .env.*
-_build
