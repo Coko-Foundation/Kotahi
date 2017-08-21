@@ -1,3 +1,3 @@
-require('typeface-fira-sans-condensed')
-require('typeface-vollkorn')
-require('pubsweet-fira')
+import 'typeface-fira-sans-condensed'
+import 'typeface-vollkorn'
+import 'pubsweet-fira'
