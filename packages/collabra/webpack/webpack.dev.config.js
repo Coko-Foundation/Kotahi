@@ -1,12 +1,12 @@
-process.env.NODE_ENV = "development"
-process.env.BABEL_ENV = "development"
+process.env.NODE_ENV = 'development'
+process.env.BABEL_ENV = 'development'
 
 const path = require('path')
 const webpack = require('webpack')
 const ThemePlugin = require('pubsweet-theme-plugin')
-const config = require('../config/dev')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const rules = require('./common-rules')
+const config = require('../config/dev')
 
 module.exports = [
   {
@@ -16,8 +16,8 @@ module.exports = [
     context: path.join(__dirname, '..', 'app'),
     entry: {
       app: [
-        'react-hot-loader/patch',
-        'webpack-hot-middleware/client',
+        // 'react-hot-loader/patch',
+        // 'webpack-hot-middleware/client',
         './app'
       ]
     },
@@ -32,9 +32,10 @@ module.exports = [
     },
     resolve: {
       // symlinks: false,
-      modules: [ // needed for resolving app/routes
-        path.resolve(__dirname, '..'),
-        path.resolve(__dirname, '..', 'node_modules'),
+      modules: [
+        path.resolve(__dirname, '..'), // needed for resolving app/routes
+        path.resolve(__dirname, '../node_modules'),
+        path.resolve(__dirname, '../../../node_modules'),
         'node_modules'
       ],
       alias: {

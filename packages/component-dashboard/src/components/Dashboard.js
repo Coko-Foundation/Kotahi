@@ -14,8 +14,8 @@ const Dashboard = ({ projects, createProject, createVersion, convertToHTML, isCo
 
     {projects.map(project => (
       <DashboardItem
-        className={classes.item}
         key={project.id}
+        className={classes.item}
         project={project}/>
     ))}
   </div>
