@@ -2,7 +2,7 @@ Note: xpub is still _very_ new. This repository contains an initial set of compo
 
 ## Installing
 
-In the root directory, run `npm install` then `npm run hoist` to install all the dependencies.
+In the root directory, run `npm install` then `npm run bootstrap` to install all the dependencies.
 
 ## Contents
 
