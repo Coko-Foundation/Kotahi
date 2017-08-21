@@ -19,7 +19,7 @@ import ManuscriptPage from 'pubsweet-component-xpub-manuscript/src/components'
 
 export default (
   <Route>
-    <Redirect from="/" to="/projects"/>
+    <Redirect from="/" to="/dashboard"/>
 
     <Route path="/" component={App}>
       <Route component={AuthenticatedPage}>
