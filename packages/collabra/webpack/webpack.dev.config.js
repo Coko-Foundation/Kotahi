@@ -1,12 +1,7 @@
-process.env.NODE_ENV = 'development'
-process.env.BABEL_ENV = 'development'
-
 const path = require('path')
 const webpack = require('webpack')
-const ThemePlugin = require('pubsweet-theme-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const rules = require('./common-rules')
-const config = require('../config/dev')
 
 module.exports = [
   {
@@ -16,8 +11,8 @@ module.exports = [
     context: path.join(__dirname, '..', 'app'),
     entry: {
       app: [
-        // 'react-hot-loader/patch',
-        // 'webpack-hot-middleware/client',
+        'react-hot-loader/patch',
+        'webpack-hot-middleware/client',
         './app'
       ]
     },
@@ -41,13 +36,10 @@ module.exports = [
       alias: {
         joi: 'joi-browser'
       },
-      plugins: [
-        new ThemePlugin(config['pubsweet-client'].theme)
-      ],
       extensions: ['.js', '.jsx'],
     },
     plugins: [
-      // new webpack.HotModuleReplacementPlugin(),
+      new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('dev'),

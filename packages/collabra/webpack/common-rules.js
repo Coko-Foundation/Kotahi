@@ -43,8 +43,9 @@ module.exports = [
         loader: 'babel-loader',
         options: {
           presets: [
-            'env',
-            'react-app'
+            ['env', { modules: false }],
+            'react',
+            'stage-2'
           ],
           plugins: [
             'react-hot-loader/babel',
