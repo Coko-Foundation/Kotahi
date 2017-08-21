@@ -4,7 +4,7 @@ import { compose, withContext } from 'recompose'
 import { connect } from 'react-redux'
 import { AppBar } from 'xpub-ui'
 import { selectCurrentUser } from 'xpub-selectors'
-import { actions } from 'pubsweet-client'
+import actions from 'pubsweet-client/src/actions'
 import classes from './App.local.css'
 import * as journal from '../config/journal'
 

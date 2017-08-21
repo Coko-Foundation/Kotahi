@@ -1,6 +1,6 @@
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
-import { actions } from 'pubsweet-client'
+import actions from 'pubsweet-client/src/actions'
 import { selectCurrentUser, selectCollection, selectFragment } from 'xpub-selectors'
 import Manuscript from './Manuscript'
 

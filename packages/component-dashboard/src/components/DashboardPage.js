@@ -1,7 +1,7 @@
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import { orderBy } from 'lodash'
-import { actions } from 'pubsweet-client'
+import actions from 'pubsweet-client/src/actions'
 import { selectCurrentUser } from 'xpub-selectors'
 import { ink } from 'pubsweet-component-ink-frontend/actions'
 import Dashboard from './Dashboard'

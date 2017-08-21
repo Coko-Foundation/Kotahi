@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
-import { actions } from 'pubsweet-client'
+import actions from 'pubsweet-client/src/actions'
 import { withRouter } from 'react-router'
 
 class AuthenticatedPage extends React.Component {
