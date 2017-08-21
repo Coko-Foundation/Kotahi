@@ -31,7 +31,7 @@ module.exports = [
       rules
     },
     resolve: {
-      // symlinks: false,
+      symlinks: false, // needed so that babel doesn't look for plugins in components
       modules: [
         path.resolve(__dirname, '..'), // needed for resolving app/routes
         path.resolve(__dirname, '../node_modules'),
@@ -47,7 +47,7 @@ module.exports = [
       extensions: ['.js', '.jsx'],
     },
     plugins: [
-      new webpack.HotModuleReplacementPlugin(),
+      // new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify('dev'),
