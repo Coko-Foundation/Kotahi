@@ -8,9 +8,7 @@ module.exports = {
   entry: './src/index.js',
   output: {
     filename: 'index.js',
-    path: path.join(__dirname, 'dist'),
-    library: 'xpub-ui',
-    libraryTarget: 'commonjs2'
+    path: path.join(__dirname, 'dist')
   },
   devtool: 'cheap-module-source-map',
   externals: [nodeExternals({

@@ -14,10 +14,11 @@ module.exports = {
     libraryTarget: 'commonjs2'
   },
   devtool: 'cheap-module-source-map',
-  externals: [nodeExternals({
-    whitelist: [/\.(?!js$).{1,5}$/i]
-  })],
+  // externals: [nodeExternals({
+  //   whitelist: [/\.(?!js$).{1,5}$/i]
+  // })],
   resolve: {
+    symlinks: false, // needed to prevent babel looking in other folders
     extensions: ['.js', '.jsx'], // needed because pubsweet-component-wax uses jsx
   },
   module: {
@@ -29,11 +30,12 @@ module.exports = {
             include: [
               path.join(__dirname, 'src'),
               /pubsweet-[^/]+\/src/,
+              /xpub-[^/]+\/src/,
             ],
             loader: 'babel-loader',
             options: {
               presets: [
-                'minify',
+                // 'minify',
                 ['env', { modules: false }],
                 'react',
                 'stage-2'
@@ -44,6 +46,11 @@ module.exports = {
           // CSS modules
           {
             test: /\.local\.css$/,
+            include: [
+              path.join(__dirname, 'src'),
+              /pubsweet-[^/]+\/src/,
+              /xpub-[^/]+\/src/,
+            ],
             use: [
               'style-loader',
               {
