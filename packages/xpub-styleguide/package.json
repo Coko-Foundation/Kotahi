@@ -1,22 +1,18 @@
 {
-  "name": "xpub-ui",
+  "name": "xpub-styleguide",
   "version": "0.0.2",
   "files": [
-    "docs",
-    "dist",
-    "src"
+    "src",
+    "dist"
   ],
   "main": "src",
-  "jsnext:main": "src",
   "dependencies": {
-    "classnames": "^2.2.5",
-    "prop-types": "^15.5.10",
+    "xpub-fonts": "^0.0.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "react-redux": "^5.0.6",
-    "react-router": "^3.0.5",
+    "react-redux": "^5.0.2",
     "redux": "^3.6.0",
-    "xpub-fonts": "^0.0.2"
+    "redux-form": "^7.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -26,17 +22,13 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "css-loader": "^0.28.4",
-    "faker": "^4.1.0",
-    "file-loader": "^0.11.2",
-    "xpub-styleguide": "^0.0.2",
-    "react-styleguidist": "^6.0.8",
+    "eslint": "^4.4.1",
+    "rimraf": "^2.6.1",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.5",
     "webpack-node-externals": "^1.6.0"
   },
   "scripts": {
-    "styleguide": "styleguidist server",
-    "styleguide:build": "styleguidist build",
     "clean": "rimraf dist",
     "lint": "eslint src",
     "prebuild": "npm run clean && npm run lint",

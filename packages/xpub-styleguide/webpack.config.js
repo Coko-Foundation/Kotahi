@@ -9,7 +9,7 @@ module.exports = {
   output: {
     filename: 'index.js',
     path: path.join(__dirname, 'dist'),
-    library: 'xpub-ui',
+    library: 'xpub-styleguide',
     libraryTarget: 'commonjs2'
   },
   devtool: 'cheap-module-source-map',
@@ -28,7 +28,6 @@ module.exports = {
             test: /\.js$/,
             include: [
               path.join(__dirname, 'src'),
-              /xpub-[^/]+\/src/,
             ],
             loader: 'babel-loader',
             options: {
@@ -46,7 +45,6 @@ module.exports = {
             test: /\.local\.css$/,
             include: [
               path.join(__dirname, 'src'),
-              /xpub-[^/]+\/src/,
             ],
             use: [
               'style-loader',
@@ -57,24 +55,6 @@ module.exports = {
                 }
               }
             ],
-          },
-
-          // CSS
-          {
-            test: /\.css$/,
-            use: [
-              'style-loader',
-              'css-loader'
-            ],
-          },
-
-          // Files
-          {
-            exclude: [/\.js$/, /\.html$/, /\.json$/],
-            loader: 'file-loader',
-            options: {
-              name: 'static/media/[name].[hash:8].[ext]',
-            }
           }
         ]
       }

@@ -10,6 +10,7 @@
   ],
   "dependencies": {
     "classnames": "^2.2.5",
+    "lodash": "^4.17.4",
     "pubsweet-component-ink-frontend": "^0.1.0",
     "react-dropzone": "^3.13.3",
     "react-moment": "^0.6.1",

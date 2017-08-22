@@ -1,14 +1,12 @@
 const styleguideComponents = require('xpub-styleguide')
 
 module.exports = {
-  title: 'xpub-ui style guide',
+  title: 'xpub authentication style guide',
   styleguideComponents,
-  context: {
-    faker: 'faker',
-  },
   components: './src/*.js',
   skipComponentsWithoutExample: true,
   webpackConfig: require('./webpack.config.js'),
+  serverPort: 6061,
   theme: {
     fontFamily: {
       base: '"Fira Sans", sans-serif'
@@ -16,15 +14,5 @@ module.exports = {
     color: {
       link: 'cornflowerblue'
     }
-  },
-  sections: [
-    {
-      name: 'Atoms',
-      components: 'src/atoms/*.js'
-    },
-    {
-      name: 'Molecules',
-      components: 'src/molecules/*.js'
-    }
-  ]
+  }
 }

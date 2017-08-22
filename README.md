@@ -13,8 +13,8 @@ Note: this monorepo uses Lerna, which works best with npm v4 when linking unpubl
 * `component-app`: a PubSweet component that provides an app container with nav bar.
 * `component-authentication`: a PubSweet component that provides authentication-related client pages.
 * `component-dashboard`: a PubSweet component that provides a Dashboard page.
-* `component-submit`: a PubSweet component that provides a Submit page.
 * `component-manuscript`: a PubSweet component that provides a Manuscript page.
+* `component-submit`: a PubSweet component that provides a Submit page.
 
 ## PubSweet applications
 
@@ -24,5 +24,6 @@ Note: this monorepo uses Lerna, which works best with npm v4 when linking unpubl
 
 * `xpub-fonts`: fonts for use in xpub applications
 * `xpub-selectors`: some useful redux selectors
+* `xpub-styleguide`: components for use in react-styleguidist
 * `xpub-ui`: a library of user interface elements for use in PubSweet components.
 

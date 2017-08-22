@@ -1,5 +1,4 @@
 import React from 'react'
-// import { Router, createMemoryHistory } from 'react-router'
 import { Provider } from 'react-redux'
 import { reducer as formReducer } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
@@ -20,15 +19,5 @@ const Wrapper = ({ children }) => (
     </div>
   </Provider>
 )
-
-/*const Wrapper = ({ children }) => (
-  <Provider store={store}>
-    <Router history={createMemoryHistory()}>
-      <div className={classes.root}>
-        {children}
-      </div>
-    </Router>
-  </Provider>
-)*/
 
 export default Wrapper

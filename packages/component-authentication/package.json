@@ -9,7 +9,35 @@
     "dist"
   ],
   "dependencies": {
-    "xpub-ui": "^0.0.2"
+    "classnames": "^2.2.5",
+    "prop-types": "^15.5.10",
+    "pubsweet-client": "^1.0.0-alpha.1",
+    "pubsweet-component-login": "^0.3.0",
+    "pubsweet-component-signup": "^0.2.0",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.6",
+    "react-router": "^3.0.5",
+    "react-router-redux": "^4.0.7",
+    "recompose": "^0.25.0",
+    "redux": "^3.6.0",
+    "redux-form": "^7.0.3"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-minify": "^0.2.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "css-loader": "^0.28.4",
+    "faker": "^4.1.0",
+    "file-loader": "^0.11.2",
+    "xpub-styleguide": "^0.0.2",
+    "react-styleguidist": "^6.0.8",
+    "style-loader": "^0.18.2",
+    "webpack": "^3.5.5",
+    "webpack-node-externals": "^1.6.0"
   },
   "peerDependencies": {
     "prop-types": "^15.5.10",
@@ -19,5 +47,9 @@
     "react-redux": "^5.0.2",
     "react-router": "^3.0.5",
     "react-router-redux": "^4.0.7"
+  },
+  "scripts": {
+    "styleguide": "styleguidist server",
+    "styleguide:build": "styleguidist build"
   }
 }
