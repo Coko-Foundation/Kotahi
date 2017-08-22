@@ -1,1 +1,1 @@
-module.exports = require('./ManuscriptPage')
+export { default } from './ManuscriptPage'

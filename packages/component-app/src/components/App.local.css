@@ -1,0 +1,11 @@
+.root {
+  font-family: "Fira Sans", sans-serif;
+}
+
+.root a {
+  text-decoration: none;
+}
+
+.main {
+  margin-top: 50px;
+}

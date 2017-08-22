@@ -20,4 +20,14 @@ module.exports = {
       link: 'cornflowerblue'
     }
   },
+  sections: [
+    {
+      name: 'Atoms',
+      components: 'src/atoms/*.js'
+    },
+    {
+      name: 'Molecules',
+      components: 'src/molecules/*.js'
+    }
+  ]
 }

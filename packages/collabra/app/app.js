@@ -1,24 +1,15 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { Provider } from 'react-redux'
 import { AppContainer } from 'react-hot-loader'
-import { Router, browserHistory } from 'react-router'
-import { syncHistoryWithStore } from 'react-router-redux'
-import { configureStore } from 'pubsweet-client'
+import Root from './Root'
 import routes from './routes'
+import * as journal from './config/journal'
 import 'xpub-fonts'
-
-const store = configureStore(browserHistory, {})
-const history = syncHistoryWithStore(browserHistory, store)
 
 const render = routes => {
   ReactDOM.render(
     <AppContainer>
-      <Provider store={store}>
-        <Router history={history}>
-          {routes}
-        </Router>
-      </Provider>
+      <Root routes={routes} journal={journal}/>
     </AppContainer>,
     document.getElementById('root')
   )

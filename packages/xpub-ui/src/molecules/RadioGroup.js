@@ -1,5 +1,5 @@
 import React from 'react'
-import Radio from './Radio'
+import Radio from '../atoms/Radio'
 
 const RadioGroup = ({ name, value, options, required, handleChange }) => (
   <div>

@@ -1,1 +1,1 @@
-module.exports = require('./SubmitPage')
+export { default } from './SubmitPage'
