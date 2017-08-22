@@ -13,7 +13,7 @@ const options = [
   }
 ]
 
-const YesOrNo = (name, value, handleChange) => (
+const YesOrNo = ({ name, value, handleChange }) => (
   <RadioGroup
     className={classes.root}
     name={name}
