@@ -1,12 +1,12 @@
-const styleguideComponents = require('xpub-styleguide')
-
 module.exports = {
   title: 'xpub-ui style guide',
-  styleguideComponents,
+  styleguideComponents: {
+    StyleGuideRenderer: require.resolve('xpub-styleguide/src/components/StyleGuideRenderer'),
+    Wrapper: require.resolve('xpub-styleguide/src/components/Wrapper')
+  },
   context: {
     faker: 'faker',
   },
-  components: './src/*.js',
   skipComponentsWithoutExample: true,
   webpackConfig: require('./webpack.config.js'),
   theme: {
