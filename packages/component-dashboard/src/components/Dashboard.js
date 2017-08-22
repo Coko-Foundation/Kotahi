@@ -2,6 +2,8 @@ import React from 'react'
 import classes from './Dashboard.local.css'
 import UploadManuscript from './UploadManuscript'
 import DashboardItem from './DashboardItem'
+import EmptySubmissions from './EmptySubmissions'
+import DashboardSection from './DashboardSection'
 
 const Dashboard = ({ projects, createProject, createVersion, convertToHTML, isConverting }) => (
   <div className={classes.root}>
@@ -12,16 +14,17 @@ const Dashboard = ({ projects, createProject, createVersion, convertToHTML, isCo
         convertToHTML={convertToHTML}/>
     </div>
 
-    <div className={classes.projects}>
-      <div className={classes.heading}>
-        {projects.map(project => (
-          <DashboardItem
-            key={project.id}
-            className={classes.item}
-            project={project}/>
-        ))}
-      </div>
-    </div>
+    <DashboardSection
+      heading="My Submissions"
+      items={projects}
+      empty={EmptySubmissions}>
+      {projects.map(project => (
+        <DashboardItem
+          key={project.id}
+          className={classes.item}
+          project={project}/>
+      ))}
+    </DashboardSection>
   </div>
 )
 
