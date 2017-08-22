@@ -20,7 +20,8 @@
   "scripts": {
     "bootstrap": "lerna bootstrap --concurrency=1",
     "hoist": "lerna bootstrap --hoist --concurrency=1",
-    "clean": "lerna clean"
+    "clean": "lerna clean",
+    "styleguide": "lerna run styleguide"
   },
   "engines": {
     "node": ">=7.9"
