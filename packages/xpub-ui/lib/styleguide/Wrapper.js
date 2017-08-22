@@ -5,16 +5,7 @@ import { reducer as formReducer } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
 
 import 'xpub-fonts'
-import './Wrapper.scss'
 import classes from './Wrapper.local.css'
-
-/*const Wrapper = ({ children }) => (
-  <Router history={createMemoryHistory()}>
-    <div className={classes.root}>
-      {children}
-    </div>
-  </Router>
-)*/
 
 const rootReducer = combineReducers({
   form: formReducer
@@ -29,5 +20,15 @@ const Wrapper = ({ children }) => (
     </div>
   </Provider>
 )
+
+/*const Wrapper = ({ children }) => (
+  <Provider store={store}>
+    <Router history={createMemoryHistory()}>
+      <div className={classes.root}>
+        {children}
+      </div>
+    </Router>
+  </Provider>
+)*/
 
 export default Wrapper
