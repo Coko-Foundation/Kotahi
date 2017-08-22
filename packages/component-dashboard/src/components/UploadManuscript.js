@@ -75,15 +75,15 @@ class UploadManuscript extends React.Component {
         accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
         className={classes.dropzone}>
         <div className={classes.main}>
-          <div className={classnames(classes.icon, {
+          <div className={classnames({
             [classes.converting]: converting,
             [classes.complete]: complete
           })}>
-            <span>+</span>
+            <span className={classes.icon}>+</span>
           </div>
 
           <div className={classes.info}>
-            {error ? error : 'Start a new submission'}
+            {error ? error : 'Create submission'}
           </div>
         </div>
       </Dropzone>

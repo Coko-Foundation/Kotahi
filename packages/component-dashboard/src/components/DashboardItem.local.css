@@ -1,0 +1,34 @@
+.root {
+  display: flex;
+  align-items: center;
+}
+
+.indicator {
+  fill: blue;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+.title {
+  display: flex;
+  font-family: Vollkorn, serif;
+  font-size: 120%;
+}
+
+.status {
+  text-transform: uppercase;
+  color: gray;
+  margin: 0 10px;
+}
+
+.divider {
+  color: gray;
+}
+
+.link {
+  font-style: italic;
+  display: inline-block;
+  padding: 10px;
+}

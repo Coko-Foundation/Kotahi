@@ -12,12 +12,16 @@ const Dashboard = ({ projects, createProject, createVersion, convertToHTML, isCo
         convertToHTML={convertToHTML}/>
     </div>
 
-    {projects.map(project => (
-      <DashboardItem
-        key={project.id}
-        className={classes.item}
-        project={project}/>
-    ))}
+    <div className={classes.projects}>
+      <div className={classes.heading}>
+        {projects.map(project => (
+          <DashboardItem
+            key={project.id}
+            className={classes.item}
+            project={project}/>
+        ))}
+      </div>
+    </div>
   </div>
 )
 

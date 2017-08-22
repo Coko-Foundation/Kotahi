@@ -2,3 +2,13 @@
   max-width: 60em;
   margin: auto;
 }
+
+.upload {
+  display: flex;
+  justify-content: center;
+}
+
+.heading {
+  font-size: 200%;
+  color: cornflowerblue;
+}

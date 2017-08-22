@@ -1,3 +1,6 @@
+process.env.BABEL_ENV = 'development'
+process.env.NODE_ENV = 'development'
+
 const path = require('path')
 const nodeExternals = require('webpack-node-externals')
 
@@ -52,6 +55,15 @@ module.exports = {
                 }
               }
             ],
+          },
+
+          // Files
+          {
+            exclude: [/\.js$/, /\.html$/, /\.json$/],
+            loader: 'file-loader',
+            options: {
+              name: 'static/media/[name].[hash:8].[ext]',
+            }
           }
         ]
       }
