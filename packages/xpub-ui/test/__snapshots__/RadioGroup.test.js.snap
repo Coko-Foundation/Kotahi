@@ -1,0 +1,48 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Radio Group Snapshot 1`] = `
+<div>
+  <label
+    className={undefined}
+  >
+    <input
+      checked={false}
+      className={undefined}
+      name="TestName"
+      onChange={[Function]}
+      required={true}
+      type="radio"
+      value="yes"
+    />
+    Yes
+  </label>
+  <label
+    className={undefined}
+  >
+    <input
+      checked={false}
+      className={undefined}
+      name="TestName"
+      onChange={[Function]}
+      required={true}
+      type="radio"
+      value="no"
+    />
+    No
+  </label>
+  <label
+    className={undefined}
+  >
+    <input
+      checked={false}
+      className={undefined}
+      name="TestName"
+      onChange={[Function]}
+      required={true}
+      type="radio"
+      value="maybe"
+    />
+    Maybe
+  </label>
+</div>
+`;
