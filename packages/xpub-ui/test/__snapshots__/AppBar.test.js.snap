@@ -1,0 +1,29 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`AppBar Snapshot 1`] = `
+<div
+  className={undefined}
+>
+  <a
+    className={undefined}
+    onClick={[Function]}
+    style={Object {}}
+  >
+    some brand
+  </a>
+  <div>
+    <span
+      className={undefined}
+    >
+      some name
+    </span>
+    <a
+      className=""
+      onClick={[Function]}
+      style={Object {}}
+    >
+      logout
+    </a>
+  </div>
+</div>
+`;

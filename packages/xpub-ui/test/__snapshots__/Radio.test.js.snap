@@ -1,0 +1,18 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Radio Snapshot 1`] = `
+<label
+  className={undefined}
+>
+  <input
+    checked={false}
+    className={undefined}
+    name="TestName"
+    onChange={[Function]}
+    required={true}
+    type="radio"
+    value="TestValue"
+  />
+  TestLabel
+</label>
+`;
