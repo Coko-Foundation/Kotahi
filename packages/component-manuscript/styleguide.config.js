@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'xpub dashboard style guide',
+  title: 'xpub-manuscript style guide',
   styleguideComponents: {
     StyleGuideRenderer: require.resolve('xpub-styleguide/src/components/StyleGuideRenderer'),
     Wrapper: require.resolve('xpub-styleguide/src/components/Wrapper')
@@ -7,7 +7,6 @@ module.exports = {
   context: {
     faker: 'faker'
   },
-  components: './src/components/*.js',
   skipComponentsWithoutExample: true,
   webpackConfig: require('./webpack.config.js'),
   serverPort: 6063,

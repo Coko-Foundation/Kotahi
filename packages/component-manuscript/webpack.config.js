@@ -2,7 +2,7 @@ process.env.BABEL_ENV = 'production'
 process.env.NODE_ENV = 'production'
 
 const path = require('path')
-const nodeExternals = require('webpack-node-externals')
+// const nodeExternals = require('webpack-node-externals')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
@@ -35,7 +35,6 @@ module.exports = {
             loader: 'babel-loader',
             options: {
               presets: [
-                // 'minify',
                 ['env', { modules: false }],
                 'react',
                 'stage-2'
