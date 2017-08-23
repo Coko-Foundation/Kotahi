@@ -1,5 +1,5 @@
 module.exports = {
-  title: 'xpub-manuscript style guide',
+  title: 'xpub submit style guide',
   styleguideComponents: {
     StyleGuideRenderer: require.resolve('xpub-styleguide/src/components/StyleGuideRenderer'),
     Wrapper: require.resolve('xpub-styleguide/src/components/Wrapper')
@@ -9,7 +9,7 @@ module.exports = {
   },
   skipComponentsWithoutExample: true,
   webpackConfig: require('./webpack.config.js'),
-  serverPort: 6063,
+  serverPort: 6064,
   theme: {
     fontFamily: {
       base: '"Fira Sans", sans-serif'

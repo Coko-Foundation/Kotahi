@@ -1,0 +1,21 @@
+.toolbar {
+  display: flex;
+  margin-bottom: 10px;
+}
+
+.button {
+  border: none;
+  background: white;
+  cursor: pointer;
+  color: #777;
+}
+
+.button:hover {
+  color: cornflowerblue;
+  text-decoration: underline;
+}
+
+.title {
+  font-weight: bold;
+  margin-right: 10px;
+}

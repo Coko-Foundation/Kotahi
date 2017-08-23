@@ -7,7 +7,6 @@ module.exports = {
   context: {
     faker: 'faker'
   },
-  components: './src/components/*.js',
   skipComponentsWithoutExample: true,
   webpackConfig: require('./webpack.config.js'),
   serverPort: 6062,
