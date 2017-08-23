@@ -12,17 +12,17 @@ export default {
     {
       type: 'italic',
       label: 'Italic',
-      button: <i>Italic</i>,
+      button: <i>Ital</i>,
     },
     {
       type: 'superscript',
       label: 'Superscript',
-      button: <span>x<sup>2</sup></span>,
+      button: <span>t<sup>x</sup></span>,
     },
     {
       type: 'subscript',
       label: 'Subscript',
-      button: <span>x<sub>2</sub></span>,
+      button: <span>t<sub>x</sub></span>,
 
     },
     // {

@@ -1,9 +1,10 @@
 import React from 'react'
 import { Link } from 'react-router'
 import classes from './Submit.local.css'
-import DeclarationsForm from './Declarations'
+import Metadata from './Metadata'
+import Declarations from './Declarations'
 
-const Submit = ({ project, version, submitVersion }) => (
+const Submit = ({ project, version, updateVersion, submitVersion }) => (
   <div className={classes.root}>
     <div className={classes.title}>
       Submission information
@@ -15,7 +16,11 @@ const Submit = ({ project, version, submitVersion }) => (
       <div>The answers will be automatically saved.</div>
     </div>
 
-    <DeclarationsForm handleSubmit={submitVersion}/>
+    <Metadata
+      handleChange={updateVersion}/>
+
+    <Declarations
+      handleChange={updateVersion}/>
   </div>
 )
 
