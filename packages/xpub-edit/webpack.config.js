@@ -1,35 +1,31 @@
-process.env.BABEL_ENV = 'production'
-process.env.NODE_ENV = 'production'
+process.env.BABEL_ENV = 'development'
+process.env.NODE_ENV = 'development'
 
 const path = require('path')
 // const nodeExternals = require('webpack-node-externals')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = {
   entry: './src/index.js',
   output: {
     filename: 'index.js',
-    path: path.join(__dirname, 'dist'),
-    library: 'WaxEditor',
-    libraryTarget: 'commonjs2'
+    path: path.join(__dirname, 'dist')
   },
   devtool: 'cheap-module-source-map',
   // externals: [nodeExternals({
   //   whitelist: [/\.(?!js$).{1,5}$/i]
   // })],
   resolve: {
-    symlinks: false, // needed to prevent babel looking in other folders
-    extensions: ['.js', '.jsx'], // needed because pubsweet-component-wax uses jsx
+    symlinks: false
   },
   module: {
     rules: [
       {
         oneOf: [
+          // ES6 modules
           {
-            test: /\.jsx?$/,
+            test: /\.js$/,
             include: [
               path.join(__dirname, 'src'),
-              /pubsweet-[^/]+\/src/,
               /xpub-[^/]+\/src/,
             ],
             loader: 'babel-loader',
@@ -39,7 +35,8 @@ module.exports = {
                 'react',
                 'stage-2'
               ],
-            }
+              cacheDirectory: true,
+            },
           },
 
           // CSS modules
@@ -47,7 +44,6 @@ module.exports = {
             test: /\.local\.css$/,
             include: [
               path.join(__dirname, 'src'),
-              /pubsweet-[^/]+\/src/,
               /xpub-[^/]+\/src/,
             ],
             use: [
@@ -55,43 +51,31 @@ module.exports = {
               {
                 loader: 'css-loader',
                 options: {
-                  modules: true
+                  modules: true,
                 }
               }
-            ]
+            ],
           },
 
           // CSS
           {
             test: /\.css$/,
-            use: ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: 'css-loader'
-            })
+            use: [
+              'style-loader',
+              'css-loader'
+            ],
           },
 
-          // SCSS
+          // Files
           {
-            test: /\.scss$/,
-            use: ExtractTextPlugin.extract({
-              fallback: 'style-loader',
-              use: ['css-loader', 'sass-loader'],
-            }),
-          },
-
-          // other files
-          {
-            exclude: [/\.jsx?$/, /\.html$/, /\.json$/],
+            exclude: [/\.js$/, /\.html$/, /\.json$/],
             loader: 'file-loader',
             options: {
-              name: 'static/[name].[hash:8].[ext]',
+              name: 'static/media/[name].[hash:8].[ext]',
             }
           }
         ]
       }
     ]
-  },
-  plugins: [
-    new ExtractTextPlugin('styles.css'),
-  ]
+  }
 }
