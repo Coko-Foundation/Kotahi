@@ -21,18 +21,30 @@
   "devDependencies": {
     "babel-core": "^6.26.0",
     "babel-loader": "^7.1.2",
+    "babel-jest": "^20.0.3",
     "babel-preset-env": "^1.6.0",
     "babel-preset-minify": "^0.2.0",
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "css-loader": "^0.28.4",
+    "enzyme": "^2.9.1",
     "faker": "^4.1.0",
     "file-loader": "^0.11.2",
-    "xpub-styleguide": "^0.0.2",
+    "jest": "^20.0.4",
     "react-styleguidist": "^6.0.8",
+    "react-test-renderer": "^15.6.1",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.5",
-    "webpack-node-externals": "^1.6.0"
+    "webpack-node-externals": "^1.6.0",
+    "xpub-styleguide": "^0.0.2"
+  },
+  "jest": {
+    "moduleNameMapper": {
+      "\\.css$": "<rootDir>/test/setup/styleMock.js"
+    },
+    "transform": {
+      "\\.js$": "<rootDir>/test/config/transform.js"
+    }
   },
   "scripts": {
     "styleguide": "styleguidist server",
@@ -40,6 +52,10 @@
     "clean": "rimraf dist",
     "lint": "eslint src",
     "prebuild": "npm run clean && npm run lint",
-    "build": "webpack --progress --profile"
+    "build": "webpack --progress --profile",
+    "test": "NODE_ENV=test jest",
+    "test:watch": "NODE_ENV=test jest --watch",
+    "test:cover": "NODE_ENV=test jest --coverage",
+    "test:u": "NODE_ENV=test jest --updateSnapshot"
   }
 }

@@ -1,0 +1,34 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Yes or No Snapshot 1`] = `
+<div>
+  <label
+    className={undefined}
+  >
+    <input
+      checked={false}
+      className={undefined}
+      name="TestName"
+      onChange={[Function]}
+      required={undefined}
+      type="radio"
+      value="yes"
+    />
+    Yes
+  </label>
+  <label
+    className={undefined}
+  >
+    <input
+      checked={false}
+      className={undefined}
+      name="TestName"
+      onChange={[Function]}
+      required={undefined}
+      type="radio"
+      value="no"
+    />
+    No
+  </label>
+</div>
+`;
