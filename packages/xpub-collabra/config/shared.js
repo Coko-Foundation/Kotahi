@@ -1,3 +1,4 @@
+const path = require('path')
 const authsome = require('./authsome')
 const components = require('./components.json')
 const validations = require('./validations')
@@ -9,7 +10,7 @@ module.exports = {
     components
   },
   'pubsweet-server': {
-    dbPath: 'http://localhost:5984/',
+    dbPath: process.env.PUBSWEET_DB || path.join(__dirname, '..', 'api', 'db'),
     API_ENDPOINT: 'http://localhost:3000/api'
   },
   'pubsweet-client': {
