@@ -9,7 +9,33 @@
     "dist"
   ],
   "dependencies": {
+    "classnames": "^2.2.5",
+    "lodash": "^4.17.4",
+    "prop-types": "^15.5.10",
+    "pubsweet-client": "^1.0.0-alpha.1",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "react-redux": "^5.0.2",
+    "react-router": "^3.0.5",
+    "recompose": "^0.25.0",
+    "redux-form": "^7.0.3",
+    "xpub-edit": "^0.0.2",
     "xpub-selectors": "^0.0.2"
+  },
+  "devDependencies": {
+    "babel-core": "^6.26.0",
+    "babel-loader": "^7.1.2",
+    "babel-preset-env": "^1.6.0",
+    "babel-preset-react": "^6.24.1",
+    "babel-preset-stage-2": "^6.24.1",
+    "css-loader": "^0.28.4",
+    "faker": "^4.1.0",
+    "file-loader": "^0.11.2",
+    "xpub-styleguide": "^0.0.2",
+    "react-styleguidist": "^6.0.8",
+    "style-loader": "^0.18.2",
+    "webpack": "^3.5.5",
+    "webpack-node-externals": "^1.6.0"
   },
   "peerDependencies": {
     "prop-types": "^15.5.10",
@@ -18,5 +44,13 @@
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.2",
     "react-router": "^3.0.5"
+  },
+  "scripts": {
+    "styleguide": "styleguidist server",
+    "styleguide:build": "styleguidist build",
+    "clean": "rimraf dist",
+    "lint": "eslint src",
+    "prebuild": "npm run clean && npm run lint",
+    "build": "webpack --progress --profile"
   }
 }
