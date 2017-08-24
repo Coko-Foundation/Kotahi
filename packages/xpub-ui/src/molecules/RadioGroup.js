@@ -1,7 +1,7 @@
 import React from 'react'
 import Radio from '../atoms/Radio'
 
-const RadioGroup = ({ name, value, options, required, handleChange }) => (
+const RadioGroup = ({ name, value, options, required }) => (
   <div>
     {options.map(option => (
       <Radio
@@ -10,8 +10,7 @@ const RadioGroup = ({ name, value, options, required, handleChange }) => (
         required={required}
         value={option.value}
         label={option.label}
-        checked={option.value === value}
-        handleChange={handleChange}/>
+        checked={option.value === value}/>
     ))}
   </div>
 )

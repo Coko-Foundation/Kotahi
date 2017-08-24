@@ -5,10 +5,7 @@ import renderer from 'react-test-renderer'
 import YesOrNo from '../src/molecules/YesOrNo'
 import RadioGroup from '../src/molecules/RadioGroup'
 
-const handleChange = () => { return null }
-
 const props = {
-  handleChange,
   name: 'TestName',
   value: 'Maybe'
 }
@@ -48,10 +45,5 @@ describe('Yes or No', () => {
   test('Passes down the correct value', () => {
     const value = radio.props().value
     expect(value).toEqual(props.value)
-  })
-
-  test('Passes down the correct handle change function', () => {
-    const handle = radio.props().handleChange
-    expect(handle).toEqual(props.handleChange)
   })
 })

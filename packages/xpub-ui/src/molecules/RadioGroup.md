@@ -22,5 +22,5 @@ const options = [
   options={options} 
   name="foo"
   value={state.foo} 
-  handleChange={foo => setState({ foo })}/>
+  handleChange={event => setState({ foo: event.target.value })}/>
 ```

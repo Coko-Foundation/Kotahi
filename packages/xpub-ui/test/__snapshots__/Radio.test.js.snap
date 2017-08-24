@@ -8,7 +8,6 @@ exports[`Radio Snapshot 1`] = `
     checked={false}
     className={undefined}
     name="TestName"
-    onChange={[Function]}
     required={true}
     type="radio"
     value="TestValue"

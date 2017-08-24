@@ -3,7 +3,7 @@ A radio button.
 ```js
 <Radio 
   name="foo" 
-  handleChange={event => console.log(event)}/>
+  onChange={event => console.log(event.target.value)}/>
 ```
 
 A checked radio button.
@@ -12,7 +12,7 @@ A checked radio button.
 <Radio 
   name="bar" 
   checked 
-  handleChange={event => console.log(event)}/>
+  onChange={event => console.log(event.target.value)}/>
 ```
 
 A radio button with a label.
@@ -21,5 +21,5 @@ A radio button with a label.
 <Radio 
   name="foo" 
   label="Foo"
-  handleChange={event => console.log(event)}/>
+  onChange={event => console.log(event.target.value)}/>
 ```

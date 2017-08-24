@@ -6,10 +6,7 @@ import renderer from 'react-test-renderer'
 import Radio from '../src/atoms/Radio'
 import RadioGroup from '../src/molecules/RadioGroup'
 
-const handleChange = () => { return null }
-
 const props = {
-  handleChange,
   name: 'TestName',
   options: [
     {
@@ -70,7 +67,6 @@ describe('Radio Group', () => {
       expect(radioProps.value).toEqual(props.options[i].value)
       expect(radioProps.name).toEqual(props.name)
       expect(radioProps.required).toEqual(props.required)
-      expect(radioProps.handleChange).toEqual(props.handleChange)
 
       i++
     }

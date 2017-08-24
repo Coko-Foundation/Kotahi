@@ -1,6 +1,6 @@
 import React from 'react'
 import { shallow } from 'enzyme'
-// import renderer from 'react-test-renderer'
+import renderer from 'react-test-renderer'
 
 import Menu from '../src/atoms/Menu'
 
@@ -15,12 +15,12 @@ const props = {
 const wrapper = shallow(<Menu {...props} />)
 
 describe('Menu', () => {
-  /*test('Snapshot', () => {
+  test('Snapshot', () => {
     const tree = renderer.create(
       <Menu {...props} />
     ).toJSON()
     expect(tree).toMatchSnapshot()
-  })*/
+  })
 
   test('Renders a Menu', () => {
     expect(wrapper.is('div')).toBeTruthy()

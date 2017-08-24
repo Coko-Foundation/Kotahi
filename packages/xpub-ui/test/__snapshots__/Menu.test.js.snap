@@ -1,0 +1,26 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`Menu Snapshot 1`] = `
+<div
+  className={undefined}
+>
+  <div>
+    <button
+      className={undefined}
+      onClick={[Function]}
+    >
+      <span>
+        Foo
+      </span>
+      <span
+        className={undefined}
+      >
+        ▼
+      </span>
+    </button>
+  </div>
+  <div
+    className={undefined}
+  />
+</div>
+`;

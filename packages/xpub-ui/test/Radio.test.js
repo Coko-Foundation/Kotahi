@@ -6,7 +6,6 @@ import Radio from '../src/atoms/Radio'
 
 const props = {
   checked: false,
-  handleChange: jest.fn(),
   label: 'TestLabel',
   name: 'TestName',
   required: true,
@@ -43,16 +42,5 @@ describe('Radio', () => {
     expect(input.prop('value')).toBe(props.value)
     expect(input.prop('checked')).toBe(props.checked)
     expect(input.prop('required')).toBe(props.required)
-  })
-
-  test('Change handler should be called on change', () => {
-    const input = wrapper.find('input')
-
-    expect(props.handleChange).not.toHaveBeenCalled()
-
-    const event = { target: {} }
-    input.simulate('change', event)
-
-    expect(props.handleChange).toHaveBeenCalledTimes(1)
   })
 })
