@@ -1,11 +1,11 @@
 import React from 'react'
 import classnames from 'classnames'
-import { Field } from 'redux-form'
+import { FormSection, Field } from 'redux-form'
 import { YesOrNo } from 'xpub-ui'
 import classes from './Declarations.local.css'
 
-const Declarations = ({ version, handleSubmit, handleChange }) => (
-  <form onSubmit={handleSubmit} onChange={handleChange}>
+const Declarations = () => (
+  <FormSection name="declarations">
     <div className={classnames(classes.section, classes.spread)}>
       <div className={classes.legend}>
         Data is open
@@ -14,10 +14,9 @@ const Declarations = ({ version, handleSubmit, handleChange }) => (
       <Field
         name="openData"
         id="openData"
-        value={version.openData}
         component={props => <YesOrNo {...props.input}/>}/>
     </div>
-  </form>
+  </FormSection>
 )
 
 export default Declarations

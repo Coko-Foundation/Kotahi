@@ -4,12 +4,13 @@ A list of questions that must be answered before submission.
 const { reduxForm } = require('redux-form');
 
 const version = {
-  
+  declarations: {
+    openData: 'yes'
+  }
 };
 
 const DeclarationsForm = reduxForm({ form: 'declarations' })(Declarations);
 
 <DeclarationsForm
-  version={version}
-  submitVersion={data => console.log(data)}/>
+  initialValues={version}/>
 ```

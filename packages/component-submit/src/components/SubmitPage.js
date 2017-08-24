@@ -7,10 +7,17 @@ import Submit from './Submit'
 
 export default compose(
   connect(
-    (state, ownProps) => ({
-      project: selectCollection(state, ownProps.params.project),
-      version: selectFragment(state, ownProps.params.version)
-    }),
+    (state, ownProps) => {
+      const project = selectCollection(state, ownProps.params.project)
+      const version = selectFragment(state, ownProps.params.version)
+
+      const initialValues = {
+        declarations: version.declarations,
+        metadata: version.metadata
+      }
+
+      return { project, version, initialValues }
+    },
     {
       updateVersion: actions.updateFragment
     }

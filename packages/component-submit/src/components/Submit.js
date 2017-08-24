@@ -6,7 +6,7 @@ import Declarations from './Declarations'
 
 // TODO: use FormSection?
 
-const Submit = ({ journal, project, version, updateVersion, submitVersion }) => (
+const Submit = ({ journal, project, version, handleChange, handleSubmit }) => (
   <div className={classes.root}>
     <div className={classes.title}>
       Submission information
@@ -18,15 +18,10 @@ const Submit = ({ journal, project, version, updateVersion, submitVersion }) => 
       <div>The answers will be automatically saved.</div>
     </div>
 
-    <Metadata
-      version={version}
-      journal={journal}
-      handleChange={updateVersion}/>
-
-    <Declarations
-      version={version}
-      handleChange={updateVersion}
-      handleSubmit={submitVersion}/>
+    <form onSubmit={handleSubmit} onChange={handleChange}>
+      <Metadata journal={journal}/>
+      <Declarations/>
+    </form>
   </div>
 )
 

@@ -3,10 +3,18 @@ A form for entering the submission's metadata.
 ```js
 const { reduxForm } = require('redux-form');
 
+const project = {
+  id: faker.random.uuid(),
+};
+
 const version = {
-  declarations: {
+  id: faker.random.uuid(),
+  metadata: {
       title: faker.lorem.sentence(25),
       articleType: 'original-research'
+  },
+  declarations: {
+    openData: 'yes'
   }
 };
 
@@ -31,10 +39,12 @@ const journal = {
     ]
 };
 
-const MetadataForm = reduxForm({ form: 'login' })(Metadata);
+const SubmitForm = reduxForm({ form: 'submit' })(Submit);
 
-<MetadataForm 
+<SubmitForm 
+  project={project}
   initialValues={version} 
   journal={journal}
-  handleChange={values => console.log(values)}/>
+  handleChange={({ target }) => console.log({ [target.name]: target.value })}
+  handleSubmit={values => console.log(values)}/>
 ```

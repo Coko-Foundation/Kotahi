@@ -1,17 +1,16 @@
 import React from 'react'
 import classnames from 'classnames'
-import { Field } from 'redux-form'
+import { FormSection, Field } from 'redux-form'
 import { AbstractEditor, TitleEditor } from 'xpub-edit'
 import { Menu, Tags } from 'xpub-ui'
 import classes from './Metadata.local.css'
 
-const Metadata = ({ journal, version, handleChange }) => (
-  <form onChange={handleChange}>
+const Metadata = ({ journal }) => (
+  <FormSection name="metadata">
     <div className={classes.section}>
       <Field
         name="title"
         id="title"
-        value={version.title}
         component={props =>
           <TitleEditor
             placeholder="Enter the title…"
@@ -24,7 +23,6 @@ const Metadata = ({ journal, version, handleChange }) => (
       <Field
         name="abstract"
         id="abstract"
-        value={version.abstract}
         component={props =>
           <AbstractEditor
             placeholder="Enter the abstract…"
@@ -40,7 +38,6 @@ const Metadata = ({ journal, version, handleChange }) => (
       <Field
         name="authors"
         id="authors"
-        value={version.authors}
         component={props =>
           <Tags placeholder="Enter an author…" {...props.input}/>
         }/>
@@ -53,7 +50,6 @@ const Metadata = ({ journal, version, handleChange }) => (
       <Field
         name="keywords"
         id="keywords"
-        value={version.keywords}
         component={props =>
           <Tags placeholder="Enter a keyword…" {...props.input}/>
         }/>
@@ -66,12 +62,11 @@ const Metadata = ({ journal, version, handleChange }) => (
       <Field
         name="articleType"
         id="articleType"
-        value={version.articleType}
         component={props =>
           <Menu options={journal.articleTypes} {...props.input}/>
         }/>
     </div>
-  </form>
+  </FormSection>
 )
 
 export default Metadata
