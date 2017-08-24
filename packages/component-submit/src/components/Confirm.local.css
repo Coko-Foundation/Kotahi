@@ -1,0 +1,16 @@
+.heading {
+}
+
+/*.actions {
+  display: flex;
+  justify-content: space-between;
+}*/
+
+.actionDivider {
+  margin: 0 20px;
+}
+
+.cancelLink {
+  text-decoration: underline;
+  text-decoration-color: blue;
+}
