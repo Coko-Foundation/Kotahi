@@ -20,6 +20,8 @@ class Tags extends React.Component {
     tags.splice(index, 1)
 
     this.setState({ tags })
+
+    this.props.onChange(tags)
   }
 
   handleAddition = tag => {
@@ -28,16 +30,19 @@ class Tags extends React.Component {
     tags.push(tag)
 
     this.setState({ tags })
+
+    this.props.onChange(tags)
   }
 
   // TODO: fire change event on state change
 
   render () {
     const { tags } = this.state
-    const { suggestions, placeholder } = this.props
+    const { name, suggestions, placeholder } = this.props
 
     return (
       <ReactTags
+        name={name}
         tags={tags}
         suggestions={suggestions}
         placeholder={placeholder}
