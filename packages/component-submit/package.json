@@ -10,6 +10,7 @@
   ],
   "dependencies": {
     "classnames": "^2.2.5",
+    "component-app": "^0.0.2",
     "lodash": "^4.17.4",
     "prop-types": "^15.5.10",
     "pubsweet-client": "^1.0.0-alpha.1",
