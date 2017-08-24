@@ -124,6 +124,7 @@ class EditorToolbar extends React.Component {
                 key={type}
                 className={classes.button}
                 onMouseDown={this.onClickMark}
+                type="button"
                 data-type={type}
                 data-active={this.hasMark(type)}>{button}</button>
             ))}
@@ -133,6 +134,7 @@ class EditorToolbar extends React.Component {
                 key={type}
                 className={classes.button}
                 onMouseDown={this.onClickBlock}
+                type="button"
                 data-type={type}
                 data-active={this.hasBlock(type)}>{button}</button>
             ))}

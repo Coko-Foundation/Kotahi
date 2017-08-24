@@ -41,6 +41,7 @@ class Menu extends React.Component {
       <div className={classes.root}>
         <div>
           <button
+            type="button"
             className={classes.opener}
             onClick={this.toggleMenu}>
             {selected ? (
