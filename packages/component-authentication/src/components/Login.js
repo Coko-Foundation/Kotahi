@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import { Field } from 'redux-form'
 import classes from './Login.local.css'
 
- const Login = ({ loginError, handleSubmit }) => (
+const Login = ({ loginError, handleSubmit }) => (
   <div className={classes.root}>
     <div className={classes.title}>
       Login
