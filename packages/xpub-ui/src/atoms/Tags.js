@@ -1,8 +1,8 @@
 import React from 'react'
 import ReactTags from 'react-tag-autocomplete'
-import './Keywords.css'
+import './Tags.css'
 
-class Keywords extends React.Component {
+class Tags extends React.Component {
   constructor (props) {
     super(props)
 
@@ -49,4 +49,4 @@ class Keywords extends React.Component {
   }
 }
 
-export default Keywords
+export default Tags

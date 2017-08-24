@@ -1,8 +1,7 @@
-A form input for a list of keywords.
+A form input for a list of tags.
 
 ```js
-<Keywords 
-  placeholder="Type a keyword"
+<Tags 
   onChange={event => console.log(event.target.value)}/>
 ```
 
@@ -15,7 +14,7 @@ const value = [
   {id: 3, name: 'baz'}
 ];
 
-<Keywords 
+<Tags 
   value={value}
   placeholder="Add new keyword"
   onChange={event => console.log(event.target.value)}/>
