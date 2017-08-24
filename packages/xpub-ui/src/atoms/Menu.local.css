@@ -1,0 +1,52 @@
+.menuContainer {
+  position: relative;
+}
+
+.opener {
+  border: none;
+  cursor: pointer;
+  background: transparent;
+  font-size: inherit;
+  display: flex;
+  align-items: center;
+  /*min-width: 10em;*/
+  /*justify-content: end;*/
+}
+
+.opener:hover,
+.opener:hover .placeholder {
+  color: cornflowerblue;
+}
+
+.placeholder {
+  color: gray;
+}
+
+.arrow {
+  margin-left: 10px;
+  font-size: 50%;
+}
+
+.menu {
+  position: absolute;
+  top: 0;
+  left: 0;
+  min-width: 10em;
+  background-color: white;
+  border-left: 1px solid #aaa;
+  border-bottom: 1px solid #aaa;
+  /*columns: 2 auto;*/
+}
+
+.option {
+  cursor: pointer;
+  padding: 10px;
+}
+
+.option:hover {
+  color: cornflowerblue;
+}
+
+.active {
+  color: cornflowerblue;
+}
