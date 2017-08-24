@@ -4,6 +4,8 @@ import classes from './Submit.local.css'
 import Metadata from './Metadata'
 import Declarations from './Declarations'
 
+// TODO: use FormSection?
+
 const Submit = ({ journal, project, version, updateVersion, submitVersion }) => (
   <div className={classes.root}>
     <div className={classes.title}>
@@ -17,11 +19,14 @@ const Submit = ({ journal, project, version, updateVersion, submitVersion }) => 
     </div>
 
     <Metadata
+      version={version}
       journal={journal}
       handleChange={updateVersion}/>
 
     <Declarations
-      handleChange={updateVersion}/>
+      version={version}
+      handleChange={updateVersion}
+      handleSubmit={submitVersion}/>
   </div>
 )
 

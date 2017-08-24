@@ -2,11 +2,11 @@
   margin-bottom: 20px;
 }
 
-.inline {
+.spread {
   display: flex;
+  justify-content: space-between;
 }
 
-.label {
+.legend {
   font-weight: bold;
-  margin-right: 20px;
 }

@@ -5,8 +5,8 @@ import { AbstractEditor, TitleEditor } from 'xpub-edit'
 import { Menu, Tags } from 'xpub-ui'
 import classes from './Metadata.local.css'
 
-const Metadata = ({ journal, version, handleSubmit }) => (
-  <form onSubmit={handleSubmit}>
+const Metadata = ({ journal, version, handleChange }) => (
+  <form onChange={handleChange}>
     <div className={classes.section}>
       <Field
         name="title"
@@ -16,7 +16,7 @@ const Metadata = ({ journal, version, handleSubmit }) => (
           <TitleEditor
             placeholder="Enter the title…"
             title="Title"
-            {...props}/>
+            {...props.input}/>
         }/>
     </div>
 
@@ -29,7 +29,7 @@ const Metadata = ({ journal, version, handleSubmit }) => (
           <AbstractEditor
             placeholder="Enter the abstract…"
             title="Abstract"
-            {...props}/>
+            {...props.input}/>
         }/>
     </div>
 
@@ -42,7 +42,7 @@ const Metadata = ({ journal, version, handleSubmit }) => (
         id="authors"
         value={version.authors}
         component={props =>
-          <Tags placeholder="Enter an author…" {...props}/>
+          <Tags placeholder="Enter an author…" {...props.input}/>
         }/>
     </div>
 
@@ -55,7 +55,7 @@ const Metadata = ({ journal, version, handleSubmit }) => (
         id="keywords"
         value={version.keywords}
         component={props =>
-          <Tags placeholder="Enter a keyword…" {...props}/>
+          <Tags placeholder="Enter a keyword…" {...props.input}/>
         }/>
     </div>
 
@@ -68,7 +68,7 @@ const Metadata = ({ journal, version, handleSubmit }) => (
         id="articleType"
         value={version.articleType}
         component={props =>
-          <Menu options={journal.articleTypes} {...props}/>
+          <Menu options={journal.articleTypes} {...props.input}/>
         }/>
     </div>
   </form>
