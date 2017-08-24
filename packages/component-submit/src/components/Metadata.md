@@ -12,23 +12,23 @@ const version = {
 
 const journal = {
   articleTypes: [
-      {
-        value: 'original-research',
-        label: 'Original Research Report'
-      },
-      {
-        value: 'review',
-        label: 'Review'
-      },
-      {
-        value: 'opinion',
-        label: 'Opinion/Commentary'
-      },
-      {
-        value: 'registered-report',
-        label: 'Registered Report'
-      },
-    ]
+    {
+      value: 'original-research',
+      label: 'Original Research Report'
+    },
+    {
+      value: 'review',
+      label: 'Review'
+    },
+    {
+      value: 'opinion',
+      label: 'Opinion/Commentary'
+    },
+    {
+      value: 'registered-report',
+      label: 'Registered Report'
+    },
+  ]
 };
 
 const MetadataForm = reduxForm({ form: 'metadata' })(Metadata);

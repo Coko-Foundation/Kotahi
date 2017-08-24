@@ -4,18 +4,22 @@ import { FormSection, Field } from 'redux-form'
 import { YesOrNo } from 'xpub-ui'
 import classes from './Declarations.local.css'
 
-const Declarations = () => (
+const Declarations = ({ journal }) => (
   <FormSection name="declarations">
-    <div className={classnames(classes.section, classes.spread)}>
-      <div className={classes.legend}>
-        Data is open
-      </div>
+    {journal.declarations.questions.map(question => (
+      <div
+        key={question.id}
+        className={classnames(classes.section, classes.spread)}>
+        <div className={classes.legend}>
+          { question.legend }
+        </div>
 
-      <Field
-        name="openData"
-        id="openData"
-        component={props => <YesOrNo {...props.input}/>}/>
-    </div>
+        <Field
+          name={question.id}
+          id={question.id}
+          component={props => <YesOrNo {...props.input}/>}/>
+      </div>
+    ))}
   </FormSection>
 )
 

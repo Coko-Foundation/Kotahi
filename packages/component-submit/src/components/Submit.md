@@ -20,23 +20,46 @@ const version = {
 
 const journal = {
   articleTypes: [
+    {
+      value: 'original-research',
+      label: 'Original Research Report'
+    },
+    {
+      value: 'review',
+      label: 'Review'
+    },
+    {
+      value: 'opinion',
+      label: 'Opinion/Commentary'
+    },
+    {
+      value: 'registered-report',
+      label: 'Registered Report'
+    },
+  ],
+  declarations: {
+    questions: [
       {
-        value: 'original-research',
-        label: 'Original Research Report'
+        id: 'openData',
+        legend: 'Data is open'
       },
       {
-        value: 'review',
-        label: 'Review'
+        id: 'previouslySubmitted',
+        legend: 'Previously submitted'
       },
       {
-        value: 'opinion',
-        label: 'Opinion/Commentary'
-      },
-      {
-        value: 'registered-report',
-        label: 'Registered Report'
-      },
+        id: 'openPeerReview',
+        legend: 'Open peer review'
+      }
     ]
+  },
+  suggestions: {
+    reviewers: {
+      opposed: [
+        { name: faker.name.findName() }
+      ]
+    }
+  }
 };
 
 const SubmitForm = reduxForm({ form: 'submit' })(Submit);

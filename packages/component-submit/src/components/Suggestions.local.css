@@ -1,0 +1,12 @@
+.section {
+  margin: 20px 0;
+}
+
+.inline {
+  display: flex;
+  align-items: center;
+}
+
+.legend {
+  font-weight: bold;
+}

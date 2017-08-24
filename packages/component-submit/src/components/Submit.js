@@ -3,8 +3,7 @@ import { Link } from 'react-router'
 import classes from './Submit.local.css'
 import Metadata from './Metadata'
 import Declarations from './Declarations'
-
-// TODO: use FormSection?
+import Suggestions from './Suggestions'
 
 const Submit = ({ journal, project, version, handleSubmit }) => (
   <div className={classes.root}>
@@ -20,7 +19,8 @@ const Submit = ({ journal, project, version, handleSubmit }) => (
 
     <form onSubmit={handleSubmit}>
       <Metadata journal={journal}/>
-      <Declarations/>
+      <Declarations journal={journal}/>
+      <Suggestions/>
     </form>
   </div>
 )
