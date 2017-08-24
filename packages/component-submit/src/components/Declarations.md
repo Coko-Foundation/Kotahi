@@ -12,5 +12,6 @@ const version = {
 const DeclarationsForm = reduxForm({ form: 'declarations' })(Declarations);
 
 <DeclarationsForm
-  initialValues={version}/>
+  initialValues={version}
+  onChange={values => console.log(values)}/>
 ```

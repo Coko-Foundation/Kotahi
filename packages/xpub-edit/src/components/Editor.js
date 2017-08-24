@@ -49,8 +49,16 @@ class Editor extends React.Component {
   // TODO: debouncing?
   // TODO: only fire on onBlur or onSubmit?
   // TODO: send an event?
-  onDocumentChange = (document, state) => {
-    // this.props.onChange(null, this.props.converter.serialize(state))
+  // onDocumentChange = (document, state) => {
+  //   this.props.onChange(this.props.converter.serialize(state))
+  // }
+
+  // TODO: only fire onChange if actually changed
+  // TODO: is this appropriate?
+  onBlur = () => {
+    const { state } = this.state
+
+    this.props.onChange(this.props.converter.serialize(state))
   }
 
   onKeyDown = (event, { isMod, key }, state) => {
@@ -135,11 +143,12 @@ class Editor extends React.Component {
           className={className}
           schema={schema}
           state={state}
+          onBlur={this.onBlur}
           onChange={this.onChange}
           onKeyDown={this.onKeyDown}
           onPaste={this.onReceive}
           onDrop={this.onReceive}
-          onDocumentChange={this.onDocumentChange}
+          // onDocumentChange={this.onDocumentChange}
           placeholder={placeholder}
           spellCheck
         />

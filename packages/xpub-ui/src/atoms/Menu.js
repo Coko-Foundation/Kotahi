@@ -24,7 +24,7 @@ class Menu extends React.Component {
       open: false
     })
 
-    // TODO: fire "change" event
+    this.props.onChange(selected)
   }
 
   optionLabel = value => {

@@ -4,5 +4,5 @@ An editor for plain text, with no options for adding blocks or applying text for
 <TextEditor
     value=""
     placeholder="Enter some text…"
-    onChange={(event, value) => console.log({ value })}/>
+    onChange={value => console.log(value)}/>
 ```

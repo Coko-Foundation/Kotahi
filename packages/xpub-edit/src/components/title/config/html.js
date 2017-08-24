@@ -29,7 +29,7 @@ const tags = {
 
 const renderers = {
   block: {
-    // paragraph: children => <p>{children}</p>,
+    paragraph: children => <p>{children}</p>, // TODO: no paragraph wrapper
   },
   mark: {
     italic: children => <i>{children}</i>,

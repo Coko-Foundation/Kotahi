@@ -12,8 +12,8 @@ const TextEditor = ({ value, placeholder, title, onChange }) => (
     value={value}
     converter={converter}
     placeholder={placeholder}
-    onChange={onChange}
     title={title}
+    onChange={onChange}
   />
 )
 

@@ -9,7 +9,7 @@ const options = [
 
 <Menu 
   options={options}
-  onChange={event => console.log(event.target.value)}/>
+  onChange={value => console.log(value)}/>
 ```
 
 When an option is selected, it replaces the placeholder.
@@ -24,5 +24,5 @@ const options = [
 <Menu 
   options={options}
   value="foo"
-  onChange={event => console.log(event.target.value)}/>
+  onChange={value => console.log(value)}/>
 ```

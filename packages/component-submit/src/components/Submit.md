@@ -45,6 +45,6 @@ const SubmitForm = reduxForm({ form: 'submit' })(Submit);
   project={project}
   initialValues={version} 
   journal={journal}
-  handleChange={({ target }) => console.log({ [target.name]: target.value })}
-  handleSubmit={values => console.log(values)}/>
+  onChange={values => console.log(values)}
+  onSubmit={values => console.log(values)}/>
 ```

@@ -3,7 +3,7 @@ import { converter, keys, schema, toolbar } from './config'
 import Editor from '../Editor'
 import classes from './AbstractEditor.local.css'
 
-const AbstractEditor = ({ value, placeholder, title, onChange, onSubmit }) => (
+const AbstractEditor = ({ value, placeholder, title, onChange }) => (
   <Editor
     className={classes.root}
     value={value}
@@ -14,7 +14,6 @@ const AbstractEditor = ({ value, placeholder, title, onChange, onSubmit }) => (
     placeholder={placeholder}
     title={title}
     onChange={onChange}
-    onSubmit={onSubmit}
   />
 )
 

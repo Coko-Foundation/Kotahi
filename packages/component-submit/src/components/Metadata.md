@@ -4,7 +4,7 @@ A form for entering the submission's metadata.
 const { reduxForm } = require('redux-form');
 
 const version = {
-  declarations: {
+  metadata: {
       title: faker.lorem.sentence(25),
       articleType: 'original-research'
   }
@@ -31,10 +31,10 @@ const journal = {
     ]
 };
 
-const MetadataForm = reduxForm({ form: 'login' })(Metadata);
+const MetadataForm = reduxForm({ form: 'metadata' })(Metadata);
 
 <MetadataForm 
   initialValues={version} 
   journal={journal}
-  handleChange={values => console.log(values)}/>
+  onChange={values => console.log(values)}/>
 ```
