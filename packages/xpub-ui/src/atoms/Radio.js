@@ -1,7 +1,7 @@
 import React from 'react'
 import classes from './Radio.local.css'
 
-const Radio = ({ name, value, label, checked, required }) => (
+const Radio = ({ name, value, label, checked, required, onChange }) => (
   <label className={classes.root}>
     <input
       className={classes.input}
@@ -9,7 +9,8 @@ const Radio = ({ name, value, label, checked, required }) => (
       name={name}
       value={value}
       checked={checked}
-      required={required}/>
+      required={required}
+      onChange={onChange}/>
     {label}
   </label>
 )

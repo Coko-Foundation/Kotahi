@@ -13,12 +13,14 @@ const options = [
   }
 ]
 
-const YesOrNo = ({ name, value }) => (
+const YesOrNo = ({ name, value, required, onChange }) => (
   <RadioGroup
     className={classes.root}
     name={name}
     options={options}
-    value={value}/>
+    value={value}
+    required={required}
+    onChange={onChange}/>
 )
 
 export default YesOrNo

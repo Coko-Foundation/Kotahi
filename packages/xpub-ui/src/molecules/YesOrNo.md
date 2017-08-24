@@ -1,10 +1,17 @@
 A group of radio buttons that provides just two options: "Yes" or "No"
 
 ```js
-initialState = { foo: undefined };
-
 <YesOrNo
-  name="foo" 
-  value={state.foo} 
-  onChange={event => setState({ foo: event.target.value })}/>
+  name="yesorno" 
+  onChange={event => console.log(event.target.value)}/>
 ```
+
+If a value is set, one option is selected.
+
+```js
+<YesOrNo
+  name="yesorno-value" 
+  value="yes"
+  onChange={event => console.log(event.target.value)}/>
+```
+

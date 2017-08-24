@@ -10,7 +10,7 @@ A checked radio button.
 
 ```js
 <Radio 
-  name="bar" 
+  name="radio-bar" 
   checked 
   onChange={event => console.log(event.target.value)}/>
 ```
@@ -19,7 +19,7 @@ A radio button with a label.
 
 ```js
 <Radio 
-  name="foo" 
+  name="radio-foo" 
   label="Foo"
   onChange={event => console.log(event.target.value)}/>
 ```

@@ -1,8 +1,6 @@
 A group of radio buttons.
 
 ```js
-initialState = { foo: undefined };
-
 const options = [
   {
     value: 'one',
@@ -20,7 +18,6 @@ const options = [
 
 <RadioGroup 
   options={options} 
-  name="foo"
-  value={state.foo} 
-  handleChange={event => setState({ foo: event.target.value })}/>
+  name="radiogroup-foo"
+  onChange={event => console.log(event.target.value)}/>
 ```
