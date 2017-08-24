@@ -2,6 +2,16 @@
   margin-bottom: 20px;
 }
 
+.inline {
+  display: flex;
+}
+
+.spread {
+  display: flex;
+  justify-content: space-between;
+}
+
 .label {
   font-weight: bold;
+  margin-right: 20px;
 }

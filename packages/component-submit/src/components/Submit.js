@@ -4,7 +4,7 @@ import classes from './Submit.local.css'
 import Metadata from './Metadata'
 import Declarations from './Declarations'
 
-const Submit = ({ project, version, updateVersion, submitVersion }) => (
+const Submit = ({ journal, project, version, updateVersion, submitVersion }) => (
   <div className={classes.root}>
     <div className={classes.title}>
       Submission information
@@ -17,6 +17,7 @@ const Submit = ({ project, version, updateVersion, submitVersion }) => (
     </div>
 
     <Metadata
+      journal={journal}
       handleChange={updateVersion}/>
 
     <Declarations
