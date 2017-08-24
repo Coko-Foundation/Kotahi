@@ -2,6 +2,9 @@ import React from 'react'
 import ReactTags from 'react-tag-autocomplete'
 import './Tags.css'
 
+// TODO: separate tags when pasted
+// TODO: allow tags to be edited
+
 class Tags extends React.Component {
   constructor (props) {
     super(props)

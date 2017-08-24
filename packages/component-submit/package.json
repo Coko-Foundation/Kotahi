@@ -20,7 +20,8 @@
     "recompose": "^0.25.0",
     "redux-form": "^7.0.3",
     "xpub-edit": "^0.0.2",
-    "xpub-selectors": "^0.0.2"
+    "xpub-selectors": "^0.0.2",
+    "xpub-ui": "^0.0.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

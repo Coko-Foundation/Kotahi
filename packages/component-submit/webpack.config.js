@@ -57,6 +57,19 @@ module.exports = {
             ],
           },
 
+          // CSS
+          {
+            test: /\.css$/,
+            include: [
+              path.join(__dirname, 'src'),
+              /xpub-[^/]+\/src/,
+            ],
+            use: [
+              'style-loader',
+              'css-loader'
+            ],
+          },
+
           // Files
           {
             exclude: [/\.js$/, /\.html$/, /\.json$/],
