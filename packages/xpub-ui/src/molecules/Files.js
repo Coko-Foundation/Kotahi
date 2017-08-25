@@ -21,7 +21,6 @@ class Files extends React.Component {
     const { uploadFile } = this.props
     const { uploads } = this.state
 
-
     Array.from(event.target.files).forEach(file => {
       uploads.push({
         file,

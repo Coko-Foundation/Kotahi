@@ -1,8 +1,9 @@
 import React from 'react'
 import { FormSection, Field } from 'redux-form'
+import { Files } from 'xpub-ui'
 import classes from './Metadata.local.css'
 
-const Files = () => (
+const SupplementaryFiles = ({ uploadFile }) => (
   <FormSection name="files">
     <div className={classes.section}>
       <div
@@ -13,10 +14,10 @@ const Files = () => (
         name="supplementary"
         id="supplementary"
         component={props =>
-          <div>TODO</div>
+          <Files uploadFile={uploadFile} {...props.input}/>
         }/>
     </div>
   </FormSection>
 )
 
-export default Files
+export default SupplementaryFiles
