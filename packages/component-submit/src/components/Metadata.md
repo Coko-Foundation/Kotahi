@@ -28,6 +28,16 @@ const journal = {
       value: 'registered-report',
       label: 'Registered Report'
     },
+  ],
+  articleSections: [
+     {
+       value: 'organizational-behavior',
+       label: 'Organizational Behavior'
+     },
+     {
+       value: 'methodology',
+       label: 'Methodology and Research Practice'
+     },
   ]
 };
 

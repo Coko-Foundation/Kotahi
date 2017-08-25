@@ -17,7 +17,7 @@ const Declarations = ({ journal }) => (
         <Field
           name={question.id}
           id={question.id}
-          component={props => <YesOrNo {...props.input}/>}/>
+          component={props => <YesOrNo inline={true} {...props.input}/>}/>
       </div>
     ))}
   </FormSection>

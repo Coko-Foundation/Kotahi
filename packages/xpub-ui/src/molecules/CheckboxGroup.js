@@ -1,38 +1,46 @@
 import React from 'react'
-import Radio from '../atoms/Radio'
+import Checkbox from '../atoms/Checkbox'
 
-class RadioGroup extends React.Component {
+class CheckboxGroup extends React.Component {
   constructor (props) {
     super(props)
 
     this.state = {
-      value: props.value
+      values: props.value || []
     }
   }
 
   handleChange = event => {
+    const { values } = this.state
+
     const value = event.target.value
 
-    this.setState({ value })
+    if (event.target.checked) {
+      values.push(value)
+    } else {
+      values.splice(values.indexOf(value), 1)
+    }
 
-    this.props.onChange(value)
+    this.setState({ values })
+
+    this.props.onChange(values)
   }
 
   render () {
     const { inline, name, options, required } = this.props
-    const { value } = this.state
+    const { values } = this.state
 
     return (
       <div>
         {options.map(option => (
-          <Radio
+          <Checkbox
             key={option.value}
             name={name}
             required={required}
             inline={inline}
             value={option.value}
             label={option.label}
-            checked={option.value === value}
+            checked={values.includes(option.value)}
             onChange={this.handleChange}/>
         ))}
       </div>
@@ -40,4 +48,4 @@ class RadioGroup extends React.Component {
   }
 }
 
-export default RadioGroup
+export default CheckboxGroup

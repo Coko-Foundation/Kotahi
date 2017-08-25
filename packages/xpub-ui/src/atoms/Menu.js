@@ -2,6 +2,8 @@ import React from 'react'
 import classnames from 'classnames'
 import classes from './Menu.local.css'
 
+// TODO: match the width of the container to the width of the widest option?
+
 class Menu extends React.Component {
   constructor (props) {
     super(props)

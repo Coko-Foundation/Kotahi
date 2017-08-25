@@ -1,4 +1,4 @@
-A group of radio buttons.
+A group of checkboxes.
 
 ```js
 const options = [
@@ -16,13 +16,16 @@ const options = [
   }
 ];
 
-<RadioGroup 
+initialState = { value: [] };
+
+<CheckboxGroup 
+  name="checkboxgroup"
   options={options} 
-  name="radiogroup"
-  onChange={value => console.log(value)}/>
+  value={state.value}
+  onChange={value => setState({ value })}/>
 ```
 
-The buttons can be displayed inline
+The checkboxes can be displayed inline.
 
 ```js
 const options = [
@@ -40,9 +43,12 @@ const options = [
   }
 ];
 
-<RadioGroup 
+initialState = { value: [] };
+
+<CheckboxGroup 
+  name="checkboxgroup-inline"
   options={options} 
-  name="radiogroup-inline"
+  value={state.value}
   inline={true}
-  onChange={value => console.log(value)}/>
+  onChange={value => setState({ value })}/>
 ```

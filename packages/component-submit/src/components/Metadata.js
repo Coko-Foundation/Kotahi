@@ -2,7 +2,7 @@ import React from 'react'
 import classnames from 'classnames'
 import { FormSection, Field } from 'redux-form'
 import { AbstractEditor, TitleEditor } from 'xpub-edit'
-import { Menu, Tags } from 'xpub-ui'
+import { CheckboxGroup, Menu, Tags } from 'xpub-ui'
 import classes from './Metadata.local.css'
 
 const Metadata = ({ journal }) => (
@@ -55,7 +55,7 @@ const Metadata = ({ journal }) => (
         }/>
     </div>
 
-    <div className={classnames(classes.section, classes.inline)}>
+    <div className={classes.section}>
       <label
         className={classes.label}
         htmlFor="articleType">Type of article</label>
@@ -64,6 +64,18 @@ const Metadata = ({ journal }) => (
         id="articleType"
         component={props =>
           <Menu options={journal.articleTypes} {...props.input}/>
+        }/>
+    </div>
+
+    <div className={classes.section}>
+      <div
+        className={classes.label}
+        htmlFor="articleSection">Section</div>
+      <Field
+        name="articleSection"
+        id="articleSection"
+        component={props =>
+          <CheckboxGroup options={journal.articleSections} {...props.input}/>
         }/>
     </div>
   </FormSection>

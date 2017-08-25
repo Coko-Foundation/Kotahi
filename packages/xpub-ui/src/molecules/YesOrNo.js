@@ -20,6 +20,7 @@ const YesOrNo = ({ name, value, required, onChange }) => (
     options={options}
     value={value}
     required={required}
+    inline={true}
     onChange={onChange}/>
 )
 

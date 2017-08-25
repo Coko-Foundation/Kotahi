@@ -1,21 +1,21 @@
 import React from 'react'
 import classnames from 'classnames'
-import classes from './Radio.local.css'
+import classes from './Checkbox.local.css'
 
-const Radio = ({ inline, name, value, label, checked, required, onChange }) => (
+const Checkbox = ({ inline, name, value, label, checked, required, onChange }) => (
   <label className={classnames(classes.root, {
     [classes.inline]: inline
   })}>
     <input
       className={classes.input}
-      type="radio"
+      type="checkbox"
       name={name}
       value={value}
-      checked={checked}
+      checked={checked || false}
       required={required}
       onChange={onChange}/>
     {label}
   </label>
 )
 
-export default Radio
+export default Checkbox

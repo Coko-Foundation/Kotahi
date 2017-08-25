@@ -37,6 +37,16 @@ const journal = {
       label: 'Registered Report'
     },
   ],
+  articleSections: [
+    {
+      value: 'organizational-behavior',
+      label: 'Organizational Behavior'
+    },
+    {
+      value: 'methodology',
+      label: 'Methodology and Research Practice'
+    },
+  ],
   declarations: {
     questions: [
       {
