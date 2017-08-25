@@ -1,5 +1,4 @@
 import React from 'react'
-import classnames from 'classnames'
 import { FormSection, Field } from 'redux-form'
 import { Tags } from 'xpub-ui'
 import classes from './Suggestions.local.css'

@@ -8,5 +8,6 @@
 
 .label {
   font-weight: bold;
-  margin: 20px 20px 20px 0;
+  display: block;
+  margin-bottom: 10px;
 }

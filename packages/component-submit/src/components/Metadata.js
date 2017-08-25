@@ -1,5 +1,4 @@
 import React from 'react'
-import classnames from 'classnames'
 import { FormSection, Field } from 'redux-form'
 import { AbstractEditor, TitleEditor } from 'xpub-edit'
 import { CheckboxGroup, Menu, Tags } from 'xpub-ui'

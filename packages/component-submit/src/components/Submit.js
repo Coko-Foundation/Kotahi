@@ -4,6 +4,7 @@ import classes from './Submit.local.css'
 import Metadata from './Metadata'
 import Declarations from './Declarations'
 import Suggestions from './Suggestions'
+import Notes from './Notes'
 
 const Submit = ({ journal, project, version, handleSubmit }) => (
   <div className={classes.root}>
@@ -21,6 +22,7 @@ const Submit = ({ journal, project, version, handleSubmit }) => (
       <Metadata journal={journal}/>
       <Declarations journal={journal}/>
       <Suggestions/>
+      <Notes/>
     </form>
   </div>
 )
