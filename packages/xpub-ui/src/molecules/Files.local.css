@@ -1,0 +1,16 @@
+.input {
+  display: none;
+}
+
+.button {
+  border: none;
+  background: transparent;
+  padding: 10px;
+  cursor: pointer;
+  font-size: inherit;
+  font-family: inherit;
+}
+
+.button:hover {
+  color: cornflowerblue;
+}
