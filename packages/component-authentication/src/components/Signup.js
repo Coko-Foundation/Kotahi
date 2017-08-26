@@ -3,17 +3,17 @@ import classnames from 'classnames'
 import { Field } from 'redux-form'
 import classes from './Signup.local.css'
 
-const Signup = ({ signupError, handleSubmit }) => (
+const Signup = ({ error, handleSubmit }) => (
   <div className={classes.root}>
     <div className={classes.title}>
       Sign up
     </div>
 
-    {signupError && <div className={classes.error}>{signupError}</div>}
+    {error && <div className={classes.error}>{error}</div>}
 
     <form
       onSubmit={handleSubmit}
-      className={classnames({ error: !!signupError, success: !signupError })}>
+      className={classnames({ error: !!error, success: !error })}>
       <div>
         <label>
           Username
