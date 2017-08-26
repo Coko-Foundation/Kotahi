@@ -1,7 +1,7 @@
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import actions from 'pubsweet-client/src/actions'
-import { withJournal } from 'component-app'
+import { withJournal } from 'pubsweet-component-xpub-app/src/components'
 import { selectCollection, selectFragment } from 'xpub-selectors'
 import Submit from './Submit'
 
