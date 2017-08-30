@@ -9,7 +9,8 @@ const onSubmit = (values, dispatch) => {
     if (error.validationErrors) {
       throw new SubmissionError(error.validationErrors)
     } else {
-      //
+      console.error(error)
+      // TODO: display error
     }
   })
 }

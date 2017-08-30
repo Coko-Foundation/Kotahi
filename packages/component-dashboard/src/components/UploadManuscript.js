@@ -47,27 +47,31 @@ class UploadManuscript extends React.Component {
 
       return createProject({
         type: 'project',
-      }).then(({ collection: project }) => {
-        if (!project.id) {
+        title
+      }).then(result => {
+        if (!result.collection.id) {
           throw new Error('Failed to create a project')
         }
 
-        return createVersion(project, {
+        return createVersion(result.collection, {
           type: 'version',
           version: 1,
           source,
-          title
-        }).then(() => {
+          metadata: {
+            title
+          }
+        }).then(result => {
           this.setState({ complete: true })
         })
       })
     }).catch(error => {
       this.setState({ error: error.message })
+      console.error(error)
     })
   }
 
   render () {
-    const { converting, complete, error } = this.props
+    const { converting, complete, error } = this.state
 
     return (
       <Dropzone

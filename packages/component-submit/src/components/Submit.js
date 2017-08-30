@@ -14,7 +14,7 @@ const Submit = ({ journal, project, version, handleSubmit, uploadFile }) => (
     </div>
 
     <div className={classes.intro}>
-      <div>We have ingested your manuscript. To access your manuscript in an editor, please <Link to={`/projects/${project.id}/manuscript`}>view here</Link>.</div>
+      <div>We have ingested your manuscript. To access your manuscript in an editor, please <Link to={`/projects/${project.id}/version/${version.id}/manuscript`}>view here</Link>.</div>
       <div>To complete your submission, please answer the following questions.</div>
       <div>The answers will be automatically saved.</div>
     </div>

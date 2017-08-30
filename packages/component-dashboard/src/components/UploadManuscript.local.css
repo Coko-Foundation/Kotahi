@@ -12,17 +12,30 @@
 }
 
 .icon {
-  color: cornflowerblue;
+  display: inline-flex;
   font-size: 2em;
+  align-items: center;
+  justify-content: center;
+  color: cornflowerblue;
   margin-right: 10px;
 }
 
 .converting {
   color: orange;
+  animation: spin 1s infinite linear;
 }
 
 .info {
   text-transform: uppercase;
   font-size: 200%;
   color: cornflowerblue;
+}
+
+@-webkit-keyframes spin {
+  0% {
+    -webkit-transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+  }
 }

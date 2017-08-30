@@ -12,7 +12,7 @@
 }
 
 .title {
-  display: flex;
+  flex: 1;
   font-family: Vollkorn, serif;
   font-size: 120%;
 }

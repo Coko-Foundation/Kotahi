@@ -15,8 +15,8 @@ export default (
     <Route path="/" component={App}>
       <Route component={AuthenticatedPage}>
         <Route path="dashboard" component={DashboardPage}/>
-        <Route path="projects/:project/submit" component={SubmitPage}/>
-        <Route path="projects/:project/manuscript" component={ManuscriptPage}/>
+        <Route path="projects/:project/version/:version/submit" component={SubmitPage}/>
+        <Route path="projects/:project/version/:version/manuscript" component={ManuscriptPage}/>
       </Route>
 
       <Route path="signup" component={SignupPage}/>
