@@ -1,21 +1,21 @@
 import React from 'react'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
-import { logoutUser } from 'pubsweet-component-login/actions'
+import { logout } from '../redux/logout'
 
 class Logout extends React.Component {
   componentDidMount () {
-    const { isAuthenticated, logoutUser } = this.props
+    const { isAuthenticated, logout } = this.props
 
     if (isAuthenticated)  {
-      logoutUser()
+      logout()
     }
   }
 
   render () {
     const { isAuthenticated } = this.props
 
-    return isAuthenticated ? 'Signed out' : 'Signing out…'
+    return isAuthenticated ? <div>Signing out…</div> : <div>Signed out</div>
   }
 }
 
@@ -25,7 +25,7 @@ export default compose(
       isAuthenticated: state.currentUser.isAuthenticated,
     }),
     {
-      logoutUser
+      logout
     }
   )
 )(Logout)

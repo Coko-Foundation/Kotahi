@@ -3,8 +3,8 @@ import PropTypes from 'prop-types'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
-import actions from 'pubsweet-client/src/actions'
 import { withRouter } from 'react-router'
+import { getCurrentUser } from '../redux/currentUser'
 
 class AuthenticatedPage extends React.Component {
   componentDidMount () {
@@ -52,7 +52,7 @@ export default compose(
       isFetching: state.currentUser.isFetching
     }),
     {
-      getCurrentUser: actions.getCurrentUser,
+      getCurrentUser,
       push
     }
   ),

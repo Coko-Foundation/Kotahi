@@ -31,7 +31,7 @@ class App extends React.Component  {
           brandLink="/"
           userName={currentUser ? currentUser.username : null}
           loginLink="/login"
-          logoutLink="/signout"/>
+          logoutLink="/logout"/>
 
         <div className={classes.main}>
           {children}
@@ -40,21 +40,6 @@ class App extends React.Component  {
     )
   }
 }
-
-/*const App = ({ children, currentUser }) => (
-  <div className={classes.root}>
-    <AppBar
-      appName={journal.metadata.name}
-      appLink="/projects" // TODO: make configurable
-      userName={currentUser ? currentUser.username : null}
-      loginLink="/signin"
-      logoutLink="/signout"/>
-
-    <div className={classes.main}>
-      {children}
-    </div>
-  </div>
-)*/
 
 App.propTypes = {
   children: PropTypes.node,

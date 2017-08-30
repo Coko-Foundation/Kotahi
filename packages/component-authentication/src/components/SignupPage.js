@@ -1,19 +1,27 @@
-import { compose } from 'recompose'
 import { connect } from 'react-redux'
-import { reduxForm } from 'redux-form'
-import { signupUser } from 'pubsweet-component-signup/actions'
+import { compose } from 'recompose'
+import { reduxForm, SubmissionError } from 'redux-form'
+import { signup } from '../redux/signup'
 import Signup from './Signup'
+
+const onSubmit = (values, dispatch) => {
+  dispatch(signup(values)).catch(error => {
+    if (error.validationErrors) {
+      throw new SubmissionError(error.validationErrors)
+    } else {
+      //
+    }
+  })
+}
 
 export default compose(
   reduxForm({
-    form: 'signup'
+    form: 'signup',
+    onSubmit
   }),
   connect(
     state => ({
-      signupError: state.error
-    }),
-    {
-      onSubmit: signupUser
-    }
+      error: state.signup.error
+    })
   )
 )(Signup)

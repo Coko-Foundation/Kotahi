@@ -1,6 +1,6 @@
 import React from 'react'
-import classnames from 'classnames'
 import { Field } from 'redux-form'
+import { Link } from 'react-router'
 import classes from './Signup.local.css'
 
 const Signup = ({ error, handleSubmit }) => (
@@ -9,11 +9,9 @@ const Signup = ({ error, handleSubmit }) => (
       Sign up
     </div>
 
-    {error && <div className={classes.error}>{error}</div>}
+    {error && <div className={classes.error}>{error.message}</div>}
 
-    <form
-      onSubmit={handleSubmit}
-      className={classnames({ error: !!error, success: !error })}>
+    <form onSubmit={handleSubmit}>
       <div>
         <label>
           Username
@@ -39,6 +37,8 @@ const Signup = ({ error, handleSubmit }) => (
         <button type="submit" className={classes.button}>Sign up</button>
       </div>
     </form>
+
+    <div>or <Link to="/login">login</Link></div>
   </div>
 )
 

@@ -13,11 +13,11 @@ export default (
     <Redirect from="/" to="/dashboard"/>
 
     <Route path="/" component={App}>
-      {/*<Route component={AuthenticatedPage}>*/}
+      <Route component={AuthenticatedPage}>
         <Route path="dashboard" component={DashboardPage}/>
         <Route path="projects/:project/submit" component={SubmitPage}/>
         <Route path="projects/:project/manuscript" component={ManuscriptPage}/>
-      {/*</Route>*/}
+      </Route>
 
       <Route path="signup" component={SignupPage}/>
       <Route path="login" component={LoginPage}/>
