@@ -68,6 +68,23 @@ module.exports = [
         ]
       },
 
+      // SCSS Modules
+      {
+        test: /\.local\.scss$/,
+        include,
+        use: [
+          'style-loader',
+          {
+            loader: 'css-loader',
+            options: {
+              modules: true,
+              importLoaders: 1,
+            }
+          },
+          'sass-loader'
+        ]
+      },
+
       // global CSS
       {
         test: /\.css$/,
@@ -78,14 +95,14 @@ module.exports = [
       },
 
       // global SCSS
-      /*{
+      {
         test: /\.scss$/,
         use: [
           'style-loader',
-          'css-loader',
+          'css-loader', // TODO: importLoaders: 1?
           'sass-loader'
         ]
-      },*/
+      },
 
       // HTML (needed?)
       {

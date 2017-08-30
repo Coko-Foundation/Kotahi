@@ -4,6 +4,11 @@ process.env.NODE_ENV = 'development'
 const path = require('path')
 const nodeExternals = require('webpack-node-externals')
 
+const include = [
+  path.join(__dirname, 'src'),
+  /xpub-[^/]+\/src/,
+]
+
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -24,10 +29,7 @@ module.exports = {
           // ES6 modules
           {
             test: /\.js$/,
-            include: [
-              path.join(__dirname, 'src'),
-              /xpub-[^/]+\/src/,
-            ],
+            include,
             loader: 'babel-loader',
             options: {
               presets: [
@@ -42,10 +44,7 @@ module.exports = {
           // CSS modules
           {
             test: /\.local\.css$/,
-            include: [
-              path.join(__dirname, 'src'),
-              /xpub-[^/]+\/src/,
-            ],
+            include,
             use: [
               'style-loader',
               {
@@ -54,6 +53,23 @@ module.exports = {
                   modules: true,
                 }
               }
+            ],
+          },
+
+          // SCSS modules
+          {
+            test: /\.local\.scss$/,
+            include,
+            use: [
+              'style-loader',
+              {
+                loader: 'css-loader',
+                options: {
+                  modules: true,
+                  importLoaders: 1
+                }
+              },
+              'sass-loader'
             ],
           },
 

@@ -22,7 +22,9 @@
     "babel-preset-stage-2": "^6.24.1",
     "css-loader": "^0.28.4",
     "eslint": "^4.4.1",
+    "node-sass": "^4.5.3",
     "rimraf": "^2.6.1",
+    "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.5",
     "webpack-node-externals": "^1.6.0"

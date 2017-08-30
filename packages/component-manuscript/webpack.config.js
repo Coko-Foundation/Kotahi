@@ -5,6 +5,12 @@ const path = require('path')
 // const nodeExternals = require('webpack-node-externals')
 const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
+const include = [
+  path.join(__dirname, 'src'),
+  /pubsweet-[^/]+\/src/,
+  /xpub-[^/]+\/src/,
+]
+
 module.exports = {
   entry: './src/index.js',
   output: {
@@ -27,11 +33,7 @@ module.exports = {
         oneOf: [
           {
             test: /\.jsx?$/,
-            include: [
-              path.join(__dirname, 'src'),
-              /pubsweet-[^/]+\/src/,
-              /xpub-[^/]+\/src/,
-            ],
+            include,
             loader: 'babel-loader',
             options: {
               presets: [
@@ -45,20 +47,33 @@ module.exports = {
           // CSS modules
           {
             test: /\.local\.css$/,
-            include: [
-              path.join(__dirname, 'src'),
-              /pubsweet-[^/]+\/src/,
-              /xpub-[^/]+\/src/,
-            ],
+            include,
             use: [
               'style-loader',
               {
                 loader: 'css-loader',
                 options: {
-                  modules: true
+                  modules: true,
                 }
               }
-            ]
+            ],
+          },
+
+          // SCSS modules
+          {
+            test: /\.local\.scss$/,
+            include,
+            use: [
+              'style-loader',
+              {
+                loader: 'css-loader',
+                options: {
+                  modules: true,
+                  importLoaders: 1
+                }
+              },
+              'sass-loader'
+            ],
           },
 
           // CSS
@@ -75,7 +90,10 @@ module.exports = {
             test: /\.scss$/,
             use: ExtractTextPlugin.extract({
               fallback: 'style-loader',
-              use: ['css-loader', 'sass-loader'],
+              use: [
+                'css-loader',
+                'sass-loader'
+              ],
             }),
           },
 

@@ -4,11 +4,11 @@
   cursor: pointer;
 }
 
-.inline {
+.root.inline {
   display: inline-flex;
 }
 
-.inline:not(:last-child) {
+.root.inline:not(:last-child) {
   margin-right: 1rem;
 }
 

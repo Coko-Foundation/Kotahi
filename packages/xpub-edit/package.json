@@ -21,11 +21,13 @@
     "css-loader": "^0.28.4",
     "faker": "^4.1.0",
     "file-loader": "^0.11.2",
-    "xpub-styleguide": "^0.0.2",
+    "node-sass": "^4.5.3",
     "react-styleguidist": "^6.0.8",
+    "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
     "webpack": "^3.5.5",
-    "webpack-node-externals": "^1.6.0"
+    "webpack-node-externals": "^1.6.0",
+    "xpub-styleguide": "^0.0.2"
   },
   "scripts": {
     "styleguide": "styleguidist server",
