@@ -12,9 +12,23 @@ import classes from './App.local.css'
 
 class App extends React.Component  {
   componentDidMount () {
-    const { getProjects, getVersions, isAuthenticated } = this.props
+    const { isAuthenticated } = this.props
 
-    if (!isAuthenticated) return
+    if (isAuthenticated) {
+      this.hydrate()
+    }
+  }
+
+  componentWillReceiveProps (nextProps) {
+    const { isAuthenticated } = nextProps
+
+    if (isAuthenticated !== this.props.isAuthenticated) {
+      this.hydrate()
+    }
+  }
+
+  hydrate () {
+    const { getProjects, getVersions } = this.props
 
     getProjects().then(({ collections: projects }) => {
       projects.forEach(project => getVersions(project))
