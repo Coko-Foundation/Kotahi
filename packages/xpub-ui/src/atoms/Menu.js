@@ -40,7 +40,9 @@ class Menu extends React.Component {
     const { open, selected } = this.state
 
     return (
-      <div className={classes.root}>
+      <div className={classnames(classes.root, {
+        [classes.open]: open
+      })}>
         <div>
           <button
             type="button"
@@ -51,7 +53,7 @@ class Menu extends React.Component {
             ) : (
               <span className={classes.placeholder}>{placeholder}</span>
             )}
-            <span className={classes.arrow}>{ open ? '▲' : '▼' }</span>
+            <span className={classes.arrow}>▼</span>
           </button>
         </div>
 
