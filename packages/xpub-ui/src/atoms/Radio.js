@@ -14,7 +14,7 @@ const Radio = ({ inline, name, value, label, checked, required, onChange }) => (
       checked={checked}
       required={required}
       onChange={onChange}/>
-    {label}
+    <span>{label}</span>
   </label>
 )
 

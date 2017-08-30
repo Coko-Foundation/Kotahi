@@ -14,7 +14,7 @@ const Checkbox = ({ inline, name, value, label, checked, required, onChange }) =
       checked={checked || false}
       required={required}
       onChange={onChange}/>
-    {label}
+    <span>{label}</span>
   </label>
 )
 
