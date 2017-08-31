@@ -36,11 +36,6 @@ const uploadFile = file => dispatch => {
 }
 
 export default compose(
-  reduxForm({
-    form: 'submit',
-    onSubmit,
-    onChange
-  }),
   ConnectPage(params => [
     actions.getCollection({ id: params.project }),
     actions.getFragment({ id: params.project }, { id: params.version })
@@ -56,5 +51,10 @@ export default compose(
       uploadFile
     }
   ),
+  reduxForm({
+    form: 'submit',
+    onSubmit,
+    onChange
+  }),
   withJournal
 )(Submit)
