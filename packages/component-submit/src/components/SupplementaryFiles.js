@@ -5,14 +5,13 @@ import classes from './Metadata.local.css'
 
 const SupplementaryFiles = ({ uploadFile }) => (
   <FormSection name="files">
-    <div className={classes.section}>
+    <div className={classes.section} id="files.supplementary">
       <div
         className={classes.label}
         htmlFor="supplementary">Upload supplementary materials</div>
 
       <Field
         name="supplementary"
-        id="supplementary"
         component={props =>
           <Files
             uploadFile={uploadFile}

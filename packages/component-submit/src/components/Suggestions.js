@@ -5,7 +5,7 @@ import classes from './Suggestions.local.css'
 
 const Suggestions = () => (
   <FormSection name="suggestions">
-    <div className={classes.section}>
+    <div className={classes.section} id="suggestions.reviewers">
       <FormSection name="reviewers">
         <div className={classes.legend}>
           Suggested or opposed reviewers
@@ -16,7 +16,6 @@ const Suggestions = () => (
 
           <Field
             name="suggested"
-            id="suggestedReviewers"
             component={props => (
               <Tags
                 placeholder="Add a reviewer"
@@ -29,7 +28,6 @@ const Suggestions = () => (
 
           <Field
             name="opposed"
-            id="opposedReviewers"
             component={props => (
               <Tags
                 placeholder="Add a reviewer"
@@ -39,7 +37,7 @@ const Suggestions = () => (
       </FormSection>
     </div>
 
-    <div className={classes.section}>
+    <div className={classes.section} id="suggestions.editors">
       <FormSection name="editors">
         <div className={classes.legend}>
           Suggested or opposed editors
@@ -50,7 +48,6 @@ const Suggestions = () => (
 
           <Field
             name="suggested"
-            id="suggestedEditors"
             component={props => (
               <Tags
                 placeholder="Add an editor"
@@ -63,7 +60,6 @@ const Suggestions = () => (
 
           <Field
             name="opposed"
-            id="opposedEditors"
             component={props => (
               <Tags
                 placeholder="Add an editor"

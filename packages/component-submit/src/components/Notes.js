@@ -5,10 +5,9 @@ import classes from './Metadata.local.css'
 
 const Notes = () => (
   <FormSection name="notes">
-    <div className={classes.section}>
+    <div className={classes.section} id="notes.fundingAcknowledgement">
       <Field
         name="fundingAcknowledgement"
-        id="fundingAcknowledgement"
         component={props =>
           <NoteEditor
             placeholder="Enter an acknowledgment…"
@@ -17,10 +16,9 @@ const Notes = () => (
         }/>
     </div>
 
-    <div className={classes.section}>
+    <div className={classes.section} id="notes.specialInstructions">
       <Field
         name="specialInstructions"
-        id="specialInstructions"
         component={props =>
           <NoteEditor
             placeholder="Enter instructions for the editor…"

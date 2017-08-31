@@ -9,6 +9,7 @@ const Declarations = ({ journal }) => (
     {journal.declarations.questions.map(question => (
       <div
         key={question.id}
+        id={`declarations.${question.id}`}
         className={classnames(classes.section, classes.spread)}>
         <div className={classes.legend}>
           { question.legend }
@@ -16,7 +17,6 @@ const Declarations = ({ journal }) => (
 
         <Field
           name={question.id}
-          id={question.id}
           component={props => <YesOrNo inline={true} {...props.input}/>}/>
       </div>
     ))}
