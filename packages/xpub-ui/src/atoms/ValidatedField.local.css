@@ -1,0 +1,18 @@
+.messages {
+  margin-top: 10px;
+}
+
+.message {
+  width: fit-content;
+  padding: 10px;
+}
+
+.error {
+  background-color: red;
+  color: white;
+}
+
+.warning {
+  background-color: orange;
+  color: white;
+}

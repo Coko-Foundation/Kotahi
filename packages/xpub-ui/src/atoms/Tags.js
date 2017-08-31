@@ -34,8 +34,6 @@ class Tags extends React.Component {
     this.props.onChange(tags)
   }
 
-  // TODO: fire change event on state change
-
   render () {
     const { tags } = this.state
     const { name, suggestions, placeholder } = this.props

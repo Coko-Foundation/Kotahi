@@ -1,6 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 import { Button } from 'xpub-ui'
+import { FormSection, Field } from 'redux-form'
 import classes from './Submit.local.css'
 import Metadata from './Metadata'
 import Declarations from './Declarations'
@@ -19,6 +20,10 @@ const Submit = ({ journal, project, version, pristine, submitting, handleSubmit,
       <div>To complete your submission, please answer the following questions.</div>
       <div>The answers will be automatically saved.</div>
     </div>
+
+    <FormSection name="metadata">
+      <Field name="title" component={props => <span>{props.valid}</span>}/>
+    </FormSection>
 
     <form onSubmit={handleSubmit}>
       <Metadata journal={journal}/>
