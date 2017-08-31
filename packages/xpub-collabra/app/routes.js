@@ -1,12 +1,12 @@
 import React from 'react'
 import { Redirect, Route } from 'react-router'
-// import loadable from 'loadable-components'
+import loadable from 'loadable-components'
 import { App } from 'pubsweet-component-xpub-app/src/components'
 import { AuthenticatedPage, SignupPage, LoginPage, LogoutPage } from 'pubsweet-component-xpub-authentication/src/components'
 import DashboardPage from 'pubsweet-component-xpub-dashboard/src/components'
 import SubmitPage from 'pubsweet-component-xpub-submit/src/components'
-import ManuscriptPage from 'pubsweet-component-xpub-manuscript/src/components'
-// const ManuscriptPage = loadable(() => import('pubsweet-component-xpub-manuscript/src/components'))
+// import ManuscriptPage from 'pubsweet-component-xpub-manuscript/src/components'
+const ManuscriptPage = loadable(() => import('pubsweet-component-xpub-manuscript/src/components'))
 
 export default (
   <Route>
