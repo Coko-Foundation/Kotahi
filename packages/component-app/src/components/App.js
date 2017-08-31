@@ -1,5 +1,6 @@
 import React from 'react'
 import { compose } from 'recompose'
+import { connect } from 'react-redux'
 import { AppBar } from 'xpub-ui'
 import { withJournal } from './JournalProvider'
 import classes from './App.local.css'
@@ -20,5 +21,10 @@ const App = ({ children, currentUser, journal }) => (
 )
 
 export default compose(
+  connect(
+    state => ({
+      currentUser: state.currentUser.user
+    })
+  ),
   withJournal
 )(App)
