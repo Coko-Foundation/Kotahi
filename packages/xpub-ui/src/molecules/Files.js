@@ -57,6 +57,7 @@ class Files extends React.Component {
         <div className={classes.files}>
           {uploads && uploads.map(upload => (
             <Upload
+              key={upload.file.name}
               file={upload.file}
               request={upload.request}/>
           ))}

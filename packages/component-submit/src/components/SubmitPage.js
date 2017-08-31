@@ -1,7 +1,10 @@
-import { compose } from 'recompose'
+/* global CONFIG */
+
+import { compose, withHandlers } from 'recompose'
 import { connect } from 'react-redux'
 import { reduxForm } from 'redux-form'
 import actions from 'pubsweet-client/src/actions'
+import token from 'pubsweet-client/src/helpers/token'
 import { withJournal, ConnectPage } from 'pubsweet-component-xpub-app/src/components'
 import { selectCollection, selectFragment } from 'xpub-selectors'
 import Submit from './Submit'
@@ -14,6 +17,44 @@ const onSubmit = (values, dispatch) => {
 const onChange = (values, dispatch) => {
   // TODO: save fragment
   console.log('change', values)
+}
+
+const uploadFile = (file, project, version) => dispatch => {
+  // TODO: import the endpoint URL from a client module
+  const API_ENDPOINT = CONFIG['pubsweet-server'].API_ENDPOINT
+
+  const data = new FormData()
+  data.append('file', file)
+
+  const request = new XMLHttpRequest()
+  request.open('POST', API_ENDPOINT + '/upload')
+  request.setRequestHeader('Authorization', 'Bearer ' + token())
+  request.setRequestHeader('Accept', 'text/plain') // the response is a URL
+  request.send(data)
+
+  request.addEventListener('load', event => {
+    if (request.status === 200) { // TODO: 201?
+      const url = request.responseText
+
+      // TODO: create this before uploading, to get an upload token?
+      // if (!version.files) {
+        version.files = {}
+      // }
+
+      if (!version.files.supplementary) {
+        version.files.supplementary = []
+      }
+
+      version.files.supplementary.push({
+        name: file.name,
+        url
+      })
+
+      dispatch(actions.updateFragment(project, version))
+    }
+  })
+
+  return request
 }
 
 export default compose(
@@ -31,16 +72,16 @@ export default compose(
       const project = selectCollection(state, ownProps.params.project)
       const version = selectFragment(state, ownProps.params.version)
 
-      const initialValues = {
-        declarations: version.declarations,
-        metadata: version.metadata,
-        notes: version.notes,
-        suggestions: version.suggestions,
-        files: version.files
-      }
-
-      return { project, version, initialValues }
+      return { project, version, initialValues: version }
+    },
+    {
+      uploadFile
     }
   ),
+  withHandlers({
+    uploadFile: ({ dispatch, project, version }) => file => {
+      return dispatch(uploadFile(file, project, version))
+    }
+  }),
   withJournal
 )(Submit)

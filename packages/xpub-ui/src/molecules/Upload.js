@@ -31,8 +31,6 @@ class Upload extends React.Component {
       this.setState({
         progress: 1
       })
-
-      this.props.onComplete() // TODO: pass info?
     } else {
       this.setState({
         error: 'There was an error'

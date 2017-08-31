@@ -14,7 +14,9 @@ const SupplementaryFiles = ({ uploadFile }) => (
         name="supplementary"
         id="supplementary"
         component={props =>
-          <Files uploadFile={uploadFile} {...props.input}/>
+          <Files
+            uploadFile={uploadFile}
+            {...props.input}/>
         }/>
     </div>
   </FormSection>

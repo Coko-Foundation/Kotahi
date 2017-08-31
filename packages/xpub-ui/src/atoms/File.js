@@ -11,7 +11,11 @@ const File = ({ value, file, error, progress }) => (
       </div>
     </div>
 
-    <div className={classes.name}>{value.name}</div>
+    <div className={classes.name}>
+      <a href={value.url}>
+        {value.name}
+      </a>
+    </div>
   </div>
 )
 
