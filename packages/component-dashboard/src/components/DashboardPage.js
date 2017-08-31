@@ -3,8 +3,8 @@ import { connect } from 'react-redux'
 import { orderBy } from 'lodash'
 import actions from 'pubsweet-client/src/actions'
 import { selectCurrentUser } from 'xpub-selectors'
-import { ink } from 'pubsweet-component-ink-frontend/actions'
 import { ConnectPage } from 'pubsweet-component-xpub-app/src/components'
+import { uploadManuscript } from '../redux/manuscriptConversion'
 import Dashboard from './Dashboard'
 
 export default compose(
@@ -15,13 +15,11 @@ export default compose(
     state => ({
       projects: orderBy(state.collections, ['created'], ['desc']),
       currentUser: selectCurrentUser(state),
-      isConverting: state.ink.isFetching
+      conversion: state.manuscriptConversion
     }),
     {
-      createProject: actions.createCollection,
-      createVersion: actions.createFragment,
+      uploadManuscript,
       deleteProject: actions.deleteCollection,
-      convertToHTML: ink
     }
   )
 )(Dashboard)

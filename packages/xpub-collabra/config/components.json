@@ -1,5 +1,9 @@
 [
+  "pubsweet-component-xpub-app",
   "pubsweet-component-xpub-authentication",
+  "pubsweet-component-xpub-dashboard",
+  "pubsweet-component-xpub-manuscript",
+  "pubsweet-component-xpub-submit",
   "pubsweet-component-ink-frontend",
   "pubsweet-component-ink-backend"
 ]

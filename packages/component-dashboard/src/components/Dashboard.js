@@ -5,13 +5,12 @@ import DashboardItem from './DashboardItem'
 import EmptySubmissions from './EmptySubmissions'
 import DashboardSection from './DashboardSection'
 
-const Dashboard = ({ projects, createProject, createVersion, convertToHTML, deleteProject, isConverting }) => (
+const Dashboard = ({ projects, conversion, deleteProject, redirectToSubmit, uploadManuscript }) => (
   <div className={classes.root}>
     <div className={classes.upload}>
       <UploadManuscript
-        createProject={createProject}
-        createVersion={createVersion}
-        convertToHTML={convertToHTML}/>
+        conversion={conversion}
+        uploadManuscript={uploadManuscript}/>
     </div>
 
     <DashboardSection

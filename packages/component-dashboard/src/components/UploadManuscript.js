@@ -1,98 +1,37 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import classnames from 'classnames'
+import { Icon } from 'xpub-ui'
 import classes from './UploadManuscript.local.css'
 
-// TODO: move isConverting from global state to local state
+const UploadManuscript = ({ uploadManuscript, conversion }) => (
+  <Dropzone
+    onDrop={uploadManuscript}
+    accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
+    className={classes.dropzone}>
+    <div className={classes.main}>
+      <div className={classnames({
+        [classes.converting]: conversion.converting,
+        [classes.complete]: conversion.complete
+      })}>
+        <span className={classes.icon}>
+          <Icon color="cornflowerblue">
+            {conversion.complete ? 'check_circle' : 'plus_circle'}
+          </Icon>
+        </span>
+      </div>
 
-const generateTitle = (name) => {
-  return name
-    .replace(/[_-]+/g, ' ') // convert hyphens/underscores to space
-    .replace(/\.[^.]+$/, '') // remove file extension
-}
-
-// TODO: preserve italics (use parse5?)
-const extractTitle = (source) => {
-  const doc = new DOMParser().parseFromString(source, 'text/html')
-  const heading = doc.querySelector('h1')
-
-  return heading ? heading.textContent : null
-}
-
-class UploadManuscript extends React.Component {
-  state = {
-    converting: false,
-    complete: undefined,
-    error: undefined
-  }
-
-  onDrop = acceptedFiles => {
-    const { convertToHTML, createProject, createVersion } = this.props
-
-    const inputFile = acceptedFiles[0]
-
-    this.setState({
-      converting: true,
-      complete: false,
-      error: undefined
-    })
-
-    convertToHTML(inputFile).then(response => {
-      if (!response.converted) {
-        throw new Error('The file was not converted')
-      }
-
-      const source = response.converted
-      const title = extractTitle(source) || generateTitle(inputFile.name)
-
-      return createProject({
-        type: 'project',
-        title
-      }).then(result => {
-        if (!result.collection.id) {
-          throw new Error('Failed to create a project')
-        }
-
-        return createVersion(result.collection, {
-          type: 'version',
-          version: 1,
-          source,
-          metadata: {
-            title
-          }
-        }).then(result => {
-          this.setState({ complete: true })
-        })
-      })
-    }).catch(error => {
-      this.setState({ error: error.message })
-      console.error(error)
-    })
-  }
-
-  render () {
-    const { converting, complete, error } = this.state
-
-    return (
-      <Dropzone
-        onDrop={this.onDrop}
-        accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-        className={classes.dropzone}>
-        <div className={classes.main}>
-          <div className={classnames({
-            [classes.converting]: converting,
-            [classes.complete]: complete
-          })}>
-            <span className={classes.icon}>+</span>
-          </div>
-
-          <div className={classes.info}>
-            {error ? error : 'Create submission'}
-          </div>
+      {conversion.error ? (
+        <div className={classes.error}>
+          {conversion.error.message}
         </div>
-      </Dropzone>
-    )
-  }
-}
+      ) : (
+        <div className={classes.info}>
+          {conversion.complete ? 'Submission created' : 'Create submission'}
+        </div>
+      )}
+    </div>
+  </Dropzone>
+)
 
 export default UploadManuscript

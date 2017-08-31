@@ -13,15 +13,14 @@
 
 .icon {
   display: inline-flex;
-  font-size: 2em;
+  height: 100%;
   align-items: center;
-  justify-content: center;
   color: cornflowerblue;
   margin-right: 10px;
+  transform-origin: center;
 }
 
 .converting {
-  color: orange;
   animation: spin 1s infinite linear;
 }
 
@@ -31,11 +30,15 @@
   color: cornflowerblue;
 }
 
-@-webkit-keyframes spin {
+.error {
+  color: red;
+}
+
+@keyframes spin {
   0% {
-    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
   }
   100% {
-    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
   }
 }
