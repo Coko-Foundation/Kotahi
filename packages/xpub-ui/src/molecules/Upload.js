@@ -31,6 +31,11 @@ class Upload extends React.Component {
       this.setState({
         progress: 1
       })
+
+      this.props.handleUploadedFile({
+        file: this.props.file,
+        url: this.props.request.responseText
+      })
     } else {
       this.setState({
         error: 'There was an error'

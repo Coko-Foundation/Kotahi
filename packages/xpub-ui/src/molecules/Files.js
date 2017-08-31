@@ -18,17 +18,27 @@ class Files extends React.Component {
   }
 
   handleChange = event => {
-    const { uploadFile } = this.props
     const { uploads } = this.state
 
     Array.from(event.target.files).forEach(file => {
       uploads.push({
         file,
-        request: uploadFile(file)
+        request: this.props.uploadFile(file)
       })
     })
 
     this.setState({ uploads })
+  }
+
+  handleUploadedFile = ({ file, url }) => {
+    const values = this.state.values.concat({
+      name: file.name,
+      url
+    })
+
+    this.setState({ values })
+
+    this.props.handleChange(values)
   }
 
   render () {
@@ -59,7 +69,8 @@ class Files extends React.Component {
             <Upload
               key={upload.file.name}
               file={upload.file}
-              request={upload.request}/>
+              request={upload.request}
+              handleUploadedFile={this.handleUploadedFile}/>
           ))}
 
           {values && values.map(value => (

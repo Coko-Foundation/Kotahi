@@ -1,6 +1,6 @@
 /* global CONFIG */
 
-import { compose, withHandlers } from 'recompose'
+import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import { reduxForm } from 'redux-form'
 import actions from 'pubsweet-client/src/actions'
@@ -19,7 +19,7 @@ const onChange = (values, dispatch) => {
   console.log('change', values)
 }
 
-const uploadFile = (file, project, version) => dispatch => {
+const uploadFile = file => dispatch => {
   // TODO: import the endpoint URL from a client module
   const API_ENDPOINT = CONFIG['pubsweet-server'].API_ENDPOINT
 
@@ -31,28 +31,6 @@ const uploadFile = (file, project, version) => dispatch => {
   request.setRequestHeader('Authorization', 'Bearer ' + token())
   request.setRequestHeader('Accept', 'text/plain') // the response is a URL
   request.send(data)
-
-  request.addEventListener('load', event => {
-    if (request.status === 200) { // TODO: 201?
-      const url = request.responseText
-
-      // TODO: create this before uploading, to get an upload token?
-      // if (!version.files) {
-        version.files = {}
-      // }
-
-      if (!version.files.supplementary) {
-        version.files.supplementary = []
-      }
-
-      version.files.supplementary.push({
-        name: file.name,
-        url
-      })
-
-      dispatch(actions.updateFragment(project, version))
-    }
-  })
 
   return request
 }
@@ -78,10 +56,5 @@ export default compose(
       uploadFile
     }
   ),
-  withHandlers({
-    uploadFile: ({ dispatch, project, version }) => file => {
-      return dispatch(uploadFile(file, project, version))
-    }
-  }),
   withJournal
 )(Submit)
