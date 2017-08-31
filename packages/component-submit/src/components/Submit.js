@@ -9,7 +9,7 @@ import Suggestions from './Suggestions'
 import Notes from './Notes'
 import SupplementaryFiles from './SupplementaryFiles'
 
-const Submit = ({ journal, project, version, pristine, submitting, handleSubmit, uploadFile }) => (
+const Submit = ({ journal, project, version, valid, pristine, submitting, handleSubmit, uploadFile }) => (
   <div className={classes.root}>
     <div className={classes.title}>
       Submission information
@@ -21,10 +21,6 @@ const Submit = ({ journal, project, version, pristine, submitting, handleSubmit,
       <div>The answers will be automatically saved.</div>
     </div>
 
-    <FormSection name="metadata">
-      <Field name="title" component={props => <span>{props.valid}</span>}/>
-    </FormSection>
-
     <form onSubmit={handleSubmit}>
       <Metadata journal={journal}/>
       <Declarations journal={journal}/>
@@ -34,7 +30,7 @@ const Submit = ({ journal, project, version, pristine, submitting, handleSubmit,
       <div>
         <Button
           type="submit"
-          disabled={pristine || submitting}>Submit your manuscript</Button>
+          disabled={pristine || submitting || !valid}>Submit your manuscript</Button>
       </div>
     </form>
   </div>
