@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormSection, Field } from 'redux-form'
-import { Tags } from 'xpub-ui'
+import { Tags, ValidatedField } from 'xpub-ui'
 import classes from './Suggestions.local.css'
 
 const Suggestions = () => (
@@ -12,27 +12,31 @@ const Suggestions = () => (
         </div>
 
         <div className={classes.inline}>
-          <label htmlFor="suggestedReviewers">Suggested reviewers</label>
+          <div className={classes.legend}>Suggested reviewers</div>
 
           <Field
             name="suggested"
-            component={props => (
-              <Tags
-                placeholder="Add a reviewer"
-                {...props.input}/>
-            )}/>
+            component={props =>
+              <ValidatedField {...props.meta}>
+                <Tags
+                  placeholder="Add a reviewer"
+                  {...props.input}/>
+              </ValidatedField>
+            }/>
         </div>
 
         <div className={classes.inline}>
-          <label htmlFor="opposedReviewers">Opposed reviewers</label>
+          <div className={classes.legend}>Opposed reviewers</div>
 
           <Field
             name="opposed"
-            component={props => (
-              <Tags
-                placeholder="Add a reviewer"
-                {...props.input}/>
-            )}/>
+            component={props =>
+              <ValidatedField {...props.meta}>
+                <Tags
+                  placeholder="Add a reviewer"
+                  {...props.input}/>
+              </ValidatedField>
+            }/>
         </div>
       </FormSection>
     </div>
@@ -44,27 +48,31 @@ const Suggestions = () => (
         </div>
 
         <div className={classes.inline}>
-          <label htmlFor="suggestedEditors">Suggested editors</label>
+          <div className={classes.legend}>Suggested editors</div>
 
           <Field
             name="suggested"
-            component={props => (
-              <Tags
-                placeholder="Add an editor"
-                {...props.input}/>
-            )}/>
+            component={props =>
+              <ValidatedField {...props.meta}>
+                <Tags
+                  placeholder="Add an editor"
+                  {...props.input}/>
+              </ValidatedField>
+            }/>
         </div>
 
         <div className={classes.inline}>
-          <label htmlFor="opposedEditors">Opposed editors</label>
+          <div className={classes.legend}>Opposed editors</div>
 
           <Field
             name="opposed"
-            component={props => (
-              <Tags
-                placeholder="Add an editor"
-                {...props.input}/>
-            )}/>
+            component={props =>
+              <ValidatedField {...props.meta}>
+                <Tags
+                  placeholder="Add an editor"
+                  {...props.input}/>
+              </ValidatedField>
+            }/>
         </div>
       </FormSection>
     </div>

@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormSection, Field } from 'redux-form'
-import { Files } from 'xpub-ui'
+import { Files, ValidatedField } from 'xpub-ui'
 import classes from './Metadata.local.css'
 
 const SupplementaryFiles = ({ uploadFile }) => (
@@ -13,9 +13,11 @@ const SupplementaryFiles = ({ uploadFile }) => (
       <Field
         name="supplementary"
         component={props =>
-          <Files
-            uploadFile={uploadFile}
-            {...props.input}/>
+          <ValidatedField {...props.meta}>
+            <Files
+              uploadFile={uploadFile}
+              {...props.input}/>
+          </ValidatedField>
         }/>
     </div>
   </FormSection>

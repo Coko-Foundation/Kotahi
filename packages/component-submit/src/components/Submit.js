@@ -1,7 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
 import { Button } from 'xpub-ui'
-import { FormSection, Field } from 'redux-form'
 import classes from './Submit.local.css'
 import Metadata from './Metadata'
 import Declarations from './Declarations'

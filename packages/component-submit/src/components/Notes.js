@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormSection, Field } from 'redux-form'
 import { NoteEditor } from 'xpub-edit'
+import { ValidatedField } from 'xpub-ui'
 import classes from './Metadata.local.css'
 
 const Notes = () => (
@@ -9,10 +10,12 @@ const Notes = () => (
       <Field
         name="fundingAcknowledgement"
         component={props =>
-          <NoteEditor
-            placeholder="Enter an acknowledgment…"
-            title="Funding body acknowledgement"
-            {...props.input}/>
+          <ValidatedField {...props.meta}>
+            <NoteEditor
+              placeholder="Enter an acknowledgment…"
+              title="Funding body acknowledgement"
+              {...props.input}/>
+          </ValidatedField>
         }/>
     </div>
 
@@ -20,10 +23,12 @@ const Notes = () => (
       <Field
         name="specialInstructions"
         component={props =>
-          <NoteEditor
-            placeholder="Enter instructions for the editor…"
-            title="Special instructions (confidential)"
-            {...props.input}/>
+          <ValidatedField {...props.meta}>
+            <NoteEditor
+              placeholder="Enter instructions for the editor…"
+              title="Special instructions (confidential)"
+              {...props.input}/>
+          </ValidatedField>
         }/>
     </div>
   </FormSection>
