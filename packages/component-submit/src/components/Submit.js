@@ -8,6 +8,7 @@ import Suggestions from './Suggestions'
 import Notes from './Notes'
 import SupplementaryFiles from './SupplementaryFiles'
 import Confirm from './Confirm'
+import Validots from './Validots'
 
 const Submit = ({ journal, project, version, valid, pristine, submitting, handleSubmit, uploadFile }) => (
   <div className={classes.root}>
@@ -35,6 +36,13 @@ const Submit = ({ journal, project, version, valid, pristine, submitting, handle
     </form>
 
     <Confirm project={project} version={version}/>
+
+    <div className={classes.validots}>
+      <Validots
+        journal={journal}
+        valid={valid}
+        handleSubmit={handleSubmit}/>
+    </div>
   </div>
 )
 

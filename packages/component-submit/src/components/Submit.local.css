@@ -7,3 +7,10 @@
   font-size: 150%;
   font-weight: bold;
 }
+
+.validots {
+  position: fixed;
+  top: 50px;
+  right: 10px;
+  bottom: 50px;
+}

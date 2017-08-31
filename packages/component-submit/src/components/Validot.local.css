@@ -1,0 +1,25 @@
+.root {
+  display: block;
+  width: 25px;
+  height: 25px;
+  margin: 5px 10px;
+  cursor: pointer;
+  border: 3px solid transparent;
+  border-radius: 100%;
+}
+
+.root:hover {
+  border-color: black;
+}
+
+.valid {
+  fill: lightgreen;
+}
+
+.warning {
+  fill: orange;
+}
+
+.error {
+  fill: red;
+}
