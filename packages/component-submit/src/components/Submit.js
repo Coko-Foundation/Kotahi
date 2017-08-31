@@ -7,6 +7,7 @@ import Declarations from './Declarations'
 import Suggestions from './Suggestions'
 import Notes from './Notes'
 import SupplementaryFiles from './SupplementaryFiles'
+import Confirm from './Confirm'
 
 const Submit = ({ journal, project, version, valid, pristine, submitting, handleSubmit, uploadFile }) => (
   <div className={classes.root}>
@@ -32,6 +33,8 @@ const Submit = ({ journal, project, version, valid, pristine, submitting, handle
           disabled={pristine || submitting || !valid}>Submit your manuscript</Button>
       </div>
     </form>
+
+    <Confirm project={project} version={version}/>
   </div>
 )
 
