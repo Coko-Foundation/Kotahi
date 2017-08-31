@@ -72,12 +72,15 @@ const journal = {
   }
 };
 
-const SubmitForm = reduxForm({ form: 'submit' })(Submit);
+const SubmitForm = reduxForm({ 
+  form: 'submit',
+  onSubmit: values => console.log(values),
+  onChange: values => console.log(values)
+})(Submit);
 
 <SubmitForm 
   project={project}
+  version={version}
   initialValues={version} 
-  journal={journal}
-  onChange={values => console.log(values)}
-  onSubmit={values => console.log(values)}/>
+  journal={journal}/>
 ```

@@ -1,5 +1,6 @@
 import React from 'react'
 import { Link } from 'react-router'
+import { Button } from 'xpub-ui'
 import classes from './Submit.local.css'
 import Metadata from './Metadata'
 import Declarations from './Declarations'
@@ -7,7 +8,7 @@ import Suggestions from './Suggestions'
 import Notes from './Notes'
 import SupplementaryFiles from './SupplementaryFiles'
 
-const Submit = ({ journal, project, version, handleSubmit, uploadFile }) => (
+const Submit = ({ journal, project, version, pristine, submitting, handleSubmit, uploadFile }) => (
   <div className={classes.root}>
     <div className={classes.title}>
       Submission information
@@ -25,6 +26,11 @@ const Submit = ({ journal, project, version, handleSubmit, uploadFile }) => (
       <Suggestions/>
       <Notes/>
       <SupplementaryFiles uploadFile={uploadFile}/>
+      <div>
+        <Button
+          type="submit"
+          disabled={pristine || submitting}>Submit your manuscript</Button>
+      </div>
     </form>
   </div>
 )

@@ -1,5 +1,6 @@
 .root {
-
+  max-width: 60em;
+  margin: auto;
 }
 
 .title {
