@@ -36,9 +36,13 @@ class Files extends React.Component {
       url
     })
 
-    this.setState({ values })
+    const uploads = this.state.uploads.filter(item => {
+      return item.file.name !== file.name
+    })
 
-    this.props.handleChange(values)
+    this.setState({ values, uploads })
+
+    this.props.onChange(values)
   }
 
   render () {

@@ -16,8 +16,10 @@ class Upload extends React.Component {
     request.addEventListener('progress', this.handleProgress)
     request.addEventListener('load', this.handleLoad)
     request.addEventListener('error', this.handleError)
+    request.addEventListener('abort', this.handleAbort)
   }
 
+  // TODO: 'progress' event not being fired often enough?
   handleProgress = event => {
     if (!event.lengthComputable) return
 
@@ -43,9 +45,15 @@ class Upload extends React.Component {
     }
   }
 
-  handlError = event => {
+  handleError = event => {
     this.setState({
       error: 'There was an error'
+    })
+  }
+
+  handleAbort = event => {
+    this.setState({
+      error: 'The upload was cancelled'
     })
   }
 
