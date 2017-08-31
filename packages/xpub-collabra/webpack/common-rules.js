@@ -16,6 +16,7 @@ const requireComponentsString = components
 const include = [
   path.join(__dirname, '..', 'app'),
   /pubsweet-[^/]+\/src/,
+  /pubsweet-[^/]+\/[^/]+\.jsx$/, // needed for ink-frontend
   /xpub-[^/]+\/src/,
   /component-[^/]+\/src/,
 ]
@@ -38,7 +39,7 @@ module.exports = [
     oneOf: [
       // ES6 JS
       {
-        test: /\.js?$/,
+        test: /\.jsx?$/,
         include,
         loader: 'babel-loader',
         options: {
@@ -112,7 +113,7 @@ module.exports = [
 
       // files
       {
-        exclude: [/\.js$/, /\.html$/, /\.json$/],
+        exclude: [/\.jsx?$/, /\.html$/, /\.json$/],
         loader: 'file-loader',
         options: {
           name: 'static/media/[name].[hash:8].[ext]',

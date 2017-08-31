@@ -42,11 +42,11 @@ const ConnectPage = requirements => WrappedComponent => {
           complete: true,
         })
       }).catch(error => {
+        console.error(error)
+
         this.setState({
           error: error.message
         })
-
-        console.error(error)
 
         throw error // rethrow
       })

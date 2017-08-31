@@ -8,7 +8,6 @@ import Manuscript from './Manuscript'
 export default compose(
   ConnectPage(params => [
     actions.getCollection({ id: params.project }),
-    // actions.getFragments({ id: params.project }),
     actions.getFragment({ id: params.project }, { id: params.version })
   ]),
   connect(
