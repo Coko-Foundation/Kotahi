@@ -10,9 +10,11 @@
   "jsnext:main": "src",
   "dependencies": {
     "classnames": "^2.2.5",
+    "humps": "^2.0.1",
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
+    "react-feather": "^1.0.7",
     "react-redux": "^5.0.6",
     "react-router": "^3.0.5",
     "react-tag-autocomplete": "^5.4.1",
