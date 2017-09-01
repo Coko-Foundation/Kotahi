@@ -13,7 +13,7 @@ const DashboardItem = ({ project, deleteProject }) => (
     </div>
 
     <div className={classes.status}>
-      { project.submitted ? 'Submitted' : 'Unsubmitted' }
+      { project.status === 'submitted' ? 'Submitted' : 'Unsubmitted' }
     </div>
 
     <div className={classes.link}>
