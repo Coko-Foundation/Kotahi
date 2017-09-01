@@ -1,4 +1,5 @@
 import React from 'react'
+import { debounce } from 'lodash'
 import { Editor as SlateEditor, Plain } from 'slate'
 import EditorToolbar from './EditorToolbar'
 
@@ -8,6 +9,12 @@ import EditorToolbar from './EditorToolbar'
 class Editor extends React.Component {
   state = {
     state: undefined
+  }
+
+  constructor (props) {
+    super(props)
+
+    this.throttledOnDocumentChange = debounce(this.onDocumentChange, 1000)
   }
 
   componentDidMount () {
@@ -46,8 +53,7 @@ class Editor extends React.Component {
     this.setState({ state })
   }
 
-  // TODO: debouncing?
-  onDocumentChange = (document, state) => {
+    onDocumentChange = (document, state) => {
     const { converter, onDocumentChange } = this.props
 
     if (typeof onDocumentChange === 'function') {
@@ -152,7 +158,7 @@ class Editor extends React.Component {
           onKeyDown={this.onKeyDown}
           onPaste={this.onReceive}
           onDrop={this.onReceive}
-          onDocumentChange={this.onDocumentChange}
+          onDocumentChange={this.throttledOnDocumentChange}
           placeholder={placeholder}
           spellCheck
         />
