@@ -2,6 +2,7 @@ import React from 'react'
 import classnames from 'classnames'
 import { FormSection, Field } from 'redux-form'
 import { YesOrNo } from 'xpub-ui'
+import { required } from '../lib/validators'
 import classes from './Declarations.local.css'
 
 const Declarations = ({ journal }) => (
@@ -17,6 +18,8 @@ const Declarations = ({ journal }) => (
 
         <Field
           name={question.id}
+          required
+          validate={[required]}
           component={props => <YesOrNo inline={true} {...props.input}/>}/>
       </div>
     ))}

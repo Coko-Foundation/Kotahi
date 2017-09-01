@@ -2,6 +2,7 @@ import React from 'react'
 import { FormSection, Field } from 'redux-form'
 import { NoteEditor } from 'xpub-edit'
 import { ValidatedField } from 'xpub-ui'
+import { required } from '../lib/validators'
 import classes from './Metadata.local.css'
 
 const Notes = () => (
@@ -9,6 +10,7 @@ const Notes = () => (
     <div className={classes.section} id="notes.fundingAcknowledgement">
       <Field
         name="fundingAcknowledgement"
+        validate={[required]}
         component={props =>
           <ValidatedField {...props.meta}>
             <NoteEditor

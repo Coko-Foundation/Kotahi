@@ -10,6 +10,7 @@ const Metadata = ({ journal, validators }) => (
     <div className={classes.section} id="metadata.title">
       <Field
         name="title"
+        required
         validate={[minChars(20), maxChars(500)]}
         component={props =>
           <ValidatedField {...props.meta}>
@@ -24,6 +25,7 @@ const Metadata = ({ journal, validators }) => (
     <div className={classes.section} id="metadata.abstract">
       <Field
         name="abstract"
+        required
         validate={[minChars(100), maxChars(5000)]}
         component={props =>
           <ValidatedField {...props.meta}>
@@ -39,6 +41,7 @@ const Metadata = ({ journal, validators }) => (
       <div className={classes.label}>Authors</div>
       <Field
         name="authors"
+        required
         validate={[minSize(1)]}
         component={props =>
           <ValidatedField {...props.meta}>
@@ -53,6 +56,7 @@ const Metadata = ({ journal, validators }) => (
       <div className={classes.label}>Keywords</div>
       <Field
         name="keywords"
+        required
         validate={[minSize(1)]}
         component={props =>
           <ValidatedField {...props.meta}>
@@ -67,7 +71,8 @@ const Metadata = ({ journal, validators }) => (
       <div className={classes.label}>Type of article</div>
       <Field
         name="articleType"
-        warn={[required]}
+        required
+        validate={[required]}
         component={props =>
           <ValidatedField {...props.meta}>
             <Menu options={journal.articleTypes} {...props.input}/>
@@ -79,6 +84,7 @@ const Metadata = ({ journal, validators }) => (
       <div className={classes.label}>Section</div>
       <Field
         name="articleSection"
+        required
         validate={[required]}
         component={props =>
           <ValidatedField {...props.meta}>
