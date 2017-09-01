@@ -2,17 +2,14 @@
   margin-top: 10px;
 }
 
-.message {
-  width: fit-content;
-  padding: 10px;
+.message:not(:last-child) {
+  margin-bottom: 10px;
 }
 
 .error {
-  background-color: red;
-  color: white;
+  color: red;
 }
 
 .warning {
-  background-color: orange;
-  color: white;
+  color: orange;
 }
