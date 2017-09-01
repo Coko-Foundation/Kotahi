@@ -5,7 +5,7 @@ import { CheckboxGroup, Menu, TextField, ValidatedField } from 'xpub-ui'
 import classes from './Metadata.local.css'
 import { join, required, minChars, maxChars, minSize, split } from '../lib/validators'
 
-const Metadata = ({ journal, validators }) => (
+const Metadata = ({ journal }) => (
   <FormSection name="metadata">
     <div className={classes.section} id="metadata.title">
       <Field

@@ -1,6 +1,7 @@
 /* global CONFIG */
 
-import { compose } from 'recompose'
+import { pick } from 'lodash'
+import { compose, withState, withHandlers } from 'recompose'
 import { connect } from 'react-redux'
 import { reduxForm } from 'redux-form'
 import actions from 'pubsweet-client/src/actions'
@@ -40,21 +41,36 @@ export default compose(
     actions.getCollection({ id: params.project }),
     actions.getFragment({ id: params.project }, { id: params.version })
   ]),
+  withJournal,
   connect(
     (state, ownProps) => {
-      const project = selectCollection(state, ownProps.params.project)
       const version = selectFragment(state, ownProps.params.version)
+      const paths = ['metadata', 'declarations', 'suggestions', 'notes', 'files']
 
-      return { project, version, initialValues: version }
-    },
+      return {
+        initialValues: pick(version, paths)
+      }
+    }
+  ),
+  connect(
+    (state, ownProps) => ({
+        project: selectCollection(state, ownProps.params.project),
+        version: selectFragment(state, ownProps.params.version)
+    }),
     {
       uploadFile
     }
   ),
   reduxForm({
     form: 'submit',
+    // enableReinitialize: true,
     onSubmit,
     onChange
   }),
-  withJournal
+  withState('confirming', 'setConfirming', false),
+  withHandlers({
+    toggleConfirming: props => () => {
+      props.setConfirming(confirming => !confirming)
+    }
+  })
 )(Submit)

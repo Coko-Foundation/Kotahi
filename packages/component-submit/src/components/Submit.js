@@ -1,16 +1,19 @@
 import React from 'react'
+import classnames from 'classnames'
 import { Link } from 'react-router'
 import { Button } from 'xpub-ui'
-import classes from './Submit.local.css'
 import Metadata from './Metadata'
 import Declarations from './Declarations'
 import Suggestions from './Suggestions'
 import Notes from './Notes'
 import SupplementaryFiles from './SupplementaryFiles'
 import Confirm from './Confirm'
+import classes from './Submit.local.css'
 
-const Submit = ({ journal, project, version, valid, pristine, submitting, handleSubmit, uploadFile }) => (
-  <div className={classes.root}>
+const Submit = ({ journal, project, version, valid, pristine, submitting, handleSubmit, uploadFile, confirming, toggleConfirming }) => (
+  <div className={classnames(classes.root, {
+    [classes.confirming]: confirming
+  })}>
     <div className={classes.title}>
       Submission information
     </div>
@@ -27,14 +30,23 @@ const Submit = ({ journal, project, version, valid, pristine, submitting, handle
       <Suggestions/>
       <Notes/>
       <SupplementaryFiles uploadFile={uploadFile}/>
+
       <div>
         <Button
-          type="submit"
-          disabled={pristine || submitting || !valid}>Submit your manuscript</Button>
+          type="button"
+          onClick={toggleConfirming}
+          // disabled={pristine || submitting || !valid}
+        >
+          Submit your manuscript
+        </Button>
       </div>
-    </form>
 
-    <Confirm project={project} version={version}/>
+      {confirming && (
+        <div className={classes.confirm}>
+          <Confirm toggleConfirming={toggleConfirming}/>
+        </div>
+      )}
+    </form>
   </div>
 )
 

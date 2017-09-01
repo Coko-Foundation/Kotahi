@@ -1,10 +1,10 @@
-.heading {
+.root {
+  max-width: 60em;
+  padding: 4rem;
+  background: white;
+  max-height: 100%;
+  overflow-y: auto;
 }
-
-/*.actions {
-  display: flex;
-  justify-content: space-between;
-}*/
 
 .actionDivider {
   margin: 0 20px;
