@@ -4,22 +4,22 @@
   height: 25px;
   margin: 5px 10px;
   cursor: pointer;
-  border: 3px solid transparent;
+  border: 3px solid cornflowerblue;
   border-radius: 100%;
 }
 
 .root:hover {
-  border-color: black;
+  border-color: #aaa;
 }
 
 .valid {
-  fill: lightgreen;
+  background: cornflowerblue;
 }
 
 .warning {
-  fill: orange;
+  border-color: orange;
 }
 
 .error {
-  fill: red;
+  border-color: red;
 }
