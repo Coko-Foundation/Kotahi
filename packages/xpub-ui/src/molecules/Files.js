@@ -79,7 +79,7 @@ class Files extends React.Component {
 
           {values && values.map(value => (
             <File
-              key={value.id}
+              key={value.name}
               value={value}/>
           ))}
         </div>
