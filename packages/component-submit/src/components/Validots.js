@@ -4,11 +4,10 @@ import { map } from 'lodash'
 import Validot from './Validot'
 import { connect } from 'react-redux'
 
-// TODO: build sections and fields from configuration
 // TODO: is the order of map(form.registeredFields) guaranteed to be the same?
 // TODO: use journal config instead of form.registeredFields once using it to build the form
 
-const Validots = ({ form, journal, valid, handleSubmit }) => (
+export const Validots = ({ form, journal, valid, handleSubmit }) => (
   <div>
     {form.registeredFields && (
       map(form.registeredFields, field => (
