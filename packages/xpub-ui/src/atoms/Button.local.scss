@@ -1,7 +1,17 @@
 .root {
-  composes: primary from '../lib/colors.local.scss';
   text-transform: uppercase;
   border: none;
   font-size: inherit;
   padding: 10px 20px;
+  cursor: pointer;
+}
+
+.primary {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.disabled {
+  background-color: gray;
+  color: white;
 }

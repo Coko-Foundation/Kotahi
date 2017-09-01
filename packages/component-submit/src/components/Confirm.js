@@ -20,7 +20,7 @@ const Confirm = ({ toggleConfirming }) => (
       <p>A conflict of interest statement is present in the manuscript, even if to state no conflicts of interest.</p>
 
       <div className={classes.actions}>
-        <Button type="submit">
+        <Button type="submit" primary>
           Submit your manuscript
         </Button>
         <span className={classes.actionDivider}> or </span>
