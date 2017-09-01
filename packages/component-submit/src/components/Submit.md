@@ -78,9 +78,11 @@ const SubmitForm = reduxForm({
   onChange: values => console.log(values)
 })(Submit);
 
-<SubmitForm 
-  project={project}
-  version={version}
-  initialValues={version} 
-  journal={journal}/>
+<div style={{position:'relative', paddingRight: 100}}>
+    <SubmitForm 
+      project={project}
+      version={version}
+      initialValues={version} 
+      journal={journal}/>
+</div>
 ```

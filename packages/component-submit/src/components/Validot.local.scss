@@ -1,0 +1,25 @@
+.root {
+  display: block;
+  width: 25px;
+  height: 25px;
+  margin: 5px 10px;
+  cursor: pointer;
+  border: 3px solid cornflowerblue;
+  border-radius: 100%;
+}
+
+.root:hover {
+  border-color: #aaa;
+}
+
+.valid {
+  background: cornflowerblue;
+}
+
+.warning {
+  border-color: orange;
+}
+
+.error {
+  border-color: red;
+}
