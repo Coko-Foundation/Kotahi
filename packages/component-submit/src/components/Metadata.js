@@ -1,9 +1,9 @@
 import React from 'react'
 import { FormSection, Field } from 'redux-form'
 import { AbstractEditor, TitleEditor } from 'xpub-edit'
-import { CheckboxGroup, Menu, Tags, ValidatedField } from 'xpub-ui'
+import { CheckboxGroup, Menu, TextField, ValidatedField } from 'xpub-ui'
 import classes from './Metadata.local.css'
-import { required, minChars, maxChars, minSize } from '../lib/validators'
+import { join, required, minChars, maxChars, minSize, split } from '../lib/validators'
 
 const Metadata = ({ journal, validators }) => (
   <FormSection name="metadata">
@@ -42,11 +42,13 @@ const Metadata = ({ journal, validators }) => (
       <Field
         name="authors"
         required
+        format={join()}
+        parse={split()}
         validate={[minSize(1)]}
         component={props =>
           <ValidatedField {...props.meta}>
-            <Tags
-              placeholder="Enter an author…"
+            <TextField
+              placeholder="Enter author names…"
               {...props.input}/>
           </ValidatedField>
         }/>
@@ -57,11 +59,13 @@ const Metadata = ({ journal, validators }) => (
       <Field
         name="keywords"
         required
+        format={join()}
+        parse={split()}
         validate={[minSize(1)]}
         component={props =>
           <ValidatedField {...props.meta}>
-            <Tags
-              placeholder="Enter a keyword…"
+            <TextField
+              placeholder="Enter keywords…"
               {...props.input}/>
           </ValidatedField>
         }/>

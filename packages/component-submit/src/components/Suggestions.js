@@ -1,6 +1,7 @@
 import React from 'react'
 import { FormSection, Field } from 'redux-form'
-import { Tags, ValidatedField } from 'xpub-ui'
+import { TextField, ValidatedField } from 'xpub-ui'
+import { join, split } from '../lib/validators'
 import classes from './Suggestions.local.css'
 
 const Suggestions = () => (
@@ -16,10 +17,12 @@ const Suggestions = () => (
 
           <Field
             name="suggested"
+            format={join()}
+            parse={split()}
             component={props =>
               <ValidatedField {...props.meta}>
-                <Tags
-                  placeholder="Add a reviewer"
+                <TextField
+                  placeholder="Add reviewer names"
                   {...props.input}/>
               </ValidatedField>
             }/>
@@ -30,10 +33,12 @@ const Suggestions = () => (
 
           <Field
             name="opposed"
+            format={join()}
+            parse={split()}
             component={props =>
               <ValidatedField {...props.meta}>
-                <Tags
-                  placeholder="Add a reviewer"
+                <TextField
+                  placeholder="Add reviewer names"
                   {...props.input}/>
               </ValidatedField>
             }/>
@@ -52,10 +57,12 @@ const Suggestions = () => (
 
           <Field
             name="suggested"
+            format={join()}
+            parse={split()}
             component={props =>
               <ValidatedField {...props.meta}>
-                <Tags
-                  placeholder="Add an editor"
+                <TextField
+                  placeholder="Add editor names"
                   {...props.input}/>
               </ValidatedField>
             }/>
@@ -66,10 +73,12 @@ const Suggestions = () => (
 
           <Field
             name="opposed"
+            format={join()}
+            parse={split()}
             component={props =>
               <ValidatedField {...props.meta}>
-                <Tags
-                  placeholder="Add an editor"
+                <TextField
+                  placeholder="Add editor names"
                   {...props.input}/>
               </ValidatedField>
             }/>
