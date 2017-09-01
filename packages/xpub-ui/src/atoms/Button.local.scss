@@ -1,0 +1,7 @@
+.root {
+  composes: primary from '../lib/colors.local.scss';
+  text-transform: uppercase;
+  border: none;
+  font-size: inherit;
+  padding: 10px 20px;
+}
