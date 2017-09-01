@@ -13,6 +13,7 @@
     "lodash": "^4.17.4",
     "prop-types": "^15.5.10",
     "pubsweet-client": "git+https://gitlab.coko.foundation/pubsweet/pubsweet-client.git",
+    "pubsweet-component-xpub-app": "^0.0.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.2",
@@ -20,7 +21,7 @@
     "recompose": "^0.25.0",
     "redux": "^3.6.0",
     "redux-form": "^7.0.3",
-    "pubsweet-component-xpub-app": "^0.0.2",
+    "striptags": "^3.1.0",
     "xpub-edit": "^0.0.2",
     "xpub-selectors": "^0.0.2",
     "xpub-ui": "^0.0.2"

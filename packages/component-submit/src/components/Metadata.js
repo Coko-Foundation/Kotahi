@@ -10,9 +10,7 @@ const Metadata = ({ journal, validators }) => (
     <div className={classes.section} id="metadata.title">
       <Field
         name="title"
-        normalize={value => value.replace(/^<p><\/p>$/, '')}
-        validate={[required]}
-        warn={[minChars(20), maxChars(500)]}
+        validate={[minChars(20), maxChars(500)]}
         component={props =>
           <ValidatedField {...props.meta}>
             <TitleEditor
@@ -26,9 +24,7 @@ const Metadata = ({ journal, validators }) => (
     <div className={classes.section} id="metadata.abstract">
       <Field
         name="abstract"
-        normalize={value => String(value).replace(/^<p><\/p>$/, '')}
-        validate={[required]}
-        warn={[minChars(100), maxChars(5000)]}
+        validate={[minChars(100), maxChars(5000)]}
         component={props =>
           <ValidatedField {...props.meta}>
             <AbstractEditor
@@ -43,8 +39,7 @@ const Metadata = ({ journal, validators }) => (
       <div className={classes.label}>Authors</div>
       <Field
         name="authors"
-        validate={[required]}
-        warn={[minSize(1)]}
+        validate={[minSize(1)]}
         component={props =>
           <ValidatedField {...props.meta}>
             <Tags
@@ -58,8 +53,7 @@ const Metadata = ({ journal, validators }) => (
       <div className={classes.label}>Keywords</div>
       <Field
         name="keywords"
-        validate={[required]}
-        warn={[minSize(1)]}
+        validate={[minSize(1)]}
         component={props =>
           <ValidatedField {...props.meta}>
             <Tags
@@ -73,7 +67,7 @@ const Metadata = ({ journal, validators }) => (
       <div className={classes.label}>Type of article</div>
       <Field
         name="articleType"
-        validate={[required]}
+        warn={[required]}
         component={props =>
           <ValidatedField {...props.meta}>
             <Menu options={journal.articleTypes} {...props.input}/>
