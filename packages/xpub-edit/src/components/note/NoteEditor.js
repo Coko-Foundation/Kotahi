@@ -13,7 +13,7 @@ const NoteEditor = ({ value, placeholder, title, onChange }) => (
     keys={keys}
     placeholder={placeholder}
     title={title}
-    onChange={onChange}
+    onDocumentChange={onChange}
   />
 )
 
