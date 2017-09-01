@@ -66,7 +66,7 @@ const journal = {
   suggestions: {
     reviewers: {
       opposed: [
-        { name: faker.name.findName() }
+        faker.name.findName()
       ]
     }
   }
