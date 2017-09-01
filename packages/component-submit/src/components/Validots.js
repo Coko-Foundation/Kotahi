@@ -1,43 +1,22 @@
 import React from 'react'
-import { Field, FormSection } from 'redux-form'
+import { Field } from 'redux-form'
+import { map } from 'lodash'
 import Validot from './Validot'
+import { connect } from 'react-redux'
 
 // TODO: build sections and fields from configuration
+// TODO: is the order of map(form.registeredFields) guaranteed to be the same?
+// TODO: use journal config instead of form.registeredFields once using it to build the form
 
-const Validots = ({ journal, valid, handleSubmit }) => (
+const Validots = ({ form, journal, valid, handleSubmit }) => (
   <div>
-    <FormSection name="metadata">
-      <Field name="title" component={Validot}/>
-      <Field name="abstract" component={Validot}/>
-      <Field name="authors" component={Validot}/>
-      <Field name="keywords" component={Validot}/>
-    </FormSection>
-
-    <FormSection name="declarations">
-      {journal.declarations.questions.map(question => (
-        <Field name={question.id} component={Validot}/>
-      ))}
-    </FormSection>
-
-    <FormSection name="suggestions">
-      <FormSection name="reviewers">
-        <Field name="suggested" component={Validot}/>
-        <Field name="opposed" component={Validot}/>
-      </FormSection>
-      <FormSection name="editors">
-        <Field name="suggested" component={Validot}/>
-        <Field name="opposed" component={Validot}/>
-      </FormSection>
-    </FormSection>
-
-    <FormSection name="notes">
-      <Field name="fundingAcknowledgement" component={Validot}/>
-      <Field name="specialInstructions" component={Validot}/>
-    </FormSection>
-
-    <FormSection name="files">
-      <Field name="supplementary" component={Validot}/>
-    </FormSection>
+    {form.registeredFields && (
+      map(form.registeredFields, field => (
+        <div>
+          <Field name={field.name} component={Validot}/>
+        </div>
+      ))
+    )}
 
     <button
       onClick={handleSubmit}
@@ -45,4 +24,8 @@ const Validots = ({ journal, valid, handleSubmit }) => (
   </div>
 )
 
-export default Validots
+export default connect(
+  state => ({
+    form: state.form.submit
+  })
+)(Validots)
