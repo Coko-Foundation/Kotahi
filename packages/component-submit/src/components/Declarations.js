@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import { FormSection, Field } from 'redux-form'
 import { ValidatedField, YesOrNo } from 'xpub-ui'
 import { required } from '../lib/validators'
-import classes from './Declarations.local.css'
+import classes from './Declarations.local.scss'
 
 const Declarations = ({ journal }) => (
   <FormSection name="declarations">

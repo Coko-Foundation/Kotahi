@@ -1,5 +1,5 @@
 import React from 'react'
-import classes from './EditorToolbar.local.css'
+import classes from './EditorToolbar.local.scss'
 
 // TODO: move file input to a separate component
 

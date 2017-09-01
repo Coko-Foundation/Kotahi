@@ -1,6 +1,6 @@
 import React from 'react'
 import ReactTags from 'react-tag-autocomplete'
-import './Tags.css'
+import './Tags.scss'
 
 // TODO: separate tags when pasted
 // TODO: allow tags to be edited

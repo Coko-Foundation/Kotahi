@@ -1,6 +1,6 @@
 import React from 'react'
 import classnames from 'classnames'
-import classes from './Menu.local.css'
+import classes from './Menu.local.scss'
 
 // TODO: match the width of the container to the width of the widest option?
 

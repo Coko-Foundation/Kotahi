@@ -1,7 +1,7 @@
 import React from 'react'
 import { browserHistory } from 'react-router'
 import SimpleEditor from 'pubsweet-component-wax/src/SimpleEditor'
-import classes from './Manuscript.local.css'
+import classes from './Manuscript.local.scss'
 
 // TODO: convert user teams to roles (see SimpleEditorWrapper)?
 

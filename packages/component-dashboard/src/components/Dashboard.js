@@ -1,5 +1,5 @@
 import React from 'react'
-import classes from './Dashboard.local.css'
+import classes from './Dashboard.local.scss'
 import UploadManuscript from './UploadManuscript'
 import DashboardItem from './DashboardItem'
 import EmptySubmissions from './EmptySubmissions'

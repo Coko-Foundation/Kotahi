@@ -3,7 +3,7 @@ import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import { AppBar } from 'xpub-ui'
 import { withJournal } from './JournalProvider'
-import classes from './App.local.css'
+import classes from './App.local.scss'
 
 const App = ({ children, currentUser, journal }) => (
   <div className={classes.root}>

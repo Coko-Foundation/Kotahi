@@ -1,6 +1,6 @@
 import React from 'react'
 import classnames from 'classnames'
-import classes from './Checkbox.local.css'
+import classes from './Checkbox.local.scss'
 
 const Checkbox = ({ inline, name, value, label, checked, required, onChange }) => (
   <label className={classnames(classes.root, {

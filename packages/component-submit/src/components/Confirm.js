@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button } from 'xpub-ui'
-import classes from './Confirm.local.css'
+import classes from './Confirm.local.scss'
 
 const Confirm = ({ toggleConfirming }) => (
   <div className={classes.root}>

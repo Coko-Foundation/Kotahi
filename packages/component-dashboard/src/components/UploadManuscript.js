@@ -2,7 +2,7 @@ import React from 'react'
 import Dropzone from 'react-dropzone'
 import classnames from 'classnames'
 import { Icon } from 'xpub-ui'
-import classes from './UploadManuscript.local.css'
+import classes from './UploadManuscript.local.scss'
 
 const UploadManuscript = ({ uploadManuscript, conversion }) => (
   <Dropzone

@@ -2,7 +2,7 @@ import React from 'react'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router'
-import classes from './ConnectPage.local.css'
+import classes from './ConnectPage.local.scss'
 
 const ConnectPage = requirements => WrappedComponent => {
   class ConnectedComponent extends React.Component {

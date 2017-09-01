@@ -1,5 +1,5 @@
 import React from 'react'
-import classes from './DashboardSection.local.css'
+import classes from './DashboardSection.local.scss'
 
 const DashboardSection = ({ heading, items, empty, children }) => (
   <div className={classes.root}>

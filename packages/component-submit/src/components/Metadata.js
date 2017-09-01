@@ -2,7 +2,7 @@ import React from 'react'
 import { FormSection, Field } from 'redux-form'
 import { AbstractEditor, TitleEditor } from 'xpub-edit'
 import { CheckboxGroup, Menu, TextField, ValidatedField } from 'xpub-ui'
-import classes from './Metadata.local.css'
+import classes from './Metadata.local.scss'
 import { join, required, minChars, maxChars, minSize, split } from '../lib/validators'
 
 const Metadata = ({ journal }) => (

@@ -4,7 +4,7 @@ import { reducer as formReducer } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
 
 import 'xpub-fonts'
-import classes from './Wrapper.local.css'
+import classes from './Wrapper.local.scss'
 
 const rootReducer = combineReducers({
   form: formReducer

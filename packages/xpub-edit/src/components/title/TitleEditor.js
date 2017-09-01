@@ -1,7 +1,7 @@
 import React from 'react'
 import { converter, keys, schema, toolbar } from './config'
 import Editor from '../Editor'
-import classes from './TitleEditor.local.css'
+import classes from './TitleEditor.local.scss'
 
 // TODO: no blocks allowed
 

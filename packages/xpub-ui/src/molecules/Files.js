@@ -1,5 +1,5 @@
 import React from 'react'
-import classes from './Files.local.css'
+import classes from './Files.local.scss'
 import Upload from './Upload'
 import File from '../atoms/File'
 

@@ -1,5 +1,5 @@
 import React from 'react'
-import classes from './UploadingFile.local.css'
+import classes from './UploadingFile.local.scss'
 
 // TODO: cancel button
 

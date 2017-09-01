@@ -2,7 +2,7 @@ import React from 'react'
 import { FormSection, Field } from 'redux-form'
 import { TextField, ValidatedField } from 'xpub-ui'
 import { join, split } from '../lib/validators'
-import classes from './Suggestions.local.css'
+import classes from './Suggestions.local.scss'
 
 const Suggestions = () => (
   <FormSection name="suggestions">

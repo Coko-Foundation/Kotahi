@@ -1,7 +1,7 @@
 import React from 'react'
 import { converter, keys, schema, toolbar } from './config'
 import Editor from '../Editor'
-import classes from './AbstractEditor.local.css'
+import classes from './AbstractEditor.local.scss'
 
 const AbstractEditor = ({ value, placeholder, title, onChange }) => (
   <Editor

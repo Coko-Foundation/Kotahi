@@ -1,5 +1,5 @@
 import React from 'react'
-import classes from './DashboardItem.local.css'
+import classes from './DashboardItem.local.scss'
 import { Link } from 'react-router'
 
 const DashboardItem = ({ project, deleteProject }) => (

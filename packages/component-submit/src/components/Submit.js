@@ -8,7 +8,7 @@ import Suggestions from './Suggestions'
 import Notes from './Notes'
 import SupplementaryFiles from './SupplementaryFiles'
 import Confirm from './Confirm'
-import classes from './Submit.local.css'
+import classes from './Submit.local.scss'
 
 const Submit = ({ journal, project, version, valid, pristine, submitting, handleSubmit, uploadFile, confirming, toggleConfirming }) => (
   <div className={classnames(classes.root, {

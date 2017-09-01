@@ -1,5 +1,5 @@
 import React from 'react'
-import classes from './File.local.css'
+import classes from './File.local.scss'
 
 const extension = ({ name }) => name.replace(/^.+\./, '')
 

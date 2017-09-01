@@ -1,6 +1,6 @@
 import React from 'react'
 import RadioGroup from './RadioGroup'
-import classes from './YesOrNo.local.css'
+import classes from './YesOrNo.local.scss'
 
 const options = [
   {

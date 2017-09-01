@@ -1,7 +1,7 @@
 import React from 'react'
 import { converter, schema } from './config'
 import Viewer from '../Viewer'
-import classes from './TitleViewer.local.css'
+import classes from './TitleViewer.local.scss'
 
 const TitleViewer = ({ value }) => (
   <Viewer

@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router'
 import classnames from 'classnames'
-import classes from './AppBar.local.css'
+import classes from './AppBar.local.scss'
 
 const AppBar = ({ brandLink, brandName, loginLink, logoutLink, userName }) => (
   <div className={classes.root}>

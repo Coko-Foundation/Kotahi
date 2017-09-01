@@ -1,7 +1,7 @@
 import React from 'react'
 import { Field } from 'redux-form'
 import { Link } from 'react-router'
-import classes from './Signup.local.css'
+import classes from './Signup.local.scss'
 
 const Signup = ({ error, handleSubmit }) => (
   <div className={classes.root}>
