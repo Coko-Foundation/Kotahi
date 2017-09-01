@@ -12,7 +12,7 @@ const File = ({ value, file, error, progress }) => (
     </div>
 
     <div className={classes.name}>
-      <a href={value.url}>
+      <a href={value.url} download={value.name}>
         {value.name}
       </a>
     </div>
