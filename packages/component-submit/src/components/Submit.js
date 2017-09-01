@@ -34,9 +34,9 @@ const Submit = ({ journal, project, version, valid, pristine, submitting, handle
       <div>
         <Button
           type="button"
+          primary
           onClick={toggleConfirming}
-          // disabled={pristine || submitting || !valid}
-        >
+          disabled={submitting || !valid}>
           Submit your manuscript
         </Button>
       </div>

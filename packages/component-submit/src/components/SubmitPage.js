@@ -1,23 +1,48 @@
 /* global CONFIG */
 
 import { pick } from 'lodash'
-import { compose, withState, withHandlers } from 'recompose'
+import { compose, withProps, withState, withHandlers } from 'recompose'
 import { connect } from 'react-redux'
-import { reduxForm } from 'redux-form'
+import { push } from 'react-router-redux'
+import { reduxForm, SubmissionError } from 'redux-form'
 import actions from 'pubsweet-client/src/actions'
 import token from 'pubsweet-client/src/helpers/token'
 import { withJournal, ConnectPage } from 'pubsweet-component-xpub-app/src/components'
 import { selectCollection, selectFragment } from 'xpub-selectors'
 import Submit from './Submit'
 
-const onSubmit = (values, dispatch) => {
-  // TODO: save fragment
+const onSubmit = (values, dispatch, props) => {
   console.log('submit', values)
+
+  return dispatch(actions.updateFragment(props.project, {
+    id: props.version.id,
+    submitted: true,
+    ...values
+  })).then(() => {
+    return dispatch(actions.updateCollection({
+      id: props.project.id,
+      status: 'submitted'
+    }))
+  }).then(() => {
+    dispatch(push(`/`))
+  }).catch(error => {
+    if (error.validationErrors) {
+      throw new SubmissionError()
+    }
+  })
 }
 
-const onChange = (values, dispatch) => {
-  // TODO: save fragment
+// TODO: redux-form doesn't have an onBlur handler(?)
+const onBlur = (values, dispatch, props) => {
   console.log('change', values)
+
+  return dispatch(actions.updateFragment(props.project, {
+    id: props.version.id,
+    // submitted: false,
+    ...values
+  }))
+
+  // TODO: display a notification when saving/saving completes/saving fails
 }
 
 const uploadFile = file => dispatch => {
@@ -43,29 +68,26 @@ export default compose(
   ]),
   withJournal,
   connect(
-    (state, ownProps) => {
-      const version = selectFragment(state, ownProps.params.version)
-      const paths = ['metadata', 'declarations', 'suggestions', 'notes', 'files']
-
-      return {
-        initialValues: pick(version, paths)
-      }
-    }
-  ),
-  connect(
     (state, ownProps) => ({
-        project: selectCollection(state, ownProps.params.project),
-        version: selectFragment(state, ownProps.params.version)
+      project: selectCollection(state, ownProps.params.project),
+      version: selectFragment(state, ownProps.params.version)
     }),
     {
       uploadFile
     }
   ),
+  withProps(({ version }) => {
+    const paths = ['metadata', 'declarations', 'suggestions', 'notes', 'files']
+
+    return {
+      initialValues: pick(version, paths)
+    }
+  }),
   reduxForm({
     form: 'submit',
     // enableReinitialize: true,
     onSubmit,
-    onChange
+    onBlur
   }),
   withState('confirming', 'setConfirming', false),
   withHandlers({
