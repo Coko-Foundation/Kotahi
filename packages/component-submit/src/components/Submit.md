@@ -15,6 +15,13 @@ const version = {
   },
   declarations: {
     openData: 'yes'
+  },
+  suggestions: {
+    reviewers: {
+      opposed: [
+        faker.name.findName()
+      ]
+    }
   }
 };
 
@@ -62,13 +69,6 @@ const journal = {
         legend: 'Open peer review'
       }
     ]
-  },
-  suggestions: {
-    reviewers: {
-      opposed: [
-        faker.name.findName()
-      ]
-    }
   }
 };
 
