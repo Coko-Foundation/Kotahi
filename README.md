@@ -28,9 +28,7 @@ In the root directory, run `npm install` then `npm run bootstrap` to install all
 
 Note: this monorepo uses Lerna, which works best with npm v4 when linking unpublished packages. Hoisting is not yet reliable, so each component has its own node_modules folder.
 
-## Running the app
-
-`cd packages/xpub-collabra && npm run start`
+## Configuration
 
 To enable manuscript conversion via INK, add the following values to `packages/xpub-collabra/.env.dev` (ask in [the xpub channel](https://mattermost.coko.foundation/coko/channels/xpub) if you need an account):
 
@@ -39,6 +37,12 @@ INK_USERNAME=*****
 INK_PASSWORD=*****
 INK_ENDPOINT=http://ink-api.coko.foundation
 ```
+
+## Running the app
+
+1. `cd packages/xpub-collabra`
+1. The first time you run the app, initialise the database with `npm run setupdb` (press Enter when asked for a collection title, to skip that step).
+1. `npm run start`
 
 ## Community
 
