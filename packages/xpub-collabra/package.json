@@ -21,6 +21,7 @@
     "pubsweet-component-xpub-authentication": "^0.0.2",
     "pubsweet-component-xpub-dashboard": "^0.0.2",
     "pubsweet-component-xpub-manuscript": "^0.0.2",
+    "pubsweet-component-xpub-review": "^0.0.2",
     "pubsweet-component-xpub-submit": "^0.0.2",
     "pubsweet-server": "^1.0.0-alpha.2",
     "pubsweet-theme-plugin": "^0.0.1",
