@@ -8,6 +8,7 @@ Note: xpub is still _very_ new. This repository contains an initial set of compo
 * `component-authentication`: a PubSweet component that provides authentication-related client pages.
 * `component-dashboard`: a PubSweet component that provides a Dashboard page.
 * `component-manuscript`: a PubSweet component that provides a Manuscript page.
+* `component-review`: a PubSweet component that provides a Review page.
 * `component-submit`: a PubSweet component that provides a Submit page.
 
 ## PubSweet applications
