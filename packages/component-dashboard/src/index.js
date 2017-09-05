@@ -4,7 +4,8 @@ module.exports = {
       () => require('./components')
     ],
     reducers: {
-      manuscriptConversion: () => require('./redux/manuscriptConversion'),
+      dashboard: () => require('./redux/dashboard').default,
+      manuscriptConversion: () => require('./redux/manuscriptConversion').default,
     }
   },
 }

@@ -4,9 +4,9 @@ module.exports = {
       () => require('./components')
     ],
     reducers: {
-      login: () => require('./redux/login'),
-      signup: () => require('./redux/signup'),
-      currentUser: () => require('./redux/currentUser')
+      login: () => require('./redux/login').default,
+      signup: () => require('./redux/signup').default,
+      currentUser: () => require('./redux/currentUser').default
     }
   },
 }
