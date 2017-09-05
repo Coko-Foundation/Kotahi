@@ -16,7 +16,6 @@ const requireComponentsString = components
 const include = [
   path.join(__dirname, '..', 'app'),
   /pubsweet-[^/]+\/src/,
-  /pubsweet-[^/]+\/[^/]+\.jsx$/, // needed for ink-frontend
   /xpub-[^/]+\/src/,
   /component-[^/]+\/src/,
 ]
