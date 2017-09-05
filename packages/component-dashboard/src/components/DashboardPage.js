@@ -1,25 +1,58 @@
-import { compose } from 'recompose'
+import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
 import { orderBy } from 'lodash'
 import actions from 'pubsweet-client/src/actions'
 import { selectCurrentUser } from 'xpub-selectors'
-import { ConnectPage } from 'pubsweet-component-xpub-app/src/components'
+import { ConnectPage, withJournal} from 'pubsweet-component-xpub-app/src/components'
 import { uploadManuscript } from '../redux/manuscriptConversion'
+import { addUserToTeam } from '../redux/teams'
 import Dashboard from './Dashboard'
+
+const newestFirst = items => orderBy(items, ['created'], ['desc'])
 
 export default compose(
   ConnectPage(params => [
-    actions.getCollections()
+    actions.getCollections(),
+    actions.getTeams(),
   ]),
+  withJournal,
   connect(
     state => ({
-      projects: orderBy(state.collections, ['created'], ['desc']),
+      collections: state.collections,
+      teams: state.teams,
       currentUser: selectCurrentUser(state),
       conversion: state.manuscriptConversion
     }),
     {
       uploadManuscript,
+      addUserToTeam,
       deleteProject: actions.deleteCollection,
     }
-  )
+  ),
+  withProps(({ collections, currentUser, teams }) => {
+    return {
+      dashboard: {
+        owner: collections
+          .filter(collection => collection.owners
+            && collection.owners.includes(currentUser.id))
+          .sort(newestFirst),
+        editor: teams
+          .filter(team => team.group === 'editor'
+            && team.object.type === 'collection'
+            && team.members.includes(currentUser.id))
+          .map(team => collections.find(collection => {
+            return collection.id === team.object
+          }))
+          .sort(newestFirst),
+        reviewer: teams
+          .filter(team => team.group === 'reviewer'
+            && team.object.type === 'collection'
+            && team.members.includes(currentUser.id))
+          .map(team => collections.find(collection => {
+            return collection.id === team.object
+          }))
+          .sort(newestFirst),
+      }
+    }
+  })
 )(Dashboard)

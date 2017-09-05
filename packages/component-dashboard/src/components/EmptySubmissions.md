@@ -1,4 +1,4 @@
-When the user has no submissions, a message is displayed.
+A message that is displayed when the current user has no submissions.
 
 ```js
 <EmptySubmissions/>

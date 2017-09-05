@@ -1,14 +1,10 @@
-.root {
+.main {
   display: flex;
   align-items: center;
 }
 
-.indicator {
-  fill: blue;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  margin-right: 10px;
+.main, .roles {
+  padding-left: 40px;
 }
 
 .title {
@@ -17,18 +13,34 @@
   font-size: 120%;
 }
 
-.status {
-  text-transform: uppercase;
-  color: gray;
-  margin: 0 10px;
+.header {
+  display: flex;
+  justify-content: space-between;
+}
+
+.meta {
+  display: flex;
+  flex-wrap: nowrap;
 }
 
 .divider {
   color: gray;
+  white-space: pre;
 }
 
 .link {
-  font-style: italic;
   display: inline-block;
+  font-style: italic;
   padding: 10px;
+}
+
+.action {
+  display: inline-block;
+}
+
+.action button {
+  background: none;
+  text-transform: none;
+  border: none;
+  cursor: pointer;
 }

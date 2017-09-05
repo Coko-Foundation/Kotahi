@@ -1,34 +1,62 @@
 import React from 'react'
-import classes from './DashboardItem.local.scss'
 import { Link } from 'react-router'
+import Status from './Status'
+import classes from './DashboardItem.local.scss'
 
-const DashboardItem = ({ project, deleteProject }) => (
+const DashboardItem = ({ project, actions, links, meta, roles, status = true }) => (
   <div className={classes.root}>
-    <svg className={classes.indicator} viewBox="0 0 40 40">
-      <circle cx="20" cy="20" r="20"/>
-    </svg>
+    <div className={classes.header}>
+      {status && <Status status={project.status}/>}
 
-    <div className={classes.title}>
-      { project.title || 'Untitled' }
+      {meta && (
+        <div className={classes.meta}>
+          {meta(project).map((item, index) => [
+            index === 0 ? null : <span className={classes.divider}>{' - '}</span>,
+            <div key={item.key}>
+              {item.content}
+            </div>
+          ])}
+        </div>
+      )}
     </div>
 
-    <div className={classes.status}>
-      { project.status === 'submitted' ? 'Submitted' : 'Unsubmitted' }
+    <div className={classes.main}>
+      <div className={classes.title}>
+        { project.title || 'Untitled' }
+      </div>
+
+      {links && (
+        <div className={classes.links}>
+          {links(project).map((item, index) => [
+            index === 0 ? null : <span className={classes.divider}> | </span>,
+            <div className={classes.link} key={item.url}>
+              <Link to={item.url}>{item.name}</Link>
+            </div>
+          ])}
+        </div>
+      )}
+
+      {actions && (
+        <div className={classes.actions}>
+          {actions(project).map((item, index) => [
+            index === 0 ? null : <span className={classes.divider}> | </span>,
+            <div className={classes.action} key={item.key}>
+              {item.content}
+            </div>
+          ])}
+        </div>
+      )}
     </div>
 
-    <div className={classes.link}>
-      <Link to={`/projects/${project.id}/version/${project.fragments.length ? project.fragments[0] : null}/submit`}>Submission</Link>
-    </div>
-
-    <div className={classes.divider}>
-      |
-    </div>
-
-    <div className={classes.link}>
-      <Link to={`/projects/${project.id}/version/${project.fragments.length ? project.fragments[0] : null}/manuscript`}>Manuscript</Link>
-    </div>
-
-    <button onClick={() => deleteProject({id: project.id})}>x</button>
+    {roles && (
+      <div className={classes.roles}>
+        {roles(project).map((item, index) => [
+          <div className={classes.role} key={item.role}>
+            {item.content}
+          </div>
+        ])}
+      </div>
+    )}
   </div>
 )
 

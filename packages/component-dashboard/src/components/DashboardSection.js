@@ -1,20 +1,34 @@
 import React from 'react'
+import DashboardItem from './DashboardItem'
 import classes from './DashboardSection.local.scss'
 
-const DashboardSection = ({ heading, items, empty, children }) => (
-  <div className={classes.root}>
-    <div className={classes.heading}>
-      {heading}
-    </div>
+const DashboardSection = ({ heading, projects, status, actions, links, meta, roles, empty }) => {
+  if (!projects.length && !empty) return null
 
-    {items.length ? (
-      children
-    ) : (
-      <div className={classes.empty}>
-        {empty()}
+  return (
+    <div className={classes.root}>
+      <div className={classes.heading}>
+        {heading}
       </div>
-    )}
-  </div>
-)
+
+      {projects.length ? projects.map(item => (
+        <div className={classes.item} key={item.id}>
+          <DashboardItem
+            project={item}
+            // version={item.fragments[0]}
+            status={status}
+            actions={actions}
+            links={links}
+            meta={meta}
+            roles={roles}/>
+        </div>
+      )) : (
+        <div className={classes.empty}>
+          {empty()}
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default DashboardSection

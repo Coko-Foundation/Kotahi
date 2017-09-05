@@ -43,5 +43,8 @@ module.exports = {
   },
   user: {
     name: Joi.string(), // TODO: add "name" to the login form
+  },
+  team: {
+    group: Joi.string()
   }
 }

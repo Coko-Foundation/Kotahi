@@ -3,28 +3,21 @@ A section of a dashboard.
 When the list of items is not empty, the children are rendered.
 
 ```js
-const items = [
+const projects = [
   { 
     id: faker.random.uuid(),
     title: faker.lorem.sentence(20) 
   }
 ];
 
-<DashboardSection items={items} empty={EmptySubmissions}>
-  <ul>
-    {items.map(item => <li key={item.id}>{item.title}</li>)}
-  </ul>
-</DashboardSection>
+<DashboardSection 
+  projects={projects}/>
 ```
 
-When the list of items is empty, a custom element is displayed instead.
+When the list of items is empty, a custom element can be displayed instead.
 
 ```js
-const items = [];
-
-<DashboardSection items={items} empty={EmptySubmissions}>
-  <ul>
-    {items.map(item => <li key={item.id}>{item.title}</li>)}
-  </ul>
-</DashboardSection>
+<DashboardSection 
+  projects={[]}
+  empty={EmptySubmissions}/>
 ```
