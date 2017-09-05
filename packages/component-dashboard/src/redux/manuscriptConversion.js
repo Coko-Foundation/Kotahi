@@ -51,6 +51,9 @@ export const uploadManuscript = acceptedFiles => dispatch => {
         throw new Error('Failed to create a project')
       }
 
+      // TODO: create teams?
+      // TODO: upload the manuscript file and attach it to the fragment
+
       return dispatch(actions.createFragment(collection, {
         type: 'version',
         version: 1,
