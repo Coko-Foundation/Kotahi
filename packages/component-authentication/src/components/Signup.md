@@ -18,7 +18,7 @@ const { reduxForm } = require('redux-form');
 const SignupForm = reduxForm({ form: 'signup-error' })(Signup);
 
 <SignupForm 
-      signupError="There was an error"
+      error="There was an error"
       onSubmit={values => console.log(values)}/>
 ```
 
