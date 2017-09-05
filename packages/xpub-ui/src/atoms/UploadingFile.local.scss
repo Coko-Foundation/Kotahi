@@ -1,22 +1,83 @@
 .root {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
-    position: relative;
-    margin-bottom: 2em;
-    margin-right: 3em;
-    width: 20ch;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-bottom: 2em;
+  margin-right: 3em;
+  width: 20ch;
 }
 
 .icon {
-    opacity: 0.5;
-  
-    width: 70px;
-    height: 100px;
-    background: #ddd;
-    position: relative;
-    margin: 5px;
+  opacity: 0.5;
+  width: 70px;
+  height: 100px;
+  background: #ddd;
+  position: relative;
+  margin: 5px;
 }
+
+.progress {
+  opacity: 1;
+  background: var(--color-primary);
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  content: '';
+
+  display: block;
+  transform-origin: 0 0;
+  background-image: linear-gradient( to top,
+  var(--color-primary-light) 50%,
+  var(--color-primary) 75%);
+
+  &:after {
+    /*we can use a data attribute for the numbering below */
+    content: "00%";
+    display: block;
+    color: white;
+    position: absolute;
+    bottom: 2px;
+    right: 2px;
+  }
+}
+
+.error {
+  font-size: 0.8em;
+  letter-spacing: 0.01em;
+  background: var(--color-danger);
+  border: 2px solid white;
+  color: white;
+  opacity: 1;
+  position: absolute;
+  top: 25%;
+  z-index: 4;
+  padding: 0.3em 0.5em;
+}
+
+.extension {
+  position: absolute;
+  top: 20px;
+  right: 0;
+  left: 20px;
+  text-align: center;
+  text-transform: uppercase;
+  background: #888;
+  color: white;
+  font-size: 12px;
+  padding: 2px;
+}
+
+.name {
+  font-style: italic;
+  font-size: 90%;
+  color: gray;
+  margin: 5px;
+  max-width: 20ch;
+}
+
+
 
 /* clock experiment, on hold.
 .progress {
@@ -40,75 +101,15 @@
       width: 1em;
       height:  1em;
     }
-}*/
-
-
-.progress {
-    opacity: 1;
-    background: var(--color-primary);
-    position: absolute;
-    bottom: 0;
-    right: 0;
-    left: 0;
-    content: '';
-
-    display: block;
-    transform-origin: 0 0;
-    background-image: linear-gradient( to top,
-    var(--color-primary-light) 50%,
-    var(--color-primary) 75%);
-
-    &:after {
-        content: "XX%";
-
-        display: block;
-        color: white;
-        position: absolute;
-        bottom: 2px;
-        right: 2px;
-    }
-}
-
-.error {
-  font-size: 0.8em;
-  letter-spacing: 0.01em;
-  background: var(--color-danger);
-  border: 2px solid white;
-  color: white;
-  opacity: 1;
-  position: absolute;
-  top: 25%;
-  z-index: 4;
-  padding: 0.3em 0.5em;
-}
-
-.extension {
-    position: absolute;
-    top: 20px;
-    right: 0;
-    left: 20px;
-    text-align: center;
-    text-transform: uppercase;
-    background: #888;
-    color: white;
-    font-size: 12px;
-    padding: 2px;
-}
-
-.name {
-    font-style: italic;
-    font-size: 90%;
-    color: gray;
-    margin: 5px;
-    max-width: 20ch;
 }
 
 
 @keyframes rotate {
-    0% {
-        transform: rotate(0)
-    }
-    100% {
-        transform: rotate(360deg);
-    }
+  0% {
+    transform: rotate(0)
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
+*/

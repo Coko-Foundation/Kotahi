@@ -1,60 +1,60 @@
 .root {
-    text-transform: uppercase;
-    font-family: 'Fira Sans Condensed';
-    letter-spacing: 0.05em;
-    border: none;
-    font-size: inherit;
-    padding: 10px 20px;
-    position: relative;
-    &:not(.disabled) {
-        cursor: pointer;
-        border: 2px solid transparent;
-        border-bottom: 4px solid transparent;
-        font-weight: 500;
-        transition: border 0.3s, background 0.5s;
+  text-transform: uppercase;
+  font-family: 'Fira Sans Condensed';
+  letter-spacing: 0.05em;
+  border: none;
+  font-size: inherit;
+  padding: 10px 20px;
+  position: relative;
+  &:not(.disabled) {
+    cursor: pointer;
+    border: 2px solid transparent;
+    border-bottom: 4px solid transparent;
+    font-weight: 500;
+    transition: border 0.3s, background 0.5s;
 
-        &:hover {
-            background: white;
-            color: var(--color-primary);
-            border: 2px solid var(--color-primary);
-            border-bottom: 4px solid var(--color-primary);
-            outline: 1px solid transparent;
-        }
-
-        &:focus {
-            background: white;
-            color: var(--color-primary);
-            border: 2px solid var(--color-primary);
-            border-bottom: 4px solid var(--color-primary);
-            box-shadow: 0 2px 0 0 var(--color-primary);
-            outline: 1px solid transparent;
-        }
-
-
-
-        &:after {
-            content: "Saved!";
-            top: 20%;
-            left: 115%;
-            position: absolute;
-            background: var(--color-primary);
-            color: white;
-            padding: 0.1em 0.3em;
-            opacity: 0;
-        }
-        &:active {
-            transform: scale(0.80);
-            &:after {
-                opacity: 1;
-                animation: 1s warning;
-            }
-        }
+    &:hover {
+      background: white;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+      border-bottom: 4px solid var(--color-primary);
+      outline: 1px solid transparent;
     }
+
+    &:focus {
+      background: white;
+      color: var(--color-primary);
+      border: 2px solid var(--color-primary);
+      border-bottom: 4px solid var(--color-primary);
+      box-shadow: 0 2px 0 0 var(--color-primary);
+      outline: 1px solid transparent;
+    }
+
+
+
+    &:after {
+      content: "Saved!";
+      top: 20%;
+      left: 115%;
+      position: absolute;
+      background: var(--color-primary);
+      color: white;
+      padding: 0.1em 0.3em;
+      opacity: 0;
+    }
+    &:active {
+      transform: scale(0.80);
+      &:after {
+        opacity: 1;
+        animation: 1s warning;
+      }
+    }
+  }
 }
 
 .primary {
-    background-color: var(--color-primary);
-    color: white;
+  background-color: var(--color-primary);
+  color: white;
 }
 
 .disabled {
@@ -68,33 +68,33 @@
         // border: 2px solid #F10C08;
         cursor: not-allowed;
         &:after {
-            text-transform: lowercase;
-            letter-spacing: 0;
+          text-transform: lowercase;
+          letter-spacing: 0;
 
-            content: "sorry, this action is not possible";
-            position: absolute;
-            display: inline;
-            top: 30%;
-            left: 115%;
-            font-style: italic;
-            font-size: 0.9em;
-            color: #F10C08;
-            width: 30ch;
+          content: "sorry, this action is not possible";
+          position: absolute;
+          display: inline;
+          top: 30%;
+          left: 115%;
+          font-style: italic;
+          font-size: 0.9em;
+          color: #F10C08;
+          width: 30ch;
             text-align: left; // background: #F10C08;
             opacity: 1;
+          }
         }
-    }
-}
+      }
 
 
-@keyframes fadeout {
-    0% {
-        opacity: 1;
-    }
-    90% {
-        opacity: 1;
-    }
-    100% {
-        opacity: 0;
-    }
-}
+      @keyframes fadeout {
+        0% {
+          opacity: 1;
+        }
+        90% {
+          opacity: 1;
+        }
+        100% {
+          opacity: 0;
+        }
+      }

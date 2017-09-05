@@ -1,28 +1,28 @@
 .root {
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 .text {
-    margin-right: 10px;
+  margin-right: 10px;
 }
 
 .input {
-    flex: 1;
-    font-size: inherit;
-    padding: 0.5em;
+  flex: 1;
+  font-size: inherit;
+  padding: 0.5em;
 }
 
 .root input {
-    border: 0 none;
-    padding: 0;
-    border-bottom: 1px dashed #aaa;
-    font-family: "Vollkorn", serif;
-    &:hover,
-    &:focus {
-        outline-style: none;
-        box-shadow: none;
-        border-color: transparent;
-        border-bottom: 1px dashed var(--color-primary);
-    }
+  border: 0 none;
+  padding: 0;
+  border-bottom: 1px dashed #aaa;
+  font-family: "Vollkorn", serif;
+  &:hover,
+  &:focus {
+    outline-style: none;
+    box-shadow: none;
+    border-color: transparent;
+    border-bottom: 1px dashed var(--color-primary);
+  }
 }

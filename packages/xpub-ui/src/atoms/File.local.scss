@@ -1,106 +1,102 @@
 .root {
-    display: inline-flex;
-    flex-direction: column;
-    align-items: center;
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  position: relative;
+  margin-bottom: 2em;
+  margin-right: 3em;
+  width: 20ch;
+
+  &:before,
+  &:after {
+    transition: transform 0.5s;
+    transition: transform 0.3s;
+    cursor: pointer;
+  }
+
+  &:after {
+    content: 'remove';
+    background: var(--color-danger);
+    color: white;
+    position: absolute;
+    left: 70%;
+    top: 4em;
+    transform: scaleX(0);
+    transform-origin: 0 0;
+    font-size: 0.8em;
+    padding: 0.2em 0.4em;
+    letter-spacing: 0.5px;
+    text-transform: uppercase;
+    z-index: 2;
+    cursor: pointer;
+    border: 1px solid white;
+  }
+  &:before {
+    content: 'replace';
+    background: var(--color-primary);
+    color: white;
+    position: absolute;
+    left: 70%;
+    top: 6em;
+    transform-origin: 0 0;
+    cursor: pointer;
+    transform: scaleX(0);
+    font-size: 0.8em;
+    padding: 0.2em 0.4em;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    z-index: 3;
+    border: 1px solid white;
+  }
+
+  .icon {
+    transition: transform 0.3s ease;
+    width: 70px;
+    height: 100px;
+    background: #ddd;
     position: relative;
-    margin-bottom: 2em;
+    padding: 5px;
+  }
 
-      margin-right: 3em;
-      width: 20ch;
-      
-&:before, &:after {
-          transition: transform 0.5s;
-        transition: transform 0.3s;
-      cursor: pointer;
-}
+  .extension {
+    position: absolute;
+    top: 20px;
+    right: 0;
+    left: 20px;
+    text-align: center;
+    text-transform: uppercase;
+    background: #888;
+    color: white;
+    font-size: 12px;
+    padding: 2px;
+  }
 
-    &:after {
-        content: 'remove';
-        background: var(--color-danger);
-        color: white;
-        position: absolute;
-        left: 70%;
-        top: 4em;
-        transform: scaleX(0);
-        transform-origin: 0 0;
-        font-size: 0.8em;
-        padding: 0.2em 0.4em;
-        letter-spacing: 0.5px;
-        text-transform: uppercase;
-        z-index: 2;
-        cursor: pointer;
-        border: 1px solid white;
+  .name {
+    font-style: italic;
+    font-size: 0.9em;
+    color: #aaa;
+    margin: 5px;
+    max-width: 15ch;
+    /*to divide into lines*/
+    word-break: break-all;
+    text-align: center;
+  }
 
+  &:hover {
+    .extension {
+      background: white;
+      color: var(--color-primary);
+      border-right: 2px solid #ddd;
     }
-    &:before {
-        content: 'replace';
-        background: var(--color-primary);
-        color: white;
-        position: absolute;
-        left: 70%;
-        top: 6em;
-        transform-origin: 0 0;
-        cursor: pointer;
 
-        transform: scaleX(0);
-        font-size: 0.8em;
-        padding: 0.2em 0.4em;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
-        z-index: 3;
-        border: 1px solid white;
-
-    }
 
     .icon {
-        transition: transform 0.3s ease;
-
-        width: 70px;
-        height: 100px;
-        background: #ddd;
-        position: relative;
-        padding: 5px;
+      background: var(--color-primary);
+      transform: skewY(6deg) rotate(-6deg);
     }
-
-    .extension {
-        position: absolute;
-        top: 20px;
-        right: 0;
-        left: 20px;
-        text-align: center;
-        text-transform: uppercase;
-        background: #888;
-        color: white;
-        font-size: 12px;
-        padding: 2px;
+    &:after,
+    &:before {
+      transform: scaleX(1);
     }
-
-    .name {
-        font-style: italic;
-        font-size: 0.9em;
-        color: #aaa;
-        margin: 5px;
-        max-width: 15ch;
-        /*to divide into lines*/
-        word-break: break-all;
-        text-align: center;
-    }
-
-    &:hover {
-        .extension {
-          background: white;
-          color: var(--color-primary);
-          border-right: 2px solid #ddd;
-        }
-
-
-        .icon {
-          background: var(--color-primary);
-            transform: skewY(6deg) rotate(-6deg);
-        }
-        &:after,
-        &:before {
-            transform: scaleX(1);
-        }
-    }
+  }
 }

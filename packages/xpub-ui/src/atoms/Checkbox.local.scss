@@ -1,58 +1,58 @@
 .root {
-    display: flex;
-    align-items: center;
-    cursor: pointer;
-    transition: all 2s;
-    font-size: 1em;
-    font-family: var(--font-author);
-    font-style: italic;
-    letter-spacing: 1px;
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+  transition: all 2s;
+  font-size: 1em;
+  font-family: var(--font-author);
+  font-style: italic;
+  letter-spacing: 1px;
 }
 
 .root.inline {
-    display: inline-flex;
+  display: inline-flex;
 }
 
 .root.inline:not(:last-child) {
-    margin-right: 2.7em;
+  margin-right: 2.7em;
 }
 
 .root:not(.inline):not(:last-child) {
-    margin-bottom: 0.5rem;
+  margin-bottom: 0.5rem;
 }
 
 .root .input {
-    margin-right: 0.25rem;
-    display: none;
+  margin-right: 0.25rem;
+  display: none;
 }
 
 
 
 .root span:before {
-    transition: border 0.5s ease, background-size 0.3s ease;
-    content: ' ';
-    display: inline-block;
-    vertical-align: middle;
-    width: 9px;
-    height: 9px;
-    border: 1px solid black; // border-radius: 20px;
-    background-size: 0;
-    margin-right: 0.3em;
+  transition: border 0.5s ease, background-size 0.3s ease;
+  content: ' ';
+  display: inline-block;
+  vertical-align: middle;
+  width: 9px;
+  height: 9px;
+  border: 1px solid black; // border-radius: 20px;
+  background-size: 0;
+  margin-right: 0.3em;
 }
 
 .root:hover span:before {
-    background-size: 100%;
-    background: var(--color-primary);
-    box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 white;
+  background-size: 100%;
+  background: var(--color-primary);
+  box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 white;
 }
 
 .root input:checked+span {
-    font-weight: 500;
+  font-weight: 500;
 
-    &:before {
-        transition: border 0.5s ease, background-size 0.3s ease;
-        border: 1px solid black;
-        background: black;
-        box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 white;
-    }
+  &:before {
+    transition: border 0.5s ease, background-size 0.3s ease;
+    border: 1px solid black;
+    background: black;
+    box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 white;
+  }
 }
