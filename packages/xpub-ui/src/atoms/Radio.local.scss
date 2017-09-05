@@ -22,7 +22,7 @@
   display: none;
 }
 
-.root span:before {
+.root span::before {
   transition: border 0.5s ease, background-size 0.3s ease;
   content: ' ';
   display: inline-block;
@@ -37,22 +37,22 @@
 }
 
 .root:hover span {
-  &:before {
-    background-size: 100%;
-    background: radial-gradient(closest-corner at center, var(--color-primary) 0%, var(--color-primary) 30%, white 30%, white 100%); 
+  &::before {
+    //background-size: 100%;
+    background: radial-gradient(closest-corner at center, var(--color-primary) 0%, var(--color-primary) 30%, white 30%, white 100%);
 
-    /*less blurry circle: 2 lines below
-    -------------------------------------------------*/
+    /* less blurry circle: 2 lines below
+    ------------------------------------------------- */
     border-color: transparent;
     box-shadow: 0 0 0 1px var(--color-primary);
   }
 }
 
-.root input:checked+span {
+.root input:checked + span {
   font-weight: 500;
 
-  &:before {
-    transition: border 0.5s ease background-size 0.3s ease;
+  &::before {
+    transition: border 0.5s ease, background-size 0.3s ease;
     border-color: transparent;
     box-shadow: 0 0 0 1px black;
     background: radial-gradient(closest-corner at center, black 0%, black 45%, white 45%, white 100%);

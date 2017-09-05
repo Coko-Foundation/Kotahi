@@ -1,16 +1,15 @@
-/*trying to reuse some parts frome pubsweet website: the mixins for the underlines for the tags*/
+/* trying to reuse some parts frome pubsweet website: the mixins for the underlines for the tags */
 
 $color: var(--color-primary);
 $color-back: white;
 
 @mixin realBorder($color, $colorback) {
-  background: linear-gradient($colorback 0, $colorback 1.2em, $color 1.2em, $color 1.25em, $colorback 1.25em, $colorback 2em);
+  background: linear-gradient($colorback 0, $colorback 1.2em, $color 1.2em, $color 1.25em, $colorback 1.25em, $colorback 2em) no-repeat;
   text-shadow: 0.05em 0.05em 0 $colorback, -0.05em -0.05em 0 $colorback, -0.05em 0.05em 0 $colorback, 0.05em -0.05em 0 $colorback;
-  background-repeat: no-repeat;
 }
 
 .root {
-  font-family: "Fira Sans Condensed";
+  font-family: "Fira Sans Condensed", sans-serif;
 }
 
 .react-tags {
@@ -33,12 +32,11 @@ $color-back: white;
 
 .react-tags__selected-tag {
   font-family: "Vollkorn", serif;
-
   display: inline-block;
   box-sizing: border-box;
   margin: 0 1em 1em 0;
   padding: 0.1em 0.3em;
-  border: 0px solid transparent;
+  border: 0 solid transparent;
   @include realBorder(#aaa, white);
 
   /* match the font styles */
@@ -47,10 +45,11 @@ $color-back: white;
   cursor: pointer;
 }
 
-.react-tags__selected-tag:after {
+.react-tags__selected-tag::after {
   content: '\2715';
   margin-left: 8px;
-  padding: 0; // margin: 0;
+  padding: 3px 0 0;
+  // margin: 0;
   display: inline-block;
   width: 13px;
   height: 10px;
@@ -58,20 +57,20 @@ $color-back: white;
   background: white;
   color: #aaa;
   font-weight: 600;
-  padding-top: 3px;
+  text-shadow: none;
 
   &:hover {
     background: var(--color-primary);
   }
-  text-shadow: none;
 }
 
 .react-tags__selected-tag:hover,
 .react-tags__selected-tag:focus {
   @include realBorder(transparent, white);
+
   text-decoration: line-through;
 
-  &:after {
+  &::after {
     color: var(--color-danger);
   }
 }
@@ -79,17 +78,15 @@ $color-back: white;
 .react-tags__search {
   display: inline-block;
 
-
   /* match tag layout */
   margin: 0 1em 1em 0;
   padding: 0.1em 0.3em;
 
   /* prevent autoresize overflowing the container */
-  max-width: 100;
+  max-width: 100px;
 }
 
 @media screen and (min-width: 30em) {
-
   .react-tags__search {
     /* this will become the offsetParent for suggestions */
     position: relative;
@@ -113,10 +110,12 @@ $color-back: white;
   min-width: 15ch;
   font-family: "Vollkorn", serif;
   color: black; // color: red;
+
   &::placeholder {
     font-family: "Fira Sans Condensed", sans-serif;
     opacity: 0.5;
   }
+
   &:focus,
   &:hover {
     border-bottom: 1px dashed var(--color-primary);

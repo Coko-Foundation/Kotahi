@@ -19,21 +19,22 @@
 
 .progress {
   opacity: 1;
-  background: var(--color-primary);
   position: absolute;
   bottom: 0;
   right: 0;
   left: 0;
   content: '';
-
   display: block;
   transform-origin: 0 0;
-  background-image: linear-gradient( to top,
-  var(--color-primary-light) 50%,
-  var(--color-primary) 75%);
+  background-image:
+    linear-gradient(
+      to top,
+      var(--color-primary-light) 50%,
+      var(--color-primary) 75%
+    );
 
-  &:after {
-    /*we can use a data attribute for the numbering below */
+  &::after {
+    /* we can use a data attribute for the numbering below */
     content: "00%";
     display: block;
     color: white;
@@ -77,39 +78,36 @@
   max-width: 20ch;
 }
 
-
-
-/* clock experiment, on hold.
-.progress {
-    opacity: 1;
-    background: var(--color-primary);
-    position: absolute;
-    bottom: 10%;
-    right: 10%;
-    content: '';
-    width: 3px;
-    height: 1em;
-    display: block;
-    // margin-left: 30%;
-    transform-origin: 0 0;
-    animation: rotate 1s infinite ease-in-out ;
-    background-image: 
-    &:after {
-      content: "uploading";
-      display: block;
-      position: absolute;
-      width: 1em;
-      height:  1em;
-    }
-}
-
-
-@keyframes rotate {
-  0% {
-    transform: rotate(0)
-  }
-  100% {
-    transform: rotate(360deg);
-  }
-}
-*/
+// clock experiment, on hold.
+//.progress {
+//    opacity: 1;
+//    background: var(--color-primary);
+//    position: absolute;
+//    bottom: 10%;
+//    right: 10%;
+//    content: '';
+//    width: 3px;
+//    height: 1em;
+//    display: block;
+//    // margin-left: 30%;
+//    transform-origin: 0 0;
+//    animation: rotate 1s infinite ease-in-out ;
+//    background-image:
+//    &:after {
+//      content: "uploading";
+//      display: block;
+//      position: absolute;
+//      width: 1em;
+//      height:  1em;
+//    }
+//}
+//
+//
+//@keyframes rotate {
+//  0% {
+//    transform: rotate(0)
+//  }
+//  100% {
+//    transform: rotate(360deg);
+//  }
+//}

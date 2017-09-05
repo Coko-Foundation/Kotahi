@@ -26,9 +26,7 @@
   display: none;
 }
 
-
-
-.root span:before {
+.root span::before {
   transition: border 0.5s ease, background-size 0.3s ease;
   content: ' ';
   display: inline-block;
@@ -40,16 +38,16 @@
   margin-right: 0.3em;
 }
 
-.root:hover span:before {
-  background-size: 100%;
+.root:hover span::before {
+  //background-size: 100%;
   background: var(--color-primary);
   box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 white;
 }
 
-.root input:checked+span {
+.root input:checked + span {
   font-weight: 500;
 
-  &:before {
+  &::before {
     transition: border 0.5s ease, background-size 0.3s ease;
     border: 1px solid black;
     background: black;

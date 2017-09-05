@@ -7,14 +7,13 @@
   margin-right: 3em;
   width: 20ch;
 
-  &:before,
-  &:after {
-    transition: transform 0.5s;
+  &::before,
+  &::after {
     transition: transform 0.3s;
     cursor: pointer;
   }
 
-  &:after {
+  &::after {
     content: 'remove';
     background: var(--color-danger);
     color: white;
@@ -31,7 +30,8 @@
     cursor: pointer;
     border: 1px solid white;
   }
-  &:before {
+
+  &::before {
     content: 'replace';
     background: var(--color-primary);
     color: white;
@@ -77,7 +77,8 @@
     color: #aaa;
     margin: 5px;
     max-width: 15ch;
-    /*to divide into lines*/
+
+    /* to divide into lines */
     word-break: break-all;
     text-align: center;
   }
@@ -89,13 +90,13 @@
       border-right: 2px solid #ddd;
     }
 
-
     .icon {
       background: var(--color-primary);
       transform: skewY(6deg) rotate(-6deg);
     }
-    &:after,
-    &:before {
+
+    &::after,
+    &::before {
       transform: scaleX(1);
     }
   }

@@ -5,7 +5,8 @@
 
 .link {
   color: var(--color-primary);
-  &:before {
+
+  &::before {
     // while waiting for the user icon. :D
     content: "ʕ•ᴥ•ʔ";
     text-align: center;
@@ -19,7 +20,8 @@
 .link:hover {
   text-decoration: underline;
   cursor: pointer;
-  &:before {
+
+  &::before {
     color: var(--color-primary);
   }
 }
@@ -28,6 +30,6 @@
   padding: 1rem;
 }
 
-.logo:before {
+.logo::before {
   content: "";
 }

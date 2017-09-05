@@ -62,7 +62,7 @@
   background-color: white;
   border-left: 2px solid var(--color-primary);
   border-bottom: 2px solid var(--color-primary);
-  /*columns: 2 auto;*/
+  //columns: 2 auto;
   max-height: 2px;
   transition: max-height 3s;
 }
@@ -83,7 +83,7 @@
 }
 
 .active {
-  // placegolder for the semibold semibold
+  // placeholder for the semibold
   font-weight: 500;
   color: black;
 }

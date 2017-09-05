@@ -1,11 +1,12 @@
 .root {
   text-transform: uppercase;
-  font-family: 'Fira Sans Condensed';
+  font-family: 'Fira Sans Condensed', sans-serif;
   letter-spacing: 0.05em;
   border: none;
   font-size: inherit;
   padding: 10px 20px;
   position: relative;
+
   &:not(.disabled) {
     cursor: pointer;
     border: 2px solid transparent;
@@ -30,9 +31,7 @@
       outline: 1px solid transparent;
     }
 
-
-
-    &:after {
+    &::after {
       content: "Saved!";
       top: 20%;
       left: 115%;
@@ -42,9 +41,11 @@
       padding: 0.1em 0.3em;
       opacity: 0;
     }
+
     &:active {
-      transform: scale(0.80);
-      &:after {
+      transform: scale(0.8);
+
+      &::after {
         opacity: 1;
         animation: 1s warning;
       }
@@ -58,43 +59,45 @@
 }
 
 .disabled {
-    // text-decoration: line-through;
-    background: white;
-    border: 2px solid transparent;
-    border-bottom: 2px solid #bbb;
-    color: #bbb;
+  // text-decoration: line-through;
+  background: white;
+  border: 2px solid transparent;
+  border-bottom: 2px solid #bbb;
+  color: #bbb;
 
-    &:hover {
-        // border: 2px solid #F10C08;
-        cursor: not-allowed;
-        &:after {
-          text-transform: lowercase;
-          letter-spacing: 0;
+  &:hover {
+    // border: 2px solid #F10C08;
+    cursor: not-allowed;
 
-          content: "sorry, this action is not possible";
-          position: absolute;
-          display: inline;
-          top: 30%;
-          left: 115%;
-          font-style: italic;
-          font-size: 0.9em;
-          color: #F10C08;
-          width: 30ch;
-            text-align: left; // background: #F10C08;
-            opacity: 1;
-          }
-        }
-      }
+    &::after {
+      text-transform: lowercase;
+      letter-spacing: 0;
+      content: "sorry, this action is not possible";
+      position: absolute;
+      display: inline;
+      top: 30%;
+      left: 115%;
+      font-style: italic;
+      font-size: 0.9em;
+      color: #f10c08;
+      width: 30ch;
+      text-align: left;
+      // background: #F10C08;
+      opacity: 1;
+    }
+  }
+}
 
-
-      @keyframes fadeout {
-        0% {
-          opacity: 1;
-        }
-        90% {
-          opacity: 1;
-        }
-        100% {
-          opacity: 0;
-        }
-      }
+//@keyframes fadeout {
+//  0% {
+//    opacity: 1;
+//  }
+//
+//  90% {
+//    opacity: 1;
+//  }
+//
+//  100% {
+//    opacity: 0;
+//  }
+//}

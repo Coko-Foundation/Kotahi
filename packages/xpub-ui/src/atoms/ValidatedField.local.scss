@@ -1,5 +1,6 @@
 .root {
-  composes: root from "./TextField.local.scss";
+  display: flex;
+  align-items: center;
   font-size: inherit;
 }
 
@@ -9,6 +10,7 @@ input {
   padding: 0;
   border-bottom: 1px dashed #aaa;
   font-family: "Vollkorn", serif;
+
   &:hover,
   &:focus {
     outline-style: none;
@@ -17,7 +19,6 @@ input {
     border-bottom: 1px dashed var(--color-primary);
   }
 }
-
 
 .messages {
   // color: white;
@@ -42,6 +43,5 @@ input {
 }
 
 .warning {
-  color: var(--color-warn);
-  color: #ee7600;
+  color: var(--color-warning);
 }
