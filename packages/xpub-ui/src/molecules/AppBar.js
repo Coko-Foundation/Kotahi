@@ -2,6 +2,7 @@ import React from 'react'
 import { Link } from 'react-router'
 import classnames from 'classnames'
 import classes from './AppBar.local.scss'
+import Icon from '../atoms/Icon'
 
 const AppBar = ({ brandLink, brandName, loginLink, logoutLink, userName }) => (
   <div className={classes.root}>
@@ -10,7 +11,10 @@ const AppBar = ({ brandLink, brandName, loginLink, logoutLink, userName }) => (
 
     <div>
       {userName && (
-        <span className={classes.item}>{userName}</span>
+        <span className={classes.item}>
+          <Icon size={16}>user</Icon>
+          <span className={classes.username}>{userName}</span>
+        </span>
       )}
 
       {userName ? (

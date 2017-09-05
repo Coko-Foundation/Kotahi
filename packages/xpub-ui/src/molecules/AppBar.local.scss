@@ -7,8 +7,6 @@
   color: var(--color-primary);
 
   &::before {
-    // while waiting for the user icon. :D
-    content: "ʕ•ᴥ•ʔ";
     text-align: center;
     color: #aaa;
     height: 1em;
@@ -27,7 +25,13 @@
 }
 
 .item {
-  padding: 1rem;
+  padding: 0 1rem;
+  display: inline-flex;
+  align-items: center;
+}
+
+.username {
+  margin-left: 0.3em;
 }
 
 .logo::before {
