@@ -1,15 +1,48 @@
+.root {
+    composes: root from "./TextField.local.scss";
+    font-size: inherit;
+}
+
+input {
+    font-size: inherit;
+    border: 0 none;
+    padding: 0;
+    border-bottom: 1px dashed #aaa;
+    font-family: "Vollkorn", serif;
+    &:hover,
+    &:focus {
+        outline-style: none;
+        box-shadow: none;
+        border-color: transparent;
+        border-bottom: 1px dashed var(--color-primary);
+    }
+}
+
+
 .messages {
-  margin-top: 10px;
+    // color: white;
+    margin-top: 10px;
+    font-style: italic;
+    display: inline-block;
+    margin-left: 1em;
 }
 
 .message:not(:last-child) {
-  margin-bottom: 10px;
+    margin-bottom: 10px;
+}
+
+.error, .warning {
+    font-size: 0.9em;
+    // padding: 0.3em 0.5em;
+    letter-spacing: 0.01em;
+
 }
 
 .error {
-  color: red;
+    color: var(--color-danger);
 }
 
 .warning {
-  color: orange;
+  color: var(--color-warn);
+  color: #ee7600;
 }

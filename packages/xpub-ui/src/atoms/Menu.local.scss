@@ -1,57 +1,89 @@
+.root button {
+    font-family: var(--font-author);
+}
+
 .menuContainer {
-  position: relative;
+    position: relative;
+
 }
 
 .opener {
-  border: none;
-  cursor: pointer;
-  background: transparent;
-  font-size: inherit;
-  display: flex;
-  align-items: center;
-  /*min-width: 10em;*/
-  /*justify-content: end;*/
+    border: none;
+    outline: none;
+    cursor: pointer;
+    background: transparent;
+    font-size: inherit;
+    display: flex;
+    align-items: center;
+    /*min-width: 10em;*/
+    /*justify-content: end;*/
+    font-family: var(--font-interface);
+    // #semibold
+    font-weight: 600;
+
+    border-left: 2px solid transparent;
+}
+
+.open .opener {
+    border-left: 2px solid var(--color-primary);
 }
 
 .opener:hover,
+.open .opener,
 .opener:hover .placeholder {
-  color: cornflowerblue;
+    color: var(--color-primary);
 }
 
 .placeholder {
-  color: gray;
+    color: #aaa;
+    font-family: var(--font-interface);
+    font-weight: 400;
 }
 
 .arrow {
-  margin-left: 10px;
-  font-size: 50%;
+    margin-left: 10px;
+    font-size: 50%;
+    transform: scaleY(1.2) scaleX(2.2);
+    transition: transform 0.2s;
 }
 
 .open .arrow {
-  transform: scaleY(-1)
+    transform: scaleX(2.2) scaleY(-1.2);
 }
 
 .menu {
-  position: absolute;
-  top: 0;
-  left: 0;
-  min-width: 10em;
-  background-color: white;
-  border-left: 1px solid #aaa;
-  border-bottom: 1px solid #aaa;
-  /*columns: 2 auto;*/
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 10em;
+    background-color: white;
+    border-left: 2px solid var(--color-primary);
+    border-bottom: 2px solid var(--color-primary);
+
+    /*columns: 2 auto;*/
+    // opening animation
+    max-height: 2px;
+    transition: max-height 3s;
+}
+
+
+
+.open .menu {
+    max-height: 3000px;
 }
 
 .option {
-  cursor: pointer;
-  padding: 10px;
-  white-space: nowrap;
+    font-family: var(--font-author);
+    cursor: pointer;
+    padding: 10px;
+    white-space: nowrap;
 }
 
 .option:hover {
-  color: cornflowerblue;
+    color: var(--color-primary);
 }
 
 .active {
-  color: cornflowerblue;
+
+    font-weight: 600;
 }

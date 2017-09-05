@@ -4,13 +4,31 @@
 }
 
 .link {
-  color: cornflowerblue;
+  color: var(--color-primary);
+  &:before {
+    // while waiting for the user icon. :D
+    content: "ʕ•ᴥ•ʔ";
+    text-align: center;
+    // letter-spacing: -1px;
+    color: grey;
+    // width: 1em;
+    height: 1em;
+    display: inline-block;
+    margin-right: 0.3em;
+    // background: #aaa;
+
+  }
 }
 
 .link:hover {
   text-decoration: underline;
+  cursor: pointer;
 }
 
 .item {
   padding: 1rem;
+}
+
+.logo:before {
+  content: "";
 }
