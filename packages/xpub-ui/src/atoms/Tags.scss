@@ -1,10 +1,21 @@
+/*trying to reuse some parts frome pubsweet website: the mixins for the underlines for the tags*/
+
+$color: var(--color-primary);
+$color-back: white;
+
+@mixin realBorder($color, $colorback) {
+  background: linear-gradient($colorback 0, $colorback 1.2em, $color 1.2em, $color 1.25em, $colorback 1.25em, $colorback 2em);
+  text-shadow: 0.05em 0.05em 0 $colorback, -0.05em -0.05em 0 $colorback, -0.05em 0.05em 0 $colorback, 0.05em -0.05em 0 $colorback;
+  background-repeat: no-repeat;
+}
+
+.root {
+  font-family: "Fira Sans Condensed";
+}
+
 .react-tags {
   position: relative;
   padding: 6px 0 0 6px;
-  /*border: 1px solid #D1D1D1;*/
-  /*border-radius: 1px;*/
-
-  /* shared font styles */
   font-size: 1em;
   line-height: 1.2;
 
@@ -13,7 +24,7 @@
 }
 
 .react-tags.is-focused {
-  border-color: #B1B1B1;
+  border-color: var(--color-primary);
 }
 
 .react-tags__selected {
@@ -21,39 +32,60 @@
 }
 
 .react-tags__selected-tag {
+  font-family: "Vollkorn", serif;
+
   display: inline-block;
   box-sizing: border-box;
-  margin: 0 6px 6px 0;
-  padding: 6px 8px;
-  border: 1px solid #D1D1D1;
-  border-radius: 2px;
-  background: #F1F1F1;
+  margin: 0 1em 1em 0;
+  padding: 0.1em 0.3em;
+  border: 0px solid transparent;
+  @include realBorder(#aaa, white);
 
   /* match the font styles */
   font-size: inherit;
   line-height: inherit;
+  cursor: pointer;
 }
 
 .react-tags__selected-tag:after {
   content: '\2715';
-  color: #AAA;
   margin-left: 8px;
+  padding: 0; // margin: 0;
+  display: inline-block;
+  width: 13px;
+  height: 10px;
+  font-size: 0.9em;
+  background: white;
+  color: #aaa;
+  font-weight: 600;
+  padding-top: 3px;
+
+  &:hover {
+    background: var(--color-primary);
+  }
+  text-shadow: none;
 }
 
 .react-tags__selected-tag:hover,
 .react-tags__selected-tag:focus {
-  border-color: #B1B1B1;
+  @include realBorder(transparent, white);
+  text-decoration: line-through;
+
+  &:after {
+    color: var(--color-danger);
+  }
 }
 
 .react-tags__search {
   display: inline-block;
 
+
   /* match tag layout */
-  padding: 7px 2px;
-  margin-bottom: 6px;
+  margin: 0 1em 1em 0;
+  padding: 0.1em 0.3em;
 
   /* prevent autoresize overflowing the container */
-  max-width: 100%;
+  max-width: 100;
 }
 
 @media screen and (min-width: 30em) {
@@ -62,7 +94,6 @@
     /* this will become the offsetParent for suggestions */
     position: relative;
   }
-
 }
 
 .react-tags__search input {
@@ -78,8 +109,18 @@
   /* match the font styles */
   font-size: inherit;
   line-height: inherit;
-
-  opacity: 0.5;
+  border-bottom: 1px dashed grey;
+  min-width: 15ch;
+  font-family: "Vollkorn", serif;
+  color: black; // color: red;
+  &::placeholder {
+    font-family: "Fira Sans Condensed", sans-serif;
+    opacity: 0.5;
+  }
+  &:focus,
+  &:hover {
+    border-bottom: 1px dashed var(--color-primary);
+  }
 }
 
 .react-tags__search input::-ms-clear {

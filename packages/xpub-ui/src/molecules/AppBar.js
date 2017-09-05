@@ -6,7 +6,7 @@ import classes from './AppBar.local.scss'
 const AppBar = ({ brandLink, brandName, loginLink, logoutLink, userName }) => (
   <div className={classes.root}>
     <Link to={brandLink || '/'}
-          className={classes.link}>{brandName}</Link>
+          className={classnames(classes.link, classes.logo)}>{brandName}</Link>
 
     <div>
       {userName && (

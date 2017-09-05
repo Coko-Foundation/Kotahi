@@ -12,3 +12,17 @@
   font-size: inherit;
   padding: 0.5em;
 }
+
+.root input {
+  border: 0 none;
+  padding: 0;
+  border-bottom: 1px dashed #aaa;
+  font-family: "Vollkorn", serif;
+  &:hover,
+  &:focus {
+    outline-style: none;
+    box-shadow: none;
+    border-color: transparent;
+    border-bottom: 1px dashed var(--color-primary);
+  }
+}
