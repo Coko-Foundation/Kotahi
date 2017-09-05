@@ -12,6 +12,14 @@ class Logout extends React.Component {
     }
   }
 
+  componentWillReceiveProps (nextProps) {
+    const { isAuthenticated, logout } = nextProps
+
+    if (isAuthenticated) {
+      logout()
+    }
+  }
+
   render () {
     const { isAuthenticated } = this.props
 
