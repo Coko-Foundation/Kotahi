@@ -3,6 +3,7 @@ import classnames from 'classnames'
 import classes from './Menu.local.scss'
 
 // TODO: match the width of the container to the width of the widest option?
+// TODO: use a <select> element instead of divs?
 
 class Menu extends React.Component {
   constructor (props) {
@@ -36,14 +37,18 @@ class Menu extends React.Component {
   }
 
   render () {
-    const { options, placeholder = 'Choose in the list' } = this.props
+    const { label, options, placeholder = 'Choose in the list' } = this.props
     const { open, selected } = this.state
 
     return (
       <div className={classnames(classes.root, {
         [classes.open]: open
       })}>
-        <div>
+        <div className={classes.openerContainer}>
+          {label && (
+            <span className={classes.label}>{label}</span>
+          )}
+
           <button
             type="button"
             className={classes.opener}
@@ -57,9 +62,9 @@ class Menu extends React.Component {
           </button>
         </div>
 
-        <div className={classes.menuContainer}>
+        <div className={classes.optionsContainer}>
           {open && (
-            <div className={classes.menu}>
+            <div className={classes.options}>
               {options.map(option => (
                 <div
                   key={option.value}

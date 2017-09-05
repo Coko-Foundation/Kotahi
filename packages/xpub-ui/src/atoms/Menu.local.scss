@@ -1,8 +1,18 @@
+.root {
+  display: flex;
+  align-items: center;
+}
+
 .root button {
   font-family: var(--font-author);
 }
 
-.menuContainer {
+.openerContainer {
+  display: flex;
+  align-items: center;
+}
+
+.optionsContainer {
   position: relative;
 }
 
@@ -44,7 +54,7 @@
   transform: scaleX(2.2) scaleY(-1.2);
 }
 
-.menu {
+.options {
   position: absolute;
   top: 0;
   left: 0;
