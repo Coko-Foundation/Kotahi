@@ -2,11 +2,12 @@ process.env.BABEL_ENV = 'development'
 process.env.NODE_ENV = 'development'
 
 const path = require('path')
+const webpack = require('webpack')
 const nodeExternals = require('webpack-node-externals')
 
 const include = [
   path.join(__dirname, 'src'),
-  // /pubsweet-[^/]+\/src/,
+  /pubsweet-[^/]+\/src/,
   /xpub-[^/]+\/src/,
 ]
 
@@ -23,6 +24,11 @@ module.exports = {
   resolve: {
     symlinks: false
   },
+  plugins: [
+    new webpack.ProvidePlugin({
+      'CONFIG': path.resolve(__dirname, '..', 'config', 'dev.js')
+    }),
+  ],
   module: {
     rules: [
       {

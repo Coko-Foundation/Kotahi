@@ -7,7 +7,7 @@ import DashboardItem from './DashboardItem'
 
 export default compose(
   ConnectPage(props => [
-    actions.getFragment({id: props.project.fragments[0]})
+    actions.getFragment({id: props.project.id}, {id: props.project.fragments[0]})
   ]),
   connect(
     (state, ownProps) => ({

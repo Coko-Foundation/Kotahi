@@ -39,7 +39,8 @@ module.exports = {
     notes: Joi.object({
       fundingAcknowledgement: Joi.string(),
       specialInstructions: Joi.string()
-    })
+    }),
+    lock: Joi.object()
   },
   user: {
     name: Joi.string(), // TODO: add "name" to the login form

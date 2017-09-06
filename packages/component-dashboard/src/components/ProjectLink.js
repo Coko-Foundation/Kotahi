@@ -1,4 +1,5 @@
 import React from 'react'
+import { Link } from 'react-router'
 
 const projectUrl = ({ project, version, page, id }) => {
   const parts = []

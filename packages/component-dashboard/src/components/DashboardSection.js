@@ -1,5 +1,5 @@
 import React from 'react'
-import DashboardItemContainer from './DashboardItem'
+import DashboardItemContainer from './DashboardItemContainer'
 import classes from './DashboardSection.local.scss'
 
 const DashboardSection = ({ heading, projects, status, actions, links, meta, roles, empty }) => {

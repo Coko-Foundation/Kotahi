@@ -1,3 +1,5 @@
+const path = require('path')
+
 module.exports = {
   symlinks: false, // needed so that babel doesn't look for plugins in components
   modules: [
