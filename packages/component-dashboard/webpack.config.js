@@ -6,6 +6,7 @@ const nodeExternals = require('webpack-node-externals')
 
 const include = [
   path.join(__dirname, 'src'),
+  // /pubsweet-[^/]+\/src/,
   /xpub-[^/]+\/src/,
 ]
 

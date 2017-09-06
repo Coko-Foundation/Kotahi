@@ -1,10 +1,9 @@
 const path = require('path')
 const webpack = require('webpack')
 const ThemePlugin = require('pubsweet-theme-plugin')
-const config = require('../config/test')
-const CompressionPlugin = require('compression-webpack-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const rules = require('./common-rules')
+const resolve = require('./common-resolve')
 
 module.exports = [
   {
@@ -27,20 +26,7 @@ module.exports = [
     module: {
       rules
     },
-    resolve: {
-      // symlinks: false,
-      // modules: [
-      //   path.resolve(__dirname, '..'),
-      //   path.resolve(__dirname, '..', 'node_modules'),
-      //   'node_modules'
-      // ],
-      alias: {
-        joi: 'joi-browser'
-      },
-      plugins: [new ThemePlugin(config['pubsweet-client'].theme)],
-      extensions: ['.js', '.jsx', '.json', '.scss'],
-      enforceExtension: false
-    },
+    resolve,
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
@@ -56,13 +42,6 @@ module.exports = [
       ]),
       new webpack.optimize.AggressiveMergingPlugin(),
       new webpack.optimize.OccurrenceOrderPlugin(),
-      new CompressionPlugin({
-        asset: '[path].gz[query]',
-        algorithm: 'gzip',
-        test: /\.js$|\.css$|\.html$/,
-        threshold: 10240,
-        minRatio: 0.8
-      })
     ],
     node: {
       fs: 'empty',

@@ -2,6 +2,7 @@ const path = require('path')
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const rules = require('./common-rules')
+const resolve = require('./common-resolve')
 
 module.exports = [
   {
@@ -25,19 +26,7 @@ module.exports = [
     module: {
       rules
     },
-    resolve: {
-      symlinks: false, // needed so that babel doesn't look for plugins in components
-      modules: [
-        path.resolve(__dirname, '..'), // needed for resolving app/routes
-        path.resolve(__dirname, '../node_modules'),
-        path.resolve(__dirname, '../../../node_modules'),
-        'node_modules'
-      ],
-      alias: {
-        joi: 'joi-browser'
-      },
-      extensions: ['.js', '.jsx'],
-    },
+    resolve,
     plugins: [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
