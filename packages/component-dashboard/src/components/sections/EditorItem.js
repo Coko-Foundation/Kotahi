@@ -44,10 +44,10 @@ const EditorItem = ({ project, version, addUserToTeam }) => (
 
     <div className={classes.roles}>
       <div className={classes.role}>
-        {/*<AssignEditor
+        <AssignEditor
           project={project}
           teamType="seniorEditor"
-          addUserToTeam={addUserToTeam}/>*/}
+          addUserToTeam={addUserToTeam}/>
       </div>
     </div>
   </div>

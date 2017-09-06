@@ -33,7 +33,7 @@ export default compose(
   withJournal,
   connect(
     (state, { project, teamType }) => ({
-      team: state.teams
+      team: state.teams && state.teams
         .find(team => team.object.type === 'collection'
           && team.object.id === project.id
           && team.teamType === teamType)

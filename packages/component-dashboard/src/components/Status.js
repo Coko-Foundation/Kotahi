@@ -1,6 +1,8 @@
 import React from 'react'
 import classes from './Status.local.css'
 
+// TODO: move labels to journal config
+
 const labels = {
   new: 'Unsubmitted',
   submitted: 'Submitted',
