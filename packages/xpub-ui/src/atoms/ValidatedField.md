@@ -1,13 +1,31 @@
 A form field that displays the results of validation.
 
 ```js
-<ValidatedField error="There was an error">
-  <input/>
-</ValidatedField>
+const { reduxForm } = require('redux-form');
+
+const ValidatedFieldForm = reduxForm({ 
+  form: 'validated-field-error',
+  onChange: values => console.log(values)
+})(ValidatedField);
+
+<ValidatedFieldForm 
+    name="error" 
+    validate={() => 'Required'}
+    component={input => <input {...input}/>}
+    />
 ```
 
 ```js
-<ValidatedField warning="There was a warning">
-  <input/>
-</ValidatedField>
+const { reduxForm } = require('redux-form');
+
+const ValidatedFieldForm = reduxForm({ 
+  form: 'validated-field-warning',
+  onChange: values => console.log(values)
+})(ValidatedField);
+
+<ValidatedFieldForm 
+    name="warning" 
+    warn={() => 'Expected'}
+    component={input => <input {...input}/>}
+    />
 ```
