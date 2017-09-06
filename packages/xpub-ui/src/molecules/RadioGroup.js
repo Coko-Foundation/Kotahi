@@ -32,6 +32,7 @@ class RadioGroup extends React.Component {
             inline={inline}
             value={option.value}
             label={option.label}
+            color={option.color}
             checked={option.value === value}
             onChange={this.handleChange}/>
         ))}

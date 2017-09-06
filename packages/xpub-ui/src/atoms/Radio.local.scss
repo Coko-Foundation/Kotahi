@@ -17,16 +17,34 @@
   margin-bottom: 0.5rem;
 }
 
-.root .input {
-  margin-right: 0.25rem;
+/* label text */
+
+.label {
+  font-size: 1em;
+  font-family: "Vollkorn", serif;
+  font-style: italic;
+  display: inline-block;
+  letter-spacing: 1px;
+}
+
+//.checked .label {
+input:checked + .label {
+  font-weight: 500;
+}
+
+/* hide the input */
+
+.input {
   display: none;
 }
 
-.root span::before {
+/* pseudo-input */
+
+.label::before {
   transition: border 0.5s ease, background-size 0.3s ease;
-  content: ' ';
+  content: " ";
   display: inline-block;
-  vertical-align: middle;
+  vertical-align: center;
   width: 10px;
   height: 10px;
   border-color: transparent;
@@ -36,33 +54,35 @@
   margin-right: 0.3em;
 }
 
-.root:hover span {
-  &::before {
-    //background-size: 100%;
-    background: radial-gradient(closest-corner at center, var(--color-primary) 0%, var(--color-primary) 30%, white 30%, white 100%);
+// TODO: don't apply this when checked
+.root:hover .label::before {
+  //background-size: 100%;
+  background:
+    radial-gradient(
+      closest-corner at center,
+      var(--color-primary) 0%,
+      var(--color-primary) 30%,
+      white 30%,
+      white 100%
+    );
 
-    /* less blurry circle: 2 lines below
-    ------------------------------------------------- */
-    border-color: transparent;
-    box-shadow: 0 0 0 1px var(--color-primary);
-  }
+  /* less blurry circle: 2 lines below
+  ------------------------------------------------- */
+  border-color: transparent;
+  box-shadow: 0 0 0 1px var(--color-primary);
 }
 
-.root input:checked + span {
-  font-weight: 500;
-
-  &::before {
-    transition: border 0.5s ease, background-size 0.3s ease;
-    border-color: transparent;
-    box-shadow: 0 0 0 1px black;
-    background: radial-gradient(closest-corner at center, black 0%, black 45%, white 45%, white 100%);
-  }
-}
-
-.root span {
-  font-size: 1em;
-  font-family: "Vollkorn", serif;
-  font-style: italic;
-  display: inline-block;
-  letter-spacing: 1px;
+//.checked .label::before {
+input:checked + .label::before {
+  transition: border 0.5s ease, background-size 0.3s ease;
+  border-color: transparent;
+  box-shadow: 0 0 0 1px black;
+  background:
+    radial-gradient(
+      closest-corner at center,
+      black 0%,
+      black 45%,
+      white 45%,
+      white 100%
+    );
 }

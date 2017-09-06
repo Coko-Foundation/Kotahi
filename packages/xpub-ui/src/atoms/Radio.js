@@ -2,10 +2,11 @@ import React from 'react'
 import classnames from 'classnames'
 import classes from './Radio.local.scss'
 
-const Radio = ({ inline, name, value, label, checked, required, onChange }) => (
+const Radio = ({ color, inline, name, value, label, checked, required, onChange }) => (
   <label className={classnames(classes.root, {
-    [classes.inline]: inline
-  })}>
+    [classes.inline]: inline,
+    [classes.checked]: checked
+  })} style={{color}}>
     <input
       className={classes.input}
       type="radio"
@@ -14,7 +15,7 @@ const Radio = ({ inline, name, value, label, checked, required, onChange }) => (
       checked={checked}
       required={required}
       onChange={onChange}/>
-    <span>{label}</span>
+    <span className={classes.label}>{label}</span>
   </label>
 )
 
