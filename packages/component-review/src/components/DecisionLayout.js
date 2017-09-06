@@ -1,10 +1,11 @@
 import React from 'react'
 // import classnames from 'classnames'
 // import SimpleEditor from 'pubsweet-component-wax/src/SimpleEditor'
-import classes from './ReviewLayout.local.scss'
-import Review from './Review'
+import classes from './DecisionLayout.local.scss'
+import Decision from './Decision'
+import Reviews from './Reviews'
 
-const ReviewLayout = ({ project, version, review, valid, handleSubmit, uploadFile }) => (
+const DecisionLayout = ({ project, version, decision, valid, handleSubmit, uploadFile }) => (
   <div className={classes.root}>
     <div className={classes.column}>
       {/*<SimpleEditor
@@ -23,9 +24,11 @@ const ReviewLayout = ({ project, version, review, valid, handleSubmit, uploadFil
         </tbody>
       </table>
 
-      <Review valid={valid} handleSubmit={handleSubmit} uploadFile={uploadFile}/>
+      <Reviews version={version}/>
+
+      <Decision valid={valid} handleSubmit={handleSubmit} uploadFile={uploadFile}/>
     </div>
   </div>
 )
 
-export default ReviewLayout
+export default DecisionLayout

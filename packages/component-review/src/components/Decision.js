@@ -4,9 +4,9 @@ import { NoteEditor } from 'xpub-edit'
 import { RadioGroup, ValidatedField } from 'xpub-ui'
 import { withJournal } from 'pubsweet-component-xpub-app/src/components'
 import { required } from '../lib/validators'
-import classes from './Review.local.scss'
+import classes from './Decision.local.scss'
 
-const Review = ({ journal, review, valid, handleSubmit, uploadFile }) => (
+const Decision = ({journal, decision, valid, handleSubmit, uploadFile}) => (
   <form onSubmit={handleSubmit}>
     <div className={classes.section}>
       <ValidatedField
@@ -14,8 +14,8 @@ const Review = ({ journal, review, valid, handleSubmit, uploadFile }) => (
         validate={[required]}
         component={input =>
           <NoteEditor
-            placeholder="Enter your review…"
-            title="Review"
+            placeholder="Enter your decision…"
+            title="Decision"
             {...input}/>
         }/>
     </div>
@@ -39,4 +39,4 @@ const Review = ({ journal, review, valid, handleSubmit, uploadFile }) => (
   </form>
 )
 
-export default withJournal(Review)
+export default withJournal(Decision)

@@ -36,6 +36,14 @@ const EditorItem = ({ project, version, addUserToTeam }) => (
             project={project}
             version={version}
             page="reviewers">Assign Reviewers</ProjectLink>
+
+          <Divider separator="|"/>
+
+          <ProjectLink
+            project={project}
+            version={version}
+            page="decisions"
+            id={project.id}>Make decision</ProjectLink>
         </div>
       </div>
 
