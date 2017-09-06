@@ -1,6 +1,6 @@
 import React from 'react'
 import classnames from 'classnames'
-import { FormSection, Field } from 'redux-form'
+import { FormSection } from 'redux-form'
 import { ValidatedField, YesOrNo } from 'xpub-ui'
 import { withJournal } from 'pubsweet-component-xpub-app/src/components'
 import { required } from '../lib/validators'
@@ -17,14 +17,12 @@ const Declarations = ({ journal }) => (
           { question.legend }
         </div>
 
-        <Field
+        <ValidatedField
           name={question.id}
           required
           validate={[required]}
-          component={props =>
-            <ValidatedField {...props.meta}>
-              <YesOrNo inline={true} {...props.input}/>
-            </ValidatedField>
+          component={input =>
+            <YesOrNo inline={true} {...input}/>
           }/>
       </div>
     ))}

@@ -15,32 +15,28 @@ const Suggestions = () => (
         <div className={classes.inline}>
           <div className={classes.legend}>Suggested reviewers</div>
 
-          <Field
+          <ValidatedField
             name="suggested"
             format={join()}
             parse={split()}
-            component={props =>
-              <ValidatedField {...props.meta}>
-                <TextField
-                  placeholder="Add reviewer names"
-                  {...props.input}/>
-              </ValidatedField>
+            component={input =>
+              <TextField
+                placeholder="Add reviewer names"
+                {...input}/>
             }/>
         </div>
 
         <div className={classes.inline}>
           <div className={classes.legend}>Opposed reviewers</div>
 
-          <Field
+          <ValidatedField
             name="opposed"
             format={join()}
             parse={split()}
-            component={props =>
-              <ValidatedField {...props.meta}>
-                <TextField
-                  placeholder="Add reviewer names"
-                  {...props.input}/>
-              </ValidatedField>
+            component={input =>
+              <TextField
+                placeholder="Add reviewer names"
+                {...input}/>
             }/>
         </div>
       </FormSection>
@@ -55,32 +51,28 @@ const Suggestions = () => (
         <div className={classes.inline}>
           <div className={classes.legend}>Suggested editors</div>
 
-          <Field
+          <ValidatedField
             name="suggested"
             format={join()}
             parse={split()}
-            component={props =>
-              <ValidatedField {...props.meta}>
-                <TextField
-                  placeholder="Add editor names"
-                  {...props.input}/>
-              </ValidatedField>
+            component={input =>
+              <TextField
+                placeholder="Add editor names"
+                {...input}/>
             }/>
         </div>
 
         <div className={classes.inline}>
           <div className={classes.legend}>Opposed editors</div>
 
-          <Field
+          <ValidatedField
             name="opposed"
             format={join()}
             parse={split()}
-            component={props =>
-              <ValidatedField {...props.meta}>
-                <TextField
-                  placeholder="Add editor names"
-                  {...props.input}/>
-              </ValidatedField>
+            component={input =>
+              <TextField
+                placeholder="Add editor names"
+                {...input}/>
             }/>
         </div>
       </FormSection>
