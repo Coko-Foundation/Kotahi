@@ -5,9 +5,7 @@ import OwnerSection from './sections/OwnerSection'
 import ReviewerSection from './sections/ReviewerSection'
 import EditorSection from './sections/EditorSection'
 
-const projectRoute = (project, page) => `/projects/${project.id}/version/${project.fragments[0]}/${page}`
-
-const Dashboard = ({ journal, dashboard, conversion, deleteProject, reviewerResponse, uploadManuscript }) => (
+const Dashboard = ({ dashboard, conversion, deleteProject, reviewerResponse, uploadManuscript }) => (
   <div className={classes.root}>
     <div className={classes.upload}>
       <UploadManuscript
@@ -17,18 +15,14 @@ const Dashboard = ({ journal, dashboard, conversion, deleteProject, reviewerResp
 
     <OwnerSection
       projects={dashboard.owner}
-      deleteProject={deleteProject}
-      projectRoute={projectRoute}/>
+      deleteProject={deleteProject}/>
 
     <ReviewerSection
       projects={dashboard.reviewer}
-      reviewerResponse={reviewerResponse}
-      projectRoute={projectRoute}/>
+      reviewerResponse={reviewerResponse}/>
 
     <EditorSection
-      journal={journal}
-      projects={dashboard.editor}
-      projectRoute={projectRoute}/>
+      projects={dashboard.editor}/>
   </div>
 )
 
