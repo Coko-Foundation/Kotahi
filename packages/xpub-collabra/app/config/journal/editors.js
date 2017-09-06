@@ -1,5 +1,5 @@
 export default {
-  managing: [
+  managingEditor: [
     {
       user: 1,
       name: "Managing Editor One"
@@ -9,7 +9,7 @@ export default {
       name: "Managing Editor Two"
     }
   ],
-  senior: [
+  seniorEditor: [
     {
       user: 3,
       name: "Senior Editor One"
@@ -19,7 +19,7 @@ export default {
       name: "Senior Editor Two"
     }
   ],
-  handling: [
+  handlingEditor: [
     {
       user: 5,
       name: "Handling Editor One"
