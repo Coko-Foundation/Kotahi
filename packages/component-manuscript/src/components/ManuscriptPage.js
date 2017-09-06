@@ -6,7 +6,7 @@ import { selectCurrentUser, selectCollection, selectFragment } from 'xpub-select
 import Manuscript from './Manuscript'
 
 export default compose(
-  ConnectPage(params => [
+  ConnectPage(({ params }) => [
     actions.getCollection({ id: params.project }),
     actions.getFragment({ id: params.project }, { id: params.version })
   ]),

@@ -34,7 +34,7 @@ const ConnectPage = requirements => WrappedComponent => {
         complete: false
       })
 
-      const requests = requirements(this.props.params).map(this.props.dispatch)
+      const requests = requirements(this.props).map(this.props.dispatch)
 
       Promise.all(requests).then(() => {
         this.setState({

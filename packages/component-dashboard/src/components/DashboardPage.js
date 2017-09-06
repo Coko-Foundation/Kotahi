@@ -3,7 +3,7 @@ import { connect } from 'react-redux'
 import { orderBy } from 'lodash'
 import actions from 'pubsweet-client/src/actions'
 import { selectCurrentUser } from 'xpub-selectors'
-import { ConnectPage, withJournal} from 'pubsweet-component-xpub-app/src/components'
+import { ConnectPage } from 'pubsweet-component-xpub-app/src/components'
 import { uploadManuscript } from '../redux/manuscriptConversion'
 import { addUserToTeam } from '../redux/teams'
 import Dashboard from './Dashboard'
@@ -11,11 +11,10 @@ import Dashboard from './Dashboard'
 const newestFirst = items => orderBy(items, ['created'], ['desc'])
 
 export default compose(
-  ConnectPage(params => [
+  ConnectPage(() => [
     actions.getCollections(),
     actions.getTeams(),
   ]),
-  withJournal,
   connect(
     state => ({
       collections: state.collections,
