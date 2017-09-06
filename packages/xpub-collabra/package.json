@@ -24,7 +24,7 @@
     "pubsweet-component-xpub-manuscript": "^0.0.2",
     "pubsweet-component-xpub-review": "^0.0.2",
     "pubsweet-component-xpub-submit": "^0.0.2",
-    "pubsweet-server": "git+https://gitlab.coko.foundation/pubsweet/pubsweet-server.git",
+    "pubsweet-server": "^1.0.0-alpha.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-loadable": "^4.0.3",
