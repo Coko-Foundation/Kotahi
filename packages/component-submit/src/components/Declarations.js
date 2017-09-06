@@ -2,6 +2,7 @@ import React from 'react'
 import classnames from 'classnames'
 import { FormSection, Field } from 'redux-form'
 import { ValidatedField, YesOrNo } from 'xpub-ui'
+import { withJournal } from 'pubsweet-component-xpub-app/src/components'
 import { required } from '../lib/validators'
 import classes from './Declarations.local.scss'
 
@@ -30,4 +31,4 @@ const Declarations = ({ journal }) => (
   </FormSection>
 )
 
-export default Declarations
+export default withJournal(Declarations)

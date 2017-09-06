@@ -20,23 +20,6 @@ const review = {
   recommendation: 'accept'
 };
 
-const journal = {
-  recommendations: [
-    {
-      value: 'accept',
-      label: 'Accept',
-    },
-    {
-      value: 'revise',
-      label: 'Revise',
-    },
-    {
-      value: 'reject',
-      label: 'Reject',
-    }
-  ]
-}
-
 const ReviewForm = reduxForm({ 
   form: 'review',
   onSubmit: values => console.log(values),
@@ -45,6 +28,5 @@ const ReviewForm = reduxForm({
 
 <ReviewForm
   version={version}
-  journal={journal}
   initialValues={review}/>
 ```

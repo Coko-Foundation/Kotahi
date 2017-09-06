@@ -4,7 +4,7 @@ import React from 'react'
 import classes from './ReviewLayout.local.scss'
 import Review from './Review'
 
-const ReviewLayout = ({ journal, project, version, review, valid, pristine, submitting, handleSubmit, uploadFile }) => (
+const ReviewLayout = ({ project, version, review, valid, pristine, submitting, handleSubmit, uploadFile }) => (
   <div className={classes.root}>
     <div className={classes.column}>
       {/*<SimpleEditor

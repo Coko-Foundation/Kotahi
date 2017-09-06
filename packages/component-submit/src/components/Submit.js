@@ -11,7 +11,7 @@ import Confirm from './Confirm'
 import Validots from './Validots'
 import classes from './Submit.local.scss'
 
-const Submit = ({ journal, project, version, valid, pristine, submitting, handleSubmit, uploadFile, confirming, toggleConfirming }) => (
+const Submit = ({ project, version, valid, pristine, submitting, handleSubmit, uploadFile, confirming, toggleConfirming }) => (
   <div className={classnames(classes.root, {
     [classes.confirming]: confirming
   })}>
@@ -26,8 +26,8 @@ const Submit = ({ journal, project, version, valid, pristine, submitting, handle
     </div>
 
     <form onSubmit={handleSubmit}>
-      <Metadata journal={journal}/>
-      <Declarations journal={journal}/>
+      <Metadata/>
+      <Declarations/>
       <Suggestions/>
       <Notes/>
       <SupplementaryFiles uploadFile={uploadFile}/>
@@ -51,7 +51,6 @@ const Submit = ({ journal, project, version, valid, pristine, submitting, handle
 
     <div className={classes.validots}>
       <Validots
-        journal={journal}
         valid={valid}
         handleSubmit={handleSubmit}/>
     </div>

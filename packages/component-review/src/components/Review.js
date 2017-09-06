@@ -2,8 +2,9 @@ import React from 'react'
 import { Button } from 'xpub-ui'
 import { NoteEditor } from 'xpub-edit'
 import { Field } from 'redux-form'
-import { required } from '../lib/validators'
 import { RadioGroup, ValidatedField } from 'xpub-ui'
+import { withJournal } from 'pubsweet-component-xpub-app/src/components'
+import { required } from '../lib/validators'
 import classes from './Review.local.scss'
 
 const Review = ({ journal, review, valid, pristine, submitting, handleSubmit, uploadFile }) => (
@@ -43,4 +44,4 @@ const Review = ({ journal, review, valid, pristine, submitting, handleSubmit, up
   </form>
 )
 
-export default Review
+export default withJournal(Review)
