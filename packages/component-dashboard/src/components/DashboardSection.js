@@ -1,5 +1,5 @@
 import React from 'react'
-import DashboardItem from './DashboardItem'
+import DashboardItemContainer from './DashboardItem'
 import classes from './DashboardSection.local.scss'
 
 const DashboardSection = ({ heading, projects, status, actions, links, meta, roles, empty }) => {
@@ -11,11 +11,10 @@ const DashboardSection = ({ heading, projects, status, actions, links, meta, rol
         {heading}
       </div>
 
-      {projects.length ? projects.map(item => (
-        <div className={classes.item} key={item.id}>
-          <DashboardItem
-            project={item}
-            // version={item.fragments[0]}
+      {projects.length ? projects.map(project => (
+        <div className={classes.item} key={project.id}>
+          <DashboardItemContainer
+            project={project}
             status={status}
             actions={actions}
             links={links}
