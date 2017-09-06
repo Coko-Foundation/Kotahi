@@ -1,4 +1,5 @@
 import React from 'react'
+import ProjectLink from '../ProjectLink'
 import DashboardSection from '../DashboardSection'
 import EmptySubmissions from '../EmptySubmissions'
 
@@ -7,20 +8,32 @@ const OwnerSection = ({ projects, deleteProject, projectRoute }) => (
     heading="My Submissions"
     projects={projects}
     empty={EmptySubmissions}
-    links={project => [
+    links={(project, version) => [
       {
-        url: projectRoute(project, 'submit'),
-        name: 'Submission'
+        key: 'submit',
+        content: (
+          <ProjectLink
+            project={project}
+            version={version}
+            page="submit">Submission</ProjectLink>
+        )
       },
       {
-        url: projectRoute(project, 'manuscript'),
-        name: 'Manuscript'
+        key: 'manuscript',
+        content: (
+          <ProjectLink
+            project={project}
+            version={version}
+            page="manuscript">Manuscript</ProjectLink>
+        )
       }
     ]}
     actions={project => [
       {
         key: 'delete',
-        content: <button onClick={() => deleteProject({ id: project.id })}>x</button>
+        content: (
+          <button onClick={() => deleteProject({ id: project.id })}>x</button>
+        )
       }
     ]}/>
 )

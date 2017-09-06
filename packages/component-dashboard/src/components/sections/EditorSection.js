@@ -1,69 +1,72 @@
 import React from 'react'
-import Moment from 'react-moment'
-import { Menu } from 'xpub-ui'
+import MetadataSections from '../metadata/MetadataSections'
+import MetadataReviewType from '../metadata/MetadataReviewType'
+import MetadataSubmittedDate from '../metadata/MetadataSubmittedDate';
+import MetadataOwners from '../metadata/MetadataOwners';
+import AssignEditor from '../AssignEditor'
 import DashboardSection from '../DashboardSection'
+import ProjectLink from '../ProjectLink';
 
-const editorOption = editor => ({
-  value: editor.user,
-  label: editor.name
-})
-
-const EditorSection = ({ journal, projects, reviewerResponse, addUserToTeam, projectRoute }) => (
+const EditorSection = ({ projects, teams, reviewerResponse, addUserToTeam, projectRoute }) => (
   <DashboardSection
     heading="My Manuscripts"
     projects={projects}
-    links={project => {
-      return [
-        {
-          url: projectRoute(project, 'reviewers'), // TODO: review id
-          name: 'Assign Reviewers'
-        }
-      ]
-    }}
-    meta={project => {
-      const version = project._fragments[0]
-
+    links={(project, version) => [
+      {
+        key: 'assign',
+        content: (
+          <ProjectLink
+            project={project}
+            version={version}
+            page="reviewers">Assign Reviewers</ProjectLink>
+        )
+      },
+    ]}
+    meta={(project, version) => {
       return [
         {
           key: 'owner',
-          content: project._owner.name
+          content: (
+            <MetadataOwners owners={project.owners}/>
+          )
         },
         {
           key: 'submitted',
-          // TODO: format date
           content: (
-            <Moment format="YYYY-MM-DD">
-              {version.submitted}
-            </Moment>
+            <MetadataSubmittedDate submitted={version.submitted}/>
           )
         },
         {
           key: 'section',
-          // TODO: convert section values to labels
-          content: version.metadata.articleSection.join(', ')
+          content: (
+            <MetadataSections sections={version.metadata.articleSection}/>
+          )
         },
         {
           key: 'openReview',
-          content: version.declarations.openReview ? 'Open review' : 'Closed review'
+          content: (
+            <MetadataReviewType openReview={version.declarations.openReview}/>
+          )
         }
       ]
     }}
-    roles={project => {
+    roles={(project) => {
+      const projectTeams = teams.filter(team => {
+        return team.object.type === 'collection'
+          && team.object.id === project.id
+      })
+
       // TODO: only show the menu if editable
       return [
         {
           role: 'senior-editor',
           content: (
-            <Menu
-              label="Senior Editor"
-              options={journal.editors.senior.map(editorOption)}
-              placeholder="Assign an editor…"
-              onChange={value => addUserToTeam({
-                teamType: 'senior-editor',
-                group: 'editor',
-                project,
-                user: value
-              })}/>
+            <AssignEditor
+              project={project}
+              team={projectTeams.find(team => team.teamType === 'seniorEditor')}
+              teamType="seniorEditor"
+              addUserToTeam={addUserToTeam}
+            />
           )
         }
       ]
