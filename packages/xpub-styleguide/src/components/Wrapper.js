@@ -3,7 +3,7 @@ import { Provider } from 'react-redux'
 import { reducer as formReducer } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
 import { JournalProvider } from 'pubsweet-component-xpub-app'
-import journal from '../config/journal'
+import * as journal from '../config/journal'
 
 import 'xpub-fonts'
 import classes from './Wrapper.local.scss'
