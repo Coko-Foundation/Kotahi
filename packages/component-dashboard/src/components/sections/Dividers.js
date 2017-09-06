@@ -1,5 +1,5 @@
 import React from 'react'
-import classes from '../Dividers.local.scss'
+import classes from './Dividers.local.scss'
 
 export const MetadataDivider = () => (
   <span className={classes.divider}>{' - '}</span>
