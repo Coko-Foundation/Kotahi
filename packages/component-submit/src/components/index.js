@@ -1,1 +1,1 @@
-export { default } from './SubmitPage'
+export { default as SubmitPage } from './SubmitPage'

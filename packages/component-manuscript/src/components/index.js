@@ -1,1 +1,1 @@
-export { default } from './ManuscriptPage'
+export { default as ManuscriptPage } from './ManuscriptPage'

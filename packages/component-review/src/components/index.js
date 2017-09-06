@@ -1,1 +1,2 @@
-export { default } from './ReviewPage'
+export { default as DecisionPage } from './DecisionPage'
+export { default as ReviewPage } from './ReviewPage'

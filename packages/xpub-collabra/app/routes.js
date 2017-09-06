@@ -5,16 +5,19 @@ import { App } from 'pubsweet-component-xpub-app/src/components'
 import { AuthenticatedPage, SignupPage, LoginPage, LogoutPage } from 'pubsweet-component-xpub-authentication/src/components'
 
 const DashboardPage = loadable(() =>
-  import('pubsweet-component-xpub-dashboard/src/components'))
+  import('pubsweet-component-xpub-dashboard/src/components/DashboardPage'))
 
 const SubmitPage = loadable(() =>
-  import('pubsweet-component-xpub-submit/src/components'))
+  import('pubsweet-component-xpub-submit/src/components/SubmitPage'))
 
 const ManuscriptPage = loadable(() =>
-  import('pubsweet-component-xpub-manuscript/src/components'))
+  import('pubsweet-component-xpub-manuscript/src/components/ManuscriptPage'))
 
 const ReviewPage = loadable(() =>
-  import('pubsweet-component-xpub-review/src/components'))
+  import('pubsweet-component-xpub-review/src/components/ReviewPage'))
+
+const DecisionPage = loadable(() =>
+  import('pubsweet-component-xpub-review/src/components/DecisionPage'))
 
 export default (
   <Route>
@@ -26,6 +29,7 @@ export default (
         <Route path="projects/:project/versions/:version/submit" component={SubmitPage}/>
         <Route path="projects/:project/versions/:version/manuscript" component={ManuscriptPage}/>
         <Route path="projects/:project/versions/:version/reviews/:review" component={ReviewPage}/>
+        <Route path="projects/:project/versions/:version/decisions/:decision" component={DecisionPage}/>
       </Route>
 
       <Route path="signup" component={SignupPage}/>
