@@ -6,7 +6,7 @@ import MetadataSubmittedDate from '../metadata/MetadataSubmittedDate'
 import MetadataOwners from '../metadata/MetadataOwners'
 import ProjectLink from '../ProjectLink'
 import AssignEditor from '../AssignEditor'
-import { MetadataDivider } from './Dividers'
+import Divider from './Divider'
 import classes from './Item.local.scss'
 
 const EditorItem = ({ project, version, addUserToTeam }) => (
@@ -16,11 +16,11 @@ const EditorItem = ({ project, version, addUserToTeam }) => (
 
       <div className={classes.meta}>
         <MetadataOwners owners={project.owners}/>
-        <MetadataDivider/>
+        <Divider separator="-"/>
         <MetadataSubmittedDate submitted={version.submitted}/>
-        <MetadataDivider/>
+        <Divider separator="-"/>
         <MetadataSections sections={version.metadata.articleSection}/>
-        <MetadataDivider/>
+        <Divider separator="-"/>
         <MetadataReviewType openReview={version.declarations.openReview}/>
       </div>
     </div>

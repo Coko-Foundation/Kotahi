@@ -1,9 +1,8 @@
 import React from 'react'
 import { Button } from 'xpub-ui'
-import Status from '../Status'
 import classes from './Item.local.scss'
 import ProjectLink from '../ProjectLink'
-import { ActionsDivider } from './Dividers'
+import Divider from './Divider'
 
 // TODO: only return links if version id is in reviewer.accepted array
 // TODO: only return actions if not accepted or declined
@@ -30,7 +29,9 @@ const ReviewerItem = ({ project, version, reviewerResponse }) => (
         <div className={classes.action}>
           <Button onClick={() => reviewerResponse(version.id, true)}>accept</Button>
         </div>
-        <ActionsDivider/>
+
+        <Divider separator="|"/>
+
         <div className={classes.action}>
           <Button onClick={() => reviewerResponse(version.id, false)}>reject</Button>
         </div>

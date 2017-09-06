@@ -2,7 +2,7 @@ import React from 'react'
 import Status from '../Status'
 import classes from './Item.local.scss'
 import ProjectLink from '../ProjectLink'
-import { LinksDivider } from './Dividers'
+import Divider from './Divider'
 
 const OwnerItem = ({ project, version, deleteProject }) => (
   <div className={classes.root}>
@@ -23,7 +23,7 @@ const OwnerItem = ({ project, version, deleteProject }) => (
             page="submit">Submission</ProjectLink>
         </div>
 
-        <LinksDivider/>
+        <Divider separator="|"/>
 
         <div className={classes.link}>
           <ProjectLink
