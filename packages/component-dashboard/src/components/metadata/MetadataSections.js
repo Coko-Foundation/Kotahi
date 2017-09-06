@@ -6,7 +6,7 @@ const MetadataSections = ({ journal, sections }) => (
     {sections.map((section, index) => [
       index === 0 ? null : <span>{', '}</span>,
       <span>
-        {journal.sections.find(item => item.id === section).label}
+        {journal.articleSections.find(item => item.value === section).label}
       </span>
     ])}
   </span>

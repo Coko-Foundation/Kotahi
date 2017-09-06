@@ -8,3 +8,23 @@
   justify-content: center;
 }
 
+.section {
+  margin: 40px 0;
+}
+
+.heading {
+  font-size: 200%;
+  text-transform: uppercase;
+  font-family: Vollkorn, serif;
+  color: cornflowerblue;
+  margin-bottom: 20px;
+}
+
+.empty {
+  display: flex;
+  justify-content: center;
+}
+
+.section:not(:last-of-type) {
+  margin-bottom: 20px;
+}

@@ -1,4 +1,6 @@
 import React from 'react'
+import { connect } from 'react-redux'
+import { compose } from 'recompose'
 import { Menu } from 'xpub-ui'
 import { withJournal } from 'pubsweet-component-xpub-app/src/components'
 
@@ -27,4 +29,14 @@ const AssignEditor = ({ journal, project, team, teamType, addUserToTeam }) => (
     }}/>
 )
 
-export default withJournal(AssignEditor)
+export default compose(
+  withJournal,
+  connect(
+    (state, { project, teamType }) => ({
+      team: state.teams
+        .find(team => team.object.type === 'collection'
+          && team.object.id === project.id
+          && team.teamType === teamType)
+    })
+  )
+)(AssignEditor)

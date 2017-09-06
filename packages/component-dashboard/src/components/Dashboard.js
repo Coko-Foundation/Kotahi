@@ -1,9 +1,15 @@
 import React from 'react'
 import classes from './Dashboard.local.scss'
 import UploadManuscript from './UploadManuscript'
-import OwnerSection from './sections/OwnerSection'
-import ReviewerSection from './sections/ReviewerSection'
-import EditorSection from './sections/EditorSection'
+import EmptySubmissions from './EmptySubmissions'
+import withVersion from './withVersion'
+import EditorItem from './sections/EditorItem'
+import OwnerItem from './sections/OwnerItem'
+import ReviewerItem from './sections/ReviewerItem'
+
+const OwnerItemWithVersion = withVersion(OwnerItem)
+const EditorItemWithVersion = withVersion(EditorItem)
+const ReviewerItemWithVersion = withVersion(ReviewerItem)
 
 const Dashboard = ({ dashboard, conversion, deleteProject, reviewerResponse, uploadManuscript }) => (
   <div className={classes.root}>
@@ -13,16 +19,51 @@ const Dashboard = ({ dashboard, conversion, deleteProject, reviewerResponse, upl
         uploadManuscript={uploadManuscript}/>
     </div>
 
-    <OwnerSection
-      projects={dashboard.owner}
-      deleteProject={deleteProject}/>
+    <div className={classes.section}>
+      <div className={classes.heading}>
+        My Submissions
+      </div>
 
-    <ReviewerSection
-      projects={dashboard.reviewer}
-      reviewerResponse={reviewerResponse}/>
+      {dashboard.owner ? (
+        dashboard.owner.map(project => (
+          <OwnerItemWithVersion
+            key={project.id}
+            project={project}
+            deleteProject={deleteProject}/>
+        ))
+      ) : (
+        <EmptySubmissions/>
+      )}
+    </div>
 
-    <EditorSection
-      projects={dashboard.editor}/>
+    {!!dashboard.reviewer.length && (
+      <div className={classes.section}>
+        <div className={classes.heading}>
+          My Reviews
+        </div>
+
+        {dashboard.reviewer.map(project => (
+          <ReviewerItemWithVersion
+            key={project.id}
+            project={project}
+            reviewerResponse={reviewerResponse}/>
+        ))}
+      </div>
+    )}
+
+    {!!dashboard.editor.length && (
+      <div className={classes.section}>
+        <div className={classes.heading}>
+          My Manuscripts
+        </div>
+
+        {dashboard.editor.map(project => (
+          <EditorItemWithVersion
+            key={project.id}
+            project={project}/>
+        ))}
+      </div>
+    )}
   </div>
 )
 

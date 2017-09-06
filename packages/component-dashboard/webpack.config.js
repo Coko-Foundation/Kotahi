@@ -24,11 +24,13 @@ module.exports = {
   resolve: {
     symlinks: false
   },
-  plugins: [
-    new webpack.ProvidePlugin({
-      'CONFIG': path.resolve(__dirname, '..', 'config', 'dev.js')
-    }),
-  ],
+  // plugins: [
+  //   new webpack.ProvidePlugin({
+  //     CONFIG: {
+  //       'pubsweet-server': {}
+  //     }
+  //   }),
+  // ],
   module: {
     rules: [
       {
