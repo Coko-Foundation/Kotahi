@@ -23,9 +23,9 @@ export default (
     <Route path="/" component={App}>
       <Route component={AuthenticatedPage}>
         <Route path="dashboard" component={DashboardPage}/>
-        <Route path="projects/:project/version/:version/submit" component={SubmitPage}/>
-        <Route path="projects/:project/version/:version/manuscript" component={ManuscriptPage}/>
-        <Route path="projects/:project/version/:version/review/:review" component={ReviewPage}/>
+        <Route path="projects/:project/versions/:version/submit" component={SubmitPage}/>
+        <Route path="projects/:project/versions/:version/manuscript" component={ManuscriptPage}/>
+        <Route path="projects/:project/versions/:version/reviews/:review" component={ReviewPage}/>
       </Route>
 
       <Route path="signup" component={SignupPage}/>

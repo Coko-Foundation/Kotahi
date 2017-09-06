@@ -64,7 +64,7 @@ export const uploadManuscript = acceptedFiles => dispatch => {
       })).then(({ fragment }) => {
         dispatch(uploadManuscriptSuccess(collection, fragment))
 
-        const route = `/projects/${collection.id}/version/${fragment.id}/submit`
+        const route = `/projects/${collection.id}/versions/${fragment.id}/submit`
 
         // redirect after a short delay
         window.setTimeout(() => {
