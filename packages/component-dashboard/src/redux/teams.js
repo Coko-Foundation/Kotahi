@@ -1,31 +1,19 @@
-import * as api from 'pubsweet-client/src/helpers/api'
+import actions from 'pubsweet-client/src/actions'
 
-// TODO: move teams to journal config
-const teamNames = {
-  'managing-editor': 'Managing Editor',
-  'senior-editor': 'Senior Editor',
-  'handling-editor': 'Handling Editor'
-}
-
-export const addUserToTeam = ({ teamType, group, project, user }) => dispatch => {
-  const team = project._teams.find(team => team.teamType === teamType)
-
-  if (!team) {
-    return api.create('/teams', {
-      teamType,
-      group,
-      name: teamNames[teamType],
-      object: {
-        type: 'collection',
-        id: project.id
-      },
-      members: [user]
-    }).then(team => {
-      project._teams.push(team)
-    })
+export const addUserToTeam = ({ team, teamType, name, group, project, user }) => dispatch => {
+  if (team) {
+    team.members.push(user)
+    return dispatch(actions.updateTeam(team))
   }
 
-  team.members.push(user)
-
-  return api.update(`/teams/${team.id}`, team)
+  return dispatch(actions.createTeam({
+    teamType,
+    group,
+    name,
+    object: {
+      type: 'collection',
+      id: project.id
+    },
+    members: [user]
+  }))
 }
