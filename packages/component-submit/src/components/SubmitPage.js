@@ -1,12 +1,10 @@
-/* global CONFIG */
-
 import { pick } from 'lodash'
 import { compose, withProps, withState, withHandlers } from 'recompose'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 import { reduxForm, SubmissionError } from 'redux-form'
 import actions from 'pubsweet-client/src/actions'
-import token from 'pubsweet-client/src/helpers/token'
+import uploadFile from 'pubsweet-component-xpub-app/src/lib/upload'
 import { ConnectPage } from 'pubsweet-component-xpub-app/src/components'
 import { selectCollection, selectFragment } from 'xpub-selectors'
 import Submit from './Submit'
@@ -43,22 +41,6 @@ const onBlur = (values, dispatch, props) => {
   }))
 
   // TODO: display a notification when saving/saving completes/saving fails
-}
-
-const uploadFile = file => dispatch => {
-  // TODO: import the endpoint URL from a client module
-  const API_ENDPOINT = CONFIG['pubsweet-server'].API_ENDPOINT
-
-  const data = new FormData()
-  data.append('file', file)
-
-  const request = new XMLHttpRequest()
-  request.open('POST', API_ENDPOINT + '/upload')
-  request.setRequestHeader('Authorization', 'Bearer ' + token())
-  request.setRequestHeader('Accept', 'text/plain') // the response is a URL
-  request.send(data)
-
-  return request
 }
 
 export default compose(
