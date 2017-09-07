@@ -3,43 +3,73 @@
 exports[`Radio Group Snapshot 1`] = `
 <div>
   <label
-    className={undefined}
+    className=""
+    style={
+      Object {
+        "color": undefined,
+      }
+    }
   >
     <input
       checked={false}
       className={undefined}
       name="TestName"
+      onChange={[Function]}
       required={true}
       type="radio"
       value="yes"
     />
-    Yes
+    <span
+      className={undefined}
+    >
+      Yes
+    </span>
   </label>
   <label
-    className={undefined}
+    className=""
+    style={
+      Object {
+        "color": undefined,
+      }
+    }
   >
     <input
       checked={false}
       className={undefined}
       name="TestName"
+      onChange={[Function]}
       required={true}
       type="radio"
       value="no"
     />
-    No
+    <span
+      className={undefined}
+    >
+      No
+    </span>
   </label>
   <label
-    className={undefined}
+    className=""
+    style={
+      Object {
+        "color": undefined,
+      }
+    }
   >
     <input
       checked={false}
       className={undefined}
       name="TestName"
+      onChange={[Function]}
       required={true}
       type="radio"
       value="maybe"
     />
-    Maybe
+    <span
+      className={undefined}
+    >
+      Maybe
+    </span>
   </label>
 </div>
 `;

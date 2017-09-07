@@ -24,7 +24,8 @@
     "bootstrap": "lerna bootstrap --concurrency=1",
     "hoist": "lerna bootstrap --hoist --concurrency=1",
     "clean": "lerna clean",
-    "styleguide": "lerna run styleguide"
+    "styleguide": "lerna run styleguide",
+    "test": "lerna run test"
   },
   "engines": {
     "node": ">=7.9"

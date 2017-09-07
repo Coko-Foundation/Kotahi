@@ -45,7 +45,7 @@
   },
   "jest": {
     "moduleNameMapper": {
-      "\\.css$": "<rootDir>/test/setup/styleMock.js"
+      "\\.s?css$": "<rootDir>/test/setup/styleMock.js"
     },
     "transform": {
       "\\.js$": "<rootDir>/test/config/transform.js"

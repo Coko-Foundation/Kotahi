@@ -2,16 +2,26 @@
 
 exports[`Radio Snapshot 1`] = `
 <label
-  className={undefined}
+  className=""
+  style={
+    Object {
+      "color": undefined,
+    }
+  }
 >
   <input
     checked={false}
     className={undefined}
     name="TestName"
+    onChange={undefined}
     required={true}
     type="radio"
     value="TestValue"
   />
-  TestLabel
+  <span
+    className={undefined}
+  >
+    TestLabel
+  </span>
 </label>
 `;

@@ -30,9 +30,9 @@ describe('Radio', () => {
     expect(input.is('input')).toBeTruthy()
     expect(input.children()).toHaveLength(0)
 
-    const labelText = wrapper.childAt(1)
-    expect(labelText.text()).toBe(props.label)
-    expect(labelText.children()).toHaveLength(0)
+    const labelSpan = wrapper.childAt(1)
+    expect(labelSpan.text()).toBe(props.label)
+    expect(labelSpan.children()).toHaveLength(1)
   })
 
   test('Input gets the correct props', () => {

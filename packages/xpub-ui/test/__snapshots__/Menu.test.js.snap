@@ -2,12 +2,15 @@
 
 exports[`Menu Snapshot 1`] = `
 <div
-  className={undefined}
+  className=""
 >
-  <div>
+  <div
+    className={undefined}
+  >
     <button
       className={undefined}
       onClick={[Function]}
+      type="button"
     >
       <span>
         Foo

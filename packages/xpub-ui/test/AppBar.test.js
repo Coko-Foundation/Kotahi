@@ -80,7 +80,7 @@ describe('AppBar', () => {
     expect(rightArea.children()).toHaveLength(2)
 
     const userName = rightArea.childAt(0)
-    expect(userName.text()).toBe(props.userName)
+    expect(userName.text()).toBe("<Icon />some name")
   })
 
   test('Should display the login link if no username is given', () => {
