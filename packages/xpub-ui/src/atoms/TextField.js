@@ -1,7 +1,7 @@
 import React from 'react'
 import classes from './TextField.local.scss'
 
-const TextField = ({ label, name, placeholder, required, type = 'text', value, onChange }) => (
+const TextField = ({ label, name, placeholder, required, type = 'text', value = '', onChange }) => (
   <label className={classes.root}>
     {label && <span className={classes.text}>{label}</span>}
     <input
