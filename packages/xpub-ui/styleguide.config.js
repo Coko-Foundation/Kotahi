@@ -19,6 +19,14 @@ module.exports = {
   },
   sections: [
     {
+      name: 'Colors',
+      content: 'docs/colors.md'
+    },
+    {
+      name: 'Fonts',
+      content: 'docs/fonts.md'
+    },
+    {
       name: 'Atoms',
       components: 'src/atoms/*.js'
     },
