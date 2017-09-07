@@ -1,7 +1,7 @@
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import actions from 'pubsweet-client/src/actions'
-import { ConnectPage } from 'pubsweet-component-xpub-app/src/components'
+import { ConnectPage } from 'xpub-connect'
 import { selectCurrentUser, selectCollection, selectFragment } from 'xpub-selectors'
 import Manuscript from './Manuscript'
 

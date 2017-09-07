@@ -14,7 +14,6 @@
     "prop-types": "^15.5.10",
     "pubsweet-client": "git+https://gitlab.coko.foundation/pubsweet/pubsweet-client.git",
     "pubsweet-component-wax": "^0.1.0",
-    "pubsweet-component-xpub-app": "^0.0.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.2",
@@ -24,9 +23,12 @@
     "redux": "^3.6.0",
     "redux-form": "^7.0.3",
     "striptags": "^3.1.0",
+    "xpub-connect": "^0.0.2",
     "xpub-edit": "^0.0.2",
+    "xpub-journal": "^0.0.2",
     "xpub-selectors": "^0.0.2",
-    "xpub-ui": "^0.0.2"
+    "xpub-ui": "^0.0.2",
+    "xpub-upload": "^0.0.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

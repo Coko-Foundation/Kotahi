@@ -1,0 +1,22 @@
+{
+  "name": "xpub-journal",
+  "version": "0.0.2",
+  "main": "src",
+  "author": "Collaborative Knowledge Foundation",
+  "license": "MIT",
+  "files": [
+    "src",
+    "dist"
+  ],
+  "dependencies": {
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1",
+    "recompose": "^0.25.0"
+  },
+  "peerDependencies": {
+    "prop-types": "^15.5.10",
+    "react": "^15.6.1",
+    "react-dom": "^15.6.1"
+  }
+}

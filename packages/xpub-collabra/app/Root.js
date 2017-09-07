@@ -3,7 +3,7 @@ import { Provider as StoreProvider } from 'react-redux'
 import { Router, browserHistory } from 'react-router'
 import { syncHistoryWithStore } from 'react-router-redux'
 import { configureStore } from 'pubsweet-client'
-import { JournalProvider } from 'pubsweet-component-xpub-app/src/components'
+import { JournalProvider } from 'xpub-journal'
 
 const store = configureStore(browserHistory, {})
 const history = syncHistoryWithStore(browserHistory, store)

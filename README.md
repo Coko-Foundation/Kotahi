@@ -19,9 +19,11 @@ Note: xpub is still _very_ new. This repository contains an initial set of compo
 
 * `xpub-edit`: WYSIWYG editors for use in xpub forms
 * `xpub-fonts`: fonts for use in xpub applications
+* `xpub-journal`: a helper that provides journal config to components
 * `xpub-selectors`: some useful redux selectors
 * `xpub-styleguide`: components for use in react-styleguidist
-* `xpub-ui`: a library of user interface elements for use in PubSweet components.
+* `xpub-ui`: a library of user interface elements for use in PubSweet components
+* `xpub-upload`: a helper function for file uploading
 
 ## Installing
 

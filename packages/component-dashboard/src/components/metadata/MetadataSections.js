@@ -1,5 +1,5 @@
 import React from 'react'
-import { withJournal } from 'pubsweet-component-xpub-app/src/components'
+import { withJournal } from 'xpub-journal'
 
 const MetadataSections = ({ journal, sections }) => (
   <span>

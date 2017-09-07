@@ -8,6 +8,7 @@
   "main": "src",
   "dependencies": {
     "pubsweet-component-wax": "^0.1.0",
+    "xpub-connect": "^0.0.2",
     "xpub-selectors": "^0.0.2"
   },
   "peerDependencies": {
@@ -30,7 +31,6 @@
     "faker": "^4.1.0",
     "file-loader": "^0.11.2",
     "node-sass": "^4.5.3",
-    "pubsweet-component-xpub-app": "^0.0.2",
     "recompose": "^0.25.0",
     "rimraf": "^2.6.1",
     "react-styleguidist": "^6.0.8",

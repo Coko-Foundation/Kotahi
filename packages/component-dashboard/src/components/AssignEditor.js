@@ -2,7 +2,7 @@ import React from 'react'
 import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { Menu } from 'xpub-ui'
-import { withJournal } from 'pubsweet-component-xpub-app/src/components'
+import { withJournal } from 'xpub-journal'
 
 const editorOption = editor => ({
   value: editor.user,
