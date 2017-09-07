@@ -1,0 +1,34 @@
+image: node:7.9
+
+stages:
+  - install
+  - bootstrap
+  - test
+
+install:
+  stage: install
+  script: npm run install
+  only:
+    - master
+  artifacts:
+    paths:
+      - node_modules
+
+bootstrap:
+  stage: bootstrap
+  script: npm run bootstrap
+  only:
+    - master
+  artifacts:
+    paths:
+      - packages/*/node_modules
+
+test:
+  stage: test
+  script: npm run test
+  only:
+    - master
+
+# TODO: start?
+# TODO: build
+# TODO: deploy
