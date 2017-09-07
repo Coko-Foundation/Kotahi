@@ -63,6 +63,6 @@
   },
   "scripts": {
     "setupdb": "pubsweet setupdb --dev ./",
-    "start": "pubsweet run --dev"
+    "start": "pubsweet run --dev --reduxlog-off"
   }
 }
