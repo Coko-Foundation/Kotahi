@@ -20,7 +20,7 @@ const Declarations = ({ journal }) => (
         <ValidatedField
           name={question.id}
           required
-          validate={[required, minChars(1)]}
+          validate={[required]}
           component={input =>
             <YesOrNo inline={true} {...input}/>
           }/>

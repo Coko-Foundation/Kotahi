@@ -1,8 +1,11 @@
 import React from 'react'
-import { FormSection, Field } from 'redux-form'
+import { FormSection } from 'redux-form'
 import { TextField, ValidatedField } from 'xpub-ui'
 import { join, split } from '../lib/validators'
 import classes from './Suggestions.local.scss'
+
+const joinComma = join(',')
+const splitComma = split(',')
 
 const Suggestions = () => (
   <FormSection name="suggestions">
@@ -17,8 +20,8 @@ const Suggestions = () => (
 
           <ValidatedField
             name="suggested"
-            format={join()}
-            parse={split()}
+            format={joinComma}
+            parse={splitComma}
             component={input =>
               <TextField
                 placeholder="Add reviewer names"
@@ -31,8 +34,8 @@ const Suggestions = () => (
 
           <ValidatedField
             name="opposed"
-            format={join()}
-            parse={split()}
+            format={joinComma}
+            parse={splitComma}
             component={input =>
               <TextField
                 placeholder="Add reviewer names"
@@ -53,8 +56,8 @@ const Suggestions = () => (
 
           <ValidatedField
             name="suggested"
-            format={join()}
-            parse={split()}
+            format={joinComma}
+            parse={splitComma}
             component={input =>
               <TextField
                 placeholder="Add editor names"
@@ -67,8 +70,8 @@ const Suggestions = () => (
 
           <ValidatedField
             name="opposed"
-            format={join()}
-            parse={split()}
+            format={joinComma}
+            parse={splitComma}
             component={input =>
               <TextField
                 placeholder="Add editor names"

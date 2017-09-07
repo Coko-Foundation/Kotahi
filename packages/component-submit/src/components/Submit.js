@@ -8,10 +8,10 @@ import Suggestions from './Suggestions'
 import Notes from './Notes'
 import SupplementaryFiles from './SupplementaryFiles'
 import Confirm from './Confirm'
-import Validots from './Validots'
+// import Validots from './Validots'
 import classes from './Submit.local.scss'
 
-const Submit = ({ project, version, valid, pristine, submitting, handleSubmit, uploadFile, confirming, toggleConfirming }) => (
+const Submit = ({ project, version, valid, handleSubmit, uploadFile, confirming, toggleConfirming }) => (
   <div className={classnames(classes.root, {
     [classes.confirming]: confirming
   })}>
@@ -37,7 +37,7 @@ const Submit = ({ project, version, valid, pristine, submitting, handleSubmit, u
           type="button"
           primary
           onClick={toggleConfirming}
-          disabled={submitting || !valid}>
+          disabled={!valid}>
           Submit your manuscript
         </Button>
       </div>
@@ -49,11 +49,11 @@ const Submit = ({ project, version, valid, pristine, submitting, handleSubmit, u
       )}
     </form>
 
-    <div className={classes.validots}>
+    {/*<div className={classes.validots}>
       <Validots
         valid={valid}
         handleSubmit={handleSubmit}/>
-    </div>
+    </div>*/}
   </div>
 )
 

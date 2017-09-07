@@ -6,13 +6,19 @@ import { withJournal } from 'xpub-journal'
 import classes from './Metadata.local.scss'
 import { join, required, minChars, maxChars, minSize, split } from '../lib/validators'
 
+const minSize1 = minSize(1)
+const minChars20 = minChars(20)
+const minChars100 = minChars(100)
+const maxChars500 = maxChars(500)
+const maxChars5000 = maxChars(5000)
+
 const Metadata = ({ journal }) => (
   <FormSection name="metadata">
     <div className={classes.section} id="metadata.title">
       <ValidatedField
         name="title"
         required
-        validate={[minChars(20), maxChars(500)]}
+        validate={[minChars20, maxChars500]}
         component={input =>
           <TitleEditor
             placeholder="Enter the title…"
@@ -25,7 +31,7 @@ const Metadata = ({ journal }) => (
       <ValidatedField
         name="abstract"
         required
-        validate={[minChars(100), maxChars(5000)]}
+        validate={[minChars100, maxChars5000]}
         component={input =>
           <AbstractEditor
             title="Abstract"
@@ -42,7 +48,7 @@ const Metadata = ({ journal }) => (
         required
         format={join()}
         parse={split()}
-        validate={[minSize(1)]}
+        validate={[minSize1]}
         component={input =>
           <TextField
             placeholder="Enter author names…"
@@ -58,7 +64,7 @@ const Metadata = ({ journal }) => (
         required
         format={join()}
         parse={split()}
-        validate={[minSize(1)]}
+        validate={[minSize1]}
         component={input =>
           <TextField
             placeholder="Enter keywords…"
@@ -72,7 +78,7 @@ const Metadata = ({ journal }) => (
       <ValidatedField
         name="articleType"
         required
-        validate={[required, minSize(1)]}
+        validate={[required]}
         component={input =>
           <Menu
             options={journal.articleTypes}
@@ -86,7 +92,7 @@ const Metadata = ({ journal }) => (
       <ValidatedField
         name="articleSection"
         required
-        validate={[required, minSize(1)]}
+        validate={[required]}
         component={input =>
           <CheckboxGroup
             options={journal.articleSections}
