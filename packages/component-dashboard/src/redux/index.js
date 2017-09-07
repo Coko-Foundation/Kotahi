@@ -1,1 +1,1 @@
-export { default as manuscriptConversion } from './manuscriptConversion'
+export { default as conversion } from './conversion'

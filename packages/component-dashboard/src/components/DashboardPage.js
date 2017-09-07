@@ -4,7 +4,7 @@ import { orderBy } from 'lodash'
 import actions from 'pubsweet-client/src/actions'
 import { selectCurrentUser } from 'xpub-selectors'
 import { ConnectPage } from 'xpub-connect'
-import { uploadManuscript } from '../redux/manuscriptConversion'
+import { uploadManuscript } from '../redux/conversion'
 import { addUserToTeam } from '../redux/teams'
 import Dashboard from './Dashboard'
 
@@ -20,7 +20,7 @@ export default compose(
       collections: state.collections,
       teams: state.teams,
       currentUser: selectCurrentUser(state),
-      conversion: state.manuscriptConversion
+      conversion: state.conversion
     }),
     {
       uploadManuscript,

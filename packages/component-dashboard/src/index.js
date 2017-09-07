@@ -4,7 +4,7 @@ module.exports = {
       () => require('./components')
     ],
     reducers: {
-      manuscriptConversion: () => require('./redux/manuscriptConversion').default,
+      conversion: () => require('./redux/conversion').default,
     }
   },
 }
