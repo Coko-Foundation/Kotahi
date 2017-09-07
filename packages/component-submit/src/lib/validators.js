@@ -9,7 +9,15 @@ export const join = (separator = ',') => value => {
 }
 
 export const required = value => {
-  return value ? undefined : 'Required'
+  if (value === undefined || value === '') {
+    return 'Required'
+  }
+
+  if (Array.isArray(value) && !value.length) {
+    return 'Required'
+  }
+
+  return undefined
 }
 
 export const minChars = min => {

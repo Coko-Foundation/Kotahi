@@ -72,7 +72,7 @@ const Metadata = ({ journal }) => (
       <ValidatedField
         name="articleType"
         required
-        validate={[required]}
+        validate={[required, minSize(1)]}
         component={input =>
           <Menu
             options={journal.articleTypes}
@@ -86,7 +86,7 @@ const Metadata = ({ journal }) => (
       <ValidatedField
         name="articleSection"
         required
-        validate={[required]}
+        validate={[required, minSize(1)]}
         component={input =>
           <CheckboxGroup
             options={journal.articleSections}

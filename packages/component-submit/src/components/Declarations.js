@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import { FormSection } from 'redux-form'
 import { ValidatedField, YesOrNo } from 'xpub-ui'
 import { withJournal } from 'xpub-journal'
-import { required } from '../lib/validators'
+import { required, minChars } from '../lib/validators'
 import classes from './Declarations.local.scss'
 
 const Declarations = ({ journal }) => (
@@ -20,7 +20,7 @@ const Declarations = ({ journal }) => (
         <ValidatedField
           name={question.id}
           required
-          validate={[required]}
+          validate={[required, minChars(1)]}
           component={input =>
             <YesOrNo inline={true} {...input}/>
           }/>
