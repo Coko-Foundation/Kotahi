@@ -5,7 +5,7 @@ import { push } from 'react-router-redux'
 import { reduxForm, SubmissionError } from 'redux-form'
 import actions from 'pubsweet-client/src/actions'
 import { ConnectPage } from 'xpub-connect'
-import uploadFile from 'xpub-uplod'
+import uploadFile from 'xpub-upload'
 import { selectCollection, selectFragment } from 'xpub-selectors'
 import DecisionLayout from './DecisionLayout'
 
