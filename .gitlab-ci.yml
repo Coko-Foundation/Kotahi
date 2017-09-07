@@ -7,7 +7,7 @@ stages:
 
 install:
   stage: install
-  script: npm run install
+  script: npm install
   only:
     - master
   artifacts:
