@@ -5,8 +5,11 @@
   "main": "src",
   "license": "MIT",
   "dependencies": {
-    "pubsweet-fira": "^0.0.3",
+    "typeface-fira-sans": "^0.0.35",
     "typeface-fira-sans-condensed": "^0.0.35",
     "typeface-vollkorn": "^0.0.35"
+  },
+  "dependencies_disabled": {
+    "pubsweet-fira": "^0.0.3"
   }
 }
