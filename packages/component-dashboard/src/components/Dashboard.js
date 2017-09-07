@@ -51,6 +51,20 @@ const Dashboard = ({ dashboard, conversion, deleteProject, reviewerResponse, upl
       </div>
     )}
 
+    {!!dashboard.assign.length && (
+      <div className={classes.section}>
+        <div className={classes.heading}>
+          Assign
+        </div>
+
+        {dashboard.assign.map(project => (
+          <EditorItemWithVersion
+            key={project.id}
+            project={project}/>
+        ))}
+      </div>
+    )}
+
     {!!dashboard.editor.length && (
       <div className={classes.section}>
         <div className={classes.heading}>
