@@ -3,6 +3,7 @@ import { connect } from 'react-redux'
 import { compose } from 'recompose'
 import { Menu } from 'xpub-ui'
 import { withJournal } from 'xpub-journal'
+import { addUserToTeam } from '../redux/teams'
 
 const editorOption = editor => ({
   value: editor.user,
@@ -37,6 +38,9 @@ export default compose(
         .find(team => team.object.type === 'collection'
           && team.object.id === project.id
           && team.teamType === teamType)
-    })
+    }),
+    {
+      addUserToTeam
+    }
   )
 )(AssignEditor)

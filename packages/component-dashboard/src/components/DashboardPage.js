@@ -5,7 +5,6 @@ import actions from 'pubsweet-client/src/actions'
 import { selectCurrentUser } from 'xpub-selectors'
 import { ConnectPage } from 'xpub-connect'
 import { uploadManuscript } from '../redux/conversion'
-import { addUserToTeam } from '../redux/teams'
 import Dashboard from './Dashboard'
 
 const newestFirst = items => orderBy(items, ['created'], ['desc'])
@@ -24,7 +23,6 @@ export default compose(
     }),
     {
       uploadManuscript,
-      addUserToTeam,
       deleteProject: actions.deleteCollection,
     }
   ),
