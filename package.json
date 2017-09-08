@@ -31,6 +31,15 @@
     "lint": "npm run lint:js && npm run lint:style",
     "lint:js": "eslint packages",
     "lint:style": "stylelint packages/**/*.scss packages/**/*.css"
+    "precommit": "lint-staged"
+  },
+  "lint-staged": {
+    "*.js": [
+      "eslint",
+      "git add"
+    ],
+    "*.css": "stylelint",
+    "*.scss": "stylelint"
   },
   "engines": {
     "node": ">=7.9"
