@@ -1,29 +1,25 @@
 image: node:7.9
 
 stages:
-  - lint
   - install
+  - lint
   - bootstrap
   - test
+
+install:
+  stage: install
+  script: npm install
+  artifacts:
+    paths:
+      - node_modules
 
 lint:
   stage: lint
   script: npm run lint
 
-#install:
-#  stage: install
-#  script: npm install
-#  only:
-#    - master
-#  artifacts:
-#    paths:
-#      - node_modules
-#
 #bootstrap:
 #  stage: bootstrap
 #  script: npm run bootstrap
-#  only:
-#    - master
 #  artifacts:
 #    paths:
 #      - packages/*/node_modules
@@ -31,8 +27,6 @@ lint:
 #test:
 #  stage: test
 #  script: npm run test
-#  only:
-#    - master
 
 # TODO: start?
 # TODO: build
