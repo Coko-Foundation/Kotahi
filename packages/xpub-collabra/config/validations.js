@@ -29,12 +29,12 @@ module.exports = {
       }),
     }),
     files: Joi.object({
-      manuscript: Joi.array().items(Joi.object({
+      manuscript: Joi.object({
         name: Joi.string().required(),
         type: Joi.string(),
         size: Joi.number(),
         url: Joi.string()
-      })),
+      }),
       supplementary: Joi.array().items(Joi.object({
         name: Joi.string().required(),
         type: Joi.string(),
