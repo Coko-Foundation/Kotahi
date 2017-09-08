@@ -13,7 +13,7 @@
 }
 
 .optionsContainer {
-  position: relative;
+  position: absolute;
 }
 
 .opener {
@@ -56,19 +56,20 @@
 
 .options {
   position: absolute;
-  top: 0;
+  padding-top: .5em;
+  top: 0.6em;
   left: 0;
   min-width: 10em;
   background-color: white;
   border-left: 2px solid var(--color-primary);
   border-bottom: 2px solid var(--color-primary);
-  //columns: 2 auto;
-  max-height: 2px;
-  transition: max-height 3s;
+  /*columns: 2 auto;*/
+    opacity: 0;
 }
 
-.open .menu {
-  max-height: 3000px;
+
+.open .options {
+    opacity: 1;
 }
 
 .option {
