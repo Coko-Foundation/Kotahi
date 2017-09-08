@@ -12,29 +12,29 @@ const minChars100 = minChars(100)
 const maxChars500 = maxChars(500)
 const maxChars5000 = maxChars(5000)
 
+const TitleInput = input =>
+  <TitleEditor
+    placeholder="Enter the title…"
+    title="Title"
+    {...input}/>
+
+const AbstractInput = input =>
+  <AbstractEditor
+    title="Abstract"
+    placeholder="Enter the abstract…"
+    {...input}/>
+
+const AuthorsInput = input =>
+  <TextField
+    placeholder="Enter author names…"
+    {...input}/>
+
+const KeywordsInput = input =>
+  <TextField
+    placeholder="Enter keywords…"
+    {...input}/>
+
 const Metadata = ({ journal }) => {
-  const TitleInput = input =>
-    <TitleEditor
-      placeholder="Enter the title…"
-      title="Title"
-      {...input}/>
-
-  const AbstractInput = input =>
-    <AbstractEditor
-      title="Abstract"
-      placeholder="Enter the abstract…"
-      {...input}/>
-
-  const AuthorsInput = input =>
-    <TextField
-      placeholder="Enter author names…"
-      {...input}/>
-
-  const KeywordsInput = input =>
-    <TextField
-      placeholder="Enter keywords…"
-      {...input}/>
-
   const ArticleTypeInput = input =>
     <Menu
       options={journal.articleTypes}

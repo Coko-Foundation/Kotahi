@@ -6,11 +6,11 @@ import { withJournal } from 'xpub-journal'
 import { required } from '../lib/validators'
 import classes from './Declarations.local.scss'
 
-const Declarations = ({ journal }) => {
-  const DeclarationInput = input => (
-    <YesOrNo inline={true} {...input}/>
-  )
+const DeclarationInput = input => (
+  <YesOrNo inline={true} {...input}/>
+)
 
+const Declarations = ({ journal }) => {
   return (
     <FormSection name="declarations">
       {journal.declarations.questions.map(question => (

@@ -7,27 +7,27 @@ import classes from './Suggestions.local.scss'
 const joinComma = join(',')
 const splitComma = split(',')
 
+const SuggestedReviewerInput = input =>
+  <TextField
+    placeholder="Add reviewer names"
+    {...input}/>
+
+const OpposedReviewerInput = input =>
+  <TextField
+    placeholder="Add reviewer names"
+    {...input}/>
+
+const SuggestedEditorInput = input =>
+  <TextField
+    placeholder="Add editor names"
+    {...input}/>
+
+const OpposedEditorInput = input =>
+  <TextField
+    placeholder="Add editor names"
+    {...input}/>
+
 const Suggestions = () => {
-  const SuggestedReviewerInput = input =>
-    <TextField
-      placeholder="Add reviewer names"
-      {...input}/>
-
-  const OpposedReviewerInput = input =>
-    <TextField
-      placeholder="Add reviewer names"
-      {...input}/>
-
-  const SuggestedEditorInput = input =>
-    <TextField
-      placeholder="Add editor names"
-      {...input}/>
-
-  const OpposedEditorInput = input =>
-    <TextField
-      placeholder="Add editor names"
-      {...input}/>
-
   return (
     <FormSection name="suggestions">
       <div className={classes.section} id="suggestions.reviewers">
