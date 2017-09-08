@@ -1,6 +1,5 @@
 const path = require('path')
 const webpack = require('webpack')
-const ThemePlugin = require('pubsweet-theme-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const rules = require('./common-rules')
 const resolve = require('./common-resolve')

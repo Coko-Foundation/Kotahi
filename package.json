@@ -25,7 +25,10 @@
     "hoist": "lerna bootstrap --hoist --concurrency=1",
     "clean": "lerna clean",
     "styleguide": "lerna run styleguide",
-    "test": "lerna run test"
+    "test": "lerna run test",
+    "lint": "npm run lint:js && npm run lint:style",
+    "lint:js": "eslint packages",
+    "lint:style": "stylelint packages/**/*.scss packages/**/*.css"
   },
   "engines": {
     "node": ">=7.9"

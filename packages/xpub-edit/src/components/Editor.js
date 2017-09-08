@@ -1,6 +1,7 @@
 import React from 'react'
 import { debounce } from 'lodash'
-import { Editor as SlateEditor, Plain } from 'slate'
+// import { Editor as SlateEditor, Plain } from 'slate'
+import { Editor as SlateEditor } from 'slate'
 import EditorToolbar from './EditorToolbar'
 
 // TODO: move paste/drop handlers to plugins
