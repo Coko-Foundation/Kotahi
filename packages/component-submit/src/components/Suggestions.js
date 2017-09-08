@@ -36,8 +36,8 @@ const Suggestions = () => {
             Suggested or opposed reviewers
           </div>
 
-          <div className={classes.inline}>
-            <div className={classes.legend}>Suggested reviewers</div>
+          <div>
+            <div className={classes.sublegend}>Suggested reviewers</div>
 
             <ValidatedField
               name="suggested"
@@ -46,8 +46,8 @@ const Suggestions = () => {
               component={SuggestedReviewerInput}/>
           </div>
 
-          <div className={classes.inline}>
-            <div className={classes.legend}>Opposed reviewers</div>
+          <div>
+            <div className={classes.sublegend}>Opposed reviewers</div>
 
             <ValidatedField
               name="opposed"
@@ -64,8 +64,8 @@ const Suggestions = () => {
             Suggested or opposed editors
           </div>
 
-          <div className={classes.inline}>
-            <div className={classes.legend}>Suggested editors</div>
+          <div>
+            <div className={classes.sublegend}>Suggested editors</div>
 
             <ValidatedField
               name="suggested"
@@ -74,8 +74,8 @@ const Suggestions = () => {
               component={SuggestedEditorInput}/>
           </div>
 
-          <div className={classes.inline}>
-            <div className={classes.legend}>Opposed editors</div>
+          <div>
+            <div className={classes.sublegend}>Opposed editors</div>
 
             <ValidatedField
               name="opposed"
