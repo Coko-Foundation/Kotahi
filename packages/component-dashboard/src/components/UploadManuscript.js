@@ -9,7 +9,7 @@ const UploadManuscript = ({ uploadManuscript, conversion }) => (
     onDrop={uploadManuscript}
     accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     className={classes.dropzone}>
-    <div className={classes.main}>
+    <div className={classes.root}>
       <div className={classnames({
         [classes.converting]: conversion.converting,
         [classes.complete]: conversion.complete
@@ -21,15 +21,17 @@ const UploadManuscript = ({ uploadManuscript, conversion }) => (
         </span>
       </div>
 
-      {conversion.error ? (
-        <div className={classes.error}>
-          {conversion.error.message}
-        </div>
-      ) : (
-        <div className={classes.info}>
-          {conversion.complete ? 'Submission created' : 'Create submission'}
-        </div>
-      )}
+      <div className={classes.main}>
+        {conversion.error ? (
+          <div className={classes.error}>
+            {conversion.error.message}
+          </div>
+        ) : (
+          <div className={classes.info}>
+            {conversion.complete ? 'Submission created' : 'Create submission'}
+          </div>
+        )}
+      </div>
     </div>
   </Dropzone>
 )

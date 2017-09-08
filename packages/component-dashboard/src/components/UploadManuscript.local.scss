@@ -4,7 +4,7 @@
   cursor: pointer;
 }
 
-.main {
+.root {
   font-weight: 200;
   display: flex;
   padding-top: 10px;
@@ -16,12 +16,14 @@
   height: 100%;
   align-items: center;
   color: cornflowerblue;
-  margin-right: 10px;
-  transform-origin: center;
 }
 
 .converting {
   animation: spin 1s infinite linear;
+}
+
+.main {
+  margin-left: 10px;
 }
 
 .info {
