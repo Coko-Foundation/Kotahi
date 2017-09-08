@@ -36,7 +36,7 @@ export default compose(
             && collection.owners.includes(currentUser.id))
           .sort(newestFirst),
         assign: collections
-          .filter(collection => collection.state === 'submitted')
+          .filter(collection => collection.status === 'submitted')
           .sort(newestFirst),
         editor: teams
           .filter(team => team.group === 'editor'
