@@ -54,6 +54,7 @@ module.exports = {
                 loader: 'css-loader',
                 options: {
                   modules: true,
+                  localIdentName: '[name]_[local]-[hash:base64:8]',
                 }
               }
             ],
@@ -69,7 +70,8 @@ module.exports = {
                 loader: 'css-loader',
                 options: {
                   modules: true,
-                  importLoaders: 1
+                  localIdentName: '[name]_[local]-[hash:base64:8]',
+                  importLoaders: 1,
                 }
               },
               'sass-loader'

@@ -8,7 +8,6 @@ module.exports = {
     faker: 'faker'
   },
   skipComponentsWithoutExample: true,
-  webpackConfig: require('./webpack.config.js'),
   serverPort: 6065,
   theme: {
     fontFamily: {

@@ -5,7 +5,6 @@ module.exports = {
     Wrapper: require.resolve('xpub-styleguide/src/components/Wrapper')
   },
   skipComponentsWithoutExample: true,
-  webpackConfig: require('./webpack.config.js'),
   serverPort: 6061,
   theme: {
     fontFamily: {
