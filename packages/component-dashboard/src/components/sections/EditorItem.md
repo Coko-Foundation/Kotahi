@@ -16,6 +16,7 @@ const project = {
 
 const version = {
   id: faker.random.uuid(),
+  submitted: faker.date.past(1),
   metadata: {
     articleSection: ['cognitive-psychology']
   },

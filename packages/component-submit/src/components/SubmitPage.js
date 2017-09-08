@@ -14,7 +14,7 @@ const onSubmit = (values, dispatch, props) => {
 
   return dispatch(actions.updateFragment(props.project, {
     id: props.version.id,
-    submitted: true,
+    submitted: new Date(),
     ...values
   })).then(() => {
     return dispatch(actions.updateCollection({

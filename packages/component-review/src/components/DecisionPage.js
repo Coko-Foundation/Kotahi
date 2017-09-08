@@ -14,7 +14,7 @@ const onSubmit = (values, dispatch, props) => {
 
   return dispatch(actions.updateFragment(props.project, {
     id: props.decision.id,
-    submitted: true, // TODO: current date?
+    submitted: new Date(),
     ...values
   })).then(() => {
     // TODO: show "thanks for your review" message
