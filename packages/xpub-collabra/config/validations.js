@@ -7,7 +7,7 @@ module.exports = {
   },
   fragment: { // version
     version: Joi.number().required(),
-    submitted: Joi.boolean(),
+    submitted: Joi.date(),
     source: Joi.string(), // TODO: move to a file
     metadata: Joi.object({
       title: Joi.string(),
