@@ -1,7 +1,11 @@
 import React from 'react'
 import { Field } from 'redux-form'
 import { Link } from 'react-router'
+import { Button, TextField } from 'xpub-ui'
 import classes from './Login.local.scss'
+
+const UsernameInput = props => <TextField {...props.input}/>
+const PasswordInput = props => <TextField {...props.input} type="password"/>
 
 const Login = ({ error, handleSubmit }) => (
   <div className={classes.root}>
@@ -15,19 +19,19 @@ const Login = ({ error, handleSubmit }) => (
       <div>
         <label>
           Username
-          <Field name="username" component="input" type="text"/>
+          <Field name="username" component={UsernameInput}/>
         </label>
       </div>
 
       <div>
         <label>
           Password
-          <Field name="password" component="input" type="password"/>
+          <Field name="password" component={PasswordInput}/>
         </label>
       </div>
 
       <div>
-        <button type="submit" className={classes.button}>Login</button>
+        <Button primary type="submit">Login</Button>
       </div>
     </form>
 
