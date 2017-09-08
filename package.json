@@ -30,7 +30,7 @@
     "test": "lerna run test",
     "lint": "npm run lint:js && npm run lint:style",
     "lint:js": "eslint packages",
-    "lint:style": "stylelint packages/**/*.scss packages/**/*.css"
+    "lint:style": "stylelint packages/**/*.scss packages/**/*.css",
     "precommit": "lint-staged"
   },
   "lint-staged": {
