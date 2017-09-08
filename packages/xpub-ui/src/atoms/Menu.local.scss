@@ -1,6 +1,7 @@
 .root {
   display: flex;
   align-items: center;
+  position: relative;
 }
 
 .root button {
@@ -27,20 +28,23 @@
   border-left: 2px solid transparent;
 }
 
-.open .opener {
-  border-left: 2px solid var(--color-primary);
+.opener:hover {
+  color: var(--color-primary);
 }
 
-.opener:hover,
-.open .opener,
-.opener:hover .placeholder {
+.open .opener {
   color: var(--color-primary);
+  border-left: 2px solid var(--color-primary);
 }
 
 .placeholder {
   color: #aaa;
   font-family: var(--font-interface);
   font-weight: 400;
+}
+
+.opener:hover .placeholder {
+  color: var(--color-primary);
 }
 
 .arrow {
@@ -56,20 +60,19 @@
 
 .options {
   position: absolute;
-  padding-top: .5em;
+  padding-top: 0.5em;
   top: 0.6em;
   left: 0;
   min-width: 10em;
   background-color: white;
   border-left: 2px solid var(--color-primary);
   border-bottom: 2px solid var(--color-primary);
-  /*columns: 2 auto;*/
-    opacity: 0;
+  // columns: 2 auto;
+  opacity: 0;
 }
 
-
 .open .options {
-    opacity: 1;
+  opacity: 1;
 }
 
 .option {
