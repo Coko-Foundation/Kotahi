@@ -1,6 +1,7 @@
 import { push } from 'react-router-redux'
 import actions from 'pubsweet-client/src/actions'
 import { ink as convertToHTML } from 'pubsweet-component-ink-frontend/actions'
+import uploadFile from 'xpub-upload'
 import { generateTitle, extractTitle } from '../lib/title'
 
 /* constants */
@@ -35,47 +36,65 @@ export const uploadManuscript = acceptedFiles => dispatch => {
 
   dispatch(uploadManuscriptRequest())
 
-  dispatch(convertToHTML(inputFile)).then(response => {
-    if (!response.converted) {
-      throw new Error('The file was not converted')
+  const request = dispatch(uploadFile(inputFile))
+
+  request.addEventListener('load', event => {
+    if (request.status >= 400) {
+      throw new Error('There was an error uploading the file')
     }
 
-    const source = response.converted
-    const title = extractTitle(source) || generateTitle(inputFile.name)
+    const fileURL = request.responseText
 
-    return dispatch(actions.createCollection({
-      type: 'project',
-      title
-    })).then(({ collection }) => {
-      if (!collection.id) {
-        throw new Error('Failed to create a project')
-      }
-
-      // TODO: create teams?
-      // TODO: upload the manuscript file and attach it to the fragment
-
-      return dispatch(actions.createFragment(collection, {
-        type: 'version',
-        version: 1,
-        source,
-        metadata: {
-          title
+    dispatch(convertToHTML(inputFile))
+      .then(response => {
+        if (!response.converted) {
+          throw new Error('The file was not converted')
         }
-      })).then(({ fragment }) => {
-        dispatch(uploadManuscriptSuccess(collection, fragment))
 
-        const route = `/projects/${collection.id}/versions/${fragment.id}/submit`
+        const source = response.converted
+        const title = extractTitle(source) || generateTitle(inputFile.name)
 
-        // redirect after a short delay
-        window.setTimeout(() => {
-          dispatch(push(route))
-        }, 1000)
+        return dispatch(actions.createCollection({
+          type: 'project',
+          title
+        })).then(({collection}) => {
+          if (!collection.id) {
+            throw new Error('Failed to create a project')
+          }
+
+          // TODO: create teams?
+
+          return dispatch(actions.createFragment(collection, {
+            type: 'version',
+            version: 1,
+            source,
+            metadata: {
+              title
+            },
+            files: {
+              supplementary: [],
+              manuscript: {
+                name: inputFile.name,
+                url: fileURL
+              }
+            }
+          })).then(({fragment}) => {
+            dispatch(uploadManuscriptSuccess(collection, fragment))
+
+            const route = `/projects/${collection.id}/versions/${fragment.id}/submit`
+
+            // redirect after a short delay
+            window.setTimeout(() => {
+              dispatch(push(route))
+            }, 1000)
+          })
+        })
       })
-    })
-  }).catch(error => {
-    console.error(error)
-    dispatch(uploadManuscriptFailure(error))
-    throw error // rethrow
+      .catch(error => {
+        console.error(error)
+        dispatch(uploadManuscriptFailure(error))
+        throw error // rethrow
+      })
   })
 }
 
