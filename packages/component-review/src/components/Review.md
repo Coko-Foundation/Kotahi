@@ -9,6 +9,5 @@ const review = {
 };
 
 <Review
-  review={review}
-  initialValues={review}/>
+  review={review}/>
 ```

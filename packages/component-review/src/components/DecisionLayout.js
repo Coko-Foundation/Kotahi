@@ -2,7 +2,7 @@ import React from 'react'
 // import classnames from 'classnames'
 // import SimpleEditor from 'pubsweet-component-wax/src/SimpleEditor'
 import classes from './DecisionLayout.local.scss'
-import Decision from './Decision'
+import DecisionForm from './DecisionForm'
 import Reviews from './Reviews'
 
 const DecisionLayout = ({ project, version, decision, valid, handleSubmit, uploadFile }) => (
@@ -26,7 +26,7 @@ const DecisionLayout = ({ project, version, decision, valid, handleSubmit, uploa
 
       <Reviews version={version}/>
 
-      <Decision valid={valid} handleSubmit={handleSubmit} uploadFile={uploadFile}/>
+      <DecisionForm valid={valid} handleSubmit={handleSubmit} uploadFile={uploadFile}/>
     </div>
   </div>
 )

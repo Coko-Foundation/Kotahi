@@ -6,7 +6,7 @@ const Review = ({ review }) => (
   <div>
     <div>
       <div className={classes.heading}>
-        Review
+        Note
       </div>
 
       <NoteViewer value={review.note}/>
