@@ -1,32 +1,14 @@
-A form for entering a review of a version of a project.
+A review of a version of a project.
 
 ```js
-const { reduxForm } = require('redux-form');
-
-const project = {
-  id: faker.random.uuid(),
-};
-
-const version = {
-  id: faker.random.uuid(),
-  metadata: {
-    keywords: ['foo', 'bar']
-  }
-};
-
 const review = {
   id: faker.random.uuid(),
   note: '<p>This is a review</p>',
+  confidential: '<p>This is confidential</p>',
   recommendation: 'accept'
 };
 
-const ReviewForm = reduxForm({ 
-  form: 'review',
-  onSubmit: values => console.log(values),
-  onChange: values => console.log(values)
-})(Review);
-
-<ReviewForm
-  version={version}
+<Review
+  review={review}
   initialValues={review}/>
 ```

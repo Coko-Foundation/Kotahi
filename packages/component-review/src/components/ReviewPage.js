@@ -1,4 +1,4 @@
-import { debounce } from 'lodash'
+import { debounce, filter } from 'lodash'
 import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
@@ -6,7 +6,7 @@ import { reduxForm, SubmissionError } from 'redux-form'
 import actions from 'pubsweet-client/src/actions'
 import { ConnectPage } from 'xpub-connect'
 import uploadFile from 'xpub-upload'
-import { selectCollection, selectFragment } from 'xpub-selectors'
+import { selectCollection } from 'xpub-selectors'
 import ReviewLayout from './ReviewLayout'
 
 const onSubmit = (values, dispatch, props) => {
@@ -41,22 +41,32 @@ const onChange = (values, dispatch, props) => {
 export default compose(
   ConnectPage(({ params }) => [
     actions.getCollection({ id: params.project }),
-    actions.getFragment({ id: params.project }, { id: params.version }),
-    actions.getFragment({ id: params.project }, { id: params.review }),
+    actions.getFragments({ id: params.project }),
+    // actions.getFragment({ id: params.project }, { id: params.version }),
+    // actions.getFragment({ id: params.project }, { id: params.review }),
   ]),
   connect(
-    (state, ownProps) => ({
-      project: selectCollection(state, ownProps.params.project),
-      version: selectFragment(state, ownProps.params.version),
-      review: selectFragment(state, ownProps.params.review)
-    }),
+    (state, ownProps) => {
+      const project = selectCollection(state, ownProps.params.project)
+
+      const fragments = state.fragments
+        .filter(fragment => project.fragments.includes(fragment.id))
+
+      return {
+        project,
+        versions: filter(fragments, { type: 'version' }),
+        reviews: filter(fragments, { type: 'review' }),
+        // version: selectFragment(state, ownProps.params.version),
+        // review: selectFragment(state, ownProps.params.review)
+      }
+    },
     {
       uploadFile
     }
   ),
   withProps(({ review }) => {
     return {
-      initialValues: review
+      initialValues: review,
     }
   }),
   reduxForm({

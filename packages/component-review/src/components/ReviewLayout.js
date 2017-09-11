@@ -2,7 +2,8 @@ import React from 'react'
 // import classnames from 'classnames'
 // import SimpleEditor from 'pubsweet-component-wax/src/SimpleEditor'
 import classes from './ReviewLayout.local.scss'
-import Review from './Review'
+import ReviewForm from './ReviewForm'
+import ReviewMetadata from './ReviewMetadata'
 
 const ReviewLayout = ({ project, version, review, valid, handleSubmit, uploadFile }) => (
   <div className={classes.root}>
@@ -14,16 +15,8 @@ const ReviewLayout = ({ project, version, review, valid, handleSubmit, uploadFil
     </div>
 
     <div className={classes.column}>
-      <table className={classes.metadata}>
-        <tbody>
-        <tr>
-          <th>Keywords</th>
-          <td>{version.metadata.keywords.join(',')}</td>
-        </tr>
-        </tbody>
-      </table>
-
-      <Review valid={valid} handleSubmit={handleSubmit} uploadFile={uploadFile}/>
+      <ReviewMetadata version={version}/>
+      <ReviewForm valid={valid} handleSubmit={handleSubmit} uploadFile={uploadFile}/>
     </div>
   </div>
 )
