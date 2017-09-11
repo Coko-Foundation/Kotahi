@@ -27,7 +27,7 @@ const version = {
 
 const SubmitForm = reduxForm({ 
   form: 'submit',
-  // touchOnChange: true,
+  touchOnChange: true,
   onSubmit: values => console.log(values),
   onChange: values => console.log(values)
 })(Submit);
