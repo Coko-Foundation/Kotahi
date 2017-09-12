@@ -1,0 +1,15 @@
+.attachment {
+  display: flex;
+  align-items: center;
+  color: inherit;
+  text-decoration: none;
+}
+
+.icon {
+  margin-right: 10px;
+  display: inline-flex;
+}
+
+.filename {
+  font-family: var(--font-mono);
+}
