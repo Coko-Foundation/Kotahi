@@ -3,7 +3,7 @@ import React from 'react'
 // import SimpleEditor from 'pubsweet-component-wax/src/SimpleEditor'
 import classes from './DecisionLayout.local.scss'
 import DecisionForm from './DecisionForm'
-import Reviews from './Reviews'
+import Reviews from './DecisionReviews'
 
 const DecisionLayout = ({ project, version, decision, valid, handleSubmit, attachFile }) => (
   <div className={classes.root}>

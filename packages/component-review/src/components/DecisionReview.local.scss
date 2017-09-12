@@ -1,0 +1,39 @@
+.heading {
+  display: flex;
+  align-items: center;
+}
+
+.indicator {
+  border-radius: 100%;
+  display: inline-block;
+  width: 10px;
+  height: 10px;
+  margin-right: 10px;
+}
+
+.ordinal {
+  font-weight: bold;
+  margin-right: 10px;
+}
+
+.name {
+  font-family: var(--font-mono);
+  margin-right: 10px;
+}
+
+.dots {
+  flex: 1;
+  background-color: #eee;
+}
+
+.toggle {
+  background: none;
+  border: none;
+  font-size: inherit;
+  cursor: pointer;
+  margin-left: 10px;
+}
+
+.review {
+  margin-left: 20px;
+}

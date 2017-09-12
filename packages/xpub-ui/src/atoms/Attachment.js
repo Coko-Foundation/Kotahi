@@ -4,7 +4,6 @@ import classes from './Attachment.local.scss'
 
 const Attachment = ({ value }) => (
   <a
-    key={value.url}
     download={value.name}
     href={value.url}
     className={classes.attachment}>

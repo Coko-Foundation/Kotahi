@@ -11,11 +11,13 @@ const Review = ({ review }) => (
       </div>
 
       <div className={classes.note}>
-        <NoteViewer value={review.note.content}/>
+        <div className={classes.content}>
+          <NoteViewer value={review.note.content}/>
+        </div>
 
         {review.note.attachments
           && review.note.attachments.map(attachment => (
-          <Attachment value={attachment}/>
+          <Attachment key={attachment.url} value={attachment}/>
         ))}
       </div>
     </div>
@@ -27,11 +29,13 @@ const Review = ({ review }) => (
         </div>
 
         <div className={classes.note}>
-          <NoteViewer value={review.confidential.content}/>
+          <div className={classes.content}>
+            <NoteViewer value={review.confidential.content}/>
+          </div>
 
           {review.confidential.attachments
             && review.confidential.attachments.map(attachment => (
-            <Attachment value={attachment}/>
+            <Attachment key={attachment.url} value={attachment}/>
           ))}
         </div>
       </div>
