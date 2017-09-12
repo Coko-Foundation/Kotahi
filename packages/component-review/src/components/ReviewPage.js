@@ -5,8 +5,8 @@ import { push } from 'react-router-redux'
 import { reduxForm, SubmissionError } from 'redux-form'
 import actions from 'pubsweet-client/src/actions'
 import { ConnectPage } from 'xpub-connect'
-import uploadFile from 'xpub-upload'
 import { selectCollection } from 'xpub-selectors'
+import uploadFile from 'xpub-upload'
 import ReviewLayout from './ReviewLayout'
 
 const onSubmit = (values, dispatch, props) => {

@@ -1,5 +1,6 @@
 import React from 'react'
 import { NoteViewer } from 'xpub-edit'
+import { Attachment } from 'xpub-ui'
 import classes from './Decision.local.scss'
 
 const Decision = ({ decision }) => (
@@ -9,7 +10,14 @@ const Decision = ({ decision }) => (
         Note
       </div>
 
-      <NoteViewer value={decision.note}/>
+      <div className={classes.note}>
+        <NoteViewer value={decision.note.content}/>
+
+        {decision.note.attachments
+          && decision.note.attachments.map(attachment => (
+          <Attachment value={attachment}/>
+        ))}
+      </div>
     </div>
 
     <div>

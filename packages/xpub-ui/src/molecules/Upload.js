@@ -1,5 +1,4 @@
 import React from 'react'
-import UploadingFile from '../atoms/UploadingFile'
 
 // TODO: retry on error
 // TODO: make this a HOC for <UploadingFile>?
@@ -58,15 +57,10 @@ class Upload extends React.Component {
   }
 
   render () {
-    const { file } = this.props
+    const { file, render } = this.props
     const { progress, error } = this.state
 
-    return (
-      <UploadingFile
-        file={file}
-        progress={progress}
-        error={error}/>
-    )
+    return render({ file, progress, error })
   }
 }
 

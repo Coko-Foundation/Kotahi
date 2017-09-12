@@ -1,4 +1,5 @@
 /* atom */
+export { default as Attachment } from './atoms/Attachment'
 export { default as Button } from './atoms/Button'
 export { default as Checkbox } from './atoms/Checkbox'
 export { default as Icon } from './atoms/Icon'
@@ -10,7 +11,9 @@ export { default as ValidatedField } from './atoms/ValidatedField'
 
 /* molecules */
 export { default as AppBar } from './molecules/AppBar'
+export { default as Attachments } from './molecules/Attachments'
 export { default as CheckboxGroup } from './molecules/CheckboxGroup'
 export { default as Files } from './molecules/Files'
+export { default as Supplementary } from './molecules/Supplementary'
 export { default as RadioGroup } from './molecules/RadioGroup'
 export { default as YesOrNo } from './molecules/YesOrNo'

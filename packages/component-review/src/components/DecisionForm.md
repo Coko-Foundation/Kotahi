@@ -16,7 +16,9 @@ const version = {
 
 const decision = {
   id: faker.random.uuid(),
-  note: '<p>This is a decision</p>',
+  note: {
+    content: '<p>This is a decision</p>'
+  },
   recommendation: 'accept'
 };
 
@@ -28,5 +30,6 @@ const ConnectedDecisionForm = reduxForm({
 
 <ConnectedDecisionForm
   version={version}
-  initialValues={decision}/>
+  initialValues={decision}
+  uploadFile={() => new XMLHttpRequest()}/>
 ```

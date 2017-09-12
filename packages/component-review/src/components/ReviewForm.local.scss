@@ -1,3 +1,11 @@
 .section {
   margin-bottom: 10px;
 }
+
+.note {
+  display: flex;
+}
+
+.content {
+  flex: 1;
+}

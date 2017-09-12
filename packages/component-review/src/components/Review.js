@@ -1,5 +1,6 @@
 import React from 'react'
 import { NoteViewer } from 'xpub-edit'
+import { Attachment } from 'xpub-ui'
 import classes from './Review.local.scss'
 
 const Review = ({ review }) => (
@@ -9,7 +10,14 @@ const Review = ({ review }) => (
         Note
       </div>
 
-      <NoteViewer value={review.note}/>
+      <div className={classes.note}>
+        <NoteViewer value={review.note.content}/>
+
+        {review.note.attachments
+          && review.note.attachments.map(attachment => (
+          <Attachment value={attachment}/>
+        ))}
+      </div>
     </div>
 
     {review.confidential && (
@@ -18,7 +26,14 @@ const Review = ({ review }) => (
           Confidential
         </div>
 
-        <NoteViewer value={review.confidential}/>
+        <div className={classes.note}>
+          <NoteViewer value={review.confidential.content}/>
+
+          {review.confidential.attachments
+            && review.confidential.attachments.map(attachment => (
+            <Attachment value={attachment}/>
+          ))}
+        </div>
       </div>
     )}
 

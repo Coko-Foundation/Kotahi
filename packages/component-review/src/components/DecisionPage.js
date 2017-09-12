@@ -5,8 +5,8 @@ import { push } from 'react-router-redux'
 import { reduxForm, SubmissionError } from 'redux-form'
 import actions from 'pubsweet-client/src/actions'
 import { ConnectPage } from 'xpub-connect'
-import uploadFile from 'xpub-upload'
 import { selectCollection, selectFragment } from 'xpub-selectors'
+import uploadFile from 'xpub-upload'
 import DecisionLayout from './DecisionLayout'
 
 const onSubmit = (values, dispatch, props) => {
@@ -48,7 +48,7 @@ export default compose(
     (state, { params }) => ({
       project: selectCollection(state, params.project),
       version: selectFragment(state, params.version),
-      decision: selectFragment(state, params.decision)
+      decision: selectFragment(state, params.decision),
     }),
     {
       uploadFile

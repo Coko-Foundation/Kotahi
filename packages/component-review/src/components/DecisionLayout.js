@@ -5,7 +5,7 @@ import classes from './DecisionLayout.local.scss'
 import DecisionForm from './DecisionForm'
 import Reviews from './Reviews'
 
-const DecisionLayout = ({ project, version, decision, valid, handleSubmit, uploadFile }) => (
+const DecisionLayout = ({ project, version, decision, valid, handleSubmit, attachFile }) => (
   <div className={classes.root}>
     <div className={classes.column}>
       {/*<SimpleEditor
@@ -26,7 +26,10 @@ const DecisionLayout = ({ project, version, decision, valid, handleSubmit, uploa
 
       <Reviews version={version}/>
 
-      <DecisionForm valid={valid} handleSubmit={handleSubmit} uploadFile={uploadFile}/>
+      <DecisionForm
+        valid={valid}
+        handleSubmit={handleSubmit}
+        attachFile={attachFile}/>
     </div>
   </div>
 )

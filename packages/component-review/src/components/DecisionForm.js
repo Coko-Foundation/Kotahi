@@ -1,16 +1,22 @@
 import React from 'react'
+import { FormSection } from 'redux-form'
 import { Button } from 'xpub-ui'
 import { NoteEditor } from 'xpub-edit'
-import { RadioGroup, ValidatedField } from 'xpub-ui'
+import { Attachments, RadioGroup, ValidatedField } from 'xpub-ui'
 import { withJournal } from 'xpub-journal'
 import { required } from '../lib/validators'
 import classes from './DecisionForm.local.scss'
 
-const DecisionForm = ({journal, decision, valid, handleSubmit, uploadFile}) => {
+const DecisionForm = ({journal, valid, handleSubmit, uploadFile }) => {
   const NoteInput = input =>
     <NoteEditor
-      placeholder="Enter your decision…"
       title="Decision"
+      placeholder="Enter your decision…"
+      {...input}/>
+
+  const AttachmentsInput = input =>
+    <Attachments
+      uploadFile={uploadFile}
       {...input}/>
 
   const RecommendationInput = input =>
@@ -23,10 +29,20 @@ const DecisionForm = ({journal, decision, valid, handleSubmit, uploadFile}) => {
   return (
     <form onSubmit={handleSubmit}>
       <div className={classes.section}>
-        <ValidatedField
-          name="note"
-          validate={[required]}
-          component={NoteInput}/>
+        <FormSection name="note">
+          <div className={classes.note}>
+            <div className={classes.content}>
+              <ValidatedField
+                name="content"
+                validate={[required]}
+                component={NoteInput}/>
+            </div>
+
+            <ValidatedField
+              name="attachments"
+              component={AttachmentsInput}/>
+          </div>
+        </FormSection>
       </div>
 
       <div className={classes.section}>
