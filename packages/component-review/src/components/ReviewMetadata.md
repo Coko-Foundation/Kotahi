@@ -1,4 +1,4 @@
-A form for entering a review of a version of a project.
+Project metadata, displayed at the top of the review form.
 
 ```js
 const { reduxForm } = require('redux-form');
