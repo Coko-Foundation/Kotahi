@@ -8,6 +8,7 @@ import ProjectLink from '../ProjectLink'
 import AssignEditor from '../AssignEditor'
 import Divider from './Divider'
 import classes from './Item.local.scss'
+import Reviews from '../Reviews'
 
 const EditorItem = ({ project, version, addUserToTeam }) => (
   <div className={classes.root}>
@@ -48,6 +49,12 @@ const EditorItem = ({ project, version, addUserToTeam }) => (
       </div>
 
       <div className={classes.actions}/>
+    </div>
+
+    <div className={classes.reviews}>
+      <Reviews
+        project={project}
+        version={version}/>
     </div>
 
     <div className={classes.roles}>

@@ -11,6 +11,33 @@ const project = {
     {
       name: faker.name.findName()
     }
+  ],
+  reviewers: [
+    {
+      id: 'reviewer-invited',
+      name: faker.name.findName(),
+      ordinal: 1
+    },
+    {
+      id: 'reviewer-accepted',
+      name: faker.name.findName(),
+      ordinal: 2
+    },
+    {
+      id: 'reviewer-declined',
+      name: faker.name.findName(),
+      ordinal: 3
+    },
+    {
+      id: 'reviewer-removed',
+      name: faker.name.findName(),
+      ordinal: 4
+    },
+    {
+      id: 'reviewer-reviewed',
+      name: faker.name.findName(),
+      ordinal: 4
+    }
   ]
 };
 
@@ -22,7 +49,41 @@ const version = {
   },
   declarations: {
     openReview: true
-  }
+  },
+  reviews: [
+    {
+      reviewer: 'reviewer-invited',
+      status: 'invited',
+      events: {
+        invited: faker.date.past(1),
+      }
+    },
+    {
+      reviewer: 'reviewer-accepted',
+      status: 'accepted',
+      events: {
+        invited: faker.date.past(1),
+        accepted: faker.date.past(1),
+      }
+    },
+    {
+      reviewer: 'reviewer-declined',
+      status: 'declined',
+      events: {
+        invited: faker.date.past(1),
+        declined: faker.date.past(1),
+      }
+    },
+    {
+      reviewer: 'reviewer-reviewed',
+      status: 'reviewed',
+      events: {
+        invited: faker.date.past(1),
+        accepted: faker.date.past(1),
+        reviewed: faker.date.past(1),
+      }
+    },
+  ]
 };
 
 <EditorItem
