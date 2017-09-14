@@ -11,6 +11,17 @@ const version = {
   id: faker.random.uuid(),
   metadata: {
     keywords: ['foo', 'bar']
+  },
+  declarations: {
+    openReview: true
+  },
+  files: {
+    supplementary: [
+      {
+        name: faker.system.commonFileName(),
+        url: 'https://example.com/'
+      }
+    ]
   }
 };
 
