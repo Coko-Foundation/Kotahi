@@ -32,7 +32,8 @@ module.exports = dir => {
           'pubsweet-server': {
             API_ENDPOINT: JSON.stringify('/')
           }
-        }
+        },
+        PUBSWEET_COMPONENTS: '[]'
       }),
     ],
     module: {
@@ -123,17 +124,7 @@ module.exports = dir => {
               }
             }
           ]
-        },
-        // replace "PUBSWEET_COMPONENTS" string in pubsweet-client
-        {
-          test: /\.js$/,
-          enforce: 'pre',
-          loader: 'string-replace-loader',
-          options: {
-            search: 'PUBSWEET_COMPONENTS',
-            replace: '[]'
-          }
-        },
+        }
       ]
     }
   }
