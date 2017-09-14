@@ -5,17 +5,16 @@ import classes from './DecisionReviews.local.scss'
 
 // TODO: read reviewer ordinal and name from project reviewer
 
-const DecisionReviews = ({ journal, reviews }) => (
+const DecisionReviews = ({ journal, version }) => (
   <div>
-    {reviews.map((review, index) => (
-      <div className={classes.review}>
-        <DecisionReview
-          key={review.id}
-          review={review}
-          reviewer={{
-            name: null,
-            ordinal: index + 1
-          }}/>
+    {version.reviews
+      .filter(review => review.events.reviewed)
+      .map((review, index) => (
+      <div className={classes.review} key={review.id}>
+        <DecisionReview review={review} reviewer={{
+          name: null,
+          ordinal: index + 1
+        }}/>
       </div>
     ))}
   </div>

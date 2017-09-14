@@ -16,27 +16,23 @@ const project = {
     {
       id: 'reviewer-invited',
       name: faker.name.findName(),
-      ordinal: 1
     },
     {
       id: 'reviewer-accepted',
       name: faker.name.findName(),
-      ordinal: 2
     },
     {
       id: 'reviewer-declined',
       name: faker.name.findName(),
-      ordinal: 3
     },
     {
       id: 'reviewer-removed',
       name: faker.name.findName(),
-      ordinal: 4
     },
     {
       id: 'reviewer-reviewed',
       name: faker.name.findName(),
-      ordinal: 4
+      ordinal: 1
     }
   ]
 };

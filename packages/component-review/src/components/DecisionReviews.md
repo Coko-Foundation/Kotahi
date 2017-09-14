@@ -16,6 +16,9 @@ const reviews = [
     confidential: {
       content: '<p>This is confidential</p>',
     },
+    events: {
+      reviewed: faker.date.past(1)
+    },
     recommendation: 'accept'
   },
   {
@@ -23,10 +26,13 @@ const reviews = [
     note: {
       content: '<p>This is another review</p>',
     },
+    events: {
+      reviewed: faker.date.past(1)
+    },
     recommendation: 'reject'
   }
 ];
 
 <DecisionReviews
-  reviews={reviews}/>
+  version={{reviews}}/>
 ```

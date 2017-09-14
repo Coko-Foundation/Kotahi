@@ -1,5 +1,5 @@
 import React from 'react'
-import { File } from 'xpub-ui'
+// import { File } from 'xpub-ui'
 import classes from './ReviewMetadata.local.scss'
 
 const ReviewMetadata = ({ version }) => (
@@ -31,9 +31,9 @@ const ReviewMetadata = ({ version }) => (
           {version.files.supplementary.length} supplementary {version.files.supplementary.length === 1 ? 'file' : 'files'}:
         </th>
         <td>
-          {version.files.supplementary.map(file => (
+          {/*{version.files.supplementary.map(file => (
             <File key={file.url} value={file}/>
-          ))}
+          ))}*/}
         </td>
       </tr>
       </tbody>

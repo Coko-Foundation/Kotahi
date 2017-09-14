@@ -15,7 +15,7 @@ const Decision = ({ decision }) => (
 
         {decision.note.attachments
           && decision.note.attachments.map(attachment => (
-          <Attachment value={attachment}/>
+          <Attachment key={attachment.url} value={attachment}/>
         ))}
       </div>
     </div>
