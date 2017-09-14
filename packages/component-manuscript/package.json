@@ -13,7 +13,7 @@
   },
   "peerDependencies": {
     "prop-types": "^15.5.10",
-    "pubsweet-client": "git+https://gitlab.coko.foundation/pubsweet/pubsweet-client.git",
+    "pubsweet-client": "^1.0.0-beta.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.2",
@@ -40,7 +40,7 @@
     "webpack": "^3.5.5",
     "webpack-node-externals": "^1.6.0",
     "prop-types": "^15.5.10",
-    "pubsweet-client": "git+https://gitlab.coko.foundation/pubsweet/pubsweet-client.git",
+    "pubsweet-client": "^1.0.0-beta.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.2",
