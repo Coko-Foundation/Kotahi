@@ -8,6 +8,7 @@
 }
 
 .main,
+.reviews,
 .roles {
   padding-left: 40px;
 }
@@ -21,6 +22,7 @@
 .header {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 10px;
 }
 
 .meta {
@@ -43,4 +45,9 @@
   text-transform: none;
   border: none;
   cursor: pointer;
+}
+
+.reviews {
+  margin-top: 10px;
+  margin-bottom: 10px;
 }
