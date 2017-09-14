@@ -6,9 +6,11 @@ import classes from './Tabs.local.scss'
 const Tabs = ({ sections, title, activeKey, setActiveKey }) => (
   <div className={classes.root}>
     <div className={classes.tabs}>
-      <span className={classes.title}>
-        {title}
-      </span>
+      {title && (
+        <span className={classes.title}>
+          {title}
+        </span>
+      )}
 
       {sections.map(({ key }) => (
         <span
