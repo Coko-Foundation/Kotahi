@@ -1,0 +1,18 @@
+.root {
+  display: inline-flex;
+  align-items: center;
+  border: 1px solid #eee;
+  border-radius: 2px;
+  font-size: 0.8rem;
+}
+
+.count {
+  background: white;
+  padding: 5px;
+}
+
+.label {
+  display: inline-block;
+  background: #eee;
+  padding: 5px;
+}
