@@ -1,10 +1,11 @@
-/* atom */
+/* atoms */
 export { default as Attachment } from './atoms/Attachment'
 export { default as Button } from './atoms/Button'
 export { default as Checkbox } from './atoms/Checkbox'
 export { default as Icon } from './atoms/Icon'
 export { default as Menu } from './atoms/Menu'
 export { default as Radio } from './atoms/Radio'
+export { default as Tabs } from './atoms/Tabs'
 export { default as Tags } from './atoms/Tags'
 export { default as TextField } from './atoms/TextField'
 export { default as ValidatedField } from './atoms/ValidatedField'
