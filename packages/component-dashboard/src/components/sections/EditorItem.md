@@ -4,6 +4,7 @@ A dashboard item showing a project that the current user is handling as editor.
 const project = {
   id: faker.random.uuid(),
   title: faker.lorem.sentence(15),
+  status: 'submitted',
   fragments: [
     faker.random.uuid()
   ],
