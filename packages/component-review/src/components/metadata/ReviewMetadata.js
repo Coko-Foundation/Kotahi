@@ -20,7 +20,7 @@ const ReviewMetadata = ({ version }) => (
       </tr>
       <tr>
         <th className={classes.heading}>
-          managing editor:
+          handling editor:
         </th>
         <td>
           TODO
