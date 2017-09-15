@@ -1,6 +1,7 @@
 import React from 'react'
 import Status from '../Status'
 import MetadataSections from '../metadata/MetadataSections'
+import MetadataType from '../metadata/MetadataType'
 import MetadataReviewType from '../metadata/MetadataReviewType'
 import MetadataSubmittedDate from '../metadata/MetadataSubmittedDate'
 import MetadataOwners from '../metadata/MetadataOwners'
@@ -19,6 +20,8 @@ const EditorItem = ({ project, version, addUserToTeam }) => (
         <MetadataOwners owners={project.owners}/>
         <Divider separator="-"/>
         <MetadataSubmittedDate submitted={version.submitted}/>
+        <Divider separator="-"/>
+        <MetadataType type={version.metadata.articleType}/>
         <Divider separator="-"/>
         <MetadataSections sections={version.metadata.articleSection}/>
         <Divider separator="-"/>
