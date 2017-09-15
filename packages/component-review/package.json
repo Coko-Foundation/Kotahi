@@ -29,7 +29,8 @@
     "xpub-journal": "^0.0.2",
     "xpub-selectors": "^0.0.2",
     "xpub-ui": "^0.0.2",
-    "xpub-upload": "^0.0.2"
+    "xpub-upload": "^0.0.2",
+    "xpub-validators": "^0.0.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
