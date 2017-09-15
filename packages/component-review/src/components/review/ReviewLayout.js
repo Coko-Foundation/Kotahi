@@ -3,9 +3,9 @@ import moment from 'moment'
 // import classnames from 'classnames'
 // import SimpleEditor from 'pubsweet-component-wax/src/SimpleEditor'
 import ReviewForm from './ReviewForm'
-import ReviewMetadata from './ReviewMetadata'
+import ReviewMetadata from '../metadata/ReviewMetadata'
 import Review from './Review'
-import Tabs from './Tabs'
+import Tabs from '../tabs/Tabs'
 import classes from './ReviewLayout.local.scss'
 
 const ReviewLayout = ({ project, versions, reviewer, valid, handleSubmit, uploadFile }) => {

@@ -7,7 +7,7 @@ import actions from 'pubsweet-client/src/actions'
 import { ConnectPage } from 'xpub-connect'
 import { selectCollection, selectFragment } from 'xpub-selectors'
 import uploadFile from 'xpub-upload'
-import DecisionLayout from './DecisionLayout'
+import DecisionLayout from './decision/DecisionLayout'
 
 const onSubmit = (values, dispatch, props) => {
   console.log('submit', values)

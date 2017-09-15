@@ -7,7 +7,7 @@ import actions from 'pubsweet-client/src/actions'
 import { ConnectPage } from 'xpub-connect'
 import { selectCollection } from 'xpub-selectors'
 import uploadFile from 'xpub-upload'
-import ReviewLayout from './ReviewLayout'
+import ReviewLayout from './review/ReviewLayout'
 
 const onSubmit = (values, dispatch, props) => {
   console.log('submit', values)

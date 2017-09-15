@@ -16,5 +16,23 @@ module.exports = {
     color: {
       link: 'cornflowerblue'
     }
-  }
+  },
+  sections: [
+    {
+      name: 'Review',
+      components: 'src/components/review/*.js'
+    },
+    {
+      name: 'Decision',
+      components: 'src/components/decision/*.js'
+    },
+    {
+      name: 'Metadata',
+      components: 'src/components/metadata/*.js'
+    },
+    {
+      name: 'Tabs',
+      components: 'src/components/tabs/*.js'
+    }
+  ]
 }

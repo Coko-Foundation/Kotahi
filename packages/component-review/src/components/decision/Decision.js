@@ -11,7 +11,9 @@ const Decision = ({ decision }) => (
       </div>
 
       <div className={classes.note}>
-        <NoteViewer value={decision.note.content}/>
+        <div className={classes.content}>
+          <NoteViewer value={decision.note.content}/>
+        </div>
 
         {decision.note.attachments
           && decision.note.attachments.map(attachment => (

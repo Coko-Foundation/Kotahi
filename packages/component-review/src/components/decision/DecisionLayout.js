@@ -5,9 +5,9 @@ import moment from 'moment'
 import classes from './DecisionLayout.local.scss'
 import DecisionForm from './DecisionForm'
 import DecisionReviews from './DecisionReviews'
-import ReviewMetadata from './ReviewMetadata'
+import ReviewMetadata from '../metadata/ReviewMetadata'
 import Decision from './Decision'
-import Tabs from './Tabs'
+import Tabs from '../tabs/Tabs'
 
 const DecisionLayout = ({ project, versions, reviewer, valid, handleSubmit, uploadFile }) => {
   const decisionSections = []

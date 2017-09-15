@@ -1,7 +1,7 @@
 import React from 'react'
 import { compose, withState, withHandlers } from 'recompose'
 import { withJournal } from 'xpub-journal'
-import Review from './Review'
+import Review from '../review/Review'
 import classes from './DecisionReview.local.scss'
 
 const DecisionReview = ({ review, reviewer, journal, open, toggleOpen }) => (
@@ -44,7 +44,6 @@ export default compose(
   withState('open', 'setOpen', ({ open }) => open),
   withHandlers({
     toggleOpen: props => () => {
-      console.log(props)
       props.setOpen(open => !open)
     }
   })

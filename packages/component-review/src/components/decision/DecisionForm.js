@@ -4,7 +4,7 @@ import { Button } from 'xpub-ui'
 import { NoteEditor } from 'xpub-edit'
 import { Attachments, RadioGroup, ValidatedField } from 'xpub-ui'
 import { withJournal } from 'xpub-journal'
-import { required } from '../lib/validators'
+import { required } from '../../lib/validators'
 import classes from './DecisionForm.local.scss'
 
 const DecisionForm = ({journal, valid, handleSubmit, uploadFile }) => {
