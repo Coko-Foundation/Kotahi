@@ -8,11 +8,12 @@ const ValidatedFieldForm = reduxForm({
   onChange: values => console.log(values)
 })(ValidatedField);
 
+const TextInput = input => <TextField {...input}/>;
+
 <ValidatedFieldForm 
     name="error" 
     validate={() => 'Required'}
-    component={input => <TextField {...input}/>}
-    />
+    component={TextInput}/>
 ```
 
 ```js
@@ -23,9 +24,10 @@ const ValidatedFieldForm = reduxForm({
   onChange: values => console.log(values)
 })(ValidatedField);
 
+const TextInput = input => <TextField {...input}/>;
+
 <ValidatedFieldForm 
     name="warning" 
     warn={() => 'Expected'}
-    component={input => <TextField {...input}/>}
-    />
+    component={TextInput}/>
 ```
