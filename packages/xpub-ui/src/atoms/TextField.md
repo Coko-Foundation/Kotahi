@@ -2,11 +2,20 @@ A form input for plain text.
 
 
 ```js
-<TextField/>
+initialState = { value: '' };
+
+<TextField 
+  value={state.value} 
+  onChange={event => setState({ value: event.target.value })}/>
 ```
 
 The input can have a label.
 
 ```js
-<TextField label="Foo"/>
+initialState = { value: '' };
+
+<TextField 
+  label="Foo" 
+  value={state.value}
+  onChange={event => setState({ value: event.target.value })}/>
 ```
