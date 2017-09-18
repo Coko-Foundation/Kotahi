@@ -17,23 +17,21 @@ const InstructionsInput = input =>
     title="Special instructions (confidential)"
     {...input}/>
 
-const Notes = () => {
-  return (
-    <FormSection name="notes">
-      <div className={classes.section} id="notes.fundingAcknowledgement">
-        <ValidatedField
-          name="fundingAcknowledgement"
-          validate={[required]}
-          component={FundingInput}/>
-      </div>
+const Notes = () => (
+  <FormSection name="notes">
+    <div className={classes.section} id="notes.fundingAcknowledgement">
+      <ValidatedField
+        name="fundingAcknowledgement"
+        validate={[required]}
+        component={FundingInput}/>
+    </div>
 
-      <div className={classes.section} id="notes.specialInstructions">
-        <ValidatedField
-          name="specialInstructions"
-          component={InstructionsInput}/>
-      </div>
-    </FormSection>
-  )
-}
+    <div className={classes.section} id="notes.specialInstructions">
+      <ValidatedField
+        name="specialInstructions"
+        component={InstructionsInput}/>
+    </div>
+  </FormSection>
+)
 
 export default Notes

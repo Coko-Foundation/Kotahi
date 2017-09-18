@@ -27,66 +27,64 @@ const OpposedEditorInput = input =>
     placeholder="Add editor names"
     {...input}/>
 
-const Suggestions = () => {
-  return (
-    <FormSection name="suggestions">
-      <div className={classes.section} id="suggestions.reviewers">
-        <FormSection name="reviewers">
-          <div className={classes.legend}>
-            Suggested or opposed reviewers
-          </div>
+const Suggestions = () => (
+  <FormSection name="suggestions">
+    <div className={classes.section} id="suggestions.reviewers">
+      <FormSection name="reviewers">
+        <div className={classes.legend}>
+          Suggested or opposed reviewers
+        </div>
 
-          <div>
-            <div className={classes.sublegend}>Suggested reviewers</div>
+        <div>
+          <div className={classes.sublegend}>Suggested reviewers</div>
 
-            <ValidatedField
-              name="suggested"
-              format={joinComma}
-              parse={splitComma}
-              component={SuggestedReviewerInput}/>
-          </div>
+          <ValidatedField
+            name="suggested"
+            format={joinComma}
+            parse={splitComma}
+            component={SuggestedReviewerInput}/>
+        </div>
 
-          <div>
-            <div className={classes.sublegend}>Opposed reviewers</div>
+        <div>
+          <div className={classes.sublegend}>Opposed reviewers</div>
 
-            <ValidatedField
-              name="opposed"
-              format={joinComma}
-              parse={splitComma}
-              component={OpposedReviewerInput}/>
-          </div>
-        </FormSection>
-      </div>
+          <ValidatedField
+            name="opposed"
+            format={joinComma}
+            parse={splitComma}
+            component={OpposedReviewerInput}/>
+        </div>
+      </FormSection>
+    </div>
 
-      <div className={classes.section} id="suggestions.editors">
-        <FormSection name="editors">
-          <div className={classes.legend}>
-            Suggested or opposed editors
-          </div>
+    <div className={classes.section} id="suggestions.editors">
+      <FormSection name="editors">
+        <div className={classes.legend}>
+          Suggested or opposed editors
+        </div>
 
-          <div>
-            <div className={classes.sublegend}>Suggested editors</div>
+        <div>
+          <div className={classes.sublegend}>Suggested editors</div>
 
-            <ValidatedField
-              name="suggested"
-              format={joinComma}
-              parse={splitComma}
-              component={SuggestedEditorInput}/>
-          </div>
+          <ValidatedField
+            name="suggested"
+            format={joinComma}
+            parse={splitComma}
+            component={SuggestedEditorInput}/>
+        </div>
 
-          <div>
-            <div className={classes.sublegend}>Opposed editors</div>
+        <div>
+          <div className={classes.sublegend}>Opposed editors</div>
 
-            <ValidatedField
-              name="opposed"
-              format={joinComma}
-              parse={splitComma}
-              component={OpposedEditorInput}/>
-          </div>
-        </FormSection>
-      </div>
-    </FormSection>
-  )
-}
+          <ValidatedField
+            name="opposed"
+            format={joinComma}
+            parse={splitComma}
+            component={OpposedEditorInput}/>
+        </div>
+      </FormSection>
+    </div>
+  </FormSection>
+)
 
 export default Suggestions

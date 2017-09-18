@@ -34,80 +34,78 @@ const KeywordsInput = input =>
     placeholder="Enter keywords…"
     {...input}/>
 
-const Metadata = ({ journal }) => {
-  const ArticleTypeInput = input =>
-    <Menu
-      options={journal.articleTypes}
-      {...input}/>
+const ArticleTypeInput = journal => input =>
+  <Menu
+    options={journal.articleTypes}
+    {...input}/>
 
-  const ArticleSectionInput = input =>
-    <CheckboxGroup
-      options={journal.articleSections}
-      {...input}/>
+const ArticleSectionInput = journal => input =>
+  <CheckboxGroup
+    options={journal.articleSections}
+    {...input}/>
 
-  return (
-    <FormSection name="metadata">
-      <div className={classes.section} id="metadata.title">
-        <ValidatedField
-          name="title"
-          required
-          validate={[minChars20, maxChars500]}
-          component={TitleInput}/>
-      </div>
+const Metadata = ({ journal }) => (
+  <FormSection name="metadata">
+    <div className={classes.section} id="metadata.title">
+      <ValidatedField
+        name="title"
+        required
+        validate={[minChars20, maxChars500]}
+        component={TitleInput}/>
+    </div>
 
-      <div className={classes.section} id="metadata.abstract">
-        <ValidatedField
-          name="abstract"
-          required
-          validate={[minChars100, maxChars5000]}
-          component={AbstractInput}/>
-      </div>
+    <div className={classes.section} id="metadata.abstract">
+      <ValidatedField
+        name="abstract"
+        required
+        validate={[minChars100, maxChars5000]}
+        component={AbstractInput}/>
+    </div>
 
-      <div className={classes.section} id="metadata.authors">
-        <div className={classes.label}>Authors</div>
+    <div className={classes.section} id="metadata.authors">
+      <div className={classes.label}>Authors</div>
 
-        <ValidatedField
-          name="authors"
-          required
-          format={join()}
-          parse={split()}
-          validate={[minSize1]}
-          component={AuthorsInput}/>
-      </div>
+      <ValidatedField
+        name="authors"
+        required
+        format={join()}
+        parse={split()}
+        validate={[minSize1]}
+        component={AuthorsInput}/>
+    </div>
 
-      <div className={classes.section} id="metadata.keywords">
-        <div className={classes.label}>Keywords</div>
+    <div className={classes.section} id="metadata.keywords">
+      <div className={classes.label}>Keywords</div>
 
-        <ValidatedField
-          name="keywords"
-          required
-          format={join()}
-          parse={split()}
-          validate={[minSize1]}
-          component={KeywordsInput}/>
-      </div>
+      <ValidatedField
+        name="keywords"
+        required
+        format={join()}
+        parse={split()}
+        validate={[minSize1]}
+        component={KeywordsInput}/>
+    </div>
 
-      <div className={classes.section} id="metadata.articleType">
-        <div className={classes.label}>Type of article</div>
+    <div className={classes.section} id="metadata.articleType">
+      <div className={classes.label}>Type of article</div>
 
-        <ValidatedField
-          name="articleType"
-          required
-          validate={[required]}
-          component={ArticleTypeInput}/>
-      </div>
+      <ValidatedField
+        name="articleType"
+        required
+        validate={[required]}
+        component={ArticleTypeInput(journal)}/>
+    </div>
 
-      <div className={classes.section} id="metadata.articleSection">
-        <div className={classes.label}>Section</div>
+    <div className={classes.section} id="metadata.articleSection">
+      <div className={classes.label}>Section</div>
 
-        <ValidatedField
-          name="articleSection"
-          required
-          validate={[required]}
-          component={ArticleSectionInput}/>
-      </div>
-    </FormSection>
-  )
-}
+      <ValidatedField
+        name="articleSection"
+        required
+        validate={[required]}
+        component={ArticleSectionInput(journal)}/>
+    </div>
+  </FormSection>
+)
 
 export default withJournal(Metadata)
