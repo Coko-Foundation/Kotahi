@@ -67,6 +67,13 @@ const EditorItem = ({ project, version, addUserToTeam }) => (
           teamTypeName="seniorEditor"
           addUserToTeam={addUserToTeam}/>
       </div>
+
+      <div className={classes.role}>
+        <AssignEditor
+          project={project}
+          teamTypeName="handlingEditor"
+          addUserToTeam={addUserToTeam}/>
+      </div>
     </div>
   </div>
 )

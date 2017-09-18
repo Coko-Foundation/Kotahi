@@ -13,6 +13,14 @@
   padding-left: 40px;
 }
 
+.roles {
+  display: flex;
+}
+
+.role:not(:last-of-type) {
+  margin-right: 40px;
+}
+
 .title {
   flex: 1;
   font-family: Vollkorn, serif;
