@@ -10,7 +10,7 @@ const ValidatedFieldComponent = ({ component }) => ({ meta, input }) => (
   <div>
     {component(input)}
 
-    {meta.touched && (
+    {meta.touched && (meta.error || meta.warning) && (
       <div className={classes.messages}>
         {meta.error && (
           <div className={classnames(classes.message, classes.error)}>
