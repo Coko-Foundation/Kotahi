@@ -16,26 +16,19 @@ const Login = ({ error, handleSubmit }) => (
     {error && <div className={classes.error}>{error.message}</div>}
 
     <form onSubmit={handleSubmit}>
-      <div>
+    
         <label>
           Username
           <Field name="username" component={UsernameInput}/>
         </label>
-      </div>
-
-      <div>
+    
         <label>
           Password
           <Field name="password" component={PasswordInput}/>
         </label>
-      </div>
-
-      <div>
         <Button primary type="submit">Login</Button>
-      </div>
     </form>
-
-    <div>or <Link to="/signup">sign up</Link></div>
+    <div>You don't have an account? <Link to="/signup">Sign up</Link></div>
   </div>
 )
 

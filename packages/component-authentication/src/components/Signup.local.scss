@@ -1,3 +1,9 @@
-.error {
-  color: red;
+/* stylelint-disable */
+.root {
+  composes: root from "./Login.local.scss";
 }
+
+.title {
+  composes:title from "./Login.local.scss";
+}
+  

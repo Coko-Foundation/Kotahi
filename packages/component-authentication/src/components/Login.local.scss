@@ -1,3 +1,74 @@
-.error {
+.root {
+  font-family: "Fira Sans Condensed";
+  width: 30ch;
+  margin: 0 auto;
+}
+
+.title {
+  text-align: left;
+  margin-bottom: 1.2em;
+  font-size: 2em;
+}
+
+.root input {
+  display: block;
+  width: 100%;
+  border: 0 none;
+  padding: 0;
+  border-bottom: 1px dashed #aaa;
+  font-family: "Fira Sans";
+
+  &:hover,
+  &:focus {
+    outline-style: none;
+    box-shadow: none;
+    border-color: transparent;
+    border-bottom: 1px dashed var(--color-primary);
+  }
+}
+
+.root form {
+  margin-top: 1em;
+  font-size: 0.8em;
+
+  label {
+    margin-top: 0.6em;
+    display: block;
+    cursor: text;
+    text-transform: lowercase;
+    font-style: italic;
+
+    &:hover {
+      color: var(--color-primary);
+    }
+
+    input {
+      font-size: 1.3em;
+      line-height: 1;
+      margin-bottom: 3em;
+    }
+  }
+
+  button {
+    margin-top: 1em;
+    display: block;
+    padding: 0.4em 2em;
+  }
+
+  + div {
+    margin-top: 1.6em;
+    color: #777;
+    text-align: left;
+    font-size: 0.8em;
+
+    a {
+      color: var(--color-primary);
+      border-bottom: 1px solid currentcolor;
+      cursor: pointer;
+    }
+  }
+}
+
+.root .error {
   color: red;
 }
