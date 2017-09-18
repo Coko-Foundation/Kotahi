@@ -13,6 +13,7 @@ export default compose(
   ConnectPage(() => [
     actions.getCollections(),
     actions.getTeams(),
+    actions.getUsers(),
   ]),
   connect(
     state => ({
@@ -41,7 +42,7 @@ export default compose(
             && team.object.type === 'collection'
             && team.members.includes(currentUser.id))
           .map(team => collections.find(collection => {
-            return collection.id === team.object
+            return collection.id === team.object.id
           }))
           .sort(newestFirst),
         reviewer: teams
