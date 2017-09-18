@@ -1,5 +1,5 @@
 .root {
-  font-family: "Fira Sans Condensed";
+  font-family: "Fira Sans Condensed", sans-serif;
   width: 30ch;
   margin: 0 auto;
 }
@@ -16,7 +16,7 @@
   border: 0 none;
   padding: 0;
   border-bottom: 1px dashed #aaa;
-  font-family: "Fira Sans";
+  font-family: "Fira Sans", sans-serif;
 
   &:hover,
   &:focus {
@@ -27,12 +27,11 @@
   }
 }
 
-.root form {
+.form {
   margin-top: 1em;
   font-size: 0.8em;
 
   label {
-    margin-top: 0.6em;
     display: block;
     cursor: text;
     text-transform: lowercase;
@@ -45,30 +44,35 @@
     input {
       font-size: 1.3em;
       line-height: 1;
+      margin-top: 0.6em;
       margin-bottom: 3em;
-    }
-  }
-
-  button {
-    margin-top: 1em;
-    display: block;
-    padding: 0.4em 2em;
-  }
-
-  + div {
-    margin-top: 1.6em;
-    color: #777;
-    text-align: left;
-    font-size: 0.8em;
-
-    a {
-      color: var(--color-primary);
-      border-bottom: 1px solid currentcolor;
-      cursor: pointer;
     }
   }
 }
 
-.root .error {
+.button {
+  margin-top: 1em;
+  display: block;
+  padding: 0.4em 2em;
+}
+
+.alternate {
+  margin-top: 1.6em;
+  color: #777;
+  text-align: left;
+  font-size: 0.8em;
+
+  .message {
+    margin-right: 1ch;
+  }
+
+  .link {
+    color: var(--color-primary);
+    border-bottom: 1px solid currentcolor;
+    cursor: pointer;
+  }
+}
+
+.error {
   color: red;
 }

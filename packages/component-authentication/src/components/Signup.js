@@ -2,11 +2,17 @@ import React from 'react'
 import { Field } from 'redux-form'
 import { Link } from 'react-router'
 import { Button, TextField } from 'xpub-ui'
-import classes from './Signup.local.scss'
+import classes from './Login.local.scss'
 
-const UsernameInput = props => <TextField {...props.input}/>
-const EmailInput = props => <TextField {...props.input} type="email"/>
-const PasswordInput = props => <TextField {...props.input} type="password"/>
+const UsernameInput = props => (
+  <TextField label="Username" {...props.input}/>
+)
+const EmailInput = props => (
+  <TextField label="Email" {...props.input} type="email"/>
+)
+const PasswordInput = props => (
+  <TextField label="Password" {...props.input} type="password"/>
+)
 
 const Signup = ({ error, handleSubmit }) => (
   <div className={classes.root}>
@@ -16,34 +22,21 @@ const Signup = ({ error, handleSubmit }) => (
 
     {error && <div className={classes.error}>{error.message}</div>}
 
-    <form onSubmit={handleSubmit}>
-      <div>
-        <label>
-          Username
-          <Field name="username" component={UsernameInput}/>
-        </label>
-      </div>
-
-      <div>
-        <label>
-          Email
-          <Field name="email" component={EmailInput}/>
-        </label>
-      </div>
-
-      <div>
-        <label>
-          Password
-          <Field name="password" component={PasswordInput}/>
-        </label>
-      </div>
-
-      <div>
-        <Button primary type="submit">Sign up</Button>
-      </div>
+    <form onSubmit={handleSubmit} className={classes.form}>
+      <Field name="username" component={UsernameInput}/>
+      <Field name="email" component={EmailInput}/>
+      <Field name="password" component={PasswordInput}/>
+      <Button primary type="submit" className={classes.button}>Sign up</Button>
     </form>
 
-    <div>Already have an account? <Link to="/login">Login</Link></div>
+    <div className={classes.alternate}>
+      <span className={classes.message}>
+        Already have an account?
+      </span>
+      <Link to="/login" className={classes.link}>
+        Login
+      </Link>
+    </div>
   </div>
 )
 

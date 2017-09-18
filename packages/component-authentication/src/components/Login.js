@@ -4,8 +4,12 @@ import { Link } from 'react-router'
 import { Button, TextField } from 'xpub-ui'
 import classes from './Login.local.scss'
 
-const UsernameInput = props => <TextField {...props.input}/>
-const PasswordInput = props => <TextField {...props.input} type="password"/>
+const UsernameInput = props => (
+  <TextField label="Username" {...props.input}/>
+)
+const PasswordInput = props => (
+  <TextField label="Password" {...props.input} type="password"/>
+)
 
 const Login = ({ error, handleSubmit }) => (
   <div className={classes.root}>
@@ -15,20 +19,20 @@ const Login = ({ error, handleSubmit }) => (
 
     {error && <div className={classes.error}>{error.message}</div>}
 
-    <form onSubmit={handleSubmit}>
-    
-        <label>
-          Username
-          <Field name="username" component={UsernameInput}/>
-        </label>
-    
-        <label>
-          Password
-          <Field name="password" component={PasswordInput}/>
-        </label>
-        <Button primary type="submit">Login</Button>
+    <form onSubmit={handleSubmit} className={classes.form}>
+      <Field name="username" component={UsernameInput}/>
+      <Field name="password" component={PasswordInput}/>
+      <Button primary type="submit" className={classes.button}>Login</Button>
     </form>
-    <div>You don't have an account? <Link to="/signup">Sign up</Link></div>
+
+    <div className={classes.alternate}>
+      <span className={classes.message}>
+        You don't have an account?
+      </span>
+      <Link to="/signup" className={classes.link}>
+        Sign up
+      </Link>
+    </div>
   </div>
 )
 
