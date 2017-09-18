@@ -43,7 +43,7 @@ const Signup = ({ error, handleSubmit }) => (
       </div>
     </form>
 
-    <div>or <Link to="/login">login</Link></div>
+    <div>Already have an account? <Link to="/login">Login</Link></div>
   </div>
 )
 
