@@ -3,7 +3,7 @@ import { converter, keys, schema, toolbar } from './config'
 import Editor from '../Editor'
 import classes from './NoteEditor.local.scss'
 
-const NoteEditor = ({ value, placeholder, title, onChange }) => (
+const NoteEditor = ({ value, placeholder, title, onBlur, onChange }) => (
   <Editor
     className={classes.root}
     value={value}
@@ -13,6 +13,7 @@ const NoteEditor = ({ value, placeholder, title, onChange }) => (
     keys={keys}
     placeholder={placeholder}
     title={title}
+    onBlur={onBlur}
     onDocumentChange={onChange}
   />
 )

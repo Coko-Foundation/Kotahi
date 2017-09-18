@@ -4,7 +4,7 @@ import Editor from '../Editor'
 
 // TODO: no blocks allowed
 
-const TitleEditor = ({ value, placeholder, title, onChange }) => (
+const TitleEditor = ({ value, placeholder, title, onBlur, onChange }) => (
   <Editor
     value={value}
     converter={converter}
@@ -13,6 +13,7 @@ const TitleEditor = ({ value, placeholder, title, onChange }) => (
     keys={keys}
     placeholder={placeholder}
     title={title}
+    onBlur={onBlur}
     onDocumentChange={onChange}
   />
 )

@@ -54,7 +54,7 @@ class Editor extends React.Component {
     this.setState({ state })
   }
 
-    onDocumentChange = (document, state) => {
+  onDocumentChange = (document, state) => {
     const { converter, onDocumentChange } = this.props
 
     if (typeof onDocumentChange === 'function') {
@@ -64,11 +64,11 @@ class Editor extends React.Component {
 
   // TODO: only fire onChange if actually changed?
   onBlur = () => {
-    const { converter, onChange } = this.props
+    const { converter, onBlur } = this.props
     const { state } = this.state
 
-    if (typeof onChange === 'function') {
-      onChange(converter.serialize(state))
+    if (typeof onBlur === 'function') {
+      onBlur(converter.serialize(state))
     }
   }
 
