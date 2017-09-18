@@ -10,8 +10,6 @@ const ValidatedFieldComponent = ({ component }) => ({ meta, input }) => (
   <div>
     {component(input)}
 
-    {console.log(meta)}
-
     {meta.touched && (
       <div className={classes.messages}>
         {meta.error && (
