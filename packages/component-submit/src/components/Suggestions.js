@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormSection } from 'redux-form'
 import { TextField, ValidatedField } from 'xpub-ui'
-import { join, split } from '../lib/validators'
+import { join, split } from 'xpub-validators'
 import classes from './Suggestions.local.scss'
 
 const joinComma = join(',')

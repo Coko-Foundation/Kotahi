@@ -3,7 +3,7 @@ import classes from './File.local.scss'
 
 const extension = ({ name }) => name.replace(/^.+\./, '')
 
-const File = ({ value, file, error, progress }) => (
+const File = ({ value }) => (
   <div className={classes.root}>
     <div className={classes.icon}>
       <div className={classes.extension}>

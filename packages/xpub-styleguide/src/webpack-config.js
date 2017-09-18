@@ -2,6 +2,7 @@ process.env.BABEL_ENV = 'development'
 process.env.NODE_ENV = 'development'
 
 const path = require('path')
+const webpack = require('webpack')
 // const nodeExternals = require('webpack-node-externals')
 
 module.exports = dir => {
@@ -24,6 +25,17 @@ module.exports = dir => {
     resolve: {
       symlinks: false
     },
+    plugins: [
+      // mock CONFIG
+      new webpack.DefinePlugin({
+        CONFIG: {
+          'pubsweet-server': {
+            API_ENDPOINT: JSON.stringify('/')
+          }
+        },
+        PUBSWEET_COMPONENTS: '[]'
+      }),
+    ],
     module: {
       rules: [
         {

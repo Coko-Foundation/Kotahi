@@ -1,0 +1,7 @@
+{
+  "name": "xpub-validators",
+  "version": "0.0.2",
+  "description": "Validators for use with redux-form",
+  "main": "src",
+  "license": "MIT"
+}

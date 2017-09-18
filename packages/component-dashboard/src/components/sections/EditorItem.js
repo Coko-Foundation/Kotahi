@@ -1,6 +1,7 @@
 import React from 'react'
 import Status from '../Status'
 import MetadataSections from '../metadata/MetadataSections'
+import MetadataType from '../metadata/MetadataType'
 import MetadataReviewType from '../metadata/MetadataReviewType'
 import MetadataSubmittedDate from '../metadata/MetadataSubmittedDate'
 import MetadataOwners from '../metadata/MetadataOwners'
@@ -8,6 +9,7 @@ import ProjectLink from '../ProjectLink'
 import AssignEditor from '../AssignEditor'
 import Divider from './Divider'
 import classes from './Item.local.scss'
+import Reviews from '../Reviews'
 
 const EditorItem = ({ project, version, addUserToTeam }) => (
   <div className={classes.root}>
@@ -18,6 +20,8 @@ const EditorItem = ({ project, version, addUserToTeam }) => (
         <MetadataOwners owners={project.owners}/>
         <Divider separator="-"/>
         <MetadataSubmittedDate submitted={version.submitted}/>
+        <Divider separator="-"/>
+        <MetadataType type={version.metadata.articleType}/>
         <Divider separator="-"/>
         <MetadataSections sections={version.metadata.articleSection}/>
         <Divider separator="-"/>
@@ -48,6 +52,12 @@ const EditorItem = ({ project, version, addUserToTeam }) => (
       </div>
 
       <div className={classes.actions}/>
+    </div>
+
+    <div className={classes.reviews}>
+      <Reviews
+        project={project}
+        version={version}/>
     </div>
 
     <div className={classes.roles}>

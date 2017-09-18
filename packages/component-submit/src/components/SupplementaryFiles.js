@@ -1,11 +1,11 @@
 import React from 'react'
 import { FormSection } from 'redux-form'
-import { Files, ValidatedField } from 'xpub-ui'
+import { Supplementary, ValidatedField } from 'xpub-ui'
 import classes from './Metadata.local.scss'
 
 const SupplementaryFiles = ({ uploadFile }) => {
   const FileInput = input =>
-    <Files
+    <Supplementary
       uploadFile={uploadFile}
       {...input}/>
 

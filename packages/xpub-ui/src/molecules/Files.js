@@ -1,7 +1,6 @@
 import React from 'react'
 import classes from './Files.local.scss'
 import Upload from './Upload'
-import File from '../atoms/File'
 
 class Files extends React.Component {
   constructor (props) {
@@ -46,7 +45,7 @@ class Files extends React.Component {
   }
 
   render () {
-    const { name } = this.props
+    const { name, buttonText, uploadingFile, uploadedFile } = this.props
     const { values, uploads } = this.state
 
     return (
@@ -56,7 +55,7 @@ class Files extends React.Component {
             type="button"
             className={classes.button}
             onClick={() => this.fileInput.click()}>
-            ▲ Upload files
+            {buttonText}
           </button>
 
           <input
@@ -74,14 +73,12 @@ class Files extends React.Component {
               key={upload.file.name}
               file={upload.file}
               request={upload.request}
-              handleUploadedFile={this.handleUploadedFile}/>
+              handleUploadedFile={this.handleUploadedFile}
+              render={uploadingFile}
+            />
           ))}
 
-          {values && values.map(value => (
-            <File
-              key={value.name}
-              value={value}/>
-          ))}
+          {values && values.map(uploadedFile)}
         </div>
       </div>
     )

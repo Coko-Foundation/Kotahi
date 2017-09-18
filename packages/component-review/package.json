@@ -11,8 +11,9 @@
   "dependencies": {
     "classnames": "^2.2.5",
     "lodash": "^4.17.4",
+    "moment": "^2.18.1",
     "prop-types": "^15.5.10",
-    "pubsweet-client": "git+https://gitlab.coko.foundation/pubsweet/pubsweet-client.git",
+    "pubsweet-client": "^1.0.0-beta.1",
     "pubsweet-component-wax": "^0.1.0",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
@@ -28,7 +29,8 @@
     "xpub-journal": "^0.0.2",
     "xpub-selectors": "^0.0.2",
     "xpub-ui": "^0.0.2",
-    "xpub-upload": "^0.0.2"
+    "xpub-upload": "^0.0.2",
+    "xpub-validators": "^0.0.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -49,7 +51,7 @@
   },
   "peerDependencies": {
     "prop-types": "^15.5.10",
-    "pubsweet-client": "git+https://gitlab.coko.foundation/pubsweet/pubsweet-client.git",
+    "pubsweet-client": "^1.0.0-beta.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.2",

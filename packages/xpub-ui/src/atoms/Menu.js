@@ -44,38 +44,40 @@ class Menu extends React.Component {
       <div className={classnames(classes.root, {
         [classes.open]: open
       })}>
-        <div className={classes.openerContainer}>
-          {label && (
-            <span className={classes.label}>{label}</span>
-          )}
+        {label && (
+          <span className={classes.label}>{label}</span>
+        )}
 
-          <button
-            type="button"
-            className={classes.opener}
-            onClick={this.toggleMenu}>
-            {selected ? (
-              <span>{this.optionLabel(selected)}</span>
-            ) : (
-              <span className={classes.placeholder}>{placeholder}</span>
+        <div className={classes.main}>
+          <div className={classes.openerContainer}>
+            <button
+              type="button"
+              className={classes.opener}
+              onClick={this.toggleMenu}>
+              {selected ? (
+                <span>{this.optionLabel(selected)}</span>
+              ) : (
+                <span className={classes.placeholder}>{placeholder}</span>
+              )}
+              <span className={classes.arrow}>▼</span>
+            </button>
+          </div>
+
+          <div className={classes.optionsContainer}>
+            {open && (
+              <div className={classes.options}>
+                {options.map(option => (
+                  <div
+                    key={option.value}
+                    className={classnames(classes.option, {
+                      [classes.active]: option.value === selected
+                    })}
+                    onClick={() => this.handleSelect(option.value)}
+                  >{option.label || option.value}</div>
+                ))}
+              </div>
             )}
-            <span className={classes.arrow}>▼</span>
-          </button>
-        </div>
-
-        <div className={classes.optionsContainer}>
-          {open && (
-            <div className={classes.options}>
-              {options.map(option => (
-                <div
-                  key={option.value}
-                  className={classnames(classes.option, {
-                    [classes.active]: option.value === selected
-                  })}
-                  onClick={() => this.handleSelect(option.value)}
-                >{option.label || option.value}</div>
-              ))}
-            </div>
-          )}
+          </div>
         </div>
       </div>
     )

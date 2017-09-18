@@ -26,3 +26,19 @@ const options = [
   value="foo"
   onChange={value => console.log(value)}/>
 ```
+
+A menu can have a label
+
+```js
+const options = [
+  { value: 'foo', label: 'Foo' },
+  { value: 'bar', label: 'Bar' },
+  { value: 'baz', label: 'Baz' }
+];
+
+<Menu 
+  options={options}
+  label="Title"
+  value="foo"
+  onChange={value => console.log(value)}/>
+```

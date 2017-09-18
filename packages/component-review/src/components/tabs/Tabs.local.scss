@@ -1,0 +1,27 @@
+.root {
+  position: relative;
+}
+
+.tabs {
+  display: flex;
+  flex-wrap: wrap;
+  margin-bottom: 20px;
+  align-items: baseline;
+}
+
+.tab:not(:last-child) {
+  margin-right: 10px;
+}
+
+.title {
+  font-weight: bold;
+  margin-right: 20px;
+}
+
+.pane {
+  display: none;
+}
+
+.pane.active {
+  display: block;
+}

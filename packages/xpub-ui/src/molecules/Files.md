@@ -15,5 +15,8 @@ const value = [
 
 <Files
   value={value}
+  buttonText="Choose a file to upload"
+  uploadingFile={({ file, progress, error }) => <div style={{color:'gray'}}>{file.name}</div>}
+  uploadedFile={value => <div>{value.name}</div>}
   uploadFile={file => new XMLHttpRequest()}/>
 ```
