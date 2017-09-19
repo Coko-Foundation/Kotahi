@@ -1,7 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 // import classnames from 'classnames'
-// import SimpleEditor from 'pubsweet-component-wax/src/SimpleEditor'
+import SimpleEditor from 'wax-editor-react'
 import ReviewForm from './ReviewForm'
 import ReviewMetadata from '../metadata/ReviewMetadata'
 import Review from './Review'
@@ -31,8 +31,9 @@ const ReviewLayout = ({ project, versions, reviewer, valid, handleSubmit, upload
       // TODO: need to include unreviewed versions?
       editorSections.push({
         key,
-        content: <div>TODO</div>
-        // editor: <SimpleEditor book={project} fragment={version}/>
+        content: <SimpleEditor
+          content={version.source}
+          readOnly={true}/>
       })
     }
   }, [])
@@ -60,8 +61,7 @@ const ReviewLayout = ({ project, versions, reviewer, valid, handleSubmit, upload
 
     editorSections.push({
       key,
-      editor: <div>TODO</div>
-      // editor: <SimpleEditor book={project} fragment={version}/>
+      content: <SimpleEditor content={version.source} readOnly={true}/>
     })
   }
 

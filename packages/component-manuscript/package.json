@@ -7,7 +7,7 @@
   ],
   "main": "src",
   "dependencies": {
-    "pubsweet-component-wax": "^0.1.0",
+    "wax-editor-react": "^0.0.5",
     "xpub-connect": "^0.0.2",
     "xpub-selectors": "^0.0.2"
   },
