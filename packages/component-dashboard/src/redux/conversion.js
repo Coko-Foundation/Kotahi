@@ -65,7 +65,7 @@ export const uploadManuscript = acceptedFiles => dispatch => {
           // TODO: create teams?
 
           return dispatch(actions.createFragment(collection, {
-            type: 'version',
+            fragmentType: 'version',
             version: 1,
             source,
             metadata: {

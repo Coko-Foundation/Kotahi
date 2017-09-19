@@ -19,6 +19,10 @@ module.exports = {
   },
   sections: [
     {
+      name: 'Reviewers',
+      components: 'src/components/reviewers/*.js'
+    },
+    {
       name: 'Review',
       components: 'src/components/review/*.js'
     },

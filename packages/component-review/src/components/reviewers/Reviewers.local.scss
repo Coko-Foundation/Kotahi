@@ -1,0 +1,14 @@
+.root {
+  display: flex;
+}
+
+.form {
+  width: 30ch;
+}
+
+.reviewers {
+  flex: 1;
+  padding: 20px;
+  display: flex;
+  flex-wrap: wrap;
+}
