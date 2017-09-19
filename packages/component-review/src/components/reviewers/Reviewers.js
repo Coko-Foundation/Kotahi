@@ -1,7 +1,7 @@
 import React from 'react'
 import classes from './Reviewers.local.scss'
 
-const ReviewersLayout = ({ Form, Item, project, version, reviewers, projectReviewers, reviewerUsers }) => (
+const Reviewers = ({ Form, Item, project, version, reviewers, projectReviewers, reviewerUsers }) => (
   <div className={classes.root}>
     <div className={classes.form}>
       <Form
@@ -24,4 +24,4 @@ const ReviewersLayout = ({ Form, Item, project, version, reviewers, projectRevie
   </div>
 )
 
-export default ReviewersLayout
+export default Reviewers
