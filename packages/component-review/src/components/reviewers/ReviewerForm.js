@@ -2,6 +2,7 @@ import React from 'react'
 import Select from 'react-select'
 import { Field } from 'redux-form'
 import { Button } from 'xpub-ui'
+import { required } from 'xpub-validators'
 import 'react-select/dist/react-select.css'
 import classes from './ReviewerForm.local.scss'
 
@@ -25,12 +26,15 @@ const ReviewerInput = loadOptions => ({ input }) => (
   />
 )
 
-const ReviewerForm = ({ handleSubmit, loadOptions }) => (
+const ReviewerForm = ({ valid, handleSubmit, loadOptions }) => (
   <form onSubmit={handleSubmit}>
-    <Field name="user" component={ReviewerInput(loadOptions)}/>
+    <Field
+      name="user"
+      validate={required}
+      component={ReviewerInput(loadOptions)}/>
 
     <div className={classes.actions}>
-      <Button type="submit" primary>Invite reviewer</Button>
+      <Button type="submit" primary disabled={!valid}>Invite reviewer</Button>
     </div>
   </form>
 )
