@@ -4,7 +4,6 @@ process.env.NODE_ENV = 'development'
 const path = require('path')
 const webpack = require('webpack')
 // const nodeExternals = require('webpack-node-externals')
-const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = dir => {
   const include = [
@@ -28,7 +27,6 @@ module.exports = dir => {
       symlinks: false
     },
     plugins: [
-      new ExtractTextPlugin('styles.css'),
       // mock CONFIG
       new webpack.DefinePlugin({
         CONFIG: {
@@ -97,22 +95,26 @@ module.exports = dir => {
             // global CSS
             {
               test: /\.css$/,
-              use: ExtractTextPlugin.extract({
-                fallback: 'style-loader',
-                use: 'css-loader'
-              })
+              use: [
+                'style-loader',
+                'css-loader'
+              ]
             },
 
             // global SCSS
             {
               test: /\.scss$/,
-              use: ExtractTextPlugin.extract({
-                fallback: 'style-loader',
-                use: [
-                  'css-loader',
-                  'sass-loader'
-                ],
-              }),
+              use: [
+                'style-loader',
+                'css-loader',
+                // {
+                //   loader: 'css-loader',
+                //   options: {
+                //     importLoaders: 1,
+                //   }
+                // },
+                'sass-loader'
+              ]
             },
 
             // Files
