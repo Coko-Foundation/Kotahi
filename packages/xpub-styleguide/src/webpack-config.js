@@ -4,12 +4,14 @@ process.env.NODE_ENV = 'development'
 const path = require('path')
 const webpack = require('webpack')
 // const nodeExternals = require('webpack-node-externals')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 
 module.exports = dir => {
   const include = [
     path.join(dir, 'src'),
     /pubsweet-[^/]+\/src/,
     /xpub-[^/]+\/src/,
+    /wax-[^/]+\/src/
   ]
 
   return {
@@ -26,6 +28,7 @@ module.exports = dir => {
       symlinks: false
     },
     plugins: [
+      new ExtractTextPlugin('styles.css'),
       // mock CONFIG
       new webpack.DefinePlugin({
         CONFIG: {
@@ -94,25 +97,22 @@ module.exports = dir => {
             // global CSS
             {
               test: /\.css$/,
-              use: [
-                'style-loader',
-                'css-loader'
-              ],
+              use: ExtractTextPlugin.extract({
+                fallback: 'style-loader',
+                use: 'css-loader'
+              })
             },
 
             // global SCSS
             {
               test: /\.scss$/,
-              use: [
-                'style-loader',
-                {
-                  loader: 'css-loader',
-                  options: {
-                    importLoaders: 1,
-                  }
-                },
-                'sass-loader'
-              ],
+              use: ExtractTextPlugin.extract({
+                fallback: 'style-loader',
+                use: [
+                  'css-loader',
+                  'sass-loader'
+                ],
+              }),
             },
 
             // Files
