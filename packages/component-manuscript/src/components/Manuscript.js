@@ -1,6 +1,6 @@
 import React from 'react'
 import { browserHistory } from 'react-router'
-import SimpleEditor from 'pubsweet-component-wax/src/SimpleEditor'
+import SimpleEditor from 'wax-editor-react'
 import classes from './Manuscript.local.scss'
 
 // TODO: convert user teams to roles (see SimpleEditorWrapper)?
@@ -8,11 +8,12 @@ import classes from './Manuscript.local.scss'
 const Manuscript = ({ project, version, currentUser, fileUpload, updateVersion }) => (
   <SimpleEditor
     classes={classes.fullscreen}
-    book={project}
-    fragment={version}
+    content={version.source}
     user={currentUser}
     fileUpload={fileUpload}
     history={browserHistory}
+    readOnly={false}
+    trackChanges={false}
     update={data => (
       updateVersion(project, { id: version.id, ...data })
     )}
