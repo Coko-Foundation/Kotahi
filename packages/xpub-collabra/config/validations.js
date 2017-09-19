@@ -3,10 +3,12 @@ const Joi = require('joi')
 module.exports = {
   collection: { // project
     title: Joi.string(),
-    status: Joi.string()
+    status: Joi.string(),
+    reviewers: Joi.object(),
   },
   fragment: { // version
-    version: Joi.number().required(),
+    // version: Joi.number().required(),
+    version: Joi.number(),
     submitted: Joi.date(),
     source: Joi.string(), // TODO: move to a file
     metadata: Joi.object({
@@ -46,7 +48,13 @@ module.exports = {
       fundingAcknowledgement: Joi.string(),
       specialInstructions: Joi.string()
     }),
-    lock: Joi.object()
+    lock: Joi.object(),
+    fragmentType: Joi.string(), // versions, reviewers, reviews
+    parentVersion: Joi.string(), // review
+    projectReviewer: Joi.string(), // review
+    user: Joi.string(), // review
+    status: Joi.string(), // review
+    events: Joi.object(), // review
   },
   user: {
     name: Joi.string(), // TODO: add "name" to the login form

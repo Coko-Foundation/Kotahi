@@ -13,6 +13,9 @@ const SubmitPage = loadable(() =>
 const ManuscriptPage = loadable(() =>
   import('pubsweet-component-xpub-manuscript/src/components/ManuscriptPage'))
 
+const ReviewersPage = loadable(() =>
+  import('pubsweet-component-xpub-review/src/components/ReviewersPage'))
+
 const ReviewPage = loadable(() =>
   import('pubsweet-component-xpub-review/src/components/ReviewPage'))
 
@@ -28,6 +31,7 @@ export default (
         <Route path="dashboard" component={DashboardPage}/>
         <Route path="projects/:project/versions/:version/submit" component={SubmitPage}/>
         <Route path="projects/:project/versions/:version/manuscript" component={ManuscriptPage}/>
+        <Route path="projects/:project/versions/:version/reviewers" component={ReviewersPage}/>
         <Route path="projects/:project/versions/:version/reviews/:review" component={ReviewPage}/>
         <Route path="projects/:project/versions/:version/decisions/:decision" component={DecisionPage}/>
       </Route>
