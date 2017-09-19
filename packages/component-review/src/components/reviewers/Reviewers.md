@@ -49,7 +49,7 @@ initialState = {
   reviewers: []
 };
 
-const Form = compose(
+const ReviewerFormContainer = compose(
   reduxForm({ 
     form: 'reviewers',
     onSubmit: reviewer => setState({ reviewers: state.reviewers.concat(reviewer) })
@@ -59,13 +59,13 @@ const Form = compose(
   }))
 )(ReviewerForm);
 
-const Item = withProps({
+const ReviewerContainer = withProps({
   removeReviewer: value => setState({ reviewers: state.reviewers.filter(reviewer => reviewer.id !== value.id) })
 })(Reviewer);
 
 <Reviewers
-  Form={Form}
-  Item={Item}
+  ReviewerForm={ReviewerFormContainer}
+  Reviewer={ReviewerContainer}
   project={project}
   version={version}
   projectReviewers={projectReviewers}

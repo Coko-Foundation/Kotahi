@@ -1,10 +1,10 @@
 import React from 'react'
 import classes from './Reviewers.local.scss'
 
-const Reviewers = ({ Form, Item, project, version, reviewers, projectReviewers, reviewerUsers }) => (
+const Reviewers = ({ ReviewerForm, Reviewer, project, version, reviewers, projectReviewers, reviewerUsers }) => (
   <div className={classes.root}>
     <div className={classes.form}>
-      <Form
+      <ReviewerForm
         project={project}
         version={version}
         reviewerUsers={reviewerUsers}
@@ -14,7 +14,7 @@ const Reviewers = ({ Form, Item, project, version, reviewers, projectReviewers, 
     {reviewers && (
       <div className={classes.reviewers}>
         {reviewers.map(reviewer => (
-          <Item
+          <Reviewer
             key={reviewer.id}
             project={project}
             reviewer={reviewer}/>

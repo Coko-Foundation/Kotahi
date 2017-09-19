@@ -1,4 +1,4 @@
-import { debounce } from 'lodash'
+import { debounce, filter } from 'lodash'
 import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
@@ -45,11 +45,22 @@ export default compose(
     actions.getFragment({id: params.project}, {id: params.decision}),
   ]),
   connect(
-    (state, { params }) => ({
-      project: selectCollection(state, params.project),
-      version: selectFragment(state, params.version),
-      decision: selectFragment(state, params.decision),
-    }),
+    (state, ownProps) => {
+      const project = selectCollection(state, ownProps.params.project)
+
+      const fragments = filter(state.fragments, fragment => {
+        return project.fragments.includes(fragment.id)
+      })
+
+      return {
+        project,
+        versions: filter(fragments, { type: 'version' }),
+        reviews: filter(fragments, { type: 'review' }),
+        decisions: filter(fragments, { type: 'decisions' }),
+        // version: selectFragment(state, ownProps.params.version),
+        // decision: selectFragment(state, ownProps.params.decision)
+      }
+    },
     {
       uploadFile
     }

@@ -49,8 +49,7 @@ export default compose(
     (state, ownProps) => {
       const project = selectCollection(state, ownProps.params.project)
 
-      const fragments = state.fragments
-        .filter(fragment => project.fragments.includes(fragment.id))
+      const fragments = filter(state.fragments, fragment => project.fragments.includes(fragment.id))
 
       return {
         project,
