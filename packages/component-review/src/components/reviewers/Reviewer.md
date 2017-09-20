@@ -10,11 +10,17 @@ const statusFactory = () => {
   const statuses = ['Accepted', 'Pending', 'Declined']
   return statuses[Math.floor(Math.random() * statuses.length)]
 }
+const date = () => {
+  const options = { year: 'numeric', month: 'long', day: 'numeric' }
+  const date = new Date()
+  return date.toLocaleDateString('en-US', options)
+}
 const reviewer = {
     projectReviewer: faker.random.uuid(),
     _user: user(),
-    status: statusFactory()
-};
+    status: statusFactory(),
+    addedOn: date() 
+}
 
 <Reviewer
   reviewer={reviewer}

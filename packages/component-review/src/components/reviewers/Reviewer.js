@@ -11,6 +11,7 @@ const Reviewer = ({ reviewer, removeReviewer }) => (
     )}
 
     <div>{reviewer.status}</div>
+    <div>{`added on ${reviewer.addedOn}`}</div>
 
     <button onClick={removeReviewer}>remove</button>
   </div>
