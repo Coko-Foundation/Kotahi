@@ -10,6 +10,7 @@
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.2",
+    "recompose": "^0.25.0",
     "redux": "^3.6.0",
     "redux-form": "^7.0.3",
     "xpub-fonts": "^0.0.2",
