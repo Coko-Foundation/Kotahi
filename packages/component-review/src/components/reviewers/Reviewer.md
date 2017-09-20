@@ -6,10 +6,14 @@ const user = () => ({
     username: faker.internet.userName(),
     email: faker.internet.email()
 })
-
+const statusFactory = () => {
+  const statuses = ['Accepted', 'Pending', 'Declined']
+  return statuses[Math.floor(Math.random() * statuses.length)]
+}
 const reviewer = {
     projectReviewer: faker.random.uuid(),
-    _user: user()
+    _user: user(),
+    status: statusFactory()
 };
 
 <Reviewer
