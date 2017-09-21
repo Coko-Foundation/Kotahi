@@ -8,34 +8,38 @@ import Divider from './Divider'
 // TODO: only return actions if not accepted or declined
 // TODO: review id in link
 
-const ReviewerItem = ({ project, version, reviewerResponse }) => (
+const ReviewerItem = ({ project, version, reviewer, reviewerResponse }) => (
   <div className={classes.root}>
     <div className={classes.main}>
       <div className={classes.title}>
         {project.title || 'Untitled'}
       </div>
 
-      <div className={classes.links}>
-        <div className={classes.link}>
-          <ProjectLink
-            project={project}
-            version={version}
-            page="reviews"
-            id={project.id}>Do Review</ProjectLink>
+      {reviewer.status === 'accepted' && (
+        <div className={classes.links}>
+          <div className={classes.link}>
+            <ProjectLink
+              project={project}
+              version={version}
+              page="reviews"
+              id={project.id}>Do Review</ProjectLink>
+          </div>
         </div>
-      </div>
+      )}
 
-      <div className={classes.actions}>
-        <div className={classes.action}>
-          <Button onClick={() => reviewerResponse(version.id, true)}>accept</Button>
+      {reviewer.status === 'invited' && (
+        <div className={classes.actions}>
+          <div className={classes.action}>
+            <Button onClick={() => reviewerResponse(version.id, 'accepted')}>accept</Button>
+          </div>
+
+          <Divider separator="|"/>
+
+          <div className={classes.action}>
+            <Button onClick={() => reviewerResponse(version.id, 'declined')}>reject</Button>
+          </div>
         </div>
-
-        <Divider separator="|"/>
-
-        <div className={classes.action}>
-          <Button onClick={() => reviewerResponse(version.id, false)}>reject</Button>
-        </div>
-      </div>
+      )}
     </div>
   </div>
 )
