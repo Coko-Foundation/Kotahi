@@ -40,6 +40,10 @@ const ReviewerItem = ({ project, version, reviewer, reviewerResponse }) => (
           </div>
         </div>
       )}
+
+      {reviewer.status === 'declined' && (
+        <div>declined</div>
+      )}
     </div>
   </div>
 )

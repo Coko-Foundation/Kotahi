@@ -52,3 +52,30 @@ initialState = {
       version={version}
       reviewer={state.reviewer}/>
 ```
+
+When the reviewer has declined the invitation to review, they can't perform any further actions.
+
+```js
+const project = {
+  id: faker.random.uuid(),
+  title: faker.lorem.sentence(15),
+  fragments: [
+    faker.random.uuid()
+  ],
+};
+
+const version = {
+  id: faker.random.uuid(),
+};
+
+initialState = {
+  reviewer: {
+    status: 'declined'
+  }
+};
+
+<ReviewerItem
+      project={project}
+      version={version}
+      reviewer={state.reviewer}/>
+```
