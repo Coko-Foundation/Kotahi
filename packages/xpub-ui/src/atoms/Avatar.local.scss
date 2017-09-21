@@ -6,13 +6,28 @@
   --color-waiting: #aaa;
 }
 
-svg {
-  cursor: pointer;
-}
-
 figure {
   width: 6em;
   margin: 0 auto 2px;
+}
+
+.default {
+  .persona {
+    fill: var(--color-primary);
+    display: block;
+  }
+
+  .check {
+    display: none;
+  }
+
+  .x {
+    display: none;
+  }
+
+  .question-mark {
+    display: none;
+  }
 }
 
 .accepted {
