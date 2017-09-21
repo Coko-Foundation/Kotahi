@@ -6,7 +6,7 @@ module.exports = {
     status: Joi.string(),
     reviewers: Joi.object(),
   },
-  fragment: { // version
+  fragment: { // version, projectReviewer, reviewer
     // version: Joi.number().required(),
     version: Joi.number(),
     submitted: Joi.date(),
@@ -49,12 +49,12 @@ module.exports = {
       specialInstructions: Joi.string()
     }),
     lock: Joi.object(),
-    fragmentType: Joi.string(), // versions, reviewers, reviews
-    parentVersion: Joi.string(), // review
-    projectReviewer: Joi.string(), // review
-    user: Joi.string(), // review
-    status: Joi.string(), // review
-    events: Joi.object(), // review
+    fragmentType: Joi.string(), // version, projectReviewer, reviewer
+    parentVersion: Joi.string(), // reviewer
+    projectReviewer: Joi.string(), // reviewer
+    user: Joi.string(), // reviewer
+    status: Joi.string(), // reviewer
+    events: Joi.object(), // reviewer
   },
   user: {
     name: Joi.string(), // TODO: add "name" to the login form
