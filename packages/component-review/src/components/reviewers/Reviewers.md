@@ -52,7 +52,11 @@ initialState = {
 const ReviewerFormContainer = compose(
   reduxForm({ 
     form: 'reviewers',
-    onSubmit: reviewer => setState({ reviewers: state.reviewers.concat(reviewer) })
+    onSubmit: ({ user }) => setState({ reviewers: state.reviewers.concat({
+      id: faker.random.uuid(),
+      reviewer: faker.random.uuid(),
+      _user: user
+    }) })
   }),
   withProps(props => ({
     loadOptions: input => Promise.resolve({ options: props.reviewerUsers })
