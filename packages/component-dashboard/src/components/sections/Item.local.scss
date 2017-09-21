@@ -10,38 +10,82 @@
 .main,
 .reviews,
 .roles {
-  padding-left: 40px;
+  padding-left: 1.5em;
 }
 
 .roles {
   display: flex;
+  text-transform: uppercase;
+  font-size: 0.8em;
+  margin-left: 0.5em;
+  margin-top: 1em;
 }
 
 .role:not(:last-of-type) {
-  margin-right: 40px;
+  margin-right: 3em;
 }
 
 .title {
   flex: 1;
   font-family: Vollkorn, serif;
   font-size: 120%;
+  margin-top: 0.5em;
+  padding-right: 0.4em;
+  font-weight: 500;
+  overflow: hidden;
+
+  span {
+    background: white;
+    padding-right: 0.3em;
+  }
+
+  &::after {
+    float: left;
+    width: 0;
+    font-weight: 400;
+    color: grey;
+    white-space: nowrap;
+    content: ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . ";
+  }
 }
 
 .header {
   display: flex;
   justify-content: space-between;
-  margin-bottom: 10px;
+  margin-bottom: 0.4em;
+  align-items: baseline;
 }
 
 .meta {
   display: flex;
   flex-wrap: nowrap;
+  color: #575757;
+  font-size: 0.8em;
+}
+
+.links {
+  align-self: flex-end;
+  display: flex;
+  padding-right: 0;
 }
 
 .link {
   display: inline-block;
   font-style: italic;
-  padding: 10px;
+  font-size: 0.9em;
+  padding: 0 0.3em;
+  color: var(--color-primary);
+  vertical-align: bottom;
+  cursor: pointer;
+  padding-bottom: 0.3em;
+
+  &:last-child {
+    margin-right: 0;
+  }
+
+  & a:hover {
+    border-bottom: 2px solid var(--color-primary);
+  }
 }
 
 .action {
@@ -58,4 +102,11 @@
 .reviews {
   margin-top: 10px;
   margin-bottom: 10px;
+  display: inline-flex;
+  justify-content: flex-end;
+}
+
+.editors {
+  display: inline-flex;
+  justify-content: flex-start;
 }

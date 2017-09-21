@@ -17,20 +17,20 @@ const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
 
       <div className={classes.meta}>
         <MetadataOwners owners={project.owners}/>
-        <Divider separator="-"/>
+        <Divider separator="–"/>
         <MetadataSubmittedDate submitted={version.submitted}/>
-        <Divider separator="-"/>
+        <Divider separator="–"/>
         <MetadataType type={version.metadata.articleType}/>
-        <Divider separator="-"/>
+        <Divider separator="–"/>
         <MetadataSections sections={version.metadata.articleSection}/>
-        <Divider separator="-"/>
+        <Divider separator="–"/>
         <MetadataReviewType openReview={version.declarations.openReview}/>
       </div>
     </div>
 
     <div className={classes.main}>
       <div className={classes.title}>
-        {project.title || 'Untitled'}
+      <span>{project.title || 'Untitled'}</span>
       </div>
 
       <div className={classes.links}>
@@ -53,11 +53,7 @@ const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
       <div className={classes.actions}/>
     </div>
 
-    <div className={classes.reviews}>
-      <Reviews
-        project={project}
-        version={version}/>
-    </div>
+  
 
     <div className={classes.roles}>
       <div className={classes.role}>
@@ -73,6 +69,13 @@ const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
           teamTypeName="handlingEditor"
           addUserToTeam={addUserToTeam}/>
       </div>
+
+
+    </div>
+      <div className={classes.reviews}>
+      <Reviews
+        project={project}
+        version={version}/>
     </div>
   </div>
 )
