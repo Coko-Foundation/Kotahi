@@ -1,0 +1,76 @@
+.root {
+  --color-primary: #0d78f2;
+  --color-danger: #ff2d1a;
+  --color-warning: #ee7600;
+  --color-valid: #00bf05;
+  --color-waiting: #aaa;
+}
+
+svg {
+  cursor: pointer;
+}
+
+figure {
+  width: 6em;
+  margin: 0 auto 2px;
+}
+
+.accepted {
+  .persona {
+    fill: var(--color-primary);
+    display: block;
+  }
+
+  .check {
+    fill: var(--color-primary);
+    display: block;
+  }
+
+  .x {
+    display: none;
+  }
+
+  .question-mark {
+    display: none;
+  }
+}
+
+.declined {
+  .persona {
+    fill: var(--color-danger);
+    display: block;
+  }
+
+  .check {
+    display: none;
+  }
+
+  .x {
+    fill: var(--color-danger);
+    display: block;
+  }
+
+  .question-mark {
+    display: none;
+  }
+}
+
+.pending {
+  .persona {
+    fill: var(--color-waiting);
+    display: block;
+  }
+
+  .check {
+    display: none;
+  }
+
+  .x {
+    display: none;
+  }
+
+  .question-mark {
+    fill: var(--color-waiting);
+    display: block;
+  }
+}
