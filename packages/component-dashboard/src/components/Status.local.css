@@ -1,4 +1,4 @@
 .root {
   text-transform: uppercase;
-  color: cornflowerblue;
+  color: var(--color-primary);
 }
