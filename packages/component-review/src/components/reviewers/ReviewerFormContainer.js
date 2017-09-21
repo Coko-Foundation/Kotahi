@@ -18,7 +18,7 @@ const addProjectReviewer = (props, user) => {
   }).then(result => result.fragment)
 }
 
-const addReview = (props, projectReviewer) => {
+const addReviewer = (props, projectReviewer) => {
   return props.createFragment(props.project, {
     fragmentType: 'reviewer',
     parentVersion: props.version.id,
@@ -30,7 +30,7 @@ const addReview = (props, projectReviewer) => {
   })
 }
 
-const handleSubmit = props => values => {
+const handleSubmit = props => reset => values => {
   // TODO: create a user account if values.user.id is null
 
   return getProjectReviewer(props, values.user).then(projectReviewer => {
@@ -38,8 +38,8 @@ const handleSubmit = props => values => {
       throw new SubmissionError('This reviewer has already been added')
     }
 
-    return addReview(props, projectReviewer)
-  })
+    return addReviewer(props, projectReviewer)
+  }).then(() => reset())
 }
 
 const loadOptions = props => input => {

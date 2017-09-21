@@ -26,8 +26,8 @@ const ReviewerInput = loadOptions => ({ input }) => (
   />
 )
 
-const ReviewerForm = ({ valid, handleSubmit, loadOptions }) => (
-  <form onSubmit={handleSubmit}>
+const ReviewerForm = ({ reset, valid, handleSubmit, onSubmit, loadOptions }) => (
+  <form onSubmit={handleSubmit(onSubmit(reset))}>
     <Field
       name="user"
       validate={required}

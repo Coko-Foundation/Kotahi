@@ -6,7 +6,7 @@ On the reviewers page, the handling editor can:
 
 ```js
 const { reduxForm } = require('redux-form');
-const { compose, withProps } = require('recompose');
+const { compose, withHandlers } = require('recompose');
 const Reviewer = require('./Reviewer').default;
 const ReviewerForm = require('./ReviewerForm').default;
 
@@ -42,6 +42,11 @@ const reviewerUsers = [
     id: faker.random.uuid(),
     username: faker.internet.userName(),
     email: faker.internet.email()
+  },
+  {
+    id: faker.random.uuid(),
+    username: faker.internet.userName(),
+    email: faker.internet.email()
   }
 ];
 
@@ -52,19 +57,29 @@ initialState = {
 const ReviewerFormContainer = compose(
   reduxForm({ 
     form: 'reviewers',
-    onSubmit: ({ user }) => setState({ reviewers: state.reviewers.concat({
-      id: faker.random.uuid(),
-      reviewer: faker.random.uuid(),
-      _user: user
-    }) })
+    onSubmit: reset => ({ user }) => {
+      console.log(user)
+      setState({ 
+        reviewers: state.reviewers.concat({
+          id: faker.random.uuid(),
+          reviewer: faker.random.uuid(),
+          _user: user
+        }) 
+      })
+      
+      // reset()
+    }
   }),
-  withProps(props => ({
-    loadOptions: input => Promise.resolve({ options: props.reviewerUsers })
-  }))
+  withHandlers({
+    loadOptions: props => input => Promise.resolve({ options: props.reviewerUsers })
+  })
 )(ReviewerForm);
 
-const ReviewerContainer = withProps({
-  removeReviewer: value => setState({ reviewers: state.reviewers.filter(reviewer => reviewer.id !== value.id) })
+const ReviewerContainer = withHandlers({
+  removeReviewer: props => () => setState({ 
+    reviewers: state.reviewers
+      .filter(reviewer => reviewer.id !== props.reviewer.id) 
+  })
 })(Reviewer);
 
 <Reviewers

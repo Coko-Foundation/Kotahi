@@ -29,7 +29,10 @@ const loadOptions = input => {
 
 const ConnectedReviewerForm = reduxForm({ 
   form: 'reviewer',
-  onSubmit: values => console.log(values)
+  onSubmit: reset => values => {
+    console.log(values)
+    reset()
+  }
 })(ReviewerForm);
 
 <ConnectedReviewerForm
