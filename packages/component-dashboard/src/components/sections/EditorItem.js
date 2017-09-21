@@ -6,12 +6,11 @@ import MetadataReviewType from '../metadata/MetadataReviewType'
 import MetadataSubmittedDate from '../metadata/MetadataSubmittedDate'
 import MetadataOwners from '../metadata/MetadataOwners'
 import ProjectLink from '../ProjectLink'
-import AssignEditor from '../AssignEditor'
 import Divider from './Divider'
 import classes from './Item.local.scss'
 import Reviews from '../Reviews'
 
-const EditorItem = ({ project, version, addUserToTeam }) => (
+const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
   <div className={classes.root}>
     <div className={classes.header}>
       <Status status={project.status}/>

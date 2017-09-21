@@ -1,6 +1,8 @@
 A dashboard item showing a project that the current user is handling as editor.
 
 ```js
+const AssignEditor = require('../AssignEditor').default;
+
 const project = {
   id: faker.random.uuid(),
   title: faker.lorem.sentence(15),
@@ -84,8 +86,32 @@ const version = {
   ]
 };
 
+const team = {
+  members: []
+};
+
+const options = [
+  {
+    value: faker.random.uuid(),
+    label: faker.internet.userName(),
+  },
+  {
+    value: faker.random.uuid(),
+    label: faker.internet.userName(),
+  },
+  {
+    value: faker.random.uuid(),
+    label: faker.internet.userName(),
+  }
+];
+
+const AssignEditorContainer = props => (
+  <AssignEditor team={team} options={options} {...props}/>
+);
+
 <EditorItem
       project={project}
       version={version}
-      addUserToTeam={props => console.log(props)}/>
+      addUserToTeam={props => console.log(props)}
+      AssignEditor={AssignEditorContainer}/>
 ```
