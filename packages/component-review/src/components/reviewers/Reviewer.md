@@ -4,6 +4,7 @@ A grid block that displays information about a reviewer of a version.
 const user = () => ({
     id: faker.random.uuid(),
     username: faker.internet.userName(),
+    fullname: faker.name.findName(),
     email: faker.internet.email()
 });
 const statusFactory = () => {
