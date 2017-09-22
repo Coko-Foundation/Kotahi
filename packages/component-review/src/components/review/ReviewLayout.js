@@ -33,6 +33,7 @@ const ReviewLayout = ({ project, versions, reviewer, valid, handleSubmit, upload
         key,
         content: <SimpleEditor
           content={version.source}
+          layout="bare"
           readOnly={true}/>
       })
     }
