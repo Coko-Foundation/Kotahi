@@ -1,0 +1,136 @@
+figure {
+  width: auto;
+  margin: 0 auto 2px;
+  text-align: center;
+}
+
+svg {
+  max-width: 100%;
+  width: auto;
+  max-height: 100vh;
+  height: auto;
+}
+
+.default {
+  .persona {
+    fill: var(--color-primary);
+    display: block;
+  }
+
+  .check {
+    display: none;
+  }
+
+  .x {
+    display: none;
+  }
+
+  .question-mark {
+    display: none;
+  }
+
+  .reviewer-number {
+    display: none;
+  }
+}
+
+.accepted {
+  .persona {
+    fill: var(--color-primary);
+    display: block;
+  }
+
+  .check {
+    fill: var(--color-primary);
+    display: block;
+  }
+
+  .x {
+    display: none;
+  }
+
+  .question-mark {
+    display: none;
+  }
+
+  .reviewer-number {
+    display: none;
+  }
+}
+
+.declined {
+  .persona {
+    fill: var(--color-danger);
+    display: block;
+  }
+
+  .check {
+    display: none;
+  }
+
+  .x {
+    fill: var(--color-danger);
+    display: block;
+  }
+
+  .question-mark {
+    display: none;
+  }
+
+  .reviewer-number {
+    display: none;
+  }
+}
+
+.pending {
+  .persona {
+    fill: var(--color-pending);
+    display: block;
+  }
+
+  .check {
+    display: none;
+  }
+
+  .x {
+    display: none;
+  }
+
+  .question-mark {
+    fill: var(--color-pending);
+    display: block;
+  }
+
+  .reviewer-number {
+    display: none;
+  }
+}
+
+.submitted {
+  .persona {
+    fill: var(--color-primary);
+    display: block;
+  }
+
+  .check {
+    display: none;
+  }
+
+  .x {
+    display: none;
+  }
+
+  .question-mark {
+    display: none;
+  }
+
+  .reviewer-number {
+    font-family: 'Fira Sans Condensed';
+    font-weight: 600;
+    font-size: 50px;
+    font-style: normal;
+    stroke: none;
+    fill: var(--color-primary);
+    text-transform: uppercase;
+  }
+}

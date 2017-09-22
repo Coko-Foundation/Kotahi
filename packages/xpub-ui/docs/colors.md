@@ -35,3 +35,11 @@ CSS variables are used to define the theme's color scheme.
 {faker.lorem.sentence(5)}
 </div>
 ```
+
+`--color-pending`
+
+```js
+<div style={{ color: 'var(--color-pending)' }}>
+{faker.lorem.sentence(5)}
+</div>
+```
