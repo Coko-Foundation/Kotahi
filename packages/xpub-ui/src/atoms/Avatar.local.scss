@@ -28,6 +28,10 @@ svg {
   .question-mark {
     display: none;
   }
+
+  .reviewer-number {
+    display: none;
+  }
 }
 
 .accepted {
@@ -46,6 +50,10 @@ svg {
   }
 
   .question-mark {
+    display: none;
+  }
+
+  .reviewer-number {
     display: none;
   }
 }
@@ -68,6 +76,10 @@ svg {
   .question-mark {
     display: none;
   }
+
+  .reviewer-number {
+    display: none;
+  }
 }
 
 .pending {
@@ -87,5 +99,38 @@ svg {
   .question-mark {
     fill: var(--color-pending);
     display: block;
+  }
+
+  .reviewer-number {
+    display: none;
+  }
+}
+
+.submitted {
+  .persona {
+    fill: var(--color-primary);
+    display: block;
+  }
+
+  .check {
+    fill: var(--color-primary);
+    display: block;
+  }
+
+  .x {
+    display: none;
+  }
+
+  .question-mark {
+    display: none;
+  }
+
+  .reviewer-number {
+    font-family: 'Fira Sans Condensed';
+    font-weight: 600;
+    font-size: 50px;
+    font-style: normal;
+    stroke: none;
+    text-transform: uppercase;
   }
 }
