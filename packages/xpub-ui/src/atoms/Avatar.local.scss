@@ -113,8 +113,7 @@ svg {
   }
 
   .check {
-    fill: var(--color-primary);
-    display: block;
+    display: none;
   }
 
   .x {
@@ -131,6 +130,7 @@ svg {
     font-size: 50px;
     font-style: normal;
     stroke: none;
+    fill: var(--color-primary);
     text-transform: uppercase;
   }
 }
