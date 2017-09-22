@@ -9,7 +9,7 @@ const Avatar = ({ status, width, height, reviewerLetter }) => {
     <svg
       className={classes[classValue]}
       xmlns="http://www.w3.org/2000/svg"
-      viewbox={`0 0 ${width ? width + 5 : '105'} ${height ? height : '70'}`}
+      viewBox={`0 0 ${width ? width + 5 : '105'} ${height ? height : '70'}`}
       width={width ? width : '100'}
       height={height ? height : '70'}
     >
