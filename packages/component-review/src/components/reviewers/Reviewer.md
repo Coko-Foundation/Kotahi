@@ -7,23 +7,20 @@ const user = () => ({
     fullname: faker.name.findName(),
     email: faker.internet.email()
 });
-const statusFactory = () => {
-  const statuses = ['Accepted', 'Pending', 'Declined']
-  return statuses[Math.floor(Math.random() * statuses.length)]
-};
-const dateFactory = () => {
-  const options = { year: 'numeric', month: 'long', day: 'numeric' }
-  const date = new Date()
-  return date.toLocaleDateString('en-US', options)
-};
-const reviewer = {
-    projectReviewer: faker.random.uuid(),
-    _user: user(),
-    status: statusFactory(),
-    addedOn: dateFactory() 
+
+const reviewerFactory = () => {
+    const options = { year: 'numeric', month: 'long', day: 'numeric' }
+    const date = faker.date.recent()
+
+    return {
+      _user: user(),
+      status: faker.random.arrayElement(['Accepted', 'Pending', 'Declined', 'Sumbitted']),
+      addedOn: date.toLocaleDateString('en-US', options),
+      projectReviewer: faker.random.arrayElement([1,2,3])
+    }
 };
 
 <Reviewer
-  reviewer={reviewer}
+  reviewer={reviewerFactory()}
   removeReviewer={value => console.log(value)}/>
 ```
