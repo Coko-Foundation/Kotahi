@@ -14,7 +14,7 @@ const Reviewer = ({ reviewer, removeReviewer }) => {
         <div>
           <Avatar status={reviewer.status} width="100" height="70" />
           <div className={classes.fullname}>{reviewer._user.fullname}</div>
-          <div className={classes.date}>{`added on ${reviewer.addedOn}`}</div>
+          <div className={classes.date}>added on {reviewer.addedOn}</div>
           {interactionsArea}
         </div>
       )}
