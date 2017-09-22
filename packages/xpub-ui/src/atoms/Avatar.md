@@ -1,4 +1,4 @@
-A file attached to a note.
+A general purpose Avatar element.
 
 ```js
 const statusFactory = () => {
