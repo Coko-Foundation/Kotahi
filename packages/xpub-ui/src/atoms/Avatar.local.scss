@@ -1,6 +1,14 @@
 figure {
-  width: 6em;
+  width: auto;
   margin: 0 auto 2px;
+  text-align: center;
+}
+
+svg {
+  max-width: 100%;
+  width: auto;
+  max-height: 100vh;
+  height: auto;
 }
 
 .default {
