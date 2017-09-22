@@ -5,4 +5,14 @@
   box-shadow: 0 1px #aaa;
   margin-bottom: 10px;
   margin-right: 10px;
+  font-family: (--font-reviewer);
+}
+
+.fullname {
+  font-size: 18px;
+}
+
+.date {
+  font-style: italic;
+  font-size: 16px;
 }
