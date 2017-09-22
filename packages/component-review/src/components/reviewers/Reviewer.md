@@ -1,4 +1,4 @@
-A grid block that displays information about a reviewer of a version.
+A visual representation of the Reviewer of the system.
 
 ```js
 const user = () => ({
