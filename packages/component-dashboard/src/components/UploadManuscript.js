@@ -4,6 +4,8 @@ import classnames from 'classnames'
 import { Icon } from 'xpub-ui'
 import classes from './UploadManuscript.local.scss'
 
+const isIdle = conversion => !(conversion.converting || conversion.complete || conversion.error)
+
 const UploadManuscript = ({ uploadManuscript, conversion }) => (
   <Dropzone
     onDrop={uploadManuscript}
@@ -11,6 +13,7 @@ const UploadManuscript = ({ uploadManuscript, conversion }) => (
     className={classes.dropzone}>
     <div className={classes.root}>
       <div className={classnames({
+        [classes.idle]: isIdle(conversion),
         [classes.converting]: conversion.converting,
         [classes.complete]: conversion.complete
       })}>
