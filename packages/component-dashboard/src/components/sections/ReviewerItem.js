@@ -12,7 +12,7 @@ const ReviewerItem = ({ project, version, reviewer, reviewerResponse }) => (
   <div className={classes.root}>
     <div className={classes.main}>
       <div className={classes.title}>
-        {project.title || 'Untitled'}
+        <span>{project.title || 'Untitled'}</span>
       </div>
 
       {reviewer.status === 'accepted' && (

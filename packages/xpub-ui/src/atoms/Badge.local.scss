@@ -1,18 +1,25 @@
 .root {
   display: inline-flex;
   align-items: center;
-  border: 1px solid #eee;
-  border-radius: 2px;
+  background: lightgrey;
+  background: linear-gradient(#fff 0, #fff 1.1em, grey 1.1em, grey 1.15em, #fff 1.15em, #fff 2em);
   font-size: 0.8rem;
+  margin-right: 1em;
+  padding-bottom: 1em;
+  color: inherit;
 }
 
 .count {
-  background: white;
-  padding: 5px;
+  border-radius: 50%;
+  text-align: center;
+  font-weight: 600;
+  color: grey;
+  font-size: 1em;
+  padding-right: 0.5em;
 }
 
 .label {
   display: inline-block;
-  background: #eee;
-  padding: 5px;
+  padding: 0;
+  text-shadow: 0.05em 0.05em 0 #fff, -0.05em -0.05em 0 #fff, -0.05em 0.05em 0 #fff, 0.05em -0.05em 0 #fff;
 }
