@@ -31,16 +31,17 @@
       outline: 1px solid transparent;
     }
 
-    &::after {
-      content: "Saved!";
-      top: 20%;
-      left: 115%;
-      position: absolute;
-      background: var(--color-primary);
-      color: white;
-      padding: 0.1em 0.3em;
-      opacity: 0;
-    }
+    // this will be added to the button that need a feedback to the user. 
+    // &::after {
+    //   content: "Saved!";
+    //   top: 20%;
+    //   left: 115%;
+    //   position: absolute;
+    //   background: var(--color-primary);
+    //   color: white;
+    //   padding: 0.1em 0.3em;
+    //   opacity: 0;
+    // }
 
     &:active {
       transform: scale(0.8);

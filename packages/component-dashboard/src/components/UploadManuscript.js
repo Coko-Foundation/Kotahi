@@ -15,10 +15,11 @@ const UploadManuscript = ({ uploadManuscript, conversion }) => (
       <div className={classnames({
         [classes.idle]: isIdle(conversion),
         [classes.converting]: conversion.converting,
+        [classes.error]: conversion.error,
         [classes.complete]: conversion.complete
       })}>
         <span className={classes.icon}>
-          <Icon color="cornflowerblue">
+          <Icon color="var(--color-primary)">
             {conversion.complete ? 'check_circle' : 'plus_circle'}
           </Icon>
         </span>

@@ -12,7 +12,7 @@ const OwnerItem = ({ project, version, deleteProject }) => (
 
     <div className={classes.main}>
       <div className={classes.title}>
-        {project.title || 'Untitled'}
+        <span>{project.title || 'Untitled'}</span>
       </div>
 
       <div className={classes.links}>
