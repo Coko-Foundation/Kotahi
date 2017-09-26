@@ -21,23 +21,28 @@
 .root:hover .idle {
   circle {
     fill: var(--color-primary);
-    stroke: white;
+    stroke: var(--color-primary);
   }
 
-  path {
+  line {
     stroke: white;
   }
 }
 
 .converting {
+  &:hover {
+    cursor: wait;
+  }
+
   line {
-    animation: spin 0.5s infinite linear;
+    stroke-linejoin: round;
   }
 
   circle {
-    stroke-dashoffset: -10;
-    stroke-dasharray: 50;
-    animation: spin 3s infinite linear;
+    stroke-dashoffset: 0;
+    stroke-dasharray: 16;
+    animation: spin 2s infinite linear;
+    stroke-linejoin: round;
   }
 }
 
