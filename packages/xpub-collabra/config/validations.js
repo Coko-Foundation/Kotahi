@@ -2,6 +2,7 @@ const Joi = require('joi')
 
 module.exports = {
   collection: { // project
+    collectionType: Joi.string(),
     title: Joi.string(),
     status: Joi.string(),
     reviewers: Joi.object(),
