@@ -42,6 +42,7 @@
     "*.scss": "stylelint"
   },
   "engines": {
-    "node": ">=7.9"
+    "node": ">=7.9 <8",
+    "npm": ">=4.2 <5"
   }
 }

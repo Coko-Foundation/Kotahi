@@ -55,7 +55,7 @@ export const uploadManuscript = acceptedFiles => dispatch => {
         const title = extractTitle(source) || generateTitle(inputFile.name)
 
         return dispatch(actions.createCollection({
-          type: 'project',
+          collectionType: 'project',
           title
         })).then(({collection}) => {
           if (!collection.id) {

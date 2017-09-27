@@ -48,15 +48,17 @@ export default compose(
     (state, ownProps) => {
       const project = selectCollection(state, ownProps.params.project)
 
-      const fragments = filter(state.fragments, fragment => {
-        return project.fragments.includes(fragment.id)
-      })
+      // const fragments = filter(state.fragments, fragment => {
+      //   return project.fragments.includes(fragment.id)
+      // })
+
+      const fragments = project.fragments.map(id => state.fragments[id])
 
       return {
         project,
-        versions: filter(fragments, { type: 'version' }),
-        reviews: filter(fragments, { type: 'review' }),
-        decisions: filter(fragments, { type: 'decisions' }),
+        versions: filter(fragments, { fragmentType: 'version' }),
+        reviews: filter(fragments, { fragmentType: 'review' }),
+        decisions: filter(fragments, { fragmentType: 'decisions' }),
         // version: selectFragment(state, ownProps.params.version),
         // decision: selectFragment(state, ownProps.params.decision)
       }

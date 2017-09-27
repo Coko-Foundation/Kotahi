@@ -35,7 +35,7 @@ const OwnerItem = ({ project, version, deleteProject }) => (
 
       <div className={classes.actions}>
         <div className={classes.action}>
-          <button onClick={() => deleteProject({id: project.id})}>x</button>
+          <button onClick={() => deleteProject(project)}>x</button>
         </div>
       </div>
     </div>
