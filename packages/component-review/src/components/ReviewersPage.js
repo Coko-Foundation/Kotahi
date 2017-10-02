@@ -1,12 +1,12 @@
-import { filter, find } from 'lodash'
+import { find } from 'lodash'
 import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
-import actions from 'pubsweet-client/src/actions'
+import { actions } from 'pubsweet-client'
 import { ConnectPage } from 'xpub-connect'
 import { selectCollection, selectFragment } from 'xpub-selectors'
 import Reviewers from './reviewers/Reviewers'
 import ReviewerFormContainer from './reviewers/ReviewerFormContainer'
-import ReviewerContainer from './reviewers/ReviewerContainer'
+import ReviewContainer from './reviewers/ReviewContainer'
 
 export default compose(
   ConnectPage(({ params }) => [
@@ -21,30 +21,32 @@ export default compose(
       const project = selectCollection(state, ownProps.params.project)
       const version = selectFragment(state, ownProps.params.version)
 
-      const fragments = project.fragments.map(id => state.fragments[id])
-
-      const versions = filter(fragments, { fragmentType: 'version' })
-      const projectReviewers = filter(fragments, { fragmentType: 'projectReviewer' })
-      const reviewers = filter(fragments, { fragmentType: 'reviewer' })
+      const versions = project.fragments.map(id => state.fragments[id])
 
       const reviewerUsers = state.users.users
       // const reviewerUsers = filter(state.users.users, { reviewer: true })
 
       // populate the reviewer user
-      reviewers.forEach(reviewer => {
-        const projectReviewer = find(projectReviewers, { id: reviewer.projectReviewer })
+      versions.forEach(version => {
+        version.reviews.forEach(review => {
+          const reviewer = find(project.reviewers, {
+            id: review.reviewer
+          })
 
-        if (projectReviewer) {
-          reviewer._user = find(reviewerUsers, { id: projectReviewer.user })
-        }
+          if (reviewer) {
+            reviewer._user = find(reviewerUsers, {
+              id: reviewer.user
+            })
+
+            review._reviewer = reviewer
+          }
+        })
       })
 
       return {
         project,
         version,
         versions,
-        projectReviewers,
-        reviewers,
         reviewerUsers,
         // teams: state.teams,
       }
@@ -52,6 +54,6 @@ export default compose(
   ),
   withProps({
     ReviewerForm: ReviewerFormContainer,
-    Reviewer: ReviewerContainer
+    Review: ReviewContainer
   })
 )(Reviewers)

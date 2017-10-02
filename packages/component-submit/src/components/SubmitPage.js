@@ -1,28 +1,26 @@
-import { pick } from 'lodash'
+import { find, pick } from 'lodash'
 import { compose, withProps, withState, withHandlers } from 'recompose'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 import { reduxForm, SubmissionError } from 'redux-form'
-import actions from 'pubsweet-client/src/actions'
+import { actions } from 'pubsweet-client'
 import uploadFile from 'xpub-upload'
 import { ConnectPage } from 'xpub-connect'
-import { selectCollection, selectFragment } from 'xpub-selectors'
+import { selectCollection, selectFragment, selectVersion } from 'xpub-selectors'
 import Submit from './Submit'
 
-const onSubmit = (values, dispatch, props) => {
+const onSubmit = (values, dispatch, { journal, project, version }) => {
   console.log('submit', values)
 
-  return dispatch(actions.updateFragment(props.project, {
-    id: props.version.id,
-    submitted: new Date(),
-    ...values
+  Object.assign(version, values, {
+    submitted: new Date()
+  })
+
+  return dispatch(actions.updateFragment(journal, {
+    id: project.id,
+    versions: project.versions
   })).then(() => {
-    return dispatch(actions.updateCollection({
-      id: props.project.id,
-      status: 'submitted'
-    }))
-  }).then(() => {
-    dispatch(push(`/`))
+    dispatch(push('/'))
   }).catch(error => {
     if (error.validationErrors) {
       throw new SubmissionError()
@@ -31,13 +29,16 @@ const onSubmit = (values, dispatch, props) => {
 }
 
 // TODO: redux-form doesn't have an onBlur handler(?)
-const onBlur = (values, dispatch, props) => {
-  console.log('change', values)
+const onBlur = (values, dispatch, { journal, project, version }) => {
+  console.log('blur', values)
 
-  return dispatch(actions.updateFragment(props.project, {
-    id: props.version.id,
-    // submitted: false,
-    ...values
+  Object.assign(version, values, {
+    submitted: new Date()
+  })
+
+  return dispatch(actions.updateFragment(journal, {
+    id: project.id,
+    versions: project.versions
   }))
 
   // TODO: display a notification when saving/saving completes/saving fails
@@ -45,14 +46,17 @@ const onBlur = (values, dispatch, props) => {
 
 export default compose(
   ConnectPage(({ params }) => [
-    actions.getCollection({ id: params.project }),
-    actions.getFragment({ id: params.project }, { id: params.version })
+    actions.getCollection({ id: params.journal }),
+    actions.getFragment({ id: params.project })
   ]),
   connect(
-    (state, ownProps) => ({
-      project: selectCollection(state, ownProps.params.project),
-      version: selectFragment(state, ownProps.params.version)
-    }),
+    (state, { params }) => {
+      const journal = selectCollection(state, params.journal)
+      const project = selectFragment(state, params.project)
+      const version = selectVersion(project, params.version)
+
+      return { journal, project, version }
+    },
     {
       uploadFile
     }

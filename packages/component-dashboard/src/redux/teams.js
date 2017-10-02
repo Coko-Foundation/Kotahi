@@ -1,4 +1,4 @@
-import actions from 'pubsweet-client/src/actions'
+import { actions } from 'pubsweet-client'
 
 export const addUserToTeam = ({ team, teamTypeName, name, group, project, user }) => dispatch => {
   if (team) {
