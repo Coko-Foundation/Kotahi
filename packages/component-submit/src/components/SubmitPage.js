@@ -1,4 +1,4 @@
-import { find, pick } from 'lodash'
+import { pick } from 'lodash'
 import { compose, withProps, withState, withHandlers } from 'recompose'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
@@ -6,21 +6,23 @@ import { reduxForm, SubmissionError } from 'redux-form'
 import { actions } from 'pubsweet-client'
 import uploadFile from 'xpub-upload'
 import { ConnectPage } from 'xpub-connect'
-import { selectCollection, selectFragment, selectVersion } from 'xpub-selectors'
+import { selectCollection, selectFragment } from 'xpub-selectors'
 import Submit from './Submit'
 
-const onSubmit = (values, dispatch, { journal, project, version }) => {
+const onSubmit = (values, dispatch, props) => {
   console.log('submit', values)
 
-  Object.assign(version, values, {
-    submitted: new Date()
-  })
-
-  return dispatch(actions.updateFragment(journal, {
-    id: project.id,
-    versions: project.versions
+  return dispatch(actions.updateFragment(props.project, {
+    id: props.version.id,
+    submitted: new Date(),
+    ...values
   })).then(() => {
-    dispatch(push('/'))
+    return dispatch(actions.updateCollection({
+      id: props.project.id,
+      status: 'submitted'
+    }))
+  }).then(() => {
+    dispatch(push(`/`))
   }).catch(error => {
     if (error.validationErrors) {
       throw new SubmissionError()
@@ -29,16 +31,13 @@ const onSubmit = (values, dispatch, { journal, project, version }) => {
 }
 
 // TODO: redux-form doesn't have an onBlur handler(?)
-const onBlur = (values, dispatch, { journal, project, version }) => {
+const onBlur = (values, dispatch, props) => {
   console.log('blur', values)
 
-  Object.assign(version, values, {
-    submitted: new Date()
-  })
-
-  return dispatch(actions.updateFragment(journal, {
-    id: project.id,
-    versions: project.versions
+  return dispatch(actions.updateFragment(props.project, {
+    id: props.version.id,
+    // submitted: false,
+    ...values
   }))
 
   // TODO: display a notification when saving/saving completes/saving fails
@@ -46,16 +45,15 @@ const onBlur = (values, dispatch, { journal, project, version }) => {
 
 export default compose(
   ConnectPage(({ params }) => [
-    actions.getCollection({ id: params.journal }),
-    actions.getFragment({ id: params.project })
+    actions.getCollection({ id: params.project }),
+    actions.getFragment({ id: params.project }, { id: params.version })
   ]),
   connect(
     (state, { params }) => {
-      const journal = selectCollection(state, params.journal)
-      const project = selectFragment(state, params.project)
-      const version = selectVersion(project, params.version)
+      const project = selectCollection(state, params.project)
+      const version = selectFragment(project, params.version)
 
-      return { journal, project, version }
+      return { project, version }
     },
     {
       uploadFile

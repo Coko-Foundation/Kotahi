@@ -1,4 +1,3 @@
-import { find } from 'lodash'
 import { compose, withHandlers } from 'recompose'
 import { connect } from 'react-redux'
 import { actions } from 'pubsweet-client'
@@ -8,34 +7,28 @@ import Manuscript from './Manuscript'
 
 export default compose(
   ConnectPage(({ params }) => [
-    actions.getCollection({ id: params.journal }),
-    actions.getFragment({ id: params.project }),
+    actions.getCollection({ id: params.project }),
+    actions.getFragment({ id: params.project }, { id: params.version })
   ]),
   connect(
     (state, { params }) => {
       const currentUser = selectCurrentUser(state)
-      const journal = selectCollection(state, params.journal)
-      const project = selectFragment(state, params.project)
-      const version = selectVersion(project, params.version)
+      const project = selectCollection(state, params.project)
+      const version = selectFragment(state, params.version)
 
-      const content = version.manuscript.source // TODO: load from a file
+      const content = version.source // TODO: load from a file
 
-      return { currentUser, journal, project, version, content }
+      return { currentUser, project, version, content }
     },
     {
       fileUpload: actions.fileUpload,
     }
   ),
   withHandlers({
-    updateManuscript: ({ project, version, journal }) => data => {
-      version.manuscript = {
-        ...version.manuscript,
+    updateManuscript: ({ project, version }) => data => {
+      return actions.updateFragment(project, {
+        id: version.id,
         ...data
-      }
-
-      return actions.updateFragment(journal, {
-        id: project.id,
-        versions: project.versions
       })
     }
   })
