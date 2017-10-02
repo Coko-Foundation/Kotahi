@@ -7,7 +7,7 @@ import classes from './DecisionReviews.local.scss'
 
 const DecisionReviews = ({ journal, version }) => (
   <div>
-    {version.reviews && version.reviews
+    {version.reviewers && version.reviewers
       .filter(review => review.events.reviewed)
       .map((review, index) => (
       <div className={classes.review} key={review.id}>

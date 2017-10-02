@@ -11,7 +11,13 @@ const Reviewer = require('./Reviewer').default;
 const ReviewerForm = require('./ReviewerForm').default;
 
 const project = {
-  id: faker.random.uuid()
+  id: faker.random.uuid(),
+  reviewers: [
+    {
+      id: faker.random.uuid(),
+      user: faker.random.uuid(),
+    }
+  ]
 };
 
 const version = {
@@ -34,13 +40,6 @@ const reviewers = [
       ordinal: null
     }
   },
-];
-
-const projectReviewers = [
-  {
-    id: faker.random.uuid(),
-    user: faker.random.uuid(),
-  }
 ];
 
 const reviewerUsers = [
@@ -98,8 +97,7 @@ const ReviewerContainer = withHandlers({
   Reviewer={ReviewerContainer}
   project={project}
   version={version}
-  projectReviewers={projectReviewers}
-  reviewerUsers={reviewerUsers}
   reviewers={state.reviewers}
+  reviewerUsers={reviewerUsers}
 />
 ```

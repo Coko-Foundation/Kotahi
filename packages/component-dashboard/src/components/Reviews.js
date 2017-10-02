@@ -16,6 +16,6 @@ const Reviews = ({ reviews }) => (
 
 export default compose(
   withProps(props => ({
-    reviews: groupBy(props.version.reviews, 'status')
+    reviews: groupBy(props.version.reviewers, 'status')
   }))
 )(Reviews)

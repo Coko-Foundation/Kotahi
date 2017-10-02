@@ -20,40 +20,27 @@ export default compose(
     (state, ownProps) => {
       const project = selectCollection(state, ownProps.params.project)
       const version = selectFragment(state, ownProps.params.version)
-
-      const versions = project.fragments.map(id => state.fragments[id])
+      const reviewers = version.reviewers
 
       const reviewerUsers = state.users.users
       // const reviewerUsers = filter(state.users.users, { reviewer: true })
 
       // populate the reviewer user
-      versions.forEach(version => {
-        if (version.reviews) {
-          version.reviews.forEach(review => {
-            if (review) {
-              const reviewer = find(project.reviewers, {
-                id: review.reviewer
-              })
+      reviewers.forEach(reviewer => {
+        const projectReviewer = find(project.reviewers, {
+          user: reviewer.user
+        })
 
-              if (reviewer) {
-                reviewer._user = find(reviewerUsers, {
-                  id: reviewer.user
-                })
-
-                review._reviewer = reviewer
-              }
-            }
+        if (projectReviewer) {
+          reviewer._user = find(reviewerUsers, {
+            id: projectReviewer.user
           })
+
+          reviewer._reviewer = projectReviewer
         }
       })
 
-      return {
-        project,
-        version,
-        versions,
-        reviewerUsers,
-        // teams: state.teams,
-      }
+      return { project, version, reviewers, reviewerUsers }
     }
   ),
   withProps({

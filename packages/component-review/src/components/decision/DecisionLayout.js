@@ -9,7 +9,7 @@ import ReviewMetadata from '../metadata/ReviewMetadata'
 import Decision from './Decision'
 import Tabs from '../tabs/Tabs'
 
-const DecisionLayout = ({ project, versions, reviewer, valid, handleSubmit, uploadFile }) => {
+const DecisionLayout = ({ project, versions, valid, handleSubmit, uploadFile }) => {
   const decisionSections = []
   const editorSections = []
 

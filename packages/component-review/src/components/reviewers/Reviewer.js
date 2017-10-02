@@ -14,7 +14,7 @@ const Reviewer = ({ reviewer, removeReviewer }) => (
       status={reviewer.status}
       width={100}
       height={70}
-      reviewerLetter={ordinalLetter(reviewer._projectReviewer.ordinal)}
+      reviewerLetter={ordinalLetter(reviewer._reviewer.ordinal)}
     />
     <div className={classes.name}>
       {reviewer._user.username}

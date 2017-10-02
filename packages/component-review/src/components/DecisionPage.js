@@ -57,7 +57,6 @@ export default compose(
       return {
         project,
         versions: filter(fragments, { fragmentType: 'version' }),
-        reviews: filter(fragments, { fragmentType: 'review' }),
         decisions: filter(fragments, { fragmentType: 'decisions' }),
         // version: selectFragment(state, ownProps.params.version),
         // decision: selectFragment(state, ownProps.params.decision)

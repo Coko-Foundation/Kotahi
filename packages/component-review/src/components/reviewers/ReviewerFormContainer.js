@@ -18,7 +18,7 @@ const addProjectReviewer = (props, user) => {
 
   return props.updateProject({
     id: props.project.id,
-    reviewers: [].concat(props.project.reviewers, reviewer)
+    reviewers: (props.project.reviewers || []).concat(reviewer)
   }).then(() => reviewer)
 }
 
@@ -33,7 +33,7 @@ const addReviewer = (props, reviewer) => {
 
   return props.updateVersion(props.project, {
     id: props.version.id,
-    reviews: [].concat(props.version.reviews, review)
+    reviewers: (props.version.reviewers || []).concat(review)
   }).then(() => review)
 }
 

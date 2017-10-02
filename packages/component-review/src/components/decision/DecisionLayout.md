@@ -34,7 +34,7 @@ const versions = [
         
       ]
     },
-    reviews: [
+    reviewers: [
       {
         id: faker.random.uuid(),
         reviewer: 'reviewer-reviewed',
@@ -69,7 +69,7 @@ const versions = [
               
             ]
           },
-      reviews: [
+      reviewers: [
         {
             id: faker.random.uuid(),
             reviewer: 'reviewer-reviewed',
@@ -104,7 +104,7 @@ const versions = [
                 
               ]
             },
-        reviews: [
+        reviewers: [
           {
               id: faker.random.uuid(),
               reviewer: 'reviewer-reviewed',
