@@ -62,7 +62,10 @@ const ReviewLayout = ({ project, versions, reviewer, valid, handleSubmit, upload
 
     editorSections.push({
       key,
-      content: <SimpleEditor content={version.source} readOnly={true}/>
+      content: <SimpleEditor
+        layout="bare"
+        content={version.source}
+        readOnly={true}/>
     })
   }
 
