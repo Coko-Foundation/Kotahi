@@ -2,7 +2,7 @@ import { compose, withHandlers } from 'recompose'
 import { connect } from 'react-redux'
 import { actions } from 'pubsweet-client'
 import { ConnectPage } from 'xpub-connect'
-import { selectCurrentUser, selectCollection, selectFragment, selectVersion } from 'xpub-selectors'
+import { selectCurrentUser, selectCollection, selectFragment } from 'xpub-selectors'
 import Manuscript from './Manuscript'
 
 export default compose(

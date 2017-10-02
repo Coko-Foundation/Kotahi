@@ -5,24 +5,25 @@ import { connect } from 'react-redux'
 import { actions } from 'pubsweet-client'
 import ReviewerForm from './ReviewerForm'
 
-const getReviewer = (props, user) => {
+const getProjectReviewer = (props, user) => {
   const reviewer = find(props.project.reviewers, { user: user.id })
 
-  return reviewer ? Promise.resolve(reviewer) : addReviewer(props, user)
+  return reviewer ? Promise.resolve(reviewer) : addProjectReviewer(props, user)
 }
 
-const addReviewer = (props, user) => {
+const addProjectReviewer = (props, user) => {
   const reviewer = {
     user: user.id
   }
 
-  return props.updateProject(props.project, {
+  return props.updateProject({
+    id: props.project.id,
     reviewers: [].concat(props.project.reviewers, reviewer)
   }).then(() => reviewer)
 }
 
-const addInvitation = (props, reviewer) => {
-  const invitation = {
+const addReviewer = (props, reviewer) => {
+  const review = {
     reviewer: reviewer.id,
     status: 'invited',
     events: {
@@ -32,19 +33,19 @@ const addInvitation = (props, reviewer) => {
 
   return props.updateVersion(props.project, {
     id: props.version.id,
-    invitations: [].concat(props.version.invitations, invitation)
-  }).then(() => invitation)
+    reviews: [].concat(props.version.reviews, review)
+  }).then(() => review)
 }
 
 const handleSubmit = props => reset => values => {
   // TODO: create a user account if values.user.id is null
 
-  return getReviewer(props, values.user).then(reviewer => {
-    if (some(props.version.invitations, { reviewer: reviewer.id })) {
+  return getProjectReviewer(props, values.user).then(reviewer => {
+    if (some(props.version.reviewers, { reviewer: reviewer.id })) {
       throw new SubmissionError('This reviewer has already been added')
     }
 
-    return addInvitation(props, reviewer)
+    return addReviewer(props, reviewer)
   }).then(() => reset())
 }
 

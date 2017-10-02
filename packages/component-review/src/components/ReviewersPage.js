@@ -6,7 +6,7 @@ import { ConnectPage } from 'xpub-connect'
 import { selectCollection, selectFragment } from 'xpub-selectors'
 import Reviewers from './reviewers/Reviewers'
 import ReviewerFormContainer from './reviewers/ReviewerFormContainer'
-import ReviewContainer from './reviewers/ReviewContainer'
+import ReviewerContainer from './reviewers/ReviewerContainer'
 
 export default compose(
   ConnectPage(({ params }) => [
@@ -28,19 +28,23 @@ export default compose(
 
       // populate the reviewer user
       versions.forEach(version => {
-        version.reviews.forEach(review => {
-          const reviewer = find(project.reviewers, {
-            id: review.reviewer
+        if (version.reviews) {
+          version.reviews.forEach(review => {
+            if (review) {
+              const reviewer = find(project.reviewers, {
+                id: review.reviewer
+              })
+
+              if (reviewer) {
+                reviewer._user = find(reviewerUsers, {
+                  id: reviewer.user
+                })
+
+                review._reviewer = reviewer
+              }
+            }
           })
-
-          if (reviewer) {
-            reviewer._user = find(reviewerUsers, {
-              id: reviewer.user
-            })
-
-            review._reviewer = reviewer
-          }
-        })
+        }
       })
 
       return {
@@ -54,6 +58,6 @@ export default compose(
   ),
   withProps({
     ReviewerForm: ReviewerFormContainer,
-    Review: ReviewContainer
+    Reviewer: ReviewerContainer
   })
 )(Reviewers)

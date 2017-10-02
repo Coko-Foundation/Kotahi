@@ -51,7 +51,7 @@ export default compose(
   connect(
     (state, { params }) => {
       const project = selectCollection(state, params.project)
-      const version = selectFragment(project, params.version)
+      const version = selectFragment(state, params.version)
 
       return { project, version }
     },
