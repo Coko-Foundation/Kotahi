@@ -5,7 +5,7 @@
   box-shadow: 0 1px #aaa;
   margin-bottom: 10px;
   margin-right: 10px;
-  font-family: (--font-reviewer);
+  font-family: var(--font-reviewer);
 }
 
 .fullname {
