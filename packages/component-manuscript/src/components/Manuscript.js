@@ -5,21 +5,17 @@ import classes from './Manuscript.local.scss'
 
 // TODO: convert user teams to roles (see SimpleEditorWrapper)?
 
-const Manuscript = ({ project, version, currentUser, fileUpload, updateVersion }) => (
+const Manuscript = ({ content, currentUser, fileUpload, updateManuscript }) => (
   <SimpleEditor
     classes={classes.fullscreen}
-    content={version.source}
+    content={content}
     user={currentUser}
     fileUpload={fileUpload}
     history={browserHistory}
     readOnly={false}
     trackChanges={false}
-    update={data => (
-      updateVersion(project, { id: version.id, ...data })
-    )}
-    onSave={source => (
-      updateVersion(project, { id: version.id, source })
-    )}
+    update={data => updateManuscript(data)}
+    onSave={source => updateManuscript({ source })}
   />
 )
 
