@@ -22,12 +22,18 @@ const reviewers = [
   {
     id: faker.random.uuid(),
     reviewer: faker.random.uuid(),
+    events: {
+      invited: faker.date.recent(),
+    },
+    status: 'invited',
     _user: {
        id: faker.random.uuid(),
        username: faker.internet.userName(),
-       email: faker.internet.email()
+    },
+    _projectReviewer: {
+      ordinal: null
     }
-  }
+  },
 ];
 
 const projectReviewers = [
@@ -51,19 +57,24 @@ const reviewerUsers = [
 ];
 
 initialState = {
-  reviewers: []
+  reviewers
 };
 
 const ReviewerFormContainer = compose(
   reduxForm({ 
     form: 'reviewers',
     onSubmit: reset => ({ user }) => {
-      console.log(user)
       setState({ 
         reviewers: state.reviewers.concat({
           id: faker.random.uuid(),
           reviewer: faker.random.uuid(),
-          _user: user
+          events: {
+            invited: (new Date()).toISOString(),
+          },
+          _user: user,
+          _projectReviewer: {
+            ordinal: null
+          }
         }) 
       })
       

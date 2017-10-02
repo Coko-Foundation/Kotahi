@@ -1,26 +1,87 @@
-A visual representation of the Reviewer of the system.
+A reviewer who has been invited:
 
 ```js
-const user = () => ({
-    id: faker.random.uuid(),
-    username: faker.internet.userName(),
-    fullname: faker.name.findName(),
-    email: faker.internet.email()
-});
-
-const reviewerFactory = () => {
-    const options = { year: 'numeric', month: 'long', day: 'numeric' }
-    const date = faker.date.recent()
-
-    return {
-      _user: user(),
-      status: faker.random.arrayElement(['Accepted', 'Pending', 'Declined', 'Sumbitted']),
-      addedOn: date.toLocaleDateString('en-US', options),
-      projectReviewer: faker.random.arrayElement([1,2,3])
-    }
+const reviewer = {
+  status: 'invited',
+  events: {
+    invited: faker.date.recent(),    
+  },
+  _projectReviewer: {
+    ordinal: null
+  },
+  _user: {
+     username: faker.internet.userName(),
+  },
 };
 
 <Reviewer
-  reviewer={reviewerFactory()}
-  removeReviewer={value => console.log(value)}/>
+  reviewer={reviewer}
+  removeReviewer={() => console.log('remove')}/>
+```
+
+A reviewer who has accepted their invitation:
+
+```js
+const reviewer = {
+  status: 'accepted',
+  events: {
+    invited: faker.date.recent(),
+    accepted: faker.date.recent(),
+  },
+  _projectReviewer: {
+    ordinal: null
+  },
+  _user: {
+     username: faker.internet.userName(),
+  },
+};
+
+<Reviewer
+  reviewer={reviewer}
+  removeReviewer={() => console.log('remove')}/>
+```
+
+A reviewer who has declined their invitation:
+
+```js
+const reviewer = {
+  status: 'declined',
+  events: {
+    invited: faker.date.recent(),
+    declined: faker.date.recent(),
+  },
+  _projectReviewer: {
+    ordinal: null
+  },
+  _user: {
+     username: faker.internet.userName(),
+  },
+};
+
+<Reviewer
+  reviewer={reviewer}
+  removeReviewer={() => console.log('remove')}/>
+```
+
+A reviewer who has submitted their review:
+
+```js
+const reviewer = {
+  status: 'reviewed',
+  events: {
+    invited: faker.date.recent(),
+    accepted: faker.date.recent(),
+    reviewed: faker.date.recent(),
+  },
+  _projectReviewer: {
+    ordinal: faker.random.number({ max: 3 })
+  },
+  _user: {
+     username: faker.internet.userName(),
+  },
+};
+
+<Reviewer
+  reviewer={reviewer}
+  removeReviewer={() => console.log('remove')}/>
 ```

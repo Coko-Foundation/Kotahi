@@ -26,7 +26,7 @@ const addInvitation = (props, reviewer) => {
     reviewer: reviewer.id,
     status: 'invited',
     events: {
-      invited: new Date()
+      invited: (new Date()).toString()
     }
   }
 
