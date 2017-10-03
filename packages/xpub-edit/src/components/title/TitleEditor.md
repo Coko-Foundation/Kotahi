@@ -1,4 +1,4 @@
-An editor for an article"s title, with minimal formatting.
+An editor for an article's title, with minimal formatting.
 
 ```js
 const value = faker.lorem.sentence(15);

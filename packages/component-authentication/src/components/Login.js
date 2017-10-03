@@ -11,13 +11,13 @@ const PasswordInput = props => (
   <TextField label="Password" {...props.input} type="password"/>
 )
 
-const Login = ({ error, handleSubmit }) => (
+const Login = ({ errorMessage, handleSubmit }) => (
   <div className={classes.root}>
     <div className={classes.title}>
       Login
     </div>
 
-    {error && <div className={classes.error}>{error.message}</div>}
+    {errorMessage && <div className={classes.error}>{errorMessage}</div>}
 
     <form onSubmit={handleSubmit} className={classes.form}>
       <Field name="username" component={UsernameInput}/>

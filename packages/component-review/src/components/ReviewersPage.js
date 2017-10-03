@@ -1,7 +1,7 @@
-import { filter, find } from 'lodash'
+import { find } from 'lodash'
 import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
-import actions from 'pubsweet-client/src/actions'
+import { actions } from 'pubsweet-client'
 import { ConnectPage } from 'xpub-connect'
 import { selectCollection, selectFragment } from 'xpub-selectors'
 import Reviewers from './reviewers/Reviewers'
@@ -20,34 +20,27 @@ export default compose(
     (state, ownProps) => {
       const project = selectCollection(state, ownProps.params.project)
       const version = selectFragment(state, ownProps.params.version)
-
-      const fragments = project.fragments.map(id => state.fragments[id])
-
-      const versions = filter(fragments, { fragmentType: 'version' })
-      const projectReviewers = filter(fragments, { fragmentType: 'projectReviewer' })
-      const reviewers = filter(fragments, { fragmentType: 'reviewer' })
+      const reviewers = version.reviewers
 
       const reviewerUsers = state.users.users
       // const reviewerUsers = filter(state.users.users, { reviewer: true })
 
       // populate the reviewer user
       reviewers.forEach(reviewer => {
-        const projectReviewer = find(projectReviewers, { id: reviewer.projectReviewer })
+        const projectReviewer = find(project.reviewers, {
+          user: reviewer.user
+        })
 
         if (projectReviewer) {
-          reviewer._user = find(reviewerUsers, { id: projectReviewer.user })
+          reviewer._user = find(reviewerUsers, {
+            id: projectReviewer.user
+          })
+
+          reviewer._reviewer = projectReviewer
         }
       })
 
-      return {
-        project,
-        version,
-        versions,
-        projectReviewers,
-        reviewers,
-        reviewerUsers,
-        // teams: state.teams,
-      }
+      return { project, version, reviewers, reviewerUsers }
     }
   ),
   withProps({

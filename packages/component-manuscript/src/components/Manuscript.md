@@ -1,14 +1,7 @@
 An editor for a manuscript.
 
 ```js
-const project = {
-  
-};
-
-const version = {
-  progress: {},
-  source: '<div><h1>This is an example</h1></div>'
-};
+const content = '<h1>This is a heading</h1><p>This is a paragraph.</p>'
 
 const currentUser = {
   teams: [
@@ -21,9 +14,8 @@ const currentUser = {
 };
 
 <Manuscript 
-  project={project}
-  version={version}
+  content={content}
   currentUser={currentUser}
   fileUpload={data => console.log(data)}
-  updateVersion={(project, version) => console.log(project, version)}/>
+  updateManuscript={data => console.log(data)}/>
 ```

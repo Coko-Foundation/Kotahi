@@ -1,6 +1,6 @@
-import { compose } from 'recompose'
+import { compose, withHandlers } from 'recompose'
 import { connect } from 'react-redux'
-import actions from 'pubsweet-client/src/actions'
+import { actions } from 'pubsweet-client'
 import { ConnectPage } from 'xpub-connect'
 import { selectCurrentUser, selectCollection, selectFragment } from 'xpub-selectors'
 import Manuscript from './Manuscript'
@@ -11,14 +11,25 @@ export default compose(
     actions.getFragment({ id: params.project }, { id: params.version })
   ]),
   connect(
-    (state, ownProps) => ({
-      currentUser: selectCurrentUser(state),
-      project: selectCollection(state, ownProps.params.project),
-      version: selectFragment(state, ownProps.params.version)
-    }),
+    (state, { params }) => {
+      const currentUser = selectCurrentUser(state)
+      const project = selectCollection(state, params.project)
+      const version = selectFragment(state, params.version)
+
+      const content = version.source // TODO: load from a file
+
+      return { currentUser, project, version, content }
+    },
     {
       fileUpload: actions.fileUpload,
-      updateVersion: actions.updateFragment
     }
-  )
+  ),
+  withHandlers({
+    updateManuscript: ({ project, version }) => data => {
+      return actions.updateFragment(project, {
+        id: version.id,
+        ...data
+      })
+    }
+  })
 )(Manuscript)

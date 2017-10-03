@@ -1,6 +1,6 @@
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
-import actions from 'pubsweet-client/src/actions'
+import { actions } from 'pubsweet-client'
 import { ConnectPage } from 'xpub-connect'
 import { selectFragment } from 'xpub-selectors'
 

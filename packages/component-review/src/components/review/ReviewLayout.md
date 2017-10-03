@@ -109,7 +109,7 @@ const reviewer = {
 };
 
 const version = versions[versions.length - 1];
-const review = version.reviews.find(review => review.reviewer === reviewer.id);
+const review = version.reviewers.find(review => review.reviewer === reviewer.id);
 
 const ConnectedReviewLayout= reduxForm({ 
   form: 'review-layout',

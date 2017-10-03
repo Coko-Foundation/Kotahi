@@ -3,9 +3,9 @@ import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 import { reduxForm, SubmissionError } from 'redux-form'
-import actions from 'pubsweet-client/src/actions'
+import { actions } from 'pubsweet-client'
 import { ConnectPage } from 'xpub-connect'
-import { selectCollection, selectFragment } from 'xpub-selectors'
+import { selectCollection } from 'xpub-selectors'
 import uploadFile from 'xpub-upload'
 import DecisionLayout from './decision/DecisionLayout'
 
@@ -57,7 +57,6 @@ export default compose(
       return {
         project,
         versions: filter(fragments, { fragmentType: 'version' }),
-        reviews: filter(fragments, { fragmentType: 'review' }),
         decisions: filter(fragments, { fragmentType: 'decisions' }),
         // version: selectFragment(state, ownProps.params.version),
         // decision: selectFragment(state, ownProps.params.decision)

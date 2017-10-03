@@ -1,4 +1,4 @@
-A form for entering the submission's metadata.
+A form for entering information about the submission.
 
 ```js
 const { reduxForm } = require('redux-form');

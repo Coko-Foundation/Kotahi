@@ -13,7 +13,7 @@ const ReviewLayout = ({ project, versions, reviewer, valid, handleSubmit, upload
   const editorSections = []
 
   versions.forEach(version => {
-    const review = version.reviews.find(review => review.reviewer === reviewer.id)
+    const review = version.reviewers.find(review => review.reviewer === reviewer.id)
 
     if (review && review.events.reviewed) {
       const key = moment(review.events.reviewed).format('YYYY-MM-DD')
@@ -40,7 +40,7 @@ const ReviewLayout = ({ project, versions, reviewer, valid, handleSubmit, upload
   }, [])
 
   const version = versions[versions.length - 1]
-  const review = version.reviews.find(review => review.reviewer === reviewer.id)
+  const review = version.reviewers.find(review => review.reviewer === reviewer.id)
 
   if (!review || !review.submitted) {
     const key = moment().format('YYYY-MM-DD')
@@ -62,7 +62,10 @@ const ReviewLayout = ({ project, versions, reviewer, valid, handleSubmit, upload
 
     editorSections.push({
       key,
-      content: <SimpleEditor content={version.source} readOnly={true}/>
+      content: <SimpleEditor
+        layout="bare"
+        content={version.source}
+        readOnly={true}/>
     })
   }
 

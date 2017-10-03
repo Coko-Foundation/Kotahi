@@ -1,14 +1,13 @@
 import React from 'react'
 import classes from './Reviewers.local.scss'
 
-const Reviewers = ({ ReviewerForm, Reviewer, project, version, reviewers, projectReviewers, reviewerUsers }) => (
+const Reviewers = ({ ReviewerForm, Reviewer, project, version, reviewers, reviewerUsers }) => (
   <div className={classes.root}>
     <div className={classes.form}>
       <ReviewerForm
         project={project}
         version={version}
-        reviewerUsers={reviewerUsers}
-        projectReviewers={projectReviewers}/>
+        reviewerUsers={reviewerUsers}/>
     </div>
 
     {reviewers && (

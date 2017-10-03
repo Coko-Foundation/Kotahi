@@ -5,7 +5,7 @@ module.exports = {
     collectionType: Joi.string(),
     title: Joi.string(),
     status: Joi.string(),
-    reviewers: Joi.object(),
+    reviewers: Joi.array(),
   },
   fragment: { // version, projectReviewer, reviewer
     // version: Joi.number().required(),
@@ -49,6 +49,7 @@ module.exports = {
       fundingAcknowledgement: Joi.string(),
       specialInstructions: Joi.string()
     }),
+    reviewers: Joi.array(),
     lock: Joi.object(),
     fragmentType: Joi.string(), // version, projectReviewer, reviewer
     parentVersion: Joi.string(), // reviewer

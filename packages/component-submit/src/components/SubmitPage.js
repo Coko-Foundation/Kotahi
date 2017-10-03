@@ -3,7 +3,7 @@ import { compose, withProps, withState, withHandlers } from 'recompose'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 import { reduxForm, SubmissionError } from 'redux-form'
-import actions from 'pubsweet-client/src/actions'
+import { actions } from 'pubsweet-client'
 import uploadFile from 'xpub-upload'
 import { ConnectPage } from 'xpub-connect'
 import { selectCollection, selectFragment } from 'xpub-selectors'
@@ -32,7 +32,7 @@ const onSubmit = (values, dispatch, props) => {
 
 // TODO: redux-form doesn't have an onBlur handler(?)
 const onBlur = (values, dispatch, props) => {
-  console.log('change', values)
+  console.log('blur', values)
 
   return dispatch(actions.updateFragment(props.project, {
     id: props.version.id,
@@ -49,10 +49,12 @@ export default compose(
     actions.getFragment({ id: params.project }, { id: params.version })
   ]),
   connect(
-    (state, ownProps) => ({
-      project: selectCollection(state, ownProps.params.project),
-      version: selectFragment(state, ownProps.params.version)
-    }),
+    (state, { params }) => {
+      const project = selectCollection(state, params.project)
+      const version = selectFragment(state, params.version)
+
+      return { project, version }
+    },
     {
       uploadFile
     }

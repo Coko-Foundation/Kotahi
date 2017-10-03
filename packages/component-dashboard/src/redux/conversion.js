@@ -1,5 +1,5 @@
 import { push } from 'react-router-redux'
-import actions from 'pubsweet-client/src/actions'
+import { actions } from 'pubsweet-client'
 import { ink as convertToHTML } from 'pubsweet-component-ink-frontend/actions'
 import uploadFile from 'xpub-upload'
 import { generateTitle, extractTitle } from '../lib/title'
@@ -54,10 +54,7 @@ export const uploadManuscript = acceptedFiles => dispatch => {
         const source = response.converted
         const title = extractTitle(source) || generateTitle(inputFile.name)
 
-        return dispatch(actions.createCollection({
-          collectionType: 'project',
-          title
-        })).then(({collection}) => {
+        return dispatch(actions.createCollection({ title })).then(({collection}) => {
           if (!collection.id) {
             throw new Error('Failed to create a project')
           }

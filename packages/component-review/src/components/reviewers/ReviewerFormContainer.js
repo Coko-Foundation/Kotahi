@@ -2,50 +2,57 @@ import { find, some } from 'lodash'
 import { compose, withHandlers } from 'recompose'
 import { reduxForm, SubmissionError } from 'redux-form'
 import { connect } from 'react-redux'
-import actions from 'pubsweet-client/src/actions'
+import { actions } from 'pubsweet-client'
 import ReviewerForm from './ReviewerForm'
 
 const getProjectReviewer = (props, user) => {
-  const projectReviewer = find(props.projectReviewers, { user: user.id })
+  const reviewer = find(props.project.reviewers, { user: user.id })
 
-  return projectReviewer ? Promise.resolve(projectReviewer) : addProjectReviewer(props, user)
+  return reviewer ? Promise.resolve(reviewer) : addProjectReviewer(props, user)
 }
 
 const addProjectReviewer = (props, user) => {
-  return props.createFragment(props.project, {
-    fragmentType: 'projectReviewer',
-    user: user.id,
-  }).then(result => result.fragment)
+  const reviewer = {
+    user: user.id
+  }
+
+  return props.updateProject({
+    id: props.project.id,
+    reviewers: (props.project.reviewers || []).concat(reviewer)
+  }).then(() => reviewer)
 }
 
-const addReviewer = (props, projectReviewer) => {
-  return props.createFragment(props.project, {
-    fragmentType: 'reviewer',
-    parentVersion: props.version.id,
-    projectReviewer: projectReviewer.id,
+const addReviewer = (props, reviewer) => {
+  const review = {
+    reviewer: reviewer.id,
     status: 'invited',
     events: {
-      invited: new Date()
+      invited: (new Date()).toString()
     }
-  })
+  }
+
+  return props.updateVersion(props.project, {
+    id: props.version.id,
+    reviewers: (props.version.reviewers || []).concat(review)
+  }).then(() => review)
 }
 
 const handleSubmit = props => reset => values => {
   // TODO: create a user account if values.user.id is null
 
-  return getProjectReviewer(props, values.user).then(projectReviewer => {
-    if (some(props.reviewers, { projectReviewer: projectReviewer.id })) {
+  return getProjectReviewer(props, values.user).then(reviewer => {
+    if (some(props.version.reviewers, { reviewer: reviewer.id })) {
       throw new SubmissionError('This reviewer has already been added')
     }
 
-    return addReviewer(props, projectReviewer)
+    return addReviewer(props, reviewer)
   }).then(() => reset())
 }
 
 const loadOptions = props => input => {
   const options = props.reviewerUsers
 
-  // TODO: put existing, uninvited projectReviewers at the top
+  // TODO: put existing, uninvited project reviewers at the top
 
   // TODO: filter users based on input
 
@@ -54,7 +61,8 @@ const loadOptions = props => input => {
 
 export default compose(
   connect(null, {
-    createFragment: actions.createFragment,
+    updateProject: actions.updateCollection,
+    updateVersion: actions.updateFragment,
   }),
   withHandlers({
     loadOptions: props => loadOptions(props),

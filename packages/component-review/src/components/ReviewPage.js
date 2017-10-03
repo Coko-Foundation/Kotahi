@@ -1,9 +1,9 @@
-import { debounce, filter } from 'lodash'
+import { debounce } from 'lodash'
 import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
 import { reduxForm, SubmissionError } from 'redux-form'
-import actions from 'pubsweet-client/src/actions'
+import { actions } from 'pubsweet-client'
 import { ConnectPage } from 'xpub-connect'
 import { selectCollection } from 'xpub-selectors'
 import uploadFile from 'xpub-upload'
@@ -48,15 +48,12 @@ export default compose(
   connect(
     (state, ownProps) => {
       const project = selectCollection(state, ownProps.params.project)
-
-      const fragments = project.fragments.map(id => state.fragments[id])
+      const versions = project.fragments.map(id => state.fragments[id])
 
       return {
         project,
-        versions: filter(fragments, { fragmentType: 'version' }),
-        reviews: filter(fragments, { fragmentType: 'review' }),
+        versions,
         // version: selectFragment(state, ownProps.params.version),
-        // review: selectFragment(state, ownProps.params.review)
       }
     },
     {
