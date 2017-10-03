@@ -7,8 +7,7 @@ import { actions } from 'pubsweet-client'
 import ReviewerForm from './ReviewerForm'
 
 const getProjectReviewer = (props, user) => {
-  // const reviewer = find(props.project.reviewers, { user: user.id })
-  const reviewer = null
+  const reviewer = find(props.project.reviewers, { user: user.id })
 
   return reviewer ? Promise.resolve(reviewer) : addProjectReviewer(props, user)
 }
@@ -27,6 +26,7 @@ const addProjectReviewer = (props, user) => {
 
 const addReviewer = (props, projectReviewer) => {
   const reviewer = {
+    id: uuid(),
     reviewer: projectReviewer.id,
     status: 'invited',
     events: {

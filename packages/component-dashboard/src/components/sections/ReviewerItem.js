@@ -8,44 +8,58 @@ import Divider from './Divider'
 // TODO: only return actions if not accepted or declined
 // TODO: review id in link
 
-const ReviewerItem = ({ project, version, reviewer, reviewerResponse }) => (
-  <div className={classes.root}>
-    <div className={classes.main}>
-      <div className={classes.title}>
-        <span>{project.title || 'Untitled'}</span>
+const getReviewerFromUser = (project, version, currentUser) => {
+  const projectReviewer = project.reviewers.find(
+    reviewer => reviewer && reviewer.user === currentUser.id
+  )
+
+  return version.reviewers.find(
+    reviewer => reviewer && reviewer.reviewer === projectReviewer.id
+  )
+}
+
+const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
+  const reviewer = getReviewerFromUser(project, version, currentUser)
+
+  return (
+    <div className={classes.root}>
+      <div className={classes.main}>
+        <div className={classes.title}>
+          <span>{project.title || 'Untitled'}</span>
+        </div>
+
+        {reviewer.status === 'accepted' && (
+          <div className={classes.links}>
+            <div className={classes.link}>
+              <ProjectLink
+                project={project}
+                version={version}
+                page="reviews"
+                id={project.id}>Do Review</ProjectLink>
+            </div>
+          </div>
+        )}
+
+        {reviewer.status === 'invited' && (
+          <div className={classes.actions}>
+            <div className={classes.action}>
+              <Button onClick={() => reviewerResponse(project, version, reviewer, 'accepted')}>accept</Button>
+            </div>
+
+            <Divider separator="|"/>
+
+            <div className={classes.action}>
+              <Button onClick={() => reviewerResponse(version.id, 'declined')}>reject</Button>
+            </div>
+          </div>
+        )}
+
+        {reviewer.status === 'declined' && (
+          <div>declined</div>
+        )}
       </div>
-
-      {reviewer.status === 'accepted' && (
-        <div className={classes.links}>
-          <div className={classes.link}>
-            <ProjectLink
-              project={project}
-              version={version}
-              page="reviews"
-              id={project.id}>Do Review</ProjectLink>
-          </div>
-        </div>
-      )}
-
-      {reviewer.status === 'invited' && (
-        <div className={classes.actions}>
-          <div className={classes.action}>
-            <Button onClick={() => reviewerResponse(version.id, 'accepted')}>accept</Button>
-          </div>
-
-          <Divider separator="|"/>
-
-          <div className={classes.action}>
-            <Button onClick={() => reviewerResponse(version.id, 'declined')}>reject</Button>
-          </div>
-        </div>
-      )}
-
-      {reviewer.status === 'declined' && (
-        <div>declined</div>
-      )}
     </div>
-  </div>
-)
+  )
+}
 
 export default ReviewerItem
