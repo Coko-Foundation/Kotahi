@@ -1,5 +1,4 @@
 import React from 'react'
-import classnames from 'classnames'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import { AppBar } from 'xpub-ui'
@@ -8,7 +7,7 @@ import 'xpub-bootstrap'
 import classes from './App.local.scss'
 
 const App = ({ children, currentUser, journal }) => (
-  <div className={classnames('bootstrap', classes.root)}>
+  <div className={classes.root}>
     <AppBar
       brandName={journal.metadata.name}
       brandLink="/"
