@@ -24,7 +24,7 @@ const Tabs = ({ sections, title, activeKey, setActiveKey }) => (
       ))}
     </div>
 
-    <div>
+    <div className={classes.content}>
       {sections.find(section => section.key === activeKey).content}
     </div>
   </div>

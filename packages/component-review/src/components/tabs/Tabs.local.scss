@@ -1,11 +1,16 @@
 .root {
   position: relative;
+  height: 100%;
+  overflow-y: hidden;
+  display: flex;
+  flex-direction: column;
 }
 
 .tabs {
   display: flex;
   flex-wrap: wrap;
-  margin-bottom: 20px;
+  padding: 10px;
+  margin-bottom: 10px;
   align-items: baseline;
 }
 
@@ -18,10 +23,8 @@
   margin-right: 20px;
 }
 
-.pane {
-  display: none;
-}
-
-.pane.active {
-  display: block;
+.content {
+  padding: 10px;
+  flex: 1;
+  overflow-y: auto;
 }
