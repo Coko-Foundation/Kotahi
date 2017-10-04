@@ -1,4 +1,4 @@
-import { pick } from 'lodash'
+import { pick, debounce } from 'lodash'
 import { compose, withProps, withState, withHandlers } from 'recompose'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
@@ -31,8 +31,8 @@ const onSubmit = (values, dispatch, props) => {
 }
 
 // TODO: redux-form doesn't have an onBlur handler(?)
-const onBlur = (values, dispatch, props) => {
-  console.log('blur', values)
+const onChange = (values, dispatch, props) => {
+  console.log('change', values)
 
   return dispatch(actions.updateFragment(props.project, {
     id: props.version.id,
@@ -70,7 +70,7 @@ export default compose(
     form: 'submit',
     // enableReinitialize: true,
     onSubmit,
-    onBlur
+    onChange: debounce(onChange, 1000, { maxWait: 5000 })
   }),
   withState('confirming', 'setConfirming', false),
   withHandlers({
