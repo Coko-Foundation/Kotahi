@@ -11,7 +11,7 @@ import Confirm from './Confirm'
 // import Validots from './Validots'
 import classes from './Submit.local.scss'
 
-const Submit = ({ project, version, valid, handleSubmit, uploadFile, confirming, toggleConfirming }) => (
+const Submit = ({ project, version, valid, error, handleSubmit, uploadFile, confirming, toggleConfirming }) => (
   <div className={classnames(classes.root, {
     [classes.confirming]: confirming
   })}>

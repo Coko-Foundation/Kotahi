@@ -20,7 +20,7 @@ export default compose(
     (state, ownProps) => {
       const project = selectCollection(state, ownProps.params.project)
       const version = selectFragment(state, ownProps.params.version)
-      const reviewers = version.reviewers.filter(reviewer => reviewer.reviewer)
+      const reviewers = (version.reviewers || []).filter(reviewer => reviewer.reviewer)
 
       const reviewerUsers = state.users.users
       // const reviewerUsers = filter(state.users.users, { reviewer: true })

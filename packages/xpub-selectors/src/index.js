@@ -20,3 +20,16 @@ export const selectFragment = (state, id) => state.fragments[id]
 export const selectCurrentVersion = (state, project) => {
   return newestFirst(selectFragments(state, project.fragments))[0]
 }
+
+export const getReviewerFromUser = (project, version, currentUser) => {
+  const projectReviewer = project.reviewers.find(
+    reviewer => reviewer && reviewer.user === currentUser.id
+  )
+
+  return version.reviewers.find(
+    reviewer => reviewer && reviewer.reviewer === projectReviewer.id
+  )
+}
+
+export const selectUser = (state, id) => state.users.users
+  .find(user => user.id === id)

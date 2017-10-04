@@ -1,7 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 // import classnames from 'classnames'
-// import SimpleEditor from 'pubsweet-component-wax/src/SimpleEditor'
+import SimpleEditor from 'wax-editor-react'
 import classes from './DecisionLayout.local.scss'
 import DecisionForm from './DecisionForm'
 import DecisionReviews from './DecisionReviews'
@@ -9,7 +9,7 @@ import ReviewMetadata from '../metadata/ReviewMetadata'
 import Decision from './Decision'
 import Tabs from '../tabs/Tabs'
 
-const DecisionLayout = ({ project, versions, valid, handleSubmit, uploadFile }) => {
+const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit, uploadFile }) => {
   const decisionSections = []
   const editorSections = []
 
@@ -33,14 +33,15 @@ const DecisionLayout = ({ project, versions, valid, handleSubmit, uploadFile }) 
 
       editorSections.push({
         key,
-        content: <div>TODO</div>
-        // editor: <SimpleEditor book={project} fragment={version}/>
+        content: <SimpleEditor
+          content={version.source}
+          layout="bare"
+          readOnly={true}/>
       })
     }
   }, [])
 
-  const version = versions[versions.length - 1]
-  const decision = version.decision
+  const decision = currentVersion.decision
 
   if (!decision || !decision.submitted) {
     const key = moment().format('YYYY-MM-DD')
@@ -50,9 +51,9 @@ const DecisionLayout = ({ project, versions, valid, handleSubmit, uploadFile }) 
       content: (
         <div>
           <ReviewMetadata
-            version={version}/>
+            version={currentVersion}/>
           <DecisionReviews
-            version={version}/>
+            version={currentVersion}/>
           <DecisionForm
             decision={decision}
             valid={valid}
@@ -64,8 +65,10 @@ const DecisionLayout = ({ project, versions, valid, handleSubmit, uploadFile }) 
 
     editorSections.push({
       key,
-      editor: <div>TODO</div>
-      // editor: <SimpleEditor book={project} fragment={version}/>
+      content: <SimpleEditor
+        content={currentVersion.source}
+        layout="bare"
+        readOnly={true}/>
     })
   }
 

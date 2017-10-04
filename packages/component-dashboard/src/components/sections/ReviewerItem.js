@@ -1,5 +1,6 @@
 import React from 'react'
 import { Button } from 'xpub-ui'
+import { getReviewerFromUser } from 'xpub-selectors'
 import classes from './Item.local.scss'
 import ProjectLink from '../ProjectLink'
 import Divider from './Divider'
@@ -7,16 +8,6 @@ import Divider from './Divider'
 // TODO: only return links if version id is in reviewer.accepted array
 // TODO: only return actions if not accepted or declined
 // TODO: review id in link
-
-const getReviewerFromUser = (project, version, currentUser) => {
-  const projectReviewer = project.reviewers.find(
-    reviewer => reviewer && reviewer.user === currentUser.id
-  )
-
-  return version.reviewers.find(
-    reviewer => reviewer && reviewer.reviewer === projectReviewer.id
-  )
-}
 
 const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
   const reviewer = getReviewerFromUser(project, version, currentUser)
@@ -35,7 +26,9 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
                 project={project}
                 version={version}
                 page="reviews"
-                id={project.id}>Do Review</ProjectLink>
+                id={reviewer.id}>
+                {reviewer.submitted ? 'Reviewed' : 'Do Review'}
+              </ProjectLink>
             </div>
           </div>
         )}
@@ -49,7 +42,7 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
             <Divider separator="|"/>
 
             <div className={classes.action}>
-              <Button onClick={() => reviewerResponse(version.id, 'declined')}>reject</Button>
+              <Button onClick={() => reviewerResponse(project, version, reviewer, 'declined')}>reject</Button>
             </div>
           </div>
         )}

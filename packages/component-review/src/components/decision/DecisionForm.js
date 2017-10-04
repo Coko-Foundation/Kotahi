@@ -25,7 +25,7 @@ const RecommendationInput = journal => input =>
     options={journal.recommendations}
     {...input}/>
 
-const DecisionForm = ({journal, valid, handleSubmit, uploadFile }) => (
+const DecisionForm = ({ journal, valid, handleSubmit, uploadFile }) => (
   <form onSubmit={handleSubmit}>
     <div className={classes.section}>
       <FormSection name="note">
@@ -52,8 +52,7 @@ const DecisionForm = ({journal, valid, handleSubmit, uploadFile }) => (
     </div>
 
     <div>
-      {/*<Button type="button" onClick={handleSave}>Save</Button>*/}
-      <Button type="submit" primary>Submit</Button>
+      <Button type="submit" primary disabled={!valid}>Submit</Button>
     </div>
   </form>
 )

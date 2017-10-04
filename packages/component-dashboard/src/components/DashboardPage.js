@@ -7,7 +7,7 @@ import { uploadManuscript } from '../redux/conversion'
 import Dashboard from './Dashboard'
 import AssignEditorContainer from './AssignEditorContainer'
 
-const reviewerResponse = dispatch => (project, version, reviewer, status) => {
+const reviewerResponse = (project, version, reviewer, status) => dispatch => {
   reviewer.status = status
 
   return dispatch(actions.updateFragment(project, {
@@ -43,7 +43,8 @@ export default compose(
             && team.members.includes(currentUser.id))
           .map(team => collections.find(
             collection => collection.id === team.object.id
-          ))),
+          )))
+          .filter(collection => collection),
         // reviewer: newestFirst(teams
         //   .filter(team => team.group === 'reviewer'
         //     && team.object.type === 'collection'
@@ -52,9 +53,10 @@ export default compose(
         //     return collection.id === team.object
         //   }))),
         reviewer: sortedCollections
-          .filter(collection => collection.reviewers.some(
-            reviewer => reviewer && reviewer.user === currentUser.id
-          )),
+          .filter(collection => collection.reviewers
+            && collection.reviewers.some(
+              reviewer => reviewer && reviewer.user === currentUser.id
+            )),
       }
 
       return { collections, currentUser, conversion, dashboard }
