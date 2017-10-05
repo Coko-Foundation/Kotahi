@@ -36,7 +36,7 @@ const reviewers = [
        id: faker.random.uuid(),
        username: faker.internet.userName(),
     },
-    _projectReviewer: {
+    _reviewer: {
       ordinal: null
     }
   },
@@ -71,7 +71,7 @@ const ReviewerFormContainer = compose(
             invited: (new Date()).toISOString(),
           },
           _user: user,
-          _projectReviewer: {
+          _reviewer: {
             ordinal: null
           }
         }) 

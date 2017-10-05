@@ -6,7 +6,7 @@ const reviewer = {
   events: {
     invited: faker.date.recent(),    
   },
-  _projectReviewer: {
+  _reviewer: {
     ordinal: null
   },
   _user: {
@@ -28,7 +28,7 @@ const reviewer = {
     invited: faker.date.recent(),
     accepted: faker.date.recent(),
   },
-  _projectReviewer: {
+  _reviewer: {
     ordinal: null
   },
   _user: {
@@ -50,7 +50,7 @@ const reviewer = {
     invited: faker.date.recent(),
     declined: faker.date.recent(),
   },
-  _projectReviewer: {
+  _reviewer: {
     ordinal: null
   },
   _user: {
@@ -73,7 +73,7 @@ const reviewer = {
     accepted: faker.date.recent(),
     reviewed: faker.date.recent(),
   },
-  _projectReviewer: {
+  _reviewer: {
     ordinal: faker.random.number({ max: 3 })
   },
   _user: {

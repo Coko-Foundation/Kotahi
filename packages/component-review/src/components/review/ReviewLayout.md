@@ -34,7 +34,7 @@ const versions = [
         
       ]
     },
-    reviews: [
+    reviewers: [
       {
         id: faker.random.uuid(),
         reviewer: 'reviewer-reviewed',
@@ -62,7 +62,7 @@ const versions = [
               
             ]
           },
-      reviews: [
+      reviewers: [
         {
             id: faker.random.uuid(),
             reviewer: 'reviewer-reviewed',
@@ -90,7 +90,7 @@ const versions = [
                 
               ]
             },
-        reviews: [
+        reviewers: [
           {
               id: faker.random.uuid(),
               reviewer: 'reviewer-reviewed',
@@ -104,12 +104,18 @@ const versions = [
     }
 ];
 
-const reviewer = {
+const projectReviewer = {
   id: 'reviewer-reviewed'
 };
 
-const version = versions[versions.length - 1];
-const review = version.reviewers.find(review => review.reviewer === reviewer.id);
+const currentVersion = versions[versions.length - 1];
+const reviewer = currentVersion.reviewers.find(
+  review => review.reviewer === projectReviewer.id
+);
+
+const handlingEditors = [{
+  username: faker.internet.userName()
+}];
 
 const ConnectedReviewLayout= reduxForm({ 
   form: 'review-layout',
@@ -121,7 +127,9 @@ const ConnectedReviewLayout= reduxForm({
     <ConnectedReviewLayout
         project={project}
         versions={versions}
-        initialValues={review}
-        reviewer={reviewer}/>
+        currentVersion={currentVersion}
+        initialValues={reviewer}
+        reviewer={reviewer}
+        uploadFile={() => {}}/>
 </div>
 ```
