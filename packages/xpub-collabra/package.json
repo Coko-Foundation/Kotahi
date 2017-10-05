@@ -17,7 +17,7 @@
     "config": "^1.26.2",
     "prop-types": "^15.5.10",
     "pubsweet": "git+https://gitlab.coko.foundation/pubsweet/pubsweet-cli.git",
-    "pubsweet-client": "^1.0.0-beta.1",
+    "pubsweet-client": "^1.0.0-beta.3",
     "pubsweet-component-ink-backend": "0.0.10",
     "pubsweet-component-ink-frontend": "^0.1.0",
     "pubsweet-component-xpub-app": "^0.0.2",
@@ -65,6 +65,7 @@
   },
   "scripts": {
     "setupdb": "pubsweet setupdb --dev ./",
+    "reset": "pubsweet setupdb --dev --clobber ./",
     "start": "pubsweet run --dev --reduxlog-off"
   }
 }

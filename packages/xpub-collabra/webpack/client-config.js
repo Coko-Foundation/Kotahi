@@ -9,7 +9,6 @@ const fields = [
   'authsome',
   'validations',
   'pubsweet-client',
-  'pubsweet-server' // for API_ENDPOINT
 ]
 
 fs.outputJsonSync(outputPath, pick(config, fields))
