@@ -26,6 +26,7 @@ export default compose(
       // const reviewerUsers = filter(state.users.users, { reviewer: true })
 
       // populate the reviewer user
+      // TODO: remove these, as they'll get saved back to the server
       reviewers.forEach(reviewer => {
         const projectReviewer = find(project.reviewers, {
           id: reviewer.reviewer
