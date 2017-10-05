@@ -30,7 +30,7 @@ module.exports = dir => {
       // mock CONFIG
       new webpack.DefinePlugin({
         CONFIG: {
-          'pubsweet-server': {
+          'pubsweet-client': {
             API_ENDPOINT: JSON.stringify('/')
           }
         },

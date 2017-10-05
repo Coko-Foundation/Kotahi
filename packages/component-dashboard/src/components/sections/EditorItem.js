@@ -30,30 +30,38 @@ const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
 
     <div className={classes.main}>
       <div className={classes.title}>
-      <span>{project.title || 'Untitled'}</span>
+        <span>{project.title || 'Untitled'}</span>
       </div>
 
       <div className={classes.links}>
         <div className={classes.link}>
-          <ProjectLink
-            project={project}
-            version={version}
-            page="reviewers">Assign Reviewers</ProjectLink>
+          {(!version.decision || version.decision.status !== 'submitted') && (
+            <span>
+              <ProjectLink
+                project={project}
+                version={version}
+                page="reviewers">Assign Reviewers</ProjectLink>
 
-          <Divider separator="|"/>
+              <Divider separator="|"/>
+            </span>
+          )}
 
           <ProjectLink
             project={project}
             version={version}
             page="decisions"
-            id={project.id}>Make decision</ProjectLink>
+            id={project.id}>
+              {version.decision && version.decision.status === 'submitted'
+                ? `Decision: ${version.decision.recommendation}`
+                : 'Make decision'}
+          </ProjectLink>
         </div>
       </div>
 
       <div className={classes.actions}/>
     </div>
 
-  
+
 
     <div className={classes.roles}>
       <div className={classes.role}>
@@ -72,7 +80,8 @@ const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
 
 
     </div>
-      <div className={classes.reviews}>
+
+    <div className={classes.reviews}>
       <Reviews
         project={project}
         version={version}/>

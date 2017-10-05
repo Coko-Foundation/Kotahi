@@ -22,11 +22,12 @@ export default compose(
     },
     {
       fileUpload: actions.fileUpload,
+      updateVersion: actions.updateFragment
     }
   ),
   withHandlers({
-    updateManuscript: ({ project, version }) => data => {
-      return actions.updateFragment(project, {
+    updateManuscript: ({ updateVersion, project, version }) => data => {
+      return updateVersion(project, {
         id: version.id,
         ...data
       })

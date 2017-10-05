@@ -51,6 +51,7 @@ module.exports = {
     }),
     reviewers: Joi.array(),
     lock: Joi.object(),
+    decision: Joi.object(),
     fragmentType: Joi.string(), // version, projectReviewer, reviewer
     parentVersion: Joi.string(), // reviewer
     projectReviewer: Joi.string(), // reviewer

@@ -5,17 +5,22 @@ import { push } from 'react-router-redux'
 import { reduxForm, SubmissionError } from 'redux-form'
 import { actions } from 'pubsweet-client'
 import { ConnectPage } from 'xpub-connect'
-import { selectCollection } from 'xpub-selectors'
+import { selectCurrentUser, selectCollection, selectFragments, selectCurrentVersion, selectFragment, selectUser, getReviewerFromUser } from 'xpub-selectors'
 import uploadFile from 'xpub-upload'
 import ReviewLayout from './review/ReviewLayout'
 
-const onSubmit = (values, dispatch, props) => {
+const onSubmit = (values, dispatch, { project, version, reviewer }) => {
   console.log('submit', values)
 
-  return dispatch(actions.updateFragment(props.project, {
-    id: props.review.id,
+  Object.assign(reviewer, {
     submitted: new Date(),
+    status: 'reviewed',
     ...values
+  })
+
+  return dispatch(actions.updateFragment(project, {
+    id: version.id,
+    reviewers: version.reviewers
   })).then(() => {
     // TODO: show "thanks for your review" message
     dispatch(push(`/`))
@@ -26,13 +31,17 @@ const onSubmit = (values, dispatch, props) => {
   })
 }
 
-const onChange = (values, dispatch, props) => {
+const onChange = (values, dispatch, { project, version, reviewer }) => {
   console.log('change', values)
 
-  return dispatch(actions.updateFragment(props.project, {
-    id: props.review.id,
-    // submitted: false,
+  Object.assign(reviewer, {
+    submitted: new Date(),
     ...values
+  })
+
+  return dispatch(actions.updateFragment(project, {
+    id: version.id,
+    reviewers: version.reviewers
   }))
 
   // TODO: display a notification when saving/saving completes/saving fails
@@ -42,32 +51,39 @@ export default compose(
   ConnectPage(({ params }) => [
     actions.getCollection({ id: params.project }),
     actions.getFragments({ id: params.project }),
-    // actions.getFragment({ id: params.project }, { id: params.version }),
-    // actions.getFragment({ id: params.project }, { id: params.review }),
+    actions.getTeams(),
+    actions.getUsers(),
   ]),
   connect(
-    (state, ownProps) => {
-      const project = selectCollection(state, ownProps.params.project)
-      const versions = project.fragments.map(id => state.fragments[id])
+    (state, { params }) => {
+      const currentUser = selectCurrentUser(state)
+      const project = selectCollection(state, params.project)
+      const versions = selectFragments(state, project.fragments)
+      const version = selectFragment(state, params.version)
+      const currentVersion = selectCurrentVersion(state, project)
 
-      return {
-        project,
-        versions,
-        // version: selectFragment(state, ownProps.params.version),
-      }
+      const handlingEditors = state.teams.find(team => (
+        team.object.type === 'collection'
+          && team.object.id === params.project
+          && team.teamType.name === 'handlingEditor'
+      )).members.map(id => selectUser(state, id))
+
+      const reviewer = getReviewerFromUser(project, currentVersion, currentUser)
+
+      return { project, versions, version, currentVersion, reviewer, handlingEditors }
     },
     {
       uploadFile
     }
   ),
-  withProps(({ review }) => {
+  withProps(({ reviewer }) => {
     return {
-      initialValues: review,
+      initialValues: reviewer,
     }
   }),
   reduxForm({
     form: 'review',
     onSubmit,
-    onChange: debounce(onChange, 1000)
+    onChange: debounce(onChange, 1000, { maxWait: 5000 })
   })
 )(ReviewLayout)

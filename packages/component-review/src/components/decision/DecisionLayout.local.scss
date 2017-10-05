@@ -10,6 +10,7 @@
 
 .column {
   height: 100%;
-  overflow-y: auto;
+  overflow-y: hidden;
   flex: 1;
+  padding: 10px;
 }

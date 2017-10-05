@@ -8,7 +8,7 @@ import classes from './Metadata.local.scss'
 const FundingInput = input =>
   <NoteEditor
     placeholder="Enter an acknowledgment…"
-    title="Funding body acknowledgement"
+    title="Funding body acknowledgement (required)"
     {...input}/>
 
 const InstructionsInput = input =>

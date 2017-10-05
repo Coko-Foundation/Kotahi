@@ -11,7 +11,7 @@ const OwnerItemWithVersion = withVersion(OwnerItem)
 const EditorItemWithVersion = withVersion(EditorItem)
 const ReviewerItemWithVersion = withVersion(ReviewerItem)
 
-const Dashboard = ({ AssignEditor, dashboard, conversion, deleteProject, reviewerResponse, uploadManuscript }) => (
+const Dashboard = ({ AssignEditor, currentUser, dashboard, conversion, deleteProject, reviewerResponse, uploadManuscript }) => (
   <div className={classes.root}>
     <div className={classes.upload}>
       <UploadManuscript
@@ -46,6 +46,7 @@ const Dashboard = ({ AssignEditor, dashboard, conversion, deleteProject, reviewe
           <ReviewerItemWithVersion
             key={project.id}
             project={project}
+            currentUser={currentUser}
             reviewerResponse={reviewerResponse}/>
         ))}
       </div>

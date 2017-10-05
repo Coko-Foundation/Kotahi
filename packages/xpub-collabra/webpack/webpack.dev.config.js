@@ -1,3 +1,6 @@
+process.env.NODE_ENV = 'development'
+process.env.BABEL_ENV = 'development'
+
 const path = require('path')
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -31,7 +34,7 @@ module.exports = [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify('dev'),
+        'process.env.NODE_ENV': JSON.stringify('development'),
         'process.env.REDUXLOG_OFF': process.env.REDUXLOG_OFF
       }),
       new webpack.ProvidePlugin({

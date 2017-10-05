@@ -8,7 +8,7 @@ import Review from './Review'
 import Tabs from '../tabs/Tabs'
 import classes from './ReviewLayout.local.scss'
 
-const ReviewLayout = ({ project, versions, reviewer, valid, handleSubmit, uploadFile }) => {
+const ReviewLayout = ({ project, versions, currentVersion, handlingEditors, reviewer, valid, handleSubmit, uploadFile }) => {
   const reviewSections = []
   const editorSections = []
 
@@ -22,8 +22,11 @@ const ReviewLayout = ({ project, versions, reviewer, valid, handleSubmit, upload
         key,
         content: (
           <div>
-            <ReviewMetadata version={version}/>
-            <Review review={review}/>
+            <ReviewMetadata
+              version={version}
+              handlingEditors={handlingEditors}/>
+            <Review
+              review={review}/>
           </div>
         ),
       })
@@ -39,8 +42,9 @@ const ReviewLayout = ({ project, versions, reviewer, valid, handleSubmit, upload
     }
   }, [])
 
-  const version = versions[versions.length - 1]
-  const review = version.reviewers.find(review => review.reviewer === reviewer.id)
+  const review = currentVersion.reviewers.find(
+    review => review.reviewer === reviewer.id
+  )
 
   if (!review || !review.submitted) {
     const key = moment().format('YYYY-MM-DD')
@@ -50,7 +54,8 @@ const ReviewLayout = ({ project, versions, reviewer, valid, handleSubmit, upload
       content: (
         <div>
           <ReviewMetadata
-            version={version}/>
+            version={currentVersion}
+            handlingEditors={handlingEditors}/>
           <ReviewForm
             review={review}
             valid={valid}
@@ -64,7 +69,7 @@ const ReviewLayout = ({ project, versions, reviewer, valid, handleSubmit, upload
       key,
       content: <SimpleEditor
         layout="bare"
-        content={version.source}
+        content={currentVersion.source}
         readOnly={true}/>
     })
   }

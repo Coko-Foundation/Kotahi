@@ -1,3 +1,4 @@
+import uuid from 'uuid'
 import { find, some } from 'lodash'
 import { compose, withHandlers } from 'recompose'
 import { reduxForm, SubmissionError } from 'redux-form'
@@ -13,6 +14,7 @@ const getProjectReviewer = (props, user) => {
 
 const addProjectReviewer = (props, user) => {
   const reviewer = {
+    id: uuid(),
     user: user.id
   }
 
@@ -22,9 +24,10 @@ const addProjectReviewer = (props, user) => {
   }).then(() => reviewer)
 }
 
-const addReviewer = (props, reviewer) => {
-  const review = {
-    reviewer: reviewer.id,
+const addReviewer = (props, projectReviewer) => {
+  const reviewer = {
+    id: uuid(),
+    reviewer: projectReviewer.id,
     status: 'invited',
     events: {
       invited: (new Date()).toString()
@@ -33,19 +36,19 @@ const addReviewer = (props, reviewer) => {
 
   return props.updateVersion(props.project, {
     id: props.version.id,
-    reviewers: (props.version.reviewers || []).concat(review)
-  }).then(() => review)
+    reviewers: (props.version.reviewers || []).concat(reviewer)
+  }).then(() => reviewer)
 }
 
 const handleSubmit = props => reset => values => {
   // TODO: create a user account if values.user.id is null
 
-  return getProjectReviewer(props, values.user).then(reviewer => {
-    if (some(props.version.reviewers, { reviewer: reviewer.id })) {
+  return getProjectReviewer(props, values.user).then(projectReviewer => {
+    if (some(props.version.reviewers, { reviewer: projectReviewer.id })) {
       throw new SubmissionError('This reviewer has already been added')
     }
 
-    return addReviewer(props, reviewer)
+    return addReviewer(props, projectReviewer)
   }).then(() => reset())
 }
 

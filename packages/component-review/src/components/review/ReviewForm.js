@@ -73,8 +73,7 @@ const ReviewForm = ({ journal, valid, handleSubmit, uploadFile }) => (
     </div>
 
     <div>
-      {/*<Button type="button" onClick={handleSave}>Save</Button>*/}
-      <Button type="submit" primary>Submit</Button>
+      <Button type="submit" primary disabled={!valid}>Submit</Button>
     </div>
   </form>
 )

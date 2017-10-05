@@ -1,3 +1,6 @@
+process.env.NODE_ENV = 'test'
+process.env.BABEL_ENV = 'test'
+
 const path = require('path')
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
