@@ -118,8 +118,8 @@ const versions = [
     }
 ];
 
-const version = versions[versions.length - 1];
-const decision = version.decision;
+const currentVersion = versions[versions.length - 1];
+const decision = currentVersion.decision;
 
 const ConnectedDecisionLayout= reduxForm({ 
   form: 'decision-layout',
@@ -131,6 +131,8 @@ const ConnectedDecisionLayout= reduxForm({
     <ConnectedDecisionLayout
         project={project}
         versions={versions}
-        initialValues={decision}/>
+        currentVersion={currentVersion}
+        initialValues={decision}
+        uploadFile={() => {}}/>
 </div>
 ```
