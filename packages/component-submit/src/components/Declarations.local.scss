@@ -1,12 +1,22 @@
 .section {
-  margin: 20px 0;
+  margin: 2em 0;
 }
 
 .spread {
   display: flex;
   justify-content: space-between;
+  margin-bottom: 2em;
 }
 
 .legend {
-  font-weight: bold;
+  font-weight: 500;
+  font-size: 1em;
+}
+
+.spread:hover {
+  background-image: linear-gradient(to right, #666 50%, white 0%);
+  background-position: 0 90%;
+  background-repeat: repeat-x;
+  background-size: 6px 1px;
+  position: relative;
 }

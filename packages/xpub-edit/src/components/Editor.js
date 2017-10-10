@@ -3,6 +3,7 @@ import { debounce } from 'lodash'
 // import { Editor as SlateEditor, Plain } from 'slate'
 import { Editor as SlateEditor } from 'slate'
 import EditorToolbar from './EditorToolbar'
+import classes from './Editor.local.scss'
 
 // TODO: move paste/drop handlers to plugins
 // TODO: word/character count
@@ -151,7 +152,7 @@ class Editor extends React.Component {
         )}
 
         <SlateEditor
-          className={className}
+          className={classes.root}
           schema={schema}
           state={state}
           onBlur={this.onBlur}
@@ -161,7 +162,7 @@ class Editor extends React.Component {
           onDrop={this.onReceive}
           onDocumentChange={this.throttledOnDocumentChange}
           placeholder={placeholder}
-          placeholderClassName={placeholderClassName}
+          placeholderClassName={classes.placeholder}
           spellCheck
         />
       </div>

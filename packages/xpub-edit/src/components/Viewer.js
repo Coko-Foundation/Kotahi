@@ -1,5 +1,6 @@
 import React from 'react'
 import { Editor as SlateEditor } from 'slate'
+import classes  from './Viewer.local.scss'
 
 class Viewer extends React.Component {
   state = {
@@ -30,6 +31,7 @@ class Viewer extends React.Component {
 
     return (
       <SlateEditor
+        className={classes.root}
         schema={schema}
         state={state}
         readOnly/>
