@@ -15,8 +15,8 @@ const ReviewLayout = ({ project, versions, currentVersion, handlingEditors, revi
   versions.forEach(version => {
     const review = version.reviewers.find(review => review.reviewer === reviewer.id)
 
-    if (review && review.events.reviewed) {
-      const key = moment(review.events.reviewed).format('YYYY-MM-DD')
+    if (review && review.submitted) {
+      const key = moment(review.submitted).format('YYYY-MM-DD')
 
       reviewSections.push({
         key,

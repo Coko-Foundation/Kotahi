@@ -6,9 +6,9 @@ import classes from './DecisionReviews.local.scss'
 // TODO: read reviewer ordinal and name from project reviewer
 
 const DecisionReviews = ({ journal, version }) => (
-  <div>
+  <div className={classes.root}>
     {version.reviewers && version.reviewers
-      .filter(review => review.events.reviewed)
+      .filter(review => review.submitted)
       .map((review, index) => (
       <div className={classes.review} key={review.id}>
         <DecisionReview review={review} reviewer={{
