@@ -135,7 +135,7 @@ class Editor extends React.Component {
 
   render () {
     const { state } = this.state
-    const { className, schema, placeholder, toolbar, title } = this.props
+    const { className, schema, placeholder, placeholderClassName, toolbar, title } = this.props
 
     if (!state) return null
 
@@ -161,6 +161,7 @@ class Editor extends React.Component {
           onDrop={this.onReceive}
           onDocumentChange={this.throttledOnDocumentChange}
           placeholder={placeholder}
+          placeholderClassName={placeholderClassName}
           spellCheck
         />
       </div>
