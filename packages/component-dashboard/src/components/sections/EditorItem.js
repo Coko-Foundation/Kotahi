@@ -77,8 +77,6 @@ const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
           teamTypeName="handlingEditor"
           addUserToTeam={addUserToTeam}/>
       </div>
-
-
     </div>
 
     <div className={classes.reviews}>

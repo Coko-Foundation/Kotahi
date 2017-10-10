@@ -19,36 +19,40 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
           <span>{project.title || 'Untitled'}</span>
         </div>
 
-        {reviewer.status === 'accepted' && (
-          <div className={classes.links}>
-            <div className={classes.link}>
-              <ProjectLink
-                project={project}
-                version={version}
-                page="reviews"
-                id={reviewer.id}>
-                {reviewer.submitted ? 'Reviewed' : 'Do Review'}
-              </ProjectLink>
-            </div>
+        {reviewer && (
+          <div>
+            {reviewer.status === 'accepted' && (
+              <div className={classes.links}>
+                <div className={classes.link}>
+                  <ProjectLink
+                    project={project}
+                    version={version}
+                    page="reviews"
+                    id={reviewer.id}>
+                    {reviewer.submitted ? 'Reviewed' : 'Do Review'}
+                  </ProjectLink>
+                </div>
+              </div>
+            )}
+
+            {reviewer.status === 'invited' && (
+              <div className={classes.actions}>
+                <div className={classes.action}>
+                  <Button onClick={() => reviewerResponse(project, version, reviewer, 'accepted')}>accept</Button>
+                </div>
+
+                <Divider separator="|"/>
+
+                <div className={classes.action}>
+                  <Button onClick={() => reviewerResponse(project, version, reviewer, 'declined')}>reject</Button>
+                </div>
+              </div>
+            )}
+
+            {reviewer.status === 'declined' && (
+              <div>declined</div>
+            )}
           </div>
-        )}
-
-        {reviewer.status === 'invited' && (
-          <div className={classes.actions}>
-            <div className={classes.action}>
-              <Button onClick={() => reviewerResponse(project, version, reviewer, 'accepted')}>accept</Button>
-            </div>
-
-            <Divider separator="|"/>
-
-            <div className={classes.action}>
-              <Button onClick={() => reviewerResponse(project, version, reviewer, 'declined')}>reject</Button>
-            </div>
-          </div>
-        )}
-
-        {reviewer.status === 'declined' && (
-          <div>declined</div>
         )}
       </div>
     </div>

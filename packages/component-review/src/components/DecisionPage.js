@@ -1,4 +1,4 @@
-import { debounce } from 'lodash'
+import { debounce, pick } from 'lodash'
 import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
 import { push } from 'react-router-redux'
@@ -10,6 +10,49 @@ import { selectCollection, selectCurrentVersion, selectFragment,
 import uploadFile from 'xpub-upload'
 import DecisionLayout from './decision/DecisionLayout'
 
+// TODO: this should happen on the server
+const handleDecision = (project, version) => dispatch => {
+  return dispatch(actions.updateFragment(project, {
+    id: version.id,
+    decision: version.decision
+  })).then(() => {
+    console.log(version)
+
+    switch (version.decision.recommendation) {
+      case 'accept':
+        return dispatch(actions.updateCollection({
+          id: project.id,
+          status: 'accepted'
+        }))
+
+      case 'reject':
+        return dispatch(actions.updateCollection({
+          id: project.id,
+          status: 'rejected'
+        }))
+
+      case 'revise':
+        const cloned = pick(
+          version,
+          ['source', 'metadata', 'declarations', 'suggestions', 'files', 'notes']
+        )
+
+        return dispatch(actions.updateCollection({
+          id: project.id,
+          status: 'revise'
+        })).then(() => dispatch(actions.createFragment(project, {
+          fragmentType: 'version',
+          created: new Date(), // TODO: set on server
+          ...cloned,
+          version: version.version + 1,
+        })))
+
+      default:
+        throw new Error('Unknown decision type')
+    }
+  })
+}
+
 const onSubmit = (values, dispatch, { project, version }) => {
   console.log('submit', values)
 
@@ -20,10 +63,7 @@ const onSubmit = (values, dispatch, { project, version }) => {
     status: 'submitted'
   }
 
-  return dispatch(actions.updateFragment(project, {
-    id: version.id,
-    decision: version.decision
-  })).then(() => {
+  return dispatch(handleDecision(project, version)).then(() => {
     // TODO: show "thanks for your review" message
     dispatch(push('/'))
   }).catch(error => {
