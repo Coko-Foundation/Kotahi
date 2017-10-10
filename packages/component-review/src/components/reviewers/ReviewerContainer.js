@@ -1,6 +1,6 @@
 import { compose, withHandlers } from 'recompose'
 import { connect } from 'react-redux'
-import actions from 'pubsweet-client/src/actions'
+import { actions } from 'pubsweet-client'
 import Reviewer from './Reviewer'
 
 const removeReviewer = props => () => {
