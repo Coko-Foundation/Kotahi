@@ -22,6 +22,8 @@ export const selectCurrentVersion = (state, project) => {
 }
 
 export const getReviewerFromUser = (project, version, currentUser) => {
+  if (!project.reviewers || !version.reviewers) return null
+
   const projectReviewer = project.reviewers.find(
     reviewer => reviewer && reviewer.user === currentUser.id
   )

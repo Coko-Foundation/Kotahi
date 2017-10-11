@@ -61,8 +61,10 @@ export const uploadManuscript = acceptedFiles => dispatch => {
 
           // TODO: create teams?
 
+          // TODO: rethrow errors so they can be caught here
           return dispatch(actions.createFragment(collection, {
             fragmentType: 'version',
+            created: new Date(), // TODO: set on server
             version: 1,
             source,
             metadata: {

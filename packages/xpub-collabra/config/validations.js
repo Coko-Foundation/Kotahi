@@ -9,6 +9,7 @@ module.exports = {
   },
   fragment: { // version, projectReviewer, reviewer
     // version: Joi.number().required(),
+    created: Joi.date(),
     version: Joi.number(),
     submitted: Joi.date(),
     source: Joi.string(), // TODO: move to a file

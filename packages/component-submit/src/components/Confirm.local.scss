@@ -4,13 +4,37 @@
   background: white;
   max-height: 100%;
   overflow-y: auto;
+  color: #404040;
+  line-height: 1.55;
+}
+
+p {
+  width: 55ch;
+  font-size: 1em;
+  margin-bottom: 1.6em;
+}
+
+.heading {
+  font-size: 1.3em;
 }
 
 .actionDivider {
-  margin: 0 20px;
+  margin: 1em 0;
+  display: block;
 }
 
 .cancelLink {
   text-decoration: underline;
   text-decoration-color: blue;
+}
+
+.root button {
+  margin-top: 2em;
+}
+
+.back {
+  background: white;
+  margin-top: 0;
+  padding: 0;
+  text-transform: none;
 }

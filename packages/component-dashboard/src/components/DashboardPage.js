@@ -1,6 +1,6 @@
 import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
-import actions from 'pubsweet-client/src/actions'
+import { actions } from 'pubsweet-client'
 import { newestFirst, selectCurrentUser } from 'xpub-selectors'
 import { ConnectPage } from 'xpub-connect'
 import { uploadManuscript } from '../redux/conversion'
@@ -36,7 +36,12 @@ export default compose(
           .filter(collection => collection.owners
             && collection.owners.includes(currentUser.id)),
         assign: sortedCollections
-          .filter(collection => collection.status === 'submitted'),
+          .filter(collection => collection.status === 'submitted'
+            && !teams.some(team =>
+              team.object.type === 'collection'
+                && team.object.id === collection.id
+                && team.teamType.name === 'handlingEditor'
+            )),
         editor: newestFirst(teams
           .filter(team => team.group === 'editor'
             && team.object.type === 'collection'

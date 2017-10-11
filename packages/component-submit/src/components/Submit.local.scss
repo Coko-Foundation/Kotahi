@@ -1,11 +1,19 @@
 .root {
   max-width: 60em;
   margin: auto;
+  font-family: var(--font-interface);
+  line-height: 1.3;
 }
 
 .title {
-  font-size: 150%;
+  font-size: 2em;
   font-weight: bold;
+  margin-bottom: 0.3em;
+}
+
+.intro {
+  font-style: italic;
+  line-height: 1.4;
 }
 
 .confirm {

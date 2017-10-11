@@ -18,7 +18,7 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
     const decision = version.decision
 
     if (decision && decision.submitted) {
-      const key = moment(decision.submitted).format('YYYY-MM-DD')
+      const key = moment(decision.submitted).format('YYYY-MM-DD hh:mm')
 
       decisionSections.push({
         key,
@@ -44,7 +44,7 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
   const decision = currentVersion.decision
 
   if (!decision || !decision.submitted) {
-    const key = moment().format('YYYY-MM-DD')
+    const key = moment().format('YYYY-MM-DD hh:mm')
 
     decisionSections.push({
       key,
