@@ -6,13 +6,14 @@ import classes from './Validot.local.scss'
 // TODO: highlight the scrolled-to element
 const scrollIntoView = id => document.getElementById(id).scrollIntoView()
 
-const Validot = ({ input, meta }) => (
+const Validot = ({ input, meta, message }) => (
   <div
     className={classnames(classes.root, {
       [classes.valid]: meta.valid,
       [classes.error]: meta.error,
       [classes.warning]: meta.warning,
     })}
+    message={message}
     onClick={() => scrollIntoView(input.name)}/>
 )
 

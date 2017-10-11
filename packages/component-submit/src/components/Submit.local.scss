@@ -16,6 +16,12 @@
   line-height: 1.4;
 }
 
+a {
+  color: var(--color-primary);
+  text-decoration: underline;
+  font-style: italic;
+}
+
 .confirm {
   position: fixed;
   top: 0;
@@ -36,4 +42,14 @@
   position: absolute;
   top: 50px;
   right: 10px;
+}
+
+.root p {
+  max-width: 45ch;
+  font-family: var(--font-author);
+}
+
+a:visited {
+  color: var(--color-primary);
+  font-style: normal;
 }

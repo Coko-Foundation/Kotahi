@@ -9,9 +9,9 @@
 }
 
 .root:hover {
-  color: cornflowerblue;
+  color: var(--color-primary);
 }
 
 .root.active {
-  color: cornflowerblue;
+  color: var(--color-primary);
 }

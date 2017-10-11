@@ -1,18 +1,36 @@
 .root {
+  color: #333;
   display: inline-block;
   padding: 10px;
-  border: 1px solid #eee;
-  box-shadow: 0 1px #aaa;
   margin-bottom: 10px;
   margin-right: 10px;
   font-family: var(--font-reviewer);
 }
 
 .name {
+  color: current-color;
   font-size: 18px;
+  font-family: var(--font-interface);
+  font-weight: 500;
+}
+
+.fullname {
+  color: current-color;
+  font-size: 1.3em;
+  margin-top: 0.2em;
+  font-weight: bold;
+  font-style: italic;
 }
 
 .date {
+  color: current-color;
+  font-family: var(--font-interface);
   font-style: italic;
-  font-size: 16px;
+  font-size: 0.9em;
+  margin-top: 0.4em;
+  margin-left: 0.1em;
+}
+
+.root button {
+  margin-top: 1em;
 }

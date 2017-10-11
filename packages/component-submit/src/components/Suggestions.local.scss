@@ -1,12 +1,17 @@
 .section {
-  margin: 20px 0;
+  margin-bottom: 3em 0;
 }
 
 .legend {
-  font-weight: bold;
-  margin: 10px 10px 10px 0;
+  font-weight: 500;
+  font-size: 1.5em;
+  margin-top: 3em;
 }
 
 .sublegend {
-  margin: 10px 10px 10px 0;
+  margin: 2em 0 1em;
+}
+
+.root input {
+  margin-left: 1em;
 }

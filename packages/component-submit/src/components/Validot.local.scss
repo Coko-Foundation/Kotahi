@@ -1,25 +1,56 @@
+:root {
+  --color-circle: #aaa;
+}
+
 .root {
   display: block;
+  position: relative;
   width: 25px;
   height: 25px;
   margin: 5px 10px;
   cursor: pointer;
-  border: 3px solid cornflowerblue;
+  border: 3px solid white;
   border-radius: 100%;
+  background: var(--color-circle);
 }
 
 .root:hover {
-  border-color: #aaa;
+  &::before {
+    content: " ";
+    width: 25px;
+    height: 25px;
+    transform: scale(1.5);
+    transform-origin: 50%;
+    position: absolute;
+    background: var(--color-circle);
+    z-index: -1;
+    border-radius: 50%;
+  }
+
+  &::after {
+    display: block;
+    width: 20ch;
+    content: "it would be nice to get a variable here for the message";
+    font-size: 0.8em;
+    margin-left: 3em;
+    margin-top: -0.5em;
+    color: var(--color-circle);
+    font-style: italic;
+  }
 }
 
 .valid {
-  background: cornflowerblue;
+  --color-circle: var(--color-primary);
 }
 
 .warning {
-  border-color: orange;
+  --color-circle: var(--color-warning);
+}
+
+.idle {
+  background: #aaa;
 }
 
 .error {
-  border-color: red;
+  --color-circle: var(--color-danger);
 }
