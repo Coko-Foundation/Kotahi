@@ -24,7 +24,7 @@ const Confirm = ({ toggleConfirming }) => (
           Submit your manuscript
         </Button>
         <span className={classes.actionDivider}> or </span>
-        <Button onClick={toggleConfirming}>
+        <Button onClick={toggleConfirming} back>
           get back to your submission
         </Button>
       </div>

@@ -3,14 +3,22 @@
 }
 
 .button {
-  border: none;
+  border: 1px dashed grey;
   background: transparent;
   padding: 10px;
   cursor: pointer;
   font-size: inherit;
   font-family: inherit;
+  margin-bottom: 2em;
 }
 
 .button:hover {
   color: var(--color-primary);
+  border-color: var(--color-primary);
+}
+
+.files {
+  font-style: italic;
+  line-height: 1.5;
+  font-size: 0.9em;
 }

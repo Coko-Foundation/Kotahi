@@ -6,7 +6,7 @@ import File from '../atoms/File'
 const Supplementary = props => (
   <Files
     {...props}
-    buttonText="▲ Upload files"
+    buttonText="↑ Upload files"
     uploadingFile={({ file, progress, error }) => (
       <UploadingFile
         key={file.name}

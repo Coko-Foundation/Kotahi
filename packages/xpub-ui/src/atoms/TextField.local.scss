@@ -27,3 +27,9 @@
     border-bottom: 1px dashed var(--color-primary);
   }
 }
+
+.root input::placeholder {
+  font-style: italic;
+  font-family: var(--font-interface);
+  color: #777;
+}
