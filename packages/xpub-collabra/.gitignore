@@ -5,3 +5,4 @@ node_modules/
 uploads/
 .env.*
 .env
+config/local.*
