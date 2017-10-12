@@ -59,8 +59,10 @@
 .meta {
   display: flex;
   flex-wrap: nowrap;
+  white-space: nowrap;
   color: #575757;
   font-size: 0.8em;
+  margin-left: 1em;
 }
 
 .links {
