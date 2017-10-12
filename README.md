@@ -33,12 +33,19 @@ Note: this monorepo uses Lerna, which works best with npm v4 when linking unpubl
 
 ## Configuration
 
-To enable manuscript conversion via INK, add the following values to `packages/xpub-collabra/.env.dev` (ask in [the xpub channel](https://mattermost.coko.foundation/coko/channels/xpub) if you need an account):
+To enable manuscript conversion via INK, add the following values to `packages/xpub-collabra/config/local.json` (ask in [the xpub channel](https://mattermost.coko.foundation/coko/channels/xpub) if you need an account):
 
-```
-INK_USERNAME=*****
-INK_PASSWORD=*****
-INK_ENDPOINT=http://ink-api.coko.foundation
+```json
+{
+  "pubsweet-server": {
+    "secret": "__EDIT_THIS__"
+  },
+  "pubsweet-component-ink-backend": {
+    "inkEndpoint": "__EDIT_THIS__",
+    "email": "__EDIT_THIS__",
+    "password": "__EDIT_THIS__"
+  }
+}
 ```
 
 ## Running the app
