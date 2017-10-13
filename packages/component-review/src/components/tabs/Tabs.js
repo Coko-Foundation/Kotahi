@@ -3,6 +3,8 @@ import { compose, withState } from 'recompose'
 import Tab from './Tab'
 import classes from './Tabs.local.scss'
 
+// TODO: allow the tab content to be separate from the key
+
 const Tabs = ({ sections, title, activeKey, setActiveKey }) => (
   <div className={classes.root}>
     <div className={classes.tabs}>

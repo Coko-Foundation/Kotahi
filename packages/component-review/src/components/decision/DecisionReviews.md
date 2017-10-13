@@ -1,38 +1,46 @@
 Reviews of a version of a project, as shown when making a decision.
 
 ```js
-const reviews = [
-  {
-    id: faker.random.uuid(),
-    note: {
-      content: '<p>This is a review</p>',
-      attachments: [
-        {
-          name: faker.system.commonFileName(),
-          url: faker.internet.url()
-        }
-      ]
-    },
-    confidential: {
-      content: '<p>This is confidential</p>',
-    },
-    events: {
-      reviewed: faker.date.past(1)
-    },
-    recommendation: 'accept'
+const version = {
+  id: faker.random.uuid(),
+  submitted: faker.date.past(2),
+  declarations: {
+    openReview: true
   },
-  {
-    id: faker.random.uuid(),
+  files: {
+    supplementary: []
+  },
+  reviewers: [
+    {
+      id: faker.random.uuid(),
+      reviewer: 'reviewer-reviewed',
+      status: 'reviewed',
+      submitted: faker.date.past(2),
+      note: {
+        content: '<p>This is a review</p>'
+      },
+      recommendation: 'accept'
+    },
+    {
+      id: faker.random.uuid(),
+      reviewer: 'reviewer-reviewed',
+      status: 'reviewed',
+      submitted: faker.date.past(2),
+      note: {
+        content: '<p>This is another review</p>'
+      },
+      recommendation: 'revise'
+    },
+  ],
+  decision: {
+    submitted: faker.date.past(2),
     note: {
-      content: '<p>This is another review</p>',
-    },
-    events: {
-      reviewed: faker.date.past(1)
-    },
-    recommendation: 'reject'
+      content: '<p>This is a decision</p>',
+      recommendation: 'accept'
+    }
   }
-];
+};
 
 <DecisionReviews
-  version={{reviews}}/>
+  version={version}/>
 ```

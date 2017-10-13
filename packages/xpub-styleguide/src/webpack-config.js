@@ -20,6 +20,7 @@ module.exports = dir => {
       path: path.join(dir, 'dist')
     },
     devtool: 'cheap-module-source-map',
+    watch: true,
     // externals: [nodeExternals({
     //   whitelist: [/\.(?!js$).{1,5}$/i]
     // })],

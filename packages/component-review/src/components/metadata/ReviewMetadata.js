@@ -26,7 +26,7 @@ const ReviewMetadata = ({ version, handlingEditors }) => (
           </th>
           <td>
             {handlingEditors.map(user => (
-              <span>{user.username}</span>
+              <span key={user.username}>{user.username}</span>
             ))}
           </td>
         </tr>

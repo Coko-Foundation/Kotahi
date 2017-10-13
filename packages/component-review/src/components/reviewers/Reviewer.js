@@ -21,7 +21,7 @@ const Reviewer = ({ reviewer, removeReviewer }) => (
     </div>
     <div>
       {map(reviewer.events, (event, key) => (
-        <div className={classes.date}>
+        <div className={classes.date} key={`${key}-${event}`}>
           {key} on <Moment format="YYYY-MM-DD">{event}</Moment>
         </div>
       ))}

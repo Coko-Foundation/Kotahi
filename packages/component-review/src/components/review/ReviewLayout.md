@@ -130,6 +130,7 @@ const ConnectedReviewLayout= reduxForm({
         currentVersion={currentVersion}
         initialValues={reviewer}
         reviewer={reviewer}
+        handlingEditors={handlingEditors}
         uploadFile={() => {}}/>
 </div>
 ```
