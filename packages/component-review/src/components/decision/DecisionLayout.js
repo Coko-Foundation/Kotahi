@@ -18,10 +18,13 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
     const decision = version.decision
 
     if (decision && decision.submitted) {
-      const key = moment(decision.submitted).format('YYYY-MM-DD')
+      const submittedMoment = moment(decision.submitted)
+      const key = submittedMoment.format('x')
+      const label = submittedMoment.format('YYYY-MM-DD')
 
       decisionSections.push({
         key,
+        label,
         content: (
           <div>
             <ReviewMetadata version={version}/>
@@ -33,6 +36,7 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
 
       editorSections.push({
         key,
+        label,
         content: <SimpleEditor
           content={version.source}
           layout="bare"
@@ -44,10 +48,13 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
   const decision = currentVersion.decision
 
   if (!decision || !decision.submitted) {
-    const key = moment().format('YYYY-MM-DD')
+    const submittedMoment = moment()
+    const key = submittedMoment.format('x')
+    const label = submittedMoment.format('YYYY-MM-DD')
 
     decisionSections.push({
       key,
+      label,
       content: (
         <div>
           <ReviewMetadata
@@ -65,6 +72,7 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
 
     editorSections.push({
       key,
+      label,
       content: <SimpleEditor
         content={currentVersion.source}
         layout="bare"

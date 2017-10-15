@@ -16,10 +16,13 @@ const ReviewLayout = ({ project, versions, currentVersion, handlingEditors, revi
     const review = version.reviewers.find(review => review.reviewer === reviewer.id)
 
     if (review && review.submitted) {
-      const key = moment(review.submitted).format('YYYY-MM-DD')
+      const submittedMoment = moment(review.submitted)
+      const key = submittedMoment.format('x')
+      const label = submittedMoment.format('YYYY-MM-DD')
 
       reviewSections.push({
         key,
+        label,
         content: (
           <div>
             <ReviewMetadata
@@ -34,6 +37,7 @@ const ReviewLayout = ({ project, versions, currentVersion, handlingEditors, revi
       // TODO: need to include unreviewed versions?
       editorSections.push({
         key,
+        label,
         content: <SimpleEditor
           content={version.source}
           layout="bare"
@@ -47,10 +51,13 @@ const ReviewLayout = ({ project, versions, currentVersion, handlingEditors, revi
   )
 
   if (!review || !review.submitted) {
-    const key = moment().format('YYYY-MM-DD')
+    const submittedMoment = moment()
+    const key = submittedMoment.format('x')
+    const label = submittedMoment.format('YYYY-MM-DD')
 
     reviewSections.push({
       key,
+      label,
       content: (
         <div>
           <ReviewMetadata
@@ -67,6 +74,7 @@ const ReviewLayout = ({ project, versions, currentVersion, handlingEditors, revi
 
     editorSections.push({
       key,
+      label,
       content: <SimpleEditor
         layout="bare"
         content={currentVersion.source}

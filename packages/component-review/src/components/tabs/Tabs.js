@@ -14,13 +14,13 @@ const Tabs = ({ sections, title, activeKey, setActiveKey }) => (
         </span>
       )}
 
-      {sections.map(({ key }) => (
+      {sections.map(({ key, label }) => (
         <span
           key={key}
           className={classes.tab}
           onClick={() => setActiveKey(key)}>
           <Tab active={activeKey === key}>
-            {key}
+            {label || key}
           </Tab>
         </span>
       ))}
