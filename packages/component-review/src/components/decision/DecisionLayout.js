@@ -80,21 +80,19 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
     })
   }
 
-  const activeKey = decisionSections[decisionSections.length - 1].key
-
   return (
     <div className={classes.root}>
       <div className={classes.column}>
         <Tabs
           sections={editorSections}
-          activeKey={activeKey}
+          activeKey={editorSections[editorSections.length - 1].key}
           title="Versions"/>
       </div>
 
       <div className={classes.column}>
         <Tabs
           sections={decisionSections}
-          activeKey={activeKey}
+          activeKey={decisionSections[decisionSections.length - 1].key}
           title="Versions"/>
       </div>
     </div>
