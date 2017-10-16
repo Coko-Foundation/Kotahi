@@ -1,6 +1,6 @@
 import React from 'react'
 import classnames from 'classnames'
-import { debounce } from 'lodash'
+import { debounce, findKey } from 'lodash'
 // import { Plain } from 'slate'
 import { Editor as SlateEditor } from 'slate-react'
 import EditorToolbar from './EditorToolbar'
@@ -38,20 +38,6 @@ class Editor extends React.Component {
     })
   }
 
-  transform = callback => {
-    const { state } = this.state
-
-    const transform = state.transform()
-
-    callback(transform)
-
-    // TODO: call editor.onChange(state) instead?
-
-    this.setState({
-      state: transform.apply()
-    })
-  }
-
   onChange = ({ state }) => {
     if (state.document !== this.state.state.document) {
       this.throttledOnDocumentChange({ state })
@@ -78,14 +64,18 @@ class Editor extends React.Component {
     }
   }
 
-  onKeyDown = (event, { isMod, key }, state) => {
+  onKeyDown = (event, data, change) => {
     const { keys } = this.props
 
-    if (!isMod || !keys[key]) return
+    const mark = findKey(keys, test => test(event))
+
+    if (!mark) return
 
     event.preventDefault()
 
-    return state.transform().toggleMark(keys[key]).apply()
+    change.toggleMark(mark)
+
+    return true
   }
 
   onReceive = (event, data, state, editor) => {
@@ -111,7 +101,7 @@ class Editor extends React.Component {
   insertPastedContent = (content, state) => {
     const { document } = this.props.converter.deserialize(content)
 
-    return state.transform().insertFragment(document).apply()
+    return state.change().insertFragment(document)
   }
 
   insertFiles = (type, data) => {
@@ -127,21 +117,21 @@ class Editor extends React.Component {
         }
       }
 
-      this.transform(transform => {
-        if (data.target) {
-          transform.select(data.target).collapseToStartOfNextBlock()
-        }
+      const change = this.state.state
 
-        // TODO: insert after last block
+      if (data.target) {
+        change.select(data.target).collapseToStartOfNextBlock()
+      }
 
-        transform.insertBlock(block)
-      })
+      // TODO: insert after last block
+
+      change.insertBlock(block)
     })
   }
 
   render () {
     const { state } = this.state
-    const { className, schema, placeholder, placeholderClassName, toolbar, title } = this.props
+    const { className, schema, placeholder, placeholderClassName, plugins, toolbar, title } = this.props
 
     if (!state) return null
 
@@ -152,7 +142,7 @@ class Editor extends React.Component {
             title={title}
             toolbar={toolbar}
             state={state}
-            transform={this.transform}
+            onChange={this.onChange}
             insertFiles={this.insertFiles}/>
         )}
 
@@ -167,6 +157,7 @@ class Editor extends React.Component {
           onDrop={this.onReceive}
           placeholder={placeholder}
           placeholderClassName={classnames(placeholderClassName, classes.placeholder)}
+          plugins={plugins}
           spellCheck
         />
       </div>
