@@ -1,3 +1,9 @@
+:root {
+  --color-activation: black;
+  --font-style: italic;
+  --letter-spacing:  1px;
+}
+
 .root {
   display: flex;
   align-items: center;
@@ -21,10 +27,10 @@
 
 .label {
   font-size: 1em;
-  font-family: "Vollkorn", serif;
-  font-style: italic;
+  font-family: inherit;
+  font-style: var(--font-style);
   display: inline-block;
-  letter-spacing: 1px;
+  letter-spacing: var(--letter-spacing);
 }
 
 //.checked .label {
@@ -32,7 +38,7 @@ input:checked + .label {
   font-weight: 500;
 }
 
-/* hide the input */
+// hide the input
 
 .input {
   display: none;
@@ -57,14 +63,7 @@ input:checked + .label {
 // TODO: don't apply this when checked
 .root:hover .label::before {
   //background-size: 100%;
-  background:
-    radial-gradient(
-      closest-corner at center,
-      var(--color-primary) 0%,
-      var(--color-primary) 30%,
-      white 30%,
-      white 100%
-    );
+  background: radial-gradient(closest-corner at center, var(--color-primary) 0%, var(--color-primary) 30%, white 30%, white 100%);
 
   /* less blurry circle: 2 lines below
   ------------------------------------------------- */
@@ -76,13 +75,18 @@ input:checked + .label {
 input:checked + .label::before {
   transition: border 0.5s ease, background-size 0.3s ease;
   border-color: transparent;
-  box-shadow: 0 0 0 1px black;
-  background:
-    radial-gradient(
-      closest-corner at center,
-      black 0%,
-      black 45%,
-      white 45%,
-      white 100%
-    );
+  box-shadow: 0 0 0 1px var(--color-activation);
+  background: radial-gradient(closest-corner at center, var(--color-activation) 0%, var(--color-activation) 45%, white 45%, white 100%);
+}
+
+input[value="accept"]:checked + .label::before {
+  --color-activation: var(--color-valid);
+}
+
+input[value="reject"]:checked + .label::before {
+  --color-activation: var(--color-danger);
+}
+
+input[value="revise"]:checked + .label::before {
+  --color-activation: var(--color-warning);
 }

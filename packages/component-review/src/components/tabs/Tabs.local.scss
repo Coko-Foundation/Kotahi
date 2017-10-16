@@ -14,13 +14,12 @@
   align-items: baseline;
 }
 
-.tab:not(:last-child) {
-  margin-right: 10px;
-}
-
 .title {
-  font-weight: bold;
-  margin-right: 20px;
+  font-weight: 400;
+  border-bottom: 1px solid #aaa;
+  padding-bottom: 4px;
+  padding-right: 2em;
+  margin-right: -2.5em;
 }
 
 .content {

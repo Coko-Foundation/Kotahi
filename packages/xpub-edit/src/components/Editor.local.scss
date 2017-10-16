@@ -3,12 +3,12 @@
 }
 
 .root {
-  font-size: 1em;
-  line-height: 1.5;
-  font-family: var(--font-author);
+  font-size: 0.8em;
+  line-height: 1.8;
+  font-family: var(--font-reviewer);
   background: linear-gradient(to right, transparent 0%, transparent 2px, white 2px, white 4px), linear-gradient(white 0%, white 90%, var(--color-back) 92%, white 100%);
   background-repeat: repeat-X, repeat-Y;
-  background-size: 4px 100%, 100% 1.5em;
+  background-size: 4px 100%, 100% 1.8em;
   min-height: 1em;
 }
 
@@ -24,10 +24,10 @@
 
 .root:active,
 .root:focus {
-  --color-back: #aaa;
+  --color-back: #eee;
 
   background: linear-gradient(to right, transparent 0%, transparent 2px, white 2px, white 4px), linear-gradient(white 0%, white 90%, var(--color-back) 92%, white 100%);
   background-repeat: repeat-X, repeat-Y;
-  background-size: 4px 100%, 100% 1.5em;
+  background-size: 4px 100%, 100% 1.8em;
   caret-color: var(--color-primary);
 }

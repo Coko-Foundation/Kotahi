@@ -27,7 +27,7 @@ const Decision = ({ decision }) => (
         Decision
       </div>
 
-      <div>{decision.recommendation}</div>
+      <div className={classes.decision}>{decision.recommendation}</div>
     </div>
   </div>
 )

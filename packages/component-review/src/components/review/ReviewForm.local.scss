@@ -1,6 +1,10 @@
 .section {
-  margin-top: 20px;
-  margin-bottom: 20px;
+  --font-style: normal;
+  --letter-spacing: 0;
+
+  font-size: 1em;
+  margin-top: 4em;
+  margin-bottom: 2em;
 }
 
 .note {
@@ -11,6 +15,9 @@
   flex: 1;
 }
 
-.NoteEditor {
-  font-family: var(--font-review);
+.title {
+  font-size: 1.5em;
+  font-weight: 500;
+  margin-right: 10px;
+  margin-bottom: 1em;
 }

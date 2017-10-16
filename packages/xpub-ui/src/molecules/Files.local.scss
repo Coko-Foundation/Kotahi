@@ -22,3 +22,18 @@
   line-height: 1.5;
   font-size: 0.9em;
 }
+
+.attach {
+  border: 0 dashed grey;
+  background: transparent;
+  padding: 0;
+  font-family: inherit;
+  margin-bottom: 0;
+  font-size: 0.8em;
+  border-bottom: 2px solid transparent;
+
+  &:hover {
+    border-bottom: 2px solid var(--color-primary);
+    color: primary;
+  }
+}

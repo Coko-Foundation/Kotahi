@@ -2,11 +2,12 @@ import React from 'react'
 import classnames from 'classnames'
 import classes from './Button.local.scss'
 
-const Button = ({ children, type = 'button', back, disabled, primary, onClick}) => (
+const Button = ({ children, type = 'button', back, disabled, addFile, primary, onClick}) => (
   <button
     className={classnames(classes.root, {
       [classes.disabled]: disabled,
       [classes.back]: back,
+      [classes.addFile]: addFile,
       [classes.primary]: primary
     })}
     type={type}

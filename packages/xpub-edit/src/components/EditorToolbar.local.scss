@@ -1,8 +1,8 @@
 .toolbar {
   display: flex;
   margin-bottom: 0.8em;
-  margin-top: 3em;
   align-items: baseline;
+  margin-top: 0;
 }
 
 .button {
@@ -26,7 +26,8 @@
 }
 
 .title {
-  font-size: 1.5em;
+  font-size: 1.1em;
   font-weight: 500;
   margin-right: 10px;
+  margin-top: 0;
 }

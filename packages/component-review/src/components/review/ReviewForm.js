@@ -27,6 +27,7 @@ const ConfidentialInput = input =>
 const RecommendationInput = journal => input =>
   <RadioGroup
     inline
+    class={classes.class}
     options={journal.recommendations}
     {...input}/>
 
@@ -66,10 +67,13 @@ const ReviewForm = ({ journal, valid, handleSubmit, uploadFile }) => (
     </div>
 
     <div className={classes.section}>
-      <ValidatedField
-        name="recommendation"
-        validate={[required]}
-        component={RecommendationInput(journal)}/>
+      <FormSection name="Recommendation">
+        <div className={classes.title}>Recommendation</div>  
+        <ValidatedField
+          name="recommendation"
+          validate={[required]}
+          component={RecommendationInput(journal)}/>
+      </FormSection>
     </div>
 
     <div>
