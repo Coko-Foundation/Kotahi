@@ -66,6 +66,6 @@
   "scripts": {
     "setupdb": "pubsweet setupdb --dev ./",
     "reset": "pubsweet setupdb --dev --clobber ./",
-    "start": "pubsweet run --dev"
+    "start": "NODE_ENV=dev pubsweet run --dev"
   }
 }
