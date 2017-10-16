@@ -1,7 +1,8 @@
 import React from 'react'
+import classnames from 'classnames'
 import { debounce } from 'lodash'
-// import { Editor as SlateEditor, Plain } from 'slate'
-import { Editor as SlateEditor } from 'slate'
+// import { Plain } from 'slate'
+import { Editor as SlateEditor } from 'slate-react'
 import EditorToolbar from './EditorToolbar'
 import classes from './Editor.local.scss'
 
@@ -51,11 +52,15 @@ class Editor extends React.Component {
     })
   }
 
-  onChange = (state) => {
+  onChange = ({ state }) => {
+    if (state.document !== this.state.state.document) {
+      this.throttledOnDocumentChange({ state })
+    }
+
     this.setState({ state })
   }
 
-  onDocumentChange = (document, state) => {
+  onDocumentChange = ({ state }) => {
     const { converter, onDocumentChange } = this.props
 
     if (typeof onDocumentChange === 'function') {
@@ -152,7 +157,7 @@ class Editor extends React.Component {
         )}
 
         <SlateEditor
-          className={classes.root}
+          className={classnames(className, classes.root)}
           schema={schema}
           state={state}
           onBlur={this.onBlur}
@@ -160,9 +165,8 @@ class Editor extends React.Component {
           onKeyDown={this.onKeyDown}
           onPaste={this.onReceive}
           onDrop={this.onReceive}
-          onDocumentChange={this.throttledOnDocumentChange}
           placeholder={placeholder}
-          placeholderClassName={classes.placeholder}
+          placeholderClassName={classnames(placeholderClassName, classes.placeholder)}
           spellCheck
         />
       </div>

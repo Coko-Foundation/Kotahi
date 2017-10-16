@@ -1,1 +1,1 @@
-export { default as converter } from './plain'
+export { default as converter } from 'slate-plain-serializer'
