@@ -1,5 +1,5 @@
 import React from 'react'
-import { Editor as SlateEditor } from 'slate'
+import { Editor as SlateEditor } from 'slate-react'
 import classes  from './Viewer.local.scss'
 
 class Viewer extends React.Component {

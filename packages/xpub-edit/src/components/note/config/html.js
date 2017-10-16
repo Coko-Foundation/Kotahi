@@ -1,7 +1,7 @@
 // convert HTML to/from Slate
 
 import React from 'react'
-import { Html } from 'slate'
+import Html from 'slate-html-serializer'
 import { parseFragment } from 'parse5'
 
 // define the mapping from HTML tag to Slate node
@@ -75,7 +75,7 @@ export default new Html({
   rules: [
     { deserialize, serialize }
   ],
-  defaultBlockType: 'paragraph',
+  defaultBlock: 'paragraph',
   // parseHtml: null
   parseHtml: parseFragment
 })
