@@ -7,58 +7,64 @@ class EditorToolbar extends React.Component {
   onClickMark = event => {
     event.preventDefault()
 
+    const { state, onChange } = this.props
+
     const type = event.currentTarget.dataset.type
 
-    this.props.transform(transform => {
-      transform.toggleMark(type)
-    })
+    const change = state.change().toggleMark(type)
+
+    onChange(change)
   }
 
   onClickBlock = event => {
     event.preventDefault()
 
+    const { state, onChange } = this.props
+
     const type = event.currentTarget.dataset.type
 
-    this.props.transform(transform => {
-      switch (type) {
-        case 'bulleted-list':
-        case 'numbered-list':
-          if (this.isList()) {
-            if (this.isType(type)) {
-              transform
-                .setBlock('paragraph')
-                .unwrapBlock(type)
-            } else {
-              transform
-                .unwrapBlock(type === 'numbered-list' ? 'bulleted-list' : 'numbered-list')
-                .wrapBlock(type)
-            }
+    const change = state.change()
+
+    switch (type) {
+      case 'bulleted-list':
+      case 'numbered-list':
+        if (this.isList()) {
+          if (this.isType(type)) {
+            change
+              .setBlock('paragraph')
+              .unwrapBlock(type)
           } else {
-            transform
-              .setBlock('list-item')
+            change
+              .unwrapBlock(type === 'numbered-list' ? 'bulleted-list' : 'numbered-list')
               .wrapBlock(type)
           }
+        } else {
+          change
+            .setBlock('list-item')
+            .wrapBlock(type)
+        }
 
-          break
+        break
 
-        case 'file':
-        case 'image':
-          this.openFilePicker(type)
-          break
+      case 'file':
+      case 'image':
+        this.openFilePicker(type)
+        break
 
-        default:
-          transform
-            .setBlock(this.hasBlock(type) ? 'paragraph' : type)
+      default:
+        change
+          .setBlock(this.hasBlock(type) ? 'paragraph' : type)
 
-          if (this.isList()) {
-            transform
-              .unwrapBlock('bulleted-list')
-              .unwrapBlock('numbered-list')
-          }
+        if (this.isList()) {
+          change
+            .unwrapBlock('bulleted-list')
+            .unwrapBlock('numbered-list')
+        }
 
-          break
-      }
-    })
+        break
+    }
+
+    onChange(change)
   }
 
   hasMark = type => {

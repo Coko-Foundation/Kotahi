@@ -30,14 +30,15 @@ const defaultBlock = {
 
 export default {
   marks: {
-    'bold': props => <b>{props.children}</b>,
-    'italic': props => <i>{props.children}</i>,
-    'superscript': props => <sup>{props.children}</sup>,
-    'subscript': props => <sub>{props.children}</sub>,
+    bold: props => <b>{props.children}</b>,
+    italic: props => <i>{props.children}</i>,
+    superscript: props => <sup>{props.children}</sup>,
+    subscript: props => <sub>{props.children}</sub>,
     // 'smallcaps': props => <span style={{ fontVariant: 'smallcaps' }}>{props.children}</span>,
   },
   nodes: {
     // 'paragraph': props => <p {...props.attributes}>{props.children}</p>,
+    link: props => <a {...props.attributes}>{props.children}</a>,
   },
   rules: [
     // Rule to insert a paragraph block if the document is empty.

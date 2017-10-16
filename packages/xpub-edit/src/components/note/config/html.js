@@ -11,6 +11,10 @@ const tags = {
     type: 'paragraph',
     kind: 'block'
   },
+  a: {
+    type: 'link',
+    kind: 'inline',
+  },
   b: {
     type: 'bold',
     kind: 'mark'
@@ -38,6 +42,10 @@ const tags = {
 const renderers = {
   block: {
     paragraph: children => <p>{children}</p>,
+  },
+  inline: {
+    link: (children, data) =>
+      <a href={data.href} target={data.target}>{children}</a>
   },
   mark: {
     bold: children => <b>{children}</b>,
