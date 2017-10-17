@@ -7,11 +7,16 @@
   --color-warning: #ee7600;
   --color-valid: #00bf05;
   --color-pending: #aaa;
+
   // fonts for the different views
   --font-author: 'Vollkorn', serif;
   --font-reviewer: 'Kocourier Prime Sans', monospace;
   --font-interface: 'Fira Sans Condensed', sans-serif;
   --font-mono: 'Fira Mono', monospace;
+}
+
+:global(body) {
+  overflow: hidden;
 }
 
 .root {
