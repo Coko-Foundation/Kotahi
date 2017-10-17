@@ -24,16 +24,11 @@
 }
 
 .attach {
-  border: 0 dashed grey;
+  border: 1px dashed grey;
   background: transparent;
-  padding: 0;
+  padding: 10px;
+  cursor: pointer;
+  font-size: inherit;
   font-family: inherit;
-  margin-bottom: 0;
-  font-size: 0.8em;
-  border-bottom: 2px solid transparent;
-
-  &:hover {
-    border-bottom: 2px solid var(--color-primary);
-    color: primary;
-  }
+  margin-bottom: 2em;
 }
