@@ -64,8 +64,8 @@
     "webpack-hot-middleware": "^2.18.1"
   },
   "scripts": {
-    "setupdb": "pubsweet setupdb --dev ./",
-    "reset": "pubsweet setupdb --dev --clobber ./",
-    "start": "NODE_ENV=dev pubsweet run --dev"
+    "setupdb": "NODE_ENV=dev pubsweet setupdb ./",
+    "reset": "NODE_ENV=dev pubsweet setupdb --clobber ./",
+    "start": "NODE_ENV=dev pubsweet start"
   }
 }
