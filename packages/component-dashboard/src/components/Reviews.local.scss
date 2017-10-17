@@ -1,3 +1,7 @@
 .badge:not(:last-child) {
   margin-right: 10px;
 }
+
+.root {
+  font-family: var(--font-reviewer);
+}

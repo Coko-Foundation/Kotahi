@@ -8,7 +8,7 @@ const Attachment = ({ value }) => (
     href={value.url}
     className={classes.attachment}>
     <span className={classes.icon}>
-      <Icon color="cornflowerblue">paperclip</Icon>
+      <Icon color="var(--color-primary)">paperclip</Icon>
     </span>
     <span className={classes.filename}>
       {value.name}

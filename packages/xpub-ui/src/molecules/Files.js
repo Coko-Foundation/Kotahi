@@ -53,7 +53,7 @@ class Files extends React.Component {
         <div className={classes.upload}>
           <button
             type="button"
-            className={classes.button}
+            className={classes.attach}
             onClick={() => this.fileInput.click()}>
             {buttonText}
           </button>

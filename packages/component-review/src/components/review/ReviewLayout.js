@@ -84,14 +84,14 @@ const ReviewLayout = ({ project, versions, currentVersion, handlingEditors, revi
 
   return (
     <div className={classes.root}>
-      <div className={classes.column}>
+      <div className={classes.manuscript}>
         <Tabs
           sections={editorSections}
           activeKey={editorSections[editorSections.length - 1].key}
           title="Versions"/>
       </div>
 
-      <div className={classes.column}>
+      <div className={classes.review}>
         <Tabs
           sections={reviewSections}
           activeKey={reviewSections[reviewSections.length - 1].key}

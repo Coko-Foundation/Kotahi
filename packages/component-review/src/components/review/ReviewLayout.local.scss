@@ -1,16 +1,28 @@
 .root {
-  display: flex;
-  position: absolute;
-  top: 50px;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  overflow: hidden;
+  display: grid;
+  grid-template-areas: "manuscript review files";
+  grid-template-columns: minmax(200px, 80ch) minmax(200px, 50ch) minmax(10ch, 10ch);
+  justify-content: center;
+  grid-column-gap: 2em;
 }
 
-.column {
-  height: 100%;
-  overflow-y: hidden;
-  padding: 10px;
-  flex: 1;
+.manuscript {
+  grid-area: manuscript;
+}
+
+.review {
+  grid-area: review;
+}
+
+.files  {
+  position: absolute;
+  margin-left: 4em;
+}
+
+.attach {
+  grid-area: files;
+}
+
+.layout-metadatas  {
+  background: red;
 }

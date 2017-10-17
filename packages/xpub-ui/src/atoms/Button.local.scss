@@ -72,6 +72,8 @@
   cursor: not-allowed;
   background: transparent;
   color: #aaa;
+  border: 2px solid transparent;
+  border-bottom: 2px solid #bbb;
 }
 
 .disabled:hover::after {
@@ -110,4 +112,13 @@
 
 .back:active {
   transform: scale(0.99);
+}
+
+.addFile {
+  background: none;
+  font-style: normal;
+  text-transform: none;
+  padding: 0;
+  letter-spacing: 0;
+  border: none;
 }

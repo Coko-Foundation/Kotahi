@@ -9,15 +9,15 @@
 }
 
 .section {
-  margin: 40px 0;
+  margin: 3em 0;
 }
 
 .heading {
-  font-size: 200%;
+  font-size: 1.6em;
   text-transform: uppercase;
   font-family: Vollkorn, serif;
   color: var(--color-primary);
-  margin-bottom: 20px;
+  margin: 4em 0 2em;
 }
 
 .empty {
@@ -27,4 +27,8 @@
 
 .section:not(:last-of-type) {
   margin-bottom: 20px;
+}
+
+a {
+  color: var(--color-primary);
 }

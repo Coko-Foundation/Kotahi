@@ -1,13 +1,23 @@
+.root {
+  margin-bottom: 2em;
+}
+
+table td {
+  vertical-align: top;
+}
+
 .title {
-  font-weight: bold;
-  border-bottom: 2px solid #444;
-  margin-bottom: 20px;
+  font-weight: 400;
+  border-bottom: 1px solid #222;
+  margin-bottom: 0.5em;
 }
 
 .heading {
-  font-weight: normal;
-  color: var(--color-primary);
-  margin-right: 2em;
-  text-align: right;
+  font-weight: 400;
+  padding-bottom: 1em;
+  text-align: left;
   vertical-align: top;
+  font-style: italic;
+  padding-right: 1em;
+  color: #aaa;
 }
