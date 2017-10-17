@@ -12,11 +12,11 @@
     "parse5": "^3.0.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "slate": "^0.27.1",
-    "slate-auto-replace": "^0.6.3",
-    "slate-html-serializer": "^0.2.1",
-    "slate-plain-serializer": "^0.2.1",
-    "slate-react": "^0.5.0"
+    "slate": "^0.27.2",
+    "slate-auto-replace": "^0.7.0",
+    "slate-html-serializer": "^0.2.2",
+    "slate-plain-serializer": "^0.2.2",
+    "slate-react": "^0.6.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

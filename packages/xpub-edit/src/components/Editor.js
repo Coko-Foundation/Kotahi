@@ -1,8 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
 import { debounce, findKey } from 'lodash'
-// import { Plain } from 'slate'
-import { Editor as SlateEditor } from 'slate-react'
+import { Editor as SlateEditor, getEventTransfer } from 'slate-react'
 import EditorToolbar from './EditorToolbar'
 import classes from './Editor.local.scss'
 
@@ -64,7 +63,7 @@ class Editor extends React.Component {
     }
   }
 
-  onKeyDown = (event, data, change) => {
+  onKeyDown = (event, change) => {
     const { keys } = this.props
 
     const mark = findKey(keys, test => test(event))
@@ -78,36 +77,34 @@ class Editor extends React.Component {
     return true
   }
 
-  onReceive = (event, data, state, editor) => {
-    switch (data.type) {
+  onReceive = (event, change) => {
+    const transfer = getEventTransfer(event)
+
+    switch (transfer.type) {
       case 'files':
-        return this.insertFiles(data, state, editor)
+        return this.insertFiles(event, transfer, change)
 
       case 'html':
-        // if (this.props.converter instanceof Plain) {
-        //   return this.insertPastedContent(data.text, state)
-        // }
+        const { converter } = this.props
+        const { document } = converter.deserialize(transfer.html)
 
-        return this.insertPastedContent(data.html, state)
+        return change.insertFragment(document)
 
       case 'text':
-        return this.insertPastedContent(data.text, state)
+        return change.insertText(transfer.text)
+
+      case 'fragment':
+        return change.insertFragment(transfer.fragment)
 
       default:
         throw new Error('Unknown paste type')
     }
   }
 
-  insertPastedContent = (content, state) => {
-    const { document } = this.props.converter.deserialize(content)
-
-    return state.change().insertFragment(document)
-  }
-
-  insertFiles = (type, data) => {
-    Array.from(data.files).forEach(file => {
+  insertFiles = (event, transfer, change) => {
+    Array.from(transfer.files).forEach(file => {
       const block = {
-        type,
+        type: transfer.type,
         isVoid: true,
         data: {
           file,
@@ -117,10 +114,8 @@ class Editor extends React.Component {
         }
       }
 
-      const change = this.state.state
-
-      if (data.target) {
-        change.select(data.target).collapseToStartOfNextBlock()
+      if (event.target) {
+        change.select(event.target).collapseToStartOfNextBlock()
       }
 
       // TODO: insert after last block
@@ -147,7 +142,7 @@ class Editor extends React.Component {
         )}
 
         <SlateEditor
-          className={classnames(classes.root, className)}
+          className={classnames(className, classes.root)}
           schema={schema}
           state={state}
           onBlur={this.onBlur}
