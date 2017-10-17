@@ -147,7 +147,7 @@ class Editor extends React.Component {
         )}
 
         <SlateEditor
-          className={classnames(className, classes.root)}
+          className={classnames(classes.root, className)}
           schema={schema}
           state={state}
           onBlur={this.onBlur}

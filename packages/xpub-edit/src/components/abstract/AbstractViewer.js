@@ -2,8 +2,9 @@ import React from 'react'
 import { converter, schema } from './config'
 import Viewer from '../Viewer'
 
-const AbstractViewer = ({ value }) => (
+const AbstractViewer = ({ className, value }) => (
   <Viewer
+    className={className}
     value={value}
     converter={converter}
     schema={schema}/>

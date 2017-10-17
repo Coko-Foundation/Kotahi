@@ -2,8 +2,9 @@ import React from 'react'
 import { converter, keys, schema, toolbar } from './config'
 import Editor from '../Editor'
 
-const AbstractEditor = ({ value, placeholder, placeholderClassName, title, onBlur, onChange }) => (
+const AbstractEditor = ({ className, value, placeholder, placeholderClassName, title, onBlur, onChange }) => (
   <Editor
+    className={className}
     value={value}
     converter={converter}
     schema={schema}

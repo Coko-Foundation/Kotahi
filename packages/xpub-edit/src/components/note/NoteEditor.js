@@ -2,8 +2,9 @@ import React from 'react'
 import { converter, keys, plugins, schema, toolbar } from './config'
 import Editor from '../Editor'
 
-const NoteEditor = ({ value, placeholder, title, onBlur, onChange }) => (
+const NoteEditor = ({ className, value, placeholder, title, onBlur, onChange }) => (
   <Editor
+    className={className}
     value={value}
     converter={converter}
     schema={schema}

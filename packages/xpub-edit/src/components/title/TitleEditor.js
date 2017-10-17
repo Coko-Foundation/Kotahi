@@ -4,8 +4,9 @@ import Editor from '../Editor'
 
 // TODO: no blocks allowed
 
-const TitleEditor = ({ value, placeholder, title, onBlur, onChange }) => (
+const TitleEditor = ({ className, value, placeholder, title, onBlur, onChange }) => (
   <Editor
+    className={className}
     value={value}
     converter={converter}
     schema={schema}

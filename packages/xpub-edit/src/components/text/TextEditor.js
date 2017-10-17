@@ -5,8 +5,9 @@ import Editor from '../Editor'
 // TODO: only allow a single line of text (no line-breaks)
 // TODO: ensure that content is saved when component is unmounted or blurred
 
-const TextEditor = ({ value, placeholder, title, onBlur, onChange }) => (
+const TextEditor = ({ className, value, placeholder, title, onBlur, onChange }) => (
   <Editor
+    className={className}
     value={value}
     converter={converter}
     placeholder={placeholder}
