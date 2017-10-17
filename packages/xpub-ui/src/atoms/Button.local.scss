@@ -7,6 +7,7 @@
   padding: 10px 20px;
   position: relative;
   background: #ddd;
+  cursor: pointer;
 }
 
 .root:hover,
@@ -16,7 +17,7 @@
   outline: 1px solid transparent;
 }
 
-// this will be added to the button that need a feedback to the user. 
+// this will be added to the button that need a feedback to the user.
 // &::after {
 //   content: "Saved!";
 //   top: 20%;
@@ -90,28 +91,6 @@
   width: 30ch;
   text-align: left;
   opacity: 1;
-}
-
-.back {
-  background: none;
-  font-style: italic;
-  text-transform: none;
-  padding: 0;
-  letter-spacing: 0;
-  border: 0;
-  border-bottom: 2px solid #777;
-}
-
-.back:hover,
-.back:focus {
-  border: 0;
-  background: transparent;
-  border-bottom: 2px solid var(--color-primary);
-  color: var(--color-primary);
-}
-
-.back:active {
-  transform: scale(0.99);
 }
 
 .addFile {

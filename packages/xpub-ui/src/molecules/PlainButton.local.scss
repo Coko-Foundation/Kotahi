@@ -1,0 +1,21 @@
+.root {
+  background: none;
+  font-style: italic;
+  text-transform: none;
+  padding: 0;
+  letter-spacing: 0;
+  border: 0;
+  border-bottom: 2px solid #777;
+}
+
+.root:hover,
+.root:focus {
+  border: 0;
+  background: transparent;
+  border-bottom: 2px solid var(--color-primary);
+  color: var(--color-primary);
+}
+
+.root:active {
+  transform: scale(0.99);
+}

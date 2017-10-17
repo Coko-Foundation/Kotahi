@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from 'xpub-ui'
+import { Button, PlainButton } from 'xpub-ui'
 import classes from './Confirm.local.scss'
 
 const Confirm = ({ toggleConfirming }) => (
@@ -24,9 +24,9 @@ const Confirm = ({ toggleConfirming }) => (
           Submit your manuscript
         </Button>
         <span className={classes.actionDivider}> or </span>
-        <Button onClick={toggleConfirming} back>
+        <PlainButton onClick={toggleConfirming}>
           get back to your submission
-        </Button>
+        </PlainButton>
       </div>
     </article>
   </div>
