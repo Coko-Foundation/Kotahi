@@ -1,9 +1,3 @@
-:root {
-  --color-activation: black;
-  --font-style: italic;
-  --letter-spacing:  1px;
-}
-
 .root {
   display: flex;
   align-items: center;
@@ -28,13 +22,12 @@
 .label {
   font-size: 1em;
   font-family: inherit;
-  font-style: var(--font-style);
+  font-style: italic;
   display: inline-block;
-  letter-spacing: var(--letter-spacing);
+  letter-spacing: 1px;
 }
 
-//.checked .label {
-input:checked + .label {
+.checked .label {
   font-weight: 500;
 }
 
@@ -46,7 +39,7 @@ input:checked + .label {
 
 /* pseudo-input */
 
-.label::before {
+.pseudoInput {
   transition: border 0.5s ease, background-size 0.3s ease;
   content: " ";
   display: inline-block;
@@ -54,39 +47,13 @@ input:checked + .label {
   width: 10px;
   height: 10px;
   border-color: transparent;
-  box-shadow: 0 0 0 1px black;
+  box-shadow: 0 0 0 1px;
   border-radius: 10px;
   background-size: 0;
   margin-right: 0.3em;
 }
 
-// TODO: don't apply this when checked
-.root:hover .label::before {
-  //background-size: 100%;
+.root:not(.checked):hover .pseudoInput {
   background: radial-gradient(closest-corner at center, var(--color-primary) 0%, var(--color-primary) 30%, white 30%, white 100%);
-
-  /* less blurry circle: 2 lines below
-  ------------------------------------------------- */
-  border-color: transparent;
   box-shadow: 0 0 0 1px var(--color-primary);
-}
-
-//.checked .label::before {
-input:checked + .label::before {
-  transition: border 0.5s ease, background-size 0.3s ease;
-  border-color: transparent;
-  box-shadow: 0 0 0 1px var(--color-activation);
-  background: radial-gradient(closest-corner at center, var(--color-activation) 0%, var(--color-activation) 45%, white 45%, white 100%);
-}
-
-input[value="accept"]:checked + .label::before {
-  --color-activation: var(--color-valid);
-}
-
-input[value="reject"]:checked + .label::before {
-  --color-activation: var(--color-danger);
-}
-
-input[value="revise"]:checked + .label::before {
-  --color-activation: var(--color-warning);
 }
