@@ -3,6 +3,8 @@ const authsome = require('./authsome')
 const components = require('./components.json')
 const validations = require('./validations')
 
+const environment = process.env.NODE_ENV || 'development'
+
 module.exports = {
   authsome,
   validations,
@@ -11,7 +13,7 @@ module.exports = {
   },
   'pubsweet-server': {
     'API_ENDPOINT': 'http://localhost:3000/api', // TODO: remove this
-    dbPath: process.env.PUBSWEET_DB || path.join(__dirname, '..', 'api', 'db', process.env.NODE_ENV),
+    dbPath: process.env.PUBSWEET_DB || path.join(__dirname, '..', 'api', 'db', environment),
   },
   'pubsweet-client': {
     'API_ENDPOINT': 'http://localhost:3000/api',
