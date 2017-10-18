@@ -35,10 +35,7 @@ module.exports = [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify('dev'),
-      }),
-      new webpack.ProvidePlugin({
-        CONFIG: path.resolve(__dirname, '..', 'config', 'dev.js')
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       }),
       new CopyWebpackPlugin([
         { from: '../static' }

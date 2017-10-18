@@ -33,10 +33,7 @@ module.exports = [
       new webpack.HotModuleReplacementPlugin(),
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify('test'),
-      }),
-      new webpack.ProvidePlugin({
-        CONFIG: path.resolve(__dirname, '..', 'config', 'test.js')
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       }),
       new CopyWebpackPlugin([
         { from: '../static' }

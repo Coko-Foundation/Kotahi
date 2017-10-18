@@ -34,10 +34,7 @@ module.exports = [
         inject: 'body' // Inject all scripts into the body
       }),
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify('production')
-      }),
-      new webpack.ProvidePlugin({
-        CONFIG: path.resolve(__dirname, '..', 'config', 'production.js')
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
       }),
       new ExtractTextPlugin('styles/main.css'),
       new CopyWebpackPlugin([
