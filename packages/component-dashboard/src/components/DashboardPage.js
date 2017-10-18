@@ -34,7 +34,7 @@ export default compose(
       const dashboard = {
         owner: sortedCollections
           .filter(collection => collection.owners
-            && collection.owners.includes(currentUser.id)),
+            && collection.owners.some(owner => owner.id === currentUser.id)),
         assign: sortedCollections
           .filter(collection => collection.status === 'submitted'
             && !teams.some(team =>
