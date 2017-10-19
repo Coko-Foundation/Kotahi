@@ -12,6 +12,7 @@ const reviewerResponse = (project, version, reviewer, status) => dispatch => {
 
   return dispatch(actions.updateFragment(project, {
     id: version.id,
+    rev: version.rev,
     reviewers: version.reviewers
   }))
 }

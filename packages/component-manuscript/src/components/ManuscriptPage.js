@@ -29,6 +29,7 @@ export default compose(
     updateManuscript: ({ updateVersion, project, version }) => data => {
       return updateVersion(project, {
         id: version.id,
+        rev: version.rev,
         ...data
       })
     }
