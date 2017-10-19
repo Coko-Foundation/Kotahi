@@ -24,9 +24,6 @@ module.exports = dir => {
     // externals: [nodeExternals({
     //   whitelist: [/\.(?!js$).{1,5}$/i]
     // })],
-    resolve: {
-      symlinks: false
-    },
     plugins: [
       // mock CONFIG
       new webpack.DefinePlugin({
@@ -49,9 +46,9 @@ module.exports = dir => {
               loader: 'babel-loader',
               options: {
                 presets: [
-                  ['env', {modules: false}],
-                  'react',
-                  'stage-2'
+                  [require('babel-preset-env'), { modules: false }],
+                  require('babel-preset-react'),
+                  require('babel-preset-stage-2')
                 ],
                 cacheDirectory: true,
               },
