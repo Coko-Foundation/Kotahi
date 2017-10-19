@@ -47,7 +47,7 @@
     "react-styleguidist": "^6.0.8",
     "sass-loader": "^6.0.6",
     "style-loader": "^0.18.2",
-    "webpack": "^3.5.5",
+    "webpack": "^3.8.1",
     "webpack-node-externals": "^1.6.0",
     "xpub-styleguide": "^0.0.2"
   },
