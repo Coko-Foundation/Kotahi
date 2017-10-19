@@ -13,7 +13,7 @@ const Validot = ({ input, meta, message }) => (
       [classes.error]: meta.error,
       [classes.warning]: meta.warning,
     })}
-    message={message}
+    // message={message}
     onClick={() => scrollIntoView(input.name)}/>
 )
 
