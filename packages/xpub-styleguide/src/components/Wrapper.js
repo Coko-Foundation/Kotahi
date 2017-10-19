@@ -1,5 +1,6 @@
 import React from 'react'
 import { Provider } from 'react-redux'
+import { BrowserRouter as Router } from 'react-router-dom'
 import { reducer as formReducer } from 'redux-form'
 import { createStore, combineReducers } from 'redux'
 import { JournalProvider } from 'xpub-journal'
@@ -21,11 +22,13 @@ const store = createStore(
 
 const Wrapper = ({ children }) => (
   <Provider store={store}>
-    <JournalProvider journal={journal}>
-      <div className={classes.root}>
-        {children}
-      </div>
-    </JournalProvider>
+    <Router>
+      <JournalProvider journal={journal}>
+        <div className={classes.root}>
+          {children}
+        </div>
+      </JournalProvider>
+    </Router>
   </Provider>
 )
 
