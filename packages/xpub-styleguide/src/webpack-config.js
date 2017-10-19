@@ -25,13 +25,8 @@ module.exports = dir => {
     //   whitelist: [/\.(?!js$).{1,5}$/i]
     // })],
     plugins: [
-      // mock CONFIG
+      // mock constants
       new webpack.DefinePlugin({
-        CONFIG: {
-          'pubsweet-client': {
-            API_ENDPOINT: JSON.stringify('/')
-          }
-        },
         PUBSWEET_COMPONENTS: '[]'
       }),
     ],
