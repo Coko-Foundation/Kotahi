@@ -20,6 +20,7 @@ const onSubmit = (values, dispatch, { project, version, reviewer }) => {
 
   return dispatch(actions.updateFragment(project, {
     id: version.id,
+    rev: version.rev,
     reviewers: version.reviewers
   })).then(() => {
     // TODO: show "thanks for your review" message
@@ -41,6 +42,7 @@ const onChange = (values, dispatch, { project, version, reviewer }) => {
 
   return dispatch(actions.updateFragment(project, {
     id: version.id,
+    rev: version.rev,
     reviewers: version.reviewers
   }))
 

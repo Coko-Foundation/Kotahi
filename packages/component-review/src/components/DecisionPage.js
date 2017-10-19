@@ -14,6 +14,7 @@ import DecisionLayout from './decision/DecisionLayout'
 const handleDecision = (project, version) => dispatch => {
   return dispatch(actions.updateFragment(project, {
     id: version.id,
+    rev: version.rev,
     decision: version.decision
   })).then(() => {
     console.log(version)
@@ -22,12 +23,14 @@ const handleDecision = (project, version) => dispatch => {
       case 'accept':
         return dispatch(actions.updateCollection({
           id: project.id,
+          rev: project.rev,
           status: 'accepted'
         }))
 
       case 'reject':
         return dispatch(actions.updateCollection({
           id: project.id,
+          rev: project.rev,
           status: 'rejected'
         }))
 
@@ -39,6 +42,7 @@ const handleDecision = (project, version) => dispatch => {
 
         return dispatch(actions.updateCollection({
           id: project.id,
+          rev: project.rev,
           status: 'revise'
         })).then(() => dispatch(actions.createFragment(project, {
           fragmentType: 'version',
@@ -83,6 +87,7 @@ const onChange = (values, dispatch, { project, version }) => {
 
   return dispatch(actions.updateFragment(project, {
     id: version.id,
+    rev: version.rev,
     decision: version.decision
   }))
 

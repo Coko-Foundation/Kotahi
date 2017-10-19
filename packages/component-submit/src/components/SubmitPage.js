@@ -14,11 +14,13 @@ const onSubmit = (values, dispatch, props) => {
 
   return dispatch(actions.updateFragment(props.project, {
     id: props.version.id,
+    rev: props.version.rev,
     submitted: new Date(),
     ...values
   })).then(() => {
     return dispatch(actions.updateCollection({
       id: props.project.id,
+      rev: props.project.rev,
       status: 'submitted'
     }))
   }).then(() => {
@@ -36,6 +38,7 @@ const onChange = (values, dispatch, props) => {
 
   return dispatch(actions.updateFragment(props.project, {
     id: props.version.id,
+    rev: props.version.rev,
     // submitted: false,
     ...values
   }))
