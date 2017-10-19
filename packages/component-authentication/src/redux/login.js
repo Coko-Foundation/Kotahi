@@ -1,5 +1,4 @@
 import * as api from 'pubsweet-client/src/helpers/api'
-import { push } from 'react-router-redux'
 import { getCurrentUser } from './currentUser'
 
 // TODO: This will break when rendered on a server
@@ -26,14 +25,13 @@ export const loginFailure = error => ({
   error
 })
 
-export const login = (credentials, redirectTo) => dispatch => {
+export const login = (credentials) => dispatch => {
   dispatch(loginRequest())
   return api.create('/users/authenticate', credentials).then(
     user => {
       localStorage.setItem('token', user.token)
       dispatch(loginSuccess())
-      dispatch(getCurrentUser())
-      dispatch(push(redirectTo || '/'))
+      return dispatch(getCurrentUser())
     },
     error => {
       dispatch(loginFailure(error))

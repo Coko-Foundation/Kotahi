@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import classnames from 'classnames'
 import classes from './AppBar.local.scss'
 import Icon from '../atoms/Icon'

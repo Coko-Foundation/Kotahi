@@ -1,5 +1,3 @@
-/* global CONFIG */
-
 import endpoint from 'pubsweet-client/src/helpers/endpoint'
 import token from 'pubsweet-client/src/helpers/token'
 

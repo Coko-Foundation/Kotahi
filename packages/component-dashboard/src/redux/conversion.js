@@ -1,4 +1,3 @@
-import { push } from 'react-router-redux'
 import { actions } from 'pubsweet-client'
 import { ink as convertToHTML } from 'pubsweet-component-ink-frontend/actions'
 import uploadFile from 'xpub-upload'
@@ -27,7 +26,7 @@ export const uploadManuscriptFailure = error => ({
   error
 })
 
-export const uploadManuscript = acceptedFiles => dispatch => {
+export const uploadManuscript = (acceptedFiles, history) => dispatch => {
   if (acceptedFiles.length > 1) {
     throw new Error('Only one manuscript file can be uploaded')
   }
@@ -84,7 +83,7 @@ export const uploadManuscript = acceptedFiles => dispatch => {
 
             // redirect after a short delay
             window.setTimeout(() => {
-              dispatch(push(route))
+              history.push(route)
             }, 1000)
           })
         })
