@@ -1,14 +1,17 @@
 export default [
   {
     value: 'accept',
-    label: 'Accept'
+    label: 'Accept',
+    color: 'green'
   },
   {
     value: 'revise',
-    label: 'Revise'
+    label: 'Revise',
+    color: 'orange'
   },
   {
     value: 'reject',
-    label: 'Reject'
+    label: 'Reject',
+    color: 'red'
   }
 ]
