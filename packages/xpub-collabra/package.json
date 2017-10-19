@@ -40,6 +40,7 @@
     "xpub-fonts": "^0.0.2",
     "xpub-journal": "^0.0.2",
     "xpub-selectors": "^0.0.2",
+    "xpub-theme": "^0.0.2",
     "xpub-ui": "^0.0.2"
   },
   "devDependencies": {

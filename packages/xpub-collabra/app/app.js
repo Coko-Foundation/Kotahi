@@ -9,6 +9,7 @@ import { JournalProvider } from 'xpub-journal'
 import * as journal from './config/journal'
 import Root from './routes'
 import 'xpub-fonts'
+import 'xpub-theme'
 
 const history = createHistory()
 const store = configureStore(history, {})

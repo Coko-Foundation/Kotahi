@@ -20,8 +20,7 @@
     "react-tag-autocomplete": "^5.4.1",
     "recompose": "^0.25.0",
     "redux": "^3.6.0",
-    "redux-form": "^7.0.3",
-    "xpub-fonts": "^0.0.2"
+    "redux-form": "^7.0.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
