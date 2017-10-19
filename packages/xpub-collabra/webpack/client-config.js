@@ -6,8 +6,8 @@ const { pick } = require('lodash')
 const outputPath = path.resolve(__dirname, '../_build/client.json')
 
 const fields = [
-  'authsome',
-  'validations',
+  // 'authsome',
+  // 'validations',
   'pubsweet-client',
 ]
 
