@@ -5,7 +5,7 @@ import classes from './PlainButton.local.scss'
 
 const PlainButton = ({ className, children, type, disabled, primary, onClick }) => (
   <Button
-    className={classnames(className, classes.root)}
+    className={classnames(classes.root, className)}
     type={type}
     primary={primary}
     disabled={disabled}
