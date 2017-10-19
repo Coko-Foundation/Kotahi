@@ -48,8 +48,10 @@ export default compose(
           .filter(team => team.group === 'editor'
             && team.object.type === 'collection'
             && team.members.includes(currentUser.id))
-          .map(team => collections.find(
-            collection => collection.id === team.object.id
+          .map(team => team.object.id)
+          .filter((id, index, items) => items.indexOf(id) === index) // unique
+          .map(id => collections.find(
+            collection => collection.id === id
           )))
           .filter(collection => collection),
         // reviewer: newestFirst(teams
