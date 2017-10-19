@@ -9,17 +9,17 @@ import ReviewerFormContainer from './reviewers/ReviewerFormContainer'
 import ReviewerContainer from './reviewers/ReviewerContainer'
 
 export default compose(
-  ConnectPage(({ params }) => [
-    actions.getCollection({ id: params.project }),
-    actions.getFragments({ id: params.project }),
+  ConnectPage(({ match }) => [
+    actions.getCollection({ id: match.params.project }),
+    actions.getFragments({ id: match.params.project }),
     // actions.getTeams(),
     actions.getUsers(),
-    // actions.getFragment({ id: params.project }, { id: params.version }),
+    // actions.getFragment({ id: match.params.project }, { id: match.params.version }),
   ]),
   connect(
-    (state, ownProps) => {
-      const project = selectCollection(state, ownProps.params.project)
-      const version = selectFragment(state, ownProps.params.version)
+    (state, { match }) => {
+      const project = selectCollection(state, match.params.project)
+      const version = selectFragment(state, match.params.version)
       const reviewers = (version.reviewers || []).filter(reviewer => reviewer.reviewer)
 
       const reviewerUsers = state.users.users

@@ -1,5 +1,6 @@
 import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
+import { withRouter } from 'react-router-dom'
 import { actions } from 'pubsweet-client'
 import { newestFirst, selectCurrentUser } from 'xpub-selectors'
 import { ConnectPage } from 'xpub-connect'
@@ -67,13 +68,14 @@ export default compose(
 
       return { collections, currentUser, conversion, dashboard }
     },
-    {
-      uploadManuscript,
-      reviewerResponse,
-      deleteProject: actions.deleteCollection,
-    }
+    (dispatch, { history }) => ({
+      uploadManuscript: acceptedFiles => dispatch(uploadManuscript(acceptedFiles, history)),
+      reviewerResponse: (project, version, reviewer, status) => dispatch(reviewerResponse(project, version, reviewer, status)),
+      deleteProject: collection => dispatch(actions.deleteCollection(collection)),
+    })
   ),
   withProps({
     AssignEditor: AssignEditorContainer
-  })
+  }),
+  withRouter,
 )(Dashboard)

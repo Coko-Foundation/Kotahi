@@ -1,24 +1,37 @@
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
-import Root from './Root'
-import routes from './routes'
+import { Provider as StoreProvider } from 'react-redux'
+import { Router } from 'react-router-dom'
+import { configureStore } from 'pubsweet-client'
+import createHistory from 'history/createBrowserHistory'
+import { JournalProvider } from 'xpub-journal'
 import * as journal from './config/journal'
+import Root from './routes'
 import 'xpub-fonts'
 
-const render = routes => {
+const history = createHistory()
+const store = configureStore(history, {})
+
+const render = () => {
   ReactDOM.render(
     <AppContainer>
-      <Root routes={routes} journal={journal}/>
+      <StoreProvider store={store}>
+        <JournalProvider journal={journal}>
+          <Router history={history}>
+            <Root/>
+          </Router>
+        </JournalProvider>
+      </StoreProvider>
     </AppContainer>,
     document.getElementById('root')
   )
 }
 
-render(routes)
+render()
 
 if (module.hot) {
   module.hot.accept('./routes', () => {
-    render(routes)
+    render()
   })
 }

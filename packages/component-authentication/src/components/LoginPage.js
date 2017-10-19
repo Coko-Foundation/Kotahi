@@ -6,8 +6,10 @@ import Login from './Login'
 
 // TODO: const redirect = this.props.location.query.next | CONFIG['pubsweet-client']['login-redirect']
 
-const onSubmit = (values, dispatch) => {
-  dispatch(login(values)).catch(error => {
+const onSubmit = (values, dispatch, { history }) => {
+  dispatch(login(values)).then(() => {
+    history.push('/') // TODO: state
+  }).catch(error => {
     if (error.validationErrors) {
       throw new SubmissionError(error.validationErrors)
     } else {

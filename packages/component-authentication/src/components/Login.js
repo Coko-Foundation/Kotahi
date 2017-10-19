@@ -1,6 +1,6 @@
 import React from 'react'
 import { Field } from 'redux-form'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import { Button, TextField } from 'xpub-ui'
 import classes from './Form.local.scss'
 

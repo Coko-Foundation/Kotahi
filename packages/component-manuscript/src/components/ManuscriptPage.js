@@ -6,15 +6,15 @@ import { selectCurrentUser, selectCollection, selectFragment } from 'xpub-select
 import Manuscript from './Manuscript'
 
 export default compose(
-  ConnectPage(({ params }) => [
-    actions.getCollection({ id: params.project }),
-    actions.getFragment({ id: params.project }, { id: params.version })
+  ConnectPage(({ match }) => [
+    actions.getCollection({ id: match.params.project }),
+    actions.getFragment({ id: match.params.project }, { id: match.params.version })
   ]),
   connect(
-    (state, { params }) => {
+    (state, { match }) => {
       const currentUser = selectCurrentUser(state)
-      const project = selectCollection(state, params.project)
-      const version = selectFragment(state, params.version)
+      const project = selectCollection(state, match.params.project)
+      const version = selectFragment(state, match.params.version)
 
       const content = version.source // TODO: load from a file
 

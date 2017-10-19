@@ -1,7 +1,7 @@
 import React from 'react'
 import { clone } from 'lodash'
 import { shallow } from 'enzyme'
-import { Link } from 'react-router'
+import { Link } from 'react-router-dom'
 import renderer from 'react-test-renderer'
 
 import AppBar from '../src/molecules/AppBar'

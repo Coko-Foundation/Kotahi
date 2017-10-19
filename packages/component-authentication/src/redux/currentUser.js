@@ -28,7 +28,7 @@ export const getCurrentUser = () => dispatch => {
   dispatch(getCurrentUserRequest())
   return api.get('/users/authenticate').then(
     user => {
-      dispatch(getCurrentUserSuccess(user))
+      return dispatch(getCurrentUserSuccess(user))
     },
     error => {
       dispatch(getCurrentUserFailure(error))
@@ -41,6 +41,7 @@ export const getCurrentUser = () => dispatch => {
 
 const initialState = {
   isFetching: false,
+  isFetched: false,
   isAuthenticated: false,
   user: null,
   error: null
@@ -51,6 +52,7 @@ export default (state = initialState, action) => {
     case GET_CURRENT_USER_REQUEST:
       return {
         isFetching: true,
+        isFetched: false,
         isAuthenticated: false,
         user: null,
         error: null,
@@ -59,6 +61,7 @@ export default (state = initialState, action) => {
     case GET_CURRENT_USER_FAILURE:
       return {
         isFetching: false,
+        isFetched: true,
         isAuthenticated: false,
         user: null,
         error: action.error
@@ -67,6 +70,7 @@ export default (state = initialState, action) => {
     case GET_CURRENT_USER_SUCCESS:
       return {
         isFetching: false,
+        isFetched: true,
         isAuthenticated: true,
         user: action.user,
         error: null
@@ -76,6 +80,7 @@ export default (state = initialState, action) => {
     case LOGOUT_SUCCESS:
       return {
         isFetching: false,
+        isFetched: false,
         isAuthenticated: false,
         user: null,
         error: null,

@@ -1,7 +1,7 @@
 import React from 'react'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
-import { withRouter } from 'react-router'
+import { withRouter } from 'react-router-dom'
 import classes from './ConnectPage.local.scss'
 
 const ConnectPage = requirements => WrappedComponent => {
@@ -68,12 +68,12 @@ const ConnectPage = requirements => WrappedComponent => {
   }
 
   return compose(
+    withRouter,
     connect(
       state => ({
         isAuthenticated: state.currentUser.isAuthenticated
       })
-    ),
-    withRouter
+    )
   )(ConnectedComponent)
 }
 

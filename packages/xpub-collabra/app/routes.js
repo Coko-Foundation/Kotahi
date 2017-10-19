@@ -1,8 +1,15 @@
 import React from 'react'
-import { Redirect, Route } from 'react-router'
+import { Route, withRouter } from 'react-router-dom'
 import loadable from 'loadable-components'
+
 import { App } from 'pubsweet-component-xpub-app/src/components'
-import { AuthenticatedPage, SignupPage, LoginPage, LogoutPage } from 'pubsweet-component-xpub-authentication/src/components'
+
+import {
+  PrivateRoute,
+  SignupPage,
+  LoginPage,
+  LogoutPage
+} from 'pubsweet-component-xpub-authentication/src/components'
 
 const DashboardPage = loadable(() =>
   import('pubsweet-component-xpub-dashboard/src/components/DashboardPage'))
@@ -22,23 +29,24 @@ const ReviewPage = loadable(() =>
 const DecisionPage = loadable(() =>
   import('pubsweet-component-xpub-review/src/components/DecisionPage'))
 
-export default (
-  <Route>
-    <Redirect from="/" to="/dashboard"/>
+// TODO: use componentDidMount to fetch the current user before rendering?
 
-    <Route path="/" component={App}>
-      <Route component={AuthenticatedPage}>
-        <Route path="dashboard" component={DashboardPage}/>
-        <Route path="projects/:project/versions/:version/submit" component={SubmitPage}/>
-        <Route path="projects/:project/versions/:version/manuscript" component={ManuscriptPage}/>
-        <Route path="projects/:project/versions/:version/reviewers" component={ReviewersPage}/>
-        <Route path="projects/:project/versions/:version/reviews/:review" component={ReviewPage}/>
-        <Route path="projects/:project/versions/:version/decisions/:decision" component={DecisionPage}/>
-      </Route>
+const Root = () => (
+  <App>
+    <PrivateRoute exact path="/" component={DashboardPage}/>
+    <PrivateRoute exact path="/projects/:project/versions/:version/submit" component={SubmitPage}/>
+    <PrivateRoute exact path="/projects/:project/versions/:version/manuscript" component={ManuscriptPage}/>
+    <PrivateRoute exact path="/projects/:project/versions/:version/reviewers" component={ReviewersPage}/>
+    <PrivateRoute exact path="/projects/:project/versions/:version/reviews/:review" component={ReviewPage}/>
+    <PrivateRoute exact path="/projects/:project/versions/:version/decisions/:decision" component={DecisionPage}/>
 
-      <Route path="signup" component={SignupPage}/>
-      <Route path="login" component={LoginPage}/>
-      <Route path="logout" component={LogoutPage}/>
-    </Route>
-  </Route>
+    <PrivateRoute exact path="/logout" component={LogoutPage}/>
+
+    <Route exact path="/signup" component={SignupPage}/>
+    <Route exact path="/login" component={LoginPage}/>
+
+    {/*<Redirect from="/" to="/dashboard"/>*/}
+  </App>
 )
+
+export default withRouter(Root)

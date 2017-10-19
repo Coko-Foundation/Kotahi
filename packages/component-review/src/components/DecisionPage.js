@@ -1,7 +1,7 @@
 import { debounce, pick } from 'lodash'
 import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
-import { push } from 'react-router-redux'
+import { withRouter } from 'react-router-dom'
 import { reduxForm, SubmissionError } from 'redux-form'
 import { actions } from 'pubsweet-client'
 import { ConnectPage } from 'xpub-connect'
@@ -57,7 +57,7 @@ const handleDecision = (project, version) => dispatch => {
   })
 }
 
-const onSubmit = (values, dispatch, { project, version }) => {
+const onSubmit = (values, dispatch, { project, version, history }) => {
   console.log('submit', values)
 
   version.decision = {
@@ -69,7 +69,7 @@ const onSubmit = (values, dispatch, { project, version }) => {
 
   return dispatch(handleDecision(project, version)).then(() => {
     // TODO: show "thanks for your review" message
-    dispatch(push('/'))
+    history.push('/')
   }).catch(error => {
     if (error.validationErrors) {
       throw new SubmissionError()
@@ -95,15 +95,15 @@ const onChange = (values, dispatch, { project, version }) => {
 }
 
 export default compose(
-  ConnectPage(({params}) => [
-    actions.getCollection({id: params.project}),
-    actions.getFragments({id: params.project}),
+  ConnectPage(({ match }) => [
+    actions.getCollection({id: match.params.project}),
+    actions.getFragments({id: match.params.project}),
   ]),
   connect(
-    (state, { params }) => {
-      const project = selectCollection(state, params.project)
+    (state, { match }) => {
+      const project = selectCollection(state, match.params.project)
       const versions = selectFragments(state, project.fragments)
-      const version = selectFragment(state, params.version)
+      const version = selectFragment(state, match.params.version)
       const currentVersion = selectCurrentVersion(state, project)
 
       return { project, versions, version, currentVersion }
@@ -112,6 +112,7 @@ export default compose(
       uploadFile
     }
   ),
+  withRouter,
   withProps(({decision}) => {
     return {
       initialValues: decision

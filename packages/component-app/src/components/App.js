@@ -24,7 +24,7 @@ const App = ({ children, currentUser, journal }) => (
 export default compose(
   connect(
     state => ({
-      currentUser: state.currentUser.user
+      currentUser: state.currentUser.user,
     })
   ),
   withJournal
