@@ -10,7 +10,8 @@ module.exports = dir => {
     path.join(dir, 'src'),
     /pubsweet-[^/]+\/src/,
     /xpub-[^/]+\/src/,
-    /wax-[^/]+\/src/
+    /wax-[^/]+\/src/,
+    /@pubsweet\/[^/]+\/src/
   ]
 
   return {

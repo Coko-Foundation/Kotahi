@@ -19,6 +19,7 @@ const include = [
   /xpub-[^/]+\/src/,
   /component-[^/]+\/src/,
   /wax-[^/]+\/src/,
+  /@pubsweet\/[^/]+\/src/,
 ]
 
 module.exports = [
