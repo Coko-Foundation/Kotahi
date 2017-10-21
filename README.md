@@ -27,9 +27,9 @@ Note: xpub is still _very_ new. This repository contains an initial set of compo
 
 ## Installing
 
-In the root directory, run `npm install` then `npm run bootstrap` to install all the dependencies.
+Run `yarn config set workspaces-experimental true` to enable yarn workspaces.
 
-Note: this monorepo uses Lerna, which works best with npm v4 when linking unpublished packages. Hoisting is not yet reliable, so each component has its own node_modules folder.
+In the root directory, run `yarn` to install all the dependencies.
 
 ## Configuration
 
@@ -51,8 +51,8 @@ To enable manuscript conversion via INK, add the following values to `packages/x
 ## Running the app
 
 1. `cd packages/xpub-collabra`
-1. The first time you run the app, initialise the database with `npm run setupdb` (press Enter when asked for a collection title, to skip that step).
-1. `npm run start`
+1. The first time you run the app, initialise the database with `yarn run setupdb` (press Enter when asked for a collection title, to skip that step).
+1. `yarn start`
 
 ## Community
 
