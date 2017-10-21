@@ -10,9 +10,11 @@ const DecisionReview = ({ review, reviewer, journal, open, toggleOpen }) => (
       <span
         className={classes.indicator}
         style={{
-          backgroundColor: journal.recommendations
-            .find(item => item.value === review.recommendation)
-            .color
+          backgroundColor: review.recommendation
+            ? journal.recommendations.find(item =>
+                item.value === review.recommendation
+              ).color
+            : 'black'
         }}/>
 
       <span className={classes.ordinal}>
