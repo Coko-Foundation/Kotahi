@@ -1,6 +1,7 @@
 import React from 'react'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
+import { Redirect } from 'react-router-dom'
 import { logout } from '../redux/logout'
 
 class Logout extends React.Component {
@@ -23,7 +24,9 @@ class Logout extends React.Component {
   render () {
     const { isAuthenticated } = this.props
 
-    return isAuthenticated ? <div>Signing out…</div> : <div>Signed out</div>
+    return isAuthenticated
+      ? <div>Signing out…</div>
+      : <Redirect to="/"/>
   }
 }
 
