@@ -33,7 +33,7 @@ In the root directory, run `yarn` to install all the dependencies.
 
 ## Configuration
 
-To enable manuscript conversion via INK, add the following values to `packages/xpub-collabra/config/local.json` (ask in [the xpub channel](https://mattermost.coko.foundation/coko/channels/xpub) if you need an account):
+To enable manuscript conversion via INK, add the following values to `packages/xpub-collabra/config/local-development.json` (ask in [the xpub channel](https://mattermost.coko.foundation/coko/channels/xpub) if you need an account):
 
 ```json
 {
