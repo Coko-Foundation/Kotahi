@@ -1,4 +1,5 @@
 const path = require('path')
+const raw = require('config/raw').raw
 const authsome = require('./authsome')
 const components = require('./components.json')
 const validations = require('./validations')
@@ -7,15 +8,9 @@ const environment = process.env.NODE_ENV || 'development'
 
 module.exports = {
   authsome,
-  validations,
+  validations: raw(validations),
   pubsweet: {
     components
-  },
-  'pubsweet-client': {
-    'API_ENDPOINT': 'http://localhost:3000/api',
-    'login-redirect': '/',
-    'redux-log': false,
-    theme: process.env.PUBSWEET_THEME
   },
   'pubsweet-server': {
     dbPath: process.env.PUBSWEET_DB || path.join(__dirname, '..', 'api', 'db', environment),

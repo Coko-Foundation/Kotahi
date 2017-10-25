@@ -12,7 +12,7 @@
     "prop-types": "^15.5.10",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "recompose": "^0.25.0"
+    "recompose": "^0.26.0"
   },
   "peerDependencies": {
     "prop-types": "^15.5.10",

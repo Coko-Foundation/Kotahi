@@ -15,7 +15,7 @@
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.2",
     "react-router-dom": "^4.2.2",
-    "recompose": "^0.25.0",
+    "recompose": "^0.26.0",
     "redux": "^3.6.0",
     "xpub-bootstrap": "^0.0.2",
     "xpub-journal": "^0.0.2",

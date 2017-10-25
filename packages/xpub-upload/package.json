@@ -9,12 +9,12 @@
     "dist"
   ],
   "dependencies": {
-    "pubsweet-client": "^1.0.0-beta.7",
+    "pubsweet-client": "^1.0.0-beta.8",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.2",
     "react-router-dom": "^4.2.2",
-    "recompose": "^0.25.0",
+    "recompose": "^0.26.0",
     "redux": "^3.6.0"
   },
   "peerDependencies": {

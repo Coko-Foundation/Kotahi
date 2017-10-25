@@ -6,10 +6,10 @@
   "license": "MIT",
   "dependencies": {
     "cokourier-prime-sans": "git+https://gitlab.coko.foundation/julientaq/cokourier-sans-prime.git",
-    "typeface-fira-mono": "^0.0.35",
+    "typeface-fira-mono": "^0.0.40",
     "typeface-fira-sans": "^0.0.35",
     "typeface-fira-sans-condensed": "^0.0.35",
-    "typeface-vollkorn": "^0.0.35"
+    "typeface-vollkorn": "^0.0.40"
   },
   "dependencies_disabled": {
     "pubsweet-fira": "^0.0.3"
