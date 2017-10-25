@@ -10,7 +10,7 @@ module.exports = {
   ],
   alias: {
     joi: 'joi-browser',
-    config: require('./client-config')
+    config: path.resolve(__dirname, '../config/client')
   },
   extensions: ['.js', '.jsx'],
 }

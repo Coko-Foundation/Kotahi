@@ -8,15 +8,15 @@
   "main": "src",
   "dependencies": {
     "immutable": "^3.8.2",
-    "is-hotkey": "0.0.1",
+    "is-hotkey": "^0.1.1",
     "parse5": "^3.0.2",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
-    "slate": "^0.27.2",
-    "slate-auto-replace": "^0.7.0",
-    "slate-html-serializer": "^0.2.2",
-    "slate-plain-serializer": "^0.2.2",
-    "slate-react": "^0.6.0"
+    "slate": "^0.27.5",
+    "slate-auto-replace": "^0.8.1",
+    "slate-html-serializer": "^0.2.5",
+    "slate-plain-serializer": "^0.2.5",
+    "slate-react": "^0.7.3"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
@@ -26,11 +26,11 @@
     "babel-preset-stage-2": "^6.24.1",
     "css-loader": "^0.28.4",
     "faker": "^4.1.0",
-    "file-loader": "^0.11.2",
+    "file-loader": "^1.1.5",
     "node-sass": "^4.5.3",
     "react-styleguidist": "^6.0.8",
     "sass-loader": "^6.0.6",
-    "style-loader": "^0.18.2",
+    "style-loader": "^0.19.0",
     "webpack": "^3.8.1",
     "webpack-node-externals": "^1.6.0",
     "xpub-styleguide": "^0.0.2"
