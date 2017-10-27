@@ -7716,7 +7716,7 @@ prompt@^1.0.0:
     utile "0.3.x"
     winston "2.1.x"
 
-"prompt@github:flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87":
+prompt@flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87:
   version "1.0.0"
   resolved "https://codeload.github.com/flatiron/prompt/tar.gz/1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87"
   dependencies:
@@ -10128,25 +10128,25 @@ typedarray@^0.0.6:
   version "0.0.6"
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
 
-typeface-fira-mono@^0.0.40:
-  version "0.0.40"
-  resolved "https://registry.yarnpkg.com/typeface-fira-mono/-/typeface-fira-mono-0.0.40.tgz#bb83ae196fedcb011d11aa31ad044599bd5d8381"
+typeface-fira-mono@^0.0.43:
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/typeface-fira-mono/-/typeface-fira-mono-0.0.43.tgz#cb381244490d201ee803c718e0c8ad94913d769d"
 
-typeface-fira-sans-condensed@^0.0.35:
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/typeface-fira-sans-condensed/-/typeface-fira-sans-condensed-0.0.35.tgz#8f69de8ff8d1528a5553b38b2846d690a9ed0bc5"
+typeface-fira-sans-condensed@^0.0.43:
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/typeface-fira-sans-condensed/-/typeface-fira-sans-condensed-0.0.43.tgz#a13f8547876774e34e53daacf96423d83fecbc7d"
 
-typeface-fira-sans@^0.0.35:
-  version "0.0.35"
-  resolved "https://registry.yarnpkg.com/typeface-fira-sans/-/typeface-fira-sans-0.0.35.tgz#430c71e6bd7dcd698363a209cf99ebc212a3c371"
+typeface-fira-sans@^0.0.43:
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/typeface-fira-sans/-/typeface-fira-sans-0.0.43.tgz#f9c026ae5b7ad5f1fb727f9947bd1e10e13702e6"
 
 typeface-open-sans@0.0.35:
   version "0.0.35"
   resolved "https://registry.yarnpkg.com/typeface-open-sans/-/typeface-open-sans-0.0.35.tgz#170dc36bbbd63829c9ea64b991c2b0fd65017708"
 
-typeface-vollkorn@^0.0.40:
-  version "0.0.40"
-  resolved "https://registry.yarnpkg.com/typeface-vollkorn/-/typeface-vollkorn-0.0.40.tgz#64225d7e0616c6bf5b89b711df0787aa9d0eaa83"
+typeface-vollkorn@^0.0.43:
+  version "0.0.43"
+  resolved "https://registry.yarnpkg.com/typeface-vollkorn/-/typeface-vollkorn-0.0.43.tgz#4ee1a03f90000b0be3ebd8cac360ee777456465b"
 
 ua-parser-js@^0.7.9:
   version "0.7.17"

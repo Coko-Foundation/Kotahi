@@ -1,5 +1,4 @@
 import React from 'react'
-import 'xpub-fonts'
 import classes from './StyleGuideRenderer.local.scss'
 
 const StyleGuideRenderer = ({ title, children, toc }) => {
