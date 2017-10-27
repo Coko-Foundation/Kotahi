@@ -37,7 +37,6 @@
     "redux": "^3.6.0",
     "redux-form": "^7.0.3",
     "redux-logger": "^3.0.1",
-    "xpub-fonts": "^0.0.2",
     "xpub-journal": "^0.0.2",
     "xpub-selectors": "^0.0.2",
     "xpub-theme": "^0.0.2",

@@ -6,7 +6,6 @@ import { createStore, combineReducers } from 'redux'
 import { JournalProvider } from 'xpub-journal'
 import * as journal from '../config/journal'
 
-import 'xpub-fonts'
 import 'xpub-theme'
 
 import classes from './Wrapper.local.scss'
