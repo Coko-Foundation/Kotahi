@@ -1,5 +1,4 @@
 const path = require('path')
-const raw = require('config/raw').raw
 const authsome = require('./authsome')
 const components = require('./components.json')
 const validations = require('./validations')
@@ -8,7 +7,7 @@ const environment = process.env.NODE_ENV || 'development'
 
 module.exports = {
   authsome,
-  validations: raw(validations),
+  validations,
   pubsweet: {
     components
   },
