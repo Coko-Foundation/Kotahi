@@ -1,5 +1,4 @@
 const path = require('path')
-const raw = require('config/raw').raw
 const authsome = require('./authsome')
 const components = require('./components.json')
 const validations = require('./validations')
@@ -8,7 +7,7 @@ const environment = process.env.NODE_ENV || 'development'
 
 module.exports = {
   authsome,
-  validations: raw(validations),
+  validations,
   pubsweet: {
     components
   },
@@ -19,7 +18,7 @@ module.exports = {
     sendmail: true
   },
   'password-reset': {
-    url: process.env.PUBSWEET_PASSWORD_RESET_URL || 'http://localhost:3000/password-reset',
+    url: process.env.PUBSWEET_PASSWORD_RESET_URL || 'http://localhost:5000/password-reset',
     sender: process.env.PUBSWEET_PASSWORD_RESET_SENDER || 'dev@example.com'
   },
   'pubsweet-component-ink-backend': {
