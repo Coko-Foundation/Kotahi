@@ -18,7 +18,7 @@ module.exports = {
     sendmail: true
   },
   'password-reset': {
-    url: process.env.PUBSWEET_PASSWORD_RESET_URL || 'http://localhost:5000/password-reset',
+    url: process.env.PUBSWEET_PASSWORD_RESET_URL || 'http://localhost:3000/password-reset',
     sender: process.env.PUBSWEET_PASSWORD_RESET_SENDER || 'dev@example.com'
   },
   'pubsweet-component-ink-backend': {
