@@ -1,6 +1,7 @@
 process.env.NODE_ENV = 'development'
 process.env.BABEL_ENV = 'development'
 
+const config = require('config')
 const path = require('path')
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
@@ -36,6 +37,10 @@ module.exports = [
       new webpack.NoEmitOnErrorsPlugin(),
       new webpack.DefinePlugin({
         'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
+      }),
+      new webpack.ContextReplacementPlugin(/./, __dirname, {
+        [config.authsome.mode]: config.authsome.mode,
+        [config.validations]: config.validations
       }),
       new CopyWebpackPlugin([
         { from: '../static' }

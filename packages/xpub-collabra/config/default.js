@@ -1,13 +1,16 @@
 const path = require('path')
-const authsome = require('./authsome')
 const components = require('./components.json')
-const validations = require('./validations')
 
 const environment = process.env.NODE_ENV || 'development'
 
 module.exports = {
-  authsome,
-  validations,
+  authsome: {
+    mode: path.resolve(__dirname, 'authsome.js'),
+    teams: {
+      // TODO
+    }
+  },
+  validations: path.resolve(__dirname, 'validations.js'),
   pubsweet: {
     components
   },
