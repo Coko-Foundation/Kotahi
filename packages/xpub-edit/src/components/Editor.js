@@ -11,13 +11,6 @@ class Editor extends React.Component {
   constructor (props) {
     super(props)
 
-    console.log(props.options)
-
-    // placeholder({
-    //   text: props.placeholder,
-    //   className: props.placeholderClassName
-    // })
-
     this.state = {
       state: EditorState.create(props.options)
     }
