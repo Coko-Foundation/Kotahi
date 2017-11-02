@@ -1,21 +1,17 @@
 import React from 'react'
-import { converter, keys, schema, toolbar } from './config'
-import Editor from '../Editor'
+import HtmlEditor from '../HtmlEditor'
+import * as options from './config'
 
-// TODO: no blocks allowed
-
-const TitleEditor = ({ className, value, placeholder, title, onBlur, onChange }) => (
-  <Editor
+const TitleEditor = ({ className, value, placeholder, placeholderClassName, title, onBlur, onChange }) => (
+  <HtmlEditor
+    options={options}
     className={className}
     value={value}
-    converter={converter}
-    schema={schema}
-    toolbar={toolbar}
-    keys={keys}
     placeholder={placeholder}
+    placeholderClassName={placeholderClassName}
     title={title}
     onBlur={onBlur}
-    onDocumentChange={onChange}
+    onChange={onChange}
   />
 )
 

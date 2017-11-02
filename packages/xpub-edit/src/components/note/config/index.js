@@ -1,5 +1,3 @@
-export { default as converter } from './html'
-export { default as keys } from './keys'
-export { default as plugins } from '../../note/config/plugins'
 export { default as schema } from './schema'
-export { default as toolbar } from './toolbar'
+export { default as plugins } from './plugins'
+export { default as menu } from './menu'

@@ -1,19 +1,17 @@
 import React from 'react'
-import { converter, keys, schema, toolbar } from './config'
-import Editor from '../Editor'
+import HtmlEditor from '../HtmlEditor'
+import * as options from './config'
 
 const AbstractEditor = ({ className, value, placeholder, placeholderClassName, title, onBlur, onChange }) => (
-  <Editor
-    className={className}
+  <HtmlEditor
+    options={options}
     value={value}
-    converter={converter}
-    schema={schema}
-    toolbar={toolbar}
-    keys={keys}
+    className={className}
     placeholder={placeholder}
+    placeholderClassName={placeholderClassName}
     title={title}
     onBlur={onBlur}
-    onDocumentChange={onChange}
+    onChange={onChange}
   />
 )
 

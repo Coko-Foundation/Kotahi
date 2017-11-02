@@ -1,13 +1,13 @@
 import React from 'react'
-import { converter, schema } from './config'
-import Viewer from '../Viewer'
+import HtmlViewer from '../HtmlViewer'
+import * as options from './config'
 
 const TitleViewer = ({ className, value }) => (
-  <Viewer
+  <HtmlViewer
+    options={options}
     className={className}
     value={value}
-    converter={converter}
-    schema={schema}/>
+  />
 )
 
 export default TitleViewer

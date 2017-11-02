@@ -1,41 +1,36 @@
 import React from 'react'
 import classnames from 'classnames'
-import { Editor as SlateEditor } from 'slate-react'
-import classes  from './Viewer.local.scss'
+import { EditorState } from 'prosemirror-state'
+import { EditorView } from 'prosemirror-view'
+import baseClasses from 'prosemirror-view/style/prosemirror.css'
+import classes from './Editor.local.css'
 
 class Viewer extends React.Component {
-  state = {
-    state: undefined
-  }
+  constructor (props) {
+    super(props)
 
-  componentDidMount () {
-    this.deserialize(this.props.value)
-  }
-
-  componentWillUpdate (nextProps) {
-    if (nextProps.value !== this.props.value) {
-      this.deserialize(nextProps.value)
+    this.state = {
+      state: EditorState.create(props.options)
     }
   }
 
-  deserialize (value) {
-    this.setState({
-      state: this.props.converter.deserialize(value || '')
+  createEditorView = node => {
+    const { state } = this.state
+
+    this.view = new EditorView(node, {
+      state,
+      dispatchTransaction: () => false,
+      attributes: {
+        class: classnames(baseClasses.ProseMirror, classes.ProseMirror)
+      }
     })
   }
 
   render () {
-    const { state } = this.state
-    const { className, schema } = this.props
-
-    if (!state) return null
-
     return (
-      <SlateEditor
-        className={classnames(classes.root, className)}
-        schema={schema}
-        state={state}
-        readOnly/>
+      <div
+        ref={this.createEditorView}
+      />
     )
   }
 }
