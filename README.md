@@ -17,17 +17,17 @@ Note: xpub is still _very_ new. This repository contains an initial set of compo
 
 ## xpub packages
 
+* `xpub-connect`: a helper component for connecting pages to data
 * `xpub-edit`: WYSIWYG editors for use in xpub forms
-* `xpub-fonts`: fonts for use in xpub applications
 * `xpub-journal`: a helper that provides journal config to components
 * `xpub-selectors`: some useful redux selectors
 * `xpub-styleguide`: components for use in react-styleguidist
+* `xpub-theme`: fonts and styles for use in xpub applications
 * `xpub-ui`: a library of user interface elements for use in PubSweet components
 * `xpub-upload`: a helper function for file uploading
+* `xpub-validators`: validator functions for use with redux-form
 
 ## Installing
-
-Run `yarn config set workspaces-experimental true` to enable yarn workspaces.
 
 In the root directory, run `yarn` to install all the dependencies.
 
