@@ -76,8 +76,13 @@ export default compose(
   }),
   withState('confirming', 'setConfirming', false),
   withHandlers({
-    toggleConfirming: props => () => {
-      props.setConfirming(confirming => !confirming)
+    toggleConfirming: ({valid, setConfirming, handleSubmit}) => () => {
+      if (valid) {
+        setConfirming(confirming => !confirming)
+      } else {
+        // trigger dummy submit to mark all fields as touched
+        handleSubmit(() => {})()
+      }
     }
   })
 )(Submit)
