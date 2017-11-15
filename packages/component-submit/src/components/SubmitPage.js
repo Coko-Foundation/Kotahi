@@ -33,8 +33,6 @@ const onSubmit = (values, dispatch, { history, project, version }) => {
 
 // TODO: redux-form doesn't have an onBlur handler(?)
 const onChange = (values, dispatch, { project, version }) => {
-  console.log('change', values)
-
   return dispatch(actions.updateFragment(project, {
     id: version.id,
     rev: version.rev,
