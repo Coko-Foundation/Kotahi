@@ -62,25 +62,25 @@ export default {
       content: icons.small_caps,
       active: markActive(schema.marks.small_caps),
       run: toggleMark(schema.marks.small_caps)
-    },
-    link: {
-      title: 'Add or remove link',
-      content: icons.link,
-      active: markActive(schema.marks.link),
-      enable: state => !state.selection.empty,
-      run: (state, dispatch) => {
-        if (markActive(schema.marks.link)(state)) {
-          toggleMark(schema.marks.link)(state, dispatch)
-          return true
-        }
-
-        const href = promptForURL()
-        if (!href) return false
-
-        toggleMark(schema.marks.link, { href })(state, dispatch)
-        // view.focus()
-      }
     }
+    // link: {
+    //   title: 'Add or remove link',
+    //   content: icons.link,
+    //   active: markActive(schema.marks.link),
+    //   enable: state => !state.selection.empty,
+    //   run: (state, dispatch) => {
+    //     if (markActive(schema.marks.link)(state)) {
+    //       toggleMark(schema.marks.link)(state, dispatch)
+    //       return true
+    //     }
+    //
+    //     const href = promptForURL()
+    //     if (!href) return false
+    //
+    //     toggleMark(schema.marks.link, { href })(state, dispatch)
+    //     // view.focus()
+    //   }
+    // }
   },
   history: {
     undo: {
