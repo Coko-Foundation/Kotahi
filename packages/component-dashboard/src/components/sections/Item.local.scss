@@ -25,7 +25,8 @@
   margin-right: 3em;
 }
 
-.title {
+// double class name to avoid clash with Viewer .root
+.title.title {
   flex: 1;
   font-family: Vollkorn, serif;
   font-size: 1.6em;
@@ -34,9 +35,10 @@
   font-weight: 600;
   overflow: hidden;
 
-  span {
+  > * {
     background: white;
     padding-right: 0.3em;
+    display: inline;
   }
 
   &::after {

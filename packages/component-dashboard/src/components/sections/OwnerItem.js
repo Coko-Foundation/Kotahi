@@ -3,6 +3,7 @@ import Status from '../Status'
 import classes from './Item.local.scss'
 import ProjectLink from '../ProjectLink'
 import Divider from './Divider'
+import VersionTitle from './VersionTitle'
 
 const OwnerItem = ({ project, version, deleteProject }) => (
   <div className={classes.root}>
@@ -11,9 +12,7 @@ const OwnerItem = ({ project, version, deleteProject }) => (
     </div>
 
     <div className={classes.main}>
-      <div className={classes.title}>
-        <span>{project.title || 'Untitled'}</span>
-      </div>
+      <VersionTitle version={version} className={classes.title}/>
 
       <div className={classes.links}>
         <div className={classes.link}>
