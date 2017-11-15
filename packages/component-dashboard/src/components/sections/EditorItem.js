@@ -9,6 +9,7 @@ import ProjectLink from '../ProjectLink'
 import Divider from './Divider'
 import classes from './Item.local.scss'
 import Reviews from '../Reviews'
+import VersionTitle from './VersionTitle'
 
 const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
   <div className={classes.root}>
@@ -29,9 +30,7 @@ const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
     </div>
 
     <div className={classes.main}>
-      <div className={classes.title}>
-        <span>{project.title || 'Untitled'}</span>
-      </div>
+      <VersionTitle version={version} className={classes.title}/>
 
       <div className={classes.links}>
         <div className={classes.link}>

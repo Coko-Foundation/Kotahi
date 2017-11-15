@@ -4,6 +4,7 @@ import { getReviewerFromUser } from 'xpub-selectors'
 import classes from './Item.local.scss'
 import ProjectLink from '../ProjectLink'
 import Divider from './Divider'
+import VersionTitle from './VersionTitle'
 
 // TODO: only return links if version id is in reviewer.accepted array
 // TODO: only return actions if not accepted or declined
@@ -15,9 +16,7 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
   return (
     <div className={classes.root}>
       <div className={classes.main}>
-        <div className={classes.title}>
-          <span>{project.title || 'Untitled'}</span>
-        </div>
+        <VersionTitle version={version} className={classes.title}/>
 
         {reviewer && (
           <div>
