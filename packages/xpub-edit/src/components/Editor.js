@@ -28,8 +28,17 @@ class Editor extends React.Component {
       }),
       attributes: {
         class: classnames(baseClasses.ProseMirror, classes.ProseMirror)
+      },
+      handleDOMEvents: {
+        blur: this.props.onBlur ? view => {
+          this.props.onBlur(view.state.doc.content)
+        } : null
       }
     })
+
+    if (this.props.autoFocus) {
+      this.view.focus()
+    }
   }
 
   dispatchTransaction = transaction => {
