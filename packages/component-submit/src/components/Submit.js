@@ -36,8 +36,7 @@ const Submit = ({ project, version, valid, error, handleSubmit, uploadFile, conf
         <Button
           type="button"
           primary
-          onClick={toggleConfirming}
-          disabled={!valid}>
+          onClick={toggleConfirming}>
           Submit your manuscript
         </Button>
       </div>
