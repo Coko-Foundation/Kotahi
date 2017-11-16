@@ -6,8 +6,8 @@ exports[`AppBar Snapshot 1`] = `
 >
   <a
     className=""
+    href="some link"
     onClick={[Function]}
-    style={Object {}}
   >
     some brand
   </a>
@@ -15,7 +15,9 @@ exports[`AppBar Snapshot 1`] = `
     <span
       className={undefined}
     >
-      <span>
+      <span
+        className={undefined}
+      >
         <svg
           height={16}
           viewBox="0 0 24 24"
@@ -50,8 +52,8 @@ exports[`AppBar Snapshot 1`] = `
     </span>
     <a
       className=""
+      href="logout link"
       onClick={[Function]}
-      style={Object {}}
     >
       logout
     </a>

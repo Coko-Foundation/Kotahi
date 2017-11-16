@@ -6,7 +6,7 @@ exports[`Yes or No Snapshot 1`] = `
     className=""
     style={
       Object {
-        "color": undefined,
+        "color": "black",
       }
     }
   >
@@ -21,6 +21,16 @@ exports[`Yes or No Snapshot 1`] = `
     />
     <span
       className={undefined}
+      style={
+        Object {
+          "background": "transparent",
+        }
+      }
+    >
+       
+    </span>
+    <span
+      className={undefined}
     >
       Yes
     </span>
@@ -29,7 +39,7 @@ exports[`Yes or No Snapshot 1`] = `
     className=""
     style={
       Object {
-        "color": undefined,
+        "color": "black",
       }
     }
   >
@@ -42,6 +52,16 @@ exports[`Yes or No Snapshot 1`] = `
       type="radio"
       value="no"
     />
+    <span
+      className={undefined}
+      style={
+        Object {
+          "background": "transparent",
+        }
+      }
+    >
+       
+    </span>
     <span
       className={undefined}
     >

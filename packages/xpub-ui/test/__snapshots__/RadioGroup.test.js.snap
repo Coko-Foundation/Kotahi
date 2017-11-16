@@ -6,7 +6,7 @@ exports[`Radio Group Snapshot 1`] = `
     className=""
     style={
       Object {
-        "color": undefined,
+        "color": "black",
       }
     }
   >
@@ -21,6 +21,16 @@ exports[`Radio Group Snapshot 1`] = `
     />
     <span
       className={undefined}
+      style={
+        Object {
+          "background": "transparent",
+        }
+      }
+    >
+       
+    </span>
+    <span
+      className={undefined}
     >
       Yes
     </span>
@@ -29,7 +39,7 @@ exports[`Radio Group Snapshot 1`] = `
     className=""
     style={
       Object {
-        "color": undefined,
+        "color": "black",
       }
     }
   >
@@ -44,6 +54,16 @@ exports[`Radio Group Snapshot 1`] = `
     />
     <span
       className={undefined}
+      style={
+        Object {
+          "background": "transparent",
+        }
+      }
+    >
+       
+    </span>
+    <span
+      className={undefined}
     >
       No
     </span>
@@ -52,7 +72,7 @@ exports[`Radio Group Snapshot 1`] = `
     className=""
     style={
       Object {
-        "color": undefined,
+        "color": "black",
       }
     }
   >
@@ -65,6 +85,16 @@ exports[`Radio Group Snapshot 1`] = `
       type="radio"
       value="maybe"
     />
+    <span
+      className={undefined}
+      style={
+        Object {
+          "background": "transparent",
+        }
+      }
+    >
+       
+    </span>
     <span
       className={undefined}
     >

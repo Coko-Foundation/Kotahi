@@ -7,23 +7,27 @@ exports[`Menu Snapshot 1`] = `
   <div
     className={undefined}
   >
-    <button
+    <div
       className={undefined}
-      onClick={[Function]}
-      type="button"
     >
-      <span>
-        Foo
-      </span>
-      <span
+      <button
         className={undefined}
+        onClick={[Function]}
+        type="button"
       >
-        ▼
-      </span>
-    </button>
+        <span>
+          Foo
+        </span>
+        <span
+          className={undefined}
+        >
+          ▼
+        </span>
+      </button>
+    </div>
+    <div
+      className={undefined}
+    />
   </div>
-  <div
-    className={undefined}
-  />
 </div>
 `;
