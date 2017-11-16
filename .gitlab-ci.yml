@@ -1,32 +1,19 @@
-image: node:7.9
-
-stages:
-  - install
-  - lint
-  - bootstrap
-  - test
+image: node:8
 
 install:
-  stage: install
-  script: npm install
+  stage: build
+  script: yarn
   artifacts:
+    expire_in: 1h
     paths:
       - node_modules
+      - packages/*/node_modules
 
 lint:
-  stage: lint
   script: npm run lint
 
-#bootstrap:
-#  stage: bootstrap
-#  script: npm run bootstrap
-#  artifacts:
-#    paths:
-#      - packages/*/node_modules
-#
-#test:
-#  stage: test
-#  script: npm run test
+test:
+  script: npm run test
 
 # TODO: start?
 # TODO: build
