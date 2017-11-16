@@ -17,6 +17,12 @@ module.exports = {
   'pubsweet-server': {
     dbPath: process.env.PUBSWEET_DB || path.join(__dirname, '..', 'api', 'db', environment),
   },
+  'pubsweet-client': {
+    API_ENDPOINT: 'http://localhost:3000/api',
+    'login-redirect': '/',
+    'redux-log': false,
+    theme: process.env.PUBSWEET_THEME
+  },
   'mail-transport': {
     sendmail: true
   },
@@ -30,4 +36,5 @@ module.exports = {
     password: process.env.INK_PASSWORD,
     maxRetries: 500
   },
+  publicKeys: ['pubsweet-client', 'authsome', 'validations'],
 }
