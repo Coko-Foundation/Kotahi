@@ -35,19 +35,11 @@ const OwnerItem = ({ project, version, deleteProject }) => (
         <Divider separator="|"/>
 
         <div className={classes.link}>
-          <ProjectLink
-            project={project}
-            version={version}
-            page="manuscript">Delete</ProjectLink>
+          <a onClick={() => deleteProject(project)} >Delete</a>
         </div>
 
       </div>
 
-      <div className={classes.actions}>
-        <div className={classes.action}>
-          <button onClick={() => deleteProject(project)}>x</button>
-        </div>
-      </div>
     </div>
   </div>
 )
