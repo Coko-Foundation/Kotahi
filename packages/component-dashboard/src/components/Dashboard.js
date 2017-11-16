@@ -28,16 +28,16 @@ const Dashboard = ({
     <div className={classes.section}>
       <div className={classes.heading}>My Submissions</div>
 
-      {false ? (
-        dashboard.owner.map(project => (
-          <OwnerItemWithVersion key={project.id} project={project} deleteProject={deleteProject} />
-        ))
-      ) : (
+      {!dashboard.owner.length ? (
         <EmptySubmissions
           conversion={conversion}
           uploadManuscript={uploadManuscript}
           text={`You haven't submitted any manuscripts yet.`}
         />
+      ) : (
+        dashboard.owner.map(project => (
+          <OwnerItemWithVersion key={project.id} project={project} deleteProject={deleteProject} />
+        ))
       )}
     </div>
 
@@ -60,7 +60,7 @@ const Dashboard = ({
     <div className={classes.section}>
       <div className={classes.heading}>Assign</div>
       {!dashboard.assign.length ? (
-        <EmptySubmissions text={`Nu este nimic nici aici.`} />
+        <EmptySubmissions text={`You have no manuscripts to assign.`} />
       ) : (
         dashboard.assign.map(project => (
           <EditorItemWithVersion key={project.id} project={project} AssignEditor={AssignEditor} />
