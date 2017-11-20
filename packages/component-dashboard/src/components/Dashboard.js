@@ -1,7 +1,6 @@
 import React from 'react'
 import classes from './Dashboard.local.scss'
 import UploadManuscript from './UploadManuscript'
-import EmptySubmissions from './EmptySubmissions'
 import withVersion from './withVersion'
 import EditorItem from './sections/EditorItem'
 import OwnerItem from './sections/OwnerItem'
@@ -25,59 +24,55 @@ const Dashboard = ({
       <UploadManuscript conversion={conversion} uploadManuscript={uploadManuscript} />
     </div>
 
-    <div className={classes.section}>
-      <div className={classes.heading}>My Submissions</div>
-
-      {!dashboard.owner.length ? (
-        <EmptySubmissions
-          conversion={conversion}
-          uploadManuscript={uploadManuscript}
-          text={`You haven't submitted any manuscripts yet.`}
-        />
-      ) : (
-        dashboard.owner.map(project => (
-          <OwnerItemWithVersion key={project.id} project={project} deleteProject={deleteProject} />
-        ))
+    {!dashboard.owner.length &&
+      !dashboard.reviewer.length &&
+      !dashboard.assign.length &&
+      !dashboard.editor.length && (
+        <div className={classes.section}>
+          <div className={classes.empty}>Nothing to do at the moment. Please upload a document.</div>
+        </div>
       )}
-    </div>
 
-    <div className={classes.section}>
-      <div className={classes.heading}>To review</div>
-      {!dashboard.reviewer.length ? (
-        <EmptySubmissions text={`You have no manuscripts to review for now.`} />
-      ) : (
-        dashboard.reviewer.map(project => (
+    {!!dashboard.owner.length && (
+      <div className={classes.section}>
+        <div className={classes.heading}>My Submissions</div>
+        {dashboard.owner.map(project => (
+          <OwnerItemWithVersion key={project.id} project={project} deleteProject={deleteProject} />
+        ))}
+      </div>
+    )}
+
+    {!!dashboard.reviewer.length && (
+      <div className={classes.section}>
+        <div className={classes.heading}>To review</div>
+        {dashboard.reviewer.map(project => (
           <ReviewerItemWithVersion
             key={project.id}
             project={project}
             currentUser={currentUser}
             reviewerResponse={reviewerResponse}
           />
-        ))
-      )}
-    </div>
+        ))}
+      </div>
+    )}
 
-    <div className={classes.section}>
-      <div className={classes.heading}>Assign</div>
-      {!dashboard.assign.length ? (
-        <EmptySubmissions text={`You have no manuscripts to assign.`} />
-      ) : (
-        dashboard.assign.map(project => (
+    {!!dashboard.assign.length && (
+      <div className={classes.section}>
+        <div className={classes.heading}>Assign</div>
+        {dashboard.assign.map(project => (
           <EditorItemWithVersion key={project.id} project={project} AssignEditor={AssignEditor} />
-        ))
-      )}
-    </div>
+        ))}
+      </div>
+    )}
 
-    <div className={classes.section}>
-      <div className={classes.heading}>My Manuscripts</div>
-      {!dashboard.editor.length ? (
-        <EmptySubmissions text={`You have no manuscripts.`} />
-      ) : (
-        dashboard.editor.map(project => (
+    {!!dashboard.editor.length && (
+      <div className={classes.section}>
+        <div className={classes.heading}>My Manuscripts</div>
+        {dashboard.editor.map(project => (
           <EditorItemWithVersion key={project.id} project={project} AssignEditor={AssignEditor} />
-        ))
-      )}
-    </div>
+        ))}
+      </div>
+    )}
   </div>
 )
 
