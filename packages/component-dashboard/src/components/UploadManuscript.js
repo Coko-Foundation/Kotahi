@@ -14,7 +14,6 @@ const UploadManuscript = ({ uploadManuscript, conversion }) => (
   >
     <div className={classes.root}>
       <div
-        key="submitIcon"
         className={classnames({
           [classes.idle]: isIdle(conversion),
           [classes.converting]: conversion.converting,
@@ -25,8 +24,9 @@ const UploadManuscript = ({ uploadManuscript, conversion }) => (
         <span className={classes.icon}>
           <Icon color="var(--color-primary)">{conversion.complete ? 'check_circle' : 'plus_circle'}</Icon>
         </span>
-      </div>,
-      <div className={classes.main} key="submitText">
+      </div>
+
+      <div className={classes.main}>
         {conversion.error ? (
           <div className={classes.error}>{conversion.error.message}</div>
         ) : (

@@ -13,8 +13,8 @@ const ReviewerItemWithVersion = withVersion(ReviewerItem)
 const Dashboard = ({
   AssignEditor,
   currentUser,
-  dashboard,
   conversion,
+  dashboard,
   deleteProject,
   reviewerResponse,
   uploadManuscript
