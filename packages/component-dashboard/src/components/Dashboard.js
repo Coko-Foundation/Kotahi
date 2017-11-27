@@ -56,15 +56,6 @@ const Dashboard = ({
       </div>
     )}
 
-    {!!dashboard.assign.length && (
-      <div className={classes.section}>
-        <div className={classes.heading}>Assign</div>
-        {dashboard.assign.map(project => (
-          <EditorItemWithVersion key={project.id} project={project} AssignEditor={AssignEditor} />
-        ))}
-      </div>
-    )}
-
     {!!dashboard.editor.length && (
       <div className={classes.section}>
         <div className={classes.heading}>My Manuscripts</div>

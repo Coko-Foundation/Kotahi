@@ -33,27 +33,41 @@ export default compose(
 
       const sortedCollections = newestFirst(collections)
 
+      const unassignedCollections = sortedCollections.filter(
+        collection =>
+          collection.status === 'submitted' &&
+          !teams.some(
+            team =>
+              team.object.type === 'collection' &&
+              team.object.id === collection.id &&
+              team.teamType.name === 'handlingEditor'
+          )
+      )
+      const myCollections = teams
+        .filter(
+          team =>
+            team.group === 'editor' &&
+            team.object.type === 'collection' &&
+            team.members.includes(currentUser.id)
+        )
+        .map(team =>
+          collections.find(collection => collection.id === team.object.id)
+        )
+
       const dashboard = {
-        owner: sortedCollections
-          .filter(collection => collection.owners
-            && collection.owners.some(owner => owner.id === currentUser.id)),
-        assign: sortedCollections
-          .filter(collection => collection.status === 'submitted'
-            && !teams.some(team =>
-              team.object.type === 'collection'
-                && team.object.id === collection.id
-                && team.teamType.name === 'handlingEditor'
-            )),
-        editor: newestFirst(teams
-          .filter(team => team.group === 'editor'
-            && team.object.type === 'collection'
-            && team.members.includes(currentUser.id))
-          .map(team => team.object.id)
-          .filter((id, index, items) => items.indexOf(id) === index) // unique
-          .map(id => collections.find(
-            collection => collection.id === id
-          )))
-          .filter(collection => collection),
+        owner: sortedCollections.filter(
+          collection =>
+            collection.owners &&
+            collection.owners.some(owner => owner.id === currentUser.id)
+        ),
+        editor: newestFirst(
+          unassignedCollections
+            .concat(myCollections)
+            .filter(
+              (collection, index, items) =>
+                items.findIndex(item => item.id === collection.id) === index
+            )
+        ),
         // reviewer: newestFirst(teams
         //   .filter(team => team.group === 'reviewer'
         //     && team.object.type === 'collection'
