@@ -2,28 +2,32 @@
 
 exports[`Menu Snapshot 1`] = `
 <div
-  className=""
+  className="root"
 >
   <div
-    className={undefined}
+    className="main"
   >
-    <button
-      className={undefined}
-      onClick={[Function]}
-      type="button"
+    <div
+      className="openerContainer"
     >
-      <span>
-        Foo
-      </span>
-      <span
-        className={undefined}
+      <button
+        className="opener"
+        onClick={[Function]}
+        type="button"
       >
-        ▼
-      </span>
-    </button>
+        <span>
+          Foo
+        </span>
+        <span
+          className="arrow"
+        >
+          ▼
+        </span>
+      </button>
+    </div>
+    <div
+      className="optionsContainer"
+    />
   </div>
-  <div
-    className={undefined}
-  />
 </div>
 `;

@@ -30,9 +30,11 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "css-loader": "^0.28.4",
-    "enzyme": "^3.1.0",
+    "enzyme": "^3.2.0",
+    "enzyme-adapter-react-15": "^1.0.5",
     "faker": "^4.1.0",
     "file-loader": "^1.1.5",
+    "identity-obj-proxy": "^3.0.0",
     "jest": "^21.2.1",
     "node-sass": "^4.5.3",
     "react-styleguidist": "^6.0.8",
@@ -45,8 +47,9 @@
   },
   "jest": {
     "moduleNameMapper": {
-      "\\.s?css$": "<rootDir>/test/setup/styleMock.js"
+      "\\.s?css$": "identity-obj-proxy"
     },
+    "setupTestFrameworkScriptFile": "<rootDir>/test/setup/enzyme.js",
     "transform": {
       "\\.js$": "<rootDir>/test/config/transform.js"
     }
@@ -58,9 +61,9 @@
     "lint": "eslint src",
     "prebuild": "npm run clean && npm run lint",
     "build": "webpack --progress --profile",
-    "test": "NODE_ENV=test jest",
-    "test:watch": "NODE_ENV=test jest --watch",
-    "test:cover": "NODE_ENV=test jest --coverage",
-    "test:u": "NODE_ENV=test jest --updateSnapshot"
+    "test": "jest",
+    "test:watch": "npm test -- --watch",
+    "test:cover": "npm test -- --coverage",
+    "test:u": "npm test -- --updateSnapshot"
   }
 }

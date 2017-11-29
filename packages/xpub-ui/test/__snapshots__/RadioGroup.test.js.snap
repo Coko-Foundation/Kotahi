@@ -3,16 +3,16 @@
 exports[`Radio Group Snapshot 1`] = `
 <div>
   <label
-    className=""
+    className="root"
     style={
       Object {
-        "color": undefined,
+        "color": "black",
       }
     }
   >
     <input
       checked={false}
-      className={undefined}
+      className="input"
       name="TestName"
       onChange={[Function]}
       required={true}
@@ -20,22 +20,32 @@ exports[`Radio Group Snapshot 1`] = `
       value="yes"
     />
     <span
-      className={undefined}
+      className="pseudoInput"
+      style={
+        Object {
+          "background": "transparent",
+        }
+      }
+    >
+       
+    </span>
+    <span
+      className="label"
     >
       Yes
     </span>
   </label>
   <label
-    className=""
+    className="root"
     style={
       Object {
-        "color": undefined,
+        "color": "black",
       }
     }
   >
     <input
       checked={false}
-      className={undefined}
+      className="input"
       name="TestName"
       onChange={[Function]}
       required={true}
@@ -43,22 +53,32 @@ exports[`Radio Group Snapshot 1`] = `
       value="no"
     />
     <span
-      className={undefined}
+      className="pseudoInput"
+      style={
+        Object {
+          "background": "transparent",
+        }
+      }
+    >
+       
+    </span>
+    <span
+      className="label"
     >
       No
     </span>
   </label>
   <label
-    className=""
+    className="root"
     style={
       Object {
-        "color": undefined,
+        "color": "black",
       }
     }
   >
     <input
       checked={false}
-      className={undefined}
+      className="input"
       name="TestName"
       onChange={[Function]}
       required={true}
@@ -66,7 +86,17 @@ exports[`Radio Group Snapshot 1`] = `
       value="maybe"
     />
     <span
-      className={undefined}
+      className="pseudoInput"
+      style={
+        Object {
+          "background": "transparent",
+        }
+      }
+    >
+       
+    </span>
+    <span
+      className="label"
     >
       Maybe
     </span>

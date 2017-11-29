@@ -56,7 +56,7 @@ describe('Radio Group', () => {
   })
 
   test('Radios get the correct props', () => {
-    const radioComps = radios.getNodes()
+    const radioComps = radios.getElements()
     let i = 0
 
     while (i < props.options.length) {
@@ -74,7 +74,7 @@ describe('Radio Group', () => {
 
   test('Value should match the checked radio button', () => {
     // With no radio button selected
-    const radioComps = radios.getNodes()
+    const radioComps = radios.getElements()
     let i = 0
 
     while (i < props.options.length) {
@@ -92,7 +92,7 @@ describe('Radio Group', () => {
 
     const newWrapper = shallow(<RadioGroup {...newProps} />)
     const newRadios = newWrapper.find(Radio)
-    const newRadioComps = newRadios.getNodes()
+    const newRadioComps = newRadios.getElements()
 
     i = 0
 

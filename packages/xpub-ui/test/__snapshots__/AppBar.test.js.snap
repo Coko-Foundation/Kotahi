@@ -2,20 +2,22 @@
 
 exports[`AppBar Snapshot 1`] = `
 <div
-  className={undefined}
+  className="root"
 >
   <a
-    className=""
+    className="link logo"
+    href="some link"
     onClick={[Function]}
-    style={Object {}}
   >
     some brand
   </a>
   <div>
     <span
-      className={undefined}
+      className="item"
     >
-      <span>
+      <span
+        className="root"
+      >
         <svg
           height={16}
           viewBox="0 0 24 24"
@@ -43,15 +45,15 @@ exports[`AppBar Snapshot 1`] = `
         </svg>
       </span>
       <span
-        className={undefined}
+        className="username"
       >
         some name
       </span>
     </span>
     <a
-      className=""
+      className="item link"
+      href="logout link"
       onClick={[Function]}
-      style={Object {}}
     >
       logout
     </a>
