@@ -3,7 +3,7 @@
 exports[`Radio Group Snapshot 1`] = `
 <div>
   <label
-    className=""
+    className="root"
     style={
       Object {
         "color": "black",
@@ -12,7 +12,7 @@ exports[`Radio Group Snapshot 1`] = `
   >
     <input
       checked={false}
-      className={undefined}
+      className="input"
       name="TestName"
       onChange={[Function]}
       required={true}
@@ -20,7 +20,7 @@ exports[`Radio Group Snapshot 1`] = `
       value="yes"
     />
     <span
-      className={undefined}
+      className="pseudoInput"
       style={
         Object {
           "background": "transparent",
@@ -30,13 +30,13 @@ exports[`Radio Group Snapshot 1`] = `
        
     </span>
     <span
-      className={undefined}
+      className="label"
     >
       Yes
     </span>
   </label>
   <label
-    className=""
+    className="root"
     style={
       Object {
         "color": "black",
@@ -45,7 +45,7 @@ exports[`Radio Group Snapshot 1`] = `
   >
     <input
       checked={false}
-      className={undefined}
+      className="input"
       name="TestName"
       onChange={[Function]}
       required={true}
@@ -53,7 +53,7 @@ exports[`Radio Group Snapshot 1`] = `
       value="no"
     />
     <span
-      className={undefined}
+      className="pseudoInput"
       style={
         Object {
           "background": "transparent",
@@ -63,13 +63,13 @@ exports[`Radio Group Snapshot 1`] = `
        
     </span>
     <span
-      className={undefined}
+      className="label"
     >
       No
     </span>
   </label>
   <label
-    className=""
+    className="root"
     style={
       Object {
         "color": "black",
@@ -78,7 +78,7 @@ exports[`Radio Group Snapshot 1`] = `
   >
     <input
       checked={false}
-      className={undefined}
+      className="input"
       name="TestName"
       onChange={[Function]}
       required={true}
@@ -86,7 +86,7 @@ exports[`Radio Group Snapshot 1`] = `
       value="maybe"
     />
     <span
-      className={undefined}
+      className="pseudoInput"
       style={
         Object {
           "background": "transparent",
@@ -96,7 +96,7 @@ exports[`Radio Group Snapshot 1`] = `
        
     </span>
     <span
-      className={undefined}
+      className="label"
     >
       Maybe
     </span>

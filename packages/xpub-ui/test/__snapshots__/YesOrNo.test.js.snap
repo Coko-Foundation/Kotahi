@@ -3,7 +3,7 @@
 exports[`Yes or No Snapshot 1`] = `
 <div>
   <label
-    className=""
+    className="root inline"
     style={
       Object {
         "color": "black",
@@ -12,7 +12,7 @@ exports[`Yes or No Snapshot 1`] = `
   >
     <input
       checked={false}
-      className={undefined}
+      className="input"
       name="TestName"
       onChange={[Function]}
       required={undefined}
@@ -20,7 +20,7 @@ exports[`Yes or No Snapshot 1`] = `
       value="yes"
     />
     <span
-      className={undefined}
+      className="pseudoInput"
       style={
         Object {
           "background": "transparent",
@@ -30,13 +30,13 @@ exports[`Yes or No Snapshot 1`] = `
        
     </span>
     <span
-      className={undefined}
+      className="label"
     >
       Yes
     </span>
   </label>
   <label
-    className=""
+    className="root inline"
     style={
       Object {
         "color": "black",
@@ -45,7 +45,7 @@ exports[`Yes or No Snapshot 1`] = `
   >
     <input
       checked={false}
-      className={undefined}
+      className="input"
       name="TestName"
       onChange={[Function]}
       required={undefined}
@@ -53,7 +53,7 @@ exports[`Yes or No Snapshot 1`] = `
       value="no"
     />
     <span
-      className={undefined}
+      className="pseudoInput"
       style={
         Object {
           "background": "transparent",
@@ -63,7 +63,7 @@ exports[`Yes or No Snapshot 1`] = `
        
     </span>
     <span
-      className={undefined}
+      className="label"
     >
       No
     </span>

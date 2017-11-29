@@ -2,16 +2,16 @@
 
 exports[`Menu Snapshot 1`] = `
 <div
-  className=""
+  className="root"
 >
   <div
-    className={undefined}
+    className="main"
   >
     <div
-      className={undefined}
+      className="openerContainer"
     >
       <button
-        className={undefined}
+        className="opener"
         onClick={[Function]}
         type="button"
       >
@@ -19,14 +19,14 @@ exports[`Menu Snapshot 1`] = `
           Foo
         </span>
         <span
-          className={undefined}
+          className="arrow"
         >
           ▼
         </span>
       </button>
     </div>
     <div
-      className={undefined}
+      className="optionsContainer"
     />
   </div>
 </div>

@@ -2,7 +2,7 @@
 
 exports[`Radio Snapshot 1`] = `
 <label
-  className=""
+  className="root"
   style={
     Object {
       "color": "black",
@@ -11,7 +11,7 @@ exports[`Radio Snapshot 1`] = `
 >
   <input
     checked={false}
-    className={undefined}
+    className="input"
     name="TestName"
     onChange={undefined}
     required={true}
@@ -19,7 +19,7 @@ exports[`Radio Snapshot 1`] = `
     value="TestValue"
   />
   <span
-    className={undefined}
+    className="pseudoInput"
     style={
       Object {
         "background": "transparent",
@@ -29,7 +29,7 @@ exports[`Radio Snapshot 1`] = `
      
   </span>
   <span
-    className={undefined}
+    className="label"
   >
     TestLabel
   </span>
