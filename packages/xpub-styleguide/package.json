@@ -24,7 +24,6 @@
     "babel-preset-react": "^6.24.1",
     "babel-preset-stage-2": "^6.24.1",
     "css-loader": "^0.28.4",
-    "eslint": "^4.4.1",
     "node-sass": "^4.5.3",
     "rimraf": "^2.6.1",
     "sass-loader": "^6.0.6",
@@ -34,7 +33,6 @@
   },
   "scripts": {
     "clean": "rimraf dist",
-    "lint": "eslint src",
     "prebuild": "npm run clean && npm run lint",
     "build": "webpack --progress --profile"
   }

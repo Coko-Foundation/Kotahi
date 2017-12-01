@@ -63,7 +63,6 @@
     "styleguide": "styleguidist server",
     "styleguide:build": "styleguidist build",
     "clean": "rimraf dist",
-    "lint": "eslint src",
     "prebuild": "npm run clean && npm run lint",
     "build": "webpack --progress --profile"
   }
