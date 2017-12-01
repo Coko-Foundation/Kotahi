@@ -2,53 +2,54 @@
 # yarn lockfile v1
 
 
-"@babel/code-frame@7.0.0-beta.32", "@babel/code-frame@^7.0.0-beta.31":
-  version "7.0.0-beta.32"
-  resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0-beta.32.tgz#04f231b8ec70370df830d9926ce0f5add074ec4c"
+"@babel/code-frame@7.0.0-beta.31":
+  version "7.0.0-beta.31"
+  resolved "https://registry.yarnpkg.com/@babel/code-frame/-/code-frame-7.0.0-beta.31.tgz#473d021ecc573a2cce1c07d5b509d5215f46ba35"
   dependencies:
     chalk "^2.0.0"
     esutils "^2.0.2"
     js-tokens "^3.0.0"
 
-"@babel/helper-function-name@7.0.0-beta.32":
-  version "7.0.0-beta.32"
-  resolved "https://registry.yarnpkg.com/@babel/helper-function-name/-/helper-function-name-7.0.0-beta.32.tgz#6161af4419f1b4e3ed2d28c0c79c160e218be1f3"
+"@babel/helper-function-name@7.0.0-beta.31":
+  version "7.0.0-beta.31"
+  resolved "https://registry.yarnpkg.com/@babel/helper-function-name/-/helper-function-name-7.0.0-beta.31.tgz#afe63ad799209989348b1109b44feb66aa245f57"
   dependencies:
-    "@babel/helper-get-function-arity" "7.0.0-beta.32"
-    "@babel/template" "7.0.0-beta.32"
-    "@babel/types" "7.0.0-beta.32"
+    "@babel/helper-get-function-arity" "7.0.0-beta.31"
+    "@babel/template" "7.0.0-beta.31"
+    "@babel/traverse" "7.0.0-beta.31"
+    "@babel/types" "7.0.0-beta.31"
 
-"@babel/helper-get-function-arity@7.0.0-beta.32":
-  version "7.0.0-beta.32"
-  resolved "https://registry.yarnpkg.com/@babel/helper-get-function-arity/-/helper-get-function-arity-7.0.0-beta.32.tgz#93721a99db3757de575a83bab7c453299abca568"
+"@babel/helper-get-function-arity@7.0.0-beta.31":
+  version "7.0.0-beta.31"
+  resolved "https://registry.yarnpkg.com/@babel/helper-get-function-arity/-/helper-get-function-arity-7.0.0-beta.31.tgz#1176d79252741218e0aec872ada07efb2b37a493"
   dependencies:
-    "@babel/types" "7.0.0-beta.32"
+    "@babel/types" "7.0.0-beta.31"
 
-"@babel/template@7.0.0-beta.32":
-  version "7.0.0-beta.32"
-  resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.0.0-beta.32.tgz#e1d9fdbd2a7bcf128f2f920744a67dab18072495"
+"@babel/template@7.0.0-beta.31":
+  version "7.0.0-beta.31"
+  resolved "https://registry.yarnpkg.com/@babel/template/-/template-7.0.0-beta.31.tgz#577bb29389f6c497c3e7d014617e7d6713f68bda"
   dependencies:
-    "@babel/code-frame" "7.0.0-beta.32"
-    "@babel/types" "7.0.0-beta.32"
-    babylon "7.0.0-beta.32"
+    "@babel/code-frame" "7.0.0-beta.31"
+    "@babel/types" "7.0.0-beta.31"
+    babylon "7.0.0-beta.31"
     lodash "^4.2.0"
 
-"@babel/traverse@^7.0.0-beta.31":
-  version "7.0.0-beta.32"
-  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.0.0-beta.32.tgz#b78b754c6e1af3360626183738e4c7a05951bc99"
+"@babel/traverse@7.0.0-beta.31":
+  version "7.0.0-beta.31"
+  resolved "https://registry.yarnpkg.com/@babel/traverse/-/traverse-7.0.0-beta.31.tgz#db399499ad74aefda014f0c10321ab255134b1df"
   dependencies:
-    "@babel/code-frame" "7.0.0-beta.32"
-    "@babel/helper-function-name" "7.0.0-beta.32"
-    "@babel/types" "7.0.0-beta.32"
-    babylon "7.0.0-beta.32"
+    "@babel/code-frame" "7.0.0-beta.31"
+    "@babel/helper-function-name" "7.0.0-beta.31"
+    "@babel/types" "7.0.0-beta.31"
+    babylon "7.0.0-beta.31"
     debug "^3.0.1"
     globals "^10.0.0"
     invariant "^2.2.0"
     lodash "^4.2.0"
 
-"@babel/types@7.0.0-beta.32", "@babel/types@^7.0.0-beta.31":
-  version "7.0.0-beta.32"
-  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.0.0-beta.32.tgz#c317d0ecc89297b80bbcb2f50608e31f6452a5ff"
+"@babel/types@7.0.0-beta.31":
+  version "7.0.0-beta.31"
+  resolved "https://registry.yarnpkg.com/@babel/types/-/types-7.0.0-beta.31.tgz#42c9c86784f674c173fb21882ca9643334029de4"
   dependencies:
     esutils "^2.0.2"
     lodash "^4.2.0"
@@ -563,13 +564,13 @@ babel-core@^6.0.0, babel-core@^6.26.0:
     source-map "^0.5.6"
 
 babel-eslint@^8.0.1:
-  version "8.0.2"
-  resolved "https://registry.yarnpkg.com/babel-eslint/-/babel-eslint-8.0.2.tgz#e44fb9a037d749486071d52d65312f5c20aa7530"
+  version "8.0.3"
+  resolved "https://registry.yarnpkg.com/babel-eslint/-/babel-eslint-8.0.3.tgz#f29ecf02336be438195325cd47c468da81ee4e98"
   dependencies:
-    "@babel/code-frame" "^7.0.0-beta.31"
-    "@babel/traverse" "^7.0.0-beta.31"
-    "@babel/types" "^7.0.0-beta.31"
-    babylon "^7.0.0-beta.31"
+    "@babel/code-frame" "7.0.0-beta.31"
+    "@babel/traverse" "7.0.0-beta.31"
+    "@babel/types" "7.0.0-beta.31"
+    babylon "7.0.0-beta.31"
 
 babel-generator@^6.18.0, babel-generator@^6.26.0:
   version "6.26.0"
@@ -1217,10 +1218,6 @@ babel-types@^6.18.0, babel-types@^6.19.0, babel-types@^6.24.1, babel-types@^6.26
 babylon@7.0.0-beta.31:
   version "7.0.0-beta.31"
   resolved "https://registry.yarnpkg.com/babylon/-/babylon-7.0.0-beta.31.tgz#7ec10f81e0e456fd0f855ad60fa30c2ac454283f"
-
-babylon@7.0.0-beta.32, babylon@^7.0.0-beta.31:
-  version "7.0.0-beta.32"
-  resolved "https://registry.yarnpkg.com/babylon/-/babylon-7.0.0-beta.32.tgz#e9033cb077f64d6895f4125968b37dc0a8c3bc6e"
 
 babylon@^6.18.0:
   version "6.18.0"
@@ -2661,8 +2658,8 @@ detect-port-alt@1.1.3:
     debug "^2.6.0"
 
 detective@^4.3.1:
-  version "4.6.0"
-  resolved "https://registry.yarnpkg.com/detective/-/detective-4.6.0.tgz#d1a793ad0bcc829fa225465061096b7bca040527"
+  version "4.7.0"
+  resolved "https://registry.yarnpkg.com/detective/-/detective-4.7.0.tgz#6276e150f9e50829ad1f90ace4d9a2304188afcf"
   dependencies:
     acorn "^5.2.1"
     defined "^1.0.0"
@@ -7868,7 +7865,7 @@ prompt@^1.0.0:
     utile "0.3.x"
     winston "2.1.x"
 
-prompt@flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87:
+"prompt@github:flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87":
   version "1.0.0"
   resolved "https://codeload.github.com/flatiron/prompt/tar.gz/1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87"
   dependencies:
@@ -10664,22 +10661,23 @@ watchpack@^1.4.0:
     chokidar "^1.7.0"
     graceful-fs "^4.1.2"
 
-wax-editor-core@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/wax-editor-core/-/wax-editor-core-0.1.0.tgz#6f6e4e02c20415ff871caf39c6c77a6c9e2021ac"
+wax-editor-core@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/wax-editor-core/-/wax-editor-core-0.2.1.tgz#850433da5919eefd66defbb388ba70641ae1f818"
   dependencies:
     font-awesome "^4.7.0"
     lodash "^4.17.4"
     substance "1.0.0-beta.6.5"
 
-wax-editor-react@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/wax-editor-react/-/wax-editor-react-0.0.8.tgz#f8c2fd2e8586a806705b2683d25a082227495cb2"
+wax-editor-react@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/wax-editor-react/-/wax-editor-react-0.0.10.tgz#6cb19c05fed918490034d2a7b6ce3891428f6807"
   dependencies:
     lodash "^4.17.4"
     react "^15.6.1"
     react-dom "^15.6.1"
-    wax-editor-core "^0.1.0"
+    react-router-dom "^4.2.2"
+    wax-editor-core "^0.2.1"
 
 wbuf@^1.1.0, wbuf@^1.7.2:
   version "1.7.2"
