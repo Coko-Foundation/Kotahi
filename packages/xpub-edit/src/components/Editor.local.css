@@ -73,3 +73,8 @@
   pointer-events: none;
   height: 0;
 }
+
+.ProseMirror p {
+  margin-top: 0;
+  margin-bottom: 0;
+}

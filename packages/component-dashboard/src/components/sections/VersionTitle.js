@@ -12,7 +12,7 @@ export default ({version, className}) => {
 
   return (
     <div className={className}>
-      {title}
+      <span>{title}</span>
     </div>
   )
 }
