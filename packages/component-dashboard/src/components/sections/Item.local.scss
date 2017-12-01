@@ -26,7 +26,8 @@
 }
 
 // double class name to avoid clash with Viewer .root
-.title.title {
+// .title.title {
+.versionTitle {
   flex: 1;
   font-family: Vollkorn, serif;
   font-size: 1.6em;

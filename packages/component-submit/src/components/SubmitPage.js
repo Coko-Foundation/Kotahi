@@ -31,8 +31,19 @@ const onSubmit = (values, dispatch, { history, project, version }) => {
   })
 }
 
+// TODO: this is only here because prosemirror would save the title in the
+// metadata as html instead of plain text. we need to maybe find a better
+// position than here to perform this operation
+const stripHtml = (htmlString) => {
+  const temp = document.createElement('span')
+  temp.innerHTML = htmlString
+  return temp.textContent
+}
+
 // TODO: redux-form doesn't have an onBlur handler(?)
 const onChange = (values, dispatch, { project, version }) => {
+  values.metadata.title = stripHtml(values.metadata.title) // see TODO above
+
   return dispatch(actions.updateFragment(project, {
     id: version.id,
     rev: version.rev,
