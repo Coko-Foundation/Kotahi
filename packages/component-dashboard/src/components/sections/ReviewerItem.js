@@ -16,7 +16,7 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
   return (
     <div className={classes.root}>
       <div className={classes.main}>
-        <VersionTitle version={version} className={classes.title}/>
+        <VersionTitle version={version} className={classes.versionTitle}/>
 
         {reviewer && (
           <div>

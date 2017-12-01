@@ -1,13 +1,13 @@
 import React from 'react'
-import { converter, schema } from './config'
-import Viewer from '../Viewer'
+import HtmlViewer from '../HtmlViewer'
+import * as options from './config'
 
 const AbstractViewer = ({ className, value }) => (
-  <Viewer
+  <HtmlViewer
     className={className}
     value={value}
-    converter={converter}
-    schema={schema}/>
+    options={options}
+  />
 )
 
 export default AbstractViewer

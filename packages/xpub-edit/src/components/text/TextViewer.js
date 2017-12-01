@@ -1,12 +1,14 @@
 import React from 'react'
-import { converter } from './config'
-import Viewer from '../Viewer'
+import HtmlViewer from '../HtmlViewer'
+
+import * as options from './config'
 
 const TextViewer = ({ className, value }) => (
-  <Viewer
+  <HtmlViewer
     className={className}
     value={value}
-    converter={converter}/>
+    options={options}
+  />
 )
 
 export default TextViewer

@@ -7,16 +7,17 @@
   ],
   "main": "src",
   "dependencies": {
-    "immutable": "^3.8.2",
-    "is-hotkey": "^0.1.1",
-    "parse5": "^3.0.2",
+    "prosemirror-commands": "^1.0.1",
+    "prosemirror-dropcursor": "^1.0.0",
+    "prosemirror-gapcursor": "^1.0.0",
+    "prosemirror-history": "^1.0.0",
+    "prosemirror-inputrules": "^1.0.0",
+    "prosemirror-keymap": "^1.0.0",
+    "prosemirror-model": "^1.0.0",
+    "prosemirror-state": "^1.0.1",
+    "prosemirror-view": "^1.0.0",
     "react": "^15.6.1",
-    "react-dom": "^15.6.1",
-    "slate": "^0.27.5",
-    "slate-auto-replace": "^0.8.1",
-    "slate-html-serializer": "^0.2.5",
-    "slate-plain-serializer": "^0.2.5",
-    "slate-react": "^0.7.3"
+    "react-dom": "^15.6.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

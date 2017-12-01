@@ -1,1 +1,2 @@
-export { default as converter } from 'slate-plain-serializer'
+export { default as schema } from './schema'
+export { default as plugins } from './plugins'

@@ -1,13 +1,6 @@
-import React from 'react'
+import { Schema } from 'prosemirror-model'
 
-// define the mapping from Slate node to React component
-// NOTE: the value can be a React component, a style object, or a classname string
+import nodes from './nodes'
+import marks from './marks'
 
-export default {
-  marks: {
-    'italic': props => <i>{props.children}</i>,
-    'superscript': props => <sup>{props.children}</sup>,
-    'subscript': props => <sub>{props.children}</sub>,
-    // 'smallcaps': props => <span style={{fontVariant:'smallcaps'}}>{props.children}</span>,
-  }
-}
+export default new Schema({ nodes, marks })

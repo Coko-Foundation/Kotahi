@@ -30,7 +30,7 @@ const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
     </div>
 
     <div className={classes.main}>
-      <VersionTitle version={version} className={classes.title}/>
+      <VersionTitle version={version} className={classes.versionTitle}/>
 
       <div className={classes.links}>
         <div className={classes.link}>

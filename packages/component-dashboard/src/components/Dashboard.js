@@ -26,7 +26,6 @@ const Dashboard = ({
 
     {!dashboard.owner.length &&
       !dashboard.reviewer.length &&
-      !dashboard.assign.length &&
       !dashboard.editor.length && (
         <div className={classes.section}>
           <div className={classes.empty}>Nothing to do at the moment. Please upload a document.</div>

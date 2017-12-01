@@ -4,7 +4,8 @@
 
 .main {
   display: flex;
-  align-items: center;
+  align-items: bottom;
+  justify-content: flex-start;
 }
 
 .main,
@@ -26,16 +27,17 @@
 }
 
 // double class name to avoid clash with Viewer .root
-.title.title {
+// .title.title {
+.versionTitle {
   flex: 1;
   font-family: Vollkorn, serif;
   font-size: 1.6em;
   margin-top: 0.2em;
   padding-right: 0.4em;
-  font-weight: 600;
+  font-weight: 500;
   overflow: hidden;
 
-  > * {
+  > span {
     background: white;
     padding-right: 0.3em;
     display: inline;
@@ -45,7 +47,10 @@
     float: left;
     width: 0;
     font-weight: 400;
-    color: grey;
+    color: lightgrey;
+    vertical-align: baseline;
+    font-size: 0.8em;
+    padding-top: 0.25em;
     white-space: nowrap;
     content: ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . ";
   }
