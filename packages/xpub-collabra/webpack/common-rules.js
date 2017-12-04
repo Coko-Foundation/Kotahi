@@ -103,12 +103,6 @@ module.exports = [
         ],
       },
 
-      // HTML (needed?)
-      {
-        test: /\.html$/,
-        use: 'html-loader',
-      },
-
       // files
       {
         exclude: [/\.jsx?$/, /\.html$/, /\.json$/],
