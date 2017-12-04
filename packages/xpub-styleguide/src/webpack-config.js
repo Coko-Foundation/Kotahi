@@ -11,14 +11,14 @@ module.exports = dir => {
     /pubsweet-[^/]+\/src/,
     /xpub-[^/]+\/src/,
     /wax-[^/]+\/src/,
-    /@pubsweet\/[^/]+\/src/
+    /@pubsweet\/[^/]+\/src/,
   ]
 
   return {
     entry: './src/index.js',
     output: {
       filename: 'index.js',
-      path: path.join(dir, 'dist')
+      path: path.join(dir, 'dist'),
     },
     devtool: 'cheap-module-source-map',
     watch: true,
@@ -28,7 +28,7 @@ module.exports = dir => {
     plugins: [
       // mock constants
       new webpack.DefinePlugin({
-        PUBSWEET_COMPONENTS: '[]'
+        PUBSWEET_COMPONENTS: '[]',
       }),
     ],
     module: {
@@ -44,7 +44,7 @@ module.exports = dir => {
                 presets: [
                   [require('babel-preset-env'), { modules: false }],
                   require('babel-preset-react'),
-                  require('babel-preset-stage-2')
+                  require('babel-preset-stage-2'),
                 ],
                 cacheDirectory: true,
               },
@@ -62,8 +62,8 @@ module.exports = dir => {
                     modules: true,
                     // sourceMap: true,
                     localIdentName: '[name]_[local]-[hash:base64:8]',
-                  }
-                }
+                  },
+                },
               ],
             },
 
@@ -80,19 +80,16 @@ module.exports = dir => {
                     importLoaders: 1,
                     // sourceMap: true,
                     localIdentName: '[name]_[local]-[hash:base64:8]',
-                  }
+                  },
                 },
-                'sass-loader'
+                'sass-loader',
               ],
             },
 
             // global CSS
             {
               test: /\.css$/,
-              use: [
-                'style-loader',
-                'css-loader'
-              ]
+              use: ['style-loader', 'css-loader'],
             },
 
             // global SCSS
@@ -107,8 +104,8 @@ module.exports = dir => {
                 //     importLoaders: 1,
                 //   }
                 // },
-                'sass-loader'
-              ]
+                'sass-loader',
+              ],
             },
 
             // Files
@@ -117,11 +114,11 @@ module.exports = dir => {
               loader: 'file-loader',
               options: {
                 name: 'static/media/[name].[hash:8].[ext]',
-              }
-            }
-          ]
-        }
-      ]
-    }
+              },
+            },
+          ],
+        },
+      ],
+    },
   }
 }

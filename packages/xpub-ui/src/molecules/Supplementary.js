@@ -12,13 +12,11 @@ const Supplementary = props => (
         key={file.name}
         file={file}
         progress={progress}
-        error={error}/>
+        error={error}
+      />
     )}
-    uploadedFile={value => (
-      <File
-        key={value.url}
-        value={value}/>
-    )}/>
+    uploadedFile={value => <File key={value.url} value={value} />}
+  />
 )
 
 export default Supplementary

@@ -3,14 +3,23 @@ import classnames from 'classnames'
 import Button from '../atoms/Button'
 import classes from './PlainButton.local.scss'
 
-const PlainButton = ({ className, children, type, disabled, primary, onClick }) => (
+const PlainButton = ({
+  className,
+  children,
+  type,
+  disabled,
+  primary,
+  onClick,
+}) => (
   <Button
     className={classnames(classes.root, className)}
     type={type}
     primary={primary}
     disabled={disabled}
-    onClick={onClick}>{children}</Button>
+    onClick={onClick}
+  >
+    {children}
+  </Button>
 )
 
 export default PlainButton
-

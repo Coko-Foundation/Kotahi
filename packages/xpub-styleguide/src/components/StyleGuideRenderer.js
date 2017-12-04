@@ -9,14 +9,10 @@ const StyleGuideRenderer = ({ title, children, toc }) => {
           <h1 className={classes.title}>{title}</h1>
         </header>
 
-        <nav className={classes.nav}>
-          {toc}
-        </nav>
+        <nav className={classes.nav}>{toc}</nav>
       </div>
 
-      <div className={classes.content}>
-        {children}
-      </div>
+      <div className={classes.content}>{children}</div>
     </div>
   )
 }

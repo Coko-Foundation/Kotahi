@@ -9,7 +9,7 @@ class Upload extends React.Component {
     error: undefined,
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { request } = this.props
 
     request.addEventListener('progress', this.handleProgress)
@@ -23,40 +23,40 @@ class Upload extends React.Component {
     if (!event.lengthComputable) return
 
     this.setState({
-      progress: event.loaded / event.total
+      progress: event.loaded / event.total,
     })
   }
 
   handleLoad = event => {
     if (this.props.request.status === 200) {
       this.setState({
-        progress: 1
+        progress: 1,
       })
 
       this.props.handleUploadedFile({
         file: this.props.file,
-        url: this.props.request.responseText
+        url: this.props.request.responseText,
       })
     } else {
       this.setState({
-        error: 'There was an error'
+        error: 'There was an error',
       })
     }
   }
 
   handleError = event => {
     this.setState({
-      error: 'There was an error'
+      error: 'There was an error',
     })
   }
 
   handleAbort = event => {
     this.setState({
-      error: 'The upload was cancelled'
+      error: 'The upload was cancelled',
     })
   }
 
-  render () {
+  render() {
     const { file, render } = this.props
     const { progress, error } = this.state
 

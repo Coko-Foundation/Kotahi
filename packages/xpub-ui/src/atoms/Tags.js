@@ -6,11 +6,11 @@ import './Tags.scss'
 // TODO: allow tags to be edited
 
 class Tags extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
-      tags: props.value || []
+      tags: props.value || [],
     }
   }
 
@@ -34,7 +34,7 @@ class Tags extends React.Component {
     this.props.onChange(tags)
   }
 
-  render () {
+  render() {
     const { tags } = this.state
     const { name, suggestions, placeholder } = this.props
 
@@ -50,7 +50,8 @@ class Tags extends React.Component {
         // delimiters={[]}
         // delimiterChars={[',', ';']}
         handleDelete={this.handleDelete}
-        handleAddition={this.handleAddition}/>
+        handleAddition={this.handleAddition}
+      />
     )
   }
 }

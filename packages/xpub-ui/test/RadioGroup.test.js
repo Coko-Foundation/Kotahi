@@ -11,19 +11,19 @@ const props = {
   options: [
     {
       label: 'Yes',
-      value: 'yes'
+      value: 'yes',
     },
     {
       label: 'No',
-      value: 'no'
+      value: 'no',
     },
     {
       label: 'Maybe',
-      value: 'maybe'
-    }
+      value: 'maybe',
+    },
   ],
   required: true,
-  value: undefined
+  value: undefined,
 }
 
 const wrapper = shallow(<RadioGroup {...props} />)
@@ -31,9 +31,7 @@ const radios = wrapper.find(Radio)
 
 describe('Radio Group', () => {
   test('Snapshot', () => {
-    const tree = renderer.create(
-      <RadioGroup {...props} />
-    ).toJSON()
+    const tree = renderer.create(<RadioGroup {...props} />).toJSON()
     expect(tree).toMatchSnapshot()
   })
 

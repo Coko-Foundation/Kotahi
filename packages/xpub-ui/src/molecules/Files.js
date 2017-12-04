@@ -3,12 +3,12 @@ import classes from './Files.local.scss'
 import Upload from './Upload'
 
 class Files extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
       values: props.value || [],
-      uploads: []
+      uploads: [],
     }
   }
 
@@ -22,7 +22,7 @@ class Files extends React.Component {
     Array.from(event.target.files).forEach(file => {
       uploads.push({
         file,
-        request: this.props.uploadFile(file)
+        request: this.props.uploadFile(file),
       })
     })
 
@@ -32,7 +32,7 @@ class Files extends React.Component {
   handleUploadedFile = ({ file, url }) => {
     const values = this.state.values.concat({
       name: file.name,
-      url
+      url,
     })
 
     const uploads = this.state.uploads.filter(item => {
@@ -44,7 +44,7 @@ class Files extends React.Component {
     this.props.onChange(values)
   }
 
-  render () {
+  render() {
     const { name, buttonText, uploadingFile, uploadedFile } = this.props
     const { values, uploads } = this.state
 
@@ -54,7 +54,8 @@ class Files extends React.Component {
           <button
             type="button"
             className={classes.attach}
-            onClick={() => this.fileInput.click()}>
+            onClick={() => this.fileInput.click()}
+          >
             {buttonText}
           </button>
 
@@ -64,19 +65,21 @@ class Files extends React.Component {
             type="file"
             name={name}
             multiple
-            onChange={this.handleChange}/>
+            onChange={this.handleChange}
+          />
         </div>
 
         <div className={classes.files}>
-          {uploads && uploads.map(upload => (
-            <Upload
-              key={upload.file.name}
-              file={upload.file}
-              request={upload.request}
-              handleUploadedFile={this.handleUploadedFile}
-              render={uploadingFile}
-            />
-          ))}
+          {uploads &&
+            uploads.map(upload => (
+              <Upload
+                key={upload.file.name}
+                file={upload.file}
+                request={upload.request}
+                handleUploadedFile={this.handleUploadedFile}
+                render={uploadingFile}
+              />
+            ))}
 
           {values && values.map(uploadedFile)}
         </div>

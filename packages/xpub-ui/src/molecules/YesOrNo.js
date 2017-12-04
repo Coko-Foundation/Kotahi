@@ -5,12 +5,12 @@ import classes from './YesOrNo.local.scss'
 const options = [
   {
     value: 'yes',
-    label: 'Yes'
+    label: 'Yes',
   },
   {
     value: 'no',
-    label: 'No'
-  }
+    label: 'No',
+  },
 ]
 
 const YesOrNo = ({ name, value, required, onChange }) => (
@@ -21,7 +21,8 @@ const YesOrNo = ({ name, value, required, onChange }) => (
     value={value}
     required={required}
     inline={true}
-    onChange={onChange}/>
+    onChange={onChange}
+  />
 )
 
 export default YesOrNo

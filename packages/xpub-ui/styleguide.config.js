@@ -1,8 +1,10 @@
 module.exports = {
   title: 'xpub-ui style guide',
   styleguideComponents: {
-    StyleGuideRenderer: require.resolve('xpub-styleguide/src/components/StyleGuideRenderer'),
-    Wrapper: require.resolve('xpub-styleguide/src/components/Wrapper')
+    StyleGuideRenderer: require.resolve(
+      'xpub-styleguide/src/components/StyleGuideRenderer',
+    ),
+    Wrapper: require.resolve('xpub-styleguide/src/components/Wrapper'),
   },
   context: {
     faker: 'faker',
@@ -10,28 +12,28 @@ module.exports = {
   skipComponentsWithoutExample: true,
   theme: {
     fontFamily: {
-      base: '"Fira Sans", sans-serif'
+      base: '"Fira Sans", sans-serif',
     },
     color: {
-      link: 'cornflowerblue'
-    }
+      link: 'cornflowerblue',
+    },
   },
   sections: [
     {
       name: 'Colors',
-      content: 'docs/colors.md'
+      content: 'docs/colors.md',
     },
     {
       name: 'Fonts',
-      content: 'docs/fonts.md'
+      content: 'docs/fonts.md',
     },
     {
       name: 'Atoms',
-      components: 'src/atoms/*.js'
+      components: 'src/atoms/*.js',
     },
     {
       name: 'Molecules',
-      components: 'src/molecules/*.js'
-    }
-  ]
+      components: 'src/molecules/*.js',
+    },
+  ],
 }

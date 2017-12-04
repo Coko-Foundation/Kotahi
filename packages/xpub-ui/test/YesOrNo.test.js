@@ -7,7 +7,7 @@ import RadioGroup from '../src/molecules/RadioGroup'
 
 const props = {
   name: 'TestName',
-  value: 'Maybe'
+  value: 'Maybe',
 }
 
 const wrapper = shallow(<YesOrNo {...props} />)
@@ -15,9 +15,7 @@ const radio = wrapper.find(RadioGroup)
 
 describe('Yes or No', () => {
   test('Snapshot', () => {
-    const tree = renderer.create(
-      <YesOrNo {...props} />
-    ).toJSON()
+    const tree = renderer.create(<YesOrNo {...props} />).toJSON()
     expect(tree).toMatchSnapshot()
   })
 

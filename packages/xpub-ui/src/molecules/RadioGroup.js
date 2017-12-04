@@ -2,11 +2,11 @@ import React from 'react'
 import Radio from '../atoms/Radio'
 
 class RadioGroup extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
-      value: props.value
+      value: props.value,
     }
   }
 
@@ -18,7 +18,7 @@ class RadioGroup extends React.Component {
     this.props.onChange(value)
   }
 
-  render () {
+  render() {
     const { inline, name, options, required } = this.props
     const { value } = this.state
 
@@ -34,7 +34,8 @@ class RadioGroup extends React.Component {
             label={option.label}
             color={option.color}
             checked={option.value === value}
-            onChange={this.handleChange}/>
+            onChange={this.handleChange}
+          />
         ))}
       </div>
     )

@@ -11,21 +11,19 @@ import 'xpub-theme'
 import classes from './Wrapper.local.scss'
 
 const rootReducer = combineReducers({
-  form: formReducer
+  form: formReducer,
 })
 
 const store = createStore(
   rootReducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
+  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
 )
 
 const Wrapper = ({ children }) => (
   <Provider store={store}>
     <Router>
       <JournalProvider journal={journal}>
-        <div className={classes.root}>
-          {children}
-        </div>
+        <div className={classes.root}>{children}</div>
       </JournalProvider>
     </Router>
   </Provider>
