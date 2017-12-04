@@ -31,8 +31,8 @@ module.exports = [
     loader: 'string-replace-loader',
     options: {
       search: 'PUBSWEET_COMPONENTS',
-      replace: '[' + requireComponentsString + ']'
-    }
+      replace: '[' + requireComponentsString + ']',
+    },
   },
 
   // loaders
@@ -47,12 +47,10 @@ module.exports = [
           presets: [
             [require('babel-preset-env'), { modules: false }],
             require('babel-preset-react'),
-            require('babel-preset-stage-2')
+            require('babel-preset-stage-2'),
           ],
-          plugins: [
-            require('react-hot-loader/babel'),
-          ]
-        }
+          plugins: [require('react-hot-loader/babel')],
+        },
       },
 
       // CSS Modules
@@ -66,9 +64,9 @@ module.exports = [
             options: {
               modules: true,
               localIdentName: '[name]_[local]-[hash:base64:8]',
-            }
-          }
-        ]
+            },
+          },
+        ],
       },
 
       // SCSS Modules
@@ -83,19 +81,16 @@ module.exports = [
               modules: true,
               importLoaders: 1,
               localIdentName: '[name]_[local]-[hash:base64:8]',
-            }
+            },
           },
-          'sass-loader'
-        ]
+          'sass-loader',
+        ],
       },
 
       // global CSS
       {
         test: /\.css$/,
-        use: [
-          'style-loader',
-          'css-loader',
-        ]
+        use: ['style-loader', 'css-loader'],
       },
 
       // global SCSS
@@ -104,14 +99,14 @@ module.exports = [
         use: [
           'style-loader',
           'css-loader', // TODO: importLoaders: 1?
-          'sass-loader'
-        ]
+          'sass-loader',
+        ],
       },
 
       // HTML (needed?)
       {
         test: /\.html$/,
-        use: 'html-loader'
+        use: 'html-loader',
       },
 
       // files
@@ -120,8 +115,8 @@ module.exports = [
         loader: 'file-loader',
         options: {
           name: 'static/media/[name].[hash:8].[ext]',
-        }
-      }
-    ]
+        },
+      },
+    ],
   },
 ]

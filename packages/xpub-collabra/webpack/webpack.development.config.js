@@ -18,17 +18,17 @@ module.exports = [
       app: [
         'react-hot-loader/patch',
         'webpack-hot-middleware/client?reload=true',
-        './app'
-      ]
+        './app',
+      ],
     },
     output: {
       path: path.join(__dirname, '..', '_build', 'assets'),
       filename: '[name].js',
-      publicPath: '/assets/'
+      publicPath: '/assets/',
     },
     devtool: 'eval', // 'cheap-module-source-map',
     module: {
-      rules
+      rules,
     },
     resolve,
     plugins: [
@@ -40,15 +40,13 @@ module.exports = [
       }),
       new webpack.ContextReplacementPlugin(/./, __dirname, {
         [config.authsome.mode]: config.authsome.mode,
-        [config.validations]: config.validations
+        [config.validations]: config.validations,
       }),
-      new CopyWebpackPlugin([
-        { from: '../static' }
-      ])
+      new CopyWebpackPlugin([{ from: '../static' }]),
     ],
     node: {
       fs: 'empty',
-      __dirname: true
-    }
-  }
+      __dirname: true,
+    },
+  },
 ]

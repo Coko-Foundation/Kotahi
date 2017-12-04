@@ -19,12 +19,12 @@ const render = () => {
       <StoreProvider store={store}>
         <JournalProvider journal={journal}>
           <Router history={history}>
-            <Root/>
+            <Root />
           </Router>
         </JournalProvider>
       </StoreProvider>
     </AppContainer>,
-    document.getElementById('root')
+    document.getElementById('root'),
   )
 }
 
