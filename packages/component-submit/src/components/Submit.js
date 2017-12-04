@@ -11,39 +11,53 @@ import Confirm from './Confirm'
 // import Validots from './Validots'
 import classes from './Submit.local.scss'
 
-const Submit = ({ project, version, valid, error, handleSubmit, uploadFile, confirming, toggleConfirming }) => (
-  <div className={classnames(classes.root, {
-    [classes.confirming]: confirming
-  })}>
-    <div className={classes.title}>
-      Submission information
-    </div>
+const Submit = ({
+  project,
+  version,
+  valid,
+  error,
+  handleSubmit,
+  uploadFile,
+  confirming,
+  toggleConfirming,
+}) => (
+  <div
+    className={classnames(classes.root, {
+      [classes.confirming]: confirming,
+    })}
+  >
+    <div className={classes.title}>Submission information</div>
 
     <div className={classes.intro}>
-      <div>We have ingested your manuscript. To access your manuscript in an editor, please <Link to={`/projects/${project.id}/versions/${version.id}/manuscript`}>view here</Link>.</div>
-      <div>To complete your submission, please answer the following questions.</div>
+      <div>
+        We have ingested your manuscript. To access your manuscript in an
+        editor, please{' '}
+        <Link to={`/projects/${project.id}/versions/${version.id}/manuscript`}>
+          view here
+        </Link>.
+      </div>
+      <div>
+        To complete your submission, please answer the following questions.
+      </div>
       <div>The answers will be automatically saved.</div>
     </div>
 
     <form onSubmit={handleSubmit}>
-      <Metadata/>
-      <Declarations/>
-      <Suggestions/>
-      <Notes/>
-      <SupplementaryFiles uploadFile={uploadFile}/>
+      <Metadata />
+      <Declarations />
+      <Suggestions />
+      <Notes />
+      <SupplementaryFiles uploadFile={uploadFile} />
 
       <div>
-        <Button
-          type="button"
-          primary
-          onClick={toggleConfirming}>
+        <Button type="button" primary onClick={toggleConfirming}>
           Submit your manuscript
         </Button>
       </div>
 
       {confirming && (
         <div className={classes.confirm}>
-          <Confirm toggleConfirming={toggleConfirming}/>
+          <Confirm toggleConfirming={toggleConfirming} />
         </div>
       )}
     </form>

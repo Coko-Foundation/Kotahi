@@ -7,33 +7,27 @@ import classes from './Suggestions.local.scss'
 const joinComma = join(',')
 const splitComma = split(',')
 
-const SuggestedReviewerInput = input =>
-  <TextField
-    placeholder="Add reviewer names"
-    {...input}/>
+const SuggestedReviewerInput = input => (
+  <TextField placeholder="Add reviewer names" {...input} />
+)
 
-const OpposedReviewerInput = input =>
-  <TextField
-    placeholder="Add reviewer names"
-    {...input}/>
+const OpposedReviewerInput = input => (
+  <TextField placeholder="Add reviewer names" {...input} />
+)
 
-const SuggestedEditorInput = input =>
-  <TextField
-    placeholder="Add editor names"
-    {...input}/>
+const SuggestedEditorInput = input => (
+  <TextField placeholder="Add editor names" {...input} />
+)
 
-const OpposedEditorInput = input =>
-  <TextField
-    placeholder="Add editor names"
-    {...input}/>
+const OpposedEditorInput = input => (
+  <TextField placeholder="Add editor names" {...input} />
+)
 
 const Suggestions = () => (
   <FormSection name="suggestions">
     <div className={classes.section} id="suggestions.reviewers">
       <FormSection name="reviewers">
-        <div className={classes.legend}>
-          Suggested or opposed reviewers
-        </div>
+        <div className={classes.legend}>Suggested or opposed reviewers</div>
 
         <div>
           <div className={classes.sublegend}>Suggested reviewers</div>
@@ -42,7 +36,8 @@ const Suggestions = () => (
             name="suggested"
             format={joinComma}
             parse={splitComma}
-            component={SuggestedReviewerInput}/>
+            component={SuggestedReviewerInput}
+          />
         </div>
 
         <div>
@@ -52,16 +47,15 @@ const Suggestions = () => (
             name="opposed"
             format={joinComma}
             parse={splitComma}
-            component={OpposedReviewerInput}/>
+            component={OpposedReviewerInput}
+          />
         </div>
       </FormSection>
     </div>
 
     <div className={classes.section} id="suggestions.editors">
       <FormSection name="editors">
-        <div className={classes.legend}>
-          Suggested or opposed editors
-        </div>
+        <div className={classes.legend}>Suggested or opposed editors</div>
 
         <div>
           <div className={classes.sublegend}>Suggested editors</div>
@@ -70,7 +64,8 @@ const Suggestions = () => (
             name="suggested"
             format={joinComma}
             parse={splitComma}
-            component={SuggestedEditorInput}/>
+            component={SuggestedEditorInput}
+          />
         </div>
 
         <div>
@@ -80,7 +75,8 @@ const Suggestions = () => (
             name="opposed"
             format={joinComma}
             parse={splitComma}
-            component={OpposedEditorInput}/>
+            component={OpposedEditorInput}
+          />
         </div>
       </FormSection>
     </div>

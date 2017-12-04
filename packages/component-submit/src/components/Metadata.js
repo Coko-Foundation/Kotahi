@@ -4,7 +4,14 @@ import { AbstractEditor, TitleEditor } from 'xpub-edit'
 import { CheckboxGroup, Menu, TextField, ValidatedField } from 'xpub-ui'
 import { withJournal } from 'xpub-journal'
 import classes from './Metadata.local.scss'
-import { join, required, minChars, maxChars, minSize, split } from 'xpub-validators'
+import {
+  join,
+  required,
+  minChars,
+  maxChars,
+  minSize,
+  split,
+} from 'xpub-validators'
 
 const minSize1 = minSize(1)
 const minChars20 = minChars(20)
@@ -12,37 +19,33 @@ const minChars100 = minChars(100)
 const maxChars500 = maxChars(500)
 const maxChars5000 = maxChars(5000)
 
-const TitleInput = input =>
-  <TitleEditor
-    placeholder="Enter the title…"
-    title="Title"
-    {...input}/>
+const TitleInput = input => (
+  <TitleEditor placeholder="Enter the title…" title="Title" {...input} />
+)
 
-const AbstractInput = input =>
+const AbstractInput = input => (
   <AbstractEditor
     title="Abstract"
     placeholder="Enter the abstract…"
-    {...input}/>
+    {...input}
+  />
+)
 
-const AuthorsInput = input =>
-  <TextField
-    placeholder="Enter author names…"
-    {...input}/>
+const AuthorsInput = input => (
+  <TextField placeholder="Enter author names…" {...input} />
+)
 
-const KeywordsInput = input =>
-  <TextField
-    placeholder="Enter keywords…"
-    {...input}/>
+const KeywordsInput = input => (
+  <TextField placeholder="Enter keywords…" {...input} />
+)
 
-const ArticleTypeInput = journal => input =>
-  <Menu
-    options={journal.articleTypes}
-    {...input}/>
+const ArticleTypeInput = journal => input => (
+  <Menu options={journal.articleTypes} {...input} />
+)
 
-const ArticleSectionInput = journal => input =>
-  <CheckboxGroup
-    options={journal.articleSections}
-    {...input}/>
+const ArticleSectionInput = journal => input => (
+  <CheckboxGroup options={journal.articleSections} {...input} />
+)
 
 const Metadata = ({ journal }) => (
   <FormSection name="metadata">
@@ -51,7 +54,8 @@ const Metadata = ({ journal }) => (
         name="title"
         required
         validate={[minChars20, maxChars500]}
-        component={TitleInput}/>
+        component={TitleInput}
+      />
     </div>
 
     <div className={classes.section} id="metadata.abstract">
@@ -59,7 +63,8 @@ const Metadata = ({ journal }) => (
         name="abstract"
         required
         validate={[minChars100, maxChars5000]}
-        component={AbstractInput}/>
+        component={AbstractInput}
+      />
     </div>
 
     <div className={classes.section} id="metadata.authors">
@@ -71,7 +76,8 @@ const Metadata = ({ journal }) => (
         format={join()}
         parse={split()}
         validate={[minSize1]}
-        component={AuthorsInput}/>
+        component={AuthorsInput}
+      />
     </div>
 
     <div className={classes.section} id="metadata.keywords">
@@ -83,7 +89,8 @@ const Metadata = ({ journal }) => (
         format={join()}
         parse={split()}
         validate={[minSize1]}
-        component={KeywordsInput}/>
+        component={KeywordsInput}
+      />
     </div>
 
     <div className={classes.section} id="metadata.articleType">
@@ -93,7 +100,8 @@ const Metadata = ({ journal }) => (
         name="articleType"
         required
         validate={[required]}
-        component={ArticleTypeInput(journal)}/>
+        component={ArticleTypeInput(journal)}
+      />
     </div>
 
     <div className={classes.section} id="metadata.articleSection">
@@ -103,7 +111,8 @@ const Metadata = ({ journal }) => (
         name="articleSection"
         required
         validate={[required]}
-        component={ArticleSectionInput(journal)}/>
+        component={ArticleSectionInput(journal)}
+      />
     </div>
   </FormSection>
 )
