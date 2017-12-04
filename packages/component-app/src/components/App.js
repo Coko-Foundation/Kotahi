@@ -4,6 +4,7 @@ import { connect } from 'react-redux'
 import { AppBar } from 'xpub-ui'
 import { withJournal } from 'xpub-journal'
 import 'xpub-bootstrap'
+
 import classes from './App.local.scss'
 
 const App = ({ children, currentUser, journal }) => (
@@ -13,19 +14,16 @@ const App = ({ children, currentUser, journal }) => (
       brandLink="/"
       userName={currentUser ? currentUser.username : null}
       loginLink="/login"
-      logoutLink="/logout"/>
+      logoutLink="/logout"
+    />
 
-    <div className={classes.main}>
-      {children}
-    </div>
+    <div className={classes.main}>{children}</div>
   </div>
 )
 
 export default compose(
-  connect(
-    state => ({
-      currentUser: state.currentUser.user,
-    })
-  ),
-  withJournal
+  connect(state => ({
+    currentUser: state.currentUser.user,
+  })),
+  withJournal,
 )(App)
