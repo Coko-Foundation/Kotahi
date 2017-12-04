@@ -8,13 +8,11 @@ const labels = {
   submitted: 'Submitted',
   accepted: 'Accepted',
   assignedToEditor: 'Assigned to editor',
-  assigningReviewers: 'Assigning reviewers'
+  assigningReviewers: 'Assigning reviewers',
 }
 
 const Status = ({ status }) => (
-  <div className={classes.root}>
-    {labels[status] || 'Unsubmitted'}
-  </div>
+  <div className={classes.root}>{labels[status] || 'Unsubmitted'}</div>
 )
 
 export default Status

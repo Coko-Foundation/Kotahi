@@ -11,11 +11,13 @@ import AssignEditorContainer from './AssignEditorContainer'
 const reviewerResponse = (project, version, reviewer, status) => dispatch => {
   reviewer.status = status
 
-  return dispatch(actions.updateFragment(project, {
-    id: version.id,
-    rev: version.rev,
-    reviewers: version.reviewers
-  }))
+  return dispatch(
+    actions.updateFragment(project, {
+      id: version.id,
+      rev: version.rev,
+      reviewers: version.reviewers,
+    }),
+  )
 }
 
 export default compose(
@@ -40,33 +42,33 @@ export default compose(
             team =>
               team.object.type === 'collection' &&
               team.object.id === collection.id &&
-              team.teamType.name === 'handlingEditor'
-          )
+              team.teamType.name === 'handlingEditor',
+          ),
       )
       const myCollections = teams
         .filter(
           team =>
             team.group === 'editor' &&
             team.object.type === 'collection' &&
-            team.members.includes(currentUser.id)
+            team.members.includes(currentUser.id),
         )
         .map(team =>
-          collections.find(collection => collection.id === team.object.id)
+          collections.find(collection => collection.id === team.object.id),
         )
 
       const dashboard = {
         owner: sortedCollections.filter(
           collection =>
             collection.owners &&
-            collection.owners.some(owner => owner.id === currentUser.id)
+            collection.owners.some(owner => owner.id === currentUser.id),
         ),
         editor: newestFirst(
           unassignedCollections
             .concat(myCollections)
             .filter(
               (collection, index, items) =>
-                items.findIndex(item => item.id === collection.id) === index
-            )
+                items.findIndex(item => item.id === collection.id) === index,
+            ),
         ),
         // reviewer: newestFirst(teams
         //   .filter(team => team.group === 'reviewer'
@@ -75,23 +77,28 @@ export default compose(
         //   .map(team => collections.find(collection => {
         //     return collection.id === team.object
         //   }))),
-        reviewer: sortedCollections
-          .filter(collection => collection.reviewers
-            && collection.reviewers.some(
-              reviewer => reviewer && reviewer.user === currentUser.id
-            )),
+        reviewer: sortedCollections.filter(
+          collection =>
+            collection.reviewers &&
+            collection.reviewers.some(
+              reviewer => reviewer && reviewer.user === currentUser.id,
+            ),
+        ),
       }
 
       return { collections, currentUser, conversion, dashboard }
     },
     (dispatch, { history }) => ({
-      uploadManuscript: acceptedFiles => dispatch(uploadManuscript(acceptedFiles, history)),
-      reviewerResponse: (project, version, reviewer, status) => dispatch(reviewerResponse(project, version, reviewer, status)),
-      deleteProject: collection => dispatch(actions.deleteCollection(collection)),
-    })
+      uploadManuscript: acceptedFiles =>
+        dispatch(uploadManuscript(acceptedFiles, history)),
+      reviewerResponse: (project, version, reviewer, status) =>
+        dispatch(reviewerResponse(project, version, reviewer, status)),
+      deleteProject: collection =>
+        dispatch(actions.deleteCollection(collection)),
+    }),
   ),
   withProps({
-    AssignEditor: AssignEditorContainer
+    AssignEditor: AssignEditorContainer,
   }),
   withRouter,
 )(Dashboard)

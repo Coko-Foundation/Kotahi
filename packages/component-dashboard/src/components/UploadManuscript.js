@@ -4,7 +4,8 @@ import classnames from 'classnames'
 import { Icon } from 'xpub-ui'
 import classes from './UploadManuscript.local.scss'
 
-const isIdle = conversion => !(conversion.converting || conversion.complete || conversion.error)
+const isIdle = conversion =>
+  !(conversion.converting || conversion.complete || conversion.error)
 
 const UploadManuscript = ({ uploadManuscript, conversion }) => (
   <Dropzone
@@ -18,11 +19,13 @@ const UploadManuscript = ({ uploadManuscript, conversion }) => (
           [classes.idle]: isIdle(conversion),
           [classes.converting]: conversion.converting,
           [classes.error]: conversion.error,
-          [classes.complete]: conversion.complete
+          [classes.complete]: conversion.complete,
         })}
       >
         <span className={classes.icon}>
-          <Icon color="var(--color-primary)">{conversion.complete ? 'check_circle' : 'plus_circle'}</Icon>
+          <Icon color="var(--color-primary)">
+            {conversion.complete ? 'check_circle' : 'plus_circle'}
+          </Icon>
         </span>
       </div>
 
