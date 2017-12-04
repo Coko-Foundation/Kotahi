@@ -26,15 +26,24 @@ const ReviewerInput = loadOptions => ({ input }) => (
   />
 )
 
-const ReviewerForm = ({ reset, valid, handleSubmit, onSubmit, loadOptions }) => (
+const ReviewerForm = ({
+  reset,
+  valid,
+  handleSubmit,
+  onSubmit,
+  loadOptions,
+}) => (
   <form onSubmit={handleSubmit(onSubmit(reset))}>
     <Field
       name="user"
       validate={required}
-      component={ReviewerInput(loadOptions)}/>
+      component={ReviewerInput(loadOptions)}
+    />
 
     <div className={classes.actions}>
-      <Button type="submit" primary disabled={!valid}>Invite reviewer</Button>
+      <Button type="submit" primary disabled={!valid}>
+        Invite reviewer
+      </Button>
     </div>
   </form>
 )

@@ -5,21 +5,21 @@ import classes from './Tabs.local.scss'
 // TODO: allow the tab content to be separate from the key
 
 class Tabs extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
-      activeKey: null
+      activeKey: null,
     }
   }
 
-  componentDidMount () {
+  componentDidMount() {
     const { activeKey } = this.props
 
     this.setState({ activeKey })
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     const { activeKey } = nextProps
 
     if (activeKey !== this.props.activeKey) {
@@ -29,25 +29,22 @@ class Tabs extends React.Component {
 
   setActiveKey = activeKey => this.setState({ activeKey })
 
-  render () {
+  render() {
     const { sections, title } = this.props
     const { activeKey } = this.state
 
     return (
       <div className={classes.root}>
         <div className={classes.tabs}>
-          {title && (
-            <span className={classes.title}>{title}</span>
-          )}
+          {title && <span className={classes.title}>{title}</span>}
 
           {sections.map(({ key, label }) => (
             <span
               key={key}
               className={classes.tab}
-              onClick={() => this.setActiveKey(key)}>
-              <Tab active={activeKey === key}>
-                {label || key}
-              </Tab>
+              onClick={() => this.setActiveKey(key)}
+            >
+              <Tab active={activeKey === key}>{label || key}</Tab>
             </span>
           ))}
         </div>

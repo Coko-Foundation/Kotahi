@@ -16,34 +16,34 @@ export default compose(
     actions.getUsers(),
     // actions.getFragment({ id: match.params.project }, { id: match.params.version }),
   ]),
-  connect(
-    (state, { match }) => {
-      const project = selectCollection(state, match.params.project)
-      const version = selectFragment(state, match.params.version)
-      const reviewers = (version.reviewers || []).filter(reviewer => reviewer.reviewer)
+  connect((state, { match }) => {
+    const project = selectCollection(state, match.params.project)
+    const version = selectFragment(state, match.params.version)
+    const reviewers = (version.reviewers || []).filter(
+      reviewer => reviewer.reviewer,
+    )
 
-      const reviewerUsers = state.users.users
-      // const reviewerUsers = filter(state.users.users, { reviewer: true })
+    const reviewerUsers = state.users.users
+    // const reviewerUsers = filter(state.users.users, { reviewer: true })
 
-      // populate the reviewer user
-      // TODO: remove these, as they'll get saved back to the server
-      reviewers.forEach(reviewer => {
-        const projectReviewer = find(project.reviewers, {
-          id: reviewer.reviewer
-        })
-
-        reviewer._user = find(reviewerUsers, {
-          id: projectReviewer.user
-        })
-
-        reviewer._reviewer = projectReviewer
+    // populate the reviewer user
+    // TODO: remove these, as they'll get saved back to the server
+    reviewers.forEach(reviewer => {
+      const projectReviewer = find(project.reviewers, {
+        id: reviewer.reviewer,
       })
 
-      return { project, version, reviewers, reviewerUsers }
-    }
-  ),
+      reviewer._user = find(reviewerUsers, {
+        id: projectReviewer.user,
+      })
+
+      reviewer._reviewer = projectReviewer
+    })
+
+    return { project, version, reviewers, reviewerUsers }
+  }),
   withProps({
     ReviewerForm: ReviewerFormContainer,
-    Reviewer: ReviewerContainer
-  })
+    Reviewer: ReviewerContainer,
+  }),
 )(Reviewers)

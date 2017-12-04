@@ -9,7 +9,14 @@ import ReviewMetadata from '../metadata/ReviewMetadata'
 import Decision from './Decision'
 import Tabs from '../tabs/Tabs'
 
-const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit, uploadFile }) => {
+const DecisionLayout = ({
+  project,
+  versions,
+  currentVersion,
+  valid,
+  handleSubmit,
+  uploadFile,
+}) => {
   const decisionSections = []
   const editorSections = []
 
@@ -27,9 +34,9 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
         label,
         content: (
           <div>
-            <ReviewMetadata version={version}/>
-            <DecisionReviews version={version}/>
-            <Decision decision={decision}/>
+            <ReviewMetadata version={version} />
+            <DecisionReviews version={version} />
+            <Decision decision={decision} />
           </div>
         ),
       })
@@ -37,10 +44,13 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
       editorSections.push({
         key,
         label,
-        content: <SimpleEditor
-          content={version.source}
-          layout="bare"
-          readOnly={true}/>
+        content: (
+          <SimpleEditor
+            content={version.source}
+            layout="bare"
+            readOnly={true}
+          />
+        ),
       })
     }
   }, [])
@@ -57,26 +67,28 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
       label,
       content: (
         <div>
-          <ReviewMetadata
-            version={currentVersion}/>
-          <DecisionReviews
-            version={currentVersion}/>
+          <ReviewMetadata version={currentVersion} />
+          <DecisionReviews version={currentVersion} />
           <DecisionForm
             decision={decision}
             valid={valid}
             handleSubmit={handleSubmit}
-            uploadFile={uploadFile}/>
+            uploadFile={uploadFile}
+          />
         </div>
-      )
+      ),
     })
 
     editorSections.push({
       key,
       label,
-      content: <SimpleEditor
-        content={currentVersion.source}
-        layout="bare"
-        readOnly={true}/>
+      content: (
+        <SimpleEditor
+          content={currentVersion.source}
+          layout="bare"
+          readOnly={true}
+        />
+      ),
     })
   }
 
@@ -86,14 +98,16 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
         <Tabs
           sections={editorSections}
           activeKey={editorSections[editorSections.length - 1].key}
-          title="Versions"/>
+          title="Versions"
+        />
       </div>
 
       <div className={classes.column}>
         <Tabs
           sections={decisionSections}
           activeKey={decisionSections[decisionSections.length - 1].key}
-          title="Versions"/>
+          title="Versions"
+        />
       </div>
     </div>
   )

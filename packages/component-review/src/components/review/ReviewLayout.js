@@ -8,12 +8,23 @@ import Review from './Review'
 import Tabs from '../tabs/Tabs'
 import classes from './ReviewLayout.local.scss'
 
-const ReviewLayout = ({ project, versions, currentVersion, handlingEditors, reviewer, valid, handleSubmit, uploadFile }) => {
+const ReviewLayout = ({
+  project,
+  versions,
+  currentVersion,
+  handlingEditors,
+  reviewer,
+  valid,
+  handleSubmit,
+  uploadFile,
+}) => {
   const reviewSections = []
   const editorSections = []
 
   versions.forEach(version => {
-    const review = version.reviewers.find(review => review.reviewer === reviewer.id)
+    const review = version.reviewers.find(
+      review => review.reviewer === reviewer.id,
+    )
 
     if (review && review.submitted) {
       const submittedMoment = moment(review.submitted)
@@ -27,9 +38,9 @@ const ReviewLayout = ({ project, versions, currentVersion, handlingEditors, revi
           <div>
             <ReviewMetadata
               version={version}
-              handlingEditors={handlingEditors}/>
-            <Review
-              review={review}/>
+              handlingEditors={handlingEditors}
+            />
+            <Review review={review} />
           </div>
         ),
       })
@@ -38,16 +49,19 @@ const ReviewLayout = ({ project, versions, currentVersion, handlingEditors, revi
       editorSections.push({
         key,
         label,
-        content: <SimpleEditor
-          content={version.source}
-          layout="bare"
-          readOnly={true}/>
+        content: (
+          <SimpleEditor
+            content={version.source}
+            layout="bare"
+            readOnly={true}
+          />
+        ),
       })
     }
   }, [])
 
   const review = currentVersion.reviewers.find(
-    review => review.reviewer === reviewer.id
+    review => review.reviewer === reviewer.id,
   )
 
   if (!review || !review.submitted) {
@@ -62,23 +76,28 @@ const ReviewLayout = ({ project, versions, currentVersion, handlingEditors, revi
         <div>
           <ReviewMetadata
             version={currentVersion}
-            handlingEditors={handlingEditors}/>
+            handlingEditors={handlingEditors}
+          />
           <ReviewForm
             review={review}
             valid={valid}
             handleSubmit={handleSubmit}
-            uploadFile={uploadFile}/>
+            uploadFile={uploadFile}
+          />
         </div>
-      )
+      ),
     })
 
     editorSections.push({
       key,
       label,
-      content: <SimpleEditor
-        layout="bare"
-        content={currentVersion.source}
-        readOnly={true}/>
+      content: (
+        <SimpleEditor
+          layout="bare"
+          content={currentVersion.source}
+          readOnly={true}
+        />
+      ),
     })
   }
 
@@ -88,14 +107,16 @@ const ReviewLayout = ({ project, versions, currentVersion, handlingEditors, revi
         <Tabs
           sections={editorSections}
           activeKey={editorSections[editorSections.length - 1].key}
-          title="Versions"/>
+          title="Versions"
+        />
       </div>
 
       <div className={classes.review}>
         <Tabs
           sections={reviewSections}
           activeKey={reviewSections[reviewSections.length - 1].key}
-          title="Versions"/>
+          title="Versions"
+        />
       </div>
     </div>
   )

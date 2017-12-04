@@ -16,9 +16,7 @@ const Reviewer = ({ reviewer, removeReviewer }) => (
       height={70}
       reviewerLetter={ordinalLetter(reviewer._reviewer.ordinal)}
     />
-    <div className={classes.name}>
-      {reviewer._user.username}
-    </div>
+    <div className={classes.name}>{reviewer._user.username}</div>
     <div>
       {map(reviewer.events, (event, key) => (
         <div className={classes.date} key={`${key}-${event}`}>

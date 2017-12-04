@@ -7,23 +7,17 @@ import { withJournal } from 'xpub-journal'
 import { required } from 'xpub-validators'
 import classes from './DecisionForm.local.scss'
 
-const NoteInput = input =>
-  <NoteEditor
-    title="Decision"
-    placeholder="Enter your decision…"
-    {...input}/>
+const NoteInput = input => (
+  <NoteEditor title="Decision" placeholder="Enter your decision…" {...input} />
+)
 
-const AttachmentsInput = uploadFile => input =>
-  <Attachments
-    uploadFile={uploadFile}
-    {...input}/>
+const AttachmentsInput = uploadFile => input => (
+  <Attachments uploadFile={uploadFile} {...input} />
+)
 
-const RecommendationInput = journal => input =>
-  <RadioGroup
-    inline
-    required
-    options={journal.recommendations}
-    {...input}/>
+const RecommendationInput = journal => input => (
+  <RadioGroup inline required options={journal.recommendations} {...input} />
+)
 
 const DecisionForm = ({ journal, valid, handleSubmit, uploadFile }) => (
   <form onSubmit={handleSubmit}>
@@ -34,12 +28,14 @@ const DecisionForm = ({ journal, valid, handleSubmit, uploadFile }) => (
             <ValidatedField
               name="content"
               validate={[required]}
-              component={NoteInput}/>
+              component={NoteInput}
+            />
           </div>
 
           <ValidatedField
             name="attachments"
-            component={AttachmentsInput(uploadFile)}/>
+            component={AttachmentsInput(uploadFile)}
+          />
         </div>
       </FormSection>
     </div>
@@ -48,11 +44,14 @@ const DecisionForm = ({ journal, valid, handleSubmit, uploadFile }) => (
       <ValidatedField
         name="recommendation"
         validate={[required]}
-        component={RecommendationInput(journal)}/>
+        component={RecommendationInput(journal)}
+      />
     </div>
 
     <div>
-      <Button type="submit" primary disabled={!valid}>Submit</Button>
+      <Button type="submit" primary disabled={!valid}>
+        Submit
+      </Button>
     </div>
   </form>
 )
