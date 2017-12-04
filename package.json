@@ -28,16 +28,16 @@
   },
   "scripts": {
     "clean": "lerna clean",
-    "styleguide": "lerna run styleguide",
-    "test": "lerna run test",
     "lint": "npm run lint:js && npm run lint:style",
     "lint:js": "eslint packages",
     "lint:style": "stylelint packages/**/*.scss packages/**/*.css",
-    "precommit": "lint-staged"
+    "precommit": "lint-staged",
+    "styleguide": "lerna run styleguide",
+    "test": "lerna run test"
   },
   "lint-staged": {
     "*.js": [
-      "eslint",
+      "prettier --write",
       "git add"
     ],
     "*.css": "stylelint",
