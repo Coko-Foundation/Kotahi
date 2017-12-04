@@ -47,7 +47,7 @@ describe('Radio Group', () => {
       const child = wrapper.childAt(i)
       expect(child.is(Radio)).toBeTruthy()
 
-      i++
+      i += 1
     }
 
     expect(radios).toHaveLength(len)
@@ -66,7 +66,7 @@ describe('Radio Group', () => {
       expect(radioProps.name).toEqual(props.name)
       expect(radioProps.required).toEqual(props.required)
 
-      i++
+      i += 1
     }
   })
 
@@ -80,7 +80,7 @@ describe('Radio Group', () => {
       const radioProps = radio.props
 
       expect(radioProps.checked).toBeFalsy()
-      i++
+      i += 1
     }
 
     // With the first radio button selected
@@ -104,7 +104,7 @@ describe('Radio Group', () => {
         expect(radioProps.checked).toBeFalsy()
       }
 
-      i++
+      i += 1
     }
   })
 })

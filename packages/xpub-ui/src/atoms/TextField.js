@@ -16,12 +16,12 @@ const TextField = ({
     <input
       className={classes.input}
       name={name}
-      type={type}
-      value={value}
-      placeholder={placeholder}
-      required={required}
       onBlur={onBlur}
       onChange={onChange}
+      placeholder={placeholder}
+      required={required}
+      type={type}
+      value={value}
     />
   </label>
 )

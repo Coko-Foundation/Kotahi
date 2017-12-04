@@ -7,8 +7,8 @@ import Icon from '../atoms/Icon'
 const AppBar = ({ brandLink, brandName, loginLink, logoutLink, userName }) => (
   <div className={classes.root}>
     <Link
-      to={brandLink || '/'}
       className={classnames(classes.link, classes.logo)}
+      to={brandLink || '/'}
     >
       {brandName}
     </Link>
@@ -23,13 +23,13 @@ const AppBar = ({ brandLink, brandName, loginLink, logoutLink, userName }) => (
 
       {userName ? (
         <Link
-          to={logoutLink}
           className={classnames(classes.item, classes.link)}
+          to={logoutLink}
         >
           logout
         </Link>
       ) : (
-        <Link to={loginLink} className={classnames(classes.item, classes.link)}>
+        <Link className={classnames(classes.item, classes.link)} to={loginLink}>
           login
         </Link>
       )}

@@ -30,13 +30,13 @@ const Radio = ({
     style={{ color }}
   >
     <input
-      className={classes.input}
-      type="radio"
-      name={name}
-      value={value}
       checked={checked}
-      required={required}
+      className={classes.input}
+      name={name}
       onChange={onChange}
+      required={required}
+      type="radio"
+      value={value}
     />
     <span
       className={classes.pseudoInput}

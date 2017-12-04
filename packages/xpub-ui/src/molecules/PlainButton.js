@@ -13,10 +13,10 @@ const PlainButton = ({
 }) => (
   <Button
     className={classnames(classes.root, className)}
-    type={type}
-    primary={primary}
     disabled={disabled}
     onClick={onClick}
+    primary={primary}
+    type={type}
   >
     {children}
   </Button>

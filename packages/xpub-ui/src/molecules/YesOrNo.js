@@ -4,24 +4,24 @@ import classes from './YesOrNo.local.scss'
 
 const options = [
   {
-    value: 'yes',
     label: 'Yes',
+    value: 'yes',
   },
   {
-    value: 'no',
     label: 'No',
+    value: 'no',
   },
 ]
 
 const YesOrNo = ({ name, value, required, onChange }) => (
   <RadioGroup
     className={classes.root}
+    inline
     name={name}
-    options={options}
-    value={value}
-    required={required}
-    inline={true}
     onChange={onChange}
+    options={options}
+    required={required}
+    value={value}
   />
 )
 

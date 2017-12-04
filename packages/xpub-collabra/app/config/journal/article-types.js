@@ -1,18 +1,18 @@
 export default [
   {
-    value: 'original-research',
     label: 'Original Research Report',
+    value: 'original-research',
   },
   {
-    value: 'review',
     label: 'Review',
+    value: 'review',
   },
   {
-    value: 'opinion',
     label: 'Opinion/Commentary',
+    value: 'opinion',
   },
   {
-    value: 'registered-report',
     label: 'Registered Report',
+    value: 'registered-report',
   },
 ]

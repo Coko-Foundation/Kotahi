@@ -5,7 +5,7 @@ import renderer from 'react-test-renderer'
 import Menu from '../src/atoms/Menu'
 
 const props = {
-  options: [{ value: 'foo', label: 'Foo' }, { value: 'bar', label: 'Bar' }],
+  options: [{ label: 'Foo', value: 'foo' }, { label: 'Bar', value: 'bar' }],
   value: 'foo',
 }
 

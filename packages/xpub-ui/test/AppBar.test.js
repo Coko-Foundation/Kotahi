@@ -1,5 +1,4 @@
 import React from 'react'
-import { clone } from 'lodash'
 import { shallow } from 'enzyme'
 import { Link, MemoryRouter } from 'react-router-dom'
 import renderer from 'react-test-renderer'

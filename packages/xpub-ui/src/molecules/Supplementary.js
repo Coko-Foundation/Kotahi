@@ -7,15 +7,15 @@ const Supplementary = props => (
   <Files
     {...props}
     buttonText="↑ Upload files"
+    uploadedFile={value => <File key={value.url} value={value} />}
     uploadingFile={({ file, progress, error }) => (
       <UploadingFile
-        key={file.name}
-        file={file}
-        progress={progress}
         error={error}
+        file={file}
+        key={file.name}
+        progress={progress}
       />
     )}
-    uploadedFile={value => <File key={value.url} value={value} />}
   />
 )
 

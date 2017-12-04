@@ -15,22 +15,11 @@ module.exports = dir => {
   ]
 
   return {
-    entry: './src/index.js',
-    output: {
-      filename: 'index.js',
-      path: path.join(dir, 'dist'),
-    },
     devtool: 'cheap-module-source-map',
-    watch: true,
+    entry: './src/index.js',
     // externals: [nodeExternals({
     //   whitelist: [/\.(?!js$).{1,5}$/i]
     // })],
-    plugins: [
-      // mock constants
-      new webpack.DefinePlugin({
-        PUBSWEET_COMPONENTS: '[]',
-      }),
-    ],
     module: {
       rules: [
         {
@@ -120,5 +109,16 @@ module.exports = dir => {
         },
       ],
     },
+    output: {
+      filename: 'index.js',
+      path: path.join(dir, 'dist'),
+    },
+    plugins: [
+      // mock constants
+      new webpack.DefinePlugin({
+        PUBSWEET_COMPONENTS: '[]',
+      }),
+    ],
+    watch: true,
   }
 }
