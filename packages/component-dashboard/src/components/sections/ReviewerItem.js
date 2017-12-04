@@ -16,7 +16,7 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
   return (
     <div className={classes.root}>
       <div className={classes.main}>
-        <VersionTitle version={version} className={classes.versionTitle}/>
+        <VersionTitle version={version} className={classes.versionTitle} />
 
         {reviewer && (
           <div>
@@ -27,7 +27,8 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
                     project={project}
                     version={version}
                     page="reviews"
-                    id={reviewer.id}>
+                    id={reviewer.id}
+                  >
                     {reviewer.submitted ? 'Reviewed' : 'Do Review'}
                   </ProjectLink>
                 </div>
@@ -37,20 +38,30 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
             {reviewer.status === 'invited' && (
               <div className={classes.actions}>
                 <div className={classes.action}>
-                  <Button onClick={() => reviewerResponse(project, version, reviewer, 'accepted')}>accept</Button>
+                  <Button
+                    onClick={() =>
+                      reviewerResponse(project, version, reviewer, 'accepted')
+                    }
+                  >
+                    accept
+                  </Button>
                 </div>
 
-                <Divider separator="|"/>
+                <Divider separator="|" />
 
                 <div className={classes.action}>
-                  <Button onClick={() => reviewerResponse(project, version, reviewer, 'declined')}>reject</Button>
+                  <Button
+                    onClick={() =>
+                      reviewerResponse(project, version, reviewer, 'declined')
+                    }
+                  >
+                    reject
+                  </Button>
                 </div>
               </div>
             )}
 
-            {reviewer.status === 'declined' && (
-              <div>declined</div>
-            )}
+            {reviewer.status === 'declined' && <div>declined</div>}
           </div>
         )}
       </div>
