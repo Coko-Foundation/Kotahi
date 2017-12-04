@@ -24,10 +24,11 @@ class HtmlViewer extends React.Component {
   }
 
   render () {
-    const { options } = this.props
+    const { options, className } = this.props
 
     return (
       <Viewer
+        className={className}
         options={options}
       />
     )

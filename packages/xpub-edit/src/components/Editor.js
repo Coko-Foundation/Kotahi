@@ -17,6 +17,7 @@ class Editor extends React.Component {
   }
 
   createEditorView = node => {
+    const { className } = this.props
     const { state } = this.state
 
     this.view = new EditorView(node, {
@@ -27,7 +28,7 @@ class Editor extends React.Component {
         classes
       }),
       attributes: {
-        class: classnames(baseClasses.ProseMirror, classes.ProseMirror)
+        class: classnames(baseClasses.ProseMirror, classes.ProseMirror, className)
       },
       handleDOMEvents: {
         blur: this.props.onBlur ? view => {
