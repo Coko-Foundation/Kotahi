@@ -2,7 +2,15 @@ import React from 'react'
 import HtmlEditor from '../HtmlEditor'
 import * as options from './config'
 
-const NoteEditor = ({ className, value, placeholder, placeholderClassName, title, onBlur, onChange }) => (
+const NoteEditor = ({
+  className,
+  value,
+  placeholder,
+  placeholderClassName,
+  title,
+  onBlur,
+  onChange,
+}) => (
   <HtmlEditor
     options={options}
     className={className}

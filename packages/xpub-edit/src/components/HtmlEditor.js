@@ -25,7 +25,7 @@ const serializer = schema => {
 }
 
 class HtmlEditor extends React.Component {
-  componentWillMount () {
+  componentWillMount() {
     const { value, onChange, onBlur, options } = this.props
     const { schema } = options
 
@@ -34,17 +34,27 @@ class HtmlEditor extends React.Component {
 
     options.doc = parse(value)
 
-    this.onChange = debounce(value => {
-      onChange(serialize(value))
-    }, 1000, { maxWait: 5000 })
+    this.onChange = debounce(
+      value => {
+        onChange(serialize(value))
+      },
+      1000,
+      { maxWait: 5000 },
+    )
 
     this.onBlur = value => {
       onBlur(serialize(value))
     }
   }
 
-  render () {
-    const { options, className, placeholder, placeholderClassName, title } = this.props
+  render() {
+    const {
+      options,
+      className,
+      placeholder,
+      placeholderClassName,
+      title,
+    } = this.props
 
     return (
       <Editor

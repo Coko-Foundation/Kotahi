@@ -8,9 +8,9 @@ import schema from './schema'
 const keys = {
   'Mod-z': undo,
   'Shift-Mod-z': redo,
-  'Backspace': undoInputRule,
+  Backspace: undoInputRule,
   'Mod-y': redo,
-  'Mod-i': toggleMark(schema.marks.italic)
+  'Mod-i': toggleMark(schema.marks.italic),
 }
 
 Object.keys(baseKeymap).forEach(key => {

@@ -17,25 +17,25 @@ export default {
       title: 'Toggle italic',
       content: icons.italic,
       active: markActive(schema.marks.italic),
-      run: toggleMark(schema.marks.italic)
+      run: toggleMark(schema.marks.italic),
     },
     subscript: {
       title: 'Toggle subscript',
       content: icons.subscript,
       active: markActive(schema.marks.subscript),
-      run: toggleMark(schema.marks.subscript)
+      run: toggleMark(schema.marks.subscript),
     },
     superscript: {
       title: 'Toggle superscript',
       content: icons.superscript,
       active: markActive(schema.marks.superscript),
-      run: toggleMark(schema.marks.superscript)
+      run: toggleMark(schema.marks.superscript),
     },
     small_caps: {
       title: 'Toggle small caps',
       content: icons.small_caps,
       active: markActive(schema.marks.small_caps),
-      run: toggleMark(schema.marks.small_caps)
-    }
-  }
+      run: toggleMark(schema.marks.small_caps),
+    },
+  },
 }

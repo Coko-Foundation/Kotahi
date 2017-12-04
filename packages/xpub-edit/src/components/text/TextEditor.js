@@ -6,7 +6,15 @@ import HtmlEditor from '../HtmlEditor'
 
 import * as options from './config'
 
-const TextEditor = ({ className, value, placeholder, placeholderClassName, title, onBlur, onChange }) => (
+const TextEditor = ({
+  className,
+  value,
+  placeholder,
+  placeholderClassName,
+  title,
+  onBlur,
+  onChange,
+}) => (
   <HtmlEditor
     options={options}
     className={className}

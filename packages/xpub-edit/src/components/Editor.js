@@ -8,11 +8,11 @@ import classes from './Editor.local.css'
 import decorations from '../decorations'
 
 class Editor extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
-      state: EditorState.create(props.options)
+      state: EditorState.create(props.options),
     }
   }
 
@@ -24,16 +24,18 @@ class Editor extends React.Component {
       dispatchTransaction: this.dispatchTransaction,
       decorations: decorations({
         props: this.props,
-        classes
+        classes,
       }),
       attributes: {
-        class: classnames(baseClasses.ProseMirror, classes.ProseMirror)
+        class: classnames(baseClasses.ProseMirror, classes.ProseMirror),
       },
       handleDOMEvents: {
-        blur: this.props.onBlur ? view => {
-          this.props.onBlur(view.state.doc.content)
-        } : null
-      }
+        blur: this.props.onBlur
+          ? view => {
+              this.props.onBlur(view.state.doc.content)
+            }
+          : null,
+      },
     })
 
     if (this.props.autoFocus) {
@@ -48,7 +50,7 @@ class Editor extends React.Component {
     this.props.onChange(state.doc.content)
   }
 
-  render () {
+  render() {
     const { options: { menu }, title } = this.props
     const { state } = this.state
 
@@ -63,9 +65,7 @@ class Editor extends React.Component {
           />
         )}
 
-        <div
-          ref={this.createEditorView}
-        />
+        <div ref={this.createEditorView} />
       </div>
     )
   }
