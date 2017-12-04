@@ -50,7 +50,7 @@ const Submit = ({
       <SupplementaryFiles uploadFile={uploadFile} />
 
       <div>
-        <Button type="button" primary onClick={toggleConfirming}>
+        <Button onClick={toggleConfirming} primary type="button">
           Submit your manuscript
         </Button>
       </div>
@@ -62,11 +62,11 @@ const Submit = ({
       )}
     </form>
 
-    {/*<div className={classes.validots}>
+    {/* <div className={classes.validots}>
       <Validots
         valid={valid}
         handleSubmit={handleSubmit}/>
-    </div>*/}
+    </div> */}
   </div>
 )
 

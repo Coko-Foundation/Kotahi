@@ -40,10 +40,10 @@ export default compose(
       reviewer._reviewer = projectReviewer
     })
 
-    return { project, version, reviewers, reviewerUsers }
+    return { project, reviewers, reviewerUsers, version }
   }),
   withProps({
-    ReviewerForm: ReviewerFormContainer,
     Reviewer: ReviewerContainer,
+    ReviewerForm: ReviewerFormContainer,
   }),
 )(Reviewers)

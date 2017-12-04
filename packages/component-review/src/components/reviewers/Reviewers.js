@@ -13,8 +13,8 @@ const Reviewers = ({
     <div className={classes.form}>
       <ReviewerForm
         project={project}
-        version={version}
         reviewerUsers={reviewerUsers}
+        version={version}
       />
     </div>
 

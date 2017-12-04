@@ -42,9 +42,9 @@ const Dashboard = ({
         <div className={classes.heading}>My Submissions</div>
         {dashboard.owner.map(project => (
           <OwnerItemWithVersion
+            deleteProject={deleteProject}
             key={project.id}
             project={project}
-            deleteProject={deleteProject}
           />
         ))}
       </div>
@@ -55,9 +55,9 @@ const Dashboard = ({
         <div className={classes.heading}>To review</div>
         {dashboard.reviewer.map(project => (
           <ReviewerItemWithVersion
+            currentUser={currentUser}
             key={project.id}
             project={project}
-            currentUser={currentUser}
             reviewerResponse={reviewerResponse}
           />
         ))}
@@ -69,9 +69,9 @@ const Dashboard = ({
         <div className={classes.heading}>My Manuscripts</div>
         {dashboard.editor.map(project => (
           <EditorItemWithVersion
+            AssignEditor={AssignEditor}
             key={project.id}
             project={project}
-            AssignEditor={AssignEditor}
           />
         ))}
       </div>

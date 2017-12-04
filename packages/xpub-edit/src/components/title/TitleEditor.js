@@ -12,14 +12,14 @@ const TitleEditor = ({
   onChange,
 }) => (
   <HtmlEditor
-    options={options}
     className={className}
-    value={value}
+    onBlur={onBlur}
+    onChange={onChange}
+    options={options}
     placeholder={placeholder}
     placeholderClassName={placeholderClassName}
     title={title}
-    onBlur={onBlur}
-    onChange={onChange}
+    value={value}
   />
 )
 

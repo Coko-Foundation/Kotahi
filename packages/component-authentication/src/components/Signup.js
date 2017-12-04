@@ -18,18 +18,18 @@ const Signup = ({ errorMessage, handleSubmit }) => (
 
     {errorMessage && <div className={classes.error}>{errorMessage}</div>}
 
-    <form onSubmit={handleSubmit} className={classes.form}>
-      <Field name="username" component={UsernameInput} />
-      <Field name="email" component={EmailInput} />
-      <Field name="password" component={PasswordInput} />
-      <Button primary type="submit" className={classes.button}>
+    <form className={classes.form} onSubmit={handleSubmit}>
+      <Field component={UsernameInput} name="username" />
+      <Field component={EmailInput} name="email" />
+      <Field component={PasswordInput} name="password" />
+      <Button className={classes.button} primary type="submit">
         Sign up
       </Button>
     </form>
 
     <div className={classes.alternate}>
       <span className={classes.message}>Already have an account?</span>
-      <Link to="/login" className={classes.link}>
+      <Link className={classes.link} to="/login">
         Login
       </Link>
     </div>

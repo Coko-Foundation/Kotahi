@@ -13,11 +13,11 @@ export const Validots = ({ form, valid, handleSubmit }) => (
     {form.registeredFields &&
       map(form.registeredFields, field => (
         <div key={field.name}>
-          <Field name={field.name} component={Validot} />
+          <Field component={Validot} name={field.name} />
         </div>
       ))}
 
-    <button onClick={handleSubmit} disabled={!valid}>
+    <button disabled={!valid} onClick={handleSubmit}>
       Submit
     </button>
   </div>

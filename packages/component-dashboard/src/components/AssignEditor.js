@@ -14,20 +14,20 @@ const AssignEditor = ({
   addUserToTeam,
 }) => (
   <Menu
-    value={team ? team.members[0] : null}
     label={teamName}
-    options={options}
-    placeholder="Assign an editor…"
     onChange={user => {
       addUserToTeam({
+        group: 'editor',
+        name: teamName,
+        project,
         team,
         teamTypeName,
-        name: teamName,
-        group: 'editor',
-        project,
         user,
       })
     }}
+    options={options}
+    placeholder="Assign an editor…"
+    value={team ? team.members[0] : null}
   />
 )
 

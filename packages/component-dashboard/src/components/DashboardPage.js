@@ -28,10 +28,9 @@ export default compose(
   ]),
   connect(
     state => {
-      const collections = state.collections
-      const teams = state.teams
+      const { collections } = state
+      const { conversion, teams } = state
       const currentUser = selectCurrentUser(state)
-      const conversion = state.conversion
 
       const sortedCollections = newestFirst(collections)
 
@@ -57,11 +56,6 @@ export default compose(
         )
 
       const dashboard = {
-        owner: sortedCollections.filter(
-          collection =>
-            collection.owners &&
-            collection.owners.some(owner => owner.id === currentUser.id),
-        ),
         editor: newestFirst(
           unassignedCollections
             .concat(myCollections)
@@ -69,6 +63,11 @@ export default compose(
               (collection, index, items) =>
                 items.findIndex(item => item.id === collection.id) === index,
             ),
+        ),
+        owner: sortedCollections.filter(
+          collection =>
+            collection.owners &&
+            collection.owners.some(owner => owner.id === currentUser.id),
         ),
         // reviewer: newestFirst(teams
         //   .filter(team => team.group === 'reviewer'
@@ -86,15 +85,15 @@ export default compose(
         ),
       }
 
-      return { collections, currentUser, conversion, dashboard }
+      return { collections, conversion, currentUser, dashboard }
     },
     (dispatch, { history }) => ({
-      uploadManuscript: acceptedFiles =>
-        dispatch(uploadManuscript(acceptedFiles, history)),
-      reviewerResponse: (project, version, reviewer, status) =>
-        dispatch(reviewerResponse(project, version, reviewer, status)),
       deleteProject: collection =>
         dispatch(actions.deleteCollection(collection)),
+      reviewerResponse: (project, version, reviewer, status) =>
+        dispatch(reviewerResponse(project, version, reviewer, status)),
+      uploadManuscript: acceptedFiles =>
+        dispatch(uploadManuscript(acceptedFiles, history)),
     }),
   ),
   withProps({

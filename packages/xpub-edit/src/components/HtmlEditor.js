@@ -58,13 +58,13 @@ class HtmlEditor extends React.Component {
 
     return (
       <Editor
-        options={options}
         className={className}
+        onBlur={this.onBlur}
+        onChange={this.onChange}
+        options={options}
         placeholder={placeholder}
         placeholderClassName={placeholderClassName}
         title={title}
-        onChange={this.onChange}
-        onBlur={this.onBlur}
       />
     )
   }

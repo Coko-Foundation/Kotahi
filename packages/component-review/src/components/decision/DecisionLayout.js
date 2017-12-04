@@ -22,7 +22,7 @@ const DecisionLayout = ({
 
   versions.forEach(version => {
     // TODO: allow multiple decisions, e.g. appeals
-    const decision = version.decision
+    const { decision } = version
 
     if (decision && decision.submitted) {
       const submittedMoment = moment(decision.submitted)
@@ -30,8 +30,6 @@ const DecisionLayout = ({
       const label = submittedMoment.format('YYYY-MM-DD')
 
       decisionSections.push({
-        key,
-        label,
         content: (
           <div>
             <ReviewMetadata version={version} />
@@ -39,23 +37,21 @@ const DecisionLayout = ({
             <Decision decision={decision} />
           </div>
         ),
+        key,
+        label,
       })
 
       editorSections.push({
+        content: (
+          <SimpleEditor content={version.source} layout="bare" readOnly />
+        ),
         key,
         label,
-        content: (
-          <SimpleEditor
-            content={version.source}
-            layout="bare"
-            readOnly={true}
-          />
-        ),
       })
     }
   }, [])
 
-  const decision = currentVersion.decision
+  const { decision } = currentVersion
 
   if (!decision || !decision.submitted) {
     const submittedMoment = moment()
@@ -63,32 +59,28 @@ const DecisionLayout = ({
     const label = submittedMoment.format('YYYY-MM-DD')
 
     decisionSections.push({
-      key,
-      label,
       content: (
         <div>
           <ReviewMetadata version={currentVersion} />
           <DecisionReviews version={currentVersion} />
           <DecisionForm
             decision={decision}
-            valid={valid}
             handleSubmit={handleSubmit}
             uploadFile={uploadFile}
+            valid={valid}
           />
         </div>
       ),
+      key,
+      label,
     })
 
     editorSections.push({
+      content: (
+        <SimpleEditor content={currentVersion.source} layout="bare" readOnly />
+      ),
       key,
       label,
-      content: (
-        <SimpleEditor
-          content={currentVersion.source}
-          layout="bare"
-          readOnly={true}
-        />
-      ),
     })
   }
 
@@ -96,16 +88,16 @@ const DecisionLayout = ({
     <div className={classes.root}>
       <div className={classes.column}>
         <Tabs
-          sections={editorSections}
           activeKey={editorSections[editorSections.length - 1].key}
+          sections={editorSections}
           title="Versions"
         />
       </div>
 
       <div className={classes.column}>
         <Tabs
-          sections={decisionSections}
           activeKey={decisionSections[decisionSections.length - 1].key}
+          sections={decisionSections}
           title="Versions"
         />
       </div>

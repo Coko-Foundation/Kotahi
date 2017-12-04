@@ -90,10 +90,10 @@ export default compose(
     }
   }),
   reduxForm({
-    form: 'submit',
     // enableReinitialize: true,
-    onSubmit,
+    form: 'submit',
     onChange: debounce(onChange, 1000, { maxWait: 5000 }),
+    onSubmit,
   }),
   withState('confirming', 'setConfirming', false),
   withHandlers({

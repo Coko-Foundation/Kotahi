@@ -32,30 +32,26 @@ const ReviewLayout = ({
       const label = submittedMoment.format('YYYY-MM-DD')
 
       reviewSections.push({
-        key,
-        label,
         content: (
           <div>
             <ReviewMetadata
-              version={version}
               handlingEditors={handlingEditors}
+              version={version}
             />
             <Review review={review} />
           </div>
         ),
+        key,
+        label,
       })
 
       // TODO: need to include unreviewed versions?
       editorSections.push({
+        content: (
+          <SimpleEditor content={version.source} layout="bare" readOnly />
+        ),
         key,
         label,
-        content: (
-          <SimpleEditor
-            content={version.source}
-            layout="bare"
-            readOnly={true}
-          />
-        ),
       })
     }
   }, [])
@@ -70,34 +66,30 @@ const ReviewLayout = ({
     const label = submittedMoment.format('YYYY-MM-DD')
 
     reviewSections.push({
-      key,
-      label,
       content: (
         <div>
           <ReviewMetadata
-            version={currentVersion}
             handlingEditors={handlingEditors}
+            version={currentVersion}
           />
           <ReviewForm
-            review={review}
-            valid={valid}
             handleSubmit={handleSubmit}
+            review={review}
             uploadFile={uploadFile}
+            valid={valid}
           />
         </div>
       ),
+      key,
+      label,
     })
 
     editorSections.push({
+      content: (
+        <SimpleEditor content={currentVersion.source} layout="bare" readOnly />
+      ),
       key,
       label,
-      content: (
-        <SimpleEditor
-          layout="bare"
-          content={currentVersion.source}
-          readOnly={true}
-        />
-      ),
     })
   }
 
@@ -105,16 +97,16 @@ const ReviewLayout = ({
     <div className={classes.root}>
       <div className={classes.manuscript}>
         <Tabs
-          sections={editorSections}
           activeKey={editorSections[editorSections.length - 1].key}
+          sections={editorSections}
           title="Versions"
         />
       </div>
 
       <div className={classes.review}>
         <Tabs
-          sections={reviewSections}
           activeKey={reviewSections[reviewSections.length - 1].key}
+          sections={reviewSections}
           title="Versions"
         />
       </div>

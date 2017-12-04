@@ -25,7 +25,7 @@ export default compose(
 
       const content = version.source // TODO: load from a file
 
-      return { currentUser, project, version, content }
+      return { content, currentUser, project, version }
     },
     {
       fileUpload: actions.fileUpload,

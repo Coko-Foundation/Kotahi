@@ -15,13 +15,13 @@ const Manuscript = ({
   <SimpleEditor
     classes={classes.fullscreen}
     content={content}
-    user={currentUser}
     fileUpload={fileUpload}
     history={history}
+    onSave={source => updateManuscript({ source })}
     readOnly={false}
     trackChanges={false}
     update={data => updateManuscript(data)}
-    onSave={source => updateManuscript({ source })}
+    user={currentUser}
   />
 )
 

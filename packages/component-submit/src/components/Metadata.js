@@ -3,7 +3,6 @@ import { FormSection } from 'redux-form'
 import { AbstractEditor, TitleEditor } from 'xpub-edit'
 import { CheckboxGroup, Menu, TextField, ValidatedField } from 'xpub-ui'
 import { withJournal } from 'xpub-journal'
-import classes from './Metadata.local.scss'
 import {
   join,
   required,
@@ -12,6 +11,8 @@ import {
   minSize,
   split,
 } from 'xpub-validators'
+
+import classes from './Metadata.local.scss'
 
 const minSize1 = minSize(1)
 const minChars20 = minChars(20)
@@ -25,8 +26,8 @@ const TitleInput = input => (
 
 const AbstractInput = input => (
   <AbstractEditor
-    title="Abstract"
     placeholder="Enter the abstract…"
+    title="Abstract"
     {...input}
   />
 )
@@ -51,19 +52,19 @@ const Metadata = ({ journal }) => (
   <FormSection name="metadata">
     <div className={classes.section} id="metadata.title">
       <ValidatedField
+        component={TitleInput}
         name="title"
         required
         validate={[minChars20, maxChars500]}
-        component={TitleInput}
       />
     </div>
 
     <div className={classes.section} id="metadata.abstract">
       <ValidatedField
+        component={AbstractInput}
         name="abstract"
         required
         validate={[minChars100, maxChars5000]}
-        component={AbstractInput}
       />
     </div>
 
@@ -71,12 +72,12 @@ const Metadata = ({ journal }) => (
       <div className={classes.label}>Authors</div>
 
       <ValidatedField
-        name="authors"
-        required
-        format={join()}
-        parse={split()}
-        validate={[minSize1]}
         component={AuthorsInput}
+        format={join()}
+        name="authors"
+        parse={split()}
+        required
+        validate={[minSize1]}
       />
     </div>
 
@@ -84,12 +85,12 @@ const Metadata = ({ journal }) => (
       <div className={classes.label}>Keywords</div>
 
       <ValidatedField
-        name="keywords"
-        required
-        format={join()}
-        parse={split()}
-        validate={[minSize1]}
         component={KeywordsInput}
+        format={join()}
+        name="keywords"
+        parse={split()}
+        required
+        validate={[minSize1]}
       />
     </div>
 
@@ -97,10 +98,10 @@ const Metadata = ({ journal }) => (
       <div className={classes.label}>Type of article</div>
 
       <ValidatedField
+        component={ArticleTypeInput(journal)}
         name="articleType"
         required
         validate={[required]}
-        component={ArticleTypeInput(journal)}
       />
     </div>
 
@@ -108,10 +109,10 @@ const Metadata = ({ journal }) => (
       <div className={classes.label}>Section</div>
 
       <ValidatedField
+        component={ArticleSectionInput(journal)}
         name="articleSection"
         required
         validate={[required]}
-        component={ArticleSectionInput(journal)}
       />
     </div>
   </FormSection>

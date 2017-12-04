@@ -16,14 +16,14 @@ export const uploadManuscriptRequest = () => ({
 })
 
 export const uploadManuscriptSuccess = (collection, fragment) => ({
-  type: UPLOAD_MANUSCRIPT_SUCCESS,
   collection,
   fragment,
+  type: UPLOAD_MANUSCRIPT_SUCCESS,
 })
 
 export const uploadManuscriptFailure = error => ({
-  type: UPLOAD_MANUSCRIPT_FAILURE,
   error,
+  type: UPLOAD_MANUSCRIPT_FAILURE,
 })
 
 export const uploadManuscript = (acceptedFiles, history) => dispatch => {
@@ -64,20 +64,20 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
             // TODO: rethrow errors so they can be caught here
             return dispatch(
               actions.createFragment(collection, {
-                fragmentType: 'version',
                 created: new Date(), // TODO: set on server
-                version: 1,
-                source,
-                metadata: {
-                  title,
-                },
                 files: {
-                  supplementary: [],
                   manuscript: {
                     name: inputFile.name,
                     url: fileURL,
                   },
+                  supplementary: [],
                 },
+                fragmentType: 'version',
+                metadata: {
+                  title,
+                },
+                source,
+                version: 1,
               }),
             ).then(({ fragment }) => {
               dispatch(uploadManuscriptSuccess(collection, fragment))
@@ -105,8 +105,8 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
 /* reducer */
 
 const initialState = {
-  converting: false,
   complete: undefined,
+  converting: false,
   error: undefined,
 }
 
@@ -114,21 +114,21 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case UPLOAD_MANUSCRIPT_REQUEST:
       return {
-        converting: true,
         complete: false,
+        converting: true,
         error: undefined,
       }
 
     case UPLOAD_MANUSCRIPT_SUCCESS:
       return {
-        converting: false,
         complete: true,
+        converting: false,
       }
 
     case UPLOAD_MANUSCRIPT_FAILURE:
       return {
-        converting: false,
         complete: false,
+        converting: false,
         error: action.error,
       }
 

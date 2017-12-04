@@ -15,17 +15,17 @@ const Login = ({ errorMessage, handleSubmit }) => (
 
     {errorMessage && <div className={classes.error}>{errorMessage}</div>}
 
-    <form onSubmit={handleSubmit} className={classes.form}>
-      <Field name="username" component={UsernameInput} />
-      <Field name="password" component={PasswordInput} />
-      <Button primary type="submit" className={classes.button}>
+    <form className={classes.form} onSubmit={handleSubmit}>
+      <Field component={UsernameInput} name="username" />
+      <Field component={PasswordInput} name="password" />
+      <Button className={classes.button} primary type="submit">
         Login
       </Button>
     </form>
 
     <div className={classes.alternate}>
       <span className={classes.message}>You don't have an account?</span>
-      <Link to="/signup" className={classes.link}>
+      <Link className={classes.link} to="/signup">
         Sign up
       </Link>
     </div>

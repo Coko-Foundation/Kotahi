@@ -20,8 +20,8 @@ const Confirm = ({ toggleConfirming }) => (
         proper attribution. (The journal employs{' '}
         <a
           href="https://www.crossref.org/services/similarity-check/"
-          target="_blank"
           rel="noopener noreferrer"
+          target="_blank"
         >
           CrossCheck
         </a>{' '}
@@ -44,7 +44,7 @@ const Confirm = ({ toggleConfirming }) => (
       </p>
 
       <div className={classes.actions}>
-        <Button type="submit" primary>
+        <Button primary type="submit">
           Submit your manuscript
         </Button>
         <span className={classes.actionDivider}> or </span>

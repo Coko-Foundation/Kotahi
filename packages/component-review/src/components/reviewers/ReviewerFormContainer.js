@@ -29,12 +29,12 @@ const addProjectReviewer = (props, user) => {
 
 const addReviewer = (props, projectReviewer) => {
   const reviewer = {
-    id: uuid(),
-    reviewer: projectReviewer.id,
-    status: 'invited',
     events: {
       invited: new Date().toString(),
     },
+    id: uuid(),
+    reviewer: projectReviewer.id,
+    status: 'invited',
   }
 
   return props

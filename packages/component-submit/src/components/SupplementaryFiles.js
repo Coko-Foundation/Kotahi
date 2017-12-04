@@ -14,7 +14,7 @@ const SupplementaryFiles = ({ uploadFile }) => (
         Upload supplementary materials
       </div>
 
-      <ValidatedField name="supplementary" component={FileInput(uploadFile)} />
+      <ValidatedField component={FileInput(uploadFile)} name="supplementary" />
     </div>
   </FormSection>
 )

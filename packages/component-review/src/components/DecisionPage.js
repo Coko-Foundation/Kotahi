@@ -18,13 +18,11 @@ import DecisionLayout from './decision/DecisionLayout'
 const handleDecision = (project, version) => dispatch => {
   return dispatch(
     actions.updateFragment(project, {
+      decision: version.decision,
       id: version.id,
       rev: version.rev,
-      decision: version.decision,
     }),
   ).then(() => {
-    console.log(version)
-
     switch (version.decision.recommendation) {
       case 'accept':
         return dispatch(
@@ -78,13 +76,11 @@ const handleDecision = (project, version) => dispatch => {
 }
 
 const onSubmit = (values, dispatch, { project, version, history }) => {
-  console.log('submit', values)
-
   version.decision = {
     ...version.decision,
     ...values,
-    submitted: new Date(),
     status: 'submitted',
+    submitted: new Date(),
   }
 
   return dispatch(handleDecision(project, version))
@@ -100,8 +96,6 @@ const onSubmit = (values, dispatch, { project, version, history }) => {
 }
 
 const onChange = (values, dispatch, { project, version }) => {
-  console.log('change', values)
-
   version.decision = {
     ...version.decision,
     ...values,
@@ -109,9 +103,9 @@ const onChange = (values, dispatch, { project, version }) => {
 
   return dispatch(
     actions.updateFragment(project, {
+      decision: version.decision,
       id: version.id,
       rev: version.rev,
-      decision: version.decision,
     }),
   )
 
@@ -130,7 +124,7 @@ export default compose(
       const version = selectFragment(state, match.params.version)
       const currentVersion = selectCurrentVersion(state, project)
 
-      return { project, versions, version, currentVersion }
+      return { currentVersion, project, version, versions }
     },
     {
       uploadFile,
@@ -144,7 +138,7 @@ export default compose(
   }),
   reduxForm({
     form: 'decision',
-    onSubmit,
     onChange: debounce(onChange, 1000, { maxWait: 5000 }),
+    onSubmit,
   }),
 )(DecisionLayout)

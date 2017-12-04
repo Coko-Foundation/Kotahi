@@ -33,10 +33,10 @@ const Suggestions = () => (
           <div className={classes.sublegend}>Suggested reviewers</div>
 
           <ValidatedField
-            name="suggested"
-            format={joinComma}
-            parse={splitComma}
             component={SuggestedReviewerInput}
+            format={joinComma}
+            name="suggested"
+            parse={splitComma}
           />
         </div>
 
@@ -44,10 +44,10 @@ const Suggestions = () => (
           <div className={classes.sublegend}>Opposed reviewers</div>
 
           <ValidatedField
-            name="opposed"
-            format={joinComma}
-            parse={splitComma}
             component={OpposedReviewerInput}
+            format={joinComma}
+            name="opposed"
+            parse={splitComma}
           />
         </div>
       </FormSection>
@@ -61,10 +61,10 @@ const Suggestions = () => (
           <div className={classes.sublegend}>Suggested editors</div>
 
           <ValidatedField
-            name="suggested"
-            format={joinComma}
-            parse={splitComma}
             component={SuggestedEditorInput}
+            format={joinComma}
+            name="suggested"
+            parse={splitComma}
           />
         </div>
 
@@ -72,10 +72,10 @@ const Suggestions = () => (
           <div className={classes.sublegend}>Opposed editors</div>
 
           <ValidatedField
-            name="opposed"
-            format={joinComma}
-            parse={splitComma}
             component={OpposedEditorInput}
+            format={joinComma}
+            name="opposed"
+            parse={splitComma}
           />
         </div>
       </FormSection>

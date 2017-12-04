@@ -20,8 +20,8 @@ export const getCurrentUserSuccess = user => ({
 })
 
 export const getCurrentUserFailure = error => ({
-  type: GET_CURRENT_USER_FAILURE,
   error,
+  type: GET_CURRENT_USER_FAILURE,
 })
 
 export const getCurrentUser = () => dispatch => {
@@ -40,50 +40,50 @@ export const getCurrentUser = () => dispatch => {
 /* reducer */
 
 const initialState = {
-  isFetching: false,
-  isFetched: false,
-  isAuthenticated: false,
-  user: null,
   error: null,
+  isAuthenticated: false,
+  isFetched: false,
+  isFetching: false,
+  user: null,
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_CURRENT_USER_REQUEST:
       return {
-        isFetching: true,
-        isFetched: false,
-        isAuthenticated: false,
-        user: null,
         error: null,
+        isAuthenticated: false,
+        isFetched: false,
+        isFetching: true,
+        user: null,
       }
 
     case GET_CURRENT_USER_FAILURE:
       return {
-        isFetching: false,
-        isFetched: true,
-        isAuthenticated: false,
-        user: null,
         error: action.error,
+        isAuthenticated: false,
+        isFetched: true,
+        isFetching: false,
+        user: null,
       }
 
     case GET_CURRENT_USER_SUCCESS:
       return {
-        isFetching: false,
-        isFetched: true,
-        isAuthenticated: true,
-        user: action.user,
         error: null,
+        isAuthenticated: true,
+        isFetched: true,
+        isFetching: false,
+        user: action.user,
       }
 
     // clear the current user on logout
     case LOGOUT_SUCCESS:
       return {
-        isFetching: false,
-        isFetched: false,
-        isAuthenticated: false,
-        user: null,
         error: null,
+        isAuthenticated: false,
+        isFetched: false,
+        isFetching: false,
+        user: null,
       }
 
     default:

@@ -16,13 +16,13 @@ const OptionRenderer = option => (
 const ReviewerInput = loadOptions => ({ input }) => (
   <Select.AsyncCreatable
     {...input}
-    valueKey="id"
-    labelKey="username"
-    filterOption={() => true}
-    loadOptions={loadOptions}
-    promptTextCreator={label => `Add ${label}?`}
-    optionRenderer={OptionRenderer}
     // autoload={false}
+    filterOption={() => true}
+    labelKey="username"
+    loadOptions={loadOptions}
+    optionRenderer={OptionRenderer}
+    promptTextCreator={label => `Add ${label}?`}
+    valueKey="id"
   />
 )
 
@@ -35,13 +35,13 @@ const ReviewerForm = ({
 }) => (
   <form onSubmit={handleSubmit(onSubmit(reset))}>
     <Field
+      component={ReviewerInput(loadOptions)}
       name="user"
       validate={required}
-      component={ReviewerInput(loadOptions)}
     />
 
     <div className={classes.actions}>
-      <Button type="submit" primary disabled={!valid}>
+      <Button disabled={!valid} primary type="submit">
         Invite reviewer
       </Button>
     </div>

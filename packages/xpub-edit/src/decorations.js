@@ -1,7 +1,7 @@
 import { DecorationSet, Decoration } from 'prosemirror-view'
 
 export default ({ props, classes }) => state => {
-  const doc = state.doc
+  const { doc } = state
   const decorations = []
 
   if (

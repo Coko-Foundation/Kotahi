@@ -11,14 +11,14 @@ const MenuBar = ({ title, menu, state, dispatch }) => {
 
   const Button = (item, key) => (
     <button
-      key={key}
       className={classnames({
         [classes.button]: true,
         [classes.active]: item.active && item.active(state),
       })}
-      title={item.title}
       disabled={item.enable && !item.enable(state)}
+      key={key}
       onMouseDown={handle(item.run)}
+      title={item.title}
     >
       {item.content}
     </button>

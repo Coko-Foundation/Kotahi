@@ -33,36 +33,48 @@ const promptForURL = () => {
 }
 
 export default {
+  blocks: {
+    h1: {
+      active: blockActive(schema.nodes.heading, { level: 1 }),
+      content: icons.heading,
+      enable: setBlockType(schema.nodes.heading, { level: 1 }),
+      run: (state, dispatch) => {
+        if (blockActive(schema.marks.heading)(state)) {
+          setBlockType(schema.marks.paragraph)(state, dispatch)
+          return true
+        }
+
+        setBlockType(schema.nodes.heading, { level: 1 })(state, dispatch)
+      },
+      title: 'Change to heading level 1',
+    },
+  },
+  history: {
+    redo: {
+      content: icons.redo,
+      enable: redo,
+      run: redo,
+      title: 'Redo last undone change',
+    },
+    undo: {
+      content: icons.undo,
+      enable: undo,
+      run: undo,
+      title: 'Undo last change',
+    },
+  },
   marks: {
-    italic: {
-      title: 'Toggle italic',
-      content: icons.italic,
-      active: markActive(schema.marks.italic),
-      run: toggleMark(schema.marks.italic),
-    },
     bold: {
-      title: 'Toggle bold',
-      content: icons.bold,
       active: markActive(schema.marks.bold),
+      content: icons.bold,
       run: toggleMark(schema.marks.bold),
+      title: 'Toggle bold',
     },
-    subscript: {
-      title: 'Toggle subscript',
-      content: icons.subscript,
-      active: markActive(schema.marks.subscript),
-      run: toggleMark(schema.marks.subscript),
-    },
-    superscript: {
-      title: 'Toggle superscript',
-      content: icons.superscript,
-      active: markActive(schema.marks.superscript),
-      run: toggleMark(schema.marks.superscript),
-    },
-    small_caps: {
-      title: 'Toggle small caps',
-      content: icons.small_caps,
-      active: markActive(schema.marks.small_caps),
-      run: toggleMark(schema.marks.small_caps),
+    italic: {
+      active: markActive(schema.marks.italic),
+      content: icons.italic,
+      run: toggleMark(schema.marks.italic),
+      title: 'Toggle italic',
     },
     // link: {
     //   title: 'Add or remove link',
@@ -82,35 +94,23 @@ export default {
     //     // view.focus()
     //   }
     // }
-  },
-  blocks: {
-    h1: {
-      title: 'Change to heading level 1',
-      content: icons.heading,
-      active: blockActive(schema.nodes.heading, { level: 1 }),
-      enable: setBlockType(schema.nodes.heading, { level: 1 }),
-      run: (state, dispatch) => {
-        if (blockActive(schema.marks.heading)(state)) {
-          setBlockType(schema.marks.paragraph)(state, dispatch)
-          return true
-        }
-
-        setBlockType(schema.nodes.heading, { level: 1 })(state, dispatch)
-      },
+    small_caps: {
+      active: markActive(schema.marks.small_caps),
+      content: icons.small_caps,
+      run: toggleMark(schema.marks.small_caps),
+      title: 'Toggle small caps',
     },
-  },
-  history: {
-    undo: {
-      title: 'Undo last change',
-      content: icons.undo,
-      enable: undo,
-      run: undo,
+    subscript: {
+      active: markActive(schema.marks.subscript),
+      content: icons.subscript,
+      run: toggleMark(schema.marks.subscript),
+      title: 'Toggle subscript',
     },
-    redo: {
-      title: 'Redo last undone change',
-      content: icons.redo,
-      enable: redo,
-      run: redo,
+    superscript: {
+      active: markActive(schema.marks.superscript),
+      content: icons.superscript,
+      run: toggleMark(schema.marks.superscript),
+      title: 'Toggle superscript',
     },
   },
 }

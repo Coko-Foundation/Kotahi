@@ -22,11 +22,9 @@ const onSubmit = (
   dispatch,
   { history, project, version, reviewer },
 ) => {
-  console.log('submit', values)
-
   Object.assign(reviewer, {
-    submitted: new Date(),
     status: 'reviewed',
+    submitted: new Date(),
     ...values,
   })
 
@@ -49,8 +47,6 @@ const onSubmit = (
 }
 
 const onChange = (values, dispatch, { project, version, reviewer }) => {
-  console.log('change', values)
-
   Object.assign(reviewer, {
     submitted: new Date(),
     ...values,
@@ -94,12 +90,12 @@ export default compose(
       const reviewer = getReviewerFromUser(project, currentVersion, currentUser)
 
       return {
-        project,
-        versions,
-        version,
         currentVersion,
-        reviewer,
         handlingEditors,
+        project,
+        reviewer,
+        version,
+        versions,
       }
     },
     {
@@ -114,7 +110,7 @@ export default compose(
   }),
   reduxForm({
     form: 'review',
-    onSubmit,
     onChange: debounce(onChange, 1000, { maxWait: 5000 }),
+    onSubmit,
   }),
 )(ReviewLayout)

@@ -12,14 +12,14 @@ const AbstractEditor = ({
   onChange,
 }) => (
   <HtmlEditor
-    options={options}
-    value={value}
     className={className}
+    onBlur={onBlur}
+    onChange={onChange}
+    options={options}
     placeholder={placeholder}
     placeholderClassName={placeholderClassName}
     title={title}
-    onBlur={onBlur}
-    onChange={onChange}
+    value={value}
   />
 )
 

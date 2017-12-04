@@ -14,8 +14,8 @@ const heading = {
     level: { default: 1 },
   },
   content: 'inline*',
-  group: 'block',
   defining: true,
+  group: 'block',
   parseDOM: [{ tag: 'h1', attrs: { level: 1 } }],
   toDOM: node => ['h' + node.attrs.level, 0],
 }
@@ -26,7 +26,7 @@ const text = {
 
 export default {
   doc,
-  paragraph,
   heading,
+  paragraph,
   text,
 }

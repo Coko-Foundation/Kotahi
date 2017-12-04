@@ -21,8 +21,8 @@ export const loginSuccess = user => ({
 })
 
 export const loginFailure = error => ({
-  type: LOGIN_FAILURE,
   error,
+  type: LOGIN_FAILURE,
 })
 
 export const login = credentials => dispatch => {
@@ -43,28 +43,28 @@ export const login = credentials => dispatch => {
 /* reducer */
 
 const initialState = {
-  isFetching: false,
   error: null,
+  isFetching: false,
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case LOGIN_REQUEST:
       return {
-        isFetching: true,
         error: null,
+        isFetching: true,
       }
 
     case LOGIN_SUCCESS:
       return {
-        isFetching: false,
         error: null,
+        isFetching: false,
       }
 
     case LOGIN_FAILURE:
       return {
-        isFetching: false,
         error: action.error,
+        isFetching: false,
       }
 
     default:

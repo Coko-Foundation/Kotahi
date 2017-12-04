@@ -25,16 +25,16 @@ const Notes = () => (
   <FormSection name="notes">
     <div className={classes.section} id="notes.fundingAcknowledgement">
       <ValidatedField
+        component={FundingInput}
         name="fundingAcknowledgement"
         validate={[required]}
-        component={FundingInput}
       />
     </div>
 
     <div className={classes.section} id="notes.specialInstructions">
       <ValidatedField
-        name="specialInstructions"
         component={InstructionsInput}
+        name="specialInstructions"
       />
     </div>
   </FormSection>

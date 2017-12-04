@@ -9,9 +9,9 @@ const isIdle = conversion =>
 
 const UploadManuscript = ({ uploadManuscript, conversion }) => (
   <Dropzone
-    onDrop={uploadManuscript}
     accept="application/vnd.openxmlformats-officedocument.wordprocessingml.document"
     className={classes.dropzone}
+    onDrop={uploadManuscript}
   >
     <div className={classes.root}>
       <div

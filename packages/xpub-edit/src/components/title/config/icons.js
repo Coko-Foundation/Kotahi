@@ -2,9 +2,9 @@ import React from 'react'
 
 export default {
   italic: <i>Ital</i>,
-  superscript: (
+  small_caps: (
     <span>
-      t<sup>x</sup>
+      T<span style={{ fontSize: '70%', fontVariant: 'small-caps' }}>T</span>
     </span>
   ),
   subscript: (
@@ -12,9 +12,9 @@ export default {
       t<sub>x</sub>
     </span>
   ),
-  small_caps: (
+  superscript: (
     <span>
-      T<span style={{ fontVariant: 'small-caps', fontSize: '70%' }}>T</span>
+      t<sup>x</sup>
     </span>
   ),
 }

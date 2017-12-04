@@ -3,7 +3,7 @@ import HtmlViewer from '../HtmlViewer'
 import * as options from './config'
 
 const NoteViewer = ({ className, value }) => (
-  <HtmlViewer className={className} value={value} options={options} />
+  <HtmlViewer className={className} options={options} value={value} />
 )
 
 export default NoteViewer

@@ -6,11 +6,11 @@ const link = {
   inclusive: false,
   parseDOM: [
     {
-      tag: 'a[href]',
       getAttrs: dom => ({
         href: dom.getAttribute('href'),
         title: dom.getAttribute('title'),
       }),
+      tag: 'a[href]',
     },
   ],
   toDOM: node => ['a', node.attrs],
@@ -25,12 +25,12 @@ const bold = {
   parseDOM: [
     { tag: 'strong' },
     {
-      tag: 'b',
       getAttrs: node => node.style.fontWeight !== 'normal' && null,
+      tag: 'b',
     },
     {
-      style: 'font-weight',
       getAttrs: value => /^(bold(er)?|[5-9]\d{2,})$/.test(value) && null,
+      style: 'font-weight',
     },
   ],
   toDOM: () => ['b'],
@@ -52,10 +52,10 @@ const small_caps = {
 }
 
 export default {
-  link,
-  italic,
   bold,
+  italic,
+  link,
+  small_caps,
   subscript,
   superscript,
-  small_caps,
 }

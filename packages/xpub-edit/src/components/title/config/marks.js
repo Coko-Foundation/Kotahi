@@ -20,7 +20,7 @@ const small_caps = {
 
 export default {
   italic,
+  small_caps,
   subscript,
   superscript,
-  small_caps,
 }
