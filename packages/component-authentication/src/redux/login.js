@@ -22,10 +22,10 @@ export const loginSuccess = user => ({
 
 export const loginFailure = error => ({
   type: LOGIN_FAILURE,
-  error
+  error,
 })
 
-export const login = (credentials) => dispatch => {
+export const login = credentials => dispatch => {
   dispatch(loginRequest())
   return api.create('/users/authenticate', credentials).then(
     user => {
@@ -36,7 +36,7 @@ export const login = (credentials) => dispatch => {
     error => {
       dispatch(loginFailure(error))
       throw error
-    }
+    },
   )
 }
 
@@ -44,7 +44,7 @@ export const login = (credentials) => dispatch => {
 
 const initialState = {
   isFetching: false,
-  error: null
+  error: null,
 }
 
 export default (state = initialState, action) => {
@@ -52,19 +52,19 @@ export default (state = initialState, action) => {
     case LOGIN_REQUEST:
       return {
         isFetching: true,
-        error: null
+        error: null,
       }
 
     case LOGIN_SUCCESS:
       return {
         isFetching: false,
-        error: null
+        error: null,
       }
 
     case LOGIN_FAILURE:
       return {
         isFetching: false,
-        error: action.error
+        error: action.error,
       }
 
     default:

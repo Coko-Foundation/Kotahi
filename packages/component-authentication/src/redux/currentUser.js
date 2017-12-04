@@ -11,17 +11,17 @@ export const GET_CURRENT_USER_FAILURE = 'GET_CURRENT_USER_FAILURE'
 /* actions */
 
 export const getCurrentUserRequest = () => ({
-  type: GET_CURRENT_USER_REQUEST
+  type: GET_CURRENT_USER_REQUEST,
 })
 
 export const getCurrentUserSuccess = user => ({
   type: GET_CURRENT_USER_SUCCESS,
-  user
+  user,
 })
 
 export const getCurrentUserFailure = error => ({
   type: GET_CURRENT_USER_FAILURE,
-  error
+  error,
 })
 
 export const getCurrentUser = () => dispatch => {
@@ -33,7 +33,7 @@ export const getCurrentUser = () => dispatch => {
     error => {
       dispatch(getCurrentUserFailure(error))
       throw error
-    }
+    },
   )
 }
 
@@ -44,7 +44,7 @@ const initialState = {
   isFetched: false,
   isAuthenticated: false,
   user: null,
-  error: null
+  error: null,
 }
 
 export default (state = initialState, action) => {
@@ -64,7 +64,7 @@ export default (state = initialState, action) => {
         isFetched: true,
         isAuthenticated: false,
         user: null,
-        error: action.error
+        error: action.error,
       }
 
     case GET_CURRENT_USER_SUCCESS:
@@ -73,7 +73,7 @@ export default (state = initialState, action) => {
         isFetched: true,
         isAuthenticated: true,
         user: action.user,
-        error: null
+        error: null,
       }
 
     // clear the current user on logout

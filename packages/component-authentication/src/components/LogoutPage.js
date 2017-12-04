@@ -5,15 +5,15 @@ import { Redirect } from 'react-router-dom'
 import { logout } from '../redux/logout'
 
 class Logout extends React.Component {
-  componentDidMount () {
+  componentDidMount() {
     const { isAuthenticated, logout } = this.props
 
-    if (isAuthenticated)  {
+    if (isAuthenticated) {
       logout()
     }
   }
 
-  componentWillReceiveProps (nextProps) {
+  componentWillReceiveProps(nextProps) {
     const { isAuthenticated, logout } = nextProps
 
     if (isAuthenticated) {
@@ -21,12 +21,10 @@ class Logout extends React.Component {
     }
   }
 
-  render () {
+  render() {
     const { isAuthenticated } = this.props
 
-    return isAuthenticated
-      ? <div>Signing out…</div>
-      : <Redirect to="/"/>
+    return isAuthenticated ? <div>Signing out…</div> : <Redirect to="/" />
   }
 }
 
@@ -36,7 +34,7 @@ export default compose(
       isAuthenticated: state.currentUser.isAuthenticated,
     }),
     {
-      logout
-    }
-  )
+      logout,
+    },
+  ),
 )(Logout)
