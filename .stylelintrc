@@ -1,3 +1,3 @@
 {
-    "extends": "stylelint-config-pubsweet"
+  "extends": "stylelint-config-pubsweet"
 }

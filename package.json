@@ -40,9 +40,7 @@
     "*.js": [
       "prettier --write",
       "git add"
-    ],
-    "*.css": "stylelint",
-    "*.scss": "stylelint"
+    ]
   },
   "engines": {
     "node": ">=8",

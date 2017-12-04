@@ -1,4 +1,4 @@
 .root {
-  text-transform: uppercase;
   color: var(--color-primary);
+  text-transform: uppercase;
 }
