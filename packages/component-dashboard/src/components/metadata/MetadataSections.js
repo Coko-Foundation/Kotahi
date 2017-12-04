@@ -7,7 +7,7 @@ const MetadataSections = ({ journal, sections }) => (
       index === 0 ? null : <span>{', '}</span>,
       <span>
         {journal.articleSections.find(item => item.value === section).label}
-      </span>
+      </span>,
     ])}
   </span>
 )
