@@ -1,6 +1,5 @@
 import React from 'react'
 import { Route, withRouter } from 'react-router-dom'
-import loadable from 'loadable-components'
 
 import App from 'pubsweet-component-xpub-app/src/components'
 
@@ -11,29 +10,12 @@ import {
   LogoutPage,
 } from 'pubsweet-component-xpub-authentication/src/components'
 
-const DashboardPage = loadable(() =>
-  import('pubsweet-component-xpub-dashboard/src/components/DashboardPage'),
-)
-
-const SubmitPage = loadable(() =>
-  import('pubsweet-component-xpub-submit/src/components/SubmitPage'),
-)
-
-const ManuscriptPage = loadable(() =>
-  import('pubsweet-component-xpub-manuscript/src/components/ManuscriptPage'),
-)
-
-const ReviewersPage = loadable(() =>
-  import('pubsweet-component-xpub-review/src/components/ReviewersPage'),
-)
-
-const ReviewPage = loadable(() =>
-  import('pubsweet-component-xpub-review/src/components/ReviewPage'),
-)
-
-const DecisionPage = loadable(() =>
-  import('pubsweet-component-xpub-review/src/components/DecisionPage'),
-)
+import DashboardPage from 'pubsweet-component-xpub-dashboard/src/components/DashboardPage'
+import SubmitPage from 'pubsweet-component-xpub-submit/src/components/SubmitPage'
+import ManuscriptPage from 'pubsweet-component-xpub-manuscript/src/components/ManuscriptPage'
+import ReviewersPage from 'pubsweet-component-xpub-review/src/components/ReviewersPage'
+import ReviewPage from 'pubsweet-component-xpub-review/src/components/ReviewPage'
+import DecisionPage from 'pubsweet-component-xpub-review/src/components/DecisionPage'
 
 // TODO: use componentDidMount to fetch the current user before rendering?
 

@@ -3120,9 +3120,9 @@ eslint-config-prettier@^2.6.0, eslint-config-prettier@^2.7.0:
   dependencies:
     get-stdin "^5.0.1"
 
-eslint-config-pubsweet@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/eslint-config-pubsweet/-/eslint-config-pubsweet-0.0.5.tgz#7e6b3ee115c9281fd85a55c255a975b02b5d0bdb"
+eslint-config-pubsweet@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/eslint-config-pubsweet/-/eslint-config-pubsweet-0.0.6.tgz#cb29cd241a33efab96f9ba8947d56f4b4b4cd5aa"
   dependencies:
     eslint-config-airbnb "^16.1.0"
     eslint-config-prettier "^2.7.0"
@@ -7949,7 +7949,7 @@ prop-types-extra@^1.0.1:
   dependencies:
     warning "^3.0.0"
 
-prop-types@^15.5.0, prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0:
+prop-types@^15.5.10, prop-types@^15.5.4, prop-types@^15.5.7, prop-types@^15.5.8, prop-types@^15.5.9, prop-types@^15.6.0:
   version "15.6.0"
   resolved "https://registry.yarnpkg.com/prop-types/-/prop-types-15.6.0.tgz#ceaf083022fc46b4a35f69e13ef75aed0d639856"
   dependencies:
@@ -8461,12 +8461,6 @@ react-input-autosize@^2.1.0:
   resolved "https://registry.yarnpkg.com/react-input-autosize/-/react-input-autosize-2.1.2.tgz#a3dc11a5517c434db25229925541309de3f7a8f5"
   dependencies:
     prop-types "^15.5.8"
-
-react-loadable@^5.3.1:
-  version "5.3.1"
-  resolved "https://registry.yarnpkg.com/react-loadable/-/react-loadable-5.3.1.tgz#9699e9a08fed49bacd69caaa282034b62a76bcdd"
-  dependencies:
-    prop-types "^15.5.0"
 
 react-moment@^0.6.1:
   version "0.6.8"
@@ -9879,9 +9873,9 @@ style-search@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/style-search/-/style-search-0.1.0.tgz#7958c793e47e32e07d2b5cafe5c0bf8e12e77902"
 
-stylelint-config-pubsweet@^0.0.2:
-  version "0.0.2"
-  resolved "https://registry.yarnpkg.com/stylelint-config-pubsweet/-/stylelint-config-pubsweet-0.0.2.tgz#e3981f91dc5462cd91d1dc0c43e1ce314e62fdec"
+stylelint-config-pubsweet@^0.0.3:
+  version "0.0.3"
+  resolved "https://registry.yarnpkg.com/stylelint-config-pubsweet/-/stylelint-config-pubsweet-0.0.3.tgz#1f2284a5ffca26dcfa6bfee225b6f65bbcb2d2f5"
   dependencies:
     stylelint "^8.2.0"
     stylelint-config-standard "^18.0.0"
