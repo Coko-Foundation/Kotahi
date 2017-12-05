@@ -13,7 +13,7 @@ const AppBar = ({ brandLink, brandName, loginLink, logoutLink, userName }) => (
       {brandName}
     </Link>
 
-    <div>
+    <div className={classes.actions}>
       {userName && (
         <span className={classes.item}>
           <Icon size={16}>user</Icon>
