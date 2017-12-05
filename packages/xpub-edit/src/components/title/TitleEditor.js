@@ -10,6 +10,7 @@ const TitleEditor = ({
   title,
   onBlur,
   onChange,
+  readonly,
 }) => (
   <HtmlEditor
     className={className}
@@ -18,6 +19,7 @@ const TitleEditor = ({
     options={options}
     placeholder={placeholder}
     placeholderClassName={placeholderClassName}
+    readonly={readonly}
     title={title}
     value={value}
   />

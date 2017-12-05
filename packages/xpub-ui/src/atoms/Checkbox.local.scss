@@ -37,12 +37,6 @@
   width: 9px;
 }
 
-.root:hover span::before {
-  //background-size: 100%;
-  background: var(--color-primary);
-  box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 white;
-}
-
 .root input:checked + span {
   font-weight: 600;
 
@@ -52,5 +46,11 @@
     box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 white;
     transition: border 0.5s ease, background-size 0.3s ease;
   }
+}
+
+.root:hover input:not(:disabled) + span::before {
+  //background-size: 100%;
+  background: var(--color-primary);
+  box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 white;
 }
 

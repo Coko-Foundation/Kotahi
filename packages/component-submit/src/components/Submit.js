@@ -16,6 +16,7 @@ const Submit = ({
   version,
   valid,
   error,
+  readonly,
   handleSubmit,
   uploadFile,
   confirming,
@@ -43,17 +44,19 @@ const Submit = ({
     </div>
 
     <form onSubmit={handleSubmit}>
-      <Metadata />
-      <Declarations />
-      <Suggestions />
-      <Notes />
-      <SupplementaryFiles uploadFile={uploadFile} />
+      <Metadata readonly={readonly} />
+      <Declarations readonly={readonly} />
+      <Suggestions readonly={readonly} />
+      <Notes readonly={readonly} />
+      <SupplementaryFiles readonly={readonly} uploadFile={uploadFile} />
 
-      <div>
-        <Button onClick={toggleConfirming} primary type="button">
-          Submit your manuscript
-        </Button>
-      </div>
+      {!readonly && (
+        <div>
+          <Button onClick={toggleConfirming} primary type="button">
+            Submit your manuscript
+          </Button>
+        </div>
+      )}
 
       {confirming && (
         <div className={classes.confirm}>

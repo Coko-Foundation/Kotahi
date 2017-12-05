@@ -21,12 +21,13 @@ const InstructionsInput = input => (
   />
 )
 
-const Notes = () => (
+const Notes = ({ readonly }) => (
   <FormSection name="notes">
     <div className={classes.section} id="notes.fundingAcknowledgement">
       <ValidatedField
         component={FundingInput}
         name="fundingAcknowledgement"
+        readonly={readonly}
         validate={[required]}
       />
     </div>
@@ -35,6 +36,7 @@ const Notes = () => (
       <ValidatedField
         component={InstructionsInput}
         name="specialInstructions"
+        readonly={readonly}
       />
     </div>
   </FormSection>

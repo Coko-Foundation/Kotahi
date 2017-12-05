@@ -6,9 +6,13 @@ import classes from './ValidatedField.local.scss'
 
 // TODO: pass ...props.input to children automatically?
 
-const ValidatedFieldComponent = ({ component }) => ({ meta, input }) => (
+const ValidatedFieldComponent = ({ component: Component }) => ({
+  meta,
+  input,
+  readonly,
+}) => (
   <div>
-    {component(input)}
+    <Component {...input} readonly={readonly} />
 
     {meta.touched &&
       (meta.error || meta.warning) && (

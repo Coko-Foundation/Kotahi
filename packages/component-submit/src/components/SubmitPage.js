@@ -86,6 +86,7 @@ export default compose(
 
     return {
       initialValues: pick(version, paths),
+      readonly: !!version.submitted,
     }
   }),
   reduxForm({

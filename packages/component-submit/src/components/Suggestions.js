@@ -23,7 +23,7 @@ const OpposedEditorInput = input => (
   <TextField placeholder="Add editor names" {...input} />
 )
 
-const Suggestions = () => (
+const Suggestions = ({ readonly }) => (
   <FormSection name="suggestions">
     <div className={classes.section} id="suggestions.reviewers">
       <FormSection name="reviewers">
@@ -37,6 +37,7 @@ const Suggestions = () => (
             format={joinComma}
             name="suggested"
             parse={splitComma}
+            readonly={readonly}
           />
         </div>
 
@@ -48,6 +49,7 @@ const Suggestions = () => (
             format={joinComma}
             name="opposed"
             parse={splitComma}
+            readonly={readonly}
           />
         </div>
       </FormSection>
@@ -65,6 +67,7 @@ const Suggestions = () => (
             format={joinComma}
             name="suggested"
             parse={splitComma}
+            readonly={readonly}
           />
         </div>
 
@@ -76,6 +79,7 @@ const Suggestions = () => (
             format={joinComma}
             name="opposed"
             parse={splitComma}
+            readonly={readonly}
           />
         </div>
       </FormSection>

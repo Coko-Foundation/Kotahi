@@ -27,7 +27,7 @@ class CheckboxGroup extends React.Component {
   }
 
   render() {
-    const { inline, name, options, required } = this.props
+    const { inline, name, options, required, readonly } = this.props
     const { values } = this.state
 
     return (
@@ -40,6 +40,7 @@ class CheckboxGroup extends React.Component {
             label={option.label}
             name={name}
             onChange={this.handleChange}
+            readonly={readonly}
             required={required}
             value={option.value}
           />

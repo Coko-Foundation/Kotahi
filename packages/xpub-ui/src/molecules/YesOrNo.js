@@ -13,13 +13,14 @@ const options = [
   },
 ]
 
-const YesOrNo = ({ name, value, required, onChange }) => (
+const YesOrNo = ({ name, value, required, onChange, readonly }) => (
   <RadioGroup
     className={classes.root}
     inline
     name={name}
     onChange={onChange}
     options={options}
+    readonly={readonly}
     required={required}
     value={value}
   />

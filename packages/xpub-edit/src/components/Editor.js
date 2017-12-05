@@ -20,9 +20,11 @@ class Editor extends React.Component {
   createEditorView = node => {
     const { className } = this.props
     const { state } = this.state
+    const { autoFocus, readonly, onBlur } = this.props
 
     this.view = new EditorView(node, {
       state,
+      editable: () => !readonly,
       dispatchTransaction: this.dispatchTransaction,
       decorations: decorations({
         props: this.props,
@@ -33,18 +35,19 @@ class Editor extends React.Component {
           baseClasses.ProseMirror,
           classes.ProseMirror,
           className,
+          !readonly && classes.ProseMirrorEditable,
         ),
       },
       handleDOMEvents: {
-        blur: this.props.onBlur
+        blur: onBlur
           ? view => {
-              this.props.onBlur(view.state.doc.content)
+              onBlur(view.state.doc.content)
             }
           : null,
       },
     })
 
-    if (this.props.autoFocus) {
+    if (autoFocus) {
       this.view.focus()
     }
   }
@@ -57,8 +60,9 @@ class Editor extends React.Component {
   }
 
   render() {
-    const { options: { menu }, title } = this.props
+    const { options, title, readonly } = this.props
     const { state } = this.state
+    const menu = readonly ? {} : options.menu
 
     return (
       <div>

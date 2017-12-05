@@ -16,6 +16,7 @@ const Radio = ({
   checked,
   required,
   onChange,
+  readonly,
 }) => (
   <label
     className={classnames(
@@ -31,6 +32,7 @@ const Radio = ({
     <input
       checked={checked}
       className={classes.input}
+      disabled={readonly}
       name={name}
       onChange={onChange}
       required={required}

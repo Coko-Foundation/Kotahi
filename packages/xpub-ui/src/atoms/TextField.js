@@ -10,6 +10,7 @@ const TextField = ({
   value = '',
   onBlur,
   onChange,
+  readonly,
 }) => (
   <label className={classes.root}>
     {label && <span className={classes.text}>{label}</span>}
@@ -19,6 +20,7 @@ const TextField = ({
       onBlur={onBlur}
       onChange={onChange}
       placeholder={placeholder}
+      readOnly={readonly}
       required={required}
       type={type}
       value={value}

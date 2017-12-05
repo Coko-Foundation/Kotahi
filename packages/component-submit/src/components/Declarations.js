@@ -8,19 +8,23 @@ import classes from './Declarations.local.scss'
 
 const DeclarationInput = input => <YesOrNo inline {...input} />
 
-const Declarations = ({ journal }) => (
+const Declarations = ({ journal, readonly }) => (
   <FormSection name="declarations">
     {journal.declarations.questions.map(question => (
       <div
-        className={classnames(classes.section, classes.spread)}
+        className={classnames(
+          classes.section,
+          classes.spread,
+          !readonly && classes.spreadEnabled,
+        )}
         id={`declarations.${question.id}`}
         key={question.id}
       >
         <div className={classes.legend}>{question.legend}</div>
-
         <ValidatedField
           component={DeclarationInput}
           name={question.id}
+          readonly={readonly}
           required
           validate={[required]}
         />
