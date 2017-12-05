@@ -16,7 +16,7 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
   return (
     <div className={classes.root}>
       <div className={classes.main}>
-        <VersionTitle version={version} className={classes.versionTitle} />
+        <VersionTitle className={classes.versionTitle} version={version} />
 
         {reviewer && (
           <div>
@@ -24,10 +24,10 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
               <div className={classes.links}>
                 <div className={classes.link}>
                   <ProjectLink
+                    id={reviewer.id}
+                    page="reviews"
                     project={project}
                     version={version}
-                    page="reviews"
-                    id={reviewer.id}
                   >
                     {reviewer.submitted ? 'Reviewed' : 'Do Review'}
                   </ProjectLink>

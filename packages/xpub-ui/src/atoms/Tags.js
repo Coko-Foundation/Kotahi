@@ -14,7 +14,7 @@ class Tags extends React.Component {
     }
   }
 
-  handleDelete = index => {
+  handleDelete(index) {
     const { tags } = this.state
 
     tags.splice(index, 1)
@@ -24,7 +24,7 @@ class Tags extends React.Component {
     this.props.onChange(tags)
   }
 
-  handleAddition = tag => {
+  handleAddition(tag) {
     const { tags } = this.state
 
     tags.push(tag)
@@ -40,17 +40,17 @@ class Tags extends React.Component {
 
     return (
       <ReactTags
-        name={name}
-        tags={tags}
-        suggestions={suggestions}
-        placeholder={placeholder}
+        allowNew
         autofocus={false}
-        allowNew={true}
         // TODO: enable these when react-tag-autocomplete update is released
         // delimiters={[]}
         // delimiterChars={[',', ';']}
-        handleDelete={this.handleDelete}
         handleAddition={this.handleAddition}
+        handleDelete={this.handleDelete}
+        name={name}
+        placeholder={placeholder}
+        suggestions={suggestions}
+        tags={tags}
       />
     )
   }

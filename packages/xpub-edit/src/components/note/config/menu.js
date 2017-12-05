@@ -1,4 +1,4 @@
-import { setBlockType, toggleMark } from 'prosemirror-commands'
+import { toggleMark } from 'prosemirror-commands'
 import { redo, undo } from 'prosemirror-history'
 import icons from './icons'
 import schema from './schema'
@@ -11,25 +11,25 @@ const markActive = type => state => {
     : state.doc.rangeHasMark(from, to, type)
 }
 
-const blockActive = (type, attrs = {}) => state => {
-  const { $from, to, node } = state.selection
+// const blockActive = (type, attrs = {}) => state => {
+//   const { $from, to, node } = state.selection
 
-  if (node) {
-    return node.hasMarkup(type, attrs)
-  }
+//   if (node) {
+//     return node.hasMarkup(type, attrs)
+//   }
 
-  return to <= $from.end() && $from.parent.hasMarkup(type, attrs)
-}
+//   return to <= $from.end() && $from.parent.hasMarkup(type, attrs)
+// }
 
-const promptForURL = () => {
-  let url = window.prompt('Enter the URL', 'https://')
+// const promptForURL = () => {
+//   let url = window.prompt('Enter the URL', 'https://')
 
-  if (url && !/^https?:\/\//i.test(url)) {
-    url = 'http://' + url
-  }
+//   if (url && !/^https?:\/\//i.test(url)) {
+//     url = `http://${url}`
+//   }
 
-  return url
-}
+//   return url
+// }
 
 export default {
   marks: {

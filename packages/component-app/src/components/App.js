@@ -1,7 +1,7 @@
 import React from 'react'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 
 import { AppBar } from 'xpub-ui'
 import { withJournal } from 'xpub-journal'

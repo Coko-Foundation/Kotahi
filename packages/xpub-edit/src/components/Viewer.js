@@ -14,7 +14,7 @@ class Viewer extends React.Component {
     }
   }
 
-  createEditorView = node => {
+  createEditorView(node) {
     const { state } = this.state
 
     this.view = new EditorView(node, {

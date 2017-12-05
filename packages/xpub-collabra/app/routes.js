@@ -39,39 +39,39 @@ const DecisionPage = loadable(() =>
 
 const Root = () => (
   <App>
-    <PrivateRoute exact path="/" component={DashboardPage} />
+    <PrivateRoute component={DashboardPage} exact path="/" />
     <PrivateRoute
+      component={SubmitPage}
       exact
       path="/projects/:project/versions/:version/submit"
-      component={SubmitPage}
     />
     <PrivateRoute
+      component={ManuscriptPage}
       exact
       path="/projects/:project/versions/:version/manuscript"
-      component={ManuscriptPage}
     />
     <PrivateRoute
+      component={ReviewersPage}
       exact
       path="/projects/:project/versions/:version/reviewers"
-      component={ReviewersPage}
     />
     <PrivateRoute
+      component={ReviewPage}
       exact
       path="/projects/:project/versions/:version/reviews/:review"
-      component={ReviewPage}
     />
     <PrivateRoute
+      component={DecisionPage}
       exact
       path="/projects/:project/versions/:version/decisions/:decision"
-      component={DecisionPage}
     />
 
-    <PrivateRoute exact path="/logout" component={LogoutPage} />
+    <PrivateRoute component={LogoutPage} exact path="/logout" />
 
-    <Route exact path="/signup" component={SignupPage} />
-    <Route exact path="/login" component={LoginPage} />
+    <Route component={SignupPage} exact path="/signup" />
+    <Route component={LoginPage} exact path="/login" />
 
-    {/*<Redirect from="/" to="/dashboard"/>*/}
+    {/* <Redirect from="/" to="/dashboard"/> */}
   </App>
 )
 

@@ -24,7 +24,7 @@ const Login = ({ errorMessage, handleSubmit }) => (
     </form>
 
     <div className={classes.alternate}>
-      <span className={classes.message}>You don't have an account?</span>
+      <span className={classes.message}>You don&apos;t have an account?</span>
       <Link className={classes.link} to="/signup">
         Sign up
       </Link>

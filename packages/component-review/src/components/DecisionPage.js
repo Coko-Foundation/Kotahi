@@ -15,14 +15,23 @@ import uploadFile from 'xpub-upload'
 import DecisionLayout from './decision/DecisionLayout'
 
 // TODO: this should happen on the server
-const handleDecision = (project, version) => dispatch => {
-  return dispatch(
+const handleDecision = (project, version) => dispatch =>
+  dispatch(
     actions.updateFragment(project, {
       decision: version.decision,
       id: version.id,
       rev: version.rev,
     }),
   ).then(() => {
+    const cloned = pick(version, [
+      'source',
+      'metadata',
+      'declarations',
+      'suggestions',
+      'files',
+      'notes',
+    ])
+
     switch (version.decision.recommendation) {
       case 'accept':
         return dispatch(
@@ -43,15 +52,6 @@ const handleDecision = (project, version) => dispatch => {
         )
 
       case 'revise':
-        const cloned = pick(version, [
-          'source',
-          'metadata',
-          'declarations',
-          'suggestions',
-          'files',
-          'notes',
-        ])
-
         return dispatch(
           actions.updateCollection({
             id: project.id,
@@ -73,7 +73,6 @@ const handleDecision = (project, version) => dispatch => {
         throw new Error('Unknown decision type')
     }
   })
-}
 
 const onSubmit = (values, dispatch, { project, version, history }) => {
   version.decision = {
@@ -131,11 +130,9 @@ export default compose(
     },
   ),
   withRouter,
-  withProps(({ decision }) => {
-    return {
-      initialValues: decision,
-    }
-  }),
+  withProps(({ decision }) => ({
+    initialValues: decision,
+  })),
   reduxForm({
     form: 'decision',
     onChange: debounce(onChange, 1000, { maxWait: 5000 }),

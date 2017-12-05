@@ -8,10 +8,10 @@ import { ConnectPage } from 'xpub-connect'
 import { selectCollection, selectFragment } from 'xpub-selectors'
 import Submit from './Submit'
 
-const onSubmit = (values, dispatch, { history, project, version }) => {
+const onSubmit = (values, dispatch, { history, project, version }) =>
   // console.log('submit', values)
 
-  return dispatch(
+  dispatch(
     actions.updateFragment(project, {
       id: version.id,
       rev: version.rev,
@@ -19,15 +19,15 @@ const onSubmit = (values, dispatch, { history, project, version }) => {
       ...values,
     }),
   )
-    .then(() => {
-      return dispatch(
+    .then(() =>
+      dispatch(
         actions.updateCollection({
           id: project.id,
           rev: project.rev,
           status: 'submitted',
         }),
-      )
-    })
+      ),
+    )
     .then(() => {
       history.push('/')
     })
@@ -36,7 +36,6 @@ const onSubmit = (values, dispatch, { history, project, version }) => {
         throw new SubmissionError()
       }
     })
-}
 
 // TODO: this is only here because prosemirror would save the title in the
 // metadata as html instead of plain text. we need to maybe find a better

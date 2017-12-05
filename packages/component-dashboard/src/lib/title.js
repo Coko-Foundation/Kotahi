@@ -1,8 +1,7 @@
-export const generateTitle = name => {
-  return name
+export const generateTitle = name =>
+  name
     .replace(/[_-]+/g, ' ') // convert hyphens/underscores to space
     .replace(/\.[^.]+$/, '') // remove file extension
-}
 
 // TODO: preserve italics (use parse5?)
 export const extractTitle = source => {

@@ -15,22 +15,22 @@ class Menu extends React.Component {
     }
   }
 
-  toggleMenu = () => {
+  toggleMenu() {
     this.setState({
       open: !this.state.open,
     })
   }
 
-  handleSelect = selected => {
+  handleSelect(selected) {
     this.setState({
-      selected,
       open: false,
+      selected,
     })
 
     this.props.onChange(selected)
   }
 
-  optionLabel = value => {
+  optionLabel(value) {
     const { options } = this.props
 
     return options.find(option => option.value === value).label
@@ -51,9 +51,9 @@ class Menu extends React.Component {
         <div className={classes.main}>
           <div className={classes.openerContainer}>
             <button
-              type="button"
               className={classes.opener}
               onClick={this.toggleMenu}
+              type="button"
             >
               {selected ? (
                 <span>{this.optionLabel(selected)}</span>
@@ -69,10 +69,10 @@ class Menu extends React.Component {
               <div className={classes.options}>
                 {options.map(option => (
                   <div
-                    key={option.value}
                     className={classnames(classes.option, {
                       [classes.active]: option.value === selected,
                     })}
+                    key={option.value}
                     onClick={() => this.handleSelect(option.value)}
                   >
                     {option.label || option.value}

@@ -12,11 +12,11 @@ const OwnerItem = ({ project, version, deleteProject }) => (
     </div>
 
     <div className={classes.main}>
-      <VersionTitle version={version} className={classes.versionTitle} />
+      <VersionTitle className={classes.versionTitle} version={version} />
 
       <div className={classes.links}>
         <div className={classes.link}>
-          <ProjectLink project={project} version={version} page="submit">
+          <ProjectLink page="submit" project={project} version={version}>
             Submission
           </ProjectLink>
         </div>
@@ -24,7 +24,7 @@ const OwnerItem = ({ project, version, deleteProject }) => (
         <Divider separator="|" />
 
         <div className={classes.link}>
-          <ProjectLink project={project} version={version} page="manuscript">
+          <ProjectLink page="manuscript" project={project} version={version}>
             Manuscript
           </ProjectLink>
         </div>

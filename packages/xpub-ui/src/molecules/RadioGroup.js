@@ -10,11 +10,9 @@ class RadioGroup extends React.Component {
     }
   }
 
-  handleChange = event => {
-    const value = event.target.value
-
+  handleChange(event) {
+    const { value } = event.target
     this.setState({ value })
-
     this.props.onChange(value)
   }
 
@@ -26,15 +24,15 @@ class RadioGroup extends React.Component {
       <div>
         {options.map(option => (
           <Radio
-            key={option.value}
-            name={name}
-            required={required}
-            inline={inline}
-            value={option.value}
-            label={option.label}
-            color={option.color}
             checked={option.value === value}
+            color={option.color}
+            inline={inline}
+            key={option.value}
+            label={option.label}
+            name={name}
             onChange={this.handleChange}
+            required={required}
+            value={option.value}
           />
         ))}
       </div>

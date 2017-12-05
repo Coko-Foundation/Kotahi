@@ -6,21 +6,25 @@ import classes from './ConnectPage.local.scss'
 
 const ConnectPage = requirements => WrappedComponent => {
   class ConnectedComponent extends React.Component {
-    state = {
-      fetching: false,
-      complete: false,
-      error: null
+    constructor(props) {
+      super(props)
+
+      this.state = {
+        complete: false,
+        error: null,
+        fetching: false,
+      }
     }
 
-    componentDidMount () {
+    componentDidMount() {
       this.fetch(this.props)
     }
 
-    componentWillReceiveProps (nextProps) {
+    componentWillReceiveProps(nextProps) {
       this.fetch(nextProps)
     }
 
-    fetch ({ isAuthenticated }) {
+    fetch({ isAuthenticated }) {
       if (!isAuthenticated) {
         return
       }
@@ -31,49 +35,45 @@ const ConnectPage = requirements => WrappedComponent => {
 
       this.setState({
         fetching: true,
-        complete: false
+        complete: false,
       })
 
       const requests = requirements(this.props).map(this.props.dispatch)
 
-      Promise.all(requests).then(() => {
-        this.setState({
-          fetching: false,
-          complete: true,
+      Promise.all(requests)
+        .then(() => {
+          this.setState({
+            fetching: false,
+            complete: true,
+          })
         })
-      }).catch(error => {
-        console.error(error)
+        .catch(error => {
+          console.error(error)
 
-        this.setState({
-          error: error.message
+          this.setState({
+            error: error.message,
+          })
+
+          throw error // rethrow
         })
-
-        throw error // rethrow
-      })
     }
 
-    render () {
+    render() {
       const { complete, error } = this.state
 
-      if (error) return (
-        <div className={classes.error}>{error}</div>
-      )
+      if (error) return <div className={classes.error}>{error}</div>
 
-      if (!complete) return (
-        <div className={classes.bar}>loading…</div>
-      )
+      if (!complete) return <div className={classes.bar}>loading…</div>
 
-      return <WrappedComponent {...this.props}/>
+      return <WrappedComponent {...this.props} />
     }
   }
 
   return compose(
     withRouter,
-    connect(
-      state => ({
-        isAuthenticated: state.currentUser.isAuthenticated
-      })
-    )
+    connect(state => ({
+      isAuthenticated: state.currentUser.isAuthenticated,
+    })),
   )(ConnectedComponent)
 }
 

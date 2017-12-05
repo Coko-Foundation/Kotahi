@@ -46,10 +46,10 @@ const addReviewer = (props, projectReviewer) => {
     .then(() => reviewer)
 }
 
-const handleSubmit = props => reset => values => {
+const handleSubmit = props => reset => values =>
   // TODO: create a user account if values.user.id is null
 
-  return getProjectReviewer(props, values.user)
+  getProjectReviewer(props, values.user)
     .then(projectReviewer => {
       if (some(props.version.reviewers, { reviewer: projectReviewer.id })) {
         throw new SubmissionError('This reviewer has already been added')
@@ -58,7 +58,6 @@ const handleSubmit = props => reset => values => {
       return addReviewer(props, projectReviewer)
     })
     .then(() => reset())
-}
 
 const loadOptions = props => input => {
   const options = props.reviewerUsers

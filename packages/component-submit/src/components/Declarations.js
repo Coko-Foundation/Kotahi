@@ -8,27 +8,25 @@ import classes from './Declarations.local.scss'
 
 const DeclarationInput = input => <YesOrNo inline {...input} />
 
-const Declarations = ({ journal }) => {
-  return (
-    <FormSection name="declarations">
-      {journal.declarations.questions.map(question => (
-        <div
-          className={classnames(classes.section, classes.spread)}
-          id={`declarations.${question.id}`}
-          key={question.id}
-        >
-          <div className={classes.legend}>{question.legend}</div>
+const Declarations = ({ journal }) => (
+  <FormSection name="declarations">
+    {journal.declarations.questions.map(question => (
+      <div
+        className={classnames(classes.section, classes.spread)}
+        id={`declarations.${question.id}`}
+        key={question.id}
+      >
+        <div className={classes.legend}>{question.legend}</div>
 
-          <ValidatedField
-            component={DeclarationInput}
-            name={question.id}
-            required
-            validate={[required]}
-          />
-        </div>
-      ))}
-    </FormSection>
-  )
-}
+        <ValidatedField
+          component={DeclarationInput}
+          name={question.id}
+          required
+          validate={[required]}
+        />
+      </div>
+    ))}
+  </FormSection>
+)
 
 export default withJournal(Declarations)

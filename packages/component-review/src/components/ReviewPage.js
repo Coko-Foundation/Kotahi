@@ -103,11 +103,9 @@ export default compose(
     },
   ),
   withRouter,
-  withProps(({ reviewer }) => {
-    return {
-      initialValues: reviewer,
-    }
-  }),
+  withProps(({ reviewer }) => ({
+    initialValues: reviewer,
+  })),
   reduxForm({
     form: 'review',
     onChange: debounce(onChange, 1000, { maxWait: 5000 }),

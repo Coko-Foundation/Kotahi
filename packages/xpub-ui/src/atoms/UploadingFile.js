@@ -13,7 +13,7 @@ const UploadingFile = ({ file, error, progress }) => (
       {!!progress && (
         <div
           className={classes.progress}
-          style={{ top: progress * 100 + '%' }}
+          style={{ top: `${progress * 100}%` }}
         />
       )}
 

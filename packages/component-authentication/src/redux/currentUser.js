@@ -27,9 +27,7 @@ export const getCurrentUserFailure = error => ({
 export const getCurrentUser = () => dispatch => {
   dispatch(getCurrentUserRequest())
   return api.get('/users/authenticate').then(
-    user => {
-      return dispatch(getCurrentUserSuccess(user))
-    },
+    user => dispatch(getCurrentUserSuccess(user)),
     error => {
       dispatch(getCurrentUserFailure(error))
       throw error

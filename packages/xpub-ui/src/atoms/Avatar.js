@@ -8,9 +8,9 @@ const Avatar = ({ status, width, height, reviewerLetter }) => {
   return (
     <svg
       className={classes[classValue]}
-      height={height ? height : '70'}
-      viewBox={`0 0 ${width ? width + 5 : '105'} ${height ? height : '70'}`}
-      width={width ? width : '100'}
+      height={height || '70'}
+      viewBox={`0 0 ${width ? width + 5 : '105'} ${height || '70'}`}
+      width={width || '100'}
       xmlns="http://www.w3.org/2000/svg"
     >
       <path

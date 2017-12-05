@@ -30,13 +30,13 @@ const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
     </div>
 
     <div className={classes.main}>
-      <VersionTitle version={version} className={classes.versionTitle} />
+      <VersionTitle className={classes.versionTitle} version={version} />
 
       <div className={classes.links}>
         <div className={classes.link}>
           {(!version.decision || version.decision.status !== 'submitted') && (
             <span>
-              <ProjectLink project={project} version={version} page="reviewers">
+              <ProjectLink page="reviewers" project={project} version={version}>
                 Assign Reviewers
               </ProjectLink>
 
@@ -45,10 +45,10 @@ const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
           )}
 
           <ProjectLink
+            id={project.id}
+            page="decisions"
             project={project}
             version={version}
-            page="decisions"
-            id={project.id}
           >
             {version.decision && version.decision.status === 'submitted'
               ? `Decision: ${version.decision.recommendation}`
@@ -63,17 +63,17 @@ const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
     <div className={classes.roles}>
       <div className={classes.role}>
         <AssignEditor
+          addUserToTeam={addUserToTeam}
           project={project}
           teamTypeName="seniorEditor"
-          addUserToTeam={addUserToTeam}
         />
       </div>
 
       <div className={classes.role}>
         <AssignEditor
+          addUserToTeam={addUserToTeam}
           project={project}
           teamTypeName="handlingEditor"
-          addUserToTeam={addUserToTeam}
         />
       </div>
     </div>

@@ -17,7 +17,7 @@ const heading = {
   defining: true,
   group: 'block',
   parseDOM: [{ tag: 'h1', attrs: { level: 1 } }],
-  toDOM: node => ['h' + node.attrs.level, 0],
+  toDOM: node => [`h${node.attrs.level}`, 0],
 }
 
 const text = {

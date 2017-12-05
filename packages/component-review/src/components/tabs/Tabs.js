@@ -27,7 +27,9 @@ class Tabs extends React.Component {
     }
   }
 
-  setActiveKey = activeKey => this.setState({ activeKey })
+  setActiveKey(activeKey) {
+    this.setState({ activeKey })
+  }
 
   render() {
     const { sections, title } = this.props
@@ -40,8 +42,8 @@ class Tabs extends React.Component {
 
           {sections.map(({ key, label }) => (
             <span
-              key={key}
               className={classes.tab}
+              key={key}
               onClick={() => this.setActiveKey(key)}
             >
               <Tab active={activeKey === key}>{label || key}</Tab>

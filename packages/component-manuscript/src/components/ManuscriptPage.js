@@ -33,12 +33,11 @@ export default compose(
     },
   ),
   withHandlers({
-    updateManuscript: ({ updateVersion, project, version }) => data => {
-      return updateVersion(project, {
+    updateManuscript: ({ updateVersion, project, version }) => data =>
+      updateVersion(project, {
         id: version.id,
         rev: version.rev,
         ...data,
-      })
-    },
+      }),
   }),
 )(Manuscript)

@@ -8,7 +8,7 @@ const requireComponentsString = components
     // "client" or "frontend" for backwards compatibility
     return component.client || component.frontend
   })
-  .map(name => "require('" + name + "')")
+  .map(name => `require('${name}')`)
   .join(', ')
 
 // paths that use ES6 scripts and CSS modules
@@ -31,7 +31,7 @@ module.exports = [
     loader: 'string-replace-loader',
     options: {
       search: 'PUBSWEET_COMPONENTS',
-      replace: '[' + requireComponentsString + ']',
+      replace: `[${requireComponentsString}]`,
     },
   },
 

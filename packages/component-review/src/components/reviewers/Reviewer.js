@@ -5,9 +5,8 @@ import { Avatar, Button } from 'xpub-ui'
 
 import classes from './Reviewer.local.scss'
 
-const ordinalLetter = ordinal => {
-  return ordinal ? String.fromCharCode(96 + ordinal) : null
-}
+const ordinalLetter = ordinal =>
+  ordinal ? String.fromCharCode(96 + ordinal) : null
 
 const Reviewer = ({ reviewer, removeReviewer }) => (
   <div className={classes.root}>

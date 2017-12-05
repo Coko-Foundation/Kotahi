@@ -22,15 +22,15 @@ const blockActive = (type, attrs = {}) => state => {
   return to <= $from.end() && $from.parent.hasMarkup(type, attrs)
 }
 
-const promptForURL = () => {
-  let url = window.prompt('Enter the URL', 'https://')
+// const promptForURL = () => {
+//   let url = window.prompt('Enter the URL', 'https://')
 
-  if (url && !/^https?:\/\//i.test(url)) {
-    url = 'http://' + url
-  }
+//   if (url && !/^https?:\/\//i.test(url)) {
+//     url = `http://${url}`
+//   }
 
-  return url
-}
+//   return url
+// }
 
 export default {
   blocks: {

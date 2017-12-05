@@ -3,12 +3,14 @@ import ReactDOM from 'react-dom'
 import { AppContainer } from 'react-hot-loader'
 import { Provider as StoreProvider } from 'react-redux'
 import { Router } from 'react-router-dom'
-import { configureStore } from 'pubsweet-client'
 import createHistory from 'history/createBrowserHistory'
+
+import { configureStore } from 'pubsweet-client'
 import { JournalProvider } from 'xpub-journal'
+import 'xpub-theme'
+
 import * as journal from './config/journal'
 import Root from './routes'
-import 'xpub-theme'
 
 const history = createHistory()
 const store = configureStore(history, {})

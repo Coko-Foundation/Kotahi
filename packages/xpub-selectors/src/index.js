@@ -15,9 +15,8 @@ export const selectFragments = (state, ids) =>
 
 export const selectFragment = (state, id) => state.fragments[id]
 
-export const selectCurrentVersion = (state, project) => {
-  return newestFirst(selectFragments(state, project.fragments))[0]
-}
+export const selectCurrentVersion = (state, project) =>
+  newestFirst(selectFragments(state, project.fragments))[0]
 
 export const getReviewerFromUser = (project, version, currentUser) => {
   if (!project.reviewers || !version.reviewers) return null

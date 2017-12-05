@@ -12,11 +12,11 @@ class Files extends React.Component {
     }
   }
 
-  handleClick = () => {
+  handleClick() {
     this.fileInput.click()
   }
 
-  handleChange = event => {
+  handleChange(event) {
     const { uploads } = this.state
 
     Array.from(event.target.files).forEach(file => {
@@ -29,15 +29,15 @@ class Files extends React.Component {
     this.setState({ uploads })
   }
 
-  handleUploadedFile = ({ file, url }) => {
+  handleUploadedFile({ file, url }) {
     const values = this.state.values.concat({
       name: file.name,
       url,
     })
 
-    const uploads = this.state.uploads.filter(item => {
-      return item.file.name !== file.name
-    })
+    const uploads = this.state.uploads.filter(
+      item => item.file.name !== file.name,
+    )
 
     this.setState({ values, uploads })
 
@@ -52,20 +52,20 @@ class Files extends React.Component {
       <div className={classes.root}>
         <div className={classes.upload}>
           <button
-            type="button"
             className={classes.attach}
             onClick={() => this.fileInput.click()}
+            type="button"
           >
             {buttonText}
           </button>
 
           <input
             className={classes.input}
+            multiple
+            name={name}
+            onChange={this.handleChange}
             ref={input => (this.fileInput = input)}
             type="file"
-            name={name}
-            multiple
-            onChange={this.handleChange}
           />
         </div>
 
@@ -73,11 +73,11 @@ class Files extends React.Component {
           {uploads &&
             uploads.map(upload => (
               <Upload
-                key={upload.file.name}
                 file={upload.file}
-                request={upload.request}
                 handleUploadedFile={this.handleUploadedFile}
+                key={upload.file.name}
                 render={uploadingFile}
+                request={upload.request}
               />
             ))}
 
