@@ -12,6 +12,7 @@ const MenuBar = ({ title, menu, state, dispatch }) => {
   const Button = (item, key) => (
     <button
       key={key}
+      type="button"
       className={classnames({
         [classes.button]: true,
         [classes.active]: item.active && item.active(state)
