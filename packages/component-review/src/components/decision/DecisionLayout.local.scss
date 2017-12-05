@@ -1,16 +1,16 @@
 .root {
-  display: flex;
-  position: absolute;
-  top: 50px;
-  left: 0;
-  right: 0;
   bottom: 0;
+  display: flex;
+  left: 0;
   overflow: hidden;
+  position: absolute;
+  right: 0;
+  top: 50px;
 }
 
 .column {
+  flex: 1;
   height: 100%;
   overflow-y: hidden;
-  flex: 1;
   padding: 10px;
 }

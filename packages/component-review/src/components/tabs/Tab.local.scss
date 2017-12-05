@@ -1,15 +1,28 @@
 .root {
-  display: inline-block;
-  padding: 5px;
-  color: #aaa;
   border-color: inherit;
   border-style: solid;
   border-width: 0 0 1px;
+  color: #aaa;
   cursor: pointer;
-  position: relative;
+  display: inline-block;
   font-size: 0.8em;
   margin-left: 1em;
+  padding: 5px;
   padding-left: 1.2em;
+  position: relative;
+}
+
+.root::after {
+  background: white;
+  border-bottom: 1px solid #aaa;
+  bottom: -2px;
+  content: " ";
+  display: block;
+  position: absolute;
+  right: -25px;
+  transform: rotate(-66deg);
+  transform-origin: 0% 0%;
+  width: 25px;
 }
 
 .root:hover {
@@ -26,19 +39,6 @@
   &::after {
     border-color: var(--color-primary);
   }
-}
-
-.root::after {
-  content: " ";
-  width: 25px;
-  display: block;
-  border-bottom: 1px solid #aaa;
-  position: absolute;
-  right: -25px;
-  bottom: -2px;
-  background: white;
-  transform: rotate(-66deg);
-  transform-origin: 0% 0%;
 }
 
 .root.editor-wrapper {

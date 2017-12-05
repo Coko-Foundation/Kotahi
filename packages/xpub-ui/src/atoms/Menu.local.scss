@@ -1,6 +1,6 @@
 .root {
-  display: flex;
   align-items: center;
+  display: flex;
 }
 
 .label {
@@ -16,15 +16,15 @@
 }
 
 .opener {
-  border: none;
-  outline: none;
-  cursor: pointer;
-  background: transparent;
-  font-size: inherit;
-  font-family: var(--font-author);
-  display: flex;
   align-items: center;
+  background: transparent;
+  border: none;
   border-left: 2px solid transparent;
+  cursor: pointer;
+  display: flex;
+  font-family: var(--font-author);
+  font-size: inherit;
+  outline: none;
 }
 
 .opener:hover {
@@ -32,8 +32,8 @@
 }
 
 .open .opener {
-  color: var(--color-primary);
   border-left: 2px solid var(--color-primary);
+  color: var(--color-primary);
 }
 
 .placeholder {
@@ -47,8 +47,8 @@
 }
 
 .arrow {
-  margin-left: 10px;
   font-size: 50%;
+  margin-left: 10px;
   transform: scaleY(1.2) scaleX(2.2);
   transition: transform 0.2s;
 }
@@ -58,16 +58,16 @@
 }
 
 .options {
-  position: absolute;
-  padding-top: 0.5em;
-  top: 0;
+  background-color: white;
+  border-bottom: 2px solid var(--color-primary);
+  border-left: 2px solid var(--color-primary);
+  // columns: 2 auto;
   left: 0;
   min-width: 10em;
-  background-color: white;
-  border-left: 2px solid var(--color-primary);
-  border-bottom: 2px solid var(--color-primary);
-  // columns: 2 auto;
   opacity: 0;
+  padding-top: 0.5em;
+  position: absolute;
+  top: 0;
   z-index: 10;
 }
 
@@ -76,8 +76,8 @@
 }
 
 .option {
-  font-family: var(--font-author);
   cursor: pointer;
+  font-family: var(--font-author);
   padding: 10px;
   white-space: nowrap;
 }
@@ -87,7 +87,6 @@
 }
 
 .active {
-  // placeholder for the semibold
-  font-weight: 600;
   color: black;
+  font-weight: 600; /* placeholder for the semibold */
 }

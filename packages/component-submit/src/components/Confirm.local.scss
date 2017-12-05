@@ -1,17 +1,17 @@
 .root {
-  max-width: 60em;
-  padding: 4rem;
   background: white;
-  max-height: 100%;
-  overflow-y: auto;
   color: #404040;
   line-height: 1.55;
+  max-height: 100%;
+  max-width: 60em;
+  overflow-y: auto;
+  padding: 4rem;
 }
 
 .root p {
-  width: 55ch;
   font-size: 1em;
   margin-bottom: 1.6em;
+  width: 55ch;
 }
 
 .heading {

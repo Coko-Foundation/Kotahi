@@ -1,13 +1,13 @@
 .icon {
-  margin-right: 10px;
-  display: inline-flex;
   color: var(--color-primary);
+  display: inline-flex;
+  margin-right: 10px;
 }
 
 .filename {
   font-size: 0.7em;
-  max-width: 25ch;
   height: 2em;
+  max-width: 25ch;
   overflow-wrap: break-word;
   padding: 0;
 }

@@ -1,11 +1,11 @@
 .root {
-  display: flex;
   align-items: center;
-  transition: all 2s;
-  font-size: 1em;
+  display: flex;
   font-family: var(--font-author);
+  font-size: 1em;
   font-style: italic;
   letter-spacing: 1px;
+  transition: all 2s;
 }
 
 .root.inline {
@@ -21,20 +21,20 @@
 }
 
 .root .input {
-  margin-right: 0.25rem;
   display: none;
+  margin-right: 0.25rem;
 }
 
 .root span::before {
-  transition: border 0.5s ease, background-size 0.3s ease;
+  background-size: 0;
+  border: 1px solid black; // border-radius: 20px;
   content: ' ';
   display: inline-block;
+  height: 9px;
+  margin-right: 0.3em;
+  transition: border 0.5s ease, background-size 0.3s ease;
   vertical-align: middle;
   width: 9px;
-  height: 9px;
-  border: 1px solid black; // border-radius: 20px;
-  background-size: 0;
-  margin-right: 0.3em;
 }
 
 .root:hover span::before {
@@ -47,10 +47,10 @@
   font-weight: 600;
 
   &::before {
-    transition: border 0.5s ease, background-size 0.3s ease;
-    border: 1px solid black;
     background: black;
+    border: 1px solid black;
     box-shadow: inset 1px 1px 0 0 white, inset -1px -1px 0 0 white;
+    transition: border 0.5s ease, background-size 0.3s ease;
   }
 }
 

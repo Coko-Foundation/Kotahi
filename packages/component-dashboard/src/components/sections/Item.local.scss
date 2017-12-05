@@ -3,8 +3,8 @@
 }
 
 .main {
-  display: flex;
   align-items: bottom;
+  display: flex;
   justify-content: flex-start;
 }
 
@@ -16,10 +16,10 @@
 
 .roles {
   display: flex;
-  text-transform: uppercase;
   font-size: 0.8em;
   margin-left: 0.5em;
   margin-top: 1em;
+  text-transform: uppercase;
 }
 
 .role:not(:last-of-type) {
@@ -32,44 +32,44 @@
   flex: 1;
   font-family: Vollkorn, serif;
   font-size: 1.6em;
-  margin-top: 0.2em;
-  padding-right: 0.4em;
   font-weight: 500;
+  margin-top: 0.2em;
   overflow: hidden;
+  padding-right: 0.4em;
 
   > span {
     background: white;
-    padding-right: 0.3em;
     display: inline;
+    padding-right: 0.3em;
   }
 
   &::after {
-    float: left;
-    width: 0;
-    font-weight: 400;
     color: lightgrey;
-    vertical-align: baseline;
-    font-size: 0.8em;
-    padding-top: 0.25em;
-    white-space: nowrap;
     content: ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . "". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . ";
+    float: left;
+    font-size: 0.8em;
+    font-weight: 400;
+    padding-top: 0.25em;
+    vertical-align: baseline;
+    white-space: nowrap;
+    width: 0;
   }
 }
 
 .header {
+  align-items: baseline;
   display: flex;
   justify-content: space-between;
   margin-bottom: 0.4em;
-  align-items: baseline;
 }
 
 .meta {
+  color: #575757;
   display: flex;
   flex-wrap: nowrap;
-  white-space: nowrap;
-  color: #575757;
   font-size: 0.8em;
   margin-left: 1em;
+  white-space: nowrap;
 }
 
 .links {
@@ -79,14 +79,14 @@
 }
 
 .link {
-  display: inline-block;
-  font-style: italic;
-  font-size: 0.9em;
-  padding: 0 0.3em;
   color: var(--color-primary);
-  vertical-align: bottom;
   cursor: pointer;
+  display: inline-block;
+  font-size: 0.9em;
+  font-style: italic;
+  padding: 0 0.3em;
   padding-bottom: 0.3em;
+  vertical-align: bottom;
 
   &:last-child {
     margin-right: 0;
@@ -103,16 +103,16 @@
 
 .action button {
   background: none;
-  text-transform: none;
   border: none;
   cursor: pointer;
+  text-transform: none;
 }
 
 .reviews {
-  margin-top: 10px;
-  margin-bottom: 10px;
   display: inline-flex;
   justify-content: flex-end;
+  margin-bottom: 10px;
+  margin-top: 10px;
 }
 
 .editors {

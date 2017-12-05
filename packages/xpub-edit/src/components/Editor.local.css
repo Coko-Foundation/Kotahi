@@ -62,16 +62,16 @@
   padding: 2px 5px;
 }
 
-.ProseMirror:focus .placeholder {
-  display: none;
-}
-
 .ProseMirror .placeholder {
   color: #aaa;
   font-family: var(--font-interface);
   font-style: italic;
   height: 0;
   pointer-events: none;
+}
+
+.ProseMirror:focus .placeholder {
+  display: none;
 }
 
 .ProseMirror p {
