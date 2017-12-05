@@ -15,13 +15,13 @@ class Menu extends React.Component {
     }
   }
 
-  toggleMenu() {
+  toggleMenu = () => {
     this.setState({
       open: !this.state.open,
     })
   }
 
-  handleSelect(selected) {
+  handleSelect = selected => {
     this.setState({
       open: false,
       selected,
@@ -30,7 +30,7 @@ class Menu extends React.Component {
     this.props.onChange(selected)
   }
 
-  optionLabel(value) {
+  optionLabel = value => {
     const { options } = this.props
 
     return options.find(option => option.value === value).label

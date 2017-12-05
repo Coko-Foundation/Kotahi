@@ -17,7 +17,7 @@ class Editor extends React.Component {
     }
   }
 
-  createEditorView(node) {
+  createEditorView = node => {
     const { state } = this.state
 
     this.view = new EditorView(node, {
@@ -44,7 +44,7 @@ class Editor extends React.Component {
     }
   }
 
-  dispatchTransaction(transaction) {
+  dispatchTransaction = transaction => {
     const state = this.view.state.apply(transaction)
     this.view.updateState(state)
     this.setState({ state })

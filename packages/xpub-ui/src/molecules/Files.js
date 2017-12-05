@@ -12,11 +12,11 @@ class Files extends React.Component {
     }
   }
 
-  handleClick() {
+  handleClick = () => {
     this.fileInput.click()
   }
 
-  handleChange(event) {
+  handleChange = event => {
     const { uploads } = this.state
 
     Array.from(event.target.files).forEach(file => {
@@ -29,7 +29,7 @@ class Files extends React.Component {
     this.setState({ uploads })
   }
 
-  handleUploadedFile({ file, url }) {
+  handleUploadedFile = ({ file, url }) => {
     const values = this.state.values.concat({
       name: file.name,
       url,

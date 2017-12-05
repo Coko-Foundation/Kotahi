@@ -4,13 +4,9 @@ import React from 'react'
 // TODO: make this a HOC for <UploadingFile>?
 
 class Upload extends React.Component {
-  constructor(props) {
-    super(props)
-
-    this.state = {
-      progress: 0,
-      error: undefined,
-    }
+  state = {
+    error: undefined,
+    progress: 0,
   }
 
   componentDidMount() {
@@ -23,7 +19,7 @@ class Upload extends React.Component {
   }
 
   // TODO: 'progress' event not being fired often enough?
-  handleProgress(event) {
+  handleProgress = event => {
     if (!event.lengthComputable) return
 
     this.setState({
@@ -31,7 +27,7 @@ class Upload extends React.Component {
     })
   }
 
-  handleLoad(event) {
+  handleLoad = event => {
     if (this.props.request.status === 200) {
       this.setState({
         progress: 1,
@@ -48,13 +44,13 @@ class Upload extends React.Component {
     }
   }
 
-  handleError(event) {
+  handleError = event => {
     this.setState({
       error: 'There was an error',
     })
   }
 
-  handleAbort(event) {
+  handleAbort = event => {
     this.setState({
       error: 'The upload was cancelled',
     })

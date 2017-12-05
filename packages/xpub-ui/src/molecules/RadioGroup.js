@@ -10,7 +10,7 @@ class RadioGroup extends React.Component {
     }
   }
 
-  handleChange(event) {
+  handleChange = event => {
     const { value } = event.target
     this.setState({ value })
     this.props.onChange(value)

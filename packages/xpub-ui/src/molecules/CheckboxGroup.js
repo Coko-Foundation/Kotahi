@@ -10,7 +10,7 @@ class CheckboxGroup extends React.Component {
     }
   }
 
-  handleChange(event) {
+  handleChange = event => {
     const { values } = this.state
 
     const { value } = event.target

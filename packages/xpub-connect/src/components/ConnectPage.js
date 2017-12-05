@@ -6,21 +6,17 @@ import classes from './ConnectPage.local.scss'
 
 const ConnectPage = requirements => WrappedComponent => {
   class ConnectedComponent extends React.Component {
-    constructor(props) {
-      super(props)
-
-      this.state = {
-        complete: false,
-        error: null,
-        fetching: false,
-      }
+    state = {
+      complete: false,
+      error: null,
+      fetching: false,
     }
 
-    componentDidMount() {
+    componentDidMount = () => {
       this.fetch(this.props)
     }
 
-    componentWillReceiveProps(nextProps) {
+    componentWillReceiveProps = nextProps => {
       this.fetch(nextProps)
     }
 
