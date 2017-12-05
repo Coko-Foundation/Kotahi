@@ -9,8 +9,8 @@ install:
       - node_modules
       - packages/*/node_modules
 
-#lint:
-#  script: npm run lint
+lint:
+ script: npm run lint
 
 test:
   script: npm run test
