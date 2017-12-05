@@ -2,18 +2,18 @@ import React from 'react'
 import Checkbox from '../atoms/Checkbox'
 
 class CheckboxGroup extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
-      values: props.value || []
+      values: props.value || [],
     }
   }
 
   handleChange = event => {
     const { values } = this.state
 
-    const value = event.target.value
+    const { value } = event.target
 
     if (event.target.checked) {
       values.push(value)
@@ -26,7 +26,7 @@ class CheckboxGroup extends React.Component {
     this.props.onChange(values)
   }
 
-  render () {
+  render() {
     const { inline, name, options, required } = this.props
     const { values } = this.state
 
@@ -34,14 +34,15 @@ class CheckboxGroup extends React.Component {
       <div>
         {options.map(option => (
           <Checkbox
-            key={option.value}
-            name={name}
-            required={required}
-            inline={inline}
-            value={option.value}
-            label={option.label}
             checked={values.includes(option.value)}
-            onChange={this.handleChange}/>
+            inline={inline}
+            key={option.value}
+            label={option.label}
+            name={name}
+            onChange={this.handleChange}
+            required={required}
+            value={option.value}
+          />
         ))}
       </div>
     )

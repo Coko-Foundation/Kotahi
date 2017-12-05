@@ -6,11 +6,11 @@ import baseClasses from 'prosemirror-view/style/prosemirror.css'
 import classes from './Editor.local.css'
 
 class Viewer extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
-      state: EditorState.create(props.options)
+      state: EditorState.create(props.options),
     }
   }
 
@@ -21,17 +21,13 @@ class Viewer extends React.Component {
       state,
       dispatchTransaction: () => false,
       attributes: {
-        class: classnames(baseClasses.ProseMirror, classes.ProseMirror)
-      }
+        class: classnames(baseClasses.ProseMirror, classes.ProseMirror),
+      },
     })
   }
 
-  render () {
-    return (
-      <div
-        ref={this.createEditorView}
-      />
-    )
+  render() {
+    return <div ref={this.createEditorView} />
   }
 }
 

@@ -9,13 +9,20 @@ import ReviewMetadata from '../metadata/ReviewMetadata'
 import Decision from './Decision'
 import Tabs from '../tabs/Tabs'
 
-const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit, uploadFile }) => {
+const DecisionLayout = ({
+  project,
+  versions,
+  currentVersion,
+  valid,
+  handleSubmit,
+  uploadFile,
+}) => {
   const decisionSections = []
   const editorSections = []
 
   versions.forEach(version => {
     // TODO: allow multiple decisions, e.g. appeals
-    const decision = version.decision
+    const { decision } = version
 
     if (decision && decision.submitted) {
       const submittedMoment = moment(decision.submitted)
@@ -23,29 +30,28 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
       const label = submittedMoment.format('YYYY-MM-DD')
 
       decisionSections.push({
-        key,
-        label,
         content: (
           <div>
-            <ReviewMetadata version={version}/>
-            <DecisionReviews version={version}/>
-            <Decision decision={decision}/>
+            <ReviewMetadata version={version} />
+            <DecisionReviews version={version} />
+            <Decision decision={decision} />
           </div>
         ),
+        key,
+        label,
       })
 
       editorSections.push({
+        content: (
+          <SimpleEditor content={version.source} layout="bare" readOnly />
+        ),
         key,
         label,
-        content: <SimpleEditor
-          content={version.source}
-          layout="bare"
-          readOnly={true}/>
       })
     }
   }, [])
 
-  const decision = currentVersion.decision
+  const { decision } = currentVersion
 
   if (!decision || !decision.submitted) {
     const submittedMoment = moment()
@@ -53,30 +59,28 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
     const label = submittedMoment.format('YYYY-MM-DD')
 
     decisionSections.push({
-      key,
-      label,
       content: (
         <div>
-          <ReviewMetadata
-            version={currentVersion}/>
-          <DecisionReviews
-            version={currentVersion}/>
+          <ReviewMetadata version={currentVersion} />
+          <DecisionReviews version={currentVersion} />
           <DecisionForm
             decision={decision}
-            valid={valid}
             handleSubmit={handleSubmit}
-            uploadFile={uploadFile}/>
+            uploadFile={uploadFile}
+            valid={valid}
+          />
         </div>
-      )
+      ),
+      key,
+      label,
     })
 
     editorSections.push({
+      content: (
+        <SimpleEditor content={currentVersion.source} layout="bare" readOnly />
+      ),
       key,
       label,
-      content: <SimpleEditor
-        content={currentVersion.source}
-        layout="bare"
-        readOnly={true}/>
     })
   }
 
@@ -84,16 +88,18 @@ const DecisionLayout = ({ project, versions, currentVersion, valid, handleSubmit
     <div className={classes.root}>
       <div className={classes.column}>
         <Tabs
-          sections={editorSections}
           activeKey={editorSections[editorSections.length - 1].key}
-          title="Versions"/>
+          sections={editorSections}
+          title="Versions"
+        />
       </div>
 
       <div className={classes.column}>
         <Tabs
-          sections={decisionSections}
           activeKey={decisionSections[decisionSections.length - 1].key}
-          title="Versions"/>
+          sections={decisionSections}
+          title="Versions"
+        />
       </div>
     </div>
   )

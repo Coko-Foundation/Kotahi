@@ -17,40 +17,38 @@ module.exports = [
     target: 'web',
     context: path.join(__dirname, '..', 'app'),
     entry: {
-      app: ['./app']
+      app: ['./app'],
     },
     output: {
       path: path.join(__dirname, '..', '_build', 'assets'),
       filename: '[name].[hash].js',
-      publicPath: '/assets/'
+      publicPath: '/assets/',
     },
     module: {
-      rules
+      rules,
     },
     resolve,
     plugins: [
       new HtmlWebpackPlugin({
         title: 'xpub',
         template: '../app/index.ejs', // Load a custom template
-        inject: 'body' // Inject all scripts into the body
+        inject: 'body', // Inject all scripts into the body
       }),
       new webpack.DefinePlugin({
-        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV)
+        'process.env.NODE_ENV': JSON.stringify(process.env.NODE_ENV),
       }),
       new webpack.ContextReplacementPlugin(/./, __dirname, {
         [config.authsome.mode]: config.authsome.mode,
-        [config.validations]: config.validations
+        [config.validations]: config.validations,
       }),
       new ExtractTextPlugin('styles/main.css'),
-      new CopyWebpackPlugin([
-        { from: '../static' }
-      ]),
+      new CopyWebpackPlugin([{ from: '../static' }]),
       new webpack.optimize.AggressiveMergingPlugin(),
       new webpack.optimize.OccurrenceOrderPlugin(),
     ],
     node: {
       fs: 'empty',
-      __dirname: true
-    }
-  }
+      __dirname: true,
+    },
+  },
 ]

@@ -4,27 +4,37 @@ import { connect } from 'react-redux'
 import { Route, Redirect, withRouter } from 'react-router-dom'
 import { getCurrentUser } from '../redux/currentUser'
 
-const PrivateRoute = ({ currentUser, getCurrentUser, component: Component, ...rest }) => (
-  <Route {...rest} render={props => {
-    if (!currentUser.isFetched) {
-      if (!currentUser.isFetching) {
-        getCurrentUser()
+const PrivateRoute = ({
+  currentUser,
+  getCurrentUser,
+  component: Component,
+  ...rest
+}) => (
+  <Route
+    {...rest}
+    render={props => {
+      if (!currentUser.isFetched) {
+        if (!currentUser.isFetching) {
+          getCurrentUser()
+        }
+
+        return <div>loading…</div>
       }
 
-      return <div>loading…</div>
-    }
+      if (!currentUser.isAuthenticated) {
+        return (
+          <Redirect
+            to={{
+              pathname: '/login',
+              state: { from: props.location },
+            }}
+          />
+        )
+      }
 
-    if (!currentUser.isAuthenticated) {
-      return (
-        <Redirect to={{
-          pathname: '/login',
-          state: { from: props.location }
-        }}/>
-      )
-    }
-
-    return <Component {...props}/>
-  }}/>
+      return <Component {...props} />
+    }}
+  />
 )
 
 export default compose(
@@ -34,7 +44,7 @@ export default compose(
       currentUser: state.currentUser,
     }),
     {
-      getCurrentUser
-    }
-  )
+      getCurrentUser,
+    },
+  ),
 )(PrivateRoute)

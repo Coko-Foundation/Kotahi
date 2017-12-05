@@ -11,79 +11,77 @@ export const GET_CURRENT_USER_FAILURE = 'GET_CURRENT_USER_FAILURE'
 /* actions */
 
 export const getCurrentUserRequest = () => ({
-  type: GET_CURRENT_USER_REQUEST
+  type: GET_CURRENT_USER_REQUEST,
 })
 
 export const getCurrentUserSuccess = user => ({
   type: GET_CURRENT_USER_SUCCESS,
-  user
+  user,
 })
 
 export const getCurrentUserFailure = error => ({
+  error,
   type: GET_CURRENT_USER_FAILURE,
-  error
 })
 
 export const getCurrentUser = () => dispatch => {
   dispatch(getCurrentUserRequest())
   return api.get('/users/authenticate').then(
-    user => {
-      return dispatch(getCurrentUserSuccess(user))
-    },
+    user => dispatch(getCurrentUserSuccess(user)),
     error => {
       dispatch(getCurrentUserFailure(error))
       throw error
-    }
+    },
   )
 }
 
 /* reducer */
 
 const initialState = {
-  isFetching: false,
-  isFetched: false,
+  error: null,
   isAuthenticated: false,
+  isFetched: false,
+  isFetching: false,
   user: null,
-  error: null
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case GET_CURRENT_USER_REQUEST:
       return {
-        isFetching: true,
-        isFetched: false,
-        isAuthenticated: false,
-        user: null,
         error: null,
+        isAuthenticated: false,
+        isFetched: false,
+        isFetching: true,
+        user: null,
       }
 
     case GET_CURRENT_USER_FAILURE:
       return {
-        isFetching: false,
-        isFetched: true,
+        error: action.error,
         isAuthenticated: false,
+        isFetched: true,
+        isFetching: false,
         user: null,
-        error: action.error
       }
 
     case GET_CURRENT_USER_SUCCESS:
       return {
-        isFetching: false,
-        isFetched: true,
+        error: null,
         isAuthenticated: true,
+        isFetched: true,
+        isFetching: false,
         user: action.user,
-        error: null
       }
 
     // clear the current user on logout
     case LOGOUT_SUCCESS:
       return {
-        isFetching: false,
-        isFetched: false,
-        isAuthenticated: false,
-        user: null,
         error: null,
+        isAuthenticated: false,
+        isFetched: false,
+        isFetching: false,
+        user: null,
       }
 
     default:

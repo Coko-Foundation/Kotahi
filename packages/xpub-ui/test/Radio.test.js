@@ -9,16 +9,14 @@ const props = {
   label: 'TestLabel',
   name: 'TestName',
   required: true,
-  value: 'TestValue'
+  value: 'TestValue',
 }
 
 const wrapper = shallow(<Radio {...props} />)
 
 describe('Radio', () => {
   test('Snapshot', () => {
-    const tree = renderer.create(
-      <Radio {...props} />
-    ).toJSON()
+    const tree = renderer.create(<Radio {...props} />).toJSON()
     expect(tree).toMatchSnapshot()
   })
 

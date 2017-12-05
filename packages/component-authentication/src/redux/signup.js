@@ -15,12 +15,12 @@ export const signupRequest = () => ({
 
 export const signupSuccess = user => ({
   type: SIGNUP_SUCCESS,
-  user
+  user,
 })
 
 export const signupFailure = error => ({
+  error,
   type: SIGNUP_FAILURE,
-  error
 })
 
 export const signup = credentials => dispatch => {
@@ -33,35 +33,35 @@ export const signup = credentials => dispatch => {
     error => {
       dispatch(signupFailure(error))
       throw error
-    }
+    },
   )
 }
 
 /* reducer */
 
 const initialState = {
-  isFetching: false,
   error: null,
+  isFetching: false,
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case SIGNUP_REQUEST:
       return {
+        error: null,
         isFetching: true,
-        error: null
       }
 
     case SIGNUP_SUCCESS:
       return {
+        error: null,
         isFetching: false,
-        error: null
       }
 
     case SIGNUP_FAILURE:
       return {
+        error: action.error,
         isFetching: false,
-        error: action.error
       }
 
     default:

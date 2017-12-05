@@ -1,32 +1,21 @@
 .dropzone {
   border: none;
-  display: inline-block;
   cursor: pointer;
+  display: inline-block;
 }
 
 .root {
-  font-weight: 200;
   display: flex;
-  padding-top: 10px;
+  font-weight: 200;
   padding-bottom: 10px;
+  padding-top: 10px;
 }
 
 .icon {
-  display: inline-flex;
-  height: 100%;
   align-items: center;
   color: var(--color-primary);
-}
-
-.root:hover .idle {
-  circle {
-    fill: var(--color-primary);
-    stroke: var(--color-primary);
-  }
-
-  line {
-    stroke: white;
-  }
+  display: inline-flex;
+  height: 100%;
 }
 
 .converting {
@@ -39,9 +28,9 @@
   }
 
   circle {
-    stroke-dashoffset: 0;
-    stroke-dasharray: 16;
     animation: spin 2s infinite linear;
+    stroke-dasharray: 16;
+    stroke-dashoffset: 0;
     stroke-linejoin: round;
   }
 }
@@ -51,10 +40,10 @@
 }
 
 .info {
-  text-transform: uppercase;
+  color: var(--color-primary);
   font-size: 2em;
   font-weight: 400;
-  color: var(--color-primary);
+  text-transform: uppercase;
 }
 
 .error {
@@ -68,24 +57,35 @@
   }
 
   .icon line {
+    stroke: var(--color-danger);
     transform: rotate(45deg) scale(2.8);
     transform-origin: 50% 50%;
-    stroke: var(--color-danger);
+  }
+}
+
+.root:hover .idle {
+  circle {
+    fill: var(--color-primary);
+    stroke: var(--color-primary);
+  }
+
+  line {
+    stroke: white;
   }
 }
 
 .complete {
   .icon {
     polyline {
-      stroke-dashoffset: 0;
-      stroke-dasharray: 100;
       animation: dash 1.35s linear;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 0;
     }
 
     path {
-      stroke-dashoffset: 0;
-      stroke-dasharray: 100;
       animation: dash 0.75s linear;
+      stroke-dasharray: 100;
+      stroke-dashoffset: 0;
     }
   }
 }

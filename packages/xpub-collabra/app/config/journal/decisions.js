@@ -1,22 +1,23 @@
 export default {
   accept: {
-    label: 'Accept',
     color: 'green',
-    message: 'The submission has been accepted for publication'
-  },
-  minor: {
-    label: 'Minor revisions',
-    color: 'orange',
-    message: 'The submission will be accepted for publication after minor changes'
+    label: 'Accept',
+    message: 'The submission has been accepted for publication',
   },
   major: {
-    label: 'Major revisions',
     color: 'yellow',
-    message: 'The requested changes must be made before submission for review'
+    label: 'Major revisions',
+    message: 'The requested changes must be made before submission for review',
+  },
+  minor: {
+    color: 'orange',
+    label: 'Minor revisions',
+    message:
+      'The submission will be accepted for publication after minor changes',
   },
   reject: {
-    label: 'Reject',
     color: 'red',
-    message: 'The submission is not acceptable for publication'
+    label: 'Reject',
+    message: 'The submission is not acceptable for publication',
   },
 }

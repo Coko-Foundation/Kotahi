@@ -7,16 +7,20 @@ import classes from './DecisionReviews.local.scss'
 
 const DecisionReviews = ({ journal, version }) => (
   <div className={classes.root}>
-    {version.reviewers && version.reviewers
-      .filter(review => review.submitted)
-      .map((review, index) => (
-      <div className={classes.review} key={review.id}>
-        <DecisionReview review={review} reviewer={{
-          name: null,
-          ordinal: index + 1
-        }}/>
-      </div>
-    ))}
+    {version.reviewers &&
+      version.reviewers
+        .filter(review => review.submitted)
+        .map((review, index) => (
+          <div className={classes.review} key={review.id}>
+            <DecisionReview
+              review={review}
+              reviewer={{
+                name: null,
+                ordinal: index + 1,
+              }}
+            />
+          </div>
+        ))}
   </div>
 )
 

@@ -4,15 +4,10 @@ import { actions } from 'pubsweet-client'
 import { ConnectPage } from 'xpub-connect'
 import { selectCurrentVersion } from 'xpub-selectors'
 
-export default Component => (
+export default Component =>
   compose(
-    ConnectPage(({project}) => [
-      actions.getFragments({id: project.id})
-    ]),
-    connect(
-      (state, {project}) => ({
-        version: selectCurrentVersion(state, project)
-      })
-    )
+    ConnectPage(({ project }) => [actions.getFragments({ id: project.id })]),
+    connect((state, { project }) => ({
+      version: selectCurrentVersion(state, project),
+    })),
   )(Component)
-)
