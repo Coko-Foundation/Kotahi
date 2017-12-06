@@ -19,6 +19,7 @@ const MenuBar = ({ title, menu, state, dispatch }) => {
       key={key}
       onMouseDown={handle(item.run)}
       title={item.title}
+      type="button"
     >
       {item.content}
     </button>
