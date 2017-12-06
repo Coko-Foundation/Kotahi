@@ -45,29 +45,37 @@ class Files extends React.Component {
   }
 
   render() {
-    const { name, buttonText, uploadingFile, uploadedFile } = this.props
+    const {
+      name,
+      buttonText,
+      uploadingFile,
+      uploadedFile,
+      readonly,
+    } = this.props
     const { values, uploads } = this.state
 
     return (
       <div className={classes.root}>
-        <div className={classes.upload}>
-          <button
-            className={classes.attach}
-            onClick={() => this.fileInput.click()}
-            type="button"
-          >
-            {buttonText}
-          </button>
+        {!readonly && (
+          <div className={classes.upload}>
+            <button
+              className={classes.attach}
+              onClick={() => this.fileInput.click()}
+              type="button"
+            >
+              {buttonText}
+            </button>
 
-          <input
-            className={classes.input}
-            multiple
-            name={name}
-            onChange={this.handleChange}
-            ref={input => (this.fileInput = input)}
-            type="file"
-          />
-        </div>
+            <input
+              className={classes.input}
+              multiple
+              name={name}
+              onChange={this.handleChange}
+              ref={input => (this.fileInput = input)}
+              type="file"
+            />
+          </div>
+        )}
 
         <div className={classes.files}>
           {uploads &&

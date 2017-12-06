@@ -10,6 +10,7 @@ const Checkbox = ({
   checked,
   required,
   onChange,
+  readonly,
 }) => (
   <label
     className={classnames(classes.root, {
@@ -19,6 +20,7 @@ const Checkbox = ({
     <input
       checked={checked || false}
       className={classes.input}
+      disabled={readonly}
       name={name}
       onChange={onChange}
       required={required}

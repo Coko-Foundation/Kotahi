@@ -13,6 +13,7 @@ exports[`Yes or No Snapshot 1`] = `
     <input
       checked={false}
       className="input"
+      disabled={undefined}
       name="TestName"
       onChange={[Function]}
       required={undefined}
@@ -46,6 +47,7 @@ exports[`Yes or No Snapshot 1`] = `
     <input
       checked={false}
       className="input"
+      disabled={undefined}
       name="TestName"
       onChange={[Function]}
       required={undefined}

@@ -12,6 +12,7 @@ exports[`Radio Snapshot 1`] = `
   <input
     checked={false}
     className="input"
+    disabled={undefined}
     name="TestName"
     onChange={undefined}
     required={true}

@@ -37,7 +37,12 @@ class Menu extends React.Component {
   }
 
   render() {
-    const { label, options, placeholder = 'Choose in the list' } = this.props
+    const {
+      label,
+      options,
+      placeholder = 'Choose in the list',
+      readonly,
+    } = this.props
     const { open, selected } = this.state
 
     return (
@@ -50,18 +55,22 @@ class Menu extends React.Component {
 
         <div className={classes.main}>
           <div className={classes.openerContainer}>
-            <button
-              className={classes.opener}
-              onClick={this.toggleMenu}
-              type="button"
-            >
-              {selected ? (
-                <span>{this.optionLabel(selected)}</span>
-              ) : (
-                <span className={classes.placeholder}>{placeholder}</span>
-              )}
-              <span className={classes.arrow}>▼</span>
-            </button>
+            {readonly ? (
+              <span>{this.optionLabel(selected)}</span>
+            ) : (
+              <button
+                className={classes.opener}
+                onClick={this.toggleMenu}
+                type="button"
+              >
+                {selected ? (
+                  <span>{this.optionLabel(selected)}</span>
+                ) : (
+                  <span className={classes.placeholder}>{placeholder}</span>
+                )}
+                <span className={classes.arrow}>▼</span>
+              </button>
+            )}
           </div>
 
           <div className={classes.optionsContainer}>

@@ -48,12 +48,13 @@ const ArticleSectionInput = journal => input => (
   <CheckboxGroup options={journal.articleSections} {...input} />
 )
 
-const Metadata = ({ journal }) => (
+const Metadata = ({ journal, readonly }) => (
   <FormSection name="metadata">
     <div className={classes.section} id="metadata.title">
       <ValidatedField
         component={TitleInput}
         name="title"
+        readonly={readonly}
         required
         validate={[minChars20, maxChars500]}
       />
@@ -63,6 +64,7 @@ const Metadata = ({ journal }) => (
       <ValidatedField
         component={AbstractInput}
         name="abstract"
+        readonly={readonly}
         required
         validate={[minChars100, maxChars5000]}
       />
@@ -76,6 +78,7 @@ const Metadata = ({ journal }) => (
         format={join()}
         name="authors"
         parse={split()}
+        readonly={readonly}
         required
         validate={[minSize1]}
       />
@@ -89,6 +92,7 @@ const Metadata = ({ journal }) => (
         format={join()}
         name="keywords"
         parse={split()}
+        readonly={readonly}
         required
         validate={[minSize1]}
       />
@@ -100,6 +104,7 @@ const Metadata = ({ journal }) => (
       <ValidatedField
         component={ArticleTypeInput(journal)}
         name="articleType"
+        readonly={readonly}
         required
         validate={[required]}
       />
@@ -111,6 +116,7 @@ const Metadata = ({ journal }) => (
       <ValidatedField
         component={ArticleSectionInput(journal)}
         name="articleSection"
+        readonly={readonly}
         required
         validate={[required]}
       />

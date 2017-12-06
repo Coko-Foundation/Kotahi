@@ -54,6 +54,7 @@ class HtmlEditor extends React.Component {
       placeholder,
       placeholderClassName,
       title,
+      readonly,
     } = this.props
 
     return (
@@ -64,6 +65,7 @@ class HtmlEditor extends React.Component {
         options={options}
         placeholder={placeholder}
         placeholderClassName={placeholderClassName}
+        readonly={readonly}
         title={title}
       />
     )
