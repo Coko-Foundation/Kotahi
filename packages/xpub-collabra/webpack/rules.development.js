@@ -1,41 +1,8 @@
-const path = require('path')
-const components = require('../config/components.json')
-
-const requireComponentsString = components
-  .filter(name => {
-    const component = require(name)
-
-    // "client" or "frontend" for backwards compatibility
-    return component.client || component.frontend
-  })
-  .map(name => `require('${name}')`)
-  .join(', ')
-
-// paths that use ES6 scripts and CSS modules
-// TODO: compile components to ES5 for distribution
-const include = [
-  path.join(__dirname, '..', 'app'),
-  /pubsweet-[^/]+\/src/,
-  /xpub-[^/]+\/src/,
-  /component-[^/]+\/src/,
-  /wax-[^/]+\/src/,
-  /@pubsweet\/[^/]+\/src/,
-]
+const include = require('./babel-includes')
+const stringReplaceRule = require('./string-replace')
 
 module.exports = [
-  // replace "PUBSWEET_COMPONENTS" string in pubsweet-client
-  {
-    test: /\.js$/,
-    enforce: 'pre',
-    // include: /pubsweet-client\/src\/components/,
-    loader: 'string-replace-loader',
-    options: {
-      search: 'PUBSWEET_COMPONENTS',
-      replace: `[${requireComponentsString}]`,
-    },
-  },
-
-  // loaders
+  stringReplaceRule,
   {
     oneOf: [
       // ES6 JS
@@ -101,12 +68,6 @@ module.exports = [
           'css-loader', // TODO: importLoaders: 1?
           'sass-loader',
         ],
-      },
-
-      // HTML (needed?)
-      {
-        test: /\.html$/,
-        use: 'html-loader',
       },
 
       // files

@@ -3,9 +3,8 @@ import classnames from 'classnames'
 import classes from './Radio.local.scss'
 
 const inputGradient = color =>
-  `radial-gradient(closest-corner at center, ${color} 0%, ${
-    color
-  } 45%, white 45%, white 100%)`
+  `radial-gradient(closest-corner at center, ${color} 0%, ${color} 45%,
+    white 45%, white 100%)`
 
 const Radio = ({
   className,
