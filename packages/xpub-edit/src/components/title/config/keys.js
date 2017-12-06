@@ -6,11 +6,11 @@ import { baseKeymap, toggleMark, chainCommands } from 'prosemirror-commands'
 import schema from './schema'
 
 const keys = {
+  Backspace: undoInputRule,
+  'Mod-i': toggleMark(schema.marks.italic),
+  'Mod-y': redo,
   'Mod-z': undo,
   'Shift-Mod-z': redo,
-  'Backspace': undoInputRule,
-  'Mod-y': redo,
-  'Mod-i': toggleMark(schema.marks.italic)
 }
 
 Object.keys(baseKeymap).forEach(key => {

@@ -6,11 +6,11 @@ import './Tags.scss'
 // TODO: allow tags to be edited
 
 class Tags extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
-      tags: props.value || []
+      tags: props.value || [],
     }
   }
 
@@ -34,23 +34,24 @@ class Tags extends React.Component {
     this.props.onChange(tags)
   }
 
-  render () {
+  render() {
     const { tags } = this.state
     const { name, suggestions, placeholder } = this.props
 
     return (
       <ReactTags
-        name={name}
-        tags={tags}
-        suggestions={suggestions}
-        placeholder={placeholder}
+        allowNew
         autofocus={false}
-        allowNew={true}
         // TODO: enable these when react-tag-autocomplete update is released
         // delimiters={[]}
         // delimiterChars={[',', ';']}
+        handleAddition={this.handleAddition}
         handleDelete={this.handleDelete}
-        handleAddition={this.handleAddition}/>
+        name={name}
+        placeholder={placeholder}
+        suggestions={suggestions}
+        tags={tags}
+      />
     )
   }
 }

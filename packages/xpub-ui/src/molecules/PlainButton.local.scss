@@ -1,17 +1,17 @@
 .root.root {
   background: none;
-  font-style: italic;
-  text-transform: none;
-  padding: 0;
-  letter-spacing: 0;
   border: 0;
   border-bottom: 2px solid #777;
+  font-style: italic;
+  letter-spacing: 0;
+  padding: 0;
+  text-transform: none;
 }
 
 .root.root:hover,
 .root.root:focus {
-  border: 0;
   background: transparent;
+  border: 0;
   border-bottom: 2px solid var(--color-primary);
   color: var(--color-primary);
 }

@@ -6,31 +6,27 @@ import { withJournal } from 'xpub-journal'
 import { required } from 'xpub-validators'
 import classes from './Declarations.local.scss'
 
-const DeclarationInput = input => (
-  <YesOrNo inline={true} {...input}/>
+const DeclarationInput = input => <YesOrNo inline {...input} />
+
+const Declarations = ({ journal }) => (
+  <FormSection name="declarations">
+    {journal.declarations.questions.map(question => (
+      <div
+        className={classnames(classes.section, classes.spread)}
+        id={`declarations.${question.id}`}
+        key={question.id}
+      >
+        <div className={classes.legend}>{question.legend}</div>
+
+        <ValidatedField
+          component={DeclarationInput}
+          name={question.id}
+          required
+          validate={[required]}
+        />
+      </div>
+    ))}
+  </FormSection>
 )
-
-const Declarations = ({ journal }) => {
-  return (
-    <FormSection name="declarations">
-      {journal.declarations.questions.map(question => (
-        <div
-          key={question.id}
-          id={`declarations.${question.id}`}
-          className={classnames(classes.section, classes.spread)}>
-          <div className={classes.legend}>
-            {question.legend}
-          </div>
-
-          <ValidatedField
-            name={question.id}
-            required
-            validate={[required]}
-            component={DeclarationInput}/>
-        </div>
-      ))}
-    </FormSection>
-  )
-}
 
 export default withJournal(Declarations)

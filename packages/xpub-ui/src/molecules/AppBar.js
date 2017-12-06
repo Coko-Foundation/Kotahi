@@ -6,10 +6,14 @@ import Icon from '../atoms/Icon'
 
 const AppBar = ({ brandLink, brandName, loginLink, logoutLink, userName }) => (
   <div className={classes.root}>
-    <Link to={brandLink || '/'}
-          className={classnames(classes.link, classes.logo)}>{brandName}</Link>
+    <Link
+      className={classnames(classes.link, classes.logo)}
+      to={brandLink || '/'}
+    >
+      {brandName}
+    </Link>
 
-    <div>
+    <div className={classes.actions}>
       {userName && (
         <span className={classes.item}>
           <Icon size={16}>user</Icon>
@@ -18,11 +22,16 @@ const AppBar = ({ brandLink, brandName, loginLink, logoutLink, userName }) => (
       )}
 
       {userName ? (
-        <Link to={logoutLink}
-              className={classnames(classes.item, classes.link)}>logout</Link>
+        <Link
+          className={classnames(classes.item, classes.link)}
+          to={logoutLink}
+        >
+          logout
+        </Link>
       ) : (
-        <Link to={loginLink}
-              className={classnames(classes.item, classes.link)}>login</Link>
+        <Link className={classnames(classes.item, classes.link)} to={loginLink}>
+          login
+        </Link>
       )}
     </div>
   </div>

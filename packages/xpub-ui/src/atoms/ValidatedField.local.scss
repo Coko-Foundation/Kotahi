@@ -3,10 +3,10 @@
 }
 
 .messages {
-  margin-top: 10px;
-  font-style: italic;
   display: inline-block;
+  font-style: italic;
   margin-left: 1em;
+  margin-top: 10px;
 }
 
 .message:not(:last-child) {

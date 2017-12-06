@@ -1,29 +1,29 @@
 .root {
-  position: relative;
-  height: 100%;
-  overflow-y: hidden;
   display: flex;
   flex-direction: column;
+  height: 100%;
+  overflow-y: hidden;
+  position: relative;
 }
 
 .tabs {
+  align-items: baseline;
   display: flex;
   flex-wrap: wrap;
-  padding: 10px;
   margin-bottom: 10px;
-  align-items: baseline;
+  padding: 10px;
 }
 
 .title {
-  font-weight: 400;
   border-bottom: 1px solid #aaa;
+  font-weight: 400;
+  margin-right: -2.5em;
   padding-bottom: 4px;
   padding-right: 2em;
-  margin-right: -2.5em;
 }
 
 .content {
-  padding: 10px;
   flex: 1;
   // overflow-y: auto;
+  padding: 10px;
 }

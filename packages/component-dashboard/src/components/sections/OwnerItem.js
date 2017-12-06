@@ -8,37 +8,33 @@ import VersionTitle from './VersionTitle'
 const OwnerItem = ({ project, version, deleteProject }) => (
   <div className={classes.root}>
     <div className={classes.header}>
-      <Status status={project.status}/>
+      <Status status={project.status} />
     </div>
 
     <div className={classes.main}>
-      <VersionTitle version={version} className={classes.versionTitle}/>
+      <VersionTitle className={classes.versionTitle} version={version} />
 
       <div className={classes.links}>
         <div className={classes.link}>
-          <ProjectLink
-            project={project}
-            version={version}
-            page="submit">Submission</ProjectLink>
+          <ProjectLink page="submit" project={project} version={version}>
+            Submission
+          </ProjectLink>
         </div>
 
-        <Divider separator="|"/>
+        <Divider separator="|" />
 
         <div className={classes.link}>
-          <ProjectLink
-            project={project}
-            version={version}
-            page="manuscript">Manuscript</ProjectLink>
+          <ProjectLink page="manuscript" project={project} version={version}>
+            Manuscript
+          </ProjectLink>
         </div>
 
-        <Divider separator="|"/>
+        <Divider separator="|" />
 
         <div className={classes.link}>
-          <a onClick={() => deleteProject(project)} >Delete</a>
+          <a onClick={() => deleteProject(project)}>Delete</a>
         </div>
-
       </div>
-
     </div>
   </div>
 )

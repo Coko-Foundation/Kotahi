@@ -1,32 +1,32 @@
 export default {
-  managingEditor: [
+  handlingEditor: [
     {
-      user: 1,
-      name: "Managing Editor One"
+      name: 'Handling Editor One',
+      user: 5,
     },
     {
+      name: 'Handling Editor Two',
+      user: 6,
+    },
+  ],
+  managingEditor: [
+    {
+      name: 'Managing Editor One',
+      user: 1,
+    },
+    {
+      name: 'Managing Editor Two',
       user: 2,
-      name: "Managing Editor Two"
-    }
+    },
   ],
   seniorEditor: [
     {
+      name: 'Senior Editor One',
       user: 3,
-      name: "Senior Editor One"
     },
     {
+      name: 'Senior Editor Two',
       user: 4,
-      name: "Senior Editor Two"
-    }
-  ],
-  handlingEditor: [
-    {
-      user: 5,
-      name: "Handling Editor One"
     },
-    {
-      user: 6,
-      name: "Handling Editor Two"
-    }
-  ]
+  ],
 }

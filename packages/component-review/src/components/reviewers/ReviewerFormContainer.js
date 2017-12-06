@@ -15,44 +15,49 @@ const getProjectReviewer = (props, user) => {
 const addProjectReviewer = (props, user) => {
   const reviewer = {
     id: uuid(),
-    user: user.id
+    user: user.id,
   }
 
-  return props.updateProject({
-    id: props.project.id,
-    rev: props.project.rev,
-    reviewers: (props.project.reviewers || []).concat(reviewer)
-  }).then(() => reviewer)
+  return props
+    .updateProject({
+      id: props.project.id,
+      rev: props.project.rev,
+      reviewers: (props.project.reviewers || []).concat(reviewer),
+    })
+    .then(() => reviewer)
 }
 
 const addReviewer = (props, projectReviewer) => {
   const reviewer = {
+    events: {
+      invited: new Date().toString(),
+    },
     id: uuid(),
     reviewer: projectReviewer.id,
     status: 'invited',
-    events: {
-      invited: (new Date()).toString()
-    }
   }
 
-  return props.updateVersion(props.project, {
-    id: props.version.id,
-    rev: props.version.rev,
-    reviewers: (props.version.reviewers || []).concat(reviewer)
-  }).then(() => reviewer)
+  return props
+    .updateVersion(props.project, {
+      id: props.version.id,
+      rev: props.version.rev,
+      reviewers: (props.version.reviewers || []).concat(reviewer),
+    })
+    .then(() => reviewer)
 }
 
-const handleSubmit = props => reset => values => {
+const handleSubmit = props => reset => values =>
   // TODO: create a user account if values.user.id is null
 
-  return getProjectReviewer(props, values.user).then(projectReviewer => {
-    if (some(props.version.reviewers, { reviewer: projectReviewer.id })) {
-      throw new SubmissionError('This reviewer has already been added')
-    }
+  getProjectReviewer(props, values.user)
+    .then(projectReviewer => {
+      if (some(props.version.reviewers, { reviewer: projectReviewer.id })) {
+        throw new SubmissionError('This reviewer has already been added')
+      }
 
-    return addReviewer(props, projectReviewer)
-  }).then(() => reset())
-}
+      return addReviewer(props, projectReviewer)
+    })
+    .then(() => reset())
 
 const loadOptions = props => input => {
   const options = props.reviewerUsers
@@ -74,6 +79,6 @@ export default compose(
     onSubmit: props => handleSubmit(props),
   }),
   reduxForm({
-    form: 'reviewers'
-  })
+    form: 'reviewers',
+  }),
 )(ReviewerForm)

@@ -2,16 +2,24 @@ import React from 'react'
 import HtmlEditor from '../HtmlEditor'
 import * as options from './config'
 
-const AbstractEditor = ({ className, value, placeholder, placeholderClassName, title, onBlur, onChange }) => (
+const AbstractEditor = ({
+  className,
+  value,
+  placeholder,
+  placeholderClassName,
+  title,
+  onBlur,
+  onChange,
+}) => (
   <HtmlEditor
-    options={options}
-    value={value}
     className={className}
+    onBlur={onBlur}
+    onChange={onChange}
+    options={options}
     placeholder={placeholder}
     placeholderClassName={placeholderClassName}
     title={title}
-    onBlur={onBlur}
-    onChange={onChange}
+    value={value}
   />
 )
 

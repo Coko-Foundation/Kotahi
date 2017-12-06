@@ -2,17 +2,18 @@ import React from 'react'
 import classnames from 'classnames'
 import { EditorState } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
-import MenuBar from './MenuBar'
 import baseClasses from 'prosemirror-view/style/prosemirror.css'
+
+import MenuBar from './MenuBar'
 import classes from './Editor.local.css'
 import decorations from '../decorations'
 
 class Editor extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
-      state: EditorState.create(props.options)
+      state: EditorState.create(props.options),
     }
   }
 
@@ -25,16 +26,22 @@ class Editor extends React.Component {
       dispatchTransaction: this.dispatchTransaction,
       decorations: decorations({
         props: this.props,
-        classes
+        classes,
       }),
       attributes: {
-        class: classnames(baseClasses.ProseMirror, classes.ProseMirror, className)
+        class: classnames(
+          baseClasses.ProseMirror,
+          classes.ProseMirror,
+          className,
+        ),
       },
       handleDOMEvents: {
-        blur: this.props.onBlur ? view => {
-          this.props.onBlur(view.state.doc.content)
-        } : null
-      }
+        blur: this.props.onBlur
+          ? view => {
+              this.props.onBlur(view.state.doc.content)
+            }
+          : null,
+      },
     })
 
     if (this.props.autoFocus) {
@@ -49,7 +56,7 @@ class Editor extends React.Component {
     this.props.onChange(state.doc.content)
   }
 
-  render () {
+  render() {
     const { options: { menu }, title } = this.props
     const { state } = this.state
 
@@ -57,16 +64,14 @@ class Editor extends React.Component {
       <div>
         {menu && (
           <MenuBar
-            menu={menu}
-            title={title}
-            state={state}
             dispatch={this.dispatchTransaction}
+            menu={menu}
+            state={state}
+            title={title}
           />
         )}
 
-        <div
-          ref={this.createEditorView}
-        />
+        <div ref={this.createEditorView} />
       </div>
     )
   }

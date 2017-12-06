@@ -1,7 +1,7 @@
 .root {
-  display: flex;
   align-items: center;
   cursor: pointer;
+  display: flex;
   transition: all 2s;
 }
 
@@ -20,10 +20,10 @@
 /* label text */
 
 .label {
-  font-size: 1em;
-  font-family: inherit;
-  font-style: italic;
   display: inline-block;
+  font-family: inherit;
+  font-size: 1em;
+  font-style: italic;
   letter-spacing: 1px;
 }
 
@@ -40,17 +40,17 @@
 /* pseudo-input */
 
 .pseudoInput {
-  transition: border 0.5s ease, background-size 0.3s ease;
+  background-size: 0;
+  border-color: transparent;
+  border-radius: 10px;
+  box-shadow: 0 0 0 1px;
   content: " ";
   display: inline-block;
+  height: 10px;
+  margin-right: 0.3em;
+  transition: border 0.5s ease, background-size 0.3s ease;
   vertical-align: center;
   width: 10px;
-  height: 10px;
-  border-color: transparent;
-  box-shadow: 0 0 0 1px;
-  border-radius: 10px;
-  background-size: 0;
-  margin-right: 0.3em;
 }
 
 .root:not(.checked):hover .pseudoInput {

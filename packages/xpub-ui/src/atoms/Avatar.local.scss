@@ -1,20 +1,20 @@
 figure {
-  width: auto;
   margin: 0 auto 2px;
   text-align: center;
+  width: auto;
 }
 
 svg {
+  height: auto;
+  max-height: 100vh;
   max-width: 100%;
   width: auto;
-  max-height: 100vh;
-  height: auto;
 }
 
 .default {
   .persona {
-    fill: var(--color-primary);
     display: block;
+    fill: var(--color-primary);
   }
 
   .check {
@@ -36,13 +36,13 @@ svg {
 
 .accepted {
   .persona {
-    fill: var(--color-primary);
     display: block;
+    fill: var(--color-primary);
   }
 
   .check {
-    fill: var(--color-primary);
     display: block;
+    fill: var(--color-primary);
   }
 
   .x {
@@ -60,8 +60,8 @@ svg {
 
 .declined {
   .persona {
-    fill: var(--color-danger);
     display: block;
+    fill: var(--color-danger);
   }
 
   .check {
@@ -69,8 +69,8 @@ svg {
   }
 
   .x {
-    fill: var(--color-danger);
     display: block;
+    fill: var(--color-danger);
   }
 
   .question-mark {
@@ -84,8 +84,8 @@ svg {
 
 .pending {
   .persona {
-    fill: var(--color-pending);
     display: block;
+    fill: var(--color-pending);
   }
 
   .check {
@@ -97,8 +97,8 @@ svg {
   }
 
   .question-mark {
-    fill: var(--color-pending);
     display: block;
+    fill: var(--color-pending);
   }
 
   .reviewer-number {
@@ -108,8 +108,8 @@ svg {
 
 .submitted {
   .persona {
-    fill: var(--color-primary);
     display: block;
+    fill: var(--color-primary);
   }
 
   .check {
@@ -125,17 +125,17 @@ svg {
   }
 
   .reviewer-number {
-    font-family: 'Fira Sans Condensed';
-    font-weight: 600;
+    fill: var(--color-primary);
+    font-family: 'Fira Sans Condensed', sans-serif;
     font-size: 50px;
     font-style: normal;
+    font-weight: 600;
     stroke: none;
-    fill: var(--color-primary);
     text-transform: uppercase;
   }
 }
 
 .fullname {
-  font-family: var(--font-reviewer);
   color: red;
+  font-family: var(--font-reviewer);
 }

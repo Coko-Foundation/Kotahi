@@ -11,22 +11,22 @@ const MenuBar = ({ title, menu, state, dispatch }) => {
 
   const Button = (item, key) => (
     <button
-      key={key}
       className={classnames({
         [classes.button]: true,
-        [classes.active]: item.active && item.active(state)
+        [classes.active]: item.active && item.active(state),
       })}
-      title={item.title}
       disabled={item.enable && !item.enable(state)}
+      key={key}
       onMouseDown={handle(item.run)}
-    >{item.content}</button>
+      title={item.title}
+    >
+      {item.content}
+    </button>
   )
 
   return (
     <div className={classes.toolbar}>
-      {title && (
-        <div className={classes.title}>{title}</div>
-      )}
+      {title && <div className={classes.title}>{title}</div>}
 
       {menu.marks && map(menu.marks, Button)}
       {menu.blocks && map(menu.blocks, Button)}

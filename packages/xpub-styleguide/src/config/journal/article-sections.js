@@ -1,30 +1,30 @@
 export default [
   {
     value: 'cognitive-psychology',
-    label: 'Cognitive Psychology'
+    label: 'Cognitive Psychology',
   },
   {
     value: 'social-psychology',
-    label: 'Social Psychology'
+    label: 'Social Psychology',
   },
   {
     value: 'personality-psychology',
-    label: 'Personality Psychology'
+    label: 'Personality Psychology',
   },
   {
     value: 'developmental-psychology',
-    label: 'Developmental Psychology'
+    label: 'Developmental Psychology',
   },
   {
     value: 'clinical-psychology',
-    label: 'Clinical Psychology'
+    label: 'Clinical Psychology',
   },
   {
     value: 'organizational-behavior',
-    label: 'Organizational Behavior'
+    label: 'Organizational Behavior',
   },
   {
     value: 'methodology',
-    label: 'Methodology and Research Practice'
+    label: 'Methodology and Research Practice',
   },
 ]

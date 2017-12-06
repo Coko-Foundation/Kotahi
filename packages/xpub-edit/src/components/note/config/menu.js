@@ -1,4 +1,4 @@
-import { setBlockType, toggleMark } from 'prosemirror-commands'
+import { toggleMark } from 'prosemirror-commands'
 import { redo, undo } from 'prosemirror-history'
 import icons from './icons'
 import schema from './schema'
@@ -11,25 +11,25 @@ const markActive = type => state => {
     : state.doc.rangeHasMark(from, to, type)
 }
 
-const blockActive = (type, attrs = {}) => state => {
-  const { $from, to, node } = state.selection
+// const blockActive = (type, attrs = {}) => state => {
+//   const { $from, to, node } = state.selection
 
-  if (node) {
-    return node.hasMarkup(type, attrs)
-  }
+//   if (node) {
+//     return node.hasMarkup(type, attrs)
+//   }
 
-  return to <= $from.end() && $from.parent.hasMarkup(type, attrs)
-}
+//   return to <= $from.end() && $from.parent.hasMarkup(type, attrs)
+// }
 
-const promptForURL = () => {
-  let url = window.prompt('Enter the URL', 'https://')
+// const promptForURL = () => {
+//   let url = window.prompt('Enter the URL', 'https://')
 
-  if (url && !/^https?:\/\//i.test(url)) {
-    url = 'http://' + url
-  }
+//   if (url && !/^https?:\/\//i.test(url)) {
+//     url = `http://${url}`
+//   }
 
-  return url
-}
+//   return url
+// }
 
 export default {
   marks: {
@@ -37,32 +37,32 @@ export default {
       title: 'Toggle italic',
       content: icons.italic,
       active: markActive(schema.marks.italic),
-      run: toggleMark(schema.marks.italic)
+      run: toggleMark(schema.marks.italic),
     },
     bold: {
       title: 'Toggle bold',
       content: icons.bold,
       active: markActive(schema.marks.bold),
-      run: toggleMark(schema.marks.bold)
+      run: toggleMark(schema.marks.bold),
     },
     subscript: {
       title: 'Toggle subscript',
       content: icons.subscript,
       active: markActive(schema.marks.subscript),
-      run: toggleMark(schema.marks.subscript)
+      run: toggleMark(schema.marks.subscript),
     },
     superscript: {
       title: 'Toggle superscript',
       content: icons.superscript,
       active: markActive(schema.marks.superscript),
-      run: toggleMark(schema.marks.superscript)
+      run: toggleMark(schema.marks.superscript),
     },
     small_caps: {
       title: 'Toggle small caps',
       content: icons.small_caps,
       active: markActive(schema.marks.small_caps),
-      run: toggleMark(schema.marks.small_caps)
-    }
+      run: toggleMark(schema.marks.small_caps),
+    },
     // link: {
     //   title: 'Add or remove link',
     //   content: icons.link,
@@ -87,13 +87,13 @@ export default {
       title: 'Undo last change',
       content: icons.undo,
       enable: undo,
-      run: undo
+      run: undo,
     },
     redo: {
       title: 'Redo last undone change',
       content: icons.redo,
       enable: redo,
-      run: redo
-    }
-  }
+      run: redo,
+    },
+  },
 }

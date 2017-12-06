@@ -18,11 +18,9 @@ const onSubmit = (values, dispatch) => {
 export default compose(
   reduxForm({
     form: 'signup',
-    onSubmit
+    onSubmit,
   }),
-  connect(
-    state => ({
-      error: state.signup.error
-    })
-  )
+  connect(state => ({
+    error: state.signup.error,
+  })),
 )(Signup)

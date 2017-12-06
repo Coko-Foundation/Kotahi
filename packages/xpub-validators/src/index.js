@@ -1,12 +1,10 @@
 import striptags from 'striptags'
 
-export const split = (separator = ',') => value => {
-  return value ? value.split(separator) : []
-}
+export const split = (separator = ',') => value =>
+  value ? value.split(separator) : []
 
-export const join = (separator = ',') => value => {
-  return value ? value.join(separator) : value
-}
+export const join = (separator = ',') => value =>
+  value ? value.join(separator) : value
 
 export const required = value => {
   if (value === undefined || value === '') {

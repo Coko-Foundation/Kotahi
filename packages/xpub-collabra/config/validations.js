@@ -1,7 +1,8 @@
 const Joi = require('joi')
 
 module.exports = {
-  collection: { // project
+  collection: {
+    // project
     collectionType: Joi.string(),
     created: Joi.date(),
     title: Joi.string(),
@@ -27,11 +28,11 @@ module.exports = {
       suggestions: Joi.object({
         reviewers: Joi.object({
           suggested: Joi.array().items(Joi.string()),
-          opposed: Joi.array().items(Joi.string())
+          opposed: Joi.array().items(Joi.string()),
         }),
         editors: Joi.object({
           suggested: Joi.array().items(Joi.string()),
-          opposed: Joi.array().items(Joi.string())
+          opposed: Joi.array().items(Joi.string()),
         }),
       }),
       files: Joi.object({
@@ -39,29 +40,31 @@ module.exports = {
           name: Joi.string().required(),
           type: Joi.string(),
           size: Joi.number(),
-          url: Joi.string()
+          url: Joi.string(),
         }),
-        supplementary: Joi.array().items(Joi.object({
-          name: Joi.string().required(),
-          type: Joi.string(),
-          size: Joi.number(),
-          url: Joi.string()
-        }))
+        supplementary: Joi.array().items(
+          Joi.object({
+            name: Joi.string().required(),
+            type: Joi.string(),
+            size: Joi.number(),
+            url: Joi.string(),
+          }),
+        ),
       }),
       notes: Joi.object({
         fundingAcknowledgement: Joi.string(),
-        specialInstructions: Joi.string()
+        specialInstructions: Joi.string(),
       }),
       reviewers: Joi.array(),
       lock: Joi.object(),
       decision: Joi.object(),
-    }
+    },
   ],
   user: {
     name: Joi.string(), // TODO: add "name" to the login form
-    roles: Joi.object()
+    roles: Joi.object(),
   },
   team: {
-    group: Joi.string()
-  }
+    group: Joi.string(),
+  },
 }

@@ -10,7 +10,7 @@ install:
       - packages/*/node_modules
 
 lint:
-  script: npm run lint
+ script: npm run lint
 
 test:
   script: npm run test

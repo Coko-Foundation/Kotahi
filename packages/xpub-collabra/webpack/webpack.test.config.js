@@ -15,19 +15,15 @@ module.exports = [
     target: 'web',
     context: path.join(__dirname, '..', 'app'),
     entry: {
-      app: [
-        'react-hot-loader/patch',
-        'webpack-hot-middleware/client',
-        './app'
-      ]
+      app: ['react-hot-loader/patch', 'webpack-hot-middleware/client', './app'],
     },
     output: {
       path: path.join(__dirname, '..', '_build', 'assets'),
       filename: '[name].js',
-      publicPath: '/assets/'
+      publicPath: '/assets/',
     },
     module: {
-      rules
+      rules,
     },
     resolve,
     plugins: [
@@ -38,17 +34,15 @@ module.exports = [
       }),
       new webpack.ContextReplacementPlugin(/./, __dirname, {
         [config.authsome.mode]: config.authsome.mode,
-        [config.validations]: config.validations
+        [config.validations]: config.validations,
       }),
-      new CopyWebpackPlugin([
-        { from: '../static' }
-      ]),
+      new CopyWebpackPlugin([{ from: '../static' }]),
       new webpack.optimize.AggressiveMergingPlugin(),
       new webpack.optimize.OccurrenceOrderPlugin(),
     ],
     node: {
       fs: 'empty',
-      __dirname: true
-    }
-  }
+      __dirname: true,
+    },
+  },
 ]

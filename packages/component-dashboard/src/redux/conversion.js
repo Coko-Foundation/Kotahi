@@ -12,18 +12,18 @@ export const UPLOAD_MANUSCRIPT_FAILURE = 'UPLOAD_MANUSCRIPT_FAILURE'
 /* actions */
 
 export const uploadManuscriptRequest = () => ({
-  type: UPLOAD_MANUSCRIPT_REQUEST
+  type: UPLOAD_MANUSCRIPT_REQUEST,
 })
 
 export const uploadManuscriptSuccess = (collection, fragment) => ({
-  type: UPLOAD_MANUSCRIPT_SUCCESS,
   collection,
-  fragment
+  fragment,
+  type: UPLOAD_MANUSCRIPT_SUCCESS,
 })
 
 export const uploadManuscriptFailure = error => ({
+  error,
   type: UPLOAD_MANUSCRIPT_FAILURE,
-  error
 })
 
 export const uploadManuscript = (acceptedFiles, history) => dispatch => {
@@ -53,40 +53,46 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
         const source = response.converted
         const title = extractTitle(source) || generateTitle(inputFile.name)
 
-        return dispatch(actions.createCollection({ title })).then(({collection}) => {
-          if (!collection.id) {
-            throw new Error('Failed to create a project')
-          }
-
-          // TODO: create teams?
-
-          // TODO: rethrow errors so they can be caught here
-          return dispatch(actions.createFragment(collection, {
-            fragmentType: 'version',
-            created: new Date(), // TODO: set on server
-            version: 1,
-            source,
-            metadata: {
-              title
-            },
-            files: {
-              supplementary: [],
-              manuscript: {
-                name: inputFile.name,
-                url: fileURL
-              }
+        return dispatch(actions.createCollection({ title })).then(
+          ({ collection }) => {
+            if (!collection.id) {
+              throw new Error('Failed to create a project')
             }
-          })).then(({fragment}) => {
-            dispatch(uploadManuscriptSuccess(collection, fragment))
 
-            const route = `/projects/${collection.id}/versions/${fragment.id}/submit`
+            // TODO: create teams?
 
-            // redirect after a short delay
-            window.setTimeout(() => {
-              history.push(route)
-            }, 1000)
-          })
-        })
+            // TODO: rethrow errors so they can be caught here
+            return dispatch(
+              actions.createFragment(collection, {
+                created: new Date(), // TODO: set on server
+                files: {
+                  manuscript: {
+                    name: inputFile.name,
+                    url: fileURL,
+                  },
+                  supplementary: [],
+                },
+                fragmentType: 'version',
+                metadata: {
+                  title,
+                },
+                source,
+                version: 1,
+              }),
+            ).then(({ fragment }) => {
+              dispatch(uploadManuscriptSuccess(collection, fragment))
+
+              const route = `/projects/${collection.id}/versions/${
+                fragment.id
+              }/submit`
+
+              // redirect after a short delay
+              window.setTimeout(() => {
+                history.push(route)
+              }, 1000)
+            })
+          },
+        )
       })
       .catch(error => {
         console.error(error)
@@ -99,31 +105,31 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
 /* reducer */
 
 const initialState = {
-  converting: false,
   complete: undefined,
-  error: undefined
+  converting: false,
+  error: undefined,
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case UPLOAD_MANUSCRIPT_REQUEST:
       return {
-        converting: true,
         complete: false,
-        error: undefined
+        converting: true,
+        error: undefined,
       }
 
     case UPLOAD_MANUSCRIPT_SUCCESS:
       return {
-        converting: false,
         complete: true,
+        converting: false,
       }
 
     case UPLOAD_MANUSCRIPT_FAILURE:
       return {
-        converting: false,
         complete: false,
-        error: action.error
+        converting: false,
+        error: action.error,
       }
 
     default:
