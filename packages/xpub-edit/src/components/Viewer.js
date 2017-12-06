@@ -15,13 +15,18 @@ class Viewer extends React.Component {
   }
 
   createEditorView = node => {
+    const { className } = this.props
     const { state } = this.state
 
     this.view = new EditorView(node, {
       state,
       dispatchTransaction: () => false,
       attributes: {
-        class: classnames(baseClasses.ProseMirror, classes.ProseMirror),
+        class: classnames(
+          baseClasses.ProseMirror,
+          classes.ProseMirror,
+          className,
+        ),
       },
     })
   }
