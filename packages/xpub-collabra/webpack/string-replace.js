@@ -5,11 +5,10 @@ const components = require('../config/components.json')
 const requireComponentsString = components
   .filter(name => {
     const component = require(name)
-
     // "client" or "frontend" for backwards compatibility
     return component.client || component.frontend
   })
-  .map(name => "require('" + name + "')")
+  .map(name => `require('${name}')`)
   .join(', ')
 
 module.exports = {
@@ -19,6 +18,6 @@ module.exports = {
   loader: 'string-replace-loader',
   options: {
     search: 'PUBSWEET_COMPONENTS',
-    replace: '[' + requireComponentsString + ']'
-  }
+    replace: `[${requireComponentsString}]`,
+  },
 }

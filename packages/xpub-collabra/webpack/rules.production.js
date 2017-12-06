@@ -15,9 +15,9 @@ module.exports = [
           presets: [
             [require('babel-preset-env'), { modules: false }],
             require('babel-preset-react'),
-            require('babel-preset-stage-2')
-          ]
-        }
+            require('babel-preset-stage-2'),
+          ],
+        },
       },
 
       // CSS Modules
@@ -32,12 +32,10 @@ module.exports = [
               options: {
                 modules: true,
                 localIdentName: '[name]_[local]-[hash:base64:8]',
-              }
-            }
-          ]
-        })
-
-
+              },
+            },
+          ],
+        }),
       },
 
       // SCSS Modules
@@ -53,11 +51,11 @@ module.exports = [
                 modules: true,
                 importLoaders: 1,
                 localIdentName: '[name]_[local]-[hash:base64:8]',
-              }
+              },
             },
-            'sass-loader'
-          ]
-        })
+            'sass-loader',
+          ],
+        }),
       },
 
       // global CSS
@@ -65,9 +63,7 @@ module.exports = [
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
-          use: [
-            'css-loader'
-          ]
+          use: ['css-loader'],
         }),
       },
 
@@ -78,9 +74,9 @@ module.exports = [
           fallback: 'style-loader',
           use: [
             'css-loader', // TODO: importLoaders: 1?
-            'sass-loader'
-          ]
-        })
+            'sass-loader',
+          ],
+        }),
       },
 
       // files
@@ -89,8 +85,8 @@ module.exports = [
         loader: 'file-loader',
         options: {
           name: 'static/media/[name].[hash:8].[ext]',
-        }
-      }
-    ]
-  }
+        },
+      },
+    ],
+  },
 ]
