@@ -59,7 +59,10 @@ const ReviewForm = ({ journal, valid, handleSubmit, uploadFile }) => (
             <ValidatedField component={ConfidentialInput} name="content" />
           </div>
 
-          <ValidatedField component={AttachmentsInput} name="attachments" />
+          <ValidatedField
+            component={AttachmentsInput(uploadFile)}
+            name="attachments"
+          />
         </div>
       </FormSection>
     </div>
