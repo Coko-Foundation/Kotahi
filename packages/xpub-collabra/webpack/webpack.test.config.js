@@ -5,7 +5,7 @@ const config = require('config')
 const path = require('path')
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
-const rules = require('./common-rules')
+const rules = require('./rules.production')
 const resolve = require('./common-resolve')
 
 module.exports = [
