@@ -1,93 +1,91 @@
 .root {
+  align-items: center;
   display: inline-flex;
   flex-direction: column;
-  align-items: center;
-  position: relative;
   margin-bottom: 2em;
   margin-right: 3em;
+  position: relative;
   width: 20ch;
 
   &::before,
   &::after {
-    transition: transform 0.3s;
     cursor: pointer;
+    transition: transform 0.3s;
   }
 
   &::after {
-    content: 'remove';
     background: var(--color-danger);
+    border: 1px solid white;
     color: white;
-    position: absolute;
+    content: 'remove';
+    cursor: pointer;
+    font-size: 0.8em;
     left: 70%;
+    letter-spacing: 0.5px;
+    padding: 0.2em 0.4em;
+    position: absolute;
+    text-transform: uppercase;
     top: 4em;
     transform: scaleX(0);
     transform-origin: 0 0;
-    font-size: 0.8em;
-    padding: 0.2em 0.4em;
-    letter-spacing: 0.5px;
-    text-transform: uppercase;
     z-index: 2;
-    cursor: pointer;
-    border: 1px solid white;
   }
 
   &::before {
-    content: 'replace';
     background: var(--color-primary);
-    color: white;
-    position: absolute;
-    left: 70%;
-    top: 6em;
-    transform-origin: 0 0;
-    cursor: pointer;
-    transform: scaleX(0);
-    font-size: 0.8em;
-    padding: 0.2em 0.4em;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-    z-index: 3;
     border: 1px solid white;
+    color: white;
+    content: 'replace';
+    cursor: pointer;
+    font-size: 0.8em;
+    left: 70%;
+    letter-spacing: 0.5px;
+    padding: 0.2em 0.4em;
+    position: absolute;
+    text-transform: uppercase;
+    top: 6em;
+    transform: scaleX(0);
+    transform-origin: 0 0;
+    z-index: 3;
   }
 
   .icon {
+    background: #ddd;
+    height: 100px;
+    padding: 5px;
+    position: relative;
     transition: transform 0.3s ease;
     width: 70px;
-    height: 100px;
-    background: #ddd;
-    position: relative;
-    padding: 5px;
   }
 
   .extension {
-    position: absolute;
-    top: 20px;
-    right: 0;
-    left: 20px;
-    text-align: center;
-    text-transform: uppercase;
     background: #888;
     color: white;
     font-size: 12px;
+    left: 20px;
     padding: 2px;
+    position: absolute;
+    right: 0;
+    text-align: center;
+    text-transform: uppercase;
+    top: 20px;
   }
 
   .name {
-    font-style: italic;
-    font-size: 0.9em;
     color: #aaa;
+    font-size: 0.9em;
+    font-style: italic;
     margin: 5px;
     max-width: 15ch;
-
-    /* to divide into lines */
-    word-break: break-all;
     text-align: center;
+    word-break: break-all; /* to divide into lines */
   }
 
   &:hover {
     .extension {
       background: white;
-      color: var(--color-primary);
       border-right: 2px solid #ddd;
+      color: var(--color-primary);
     }
 
     .icon {

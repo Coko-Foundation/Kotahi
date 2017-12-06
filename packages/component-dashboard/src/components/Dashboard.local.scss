@@ -1,6 +1,6 @@
 .root {
-  max-width: 60em;
   margin: auto;
+  max-width: 60em;
 }
 
 .upload {
@@ -13,11 +13,11 @@
 }
 
 .heading {
-  font-size: 1.6em;
-  text-transform: uppercase;
-  font-family: Vollkorn, serif;
   color: var(--color-primary);
+  font-family: Vollkorn, serif;
+  font-size: 1.6em;
   margin: 4em 0 2em;
+  text-transform: uppercase;
 }
 
 .empty {

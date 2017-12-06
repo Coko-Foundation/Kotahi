@@ -2,18 +2,29 @@ import React from 'react'
 import classnames from 'classnames'
 import classes from './Checkbox.local.scss'
 
-const Checkbox = ({ inline, name, value, label, checked, required, onChange }) => (
-  <label className={classnames(classes.root, {
-    [classes.inline]: inline
-  })}>
+const Checkbox = ({
+  inline,
+  name,
+  value,
+  label,
+  checked,
+  required,
+  onChange,
+}) => (
+  <label
+    className={classnames(classes.root, {
+      [classes.inline]: inline,
+    })}
+  >
     <input
-      className={classes.input}
-      type="checkbox"
-      name={name}
-      value={value}
       checked={checked || false}
+      className={classes.input}
+      name={name}
+      onChange={onChange}
       required={required}
-      onChange={onChange}/>
+      type="checkbox"
+      value={value}
+    />
     <span>{label}</span>
   </label>
 )

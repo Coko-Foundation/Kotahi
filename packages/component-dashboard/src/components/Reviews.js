@@ -7,8 +7,8 @@ import classes from './Reviews.local.scss'
 const Reviews = ({ reviews }) => (
   <div className={classes.root}>
     {Object.keys(reviews).map(status => (
-      <span key={status} className={classes.badge}>
-        <Badge count={reviews[status].length} label={status}/>
+      <span className={classes.badge} key={status}>
+        <Badge count={reviews[status].length} label={status} />
       </span>
     ))}
   </div>
@@ -16,6 +16,6 @@ const Reviews = ({ reviews }) => (
 
 export default compose(
   withProps(props => ({
-    reviews: groupBy(props.version.reviewers, 'status')
-  }))
+    reviews: groupBy(props.version.reviewers, 'status'),
+  })),
 )(Reviews)

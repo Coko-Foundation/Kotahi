@@ -3,12 +3,12 @@ import classes from './Files.local.scss'
 import Upload from './Upload'
 
 class Files extends React.Component {
-  constructor (props) {
+  constructor(props) {
     super(props)
 
     this.state = {
       values: props.value || [],
-      uploads: []
+      uploads: [],
     }
   }
 
@@ -22,7 +22,7 @@ class Files extends React.Component {
     Array.from(event.target.files).forEach(file => {
       uploads.push({
         file,
-        request: this.props.uploadFile(file)
+        request: this.props.uploadFile(file),
       })
     })
 
@@ -32,19 +32,19 @@ class Files extends React.Component {
   handleUploadedFile = ({ file, url }) => {
     const values = this.state.values.concat({
       name: file.name,
-      url
+      url,
     })
 
-    const uploads = this.state.uploads.filter(item => {
-      return item.file.name !== file.name
-    })
+    const uploads = this.state.uploads.filter(
+      item => item.file.name !== file.name,
+    )
 
     this.setState({ values, uploads })
 
     this.props.onChange(values)
   }
 
-  render () {
+  render() {
     const { name, buttonText, uploadingFile, uploadedFile } = this.props
     const { values, uploads } = this.state
 
@@ -52,31 +52,34 @@ class Files extends React.Component {
       <div className={classes.root}>
         <div className={classes.upload}>
           <button
-            type="button"
             className={classes.attach}
-            onClick={() => this.fileInput.click()}>
+            onClick={() => this.fileInput.click()}
+            type="button"
+          >
             {buttonText}
           </button>
 
           <input
             className={classes.input}
+            multiple
+            name={name}
+            onChange={this.handleChange}
             ref={input => (this.fileInput = input)}
             type="file"
-            name={name}
-            multiple
-            onChange={this.handleChange}/>
+          />
         </div>
 
         <div className={classes.files}>
-          {uploads && uploads.map(upload => (
-            <Upload
-              key={upload.file.name}
-              file={upload.file}
-              request={upload.request}
-              handleUploadedFile={this.handleUploadedFile}
-              render={uploadingFile}
-            />
-          ))}
+          {uploads &&
+            uploads.map(upload => (
+              <Upload
+                file={upload.file}
+                handleUploadedFile={this.handleUploadedFile}
+                key={upload.file.name}
+                render={uploadingFile}
+                request={upload.request}
+              />
+            ))}
 
           {values && values.map(uploadedFile)}
         </div>

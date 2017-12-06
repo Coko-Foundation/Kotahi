@@ -1,29 +1,22 @@
 import React from 'react'
 import { FormSection } from 'redux-form'
-import { Button } from 'xpub-ui'
 import { NoteEditor } from 'xpub-edit'
-import { Attachments, RadioGroup, ValidatedField } from 'xpub-ui'
+import { Attachments, Button, RadioGroup, ValidatedField } from 'xpub-ui'
 import { withJournal } from 'xpub-journal'
 import { required } from 'xpub-validators'
 import classes from './DecisionForm.local.scss'
 
-const NoteInput = input =>
-  <NoteEditor
-    title="Decision"
-    placeholder="Enter your decision…"
-    {...input}/>
+const NoteInput = input => (
+  <NoteEditor placeholder="Enter your decision…" title="Decision" {...input} />
+)
 
-const AttachmentsInput = uploadFile => input =>
-  <Attachments
-    uploadFile={uploadFile}
-    {...input}/>
+const AttachmentsInput = uploadFile => input => (
+  <Attachments uploadFile={uploadFile} {...input} />
+)
 
-const RecommendationInput = journal => input =>
-  <RadioGroup
-    inline
-    required
-    options={journal.recommendations}
-    {...input}/>
+const RecommendationInput = journal => input => (
+  <RadioGroup inline options={journal.recommendations} required {...input} />
+)
 
 const DecisionForm = ({ journal, valid, handleSubmit, uploadFile }) => (
   <form onSubmit={handleSubmit}>
@@ -32,27 +25,32 @@ const DecisionForm = ({ journal, valid, handleSubmit, uploadFile }) => (
         <div className={classes.note}>
           <div className={classes.content}>
             <ValidatedField
+              component={NoteInput}
               name="content"
               validate={[required]}
-              component={NoteInput}/>
+            />
           </div>
 
           <ValidatedField
+            component={AttachmentsInput(uploadFile)}
             name="attachments"
-            component={AttachmentsInput(uploadFile)}/>
+          />
         </div>
       </FormSection>
     </div>
 
     <div className={classes.section}>
       <ValidatedField
+        component={RecommendationInput(journal)}
         name="recommendation"
         validate={[required]}
-        component={RecommendationInput(journal)}/>
+      />
     </div>
 
     <div>
-      <Button type="submit" primary disabled={!valid}>Submit</Button>
+      <Button disabled={!valid} primary type="submit">
+        Submit
+      </Button>
     </div>
   </form>
 )

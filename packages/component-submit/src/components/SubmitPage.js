@@ -8,33 +8,39 @@ import { ConnectPage } from 'xpub-connect'
 import { selectCollection, selectFragment } from 'xpub-selectors'
 import Submit from './Submit'
 
-const onSubmit = (values, dispatch, { history, project, version }) => {
+const onSubmit = (values, dispatch, { history, project, version }) =>
   // console.log('submit', values)
 
-  return dispatch(actions.updateFragment(project, {
-    id: version.id,
-    rev: version.rev,
-    submitted: new Date(),
-    ...values
-  })).then(() => {
-    return dispatch(actions.updateCollection({
-      id: project.id,
-      rev: project.rev,
-      status: 'submitted'
-    }))
-  }).then(() => {
-    history.push('/')
-  }).catch(error => {
-    if (error.validationErrors) {
-      throw new SubmissionError()
-    }
-  })
-}
+  dispatch(
+    actions.updateFragment(project, {
+      id: version.id,
+      rev: version.rev,
+      submitted: new Date(),
+      ...values,
+    }),
+  )
+    .then(() =>
+      dispatch(
+        actions.updateCollection({
+          id: project.id,
+          rev: project.rev,
+          status: 'submitted',
+        }),
+      ),
+    )
+    .then(() => {
+      history.push('/')
+    })
+    .catch(error => {
+      if (error.validationErrors) {
+        throw new SubmissionError()
+      }
+    })
 
 // TODO: this is only here because prosemirror would save the title in the
 // metadata as html instead of plain text. we need to maybe find a better
 // position than here to perform this operation
-const stripHtml = (htmlString) => {
+const stripHtml = htmlString => {
   const temp = document.createElement('span')
   temp.innerHTML = htmlString
   return temp.textContent
@@ -44,12 +50,14 @@ const stripHtml = (htmlString) => {
 const onChange = (values, dispatch, { project, version }) => {
   values.metadata.title = stripHtml(values.metadata.title) // see TODO above
 
-  return dispatch(actions.updateFragment(project, {
-    id: version.id,
-    rev: version.rev,
-    // submitted: false,
-    ...values
-  }))
+  return dispatch(
+    actions.updateFragment(project, {
+      id: version.id,
+      rev: version.rev,
+      // submitted: false,
+      ...values,
+    }),
+  )
 
   // TODO: display a notification when saving/saving completes/saving fails
 }
@@ -57,7 +65,10 @@ const onChange = (values, dispatch, { project, version }) => {
 export default compose(
   ConnectPage(({ match }) => [
     actions.getCollection({ id: match.params.project }),
-    actions.getFragment({ id: match.params.project }, { id: match.params.version })
+    actions.getFragment(
+      { id: match.params.project },
+      { id: match.params.version },
+    ),
   ]),
   connect(
     (state, { match }) => {
@@ -67,31 +78,31 @@ export default compose(
       return { project, version }
     },
     {
-      uploadFile
-    }
+      uploadFile,
+    },
   ),
   withProps(({ version }) => {
     const paths = ['metadata', 'declarations', 'suggestions', 'notes', 'files']
 
     return {
-      initialValues: pick(version, paths)
+      initialValues: pick(version, paths),
     }
   }),
   reduxForm({
-    form: 'submit',
     // enableReinitialize: true,
+    form: 'submit',
+    onChange: debounce(onChange, 1000, { maxWait: 5000 }),
     onSubmit,
-    onChange: debounce(onChange, 1000, { maxWait: 5000 })
   }),
   withState('confirming', 'setConfirming', false),
   withHandlers({
-    toggleConfirming: ({valid, setConfirming, handleSubmit}) => () => {
+    toggleConfirming: ({ valid, setConfirming, handleSubmit }) => () => {
       if (valid) {
         setConfirming(confirming => !confirming)
       } else {
         // trigger dummy submit to mark all fields as touched
         handleSubmit(() => {})()
       }
-    }
-  })
+    },
+  }),
 )(Submit)

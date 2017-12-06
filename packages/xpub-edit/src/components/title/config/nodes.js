@@ -1,22 +1,20 @@
 const doc = {
-  content: 'block+'
+  content: 'block+',
 }
 
 const paragraph = {
   content: 'inline*',
   group: 'block',
-  parseDOM: [
-    { tag: 'p' }
-  ],
-  toDOM: () => ['p', 0]
+  parseDOM: [{ tag: 'p' }],
+  toDOM: () => ['p', 0],
 }
 
 const text = {
-  group: 'inline'
+  group: 'inline',
 }
 
 export default {
   doc,
   paragraph,
-  text
+  text,
 }

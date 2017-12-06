@@ -7,80 +7,76 @@ import classes from './Suggestions.local.scss'
 const joinComma = join(',')
 const splitComma = split(',')
 
-const SuggestedReviewerInput = input =>
-  <TextField
-    placeholder="Add reviewer names"
-    {...input}/>
+const SuggestedReviewerInput = input => (
+  <TextField placeholder="Add reviewer names" {...input} />
+)
 
-const OpposedReviewerInput = input =>
-  <TextField
-    placeholder="Add reviewer names"
-    {...input}/>
+const OpposedReviewerInput = input => (
+  <TextField placeholder="Add reviewer names" {...input} />
+)
 
-const SuggestedEditorInput = input =>
-  <TextField
-    placeholder="Add editor names"
-    {...input}/>
+const SuggestedEditorInput = input => (
+  <TextField placeholder="Add editor names" {...input} />
+)
 
-const OpposedEditorInput = input =>
-  <TextField
-    placeholder="Add editor names"
-    {...input}/>
+const OpposedEditorInput = input => (
+  <TextField placeholder="Add editor names" {...input} />
+)
 
 const Suggestions = () => (
   <FormSection name="suggestions">
     <div className={classes.section} id="suggestions.reviewers">
       <FormSection name="reviewers">
-        <div className={classes.legend}>
-          Suggested or opposed reviewers
-        </div>
+        <div className={classes.legend}>Suggested or opposed reviewers</div>
 
         <div>
           <div className={classes.sublegend}>Suggested reviewers</div>
 
           <ValidatedField
-            name="suggested"
+            component={SuggestedReviewerInput}
             format={joinComma}
+            name="suggested"
             parse={splitComma}
-            component={SuggestedReviewerInput}/>
+          />
         </div>
 
         <div>
           <div className={classes.sublegend}>Opposed reviewers</div>
 
           <ValidatedField
-            name="opposed"
+            component={OpposedReviewerInput}
             format={joinComma}
+            name="opposed"
             parse={splitComma}
-            component={OpposedReviewerInput}/>
+          />
         </div>
       </FormSection>
     </div>
 
     <div className={classes.section} id="suggestions.editors">
       <FormSection name="editors">
-        <div className={classes.legend}>
-          Suggested or opposed editors
-        </div>
+        <div className={classes.legend}>Suggested or opposed editors</div>
 
         <div>
           <div className={classes.sublegend}>Suggested editors</div>
 
           <ValidatedField
-            name="suggested"
+            component={SuggestedEditorInput}
             format={joinComma}
+            name="suggested"
             parse={splitComma}
-            component={SuggestedEditorInput}/>
+          />
         </div>
 
         <div>
           <div className={classes.sublegend}>Opposed editors</div>
 
           <ValidatedField
-            name="opposed"
+            component={OpposedEditorInput}
             format={joinComma}
+            name="opposed"
             parse={splitComma}
-            component={OpposedEditorInput}/>
+          />
         </div>
       </FormSection>
     </div>

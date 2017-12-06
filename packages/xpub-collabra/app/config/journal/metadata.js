@@ -1,4 +1,4 @@
 export default {
+  issn: '2474-7394',
   name: 'Collabra: Psychology',
-  issn: '2474-7394'
 }

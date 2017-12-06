@@ -7,17 +7,17 @@
   color: var(--color-primary);
 
   &::before {
-    text-align: center;
     color: #aaa;
-    height: 1em;
     display: inline-block;
+    height: 1em;
     margin-right: 0.3em;
+    text-align: center;
   }
 }
 
 .link:hover {
-  text-decoration: underline;
   cursor: pointer;
+  text-decoration: underline;
 
   &::before {
     color: var(--color-primary);
@@ -25,9 +25,13 @@
 }
 
 .item {
-  padding: 0 1rem;
-  display: inline-flex;
   align-items: center;
+  display: inline-flex;
+  padding: 0 1rem;
+}
+
+.actions {
+  display: flex;
 }
 
 .username {

@@ -1,6 +1,6 @@
 export default {
   author: 'Author',
-  seniorEditor: 'Senior Editor',
-  managingEditor: 'Managing Editor',
   handlingEditor: 'Handling Editor',
+  managingEditor: 'Managing Editor',
+  seniorEditor: 'Senior Editor',
 }

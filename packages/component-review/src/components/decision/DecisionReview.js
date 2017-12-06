@@ -11,31 +11,27 @@ const DecisionReview = ({ review, reviewer, journal, open, toggleOpen }) => (
         className={classes.indicator}
         style={{
           backgroundColor: review.recommendation
-            ? journal.recommendations.find(item =>
-                item.value === review.recommendation
+            ? journal.recommendations.find(
+                item => item.value === review.recommendation,
               ).color
-            : 'black'
-        }}/>
+            : 'black',
+        }}
+      />
 
-      <span className={classes.ordinal}>
-        Review {reviewer.ordinal}
-      </span>
+      <span className={classes.ordinal}>Review {reviewer.ordinal}</span>
 
-      <span className={classes.name}>
-        {reviewer.name || 'Anonymous'}
-      </span>
+      <span className={classes.name}>{reviewer.name || 'Anonymous'}</span>
 
-      <span className={classes.dots}/>
+      <span className={classes.dots} />
 
-      <button
-        className={classes.toggle}
-        onClick={toggleOpen}
-        >{ open ? 'Hide' : 'Show' }</button>
+      <button className={classes.toggle} onClick={toggleOpen}>
+        {open ? 'Hide' : 'Show'}
+      </button>
     </div>
 
     {open && (
       <div className={classes.review}>
-        <Review review={review}/>
+        <Review review={review} />
       </div>
     )}
   </div>
@@ -47,6 +43,6 @@ export default compose(
   withHandlers({
     toggleOpen: props => () => {
       props.setOpen(open => !open)
-    }
-  })
+    },
+  }),
 )(DecisionReview)

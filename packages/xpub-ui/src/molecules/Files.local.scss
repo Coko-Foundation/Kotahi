@@ -3,32 +3,32 @@
 }
 
 .button {
-  border: 1px dashed grey;
   background: transparent;
-  padding: 10px;
+  border: 1px dashed grey;
   cursor: pointer;
-  font-size: inherit;
   font-family: inherit;
+  font-size: inherit;
   margin-bottom: 2em;
+  padding: 10px;
 }
 
 .button:hover {
-  color: var(--color-primary);
   border-color: var(--color-primary);
+  color: var(--color-primary);
 }
 
 .files {
+  font-size: 0.9em;
   font-style: italic;
   line-height: 1.5;
-  font-size: 0.9em;
 }
 
 .attach {
-  border: 1px dashed grey;
   background: transparent;
-  padding: 10px;
+  border: 1px dashed grey;
   cursor: pointer;
-  font-size: inherit;
   font-family: inherit;
+  font-size: inherit;
   margin-bottom: 2em;
+  padding: 10px;
 }

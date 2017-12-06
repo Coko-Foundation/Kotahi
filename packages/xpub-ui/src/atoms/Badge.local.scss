@@ -1,21 +1,21 @@
 .root {
-  display: inline-flex;
   align-items: center;
-  background: lightgrey;
+  // background: lightgrey;
   background: linear-gradient(#fff 0, #fff 1.1em, grey 1.1em, grey 1.15em, #fff 1.15em, #fff 2em);
+  color: inherit;
+  display: inline-flex;
   font-size: 0.8rem;
   margin-right: 1em;
   padding-bottom: 1em;
-  color: inherit;
 }
 
 .count {
   border-radius: 50%;
-  text-align: center;
-  font-weight: 600;
   color: grey;
   font-size: 1em;
+  font-weight: 600;
   padding-right: 0.5em;
+  text-align: center;
 }
 
 .label {

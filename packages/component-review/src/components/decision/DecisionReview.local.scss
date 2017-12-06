@@ -1,14 +1,14 @@
 .heading {
-  display: flex;
   align-items: baseline;
+  display: flex;
 }
 
 .indicator {
   border-radius: 100%;
   display: inline-block;
-  width: 10px;
   height: 10px;
   margin-right: 10px;
+  width: 10px;
 }
 
 .ordinal {
@@ -17,36 +17,36 @@
 }
 
 .name {
+  background: white;
   font-family: var(--font-mono);
   margin-right: 10px;
-  background: white;
 
   &::after {
+    color: #aaa;
+    content: ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . ";
     float: left;
     font-size: 0.8em;
-    letter-spacing: -2px;
-    width: 0;
     font-weight: 400;
-    color: #aaa;
+    letter-spacing: -2px;
     white-space: nowrap;
-    content: ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . " ". . . . . . . . . . . . . . . . . . . . ";
+    width: 0;
   }
 }
 
 .dots {
-  flex: 1;
   background-color: #eee;
+  flex: 1;
 }
 
 .toggle {
   background: white;
   border: none;
   border-bottom: 2px solid transparent;
-  font-size: inherit;
-  cursor: pointer;
-  margin-left: 10px;
-  font-style: italic;
   color: var(--color-primary);
+  cursor: pointer;
+  font-size: inherit;
+  font-style: italic;
+  margin-left: 10px;
 
   &:hover {
     border-bottom: 2px solid var(color-primary);

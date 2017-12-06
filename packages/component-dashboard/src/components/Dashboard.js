@@ -17,18 +17,23 @@ const Dashboard = ({
   dashboard,
   deleteProject,
   reviewerResponse,
-  uploadManuscript
+  uploadManuscript,
 }) => (
   <div className={classes.root}>
     <div className={classes.upload}>
-      <UploadManuscript conversion={conversion} uploadManuscript={uploadManuscript} />
+      <UploadManuscript
+        conversion={conversion}
+        uploadManuscript={uploadManuscript}
+      />
     </div>
 
     {!dashboard.owner.length &&
       !dashboard.reviewer.length &&
       !dashboard.editor.length && (
         <div className={classes.section}>
-          <div className={classes.empty}>Nothing to do at the moment. Please upload a document.</div>
+          <div className={classes.empty}>
+            Nothing to do at the moment. Please upload a document.
+          </div>
         </div>
       )}
 
@@ -36,7 +41,11 @@ const Dashboard = ({
       <div className={classes.section}>
         <div className={classes.heading}>My Submissions</div>
         {dashboard.owner.map(project => (
-          <OwnerItemWithVersion key={project.id} project={project} deleteProject={deleteProject} />
+          <OwnerItemWithVersion
+            deleteProject={deleteProject}
+            key={project.id}
+            project={project}
+          />
         ))}
       </div>
     )}
@@ -46,9 +55,9 @@ const Dashboard = ({
         <div className={classes.heading}>To review</div>
         {dashboard.reviewer.map(project => (
           <ReviewerItemWithVersion
+            currentUser={currentUser}
             key={project.id}
             project={project}
-            currentUser={currentUser}
             reviewerResponse={reviewerResponse}
           />
         ))}
@@ -59,7 +68,11 @@ const Dashboard = ({
       <div className={classes.section}>
         <div className={classes.heading}>My Manuscripts</div>
         {dashboard.editor.map(project => (
-          <EditorItemWithVersion key={project.id} project={project} AssignEditor={AssignEditor} />
+          <EditorItemWithVersion
+            AssignEditor={AssignEditor}
+            key={project.id}
+            project={project}
+          />
         ))}
       </div>
     )}

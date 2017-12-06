@@ -6,8 +6,8 @@ export default file => dispatch => {
   data.append('file', file)
 
   const request = new XMLHttpRequest()
-  request.open('POST', endpoint + '/upload')
-  request.setRequestHeader('Authorization', 'Bearer ' + token())
+  request.open('POST', `${endpoint}/upload`)
+  request.setRequestHeader('Authorization', `Bearer ${token()}`)
   request.setRequestHeader('Accept', 'text/plain') // the response is a URL
   request.send(data)
 

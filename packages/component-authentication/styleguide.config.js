@@ -1,17 +1,19 @@
 module.exports = {
   title: 'xpub authentication style guide',
   styleguideComponents: {
-    StyleGuideRenderer: require.resolve('xpub-styleguide/src/components/StyleGuideRenderer'),
-    Wrapper: require.resolve('xpub-styleguide/src/components/Wrapper')
+    StyleGuideRenderer: require.resolve(
+      'xpub-styleguide/src/components/StyleGuideRenderer',
+    ),
+    Wrapper: require.resolve('xpub-styleguide/src/components/Wrapper'),
   },
   skipComponentsWithoutExample: true,
   serverPort: 6061,
   theme: {
     fontFamily: {
-      base: '"Fira Sans", sans-serif'
+      base: '"Fira Sans", sans-serif',
     },
     color: {
-      link: 'cornflowerblue'
-    }
-  }
+      link: 'cornflowerblue',
+    },
+  },
 }

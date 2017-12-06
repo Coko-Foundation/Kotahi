@@ -1,10 +1,22 @@
 import React from 'react'
 
 export default {
-  italic: <i>Ital</i>,
   bold: <b>Bold</b>,
-  superscript: <span>t<sup>x</sup></span>,
-  subscript: <span>t<sub>x</sub></span>,
-  small_caps: <span>T<span style={{ fontVariant: 'small-caps', fontSize: '70%' }}>T</span></span>,
-  link: <span>Link</span>
+  italic: <i>Ital</i>,
+  link: <span>Link</span>,
+  small_caps: (
+    <span>
+      T<span style={{ fontSize: '70%', fontVariant: 'small-caps' }}>T</span>
+    </span>
+  ),
+  subscript: (
+    <span>
+      t<sub>x</sub>
+    </span>
+  ),
+  superscript: (
+    <span>
+      t<sup>x</sup>
+    </span>
+  ),
 }

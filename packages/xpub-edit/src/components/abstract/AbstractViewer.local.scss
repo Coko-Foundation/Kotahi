@@ -1,19 +1,14 @@
 .root {
-  min-height: 5em;
   font-family: var(--font-author);
-  max-width: 50ch;
-  text-align: justify;
+  font-size: 1em;
   hyphens: auto;
   line-height: 1.5;
+  max-width: 50ch;
+  min-height: 5em;
+  text-align: justify;
 }
 
 .placeholder {
   font-family: var(--font-interface);
   font-style: italic;
-}
-
-.root {
-  font-size: 1em;
-  line-height: 1.5;
-  font-family: var(--font-author);
 }

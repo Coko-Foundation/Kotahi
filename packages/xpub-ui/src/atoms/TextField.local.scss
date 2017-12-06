@@ -1,6 +1,6 @@
 .root {
-  display: flex;
   align-items: center;
+  display: flex;
 }
 
 .text {
@@ -15,21 +15,21 @@
 
 .root input {
   border: 0 none;
-  padding: 0;
   border-bottom: 1px dashed #aaa;
   font-family: "Vollkorn", serif;
+  padding: 0;
 
   &:hover,
   &:focus {
-    outline-style: none;
-    box-shadow: none;
-    border-color: transparent;
     border-bottom: 1px dashed var(--color-primary);
+    border-color: transparent;
+    box-shadow: none;
+    outline-style: none;
   }
 }
 
 .root input::placeholder {
-  font-style: italic;
-  font-family: var(--font-interface);
   color: #777;
+  font-family: var(--font-interface);
+  font-style: italic;
 }

@@ -1,5 +1,3 @@
 import { history } from 'prosemirror-history'
 
-export default [
-  history()
-]
+export default [history()]

@@ -1,11 +1,11 @@
 .root {
+  font-family: var(--font-author);
   font-size: 1em;
   line-height: 1.5;
-  font-family: var(--font-author);
 }
 
 .placeholder {
-  font-style: italic;
-  font-family: var(--font-interface);
   color: #aaa;
+  font-family: var(--font-interface);
+  font-style: italic;
 }

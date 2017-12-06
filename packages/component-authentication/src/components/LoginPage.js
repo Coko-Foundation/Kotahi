@@ -15,26 +15,26 @@ const redirectPath = ({ location: { state } }) => {
 }
 
 const onSubmit = (values, dispatch, { history, location }) => {
-  dispatch(login(values)).then(() => {
-    history.push(redirectPath({ location }))
-  }).catch(error => {
-    if (error.validationErrors) {
-      throw new SubmissionError(error.validationErrors)
-    } else {
-      console.error(error)
-      // TODO: display error
-    }
-  })
+  dispatch(login(values))
+    .then(() => {
+      history.push(redirectPath({ location }))
+    })
+    .catch(error => {
+      if (error.validationErrors) {
+        throw new SubmissionError(error.validationErrors)
+      } else {
+        console.error(error)
+        // TODO: display error
+      }
+    })
 }
 
 export default compose(
   reduxForm({
     form: 'login',
-    onSubmit
+    onSubmit,
   }),
-  connect(
-    state => ({
-      error: state.login.error
-    })
-  )
+  connect(state => ({
+    error: state.login.error,
+  })),
 )(Login)

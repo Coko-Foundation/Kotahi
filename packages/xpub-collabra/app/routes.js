@@ -1,51 +1,59 @@
 import React from 'react'
 import { Route, withRouter } from 'react-router-dom'
-import loadable from 'loadable-components'
 
-import { App } from 'pubsweet-component-xpub-app/src/components'
+import App from 'pubsweet-component-xpub-app/src/components'
 
 import {
   PrivateRoute,
   SignupPage,
   LoginPage,
-  LogoutPage
+  LogoutPage,
 } from 'pubsweet-component-xpub-authentication/src/components'
 
-const DashboardPage = loadable(() =>
-  import('pubsweet-component-xpub-dashboard/src/components/DashboardPage'))
-
-const SubmitPage = loadable(() =>
-  import('pubsweet-component-xpub-submit/src/components/SubmitPage'))
-
-const ManuscriptPage = loadable(() =>
-  import('pubsweet-component-xpub-manuscript/src/components/ManuscriptPage'))
-
-const ReviewersPage = loadable(() =>
-  import('pubsweet-component-xpub-review/src/components/ReviewersPage'))
-
-const ReviewPage = loadable(() =>
-  import('pubsweet-component-xpub-review/src/components/ReviewPage'))
-
-const DecisionPage = loadable(() =>
-  import('pubsweet-component-xpub-review/src/components/DecisionPage'))
+import DashboardPage from 'pubsweet-component-xpub-dashboard/src/components/DashboardPage'
+import SubmitPage from 'pubsweet-component-xpub-submit/src/components/SubmitPage'
+import ManuscriptPage from 'pubsweet-component-xpub-manuscript/src/components/ManuscriptPage'
+import ReviewersPage from 'pubsweet-component-xpub-review/src/components/ReviewersPage'
+import ReviewPage from 'pubsweet-component-xpub-review/src/components/ReviewPage'
+import DecisionPage from 'pubsweet-component-xpub-review/src/components/DecisionPage'
 
 // TODO: use componentDidMount to fetch the current user before rendering?
 
 const Root = () => (
   <App>
-    <PrivateRoute exact path="/" component={DashboardPage}/>
-    <PrivateRoute exact path="/projects/:project/versions/:version/submit" component={SubmitPage}/>
-    <PrivateRoute exact path="/projects/:project/versions/:version/manuscript" component={ManuscriptPage}/>
-    <PrivateRoute exact path="/projects/:project/versions/:version/reviewers" component={ReviewersPage}/>
-    <PrivateRoute exact path="/projects/:project/versions/:version/reviews/:review" component={ReviewPage}/>
-    <PrivateRoute exact path="/projects/:project/versions/:version/decisions/:decision" component={DecisionPage}/>
+    <PrivateRoute component={DashboardPage} exact path="/" />
+    <PrivateRoute
+      component={SubmitPage}
+      exact
+      path="/projects/:project/versions/:version/submit"
+    />
+    <PrivateRoute
+      component={ManuscriptPage}
+      exact
+      path="/projects/:project/versions/:version/manuscript"
+    />
+    <PrivateRoute
+      component={ReviewersPage}
+      exact
+      path="/projects/:project/versions/:version/reviewers"
+    />
+    <PrivateRoute
+      component={ReviewPage}
+      exact
+      path="/projects/:project/versions/:version/reviews/:review"
+    />
+    <PrivateRoute
+      component={DecisionPage}
+      exact
+      path="/projects/:project/versions/:version/decisions/:decision"
+    />
 
-    <PrivateRoute exact path="/logout" component={LogoutPage}/>
+    <PrivateRoute component={LogoutPage} exact path="/logout" />
 
-    <Route exact path="/signup" component={SignupPage}/>
-    <Route exact path="/login" component={LoginPage}/>
+    <Route component={SignupPage} exact path="/signup" />
+    <Route component={LoginPage} exact path="/login" />
 
-    {/*<Redirect from="/" to="/dashboard"/>*/}
+    {/* <Redirect from="/" to="/dashboard"/> */}
   </App>
 )
 

@@ -1,4 +1,4 @@
 module.exports = {
   StyleGuideRenderer: require('./StyleGuideRenderer'),
-  Wrapper: require('./Wrapper')
+  Wrapper: require('./Wrapper'),
 }

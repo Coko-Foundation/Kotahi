@@ -10,9 +10,7 @@ const Icon = ({ children, color = 'black', size = 24 }) => {
   // select the icon
   const icon = icons[name]
 
-  return (
-    <span className={classes.root}>{icon({ color, size })}</span>
-  )
+  return <span className={classes.root}>{icon({ color, size })}</span>
 }
 
 export default Icon

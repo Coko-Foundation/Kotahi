@@ -5,31 +5,37 @@ import { ValidatedField } from 'xpub-ui'
 import { required } from 'xpub-validators'
 import classes from './Metadata.local.scss'
 
-const FundingInput = input =>
+const FundingInput = input => (
   <NoteEditor
     placeholder="Enter an acknowledgment…"
     title="Funding body acknowledgement (required)"
-    {...input}/>
+    {...input}
+  />
+)
 
-const InstructionsInput = input =>
+const InstructionsInput = input => (
   <NoteEditor
     placeholder="Enter instructions for the editor…"
     title="Special instructions (confidential)"
-    {...input}/>
+    {...input}
+  />
+)
 
 const Notes = () => (
   <FormSection name="notes">
     <div className={classes.section} id="notes.fundingAcknowledgement">
       <ValidatedField
+        component={FundingInput}
         name="fundingAcknowledgement"
         validate={[required]}
-        component={FundingInput}/>
+      />
     </div>
 
     <div className={classes.section} id="notes.specialInstructions">
       <ValidatedField
+        component={InstructionsInput}
         name="specialInstructions"
-        component={InstructionsInput}/>
+      />
     </div>
   </FormSection>
 )

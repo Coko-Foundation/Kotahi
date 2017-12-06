@@ -14,7 +14,7 @@ const parser = schema => {
 }
 
 class HtmlViewer extends React.Component {
-  componentWillMount () {
+  componentWillMount() {
     const { value, options } = this.props
     const { schema } = options
 
@@ -23,14 +23,10 @@ class HtmlViewer extends React.Component {
     options.doc = parse(value)
   }
 
-  render () {
+  render() {
     const { options } = this.props
 
-    return (
-      <Viewer
-        options={options}
-      />
-    )
+    return <Viewer options={options} />
   }
 }
 

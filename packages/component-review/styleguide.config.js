@@ -1,42 +1,44 @@
 module.exports = {
   title: 'xpub review style guide',
   styleguideComponents: {
-    StyleGuideRenderer: require.resolve('xpub-styleguide/src/components/StyleGuideRenderer'),
-    Wrapper: require.resolve('xpub-styleguide/src/components/Wrapper')
+    StyleGuideRenderer: require.resolve(
+      'xpub-styleguide/src/components/StyleGuideRenderer',
+    ),
+    Wrapper: require.resolve('xpub-styleguide/src/components/Wrapper'),
   },
   context: {
-    faker: 'faker'
+    faker: 'faker',
   },
   skipComponentsWithoutExample: true,
   serverPort: 6065,
   theme: {
     fontFamily: {
-      base: '"Fira Sans", sans-serif'
+      base: '"Fira Sans", sans-serif',
     },
     color: {
-      link: 'cornflowerblue'
-    }
+      link: 'cornflowerblue',
+    },
   },
   sections: [
     {
       name: 'Reviewers',
-      components: 'src/components/reviewers/*.js'
+      components: 'src/components/reviewers/*.js',
     },
     {
       name: 'Review',
-      components: 'src/components/review/*.js'
+      components: 'src/components/review/*.js',
     },
     {
       name: 'Decision',
-      components: 'src/components/decision/*.js'
+      components: 'src/components/decision/*.js',
     },
     {
       name: 'Metadata',
-      components: 'src/components/metadata/*.js'
+      components: 'src/components/metadata/*.js',
     },
     {
       name: 'Tabs',
-      components: 'src/components/tabs/*.js'
-    }
-  ]
+      components: 'src/components/tabs/*.js',
+    },
+  ],
 }
