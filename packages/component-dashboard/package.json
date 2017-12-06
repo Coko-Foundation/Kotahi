@@ -13,7 +13,7 @@
     "lodash": "^4.17.4",
     "prop-types": "^15.5.10",
     "pubsweet-client": "^1.0.0-beta.8",
-    "pubsweet-component-ink-frontend": "^0.2.2",
+    "pubsweet-component-ink-frontend": "^0.2.3",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-redux": "^5.0.2",

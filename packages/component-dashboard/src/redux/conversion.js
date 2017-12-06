@@ -44,7 +44,7 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
 
     const fileURL = request.responseText
 
-    dispatch(convertToHTML(inputFile))
+    dispatch(convertToHTML(inputFile, {}))
       .then(response => {
         if (!response.converted) {
           throw new Error('The file was not converted')
