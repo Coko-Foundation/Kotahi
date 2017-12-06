@@ -37,16 +37,15 @@ export default {
     h1: {
       active: blockActive(schema.nodes.heading, { level: 1 }),
       content: icons.heading,
-      enable: setBlockType(schema.nodes.heading, { level: 1 }),
       run: (state, dispatch) => {
-        if (blockActive(schema.marks.heading)(state)) {
-          setBlockType(schema.marks.paragraph)(state, dispatch)
+        if (blockActive(schema.nodes.heading)(state)) {
+          setBlockType(schema.nodes.paragraph)(state, dispatch)
           return true
         }
 
         setBlockType(schema.nodes.heading, { level: 1 })(state, dispatch)
       },
-      title: 'Change to heading level 1',
+      title: 'Toggle section title',
     },
   },
   history: {
