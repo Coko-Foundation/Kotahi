@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route, withRouter } from 'react-router-dom'
+import { Route } from 'react-router-dom'
 
 import App from 'pubsweet-component-xpub-app/src/components'
 
@@ -19,7 +19,7 @@ import DecisionPage from 'pubsweet-component-xpub-review/src/components/Decision
 
 // TODO: use componentDidMount to fetch the current user before rendering?
 
-const Root = () => (
+const Routes = () => (
   <App>
     <PrivateRoute component={DashboardPage} exact path="/" />
     <PrivateRoute
@@ -57,4 +57,4 @@ const Root = () => (
   </App>
 )
 
-export default withRouter(Root)
+export default Routes
