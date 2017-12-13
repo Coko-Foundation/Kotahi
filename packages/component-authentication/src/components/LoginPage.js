@@ -1,18 +1,9 @@
-import { get } from 'lodash'
-import config from 'config'
 import { reduxForm, SubmissionError } from 'redux-form'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import { login } from '../redux/login'
 import Login from './Login'
-
-const redirectPath = ({ location: { state } }) => {
-  const redirect = get(config, ['pubsweet-client', 'login-redirect'], '/')
-
-  return state && state.from && state.from.pathname !== '/logout'
-    ? state.from.pathname
-    : redirect
-}
+import redirectPath from '../redirect'
 
 const onSubmit = (values, dispatch, { history, location }) => {
   dispatch(login(values))
