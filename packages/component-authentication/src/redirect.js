@@ -1,12 +1,10 @@
 import { get } from 'lodash'
 import config from 'config'
 
-const exclude = ['/logout', '/login', '/signup']
+const allowedRedirect = pathname =>
+  ['/logout', '/login', '/signup'].indexOf(pathname) === -1
 
-export default ({ location: { state } }) => {
-  const redirect = get(config, ['pubsweet-client', 'login-redirect'], '/')
-
-  return state && state.from && !exclude.includes[state.from.pathname]
+export default ({ location: { state } }) =>
+  state && state.from && allowedRedirect(state.from.pathname)
     ? state.from.pathname
-    : redirect
-}
+    : get(config, ['pubsweet-client', 'login-redirect'], '/')
