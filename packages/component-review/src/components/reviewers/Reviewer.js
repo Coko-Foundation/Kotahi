@@ -1,7 +1,7 @@
 import React from 'react'
 import { map } from 'lodash'
 import Moment from 'react-moment'
-import { Avatar, Button } from 'xpub-ui'
+import { Avatar, Button } from '@pubsweet/ui'
 
 import classes from './Reviewer.local.scss'
 

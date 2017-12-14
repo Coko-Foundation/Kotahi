@@ -3,7 +3,7 @@ import { compose } from 'recompose'
 import { connect } from 'react-redux'
 // import PropTypes from 'prop-types'
 
-import { AppBar } from 'xpub-ui'
+import { AppBar } from '@pubsweet/ui'
 import { withJournal } from 'xpub-journal'
 import 'xpub-bootstrap'
 

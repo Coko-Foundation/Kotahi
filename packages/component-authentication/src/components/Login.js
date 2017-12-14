@@ -1,7 +1,7 @@
 import React from 'react'
 import { Field } from 'redux-form'
 import { Link } from 'react-router-dom'
-import { Button, TextField } from 'xpub-ui'
+import { Button, TextField } from '@pubsweet/ui'
 import classes from './Form.local.scss'
 
 const UsernameInput = props => <TextField label="Username" {...props.input} />

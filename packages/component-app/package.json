@@ -19,7 +19,7 @@
     "redux": "^3.6.0",
     "xpub-bootstrap": "^0.0.2",
     "xpub-journal": "^0.0.2",
-    "xpub-ui": "^0.0.2"
+    "@pubsweet/ui": "^0.1.1"
   },
   "peerDependencies": {
     "prop-types": "^15.5.10",

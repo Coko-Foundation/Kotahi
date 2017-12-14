@@ -1,11 +1,10 @@
 import React from 'react'
 import { compose, withProps } from 'recompose'
-import { Menu } from 'xpub-ui'
+import { Menu } from '@pubsweet/ui'
 import { withJournal } from 'xpub-journal'
 
 // TODO: select multiple editors
 const AssignEditor = ({
-  journal,
   project,
   team,
   teamName,

@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormSection } from 'redux-form'
 import { NoteEditor } from 'xpub-edit'
-import { Attachments, Button, RadioGroup, ValidatedField } from 'xpub-ui'
+import { Attachments, Button, RadioGroup, ValidatedField } from '@pubsweet/ui'
 import { withJournal } from 'xpub-journal'
 import { required } from 'xpub-validators'
 import classes from './ReviewForm.local.scss'

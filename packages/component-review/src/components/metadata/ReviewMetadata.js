@@ -1,5 +1,5 @@
 import React from 'react'
-import { File } from 'xpub-ui'
+import { File } from '@pubsweet/ui'
 import classes from './ReviewMetadata.local.scss'
 
 const ReviewMetadata = ({ version, handlingEditors }) => (

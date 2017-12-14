@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormSection } from 'redux-form'
-import { TextField, ValidatedField } from 'xpub-ui'
+import { TextField, ValidatedField } from '@pubsweet/ui'
 import { join, split } from 'xpub-validators'
 import classes from './Suggestions.local.scss'
 

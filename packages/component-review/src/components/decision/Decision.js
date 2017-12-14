@@ -1,6 +1,6 @@
 import React from 'react'
 import { NoteViewer } from 'xpub-edit'
-import { Attachment } from 'xpub-ui'
+import { Attachment } from '@pubsweet/ui'
 import classes from './Decision.local.scss'
 
 const Decision = ({ decision }) => (

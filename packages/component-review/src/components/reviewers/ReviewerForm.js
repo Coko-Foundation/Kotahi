@@ -1,7 +1,7 @@
 import React from 'react'
 import Select from 'react-select'
 import { Field } from 'redux-form'
-import { Button } from 'xpub-ui'
+import { Button } from '@pubsweet/ui'
 import { required } from 'xpub-validators'
 import 'react-select/dist/react-select.css'
 import classes from './ReviewerForm.local.scss'
