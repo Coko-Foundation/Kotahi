@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button } from 'xpub-ui'
+import { Button } from '@pubsweet/ui'
 import { getReviewerFromUser } from 'xpub-selectors'
 import classes from './Item.local.scss'
 import ProjectLink from '../ProjectLink'

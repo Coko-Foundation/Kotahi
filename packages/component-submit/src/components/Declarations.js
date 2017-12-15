@@ -1,7 +1,7 @@
 import React from 'react'
 import classnames from 'classnames'
 import { FormSection } from 'redux-form'
-import { ValidatedField, YesOrNo } from 'xpub-ui'
+import { ValidatedField, YesOrNo } from '@pubsweet/ui'
 import { withJournal } from 'xpub-journal'
 import { required } from 'xpub-validators'
 import classes from './Declarations.local.scss'

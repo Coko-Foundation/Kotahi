@@ -1,7 +1,7 @@
 import React from 'react'
 import { compose, withProps } from 'recompose'
 import { groupBy } from 'lodash'
-import { Badge } from 'xpub-ui'
+import { Badge } from '@pubsweet/ui'
 import classes from './Reviews.local.scss'
 
 const Reviews = ({ reviews }) => (

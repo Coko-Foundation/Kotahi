@@ -1,5 +1,5 @@
 import React from 'react'
-import { Button, PlainButton } from 'xpub-ui'
+import { Button, PlainButton } from '@pubsweet/ui'
 import classes from './Confirm.local.scss'
 
 const Confirm = ({ toggleConfirming }) => (

@@ -1,7 +1,7 @@
 import React from 'react'
 import { FormSection } from 'redux-form'
 import { AbstractEditor, TitleEditor } from 'xpub-edit'
-import { CheckboxGroup, Menu, TextField, ValidatedField } from 'xpub-ui'
+import { CheckboxGroup, Menu, TextField, ValidatedField } from '@pubsweet/ui'
 import { withJournal } from 'xpub-journal'
 import {
   join,

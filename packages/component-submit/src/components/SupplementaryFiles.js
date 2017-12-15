@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormSection } from 'redux-form'
-import { Supplementary, ValidatedField } from 'xpub-ui'
+import { Supplementary, ValidatedField } from '@pubsweet/ui'
 import classes from './Metadata.local.scss'
 
 const FileInput = uploadFile => input => (

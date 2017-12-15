@@ -23,7 +23,6 @@ Note: xpub is still _very_ new. This repository contains an initial set of compo
 * `xpub-selectors`: some useful redux selectors
 * `xpub-styleguide`: components for use in react-styleguidist
 * `xpub-theme`: fonts and styles for use in xpub applications
-* `xpub-ui`: a library of user interface elements for use in PubSweet components
 * `xpub-upload`: a helper function for file uploading
 * `xpub-validators`: validator functions for use with redux-form
 

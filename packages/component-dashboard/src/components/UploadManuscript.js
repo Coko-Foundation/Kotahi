@@ -1,7 +1,7 @@
 import React from 'react'
 import Dropzone from 'react-dropzone'
 import classnames from 'classnames'
-import { Icon } from 'xpub-ui'
+import { Icon } from '@pubsweet/ui'
 import classes from './UploadManuscript.local.scss'
 
 const isIdle = conversion =>

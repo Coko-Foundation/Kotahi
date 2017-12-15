@@ -1,7 +1,0 @@
-{
-  "globals": {
-    "initialState": true,
-    "state": false,
-    "setState": false
-  }
-}

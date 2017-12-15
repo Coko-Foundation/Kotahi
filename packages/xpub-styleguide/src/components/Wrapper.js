@@ -1,33 +1,14 @@
 import React from 'react'
-import { Provider } from 'react-redux'
-import { BrowserRouter as Router } from 'react-router-dom'
-import { reducer as formReducer } from 'redux-form'
-import { createStore, combineReducers } from 'redux'
 import { JournalProvider } from 'xpub-journal'
+import BaseWrapper from '@pubsweet/styleguide/src/components/Wrapper'
 
 import 'xpub-theme'
-
 import * as journal from '../config/journal'
 
-import classes from './Wrapper.local.scss'
-
-const rootReducer = combineReducers({
-  form: formReducer,
-})
-
-const store = createStore(
-  rootReducer,
-  window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__(),
-)
-
 const Wrapper = ({ children }) => (
-  <Provider store={store}>
-    <Router>
-      <JournalProvider journal={journal}>
-        <div className={classes.root}>{children}</div>
-      </JournalProvider>
-    </Router>
-  </Provider>
+  <JournalProvider journal={journal}>
+    <BaseWrapper>{children}</BaseWrapper>
+  </JournalProvider>
 )
 
 export default Wrapper

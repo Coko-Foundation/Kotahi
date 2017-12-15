@@ -25,7 +25,7 @@
     "xpub-edit": "^0.0.2",
     "xpub-journal": "^0.0.2",
     "xpub-selectors": "^0.0.2",
-    "xpub-ui": "^0.0.2",
+    "@pubsweet/ui": "^0.1.1",
     "xpub-upload": "^0.0.2",
     "xpub-validators": "^0.0.2"
   },

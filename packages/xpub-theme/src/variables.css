@@ -1,16 +1,4 @@
 :root {
-  /* brand colors */
-  --color-primary: #0d78f2;
-
-  /* colors for interactions */
-  --color-danger: #ff2d1a;
-  --color-warning: #ee7600;
-  --color-valid: #00bf05;
-  --color-pending: #aaa;
-
-  /* fonts for the different views */
   --font-author: 'Vollkorn', serif;
   --font-reviewer: 'Kocourier Prime Sans', monospace;
-  --font-interface: 'Fira Sans Condensed', sans-serif;
-  --font-mono: 'Fira Mono', monospace;
 }
