@@ -28,12 +28,20 @@ build:
 lint:
   image: $DOCKERHUB_USERNAME/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
-  script: npm run lint
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - cd ${HOME}
+    - npm run lint
 
 test:
   image: $DOCKERHUB_USERNAME/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
-  script: npm run test
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - cd ${HOME}
+    - npm run test
 
 # -----------------------------------------------
 # xpub-collabra ---------------------------------

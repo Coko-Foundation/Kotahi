@@ -19,7 +19,7 @@ RUN git config --global user.email "test@testing.com" && \
 
 WORKDIR ${HOME}
 
-COPY package.json yarn.lock lerna.json ./
+COPY package.json yarn.lock lerna.json .eslintignore .eslintrc .prettierrc .stylelintignore .stylelintrc ./
 COPY packages packages
 
 RUN [ "yarn", "config", "set", "workspaces-experimental", "true" ]
