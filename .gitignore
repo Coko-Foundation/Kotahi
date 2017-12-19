@@ -6,3 +6,5 @@ node_modules
 coverage/
 api/db/*
 logs/*
+log.txt
+config.json

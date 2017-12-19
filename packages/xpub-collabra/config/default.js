@@ -20,7 +20,7 @@ module.exports = {
       path.join(__dirname, '..', 'api', 'db', environment),
   },
   'pubsweet-client': {
-    API_ENDPOINT: 'http://localhost:3000/api',
+    API_ENDPOINT: '/api',
     'login-redirect': '/',
     'redux-log': false,
     theme: process.env.PUBSWEET_THEME,
@@ -40,6 +40,7 @@ module.exports = {
     email: process.env.INK_USERNAME,
     password: process.env.INK_PASSWORD,
     maxRetries: 500,
+    recipes: {},
   },
   publicKeys: ['pubsweet-client', 'authsome', 'validations'],
 }

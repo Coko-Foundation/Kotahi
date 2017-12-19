@@ -1,5 +1,6 @@
 Note: xpub is still _very_ new. This repository contains an initial set of components but is not yet ready for use.
 
+
 ## Contents
 
 ### PubSweet components
@@ -11,11 +12,11 @@ Note: xpub is still _very_ new. This repository contains an initial set of compo
 * `component-review`: a PubSweet component that provides a Review page.
 * `component-submit`: a PubSweet component that provides a Submit page.
 
-## PubSweet applications
+### PubSweet applications
 
 * `xpub-collabra`: a PubSweet application that provides configuration and routing for a journal.
 
-## xpub packages
+### xpub packages
 
 * `xpub-connect`: a helper component for connecting pages to data
 * `xpub-edit`: WYSIWYG editors for use in xpub forms
@@ -50,8 +51,12 @@ To enable manuscript conversion via INK, add the following values to `packages/x
 ## Running the app
 
 1. `cd packages/xpub-collabra`
-1. The first time you run the app, initialise the database with `yarn run setupdb` (press Enter when asked for a collection title, to skip that step).
-1. `yarn start`
+2. The first time you run the app, initialise the database with `yarn run setupdb` (press Enter when asked for a collection title, to skip that step).
+3. `yarn start`
+
+## CI
+
+CI requires a Kubernetes cluster, resources for which can be found in `pubsweet/infra`. In order to set up a Kubernetes cluster (using AWS) you need to follow the instructions there.
 
 ## Community
 
