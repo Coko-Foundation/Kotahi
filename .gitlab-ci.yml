@@ -50,8 +50,8 @@ review:xpub-collabra:
     # !! kube-lego will fail if domain > 64 chars
     url: "https://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
     on_stop: stop_review:xpub-collabra
-  only:
-  - branches
+  except:
+  - master
   script:
     - source deploy.sh
     - create_deployment
@@ -127,8 +127,8 @@ demo:xpub-collabra:
 #    # !! kube-lego will fail if domain > 64 chars
 #    url: "https://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
 #    on_stop: stop_review:xpub-ui
-#  only:
-#  - branches
+#  except:
+#  - master
 #  script:
 #    - source deploy.sh
 #    - create_deployment
