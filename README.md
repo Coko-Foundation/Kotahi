@@ -56,3 +56,16 @@ To enable manuscript conversion via INK, add the following values to `packages/x
 ## Community
 
 Join [the Mattermost channel](https://mattermost.coko.foundation/coko/channels/xpub) for discussion of xpub.
+
+## Roadmap
+
+The major tasks we're planning to work on are the following: 
+* Implement a future-proof theming setup.
+* Let users go through multiple rounds of review.
+* Implement roles and permissions.
+* Change the data model to account for the changes that have occured in `pubsweet-server`, as well as to make it easily portable to Postgres in the future.
+* Merge xpub's authentication, routing and navigation with pubsweet's.
+
+You can follow more fine-grained lists of things that we're working on  
+* [Collabra](https://gitlab.coko.foundation/xpub/xpub/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Collabra) for tasks related to `xpub-collabra` and  
+* [Xpub](https://gitlab.coko.foundation/xpub/xpub/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Xpub) for more general xpub concerns
