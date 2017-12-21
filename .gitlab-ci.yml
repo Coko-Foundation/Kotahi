@@ -74,6 +74,8 @@ stop_review:xpub-collabra:
     name: $PACKAGE_NAME/review/$CI_COMMIT_REF_NAME
     action: stop
   when: manual
+  except:
+  - master
   script:
     - source deploy.sh
     - delete_deployment
