@@ -8,6 +8,7 @@
     "url": "https://gitlab.coko.foundation/xpub/xpub"
   },
   "dependencies": {
+    "@pubsweet/ui": "^0.1.1",
     "babel-core": "^6.26.0",
     "config": "^1.26.2",
     "font-awesome": "^4.7.0",
@@ -17,8 +18,8 @@
     "loadable-components": "^0.3.0",
     "moment": "^2.18.1",
     "prop-types": "^15.5.10",
-    "pubsweet": "^1.0.0-beta.5",
-    "pubsweet-client": "^1.0.0-beta.8",
+    "pubsweet": "^1.1.1",
+    "pubsweet-client": "^1.1.1",
     "pubsweet-component-ink-backend": "^0.1.1",
     "pubsweet-component-ink-frontend": "^0.2.3",
     "pubsweet-component-xpub-app": "^0.0.2",
@@ -27,7 +28,7 @@
     "pubsweet-component-xpub-manuscript": "^0.0.2",
     "pubsweet-component-xpub-review": "^0.0.2",
     "pubsweet-component-xpub-submit": "^0.0.2",
-    "pubsweet-server": "^1.0.0-beta.2",
+    "pubsweet-server": "^1.0.1",
     "react": "^15.6.1",
     "react-dom": "^15.6.1",
     "react-router-dom": "^4.2.2",
@@ -35,10 +36,10 @@
     "redux": "^3.6.0",
     "redux-form": "^7.0.3",
     "redux-logger": "^3.0.1",
+    "winston": "^2.4.0",
     "xpub-journal": "^0.0.2",
     "xpub-selectors": "^0.0.2",
-    "xpub-theme": "^0.0.2",
-    "@pubsweet/ui": "^0.1.1"
+    "xpub-theme": "^0.0.2"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",

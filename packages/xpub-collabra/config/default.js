@@ -1,5 +1,6 @@
 const path = require('path')
 const components = require('./components.json')
+const logger = require('winston')
 
 const environment = process.env.NODE_ENV || 'development'
 
@@ -18,6 +19,7 @@ module.exports = {
     dbPath:
       process.env.PUBSWEET_DB ||
       path.join(__dirname, '..', 'api', 'db', environment),
+    logger,
   },
   'pubsweet-client': {
     API_ENDPOINT: 'http://localhost:3000/api',
