@@ -1,5 +1,5 @@
 import { actions } from 'pubsweet-client'
-import { ink as convertToHTML } from 'pubsweet-component-ink-frontend/actions'
+import { ink } from 'pubsweet-component-ink-frontend/actions'
 import uploadFile from 'xpub-upload'
 import { generateTitle, extractTitle } from '../lib/title'
 
@@ -44,7 +44,7 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
 
     const fileURL = request.responseText
 
-    dispatch(convertToHTML(inputFile, {}))
+    dispatch(ink(inputFile, { recipe: 'editoria-typescript' }))
       .then(response => {
         if (!response.converted) {
           throw new Error('The file was not converted')
