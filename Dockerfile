@@ -19,6 +19,12 @@ WORKDIR ${HOME}
 COPY package.json yarn.lock lerna.json .eslintignore .eslintrc .prettierrc .stylelintignore .stylelintrc ./
 COPY packages packages
 
+
+# /cache/yarn is directory mounted from gitlab-runner host
+RUN [ "yarn", "config", "set", "cache-folder", "/cache/yarn" ]
+RUN ["yarn", "cache", "dir"]
+RUN ["yarn", "cache", "list"]
+
 RUN [ "yarn", "config", "set", "workspaces-experimental", "true" ]
 # We do a development install because react-styleguidist is a dev dependency
 RUN [ "yarn", "install", "--frozen-lockfile" ]
@@ -38,6 +44,7 @@ RUN [ "npx", "pubsweet", "build"]
 # RUN [ "npm", "run", "styleguide:build" ]
 ## Create file for kubernetes health checks
 # RUN touch ./styleguide/health
+
 
 EXPOSE 3000
 
