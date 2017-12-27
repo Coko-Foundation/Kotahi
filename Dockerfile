@@ -1,36 +1,13 @@
-FROM node:8.9-alpine
-MAINTAINER PubSweet Team <richard@coko.foundation>
+FROM xpub/xpub:base
 
-ENV HOME "/home/xpub"
-
-RUN mkdir -p ${HOME}
-
-# git required for yarn. Why isn't it included!?
-# the rest is for compiling leveldown
-RUN apk add --no-cache --virtual .gyp \
-        python \
-        curl \
-        make \
-        g++ \
-        git
-
-WORKDIR ${HOME}
-
-COPY package.json yarn.lock lerna.json .eslintignore .eslintrc .prettierrc .stylelintignore .stylelintrc ./
+COPY package.json yarn.lock ./
+COPY lerna.json .eslintignore .eslintrc .prettierrc .stylelintignore .stylelintrc ./
 COPY packages packages
-
-
-# /cache/yarn is directory mounted from gitlab-runner host
-RUN [ "yarn", "config", "set", "cache-folder", "/cache/yarn" ]
-RUN ["yarn", "cache", "dir"]
-RUN ["yarn", "cache", "list"]
 
 RUN [ "yarn", "config", "set", "workspaces-experimental", "true" ]
 # We do a development install because react-styleguidist is a dev dependency
 RUN [ "yarn", "install", "--frozen-lockfile" ]
-
 RUN [ "npm", "rebuild", "bcrypt", "--build-from-source=bcrypt"]
-
 ENV NODE_ENV "production"
 
 # We are temporarily going to use the same image with different commands to deploy different apps in the monorepo. This is bad :(.
