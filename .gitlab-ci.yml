@@ -1,5 +1,4 @@
 variables:
-  DOCKER_DRIVER: overlay
   IMAGE_NAME: xpub
   BASE_DOMAIN: gateway.xpub.semioticsquares.com
   CONFIGURATION_REPOSITORY: https://gitlab.coko.foundation/pubsweet/infra.git
@@ -14,8 +13,6 @@ stages:
 
 build:
   image: docker:latest
-  services:
-    - docker:dind
   stage: build
   script:
     - docker version
