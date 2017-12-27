@@ -14,9 +14,6 @@ RUN apk add --no-cache --virtual .gyp \
         g++ \
         git
 
-RUN git config --global user.email "test@testing.com" && \
-    git config --global user.name "Fakey McFakerson"
-
 WORKDIR ${HOME}
 
 COPY package.json yarn.lock lerna.json .eslintignore .eslintrc .prettierrc .stylelintignore .stylelintrc ./
