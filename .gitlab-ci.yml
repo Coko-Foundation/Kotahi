@@ -18,8 +18,7 @@ build:
     - docker version
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
     - echo "Ignore warning! Cannot perform an interactive login from a non TTY device"
-    - docker build --pull -t $DOCKERHUB_USERNAME/$IMAGE_NAME .
-    - docker tag $DOCKERHUB_USERNAME/$IMAGE_NAME $DOCKERHUB_USERNAME/$IMAGE_NAME:$CI_COMMIT_SHA
+    - docker build -t $DOCKERHUB_USERNAME/$IMAGE_NAME:$CI_COMMIT_SHA .
     - docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:$CI_COMMIT_SHA
 
 lint:
