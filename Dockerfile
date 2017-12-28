@@ -8,7 +8,6 @@ RUN [ "yarn", "config", "set", "workspaces-experimental", "true" ]
 
 # We do a development install because react-styleguidist is a dev dependency
 RUN [ "yarn", "install", "--frozen-lockfile" ]
-RUN [ "npm", "rebuild", "bcrypt", "--build-from-source=bcrypt"]
 
 # Remove cache and offline mirror
 RUN [ "yarn", "cache", "clean"]
