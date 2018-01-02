@@ -42,7 +42,9 @@ module.exports = {
     email: process.env.INK_USERNAME,
     password: process.env.INK_PASSWORD,
     maxRetries: 500,
-    recipes: {},
+    recipes: {
+      'editoria-typescript': '2',
+    },
   },
   publicKeys: ['pubsweet-client', 'authsome', 'validations'],
 }
