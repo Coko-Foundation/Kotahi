@@ -11,6 +11,7 @@ const Manuscript = ({
   fileUpload,
   history,
   updateManuscript,
+  version,
 }) => (
   <SimpleEditor
     classes={classes.fullscreen}
@@ -18,7 +19,7 @@ const Manuscript = ({
     fileUpload={fileUpload}
     history={history}
     onSave={source => updateManuscript({ source })}
-    readOnly={false}
+    readOnly={version.submitted}
     trackChanges={false}
     update={data => updateManuscript(data)}
     user={currentUser}
