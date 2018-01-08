@@ -1,7 +1,8 @@
 variables:
+  IMAGE_ORG: xpub
   IMAGE_NAME: xpub
   BASE_DOMAIN: gateway.xpub.semioticsquares.com
-  CONFIGURATION_REPOSITORY: https://gitlab.coko.foundation/pubsweet/infra.git
+  CONFIGURATION_REPOSITORY: https://gitlab.coko.foundation/xpub/deployment-config.git
 
 stages:
   - build
@@ -18,11 +19,11 @@ build:
     - docker version
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD
     - echo "Ignore warning! Cannot perform an interactive login from a non TTY device"
-    - docker build -t $DOCKERHUB_USERNAME/$IMAGE_NAME:$CI_COMMIT_SHA .
-    - docker push $DOCKERHUB_USERNAME/$IMAGE_NAME:$CI_COMMIT_SHA
+    - docker build -t $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA .
+    - docker push $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
 
 lint:
-  image: $DOCKERHUB_USERNAME/$IMAGE_NAME:$CI_COMMIT_SHA
+  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
   variables:
     GIT_STRATEGY: none
@@ -31,7 +32,7 @@ lint:
     - npm run lint
 
 test:
-  image: $DOCKERHUB_USERNAME/$IMAGE_NAME:$CI_COMMIT_SHA
+  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
   variables:
     GIT_STRATEGY: none
@@ -44,7 +45,7 @@ test:
 # -----------------------------------------------
 
 review:xpub-collabra:
-  image: xpub/deployer:latest
+  image: pubsweet/deployer:latest
   stage: review
   variables:
     PACKAGE_NAME: xpub-collabra
@@ -61,7 +62,7 @@ review:xpub-collabra:
     - create_deployment
 
 stop_review:xpub-collabra:
-  image: xpub/deployer:latest
+  image: pubsweet/deployer:latest
   stage: review
   variables:
     PACKAGE_NAME: xpub-collabra
@@ -78,7 +79,7 @@ stop_review:xpub-collabra:
 
 
 staging:xpub-collabra:
-  image: xpub/deployer:latest
+  image: pubsweet/deployer:latest
   stage: staging
   variables:
     PACKAGE_NAME: xpub-collabra
@@ -92,7 +93,7 @@ staging:xpub-collabra:
     - create_deployment
 
 production:xpub-collabra:
-  image: xpub/deployer:latest
+  image: pubsweet/deployer:latest
   stage: production
   variables:
     PACKAGE_NAME: xpub-collabra
@@ -107,7 +108,7 @@ production:xpub-collabra:
     - create_deployment
 
 demo:xpub-collabra:
-  image: xpub/deployer:latest
+  image: pubsweet/deployer:latest
   stage: demo
   variables:
     PACKAGE_NAME: xpub-collabra
@@ -124,7 +125,7 @@ demo:xpub-collabra:
 # -----------------------------------------------
 
 #review:xpub-ui:
-#  image: xpub/deployer:latest
+#  image: pubsweet/deployer:latest
 #  stage: review
 #  variables:
 #    PACKAGE_NAME: xpub-ui
@@ -140,7 +141,7 @@ demo:xpub-collabra:
 #    - create_deployment
 #
 #stop_review:xpub-ui:
-#  image: xpub/deployer:latest
+#  image: pubsweet/deployer:latest
 #  stage: review
 #  variables:
 #    PACKAGE_NAME: xpub-ui
@@ -154,7 +155,7 @@ demo:xpub-collabra:
 #    - delete_deployment
 #
 #staging:xpub-ui:
-#  image: xpub/deployer:latest
+#  image: pubsweet/deployer:latest
 #  stage: staging
 #  variables:
 #    PACKAGE_NAME: xpub-ui
@@ -168,7 +169,7 @@ demo:xpub-collabra:
 #    - create_deployment
 #
 #production:xpub-ui:
-#  image: xpub/deployer:latest
+#  image: pubsweet/deployer:latest
 #  stage: production
 #  variables:
 #    PACKAGE_NAME: xpub-ui
@@ -183,7 +184,7 @@ demo:xpub-collabra:
 #    - create_deployment
 #
 #demo:xpub-ui:
-#  image: xpub/deployer:latest
+#  image: pubsweet/deployer:latest
 #  stage: demo
 #  variables:
 #    PACKAGE_NAME: xpub-ui
