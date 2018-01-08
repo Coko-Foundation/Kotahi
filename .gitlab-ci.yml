@@ -2,7 +2,7 @@ variables:
   IMAGE_ORG: xpub
   IMAGE_NAME: xpub
   BASE_DOMAIN: gateway.xpub.semioticsquares.com
-  CONFIGURATION_REPOSITORY: https://gitlab.coko.foundation/pubsweet/infra.git
+  CONFIGURATION_REPOSITORY: https://gitlab.coko.foundation/xpub/deployment-config.git
 
 stages:
   - build
