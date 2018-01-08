@@ -69,7 +69,7 @@ To enable manuscript conversion via INK, add the following values to `packages/x
 
 ## CI
 
-CI requires a Kubernetes cluster, resources for which can be found in `pubsweet/infra`. In order to set up a Kubernetes cluster (using AWS) you need to follow the instructions there.
+CI requires a Kubernetes cluster, resources for which can be found in [`pubsweet/infra`](https://gitlab.coko.foundation/pubsweet/infra). In order to set up a Kubernetes cluster (using AWS) you need to follow the instructions there. Templates for deploying to this cluster with [`pubsweet/deployer`](https://gitlab.coko.foundation/pubsweet/deployer) are located in [`xpub/deployment-config`](https://gitlab.coko.foundation/xpub/deployment-config).
 
 ## Community
 
