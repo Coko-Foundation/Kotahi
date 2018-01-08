@@ -44,7 +44,7 @@ test:
 # -----------------------------------------------
 
 review:xpub-collabra:
-  image: xpub/deployer:latest
+  image: pubsweet/deployer:latest
   stage: review
   variables:
     PACKAGE_NAME: xpub-collabra
@@ -61,7 +61,7 @@ review:xpub-collabra:
     - create_deployment
 
 stop_review:xpub-collabra:
-  image: xpub/deployer:latest
+  image: pubsweet/deployer:latest
   stage: review
   variables:
     PACKAGE_NAME: xpub-collabra
@@ -78,7 +78,7 @@ stop_review:xpub-collabra:
 
 
 staging:xpub-collabra:
-  image: xpub/deployer:latest
+  image: pubsweet/deployer:latest
   stage: staging
   variables:
     PACKAGE_NAME: xpub-collabra
@@ -92,7 +92,7 @@ staging:xpub-collabra:
     - create_deployment
 
 production:xpub-collabra:
-  image: xpub/deployer:latest
+  image: pubsweet/deployer:latest
   stage: production
   variables:
     PACKAGE_NAME: xpub-collabra
@@ -107,7 +107,7 @@ production:xpub-collabra:
     - create_deployment
 
 demo:xpub-collabra:
-  image: xpub/deployer:latest
+  image: pubsweet/deployer:latest
   stage: demo
   variables:
     PACKAGE_NAME: xpub-collabra
@@ -124,7 +124,7 @@ demo:xpub-collabra:
 # -----------------------------------------------
 
 #review:xpub-ui:
-#  image: xpub/deployer:latest
+#  image: pubsweet/deployer:latest
 #  stage: review
 #  variables:
 #    PACKAGE_NAME: xpub-ui
@@ -140,7 +140,7 @@ demo:xpub-collabra:
 #    - create_deployment
 #
 #stop_review:xpub-ui:
-#  image: xpub/deployer:latest
+#  image: pubsweet/deployer:latest
 #  stage: review
 #  variables:
 #    PACKAGE_NAME: xpub-ui
@@ -154,7 +154,7 @@ demo:xpub-collabra:
 #    - delete_deployment
 #
 #staging:xpub-ui:
-#  image: xpub/deployer:latest
+#  image: pubsweet/deployer:latest
 #  stage: staging
 #  variables:
 #    PACKAGE_NAME: xpub-ui
@@ -168,7 +168,7 @@ demo:xpub-collabra:
 #    - create_deployment
 #
 #production:xpub-ui:
-#  image: xpub/deployer:latest
+#  image: pubsweet/deployer:latest
 #  stage: production
 #  variables:
 #    PACKAGE_NAME: xpub-ui
@@ -183,7 +183,7 @@ demo:xpub-collabra:
 #    - create_deployment
 #
 #demo:xpub-ui:
-#  image: xpub/deployer:latest
+#  image: pubsweet/deployer:latest
 #  stage: demo
 #  variables:
 #    PACKAGE_NAME: xpub-ui
