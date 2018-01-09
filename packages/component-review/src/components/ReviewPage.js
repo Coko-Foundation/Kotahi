@@ -78,15 +78,17 @@ export default compose(
       const version = selectFragment(state, match.params.version)
       const currentVersion = selectCurrentVersion(state, project)
 
-      const handlingEditors = state.teams
-        .find(
-          team =>
-            team.object.type === 'collection' &&
-            team.object.id === match.params.project &&
-            team.teamType.name === 'handlingEditor',
-        )
-        .members.map(id => selectUser(state, id))
+      let handlingEditors
+      const editors = state.teams.find(
+        team =>
+          team.object.type === 'collection' &&
+          team.object.id === match.params.project &&
+          team.teamType.name === 'handlingEditor',
+      )
 
+      if (editors) {
+        handlingEditors = editors.members.map(id => selectUser(state, id))
+      }
       const reviewer = getReviewerFromUser(project, currentVersion, currentUser)
 
       return {
