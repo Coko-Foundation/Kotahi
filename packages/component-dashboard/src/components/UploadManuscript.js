@@ -15,13 +15,11 @@ class UploadManuscript extends Component {
     }
   }
 
-  componentDidMount() {
-    if (this.state.complete === true) {
-      setTimeout(() => {
-        this.setState({
-          complete: false,
-        })
-      }, 3000)
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.conversion.complete === true) {
+      this.setState({
+        complete: true,
+      })
     }
   }
 

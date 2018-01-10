@@ -8,6 +8,7 @@ import { generateTitle, extractTitle } from '../lib/title'
 export const UPLOAD_MANUSCRIPT_REQUEST = 'UPLOAD_MANUSCRIPT_REQUEST'
 export const UPLOAD_MANUSCRIPT_SUCCESS = 'UPLOAD_MANUSCRIPT_SUCCESS'
 export const UPLOAD_MANUSCRIPT_FAILURE = 'UPLOAD_MANUSCRIPT_FAILURE'
+export const INITIAL_MANUSCRIPT = 'INITIAL_MANUSCRIPT'
 
 /* actions */
 
@@ -85,11 +86,13 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
               const route = `/projects/${collection.id}/versions/${
                 fragment.id
               }/submit`
-
               // redirect after a short delay
               window.setTimeout(() => {
+                dispatch({
+                  type: INITIAL_MANUSCRIPT,
+                })
                 history.push(route)
-              }, 1000)
+              }, 2000)
             })
           },
         )
@@ -105,9 +108,9 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
 /* reducer */
 
 const initialState = {
-  complete: undefined,
+  complete: false,
   converting: false,
-  error: undefined,
+  error: false,
 }
 
 export default (state = initialState, action) => {
@@ -117,6 +120,12 @@ export default (state = initialState, action) => {
         complete: false,
         converting: true,
         error: undefined,
+      }
+
+    case INITIAL_MANUSCRIPT:
+      return {
+        complete: false,
+        converting: false,
       }
 
     case UPLOAD_MANUSCRIPT_SUCCESS:
