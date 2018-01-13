@@ -8,7 +8,6 @@ import { generateTitle, extractTitle } from '../lib/title'
 export const UPLOAD_MANUSCRIPT_REQUEST = 'UPLOAD_MANUSCRIPT_REQUEST'
 export const UPLOAD_MANUSCRIPT_SUCCESS = 'UPLOAD_MANUSCRIPT_SUCCESS'
 export const UPLOAD_MANUSCRIPT_FAILURE = 'UPLOAD_MANUSCRIPT_FAILURE'
-export const INITIAL_MANUSCRIPT = 'INITIAL_MANUSCRIPT'
 
 /* actions */
 
@@ -40,6 +39,11 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
 
   request.addEventListener('load', event => {
     if (request.status >= 400) {
+      dispatch(
+        uploadManuscriptFailure({
+          message: 'There was an error uploading the file',
+        }),
+      )
       throw new Error('There was an error uploading the file')
     }
 
@@ -88,9 +92,6 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
               }/submit`
               // redirect after a short delay
               window.setTimeout(() => {
-                dispatch({
-                  type: INITIAL_MANUSCRIPT,
-                })
                 history.push(route)
               }, 2000)
             })
@@ -98,7 +99,6 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
         )
       })
       .catch(error => {
-        console.error(error)
         dispatch(uploadManuscriptFailure(error))
         throw error // rethrow
       })
@@ -108,35 +108,26 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
 /* reducer */
 
 const initialState = {
-  complete: false,
   converting: false,
-  error: false,
+  error: undefined,
 }
 
 export default (state = initialState, action) => {
   switch (action.type) {
     case UPLOAD_MANUSCRIPT_REQUEST:
       return {
-        complete: false,
         converting: true,
         error: undefined,
       }
 
-    case INITIAL_MANUSCRIPT:
-      return {
-        complete: false,
-        converting: false,
-      }
-
     case UPLOAD_MANUSCRIPT_SUCCESS:
       return {
-        complete: true,
         converting: false,
+        error: undefined,
       }
 
     case UPLOAD_MANUSCRIPT_FAILURE:
       return {
-        complete: false,
         converting: false,
         error: action.error,
       }
