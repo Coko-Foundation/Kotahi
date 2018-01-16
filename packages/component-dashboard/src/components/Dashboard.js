@@ -42,7 +42,11 @@ const Dashboard = ({
         <div className={classes.heading}>My Submissions</div>
         {dashboard.owner.map(project => (
           <OwnerItemWithVersion
-            deleteProject={deleteProject}
+            deleteProject={() =>
+              window.confirm(
+                'Are you sure you want to delete this submission?',
+              ) && deleteProject(project)
+            }
             key={project.id}
             project={project}
           />
