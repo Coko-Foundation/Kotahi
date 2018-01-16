@@ -39,6 +39,11 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
 
   request.addEventListener('load', event => {
     if (request.status >= 400) {
+      dispatch(
+        uploadManuscriptFailure({
+          message: 'There was an error uploading the file',
+        }),
+      )
       throw new Error('There was an error uploading the file')
     }
 
@@ -85,17 +90,15 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
               const route = `/projects/${collection.id}/versions/${
                 fragment.id
               }/submit`
-
               // redirect after a short delay
               window.setTimeout(() => {
                 history.push(route)
-              }, 1000)
+              }, 2000)
             })
           },
         )
       })
       .catch(error => {
-        console.error(error)
         dispatch(uploadManuscriptFailure(error))
         throw error // rethrow
       })
@@ -105,7 +108,6 @@ export const uploadManuscript = (acceptedFiles, history) => dispatch => {
 /* reducer */
 
 const initialState = {
-  complete: undefined,
   converting: false,
   error: undefined,
 }
@@ -114,20 +116,18 @@ export default (state = initialState, action) => {
   switch (action.type) {
     case UPLOAD_MANUSCRIPT_REQUEST:
       return {
-        complete: false,
         converting: true,
         error: undefined,
       }
 
     case UPLOAD_MANUSCRIPT_SUCCESS:
       return {
-        complete: true,
         converting: false,
+        error: undefined,
       }
 
     case UPLOAD_MANUSCRIPT_FAILURE:
       return {
-        complete: false,
         converting: false,
         error: action.error,
       }
