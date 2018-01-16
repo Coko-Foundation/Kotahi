@@ -1,16 +1,13 @@
 .root {
-  bottom: 0;
-  display: flex;
-  left: 0;
-  overflow: hidden;
-  position: absolute;
-  right: 0;
-  top: 50px;
+  display: grid;
+  grid-column-gap: 2em;
+  grid-template-areas: "manuscript decision files";
+  grid-template-columns: minmax(200px, 80ch) minmax(200px, 50ch) minmax(10ch, 10ch);
+  justify-content: center;
 }
 
 .column {
   flex: 1;
   height: 100%;
   overflow-y: hidden;
-  padding: 10px;
 }
