@@ -11,8 +11,11 @@ jest.mock('config', () => ({ 'pubsweet-client': {} }))
 
 describe('Dashboard', () => {
   it('can render', () => {
-    // doesn't actually work cos of missing props
-    const wrapper = shallow(<Dashboard />)
-    console.log(wrapper.debug())
+    const dashboard = {
+      owner: [],
+      reviewer: [],
+      editor: [],
+    }
+    shallow(<Dashboard dashboard={dashboard} />)
   })
 })
