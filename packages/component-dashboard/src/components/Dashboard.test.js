@@ -37,11 +37,25 @@ describe('Dashboard', () => {
     expect(dashboard.find('.heading')).toHaveLength(0)
   })
 
+  it('shows a list of projects submitted by the current user', () => {
+    const dashboard = makeWrapper({
+      dashboard: { owner: [{ id: 1 }] },
+    })
+    expect(dashboard.find('.empty')).toHaveLength(0)
+    expect(dashboard.find('.heading')).toHaveLength(1)
+  })
+
   it('shows a list of projects to be reviewed', () => {
     const dashboard = makeWrapper({
-      dashboard: {
-        owner: [{ id: 1 }],
-      },
+      dashboard: { reviewer: [{ id: 1 }] },
+    })
+    expect(dashboard.find('.empty')).toHaveLength(0)
+    expect(dashboard.find('.heading')).toHaveLength(1)
+  })
+
+  it('shows a list of projects of which the current user is the editor', () => {
+    const dashboard = makeWrapper({
+      dashboard: { editor: [{ id: 1 }] },
     })
     expect(dashboard.find('.empty')).toHaveLength(0)
     expect(dashboard.find('.heading')).toHaveLength(1)
