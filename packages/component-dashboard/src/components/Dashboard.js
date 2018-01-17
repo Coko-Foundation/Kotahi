@@ -43,6 +43,7 @@ const Dashboard = ({
         {dashboard.owner.map(project => (
           <OwnerItemWithVersion
             deleteProject={() =>
+              // eslint-disable-next-line
               window.confirm(
                 'Are you sure you want to delete this submission?',
               ) && deleteProject(project)
