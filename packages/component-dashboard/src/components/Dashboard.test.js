@@ -10,12 +10,40 @@ Enzyme.configure({ adapter: new Adapter() })
 jest.mock('config', () => ({ 'pubsweet-client': {} }))
 
 describe('Dashboard', () => {
-  it('can render', () => {
-    const dashboard = {
-      owner: [],
-      reviewer: [],
-      editor: [],
-    }
-    shallow(<Dashboard dashboard={dashboard} />)
+  const makeWrapper = (props = {}) => {
+    props = Object.assign(
+      {
+        dashboard: {},
+        conversion: {},
+      },
+      props,
+    )
+
+    props.dashboard = Object.assign(
+      {
+        owner: [],
+        reviewer: [],
+        editor: [],
+      },
+      props.dashboard,
+    )
+
+    return shallow(<Dashboard {...props} />)
+  }
+
+  it('shows a message when there are no projects', () => {
+    const dashboard = makeWrapper()
+    expect(dashboard.find('.empty')).toHaveLength(1)
+    expect(dashboard.find('.heading')).toHaveLength(0)
+  })
+
+  it('shows a list of projects to be reviewed', () => {
+    const dashboard = makeWrapper({
+      dashboard: {
+        owner: [{ id: 1 }],
+      },
+    })
+    expect(dashboard.find('.empty')).toHaveLength(0)
+    expect(dashboard.find('.heading')).toHaveLength(1)
   })
 })
