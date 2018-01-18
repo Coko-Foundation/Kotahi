@@ -56,7 +56,7 @@ const handleDecision = (project, version) => dispatch =>
           actions.updateCollection({
             id: project.id,
             rev: project.rev,
-            status: 'revise',
+            status: 'revising',
           }),
         ).then(() =>
           dispatch(

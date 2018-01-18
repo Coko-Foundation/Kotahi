@@ -56,13 +56,18 @@ export default compose(
         )
 
       const dashboard = {
-        editor: newestFirst(
-          unassignedCollections
-            .concat(myCollections)
-            .filter(
-              (collection, index, items) =>
-                items.findIndex(item => item.id === collection.id) === index,
-            ),
+        // editor: newestFirst(
+        //   unassignedCollections
+        //     .concat(myCollections)
+        //     .filter(
+        //       (collection, index, items) =>
+        //         items.findIndex(item => item.id === collection.id) === index,
+        //     ),
+        // ),
+        editor: sortedCollections.filter(
+          collection =>
+            collection.status === 'submitted' ||
+            collection.status === 'revising',
         ),
         owner: sortedCollections.filter(
           collection =>
