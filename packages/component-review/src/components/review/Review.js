@@ -40,7 +40,9 @@ const Review = ({ review }) => (
     <div>
       <div className={classes.heading}>Recommendation</div>
 
-      <div className={classes.recommendation}>{review.recommendation}</div>
+      <div className={classes.recommendation}>
+        {review.Recommendation.recommendation}
+      </div>
     </div>
   </div>
 )

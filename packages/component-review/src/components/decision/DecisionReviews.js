@@ -13,6 +13,7 @@ const DecisionReviews = ({ journal, version }) => (
         .map((review, index) => (
           <div className={classes.review} key={review.id}>
             <DecisionReview
+              open
               review={review}
               reviewer={{
                 name: null,

@@ -4,38 +4,70 @@ import { withJournal } from 'xpub-journal'
 import Review from '../review/Review'
 import classes from './DecisionReview.local.scss'
 
-const DecisionReview = ({ review, reviewer, journal, open, toggleOpen }) => (
-  <div>
-    <div className={classes.heading}>
-      <span
-        className={classes.indicator}
-        style={{
-          backgroundColor: review.recommendation
-            ? journal.recommendations.find(
-                item => item.value === review.recommendation,
-              ).color
-            : 'black',
-        }}
-      />
+const ToggleReview = ({ open, toggle }) => (
+  <button className={classes.toggle} onClick={toggle}>
+    {open ? 'Hide' : 'Show'}
+  </button>
+)
 
-      <span className={classes.ordinal}>Review {reviewer.ordinal}</span>
+const Bullet = ({ journal, recommendation }) => {
+  const recommendationColor = journal.recommendations.find(
+    item => item.value === recommendation,
+  ).color
 
-      <span className={classes.name}>{reviewer.name || 'Anonymous'}</span>
+  return (
+    <span
+      className={classes.indicator}
+      style={{
+        backgroundColor: recommendation ? recommendationColor : 'black',
+      }}
+    />
+  )
+}
 
-      <span className={classes.dots} />
+const ReviewHeading = ({
+  journal,
+  name,
+  open,
+  ordinal,
+  recommendation,
+  toggleOpen,
+}) => (
+  <div className={classes.heading}>
+    <Bullet journal={journal} recommendation={recommendation} />
 
-      <button className={classes.toggle} onClick={toggleOpen}>
-        {open ? 'Hide' : 'Show'}
-      </button>
-    </div>
+    <span className={classes.ordinal}>Review {ordinal}</span>
+    <span className={classes.name}>{name || 'Anonymous'}</span>
 
-    {open && (
-      <div className={classes.review}>
-        <Review review={review} />
-      </div>
-    )}
+    <span className={classes.dots} />
+
+    <ToggleReview open toggle={toggleOpen} />
   </div>
 )
+
+const DecisionReview = ({ review, reviewer, journal, open, toggleOpen }) => {
+  const { recommendation } = review.Recommendation
+  const { name, ordinal } = reviewer
+
+  return (
+    <div>
+      <ReviewHeading
+        journal={journal}
+        name={name}
+        open={open}
+        ordinal={ordinal}
+        recommendation={recommendation}
+        toggleOpen={toggleOpen}
+      />
+
+      {open && (
+        <div className={classes.review}>
+          <Review review={review} />
+        </div>
+      )}
+    </div>
+  )
+}
 
 export default compose(
   withJournal,
