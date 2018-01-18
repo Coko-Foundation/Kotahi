@@ -10,12 +10,12 @@ import Decision from './Decision'
 import Tabs from '../tabs/Tabs'
 
 const DecisionLayout = ({
-  project,
-  versions,
   currentVersion,
-  valid,
   handleSubmit,
+  project,
   uploadFile,
+  valid,
+  versions,
 }) => {
   const decisionSections = []
   const editorSections = []
@@ -43,7 +43,12 @@ const DecisionLayout = ({
 
       editorSections.push({
         content: (
-          <SimpleEditor content={version.source} layout="bare" readOnly />
+          <SimpleEditor
+            content={version.source}
+            key={key}
+            layout="bare"
+            readOnly
+          />
         ),
         key,
         label,
@@ -77,7 +82,12 @@ const DecisionLayout = ({
 
     editorSections.push({
       content: (
-        <SimpleEditor content={currentVersion.source} layout="bare" readOnly />
+        <SimpleEditor
+          content={currentVersion.source}
+          key={key}
+          layout="bare"
+          readOnly
+        />
       ),
       key,
       label,
