@@ -24,9 +24,9 @@ const ReviewLayout = ({
   versions.forEach(version => {
     let review
     if (version.reviewers) {
-      review = version.reviewers.find(review => {
-        return review.reviewer === reviewer._reviewer.id
-      })
+      review = version.reviewers.find(
+        review => review.reviewer === reviewer._reviewer.id,
+      )
     }
 
     if (review && review.submitted) {
