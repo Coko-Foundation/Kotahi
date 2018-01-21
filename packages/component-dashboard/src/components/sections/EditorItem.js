@@ -12,8 +12,6 @@ import Reviews from '../Reviews'
 import VersionTitle from './VersionTitle'
 
 const Actions = ({ project, version }) => {
-  if (project.status === 'revising') return null
-
   return (
     <div className={classes.links}>
       <div className={classes.link}>
