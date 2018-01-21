@@ -9,6 +9,12 @@ import ReviewMetadata from '../metadata/ReviewMetadata'
 import Decision from './Decision'
 import Tabs from '../tabs/Tabs'
 
+// TODO -- is passing arrays of react components as props an ok practice?
+/*
+  TODO -- should we make an editor for each tab, or should we just rerender
+          the same one with different content?
+*/
+
 const DecisionLayout = ({
   currentVersion,
   handleSubmit,
