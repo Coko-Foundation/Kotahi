@@ -9,13 +9,19 @@ import ReviewMetadata from '../metadata/ReviewMetadata'
 import Decision from './Decision'
 import Tabs from '../tabs/Tabs'
 
+// TODO -- is passing arrays of react components as props an ok practice?
+/*
+  TODO -- should we make an editor for each tab, or should we just rerender
+          the same one with different content?
+*/
+
 const DecisionLayout = ({
-  project,
-  versions,
   currentVersion,
-  valid,
   handleSubmit,
+  project,
   uploadFile,
+  valid,
+  versions,
 }) => {
   const decisionSections = []
   const editorSections = []
@@ -43,7 +49,12 @@ const DecisionLayout = ({
 
       editorSections.push({
         content: (
-          <SimpleEditor content={version.source} layout="bare" readOnly />
+          <SimpleEditor
+            content={version.source}
+            key={key}
+            layout="bare"
+            readOnly
+          />
         ),
         key,
         label,
@@ -77,7 +88,12 @@ const DecisionLayout = ({
 
     editorSections.push({
       content: (
-        <SimpleEditor content={currentVersion.source} layout="bare" readOnly />
+        <SimpleEditor
+          content={currentVersion.source}
+          key={key}
+          layout="bare"
+          readOnly
+        />
       ),
       key,
       label,

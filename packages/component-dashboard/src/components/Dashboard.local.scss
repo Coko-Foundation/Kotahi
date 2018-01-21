@@ -16,7 +16,8 @@
   color: var(--color-primary);
   font-family: Vollkorn, serif;
   font-size: 1.6em;
-  margin: 4em 0 2em;
+  // margin: 4em 0 2em;
+  margin: 1em 0 1em;
   text-transform: uppercase;
 }
 
@@ -26,7 +27,7 @@
 }
 
 .section:not(:last-of-type) {
-  margin-bottom: 20px;
+  margin-bottom: 70px;
 }
 
 a {
