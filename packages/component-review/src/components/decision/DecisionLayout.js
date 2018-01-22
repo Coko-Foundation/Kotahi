@@ -64,7 +64,7 @@ const DecisionLayout = ({
 
   const { decision } = currentVersion
 
-  if (!decision || !decision.submitted) {
+  if (currentVersion.submitted && (!decision || !decision.submitted)) {
     const submittedMoment = moment()
     const key = submittedMoment.format('x')
     const label = submittedMoment.format('YYYY-MM-DD')

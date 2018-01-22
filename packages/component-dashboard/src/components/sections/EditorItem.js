@@ -11,38 +11,34 @@ import classes from './Item.local.scss'
 import Reviews from '../Reviews'
 import VersionTitle from './VersionTitle'
 
-const Actions = ({ project, version }) => {
-  if (project.status === 'revising') return null
+const Actions = ({ project, version }) => (
+  <div className={classes.links}>
+    <div className={classes.link}>
+      {(!version.decision ||
+        version.decision.status !== 'revising' ||
+        version.decision.status !== 'submitted') && (
+        <span>
+          <ProjectLink page="reviewers" project={project} version={version}>
+            Assign Reviewers
+          </ProjectLink>
 
-  return (
-    <div className={classes.links}>
-      <div className={classes.link}>
-        {(!version.decision ||
-          version.decision.status !== 'revising' ||
-          version.decision.status !== 'submitted') && (
-          <span>
-            <ProjectLink page="reviewers" project={project} version={version}>
-              Assign Reviewers
-            </ProjectLink>
+          <Divider separator="|" />
+        </span>
+      )}
 
-            <Divider separator="|" />
-          </span>
-        )}
-
-        <ProjectLink
-          id={project.id}
-          page="decisions"
-          project={project}
-          version={version}
-        >
-          {version.decision && version.decision.status === 'submitted'
-            ? `Decision: ${version.decision.recommendation}`
-            : 'Make decision'}
-        </ProjectLink>
-      </div>
+      <ProjectLink
+        id={project.id}
+        page="decisions"
+        project={project}
+        version={version}
+      >
+        {version.decision && version.decision.status === 'submitted'
+          ? `Decision: ${version.decision.recommendation}`
+          : 'Make decision'}
+      </ProjectLink>
     </div>
-  )
-}
+  </div>
+)
 
 const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
   <div className={classes.root}>

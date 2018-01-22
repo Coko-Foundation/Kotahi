@@ -68,7 +68,7 @@ const ReviewLayout = ({
     review => review.reviewer === reviewer.id,
   )
 
-  if (!review || !review.submitted) {
+  if (currentVersion.submitted && (!review || !review.submitted)) {
     const submittedMoment = moment()
     const key = submittedMoment.format('x')
     const label = submittedMoment.format('YYYY-MM-DD')
