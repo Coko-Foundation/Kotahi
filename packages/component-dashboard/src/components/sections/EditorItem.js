@@ -14,7 +14,7 @@ import VersionTitle from './VersionTitle'
 const Actions = ({ project, version }) => (
   <div className={classes.links}>
     <div className={classes.link}>
-      {(!version.decision ||
+      {/* {(!version.decision ||
         version.decision.status !== 'revising' ||
         version.decision.status !== 'submitted') && (
         <span>
@@ -24,7 +24,7 @@ const Actions = ({ project, version }) => (
 
           <Divider separator="|" />
         </span>
-      )}
+      )} */}
 
       <ProjectLink
         id={project.id}
@@ -34,7 +34,7 @@ const Actions = ({ project, version }) => (
       >
         {version.decision && version.decision.status === 'submitted'
           ? `Decision: ${version.decision.recommendation}`
-          : 'Make decision'}
+          : 'Control Panel'}
       </ProjectLink>
     </div>
   </div>
