@@ -1,6 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 // import classnames from 'classnames'
+import { Link } from 'react-router-dom'
 import SimpleEditor from 'wax-editor-react'
 import classes from './DecisionLayout.local.scss'
 import DecisionForm from './DecisionForm'
@@ -68,12 +69,18 @@ const DecisionLayout = ({
     const submittedMoment = moment()
     const key = submittedMoment.format('x')
     const label = submittedMoment.format('YYYY-MM-DD')
-
     decisionSections.push({
       content: (
         <div>
           <ReviewMetadata version={currentVersion} />
           <DecisionReviews version={currentVersion} />
+          <Link
+            to={`/projects/${project.id}/versions/${
+              currentVersion.id
+            }/reviewers`}
+          >
+            Assign Reviewers
+          </Link>
           <DecisionForm
             decision={decision}
             handleSubmit={handleSubmit}
