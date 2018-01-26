@@ -63,6 +63,7 @@ review:xpub-collabra:
   variables:
     PACKAGE_NAME: xpub-collabra
     FORCE_FRESH_DB: "yes"
+    REQUIRES_PROVISIONING: "yes"
   environment:
     name: $PACKAGE_NAME/review/$CI_COMMIT_REF_NAME
     # !! kube-lego will fail if domain > 64 chars
@@ -79,6 +80,7 @@ stop_review:xpub-collabra:
   stage: review
   variables:
     PACKAGE_NAME: xpub-collabra
+    REQUIRES_PROVISIONING: "yes"
     GIT_STRATEGY: none
   environment:
     name: $PACKAGE_NAME/review/$CI_COMMIT_REF_NAME
@@ -89,7 +91,7 @@ stop_review:xpub-collabra:
   script:
     - source deploy.sh
     - delete_deployment
-
+    - delete_objects_in_environment pvc
 
 staging:xpub-collabra:
   image: pubsweet/deployer:latest
@@ -144,7 +146,7 @@ demo:xpub-collabra:
 #    PACKAGE_NAME: xpub-ui
 #  environment:
 #    name: $PACKAGE_NAME/review/$CI_COMMIT_REF_NAME
-#    # !! kube-lego will fail if domain > 64 chars
+#    # !! kube-lego will fail if domain > 63 chars
 #    url: "https://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
 #    on_stop: stop_review:xpub-ui
 #  except:
