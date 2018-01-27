@@ -1,11 +1,7 @@
 import React from 'react'
-<<<<<<< HEAD
 import { withProps } from 'recompose'
-import { Route } from 'react-router-dom'
-import { AuthenticatedComponent } from 'pubsweet-client'
-=======
 import { Route, Switch } from 'react-router-dom'
->>>>>>> Redirect to dashboard if no route matches
+import { AuthenticatedComponent } from 'pubsweet-client'
 
 import App from 'pubsweet-component-xpub-app/src/components'
 import Login from 'pubsweet-component-login/LoginContainer'
@@ -35,38 +31,6 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 
 const Routes = () => (
   <App>
-<<<<<<< HEAD
-    <PrivateRoute component={DashboardPage} exact path="/" />
-    <PrivateRoute
-      component={SubmitPage}
-      exact
-      path="/projects/:project/versions/:version/submit"
-    />
-    <PrivateRoute
-      component={ManuscriptPage}
-      exact
-      path="/projects/:project/versions/:version/manuscript"
-    />
-    <PrivateRoute
-      component={ReviewersPage}
-      exact
-      path="/projects/:project/versions/:version/reviewers"
-    />
-    <PrivateRoute
-      component={ReviewPage}
-      exact
-      path="/projects/:project/versions/:version/reviews/:review"
-    />
-    <PrivateRoute
-      component={DecisionPage}
-      exact
-      path="/projects/:project/versions/:version/decisions/:decision"
-    />
-
-    <Route component={Signup} exact path="/signup" />
-    <Route component={LoginPage} exact path="/login" />
-    <Route component={DashboardPage} path="*" />
-=======
     <Switch>
       <PrivateRoute component={DashboardPage} exact path="/" />
       <PrivateRoute
@@ -101,7 +65,6 @@ const Routes = () => (
       <Route component={LoginPage} exact path="/login" />
       <PrivateRoute component={DashboardPage} path="*" />
     </Switch>
->>>>>>> Redirect to dashboard if no route matches
     {/* <Redirect from="/" to="/dashboard"/> */}
   </App>
 )
