@@ -1,5 +1,5 @@
 import React from 'react'
-import { Route } from 'react-router-dom'
+import { Route, Switch } from 'react-router-dom'
 
 import App from 'pubsweet-component-xpub-app/src/components'
 
@@ -21,38 +21,40 @@ import DecisionPage from 'pubsweet-component-xpub-review/src/components/Decision
 
 const Routes = () => (
   <App>
-    <PrivateRoute component={DashboardPage} exact path="/" />
-    <PrivateRoute
-      component={SubmitPage}
-      exact
-      path="/projects/:project/versions/:version/submit"
-    />
-    <PrivateRoute
-      component={ManuscriptPage}
-      exact
-      path="/projects/:project/versions/:version/manuscript"
-    />
-    <PrivateRoute
-      component={ReviewersPage}
-      exact
-      path="/projects/:project/versions/:version/reviewers"
-    />
-    <PrivateRoute
-      component={ReviewPage}
-      exact
-      path="/projects/:project/versions/:version/reviews/:review"
-    />
-    <PrivateRoute
-      component={DecisionPage}
-      exact
-      path="/projects/:project/versions/:version/decisions/:decision"
-    />
+    <Switch>
+      <PrivateRoute component={DashboardPage} exact path="/" />
+      <PrivateRoute
+        component={SubmitPage}
+        exact
+        path="/projects/:project/versions/:version/submit"
+      />
+      <PrivateRoute
+        component={ManuscriptPage}
+        exact
+        path="/projects/:project/versions/:version/manuscript"
+      />
+      <PrivateRoute
+        component={ReviewersPage}
+        exact
+        path="/projects/:project/versions/:version/reviewers"
+      />
+      <PrivateRoute
+        component={ReviewPage}
+        exact
+        path="/projects/:project/versions/:version/reviews/:review"
+      />
+      <PrivateRoute
+        component={DecisionPage}
+        exact
+        path="/projects/:project/versions/:version/decisions/:decision"
+      />
 
-    <PrivateRoute component={LogoutPage} exact path="/logout" />
+      <PrivateRoute component={LogoutPage} exact path="/logout" />
 
-    <Route component={SignupPage} exact path="/signup" />
-    <Route component={LoginPage} exact path="/login" />
-    <Route component={DashboardPage} path="*" />
+      <Route component={SignupPage} exact path="/signup" />
+      <Route component={LoginPage} exact path="/login" />
+      <PrivateRoute component={DashboardPage} path="*" />
+    </Switch>
     {/* <Redirect from="/" to="/dashboard"/> */}
   </App>
 )
