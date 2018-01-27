@@ -52,7 +52,7 @@ const Routes = () => (
 
     <Route component={SignupPage} exact path="/signup" />
     <Route component={LoginPage} exact path="/login" />
-
+    <Route component={DashboardPage} path="*" />
     {/* <Redirect from="/" to="/dashboard"/> */}
   </App>
 )
