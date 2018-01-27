@@ -59,9 +59,7 @@ const Routes = () => (
         path="/projects/:project/versions/:version/decisions/:decision"
       />
 
-      <PrivateRoute component={LogoutPage} exact path="/logout" />
-
-      <Route component={SignupPage} exact path="/signup" />
+      <Route component={Signup} exact path="/signup" />
       <Route component={LoginPage} exact path="/login" />
       <PrivateRoute component={DashboardPage} path="*" />
     </Switch>
