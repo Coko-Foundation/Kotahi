@@ -67,7 +67,7 @@ review:xpub-collabra:
   environment:
     name: $PACKAGE_NAME/review/$CI_COMMIT_REF_NAME
     # !! kube-lego will fail if domain > 64 chars
-    url: "https://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
+    url: "http://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
     on_stop: stop_review:xpub-collabra
   except:
   - master
@@ -147,7 +147,7 @@ demo:xpub-collabra:
 #  environment:
 #    name: $PACKAGE_NAME/review/$CI_COMMIT_REF_NAME
 #    # !! kube-lego will fail if domain > 63 chars
-#    url: "https://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
+#    url: "http://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
 #    on_stop: stop_review:xpub-ui
 #  except:
 #  - master
