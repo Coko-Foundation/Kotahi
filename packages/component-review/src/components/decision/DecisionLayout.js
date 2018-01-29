@@ -73,7 +73,6 @@ const DecisionLayout = ({
       content: (
         <div>
           <ReviewMetadata version={currentVersion} />
-          <DecisionReviews version={currentVersion} />
           <Link
             to={`/projects/${project.id}/versions/${
               currentVersion.id
@@ -81,6 +80,7 @@ const DecisionLayout = ({
           >
             Assign Reviewers
           </Link>
+          <DecisionReviews version={currentVersion} />
           <DecisionForm
             decision={decision}
             handleSubmit={handleSubmit}
