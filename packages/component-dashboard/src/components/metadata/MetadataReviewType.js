@@ -1,7 +1,7 @@
 import React from 'react'
 
-const MetadataReviewType = ({ openReview }) => (
-  <span>{openReview ? 'Open review' : 'Closed review'}</span>
+const MetadataReviewType = ({ openPeerReview }) => (
+  <span>{openPeerReview === 'yes' ? 'Open review' : 'Closed review'}</span>
 )
 
 export default MetadataReviewType
