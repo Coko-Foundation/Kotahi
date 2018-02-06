@@ -10,7 +10,7 @@ const ReviewMetadata = ({ version, handlingEditors }) => (
       <tbody>
         <tr>
           <th className={classes.heading}>peer review:</th>
-          <td>{version.declarations.openReview ? 'open' : 'closed'}</td>
+          <td>{version.declarations.openPeerReview ? 'open' : 'closed'}</td>
         </tr>
 
         {!!handlingEditors && (
