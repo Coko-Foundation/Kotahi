@@ -54,7 +54,9 @@ const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
         <Divider separator="–" />
         <MetadataSections sections={version.metadata.articleSection} />
         <Divider separator="–" />
-        <MetadataReviewType openReview={version.declarations.openReview} />
+        <MetadataReviewType
+          openPeerReview={version.declarations.openPeerReview}
+        />
       </div>
     </div>
 
