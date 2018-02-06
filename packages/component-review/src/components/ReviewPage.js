@@ -48,7 +48,7 @@ const onSubmit = (
 
 const onChange = (values, dispatch, { project, version, reviewer }) => {
   Object.assign(reviewer, {
-    submitted: new Date(),
+    // submitted: new Date(),
     ...values,
   })
 
