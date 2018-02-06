@@ -65,7 +65,7 @@ const ReviewLayout = ({
   }, [])
 
   const review = currentVersion.reviewers.find(
-    review => review.reviewer === reviewer.id,
+    review => review.id === reviewer.id,
   )
 
   if (currentVersion.submitted && (!review || !review.submitted)) {
