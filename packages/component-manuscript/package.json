@@ -7,7 +7,7 @@
   ],
   "main": "src",
   "dependencies": {
-    "wax-editor-react": "^0.0.10",
+    "wax-editor-react": "^0.1.7",
     "xpub-connect": "^0.0.2",
     "xpub-selectors": "^0.0.2"
   },
