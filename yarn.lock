@@ -10322,23 +10322,23 @@ watchpack@^1.4.0:
     chokidar "^1.7.0"
     graceful-fs "^4.1.2"
 
-wax-editor-core@^0.2.1:
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/wax-editor-core/-/wax-editor-core-0.2.1.tgz#850433da5919eefd66defbb388ba70641ae1f818"
+wax-editor-core@^0.3.7:
+  version "0.3.7"
+  resolved "https://registry.yarnpkg.com/wax-editor-core/-/wax-editor-core-0.3.7.tgz#37fcdb9f32870b241732d7fa27e80b7674ebe5f4"
   dependencies:
     font-awesome "^4.7.0"
     lodash "^4.17.4"
     substance "1.0.0-beta.6.5"
 
-wax-editor-react@^0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/wax-editor-react/-/wax-editor-react-0.0.10.tgz#6cb19c05fed918490034d2a7b6ce3891428f6807"
+wax-editor-react@^0.1.7:
+  version "0.1.7"
+  resolved "https://registry.yarnpkg.com/wax-editor-react/-/wax-editor-react-0.1.7.tgz#222981d68603e2fbd82fecec4d7d4cb1c35c1b08"
   dependencies:
     lodash "^4.17.4"
     react "^15.6.1"
     react-dom "^15.6.1"
     react-router-dom "^4.2.2"
-    wax-editor-core "^0.2.1"
+    wax-editor-core "^0.3.7"
 
 wbuf@^1.1.0, wbuf@^1.7.2:
   version "1.7.2"
