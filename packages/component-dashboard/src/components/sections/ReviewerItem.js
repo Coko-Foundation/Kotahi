@@ -19,7 +19,7 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
         <VersionTitle className={classes.versionTitle} version={version} />
 
         {reviewer && (
-          <div>
+          <div className={classes.links}>
             {reviewer.status === 'accepted' && (
               <div className={classes.links}>
                 <div className={classes.link}>
@@ -60,8 +60,8 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
                 </div>
               </div>
             )}
-
-            {reviewer.status === 'rejected' && <div>rejected</div>}
+            {reviewer.status === 'completed' && 'completed'}
+            {reviewer.status === 'rejected' && 'rejected'}
           </div>
         )}
       </div>
