@@ -1,0 +1,21 @@
+{
+  "name": "pubsweet-component-xpub-review-backend",
+  "version": "0.1.0",
+  "main": "src",
+  "scripts": {},
+  "keywords": [],
+  "author": "Collaborative Knowledge Foundation",
+  "license": "MIT",
+  "dependencies": {
+    "body-parser": "^1.17.2",
+    "config": "^1.26.1",
+    "moment": "^2.18.1",
+    "nodemailer": "^4.0.1"
+  },
+  "peerDependencies": {
+    "@pubsweet/logger": ">=0.0.1",
+    "nodemailer": "^4.4.2",
+    "pubsweet-component-xpub-review": "^0.0.1",
+    "pubsweet-server": ">=1.0.0-alpha.1"
+  }
+}
