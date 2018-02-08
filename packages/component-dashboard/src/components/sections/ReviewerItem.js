@@ -7,7 +7,7 @@ import Divider from './Divider'
 import VersionTitle from './VersionTitle'
 
 // TODO: only return links if version id is in reviewer.accepted array
-// TODO: only return actions if not accepted or declined
+// TODO: only return actions if not accepted or rejected
 // TODO: review id in link
 
 const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
@@ -29,7 +29,7 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
                     project={project}
                     version={version}
                   >
-                    {reviewer.submitted ? 'Reviewed' : 'Do Review'}
+                    {reviewer.submitted ? 'Completed' : 'Do Review'}
                   </ProjectLink>
                 </div>
               </div>
@@ -52,7 +52,7 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
                 <div className={classes.action}>
                   <Button
                     onClick={() =>
-                      reviewerResponse(project, version, reviewer, 'declined')
+                      reviewerResponse(project, version, reviewer, 'rejected')
                     }
                   >
                     reject
@@ -61,7 +61,7 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
               </div>
             )}
 
-            {reviewer.status === 'declined' && <div>declined</div>}
+            {reviewer.status === 'rejected' && <div>rejected</div>}
           </div>
         )}
       </div>
