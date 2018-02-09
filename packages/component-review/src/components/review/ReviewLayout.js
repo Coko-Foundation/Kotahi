@@ -53,6 +53,7 @@ const ReviewLayout = ({
         content: (
           <SimpleEditor
             content={version.source}
+            editing="selection"
             key={key}
             layout="bare"
             readOnly
@@ -96,6 +97,7 @@ const ReviewLayout = ({
       content: (
         <SimpleEditor
           content={currentVersion.source}
+          editing="selection"
           key={key}
           layout="bare"
           readOnly
