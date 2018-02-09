@@ -104,9 +104,9 @@
     typeface-fira-sans-condensed "^0.0.43"
     typeface-vollkorn "^0.0.43"
 
-"@pubsweet/ui@^0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-0.1.1.tgz#fdd6aaf85ff79de62ef6933ac90105a2b7cd8863"
+"@pubsweet/ui@^0.2.0":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-0.2.3.tgz#da93ef5bcb46444798dea9e482f0f70b5114342a"
   dependencies:
     babel-jest "^21.2.0"
     classnames "^2.2.5"
@@ -3097,7 +3097,7 @@ eslint-config-airbnb@^16.1.0:
   dependencies:
     eslint-config-airbnb-base "^12.1.0"
 
-eslint-config-prettier@^2.6.0, eslint-config-prettier@^2.7.0:
+eslint-config-prettier@^2.7.0:
   version "2.9.0"
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-2.9.0.tgz#5ecd65174d486c22dff389fe036febf502d468a3"
   dependencies:
@@ -7494,7 +7494,7 @@ preserve@^0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/preserve/-/preserve-0.2.0.tgz#815ed1f6ebc65926f865b310c0713bcb3315ce4b"
 
-prettier@^1.7.4, prettier@^1.8.2:
+prettier@^1.8.2:
   version "1.9.2"
   resolved "https://registry.yarnpkg.com/prettier/-/prettier-1.9.2.tgz#96bc2132f7a32338e6078aeb29727178c6335827"
 
@@ -7692,22 +7692,19 @@ public-encrypt@^4.0.0:
     parse-asn1 "^5.0.0"
     randombytes "^2.0.1"
 
-pubsweet-client@^1.0.0-beta.8, pubsweet-client@^1.1.1:
-  version "1.1.1"
-  resolved "https://registry.yarnpkg.com/pubsweet-client/-/pubsweet-client-1.1.1.tgz#5865f87760cc762d6ee077db0ff5ca68592c1fb4"
+pubsweet-client@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/pubsweet-client/-/pubsweet-client-1.1.4.tgz#9b4ea16bd25d305d7e3392aa45c0db8865471611"
   dependencies:
     authsome "0.0.9"
     config "^1.21.0"
-    eslint-config-prettier "^2.6.0"
     event-source-polyfill "^0.0.10"
     global "^4.3.1"
-    husky "^0.14.3"
     isomorphic-fetch "^2.1.1"
     lint-staged "^6.0.0"
     lodash "^4.0.0"
-    prettier "^1.7.4"
     prop-types "^15.5.8"
-    pubsweet-component-login "^0.5.6"
+    pubsweet-component-login "^0.6.0"
     react "^15.4.4"
     react-css-themr "^2.1.2"
     react-redux "^5.0.2"
@@ -7717,6 +7714,7 @@ pubsweet-client@^1.0.0-beta.8, pubsweet-client@^1.1.1:
     redux-form "^7.0.3"
     redux-logger "^3.0.1"
     redux-thunk "^2.2.0"
+    reselect "^3.0.1"
 
 pubsweet-component-ink-backend@^0.1.1:
   version "0.1.1"
@@ -7740,15 +7738,26 @@ pubsweet-component-ink-frontend@^0.2.3:
     react-redux "^5.0.6"
     redux "^3.7.2"
 
-pubsweet-component-login@^0.5.6:
-  version "0.5.6"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-login/-/pubsweet-component-login-0.5.6.tgz#fd637d1287254d2d08c56c51e209180ba4a6e585"
+pubsweet-component-login@^0.6.0:
+  version "0.6.0"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-login/-/pubsweet-component-login-0.6.0.tgz#4f5ee6ca096b8b8651d50c9798957a694e42c6d2"
   dependencies:
     prop-types "^15.5.10"
     react-bootstrap "^0.31.3"
     react-redux "^5.0.6"
     react-router-dom "^4.2.2"
     react-router-redux "^4.0.8"
+    redux "^3.7.2"
+    redux-form "^7.0.3"
+
+pubsweet-component-signup@^0.5.0:
+  version "0.5.0"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-signup/-/pubsweet-component-signup-0.5.0.tgz#26fd0720b8ccbe8a35ba97277d9a3ad69cb9b6a9"
+  dependencies:
+    prop-types "^15.5.10"
+    react-bootstrap "^0.31.3"
+    react-redux "^5.0.6"
+    react-router "^4.2.0"
     redux "^3.7.2"
 
 pubsweet-server@^1.0.0-beta.2, pubsweet-server@^1.0.1:
@@ -8146,7 +8155,7 @@ react-router-redux@^4.0.8:
   version "4.0.8"
   resolved "https://registry.yarnpkg.com/react-router-redux/-/react-router-redux-4.0.8.tgz#227403596b5151e182377dab835b5d45f0f8054e"
 
-react-router-redux@next:
+react-router-redux@^5.0.0-alpha.9, react-router-redux@next:
   version "5.0.0-alpha.9"
   resolved "https://registry.yarnpkg.com/react-router-redux/-/react-router-redux-5.0.0-alpha.9.tgz#825431516e0e6f1fd93b8807f6bd595e23ec3d10"
   dependencies:
@@ -8810,6 +8819,10 @@ require-uncached@^1.0.3:
 requires-port@1.0.x, requires-port@1.x.x, requires-port@~1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/requires-port/-/requires-port-1.0.0.tgz#925d2601d39ac485e091cf0da5c6e694dc3dcaff"
+
+reselect@^3.0.1:
+  version "3.0.1"
+  resolved "https://registry.yarnpkg.com/reselect/-/reselect-3.0.1.tgz#efdaa98ea7451324d092b2b2163a6a1d7a9a2147"
 
 resolve-cwd@^2.0.0:
   version "2.0.0"

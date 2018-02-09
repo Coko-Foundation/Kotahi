@@ -4,10 +4,14 @@ const path = require('path')
 // TODO: compile components to ES5 for distribution
 
 module.exports = [
+  // include app folder
   path.join(__dirname, '..', 'app'),
-  /pubsweet-[^/]+\/src/,
+  // include pubsweet and xpub packages which are published untranspiled
   /xpub-[^/]+\/src/,
   /component-[^/]+\/src/,
   /wax-[^/]+\/src/,
-  /@pubsweet\/[^/]+\/src/,
+  /pubsweet-[^/\\]+\/(?!node_modules)/,
+  /@pubsweet\/[^/\\]+\/(?!node_modules)/,
+  // include other packages when this repo is mounted in a workspace
+  /packages\/[^/\\]+\/(?!node_modules)/,
 ]
