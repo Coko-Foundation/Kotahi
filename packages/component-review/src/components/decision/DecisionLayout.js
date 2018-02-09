@@ -52,6 +52,7 @@ const DecisionLayout = ({
         content: (
           <SimpleEditor
             content={version.source}
+            editing="selection"
             key={key}
             layout="bare"
             readOnly
@@ -97,6 +98,7 @@ const DecisionLayout = ({
       content: (
         <SimpleEditor
           content={currentVersion.source}
+          editing="selection"
           key={key}
           layout="bare"
           readOnly
