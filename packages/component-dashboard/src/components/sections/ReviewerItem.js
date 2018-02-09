@@ -20,7 +20,8 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
 
         {reviewer && (
           <div className={classes.links}>
-            {reviewer.status === 'accepted' && (
+            {(reviewer.status === 'accepted' ||
+              reviewer.status === 'completed') && (
               <div className={classes.links}>
                 <div className={classes.link}>
                   <ProjectLink
@@ -60,7 +61,6 @@ const ReviewerItem = ({ project, version, currentUser, reviewerResponse }) => {
                 </div>
               </div>
             )}
-            {reviewer.status === 'completed' && 'completed'}
             {reviewer.status === 'rejected' && 'rejected'}
           </div>
         )}
