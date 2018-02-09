@@ -23,9 +23,9 @@ const onSubmit = (
   { history, project, version, reviewer },
 ) => {
   Object.assign(reviewer, {
-    status: 'reviewed',
-    submitted: new Date(),
     ...values,
+    status: 'completed',
+    submitted: new Date(),
   })
 
   return dispatch(
