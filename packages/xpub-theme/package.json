@@ -5,7 +5,7 @@
   "main": "src",
   "license": "MIT",
   "dependencies": {
-    "@pubsweet/theme": "^0.1.1",
+    "@pubsweet/theme": "^0.1.3",
     "cokourier-prime-sans": "git+https://gitlab.coko.foundation/julientaq/cokourier-sans-prime.git",
     "typeface-fira-mono": "^0.0.43",
     "typeface-fira-sans": "^0.0.43",

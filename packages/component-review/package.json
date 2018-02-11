@@ -9,13 +9,14 @@
     "dist"
   ],
   "dependencies": {
+    "@pubsweet/ui": "^2.0.0",
     "classnames": "^2.2.5",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "prop-types": "^15.5.10",
-    "pubsweet-client": "^1.1.4",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
+    "pubsweet-client": "^2.1.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "react-moment": "^0.6.1",
     "react-redux": "^5.0.2",
     "react-router-dom": "^4.2.2",
@@ -30,7 +31,6 @@
     "xpub-edit": "^0.0.2",
     "xpub-journal": "^0.0.2",
     "xpub-selectors": "^0.0.2",
-    "@pubsweet/ui": "^0.2.0",
     "xpub-upload": "^0.0.2",
     "xpub-validators": "^0.0.2"
   },
@@ -53,9 +53,9 @@
   },
   "peerDependencies": {
     "prop-types": "^15.5.10",
-    "pubsweet-client": "^1.1.4",
-    "react": "^15.6.1",
-    "react-dom": "^15.6.1",
+    "pubsweet-client": "^2.1.0",
+    "react": "^16.2.0",
+    "react-dom": "^16.2.0",
     "react-redux": "^5.0.2",
     "react-router-dom": "^4.2.2"
   },
