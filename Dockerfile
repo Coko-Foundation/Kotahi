@@ -1,7 +1,7 @@
 FROM xpub/xpub:base
 
 COPY package.json yarn.lock ./
-COPY lerna.json .eslintignore .eslintrc .prettierrc .stylelintignore .stylelintrc ./
+COPY lerna.json .babelrc .eslintignore .eslintrc .prettierrc .stylelintignore .stylelintrc ./
 COPY packages packages
 
 RUN [ "yarn", "config", "set", "workspaces-experimental", "true" ]
