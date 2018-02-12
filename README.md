@@ -19,7 +19,6 @@ You can follow more fine-grained lists of things that we're working on
 ### PubSweet components
 
 * `component-app`: a PubSweet component that provides an app container with nav bar and journal provider.
-* `component-authentication`: a PubSweet component that provides authentication-related client pages.
 * `component-dashboard`: a PubSweet component that provides a Dashboard page.
 * `component-manuscript`: a PubSweet component that provides a Manuscript page.
 * `component-review`: a PubSweet component that provides a Review page.

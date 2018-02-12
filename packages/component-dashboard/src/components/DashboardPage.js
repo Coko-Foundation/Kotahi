@@ -29,40 +29,46 @@ export default compose(
   connect(
     state => {
       const { collections } = state
-      const { conversion, teams } = state
+      // const { conversion, teams } = state
+      const { conversion } = state
       const currentUser = selectCurrentUser(state)
 
       const sortedCollections = newestFirst(collections)
 
-      const unassignedCollections = sortedCollections.filter(
-        collection =>
-          collection.status === 'submitted' &&
-          !teams.some(
-            team =>
-              team.object.type === 'collection' &&
-              team.object.id === collection.id &&
-              team.teamType.name === 'handlingEditor',
-          ),
-      )
-      const myCollections = teams
-        .filter(
-          team =>
-            team.group === 'editor' &&
-            team.object.type === 'collection' &&
-            team.members.includes(currentUser.id),
-        )
-        .map(team =>
-          collections.find(collection => collection.id === team.object.id),
-        )
+      // const unassignedCollections = sortedCollections.filter(
+      //   collection =>
+      //     collection.status === 'submitted' &&
+      //     !teams.some(
+      //       team =>
+      //         team.object.type === 'collection' &&
+      //         team.object.id === collection.id &&
+      //         team.teamType.name === 'handlingEditor',
+      //     ),
+      // )
+      // const myCollections = teams
+      //   .filter(
+      //     team =>
+      //       team.group === 'editor' &&
+      //       team.object.type === 'collection' &&
+      //       team.members.includes(currentUser.id),
+      //   )
+      //   .map(team =>
+      //     collections.find(collection => collection.id === team.object.id),
+      //   )
 
       const dashboard = {
-        editor: newestFirst(
-          unassignedCollections
-            .concat(myCollections)
-            .filter(
-              (collection, index, items) =>
-                items.findIndex(item => item.id === collection.id) === index,
-            ),
+        // editor: newestFirst(
+        //   unassignedCollections
+        //     .concat(myCollections)
+        //     .filter(
+        //       (collection, index, items) =>
+        //         items.findIndex(item => item.id === collection.id) === index,
+        //     ),
+        // ),
+        editor: sortedCollections.filter(
+          collection =>
+            collection.status === 'submitted' ||
+            collection.status === 'revising',
         ),
         owner: sortedCollections.filter(
           collection =>

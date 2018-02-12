@@ -1,14 +1,11 @@
 import React from 'react'
+import { withProps } from 'recompose'
 import { Route } from 'react-router-dom'
+import { AuthenticatedComponent } from 'pubsweet-client'
 
 import App from 'pubsweet-component-xpub-app/src/components'
-
-import {
-  PrivateRoute,
-  SignupPage,
-  LoginPage,
-  LogoutPage,
-} from 'pubsweet-component-xpub-authentication/src/components'
+import Login from 'pubsweet-component-login/LoginContainer'
+import Signup from 'pubsweet-component-signup/SignupContainer'
 
 import DashboardPage from 'pubsweet-component-xpub-dashboard/src/components/DashboardPage'
 import SubmitPage from 'pubsweet-component-xpub-submit/src/components/SubmitPage'
@@ -16,6 +13,19 @@ import ManuscriptPage from 'pubsweet-component-xpub-manuscript/src/components/Ma
 import ReviewersPage from 'pubsweet-component-xpub-review/src/components/ReviewersPage'
 import ReviewPage from 'pubsweet-component-xpub-review/src/components/ReviewPage'
 import DecisionPage from 'pubsweet-component-xpub-review/src/components/DecisionPage'
+
+const LoginPage = withProps({ passwordReset: false })(Login)
+
+const PrivateRoute = ({ component: Component, ...rest }) => (
+  <Route
+    {...rest}
+    render={props => (
+      <AuthenticatedComponent>
+        <Component {...props} />
+      </AuthenticatedComponent>
+    )}
+  />
+)
 
 // TODO: use componentDidMount to fetch the current user before rendering?
 
@@ -48,9 +58,7 @@ const Routes = () => (
       path="/projects/:project/versions/:version/decisions/:decision"
     />
 
-    <PrivateRoute component={LogoutPage} exact path="/logout" />
-
-    <Route component={SignupPage} exact path="/signup" />
+    <Route component={Signup} exact path="/signup" />
     <Route component={LoginPage} exact path="/login" />
 
     {/* <Redirect from="/" to="/dashboard"/> */}

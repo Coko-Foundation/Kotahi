@@ -1,6 +1,7 @@
 import React from 'react'
 import moment from 'moment'
 // import classnames from 'classnames'
+import { Link } from 'react-router-dom'
 import SimpleEditor from 'wax-editor-react'
 import classes from './DecisionLayout.local.scss'
 import DecisionForm from './DecisionForm'
@@ -9,13 +10,19 @@ import ReviewMetadata from '../metadata/ReviewMetadata'
 import Decision from './Decision'
 import Tabs from '../tabs/Tabs'
 
+// TODO -- is passing arrays of react components as props an ok practice?
+/*
+  TODO -- should we make an editor for each tab, or should we just rerender
+          the same one with different content?
+*/
+
 const DecisionLayout = ({
-  project,
-  versions,
   currentVersion,
-  valid,
   handleSubmit,
+  project,
   uploadFile,
+  valid,
+  versions,
 }) => {
   const decisionSections = []
   const editorSections = []
@@ -43,7 +50,13 @@ const DecisionLayout = ({
 
       editorSections.push({
         content: (
-          <SimpleEditor content={version.source} layout="bare" readOnly />
+          <SimpleEditor
+            content={version.source}
+            editing="selection"
+            key={key}
+            layout="bare"
+            readOnly
+          />
         ),
         key,
         label,
@@ -53,15 +66,21 @@ const DecisionLayout = ({
 
   const { decision } = currentVersion
 
-  if (!decision || !decision.submitted) {
+  if (currentVersion.submitted && (!decision || !decision.submitted)) {
     const submittedMoment = moment()
     const key = submittedMoment.format('x')
     const label = submittedMoment.format('YYYY-MM-DD')
-
     decisionSections.push({
       content: (
         <div>
           <ReviewMetadata version={currentVersion} />
+          <Link
+            to={`/projects/${project.id}/versions/${
+              currentVersion.id
+            }/reviewers`}
+          >
+            Assign Reviewers
+          </Link>
           <DecisionReviews version={currentVersion} />
           <DecisionForm
             decision={decision}
@@ -77,7 +96,13 @@ const DecisionLayout = ({
 
     editorSections.push({
       content: (
-        <SimpleEditor content={currentVersion.source} layout="bare" readOnly />
+        <SimpleEditor
+          content={currentVersion.source}
+          editing="selection"
+          key={key}
+          layout="bare"
+          readOnly
+        />
       ),
       key,
       label,
