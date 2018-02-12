@@ -9,13 +9,12 @@ class Tabs extends React.Component {
     super(props)
 
     this.state = {
-      activeKey: null,
+      activeKey: props.activeKey || null,
     }
   }
 
   componentDidMount() {
     const { activeKey } = this.props
-
     this.setState({ activeKey })
   }
 

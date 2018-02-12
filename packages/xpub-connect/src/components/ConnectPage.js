@@ -17,7 +17,7 @@ const ConnectPage = requirements => WrappedComponent => {
     }
 
     componentWillReceiveProps = nextProps => {
-      this.fetch(nextProps)
+      // this.fetch(nextProps)
     }
 
     fetch({ isAuthenticated }) {

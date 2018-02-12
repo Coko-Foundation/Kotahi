@@ -17,7 +17,7 @@ const OwnerItem = ({ project, version, deleteProject }) => (
       <div className={classes.links}>
         <div className={classes.link}>
           <ProjectLink page="submit" project={project} version={version}>
-            Submission
+            Summary info
           </ProjectLink>
         </div>
 

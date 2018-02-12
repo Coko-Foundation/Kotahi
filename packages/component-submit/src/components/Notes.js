@@ -16,7 +16,7 @@ const FundingInput = input => (
 const InstructionsInput = input => (
   <NoteEditor
     placeholder="Enter instructions for the editor…"
-    title="Special instructions (confidential)"
+    title="Special instructions (confidential, to Editors only)"
     {...input}
   />
 )

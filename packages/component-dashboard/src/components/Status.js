@@ -8,7 +8,9 @@ const labels = {
   assignedToEditor: 'Assigned to editor',
   assigningReviewers: 'Assigning reviewers',
   new: 'Unsubmitted',
+  rejected: 'Rejected',
   submitted: 'Submitted',
+  revising: 'Under Revision',
 }
 
 const Status = ({ status }) => (
