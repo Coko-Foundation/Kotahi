@@ -26,7 +26,7 @@
     "redux-form": "^7.0.3",
     "striptags": "^3.1.0",
     "uuid": "^3.1.0",
-    "wax-editor-react": "^0.1.7",
+    "wax-editor-react": "^0.1.8",
     "xpub-connect": "^0.0.2",
     "xpub-edit": "^0.0.2",
     "xpub-journal": "^0.0.2",
