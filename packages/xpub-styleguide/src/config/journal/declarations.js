@@ -3,26 +3,30 @@ export default {
     {
       id: 'openData',
       legend: 'Data is open',
+      options: [
+        {
+          label: 'Yes',
+          value: 'yes',
+        },
+        {
+          label: 'No/Not Applicable',
+          value: 'no',
+        },
+      ],
     },
     {
       id: 'previouslySubmitted',
       legend: 'Previously submitted',
-    },
-    {
-      id: 'openPeerReview',
-      legend: 'Open peer review',
-    },
-    {
-      id: 'streamlinedReview',
-      legend: 'Streamlined review',
-    },
-    {
-      id: 'researchNexus',
-      legend: 'Submitted as part of the research nexus?',
-    },
-    {
-      id: 'preregistered',
-      legend: 'Pre-registered?',
+      options: [
+        {
+          label: 'Yes',
+          value: 'yes',
+        },
+        {
+          label: 'No',
+          value: 'no',
+        },
+      ],
     },
   ],
 }

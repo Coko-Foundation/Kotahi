@@ -2,7 +2,7 @@ import React from 'react'
 import { FormSection } from 'redux-form'
 import { TextField, ValidatedField } from '@pubsweet/ui'
 import { join, split } from 'xpub-validators'
-import classes from './Suggestions.local.scss'
+import { Section, Legend } from '../styles'
 
 const joinComma = join(',')
 const splitComma = split(',')
@@ -23,14 +23,19 @@ const OpposedEditorInput = input => (
   <TextField placeholder="Add editor names" {...input} />
 )
 
+const SubLegend = Legend.extend`
+  font-weight: normal;
+  margin-top: var(--grid-unit);
+`
+
 const Suggestions = ({ readonly }) => (
   <FormSection name="suggestions">
-    <div className={classes.section} id="suggestions.reviewers">
+    <Section id="suggestions.reviewers">
       <FormSection name="reviewers">
-        <div className={classes.legend}>Suggested or opposed reviewers</div>
+        <Legend>Suggested or opposed reviewers</Legend>
 
         <div>
-          <div className={classes.sublegend}>Suggested reviewers</div>
+          <SubLegend space>Suggested reviewers</SubLegend>
 
           <ValidatedField
             component={SuggestedReviewerInput}
@@ -42,7 +47,7 @@ const Suggestions = ({ readonly }) => (
         </div>
 
         <div>
-          <div className={classes.sublegend}>Opposed reviewers</div>
+          <SubLegend space>Opposed reviewers</SubLegend>
 
           <ValidatedField
             component={OpposedReviewerInput}
@@ -53,14 +58,14 @@ const Suggestions = ({ readonly }) => (
           />
         </div>
       </FormSection>
-    </div>
+    </Section>
 
-    <div className={classes.section} id="suggestions.editors">
+    <Section id="suggestions.editors">
       <FormSection name="editors">
-        <div className={classes.legend}>Suggested or opposed editors</div>
+        <Legend>Suggested or opposed editors</Legend>
 
         <div>
-          <div className={classes.sublegend}>Suggested editors</div>
+          <SubLegend space>Suggested editors</SubLegend>
 
           <ValidatedField
             component={SuggestedEditorInput}
@@ -72,7 +77,7 @@ const Suggestions = ({ readonly }) => (
         </div>
 
         <div>
-          <div className={classes.sublegend}>Opposed editors</div>
+          <SubLegend space>Opposed editors</SubLegend>
 
           <ValidatedField
             component={OpposedEditorInput}
@@ -83,7 +88,7 @@ const Suggestions = ({ readonly }) => (
           />
         </div>
       </FormSection>
-    </div>
+    </Section>
   </FormSection>
 )
 

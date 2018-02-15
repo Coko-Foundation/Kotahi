@@ -11,8 +11,7 @@ import {
   minSize,
   split,
 } from 'xpub-validators'
-
-import classes from './Metadata.local.scss'
+import { Section, Legend } from '../styles'
 
 const minSize1 = minSize(1)
 const minChars20 = minChars(20)
@@ -50,7 +49,7 @@ const ArticleSectionInput = journal => input => (
 
 const Metadata = ({ journal, readonly }) => (
   <FormSection name="metadata">
-    <div className={classes.section} id="metadata.title">
+    <Section id="metadata.title">
       <ValidatedField
         component={TitleInput}
         name="title"
@@ -58,9 +57,9 @@ const Metadata = ({ journal, readonly }) => (
         required
         validate={[minChars20, maxChars500]}
       />
-    </div>
+    </Section>
 
-    <div className={classes.section} id="metadata.abstract">
+    <Section id="metadata.abstract">
       <ValidatedField
         component={AbstractInput}
         name="abstract"
@@ -68,10 +67,10 @@ const Metadata = ({ journal, readonly }) => (
         required
         validate={[minChars100, maxChars5000]}
       />
-    </div>
+    </Section>
 
-    <div className={classes.section} id="metadata.authors">
-      <div className={classes.label}>Authors</div>
+    <Section id="metadata.authors">
+      <Legend space>Authors</Legend>
 
       <ValidatedField
         component={AuthorsInput}
@@ -82,10 +81,10 @@ const Metadata = ({ journal, readonly }) => (
         required
         validate={[minSize1]}
       />
-    </div>
+    </Section>
 
-    <div className={classes.section} id="metadata.keywords">
-      <div className={classes.label}>Keywords</div>
+    <Section id="metadata.keywords">
+      <Legend space>Keywords</Legend>
 
       <ValidatedField
         component={KeywordsInput}
@@ -96,10 +95,10 @@ const Metadata = ({ journal, readonly }) => (
         required
         validate={[minSize1]}
       />
-    </div>
+    </Section>
 
-    <div className={classes.section} id="metadata.articleType">
-      <div className={classes.label}>Type of article</div>
+    <Section id="metadata.articleType">
+      <Legend space>Type of article</Legend>
 
       <ValidatedField
         component={ArticleTypeInput(journal)}
@@ -108,10 +107,10 @@ const Metadata = ({ journal, readonly }) => (
         required
         validate={[required]}
       />
-    </div>
+    </Section>
 
-    <div className={classes.section} id="metadata.articleSection">
-      <div className={classes.label}>Section</div>
+    <Section id="metadata.articleSection">
+      <Legend space>Section</Legend>
 
       <ValidatedField
         component={ArticleSectionInput(journal)}
@@ -120,7 +119,7 @@ const Metadata = ({ journal, readonly }) => (
         required
         validate={[required]}
       />
-    </div>
+    </Section>
   </FormSection>
 )
 

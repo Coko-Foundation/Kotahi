@@ -10,7 +10,6 @@
   ],
   "dependencies": {
     "@pubsweet/ui": "^2.0.0",
-    "classnames": "^2.2.5",
     "lodash": "^4.17.4",
     "prop-types": "^15.5.10",
     "pubsweet-client": "^2.1.0",
@@ -22,6 +21,7 @@
     "redux": "^3.6.0",
     "redux-form": "^7.0.3",
     "striptags": "^3.1.0",
+    "styled-components": "^3.1.6",
     "xpub-connect": "^0.0.2",
     "xpub-edit": "^0.0.2",
     "xpub-journal": "^0.0.2",
@@ -38,10 +38,7 @@
     "css-loader": "^0.28.4",
     "faker": "^4.1.0",
     "file-loader": "^1.1.5",
-    "node-sass": "^4.5.3",
     "react-styleguidist": "^6.2.5",
-    "sass-loader": "^6.0.6",
-    "style-loader": "^0.19.0",
     "webpack": "^3.8.1",
     "webpack-node-externals": "^1.6.0",
     "xpub-styleguide": "^0.0.2"

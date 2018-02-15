@@ -3,7 +3,7 @@ import { FormSection } from 'redux-form'
 import { NoteEditor } from 'xpub-edit'
 import { ValidatedField } from '@pubsweet/ui'
 import { required } from 'xpub-validators'
-import classes from './Metadata.local.scss'
+import { Section } from '../styles'
 
 const FundingInput = input => (
   <NoteEditor
@@ -23,22 +23,22 @@ const InstructionsInput = input => (
 
 const Notes = ({ readonly }) => (
   <FormSection name="notes">
-    <div className={classes.section} id="notes.fundingAcknowledgement">
+    <Section id="notes.fundingAcknowledgement">
       <ValidatedField
         component={FundingInput}
         name="fundingAcknowledgement"
         readonly={readonly}
         validate={[required]}
       />
-    </div>
+    </Section>
 
-    <div className={classes.section} id="notes.specialInstructions">
+    <Section id="notes.specialInstructions">
       <ValidatedField
         component={InstructionsInput}
         name="specialInstructions"
         readonly={readonly}
       />
-    </div>
+    </Section>
   </FormSection>
 )
 

@@ -1,17 +1,9 @@
-A list of questions that must be answered before submission.
+A list of questions that must be answered before submission. The questions are
+configured via the journal config on the context.
 
 ```js
-const { reduxForm } = require('redux-form');
+const { reduxForm } = require('redux-form')
+const DeclarationsForm = reduxForm({ form: 'declarations' })(Declarations)
 
-const version = {
-  declarations: {
-    openData: 'yes'
-  }
-};
-
-const DeclarationsForm = reduxForm({ form: 'declarations' })(Declarations);
-
-<DeclarationsForm
-  initialValues={version}
-  onChange={values => console.log(values)}/>
+;<DeclarationsForm onChange={values => console.log(values)} />
 ```
