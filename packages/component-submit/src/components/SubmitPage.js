@@ -1,4 +1,4 @@
-import { pick, debounce } from 'lodash'
+import { pick, throttle } from 'lodash'
 import { compose, withProps, withState, withHandlers } from 'recompose'
 import { connect } from 'react-redux'
 import { reduxForm, SubmissionError } from 'redux-form'
@@ -92,7 +92,7 @@ export default compose(
   reduxForm({
     // enableReinitialize: true,
     form: 'submit',
-    onChange: debounce(onChange, 1000, { maxWait: 5000 }),
+    onChange: throttle(onChange, 3000, { trailing: false }),
     onSubmit,
   }),
   withState('confirming', 'setConfirming', false),
