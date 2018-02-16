@@ -1,29 +1,35 @@
 import React from 'react'
+import styled from 'styled-components'
+
 import { NoteViewer } from 'xpub-edit'
 import { Attachment } from '@pubsweet/ui'
-import classes from './Decision.local.scss'
+
+const Heading = styled.div``
+const Note = styled.div``
+const Content = styled.div``
+const Recommendation = styled.div``
 
 const Decision = ({ decision }) => (
   <div>
     <div>
-      <div className={classes.heading}>Note</div>
+      <Heading>Note</Heading>
 
-      <div className={classes.note}>
-        <div className={classes.content}>
+      <Note>
+        <Content>
           <NoteViewer value={decision.note.content} />
-        </div>
+        </Content>
 
         {decision.note.attachments &&
           decision.note.attachments.map(attachment => (
             <Attachment key={attachment.url} value={attachment} />
           ))}
-      </div>
+      </Note>
     </div>
 
     <div>
-      <div className={classes.heading}>Decision</div>
+      <Heading>Decision</Heading>
 
-      <div className={classes.decision}>{decision.recommendation}</div>
+      <Recommendation>{decision.recommendation}</Recommendation>
     </div>
   </div>
 )

@@ -1,12 +1,14 @@
 import React from 'react'
+
 import moment from 'moment'
 // import classnames from 'classnames'
 import SimpleEditor from 'wax-editor-react'
+
 import ReviewForm from './ReviewForm'
 import ReviewMetadata from '../metadata/ReviewMetadata'
 import Review from './Review'
-import Tabs from '../tabs/Tabs'
-import classes from './ReviewLayout.local.scss'
+import { Columns, Manuscript, Admin } from '../atoms/Columns'
+import Tabs from '../atoms/Tabs'
 
 const ReviewLayout = ({
   project,
@@ -109,23 +111,23 @@ const ReviewLayout = ({
   }
 
   return (
-    <div className={classes.root}>
-      <div className={classes.manuscript}>
+    <Columns>
+      <Manuscript>
         <Tabs
           activeKey={editorSections[editorSections.length - 1].key}
           sections={editorSections}
           title="Versions"
         />
-      </div>
+      </Manuscript>
 
-      <div className={classes.review}>
+      <Admin>
         <Tabs
           activeKey={reviewSections[reviewSections.length - 1].key}
           sections={reviewSections}
           title="Versions"
         />
-      </div>
-    </div>
+      </Admin>
+    </Columns>
   )
 }
 

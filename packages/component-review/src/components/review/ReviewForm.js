@@ -1,10 +1,20 @@
 import React from 'react'
+import styled from 'styled-components'
+
 import { FormSection } from 'redux-form'
 import { NoteEditor } from 'xpub-edit'
-import { Attachments, Button, RadioGroup, ValidatedField } from '@pubsweet/ui'
+import {
+  Attachments,
+  Button,
+  ControlGroup,
+  RadioGroup,
+  ValidatedField,
+} from '@pubsweet/ui'
+
 import { withJournal } from 'xpub-journal'
 import { required } from 'xpub-validators'
-import classes from './ReviewForm.local.scss'
+
+import AdminSection from '../atoms/AdminSection'
 
 const NoteInput = input => (
   <NoteEditor placeholder="Enter your review…" title="Review" {...input} />
@@ -23,66 +33,59 @@ const ConfidentialInput = input => (
 )
 
 const RecommendationInput = journal => input => (
-  <RadioGroup
-    class={classes.class}
-    inline
-    options={journal.recommendations}
-    {...input}
-  />
+  <RadioGroup inline options={journal.recommendations} {...input} />
 )
+
+const Title = styled.div``
 
 const ReviewForm = ({ journal, valid, handleSubmit, uploadFile }) => (
   <form onSubmit={handleSubmit}>
-    <div className={classes.section}>
+    <AdminSection>
       <FormSection name="note">
-        <div className={classes.note}>
-          <div className={classes.content}>
-            <ValidatedField
-              component={NoteInput}
-              name="content"
-              validate={[required]}
-            />
-          </div>
+        <ControlGroup inline>
+          <ValidatedField
+            component={NoteInput}
+            name="content"
+            validate={[required]}
+          />
 
           <ValidatedField
             component={AttachmentsInput(uploadFile)}
             name="attachments"
           />
-        </div>
+        </ControlGroup>
       </FormSection>
-    </div>
+    </AdminSection>
 
-    <div className={classes.section}>
+    <AdminSection>
       <FormSection name="confidential">
-        <div className={classes.note}>
-          <div className={classes.content}>
-            <ValidatedField component={ConfidentialInput} name="content" />
-          </div>
+        <ControlGroup inline>
+          <ValidatedField component={ConfidentialInput} name="content" />
 
           <ValidatedField
             component={AttachmentsInput(uploadFile)}
             name="attachments"
           />
-        </div>
+        </ControlGroup>
       </FormSection>
-    </div>
+    </AdminSection>
 
-    <div className={classes.section}>
+    <AdminSection>
       <FormSection name="Recommendation">
-        <div className={classes.title}>Recommendation</div>
+        <Title>Recommendation</Title>
         <ValidatedField
           component={RecommendationInput(journal)}
           name="recommendation"
           validate={[required]}
         />
       </FormSection>
-    </div>
+    </AdminSection>
 
-    <div>
+    <AdminSection>
       <Button disabled={!valid} primary type="submit">
         Submit
       </Button>
-    </div>
+    </AdminSection>
   </form>
 )
 

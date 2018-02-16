@@ -1,14 +1,15 @@
 import React from 'react'
 import moment from 'moment'
-// import classnames from 'classnames'
 import { Link } from 'react-router-dom'
 import SimpleEditor from 'wax-editor-react'
-import classes from './DecisionLayout.local.scss'
+
 import DecisionForm from './DecisionForm'
 import DecisionReviews from './DecisionReviews'
 import ReviewMetadata from '../metadata/ReviewMetadata'
 import Decision from './Decision'
-import Tabs from '../tabs/Tabs'
+import { Columns, Manuscript, Admin } from '../atoms/Columns'
+import AdminSection from '../atoms/AdminSection'
+import Tabs from '../atoms/Tabs'
 
 // TODO -- is passing arrays of react components as props an ok practice?
 /*
@@ -73,21 +74,29 @@ const DecisionLayout = ({
     decisionSections.push({
       content: (
         <div>
-          <ReviewMetadata version={currentVersion} />
-          <Link
-            to={`/projects/${project.id}/versions/${
-              currentVersion.id
-            }/reviewers`}
-          >
-            Assign Reviewers
-          </Link>
-          <DecisionReviews version={currentVersion} />
-          <DecisionForm
-            decision={decision}
-            handleSubmit={handleSubmit}
-            uploadFile={uploadFile}
-            valid={valid}
-          />
+          <AdminSection>
+            <ReviewMetadata version={currentVersion} />
+          </AdminSection>
+          <AdminSection>
+            <Link
+              to={`/projects/${project.id}/versions/${
+                currentVersion.id
+              }/reviewers`}
+            >
+              Assign Reviewers
+            </Link>
+          </AdminSection>
+          <AdminSection>
+            <DecisionReviews version={currentVersion} />
+          </AdminSection>
+          <AdminSection>
+            <DecisionForm
+              decision={decision}
+              handleSubmit={handleSubmit}
+              uploadFile={uploadFile}
+              valid={valid}
+            />
+          </AdminSection>
         </div>
       ),
       key,
@@ -110,23 +119,23 @@ const DecisionLayout = ({
   }
 
   return (
-    <div className={classes.root}>
-      <div className={classes.column}>
+    <Columns>
+      <Manuscript>
         <Tabs
           activeKey={editorSections[editorSections.length - 1].key}
           sections={editorSections}
           title="Versions"
         />
-      </div>
+      </Manuscript>
 
-      <div className={classes.column}>
+      <Admin>
         <Tabs
           activeKey={decisionSections[decisionSections.length - 1].key}
           sections={decisionSections}
           title="Versions"
         />
-      </div>
-    </div>
+      </Admin>
+    </Columns>
   )
 }
 

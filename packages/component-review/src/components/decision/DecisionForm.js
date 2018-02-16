@@ -1,10 +1,19 @@
 import React from 'react'
+
 import { FormSection } from 'redux-form'
 import { NoteEditor } from 'xpub-edit'
-import { Attachments, Button, RadioGroup, ValidatedField } from '@pubsweet/ui'
+import {
+  Attachments,
+  Button,
+  ControlGroup,
+  RadioGroup,
+  ValidatedField,
+} from '@pubsweet/ui'
+
 import { withJournal } from 'xpub-journal'
 import { required } from 'xpub-validators'
-import classes from './DecisionForm.local.scss'
+
+import AdminSection from '../atoms/AdminSection'
 
 const NoteInput = input => (
   <NoteEditor placeholder="Enter your decision…" title="Decision" {...input} />
@@ -20,38 +29,36 @@ const RecommendationInput = journal => input => (
 
 const DecisionForm = ({ journal, valid, handleSubmit, uploadFile }) => (
   <form onSubmit={handleSubmit}>
-    <div className={classes.section}>
+    <AdminSection>
       <FormSection name="note">
-        <div className={classes.note}>
-          <div className={classes.content}>
-            <ValidatedField
-              component={NoteInput}
-              name="content"
-              validate={[required]}
-            />
-          </div>
+        <ControlGroup inline>
+          <ValidatedField
+            component={NoteInput}
+            name="content"
+            validate={[required]}
+          />
 
           <ValidatedField
             component={AttachmentsInput(uploadFile)}
             name="attachments"
           />
-        </div>
+        </ControlGroup>
       </FormSection>
-    </div>
+    </AdminSection>
 
-    <div className={classes.section}>
+    <AdminSection>
       <ValidatedField
         component={RecommendationInput(journal)}
         name="recommendation"
         validate={[required]}
       />
-    </div>
+    </AdminSection>
 
-    <div>
+    <AdminSection>
       <Button disabled={!valid} primary type="submit">
         Submit
       </Button>
-    </div>
+    </AdminSection>
   </form>
 )
 

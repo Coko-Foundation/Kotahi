@@ -1,8 +1,20 @@
 import React from 'react'
+import styled from 'styled-components'
 import Tab from './Tab'
-import classes from './Tabs.local.scss'
 
 // TODO: allow the tab content to be separate from the key
+
+const Root = styled.div``
+const TabsContainer = styled.div`
+  display: flex;
+  margin-bottom: var(--grid-unit);
+`
+const Title = styled.div`
+  border-bottom: var(--border-width) var(--border-style) var(--color-border);
+  padding: var(--sub-grid-unit) 1em;
+`
+const TabContainer = styled.div``
+const Content = styled.div``
 
 class Tabs extends React.Component {
   constructor(props) {
@@ -35,27 +47,23 @@ class Tabs extends React.Component {
     const { activeKey } = this.state
 
     return (
-      <div className={classes.root}>
-        <div className={classes.tabs}>
-          {title && <span className={classes.title}>{title}</span>}
+      <Root>
+        <TabsContainer>
+          {title && <Title>{title}</Title>}
 
           {sections.map(({ key, label }) => (
-            <span
-              className={classes.tab}
-              key={key}
-              onClick={() => this.setActiveKey(key)}
-            >
+            <TabContainer key={key} onClick={() => this.setActiveKey(key)}>
               <Tab active={activeKey === key}>{label || key}</Tab>
-            </span>
+            </TabContainer>
           ))}
-        </div>
+        </TabsContainer>
 
         {activeKey && (
-          <div className={classes.content}>
+          <Content>
             {sections.find(section => section.key === activeKey).content}
-          </div>
+          </Content>
         )}
-      </div>
+      </Root>
     )
   }
 }
