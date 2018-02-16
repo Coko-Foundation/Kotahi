@@ -1,19 +1,23 @@
 import React from 'react'
+
+import { Item, Header, Body, Divider } from '../molecules/Item'
+import { Links, LinkContainer } from '../molecules/Links'
+import { Roles, Role } from '../molecules/Roles'
+
 import Status from '../Status'
+import Meta from '../metadata/Meta'
 import MetadataSections from '../metadata/MetadataSections'
 import MetadataType from '../metadata/MetadataType'
 import MetadataReviewType from '../metadata/MetadataReviewType'
 import MetadataSubmittedDate from '../metadata/MetadataSubmittedDate'
 import MetadataOwners from '../metadata/MetadataOwners'
 import ProjectLink from '../ProjectLink'
-import Divider from './Divider'
-import classes from './Item.local.scss'
 import Reviews from '../Reviews'
 import VersionTitle from './VersionTitle'
 
-const Actions = ({ project, version }) => (
-  <div className={classes.links}>
-    <div className={classes.link}>
+const EditorItemLinks = ({ project, version }) => (
+  <Links>
+    <LinkContainer>
       {/* {(!version.decision ||
         version.decision.status !== 'revising' ||
         version.decision.status !== 'submitted') && (
@@ -36,16 +40,16 @@ const Actions = ({ project, version }) => (
           ? `Decision: ${version.decision.recommendation}`
           : 'Control Panel'}
       </ProjectLink>
-    </div>
-  </div>
+    </LinkContainer>
+  </Links>
 )
 
 const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
-  <div className={classes.root}>
-    <div className={classes.header}>
+  <Item>
+    <Header>
       <Status status={project.status} />
 
-      <div className={classes.meta}>
+      <Meta>
         <MetadataOwners owners={project.owners} />
         <Divider separator="–" />
         <MetadataSubmittedDate submitted={version.submitted} />
@@ -57,37 +61,34 @@ const EditorItem = ({ AssignEditor, project, version, addUserToTeam }) => (
         <MetadataReviewType
           openPeerReview={version.declarations.openPeerReview}
         />
-      </div>
-    </div>
+      </Meta>
+    </Header>
 
-    <div className={classes.main}>
-      <VersionTitle className={classes.versionTitle} version={version} />
-      <Actions project={project} version={version} />
-      <div className={classes.actions} />
-    </div>
+    <Body>
+      <VersionTitle version={version} />
+      <EditorItemLinks project={project} version={version} />
+    </Body>
 
-    <div className={classes.roles}>
-      <div className={classes.role}>
+    <Roles>
+      <Role>
         <AssignEditor
           addUserToTeam={addUserToTeam}
           project={project}
           teamTypeName="seniorEditor"
         />
-      </div>
+      </Role>
 
-      <div className={classes.role}>
+      <Role>
         <AssignEditor
           addUserToTeam={addUserToTeam}
           project={project}
           teamTypeName="handlingEditor"
         />
-      </div>
-    </div>
+      </Role>
+    </Roles>
 
-    <div className={classes.reviews}>
-      <Reviews project={project} version={version} />
-    </div>
-  </div>
+    <Reviews project={project} version={version} />
+  </Item>
 )
 
 export default EditorItem

@@ -1,5 +1,5 @@
 import React from 'react'
-import { Link } from 'react-router-dom'
+import { Link } from '@pubsweet/ui'
 
 const projectUrl = ({ project, version, page, id }) => {
   const parts = []
