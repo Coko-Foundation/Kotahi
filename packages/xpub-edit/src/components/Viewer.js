@@ -3,7 +3,7 @@ import classnames from 'classnames'
 import { EditorState } from 'prosemirror-state'
 import { EditorView } from 'prosemirror-view'
 import baseClasses from 'prosemirror-view/style/prosemirror.css'
-import classes from './Editor.local.css'
+import { withViewerStyle } from './withStyles'
 
 class Viewer extends React.Component {
   constructor(props) {
@@ -22,11 +22,7 @@ class Viewer extends React.Component {
       state,
       dispatchTransaction: () => false,
       attributes: {
-        class: classnames(
-          baseClasses.ProseMirror,
-          classes.ProseMirror,
-          className,
-        ),
+        class: classnames(baseClasses.ProseMirror, className),
       },
     })
   }
@@ -36,4 +32,4 @@ class Viewer extends React.Component {
   }
 }
 
-export default Viewer
+export default withViewerStyle(Viewer)

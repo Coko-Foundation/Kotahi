@@ -1,6 +1,6 @@
 import { DecorationSet, Decoration } from 'prosemirror-view'
 
-export default ({ props, classes }) => state => {
+export default ({ props }) => state => {
   const { doc } = state
   const decorations = []
 
@@ -12,7 +12,7 @@ export default ({ props, classes }) => state => {
   ) {
     const placeHolder = document.createElement('div')
     placeHolder.textContent = props.placeholder
-    placeHolder.classList.add(classes.placeholder)
+    placeHolder.classList.add(props.basePlaceholderClassName)
 
     if (props.placeholderClassName) {
       placeHolder.classList.add(props.placeholderClassName)

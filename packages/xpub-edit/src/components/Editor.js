@@ -5,8 +5,8 @@ import { EditorView } from 'prosemirror-view'
 import baseClasses from 'prosemirror-view/style/prosemirror.css'
 
 import MenuBar from './MenuBar'
-import classes from './Editor.local.css'
 import decorations from '../decorations'
+import { withEditorStyle } from './withStyles'
 
 class Editor extends React.Component {
   constructor(props) {
@@ -18,9 +18,8 @@ class Editor extends React.Component {
   }
 
   createEditorView = node => {
-    const { className } = this.props
     const { state } = this.state
-    const { autoFocus, readonly, onBlur } = this.props
+    const { autoFocus, className, readonly, onBlur } = this.props
 
     this.view = new EditorView(node, {
       state,
@@ -28,15 +27,9 @@ class Editor extends React.Component {
       dispatchTransaction: this.dispatchTransaction,
       decorations: decorations({
         props: this.props,
-        classes,
       }),
       attributes: {
-        class: classnames(
-          baseClasses.ProseMirror,
-          classes.ProseMirror,
-          className,
-          !readonly && classes.ProseMirrorEditable,
-        ),
+        class: classnames(className, baseClasses.ProseMirror),
       },
       handleDOMEvents: {
         blur: onBlur
@@ -81,4 +74,4 @@ class Editor extends React.Component {
   }
 }
 
-export default Editor
+export default withEditorStyle(Editor)

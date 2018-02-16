@@ -7,6 +7,7 @@ const value = faker.lorem.sentence(50);
     value={value}
     title="Note"
     placeholder="Enter a message…"
+    onBlur={value => console.log(value)}
     onChange={value => console.log(value)}/>
 ```
 
@@ -17,5 +18,6 @@ When no content has been entered, a placeholder is displayed.
     value=""
     title="Note"
     placeholder="Enter a message…"
+    onBlur={value => console.log(value)}
     onChange={value => console.log(value)}/>
 ```

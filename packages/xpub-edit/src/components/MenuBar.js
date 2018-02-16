@@ -1,41 +1,39 @@
 import React from 'react'
+import styled from 'styled-components'
 import map from 'lodash/map'
-import classnames from 'classnames'
-import classes from './MenuBar.local.css'
+import MenuButton from './MenuButton'
 
-const MenuBar = ({ title, menu, state, dispatch }) => {
-  const handle = cmd => e => {
-    e.preventDefault()
-    cmd(state, dispatch)
-  }
+const Wrapper = styled.div`
+  align-items: baseline;
+  display: flex;
+  margin-bottom: 0.8em;
+  margin-top: 0;
+`
 
-  const Button = (item, key) => (
-    <button
-      className={classnames({
-        [classes.button]: true,
-        [classes.active]: item.active && item.active(state),
-      })}
-      disabled={item.enable && !item.enable(state)}
-      key={key}
-      onMouseDown={handle(item.run)}
-      title={item.title}
-      type="button"
-    >
-      {item.content}
-    </button>
-  )
+const Legend = styled.div`
+  font-size: var(--font-size-base);
+  margin-right: 10px;
+`
 
-  return (
-    <div className={classes.toolbar}>
-      {title && <div className={classes.title}>{title}</div>}
+const MenuBar = ({ title, menu, state, dispatch }) => (
+  <Wrapper>
+    {title && <Legend>{title}</Legend>}
 
-      {menu.marks && map(menu.marks, Button)}
-      {menu.blocks && map(menu.blocks, Button)}
-      {menu.insert && map(menu.insert, Button)}
-      {menu.history && map(menu.history, Button)}
-      {menu.table && map(menu.table, Button)}
-    </div>
-  )
-}
+    {['marks', 'blocks', 'insert', 'history', 'table'].map(name =>
+      map(menu[name], (item, key) => (
+        <MenuButton
+          handle={e => {
+            e.preventDefault()
+            item.run(state, dispatch)
+          }}
+          item={item}
+          key={key}
+          state={state}
+          title={title}
+        />
+      )),
+    )}
+  </Wrapper>
+)
 
 export default MenuBar
