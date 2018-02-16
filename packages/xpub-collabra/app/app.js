@@ -5,10 +5,14 @@ import createHistory from 'history/createBrowserHistory'
 
 import { configureStore, Root } from 'pubsweet-client'
 import { JournalProvider } from 'xpub-journal'
-import 'xpub-theme'
+
+import injectNormalizeCSS from 'pubsweet-client/src/helpers/inject-normalize-css'
+import '@pubsweet/default-theme'
 
 import * as journal from './config/journal'
 import Routes from './routes'
+
+injectNormalizeCSS()
 
 const history = createHistory()
 const store = configureStore(history, {})
