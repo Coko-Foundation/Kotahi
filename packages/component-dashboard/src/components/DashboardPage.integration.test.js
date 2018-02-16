@@ -5,7 +5,7 @@ import { combineReducers } from 'redux'
 import configureMockStore from 'redux-mock-store'
 import thunk from 'redux-thunk'
 import Enzyme, { mount } from 'enzyme'
-import Adapter from 'enzyme-adapter-react-15'
+import Adapter from 'enzyme-adapter-react-16'
 
 import { reducers } from 'pubsweet-client'
 import conversion from '../redux/conversion'
