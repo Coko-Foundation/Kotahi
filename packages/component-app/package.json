@@ -18,7 +18,6 @@
     "react-router-dom": "^4.2.2",
     "recompose": "^0.26.0",
     "redux": "^3.6.0",
-    "xpub-bootstrap": "^0.0.2",
     "xpub-journal": "^0.0.2"
   },
   "peerDependencies": {

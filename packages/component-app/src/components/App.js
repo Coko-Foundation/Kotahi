@@ -5,7 +5,6 @@ import { connect } from 'react-redux'
 
 import { AppBar } from '@pubsweet/ui'
 import { withJournal } from 'xpub-journal'
-import 'xpub-bootstrap'
 import actions from 'pubsweet-client/src/actions'
 
 const App = ({ children, currentUser, journal, logoutUser }) => (
