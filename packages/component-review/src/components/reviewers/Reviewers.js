@@ -1,5 +1,15 @@
 import React from 'react'
-import classes from './Reviewers.local.scss'
+import styled from 'styled-components'
+
+const Root = styled.div`
+  display: flex;
+  margin-top: var(--grid-unit);
+`
+const Form = styled.div``
+const ReviewersList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
 
 const Reviewers = ({
   ReviewerForm,
@@ -9,23 +19,23 @@ const Reviewers = ({
   reviewers,
   reviewerUsers,
 }) => (
-  <div className={classes.root}>
-    <div className={classes.form}>
+  <Root>
+    <Form>
       <ReviewerForm
         project={project}
         reviewerUsers={reviewerUsers}
         version={version}
       />
-    </div>
+    </Form>
 
     {reviewers && (
-      <div className={classes.reviewers}>
+      <ReviewersList>
         {reviewers.map(reviewer => (
           <Reviewer key={reviewer.id} project={project} reviewer={reviewer} />
         ))}
-      </div>
+      </ReviewersList>
     )}
-  </div>
+  </Root>
 )
 
 export default Reviewers
