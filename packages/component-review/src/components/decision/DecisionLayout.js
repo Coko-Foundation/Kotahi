@@ -30,10 +30,9 @@ const DecisionLayout = ({
   versions.forEach(version => {
     // TODO: allow multiple decisions, e.g. appeals
     const { decision } = version
-
     if (decision && decision.submitted) {
       const submittedMoment = moment(decision.submitted)
-      const key = submittedMoment.format('x')
+      // const key = submittedMoment.format('x')
       const label = submittedMoment.format('YYYY-MM-DD')
 
       decisionSections.push({
@@ -44,7 +43,7 @@ const DecisionLayout = ({
             <Decision decision={decision} />
           </div>
         ),
-        key,
+        key: version.id,
         label,
       })
 
@@ -53,12 +52,12 @@ const DecisionLayout = ({
           <SimpleEditor
             content={version.source}
             editing="selection"
-            key={key}
+            key={version.id}
             layout="bare"
             readOnly
           />
         ),
-        key,
+        key: version.id,
         label,
       })
     }
@@ -68,7 +67,7 @@ const DecisionLayout = ({
 
   if (currentVersion.submitted && (!decision || !decision.submitted)) {
     const submittedMoment = moment()
-    const key = submittedMoment.format('x')
+    // const key = submittedMoment.format('x')
     const label = submittedMoment.format('YYYY-MM-DD')
     decisionSections.push({
       content: (
@@ -90,7 +89,7 @@ const DecisionLayout = ({
           />
         </div>
       ),
-      key,
+      key: currentVersion.id,
       label,
     })
 
@@ -99,12 +98,12 @@ const DecisionLayout = ({
         <SimpleEditor
           content={currentVersion.source}
           editing="selection"
-          key={key}
+          key={currentVersion.id}
           layout="bare"
           readOnly
         />
       ),
-      key,
+      key: currentVersion.id,
       label,
     })
   }
@@ -118,12 +117,11 @@ const DecisionLayout = ({
           title="Versions"
         />
       </div>
-
       <div className={classes.column}>
         <Tabs
           activeKey={decisionSections[decisionSections.length - 1].key}
           sections={decisionSections}
-          title="Versions"
+          title="Versions1"
         />
       </div>
     </div>

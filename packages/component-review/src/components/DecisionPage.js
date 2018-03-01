@@ -137,5 +137,6 @@ export default compose(
     form: 'decision',
     onChange: debounce(onChange, 1000, { maxWait: 5000 }),
     onSubmit,
+    destroyOnUnmount: false,
   }),
 )(DecisionLayout)
