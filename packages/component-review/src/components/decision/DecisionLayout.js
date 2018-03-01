@@ -32,7 +32,6 @@ const DecisionLayout = ({
     const { decision } = version
     if (decision && decision.submitted) {
       const submittedMoment = moment(decision.submitted)
-      // const key = submittedMoment.format('x')
       const label = submittedMoment.format('YYYY-MM-DD')
 
       decisionSections.push({
@@ -67,7 +66,6 @@ const DecisionLayout = ({
 
   if (currentVersion.submitted && (!decision || !decision.submitted)) {
     const submittedMoment = moment()
-    // const key = submittedMoment.format('x')
     const label = submittedMoment.format('YYYY-MM-DD')
     decisionSections.push({
       content: (
@@ -121,7 +119,7 @@ const DecisionLayout = ({
         <Tabs
           activeKey={decisionSections[decisionSections.length - 1].key}
           sections={decisionSections}
-          title="Versions1"
+          title="Versions"
         />
       </div>
     </div>
