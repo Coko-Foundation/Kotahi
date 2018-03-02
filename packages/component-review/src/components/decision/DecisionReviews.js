@@ -16,7 +16,7 @@ const DecisionReviews = ({ journal, version }) => (
               open
               review={review}
               reviewer={{
-                name: null,
+                name: review._user.username,
                 ordinal: index + 1,
               }}
             />
