@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import styled, { keyframes } from 'styled-components'
+import styled, { keyframes, withTheme } from 'styled-components'
 import Dropzone from 'react-dropzone'
 import { Icon, th } from '@pubsweet/ui'
 
@@ -9,9 +9,9 @@ const StyledDropzone = styled(Dropzone)`
   display: inline-block;
 `
 
-const StatusIcon = ({ children }) => (
-  <Icon color={th('colorPrimary')}>{children}</Icon>
-)
+const StatusIcon = withTheme(({ children, theme }) => (
+  <Icon color={theme.colorPrimary}>{children}</Icon>
+))
 
 const Status = styled.div`
   align-items: center;
