@@ -9,7 +9,7 @@
     "dist"
   ],
   "dependencies": {
-    "@pubsweet/ui": "^2.1.1",
+    "@pubsweet/ui": "3.0.0",
     "classnames": "^2.2.5",
     "prop-types": "^15.5.10",
     "react": "^16.2.0",

@@ -9,7 +9,7 @@
     "dist"
   ],
   "dependencies": {
-    "@pubsweet/ui": "^2.1.1",
+    "@pubsweet/ui": "3.0.0",
     "lodash": "^4.17.4",
     "prop-types": "^15.5.10",
     "pubsweet-client": "^2.1.0",
