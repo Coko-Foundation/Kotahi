@@ -74,9 +74,14 @@
     pouchdb "^6.3.4"
     pubsweet-server "^1.0.0-beta.2"
 
-"@pubsweet/default-theme@^0.1.0":
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/@pubsweet/default-theme/-/default-theme-0.1.0.tgz#80707d3c57a459d48bca4f3844b0d29e2c18da1e"
+"@pubsweet/default-theme@0.2.0":
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/default-theme/-/default-theme-0.2.0.tgz#e4572f6a497ecaee02afaa664172b456f914c400"
+  dependencies:
+    styled-components "^2.4.0"
+    typeface-noto-sans "^0.0.54"
+    typeface-noto-serif "^0.0.54"
+    typeface-ubuntu-mono "^0.0.54"
 
 "@pubsweet/logger@0.0.1", "@pubsweet/logger@^0.0.1":
   version "0.0.1"
@@ -116,9 +121,9 @@
     typeface-fira-sans-condensed "^0.0.43"
     typeface-vollkorn "^0.0.43"
 
-"@pubsweet/ui@^2.1.1":
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-2.1.1.tgz#6db1c825de9ed347465ac83dacd8efc46b5cb260"
+"@pubsweet/ui@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-3.0.0.tgz#b8915ce2b2729e66fd5628ecf7855f1d740270a5"
   dependencies:
     babel-jest "^21.2.0"
     classnames "^2.2.5"
@@ -129,7 +134,7 @@
     prop-types "^15.5.10"
     react "^16.2.0"
     react-dom "^16.2.0"
-    react-feather "^1.0.7"
+    react-feather "^1.0.8"
     react-redux "^5.0.2"
     react-router-dom "^4.2.2"
     react-tag-autocomplete "^5.4.1"
@@ -9226,7 +9231,7 @@ react-error-overlay@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/react-error-overlay/-/react-error-overlay-3.0.0.tgz#c2bc8f4d91f1375b3dad6d75265d51cd5eeaf655"
 
-react-feather@^1.0.7:
+react-feather@^1.0.8:
   version "1.0.8"
   resolved "https://registry.yarnpkg.com/react-feather/-/react-feather-1.0.8.tgz#69b13d5c729949f194d33201dee91bab67fa31a2"
 
@@ -11413,9 +11418,21 @@ typeface-fira-sans@^0.0.43:
   version "0.0.43"
   resolved "https://registry.yarnpkg.com/typeface-fira-sans/-/typeface-fira-sans-0.0.43.tgz#f9c026ae5b7ad5f1fb727f9947bd1e10e13702e6"
 
+typeface-noto-sans@^0.0.54:
+  version "0.0.54"
+  resolved "https://registry.yarnpkg.com/typeface-noto-sans/-/typeface-noto-sans-0.0.54.tgz#16989ef56a5220b0503495ab8c1036f66b517b55"
+
+typeface-noto-serif@^0.0.54:
+  version "0.0.54"
+  resolved "https://registry.yarnpkg.com/typeface-noto-serif/-/typeface-noto-serif-0.0.54.tgz#26a552df3557c54f2f0c7f9bdbd28a95c9aab06b"
+
 typeface-open-sans@0.0.35:
   version "0.0.35"
   resolved "https://registry.yarnpkg.com/typeface-open-sans/-/typeface-open-sans-0.0.35.tgz#170dc36bbbd63829c9ea64b991c2b0fd65017708"
+
+typeface-ubuntu-mono@^0.0.54:
+  version "0.0.54"
+  resolved "https://registry.yarnpkg.com/typeface-ubuntu-mono/-/typeface-ubuntu-mono-0.0.54.tgz#773582617ff60dc252acbaaeb22880ba7f559fe6"
 
 typeface-vollkorn@^0.0.43:
   version "0.0.43"
