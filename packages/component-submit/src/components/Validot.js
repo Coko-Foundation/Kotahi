@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { th } from '@pubsweet/ui'
 
 // TODO: use the parent validots node instead of document
 // TODO: highlight the scrolled-to element
@@ -7,7 +8,7 @@ const scrollIntoView = id => document.getElementById(id).scrollIntoView()
 const Validot = styled.div.attrs({
   onClick: props => () => scrollIntoView(props.input.name),
 })`
-  background: var(--color-circle);
+  background: ${th('colorCircle')};
   border: 3px solid white;
   border-radius: 100%;
   cursor: pointer;
@@ -19,7 +20,7 @@ const Validot = styled.div.attrs({
 
 
   &:hover::before {
-    background: var(--color-circle);
+    background: ${th('colorCircle')};
     border-radius: 50%;
     content: ' ';
     height: 25px;
@@ -31,7 +32,7 @@ const Validot = styled.div.attrs({
   }
 
   &:hover::after {
-    color: var(--color-circle);
+    color: ${th('colorCircle')};
     content: '${props => props.message}';
     display: block;
     font-size: 0.8em;

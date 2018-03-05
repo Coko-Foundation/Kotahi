@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { th } from '@pubsweet/ui'
 
 // TODO: move labels to journal config
 
@@ -14,7 +15,7 @@ const labels = {
 }
 
 const Root = styled.div`
-  color: var(--color-primary);
+  color: ${th('colorPrimary')};
 `
 
 const Status = ({ status }) => <Root>{labels[status] || 'Unsubmitted'}</Root>

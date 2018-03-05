@@ -1,6 +1,6 @@
 import React from 'react'
 import { FormSection } from 'redux-form'
-import { TextField, ValidatedField } from '@pubsweet/ui'
+import { TextField, ValidatedField, th } from '@pubsweet/ui'
 import { join, split } from 'xpub-validators'
 import { Section, Legend } from '../styles'
 
@@ -25,7 +25,7 @@ const OpposedEditorInput = input => (
 
 const SubLegend = Legend.extend`
   font-weight: normal;
-  margin-top: var(--grid-unit);
+  margin-top: ${th('gridUnit')};
 `
 
 const Suggestions = ({ readonly }) => (

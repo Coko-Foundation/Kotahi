@@ -1,4 +1,5 @@
 import styled, { css } from 'styled-components'
+import { th } from '@pubsweet/ui'
 
 const contentStyles = css`
   hr {
@@ -46,23 +47,23 @@ const contentStyles = css`
 export const withEditorStyle = Component => styled(Component).attrs({
   basePlaceholderClassName: 'placeholder',
 })`
-  font-family: var(--font-writing);
-  font-size: var(--font-size-base);
+  font-family: ${th('fontWriting')};
+  font-size: ${th('fontSizeBase')};
   line-height: 1.8;
   min-height: 1em;
-  margin-bottom: var(--grid-unit);
+  margin-bottom: ${th('gridUnit')};
 
-  border: var(--border-width) var(--border-style) var(--color-border);
-  border-radius: var(--border-radius);
-  padding: calc(var(--grid-unit) / 2);
+  border: ${th('borderWidth')} ${th('borderStyle')} ${th('colorBorder')};
+  border-radius: ${th('borderRadius')};
+  padding: calc(${th('gridUnit')} / 2);
 
   &:focus {
     outline: none;
   }
 
   .placeholder {
-    color: var(--color-text-placeholder);
-    font-family: var(--font-interface);
+    color: ${th('colorTextPlaceholder')};
+    font-family: ${th('fontInterface')};
     height: 0;
     pointer-events: none;
   }
@@ -75,10 +76,10 @@ export const withEditorStyle = Component => styled(Component).attrs({
 `
 
 export const withViewerStyle = Component => styled(Component)`
-  font-family: var(--font-reading);
-  font-size: var(--font-size-base);
+  font-family: ${th('fontReading')};
+  font-size: ${th('fontSizeBase')};
   line-height: 1.8;
-  margin-bottom: var(--grid-unit);
+  margin-bottom: ${th('gridUnit')};
 
   ${contentStyles};
 `

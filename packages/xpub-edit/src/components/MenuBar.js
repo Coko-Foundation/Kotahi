@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import map from 'lodash/map'
+import { th } from '@pubsweet/ui'
 import MenuButton from './MenuButton'
 
 const Wrapper = styled.div`
@@ -11,7 +12,7 @@ const Wrapper = styled.div`
 `
 
 const Legend = styled.div`
-  font-size: var(--font-size-base);
+  font-size: ${th('fontSizeBase')};
   margin-right: 10px;
 `
 

@@ -1,9 +1,10 @@
 import React from 'react'
 import styled from 'styled-components'
+import { th } from '@pubsweet/ui'
 
 const Root = styled.div`
   display: flex;
-  margin-top: var(--grid-unit);
+  margin-top: ${th('gridUnit')};
 `
 const Form = styled.div``
 const ReviewersList = styled.div`

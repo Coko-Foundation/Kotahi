@@ -2,16 +2,16 @@ import React from 'react'
 import styled from 'styled-components'
 import { map } from 'lodash'
 import Moment from 'react-moment'
-import { Avatar, Button } from '@pubsweet/ui'
+import { Avatar, Button, th } from '@pubsweet/ui'
 
 const Root = styled.div`
-  font-family: var(--font-reviewer);
-  margin-right: var(--sub-grid-unit);
-  padding: var(--sub-grid-unit);
+  font-family: ${th('fontReviewer')};
+  margin-right: ${th('subGridUnit')};
+  padding: ${th('subGridUnit')};
 `
 
 const Event = styled.div`
-  font-size: var(--font-size-base-small);
+  font-size: ${th('fontSizeBaseSmall')};
 `
 
 const ordinalLetter = ordinal =>

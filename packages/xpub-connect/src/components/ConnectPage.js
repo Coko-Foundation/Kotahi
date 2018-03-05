@@ -3,9 +3,10 @@ import styled from 'styled-components'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
+import { th } from '@pubsweet/ui'
 
 const ErrorMessage = styled.div`
-  color: var(--color-error);
+  color: ${th('colorError')};
 `
 
 const LoadingMessage = styled.div.attrs({

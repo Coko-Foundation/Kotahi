@@ -1,26 +1,26 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Button, PlainButton } from '@pubsweet/ui'
+import { Button, PlainButton, th } from '@pubsweet/ui'
 import { Heading1 } from '../styles'
 
 const Wrapper = styled.div`
-  background: var(--color-background);
-  color: var(--color-text);
-  line-height: var(--font-line-height);
+  background: ${th('colorBackground')};
+  color: ${th('colorText')};
+  line-height: ${th('fontLineHeight')};
   max-height: 100%;
   max-width: 60em;
   overflow-y: auto;
-  padding: calc(var(--grid-unit) * 2);
+  padding: calc(${th('gridUnit')} * 2);
 `
 
 const Paragraph = styled.p`
-  font-size: var(--font-size-base);
-  margin-bottom: var(--grid-unit);
+  font-size: ${th('fontSizeBase')};
+  margin-bottom: ${th('gridUnit')};
   width: 55ch;
 `
 
 const Divider = styled.span`
-  margin: 0 calc(var(--grid-unit) / 2);
+  margin: 0 calc(${th('gridUnit')} / 2);
 `
 
 const Confirm = ({ toggleConfirming }) => (

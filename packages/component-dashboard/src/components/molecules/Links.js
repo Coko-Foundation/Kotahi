@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { th } from '@pubsweet/ui'
 
 const Links = styled.div`
   align-items: flex-end;
@@ -7,7 +8,7 @@ const Links = styled.div`
 `
 
 const LinkContainer = styled.div`
-  font-size: var(--font-size-base-small);
+  font-size: ${th('fontSizeBaseSmall')};
 `
 
 export { Links, LinkContainer }

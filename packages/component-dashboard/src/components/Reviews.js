@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { compose, withProps } from 'recompose'
 import { groupBy } from 'lodash'
 import { withJournal } from 'xpub-journal'
-import { Badge } from '@pubsweet/ui'
+import { Badge, th } from '@pubsweet/ui'
 
 const Root = styled.div`
   display: inline-flex;
@@ -12,7 +12,7 @@ const Root = styled.div`
   margin-top: 0.3em;
   padding-left: 1.5em;
 
-  font-family: var(--font-reviewer);
+  font-family: ${th('fontReviewer')};
   font-size: 0.9em;
 `
 

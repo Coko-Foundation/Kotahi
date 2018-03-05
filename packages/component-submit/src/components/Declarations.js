@@ -1,7 +1,7 @@
 import React from 'react'
 import { css } from 'styled-components'
 import { FormSection } from 'redux-form'
-import { ValidatedField, RadioGroup } from '@pubsweet/ui'
+import { ValidatedField, RadioGroup, th } from '@pubsweet/ui'
 import { withJournal } from 'xpub-journal'
 import { required } from 'xpub-validators'
 import { Section, Legend } from '../styles'
@@ -15,7 +15,7 @@ const hoverStyles = css`
 `
 
 const DeclarationSection = Section.extend`
-  margin: calc(var(--grid-unit) * 2) 0;
+  margin: calc(${th('gridUnit')} * 2) 0;
   display: flex;
   justify-content: space-between;
 

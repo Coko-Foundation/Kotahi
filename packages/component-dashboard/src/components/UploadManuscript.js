@@ -1,7 +1,7 @@
 import React, { Component } from 'react'
 import styled, { keyframes } from 'styled-components'
 import Dropzone from 'react-dropzone'
-import { Icon } from '@pubsweet/ui'
+import { Icon, th } from '@pubsweet/ui'
 
 const StyledDropzone = styled(Dropzone)`
   border: none;
@@ -10,12 +10,12 @@ const StyledDropzone = styled(Dropzone)`
 `
 
 const StatusIcon = ({ children }) => (
-  <Icon color="var(--color-primary)">{children}</Icon>
+  <Icon color={th('colorPrimary')}>{children}</Icon>
 )
 
 const Status = styled.div`
   align-items: center;
-  color: var(--color-primary);
+  color: ${th('colorPrimary')};
   display: inline-flex;
 `
 
@@ -57,7 +57,7 @@ const StatusConverting = Status.extend.attrs({
 const StatusError = Status.extend.attrs({
   children: () => <StatusIcon>plus_circle</StatusIcon>,
 })`
-  color: var(--color-danger);
+  color: ${th('colorDanger')};
   font-size: 1.5em;
   font-style: italic;
   font-weight: 400;
@@ -67,7 +67,7 @@ const StatusError = Status.extend.attrs({
   }
 
   .icon line {
-    stroke: var(--color-danger);
+    stroke: ${th('colorDanger')};
     transform: rotate(45deg) scale(2.8);
     transform-origin: 50% 50%;
   }
@@ -107,8 +107,8 @@ const Root = styled.div`
 
   &:hover ${StatusIdle} {
     circle {
-      fill: var(--color-primary);
-      stroke: var(--color-primary);
+      fill: ${th('colorPrimary')};
+      stroke: ${th('colorPrimary')};
     }
 
     line {
@@ -122,14 +122,14 @@ const Main = styled.div`
 `
 
 const Error = styled.div`
-  color: var(--color-danger);
+  color: ${th('colorDanger')};
   font-size: 1.5em;
   font-style: italic;
   font-weight: 400;
 `
 
 const Info = styled.div`
-  color: var(--color-primary);
+  color: ${th('colorPrimary')};
   font-size: 2em;
   font-weight: 400;
   text-transform: uppercase;

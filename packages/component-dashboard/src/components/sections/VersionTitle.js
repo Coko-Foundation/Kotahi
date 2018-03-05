@@ -1,10 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
+import { th } from '@pubsweet/ui'
 // import {TitleViewer} from 'xpub-edit/src/components'
 
 const Root = styled.div`
   flex: 1;
-  font-size: var(--font-size-heading-3);
+  font-size: ${th('fontSizeHeading3')};
 `
 
 export default ({ version, className }) => {

@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
-import { Button } from '@pubsweet/ui'
+import { Button, th } from '@pubsweet/ui'
 import Metadata from './Metadata'
 import Declarations from './Declarations'
 import Suggestions from './Suggestions'
@@ -12,7 +12,7 @@ import { Heading1 } from '../styles'
 // import Validots from './Validots'
 
 const Wrapper = styled.div`
-  font-family: var(--font-interface);
+  font-family: ${th('fontInterface')};
   line-height: 1.3;
   margin: auto;
   max-width: 60em;

@@ -1,11 +1,11 @@
 import React from 'react'
 import styled from 'styled-components'
 import { NoteViewer } from 'xpub-edit'
-import { Attachment } from '@pubsweet/ui'
+import { Attachment, th } from '@pubsweet/ui'
 
 const Heading = styled.div``
 const Note = styled.div`
-  font-size: var(--font-size-base-small);
+  font-size: ${th('fontSizeBaseSmall')};
 `
 const Recommendation = Note.extend``
 const Content = styled.div``

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { th } from '@pubsweet/ui'
 import Tab from './Tab'
 
 // TODO: allow the tab content to be separate from the key
@@ -7,11 +8,11 @@ import Tab from './Tab'
 const Root = styled.div``
 const TabsContainer = styled.div`
   display: flex;
-  margin-bottom: var(--grid-unit);
+  margin-bottom: ${th('gridUnit')};
 `
 const Title = styled.div`
-  border-bottom: var(--border-width) var(--border-style) var(--color-border);
-  padding: var(--sub-grid-unit) 1em;
+  border-bottom: ${th('borderWidth')} ${th('borderStyle')} ${th('colorBorder')};
+  padding: ${th('subGridUnit')} 1em;
 `
 const TabContainer = styled.div``
 const Content = styled.div``

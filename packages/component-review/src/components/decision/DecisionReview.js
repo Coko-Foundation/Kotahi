@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { compose, withState, withHandlers } from 'recompose'
 import { withJournal } from 'xpub-journal'
-import { Button } from '@pubsweet/ui'
+import { Button, th } from '@pubsweet/ui'
 import Review from '../review/Review'
 
 const ToggleReview = ({ open, toggle }) => (
@@ -67,7 +67,7 @@ const DecisionReview = ({ review, reviewer, journal, open, toggleOpen }) => {
   const { name, ordinal } = reviewer
 
   const Root = styled.div`
-    margin-bottom: var(--grid-unit);
+    margin-bottom: ${th('gridUnit')};
   `
 
   const ReviewBody = styled.div`

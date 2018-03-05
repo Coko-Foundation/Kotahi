@@ -1,4 +1,5 @@
 import styled from 'styled-components'
+import { th } from '@pubsweet/ui'
 
 const Page = styled.div`
   margin: auto;
@@ -6,18 +7,18 @@ const Page = styled.div`
 `
 
 const Section = styled.div`
-  margin: var(--grid-unit) 0;
+  margin: ${th('gridUnit')} 0;
 
   &:not(:last-of-type) {
-    margin-bottom: calc(var(--grid-unit) * 2);
+    margin-bottom: calc(${th('gridUnit')} * 2);
   }
 `
 
 const Heading = styled.div`
-  color: var(--color-primary);
-  font-family: var(--font-heading);
-  font-size: var(--font-size-heading-3);
-  margin: var(--grid-unit) 0;
+  color: ${th('colorPrimary')};
+  font-family: ${th('fontHeading')};
+  font-size: ${th('fontSizeHeading3')};
+  margin: ${th('gridUnit')} 0;
 `
 
 const UploadContainer = styled.div`

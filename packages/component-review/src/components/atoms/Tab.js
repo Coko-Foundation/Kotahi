@@ -1,12 +1,13 @@
 import styled from 'styled-components'
+import { th } from '@pubsweet/ui'
 
 const Tab = styled.div`
-  padding: var(--sub-grid-unit) 1em;
-  font-size: var(--font-size-base-small);
-  border-width: 0 var(--border-width) var(--border-width) 0;
-  border-style: var(--border-style);
-  border-color: ${({ active }) =>
-    active ? 'var(--color-primary)' : 'var(--color-border)'};
+  padding: ${th('subGridUnit')} 1em;
+  font-size: ${th('fontSizeBaseSmall')};
+  border-width: 0 ${th('borderWidth')} ${th('borderWidth')} 0;
+  border-style: ${th('borderStyle')};
+  border-color: ${({ active, theme }) =>
+    active ? theme.colorPrimary : theme.colorBorder};
 `
 
 export default Tab
