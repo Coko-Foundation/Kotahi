@@ -2,13 +2,7 @@ import React from 'react'
 
 import { FormSection } from 'redux-form'
 import { NoteEditor } from 'xpub-edit'
-import {
-  Attachments,
-  Button,
-  ControlGroup,
-  RadioGroup,
-  ValidatedField,
-} from '@pubsweet/ui'
+import { Attachments, Button, RadioGroup, ValidatedField } from '@pubsweet/ui'
 
 import { withJournal } from 'xpub-journal'
 import { required } from 'xpub-validators'
@@ -31,18 +25,16 @@ const DecisionForm = ({ journal, valid, handleSubmit, uploadFile }) => (
   <form onSubmit={handleSubmit}>
     <AdminSection>
       <FormSection name="note">
-        <ControlGroup inline>
-          <ValidatedField
-            component={NoteInput}
-            name="content"
-            validate={[required]}
-          />
+        <ValidatedField
+          component={NoteInput}
+          name="content"
+          validate={[required]}
+        />
 
-          <ValidatedField
-            component={AttachmentsInput(uploadFile)}
-            name="attachments"
-          />
-        </ControlGroup>
+        <ValidatedField
+          component={AttachmentsInput(uploadFile)}
+          name="attachments"
+        />
       </FormSection>
     </AdminSection>
 

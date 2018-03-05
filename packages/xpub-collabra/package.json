@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@pubsweet/default-theme": "^0.1.0",
-    "@pubsweet/ui": "^2.0.0",
+    "@pubsweet/ui": "^2.1.1",
     "babel-core": "^6.26.0",
     "config": "^1.26.2",
     "font-awesome": "^4.7.0",
