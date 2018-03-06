@@ -18,13 +18,13 @@ const Reviewers = ({
         version={version}
       />
 
-      <div className={classes.find}>
-        <Link
-          to={`/projects/${project.id}/versions/${version.id}/find-reviewers`}
-        >
-          Find reviewers
-        </Link>
-      </div>
+      {/* <div className={classes.find}>
+          <Link
+            to={`/projects/${project.id}/versions/${version.id}/find-reviewers`}
+            >
+              Find reviewers
+          </Link>
+        </div> */}
     </div>
 
     <div className={classes.reviewers}>

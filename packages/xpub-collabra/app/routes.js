@@ -64,6 +64,21 @@ const Routes = () => (
         exact
         path="/projects/:project/versions/:version/decisions/:decision"
       />
+      {/* <PrivateRoute
+        component={FindReviewersPage}
+        exact
+        path="/projects/:project/versions/:version/find-reviewers"
+      />
+      <PrivateRoute
+        component={FindReviewersAuthorPage}
+        exact
+        path="/projects/:project/versions/:version/find-reviewers/author/:id"
+      />
+      <PrivateRoute
+        component={FindReviewersPaperPage}
+        exact
+        path="/projects/:project/versions/:version/find-reviewers/paper/:id"
+      /> */}
 
       <Route component={Signup} exact path="/signup" />
       <Route component={LoginPage} exact path="/login" />
