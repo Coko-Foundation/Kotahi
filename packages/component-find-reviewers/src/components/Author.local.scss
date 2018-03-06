@@ -1,0 +1,30 @@
+.papers {
+  margin: 10px;
+}
+
+.title {
+  display: flex;
+}
+
+.marker {
+  height: 1em;
+  margin-left: 1ch;
+}
+
+.toggle {
+  color: #777;
+  font-size: 10px;
+  margin-left: 2ch;
+}
+
+.root:not(:hover) .showOnHover:not(.assigned) {
+  display: none;
+}
+
+.assigned {
+  color: blue;
+}
+
+.expanded {
+  color: red;
+}

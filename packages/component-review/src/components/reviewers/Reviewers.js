@@ -1,4 +1,5 @@
 import React from 'react'
+// import { Link } from 'react-router-dom'
 import classes from './Reviewers.local.scss'
 
 const Reviewers = ({
@@ -16,15 +17,22 @@ const Reviewers = ({
         reviewerUsers={reviewerUsers}
         version={version}
       />
+
+      {/* <div className={classes.find}>
+          <Link
+            to={`/projects/${project.id}/versions/${version.id}/find-reviewers`}
+            >
+              Find reviewers
+          </Link>
+        </div> */}
     </div>
 
-    {reviewers && (
-      <div className={classes.reviewers}>
-        {reviewers.map(reviewer => (
+    <div className={classes.reviewers}>
+      {reviewers &&
+        reviewers.map(reviewer => (
           <Reviewer key={reviewer.id} project={project} reviewer={reviewer} />
         ))}
-      </div>
-    )}
+    </div>
   </div>
 )
 

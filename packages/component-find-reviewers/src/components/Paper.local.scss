@@ -1,0 +1,41 @@
+.root {
+  align-items: left;
+  display: flex;
+  flex-wrap: nowrap;
+  margin-bottom: 5px;
+}
+
+.score {
+  border: 1px solid #6f97cc;
+  display: inline-block;
+  height: 1em;
+  margin-right: 1ch;
+  position: relative;
+  width: 30px;
+}
+
+.scoreIndicator {
+  background: #6f97cc;
+  bottom: 0;
+  display: inline-block;
+  left: 0;
+  position: absolute;
+  top: 0;
+}
+
+.main {
+  align-items: left;
+  display: flex;
+  flex: 1;
+  flex-wrap: nowrap;
+}
+
+.year {
+  font-family: 'Kocourier Prime Sans', monospace;
+  margin-right: 1ch;
+  white-space: nowrap;
+}
+
+.title {
+  flex: 1;
+}

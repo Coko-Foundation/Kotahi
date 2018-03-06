@@ -7,6 +7,12 @@ import App from 'pubsweet-component-xpub-app/src/components'
 import Login from 'pubsweet-component-login/LoginContainer'
 import Signup from 'pubsweet-component-signup/SignupContainer'
 
+// import {
+//   FindReviewersPage,
+//   AuthorPage as FindReviewersAuthorPage,
+//   PaperPage as FindReviewersPaperPage,
+// } from 'pubsweet-component-xpub-find-reviewers/src/components'
+
 import DashboardPage from 'pubsweet-component-xpub-dashboard/src/components/DashboardPage'
 import SubmitPage from 'pubsweet-component-xpub-submit/src/components/SubmitPage'
 import ManuscriptPage from 'pubsweet-component-xpub-manuscript/src/components/ManuscriptPage'
@@ -58,6 +64,21 @@ const Routes = () => (
         exact
         path="/projects/:project/versions/:version/decisions/:decision"
       />
+      {/* <PrivateRoute
+        component={FindReviewersPage}
+        exact
+        path="/projects/:project/versions/:version/find-reviewers"
+      />
+      <PrivateRoute
+        component={FindReviewersAuthorPage}
+        exact
+        path="/projects/:project/versions/:version/find-reviewers/author/:id"
+      />
+      <PrivateRoute
+        component={FindReviewersPaperPage}
+        exact
+        path="/projects/:project/versions/:version/find-reviewers/paper/:id"
+      /> */}
 
       <Route component={Signup} exact path="/signup" />
       <Route component={LoginPage} exact path="/login" />
