@@ -7,11 +7,11 @@ import App from 'pubsweet-component-xpub-app/src/components'
 import Login from 'pubsweet-component-login/LoginContainer'
 import Signup from 'pubsweet-component-signup/SignupContainer'
 
-import {
-  FindReviewersPage,
-  AuthorPage as FindReviewersAuthorPage,
-  PaperPage as FindReviewersPaperPage,
-} from 'pubsweet-component-xpub-find-reviewers/src/components'
+// import {
+//   FindReviewersPage,
+//   AuthorPage as FindReviewersAuthorPage,
+//   PaperPage as FindReviewersPaperPage,
+// } from 'pubsweet-component-xpub-find-reviewers/src/components'
 
 import DashboardPage from 'pubsweet-component-xpub-dashboard/src/components/DashboardPage'
 import SubmitPage from 'pubsweet-component-xpub-submit/src/components/SubmitPage'
