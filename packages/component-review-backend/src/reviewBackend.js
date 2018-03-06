@@ -33,17 +33,17 @@ module.exports = app => {
       switch (version.decision.recommendation) {
         case 'accept':
           projectUpdateData.status = 'accepted'
-          message = 'Your manuscript has been accepted'
+          message = '<p>Your manuscript has been accepted</p>'
           break
 
         case 'reject':
           projectUpdateData.status = 'rejected'
-          message = 'Your manuscript has been rejected'
+          message = '<p>Your manuscript has been rejected</p>'
           break
 
         case 'revise': {
           projectUpdateData.status = 'revising'
-          message = 'Revisions to your manuscript have been requested'
+          message = '<p>Revisions to your manuscript have been requested</p>'
 
           const cloned = pick(version, [
             'source',
@@ -66,6 +66,8 @@ module.exports = app => {
         default:
           throw new Error('Unknown decision type')
       }
+
+      message += version.decision.note.content
 
       let nextVersion
       let canViewNextVersion
@@ -103,7 +105,7 @@ module.exports = app => {
         from: config.get('mailer.from'),
         to: authorEmails,
         subject: 'Decision made',
-        text: message,
+        html: message,
       })
 
       res.send({
