@@ -1,15 +1,12 @@
 const { pick } = require('lodash')
 const config = require('config')
-const nodemailer = require('nodemailer')
 const logger = require('@pubsweet/logger')
 const User = require('pubsweet-server/src/models/User')
 const Fragment = require('pubsweet-server/src/models/Fragment')
 const Collection = require('pubsweet-server/src/models/Collection')
 const authsome = require('pubsweet-server/src/helpers/authsome')
 const AuthorizationError = require('pubsweet-server/src/errors/AuthorizationError')
-
-const options = config.get('mailer.transport')
-const transport = nodemailer.createTransport(options)
+const transport = require('./transport')
 
 module.exports = app => {
   app.patch('/api/make-decision', async (req, res, next) => {
