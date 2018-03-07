@@ -1,5 +1,12 @@
 import React from 'react'
+import styled from 'styled-components'
+import { th } from '@pubsweet/ui'
 // import {TitleViewer} from 'xpub-edit/src/components'
+
+const Root = styled.div`
+  flex: 1;
+  font-size: ${th('fontSizeHeading3')};
+`
 
 export default ({ version, className }) => {
   // <TitleViewer
@@ -11,9 +18,5 @@ export default ({ version, className }) => {
       ? version.metadata.title
       : 'Untitled'
 
-  return (
-    <div className={className}>
-      <span>{title}</span>
-    </div>
-  )
+  return <Root>{title}</Root>
 }

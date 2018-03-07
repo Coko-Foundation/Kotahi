@@ -1,5 +1,6 @@
 import React from 'react'
-import classes from './Status.local.css'
+import styled from 'styled-components'
+import { th } from '@pubsweet/ui'
 
 // TODO: move labels to journal config
 
@@ -13,8 +14,10 @@ const labels = {
   revising: 'Under Revision',
 }
 
-const Status = ({ status }) => (
-  <div className={classes.root}>{labels[status] || 'Unsubmitted'}</div>
-)
+const Root = styled.div`
+  color: ${th('colorPrimary')};
+`
+
+const Status = ({ status }) => <Root>{labels[status] || 'Unsubmitted'}</Root>
 
 export default Status

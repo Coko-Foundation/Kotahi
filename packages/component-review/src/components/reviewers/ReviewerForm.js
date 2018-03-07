@@ -4,7 +4,6 @@ import { Field } from 'redux-form'
 import { Button } from '@pubsweet/ui'
 import { required } from 'xpub-validators'
 import 'react-select/dist/react-select.css'
-import classes from './ReviewerForm.local.scss'
 
 const OptionRenderer = option => (
   <div>
@@ -40,11 +39,9 @@ const ReviewerForm = ({
       validate={required}
     />
 
-    <div className={classes.actions}>
-      <Button disabled={!valid} primary type="submit">
-        Invite reviewer
-      </Button>
-    </div>
+    <Button disabled={!valid} primary type="submit">
+      Invite reviewer
+    </Button>
   </form>
 )
 

@@ -1,48 +1,53 @@
 import React from 'react'
+import styled from 'styled-components'
 import { NoteViewer } from 'xpub-edit'
-import { Attachment } from '@pubsweet/ui'
-import classes from './Review.local.scss'
+import { Attachment, th } from '@pubsweet/ui'
+
+const Heading = styled.div``
+const Note = styled.div`
+  font-size: ${th('fontSizeBaseSmall')};
+`
+const Recommendation = Note.extend``
+const Content = styled.div``
 
 const Review = ({ review }) => (
   <div>
     <div>
-      <div className={classes.heading}>Note</div>
+      <Heading>Note</Heading>
 
-      <div className={classes.note}>
-        <div className={classes.content}>
+      <Note>
+        <Content>
           <NoteViewer value={review.note.content} />
-        </div>
+        </Content>
 
         {review.note.attachments &&
           review.note.attachments.map(attachment => (
             <Attachment key={attachment.url} value={attachment} />
           ))}
-      </div>
+      </Note>
     </div>
 
     {review.confidential && (
       <div>
-        <div className={classes.heading}>Confidential</div>
+        <Heading>Confidential</Heading>
 
-        <div className={classes.note}>
-          <div className={classes.content}>
+        <Note>
+          <Content>
             <NoteViewer value={review.confidential.content} />
-          </div>
+          </Content>
 
           {review.confidential.attachments &&
             review.confidential.attachments.map(attachment => (
               <Attachment key={attachment.url} value={attachment} />
             ))}
-        </div>
+        </Note>
       </div>
     )}
 
     <div>
-      <div className={classes.heading}>Recommendation</div>
+      <Heading>Recommendation</Heading>
 
-      <div className={classes.recommendation}>
-        {review.Recommendation.recommendation}
-      </div>
+      <Recommendation>{review.Recommendation.recommendation}</Recommendation>
     </div>
   </div>
 )

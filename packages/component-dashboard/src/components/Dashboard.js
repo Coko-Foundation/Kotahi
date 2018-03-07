@@ -1,5 +1,7 @@
 import React from 'react'
-import classes from './Dashboard.local.scss'
+
+import { Page, Section, Heading, UploadContainer } from './molecules/Page'
+
 import UploadManuscript from './UploadManuscript'
 import withVersion from './withVersion'
 import EditorItem from './sections/EditorItem'
@@ -19,27 +21,25 @@ const Dashboard = ({
   reviewerResponse,
   uploadManuscript,
 }) => (
-  <div className={classes.root}>
-    <div className={classes.upload}>
+  <Page>
+    <UploadContainer>
       <UploadManuscript
         conversion={conversion}
         uploadManuscript={uploadManuscript}
       />
-    </div>
+    </UploadContainer>
 
     {!dashboard.owner.length &&
       !dashboard.reviewer.length &&
       !dashboard.editor.length && (
-        <div className={classes.section}>
-          <div className={classes.empty}>
-            Nothing to do at the moment. Please upload a document.
-          </div>
-        </div>
+        <UploadContainer>
+          Nothing to do at the moment. Please upload a document.
+        </UploadContainer>
       )}
 
     {!!dashboard.owner.length && (
-      <div className={classes.section}>
-        <div className={classes.heading}>My Submissions</div>
+      <Section>
+        <Heading>My Submissions</Heading>
         {dashboard.owner.map(project => (
           <OwnerItemWithVersion
             deleteProject={() =>
@@ -52,12 +52,12 @@ const Dashboard = ({
             project={project}
           />
         ))}
-      </div>
+      </Section>
     )}
 
     {!!dashboard.reviewer.length && (
-      <div className={classes.section}>
-        <div className={classes.heading}>To review</div>
+      <Section>
+        <Heading>To review</Heading>
         {dashboard.reviewer.map(project => (
           <ReviewerItemWithVersion
             currentUser={currentUser}
@@ -66,12 +66,12 @@ const Dashboard = ({
             reviewerResponse={reviewerResponse}
           />
         ))}
-      </div>
+      </Section>
     )}
 
     {!!dashboard.editor.length && (
-      <div className={classes.section}>
-        <div className={classes.heading}>My Manuscripts</div>
+      <Section>
+        <Heading>My Manuscripts</Heading>
         {dashboard.editor.map(project => (
           <EditorItemWithVersion
             AssignEditor={AssignEditor}
@@ -79,9 +79,9 @@ const Dashboard = ({
             project={project}
           />
         ))}
-      </div>
+      </Section>
     )}
-  </div>
+  </Page>
 )
 
 export default Dashboard

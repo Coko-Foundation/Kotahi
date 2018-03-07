@@ -9,7 +9,7 @@
     "dist"
   ],
   "dependencies": {
-    "@pubsweet/ui": "^2.0.0",
+    "@pubsweet/ui": "3.0.0",
     "classnames": "^2.2.5",
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
@@ -25,6 +25,7 @@
     "redux": "^3.6.0",
     "redux-form": "^7.0.3",
     "striptags": "^3.1.0",
+    "styled-components": "^2.4.0",
     "uuid": "^3.1.0",
     "wax-editor-react": "^0.1.8",
     "xpub-connect": "^0.0.2",

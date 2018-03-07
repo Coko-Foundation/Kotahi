@@ -5,20 +5,17 @@ import { connect } from 'react-redux'
 
 import { AppBar } from '@pubsweet/ui'
 import { withJournal } from 'xpub-journal'
-import 'xpub-bootstrap'
 import actions from 'pubsweet-client/src/actions'
 
-import classes from './App.local.scss'
-
 const App = ({ children, currentUser, journal, logoutUser }) => (
-  <div className={classes.root}>
+  <div>
     <AppBar
       brand={journal.metadata.name}
       onLogoutClick={logoutUser}
       user={currentUser}
     />
 
-    <div className={classes.main}>{children}</div>
+    <div>{children}</div>
   </div>
 )
 

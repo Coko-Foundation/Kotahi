@@ -7,10 +7,13 @@ import thunk from 'redux-thunk'
 import Enzyme, { mount } from 'enzyme'
 import Adapter from 'enzyme-adapter-react-16'
 
+import { ThemeProvider } from 'styled-components'
+
 import { reducers } from 'pubsweet-client'
 import conversion from '../redux/conversion'
 
 import DashboardPage from './DashboardPage'
+import { Section, UploadContainer } from './molecules/Page'
 
 // this should be elsewhere
 Enzyme.configure({ adapter: new Adapter() })
@@ -47,15 +50,18 @@ describe('DashboardPage', () => {
     const store = mockStore()
     const page = mount(
       <MemoryRouter>
-        <Provider store={store}>
-          <DashboardPage />
-        </Provider>
+        <ThemeProvider theme={{ colorPrimary: 'blue' }}>
+          <Provider store={store}>
+            <DashboardPage />
+          </Provider>
+        </ThemeProvider>
       </MemoryRouter>,
     )
 
     setImmediate(() => {
       page.update()
-      expect(page.find('.empty')).toHaveLength(1)
+      expect(page.find(UploadContainer)).toHaveLength(2)
+      expect(page.find(Section)).toHaveLength(0)
       done()
     })
   })

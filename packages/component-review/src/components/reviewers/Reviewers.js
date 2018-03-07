@@ -1,6 +1,16 @@
 import React from 'react'
-// import { Link } from 'react-router-dom'
-import classes from './Reviewers.local.scss'
+import styled from 'styled-components'
+import { th } from '@pubsweet/ui'
+
+const Root = styled.div`
+  display: flex;
+  margin-top: ${th('gridUnit')};
+`
+const Form = styled.div``
+const ReviewersList = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+`
 
 const Reviewers = ({
   ReviewerForm,
@@ -10,30 +20,23 @@ const Reviewers = ({
   reviewers,
   reviewerUsers,
 }) => (
-  <div className={classes.root}>
-    <div className={classes.form}>
+  <Root>
+    <Form>
       <ReviewerForm
         project={project}
         reviewerUsers={reviewerUsers}
         version={version}
       />
+    </Form>
 
-      {/* <div className={classes.find}>
-          <Link
-            to={`/projects/${project.id}/versions/${version.id}/find-reviewers`}
-            >
-              Find reviewers
-          </Link>
-        </div> */}
-    </div>
-
-    <div className={classes.reviewers}>
-      {reviewers &&
-        reviewers.map(reviewer => (
+    {reviewers && (
+      <ReviewersList>
+        {reviewers.map(reviewer => (
           <Reviewer key={reviewer.id} project={project} reviewer={reviewer} />
         ))}
-    </div>
-  </div>
+      </ReviewersList>
+    )}
+  </Root>
 )
 
 export default Reviewers

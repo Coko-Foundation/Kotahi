@@ -1,8 +1,20 @@
 import React from 'react'
+import styled from 'styled-components'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
-import classes from './ConnectPage.local.scss'
+import { th } from '@pubsweet/ui'
+
+const ErrorMessage = styled.div`
+  color: ${th('colorError')};
+`
+
+const LoadingMessage = styled.div.attrs({
+  children: 'loading…',
+})`
+  display: flex;
+  justify-content: center;
+`
 
 const ConnectPage = requirements => WrappedComponent => {
   class ConnectedComponent extends React.Component {
@@ -57,9 +69,9 @@ const ConnectPage = requirements => WrappedComponent => {
     render() {
       const { complete, error } = this.state
 
-      if (error) return <div className={classes.error}>{error}</div>
+      if (error) return <ErrorMessage>{error}</ErrorMessage>
 
-      if (!complete) return <div className={classes.bar}>loading…</div>
+      if (!complete) return <LoadingMessage />
 
       return <WrappedComponent {...this.props} />
     }

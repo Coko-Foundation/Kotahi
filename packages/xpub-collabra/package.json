@@ -8,7 +8,8 @@
     "url": "https://gitlab.coko.foundation/xpub/xpub"
   },
   "dependencies": {
-    "@pubsweet/ui": "^2.0.0",
+    "@pubsweet/default-theme": "0.2.0",
+    "@pubsweet/ui": "3.0.0",
     "babel-core": "^6.26.0",
     "config": "^1.26.2",
     "font-awesome": "^4.7.0",
@@ -19,7 +20,7 @@
     "moment": "^2.18.1",
     "prop-types": "^15.5.10",
     "pubsweet": "^1.1.1",
-    "pubsweet-client": "^2.1.0",
+    "pubsweet-client": "^2.1.1",
     "pubsweet-component-ink-backend": "^0.1.1",
     "pubsweet-component-ink-frontend": "^1.0.0",
     "pubsweet-component-login": "^1.0.1",

@@ -1,7 +1,6 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import SimpleEditor from 'wax-editor-react'
-import classes from './Manuscript.local.scss'
 
 // TODO: convert user teams to roles (see SimpleEditorWrapper)?
 
@@ -14,7 +13,6 @@ const Manuscript = ({
   version,
 }) => (
   <SimpleEditor
-    classes={classes.fullscreen}
     content={content}
     fileUpload={fileUpload}
     history={history}

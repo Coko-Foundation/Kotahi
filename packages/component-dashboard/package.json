@@ -9,7 +9,7 @@
     "dist"
   ],
   "dependencies": {
-    "@pubsweet/ui": "^2.0.0",
+    "@pubsweet/ui": "3.0.0",
     "classnames": "^2.2.5",
     "lodash": "^4.17.4",
     "prop-types": "^15.5.10",
@@ -23,6 +23,7 @@
     "react-router-dom": "^4.2.2",
     "recompose": "^0.26.0",
     "redux": "^3.6.0",
+    "styled-components": "^2.4.0",
     "xpub-connect": "^0.0.2",
     "xpub-journal": "^0.0.2",
     "xpub-selectors": "^0.0.2",

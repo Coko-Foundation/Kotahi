@@ -1,28 +1,33 @@
 import React from 'react'
+import styled from 'styled-components'
 import { compose, withState, withHandlers } from 'recompose'
 import { withJournal } from 'xpub-journal'
+import { Button, th } from '@pubsweet/ui'
 import Review from '../review/Review'
-import classes from './DecisionReview.local.scss'
 
 const ToggleReview = ({ open, toggle }) => (
-  <button className={classes.toggle} onClick={toggle}>
+  <Button onClick={toggle} plain>
     {open ? 'Hide' : 'Show'}
-  </button>
+  </Button>
 )
 
 const Bullet = ({ journal, recommendation }) => {
-  const recommendationColor = journal.recommendations.find(
-    item => item.value === recommendation,
-  ).color
+  const recommendationColor = () =>
+    recommendation
+      ? journal.recommendations.find(item => item.value === recommendation)
+          .color
+      : 'black'
 
-  return (
-    <span
-      className={classes.indicator}
-      style={{
-        backgroundColor: recommendation ? recommendationColor : 'black',
-      }}
-    />
-  )
+  const Dot = styled.span`
+    border-radius: 100%;
+    display: inline-block;
+    height: 10px;
+    margin-right: 10px;
+    width: 10px;
+    background-color: ${recommendationColor};
+  `
+
+  return <Dot />
 }
 
 const ReviewHeading = ({
@@ -32,25 +37,45 @@ const ReviewHeading = ({
   ordinal,
   recommendation,
   toggleOpen,
-}) => (
-  <div className={classes.heading}>
-    <Bullet journal={journal} recommendation={recommendation} />
+}) => {
+  const Root = styled.div`
+    display: flex;
+    align-items: baseline;
+  `
+  const Ordinal = styled.span``
+  const Name = styled.span``
+  const Controls = styled.span`
+    flex-grow: 1;
+    text-align: right;
+  `
 
-    <span className={classes.ordinal}>Review {ordinal}</span>
-    <span className={classes.name}>{name || 'Anonymous'}</span>
-
-    <span className={classes.dots} />
-
-    <ToggleReview open toggle={toggleOpen} />
-  </div>
-)
+  return (
+    <Root>
+      <Bullet journal={journal} recommendation={recommendation} />
+      <Ordinal>Review {ordinal}</Ordinal>
+      &nbsp;
+      <Name>{name || 'Anonymous'}</Name>
+      <Controls>
+        <ToggleReview open={open} toggle={toggleOpen} />
+      </Controls>
+    </Root>
+  )
+}
 
 const DecisionReview = ({ review, reviewer, journal, open, toggleOpen }) => {
   const { recommendation } = review.Recommendation
   const { name, ordinal } = reviewer
 
+  const Root = styled.div`
+    margin-bottom: ${th('gridUnit')};
+  `
+
+  const ReviewBody = styled.div`
+    margin-left: 1em;
+  `
+
   return (
-    <div>
+    <Root>
       <ReviewHeading
         journal={journal}
         name={name}
@@ -61,11 +86,11 @@ const DecisionReview = ({ review, reviewer, journal, open, toggleOpen }) => {
       />
 
       {open && (
-        <div className={classes.review}>
+        <ReviewBody>
           <Review review={review} />
-        </div>
+        </ReviewBody>
       )}
-    </div>
+    </Root>
   )
 }
 

@@ -1,42 +1,47 @@
 import React from 'react'
+
+import { Button } from '@pubsweet/ui'
+import { Item, Header, Body, Divider } from '../molecules/Item'
+import { Links, LinkContainer } from '../molecules/Links'
+
 import Status from '../Status'
-import classes from './Item.local.scss'
 import ProjectLink from '../ProjectLink'
-import Divider from './Divider'
 import VersionTitle from './VersionTitle'
 
 const OwnerItem = ({ project, version, deleteProject }) => (
-  <div className={classes.root}>
-    <div className={classes.header}>
+  <Item>
+    <Header>
       <Status status={project.status} />
-    </div>
+    </Header>
 
-    <div className={classes.main}>
-      <VersionTitle className={classes.versionTitle} version={version} />
+    <Body>
+      <VersionTitle version={version} />
 
-      <div className={classes.links}>
-        <div className={classes.link}>
+      <Links>
+        <LinkContainer>
           <ProjectLink page="submit" project={project} version={version}>
             Summary info
           </ProjectLink>
-        </div>
+        </LinkContainer>
 
         <Divider separator="|" />
 
-        <div className={classes.link}>
+        <LinkContainer>
           <ProjectLink page="manuscript" project={project} version={version}>
             Manuscript
           </ProjectLink>
-        </div>
+        </LinkContainer>
 
         <Divider separator="|" />
 
-        <div className={classes.link}>
-          <a onClick={() => deleteProject(project)}>Delete</a>
-        </div>
-      </div>
-    </div>
-  </div>
+        <LinkContainer>
+          <Button onClick={() => deleteProject(project)} plain>
+            Delete
+          </Button>
+        </LinkContainer>
+      </Links>
+    </Body>
+  </Item>
 )
 
 export default OwnerItem

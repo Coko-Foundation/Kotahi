@@ -7,6 +7,7 @@
   ],
   "main": "src",
   "dependencies": {
+    "@pubsweet/ui": "3.0.0",
     "prosemirror-commands": "^1.0.1",
     "prosemirror-dropcursor": "^1.0.0",
     "prosemirror-gapcursor": "^1.0.0",

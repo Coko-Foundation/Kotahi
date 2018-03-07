@@ -1,36 +1,44 @@
 import React from 'react'
-import classnames from 'classnames'
+import { css } from 'styled-components'
 import { FormSection } from 'redux-form'
-import { ValidatedField, RadioGroup } from '@pubsweet/ui'
+import { ValidatedField, RadioGroup, th } from '@pubsweet/ui'
 import { withJournal } from 'xpub-journal'
 import { required } from 'xpub-validators'
-import classes from './Declarations.local.scss'
+import { Section, Legend } from '../styles'
 
-const DeclarationInput = options => input => (
-  <RadioGroup inline options={options} {...input} />
-)
+const hoverStyles = css`
+  background-image: linear-gradient(to right, #666 50%, white 0%);
+  background-position: 0 90%;
+  background-repeat: repeat-x;
+  background-size: 6px 1px;
+  position: relative;
+`
+
+const DeclarationSection = Section.extend`
+  margin: calc(${th('gridUnit')} * 2) 0;
+  display: flex;
+  justify-content: space-between;
+
+  &:hover {
+    ${props => !props.readonly && hoverStyles};
+  }
+`
 
 const Declarations = ({ journal, readonly }) => (
   <FormSection name="declarations">
     {journal.declarations.questions.map(question => (
-      <div
-        className={classnames(
-          classes.section,
-          classes.spread,
-          !readonly && classes.spreadEnabled,
-        )}
-        id={`declarations.${question.id}`}
-        key={question.id}
-      >
-        <div className={classes.legend}>{question.legend}</div>
+      <DeclarationSection id={`declarations.${question.id}`} key={question.id}>
+        <Legend>{question.legend}</Legend>
         <ValidatedField
-          component={DeclarationInput(question.options)}
+          component={props => (
+            <RadioGroup inline options={question.options} {...props} />
+          )}
           name={question.id}
           readonly={readonly}
           required
           validate={[required]}
         />
-      </div>
+      </DeclarationSection>
     ))}
   </FormSection>
 )
