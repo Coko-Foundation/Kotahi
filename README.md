@@ -1,8 +1,18 @@
 # xpub-collabra  
 
-An MVP implementation of the first design sessions with [Collabra Psychology](https://www.collabra.org/), which allows a user to go through the process of creating a submission, assigning editors and reviewers, submitting reviews and submitting a decision.
+## Quickstart
 
-Note: xpub is still _very_ new. This repository contains an initial set of components but is not yet ready for use.
+```
+npm start # or docker-compose up
+```
+
+**Note**: yarn will be run automatically inside the container to install dependencies. If dependencies were already installed on the host, this may cause problems as the binaries are compiled for the wrong platform. If you encounter errors about "invalid ELF header", do `npm run clean` and then `npm start` again.
+
+See `pubsweet-cli` for detailed documentation on running the app
+
+## Notes
+
+An MVP implementation of the first design sessions with [Collabra Psychology](https://www.collabra.org/), which allows a user to go through the process of creating a submission, assigning editors and reviewers, submitting reviews and submitting a decision.  
 
 ## Roadmap
 
