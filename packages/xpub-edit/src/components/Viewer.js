@@ -14,6 +14,11 @@ class Viewer extends React.Component {
     }
   }
 
+  componentDidUpdate(props) {
+    const newState = EditorState.create(props.options)
+    this.view.updateState(newState)
+  }
+
   createEditorView = node => {
     const { className } = this.props
     const { state } = this.state

@@ -14,18 +14,18 @@ const parser = schema => {
 }
 
 class HtmlViewer extends React.Component {
-  componentWillMount() {
-    const { value, options } = this.props
+  changeContentValue(value) {
+    const { options } = this.props
     const { schema } = options
 
     const parse = parser(schema)
 
-    options.doc = parse(value)
+    return parse(value)
   }
 
   render() {
-    const { options, className } = this.props
-
+    const { options, className, value } = this.props
+    options.doc = this.changeContentValue(value)
     return <Viewer className={className} options={options} />
   }
 }

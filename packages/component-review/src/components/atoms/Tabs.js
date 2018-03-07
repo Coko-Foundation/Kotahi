@@ -31,14 +31,6 @@ class Tabs extends React.Component {
     this.setState({ activeKey })
   }
 
-  componentWillReceiveProps(nextProps) {
-    const { activeKey } = nextProps
-
-    if (activeKey !== this.props.activeKey) {
-      this.setState({ activeKey })
-    }
-  }
-
   setActiveKey(activeKey) {
     this.setState({ activeKey })
   }

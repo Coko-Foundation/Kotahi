@@ -27,6 +27,7 @@
     "pubsweet-component-signup": "^1.0.0",
     "pubsweet-component-xpub-app": "^0.0.2",
     "pubsweet-component-xpub-dashboard": "^0.0.2",
+    "pubsweet-component-xpub-find-reviewers": "^0.0.2",
     "pubsweet-component-xpub-manuscript": "^0.0.2",
     "pubsweet-component-xpub-review": "^0.0.2",
     "pubsweet-component-xpub-submit": "^0.0.2",
