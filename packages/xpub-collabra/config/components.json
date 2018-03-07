@@ -3,6 +3,7 @@
   "pubsweet-component-xpub-dashboard",
   "pubsweet-component-xpub-manuscript",
   "pubsweet-component-xpub-review",
+  "pubsweet-component-xpub-review-backend",
   "pubsweet-component-xpub-submit",
   "pubsweet-component-ink-backend",
   "pubsweet-component-login",

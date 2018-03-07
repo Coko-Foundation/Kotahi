@@ -1,4 +1,4 @@
-import { debounce, pick } from 'lodash'
+import { debounce } from 'lodash'
 import { compose, withProps } from 'recompose'
 import { connect } from 'react-redux'
 import { withRouter } from 'react-router-dom'
@@ -14,66 +14,6 @@ import {
 import uploadFile from 'xpub-upload'
 import DecisionLayout from './decision/DecisionLayout'
 
-// TODO: this should happen on the server
-const handleDecision = (project, version) => dispatch =>
-  dispatch(
-    actions.updateFragment(project, {
-      decision: version.decision,
-      id: version.id,
-      rev: version.rev,
-    }),
-  ).then(() => {
-    const cloned = pick(version, [
-      'source',
-      'metadata',
-      'declarations',
-      'suggestions',
-      'files',
-      'notes',
-    ])
-
-    switch (version.decision.recommendation) {
-      case 'accept':
-        return dispatch(
-          actions.updateCollection({
-            id: project.id,
-            rev: project.rev,
-            status: 'accepted',
-          }),
-        )
-
-      case 'reject':
-        return dispatch(
-          actions.updateCollection({
-            id: project.id,
-            rev: project.rev,
-            status: 'rejected',
-          }),
-        )
-
-      case 'revise':
-        return dispatch(
-          actions.updateCollection({
-            id: project.id,
-            rev: project.rev,
-            status: 'revising',
-          }),
-        ).then(() =>
-          dispatch(
-            actions.createFragment(project, {
-              fragmentType: 'version',
-              created: new Date(), // TODO: set on server
-              ...cloned,
-              version: version.version + 1,
-            }),
-          ),
-        )
-
-      default:
-        throw new Error('Unknown decision type')
-    }
-  })
-
 const onSubmit = (values, dispatch, { project, version, history }) => {
   version.decision = {
     ...version.decision,
@@ -82,7 +22,7 @@ const onSubmit = (values, dispatch, { project, version, history }) => {
     submitted: new Date(),
   }
 
-  return dispatch(handleDecision(project, version))
+  return dispatch(actions.makeDecision(project, version))
     .then(() => {
       // TODO: show "thanks for your review" message
       history.push('/')

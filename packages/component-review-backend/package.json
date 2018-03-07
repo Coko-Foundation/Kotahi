@@ -1,0 +1,27 @@
+{
+  "name": "pubsweet-component-xpub-review-backend",
+  "version": "0.1.0",
+  "main": "src",
+  "scripts": {
+    "test": "jest"
+  },
+  "keywords": [],
+  "author": "Collaborative Knowledge Foundation",
+  "license": "MIT",
+  "dependencies": {
+    "config": "^1.26.1",
+    "moment": "^2.18.1",
+    "nodemailer": "^4.0.1"
+  },
+  "devDependencies": {
+    "body-parser": "^1.17.2",
+    "jest": "^22.4.2",
+    "superagent": "^3.8.2",
+    "supertest": "^3.0.0"
+  },
+  "peerDependencies": {
+    "@pubsweet/logger": ">=0.0.1",
+    "pubsweet-component-xpub-review": "^0.0.1",
+    "pubsweet-server": ">=1.0.0-alpha.1"
+  }
+}

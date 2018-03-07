@@ -27,8 +27,11 @@ module.exports = {
     'redux-log': false,
     theme: process.env.PUBSWEET_THEME,
   },
-  'mail-transport': {
-    sendmail: true,
+  mailer: {
+    from: 'dev@example.com',
+    transport: {
+      sendmail: true,
+    },
   },
   'password-reset': {
     url:
