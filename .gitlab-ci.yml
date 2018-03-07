@@ -2,7 +2,7 @@ variables:
   IMAGE_ORG: xpub
   IMAGE_NAME: xpub
   BASE_DOMAIN: gateway.xpub.semioticsquares.com
-  CONFIGURATION_REPOSITORY: https://gitlab.coko.foundation/xpub/deployment-config.git
+  CONFIGURATION_REPOSITORY: https://gitlab.coko.foundation/yld/xpub-deployment-config-postgres.git 
 
 stages:
   - build
@@ -38,9 +38,19 @@ lint:
   stage: test
   variables:
     GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: test
+    POSTGRES_PASSWORD: pw
+    # connection details for tests
+    PGUSER: test
+    PGPASSWORD: pw
+    NODE_ENV: test
+  services:
+    - postgres
   script:
     - cd ${HOME}
-    - npm run test
+    # specify host here else it confuses the linked postgres image
+    - PGHOST=postgres npm run test
 
 push:latest:
   image: docker:latest
