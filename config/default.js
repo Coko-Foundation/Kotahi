@@ -28,9 +28,13 @@ module.exports = {
     theme: process.env.PUBSWEET_THEME,
   },
   mailer: {
-    from: 'dev@example.com',
+    from: process.env.PUBSWEET_MAILER_SENDER,
     transport: {
-      sendmail: true,
+      host: process.env.PUBSWEET_MAILER_HOSTNAME,
+      auth: {
+        user: process.env.PUBSWEET_MAILER_USERNAME,
+        pass: process.env.PUBSWEET_MAILER_PASSWORD,
+      },
     },
   },
   'password-reset': {
