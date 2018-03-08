@@ -1,10 +1,10 @@
 FROM xpub/xpub:base
 
-COPY package.json yarn.lock ./
-COPY lerna.json .babelrc .eslintignore .eslintrc .prettierrc .stylelintignore .stylelintrc ./
-COPY packages packages
+# TODO package namespacing no longer necessary 
+RUN mkdir -p ${HOME}/packages/xpub-collabra
+WORKDIR ${HOME}/packages/xpub-collabra
 
-RUN [ "yarn", "config", "set", "workspaces-experimental", "true" ]
+COPY package.json yarn.lock ./
 
 # We do a development install because react-styleguidist is a dev dependency
 RUN [ "yarn", "install", "--frozen-lockfile" ]
@@ -13,18 +13,18 @@ RUN [ "yarn", "install", "--frozen-lockfile" ]
 RUN [ "yarn", "cache", "clean"]
 RUN [ "rm", "-rf", "/npm-packages-offline-cache"]
 
+COPY app.js .babelrc .eslintignore .eslintrc .prettierrc .stylelintignore .stylelintrc ./
+
+COPY static static
+COPY api api
+COPY webpack webpack
+COPY config config
+COPY logs logs
+COPY app app
+
 ENV NODE_ENV "production"
 
-# We are temporarily going to use the same image with different commands to deploy different apps in the monorepo. This is bad :(.
-
-WORKDIR ${HOME}/packages/xpub-collabra
 RUN [ "npx", "pubsweet", "build"]
-
-## No xpub-ui to deploy yet
-# WORKDIR ${HOME}/packages/xpub-ui
-# RUN [ "npm", "run", "styleguide:build" ]
-## Create file for kubernetes health checks
-# RUN touch ./styleguide/health
 
 EXPOSE 3000
 
