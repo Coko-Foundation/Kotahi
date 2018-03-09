@@ -1,6 +1,7 @@
 {
   "name": "xpub-collabra",
   "version": "0.0.1",
+  "private": true,
   "description": "xpub configured for Collabra",
   "license": "MIT",
   "engines": {
@@ -29,13 +30,13 @@
     "pubsweet-component-ink-frontend": "^1.0.0",
     "pubsweet-component-login": "^1.0.1",
     "pubsweet-component-signup": "^1.0.0",
-    "pubsweet-component-xpub-app": "^0.0.2",
-    "pubsweet-component-xpub-dashboard": "^0.0.2",
-    "pubsweet-component-xpub-find-reviewers": "^0.0.2",
-    "pubsweet-component-xpub-manuscript": "^0.0.2",
-    "pubsweet-component-xpub-review": "^0.0.2",
+    "pubsweet-component-xpub-app": "^0.0.3",
+    "pubsweet-component-xpub-dashboard": "^0.0.3",
+    "pubsweet-component-xpub-find-reviewers": "^0.0.3",
+    "pubsweet-component-xpub-manuscript": "^0.0.3",
+    "pubsweet-component-xpub-review": "^0.0.3",
     "pubsweet-component-xpub-review-backend": "^0.1.0",
-    "pubsweet-component-xpub-submit": "^0.0.2",
+    "pubsweet-component-xpub-submit": "^0.0.3",
     "pubsweet-server": "^1.0.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
@@ -45,9 +46,9 @@
     "redux-form": "^7.0.3",
     "redux-logger": "^3.0.1",
     "winston": "^2.4.0",
-    "xpub-journal": "^0.0.2",
-    "xpub-selectors": "^0.0.2",
-    "xpub-theme": "^0.0.2"
+    "xpub-journal": "^0.0.3",
+    "xpub-selectors": "^0.0.3",
+    "xpub-theme": "^0.0.3"
   },
   "devDependencies": {
     "babel-eslint": "^8.0.2",
@@ -91,10 +92,9 @@
     "webpack-hot-middleware": "^2.20.0"
   },
   "scripts": {
-    "clean": "rm -rf node_modules",
     "test": "echo YOU HAVE NO TESTS, FOOOL!",
     "lint": "npm run lint:js && npm run lint:style",
-    "lint:js": "eslint ",
+    "lint:js": "eslint .",
     "lint:style": "stylelint app/**/*.scss app/**/*.css",
     "setupdb": "pubsweet setupdb ./",
     "precommit": "lint-staged",
