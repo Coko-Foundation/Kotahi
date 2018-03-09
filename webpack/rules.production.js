@@ -38,44 +38,12 @@ module.exports = [
         }),
       },
 
-      // SCSS Modules
-      {
-        test: /\.local\.scss$/,
-        include,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            {
-              loader: 'css-loader',
-              options: {
-                modules: true,
-                importLoaders: 1,
-                localIdentName: '[name]_[local]-[hash:base64:8]',
-              },
-            },
-            'sass-loader',
-          ],
-        }),
-      },
-
       // global CSS
       {
         test: /\.css$/,
         use: ExtractTextPlugin.extract({
           fallback: 'style-loader',
           use: ['css-loader'],
-        }),
-      },
-
-      // global SCSS
-      {
-        test: /\.scss$/,
-        use: ExtractTextPlugin.extract({
-          fallback: 'style-loader',
-          use: [
-            'css-loader', // TODO: importLoaders: 1?
-            'sass-loader',
-          ],
         }),
       },
 
