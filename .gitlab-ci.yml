@@ -32,7 +32,8 @@ lint:
     - cd ${HOME}
     - npm run lint
 
-test:
+# disable this job to make it clear we're not running any tests
+.test:
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
   variables:
@@ -52,10 +53,6 @@ push:latest:
     - docker push $IMAGE_ORG/$IMAGE_NAME:latest
   only:
   - master
-
-# -----------------------------------------------
-# xpub-collabra ---------------------------------
-# -----------------------------------------------
 
 review:xpub-collabra:
   image: pubsweet/deployer:latest
@@ -134,80 +131,3 @@ demo:xpub-collabra:
   script:
     - source deploy.sh
     - create_deployment
-
-# -----------------------------------------------
-# xpub-ui ---------------------------------------
-# -----------------------------------------------
-
-#review:xpub-ui:
-#  image: pubsweet/deployer:latest
-#  stage: review
-#  variables:
-#    PACKAGE_NAME: xpub-ui
-#  environment:
-#    name: $PACKAGE_NAME/review/$CI_COMMIT_REF_NAME
-#    # !! kube-lego will fail if domain > 63 chars
-#    url: "http://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
-#    on_stop: stop_review:xpub-ui
-#  except:
-#  - master
-#  script:
-#    - source deploy.sh
-#    - create_deployment
-#
-#stop_review:xpub-ui:
-#  image: pubsweet/deployer:latest
-#  stage: review
-#  variables:
-#    PACKAGE_NAME: xpub-ui
-#    GIT_STRATEGY: none
-#  when: manual
-#  environment:
-#    name: $PACKAGE_NAME/review/$CI_COMMIT_REF_NAME
-#    action: stop
-#  script:
-#    - source deploy.sh
-#    - delete_deployment
-#
-#staging:xpub-ui:
-#  image: pubsweet/deployer:latest
-#  stage: staging
-#  variables:
-#    PACKAGE_NAME: xpub-ui
-#  environment:
-#    name: $PACKAGE_NAME/staging
-#    url: "https://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
-#  only:
-#  - master
-#  script:
-#    - source deploy.sh
-#    - create_deployment
-#
-#production:xpub-ui:
-#  image: pubsweet/deployer:latest
-#  stage: production
-#  variables:
-#    PACKAGE_NAME: xpub-ui
-#  environment:
-#    name: $PACKAGE_NAME/production
-#    url: "https://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
-#  when: manual
-#  only:
-#  - master
-#  script:
-#    - source deploy.sh
-#    - create_deployment
-#
-#demo:xpub-ui:
-#  image: pubsweet/deployer:latest
-#  stage: demo
-#  variables:
-#    PACKAGE_NAME: xpub-ui
-#  environment:
-#    name: $PACKAGE_NAME/demo
-#    url: "https://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
-#  when: manual
-#  script:
-#    - source deploy.sh
-#    - create_deployment
-#

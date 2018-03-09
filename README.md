@@ -1,3 +1,7 @@
+# xpub-collabra  
+
+An MVP implementation of the first design sessions with [Collabra Psychology](https://www.collabra.org/), which allows a user to go through the process of creating a submission, assigning editors and reviewers, submitting reviews and submitting a decision.
+
 Note: xpub is still _very_ new. This repository contains an initial set of components but is not yet ready for use.
 
 ## Roadmap
@@ -28,7 +32,7 @@ You can follow more fine-grained lists of things that we're working on
 
 * `xpub-collabra`: a PubSweet application that provides configuration and routing for a journal.
 
-### xpub packages
+### xpub packages (located in pubsweet/pubsweet)
 
 * `xpub-connect`: a helper component for connecting pages to data
 * `xpub-edit`: WYSIWYG editors for use in xpub forms
@@ -45,7 +49,7 @@ In the root directory, run `yarn` to install all the dependencies.
 
 ## Configuration
 
-To enable manuscript conversion via INK, add the following values to `packages/xpub-collabra/config/local-development.json` (ask in [the xpub channel](https://mattermost.coko.foundation/coko/channels/xpub) if you need an account):
+To enable manuscript conversion via INK, add the following values to `config/local-development.json` (ask in [the xpub channel](https://mattermost.coko.foundation/coko/channels/xpub) if you need an account):
 
 ```json
 {
@@ -62,9 +66,8 @@ To enable manuscript conversion via INK, add the following values to `packages/x
 
 ## Running the app
 
-1. `cd packages/xpub-collabra`
-2. The first time you run the app, initialise the database with `yarn run setupdb` (press Enter when asked for a collection title, to skip that step).
-3. `yarn start`
+1. The first time you run the app, initialise the database with `yarn run setupdb` (press Enter when asked for a collection title, to skip that step).
+2. `yarn start`
 
 ## CI
 
