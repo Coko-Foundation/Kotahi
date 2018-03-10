@@ -8,3 +8,6 @@ api/db/*
 logs/*
 log.txt
 config.json
+_build/
+uploads/
+config/local*.*
