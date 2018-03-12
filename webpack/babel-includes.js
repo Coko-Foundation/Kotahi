@@ -8,10 +8,11 @@ module.exports = [
   path.join(__dirname, '..', 'app'),
   // include pubsweet and xpub packages which are published untranspiled
   /xpub-[^/]+\/src/,
-  /component-[^/]+\/src/,
   /wax-[^/]+\/src/,
   /pubsweet-[^/\\]+\/(?!node_modules)/,
   /@pubsweet\/[^/\\]+\/(?!node_modules)/,
-  // include other packages when this repo is mounted in a workspace
-  /packages\/[^/\\]+\/(?!node_modules)/,
+  // include pubsweet packages when npm linked from monorepo
+  filepath =>
+    // is a child of packages but not node_modules
+    filepath.match(/\/packages\//) && !filepath.match(/\/node_modules\//),
 ]
