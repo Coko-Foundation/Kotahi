@@ -96,7 +96,6 @@
     "lint": "npm run lint:js && npm run lint:style",
     "lint:js": "eslint .",
     "lint:style": "stylelint app/**/*.scss app/**/*.css",
-    "setupdb": "pubsweet setupdb ./",
     "precommit": "lint-staged",
     "setupdb": "pubsweet setupdb",
     "reset": "pubsweet setupdb --clobber",
