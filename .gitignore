@@ -1,4 +1,5 @@
 *.log
+.bash_history
 .env
 .env.*
 dist/
