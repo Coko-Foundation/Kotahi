@@ -36,38 +36,10 @@ module.exports = [
         ],
       },
 
-      // SCSS Modules
-      {
-        test: /\.local\.scss$/,
-        include,
-        use: [
-          'style-loader',
-          {
-            loader: 'css-loader',
-            options: {
-              modules: true,
-              importLoaders: 1,
-              localIdentName: '[name]_[local]-[hash:base64:8]',
-            },
-          },
-          'sass-loader',
-        ],
-      },
-
       // global CSS
       {
         test: /\.css$/,
         use: ['style-loader', 'css-loader'],
-      },
-
-      // global SCSS
-      {
-        test: /\.scss$/,
-        use: [
-          'style-loader',
-          'css-loader', // TODO: importLoaders: 1?
-          'sass-loader',
-        ],
       },
 
       // files
