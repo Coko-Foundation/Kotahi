@@ -16,17 +16,25 @@ An MVP implementation of the first design sessions with [Collabra Psychology](ht
 
 ## Roadmap
 
-The major tasks we're planning to work on are the following: 
-* Implement a future-proof theming setup. (#88)
-* Let users go through multiple rounds of review. (#50)
-* Implement roles and permissions. (#58)
-* Change the data model to account for the changes that have occured in `pubsweet-server`, as well as to make it easily portable to Postgres in the future. (#67)
-* Merge xpub's authentication, routing and navigation with pubsweet's. (#55 #89 #57)
-
-You can follow more fine-grained lists of things that we're working on  
-* [Collabra](https://gitlab.coko.foundation/xpub/xpub/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Collabra) for tasks related to `xpub-collabra` and  
-* [Xpub](https://gitlab.coko.foundation/xpub/xpub/boards?scope=all&utf8=%E2%9C%93&state=opened&milestone_title=Xpub) for more general xpub concerns
-
+|Module             |Description                                    |In progress    |Issue
+|:---:              |---                                            |:---:          |
+|System             |Apply Coko theme                               |&#x2714;       |#154
+|System             |Implement roles & permissions                  |&#x2714;       |#58
+|System             |Revisit data model                             |               |#67
+|Dashboard          |Change text for new submission button          |               |#156
+|Dashboard          |Provide feedback while ingesting docs          |               |#157
+|Dashboard          |Click on title to go to control panel          |               |#158
+|Dashboard          |Add streamlined review to displayed metadata   |               |#159
+|Dashboard          |Update text of manuscript statuses             |               |#112
+|Summary Info       |Reduce minimum title length                    |               |#164
+|Summary Info       |Update text for metadata questions             |               |#165
+|Summary Info       |Display decision letter                        |               |#166
+|Manuscript         |Link to Summary Info for this manuscript       |               |#114
+|Assign Reviewers   |Reviewer invitation email                      |               |#160
+|Assign Reviewers   |Link back to Control Panel                     |               |#155
+|Review             |Update label text                              |               |#161
+|Control Panel      |Update decision placeholder text               |               |#163
+|Control Panel      |Show more complete set of metadata             |               |#131
 
 ## Contents
 
