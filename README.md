@@ -17,7 +17,7 @@ An MVP implementation of the first design sessions with [Collabra Psychology](ht
 ## Roadmap
 
 |Module             |Description                                    |In progress    |Issue
-|:---:              |---                                            |:---:          |
+|:---:              |---                                            |:---:          |:---:
 |System             |Apply Coko theme                               |&#x2714;       |#154
 |System             |Implement roles & permissions                  |&#x2714;       |#58
 |System             |Revisit data model                             |               |#67
