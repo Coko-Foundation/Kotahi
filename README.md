@@ -21,6 +21,7 @@ An MVP implementation of the first design sessions with [Collabra Psychology](ht
 |System             |Apply Coko theme                               |&#x2714;       |#154
 |System             |Implement roles & permissions                  |&#x2714;       |#58
 |System             |Revisit data model                             |               |#67
+|System             |Write integration tests                        |&#x2714;       |
 |Dashboard          |Change text for new submission button          |               |#156
 |Dashboard          |Provide feedback while ingesting docs          |               |#157
 |Dashboard          |Click on title to go to control panel          |               |#158
