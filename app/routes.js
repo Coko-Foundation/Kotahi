@@ -20,6 +20,7 @@ import ReviewPage from 'pubsweet-component-xpub-review/src/components/ReviewPage
 import DecisionPage from 'pubsweet-component-xpub-review/src/components/DecisionPage'
 
 import App from './components/App'
+import UsersManager from 'pubsweet-component-users-manager/src/UsersManagerContainer'
 
 const LoginPage = withProps({ passwordReset: false })(Login)
 
@@ -83,6 +84,8 @@ const Routes = () => (
 
       <Route component={Signup} exact path="/signup" />
       <Route component={LoginPage} exact path="/login" />
+      <PrivateRoute component={UsersManager} path="/users" />
+
       <PrivateRoute component={DashboardPage} path="*" />
     </Switch>
     {/* <Redirect from="/" to="/dashboard"/> */}

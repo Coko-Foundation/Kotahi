@@ -4,9 +4,20 @@ const logger = require('winston')
 
 module.exports = {
   authsome: {
-    mode: path.resolve(__dirname, 'authsome.js'),
+    mode: require.resolve('xpub-collabra-authsome'),
     teams: {
-      // TODO
+      seniorEditor: {
+        name: 'Senior Editors',
+      },
+      handlingEditor: {
+        name: 'Handling Editors',
+      },
+      managingEditor: {
+        name: 'Managing Editors',
+      },
+      reviewer: {
+        name: 'Reviewer',
+      },
     },
   },
   validations: path.resolve(__dirname, 'validations.js'),
@@ -26,11 +37,11 @@ module.exports = {
       extend type User {
         name: String
       }
-      
+
       extend type Team {
         group: String
       }
-      
+
       extend type Collection {
         collectionType: String
         created: String
@@ -38,12 +49,12 @@ module.exports = {
         status: String
         reviewers: [CollectionReviewer]
       }
-      
+
       type CollectionReviewer {
         id: String!
         user: String!
       }
-      
+
       extend type Fragment {
         created: String
         version: Int
