@@ -29,12 +29,16 @@ An MVP implementation of the first design sessions with [Collabra Psychology](ht
 |Summary Info       |Reduce minimum title length                    |               |#164
 |Summary Info       |Update text for metadata questions             |               |#165
 |Summary Info       |Display decision letter                        |               |#166
+|Summary Info       |Detailed author information                    |               |#115
+|Summary Info       |Add instructions for uploading files           |               |#168
 |Manuscript         |Link to Summary Info for this manuscript       |               |#114
 |Assign Reviewers   |Reviewer invitation email                      |               |#160
 |Assign Reviewers   |Link back to Control Panel                     |               |#155
 |Review             |Update label text                              |               |#161
 |Control Panel      |Update decision placeholder text               |               |#163
 |Control Panel      |Show more complete set of metadata             |               |#131
+|Control Panel      |Assign editors                                 |               |#138
+|Control Panel      |Redesign uploaded files UI                     |               |#169
 
 ## Contents
 
