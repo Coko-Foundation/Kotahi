@@ -6818,18 +6818,18 @@ pubsweet-component-xpub-manuscript@^0.0.3:
     xpub-connect "^0.0.3"
     xpub-selectors "^0.0.3"
 
-pubsweet-component-xpub-review-backend@^0.1.0:
-  version "0.1.2"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review-backend/-/pubsweet-component-xpub-review-backend-0.1.2.tgz#fef728a2230e1ff45e5bccf279d20c904ccc1a5b"
+pubsweet-component-xpub-review-backend@^0.1.4:
+  version "0.1.4"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review-backend/-/pubsweet-component-xpub-review-backend-0.1.4.tgz#fef728a2230e1ff45e5bccf279d20c904ccc1a5b"
   dependencies:
     config "^1.26.1"
     lodash "^4.17.5"
     moment "^2.18.1"
     nodemailer "^4.0.1"
 
-pubsweet-component-xpub-review@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review/-/pubsweet-component-xpub-review-0.0.4.tgz#3715ccf15cb54af997d876af0aa3b06cd16e6bf9"
+pubsweet-component-xpub-review@^0.1.1:
+  version "0.1.1"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review/-/pubsweet-component-xpub-review-0.1.1.tgz#3715ccf15cb54af997d876af0aa3b06cd16e6bf9"
   dependencies:
     "@pubsweet/ui" "^3.2.0"
     classnames "^2.2.5"
