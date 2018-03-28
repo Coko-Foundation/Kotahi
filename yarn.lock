@@ -85,6 +85,12 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
+"@pubsweet/coko-theme@0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/coko-theme/-/coko-theme-0.1.0.tgz#ac44885bdd3ee99f723af0453249577b6f66b7c1"
+  dependencies:
+    styled-components "^2.4.0"
+
 "@pubsweet/db-manager@^1.0.2":
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/@pubsweet/db-manager/-/db-manager-1.0.2.tgz#155182717ed311274be1f50ca0a654fe936ecc1b"
@@ -95,15 +101,6 @@
     joi "^13.1.0"
     pg "^7.4.1"
     pubsweet-server "^2.0.2"
-
-"@pubsweet/default-theme@0.2.1":
-  version "0.2.1"
-  resolved "https://registry.yarnpkg.com/@pubsweet/default-theme/-/default-theme-0.2.1.tgz#d97d8083618154ea22d005af1b4f92acf4da7058"
-  dependencies:
-    styled-components "^2.4.0"
-    typeface-noto-sans "^0.0.54"
-    typeface-noto-serif "^0.0.54"
-    typeface-ubuntu-mono "^0.0.54"
 
 "@pubsweet/logger@^0.0.1":
   version "0.0.1"
@@ -8666,21 +8663,9 @@ typeface-fira-sans@^0.0.43:
   version "0.0.43"
   resolved "https://registry.yarnpkg.com/typeface-fira-sans/-/typeface-fira-sans-0.0.43.tgz#f9c026ae5b7ad5f1fb727f9947bd1e10e13702e6"
 
-typeface-noto-sans@^0.0.54:
-  version "0.0.54"
-  resolved "https://registry.yarnpkg.com/typeface-noto-sans/-/typeface-noto-sans-0.0.54.tgz#16989ef56a5220b0503495ab8c1036f66b517b55"
-
-typeface-noto-serif@^0.0.54:
-  version "0.0.54"
-  resolved "https://registry.yarnpkg.com/typeface-noto-serif/-/typeface-noto-serif-0.0.54.tgz#26a552df3557c54f2f0c7f9bdbd28a95c9aab06b"
-
 typeface-open-sans@0.0.35:
   version "0.0.35"
   resolved "https://registry.yarnpkg.com/typeface-open-sans/-/typeface-open-sans-0.0.35.tgz#170dc36bbbd63829c9ea64b991c2b0fd65017708"
-
-typeface-ubuntu-mono@^0.0.54:
-  version "0.0.54"
-  resolved "https://registry.yarnpkg.com/typeface-ubuntu-mono/-/typeface-ubuntu-mono-0.0.54.tgz#773582617ff60dc252acbaaeb22880ba7f559fe6"
 
 typeface-vollkorn@^0.0.43:
   version "0.0.43"
