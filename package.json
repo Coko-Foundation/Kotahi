@@ -14,7 +14,7 @@
     "url": "https://gitlab.coko.foundation/xpub/xpub"
   },
   "dependencies": {
-    "@pubsweet/coko-theme": "0.0.1",
+    "@pubsweet/coko-theme": "0.1.0",
     "@pubsweet/ui": "3.3.0",
     "babel-core": "^6.26.0",
     "config": "^1.26.2",
