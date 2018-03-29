@@ -150,7 +150,7 @@
     redux-form "^7.0.3"
     styled-components "^2.4.0"
 
-"@pubsweet/ui@^3.2.0", "@pubsweet/ui@^3.3.1":
+"@pubsweet/ui@^3.3.1":
   version "3.3.1"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-3.3.1.tgz#f4ae3f21334e5ba290911b6a73aa71698099f83f"
   dependencies:
@@ -6231,6 +6231,10 @@ pkginfo@0.3.x:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.3.1.tgz#5b29f6a81f70717142e09e765bbeab97b4f81e21"
 
+pkginfo@0.x.x:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.4.1.tgz#b5418ef0439de5425fc4995042dced14fb2a84ff"
+
 platform@1.3.5:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/platform/-/platform-1.3.5.tgz#fb6958c696e07e2918d2eeda0f0bc9448d733444"
@@ -6647,7 +6651,7 @@ prompt@^1.0.0:
     utile "0.3.x"
     winston "2.1.x"
 
-"prompt@github:flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87":
+prompt@flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87:
   version "1.0.0"
   resolved "https://codeload.github.com/flatiron/prompt/tar.gz/1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87"
   dependencies:
@@ -6775,7 +6779,7 @@ public-encrypt@^4.0.0:
     parse-asn1 "^5.0.0"
     randombytes "^2.0.1"
 
-pubsweet-client@^2.1.1, pubsweet-client@^2.2.2:
+pubsweet-client@^2.1.1:
   version "2.3.0"
   resolved "https://registry.yarnpkg.com/pubsweet-client/-/pubsweet-client-2.3.0.tgz#bcae8de16882b84312c6ef290828b95c3ab545fa"
   dependencies:
@@ -6908,7 +6912,7 @@ pubsweet-component-xpub-review-backend@^0.1.4:
     moment "^2.18.1"
     nodemailer "^4.0.1"
 
-pubsweet-component-xpub-review@^0.1.1:
+pubsweet-component-xpub-review@^0.1.0:
   version "0.1.1"
   resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review/-/pubsweet-component-xpub-review-0.1.1.tgz#0e0ed46203213806f171aa570f1b12449ea09f3f"
   dependencies:
@@ -7175,15 +7179,6 @@ react-deep-force-update@^2.1.1:
   version "2.1.1"
   resolved "https://registry.yarnpkg.com/react-deep-force-update/-/react-deep-force-update-2.1.1.tgz#8ea4263cd6455a050b37445b3f08fd839d86e909"
 
-react-dom@^15.6.1:
-  version "15.6.2"
-  resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-15.6.2.tgz#41cfadf693b757faf2708443a1d1fd5a02bef730"
-  dependencies:
-    fbjs "^0.8.9"
-    loose-envify "^1.1.0"
-    object-assign "^4.1.0"
-    prop-types "^15.5.10"
-
 react-dom@^16.2.0:
   version "16.2.0"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.2.0.tgz#69003178601c0ca19b709b33a83369fe6124c044"
@@ -7328,16 +7323,6 @@ react-transition-group@^2.0.0, react-transition-group@^2.2.0:
     loose-envify "^1.3.1"
     prop-types "^15.5.8"
     warning "^3.0.0"
-
-react@^15.6.1:
-  version "15.6.2"
-  resolved "https://registry.yarnpkg.com/react/-/react-15.6.2.tgz#dba0434ab439cfe82f108f0f511663908179aa72"
-  dependencies:
-    create-react-class "^15.6.0"
-    fbjs "^0.8.9"
-    loose-envify "^1.1.0"
-    object-assign "^4.1.0"
-    prop-types "^15.5.10"
 
 react@^16.2.0:
   version "16.2.0"
@@ -9272,6 +9257,18 @@ winston@0.8.x:
     pkginfo "0.3.x"
     stack-trace "0.0.x"
 
+winston@2.1.x:
+  version "2.1.1"
+  resolved "https://registry.yarnpkg.com/winston/-/winston-2.1.1.tgz#3c9349d196207fd1bdff9d4bc43ef72510e3a12e"
+  dependencies:
+    async "~1.0.0"
+    colors "1.0.x"
+    cycle "1.0.x"
+    eyes "0.1.x"
+    isstream "0.1.x"
+    pkginfo "0.3.x"
+    stack-trace "0.0.x"
+
 winston@2.x, winston@^2.2.0, winston@^2.4.0:
   version "2.4.1"
   resolved "https://registry.yarnpkg.com/winston/-/winston-2.4.1.tgz#a3a9265105564263c6785b4583b8c8aca26fded6"
@@ -9334,9 +9331,16 @@ xml-char-classes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/xml-char-classes/-/xml-char-classes-1.0.0.tgz#64657848a20ffc5df583a42ad8a277b4512bbc4d"
 
-xpub-edit@^0.0.6:
+xpub-connect@^0.0.6:
   version "0.0.6"
-  resolved "https://registry.yarnpkg.com/xpub-edit/-/xpub-edit-0.0.6.tgz#a90452413047bbed51d3dc00b3d01f171b648bfb"
+  resolved "https://registry.yarnpkg.com/xpub-connect/-/xpub-connect-0.0.6.tgz#25ea29ba7132dc653ed8df79bc6d28b2046f8125"
+  dependencies:
+    "@pubsweet/ui" "^3.3.0"
+    react-redux "^5.0.2"
+    react-router-dom "^4.2.2"
+    recompose "^0.26.0"
+    styled-components "^2.4.0"
+
 xpub-connect@^0.0.7:
   version "0.0.7"
   resolved "https://registry.yarnpkg.com/xpub-connect/-/xpub-connect-0.0.7.tgz#67f287bf69bedc25acf7ff6e1de7058decb0e5ee"
@@ -9347,6 +9351,9 @@ xpub-connect@^0.0.7:
     recompose "^0.26.0"
     styled-components "^2.4.0"
 
+xpub-edit@^0.0.6:
+  version "0.0.6"
+  resolved "https://registry.yarnpkg.com/xpub-edit/-/xpub-edit-0.0.6.tgz#a90452413047bbed51d3dc00b3d01f171b648bfb"
   dependencies:
     "@pubsweet/ui" "^3.3.0"
     prosemirror-commands "^1.0.1"
@@ -9374,55 +9381,12 @@ xpub-edit@^0.0.7:
     prosemirror-state "^1.0.1"
     prosemirror-view "^1.0.0"
 
-xpub-edit@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/xpub-edit/-/xpub-edit-0.0.7.tgz#b6383a1588e3fa0b87110e83daee5f7c3a7c2bdf"
-  dependencies:
-    "@pubsweet/ui" "^3.3.1"
-    prosemirror-commands "^1.0.1"
-    prosemirror-dropcursor "^1.0.0"
-    prosemirror-gapcursor "^1.0.0"
-    prosemirror-history "^1.0.0"
-    prosemirror-inputrules "^1.0.0"
-    prosemirror-keymap "^1.0.0"
-    prosemirror-model "^1.0.0"
-    prosemirror-state "^1.0.1"
-    prosemirror-view "^1.0.0"
-
-xpub-journal@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/xpub-journal/-/xpub-journal-0.0.3.tgz#d930328aa3ee9a60de73444d4e960963ee65ede4"
-  dependencies:
-    prop-types "^15.5.10"
-    react "^16.2.0"
-    react-dom "^16.2.0"
-    recompose "^0.26.0"
-
-xpub-journal@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/xpub-journal/-/xpub-journal-0.0.4.tgz#c92e8d2eb83058c2d64266b4865c8fb6798cfc2b"
-
-  dependencies:
-    prop-types "^15.5.10"
-    recompose "^0.26.0"
-
 xpub-journal@^0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/xpub-journal/-/xpub-journal-0.0.5.tgz#def194bcb6254c2122125f5b2744d6b4ae1fded9"
   dependencies:
     prop-types "^15.5.10"
     recompose "^0.26.0"
-
-xpub-journal@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/xpub-journal/-/xpub-journal-0.0.5.tgz#def194bcb6254c2122125f5b2744d6b4ae1fded9"
-  dependencies:
-    prop-types "^15.5.10"
-    recompose "^0.26.0"
-
-xpub-selectors@^0.0.3:
-  version "0.0.3"
-  resolved "https://registry.yarnpkg.com/xpub-selectors/-/xpub-selectors-0.0.3.tgz#0ddb67feeebb20936c68567ef874543e5e6f05b9"
 
 xpub-selectors@^0.0.4:
   version "0.0.4"
@@ -9438,22 +9402,6 @@ xpub-theme@^0.0.5:
     typeface-fira-sans "^0.0.43"
     typeface-fira-sans-condensed "^0.0.43"
     typeface-vollkorn "^0.0.43"
-
-xpub-upload@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/xpub-upload/-/xpub-upload-0.0.5.tgz#b83ac2ea1e0a65d37a6af006bba8778d369341de"
-  dependencies:
-    react-redux "^5.0.2"
-    react-router-dom "^4.2.2"
-    recompose "^0.26.0"
-
-xpub-upload@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/xpub-upload/-/xpub-upload-0.0.5.tgz#b83ac2ea1e0a65d37a6af006bba8778d369341de"
-  dependencies:
-    react-redux "^5.0.2"
-    react-router-dom "^4.2.2"
-    recompose "^0.26.0"
 
 xpub-upload@^0.0.5:
   version "0.0.5"
