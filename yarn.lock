@@ -9374,6 +9374,21 @@ xpub-edit@^0.0.7:
     prosemirror-state "^1.0.1"
     prosemirror-view "^1.0.0"
 
+xpub-edit@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/xpub-edit/-/xpub-edit-0.0.7.tgz#b6383a1588e3fa0b87110e83daee5f7c3a7c2bdf"
+  dependencies:
+    "@pubsweet/ui" "^3.3.1"
+    prosemirror-commands "^1.0.1"
+    prosemirror-dropcursor "^1.0.0"
+    prosemirror-gapcursor "^1.0.0"
+    prosemirror-history "^1.0.0"
+    prosemirror-inputrules "^1.0.0"
+    prosemirror-keymap "^1.0.0"
+    prosemirror-model "^1.0.0"
+    prosemirror-state "^1.0.1"
+    prosemirror-view "^1.0.0"
+
 xpub-journal@^0.0.3:
   version "0.0.3"
   resolved "https://registry.yarnpkg.com/xpub-journal/-/xpub-journal-0.0.3.tgz#d930328aa3ee9a60de73444d4e960963ee65ede4"
@@ -9387,6 +9402,13 @@ xpub-journal@^0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/xpub-journal/-/xpub-journal-0.0.4.tgz#c92e8d2eb83058c2d64266b4865c8fb6798cfc2b"
 
+  dependencies:
+    prop-types "^15.5.10"
+    recompose "^0.26.0"
+
+xpub-journal@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/xpub-journal/-/xpub-journal-0.0.5.tgz#def194bcb6254c2122125f5b2744d6b4ae1fded9"
   dependencies:
     prop-types "^15.5.10"
     recompose "^0.26.0"
@@ -9416,6 +9438,14 @@ xpub-theme@^0.0.5:
     typeface-fira-sans "^0.0.43"
     typeface-fira-sans-condensed "^0.0.43"
     typeface-vollkorn "^0.0.43"
+
+xpub-upload@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/xpub-upload/-/xpub-upload-0.0.5.tgz#b83ac2ea1e0a65d37a6af006bba8778d369341de"
+  dependencies:
+    react-redux "^5.0.2"
+    react-router-dom "^4.2.2"
+    recompose "^0.26.0"
 
 xpub-upload@^0.0.5:
   version "0.0.5"
