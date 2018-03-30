@@ -4,7 +4,7 @@ const logger = require('winston')
 
 module.exports = {
   authsome: {
-    mode: require.resolve('xpub-collabra-authsome'),
+    mode: path.resolve(__dirname, 'authsome.js'),
     teams: {
       seniorEditor: {
         name: 'Senior Editors',
