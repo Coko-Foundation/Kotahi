@@ -14,9 +14,6 @@ module.exports = {
     port: 4000,
     secret: 'secret-string',
   },
-  // pubsweet: {
-  //   components: [], // There is something weird going on if there are components present.
-  // },
   baseUrl: deferConfig(
     cfg => `http://localhost:${cfg['pubsweet-server'].port}`,
   ),
