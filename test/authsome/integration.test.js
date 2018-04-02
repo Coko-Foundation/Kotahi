@@ -100,6 +100,15 @@ describe('server integration', () => {
           .expect(201)
       })
 
+      it('can delete a collection they own', async () => {
+        const collection = await new Collection({
+          title: 'Test',
+          owners: [user.id],
+        }).save()
+
+        await api.collections.delete(collection.id, userToken).expect(200)
+      })
+
       it('can read own user', async () => {
         const userResponse = await api.users
           .get({ userId: user.id, token: userToken })

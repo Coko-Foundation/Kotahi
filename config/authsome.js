@@ -1,6 +1,5 @@
 const { pickBy } = require('lodash')
 
-/** The base class for Xpub Collabra's Authsome mode. */
 class XpubCollabraMode {
   /**
    * Creates a new instance of XpubCollabraMode
@@ -142,10 +141,21 @@ class XpubCollabraMode {
     return !!this.userId
   }
 
+  /**
+   * Checks if a user can create a collection.
+   *
+   * @returns {boolean}
+   */
   canCreateCollection() {
     return this.isAuthenticated()
   }
 
+  /**
+   * Checks if a user can read a specific collection
+   *
+   * @returns {boolean}
+   *
+   */
   async canReadCollection() {
     if (!this.isAuthenticated()) {
       return false
@@ -167,6 +177,11 @@ class XpubCollabraMode {
     return permission
   }
 
+  /**
+   * Checks if a user can list users
+   *
+   * @returns {boolean}
+   */
   async canListUsers() {
     if (!this.isAuthenticated()) {
       return false
@@ -177,6 +192,11 @@ class XpubCollabraMode {
     return true
   }
 
+  /**
+   * Checks if a user can read a specific user
+   *
+   * @returns {boolean}
+   */
   async canReadUser() {
     if (!this.isAuthenticated()) {
       return false
@@ -193,6 +213,11 @@ class XpubCollabraMode {
     }
   }
 
+  /**
+   * Checks if a user can read a fragment
+   *
+   * @returns {boolean}
+   */
   async canReadFragment() {
     if (!this.isAuthenticated()) {
       return false
@@ -205,6 +230,11 @@ class XpubCollabraMode {
     return true
   }
 
+  /**
+   * Checks if a user can list collections
+   *
+   * @returns {boolean}
+   */
   async canListCollections() {
     if (!this.isAuthenticated()) {
       return false
@@ -232,6 +262,11 @@ class XpubCollabraMode {
     }
   }
 
+  /**
+   * Checks if a user can create fragments
+   *
+   * @returns {boolean}
+   */
   canCreateFragment() {
     if (!this.isAuthenticated()) {
       return false
@@ -239,6 +274,11 @@ class XpubCollabraMode {
     return true
   }
 
+  /**
+   * Checks if a user can create a fragment in a specific collection
+   *
+   * @returns {boolean}
+   */
   async canCreateFragmentInACollection() {
     if (!this.isAuthenticated()) {
       return false
@@ -259,64 +299,37 @@ class XpubCollabraMode {
     return false
   }
 
+  /**
+   * Checks if a user can be created
+   *
+   * @returns {boolean}
+   */
   // eslint-disable-next-line
   canCreateUser() {
     return true
   }
 
+  /**
+   * Checks if a user can create a team
+   *
+   * @returns {boolean}
+   * @memberof XpubCollabraMode
+   */
   canCreateTeam() {
     if (!this.isAuthenticated()) {
       return false
     }
     return true
   }
-}
 
-/** This class is used to handle authorization requirements for REST endpoints. */
-class RESTMode extends XpubCollabraMode {
   /**
-   * An async functions that's the entry point for determining
-   * authorization results. Returns true (if allowed), false (if not allowed),
-   * and { filter: function(filterable) } if partially allowed
+   * Checks if a user can delete a collection
    *
-   * @returns {any} Returns true, false or { filter: fn }
-   * @memberof RESTMode
-   */
-  async determine() {
-    if (!this.isAuthenticated()) {
-      return this.unauthenticatedUser(this.operation)
-    }
-
-    // Admins can do anything
-    if (this.isAdmin()) {
-      return true
-    }
-    return false
-  }
-}
-
-/** This class is used to handle authorization requirements for GraphQL. */
-class GraphQLMode extends XpubCollabraMode {
-  /**
-   * Returns true if current operation is listing collections
-   *
-   * @memberof GraphQLMode
    * @returns {boolean}
    */
-  isListingCollections() {
-    return this.operation === 'list collections'
-  }
-
-  /**
-   * Returns true if owner of the object is user and operation is read
-   * @returns {boolean}
-   */
-  isReadingOwnObject() {
-    return (
-      this.operation === 'read' &&
-      this.object &&
-      this.object.owners.includes(this.user.id)
-    )
+  async canDeleteCollection() {
+    this.user = await this.context.models.User.find(this.userId)
+    return this.isAuthor(this.object)
   }
 }
 
@@ -328,7 +341,7 @@ module.exports = {
     return user.admin
   },
   GET: (userId, operation, object, context) => {
-    const mode = new RESTMode(userId, operation, object, context)
+    const mode = new XpubCollabraMode(userId, operation, object, context)
 
     // GET /api/collections
     if (object && object.path === '/collections') {
@@ -373,7 +386,7 @@ module.exports = {
     return false
   },
   POST: (userId, operation, object, context) => {
-    const mode = new RESTMode(userId, operation, object, context)
+    const mode = new XpubCollabraMode(userId, operation, object, context)
 
     // POST /api/collections
     if (object && object.path === '/collections') {
@@ -403,46 +416,62 @@ module.exports = {
     return false
   },
   PATCH: (userId, operation, object, context) => {
-    const mode = new RESTMode(userId, operation, object, context)
+    const mode = new XpubCollabraMode(userId, operation, object, context)
 
-    // PATCH /api/collections
-    if (object && object.path === '/collections') {
+    // PATCH /api/collections/:id
+    if (object && object.type === 'collection') {
       return mode.canUpdateCollection()
     }
 
-    // PATCH /api/users
-    if (object && object.path === '/users') {
+    // PATCH /api/users/:id
+    if (object && object.type === 'user') {
       return mode.canUpdateUser()
     }
 
-    // PATCH /api/fragments
-    if (object && object.path === '/fragments') {
+    // PATCH /api/fragments/:id
+    if (object && object.type === 'fragment') {
       return mode.canUpdateFragment()
     }
 
-    // PATCH /api/collections/:collectionId/fragments
-    if (object && object.path === '/collections/:collectionId/fragments') {
-      return mode.canUpdateFragmentInACollection()
-    }
-
-    // PATCH /api/teams
-    if (object && object.path === '/teams') {
+    // PATCH /api/teams/:id
+    if (object && object.type === '/teams') {
       return mode.canUpdateTeam()
     }
 
     return false
   },
   DELETE: (userId, operation, object, context) => {
-    const mode = new RESTMode(userId, operation, object, context)
-    return mode.determine()
+    const mode = new XpubCollabraMode(userId, operation, object, context)
+
+    // DELETE /api/collections/:id
+    if (object && object.type === 'collection') {
+      return mode.canDeleteCollection()
+    }
+
+    // DELETE /api/users/:id
+    if (object && object.type === 'users') {
+      return mode.canDeleteUser()
+    }
+
+    // DELETE /api/fragments/:id
+    if (object && object.type === 'fragments') {
+      return mode.canDeleteFragment()
+    }
+
+    // DELETE /api/teams/:id
+    if (object && object.type === 'teams') {
+      return mode.canDeleteTeam()
+    }
+
+    return false
   },
   // Example of a specific authorization query. Notice how easy it is to respond to this.
   'list collections': (userId, operation, object, context) => {
-    const mode = new GraphQLMode(userId, operation, object, context)
+    const mode = new XpubCollabraMode(userId, operation, object, context)
     return mode.canListCollections()
   },
   create: (userId, operation, object, context) => {
-    const mode = new GraphQLMode(userId, operation, object, context)
+    const mode = new XpubCollabraMode(userId, operation, object, context)
 
     if (object === 'collections' || object.type === 'collection') {
       return mode.canCreateCollection()
@@ -451,7 +480,7 @@ module.exports = {
     return false
   },
   read: (userId, operation, object, context) => {
-    const mode = new GraphQLMode(userId, operation, object, context)
+    const mode = new XpubCollabraMode(userId, operation, object, context)
 
     if (object === 'collections') {
       return mode.canListCollections()
