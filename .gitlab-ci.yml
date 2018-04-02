@@ -32,8 +32,7 @@ lint:
     - cd ${HOME}
     - npm run lint
 
-# disable this job to make it clear we're not running any tests
-.test:
+test:
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
   variables:

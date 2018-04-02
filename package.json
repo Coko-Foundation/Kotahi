@@ -114,7 +114,7 @@
     "build": "NODE_ENV=production pubsweet build"
   },
   "jest": {
-    "testEnvironment": "jest-environment-db",
+    "testEnvironment": "node",
     "testRegex": "/test/.*.test.js$",
     "collectCoverage": true,
     "collectCoverageFrom": ["src/**/*.js", "config/authsome.js"],
