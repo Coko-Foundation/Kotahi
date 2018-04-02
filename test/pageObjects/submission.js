@@ -1,5 +1,5 @@
 import config from 'config'
-import ReactSelector from 'testcafe-react-selector'
+import ReactSelector from 'testcafe-react-selectors'
 
 const submission = {
   url: `${config.get('pubsweet-server.baseUrl')}`,
