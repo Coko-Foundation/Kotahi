@@ -10,7 +10,7 @@ export async function startServer() {
   }
 }
 
-export async function setup(user, collection) {
+export async function setup(user) {
   await createTables(true)
 
   const userData = user || {

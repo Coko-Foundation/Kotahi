@@ -9,8 +9,6 @@ const login = {
   password: Selector('form input[type=password]'),
   submit: Selector('form button'),
 
-  alert: Selector(() => document.querySelector('form').previousSibling),
-
   doLogin: (username, password) =>
     t
       .navigateTo(login.url)

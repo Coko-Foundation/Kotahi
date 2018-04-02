@@ -2,8 +2,8 @@ import faker from 'faker'
 import config from 'config'
 
 import { startServer, setup } from './helpers/setup'
-import { login, submission } from './pageObjects'
-//import login from './pageObjects/login'
+import login from './pageObjects/login'
+import submission from './pageObjects/submission'
 
 let user
 
