@@ -37,7 +37,7 @@
     "pubsweet-component-xpub-manuscript": "^0.0.6",
     "pubsweet-component-xpub-review": "^0.1.0",
     "pubsweet-component-xpub-review-backend": "^0.1.4",
-    "pubsweet-component-xpub-submit": "^0.0.6",
+    "pubsweet-component-xpub-submit": "^0.0.7",
     "pubsweet-server": "^2.0.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
