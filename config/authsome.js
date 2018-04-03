@@ -331,6 +331,16 @@ class XpubCollabraMode {
     this.user = await this.context.models.User.find(this.userId)
     return this.isAuthor(this.object)
   }
+
+  /**
+   * Checks if a user can read a team
+   *
+   * @returns {boolean}
+   */
+  // eslint-disable-next-line
+  async canReadTeam() {
+    return true
+  }
 }
 
 module.exports = {
@@ -434,7 +444,7 @@ module.exports = {
     }
 
     // PATCH /api/teams/:id
-    if (object && object.type === '/teams') {
+    if (object && object.type === 'team') {
       return mode.canUpdateTeam()
     }
 
