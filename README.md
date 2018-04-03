@@ -1,5 +1,6 @@
 # xpub-collabra
-Xpub-collabra is a manuscript submission system for the [Collabra Psychology](https://www.collabra.org/) journal. It is currently under development by the [Coko Foundation](https://coko.foundation/) and is being built with the tools provided by the [Pubsweet](https://gitlab.coko.foundation/pubsweet/pubsweet) and [INK](https://gitlab.coko.foundation/INK) projects.  
+Xpub-collabra is a manuscript submission system for the [Collabra Psychology](https://www.collabra.org/) journal.  
+It is currently under development by the [Coko Foundation](https://coko.foundation/) and is being built with the tools provided by the [Pubsweet](https://gitlab.coko.foundation/pubsweet/pubsweet) and [INK](https://gitlab.coko.foundation/INK) projects.  
 
 ## Roadmap
 
@@ -87,7 +88,7 @@ Create the file `local-development.json` inside the `config` folder.
 }
 ```
 
-This will give your database a secret, as well as enable manuscript docx to HTML conversion via the INK service. (ask in our [chat channel](https://mattermost.coko.foundation/coko/channels/xpub) if you don't know how to setup an INK account)
+This will give your database a secret, as well as enable manuscript docx to HTML conversion via the INK service. (ask in our [chat channel](https://mattermost.coko.foundation/coko/channels/xpub) if you don't know how to set up an INK account)
 
 Run the docker container for the database.
 
