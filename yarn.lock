@@ -6930,11 +6930,11 @@ pubsweet-component-xpub-review-backend@^0.1.4:
     moment "^2.18.1"
     nodemailer "^4.0.1"
 
-pubsweet-component-xpub-review@^0.1.0:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review/-/pubsweet-component-xpub-review-0.1.1.tgz#0e0ed46203213806f171aa570f1b12449ea09f3f"
+pubsweet-component-xpub-review@^0.1.3:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review/-/pubsweet-component-xpub-review-0.1.3.tgz#b0d18bab04aa2f980f55c090e80dc6522d2a20f0"
   dependencies:
-    "@pubsweet/ui" "^3.3.1"
+    "@pubsweet/ui" "^3.3.2"
     classnames "^2.2.5"
     lodash "^4.17.4"
     moment "^2.18.1"
@@ -6947,12 +6947,12 @@ pubsweet-component-xpub-review@^0.1.0:
     styled-components "^2.4.0"
     uuid "^3.1.0"
     wax-editor-react "^0.1.8"
-    xpub-connect "^0.0.7"
-    xpub-edit "^0.0.7"
-    xpub-journal "^0.0.5"
-    xpub-selectors "^0.0.4"
-    xpub-upload "^0.0.5"
-    xpub-validators "^0.0.4"
+    xpub-connect "^0.0.9"
+    xpub-edit "^0.0.9"
+    xpub-journal "^0.0.6"
+    xpub-selectors "^0.0.5"
+    xpub-upload "^0.0.6"
+    xpub-validators "^0.0.5"
 
 pubsweet-component-xpub-submit@^0.0.7:
   version "0.0.7"
@@ -9382,6 +9382,21 @@ xpub-edit@^0.0.7:
     prosemirror-state "^1.0.1"
     prosemirror-view "^1.0.0"
 
+xpub-edit@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/xpub-edit/-/xpub-edit-0.0.9.tgz#16bcd24a1c07f56bc6259ffb7e62843ef9045f29"
+  dependencies:
+    "@pubsweet/ui" "^3.3.2"
+    prosemirror-commands "^1.0.1"
+    prosemirror-dropcursor "^1.0.0"
+    prosemirror-gapcursor "^1.0.0"
+    prosemirror-history "^1.0.0"
+    prosemirror-inputrules "^1.0.0"
+    prosemirror-keymap "^1.0.0"
+    prosemirror-model "^1.0.0"
+    prosemirror-state "^1.0.1"
+    prosemirror-view "^1.0.0"
+
 xpub-journal@^0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/xpub-journal/-/xpub-journal-0.0.5.tgz#def194bcb6254c2122125f5b2744d6b4ae1fded9"
@@ -9434,6 +9449,12 @@ xpub-upload@^0.0.6:
 xpub-validators@^0.0.4:
   version "0.0.4"
   resolved "https://registry.yarnpkg.com/xpub-validators/-/xpub-validators-0.0.4.tgz#449cece45421342fd9cf78b0a5c13a4b957ecdb4"
+  dependencies:
+    striptags "^3.1.0"
+
+xpub-validators@^0.0.5:
+  version "0.0.5"
+  resolved "https://registry.yarnpkg.com/xpub-validators/-/xpub-validators-0.0.5.tgz#c87daf8e8cde5fca6d6cca4ada1e1d6a4820496f"
   dependencies:
     striptags "^3.1.0"
 
