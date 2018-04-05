@@ -16,30 +16,36 @@ An MVP implementation of the first design sessions with [Collabra Psychology](ht
 
 ## Roadmap
 
-|Module             |Description                                    |In progress    |Issue
-|:---:              |---                                            |:---:          |:---:
-|System             |Apply Coko theme                               |&#x2714;       |#154
-|System             |Implement roles & permissions                  |&#x2714;       |#58
-|System             |Revisit data model                             |               |#67
-|System             |Write integration tests                        |&#x2714;       |
-|Dashboard          |Change text for new submission button          |               |#156
-|Dashboard          |Provide feedback while ingesting docs          |               |#157
-|Dashboard          |Click on title to go to control panel          |               |#158
-|Dashboard          |Add streamlined review to displayed metadata   |               |#159
-|Dashboard          |Update text of manuscript statuses             |               |#112
-|Summary Info       |Reduce minimum title length                    |               |#164
-|Summary Info       |Update text for metadata questions             |               |#165
-|Summary Info       |Display decision letter                        |               |#166
-|Summary Info       |Detailed author information                    |               |#115
-|Summary Info       |Add instructions for uploading files           |               |#168
-|Manuscript         |Link to Summary Info for this manuscript       |               |#114
-|Assign Reviewers   |Reviewer invitation email                      |               |#160
-|Assign Reviewers   |Link back to Control Panel                     |               |#155
-|Review             |Update label text                              |               |#161
-|Control Panel      |Update decision placeholder text               |               |#163
-|Control Panel      |Show more complete set of metadata             |               |#131
-|Control Panel      |Assign editors                                 |               |#138
-|Control Panel      |Redesign uploaded files UI                     |               |#169
+This is the current set of features and their status on our roadmap.
+
+|Module             |Description                                    |In progress    |Done       |Issue
+|:---:              |---                                            |:---:          |:---:      |:---:
+|System             |Apply Coko theme                               |&#x2714;       |           |pubsweet/pubsweet#372
+|System             |Implement roles & permissions                  |&#x2714;       |           |#58
+|System             |Revisit data model                             |               |           |#67
+|System             |Write integration tests                        |&#x2714;       |           |
+|Dashboard          |Change text for new submission button          |&#x2714;       |           |#156
+|Dashboard          |Provide feedback while ingesting docs          |&#x2714;       |           |#157
+|Dashboard          |Click on title to go to control panel          |&#x2714;       |           |#158
+|Dashboard          |Add streamlined review to displayed metadata   |&#x2714;       |           |#159
+|Dashboard          |Update text of manuscript statuses             |&#x2714;       |           |#112
+|Summary Info       |Reduce minimum title length                    |&#x2714;       |           |#164
+|Summary Info       |Update text for metadata questions             |               |           |#165
+|Summary Info       |Display decision letter                        |               |           |#166
+|Summary Info       |Detailed author information                    |               |           |#115
+|Summary Info       |Add instructions for uploading files           |&#x2714;       |           |#168
+|Manuscript         |Link to Summary Info for this manuscript       |               |           |#114
+|Assign Reviewers   |Reviewer invitation email                      |&#x2714;       |           |#160
+|Assign Reviewers   |Link back to Control Panel                     |               |&#x2714;   |#155
+|Review             |Update label text                              |&#x2714;       |           |#161
+|Control Panel      |Update decision placeholder text               |&#x2714;       |           |#163
+|Control Panel      |Show more complete set of metadata             |               |           |#131
+|Control Panel      |Assign editors                                 |               |           |#138
+|Control Panel      |Redesign uploaded files UI                     |               |           |#169
+
+<br/>
+If you want more detailed (and potentially more technical) information about the current set of tasks that are being worked on, you can go to
+* https://gitlab.coko.foundation/xpub/xpub/milestones/8
 
 ## Contents
 
