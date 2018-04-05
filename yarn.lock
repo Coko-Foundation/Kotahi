@@ -91,6 +91,13 @@
   dependencies:
     styled-components "^2.4.0"
 
+"@pubsweet/component-send-email@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@pubsweet/component-send-email/-/component-send-email-0.2.3.tgz#73e2cef352c967fdb8e68fc3066bfe6fd3535596"
+  dependencies:
+    aws-sdk "^2.185.0"
+    nodemailer "^4.4.2"
+
 "@pubsweet/db-manager@^1.0.5":
   version "1.0.5"
   resolved "https://registry.yarnpkg.com/@pubsweet/db-manager/-/db-manager-1.0.5.tgz#32b45b1c8939e3426281a251c71200ad89974847"
@@ -659,6 +666,21 @@ autoprefixer@^7.1.2:
     num2fraction "^1.2.2"
     postcss "^6.0.17"
     postcss-value-parser "^3.2.3"
+
+aws-sdk@^2.185.0:
+  version "2.221.1"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.221.1.tgz#437b6a4a0c9ce74fdd10c16d97b5247ff9c2cd35"
+  dependencies:
+    buffer "4.9.1"
+    events "1.1.1"
+    ieee754 "1.1.8"
+    jmespath "0.15.0"
+    querystring "0.2.0"
+    sax "1.2.1"
+    url "0.10.3"
+    uuid "3.1.0"
+    xml2js "0.4.17"
+    xmlbuilder "4.2.1"
 
 aws-sign2@~0.6.0:
   version "0.6.0"
@@ -1610,7 +1632,7 @@ buffer-xor@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/buffer-xor/-/buffer-xor-1.0.3.tgz#26e61ed1422fb70dd42e6e36729ed51d855fe8d9"
 
-buffer@^4.3.0:
+buffer@4.9.1, buffer@^4.3.0:
   version "4.9.1"
   resolved "https://registry.yarnpkg.com/buffer/-/buffer-4.9.1.tgz#6d1bb601b07a4efced97094132093027c95bc298"
   dependencies:
@@ -3163,7 +3185,7 @@ eventemitter2@0.4.14:
   version "0.4.14"
   resolved "https://registry.yarnpkg.com/eventemitter2/-/eventemitter2-0.4.14.tgz#8f61b75cde012b2e9eb284d4545583b5643b61ab"
 
-events@^1.0.0:
+events@1.1.1, events@^1.0.0:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/events/-/events-1.1.1.tgz#9ebdb7635ad099c70dcc4c2a1f5004288e8bd924"
 
@@ -4162,6 +4184,10 @@ icss-utils@^2.1.0:
   dependencies:
     postcss "^6.0.1"
 
+ieee754@1.1.8:
+  version "1.1.8"
+  resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.8.tgz#be33d40ac10ef1926701f6f08a2d86fbfd1ad3e4"
+
 ieee754@^1.1.4:
   version "1.1.11"
   resolved "https://registry.yarnpkg.com/ieee754/-/ieee754-1.1.11.tgz#c16384ffe00f5b7835824e67b6f2bd44a5229455"
@@ -4678,6 +4704,10 @@ jest-validate@^21.1.0:
     jest-get-type "^21.2.0"
     leven "^2.1.0"
     pretty-format "^21.2.1"
+
+jmespath@0.15.0:
+  version "0.15.0"
+  resolved "https://registry.yarnpkg.com/jmespath/-/jmespath-0.15.0.tgz#a3f222a9aae9f966f5d27c796510e28091764217"
 
 joi-browser@^10.0.6:
   version "10.6.1"
@@ -5678,9 +5708,9 @@ node-sass@^4.5.3:
     stdout-stream "^1.4.0"
     "true-case-path" "^1.0.2"
 
-nodemailer@^4.0.1:
-  version "4.6.3"
-  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-4.6.3.tgz#c3b7e97fb72f46d4a475c406a15ed23a45dbcddc"
+nodemailer@^4.4.2:
+  version "4.6.4"
+  resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-4.6.4.tgz#f0d72d0c6a6ec5f4369fa8f4bf5127a31baa2014"
 
 nomnom@~1.6.2:
   version "1.6.2"
@@ -6921,14 +6951,14 @@ pubsweet-component-xpub-manuscript@^0.0.6:
     xpub-connect "^0.0.6"
     xpub-selectors "^0.0.4"
 
-pubsweet-component-xpub-review-backend@^0.1.4:
-  version "0.1.4"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review-backend/-/pubsweet-component-xpub-review-backend-0.1.4.tgz#a17d2701c62d90ddb84e466ce21b5f5b9894562f"
+pubsweet-component-xpub-review-backend@^0.1.5:
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review-backend/-/pubsweet-component-xpub-review-backend-0.1.5.tgz#1f5220575eec9106608e3525c88be3e5d26b810f"
   dependencies:
+    "@pubsweet/component-send-email" "^0.2.3"
     config "^1.26.1"
     lodash "^4.17.5"
     moment "^2.18.1"
-    nodemailer "^4.0.1"
 
 pubsweet-component-xpub-review@^0.1.3:
   version "0.1.3"
@@ -7924,7 +7954,11 @@ sass-loader@^6.0.6:
     neo-async "^2.5.0"
     pify "^3.0.0"
 
-sax@~1.2.1:
+sax@1.2.1:
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.1.tgz#7b8e656190b228e81a66aea748480d828cd2d37a"
+
+sax@>=0.6.0, sax@~1.2.1:
   version "1.2.4"
   resolved "https://registry.yarnpkg.com/sax/-/sax-1.2.4.tgz#2816234e2378bddc4e5354fab5caa895df7100d9"
 
@@ -9018,6 +9052,13 @@ urix@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/urix/-/urix-0.1.0.tgz#da937f7a62e21fec1fd18d49b35c2935067a6c72"
 
+url@0.10.3:
+  version "0.10.3"
+  resolved "https://registry.yarnpkg.com/url/-/url-0.10.3.tgz#021e4d9c7705f21bbf37d03ceb58767402774c64"
+  dependencies:
+    punycode "1.3.2"
+    querystring "0.2.0"
+
 url@^0.11.0:
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/url/-/url-0.11.0.tgz#3838e97cfc60521eb73c525a8e55bfdd9e2e28f1"
@@ -9074,6 +9115,10 @@ utile@0.3.x:
 utils-merge@1.0.1:
   version "1.0.1"
   resolved "https://registry.yarnpkg.com/utils-merge/-/utils-merge-1.0.1.tgz#9f95710f50a267947b2ccc124741c1028427e713"
+
+uuid@3.1.0:
+  version "3.1.0"
+  resolved "https://registry.yarnpkg.com/uuid/-/uuid-3.1.0.tgz#3dd3d3e790abc24d7b0d3a034ffababe28ebbc04"
 
 uuid@^3.0.0, uuid@^3.0.1, uuid@^3.1.0:
   version "3.2.1"
@@ -9336,6 +9381,19 @@ x-xss-protection@1.1.0:
 xml-char-classes@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/xml-char-classes/-/xml-char-classes-1.0.0.tgz#64657848a20ffc5df583a42ad8a277b4512bbc4d"
+
+xml2js@0.4.17:
+  version "0.4.17"
+  resolved "https://registry.yarnpkg.com/xml2js/-/xml2js-0.4.17.tgz#17be93eaae3f3b779359c795b419705a8817e868"
+  dependencies:
+    sax ">=0.6.0"
+    xmlbuilder "^4.1.0"
+
+xmlbuilder@4.2.1, xmlbuilder@^4.1.0:
+  version "4.2.1"
+  resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-4.2.1.tgz#aa58a3041a066f90eaa16c2f5389ff19f3f461a5"
+  dependencies:
+    lodash "^4.0.0"
 
 xpub-connect@^0.0.6:
   version "0.0.6"
