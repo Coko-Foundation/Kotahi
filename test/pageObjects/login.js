@@ -8,13 +8,14 @@ const login = {
   password: Selector('form input[type=password]'),
   submit: Selector('form button'),
 
-  doLogin: (username, password) => {
+  alert: Selector(() => document.querySelector('form').previousSibling),
+
+  doLogin: (username, password) =>
     t
       .navigateTo(login.url)
       .typeText(login.username, username)
       .typeText(login.password, password)
-      .click(login.submit)
-  },
+      .click(login.submit),
 }
 
 export default login
