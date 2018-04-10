@@ -7,7 +7,7 @@ let server
 
 export async function startServer() {
   if (!server) {
-    //increase timeout to wait for webpack compilation
+    // increase timeout to wait for webpack compilation
     DestinationRequest.TIMEOUT = 60 * 1000
     server = await start()
   }

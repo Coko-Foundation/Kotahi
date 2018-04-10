@@ -3,6 +3,10 @@
     "es6": true,
     "browser": true
   },
+  "globals": {
+    "fixture": true,
+    "test": true
+  },
   "extends": [
     "pubsweet"
   ],

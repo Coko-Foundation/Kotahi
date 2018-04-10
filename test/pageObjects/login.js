@@ -13,7 +13,6 @@ const login = {
   doLogin: (username, password) =>
     t
       .navigateTo(login.url)
-      .debug()
       .typeText(login.username, username)
       .typeText(login.password, password)
       .click(login.submit),

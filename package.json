@@ -18,6 +18,7 @@
     "@pubsweet/ui": "3.3.0",
     "babel-core": "^6.26.0",
     "config": "^1.26.2",
+    "faker": "^4.1.0",
     "font-awesome": "^4.7.0",
     "fs-extra": "^4.0.2",
     "history": "^4.7.2",
@@ -96,7 +97,7 @@
     "webpack-hot-middleware": "^2.20.0"
   },
   "scripts": {
-    "test": "NODE_ENV=test testcafe chrome 'test/**/*.test.js'",
+    "test": "testcafe chrome 'test/**/*.test.js'",
     "clean": "rm -rf node_modules",
     "lint": "npm run lint:js && npm run lint:style",
     "lint:js": "eslint .",
