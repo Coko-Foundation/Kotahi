@@ -1,18 +1,6 @@
-# xpub-collabra  
-
-## Quickstart
-
-```
-npm start # or docker-compose up
-```
-
-**Note**: yarn will be run automatically inside the container to install dependencies. If dependencies were already installed on the host, this may cause problems as the binaries are compiled for the wrong platform. If you encounter errors about "invalid ELF header", do `npm run clean` and then `npm start` again.
-
-See `pubsweet-cli` for detailed documentation on running the app
-
-## Notes
-
-An MVP implementation of the first design sessions with [Collabra Psychology](https://www.collabra.org/), which allows a user to go through the process of creating a submission, assigning editors and reviewers, submitting reviews and submitting a decision.  
+# xpub-collabra
+Xpub-collabra is a manuscript submission system for the [Collabra Psychology](https://www.collabra.org/) journal.  
+It is currently under development by the [Coko Foundation](https://coko.foundation/) and is being built with the tools provided by the [Pubsweet](https://gitlab.coko.foundation/pubsweet/pubsweet) and [INK](https://gitlab.coko.foundation/INK) projects.  
 
 ## Roadmap
 
@@ -45,62 +33,80 @@ This is the current set of features and their status on our roadmap.
 
 <br/>
 If you want more detailed (and potentially more technical) information about the current set of tasks that are being worked on, you can go to
+
 * https://gitlab.coko.foundation/xpub/xpub/milestones/8
 
-## Contents
-
 ### PubSweet components
+The application consists primarily of the following high-level pubsweet components, which roughly correspond to the pages in the system:
 
-* `component-app`: a PubSweet component that provides an app container with nav bar and journal provider.
-* `component-dashboard`: a PubSweet component that provides a Dashboard page.
-* `component-manuscript`: a PubSweet component that provides a Manuscript page.
-* `component-review`: a PubSweet component that provides a Review page.
-* `component-submit`: a PubSweet component that provides a Submit page.
+* `xpub-app`: a PubSweet component that provides an app container with nav bar and journal provider.
+* `xpub-dashboard`: a PubSweet component that provides a Dashboard page.
+* `xpub-submit`: a PubSweet component that provides a Submit page.
+* `xpub-manuscript`: a PubSweet component that provides a Manuscript page.
+* `xpub-review`: a PubSweet component that provides a Review page.
 
-### PubSweet applications
+The code for these components (as well as the smaller UI elements that they are made of) can be found in the [pubsweet repo](https://gitlab.coko.foundation/pubsweet/pubsweet/tree/master/packages).
 
-* `xpub-collabra`: a PubSweet application that provides configuration and routing for a journal.
 
-### xpub packages (located in pubsweet/pubsweet)
+## Installation
 
-* `xpub-connect`: a helper component for connecting pages to data
-* `xpub-edit`: WYSIWYG editors for use in xpub forms
-* `xpub-journal`: a helper that provides journal config to components
-* `xpub-selectors`: some useful redux selectors
-* `xpub-styleguide`: components for use in react-styleguidist
-* `xpub-theme`: fonts and styles for use in xpub applications
-* `xpub-upload`: a helper function for file uploading
-* `xpub-validators`: validator functions for use with redux-form
+### Quickstart
 
-## Installing
+To quickly get up and running, run
 
-In the root directory, run `yarn` to install all the dependencies.
+```
+yarn start
+```
 
-## Configuration
+This will run the various docker containers that the app needs. If you're doing development, you'll probably want to follow the next set of instructions.
 
-To enable manuscript conversion via INK, add the following values to `config/local-development.json` (ask in [the xpub channel](https://mattermost.coko.foundation/coko/channels/xpub) if you need an account):
+**Note**:  
+`yarn` will be run automatically inside the container to install dependencies. If dependencies were already installed on the host, this may cause problems as the binaries are compiled for the wrong platform. If you encounter errors about "invalid ELF header", run `yarn clean && yarn start`.
+
+### Running the app manually
+
+Start with installing the dependencies:
+```
+yarn
+```
+
+Create the file `local-development.json` inside the `config` folder.
 
 ```json
 {
-  "pubsweet-server": {
-    "secret": "__EDIT_THIS__"
-  },
-  "pubsweet-component-ink-backend": {
-    "inkEndpoint": "__EDIT_THIS__",
-    "email": "__EDIT_THIS__",
-    "password": "__EDIT_THIS__"
-  }
+    "pubsweet-server": {
+        "secret": "<your-secret-here>"
+    },
+    "pubsweet-component-ink-backend": {
+        "inkEndpoint": "< your-ink-api-endpoint >",
+        "email": "< your-ink-email >",
+        "password": "< your-ink-password >",
+        "recipes": {
+            "editoria-typescript": "< editoria-typescript-recipe-id >"
+        }
+    }
 }
 ```
 
-## Running the app
+This will give your database a secret, as well as enable manuscript docx to HTML conversion via the INK service. (ask in our [chat channel](https://mattermost.coko.foundation/coko/channels/xpub) if you don't know how to set up an INK account)
 
-1. The first time you run the app, initialise the database with `yarn run setupdb` (press Enter when asked for a collection title, to skip that step).
-2. `yarn start`
+Run the docker container for the database.
 
-## CI
+```
+yarn start:services
+```
 
-CI requires a Kubernetes cluster, resources for which can be found in [`pubsweet/infra`](https://gitlab.coko.foundation/pubsweet/infra). In order to set up a Kubernetes cluster (using AWS) you need to follow the instructions there. Templates for deploying to this cluster with [`pubsweet/deployer`](https://gitlab.coko.foundation/pubsweet/deployer) are located in [`xpub/deployment-config`](https://gitlab.coko.foundation/xpub/deployment-config).
+Now (in a separate terminal) run the app.
+```
+yarn server
+```
+
+## Continuous Integration
+
+CI requires a Kubernetes cluster, resources for which can be found in [`pubsweet/infra`](https://gitlab.coko.foundation/pubsweet/infra).  
+In order to set up a Kubernetes cluster using AWS, you need to follow the instructions there.  
+
+Templates for deploying to this cluster with [`pubsweet/deployer`](https://gitlab.coko.foundation/pubsweet/deployer) are located in [`xpub/deployment-config`](https://gitlab.coko.foundation/xpub/deployment-config).
 
 ## Community
 
