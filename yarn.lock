@@ -6947,50 +6947,6 @@ pubsweet-component-xpub-review-backend@^0.1.5:
     lodash "^4.17.5"
     moment "^2.18.1"
 
-pubsweet-component-xpub-review@^0.1.3:
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review/-/pubsweet-component-xpub-review-0.1.3.tgz#b0d18bab04aa2f980f55c090e80dc6522d2a20f0"
-  dependencies:
-    "@pubsweet/ui" "^3.3.2"
-    classnames "^2.2.5"
-    lodash "^4.17.4"
-    moment "^2.18.1"
-    prop-types "^15.5.10"
-    react-moment "^0.6.1"
-    react-select "^1.0.0-rc.10"
-    recompose "^0.26.0"
-    redux-form "^7.0.3"
-    striptags "^3.1.0"
-    styled-components "^2.4.0"
-    uuid "^3.1.0"
-    wax-editor-react "^0.1.8"
-    xpub-connect "^0.0.9"
-    xpub-edit "^0.0.9"
-    xpub-journal "^0.0.6"
-    xpub-selectors "^0.0.5"
-    xpub-upload "^0.0.6"
-    xpub-validators "^0.0.5"
-
-pubsweet-component-xpub-submit@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-submit/-/pubsweet-component-xpub-submit-0.0.7.tgz#215b5d93470a719bd5f9994a98e3322d9868f379"
-  dependencies:
-    "@pubsweet/ui" "^3.3.1"
-    lodash "^4.17.4"
-    prop-types "^15.5.10"
-    react-redux "^5.0.2"
-    react-router-dom "^4.2.2"
-    recompose "^0.26.0"
-    redux-form "^7.0.3"
-    striptags "^3.1.0"
-    styled-components "^2.4.0"
-    xpub-connect "^0.0.7"
-    xpub-edit "^0.0.7"
-    xpub-journal "^0.0.5"
-    xpub-selectors "^0.0.4"
-    xpub-upload "^0.0.5"
-    xpub-validators "^0.0.4"
-
 pubsweet-server@^2.0.0:
   version "2.0.5"
   resolved "https://registry.yarnpkg.com/pubsweet-server/-/pubsweet-server-2.0.5.tgz#4e8c4868e59c83a67ab440417dcc5cd04a26b780"
@@ -9455,36 +9411,6 @@ xpub-connect@^0.0.9:
     react-router-dom "^4.2.2"
     recompose "^0.26.0"
     styled-components "^2.4.0"
-
-xpub-edit@^0.0.7:
-  version "0.0.7"
-  resolved "https://registry.yarnpkg.com/xpub-edit/-/xpub-edit-0.0.7.tgz#b6383a1588e3fa0b87110e83daee5f7c3a7c2bdf"
-  dependencies:
-    "@pubsweet/ui" "^3.3.1"
-    prosemirror-commands "^1.0.1"
-    prosemirror-dropcursor "^1.0.0"
-    prosemirror-gapcursor "^1.0.0"
-    prosemirror-history "^1.0.0"
-    prosemirror-inputrules "^1.0.0"
-    prosemirror-keymap "^1.0.0"
-    prosemirror-model "^1.0.0"
-    prosemirror-state "^1.0.1"
-    prosemirror-view "^1.0.0"
-
-xpub-edit@^0.0.9:
-  version "0.0.9"
-  resolved "https://registry.yarnpkg.com/xpub-edit/-/xpub-edit-0.0.9.tgz#16bcd24a1c07f56bc6259ffb7e62843ef9045f29"
-  dependencies:
-    "@pubsweet/ui" "^3.3.2"
-    prosemirror-commands "^1.0.1"
-    prosemirror-dropcursor "^1.0.0"
-    prosemirror-gapcursor "^1.0.0"
-    prosemirror-history "^1.0.0"
-    prosemirror-inputrules "^1.0.0"
-    prosemirror-keymap "^1.0.0"
-    prosemirror-model "^1.0.0"
-    prosemirror-state "^1.0.1"
-    prosemirror-view "^1.0.0"
 
 xpub-journal@^0.0.5:
   version "0.0.5"
