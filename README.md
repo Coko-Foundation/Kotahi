@@ -14,10 +14,10 @@ This is the current set of features and their status on our roadmap.
 |System             |Write integration tests                        |&#x2714;       |           |
 |Dashboard          |Change text for new submission button          |&#x2714;       |           |#156
 |Dashboard          |Provide feedback while ingesting docs          |&#x2714;       |           |#157
-|Dashboard          |Click on title to go to control panel          |&#x2714;       |           |#158
-|Dashboard          |Add streamlined review to displayed metadata   |&#x2714;       |           |#159
+|Dashboard          |Click on title to go to control panel          |               |&#x2714;   |#158
+|Dashboard          |Add streamlined review to displayed metadata   |               |&#x2714;   |#159
 |Dashboard          |Update text of manuscript statuses             |&#x2714;       |           |#112
-|Summary Info       |Reduce minimum title length                    |&#x2714;       |           |#164
+|Summary Info       |Reduce minimum title length                    |               |&#x2714;   |#164
 |Summary Info       |Update text for metadata questions             |               |           |#165
 |Summary Info       |Display decision letter                        |               |           |#166
 |Summary Info       |Detailed author information                    |               |           |#115
@@ -25,7 +25,7 @@ This is the current set of features and their status on our roadmap.
 |Manuscript         |Link to Summary Info for this manuscript       |               |           |#114
 |Assign Reviewers   |Reviewer invitation email                      |&#x2714;       |           |#160
 |Assign Reviewers   |Link back to Control Panel                     |               |&#x2714;   |#155
-|Review             |Update label text                              |&#x2714;       |           |#161
+|Review             |Update label text                              |               |&#x2714;   |#161
 |Control Panel      |Update decision placeholder text               |&#x2714;       |           |#163
 |Control Panel      |Show more complete set of metadata             |               |           |#131
 |Control Panel      |Assign editors                                 |               |           |#138
