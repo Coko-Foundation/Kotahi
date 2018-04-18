@@ -157,7 +157,7 @@
     redux-form "^7.0.3"
     styled-components "^2.4.0"
 
-"@pubsweet/ui@^3.3.0", "@pubsweet/ui@^3.3.3":
+"@pubsweet/ui@^3.3.3":
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-3.3.3.tgz#a4703709e40b8be3bcb2a0cf0d4d8d2b44949a5b"
   dependencies:
@@ -6692,7 +6692,7 @@ prompt@^1.0.0:
     utile "0.3.x"
     winston "2.1.x"
 
-"prompt@github:flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87":
+prompt@flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87:
   version "1.0.0"
   resolved "https://codeload.github.com/flatiron/prompt/tar.gz/1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87"
   dependencies:
@@ -6896,15 +6896,15 @@ pubsweet-component-signup@^1.0.0:
     react-router "^4.2.0"
     redux "^3.7.2"
 
-pubsweet-component-xpub-app@^0.0.6:
-  version "0.0.6"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-app/-/pubsweet-component-xpub-app-0.0.6.tgz#f57207a987660ca22e392e92aaa00d737f12edc0"
+pubsweet-component-xpub-app@^0.0.10:
+  version "0.0.10"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-app/-/pubsweet-component-xpub-app-0.0.10.tgz#4a77ed709de07b517ac65902dc5082282e306858"
   dependencies:
-    "@pubsweet/ui" "^3.3.0"
+    "@pubsweet/ui" "^3.3.3"
     prop-types "^15.5.10"
     react-redux "^5.0.2"
     recompose "^0.26.0"
-    xpub-journal "^0.0.5"
+    xpub-journal "^0.0.6"
 
 pubsweet-component-xpub-dashboard@^0.2.0:
   version "0.2.0"
