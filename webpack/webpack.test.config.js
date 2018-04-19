@@ -2,6 +2,7 @@ const config = require('config')
 const path = require('path')
 const webpack = require('webpack')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
+const ExtractTextPlugin = require('extract-text-webpack-plugin')
 const rules = require('./rules.production')
 const resolve = require('./common-resolve')
 
@@ -36,6 +37,7 @@ module.exports = [
       new CopyWebpackPlugin([{ from: '../static' }]),
       new webpack.optimize.AggressiveMergingPlugin(),
       new webpack.optimize.OccurrenceOrderPlugin(),
+      new ExtractTextPlugin('styles.css'),
     ],
     node: {
       fs: 'empty',
