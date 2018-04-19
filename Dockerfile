@@ -17,6 +17,7 @@ COPY api api
 COPY webpack webpack
 COPY config config
 COPY app app
+COPY test test
 
 ENV NODE_ENV "production"
 
