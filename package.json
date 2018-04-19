@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@pubsweet/coko-theme": "0.1.1",
-    "@pubsweet/ui": "3.3.0",
+    "@pubsweet/ui": "3.3.3",
     "babel-core": "^6.26.0",
     "config": "^1.26.2",
     "faker": "^4.1.0",

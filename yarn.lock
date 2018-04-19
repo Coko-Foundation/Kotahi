@@ -134,29 +134,6 @@
     typeface-fira-sans-condensed "^0.0.43"
     typeface-vollkorn "^0.0.43"
 
-"@pubsweet/ui@3.3.0":
-  version "3.3.0"
-  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-3.3.0.tgz#61d6973000a460818a2e52ad8c6c585758b85d3a"
-  dependencies:
-    babel-jest "^21.2.0"
-    classnames "^2.2.5"
-    enzyme "^3.2.0"
-    enzyme-adapter-react-16 "^1.1.1"
-    humps "^2.0.1"
-    invariant "^2.2.3"
-    lodash "^4.17.4"
-    prop-types "^15.5.10"
-    react "^16.2.0"
-    react-dom "^16.2.0"
-    react-feather "^1.0.8"
-    react-redux "^5.0.2"
-    react-router-dom "^4.2.2"
-    react-tag-autocomplete "^5.5.0"
-    recompose "^0.26.0"
-    redux "^3.6.0"
-    redux-form "^7.0.3"
-    styled-components "^2.4.0"
-
 "@pubsweet/ui@^3.3.3":
   version "3.3.3"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-3.3.3.tgz#a4703709e40b8be3bcb2a0cf0d4d8d2b44949a5b"
