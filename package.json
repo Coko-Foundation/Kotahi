@@ -99,6 +99,7 @@
   "scripts": {
     "test:chrome": "NODE_ENV=test testcafe $(testcafe -b | grep chrom*) 'test/**/*.test.js'",
     "test:firefox": "NODE_ENV=test testcafe firefox 'test/**/*.test.js'",
+    "test": "npm run test:chrome && npm run test:firefox",
     "clean": "rm -rf node_modules",
     "lint": "npm run lint:js && npm run lint:style",
     "lint:js": "eslint .",
