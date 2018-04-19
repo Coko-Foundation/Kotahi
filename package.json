@@ -97,7 +97,7 @@
     "webpack-hot-middleware": "^2.20.0"
   },
   "scripts": {
-    "test:chrome": "NODE_ENV=test testcafe chrome 'test/**/*.test.js'",
+    "test:chrome": "NODE_ENV=test testcafe $(testcafe -b | grep chrom*) 'test/**/*.test.js'",
     "test:firefox": "NODE_ENV=test testcafe firefox 'test/**/*.test.js'",
     "clean": "rm -rf node_modules",
     "lint": "npm run lint:js && npm run lint:style",
