@@ -18,6 +18,7 @@
     "@pubsweet/ui": "3.3.0",
     "babel-core": "^6.26.0",
     "config": "^1.26.2",
+    "faker": "^4.1.0",
     "font-awesome": "^4.7.0",
     "fs-extra": "^4.0.2",
     "history": "^4.7.2",
@@ -90,10 +91,14 @@
     "react-router-redux": "^5.0.0-alpha.9",
     "stylelint": "^8.2.0",
     "stylelint-config-pubsweet": "^0.0.3",
+    "testcafe": "^0.18.6",
+    "testcafe-react-selectors": "^1.0.5",
+
     "webpack-hot-middleware": "^2.20.0"
   },
   "scripts": {
-    "test": "echo YOU HAVE NO TESTS, FOOOL!",
+    "test:chrome": "NODE_ENV=test testcafe chrome 'test/**/*.test.js'",
+    "test:firefox": "NODE_ENV=test testcafe firefox 'test/**/*.test.js'",
     "clean": "rm -rf node_modules",
     "lint": "npm run lint:js && npm run lint:style",
     "lint:js": "eslint .",
