@@ -12,11 +12,11 @@ This is the current set of features and their status on our roadmap.
 |System             |Implement roles & permissions                  |&#x2714;       |           |#58
 |System             |Revisit data model                             |&#x2714;       |           |#67
 |System             |Write integration tests                        |&#x2714;       |           |
-|Dashboard          |Change text for new submission button          |&#x2714;       |           |#156
-|Dashboard          |Provide feedback while ingesting docs          |&#x2714;       |           |#157
+|Dashboard          |Change text for new submission button          |               |&#x2714;   |#156
+|Dashboard          |Provide feedback while ingesting docs          |               |&#x2714;   |#157
 |Dashboard          |Click on title to go to control panel          |               |&#x2714;   |#158
 |Dashboard          |Add streamlined review to displayed metadata   |               |&#x2714;   |#159
-|Dashboard          |Update text of manuscript statuses             |&#x2714;       |           |#112
+|Dashboard          |Update text of manuscript statuses             |               |&#x2714;   |#112
 |Summary Info       |Reduce minimum title length                    |               |&#x2714;   |#164
 |Summary Info       |Update text for metadata questions             |&#x2714;       |           |#165
 |Summary Info       |Display decision letter                        |               |           |#166
