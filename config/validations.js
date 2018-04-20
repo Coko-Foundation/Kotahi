@@ -27,12 +27,12 @@ module.exports = {
       declarations: Joi.object().unknown(),
       suggestions: Joi.object({
         reviewers: Joi.object({
-          suggested: Joi.array().items(Joi.string()),
-          opposed: Joi.array().items(Joi.string()),
+          suggested: Joi.array().items(Joi.string().allow('')),
+          opposed: Joi.array().items(Joi.string().allow('')),
         }),
         editors: Joi.object({
-          suggested: Joi.array().items(Joi.string()),
-          opposed: Joi.array().items(Joi.string()),
+          suggested: Joi.array().items(Joi.string().allow('')),
+          opposed: Joi.array().items(Joi.string().allow('')),
         }),
       }),
       files: Joi.object({
@@ -53,7 +53,7 @@ module.exports = {
       }),
       notes: Joi.object({
         fundingAcknowledgement: Joi.string(),
-        specialInstructions: Joi.string(),
+        specialInstructions: Joi.string().allow(''),
       }),
       reviewers: Joi.array(),
       lock: Joi.object(),
