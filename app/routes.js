@@ -3,7 +3,6 @@ import { withProps } from 'recompose'
 import { Route, Switch } from 'react-router-dom'
 import { AuthenticatedComponent } from 'pubsweet-client'
 
-import App from 'pubsweet-component-xpub-app/src/components'
 import Login from 'pubsweet-component-login/LoginContainer'
 import Signup from 'pubsweet-component-signup/SignupContainer'
 
@@ -19,6 +18,8 @@ import ManuscriptPage from 'pubsweet-component-xpub-manuscript/src/components/Ma
 import ReviewersPage from 'pubsweet-component-xpub-review/src/components/ReviewersPage'
 import ReviewPage from 'pubsweet-component-xpub-review/src/components/ReviewPage'
 import DecisionPage from 'pubsweet-component-xpub-review/src/components/DecisionPage'
+
+import App from './components/App'
 
 const LoginPage = withProps({ passwordReset: false })(Login)
 
