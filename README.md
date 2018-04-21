@@ -22,11 +22,11 @@ This is the current set of features and their status on our roadmap.
 |Summary Info       |Display decision letter                        |               |           |#166
 |Summary Info       |Detailed author information                    |               |           |#115
 |Summary Info       |Add instructions for uploading files           |&#x2714;       |           |#168
-|Manuscript         |Link to Summary Info for this manuscript       |&#x2714;       |           |#114
+|Manuscript         |Link to Summary Info for this manuscript       |               |&#x2714;   |#114
 |Assign Reviewers   |Reviewer invitation email                      |&#x2714;       |           |#160
 |Assign Reviewers   |Link back to Control Panel                     |               |&#x2714;   |#155
 |Review             |Update label text                              |               |&#x2714;   |#161
-|Control Panel      |Update decision placeholder text               |&#x2714;       |           |#163
+|Control Panel      |Update decision placeholder text               |               |&#x2714;   |#163
 |Control Panel      |Show more complete set of metadata             |&#x2714;       |           |#131
 |Control Panel      |Assign editors                                 |               |           |#138
 |Control Panel      |Redesign uploaded files UI                     |               |           |#169
