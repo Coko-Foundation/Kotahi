@@ -19,7 +19,7 @@ This is the current set of features and their status on our roadmap.
 |Dashboard          |Update text of manuscript statuses             |               |&#x2714;   |#112
 |Summary Info       |Reduce minimum title length                    |               |&#x2714;   |#164
 |Summary Info       |Update text for metadata questions             |&#x2714;       |           |#165
-|Summary Info       |Display decision letter                        |               |           |#166
+|Summary Info       |Display decision letter                        |&#x2714;       |           |#166
 |Summary Info       |Detailed author information                    |&#x2714;       |           |#115
 |Summary Info       |Add instructions for uploading files           |&#x2714;       |           |#168
 |Manuscript         |Link to Summary Info for this manuscript       |               |&#x2714;   |#114
