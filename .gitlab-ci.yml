@@ -49,7 +49,7 @@ test:
   script:
     - cd ${HOME}
     # specify host here else it confuses the linked postgres image
-    - PGHOST=postgres npm run test
+    - PGHOST=postgres yarn jest
 
 test:chrome:
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
