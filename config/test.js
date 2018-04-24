@@ -12,11 +12,15 @@ module.exports = {
       transports: [new winston.transports.Console()],
     }),
     port: 4000,
+<<<<<<< HEAD
     secret: 'secret-string',
+=======
+    secret: 'test',
+    baseUrl: deferConfig(
+      cfg => `http://localhost:${cfg['pubsweet-server'].port}`,
+    ),
+>>>>>>> fix(test): fix test config
   },
-  baseUrl: deferConfig(
-    cfg => `http://localhost:${cfg['pubsweet-server'].port}`,
-  ),
   'password-reset': deferConfig(
     cfg => `http://localhost:${cfg['pubsweet-server'].port}/password-reset`,
   ),
