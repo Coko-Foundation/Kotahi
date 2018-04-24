@@ -115,7 +115,7 @@
   },
   "jest": {
     "testEnvironment": "node",
-    "testRegex": "/test/.*.test.js$",
+    "testRegex": "/test/authsome/.*.test.js$",
     "collectCoverage": true,
     "collectCoverageFrom": [
       "src/**/*.js",
