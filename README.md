@@ -27,9 +27,9 @@ This is the current set of features and their status on our roadmap.
 |Assign Reviewers   |Link back to Control Panel                     |               |&#x2714;   |#155
 |Review             |Update label text                              |               |&#x2714;   |#161
 |Control Panel      |Update decision placeholder text               |               |&#x2714;   |#163
-|Control Panel      |Show more complete set of metadata             |&#x2714;       |           |#131
+|Control Panel      |Show more complete set of metadata             |               |&#x2714;   |#131
 |Control Panel      |Assign editors                                 |&#x2714;       |           |#138
-|Control Panel      |Redesign uploaded files UI                     |               |           |#169
+|Control Panel      |Redesign uploaded files UI                     |&#x2714;       |           |#169
 
 <br/>
 If you want more detailed (and potentially more technical) information about the current set of tasks that are being worked on, you can go to
