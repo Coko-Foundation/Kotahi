@@ -68,7 +68,7 @@ test:chrome:
   script:
     - cd ${HOME}
     # specify host here else it confuses the linked postgres image
-    - PGHOST=postgres npx testcafe 'chrome:headless --no-sandbox' test/**/*.test.js
+    - PGHOST=postgres npm run test:e2e:ci:chrome
 
 test:firefox:
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
@@ -87,7 +87,7 @@ test:firefox:
   script:
     - cd ${HOME}
     # specify host here else it confuses the linked postgres image
-    - PGHOST=postgres npx testcafe firefox:headless test/**/*.test.js
+    - PGHOST=postgres npm run test:e2e:ci:firefox
 
 push:latest:
   image: docker:latest
