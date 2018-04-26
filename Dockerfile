@@ -35,7 +35,7 @@ ENV NODE_ENV "production"
 
 RUN [ "npx", "pubsweet", "build"]
 
-EXPOSE 3000
+EXPOSE ${PORT}
 
 CMD []
 

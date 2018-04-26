@@ -1,0 +1,3 @@
+NODE_ENV=development
+DOCKER_FILE={Dockerfile-development|Dockerfile}
+PORT=3000
