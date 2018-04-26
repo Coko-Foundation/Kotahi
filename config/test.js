@@ -7,6 +7,7 @@ module.exports = {
     baseUrl: deferConfig(
       cfg => `http://localhost:${cfg['pubsweet-server'].port}`,
     ),
+    secret: 'secret-string',
   },
   secret: 'test',
   mailer: {
