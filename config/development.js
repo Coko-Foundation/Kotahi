@@ -5,6 +5,7 @@ module.exports = {
     baseUrl: deferConfig(
       cfg => `http://localhost:${cfg['pubsweet-server'].port}`,
     ),
+    secret: 'secret-string',
   },
   dbManager: {
     username: 'admin',
