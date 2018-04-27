@@ -2,6 +2,7 @@
   "name": "xpub-collabra",
   "version": "0.0.1",
   "private": true,
+  "workspaces": [],
   "description": "xpub configured for Collabra",
   "license": "MIT",
   "engines": {
