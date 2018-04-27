@@ -23,7 +23,7 @@ This is the current set of features and their status on our roadmap.
 |Summary Info       |Detailed author information                    |&#x2714;       |           |#115
 |Summary Info       |Add instructions for uploading files           |&#x2714;       |           |#168
 |Manuscript         |Link to Summary Info for this manuscript       |               |&#x2714;   |#114
-|Assign Reviewers   |Reviewer invitation email                      |&#x2714;       |           |#160
+|Assign Reviewers   |Reviewer invitation email                      |               |&#x2714;   |#160
 |Assign Reviewers   |Link back to Control Panel                     |               |&#x2714;   |#155
 |Review             |Update label text                              |               |&#x2714;   |#161
 |Control Panel      |Update decision placeholder text               |               |&#x2714;   |#163
