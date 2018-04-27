@@ -18,9 +18,9 @@ import ManuscriptPage from 'pubsweet-component-xpub-manuscript/src/components/Ma
 import ReviewersPage from 'pubsweet-component-xpub-review/src/components/ReviewersPage'
 import ReviewPage from 'pubsweet-component-xpub-review/src/components/ReviewPage'
 import DecisionPage from 'pubsweet-component-xpub-review/src/components/DecisionPage'
+import UsersManager from 'pubsweet-component-users-manager/src/UsersManagerContainer'
 
 import App from './components/App'
-import UsersManager from 'pubsweet-component-users-manager/src/UsersManagerContainer'
 
 const LoginPage = withProps({ passwordReset: false })(Login)
 
