@@ -4,7 +4,7 @@ import { connect } from 'react-redux'
 import { withRouter, matchPath } from 'react-router-dom'
 // import PropTypes from 'prop-types'
 
-import { AppBar, Link } from '@pubsweet/ui'
+import { Action, AppBar } from '@pubsweet/ui'
 import { withJournal } from 'xpub-journal'
 import actions from 'pubsweet-client/src/actions'
 
@@ -33,12 +33,18 @@ const App = ({
 
     links = showLinks
       ? [
-          <Link key="submission" to={submitLink}>
+          <Action
+            active={window.location.pathname === submitLink}
+            to={submitLink}
+          >
             Summary Info
-          </Link>,
-          <Link key="manuscript" to={manuscriptLink}>
+          </Action>,
+          <Action
+            active={window.location.pathname === manuscriptLink}
+            to={manuscriptLink}
+          >
             Manuscript
-          </Link>,
+          </Action>,
         ]
       : null
   }

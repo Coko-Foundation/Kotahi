@@ -21,7 +21,7 @@ services:
   postgres:
     image: postgres:10
     ports:
-      - 5432:5432
+      - 5440:5432
     environment:
       POSTGRES_USER: $USER
     volumes:
