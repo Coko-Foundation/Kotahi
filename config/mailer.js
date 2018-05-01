@@ -1,4 +1,4 @@
-module.export = {
+module.exports = {
   transport: {
     host: 'smtp.mailgun.org',
     auth: {
