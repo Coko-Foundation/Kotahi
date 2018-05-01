@@ -10839,10 +10839,6 @@ xpub-journal@^0.0.6:
     prop-types "^15.5.10"
     recompose "^0.26.0"
 
-xpub-selectors@^0.0.4:
-  version "0.0.4"
-  resolved "https://registry.yarnpkg.com/xpub-selectors/-/xpub-selectors-0.0.4.tgz#b0dcf0dd405e28d9e7089fa5970759ebcf23e696"
-
 xpub-selectors@^0.0.5:
   version "0.0.5"
   resolved "https://registry.yarnpkg.com/xpub-selectors/-/xpub-selectors-0.0.5.tgz#bb728826c65e55f607677db007d0a04440f6c12e"

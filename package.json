@@ -51,7 +51,7 @@
     "supertest": "^3.0.0",
     "winston": "^2.4.0",
     "xpub-journal": "^0.0.5",
-    "xpub-selectors": "^0.0.4",
+    "xpub-selectors": "^0.0.5",
     "xpub-theme": "^0.0.5"
   },
   "devDependencies": {
