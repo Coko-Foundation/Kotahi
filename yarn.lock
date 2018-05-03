@@ -99,11 +99,14 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@pubsweet/coko-theme@0.1.1":
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/@pubsweet/coko-theme/-/coko-theme-0.1.1.tgz#77831cdcbcb980e55e0e4c395d520cc4c8132b6b"
+"@pubsweet/coko-theme@1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/coko-theme/-/coko-theme-1.0.0.tgz#172036ac1dc31b41bcb071409c66faebff1a4a8d"
   dependencies:
+    cokourier-prime-sans "git+https://gitlab.coko.foundation/julientaq/cokourier-sans-prime.git"
     styled-components "^3.2.5"
+    typeface-fira-sans-condensed "^0.0.54"
+    typeface-vollkorn "^0.0.54"
 
 "@pubsweet/component-send-email@^0.2.3":
   version "0.2.3"
@@ -148,29 +151,7 @@
     typeface-fira-sans-condensed "^0.0.43"
     typeface-vollkorn "^0.0.43"
 
-"@pubsweet/ui@3.3.3":
-  version "3.3.3"
-  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-3.3.3.tgz#a4703709e40b8be3bcb2a0cf0d4d8d2b44949a5b"
-  dependencies:
-    babel-jest "^21.2.0"
-    classnames "^2.2.5"
-    enzyme "^3.2.0"
-    enzyme-adapter-react-16 "^1.1.1"
-    invariant "^2.2.3"
-    lodash "^4.17.4"
-    prop-types "^15.5.10"
-    react "^16.2.0"
-    react-dom "^16.2.0"
-    react-feather "^1.0.8"
-    react-redux "^5.0.2"
-    react-router-dom "^4.2.2"
-    react-tag-autocomplete "^5.5.0"
-    recompose "^0.26.0"
-    redux "^3.6.0"
-    redux-form "^7.0.3"
-    styled-components "^3.2.5"
-
-"@pubsweet/ui@^3.3.4":
+"@pubsweet/ui@3.3.4", "@pubsweet/ui@^3.3.4":
   version "3.3.4"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-3.3.4.tgz#f4dda1e900268a7c460f01aec40da187518b6363"
   dependencies:
@@ -7163,10 +7144,6 @@ pkginfo@0.3.x:
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.3.1.tgz#5b29f6a81f70717142e09e765bbeab97b4f81e21"
 
-pkginfo@0.x.x:
-  version "0.4.1"
-  resolved "https://registry.yarnpkg.com/pkginfo/-/pkginfo-0.4.1.tgz#b5418ef0439de5425fc4995042dced14fb2a84ff"
-
 platform@1.3.5:
   version "1.3.5"
   resolved "https://registry.yarnpkg.com/platform/-/platform-1.3.5.tgz#fb6958c696e07e2918d2eeda0f0bc9448d733444"
@@ -7589,18 +7566,7 @@ promisify-event@^1.0.0:
   dependencies:
     pinkie-promise "^2.0.0"
 
-prompt@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/prompt/-/prompt-1.0.0.tgz#8e57123c396ab988897fb327fd3aedc3e735e4fe"
-  dependencies:
-    colors "^1.1.2"
-    pkginfo "0.x.x"
-    read "1.0.x"
-    revalidator "0.1.x"
-    utile "0.3.x"
-    winston "2.1.x"
-
-prompt@flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87:
+prompt@^1.0.0, prompt@flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87:
   version "1.0.0"
   resolved "https://codeload.github.com/flatiron/prompt/tar.gz/1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87"
   dependencies:
@@ -10146,6 +10112,10 @@ typeface-fira-sans-condensed@^0.0.43:
   version "0.0.43"
   resolved "https://registry.yarnpkg.com/typeface-fira-sans-condensed/-/typeface-fira-sans-condensed-0.0.43.tgz#a13f8547876774e34e53daacf96423d83fecbc7d"
 
+typeface-fira-sans-condensed@^0.0.54:
+  version "0.0.54"
+  resolved "https://registry.yarnpkg.com/typeface-fira-sans-condensed/-/typeface-fira-sans-condensed-0.0.54.tgz#5fe692b4d1ec4083f198e22b8bb1e8b1ed541db0"
+
 typeface-fira-sans@^0.0.43:
   version "0.0.43"
   resolved "https://registry.yarnpkg.com/typeface-fira-sans/-/typeface-fira-sans-0.0.43.tgz#f9c026ae5b7ad5f1fb727f9947bd1e10e13702e6"
@@ -10157,6 +10127,10 @@ typeface-open-sans@0.0.35:
 typeface-vollkorn@^0.0.43:
   version "0.0.43"
   resolved "https://registry.yarnpkg.com/typeface-vollkorn/-/typeface-vollkorn-0.0.43.tgz#4ee1a03f90000b0be3ebd8cac360ee777456465b"
+
+typeface-vollkorn@^0.0.54:
+  version "0.0.54"
+  resolved "https://registry.yarnpkg.com/typeface-vollkorn/-/typeface-vollkorn-0.0.54.tgz#1288bcd7d81c3dd7cd419e4448580d2a0b0640b2"
 
 typescript@^2.2.2:
   version "2.8.3"
@@ -10684,18 +10658,6 @@ winston@0.8.x:
   dependencies:
     async "0.2.x"
     colors "0.6.x"
-    cycle "1.0.x"
-    eyes "0.1.x"
-    isstream "0.1.x"
-    pkginfo "0.3.x"
-    stack-trace "0.0.x"
-
-winston@2.1.x:
-  version "2.1.1"
-  resolved "https://registry.yarnpkg.com/winston/-/winston-2.1.1.tgz#3c9349d196207fd1bdff9d4bc43ef72510e3a12e"
-  dependencies:
-    async "~1.0.0"
-    colors "1.0.x"
     cycle "1.0.x"
     eyes "0.1.x"
     isstream "0.1.x"
