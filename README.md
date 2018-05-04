@@ -28,13 +28,13 @@ This is the current set of features and their status on our roadmap.
 |Review             |Update label text                              |               |&#x2714;   |#161
 |Control Panel      |Update decision placeholder text               |               |&#x2714;   |#163
 |Control Panel      |Show more complete set of metadata             |               |&#x2714;   |#131
-|Control Panel      |Assign editors                                 |&#x2714;       |           |#138
-|Control Panel      |Redesign uploaded files UI                     |&#x2714;       |           |#169
+|Control Panel      |Assign editors                                 |               |&#x2714;   |#138
+|Control Panel      |Redesign uploaded files UI                     |               |&#x2714;   |#169
 
 <br/>
 If you want more detailed (and potentially more technical) information about the current set of tasks that are being worked on, you can go to
 
-* https://gitlab.coko.foundation/xpub/xpub/milestones/10
+* https://gitlab.coko.foundation/xpub/xpub/milestones/12
 
 ### PubSweet components
 The application consists primarily of the following high-level pubsweet components, which roughly correspond to the pages in the system:
