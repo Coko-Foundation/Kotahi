@@ -40,7 +40,7 @@
     "pubsweet-component-xpub-review": "^0.2.0",
     "pubsweet-component-xpub-review-backend": "^0.2.0",
     "pubsweet-component-xpub-submit": "^1.0.0",
-    "pubsweet-server": "^3.0.0",
+    "pubsweet-server": "^7.0.1",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
