@@ -6,7 +6,7 @@ services:
     build: 
       context: .
       dockerfile: ./${DOCKER_FILE:-Dockerfile-development}
-    command: sh -c "yarn install --frozen-lockfile --production=false && ./scripts/wait-for-it.sh postgres:5432 -s -t 40 -- npx pubsweet server"
+    command: sh -c "yarn install --frozen-lockfile && ./scripts/wait-for-it.sh postgres:5432 -s -t 40 -- npx pubsweet server"
     ports:
       - ${PORT:-3000}:3000
     volumes:
