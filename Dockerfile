@@ -15,6 +15,8 @@ RUN cd /opt && wget http://ftp.mozilla.org/pub/firefox/releases/57.0.4/linux-x86
 
 COPY package.json yarn.lock ./
 
+ENV NODE_ENV "development"
+
 # We do a development install because react-styleguidist is a dev dependency and we want to run tests
 RUN [ "yarn", "install", "--frozen-lockfile" ]
 
