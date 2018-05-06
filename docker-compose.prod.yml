@@ -15,7 +15,8 @@ services:
     depends_on:
       - postgres
     environment:
-      NODE_ENV: development
+      NODE_ENV: production
+      PORT: 3000
       PGHOST: postgres
       PGUSER: $USER
 
