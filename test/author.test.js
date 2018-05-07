@@ -2,10 +2,9 @@ import faker from 'faker'
 import config from 'config'
 import { addUser } from '@pubsweet/db-manager'
 import { startServer, setup, setup2, teardown } from './helpers/setup'
-import { login, dashboard, submission } from './pageObjects'
-import { prepareEditor } from './helpers/prosemirror-helper'
+import { login, dashboard, submissionInformation } from './pageObjects'
 
-import { Selector, t } from 'testcafe'
+import { Selector } from 'testcafe'
 
 let author
 let title = 'this is a test submission'
@@ -101,6 +100,28 @@ test.skip('Manage submissions journey, create new submission', async t => {
   //.expect(dashboard.unsubmittedManuscripts.length).eql(2)                 //are
   //.expect(dashboard.unsubmittedManuscript(1)).contains('Unsubmitted')     //wrong
 })
+//   // create a submisison
+//   // const submissionTitle = faker.lorem.words(20)
+//   // await t
+//   //   .typeText(submission.newPostInput, postTitle)
+//   //   .click(manageSubmissions.newPostButton)
+//   //   .expect(manageSubmissions.postTitle(0).innerText)
+//   //   .eql(submissionTitle)
+
+// //   // publish it
+// //   await t
+// //     .click(managePosts.postPublish(0))
+// //     .expect(managePosts.postPublish(0).exists)
+// //     .notOk()
+// //     .expect(managePosts.postUnpublish(0).exists)
+// //     .ok()
+
+// //   // delete it
+// //   await t
+// //     .click(managePosts.postDelete(0))
+// //     .expect(managePosts.post(0).exists)
+// //     .notOk()
+// })
 
 test('Manage submissions journey, failed new submission', async t => {
   await t
