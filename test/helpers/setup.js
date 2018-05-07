@@ -27,3 +27,5 @@ export async function setup(user) {
 
   return { userData }
 }
+
+export function teardown() {}
