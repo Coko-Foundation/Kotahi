@@ -1,4 +1,5 @@
 import React from 'react'
+import styled from 'styled-components'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
 import { withRouter, matchPath } from 'react-router-dom'
@@ -13,6 +14,17 @@ const getParams = routerPath => {
   return matchPath(routerPath, path).params
 }
 
+const Root = styled.div`
+  ${({ disableLinks }) =>
+    disableLinks &&
+    `
+     button,
+     a {
+       pointer-events: none;
+     }
+  `};
+`
+
 const App = ({
   children,
   currentUser,
@@ -20,6 +32,7 @@ const App = ({
   logoutUser,
   history,
   match,
+  disableLinks,
 }) => {
   const { pathname } = history.location
   const showLinks = pathname.match(/submit|manuscript/g)
@@ -50,7 +63,7 @@ const App = ({
   }
 
   return (
-    <div>
+    <Root disableLinks={disableLinks}>
       <AppBar
         brand={journal.metadata.name}
         navLinkComponents={links}
@@ -59,7 +72,7 @@ const App = ({
       />
 
       <div>{children}</div>
-    </div>
+    </Root>
   )
 }
 
@@ -67,6 +80,7 @@ export default compose(
   connect(
     state => ({
       currentUser: state.currentUser.user,
+      disableLinks: state.conversion.converting,
     }),
     { logoutUser: actions.logoutUser },
   ),
