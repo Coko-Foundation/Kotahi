@@ -7858,9 +7858,9 @@ pubsweet-component-xpub-manuscript@^0.0.16:
     xpub-connect "^0.0.14"
     xpub-selectors "^0.1.0"
 
-pubsweet-component-xpub-review-backend@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review-backend/-/pubsweet-component-xpub-review-backend-0.2.0.tgz#9102d733a9e39b6705170da553eec9fed0e92b60"
+pubsweet-component-xpub-review-backend@^0.2.1:
+  version "0.2.1"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review-backend/-/pubsweet-component-xpub-review-backend-0.2.1.tgz#37702ac42afef87040092797a706782e031d7287"
   dependencies:
     "@pubsweet/component-send-email" "^0.2.3"
     config "^1.26.1"
