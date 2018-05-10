@@ -29,7 +29,9 @@ module.exports = {
     path: `${__dirname}/mailer`,
   },
   'pubsweet-server': {
-    db: {},
+    db: {
+      port: 5440,
+    },
     port: 3000,
     logger,
     uploads: 'uploads',

@@ -38,7 +38,7 @@
     "pubsweet-component-xpub-find-reviewers": "^0.0.6",
     "pubsweet-component-xpub-manuscript": "^0.0.16",
     "pubsweet-component-xpub-review": "^0.4.0",
-    "pubsweet-component-xpub-review-backend": "^0.2.0",
+    "pubsweet-component-xpub-review-backend": "^0.2.1",
     "pubsweet-component-xpub-submit": "^1.2.0",
     "pubsweet-server": "^3.0.0",
     "react": "^16.2.0",
