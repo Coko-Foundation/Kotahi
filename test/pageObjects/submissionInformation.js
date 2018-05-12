@@ -2,7 +2,7 @@ import config from 'config'
 import { Selector, t } from 'testcafe'
 
 const submissionInformation = {
-  url: `${config.get('pubsweet-server.baseUrl')}`,
+  url: `${config.get('pubsweet-server.baseUrl')}`, // /projects/:project/versions/:version/submit
   title: Selector('#metadata.title div[contenteditable]'), //must be >= 20 char
   abstract: Selector('#metadata.abstract div[contenteditable]'), //must be >= 100 char
   authors: Selector('#metadata.authors div[contenteditable]'),
