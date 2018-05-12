@@ -6,16 +6,13 @@ services:
     build: 
       context: .
       dockerfile: ./Dockerfile
-    command: sh -c "./scripts/wait-for-it.sh postgres:5440 -s -t 40 -- npx pubsweet server"
-    ports:
-      - ${PORT:-3000}:${PORT:-3000}
+    command: sh -c "./scripts/wait-for-it.sh postgres:5432 -s -t 40 -- npx pubsweet server"
     volumes:
       - ./:/home/xpub
       - /home/xpub/node_modules
     depends_on:
       - postgres
     environment:
-      NODE_ENV: development
       PGHOST: postgres
       PGUSER: $USER
 
@@ -23,8 +20,6 @@ services:
     image: postgres
     environment:
       POSTGRES_USER: $USER
-    ports:
-      - 5432:5432
     volumes:
       - postgres-volume:/var/lib/postgresql/data
       - ./scripts/test.sql:/docker-entrypoint-initdb.d/test.sql

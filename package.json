@@ -114,7 +114,7 @@
     "precommit": "lint-staged",
     "setupdb": "pubsweet setupdb",
     "reset": "pubsweet setupdb --clobber",
-    "start": "NODE_ENV=development docker-compose up --build",
+    "start": "docker-compose up --build",
     "start:production": "docker-compose -f ./docker-compose.yml -f ./docker-compose.prod.yml up --build",
     "start:services": "docker-compose up postgres",
     "server": "pubsweet server",
