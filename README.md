@@ -9,7 +9,7 @@ This is the current set of features and their status on our roadmap.
 |Module             |Description                                    |In progress    |Done       |Issue
 |:---:              |---                                            |:---:          |:---:      |:---:
 |System             |Apply Coko theme                               |&#x2714;       |           |pubsweet/pubsweet#372
-|System             |Implement roles & permissions                  |               |&#x2714;   |#58
+|System             |Implement roles & permissions                  |&#x2714;       |           |#58
 |System             |Revisit data model                             |&#x2714;       |           |#67
 |System             |Write integration tests                        |&#x2714;       |           |
 |Dashboard          |Change text for new submission button          |               |&#x2714;   |#156
@@ -34,7 +34,7 @@ This is the current set of features and their status on our roadmap.
 <br/>
 If you want more detailed (and potentially more technical) information about the current set of tasks that are being worked on, you can go to
 
-* https://gitlab.coko.foundation/xpub/xpub/milestones/12
+* https://gitlab.coko.foundation/xpub/xpub/milestones/13
 
 ### PubSweet components
 The application consists primarily of the following high-level pubsweet components, which roughly correspond to the pages in the system:
