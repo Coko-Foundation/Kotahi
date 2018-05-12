@@ -132,7 +132,7 @@ module.exports = {
   },
   'pubsweet-component-ink-backend': {
     inkEndpoint:
-      process.env.INK_ENDPOINT || 'http://inkdemo-api.coko.foundation',
+      process.env.INK_ENDPOINT || 'http://inkdemo-api.coko.foundation/',
     email: process.env.INK_USERNAME,
     password: process.env.INK_PASSWORD,
     maxRetries: 500,

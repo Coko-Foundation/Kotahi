@@ -5,23 +5,19 @@ services:
     user: 'node'
     build: 
       context: .
-      dockerfile: ./Dockerfile-development
-    command: sh -c "yarn install --frozen-lockfile && ./scripts/wait-for-it.sh postgres:5432 -s -t 40 -- npx pubsweet server"
-    ports:
-      - ${PORT:-3000}:3000
+      dockerfile: ./Dockerfile
+    command: sh -c "./scripts/wait-for-it.sh postgres:5432 -s -t 40 -- npx pubsweet server"
     volumes:
       - ./:/home/xpub
+      - /home/xpub/node_modules
     depends_on:
       - postgres
     environment:
-      NODE_ENV: development
       PGHOST: postgres
       PGUSER: $USER
 
   postgres:
-    image: postgres:10
-    ports:
-      - 5432:5432
+    image: postgres
     environment:
       POSTGRES_USER: $USER
     volumes:
