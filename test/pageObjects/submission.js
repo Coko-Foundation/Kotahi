@@ -4,19 +4,7 @@ import ReactSelector from 'testcafe-react-selectors'
 const submission = {
   title: Selector('div[id="metadata.title"] div[contenteditable=true]'),
   abstract: Selector('div[id="metadata.abstract"] div[contenteditable=true]'),
-  addAuthor: Selector('div[id="metadata.authors"] button[type=button]'),
-  authorFirstName: Selector(
-    'div[id="metadata.authors"] input[name="metadata.authors[0].firstName"]',
-  ),
-  authorLastName: Selector(
-    'div[id="metadata.authors"] input[name="metadata.authors[0].lastName"]',
-  ),
-  authorEmail: Selector(
-    'div[id="metadata.authors"] input[name="metadata.authors[0].email"]',
-  ),
-  authorAffiliation: Selector(
-    'div[id="metadata.authors"] input[name="metadata.authors[0].affiliation"]',
-  ),
+  authors: Selector('div[id="metadata.authors"] input'),
   keywords: Selector('div[id="metadata.keywords"] input'),
   articleType: Selector('div[id="metadata.articleType"] button'),
   articleTypeOptions: Selector(
@@ -38,14 +26,11 @@ const submission = {
   preregisteredOptions: Selector('div[id="declarations.preregistered"] label'),
 
   fundingAcknowledgement: Selector(
-    'div[id="notes.fundingAcknowledgement"] div[contenteditable]',
+    'div[id="notes.fundingAcknowledgement"] div[contenteditable=true]',
   ),
 
   submit: ReactSelector('Button'),
-  //reallySubmit: Selector('form div button[type=button]').withText('Submit your manuscript'),
-  reallySubmit: Selector(
-    'button[type=button innerText="Submit your manuscript"]',
-  ),
+  reallySubmit: Selector('button[type=submit]'),
 }
 
 export default submission
