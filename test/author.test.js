@@ -2,9 +2,9 @@ import faker from 'faker'
 import config from 'config'
 import { addUser } from '@pubsweet/db-manager'
 import { startServer, setup, setup2, teardown } from './helpers/setup'
-import { login, dashboard, submissionInformation } from './pageObjects'
+import { login, dashboard, submission } from './pageObjects'
 
-import { Selector } from 'testcafe'
+import { Selector, t } from 'testcafe'
 
 let author
 let title = 'this is a test submission'
