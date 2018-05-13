@@ -1,18 +1,14 @@
 import config from 'config'
+import { ClientFunction, Selector, t } from 'testcafe'
 import ReactSelector from 'testcafe-react-selectors'
-import { t } from 'testcafe';
 
 const dashboard = {
-    url: `${config.get('pubsweet-server.baseUrl')}`,
+  url: `${config.get('pubsweet-server.baseUrl')}`,
 
-    createSubmission: ReactSelector('UploadManuscript div div div'),
-    uploadContainer: ReactSelector('UploadContainer'),
+  createSubmission: ReactSelector('UploadManuscript'),
+  input: Selector('input[type=file'),
 
-    doSubmit: () =>
-      t
-        .click(createSubmission)
-        .setFilesToUpload('input', ['../testSubmission.docx'])
-    
+  doSubmit: () => t.setFilesToUpload('input', ['../testSubmission.docx']),
 }
 
 export default dashboard

@@ -107,6 +107,7 @@
       "testcafe 'chrome:headless --no-sandbox' 'test/**/*.test.js'",
     "test:e2e:ci:firefox": "testcafe firefox:headless 'test/**/*.test.js'",
     "test": "npm run test:chrome && npm run test:firefox",
+    "testana": "testcafe 'chrome --inspect --debug-brk --no-sandbox' 'test/**/*.test.js'",
     "clean": "rm -rf node_modules",
     "lint": "npm run lint:js && npm run lint:style",
     "lint:js": "eslint .",
