@@ -2,12 +2,11 @@ import faker from 'faker'
 import config from 'config'
 import { addUser } from '@pubsweet/db-manager'
 import { startServer, setup, setup2, teardown } from './helpers/setup'
-import { login, dashboard, submissionInformation } from './pageObjects'
+import { login, dashboard, submission } from './pageObjects'
 
-import { Selector } from 'testcafe'
+import { Selector, t } from 'testcafe'
 
 let author
-let submission
 
 fixture
   .only('Author user')
@@ -19,12 +18,27 @@ fixture
   .afterEach(teardown)
 
 test('Manage submissions journey', async t => {
-  await login
-    .doLogin(author.username, author.password)
-    .expect(dashboard.createSubmission.innerText)
-    //.eql('Create submission')
+  await login.doLogin(author.username, author.password).expect(true) //TODO
 
-    .contains('Unauthorized')
+  await t
+    .setFilesToUpload('input', ['./testSubmission1.docx'])
+    .wait(25000)
+    .expect(
+      Selector('div[id="metadata.title"] div[contenteditable=true]').exists,
+    )
+    .ok()
+
+  await t.typeText(submission.title, 'a test', {
+    replace: true,
+  })
+
+  // await dashboard
+  //   .doSubmit()
+  //   .typeText(submissionInformation.title, 'this is a test')
+  //.expect(dashboard.noSubmissionsMessage.props.children)
+  //.eql('Create submission')
+
+  //.eql('Nothing to do at the moment. Please upload a document.')
 
   // await dashboard
   //   .doSubmit()
