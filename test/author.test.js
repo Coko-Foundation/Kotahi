@@ -21,7 +21,7 @@ fixture
   })
   .afterEach(teardown)
 
-test.skip('Manage submissions journey, create new submission', async t => {
+test('Manage submissions journey, create new submission', async t => {
   await t
     .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
     .wait(25000)
