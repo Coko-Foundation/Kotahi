@@ -3,6 +3,7 @@ import config from 'config'
 import { addUser } from '@pubsweet/db-manager'
 import { startServer, setup, setup2, teardown } from './helpers/setup'
 import { login, dashboard, submission } from './pageObjects'
+import { prepareEditor } from './helpers/prosemirror-helper'
 
 import { Selector, t } from 'testcafe'
 
@@ -28,9 +29,34 @@ test('Manage submissions journey', async t => {
     )
     .ok()
 
-  await t.typeText(submission.title, 'a test', {
-    replace: true,
-  })
+  await t
+    .typeText(submission.title, 'this is an test submission', { replace: true })
+    //.typeText(submission.abstract, faker.lorem.words(50))
+    .click(submission.addAuthor)
+    .typeText(submission.authorFirstName, 'John')
+    .typeText(submission.authorLastName, 'Cena')
+    .typeText(submission.authorEmail, 'example@example.com')
+    .typeText(submission.authorAffiliation, 'WWE')
+    .typeText(submission.keywords, 'a, few, keywords')
+    .click(submission.articleType)
+    .click(submission.articleTypeOptions.nth(0))
+    .click(submission.articleSectionOptions.nth(2))
+    .click(submission.articleSectionOptions.nth(3))
+
+    .click(submission.openDataOptions.nth(0))
+    .click(submission.previouslySubmittedOptions.nth(0))
+    .click(submission.openPeerReviewOptions.nth(1))
+    .click(submission.streamlinedReviewOptions.nth(0))
+    .click(submission.researchNexusOptions.nth(1))
+    .click(submission.preregisteredOptions.nth(0))
+
+    .typeText(
+      ...(await prepareEditor(submission.fundingAcknowledgement, 'chur buddy')),
+    )
+    //.click(submission.submit)
+    .click(submission.reallySubmit)
+
+  await t.expect(dashboard.myManuscripts.count).eql(1)
 
   // await dashboard
   //   .doSubmit()
@@ -51,28 +77,6 @@ test('Manage submissions journey', async t => {
   //     .expect(submission.title.innerText)
   //     .eql()
 })
-//   // create a submisison
-//   // const submissionTitle = faker.lorem.words(20)
-//   // await t
-//   //   .typeText(submission.newPostInput, postTitle)
-//   //   .click(manageSubmissions.newPostButton)
-//   //   .expect(manageSubmissions.postTitle(0).innerText)
-//   //   .eql(submissionTitle)
-
-// //   // publish it
-// //   await t
-// //     .click(managePosts.postPublish(0))
-// //     .expect(managePosts.postPublish(0).exists)
-// //     .notOk()
-// //     .expect(managePosts.postUnpublish(0).exists)
-// //     .ok()
-
-// //   // delete it
-// //   await t
-// //     .click(managePosts.postDelete(0))
-// //     .expect(managePosts.post(0).exists)
-// //     .notOk()
-// })
 
 // //log in
 // //should see
