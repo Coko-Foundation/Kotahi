@@ -2,9 +2,11 @@ import { Selector } from 'testcafe'
 import ReactSelector from 'testcafe-react-selectors'
 
 const submission = {
+  collabraHome: Selector('a'),
   title: Selector('div[id="metadata.title"] div[contenteditable=true]'),
   abstract: Selector('div[id="metadata.abstract"] div[contenteditable=true]'),
-  addAuthor: Selector('div[id="metadata.authors"] button[type=button]'),
+  //addAuthor: Selector('div[id="metadata.authors"] button[type=button]'),
+  addAuthor: Selector('button[type=button]').withText('Add another author'),
   authorFirstName: Selector(
     'div[id="metadata.authors"] input[name="metadata.authors[0].firstName"]',
   ),

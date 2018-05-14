@@ -30,9 +30,13 @@ test.skip('Manage submissions journey, create new submission', async t => {
     )
     .ok()
 
+  await t.typeText(submission.title, title, { replace: true })
+
   await t
-    .typeText(submission.title, 'this is an test submission', { replace: true })
-    //.typeText(submission.abstract, faker.lorem.words(50))
+    .typeText(
+      ...(await prepareEditor(submission.abstract, faker.lorem.words(50))),
+    )
+    .pressKey('tab')
     .click(submission.addAuthor)
     .typeText(submission.authorFirstName, 'John')
     .typeText(submission.authorLastName, 'Cena')
@@ -51,8 +55,9 @@ test.skip('Manage submissions journey, create new submission', async t => {
     .click(submission.researchNexusOptions.nth(1))
     .click(submission.preregisteredOptions.nth(0))
 
+  await t
     .typeText(
-      ...(await prepareEditor(submission.fundingAcknowledgement, 'chur buddy')),
+      ...(await prepareEditor(submission.fundingAcknowledgement, 'thank you')),
     )
     //.click(submission.submit)
     .click(submission.reallySubmit)
