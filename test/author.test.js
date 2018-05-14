@@ -34,7 +34,7 @@ test.skip('Manage submissions journey, create new submission', async t => {
 
   await t
     .typeText(
-      ...(await prepareEditor(submission.abstract, faker.lorem.words(50))),
+      ...(await prepareEditor(submission.abstract, faker.lorem.words(20))),
     )
     .pressKey('tab')
     .click(submission.addAuthor)
@@ -60,19 +60,18 @@ test.skip('Manage submissions journey, create new submission', async t => {
       ...(await prepareEditor(submission.fundingAcknowledgement, 'thank you')),
     )
     .pressKey('tab')
-    .navigateTo(dashboard.url) //or back button
-  //.wait(10000)
-  //.expect(dashboard.mySubmissions).exists
-  //.expect(dashboard.unsubmittedManuscripts.length).eql(2)
-  //.expect(dashboard.unsubmittedManuscript(1)).contains('Unsubmitted') //status is unsubmitted
+    .click(dashboard.collabraHome) //or back button
+  //.wait(1000)
+  //.expect(dashboard.mySubmissions).exists                                 //these
+  //.expect(dashboard.unsubmittedManuscripts.length).eql(2)                 //are
+  //.expect(dashboard.unsubmittedManuscript(1)).contains('Unsubmitted')     //wrong
 })
 
 test('Manage submissions journey, failed new submission', async t => {
   await t
-    .debug()
-    .setFilesToUpload(dashboard.createSubmission, ['./testSubmission2.txt'])
-    .expect(Selector(dashboard.submitError).exists)
+    .setFilesToUpload(dashboard.createSubmission, ['./testSubmission2.txt']) //setFilesToUpload error automatically causes test to fail
+    .expect(await Selector(dashboard.submitError).exists)
     .ok()
 
-  await t.expect(dashboard.createSubmission).exists
+  await t.wait(1000).expect(dashboard.createSubmission).exists
 })

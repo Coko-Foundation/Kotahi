@@ -4,7 +4,7 @@ import ReactSelector from 'testcafe-react-selectors'
 
 const dashboard = {
   url: `${config.get('pubsweet-server.baseUrl')}`,
-  collabraHome: Selector('a'),
+  collabraHome: Selector('nav a'),
 
   createSubmission: Selector('input'),
   input: Selector('input[type=file]'),
