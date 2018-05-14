@@ -34,7 +34,7 @@ test.skip('Manage submissions journey, create new submission', async t => {
 
   await t
     .typeText(
-      ...(await prepareEditor(submission.abstract, faker.lorem.words(50))),
+      ...(await prepareEditor(submission.abstract, faker.lorem.words(20))),
     )
     .pressKey('tab')
     .click(submission.addAuthor)
