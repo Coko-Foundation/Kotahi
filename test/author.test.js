@@ -1,11 +1,10 @@
 import faker from 'faker'
 import config from 'config'
 import { addUser } from '@pubsweet/db-manager'
+import { prepareEditor } from './helpers/prosemirror-helper'
+import { Selector, t } from 'testcafe'
 import { startServer, setup, setup2, teardown } from './helpers/setup'
 import { login, dashboard, submission } from './pageObjects'
-import { prepareEditor } from './helpers/prosemirror-helper'
-
-import { Selector, t } from 'testcafe'
 
 let author
 let title = 'this is a test submission'
@@ -21,10 +20,12 @@ fixture
   })
   .afterEach(teardown)
 
-test.skip('Manage submissions journey, create new submission', async t => {
+test('Manage submissions journey, create new submission', async t => {
+  await t.expect(Selector(dashboard.mySubmissionsTitle).exists).notOk()
+
   await t
     .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
-    .wait(25000)
+    .wait(30000)
     .expect(
       Selector('div[id="metadata.title"] div[contenteditable=true]').exists,
     )
@@ -38,11 +39,11 @@ test.skip('Manage submissions journey, create new submission', async t => {
     )
     .pressKey('tab')
     .click(submission.addAuthor)
-    .typeText(submission.authorFirstName, 'John')
-    .typeText(submission.authorLastName, 'Cena')
-    .typeText(submission.authorEmail, 'example@example.com')
-    .typeText(submission.authorAffiliation, 'WWE')
-    .typeText(submission.keywords, 'a, few, keywords')
+    .typeText(submission.authorFirstName, faker.internet.domainWord())
+    .typeText(submission.authorLastName, faker.internet.domainWord())
+    .typeText(submission.authorEmail, faker.internet.exampleEmail())
+    .typeText(submission.authorAffiliation, faker.internet.domainWord())
+    .typeText(submission.keywords, faker.lorem.words(3))
     .click(submission.articleType)
     .click(submission.articleTypeOptions.nth(0))
     .click(submission.articleSectionOptions.nth(2))
@@ -57,17 +58,23 @@ test.skip('Manage submissions journey, create new submission', async t => {
 
   await t
     .typeText(
-      ...(await prepareEditor(submission.fundingAcknowledgement, 'thank you')),
+      ...(await prepareEditor(
+        submission.fundingAcknowledgement,
+        faker.lorem.words(3),
+      )),
     )
-    .pressKey('tab')
-    .click(dashboard.collabraHome) //or back button
-  //.wait(1000)
-  //.expect(dashboard.mySubmissions).exists                                 //these
-  //.expect(dashboard.unsubmittedManuscripts.length).eql(2)                 //are
-  //.expect(dashboard.unsubmittedManuscript(1)).contains('Unsubmitted')     //wrong
+    .click(dashboard.collabraHome)
+
+  await t
+    .expect(Selector(dashboard.submissionStatus(1)).exists)
+    .ok()
+    .expect(dashboard.submissionStatus(1).innerText)
+    .contains('UNSUBMITTED')
+    .expect(Selector(dashboard.submissionSummaryInfoLink(0)).exists)
+    .ok()
 })
 
-test('Manage submissions journey, failed new submission', async t => {
+test.skip('Manage submissions journey, failed new submission', async t => {
   await t
     .setFilesToUpload(dashboard.createSubmission, ['./testSubmission2.txt']) //setFilesToUpload error automatically causes test to fail
     .expect(await Selector(dashboard.submitError).exists)
