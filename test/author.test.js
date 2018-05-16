@@ -3,7 +3,7 @@ import config from 'config'
 import { addUser } from '@pubsweet/db-manager'
 import { prepareEditor } from './helpers/prosemirror-helper'
 import { Selector, t } from 'testcafe'
-import { startServer, setup, setup2, teardown } from './helpers/setup'
+import { startServer, setup, teardown } from './helpers/setup'
 import { login, dashboard, submission } from './pageObjects'
 
 let author
