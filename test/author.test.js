@@ -20,7 +20,7 @@ fixture
   })
   .afterEach(teardown)
 
-test('Manage submissions journey, create new submission', async t => {
+test.skip('Manage submissions journey, create new submission', async t => {
   await t.expect(Selector(dashboard.mySubmissionsTitle).exists).notOk()
 
   await t
@@ -74,11 +74,26 @@ test('Manage submissions journey, create new submission', async t => {
     .ok()
 })
 
-test.skip('Manage submissions journey, failed new submission', async t => {
-  await t
-    .setFilesToUpload(dashboard.createSubmission, ['./testSubmission2.txt']) //setFilesToUpload error automatically causes test to fail
-    .expect(await Selector(dashboard.submitError).exists)
-    .ok()
+test.before(async t => {
+  startServer
+  const result = await setup()
 
-  await t.wait(1000).expect(dashboard.createSubmission).exists
+  config.util.extendDeep(
+    {},
+    JSON.parse(JSON.stringify(config.get('pubsweet-component-ink-backend'))),
+    JSON.parse(
+      JSON.stringify(config.get('bad-pubsweet-component-ink-backend')),
+    ),
+  )
+
+  author = result.userData
+  await login.doLogin(author.username, author.password)
+})('Manage submissions journey, failed new submission', async t => {
+  await t
+    .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
+    .wait(1560)
+    .expect(await Selector(dashboard.uploadError).innerText)
+    .eql('Internal Server Error')
+
+  await t.wait(3000).expect(dashboard.createSubmission).exists
 })
