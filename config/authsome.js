@@ -643,6 +643,10 @@ module.exports = {
       return mode.canUpdateTeam()
     }
 
+    if (object && object.path === '/make-invitation') {
+      return mode.canInviteReviewer()
+    }
+
     return false
   },
   DELETE: (userId, operation, object, context) => {
