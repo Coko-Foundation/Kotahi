@@ -20,10 +20,11 @@ fixture
   })
   .afterEach(teardown)
 
-test.skip('Manage submissions journey, create new submission', async t => {
+test('Manage submissions journey, create new submission', async t => {
   await t.expect(Selector(dashboard.mySubmissionsTitle).exists).notOk()
 
   await t
+    .debug()
     .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
     .wait(30000)
     .expect(
@@ -74,26 +75,31 @@ test.skip('Manage submissions journey, create new submission', async t => {
     .ok()
 })
 
-test.before(async t => {
-  startServer
-  const result = await setup()
+test.skip
+  .before(async t => {
+    startServer
+    const result = await setup()
 
-  config.util.extendDeep(
-    {},
-    JSON.parse(JSON.stringify(config.get('pubsweet-component-ink-backend'))),
-    JSON.parse(
-      JSON.stringify(config.get('bad-pubsweet-component-ink-backend')),
-    ),
-  )
+    config.util.extendDeep(
+      {},
+      JSON.parse(JSON.stringify(config.get('pubsweet-component-ink-backend'))),
+      JSON.parse(
+        JSON.stringify(config.get('bad-pubsweet-component-ink-backend')),
+      ),
+    )
 
-  author = result.userData
-  await login.doLogin(author.username, author.password)
-})('Manage submissions journey, failed new submission', async t => {
-  await t
-    .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
-    .wait(1560)
-    .expect(await Selector(dashboard.uploadError).innerText)
-    .eql('Internal Server Error')
-
-  await t.wait(3000).expect(dashboard.createSubmission).exists
-})
+    author = result.userData
+    await login.doLogin(author.username, author.password)
+  })('Manage submissions journey, failed new submission', async t => {
+    await t
+      .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
+      .expect(await Selector('div').withText('Internal Server Error').exists)
+    await t.expect(dashboard.createSubmission).exists
+  })
+  .after(async t => {
+    config.util.extendDeep(
+      {},
+      JSON.parse(JSON.stringify(config.get('pubsweet-component-ink-backend'))),
+      JSON.parse(JSON.stringify(config.get('pubsweet-component-ink-backend'))),
+    )
+  })

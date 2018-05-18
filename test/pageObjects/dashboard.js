@@ -8,7 +8,6 @@ const dashboard = {
 
   createSubmission: Selector('input'),
   input: Selector('input[type=file]'),
-  uploadError: Selector('#root div div div div'),
 
   mySubmissionsTitle: Selector('#root div div div div').child(2),
   mySubmissions: Selector('#root div div div div'),
