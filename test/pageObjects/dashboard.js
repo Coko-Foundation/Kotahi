@@ -1,6 +1,5 @@
 import config from 'config'
-import { ClientFunction, Selector, t } from 'testcafe'
-import ReactSelector from 'testcafe-react-selectors'
+import { Selector } from 'testcafe'
 
 const dashboard = {
   url: `${config.get('pubsweet-server.baseUrl')}`,
