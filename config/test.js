@@ -30,4 +30,12 @@ module.exports = {
       },
     },
   },
+  'bad-pubsweet-component-ink-backend': {
+    inkEndpoint: 'http://testinkdemo-api.coko.foundation/',
+    email: 'test@example.com',
+    password: 'p',
+    recipes: {
+      'editoria-typescript': '1',
+    },
+  },
 }
