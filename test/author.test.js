@@ -23,7 +23,6 @@ test('Manage submissions journey, create new submission', async t => {
   await t.expect(Selector(dashboard.mySubmissionsTitle).exists).notOk()
 
   await t
-    .debug()
     .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
     .wait(30000)
     .expect(
@@ -76,7 +75,7 @@ test('Manage submissions journey, create new submission', async t => {
 
 test
   .before(async t => {
-    startServer
+    startServer()
     const result = await setup()
 
     config.util.extendDeep(
