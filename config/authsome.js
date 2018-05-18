@@ -62,10 +62,10 @@ class XpubCollabraMode {
     const memberships = await Promise.all(
       this.user.teams.map(async teamId => {
         const team = await this.context.models.Team.find(teamId)
+
         return membershipCondition(team)
       }),
     )
-
     return memberships.includes(true)
   }
 
@@ -178,12 +178,25 @@ class XpubCollabraMode {
 
     const collection = await this.context.models.Collection.find(this.object.id)
 
-    const permission =
-      this.isAuthor(collection) ||
-      (await this.isAssignedHandlingEditor(collection)) ||
-      (await this.isAssignedSeniorEditor(collection))
-
+    let permission = await this.canReadatLeastOneFragmentOfCollection(
+      collection,
+      [
+        'isAssignedSeniorEditor',
+        'isAssignedHandlingEditor',
+        'isAssignedReviewerEditor',
+      ],
+    )
+    permission = permission ? true : await this.isAuthor(collection)
     return permission
+  }
+
+  async canReadatLeastOneFragmentOfCollection(collection, teamMembers) {
+    const permission = await Promise.all(
+      collection.fragments.map(async fragmentId =>
+        this.checkTeamMembers(teamMembers, { id: fragmentId }),
+      ),
+    )
+    return permission.includes(true)
   }
 
   /**
@@ -253,21 +266,22 @@ class XpubCollabraMode {
     if (await this.isManagingEditor()) {
       return true
     }
-
     return {
       filter: async collections => {
         const filteredCollections = await Promise.all(
           collections.map(async collection => {
-            const condition =
-              this.isAuthor(collection) ||
-              (await this.isAssignedHandlingEditor(collection)) || // eslint-disable-line
-              (await this.isAssignedSeniorEditor(collection)) || // eslint-disable-line
-              (await this.isAssignedReviewerEditor(collection)) // eslint-disable-line
-
-            return condition ? collection : undefined // eslint-disable-line
-          }, this),
+            let condition = await this.canReadatLeastOneFragmentOfCollection(
+              collection,
+              [
+                'isAssignedHandlingEditor',
+                'isAssignedSeniorEditor',
+                'isAssignedReviewerEditor',
+              ],
+            )
+            condition = condition ? true : await this.isAuthor(collection)
+            return condition ? collection : false
+          }),
         )
-
         return filteredCollections.filter(collection => collection)
       },
     }
@@ -311,6 +325,31 @@ class XpubCollabraMode {
   }
 
   /**
+   * Checks if a user can create a fragment in a specific collection
+   *
+   * @returns {boolean}
+   */
+  async canUpdateFragmentInACollection() {
+    if (!this.isAuthenticated()) {
+      return false
+    }
+
+    this.user = await this.context.models.User.find(this.userId)
+
+    const { collection } = this.object
+    if (collection) {
+      const permission =
+        this.isAuthor(collection) ||
+        (await this.isAssignedHandlingEditor(collection)) ||
+        (await this.isAssignedSeniorEditor(collection)) ||
+        (await this.isAssignedReviewerEditor(collection))
+      return permission
+    }
+
+    return false
+  }
+
+  /**
    * Checks if a user can be created
    *
    * @returns {boolean}
@@ -326,11 +365,19 @@ class XpubCollabraMode {
    * @returns {boolean}
    * @memberof XpubCollabraMode
    */
-  canCreateTeam() {
+  async canCreateTeam() {
     if (!this.isAuthenticated()) {
       return false
     }
-    return true
+    this.user = await this.context.models.User.find(this.userId)
+
+    const { teamType, object } = this.object.team
+    if (teamType === 'handlingEditor') {
+      this.isAssignedSeniorEditor(object)
+      return true
+    }
+
+    return false
   }
 
   /**
@@ -383,7 +430,8 @@ class XpubCollabraMode {
     const permission =
       this.isAuthor(this.object) ||
       (await this.isAssignedHandlingEditor(this.object)) ||
-      (await this.isAssignedSeniorEditor(this.object))
+      (await this.isAssignedSeniorEditor(this.object)) ||
+      (await this.isAssignedReviewerEditor(this.object))
     return permission
   }
 
@@ -396,10 +444,11 @@ class XpubCollabraMode {
     this.user = await this.context.models.User.find(this.userId)
     const collection = this.object
     if (collection) {
-      const permission =
-        this.isAuthor(collection) ||
-        (await this.isAssignedHandlingEditor(collection)) ||
-        (await this.isAssignedSeniorEditor(collection))
+      let permission = await this.canReadatLeastOneFragmentOfCollection(
+        collection,
+        ['isAssignedHandlingEditor', 'isAssignedSeniorEditor'],
+      )
+      permission = permission ? true : await this.isAuthor(collection)
       return permission
     }
     return false
@@ -410,29 +459,34 @@ class XpubCollabraMode {
    *
    * @returns {boolean}
    */
-  async canInviteReviewer() {
-    this.user = await this.context.models.User.find(this.userId)
+  // async canInviteReviewer() {
+  //   this.user = await this.context.models.User.find(this.userId)
 
-    const { collection } = this.object
-    const permission =
-      (await this.isAssignedHandlingEditor(collection)) ||
-      (await this.isAssignedSeniorEditor(collection))
-
-    return permission
-  }
+  //   const { collection } = this.object
+  //   const permission = await this.canReadatLeastOneFragmentOfCollection(
+  //     collection,
+  //     ['isAssignedHandlingEditor', 'isAssignedSeniorEditor'],
+  //   )
+  //   return permission
+  // }
 
   async canViewManuscripts() {
     this.user = await this.context.models.User.find(this.userId)
-
-    const result = await Promise.all(
+    const collection = await Promise.all(
       this.object.map(async collection => {
-        const permission =
-          (await this.isAssignedHandlingEditor(collection)) ||
-          (await this.isAssignedSeniorEditor(collection))
+        const permission = await this.canReadatLeastOneFragmentOfCollection(
+          collection,
+          ['isAssignedHandlingEditor', 'isAssignedSeniorEditor'],
+        )
         return permission
-      }, this),
+      }),
     )
-    return result.includes(true)
+    return collection.every(collection => collection)
+  }
+
+  async checkTeamMembers(team, object) {
+    const permission = await Promise.all(team.map(t => this[t](object)))
+    return permission.includes(true)
   }
 }
 
@@ -445,7 +499,6 @@ module.exports = {
   },
   GET: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
-
     // GET /api/collections
     if (object && object.path === '/collections') {
       return mode.canListCollections()
@@ -539,10 +592,6 @@ module.exports = {
     // PATCH /api/teams/:id
     if (object && object.type === 'team') {
       return mode.canUpdateTeam()
-    }
-
-    if (object && object.path === '/make-invitation') {
-      return mode.canInviteReviewer()
     }
 
     return false
