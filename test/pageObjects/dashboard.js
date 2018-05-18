@@ -10,6 +10,7 @@ const dashboard = {
 
   mySubmissionsTitle: Selector('#root div div div div').child(2),
   mySubmissions: Selector('#root div div div div'),
+
   submission: n => dashboard.mySubmissions.child(n),
   submissionStatus: n =>
     dashboard.mySubmissions
