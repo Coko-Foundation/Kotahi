@@ -66,7 +66,6 @@ class XpubCollabraMode {
         return membershipCondition(team)
       }),
     )
-
     return memberships.includes(true)
   }
 
@@ -294,7 +293,6 @@ class XpubCollabraMode {
             return condition ? collection : false
           }),
         )
-
         return filteredCollections.filter(collection => collection)
       },
     }
@@ -641,10 +639,6 @@ module.exports = {
     // PATCH /api/teams/:id
     if (object && object.type === 'team') {
       return mode.canUpdateTeam()
-    }
-
-    if (object && object.path === '/make-invitation') {
-      return mode.canInviteReviewer()
     }
 
     return false
