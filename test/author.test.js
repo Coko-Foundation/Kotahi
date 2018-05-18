@@ -1,13 +1,12 @@
 import faker from 'faker'
 import config from 'config'
-import { addUser } from '@pubsweet/db-manager'
+import { Selector } from 'testcafe'
 import { prepareEditor } from './helpers/prosemirror-helper'
-import { Selector, t } from 'testcafe'
 import { startServer, setup, teardown } from './helpers/setup'
 import { login, dashboard, submission } from './pageObjects'
 
 let author
-let title = 'this is a test submission'
+const title = 'this is a test submission'
 
 fixture
   .only('Author user')
@@ -75,7 +74,7 @@ test('Manage submissions journey, create new submission', async t => {
     .ok()
 })
 
-test.skip
+test
   .before(async t => {
     startServer
     const result = await setup()
