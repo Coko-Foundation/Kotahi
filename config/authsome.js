@@ -284,7 +284,6 @@ class XpubCollabraMode {
                 'isAssignedReviewerEditor',
               ],
             )
-            console.log(collection)
             condition = condition ? true : await this.isAuthor(collection)
             return condition ? collection : false
           }),
@@ -471,11 +470,9 @@ class XpubCollabraMode {
     const collection = await Promise.all(
       this.object.map(async collection => {
         const permission = this.isAuthor(collection)
-        console.log(permission)
         return permission
       }),
     )
-    console.log(collection, 2222)
     return collection.length > 0
       ? collection.every(collection => collection)
       : false
