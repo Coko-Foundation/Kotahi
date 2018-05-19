@@ -5,9 +5,11 @@ const authsomeConfig = require('config').get('authsome')
 const collections = [
   {
     id: 'collection1',
+    fragments: ['fragment1'],
   },
   {
     id: 'collection2',
+    fragments: ['fragment2'],
   },
 ]
 
@@ -16,16 +18,16 @@ const teams = [
     id: 'team1',
     teamType: 'handlingEditor',
     object: {
-      id: 'collection2',
-      type: 'collection',
+      id: 'fragment2',
+      type: 'fragment',
     },
   },
   {
     id: 'team2',
     teamType: 'seniorEditor',
     object: {
-      id: 'collection1',
-      type: 'collection',
+      id: 'fragment1',
+      type: 'fragment',
     },
   },
   {
