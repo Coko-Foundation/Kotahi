@@ -18,16 +18,16 @@ const teams = [
     id: 'team1',
     teamType: 'handlingEditor',
     object: {
-      id: 'collection2',
-      type: 'collection',
+      id: 'fragment2',
+      type: 'fragment',
     },
   },
   {
     id: 'team2',
     teamType: 'seniorEditor',
     object: {
-      id: 'collection1',
-      type: 'collection',
+      id: 'fragment1',
+      type: 'fragment',
     },
   },
   {
