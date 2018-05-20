@@ -182,16 +182,19 @@ class XpubCollabraMode {
       return true
     }
 
-    const collection = await this.context.models.Collection.find(this.object.id)
+    const collection = this.object
 
-    let permission = await this.canReadatLeastOneFragmentOfCollection(
+    let permission = this.checkTeamMembers(
+      ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
       collection,
-      [
-        'isAssignedSeniorEditor',
-        'isAssignedHandlingEditor',
-        'isAssignedReviewerEditor',
-      ],
     )
+
+    permission = permission
+      ? true
+      : await this.canReadatLeastOneFragmentOfCollection(collection, [
+          'isAssignedReviewerEditor',
+        ])
+
     permission = permission ? true : await this.isAuthor(collection)
     return permission
   }
@@ -276,14 +279,17 @@ class XpubCollabraMode {
       filter: async collections => {
         const filteredCollections = await Promise.all(
           collections.map(async collection => {
-            let condition = await this.canReadatLeastOneFragmentOfCollection(
+            let condition = this.checkTeamMembers(
+              ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
               collection,
-              [
-                'isAssignedHandlingEditor',
-                'isAssignedSeniorEditor',
-                'isAssignedReviewerEditor',
-              ],
             )
+
+            condition = condition
+              ? true
+              : await this.canReadatLeastOneFragmentOfCollection(collection, [
+                  'isAssignedReviewerEditor',
+                ])
+
             condition = condition ? true : await this.isAuthor(collection)
             return condition ? collection : false
           }),
@@ -449,12 +455,10 @@ class XpubCollabraMode {
     this.user = await this.context.models.User.find(this.userId)
     const collection = this.object
     if (collection) {
-      let permission = await this.canReadatLeastOneFragmentOfCollection(
+      return this.checkTeamMembers(
+        ['isAuthor', 'isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
         collection,
-        ['isAssignedHandlingEditor', 'isAssignedSeniorEditor'],
       )
-      permission = permission ? true : await this.isAuthor(collection)
-      return permission
     }
     return false
   }
@@ -464,17 +468,25 @@ class XpubCollabraMode {
    *
    * @returns {boolean}
    */
+  async canMakeInvitation() {
+    this.user = await this.context.models.User.find(this.userId)
+    const { collection } = this.object
+    if (collection) {
+      return this.checkTeamMembers(
+        ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+        collection,
+      )
+    }
+    return false
+  }
 
   async canViewMySubmissionSection() {
     this.user = await this.context.models.User.find(this.userId)
     const collection = await Promise.all(
-      this.object.map(async collection => {
-        const permission = this.isAuthor(collection)
-        return permission
-      }),
+      this.object.map(async collection => this.isAuthor(collection)),
     )
     return collection.length > 0
-      ? collection.every(collection => collection)
+      ? collection.some(collection => collection)
       : false
   }
 
@@ -490,23 +502,22 @@ class XpubCollabraMode {
       }),
     )
     return collection.length > 0
-      ? collection.every(collection => collection)
+      ? collection.some(collection => collection)
       : false
   }
 
   async canViewManuscripts() {
     this.user = await this.context.models.User.find(this.userId)
     const collection = await Promise.all(
-      this.object.map(async collection => {
-        const permission = await this.canReadatLeastOneFragmentOfCollection(
+      this.object.map(async collection =>
+        this.checkTeamMembers(
+          ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
           collection,
-          ['isAssignedHandlingEditor', 'isAssignedSeniorEditor'],
-        )
-        return permission
-      }),
+        ),
+      ),
     )
     return collection.length > 0
-      ? collection.every(collection => collection)
+      ? collection.some(collection => collection)
       : false
   }
 
@@ -605,6 +616,11 @@ module.exports = {
   },
   PATCH: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
+
+    // PATCH /api/make-invitation
+    if (object && object.path === '/make-invitation') {
+      return mode.canMakeInvitation()
+    }
 
     // PATCH /api/collections/:id
     if (object && object.type === 'collection') {
