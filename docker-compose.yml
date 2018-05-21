@@ -17,7 +17,7 @@ services:
       PGUSER: $USER
 
   postgres:
-    image: postgres:10
+    image: postgres
     ports:
       - 5432:5432
     environment:
