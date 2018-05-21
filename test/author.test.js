@@ -22,6 +22,11 @@ fixture
   .before(startServer)
   .beforeEach(async () => {
     const result = await setup()
+
+    config.util.extendDeep(
+      {},
+      JSON.parse(JSON.stringify(config.get('pubsweet-component-ink-backend'))),
+    )
     author = result.userData
 
     await login.doLogin(author.username, author.password)
