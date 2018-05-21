@@ -15,6 +15,7 @@ fixture
     const result = await setup()
     author = result.userData
 
+    t => t.resizeWindow(1920, 1080)
     await login.doLogin(author.username, author.password)
   })
   .afterEach(teardown)
