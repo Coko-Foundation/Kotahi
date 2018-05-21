@@ -8,6 +8,15 @@ import { login, dashboard, submission } from './pageObjects'
 let author
 const title = 'this is a test submission'
 
+const badInkConfig = {
+  inkEndpoint: 'http://testinkdemo-api.coko.foundation/',
+  email: 'test@example.com',
+  password: 'p',
+  recipes: {
+    'editoria-typescript': '1',
+  },
+}
+
 fixture
   .only('Author user')
   .before(startServer)
@@ -121,9 +130,7 @@ test
     config.util.extendDeep(
       {},
       JSON.parse(JSON.stringify(config.get('pubsweet-component-ink-backend'))),
-      JSON.parse(
-        JSON.stringify(config.get('bad-pubsweet-component-ink-backend')),
-      ),
+      JSON.parse(JSON.stringify(badInkConfig)),
     )
 
     author = result.userData
