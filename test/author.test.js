@@ -81,46 +81,6 @@ test('Manage submissions journey, create new submission', async t => {
 
   await t
     .typeText(
-      ...(await prepareEditor(submission.fundingAcknowledgement, 'thank you')),
-    )
-    //.click(submission.submit)
-    .click(submission.reallySubmit)
-
-  await t.expect(dashboard.myManuscripts.count).eql(1)
-
-  // await dashboard
-  //   .doSubmit()
-  //   .typeText(submissionInformation.title, 'this is a test')
-  //.expect(dashboard.noSubmissionsMessage.props.children)
-  //.eql('Create submission')
-
-  //.eql('Nothing to do at the moment. Please upload a document.')
-
-  await t
-    .typeText(
-      ...(await prepareEditor(submission.abstract, faker.lorem.words(20))),
-    )
-    .pressKey('tab')
-    .click(submission.addAuthor)
-    .typeText(submission.authorFirstName, 'John')
-    .typeText(submission.authorLastName, 'Cena')
-    .typeText(submission.authorEmail, 'example@example.com')
-    .typeText(submission.authorAffiliation, 'WWE')
-    .typeText(submission.keywords, 'a, few, keywords')
-    .click(submission.articleType)
-    .click(submission.articleTypeOptions.nth(0))
-    .click(submission.articleSectionOptions.nth(2))
-    .click(submission.articleSectionOptions.nth(3))
-
-    .click(submission.openDataOptions.nth(0))
-    .click(submission.previouslySubmittedOptions.nth(0))
-    .click(submission.openPeerReviewOptions.nth(1))
-    .click(submission.streamlinedReviewOptions.nth(0))
-    .click(submission.researchNexusOptions.nth(1))
-    .click(submission.preregisteredOptions.nth(0))
-
-  await t
-    .typeText(
       ...(await prepareEditor(
         submission.fundingAcknowledgement,
         faker.lorem.words(3),
