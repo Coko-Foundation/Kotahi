@@ -66,6 +66,7 @@ class XpubCollabraMode {
         return membershipCondition(team)
       }),
     )
+
     return memberships.includes(true)
   }
 
@@ -279,11 +280,10 @@ class XpubCollabraMode {
       filter: async collections => {
         const filteredCollections = await Promise.all(
           collections.map(async collection => {
-            let condition = this.checkTeamMembers(
+            let condition = await this.checkTeamMembers(
               ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
               collection,
             )
-
             condition = condition
               ? true
               : await this.canReadatLeastOneFragmentOfCollection(collection, [
@@ -294,6 +294,7 @@ class XpubCollabraMode {
             return condition ? collection : false
           }),
         )
+
         return filteredCollections.filter(collection => collection)
       },
     }
