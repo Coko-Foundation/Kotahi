@@ -99,7 +99,7 @@
     "webpack-hot-middleware": "^2.20.0"
   },
   "scripts": {
-    "test:chrome": "NODE_ENV=test testcafe $(testcafe -b | grep chrom*) 'test/**/*.test.js'",
+    "test:chrome": "ALLOW_CONFIG_MUTATIONS=anything && NODE_ENV=test && testcafe $(testcafe -b | grep chrom*) 'test/**/*.test.js'",
     "test:firefox": "NODE_ENV=test testcafe firefox 'test/**/*.test.js'",
     "test:e2e:ci": "npm run test:e2e:ci:chrome && npm run test:e2e:ci:firefox",
     "test:e2e:ci:chrome": "testcafe 'chrome:headless --no-sandbox' 'test/**/*.test.js'",
