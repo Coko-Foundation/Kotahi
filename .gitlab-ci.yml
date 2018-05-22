@@ -63,6 +63,7 @@ test:chrome:
     PGUSER: test
     PGPASSWORD: pw
     NODE_ENV: test
+    ALLOW_CONFIG_MUTATIONS: true
   services:
     - postgres
   script:
@@ -82,6 +83,7 @@ test:firefox:
     PGUSER: test
     PGPASSWORD: pw
     NODE_ENV: test
+    ALLOW_CONFIG_MUTATIONS: true
   services:
     - postgres
   script:
