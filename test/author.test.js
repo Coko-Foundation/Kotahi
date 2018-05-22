@@ -1,32 +1,41 @@
 import faker from 'faker'
-import config from 'config'
 import { Selector } from 'testcafe'
 import { prepareEditor } from './helpers/prosemirror-helper'
 import { startServer, setup, teardown } from './helpers/setup'
 import { login, dashboard, submission } from './pageObjects'
 
-let author
-const title = 'this is a test submission'
+const config = require('config')
 
-const badInkConfig = {
-  inkEndpoint: 'http://testinkdemo-api.coko.foundation/',
-  email: 'test@example.com',
-  password: 'p',
+const goodInkConfig = {
+  inkEndpoint: 'http://inkdemo-api.coko.foundation/',
+  email: 'editoria@coko.foundation',
+  password: 'editoria',
   recipes: {
-    'editoria-typescript': '1',
+    'editoria-typescript': '2',
   },
 }
 
+let author
+const title = 'this is a test submission'
+
+// const badInkConfig = {
+//   inkEndpoint: 'http://testinkdemo-api.coko.foundation/',
+//   email: 'test@example.com',
+//   password: 'p',
+//   recipes: {
+//     'editoria-typescript': '1',
+//   },
+// }
+
 fixture
   .only('Author user')
-  .before(startServer)
+  .before(async () => {
+    config['pubsweet-component-ink-backend'] = goodInkConfig
+    await startServer()
+  })
   .beforeEach(async () => {
     const result = await setup()
 
-    config.util.extendDeep(
-      {},
-      JSON.parse(JSON.stringify(config.get('pubsweet-component-ink-backend'))),
-    )
     author = result.userData
 
     await login.doLogin(author.username, author.password)
@@ -35,6 +44,7 @@ fixture
 
 test('Manage submissions journey, create new submission', async t => {
   await t.expect(Selector(dashboard.mySubmissionsTitle).exists).notOk()
+  // console.log(config.get('pubsweet-component-ink-backend'),1111111111111111)
 
   await t
     .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
@@ -132,11 +142,11 @@ test
     startServer()
     const result = await setup()
 
-    config.util.extendDeep(
-      {},
-      JSON.parse(JSON.stringify(config.get('pubsweet-component-ink-backend'))),
-      JSON.parse(JSON.stringify(badInkConfig)),
-    )
+    // config.util.extendDeep(
+    //   {},
+    //   JSON.parse(JSON.stringify(config.get('pubsweet-component-ink-backend'))),
+    //   JSON.parse(JSON.stringify(badInkConfig)),
+    // )
 
     author = result.userData
     await login.doLogin(author.username, author.password)

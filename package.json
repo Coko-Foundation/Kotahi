@@ -22,8 +22,10 @@
     "font-awesome": "^4.7.0",
     "fs-extra": "^4.0.2",
     "history": "^4.7.2",
+    "import-fresh": "^2.0.0",
     "joi": "^10.0.6",
     "loadable-components": "^0.3.0",
+    "mock-require": "^3.0.2",
     "moment": "^2.18.1",
     "prop-types": "^15.5.10",
     "pubsweet": "2.2.1",
@@ -99,12 +101,10 @@
     "webpack-hot-middleware": "^2.20.0"
   },
   "scripts": {
-    "test:chrome":
-      "NODE_ENV=test testcafe $(testcafe -b | grep chrom*) 'test/**/*.test.js'",
+    "test:chrome": "NODE_ENV=test testcafe $(testcafe -b | grep chrom*) 'test/**/*.test.js'",
     "test:firefox": "NODE_ENV=test testcafe firefox 'test/**/*.test.js'",
     "test:e2e:ci": "npm run test:e2e:ci:chrome && npm run test:e2e:ci:firefox",
-    "test:e2e:ci:chrome":
-      "testcafe 'chrome:headless --no-sandbox' 'test/**/*.test.js'",
+    "test:e2e:ci:chrome": "testcafe 'chrome:headless --no-sandbox' 'test/**/*.test.js'",
     "test:e2e:ci:firefox": "testcafe firefox:headless 'test/**/*.test.js'",
     "test": "npm run test:chrome && npm run test:firefox",
     "clean": "rm -rf node_modules",
@@ -124,11 +124,17 @@
     "testEnvironment": "node",
     "testRegex": "/test/authsome/.*.test.js$",
     "collectCoverage": true,
-    "collectCoverageFrom": ["src/**/*.js", "config/authsome.js"],
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "config/authsome.js"
+    ],
     "setupTestFrameworkScriptFile": "<rootDir>/test/helpers/jest-setup.js"
   },
   "lint-staged": {
-    "*.js": ["prettier --write", "git add"],
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ],
     "*.css": "stylelint",
     "*.scss": "stylelint"
   }
