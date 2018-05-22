@@ -66,6 +66,7 @@ class XpubCollabraMode {
         return membershipCondition(team)
       }),
     )
+
     return memberships.includes(true)
   }
 
@@ -293,6 +294,7 @@ class XpubCollabraMode {
             return condition ? collection : false
           }),
         )
+
         return filteredCollections.filter(collection => collection)
       },
     }

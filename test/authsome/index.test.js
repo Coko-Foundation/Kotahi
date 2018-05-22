@@ -5,6 +5,7 @@ const authsomeConfig = require('config').get('authsome')
 const collections = [
   {
     id: 'collection1',
+    fragments: ['fragment1'],
   },
   {
     id: 'collection2',
