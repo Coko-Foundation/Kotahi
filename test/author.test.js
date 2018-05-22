@@ -18,15 +18,6 @@ const goodInkConfig = {
 let author
 const title = 'this is a test submission'
 
-// const badInkConfig = {
-//   inkEndpoint: 'http://testinkdemo-api.coko.foundation/',
-//   email: 'test@example.com',
-//   password: 'p',
-//   recipes: {
-//     'editoria-typescript': '1',
-//   },
-// }
-
 fixture
   .only('Author user')
   .before(async () => {
@@ -44,7 +35,6 @@ fixture
 
 test('Manage submissions journey, create new submission', async t => {
   await t.expect(Selector(dashboard.mySubmissionsTitle).exists).notOk()
-  // console.log(config.get('pubsweet-component-ink-backend'),1111111111111111)
 
   await t
     .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
