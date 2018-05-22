@@ -35,6 +35,8 @@ COPY webpack webpack
 
 ENV NODE_ENV ${NODE_ENV}
 
+ENV ALLOW_CONFIG_MUTATIONS "anything"
+
 RUN [ "npx", "pubsweet", "build"]
 
 EXPOSE ${PORT}
