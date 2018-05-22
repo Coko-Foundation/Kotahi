@@ -133,9 +133,11 @@ module.exports = {
     sender: process.env.PUBSWEET_PASSWORD_RESET_SENDER || 'dev@example.com',
   },
   'pubsweet-component-ink-backend': {
-    inkEndpoint: 'http://inkdemo-api.coko.foundation/',
-    email: 'editoria@coko.foundation',
-    password: 'editoria',
+    inkEndpoint:
+      process.env.INK_ENDPOINT || 'http://inkdemo-api.coko.foundation/',
+    email: process.env.INK_USERNAME,
+    password: process.env.INK_PASSWORD,
+    maxRetries: 500,
     recipes: {
       'editoria-typescript': '2',
     },
