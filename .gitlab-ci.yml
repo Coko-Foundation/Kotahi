@@ -117,6 +117,42 @@ staging:xpub-collabra:
     - source deploy.sh
     - create_deployment
 
+# review:xpub-collabra:
+#   image: pubsweet/deployer:latest
+#   stage: review
+#   variables:
+#     PACKAGE_NAME: xpub-collabra
+#     FORCE_FRESH_DB: "yes"
+#     REQUIRES_PROVISIONING: "yes"
+#   environment:
+#     name: $PACKAGE_NAME/review/$CI_COMMIT_REF_NAME
+#     # !! kube-lego will fail if domain > 64 chars
+#     url: "http://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
+#     on_stop: stop_review:xpub-collabra
+#   except:
+#   - master
+#   script:
+#     - source deploy.sh
+#     - create_deployment
+
+# stop_review:xpub-collabra:
+#   image: pubsweet/deployer:latest
+#   stage: review
+#   variables:
+#     PACKAGE_NAME: xpub-collabra
+#     REQUIRES_PROVISIONING: "yes"
+#     GIT_STRATEGY: none
+#   environment:
+#     name: $PACKAGE_NAME/review/$CI_COMMIT_REF_NAME
+#     action: stop
+#   when: manual
+#   except:
+#   - master
+#   script:
+#     - source deploy.sh
+#     - delete_deployment
+#     - delete_objects_in_environment pvc
+
 production:xpub-collabra:
   image: pubsweet/deployer:latest
   stage: production
