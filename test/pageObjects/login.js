@@ -12,6 +12,7 @@ const login = {
 
   doLogin: (username, password) =>
     t
+      .resizeWindow(1920, 1080)
       .navigateTo(login.url)
       .typeText(login.username, username)
       .typeText(login.password, password)

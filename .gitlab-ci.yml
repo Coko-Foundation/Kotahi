@@ -63,6 +63,7 @@ test:chrome:
     PGUSER: test
     PGPASSWORD: pw
     NODE_ENV: test
+    ALLOW_CONFIG_MUTATIONS: "true"
   services:
     - postgres
   script:
@@ -82,6 +83,7 @@ test:firefox:
     PGUSER: test
     PGPASSWORD: pw
     NODE_ENV: test
+    ALLOW_CONFIG_MUTATIONS: "true"
   services:
     - postgres
   script:
@@ -100,6 +102,20 @@ push:latest:
     - docker push $IMAGE_ORG/$IMAGE_NAME:latest
   only:
   - master
+
+staging:xpub-collabra:
+  image: pubsweet/deployer:latest
+  stage: staging
+  variables:
+    PACKAGE_NAME: xpub-collabra
+  environment:
+    name: $PACKAGE_NAME/staging
+    url: "https://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
+  only:
+  - master
+  script:
+    - source deploy.sh
+    - create_deployment
 
 # review:xpub-collabra:
 #   image: pubsweet/deployer:latest
@@ -136,20 +152,6 @@ push:latest:
 #     - source deploy.sh
 #     - delete_deployment
 #     - delete_objects_in_environment pvc
-
-# staging:xpub-collabra:
-#   image: pubsweet/deployer:latest
-#   stage: staging
-#   variables:
-#     PACKAGE_NAME: xpub-collabra
-#   environment:
-#     name: $PACKAGE_NAME/staging
-#     url: "https://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
-#   only:
-#   - master
-#   script:
-#     - source deploy.sh
-#     - create_deployment
 
 production:xpub-collabra:
   image: pubsweet/deployer:latest

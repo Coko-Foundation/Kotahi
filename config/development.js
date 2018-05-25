@@ -9,8 +9,8 @@ module.exports = {
   },
   dbManager: {
     username: 'admin',
-    password: 'password',
-    email: 'admin@example.com',
+    password: '12345678',
+    email: 'admin@admin.com',
     admin: true,
   },
 }

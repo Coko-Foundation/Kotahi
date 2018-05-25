@@ -10,4 +10,4 @@ services:
 
   postgres:
     ports:
-      - "5440:5432"
+      - "5432:5432"
