@@ -519,18 +519,32 @@ class XpubCollabraMode {
 
   async canViewPage() {
     this.user = await this.context.models.User.find(this.userId)
-    const { path } = this.object
+    const { path, params } = this.object
     if (path === '/projects/:project/versions/:version/submit') {
-      // this.checkPageSubmit(params)
-      return true
+      return this.checkPageSubmit(params)
     }
 
     return true
   }
 
-  checkPageSubmit(params) {
-    this.context.models.Collections.find(params.project.id)
-    return true
+  async checkPageSubmit(params) {
+    const collection = this.context.models.Collection.find(params.project)
+    let permission = await this.isAuthor(collection)
+
+    permission = permission
+      ? true
+      : await !this.canReadatLeastOneFragmentOfCollection(collection, [
+          'isAssignedReviewerEditor',
+        ])
+
+    permission = permission
+      ? true
+      : await this.checkTeamMembers(
+          ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+          collection,
+        )
+
+    return permission
   }
 
   async checkTeamMembers(team, object) {
