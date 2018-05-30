@@ -517,6 +517,22 @@ class XpubCollabraMode {
     return collection.some(collection => collection)
   }
 
+  async canViewPage() {
+    this.user = await this.context.models.User.find(this.userId)
+    const { path } = this.object
+    if (path === '/projects/:project/versions/:version/submit') {
+      // this.checkPageSubmit(params)
+      return true
+    }
+
+    return true
+  }
+
+  checkPageSubmit(params) {
+    this.context.models.Collections.find(params.project.id)
+    return true
+  }
+
   async checkTeamMembers(team, object) {
     const permission = await Promise.all(team.map(t => this[t](object)))
     return permission.includes(true)
@@ -686,6 +702,10 @@ module.exports = {
   'can view review section': (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
     return mode.canViewReviewSection()
+  },
+  'can view page': (userId, operation, object, context) => {
+    const mode = new XpubCollabraMode(userId, operation, object, context)
+    return mode.canViewPage()
   },
   create: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
