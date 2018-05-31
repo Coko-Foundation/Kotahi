@@ -486,9 +486,7 @@ class XpubCollabraMode {
     const collection = await Promise.all(
       this.object.map(async collection => this.isAuthor(collection)),
     )
-    return collection.length > 0
-      ? collection.some(collection => collection)
-      : false
+    return collection.some(collection => collection)
   }
 
   async canViewReviewSection() {
@@ -502,9 +500,7 @@ class XpubCollabraMode {
         return permission
       }),
     )
-    return collection.length > 0
-      ? collection.some(collection => collection)
-      : false
+    return collection.some(collection => collection)
   }
 
   async canViewManuscripts() {
@@ -517,9 +513,7 @@ class XpubCollabraMode {
         ),
       ),
     )
-    return collection.length > 0
-      ? collection.some(collection => collection)
-      : false
+    return collection.some(collection => collection)
   }
 
   async checkTeamMembers(team, object) {
