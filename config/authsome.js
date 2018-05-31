@@ -533,6 +533,11 @@ module.exports = {
   // to allow admin to do everything
   before: async (userId, operation, object, context) => {
     const user = await context.models.User.find(userId)
+
+    // we need to introduce a new Role Managing Editor
+    // currently we take for granted that an admin is the Managing Editor
+    // Temporally we need this if statement to prevent admin from seeing
+    // review and submission section on dashboard (ME permissions)
     if (
       operation === 'can view review section' ||
       operation === 'can view my submission section'
