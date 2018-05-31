@@ -513,6 +513,7 @@ class XpubCollabraMode {
         ),
       ),
     )
+
     return collection.some(collection => collection)
   }
 
