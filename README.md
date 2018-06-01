@@ -16,7 +16,6 @@ This is the current set of features and their status on our roadmap.
 |System             |Write integration tests                        |&#x2714;       |           |
 |System             |Team Managment|||#194
 |Previous|
-
 |System             |Revisit data model                             |&#x2714;       |           |#67
 |Dashboard          |Change text for new submission button          |               |&#x2714;   |#156
 |Dashboard          |Provide feedback while ingesting docs          |               |&#x2714;   |#157
@@ -24,10 +23,8 @@ This is the current set of features and their status on our roadmap.
 |Dashboard          |Add streamlined review to displayed metadata   |               |&#x2714;   |#159
 |Dashboard          |Update text of manuscript statuses             |               |&#x2714;   |#112
 |Summary Info       |Reduce minimum title length                    |               |&#x2714;   |#164
-
 |Summary Info       |Display decision letter                        |               |&#x2714;   |#166
 |Summary Info       |Detailed author information                    |               |&#x2714;   |#115
-
 |Manuscript         |Link to Summary Info for this manuscript       |               |&#x2714;   |#114
 |Assign Reviewers   |Reviewer invitation email                      |               |&#x2714;   |#160
 |Assign Reviewers   |Link back to Control Panel                     |               |&#x2714;   |#155
@@ -36,11 +33,6 @@ This is the current set of features and their status on our roadmap.
 |Control Panel      |Show more complete set of metadata             |               |&#x2714;   |#131
 |Control Panel      |Assign editors                                 |               |&#x2714;   |#138
 |Control Panel      |Redesign uploaded files UI                     |               |&#x2714;   |#169
-
-<br/>
-If you want more detailed (and potentially more technical) information about the current set of tasks that are being worked on, you can go to
-
-* https://gitlab.coko.foundation/xpub/xpub/milestones/13
 
 ### PubSweet components
 The application consists primarily of the following high-level pubsweet components, which roughly correspond to the pages in the system:
