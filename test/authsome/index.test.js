@@ -5,9 +5,11 @@ const authsomeConfig = require('config').get('authsome')
 const collections = [
   {
     id: 'collection1',
+    fragments: ['fragment1'],
   },
   {
     id: 'collection2',
+    fragments: [],
   },
 ]
 
@@ -33,6 +35,14 @@ const teams = [
     teamType: 'managingEditor',
     // No associated object means this is a global team
   },
+  {
+    id: 'team4',
+    teamType: 'reviewer',
+    object: {
+      id: 'fragment1',
+      type: 'fragment',
+    },
+  },
 ]
 
 const users = [
@@ -50,6 +60,11 @@ const users = [
     id: 'user3',
     username: 'managingEditor1',
     teams: ['team3'],
+  },
+  {
+    id: 'user4',
+    username: 'reviewerEditor1',
+    teams: ['team4'],
   },
   {
     id: 'adminId',
@@ -84,8 +99,22 @@ describe('Handling Editor', () => {
     const permission = await authsome.can('user1', 'GET', {
       path: '/collections',
     })
+
     const filteredCollections = await permission.filter(collections)
+
     expect(filteredCollections).toEqual([collections[1]])
+  })
+})
+
+describe('Reviewer Editor', () => {
+  it('lists only collections where user is a member of the reviewer editors team', async () => {
+    const permission = await authsome.can('user4', 'GET', {
+      path: '/collections',
+    })
+
+    const filteredCollections = await permission.filter(collections)
+
+    expect(filteredCollections).toEqual([collections[0]])
   })
 })
 

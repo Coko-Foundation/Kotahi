@@ -62,6 +62,7 @@ class XpubCollabraMode {
     const memberships = await Promise.all(
       this.user.teams.map(async teamId => {
         const team = await this.context.models.Team.find(teamId)
+
         return membershipCondition(team)
       }),
     )
@@ -91,7 +92,13 @@ class XpubCollabraMode {
     if (!object || !object.owners || !this.user) {
       return false
     }
-    return object.owners.includes(this.user.id)
+
+    const authorCheck = object.owners.includes(this.user.id)
+    if (authorCheck) {
+      return true
+    }
+
+    return object.owners.some(user => user.id === this.user.id)
   }
 
   /**
@@ -132,6 +139,15 @@ class XpubCollabraMode {
   }
 
   /**
+   * Checks if user is a reviewer editor (member of a team of type reviewer editor) for an object
+   *
+   * @returns {boolean}
+   */
+  isAssignedReviewerEditor(object) {
+    return this.isTeamMember('reviewer', object)
+  }
+
+  /**
    * Checks if userId is present, indicating an authenticated user
    *
    * @param {any} userId
@@ -167,14 +183,30 @@ class XpubCollabraMode {
       return true
     }
 
-    const collection = await this.context.models.Collection.find(this.object.id)
+    const collection = this.object
 
-    const permission =
-      this.isAuthor(collection) ||
-      (await this.isAssignedHandlingEditor(collection)) ||
-      (await this.isAssignedSeniorEditor(collection))
+    let permission = this.checkTeamMembers(
+      ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+      collection,
+    )
 
+    permission = permission
+      ? true
+      : await this.canReadatLeastOneFragmentOfCollection(collection, [
+          'isAssignedReviewerEditor',
+        ])
+
+    permission = permission ? true : await this.isAuthor(collection)
     return permission
+  }
+
+  async canReadatLeastOneFragmentOfCollection(collection, teamMembers) {
+    const permission = await Promise.all(
+      collection.fragments.map(async fragmentId =>
+        this.checkTeamMembers(teamMembers, { id: fragmentId }),
+      ),
+    )
+    return permission.includes(true)
   }
 
   /**
@@ -244,17 +276,23 @@ class XpubCollabraMode {
     if (await this.isManagingEditor()) {
       return true
     }
-
     return {
       filter: async collections => {
         const filteredCollections = await Promise.all(
           collections.map(async collection => {
-            const condition =
-              this.isAuthor(collection) ||
-              (await this.isAssignedHandlingEditor(collection)) || // eslint-disable-line
-              (await this.isAssignedSeniorEditor(collection)) // eslint-disable-line
-            return condition ? collection : undefined // eslint-disable-line
-          }, this),
+            let condition = await this.checkTeamMembers(
+              ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+              collection,
+            )
+            condition = condition
+              ? true
+              : await this.canReadatLeastOneFragmentOfCollection(collection, [
+                  'isAssignedReviewerEditor',
+                ])
+
+            condition = condition ? true : await this.isAuthor(collection)
+            return condition ? collection : false
+          }),
         )
 
         return filteredCollections.filter(collection => collection)
@@ -300,6 +338,31 @@ class XpubCollabraMode {
   }
 
   /**
+   * Checks if a user can create a fragment in a specific collection
+   *
+   * @returns {boolean}
+   */
+  async canUpdateFragmentInACollection() {
+    if (!this.isAuthenticated()) {
+      return false
+    }
+
+    this.user = await this.context.models.User.find(this.userId)
+
+    const { collection } = this.object
+    if (collection) {
+      const permission =
+        this.isAuthor(collection) ||
+        (await this.isAssignedHandlingEditor(collection)) ||
+        (await this.isAssignedSeniorEditor(collection)) ||
+        (await this.isAssignedReviewerEditor(collection))
+      return permission
+    }
+
+    return false
+  }
+
+  /**
    * Checks if a user can be created
    *
    * @returns {boolean}
@@ -315,11 +378,18 @@ class XpubCollabraMode {
    * @returns {boolean}
    * @memberof XpubCollabraMode
    */
-  canCreateTeam() {
+  async canCreateTeam() {
     if (!this.isAuthenticated()) {
       return false
     }
-    return true
+    this.user = await this.context.models.User.find(this.userId)
+
+    const { teamType, object } = this.object.team
+    if (teamType === 'handlingEditor') {
+      return this.isAssignedSeniorEditor(object)
+    }
+
+    return false
   }
 
   /**
@@ -341,6 +411,116 @@ class XpubCollabraMode {
   async canReadTeam() {
     return true
   }
+
+  /**
+   * Checks if a user can list a team
+   *
+   * @returns {boolean}
+   */
+  // eslint-disable-next-line
+  async canListTeam() {
+    return true
+  }
+
+  /**
+   * Checks if a user can lists team
+   *
+   * @returns {boolean}
+   */
+  // eslint-disable-next-line
+  async canListTeams() {
+    return true
+  }
+
+  /**
+   * Checks if a user can update a fragment
+   *
+   * @returns {boolean}
+   */
+  async canUpdateFragment() {
+    this.user = await this.context.models.User.find(this.userId)
+    const permission =
+      this.isAuthor(this.object) ||
+      (await this.isAssignedHandlingEditor(this.object)) ||
+      (await this.isAssignedSeniorEditor(this.object)) ||
+      (await this.isAssignedReviewerEditor(this.object))
+    return permission
+  }
+
+  /**
+   * Checks if a user can update collection
+   *
+   * @returns {boolean}
+   */
+  async canUpdateCollection() {
+    this.user = await this.context.models.User.find(this.userId)
+    const collection = this.object
+    if (collection) {
+      return this.checkTeamMembers(
+        ['isAuthor', 'isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+        collection,
+      )
+    }
+    return false
+  }
+
+  /**
+   * Checks if editor can invite Reviewers
+   *
+   * @returns {boolean}
+   */
+  async canMakeInvitation() {
+    this.user = await this.context.models.User.find(this.userId)
+    const { collection } = this.object
+    if (collection) {
+      return this.checkTeamMembers(
+        ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+        collection,
+      )
+    }
+    return false
+  }
+
+  async canViewMySubmissionSection() {
+    this.user = await this.context.models.User.find(this.userId)
+    const collection = await Promise.all(
+      this.object.map(async collection => this.isAuthor(collection)),
+    )
+    return collection.some(collection => collection)
+  }
+
+  async canViewReviewSection() {
+    this.user = await this.context.models.User.find(this.userId)
+    const collection = await Promise.all(
+      this.object.map(async collection => {
+        const permission = await this.canReadatLeastOneFragmentOfCollection(
+          collection,
+          ['isAssignedReviewerEditor'],
+        )
+        return permission
+      }),
+    )
+    return collection.some(collection => collection)
+  }
+
+  async canViewManuscripts() {
+    this.user = await this.context.models.User.find(this.userId)
+    const collection = await Promise.all(
+      this.object.map(async collection =>
+        this.checkTeamMembers(
+          ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+          collection,
+        ),
+      ),
+    )
+
+    return collection.some(collection => collection)
+  }
+
+  async checkTeamMembers(team, object) {
+    const permission = await Promise.all(team.map(t => this[t](object)))
+    return permission.includes(true)
+  }
 }
 
 module.exports = {
@@ -348,11 +528,21 @@ module.exports = {
   // to allow admin to do everything
   before: async (userId, operation, object, context) => {
     const user = await context.models.User.find(userId)
+
+    // we need to introduce a new Role Managing Editor
+    // currently we take for granted that an admin is the Managing Editor
+    // Temporally we need this if statement to prevent admin from seeing
+    // review and submission section on dashboard (ME permissions)
+    if (
+      operation === 'can view review section' ||
+      operation === 'can view my submission section'
+    )
+      return false
+
     return user.admin
   },
   GET: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
-
     // GET /api/collections
     if (object && object.path === '/collections') {
       return mode.canListCollections()
@@ -428,6 +618,11 @@ module.exports = {
   PATCH: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
 
+    // PATCH /api/make-invitation
+    if (object && object.path === '/make-invitation') {
+      return mode.canMakeInvitation()
+    }
+
     // PATCH /api/collections/:id
     if (object && object.type === 'collection') {
       return mode.canUpdateCollection()
@@ -479,6 +674,18 @@ module.exports = {
   'list collections': (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
     return mode.canListCollections()
+  },
+  'can view my submission section': (userId, operation, object, context) => {
+    const mode = new XpubCollabraMode(userId, operation, object, context)
+    return mode.canViewMySubmissionSection()
+  },
+  'can view my manuscripts section': (userId, operation, object, context) => {
+    const mode = new XpubCollabraMode(userId, operation, object, context)
+    return mode.canViewManuscripts()
+  },
+  'can view review section': (userId, operation, object, context) => {
+    const mode = new XpubCollabraMode(userId, operation, object, context)
+    return mode.canViewReviewSection()
   },
   create: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
