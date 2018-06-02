@@ -3,7 +3,7 @@ import { Selector } from 'testcafe'
 const submission = {
   title: Selector('div[id="metadata.title"] div[contenteditable=true]'),
   abstract: Selector('div[id="metadata.abstract"] div[contenteditable=true]'),
-  addAuthor: Selector('button[type=button]').withText('Add another author'),
+  addAuthor: Selector('button[type=button]').withText('ADD ANOTHER AUTHOR'),
   authorFirstName: Selector(
     'div[id="metadata.authors"] input[name="metadata.authors[0].firstName"]',
   ),
