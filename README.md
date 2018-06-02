@@ -7,15 +7,15 @@ It is currently under development by the [Coko Foundation](https://coko.foundati
 This is the current set of features and their status on our roadmap.
 
 |Module             |Description                                    |In progress    |Done       |Issue
-|:---:              |---                                            |:---:          |:---:      |:---:
-|Current|
+|:---              |---                                            |:---:          |:---:      |:---:
+|**Current**|
 |Summary Info       |Update text for metadata questions             |&#x2714;       |           |#165
 |Summary Info       |Add instructions for uploading files           |&#x2714;       |           |#168
 |System             |Apply Coko theme                               |&#x2714;       |           |pubsweet/pubsweet#372
 |System             |Implement roles & permissions                  |&#x2714;       |           |#58
 |System             |Write integration tests                        |&#x2714;       |           |
 |System             |Team Managment|||#194
-|Previous|
+|**Previous**|
 |System             |Revisit data model                             |&#x2714;       |           |#67
 |Dashboard          |Change text for new submission button          |               |&#x2714;   |#156
 |Dashboard          |Provide feedback while ingesting docs          |               |&#x2714;   |#157
