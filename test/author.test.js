@@ -38,7 +38,7 @@ test('Manage submissions journey, create new submission', async t => {
 
   await t
     .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
-    .wait(30000)
+    .wait(40000)
     .expect(
       Selector('div[id="metadata.title"] div[contenteditable=true]').exists,
     )
