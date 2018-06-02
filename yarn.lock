@@ -99,10 +99,11 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@pubsweet/coko-theme@1.0.0":
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/@pubsweet/coko-theme/-/coko-theme-1.0.0.tgz#172036ac1dc31b41bcb071409c66faebff1a4a8d"
+"@pubsweet/coko-theme@2.0.0":
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/coko-theme/-/coko-theme-2.0.0.tgz#f23ae8b5fed12f3bce83767190144d76180fc1b7"
   dependencies:
+    "@pubsweet/ui-toolkit" "^1.0.0"
     cokourier-prime-sans "git+https://gitlab.coko.foundation/julientaq/cokourier-sans-prime.git"
     styled-components "^3.2.5"
     typeface-fira-sans-condensed "^0.0.54"
@@ -141,15 +142,23 @@
     joi "^13.1.0"
     lodash "^4.17.4"
 
-"@pubsweet/theme@^0.1.3":
-  version "0.1.3"
-  resolved "https://registry.yarnpkg.com/@pubsweet/theme/-/theme-0.1.3.tgz#2c508abc284a33ce14f1fa0a08486477def259a4"
+"@pubsweet/theme@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/theme/-/theme-1.0.0.tgz#19800c92430189c5cd89c74f76dd57ffc856a07e"
   dependencies:
     cokourier-prime-sans "git+https://gitlab.coko.foundation/julientaq/cokourier-sans-prime.git"
     typeface-fira-mono "^0.0.43"
     typeface-fira-sans "^0.0.43"
     typeface-fira-sans-condensed "^0.0.43"
     typeface-vollkorn "^0.0.43"
+
+"@pubsweet/ui-toolkit@^1.0.0":
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui-toolkit/-/ui-toolkit-1.0.0.tgz#df05b54e7bbfabcb10c7afc2991752e1087d2298"
+  dependencies:
+    color "^3.0.0"
+    lodash "^4.17.4"
+    styled-components "^3.2.5"
 
 "@pubsweet/ui@4.1.3", "@pubsweet/ui@^4.1.3":
   version "4.1.3"
@@ -2209,7 +2218,7 @@ collection-visit@^1.0.0:
     map-visit "^1.0.0"
     object-visit "^1.0.0"
 
-color-convert@^1.3.0, color-convert@^1.9.0:
+color-convert@^1.3.0, color-convert@^1.9.0, color-convert@^1.9.1:
   version "1.9.1"
   resolved "https://registry.yarnpkg.com/color-convert/-/color-convert-1.9.1.tgz#c1261107aeb2f294ebffec9ed9ecad529a6097ed"
   dependencies:
@@ -2225,6 +2234,13 @@ color-string@^0.3.0:
   dependencies:
     color-name "^1.0.0"
 
+color-string@^1.5.2:
+  version "1.5.2"
+  resolved "https://registry.yarnpkg.com/color-string/-/color-string-1.5.2.tgz#26e45814bc3c9a7cbd6751648a41434514a773a9"
+  dependencies:
+    color-name "^1.0.0"
+    simple-swizzle "^0.2.2"
+
 color@^0.11.0:
   version "0.11.4"
   resolved "https://registry.yarnpkg.com/color/-/color-0.11.4.tgz#6d7b5c74fb65e841cd48792ad1ed5e07b904d764"
@@ -2232,6 +2248,13 @@ color@^0.11.0:
     clone "^1.0.2"
     color-convert "^1.3.0"
     color-string "^0.3.0"
+
+color@^3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/color/-/color-3.0.0.tgz#d920b4328d534a3ac8295d68f7bd4ba6c427be9a"
+  dependencies:
+    color-convert "^1.9.1"
+    color-string "^1.5.2"
 
 colormin@^1.0.5:
   version "1.1.2"
@@ -4738,6 +4761,10 @@ is-alphanumerical@^1.0.0:
 is-arrayish@^0.2.1:
   version "0.2.1"
   resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.2.1.tgz#77c99840527aa8ecb1a8ba697b80645a7a926a9d"
+
+is-arrayish@^0.3.1:
+  version "0.3.1"
+  resolved "https://registry.yarnpkg.com/is-arrayish/-/is-arrayish-0.3.1.tgz#c2dfc386abaa0c3e33c48db3fe87059e69065efd"
 
 is-binary-path@^1.0.0:
   version "1.0.1"
@@ -7783,11 +7810,11 @@ public-encrypt@^4.0.0:
     parse-asn1 "^5.0.0"
     randombytes "^2.0.1"
 
-pubsweet-client@2.5.5:
-  version "2.5.5"
-  resolved "https://registry.yarnpkg.com/pubsweet-client/-/pubsweet-client-2.5.5.tgz#53235a55c2e806d22e572a12cf53da769c0adba2"
+pubsweet-client@3.0.0:
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/pubsweet-client/-/pubsweet-client-3.0.0.tgz#f67d26485138863c3a841960a4cd7ba955cb6db2"
   dependencies:
-    "@pubsweet/ui" "^4.1.3"
+    "@pubsweet/ui-toolkit" "^1.0.0"
     apollo-client-preset "^1.0.8"
     apollo-link "^1.2.1"
     apollo-link-context "^1.0.5"
@@ -7905,14 +7932,14 @@ pubsweet-component-xpub-find-reviewers@^0.0.6:
     react-router-dom "^4.2.2"
     recompose "^0.26.0"
 
-pubsweet-component-xpub-manuscript@^0.0.18:
-  version "0.0.18"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-manuscript/-/pubsweet-component-xpub-manuscript-0.0.18.tgz#c9ed4f56ac7ea2b8260b98ec5a671362d684553a"
+pubsweet-component-xpub-manuscript@^0.0.19:
+  version "0.0.19"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-manuscript/-/pubsweet-component-xpub-manuscript-0.0.19.tgz#94649fd780262d7624f039089cd0da1ec2f4516b"
   dependencies:
     prop-types "^15.5.10"
     recompose "^0.26.0"
     wax-editor-react "^0.1.10"
-    xpub-connect "^0.0.16"
+    xpub-connect "^1.0.0"
     xpub-selectors "^0.1.0"
 
 pubsweet-component-xpub-review-backend@^0.2.1:
@@ -7924,11 +7951,12 @@ pubsweet-component-xpub-review-backend@^0.2.1:
     lodash "^4.17.5"
     moment "^2.18.1"
 
-pubsweet-component-xpub-review@^0.4.2:
-  version "0.4.2"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review/-/pubsweet-component-xpub-review-0.4.2.tgz#e2e6aea106a4464f63eebb4a5baf47d9123c878e"
+pubsweet-component-xpub-review@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review/-/pubsweet-component-xpub-review-1.0.0.tgz#9985c3572bbb4b846521297ee3cd4a9158aaa5a7"
   dependencies:
     "@pubsweet/ui" "^4.1.3"
+    "@pubsweet/ui-toolkit" "^1.0.0"
     classnames "^2.2.5"
     lodash "^4.17.4"
     moment "^2.18.1"
@@ -7941,18 +7969,19 @@ pubsweet-component-xpub-review@^0.4.2:
     styled-components "^3.2.5"
     uuid "^3.1.0"
     wax-editor-react "^0.1.8"
-    xpub-connect "^0.0.16"
-    xpub-edit "^0.1.5"
+    xpub-connect "^1.0.0"
+    xpub-edit "^1.0.0"
     xpub-journal "^0.0.6"
     xpub-selectors "^0.1.0"
     xpub-upload "^0.0.7"
     xpub-validators "^0.0.5"
 
-pubsweet-component-xpub-submit@^1.2.2:
-  version "1.2.2"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-submit/-/pubsweet-component-xpub-submit-1.2.2.tgz#ec5b8ac8de4065ac9976decc41e9ea859bb7cb74"
+pubsweet-component-xpub-submit@^2.0.0:
+  version "2.0.0"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-submit/-/pubsweet-component-xpub-submit-2.0.0.tgz#a893167ac1626eed609883e63aec70db0b43625e"
   dependencies:
     "@pubsweet/ui" "^4.1.3"
+    "@pubsweet/ui-toolkit" "^1.0.0"
     apollo-client-preset "^1.0.8"
     lodash "^4.17.4"
     prop-types "^15.5.10"
@@ -7963,8 +7992,8 @@ pubsweet-component-xpub-submit@^1.2.2:
     redux-form "^7.0.3"
     striptags "^3.1.0"
     styled-components "^3.2.5"
-    xpub-connect "^0.0.16"
-    xpub-edit "^0.1.5"
+    xpub-connect "^1.0.0"
+    xpub-edit "^1.0.0"
     xpub-journal "^0.0.6"
     xpub-selectors "^0.1.0"
     xpub-upload "^0.0.7"
@@ -9152,6 +9181,12 @@ shellwords@^0.1.1:
 signal-exit@^3.0.0, signal-exit@^3.0.2:
   version "3.0.2"
   resolved "https://registry.yarnpkg.com/signal-exit/-/signal-exit-3.0.2.tgz#b5fdc08f1287ea1178628e415e25132b73646c6d"
+
+simple-swizzle@^0.2.2:
+  version "0.2.2"
+  resolved "https://registry.yarnpkg.com/simple-swizzle/-/simple-swizzle-0.2.2.tgz#a4da6b635ffcccca33f70d17cb92592de95e557a"
+  dependencies:
+    is-arrayish "^0.3.1"
 
 slash@^1.0.0:
   version "1.0.0"
@@ -10860,11 +10895,21 @@ xpub-connect@^0.0.16:
     recompose "^0.26.0"
     styled-components "^3.2.5"
 
-xpub-edit@^0.1.5:
-  version "0.1.5"
-  resolved "https://registry.yarnpkg.com/xpub-edit/-/xpub-edit-0.1.5.tgz#5adea215b77022a3484d0f157fc8ac8e065c8629"
+xpub-connect@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/xpub-connect/-/xpub-connect-1.0.0.tgz#2bf6a4cdea18b844e3a24c7a0cf875ccca8d83c3"
   dependencies:
-    "@pubsweet/ui" "^4.1.3"
+    "@pubsweet/ui-toolkit" "^1.0.0"
+    react-redux "^5.0.2"
+    react-router-dom "^4.2.2"
+    recompose "^0.26.0"
+    styled-components "^3.2.5"
+
+xpub-edit@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/xpub-edit/-/xpub-edit-1.0.0.tgz#218bada5fb26ed83485b6cb479b5c62adcb56368"
+  dependencies:
+    "@pubsweet/ui-toolkit" "^1.0.0"
     prosemirror-commands "^1.0.1"
     prosemirror-dropcursor "^1.0.0"
     prosemirror-gapcursor "^1.0.0"
@@ -10893,11 +10938,11 @@ xpub-selectors@^0.1.0:
   version "0.1.0"
   resolved "https://registry.yarnpkg.com/xpub-selectors/-/xpub-selectors-0.1.0.tgz#83f685c1a3917ea5d840a6e26f8c0854b28c7f0d"
 
-xpub-theme@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/xpub-theme/-/xpub-theme-0.0.5.tgz#8beda69ee452b3cf681f30934ae0c6e2c4186d31"
+xpub-theme@^0.0.7:
+  version "0.0.7"
+  resolved "https://registry.yarnpkg.com/xpub-theme/-/xpub-theme-0.0.7.tgz#5d3980939c0f57c5373f7c1e496fed2a954d6745"
   dependencies:
-    "@pubsweet/theme" "^0.1.3"
+    "@pubsweet/theme" "^1.0.0"
     cokourier-prime-sans "git+https://gitlab.coko.foundation/julientaq/cokourier-sans-prime.git"
     typeface-fira-mono "^0.0.43"
     typeface-fira-sans "^0.0.43"

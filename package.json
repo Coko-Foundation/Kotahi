@@ -14,7 +14,7 @@
     "url": "https://gitlab.coko.foundation/xpub/xpub"
   },
   "dependencies": {
-    "@pubsweet/coko-theme": "1.0.0",
+    "@pubsweet/coko-theme": "2.0.0",
     "@pubsweet/ui": "4.1.3",
     "babel-core": "^6.26.0",
     "config": "^1.26.2",
@@ -27,7 +27,7 @@
     "moment": "^2.18.1",
     "prop-types": "^15.5.10",
     "pubsweet": "2.2.1",
-    "pubsweet-client": "2.5.5",
+    "pubsweet-client": "3.0.0",
     "pubsweet-component-ink-backend": "^0.1.1",
     "pubsweet-component-ink-frontend": "^1.0.0",
     "pubsweet-component-login": "^1.0.1",
@@ -36,10 +36,10 @@
     "pubsweet-component-users-manager": "^2.0.1",
     "pubsweet-component-xpub-dashboard": "^0.3.2",
     "pubsweet-component-xpub-find-reviewers": "^0.0.6",
-    "pubsweet-component-xpub-manuscript": "^0.0.18",
-    "pubsweet-component-xpub-review": "^0.4.2",
+    "pubsweet-component-xpub-manuscript": "^0.0.19",
+    "pubsweet-component-xpub-review": "^1.0.0",
     "pubsweet-component-xpub-review-backend": "^0.2.1",
-    "pubsweet-component-xpub-submit": "^1.2.2",
+    "pubsweet-component-xpub-submit": "^2.0.0",
     "pubsweet-server": "^3.0.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
@@ -52,7 +52,7 @@
     "winston": "^2.4.0",
     "xpub-journal": "^0.0.5",
     "xpub-selectors": "^0.1.0",
-    "xpub-theme": "^0.0.5"
+    "xpub-theme": "^0.0.7"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
