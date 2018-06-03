@@ -7904,11 +7904,12 @@ pubsweet-component-users-manager@^2.0.1:
     react-redux "^5.0.6"
     redux "^3.7.2"
 
-pubsweet-component-xpub-dashboard@^0.3.2:
-  version "0.3.2"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-dashboard/-/pubsweet-component-xpub-dashboard-0.3.2.tgz#336ae1279b2dc757125ab9c40352e23a3ffa03cb"
+pubsweet-component-xpub-dashboard@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-dashboard/-/pubsweet-component-xpub-dashboard-1.0.0.tgz#38f0b271b486fd6949d8b12f28b36365da385aba"
   dependencies:
     "@pubsweet/ui" "^4.1.3"
+    "@pubsweet/ui-toolkit" "^1.0.0"
     classnames "^2.2.5"
     lodash "^4.17.4"
     prop-types "^15.5.10"
@@ -7919,7 +7920,7 @@ pubsweet-component-xpub-dashboard@^0.3.2:
     react-router-dom "^4.2.2"
     recompose "^0.26.0"
     styled-components "^3.2.5"
-    xpub-connect "^0.0.16"
+    xpub-connect "^1.0.0"
     xpub-journal "^0.0.6"
     xpub-selectors "^0.1.0"
     xpub-upload "^0.0.7"
@@ -10884,16 +10885,6 @@ xmlbuilder@4.2.1, xmlbuilder@^4.1.0:
   resolved "https://registry.yarnpkg.com/xmlbuilder/-/xmlbuilder-4.2.1.tgz#aa58a3041a066f90eaa16c2f5389ff19f3f461a5"
   dependencies:
     lodash "^4.0.0"
-
-xpub-connect@^0.0.16:
-  version "0.0.16"
-  resolved "https://registry.yarnpkg.com/xpub-connect/-/xpub-connect-0.0.16.tgz#f7ae3df86d1d73d25527222359839a729d1509a2"
-  dependencies:
-    "@pubsweet/ui" "^4.1.3"
-    react-redux "^5.0.2"
-    react-router-dom "^4.2.2"
-    recompose "^0.26.0"
-    styled-components "^3.2.5"
 
 xpub-connect@^1.0.0:
   version "1.0.0"
