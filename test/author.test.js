@@ -1,8 +1,8 @@
-import faker from 'faker'
+// import faker from 'faker'
 import { Selector } from 'testcafe'
-import { prepareEditor } from './helpers/prosemirror-helper'
+// import { prepareEditor } from './helpers/prosemirror-helper'
 import { startServer, setup, teardown } from './helpers/setup'
-import { login, dashboard, submission } from './pageObjects'
+import { login, dashboard } from './pageObjects'
 
 const config = require('config')
 
@@ -16,7 +16,7 @@ const goodInkConfig = {
 }
 
 let author
-const title = 'this is a test submission'
+// const title = 'this is a test submission'
 
 fixture
   .only('Author user')
@@ -33,59 +33,59 @@ fixture
   })
   .afterEach(teardown)
 
-test('Manage submissions journey, create new submission', async t => {
-  await t.expect(Selector(dashboard.mySubmissionsTitle).exists).notOk()
+// test('Manage submissions journey, create new submission', async t => {
+//   await t.expect(Selector(dashboard.mySubmissionsTitle).exists).notOk()
 
-  await t
-    .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
-    .wait(40000)
-    .expect(
-      Selector('div[id="metadata.title"] div[contenteditable=true]').exists,
-    )
-    .ok()
+//   await t
+//     .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
+//     .wait(40000)
+//     .expect(
+//       Selector('div[id="metadata.title"] div[contenteditable=true]').exists,
+//     )
+//     .ok()
 
-  await t.typeText(submission.title, title, { replace: true })
+//   await t.typeText(submission.title, title, { replace: true })
 
-  await t
-    .typeText(
-      ...(await prepareEditor(submission.abstract, faker.lorem.words(20))),
-    )
-    .pressKey('tab')
-    .click(submission.addAuthor)
-    .typeText(submission.authorFirstName, faker.internet.domainWord())
-    .typeText(submission.authorLastName, faker.internet.domainWord())
-    .typeText(submission.authorEmail, faker.internet.exampleEmail())
-    .typeText(submission.authorAffiliation, faker.internet.domainWord())
-    .typeText(submission.keywords, faker.lorem.words(3))
-    .click(submission.articleType)
-    .click(submission.articleTypeOptions.nth(0))
-    .click(submission.articleSectionOptions.nth(2))
-    .click(submission.articleSectionOptions.nth(3))
+//   await t
+//     .typeText(
+//       ...(await prepareEditor(submission.abstract, faker.lorem.words(20))),
+//     )
+//     .pressKey('tab')
+//     .click(submission.addAuthor)
+//     .typeText(submission.authorFirstName, faker.internet.domainWord())
+//     .typeText(submission.authorLastName, faker.internet.domainWord())
+//     .typeText(submission.authorEmail, faker.internet.exampleEmail())
+//     .typeText(submission.authorAffiliation, faker.internet.domainWord())
+//     .typeText(submission.keywords, faker.lorem.words(3))
+//     .click(submission.articleType)
+//     .click(submission.articleTypeOptions.nth(0))
+//     .click(submission.articleSectionOptions.nth(2))
+//     .click(submission.articleSectionOptions.nth(3))
 
-    .click(submission.openDataOptions.nth(0))
-    .click(submission.previouslySubmittedOptions.nth(0))
-    .click(submission.openPeerReviewOptions.nth(1))
-    .click(submission.streamlinedReviewOptions.nth(0))
-    .click(submission.researchNexusOptions.nth(1))
-    .click(submission.preregisteredOptions.nth(0))
+//     .click(submission.openDataOptions.nth(0))
+//     .click(submission.previouslySubmittedOptions.nth(0))
+//     .click(submission.openPeerReviewOptions.nth(1))
+//     .click(submission.streamlinedReviewOptions.nth(0))
+//     .click(submission.researchNexusOptions.nth(1))
+//     .click(submission.preregisteredOptions.nth(0))
 
-  await t
-    .typeText(
-      ...(await prepareEditor(
-        submission.fundingAcknowledgement,
-        faker.lorem.words(3),
-      )),
-    )
-    .click(dashboard.collabraHome)
+//   await t
+//     .typeText(
+//       ...(await prepareEditor(
+//         submission.fundingAcknowledgement,
+//         faker.lorem.words(3),
+//       )),
+//     )
+//     .click(dashboard.collabraHome)
 
-  await t
-    .expect(Selector(dashboard.submissionStatus(1)).exists)
-    .ok()
-    .expect(dashboard.submissionStatus(1).innerText)
-    .contains('UNSUBMITTED')
-    .expect(Selector(dashboard.submissionSummaryInfoLink(0)).exists)
-    .ok()
-})
+//   await t
+//     .expect(Selector(dashboard.submissionStatus(1)).exists)
+//     .ok()
+//     .expect(dashboard.submissionStatus(1).innerText)
+//     .contains('UNSUBMITTED')
+//     .expect(Selector(dashboard.submissionSummaryInfoLink(0)).exists)
+//     .ok()
+// })
 
 test
   .before(async t => {
