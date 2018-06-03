@@ -16,7 +16,7 @@ const goodInkConfig = {
 }
 
 let author
-const title = 'this is a test submission'
+// const title = 'this is a test submission'
 
 fixture
   .only('Author user')
