@@ -6,5 +6,6 @@
   "pubsweet-component-xpub-submit",
   "pubsweet-component-ink-backend",
   "pubsweet-component-login",
-  "pubsweet-component-signup"
+  "pubsweet-component-signup",
+  "pubsweet-component-xpub-teams-manager"
 ]
