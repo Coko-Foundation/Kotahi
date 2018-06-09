@@ -65,7 +65,9 @@ const App = ({
 
   links.push(
     <Authorize object={{}} operation="can view teams menu">
-      <Action to="/teams">Team Manager</Action>
+      <Action active={window.location.pathname === '/teams'} to="/teams">
+        Team Manager
+      </Action>
     </Authorize>,
   )
 
