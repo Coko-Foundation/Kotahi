@@ -6,6 +6,8 @@ import { login, dashboard } from './pageObjects'
 
 const config = require('config')
 
+const fixtures = require('pubsweet-server/test/fixtures/fixtures')
+
 const goodInkConfig = {
   inkEndpoint: 'http://inkdemo-api.coko.foundation/',
   email: 'editoria@coko.foundation',
