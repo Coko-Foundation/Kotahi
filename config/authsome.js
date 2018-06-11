@@ -517,6 +517,36 @@ class XpubCollabraMode {
     return collection.some(collection => collection)
   }
 
+  async canViewPage() {
+    this.user = await this.context.models.User.find(this.userId)
+    const { path, params } = this.object
+    if (path === '/projects/:project/versions/:version/submit') {
+      return this.checkPageSubmit(params)
+    }
+
+    return true
+  }
+
+  async checkPageSubmit(params) {
+    const collection = this.context.models.Collection.find(params.project)
+    let permission = await this.isAuthor(collection)
+
+    permission = permission
+      ? true
+      : await !this.canReadatLeastOneFragmentOfCollection(collection, [
+          'isAssignedReviewerEditor',
+        ])
+
+    permission = permission
+      ? true
+      : await this.checkTeamMembers(
+          ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+          collection,
+        )
+
+    return permission
+  }
+
   async checkTeamMembers(team, object) {
     const permission = await Promise.all(team.map(t => this[t](object)))
     return permission.includes(true)
@@ -686,6 +716,10 @@ module.exports = {
   'can view review section': (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
     return mode.canViewReviewSection()
+  },
+  'can view page': (userId, operation, object, context) => {
+    const mode = new XpubCollabraMode(userId, operation, object, context)
+    return mode.canViewPage()
   },
   create: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
