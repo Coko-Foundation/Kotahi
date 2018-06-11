@@ -17,9 +17,9 @@ module.exports = {
       submitted: Joi.date(),
       source: Joi.string(), // TODO: move to a file
       metadata: Joi.object({
-        title: Joi.string().allow(''),
-        abstract: Joi.string().allow(''),
-        articleType: Joi.string().allow(''),
+        title: Joi.string(),
+        abstract: Joi.string(),
+        articleType: Joi.string(),
         articleSection: Joi.array().items(Joi.string()),
         authors: Joi.array(),
         keywords: Joi.array(),
