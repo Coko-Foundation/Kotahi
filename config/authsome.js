@@ -524,6 +524,14 @@ class XpubCollabraMode {
       return this.checkPageSubmit(params)
     }
 
+    if (path === '/projects/:project/versions/:version/review') {
+      return this.checkPageReview(params)
+    }
+
+    if (path === '/projects/:project/versions/:version/decision/:project') {
+      return this.checkPageDecision(params)
+    }
+
     return true
   }
 
