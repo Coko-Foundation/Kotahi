@@ -52,7 +52,8 @@
     "winston": "^2.4.0",
     "xpub-journal": "^0.0.6",
     "xpub-selectors": "^0.1.0",
-    "xpub-theme": "^0.0.7"
+    "xpub-theme": "^0.0.7",
+    "dbcrypt": "^1.0.0"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
