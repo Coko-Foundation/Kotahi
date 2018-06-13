@@ -127,16 +127,17 @@
     pg "^7.4.1"
     pubsweet-server "^6.1.0"
 
-"@pubsweet/logger@^0.0.1":
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/@pubsweet/logger/-/logger-0.0.1.tgz#ec0c15f04e0c64232c29173848ffe6da8190c9c2"
-  dependencies:
-    config "^1.26.2"
-    joi "^10.6.0"
-
 "@pubsweet/logger@^0.2.2":
   version "0.2.2"
   resolved "https://registry.yarnpkg.com/@pubsweet/logger/-/logger-0.2.2.tgz#ef5680c766226d4b25c5915859ea259b8c688db3"
+  dependencies:
+    config "^1.26.2"
+    joi "^13.1.0"
+    lodash "^4.17.4"
+
+"@pubsweet/logger@^0.2.3":
+  version "0.2.3"
+  resolved "https://registry.yarnpkg.com/@pubsweet/logger/-/logger-0.2.3.tgz#e625e8cea3b61d283dc723fbad9da5e872704834"
   dependencies:
     config "^1.26.2"
     joi "^13.1.0"
@@ -160,9 +161,32 @@
     lodash "^4.17.4"
     styled-components "^3.2.5"
 
-"@pubsweet/ui@4.1.3", "@pubsweet/ui@^4.1.3":
-  version "4.1.3"
-  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-4.1.3.tgz#a8c65aa69618505a1e3777f4d18c3d676b800ee9"
+"@pubsweet/ui@5.0.0":
+  version "5.0.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-5.0.0.tgz#3e8765fafa1d73fb9081074f4ed58d4e559f2437"
+  dependencies:
+    babel-jest "^21.2.0"
+    classnames "^2.2.5"
+    enzyme "^3.2.0"
+    enzyme-adapter-react-16 "^1.1.1"
+    invariant "^2.2.3"
+    lodash "^4.17.4"
+    moment "^2.22.1"
+    prop-types "^15.5.10"
+    react "^16.2.0"
+    react-dom "^16.2.0"
+    react-feather "^1.0.8"
+    react-redux "^5.0.2"
+    react-router-dom "^4.2.2"
+    react-tag-autocomplete "^5.5.0"
+    recompose "^0.26.0"
+    redux "^3.6.0"
+    redux-form "^7.0.3"
+    styled-components "^3.2.5"
+
+"@pubsweet/ui@^3.3.4":
+  version "3.3.4"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-3.3.4.tgz#f4dda1e900268a7c460f01aec40da187518b6363"
   dependencies:
     babel-jest "^21.2.0"
     classnames "^2.2.5"
@@ -182,9 +206,9 @@
     redux-form "^7.0.3"
     styled-components "^3.2.5"
 
-"@pubsweet/ui@^3.3.4":
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-3.3.4.tgz#f4dda1e900268a7c460f01aec40da187518b6363"
+"@pubsweet/ui@^4.1.3":
+  version "4.1.3"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-4.1.3.tgz#a8c65aa69618505a1e3777f4d18c3d676b800ee9"
   dependencies:
     babel-jest "^21.2.0"
     classnames "^2.2.5"
@@ -3723,6 +3747,12 @@ fastparse@^1.1.1:
   version "1.1.1"
   resolved "https://registry.yarnpkg.com/fastparse/-/fastparse-1.1.1.tgz#d1e2643b38a94d7583b479060e6c4affc94071f8"
 
+faye-websocket@0.9.4:
+  version "0.9.4"
+  resolved "https://registry.yarnpkg.com/faye-websocket/-/faye-websocket-0.9.4.tgz#885934c79effb0409549e0c0a3801ed17a40cdad"
+  dependencies:
+    websocket-driver ">=0.5.1"
+
 fb-watchman@^2.0.0:
   version "2.0.0"
   resolved "https://registry.yarnpkg.com/fb-watchman/-/fb-watchman-2.0.0.tgz#54e9abf7dfa2f26cd9b1636c588c1afc05de5d58"
@@ -4535,6 +4565,10 @@ http-errors@~1.6.2:
     inherits "2.0.3"
     setprototypeof "1.1.0"
     statuses ">= 1.4.0 < 2"
+
+http-parser-js@>=0.4.0:
+  version "0.4.13"
+  resolved "https://registry.yarnpkg.com/http-parser-js/-/http-parser-js-0.4.13.tgz#3bd6d6fde6e3172c9334c3b33b6c193d80fe1137"
 
 http-signature@~1.1.0:
   version "1.1.1"
@@ -5472,7 +5506,7 @@ joi-browser@^10.0.6:
   version "10.6.1"
   resolved "https://registry.yarnpkg.com/joi-browser/-/joi-browser-10.6.1.tgz#1cfc1a244c9242327842c24354d8ead1c2fe3571"
 
-joi@^10.0.6, joi@^10.6.0:
+joi@^10.0.6:
   version "10.6.0"
   resolved "https://registry.yarnpkg.com/joi/-/joi-10.6.0.tgz#52587f02d52b8b75cdb0c74f0b164a191a0e1fc2"
   dependencies:
@@ -6354,6 +6388,10 @@ moment-duration-format@^1.3.0:
 moment@2.x.x, moment@^2.10.3, moment@^2.14.1, moment@^2.18.1:
   version "2.22.1"
   resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.1.tgz#529a2e9bf973f259c9643d237fda84de3a26e8ad"
+
+moment@^2.22.1:
+  version "2.22.2"
+  resolved "https://registry.yarnpkg.com/moment/-/moment-2.22.2.tgz#3c257f9839fc0e93ff53149632239eb90783ff66"
 
 morgan@^1.8.2:
   version "1.9.0"
@@ -7842,18 +7880,19 @@ pubsweet-client@3.0.0:
     styled-components "^3.2.5"
     styled-normalize "^3.0.1"
 
-pubsweet-component-ink-backend@^0.1.1:
-  version "0.1.1"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-ink-backend/-/pubsweet-component-ink-backend-0.1.1.tgz#a1ed929c91503c14e1d8aaedfde1d33c365ab30c"
+pubsweet-component-ink-backend@^0.2.10:
+  version "0.2.10"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-ink-backend/-/pubsweet-component-ink-backend-0.2.10.tgz#6df57c233233af077ac46054c129b27ee5c99e21"
   dependencies:
-    "@pubsweet/logger" "^0.0.1"
+    "@pubsweet/logger" "^0.2.3"
     busboy "^0.2.13"
     config "^1.26.1"
+    pusher-js "^4.2.1"
     request "^2.83.0"
     request-promise-native "^1.0.5"
     temp "^0.8.3"
 
-pubsweet-component-ink-frontend@^1.0.0, pubsweet-component-ink-frontend@^1.0.2:
+pubsweet-component-ink-frontend@^1.0.2:
   version "1.0.2"
   resolved "https://registry.yarnpkg.com/pubsweet-component-ink-frontend/-/pubsweet-component-ink-frontend-1.0.2.tgz#437f7ae8d94c3671d8cb4cf67570f17c17372a54"
   dependencies:
@@ -8131,6 +8170,13 @@ punycode@2.x.x, punycode@^2.1.0:
 punycode@^1.2.4, punycode@^1.4.1:
   version "1.4.1"
   resolved "https://registry.yarnpkg.com/punycode/-/punycode-1.4.1.tgz#c0d5a63b2718800ad8e1eb0fa5269c84dd41845e"
+
+pusher-js@^4.2.1:
+  version "4.2.2"
+  resolved "https://registry.yarnpkg.com/pusher-js/-/pusher-js-4.2.2.tgz#de391bfb14d221ef96f462304f8a73b95ce9acc5"
+  dependencies:
+    faye-websocket "0.9.4"
+    xmlhttprequest "^1.8.0"
 
 q@^1.1.2:
   version "1.5.1"
@@ -10707,6 +10753,17 @@ webpack@^3.8.1:
     webpack-sources "^1.0.1"
     yargs "^8.0.2"
 
+websocket-driver@>=0.5.1:
+  version "0.7.0"
+  resolved "https://registry.yarnpkg.com/websocket-driver/-/websocket-driver-0.7.0.tgz#0caf9d2d755d93aee049d4bdd0d3fe2cca2a24eb"
+  dependencies:
+    http-parser-js ">=0.4.0"
+    websocket-extensions ">=0.1.1"
+
+websocket-extensions@>=0.1.1:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/websocket-extensions/-/websocket-extensions-0.1.3.tgz#5d2ff22977003ec687a4b87073dfbbac146ccf29"
+
 whatwg-encoding@^1.0.1, whatwg-encoding@^1.0.3:
   version "1.0.3"
   resolved "https://registry.yarnpkg.com/whatwg-encoding/-/whatwg-encoding-1.0.3.tgz#57c235bc8657e914d24e1a397d3c82daee0a6ba3"
@@ -10886,6 +10943,10 @@ xmlbuilder@4.2.1, xmlbuilder@^4.1.0:
   dependencies:
     lodash "^4.0.0"
 
+xmlhttprequest@^1.8.0:
+  version "1.8.0"
+  resolved "https://registry.yarnpkg.com/xmlhttprequest/-/xmlhttprequest-1.8.0.tgz#67fe075c5c24fef39f9d65f5f7b7fe75171968fc"
+
 xpub-connect@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/xpub-connect/-/xpub-connect-1.0.0.tgz#2bf6a4cdea18b844e3a24c7a0cf875ccca8d83c3"
@@ -10910,13 +10971,6 @@ xpub-edit@^1.0.0:
     prosemirror-model "^1.0.0"
     prosemirror-state "^1.0.1"
     prosemirror-view "^1.0.0"
-
-xpub-journal@^0.0.5:
-  version "0.0.5"
-  resolved "https://registry.yarnpkg.com/xpub-journal/-/xpub-journal-0.0.5.tgz#def194bcb6254c2122125f5b2744d6b4ae1fded9"
-  dependencies:
-    prop-types "^15.5.10"
-    recompose "^0.26.0"
 
 xpub-journal@^0.0.6:
   version "0.0.6"
