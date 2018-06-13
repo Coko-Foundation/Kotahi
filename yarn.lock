@@ -2752,7 +2752,7 @@ date-now@^0.1.4:
   version "0.1.4"
   resolved "https://registry.yarnpkg.com/date-now/-/date-now-0.1.4.tgz#eaf439fd4d4848ad74e5cc7dbef200672b9e345b"
 
-dbcrypt@^2.0.1:
+dbcrypt@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/dbcrypt/-/dbcrypt-1.0.0.tgz#244ac76bbb88dd332b83a546d6ac3b1deb872a85"
   dependencies:
