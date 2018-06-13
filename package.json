@@ -53,7 +53,7 @@
     "xpub-journal": "^0.0.6",
     "xpub-selectors": "^0.1.0",
     "xpub-theme": "^0.0.7",
-    "dbcrypt": "^1.0.0"
+    "bcrypt": "^2.0.1"
   },
   "devDependencies": {
     "babel-core": "^6.26.0",
