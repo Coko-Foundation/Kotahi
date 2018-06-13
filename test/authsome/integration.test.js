@@ -40,18 +40,18 @@ describe('server integration', () => {
       expect(collection.type).toEqual(fixtures.collection.type)
     })
 
-    it('can create a collection through GraphQL', async () => {
-      const { body } = await api.graphql.query(
-        `mutation($input: String) {
-          createCollection(input: $input) { id, title, status }
-        }`,
-        {
-          input: JSON.stringify(collectionPaper1),
-        },
-        adminToken,
-      )
-      expect(body.data.createCollection.title).toEqual(collectionPaper1.title)
-    })
+    // it('can create a collection through GraphQL', async () => {
+    //   const { body } = await api.graphql.query(
+    //     `mutation($input: String) {
+    //       createCollection(input: $input) { id, title, status }
+    //     }`,
+    //     {
+    //       input: JSON.stringify(collectionPaper1),
+    //     },
+    //     adminToken,
+    //   )
+    //   expect(body.data.createCollection.title).toEqual(collectionPaper1.title)
+    // })
   })
 
   describe('user', () => {
@@ -138,46 +138,46 @@ describe('server integration', () => {
       })
     })
 
-    describe('GraphQL', () => {
-      it('can create a collection with GraphQL', async () => {
-        const { body } = await api.graphql.query(
-          `mutation($input: String) {
-            createCollection(input: $input) {
-              id
-              title
-              status
-            }
-          }`,
-          { input: JSON.stringify(collectionPaper1) },
-          userToken,
-        )
-        expect(body.data.createCollection.title).toEqual(collectionPaper1.title)
-      })
+    // describe('GraphQL', () => {
+    //   it('can create a collection with GraphQL', async () => {
+    //     const { body } = await api.graphql.query(
+    //       `mutation($input: String) {
+    //         createCollection(input: $input) {
+    //           id
+    //           title
+    //           status
+    //         }
+    //       }`,
+    //       { input: JSON.stringify(collectionPaper1) },
+    //       userToken,
+    //     )
+    //     expect(body.data.createCollection.title).toEqual(collectionPaper1.title)
+    //   })
 
-      it('can read a collection with GraphQL', async () => {
-        const collection = await new Collection({
-          title: 'Test',
-          owners: [user.id],
-        }).save()
+    //   it('can read a collection with GraphQL', async () => {
+    //     const collection = await new Collection({
+    //       title: 'Test',
+    //       owners: [user.id],
+    //     }).save()
 
-        const { body } = await api.graphql.query(
-          `query($id: ID) {
-              collection(id: $id) {
-                title
-                owners {
-                  id
-                }
-              }
-            }`,
-          { id: collection.id },
-          userToken,
-        )
+    //     const { body } = await api.graphql.query(
+    //       `query($id: ID) {
+    //           collection(id: $id) {
+    //             title
+    //             owners {
+    //               id
+    //             }
+    //           }
+    //         }`,
+    //       { id: collection.id },
+    //       userToken,
+    //     )
 
-        expect(body).toEqual({
-          data: { collection: { title: 'Test', owners: [{ id: user.id }] } },
-        })
-      })
-    })
+    //     expect(body).toEqual({
+    //       data: { collection: { title: 'Test', owners: [{ id: user.id }] } },
+    //     })
+    //   })
+    // })
   })
 
   describe('managing editor', () => {
