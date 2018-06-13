@@ -40,18 +40,18 @@ describe('server integration', () => {
       expect(collection.type).toEqual(fixtures.collection.type)
     })
 
-    it('can create a collection through GraphQL', async () => {
-      const { body } = await api.graphql.query(
-        `mutation($input: String) {
-          createCollection(input: $input) { id, title, status }
-        }`,
-        {
-          input: JSON.stringify(collectionPaper1),
-        },
-        adminToken,
-      )
-      expect(body.data.createCollection.title).toEqual(collectionPaper1.title)
-    })
+    // it('can create a collection through GraphQL', async () => {
+    //   const { body } = await api.graphql.query(
+    //     `mutation($input: String) {
+    //       createCollection(input: $input) { id, title, status }
+    //     }`,
+    //     {
+    //       input: JSON.stringify(collectionPaper1),
+    //     },
+    //     adminToken,
+    //   )
+    //   expect(body.data.createCollection.title).toEqual(collectionPaper1.title)
+    // })
   })
 
   describe('user', () => {
