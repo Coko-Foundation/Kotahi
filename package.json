@@ -29,7 +29,7 @@
     "prop-types": "^15.5.10",
     "pubsweet": "^2.2.4",
     "pubsweet-client": "3.0.0",
-    "pubsweet-component-ink-backend": "^0.2.10",
+    "pubsweet-component-ink-backend": "^0.1.1",
     "pubsweet-component-ink-frontend": "^1.0.2",
     "pubsweet-component-login": "^1.0.1",
     "pubsweet-component-signup": "^1.0.0",
