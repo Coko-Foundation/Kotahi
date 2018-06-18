@@ -258,6 +258,8 @@ class XpubCollabraMode {
     let permission = this.isAuthor(fragment)
 
     permission = permission ? true : this.isAssignedReviewerEditor(fragment)
+
+    permission = permission ? true : this.isAssignedManagingEditor(fragment)
     // Caveat: this means every logged-in user can read every fragment (but needs its UUID)
     // Ideally we'd check if the fragment (version) belongs to a collection (project)
     // where the user is a member of a team with the appropriate rights. However there is no
@@ -605,32 +607,32 @@ module.exports = {
   GET: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
     // GET /api/collections
-    if (object && object.path === '/collections') {
+    if (mode.object && mode.object.path === '/collections') {
       return mode.canListCollections()
     }
 
     // GET /api/users
-    if (object && object.path === '/users') {
+    if (mode.object && mode.object.path === '/users') {
       return mode.canListUsers()
     }
 
     // GET /api/fragments
-    if (object && object.path === '/fragments') {
+    if (mode.object && mode.object.path === '/fragments') {
       return mode.canListFragments()
     }
 
     // GET /api/teams
-    if (object && object.path === '/teams') {
+    if (mode.object && mode.object.path === '/teams') {
       return mode.canListTeams()
     }
 
     // GET /api/collection
-    if (object && object.type === 'collection') {
+    if (mode.object && mode.object.type === 'collection') {
       return mode.canReadCollection()
     }
 
     // GET /api/fragment
-    if (object && object.type === 'fragment') {
+    if (mode.object && mode.object.type === 'fragment') {
       return mode.canReadFragment()
     }
 
@@ -640,7 +642,7 @@ module.exports = {
     }
 
     // GET /api/user
-    if (object && object.type === 'user') {
+    if (mode.object && mode.object.type === 'user') {
       return mode.canReadUser()
     }
 
@@ -650,27 +652,30 @@ module.exports = {
     const mode = new XpubCollabraMode(userId, operation, object, context)
 
     // POST /api/collections
-    if (object && object.path === '/collections') {
+    if (mode.object && mode.object.path === '/collections') {
       return mode.canCreateCollection()
     }
 
     // POST /api/users
-    if (object && object.path === '/users') {
+    if (mode.object && mode.object.path === '/users') {
       return mode.canCreateUser()
     }
 
     // POST /api/fragments
-    if (object && object.path === '/fragments') {
+    if (mode.object && mode.object.path === '/fragments') {
       return mode.canCreateFragment()
     }
 
     // POST /api/collections/:collectionId/fragments
-    if (object && object.path === '/collections/:collectionId/fragments') {
+    if (
+      mode.object &&
+      mode.object.path === '/collections/:collectionId/fragments'
+    ) {
       return mode.canCreateFragmentInACollection()
     }
 
     // POST /api/teams
-    if (object && object.path === '/teams') {
+    if (mode.object && mode.object.path === '/teams') {
       return mode.canCreateTeam()
     }
 
