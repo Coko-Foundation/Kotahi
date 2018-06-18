@@ -13,7 +13,7 @@ class XpubCollabraMode {
   constructor(userId, operation, object, context) {
     this.userId = userId
     this.operation = XpubCollabraMode.mapOperation(operation)
-    this.object = object
+    this.object = object.current ? object.current : object
     this.context = context
   }
 
@@ -254,12 +254,15 @@ class XpubCollabraMode {
     if (!this.isAuthenticated()) {
       return false
     }
+    const fragment = this.object
+    let permission = this.isAuthor(fragment)
 
+    permission = permission ? true : this.isAssignedReviewerEditor(fragment)
     // Caveat: this means every logged-in user can read every fragment (but needs its UUID)
     // Ideally we'd check if the fragment (version) belongs to a collection (project)
     // where the user is a member of a team with the appropriate rights. However there is no
     // link from a fragment back to a collection at this point. Something to keep in mind!
-    return true
+    return permission
   }
 
   /**
@@ -444,6 +447,7 @@ class XpubCollabraMode {
       (await this.isAssignedHandlingEditor(this.object)) ||
       (await this.isAssignedSeniorEditor(this.object)) ||
       (await this.isAssignedReviewerEditor(this.object))
+
     return permission
   }
 
@@ -555,6 +559,25 @@ class XpubCollabraMode {
     return permission
   }
 
+  async checkPageReview(params) {
+    const collection = this.context.models.Collection.find(params.project)
+
+    const version = this.context.models.Fragment.find(params.version)
+
+    if (this.isAuthor(collection)) return false
+
+    let permission = await this.checkTeamMembers(
+      ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+      collection,
+    )
+
+    // set object to Fragment so can validate on canReadFragment
+    this.object = version
+    permission = permission ? true : await this.canReadFragment()
+
+    return permission
+  }
+
   async checkTeamMembers(team, object) {
     const permission = await Promise.all(team.map(t => this[t](object)))
     return permission.includes(true)
@@ -657,27 +680,27 @@ module.exports = {
     const mode = new XpubCollabraMode(userId, operation, object, context)
 
     // PATCH /api/make-invitation
-    if (object && object.path === '/make-invitation') {
+    if (mode.object && mode.object.path === '/make-invitation') {
       return mode.canMakeInvitation()
     }
 
     // PATCH /api/collections/:id
-    if (object && object.type === 'collection') {
+    if (mode.object && mode.object.type === 'collection') {
       return mode.canUpdateCollection()
     }
 
     // PATCH /api/users/:id
-    if (object && object.type === 'user') {
+    if (mode.object && mode.object.type === 'user') {
       return mode.canUpdateUser()
     }
 
     // PATCH /api/fragments/:id
-    if (object && object.type === 'fragment') {
+    if (mode.object && mode.object.type === 'fragment') {
       return mode.canUpdateFragment()
     }
 
     // PATCH /api/teams/:id
-    if (object && object.type === 'team') {
+    if (mode.object && mode.object.type === 'team') {
       return mode.canUpdateTeam()
     }
 
