@@ -62,7 +62,7 @@ class XpubCollabraMode {
     const memberships = await Promise.all(
       this.user.teams.map(async teamId => {
         const team = await this.context.models.Team.find(teamId)
-
+        if (!team) return [false]
         return membershipCondition(team)
       }),
     )
