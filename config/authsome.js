@@ -471,6 +471,18 @@ class XpubCollabraMode {
   }
 
   /**
+   * Checks if a user can delete fragment
+   *
+   * @returns {boolean}
+   */
+  async canDeleteFragment() {
+    this.user = await this.context.models.User.find(this.userId)
+    const fragment = this.object
+
+    return this.isAuthor(fragment) && !fragment.submitted
+  }
+
+  /**
    * Checks if editor can invite Reviewers
    *
    * @returns {boolean}
@@ -752,6 +764,9 @@ module.exports = {
   'can view review section': (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
     return mode.canViewReviewSection()
+  },
+  'can delete latest version': (userId, operation, object, context) => {
+    return this.DELETE(userId, operation, object, context)
   },
   'can view page': (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
