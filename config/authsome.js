@@ -512,11 +512,16 @@ class XpubCollabraMode {
   async canViewManuscripts() {
     this.user = await this.context.models.User.find(this.userId)
     const collection = await Promise.all(
-      this.object.map(async collection =>
-        this.checkTeamMembers(
-          ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
-          collection,
-        ),
+      this.object.map(
+        async collection =>
+          this.checkTeamMembers(
+            ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+            collection,
+          ) ||
+          !(
+            collection.status === 'revising' &&
+            collection.status === 'submitted'
+          ),
       ),
     )
 
