@@ -331,11 +331,10 @@ class XpubCollabraMode {
 
     const { collection } = this.object
     if (collection) {
-      const permission =
-        this.isAuthor(collection) ||
-        (await this.isAssignedHandlingEditor(collection)) ||
-        (await this.isAssignedSeniorEditor(collection))
-
+      const permission = await this.checkTeamMembers(
+        ['isAuthor', 'isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+        collection,
+      )
       return permission
     }
 
@@ -445,20 +444,26 @@ class XpubCollabraMode {
   async canUpdateFragment() {
     const { update, current } = this.object
     this.user = await this.context.models.User.find(this.userId)
-    const schema = ['decision', 'id']
+    const collection = await this.context.models.Collection.find(
+      current.collections[0],
+    )
+    const schemaEditors = ['decision', 'id', 'reviewers']
+    const schemaReviewers = ['id', 'reviewers']
 
-    let permission = this.isAuthor(current) && !current.submitted
+    let permission = (await this.isAuthor(current)) && !current.submitted
 
     permission = permission
       ? true
-      : this.checkTeamMembers(
+      : (await this.checkTeamMembers(
           ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
-          current,
-        ) && Object.keys(update).sort() === schema.sort()
+          collection,
+        )) &&
+        Object.keys(update).every(value => schemaEditors.indexOf(value) >= 0)
 
     permission = permission
       ? true
-      : await this.isAssignedReviewerEditor(this.object)
+      : (await this.isAssignedReviewerEditor(current)) &&
+        Object.keys(update).every(value => schemaReviewers.indexOf(value) >= 0)
 
     return permission
   }
@@ -660,7 +665,6 @@ module.exports = {
   },
   POST: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
-
     // POST /api/collections
     if (mode.object && mode.object.path === '/collections') {
       return mode.canCreateCollection()
@@ -693,14 +697,6 @@ module.exports = {
   },
   PATCH: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
-
-    // PATCH /api/make-invitation
-    if (
-      mode.object.current &&
-      mode.object.current.path === '/make-invitation'
-    ) {
-      return mode.canMakeInvitation()
-    }
 
     // PATCH /api/collections/:id
     if (mode.object.current && mode.object.current.type === 'collection') {
