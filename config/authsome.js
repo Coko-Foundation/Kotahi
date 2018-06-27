@@ -623,6 +623,7 @@ module.exports = {
   // to allow admin to do everything
   before: async (userId, operation, object, context) => {
     const user = await context.models.User.find(userId)
+    if (!user) return false
 
     // we need to introduce a new Role Managing Editor
     // currently we take for granted that an admin is the Managing Editor
