@@ -13,7 +13,7 @@ class XpubCollabraMode {
   constructor(userId, operation, object, context) {
     this.userId = userId
     this.operation = XpubCollabraMode.mapOperation(operation)
-    this.object = object.current ? object.current : object
+    this.object = object
     this.context = context
   }
 
@@ -331,11 +331,10 @@ class XpubCollabraMode {
 
     const { collection } = this.object
     if (collection) {
-      const permission =
-        this.isAuthor(collection) ||
-        (await this.isAssignedHandlingEditor(collection)) ||
-        (await this.isAssignedSeniorEditor(collection))
-
+      const permission = await this.checkTeamMembers(
+        ['isAuthor', 'isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+        collection,
+      )
       return permission
     }
 
@@ -443,12 +442,28 @@ class XpubCollabraMode {
    * @returns {boolean}
    */
   async canUpdateFragment() {
+    const { update, current } = this.object
     this.user = await this.context.models.User.find(this.userId)
-    const permission =
-      this.isAuthor(this.object) ||
-      (await this.isAssignedHandlingEditor(this.object)) ||
-      (await this.isAssignedSeniorEditor(this.object)) ||
-      (await this.isAssignedReviewerEditor(this.object))
+    const collection = await this.context.models.Collection.find(
+      current.collections[0],
+    )
+    const schemaEditors = ['decision', 'id', 'reviewers']
+    const schemaReviewers = ['id', 'reviewers']
+
+    let permission = (await this.isAuthor(current)) && !current.submitted
+
+    permission = permission
+      ? true
+      : (await this.checkTeamMembers(
+          ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+          collection,
+        )) &&
+        Object.keys(update).every(value => schemaEditors.indexOf(value) >= 0)
+
+    permission = permission
+      ? true
+      : (await this.isAssignedReviewerEditor(current)) &&
+        Object.keys(update).every(value => schemaReviewers.indexOf(value) >= 0)
 
     return permission
   }
@@ -460,11 +475,11 @@ class XpubCollabraMode {
    */
   async canUpdateCollection() {
     this.user = await this.context.models.User.find(this.userId)
-    const collection = this.object
-    if (collection) {
+    const { current } = this.object
+    if (current) {
       return this.checkTeamMembers(
         ['isAuthor', 'isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
-        collection,
+        current,
       )
     }
     return false
@@ -477,11 +492,11 @@ class XpubCollabraMode {
    */
   async canMakeInvitation() {
     this.user = await this.context.models.User.find(this.userId)
-    const { collection } = this.object
-    if (collection) {
+    const { current } = this.object
+    if (current) {
       return this.checkTeamMembers(
         ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
-        collection,
+        current,
       )
     }
     return false
@@ -655,7 +670,6 @@ module.exports = {
   },
   POST: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
-
     // POST /api/collections
     if (mode.object && mode.object.path === '/collections') {
       return mode.canCreateCollection()
@@ -689,28 +703,23 @@ module.exports = {
   PATCH: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
 
-    // PATCH /api/make-invitation
-    if (mode.object && mode.object.path === '/make-invitation') {
-      return mode.canMakeInvitation()
-    }
-
     // PATCH /api/collections/:id
-    if (mode.object && mode.object.type === 'collection') {
+    if (mode.object.current && mode.object.current.type === 'collection') {
       return mode.canUpdateCollection()
     }
 
     // PATCH /api/users/:id
-    if (mode.object && mode.object.type === 'user') {
+    if (mode.object.current && mode.object.current.type === 'user') {
       return mode.canUpdateUser()
     }
 
     // PATCH /api/fragments/:id
-    if (mode.object && mode.object.type === 'fragment') {
+    if (mode.object.current && mode.object.current.type === 'fragment') {
       return mode.canUpdateFragment()
     }
 
     // PATCH /api/teams/:id
-    if (mode.object && mode.object.type === 'team') {
+    if (mode.object.current && mode.object.current.type === 'team') {
       return mode.canUpdateTeam()
     }
 

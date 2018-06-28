@@ -13,6 +13,7 @@ module.exports = {
     {
       fragmentType: Joi.valid('version').required(),
       created: Joi.date(),
+      collections: Joi.array(),
       version: Joi.number(),
       submitted: Joi.date(),
       source: Joi.string(), // TODO: move to a file
