@@ -99,9 +99,9 @@
     lodash "^4.2.0"
     to-fast-properties "^2.0.0"
 
-"@pubsweet/coko-theme@2.1.0":
-  version "2.1.0"
-  resolved "https://registry.yarnpkg.com/@pubsweet/coko-theme/-/coko-theme-2.1.0.tgz#2a6746c718c3ff032246e8b68b5eaf47e264e793"
+"@pubsweet/coko-theme@3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/coko-theme/-/coko-theme-3.0.0.tgz#ae0c93f98f4fdf25845aebecdba42e58e21efa2d"
   dependencies:
     "@pubsweet/ui-toolkit" "^1.1.0"
     cokourier-prime-sans "git+https://gitlab.coko.foundation/julientaq/cokourier-sans-prime.git"
