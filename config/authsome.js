@@ -403,7 +403,7 @@ class XpubCollabraMode {
    */
   async canDeleteCollection() {
     this.user = await this.context.models.User.find(this.userId)
-    return this.isAuthor(this.object)
+    return this.isAuthor(this.object) && this.object.status !== 'revising'
   }
 
   /**
@@ -483,6 +483,18 @@ class XpubCollabraMode {
       )
     }
     return false
+  }
+
+  /**
+   * Checks if a user can delete fragment
+   *
+   * @returns {boolean}
+   */
+  async canDeleteFragment() {
+    this.user = await this.context.models.User.find(this.userId)
+    const fragment = this.object
+
+    return this.isAuthor(fragment) && !fragment.submitted
   }
 
   /**
@@ -739,7 +751,7 @@ module.exports = {
     }
 
     // DELETE /api/fragments/:id
-    if (object && object.type === 'fragments') {
+    if (object && object.type === 'fragment') {
       return mode.canDeleteFragment()
     }
 
@@ -766,6 +778,10 @@ module.exports = {
   'can view review section': (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
     return mode.canViewReviewSection()
+  },
+  'can delete collection': (userId, operation, object, context) => {
+    const mode = new XpubCollabraMode(userId, operation, object, context)
+    return mode.canDeleteCollection()
   },
   'can view page': (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
