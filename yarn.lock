@@ -185,28 +185,6 @@
     redux-form "^7.0.3"
     styled-components "^3.2.5"
 
-"@pubsweet/ui@^3.3.4":
-  version "3.3.4"
-  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-3.3.4.tgz#f4dda1e900268a7c460f01aec40da187518b6363"
-  dependencies:
-    babel-jest "^21.2.0"
-    classnames "^2.2.5"
-    enzyme "^3.2.0"
-    enzyme-adapter-react-16 "^1.1.1"
-    invariant "^2.2.3"
-    lodash "^4.17.4"
-    prop-types "^15.5.10"
-    react "^16.2.0"
-    react-dom "^16.2.0"
-    react-feather "^1.0.8"
-    react-redux "^5.0.2"
-    react-router-dom "^4.2.2"
-    react-tag-autocomplete "^5.5.0"
-    recompose "^0.26.0"
-    redux "^3.6.0"
-    redux-form "^7.0.3"
-    styled-components "^3.2.5"
-
 "@pubsweet/ui@^4.1.3":
   version "4.1.3"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-4.1.3.tgz#a8c65aa69618505a1e3777f4d18c3d676b800ee9"
@@ -7914,10 +7892,11 @@ pubsweet-component-ink-frontend@^1.0.2:
     react-redux "^5.0.6"
     redux "^3.7.2"
 
-pubsweet-component-login@^1.0.1:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-login/-/pubsweet-component-login-1.1.2.tgz#22aba7ed65f8cdc5157af3630cd758232aa71924"
+pubsweet-component-login@^1.1.3:
+  version "1.1.3"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-login/-/pubsweet-component-login-1.1.3.tgz#a8228ce854330c7f6620c6a45deb9e4acd1ee918"
   dependencies:
+    "@pubsweet/ui" "^5.0.1"
     prop-types "^15.5.10"
     react-redux "^5.0.6"
     react-router-dom "^4.2.2"
@@ -7925,11 +7904,11 @@ pubsweet-component-login@^1.0.1:
     recompose "^0.26.0"
     redux-form "^7.0.3"
 
-pubsweet-component-signup@^1.0.0:
-  version "1.0.12"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-signup/-/pubsweet-component-signup-1.0.12.tgz#a4037770750df5674d4d353741ab77ba9f1d7025"
+pubsweet-component-signup@^1.0.17:
+  version "1.0.17"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-signup/-/pubsweet-component-signup-1.0.17.tgz#f292bbb6b9d4b7b853f089774baee529b2ddc331"
   dependencies:
-    "@pubsweet/ui" "^3.3.4"
+    "@pubsweet/ui" "^4.1.3"
     prop-types "^15.5.10"
     react-bootstrap "^0.32.0"
     react-redux "^5.0.6"
