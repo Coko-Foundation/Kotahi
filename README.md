@@ -9,11 +9,12 @@ This is the current set of features and their status on our roadmap.
 |Module             |Description                                    |In progress    |Done       |Issue
 |:---              |---                                            |:---:          |:---:      |:---:
 |**Current**|
+|Summary Info       |Form builder for submission                    |               |&#x2714;   |#165
 |Summary Info       |Update text for metadata questions             |               |&#x2714;   |#165
 |Summary Info       |Add instructions for uploading files           |               |&#x2714;   |#168
-|System             |Apply Coko theme                               |&#x2714;       |           |pubsweet/pubsweet#372
+|System             |Apply Coko theme                               |               |&#x2714;   |pubsweet/pubsweet#372
 |System             |Implement roles & permissions                  |               |&#x2714;   |#58
-|System             |Write integration tests                        |&#x2714;       |           |
+|System             |Write integration tests                        |               |&#x2714;   |
 |System             |Team Managment                                 |               |&#x2714;   |#194
 |**Previous**|
 |System             |Revisit data model                             |&#x2714;       |           |#67
