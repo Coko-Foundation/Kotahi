@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { compose } from 'recompose'
 import { connect } from 'react-redux'
+import Authorize from 'pubsweet-client/src/helpers/Authorize'
 import { withRouter, matchPath } from 'react-router-dom'
 // import PropTypes from 'prop-types'
 
@@ -36,7 +37,7 @@ const App = ({
 }) => {
   const { pathname } = history.location
   const showLinks = pathname.match(/submit|manuscript/g)
-  let links
+  let links = []
 
   if (showLinks) {
     const params = getParams(pathname)
@@ -61,6 +62,14 @@ const App = ({
         ]
       : null
   }
+
+  links.push(
+    <Authorize object={{}} operation="can view teams menu">
+      <Action active={window.location.pathname === '/teams'} to="/teams">
+        Team Manager
+      </Action>
+    </Authorize>,
+  )
 
   return (
     <Root disableLinks={disableLinks}>

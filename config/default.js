@@ -8,15 +8,19 @@ module.exports = {
     teams: {
       seniorEditor: {
         name: 'Senior Editors',
+        permissions: '',
       },
       handlingEditor: {
         name: 'Handling Editors',
+        permissions: '',
       },
       managingEditor: {
         name: 'Managing Editors',
+        permissions: '',
       },
       reviewer: {
         name: 'Reviewer',
+        permissions: '',
       },
     },
   },

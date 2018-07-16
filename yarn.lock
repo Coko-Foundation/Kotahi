@@ -194,6 +194,29 @@
     redux-form "^7.0.3"
     styled-components "^3.2.5"
 
+"@pubsweet/ui@^7.0.0":
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-7.0.0.tgz#c4a203bce525a505601cd55f7e8e9f7f45d5e1af"
+  dependencies:
+    babel-jest "^21.2.0"
+    classnames "^2.2.5"
+    enzyme "^3.2.0"
+    enzyme-adapter-react-16 "^1.1.1"
+    invariant "^2.2.3"
+    lodash "^4.17.4"
+    moment "^2.22.1"
+    prop-types "^15.5.10"
+    react "^16.2.0"
+    react-dom "^16.2.0"
+    react-feather "^1.0.8"
+    react-redux "^5.0.2"
+    react-router-dom "^4.2.2"
+    react-tag-autocomplete "^5.5.0"
+    recompose "^0.26.0"
+    redux "^3.6.0"
+    redux-form "^7.0.3"
+    styled-components "^3.2.5"
+
 "@types/async@2.0.47":
   version "2.0.47"
   resolved "https://registry.yarnpkg.com/@types/async/-/async-2.0.47.tgz#f49ba1dd1f189486beb6e1d070a850f6ab4bd521"
@@ -8033,6 +8056,19 @@ pubsweet-component-xpub-submit@^4.0.3:
     xpub-selectors "^0.1.0"
     xpub-upload "^0.0.7"
     xpub-validators "^0.0.5"
+
+pubsweet-component-xpub-teams-manager@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-teams-manager/-/pubsweet-component-xpub-teams-manager-0.1.0.tgz#e18c7d0018ee694e007d83c1bd88d5bc24f36f14"
+  dependencies:
+    "@pubsweet/ui" "^7.0.0"
+    "@pubsweet/ui-toolkit" "^1.1.3"
+    prop-types "^15.5.10"
+    react-dom "^16.2.0"
+    react-redux "^5.0.6"
+    recompose "^0.26.0"
+    redux "^3.7.2"
+    styled-components "^3.2.5"
 
 pubsweet-server@^7.1.0:
   version "7.1.1"

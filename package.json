@@ -42,6 +42,7 @@
     "pubsweet-component-xpub-review-backend": "^0.2.3",
     "pubsweet-component-xpub-submit": "^4.0.3",
     "pubsweet-server": "^7.1.2",
+    "pubsweet-component-xpub-teams-manager": "^0.1.0",
     "react": "^16.2.0",
     "react-dom": "^16.2.0",
     "react-router-dom": "^4.2.2",
