@@ -542,13 +542,11 @@ class XpubCollabraMode {
       this.object.map(
         async collection =>
           this.checkTeamMembers(
-            ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+            ['isAdmin', 'isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
             collection,
-          ) ||
-          !(
-            collection.status === 'revising' &&
-            collection.status === 'submitted'
-          ),
+          ) &&
+          (collection.status === 'revising' ||
+            collection.status === 'submitted'),
       ),
     )
 
@@ -631,7 +629,8 @@ module.exports = {
     // review and submission section on dashboard (ME permissions)
     if (
       operation === 'can view review section' ||
-      operation === 'can view my submission section'
+      operation === 'can view my submission section' ||
+      operation === 'can view my manuscripts section'
     )
       return false
 
