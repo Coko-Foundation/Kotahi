@@ -33,7 +33,10 @@ const teams = [
   {
     id: 'team3',
     teamType: 'managingEditor',
-    // No associated object means this is a global team
+    object: {
+      id: 'collection1',
+      type: 'collection',
+    },
   },
   {
     id: 'team4',
@@ -41,6 +44,14 @@ const teams = [
     object: {
       id: 'fragment1',
       type: 'fragment',
+    },
+  },
+  {
+    id: 'team5',
+    teamType: 'managingEditor',
+    object: {
+      id: 'collection2',
+      type: 'collection',
     },
   },
 ]
@@ -59,7 +70,7 @@ const users = [
   {
     id: 'user3',
     username: 'managingEditor1',
-    teams: ['team3'],
+    teams: ['team3', 'team5'],
   },
   {
     id: 'user4',
@@ -133,6 +144,8 @@ describe('Managing Editor', () => {
     const permission = await authsome.can('user3', 'GET', {
       path: '/collections',
     })
-    expect(permission).toBe(true)
+    const filteredCollections = await permission.filter(collections)
+
+    expect(filteredCollections).toEqual(collections)
   })
 })

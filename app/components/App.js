@@ -1,8 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
-import { compose } from 'recompose'
+import { compose, withState, withHandlers, lifecycle } from 'recompose'
 import { connect } from 'react-redux'
-import Authorize from 'pubsweet-client/src/helpers/Authorize'
+import withAuthsome from 'pubsweet-client/src/helpers/withAuthsome'
 import { withRouter, matchPath } from 'react-router-dom'
 // import PropTypes from 'prop-types'
 
@@ -27,6 +27,7 @@ const Root = styled.div`
 `
 
 const App = ({
+  authorized,
   children,
   currentUser,
   journal,
@@ -48,13 +49,13 @@ const App = ({
     links = showLinks
       ? [
           <Action
-            active={window.location.pathname === submitLink}
+            active={(window.location.pathname === submitLink).toString()}
             to={submitLink}
           >
             Summary Info
           </Action>,
           <Action
-            active={window.location.pathname === manuscriptLink}
+            active={(window.location.pathname === manuscriptLink).toString()}
             to={manuscriptLink}
           >
             Manuscript
@@ -63,13 +64,16 @@ const App = ({
       : null
   }
 
-  links.push(
-    <Authorize object={{}} operation="can view teams menu">
-      <Action active={window.location.pathname === '/teams'} to="/teams">
+  if (authorized) {
+    links.push(
+      <Action
+        active={(window.location.pathname === '/teams').toString()}
+        to="/teams"
+      >
         Team Manager
-      </Action>
-    </Authorize>,
-  )
+      </Action>,
+    )
+  }
 
   return (
     <Root disableLinks={disableLinks}>
@@ -93,6 +97,21 @@ export default compose(
     }),
     { logoutUser: actions.logoutUser },
   ),
+  withAuthsome(),
+  withState('authorized', 'authorizeCheck', false),
+  withHandlers({
+    authorizeCheckfn: ({ authorizeCheck, currentUser, authsome }) => () =>
+      authsome
+        .can(currentUser && currentUser.id, 'can view teams menu', {})
+        .then(result => authorizeCheck(() => result)),
+  }),
   withJournal,
   withRouter,
+  lifecycle({
+    componentDidUpdate(prevProps) {
+      if (prevProps.currentUser !== this.props.currentUser) {
+        this.props.authorizeCheckfn()
+      }
+    },
+  }),
 )(App)
