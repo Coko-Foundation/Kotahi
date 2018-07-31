@@ -134,8 +134,8 @@ class XpubCollabraMode {
    *
    * @returns {boolean}
    */
-  isManagingEditor() {
-    return this.isTeamMember('managingEditor')
+  isManagingEditor(object) {
+    return this.isTeamMember('managingEditor', object)
   }
 
   /**
@@ -179,11 +179,11 @@ class XpubCollabraMode {
 
     this.user = await this.context.models.User.find(this.userId)
 
-    if (await this.isManagingEditor()) {
+    const collection = this.object
+
+    if (await this.isManagingEditor(collection)) {
       return true
     }
-
-    const collection = this.object
 
     let permission = this.checkTeamMembers(
       ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
@@ -254,12 +254,30 @@ class XpubCollabraMode {
     if (!this.isAuthenticated()) {
       return false
     }
+
+    this.user = await this.context.models.User.find(this.userId)
+
     const fragment = this.object
     let permission = this.isAuthor(fragment)
 
-    permission = permission ? true : this.isAssignedReviewerEditor(fragment)
+    permission = permission
+      ? true
+      : await this.isAssignedReviewerEditor(fragment)
 
-    permission = permission ? true : this.isAssignedManagingEditor(fragment)
+    permission = permission
+      ? true
+      : await this.checkTeamMembers(
+          [
+            'isAssignedSeniorEditor',
+            'isAssignedHandlingEditor',
+            'isManagingEditor',
+          ],
+          { id: fragment.collections[0] },
+        )
+
+    // permission = permission
+    //   ? true
+    //   : await this.isAssignedManagingEditor(fragment)
     // Caveat: this means every logged-in user can read every fragment (but needs its UUID)
     // Ideally we'd check if the fragment (version) belongs to a collection (project)
     // where the user is a member of a team with the appropriate rights. However there is no
@@ -278,15 +296,16 @@ class XpubCollabraMode {
     }
     this.user = await this.context.models.User.find(this.userId)
 
-    if (await this.isManagingEditor()) {
-      return true
-    }
     return {
       filter: async collections => {
         const filteredCollections = await Promise.all(
           collections.map(async collection => {
             let condition = await this.checkTeamMembers(
-              ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+              [
+                'isAssignedSeniorEditor',
+                'isAssignedHandlingEditor',
+                'isManagingEditor',
+              ],
               collection,
             )
             condition = condition
@@ -437,6 +456,16 @@ class XpubCollabraMode {
   }
 
   /**
+   * Checks if a user can lists fragments
+   *
+   * @returns {boolean}
+   */
+  // eslint-disable-next-line
+  async canListFragments() {
+    return true
+  }
+
+  /**
    * Checks if a user can update a fragment
    *
    * @returns {boolean}
@@ -564,7 +593,7 @@ class XpubCollabraMode {
       return this.checkPageReview(params)
     }
 
-    if (path === '/projects/:project/versions/:version/decision/:project') {
+    if (path === '/projects/:project/versions/:version/decisions/:decision') {
       return this.checkPageDecision(params)
     }
 
@@ -591,21 +620,28 @@ class XpubCollabraMode {
     return permission
   }
 
-  async checkPageReview(params) {
+  async checkPageDecision(params) {
     const collection = this.context.models.Collection.find(params.project)
-
-    const version = this.context.models.Fragment.find(params.version)
 
     if (this.isAuthor(collection)) return false
 
-    let permission = await this.checkTeamMembers(
+    const permission = await this.checkTeamMembers(
       ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
       collection,
     )
 
-    // set object to Fragment so can validate on canReadFragment
-    this.object = version
-    permission = permission ? true : await this.canReadFragment()
+    return permission
+  }
+
+  async checkPageReview(params) {
+    const collection = this.context.models.Collection.find(params.project)
+
+    if (this.isAuthor(collection)) return false
+
+    const permission = await this.checkTeamMembers(
+      ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+      collection,
+    )
 
     return permission
   }
@@ -638,6 +674,7 @@ module.exports = {
   },
   GET: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
+
     // GET /api/collections
     if (mode.object && mode.object.path === '/collections') {
       return mode.canListCollections()

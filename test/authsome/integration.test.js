@@ -194,12 +194,6 @@ describe('server integration', () => {
           }),
         ).save()
 
-        await new Team({
-          name: 'Managing Editors',
-          teamType: 'managingEditor',
-          members: [editor.id],
-        }).save()
-
         const versionA1 = await new Fragment({
           fragmentType: 'version',
           version: 1,
@@ -225,6 +219,19 @@ describe('server integration', () => {
         await paperA.save()
         await paperB.save()
 
+        await versionA1.updateProperties({ collections: [paperA.id] })
+        await versionA1.save()
+
+        await new Team({
+          name: 'Managing Editors',
+          teamType: 'managingEditor',
+          members: [editor.id],
+          object: {
+            id: paperA.id,
+            type: 'collection',
+          },
+        }).save()
+
         editorToken = authentication.token.create(editor)
       })
 
@@ -234,7 +241,7 @@ describe('server integration', () => {
           .expect(200)
           .then(res => res.body)
 
-        expect(collections).toHaveLength(2)
+        expect(collections).toHaveLength(1)
       })
 
       it('can list all versions (fragments) of a project (collection)', async () => {
