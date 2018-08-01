@@ -570,10 +570,10 @@ class XpubCollabraMode {
     const collection = await Promise.all(
       this.object.map(
         async collection =>
-          this.checkTeamMembers(
+          (await this.checkTeamMembers(
             ['isAdmin', 'isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
             collection,
-          ) &&
+          )) &&
           (collection.status === 'revising' ||
             collection.status === 'submitted'),
       ),
@@ -589,7 +589,10 @@ class XpubCollabraMode {
       return this.checkPageSubmit(params)
     }
 
-    if (path === '/projects/:project/versions/:version/review') {
+    if (
+      path === '/projects/:project/versions/:version/review' ||
+      path === '/projects/:project/versions/:version/reviewers'
+    ) {
       return this.checkPageReview(params)
     }
 
@@ -635,8 +638,6 @@ class XpubCollabraMode {
 
   async checkPageReview(params) {
     const collection = this.context.models.Collection.find(params.project)
-
-    if (this.isAuthor(collection)) return false
 
     const permission = await this.checkTeamMembers(
       ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
