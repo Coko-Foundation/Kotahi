@@ -49,13 +49,15 @@ const App = ({
     links = showLinks
       ? [
           <Action
-            active={(window.location.pathname === submitLink).toString()}
+            active={window.location.pathname === submitLink ? 'active' : null}
             to={submitLink}
           >
             Summary Info
           </Action>,
           <Action
-            active={(window.location.pathname === manuscriptLink).toString()}
+            active={
+              window.location.pathname === manuscriptLink ? 'active' : null
+            }
             to={manuscriptLink}
           >
             Manuscript
@@ -67,7 +69,7 @@ const App = ({
   if (authorized) {
     links.push(
       <Action
-        active={(window.location.pathname === '/teams').toString()}
+        active={window.location.pathname === '/teams' ? 'active' : null}
         to="/teams"
       >
         Team Manager
