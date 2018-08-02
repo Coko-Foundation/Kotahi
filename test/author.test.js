@@ -1,10 +1,9 @@
-// import faker from 'faker'
+import config from 'config'
 import { Selector } from 'testcafe'
-// import { prepareEditor } from './helpers/prosemirror-helper'
+import { createSubmission } from './helpers/submission'
 import { startServer, setup, teardown } from './helpers/setup'
-import { login, dashboard } from './pageObjects'
-
-const config = require('config')
+import { setupWithTwoUnsubmittedManuscripts } from './fixtures/manuscript-setup/setup-two-unsubmitted'
+import { login, dashboard, submission, confirmation } from './pageObjects'
 
 const goodInkConfig = {
   inkEndpoint: 'http://inkdemo-api.coko.foundation/',
@@ -16,7 +15,6 @@ const goodInkConfig = {
 }
 
 let author
-// const title = 'this is a test submission'
 
 fixture
   .only('Author user')
@@ -24,77 +22,38 @@ fixture
     config['pubsweet-component-ink-backend'] = goodInkConfig
     await startServer()
   })
-  .beforeEach(async () => {
-    const result = await setup()
-
-    author = result.userData
-
-    await login.doLogin(author.username, author.password)
-  })
   .afterEach(teardown)
 
-// test('Manage submissions journey, create new submission', async t => {
-//   await t.expect(Selector(dashboard.mySubmissionsTitle).exists).notOk()
+test.skip
+  .before(async t => {
+    const result = await setup()
+    author = result.userData
+    await login.doLogin(author.username, author.password)
+  })('create new submission', async t => {
+    await t.expect(Selector(dashboard.mySubmissionsTitle).exists).notOk()
 
-//   await t
-//     .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
-//     .wait(40000)
-//     .expect(
-//       Selector('div[id="metadata.title"] div[contenteditable=true]').exists,
-//     )
-//     .ok()
+    await createSubmission('./fixtures/testSubmission1.docx')
 
-//   await t.typeText(submission.title, title, { replace: true })
+    await t.click(dashboard.collabraHome)
 
-//   await t
-//     .typeText(
-//       ...(await prepareEditor(submission.abstract, faker.lorem.words(20))),
-//     )
-//     .pressKey('tab')
-//     .click(submission.addAuthor)
-//     .typeText(submission.authorFirstName, faker.internet.domainWord())
-//     .typeText(submission.authorLastName, faker.internet.domainWord())
-//     .typeText(submission.authorEmail, faker.internet.exampleEmail())
-//     .typeText(submission.authorAffiliation, faker.internet.domainWord())
-//     .typeText(submission.keywords, faker.lorem.words(3))
-//     .click(submission.articleType)
-//     .click(submission.articleTypeOptions.nth(0))
-//     .click(submission.articleSectionOptions.nth(2))
-//     .click(submission.articleSectionOptions.nth(3))
-
-//     .click(submission.openDataOptions.nth(0))
-//     .click(submission.previouslySubmittedOptions.nth(0))
-//     .click(submission.openPeerReviewOptions.nth(1))
-//     .click(submission.streamlinedReviewOptions.nth(0))
-//     .click(submission.researchNexusOptions.nth(1))
-//     .click(submission.preregisteredOptions.nth(0))
-
-//   await t
-//     .typeText(
-//       ...(await prepareEditor(
-//         submission.fundingAcknowledgement,
-//         faker.lorem.words(3),
-//       )),
-//     )
-//     .click(dashboard.collabraHome)
-
-//   await t
-//     .expect(Selector(dashboard.submissionStatus(1)).exists)
-//     .ok()
-//     .expect(dashboard.submissionStatus(1).innerText)
-//     .contains('UNSUBMITTED')
-//     .expect(Selector(dashboard.submissionSummaryInfoLink(0)).exists)
-//     .ok()
-// })
+    await t
+      .expect(Selector(dashboard.submissionStatus(1)).exists)
+      .ok()
+      .expect(dashboard.submissionStatus(1).innerText)
+      .contains('UNSUBMITTED')
+      .expect(Selector(dashboard.submissionSummaryInfoLink(0)).exists)
+      .ok()
+  })
+  .after(async t => {
+    teardown()
+  })
 
 test
   .before(async t => {
-    startServer()
     const result = await setup()
-
     author = result.userData
     await login.doLogin(author.username, author.password)
-  })('Manage submissions journey, failed new submission', async t => {
+  })('Failed new submission', async t => {
     await t
       .setFilesToUpload(dashboard.createSubmission, ['./testSubmission1.docx'])
       .expect(await Selector('div').withText('Internal Server Error').exists)
@@ -107,3 +66,71 @@ test
       JSON.parse(JSON.stringify(config.get('pubsweet-component-ink-backend'))),
     )
   })
+
+test.before(async t => {
+  await setupWithTwoUnsubmittedManuscripts()
+  await login.doLogin('john', 'johnjohn')
+})('Author submits manuscript', async t => {
+  await t
+    .wait(1000)
+    .click(dashboard.submissionSummaryInfoLink(1))
+    .wait(1000)
+    .click(submission.submit.withText('SUBMIT YOUR MANUSCRIPT'))
+    .wait(1000)
+    .expect(confirmation.returnToSubmission.exists)
+
+  await t.wait(500).click(confirmation.returnToSubmission)
+
+  await t
+    .expect(
+      Selector(submission.submit.withText('SUBMIT YOUR MANUSCRIPT')).exists,
+    )
+    .ok()
+
+  await t.click(submission.submit.withText('SUBMIT YOUR MANUSCRIPT'))
+
+  await t
+    .wait(1000)
+    .expect(confirmation.submitManuscript.exists)
+    .ok()
+
+  await t.wait(1000).click(confirmation.submitManuscript)
+
+  await t
+    .expect(Selector(dashboard.myManuscriptsTitle).exists) // fails when admin user == false
+    .ok()
+
+  await t
+    .expect(Selector(dashboard.manuscript(1)).exists)
+    .ok()
+    .expect(Selector(dashboard.manuscriptStatus(1)).exists)
+    .ok()
+    .expect(dashboard.manuscriptStatus(1).innerText)
+    .contains('SUBMITTED')
+
+    .expect(Selector(dashboard.submissionStatus(1)).exists)
+    .ok()
+    .expect(dashboard.submissionStatus(1).innerText)
+    .contains('UNSUBMITTED')
+
+  await t
+    .expect(Selector(dashboard.submissionStatus(2)).exists)
+    .ok()
+    .expect(dashboard.submissionStatus(2).innerText)
+    .contains('SUBMITTED')
+    .wait(5000)
+
+  await t
+    .expect(Selector(dashboard.submissionSummaryInfoLink(2)).exists)
+    .ok()
+    .click(dashboard.submissionSummaryInfoLink(2))
+    .wait(5000)
+    .expect(Selector(submission.authorFirstName).exists)
+    .ok()
+
+  await t
+    .expect(
+      Selector(submission.submit.withText('submit your manuscript')).exists,
+    )
+    .notOk()
+})
