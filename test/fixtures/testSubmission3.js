@@ -1,15 +1,3 @@
-export const collection = {
-  type: 'collection',
-  title: 'This is a dummy document for testing purposes',
-  owners: ['f34e6a7f-d078-4bcc-a45d-15b20ca06acf'],
-  status: 'submitted',
-  created: 1528544237670,
-  fragments: [
-    //"af967b77-b860-4e57-bd3c-dd1cf3373003"
-    fragment,
-  ],
-}
-
 export const fragment = {
   type: 'fragment',
   files: {
@@ -62,4 +50,16 @@ export const fragment = {
     previouslySubmitted: 'no',
   },
   fragmentType: 'version',
+}
+
+export const collection = {
+  type: 'collection',
+  title: 'This is a dummy document for testing purposes',
+  owners: ['f34e6a7f-d078-4bcc-a45d-15b20ca06acf'],
+  status: 'submitted',
+  created: 1528544237670,
+  fragments: [
+    // "af967b77-b860-4e57-bd3c-dd1cf3373003"
+    fragment,
+  ],
 }
