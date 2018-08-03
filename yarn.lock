@@ -152,14 +152,6 @@
     joi "^13.1.0"
     lodash "^4.17.4"
 
-"@pubsweet/logger@^0.2.3":
-  version "0.2.3"
-  resolved "https://registry.yarnpkg.com/@pubsweet/logger/-/logger-0.2.3.tgz#e625e8cea3b61d283dc723fbad9da5e872704834"
-  dependencies:
-    config "^1.26.2"
-    joi "^13.1.0"
-    lodash "^4.17.4"
-
 "@pubsweet/theme@^1.0.0":
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/@pubsweet/theme/-/theme-1.0.0.tgz#19800c92430189c5cd89c74f76dd57ffc856a07e"
@@ -173,6 +165,14 @@
 "@pubsweet/ui-toolkit@^1.1.3":
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui-toolkit/-/ui-toolkit-1.1.3.tgz#20416f0a4e80eb580aa68867ceb155cb67a620ee"
+  dependencies:
+    color "^3.0.0"
+    lodash "^4.17.4"
+    styled-components "^3.2.5"
+
+"@pubsweet/ui-toolkit@^1.2.0":
+  version "1.2.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui-toolkit/-/ui-toolkit-1.2.0.tgz#5531149fa2229acc06e76e964b8a412bf503c4ce"
   dependencies:
     color "^3.0.0"
     lodash "^4.17.4"
@@ -206,6 +206,30 @@
   version "7.0.0"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-7.0.0.tgz#c4a203bce525a505601cd55f7e8e9f7f45d5e1af"
   dependencies:
+    babel-jest "^21.2.0"
+    classnames "^2.2.5"
+    enzyme "^3.2.0"
+    enzyme-adapter-react-16 "^1.1.1"
+    invariant "^2.2.3"
+    lodash "^4.17.4"
+    moment "^2.22.1"
+    prop-types "^15.5.10"
+    react "^16.2.0"
+    react-dom "^16.2.0"
+    react-feather "^1.0.8"
+    react-redux "^5.0.2"
+    react-router-dom "^4.2.2"
+    react-tag-autocomplete "^5.5.0"
+    recompose "^0.26.0"
+    redux "^3.6.0"
+    redux-form "^7.0.3"
+    styled-components "^3.2.5"
+
+"@pubsweet/ui@^8.2.0", "@pubsweet/ui@^8.3.0":
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-8.3.0.tgz#b8da7be8d9110594abdd18476e3808c9606a74b4"
+  dependencies:
+    "@pubsweet/ui-toolkit" "^1.2.0"
     babel-jest "^21.2.0"
     classnames "^2.2.5"
     enzyme "^3.2.0"
@@ -7897,6 +7921,16 @@ prosemirror-state@^1.0.0, prosemirror-state@^1.0.1:
     prosemirror-model "^1.0.0"
     prosemirror-transform "^1.0.0"
 
+prosemirror-tables@^0.7.5:
+  version "0.7.6"
+  resolved "https://registry.yarnpkg.com/prosemirror-tables/-/prosemirror-tables-0.7.6.tgz#1e9e2cf2f3f2b8d4eb59bd9485b5ece0285029e1"
+  dependencies:
+    prosemirror-keymap "^1.0.0"
+    prosemirror-model "^1.0.0"
+    prosemirror-state "^1.0.0"
+    prosemirror-transform "^1.0.0"
+    prosemirror-view "^1.0.0"
+
 prosemirror-transform@^1.0.0:
   version "1.0.10"
   resolved "https://registry.yarnpkg.com/prosemirror-transform/-/prosemirror-transform-1.0.10.tgz#0e4af6b9babb8d985f0a145f10b859815fc5033c"
@@ -7948,11 +7982,11 @@ public-encrypt@^4.0.0:
     parse-asn1 "^5.0.0"
     randombytes "^2.0.1"
 
-pubsweet-client@4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/pubsweet-client/-/pubsweet-client-4.0.3.tgz#18de448c0f7756e930724da384f5b83833c70ce2"
+pubsweet-client@4.0.4:
+  version "4.0.4"
+  resolved "https://registry.yarnpkg.com/pubsweet-client/-/pubsweet-client-4.0.4.tgz#cd54a927b9701126e4ba6a25b759c6da4d981606"
   dependencies:
-    "@pubsweet/ui" "^8.1.0"
+    "@pubsweet/ui" "^8.2.0"
     "@pubsweet/ui-toolkit" "^1.1.3"
     apollo-cache-inmemory "^1.2.4"
     apollo-client "^2.3.4"
@@ -8046,12 +8080,12 @@ pubsweet-component-users-manager@^2.0.1:
     react-redux "^5.0.6"
     redux "^3.7.2"
 
-pubsweet-component-xpub-dashboard@^3.0.3:
-  version "3.0.3"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-dashboard/-/pubsweet-component-xpub-dashboard-3.0.3.tgz#8d8a3d68c62dd989f6b358b80895de73ef77b18b"
+pubsweet-component-xpub-dashboard@^3.0.6:
+  version "3.0.7"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-dashboard/-/pubsweet-component-xpub-dashboard-3.0.7.tgz#22067ab96fc3823ab6c401af5ae38fec35698e35"
   dependencies:
-    "@pubsweet/ui" "^8.1.0"
-    "@pubsweet/ui-toolkit" "^1.1.3"
+    "@pubsweet/ui" "^8.3.0"
+    "@pubsweet/ui-toolkit" "^1.2.0"
     classnames "^2.2.5"
     lodash "^4.17.4"
     prop-types "^15.5.10"
@@ -8062,7 +8096,7 @@ pubsweet-component-xpub-dashboard@^3.0.3:
     react-router-dom "^4.2.2"
     recompose "^0.26.0"
     styled-components "^3.2.5"
-    xpub-connect "^1.1.3"
+    xpub-connect "^1.1.4"
     xpub-journal "^0.0.6"
     xpub-selectors "^0.1.0"
     xpub-upload "^0.0.7"
@@ -8075,14 +8109,14 @@ pubsweet-component-xpub-find-reviewers@^0.0.6:
     react-router-dom "^4.2.2"
     recompose "^0.26.0"
 
-pubsweet-component-xpub-manuscript@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-manuscript/-/pubsweet-component-xpub-manuscript-0.2.0.tgz#cf047c8f7915bfc7edf6468b9a011c9e18d5163b"
+pubsweet-component-xpub-manuscript@^0.4.0:
+  version "0.4.1"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-manuscript/-/pubsweet-component-xpub-manuscript-0.4.1.tgz#53052692abe3c50eafd20065a782d5c5957c7372"
   dependencies:
     prop-types "^15.5.10"
     recompose "^0.26.0"
-    wax-editor-react "^0.2.3"
-    xpub-connect "^1.1.3"
+    wax-editor-react "^0.2.5"
+    xpub-connect "^1.1.4"
     xpub-selectors "^0.1.0"
 
 pubsweet-component-xpub-review-backend@^0.2.3:
@@ -8094,12 +8128,12 @@ pubsweet-component-xpub-review-backend@^0.2.3:
     lodash "^4.17.5"
     moment "^2.18.1"
 
-pubsweet-component-xpub-review@^3.1.1:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review/-/pubsweet-component-xpub-review-3.1.1.tgz#a324ba30cf445992e4b4fb2f0725da35ef348ae1"
+pubsweet-component-xpub-review@^3.1.4:
+  version "3.1.5"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-review/-/pubsweet-component-xpub-review-3.1.5.tgz#ab784455fd6b114f657c18a65f6559ad5bfd267a"
   dependencies:
-    "@pubsweet/ui" "^8.1.0"
-    "@pubsweet/ui-toolkit" "^1.1.3"
+    "@pubsweet/ui" "^8.3.0"
+    "@pubsweet/ui-toolkit" "^1.2.0"
     classnames "^2.2.5"
     lodash "^4.17.4"
     moment "^2.18.1"
@@ -8112,19 +8146,19 @@ pubsweet-component-xpub-review@^3.1.1:
     styled-components "^3.2.5"
     uuid "^3.1.0"
     wax-editor-react "^0.2.3"
-    xpub-connect "^1.1.3"
-    xpub-edit "^2.2.0"
+    xpub-connect "^1.1.4"
+    xpub-edit "^2.4.1"
     xpub-journal "^0.0.6"
     xpub-selectors "^0.1.0"
     xpub-upload "^0.0.7"
     xpub-validators "^0.0.5"
 
-pubsweet-component-xpub-submit@^4.0.3:
-  version "4.0.3"
-  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-submit/-/pubsweet-component-xpub-submit-4.0.3.tgz#0fcfecefeaca90d5b1bfec30a570033d4fe5a7be"
+pubsweet-component-xpub-submit@^4.0.6:
+  version "4.0.7"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-submit/-/pubsweet-component-xpub-submit-4.0.7.tgz#4ab6a4171b646b99265ca0f177993c24405f89f5"
   dependencies:
-    "@pubsweet/ui" "^8.1.0"
-    "@pubsweet/ui-toolkit" "^1.1.3"
+    "@pubsweet/ui" "^8.3.0"
+    "@pubsweet/ui-toolkit" "^1.2.0"
     apollo-client-preset "^1.0.8"
     lodash "^4.17.4"
     prop-types "^15.5.10"
@@ -8136,8 +8170,8 @@ pubsweet-component-xpub-submit@^4.0.3:
     redux-form "^7.0.3"
     striptags "^3.1.0"
     styled-components "^3.2.5"
-    xpub-connect "^1.1.3"
-    xpub-edit "^2.2.0"
+    xpub-connect "^1.1.4"
+    xpub-edit "^2.4.1"
     xpub-journal "^0.0.6"
     xpub-selectors "^0.1.0"
     xpub-upload "^0.0.7"
@@ -8194,9 +8228,9 @@ pubsweet-server@^7.1.0:
     uuid "^3.0.1"
     winston "^2.2.0"
 
-pubsweet-server@^7.1.2:
-  version "7.1.2"
-  resolved "https://registry.yarnpkg.com/pubsweet-server/-/pubsweet-server-7.1.2.tgz#d50b835fc74857dc09917003727528c0bb09bcb1"
+pubsweet-server@^7.2.0:
+  version "7.2.0"
+  resolved "https://registry.yarnpkg.com/pubsweet-server/-/pubsweet-server-7.2.0.tgz#b930f910b013957e2dfd54b856f2f91ead2b9351"
   dependencies:
     "@pubsweet/logger" "^0.2.4"
     apollo-server-express "^1.3.2"
@@ -10795,7 +10829,7 @@ wax-editor-core@^0.6.4:
     lodash "^4.17.4"
     substance "1.0.0-beta.6.5"
 
-wax-editor-react@^0.2.3:
+wax-editor-react@^0.2.3, wax-editor-react@^0.2.5:
   version "0.2.5"
   resolved "https://registry.yarnpkg.com/wax-editor-react/-/wax-editor-react-0.2.5.tgz#c622c0558932c9dee2a94973f66752242d8b97d4"
   dependencies:
@@ -11045,21 +11079,21 @@ xmlbuilder@4.2.1, xmlbuilder@^4.1.0:
   dependencies:
     lodash "^4.0.0"
 
-xpub-connect@^1.1.3:
-  version "1.1.3"
-  resolved "https://registry.yarnpkg.com/xpub-connect/-/xpub-connect-1.1.3.tgz#3a60de1f1a7aa2b6cc102d50b9877e03033ce971"
+xpub-connect@^1.1.4:
+  version "1.1.4"
+  resolved "https://registry.yarnpkg.com/xpub-connect/-/xpub-connect-1.1.4.tgz#1e7232429a2f77d3ac28cfa1144bb569cbc15f99"
   dependencies:
-    "@pubsweet/ui-toolkit" "^1.1.3"
+    "@pubsweet/ui-toolkit" "^1.2.0"
     react-redux "^5.0.2"
     react-router-dom "^4.2.2"
     recompose "^0.26.0"
     styled-components "^3.2.5"
 
-xpub-edit@^2.2.0:
-  version "2.2.0"
-  resolved "https://registry.yarnpkg.com/xpub-edit/-/xpub-edit-2.2.0.tgz#a38bd6d4debfc7a777477c8720ce65009c86bd91"
+xpub-edit@^2.4.1:
+  version "2.4.1"
+  resolved "https://registry.yarnpkg.com/xpub-edit/-/xpub-edit-2.4.1.tgz#0c86f30367ff8181db6148ab0af89637855ca97a"
   dependencies:
-    "@pubsweet/ui-toolkit" "^1.1.3"
+    "@pubsweet/ui-toolkit" "^1.2.0"
     prosemirror-commands "^1.0.1"
     prosemirror-dropcursor "^1.0.0"
     prosemirror-gapcursor "^1.0.0"
@@ -11070,6 +11104,7 @@ xpub-edit@^2.2.0:
     prosemirror-schema-basic "^1.0.0"
     prosemirror-schema-list "^1.0.0"
     prosemirror-state "^1.0.1"
+    prosemirror-tables "^0.7.5"
     prosemirror-view "^1.0.0"
 
 xpub-journal@^0.0.6:
