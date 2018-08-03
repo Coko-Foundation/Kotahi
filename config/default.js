@@ -134,6 +134,17 @@ module.exports = {
       'http://localhost:3000/password-reset',
     sender: process.env.PUBSWEET_PASSWORD_RESET_SENDER || 'dev@example.com',
   },
+  'pubsweet-component-xpub-dashboard': {
+    acceptUploadFiles: [
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
+      'application/x-latex',
+      'text/vnd.latex-z',
+      'text/x-tex',
+      'application/pdf',
+      'application/epub+zip',
+      'application/zip',
+    ],
+  },
   'pubsweet-component-ink-backend': {
     inkEndpoint:
       process.env.INK_ENDPOINT || 'http://inkdemo-api.coko.foundation/',
@@ -144,5 +155,10 @@ module.exports = {
       'editoria-typescript': '2',
     },
   },
-  publicKeys: ['pubsweet-client', 'authsome', 'validations'],
+  publicKeys: [
+    'pubsweet-client',
+    'authsome',
+    'validations',
+    'pubsweet-component-xpub-dashboard',
+  ],
 }
