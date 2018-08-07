@@ -9,10 +9,10 @@ This is the current set of features and their status on our roadmap.
 |Module             |Description                                    |In progress    |Done       |Issue
 |:---               |---                                            |:---:          |:---:      |:---:
 |**Current**|
-|Dashboard      |Users logging in should always start on Dashboard  |&#x2714;                |  |#206
-|Dashboard      |Lock Submission Info once manuscript is submitted  |&#x2714;                |  |#215
-|Dashboard      |Dashboard links error                              |&#x2714;                |  |#222
-|System         |File Attachments Submissions                       |&#x2714;                |  |#226
+|Dashboard      |Users logging in should always start on Dashboard  |                |&#x2714;  |#206
+|Dashboard      |Lock Submission Info once manuscript is submitted  |&#x2714;        |  |#215
+|Dashboard      |Dashboard links error                              |                |&#x2714;  |#222
+|System         |File Attachments Submissions                       |                |&#x2714;  |#226
 |Libero         |Libero  Sprint                       |&#x2714;                |  |#227
 |System         |GraphQL Research                      |&#x2714;                |  |#228
 |System         |Revisit data model                                 |       |&#x2714;           |#67
