@@ -16,7 +16,7 @@ module.exports = {
       collections: Joi.array(),
       version: Joi.number(),
       submitted: Joi.date(),
-      source: Joi.string(), // TODO: move to a file
+      source: Joi.string().allow(''), // TODO: move to a file
       metadata: Joi.object({
         title: Joi.string(),
         abstract: Joi.string(),
