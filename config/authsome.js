@@ -594,7 +594,7 @@ class XpubCollabraMode {
       return this.checkPageSubmit(params)
     }
 
-    if (path === '/projects/:project/versions/:version/reviews') {
+    if (path === '/projects/:project/versions/:version/reviews/:review') {
       return this.checkPageReviews(params)
     }
 
