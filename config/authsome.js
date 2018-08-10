@@ -594,6 +594,10 @@ class XpubCollabraMode {
       return this.checkPageSubmit(params)
     }
 
+    if (path === '/projects/:project/versions/:version/reviews') {
+      return this.checkPageReviews(params)
+    }
+
     if (
       path === '/projects/:project/versions/:version/review' ||
       path === '/projects/:project/versions/:version/reviewers'
@@ -636,6 +640,17 @@ class XpubCollabraMode {
     const permission = await this.checkTeamMembers(
       ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
       collection,
+    )
+
+    return permission
+  }
+
+  async checkPageReviews(params) {
+    const fragment = this.context.models.Fragment.find(params.version)
+
+    const permission = await this.checkTeamMembers(
+      ['isAssignedReviewerEditor'],
+      fragment,
     )
 
     return permission
