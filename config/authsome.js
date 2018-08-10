@@ -102,7 +102,7 @@ class XpubCollabraMode {
   }
 
   /**
-   * Checks if the user is an author, as represented with the owners
+   * Checks if the user is an admin, as represented with the owners
    * relationship
    *
    * @returns {boolean}
@@ -585,6 +585,11 @@ class XpubCollabraMode {
   async canViewPage() {
     this.user = await this.context.models.User.find(this.userId)
     const { path, params } = this.object
+
+    if (path === '/teams') {
+      return !!this.isAdmin()
+    }
+
     if (path === '/projects/:project/versions/:version/submit') {
       return this.checkPageSubmit(params)
     }
