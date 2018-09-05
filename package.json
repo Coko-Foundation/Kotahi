@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@pubsweet/coko-theme": "4.0.1",
-    "@pubsweet/ui": "8.1.0",
+    "@pubsweet/ui": "8.2.0",
     "@pubsweet/db-manager": "^1.1.0",
     "babel-core": "^6.26.0",
     "config": "^1.26.2",
@@ -41,6 +41,7 @@
     "pubsweet-component-xpub-review": "^3.1.4",
     "pubsweet-component-xpub-review-backend": "^0.2.3",
     "pubsweet-component-xpub-submit": "^4.0.6",
+    "pubsweet-component-xpub-formbuilder": "^0.1.0",
     "pubsweet-server": "^7.2.0",
     "pubsweet-component-xpub-teams-manager": "^0.1.0",
     "react": "^16.2.0",

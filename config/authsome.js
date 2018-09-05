@@ -845,7 +845,7 @@ module.exports = {
     const mode = new XpubCollabraMode(userId, operation, object, context)
     return mode.canViewPage()
   },
-  'can view teams menu': () => false,
+  'can view only admin': () => false,
   create: (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
 

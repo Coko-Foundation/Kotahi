@@ -20,6 +20,7 @@ import ReviewPage from 'pubsweet-component-xpub-review/src/components/ReviewPage
 import TeamPage from 'pubsweet-component-xpub-teams-manager/src/components/TeamsManagerPage'
 import DecisionPage from 'pubsweet-component-xpub-review/src/components/DecisionPage'
 import UsersManager from 'pubsweet-component-users-manager/src/UsersManagerContainer'
+import FormBuilderPage from 'pubsweet-component-xpub-formbuilder/src/components/FormBuilderPage'
 
 import App from './components/App'
 
@@ -48,6 +49,11 @@ const Routes = () => (
         path="/projects/:project/versions/:version/submit"
       />
       <PrivateRoute component={TeamPage} exact path="/teams" />
+      <PrivateRoute
+        component={FormBuilderPage}
+        exact
+        path="/admin/form-builder"
+      />
       <PrivateRoute
         component={ManuscriptPage}
         exact
