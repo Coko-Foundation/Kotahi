@@ -15,6 +15,10 @@ const getParams = routerPath => {
   return matchPath(routerPath, path).params
 }
 
+const MainPage = styled.div`
+  margin-top: 20px;
+`
+
 const Root = styled.div`
   ${({ disableLinks }) =>
     disableLinks &&
@@ -39,6 +43,7 @@ const App = ({
   const { pathname } = history.location
   const showLinks = pathname.match(/submit|manuscript/g)
   let links = []
+  const formBuilderLink = `/admin/form-builder`
 
   if (showLinks) {
     const params = getParams(pathname)
@@ -75,6 +80,15 @@ const App = ({
         Team Manager
       </Action>,
     )
+
+    links.push(
+      <Action
+        active={window.location.pathname === formBuilderLink ? 'active' : null}
+        to={formBuilderLink}
+      >
+        Form Builder
+      </Action>,
+    )
   }
 
   return (
@@ -86,7 +100,7 @@ const App = ({
         user={currentUser}
       />
 
-      <div>{children}</div>
+      <MainPage>{children}</MainPage>
     </Root>
   )
 }

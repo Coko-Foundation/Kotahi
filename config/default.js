@@ -32,6 +32,10 @@ module.exports = {
     from: 'dev@example.com',
     path: `${__dirname}/mailer`,
   },
+  'pubsweet-component-xpub-formbuilder': {
+    path: path.resolve(__dirname, '../app/storage/forms'),
+    components: require(path.resolve(__dirname, 'form-components.json')),
+  },
   'pubsweet-server': {
     db: {},
     port: 3000,
@@ -160,5 +164,6 @@ module.exports = {
     'authsome',
     'validations',
     'pubsweet-component-xpub-dashboard',
+    'pubsweet-component-xpub-formbuilder',
   ],
 }

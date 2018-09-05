@@ -178,9 +178,9 @@
     lodash "^4.17.4"
     styled-components "^3.2.5"
 
-"@pubsweet/ui@8.1.0", "@pubsweet/ui@^8.1.0":
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-8.1.0.tgz#3c0ac8dc9c03577e933c01a49b4fb51a61d3e075"
+"@pubsweet/ui@8.2.0":
+  version "8.2.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-8.2.0.tgz#fbd4b5eb08ceee430c5bfb4287d4c5f0883e31e6"
   dependencies:
     "@pubsweet/ui-toolkit" "^1.1.3"
     babel-jest "^21.2.0"
@@ -225,9 +225,57 @@
     redux-form "^7.0.3"
     styled-components "^3.2.5"
 
+"@pubsweet/ui@^8.1.0":
+  version "8.1.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-8.1.0.tgz#3c0ac8dc9c03577e933c01a49b4fb51a61d3e075"
+  dependencies:
+    "@pubsweet/ui-toolkit" "^1.1.3"
+    babel-jest "^21.2.0"
+    classnames "^2.2.5"
+    enzyme "^3.2.0"
+    enzyme-adapter-react-16 "^1.1.1"
+    invariant "^2.2.3"
+    lodash "^4.17.4"
+    moment "^2.22.1"
+    prop-types "^15.5.10"
+    react "^16.2.0"
+    react-dom "^16.2.0"
+    react-feather "^1.0.8"
+    react-redux "^5.0.2"
+    react-router-dom "^4.2.2"
+    react-tag-autocomplete "^5.5.0"
+    recompose "^0.26.0"
+    redux "^3.6.0"
+    redux-form "^7.0.3"
+    styled-components "^3.2.5"
+
 "@pubsweet/ui@^8.2.0", "@pubsweet/ui@^8.3.0":
   version "8.3.0"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-8.3.0.tgz#b8da7be8d9110594abdd18476e3808c9606a74b4"
+  dependencies:
+    "@pubsweet/ui-toolkit" "^1.2.0"
+    babel-jest "^21.2.0"
+    classnames "^2.2.5"
+    enzyme "^3.2.0"
+    enzyme-adapter-react-16 "^1.1.1"
+    invariant "^2.2.3"
+    lodash "^4.17.4"
+    moment "^2.22.1"
+    prop-types "^15.5.10"
+    react "^16.2.0"
+    react-dom "^16.2.0"
+    react-feather "^1.0.8"
+    react-redux "^5.0.2"
+    react-router-dom "^4.2.2"
+    react-tag-autocomplete "^5.5.0"
+    recompose "^0.26.0"
+    redux "^3.6.0"
+    redux-form "^7.0.3"
+    styled-components "^3.2.5"
+
+"@pubsweet/ui@^8.6.0":
+  version "8.6.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-8.6.0.tgz#8153cfbd3f2de5b07f04655b6f7b19a7aee5ca1e"
   dependencies:
     "@pubsweet/ui-toolkit" "^1.2.0"
     babel-jest "^21.2.0"
@@ -8108,6 +8156,19 @@ pubsweet-component-xpub-find-reviewers@^0.0.6:
     react-redux "^5.0.2"
     react-router-dom "^4.2.2"
     recompose "^0.26.0"
+
+pubsweet-component-xpub-formbuilder@^0.1.0:
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/pubsweet-component-xpub-formbuilder/-/pubsweet-component-xpub-formbuilder-0.1.0.tgz#1c6dadfe77146f17cba739ec53c40ec2b9d5eb7c"
+  dependencies:
+    "@pubsweet/ui" "^8.6.0"
+    "@pubsweet/ui-toolkit" "^1.1.3"
+    prop-types "^15.5.10"
+    react-dom "^16.2.0"
+    react-redux "^5.0.6"
+    recompose "^0.26.0"
+    redux "^3.7.2"
+    styled-components "^3.2.5"
 
 pubsweet-component-xpub-manuscript@^0.4.0:
   version "0.4.1"
