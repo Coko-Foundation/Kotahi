@@ -9,6 +9,10 @@ This is the current set of features and their status on our roadmap.
 |Module             |Description                                    |In progress    |Done       |Issue
 |:---               |---                                            |:---:          |:---:      |:---:
 |**Current**|
+|Dashboard      |Lock Submission Info once manuscript is submitted  |&#x2714;        |  |#215
+|System      |Mock graphql Server |       |&#x2714;   |#231
+|System      |GraphQL implementation of xpub FrontEnd Components  |&#x2714;        |  |#232
+|**Previous**|
 |Dashboard      |Users logging in should always start on Dashboard  |                |&#x2714;  |#206
 |Dashboard      |Lock Submission Info once manuscript is submitted  |&#x2714;        |  |#215
 |Dashboard      |Dashboard links error                              |                |&#x2714;  |#222
@@ -16,15 +20,6 @@ This is the current set of features and their status on our roadmap.
 |Libero         |Libero  Sprint                       |                |&#x2714;  |#227
 |System         |GraphQL Research                      |                |&#x2714;  |#228
 |System         |Revisit data model                                 |       |&#x2714;           |#67
-|**Previous**|
-|Summary Info       |Form builder for submission                    |               |&#x2714;   |#204
-|Summary Info       |Update text for metadata questions             |               |&#x2714;   |#165
-|Summary Info       |Add instructions for uploading files           |               |&#x2714;   |#168
-|System             |Apply Coko theme                               |               |&#x2714;   |pubsweet/pubsweet#372
-|System             |Implement roles & permissions                  |               |&#x2714;   |#58
-|System             |Write integration tests                        |               |&#x2714;   |
-|System             |Team Managment                                 |               |&#x2714;   |#194
-
 
 ### PubSweet components
 The application consists primarily of the following high-level pubsweet components, which roughly correspond to the pages in the system:
