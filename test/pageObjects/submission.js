@@ -4,18 +4,10 @@ const submission = {
   title: Selector('div[id="metadata.title"] div[contenteditable=true]'),
   abstract: Selector('div[id="metadata.abstract"] div[contenteditable=true]'),
   addAuthor: Selector('button[type=button]').withText('ADD ANOTHER AUTHOR'),
-  authorFirstName: Selector(
-    'div[id="metadata.authors"] input[name="metadata.authors[0].firstName"]',
-  ),
-  authorLastName: Selector(
-    'div[id="metadata.authors"] input[name="metadata.authors[0].lastName"]',
-  ),
-  authorEmail: Selector(
-    'div[id="metadata.authors"] input[name="metadata.authors[0].email"]',
-  ),
-  authorAffiliation: Selector(
-    'div[id="metadata.authors"] input[name="metadata.authors[0].affiliation"]',
-  ),
+  authorFirstName: Selector('input[name="metadata.authors[0].firstName"]'),
+  authorLastName: Selector('input[name="metadata.authors[0].lastName"]'),
+  authorEmail: Selector('input[name="metadata.authors[0].email"]'),
+  authorAffiliation: Selector('input[name="metadata.authors[0].affiliation"]'),
   keywords: Selector('div[id="metadata.keywords"] input'),
   articleType: Selector('div[id="metadata.articleType"] button'),
   articleTypeOptions: Selector(
