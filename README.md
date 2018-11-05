@@ -9,9 +9,9 @@ This is the current set of features and their status on our roadmap.
 |Module             |Description                                    |In progress    |Done       |Issue
 |:---               |---                                            |:---:          |:---:      |:---:
 |**Current**|
-|Dashboard      |Lock Submission Info once manuscript is submitted  |&#x2714;        |  |#215
+|Dashboard      |Lock Submission Info once manuscript is submitted  |       |&#x2714;  |#215
 |System      |Mock graphql Server |       |&#x2714;   |#231
-|System      |GraphQL implementation of xpub FrontEnd Components  |&#x2714;        |  |#232
+|System      |GraphQL implementation of xpub FrontEnd Components  |        |&#x2714;  |#232
 |**Previous**|
 |Dashboard      |Users logging in should always start on Dashboard  |                |&#x2714;  |#206
 |Dashboard      |Lock Submission Info once manuscript is submitted  |&#x2714;        |  |#215
