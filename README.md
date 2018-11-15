@@ -9,6 +9,8 @@ This is the current set of features and their status on our roadmap.
 |Module             |Description                                    |In progress    |Done       |Issue
 |:---               |---                                            |:---:          |:---:      |:---:
 |**Current**|
+|System      |New Data modeling migration  |&#x2714;       |   |#233
+|**Previous**|
 |Dashboard      |Lock Submission Info once manuscript is submitted  |       |&#x2714;  |#215
 |System      |Mock graphql Server |       |&#x2714;   |#231
 |System      |GraphQL implementation of xpub FrontEnd Components  |        |&#x2714;  |#232
