@@ -9,19 +9,13 @@ This is the current set of features and their status on our roadmap.
 |Module             |Description                                    |In progress    |Done       |Issue
 |:---               |---                                            |:---:          |:---:      |:---:
 |**Current**|
-|System      |New Data modeling migration  |&#x2714;       |   |#233
+|Component      |New Simple Form Builder  |&#x2714;      |   |#234
+|System      | Fixing issue on assigning reviewer  |&#x2714;      |   |#235
 |**Previous**|
-|Dashboard      |Lock Submission Info once manuscript is submitted  |       |&#x2714;  |#215
+|System      |New Data modeling migration  |      |&#x2714;    |#233
 |System      |Mock graphql Server |       |&#x2714;   |#231
 |System      |GraphQL implementation of xpub FrontEnd Components  |        |&#x2714;  |#232
-|**Previous**|
-|Dashboard      |Users logging in should always start on Dashboard  |                |&#x2714;  |#206
-|Dashboard      |Lock Submission Info once manuscript is submitted  |&#x2714;        |  |#215
-|Dashboard      |Dashboard links error                              |                |&#x2714;  |#222
-|System         |File Attachments Submissions                       |                |&#x2714;  |#226
-|Libero         |Libero  Sprint                       |                |&#x2714;  |#227
-|System         |GraphQL Research                      |                |&#x2714;  |#228
-|System         |Revisit data model                                 |       |&#x2714;           |#67
+
 
 ### PubSweet components
 The application consists primarily of the following high-level pubsweet components, which roughly correspond to the pages in the system:
