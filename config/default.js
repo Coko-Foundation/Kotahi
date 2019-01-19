@@ -4,7 +4,7 @@ const logger = require('winston')
 
 module.exports = {
   authsome: {
-    mode: path.resolve(__dirname, 'authsome.js'),
+    mode: path.resolve(__dirname, 'authsomeGraphql.js'),
     teams: {
       seniorEditor: {
         name: 'Senior Editors',
@@ -20,6 +20,10 @@ module.exports = {
       },
       reviewer: {
         name: 'Reviewer',
+        permissions: '',
+      },
+      author: {
+        name: 'Authors',
         permissions: '',
       },
     },
@@ -40,6 +44,7 @@ module.exports = {
     db: {},
     port: 3000,
     logger,
+    enableExperimentalGraphql: true,
     uploads: 'uploads',
     typeDefs: `
       extend type User {
@@ -150,8 +155,7 @@ module.exports = {
     ],
   },
   'pubsweet-component-ink-backend': {
-    inkEndpoint:
-      process.env.INK_ENDPOINT || 'http://inkdemo-api.coko.foundation/',
+    inkEndpoint: process.env.INK_ENDPOINT || 'http://167.99.161.30:3000/',
     email: process.env.INK_USERNAME,
     password: process.env.INK_PASSWORD,
     maxRetries: 500,
@@ -165,5 +169,8 @@ module.exports = {
     'validations',
     'pubsweet-component-xpub-dashboard',
     'pubsweet-component-xpub-formbuilder',
+    'pubsweet',
+    'detectionMethodCorrelations',
   ],
+  schema: {},
 }

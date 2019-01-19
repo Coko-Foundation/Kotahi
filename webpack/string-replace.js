@@ -1,10 +1,16 @@
 // replace "PUBSWEET_COMPONENTS" string in pubsweet-client
-
+const path = require('path')
 const components = require('../config/components.json')
+const include = require('./babel-includes')
 
 const requireComponentsString = components
   .filter(name => {
-    const component = require(name)
+    let component
+    try {
+      component = require(name)
+    } catch (error) {
+      component = require(path.join(__dirname, '..', name))
+    }
     // "client" or "frontend" for backwards compatibility
     return component.client || component.frontend
   })
@@ -12,9 +18,9 @@ const requireComponentsString = components
   .join(', ')
 
 module.exports = {
-  test: /\.js$/,
+  test: /\.js$|\.jsx$/,
   enforce: 'pre',
-  // include: /pubsweet-client\/src\/components/,
+  include,
   loader: 'string-replace-loader',
   options: {
     search: 'PUBSWEET_COMPONENTS',

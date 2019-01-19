@@ -67,5 +67,6 @@ module.exports = {
   },
   team: {
     group: Joi.string(),
+    status: Joi.array().items(Joi.object()),
   },
 }

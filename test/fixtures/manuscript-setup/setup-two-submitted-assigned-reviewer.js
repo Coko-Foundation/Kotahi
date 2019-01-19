@@ -1,22 +1,17 @@
 const logger = require('@pubsweet/logger')
 const { Collection, Fragment, User } = require('pubsweet-server/src/models')
-const { setupDb } = require('@pubsweet/db-manager')
+// const { setupDb } = require('@pubsweet/db-manager')
 
 export async function setupWithTwoSubmittedManuscriptsReviewerAssigned() {
-  await setupDb({
-    username: 'admin',
-    password: 'password',
-    email: 'admin@example.com',
-    admin: true,
-    clobber: true,
-  })
-
-  const user = await new User({
-    username: 'john',
-    email: 'john@example.com',
-    password: 'johnjohn',
-    admin: true,
-  }).save()
+  let user = await User.findByUsername('john')
+  if (!user) {
+    user = await new User({
+      username: 'john',
+      email: 'john@example.com',
+      password: 'johnjohn',
+      admin: true,
+    }).save()
+  }
 
   const collection1 = new Collection({
     title: 'My Blog',

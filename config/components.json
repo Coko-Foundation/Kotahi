@@ -8,5 +8,10 @@
   "pubsweet-component-login",
   "pubsweet-component-signup",
   "pubsweet-component-xpub-teams-manager",
-  "pubsweet-component-xpub-formbuilder"
+  "pubsweet-component-xpub-formbuilder",
+  "server/journal/src/",
+  "server/manuscript/src/",
+  "server/review/src/",
+  "server/file/src/",
+  "server/formbuilder/src/"
 ]

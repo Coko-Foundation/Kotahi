@@ -1,7 +1,7 @@
 import React from 'react'
 import { withProps } from 'recompose'
-import { Route, Switch } from 'react-router-dom'
-import { AuthenticatedComponent } from 'pubsweet-client'
+import { Route, Switch, Redirect } from 'react-router-dom'
+// import AuthorizeWithGraphQL from 'pubsweet-client/src/helpers/AuthorizeWithGraphQL'
 
 import Login from 'pubsweet-component-login/LoginContainer'
 import Signup from 'pubsweet-component-signup/SignupContainer'
@@ -21,19 +21,25 @@ import TeamPage from 'pubsweet-component-xpub-teams-manager/src/components/Teams
 import DecisionPage from 'pubsweet-component-xpub-review/src/components/DecisionPage'
 import UsersManager from 'pubsweet-component-users-manager/src/UsersManagerContainer'
 import FormBuilderPage from 'pubsweet-component-xpub-formbuilder/src/components/FormBuilderPage'
-
+// import SimpleFormBuilderPage from 'pubsweet-component-xpub-simple-formbuilder/src/components/SimpleFormBuilderPage'
 import App from './components/App'
 
 const LoginPage = withProps({ passwordReset: false })(Login)
 
+const createReturnUrl = ({ pathname, search = '' }) => pathname + search
+
+const loginUrl = location => `/login?next=${createReturnUrl(location)}`
+
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
-    render={props => (
-      <AuthenticatedComponent>
+    render={props =>
+      localStorage.getItem('token') ? (
         <Component {...props} />
-      </AuthenticatedComponent>
-    )}
+      ) : (
+        <Redirect to={loginUrl(props.location)} />
+      )
+    }
   />
 )
 
@@ -46,7 +52,7 @@ const Routes = () => (
       <PrivateRoute
         component={SubmitPage}
         exact
-        path="/projects/:project/versions/:version/submit"
+        path="/journals/:journal/versions/:version/submit"
       />
       <PrivateRoute component={TeamPage} exact path="/teams" />
       <PrivateRoute
@@ -54,40 +60,45 @@ const Routes = () => (
         exact
         path="/admin/form-builder"
       />
+      {/* <PrivateRoute
+        component={SimpleFormBuilderPage}
+        exact
+        path="/admin/simple-form-builder"
+      /> */}
       <PrivateRoute
         component={ManuscriptPage}
         exact
-        path="/projects/:project/versions/:version/manuscript"
+        path="/journals/:journal/versions/:version/manuscript"
       />
       <PrivateRoute
         component={ReviewersPage}
         exact
-        path="/projects/:project/versions/:version/reviewers"
+        path="/journals/:journal/versions/:version/reviewers"
       />
       <PrivateRoute
         component={ReviewPage}
         exact
-        path="/projects/:project/versions/:version/reviews/:review"
+        path="/journals/:journal/versions/:version/reviews/:review"
       />
       <PrivateRoute
         component={DecisionPage}
         exact
-        path="/projects/:project/versions/:version/decisions/:decision"
+        path="/journals/:journal/versions/:version/decisions/:decision"
       />
       {/* <PrivateRoute
         component={FindReviewersPage}
         exact
-        path="/projects/:project/versions/:version/find-reviewers"
+        path="/journals/:journal/versions/:version/find-reviewers"
       />
       <PrivateRoute
         component={FindReviewersAuthorPage}
         exact
-        path="/projects/:project/versions/:version/find-reviewers/author/:id"
+        path="/journals/:journal/versions/:version/find-reviewers/author/:id"
       />
       <PrivateRoute
         component={FindReviewersPaperPage}
         exact
-        path="/projects/:project/versions/:version/find-reviewers/paper/:id"
+        path="/journals/:journal/versions/:version/find-reviewers/paper/:id"
       /> */}
 
       <Route component={Signup} exact path="/signup" />

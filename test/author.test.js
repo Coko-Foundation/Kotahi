@@ -65,72 +65,78 @@ test
       JSON.parse(JSON.stringify(config.get('pubsweet-component-ink-backend'))),
       JSON.parse(JSON.stringify(config.get('pubsweet-component-ink-backend'))),
     )
+    teardown()
   })
 
-test.before(async t => {
-  await setupWithTwoUnsubmittedManuscripts()
-  await login.doLogin('john', 'johnjohn')
-})('Author submits manuscript', async t => {
-  await t
-    .wait(1000)
-    .click(dashboard.submissionSummaryInfoLink(1))
-    .wait(1000)
-    .click(submission.submit.withText('SUBMIT YOUR MANUSCRIPT'))
-    .wait(1000)
-    .expect(confirmation.returnToSubmission.exists)
+test.skip
+  .before(async t => {
+    await setupWithTwoUnsubmittedManuscripts()
+    await login.doLogin('john', 'johnjohn')
+  })('Author submits manuscript', async t => {
+    await t
+      .wait(1000)
+      .click(dashboard.submissionSummaryInfoLink(1))
+      .wait(1000)
+      .click(submission.submit.withText('SUBMIT YOUR MANUSCRIPT'))
+      .wait(1000)
+      .expect(confirmation.returnToSubmission.exists)
 
-  await t.wait(500).click(confirmation.returnToSubmission)
+    await t.wait(500).click(confirmation.returnToSubmission)
 
-  await t
-    .expect(
-      Selector(submission.submit.withText('SUBMIT YOUR MANUSCRIPT')).exists,
-    )
-    .ok()
+    await t
+      .wait(500)
+      .expect(
+        Selector(submission.submit.withText('SUBMIT YOUR MANUSCRIPT')).exists,
+      )
+      .ok()
 
-  await t.click(submission.submit.withText('SUBMIT YOUR MANUSCRIPT'))
+    await t.click(submission.submit.withText('SUBMIT YOUR MANUSCRIPT'))
 
-  await t
-    .wait(1000)
-    .expect(confirmation.submitManuscript.exists)
-    .ok()
+    await t
+      .wait(1000)
+      .expect(confirmation.submitManuscript.exists)
+      .ok()
 
-  await t.wait(1000).click(confirmation.submitManuscript)
+    await t.wait(1000).click(confirmation.submitManuscript)
 
-  await t
-    .expect(Selector(dashboard.myManuscriptsTitle).exists) // fails when admin user == false
-    .ok()
+    await t
+      .expect(Selector(dashboard.myManuscriptsTitle).exists) // fails when admin user == false
+      .ok()
 
-  await t
-    .expect(Selector(dashboard.manuscript(1)).exists)
-    .ok()
-    .expect(Selector(dashboard.manuscriptStatus(1)).exists)
-    .ok()
-    .expect(dashboard.manuscriptStatus(1).innerText)
-    .contains('SUBMITTED')
+    await t
+      .expect(Selector(dashboard.manuscript(1)).exists)
+      .ok()
+      .expect(Selector(dashboard.manuscriptStatus(1)).exists)
+      .ok()
+      .expect(dashboard.manuscriptStatus(1).innerText)
+      .contains('SUBMITTED')
 
-    .expect(Selector(dashboard.submissionStatus(1)).exists)
-    .ok()
-    .expect(dashboard.submissionStatus(1).innerText)
-    .contains('UNSUBMITTED')
+      .expect(Selector(dashboard.submissionStatus(1, 2)).exists)
+      .ok()
+      .expect(dashboard.submissionStatus(1, 2).innerText)
+      .contains('UNSUBMITTED')
 
-  await t
-    .expect(Selector(dashboard.submissionStatus(2)).exists)
-    .ok()
-    .expect(dashboard.submissionStatus(2).innerText)
-    .contains('SUBMITTED')
-    .wait(5000)
+    await t
+      .expect(Selector(dashboard.submissionStatus(1)).exists)
+      .ok()
+      .expect(dashboard.submissionStatus(1).innerText)
+      .contains('SUBMITTED')
+      .wait(5000)
 
-  await t
-    .expect(Selector(dashboard.submissionSummaryInfoLink(2)).exists)
-    .ok()
-    .click(dashboard.submissionSummaryInfoLink(2))
-    .wait(5000)
-    .expect(Selector(submission.authorFirstName).exists)
-    .ok()
+    await t
+      .expect(Selector(dashboard.submissionSummaryInfoLink(2)).exists)
+      .ok()
+      .click(dashboard.submissionSummaryInfoLink(2))
+      .wait(5000)
+      .expect(Selector(submission.authorFirstName).exists)
+      .ok()
 
-  await t
-    .expect(
-      Selector(submission.submit.withText('submit your manuscript')).exists,
-    )
-    .notOk()
-})
+    await t
+      .expect(
+        Selector(submission.submit.withText('submit your manuscript')).exists,
+      )
+      .notOk()
+  })
+  .after(async t => {
+    teardown()
+  })

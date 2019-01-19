@@ -30,5 +30,37 @@
         }]
       }
     }
+  },
+  "Notes": {
+    "id": {
+      "component": "TextField"
+    },
+    "title": {
+      "component": "TextField"
+    },
+    "name": {
+      "component": "TextField"
+    },
+    "order": {
+      "component": "TextField"
+    },
+    "validate": {
+      "component": "Menu",
+      "props": {
+         "multi": true,
+         "options": [{
+            "value": "required",
+            "label": "Required"
+         },
+         {
+            "value": "minChars",
+            "label": "minimum Characters"
+         },
+         {
+            "value": "maxChars",
+            "label": "maximum Characters"
+        }]
+      }
+    }
   }
 }
