@@ -23,7 +23,7 @@ fixture
   })
   .afterEach(teardown)
 
-test.before(async t => {
+test.skip.before(async t => {
   await setupWithOneSubmittedManuscript()
   await login.doLogin(user.username, user.password)
 })('Assign reviewer', async t => {

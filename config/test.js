@@ -1,16 +1,19 @@
 const { deferConfig } = require('config/defer')
-const winston = require('winston')
+const logger = require('winston')
+const components = require('./components.json')
 
 module.exports = {
+  pubsweet: {
+    components,
+  },
   'pubsweet-server': {
     db: {
       database: 'test',
     },
     ignoreTerminatedConnectionError: true,
-    logger: new winston.Logger({
-      level: 'warn',
-      transports: [new winston.transports.Console()],
-    }),
+    logger,
+    uploads: 'uploads',
+    enableExperimentalGraphql: true,
     port: 4000,
     secret: 'secret-string',
     baseUrl: deferConfig(

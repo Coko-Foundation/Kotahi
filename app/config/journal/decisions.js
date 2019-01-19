@@ -1,5 +1,5 @@
 export default {
-  accept: {
+  accepted: {
     color: 'green',
     label: 'Accept',
     message: 'The submission has been accepted for publication',
@@ -15,7 +15,7 @@ export default {
     message:
       'The submission will be accepted for publication after minor changes',
   },
-  reject: {
+  rejected: {
     color: 'red',
     label: 'Reject',
     message: 'The submission is not acceptable for publication',

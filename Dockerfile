@@ -31,6 +31,7 @@ COPY config config
 COPY scripts scripts
 COPY static static
 COPY test test
+COPY server server
 COPY webpack webpack
 
 ENV NODE_ENV ${NODE_ENV}

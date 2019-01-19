@@ -9,14 +9,14 @@ const dashboard = {
   createSubmission: Selector('input'),
   input: Selector('input[type=file]'),
 
-  mySubmissionsTitle: Selector('#root div div div div').child(1),
-  mySubmissions: Selector('#root div div div div'),
+  mySubmissionsTitle: Selector('#root div div div div div').child(1),
+  mySubmissions: Selector('#root div div div div div'),
   submission: n => dashboard.mySubmissions.child(n),
-  submissionStatus: n =>
+  submissionStatus: (n, k) =>
     dashboard.mySubmissions
       .child(n)
       .child('div')
-      .nth(n),
+      .nth(k || n),
   submissionSummaryInfoLink: n =>
     dashboard.mySubmissions
       .child(n)
@@ -33,7 +33,7 @@ const dashboard = {
       .find('a')
       .withText('Delete'),
 
-  toReviewTitle: Selector('#root div div div div').child(2),
+  toReviewTitle: Selector('#root div div div div div').child(2),
   acceptReview: Selector('a').withText('Accept'),
   rejectReview: Selector('a').withText('Reject'),
   doReview: Selector('a').withText('Do review'),

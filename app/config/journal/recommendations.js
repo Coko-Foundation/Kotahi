@@ -2,7 +2,7 @@ export default [
   {
     color: 'green',
     label: 'Accept',
-    value: 'accept',
+    value: 'accepted',
   },
   {
     color: 'orange',
@@ -12,6 +12,6 @@ export default [
   {
     color: 'red',
     label: 'Reject',
-    value: 'reject',
+    value: 'rejected',
   },
 ]

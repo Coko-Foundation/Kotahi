@@ -1,7 +1,10 @@
 import faker from 'faker'
 import DestinationRequest from 'testcafe-hammerhead/lib/request-pipeline/destination-request'
 import start from 'pubsweet/src/startup/start'
-import { addUser, createTables } from '@pubsweet/db-manager'
+import { User } from 'pubsweet-server'
+import { createTables } from '@pubsweet/db-manager'
+
+import Journal from '../../server/journal/src/journal'
 
 let server
 
@@ -23,9 +26,18 @@ export async function setup(user) {
     admin: true,
   }
 
-  await addUser(userData)
+  const journalData = {
+    title: 'xPub Collabra',
+    meta: {},
+  }
 
-  return { userData }
+  const newUser = new User(userData)
+  await newUser.save()
+
+  const journal = new Journal(journalData)
+  await journal.save()
+
+  return { userData, journal }
 }
 
 export function teardown() {}

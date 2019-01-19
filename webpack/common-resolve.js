@@ -10,6 +10,13 @@ fs.ensureDirSync(outputPath)
 const clientConfigPath = path.join(outputPath, 'client-config.json')
 fs.writeJsonSync(clientConfigPath, clientConfig, { spaces: 2 })
 
+const alias = {
+  joi: 'joi-browser',
+  config: clientConfigPath,
+}
+alias['pubsweet-component-login/LoginContainer'] =
+  'pubsweet-component-login/graphql/LoginContainer'
+
 module.exports = {
   // symlinks: false, // needed so that babel doesn't look for plugins in components
   modules: [
@@ -18,9 +25,6 @@ module.exports = {
     path.resolve(__dirname, '../../../node_modules'),
     'node_modules',
   ],
-  alias: {
-    joi: 'joi-browser',
-    config: clientConfigPath,
-  },
+  alias,
   extensions: ['.js', '.jsx'],
 }
