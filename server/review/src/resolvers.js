@@ -5,15 +5,20 @@ const resolvers = {
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
       if (id) {
-        const review = await Review.find(id)
+        const review = await ctx.connectors.Review.fetchOne(id, ctx)
         const update = merge({}, review, input)
-        const updateReview = await new Review(update).save()
-        updateReview.comments = await updateReview.getComments()
-        return updateReview
+        await ctx.connectors.Review.update(id, update, ctx)
+        // Load Review
+        const rvw = await new Review(update)
+        rvw.comments = await rvw.getComments()
+
+        return rvw
       }
       input.userId = ctx.user
-      const review = await new Review(input).save()
+      const review = await new Review(input)
+      await review.save()
       review.comments = await review.getComments()
+
       return review
     },
   },

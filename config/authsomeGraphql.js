@@ -517,6 +517,14 @@ class XpubCollabraMode {
     return false
   }
 
+  async isAllowedToReview(object) {
+    this.user = await this.context.models.User.find(this.userId)
+    const permission = await this.isAssignedReviewerEditor({
+      id: object.manuscriptId,
+    })
+    return permission
+  }
+
   async canViewMySubmissionSection() {
     this.user = await this.context.models.User.find(this.userId)
     const manuscripts = await Promise.all(
@@ -676,15 +684,23 @@ module.exports = {
     return user.admin
   },
   create: (userId, operation, object, context) => true,
-  update: (userId, operation, object, context) => {
+  update: async (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
 
-    if (mode.object === 'Manuscript' || mode.object === 'Team') {
+    if (
+      mode.object === 'Manuscript' ||
+      mode.object === 'Review' ||
+      mode.object === 'Team'
+    ) {
       return true
     }
 
     if (mode.object.current.type === 'team') {
       return true
+    }
+
+    if (mode.object.current.type === 'Review') {
+      return mode.isAllowedToReview(mode.object.current)
     }
 
     if (mode.object.current.type === 'Manuscript') {
@@ -736,11 +752,15 @@ module.exports = {
     return mode.canViewPage()
   },
   'can view only admin': () => false,
-  read: (userId, operation, object, context) => {
+  read: async (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
 
-    if (object === 'Manuscript') {
+    if (object === 'Manuscript' || object === 'Review') {
       return true
+    }
+
+    if (object.type === 'Review') {
+      return mode.isAllowedToReview(object)
     }
 
     if (object.type === 'Manuscript') {
