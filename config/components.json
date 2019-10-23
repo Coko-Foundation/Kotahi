@@ -4,14 +4,14 @@
   "pubsweet-component-xpub-review",
   "pubsweet-component-xpub-review-backend",
   "pubsweet-component-xpub-submit",
-  "pubsweet-component-ink-backend",
-  "pubsweet-component-login",
-  "pubsweet-component-signup",
   "pubsweet-component-xpub-teams-manager",
   "pubsweet-component-xpub-formbuilder",
+  "@pubsweet/model-team",
+  "@pubsweet/model-user",
   "server/journal/src/",
   "server/manuscript/src/",
   "server/review/src/",
   "server/file/src/",
-  "server/formbuilder/src/"
+  "server/formbuilder/src/",
+  "@pubsweet/job-xsweet"
 ]

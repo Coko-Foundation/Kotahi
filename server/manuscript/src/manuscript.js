@@ -1,12 +1,8 @@
 const BaseModel = require('@pubsweet/base-model')
-const { Team, db } = require('pubsweet-server')
 const omit = require('lodash/omit')
 const cloneDeep = require('lodash/cloneDeep')
 const sortBy = require('lodash/sortBy')
 const values = require('lodash/values')
-
-const Review = require('../../review/src/review')
-const File = require('../../file/src/file')
 
 class Manuscript extends BaseModel {
   static get tableName() {
@@ -50,31 +46,29 @@ class Manuscript extends BaseModel {
   }
 
   async getTeams() {
-    const selector = {
-      'object.objectId': this.id,
-      'object.objectType': 'Manuscript',
-    }
-    const where = await Team.selectorToSql(selector)
+    const { Team } = require('@pubsweet/models')
+    const myTeams = await Team.query()
+      .where({
+        objectId: this.id,
+        objectType: 'Manuscript',
+      })
+      .eager('members')
 
-    const { rows } = await db.raw(
-      `SELECT id, data FROM entities WHERE ${where.join(' AND ')}`,
-      Object.values(selector),
-    )
+    // const { rows } = await db.raw(
+    //   `SELECT id, data FROM entities WHERE ${where.join(' AND ')}`,
+    //   Object.values(selector),
+    // )
 
-    const myTeams = rows.map(
-      result => new Team({ id: result.id, ...result.data }),
-    )
-
-    myTeams.map(team => {
-      team.role = team.teamType
-      team.objectType = team.object.objectType
-      return team
-    })
+    // const myTeams = rows.map(
+    //   result => new Team({ id: result.id, ...result.data }),
+    // )
 
     return myTeams
   }
 
   async getReviews() {
+    const Review = require('../../review/src/review')
+
     const manuscriptReviews = await Review.findByField('manuscript_id', this.id)
 
     await Promise.all(
@@ -87,6 +81,8 @@ class Manuscript extends BaseModel {
   }
 
   async getManuscriptVersions() {
+    const { File } = require('@pubsweet/models')
+
     const id = this.parentId || this.id
     const manuscripts = await Manuscript.findByField('parent_id', id)
     const firstManuscript = await Manuscript.findOneByField('id', id)
@@ -119,13 +115,15 @@ class Manuscript extends BaseModel {
   }
 
   async createNewVersion() {
+    const { Team, File } = require('@pubsweet/models')
+
     const manuscriptReviews = await this.getReviews()
     const manuscriptTeams = await this.getTeams()
     const teams = manuscriptTeams.filter(
       team =>
-        team.teamType === 'author' ||
-        team.teamType === 'seniorEditor' ||
-        team.teamType === 'handlingEditor',
+        team.role === 'author' ||
+        team.role === 'seniorEditor' ||
+        team.role === 'handlingEditor',
     )
 
     const manuscriptFiles = await File.findByObject({
@@ -153,8 +151,8 @@ class Manuscript extends BaseModel {
       // Copy Teams to the new Version
       await Promise.all(
         teams.map(async team => {
-          team.object.objectId = newManuscript.id
-          await new Team(omit(team, ['id', 'role', 'objectType'])).save()
+          team.objectId = newManuscript.id
+          await new Team(omit(team, ['id', 'objectType'])).save()
         }),
       )
     }
@@ -254,6 +252,9 @@ class Manuscript extends BaseModel {
   }
 
   async $beforeDelete() {
+    // const Review = require('../../review/src/review')
+    const { Review, Team, File } = require('@pubsweet/models')
+
     const files = await File.findByObject({
       object_id: this.id,
       object: 'Manuscript',

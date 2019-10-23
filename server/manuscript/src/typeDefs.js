@@ -83,7 +83,7 @@ const typeDefs = `
     source: String!
     articleType: String
     declarations: Declarations
-    articleSections: [String] 
+    articleSections: [String]
     articleIds: [ArticleId]
     abstract: String
     subjects: [String]
@@ -120,23 +120,23 @@ const typeDefs = `
     content: String
   }
 
-  type reviewerStatus {
-    user: ID!
-    status: String
-  }
+  # type reviewerStatus {
+  #   user: ID!
+  #   status: String
+  # }
 
-  input reviewerStatusUpdate {
-    user: ID!
-    status: String
-  }
+  # input reviewerStatusUpdate {
+  #   user: ID!
+  #   status: String
+  # }
 
-  extend type Team {
-    status: [reviewerStatus]
-  }
+  # extend type Team {
+  #   status: [reviewerStatus]
+  # }
 
-  extend input TeamInput {
-    status: [reviewerStatusUpdate]
-  }
+  # extend input TeamInput {
+  #   status: [reviewerStatusUpdate]
+  # }
 `
 
 module.exports = typeDefs

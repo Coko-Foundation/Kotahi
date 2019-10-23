@@ -1,6 +1,4 @@
 const BaseModel = require('@pubsweet/base-model')
-const { User } = require('pubsweet-server')
-const File = require('../../file/src/file')
 
 class Review extends BaseModel {
   static get tableName() {
@@ -13,10 +11,13 @@ class Review extends BaseModel {
   }
 
   async user() {
+    const { User } = require('@pubsweet/models')
     return User.find(this.userId)
   }
 
   async getComments() {
+    const File = require('../../file/src/file')
+
     await Promise.all(
       (this.comments || []).map(async comment => {
         const files = await File.findByObject({
@@ -51,6 +52,7 @@ class Review extends BaseModel {
   }
 
   async $beforeDelete() {
+    const File = require('../../file/src/file')
     const files = await File.findByObject({
       object_id: this.id,
       object: 'Review',

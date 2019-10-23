@@ -88,7 +88,7 @@ export async function setupWithTwoUnsubmittedManuscripts() {
 
   // create Team Author Owner
   const team1 = new Team({
-    teamType: 'author',
+    role: 'author',
     name: 'Author',
     object: {
       objectId: manuscript1.id,
@@ -168,7 +168,7 @@ export async function setupWithTwoUnsubmittedManuscripts() {
 
   // create Team Author Owner
   const team2 = new Team({
-    teamType: 'author',
+    role: 'author',
     name: 'Author',
     object: {
       objectId: manuscript2.id,

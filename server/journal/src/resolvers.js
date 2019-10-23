@@ -1,5 +1,5 @@
 const Journal = require('./journal')
-const Manuscript = require('../../manuscript/src/manuscript')
+// const Manuscript = require('../../manuscript/src/manuscript')
 
 // const isMember = (team, userId) => team && team.members.includes(userId)
 
@@ -10,13 +10,15 @@ const Manuscript = require('../../manuscript/src/manuscript')
 
 const resolvers = {
   Query: {
-    journals: async (_, vars, ctx) => {
+    journals: async (_, { where }, ctx) => {
       const journalAll = await Journal.all()
       const journal = journalAll[0]
 
-      const manuscripts = await ctx.connectors.Manuscript.fetchAll(ctx)
-
-      journal.manuscripts = await Manuscript.myManuscripts(manuscripts)
+      // const manuscripts = await ctx.connectors.Manuscript.fetchAll(where, ctx)
+      const manuscripts = await ctx.connectors.Manuscript.model.query()
+      journal.manuscripts = await ctx.connectors.Manuscript.model.myManuscripts(
+        manuscripts,
+      )
       await Promise.all(
         journal.manuscripts.map(async manuscript => {
           manuscript.reviews = await manuscript.getReviews()

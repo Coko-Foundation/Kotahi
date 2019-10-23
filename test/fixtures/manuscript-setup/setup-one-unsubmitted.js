@@ -91,7 +91,7 @@ export async function setupWithOneUnsubmittedManuscript() {
 
   // create Team Author Owner
   const team = new Team({
-    teamType: 'author',
+    role: 'author',
     name: 'Author',
     object: {
       objectId: manuscript.id,

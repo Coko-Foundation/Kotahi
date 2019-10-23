@@ -1,40 +1,28 @@
 import 'regenerator-runtime/runtime'
 import React from 'react'
 import ReactDOM from 'react-dom'
-import { AppContainer } from 'react-hot-loader'
-import createHistory from 'history/createBrowserHistory'
-
-import { configureStore, Root } from 'pubsweet-client'
-import { JournalProvider } from 'xpub-journal'
-
+import { hot } from 'react-hot-loader'
+import { Root } from 'pubsweet-client'
+import { createBrowserHistory } from 'history'
 import theme from '@pubsweet/coko-theme'
 
+import { JournalProvider } from 'xpub-journal'
+import { XpubProvider } from 'xpub-with-context'
+
 import * as journal from './config/journal'
-import Routes from './routes'
+import routes from './routes'
 
-const history = createHistory()
-const store = configureStore(history, {})
+const history = createBrowserHistory()
 
-const render = () => {
-  ReactDOM.render(
-    <AppContainer>
-      <JournalProvider journal={journal}>
-        <Root
-          history={history}
-          routes={<Routes />}
-          store={store}
-          theme={theme}
-        />
-      </JournalProvider>
-    </AppContainer>,
-    document.getElementById('root'),
-  )
-}
+const rootEl = document.getElementById('root')
 
-render()
+ReactDOM.render(
+  <XpubProvider>
+    <JournalProvider journal={journal}>
+      <Root history={history} routes={routes} theme={theme} />
+    </JournalProvider>
+  </XpubProvider>,
+  rootEl,
+)
 
-if (module.hot) {
-  module.hot.accept('./routes', () => {
-    render()
-  })
-}
+export default hot(module)(Root)

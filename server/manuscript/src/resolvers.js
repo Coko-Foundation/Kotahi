@@ -1,13 +1,11 @@
-const { Team } = require('pubsweet-server')
 const merge = require('lodash/merge')
-const Manuscript = require('./manuscript')
-const File = require('../../file/src/file')
-const Review = require('../../review/src/review')
 const form = require('../../../app/storage/forms/submit.json')
 
 const resolvers = {
   Mutation: {
     async createManuscript(_, vars, ctx) {
+      const { Team } = require('@pubsweet/models')
+
       const { meta, files } = vars.input
       const emptyManuscript = {
         meta: Object.assign(meta, {
@@ -24,7 +22,9 @@ const resolvers = {
         }),
         status: 'new',
       }
-      const manuscript = await new Manuscript(emptyManuscript).save()
+      const manuscript = await new ctx.connectors.Manuscript.model(
+        emptyManuscript,
+      ).save()
       manuscript.manuscriptVersions = []
       manuscript.files = []
       files.map(async file => {
@@ -33,34 +33,34 @@ const resolvers = {
           object: 'Manuscript',
           objectId: manuscript.id,
         })
-        manuscript.files.push(await new File(newFile).save())
+        manuscript.files.push(
+          await new ctx.connectors.File.model(newFile).save(),
+        )
       })
 
       manuscript.reviews = []
 
-      // create Team Author Owner
-      const team = new Team({
-        teamType: 'author',
-        name: 'Author',
-        object: {
+      const createdTeam = await Team.query().upsertGraphAndFetch(
+        {
+          role: 'author',
+          name: 'Author',
           objectId: manuscript.id,
           objectType: 'Manuscript',
+          members: [{ user: { id: ctx.user } }],
         },
-        members: [ctx.user],
-      })
-
-      const createdTeam = await team.save()
+        { relate: true },
+      )
 
       manuscript.teams = [createdTeam]
       return manuscript
     },
     async deleteManuscript(_, { id }, ctx) {
       const deleteManuscript = []
-      const manuscript = await Manuscript.findOneByField('id', id)
+      const manuscript = await ctx.connectors.Manuscript.model.find(id)
 
       deleteManuscript.push(manuscript.id)
       if (manuscript.parentId) {
-        const parentManuscripts = await Manuscript.findByField(
+        const parentManuscripts = await ctx.connectors.Manuscript.model.findByField(
           'parent_id',
           manuscript.parentId,
         )
@@ -79,19 +79,23 @@ const resolvers = {
       return id
     },
     async reviewerResponse(_, { currentUserId, action, teamId }, context) {
+      const { Team, Review } = require('@pubsweet/models')
+
       if (action !== 'accepted' && action !== 'rejected')
         throw new Error(
           `Invalid action provided to handleInvitation:
            Must be either "accepted" or "rejected"`,
         )
 
-      const team = await Team.find(teamId)
+      const team = await Team.query()
+        .findById(teamId)
+        .eager('members')
 
-      team.status = team.status.map(status => {
-        if (status.user === currentUserId) {
-          status.status = action
+      team.members = team.members.map(m => {
+        if (m.user && m.user.id === currentUserId) {
+          m.status = action
         }
-        return status
+        return m
       })
 
       if (!team) throw new Error('No team was found')
@@ -103,7 +107,7 @@ const resolvers = {
           recommendation: '',
           isDecision: false,
           userId: currentUserId,
-          manuscriptId: team.object.objectId,
+          manuscriptId: team.objectId,
         }
         await new Review(review).save()
       }
@@ -122,15 +126,20 @@ const resolvers = {
 
       const update = merge({}, manuscript, data)
 
-      const previousVersion = await new Manuscript(update).createNewVersion()
+      const previousVersion = await new ctx.connectors.Manuscript.model(
+        update,
+      ).createNewVersion()
 
       const manuscriptVersion = await previousVersion.save()
       return manuscriptVersion
     },
   },
   Query: {
-    async manuscript(_, { id }) {
+    async manuscript(_, { id }, ctx) {
+      const Manuscript = require('./manuscript')
+
       const manuscript = await Manuscript.find(id)
+
       if (!manuscript.meta) {
         manuscript.meta = {}
       }
@@ -145,7 +154,7 @@ const resolvers = {
         },
       ]
       manuscript.decision = ''
-      manuscript.files = await File.findByObject({
+      manuscript.files = await ctx.connectors.File.model.findByObject({
         object: 'Manuscript',
         object_id: manuscript.id,
       })
@@ -156,8 +165,8 @@ const resolvers = {
 
       return manuscript
     },
-    async manuscripts(_, vars, ctx) {
-      return ctx.connectors.Manuscript.fetchAll(ctx)
+    async manuscripts(_, { where }, ctx) {
+      return ctx.connectors.Manuscript.fetchAll(where, ctx)
     },
     async getFile() {
       return form
