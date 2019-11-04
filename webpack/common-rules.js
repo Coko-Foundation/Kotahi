@@ -12,6 +12,7 @@ module.exports = [
         '@babel/preset-react',
       ],
       plugins: [
+        'babel-plugin-styled-components',
         require.resolve('react-hot-loader/babel'),
         '@babel/plugin-proposal-class-properties',
         // 'transform-decorators-legacy',
