@@ -1,9 +1,9 @@
 import React from 'react'
-import { withProps } from 'recompose'
 import { Route, Switch, Redirect } from 'react-router-dom'
 
 import Login from 'pubsweet-component-login'
 import Signup from 'pubsweet-component-signup'
+import PasswordReset from '@pubsweet/component-password-reset-client'
 
 // import {
 //   FindReviewersPage,
@@ -22,8 +22,6 @@ import UsersManager from 'pubsweet-component-users-manager'
 import FormBuilderPage from 'pubsweet-component-xpub-formbuilder/src/components/FormBuilderPage'
 // import SimpleFormBuilderPage from 'pubsweet-component-xpub-simple-formbuilder/src/components/SimpleFormBuilderPage'
 import App from './components/App'
-
-const LoginPage = withProps({ passwordReset: false })(Login)
 
 const createReturnUrl = ({ pathname, search = '' }) => pathname + search
 
@@ -101,10 +99,11 @@ export default (
       /> */}
 
       <Route component={Signup} exact path="/signup" />
-      <Route component={LoginPage} exact path="/login" />
+      <Route component={Login} path="/login" />
+      <Route component={PasswordReset} path="/password-reset" />
       <PrivateRoute component={UsersManager} path="/users" />
 
-      <PrivateRoute component={Dashboard} path="*" />
+      {/* <PrivateRoute component={Dashboard} path="*" /> */}
     </Switch>
     {/* <Redirect from="/" to="/dashboard"/> */}
   </App>

@@ -13,5 +13,6 @@
   "server/review/src/",
   "server/file/src/",
   "server/formbuilder/src/",
-  "@pubsweet/job-xsweet"
+  "@pubsweet/job-xsweet",
+  "@pubsweet/component-password-reset-server"
 ]
