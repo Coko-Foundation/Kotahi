@@ -4,7 +4,7 @@ It is currently under development by the [Coko Foundation](https://coko.foundati
 
 ## Installation
 
-Developer beware! This project is currently under heavy development, so things will most definitely be broken. We also don't have a fixed roadmap for it at this point.
+Developer beware! This project is currently under very heavy development, so things will most definitely be broken. We also don't have a fixed roadmap for it at this point.
 
 ### Running the app
 
@@ -23,15 +23,21 @@ Create the file `local-development.json` inside the `config` folder.
 }
 ```
 
-Run the Docker container for the database and the XSweet (Docx to HTML conversion) job runner.
+Run the Docker container for the database:
 
 ```
 yarn start:services
 ```
 
-Now (in a separate terminal) run the server (backend PubSweet app).
+Now (in a separate terminal) run the server (backend PubSweet app):
 ```
 yarn pubsweet start:server
+```
+
+And the XSweet (Docx to HTML conversion) job runner:
+
+```
+docker run -e DATABASE_URL="postgres://yourusername@host.docker.internal/yourdatabase" -e WAIT_SERVICE_PORT="host.docker.internal:5432" pubsweet/job-xsweet
 ```
 
 And in another terminal run the client (webpack-based PubSweet app):
