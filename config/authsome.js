@@ -37,12 +37,11 @@ class XpubCollabraMode {
   /**
    * Checks if user is a member of a team of a certain type for a certain object
    *
-   * @param {any} user
-   * @param {any} teamType
+   * @param {any} role
    * @param {any} object
    * @returns {boolean}
    */
-  async isTeamMember(teamType, object) {
+  async isTeamMember(role, object) {
     if (!this.user || !Array.isArray(this.user.teams)) {
       return false
     }
@@ -51,12 +50,10 @@ class XpubCollabraMode {
     if (object) {
       // We're asking if a user is a member of a team for a specific object
       membershipCondition = team =>
-        team.teamType === teamType &&
-        team.object &&
-        team.object.id === object.id
+        team.role === role && team.object && team.object.id === object.id
     } else {
       // We're asking if a user is a member of a global team
-      membershipCondition = team => team.teamType === teamType && !team.object
+      membershipCondition = team => team.role === role && !team.object
     }
 
     const memberships = await Promise.all(
@@ -407,8 +404,8 @@ class XpubCollabraMode {
     }
     this.user = await this.context.models.User.find(this.userId)
 
-    const { teamType, object } = this.object.team
-    if (teamType === 'handlingEditor') {
+    const { role, object } = this.object.team
+    if (role === 'handlingEditor') {
       return this.isAssignedSeniorEditor(object)
     }
 
@@ -873,6 +870,8 @@ module.exports = {
     if (object.type === 'user') {
       return mode.canReadUser()
     }
+
+    console.log(userId, operation, object)
 
     return false
   },

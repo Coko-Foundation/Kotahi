@@ -22,10 +22,10 @@ const typeDefs = `
     publisherName: String
   }
 
-  extend type Team {  
-    role: String
-    objectType: String
-  }
+  #extend type Team {
+  #  role: String
+  #  objectType: String
+  #}
 
   scalar DateTime
 `

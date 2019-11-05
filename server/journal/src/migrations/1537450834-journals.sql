@@ -23,6 +23,3 @@ VALUES('4ca9e849-20f3-4121-86ef-15261be4992c', '{"type": "user", "email": "handl
 INSERT INTO entities
 (id, "data")
 VALUES('d7009f6c-61aa-49c4-a44e-8a71072d7341', '{"type": "user", "email": "author@author.com", "teams": [], "username": "author", "fragments": [], "collections": [], "passwordHash": "$2b$12$6FuyR6E5CIrU5dNCm52KKOERZW2XGeryuOeNNFwCPxhwxQ2JKLSOm"}');
-INSERT INTO entities
-(id, "data")
-VALUES('454f40b9-bf5d-4007-8879-766a8c9bedf3', '{"type": "user", "email": "admin@admin.com", "teams": [], "username": "admin", " admin": true,  "fragments": [], "collections": [], "passwordHash": "$2b$12$HRzkMwUeUY.jdaO..bjK9OhHBm4JOTvq8fjzmpjAPyaYySCnIOyCO"}');

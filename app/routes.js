@@ -1,10 +1,9 @@
 import React from 'react'
-import { withProps } from 'recompose'
 import { Route, Switch, Redirect } from 'react-router-dom'
-// import AuthorizeWithGraphQL from 'pubsweet-client/src/helpers/AuthorizeWithGraphQL'
 
-import Login from 'pubsweet-component-login/LoginContainer'
-import Signup from 'pubsweet-component-signup/SignupContainer'
+import Login from 'pubsweet-component-login'
+import Signup from 'pubsweet-component-signup'
+import PasswordReset from '@pubsweet/component-password-reset-client'
 
 // import {
 //   FindReviewersPage,
@@ -12,19 +11,17 @@ import Signup from 'pubsweet-component-signup/SignupContainer'
 //   PaperPage as FindReviewersPaperPage,
 // } from 'pubsweet-component-xpub-find-reviewers/src/components'
 
-import DashboardPage from 'pubsweet-component-xpub-dashboard/src/components/DashboardPage'
+import Dashboard from 'pubsweet-component-xpub-dashboard/src/components/Dashboard'
 import SubmitPage from 'pubsweet-component-xpub-submit/src/components/SubmitPage'
 import ManuscriptPage from 'pubsweet-component-xpub-manuscript/src/components/ManuscriptPage'
 import ReviewersPage from 'pubsweet-component-xpub-review/src/components/ReviewersPage'
 import ReviewPage from 'pubsweet-component-xpub-review/src/components/ReviewPage'
 import TeamPage from 'pubsweet-component-xpub-teams-manager/src/components/TeamsManagerPage'
 import DecisionPage from 'pubsweet-component-xpub-review/src/components/DecisionPage'
-import UsersManager from 'pubsweet-component-users-manager/src/UsersManagerContainer'
+import UsersManager from 'pubsweet-component-users-manager'
 import FormBuilderPage from 'pubsweet-component-xpub-formbuilder/src/components/FormBuilderPage'
 // import SimpleFormBuilderPage from 'pubsweet-component-xpub-simple-formbuilder/src/components/SimpleFormBuilderPage'
 import App from './components/App'
-
-const LoginPage = withProps({ passwordReset: false })(Login)
 
 const createReturnUrl = ({ pathname, search = '' }) => pathname + search
 
@@ -45,10 +42,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 
 // TODO: use componentDidMount to fetch the current user before rendering?
 
-const Routes = () => (
+export default (
   <App>
     <Switch>
-      <PrivateRoute component={DashboardPage} exact path="/" />
+      <PrivateRoute component={Dashboard} exact path="/" />
       <PrivateRoute
         component={SubmitPage}
         exact
@@ -102,13 +99,12 @@ const Routes = () => (
       /> */}
 
       <Route component={Signup} exact path="/signup" />
-      <Route component={LoginPage} exact path="/login" />
+      <Route component={Login} path="/login" />
+      <Route component={PasswordReset} path="/password-reset" />
       <PrivateRoute component={UsersManager} path="/users" />
 
-      <PrivateRoute component={DashboardPage} path="*" />
+      {/* <PrivateRoute component={Dashboard} path="*" /> */}
     </Switch>
     {/* <Redirect from="/" to="/dashboard"/> */}
   </App>
 )
-
-export default Routes

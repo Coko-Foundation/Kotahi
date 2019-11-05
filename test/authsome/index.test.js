@@ -16,7 +16,7 @@ const collections = [
 const teams = [
   {
     id: 'team1',
-    teamType: 'handlingEditor',
+    role: 'handlingEditor',
     object: {
       id: 'collection2',
       type: 'collection',
@@ -24,7 +24,7 @@ const teams = [
   },
   {
     id: 'team2',
-    teamType: 'seniorEditor',
+    role: 'seniorEditor',
     object: {
       id: 'collection1',
       type: 'collection',
@@ -32,7 +32,7 @@ const teams = [
   },
   {
     id: 'team3',
-    teamType: 'managingEditor',
+    role: 'managingEditor',
     object: {
       id: 'collection1',
       type: 'collection',
@@ -40,7 +40,7 @@ const teams = [
   },
   {
     id: 'team4',
-    teamType: 'reviewer',
+    role: 'reviewer',
     object: {
       id: 'fragment1',
       type: 'fragment',
@@ -48,7 +48,7 @@ const teams = [
   },
   {
     id: 'team5',
-    teamType: 'managingEditor',
+    role: 'managingEditor',
     object: {
       id: 'collection2',
       type: 'collection',

@@ -55,34 +55,35 @@ module.exports = {
         group: String
       }
 
-      extend type Collection {
-        collectionType: String
-        created: String
-        title: String
-        status: String
-        reviewers: [CollectionReviewer]
-      }
+      # extend type Collection {
+      #   collectionType: String
+      #   created: String
+      #   title: String
+      #   status: String
+      #   reviewers: [CollectionReviewer]
+      # }
 
       type CollectionReviewer {
         id: String!
         user: String!
       }
 
-      extend type Fragment {
-        created: String
-        version: Int
-        submitted: String
-        source: String
-        metadata: VersionMetadata
-        declarations: VersionDeclaration
-        suggestions: VersionSuggestionGroup
-        files: VersionFileGroup
-        notes: VersionNotes
-        reviewers: [ReviewerMeta]
-        # TODO
-        #lock: VersionLock
-        #decision: VersionDecision
-      }
+      # extend type Fragment {
+      #   created: String
+      #   version: Int
+      #   submitted: String
+      #   source: String
+      #   metadata: VersionMetadata
+      #   declarations: VersionDeclaration
+      #   suggestions: VersionSuggestionGroup
+      #   files: VersionFileGroup
+      #   notes: VersionNotes
+      #   reviewers: [ReviewerMeta]
+      #   # TODO
+      #   #lock: VersionLock
+      #   #decision: VersionDecision
+      # }
+
       type VersionMetadata {
         title: String
         abstract: String

@@ -1,12 +1,14 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
-import { compose, withState, withProps } from 'recompose'
-import { graphql, withApollo } from 'react-apollo'
-import { createContext } from 'xpub-with-context'
+import { compose, withProps } from 'recompose'
+import { graphql } from '@apollo/react-hoc'
+
 import { withRouter, matchPath, Router } from 'react-router-dom'
 
 import { Action, AppBar } from '@pubsweet/ui'
-import { withJournal } from 'xpub-journal'
+import { JournalContext } from 'xpub-journal'
+import { XpubContext } from 'xpub-with-context'
+
 import queries from '../graphql/'
 
 const getParams = routerPath => {
@@ -36,12 +38,13 @@ const App = ({
   children,
   client,
   currentUser,
-  journal,
   logoutUser,
   history,
   match,
-  conversion,
 }) => {
+  const journal = useContext(JournalContext)
+  const [conversion, _] = useContext(XpubContext)
+
   const { pathname } = history.location
   const showLinks = pathname.match(/submit|manuscript/g)
   let links = []
@@ -114,8 +117,6 @@ export default compose(
     // eslint-disable-next-line
     skip: () => (localStorage.getItem('token') ? false : true),
   }),
-  withJournal,
-  withApollo,
   withProps(props => ({
     logoutUser: client => {
       localStorage.removeItem('token')
@@ -123,6 +124,4 @@ export default compose(
     },
   })),
   withRouter,
-  withState('conversion', 'setConversionState', { converting: false }),
-  createContext(),
 )(App)
