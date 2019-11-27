@@ -1087,6 +1087,17 @@
     typeface-fira-sans-condensed "^0.0.54"
     typeface-vollkorn "^0.0.54"
 
+"@pubsweet/component-password-reset-client@^3.1.16":
+  version "3.1.16"
+  resolved "https://registry.yarnpkg.com/@pubsweet/component-password-reset-client/-/component-password-reset-client-3.1.16.tgz#398e9c5018be0356701865456441f1c322379046"
+  integrity sha512-Puu8dmHDbOAOahTiA92iDtl+TP8na9YQHU0drZgg3HcRuGmuD+gUSBn7CuA0LgzNooBLK3yB2ac8SclIQJSswA==
+  dependencies:
+    "@pubsweet/ui" "^12.1.0"
+    "@pubsweet/ui-toolkit" "^2.2.14"
+    graphql-tag "^2.10.1"
+    prop-types "^15.5.10"
+    query-string "^5.0.0"
+
 "@pubsweet/component-send-email@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@pubsweet/component-send-email/-/component-send-email-0.3.0.tgz#10c5bc1c07bd4ef6ca83ce5dd870101918f166b0"
@@ -11634,7 +11645,7 @@ prompt@^1.0.0:
     utile "0.3.x"
     winston "2.1.x"
 
-"prompt@github:flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87":
+prompt@flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87:
   version "1.0.0"
   resolved "https://codeload.github.com/flatiron/prompt/tar.gz/1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87"
   dependencies:
@@ -12381,7 +12392,7 @@ query-string@^4.1.0:
     object-assign "^4.1.0"
     strict-uri-encode "^1.0.0"
 
-query-string@^5.0.1:
+query-string@^5.0.0, query-string@^5.0.1:
   version "5.1.1"
   resolved "https://registry.yarnpkg.com/query-string/-/query-string-5.1.1.tgz#a78c012b71c17e05f2e3fa2319dd330682efb3cb"
   integrity sha512-gjWOsm2SoGlgLEdAGt7a6slVOk9mGiXmPFMqrEhLQ68rhQuBnpfs3+EmlvqKyxnCo9/PPlF+9MtY02S1aFg+Jw==
