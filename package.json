@@ -155,5 +155,8 @@
     ],
     "*.css": "stylelint",
     "*.scss": "stylelint"
+  },
+  "resolutions": {
+    "bcrypt": "^3.0.6"
   }
 }
