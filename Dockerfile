@@ -1,4 +1,4 @@
-FROM xpub/xpub:base
+FROM node:12
 
 WORKDIR ${HOME}
 
