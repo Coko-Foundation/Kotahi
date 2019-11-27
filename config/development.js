@@ -13,6 +13,10 @@ module.exports = {
   'pubsweet-client': {
     baseUrl: 'http://localhost:4000/',
   },
+  mailer: {
+    from: 'simplej@simplej.com',
+    path: `${__dirname}/test-mailer`,
+  },
   dbManager: {
     username: 'admin',
     password: '12345678',

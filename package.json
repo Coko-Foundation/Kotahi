@@ -56,10 +56,10 @@
     "styled-components": "^4.1.1",
     "supertest": "^3.0.0",
     "winston": "^2.4.0",
-    "xpub-journal": "^0.0.22",
+    "xpub-journal": "^0.1.0",
     "xpub-selectors": "^0.2.0",
     "xpub-theme": "^0.0.23",
-    "xpub-with-context": "^0.1.4"
+    "xpub-with-context": "^0.2.0"
   },
   "devDependencies": {
     "@babel/core": "^7.0.0",

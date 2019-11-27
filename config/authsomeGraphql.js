@@ -49,11 +49,14 @@ class XpubCollabraMode {
     let membershipCondition
     if (object) {
       // We're asking if a user is a member of a team for a specific object
-      membershipCondition = team =>
-        team.role === role && team.object && team.object.objectId === object.id
+      membershipCondition = team => {
+        // TODO: This needs to be fixed...
+        const objectId = team.objectId || (team.object && team.object.objectId)
+        return team.role === role && objectId === object.id
+      }
     } else {
       // We're asking if a user is a member of a global team
-      membershipCondition = team => team.role === role && !team.object
+      membershipCondition = team => team.role === role && team.global
     }
 
     const memberships = await Promise.all(
@@ -515,7 +518,9 @@ class XpubCollabraMode {
   }
 
   async isAllowedToReview(object) {
-    this.user = await this.context.models.User.find(this.userId)
+    this.user = await this.context.models.User.query()
+      .findById(this.userId)
+      .eager('teams')
     const permission = await this.isAssignedReviewerEditor({
       id: object.manuscriptId,
     })
@@ -752,7 +757,6 @@ module.exports = {
   read: async (userId, operation, object, context) => {
     const mode = new XpubCollabraMode(userId, operation, object, context)
 
-    console.log(userId, operation, object, object.name, object.constructor.name)
     if (object === 'Manuscript' || object === 'Review') {
       return true
     }

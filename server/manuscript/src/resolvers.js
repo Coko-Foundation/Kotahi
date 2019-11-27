@@ -92,15 +92,14 @@ const resolvers = {
         .eager('members')
 
       team.members = team.members.map(m => {
-        if (m.user && m.user.id === currentUserId) {
+        if (m.userId === currentUserId) {
           m.status = action
         }
         return m
       })
-
       if (!team) throw new Error('No team was found')
 
-      await new Team(team).save()
+      await new Team(team).saveGraph()
 
       if (action === 'accepted') {
         const review = {

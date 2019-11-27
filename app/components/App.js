@@ -43,7 +43,7 @@ const App = ({
   match,
 }) => {
   const journal = useContext(JournalContext)
-  const [conversion, _] = useContext(XpubContext)
+  const [conversion] = useContext(XpubContext)
 
   const { pathname } = history.location
   const showLinks = pathname.match(/submit|manuscript/g)
