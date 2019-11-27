@@ -47,6 +47,4 @@ Visit the master issue tracker for SimpleJ (https://gitlab.coko.foundation/simpl
 Add an issue
 Tag the issue with 'support', 'bug', or 'feature' to identify the nature of your issue
 
-Releases - follow one simple rule:
 
-1.  Tests must pass.
