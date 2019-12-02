@@ -10,7 +10,7 @@ module.exports = {
     ignoreTerminatedConnectionError: true,
     logger,
     uploads: 'uploads',
-    port: 4000,
+    port: 3000,
     secret: 'secret-string',
     baseUrl: deferConfig(
       cfg => `http://localhost:${cfg['pubsweet-server'].port}`,
