@@ -5,7 +5,8 @@
   },
   "globals": {
     "fixture": true,
-    "test": true
+    "test": true,
+    "cy": true,
   },
   "extends": [
     "pubsweet"

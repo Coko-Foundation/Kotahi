@@ -1,7 +1,8 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { compose, withProps } from 'recompose'
-import { graphql } from '@apollo/react-hoc'
+// import { graphql } from '@apollo/react-hoc'
+import { useQuery, useApolloClient } from '@apollo/react-hooks'
 
 import { withRouter, matchPath, Router } from 'react-router-dom'
 
@@ -33,17 +34,18 @@ const Root = styled.div`
 
 const localStorage = window.localStorage || undefined
 
-const App = ({
-  authorized,
-  children,
-  client,
-  currentUser,
-  logoutUser,
-  history,
-  match,
-}) => {
+const App = ({ authorized, children, history, match }) => {
+  const client = useApolloClient()
+  const logoutUser = () => {
+    localStorage.removeItem('token')
+    client.resetStore()
+  }
+
   const journal = useContext(JournalContext)
   const [conversion] = useContext(XpubContext)
+
+  const { data } = useQuery(queries.currentUser)
+  const currentUser = data && data.currentUser
 
   const { pathname } = history.location
   const showLinks = pathname.match(/submit|manuscript/g)
@@ -111,17 +113,4 @@ const App = ({
   )
 }
 
-export default compose(
-  graphql(queries.currentUser, {
-    props: ({ data }) => data,
-    // eslint-disable-next-line
-    skip: () => (localStorage.getItem('token') ? false : true),
-  }),
-  withProps(props => ({
-    logoutUser: client => {
-      localStorage.removeItem('token')
-      client.resetStore()
-    },
-  })),
-  withRouter,
-)(App)
+export default compose(withRouter)(App)
