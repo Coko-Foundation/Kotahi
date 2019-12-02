@@ -126,7 +126,7 @@
   },
   "scripts": {
     "lint": "npm run lint:js && npm run lint:style",
-    "lint:js": "eslint .",
+    "lint:js": "eslint app/ scripts/ server/ config/",
     "lint:style": "stylelint app/**/*.scss app/**/*.css",
     "precommit": "lint-staged",
     "reset": "pubsweet setupdb --clobber",

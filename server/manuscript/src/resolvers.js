@@ -22,6 +22,7 @@ const resolvers = {
         }),
         status: 'new',
       }
+      // eslint-disable-next-line
       const manuscript = await new ctx.connectors.Manuscript.model(
         emptyManuscript,
       ).save()
@@ -34,6 +35,7 @@ const resolvers = {
           objectId: manuscript.id,
         })
         manuscript.files.push(
+          // eslint-disable-next-line
           await new ctx.connectors.File.model(newFile).save(),
         )
       })
@@ -124,7 +126,7 @@ const resolvers = {
       const manuscript = await ctx.connectors.Manuscript.fetchOne(id, ctx)
 
       const update = merge({}, manuscript, data)
-
+      // eslint-disable-next-line
       const previousVersion = await new ctx.connectors.Manuscript.model(
         update,
       ).createNewVersion()

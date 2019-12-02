@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
-import { compose, withProps } from 'recompose'
+import { compose } from 'recompose'
 // import { graphql } from '@apollo/react-hoc'
 import { useQuery, useApolloClient } from '@apollo/react-hooks'
 
