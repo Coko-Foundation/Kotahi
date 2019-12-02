@@ -1,7 +1,11 @@
 FROM node:12
 
+ENV HOME "/home/simplej"
+RUN mkdir -p ${HOME}
+WORKDIR ${HOME}
+
 ENV NODE_ENV "development"
-WORKDIR /home/simplej
+
 COPY . .
 
 # We do a development install because react-styleguidist is a dev dependency and we want to run tests
