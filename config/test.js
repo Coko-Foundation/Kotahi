@@ -4,7 +4,7 @@ const logger = require('winston')
 module.exports = {
   'pubsweet-server': {
     db: {
-      database: 'collabra',
+      database: 'test',
     },
     pool: { min: 0, max: 10, idleTimeoutMillis: 1000 },
     ignoreTerminatedConnectionError: true,
