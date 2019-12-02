@@ -17,6 +17,7 @@
     "@pubsweet/base-model": "^3.5.0",
     "@pubsweet/coko-theme": "5.1.16",
     "@pubsweet/component-password-reset-client": "^3.1.16",
+    "@pubsweet/component-password-reset-server": "^2.2.0",
     "@pubsweet/job-xsweet": "^2.0.3",
     "@pubsweet/model-team": "^2.1.4",
     "@pubsweet/model-user": "^5.1.4",

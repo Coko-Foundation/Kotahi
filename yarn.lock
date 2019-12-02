@@ -1136,6 +1136,18 @@
     prop-types "^15.5.10"
     query-string "^5.0.0"
 
+"@pubsweet/component-password-reset-server@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/component-password-reset-server/-/component-password-reset-server-2.2.0.tgz#736fd01ea34526e94ffeabaa1fb2b902f29527ff"
+  integrity sha512-H80heja7dZohFfh/fSscmFU2Q7oi6hL4r/x7HMrDRqYgU47a83Tic0vNYuKvL3fcT53NqnodypZ0Th3tflgQDg==
+  dependencies:
+    "@pubsweet/component-send-email" "^0.3.0"
+    "@pubsweet/errors" "^2.0.25"
+    body-parser "^1.17.2"
+    config "^3.0.1"
+    moment "^2.18.1"
+    nodemailer "^4.0.1"
+
 "@pubsweet/component-send-email@^0.3.0":
   version "0.3.0"
   resolved "https://registry.yarnpkg.com/@pubsweet/component-send-email/-/component-send-email-0.3.0.tgz#10c5bc1c07bd4ef6ca83ce5dd870101918f166b0"
@@ -3477,7 +3489,7 @@ bn.js@^4.0.0, bn.js@^4.1.0, bn.js@^4.1.1, bn.js@^4.4.0:
   resolved "https://registry.yarnpkg.com/bn.js/-/bn.js-4.11.8.tgz#2cde09eb5ee341f484746bb0309b3253b1b1442f"
   integrity sha512-ItfYfPLkWHUjckQCk8xC+LwxgK8NYcXywGigJgSwOP8Y2iyWT4f2vsZnoOXTTbo+o5yXmIUJ4gn5538SO5S3gA==
 
-body-parser@1.19.0, body-parser@^1.15.2, body-parser@^1.18.3:
+body-parser@1.19.0, body-parser@^1.15.2, body-parser@^1.17.2, body-parser@^1.18.3:
   version "1.19.0"
   resolved "https://registry.yarnpkg.com/body-parser/-/body-parser-1.19.0.tgz#96b2709e57c9c4e09a6fd66a8fd979844f69f08a"
   integrity sha512-dhEPs72UPbDnAQJ9ZKMNTP6ptJaionhP5cBb541nXPlW60Jepo9RV/a4fX4XWW9CuFNK22krhrj1+rgzifNCsw==
@@ -10461,7 +10473,7 @@ node-wait-for-it@^0.2.0:
   resolved "https://registry.yarnpkg.com/node-wait-for-it/-/node-wait-for-it-0.2.0.tgz#598f13cedd25be61f5d2ab1691eb1923eea17464"
   integrity sha512-y3EiZ5xUhbP3vhptMVjyaVVWPtmb0mgXJUVRpMY6TM+CGjDg1tc1+foxF8sgiUVHqwOKtRZfqcfxDPNElNLofQ==
 
-nodemailer@^4.4.2:
+nodemailer@^4.0.1, nodemailer@^4.4.2:
   version "4.7.0"
   resolved "https://registry.yarnpkg.com/nodemailer/-/nodemailer-4.7.0.tgz#4420e06abfffd77d0618f184ea49047db84f4ad8"
   integrity sha512-IludxDypFpYw4xpzKdMAozBSkzKHmNBvGanUREjJItgJ2NYcK/s8+PggVhj7c2yGFQykKsnnmv1+Aqo0ZfjHmw==
