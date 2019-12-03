@@ -13,9 +13,9 @@ const seed = async () => {
   }).save()
 
   await new User({
-    username: 'john',
+    username: 'author',
     email: 'john@example.com',
-    password: 'johnjohn',
+    password: 'password',
   }).save()
 
   await new Journal({
