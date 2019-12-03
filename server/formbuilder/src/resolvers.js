@@ -118,8 +118,8 @@ const resolvers = {
         if (!forms.children) {
           forms.children = [children]
         } else if (forms.children.some(e => e.id === children.id)) {
-          const FormChildren = forms.children.map(
-            value => (value.id === children.id ? children : value),
+          const FormChildren = forms.children.map(value =>
+            value.id === children.id ? children : value,
           )
           forms.children = FormChildren
         } else {

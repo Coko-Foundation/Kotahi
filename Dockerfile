@@ -1,38 +1,18 @@
-FROM xpub/xpub:base
+FROM node:12
 
+ENV HOME "/home/simplej"
+RUN mkdir -p ${HOME}
 WORKDIR ${HOME}
-
-# install Chrome
-RUN curl -sL http://dl-ssl.google.com/linux/linux_signing_key.pub | apt-key add -
-RUN echo 'deb http://dl.google.com/linux/chrome/deb/ stable main' >> /etc/apt/sources.list.d/google.list
-RUN apt-get update && apt-get install -y google-chrome-stable
-
-# install Firefox - apparently no debian package for firefox 57
-RUN apt-get install -y libdbus-glib-1-2
-RUN cd /opt && wget http://ftp.mozilla.org/pub/firefox/releases/57.0.4/linux-x86_64/en-GB/firefox-57.0.4.tar.bz2 && \
-    tar xjf firefox-*.tar.bz2 && \
-    ln -s /opt/firefox/firefox /usr/local/bin/
-
-COPY package.json yarn.lock ./
 
 ENV NODE_ENV "development"
 
+# Install dependencies for Cypress
+RUN apt-get -y update && apt-get -y install xvfb libgtk-3-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
+
+COPY . .
+
 # We do a development install because react-styleguidist is a dev dependency and we want to run tests
 RUN [ "yarn", "install", "--frozen-lockfile" ]
-
-# Remove cache and offline mirror
-RUN [ "yarn", "cache", "clean"]
-RUN [ "rm", "-rf", "/npm-packages-offline-cache"]
-
-COPY app.js .babelrc .eslintignore .eslintrc .prettierrc .stylelintignore .stylelintrc ./
-
-COPY app app
-COPY config config
-COPY scripts scripts
-COPY static static
-COPY test test
-COPY server server
-COPY webpack webpack
 
 ENV NODE_ENV ${NODE_ENV}
 

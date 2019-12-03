@@ -1,12 +1,32 @@
 version: '3'
 
 services:
+  job-xsweet:
+    image: pubsweet/job-xsweet
+    restart: always
+    container_name: job-xsweet
+    hostname: job-xsweet
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@postgres:5432/${POSTGRES_DB}
+  postgres:
+    image: postgres:10-alpine
+    restart: always
+    container_name: postgres
+    hostname: postgres
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_DB
+      - POSTGRES_PASSWORD
+      - POSTGRES_PORT
+    volumes:
+      - ./data/postgres:/var/lib/postgresql
+      - ./scripts/test.sql:/docker-entrypoint-initdb.d/test.sql
   app:
     user: 'node'
     build: 
       context: .
       dockerfile: ./Dockerfile
-    command: sh -c "./scripts/wait-for-it.sh postgres:5432 -s -t 40 -- npx pubsweet server"
+    command: sh -c "yarn pubsweet server"
     volumes:
       - ./:/home/xpub
       - /home/xpub/node_modules
@@ -15,15 +35,3 @@ services:
     environment:
       PGHOST: postgres
       PGUSER: $USER
-
-  postgres:
-    image: postgres
-    environment:
-      POSTGRES_USER: $USER
-    volumes:
-      - postgres-volume:/var/lib/postgresql/data
-      - ./scripts/test.sql:/docker-entrypoint-initdb.d/test.sql
-
-volumes:
-  postgres-volume:
-

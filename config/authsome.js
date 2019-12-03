@@ -871,8 +871,6 @@ module.exports = {
       return mode.canReadUser()
     }
 
-    console.log(userId, operation, object)
-
     return false
   },
 }

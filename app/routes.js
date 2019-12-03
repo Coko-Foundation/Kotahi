@@ -45,7 +45,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 export default (
   <App>
     <Switch>
-      <PrivateRoute component={Dashboard} exact path="/" />
+      <PrivateRoute component={Dashboard} exact path="/dashboard" />
       <PrivateRoute
         component={SubmitPage}
         exact

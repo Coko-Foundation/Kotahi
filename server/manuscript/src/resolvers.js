@@ -22,6 +22,7 @@ const resolvers = {
         }),
         status: 'new',
       }
+      // eslint-disable-next-line
       const manuscript = await new ctx.connectors.Manuscript.model(
         emptyManuscript,
       ).save()
@@ -34,6 +35,7 @@ const resolvers = {
           objectId: manuscript.id,
         })
         manuscript.files.push(
+          // eslint-disable-next-line
           await new ctx.connectors.File.model(newFile).save(),
         )
       })
@@ -92,15 +94,14 @@ const resolvers = {
         .eager('members')
 
       team.members = team.members.map(m => {
-        if (m.user && m.user.id === currentUserId) {
+        if (m.userId === currentUserId) {
           m.status = action
         }
         return m
       })
-
       if (!team) throw new Error('No team was found')
 
-      await new Team(team).save()
+      await new Team(team).saveGraph()
 
       if (action === 'accepted') {
         const review = {
@@ -125,7 +126,7 @@ const resolvers = {
       const manuscript = await ctx.connectors.Manuscript.fetchOne(id, ctx)
 
       const update = merge({}, manuscript, data)
-
+      // eslint-disable-next-line
       const previousVersion = await new ctx.connectors.Manuscript.model(
         update,
       ).createNewVersion()

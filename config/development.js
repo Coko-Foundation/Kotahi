@@ -3,8 +3,9 @@ const { deferConfig } = require('config/defer')
 module.exports = {
   'pubsweet-server': {
     db: {
-      database: 'collabra',
+      database: 'simplej',
     },
+    pool: { min: 0, max: 10, idleTimeoutMillis: 1000 },
     baseUrl: deferConfig(
       cfg => `http://localhost:${cfg['pubsweet-server'].port}`,
     ),
@@ -12,6 +13,10 @@ module.exports = {
   },
   'pubsweet-client': {
     baseUrl: 'http://localhost:4000/',
+  },
+  mailer: {
+    from: 'simplej@example.com',
+    path: `${__dirname}/test-mailer`,
   },
   dbManager: {
     username: 'admin',
