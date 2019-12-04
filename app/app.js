@@ -6,8 +6,8 @@ import { Root } from 'pubsweet-client'
 import { createBrowserHistory } from 'history'
 import theme from '@pubsweet/coko-theme'
 
-import { JournalProvider } from 'xpub-journal'
-import { XpubProvider } from 'xpub-with-context'
+import { JournalProvider } from './components/xpub-journal'
+import { XpubProvider } from './components/xpub-with-context'
 
 import * as journal from './config/journal'
 import routes from './routes'
