@@ -1,8 +1,8 @@
 {
-  "name": "xpub",
+  "name": "SimpleJ",
   "version": "1.0.0",
   "private": true,
-  "description": "xpub - open journals",
+  "description": "SimpleJ - open journals",
   "license": "MIT",
   "engines": {
     "node": ">=9",
@@ -10,7 +10,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://gitlab.coko.foundation/xpub/xpub"
+    "url": "https://gitlab.coko.foundation/simplej/simplej"
   },
   "dependencies": {
     "@babel/core": "^7.0.0",
@@ -21,7 +21,7 @@
     "@pubsweet/job-xsweet": "^2.0.3",
     "@pubsweet/model-team": "^2.1.4",
     "@pubsweet/model-user": "^5.1.4",
-    "@pubsweet/ui": "12.0.1",
+    "@pubsweet/ui": "^12.1.0",
     "apollo-link-context": "^1.0.9",
     "apollo-link-schema": "^1.1.1",
     "config": "^1.26.2",
@@ -37,8 +37,6 @@
     "prop-types": "^15.5.10",
     "pubsweet": "^5.1.2",
     "pubsweet-client": "10.0.2",
-    "pubsweet-component-ink-backend": "^0.2.19",
-    "pubsweet-component-ink-frontend": "^1.0.2",
     "pubsweet-component-login": "^3.0.16",
     "pubsweet-component-signup": "^2.1.10",
     "pubsweet-component-users-manager": "^3.0.21",
@@ -51,7 +49,6 @@
     "supertest": "^3.0.0",
     "winston": "^2.4.0",
     "xpub-journal": "^0.1.0",
-    "xpub-theme": "^0.0.23",
     "xpub-with-context": "^0.2.0"
   },
   "devDependencies": {
@@ -150,5 +147,9 @@
   },
   "resolutions": {
     "bcrypt": "^3.0.6"
-  }
+  },
+  "workspaces": [
+    "app/components/*",
+    "server/component-*"
+  ]
 }
