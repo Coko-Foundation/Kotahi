@@ -1,12 +1,8 @@
 // TODO: What's with the wait?
 
 const login = (username, password = 'password') => {
-  cy.get('input[name="username"]')
-    .click()
-    .type(username)
-  cy.get('input[name="password"]')
-    .click()
-    .type(password)
+  cy.get('input[name="username"]').type(username)
+  cy.get('input[name="password"]').type(password)
   cy.get('button[type="submit"]').click()
 }
 
