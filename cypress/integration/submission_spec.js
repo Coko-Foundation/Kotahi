@@ -198,7 +198,7 @@ describe('PDF submission test', () => {
     cy.task('dump', '3reviewscompleted')
   })
 
-  it.only('accept a submitted paper', () => {
+  it('accept a submitted paper', () => {
     cy.task('restore', '3reviewscompleted')
     cy.visit('/dashboard')
     login('heditor')
