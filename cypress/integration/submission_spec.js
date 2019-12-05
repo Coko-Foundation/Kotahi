@@ -1,9 +1,16 @@
 // TODO: What's with the wait?
 
 const login = (username, password = 'password') => {
-  cy.get('input[name="username"]').type(username)
-  cy.get('input[name="password"]').type(password)
+  cy.get('input[name="username"]')
+    .focus()
+    .type(username)
+    .blur()
+  cy.get('input[name="password"]')
+    .focus()
+    .type(password)
+    .blur()
   cy.get('button[type="submit"]').click()
+  // cy.wait(1000)
 }
 
 const doReview = (username, note, confidential, recommendation) => {
