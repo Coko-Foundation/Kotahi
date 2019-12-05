@@ -1,6 +1,10 @@
 const login = (username, password = 'password') => {
-  cy.get('input[name="username"]').type(username)
-  cy.get('input[name="password"]').type(password)
+  cy.get('input[name="username"]')
+    .click()
+    .type(username)
+  cy.get('input[name="password"]')
+    .click()
+    .type(password)
   cy.get('button[type="submit"]').click()
 }
 
@@ -16,14 +20,14 @@ const doReview = (username, note, confidential, recommendation) => {
     .focus()
     .type(note)
     .blur()
-  cy.wait(1000)
+  cy.wait(500)
   cy.get(
     '[placeholder*="Enter a confidential note"] div[contenteditable="true"]',
   )
     .focus()
     .type(confidential)
     .blur()
-  cy.wait(1000)
+  cy.wait(500)
   // 0 == accept, 1 == revise, 2 == reject
   cy.get(`[class*=Radio__Label]:nth(${recommendation})`).click()
   cy.get('button[type=submit]').click()
