@@ -19,9 +19,8 @@ import FormBuilderPage from './components/component-xpub-formbuilder/src/compone
 
 import App from './components/App'
 
-const createReturnUrl = ({ pathname, search = '' }) => pathname + search
-
-const loginUrl = location => `/login?next=${createReturnUrl(location)}`
+// const createReturnUrl = ({ pathname, search = '' }) => pathname + search
+// const loginUrl = location => `/login?next=${createReturnUrl(location)}`
 
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
@@ -30,7 +29,7 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
       localStorage.getItem('token') ? (
         <Component {...props} />
       ) : (
-        <Redirect to={loginUrl(props.location)} />
+        <Redirect to="/login?next=/dashboard" />
       )
     }
   />

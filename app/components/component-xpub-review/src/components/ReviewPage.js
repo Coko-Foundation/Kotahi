@@ -3,7 +3,7 @@ import { graphql } from '@apollo/react-hoc'
 import { gql } from 'apollo-client-preset'
 import { withFormik } from 'formik'
 import { withLoader } from 'pubsweet-client'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, debounce } from 'lodash'
 import { getCommentContent } from './review/util'
 import ReviewLayout from '../components/review/ReviewLayout'
 
@@ -264,12 +264,16 @@ export default compose(
             input: reviewData,
           },
           update: (proxy, { data: { updateReview } }) => {
-            const data = proxy.readQuery({
-              query,
-              variables: {
-                id: manuscript.id,
-              },
-            })
+            const data = JSON.parse(
+              JSON.stringify(
+                proxy.readQuery({
+                  query,
+                  variables: {
+                    id: manuscript.id,
+                  },
+                }),
+              ),
+            )
             let reviewIndex = data.manuscript.reviews.findIndex(
               review => review.id === updateReview.id,
             )
@@ -300,14 +304,12 @@ export default compose(
         const team = cloneDeep(manuscript.teams).find(
           team => team.role === 'reviewerEditor',
         )
-        team.members = team.members
-          .map(m => {
-            if (m.user.id === currentUser.id) {
-              return { user: { id: m.user.id }, status: 'completed' }
-            }
-            return undefined
-          })
-          .filter(m => m)
+        team.members = team.members.map(m => {
+          if (m.user.id === currentUser.id) {
+            return { user: { id: m.user.id }, status: 'completed' }
+          }
+          return { user: { id: m.user.id }, status: m.status }
+        })
 
         updateTeam({
           variables: {
@@ -317,15 +319,16 @@ export default compose(
             },
           },
         }).then(() => {
-          history.push('/')
+          history.push('/dashboard')
         })
       },
     }),
   ),
   withFormik({
-    enableReinitialize: true,
     mapPropsToValues: props =>
-      props.manuscript.reviews.find(review => !review.isDecision) || {
+      props.manuscript.reviews.find(
+        review => review.user.id === props.currentUser.id && !review.isDecision,
+      ) || {
         id: null,
         comments: [],
         recommendation: null,

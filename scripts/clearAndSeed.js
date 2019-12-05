@@ -18,6 +18,36 @@ const seed = async () => {
     password: 'password',
   }).save()
 
+  await new User({
+    username: 'seditor',
+    email: 'simone@example.com',
+    password: 'password',
+  }).save()
+
+  await new User({
+    username: 'heditor',
+    email: 'hector@example.com',
+    password: 'password',
+  }).save()
+
+  await new User({
+    username: 'reviewer1',
+    email: 'regina@example.com',
+    password: 'password',
+  }).save()
+
+  await new User({
+    username: 'reviewer2',
+    email: 'robert@example.com',
+    password: 'password',
+  }).save()
+
+  await new User({
+    username: 'reviewer3',
+    email: 'remionne@example.com',
+    password: 'password',
+  }).save()
+
   await new Journal({
     title: 'My Journal',
   }).save()

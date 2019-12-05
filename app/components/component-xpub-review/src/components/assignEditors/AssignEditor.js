@@ -65,6 +65,7 @@ const AssignEditor = ({
   options,
 }) => (
   <Menu
+    data-testid={`assign${teamRole}`}
     label={teamName}
     onChange={user => {
       if (value) {
@@ -91,7 +92,7 @@ export default compose(
           variables: {
             id: team.id,
             input: {
-              members: [{ id: userId }],
+              members: [{ user: { id: userId } }],
             },
           },
         })
@@ -111,7 +112,7 @@ export default compose(
           name:
             teamRole === 'seniorEditor' ? 'Senior Editor' : 'Handling Editor',
           role: teamRole,
-          members: [{ id: userId }],
+          members: [{ user: { id: userId } }],
         }
 
         mutate({
@@ -137,7 +138,7 @@ export default compose(
     return {
       teamName,
       options: optionUsers,
-      value: members.length > 0 ? members[0].id : undefined,
+      value: members.length > 0 ? members[0].user.id : undefined,
     }
   }),
   withLoader(),

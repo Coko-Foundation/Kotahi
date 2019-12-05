@@ -107,12 +107,16 @@ const query = gql`
 `
 
 const update = match => (proxy, { data: { updateTeam, createTeam } }) => {
-  const data = proxy.readQuery({
-    query,
-    variables: {
-      id: match.params.version,
-    },
-  })
+  const data = JSON.parse(
+    JSON.stringify(
+      proxy.readQuery({
+        query,
+        variables: {
+          id: match.params.version,
+        },
+      }),
+    ),
+  )
 
   if (updateTeam) {
     const teamIndex = data.teams.findIndex(team => team.id === updateTeam.id)
@@ -148,7 +152,13 @@ const handleSubmit = (
   if (team.id) {
     const newTeam = {
       ...omit(team, ['object', 'id', '__typename']),
-      members: cloneDeep(team.members),
+      // TODO: Find a cleaner way of updating members
+      members: team.members.map(member => ({
+        user: {
+          id: member.user.id,
+        },
+        status: member.status,
+      })),
     }
 
     newTeam.members.push({ user: { id: user.id }, status: 'invited' })

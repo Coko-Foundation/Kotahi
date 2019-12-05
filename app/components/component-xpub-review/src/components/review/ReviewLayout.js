@@ -29,6 +29,7 @@ const ReviewLayout = ({
   const reviewSections = []
   const editorSections = []
   const manuscriptVersions = manuscript.manuscriptVersions || []
+
   manuscriptVersions.forEach(manuscript => {
     const label = moment().format('YYYY-MM-DD')
     reviewSections.push({
@@ -36,7 +37,11 @@ const ReviewLayout = ({
         <div>
           <ReviewMetadata manuscript={manuscript} />
           <Review
-            review={manuscript.reviews.find(review => !review.isDecision) || {}}
+            review={manuscript.reviews.find(review => {
+              return (
+                (review.user.id === currentUser.id && !review.isDecision) || {}
+              )
+            })}
           />
         </div>
       ),

@@ -57,15 +57,16 @@ const AttachmentsInput = ({
 
 const NoteInput = ({
   field,
-  form: { values, setFieldValue },
+  form: { values, setFieldValue, setTouched },
   updateReview,
+  ...rest
 }) => (
   <NoteEditor
     key="note-comment"
     placeholder="Enter your review…"
     title="Comments to the Author"
     {...field}
-    onChange={value => {
+    onBlur={value => {
       const { comment } = createComments(
         values,
         {
@@ -94,7 +95,7 @@ const ConfidentialInput = ({
     placeholder="Enter a confidential note to the editor (optional)…"
     title="Confidential Comments to Editor (Optional)"
     {...field}
-    onChange={value => {
+    onBlur={value => {
       const { comment } = createComments(
         values,
         {
@@ -132,11 +133,9 @@ const ReviewComment = props => (
   <>
     <AdminSection>
       <div name="note">
-        <Field
-          component={extraProps => <NoteInput {...props} {...extraProps} />}
-          key="noteField"
-          name="comments.0.content"
-        />
+        <Field key="noteField" name="comments.0.content">
+          {extraProps => <NoteInput {...props} {...extraProps} />}
+        </Field>
         <Field
           component={extraProps => (
             <AttachmentsInput type="note" {...props} {...extraProps} />
@@ -146,13 +145,9 @@ const ReviewComment = props => (
     </AdminSection>
     <AdminSection>
       <div name="confidential">
-        <Field
-          component={extraProps => (
-            <ConfidentialInput {...props} {...extraProps} />
-          )}
-          key="confidentialField"
-          name="comments.1.content"
-        />
+        <Field key="confidentialField" name="comments.1.content">
+          {extraProps => <ConfidentialInput {...props} {...extraProps} />}
+        </Field>
         <Field
           component={extraProps => (
             <AttachmentsInput type="confidential" {...props} {...extraProps} />
@@ -174,21 +169,23 @@ const ReviewForm = ({
   review,
 }) => (
   <form onSubmit={handleSubmit}>
-    <ReviewComment updateReview={updateReview} uploadFile={uploadFile} />
+    <ReviewComment
+      review={review}
+      updateReview={updateReview}
+      uploadFile={uploadFile}
+    />
     <AdminSection>
       <div name="Recommendation">
         <Title>Recommendation</Title>
-        <Field
-          component={props => (
+        <Field name="recommendation" updateReview={updateReview}>
+          {props => (
             <RecommendationInput
               journal={journal}
               updateReview={updateReview}
               {...props}
             />
           )}
-          name="recommendation"
-          updateReview={updateReview}
-        />
+        </Field>
       </div>
     </AdminSection>
 

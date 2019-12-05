@@ -80,7 +80,7 @@ const typeDefs = `
 
   type ManuscriptMeta {
     title: String!
-    source: String!
+    source: String
     articleType: String
     declarations: Declarations
     articleSections: [String]

@@ -1,4 +1,4 @@
-import { throttle, cloneDeep, isEmpty, set } from 'lodash'
+import { debounce, cloneDeep, isEmpty, set } from 'lodash'
 import { compose, withProps, withState, withHandlers } from 'recompose'
 import { graphql } from '@apollo/react-hoc'
 import { gql } from 'apollo-client-preset'
@@ -186,20 +186,24 @@ export default compose(
   }),
   graphql(updateMutation, {
     props: ({ mutate, ownProps }) => {
-      const updateManuscript = (value, path) => {
+      const debouncers = {}
+      const onChange = (value, path) => {
         const input = {}
         set(input, path, value)
+        debouncers[path] = debouncers[path] || debounce(updateManuscript, 300)
+        return debouncers[path](input)
+      }
+
+      const updateManuscript = input =>
         mutate({
           variables: {
             id: ownProps.match.params.version,
             input: JSON.stringify(emptyToUndefined(input)),
           },
         })
-      }
 
       return {
-        // TODO: do this on blur, rather than on every keystroke?
-        onChange: throttle(updateManuscript, 1000, { trailing: false }),
+        onChange,
       }
     },
   }),
@@ -216,7 +220,7 @@ export default compose(
             input: JSON.stringify(updateManuscript),
           },
         }).then(() => {
-          history.push('/')
+          history.push('/dashboard')
         })
       },
     }),

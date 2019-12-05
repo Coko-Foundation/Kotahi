@@ -34,6 +34,7 @@ const EditorItemLinks = ({ version, journals }) => (
       Summary Info
     </Action>
     <Action
+      data-testid="control-panel"
       to={`/journals/${journals.id}/versions/${version.id}/decisions/${version.id}`}
     >
       {version.decision && version.decision.status === 'submitted'

@@ -102,6 +102,8 @@ const App = ({ authorized, children, history, match }) => {
     <Root converting={conversion.converting}>
       <AppBar
         brand={journal.metadata.name}
+        brandLink="/dashboard"
+        loginLink="/login?next=/dashboard"
         navLinkComponents={links}
         onLogoutClick={() => logoutUser(client)}
         user={currentUser}

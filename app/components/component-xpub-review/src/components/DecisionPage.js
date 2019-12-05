@@ -216,7 +216,7 @@ export default compose(
             }),
           },
         }).then(() => {
-          history.push('/')
+          history.push('/dashboard')
         })
       },
     }),

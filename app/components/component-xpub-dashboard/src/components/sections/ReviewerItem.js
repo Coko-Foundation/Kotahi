@@ -65,6 +65,7 @@ const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
             <Actions>
               <ActionContainer>
                 <Button
+                  data-testid="accept-review"
                   onClick={() => {
                     reviewerRespond({
                       variables: {
