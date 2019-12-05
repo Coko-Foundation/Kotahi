@@ -521,10 +521,15 @@ class SimpleJMode {
 
   async isAllowedToReview(object) {
     this.user = await getUserAndTeams(this.userId, this.context)
-    const permission = await this.isAssignedReviewerEditor({
-      id: object.manuscriptId,
-    })
-    return permission
+
+    return this.checkTeamMembers(
+      [
+        'isAssignedSeniorEditor',
+        'isAssignedHandlingEditor',
+        'isAssignedReviewerEditor',
+      ],
+      { id: object.manuscriptId },
+    )
   }
 
   async canViewMySubmissionSection() {
@@ -562,7 +567,8 @@ class SimpleJMode {
             manuscript,
           )) &&
           (manuscript.status === 'revising' ||
-            manuscript.status === 'submitted'),
+            manuscript.status === 'submitted' ||
+            manuscript.status === 'accepted'),
       ),
     )
 

@@ -1,5 +1,6 @@
 describe('Login test', () => {
   it('Can log in as admin (and logout)', () => {
+    cy.task('db:seed')
     cy.visit('/dashboard')
 
     const username = 'admin'

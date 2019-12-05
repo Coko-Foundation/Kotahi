@@ -135,6 +135,8 @@ class Manuscript extends BaseModel {
       review => review.isDecision,
     )
 
+    console.log('HELLO!', manuscriptDecision)
+
     const dataManuscript = await new Manuscript(
       omit(cloneDeep(this), ['id', 'created', 'updated', 'decision']),
     )
@@ -144,6 +146,7 @@ class Manuscript extends BaseModel {
         ? 'revising'
         : manuscriptDecision.recommendation
 
+    console.log('DATA MANUISCRIPT', dataManuscript)
     dataManuscript.parentId = this.parentId || this.id
     const newManuscript = await dataManuscript.save()
 
@@ -152,7 +155,10 @@ class Manuscript extends BaseModel {
       await Promise.all(
         teams.map(async team => {
           team.objectId = newManuscript.id
-          await new Team(omit(team, ['id', 'objectType'])).save()
+          team.members = team.members.map(member => {
+            return omit(member, 'id')
+          })
+          await new Team(omit(team, ['id'])).saveGraph()
         }),
       )
     }

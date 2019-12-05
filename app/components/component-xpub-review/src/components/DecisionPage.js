@@ -7,6 +7,10 @@ import { getCommentContent } from './review/util'
 
 import DecisionLayout from './decision/DecisionLayout'
 
+// import { dashboard } from '../../../component-xpub-dashboard/src/graphql/queries'
+
+// /graphql/queries/'
+
 const reviewFields = `
   id
   created
@@ -215,6 +219,22 @@ export default compose(
                 .recommendation,
             }),
           },
+          refetchQueries: [
+            {
+              query,
+            },
+          ],
+          // update: (proxy, { data: { submitManuscript } }) => {
+          //   const data = proxy.readQuery({
+          //     query,
+          //     variables: {
+          //       id: manuscript.id,
+          //     },
+          //   })
+          //   // TODO: Remove trick to replace existing manuscript
+          //   data.manuscript.status = submitManuscript.status
+          //   proxy.writeQuery({ query, data })
+          // },
         }).then(() => {
           history.push('/dashboard')
         })
@@ -294,7 +314,8 @@ export default compose(
   ),
   withFormik({
     mapPropsToValues: props =>
-      props.manuscript.reviews.find(review => review.isDecision) || {
+      (props.manuscript.reviews &&
+        props.manuscript.reviews.find(review => review.isDecision)) || {
         comments: [],
         recommendation: null,
       },

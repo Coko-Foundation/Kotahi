@@ -1,3 +1,5 @@
+// TODO: What's with the wait?
+
 const login = (username, password = 'password') => {
   cy.get('input[name="username"]')
     .click()
@@ -20,14 +22,14 @@ const doReview = (username, note, confidential, recommendation) => {
     .focus()
     .type(note)
     .blur()
-  cy.wait(500)
+  cy.wait(1000)
   cy.get(
     '[placeholder*="Enter a confidential note"] div[contenteditable="true"]',
   )
     .focus()
     .type(confidential)
     .blur()
-  cy.wait(500)
+  cy.wait(1000)
   // 0 == accept, 1 == revise, 2 == reject
   cy.get(`[class*=Radio__Label]:nth(${recommendation})`).click()
   cy.get('button[type=submit]').click()
@@ -38,6 +40,8 @@ const doReview = (username, note, confidential, recommendation) => {
 
 describe('PDF submission test', () => {
   it('can upload and submit a PDF', () => {
+    cy.task('db:seed')
+
     cy.visit('/dashboard')
 
     // 1. Log in as author
@@ -46,7 +50,12 @@ describe('PDF submission test', () => {
     // 2. Submit a PDF
     cy.fixture('test-pdf.pdf', 'base64').then(fileContent => {
       cy.get('[data-testid="dropzone"]').upload(
-        { fileContent, fileName: 'test-pdf.pdf', mimeType: 'application/pdf' },
+        {
+          fileContent,
+          fileName: 'test-pdf.pdf',
+          encoding: 'base64',
+          mimeType: 'application/pdf',
+        },
         { subjectType: 'drag-n-drop' },
       )
     })
@@ -134,8 +143,8 @@ describe('PDF submission test', () => {
     cy.get('nav button').click()
 
     // 8. And login as handling editor
+    cy.wait(1000)
     login('heditor')
-
     cy.get('[data-testid="control-panel"]').click()
 
     // 9. Assign reviewers
@@ -184,6 +193,35 @@ describe('PDF submission test', () => {
 
     // 12. Log in as handling editor
     login('heditor')
+    cy.get('[data-testid="completed"]').contains('3')
+
+    cy.task('dump', '3reviewscompleted')
+  })
+
+  it.only('accept a submitted paper', () => {
+    cy.task('restore', '3reviewscompleted')
+    cy.visit('/dashboard')
+    login('heditor')
+    cy.get('[data-testid="completed"]').contains('3')
+
     cy.get('[data-testid="control-panel"]').click()
+    cy.contains('reviewer1')
+    cy.contains('reviewer2')
+    cy.contains('reviewer3')
+
+    // Write a decision
+    cy.get('[placeholder*="Write/paste"] div[contenteditable="true"]')
+      .focus()
+      .type("Let's do this!")
+      .blur()
+      .wait(1000)
+    cy.get(`[class*=Radio__Label]:nth(0)`)
+      .click()
+      .wait(1000)
+
+    cy.get('button[type=submit]').click()
+    cy.wait(2000)
+    cy.visit('/dashboard')
+    cy.contains('accepted')
   })
 })

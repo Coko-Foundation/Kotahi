@@ -44,7 +44,8 @@ const NoteInput = ({
 }) => (
   <NoteEditor
     key="note-input"
-    onBlur={value => {
+    onBlur={() => {}}
+    onChange={value => {
       const { updateIndex, comment } = createComments(
         values,
         {

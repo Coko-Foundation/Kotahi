@@ -13,13 +13,23 @@
 
 const seed = require('../../scripts/clearAndSeed')
 
+const { execSync } = require('child_process')
+const path = require('path')
+const { readFileSync } = require('fs')
+
+const dumpFile = name => path.join(__dirname, '..', 'dumps', `${name}.sql`)
+
 module.exports = (on, config) => {
   on('task', {
-    'db:seed': () => {
-      return seed()
+    'db:seed': () => seed(),
+    dump: name => {
+      if (process.env.NEWDUMPS) {
+        return execSync(
+          `pg_dump --column-inserts -d simplej > ${dumpFile(name)}`,
+        )
+      }
+      return true
     },
+    restore: name => seed(readFileSync(dumpFile(name), 'utf-8')),
   })
-
-  // `on` is used to hook into various events Cypress emits
-  // `config` is the resolved Cypress config
 }
