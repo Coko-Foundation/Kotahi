@@ -2,10 +2,14 @@
 
 const login = (username, password = 'password') => {
   cy.get('input[name="username"]')
+    .click()
+    .wait(200)
     .focus()
     .type(username)
     .blur()
   cy.get('input[name="password"]')
+    .click()
+    .wait(200)
     .focus()
     .type(password)
     .blur()

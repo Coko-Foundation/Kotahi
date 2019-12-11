@@ -3,7 +3,7 @@ import { withFormik } from 'formik'
 import { graphql } from '@apollo/react-hoc'
 import { gql } from 'apollo-client-preset'
 import { withLoader } from 'pubsweet-client'
-import { cloneDeep, omit } from 'lodash'
+import { omit } from 'lodash'
 
 import Reviewers from '../components/reviewers/Reviewers'
 import ReviewerContainer from '../components/reviewers/ReviewerContainer'

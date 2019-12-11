@@ -32,7 +32,7 @@ const seed = async dumpSql => {
   if (dumpSql) {
     await clearDb()
     await db.raw(dumpSql)
-    console.log('Cleared the database and restored from dump')
+    logger.info('Cleared the database and restored from dump')
     return true
   }
 

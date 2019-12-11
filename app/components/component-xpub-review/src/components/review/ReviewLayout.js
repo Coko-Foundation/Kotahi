@@ -37,11 +37,10 @@ const ReviewLayout = ({
         <div>
           <ReviewMetadata manuscript={manuscript} />
           <Review
-            review={manuscript.reviews.find(review => {
-              return (
-                (review.user.id === currentUser.id && !review.isDecision) || {}
-              )
-            })}
+            review={manuscript.reviews.find(
+              review =>
+                (review.user.id === currentUser.id && !review.isDecision) || {},
+            )}
           />
         </div>
       ),

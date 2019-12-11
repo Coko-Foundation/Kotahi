@@ -52,7 +52,7 @@ const Reviews = ({ version, journal }) => (
     <JournalContext.Consumer>
       {journal =>
         journal.reviewStatus.map(status => (
-          <BadgeContainer key={status} data-testid={status}>
+          <BadgeContainer data-testid={status} key={status}>
             <Badge count={countStatus(version, status)} label={status} />
           </BadgeContainer>
         ))

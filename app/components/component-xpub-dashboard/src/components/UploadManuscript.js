@@ -192,9 +192,9 @@ const UploadManuscript = ({ acceptFiles, ...props }) => {
   return (
     <StyledDropzone
       accept={acceptFiles}
+      data-testid="dropzone"
       disableUpload={converting ? 'disableUpload' : null}
       onDrop={uploadManuscript}
-      data-testid="dropzone"
     >
       <Root>
         <Main>

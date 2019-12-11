@@ -42,7 +42,6 @@ class SimpleJMode {
    * @returns {boolean}
    */
   async isTeamMember(role, object) {
-    console.log(this.user, this.user.teams)
     if (!this.user || !Array.isArray(this.user.teams)) {
       return false
     }

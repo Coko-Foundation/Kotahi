@@ -125,7 +125,6 @@ const resolvers = {
       const data = JSON.parse(input)
 
       const manuscript = await ctx.connectors.Manuscript.fetchOne(id, ctx)
-      console.log(manuscript, 'hello!')
       const update = merge({}, manuscript, data)
       // eslint-disable-next-line
       const previousVersion = await new ctx.connectors.Manuscript.model(
