@@ -4,6 +4,7 @@ module.exports = {
   'pubsweet-server': {
     db: {
       database: 'simplej',
+      user: 'test',
     },
     pool: { min: 0, max: 10, idleTimeoutMillis: 1000 },
     baseUrl: deferConfig(

@@ -4,7 +4,7 @@ const logger = require('winston')
 
 module.exports = {
   authsome: {
-    mode: path.resolve(__dirname, 'authsomeGraphql.js'),
+    mode: path.resolve(__dirname, 'authsome.js'),
     teams: {
       seniorEditor: {
         name: 'Senior Editors',

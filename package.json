@@ -1,8 +1,8 @@
 {
-  "name": "xpub",
+  "name": "SimpleJ",
   "version": "1.0.0",
   "private": true,
-  "description": "xpub - open journals",
+  "description": "SimpleJ - open journals",
   "license": "MIT",
   "engines": {
     "node": ">=9",
@@ -10,9 +10,10 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://gitlab.coko.foundation/xpub/xpub"
+    "url": "https://gitlab.coko.foundation/simplej/simplej"
   },
   "dependencies": {
+    "@apollo/react-testing": "^3.1.3",
     "@babel/core": "^7.0.0",
     "@pubsweet/base-model": "^3.5.0",
     "@pubsweet/coko-theme": "5.1.16",
@@ -21,7 +22,7 @@
     "@pubsweet/job-xsweet": "^2.0.3",
     "@pubsweet/model-team": "^2.1.4",
     "@pubsweet/model-user": "^5.1.4",
-    "@pubsweet/ui": "12.0.1",
+    "@pubsweet/ui": "^12.1.0",
     "apollo-link-context": "^1.0.9",
     "apollo-link-schema": "^1.1.1",
     "config": "^1.26.2",
@@ -37,19 +38,9 @@
     "prop-types": "^15.5.10",
     "pubsweet": "^5.1.2",
     "pubsweet-client": "10.0.2",
-    "pubsweet-component-ink-backend": "^0.2.19",
-    "pubsweet-component-ink-frontend": "^1.0.2",
     "pubsweet-component-login": "^3.0.16",
     "pubsweet-component-signup": "^2.1.10",
     "pubsweet-component-users-manager": "^3.0.21",
-    "pubsweet-component-xpub-dashboard": "^5.0.21",
-    "pubsweet-component-xpub-find-reviewers": "^0.0.24",
-    "pubsweet-component-xpub-formbuilder": "^1.0.7",
-    "pubsweet-component-xpub-manuscript": "^2.0.2",
-    "pubsweet-component-xpub-review": "^4.0.7",
-    "pubsweet-component-xpub-review-backend": "^1.0.24",
-    "pubsweet-component-xpub-submit": "^6.0.21",
-    "pubsweet-component-xpub-teams-manager": "^3.0.2",
     "pubsweet-server": "13.7.2",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
@@ -59,8 +50,6 @@
     "supertest": "^3.0.0",
     "winston": "^2.4.0",
     "xpub-journal": "^0.1.0",
-    "xpub-selectors": "^0.2.0",
-    "xpub-theme": "^0.0.23",
     "xpub-with-context": "^0.2.0"
   },
   "devDependencies": {
@@ -85,7 +74,8 @@
     "compression-webpack-plugin": "^3.0.0",
     "copy-webpack-plugin": "^4.0.1",
     "css-loader": "^0.28.4",
-    "cypress": "^3.7.0",
+    "cypress": "^4.0.1",
+    "cypress-file-upload": "^3.5.0",
     "eslint": "^4.12.0",
     "eslint-config-pubsweet": "^0.0.6",
     "eslint-plugin-import": "^2.8.0",
@@ -158,5 +148,9 @@
   },
   "resolutions": {
     "bcrypt": "^3.0.6"
-  }
+  },
+  "workspaces": [
+    "app/components/*",
+    "server/component-*"
+  ]
 }

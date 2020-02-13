@@ -152,7 +152,8 @@ class Manuscript extends BaseModel {
       await Promise.all(
         teams.map(async team => {
           team.objectId = newManuscript.id
-          await new Team(omit(team, ['id', 'objectType'])).save()
+          team.members = team.members.map(member => omit(member, 'id'))
+          await new Team(omit(team, ['id'])).saveGraph()
         }),
       )
     }
