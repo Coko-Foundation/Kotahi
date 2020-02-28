@@ -231,4 +231,13 @@ describe('PDF submission test', () => {
     cy.visit('/dashboard')
     cy.contains('accepted')
   })
+
+  it('can delete a submission', () => {
+    cy.task('restore', '3reviewscompleted')
+    cy.visit('/dashboard')
+    login('admin')
+    cy.get('button:contains("Delete")').click()
+    cy.visit('/dashboard')
+    cy.contains('Nothing to do at the moment')
+  })
 })

@@ -52,90 +52,9 @@ CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
---
--- Name: job_state; Type: TYPE; Schema: pgboss; Owner: test
---
-
-CREATE TYPE pgboss.job_state AS ENUM (
-    'created',
-    'retry',
-    'active',
-    'completed',
-    'expired',
-    'cancelled',
-    'failed'
-);
-
-
-ALTER TYPE pgboss.job_state OWNER TO test;
-
 SET default_tablespace = '';
 
 SET default_with_oids = false;
-
---
--- Name: archive; Type: TABLE; Schema: pgboss; Owner: test
---
-
-CREATE TABLE pgboss.archive (
-    id uuid NOT NULL,
-    name text NOT NULL,
-    priority integer NOT NULL,
-    data jsonb,
-    state pgboss.job_state NOT NULL,
-    retrylimit integer NOT NULL,
-    retrycount integer NOT NULL,
-    retrydelay integer NOT NULL,
-    retrybackoff boolean NOT NULL,
-    startafter timestamp with time zone NOT NULL,
-    startedon timestamp with time zone,
-    singletonkey text,
-    singletonon timestamp without time zone,
-    expirein interval NOT NULL,
-    createdon timestamp with time zone NOT NULL,
-    completedon timestamp with time zone,
-    archivedon timestamp with time zone DEFAULT now() NOT NULL
-);
-
-
-ALTER TABLE pgboss.archive OWNER TO test;
-
---
--- Name: job; Type: TABLE; Schema: pgboss; Owner: test
---
-
-CREATE TABLE pgboss.job (
-    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
-    name text NOT NULL,
-    priority integer DEFAULT 0 NOT NULL,
-    data jsonb,
-    state pgboss.job_state DEFAULT 'created'::pgboss.job_state NOT NULL,
-    retrylimit integer DEFAULT 0 NOT NULL,
-    retrycount integer DEFAULT 0 NOT NULL,
-    retrydelay integer DEFAULT 0 NOT NULL,
-    retrybackoff boolean DEFAULT false NOT NULL,
-    startafter timestamp with time zone DEFAULT now() NOT NULL,
-    startedon timestamp with time zone,
-    singletonkey text,
-    singletonon timestamp without time zone,
-    expirein interval DEFAULT '00:15:00'::interval NOT NULL,
-    createdon timestamp with time zone DEFAULT now() NOT NULL,
-    completedon timestamp with time zone
-);
-
-
-ALTER TABLE pgboss.job OWNER TO test;
-
---
--- Name: version; Type: TABLE; Schema: pgboss; Owner: test
---
-
-CREATE TABLE pgboss.version (
-    version text NOT NULL
-);
-
-
-ALTER TABLE pgboss.version OWNER TO test;
 
 --
 -- Name: aliases; Type: TABLE; Schema: public; Owner: test
@@ -315,25 +234,6 @@ CREATE TABLE public.users (
 ALTER TABLE public.users OWNER TO test;
 
 --
--- Data for Name: archive; Type: TABLE DATA; Schema: pgboss; Owner: test
---
-
-
-
---
--- Data for Name: job; Type: TABLE DATA; Schema: pgboss; Owner: test
---
-
-
-
---
--- Data for Name: version; Type: TABLE DATA; Schema: pgboss; Owner: test
---
-
-INSERT INTO pgboss.version (version) VALUES ('10');
-
-
---
 -- Data for Name: aliases; Type: TABLE DATA; Schema: public; Owner: test
 --
 
@@ -349,99 +249,83 @@ INSERT INTO pgboss.version (version) VALUES ('10');
 -- Data for Name: files; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.files (id, created, updated, object, object_id, label, file_type, filename, url, mime_type, size, type) VALUES ('89e23936-9271-46bc-9585-19d21a67bba9', '2019-12-05 16:26:09.886+01', '2019-12-05 16:26:09.886+01', 'Manuscript', '0f66a0d2-52b2-4de3-8efb-d07b3e6a087d', NULL, 'manuscript', 'test-pdf.pdf', '/0d6bf973199e958342350dcb9a5146eb.pdf', 'application/pdf', 106798, 'file');
+INSERT INTO public.files (id, created, updated, object, object_id, label, file_type, filename, url, mime_type, size, type) VALUES ('60972cc9-b5b9-42b4-a80f-67616cfa6ac7', '2020-02-28 19:39:59.454+01', '2020-02-28 19:39:59.454+01', 'Manuscript', 'bd429b57-6fc9-4454-a42c-c1f63cfa263c', NULL, 'manuscript', 'test-pdf.pdf', '/0b5e0a112164206f396e61beb28a913b.pdf', 'application/pdf', 106798, 'file');
 
 
 --
 -- Data for Name: journals; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.journals (id, created, updated, title, meta, type) VALUES ('f3e14b10-9027-4c3c-be79-68aa5ff0d6c9', '2019-12-05 16:26:07.424+01', '2019-12-05 16:26:07.424+01', 'My Journal', NULL, 'journal');
+INSERT INTO public.journals (id, created, updated, title, meta, type) VALUES ('4fe21415-b60c-442e-8748-872f35c2266f', '2020-02-28 19:39:55.414+01', '2020-02-28 19:39:55.414+01', 'My Journal', NULL, 'journal');
 
 
 --
 -- Data for Name: manuscripts; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.manuscripts (id, created, updated, parent_id, status, decision, authors, suggestions, meta, type) VALUES ('0f66a0d2-52b2-4de3-8efb-d07b3e6a087d', '2019-12-05 16:26:09.861+01', '2019-12-05 16:26:24.861+01', NULL, 'submitted', NULL, NULL, '{"editors": {"opposed": "Gina Ode", "suggested": "John Ode"}, "reviewers": {"opposed": "James Doe", "suggested": "Jane Doe"}}', '{"notes": [{"content": "This work was supported by the Trust [grant numbers 393,295]; the Natural Environment Research Council [grant number 49493].", "notesType": "fundingAcknowledgement"}, {"content": "", "notesType": "specialInstructions", "__typename": "Note"}], "title": "A Manuscript For The Ages", "abstract": "Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem.", "keywords": "quantum, machines, nature", "articleType": "original-research", "declarations": {"openData": "yes", "preregistered": "yes", "researchNexus": "no", "openPeerReview": "yes", "previouslySubmitted": "no"}, "articleSections": ["cognitive-psychology"]}', 'Manuscript');
+INSERT INTO public.manuscripts (id, created, updated, parent_id, status, decision, authors, suggestions, meta, type) VALUES ('bd429b57-6fc9-4454-a42c-c1f63cfa263c', '2020-02-28 19:39:59.308+01', '2020-02-28 19:40:15.15+01', NULL, 'submitted', NULL, NULL, '{"editors": {"opposed": "Gina Ode", "suggested": "John Ode"}, "reviewers": {"opposed": "James Doe", "suggested": "Jane Do"}}', '{"notes": [{"content": "This work was supported by the Trust [grant numbers 393,295]; the Natural Environment Research Council [grant number 49493].", "notesType": "fundingAcknowledgement"}, {"content": "", "notesType": "specialInstructions", "__typename": "Note"}], "title": "A Manuscript For The Ages", "keywords": "quantum, machines, nature", "articleType": "original-research", "declarations": {"openData": "yes", "preregistered": "yes", "researchNexus": "no", "openPeerReview": "yes", "streamlinedReview": "no", "previouslySubmitted": "no"}, "articleSections": ["cognitive-psychology"]}', 'Manuscript');
 
 
 --
 -- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.migrations (id, run_at) VALUES ('1524494862-entities.sql', '2019-12-05 16:26:05.130061+01');
-INSERT INTO public.migrations (id, run_at) VALUES ('1537450834-files.sql', '2019-12-05 16:26:05.140123+01');
-INSERT INTO public.migrations (id, run_at) VALUES ('1537450834-journals.sql', '2019-12-05 16:26:05.149932+01');
-INSERT INTO public.migrations (id, run_at) VALUES ('1537450834-manuscript.sql', '2019-12-05 16:26:05.161293+01');
-INSERT INTO public.migrations (id, run_at) VALUES ('1537450834-review.sql', '2019-12-05 16:26:05.198325+01');
-INSERT INTO public.migrations (id, run_at) VALUES ('1542276313-initial-user-migration.sql', '2019-12-05 16:26:05.209449+01');
-INSERT INTO public.migrations (id, run_at) VALUES ('1542801241-initial-team-migration.sql', '2019-12-05 16:26:05.219017+01');
-INSERT INTO public.migrations (id, run_at) VALUES ('1547596236-initial-team-member-migration.js', '2019-12-05 16:26:05.236755+01');
-INSERT INTO public.migrations (id, run_at) VALUES ('1548205275-move-members.js', '2019-12-05 16:26:05.244594+01');
-INSERT INTO public.migrations (id, run_at) VALUES ('1548205276-simplify-object.js', '2019-12-05 16:26:05.257434+01');
-INSERT INTO public.migrations (id, run_at) VALUES ('1548328420-add-alias-migration.js', '2019-12-05 16:26:05.273399+01');
-INSERT INTO public.migrations (id, run_at) VALUES ('1560771823-add-unique-constraints-to-users.sql', '2019-12-05 16:26:05.2811+01');
+INSERT INTO public.migrations (id, run_at) VALUES ('1524494862-entities.sql', '2020-02-28 19:39:52.52103+01');
+INSERT INTO public.migrations (id, run_at) VALUES ('1537450834-files.sql', '2020-02-28 19:39:52.533068+01');
+INSERT INTO public.migrations (id, run_at) VALUES ('1537450834-journals.sql', '2020-02-28 19:39:52.582771+01');
+INSERT INTO public.migrations (id, run_at) VALUES ('1537450834-manuscript.sql', '2020-02-28 19:39:52.628646+01');
+INSERT INTO public.migrations (id, run_at) VALUES ('1537450834-review.sql', '2020-02-28 19:39:52.682145+01');
+INSERT INTO public.migrations (id, run_at) VALUES ('1542276313-initial-user-migration.sql', '2020-02-28 19:39:52.700352+01');
+INSERT INTO public.migrations (id, run_at) VALUES ('1542801241-initial-team-migration.sql', '2020-02-28 19:39:52.713315+01');
+INSERT INTO public.migrations (id, run_at) VALUES ('1547596236-initial-team-member-migration.js', '2020-02-28 19:39:52.732321+01');
+INSERT INTO public.migrations (id, run_at) VALUES ('1548205275-move-members.js', '2020-02-28 19:39:52.743401+01');
+INSERT INTO public.migrations (id, run_at) VALUES ('1548205276-simplify-object.js', '2020-02-28 19:39:52.765508+01');
+INSERT INTO public.migrations (id, run_at) VALUES ('1548328420-add-alias-migration.js', '2020-02-28 19:39:52.783812+01');
+INSERT INTO public.migrations (id, run_at) VALUES ('1560771823-add-unique-constraints-to-users.sql', '2020-02-28 19:39:52.794199+01');
 
 
 --
 -- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, comments, user_id, manuscript_id, type) VALUES ('e49108aa-9074-4911-b62d-3f6e59340033', '2019-12-05 16:26:40.032+01', '2019-12-05 16:26:45.883+01', 'accepted', false, '[{"type": "note", "content": "Great research into CC bases in the ky289 variant are mutated to TC which results in the truncation of the SAD-1."}, {"type": "confidential", "content": "Not too bad."}]', '4338f5c1-6182-4cc4-be29-fd9ccc7cbe0e', '0f66a0d2-52b2-4de3-8efb-d07b3e6a087d', 'Review');
-INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, comments, user_id, manuscript_id, type) VALUES ('d8f3ff17-7845-46bc-859c-69f2b6fde343', '2019-12-05 16:26:49.104+01', '2019-12-05 16:26:54.224+01', 'revise', false, '[{"type": "note", "content": "Mediocre analysis of Iron-Sulfur ClUster assembly enzyme homolog."}, {"type": "confidential", "content": "It is so so."}]', '058ae58b-f87c-4ed3-b74b-8451ce71ed67', '0f66a0d2-52b2-4de3-8efb-d07b3e6a087d', 'Review');
-INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, comments, user_id, manuscript_id, type) VALUES ('8224969d-0a32-4a52-9263-6d97a3033205', '2019-12-05 16:26:57.429+01', '2019-12-05 16:27:03.718+01', 'rejected', false, '[{"type": "note", "content": "mTOR-Is positively influence the occurrence and course of certain tumors after solid organ transplantation."}, {"type": "confidential", "content": "It is not good."}]', '549eea97-67fe-481e-a0d4-9e378375b152', '0f66a0d2-52b2-4de3-8efb-d07b3e6a087d', 'Review');
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, comments, user_id, manuscript_id, type) VALUES ('622e74ac-f08b-420f-b311-076e69b03c00', '2020-02-28 19:40:33.481+01', '2020-02-28 19:40:40.542+01', 'accepted', false, '[{"type": "note", "content": "Great research into CC bases in the ky289 variant are mutated to TC which results in the truncation of the SAD-1."}, {"type": "confidential", "content": "Not too bad."}]', 'e910b3d3-273d-4492-b68b-b33a5e4cb58d', 'bd429b57-6fc9-4454-a42c-c1f63cfa263c', 'Review');
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, comments, user_id, manuscript_id, type) VALUES ('5c8b933e-6410-46f4-8949-85ad3b1fc061', '2020-02-28 19:40:44.503+01', '2020-02-28 19:40:50.2+01', 'revise', false, '[{"type": "note", "content": "Mediocre analysis of Iron-Sulfur ClUster assembly enzyme homolog."}, {"type": "confidential", "content": "It is so so."}]', '1e28bd99-497d-4496-8e1a-169693995b18', 'bd429b57-6fc9-4454-a42c-c1f63cfa263c', 'Review');
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, comments, user_id, manuscript_id, type) VALUES ('88d41d50-b647-4654-a8e0-ab5bb6934124', '2020-02-28 19:40:54.824+01', '2020-02-28 19:41:01.495+01', 'rejected', false, '[{"type": "note", "content": "mTOR-Is positively influence the occurrence and course of certain tumors after solid organ transplantation."}, {"type": "confidential", "content": "It is not good."}]', '60adcc92-64a0-4d87-97ef-a31ccf30517a', 'bd429b57-6fc9-4454-a42c-c1f63cfa263c', 'Review');
 
 
 --
 -- Data for Name: team_members; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('7474b1c0-886f-4517-a877-81168f1abdc3', '2019-12-05 16:26:09.925+01', '2019-12-05 16:26:09.925+01', NULL, 'f92f3eef-c855-4ff6-b5a3-efedce2657b1', 'bf371f23-e97d-4750-af59-f6ac52f93ef1', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('d4607e98-5648-43a5-b82e-6f2faff1f606', '2019-12-05 16:26:28.723+01', '2019-12-05 16:26:28.723+01', NULL, '120880f3-35c0-400d-b428-7d7f5995b894', '327368fc-7ad8-4bcd-8f01-ff0267c41fe7', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('aff39942-2f5d-48d5-b5c2-0ffa9f7d40b0', '2019-12-05 16:26:29.166+01', '2019-12-05 16:26:29.166+01', NULL, '0f9a96a3-16c4-485a-af6e-b0cd1cab5600', 'f18c93b2-13ae-4918-8b2a-fc10e86f36f7', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('b2db32f0-90f5-4b11-8523-4557c1d1ea53', '2019-12-05 16:27:03.998+01', '2019-12-05 16:27:03.998+01', 'completed', '17120f87-8f2a-4c45-a5fd-1ecbf9e024e3', '058ae58b-f87c-4ed3-b74b-8451ce71ed67', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('9a66383b-516b-4dfd-9169-9b03a5cd3285', '2019-12-05 16:27:03.998+01', '2019-12-05 16:27:03.998+01', 'completed', '17120f87-8f2a-4c45-a5fd-1ecbf9e024e3', '4338f5c1-6182-4cc4-be29-fd9ccc7cbe0e', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('918d4af4-e232-45fd-818b-67c9d2823d38', '2019-12-05 16:27:03.998+01', '2019-12-05 16:27:03.998+01', 'completed', '17120f87-8f2a-4c45-a5fd-1ecbf9e024e3', '549eea97-67fe-481e-a0d4-9e378375b152', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('a5ff0f55-6363-4c0f-a033-27be3b55ff37', '2020-02-28 19:39:59.499+01', '2020-02-28 19:39:59.499+01', NULL, 'ebb4cc52-04ed-4390-ad70-be8f438e6012', 'bbe263a7-3cc5-4b3a-a6ce-d2cc70425406', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('2ef219dd-66b4-45b4-b525-89a6b64e9eeb', '2020-02-28 19:40:21.509+01', '2020-02-28 19:40:21.509+01', NULL, '5848e7e9-112e-41cc-8f93-460560a740aa', '1c162384-ef4c-47fc-a89e-d7a03c13cec8', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('9a362034-2f53-4162-a5e4-d3fa6896ff5e', '2020-02-28 19:40:21.949+01', '2020-02-28 19:40:21.949+01', NULL, '84ef271d-a10c-4d3c-9c44-0568f126e161', '53c1ddca-2770-417d-991d-f386d2d06e57', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('84235add-df75-48cf-8a39-ef18faea1536', '2020-02-28 19:41:01.778+01', '2020-02-28 19:41:01.778+01', 'completed', '9c00c3e3-9d53-48d8-805d-8ffa77f12d82', '1e28bd99-497d-4496-8e1a-169693995b18', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('51b06270-cafd-46d9-af06-9ee5a703c41d', '2020-02-28 19:41:01.778+01', '2020-02-28 19:41:01.778+01', 'completed', '9c00c3e3-9d53-48d8-805d-8ffa77f12d82', '60adcc92-64a0-4d87-97ef-a31ccf30517a', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('6da43ddf-b03c-4c1e-b304-517d563aa3f9', '2020-02-28 19:41:01.778+01', '2020-02-28 19:41:01.778+01', 'completed', '9c00c3e3-9d53-48d8-805d-8ffa77f12d82', 'e910b3d3-273d-4492-b68b-b33a5e4cb58d', NULL);
 
 
 --
 -- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.teams (id, created, updated, name, role, owners, global, type, object_id, object_type) VALUES ('f92f3eef-c855-4ff6-b5a3-efedce2657b1', '2019-12-05 16:26:09.884+01', '2019-12-05 16:26:09.884+01', 'Author', 'author', NULL, NULL, 'team', '0f66a0d2-52b2-4de3-8efb-d07b3e6a087d', 'Manuscript');
-INSERT INTO public.teams (id, created, updated, name, role, owners, global, type, object_id, object_type) VALUES ('120880f3-35c0-400d-b428-7d7f5995b894', '2019-12-05 16:26:28.718+01', '2019-12-05 16:26:28.718+01', 'Senior Editor', 'seniorEditor', '["c0e7a747-a871-46b4-9164-2a20a18ff7df"]', NULL, 'team', '0f66a0d2-52b2-4de3-8efb-d07b3e6a087d', 'Manuscript');
-INSERT INTO public.teams (id, created, updated, name, role, owners, global, type, object_id, object_type) VALUES ('0f9a96a3-16c4-485a-af6e-b0cd1cab5600', '2019-12-05 16:26:29.157+01', '2019-12-05 16:26:29.157+01', 'Handling Editor', 'handlingEditor', '["c0e7a747-a871-46b4-9164-2a20a18ff7df"]', NULL, 'team', '0f66a0d2-52b2-4de3-8efb-d07b3e6a087d', 'Manuscript');
-INSERT INTO public.teams (id, created, updated, name, role, owners, global, type, object_id, object_type) VALUES ('17120f87-8f2a-4c45-a5fd-1ecbf9e024e3', '2019-12-05 16:26:33.992+01', '2019-12-05 16:26:57.415+01', 'Reviewer Editor', 'reviewerEditor', '["f18c93b2-13ae-4918-8b2a-fc10e86f36f7"]', NULL, 'team', '0f66a0d2-52b2-4de3-8efb-d07b3e6a087d', 'Manuscript');
+INSERT INTO public.teams (id, created, updated, name, role, owners, global, type, object_id, object_type) VALUES ('ebb4cc52-04ed-4390-ad70-be8f438e6012', '2020-02-28 19:39:59.452+01', '2020-02-28 19:39:59.452+01', 'Author', 'author', NULL, NULL, 'team', 'bd429b57-6fc9-4454-a42c-c1f63cfa263c', 'Manuscript');
+INSERT INTO public.teams (id, created, updated, name, role, owners, global, type, object_id, object_type) VALUES ('5848e7e9-112e-41cc-8f93-460560a740aa', '2020-02-28 19:40:21.505+01', '2020-02-28 19:40:21.505+01', 'Senior Editor', 'seniorEditor', '["2d88ee35-1fa1-4d49-8f87-0b32bb786c9e"]', NULL, 'team', 'bd429b57-6fc9-4454-a42c-c1f63cfa263c', 'Manuscript');
+INSERT INTO public.teams (id, created, updated, name, role, owners, global, type, object_id, object_type) VALUES ('84ef271d-a10c-4d3c-9c44-0568f126e161', '2020-02-28 19:40:21.947+01', '2020-02-28 19:40:21.947+01', 'Handling Editor', 'handlingEditor', '["2d88ee35-1fa1-4d49-8f87-0b32bb786c9e"]', NULL, 'team', 'bd429b57-6fc9-4454-a42c-c1f63cfa263c', 'Manuscript');
+INSERT INTO public.teams (id, created, updated, name, role, owners, global, type, object_id, object_type) VALUES ('9c00c3e3-9d53-48d8-805d-8ffa77f12d82', '2020-02-28 19:40:27.284+01', '2020-02-28 19:40:54.755+01', 'Reviewer Editor', 'reviewerEditor', '["53c1ddca-2770-417d-991d-f386d2d06e57"]', NULL, 'team', 'bd429b57-6fc9-4454-a42c-c1f63cfa263c', 'Manuscript');
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('c0e7a747-a871-46b4-9164-2a20a18ff7df', '2019-12-05 16:26:05.59+01', '2019-12-05 16:26:05.59+01', true, 'admin@example.com', 'admin', '$2b$12$EChACaS/XzaicNq.iUBifen4tXo2Yc0.ls9KltXrNy8ZuyOw3lM1u', '[]', '[]', NULL, NULL, NULL, 'user');
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('327368fc-7ad8-4bcd-8f01-ff0267c41fe7', '2019-12-05 16:26:06.194+01', '2019-12-05 16:26:06.194+01', NULL, 'simone@example.com', 'seditor', '$2b$12$EluikN3SVbcn5lBaKaBciuBDwUzfXuk4bUbddyQs8uC3Q5KBpkgMO', '[]', '[]', NULL, NULL, NULL, 'user');
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('f18c93b2-13ae-4918-8b2a-fc10e86f36f7', '2019-12-05 16:26:06.505+01', '2019-12-05 16:26:06.505+01', NULL, 'hector@example.com', 'heditor', '$2b$12$JhrX4DRzem.ov09.tvRI.OSdmQWS1u/t32oDdJidfR9n/9N9opDeO', '[]', '[]', NULL, NULL, NULL, 'user');
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('bf371f23-e97d-4750-af59-f6ac52f93ef1', '2019-12-05 16:26:05.89+01', '2019-12-05 16:26:09.937+01', NULL, 'john@example.com', 'author', '$2b$12$rS/zdEOTE3Vu8p68vCJrR.tqMrXFyzBX4IO7S/T8iFVcf8lOQ.qKK', '[]', '[]', NULL, NULL, NULL, 'user');
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('058ae58b-f87c-4ed3-b74b-8451ce71ed67', '2019-12-05 16:26:07.111+01', '2019-12-05 16:27:04.002+01', NULL, 'robert@example.com', 'reviewer2', '$2b$12$DyVhyy5xuoUu5pEgy2bEXe2xlZtpHbjaXs2uj.jGzvBmnQzN49MRW', '[]', '[]', NULL, NULL, NULL, 'user');
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('4338f5c1-6182-4cc4-be29-fd9ccc7cbe0e', '2019-12-05 16:26:06.803+01', '2019-12-05 16:27:04.002+01', NULL, 'regina@example.com', 'reviewer1', '$2b$12$yVgiMTluowuQvP5zrZlRLu56VNZ67IvC9njHmVFSUYkJjuFZ.xg6q', '[]', '[]', NULL, NULL, NULL, 'user');
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('549eea97-67fe-481e-a0d4-9e378375b152', '2019-12-05 16:26:07.413+01', '2019-12-05 16:27:04.002+01', NULL, 'remionne@example.com', 'reviewer3', '$2b$12$ibUUZ.7BySYtaxEgFetaouFXGuiqfhvA7CY13tiRZ/uhIqejA3UFO', '[]', '[]', NULL, NULL, NULL, 'user');
-
-
---
--- Name: job job_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: test
---
-
-ALTER TABLE ONLY pgboss.job
-    ADD CONSTRAINT job_pkey PRIMARY KEY (id);
-
-
---
--- Name: version version_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: test
---
-
-ALTER TABLE ONLY pgboss.version
-    ADD CONSTRAINT version_pkey PRIMARY KEY (version);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('2d88ee35-1fa1-4d49-8f87-0b32bb786c9e', '2020-02-28 19:39:53.113+01', '2020-02-28 19:39:53.113+01', true, 'admin@example.com', 'admin', '$2b$12$1qAk620zjS3m0H64vepNc.YZLMHtFyFfoIFLH721MltGTovng9U/m', '[]', '[]', NULL, NULL, NULL, 'user');
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('1c162384-ef4c-47fc-a89e-d7a03c13cec8', '2020-02-28 19:39:53.855+01', '2020-02-28 19:39:53.855+01', NULL, 'simone@example.com', 'seditor', '$2b$12$jeVSGVlpc3W0PkcS5HneBezNtqdFMUuJSiOGXXYfr0Xtjm2laKM8y', '[]', '[]', NULL, NULL, NULL, 'user');
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('53c1ddca-2770-417d-991d-f386d2d06e57', '2020-02-28 19:39:54.24+01', '2020-02-28 19:39:54.24+01', NULL, 'hector@example.com', 'heditor', '$2b$12$p.p4JZBES6JXCD2lqO9D9ORqiZj64ECCoRBpvzHsLPLjYHcnCM/J6', '[]', '[]', NULL, NULL, NULL, 'user');
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('bbe263a7-3cc5-4b3a-a6ce-d2cc70425406', '2020-02-28 19:39:53.504+01', '2020-02-28 19:39:59.54+01', NULL, 'john@example.com', 'author', '$2b$12$Bjr9z5v7nPTSDzHG6YtVQ.9M8QBsbiRbkSAeFiwEPZrTqpkxroxEi', '[]', '[]', NULL, NULL, NULL, 'user');
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('1e28bd99-497d-4496-8e1a-169693995b18', '2020-02-28 19:39:55.011+01', '2020-02-28 19:41:01.782+01', NULL, 'robert@example.com', 'reviewer2', '$2b$12$E20/golpY0zs.NCSdziUHOfj7GSz7C.CYSDwJh4lX3hboRAo56wtC', '[]', '[]', NULL, NULL, NULL, 'user');
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('60adcc92-64a0-4d87-97ef-a31ccf30517a', '2020-02-28 19:39:55.367+01', '2020-02-28 19:41:01.782+01', NULL, 'remionne@example.com', 'reviewer3', '$2b$12$7JVUD5Rhw5bqXwXYbjgFIuuHLcLaaPafwqMOQCab32x6VCaMnwNqm', '[]', '[]', NULL, NULL, NULL, 'user');
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, fragments, collections, teams, password_reset_token, password_reset_timestamp, type) VALUES ('e910b3d3-273d-4492-b68b-b33a5e4cb58d', '2020-02-28 19:39:54.618+01', '2020-02-28 19:41:01.782+01', NULL, 'regina@example.com', 'reviewer1', '$2b$12$4zYpy2jtXufGR3ib/Sh0mOTZHTeuIu1L9PqZKn7pgMs2zq7dXsDuq', '[]', '[]', NULL, NULL, NULL, 'user');
 
 
 --
@@ -538,41 +422,6 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_username_key UNIQUE (username);
-
-
---
--- Name: archive_id_idx; Type: INDEX; Schema: pgboss; Owner: test
---
-
-CREATE INDEX archive_id_idx ON pgboss.archive USING btree (id);
-
-
---
--- Name: job_name; Type: INDEX; Schema: pgboss; Owner: test
---
-
-CREATE INDEX job_name ON pgboss.job USING btree (name text_pattern_ops);
-
-
---
--- Name: job_singletonkey; Type: INDEX; Schema: pgboss; Owner: test
---
-
-CREATE UNIQUE INDEX job_singletonkey ON pgboss.job USING btree (name, singletonkey) WHERE ((state < 'completed'::pgboss.job_state) AND (singletonon IS NULL));
-
-
---
--- Name: job_singletonkeyon; Type: INDEX; Schema: pgboss; Owner: test
---
-
-CREATE UNIQUE INDEX job_singletonkeyon ON pgboss.job USING btree (name, singletonon, singletonkey) WHERE (state < 'expired'::pgboss.job_state);
-
-
---
--- Name: job_singletonon; Type: INDEX; Schema: pgboss; Owner: test
---
-
-CREATE UNIQUE INDEX job_singletonon ON pgboss.job USING btree (name, singletonon) WHERE ((state < 'expired'::pgboss.job_state) AND (singletonkey IS NULL));
 
 
 --
