@@ -12233,20 +12233,10 @@ prosemirror-dropcursor@^1.0.0, prosemirror-dropcursor@^1.1.1:
     prosemirror-transform "^1.1.0"
     prosemirror-view "^1.1.0"
 
-prosemirror-gapcursor@^1.0.0:
+prosemirror-gapcursor@^1.0.0, prosemirror-gapcursor@^1.0.3, prosemirror-gapcursor@^1.1.3:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/prosemirror-gapcursor/-/prosemirror-gapcursor-1.1.3.tgz#87eb7520c0f17459774a02afb52ad322ee755efe"
   integrity sha512-/lgWvt2AdHjsM6oEsF65z0lhdQJGl6sQSfXSOX8/xjpd8ycfOolhgKZd4TPYpikwnh85JF4l5eIyiFZsl/RQQA==
-  dependencies:
-    prosemirror-keymap "^1.0.0"
-    prosemirror-model "^1.0.0"
-    prosemirror-state "^1.0.0"
-    prosemirror-view "^1.0.0"
-
-prosemirror-gapcursor@^1.0.3:
-  version "1.1.2"
-  resolved "https://registry.yarnpkg.com/prosemirror-gapcursor/-/prosemirror-gapcursor-1.1.2.tgz#a1400a86a51d4cccc065e68d5625a9fb5bc623e0"
-  integrity sha512-Z+eqk6RysZVxidGWN5aWoSTbn5bTHf1XZ+nQJVwUSdwdBVkfQMFdTHgfrXA8W5MhHHdNg/EEEYG3z3Zi/vE2QQ==
   dependencies:
     prosemirror-keymap "^1.0.0"
     prosemirror-model "^1.0.0"
