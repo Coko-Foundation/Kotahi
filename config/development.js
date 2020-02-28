@@ -6,6 +6,7 @@ module.exports = {
       database: 'simplej',
       user: 'test',
     },
+    port: process.env.PORT || 3000,
     pool: { min: 0, max: 10, idleTimeoutMillis: 1000 },
     baseUrl: deferConfig(
       cfg => `http://localhost:${cfg['pubsweet-server'].port}`,
