@@ -126,7 +126,8 @@
     "start:server-and-client": "start-test server 3000 client",
     "test:all": "start-test start:server-and-client 4000 test",
     "test": "cypress run",
-    "build": "NODE_ENV=production pubsweet build"
+    "build": "NODE_ENV=production pubsweet build",
+    "seedFromDump": "node scripts/seedFromDump.js"
   },
   "jest": {
     "testEnvironment": "node",
