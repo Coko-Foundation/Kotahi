@@ -27,7 +27,7 @@ export async function setup(user) {
   }
 
   const journalData = {
-    title: 'xPub Collabra',
+    title: 'SimpleJ',
     meta: {},
   }
 
