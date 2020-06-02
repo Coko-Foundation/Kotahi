@@ -1,6 +1,6 @@
 import { compose, withProps } from 'recompose'
 import { graphql } from '@apollo/react-hoc'
-import { gql } from 'apollo-client-preset'
+import gql from 'graphql-tag'
 import { withLoader } from 'pubsweet-client'
 
 import Manuscript from './Manuscript'

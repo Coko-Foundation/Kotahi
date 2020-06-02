@@ -7,8 +7,8 @@ import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import { withRouter, matchPath, Router } from 'react-router-dom'
 
 import { Action, AppBar } from '@pubsweet/ui'
-import { JournalContext } from 'xpub-journal'
-import { XpubContext } from 'xpub-with-context'
+import { JournalContext } from './xpub-journal'
+import { XpubContext } from './xpub-with-context'
 
 import queries from '../graphql/'
 

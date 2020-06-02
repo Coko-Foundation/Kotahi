@@ -1,9 +1,9 @@
 import React from 'react'
-import Select from 'react-select'
+import Select from 'react-select1'
 import { Field } from 'formik'
 import { Button } from '@pubsweet/ui'
 import { required } from 'xpub-validators'
-import 'react-select/dist/react-select.css'
+import 'react-select1/dist/react-select.css'
 
 const OptionRenderer = option => (
   <div>

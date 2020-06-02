@@ -61,6 +61,7 @@ module.exports = webpackEnv => {
     },
     resolve: {
       alias: {
+        'wax-prosemirror-themes': path.resolve(__dirname, '../app/theme'),
         joi: 'joi-browser',
         config: clientConfigPath,
       },
