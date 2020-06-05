@@ -182,8 +182,8 @@ const UploadManuscript = ({ acceptFiles, ...props }) => {
   //   setError(false)
   // }
 
-  // Show and then hide the error
-  if (error) {
+  // Show and then hide the error/success state
+  if (error || completed) {
     setTimeout(() => {
       setConversion({})
     }, 3000)

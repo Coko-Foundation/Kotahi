@@ -4,7 +4,7 @@ import { compose, withProps } from 'recompose'
 import { cloneDeep, get } from 'lodash'
 import { Menu } from '@pubsweet/ui'
 import { graphql } from '@apollo/react-hoc'
-import { gql } from 'apollo-client-preset'
+import gql from 'graphql-tag'
 import { withLoader } from 'pubsweet-client'
 
 const editorOption = user => ({

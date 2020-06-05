@@ -1,12 +1,12 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
-import { Wax, CreateSchema } from 'wax-prosemirror-core'
-import { XpubSchema } from 'wax-prosemirror-schema'
-import 'wax-prosemirror-themes/themes/default-theme.css'
+import { Wax /*, CreateSchema */ } from 'wax-prosemirror-core'
+// import { XpubSchema } from 'wax-prosemirror-schema'
+// import 'wax-prosemirror-themes/themes/default-theme.css'
 
 const options = {
-  schema: new CreateSchema(XpubSchema),
+  //  schema: new CreateSchema(XpubSchema),
 }
 
 const ManuScript = styled.div`

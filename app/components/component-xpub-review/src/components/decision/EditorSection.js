@@ -1,13 +1,13 @@
 import React from 'react'
-import { Wax, CreateSchema } from 'wax-prosemirror-core'
-import { XpubSchema } from 'wax-prosemirror-schema'
-import 'wax-prosemirror-themes/themes/default-theme.css'
+import { Wax /*, CreateSchema */ } from 'wax-prosemirror-core'
+// import { XpubSchema } from 'wax-prosemirror-schema'
+// import 'wax-prosemirror-themes/themes/default-theme.css'
 
 import { EditorWrapper } from '../molecules/EditorWrapper'
 import { Info } from '../molecules/Info'
 
 const options = {
-  schema: new CreateSchema(XpubSchema),
+  // schema: new CreateSchema(XpubSchema),
 }
 
 export default ({ manuscript }) =>

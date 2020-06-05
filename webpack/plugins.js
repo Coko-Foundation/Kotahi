@@ -5,6 +5,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
+const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+  .BundleAnalyzerPlugin
 
 module.exports = (opts = {}) => {
   const plugins = []
@@ -16,7 +18,7 @@ module.exports = (opts = {}) => {
   if (opts.html) {
     plugins.push(
       new HtmlWebpackPlugin({
-        title: 'xpub - open journals',
+        title: 'SimpleJ - open journals',
         template: '../app/index.ejs', // Load a custom template
       }),
     )
@@ -61,6 +63,7 @@ module.exports = (opts = {}) => {
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new CompressionPlugin(),
+    // new BundleAnalyzerPlugin(),
   )
 
   return plugins

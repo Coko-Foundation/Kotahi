@@ -15,7 +15,6 @@
   },
   "peerDependencies": {
     "@apollo/react-hoc": ">=3.0.1",
-    "apollo-client-preset": ">=1.0.8",
     "pubsweet-client": ">=2.1.0",
     "react": ">=16.9",
     "react-router-dom": ">=5.0.0",

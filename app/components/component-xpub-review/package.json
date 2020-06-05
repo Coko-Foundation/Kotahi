@@ -16,7 +16,6 @@
     "lodash": "^4.17.4",
     "moment": "^2.18.1",
     "prop-types": "^15.5.10",
-    "react-select": "^1.0.0-rc.10",
     "recompose": "^0.30.0",
     "styled-components": "^4.1.1",
     "wax-prosemirror-core": "^0.0.2",
@@ -27,7 +26,6 @@
     "xpub-validators": "^0.0.6"
   },
   "peerDependencies": {
-    "apollo-client-preset": ">=1.0.8",
     "config": ">=3.0.1",
     "formik": ">=1.4.2",
     "pubsweet-client": ">=2.1.0",
