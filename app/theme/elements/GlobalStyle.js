@@ -1,6 +1,10 @@
-import { css } from 'styled-components'
+import { createGlobalStyle } from 'styled-components'
 
-export default css`
+export default createGlobalStyle`
+  html {
+    overflow: hidden;
+  }
+
   body {
     height: 100vh;
   }

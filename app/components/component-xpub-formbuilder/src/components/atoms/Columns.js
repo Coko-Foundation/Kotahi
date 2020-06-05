@@ -3,20 +3,20 @@ import styled from 'styled-components'
 const Columns = styled.div`
   display: grid;
   grid-column-gap: 2em;
-  grid-template-areas: 'manuscript admin';
+  grid-template-areas: 'form details';
   grid-template-columns: minmax(200px, 70ch) minmax(200px, 60ch);
   justify-content: center;
 `
 
-const Manuscript = styled.div`
-  grid-area: manuscript;
+const Form = styled.div`
+  grid-area: form;
 `
 
-const Admin = styled.div`
-  grid-area: admin;
+const Details = styled.div`
+  grid-area: details;
 
   border-left: 1px solid black;
   padding-left: 40px;
 `
 
-export { Columns, Manuscript, Admin }
+export { Columns, Form, Details }

@@ -313,14 +313,14 @@ export default ({
 
       {values.status !== 'submitted' && form.haspopup === 'false' && (
         <Button onClick={handleSubmit} primary type="submit">
-          Submit your manuscript
+          Submit your research object
         </Button>
       )}
 
       {values.status !== 'submitted' && form.haspopup === 'true' && (
         <div>
           <Button onClick={toggleConfirming} primary type="button">
-            Submit your manuscript
+            Submit your research object
           </Button>
         </div>
       )}

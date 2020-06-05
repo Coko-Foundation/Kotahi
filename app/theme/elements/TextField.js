@@ -6,8 +6,6 @@ export default {
   // -- input padding: breaking the grid?
   // -- small placeholder text? maybe by default?
   Input: css`
-    border-width: 0 0 1px 0;
-    border-style: dashed;
     border-color: ${props => {
       switch (props.validationStatus) {
         case 'success':
@@ -32,7 +30,6 @@ export default {
           return 'inherit'
       }
     }};
-    height: calc(${th('gridUnit')} * 8);
     outline: 0;
     padding: 0 0 0 2px;
     transition: ${th('transitionDuration')} ${th('transitionTimingFunction')};
