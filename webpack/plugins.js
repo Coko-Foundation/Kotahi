@@ -63,7 +63,7 @@ module.exports = (opts = {}) => {
     new webpack.optimize.AggressiveMergingPlugin(),
     new webpack.optimize.OccurrenceOrderPlugin(),
     new CompressionPlugin(),
-    new BundleAnalyzerPlugin(),
+    // new BundleAnalyzerPlugin(),
   )
 
   return plugins

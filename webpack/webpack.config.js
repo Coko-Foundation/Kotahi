@@ -2,6 +2,10 @@ const path = require('path')
 const fs = require('fs-extra')
 const config = require('config')
 const { pick } = require('lodash')
+
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+const smp = new SpeedMeasurePlugin()
+
 const rules = require('./common-rules')
 
 const contentBase = path.resolve(__dirname, '..', '_build', 'assets')
