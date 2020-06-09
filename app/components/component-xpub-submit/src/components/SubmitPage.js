@@ -90,6 +90,7 @@ const fragmentFields = `
     email
     affiliation
   }
+  submission
 `
 
 const query = gql`
@@ -237,7 +238,10 @@ export default compose(
   })),
   withFormik({
     initialValues: {},
-    mapPropsToValues: ({ manuscript }) => manuscript,
+    mapPropsToValues: ({ manuscript }) =>
+      Object.assign({}, manuscript, {
+        submission: JSON.parse(manuscript.submission),
+      }),
     displayName: 'submit',
     handleSubmit: (
       props,
