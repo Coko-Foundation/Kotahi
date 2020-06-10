@@ -1,6 +1,0 @@
-export { default as login } from './login'
-export { default as dashboard } from './dashboard'
-export { default as submission } from './submission'
-export { default as confirmation } from './confirmation'
-export { default as reviewers } from './reviewers'
-export { default as review } from './review'
