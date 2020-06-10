@@ -7,6 +7,13 @@ const resolvers = {
       const { Team } = require('@pubsweet/models')
 
       const { meta, files } = vars.input
+
+      // We want the submission information to be stored as JSONB
+      // but we want the input to come in as a JSON string
+      const submission = vars.input.submission
+        ? JSON.parse(vars.input.submission)
+        : {}
+
       const emptyManuscript = {
         meta: Object.assign(meta, {
           notes: [
@@ -21,7 +28,9 @@ const resolvers = {
           ],
         }),
         status: 'new',
+        submission,
       }
+
       // eslint-disable-next-line
       const manuscript = await new ctx.connectors.Manuscript.model(
         emptyManuscript,
@@ -171,6 +180,14 @@ const resolvers = {
     },
     async getFile() {
       return form
+    },
+  },
+  // We want submission into to come out as a stringified JSON, so that we don't have to
+  // change our queries if the submission form changes. We still want to store it as JSONB
+  // so that we can easily search through the information within.
+  Manuscript: {
+    submission(parent, args, ctx) {
+      return JSON.stringify(parent.submission)
     },
   },
 }

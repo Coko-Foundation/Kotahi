@@ -1,1 +1,358 @@
-{"name":"Backup Research Object Submission Form","id":"submit-backup","children":[{"title":"Name","id":"1531303631370","component":"TextField","name":"meta.name","placeholder":"Enter your name","validate":["required"],"validateValue":{"minChars":"10"},"order":"1"},{"title":"Affiliation","id":"1531303727228","component":"TextField","name":"meta.affiliation","placeholder":"Enter your affiliation","validate":["required"],"validateValue":{"minChars":"10"},"order":"2"},{"title":"Email and contact information","id":"1531726163478","component":"TextField","name":"meta.contact","order":"3","placeholder":"Enter your contact information"},{"title":"Keywords","id":"1531303777701","component":"TextField","name":"meta.keywords","placeholder":"Enter keywords...","parse":"split","format":"join","validate":["required"],"order":"20"},{"title":"Type of Research Object","id":"1531303833528","component":"Menu","name":"meta.objectType","options":[{"value":"original-research","label":"Original Research Report"},{"label":"Review","value":"review"},{"value":"opinion","label":"Opinion/Commentary"},{"value":"registered-report","label":"Registered Report"}],"validate":["required"],"order":"7"},{"title":"Suggested reviewers","id":"1531304848635","component":"TextField","placeholder":"Add reviewer names...","name":"suggestions.reviewers.suggested","parse":"split","format":"join","order":"13"},{"title":"Upload supplementary materials","id":"1531305332347","component":"SupplementaryFiles","description":"<p>&lt;pre&gt;There are 3 types of item which should be uploaded here:&lt;br /&gt;</p><p>&lt;ul&gt;</p><p>&lt;li&gt;Regular figures which should also be be embedded in the manuscript.(These are helpful for the production&lt;br /&gt;process,if your article is accepted, in case there are any issues with the embedded versions.)&lt;/li&gt;</p><p>&lt;li&gt;Supplemental items that provide a relevant and useful expansion of the article (Examples include appendices,&lt;br/&gt;very large tables, audios, videos, three-dimensional visualizations, interactive graphics, and so on.)&lt;/li&gt;</p><p>&lt;li&gt;Items that support the peer review process. (Examples are ported reviews and decision letters for use during&lt;br /&gt;the Streamlined Review workflow. Also, if you have a long cover letter you would rather upload than paste&lt;br/&gt;into the text box, please also upload it here.)&lt;/li&gt;</p><p>&lt;/ul&gt;</p><p>Supplemental materials can be named in almost any way, provided that the files are clearly and consistently named,&lt;br /&gt;are uploaded in chronological order, and grouped as they are described above. For example, a typical article&lt;br/&gt;might include:</p><p>&lt;br /&gt;</p><p>&lt;ul&gt;</p><p>&lt;li&gt;Figure 1.jpg&lt;/li&gt;</p><p>&lt;li&gt;Figure 2.jpg&lt;/li&gt;</p><p>&lt;li&gt;Figure 3.jpg&lt;/li&gt;</p><p>&lt;li&gt;Supplemental Table 1.docx&lt;/li&gt;</p><p>&lt;li&gt;Ported Decision Letter and Reviews from Journal X.docx&lt;/li&gt;</p><p>&lt;/ul&gt;</p><p>&lt;/pre&gt;</p>","name":"fileName","order":"19"},{"title":"Cover letter","id":"1591172762874","component":"AbstractEditor","name":"meta.cover","description":"<p>Cover letter describing submission, relevant implications, and timely information to consider</p>","order":"4","placeholder":"Enter your cover letter"},{"title":"Ethics statement","id":"1591173029656","component":"AbstractEditor","name":"meta.ethics","placeholder":"Enter your ethics statements","order":"6"},{"title":"Data and Code availability statements","id":"1591173076622","component":"AbstractEditor","name":"meta.datacode","placeholder":"Enter your data and code availability statement","order":"5"},{"title":"Links","id":"1591192678688","component":"TextField","name":"meta.links","placeholder":"Enter your links, separated by commas","order":"14","parse":"split","format":"join"},{"title":"Did your study involve healthy subjects only or patients (note that patient studies may also involve healthy subjects)","id":"1591193412418","component":"Menu","name":"meta.subjects","options":[{"label":"Healthy subjects","value":"healthy_subjects"},{"label":"Patients","value":"patients"}]},{"title":"If your research involved human subjects, was the research approved by the relevant Institutional Review Board or ethics panel?","id":"1591193588182","component":"Menu","name":"meta.irb","options":[{"label":"Yes","value":"yes"},{"label":"No","value":"no"},{"label":" Not applicable (My Research Object does not involve human subjects) ","value":"N/A"}],"description":"<p><i>NOTE: Any human subjects studies without IRB approval will be automatically rejected.</i></p>"},{"title":"Was any animal research approved by the relevant IACUC or other animal research panel?","id":"1591343661290","component":"Menu","name":"meta.animal_research_approval","description":"<p><i>NOTE: Any animal studies without IACUC approval will be automatically rejected.</i></p>","options":[{"label":"Yes","value":"yes"},{"label":"No","value":"no"},{"label":" Not applicable (My Research Object does not involve animal subjects)","value":"N/A"}],"order":"21"},{"title":"Please indicate which methods were used in your research:","id":"1591343849679","component":"CheckboxGroup","name":"meta.methods","options":[{"label":"Structural MRI","value":"Structural MRI"},{"label":"Functional MRI","value":"Functional MRI"},{"label":"Diffusion MRI","value":"Diffusion MRI"},{"label":"EEG/ERP","value":"EEG/ERP"},{"label":"Neurophysiology","value":"Neurophysiology"},{"label":"PET","value":"PET"},{"label":"MEG","value":"MEG"},{"label":"Optical Imaging","value":"Optical Imaging"},{"label":"Postmortem anatomy","value":"Postmortem anatomy"},{"label":"TMS","value":"TMS"},{"label":"Behavior","value":"Behavior"},{"label":"Neuropsychological testing","value":"Neuropsychological testing"},{"label":"Computational modeling","value":"Computational modeling"}],"order":"22"},{"title":"If you used other research methods, please specify:","id":"1591344092275","component":"TextField","name":"meta.otherMethods","placeholder":"Enter any additional methods used, if applicable","order":"23"},{"title":"For human MRI, what field strength scanner do you use?","id":"1591344209443","component":"Menu","name":"meta.humanMRI","order":"24","options":[{"label":"1T","value":"1T"},{"label":"1.5T","value":"1.5T"},{"label":"2T","value":"2T"},{"label":"3T","value":"3T"},{"label":"4T","value":"4T"},{"label":"7T","value":"7T"}]},{"title":"If other, please specify:","id":"1591345370930","component":"TextField","name":"meta.humanMRIother","order":"24"},{"title":"Which processing packages did you use for your study?","id":"1591345419676","component":"CheckboxGroup","name":"meta.packages","options":[{"label":"AFNI","value":"AFNI"},{"label":"SPM","value":"SPM"},{"label":"Brain Voyager","value":"Brain Voyager"},{"label":"FSL","value":"FSL"},{"label":"Analyze","value":"Analyze"},{"label":"Free Surfer","value":"Free Surfer"},{"label":"LONI Pipeline","value":"LONI Pipeline"}],"order":"25"},{"title":"If you used any other processing packages, please list them here:","id":"1591345560536","component":"TextField","name":"meta.otherPackages"},{"title":"Provide references using author date format:","id":"1591345620839","component":"AbstractEditor","name":"meta.references","order":"26"}],"description":"<p>Aperture is now accepting Research Object Submissions. Please fill out the form below to complete your submission.</p>","haspopup":"true","popuptitle":"By submitting the manuscript, you agree to the following statements.","popupdescription":"<p>The corresponding author confirms that all co-authors are included, and that everyone listed as a co-author agrees to that role and all the following requirements and acknowledgements.</p><p></p><p>The submission represents original work and that sources are given proper attribution. The journal employs CrossCheck to compare submissions against a large and growing database of published scholarly content. If in the judgment of a senior editor a submission is genuinely suspected of plagiarism, it will be returned to the author(s) with a request for explanation.)</p><p></p><p>The research was conducted in accordance with ethical principles.</p><p></p><p>There is a Data Accessibility Statement, containing information about the location of open data and materials, in the manuscript.</p><p></p><p>A conflict of interest statement is present in the manuscript, even if to state no conflicts of interest.</p>"}
+{
+  "name": "Research Object Submission Form",
+  "id": "submit",
+  "children": [
+    {
+      "title": "Name",
+      "id": "1531303631370",
+      "component": "TextField",
+      "name": "submission.name",
+      "placeholder": "Enter your name",
+      "validate": [
+        "required"
+      ],
+      "validateValue": {
+        "minChars": "10"
+      },
+      "order": "1"
+    },
+    {
+      "title": "Affiliation",
+      "id": "1531303727228",
+      "component": "TextField",
+      "name": "submission.affiliation",
+      "placeholder": "Enter your affiliation",
+      "validate": [
+        "required"
+      ],
+      "validateValue": {
+        "minChars": "10"
+      },
+      "order": "2"
+    },
+    {
+      "title": "Email and contact information",
+      "id": "1531726163478",
+      "component": "TextField",
+      "name": "submission.contact",
+      "order": "3",
+      "placeholder": "Enter your contact information"
+    },
+    {
+      "title": "Keywords",
+      "id": "1531303777701",
+      "component": "TextField",
+      "name": "submission.keywords",
+      "placeholder": "Enter keywords...",
+      "parse": "split",
+      "format": "join",
+      "validate": [
+        "required"
+      ],
+      "order": "20"
+    },
+    {
+      "title": "Type of Research Object",
+      "id": "1531303833528",
+      "component": "Menu",
+      "name": "submission.objectType",
+      "options": [
+        {
+          "value": "original-research",
+          "label": "Original Research Report"
+        },
+        {
+          "label": "Review",
+          "value": "review"
+        },
+        {
+          "value": "opinion",
+          "label": "Opinion/Commentary"
+        },
+        {
+          "value": "registered-report",
+          "label": "Registered Report"
+        }
+      ],
+      "validate": [
+        "required"
+      ],
+      "order": "7"
+    },
+    {
+      "title": "Suggested reviewers",
+      "id": "1531304848635",
+      "component": "TextField",
+      "placeholder": "Add reviewer names...",
+      "name": "submission.suggested",
+      "parse": "split",
+      "format": "join",
+      "order": "13"
+    },
+    {
+      "title": "Upload supplementary materials",
+      "id": "1531305332347",
+      "component": "SupplementaryFiles",
+      "description": "<p>Upload your files.</p>",
+      "name": "fileName",
+      "order": "19"
+    },
+    {
+      "title": "Cover letter",
+      "id": "1591172762874",
+      "component": "AbstractEditor",
+      "name": "submission.cover",
+      "description": "<p>Cover letter describing submission, relevant implications, and timely information to consider</p>",
+      "order": "4",
+      "placeholder": "Enter your cover letter"
+    },
+    {
+      "title": "Ethics statement",
+      "id": "1591173029656",
+      "component": "AbstractEditor",
+      "name": "submission.ethics",
+      "placeholder": "Enter your ethics statements",
+      "order": "6"
+    },
+    {
+      "title": "Data and Code availability statements",
+      "id": "1591173076622",
+      "component": "AbstractEditor",
+      "name": "submission.datacode",
+      "placeholder": "Enter your data and code availability statement",
+      "order": "5"
+    },
+    {
+      "title": "Links",
+      "id": "1591192678688",
+      "component": "TextField",
+      "name": "submission.links",
+      "placeholder": "Enter your links, separated by commas",
+      "order": "14",
+      "parse": "split",
+      "format": "join"
+    },
+    {
+      "title": "Did your study involve healthy subjects only or patients (note that patient studies may also involve healthy subjects)",
+      "id": "1591193412418",
+      "component": "Menu",
+      "name": "submission.subjects",
+      "options": [
+        {
+          "label": "Healthy subjects",
+          "value": "healthy_subjects"
+        },
+        {
+          "label": "Patients",
+          "value": "patients"
+        }
+      ]
+    },
+    {
+      "title": "If your research involved human subjects, was the research approved by the relevant Institutional Review Board or ethics panel?",
+      "id": "1591193588182",
+      "component": "Menu",
+      "name": "submission.irb",
+      "options": [
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        },
+        {
+          "label": " Not applicable (My Research Object does not involve human subjects) ",
+          "value": "N/A"
+        }
+      ],
+      "description": "<p><i>NOTE: Any human subjects studies without IRB approval will be automatically rejected.</i></p>"
+    },
+    {
+      "title": "Was any animal research approved by the relevant IACUC or other animal research panel?",
+      "id": "1591343661290",
+      "component": "Menu",
+      "name": "submission.animal_research_approval",
+      "description": "<p><i>NOTE: Any animal studies without IACUC approval will be automatically rejected.</i></p>",
+      "options": [
+        {
+          "label": "Yes",
+          "value": "yes"
+        },
+        {
+          "label": "No",
+          "value": "no"
+        },
+        {
+          "label": " Not applicable (My Research Object does not involve animal subjects)",
+          "value": "N/A"
+        }
+      ],
+      "order": "21"
+    },
+    {
+      "title": "Please indicate which methods were used in your research:",
+      "id": "1591343849679",
+      "component": "CheckboxGroup",
+      "name": "submission.methods",
+      "options": [
+        {
+          "label": "Structural MRI",
+          "value": "Structural MRI"
+        },
+        {
+          "label": "Functional MRI",
+          "value": "Functional MRI"
+        },
+        {
+          "label": "Diffusion MRI",
+          "value": "Diffusion MRI"
+        },
+        {
+          "label": "EEG/ERP",
+          "value": "EEG/ERP"
+        },
+        {
+          "label": "Neurophysiology",
+          "value": "Neurophysiology"
+        },
+        {
+          "label": "PET",
+          "value": "PET"
+        },
+        {
+          "label": "MEG",
+          "value": "MEG"
+        },
+        {
+          "label": "Optical Imaging",
+          "value": "Optical Imaging"
+        },
+        {
+          "label": "Postmortem anatomy",
+          "value": "Postmortem anatomy"
+        },
+        {
+          "label": "TMS",
+          "value": "TMS"
+        },
+        {
+          "label": "Behavior",
+          "value": "Behavior"
+        },
+        {
+          "label": "Neuropsychological testing",
+          "value": "Neuropsychological testing"
+        },
+        {
+          "label": "Computational modeling",
+          "value": "Computational modeling"
+        }
+      ],
+      "order": "22"
+    },
+    {
+      "title": "If you used other research methods, please specify:",
+      "id": "1591344092275",
+      "component": "TextField",
+      "name": "submission.otherMethods",
+      "placeholder": "Enter any additional methods used, if applicable",
+      "order": "23"
+    },
+    {
+      "title": "For human MRI, what field strength scanner do you use?",
+      "id": "1591344209443",
+      "component": "Menu",
+      "name": "submission.humanMRI",
+      "order": "24",
+      "options": [
+        {
+          "label": "1T",
+          "value": "1T"
+        },
+        {
+          "label": "1.5T",
+          "value": "1.5T"
+        },
+        {
+          "label": "2T",
+          "value": "2T"
+        },
+        {
+          "label": "3T",
+          "value": "3T"
+        },
+        {
+          "label": "4T",
+          "value": "4T"
+        },
+        {
+          "label": "7T",
+          "value": "7T"
+        }
+      ]
+    },
+    {
+      "title": "If other, please specify:",
+      "id": "1591345370930",
+      "component": "TextField",
+      "name": "submission.humanMRIother",
+      "order": "24"
+    },
+    {
+      "title": "Which processing packages did you use for your study?",
+      "id": "1591345419676",
+      "component": "CheckboxGroup",
+      "name": "submission.packages",
+      "options": [
+        {
+          "label": "AFNI",
+          "value": "AFNI"
+        },
+        {
+          "label": "SPM",
+          "value": "SPM"
+        },
+        {
+          "label": "Brain Voyager",
+          "value": "Brain Voyager"
+        },
+        {
+          "label": "FSL",
+          "value": "FSL"
+        },
+        {
+          "label": "Analyze",
+          "value": "Analyze"
+        },
+        {
+          "label": "Free Surfer",
+          "value": "Free Surfer"
+        },
+        {
+          "label": "LONI Pipeline",
+          "value": "LONI Pipeline"
+        }
+      ],
+      "order": "25"
+    },
+    {
+      "title": "If you used any other processing packages, please list them here:",
+      "id": "1591345560536",
+      "component": "TextField",
+      "name": "submission.otherPackages"
+    },
+    {
+      "title": "Provide references using author date format:",
+      "id": "1591345620839",
+      "component": "AbstractEditor",
+      "name": "submission.references",
+      "order": "26"
+    }
+  ],
+  "description": "<p>Aperture is now accepting Research Object Submissions. Please fill out the form below to complete your submission.</p>",
+  "haspopup": "true",
+  "popuptitle": "By submitting the manuscript, you agree to the following statements.",
+  "popupdescription": "<p>The corresponding author confirms that all co-authors are included, and that everyone listed as a co-author agrees to that role and all the following requirements and acknowledgements.</p><p></p><p>The submission represents original work and that sources are given proper attribution. The journal employs CrossCheck to compare submissions against a large and growing database of published scholarly content. If in the judgment of a senior editor a submission is genuinely suspected of plagiarism, it will be returned to the author(s) with a request for explanation.)</p><p></p><p>The research was conducted in accordance with ethical principles.</p><p></p><p>There is a Data Accessibility Statement, containing information about the location of open data and materials, in the manuscript.</p><p></p><p>A conflict of interest statement is present in the manuscript, even if to state no conflicts of interest.</p>"
+}

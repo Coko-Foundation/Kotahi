@@ -3,6 +3,10 @@ const fs = require('fs')
 const { readFiles, mkdirp } = require('./util')
 const form = require('../../../app/storage/forms/submit.json')
 
+const writeJson = (path, object) => {
+  return fs.writeFileSync(path, JSON.stringify(object, null, 2))
+}
+
 const mergeFiles = path =>
   readFiles(path).then(files => {
     const forms = []
@@ -17,7 +21,6 @@ const mergeFiles = path =>
 const resolvers = {
   Mutation: {
     async deleteForms(_, { formId }, ctx) {
-      // DONE
       try {
         const folderPath = `${config.get(
           'pubsweet-component-xpub-formbuilder.path',
@@ -36,7 +39,6 @@ const resolvers = {
       }
     },
     async deleteFormElement(_, { formId, elementId }, ctx) {
-      // DONE
       try {
         const folderPath = `${config.get(
           'pubsweet-component-xpub-formbuilder.path',
@@ -48,7 +50,7 @@ const resolvers = {
         if (forms.children) {
           const children = forms.children.filter(el => el.id !== elementId)
           forms.children = children
-          fs.writeFileSync(path, JSON.stringify(forms))
+          writeJson(path, forms)
         }
 
         const form = await mergeFiles(folderPath)
@@ -58,7 +60,6 @@ const resolvers = {
       }
     },
     async createForm(_, { form }, ctx) {
-      // DONE
       try {
         form = JSON.parse(form)
         const folderPath = `${config.get(
@@ -68,7 +69,7 @@ const resolvers = {
 
         if (!fs.existsSync(path)) {
           mkdirp(folderPath)
-          fs.writeFileSync(path, JSON.stringify(form))
+          writeJson(path, form)
         }
 
         const forms = await mergeFiles(folderPath)
@@ -97,7 +98,7 @@ const resolvers = {
           }
         }
 
-        fs.writeFileSync(path, JSON.stringify(form))
+        writeJson(path, form)
 
         const forms = await mergeFiles(folderPath)
 
@@ -126,7 +127,7 @@ const resolvers = {
           forms.children.push(children)
         }
 
-        fs.writeFileSync(path, JSON.stringify(forms))
+        writeJson(path, forms)
         const form = await mergeFiles(folderPath)
         return form
       } catch (err) {
