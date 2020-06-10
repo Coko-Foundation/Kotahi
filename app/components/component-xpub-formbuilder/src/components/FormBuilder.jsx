@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import {
   compose,
   withState,
@@ -30,9 +30,9 @@ const Status = styled.div`
   display: inline-flex;
 `
 
-const StatusIdle = styled(Status).attrs({
-  children: () => <StatusIcon>plus_circle</StatusIcon>,
-})``
+const StatusIdle = styled(Status).attrs(props => ({
+  children: <StatusIcon>plus_circle</StatusIcon>,
+}))``
 
 const Root = styled.div`
   display: flex;
@@ -91,12 +91,12 @@ const BuilderElement = ({ elements, changeProperties, deleteElement, form }) =>
     </Element>
   ))
 
-const AddButtonElement = ({ addElements }) => (
+const AddButtonElement = ({ addElement }) => (
   <Root>
     <Main>
       <Action
         onClick={() =>
-          addElements({
+          addElement({
             title: 'New Component',
             id: `${Date.now()}`,
           })
@@ -111,46 +111,57 @@ const AddButtonElement = ({ addElements }) => (
 
 const FormBuilder = ({
   form,
-  elements,
-  addElements,
+  // elements,
+  // addElements,
   changeProperties,
   deleteElement,
-}) => (
-  <Page>
-    <AddButtonElement addElements={addElements} form={form} id="add-element" />
-    {elements && elements.length > 0 && (
-      <BuilderElement
-        changeProperties={changeProperties}
-        deleteElement={deleteElement}
-        elements={elements}
-        form={form}
-        id="builder-element"
-      />
-    )}
-  </Page>
-)
+}) => {
+  const [elements, setElements] = useState(form.children || [])
+  const addElement = element => {
+    setElements([...elements, element])
+  }
+  // const addElements = useCallback(() => {
 
-FormBuilder.displayName = 'FormBuilder'
+  // })
 
-export default compose(
-  withState('elements', 'onAddElements', ({ form }) => form.children || []),
-  withHandlers({
-    addElements: ({ onAddElements, form }) => addElement =>
-      onAddElements(() => {
-        const addEl = { children: form.children || [] }
-        addEl.children = [...addEl.children, addElement]
-        return addEl.children
-      }),
-  }),
-  lifecycle({
-    componentWillReceiveProps(nextProps) {
-      if (this.props.form.children !== nextProps.form.children) {
-        this.setState({ elements: nextProps.form.children })
-      }
+  return (
+    <Page>
+      <AddButtonElement addElement={addElement} form={form} id="add-element" />
+      {elements && elements.length > 0 && (
+        <BuilderElement
+          changeProperties={changeProperties}
+          deleteElement={deleteElement}
+          elements={elements}
+          form={form}
+          id="builder-element"
+        />
+      )}
+    </Page>
+  )
+}
 
-      if (this.props.elements !== nextProps.elements) {
-        this.setState({ elements: nextProps.elements })
-      }
-    },
-  }),
-)(FormBuilder)
+export default FormBuilder
+// FormBuilder.displayName = 'FormBuilder'
+
+// export default compose(
+// withState('elements', 'onAddElements', ({ form }) => form.children || []),
+// withHandlers({
+//   addElements: ({ onAddElements, form }) => addElement =>
+//     onAddElements(() => {
+//       const addEl = { children: form.children || [] }
+//       addEl.children = [...addEl.children, addElement]
+//       return addEl.children
+//     }),
+// }),
+// lifecycle({
+//   componentWillReceiveProps(nextProps) {
+//     if (this.props.form.children !== nextProps.form.children) {
+//       this.setState({ elements: nextProps.form.children })
+//     }
+
+//     if (this.props.elements !== nextProps.elements) {
+//       this.setState({ elements: nextProps.elements })
+//     }
+//   },
+// }),
+// )(FormBuilder)

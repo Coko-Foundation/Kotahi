@@ -1,40 +1,39 @@
 import React, { useState } from 'react'
 import { Select, TextField, ValidatedFieldFormik } from '@pubsweet/ui'
-import { compose, withState, withHandlers } from 'recompose'
+// import { compose, withState, withHandlers } from 'recompose'
 import { Legend, Section } from '../styles'
 
-const ValidationMenu = input => {
-  const [validations, setValidations] = useState()
+const ValidationMenu = input => (
+  // const validations = useState([])
 
-  return (
-    <div>
-      <Select
-        {...input}
-        onChange={value => setValidations(value)}
-        selectElement={value => {
-          input.onSelectElement(value)
-        }}
-      />
-      {
-        // the actual value is an object with:
-        // [{"value":"minSize","label":"minSize"},{"value":"minChars","label":"minimum Characters"},{"value":"maxChars","label":"maximum Characters"}]"
+  <>
+    <Select
+      {...input}
+      // onChange={select => input.onChange(select.map(s => s.value))}
+      // onChange={select => setValidations(select.map(s => s.value))}
+    />
+
+    {((Array.isArray(input.value) && input.value) || []).map(validation => {
+      if (validation.value !== 'required') {
+        return (
+          <Section key={validation.value}>
+            <Legend space>{validation.label} value</Legend>
+            <ValidatedFieldFormik
+              component={TextField}
+              name={`validateValue.${validation.value}`}
+            />
+          </Section>
+        )
       }
-      {validations && validations !== 'required' && (
-        <Section>
-          <Legend space>Field Min / Max</Legend>
-          <ValidatedFieldFormik
-            component={TextField}
-            name={`validateValue.${input.selectelement}`}
-          />
-        </Section>
-      )}
-    </div>
-  )
-}
+      return null
+    })}
+  </>
+)
 
-export default compose(
-  withState('selectelement', 'changeSelect', undefined),
-  withHandlers({
-    onSelectElement: ({ changeSelect }) => value => changeSelect(() => value),
-  }),
-)(ValidationMenu)
+export default ValidationMenu
+// export default compose(
+//   withState('selectelement', 'changeSelect', undefined),
+//   withHandlers({
+//     onSelectElement: ({ changeSelect }) => value => changeSelect(() => value),
+//   }),
+// )(ValidationMenu)
