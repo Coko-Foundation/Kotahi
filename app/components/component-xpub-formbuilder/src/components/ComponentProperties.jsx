@@ -50,7 +50,7 @@ const ComponentProperties = ({
       </Section>
       {selectComponentValue &&
         map(components[selectComponentValue], (value, key) => (
-          <Section>
+          <Section key={key}>
             <Legend space>{`Field ${key}`}</Legend>
             <ValidatedFieldFormik
               component={elements[value.component].default}
