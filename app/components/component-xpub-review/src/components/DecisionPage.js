@@ -1,6 +1,6 @@
 import { compose, withProps } from 'recompose'
 import { graphql } from '@apollo/react-hoc'
-import { gql } from 'apollo-client-preset'
+import gql from 'graphql-tag'
 import { withFormik } from 'formik'
 import { withLoader } from 'pubsweet-client'
 import { getCommentContent } from './review/util'
@@ -96,6 +96,7 @@ const fragmentFields = `
     }
     keywords
   }
+  submission
   suggestions {
     reviewers {
       opposed

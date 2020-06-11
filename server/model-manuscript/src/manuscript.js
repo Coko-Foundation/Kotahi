@@ -248,10 +248,12 @@ class Manuscript extends BaseModel {
             keywords: { type: ['string', 'null'] },
           },
         },
+        submission: {},
       },
     }
   }
 
+  // TODO: Do this on the DB level with cascading deletes
   async $beforeDelete() {
     // const Review = require('../../review/src/review')
     const { Review, Team, File } = require('@pubsweet/models')

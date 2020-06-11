@@ -1,7 +1,7 @@
 import { debounce, cloneDeep, isEmpty, set } from 'lodash'
 import { compose, withProps, withState, withHandlers } from 'recompose'
 import { graphql } from '@apollo/react-hoc'
-import { gql } from 'apollo-client-preset'
+import gql from 'graphql-tag'
 import { withFormik } from 'formik'
 import { withLoader } from 'pubsweet-client'
 import Submit from './Submit'
@@ -90,6 +90,7 @@ const fragmentFields = `
     email
     affiliation
   }
+  submission
 `
 
 const query = gql`
@@ -237,7 +238,10 @@ export default compose(
   })),
   withFormik({
     initialValues: {},
-    mapPropsToValues: ({ manuscript }) => manuscript,
+    mapPropsToValues: ({ manuscript }) =>
+      Object.assign({}, manuscript, {
+        submission: JSON.parse(manuscript.submission),
+      }),
     displayName: 'submit',
     handleSubmit: (
       props,

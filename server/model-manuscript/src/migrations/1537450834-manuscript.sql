@@ -8,5 +8,6 @@ CREATE TABLE manuscripts (
     authors JSONB,
     suggestions JSONB,
     meta JSONB,
+    submission JSONB,
     type TEXT NOT NULL
 );

@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import { hot } from 'react-hot-loader'
 import { Root } from 'pubsweet-client'
 import { createBrowserHistory } from 'history'
-import theme from '@pubsweet/coko-theme'
+import theme from './theme'
 
 import { JournalProvider } from './components/xpub-journal'
 import { XpubProvider } from './components/xpub-with-context'
@@ -18,7 +18,7 @@ const rootEl = document.getElementById('root')
 
 ReactDOM.render(
   <XpubProvider>
-    <JournalProvider journal={journal}>
+    <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
       <Root history={history} routes={routes} theme={theme} />
     </JournalProvider>
   </XpubProvider>,

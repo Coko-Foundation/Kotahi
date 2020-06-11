@@ -6,11 +6,15 @@ import { useQuery, useApolloClient } from '@apollo/react-hooks'
 
 import { withRouter, matchPath, Router } from 'react-router-dom'
 
-import { Action, AppBar } from '@pubsweet/ui'
-import { JournalContext } from 'xpub-journal'
-import { XpubContext } from 'xpub-with-context'
+import { Action } from '@pubsweet/ui'
+import { grid } from '@pubsweet/ui-toolkit'
+import { JournalContext } from './xpub-journal'
+import { XpubContext } from './xpub-with-context'
+import GlobalStyle from '../theme/elements/GlobalStyle'
 
 import queries from '../graphql/'
+
+import Menu from './Menu'
 
 const getParams = routerPath => {
   const path = '/journals/:journal/versions/:version'
@@ -18,10 +22,16 @@ const getParams = routerPath => {
 }
 
 const MainPage = styled.div`
-  margin-top: 20px;
+  padding: ${grid(2)};
+  overflow-y: scroll;
+  height: 100vh;
 `
 
 const Root = styled.div`
+  display: grid;
+  grid-template-columns: 200px auto;
+  grid-template-areas: 'menu main';
+  overflow: hidden;
   ${({ converting }) =>
     converting &&
     `
@@ -100,7 +110,8 @@ const App = ({ authorized, children, history, match }) => {
 
   return (
     <Root converting={conversion.converting}>
-      <AppBar
+      <GlobalStyle />
+      <Menu
         brand={journal.metadata.name}
         brandLink="/dashboard"
         loginLink="/login?next=/dashboard"

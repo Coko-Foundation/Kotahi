@@ -2,6 +2,10 @@ const path = require('path')
 const fs = require('fs-extra')
 const config = require('config')
 const { pick } = require('lodash')
+
+const SpeedMeasurePlugin = require('speed-measure-webpack-plugin')
+const smp = new SpeedMeasurePlugin()
+
 const rules = require('./common-rules')
 
 const contentBase = path.resolve(__dirname, '..', '_build', 'assets')
@@ -61,6 +65,11 @@ module.exports = webpackEnv => {
     },
     resolve: {
       alias: {
+        'wax-prosemirror-themes': path.resolve(__dirname, '../app/theme'),
+        'xpub-journal': path.resolve(
+          __dirname,
+          '../app/components/xpub-journal',
+        ),
         joi: 'joi-browser',
         config: clientConfigPath,
       },

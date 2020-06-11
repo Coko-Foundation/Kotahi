@@ -19,7 +19,6 @@
   },
   "peerDependencies": {
     "@apollo/react-hoc": ">=3.0.1",
-    "apollo-client-preset": ">=1.0.8",
     "config": ">=3.0.1",
     "graphql-tag": ">=2.10.0",
     "pubsweet-client": ">=2.1.0",

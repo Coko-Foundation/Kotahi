@@ -7,16 +7,8 @@ module.exports = [
     test: /\.js$|\.jsx$/,
     loader: 'babel-loader',
     query: {
-      presets: [
-        ['@babel/preset-env', { modules: false }],
-        '@babel/preset-react',
-      ],
-      plugins: [
-        'babel-plugin-styled-components',
-        require.resolve('react-hot-loader/babel'),
-        '@babel/plugin-proposal-class-properties',
-        // 'transform-decorators-legacy',
-      ],
+      presets: [['@babel/preset-env'], '@babel/preset-react'],
+      plugins: [require.resolve('react-hot-loader/babel')],
       env: {
         production: {
           /* bug requires mangle:false https://github.com/babel/minify/issues/556#issuecomment-339751209 */

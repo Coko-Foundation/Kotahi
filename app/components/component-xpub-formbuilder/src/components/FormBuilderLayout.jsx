@@ -2,7 +2,7 @@ import React from 'react'
 import { forEach } from 'lodash'
 import styled from 'styled-components'
 import { Tabs, Action } from '@pubsweet/ui'
-import { Columns, Admin } from './atoms/Columns'
+import { Columns, Details, Form } from './atoms/Columns'
 import ComponentProperties from './ComponentProperties'
 import FormBuilder from './FormBuilder'
 import FormProperties from './FormProperties'
@@ -12,7 +12,7 @@ const DeleteIcon = styled(Action)`
   line-height: 1.15;
 `
 
-const AdminStyled = styled(Admin)`
+const DetailsStyled = styled(Details)`
   border-left: 1px solid black;
   padding-left: 40px;
 `
@@ -70,26 +70,28 @@ const FormBuilderLayout = ({
   })
   return (
     <Columns>
-      <Tabs
-        activeKey={`${activeTab}`}
-        onChange={tab => {
-          changeProperties({
-            type: 'form',
-            properties: getForms[tab],
-          })
-          changeTabs(tab)
-        }}
-        sections={Sections}
-        title="builder"
-      />
-      <AdminStyled>
+      <Form>
+        <Tabs
+          activeKey={`${activeTab}`}
+          onChange={tab => {
+            changeProperties({
+              type: 'form',
+              properties: getForms[tab],
+            })
+            changeTabs(tab)
+          }}
+          sections={Sections}
+          title="builder"
+        />
+      </Form>
+      <DetailsStyled>
         <ComponentProperties
           changeTabs={changeTabs}
           key={`${properties.type}-${(properties.properties || {}).id}`}
           onSubmitFn={properties.type === 'form' ? updateForm : updateElements}
           properties={properties}
         />
-      </AdminStyled>
+      </DetailsStyled>
     </Columns>
   )
 }

@@ -30,7 +30,8 @@ const textarea = {
 const validate = {
   component: 'Menu',
   props: {
-    multi: true,
+    isMulti: true,
+    isClearable: true,
     options: [
       {
         value: 'required',
@@ -71,7 +72,7 @@ const radiofield = {
 }
 
 const elements = {
-  Supplementary: {
+  SupplementaryFiles: {
     id: textfield,
     title: textfield,
     name: textfield,

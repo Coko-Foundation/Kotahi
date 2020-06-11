@@ -1,31 +1,39 @@
-import React from 'react'
-import { Menu, TextField, ValidatedFieldFormik } from '@pubsweet/ui'
-import { compose, withState, withHandlers } from 'recompose'
+import React, { useState } from 'react'
+import { Select, TextField, ValidatedFieldFormik } from '@pubsweet/ui'
+// import { compose, withState, withHandlers } from 'recompose'
 import { Legend, Section } from '../styles'
 
 const ValidationMenu = input => (
-  <div>
-    <Menu
+  // const validations = useState([])
+
+  <>
+    <Select
       {...input}
-      selectElement={value => {
-        input.onSelectElement(value)
-      }}
+      // onChange={select => input.onChange(select.map(s => s.value))}
+      // onChange={select => setValidations(select.map(s => s.value))}
     />
-    {input.selectelement && input.selectelement !== 'required' && (
-      <Section>
-        <Legend space>FIeld Min / Max</Legend>
-        <ValidatedFieldFormik
-          component={TextField}
-          name={`validateValue.${input.selectelement}`}
-        />
-      </Section>
-    )}
-  </div>
+
+    {((Array.isArray(input.value) && input.value) || []).map(validation => {
+      if (validation.value !== 'required') {
+        return (
+          <Section key={validation.value}>
+            <Legend space>{validation.label} value</Legend>
+            <ValidatedFieldFormik
+              component={TextField}
+              name={`validateValue.${validation.value}`}
+            />
+          </Section>
+        )
+      }
+      return null
+    })}
+  </>
 )
 
-export default compose(
-  withState('selectelement', 'changeSelect', undefined),
-  withHandlers({
-    onSelectElement: ({ changeSelect }) => value => changeSelect(() => value),
-  }),
-)(ValidationMenu)
+export default ValidationMenu
+// export default compose(
+//   withState('selectelement', 'changeSelect', undefined),
+//   withHandlers({
+//     onSelectElement: ({ changeSelect }) => value => changeSelect(() => value),
+//   }),
+// )(ValidationMenu)

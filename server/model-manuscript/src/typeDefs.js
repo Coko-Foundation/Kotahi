@@ -27,6 +27,7 @@ const typeDefs = `
     suggestions: Suggestions
     authors: [Author]
     meta: ManuscriptMeta
+    submission: String
   }
 
   type ManuscriptVersion implements Object {
@@ -42,11 +43,13 @@ const typeDefs = `
     suggestions: Suggestions
     authors: [Author]
     meta: ManuscriptMeta
+    submission: String
   }
 
   input ManuscriptInput {
     files: [FileInput]
     meta: ManuscriptMetaInput
+    submission: String
   }
 
   input ManuscriptMetaInput {
