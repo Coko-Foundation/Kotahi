@@ -8,12 +8,6 @@
       "component": "TextField",
       "name": "submission.name",
       "placeholder": "Enter your name",
-      "validate": [
-        "required"
-      ],
-      "validateValue": {
-        "minChars": "10"
-      },
       "order": "1"
     },
     {
@@ -22,12 +16,6 @@
       "component": "TextField",
       "name": "submission.affiliation",
       "placeholder": "Enter your affiliation",
-      "validate": [
-        "required"
-      ],
-      "validateValue": {
-        "minChars": "10"
-      },
       "order": "2"
     },
     {
@@ -46,10 +34,25 @@
       "placeholder": "Enter keywords...",
       "parse": "split",
       "format": "join",
+      "order": "20",
+      "validateValue": {
+        "minChars": "4",
+        "maxChars": "6"
+      },
       "validate": [
-        "required"
-      ],
-      "order": "20"
+        {
+          "value": "minChars",
+          "label": "minimum Characters"
+        },
+        {
+          "value": "maxChars",
+          "label": "maximum Characters"
+        },
+        {
+          "value": "required",
+          "label": "Required"
+        }
+      ]
     },
     {
       "title": "Type of Research Object",
@@ -73,9 +76,6 @@
           "value": "registered-report",
           "label": "Registered Report"
         }
-      ],
-      "validate": [
-        "required"
       ],
       "order": "7"
     },

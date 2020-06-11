@@ -51,6 +51,7 @@ const filesToAttachment = file => ({
 const ReviewMetadata = ({ manuscript }) => (
   <Root>
     <Title>Metadata</Title>
+
     <Metadata>
       <div>
         <Heading>Open Peer Review :</Heading>
@@ -137,6 +138,9 @@ const ReviewMetadata = ({ manuscript }) => (
           )}
         </div>
       )}
+      <Title>Additional metadata</Title>
+      {// TODO
+      JSON.stringify(JSON.parse(manuscript.submission), null, 2)}
     </Metadata>
   </Root>
 )

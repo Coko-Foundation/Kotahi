@@ -8,7 +8,9 @@ const Root = styled.div``
 const Title = styled.div``
 
 const AssignEditorsReviewers = ({ manuscript, AssignEditor }) => {
+  // TODO:
   const journal = useContext(JournalContext)
+  // const journal = { id: 'temp' }
   return (
     <Root>
       <Title>Assign Editors</Title>

@@ -66,6 +66,10 @@ module.exports = webpackEnv => {
     resolve: {
       alias: {
         'wax-prosemirror-themes': path.resolve(__dirname, '../app/theme'),
+        'xpub-journal': path.resolve(
+          __dirname,
+          '../app/components/xpub-journal',
+        ),
         joi: 'joi-browser',
         config: clientConfigPath,
       },

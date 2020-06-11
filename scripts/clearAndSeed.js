@@ -10,7 +10,7 @@ const clearDb = async () => {
   `)
 
   if (rows.length) {
-    logger.info('Overwriting existing database due to clobber option')
+    logger.info('Overwriting existing database')
     // TODO this is dangerous, change it
     let dropQuery = rows.map(
       row => `DROP TABLE ${row.schemaname}.${row.tablename} CASCADE`,

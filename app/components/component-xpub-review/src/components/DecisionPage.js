@@ -96,6 +96,7 @@ const fragmentFields = `
     }
     keywords
   }
+  submission
   suggestions {
     reviewers {
       opposed
