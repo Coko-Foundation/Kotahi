@@ -8,15 +8,15 @@ import AssignEditorsReviewers from '../assignEditors/AssignEditorsReviewers'
 import AssignEditor from '../assignEditors/AssignEditor'
 import ReviewMetadata from '../metadata/ReviewMetadata'
 import Decision from './Decision'
-import EditorSection from './EditorSection'
-import { Columns, Manuscript, Admin } from '../atoms/Columns'
+// import EditorSection from './EditorSection'
+import { Columns, Manuscript, Chat } from '../atoms/Columns'
 import AdminSection from '../atoms/AdminSection'
 
-const addEditor = (manuscript, label) => ({
-  content: <EditorSection manuscript={manuscript} />,
-  key: manuscript.id,
-  label,
-})
+// const addEditor = (manuscript, label) => ({
+//   content: <EditorSection manuscript={manuscript} />,
+//   key: manuscript.id,
+//   label,
+// })
 
 const DecisionLayout = ({
   handleSubmit,
@@ -46,7 +46,7 @@ const DecisionLayout = ({
       label,
     })
 
-    editorSections.push(addEditor(manuscript, label))
+    // editorSections.push(addEditor(manuscript, label))
   }, [])
 
   const submittedMoment = moment()
@@ -81,26 +81,26 @@ const DecisionLayout = ({
       label,
     })
 
-    editorSections.push(addEditor(manuscript, label))
+    // editorSections.push(addEditor(manuscript, label))
   }
 
   return (
     <Columns>
       <Manuscript>
-        <Tabs
+        Temp
+        {/* <Tabs
           activeKey={editorSections[editorSections.length - 1].key}
           sections={editorSections}
           title="Versions"
-        />
-      </Manuscript>
-
-      <Admin>
+        /> */}
         <Tabs
           activeKey={decisionSections[decisionSections.length - 1].key}
           sections={decisionSections}
           title="Versions"
         />
-      </Admin>
+      </Manuscript>
+
+      <Chat></Chat>
     </Columns>
   )
 }
