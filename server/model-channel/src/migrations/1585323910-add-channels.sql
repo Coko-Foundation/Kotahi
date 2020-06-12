@@ -6,7 +6,7 @@ CREATE TABLE channels (
   updated TIMESTAMP WITH TIME ZONE,
   name TEXT,
   topic TEXT,
-  type TEXT,
+  type TEXT
 );
 
 CREATE TABLE channel_members (

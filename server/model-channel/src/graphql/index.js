@@ -3,6 +3,10 @@ const fetch = require('node-fetch')
 
 const resolvers = {
   Query: {
+    manuscriptChannel: async (_, { manuscriptId }, context) => {
+      const manuscript = context.connectors.Manuscript.fetchOne(manuscriptId)
+      return Channel.find(manuscript.channelId)
+    },
     teamByName: async (_, { name }, context) => {
       const Team = context.connectors.Team.model
       return Team.query()
@@ -95,6 +99,7 @@ const typeDefs = `
     findByDOI(doi: String): Channel
     searchOnCrossref(searchTerm: String): [Work]
     channels: [Channel]
+    manuscriptChannel: Channel
   }
 
   extend type Mutation {

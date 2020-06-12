@@ -122,6 +122,10 @@ const query = gql`
       manuscriptVersions {
         ${fragmentFields}
       }
+      channel {
+        id
+        name
+      }
     }
   }
 `

@@ -196,26 +196,29 @@ const UploadManuscript = ({ acceptFiles, ...props }) => {
       disableUpload={converting ? 'disableUpload' : null}
       onDrop={uploadManuscript}
     >
-      <Root>
-        <Main>
-          {completed && <StatusCompleted />}
-          {error && <StatusError />}
-          {converting && <StatusConverting />}
-          {!converting && !error && !completed && <StatusIdle />}
-          {error ? (
-            <Error>{error.message}</Error>
-          ) : (
-            <Info>
-              {completed ? 'Submission created' : 'Submit Manuscript'}
-            </Info>
-          )}
-        </Main>
-        <SubInfo>
-          {converting &&
-            'Your manuscript is being converted into a directly editable version. This might take a few seconds.'}
-          {!converting && 'Accepted file types: pdf, epub, zip, docx, latex'}
-        </SubInfo>
-      </Root>
+      {({ getRootProps, getInputProps }) => (
+        <Root {...getRootProps()}>
+          <Main>
+            <input {...getInputProps()} />
+            {completed && <StatusCompleted />}
+            {error && <StatusError />}
+            {converting && <StatusConverting />}
+            {!converting && !error && !completed && <StatusIdle />}
+            {error ? (
+              <Error>{error.message}</Error>
+            ) : (
+              <Info>
+                {completed ? 'Submission created' : 'Submit Manuscript'}
+              </Info>
+            )}
+          </Main>
+          <SubInfo>
+            {converting &&
+              'Your manuscript is being converted into a directly editable version. This might take a few seconds.'}
+            {!converting && 'Accepted file types: pdf, epub, zip, docx, latex'}
+          </SubInfo>
+        </Root>
+      )}
     </StyledDropzone>
   )
 }

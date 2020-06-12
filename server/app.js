@@ -22,7 +22,7 @@ const registerComponents = require('pubsweet-server/src/register-components') //
 
 // Wax Collab requirements
 const WebSocket = require('ws')
-const wsUtils = require('./server-util.js')
+const wsUtils = require('./wax-collab/server-util.js')
 const cookie = require('cookie')
 const EventEmitter = require('events')
 
@@ -96,6 +96,7 @@ const configureApp = app => {
 
   // Serve the index page for front end
   // app.use('/', index)
+  app.use('/healthcheck', (req, res) => res.send('All good!'))
 
   app.use((err, req, res, next) => {
     // development error handler, will print stacktrace

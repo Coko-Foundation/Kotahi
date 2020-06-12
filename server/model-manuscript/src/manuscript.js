@@ -171,6 +171,21 @@ class Manuscript extends BaseModel {
     return this
   }
 
+  static get relationMappings() {
+    const { Channel } = require('@pubsweet/models')
+
+    return {
+      channel: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: Channel,
+        join: {
+          from: 'manuscripts.channelId',
+          to: 'channels.id',
+        },
+      },
+    }
+  }
+
   static get schema() {
     return {
       properties: {
@@ -248,6 +263,8 @@ class Manuscript extends BaseModel {
             keywords: { type: ['string', 'null'] },
           },
         },
+        // TODO
+        channelId: { type: ['string', 'null'], format: 'uuid' },
         submission: {},
       },
     }

@@ -61,6 +61,7 @@ const App = ({ authorized, children, history, match }) => {
   const showLinks = pathname.match(/submit|manuscript/g)
   let links = []
   const formBuilderLink = `/admin/form-builder`
+  const profileLink = `/profile`
 
   if (showLinks) {
     const params = getParams(pathname)
@@ -87,6 +88,15 @@ const App = ({ authorized, children, history, match }) => {
         ]
       : null
   }
+
+  links.push(
+    <Action
+      active={window.location.pathname === profileLink ? 'active' : null}
+      to={profileLink}
+    >
+      Profile
+    </Action>,
+  )
 
   if (currentUser && currentUser.admin) {
     links.push(

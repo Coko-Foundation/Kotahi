@@ -2,7 +2,7 @@ import 'regenerator-runtime/runtime'
 import React from 'react'
 import ReactDOM from 'react-dom'
 import { hot } from 'react-hot-loader'
-import { Root } from 'pubsweet-client'
+import Root from './Root'
 import { createBrowserHistory } from 'history'
 import theme from './theme'
 

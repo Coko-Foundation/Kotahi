@@ -1,6 +1,6 @@
 [
   "@pubsweet/model-team",
-  "@pubsweet/model-user",
+  "./server/model-user",
   "./server/model-journal/src/",
   "./server/model-manuscript/src/",
   "./server/model-file/src/",
@@ -9,5 +9,8 @@
   "./server/formbuilder/src/",
   "./server/teamMember/src/",
   "@pubsweet/job-xsweet",
-  "@pubsweet/component-password-reset-server"
+  "@pubsweet/component-password-reset-server",
+  "./server/model-channel",
+  "./server/model-message",
+  "./server/profile-upload"
 ]

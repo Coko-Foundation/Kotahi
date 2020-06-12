@@ -1,0 +1,1 @@
+ALTER TABLE manuscripts ADD COLUMN channel_id UUID;

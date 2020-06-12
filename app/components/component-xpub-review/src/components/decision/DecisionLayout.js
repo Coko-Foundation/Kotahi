@@ -11,12 +11,12 @@ import Decision from './Decision'
 // import EditorSection from './EditorSection'
 import { Columns, Manuscript, Chat } from '../atoms/Columns'
 import AdminSection from '../atoms/AdminSection'
-
 // const addEditor = (manuscript, label) => ({
 //   content: <EditorSection manuscript={manuscript} />,
 //   key: manuscript.id,
 //   label,
 // })
+import MessageContainer from '../../../../component-chat/src'
 
 const DecisionLayout = ({
   handleSubmit,
@@ -100,7 +100,9 @@ const DecisionLayout = ({
         />
       </Manuscript>
 
-      <Chat></Chat>
+      <Chat>
+        <MessageContainer channelId={manuscript.channel.id} />
+      </Chat>
     </Columns>
   )
 }

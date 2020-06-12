@@ -6,7 +6,13 @@ class Channel extends BaseModel {
   }
 
   static get relationMappings() {
-    const { ChannelMember, User, Message, Team } = require('@pubsweet/models')
+    const {
+      ChannelMember,
+      User,
+      Message,
+      Team,
+      Manuscript,
+    } = require('@pubsweet/models')
 
     return {
       messages: {
@@ -31,6 +37,14 @@ class Channel extends BaseModel {
         join: {
           from: 'channels.teamId',
           to: 'teams.id',
+        },
+      },
+      manuscript: {
+        relation: BaseModel.HasOneRelation,
+        modelClass: Manuscript,
+        join: {
+          from: 'channels.id',
+          to: 'manuscripts.channelId',
         },
       },
       users: {

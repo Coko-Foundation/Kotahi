@@ -1,0 +1,3 @@
+ALTER TABLE users
+ADD COLUMN profile_picture TEXT,
+ADD COLUMN online BOOLEAN;

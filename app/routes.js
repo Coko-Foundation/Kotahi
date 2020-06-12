@@ -17,11 +17,14 @@ import TeamPage from './components/component-xpub-teams-manager/src/components/T
 import DecisionPage from './components/component-xpub-review/src/components/DecisionPage'
 import FormBuilderPage from './components/component-xpub-formbuilder/src/components/FormBuilderPage'
 
+import { Profile } from './components/component-profile/src'
+
 import App from './components/App'
 
 // const createReturnUrl = ({ pathname, search = '' }) => pathname + search
 // const loginUrl = location => `/login?next=${createReturnUrl(location)}`
 
+// TODO: Redirect if token expires
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -77,6 +80,7 @@ export default (
         exact
         path="/journals/:journal/versions/:version/decisions/:decision"
       />
+      <PrivateRoute path="/profile" component={Profile} exact path="/profile" />
       {/* <PrivateRoute
         component={FindReviewersPage}
         exact

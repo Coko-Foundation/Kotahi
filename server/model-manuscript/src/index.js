@@ -1,10 +1,8 @@
-const resolvers = require('./resolvers')
-const typeDefs = require('./typeDefs')
+const graphql = require('./graphql')
 const model = require('./manuscript')
 
 module.exports = {
   model,
   modelName: 'Manuscript',
-  resolvers,
-  typeDefs,
+  ...graphql,
 }
