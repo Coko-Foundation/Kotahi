@@ -12,5 +12,6 @@
   "@pubsweet/component-password-reset-server",
   "./server/model-channel",
   "./server/model-message",
-  "./server/profile-upload"
+  "./server/profile-upload",
+  "./server/auth-orcid"
 ]

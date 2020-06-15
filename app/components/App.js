@@ -21,16 +21,12 @@ const getParams = routerPath => {
   return matchPath(routerPath, path).params
 }
 
-const MainPage = styled.div`
-  padding: ${grid(2)};
-  overflow-y: scroll;
-  height: 100vh;
-`
-
 const Root = styled.div`
   display: grid;
   grid-template-columns: 200px auto;
   grid-template-areas: 'menu main';
+  max-height: 100vh;
+  height: 100%;
   overflow: hidden;
   ${({ converting }) =>
     converting &&
@@ -129,9 +125,7 @@ const App = ({ authorized, children, history, match }) => {
         onLogoutClick={() => logoutUser(client)}
         user={currentUser}
       />
-      <Router history={history}>
-        <MainPage>{children}</MainPage>
-      </Router>
+      <Router history={history}>{children}</Router>
     </Root>
   )
 }

@@ -36,6 +36,7 @@
     "joi": "^10.0.6",
     "loadable-components": "^0.3.0",
     "moment": "^2.18.1",
+    "passport-orcid": "^0.0.4",
     "prop-types": "^15.5.10",
     "pubsweet": "^5.1.2",
     "pubsweet-client": "^10.0.2",

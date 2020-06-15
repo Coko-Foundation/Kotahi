@@ -1,0 +1,24 @@
+{
+  "name": "@pubsweet/auth-orcid",
+  "version": "1.0.0",
+  "description": "",
+  "license": "MIT",
+  "author": "eLife",
+  "main": "index.js",
+  "scripts": {},
+  "keywords": [],
+  "dependencies": {
+    "config": "^3.0.1",
+    "passport": "^0.4.0",
+    "passport-orcid": "^0.0.4"
+  },
+  "peerDependencies": {
+    "pubsweet-server": ">=13.0.0"
+  },
+  "devDependencies": {
+    "nock": "^9.2.3",
+    "replay": "^2.3.0",
+    "superagent": "^3.8.2",
+    "supertest": "^3.1.0"
+  }
+}

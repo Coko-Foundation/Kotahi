@@ -2,7 +2,7 @@ import React from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
 
 // Common PubSweet components
-import Login from 'pubsweet-component-login'
+import Login from './components/component-login'
 import Signup from 'pubsweet-component-signup'
 import PasswordReset from '@pubsweet/component-password-reset-client'
 import UsersManager from 'pubsweet-component-users-manager'
