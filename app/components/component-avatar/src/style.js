@@ -10,7 +10,7 @@ import { MEDIA_BREAK } from '../../layout'
 
 export const Container = styled.div`
   position: relative;
-  display: inline-block;
+  display: block;
   width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
   border-radius: ${props =>

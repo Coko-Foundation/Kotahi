@@ -1,5 +1,3 @@
-module.exports = {
-  frontend: {
-    components: [() => require('./components')],
-  },
-}
+import Dashboard from './components/Dashboard'
+
+export default Dashboard

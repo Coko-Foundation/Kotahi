@@ -20,17 +20,13 @@ const cokoTheme = {
   colorSecondary: '#E7E7E7',
   colorFurniture: '#CCC',
   colorBorder: '#AAA',
-  colorBackgroundHue: '#F1F1F1',
+  colorBackgroundHue: '#f9fafb',
   colorSuccess: '#008800',
   colorError: '#FF2D1A',
   colorText: '#111',
   colorTextReverse: '#FFF',
   colorTextPlaceholder: '#595959',
   colorWarning: '#ffc107',
-
-  // TODO -- not used anywhere
-  //   $colorInteract: var($colorPrimaryDarker);
-  // $colorPrimaryDarker: #0551a8
 
   /* Text variables */
 

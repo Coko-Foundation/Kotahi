@@ -1,19 +1,19 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { override, th } from '@pubsweet/ui-toolkit'
+import { override, th, grid } from '@pubsweet/ui-toolkit'
 
 import { Icon, Action } from '@pubsweet/ui'
 
-// #region styled-components
 const Root = styled.nav`
   grid-area: menu;
-  padding: calc(${th('gridUnit')} * 2);
+  padding: ${grid(2)};
   // display: flex;
   // align-items: center;
   // justify-content: space-between;
+  border-right: 1px solid ${th('colorFurniture')};
   max-height: 100vh;
-  ${override('ui.AppBar')};
+  // ${override('ui.AppBar')};
 `
 
 const Section = styled.div`
@@ -22,7 +22,7 @@ const Section = styled.div`
 `
 
 const Logo = styled.span`
-  // margin: calc(${th('gridUnit')} * 2) 1rem calc(${th('gridUnit')} * 2) 1rem;
+  // margin: ${grid(2)} 1rem ${grid(2)} 1rem;
 
   ${override('ui.AppBar.Logo')};
 `
@@ -40,7 +40,6 @@ const Item = styled.div`
   // display: inline-flex;
   // margin: calc(${th('gridUnit')} * 3) 1rem calc(${th('gridUnit')} * 3) 0;
 `
-// #endregion
 
 const AppBar = ({
   brandLink = '/',

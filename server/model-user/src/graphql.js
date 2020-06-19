@@ -8,8 +8,28 @@ const resolvers = {
     user(_, { id }, ctx) {
       return ctx.connectors.User.fetchOne(id, ctx, { eager })
     },
-    users(_, { where }, ctx) {
-      return ctx.connectors.User.fetchAll(where, ctx, { eager })
+    async users(_, { sort, offset, limit, filter }, ctx) {
+      const query = ctx.connectors.User.model.query()
+
+      if (filter && filter.admin) {
+        query.where({ admin: true })
+      }
+
+      if (sort) {
+        // e.g. 'created_DESC' into 'created' and 'DESC' arguments
+        query.orderBy(...sort.split('_'))
+      }
+
+      if (limit) {
+        query.limit(limit)
+      }
+
+      if (offset) {
+        query.offset(offset)
+      }
+
+      return query
+      // return ctx.connectors.User.fetchAll(where, ctx, { eager })
     },
     // Authentication
     currentUser(_, vars, ctx) {
@@ -132,7 +152,7 @@ const resolvers = {
 const typeDefs = `
   extend type Query {
     user(id: ID, username: String): User
-    users: [User]
+    users(sort: UsersSort, offset: Int, limit: Int, filter: UsersFilter): [User]
     searchUsers(teamId: ID, query: String): [User]
   }
 
@@ -141,6 +161,21 @@ const typeDefs = `
     deleteUser(id: ID): User
     updateUser(id: ID, input: UserInput): User
     updateCurrentUsername(username: String): User
+  }
+
+  input UsersFilter {
+    admin: Boolean
+  }
+
+  enum UsersSort {
+    username_ASC
+    username_DESC
+    email_ASC
+    email_DESC
+    admin_ASC
+    admin_DESC
+    created_ASC
+    created_DESC
   }
 
   type User {

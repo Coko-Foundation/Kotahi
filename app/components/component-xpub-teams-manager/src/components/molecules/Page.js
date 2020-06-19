@@ -1,9 +1,8 @@
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 
 const Page = styled.div`
-  margin: auto;
-  max-width: 60em;
+  padding: ${grid(2)};
 `
 
 const Section = styled.div`
