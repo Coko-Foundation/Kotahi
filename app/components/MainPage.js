@@ -1,18 +1,14 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { compose } from 'recompose'
-// import { graphql } from '@apollo/react-hoc'
 import { useQuery, useApolloClient } from '@apollo/react-hooks'
-
 import { withRouter, matchPath, Router } from 'react-router-dom'
-
 import { Action } from '@pubsweet/ui'
-import { grid } from '@pubsweet/ui-toolkit'
-import { JournalContext } from './xpub-journal'
-import { XpubContext } from './xpub-with-context'
+import { JournalContext } from './xpub-journal/src'
+import { XpubContext } from './xpub-with-context/src'
 import GlobalStyle from '../theme/elements/GlobalStyle'
 
-import queries from '../graphql/'
+import queries from '../graphql'
 
 import Menu from './Menu'
 
@@ -26,7 +22,7 @@ const Root = styled.div`
   grid-template-columns: 200px auto;
   grid-template-areas: 'menu main';
   max-height: 100vh;
-  height: 100%;
+  height: 100vh;
   overflow: hidden;
   ${({ converting }) =>
     converting &&
@@ -37,6 +33,15 @@ const Root = styled.div`
      }
   `};
 `
+
+const NavLink = ({ link, name }) => (
+  <Action
+    active={window.location.pathname === link ? 'active' : null}
+    to={link}
+  >
+    {name}
+  </Action>
+)
 
 const localStorage = window.localStorage || undefined
 
@@ -58,6 +63,7 @@ const App = ({ authorized, children, history, match }) => {
   let links = []
   const formBuilderLink = `/admin/form-builder`
   const profileLink = `/profile`
+  const dashboardLink = '/dashboard'
 
   if (showLinks) {
     const params = getParams(pathname)
@@ -67,51 +73,19 @@ const App = ({ authorized, children, history, match }) => {
 
     links = showLinks
       ? [
-          <Action
-            active={window.location.pathname === submitLink ? 'active' : null}
-            to={submitLink}
-          >
-            Summary Info
-          </Action>,
-          <Action
-            active={
-              window.location.pathname === manuscriptLink ? 'active' : null
-            }
-            to={manuscriptLink}
-          >
-            Manuscript
-          </Action>,
+          NavLink({ link: submitLink, name: 'Summary Info' }),
+          NavLink({ link: manuscriptLink, name: 'Manuscript' }),
         ]
       : null
   }
 
-  links.push(
-    <Action
-      active={window.location.pathname === profileLink ? 'active' : null}
-      to={profileLink}
-    >
-      Profile
-    </Action>,
-  )
+  links.push(NavLink({ link: dashboardLink, name: 'Dashboard' }))
+  links.push(NavLink({ link: profileLink, name: 'Profile' }))
 
   if (currentUser && currentUser.admin) {
-    links.push(
-      <Action
-        active={window.location.pathname === '/teams' ? 'active' : null}
-        to="/teams"
-      >
-        Team Manager
-      </Action>,
-    )
-
-    links.push(
-      <Action
-        active={window.location.pathname === formBuilderLink ? 'active' : null}
-        to={formBuilderLink}
-      >
-        Form Builder
-      </Action>,
-    )
+    links.push(NavLink({ link: '/teams', name: 'Teams' }))
+    links.push(NavLink({ link: formBuilderLink, name: 'Forms' }))
+    links.push(NavLink({ link: '/admin/users', name: 'Users' }))
   }
 
   return (

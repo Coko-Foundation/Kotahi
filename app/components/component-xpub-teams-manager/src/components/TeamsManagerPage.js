@@ -11,19 +11,6 @@ const deleteTeamMutation = gql`
   mutation($id: ID) {
     deleteTeam(id: $id) {
       id
-      type
-      role
-      name
-      object {
-        objectId
-        objectType
-      }
-      members {
-        user {
-          id
-          username
-        }
-      }
     }
   }
 `

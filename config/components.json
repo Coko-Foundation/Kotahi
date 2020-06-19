@@ -1,5 +1,5 @@
 [
-  "@pubsweet/model-team",
+  "./server/model-team",
   "./server/model-user",
   "./server/model-journal/src/",
   "./server/model-manuscript/src/",
@@ -7,9 +7,7 @@
   "./server/component-xpub-review-backend/src/",
   "./server/review/src/",
   "./server/formbuilder/src/",
-  "./server/teamMember/src/",
   "@pubsweet/job-xsweet",
-  "@pubsweet/component-password-reset-server",
   "./server/model-channel",
   "./server/model-message",
   "./server/profile-upload",
