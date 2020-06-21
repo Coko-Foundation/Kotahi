@@ -28,9 +28,12 @@ height: 100%
 width: 100%
 }
 
+*, *:before, *:after {
+  box-sizing: inherit;
+}
+
 * {
 border: 0;
-box-sizing: inherit;
 -webkit-font-smoothing: auto;
 font-weight: inherit;
 margin: 0;

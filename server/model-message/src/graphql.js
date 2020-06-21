@@ -5,7 +5,7 @@ const { getPubsub } = pubsubManager
 // Fires immediately when the message is created
 const MESSAGE_CREATED = 'MESSAGE_CREATED'
 
-const Message = require('../message')
+const Message = require('./message')
 
 const resolvers = {
   Query: {
@@ -85,6 +85,7 @@ const typeDefs = `
   type PageInfo {
     startCursor: String
     hasPreviousPage: Boolean
+    hasNextPage: Boolean
   }
 
   type MessagesRelay {

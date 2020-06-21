@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
-import { Heading, Action } from '@pubsweet/ui'
+import { Heading } from '@pubsweet/ui'
 
 import User from './User'
 import { Container, Table, Header } from './style'
-import Spinner from '../../Spinner'
+import Spinner from '../../shared/Spinner'
+import Pagination from './Pagination'
 
 const GET_USERS = gql`
   query Users(
@@ -15,13 +16,16 @@ const GET_USERS = gql`
     $limit: Int
   ) {
     users(sort: $sort, filter: $filter, offset: $offset, limit: $limit) {
-      id
-      username
-      admin
-      email
-      profilePicture
-      online
-      created
+      totalCount
+      users {
+        id
+        username
+        admin
+        email
+        profilePicture
+        online
+        created
+      }
     }
   }
 `
@@ -56,23 +60,25 @@ const UsersManager = () => {
   const [sortName, setSortName] = useState('created')
   const [sortDirection, setSortDirection] = useState('DESC')
   const [page, setPage] = useState(1)
-  const limit = 15
+  const limit = 10
   const sort = sortName && sortDirection && `${sortName}_${sortDirection}`
 
   const { loading, error, data } = useQuery(GET_USERS, {
     variables: {
       sort,
       offset: (page - 1) * limit,
-      limit
+      limit,
     },
   })
 
-  if (loading) return <Spinner/>
+  if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
+
+  const { users, totalCount } = data.users
 
   return (
     <Container>
-      <Heading level={1}>List of users</Heading>
+      <Heading level={1}>Users</Heading>
       <Table>
         <Header>
           <tr>
@@ -83,13 +89,12 @@ const UsersManager = () => {
           </tr>
         </Header>
         <tbody>
-          {data.users.map((user, key) => (
+          {users.map((user, key) => (
             <User key={user.id} number={key + 1} user={user} />
           ))}
         </tbody>
       </Table>
-      { page > 1 && <><Action onClick={() => setPage(page - 1)}>Previous</Action>&nbsp;</> }
-      { data.users.length === limit && <Action onClick={() => setPage(page + 1)}>Next</Action> }
+      <Pagination setPage={setPage} limit={limit} page={page} totalCount={totalCount} />
     </Container>
   )
 }

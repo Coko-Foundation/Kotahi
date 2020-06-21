@@ -3,7 +3,8 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 import { Action } from '@pubsweet/ui'
 import { UserAvatar } from '../../component-avatar/src'
-import { Row, Cell, LastCell, UserCombo } from './style'
+import { Row, Cell, LastCell, UserCombo, Primary, Secondary, UserInfo } from './style'
+import { convertTimestampToDate } from '../../../shared/time-formatting'
 
 const DELETE_USER = gql`
   mutation($id: ID) {
@@ -18,8 +19,16 @@ const User = ({ user }) => {
 
   return (
     <Row>
-      <Cell><UserCombo><UserAvatar user={user}/>{user.username} {user.email}</UserCombo></Cell>
-      <Cell>{user.created}</Cell>
+      <Cell>
+        <UserCombo>
+          <UserAvatar user={user} />
+          <UserInfo>
+            <Primary>{user.username}</Primary>
+            <Secondary>{user.email || '(via ORCID)'}</Secondary>
+          </UserInfo>
+        </UserCombo>
+      </Cell>
+      <Cell>{convertTimestampToDate(user.created)}</Cell>
       <Cell>{user.admin ? 'yes' : ''}</Cell>
       <LastCell>
         <Action onClick={() => deleteUser({ variables: { id: user.id } })}>

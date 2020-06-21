@@ -7,7 +7,7 @@ import { useMutation } from '@apollo/react-hooks'
 
 // import compose from 'recompose/compose';
 // import { connect } from 'react-redux';
-import Icon from '../Messages/Icon'
+import Icon from '../../../shared/Icon'
 // import { addToastWithTimeout } from 'src/actions/toasts';
 // import { openModal } from 'src/actions/modals';
 // import { replyToMessage } from 'src/actions/message';

@@ -19,9 +19,12 @@ const secondary = css`
 
   &[disabled] {
     color: ${th('colorTextPlaceholder')};
-
+    cursor: default;
     &:hover {
       background: none;
+    }
+    &:hover:before {
+      visibility: hidden;
     }
   }
 `

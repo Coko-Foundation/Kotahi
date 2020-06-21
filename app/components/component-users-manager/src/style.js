@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Action } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
 
@@ -6,7 +6,6 @@ export const Table = styled.table`
   width: 100%;
   border-radius: ${th('borderRadius')};
   border-collapse: collapse;
-  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   font-size: ${th('fontSizeBaseSmall')};
 
   td {
@@ -18,10 +17,10 @@ export const Header = styled.thead`
   font-variant: all-small-caps;
   border-bottom: 1px solid ${th('colorFurniture')};
 
-  background: ${th('colorBackgroundHue')};
+  background-color: ${th('colorBackgroundHue')};
 
   th {
-    padding: ${grid(2)} ${grid(3)};
+    padding: ${grid(1)} ${grid(3)};
   }
 `
 
@@ -30,13 +29,19 @@ export const Container = styled.div`
 `
 
 export const Row = styled.tr`
-  height: ${grid(6)};
+  max-height: ${grid(8)};
   border-bottom: 1px solid ${th('colorFurniture')};
+
+  &:hover {
+    background-color: ${th('colorBackgroundHue')};
+  }
 `
 
 export const Cell = styled.td`
-  padding: ${grid(2)} ${grid(3)};
-
+  padding-bottom: ${grid(2)};
+  padding-top: calc(${grid(2)} - 1px);
+  padding-left: ${grid(3)};
+  padding-right: ${grid(3)};
   button {
     font-size: ${th('fontSizeBaseSmall')};
   }
@@ -44,9 +49,22 @@ export const Cell = styled.td`
 
 export const UserCombo = styled.div`
   display: flex;
-  line-height: ${grid(5)};
+  line-height: ${grid(2.5)};
+  align-items: center;
 `
 
 export const LastCell = styled(Cell)`
   text-align: right;
+`
+
+export const Primary = styled.div`
+  font-weight: 500;
+`
+
+export const Secondary = styled.div`
+  color: ${th('colorTextPlaceholder')};
+`
+
+export const UserInfo = styled.div`
+  margin-left: ${grid(1)};
 `

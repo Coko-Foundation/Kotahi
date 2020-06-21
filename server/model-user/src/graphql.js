@@ -15,6 +15,8 @@ const resolvers = {
         query.where({ admin: true })
       }
 
+      const totalCount = await query.resultSize()
+
       if (sort) {
         // e.g. 'created_DESC' into 'created' and 'DESC' arguments
         query.orderBy(...sort.split('_'))
@@ -28,7 +30,12 @@ const resolvers = {
         query.offset(offset)
       }
 
-      return query
+      const users = await query
+      return {
+        totalCount,
+        users,
+      }
+
       // return ctx.connectors.User.fetchAll(where, ctx, { eager })
     },
     // Authentication
@@ -152,8 +159,13 @@ const resolvers = {
 const typeDefs = `
   extend type Query {
     user(id: ID, username: String): User
-    users(sort: UsersSort, offset: Int, limit: Int, filter: UsersFilter): [User]
+    users(sort: UsersSort, offset: Int, limit: Int, filter: UsersFilter): PaginatedUsers
     searchUsers(teamId: ID, query: String): [User]
+  }
+
+  type PaginatedUsers {
+    totalCount: Int
+    users: [User]
   }
 
   extend type Mutation {
