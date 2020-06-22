@@ -1,11 +1,9 @@
 import React from 'react'
 import { Route, Switch, Redirect } from 'react-router-dom'
 
-// Common PubSweet components
 import Login from './components/component-login'
 import UsersManager from './components/component-users-manager'
-
-// SimpleJ-specific components
+import Manuscripts from './components/component-manuscripts'
 import Dashboard from './components/component-xpub-dashboard/src/components/Dashboard'
 import SubmitPage from './components/component-xpub-submit/src/components/SubmitPage'
 import ManuscriptPage from './components/component-xpub-manuscript/src/components/ManuscriptPage'
@@ -53,7 +51,6 @@ export default (
         exact
         path="/admin/form-builder"
       />
-      <PrivateRoute component={UsersManager} exact path="/admin/users" />
       <PrivateRoute
         component={ManuscriptPage}
         exact
@@ -92,7 +89,8 @@ export default (
       /> */}
 
       <Route component={Login} path="/login" />
-      <PrivateRoute component={UsersManager} path="/users" />
+      <PrivateRoute component={UsersManager} path="/admin/users" />
+      <PrivateRoute component={Manuscripts} path="/admin/manuscripts" />
 
       {/* <PrivateRoute component={Dashboard} path="*" /> */}
     </Switch>

@@ -2,9 +2,9 @@ import React from 'react'
 import { Action } from '@pubsweet/ui'
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import Icon from '../../shared/Icon'
 
-import { zIndex } from '../../../globals'
+import Icon from './Icon'
+import { zIndex } from '../../globals'
 
 const Page = styled.div`
   line-height: ${grid(5)};
@@ -44,7 +44,6 @@ const Page = styled.div`
 
         }
       }
-      // border-color: ${th('colorPrimary')};
     `}
 `
 

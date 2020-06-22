@@ -3,28 +3,28 @@ import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import { Heading } from '@pubsweet/ui'
 
-import User from './User'
+import Manuscript from './Manuscript'
 import { Container, Table, Header, Caret, Carets } from './style'
 import Spinner from '../../shared/Spinner'
 import Pagination from '../../shared/Pagination'
 
-const GET_USERS = gql`
-  query Users(
-    $sort: UsersSort
-    $filter: UsersFilter
+const GET_MANUSCRIPTS = gql`
+  query Manuscripts(
+    $sort: String
+    $filter: ManuscriptsFilter
     $offset: Int
     $limit: Int
   ) {
-    users(sort: $sort, filter: $filter, offset: $offset, limit: $limit) {
+    paginatedManuscripts(sort: $sort, filter: $filter, offset: $offset, limit: $limit) {
       totalCount
-      users {
+      manuscripts {
         id
-        username
-        admin
-        email
-        profilePicture
-        online
+        meta {
+          title
+        }
         created
+        updated
+        status
       }
     }
   }
@@ -63,7 +63,7 @@ const CaretDown = ({ active }) => (
   </Caret>
 )
 
-const UsersManager = () => {
+const Manuscripts = () => {
   const SortHeader = ({ thisSortName, children }) => {
     const changeSort = () => {
       if (sortName !== thisSortName) {
@@ -102,7 +102,7 @@ const UsersManager = () => {
   const limit = 10
   const sort = sortName && sortDirection && `${sortName}_${sortDirection}`
 
-  const { loading, error, data } = useQuery(GET_USERS, {
+  const { loading, error, data } = useQuery(GET_MANUSCRIPTS, {
     variables: {
       sort,
       offset: (page - 1) * limit,
@@ -113,23 +113,23 @@ const UsersManager = () => {
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
 
-  const { users, totalCount } = data.users
+  const { manuscripts, totalCount } = data.paginatedManuscripts
 
   return (
     <Container>
-      <Heading level={1}>Users</Heading>
+      <Heading level={1}>Manuscripts</Heading>
       <Table>
         <Header>
           <tr>
-            <SortHeader thisSortName="username">Name</SortHeader>
+            <SortHeader thisSortName="title">Title</SortHeader>
             <SortHeader thisSortName="created">Created</SortHeader>
-            <SortHeader thisSortName="admin">Admin</SortHeader>
+            <SortHeader thisSortName="status">Status</SortHeader>
             <th />
           </tr>
         </Header>
         <tbody>
-          {users.map((user, key) => (
-            <User key={user.id} number={key + 1} user={user} />
+          {manuscripts.map((manuscript, key) => (
+            <Manuscript key={manuscript.id} number={key + 1} manuscript={manuscript} />
           ))}
         </tbody>
       </Table>
@@ -143,4 +143,4 @@ const UsersManager = () => {
   )
 }
 
-export default UsersManager
+export default Manuscripts

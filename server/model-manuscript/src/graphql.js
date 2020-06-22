@@ -185,6 +185,36 @@ const resolvers = {
     async manuscripts(_, { where }, ctx) {
       return ctx.connectors.Manuscript.fetchAll(where, ctx)
     },
+    async paginatedManuscripts(_, { sort, offset, limit, filter }, ctx) {
+      const query = ctx.connectors.Manuscript.model.query()
+
+      if (filter && filter.status) {
+        query.where({ status: filter.status })
+      }
+
+      const totalCount = await query.resultSize()
+
+      if (sort) {
+        // e.g. 'created_DESC' into 'created' and 'DESC' arguments
+        query.orderBy(...sort.split('_'))
+      }
+
+      if (limit) {
+        query.limit(limit)
+      }
+
+      if (offset) {
+        query.offset(offset)
+      }
+
+      const manuscripts = await query
+      return {
+        totalCount,
+        manuscripts,
+      }
+
+      // return ctx.connectors.User.fetchAll(where, ctx, { eager })
+    },
     async getFile() {
       return form
     },
@@ -204,7 +234,25 @@ const typeDefs = `
     globalTeams: [Team]
     manuscript(id: ID!): Manuscript!
     manuscripts: [Manuscript]!
+    paginatedManuscripts(sort: String, offset: Int, limit: Int, filter: ManuscriptsFilter): PaginatedManuscripts
   }
+
+  input ManuscriptsFilter {
+    status: String
+  }
+
+  type PaginatedManuscripts {
+    totalCount: Int
+    manuscripts: [Manuscript]
+  }
+
+  # enum ManuscriptsSort {
+  #   meta->>'title'_DESC
+  #   created_ASC
+  #   created_DESC
+  #   updated_ASC
+  #   updated_DESC
+  # }
 
   extend type Mutation {
     createManuscript(input: ManuscriptInput): Manuscript!

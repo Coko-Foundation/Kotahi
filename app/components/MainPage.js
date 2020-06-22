@@ -59,7 +59,7 @@ const App = ({ authorized, children, history, match }) => {
   const currentUser = data && data.currentUser
 
   const { pathname } = history.location
-  const showLinks = pathname.match(/submit|manuscript/g)
+  const showLinks = pathname.match(/^\/(submit|manuscript)/g)
   let links = []
   const formBuilderLink = `/admin/form-builder`
   const profileLink = `/profile`
@@ -86,6 +86,7 @@ const App = ({ authorized, children, history, match }) => {
     links.push(NavLink({ link: '/teams', name: 'Teams' }))
     links.push(NavLink({ link: formBuilderLink, name: 'Forms' }))
     links.push(NavLink({ link: '/admin/users', name: 'Users' }))
+    links.push(NavLink({ link: '/admin/manuscripts', name: 'Manuscripts' }))
   }
 
   return (
