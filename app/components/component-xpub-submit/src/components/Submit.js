@@ -9,12 +9,13 @@ import { Columns, SubmissionVersion } from './atoms/Columns'
 import FormTemplate from './FormTemplate'
 
 const Wrapper = styled.div`
-  font-family: ${th('fontInterface')};
-  line-height: 1.3;
-  margin: auto;
-  max-width: 60em;
+  overflow-y: scroll;
+  // font-family: ${th('fontInterface')};
+  // line-height: 1.3;
+  // margin: auto;
+  // max-width: 60em;
 
-  overflow: ${({ confirming }) => confirming && 'hidden'};
+  // overflow: ${({ confirming }) => confirming && 'hidden'};
 `
 
 const SubmittedVersionColumns = props => (

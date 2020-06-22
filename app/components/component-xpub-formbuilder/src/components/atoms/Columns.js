@@ -6,6 +6,7 @@ const Columns = styled.div`
   grid-template-areas: 'form details';
   grid-template-columns: minmax(200px, 70ch) minmax(200px, 60ch);
   justify-content: center;
+  overflow-y: scroll;
 `
 
 const Form = styled.div`

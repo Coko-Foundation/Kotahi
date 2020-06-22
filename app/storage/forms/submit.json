@@ -298,7 +298,16 @@
       "id": "1591345370930",
       "component": "TextField",
       "name": "submission.humanMRIother",
-      "order": "24"
+      "order": "24",
+      "validate": [
+        {
+          "value": "minChars",
+          "label": "minimum Characters"
+        }
+      ],
+      "validateValue": {
+        "minChars": "10"
+      }
     },
     {
       "title": "Which processing packages did you use for your study?",

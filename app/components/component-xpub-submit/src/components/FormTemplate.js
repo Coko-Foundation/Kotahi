@@ -104,18 +104,21 @@ const createMarkup = encodedHtml => ({
 
 const composeValidate = (vld = [], valueField = {}) => value => {
   const validator = vld || []
+
   if (validator.length === 0) return undefined
   const errors = []
-  validator.map(validatorFn => {
-    const error =
-      validatorFn === 'required'
-        ? validators[validatorFn](value)
-        : validators[validatorFn](valueField[validatorFn])(value)
-    if (error) {
-      errors.push(error)
-    }
-    return validatorFn
-  })
+  validator
+    .map(v => v.value)
+    .map(validatorFn => {
+      const error =
+        validatorFn === 'required'
+          ? validators[validatorFn](value)
+          : validators[validatorFn](valueField[validatorFn])(value)
+      if (error) {
+        errors.push(error)
+      }
+      return validatorFn
+    })
   return errors.length > 0 ? errors[0] : undefined
 }
 
