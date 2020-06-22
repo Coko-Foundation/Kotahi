@@ -68,3 +68,28 @@ export const Secondary = styled.div`
 export const UserInfo = styled.div`
   margin-left: ${grid(1)};
 `
+
+export const Caret = styled.svg`
+  ${props =>
+    props.active
+      ? css`
+          color: ${th('colorPrimary')};
+        `
+      : css`
+          color: ${th('colorSecondary')};
+        `}
+`
+
+export const Carets = styled.span`
+  display: inline-flex;
+  flex-direction: column;
+  align-items: center;
+  vertical-align: middle;
+  margin-left: ${grid(0.5)};
+  svg {
+    height: ${grid(1.5)};
+  }
+  svg:nth-of-type(2) {
+    margin-top: ${grid(-0.5)};
+  }
+`

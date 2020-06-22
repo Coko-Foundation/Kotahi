@@ -17,7 +17,7 @@ const cokoTheme = {
   /* Colors */
   colorBackground: 'white',
   colorPrimary: '#0B65CB',
-  colorSecondary: '#E7E7E7',
+  colorSecondary: '#9e9e9e',
   colorFurniture: '#E8E8E8',
   colorBorder: '#AAA',
   colorBackgroundHue: '#f9fafb',

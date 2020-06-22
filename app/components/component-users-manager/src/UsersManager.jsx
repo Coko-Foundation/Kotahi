@@ -4,7 +4,7 @@ import { useQuery } from '@apollo/react-hooks'
 import { Heading } from '@pubsweet/ui'
 
 import User from './User'
-import { Container, Table, Header } from './style'
+import { Container, Table, Header, Caret, Carets } from './style'
 import Spinner from '../../shared/Spinner'
 import Pagination from './Pagination'
 
@@ -30,6 +30,39 @@ const GET_USERS = gql`
   }
 `
 
+const CaretUp = ({ active }) => (
+  <Caret
+    aria-hidden="true"
+    className=""
+    data-icon="caret-up"
+    fill="currentColor"
+    focusable="false"
+    height="1em"
+    viewBox="0 0 100 100"
+    width="1em"
+    active={active}
+  >
+    <path d="M50 17L100.229 67.25H-0.229473L50 17Z" />
+  </Caret>
+)
+
+
+const CaretDown = ({ active }) => (
+  <Caret
+    active={active}
+    aria-hidden="true"
+    className=""
+    data-icon="caret-down"
+    fill="currentColor"
+    focusable="false"
+    height="1em"
+    viewBox="0 0 100 100"
+    width="1em"
+  >
+    <path d="M50 84L-0.229473 33.75L100.229 33.75L50 84Z" />
+  </Caret>
+)
+
 const UsersManager = () => {
   const SortHeader = ({ thisSortName, children }) => {
     const changeSort = () => {
@@ -46,7 +79,13 @@ const UsersManager = () => {
 
     const UpDown = () => {
       if (thisSortName === sortName) {
-        return sortDirection
+        return (
+          <Carets>
+            <CaretUp active={sortDirection === 'ASC'} />
+            <CaretDown active={sortDirection === 'DESC'} />
+          </Carets>
+        )
+        // return sortDirection
       }
     }
 
@@ -94,7 +133,12 @@ const UsersManager = () => {
           ))}
         </tbody>
       </Table>
-      <Pagination setPage={setPage} limit={limit} page={page} totalCount={totalCount} />
+      <Pagination
+        limit={limit}
+        page={page}
+        setPage={setPage}
+        totalCount={totalCount}
+      />
     </Container>
   )
 }
