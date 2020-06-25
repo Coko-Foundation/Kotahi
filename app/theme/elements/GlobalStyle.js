@@ -41,8 +41,6 @@ outline: 0;
 padding: 0;
 text-decoration: none;
 text-rendering: optimizeLegibility;
--webkit-appearance: none;
--moz-appearance: none;
 }
 
 `
