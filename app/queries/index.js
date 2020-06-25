@@ -8,9 +8,7 @@ export const GET_CURRENT_USER = gql`
       username
       defaultIdentity {
         aff
-        name {
-          surname
-        }
+        name
         type
         ... on ExternalIdentity {
           identifier
