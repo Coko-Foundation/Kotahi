@@ -1,5 +1,6 @@
 const merge = require('lodash/merge')
 const form = require('../../../app/storage/forms/submit.json')
+const { ref } = require('objection')
 
 const resolvers = {
   Mutation: {
@@ -29,15 +30,25 @@ const resolvers = {
         }),
         status: 'new',
         submission,
-        channel: {
-          user_id: ctx.user,
-        },
       }
 
       // eslint-disable-next-line
       const manuscript = await new ctx.connectors.Manuscript.model(
         emptyManuscript,
       ).saveGraph()
+
+      // Create two channels: 1. free for all involved, 2. editorial
+      const allChannel = new ctx.connectors.Channel.model({
+        manuscriptId: manuscript.id,
+        topic: 'Manuscript discussion',
+        type: 'all',
+      }).save()
+
+      const editorialChannel = new ctx.connectors.Channel.model({
+        manuscriptId: manuscript.id,
+        topic: 'Editorial discussion',
+        type: 'editorial',
+      }).save()
 
       manuscript.manuscriptVersions = []
       manuscript.files = []
@@ -67,6 +78,7 @@ const resolvers = {
       )
 
       manuscript.teams = [createdTeam]
+      manuscript.channels = [allChannel, editorialChannel]
       return manuscript
     },
     async deleteManuscript(_, { id }, ctx) {
@@ -152,7 +164,9 @@ const resolvers = {
     async manuscript(_, { id }, ctx) {
       const Manuscript = require('./manuscript')
 
-      const manuscript = await Manuscript.find(id)
+      const manuscript = await Manuscript.query()
+        .findById(id)
+        .eager('channels')
 
       if (!manuscript.meta) {
         manuscript.meta = {}
@@ -177,9 +191,9 @@ const resolvers = {
       manuscript.teams = await manuscript.getTeams()
       manuscript.reviews = await manuscript.getReviews()
       manuscript.manuscriptVersions = await manuscript.getManuscriptVersions()
-      manuscript.channel = await ctx.connectors.Channel.model.find(
-        manuscript.channelId,
-      )
+      // manuscript.channel = await ctx.connectors.Channel.model.find(
+      //   manuscript.channelId,
+      // )
       return manuscript
     },
     async manuscripts(_, { where }, ctx) {
@@ -195,8 +209,12 @@ const resolvers = {
       const totalCount = await query.resultSize()
 
       if (sort) {
-        // e.g. 'created_DESC' into 'created' and 'DESC' arguments
-        query.orderBy(...sort.split('_'))
+        const [sortName, sortDirection] = sort.split('_')
+
+        query.orderBy(ref(sortName), sortDirection)
+        // }
+        // // e.g. 'created_DESC' into 'created' and 'DESC' arguments
+        // query.orderBy(...sort.split('_'))
       }
 
       if (limit) {
@@ -277,7 +295,7 @@ const typeDefs = `
     authors: [Author]
     meta: ManuscriptMeta
     submission: String
-    channel: Channel
+    channels: [Channel]
   }
 
   type ManuscriptVersion implements Object {

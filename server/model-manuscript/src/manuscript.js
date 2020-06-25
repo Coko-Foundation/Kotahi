@@ -175,12 +175,12 @@ class Manuscript extends BaseModel {
     const { Channel } = require('@pubsweet/models')
 
     return {
-      channel: {
-        relation: BaseModel.BelongsToOneRelation,
+      channels: {
+        relation: BaseModel.HasManyRelation,
         modelClass: Channel,
         join: {
-          from: 'manuscripts.channelId',
-          to: 'channels.id',
+          from: 'manuscripts.id',
+          to: 'channels.manuscriptId',
         },
       },
     }
@@ -263,9 +263,8 @@ class Manuscript extends BaseModel {
             keywords: { type: ['string', 'null'] },
           },
         },
-        // TODO
-        channelId: { type: ['string', 'null'], format: 'uuid' },
         submission: {},
+        submitterId: { type: ['string', 'null'], format: 'uuid' },
       },
     }
   }

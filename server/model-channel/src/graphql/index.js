@@ -73,10 +73,8 @@ const resolvers = {
 
 const typeDefs = `
   type Channel {
-    user: User
     id: String
-    doi: String
-    name: String
+    manuscript: Manuscript
     topic: String
     type: String
     team: Team

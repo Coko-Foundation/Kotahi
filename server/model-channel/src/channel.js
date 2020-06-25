@@ -40,11 +40,11 @@ class Channel extends BaseModel {
         },
       },
       manuscript: {
-        relation: BaseModel.HasOneRelation,
+        relation: BaseModel.BelongsToOneRelation,
         modelClass: Manuscript,
         join: {
-          from: 'channels.id',
-          to: 'manuscripts.channelId',
+          from: 'channels.manuscriptId',
+          to: 'manuscripts.id',
         },
       },
       users: {
@@ -66,11 +66,10 @@ class Channel extends BaseModel {
   static get schema() {
     return {
       properties: {
-        name: { type: 'string' },
         type: { type: ['string', 'null'] },
         topic: { type: 'string' },
         teamId: { type: ['string', 'null'], format: 'uuid' },
-        userId: { type: 'string' },
+        manuscriptId: { type: ['string', 'null'], format: 'uuid' },
       },
     }
   }
