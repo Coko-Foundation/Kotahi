@@ -18,6 +18,10 @@ const fragmentFields = `
     title
     source
   }
+  channels {
+    id
+    type
+  }
 `
 
 const query = gql`
@@ -46,5 +50,6 @@ export default compose(
   withProps(({ manuscript }) => ({
     content: manuscript.meta.source,
     file: manuscript.files.find(file => file.fileType === 'manuscript') || {},
+    channel: manuscript.channels.find(c => (c.type = 'all')),
   })),
 )(Manuscript)
