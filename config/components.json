@@ -1,7 +1,6 @@
 [
   "./server/model-team",
   "./server/model-user",
-  "./server/model-journal/src/",
   "./server/model-manuscript/src/",
   "./server/model-file/src/",
   "./server/component-xpub-review-backend/src/",
