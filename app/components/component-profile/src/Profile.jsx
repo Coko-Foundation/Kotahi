@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { Button } from '@pubsweet/ui'
+import { Button, Action } from '@pubsweet/ui'
 // import { th } from '@pubsweet/ui-toolkit'
 // import styled from 'styled-components'
 import gql from 'graphql-tag'
@@ -20,9 +20,7 @@ const GET_CURRENT_USER = gql`
       username
       defaultIdentity {
         aff
-        name {
-          surname
-        }
+        name
         type
         ... on ExternalIdentity {
           identifier
@@ -71,6 +69,13 @@ const Profile = () => {
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
 
+  const localStorage = window.localStorage || undefined
+
+  const logoutUser = () => {
+    localStorage.removeItem('token')
+    client.resetStore()
+  }
+
   // This is a bridge between the fetch results and the Apollo cache/state
   const updateProfilePicture = profilePicture => {
     const cacheData = client.readQuery({ query: GET_CURRENT_USER })
@@ -106,6 +111,7 @@ const Profile = () => {
               <ChangeUsername user={data.currentUser} />
             </div>
           </FormRow>
+            <Button onClick={() => logoutUser()}>Logout</Button>
         </FormGrid>
       </PageWithHeader>
     </>
