@@ -121,9 +121,10 @@ const Manuscripts = () => {
       <Table>
         <Header>
           <tr>
-            <SortHeader thisSortName="title">Title</SortHeader>
+            <SortHeader thisSortName="meta:title">Title</SortHeader>
             <SortHeader thisSortName="created">Created</SortHeader>
             <SortHeader thisSortName="status">Status</SortHeader>
+            <SortHeader thisSortName="authors">Authors</SortHeader>
             <th />
           </tr>
         </Header>

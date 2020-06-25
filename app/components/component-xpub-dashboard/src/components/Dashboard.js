@@ -27,14 +27,12 @@ const updateReviewer = (proxy, { data: { reviewerResponse } }) => {
     },
   })
 
-  const manuscriptIndex = data.journals.manuscripts.findIndex(
-    manu => manu.id === id,
-  )
-  const teamIndex = data.journals.manuscripts[manuscriptIndex].teams.findIndex(
+  const manuscriptIndex = data.manuscripts.findIndex(manu => manu.id === id)
+  const teamIndex = data.manuscripts[manuscriptIndex].teams.findIndex(
     team => team.id === reviewerResponse.id,
   )
 
-  data.journals.manuscripts[manuscriptIndex].teams[teamIndex] = reviewerResponse
+  data.manuscripts[manuscriptIndex].teams[teamIndex] = reviewerResponse
   proxy.writeQuery({ query: queries.dashboard, data })
 }
 
@@ -76,11 +74,11 @@ const Dashboard = ({
     // variables: { id: manuscript.id },
     update: (proxy, { data: { deleteManuscript } }) => {
       const data = proxy.readQuery({ query: queries.dashboard })
-      const manuscriptIndex = data.journals.manuscripts.findIndex(
+      const manuscriptIndex = data.manuscripts.findIndex(
         manuscript => manuscript.id === deleteManuscript,
       )
       if (manuscriptIndex > -1) {
-        data.journals.manuscripts.splice(manuscriptIndex, 1)
+        data.manuscripts.splice(manuscriptIndex, 1)
         proxy.writeQuery({ query: queries.dashboard, data })
       }
     },
@@ -105,61 +103,59 @@ const Dashboard = ({
       </UploadContainer>
 
       {!dashboard.length && (
-        <UploadContainer>
-          Nothing to do at the moment. Please upload a document.
-        </UploadContainer>
+        <UploadContainer>Nothing to do at the moment.</UploadContainer>
       )}
-      <Authorize object={dashboard} operation="can view my submission section">
-        {dashboard.length > 0 ? (
-          <Section>
-            <Heading>My Submissions</Heading>
-            {dashboard.map(submission => (
-              <OwnerItem
-                deleteManuscript={() =>
-                  // eslint-disable-next-line no-alert
-                  window.confirm(
-                    'Are you sure you want to delete this submission?',
-                  ) && deleteManuscript({ variables: { id: submission.id } })
-                }
-                journals={journals}
-                key={`submission-${submission.id}`}
-                version={submission}
-              />
-            ))}
-          </Section>
-        ) : null}
-      </Authorize>
-      <Authorize object={dashboard} operation="can view review section">
-        {dashboard.length > 0 ? (
-          <Section>
-            <Heading>To review</Heading>
-            {dashboard.map(review => (
-              <ReviewerItem
-                currentUser={currentUser}
-                journals={journals}
-                key={review.id}
-                reviewerRespond={reviewerRespond}
-                version={review}
-              />
-            ))}
-          </Section>
-        ) : null}
-      </Authorize>
+      {/* <Authorize object={dashboard} operation="can view my submission section"> */}
+      {dashboard.length > 0 ? (
+        <Section>
+          <Heading>My Submissions</Heading>
+          {dashboard.map(submission => (
+            <OwnerItem
+              deleteManuscript={() =>
+                // eslint-disable-next-line no-alert
+                window.confirm(
+                  'Are you sure you want to delete this submission?',
+                ) && deleteManuscript({ variables: { id: submission.id } })
+              }
+              journals={journals}
+              key={`submission-${submission.id}`}
+              version={submission}
+            />
+          ))}
+        </Section>
+      ) : null}
+      {/* </Authorize>
+      <Authorize object={dashboard} operation="can view review section"> */}
+      {dashboard.length > 0 ? (
+        <Section>
+          <Heading>To review</Heading>
+          {dashboard.map(review => (
+            <ReviewerItem
+              currentUser={currentUser}
+              journals={journals}
+              key={review.id}
+              reviewerRespond={reviewerRespond}
+              version={review}
+            />
+          ))}
+        </Section>
+      ) : null}
+      {/* </Authorize> */}
 
-      <Authorize object={dashboard} operation="can view my manuscripts section">
-        {dashboard.length > 0 ? (
-          <Section>
-            <Heading>My Manuscripts</Heading>
-            {dashboard.map(manuscript => (
-              <EditorItem
-                journals={journals}
-                key={`manuscript-${manuscript.id}`}
-                version={manuscript}
-              />
-            ))}
-          </Section>
-        ) : null}
-      </Authorize>
+      {/* <Authorize object={dashboard} operation="can view my manuscripts section"> */}
+      {dashboard.length > 0 ? (
+        <Section>
+          <Heading>My Manuscripts</Heading>
+          {dashboard.map(manuscript => (
+            <EditorItem
+              journals={journals}
+              key={`manuscript-${manuscript.id}`}
+              version={manuscript}
+            />
+          ))}
+        </Section>
+      ) : null}
+      {/* </Authorize> */}
     </Page>
   )
 }

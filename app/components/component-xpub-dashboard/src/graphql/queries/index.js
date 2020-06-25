@@ -9,59 +9,55 @@ export default {
         admin
       }
 
-      journals {
+      manuscripts {
         id
-        title
-        manuscripts {
+        manuscriptVersions {
           id
-          manuscriptVersions {
+        }
+        reviews {
+          open
+          recommendation
+          created
+          isDecision
+          user {
             id
+            username
           }
-          reviews {
-            open
-            recommendation
-            created
-            isDecision
+        }
+        teams {
+          id
+          role
+          type
+          name
+          object {
+            objectId
+            objectType
+          }
+          members {
+            id
             user {
               id
               username
             }
+            status
           }
-          teams {
-            id
-            role
+        }
+        status
+        meta {
+          title
+          declarations {
+            openData
+            openPeerReview
+            preregistered
+            previouslySubmitted
+            researchNexus
+            streamlinedReview
+          }
+          articleSections
+          articleType
+          history {
             type
-            name
-            object {
-              objectId
-              objectType
-            }
-            members {
-              id
-              user {
-                id
-                username
-              }
-              status
-            }
-          }
-          status
-          meta {
-            title
-            declarations {
-              openData
-              openPeerReview
-              preregistered
-              previouslySubmitted
-              researchNexus
-              streamlinedReview
-            }
-            articleSections
-            articleType
-            history {
-              type
-              date
-            }
+            date
           }
         }
       }

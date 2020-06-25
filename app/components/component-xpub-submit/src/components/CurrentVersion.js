@@ -48,9 +48,7 @@ const CurrentVersion = ({ journal, forms, manuscript }) => (
       <div>
         We have ingested your manuscript. To access your manuscript in an
         editor, please{' '}
-        <Link
-          to={`/journals/${journal.id}/versions/${manuscript.id}/manuscript`}
-        >
+        <Link to={`/journal/versions/${manuscript.id}/manuscript`}>
           view here
         </Link>
         .

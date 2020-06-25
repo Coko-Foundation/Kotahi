@@ -36,7 +36,7 @@ const Reviewers = ({
         reviewerUsers={reviewerUsers}
       />
       <Link
-        to={`/journals/${journal.id}/versions/${manuscript.id}/decisions/${manuscript.id}`}
+        to={`/journal/versions/${manuscript.id}/decisions/${manuscript.id}`}
       >
         Back to Control Panel
       </Link>

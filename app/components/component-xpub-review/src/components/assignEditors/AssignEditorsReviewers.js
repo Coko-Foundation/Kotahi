@@ -8,9 +8,6 @@ const Root = styled.div``
 const Title = styled.div``
 
 const AssignEditorsReviewers = ({ manuscript, AssignEditor }) => {
-  // TODO:
-  const journal = useContext(JournalContext)
-  // const journal = { id: 'temp' }
   return (
     <Root>
       <Title>Assign Editors</Title>
@@ -18,7 +15,7 @@ const AssignEditorsReviewers = ({ manuscript, AssignEditor }) => {
         <AssignEditor manuscript={manuscript} teamRole="seniorEditor" />
         <AssignEditor manuscript={manuscript} teamRole="handlingEditor" />
       </Roles>
-      <Link to={`/journals/${journal.id}/versions/${manuscript.id}/reviewers`}>
+      <Link to={`/journal/versions/${manuscript.id}/reviewers`}>
         Assign Reviewers
       </Link>
     </Root>

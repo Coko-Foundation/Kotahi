@@ -39,39 +39,44 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 export default (
   <MainPage>
     <Switch>
-      <PrivateRoute component={Dashboard} exact path="/dashboard" />
+      <PrivateRoute component={Dashboard} exact path="/journal/home" />
       <PrivateRoute
         component={SubmitPage}
         exact
-        path="/journals/:journal/versions/:version/submit"
+        path="/journal/versions/:version/submit"
       />
-      <PrivateRoute component={TeamPage} exact path="/teams" />
+      <PrivateRoute component={TeamPage} exact path="/journal/admin/teams" />
       <PrivateRoute
         component={FormBuilderPage}
         exact
-        path="/admin/form-builder"
+        path="/journal/admin/form-builder"
       />
       <PrivateRoute
         component={ManuscriptPage}
         exact
-        path="/journals/:journal/versions/:version/manuscript"
+        path="/journal/versions/:version/manuscript"
       />
       <PrivateRoute
         component={ReviewersPage}
         exact
-        path="/journals/:journal/versions/:version/reviewers"
+        path="/journal/versions/:version/reviewers"
       />
       <PrivateRoute
         component={ReviewPage}
         exact
-        path="/journals/:journal/versions/:version/reviews/:review"
+        path="/journal/versions/:version/reviews/:review"
       />
       <PrivateRoute
         component={DecisionPage}
         exact
-        path="/journals/:journal/versions/:version/decisions/:decision"
+        path="/journal/versions/:version/decisions/:decision"
       />
-      <PrivateRoute path="/profile" component={Profile} exact path="/profile" />
+      <PrivateRoute
+        path="/journal/profile"
+        component={Profile}
+        exact
+        path="/journal/profile"
+      />
       {/* <PrivateRoute
         component={FindReviewersPage}
         exact
@@ -89,8 +94,8 @@ export default (
       /> */}
 
       <Route component={Login} path="/login" />
-      <PrivateRoute component={UsersManager} path="/admin/users" />
-      <PrivateRoute component={Manuscripts} path="/admin/manuscripts" />
+      <PrivateRoute component={UsersManager} path="/journal/admin/users" />
+      <PrivateRoute component={Manuscripts} path="/journal/admin/manuscripts" />
 
       {/* <PrivateRoute component={Dashboard} path="*" /> */}
     </Switch>

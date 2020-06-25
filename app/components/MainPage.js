@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { compose } from 'recompose'
 import { useQuery, useApolloClient } from '@apollo/react-hooks'
 import { withRouter, matchPath, Router } from 'react-router-dom'
-import { Action } from '@pubsweet/ui'
+// import { Action } from '@pubsweet/ui'
 import { JournalContext } from './xpub-journal/src'
 import { XpubContext } from './xpub-with-context/src'
 import GlobalStyle from '../theme/elements/GlobalStyle'
@@ -13,7 +13,7 @@ import queries from '../graphql'
 import Menu from './Menu'
 
 const getParams = routerPath => {
-  const path = '/journals/:journal/versions/:version'
+  const path = '/journal/versions/:version'
   return matchPath(routerPath, path).params
 }
 
@@ -34,23 +34,8 @@ const Root = styled.div`
   `};
 `
 
-const NavLink = ({ link, name }) => (
-  <Action
-    active={window.location.pathname === link ? 'active' : null}
-    to={link}
-  >
-    {name}
-  </Action>
-)
-
-const localStorage = window.localStorage || undefined
-
-const App = ({ authorized, children, history, match }) => {
+const MainPage = ({ children, history, match }) => {
   const client = useApolloClient()
-  const logoutUser = () => {
-    localStorage.removeItem('token')
-    client.resetStore()
-  }
 
   const journal = useContext(JournalContext)
   const [conversion] = useContext(XpubContext)
@@ -61,32 +46,37 @@ const App = ({ authorized, children, history, match }) => {
   const { pathname } = history.location
   const showLinks = pathname.match(/^\/(submit|manuscript)/g)
   let links = []
-  const formBuilderLink = `/admin/form-builder`
-  const profileLink = `/profile`
-  const dashboardLink = '/dashboard'
+  const formBuilderLink = `/journal/admin/form-builder`
+  const profileLink = `/journal/profile`
+  const homeLink = '/journal/home'
 
   if (showLinks) {
     const params = getParams(pathname)
-    const baseLink = `/journals/${params.journal}/versions/${params.version}`
+    const baseLink = `/journal/versions/${params.version}`
     const submitLink = `${baseLink}/submit`
     const manuscriptLink = `${baseLink}/manuscript`
 
     links = showLinks
       ? [
-          NavLink({ link: submitLink, name: 'Summary Info' }),
-          NavLink({ link: manuscriptLink, name: 'Manuscript' }),
+          { link: submitLink, name: 'Summary Info' },
+          { link: manuscriptLink, name: 'Manuscript' },
         ]
       : null
   }
 
-  links.push(NavLink({ link: dashboardLink, name: 'Dashboard' }))
-  links.push(NavLink({ link: profileLink, name: 'Profile' }))
+  if (currentUser) {
+    links.push({ link: homeLink, name: 'Home', icon: 'home' })
+  }
 
   if (currentUser && currentUser.admin) {
-    links.push(NavLink({ link: '/teams', name: 'Teams' }))
-    links.push(NavLink({ link: formBuilderLink, name: 'Forms' }))
-    links.push(NavLink({ link: '/admin/users', name: 'Users' }))
-    links.push(NavLink({ link: '/admin/manuscripts', name: 'Manuscripts' }))
+    links.push({ link: '/journal/admin/teams', name: 'Teams', icon: 'grid' })
+    links.push({ link: formBuilderLink, name: 'Forms', icon: 'check-square' })
+    links.push({ link: '/journal/admin/users', name: 'Users', icon: 'users' })
+    links.push({
+      link: '/journal/admin/manuscripts',
+      name: 'Manuscripts',
+      icon: 'file-text',
+    })
   }
 
   return (
@@ -94,10 +84,9 @@ const App = ({ authorized, children, history, match }) => {
       <GlobalStyle />
       <Menu
         brand={journal.metadata.name}
-        brandLink="/dashboard"
-        loginLink="/login?next=/dashboard"
+        brandLink="/journal/home"
+        loginLink="/login?next=/journal/home"
         navLinkComponents={links}
-        onLogoutClick={() => logoutUser(client)}
         user={currentUser}
       />
       <Router history={history}>{children}</Router>
@@ -105,4 +94,4 @@ const App = ({ authorized, children, history, match }) => {
   )
 }
 
-export default compose(withRouter)(App)
+export default compose(withRouter)(MainPage)

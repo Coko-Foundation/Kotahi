@@ -53,6 +53,10 @@ const User = ({ manuscript }) => {
       <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
       <Cell><Status status={manuscript.status}/></Cell>
       <LastCell>
+        <Action to={`/journal/versions/${manuscript.id}/manuscript`}>
+            View
+          </Action>
+
         <Action onClick={() => deleteManuscript({ variables: { id: manuscript.id } })}>
           Delete
         </Action>

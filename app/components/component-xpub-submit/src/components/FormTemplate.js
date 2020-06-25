@@ -96,7 +96,7 @@ const rejectProps = (obj, keys) =>
     )
 
 const link = (journal, manuscript) =>
-  String.raw`<a href=/journals/${journal.id}/versions/${manuscript.id}/manuscript>view here</a>`
+  String.raw`<a href=/journal/versions/${manuscript.id}/manuscript>view here</a>`
 
 const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),

@@ -1,6 +1,6 @@
 import React from 'react'
 import { Button } from '@pubsweet/ui'
-import Authorize from 'pubsweet-client/src/helpers/Authorize'
+// import Authorize from 'pubsweet-client/src/helpers/Authorize'
 import { Item, Body, Divider } from '../molecules/Item'
 import { Links, LinkContainer } from '../molecules/Links'
 import { Actions, ActionContainer } from '../molecules/Actions'
@@ -37,72 +37,72 @@ const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
     ) || {}
 
   return (
-    <Authorize
-      key={`${review.id}`}
-      object={[version]}
-      operation="can view review section"
-    >
-      <Item>
-        <Body>
-          <VersionTitle version={version} />
+    // <Authorize
+    //   key={`${review.id}`}
+    //   object={[version]}
+    //   operation="can view review section"
+    // >
+    <Item>
+      <Body>
+        <VersionTitle version={version} />
 
-          {(status === 'accepted' || status === 'completed') && (
-            <Links>
-              <LinkContainer>
-                <JournalLink
-                  id={version.id}
-                  journal={journals}
-                  page="reviews"
-                  version={version}
-                >
-                  {status === 'completed' ? 'Completed' : 'Do Review'}
-                </JournalLink>
-              </LinkContainer>
-            </Links>
-          )}
+        {(status === 'accepted' || status === 'completed') && (
+          <Links>
+            <LinkContainer>
+              <JournalLink
+                id={version.id}
+                journal={journals}
+                page="reviews"
+                version={version}
+              >
+                {status === 'completed' ? 'Completed' : 'Do Review'}
+              </JournalLink>
+            </LinkContainer>
+          </Links>
+        )}
 
-          {status === 'invited' && (
-            <Actions>
-              <ActionContainer>
-                <Button
-                  data-testid="accept-review"
-                  onClick={() => {
-                    reviewerRespond({
-                      variables: {
-                        currentUserId: currentUser.id,
-                        action: 'accepted',
-                        teamId: team.id,
-                      },
-                    })
-                  }}
-                >
-                  accept
-                </Button>
-              </ActionContainer>
+        {status === 'invited' && (
+          <Actions>
+            <ActionContainer>
+              <Button
+                data-testid="accept-review"
+                onClick={() => {
+                  reviewerRespond({
+                    variables: {
+                      currentUserId: currentUser.id,
+                      action: 'accepted',
+                      teamId: team.id,
+                    },
+                  })
+                }}
+              >
+                accept
+              </Button>
+            </ActionContainer>
 
-              <Divider separator="|" />
+            <Divider separator="|" />
 
-              <ActionContainer>
-                <Button
-                  onClick={() => {
-                    reviewerRespond({
-                      variables: {
-                        currentUserId: currentUser.id,
-                        action: 'rejected',
-                        teamId: team.id,
-                      },
-                    })
-                  }}
-                >
-                  reject
-                </Button>
-              </ActionContainer>
-            </Actions>
-          )}
-          {status === 'rejected' && 'rejected'}
-        </Body>
-      </Item>
-    </Authorize>
+            <ActionContainer>
+              <Button
+                onClick={() => {
+                  reviewerRespond({
+                    variables: {
+                      currentUserId: currentUser.id,
+                      action: 'rejected',
+                      teamId: team.id,
+                    },
+                  })
+                }}
+              >
+                reject
+              </Button>
+            </ActionContainer>
+          </Actions>
+        )}
+        {status === 'rejected' && 'rejected'}
+      </Body>
+    </Item>
+    // </Authorize>
   )
 }
 

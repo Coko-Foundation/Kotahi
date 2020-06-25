@@ -1,7 +1,7 @@
 import React from 'react'
 
 import styled from 'styled-components'
-import Authorize from 'pubsweet-client/src/helpers/Authorize'
+// import Authorize from 'pubsweet-client/src/helpers/Authorize'
 import { Action, ActionGroup } from '@pubsweet/ui'
 import { Item, Header, Body } from '../molecules/Item'
 import Status from '../Status'
@@ -28,14 +28,12 @@ const getUserFromTeam = (version, role) => {
   return teams.length ? teams[0].members : []
 }
 
-const EditorItemLinks = ({ version, journals }) => (
+const EditorItemLinks = ({ version }) => (
   <ActionGroup>
-    <Action to={`/journals/${journals.id}/versions/${version.id}/submit`}>
-      Summary Info
-    </Action>
+    <Action to={`/journal/versions/${version.id}/submit`}>Summary Info</Action>
     <Action
       data-testid="control-panel"
-      to={`/journals/${journals.id}/versions/${version.id}/decisions/${version.id}`}
+      to={`/journal/versions/${version.id}/decisions/${version.id}`}
     >
       {version.decision && version.decision.status === 'submitted'
         ? `Decision: ${version.decision.recommendation}`
@@ -61,41 +59,41 @@ const getSubmitedDate = version =>
     history => history.type === 'submitted',
   ) || []
 
-const EditorItem = ({ version, journals }) => (
-  <Authorize object={[version]} operation="can view my manuscripts section">
-    <Item>
-      <Header>
-        <Status status={version.status} />
-        <Meta>
-          <MetadataStreamLined
-            streamlinedReview={getDeclarationsObject(
-              version,
-              'streamlinedReview',
-            )}
-          />
-          <MetadataAuthors authors={getUserFromTeam(version, 'author')} />
-          {getSubmitedDate(version) ? (
-            <MetadataSubmittedDate submitted={getSubmitedDate(version).date} />
-          ) : null}
-          <MetadataType type={getMetadataObject(version, 'articleType')} />
-          <MetadataSections
-            sections={getMetadataObject(version, 'articleSections')}
-          />
-          <MetadataReviewType
-            openPeerReview={getDeclarationsObject(version, 'openPeerReview')}
-          />
-        </Meta>
-      </Header>
-      <Body>
-        <VersionTitleLink id={version.id} page="decisions" version={version}>
-          <VersionTitle version={version} />
-        </VersionTitleLink>
-        <EditorItemLinks journals={journals} version={version} />
-      </Body>
+const EditorItem = ({ version }) => (
+  // <Authorize object={[version]} operation="can view my manuscripts section">
+  <Item>
+    <Header>
+      <Status status={version.status} />
+      <Meta>
+        <MetadataStreamLined
+          streamlinedReview={getDeclarationsObject(
+            version,
+            'streamlinedReview',
+          )}
+        />
+        <MetadataAuthors authors={getUserFromTeam(version, 'author')} />
+        {getSubmitedDate(version) ? (
+          <MetadataSubmittedDate submitted={getSubmitedDate(version).date} />
+        ) : null}
+        <MetadataType type={getMetadataObject(version, 'articleType')} />
+        <MetadataSections
+          sections={getMetadataObject(version, 'articleSections')}
+        />
+        <MetadataReviewType
+          openPeerReview={getDeclarationsObject(version, 'openPeerReview')}
+        />
+      </Meta>
+    </Header>
+    <Body>
+      <VersionTitleLink id={version.id} page="decisions" version={version}>
+        <VersionTitle version={version} />
+      </VersionTitleLink>
+      <EditorItemLinks version={version} />
+    </Body>
 
-      <Reviews version={version} />
-    </Item>
-  </Authorize>
+    <Reviews version={version} />
+  </Item>
+  // </Authorize>
 )
 
 export default EditorItem

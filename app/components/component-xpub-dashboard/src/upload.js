@@ -68,7 +68,7 @@ const createManuscriptPromise = (file, client, currentUser) => ({
     variables: { input: manuscript },
     update: (proxy, { data: { createManuscript } }) => {
       let data = proxy.readQuery({ query: queries.dashboard })
-      data.journals.manuscripts.push(createManuscript)
+      data.manuscripts.push(createManuscript)
       proxy.writeQuery({ query: queries.dashboard, data })
 
       data = proxy.readQuery({
@@ -85,7 +85,7 @@ const redirectPromise = (setConversionState, journals, history) => ({
   data,
 }) => {
   setConversionState(() => ({ converting: false, completed: true }))
-  const route = `/journals/${journals.id}/versions/${data.createManuscript.id}/submit`
+  const route = `/journal/versions/${data.createManuscript.id}/submit`
   // redirect after a short delay
   window.setTimeout(() => {
     history.push(route)

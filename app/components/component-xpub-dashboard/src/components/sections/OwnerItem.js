@@ -2,7 +2,7 @@ import React from 'react'
 import { pickBy } from 'lodash'
 
 import { Action, ActionGroup } from '@pubsweet/ui'
-import Authorize from 'pubsweet-client/src/helpers/Authorize'
+// import Authorize from 'pubsweet-client/src/helpers/Authorize'
 
 import { Item, Header, Body } from '../molecules/Item'
 import Status from '../Status'
@@ -15,7 +15,7 @@ const OwnerItem = ({ version, journals, deleteManuscript }) => {
     </Header>
   )
 
-  const baseLink = `/journals/${journals.id}/versions/${version.id}`
+  const baseLink = `/journal/versions/${version.id}`
   const submitLink = `${baseLink}/submit`
   const manuscriptLink = `${baseLink}/manuscript`
 
@@ -44,13 +44,13 @@ const OwnerItem = ({ version, journals, deleteManuscript }) => {
   )
 
   const actions = (
-    <Authorize
-      object={version}
-      operation="can delete manuscript"
-      unauthorized={unauthorized}
-    >
-      <ActionGroup>{Object.values(actionButtons)}</ActionGroup>
-    </Authorize>
+    // <Authorize
+    //   object={version}
+    //   operation="can delete manuscript"
+    //   unauthorized={unauthorized}
+    // >
+    <ActionGroup>{Object.values(actionButtons)}</ActionGroup>
+    // </Authorize>
   )
 
   const body = (
@@ -61,12 +61,12 @@ const OwnerItem = ({ version, journals, deleteManuscript }) => {
   )
 
   return (
-    <Authorize object={[version]} operation="can view my submission section">
-      <Item>
-        {itemHeader}
-        {body}
-      </Item>
-    </Authorize>
+    // <Authorize object={[version]} operation="can view my submission section">
+    <Item>
+      {itemHeader}
+      {body}
+    </Item>
+    // </Authorize>
   )
 }
 

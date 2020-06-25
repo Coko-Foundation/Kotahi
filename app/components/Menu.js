@@ -1,9 +1,11 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
 import { override, th, grid } from '@pubsweet/ui-toolkit'
 
 import { Icon, Action } from '@pubsweet/ui'
+import { UserAvatar } from '../components/component-avatar/src'
+import { Link } from 'react-router-dom'
 
 const Root = styled.nav`
   grid-area: menu;
@@ -35,70 +37,81 @@ const LogoLink = styled(Action)`
   ${override('ui.AppBar.LogoLink')};
 `
 
-const Item = styled.div`
+const NavItem = ({ className, link, name, icon }) => (
+  <Link className={className} to={link}>
+    <Icon>{icon}</Icon>
+    {name}
+  </Link>
+)
+
+const Item = styled(NavItem)`
+  border-radius: 10px;
+  height: ${grid(5)};
+  line-height: ${grid(3)};
+
+  display: flex;
+  align-items: center;
+  color: ${th('colorSecondary')};
+  &:hover {
+    background-color: ${th('colorBackgroundHue')};
+  }
+
+  svg {
+    width: 1em;
+  }
+
+  ${props =>
+    props.active &&
+    css`
+      background-color: ${th('colorFurniture')};
+      color: ${th('colorText')};
+    `}
   // align-items: center;
   // display: inline-flex;
   // margin: calc(${th('gridUnit')} * 3) 1rem calc(${th('gridUnit')} * 3) 0;
 `
 
-const AppBar = ({
-  brandLink = '/',
-  brand,
-  className,
-  loginLink = '/login',
-  onLogoutClick,
-  navLinkComponents,
-  user,
-}) => (
+const UserItem = styled.a`
+  // height: ${grid(5)};
+  line-height: ${grid(4)};
+  display: flex;
+  padding-bottom: ${grid(2)};
+  // margin-bottom: ${grid(2)};
+  // border-bottom: 1px solid ${th('colorFurniture')};
+`
+
+const Menu = ({ className, loginLink = '/login', navLinkComponents, user }) => (
   <Root className={className}>
     <Section>
-      {brand && (
-        <Logo>
-          <LogoLink to={brandLink}>{brand}</LogoLink>
-        </Logo>
-      )}
-      <UserComponent
-        loginLink={loginLink}
-        onLogoutClick={onLogoutClick}
-        user={user}
-      />
+      <UserComponent loginLink={loginLink} user={user} />
 
       {navLinkComponents &&
-        navLinkComponents.map((NavLinkComponent, idx) => (
-          <span key={NavLinkComponent.props.to}>
-            <Item>{NavLinkComponent}</Item>
-          </span>
+        navLinkComponents.map((navInfo, idx) => (
+          <Item
+            {...navInfo}
+            active={window.location.pathname === navInfo.link}
+            key={navInfo.link}
+          />
         ))}
     </Section>
   </Root>
 )
 
-const UserComponent = ({ user, onLogoutClick, loginLink }) => (
+const UserComponent = ({ user, loginLink }) => (
   <Section>
     {user && (
-      <Item>
-        <Icon size={2}>user</Icon>
-        {user.username}
+      <UserItem href="/journal/profile">
+        <UserAvatar user={user} />
+        {user.defaultIdentity.name || user.username}
+        {/* ({user.username}) */}
         {user.admin ? ' (admin)' : ''}
-      </Item>
+      </UserItem>
     )}
-
-    {user && (
-      <Item>
-        {/* <Icon size={2}>power</Icon> */}
-        <Action onClick={onLogoutClick}>Logout</Action>
-      </Item>
-    )}
-
-    {!user && (
-      <Item>
-        <Action to={loginLink}>Login</Action>
-      </Item>
-    )}
+    {!user && <Item name="Login" link={loginLink} />}
   </Section>
 )
 
-AppBar.propTypes = {
+Menu.propTypes = {
   brandLink: PropTypes.string,
   brand: PropTypes.node,
   loginLink: PropTypes.string,
@@ -107,4 +120,4 @@ AppBar.propTypes = {
   navLinkComponents: PropTypes.arrayOf(PropTypes.element),
 }
 
-export default AppBar
+export default Menu
