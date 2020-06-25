@@ -2,7 +2,7 @@ const passport = require('passport')
 const OrcidStrategy = require('passport-orcid')
 const config = require('config')
 const authentication = require('pubsweet-server/src/authentication')
-
+const fetchUserDetails = require('./fetchUserDetails')
 const CALLBACK_URL = '/auth/orcid/callback'
 
 module.exports = app => {
@@ -46,6 +46,13 @@ module.exports = app => {
                 isDefault: true,
               },
             }).saveGraph()
+
+            // Do another request to the ORCID API for aff/name
+            const userDetails = await fetchUserDetails(user)
+
+            user.defaultIdentity.name = `${userDetails.firstName} ${userDetails.lastName}`
+            user.defaultIdentity.aff = userDetails.institution
+            user.saveGraph()
           }
         } catch (err) {
           done(err)

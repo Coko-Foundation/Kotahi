@@ -1,15 +1,19 @@
 const superagent = require('superagent')
 const _ = require('lodash')
 const logger = require('@pubsweet/logger')
+const { Identity } = require('@pubsweet/models')
 
-const apiRoot = 'https://api.sandbox.orcid.org/v2.1'
+const apiRoot =
+  process.env.NODE_ENV === 'production'
+    ? 'https://pub.orcid.org/v3.0'
+    : 'https://pub.sandbox.orcid.org/v3.0'
 
 // request data from orcid API
-const request = (user, endpoint) =>
+const request = (identity, endpoint) =>
   superagent
-    .get(`${apiRoot}/${user.orcid}/${endpoint}`)
+    .get(`${apiRoot}/${identity.identifier}/${endpoint}`)
     .set('Accept', 'application/json')
-    .set('Authorization', `Bearer ${user.oauth.accessToken}`)
+    .set('Authorization', `Bearer ${identity.oauth.accessToken}`)
 
 // convert API date object into Date
 const toDate = date => {
@@ -22,10 +26,15 @@ const toDate = date => {
 }
 
 module.exports = async user => {
+  const identity = await Identity.query().findOne({
+    userId: user.id,
+    type: 'orcid',
+  })
+
   logger.debug('processing response from orcid api')
   const [personResponse, employmentsResponse] = await Promise.all([
-    request(user, 'person'),
-    request(user, 'employments'),
+    request(identity, 'person'),
+    request(identity, 'employments'),
   ])
 
   const firstName = _.get(personResponse, 'body.name.given-names.value')
@@ -33,16 +42,18 @@ module.exports = async user => {
   const email = _.get(personResponse, 'body.emails.email[0].email')
 
   const employments = _.get(employmentsResponse, 'body.employment-summary')
-  const institution = employments.length
-    ? // sort by most recently ended
-      employments
-        .sort((a, b) => toDate(a['end-date']) - toDate(b['end-date']))
-        .pop().organization.name
-    : null
+
+  const institution =
+    employments && employments.length
+      ? // sort by most recently ended
+        employments
+          .sort((a, b) => toDate(a['end-date']) - toDate(b['end-date']))
+          .pop().organization.name
+      : null
 
   logger.debug(`fetchUserDetails returning:
     first: ${firstName},
-    last: ${lastName}
+    last: ${lastName},
     email: ${email},
     institution: ${institution}`)
   return {

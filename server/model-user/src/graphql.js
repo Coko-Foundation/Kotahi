@@ -203,14 +203,8 @@ const typeDefs = `
     online: Boolean
   }
 
-  type Name {
-    surname: String
-    givenNames: String
-    title: String
-  }
-
   interface Identity {
-    name: Name
+    name: String
     aff: String # JATS <aff>
     email: String # JATS <aff>
     type: String
@@ -220,14 +214,14 @@ const typeDefs = `
 
   # local identity (not from ORCID, etc.)
   type LocalIdentity implements Identity {
-    name: Name
+    name: String
     email: String
     aff: String
     type: String
   }
 
   type ExternalIdentity implements Identity {
-    name: Name
+    name: String
     identifier: String
     email: String
     aff: String
@@ -263,6 +257,16 @@ const typeDefs = `
     username: String!
     password: String!
   }
+
+  # Common types
+  scalar DateTime
+
+  interface Object {
+    id: ID!
+    created: DateTime!
+    updated: DateTime
+  }
+
 `
 
 module.exports = { resolvers, typeDefs }
