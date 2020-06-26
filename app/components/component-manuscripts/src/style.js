@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { Action } from '@pubsweet/ui'
+import { Action, Heading } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
 
 export const Table = styled.table`
@@ -7,17 +7,30 @@ export const Table = styled.table`
   border-radius: ${th('borderRadius')};
   border-collapse: collapse;
   font-size: ${th('fontSizeBaseSmall')};
-
+  overflow: hidden;
   td {
-    width: 33%;
+    width: 25%;
   }
 `
+
+export const PageHeading = styled(Heading)`
+  color: ${th('colorText')};
+  margin-bottom: 1rem;
+`
+
+export const Content = styled.div`
+  max-width: 90rem;
+  box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
+  background-color: ${th('colorBackground')};
+  border-radius: ${th('borderRadius')};
+`
+
 export const Header = styled.thead`
   text-align: left;
   font-variant: all-small-caps;
   border-bottom: 1px solid ${th('colorFurniture')};
 
-  background-color: ${th('colorBackgroundHue')};
+  background-color: ${th('colorSecondaryBackground')};
 
   th {
     padding: ${grid(1)} ${grid(3)};
@@ -25,6 +38,7 @@ export const Header = styled.thead`
 `
 
 export const Container = styled.div`
+  background: ${th('colorBackgroundHue')};
   padding: ${grid(2)};
 `
 
@@ -67,31 +81,6 @@ export const Secondary = styled.div`
 
 export const UserInfo = styled.div`
   margin-left: ${grid(1)};
-`
-
-export const Caret = styled.svg`
-  ${props =>
-    props.active
-      ? css`
-          color: ${th('colorPrimary')};
-        `
-      : css`
-          color: ${th('colorSecondary')};
-        `}
-`
-
-export const Carets = styled.span`
-  display: inline-flex;
-  flex-direction: column;
-  align-items: center;
-  vertical-align: middle;
-  margin-left: ${grid(0.5)};
-  svg {
-    height: ${grid(1.5)};
-  }
-  svg:nth-of-type(2) {
-    margin-top: ${grid(-0.5)};
-  }
 `
 
 // TODO: Extract common above

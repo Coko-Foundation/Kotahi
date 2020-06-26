@@ -1,10 +1,11 @@
 import React, { useState } from 'react'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
-import { Heading } from '@pubsweet/ui'
+
 
 import Manuscript from './Manuscript'
-import { Container, Table, Header, Caret, Carets } from './style'
+import { Container, Table, Header, Content, PageHeading } from './style'
+import { Carets, CaretUp, CaretDown } from '../../shared'
 import Spinner from '../../shared/Spinner'
 import Pagination from '../../shared/Pagination'
 
@@ -25,43 +26,14 @@ const GET_MANUSCRIPTS = gql`
         created
         updated
         status
+        submitter {
+          username
+          profilePicture
+        }
       }
     }
   }
 `
-
-const CaretUp = ({ active }) => (
-  <Caret
-    aria-hidden="true"
-    className=""
-    data-icon="caret-up"
-    fill="currentColor"
-    focusable="false"
-    height="1em"
-    viewBox="0 0 100 100"
-    width="1em"
-    active={active}
-  >
-    <path d="M50 17L100.229 67.25H-0.229473L50 17Z" />
-  </Caret>
-)
-
-
-const CaretDown = ({ active }) => (
-  <Caret
-    active={active}
-    aria-hidden="true"
-    className=""
-    data-icon="caret-down"
-    fill="currentColor"
-    focusable="false"
-    height="1em"
-    viewBox="0 0 100 100"
-    width="1em"
-  >
-    <path d="M50 84L-0.229473 33.75L100.229 33.75L50 84Z" />
-  </Caret>
-)
 
 const Manuscripts = () => {
   const SortHeader = ({ thisSortName, children }) => {
@@ -117,14 +89,15 @@ const Manuscripts = () => {
 
   return (
     <Container>
-      <Heading level={1}>Manuscripts</Heading>
+      <PageHeading level={1}>Manuscripts</PageHeading>
+      <Content>
       <Table>
         <Header>
           <tr>
             <SortHeader thisSortName="meta:title">Title</SortHeader>
-            <SortHeader thisSortName="created">Created</SortHeader>
+            <SortHeader thisSortName="created">Submitted</SortHeader>
             <SortHeader thisSortName="status">Status</SortHeader>
-            <SortHeader thisSortName="authors">Authors</SortHeader>
+            <SortHeader thisSortName="submitterId">Author</SortHeader>
             <th />
           </tr>
         </Header>
@@ -140,6 +113,7 @@ const Manuscripts = () => {
         setPage={setPage}
         totalCount={totalCount}
       />
+      </Content>
     </Container>
   )
 }

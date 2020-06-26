@@ -13,7 +13,7 @@ import {
   UserInfo,
   SuccessStatus,
   ErrorStatus,
-  NormalStatus
+  NormalStatus,
 } from './style'
 import { convertTimestampToDate } from '../../../shared/time-formatting'
 
@@ -25,8 +25,7 @@ const DELETE_MANUSCRIPT = gql`
   }
 `
 
-
-const Status = ({status}) => {
+const Status = ({ status }) => {
   if (status === 'accepted') {
     return <SuccessStatus>{status}</SuccessStatus>
   } else if (status === 'rejected') {
@@ -41,7 +40,7 @@ const User = ({ manuscript }) => {
   return (
     <Row>
       <Cell>
-        { manuscript.meta && manuscript.meta.title }
+        {manuscript.meta && manuscript.meta.title}
         {/* <UserCombo>
           <UserAvatar manuscript={manuscript} />
           <UserInfo>
@@ -51,13 +50,20 @@ const User = ({ manuscript }) => {
         </UserCombo> */}
       </Cell>
       <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
-      <Cell><Status status={manuscript.status}/></Cell>
+      <Cell>
+        <Status status={manuscript.status} />
+      </Cell>
+      <Cell>
+        { manuscript.submitter && manuscript.submitter.username }
+      </Cell>
       <LastCell>
         <Action to={`/journal/versions/${manuscript.id}/manuscript`}>
-            View
-          </Action>
+          View
+        </Action>
 
-        <Action onClick={() => deleteManuscript({ variables: { id: manuscript.id } })}>
+        <Action
+          onClick={() => deleteManuscript({ variables: { id: manuscript.id } })}
+        >
           Delete
         </Action>
       </LastCell>
