@@ -16,11 +16,12 @@ import {
 const cokoTheme = {
   /* Colors */
   colorBackground: 'white',
+  colorSecondaryBackground: '#f9fafb', // custom
   colorPrimary: '#0B65CB',
   colorSecondary: '#9e9e9e',
   colorFurniture: '#E8E8E8',
   colorBorder: '#AAA',
-  colorBackgroundHue: '#f9fafb',
+  colorBackgroundHue: '#f4f5f7',
   colorSuccess: '#008800',
   colorError: '#FF2D1A',
   colorText: '#111',
@@ -64,7 +65,7 @@ const cokoTheme = {
   gridUnit: '8px',
 
   /* Border */
-  borderRadius: '0',
+  borderRadius: '8px',
   borderWidth: '1px', // julien: not 0
   borderStyle: 'solid',
 

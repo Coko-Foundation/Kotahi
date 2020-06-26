@@ -122,8 +122,8 @@ export const ChatInputWrapper = styled.div`
   margin-bottom: ${th('gridUnit')};
   padding: 8px 12px 0 12px;
   background-color: ${th('colorBackground')};
-  border-top: 1px solid ${th('colorBorder')};
-  box-shadow: -1px 0 0 ${th('colorBorder')}, 1px 0 0 ${th('colorBorder')};
+  // border-top: 1px solid ${th('colorBorder')};
+  // box-shadow: -1px 0 0 ${th('colorBorder')}, 1px 0 0 ${th('colorBorder')};
   @media (max-width: ${MEDIA_BREAK}px) {
     bottom: ${props => (props.focus ? '0' : 'auto')};
     position: relative;

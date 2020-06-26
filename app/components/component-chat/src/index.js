@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-// import { th } from '@pubsweet/ui-toolkit'
+import { th } from '@pubsweet/ui-toolkit'
 // import { useQuery } from '@apollo/react-hooks'
 // import gql from 'graphql-tag'
 // import { useParams } from 'react-router-dom'
@@ -10,10 +10,8 @@ import ChatInput from './SuperChatInput/SuperChatInput'
 const MessageContainer = styled.section`
   display: grid;
   min-width: 100%;
-  // flex-direction: column;
   background: rgb(255, 255, 255);
-  // height: calc(100vh - 64px);
-  // grid-template-rows: calc(100% - 40px);
+  grid-template-rows: 1fr calc(${th('gridUnit')} * 8);
   grid-template-areas:
     'read'
     'write';

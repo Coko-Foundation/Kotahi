@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
-import { override, th, grid } from '@pubsweet/ui-toolkit'
+import { override, th, grid, darken } from '@pubsweet/ui-toolkit'
 
 import { Icon, Action } from '@pubsweet/ui'
 import { UserAvatar } from '../components/component-avatar/src'
@@ -46,18 +46,26 @@ const NavItem = ({ className, link, name, icon }) => (
 
 const Item = styled(NavItem)`
   border-radius: 10px;
+  padding-left: ${grid(1)};
   height: ${grid(5)};
   line-height: ${grid(3)};
 
   display: flex;
   align-items: center;
-  color: ${th('colorSecondary')};
+  color: ${darken('colorSecondary', 0.5)};
+
   &:hover {
+    color: ${th('colorText')};
+    stroke: ${th('colorText')};
     background-color: ${th('colorBackgroundHue')};
   }
 
   svg {
+    &:hover {
+
+    }
     width: 1em;
+    stroke: ${darken('colorSecondary', 0.5)};
   }
 
   ${props =>
@@ -65,6 +73,11 @@ const Item = styled(NavItem)`
     css`
       background-color: ${th('colorFurniture')};
       color: ${th('colorText')};
+
+      &:hover {
+        background-color: ${th('colorFurniture')};
+        color: ${th('colorText')};
+      }
     `}
   // align-items: center;
   // display: inline-flex;
