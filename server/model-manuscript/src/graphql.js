@@ -30,6 +30,7 @@ const resolvers = {
         }),
         status: 'new',
         submission,
+        submitterId: ctx.user,
       }
 
       // eslint-disable-next-line
@@ -200,7 +201,7 @@ const resolvers = {
       return ctx.connectors.Manuscript.fetchAll(where, ctx)
     },
     async paginatedManuscripts(_, { sort, offset, limit, filter }, ctx) {
-      const query = ctx.connectors.Manuscript.model.query()
+      const query = ctx.connectors.Manuscript.model.query().eager('submitter')
 
       if (filter && filter.status) {
         query.where({ status: filter.status })
@@ -296,6 +297,7 @@ const typeDefs = `
     meta: ManuscriptMeta
     submission: String
     channels: [Channel]
+    submitter: User
   }
 
   type ManuscriptVersion implements Object {

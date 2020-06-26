@@ -172,9 +172,17 @@ class Manuscript extends BaseModel {
   }
 
   static get relationMappings() {
-    const { Channel } = require('@pubsweet/models')
+    const { Channel, User } = require('@pubsweet/models')
 
     return {
+      submitter: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: User,
+        join: {
+          from: 'manuscripts.submitterId',
+          to: 'users.id',
+        },
+      },
       channels: {
         relation: BaseModel.HasManyRelation,
         modelClass: Channel,
