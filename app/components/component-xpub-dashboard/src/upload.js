@@ -25,7 +25,7 @@ const DocxToHTMLPromise = file => ({ data }) => {
   const body = new FormData()
   body.append('docx', file)
 
-  const url = `${config['pubsweet-client'].baseUrl}convertDocxToHTML`
+  const url = `${config['pubsweet-client'].baseUrl}/convertDocxToHTML`
 
   return request(url, { method: 'POST', body }).then(response =>
     Promise.resolve({

@@ -1,6 +1,6 @@
 import React, { useContext } from 'react'
 import styled, { keyframes, withTheme } from 'styled-components'
-import { XpubContext } from 'xpub-with-context'
+import { XpubContext } from '../../../xpub-with-context'
 import Dropzone from 'react-dropzone'
 import { Icon } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
