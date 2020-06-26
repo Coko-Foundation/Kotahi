@@ -1261,6 +1261,13 @@
   dependencies:
     humps "^2.0.1"
 
+"@guardian/prosemirror-invisibles@^1.2.1":
+  version "1.2.1"
+  resolved "https://registry.yarnpkg.com/@guardian/prosemirror-invisibles/-/prosemirror-invisibles-1.2.1.tgz#00a04b160c7d711c8f5972969ead79d45a675ffd"
+  integrity sha512-Xp/fl6notHbHgzViJ7+Y37Ht3FxCTMeqOXEyvnbYlLHLpQWbAJsxdFaTYeZM/WfvFNuC6TPGknoFm2ptFsELAw==
+  dependencies:
+    prosemirror-view "^1.5.1"
+
 "@hapi/address@^2.1.2":
   version "2.1.4"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-2.1.4.tgz#5d67ed43f3fd41a69d4b9ff7b56e7c0d1d0a81e5"
@@ -12140,7 +12147,7 @@ prosemirror-tables@^0.7.11:
     prosemirror-transform "^1.0.0"
     prosemirror-view "^1.0.0"
 
-prosemirror-tables@^1.0.0:
+prosemirror-tables@^1.1.0:
   version "1.1.0"
   resolved "https://registry.yarnpkg.com/prosemirror-tables/-/prosemirror-tables-1.1.0.tgz#e7fc65e57a44759b0b999d8c71294f79e5a4d54b"
   integrity sha512-E00+KSbDw65966GdiLBpqTNxIextw0RavlGmvdv/dyYbN9OTD0gzaoCU1S8MAbz4GLKmY9Y/g4nSiC1IL1ThQg==
@@ -12167,6 +12174,15 @@ prosemirror-view@^1.0.0, prosemirror-view@^1.1.0, prosemirror-view@^1.13.11, pro
   version "1.14.11"
   resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.14.11.tgz#cb1fa9910ac5c834fd8bb15598d4ed6609465a5c"
   integrity sha512-zcd6saORBuYkn2bVh9Nqu0BfSPE4xl2ct3VpWTu/BUShs/8hlIpckxz/9+NwcDqgYc+AgBgo/XcL0HNcLdxvjw==
+  dependencies:
+    prosemirror-model "^1.1.0"
+    prosemirror-state "^1.0.0"
+    prosemirror-transform "^1.1.0"
+
+prosemirror-view@^1.5.1:
+  version "1.15.0"
+  resolved "https://registry.yarnpkg.com/prosemirror-view/-/prosemirror-view-1.15.0.tgz#372102c91d05b3b0f371b3eb59aeacedb5011bba"
+  integrity sha512-a7Q76sO/DCZr2UX2Rv1Rbw52cr9kVIz8iJOf/rq4mPN1NA3lugq2BKJgUMwlB3U4utyw3olLigqouRHM48NJyg==
   dependencies:
     prosemirror-model "^1.1.0"
     prosemirror-state "^1.0.0"
@@ -12551,7 +12567,7 @@ react-dock@^0.2.4:
     lodash.debounce "^3.1.1"
     prop-types "^15.5.8"
 
-react-dom@^16.3.2, react-dom@^16.8.6, react-dom@^16.9.0:
+react-dom@^16.13.1, react-dom@^16.3.2, react-dom@^16.9.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-16.13.1.tgz#c1bd37331a0486c078ee54c4740720993b2e0e7f"
   integrity sha512-81PIMmVLnCNLO/fFOQxdQkvEq/+Hfpv24XNJfpyZhTRfO0QcmQIF/PgCa1zCOj2w1hrn12MFLyaJ/G0+Mxtfag==
@@ -12797,7 +12813,7 @@ react-visibility-sensor@^5.1.1:
   dependencies:
     prop-types "^15.7.2"
 
-react@^16.3.2, react@^16.8.6, react@^16.9.0:
+react@^16.13.1, react@^16.3.2, react@^16.9.0:
   version "16.13.1"
   resolved "https://registry.yarnpkg.com/react/-/react-16.13.1.tgz#2e818822f1a9743122c063d6410d85c1e3afe48e"
   integrity sha512-YMZQQq32xHLX0bz5Mnibv1/LHb3Sqzngu7xstSM+vrkE5Kzr9xE0yMByK5kMoTK30YVJE61WfbxIFFvfeDKT1w==
@@ -15382,26 +15398,26 @@ watchpack@^1.6.1:
     chokidar "^3.4.0"
     watchpack-chokidar2 "^2.0.0"
 
-wax-prosemirror-components@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-components/-/wax-prosemirror-components-0.0.8.tgz#47fa298305a1f52af978871bb57e4a65dfec4e0e"
-  integrity sha512-c+KUI8XLqgdYYHyLTkvGoS7BlhEAMTgfsEuHhyMVfSK6pedDwrmyu+NE+TLYbIezaGNWKOmpxrm+2IAXEyLh+w==
+wax-prosemirror-components@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-components/-/wax-prosemirror-components-0.0.9.tgz#ca6f9782d86f4e4ff28e73c702052ff8a046464f"
+  integrity sha512-Cns6/mTqeZd3JsFbO6v0DC+Bg/E/iURcavwRrsS70CnxWynimpMyDIOqrk9K5ZQN++fGl/AZw+Y3SA8F6dJhJQ==
   dependencies:
     "@fortawesome/fontawesome" "^1.1.2"
     "@fortawesome/free-solid-svg-icons" "^5.12.0"
     "@fortawesome/react-fontawesome" "^0.0.17"
     lodash "^4.17.4"
-    react "^16.8.6"
-    react-dom "^16.8.6"
+    react "^16.13.1"
+    react-dom "^16.13.1"
     react-dropdown "^1.6.2"
     react-transition-group "^4.3.0"
     styled-components "^4.2.0"
     uuid "^7.0.3"
 
-wax-prosemirror-core@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-core/-/wax-prosemirror-core-0.0.8.tgz#59099a519032ce7d6fb5ad6fd36c26deb6f6be78"
-  integrity sha512-95S7hJowjAEosSCAEHeFZhvJsdPDolsaKI0/EO/BACGgOuoIglqLVqham8BQNCxXCbE79ZCna2BGUUNIoUhgwQ==
+wax-prosemirror-core@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-core/-/wax-prosemirror-core-0.0.9.tgz#a5610a38e06bf72d38465c94074ce564175d0531"
+  integrity sha512-tWuN7hubpujeCPYtm7NrtjDnlOoCD0dnxb066jQOx7uS/+k5j0AAdZx56mqD28yzorvKwF751RSy80NZ0YfQrw==
   dependencies:
     deepmerge "^4.2.2"
     inversify "^5.0.1"
@@ -15418,55 +15434,66 @@ wax-prosemirror-core@^0.0.8:
     prosemirror-state "^1.3.2"
     prosemirror-transform "^1.2.3"
     prosemirror-view "^1.13.11"
-    react "^16.8.6"
-    react-dom "^16.8.6"
+    react "^16.13.1"
+    react-dom "^16.13.1"
     reflect-metadata "^0.1.13"
     styled-components "^4.2.0"
 
-wax-prosemirror-layouts@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-layouts/-/wax-prosemirror-layouts-0.0.8.tgz#dd090565894d9021a9181a734ef3e868727bb3e2"
-  integrity sha512-CTFcH3oyglxZZUCRLQmZC7mt8LR50D5FaGfX8m/cZjaTPkSFu1XDT6ml+fLL5u49p5WW8+4Pnzf0LGadLfXaiQ==
+wax-prosemirror-layouts@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-layouts/-/wax-prosemirror-layouts-0.0.9.tgz#88d16ac86f5e709aa89f0f4d1c17612064fe48b9"
+  integrity sha512-wF8JEzajUcNmE7vLky50cq/1iMOKfaH7BMpVavOCFBxn7gdsD57sjQ10aEj7H+FZVg/9xqrPXK9ByQ4nmXGmDw==
   dependencies:
-    react "^16.8.6"
-    react-dom "^16.8.6"
+    react "^16.13.1"
+    react-dom "^16.13.1"
     react-panelgroup "^1.0.10"
     styled-components "^4.2.0"
 
-wax-prosemirror-schema@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-schema/-/wax-prosemirror-schema-0.0.8.tgz#16a1a10012ef36212f3e8e12cc0f9e05a5c53614"
-  integrity sha512-G1xNcs7ZwhCI6fOvvL72Lp90b1p4o8otxkwQq9R8or8Zu+SQjIXQw9+7wbio8CizdDcR58dDAWx9rhi/r60TUQ==
+wax-prosemirror-plugins@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-plugins/-/wax-prosemirror-plugins-0.0.9.tgz#e03cd6c8f9afdce61935d40914c452a51dbbdbdf"
+  integrity sha512-PSk5/wYOCAGcB0zyrcONRHdMvldPwXc6HU7aMXS5XfVJPG7nk5H8GBI/QOyN7+iIulHx1ln8mikOzADEzzIAiQ==
+  dependencies:
+    wax-prosemirror-components "^0.0.9"
+    wax-prosemirror-core "^0.0.9"
+    wax-prosemirror-layouts "^0.0.9"
+
+wax-prosemirror-schema@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-schema/-/wax-prosemirror-schema-0.0.9.tgz#caba1c4445e27628b6721f01ee5cd17068512b63"
+  integrity sha512-p6aWkjhb7YIjo1txb6GVO/8Qqhwyuz+14RdyDQ5UWtZbmce4v+b86kNtaMtq4UCaEeWhtrrf5VdFbSWAz8HHMw==
   dependencies:
     prosemirror-schema-list "^1.1.2"
-    prosemirror-tables "^1.0.0"
+    prosemirror-tables "^1.1.0"
 
-wax-prosemirror-services@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-services/-/wax-prosemirror-services-0.0.8.tgz#103b7895a0f5ca9d00707162db082c8bb63e386e"
-  integrity sha512-HyJMFpLVp5BRRoB3tTp7xwC1CDRfNZcKRvEyTt5Avm8yfkmgjrieI5K5VgCKpXZYgUOB11iLRkWpSpj5qOlBtw==
+wax-prosemirror-services@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-services/-/wax-prosemirror-services-0.0.9.tgz#77c065e8f82440a4e2bea7400ab3ed4ec0c88657"
+  integrity sha512-U0Y2dzAaXOHoxyDvx59Q6ORopFTRKeYyIjTlvjAXCUccIHcOUC5E4Kv/xe+YhVIs6KI1hwDpTf+OPmCXUtyhYQ==
   dependencies:
     inversify "^5.0.1"
     inversify-inject-decorators "^3.1.0"
+    react "^16.13.1"
+    react-dom "^16.13.1"
     styled-components "^4.2.0"
-    wax-prosemirror-components "^0.0.8"
-    wax-prosemirror-core "^0.0.8"
-    wax-prosemirror-layouts "^0.0.8"
+    wax-prosemirror-components "^0.0.9"
+    wax-prosemirror-core "^0.0.9"
+    wax-prosemirror-layouts "^0.0.9"
 
-wax-prosemirror-themes@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-themes/-/wax-prosemirror-themes-0.0.8.tgz#99f98ec2585fc2dc905e942386be70f79281f966"
-  integrity sha512-zsEZgZ4Sp2sCCUZ7NxcTcTcFF/3qRmYCkXOFZuUQDDXZ2Xjdy50YcdsA0XHgzbQ8hLc8mxz1cUOjMUIverfXUA==
+wax-prosemirror-themes@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-themes/-/wax-prosemirror-themes-0.0.9.tgz#fa5ef1ecc2bf83821be7446e89b1e5e1f6fee027"
+  integrity sha512-fqD9mfETZF+DxSnvMYYJW32ZheYvHH8EDQpgMGcdJzN6OgSiVerVAqfZyvPTPN9HK6PQlXdGVVMjJ9y+0HAn9g==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.2.13"
     cokourier-prime-sans "git+https://gitlab.coko.foundation/julientaq/cokourier-sans-prime.git"
     typeface-fira-sans-condensed "^0.0.54"
     typeface-vollkorn "^0.0.54"
 
-wax-prosemirror-utilities@^0.0.8:
-  version "0.0.8"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-utilities/-/wax-prosemirror-utilities-0.0.8.tgz#3f368305cbbcd0e275bbe731cf1fcc25b83d9eae"
-  integrity sha512-3u58kLrOa8aPL4mE0MCew4IupJhRhfQ3X262hYIA18xlAcIWGlnfzO7IPLorb2dEWSjUdEhdGqUvRrN3Jh9T4A==
+wax-prosemirror-utilities@^0.0.9:
+  version "0.0.9"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-utilities/-/wax-prosemirror-utilities-0.0.9.tgz#2cc5f92ab43d0476b62f42ce95fa32628308c560"
+  integrity sha512-5oRCgcntr7qolel+rdF/wZ6DIgDq/38lOW6hzTfO5Bj2maHwlQOHHDntiSSN+SQrgR0JodX/TKFF/Vtr1C3GVg==
   dependencies:
     prosemirror-utils "^0.9.6"
 

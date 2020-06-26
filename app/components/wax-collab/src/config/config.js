@@ -1,14 +1,14 @@
-import * as Y from 'yjs'
-import { WebsocketProvider } from 'y-websocket'
-import {
-  ySyncPlugin,
-  yCursorPlugin,
-  yUndoPlugin,
-  undo,
-  redo,
-} from 'y-prosemirror'
+// import * as Y from 'yjs'
+// import { WebsocketProvider } from 'y-websocket'
+// import {
+//   ySyncPlugin,
+//   yCursorPlugin,
+//   yUndoPlugin,
+//   undo,
+//   redo,
+// } from 'y-prosemirror'
 
-import * as sharedTypes from '../provider'
+// import * as sharedTypes from '../provider'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 
 import {
@@ -53,7 +53,7 @@ import invisibles, {
 // const type = ydoc.getXmlFragment("prosemirror");
 
 // const opts = [sharedTypes.prosemirrorEditorContent, { permanentUserData: sharedTypes.permanentUserData, colors }]
-const opts = [sharedTypes.prosemirrorEditorContent]
+// const opts = [sharedTypes.prosemirrorEditorContent]
 // sharedTypes.awareness.setLocalStateField('user', _.sample(users))
 
 // console.log(ydoc, provider, type);
@@ -78,9 +78,9 @@ export default {
 
   PmPlugins: [
     invisibles([hardBreak()]),
-    ySyncPlugin(...opts),
-    yCursorPlugin(sharedTypes.awareness),
-    yUndoPlugin(),
+    // ySyncPlugin(...opts),
+    // yCursorPlugin(sharedTypes.awareness),
+    // yUndoPlugin(),
   ],
 
   services: [

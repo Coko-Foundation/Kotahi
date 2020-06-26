@@ -1,11 +1,11 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
-import { Wax /*, CreateSchema */ } from 'wax-prosemirror-core'
-// import { XpubSchema } from 'wax-prosemirror-schema'
-// import 'wax-prosemirror-themes/themes/default-theme.css'
+import { th } from '@pubsweet/ui-toolkit'
+import Wax from '../../../wax-collab/src/Editoria'
 
 import MessageContainer from '../../../component-chat/src'
+import { Spinner } from '../../../shared'
 
 const options = {
   //  schema: new CreateSchema(XpubSchema),
@@ -41,7 +41,7 @@ const ManuscriptContainer = styled.div`
 `
 
 const Chat = styled.div`
-  border-left: 1px solid black;
+  border-left: 1px solid ${th('colorFurniture')};
   grid-area: chat;
   height: 100vh;
   // overflow-y: scroll;
@@ -62,14 +62,15 @@ const Manuscript = ({
     file.mimeType ===
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
       <ManuscriptContainer>
-        <Wax
-          key={1}
-          options={options}
-          theme="default"
-          // fileUpload={fileUpload}
-          // onChange={source => updateManuscript({ source })}
-          value={content}
-        />
+        {content ? (
+          <Wax
+            // fileUpload={fileUpload}
+            // onChange={source => updateManuscript({ source })}
+            content={content}
+          />
+        ) : (
+          <Spinner />
+        )}
       </ManuscriptContainer>
     ) : (
       <Info>No supported view of the file</Info>

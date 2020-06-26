@@ -21,6 +21,15 @@ export default css`
     cursor: pointer;
   }
 
+  h1 {
+    font-size: 1em;
+    font-weight: 500;
+    margin-bottom: 1em;
+  }
+
+  p {
+    margin-bottom: 1em;
+  }
   .ProseMirror footnote::after {
     content: counter(footnote);
     position: relative;
