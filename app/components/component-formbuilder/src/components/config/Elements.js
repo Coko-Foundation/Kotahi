@@ -77,6 +77,7 @@ const elements = {
     title: textfield,
     name: textfield,
     description: editorfield,
+    shortDescription: textfield,
     order: orderfield,
     validate,
   },
@@ -85,6 +86,7 @@ const elements = {
     title: textfield,
     name: textfield,
     order: orderfield,
+    shortDescription: textfield,
     validate,
   },
   AbstractEditor: {
@@ -95,6 +97,7 @@ const elements = {
     description: editorfield,
     order: orderfield,
     validate,
+    shortDescription: textfield,
   },
   TextField: {
     id: textfield,
@@ -102,6 +105,7 @@ const elements = {
     name: textfield,
     placeholder: textfield,
     description: editorfield,
+    shortDescription: textfield,
     order: orderfield,
     validate,
     parse: {
@@ -144,6 +148,7 @@ const elements = {
     description: editorfield,
     options: optionfield,
     order: orderfield,
+    shortDescription: textfield,
     validate,
   },
   Menu: {
@@ -154,6 +159,7 @@ const elements = {
     description: editorfield,
     options: optionfield,
     order: orderfield,
+    shortDescription: textfield,
     validate,
   },
   RadioGroup: {
@@ -165,6 +171,7 @@ const elements = {
     order: orderfield,
     inline: radiofield,
     sectioncss: textarea,
+    shortDescription: textfield,
     validate,
   },
 }
