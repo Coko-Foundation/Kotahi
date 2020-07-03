@@ -1,9 +1,15 @@
 import React from 'react'
 import { Button } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
-import { Item, Body, Divider } from '../molecules/Item'
-import { Links, LinkContainer } from '../molecules/Links'
-import { Actions, ActionContainer } from '../molecules/Actions'
+import {
+  Item,
+  Body,
+  Divider,
+  Links,
+  LinkContainer,
+  Actions,
+  ActionContainer,
+} from '../../style'
 
 import JournalLink from '../JournalLink'
 import VersionTitle from './VersionTitle'

@@ -4,7 +4,7 @@ import { pickBy } from 'lodash'
 import { Action, ActionGroup } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 
-import { Item, Header, Body } from '../molecules/Item'
+import { Item, Header, Body } from '../../style'
 import Status from '../Status'
 import VersionTitle from './VersionTitle'
 

@@ -27,7 +27,6 @@ export default {
         teams {
           id
           role
-          type
           name
           object {
             objectId
