@@ -6,7 +6,7 @@ import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 import { useDropzone } from 'react-dropzone'
 
-import Spinner from '../../shared/Spinner'
+import { Spinner } from '../../shared'
 import ChangeUsername from './ChangeUsername'
 import { BigProfileImage } from './ProfileImage'
 import PageWithHeader from './PageWithHeader'
