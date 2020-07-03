@@ -30,8 +30,9 @@ const secondary = css`
 `
 
 export default css`
-  line-height: calc(${th('gridUnit')} * 4);
+  line-height: calc(${th('gridUnit')} * 3);
   min-width: calc(${th('gridUnit')} * 16);
-  text-transform: uppercase;
+  font-weight: 500;
   ${props => !props.primary && secondary};
+  border: none;
 `
