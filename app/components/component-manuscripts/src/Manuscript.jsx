@@ -20,10 +20,8 @@ import {
 import { convertTimestampToDate } from '../../../shared/time-formatting'
 
 const DELETE_MANUSCRIPT = gql`
-  mutation($id: ID) {
-    deleteManuscript(id: $id) {
-      id
-    }
+  mutation($id: ID!) {
+    deleteManuscript(id: $id)
   }
 `
 
