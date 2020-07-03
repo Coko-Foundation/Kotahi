@@ -50,6 +50,6 @@ export default compose(
   withProps(({ manuscript }) => ({
     content: manuscript.meta.source,
     file: manuscript.files.find(file => file.fileType === 'manuscript') || {},
-    channel: manuscript.channels.find(c => (c.type = 'all')),
+    channel: manuscript.channels.find(c => c.type === 'all'),
   })),
 )(Manuscript)

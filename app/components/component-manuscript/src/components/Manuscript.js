@@ -67,6 +67,7 @@ const Manuscript = ({
             // fileUpload={fileUpload}
             // onChange={source => updateManuscript({ source })}
             content={content}
+            readonly
           />
         ) : (
           <Spinner />
