@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { rotate360, th } from '@pubsweet/ui-toolkit'
 
 // Courtesy of loading.io/css
-const Spinner = styled.div`
+const SpinnerAnimation = styled.div`
   display: inline-block;
   height: 64px;
   width: 64px;
@@ -30,8 +30,8 @@ const LoadingPage = styled.div`
   padding-bottom: calc(${th('gridUnit')} * 2);
 `
 
-export default () => (
+export const Spinner = () => (
   <LoadingPage>
-    <Spinner />
+    <SpinnerAnimation />
   </LoadingPage>
 )

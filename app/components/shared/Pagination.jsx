@@ -3,7 +3,7 @@ import { Action } from '@pubsweet/ui'
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 
-import Icon from './Icon'
+import { Icon } from './Icon'
 import { zIndex } from '../../globals'
 
 const Page = styled.div`
@@ -47,7 +47,7 @@ const Page = styled.div`
     `}
 `
 
-const Pagination = styled.div`
+const PaginationContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
@@ -67,6 +67,8 @@ const Paginators = styled.div`
 const PreviousButton = styled.div`
   border: 1px solid ${th('colorFurniture')};
 
+  border-radius: ${th('borderRadius')} 0 0 ${th('borderRadius')};
+
   svg {
     stroke: ${th('colorFurniture')};
   }
@@ -84,9 +86,10 @@ const PreviousButton = styled.div`
 
 const NextButton = styled(PreviousButton)`
   margin-left: -1px;
+  border-radius: 0 ${th('borderRadius')} ${th('borderRadius')} 0;
 `
 
-const PaginationContainer = ({ setPage, limit, page, totalCount }) => {
+export const Pagination = ({ setPage, limit, page, totalCount }) => {
   const Previous = () => (
     <PreviousButton>
       <Action disabled={page <= 1} onClick={() => setPage(page - 1)}>
@@ -126,7 +129,7 @@ const PaginationContainer = ({ setPage, limit, page, totalCount }) => {
   const lastResult = Math.min((page - 1) * limit + limit, totalCount)
 
   return (
-    <Pagination>
+    <PaginationContainer>
       <PaginationInfo>
         Showing <strong>{firstResult}</strong> to <strong>{lastResult}</strong>{' '}
         of <strong>{totalCount}</strong> results
@@ -138,8 +141,7 @@ const PaginationContainer = ({ setPage, limit, page, totalCount }) => {
         ))}
         <Next />
       </Paginators>
-    </Pagination>
+    </PaginationContainer>
   )
 }
 
-export default PaginationContainer

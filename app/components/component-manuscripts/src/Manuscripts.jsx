@@ -2,12 +2,19 @@ import React, { useState } from 'react'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
 
-
 import Manuscript from './Manuscript'
-import { Container, Table, Header, Content, PageHeading } from './style'
-import { Carets, CaretUp, CaretDown } from '../../shared'
-import Spinner from '../../shared/Spinner'
-import Pagination from '../../shared/Pagination'
+import {
+  Container,
+  Table,
+  Header,
+  Content,
+  PageHeading,
+  Carets,
+  CaretUp,
+  CaretDown,
+  Spinner,
+  Pagination,
+} from './style'
 
 const GET_MANUSCRIPTS = gql`
   query Manuscripts(
@@ -16,7 +23,12 @@ const GET_MANUSCRIPTS = gql`
     $offset: Int
     $limit: Int
   ) {
-    paginatedManuscripts(sort: $sort, filter: $filter, offset: $offset, limit: $limit) {
+    paginatedManuscripts(
+      sort: $sort
+      filter: $filter
+      offset: $offset
+      limit: $limit
+    ) {
       totalCount
       manuscripts {
         id
@@ -28,6 +40,10 @@ const GET_MANUSCRIPTS = gql`
         status
         submitter {
           username
+          online
+          defaultIdentity {
+            name
+          }
           profilePicture
         }
       }
@@ -91,28 +107,32 @@ const Manuscripts = () => {
     <Container>
       <PageHeading level={1}>Manuscripts</PageHeading>
       <Content>
-      <Table>
-        <Header>
-          <tr>
-            <SortHeader thisSortName="meta:title">Title</SortHeader>
-            <SortHeader thisSortName="created">Submitted</SortHeader>
-            <SortHeader thisSortName="status">Status</SortHeader>
-            <SortHeader thisSortName="submitterId">Author</SortHeader>
-            <th />
-          </tr>
-        </Header>
-        <tbody>
-          {manuscripts.map((manuscript, key) => (
-            <Manuscript key={manuscript.id} number={key + 1} manuscript={manuscript} />
-          ))}
-        </tbody>
-      </Table>
-      <Pagination
-        limit={limit}
-        page={page}
-        setPage={setPage}
-        totalCount={totalCount}
-      />
+        <Table>
+          <Header>
+            <tr>
+              <SortHeader thisSortName="meta:title">Title</SortHeader>
+              <SortHeader thisSortName="created">Submitted</SortHeader>
+              <SortHeader thisSortName="status">Status</SortHeader>
+              <SortHeader thisSortName="submitterId">Author</SortHeader>
+              <th />
+            </tr>
+          </Header>
+          <tbody>
+            {manuscripts.map((manuscript, key) => (
+              <Manuscript
+                key={manuscript.id}
+                manuscript={manuscript}
+                number={key + 1}
+              />
+            ))}
+          </tbody>
+        </Table>
+        <Pagination
+          limit={limit}
+          page={page}
+          setPage={setPage}
+          totalCount={totalCount}
+        />
       </Content>
     </Container>
   )

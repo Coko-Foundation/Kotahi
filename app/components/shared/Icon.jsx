@@ -23,7 +23,7 @@ const IconWrapper = styled.div`
   }
 `
 
-const Icon = ({
+export const Icon = ({
   className,
   children,
   color,
@@ -56,5 +56,3 @@ Icon.propTypes = {
   size: PropTypes.number,
   color: PropTypes.string,
 }
-
-export default Icon

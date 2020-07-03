@@ -1,7 +1,7 @@
 import React from 'react'
 import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
-import { Action } from '@pubsweet/ui'
+// import { Action } from '@pubsweet/ui'
 import { UserAvatar } from '../../component-avatar/src'
 import {
   Row,
@@ -14,7 +14,9 @@ import {
   SuccessStatus,
   ErrorStatus,
   NormalStatus,
+  UserAction as Action,
 } from './style'
+
 import { convertTimestampToDate } from '../../../shared/time-formatting'
 
 const DELETE_MANUSCRIPT = gql`
@@ -54,13 +56,25 @@ const User = ({ manuscript }) => {
         <Status status={manuscript.status} />
       </Cell>
       <Cell>
-        { manuscript.submitter && manuscript.submitter.username }
+        {manuscript.submitter && (
+          <UserCombo>
+            <UserAvatar user={manuscript.submitter} />
+            <UserInfo>
+              <Primary>{manuscript.submitter.defaultIdentity.name}</Primary>
+              <Secondary>
+                {manuscript.submitter.email || `(${manuscript.submitter.username})`}
+              </Secondary>
+            </UserInfo>
+          </UserCombo>
+        )}
       </Cell>
       <LastCell>
+        <Action to={`/journal/versions/${manuscript.id}/decisions/1`}>
+          Control
+        </Action>
         <Action to={`/journal/versions/${manuscript.id}/manuscript`}>
           View
         </Action>
-
         <Action
           onClick={() => deleteManuscript({ variables: { id: manuscript.id } })}
         >
