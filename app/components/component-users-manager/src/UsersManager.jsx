@@ -1,12 +1,21 @@
 import React, { useState } from 'react'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/react-hooks'
-import { Heading } from '@pubsweet/ui'
+// import { Heading } from '@pubsweet/ui'
 
 import User from './User'
-import { Container, Table, Header, Caret, Carets } from './style'
-import Spinner from '../../shared/Spinner'
-import Pagination from '../../shared/Pagination'
+import {
+  Container,
+  Table,
+  Header,
+  PageHeading,
+  Content,
+  Spinner,
+  Pagination,
+  CaretUp,
+  CaretDown,
+  Carets,
+} from './style'
 
 const GET_USERS = gql`
   query Users(
@@ -15,7 +24,12 @@ const GET_USERS = gql`
     $offset: Int
     $limit: Int
   ) {
-    users(sort: $sort, filter: $filter, offset: $offset, limit: $limit) {
+    paginatedUsers(
+      sort: $sort
+      filter: $filter
+      offset: $offset
+      limit: $limit
+    ) {
       totalCount
       users {
         id
@@ -30,38 +44,6 @@ const GET_USERS = gql`
   }
 `
 
-const CaretUp = ({ active }) => (
-  <Caret
-    aria-hidden="true"
-    className=""
-    data-icon="caret-up"
-    fill="currentColor"
-    focusable="false"
-    height="1em"
-    viewBox="0 0 100 100"
-    width="1em"
-    active={active}
-  >
-    <path d="M50 17L100.229 67.25H-0.229473L50 17Z" />
-  </Caret>
-)
-
-
-const CaretDown = ({ active }) => (
-  <Caret
-    active={active}
-    aria-hidden="true"
-    className=""
-    data-icon="caret-down"
-    fill="currentColor"
-    focusable="false"
-    height="1em"
-    viewBox="0 0 100 100"
-    width="1em"
-  >
-    <path d="M50 84L-0.229473 33.75L100.229 33.75L50 84Z" />
-  </Caret>
-)
 
 const UsersManager = () => {
   const SortHeader = ({ thisSortName, children }) => {
@@ -113,32 +95,34 @@ const UsersManager = () => {
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
 
-  const { users, totalCount } = data.users
+  const { users, totalCount } = data.paginatedUsers
 
   return (
     <Container>
-      <Heading level={1}>Users</Heading>
-      <Table>
-        <Header>
-          <tr>
-            <SortHeader thisSortName="username">Name</SortHeader>
-            <SortHeader thisSortName="created">Created</SortHeader>
-            <SortHeader thisSortName="admin">Admin</SortHeader>
-            <th />
-          </tr>
-        </Header>
-        <tbody>
-          {users.map((user, key) => (
-            <User key={user.id} number={key + 1} user={user} />
-          ))}
-        </tbody>
-      </Table>
-      <Pagination
-        limit={limit}
-        page={page}
-        setPage={setPage}
-        totalCount={totalCount}
-      />
+      <PageHeading level={1}>Users</PageHeading>
+      <Content>
+        <Table>
+          <Header>
+            <tr>
+              <SortHeader thisSortName="username">Name</SortHeader>
+              <SortHeader thisSortName="created">Created</SortHeader>
+              <SortHeader thisSortName="admin">Admin</SortHeader>
+              <th />
+            </tr>
+          </Header>
+          <tbody>
+            {users.map((user, key) => (
+              <User key={user.id} number={key + 1} user={user} />
+            ))}
+          </tbody>
+        </Table>
+        <Pagination
+          limit={limit}
+          page={page}
+          setPage={setPage}
+          totalCount={totalCount}
+        />
+      </Content>
     </Container>
   )
 }

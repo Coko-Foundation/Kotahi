@@ -3,7 +3,10 @@ import gql from 'graphql-tag'
 import { useMutation } from '@apollo/react-hooks'
 import { Action } from '@pubsweet/ui'
 import { UserAvatar } from '../../component-avatar/src'
-import { Row, Cell, LastCell, UserCombo, Primary, Secondary, UserInfo } from './style'
+import { Row, Cell, LastCell } from './style'
+
+import { UserCombo, Primary, Secondary, UserInfo } from '../../shared'
+
 import { convertTimestampToDate } from '../../../shared/time-formatting'
 
 const DELETE_USER = gql`
