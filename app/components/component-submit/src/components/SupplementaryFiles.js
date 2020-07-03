@@ -1,6 +1,6 @@
 import React from 'react'
 import { Attachment } from '@pubsweet/ui'
-import { Section, Legend } from '../styles'
+import { Section, Legend } from '../style'
 
 const SupplementaryFiles = ({ manuscript }) => (
   <Section id="files.supplementary">

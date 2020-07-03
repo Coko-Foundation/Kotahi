@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { Button, PlainButton } from '@pubsweet/ui'
 import { unescape } from 'lodash'
 import { th } from '@pubsweet/ui-toolkit'
-import { Heading1 } from '../styles'
+import { Heading1 } from '../style'
 
 const Wrapper = styled.div`
   background: ${th('colorBackground')};

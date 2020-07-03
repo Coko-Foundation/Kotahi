@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Section, Legend } from '../styles'
+import { Section, Legend } from '../style'
 
 const Abstract = styled.div`
   word-wrap: break-word;

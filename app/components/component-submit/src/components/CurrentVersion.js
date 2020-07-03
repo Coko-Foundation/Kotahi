@@ -8,7 +8,7 @@ import Declarations from './Declarations'
 import Suggestions from './Suggestions'
 import SupplementaryFiles from './SupplementaryFiles'
 
-import { Heading1, Section, Legend } from '../styles'
+import { Heading1, Section, Legend } from '../style'
 
 const Wrapper = styled.div`
   font-family: ${th('fontInterface')};

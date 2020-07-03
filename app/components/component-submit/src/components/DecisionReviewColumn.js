@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Section } from '../styles'
+import { Section } from '../style'
 import { Review } from './atoms/Columns'
 import Accordion from './molecules/Accordion'
 

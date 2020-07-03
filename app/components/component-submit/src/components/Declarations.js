@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import ReactHtmlParser from 'react-html-parser'
 import { get } from 'lodash'
 import { th } from '@pubsweet/ui-toolkit'
-import { Section, Legend } from '../styles'
+import { Section, Legend } from '../style'
 
 const DeclarationSection = styled(Section)`
   margin: calc(${th('gridUnit')} * 6) 0;

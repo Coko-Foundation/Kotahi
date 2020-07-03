@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
-import { Section, Legend } from '../styles'
+import { Section, Legend } from '../style'
 
 const SubLegend = styled(Legend)`
   font-weight: normal;
