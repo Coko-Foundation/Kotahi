@@ -54,15 +54,6 @@ class Manuscript extends BaseModel {
       })
       .eager('members')
 
-    // const { rows } = await db.raw(
-    //   `SELECT id, data FROM entities WHERE ${where.join(' AND ')}`,
-    //   Object.values(selector),
-    // )
-
-    // const myTeams = rows.map(
-    //   result => new Team({ id: result.id, ...result.data }),
-    // )
-
     return myTeams
   }
 
@@ -172,7 +163,7 @@ class Manuscript extends BaseModel {
   }
 
   static get relationMappings() {
-    const { Channel, User } = require('@pubsweet/models')
+    const { Channel, User, Team } = require('@pubsweet/models')
 
     return {
       submitter: {
@@ -189,6 +180,18 @@ class Manuscript extends BaseModel {
         join: {
           from: 'manuscripts.id',
           to: 'channels.manuscriptId',
+        },
+      },
+      teams: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: Team,
+        beforeInsert(model) {
+          model.objectType = 'Manuscript'
+        },
+        filter: { objectType: 'Manuscript' },
+        join: {
+          from: 'manuscripts.id',
+          to: 'teams.objectId',
         },
       },
     }

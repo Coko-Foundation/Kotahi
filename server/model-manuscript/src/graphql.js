@@ -198,7 +198,9 @@ const resolvers = {
       return manuscript
     },
     async manuscripts(_, { where }, ctx) {
-      return ctx.connectors.Manuscript.fetchAll(where, ctx)
+      return ctx.connectors.Manuscript.fetchAll(where, ctx, {
+        eager: '[teams]',
+      })
     },
     async paginatedManuscripts(_, { sort, offset, limit, filter }, ctx) {
       const query = ctx.connectors.Manuscript.model.query().eager('submitter')
