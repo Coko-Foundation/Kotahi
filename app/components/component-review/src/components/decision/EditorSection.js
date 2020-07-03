@@ -3,8 +3,7 @@ import { Wax /*, CreateSchema */ } from 'wax-prosemirror-core'
 // import { XpubSchema } from 'wax-prosemirror-schema'
 // import 'wax-prosemirror-themes/themes/default-theme.css'
 
-import { EditorWrapper } from '../molecules/EditorWrapper'
-import { Info } from '../molecules/Info'
+import { EditorWrapper, Info } from '../style'
 
 const options = {
   // schema: new CreateSchema(XpubSchema),

@@ -13,7 +13,7 @@ import {
 
 import { JournalContext } from 'xpub-journal'
 import { getCommentFiles, stripHtml, createComments } from './util'
-import AdminSection from '../atoms/AdminSection'
+import { AdminSection } from '../style'
 
 const AttachmentsInput = ({
   field,

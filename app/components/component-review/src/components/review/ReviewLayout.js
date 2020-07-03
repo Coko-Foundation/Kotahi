@@ -7,7 +7,7 @@ import ReviewForm from './ReviewForm'
 import ReviewMetadata from '../metadata/ReviewMetadata'
 import Review from './Review'
 import EditorSection from '../decision/EditorSection'
-import { Columns, Manuscript, Admin } from '../atoms/Columns'
+import { Columns, Manuscript, AdminSection } from '../style'
 
 const addEditor = (manuscript, label) => ({
   content: <EditorSection manuscript={manuscript} />,
@@ -86,13 +86,13 @@ const ReviewLayout = ({
         />
       </Manuscript>
 
-      <Admin>
+      <AdminSection>
         <Tabs
           activeKey={reviewSections[reviewSections.length - 1].key}
           sections={reviewSections}
           title="Versions"
         />
-      </Admin>
+      </AdminSection>
     </Columns>
   )
 }

@@ -19,10 +19,18 @@ import {
   createComments,
 } from '../review/util'
 
-import AdminSection from '../atoms/AdminSection'
+import {
+  AdminSection,
+  Container,
+  Title,
+  SectionHeader,
+  SectionRowGrid,
+  SectionRow,
+  SectionAction,
+} from '../style'
 
 const NoteDecision = (updateReview, uploadFile) => props => (
-  <AdminSection>
+  <>
     <Field
       component={NoteInput}
       name="comments"
@@ -34,7 +42,7 @@ const NoteDecision = (updateReview, uploadFile) => props => (
       updateReview={updateReview}
       uploadFile={uploadFile}
     />
-  </AdminSection>
+  </>
 )
 
 const NoteInput = ({
@@ -46,6 +54,7 @@ const NoteInput = ({
     key="note-input"
     onBlur={() => {}}
     onChange={value => {
+      console.log(values)
       const { updateIndex, comment } = createComments(
         values,
         {
@@ -61,7 +70,6 @@ const NoteInput = ({
       )
     }}
     placeholder="Write/paste your decision letter here, or upload it using the upload button on the right."
-    title="Decision"
     value={getCommentContent({ comments: field.value }, 'note')}
   />
 )
@@ -126,32 +134,34 @@ const RecommendationInput = ({
 }
 
 const DecisionForm = ({ handleSubmit, uploadFile, updateReview, isValid }) => (
-  <form onSubmit={handleSubmit}>
-    <AdminSection key="note">
-      <div name="note">
-        <FieldArray
-          component={NoteDecision(updateReview, uploadFile)}
-          key="comments-array"
-          name="comments"
-        />
-      </div>
-    </AdminSection>
-
-    <AdminSection key="recommendation">
+  <Container>
+    {/* <form onSubmit={handleSubmit}> */}
+    <SectionHeader>
+      <Title>Decision</Title>
+    </SectionHeader>
+    <SectionRow key="note">
+      <FieldArray
+        component={NoteDecision(updateReview, uploadFile)}
+        key="comments-array"
+        name="comments"
+      />
+    </SectionRow>
+    <SectionRowGrid>
       <Field
         component={RecommendationInput}
         name="recommendation"
         updateReview={updateReview}
         validate={required}
       />
-    </AdminSection>
 
-    <AdminSection key="submit">
-      <Button disabled={!isValid} primary type="submit">
-        Submit
-      </Button>
-    </AdminSection>
-  </form>
+      <SectionAction key="submit">
+        <Button disabled={!isValid} primary type="submit">
+          Submit
+        </Button>
+      </SectionAction>
+    </SectionRowGrid>
+    {/* </form> */}
+  </Container>
 )
 
 export default DecisionForm

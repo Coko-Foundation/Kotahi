@@ -7,10 +7,13 @@ import DecisionReview from './DecisionReview'
 //       member => member.user.id === currentUser.id,
 //     )[0] || {}
 //   return status
+
 const getCompletedReviews = (manuscript, currentUser) => {
   const team =
     manuscript.teams.find(team => team.role === 'reviewerEditor') || {}
-
+  if (!team.members) {
+    return null
+  }
   const currentMember = team.members.find(m => m.user.id === currentUser.id)
   return currentMember && currentMember.status
 }
