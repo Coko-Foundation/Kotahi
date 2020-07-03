@@ -27,7 +27,7 @@ const user = {
   username: 'demo',
 }
 
-const Editoria = ({ content }) => (
+const Editoria = ({ content, readonly }) => (
   <Fragment>
     {/* <GlobalStyle /> */}
     <Wax
@@ -36,6 +36,7 @@ const Editoria = ({ content }) => (
       fileUpload={file => renderImage(file)}
       layout={EditoriaLayout}
       value={content}
+      readonly={readonly}
       placeholder="Type Something..."
       // onChange={source => console.log(source)}
       user={user}
