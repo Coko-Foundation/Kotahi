@@ -8,7 +8,10 @@ const resolvers = {
     user(_, { id }, ctx) {
       return ctx.connectors.User.fetchOne(id, ctx, { eager })
     },
-    async users(_, { sort, offset, limit, filter }, ctx) {
+    async users(_, vars, ctx) {
+      return ctx.connectors.User.model.query()
+    },
+    async paginatedUsers(_, { sort, offset, limit, filter }, ctx) {
       const query = ctx.connectors.User.model.query()
 
       if (filter && filter.admin) {
@@ -159,7 +162,8 @@ const resolvers = {
 const typeDefs = `
   extend type Query {
     user(id: ID, username: String): User
-    users(sort: UsersSort, offset: Int, limit: Int, filter: UsersFilter): PaginatedUsers
+    users: [User]
+    paginatedUsers(sort: UsersSort, offset: Int, limit: Int, filter: UsersFilter): PaginatedUsers
     searchUsers(teamId: ID, query: String): [User]
   }
 
