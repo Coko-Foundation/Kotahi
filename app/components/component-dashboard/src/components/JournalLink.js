@@ -1,11 +1,8 @@
 import React from 'react'
 import { Link } from '@pubsweet/ui'
 
-const projectUrl = ({ journal, version, page, id }) => {
+const projectUrl = ({ version, page, id }) => {
   const parts = []
-
-  parts.push('journals')
-  parts.push(typeof journal === 'object' ? journal.id : journal)
 
   if (version) {
     parts.push('versions')

@@ -55,12 +55,7 @@ const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
         {(status === 'accepted' || status === 'completed') && (
           <Links>
             <LinkContainer>
-              <JournalLink
-                id={version.id}
-                journal={journals}
-                page="reviews"
-                version={version}
-              >
+              <JournalLink id={version.id} page="reviews" version={version}>
                 {status === 'completed' ? 'Completed' : 'Do Review'}
               </JournalLink>
             </LinkContainer>

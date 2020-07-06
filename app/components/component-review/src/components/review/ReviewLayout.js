@@ -7,7 +7,8 @@ import ReviewForm from './ReviewForm'
 import ReviewMetadata from '../metadata/ReviewMetadata'
 import Review from './Review'
 import EditorSection from '../decision/EditorSection'
-import { Columns, Manuscript, AdminSection } from '../style'
+import { Columns, Manuscript, Chat } from '../style'
+import MessageContainer from '../../../../component-chat/src'
 
 const addEditor = (manuscript, label) => ({
   content: <EditorSection manuscript={manuscript} />,
@@ -25,6 +26,7 @@ const ReviewLayout = ({
   status,
   updateReview,
   uploadFile,
+  channelId,
 }) => {
   const reviewSections = []
   const editorSections = []
@@ -37,10 +39,14 @@ const ReviewLayout = ({
         <div>
           <ReviewMetadata manuscript={manuscript} />
           <Review
-            review={manuscript.reviews.find(
-              review =>
-                (review.user.id === currentUser.id && !review.isDecision) || {},
-            )}
+            review={
+              manuscript.reviews &&
+              manuscript.reviews.find(
+                review =>
+                  (review.user.id === currentUser.id && !review.isDecision) ||
+                  {},
+              )
+            }
           />
         </div>
       ),
@@ -79,20 +85,23 @@ const ReviewLayout = ({
   return (
     <Columns>
       <Manuscript>
+        {/* <Manuscript>
         <Tabs
           activeKey={editorSections[editorSections.length - 1].key}
           sections={editorSections}
           title="Versions"
         />
-      </Manuscript>
+      </Manuscript> */}
 
-      <AdminSection>
         <Tabs
           activeKey={reviewSections[reviewSections.length - 1].key}
           sections={reviewSections}
           title="Versions"
         />
-      </AdminSection>
+      </Manuscript>
+      <Chat>
+        <MessageContainer channelId={channelId} />
+      </Chat>
     </Columns>
   )
 }
