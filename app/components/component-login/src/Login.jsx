@@ -1,23 +1,12 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { withFormik, Field } from 'formik'
-import { isEmpty } from 'lodash'
+import { withFormik } from 'formik'
 import config from 'config'
-import { override } from '@pubsweet/ui-toolkit'
-import { useMutation } from '@apollo/react-hooks'
-
-import {
-  CenteredColumn,
-  ErrorText,
-  H1,
-  Link,
-  Button,
-  TextField,
-} from '@pubsweet/ui'
+import { th, grid } from '@pubsweet/ui-toolkit'
+import { CenteredColumn, H1, Button } from '@pubsweet/ui'
 import styled from 'styled-components'
-
-import { LOGIN_USER } from './graphql/mutations'
+import { Container, Content, Section } from '../../shared'
 
 const getNextUrl = () => {
   const url = new URL(window.location.href)
@@ -59,39 +48,50 @@ const getToken = props => {
   return null
 }
 
-const Logo = styled.div`
-  ${override('Login.Logo')};
-`
-Logo.displayName = 'Logo'
+const LoginLink = styled.a`
+  display: inline-block;
+  background: ${th('colorPrimary')};
+  border-radius: ${th('borderRadius')};
+  line-height: ${grid(4)};
+  color: ${th('colorTextReverse')};
 
-const FormContainer = styled.div`
-  ${override('Login.FormContainer')};
+  padding: ${grid(1)} ${grid(2)};
+  margin-bottom: ${grid(1)};
+  margin-top: ${grid(3)};
 `
 
-const UsernameInput = props => (
-  <TextField label="Username" placeholder="Username" {...props.field} />
+const CenteredSection = styled(Section)`
+  text-align: center;
+`
+
+const ORCIDIcon = ({className}) => (
+  <span className={className}>
+  <svg viewBox="0 0 256 256">
+    <path
+      d="M256,128c0,70.7-57.3,128-128,128C57.3,256,0,198.7,0,128C0,57.3,57.3,0,128,0C198.7,0,256,57.3,256,128z"
+      fill="#A6CE39"
+    />
+    <g>
+      <path d="M86.3,186.2H70.9V79.1h15.4v48.4V186.2z" fill="#FFFFFF" />
+      <path
+        d="M108.9,79.1h41.6c39.6,0,57,28.3,57,53.6c0,27.5-21.5,53.6-56.8,53.6h-41.8V79.1z M124.3,172.4h24.5   c34.9,0,42.9-26.5,42.9-39.7c0-21.5-13.7-39.7-43.7-39.7h-23.7V172.4z"
+        fill="#FFFFFF"
+      />
+      <path
+        d="M88.7,56.8c0,5.5-4.5,10.1-10.1,10.1c-5.6,0-10.1-4.6-10.1-10.1c0-5.6,4.5-10.1,10.1-10.1   C84.2,46.7,88.7,51.3,88.7,56.8z"
+        fill="#FFFFFF"
+      />
+    </g>
+  </svg>
+  </span>
 )
 
-const PasswordInput = props => (
-  <TextField
-    label="Password"
-    placeholder="Password"
-    {...props.field}
-    type="password"
-  />
-)
-
-const Login = ({
-  errors,
-  logo = null,
-  signup = true,
-  passwordReset = true,
-  redirectLink,
-  handleSubmit,
-  orcid,
-  token,
-  ...props
-}) => {
+const StyledORCIDIcon = styled(ORCIDIcon)`
+  svg {
+    height: 1rem;
+  }
+`
+const Login = ({ logo = null, redirectLink, orcid, token, ...props }) => {
   if (token) {
     window.localStorage.setItem('token', token)
     return <Redirect to={redirectLink} />
@@ -100,50 +100,23 @@ const Login = ({
   return redirectLink ? (
     <Redirect to={redirectLink} />
   ) : (
-    <CenteredColumn small>
-      {logo && (
-        <Logo>
-          <img alt="pubsweet-logo" src={`${logo}`} />
-        </Logo>
-      )}
-      <FormContainer>
-        <H1>Login to SimpleJ</H1>
+    <Container>
+      <H1>Login to SimpleJ</H1>
+      <Content>
+      <CenteredSection>
 
-        {!isEmpty(errors) && <ErrorText>{errors}</ErrorText>}
-        <form onSubmit={handleSubmit}>
-          {/* <Field component={UsernameInput} name="username" />
-          <Field component={PasswordInput} name="password" /> */}
-          <a href="/auth/orcid">
-          <Button primary>
-            Login with ORCID
-          </Button>
-          </a>
-        </form>
+          SimpleJ uses ORCID <StyledORCIDIcon /> to identify authors and staff. Login with your
+          ORCID account below or{' '}
+          <a href="https://orcid.org/signin">register at the ORCID website.</a>
+        <LoginLink href="/auth/orcid" primary>
+          Login with ORCID
+        </LoginLink>
+        </CenteredSection>
 
-        {/* {signup && (
-          <p>
-            Don&apos;t have an account? <Link to="/signup">Sign up</Link>
-          </p>
-        )} */}
+      </Content>
 
-        {/* {passwordReset && (
-          <p>
-            Forgot your password?{' '}
-            <Link to="/password-reset">Reset password</Link>
-          </p>
-        )} */}
-      </FormContainer>
-    </CenteredColumn>
+    </Container>
   )
-}
-
-Login.propTypes = {
-  error: PropTypes.string,
-  actions: PropTypes.object,
-  location: PropTypes.object,
-  signup: PropTypes.bool,
-  passwordReset: PropTypes.bool,
-  logo: PropTypes.string,
 }
 
 const EnhancedFormik = withFormik({
@@ -173,10 +146,8 @@ export default props => {
   // Also set the redirect link upon successful login (via handleSubmit)
   const onLoggedIn = () => setRedirectLink(getNextUrl())
 
-  const [loginUser] = useMutation(LOGIN_USER)
   return (
     <EnhancedFormik
-      loginUser={loginUser}
       onLoggedIn={onLoggedIn}
       orcid={orcid}
       redirectLink={redirectLink}
