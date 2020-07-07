@@ -147,18 +147,13 @@ const resolvers = {
       const update = merge({}, manuscript, data)
       return ctx.connectors.Manuscript.update(id, update, ctx)
     },
-    async submitManuscript(_, { id, input }, ctx) {
-      const data = JSON.parse(input)
-
+    async makeDecision(_, { id, decision }, ctx) {
       const manuscript = await ctx.connectors.Manuscript.fetchOne(id, ctx)
-      const update = merge({}, manuscript, data)
-      // eslint-disable-next-line
-      const previousVersion = await new ctx.connectors.Manuscript.model(
-        update,
-      ).createNewVersion()
+      manuscript.decision = decision
 
-      const manuscriptVersion = await previousVersion.save()
-      return manuscriptVersion
+      manuscript.status = decision
+
+      return manuscript.save()
     },
   },
   Query: {
@@ -167,7 +162,7 @@ const resolvers = {
 
       const manuscript = await Manuscript.query()
         .findById(id)
-        .eager('channels')
+        .eager('[teams, channels, reviews]')
 
       if (!manuscript.meta) {
         manuscript.meta = {}
@@ -188,9 +183,6 @@ const resolvers = {
         object_id: manuscript.id,
       })
 
-      // TODO: Do this with eager loading relations
-      manuscript.teams = await manuscript.getTeams()
-      manuscript.reviews = await manuscript.getReviews()
       manuscript.manuscriptVersions = await manuscript.getManuscriptVersions()
       // manuscript.channel = await ctx.connectors.Channel.model.find(
       //   manuscript.channelId,
@@ -199,7 +191,7 @@ const resolvers = {
     },
     async manuscripts(_, { where }, ctx) {
       return ctx.connectors.Manuscript.fetchAll(where, ctx, {
-        eager: '[teams]',
+        eager: '[teams, reviews]',
       })
     },
     async paginatedManuscripts(_, { sort, offset, limit, filter }, ctx) {
@@ -244,7 +236,12 @@ const resolvers = {
   // change our queries if the submission form changes. We still want to store it as JSONB
   // so that we can easily search through the information within.
   Manuscript: {
-    submission(parent, args, ctx) {
+    submission(parent) {
+      return JSON.stringify(parent.submission)
+    },
+  },
+  ManuscriptVersion: {
+    submission(parent) {
       return JSON.stringify(parent.submission)
     },
   },
@@ -278,7 +275,7 @@ const typeDefs = `
   extend type Mutation {
     createManuscript(input: ManuscriptInput): Manuscript!
     updateManuscript(id: ID!, input: String): Manuscript!
-    submitManuscript(id: ID!, input: String): Manuscript!
+    makeDecision(id: ID!, decision: String): Manuscript!
     deleteManuscript(id: ID!): ID!
     reviewerResponse(currentUserId: ID, action: String, teamId: ID! ): Team
     assignTeamEditor(id: ID!, input: String): [Team]
