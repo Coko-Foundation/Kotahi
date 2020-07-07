@@ -7,7 +7,7 @@ import ReviewForm from './ReviewForm'
 import ReviewMetadata from '../metadata/ReviewMetadata'
 import Review from './Review'
 import EditorSection from '../decision/EditorSection'
-import { Columns, Manuscript, Chat } from '../style'
+import { Columns, Manuscript, Chat, AdminSection } from '../style'
 import MessageContainer from '../../../../component-chat/src'
 
 const addEditor = (manuscript, label) => ({

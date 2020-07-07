@@ -77,28 +77,10 @@ export const Container = styled.div`
   // padding: ${grid(2)} ${grid(3)};
 `
 
-export const Title = styled.h2`
-  font-size: ${th('fontSizeHeading5')};
-  font-weight: 500;
-`
-
-export const SectionHeader = styled.div`
-  padding: ${grid(2)} ${grid(3)};
-  border-bottom: 1px solid ${th('colorFurniture')};
-`
-
-export const SectionRow = styled.div`
-  border-bottom: 1px solid ${th('colorFurniture')};
-  padding: ${grid(2)} ${grid(3)};
-`
-
-export const SectionRowGrid = styled(SectionRow)`
-  display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  grid-gap: ${grid(2)};
-`
-
-export const SectionAction = styled.div`
-  grid-column: 3;
-  justify-self: end;
-`
+export {
+  Title,
+  SectionHeader,
+  SectionRow,
+  SectionRowGrid,
+  SectionAction,
+} from '../../../shared'

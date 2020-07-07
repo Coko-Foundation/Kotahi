@@ -21,6 +21,8 @@ const teamFields = `
     user {
       id
       username
+      profilePicture
+      online
     }
     status
   }
@@ -93,6 +95,8 @@ const query = gql`
     users {
       id
       username
+      profilePicture
+      online
       admin
     }
 

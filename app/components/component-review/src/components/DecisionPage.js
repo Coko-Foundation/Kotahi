@@ -176,9 +176,9 @@ const createFileMutation = gql`
   }
 `
 
-const submitMutation = gql`
-  mutation($id: ID!, $input: String) {
-    submitManuscript(id: $id, input: $input) {
+const makeDecisionMutation = gql`
+  mutation($id: ID!, $decision: String) {
+    makeDecision(id: $id, decision: $decision) {
       id
       ${fragmentFields}
     }
@@ -294,7 +294,7 @@ const editorSections = ({ manuscript }) => {
 
 const DecisionPage = ({ match }) => {
   // Hooks from the old world
-  const [completeDecision] = useMutation(submitMutation, {
+  const [makeDecision] = useMutation(makeDecisionMutation, {
     refetchQueries: [query],
   })
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
@@ -306,13 +306,19 @@ const DecisionPage = ({ match }) => {
     variables: {
       id: match.params.version,
     },
+    fetchPolicy: 'network-only',
   })
 
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
 
   const manuscript = data.manuscript
-  const channelId = manuscript.channels.find(c => c.type === 'editorial').id
+
+  // Protect if channels don't exist for whatever reason
+  let channelId
+  if (Array.isArray(manuscript.channels) && manuscript.channels.length) {
+    channelId = manuscript.channels.find(c => c.type === 'editorial').id
+  }
 
   const uploadFile = (file, updateReview, type) =>
     uploadReviewFiles({
@@ -391,20 +397,7 @@ const DecisionPage = ({ match }) => {
       <Manuscript>
         <Formik
           displayName="decision"
-          handleSubmit={(
-            props,
-            { props: { completeDecision, history, manuscript } },
-          ) => {
-            completeDecision({
-              variables: {
-                id: manuscript.id,
-                input: JSON.stringify({
-                  decision: manuscript.reviews.find(review => review.isDecision)
-                    .recommendation,
-                }),
-              },
-            })
-          }}
+          initialValues={initialValues}
           // isInitialValid={({ manuscript }) => {
           //   const rv =
           //     manuscript.reviews.find(review => review.isDecision) || {}
@@ -413,7 +406,15 @@ const DecisionPage = ({ match }) => {
 
           //   return isCommented && isRecommendation
           // }}
-          initialValues={initialValues}
+          onSubmit={() => {
+            makeDecision({
+              variables: {
+                id: manuscript.id,
+                decision: manuscript.reviews.find(review => review.isDecision)
+                  .recommendation,
+              },
+            })
+          }}
           validate={(values, props) => {
             const errors = {}
             if (getCommentContent(values, 'note') === '') {
@@ -456,9 +457,7 @@ const DecisionPage = ({ match }) => {
         </Formik>
       </Manuscript>
 
-      <Chat>
-        <MessageContainer channelId={channelId} />
-      </Chat>
+      <Chat>{channelId && <MessageContainer channelId={channelId} />}</Chat>
     </Columns>
   )
 }

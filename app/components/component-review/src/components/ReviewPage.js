@@ -229,6 +229,7 @@ export default ({ match, ...props }) => {
     variables: {
       id: match.params.version,
     },
+    fetchPolicy: 'network-only',
   })
 
   if (loading) return <Spinner />
@@ -327,23 +328,12 @@ export default ({ match, ...props }) => {
         },
       },
     }).then(() => {
-      history.push('/dashboard')
+      history.push('/journal/home')
     })
   }
 
   return (
     <Formik
-      handleSubmit={(props, { props: { completeReview, history } }) =>
-        completeReview(history)
-      }
-      // isInitialValid: ({ review }) => {
-      //   if (!review.id) return false
-      //   const hasRecommendation = review.recommendation !== null
-      //   const comment = getCommentContent(review, 'note')
-      //   const isCommented = comment !== null && comment !== ''
-
-      //   return isCommented && hasRecommendation
-      // },
       initialValues={
         (manuscript.reviews &&
           manuscript.reviews.find(
@@ -354,16 +344,28 @@ export default ({ match, ...props }) => {
           recommendation: null,
         }
       }
+      onSubmit={values => completeReview(props.history)}
+      validateOnMount={review => {
+        if (!review.id) return false
+        const hasRecommendation = review.recommendation !== null
+        const comment = getCommentContent(review, 'note')
+        const isCommented = comment !== null && comment !== ''
+
+        return isCommented && hasRecommendation
+      }}
     >
-      <ReviewLayout
-        currentUser={currentUser}
-        manuscript={manuscript}
-        review={review}
-        status={status}
-        updateReview={updateReview}
-        uploadFile={uploadFile}
-        channelId={channelId}
-      />
+      {formikProps => (
+        <ReviewLayout
+          channelId={channelId}
+          currentUser={currentUser}
+          manuscript={manuscript}
+          review={review}
+          status={status}
+          updateReview={updateReview}
+          uploadFile={uploadFile}
+          {...formikProps}
+        />
+      )}
     </Formik>
   )
 }

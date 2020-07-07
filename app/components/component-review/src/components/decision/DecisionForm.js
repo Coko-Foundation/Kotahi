@@ -54,7 +54,6 @@ const NoteInput = ({
     key="note-input"
     onBlur={() => {}}
     onChange={value => {
-      console.log(values)
       const { updateIndex, comment } = createComments(
         values,
         {
@@ -135,32 +134,32 @@ const RecommendationInput = ({
 
 const DecisionForm = ({ handleSubmit, uploadFile, updateReview, isValid }) => (
   <Container>
-    {/* <form onSubmit={handleSubmit}> */}
-    <SectionHeader>
-      <Title>Decision</Title>
-    </SectionHeader>
-    <SectionRow key="note">
-      <FieldArray
-        component={NoteDecision(updateReview, uploadFile)}
-        key="comments-array"
-        name="comments"
-      />
-    </SectionRow>
-    <SectionRowGrid>
-      <Field
-        component={RecommendationInput}
-        name="recommendation"
-        updateReview={updateReview}
-        validate={required}
-      />
+    <form onSubmit={handleSubmit}>
+      <SectionHeader>
+        <Title>Decision</Title>
+      </SectionHeader>
+      <SectionRow key="note">
+        <FieldArray
+          component={NoteDecision(updateReview, uploadFile)}
+          key="comments-array"
+          name="comments"
+        />
+      </SectionRow>
+      <SectionRowGrid>
+        <Field
+          component={RecommendationInput}
+          name="recommendation"
+          updateReview={updateReview}
+          validate={required}
+        />
 
-      <SectionAction key="submit">
-        <Button disabled={!isValid} primary type="submit">
-          Submit
-        </Button>
-      </SectionAction>
-    </SectionRowGrid>
-    {/* </form> */}
+        <SectionAction key="submit">
+          <Button disabled={!isValid} primary type="submit">
+            Submit
+          </Button>
+        </SectionAction>
+      </SectionRowGrid>
+    </form>
   </Container>
 )
 

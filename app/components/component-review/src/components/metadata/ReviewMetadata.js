@@ -17,6 +17,8 @@ import {
 const Heading = styled.span`
   font-weight: inherit;
   padding: 0 1em 0 0;
+  text-overflow: ellipsis;
+  overflow: hidden;
   white-space: nowrap;
 `
 

@@ -1,5 +1,7 @@
 import React from 'react'
 import DecisionReview from './DecisionReview'
+import { Container, SectionHeader, SectionRow, Title } from '../style'
+import { H1, Action } from '@pubsweet/ui'
 
 // TODO: read reviewer ordinal and name from project reviewer
 // const { status } =
@@ -19,8 +21,11 @@ const getCompletedReviews = (manuscript, currentUser) => {
 }
 
 const DecisionReviews = ({ manuscript }) => (
-  <div>
-    {manuscript.reviews &&
+  <Container>
+    <SectionHeader>
+      <Title>Reviews</Title>
+    </SectionHeader>
+    {manuscript.reviews && manuscript.reviews.length ? (
       manuscript.reviews
         .filter(
           review =>
@@ -28,7 +33,7 @@ const DecisionReviews = ({ manuscript }) => (
             review.isDecision === false,
         )
         .map((review, index) => (
-          <div key={review.id}>
+          <SectionRow key={review.id}>
             <DecisionReview
               open
               review={review}
@@ -37,9 +42,16 @@ const DecisionReviews = ({ manuscript }) => (
                 ordinal: index + 1,
               }}
             />
-          </div>
-        ))}
-  </div>
+          </SectionRow>
+        ))
+    ) : (
+      <SectionRow>
+        <Action to={`/journal/versions/${manuscript.id}/reviewers`}>
+          Assign Reviewers
+        </Action>
+      </SectionRow>
+    )}
+  </Container>
 )
 
 export default DecisionReviews

@@ -17,10 +17,6 @@ const AssignEditorsReviewers = ({ manuscript, AssignEditor }) => (
     <SectionRowGrid>
       <AssignEditor manuscript={manuscript} teamRole="seniorEditor" />
       <AssignEditor manuscript={manuscript} teamRole="handlingEditor" />
-
-      <Action to={`/journal/versions/${manuscript.id}/reviewers`}>
-        Assign Reviewers
-      </Action>
     </SectionRowGrid>
   </Container>
 )

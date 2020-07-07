@@ -13,7 +13,15 @@ import {
 
 import { JournalContext } from 'xpub-journal'
 import { getCommentFiles, stripHtml, createComments } from './util'
-import { AdminSection } from '../style'
+import {
+  AdminSection,
+  Container,
+  Title,
+  SectionHeader,
+  SectionRowGrid,
+  SectionRow,
+  SectionAction,
+} from '../style'
 
 const AttachmentsInput = ({
   field,
@@ -158,43 +166,50 @@ const ReviewComment = props => (
   </>
 )
 
-const Title = styled.div``
-
 const ReviewForm = ({
   journal,
   isValid,
+  isSubmitting,
   handleSubmit,
   updateReview,
   uploadFile,
   review,
 }) => (
-  <form onSubmit={handleSubmit}>
-    <ReviewComment
-      review={review}
-      updateReview={updateReview}
-      uploadFile={uploadFile}
-    />
-    <AdminSection>
-      <div name="Recommendation">
-        <Title>Recommendation</Title>
-        <Field name="recommendation" updateReview={updateReview}>
-          {props => (
-            <RecommendationInput
-              journal={journal}
-              updateReview={updateReview}
-              {...props}
-            />
-          )}
-        </Field>
-      </div>
-    </AdminSection>
-
-    <AdminSection>
-      <Button disabled={!isValid} primary type="submit">
-        Submit
-      </Button>
-    </AdminSection>
-  </form>
+  <Container>
+    <form onSubmit={handleSubmit}>
+      <AdminSection>
+        <SectionHeader>
+          <Title>Review</Title>
+        </SectionHeader>
+        <SectionRow key="note">
+          <ReviewComment
+            review={review}
+            updateReview={updateReview}
+            uploadFile={uploadFile}
+          />
+        </SectionRow>
+        <SectionHeader>
+          <Title>Recommendation</Title>
+        </SectionHeader>
+        <SectionRowGrid>
+          <Field name="recommendation" updateReview={updateReview}>
+            {props => (
+              <RecommendationInput
+                journal={journal}
+                updateReview={updateReview}
+                {...props}
+              />
+            )}
+          </Field>
+          <SectionAction key="submit">
+            <Button disabled={!isValid || isSubmitting} primary type="submit">
+              Submit
+            </Button>
+          </SectionAction>
+        </SectionRowGrid>
+      </AdminSection>
+    </form>
+  </Container>
 )
 
 export default ReviewForm
