@@ -9,7 +9,13 @@ import { Container, Section, Heading, Content } from '../style'
 import EditorItem from './sections/EditorItem'
 import OwnerItem from './sections/OwnerItem'
 import ReviewerItem from './sections/ReviewerItem'
-import { Spinner } from '../../../shared'
+import {
+  Spinner,
+  SectionHeader,
+  Title,
+  SectionRow,
+  SectionContent,
+} from '../../../shared'
 
 const updateReviewer = (proxy, { data: { reviewerResponse } }) => {
   const id = reviewerResponse.object.objectId
@@ -66,10 +72,11 @@ const Dashboard = ({ history, ...props }) => {
       {!dashboard.length && <Section>Nothing to do at the moment.</Section>}
       {/* <Authorize object={dashboard} operation="can view my submission section"> */}
       {dashboard.length > 0 ? (
-        <Content>
-          <Section>
-            <Heading>My Submissions</Heading>
-
+        <SectionContent>
+          <SectionHeader>
+            <Title>My Submissions</Title>
+          </SectionHeader>
+          <SectionRow>
             {dashboard.map(submission => (
               <OwnerItem
                 deleteManuscript={() =>
@@ -82,15 +89,17 @@ const Dashboard = ({ history, ...props }) => {
                 version={submission}
               />
             ))}
-          </Section>
-        </Content>
+          </SectionRow>
+        </SectionContent>
       ) : null}
       {/* </Authorize>
       <Authorize object={dashboard} operation="can view review section"> */}
       {dashboard.length > 0 ? (
-        <Content>
-          <Section>
-            <Heading>To review</Heading>
+        <SectionContent>
+          <SectionHeader>
+            <Title>To Review</Title>
+          </SectionHeader>
+          <SectionRow>
             {dashboard.map(review => (
               <ReviewerItem
                 currentUser={currentUser}
@@ -99,24 +108,26 @@ const Dashboard = ({ history, ...props }) => {
                 version={review}
               />
             ))}
-          </Section>
-        </Content>
+          </SectionRow>
+        </SectionContent>
       ) : null}
       {/* </Authorize> */}
 
       {/* <Authorize object={dashboard} operation="can view my manuscripts section"> */}
       {dashboard.length > 0 ? (
-        <Content>
-          <Section>
-            <Heading>My Manuscripts</Heading>
+        <SectionContent>
+          <SectionHeader>
+            <Title>My Manuscripts</Title>
+          </SectionHeader>
+          <SectionRow>
             {dashboard.map(manuscript => (
               <EditorItem
                 key={`manuscript-${manuscript.id}`}
                 version={manuscript}
               />
             ))}
-          </Section>
-        </Content>
+          </SectionRow>
+        </SectionContent>
       ) : null}
       {/* </Authorize> */}
     </Container>

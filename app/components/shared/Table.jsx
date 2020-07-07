@@ -18,12 +18,6 @@ export const PageHeading = styled(Heading)`
   margin-bottom: 1rem;
 `
 
-export const Content = styled.div`
-  box-shadow: ${th('boxShadow')};
-  background-color: ${th('colorBackground')};
-  border-radius: ${th('borderRadius')};
-`
-
 export const Header = styled.thead`
   text-align: left;
   font-variant: all-small-caps;
@@ -34,12 +28,6 @@ export const Header = styled.thead`
   th {
     padding: ${grid(1)} ${grid(3)};
   }
-`
-
-export const Container = styled.div`
-  background: ${th('colorBackgroundHue')};
-  padding: ${grid(2)};
-  overflow-y: scroll;
 `
 
 export const Row = styled.tr`
