@@ -7,19 +7,10 @@ import CurrentVersion from './CurrentVersion'
 import DecisionReviewColumn from './DecisionReviewColumn'
 import { Columns, SubmissionVersion } from './atoms/Columns'
 import FormTemplate from './FormTemplate'
-
-const Wrapper = styled.div`
-  overflow-y: scroll;
-  // font-family: ${th('fontInterface')};
-  // line-height: 1.3;
-  // margin: auto;
-  // max-width: 60em;
-
-  // overflow: ${({ confirming }) => confirming && 'hidden'};
-`
+import { Container, Content } from '../../../shared'
 
 const SubmittedVersionColumns = props => (
-  <Wrapper>
+  <Container>
     <Columns>
       <SubmissionVersion>
         <CurrentVersion
@@ -32,7 +23,7 @@ const SubmittedVersionColumns = props => (
       </SubmissionVersion>
       <DecisionReviewColumn {...props} />
     </Columns>
-  </Wrapper>
+  </Container>
 )
 
 const Submit = ({ journal, manuscript, forms, ...formProps }) => {
@@ -56,25 +47,27 @@ const Submit = ({ journal, manuscript, forms, ...formProps }) => {
 
   decisionSections.push({
     content: (
-      <FormTemplate
-        {...formProps}
-        form={forms}
-        journal={journal}
-        manuscript={manuscript}
-      />
+      <Content>
+        <FormTemplate
+          {...formProps}
+          form={forms}
+          journal={journal}
+          manuscript={manuscript}
+        />
+      </Content>
     ),
     key: manuscript.id,
     label: 'Current Version',
   })
 
   return (
-    <Wrapper>
+    <Container>
       <Tabs
         activeKey={manuscript.id}
         sections={decisionSections}
         title="Versions"
       />
-    </Wrapper>
+    </Container>
   )
 }
 

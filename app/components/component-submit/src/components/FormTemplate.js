@@ -6,19 +6,20 @@ import { FieldArray } from 'formik'
 import * as uiComponents from '@pubsweet/ui'
 import * as validators from 'xpub-validators'
 import { AbstractEditor } from 'xpub-edit'
+import { Section as Container } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
 import Supplementary from './Supplementary'
 import Confirm from './Confirm'
 
-const Wrapper = styled.div`
-  font-family: ${th('fontInterface')};
-  line-height: 1.3;
-  margin: auto;
-  max-width: 60em;
+// const Wrapper = styled.div`
+//   font-family: ${th('fontInterface')};
+//   line-height: 1.3;
+//   margin: auto;
+//   max-width: 60em;
 
-  overflow: ${({ confirming }) => confirming && 'hidden'};
-`
+//   overflow: ${({ confirming }) => confirming && 'hidden'};
+// `
 
 const Intro = styled.div`
   font-style: italic;
@@ -226,7 +227,7 @@ export default ({
   submitSubmission,
   ...props
 }) => (
-  <Wrapper>
+  <Container>
     <Heading1>{form.name}</Heading1>
     <Intro
       dangerouslySetInnerHTML={createMarkup(
@@ -337,5 +338,5 @@ export default ({
         </ModalWrapper>
       )}
     </form>
-  </Wrapper>
+  </Container>
 )
