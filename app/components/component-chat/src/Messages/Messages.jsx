@@ -22,6 +22,7 @@ import {
   Bubble,
   InnerMessageContainer,
   Byline,
+  Placeholder,
 } from './style'
 
 const GET_MESSAGES = gql`
@@ -37,6 +38,9 @@ const GET_MESSAGES = gql`
           username
           profilePicture
           online
+          defaultIdentity {
+            name
+          }
         }
       }
       pageInfo {
@@ -59,6 +63,9 @@ const MESSAGES_SUBSCRIPTION = gql`
         username
         profilePicture
         online
+        defaultIdentity {
+          name
+        }
       }
     }
   }
@@ -214,6 +221,9 @@ const Messages = ({ channelId }) => {
           Show previous messages
         </NextPageButton>
       )}
+      {messages && !messages.length && (
+        <Placeholder>No discussion for this manuscript yet. Start by typing a message below.</Placeholder>
+      )}
       {messages.map(group => {
         const initialMessage = group[0]
         if (
@@ -239,7 +249,7 @@ const Messages = ({ channelId }) => {
                   {index === 0 && <UserAvatar user={message.user} />}
                 </GutterContainer>
                 <InnerMessageContainer>
-                  {index === 0 && <Byline>{message.user.username}</Byline>}
+                  {index === 0 && <Byline>{message.user.defaultIdentity.name}</Byline>}
                   <Bubble>
                     <MessageRenderer message={message} />
                   </Bubble>

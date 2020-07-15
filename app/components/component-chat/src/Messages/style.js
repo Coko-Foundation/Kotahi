@@ -138,3 +138,11 @@ export const EmbedComponent = styled.iframe`
   height: 100%;
   width: 100%;
 `
+
+export const Placeholder = styled.div`
+  display: grid;
+  place-items: center;
+  color: ${th('colorTextPlaceholder')};
+  height: 100%;
+  padding: 4em;
+`
