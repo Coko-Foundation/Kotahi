@@ -4,7 +4,7 @@
   "./server/model-manuscript/src/",
   "./server/model-file/src/",
   "./server/component-xpub-review-backend/src/",
-  "./server/review/src/",
+  "./server/model-review/src/",
   "./server/formbuilder/src/",
   "@pubsweet/job-xsweet",
   "./server/model-channel",
