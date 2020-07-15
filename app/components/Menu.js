@@ -1,11 +1,11 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
-import { override, th, grid, darken } from '@pubsweet/ui-toolkit'
+import { override, th, grid, darken, lighten } from '@pubsweet/ui-toolkit'
 
 import { Icon, Action } from '@pubsweet/ui'
 import { UserAvatar } from '../components/component-avatar/src'
-import { Link } from 'react-router-dom'
+import { Link, useHistory } from 'react-router-dom'
 
 const Root = styled.nav`
   grid-area: menu;
@@ -14,8 +14,13 @@ const Root = styled.nav`
   // align-items: center;
   // justify-content: space-between;
   border-right: 1px solid ${th('colorFurniture')};
+  // background: ${th('colorPrimary')};
+  // background: linear-gradient(45deg, #191654, #43C6AC);
+  background: linear-gradient(134deg, ${th('colorPrimary')}, ${lighten(
+  'colorPrimary',
+  0.3,
+)});
   max-height: 100vh;
-  // ${override('ui.AppBar')};
 `
 
 const Section = styled.div`
@@ -52,31 +57,36 @@ const Item = styled(NavItem)`
 
   display: flex;
   align-items: center;
-  color: ${darken('colorSecondary', 0.5)};
+  color: ${th('colorTextReverse')};
 
   &:hover {
     color: ${th('colorText')};
     stroke: ${th('colorText')};
-    background-color: ${th('colorBackgroundHue')};
+    background-color: ${lighten('colorPrimary', 0.5)};
+    svg {
+      stroke: ${th('colorText')};
+
+    }
   }
 
   svg {
     &:hover {
-
     }
     width: 1em;
-    stroke: ${darken('colorSecondary', 0.5)};
+    stroke: ${th('colorTextReverse')};
   }
 
   ${props =>
     props.active &&
     css`
-      background-color: ${th('colorFurniture')};
+      background-color: ${lighten('colorBackgroundHue', 0)};
       color: ${th('colorText')};
-
       &:hover {
         background-color: ${th('colorFurniture')};
         color: ${th('colorText')};
+      }
+      svg {
+        stroke: ${th('colorText')};
       }
     `}
   // align-items: center;
@@ -84,13 +94,18 @@ const Item = styled(NavItem)`
   // margin: calc(${th('gridUnit')} * 3) 1rem calc(${th('gridUnit')} * 3) 0;
 `
 
-const UserItem = styled.a`
+const UserItem = styled(Link)`
   // height: ${grid(5)};
-  line-height: ${grid(4)};
+  // line-height: ${grid(2)};
+  color: ${th('colorTextReverse')};
   display: flex;
   padding-bottom: ${grid(2)};
   // margin-bottom: ${grid(2)};
   // border-bottom: 1px solid ${th('colorFurniture')};
+`
+
+const UserInfo = styled.div`
+  margin-left: ${grid(1)};
 `
 
 const Menu = ({ className, loginLink = '/login', navLinkComponents, user }) => (
@@ -113,11 +128,13 @@ const Menu = ({ className, loginLink = '/login', navLinkComponents, user }) => (
 const UserComponent = ({ user, loginLink }) => (
   <Section>
     {user && (
-      <UserItem href="/journal/profile">
-        <UserAvatar user={user} />
-        {user.defaultIdentity.name || user.username}
-        {/* ({user.username}) */}
-        {user.admin ? ' (admin)' : ''}
+      <UserItem to="/journal/profile">
+        <UserAvatar user={user} size={64} />
+        <UserInfo>
+          {user.defaultIdentity.name || user.username}
+          {/* ({user.username}) */}
+          {user.admin ? ' (admin)' : ''}
+        </UserInfo>
       </UserItem>
     )}
     {!user && <Item name="Login" link={loginLink} />}

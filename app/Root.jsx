@@ -14,6 +14,7 @@ import {
   IntrospectionFragmentMatcher,
 } from 'apollo-cache-inmemory'
 import { createUploadLink } from 'apollo-upload-client'
+import GlobalStyle from './theme/elements/GlobalStyle'
 
 import introspectionQueryResultData from './fragmentTypes.json'
 
@@ -98,7 +99,10 @@ const Root = ({
       client={makeApolloClient(makeApolloConfig, connectToWebSocket)}
     >
       <BrowserRouter>
-        <ThemeProvider theme={theme}>{routes}</ThemeProvider>
+        <ThemeProvider theme={theme}>
+          <GlobalStyle />
+          {routes}
+        </ThemeProvider>
       </BrowserRouter>
     </ApolloProvider>
   </div>

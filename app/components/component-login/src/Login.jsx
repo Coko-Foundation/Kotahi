@@ -3,10 +3,10 @@ import { Redirect } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { withFormik } from 'formik'
 import config from 'config'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid, lighten } from '@pubsweet/ui-toolkit'
 import { CenteredColumn, H1, Button } from '@pubsweet/ui'
 import styled from 'styled-components'
-import { Container, Content, Section } from '../../shared'
+import { Section } from '../../shared'
 
 const getNextUrl = () => {
   const url = new URL(window.location.href)
@@ -48,21 +48,33 @@ const getToken = props => {
   return null
 }
 
-const LoginLink = styled.a`
-  display: inline-block;
-  background: ${th('colorPrimary')};
-  border-radius: ${th('borderRadius')};
-  line-height: ${grid(4)};
-  color: ${th('colorTextReverse')};
-
-  padding: ${grid(1)} ${grid(2)};
-  margin-bottom: ${grid(1)};
+const LoginButton = styled(Button)`
+  display: block;
   margin-top: ${grid(3)};
+  width: 100%;
 `
 
-const CenteredSection = styled(Section)`
-  text-align: center;
+// TODO: Shared?
+const Container = styled.div`
+  background: linear-gradient(134deg, ${th('colorPrimary')}, ${lighten('colorPrimary', 0.3)});
+  height: 100vh;
+  display: grid;
+  place-items: center;
 `
+
+const Content = styled.div`
+  border-radius: ${th('borderRadius')};
+  box-shadow: ${th('boxShadow')};
+  padding: ${grid(4)};
+  max-width: 30em;
+  background: ${th('colorBackground')};
+  text-align: center;
+
+  h1 {
+    margin-bottom: ${grid(2)};
+  }
+`
+
 
 const ORCIDIcon = ({className}) => (
   <span className={className}>
@@ -91,48 +103,8 @@ const StyledORCIDIcon = styled(ORCIDIcon)`
     height: 1rem;
   }
 `
-const Login = ({ logo = null, redirectLink, orcid, token, ...props }) => {
-  if (token) {
-    window.localStorage.setItem('token', token)
-    return <Redirect to={redirectLink} />
-  }
 
-  return redirectLink ? (
-    <Redirect to={redirectLink} />
-  ) : (
-    <Container>
-      <H1>Login to SimpleJ</H1>
-      <Content>
-      <CenteredSection>
-
-          SimpleJ uses ORCID <StyledORCIDIcon /> to identify authors and staff. Login with your
-          ORCID account below or{' '}
-          <a href="https://orcid.org/signin">register at the ORCID website.</a>
-        <LoginLink href="/auth/orcid" primary>
-          Login with ORCID
-        </LoginLink>
-        </CenteredSection>
-
-      </Content>
-
-    </Container>
-  )
-}
-
-const EnhancedFormik = withFormik({
-  initialValues: {
-    username: '',
-    password: '',
-  },
-  mapPropsToValues: props => ({
-    username: props.username,
-    password: props.password,
-  }),
-  displayName: 'login',
-  handleSubmit,
-})(Login)
-
-export default props => {
+const Login = ({ logo = null, ...props }) => {
   // Is ORCID authentication enabled?
   const orcid =
     config['pubsweet-component-login'] &&
@@ -146,13 +118,28 @@ export default props => {
   // Also set the redirect link upon successful login (via handleSubmit)
   const onLoggedIn = () => setRedirectLink(getNextUrl())
 
-  return (
-    <EnhancedFormik
-      onLoggedIn={onLoggedIn}
-      orcid={orcid}
-      redirectLink={redirectLink}
-      token={token}
-      {...props}
-    />
+  if (token) {
+    window.localStorage.setItem('token', token)
+    return <Redirect to={redirectLink} />
+  }
+
+  return redirectLink ? (
+    <Redirect to={redirectLink} />
+  ) : (
+    <Container>
+      <Content>
+      <H1>Login to Kotahi</H1>
+
+          Kotahi uses ORCID <StyledORCIDIcon /> to identify authors and staff. Login with your
+          ORCID account below or{' '}
+          <a href="https://orcid.org/signin">register at the ORCID website.</a>
+        <LoginButton onClick={() => window.location = "/auth/orcid"} primary>
+          Login with ORCID
+        </LoginButton>
+      </Content>
+
+    </Container>
   )
 }
+
+export default Login
