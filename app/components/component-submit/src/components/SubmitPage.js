@@ -221,7 +221,7 @@ export default compose(
             input: JSON.stringify(updateManuscript),
           },
         }).then(() => {
-          history.push('/dashboard')
+          history.push('/journal/dashboard')
         })
       },
     }),
