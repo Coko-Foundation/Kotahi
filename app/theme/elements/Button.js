@@ -35,4 +35,9 @@ export default css`
   font-weight: 500;
   ${props => !props.primary && secondary};
   border: none;
+
+  &:focus,
+  &:hover {
+    background-color: ${darken('colorPrimary', -0.2)};
+  }
 `

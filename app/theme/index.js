@@ -17,7 +17,7 @@ const cokoTheme = {
   /* Colors */
   colorBackground: 'white',
   colorSecondaryBackground: '#f9fafb', // custom
-  colorPrimary: '#0B65CB',
+  colorPrimary: '#0D83DD',
   colorSecondary: '#9e9e9e',
   colorFurniture: '#E8E8E8',
   colorBorder: '#AAA',
@@ -74,7 +74,7 @@ const cokoTheme = {
 
   /* Shadow (for tooltip) */
   boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
-  boxShadow: '4px 4px 16px #cdcdcd',
+  // boxShadow: '4px 4px 16px #cdcdcd',
   /* Transition */
   transitionDuration: '0.2s', // TODO -- julien: not 0.05s
   transitionTimingFunction: 'ease',

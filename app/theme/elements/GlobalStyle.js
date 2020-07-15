@@ -43,4 +43,7 @@ text-decoration: none;
 text-rendering: optimizeLegibility;
 }
 
+a {
+  color: ${th('colorPrimary')};
+}
 `
