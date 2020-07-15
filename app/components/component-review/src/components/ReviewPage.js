@@ -328,7 +328,7 @@ export default ({ match, ...props }) => {
         },
       },
     }).then(() => {
-      history.push('/journal/home')
+      history.push('/journal/dashboard')
     })
   }
 

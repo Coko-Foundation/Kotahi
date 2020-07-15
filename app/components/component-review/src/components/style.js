@@ -75,6 +75,9 @@ export const Container = styled.div`
   background-color: ${th('colorBackground')};
   border-radius: ${th('borderRadius')};
   // padding: ${grid(2)} ${grid(3)};
+  &:not(:first-of-type) {
+    margin-top: ${grid(4)};
+  }
 `
 
 export {

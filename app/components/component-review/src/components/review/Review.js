@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { NoteViewer } from 'xpub-edit'
 import { Attachment } from '@pubsweet/ui'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import { getCommentFiles } from './util'
 
 const Heading = styled.div``
@@ -12,7 +12,9 @@ const Note = styled.div`
 `
 const Recommendation = styled(Note)``
 const Content = styled.div``
-
+const Container = styled.div`
+  margin-top: ${grid(3)};
+`
 // Due to migration to new Data Model
 // Attachement component needs different data structure to work
 // needs to change the pubsweet ui Attachement to support the new Data Model
@@ -42,7 +44,7 @@ const ReviewComments = (review, type) => (
 )
 
 const Review = ({ review }) => (
-  <div>
+  <Container>
     {findComments(review, 'note') && (
       <div>
         <Heading>Note</Heading>
@@ -64,7 +66,7 @@ const Review = ({ review }) => (
         <Recommendation>{review.recommendation}</Recommendation>
       </div>
     )}
-  </div>
+  </Container>
 )
 
 export default Review
