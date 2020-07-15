@@ -20,28 +20,14 @@ export {
   CaretDown,
   Spinner,
   Pagination,
+  SuccessStatus,
+  ErrorStatus,
+  NormalStatus,
+  StatusBadge,
 } from '../../shared'
 
 // TODO: Extract common above
 // Specific
-
-const Status = styled.span`
-  border-radius: 8px;
-  font-variant: all-small-caps;
-  padding: ${grid(0.5)} ${grid(1)};
-`
-export const SuccessStatus = styled(Status)`
-  background-color: ${th('colorSuccess')};
-`
-
-export const ErrorStatus = styled(Status)`
-  background-color: ${th('colorError')};
-`
-
-export const NormalStatus = styled(Status)`
-  background-color: ${th('colorWarning')};
-  // color: ${th('colorTextReverse')};
-`
 
 export const UserAction = styled(Action)`
   font-size: inherit;
