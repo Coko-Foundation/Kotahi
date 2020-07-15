@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 
 const Root = styled.div`
-  font-size: ${th('fontSizeHeading4')};
+  // font-size: ${th('fontSizeHeading4')};
   line-height: ${th('lineHeightHeading4')};
 `
 

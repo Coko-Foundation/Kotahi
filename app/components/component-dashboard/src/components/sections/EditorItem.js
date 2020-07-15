@@ -3,8 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 import { Action, ActionGroup } from '@pubsweet/ui'
-import { Item, Header, Body } from '../../style'
-import Status from '../Status'
+import { Item, Header, Body, StatusBadge } from '../../style'
 import Meta from '../metadata/Meta'
 import MetadataSections from '../metadata/MetadataSections'
 import MetadataType from '../metadata/MetadataType'
@@ -61,9 +60,9 @@ const getSubmitedDate = version =>
 
 const EditorItem = ({ version }) => (
   // <Authorize object={[version]} operation="can view my manuscripts section">
-  <Item>
-    <Header>
-      <Status status={version.status} />
+  <>
+    <Item>
+      <StatusBadge minimal status={version.status} />
       <Meta>
         <MetadataStreamLined
           streamlinedReview={getDeclarationsObject(
@@ -83,16 +82,16 @@ const EditorItem = ({ version }) => (
           openPeerReview={getDeclarationsObject(version, 'openPeerReview')}
         />
       </Meta>
-    </Header>
-    <Body>
+    </Item>
+    <Item>
       <VersionTitleLink id={version.id} page="decisions" version={version}>
         <VersionTitle version={version} />
       </VersionTitleLink>
       <EditorItemLinks version={version} />
-    </Body>
-
+    </Item>
     <Reviews version={version} />
-  </Item>
+  </>
+
   // </Authorize>
 )
 

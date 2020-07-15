@@ -49,59 +49,57 @@ const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
     //   operation="can view review section"
     // >
     <Item>
-      <Body>
-        <VersionTitle version={version} />
+      <VersionTitle version={version} />
 
-        {(status === 'accepted' || status === 'completed') && (
-          <Links>
-            <LinkContainer>
-              <JournalLink id={version.id} page="reviews" version={version}>
-                {status === 'completed' ? 'Completed' : 'Do Review'}
-              </JournalLink>
-            </LinkContainer>
-          </Links>
-        )}
+      {(status === 'accepted' || status === 'completed') && (
+        <Links>
+          <LinkContainer>
+            <JournalLink id={version.id} page="reviews" version={version}>
+              {status === 'completed' ? 'Completed' : 'Do Review'}
+            </JournalLink>
+          </LinkContainer>
+        </Links>
+      )}
 
-        {status === 'invited' && (
-          <Actions>
-            <ActionContainer>
-              <Button
-                data-testid="accept-review"
-                onClick={() => {
-                  reviewerRespond({
-                    variables: {
-                      currentUserId: currentUser.id,
-                      action: 'accepted',
-                      teamId: team.id,
-                    },
-                  })
-                }}
-              >
-                accept
-              </Button>
-            </ActionContainer>
+      {status === 'invited' && (
+        <Actions>
+          <ActionContainer>
+            <Button
+              data-testid="accept-review"
+              onClick={() => {
+                reviewerRespond({
+                  variables: {
+                    currentUserId: currentUser.id,
+                    action: 'accepted',
+                    teamId: team.id,
+                  },
+                })
+              }}
+            >
+              accept
+            </Button>
+          </ActionContainer>
 
-            <Divider separator="|" />
+          <Divider separator="|" />
 
-            <ActionContainer>
-              <Button
-                onClick={() => {
-                  reviewerRespond({
-                    variables: {
-                      currentUserId: currentUser.id,
-                      action: 'rejected',
-                      teamId: team.id,
-                    },
-                  })
-                }}
-              >
-                reject
-              </Button>
-            </ActionContainer>
-          </Actions>
-        )}
-        {status === 'rejected' && 'rejected'}
-      </Body>
+          <ActionContainer>
+            <Button
+              onClick={() => {
+                reviewerRespond({
+                  variables: {
+                    currentUserId: currentUser.id,
+                    action: 'rejected',
+                    teamId: team.id,
+                  },
+                })
+              }}
+            >
+              reject
+            </Button>
+          </ActionContainer>
+        </Actions>
+      )}
+      {status === 'rejected' && 'rejected'}
     </Item>
     // </Authorize>
   )

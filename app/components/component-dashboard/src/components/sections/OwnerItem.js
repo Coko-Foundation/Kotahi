@@ -4,17 +4,10 @@ import { pickBy } from 'lodash'
 import { Action, ActionGroup } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 
-import { Item, Header, Body } from '../../style'
-import Status from '../Status'
+import { Item, Header, Body, StatusBadge } from '../../style'
 import VersionTitle from './VersionTitle'
 
 const OwnerItem = ({ version, journals, deleteManuscript }) => {
-  const itemHeader = (
-    <Header>
-      <Status status={version.status} />
-    </Header>
-  )
-
   const baseLink = `/journal/versions/${version.id}`
   const submitLink = `${baseLink}/submit`
   const manuscriptLink = `${baseLink}/manuscript`
@@ -53,18 +46,15 @@ const OwnerItem = ({ version, journals, deleteManuscript }) => {
     // </Authorize>
   )
 
-  const body = (
-    <Body>
-      <VersionTitle version={version} />
-      {actions}
-    </Body>
-  )
-
   return (
     // <Authorize object={[version]} operation="can view my submission section">
     <Item>
-      {itemHeader}
-      {body}
+      <div>
+        {' '}
+        <StatusBadge minimal status={version.status} />
+        <VersionTitle version={version} />
+      </div>
+      {actions}
     </Item>
     // </Authorize>
   )

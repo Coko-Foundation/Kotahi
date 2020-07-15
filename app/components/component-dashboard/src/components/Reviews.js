@@ -7,10 +7,9 @@ import { th } from '@pubsweet/ui-toolkit'
 
 const Root = styled.div`
   display: inline-flex;
-  justify-content: flex-end;
+  // justify-content: flex-end;
   margin-bottom: 0.6em;
   margin-top: 0.3em;
-  padding-left: 1.5em;
 
   font-family: ${th('fontReviewer')};
   font-size: 0.9em;

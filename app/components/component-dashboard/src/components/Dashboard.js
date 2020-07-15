@@ -1,11 +1,17 @@
 import React from 'react'
 import { useQuery, useMutation } from '@apollo/react-hooks'
-import { Action, Button } from '@pubsweet/ui'
+import { Action, Button, Icon } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 
 import queries from '../graphql/queries/'
 import mutations from '../graphql/mutations/'
-import { Container, Section, Heading, Content } from '../style'
+import {
+  Container,
+  Section,
+  Heading,
+  Content,
+  HeadingWithAction,
+} from '../style'
 import EditorItem from './sections/EditorItem'
 import OwnerItem from './sections/OwnerItem'
 import ReviewerItem from './sections/ReviewerItem'
@@ -65,9 +71,12 @@ const Dashboard = ({ history, ...props }) => {
 
   return (
     <Container>
-      <Button onClick={() => history.push('/journal/newSubmission')} primary>
-        New submission
-      </Button>
+      <HeadingWithAction>
+        <Heading>Dashboard</Heading>
+        <Button onClick={() => history.push('/journal/newSubmission')} primary>
+          {/* <Icon>plus</Icon> */}＋ New submission
+        </Button>
+      </HeadingWithAction>
 
       {!dashboard.length && <Section>Nothing to do at the moment.</Section>}
       {/* <Authorize object={dashboard} operation="can view my submission section"> */}
@@ -76,8 +85,8 @@ const Dashboard = ({ history, ...props }) => {
           <SectionHeader>
             <Title>My Submissions</Title>
           </SectionHeader>
-          <SectionRow>
-            {dashboard.map(submission => (
+          {dashboard.map(submission => (
+            <SectionRow key={`submission-${submission.id}`}>
               <OwnerItem
                 deleteManuscript={() =>
                   // eslint-disable-next-line no-alert
@@ -85,11 +94,10 @@ const Dashboard = ({ history, ...props }) => {
                     'Are you sure you want to delete this submission?',
                   ) && deleteManuscript({ variables: { id: submission.id } })
                 }
-                key={`submission-${submission.id}`}
                 version={submission}
               />
-            ))}
-          </SectionRow>
+            </SectionRow>
+          ))}
         </SectionContent>
       ) : null}
       {/* </Authorize>
@@ -99,16 +107,17 @@ const Dashboard = ({ history, ...props }) => {
           <SectionHeader>
             <Title>To Review</Title>
           </SectionHeader>
-          <SectionRow>
-            {dashboard.map(review => (
+
+          {dashboard.map(review => (
+            <SectionRow key={review.id}>
               <ReviewerItem
                 currentUser={currentUser}
                 key={review.id}
                 reviewerRespond={reviewerRespond}
                 version={review}
               />
-            ))}
-          </SectionRow>
+            </SectionRow>
+          ))}
         </SectionContent>
       ) : null}
       {/* </Authorize> */}
@@ -117,16 +126,13 @@ const Dashboard = ({ history, ...props }) => {
       {dashboard.length > 0 ? (
         <SectionContent>
           <SectionHeader>
-            <Title>My Manuscripts</Title>
+            <Title>Manuscripts I'm editor of</Title>
           </SectionHeader>
-          <SectionRow>
-            {dashboard.map(manuscript => (
-              <EditorItem
-                key={`manuscript-${manuscript.id}`}
-                version={manuscript}
-              />
-            ))}
-          </SectionRow>
+          {dashboard.map(manuscript => (
+            <SectionRow key={`manuscript-${manuscript.id}`}>
+              <EditorItem version={manuscript} />
+            </SectionRow>
+          ))}
         </SectionContent>
       ) : null}
       {/* </Authorize> */}

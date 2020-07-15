@@ -1,8 +1,6 @@
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 
-// TODO -- why two divs?
-
 export { Container, Section, Content } from '../../shared'
 const Actions = styled.div``
 
@@ -13,6 +11,8 @@ const ActionContainer = styled.div`
 export { Actions, ActionContainer }
 
 const Item = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
   margin-bottom: calc(${th('gridUnit') * 4});
 `
 
@@ -65,7 +65,14 @@ const Heading = styled.div`
   font-family: ${th('fontReading')};
   font-size: ${th('fontSizeHeading3')};
   line-height: ${th('lineHeightHeading3')};
-  margin: 0 0 ${grid(3)} 0;
 `
 
 export { Page, Heading }
+
+export const HeadingWithAction = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+`
+
+export { StatusBadge } from '../../shared'
