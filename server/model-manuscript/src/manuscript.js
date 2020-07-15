@@ -54,15 +54,6 @@ class Manuscript extends BaseModel {
       })
       .eager('members')
 
-    // const { rows } = await db.raw(
-    //   `SELECT id, data FROM entities WHERE ${where.join(' AND ')}`,
-    //   Object.values(selector),
-    // )
-
-    // const myTeams = rows.map(
-    //   result => new Team({ id: result.id, ...result.data }),
-    // )
-
     return myTeams
   }
 
@@ -84,8 +75,12 @@ class Manuscript extends BaseModel {
     const { File } = require('@pubsweet/models')
 
     const id = this.parentId || this.id
-    const manuscripts = await Manuscript.findByField('parent_id', id)
-    const firstManuscript = await Manuscript.findOneByField('id', id)
+    const manuscripts = await Manuscript.query()
+      .where('parent_id', id)
+      .eager('[teams, teams.members, reviews]')
+    const firstManuscript = await Manuscript.query()
+      .findById(id)
+      .eager('[teams, teams.members, reviews]')
     manuscripts.push(firstManuscript)
 
     const manuscriptVersionsArray = manuscripts.filter(
@@ -101,8 +96,6 @@ class Manuscript extends BaseModel {
 
     await Promise.all(
       manuscriptVersions.map(async manuscript => {
-        manuscript.reviews = await manuscript.getReviews()
-        manuscript.teams = await manuscript.getTeams()
         manuscript.files = await File.findByObject({
           object: 'Manuscript',
           object_id: manuscript.id,
@@ -117,8 +110,10 @@ class Manuscript extends BaseModel {
   async createNewVersion() {
     const { Team, File } = require('@pubsweet/models')
 
-    const manuscriptReviews = await this.getReviews()
-    const manuscriptTeams = await this.getTeams()
+    const manuscriptReviews = (await this.$query().eager('reviews')).reviews
+    const manuscriptTeams = (
+      await this.$query().eager('[teams, teams.members]')
+    ).teams
     const teams = manuscriptTeams.filter(
       team =>
         team.role === 'author' ||
@@ -169,6 +164,57 @@ class Manuscript extends BaseModel {
     )
 
     return this
+  }
+
+  static get relationMappings() {
+    const { Channel, User, Team, Review } = require('@pubsweet/models')
+
+    return {
+      submitter: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: User,
+        join: {
+          from: 'manuscripts.submitterId',
+          to: 'users.id',
+        },
+      },
+      channels: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: Channel,
+        join: {
+          from: 'manuscripts.id',
+          to: 'channels.manuscriptId',
+        },
+      },
+      teams: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: Team,
+        beforeInsert(model) {
+          model.objectType = 'Manuscript'
+        },
+        filter: { objectType: 'Manuscript' },
+        join: {
+          from: 'manuscripts.id',
+          to: 'teams.objectId',
+        },
+      },
+      reviews: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: Review,
+        join: {
+          from: 'manuscripts.id',
+          to: 'reviews.manuscriptId',
+        },
+      },
+      parent: {
+        relation: BaseModel.HasOneRelation,
+        modelClass: Manuscript,
+        join: {
+          from: 'manuscripts.id',
+          to: 'manuscripts.parentId',
+        },
+      },
+    }
   }
 
   static get schema() {
@@ -249,6 +295,7 @@ class Manuscript extends BaseModel {
           },
         },
         submission: {},
+        submitterId: { type: ['string', 'null'], format: 'uuid' },
       },
     }
   }

@@ -17,7 +17,7 @@ const checking = keyframes`
 `
 export default {
   Root: css`
-    transition: all ${th('transitionDuration')};
+    // transition: all ${th('transitionDuration')};
 
     &:hover {
       span {
@@ -58,13 +58,20 @@ export default {
     }
   `,
   Input: css`
+    clip: rect(0,0,0,0);
+    overflow: hidden;
+    height: 1px;
+    width: 1px;
+    white-space: nowrap;
     position: absolute;
-    opacity: 0;
-    z-index: -1;
+    margin: -1px;
+    // position: absolute;
+    // opacity: 0;
+    // z-index: -1;
 
     &:focus + span:before {
-      box-shadow: 0 0 ${th('borderWidth')} calc(${th('borderWidth')} * 2)
-        ${th('colorPrimary')};
+      // box-shadow: 0 0 ${th('borderWidth')} calc(${th('borderWidth')} * 2)
+      //   ${th('colorPrimary')};
     }
   `,
 }

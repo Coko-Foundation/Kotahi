@@ -1,0 +1,27 @@
+{
+  "name": "@pubsweet/model-team",
+  "version": "2.2.1",
+  "description": "A basic Team model",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adam Hyde",
+  "license": "MIT",
+  "dependencies": {
+    "@pubsweet/base-model": "^3.5.2",
+    "@pubsweet/logger": "^0.2.36",
+    "@pubsweet/models": "^0.3.1"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "@pubsweet/model-user": ">=2.0.0",
+    "@pubsweet/models": ">=0.1.3",
+    "config": ">=3.0.1",
+    "lodash": ">=4.17.11",
+    "pubsweet-server": ">=11.0.0"
+  },
+  "gitHead": "86193e110389e1c8dbb241c07495c5c79179aa6f"
+}

@@ -19,16 +19,25 @@ const secondary = css`
 
   &[disabled] {
     color: ${th('colorTextPlaceholder')};
-
+    cursor: default;
     &:hover {
       background: none;
+    }
+    &:hover:before {
+      visibility: hidden;
     }
   }
 `
 
 export default css`
-  line-height: calc(${th('gridUnit')} * 4);
+  line-height: calc(${th('gridUnit')} * 3);
   min-width: calc(${th('gridUnit')} * 16);
-  text-transform: uppercase;
+  font-weight: 500;
   ${props => !props.primary && secondary};
+  border: none;
+
+  &:focus,
+  &:hover {
+    background-color: ${darken('colorPrimary', -0.2)};
+  }
 `

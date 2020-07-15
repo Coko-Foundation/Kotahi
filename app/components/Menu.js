@@ -1,19 +1,26 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
-import { override, th } from '@pubsweet/ui-toolkit'
+import { override, th, grid, darken, lighten } from '@pubsweet/ui-toolkit'
 
 import { Icon, Action } from '@pubsweet/ui'
+import { UserAvatar } from '../components/component-avatar/src'
+import { Link, useHistory } from 'react-router-dom'
 
-// #region styled-components
 const Root = styled.nav`
   grid-area: menu;
-  padding: calc(${th('gridUnit')} * 2);
+  padding: ${grid(2)};
   // display: flex;
   // align-items: center;
   // justify-content: space-between;
+  border-right: 1px solid ${th('colorFurniture')};
+  // background: ${th('colorPrimary')};
+  // background: linear-gradient(45deg, #191654, #43C6AC);
+  background: linear-gradient(134deg, ${th('colorPrimary')}, ${lighten(
+  'colorPrimary',
+  0.3,
+)});
   max-height: 100vh;
-  ${override('ui.AppBar')};
 `
 
 const Section = styled.div`
@@ -22,7 +29,7 @@ const Section = styled.div`
 `
 
 const Logo = styled.span`
-  // margin: calc(${th('gridUnit')} * 2) 1rem calc(${th('gridUnit')} * 2) 1rem;
+  // margin: ${grid(2)} 1rem ${grid(2)} 1rem;
 
   ${override('ui.AppBar.Logo')};
 `
@@ -35,71 +42,106 @@ const LogoLink = styled(Action)`
   ${override('ui.AppBar.LogoLink')};
 `
 
-const Item = styled.div`
+const NavItem = ({ className, link, name, icon }) => (
+  <Link className={className} to={link}>
+    <Icon>{icon}</Icon>
+    {name}
+  </Link>
+)
+
+const Item = styled(NavItem)`
+  border-radius: 10px;
+  padding-left: ${grid(1)};
+  height: ${grid(5)};
+  line-height: ${grid(3)};
+
+  display: flex;
+  align-items: center;
+  color: ${th('colorTextReverse')};
+
+  &:hover {
+    color: ${th('colorText')};
+    stroke: ${th('colorText')};
+    background-color: ${lighten('colorPrimary', 0.5)};
+    svg {
+      stroke: ${th('colorText')};
+
+    }
+  }
+
+  svg {
+    &:hover {
+    }
+    width: 1em;
+    stroke: ${th('colorTextReverse')};
+  }
+
+  ${props =>
+    props.active &&
+    css`
+      background-color: ${lighten('colorBackgroundHue', 0)};
+      color: ${th('colorText')};
+      &:hover {
+        background-color: ${th('colorFurniture')};
+        color: ${th('colorText')};
+      }
+      svg {
+        stroke: ${th('colorText')};
+      }
+    `}
   // align-items: center;
   // display: inline-flex;
   // margin: calc(${th('gridUnit')} * 3) 1rem calc(${th('gridUnit')} * 3) 0;
 `
-// #endregion
 
-const AppBar = ({
-  brandLink = '/',
-  brand,
-  className,
-  loginLink = '/login',
-  onLogoutClick,
-  navLinkComponents,
-  user,
-}) => (
+const UserItem = styled(Link)`
+  // height: ${grid(5)};
+  // line-height: ${grid(2)};
+  color: ${th('colorTextReverse')};
+  display: flex;
+  padding-bottom: ${grid(2)};
+  // margin-bottom: ${grid(2)};
+  // border-bottom: 1px solid ${th('colorFurniture')};
+`
+
+const UserInfo = styled.div`
+  margin-left: ${grid(1)};
+`
+
+const Menu = ({ className, loginLink = '/login', navLinkComponents, user }) => (
   <Root className={className}>
     <Section>
-      {brand && (
-        <Logo>
-          <LogoLink to={brandLink}>{brand}</LogoLink>
-        </Logo>
-      )}
-      <UserComponent
-        loginLink={loginLink}
-        onLogoutClick={onLogoutClick}
-        user={user}
-      />
+      <UserComponent loginLink={loginLink} user={user} />
 
       {navLinkComponents &&
-        navLinkComponents.map((NavLinkComponent, idx) => (
-          <span key={NavLinkComponent.props.to}>
-            <Item>{NavLinkComponent}</Item>
-          </span>
+        navLinkComponents.map((navInfo, idx) => (
+          <Item
+            {...navInfo}
+            active={window.location.pathname === navInfo.link}
+            key={navInfo.link}
+          />
         ))}
     </Section>
   </Root>
 )
 
-const UserComponent = ({ user, onLogoutClick, loginLink }) => (
+const UserComponent = ({ user, loginLink }) => (
   <Section>
     {user && (
-      <Item>
-        <Icon size={2}>user</Icon>
-        {user.username}
-        {user.admin ? ' (admin)' : ''}
-      </Item>
+      <UserItem to="/journal/profile">
+        <UserAvatar user={user} size={64} />
+        <UserInfo>
+          {user.defaultIdentity.name || user.username}
+          {/* ({user.username}) */}
+          {user.admin ? ' (admin)' : ''}
+        </UserInfo>
+      </UserItem>
     )}
-
-    {user && (
-      <Item>
-        {/* <Icon size={2}>power</Icon> */}
-        <Action onClick={onLogoutClick}>Logout</Action>
-      </Item>
-    )}
-
-    {!user && (
-      <Item>
-        <Action to={loginLink}>Login</Action>
-      </Item>
-    )}
+    {!user && <Item name="Login" link={loginLink} />}
   </Section>
 )
 
-AppBar.propTypes = {
+Menu.propTypes = {
   brandLink: PropTypes.string,
   brand: PropTypes.node,
   loginLink: PropTypes.string,
@@ -108,4 +150,4 @@ AppBar.propTypes = {
   navLinkComponents: PropTypes.arrayOf(PropTypes.element),
 }
 
-export default AppBar
+export default Menu

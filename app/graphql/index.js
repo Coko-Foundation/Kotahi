@@ -1,3 +1,5 @@
+// TODO: Combine this with app/queries/index
+
 import gql from 'graphql-tag'
 
 export default {
@@ -7,6 +9,11 @@ export default {
         id
         username
         admin
+        profilePicture
+        defaultIdentity {
+          aff
+          name
+        }
       }
     }
   `,

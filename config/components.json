@@ -1,13 +1,14 @@
 [
-  "@pubsweet/model-team",
-  "@pubsweet/model-user",
-  "./server/model-journal/src/",
+  "./server/model-team",
+  "./server/model-user",
   "./server/model-manuscript/src/",
   "./server/model-file/src/",
   "./server/component-xpub-review-backend/src/",
-  "./server/review/src/",
+  "./server/model-review/src/",
   "./server/formbuilder/src/",
-  "./server/teamMember/src/",
   "@pubsweet/job-xsweet",
-  "@pubsweet/component-password-reset-server"
+  "./server/model-channel",
+  "./server/model-message",
+  "./server/profile-upload",
+  "./server/auth-orcid"
 ]

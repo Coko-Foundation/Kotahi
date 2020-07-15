@@ -1,0 +1,27 @@
+{
+  "name": "@pubsweet/model-user-time0",
+  "version": "5.1.12",
+  "description": "A basic User model",
+  "main": "src/index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Adam Hyde",
+  "license": "MIT",
+  "dependencies": {
+    "@pubsweet/base-model": "^3.6.2",
+    "@pubsweet/errors": "^2.0.32",
+    "@pubsweet/logger": "^0.2.42",
+    "@pubsweet/models": "^0.3.7",
+    "bcrypt": "^3.0.6"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "peerDependencies": {
+    "config": ">=3.0.1",
+    "lodash": ">=4.17.11",
+    "pubsweet-server": ">=11.0.0"
+  },
+  "gitHead": "6b100b76f21785e5e50fca082a2743d3d0b1c88a"
+}

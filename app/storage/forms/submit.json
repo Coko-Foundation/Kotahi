@@ -8,7 +8,16 @@
       "component": "TextField",
       "name": "submission.name",
       "placeholder": "Enter your name",
-      "order": "1"
+      "order": "1",
+      "validate": [
+        {
+          "value": "minChars",
+          "label": "minimum Characters"
+        }
+      ],
+      "validateValue": {
+        "minChars": "4"
+      }
     },
     {
       "title": "Affiliation",
@@ -34,19 +43,15 @@
       "placeholder": "Enter keywords...",
       "parse": "split",
       "format": "join",
-      "order": "20",
+      "order": "11",
       "validateValue": {
-        "minChars": "4",
+        "minChars": "2",
         "maxChars": "6"
       },
       "validate": [
         {
           "value": "minChars",
           "label": "minimum Characters"
-        },
-        {
-          "value": "maxChars",
-          "label": "maximum Characters"
         },
         {
           "value": "required",
@@ -87,7 +92,7 @@
       "name": "submission.suggested",
       "parse": "split",
       "format": "join",
-      "order": "13"
+      "order": "8"
     },
     {
       "title": "Upload supplementary materials",
@@ -95,7 +100,7 @@
       "component": "SupplementaryFiles",
       "description": "<p>Upload your files.</p>",
       "name": "fileName",
-      "order": "19"
+      "order": "10"
     },
     {
       "title": "Cover letter",
@@ -128,9 +133,15 @@
       "component": "TextField",
       "name": "submission.links",
       "placeholder": "Enter your links, separated by commas",
-      "order": "14",
-      "parse": "split",
-      "format": "join"
+      "order": "9",
+      "parse": {
+        "value": "split",
+        "label": "Split"
+      },
+      "format": {
+        "value": "join",
+        "label": "Join"
+      }
     },
     {
       "title": "Did your study involve healthy subjects only or patients (note that patient studies may also involve healthy subjects)",
@@ -146,7 +157,10 @@
           "label": "Patients",
           "value": "patients"
         }
-      ]
+      ],
+      "description": "<p></p>",
+      "shortDescription": "Patients/healthy subjects",
+      "order": "12"
     },
     {
       "title": "If your research involved human subjects, was the research approved by the relevant Institutional Review Board or ethics panel?",
@@ -167,7 +181,9 @@
           "value": "N/A"
         }
       ],
-      "description": "<p><i>NOTE: Any human subjects studies without IRB approval will be automatically rejected.</i></p>"
+      "description": "<p><i>NOTE: Any human subjects studies without IRB approval will be automatically rejected.</i></p>",
+      "shortDescription": "Ethics panel",
+      "order": "13"
     },
     {
       "title": "Was any animal research approved by the relevant IACUC or other animal research panel?",
@@ -189,7 +205,8 @@
           "value": "N/A"
         }
       ],
-      "order": "21"
+      "order": "14",
+      "shortDescription": "Animal research panel"
     },
     {
       "title": "Please indicate which methods were used in your research:",
@@ -250,7 +267,8 @@
           "value": "Computational modeling"
         }
       ],
-      "order": "22"
+      "order": "15",
+      "shortDescription": "Methods"
     },
     {
       "title": "If you used other research methods, please specify:",
@@ -258,14 +276,15 @@
       "component": "TextField",
       "name": "submission.otherMethods",
       "placeholder": "Enter any additional methods used, if applicable",
-      "order": "23"
+      "order": "16",
+      "shortDescription": "Other methods"
     },
     {
       "title": "For human MRI, what field strength scanner do you use?",
       "id": "1591344209443",
       "component": "Menu",
       "name": "submission.humanMRI",
-      "order": "24",
+      "order": "17",
       "options": [
         {
           "label": "1T",
@@ -291,14 +310,20 @@
           "label": "7T",
           "value": "7T"
         }
-      ]
+      ],
+      "shortDescription": "MRI strength"
     },
     {
       "title": "If other, please specify:",
       "id": "1591345370930",
       "component": "TextField",
       "name": "submission.humanMRIother",
-      "order": "24"
+      "order": "18",
+      "validate": [],
+      "validateValue": {
+        "minChars": "10"
+      },
+      "shortDescription": "Other MRI strength"
     },
     {
       "title": "Which processing packages did you use for your study?",
@@ -335,24 +360,37 @@
           "value": "LONI Pipeline"
         }
       ],
-      "order": "25"
+      "order": "19",
+      "shortDescription": "Processing packages"
     },
     {
       "title": "If you used any other processing packages, please list them here:",
       "id": "1591345560536",
       "component": "TextField",
-      "name": "submission.otherPackages"
+      "name": "submission.otherPackages",
+      "shortDescription": "Other processing packages",
+      "order": "20"
     },
     {
       "title": "Provide references using author date format:",
       "id": "1591345620839",
       "component": "AbstractEditor",
       "name": "submission.references",
-      "order": "26"
+      "order": "21",
+      "shortDescription": "References"
+    },
+    {
+      "title": "Title",
+      "id": "1593634996801",
+      "component": "TextField",
+      "name": "meta.title",
+      "placeholder": "Enter the manuscript's title",
+      "description": "<p></p>",
+      "order": "0"
     }
   ],
   "description": "<p>Aperture is now accepting Research Object Submissions. Please fill out the form below to complete your submission.</p>",
   "haspopup": "true",
   "popuptitle": "By submitting the manuscript, you agree to the following statements.",
-  "popupdescription": "<p>The corresponding author confirms that all co-authors are included, and that everyone listed as a co-author agrees to that role and all the following requirements and acknowledgements.</p><p></p><p>The submission represents original work and that sources are given proper attribution. The journal employs CrossCheck to compare submissions against a large and growing database of published scholarly content. If in the judgment of a senior editor a submission is genuinely suspected of plagiarism, it will be returned to the author(s) with a request for explanation.)</p><p></p><p>The research was conducted in accordance with ethical principles.</p><p></p><p>There is a Data Accessibility Statement, containing information about the location of open data and materials, in the manuscript.</p><p></p><p>A conflict of interest statement is present in the manuscript, even if to state no conflicts of interest.</p>"
+  "popupdescription": "<p>The corresponding author confirms that all co-authors are included, and that everyone listed as a co-author agrees to that role and all the following requirements and acknowledgements.</p><p></p><p>The submission represents original work and that sources are given proper attribution. The journal employs CrossCheck to compare submissions against a large and growing database of published scholarly content. If in the judgment of a senior editor a submission is genuinely suspected of plagiarism, it will be returned to the author(s) with a request for explanation.</p><p></p><p>The research was conducted in accordance with ethical principles.</p><p></p><p>There is a Data Accessibility Statement, containing information about the location of open data and materials, in the manuscript.</p><p></p><p>A conflict of interest statement is present in the manuscript, even if to state no conflicts of interest.</p>"
 }

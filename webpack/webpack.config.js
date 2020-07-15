@@ -21,6 +21,7 @@ const plugins = require('./plugins')
 module.exports = webpackEnv => {
   const isEnvDevelopment = webpackEnv === 'development'
   const isEnvProduction = webpackEnv === 'production'
+
   return {
     devServer: {
       port: 4000,
@@ -34,8 +35,10 @@ module.exports = webpackEnv => {
         },
         '/convertDocxToHTML': 'http://localhost:3000',
         '/api': 'http://localhost:3000',
+        '/auth': 'http://localhost:3000',
         '/graphql': 'http://localhost:3000',
         '/uploads': 'http://locahost:3000',
+        '/static/profiles': 'http://localhost:3000',
       },
       historyApiFallback: true,
     },

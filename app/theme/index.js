@@ -16,21 +16,18 @@ import {
 const cokoTheme = {
   /* Colors */
   colorBackground: 'white',
-  colorPrimary: '#0B65CB',
-  colorSecondary: '#E7E7E7',
-  colorFurniture: '#CCC',
+  colorSecondaryBackground: '#f9fafb', // custom
+  colorPrimary: '#0D83DD',
+  colorSecondary: '#9e9e9e',
+  colorFurniture: '#E8E8E8',
   colorBorder: '#AAA',
-  colorBackgroundHue: '#F1F1F1',
+  colorBackgroundHue: '#f4f5f7',
   colorSuccess: '#008800',
   colorError: '#FF2D1A',
   colorText: '#111',
   colorTextReverse: '#FFF',
   colorTextPlaceholder: '#595959',
   colorWarning: '#ffc107',
-
-  // TODO -- not used anywhere
-  //   $colorInteract: var($colorPrimaryDarker);
-  // $colorPrimaryDarker: #0551a8
 
   /* Text variables */
 
@@ -68,7 +65,7 @@ const cokoTheme = {
   gridUnit: '8px',
 
   /* Border */
-  borderRadius: '0',
+  borderRadius: '8px',
   borderWidth: '1px', // julien: not 0
   borderStyle: 'solid',
 
@@ -76,8 +73,8 @@ const cokoTheme = {
   // $borderColor: var($colorFurniture);
 
   /* Shadow (for tooltip) */
-  boxShadow: '0 2px 4px 0 rgba(51, 51, 51, 0.3)',
-
+  boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+  // boxShadow: '4px 4px 16px #cdcdcd',
   /* Transition */
   transitionDuration: '0.2s', // TODO -- julien: not 0.05s
   transitionTimingFunction: 'ease',
