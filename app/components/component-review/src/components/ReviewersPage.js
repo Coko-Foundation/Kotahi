@@ -1,6 +1,6 @@
 import { compose, withProps } from 'recompose'
 import { withFormik } from 'formik'
-import { graphql } from '@apollo/react-hoc'
+import { graphql } from '@apollo/client/react/hoc'
 import gql from 'graphql-tag'
 import { withLoader } from 'pubsweet-client'
 import { omit } from 'lodash'
@@ -142,15 +142,14 @@ const handleSubmit = (
   { user },
   { props: { manuscript, updateTeamMutation, createTeamMutation, match } },
 ) => {
-  const team =
-    manuscript.teams.find(team => team.role === 'reviewerEditor') || {}
+  const team = manuscript.teams.find(team => team.role === 'reviewer') || {}
 
   const teamAdd = {
     objectId: manuscript.id,
     objectType: 'Manuscript',
     // status: [{ user: user.id, status: 'invited' }],
-    name: 'Reviewer Editor',
-    role: 'reviewerEditor',
+    name: 'Reviewers',
+    role: 'reviewer',
     members: [{ user: { id: user.id }, status: 'invited' }],
   }
   if (team.id) {
@@ -207,7 +206,7 @@ export default compose(
       const reviewersTeam =
         teams.find(
           team =>
-            team.role === 'reviewerEditor' &&
+            team.role === 'reviewer' &&
             team.object.objectId === manuscript.id &&
             team.object.objectType === 'Manuscript',
         ) || {}

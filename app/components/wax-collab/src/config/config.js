@@ -17,10 +17,10 @@ import {
   PlaceholderService,
   InlineAnnotationsService,
   LinkService,
-  ListsService,
-  ListToolGroupService,
-  TablesService,
-  TableToolGroupService,
+  // ListsService,
+  // ListToolGroupService,
+  // TablesService,
+  // TableToolGroupService,
   BaseService,
   BaseToolGroupService,
   DisplayBlockLevelService,
@@ -28,17 +28,17 @@ import {
   ImageToolGroupService,
   TextBlockLevelService,
   TextToolGroupService,
-  NoteService,
-  NoteToolGroupService,
-  TrackChangeService,
-  CommentsService,
+  // NoteService,
+  // NoteToolGroupService,
+  // TrackChangeService,
+  // CommentsService,
 } from 'wax-prosemirror-services'
 
-import _ from 'lodash'
+// import _ from 'lodash'
 import invisibles, {
-  space,
+  // space,
   hardBreak,
-  paragraph,
+  // paragraph,
 } from '@guardian/prosemirror-invisibles'
 
 // const ydoc = new Y.Doc();

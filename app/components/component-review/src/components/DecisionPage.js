@@ -3,8 +3,7 @@ import moment from 'moment'
 
 import { Tabs } from '@pubsweet/ui'
 import { Formik } from 'formik'
-import gql from 'graphql-tag'
-import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useMutation, useQuery, gql } from '@apollo/client'
 import DecisionForm from './decision/DecisionForm'
 import DecisionReviews from './decision/DecisionReviews'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
@@ -12,7 +11,7 @@ import AssignEditor from './assignEditors/AssignEditor'
 import ReviewMetadata from './metadata/ReviewMetadata'
 import Decision from './decision/Decision'
 // import EditorSection from './EditorSection'
-import { AdminSection, Columns, Manuscript, Chat, TabsContainer } from './style'
+import { AdminSection, Columns, Manuscript, Chat } from './style'
 
 // const addEditor = (manuscript, label) => ({
 //   content: <EditorSection manuscript={manuscript} />,
@@ -161,20 +160,20 @@ const uploadReviewFilesMutation = gql`
   }
 `
 
-const createFileMutation = gql`
-  mutation($file: Upload!) {
-    createFile(file: $file) {
-      id
-      created
-      label
-      filename
-      fileType
-      mimeType
-      size
-      url
-    }
-  }
-`
+// const createFileMutation = gql`
+//   mutation($file: Upload!) {
+//     createFile(file: $file) {
+//       id
+//       created
+//       label
+//       filename
+//       fileType
+//       mimeType
+//       size
+//       url
+//     }
+//   }
+// `
 
 const makeDecisionMutation = gql`
   mutation($id: ID!, $decision: String) {
@@ -185,28 +184,28 @@ const makeDecisionMutation = gql`
   }
 `
 
-const updateCacheForFileCreation = (proxy, { data: { createFile } }) => {
-  const data = proxy.readQuery({
-    query,
-    variables: {
-      id: match.params.version,
-    },
-  })
+// const updateCacheForFileCreation = (proxy, { data: { createFile } }) => {
+//   const data = proxy.readQuery({
+//     query,
+//     variables: {
+//       id: match.params.version,
+//     },
+//   })
 
-  data.manuscript.reviews.map(review => {
-    if (review.id === file.objectId) {
-      review.comments.map(comment => {
-        if (comment.type === createFile.fileType) {
-          comment.files = [createFile]
-        }
-        return comment
-      })
-    }
-    return review
-  })
+//   data.manuscript.reviews.map(review => {
+//     if (review.id === file.objectId) {
+//       review.comments.map(comment => {
+//         if (comment.type === createFile.fileType) {
+//           comment.files = [createFile]
+//         }
+//         return comment
+//       })
+//     }
+//     return review
+//   })
 
-  proxy.writeQuery({ query, data })
-}
+//   proxy.writeQuery({ query, data })
+// }
 
 // const createFile = file => {
 
@@ -280,17 +279,17 @@ const decisionSections = ({
   return decisionSections
 }
 
-const editorSections = ({ manuscript }) => {
-  const editorSections = []
-  const manuscriptVersions = manuscript.manuscriptVersions || []
-  manuscriptVersions.forEach(manuscript => {
-    editorSections.push(addEditor(manuscript, dateLabel(manuscript.updated)))
-  }, [])
+// const editorSections = ({ manuscript }) => {
+//   const editorSections = []
+//   const manuscriptVersions = manuscript.manuscriptVersions || []
+//   manuscriptVersions.forEach(manuscript => {
+//     editorSections.push(addEditor(manuscript, dateLabel(manuscript.updated)))
+//   }, [])
 
-  if (manuscript.status !== 'revising') {
-    editorSections.push(addEditor(manuscript, dateLabel()))
-  }
-}
+//   if (manuscript.status !== 'revising') {
+//     editorSections.push(addEditor(manuscript, dateLabel()))
+//   }
+// }
 
 const DecisionPage = ({ match }) => {
   // Hooks from the old world
@@ -312,7 +311,7 @@ const DecisionPage = ({ match }) => {
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
 
-  const manuscript = data.manuscript
+  const { manuscript } = data
 
   // Protect if channels don't exist for whatever reason
   let channelId
@@ -326,15 +325,15 @@ const DecisionPage = ({ match }) => {
         file,
       },
     }).then(({ data }) => {
-      const newFile = {
-        url: data.upload.url,
-        filename: file.name,
-        size: file.size,
-        object: 'Review',
-        objectId: updateReview.id,
-        fileType: type,
-      }
-      createFile(newFile)
+      // const newFile = {
+      //   url: data.upload.url,
+      //   filename: file.name,
+      //   size: file.size,
+      //   object: 'Review',
+      //   objectId: updateReview.id,
+      //   fileType: type,
+      // }
+      // createFile(newFile)
     })
 
   const updateReview = (data, file) => {

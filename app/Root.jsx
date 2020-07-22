@@ -1,26 +1,43 @@
 /* eslint-disable no-param-reassign */
 import React from 'react'
+// import { BrowserRouter } from 'react-router-dom'
+// import PropTypes from 'prop-types'
+// import { ThemeProvider } from 'styled-components'
+// import { ApolloProvider } from '@apollo/react-components'
+// import { ApolloClient } from 'apollo-client'
+// import { WebSocketLink } from 'apollo-link-ws'
+// import { split, ApolloLink } from 'apollo-link'
+// import { getMainDefinition } from 'apollo-utilities'
+// import { setContext } from 'apollo-link-context'
+// import {
+//   InMemoryCache,
+//   IntrospectionFragmentMatcher,
+// } from 'apollo-cache-inmemory'
+// import { createUploadLink } from 'apollo-upload-client'
+import GlobalStyle from './theme/elements/GlobalStyle'
+
+// import introspectionQueryResultData from './fragmentTypes.json'
+
 import { BrowserRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { ThemeProvider } from 'styled-components'
-import { ApolloProvider } from '@apollo/react-components'
-import { ApolloClient } from 'apollo-client'
-import { WebSocketLink } from 'apollo-link-ws'
-import { split, ApolloLink } from 'apollo-link'
-import { getMainDefinition } from 'apollo-utilities'
-import { setContext } from 'apollo-link-context'
 import {
-  InMemoryCache,
-  IntrospectionFragmentMatcher,
-} from 'apollo-cache-inmemory'
+  ApolloProvider,
+  ApolloClient,
+  ApolloLink,
+  split,
+  gql,
+} from '@apollo/client'
+// import { ApolloClient } from 'apollo-client'
+import { WebSocketLink } from '@apollo/client/link/ws'
+// import { split, ApolloLink } from 'apollo-link'
+import { getMainDefinition } from '@apollo/client/utilities'
+import { setContext } from '@apollo/client/link/context'
+import { InMemoryCache } from '@apollo/client/cache'
 import { createUploadLink } from 'apollo-upload-client'
-import GlobalStyle from './theme/elements/GlobalStyle'
 
-import introspectionQueryResultData from './fragmentTypes.json'
-
-const fragmentMatcher = new IntrospectionFragmentMatcher({
-  introspectionQueryResultData,
-})
+import { GET_CURRENT_USER } from './queries'
+import currentRolesVar from './shared/currentRolesVar'
 
 // See https://github.com/apollographql/apollo-feature-requests/issues/6#issuecomment-465305186
 export function stripTypenames(obj) {
@@ -83,7 +100,25 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
   }
   const config = {
     link,
-    cache: new InMemoryCache({ fragmentMatcher }),
+    cache: new InMemoryCache({
+      possibleTypes: {
+        Identity: ['LocalIdentity', 'ExternalIdentity'],
+      },
+      typePolicies: {
+        Manuscript: {
+          fields: {
+            _currentRoles: {
+              read(existing, { cache, args, readField }) {
+                const currentRoles = currentRolesVar()
+                const currentId = readField('id')
+                const r = currentRoles.find(r => r.id === currentId)
+                return (r && r.roles) || []
+              },
+            },
+          },
+        },
+      },
+    }),
   }
   return new ApolloClient(makeConfig ? makeConfig(config) : config)
 }

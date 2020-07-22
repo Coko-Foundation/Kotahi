@@ -44,7 +44,6 @@ module.exports = {
     db: {},
     port: 3000,
     logger,
-    enableExperimentalGraphql: true,
     uploads: 'uploads',
     typeDefs: `
       extend type User {
@@ -134,15 +133,8 @@ module.exports = {
   },
   'pubsweet-client': {
     API_ENDPOINT: '/api',
-    'login-redirect': '/',
-    'redux-log': false,
+    'login-redirect': '/journal/dashboard',
     theme: process.env.PUBSWEET_THEME,
-  },
-  'password-reset': {
-    url:
-      process.env.PUBSWEET_PASSWORD_RESET_URL ||
-      'http://localhost:3000/password-reset',
-    sender: process.env.PUBSWEET_PASSWORD_RESET_SENDER || 'dev@example.com',
   },
   'pubsweet-component-xpub-dashboard': {
     acceptUploadFiles: [
@@ -155,15 +147,6 @@ module.exports = {
       'application/zip',
     ],
   },
-  'pubsweet-component-ink-backend': {
-    inkEndpoint: process.env.INK_ENDPOINT || 'http://167.99.161.30:3000/',
-    email: process.env.INK_USERNAME,
-    password: process.env.INK_PASSWORD,
-    maxRetries: 500,
-    recipes: {
-      'editoria-typescript': '2',
-    },
-  },
   publicKeys: [
     'pubsweet-client',
     'authsome',
@@ -172,6 +155,8 @@ module.exports = {
     'pubsweet-component-xpub-formbuilder',
     'pubsweet',
     'detectionMethodCorrelations',
+    'journal',
   ],
   schema: {},
+  journal: require('./journal'),
 }

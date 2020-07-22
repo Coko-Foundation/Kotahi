@@ -1,11 +1,10 @@
-import React, { useContext } from 'react'
+import React, { useContext, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 import { compose } from 'recompose'
-import { useQuery, useApolloClient } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import {
   withRouter,
   matchPath,
-  Router,
   Route,
   Switch,
   Redirect,
@@ -27,9 +26,12 @@ import FormBuilderPage from '../components/component-formbuilder/src/components/
 import NewSubmissionPage from '../components/component-submit/src/components/NewSubmissionPage'
 import { Profile } from '../components/component-profile/src'
 
-import queries from '../graphql'
+import { GET_CURRENT_USER } from '../queries'
 
 import Menu from './Menu'
+import { Spinner } from './shared'
+
+import currentRolesVar from '../shared/currentRolesVar'
 
 const getParams = routerPath => {
   const path = '/journal/versions/:version'
@@ -67,20 +69,47 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   />
 )
 
-const AdminPage = ({ children, history, match }) => {
-  const client = useApolloClient()
+const updateStuff = data => {
+  currentRolesVar(data.currentUser._currentRoles)
+}
 
+const AdminPage = ({ children, history, match }) => {
   const journal = useContext(JournalContext)
   const [conversion] = useContext(XpubContext)
 
-  const { data } = useQuery(queries.currentUser)
+  // Get the current user every 5 seconds (this includes authorization info)
+  const { loading, error, data } = useQuery(GET_CURRENT_USER, {
+    pollInterval: 5000,
+    notifyOnNetworkStatusChange: true,
+    fetchPolicy: 'network-only',
+    // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301
+    onCompleted: useCallback(data => updateStuff(data), []),
+  })
+
+  const previousDataRef = useRef(null)
+
+  // Do this to prevent polling-related flicker
+  if (loading && !previousDataRef.current) {
+    return <Spinner />
+  }
+
+  let notice = ''
+  if (error) {
+    if (error.networkError) {
+      notice = 'You are offline.'
+    } else {
+      return <Redirect to="/login" />
+    }
+  }
+
   const currentUser = data && data.currentUser
+
+  previousDataRef.current = data
 
   const { pathname } = history.location
   const showLinks = pathname.match(/^\/(submit|manuscript)/g)
   let links = []
   const formBuilderLink = `/journal/admin/form-builder`
-  const profileLink = `/journal/profile`
   const homeLink = '/journal/dashboard'
 
   if (showLinks) {
@@ -119,6 +148,7 @@ const AdminPage = ({ children, history, match }) => {
         brandLink="/journal/dashboard"
         loginLink="/login?next=/journal/dashboard"
         navLinkComponents={links}
+        notice={notice}
         user={currentUser}
       />
       <Switch>

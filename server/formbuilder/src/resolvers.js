@@ -3,9 +3,8 @@ const fs = require('fs')
 const { readFiles, mkdirp } = require('./util')
 const form = require('../../../app/storage/forms/submit.json')
 
-const writeJson = (path, object) => {
-  return fs.writeFileSync(path, JSON.stringify(object, null, 2))
-}
+const writeJson = (path, object) =>
+  fs.writeFileSync(path, JSON.stringify(object, null, 2))
 
 const mergeFiles = path =>
   readFiles(path).then(files => {

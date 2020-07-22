@@ -3,28 +3,32 @@ const eager = '[members.[user, alias]]'
 const resolvers = {
   Query: {
     team(_, { id }, ctx) {
-      return ctx.connectors.Team.fetchOne(id, ctx, { eager })
+      return ctx.models.Team.query()
+        .findById(id)
+        .eager(eager)
     },
     teams(_, { where }, ctx) {
       where = where || {}
-      if (where.users) {
-        const { users } = where
-        delete where.users
-        where._relations = [{ relation: 'users', ids: users }]
-      }
+      // if (where.users) {
+      //   const { users } = where
+      //   delete where.users
+      //   where._relations = [{ relation: 'users', ids: users }]
+      // }
 
-      if (where.alias) {
-        const { alias } = where
-        delete where.alias
-        where._relations = [{ relation: 'aliases', object: alias }]
-      }
+      // if (where.alias) {
+      //   const { alias } = where
+      //   delete where.alias
+      //   where._relations = [{ relation: 'aliases', object: alias }]
+      // }
 
-      return ctx.connectors.Team.fetchAll(where, ctx, { eager })
+      return ctx.models.Team.query()
+        .where(where)
+        .eager(eager)
     },
   },
   Mutation: {
     deleteTeam(_, { id }, ctx) {
-      return ctx.connectors.Team.delete(id, ctx)
+      return ctx.models.Team.query().deleteById(id)
     },
     createTeam(_, { input }, ctx) {
       const options = {
@@ -33,22 +37,29 @@ const resolvers = {
         allowUpsert: '[members, members.alias]',
         eager: '[members.[user.teams, alias]]',
       }
-      return ctx.connectors.Team.create(input, ctx, options)
+      return ctx.models.Team.query().insertGraphAndFetch(input, options)
     },
     updateTeam(_, { id, input }, ctx) {
-      return ctx.connectors.Team.update(id, input, ctx, {
-        unrelate: false,
-        eager: 'members.user.teams',
-      })
+      return ctx.models.Team.query().upsertGraphAndFetch(
+        {
+          id,
+          ...input,
+        },
+        {
+          unrelate: false,
+          eager: 'members.user.teams',
+        },
+      )
     },
   },
   User: {
     teams: (parent, _, ctx) =>
-      ctx.connectors.User.fetchRelated(parent.id, 'teams', undefined, ctx),
+      ctx.models.User.relatedQuery('teams').for(parent.id),
   },
   Team: {
-    members(team, { where }, ctx) {
-      return ctx.connectors.Team.fetchRelated(team.id, 'members', where, ctx)
+    async members(team, { where }, ctx) {
+      const t = await ctx.models.Team.query().findById(team.id)
+      return t.$relatedQuery('members')
     },
     object(team, vars, ctx) {
       const { objectId, objectType } = team
@@ -56,21 +67,13 @@ const resolvers = {
     },
   },
   TeamMember: {
-    user(teamMember, vars, ctx) {
-      return ctx.connectors.TeamMember.fetchRelated(
-        teamMember.id,
-        'user',
-        undefined,
-        ctx,
-      )
+    async user(teamMember, vars, ctx) {
+      const member = await ctx.models.TeamMember.query().findById(teamMember.id)
+      return member.$relatedQuery('user')
     },
-    alias(teamMember, vars, ctx) {
-      return ctx.connectors.TeamMember.fetchRelated(
-        teamMember.id,
-        'alias',
-        undefined,
-        ctx,
-      )
+    async alias(teamMember, vars, ctx) {
+      const member = await ctx.models.TeamMember.query().findById(teamMember.id)
+      return member.$relatedQuery('alias')
     },
   },
 }

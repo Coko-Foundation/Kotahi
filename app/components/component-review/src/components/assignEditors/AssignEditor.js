@@ -3,7 +3,7 @@ import config from 'config'
 import { compose, withProps } from 'recompose'
 import { cloneDeep, get } from 'lodash'
 import { Menu } from '@pubsweet/ui'
-import { graphql } from '@apollo/react-hoc'
+import { graphql } from '@apollo/client/react/hoc'
 import gql from 'graphql-tag'
 import { withLoader } from 'pubsweet-client'
 

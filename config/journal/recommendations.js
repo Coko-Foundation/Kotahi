@@ -1,4 +1,4 @@
-export default [
+module.exports = [
   {
     color: 'green',
     label: 'Accept',

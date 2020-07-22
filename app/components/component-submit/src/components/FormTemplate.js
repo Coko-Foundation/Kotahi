@@ -1,6 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
 import { unescape, groupBy, isArray, get, set, cloneDeep } from 'lodash'
 import { FieldArray } from 'formik'
 import * as uiComponents from '@pubsweet/ui'

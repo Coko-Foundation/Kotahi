@@ -59,6 +59,7 @@ export default {
             date
           }
         }
+        _currentRoles @client
       }
     }
   `,

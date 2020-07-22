@@ -1,0 +1,6 @@
+{
+  "auth-orcid": {
+    "clientID": "ORCID_CLIENT_ID",
+    "clientSecret": "ORCID_CLIENT_SECRET"
+  }
+}

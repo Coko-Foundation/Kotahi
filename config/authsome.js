@@ -1,8 +1,10 @@
 const { pickBy } = require('lodash')
 
-class SimpleJMode {
+const objType = obj => (obj.constructor && obj.constructor.name) || obj.type
+
+class AuthsomeMode {
   /**
-   * Creates a new instance of SimpleJMode
+   * Creates a new instance of AuthsomeMode
    *
    * @param {string} userId A user's UUID
    * @param {string} operation The operation you're authorizing for
@@ -12,26 +14,9 @@ class SimpleJMode {
    */
   constructor(userId, operation, object, context) {
     this.userId = userId
-    this.operation = SimpleJMode.mapOperation(operation)
+    this.operation = operation
     this.object = object
     this.context = context
-  }
-
-  /**
-   * Maps operations from HTTP verbs to semantic verbs
-   *
-   * @param {any} operation
-   * @returns {string}
-   */
-  static mapOperation(operation) {
-    const operationMap = {
-      GET: 'read',
-      POST: 'create',
-      PATCH: 'update',
-      DELETE: 'delete',
-    }
-
-    return operationMap[operation] ? operationMap[operation] : operation
   }
 
   /**
@@ -42,16 +27,23 @@ class SimpleJMode {
    * @returns {boolean}
    */
   async isTeamMember(role, object) {
-    if (!this.user || !Array.isArray(this.user.teams)) {
+    if (!this.user) {
       return false
     }
+
+    this.user.teams =
+      this.user.teams ||
+      (
+        await this.context.models.User.query()
+          .findById(this.user.id)
+          .eager('teams')
+      ).teams
 
     let membershipCondition
     if (object) {
       // We're asking if a user is a member of a team for a specific object
       membershipCondition = team => {
-        // TODO: This needs to be fixed...
-        const objectId = team.objectId || (team.object && team.object.objectId)
+        const { objectId } = team
         return team.role === role && objectId === object.id
       }
     } else {
@@ -60,11 +52,8 @@ class SimpleJMode {
     }
 
     const memberships = await Promise.all(
-      this.user.teams.map(async teamId => {
-        // TODO: This needs to be fixed...
-        const id = teamId.id ? teamId.id : teamId
-        const team = await this.context.models.Team.find(id)
-        if (!team) return [false]
+      this.user.teams.map(async team => {
+        if (!team) return false
 
         return membershipCondition(team)
       }),
@@ -85,8 +74,7 @@ class SimpleJMode {
   }
 
   /**
-   * Checks if the user is an admin, as represented with the owners
-   * relationship
+   * Checks if the user is an admin
    *
    * @returns {boolean}
    */
@@ -122,21 +110,24 @@ class SimpleJMode {
   }
 
   /**
-   * Checks if user is a senior editor (member of a team of type senior editor) for an object
+   * Checks if user is an editor (any editor) globally
    *
    * @returns {boolean}
    */
-  isManagingEditor(object) {
-    return this.isTeamMember('managingEditor', object)
+  async isGlobalEditor(object) {
+    const seniorEditor = await this.isTeamMember('seniorEditor')
+    const handlingEditor = await this.isTeamMember('handlingEditor')
+
+    return seniorEditor || handlingEditor
   }
 
   /**
-   * Checks if user is a reviewer editor (member of a team of type reviewer editor) for an object
+   * Checks if user is a reviewer (member of a team of type reviewer) for an object
    *
    * @returns {boolean}
    */
-  isAssignedReviewerEditor(object) {
-    return this.isTeamMember('reviewerEditor', object)
+  isAssignedReviewer(object) {
+    return this.isTeamMember('reviewer', object)
   }
 
   /**
@@ -147,15 +138,6 @@ class SimpleJMode {
    */
   isAuthenticated() {
     return !!this.userId
-  }
-
-  /**
-   * Checks if a user can create a collection.
-   *
-   * @returns {boolean}
-   */
-  canCreateCollection() {
-    return this.isAuthenticated()
   }
 
   /**
@@ -172,11 +154,6 @@ class SimpleJMode {
     this.user = await getUserAndTeams(this.userId, this.context)
 
     const manuscript = this.object
-
-    // TODO: Enable more team types
-    // if (await this.isManagingEditor(manuscript)) {
-    //   return true
-    // }
 
     let permission = await this.checkTeamMembers(
       [
@@ -258,13 +235,6 @@ class SimpleJMode {
           { id: fragment.collections[0] },
         )
 
-    // permission = permission
-    //   ? true
-    //   : await this.isAssignedManagingEditor(fragment)
-    // Caveat: this means every logged-in user can read every fragment (but needs its UUID)
-    // Ideally we'd check if the fragment (version) belongs to a collection (project)
-    // where the user is a member of a team with the appropriate rights. However there is no
-    // link from a fragment back to a collection at this point. Something to keep in mind!
     return permission
   }
 
@@ -273,41 +243,41 @@ class SimpleJMode {
    *
    * @returns {boolean}
    */
-  // async canListManuscripts() {
-  //   if (!this.isAuthenticated()) {
-  //     return false
-  //   }
+  async canListManuscripts() {
+    if (!this.isAuthenticated()) {
+      return false
+    }
 
-  //   this.user = await getUserAndTeams(this.userId, this.context)
+    this.user = await getUserAndTeams(this.userId, this.context)
 
-  //   return {
-  //     filter: async manuscripts => {
-  //       const filteredManuscripts = await Promise.all(
-  //         manuscripts.map(async manuscript => {
-  //           let condition = await this.checkTeamMembers(
-  //             [
-  //               'isAssignedSeniorEditor',
-  //               'isAssignedHandlingEditor',
-  //               'isManagingEditor',
-  //               'isAssignedReviewerEditor',
-  //             ],
-  //             manuscript,
-  //           )
-  //           // condition = condition
-  //           //   ? true
-  //           //   : await this.canReadatLeastOneFragmentOfCollection(collection, [
-  //           //       'isAssignedReviewerEditor',
-  //           //     ])
+    return {
+      filter: async manuscripts => {
+        const filteredManuscripts = await Promise.all(
+          manuscripts.map(async manuscript => {
+            let condition = await this.checkTeamMembers(
+              [
+                'isAssignedSeniorEditor',
+                'isAssignedHandlingEditor',
+                'isManagingEditor',
+                'isAssignedReviewerEditor',
+              ],
+              manuscript,
+            )
+            // condition = condition
+            //   ? true
+            //   : await this.canReadatLeastOneFragmentOfCollection(collection, [
+            //       'isAssignedReviewerEditor',
+            //     ])
 
-  //           condition = condition ? true : await this.isAuthor(manuscript)
-  //           return condition ? manuscript : false
-  //         }),
-  //       )
+            condition = condition ? true : await this.isAuthor(manuscript)
+            return condition ? manuscript : false
+          }),
+        )
 
-  //       return filteredManuscripts.filter(manuscript => manuscript)
-  //     },
-  //   }
-  // }
+        return filteredManuscripts.filter(manuscript => manuscript)
+      },
+    }
+  }
 
   /**
    * Checks if a user can create fragments
@@ -384,7 +354,7 @@ class SimpleJMode {
    * Checks if a user can create a team
    *
    * @returns {boolean}
-   * @memberof SimpleJMode
+   * @memberof AuthsomeMode
    */
   async canCreateTeam() {
     if (!this.isAuthenticated()) {
@@ -473,23 +443,6 @@ class SimpleJMode {
   }
 
   /**
-   * Checks if a user can update manuscript
-   *
-   * @returns {boolean}
-   */
-  // async canUpdateManuscript() {
-  //   this.user = await getUserAndTeams(this.userId, this.context)
-  //   const { current } = this.object
-  //   if (current) {
-  //     return this.checkTeamMembers(
-  //       ['isAuthor', 'isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
-  //       current,
-  //     )
-  //   }
-  //   return false
-  // }
-
-  /**
    * Checks if a user can delete Manuscript
    *
    * @returns {boolean}
@@ -531,31 +484,6 @@ class SimpleJMode {
     )
   }
 
-  async canViewMySubmissionSection() {
-    this.user = await getUserAndTeams(this.userId, this.context)
-    const manuscripts = await Promise.all(
-      this.object.map(async manuscript => this.isAuthor(manuscript)),
-    )
-
-    return manuscripts.some(manuscript => manuscript)
-  }
-
-  async canViewReviewSection() {
-    this.user = await getUserAndTeams(this.userId, this.context)
-
-    const collection = await Promise.all(
-      this.object.map(async manuscript => {
-        const permission = await this.checkTeamMembers(
-          ['isAssignedReviewerEditor'],
-          manuscript,
-        )
-
-        return permission
-      }),
-    )
-    return collection.some(collection => collection)
-  }
-
   async canViewManuscripts() {
     this.user = await getUserAndTeams(this.userId, this.context)
     const manuscripts = await Promise.all(
@@ -571,101 +499,7 @@ class SimpleJMode {
       ),
     )
 
-    return manuscripts.some(collection => collection)
-  }
-
-  async canViewPage() {
-    this.user = await getUserAndTeams(this.userId, this.context)
-    const { path, params } = this.object
-
-    if (path === '/teams') {
-      return !!this.isAdmin()
-    }
-
-    if (path === '/journals/:journal/versions/:version/submit') {
-      return this.checkPageSubmit(params)
-    }
-
-    if (path === '/journals/:journal/versions/:version/reviews/:review') {
-      return this.checkPageReviews(params)
-    }
-
-    if (
-      path === '/journals/:journal/versions/:version/review' ||
-      path === '/journals/:journal/versions/:version/reviewers'
-    ) {
-      return this.checkPageReview(params)
-    }
-
-    if (path === '/journals/:journal/versions/:version/decisions/:decision') {
-      return this.checkPageDecision(params)
-    }
-
-    return true
-  }
-
-  async checkPageSubmit(params) {
-    const collection = this.context.models.Collection.find(params.project)
-    let permission = await this.isAuthor(collection)
-
-    // permission = permission
-    //   ? true
-    //   : await !this.canReadatLeastOneFragmentOfCollection(collection, [
-    //       'isAssignedReviewerEditor',
-    //     ])
-
-    permission = permission
-      ? true
-      : await this.checkTeamMembers(
-          [
-            'isAssignedSeniorEditor',
-            'isAssignedHandlingEditor',
-            'isAssignedReviewerEditor',
-          ],
-          collection,
-        )
-
-    return permission
-  }
-
-  async checkPageDecision(params) {
-    const collection = this.context.models.Collection.find(params.project)
-
-    if (this.isAuthor(collection)) return false
-
-    const permission = await this.checkTeamMembers(
-      ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
-      collection,
-    )
-
-    return permission
-  }
-
-  async checkPageReviews(params) {
-    const fragment = this.context.models.Fragment.find(params.version)
-
-    const permission = await this.checkTeamMembers(
-      ['isAssignedReviewerEditor'],
-      fragment,
-    )
-
-    return permission
-  }
-
-  async checkPageReview(params) {
-    const collection = this.context.models.Collection.find(params.project)
-
-    const permission = await this.checkTeamMembers(
-      ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
-      collection,
-    )
-
-    return permission
-  }
-
-  async checkTeamMembers(team, object) {
-    const permission = await Promise.all(team.map(t => this[t](object)))
-    return permission.includes(true)
+    return manuscripts.some(m => m)
   }
 }
 
@@ -690,21 +524,11 @@ module.exports = {
     const user = await getUserAndTeams(userId, context)
     if (!user) return false
 
-    // we need to introduce a new Role Managing Editor
-    // currently we take for granted that an admin is the Managing Editor
-    // Temporally we need this if statement to prevent admin from seeing
-    // review and submission section on dashboard (ME permissions)
-    // if (
-    //   operation === 'can view review section' ||
-    //   operation === 'can view my submission section' ||
-    //   operation === 'can view my manuscripts section'
-    // )
-    //   return false
     return user.admin
   },
   create: (userId, operation, object, context) => true,
   update: async (userId, operation, object, context) => {
-    const mode = new SimpleJMode(userId, operation, object, context)
+    const mode = new AuthsomeMode(userId, operation, object, context)
 
     if (
       mode.object === 'Manuscript' ||
@@ -734,59 +558,43 @@ module.exports = {
     return false
   },
   delete: (userId, operation, object, context) => {
-    const mode = new SimpleJMode(userId, operation, object, context)
+    const mode = new AuthsomeMode(userId, operation, object, context)
 
-    if (object && object.type === 'users') {
+    if (object && objType(object) === 'users') {
       return mode.canDeleteUser()
     }
 
-    if (object === 'Manuscript' || object.type === 'Manuscript') {
+    if (object === 'Manuscript' || objType(object) === 'Manuscript') {
       return mode.isAuthor(object)
     }
 
-    if (object === 'Team' || object.type === 'Team') {
+    if (object === 'Team' || objType(object) === 'Team') {
       return true
       // return mode.canDeleteTeam()
     }
 
     return false
   },
-  'can view my submission section': (userId, operation, object, context) => {
-    const mode = new SimpleJMode(userId, operation, object, context)
-    return mode.canViewMySubmissionSection()
-  },
-  'can view my manuscripts section': (userId, operation, object, context) => {
-    const mode = new SimpleJMode(userId, operation, object, context)
-    return mode.canViewManuscripts()
-  },
-  'can view review section': (userId, operation, object, context) => {
-    const mode = new SimpleJMode(userId, operation, object, context)
-    return mode.canViewReviewSection()
-  },
-  'can delete manuscript': (userId, operation, object, context) => {
-    const mode = new SimpleJMode(userId, operation, object, context)
-    return mode.canDeleteManuscript()
-  },
-  'can view page': (userId, operation, object, context) => {
-    const mode = new SimpleJMode(userId, operation, object, context)
-    return mode.canViewPage()
-  },
-  'can view only admin': () => false,
   read: async (userId, operation, object, context) => {
-    const mode = new SimpleJMode(userId, operation, object, context)
+    const mode = new AuthsomeMode(userId, operation, object, context)
 
+    // Can a user read (list) Manuscripts or Reviews?
     if (object === 'Manuscript' || object === 'Review') {
       return true
     }
 
-    if (object.type === 'Review') {
+    // Can a user read a specific Review?
+    if (objType(object) === 'Review') {
       return mode.isAllowedToReview(object)
     }
 
-    if (object.type === 'Manuscript') {
+    // Can a user read a specific Manuscript?
+    if (objType(object) === 'Manuscript') {
       return mode.canReadManuscript()
     }
-    if (object.type === 'team' || object === 'Team') {
+
+    // Can a user read
+    if (objType(object) === 'team' || object === 'Team') {
       return mode.canReadTeam()
     }
 
@@ -798,7 +606,7 @@ module.exports = {
       return mode.canListUsers()
     }
 
-    if (object.type === 'user' || object === 'User') {
+    if (objType(object) === 'user' || object === 'User') {
       return mode.canReadUser()
     }
 

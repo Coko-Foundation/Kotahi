@@ -9,7 +9,7 @@ import theme from './theme'
 import { JournalProvider } from './components/xpub-journal'
 import { XpubProvider } from './components/xpub-with-context'
 
-import * as journal from './config/journal'
+import * as journal from '../config/journal'
 import routes from './routes'
 
 const history = createBrowserHistory()

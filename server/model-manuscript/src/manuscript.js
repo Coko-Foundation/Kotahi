@@ -58,7 +58,8 @@ class Manuscript extends BaseModel {
   }
 
   async getReviews() {
-    const Review = require('../../review/src/review')
+    // TODO: Use relationships
+    const Review = require('../../model-review/src/review')
 
     const manuscriptReviews = await Review.findByField('manuscript_id', this.id)
 

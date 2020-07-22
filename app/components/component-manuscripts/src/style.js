@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { Action } from '@pubsweet/ui'
-import { th, grid } from '@pubsweet/ui-toolkit'
 
 export {
   Row,

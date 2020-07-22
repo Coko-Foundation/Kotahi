@@ -10,7 +10,7 @@ const helmet = require('helmet')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const passport = require('passport')
-const gqlApi = require('pubsweet-server/src/graphql/api') // TODO: Fix import
+const gqlApi = require('./graphql')
 // const index = require('./routes/index')
 // const api = require('./routes/api')
 const logger = require('@pubsweet/logger')
@@ -23,7 +23,7 @@ const registerComponents = require('pubsweet-server/src/register-components') //
 // Wax Collab requirements
 const WebSocket = require('ws')
 const wsUtils = require('./wax-collab/server-util.js')
-const cookie = require('cookie')
+// const cookie = require('cookie')
 const EventEmitter = require('events')
 
 const configureApp = app => {
@@ -56,6 +56,8 @@ const configureApp = app => {
   app.use(helmet())
   app.use(express.static(path.resolve('.', '_build')))
 
+  app.use('/public', express.static(path.resolve(__dirname, '../public')))
+
   if (config.has('pubsweet-server.uploads')) {
     app.use(
       '/uploads',
@@ -82,18 +84,6 @@ const configureApp = app => {
   // GraphQL API
   gqlApi(app)
 
-  // SSE update stream
-  // if (_.get('pubsweet-server.sse', config)) {
-  //   sse.setAuthsome(authsome)
-  //   app.get(
-  //     '/updates',
-  //     passport.authenticate('bearer', { session: false }),
-  //     sse.connect,
-  //   )
-
-  //   app.locals.sse = sse
-  // }
-
   // Serve the index page for front end
   // app.use('/', index)
   app.use('/healthcheck', (req, res) => res.send('All good!'))
@@ -119,7 +109,7 @@ const configureApp = app => {
       .json({ message: err.message })
   })
 
-  // Set up a separate websocket for wax collab
+  // Set up a separate websocket for Wax-Collab
   const wss = new WebSocket.Server({ noServer: true })
   wss.on('connection', (conn, req) => wsUtils.setupWSConnection(conn, req))
 
@@ -138,14 +128,14 @@ const configureApp = app => {
       } else {
         let user = null
         if (request.headers.cookie) {
-          const cookies = cookie.parse(request.headers.cookie)
-          const user = cookies.user_identifier
+          // const cookies = cookie.parse(request.headers.cookie)
+          // const user = cookies.user_identifier
         }
-
+        // TODO: Do real auth for Wax-collab
         user = 'test' // shortcut
 
         if (!user) {
-          console.log('Failed to authenticate', user)
+          // console.log('Failed to authenticate', user)
           socket.destroy()
           return
         }

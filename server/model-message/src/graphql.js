@@ -43,7 +43,7 @@ const resolvers = {
   Mutation: {
     createMessage: async (_, { content, channelId }, context) => {
       const pubsub = await getPubsub()
-      const userId = context.user
+      const userId = context.user.id
       const savedMessage = await new Message({
         content,
         userId,

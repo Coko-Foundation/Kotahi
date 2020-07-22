@@ -11,7 +11,7 @@ const { token } = require('pubsweet-server/src/authentication') // TODO: Fix imp
 
 module.exports = {
   addSubscriptions: server => {
-    const connectors = require('pubsweet-server/src/connectors')
+    const models = require('@pubsweet/models')
     const helpers = require('pubsweet-server/src/helpers/authorization')
 
     const { User } = require('@pubsweet/models')
@@ -31,23 +31,25 @@ module.exports = {
                 reject(new Error('Bad auth token'))
               }
 
-              resolve({ user: id, connectors, helpers })
+              resolve({ userId: id, models, helpers })
             })
           })
-          console.log('I AM ALIVE!')
           // Record a user's online status
-          await User.query()
-            .update({ online: true })
-            .where('id', addTocontext.user)
+          const user = await User.query().updateAndFetchById(
+            addTocontext.userId,
+            { online: true },
+          )
+
+          addTocontext.user = user
           return addTocontext
         },
         onDisconnect: async (webSocket, context) => {
           const initialContext = await context.initPromise
           // Record that a user is no longer online
-          if (initialContext.user) {
+          if (initialContext.user && initialContext.user.id) {
             await User.query()
               .update({ online: false })
-              .where('id', initialContext.user)
+              .where('id', initialContext.user.id)
           }
         },
       },

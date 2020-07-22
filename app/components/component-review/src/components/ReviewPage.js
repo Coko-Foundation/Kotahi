@@ -1,9 +1,7 @@
 import React from 'react'
-// import { compose, withProps } from 'recompose'
-import { useMutation, useQuery } from '@apollo/react-hooks'
+import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { Formik } from 'formik'
-// import { withLoader } from 'pubsweet-client'
 import { cloneDeep } from 'lodash'
 import { getCommentContent } from './review/util'
 import ReviewLayout from '../components/review/ReviewLayout'
@@ -191,7 +189,7 @@ export default ({ match, ...props }) => {
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
 
   // File upload
-  const [uploadReviewFiles] = useMutation(uploadReviewFilesMutation)
+  // const [uploadReviewFiles] = useMutation(uploadReviewFilesMutation)
 
   const [updateTeam] = useMutation(updateTeamMutation)
 
@@ -235,7 +233,7 @@ export default ({ match, ...props }) => {
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
 
-  const manuscript = data.manuscript
+  const { manuscript } = data
   const channelId = manuscript.channels.find(c => c.type === 'editorial').id
 
   const review =
@@ -245,10 +243,11 @@ export default ({ match, ...props }) => {
       )) ||
     {}
 
+  // eslint-disable-next-line
   const status = (
     (
-      (manuscript.teams.find(team => team.role === 'reviewerEditor') || {})
-        .status || []
+      (manuscript.teams.find(team => team.role === 'reviewer') || {}).status ||
+      []
     ).find(status => status.user === currentUser.id) || {}
   ).status
 
@@ -311,7 +310,7 @@ export default ({ match, ...props }) => {
 
   const completeReview = history => {
     const team = cloneDeep(manuscript.teams).find(
-      team => team.role === 'reviewerEditor',
+      team => team.role === 'reviewer',
     )
     team.members = team.members.map(m => {
       if (m.user.id === currentUser.id) {
@@ -434,7 +433,7 @@ export default ({ match, ...props }) => {
 //   ) || {},
 // status: (
 //   (
-//     (manuscript.teams.find(team => team.role === 'reviewerEditor') || {})
+//     (manuscript.teams.find(team => team.role === 'reviewer') || {})
 //       .status || []
 //   ).find(status => status.user === currentUser.id) || {}
 // ).status,
@@ -495,7 +494,7 @@ export default ({ match, ...props }) => {
 //   }),
 //     completeReview: history => {
 //       const team = cloneDeep(manuscript.teams).find(
-//         team => team.role === 'reviewerEditor',
+//         team => team.role === 'reviewer',
 //       )
 //       team.members = team.members.map(m => {
 //         if (m.user.id === currentUser.id) {

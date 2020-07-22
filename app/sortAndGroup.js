@@ -66,6 +66,7 @@ export const sortAndGroupMessages = messages => {
       } else {
         // if we're on to the second message, we need to evaulate the timestamp
         // if the second message is older than the first message by our variance
+        // eslint-disable-next-line no-lonely-if
         if (oldMessage(messages[i], messages[i - 1])) {
           // push the batch of messages to master array
           masterArray.push(newArray)

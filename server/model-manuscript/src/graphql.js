@@ -30,22 +30,22 @@ const resolvers = {
         }),
         status: 'new',
         submission,
-        submitterId: ctx.user,
+        submitterId: ctx.user.id,
       }
 
       // eslint-disable-next-line
-      const manuscript = await new ctx.connectors.Manuscript.model(
+      const manuscript = await new ctx.models.Manuscript(
         emptyManuscript,
       ).saveGraph()
 
       // Create two channels: 1. free for all involved, 2. editorial
-      const allChannel = new ctx.connectors.Channel.model({
+      const allChannel = new ctx.models.Channel({
         manuscriptId: manuscript.id,
         topic: 'Manuscript discussion',
         type: 'all',
       }).save()
 
-      const editorialChannel = new ctx.connectors.Channel.model({
+      const editorialChannel = new ctx.models.Channel({
         manuscriptId: manuscript.id,
         topic: 'Editorial discussion',
         type: 'editorial',
@@ -61,7 +61,7 @@ const resolvers = {
         })
         manuscript.files.push(
           // eslint-disable-next-line
-          await new ctx.connectors.File.model(newFile).save(),
+          await new ctx.models.File(newFile).save(),
         )
       })
 
@@ -73,7 +73,7 @@ const resolvers = {
           name: 'Author',
           objectId: manuscript.id,
           objectType: 'Manuscript',
-          members: [{ user: { id: ctx.user } }],
+          members: [{ user: { id: ctx.user.id } }],
         },
         { relate: true },
       )
@@ -84,11 +84,11 @@ const resolvers = {
     },
     async deleteManuscript(_, { id }, ctx) {
       const deleteManuscript = []
-      const manuscript = await ctx.connectors.Manuscript.model.find(id)
+      const manuscript = await ctx.models.Manuscript.find(id)
 
       deleteManuscript.push(manuscript.id)
       if (manuscript.parentId) {
-        const parentManuscripts = await ctx.connectors.Manuscript.model.findByField(
+        const parentManuscripts = await ctx.models.Manuscript.findByField(
           'parent_id',
           manuscript.parentId,
         )
@@ -101,7 +101,7 @@ const resolvers = {
       // Delete Manuscript
       if (deleteManuscript.length > 0) {
         deleteManuscript.forEach(async manuscript => {
-          await ctx.connectors.Manuscript.delete(manuscript, ctx)
+          await ctx.models.Manuscript.query().deleteById(manuscript)
         })
       }
       return id
@@ -143,12 +143,12 @@ const resolvers = {
     },
     async updateManuscript(_, { id, input }, ctx) {
       const data = JSON.parse(input)
-      const manuscript = await ctx.connectors.Manuscript.fetchOne(id, ctx)
+      const manuscript = await ctx.models.Manuscript.findById(id)
       const update = merge({}, manuscript, data)
-      return ctx.connectors.Manuscript.update(id, update, ctx)
+      return ctx.models.Manuscript.update(id, update, ctx)
     },
     async makeDecision(_, { id, decision }, ctx) {
-      const manuscript = await ctx.connectors.Manuscript.fetchOne(id, ctx)
+      const manuscript = await ctx.models.Manuscript.findById(id)
       manuscript.decision = decision
 
       manuscript.status = decision
@@ -178,7 +178,7 @@ const resolvers = {
         },
       ]
       manuscript.decision = ''
-      manuscript.files = await ctx.connectors.File.model.findByObject({
+      manuscript.files = await ctx.models.File.findByObject({
         object: 'Manuscript',
         object_id: manuscript.id,
       })
@@ -190,12 +190,10 @@ const resolvers = {
       return manuscript
     },
     async manuscripts(_, { where }, ctx) {
-      return ctx.connectors.Manuscript.fetchAll(where, ctx, {
-        eager: '[teams, reviews]',
-      })
+      return ctx.models.Manuscript.query().eager('[teams, reviews]')
     },
     async paginatedManuscripts(_, { sort, offset, limit, filter }, ctx) {
-      const query = ctx.connectors.Manuscript.model.query().eager('submitter')
+      const query = ctx.models.Manuscript.query().eager('submitter')
 
       if (filter && filter.status) {
         query.where({ status: filter.status })
@@ -391,24 +389,6 @@ const typeDefs = `
     notesType: String
     content: String
   }
-
-  # type reviewerStatus {
-  #   user: ID!
-  #   status: String
-  # }
-
-  # input reviewerStatusUpdate {
-  #   user: ID!
-  #   status: String
-  # }
-
-  # extend type Team {
-  #   status: [reviewerStatus]
-  # }
-
-  # extend input TeamInput {
-  #   status: [reviewerStatusUpdate]
-  # }
 `
 
 module.exports = {

@@ -1,9 +1,7 @@
 import React from 'react'
-
 import styled from 'styled-components'
-// import Authorize from 'pubsweet-client/src/helpers/Authorize'
 import { Action, ActionGroup } from '@pubsweet/ui'
-import { Item, Header, Body, StatusBadge } from '../../style'
+import { Item, StatusBadge } from '../../style'
 import Meta from '../metadata/Meta'
 import MetadataSections from '../metadata/MetadataSections'
 import MetadataType from '../metadata/MetadataType'

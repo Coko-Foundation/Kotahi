@@ -1,11 +1,10 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-import PropTypes from 'prop-types'
-import { override, th, grid, darken, lighten } from '@pubsweet/ui-toolkit'
-
-import { Icon, Action } from '@pubsweet/ui'
+// import PropTypes from 'prop-types'
+import { th, grid, lighten } from '@pubsweet/ui-toolkit'
+import { Link } from 'react-router-dom'
+import { Icon } from '@pubsweet/ui'
 import { UserAvatar } from '../components/component-avatar/src'
-import { Link, useHistory } from 'react-router-dom'
 
 const Root = styled.nav`
   grid-area: menu;
@@ -28,19 +27,19 @@ const Section = styled.div`
   // align-items: center;
 `
 
-const Logo = styled.span`
-  // margin: ${grid(2)} 1rem ${grid(2)} 1rem;
+// const Logo = styled.span`
+//   // margin: ${grid(2)} 1rem ${grid(2)} 1rem;
 
-  ${override('ui.AppBar.Logo')};
-`
+//   ${override('ui.AppBar.Logo')};
+// `
 
-const LogoLink = styled(Action)`
-  & > * {
-    height: calc(${th('gridUnit')} * 6);
-  }
+// const LogoLink = styled(Action)`
+//   & > * {
+//     height: calc(${th('gridUnit')} * 6);
+//   }
 
-  ${override('ui.AppBar.LogoLink')};
-`
+//   ${override('ui.AppBar.LogoLink')};
+// `
 
 const NavItem = ({ className, link, name, icon }) => (
   <Link className={className} to={link}>
@@ -108,11 +107,18 @@ const UserInfo = styled.div`
   margin-left: ${grid(1)};
 `
 
-const Menu = ({ className, loginLink = '/login', navLinkComponents, user }) => (
+const Menu = ({
+  className,
+  loginLink = '/login',
+  navLinkComponents,
+  user,
+  notice,
+}) => (
   <Root className={className}>
     <Section>
+      {/* TODO: Place this notice (used for offline notification) better */}
+      {notice}
       <UserComponent loginLink={loginLink} user={user} />
-
       {navLinkComponents &&
         navLinkComponents.map((navInfo, idx) => (
           <Item
@@ -129,7 +135,7 @@ const UserComponent = ({ user, loginLink }) => (
   <Section>
     {user && (
       <UserItem to="/journal/profile">
-        <UserAvatar user={user} size={64} />
+        <UserAvatar size={64} user={user} />
         <UserInfo>
           {user.defaultIdentity.name || user.username}
           {/* ({user.username}) */}
@@ -137,17 +143,17 @@ const UserComponent = ({ user, loginLink }) => (
         </UserInfo>
       </UserItem>
     )}
-    {!user && <Item name="Login" link={loginLink} />}
+    {!user && <Item link={loginLink} name="Login" />}
   </Section>
 )
 
-Menu.propTypes = {
-  brandLink: PropTypes.string,
-  brand: PropTypes.node,
-  loginLink: PropTypes.string,
-  onLogoutClick: PropTypes.func,
-  user: PropTypes.object,
-  navLinkComponents: PropTypes.arrayOf(PropTypes.element),
-}
+// Menu.propTypes = {
+//   brandLink: PropTypes.string,
+//   brand: PropTypes.node,
+//   loginLink: PropTypes.string,
+//   onLogoutClick: PropTypes.func,
+//   user: PropTypes.object,
+//   navLinkComponents: PropTypes.arrayOf(PropTypes.element),
+// }
 
 export default Menu

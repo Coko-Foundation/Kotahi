@@ -3,6 +3,7 @@ const OrcidStrategy = require('passport-orcid')
 const config = require('config')
 const authentication = require('pubsweet-server/src/authentication')
 const fetchUserDetails = require('./fetchUserDetails')
+
 const CALLBACK_URL = '/auth/orcid/callback'
 
 module.exports = app => {
@@ -35,6 +36,7 @@ module.exports = app => {
           }
         }
 
+        // TODO: Update the user details on every login, asynchronously
         try {
           if (!user) {
             user = await new User({

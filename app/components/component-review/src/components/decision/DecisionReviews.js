@@ -1,18 +1,17 @@
 import React from 'react'
+import { Action } from '@pubsweet/ui'
 import DecisionReview from './DecisionReview'
 import { Container, SectionHeader, SectionRow, Title } from '../style'
-import { H1, Action } from '@pubsweet/ui'
 
 // TODO: read reviewer ordinal and name from project reviewer
 // const { status } =
-//     getUserFromTeam(manuscript, 'reviewerEditor').filter(
+//     getUserFromTeam(manuscript, 'reviewer').filter(
 //       member => member.user.id === currentUser.id,
 //     )[0] || {}
 //   return status
 
 const getCompletedReviews = (manuscript, currentUser) => {
-  const team =
-    manuscript.teams.find(team => team.role === 'reviewerEditor') || {}
+  const team = manuscript.teams.find(team => team.role === 'reviewer') || {}
   if (!team.members) {
     return null
   }

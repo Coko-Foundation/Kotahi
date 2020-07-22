@@ -3,7 +3,7 @@ import * as React from 'react'
 import { Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/client'
 
 // import compose from 'recompose/compose';
 // import { connect } from 'react-redux';

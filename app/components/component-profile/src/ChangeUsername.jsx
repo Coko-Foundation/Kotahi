@@ -1,7 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import gql from 'graphql-tag'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/client'
 import { TextField, Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
