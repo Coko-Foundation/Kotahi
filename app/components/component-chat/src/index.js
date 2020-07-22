@@ -1,9 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
-// import { useQuery } from '@apollo/react-hooks'
-// import gql from 'graphql-tag'
-// import { useParams } from 'react-router-dom'
 import Messages from './Messages/Messages'
 import ChatInput from './SuperChatInput/SuperChatInput'
 
@@ -16,14 +13,6 @@ const MessageContainer = styled.section`
     'read'
     'write';
 `
-
-// const GET_CHANNEL_BY_DOI = gql`
-//   query findByDOI($doi: String) {
-//     findByDOI(doi: $doi) {
-//       id
-//     }
-//   }
-// `
 
 const Container = ({ channelId }) => {
   return (

@@ -1,16 +1,12 @@
 import React, { useEffect } from 'react'
 import gql from 'graphql-tag'
-// import styled from 'styled-components'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import PropTypes from 'prop-types'
-// import ReactMarkdown from 'react-markdown/with-html'
-// import Icon from './Icon'
 import { UserAvatar } from '../../../component-avatar/src'
 import { sortAndGroupMessages } from '../../../../sortAndGroup'
 import NextPageButton from '../../../NextPageButton'
 import { convertTimestampToDate } from '../../../../shared/time-formatting'
 import MessageRenderer from './MessageRenderer'
-// import { SmallProfileImage } from './ProfileImage'
 
 import {
   Timestamp,
@@ -39,6 +35,15 @@ const GET_MESSAGES = gql`
           profilePicture
           online
           defaultIdentity {
+            ... on ExternalIdentity {
+              identifier
+            }
+            ... on LocalIdentity {
+              email
+            }
+            type
+            aff
+            id
             name
           }
         }
@@ -64,6 +69,15 @@ const MESSAGES_SUBSCRIPTION = gql`
         profilePicture
         online
         defaultIdentity {
+          id
+          ... on ExternalIdentity {
+            identifier
+          }
+          ... on LocalIdentity {
+            email
+          }
+          type
+          aff
           name
         }
       }
@@ -71,59 +85,6 @@ const MESSAGES_SUBSCRIPTION = gql`
   }
 `
 
-// const MESSAGES_ENHANCED_SUBSCRIPTION = gql`
-//   subscription messageEnhanced($channelId: ID) {
-//     messageEnhanced(channelId: $channelId) {
-//       id
-//       created
-//       updated
-//       content
-//       user {
-//         id
-//         username
-//         profilePicture
-//         online
-//       }
-//     }
-//   }
-// `
-
-// const subscribeToEnhancedMessages = (subscribeToMore, channelId) =>
-//   subscribeToMore({
-//     document: MESSAGES_ENHANCED_SUBSCRIPTION,
-//     variables: { channelId },
-//     updateQuery: (prev, { subscriptionData }) => {
-//       if (!subscriptionData.data) return prev
-//       const { messageEnhanced } = subscriptionData.data
-//       const existingMessage = prev.messages.edges.find(
-//         ({ id }) => id === messageEnhanced.id,
-//       )
-//       if (existingMessage) {
-//         return Object.assign({}, prev, {
-//           messages: {
-//             ...prev.messages,
-//             edges: prev.messages.edges.map(edge => {
-//               // Replace the optimstic update with the actual db message
-//               if (edge.id === existingMessage.id)
-//                 return {
-//                   ...edge,
-//                   // cursor: btoa(newMessage.id),
-//                   enhanced: subscriptionData.data.messageEnhanced.enhanced,
-//                 }
-
-//               return edge
-//             }),
-//           },
-//         })
-//       }
-//       return Object.assign({}, prev, {
-//         messages: {
-//           ...prev.messages,
-//           edges: [...prev.messages.edges, messageEnhanced],
-//         },
-//       })
-//     },
-//   })
 
 const subscribeToNewMessages = (subscribeToMore, channelId) =>
   subscribeToMore({

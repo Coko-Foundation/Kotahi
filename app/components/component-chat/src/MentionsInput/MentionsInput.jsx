@@ -1,7 +1,7 @@
 // @flow
 import React from 'react'
 import { MentionsInput, Mention } from 'react-mentions'
-import { useApolloClient } from '@apollo/react-hooks'
+import { useApolloClient } from '@apollo/client'
 import { MentionsInputStyle } from './style'
 import MentionSuggestion from './mentionSuggestion'
 import { SEARCH_USERS } from '../../../../queries'

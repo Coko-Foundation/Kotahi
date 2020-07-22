@@ -1,7 +1,7 @@
 import React from 'react'
 import ReactMarkdown from 'react-markdown'
 import htmlParser from 'react-markdown/plugins/html-parser'
-import { useQuery } from '@apollo/react-hooks'
+import { useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
