@@ -1,4 +1,4 @@
-export default [
+module.exports = [
   {
     label: 'Original Research Report',
     value: 'original-research',

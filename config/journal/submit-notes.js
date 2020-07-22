@@ -1,4 +1,4 @@
-export default {
+module.exports = {
   fundingAcknowledgement: {
     placeholder: 'Enter an acknowledgment…',
     title: 'Funding body acknowledgement (required)',
