@@ -134,7 +134,6 @@ module.exports = {
   'pubsweet-client': {
     API_ENDPOINT: '/api',
     'login-redirect': '/journal/dashboard',
-    'redux-log': false,
     theme: process.env.PUBSWEET_THEME,
   },
   'pubsweet-component-xpub-dashboard': {

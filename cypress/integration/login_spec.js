@@ -1,23 +1,17 @@
 describe('Login test', () => {
   it('Can log in as admin (and logout)', () => {
-    cy.task('db:seed')
-    cy.visit('/dashboard')
+    cy.task('restore', 'initialState')
+    cy.task('createToken', 'Sinead Sullivan').then(token => {
+      cy.setToken(token)
+      cy.visit('/journal/dashboard')
+    })
 
-    const username = 'admin'
-    const password = 'password'
+    // console.log(localStorage.getItem('token'))
 
-    cy.get('input[name="username"]').type(username)
-    cy.get('input[name="password"]').type(password)
-    cy.get('button[type="submit"]').click()
-
-    cy.url().should('include', '/dashboard')
-    cy.get('nav')
-      .contains('Login')
-      .should('not.exist')
+    cy.get('nav').contains('Sinead')
+    cy.get('nav').contains('Dashboard')
     cy.get('nav').contains('admin')
-    cy.get('nav').contains('Logout')
 
-    cy.get('nav button').click()
-    cy.get('nav').contains('Login')
+    cy.contains('You have not submitted any manuscripts yet')
   })
 })

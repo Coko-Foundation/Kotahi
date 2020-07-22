@@ -39,6 +39,7 @@ module.exports = webpackEnv => {
         '/graphql': 'http://localhost:3000',
         '/uploads': 'http://locahost:3000',
         '/static/profiles': 'http://localhost:3000',
+        '/public': 'http://localhost:3000',
       },
       historyApiFallback: true,
     },
