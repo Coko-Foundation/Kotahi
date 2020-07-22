@@ -1,5 +1,3 @@
-const { deferConfig } = require('config/defer')
-
 module.exports = {
   'pubsweet-server': {
     db: {
@@ -23,9 +21,5 @@ module.exports = {
     password: '12345678',
     email: 'admin@admin.com',
     admin: true,
-  },
-  'auth-orcid': {
-    clientID: 'APP-91SA3NKY9L7Z2ZQC',
-    clientSecret: '5bfddaea-e02f-429e-aebc-a063edae960e',
   },
 }
