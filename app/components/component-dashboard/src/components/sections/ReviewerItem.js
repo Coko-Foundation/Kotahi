@@ -20,7 +20,7 @@ import VersionTitle from './VersionTitle'
 
 const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
   const team =
-    (version.teams || []).find(team => team.role === 'reviewerEditor') || {}
+    (version.teams || []).find(team => team.role === 'reviewer') || {}
 
   const currentMember =
     team.members &&
@@ -29,7 +29,7 @@ const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
 
   // Enable that when Team Models is updated
   // const { status } =
-  //   getUserFromTeam(version, 'reviewerEditor').filter(
+  //   getUserFromTeam(version, 'reviewer').filter(
   //     member => member.id === currentUser.id,
   //   )[0] || {}
 

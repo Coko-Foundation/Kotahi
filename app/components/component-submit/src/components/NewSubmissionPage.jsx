@@ -1,5 +1,5 @@
 import React from 'react'
-import { useQuery, useMutation, ApolloConsumer } from '@apollo/react-hooks'
+import { useQuery, useMutation, ApolloConsumer } from '@apollo/client'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 
 import config from 'config'

@@ -47,16 +47,15 @@ const OwnerItem = ({ version, journals, deleteManuscript }) => {
   )
 
   return (
-    // <Authorize object={[version]} operation="can view my submission section">
     <Item>
       <div>
         {' '}
         <StatusBadge minimal status={version.status} />
+        {JSON.stringify(version._currentRoles)}
         <VersionTitle version={version} />
       </div>
       {actions}
     </Item>
-    // </Authorize>
   )
 }
 

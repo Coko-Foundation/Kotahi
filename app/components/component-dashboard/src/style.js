@@ -76,3 +76,11 @@ export const HeadingWithAction = styled.div`
 `
 
 export { StatusBadge } from '../../shared'
+
+export const Placeholder = styled.div`
+  display: grid;
+  place-items: center;
+  color: ${th('colorTextPlaceholder')};
+  height: 100%;
+  padding: 4em;
+`

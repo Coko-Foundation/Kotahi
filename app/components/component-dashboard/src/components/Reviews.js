@@ -29,7 +29,7 @@ const getUserFromTeam = (version, role) => {
 }
 
 const countStatus = (version, status) => {
-  const teamMember = getUserFromTeam(version, 'reviewerEditor')
+  const teamMember = getUserFromTeam(version, 'reviewer')
 
   if (status === 'rejected' || status === 'invited') {
     return sumBy(teamMember, member => (member.status === status ? 1 : 0))

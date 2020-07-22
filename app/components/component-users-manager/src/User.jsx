@@ -1,6 +1,6 @@
 import React from 'react'
 import gql from 'graphql-tag'
-import { useMutation } from '@apollo/react-hooks'
+import { useMutation } from '@apollo/client'
 import { Action } from '@pubsweet/ui'
 import { UserAvatar } from '../../component-avatar/src'
 import { Row, Cell, LastCell } from './style'

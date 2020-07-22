@@ -1,5 +1,5 @@
 import React from 'react'
-import { useQuery, useMutation } from '@apollo/react-hooks'
+import { useQuery, useMutation } from '@apollo/client'
 import { Action, Button, Icon } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 
@@ -11,6 +11,7 @@ import {
   Heading,
   Content,
   HeadingWithAction,
+  Placeholder,
 } from '../style'
 import EditorItem from './sections/EditorItem'
 import OwnerItem from './sections/OwnerItem'
@@ -22,6 +23,8 @@ import {
   SectionRow,
   SectionContent,
 } from '../../../shared'
+
+import hasRole from '../../../../shared/hasRole'
 
 const updateReviewer = (proxy, { data: { reviewerResponse } }) => {
   const id = reviewerResponse.object.objectId
@@ -45,7 +48,7 @@ const Dashboard = ({ history, ...props }) => {
   // const uploadManuscript = upload()
   // const [conversion] = useContext(XpubContext)
 
-  const { loading, data } = useQuery(queries.dashboard)
+  const { loading, data, error } = useQuery(queries.dashboard)
   const [reviewerRespond] = useMutation(mutations.reviewerResponseMutation, {
     // variables: { currentUserId, action, teamId },
     update: updateReviewer,
@@ -65,27 +68,37 @@ const Dashboard = ({ history, ...props }) => {
   })
 
   if (loading) return <Spinner />
-
+  if (error) return error
   const dashboard = (data && data.manuscripts) || []
   const currentUser = data && data.currentUser
+
+  const mySubmissions = dashboard.filter(submission =>
+    hasRole(submission, 'author'),
+  )
+
+  const toReview = dashboard.filter(submission =>
+    hasRole(submission, 'reviewer'),
+  )
+
+  const manuscriptsImEditorOf = dashboard.filter(submission =>
+    hasRole(submission, ['seniorEditor', 'handlingEditor']),
+  )
 
   return (
     <Container>
       <HeadingWithAction>
         <Heading>Dashboard</Heading>
         <Button onClick={() => history.push('/journal/newSubmission')} primary>
-          {/* <Icon>plus</Icon> */}＋ New submission
+          ＋ New submission
         </Button>
       </HeadingWithAction>
 
-      {!dashboard.length && <Section>Nothing to do at the moment.</Section>}
-      {/* <Authorize object={dashboard} operation="can view my submission section"> */}
-      {dashboard.length > 0 ? (
-        <SectionContent>
-          <SectionHeader>
-            <Title>My Submissions</Title>
-          </SectionHeader>
-          {dashboard.map(submission => (
+      <SectionContent>
+        <SectionHeader>
+          <Title>My Submissions</Title>
+        </SectionHeader>
+        {dashboard.length > 0 ? (
+          mySubmissions.map(submission => (
             <SectionRow key={`submission-${submission.id}`}>
               <OwnerItem
                 deleteManuscript={() =>
@@ -97,18 +110,17 @@ const Dashboard = ({ history, ...props }) => {
                 version={submission}
               />
             </SectionRow>
-          ))}
-        </SectionContent>
-      ) : null}
-      {/* </Authorize>
-      <Authorize object={dashboard} operation="can view review section"> */}
-      {dashboard.length > 0 ? (
-        <SectionContent>
-          <SectionHeader>
-            <Title>To Review</Title>
-          </SectionHeader>
-
-          {dashboard.map(review => (
+          ))
+        ) : (
+          <Placeholder>You have not submitted any manuscripts yet</Placeholder>
+        )}
+      </SectionContent>
+      <SectionContent>
+        <SectionHeader>
+          <Title>To Review</Title>
+        </SectionHeader>
+        {toReview.length > 0 ? (
+          toReview.map(review => (
             <SectionRow key={review.id}>
               <ReviewerItem
                 currentUser={currentUser}
@@ -117,25 +129,30 @@ const Dashboard = ({ history, ...props }) => {
                 version={review}
               />
             </SectionRow>
-          ))}
-        </SectionContent>
-      ) : null}
-      {/* </Authorize> */}
+          ))
+        ) : (
+          <Placeholder>You have not been assigned any reviews yet</Placeholder>
+        )}
+      </SectionContent>
 
-      {/* <Authorize object={dashboard} operation="can view my manuscripts section"> */}
-      {dashboard.length > 0 ? (
-        <SectionContent>
-          <SectionHeader>
-            <Title>Manuscripts I'm editor of</Title>
-          </SectionHeader>
-          {dashboard.map(manuscript => (
+      <SectionContent>
+        <SectionHeader>
+          <Title>Manuscripts I'm editor of</Title>
+        </SectionHeader>
+        {manuscriptsImEditorOf.length > 0 ? (
+          manuscriptsImEditorOf.map(manuscript => (
             <SectionRow key={`manuscript-${manuscript.id}`}>
               <EditorItem version={manuscript} />
             </SectionRow>
-          ))}
-        </SectionContent>
-      ) : null}
-      {/* </Authorize> */}
+          ))
+        ) : (
+          <SectionRow>
+            <Placeholder>
+              You are not an editor of any manuscript yet
+            </Placeholder>
+          </SectionRow>
+        )}
+      </SectionContent>
     </Container>
   )
 }

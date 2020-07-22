@@ -1,7 +1,7 @@
 import { compose } from 'recompose'
 import { omit } from 'lodash'
 import config from 'config'
-import { graphql } from '@apollo/react-hoc'
+import { graphql } from '@apollo/client/react/hoc'
 import gql from 'graphql-tag'
 
 import queries from './graphql/queries'

@@ -108,11 +108,18 @@ const UserInfo = styled.div`
   margin-left: ${grid(1)};
 `
 
-const Menu = ({ className, loginLink = '/login', navLinkComponents, user }) => (
+const Menu = ({
+  className,
+  loginLink = '/login',
+  navLinkComponents,
+  user,
+  notice,
+}) => (
   <Root className={className}>
     <Section>
+      {/* TODO: Place this notice (used for offline notification) better */}
+      {notice}
       <UserComponent loginLink={loginLink} user={user} />
-
       {navLinkComponents &&
         navLinkComponents.map((navInfo, idx) => (
           <Item
@@ -129,7 +136,7 @@ const UserComponent = ({ user, loginLink }) => (
   <Section>
     {user && (
       <UserItem to="/journal/profile">
-        <UserAvatar user={user} size={64} />
+        <UserAvatar size={64} user={user} />
         <UserInfo>
           {user.defaultIdentity.name || user.username}
           {/* ({user.username}) */}
@@ -137,7 +144,7 @@ const UserComponent = ({ user, loginLink }) => (
         </UserInfo>
       </UserItem>
     )}
-    {!user && <Item name="Login" link={loginLink} />}
+    {!user && <Item link={loginLink} name="Login" />}
   </Section>
 )
 

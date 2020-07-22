@@ -6,6 +6,7 @@ export const GET_CURRENT_USER = gql`
       id
       profilePicture
       username
+      admin
       defaultIdentity {
         aff
         name
@@ -16,6 +17,11 @@ export const GET_CURRENT_USER = gql`
         ... on LocalIdentity {
           email
         }
+      }
+      online
+      _currentRoles {
+        id
+        roles
       }
     }
   }
