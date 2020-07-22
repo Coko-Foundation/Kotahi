@@ -1,18 +1,16 @@
 const logger = require('@pubsweet/logger')
 const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
 
-const eager = undefined
-
 const resolvers = {
   Query: {
     user(_, { id }, ctx) {
-      return ctx.connectors.User.fetchOne(id, ctx, { eager })
+      return ctx.models.User.query().findById(id)
     },
     async users(_, vars, ctx) {
-      return ctx.connectors.User.model.query()
+      return ctx.models.User.query()
     },
     async paginatedUsers(_, { sort, offset, limit, filter }, ctx) {
-      const query = ctx.connectors.User.model.query()
+      const query = ctx.models.User.query()
 
       if (filter && filter.admin) {
         query.where({ admin: true })
@@ -39,21 +37,23 @@ const resolvers = {
         users,
       }
 
-      // return ctx.connectors.User.fetchAll(where, ctx, { eager })
+      // return ctx.models.User.fetchAll(where, ctx, { eager })
     },
     // Authentication
-    currentUser(_, vars, ctx) {
+    async currentUser(_, vars, ctx) {
       if (!ctx.user) return null
-      return ctx.connectors.User.model.find(ctx.user, { eager })
+      const user = await ctx.models.User.find(ctx.user.id)
+      user._currentRoles = await user.currentRoles()
+      return user
     },
     searchUsers(_, { teamId, query }, ctx) {
       if (teamId) {
-        return ctx.connectors.User.model
+        return ctx.models.User.model
           .query()
           .where({ teamId })
           .where('username', 'ilike', `${query}%`)
       }
-      return ctx.connectors.User.model
+      return ctx.models.User.model
         .query()
         .where('username', 'ilike', `${query}%`)
     },
@@ -63,9 +63,7 @@ const resolvers = {
       const user = {
         username: input.username,
         email: input.email,
-        passwordHash: await ctx.connectors.User.model.hashPassword(
-          input.password,
-        ),
+        passwordHash: await ctx.models.User.hashPassword(input.password),
       }
 
       const identity = {
@@ -77,7 +75,7 @@ const resolvers = {
       user.defaultIdentity = identity
 
       try {
-        const result = await ctx.connectors.User.create(user, ctx, {
+        const result = await ctx.models.User.create(user, ctx, {
           eager: 'defaultIdentity',
         })
 
@@ -93,17 +91,15 @@ const resolvers = {
       }
     },
     deleteUser(_, { id }, ctx) {
-      return ctx.connectors.User.delete(id, ctx)
+      return ctx.models.User.delete(id, ctx)
     },
     async updateUser(_, { id, input }, ctx) {
       if (input.password) {
-        input.passwordHash = await ctx.connectors.User.model.hashPassword(
-          input.password,
-        )
+        input.passwordHash = await ctx.models.User.hashPassword(input.password)
         delete input.password
       }
 
-      return ctx.connectors.User.update(id, input, ctx)
+      return ctx.models.User.update(id, input, ctx)
     },
     // Authentication
     async loginUser(_, { input }, ctx) {
@@ -112,7 +108,7 @@ const resolvers = {
       let isValid = false
       let user
       try {
-        user = await ctx.connectors.User.model.findByUsername(input.username)
+        user = await ctx.models.User.findByUsername(input.username)
         isValid = await user.validPassword(input.password)
       } catch (err) {
         logger.debug(err)
@@ -126,7 +122,7 @@ const resolvers = {
       }
     },
     async updateCurrentUsername(_, { username }, ctx) {
-      const user = await ctx.connectors.User.model.find(ctx.user)
+      const user = await ctx.models.User.find(ctx.user)
       user.username = username
       await user.save()
       return user
@@ -134,16 +130,15 @@ const resolvers = {
   },
   User: {
     async defaultIdentity(parent, args, ctx) {
-      const identity = await ctx.connectors.Identity.model
-        .query()
+      const identity = await ctx.models.Identity.query()
         .where({ userId: parent.id, isDefault: true })
         .first()
       return identity
     },
     async identities(parent, args, ctx) {
-      const identities = await ctx.connectors.Identity.model
-        .query()
-        .where({ userId: parent.id })
+      const identities = await ctx.models.Identity.query().where({
+        userId: parent.id,
+      })
       return identities
     },
   },
@@ -205,9 +200,17 @@ const typeDefs = `
     defaultIdentity: Identity
     profilePicture: String
     online: Boolean
+    _currentRoles: [CurrentRole]
+    _currentGlobalRoles: [String]
+  }
+
+  type CurrentRole {
+    id: ID
+    roles: [String]
   }
 
   interface Identity {
+    id: ID
     name: String
     aff: String # JATS <aff>
     email: String # JATS <aff>
@@ -218,6 +221,7 @@ const typeDefs = `
 
   # local identity (not from ORCID, etc.)
   type LocalIdentity implements Identity {
+    id: ID
     name: String
     email: String
     aff: String
@@ -225,6 +229,7 @@ const typeDefs = `
   }
 
   type ExternalIdentity implements Identity {
+    id: ID
     name: String
     identifier: String
     email: String

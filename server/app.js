@@ -10,7 +10,7 @@ const helmet = require('helmet')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const passport = require('passport')
-const gqlApi = require('pubsweet-server/src/graphql/api') // TODO: Fix import
+const gqlApi = require('./graphql')
 // const index = require('./routes/index')
 // const api = require('./routes/api')
 const logger = require('@pubsweet/logger')
@@ -56,6 +56,8 @@ const configureApp = app => {
   app.use(helmet())
   app.use(express.static(path.resolve('.', '_build')))
 
+  app.use('/public', express.static(path.resolve(__dirname, '../public')))
+
   if (config.has('pubsweet-server.uploads')) {
     app.use(
       '/uploads',
@@ -81,18 +83,6 @@ const configureApp = app => {
 
   // GraphQL API
   gqlApi(app)
-
-  // SSE update stream
-  // if (_.get('pubsweet-server.sse', config)) {
-  //   sse.setAuthsome(authsome)
-  //   app.get(
-  //     '/updates',
-  //     passport.authenticate('bearer', { session: false }),
-  //     sse.connect,
-  //   )
-
-  //   app.locals.sse = sse
-  // }
 
   // Serve the index page for front end
   // app.use('/', index)

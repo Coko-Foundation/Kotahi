@@ -35,6 +35,7 @@ module.exports = app => {
           }
         }
 
+        // TODO: Update the user details on every login, asynchronously
         try {
           if (!user) {
             user = await new User({

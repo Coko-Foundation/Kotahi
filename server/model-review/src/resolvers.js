@@ -14,7 +14,7 @@ const resolvers = {
 
         return rvw
       }
-      input.userId = ctx.user
+      input.userId = ctx.user.id
       const review = await new Review(input)
       await review.save()
       review.comments = await review.getComments()
