@@ -1,13 +1,10 @@
-// @flow
 import * as React from 'react'
 import { useQuery } from '@apollo/client'
 import styled from 'styled-components'
-// import { GET_USER } from '../../queries'
-// import { UserHoverProfile } from 'src/components/hoverProfile';
+import gql from 'graphql-tag'
 import AvatarImage from './image'
 import { Container, AvatarLink, OnlineIndicator } from './style'
 import ConditionalWrap from '../../ConditionalWrap'
-import gql from 'graphql-tag'
 
 export const GET_USER = gql`
   query user($id: ID, $username: String) {

@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import styled from 'styled-components'
 import { cloneDeep, set } from 'lodash'
 import { Field } from 'formik'
 import { NoteEditor } from 'xpub-edit'

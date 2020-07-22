@@ -7,9 +7,9 @@ import Wax from '../../../wax-collab/src/Editoria'
 import MessageContainer from '../../../component-chat/src'
 import { Spinner } from '../../../shared'
 
-const options = {
-  //  schema: new CreateSchema(XpubSchema),
-}
+// const options = {
+//   //  schema: new CreateSchema(XpubSchema),
+// }
 
 const Info = styled.span`
   padding: 0;

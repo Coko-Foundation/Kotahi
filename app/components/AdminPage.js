@@ -1,11 +1,10 @@
 import React, { useContext, useCallback, useRef } from 'react'
 import styled from 'styled-components'
 import { compose } from 'recompose'
-import { useQuery, useApolloClient, gql } from '@apollo/client'
+import { useQuery } from '@apollo/client'
 import {
   withRouter,
   matchPath,
-  Router,
   Route,
   Switch,
   Redirect,
@@ -72,12 +71,9 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 
 const updateStuff = data => {
   currentRolesVar(data.currentUser._currentRoles)
-  console.log('updating stuff')
 }
 
 const AdminPage = ({ children, history, match }) => {
-  const client = useApolloClient()
-
   const journal = useContext(JournalContext)
   const [conversion] = useContext(XpubContext)
 
@@ -114,7 +110,6 @@ const AdminPage = ({ children, history, match }) => {
   const showLinks = pathname.match(/^\/(submit|manuscript)/g)
   let links = []
   const formBuilderLink = `/journal/admin/form-builder`
-  const profileLink = `/journal/profile`
   const homeLink = '/journal/dashboard'
 
   if (showLinks) {

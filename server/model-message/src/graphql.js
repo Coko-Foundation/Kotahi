@@ -44,7 +44,6 @@ const resolvers = {
     createMessage: async (_, { content, channelId }, context) => {
       const pubsub = await getPubsub()
       const userId = context.user.id
-      console.log(userId, context.user)
       const savedMessage = await new Message({
         content,
         userId,

@@ -12,9 +12,7 @@
 
 import React from 'react'
 import styled, { css } from 'styled-components'
-import { th, override } from '@pubsweet/ui-toolkit'
-
-import { Button } from '@pubsweet/ui'
+import { th } from '@pubsweet/ui-toolkit'
 
 const common = css`
   color: ${th('colorPrimary')};
@@ -42,8 +40,6 @@ const ActionButton = styled.button`
   ${common};
 `
 
-const Action = props => {
-  return <ActionButton {...props}>{props.children}</ActionButton>
-}
+const Action = props => <ActionButton {...props}>{props.children}</ActionButton>
 
 export default Action

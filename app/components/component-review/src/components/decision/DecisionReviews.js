@@ -1,7 +1,7 @@
 import React from 'react'
+import { Action } from '@pubsweet/ui'
 import DecisionReview from './DecisionReview'
 import { Container, SectionHeader, SectionRow, Title } from '../style'
-import { H1, Action } from '@pubsweet/ui'
 
 // TODO: read reviewer ordinal and name from project reviewer
 // const { status } =

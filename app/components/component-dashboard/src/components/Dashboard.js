@@ -1,18 +1,11 @@
 import React from 'react'
 import { useQuery, useMutation } from '@apollo/client'
-import { Action, Button, Icon } from '@pubsweet/ui'
+import { Button } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 
 import queries from '../graphql/queries/'
 import mutations from '../graphql/mutations/'
-import {
-  Container,
-  Section,
-  Heading,
-  Content,
-  HeadingWithAction,
-  Placeholder,
-} from '../style'
+import { Container, Heading, HeadingWithAction, Placeholder } from '../style'
 import EditorItem from './sections/EditorItem'
 import OwnerItem from './sections/OwnerItem'
 import ReviewerItem from './sections/ReviewerItem'
@@ -137,7 +130,7 @@ const Dashboard = ({ history, ...props }) => {
 
       <SectionContent>
         <SectionHeader>
-          <Title>Manuscripts I'm editor of</Title>
+          <Title>Manuscripts I&apos;m editor of</Title>
         </SectionHeader>
         {manuscriptsImEditorOf.length > 0 ? (
           manuscriptsImEditorOf.map(manuscript => (

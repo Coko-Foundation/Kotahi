@@ -6,13 +6,7 @@ import { Attachment } from '@pubsweet/ui'
 
 import form from '../../../../../storage/forms/submit.json'
 
-import {
-  Container,
-  Title,
-  SectionHeader,
-  SectionRow,
-  SectionRowGrid,
-} from '../style'
+import { Container, Title, SectionHeader, SectionRowGrid } from '../style'
 
 const Heading = styled.span`
   font-weight: inherit;
@@ -42,8 +36,8 @@ const Cell = styled.span`
 const getNote = (notes, type) =>
   notes.find(note => note.notesType === type) || {}
 
-const getDeclarations = (manuscript, field) =>
-  ((manuscript.meta || {}).declarations || {})[field]
+// const getDeclarations = (manuscript, field) =>
+//   ((manuscript.meta || {}).declarations || {})[field]
 
 const getSupplementaryFiles = supplementary =>
   (supplementary || []).filter(file => file.fileType === 'supplementary') || []
@@ -68,7 +62,7 @@ const ReviewMetadata = ({ manuscript: rawManuscript }) => {
   }
 
   const sortedFormElements = form.children.sort((a, b) =>
-    parseInt(a.order || '0') > parseInt(b.order | '0') ? 1 : -1,
+    parseInt(a.order || '0', 10) > parseInt(b.order || '0', 10) ? 1 : -1,
   )
 
   return (

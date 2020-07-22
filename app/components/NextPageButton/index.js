@@ -1,7 +1,7 @@
 import VisibilitySensor from 'react-visibility-sensor'
 import { Link } from 'react-router-dom'
 import React from 'react'
-import PropTypes from 'prop-types'
+// import PropTypes from 'prop-types'
 import { Spinner } from '../shared'
 import { HasNextPage, NextPageButton } from './style'
 
@@ -53,14 +53,15 @@ const NextPageButtonWrapper = props => {
   )
 }
 
-NextPageButtonWrapper.propTypes = {
-  isFetchingMore: PropTypes.bool,
-  href: PropTypes.object,
-  fetchMore: PropTypes.func.isRequired,
-  children: PropTypes.string,
-  automatic: PropTypes.bool,
-  topOffset: PropTypes.number,
-  bottomOffset: PropTypes.number,
-}
+// TODO: Set default props
+// NextPageButtonWrapper.propTypes = {
+//   isFetchingMore: PropTypes.bool,
+//   href: PropTypes.object,
+//   fetchMore: PropTypes.func.isRequired,
+//   children: PropTypes.string,
+//   automatic: PropTypes.bool,
+//   topOffset: PropTypes.number,
+//   bottomOffset: PropTypes.number,
+// }
 
 export default NextPageButtonWrapper

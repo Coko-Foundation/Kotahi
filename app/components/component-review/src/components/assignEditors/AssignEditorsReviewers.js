@@ -1,13 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
-import { Action } from '@pubsweet/ui'
-import {
-  Roles,
-  Container,
-  SectionHeader,
-  SectionRowGrid,
-  Title,
-} from '../style'
+import { Container, SectionHeader, SectionRowGrid, Title } from '../style'
 
 const AssignEditorsReviewers = ({ manuscript, AssignEditor }) => (
   <Container>

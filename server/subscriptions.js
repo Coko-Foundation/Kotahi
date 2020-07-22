@@ -34,7 +34,6 @@ module.exports = {
               resolve({ userId: id, models, helpers })
             })
           })
-          console.log('I AM ALIVE!')
           // Record a user's online status
           const user = await User.query().updateAndFetchById(
             addTocontext.userId,

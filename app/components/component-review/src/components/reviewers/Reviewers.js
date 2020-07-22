@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Link } from '@pubsweet/ui'
-import { th } from '@pubsweet/ui-toolkit'
 import ReviewerForm from './ReviewerForm'
 import { Container, PaddedContent } from '../../../../shared'
 

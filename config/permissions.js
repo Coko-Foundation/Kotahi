@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 const { rule, shield, and, or, not, allow, deny } = require('graphql-shield')
 
 const isAdmin = rule({ cache: 'contextual' })(

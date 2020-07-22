@@ -3,6 +3,7 @@ const OrcidStrategy = require('passport-orcid')
 const config = require('config')
 const authentication = require('pubsweet-server/src/authentication')
 const fetchUserDetails = require('./fetchUserDetails')
+
 const CALLBACK_URL = '/auth/orcid/callback'
 
 module.exports = app => {

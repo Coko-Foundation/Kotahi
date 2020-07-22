@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { sumBy } from 'lodash'
-import { JournalContext } from '../../../xpub-journal'
 import { Badge } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
+import { JournalContext } from '../../../xpub-journal'
 
 const Root = styled.div`
   display: inline-flex;

@@ -11,9 +11,9 @@ import {
   Primary,
   Secondary,
   UserInfo,
-  SuccessStatus,
-  ErrorStatus,
-  NormalStatus,
+  // SuccessStatus,
+  // ErrorStatus,
+  // NormalStatus,
   UserAction as Action,
   StatusBadge,
 } from './style'
@@ -26,15 +26,12 @@ const DELETE_MANUSCRIPT = gql`
   }
 `
 
-
 const User = ({ manuscript }) => {
   const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT)
 
   return (
     <Row>
-      <Cell>
-        {manuscript.meta && manuscript.meta.title}
-      </Cell>
+      <Cell>{manuscript.meta && manuscript.meta.title}</Cell>
       <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
       <Cell>
         <StatusBadge status={manuscript.status} />
@@ -46,7 +43,8 @@ const User = ({ manuscript }) => {
             <UserInfo>
               <Primary>{manuscript.submitter.defaultIdentity.name}</Primary>
               <Secondary>
-                {manuscript.submitter.email || `(${manuscript.submitter.username})`}
+                {manuscript.submitter.email ||
+                  `(${manuscript.submitter.username})`}
               </Secondary>
             </UserInfo>
           </UserCombo>

@@ -23,7 +23,7 @@ const registerComponents = require('pubsweet-server/src/register-components') //
 // Wax Collab requirements
 const WebSocket = require('ws')
 const wsUtils = require('./wax-collab/server-util.js')
-const cookie = require('cookie')
+// const cookie = require('cookie')
 const EventEmitter = require('events')
 
 const configureApp = app => {
@@ -109,7 +109,7 @@ const configureApp = app => {
       .json({ message: err.message })
   })
 
-  // Set up a separate websocket for wax collab
+  // Set up a separate websocket for Wax-Collab
   const wss = new WebSocket.Server({ noServer: true })
   wss.on('connection', (conn, req) => wsUtils.setupWSConnection(conn, req))
 
@@ -128,14 +128,14 @@ const configureApp = app => {
       } else {
         let user = null
         if (request.headers.cookie) {
-          const cookies = cookie.parse(request.headers.cookie)
-          const user = cookies.user_identifier
+          // const cookies = cookie.parse(request.headers.cookie)
+          // const user = cookies.user_identifier
         }
-
+        // TODO: Do real auth for Wax-collab
         user = 'test' // shortcut
 
         if (!user) {
-          console.log('Failed to authenticate', user)
+          // console.log('Failed to authenticate', user)
           socket.destroy()
           return
         }

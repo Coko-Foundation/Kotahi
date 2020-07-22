@@ -3,7 +3,6 @@ import { Button } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 import {
   Item,
-  Body,
   Divider,
   Links,
   LinkContainer,
@@ -33,21 +32,16 @@ const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
   //     member => member.id === currentUser.id,
   //   )[0] || {}
 
-  const review =
-    (version.reviews || []).find(
-      review =>
-        currentUser &&
-        review.user &&
-        review.user.id === currentUser.id &&
-        !review.isDecision,
-    ) || {}
+  // const review =
+  //   (version.reviews || []).find(
+  //     review =>
+  //       currentUser &&
+  //       review.user &&
+  //       review.user.id === currentUser.id &&
+  //       !review.isDecision,
+  //   ) || {}
 
   return (
-    // <Authorize
-    //   key={`${review.id}`}
-    //   object={[version]}
-    //   operation="can view review section"
-    // >
     <Item>
       <VersionTitle version={version} />
 
@@ -101,7 +95,6 @@ const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
       )}
       {status === 'rejected' && 'rejected'}
     </Item>
-    // </Authorize>
   )
 }
 

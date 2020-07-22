@@ -189,7 +189,7 @@ export default ({ match, ...props }) => {
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
 
   // File upload
-  const [uploadReviewFiles] = useMutation(uploadReviewFilesMutation)
+  // const [uploadReviewFiles] = useMutation(uploadReviewFilesMutation)
 
   const [updateTeam] = useMutation(updateTeamMutation)
 
@@ -233,7 +233,7 @@ export default ({ match, ...props }) => {
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
 
-  const manuscript = data.manuscript
+  const { manuscript } = data
   const channelId = manuscript.channels.find(c => c.type === 'editorial').id
 
   const review =
@@ -243,6 +243,7 @@ export default ({ match, ...props }) => {
       )) ||
     {}
 
+  // eslint-disable-next-line
   const status = (
     (
       (manuscript.teams.find(team => team.role === 'reviewer') || {}).status ||

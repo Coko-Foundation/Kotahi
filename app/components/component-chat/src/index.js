@@ -14,13 +14,11 @@ const MessageContainer = styled.section`
     'write';
 `
 
-const Container = ({ channelId }) => {
-  return (
-    <MessageContainer>
-      <Messages channelId={channelId} />
-      <ChatInput channelId={channelId} />
-    </MessageContainer>
-  )
-}
+const Container = ({ channelId }) => (
+  <MessageContainer>
+    <Messages channelId={channelId} />
+    <ChatInput channelId={channelId} />
+  </MessageContainer>
+)
 
 export default Container

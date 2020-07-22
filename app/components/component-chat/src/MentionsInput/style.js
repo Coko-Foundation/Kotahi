@@ -1,4 +1,4 @@
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 
 // import theme from 'shared/theme';
