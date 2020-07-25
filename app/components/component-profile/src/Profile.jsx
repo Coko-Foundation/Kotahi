@@ -1,5 +1,5 @@
 import React, { useCallback } from 'react'
-import { Button, Action } from '@pubsweet/ui'
+import { Button } from '@pubsweet/ui'
 // import { th } from '@pubsweet/ui-toolkit'
 // import styled from 'styled-components'
 import gql from 'graphql-tag'
@@ -19,15 +19,12 @@ const GET_CURRENT_USER = gql`
       profilePicture
       username
       defaultIdentity {
-        aff
-        name
+        identifier
+        email
         type
-        ... on ExternalIdentity {
-          identifier
-        }
-        ... on LocalIdentity {
-          email
-        }
+        aff
+        id
+        name
       }
     }
   }
@@ -111,7 +108,7 @@ const Profile = () => {
               <ChangeUsername user={data.currentUser} />
             </div>
           </FormRow>
-            <Button onClick={() => logoutUser()}>Logout</Button>
+          <Button onClick={() => logoutUser()}>Logout</Button>
         </FormGrid>
       </PageWithHeader>
     </>

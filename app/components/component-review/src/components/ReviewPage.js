@@ -2,7 +2,7 @@ import React from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { Formik } from 'formik'
-import { cloneDeep } from 'lodash'
+// import { cloneDeep } from 'lodash'
 import { getCommentContent } from './review/util'
 import ReviewLayout from '../components/review/ReviewLayout'
 import { Spinner } from '../../../shared'
@@ -34,22 +34,22 @@ const reviewFields = `
   }
 `
 
-const teamFields = `
-  id
-  name
-  role
-  object {
-    objectId
-    objectType
-  }
-  members {
-    id
-    user {
-      id
-      username
-    }
-  }
-`
+// const teamFields = `
+//   id
+//   name
+//   role
+//   object {
+//     objectId
+//     objectType
+//   }
+//   members {
+//     id
+//     user {
+//       id
+//       username
+//     }
+//   }
+// `
 
 const fragmentFields = `
   id
@@ -145,10 +145,11 @@ const query = gql`
   }
 `
 
-const updateTeamMutation = gql`
-  mutation($id: ID!, $input: TeamInput) {
-    updateTeam(id: $id, input: $input) {
-      ${teamFields}
+const completeReviewMutation = gql`
+  mutation($id: ID!) {
+    completeReview(id: $id) {
+      id
+      status
     }
   }
 `
@@ -187,11 +188,10 @@ const createFileMutation = gql`
 export default ({ match, ...props }) => {
   const currentUser = useCurrentUser()
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
+  const [completeReview] = useMutation(completeReviewMutation)
 
   // File upload
   // const [uploadReviewFiles] = useMutation(uploadReviewFilesMutation)
-
-  const [updateTeam] = useMutation(updateTeamMutation)
 
   const [createFileM] = useMutation(createFileMutation)
   const createFile = file =>
@@ -269,24 +269,24 @@ export default ({ match, ...props }) => {
         id: review.id || undefined,
         input: reviewData,
       },
-      update: (proxy, { data: { updateReview } }) => {
-        const data = JSON.parse(
-          JSON.stringify(
-            proxy.readQuery({
-              query,
-              variables: {
-                id: manuscript.id,
-              },
-            }),
-          ),
-        )
-        let reviewIndex = data.manuscript.reviews.findIndex(
-          review => review.id === updateReview.id,
-        )
-        reviewIndex = reviewIndex < 0 ? 0 : reviewIndex
-        data.manuscript.reviews[reviewIndex] = updateReview
-        proxy.writeQuery({ query, data })
-      },
+      // update: (proxy, { data: { updateReview } }) => {
+      //   const data = JSON.parse(
+      //     JSON.stringify(
+      //       proxy.readQuery({
+      //         query,
+      //         variables: {
+      //           id: manuscript.id,
+      //         },
+      //       }),
+      //     ),
+      //   )
+      //   let reviewIndex = data.manuscript.reviews.findIndex(
+      //     review => review.id === updateReview.id,
+      //   )
+      //   reviewIndex = reviewIndex < 0 ? 0 : reviewIndex
+      //   data.manuscript.reviews[reviewIndex] = updateReview
+      //   proxy.writeQuery({ query, data })
+      // },
     })
   }
 
@@ -308,27 +308,14 @@ export default ({ match, ...props }) => {
       createFile(newFile)
     })
 
-  const completeReview = history => {
-    const team = cloneDeep(manuscript.teams).find(
-      team => team.role === 'reviewer',
-    )
-    team.members = team.members.map(m => {
-      if (m.user.id === currentUser.id) {
-        return { user: { id: m.user.id }, status: 'completed' }
-      }
-      return { user: { id: m.user.id }, status: m.status }
+  const handleSubmit = async ({ reviewId, history }) => {
+    await completeReview({
+      variables: {
+        id: reviewId,
+      },
     })
 
-    updateTeam({
-      variables: {
-        id: team.id,
-        input: {
-          members: team.members,
-        },
-      },
-    }).then(() => {
-      history.push('/journal/dashboard')
-    })
+    history.push('/journal/dashboard')
   }
 
   return (
@@ -343,7 +330,9 @@ export default ({ match, ...props }) => {
           recommendation: null,
         }
       }
-      onSubmit={values => completeReview(props.history)}
+      onSubmit={values =>
+        handleSubmit({ reviewId: review.id, history: props.history })
+      }
       validateOnMount={review => {
         if (!review.id) return false
         const hasRecommendation = review.recommendation !== null

@@ -1,9 +1,9 @@
 # CONTRIBUTING
 
-SimpleJ is a manuscript submission system, based on the discontinued [xpub-collabra](https://gitlab.coko.foundation/xpub/xpub) project.
+Kotahi is a manuscript submission system, based on the discontinued [xpub-collabra](https://gitlab.coko.foundation/xpub/xpub) project.
 It is currently under development by the [Coko Foundation](https://coko.foundation/) and is being built with [PubSweet](https://gitlab.coko.foundation/pubsweet/pubsweet). We welcome people of all kinds to join the community and contribute with knowledge, skills, expertise. Everyone is welcome in our chat room (https://mattermost.coko.foundation/coko/channels/town-square).
 
-In order to contribute to SimpleJ, you're expected to follow a few sensible guidelines.
+In order to contribute to Kotahi, you're expected to follow a few sensible guidelines.
 
 ## Discuss your contribution before you build
 
@@ -13,7 +13,7 @@ For contributions made as discussions and suggestions, you can at any time open 
 
 ## Branches
 
-We maintain master as the production branch and tag it with release names. If you wish to contribute to SimpleJ then you need to make a branch and then issue a pull request following this procedure:
+We maintain master as the production branch and tag it with release names. If you wish to contribute to Kotahi then you need to make a branch and then issue a pull request following this procedure:
 Create a user account on Coko's GitLab: http://gitlab.coko.foundation
 Clone master with `git clone git@gitlab.coko.foundation:simplej/simplej.git`
 Create a new branch and work off of that. Please name the branch which sensibly identifies the feature you are working on. You can push the branch to GitLab at anytime.
@@ -39,6 +39,6 @@ We use conventional commits and verify that commit messages match the pattern, y
 ## Bug reports, feature requests, support questions
 
 This is all done through GitLab using their native issue tracker
-Visit the master issue tracker for SimpleJ (https://gitlab.coko.foundation/simplej/simplej/issues)
+Visit the master issue tracker for Kotahi (https://gitlab.coko.foundation/simplej/simplej/issues)
 Tag the issue with 'support', 'bug', or 'feature' to identify the nature of your issue
 

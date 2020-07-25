@@ -44,7 +44,6 @@ const GET_USERS = gql`
   }
 `
 
-
 const UsersManager = () => {
   const SortHeader = ({ thisSortName, children }) => {
     const changeSort = () => {

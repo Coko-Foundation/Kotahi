@@ -25,36 +25,117 @@ CREATE SCHEMA pgboss;
 ALTER SCHEMA pgboss OWNER TO test;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner:
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
+--
+-- Name: job_state; Type: TYPE; Schema: pgboss; Owner: test
+--
+
+CREATE TYPE pgboss.job_state AS ENUM (
+    'created',
+    'retry',
+    'active',
+    'completed',
+    'expired',
+    'cancelled',
+    'failed'
+);
+
+
+ALTER TYPE pgboss.job_state OWNER TO test;
+
 SET default_tablespace = '';
 
 SET default_with_oids = false;
+
+--
+-- Name: archive; Type: TABLE; Schema: pgboss; Owner: test
+--
+
+CREATE TABLE pgboss.archive (
+    id uuid NOT NULL,
+    name text NOT NULL,
+    priority integer NOT NULL,
+    data jsonb,
+    state pgboss.job_state NOT NULL,
+    retrylimit integer NOT NULL,
+    retrycount integer NOT NULL,
+    retrydelay integer NOT NULL,
+    retrybackoff boolean NOT NULL,
+    startafter timestamp with time zone NOT NULL,
+    startedon timestamp with time zone,
+    singletonkey text,
+    singletonon timestamp without time zone,
+    expirein interval NOT NULL,
+    createdon timestamp with time zone NOT NULL,
+    completedon timestamp with time zone,
+    archivedon timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE pgboss.archive OWNER TO test;
+
+--
+-- Name: job; Type: TABLE; Schema: pgboss; Owner: test
+--
+
+CREATE TABLE pgboss.job (
+    id uuid DEFAULT public.gen_random_uuid() NOT NULL,
+    name text NOT NULL,
+    priority integer DEFAULT 0 NOT NULL,
+    data jsonb,
+    state pgboss.job_state DEFAULT 'created'::pgboss.job_state NOT NULL,
+    retrylimit integer DEFAULT 0 NOT NULL,
+    retrycount integer DEFAULT 0 NOT NULL,
+    retrydelay integer DEFAULT 0 NOT NULL,
+    retrybackoff boolean DEFAULT false NOT NULL,
+    startafter timestamp with time zone DEFAULT now() NOT NULL,
+    startedon timestamp with time zone,
+    singletonkey text,
+    singletonon timestamp without time zone,
+    expirein interval DEFAULT '00:15:00'::interval NOT NULL,
+    createdon timestamp with time zone DEFAULT now() NOT NULL,
+    completedon timestamp with time zone
+);
+
+
+ALTER TABLE pgboss.job OWNER TO test;
+
+--
+-- Name: version; Type: TABLE; Schema: pgboss; Owner: test
+--
+
+CREATE TABLE pgboss.version (
+    version text NOT NULL
+);
+
+
+ALTER TABLE pgboss.version OWNER TO test;
 
 --
 -- Name: aliases; Type: TABLE; Schema: public; Owner: test
@@ -288,6 +369,25 @@ CREATE TABLE public.users (
 ALTER TABLE public.users OWNER TO test;
 
 --
+-- Data for Name: archive; Type: TABLE DATA; Schema: pgboss; Owner: test
+--
+
+
+
+--
+-- Data for Name: job; Type: TABLE DATA; Schema: pgboss; Owner: test
+--
+
+
+
+--
+-- Data for Name: version; Type: TABLE DATA; Schema: pgboss; Owner: test
+--
+
+INSERT INTO pgboss.version (version) VALUES ('11');
+
+
+--
 -- Data for Name: aliases; Type: TABLE DATA; Schema: public; Owner: test
 --
 
@@ -326,7 +426,8 @@ INSERT INTO public.identities (id, user_id, created, updated, type, identifier, 
 INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('4af83984-6359-47c5-a075-5ddfa9c555d9', '0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.127+02', '2020-07-21 16:35:07.104+02', 'orcid', '0000-0002-7645-9921', 'Sherry Crofoot', NULL, '{"accessToken": "2ad4e130-0775-4e13-87fb-8e8f5a0570ae", "refreshToken": "159933d9-2020-4c02-bdfb-163af41017dc"}', true);
 INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('acfa1777-0aec-4fe1-bc16-92bb9d19e884', '85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.384+02', '2020-07-21 16:35:39.358+02', 'orcid', '0000-0002-9429-4446', 'Elaine Barnes', NULL, '{"accessToken": "dcf07bc7-e59c-41b3-9ce0-924ac20aeeea", "refreshToken": "ae49d6a1-8e62-419d-8767-4a3ec22c1950"}', true);
 INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('88c85115-d83c-42d7-a1a1-0139827977da', '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.975+02', '2020-07-21 16:36:26.059+02', 'orcid', '0000-0001-5956-7341', 'Gale Davis', NULL, '{"accessToken": "3e9f6f6c-7cc0-4afa-9fdf-6ed377c36aad", "refreshToken": "80b1e911-df97-43f1-9f11-17b61913f6d7"}', true);
-INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('2ac76834-4ddf-493a-8e50-16c3ecba1b94', '34785737-493d-4819-9982-f522abfaffe6', '2020-07-21 16:39:14.755+02', '2020-07-21 16:39:15.753+02', 'orcid', '0000-0003-1838-2441', 'Joanne Pilger', NULL, '{"accessToken": "fd3da810-1439-4666-ac1d-e737a8ba96bd", "refreshToken": "d11215a2-9921-4a74-be7e-2bec4946d1fb"}', true);
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('049f91da-c84e-4b80-be2e-6e0cfca7a136', '231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.611+02', '2020-07-22 14:18:37.745+02', 'orcid', '0000-0003-2536-230X', 'Test Account', NULL, '{"accessToken": "eb551178-79e5-4189-8c5f-0a553092a9b5", "refreshToken": "4506fa5f-bd77-4867-afb4-0b07ea5302d6"}', true);
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('2fb8359c-239c-43fa-91f5-1ff2058272a6', '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.604+02', '2020-07-24 15:21:55.7+02', 'orcid', '0000-0003-1838-2441', 'Joanne Pilger', NULL, '{"accessToken": "842de329-ef16-4461-b83b-e8fe57238904", "refreshToken": "524fbdc5-9c67-4b4c-af17-2ce4cf294e88"}', true);
 
 
 --
@@ -387,12 +488,29 @@ INSERT INTO public.migrations (id, run_at) VALUES ('1592915682-change-identities
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.125+02', '2020-07-21 16:35:24.978+02', NULL, NULL, '0000000276459921', NULL, NULL, NULL, NULL, 'user', NULL, false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.381+02', '2020-07-21 16:36:08.629+02', NULL, NULL, '0000000294294446', NULL, NULL, NULL, NULL, 'user', NULL, false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.973+02', '2020-07-21 16:39:03.909+02', NULL, NULL, '0000000159567341', NULL, NULL, NULL, NULL, 'user', NULL, false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('34785737-493d-4819-9982-f522abfaffe6', '2020-07-21 16:39:14.753+02', '2020-07-21 16:39:29.593+02', NULL, NULL, '0000000318382441', NULL, NULL, NULL, NULL, 'user', NULL, false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.734+02', '2020-07-21 16:40:03+02', NULL, NULL, '0000000205642016', NULL, NULL, NULL, NULL, 'user', NULL, false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.719+02', '2020-07-21 16:41:40.685+02', true, NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', NULL, true);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.381+02', '2020-07-24 16:43:03.114+02', NULL, NULL, '0000000294294446', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser1.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.734+02', '2020-07-24 16:43:15.46+02', NULL, NULL, '0000000205642016', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser2.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.59+02', '2020-07-24 16:43:26.378+02', NULL, NULL, '0000000318382441', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser3.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.973+02', '2020-07-24 16:43:43.943+02', NULL, NULL, '0000000159567341', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser4.jpg', true);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.597+02', '2020-07-24 16:43:54.939+02', NULL, NULL, '000000032536230X', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser5.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.719+02', '2020-07-24 16:49:06.488+02', true, NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', true);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.125+02', '2020-07-24 16:44:59.306+02', NULL, NULL, '0000000276459921', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser7.jpg', true);
+
+
+--
+-- Name: job job_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: test
+--
+
+ALTER TABLE ONLY pgboss.job
+    ADD CONSTRAINT job_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: version version_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: test
+--
+
+ALTER TABLE ONLY pgboss.version
+    ADD CONSTRAINT version_pkey PRIMARY KEY (version);
 
 
 --
@@ -513,6 +631,48 @@ ALTER TABLE ONLY public.users
 
 ALTER TABLE ONLY public.users
     ADD CONSTRAINT users_username_key UNIQUE (username);
+
+
+--
+-- Name: archive_archivedon_idx; Type: INDEX; Schema: pgboss; Owner: test
+--
+
+CREATE INDEX archive_archivedon_idx ON pgboss.archive USING btree (archivedon);
+
+
+--
+-- Name: archive_id_idx; Type: INDEX; Schema: pgboss; Owner: test
+--
+
+CREATE INDEX archive_id_idx ON pgboss.archive USING btree (id);
+
+
+--
+-- Name: job_name; Type: INDEX; Schema: pgboss; Owner: test
+--
+
+CREATE INDEX job_name ON pgboss.job USING btree (name text_pattern_ops);
+
+
+--
+-- Name: job_singletonkey; Type: INDEX; Schema: pgboss; Owner: test
+--
+
+CREATE UNIQUE INDEX job_singletonkey ON pgboss.job USING btree (name, singletonkey) WHERE ((state < 'completed'::pgboss.job_state) AND (singletonon IS NULL));
+
+
+--
+-- Name: job_singletonkeyon; Type: INDEX; Schema: pgboss; Owner: test
+--
+
+CREATE UNIQUE INDEX job_singletonkeyon ON pgboss.job USING btree (name, singletonon, singletonkey) WHERE (state < 'expired'::pgboss.job_state);
+
+
+--
+-- Name: job_singletonon; Type: INDEX; Schema: pgboss; Owner: test
+--
+
+CREATE UNIQUE INDEX job_singletonon ON pgboss.job USING btree (name, singletonon) WHERE ((state < 'expired'::pgboss.job_state) AND (singletonkey IS NULL));
 
 
 --

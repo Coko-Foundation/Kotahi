@@ -1,11 +1,4 @@
 import React, { useState } from 'react'
-import {
-  compose,
-  withState,
-  withHandlers,
-  lifecycle,
-  // setDisplayName,
-} from 'recompose'
 import styled, { withTheme } from 'styled-components'
 import { unescape } from 'lodash'
 import { th } from '@pubsweet/ui-toolkit'
@@ -141,27 +134,3 @@ const FormBuilder = ({
 }
 
 export default FormBuilder
-// FormBuilder.displayName = 'FormBuilder'
-
-// export default compose(
-// withState('elements', 'onAddElements', ({ form }) => form.children || []),
-// withHandlers({
-//   addElements: ({ onAddElements, form }) => addElement =>
-//     onAddElements(() => {
-//       const addEl = { children: form.children || [] }
-//       addEl.children = [...addEl.children, addElement]
-//       return addEl.children
-//     }),
-// }),
-// lifecycle({
-//   componentWillReceiveProps(nextProps) {
-//     if (this.props.form.children !== nextProps.form.children) {
-//       this.setState({ elements: nextProps.form.children })
-//     }
-
-//     if (this.props.elements !== nextProps.elements) {
-//       this.setState({ elements: nextProps.elements })
-//     }
-//   },
-// }),
-// )(FormBuilder)

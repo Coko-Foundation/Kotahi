@@ -29,7 +29,8 @@ const cleanSuggestionUserObject = user => {
     ...user,
     id: user.username,
     display: user.username,
-    filterName: (user.name && user.name.toLowerCase()) || user.username.toLowerCase(),
+    filterName:
+      (user.name && user.name.toLowerCase()) || user.username.toLowerCase(),
   }
 }
 
@@ -82,8 +83,9 @@ const CustomMentionsInput = props => {
       return
     }
 
-    const cleanSearchUsers = rawSearchUsers.map(user => cleanSuggestionUserObject(user))
-
+    const cleanSearchUsers = rawSearchUsers.map(user =>
+      cleanSuggestionUserObject(user),
+    )
 
     // Prepend the filtered participants in case a user is tabbing down right now
     const fullResults = [...staticSuggestions, ...cleanSearchUsers]
@@ -116,9 +118,9 @@ const CustomMentionsInput = props => {
     >
       <Mention
         appendSpaceOnAdd
+        data={searchUsers}
         displayTransform={username => `@${username}`}
         markup="@[__id__]"
-        data={searchUsers}
         renderSuggestion={(
           entry,
           search,

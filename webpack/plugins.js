@@ -18,7 +18,7 @@ module.exports = (opts = {}) => {
   if (opts.html) {
     plugins.push(
       new HtmlWebpackPlugin({
-        title: 'SimpleJ - open journals',
+        title: 'Kotahi - open journals',
         template: '../app/index.ejs', // Load a custom template
       }),
     )

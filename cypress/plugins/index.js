@@ -26,6 +26,7 @@ const testUsers = {
   'Joanne Pilger': '0000000318382441',
   'Emily Clay': '0000000205642016',
   'Sinead Sullivan': '0000000256415729', // admin
+  'Test Account': '000000032536230X',
 }
 
 module.exports = (on, config) => {

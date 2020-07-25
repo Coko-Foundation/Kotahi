@@ -14,4 +14,3 @@ export const SmallProfileImage = styled.img`
   object-fit: cover;
   border-radius: 50%;
 `
-

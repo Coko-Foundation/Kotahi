@@ -1,33 +1,9 @@
 /* eslint-disable no-param-reassign */
 import React from 'react'
-// import { BrowserRouter } from 'react-router-dom'
-// import PropTypes from 'prop-types'
-// import { ThemeProvider } from 'styled-components'
-// import { ApolloProvider } from '@apollo/react-components'
-// import { ApolloClient } from 'apollo-client'
-// import { WebSocketLink } from 'apollo-link-ws'
-// import { split, ApolloLink } from 'apollo-link'
-// import { getMainDefinition } from 'apollo-utilities'
-// import { setContext } from 'apollo-link-context'
-// import {
-//   InMemoryCache,
-//   IntrospectionFragmentMatcher,
-// } from 'apollo-cache-inmemory'
-// import { createUploadLink } from 'apollo-upload-client'
-import GlobalStyle from './theme/elements/GlobalStyle'
-
-// import introspectionQueryResultData from './fragmentTypes.json'
-
 import { BrowserRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
 import { ThemeProvider } from 'styled-components'
-import {
-  ApolloProvider,
-  ApolloClient,
-  ApolloLink,
-  split,
-  gql,
-} from '@apollo/client'
+import { ApolloProvider, ApolloClient, ApolloLink, split } from '@apollo/client'
 // import { ApolloClient } from 'apollo-client'
 import { WebSocketLink } from '@apollo/client/link/ws'
 // import { split, ApolloLink } from 'apollo-link'
@@ -36,7 +12,7 @@ import { setContext } from '@apollo/client/link/context'
 import { InMemoryCache } from '@apollo/client/cache'
 import { createUploadLink } from 'apollo-upload-client'
 
-import { GET_CURRENT_USER } from './queries'
+import GlobalStyle from './theme/elements/GlobalStyle'
 import currentRolesVar from './shared/currentRolesVar'
 
 // See https://github.com/apollographql/apollo-feature-requests/issues/6#issuecomment-465305186
@@ -101,9 +77,6 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
   const config = {
     link,
     cache: new InMemoryCache({
-      possibleTypes: {
-        Identity: ['LocalIdentity', 'ExternalIdentity'],
-      },
       typePolicies: {
         Manuscript: {
           fields: {

@@ -144,4 +144,3 @@ export const Pagination = ({ setPage, limit, page, totalCount }) => {
     </PaginationContainer>
   )
 }
-

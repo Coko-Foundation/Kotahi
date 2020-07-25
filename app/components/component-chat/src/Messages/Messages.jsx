@@ -35,12 +35,8 @@ const GET_MESSAGES = gql`
           profilePicture
           online
           defaultIdentity {
-            ... on ExternalIdentity {
-              identifier
-            }
-            ... on LocalIdentity {
-              email
-            }
+            identifier
+            email
             type
             aff
             id
@@ -69,22 +65,17 @@ const MESSAGES_SUBSCRIPTION = gql`
         profilePicture
         online
         defaultIdentity {
-          id
-          ... on ExternalIdentity {
-            identifier
-          }
-          ... on LocalIdentity {
-            email
-          }
+          identifier
+          email
           type
           aff
+          id
           name
         }
       }
     }
   }
 `
-
 
 const subscribeToNewMessages = (subscribeToMore, channelId) =>
   subscribeToMore({
@@ -183,7 +174,10 @@ const Messages = ({ channelId }) => {
         </NextPageButton>
       )}
       {messages && !messages.length && (
-        <Placeholder>No discussion for this manuscript yet. Start by typing a message below.</Placeholder>
+        <Placeholder>
+          No discussion for this manuscript yet. Start by typing a message
+          below.
+        </Placeholder>
       )}
       {messages.map(group => {
         const initialMessage = group[0]
@@ -210,7 +204,9 @@ const Messages = ({ channelId }) => {
                   {index === 0 && <UserAvatar user={message.user} />}
                 </GutterContainer>
                 <InnerMessageContainer>
-                  {index === 0 && <Byline>{message.user.defaultIdentity.name}</Byline>}
+                  {index === 0 && (
+                    <Byline>{message.user.defaultIdentity.name}</Byline>
+                  )}
                   <Bubble>
                     <MessageRenderer message={message} />
                   </Bubble>

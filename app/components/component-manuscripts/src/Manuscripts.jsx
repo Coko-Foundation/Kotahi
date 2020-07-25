@@ -42,6 +42,7 @@ const GET_MANUSCRIPTS = gql`
           username
           online
           defaultIdentity {
+            id
             name
           }
           profilePicture

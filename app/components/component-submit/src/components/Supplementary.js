@@ -3,7 +3,7 @@ import { cloneDeep } from 'lodash'
 import { FieldArray } from 'formik'
 import { Flexbox, UploadButton, UploadingFile } from '@pubsweet/ui'
 
-const renderFilesUpload = (onChange, uploadFile, createFile) => ({
+const renderFilesUpload = (onChange, createSupplementaryFile) => ({
   form: { values, setFieldValue },
   push,
   insert,
@@ -21,15 +21,7 @@ const renderFilesUpload = (onChange, uploadFile, createFile) => ({
         })
         setFieldValue('files', fileArray.concat(values.files))
         Array.from(event.target.files).forEach(file => {
-          uploadFile(file).then(({ data }) => {
-            const newFile = {
-              url: data.upload.url,
-              filename: file.name,
-              mimeType: file.type,
-              size: file.size,
-            }
-            createFile(newFile)
-          })
+          createSupplementaryFile(file)
         })
       }}
     />
@@ -44,10 +36,10 @@ const renderFilesUpload = (onChange, uploadFile, createFile) => ({
   </>
 )
 
-const Supplementary = ({ onChange, uploadFile, createFile }) => (
+const Supplementary = ({ onChange, createSupplementaryFile }) => (
   <FieldArray
     name="files"
-    render={renderFilesUpload(onChange, uploadFile, createFile)}
+    render={renderFilesUpload(onChange, createSupplementaryFile)}
   />
 )
 

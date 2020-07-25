@@ -143,17 +143,73 @@ const resolvers = {
     },
     async updateManuscript(_, { id, input }, ctx) {
       const data = JSON.parse(input)
-      const manuscript = await ctx.models.Manuscript.findById(id)
+      const manuscript = await ctx.models.Manuscript.query().findById(id)
       const update = merge({}, manuscript, data)
-      return ctx.models.Manuscript.update(id, update, ctx)
+      return ctx.models.Manuscript.query().updateAndFetchById(id, update)
     },
     async makeDecision(_, { id, decision }, ctx) {
-      const manuscript = await ctx.models.Manuscript.findById(id)
+      const manuscript = await ctx.models.Manuscript.query().findById(id)
       manuscript.decision = decision
 
       manuscript.status = decision
 
       return manuscript.save()
+    },
+    async addReviewer(_, { manuscriptId, userId }, ctx) {
+      const manuscript = await ctx.models.Manuscript.query().findById(
+        manuscriptId,
+      )
+
+      const existingTeam = await manuscript
+        .$relatedQuery('teams')
+        .where('role', 'reviewer')
+        .first()
+
+      // Add the reviewer to the existing team of reviewers
+      if (existingTeam) {
+        const reviewerExists =
+          (await existingTeam
+            .$relatedQuery('users')
+            .where('users.id', userId)
+            .resultSize()) > 0
+        if (!reviewerExists) {
+          await new ctx.models.TeamMember({
+            teamId: existingTeam.id,
+            status: 'invited',
+            userId,
+          }).save()
+        }
+        return existingTeam.$query().eager('members.[user]')
+      }
+
+      // Create a new team of reviewers if it doesn't exist
+      const newTeam = await new ctx.models.Team({
+        objectId: manuscriptId,
+        objectType: 'Manuscript',
+        members: [{ status: 'invited', userId }],
+        role: 'reviewer',
+      }).saveGraph()
+
+      return newTeam
+    },
+    async removeReviewer(_, { manuscriptId, userId }, ctx) {
+      const manuscript = await ctx.models.Manuscript.query().findById(
+        manuscriptId,
+      )
+
+      const reviewerTeam = await manuscript
+        .$relatedQuery('teams')
+        .where('role', 'reviewer')
+        .first()
+
+      await ctx.models.TeamMember.query()
+        .where({
+          userId,
+          teamId: reviewerTeam.id,
+        })
+        .delete()
+
+      return reviewerTeam.$query().eager('members.[user]')
     },
   },
   Query: {
@@ -277,6 +333,8 @@ const typeDefs = `
     deleteManuscript(id: ID!): ID!
     reviewerResponse(currentUserId: ID, action: String, teamId: ID! ): Team
     assignTeamEditor(id: ID!, input: String): [Team]
+    addReviewer(manuscriptId: ID!, userId: ID!): Team
+    removeReviewer(manuscriptId: ID!, userId: ID!): Team
   }
 
   type Manuscript implements Object {

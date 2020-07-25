@@ -1,20 +1,31 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Link } from '@pubsweet/ui'
+import { Action, Button } from '@pubsweet/ui'
+import { grid } from '@pubsweet/ui-toolkit'
 import ReviewerForm from './ReviewerForm'
-import { Container, PaddedContent } from '../../../../shared'
+import {
+  Container,
+  SectionRow,
+  SectionContent,
+  SectionHeader,
+  Title,
+  Heading,
+  HeadingWithAction,
+  StatusBadge,
+} from '../../../../shared'
 
 // TODO: Make this a proper shared component?
 import { UserAvatar } from '../../../../component-avatar/src'
 
-const Form = styled.div``
 const ReviewersList = styled.div`
-  display: flex;
-  flex-wrap: wrap;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(${grid(15)}, 1fr));
+  grid-gap: ${grid(2)};
 `
 
+const Reviewer = styled.div``
+
 const Reviewers = ({
-  Reviewer,
   journal,
   isValid,
   loadOptions,
@@ -23,11 +34,30 @@ const Reviewers = ({
   reviewerUsers,
   manuscript,
   handleSubmit,
+  removeReviewer,
   teams,
+  history,
 }) => (
   <Container>
-    <PaddedContent>
-      <Form>
+    <HeadingWithAction>
+      <Heading>Reviewers</Heading>
+      <Button
+        onClick={() =>
+          history.push(
+            `/journal/versions/${manuscript.id}/decisions/${manuscript.id}`,
+          )
+        }
+        primary
+      >
+        Back to control panel
+      </Button>
+    </HeadingWithAction>
+    <SectionContent>
+      <SectionHeader>
+        <Title>Invite reviewers</Title>
+      </SectionHeader>
+
+      <SectionRow>
         <ReviewerForm
           handleSubmit={handleSubmit}
           isValid={isValid}
@@ -35,23 +65,40 @@ const Reviewers = ({
           loadOptions={loadOptions}
           reviewerUsers={reviewerUsers}
         />
-        <Link
-          to={`/journal/versions/${manuscript.id}/decisions/${manuscript.id}`}
-        >
-          Back to Control Panel
-        </Link>
-      </Form>
-    </PaddedContent>
-    <PaddedContent>
-      {reviewers && (
-        <ReviewersList>
-          {reviewers.map(reviewer => (
-            <UserAvatar key={reviewer.id} user={reviewer.user} />
-            // <Reviewer journal={journal} key={reviewer.id} username={reviewer.user.username} />
-          ))}
-        </ReviewersList>
-      )}
-    </PaddedContent>
+      </SectionRow>
+    </SectionContent>
+    <SectionContent>
+      <SectionHeader>
+        <Title>Reviewer status</Title>
+      </SectionHeader>
+      <SectionRow>
+        {reviewers && (
+          <ReviewersList>
+            {reviewers.map(reviewer => (
+              <Reviewer>
+                <StatusBadge minimal status={reviewer.status} />
+                <UserAvatar key={reviewer.id} user={reviewer.user} />
+                {reviewer.user.defaultIdentity.name}
+                <div>
+                  <Action
+                    onClick={() =>
+                      removeReviewer({
+                        variables: {
+                          userId: reviewer.user.id,
+                          manuscriptId: manuscript.id,
+                        },
+                      })
+                    }
+                  >
+                    Delete
+                  </Action>
+                </div>
+              </Reviewer>
+            ))}
+          </ReviewersList>
+        )}
+      </SectionRow>
+    </SectionContent>
   </Container>
 )
 

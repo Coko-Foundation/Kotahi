@@ -3,15 +3,13 @@ import styled from 'styled-components'
 import { Action, ActionGroup } from '@pubsweet/ui'
 import { Item, StatusBadge } from '../../style'
 import Meta from '../metadata/Meta'
-import MetadataSections from '../metadata/MetadataSections'
-import MetadataType from '../metadata/MetadataType'
-import MetadataReviewType from '../metadata/MetadataReviewType'
 import MetadataSubmittedDate from '../metadata/MetadataSubmittedDate'
 import MetadataAuthors from '../metadata/MetadataAuthors'
 import MetadataStreamLined from '../metadata/MetadataStreamLined'
 import JournalLink from '../JournalLink'
 import Reviews from '../Reviews'
 import VersionTitle from './VersionTitle'
+import prettyRoleText from '../../../../../shared/prettyRoleText'
 
 const VersionTitleLink = styled(JournalLink)`
   text-decoration: none;
@@ -72,13 +70,7 @@ const EditorItem = ({ version }) => (
         {getSubmitedDate(version) ? (
           <MetadataSubmittedDate submitted={getSubmitedDate(version).date} />
         ) : null}
-        <MetadataType type={getMetadataObject(version, 'articleType')} />
-        <MetadataSections
-          sections={getMetadataObject(version, 'articleSections')}
-        />
-        <MetadataReviewType
-          openPeerReview={getDeclarationsObject(version, 'openPeerReview')}
-        />
+        &nbsp;You are {prettyRoleText(version._currentRoles)}.
       </Meta>
     </Item>
     <Item>

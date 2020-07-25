@@ -1,6 +1,17 @@
 const typeDefs = `
   extend type Mutation {
-    createFile(file: Upload!): File!
+    # Using a separate variable because the Upload type hides other data
+    createFile(file: Upload!, meta: FileMetaInput): File!
+  }
+
+  input FileMetaInput {
+    fileType: String
+    filename: String
+    mimeType: String
+    object: String
+    objectId: ID!
+    label: String
+    size: Int
   }
 
   type File implements Object  {

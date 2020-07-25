@@ -59,3 +59,22 @@ export const SectionAction = styled.div`
   grid-column: 3;
   justify-self: end;
 `
+
+const Page = styled.div`
+  padding: ${grid(2)};
+`
+
+const Heading = styled.div`
+  color: ${th('colorPrimary')};
+  font-family: ${th('fontReading')};
+  font-size: ${th('fontSizeHeading3')};
+  line-height: ${th('lineHeightHeading3')};
+`
+
+export { Page, Heading }
+
+export const HeadingWithAction = styled.div`
+  display: grid;
+  grid-template-columns: 1fr auto;
+  align-items: center;
+`

@@ -8,7 +8,7 @@ import gql from 'graphql-tag'
 import { withLoader } from 'pubsweet-client'
 
 const editorOption = user => ({
-  label: user.username, // TODO: name
+  label: user.defaultIdentity.name,
   value: user.id,
 })
 
@@ -35,6 +35,10 @@ const query = gql`
       id
       username
       admin
+      defaultIdentity {
+        id
+        name
+      }
     }
   }
 `

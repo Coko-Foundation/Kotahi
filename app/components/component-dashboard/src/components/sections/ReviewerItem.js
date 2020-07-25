@@ -26,21 +26,6 @@ const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
     team.members.find(member => member.user.id === currentUser.id)
   const status = currentMember && currentMember.status
 
-  // Enable that when Team Models is updated
-  // const { status } =
-  //   getUserFromTeam(version, 'reviewer').filter(
-  //     member => member.id === currentUser.id,
-  //   )[0] || {}
-
-  // const review =
-  //   (version.reviews || []).find(
-  //     review =>
-  //       currentUser &&
-  //       review.user &&
-  //       review.user.id === currentUser.id &&
-  //       !review.isDecision,
-  //   ) || {}
-
   return (
     <Item>
       <VersionTitle version={version} />

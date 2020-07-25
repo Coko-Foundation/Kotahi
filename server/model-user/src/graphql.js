@@ -142,16 +142,16 @@ const resolvers = {
       return identities
     },
   },
-  LocalIdentity: {
-    __isTypeOf: (obj, context, info) => obj.type === 'local',
-    async email(obj, args, ctx, info) {
-      // Emails stored on user, but surfaced in local identity too
-      return (await ctx.loaders.User.load(obj.userId)).email
-    },
-  },
-  ExternalIdentity: {
-    __isTypeOf: (obj, context, info) => obj.type !== 'local',
-  },
+  // LocalIdentity: {
+  //   __isTypeOf: (obj, context, info) => obj.type === 'local',
+  //   async email(obj, args, ctx, info) {
+  //     // Emails stored on user, but surfaced in local identity too
+  //     return (await ctx.loaders.User.load(obj.userId)).email
+  //   },
+  // },
+  // ExternalIdentity: {
+  //   __isTypeOf: (obj, context, info) => obj.type !== 'local',
+  // },
 }
 
 const typeDefs = `
@@ -209,33 +209,34 @@ const typeDefs = `
     roles: [String]
   }
 
-  interface Identity {
+  type Identity {
     id: ID
     name: String
     aff: String # JATS <aff>
     email: String # JATS <aff>
     type: String
+    identifier: String
   }
 
   # union Identity = Local | External
 
   # local identity (not from ORCID, etc.)
-  type LocalIdentity implements Identity {
-    id: ID
-    name: String
-    email: String
-    aff: String
-    type: String
-  }
-
-  type ExternalIdentity implements Identity {
-    id: ID
-    name: String
-    identifier: String
-    email: String
-    aff: String
-    type: String
-  }
+  #type LocalIdentity implements Identity {
+  #  id: ID
+  #  name: String
+  #  email: String
+  #  aff: String
+  #  type: String
+  #}
+  #
+  #type ExternalIdentity implements Identity {
+  #  id: ID
+  #  name: String
+  #  identifier: String
+  #  email: String
+  #  aff: String
+  #  type: String
+  #}
 
   input UserInput {
     username: String!

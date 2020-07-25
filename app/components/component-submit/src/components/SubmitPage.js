@@ -1,16 +1,10 @@
-import { debounce, cloneDeep, isEmpty, set } from 'lodash'
-import { compose, withProps, withState, withHandlers } from 'recompose'
-import { graphql } from '@apollo/client/react/hoc'
-import gql from 'graphql-tag'
-import { withFormik } from 'formik'
-import { withLoader } from 'pubsweet-client'
+import React, { useState } from 'react'
+import { debounce, cloneDeep, set } from 'lodash'
+// import { compose, withProps, withState, withHandlers } from 'recompose'
+import { gql, useQuery, useMutation } from '@apollo/client'
+import { Formik } from 'formik'
 import Submit from './Submit'
-
-const nullToEmpty = obj =>
-  JSON.parse(JSON.stringify(obj, (k, v) => (v === null ? '' : v)))
-
-const emptyToUndefined = obj =>
-  JSON.parse(JSON.stringify(obj, (k, v) => (v === '' ? undefined : v)))
+import { Spinner } from '../../../shared'
 
 const fragmentFields = `
   id
@@ -26,6 +20,7 @@ const fragmentFields = `
     url
   }
   reviews {
+    id
     open
     recommendation
     created
@@ -121,17 +116,17 @@ const updateMutation = gql`
   }
 `
 
-const uploadSuplementaryFilesMutation = gql`
-  mutation($file: Upload!) {
-    upload(file: $file) {
-      url
-    }
-  }
-`
+// const uploadSuplementaryFilesMutation = gql`
+//   mutation($file: Upload!) {
+//     upload(file: $file) {
+//       url
+//     }
+//   }
+// `
 
 const createFileMutation = gql`
-  mutation($file: Upload!) {
-    createFile(file: $file) {
+  mutation($file: Upload!, $meta: FileMetaInput) {
+    createFile(file: $file, meta: $meta) {
       id
       created
       label
@@ -144,116 +139,102 @@ const createFileMutation = gql`
   }
 `
 
-export default compose(
-  graphql(query, {
-    options: ({ match }) => ({
+const SubmitPage = ({ match, history, ...props }) => {
+  const [confirming, setConfirming] = useState(false)
+
+  const toggleConfirming = () => {
+    setConfirming(confirming => !confirming)
+  }
+
+  const { data, loading, error } = useQuery(query, {
+    variables: { id: match.params.version, form: 'submit' },
+  })
+
+  const [createFile] = useMutation(createFileMutation)
+
+  const createSupplementaryFile = file => {
+    const meta = {
+      filename: file.name,
+      mimeType: file.type,
+      size: file.size,
+      fileType: 'supplementary',
+      object: 'Manuscript',
+      objectId: match.params.version,
+    }
+
+    createFile({
+      variables: {
+        file,
+        meta,
+      },
+    })
+  }
+
+  const [update] = useMutation(updateMutation)
+
+  if (loading) return <Spinner />
+  if (error) return error
+
+  const manuscript = data?.manuscript
+  const getFile = data?.getFile
+
+  const updateManuscript = input =>
+    update({
       variables: {
         id: match.params.version,
-        form: 'submit',
+        input: JSON.stringify(input),
       },
-    }),
-    props: ({ data }) => ({ data: nullToEmpty(data) }),
-  }),
-  graphql(createFileMutation, {
-    props: ({ mutate, ownProps }) => ({
-      createFile: value => {
-        const file = {
-          url: value.url,
-          filename: value.filename,
-          mimeType: value.mimeType,
-          size: value.size,
-          fileType: 'supplementary',
-          object: 'Manuscript',
-          objectId: ownProps.match.params.version,
-        }
+    })
 
-        mutate({
-          variables: {
-            file,
-          },
-        })
+  const debouncers = {}
+
+  const handleChange = (value, path) => {
+    const input = {}
+    set(input, path, value)
+    debouncers[path] = debouncers[path] || debounce(updateManuscript, 300)
+    return debouncers[path](input)
+  }
+
+  const onSubmit = async manuscript => {
+    const updateManuscript = {
+      status: 'submitted',
+    }
+
+    await update({
+      variables: {
+        id: match.params.version,
+        input: JSON.stringify(updateManuscript),
       },
-    }),
-  }),
-  graphql(uploadSuplementaryFilesMutation, {
-    props: ({ mutate, ownProps }) => ({
-      uploadFile: file =>
-        mutate({
-          variables: {
-            file,
-          },
-        }),
-    }),
-  }),
-  graphql(updateMutation, {
-    props: ({ mutate, ownProps }) => {
-      const debouncers = {}
-      const onChange = (value, path) => {
-        const input = {}
-        set(input, path, value)
-        debouncers[path] = debouncers[path] || debounce(updateManuscript, 300)
-        return debouncers[path](input)
-      }
+    })
+    history.push('/journal/dashboard')
+  }
 
-      const updateManuscript = input =>
-        mutate({
-          variables: {
-            id: ownProps.match.params.version,
-            input: JSON.stringify(emptyToUndefined(input)),
-          },
-        })
-
-      return {
-        onChange,
-      }
-    },
-  }),
-  graphql(updateMutation, {
-    props: ({ mutate, ownProps }) => ({
-      onSubmit: (manuscript, { history }) => {
-        const updateManuscript = {
-          status: 'submitted',
-        }
-
-        mutate({
-          variables: {
-            id: ownProps.match.params.version,
-            input: JSON.stringify(updateManuscript),
-          },
-        }).then(() => {
-          history.push('/journal/dashboard')
-        })
-      },
-    }),
-  }),
-  withLoader(),
-  withProps(({ getFile, manuscript, match: { params: { journal } } }) => ({
-    journal: { id: journal },
-    forms: cloneDeep(getFile),
-    manuscript,
-    submitSubmission: ({ validateForm, setSubmitting, handleSubmit }) =>
-      validateForm().then(props =>
-        isEmpty(props) ? setSubmitting(false) : handleSubmit(),
-      ),
-  })),
-  withFormik({
-    initialValues: {},
-    mapPropsToValues: ({ manuscript }) =>
-      Object.assign({}, manuscript, {
+  return (
+    <Formik
+      displayName="submit"
+      handleChange={handleChange}
+      initialValues={Object.assign({}, manuscript, {
         submission: JSON.parse(manuscript.submission),
-      }),
-    displayName: 'submit',
-    handleSubmit: (
-      props,
-      { validateForm, setSubmitting, props: { onSubmit, history } },
-    ) =>
-      validateForm().then(props =>
-        isEmpty(props) ? onSubmit(props, { history }) : setSubmitting(false),
-      ),
-  }),
-  withState('confirming', 'setConfirming', false),
-  withHandlers({
-    toggleConfirming: ({ validateForm, setConfirming, handleSubmit }) => () =>
-      setConfirming(confirming => !confirming),
-  }),
-)(Submit)
+      })}
+      onSubmit={async (values, { validateForm, setSubmitting, ...other }) => {
+        // TODO: Change this to a more Formik idiomatic form
+        const isValid = Object.keys(await validateForm()).length === 0
+        return isValid ? onSubmit(values) : setSubmitting(false)
+      }}
+    >
+      {props => (
+        <Submit
+          confirming={confirming}
+          createSupplementaryFile={createSupplementaryFile}
+          forms={cloneDeep(getFile)}
+          manuscript={manuscript}
+          onChange={handleChange}
+          toggleConfirming={toggleConfirming}
+          {...props}
+        />
+      )}
+    </Formik>
+  )
+}
+
+export default SubmitPage

@@ -70,7 +70,9 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
 )
 
 const updateStuff = data => {
-  currentRolesVar(data.currentUser._currentRoles)
+  if (data?.currentUser) {
+    return currentRolesVar(data.currentUser._currentRoles)
+  }
 }
 
 const AdminPage = ({ children, history, match }) => {

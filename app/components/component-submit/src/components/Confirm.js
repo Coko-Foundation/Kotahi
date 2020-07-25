@@ -28,17 +28,29 @@ const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),
 })
 
-const Confirm = ({ toggleConfirming, form, submitSubmission }) => (
+const Confirm = ({ toggleConfirming, form, submit, errors }) => (
   <Wrapper>
     <article>
-      <Heading1 dangerouslySetInnerHTML={createMarkup(form.popuptitle)} />
-      <Paragraph
-        dangerouslySetInnerHTML={createMarkup(form.popupdescription)}
-      />
-      <Button onClick={submitSubmission} primary type="submit">
-        Submit your manuscript
-      </Button>
-      <Divider> or </Divider>
+      {Object.keys(errors).length > 0 ? (
+        <>
+          <Heading1>Errors in your submission</Heading1>
+          <Paragraph>
+            There are errors in your submission, please correct the following:{' '}
+            {JSON.stringify(errors)}
+          </Paragraph>
+        </>
+      ) : (
+        <>
+          <Heading1 dangerouslySetInnerHTML={createMarkup(form.popuptitle)} />
+          <Paragraph
+            dangerouslySetInnerHTML={createMarkup(form.popupdescription)}
+          />
+          <Button onClick={submit} primary type="submit">
+            Submit your manuscript
+          </Button>
+          <Divider> or </Divider>
+        </>
+      )}
       <PlainButton onClick={toggleConfirming}>
         get back to your submission
       </PlainButton>

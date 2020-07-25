@@ -34,7 +34,7 @@ const seed = async dumpSql => {
     await clearDb()
     await db.raw(dumpSql)
     logger.info('Cleared the database and restored from dump')
-    // TODO: This wait is necessary for the database to settle
+    // TODO: This wait is necessary for the database to "settle".
     await wait(2000)
     return true
   }
