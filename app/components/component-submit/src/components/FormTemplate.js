@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { unescape, groupBy, isArray, get, set, cloneDeep } from 'lodash'
-import { FieldArray } from 'formik'
+import { FieldArray, useFormikContext } from 'formik'
 import * as uiComponents from '@pubsweet/ui'
 import * as validators from 'xpub-validators'
 import { AbstractEditor } from 'xpub-edit'
@@ -10,6 +10,19 @@ import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
 import Supplementary from './Supplementary'
 import Confirm from './Confirm'
+
+// TODO: https://github.com/formium/formik/issues/146#issuecomment-474775723
+// const useFocusOnError = ({ fieldRef, name }) => {
+//   const formik = useFormikContext()
+//   const prevSubmitCountRef = React.useRef(formik.submitCount)
+//   const firstErrorKey = Object.keys(formik.errors)[0]
+//   React.useEffect(() => {
+//     if (prevSubmitCountRef.current !== formik.submitCount && !formik.isValid) {
+//       if (fieldRef.current && firstErrorKey === name) fieldRef.current.focus()
+//     }
+//     prevSubmitCountRef.current = formik.submitCount
+//   }, [formik.submitCount, formik.isValid, firstErrorKey])
+// }
 
 // const Wrapper = styled.div`
 //   font-family: ${th('fontInterface')};
@@ -219,11 +232,12 @@ export default ({
   setTouched,
   values,
   setFieldValue,
-  uploadFile,
-  createFile,
+  createSupplementaryFile,
   onChange,
   onSubmit,
   submitSubmission,
+  errors,
+  validateForm,
   ...props
 }) => (
   <Container>
@@ -247,9 +261,8 @@ export default ({
             <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
             {element.component === 'SupplementaryFiles' && (
               <Supplementary
-                createFile={createFile}
+                createSupplementaryFile={createSupplementaryFile}
                 onChange={onChange}
-                uploadFile={uploadFile}
               />
             )}
             {element.component === 'AuthorsInput' && (
@@ -322,7 +335,11 @@ export default ({
 
       {values.status !== 'submitted' && form.haspopup === 'true' && (
         <div>
-          <Button onClick={toggleConfirming} primary type="button">
+          <Button
+            onClick={() => validateForm() && toggleConfirming()}
+            primary
+            type="button"
+          >
             Submit your research object
           </Button>
         </div>
@@ -331,7 +348,8 @@ export default ({
         <ModalWrapper>
           <Confirm
             form={form}
-            submitSubmission={handleSubmit}
+            submit={handleSubmit}
+            errors={errors}
             toggleConfirming={toggleConfirming}
           />
         </ModalWrapper>

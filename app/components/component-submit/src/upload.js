@@ -156,17 +156,24 @@ const createManuscriptPromise = (
   return client.mutate({
     mutation: createManuscriptMutation,
     variables: { input: manuscript },
-    update: (proxy, { data: { createManuscript } }) => {
-      let data = proxy.readQuery({ query: queries.dashboard })
-      data.manuscripts.push(createManuscript)
-      proxy.writeQuery({ query: queries.dashboard, data })
-
-      data = proxy.readQuery({
-        query: queries.getUser,
-        variables: { id: currentUser.id },
+    update: (cache, { data: { createManuscript } }) => {
+      cache.modify({
+        fields: {
+          manuscripts(existingManuscritps = []) {
+            return [...existingManuscritps, createManuscript]
+          },
+        },
       })
-      data.user.teams.push(createManuscript.teams[0])
-      proxy.writeQuery({ query: queries.getUser, data })
+      // let data = proxy.readQuery({ query: queries.dashboard })
+      // data.manuscripts.push(createManuscript)
+      // proxy.writeQuery({ query: queries.dashboard, data })
+
+      // data = proxy.readQuery({
+      //   query: queries.getUser,
+      //   variables: { id: currentUser.id },
+      // })
+      // data.user.teams.push(createManuscript.teams[0])
+      // proxy.writeQuery({ query: queries.getUser, data })
     },
   })
 }
