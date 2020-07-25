@@ -23,7 +23,7 @@ import {
   RemovePreviewButton,
 } from './style'
 
-import { CREATE_MESSAGE, GET_MESSAGE_BY_ID } from '../../../../queries'
+import { CREATE_MESSAGE } from '../../../../queries'
 
 // import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage'
 // import { getMessageById } from 'shared/graphql/queries/message/getMessage'
@@ -101,7 +101,7 @@ export const cleanSuggestionUserObject = user => {
 const SuperChatInput = props => {
   const currentUser = useCurrentUser()
   const [sendChannelMessage] = useMutation(CREATE_MESSAGE)
-  const [sendDirectMessage] = useMutation(CREATE_MESSAGE)
+  // const [sendDirectMessage] = useMutation(CREATE_MESSAGE)
 
   const cacheKey = `last-content-${props.channelId}`
   const [text, changeText] = React.useState('')
@@ -155,6 +155,7 @@ const SuperChatInput = props => {
       // If backspace is pressed on the empty
       case 'Backspace': {
         if (text.length === 0) removeAttachments()
+        break
       }
       default:
     }
@@ -239,9 +240,9 @@ const SuperChatInput = props => {
           setMediaPreview(null)
           setAttachedMediaFile(null)
         })
-        .catch(err => {
+        .catch(_ => {
           setIsSendingMediaMessage(false)
-          props.dispatch(addToastWithTimeout('error', err.message))
+          // props.dispatch(addToastWithTimeout('error', err.message))
         })
     }
 
@@ -271,36 +272,38 @@ const SuperChatInput = props => {
   }
 
   // $FlowFixMe
+  // eslint-disable-next-line no-unused-vars
   const [isSendingMediaMessage, setIsSendingMediaMessage] = React.useState(
     false,
   )
+
   // $FlowFixMe
   const [mediaPreview, setMediaPreview] = React.useState(null)
   // $FlowFixMe
   const [mediaFile, setAttachedMediaFile] = React.useState(null)
 
-  const previewMedia = blob => {
-    if (isSendingMediaMessage) return
-    setIsSendingMediaMessage(true)
-    setAttachedMediaFile(blob)
-    inputRef && inputRef.focus()
+  // const previewMedia = blob => {
+  //   if (isSendingMediaMessage) return
+  //   setIsSendingMediaMessage(true)
+  //   setAttachedMediaFile(blob)
+  //   inputRef && inputRef.focus()
 
-    const reader = new FileReader()
-    reader.onload = () => {
-      setMediaPreview(reader.result.toString())
-      setIsSendingMediaMessage(false)
-    }
+  //   const reader = new FileReader()
+  //   reader.onload = () => {
+  //     setMediaPreview(reader.result.toString())
+  //     setIsSendingMediaMessage(false)
+  //   }
 
-    if (blob) {
-      reader.readAsDataURL(blob)
-    }
-  }
+  //   if (blob) {
+  //     reader.readAsDataURL(blob)
+  //   }
+  // }
 
   const removeQuotedMessage = () => {
-    if (props.quotedMessage)
-      props.dispatch(
-        replyToMessage({ threadId: props.threadId, messageId: null }),
-      )
+    // if (props.quotedMessage)
+    //   props.dispatch(
+    //     replyToMessage({ threadId: props.threadId, messageId: null }),
+    //   )
   }
 
   const networkDisabled =

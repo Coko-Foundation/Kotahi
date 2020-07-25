@@ -77,7 +77,6 @@ const MESSAGES_SUBSCRIPTION = gql`
   }
 `
 
-
 const subscribeToNewMessages = (subscribeToMore, channelId) =>
   subscribeToMore({
     document: MESSAGES_SUBSCRIPTION,
@@ -175,7 +174,10 @@ const Messages = ({ channelId }) => {
         </NextPageButton>
       )}
       {messages && !messages.length && (
-        <Placeholder>No discussion for this manuscript yet. Start by typing a message below.</Placeholder>
+        <Placeholder>
+          No discussion for this manuscript yet. Start by typing a message
+          below.
+        </Placeholder>
       )}
       {messages.map(group => {
         const initialMessage = group[0]
@@ -202,7 +204,9 @@ const Messages = ({ channelId }) => {
                   {index === 0 && <UserAvatar user={message.user} />}
                 </GutterContainer>
                 <InnerMessageContainer>
-                  {index === 0 && <Byline>{message.user.defaultIdentity.name}</Byline>}
+                  {index === 0 && (
+                    <Byline>{message.user.defaultIdentity.name}</Byline>
+                  )}
                   <Bubble>
                     <MessageRenderer message={message} />
                   </Bubble>

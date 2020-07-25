@@ -59,6 +59,7 @@ const ComponentProperties = ({
               onChange={event => {
                 let value = {}
                 if (event.target) {
+                  // eslint-disable-next-line prefer-destructuring
                   value = event.target.value
                 } else {
                   value = event

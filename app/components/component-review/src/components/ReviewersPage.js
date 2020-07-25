@@ -145,12 +145,12 @@ const ReviewersPage = ({ match, history }) => {
       {props => (
         <Reviewers
           {...props}
+          history={history}
           manuscript={manuscript}
           removeReviewer={removeReviewer}
           Reviewer={ReviewerContainer}
           reviewers={reviewers}
           reviewerUsers={users}
-          history={history}
         />
       )}
     </Formik>

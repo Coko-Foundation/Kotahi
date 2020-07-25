@@ -1,10 +1,6 @@
 import config from 'config'
 import request from 'pubsweet-client/src/helpers/api'
 import gql from 'graphql-tag'
-// TOOD: These queries come from the dashboard component,
-// making this a tricky dependency. Should we extract them into
-// a shared component?
-import queries from '../../component-dashboard/src/graphql/queries'
 
 const generateTitle = name =>
   name

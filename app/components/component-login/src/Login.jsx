@@ -1,13 +1,9 @@
 import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import { withFormik } from 'formik'
 import config from 'config'
 import { th, grid, lighten } from '@pubsweet/ui-toolkit'
-import { CenteredColumn, H1, Button } from '@pubsweet/ui'
+import { H1, Button } from '@pubsweet/ui'
 import styled from 'styled-components'
-import { Section } from '../../shared'
-import { Placeholder } from '../../component-chat/src/Messages/style'
 
 const getNextUrl = () => {
   const url = new URL(window.location.href)
@@ -20,26 +16,6 @@ const getNextUrl = () => {
 
   return `${url.searchParams.get('next') || redirectLink}`
 }
-
-const localStorage = window.localStorage || undefined
-
-const handleSubmit = (values, { props, setSubmitting, setErrors }) =>
-  props
-    .loginUser({ variables: { input: values } })
-    .then(({ data, errors }) => {
-      if (!errors) {
-        localStorage.setItem('token', data.loginUser.token)
-        setTimeout(() => {
-          props.onLoggedIn(getNextUrl())
-        }, 100)
-      }
-    })
-    .catch(e => {
-      if (e.graphQLErrors && e.graphQLErrors.length > 0) {
-        setSubmitting(false)
-        setErrors(e.graphQLErrors[0].message)
-      }
-    })
 
 const getToken = props => {
   const { location } = props
@@ -114,18 +90,11 @@ const StyledORCIDIcon = styled(ORCIDIcon)`
 `
 
 const Login = ({ logo = null, ...props }) => {
-  // Is ORCID authentication enabled?
-  const orcid =
-    config['pubsweet-component-login'] &&
-    config['pubsweet-component-login'].orcid
-
   const token = getToken(props)
   // If a JWT token is supplied as a query param (e.g. from OAuth)
   // go ahead and fetch the redirect URL
   const initialRedirectLink = token ? getNextUrl() : null
-  const [redirectLink, setRedirectLink] = useState(initialRedirectLink)
-  // Also set the redirect link upon successful login (via handleSubmit)
-  const onLoggedIn = () => setRedirectLink(getNextUrl())
+  const [redirectLink] = useState(initialRedirectLink)
 
   if (token) {
     window.localStorage.setItem('token', token)
@@ -140,7 +109,7 @@ const Login = ({ logo = null, ...props }) => {
       <Centered>
         <Content>
           {journalName === 'Aperture' && (
-            <img src="/public/logo-aperture.png" />
+            <img alt="Aperture" src="/public/logo-aperture.png" />
           )}
           <H1>Login to {journalName}</H1>
           {journalName} uses ORCID <StyledORCIDIcon /> to identify authors and

@@ -50,7 +50,7 @@ const PageWithHeader = ({ children, header }) => (
         <Heading>{header}</Heading>
       </HeaderText>
     </StyledHeader>
-    { children }
+    {children}
   </Settings>
 )
 

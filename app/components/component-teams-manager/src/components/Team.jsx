@@ -14,7 +14,8 @@ const Team = ({ team, number, userOptions, deleteTeam, updateTeam }) => (
       {team.name} {team.role}
     </TeamTableCell>
     <TeamTableCell>
-      {team.object && team.object.objectType} {team.object && team.object.objectId}
+      {team.object && team.object.objectType}{' '}
+      {team.object && team.object.objectId}
     </TeamTableCell>
     <TeamTableCell width={40}>
       <StyledMenu
