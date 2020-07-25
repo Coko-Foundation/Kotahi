@@ -1,8 +1,8 @@
 {
-  "name": "SimpleJ",
-  "version": "1.0.0",
+  "name": "Kotahi",
+  "version": "1.0.0-alpha",
   "private": true,
-  "description": "SimpleJ - open journals",
+  "description": "Kotahi - open journals",
   "license": "MIT",
   "engines": {
     "node": ">=9",
