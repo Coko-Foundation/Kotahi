@@ -188,6 +188,7 @@ const resolvers = {
         objectType: 'Manuscript',
         members: [{ status: 'invited', userId }],
         role: 'reviewer',
+        name: 'Reviewers',
       }).saveGraph()
 
       return newTeam

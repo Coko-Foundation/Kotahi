@@ -167,9 +167,6 @@
     "*.{js,jsx}": [
       "eslint --fix"
     ],
-    "*.{js, jsx}": [
-      "stylelint"
-    ],
     "*.{json,md}": [
       "prettier --write"
     ]
