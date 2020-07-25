@@ -2,7 +2,7 @@ import React from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { Formik } from 'formik'
-import { cloneDeep } from 'lodash'
+// import { cloneDeep } from 'lodash'
 import { getCommentContent } from './review/util'
 import ReviewLayout from '../components/review/ReviewLayout'
 import { Spinner } from '../../../shared'
@@ -34,22 +34,22 @@ const reviewFields = `
   }
 `
 
-const teamFields = `
-  id
-  name
-  role
-  object {
-    objectId
-    objectType
-  }
-  members {
-    id
-    user {
-      id
-      username
-    }
-  }
-`
+// const teamFields = `
+//   id
+//   name
+//   role
+//   object {
+//     objectId
+//     objectType
+//   }
+//   members {
+//     id
+//     user {
+//       id
+//       username
+//     }
+//   }
+// `
 
 const fragmentFields = `
   id
@@ -308,14 +308,14 @@ export default ({ match, ...props }) => {
       createFile(newFile)
     })
 
-  const handleSubmit = ({ reviewId, history }) => {
-    completeReview({
+  const handleSubmit = async ({ reviewId, history }) => {
+    await completeReview({
       variables: {
         id: reviewId,
       },
-    }).then(() => {
-      history.push('/journal/dashboard')
     })
+
+    history.push('/journal/dashboard')
   }
 
   return (

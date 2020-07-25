@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Link, Action, Button } from '@pubsweet/ui'
+import { Action, Button } from '@pubsweet/ui'
 import { grid } from '@pubsweet/ui-toolkit'
 import ReviewerForm from './ReviewerForm'
 import {

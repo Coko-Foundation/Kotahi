@@ -1,7 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import { unescape, groupBy, isArray, get, set, cloneDeep } from 'lodash'
-import { FieldArray, useFormikContext } from 'formik'
+import { FieldArray } from 'formik'
 import * as uiComponents from '@pubsweet/ui'
 import * as validators from 'xpub-validators'
 import { AbstractEditor } from 'xpub-edit'
@@ -347,9 +347,9 @@ export default ({
       {confirming && (
         <ModalWrapper>
           <Confirm
+            errors={errors}
             form={form}
             submit={handleSubmit}
-            errors={errors}
             toggleConfirming={toggleConfirming}
           />
         </ModalWrapper>

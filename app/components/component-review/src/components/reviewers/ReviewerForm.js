@@ -28,13 +28,13 @@ const ReviewerInput = ({
 }) => (
   <Select
     {...field}
+    getOptionLabel={option => option.defaultIdentity?.name}
+    getOptionValue={option => option.id}
     onChange={user => {
       setFieldValue('user', user)
     }}
     optionRenderer={OptionRenderer}
     options={reviewerUsers}
-    getOptionValue={option => option.id}
-    getOptionLabel={option => option.defaultIdentity?.name}
     promptTextCreator={label => `Add ${label}?`}
     valueKey="id"
   />

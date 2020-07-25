@@ -1,16 +1,10 @@
 import React, { useState } from 'react'
-import { debounce, cloneDeep, isEmpty, set } from 'lodash'
+import { debounce, cloneDeep, set } from 'lodash'
 // import { compose, withProps, withState, withHandlers } from 'recompose'
 import { gql, useQuery, useMutation } from '@apollo/client'
 import { Formik } from 'formik'
 import Submit from './Submit'
 import { Spinner } from '../../../shared'
-
-const nullToEmpty = obj =>
-  JSON.parse(JSON.stringify(obj, (k, v) => (v === null ? '' : v)))
-
-const emptyToUndefined = obj =>
-  JSON.parse(JSON.stringify(obj, (k, v) => (v === '' ? undefined : v)))
 
 const fragmentFields = `
   id
@@ -331,14 +325,14 @@ const SubmitPage = ({ match, history, ...props }) => {
     <Formik
       displayName="submit"
       handleChange={handleChange}
+      initialValues={Object.assign({}, manuscript, {
+        submission: JSON.parse(manuscript.submission),
+      })}
       onSubmit={async (values, { validateForm, setSubmitting, ...other }) => {
         // TODO: Change this to a more Formik idiomatic form
         const isValid = Object.keys(await validateForm()).length === 0
         return isValid ? onSubmit(values) : setSubmitting(false)
       }}
-      initialValues={Object.assign({}, manuscript, {
-        submission: JSON.parse(manuscript.submission),
-      })}
     >
       {props => (
         <Submit
