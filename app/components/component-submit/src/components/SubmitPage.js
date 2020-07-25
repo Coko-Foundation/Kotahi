@@ -20,6 +20,7 @@ const fragmentFields = `
     url
   }
   reviews {
+    id
     open
     recommendation
     created
@@ -137,119 +138,6 @@ const createFileMutation = gql`
     }
   }
 `
-
-// export default compose(
-// graphql(query, {
-//   options: ({ match }) => ({
-//     variables: {
-//       id: match.params.version,
-//       form: 'submit',
-//     },
-//   }),
-//   props: ({ data }) => ({ data: nullToEmpty(data) }),
-// }),
-// graphql(createFileMutation, {
-//   props: ({ mutate, ownProps }) => ({
-//     createFile: value => {
-//       const file = {
-//         url: value.url,
-//         filename: value.filename,
-//         mimeType: value.mimeType,
-//         size: value.size,
-//         fileType: 'supplementary',
-//         object: 'Manuscript',
-//         objectId: ownProps.match.params.version,
-//       }
-
-//       mutate({
-//         variables: {
-//           file,
-//         },
-//       })
-//     },
-//   }),
-// }),
-// graphql(uploadSuplementaryFilesMutation, {
-//   props: ({ mutate, ownProps }) => ({
-//     uploadFile: file =>
-//       mutate({
-//         variables: {
-//           file,
-//         },
-//       }),
-//   }),
-// }),
-// graphql(updateMutation, {
-//   props: ({ mutate, ownProps }) => {
-//     const debouncers = {}
-//     const onChange = (value, path) => {
-//       const input = {}
-//       set(input, path, value)
-//       debouncers[path] = debouncers[path] || debounce(updateManuscript, 300)
-//       return debouncers[path](input)
-//     }
-
-//     const updateManuscript = input =>
-//       mutate({
-//         variables: {
-//           id: ownProps.match.params.version,
-//           input: JSON.stringify(emptyToUndefined(input)),
-//         },
-//       })
-
-//     return {
-//       onChange,
-//     }
-//   },
-// }),
-// graphql(updateMutation, {
-//   props: ({ mutate, ownProps }) => ({
-//     onSubmit: (manuscript, { history }) => {
-//       const updateManuscript = {
-//         status: 'submitted',
-//       }
-
-//       mutate({
-//         variables: {
-//           id: ownProps.match.params.version,
-//           input: JSON.stringify(updateManuscript),
-//         },
-//       }).then(() => {
-//         history.push('/journal/dashboard')
-//       })
-//     },
-//   }),
-// }),
-// withProps(({ getFile, manuscript, match: { params: { journal } } }) => ({
-//   journal: { id: journal },
-//   forms: cloneDeep(getFile),
-//   manuscript,
-//   submitSubmission: ({ validateForm, setSubmitting, handleSubmit }) =>
-//     validateForm().then(props =>
-//       isEmpty(props) ? setSubmitting(false) : handleSubmit(),
-//     ),
-// })),
-// withFormik({
-//   initialValues: {},
-//   mapPropsToValues: ({ manuscript }) =>
-//     Object.assign({}, manuscript, {
-//       submission: JSON.parse(manuscript.submission),
-//     }),
-//   displayName: 'submit',
-//   handleSubmit: (
-//     props,
-//     { validateForm, setSubmitting, props: { onSubmit, history } },
-//   ) =>
-//     validateForm().then(props =>
-//       isEmpty(props) ? onSubmit(props, { history }) : setSubmitting(false),
-//     ),
-// }),
-// withState('confirming', 'setConfirming', false),
-// withHandlers({
-//   toggleConfirming: ({ validateForm, setConfirming, handleSubmit }) => () =>
-//     setConfirming(confirming => !confirming),
-// }),
-// )(Submit)
 
 const SubmitPage = ({ match, history, ...props }) => {
   const [confirming, setConfirming] = useState(false)

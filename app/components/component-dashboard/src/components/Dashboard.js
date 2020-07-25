@@ -22,22 +22,21 @@ import {
 import hasRole from '../../../../shared/hasRole'
 
 const Dashboard = ({ history, ...props }) => {
-  // const uploadManuscript = upload()
-  // const [conversion] = useContext(XpubContext)
-
   const { loading, data, error } = useQuery(queries.dashboard)
   const [reviewerRespond] = useMutation(mutations.reviewerResponseMutation)
 
   const [deleteManuscript] = useMutation(mutations.deleteManuscriptMutation, {
     update: (proxy, { data: { deleteManuscript } }) => {
       const data = proxy.readQuery({ query: queries.dashboard })
-      const manuscriptIndex = data.manuscripts.findIndex(
-        manuscript => manuscript.id === deleteManuscript,
+      const manuscripts = data.manuscripts.filter(
+        manuscript => manuscript.id !== deleteManuscript,
       )
-      if (manuscriptIndex > -1) {
-        data.manuscripts.splice(manuscriptIndex, 1)
-        proxy.writeQuery({ query: queries.dashboard, data })
-      }
+      proxy.writeQuery({
+        query: queries.dashboard,
+        data: {
+          manuscripts,
+        },
+      })
     },
   })
 
