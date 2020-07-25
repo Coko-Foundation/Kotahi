@@ -1,9 +1,10 @@
 const typeDefs = `
   extend type Mutation {
     updateReview(id: ID, input: ReviewInput): Review!
+    completeReview(id: ID!): TeamMember
   }
 
-  type Review implements Object  {
+  type Review implements Object {
     id: ID!
     created: DateTime!
     updated: DateTime

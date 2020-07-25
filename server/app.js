@@ -60,8 +60,10 @@ const configureApp = app => {
 
   if (config.has('pubsweet-server.uploads')) {
     app.use(
-      '/uploads',
-      express.static(path.resolve(config.get('pubsweet-server.uploads'))),
+      '/static/uploads',
+      express.static(
+        path.join(__dirname, '..', config.get('pubsweet-server.uploads')),
+      ),
     )
   }
   // Passport strategies

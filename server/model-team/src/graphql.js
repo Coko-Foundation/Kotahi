@@ -98,7 +98,7 @@ const typeDefs = `
     id: ID!
     type: String!
     role: String!
-    name: String!
+    name: String
     object: TeamObject
     members: [TeamMember!]
     owners: [User]
