@@ -59,6 +59,8 @@ const label = status => {
     rejected: 'Rejected',
     submitted: 'Submitted',
     revise: 'Revising',
+    invited: 'Invited', // reviewer status
+    completed: 'Completed', // reviewer status
   }
   return labels[status] || `Unknown (${status})`
 }
