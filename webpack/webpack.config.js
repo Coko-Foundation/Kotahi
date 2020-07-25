@@ -37,7 +37,7 @@ module.exports = webpackEnv => {
         '/api': 'http://localhost:3000',
         '/auth': 'http://localhost:3000',
         '/graphql': 'http://localhost:3000',
-        '/uploads': 'http://locahost:3000',
+        '/static/uploads': 'http://locahost:3000',
         '/static/profiles': 'http://localhost:3000',
         '/public': 'http://localhost:3000',
       },
