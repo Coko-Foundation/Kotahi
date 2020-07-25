@@ -1,12 +1,9 @@
-import { compose, withProps } from 'recompose'
-import { withFormik } from 'formik'
-import { graphql } from '@apollo/client/react/hoc'
-import gql from 'graphql-tag'
-import { withLoader } from 'pubsweet-client'
-import { omit } from 'lodash'
-
+import React from 'react'
+import { Formik } from 'formik'
+import { gql, useQuery, useMutation } from '@apollo/client'
 import Reviewers from '../components/reviewers/Reviewers'
 import ReviewerContainer from '../components/reviewers/ReviewerContainer'
+import { Spinner } from '../../../shared'
 
 const teamFields = `
   id
@@ -23,6 +20,10 @@ const teamFields = `
       username
       profilePicture
       online
+      defaultIdentity {
+        id
+        name
+      }
     }
     status
   }
@@ -68,17 +69,17 @@ const fragmentFields = `
   status
 `
 
-const createTeamMutation = gql`
-  mutation($input: TeamInput!) {
-    createTeam(input: $input) {
+const addReviewerMutation = gql`
+  mutation($manuscriptId: ID!, $userId: ID!) {
+    addReviewer(manuscriptId: $manuscriptId, userId: $userId) {
       ${teamFields}
     }
   }
 `
 
-const updateTeamMutation = gql`
-  mutation($id: ID, $input: TeamInput) {
-    updateTeam(id: $id, input: $input) {
+const removeReviewerMutation = gql`
+  mutation($manuscriptId: ID!, $userId: ID!) {
+    removeReviewer(manuscriptId: $manuscriptId, userId: $userId) {
       ${teamFields}
     }
   }
@@ -86,18 +87,16 @@ const updateTeamMutation = gql`
 
 const query = gql`
   query($id: ID!) {
-    currentUser {
-      id
-      username
-      admin
-    }
-
     users {
       id
       username
       profilePicture
       online
       admin
+      defaultIdentity {
+        id
+        name
+      }
     }
 
     teams {
@@ -110,121 +109,52 @@ const query = gql`
   }
 `
 
-const update = match => (proxy, { data: { updateTeam, createTeam } }) => {
-  const data = JSON.parse(
-    JSON.stringify(
-      proxy.readQuery({
-        query,
-        variables: {
-          id: match.params.version,
-        },
-      }),
-    ),
-  )
+const ReviewersPage = ({ match, history }) => {
+  const { data, error, loading } = useQuery(query, {
+    variables: { id: match.params.version },
+  })
 
-  if (updateTeam) {
-    const teamIndex = data.teams.findIndex(team => team.id === updateTeam.id)
-    const manuscriptTeamIndex = data.manuscript.teams.findIndex(
-      team => team.id === updateTeam.id,
-    )
-    data.teams[teamIndex] = updateTeam
-    data.manuscript.teams[manuscriptTeamIndex] = updateTeam
+  const [addReviewer] = useMutation(addReviewerMutation)
+  const [removeReviewer] = useMutation(removeReviewerMutation)
+
+  if (loading) {
+    return <Spinner />
   }
+  if (error) return error
 
-  if (createTeam) {
-    data.teams.push(createTeam)
-    data.manuscript.teams.push(createTeam)
-  }
-  proxy.writeQuery({ query, data })
-}
+  const { manuscript, teams, users } = data
+  const reviewersTeam =
+    teams.find(
+      team =>
+        team.role === 'reviewer' &&
+        team.object.objectId === manuscript.id &&
+        team.object.objectType === 'Manuscript',
+    ) || {}
 
-const handleSubmit = (
-  { user },
-  { props: { manuscript, updateTeamMutation, createTeamMutation, match } },
-) => {
-  const team = manuscript.teams.find(team => team.role === 'reviewer') || {}
-
-  const teamAdd = {
-    objectId: manuscript.id,
-    objectType: 'Manuscript',
-    // status: [{ user: user.id, status: 'invited' }],
-    name: 'Reviewers',
-    role: 'reviewer',
-    members: [{ user: { id: user.id }, status: 'invited' }],
-  }
-  if (team.id) {
-    const newTeam = {
-      ...omit(team, ['object', 'id', '__typename']),
-      // TODO: Find a cleaner way of updating members
-      members: team.members.map(member => ({
-        user: {
-          id: member.user.id,
-        },
-        status: member.status,
-      })),
-    }
-
-    newTeam.members.push({ user: { id: user.id }, status: 'invited' })
-    // newTeam.status.push({ user: user.id, status: 'invited' })
-    updateTeamMutation({
-      variables: {
-        id: team.id,
-        input: newTeam,
-      },
-      update: update(match),
-    })
-  } else {
-    createTeamMutation({
-      variables: {
-        input: teamAdd,
-      },
-      update: update(match),
-    })
-  }
-}
-
-export default compose(
-  graphql(query, {
-    options: ({ match }) => ({
-      variables: {
-        id: match.params.version,
-      },
-    }),
-  }),
-  graphql(createTeamMutation, { name: 'createTeamMutation' }),
-  graphql(updateTeamMutation, { name: 'updateTeamMutation' }),
-  withLoader(),
-  withProps(
-    ({
-      manuscript,
-      teams = [],
-      users,
-      match: {
-        params: { journal },
-      },
-    }) => {
-      const reviewersTeam =
-        teams.find(
-          team =>
-            team.role === 'reviewer' &&
-            team.object.objectId === manuscript.id &&
-            team.object.objectType === 'Manuscript',
-        ) || {}
-
-      return {
-        reviewers: reviewersTeam.members || [],
-        journal: { id: journal },
-        reviewerUsers: users,
-        Reviewer: ReviewerContainer,
+  const reviewers = reviewersTeam.members || []
+  return (
+    <Formik
+      displayName="reviewers"
+      initialValues={{ user: undefined }}
+      onSubmit={values =>
+        addReviewer({
+          variables: { userId: values.user.id, manuscriptId: manuscript.id },
+        })
       }
-    },
-  ),
-  // withHandlers({
-  //   loadOptions: props => props.reviewerUsers, // loadOptions(props),
-  // }),
-  withFormik({
-    mapPropsToValues: () => ({ user: '' }),
-    displayName: 'reviewers',
-    handleSubmit,
-  }),
-)(Reviewers)
+    >
+      {props => (
+        <Reviewers
+          {...props}
+          manuscript={manuscript}
+          removeReviewer={removeReviewer}
+          Reviewer={ReviewerContainer}
+          reviewers={reviewers}
+          reviewerUsers={users}
+          history={history}
+        />
+      )}
+    </Formik>
+  )
+}
+
+export default ReviewersPage

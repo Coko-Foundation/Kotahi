@@ -1,9 +1,11 @@
 import React from 'react'
-import Select from 'react-select1'
 import { Field } from 'formik'
 import { Button } from '@pubsweet/ui'
 import { required } from 'xpub-validators'
-import 'react-select1/dist/react-select.css'
+import styled from 'styled-components'
+// import 'react-select1/dist/react-select.css'
+import { grid } from '@pubsweet/ui-toolkit'
+import { Select } from '../../../../shared'
 
 const OptionRenderer = option => (
   <div>
@@ -12,6 +14,11 @@ const OptionRenderer = option => (
   </div>
 )
 
+const FieldAndButton = styled.div`
+  display: grid;
+  grid-template-columns: ${grid(30)} ${grid(10)};
+  grid-gap: ${grid(2)};
+`
 const ReviewerInput = ({
   field,
   form: { values, setFieldValue },
@@ -19,14 +26,15 @@ const ReviewerInput = ({
   replace,
   reviewerUsers,
 }) => (
-  <Select.Creatable
+  <Select
     {...field}
-    labelKey="username"
     onChange={user => {
       setFieldValue('user', user)
     }}
     optionRenderer={OptionRenderer}
     options={reviewerUsers}
+    getOptionValue={option => option.id}
+    getOptionLabel={option => option.defaultIdentity?.name}
     promptTextCreator={label => `Add ${label}?`}
     valueKey="id"
   />
@@ -40,15 +48,17 @@ const ReviewerForm = ({
   reviewerUsers,
 }) => (
   <form onSubmit={handleSubmit}>
-    <Field
-      component={ReviewerInput}
-      name="user"
-      reviewerUsers={reviewerUsers}
-      validate={required}
-    />
-    <Button disabled={!isValid} primary type="submit">
-      Invite reviewer
-    </Button>
+    <FieldAndButton>
+      <Field
+        component={ReviewerInput}
+        name="user"
+        reviewerUsers={reviewerUsers}
+        validate={required}
+      />
+      <Button disabled={!isValid} primary type="submit">
+        Invite reviewer
+      </Button>
+    </FieldAndButton>
   </form>
 )
 

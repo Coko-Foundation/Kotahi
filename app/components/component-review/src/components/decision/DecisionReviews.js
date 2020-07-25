@@ -44,12 +44,13 @@ const DecisionReviews = ({ manuscript }) => (
           </SectionRow>
         ))
     ) : (
-      <SectionRow>
-        <Action to={`/journal/versions/${manuscript.id}/reviewers`}>
-          Assign Reviewers
-        </Action>
-      </SectionRow>
+      <SectionRow>No reviews completed yet.</SectionRow>
     )}
+    <SectionRow>
+      <Action to={`/journal/versions/${manuscript.id}/reviewers`}>
+        Manage Reviewers
+      </Action>
+    </SectionRow>
   </Container>
 )
 
