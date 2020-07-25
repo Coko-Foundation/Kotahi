@@ -5,7 +5,7 @@ import { Button } from '@pubsweet/ui'
 
 import queries from '../graphql/queries/'
 import mutations from '../graphql/mutations/'
-import { Container, Heading, HeadingWithAction, Placeholder } from '../style'
+import { Container, Placeholder } from '../style'
 import EditorItem from './sections/EditorItem'
 import OwnerItem from './sections/OwnerItem'
 import ReviewerItem from './sections/ReviewerItem'
@@ -15,39 +15,20 @@ import {
   Title,
   SectionRow,
   SectionContent,
+  Heading,
+  HeadingWithAction,
 } from '../../../shared'
 
 import hasRole from '../../../../shared/hasRole'
-
-const updateReviewer = (proxy, { data: { reviewerResponse } }) => {
-  const id = reviewerResponse.object.objectId
-  const data = proxy.readQuery({
-    query: queries.dashboard,
-    variables: {
-      id,
-    },
-  })
-
-  const manuscriptIndex = data.manuscripts.findIndex(manu => manu.id === id)
-  const teamIndex = data.manuscripts[manuscriptIndex].teams.findIndex(
-    team => team.id === reviewerResponse.id,
-  )
-
-  data.manuscripts[manuscriptIndex].teams[teamIndex] = reviewerResponse
-  proxy.writeQuery({ query: queries.dashboard, data })
-}
 
 const Dashboard = ({ history, ...props }) => {
   // const uploadManuscript = upload()
   // const [conversion] = useContext(XpubContext)
 
   const { loading, data, error } = useQuery(queries.dashboard)
-  const [reviewerRespond] = useMutation(mutations.reviewerResponseMutation, {
-    // variables: { currentUserId, action, teamId },
-    update: updateReviewer,
-  })
+  const [reviewerRespond] = useMutation(mutations.reviewerResponseMutation)
+
   const [deleteManuscript] = useMutation(mutations.deleteManuscriptMutation, {
-    // variables: { id: manuscript.id },
     update: (proxy, { data: { deleteManuscript } }) => {
       const data = proxy.readQuery({ query: queries.dashboard })
       const manuscriptIndex = data.manuscripts.findIndex(
@@ -70,7 +51,12 @@ const Dashboard = ({ history, ...props }) => {
   )
 
   const toReview = dashboard.filter(submission =>
-    hasRole(submission, 'reviewer'),
+    hasRole(submission, [
+      'reviewer',
+      'invited:reviewer',
+      'accepted:reviewer',
+      'completed:reviewer',
+    ]),
   )
 
   const manuscriptsImEditorOf = dashboard.filter(submission =>
@@ -90,7 +76,7 @@ const Dashboard = ({ history, ...props }) => {
         <SectionHeader>
           <Title>My Submissions</Title>
         </SectionHeader>
-        {dashboard.length > 0 ? (
+        {mySubmissions.length > 0 ? (
           mySubmissions.map(submission => (
             <SectionRow key={`submission-${submission.id}`}>
               <OwnerItem

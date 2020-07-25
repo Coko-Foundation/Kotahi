@@ -3,7 +3,7 @@ import Moment from 'react-moment'
 
 const MetadataSubmittedDate = ({ submitted }) => (
   <span>
-    <Moment format="YYYY-MM-DD">{submitted}</Moment>
+    Submitted on <Moment format="YYYY-MM-DD">{submitted}</Moment>.
   </span>
 )
 
