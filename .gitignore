@@ -15,4 +15,3 @@ uploads/
 config/local*.*
 .vscode/launch.json
 .DS_Store
-cypress/videos
