@@ -1,4 +1,5 @@
 # Kotahi
+
 Kotahi is a manuscript submission system, based on the discontinued [xpub-collabra](https://gitlab.coko.foundation/xpub/xpub) project.
 It is currently under development by the [Coko Foundation](https://coko.foundation/) and is being built with [Pubsweet](https://gitlab.coko.foundation/pubsweet/pubsweet).
 
@@ -9,6 +10,7 @@ Developer beware! This project is currently under very heavy development, so thi
 ### Running the app
 
 Start with installing the dependencies:
+
 ```
 yarn
 ```
@@ -17,9 +19,9 @@ Create the file `local-development.json` inside the `config` folder.
 
 ```json
 {
-    "pubsweet-server": {
-        "secret": "<your-secret-here>"
-    }
+  "pubsweet-server": {
+    "secret": "<your-secret-here>"
+  }
 }
 ```
 
@@ -30,6 +32,7 @@ yarn start:services
 ```
 
 Now (in a separate terminal) run the server (backend PubSweet app):
+
 ```
 yarn pubsweet start:server
 ```
@@ -41,6 +44,11 @@ docker run -e DATABASE_URL="postgres://yourusername@host.docker.internal/yourdat
 ```
 
 And in another terminal run the client (webpack-based PubSweet app):
+
 ```
 yarn pubsweet start:client
 ```
+
+# Other credits
+
+The real-time chat functionality was heavily inspired by https://github.com/withspectrum/spectrum, from data model approach to copying and adapting certain bits of their React app. Thank you, Spectrum!
