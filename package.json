@@ -164,12 +164,15 @@
     "setupTestFrameworkScriptFile": "<rootDir>/test/helpers/jest-setup.js"
   },
   "lint-staged": {
-    "*.js": [
-      "prettier --write",
-      "git add"
+    "*.{js,jsx}": [
+      "eslint --fix"
     ],
-    "*.css": "stylelint",
-    "*.scss": "stylelint"
+    "*.{js, jsx}": [
+      "stylelint"
+    ],
+    "*.{json,md}": [
+      "prettier --write"
+    ]
   },
   "resolutions": {
     "bcrypt": "^3.0.6",
