@@ -101,9 +101,6 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
   const config = {
     link,
     cache: new InMemoryCache({
-      possibleTypes: {
-        Identity: ['LocalIdentity', 'ExternalIdentity'],
-      },
       typePolicies: {
         Manuscript: {
           fields: {

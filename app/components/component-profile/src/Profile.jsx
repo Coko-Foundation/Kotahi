@@ -19,15 +19,12 @@ const GET_CURRENT_USER = gql`
       profilePicture
       username
       defaultIdentity {
-        aff
-        name
+        identifier
+        email
         type
-        ... on ExternalIdentity {
-          identifier
-        }
-        ... on LocalIdentity {
-          email
-        }
+        aff
+        id
+        name
       }
     }
   }

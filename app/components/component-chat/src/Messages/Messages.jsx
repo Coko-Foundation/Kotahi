@@ -35,12 +35,8 @@ const GET_MESSAGES = gql`
           profilePicture
           online
           defaultIdentity {
-            ... on ExternalIdentity {
-              identifier
-            }
-            ... on LocalIdentity {
-              email
-            }
+            identifier
+            email
             type
             aff
             id
@@ -69,15 +65,11 @@ const MESSAGES_SUBSCRIPTION = gql`
         profilePicture
         online
         defaultIdentity {
-          id
-          ... on ExternalIdentity {
-            identifier
-          }
-          ... on LocalIdentity {
-            email
-          }
+          identifier
+          email
           type
           aff
+          id
           name
         }
       }

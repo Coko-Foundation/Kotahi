@@ -8,15 +8,12 @@ export const GET_CURRENT_USER = gql`
       username
       admin
       defaultIdentity {
-        aff
-        name
+        identifier
+        email
         type
-        ... on ExternalIdentity {
-          identifier
-        }
-        ... on LocalIdentity {
-          email
-        }
+        aff
+        id
+        name
       }
       online
       _currentRoles {
