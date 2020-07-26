@@ -2,10 +2,17 @@ import React from 'react'
 import styled from 'styled-components'
 import { unescape, groupBy, isArray, get, set, cloneDeep } from 'lodash'
 import { FieldArray } from 'formik'
-import * as uiComponents from '@pubsweet/ui'
+import {
+  TextField,
+  RadioGroup,
+  CheckboxGroup,
+  Button,
+  Attachment,
+  ValidatedFieldFormik,
+} from '@pubsweet/ui'
 import * as validators from 'xpub-validators'
 import { AbstractEditor } from 'xpub-edit'
-import { Section as Container } from '../../../shared'
+import { Section as Container, Select } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
 import Supplementary from './Supplementary'
@@ -72,10 +79,8 @@ const filterFileManuscript = files =>
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   )
 
-const { ValidatedFieldFormik, Button, Attachment } = uiComponents
-
 // Add the AbstractEditor and AuthorsInput to the list of available form elements
-const elements = uiComponents
+const elements = { TextField, RadioGroup, CheckboxGroup }
 elements.AbstractEditor = ({
   validationStatus,
   setTouched,
@@ -95,6 +100,7 @@ elements.AbstractEditor = ({
 )
 
 elements.AuthorsInput = AuthorsInput
+elements.Select = Select
 
 const rejectProps = (obj, keys) =>
   Object.keys(obj)
@@ -187,6 +193,7 @@ const renderArray = (elementsComponentArray, onChange) => ({
             'order',
             'value',
           ])}
+          aria-label={element.shortDescription}
           component={elements[element.component]}
           data-testid={element.name}
           key={`notes-validate-${element.id}`}
@@ -271,12 +278,21 @@ export default ({
             {element.component !== 'AuthorsInput' &&
               element.component !== 'SupplementaryFiles' && (
                 <ValidatedFieldFormik
+                  aria-label={element.placeholder || element.title}
                   component={elements[element.component]}
-                  data-testid={element.name}
+                  data-testid={element.name} // TODO: Improve this
                   key={`validate-${element.id}`}
                   name={element.name}
                   onChange={value => {
-                    const val = value.target ? value.target.value : value
+                    // TODO: Perhaps split components remove conditions here
+                    let val
+                    if (value.target) {
+                      val = value.target.value
+                    } else if (value.value) {
+                      val = value.value
+                    } else {
+                      val = value
+                    }
                     setFieldValue(element.name, val, true)
                     onChange(val, element.name)
                   }}

@@ -38,5 +38,11 @@ const styles = th => ({
 
 export const Select = props => {
   const theme = useContext(ThemeContext)
-  return <ReactSelect {...props} styles={styles(theme)} />
+  let selectedOption = props.value
+  if (!props.isMulti) {
+    selectedOption = props.options.find(option => option.value === props.value)
+  }
+  return (
+    <ReactSelect {...props} styles={styles(theme)} value={selectedOption} />
+  )
 }

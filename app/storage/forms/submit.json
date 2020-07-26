@@ -62,24 +62,24 @@
     {
       "title": "Type of Research Object",
       "id": "1531303833528",
-      "component": "Menu",
+      "component": "Select",
       "name": "submission.objectType",
       "options": [
         {
-          "value": "original-research",
-          "label": "Original Research Report"
+          "value": "dataset",
+          "label": "Dataset"
         },
         {
-          "label": "Review",
-          "value": "review"
+          "value": "software",
+          "label": "Software"
         },
         {
-          "value": "opinion",
-          "label": "Opinion/Commentary"
+          "value": "figure",
+          "label": "Figure"
         },
         {
-          "value": "registered-report",
-          "label": "Registered Report"
+          "value": "notebook",
+          "label": "Notebook"
         }
       ],
       "order": "7"
@@ -146,7 +146,7 @@
     {
       "title": "Did your study involve healthy subjects only or patients (note that patient studies may also involve healthy subjects)",
       "id": "1591193412418",
-      "component": "Menu",
+      "component": "Select",
       "name": "submission.subjects",
       "options": [
         {
@@ -165,7 +165,7 @@
     {
       "title": "If your research involved human subjects, was the research approved by the relevant Institutional Review Board or ethics panel?",
       "id": "1591193588182",
-      "component": "Menu",
+      "component": "Select",
       "name": "submission.irb",
       "options": [
         {
@@ -188,7 +188,7 @@
     {
       "title": "Was any animal research approved by the relevant IACUC or other animal research panel?",
       "id": "1591343661290",
-      "component": "Menu",
+      "component": "Select",
       "name": "submission.animal_research_approval",
       "description": "<p><i>NOTE: Any animal studies without IACUC approval will be automatically rejected.</i></p>",
       "options": [
@@ -282,7 +282,7 @@
     {
       "title": "For human MRI, what field strength scanner do you use?",
       "id": "1591344209443",
-      "component": "Menu",
+      "component": "Select",
       "name": "submission.humanMRI",
       "order": "17",
       "options": [
