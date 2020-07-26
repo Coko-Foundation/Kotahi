@@ -1,7 +1,6 @@
 const logger = require('@pubsweet/logger')
 // const { Journal, User } = require('@pubsweet/models')
 const { createTables, db } = require('@pubsweet/db-manager')
-const wait = require('waait')
 
 const clearDb = async () => {
   const { rows } = await db.raw(`
@@ -43,17 +42,16 @@ const seed = async dumpSql => {
   // TODO: This wait is necessary for the database to "settle".
   while (!ready) {
     // eslint-disable-next-line
-    const { rows } = await db.raw(`SELECT EXISTS (
-      SELECT FROM information_schema.tables
-      WHERE  table_schema = 'public'
-      AND    table_name   = 'users'
-    );`)
-    if (rows && rows[0] && rows[0].exists) {
-      ready = true
+    const result = await db.raw(`set search_path to 'public';`)
+    const { User } = require('@pubsweet/models')
+    try {
+      // eslint-disable-next-line
+      const users = await User.query()
+      ready = !!users
+    } catch (e) {
+      // eslint-disable-next-line
+      console.log(e)
     }
-
-    // eslint-disable-next-line
-    await wait(1000)
   }
   return true
 }
