@@ -30,17 +30,31 @@ const clearDb = async () => {
 }
 
 const seed = async dumpSql => {
+  let ready
+
   if (dumpSql) {
     await clearDb()
     await db.raw(dumpSql)
     logger.info('Cleared the database and restored from dump')
-    // TODO: This wait is necessary for the database to "settle".
-    await wait(2000)
-    return true
+  } else {
+    await createTables(true)
   }
 
-  await createTables(true)
+  // TODO: This wait is necessary for the database to "settle".
+  while (!ready) {
+    // eslint-disable-next-line
+    const { rows } = await db.raw(`SELECT EXISTS (
+      SELECT FROM information_schema.tables
+      WHERE  table_schema = 'public'
+      AND    table_name   = 'users'
+    );`)
+    if (rows && rows[0] && rows[0].exists) {
+      ready = true
+    }
 
+    // eslint-disable-next-line
+    await wait(1000)
+  }
   return true
 }
 
