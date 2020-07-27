@@ -1,8 +1,8 @@
 import styled from 'styled-components'
-import { Heading } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
 
 export const Table = styled.table`
+  margin-top: ${grid(2)};
   width: 100%;
   border-radius: ${th('borderRadius')};
   border-collapse: collapse;
@@ -11,11 +11,6 @@ export const Table = styled.table`
   td {
     width: 25%;
   }
-`
-
-export const PageHeading = styled(Heading)`
-  color: ${th('colorText')};
-  margin-bottom: 1rem;
 `
 
 export const Header = styled.thead`

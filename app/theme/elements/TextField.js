@@ -1,5 +1,5 @@
 import { css } from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 
 export default {
   // TODO
@@ -31,7 +31,6 @@ export default {
       }
     }};
     outline: 0;
-    padding: 0 0 0 2px;
     transition: ${th('transitionDuration')} ${th('transitionTimingFunction')};
 
     &:focus {
@@ -43,5 +42,9 @@ export default {
       font-size: ${th('fontSizeBaseSmall')};
       line-height: ${th('lineHeightBaseSmall')};
     }
+  `,
+
+  Label: css`
+    margin-bottom: ${grid(1)};
   `,
 }

@@ -8,7 +8,7 @@ import {
   Container,
   Table,
   Header,
-  PageHeading,
+  Heading,
   Content,
   Spinner,
   Pagination,
@@ -98,7 +98,7 @@ const UsersManager = () => {
 
   return (
     <Container>
-      <PageHeading level={1}>Users</PageHeading>
+      <Heading>Users</Heading>
       <Content>
         <Table>
           <Header>

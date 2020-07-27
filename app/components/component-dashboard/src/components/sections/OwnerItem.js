@@ -33,7 +33,6 @@ const OwnerItem = ({ version, journals, deleteManuscript }) => {
       <div>
         {' '}
         <StatusBadge minimal status={version.status} />
-        {JSON.stringify(version._currentRoles)}
         <VersionTitle version={version} />
       </div>
       {actions}

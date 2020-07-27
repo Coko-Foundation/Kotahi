@@ -14,7 +14,7 @@ export {
   Table,
   Header,
   Content,
-  PageHeading,
+  Heading,
   Carets,
   CaretUp,
   CaretDown,

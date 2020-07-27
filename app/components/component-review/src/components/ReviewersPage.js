@@ -99,10 +99,6 @@ const query = gql`
       }
     }
 
-    teams {
-      ${teamFields}
-    }
-
     manuscript(id: $id) {
       ${fragmentFields}
     }
@@ -114,7 +110,37 @@ const ReviewersPage = ({ match, history }) => {
     variables: { id: match.params.version },
   })
 
-  const [addReviewer] = useMutation(addReviewerMutation)
+  const [addReviewer] = useMutation(addReviewerMutation, {
+    update: (cache, { data: { addReviewer } }) => {
+      cache.modify({
+        id: cache.identify({
+          __typename: addReviewer.object.objectType,
+          id: addReviewer.object.objectId,
+        }),
+        fields: {
+          teams(existingTeamRefs = []) {
+            const newTeamRef = cache.writeFragment({
+              data: addReviewer,
+              fragment: gql`
+                fragment NewTeam on Team {
+                  id
+                  role
+                  members {
+                    id
+                    user {
+                      id
+                    }
+                  }
+                }
+              `,
+            })
+
+            return [...existingTeamRefs, newTeamRef]
+          },
+        },
+      })
+    },
+  })
   const [removeReviewer] = useMutation(removeReviewerMutation)
 
   if (loading) {
@@ -122,14 +148,9 @@ const ReviewersPage = ({ match, history }) => {
   }
   if (error) return error
 
-  const { manuscript, teams, users } = data
+  const { manuscript, users } = data
   const reviewersTeam =
-    teams.find(
-      team =>
-        team.role === 'reviewer' &&
-        team.object.objectId === manuscript.id &&
-        team.object.objectType === 'Manuscript',
-    ) || {}
+    manuscript.teams.find(team => team.role === 'reviewer') || {}
 
   const reviewers = reviewersTeam.members || []
   return (

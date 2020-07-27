@@ -1,7 +1,7 @@
 import React from 'react'
 import { ApolloConsumer } from '@apollo/client'
 import config from 'config'
-import { Container, Content, UploadContainer, PageHeading } from '../style'
+import { Container, Content, UploadContainer, Heading } from '../style'
 import UploadManuscript from './UploadManuscript'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
 
@@ -17,7 +17,7 @@ const Dashboard = props => {
 
   return (
     <Container>
-      <PageHeading level={1}>New submission</PageHeading>
+      <Heading>New submission</Heading>
       <Content>
         <UploadContainer>
           <ApolloConsumer>

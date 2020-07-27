@@ -1,7 +1,7 @@
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 
-export { Container, Content, PageHeading } from '../../shared'
+export { Container, Content, Heading } from '../../shared'
 
 export const Heading1 = styled.h1`
   margin: 0 0 calc(${th('gridUnit')} * 3);
@@ -34,6 +34,7 @@ export const SubNote = styled.span`
 `
 
 export const UploadContainer = styled.div`
+  margin-top: ${grid(2)};
   padding: ${grid(3)};
   text-align: center;
 `

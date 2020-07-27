@@ -28,6 +28,7 @@ const ReviewerInput = ({
 }) => (
   <Select
     {...field}
+    aria-label="Invite reviewers"
     getOptionLabel={option => option.defaultIdentity?.name}
     getOptionValue={option => option.id}
     onChange={user => {
