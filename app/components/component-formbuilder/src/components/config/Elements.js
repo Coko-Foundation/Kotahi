@@ -28,7 +28,7 @@ const textarea = {
 }
 
 const validate = {
-  component: 'Menu',
+  component: 'Select',
   props: {
     isMulti: true,
     isClearable: true,
@@ -151,7 +151,7 @@ const elements = {
     shortDescription: textfield,
     validate,
   },
-  Menu: {
+  Select: {
     id: textfield,
     title: textfield,
     name: textfield,

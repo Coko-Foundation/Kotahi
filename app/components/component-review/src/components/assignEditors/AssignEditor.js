@@ -2,10 +2,10 @@ import React from 'react'
 import config from 'config'
 import { compose, withProps } from 'recompose'
 import { cloneDeep, get } from 'lodash'
-import { Menu } from '@pubsweet/ui'
 import { graphql } from '@apollo/client/react/hoc'
 import gql from 'graphql-tag'
 import { withLoader } from 'pubsweet-client'
+import { Select } from '../../../../shared'
 
 const editorOption = user => ({
   label: user.defaultIdentity.name,
@@ -68,14 +68,16 @@ const AssignEditor = ({
   value,
   options,
 }) => (
-  <Menu
+  <Select
+    aria-label={`Assign ${teamRole}`}
     data-testid={`assign${teamRole}`}
     label={teamName}
-    onChange={user => {
+    onChange={selected => {
+      // selected is { label, value } object
       if (value) {
-        updateTeam(user, teamRole)
+        updateTeam(selected.value, teamRole)
       } else {
-        createTeam(user, teamRole)
+        createTeam(selected.value, teamRole)
       }
     }}
     options={options}

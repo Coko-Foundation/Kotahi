@@ -1,36 +1,7 @@
 {
-  "name": "pubsweet-component-xpub-review",
+  "name": "kotahi-component-review",
   "version": "4.1.0",
   "main": "src",
   "author": "Collaborative Knowledge Foundation",
-  "license": "MIT",
-  "files": [
-    "src",
-    "dist"
-  ],
-  "dependencies": {
-    "@apollo/react-hoc": "^3.1.3",
-    "@pubsweet/ui": "^12.1.0",
-    "@pubsweet/ui-toolkit": "^2.2.14",
-    "formik": "^1.4.2",
-    "lodash": "^4.17.4",
-    "moment": "^2.18.1",
-    "prop-types": "^15.5.10",
-    "recompose": "^0.30.0",
-    "styled-components": "^4.1.1",
-    "wax-prosemirror-core": "^0.0.2",
-    "wax-prosemirror-schema": "^0.0.2",
-    "wax-prosemirror-themes": "^0.0.2",
-    "xpub-edit": "^2.6.0",
-    "xpub-journal": "^0.1.0",
-    "xpub-validators": "^0.0.6"
-  },
-  "peerDependencies": {
-    "config": ">=3.0.1",
-    "formik": ">=1.4.2",
-    "pubsweet-client": ">=2.1.0",
-    "react": ">=16",
-    "react-redux": ">=5.0.2",
-    "react-router-dom": ">=5.0.0"
-  }
+  "license": "MIT"
 }

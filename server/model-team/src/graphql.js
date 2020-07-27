@@ -46,7 +46,8 @@ const resolvers = {
           ...input,
         },
         {
-          unrelate: false,
+          relate: ['members.user'],
+          unrelate: ['members.user'],
           eager: 'members.user.teams',
         },
       )

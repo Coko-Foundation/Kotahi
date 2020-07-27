@@ -1,28 +1,8 @@
 {
-  "name": "pubsweet-component-xpub-teams-manager",
+  "name": "kotahi-component-teams-manager",
   "version": "3.1.0",
   "description": "Teams manager component for Xpub",
   "main": "src/index.js",
   "author": "Collaborative Knowledge Foundation",
-  "license": "MIT",
-  "files": [
-    "src",
-    "dist"
-  ],
-  "dependencies": {
-    "@pubsweet/ui": "^12.1.0",
-    "@pubsweet/ui-toolkit": "^2.2.14",
-    "lodash": "^4.17.11",
-    "react-dom": "^16.9.0",
-    "recompose": "^0.30.0",
-    "styled-components": "^4.1.1"
-  },
-  "peerDependencies": {
-    "@apollo/react-hoc": ">=3.0.1",
-    "config": ">=3.0.1",
-    "graphql-tag": ">=2.10.0",
-    "pubsweet-client": ">=2.1.0",
-    "react": ">=16.9"
-  },
-  "gitHead": "6b100b76f21785e5e50fca082a2743d3d0b1c88a"
+  "license": "MIT"
 }

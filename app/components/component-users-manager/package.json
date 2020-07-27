@@ -1,27 +1,8 @@
 {
-  "name": "pubsweet-component-users-manager",
+  "name": "kotahi-component-users-manager",
   "version": "3.1.10",
   "description": "Basic navigation bar component for PubSweet",
   "main": "src/UsersManager.jsx",
   "author": "Collaborative Knowledge Foundation",
-  "license": "MIT",
-  "dependencies": {
-    "@pubsweet/ui": "^12.5.0",
-    "prop-types": "^15.5.10",
-    "recompose": "^0.30.0"
-  },
-  "peerDependencies": {
-    "@apollo/react-components": "^3.0.1",
-    "@apollo/react-hoc": "^3.0.1",
-    "config": "^3.0.1",
-    "graphql-tag": ">=2.10.0",
-    "pubsweet-client": ">=1.0.0",
-    "react": ">=16.9"
-  },
-  "repository": {
-    "type": "git",
-    "url": "https://gitlab.coko.foundation/pubsweet/pubsweet",
-    "path": "UsersManager"
-  },
-  "gitHead": "7de26ece1265898482ecd7f0e33961a55e8fccba"
+  "license": "MIT"
 }

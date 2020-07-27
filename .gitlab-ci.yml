@@ -50,16 +50,3 @@ test:
     - cd ${HOME}
     # specify host here else it confuses the linked postgres image
     - PGHOST=postgres yarn test:all
-
-# demo:xpub-collabra:
-#   image: pubsweet/deployer:latest
-#   stage: demo
-#   variables:
-#     PACKAGE_NAME: xpub-collabra
-#   environment:
-#     name: $PACKAGE_NAME/demo
-#     url: "https://${CI_ENVIRONMENT_SLUG}.${BASE_DOMAIN}"
-#   when: manual
-#   script:
-#     - source deploy.sh
-#     - create_deployment

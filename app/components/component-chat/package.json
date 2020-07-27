@@ -1,15 +1,7 @@
 {
-  "name": "pubsweet-component-chat",
+  "name": "kotahi-component-chat",
   "version": "0.0.1",
   "main": "src",
   "author": "Collaborative Knowledge Foundation",
-  "license": "MIT",
-  "files": [
-    "src",
-    "dist"
-  ],
-  "dependencies": {
-  },
-  "peerDependencies": {
-  }
+  "license": "MIT"
 }
