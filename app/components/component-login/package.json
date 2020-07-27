@@ -1,8 +1,0 @@
-{
-  "name": "pubsweet-component-login",
-  "version": "3.0.23",
-  "description": "Basic login component for PubSweet",
-  "main": "src/index.js",
-  "author": "Collaborative Knowledge Foundation",
-  "license": "MIT"
-}

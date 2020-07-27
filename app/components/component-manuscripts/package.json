@@ -1,7 +1,0 @@
-{
-  "name": "kotahi-component-manuscripts",
-  "version": "3.1.10",
-  "main": "src/Manuscripts.jsx",
-  "author": "Collaborative Knowledge Foundation",
-  "license": "MIT"
-}

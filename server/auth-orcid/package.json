@@ -1,8 +1,0 @@
-{
-  "name": "@pubsweet/auth-orcid",
-  "version": "1.0.0",
-  "description": "",
-  "license": "MIT",
-  "author": "eLife",
-  "main": "index.js"
-}

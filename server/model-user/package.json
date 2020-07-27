@@ -1,8 +1,0 @@
-{
-  "name": "@pubsweet/model-user",
-  "version": "5.1.12",
-  "description": "A basic User model",
-  "main": "src/index.js",
-  "author": "Adam Hyde",
-  "license": "MIT"
-}

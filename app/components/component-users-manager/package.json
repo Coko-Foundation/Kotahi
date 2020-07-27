@@ -1,8 +1,0 @@
-{
-  "name": "kotahi-component-users-manager",
-  "version": "3.1.10",
-  "description": "Basic navigation bar component for PubSweet",
-  "main": "src/UsersManager.jsx",
-  "author": "Collaborative Knowledge Foundation",
-  "license": "MIT"
-}
