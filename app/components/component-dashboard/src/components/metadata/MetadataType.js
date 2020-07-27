@@ -1,5 +1,5 @@
 import React from 'react'
-import { JournalContext } from '../../../../xpub-journal'
+import { JournalContext } from '../../../../xpub-journal/src'
 
 const MetadataType = ({ journal, type }) => (
   <JournalContext.Consumer>
