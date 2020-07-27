@@ -1,32 +1,7 @@
 {
-  "name": "pubsweet-component-xpub-submit",
+  "name": "kotahi-component-submit",
   "version": "6.1.0",
   "main": "src",
   "author": "Collaborative Knowledge Foundation",
-  "license": "MIT",
-  "files": [
-    "src",
-    "dist"
-  ],
-  "dependencies": {
-    "@apollo/react-hoc": "^3.0.1",
-    "@pubsweet/ui": "^12.1.0",
-    "@pubsweet/ui-toolkit": "^2.2.14",
-    "formik": "^1.4.2",
-    "lodash": "^4.17.11",
-    "moment": "^2.23.0",
-    "prop-types": "^15.5.10",
-    "react-feather": "^1.1.5",
-    "recompose": "^0.30.0",
-    "styled-components": "^4.1.1",
-    "xpub-edit": "^2.6.0",
-    "xpub-journal": "^0.1.0",
-    "xpub-validators": "^0.0.28"
-  },
-  "peerDependencies": {
-    "pubsweet-client": ">=2.1.0",
-    "react": ">=16.9",
-    "react-router-dom": ">=5.0.0"
-  },
-  "gitHead": "6b100b76f21785e5e50fca082a2743d3d0b1c88a"
+  "license": "MIT"
 }

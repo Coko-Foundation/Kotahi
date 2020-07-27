@@ -3,14 +3,5 @@
   "version": "1.0.0",
   "description": "",
   "license": "MIT",
-  "main": "src/index.js",
-  "scripts": {},
-  "keywords": [],
-  "dependencies": {
-  },
-  "peerDependencies": {
-    "pubsweet-server": ">=13.0.0"
-  },
-  "devDependencies": {
-  }
+  "main": "src/index.js"
 }

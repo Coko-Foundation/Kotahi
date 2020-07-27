@@ -1,21 +1,8 @@
 {
-  "name": "pubsweet-component-xpub-review-backend",
+  "name": "kotahi-component-review-backend",
   "version": "1.1.0",
   "main": "src",
   "keywords": [],
   "author": "Collaborative Knowledge Foundation",
-  "license": "MIT",
-  "dependencies": {
-    "@pubsweet/component-send-email": "^0.3.0",
-    "@pubsweet/errors": "^2.0.25",
-    "@pubsweet/models": "^0.3.0",
-    "lodash": "^4.17.11",
-    "passport": "^0.4.0"
-  },
-  "peerDependencies": {
-    "@pubsweet/logger": ">=0.0.1",
-    "config": ">=3.0.1",
-    "pubsweet-server": ">=1.0.0"
-  },
-  "gitHead": "6b100b76f21785e5e50fca082a2743d3d0b1c88a"
+  "license": "MIT"
 }

@@ -1,31 +1,8 @@
 {
-  "name": "pubsweet-component-xpub-formbuilder",
+  "name": "kotahi-component-formbuilder",
   "version": "1.1.0",
-  "description": "Form builder component for Xpub",
+  "description": "Form builder component for Kotahi",
   "main": "src/index.js",
   "author": "Collaborative Knowledge Foundation",
-  "license": "MIT",
-  "files": [
-    "src",
-    "dist"
-  ],
-  "dependencies": {
-    "@apollo/react-hoc": "^3.1.3",
-    "@pubsweet/ui": "^12.1.0",
-    "@pubsweet/ui-toolkit": "^2.2.14",
-    "formik": "^1.4.2",
-    "passport": "^0.4.0",
-    "prop-types": "^15.5.10",
-    "react-dom": "^16.2.0",
-    "recompose": "^0.30.0",
-    "styled-components": "^4.1.1",
-    "xpub-edit": "^2.6.0"
-  },
-  "peerDependencies": {
-    "config": ">=3.0.1",
-    "graphql-tag": ">=2.10.0",
-    "lodash": ">=4.17.11",
-    "pubsweet-client": ">=2.1.0",
-    "react": ">=16"
-  }
+  "license": "MIT"
 }
