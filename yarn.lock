@@ -1751,7 +1751,7 @@
   resolved "https://registry.yarnpkg.com/@protobufjs/utf8/-/utf8-1.1.0.tgz#a777360b5b39a1a2e5106f8e858f2fd2d060c570"
   integrity sha1-p3c2C1s5oaLlEG+OhY8v0tBgxXA=
 
-"@pubsweet/base-model@^3.5.0", "@pubsweet/base-model@^3.6.2":
+"@pubsweet/base-model@^3.5.0":
   version "3.6.5"
   resolved "https://registry.yarnpkg.com/@pubsweet/base-model/-/base-model-3.6.5.tgz#a2a6dd9be999b8360abbb0a4a1a22cb9b6b7aa37"
   integrity sha512-zhqh8cQL+0rE1U0PbeKUy+Vr7BvF4D/AoW57pI6JnGBZ8iaLtes49Vbzgj4aykQZKgzxraXyJssFHAn1E74TSQ==
@@ -1786,13 +1786,6 @@
     tmp-promise "^2.0.0"
     umzug "^2.1.0"
 
-"@pubsweet/errors@^2.0.32":
-  version "2.0.35"
-  resolved "https://registry.yarnpkg.com/@pubsweet/errors/-/errors-2.0.35.tgz#40a0c231cf5a7ab4aeafd6d20835a092fd55fcec"
-  integrity sha512-u3eR2lFDydyIVZkxkfXUHhfw0i7usOSVlPmBlcr547qGADPJ8HB4lMTSFoq20Ks7Vij3xeW1Vu6r2Mfqo3uRhQ==
-  dependencies:
-    http-status-codes "^1.3.0"
-
 "@pubsweet/errors@^2.0.35", "@pubsweet/errors@^2.0.36":
   version "2.0.36"
   resolved "https://registry.yarnpkg.com/@pubsweet/errors/-/errors-2.0.36.tgz#afa254f26578468b6d1f8839ba6310e2fd7c6177"
@@ -1813,14 +1806,6 @@
     tmp-promise "^2.0.0"
     waait "^1.0.5"
 
-"@pubsweet/logger@^0.2.42":
-  version "0.2.45"
-  resolved "https://registry.yarnpkg.com/@pubsweet/logger/-/logger-0.2.45.tgz#dbf176a5816e4c5fbc4ba0fed5c996fa2e24c288"
-  integrity sha512-9s4cb+3vgPGQT6JUbDaiX3Q0KSU2vFDB+jMAj96RlIn88PUVa6dHBJBb1V7SMlPQ493S9dfOJ3lFJQhh+HNA5Q==
-  dependencies:
-    "@hapi/joi" "^14.5.0"
-    config "^3.0.1"
-
 "@pubsweet/logger@^0.2.45", "@pubsweet/logger@^0.2.46":
   version "0.2.46"
   resolved "https://registry.yarnpkg.com/@pubsweet/logger/-/logger-0.2.46.tgz#46a7c7918b678982ac3f613664accbf6a515c608"
@@ -1829,30 +1814,12 @@
     "@hapi/joi" "^14.5.0"
     config "^3.0.1"
 
-"@pubsweet/model-user@^5.1.4":
-  version "5.1.12"
-  resolved "https://registry.yarnpkg.com/@pubsweet/model-user/-/model-user-5.1.12.tgz#2c54102f6cb3a7dea2b11b98ed141a059abfbecd"
-  integrity sha512-NTzhj1XOBnK2MDJg1C/uazNo4q5aqHApkYDWZyGGrY8tsDhBOr3m5y0gAzTC2nRl8bUc6h5qLwtxt1ai75C+3g==
-  dependencies:
-    "@pubsweet/base-model" "^3.6.2"
-    "@pubsweet/errors" "^2.0.32"
-    "@pubsweet/logger" "^0.2.42"
-    "@pubsweet/models" "^0.3.7"
-    bcrypt "^3.0.6"
-
 "@pubsweet/models@^0.3.11":
   version "0.3.11"
   resolved "https://registry.yarnpkg.com/@pubsweet/models/-/models-0.3.11.tgz#65658468d83360a1a0293f88941590c58b74ecf7"
   integrity sha512-9SvVItqghaFowmNrr0SVlm8ecgGMQlgu39gZbGgbqmPSZpNUJtGEyM0xXJK1qpfOYmfzQqlwnKrtjmAU+jaQjg==
   dependencies:
     "@pubsweet/logger" "^0.2.46"
-
-"@pubsweet/models@^0.3.7":
-  version "0.3.10"
-  resolved "https://registry.yarnpkg.com/@pubsweet/models/-/models-0.3.10.tgz#3994a05a1ca846290dc225aad118856555f65f2f"
-  integrity sha512-hJrplJOC0ck6zok3sKj6muyL+RsR5VbEdSCTOXrI59T/dLbs6O76kPC4BPYVyaiCQiGFwcnl60OtpohbxsfPXQ==
-  dependencies:
-    "@pubsweet/logger" "^0.2.45"
 
 "@pubsweet/ui-toolkit@^2.2.13":
   version "2.3.1"
@@ -1872,35 +1839,12 @@
     lodash "^4.17.4"
     styled-components "^4.1.1"
 
-"@pubsweet/ui@12.5.0", "@pubsweet/ui@^12.6.0":
+"@pubsweet/ui@12.5.0", "@pubsweet/ui@^12.1.0", "@pubsweet/ui@^12.6.0":
   version "12.5.0"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-12.5.0.tgz#56882c88dd50885cf1871c8dcb95f77692ea0b86"
   integrity sha512-De6xVEPYGTV+CZrGUQWSFQzXexcdoO7LGyRdvDp9dDlfDNTO36U1Ltkpj5m0WomAj5NshkqQVqZfhBG1IxsKDw==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.3.1"
-    enzyme "^3.7.0"
-    enzyme-adapter-react-16 "^1.12.1"
-    formik "^1.4.2"
-    invariant "^2.2.3"
-    lodash "^4.17.4"
-    moment "^2.22.1"
-    prop-types "^15.5.10"
-    react "^16.9.0"
-    react-dom "^16.9.0"
-    react-feather "^1.0.8"
-    react-router-dom "^5.0.0"
-    react-select "^3.0.8"
-    react-tag-autocomplete "^5.5.0"
-    react-uid "^2.2.0"
-    recompose "^0.30.0"
-    styled-components "^4.1.1"
-
-"@pubsweet/ui@^12.1.0":
-  version "12.6.0"
-  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-12.6.0.tgz#52f304b3ac4824fe48a310177769549d019e270c"
-  integrity sha512-QYng7wVCB1ZoJ2AGVvNvf/BizgzEA60cgJXeeUiRykk0AQFqdpF+V/Skh7A8nwdl21knz6Xgoa84BbDQhNBSWQ==
-  dependencies:
-    "@pubsweet/ui-toolkit" "^2.3.2"
     enzyme "^3.7.0"
     enzyme-adapter-react-16 "^1.12.1"
     formik "^1.4.2"
@@ -3484,17 +3428,7 @@ babel-plugin-minify-type-constructors@^0.4.3:
   dependencies:
     babel-helper-is-void-0 "^0.4.3"
 
-babel-plugin-styled-components@1.10.3:
-  version "1.10.3"
-  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.10.3.tgz#ee77c3285cc2ac5eb82483a0e6e347f023ef6972"
-  integrity sha512-QtXncjByp1+joHjmkb83bVjTIVWYnHo9aHQjUmVfQ4IC6c4hDwrD466R/Wb1faNX5sAhJkpCJ2KWt+fASwd67g==
-  dependencies:
-    "@babel/helper-annotate-as-pure" "^7.0.0"
-    "@babel/helper-module-imports" "^7.0.0"
-    babel-plugin-syntax-jsx "^6.18.0"
-    lodash "^4.17.11"
-
-babel-plugin-styled-components@1.10.5, "babel-plugin-styled-components@>= 1":
+babel-plugin-styled-components@1.10.3, babel-plugin-styled-components@1.10.5, "babel-plugin-styled-components@>= 1":
   version "1.10.5"
   resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.10.5.tgz#fc1d0929b8248026985ab312d1fc590d0b3a1ef4"
   integrity sha512-FmQdLOJ6oPilWEnwf4Yp5guKr0pBYhrmWZDyjBI2Edr91M4yWTHboS8hvwcTnZkF5ZwS7C0uzIqKQiR+vdoqdA==
@@ -14637,11 +14571,6 @@ strip-json-comments@~2.0.1:
   resolved "https://registry.yarnpkg.com/strip-json-comments/-/strip-json-comments-2.0.1.tgz#3c531942e908c2697c0ec344858c286c7ca0a60a"
   integrity sha1-PFMZQukIwml8DsNEhYwobHygpgo=
 
-striptags@^3.1.0:
-  version "3.1.1"
-  resolved "https://registry.yarnpkg.com/striptags/-/striptags-3.1.1.tgz#c8c3e7fdd6fb4bb3a32a3b752e5b5e3e38093ebd"
-  integrity sha1-yMPn/db7S7OjKjt1LltePjgJPr0=
-
 style-loader@^0.19.0:
   version "0.19.1"
   resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-0.19.1.tgz#591ffc80bcefe268b77c5d9ebc0505d772619f85"
@@ -16330,28 +16259,6 @@ xpub-edit@^2.6.10:
     prosemirror-state "^1.0.1"
     prosemirror-tables "^0.7.11"
     prosemirror-view "^1.0.0"
-
-xpub-journal@^0.1.0:
-  version "0.1.0"
-  resolved "https://registry.yarnpkg.com/xpub-journal/-/xpub-journal-0.1.0.tgz#8fc05e8dad6f14aefb5202c82d43740dc4a26f44"
-  integrity sha512-t+dVGXVT5PdoWNRUp0G3ap0iRxhG6irQDFr4p+xWt9Z9WQQegr/b6Il11RnDkrZ1CrD2qhcOyc7bLAWtwdkr7g==
-  dependencies:
-    prop-types "^15.5.10"
-    recompose "^0.30.0"
-
-xpub-validators@^0.0.28:
-  version "0.0.28"
-  resolved "https://registry.yarnpkg.com/xpub-validators/-/xpub-validators-0.0.28.tgz#462103012f883b99fc395e92a0baefb4dd0322dc"
-  integrity sha512-kefjN9VErvkO8daLZBK6rsqXHh/0SKJzJ08vFbbFNJBHplNO9fBpXbVN3qRBos+U1QOEIUsiUm5EcTj/cokF9g==
-  dependencies:
-    striptags "^3.1.0"
-
-xpub-with-context@^0.2.0:
-  version "0.2.0"
-  resolved "https://registry.yarnpkg.com/xpub-with-context/-/xpub-with-context-0.2.0.tgz#94c101795830760eb7159111212774a2ce5d712a"
-  integrity sha512-Jnw6loKzafEbi5UvCgoZiMS7dhDAT9SRLVfSrWsgzt1U7oX/wYLQw2+nXe9vdKGuhj2tmHVeNVzmpAp02EP5Dw==
-  dependencies:
-    recompose "^0.30.0"
 
 xss@^1.0.6:
   version "1.0.7"

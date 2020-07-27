@@ -4,10 +4,6 @@
   "private": true,
   "description": "Kotahi - open journals",
   "license": "MIT",
-  "engines": {
-    "node": ">=9",
-    "yarn": ">=1.2"
-  },
   "repository": {
     "type": "git",
     "url": "https://gitlab.coko.foundation/simplej/simplej"
@@ -177,5 +173,9 @@
     "babel-plugin-styled-components": "1.10.5",
     "@pubsweet/ui": "12.5.0",
     "formik": "^2.0.0"
-  }
+  },
+  "workspaces": [
+    "app/components/*",
+    "server/*"
+  ]
 }
