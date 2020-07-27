@@ -1,6 +1,0 @@
-{
-  "name": "@pubsweet/model-team",
-  "version": "2.2.1",
-  "description": "A basic Team model",
-  "main": "src/index.js"
-}

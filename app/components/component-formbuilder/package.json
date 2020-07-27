@@ -1,8 +1,0 @@
-{
-  "name": "kotahi-component-formbuilder",
-  "version": "1.1.0",
-  "description": "Form builder component for Kotahi",
-  "main": "src/index.js",
-  "author": "Collaborative Knowledge Foundation",
-  "license": "MIT"
-}

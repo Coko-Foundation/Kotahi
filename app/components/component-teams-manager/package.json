@@ -1,8 +1,0 @@
-{
-  "name": "kotahi-component-teams-manager",
-  "version": "3.1.0",
-  "description": "Teams manager component for Xpub",
-  "main": "src/index.js",
-  "author": "Collaborative Knowledge Foundation",
-  "license": "MIT"
-}
