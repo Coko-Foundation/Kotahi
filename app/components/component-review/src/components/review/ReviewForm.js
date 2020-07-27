@@ -10,7 +10,7 @@ import {
   UploadingFile,
 } from '@pubsweet/ui'
 
-import { JournalContext } from 'xpub-journal'
+import { JournalContext } from '../../../../xpub-journal/src'
 import { getCommentFiles, stripHtml, createComments } from './util'
 import {
   AdminSection,

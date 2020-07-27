@@ -1,14 +1,14 @@
 [
-  "./server/model-team",
-  "./server/model-user",
+  "./server/model-team/src",
+  "./server/model-user/src",
   "./server/model-manuscript/src/",
   "./server/model-file/src/",
   "./server/component-xpub-review-backend/src/",
   "./server/model-review/src/",
   "./server/formbuilder/src/",
   "@pubsweet/job-xsweet",
-  "./server/model-channel",
-  "./server/model-message",
+  "./server/model-channel/src",
+  "./server/model-message/src",
   "./server/profile-upload",
   "./server/auth-orcid"
 ]

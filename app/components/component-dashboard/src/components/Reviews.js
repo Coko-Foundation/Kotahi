@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { sumBy } from 'lodash'
 import { Badge } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
-import { JournalContext } from '../../../xpub-journal'
+import { JournalContext } from '../../../xpub-journal/src'
 
 const Root = styled.div`
   display: inline-flex;
