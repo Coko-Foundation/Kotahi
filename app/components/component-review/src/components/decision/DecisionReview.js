@@ -1,9 +1,9 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { compose, withState, withHandlers } from 'recompose'
-import { JournalContext } from 'xpub-journal'
 import { Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
+import { JournalContext } from '../../../../xpub-journal/src'
 import Review from '../review/Review'
 
 const ToggleReview = ({ open, toggle }) => (

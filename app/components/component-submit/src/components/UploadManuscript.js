@@ -3,7 +3,7 @@ import styled, { keyframes, withTheme } from 'styled-components'
 import { Icon, Action } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import Dropzone from 'react-dropzone'
-import { XpubContext } from '../../../xpub-with-context'
+import { XpubContext } from '../../../xpub-with-context/src'
 import upload from '../upload'
 
 const StyledDropzone = styled(({ disableUpload, ...props }) => (

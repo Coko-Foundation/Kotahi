@@ -2,8 +2,6 @@ import React, { useContext } from 'react'
 import { NoteEditor } from 'xpub-edit'
 import { cloneDeep, omit } from 'lodash'
 import { FieldArray, Field } from 'formik'
-import { JournalContext } from 'xpub-journal'
-import { required } from 'xpub-validators'
 import {
   Button,
   Flexbox,
@@ -11,6 +9,8 @@ import {
   UploadButton,
   UploadingFile,
 } from '@pubsweet/ui'
+import { JournalContext } from '../../../../xpub-journal/src'
+import { required } from '../../../../xpub-validators/src'
 
 import {
   getCommentFiles,

@@ -13,8 +13,8 @@ import {
 import { JournalContext } from './xpub-journal/src'
 import { XpubContext } from './xpub-with-context/src'
 
-import UsersManager from '../components/component-users-manager'
-import Manuscripts from '../components/component-manuscripts'
+import UsersManager from '../components/component-users-manager/src/UsersManager'
+import Manuscripts from '../components/component-manuscripts/src/Manuscripts'
 import Dashboard from '../components/component-dashboard/src/components/Dashboard'
 import SubmitPage from '../components/component-submit/src/components/SubmitPage'
 import ManuscriptPage from '../components/component-manuscript/src/components/ManuscriptPage'
