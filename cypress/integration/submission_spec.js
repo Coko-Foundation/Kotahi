@@ -129,7 +129,7 @@ describe('URL submission test', () => {
     cy.get('nav')
       .contains('Manuscripts')
       .click()
-    cy.get('a')
+    cy.get('tr[class*="Table__Row"]')
       .contains('Control')
       .click()
     cy.contains('My URL submission')
