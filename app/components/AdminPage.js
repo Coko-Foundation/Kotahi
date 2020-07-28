@@ -81,7 +81,7 @@ const AdminPage = ({ children, history, match }) => {
 
   // Get the current user every 5 seconds (this includes authorization info)
   const { loading, error, data } = useQuery(GET_CURRENT_USER, {
-    pollInterval: 30000,
+    pollInterval: 5000,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'network-only',
     // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301

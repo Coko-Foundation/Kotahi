@@ -118,11 +118,11 @@ describe('URL submission test', () => {
     cy.get('body').contains('My Submissions')
     cy.get('body').contains('My URL submission')
 
-    cy.task('dump', 'submissioncomplete')
+    cy.task('dump', 'submission_complete')
   })
 
   it('senior editor can view the submission', () => {
-    cy.task('restore', 'submissioncomplete')
+    cy.task('restore', 'submission_complete')
 
     // Admin logs in to assign senior editor
     login('Sinead Sullivan')
@@ -144,6 +144,8 @@ describe('URL submission test', () => {
 
     cy.contains('Control Panel').click()
     cy.contains('This is my data and code availability statement')
+
+    cy.task('dump', 'senior_editor_assigned')
   })
 })
 
