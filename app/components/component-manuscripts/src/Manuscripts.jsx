@@ -8,7 +8,7 @@ import {
   Table,
   Header,
   Content,
-  PageHeading,
+  Heading,
   Carets,
   CaretUp,
   CaretDown,
@@ -106,7 +106,7 @@ const Manuscripts = () => {
 
   return (
     <Container>
-      <PageHeading level={1}>Manuscripts</PageHeading>
+      <Heading>Manuscripts</Heading>
       <Content>
         <Table>
           <Header>

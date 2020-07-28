@@ -133,7 +133,7 @@ const AdminPage = ({ children, history, match }) => {
   }
 
   if (currentUser && currentUser.admin) {
-    links.push({ link: '/journal/admin/teams', name: 'Teams', icon: 'grid' })
+    // links.push({ link: '/journal/admin/teams', name: 'Teams', icon: 'grid' })
     links.push({ link: formBuilderLink, name: 'Forms', icon: 'check-square' })
     links.push({ link: '/journal/admin/users', name: 'Users', icon: 'users' })
     links.push({

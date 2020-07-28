@@ -72,7 +72,7 @@ const Reviewers = ({
         <Title>Reviewer status</Title>
       </SectionHeader>
       <SectionRow>
-        {reviewers && (
+        {reviewers && reviewers.length ? (
           <ReviewersList>
             {reviewers.map(reviewer => (
               <Reviewer>
@@ -96,6 +96,8 @@ const Reviewers = ({
               </Reviewer>
             ))}
           </ReviewersList>
+        ) : (
+          <p>No reviewers have been invited yet</p>
         )}
       </SectionRow>
     </SectionContent>
