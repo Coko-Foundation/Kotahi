@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { NoteEditor } from 'xpub-edit'
 import { cloneDeep, omit } from 'lodash'
-import { FieldArray, Field } from 'formik'
+import { Field } from 'formik'
 import {
   Button,
   Flexbox,
@@ -28,16 +28,18 @@ import {
   SectionAction,
 } from '../style'
 
-const NoteDecision = (updateReview, uploadFile) => props => (
+const NoteDecision = ({ updateReview, uploadFile }) => (
   <>
     <Field
       component={NoteInput}
+      key="commentinput"
       name="comments"
       updateReview={updateReview}
       validate={required}
     />
     <Field
       component={AttachmentsInput('note')}
+      key="attachmentinput"
       updateReview={updateReview}
       uploadFile={uploadFile}
     />
@@ -132,17 +134,13 @@ const RecommendationInput = ({
 }
 
 const DecisionForm = ({ handleSubmit, uploadFile, updateReview, isValid }) => (
-  <Container>
+  <Container key="decisionform">
     <form onSubmit={handleSubmit}>
       <SectionHeader>
         <Title>Decision</Title>
       </SectionHeader>
       <SectionRow key="note">
-        <FieldArray
-          component={NoteDecision(updateReview, uploadFile)}
-          key="comments-array"
-          name="comments"
-        />
+        <NoteDecision updateReview={updateReview} uploadFile={uploadFile} />
       </SectionRow>
       <SectionRowGrid>
         <Field

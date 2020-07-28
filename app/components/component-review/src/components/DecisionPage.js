@@ -294,7 +294,7 @@ const decisionSections = ({
 const DecisionPage = ({ match }) => {
   // Hooks from the old world
   const [makeDecision] = useMutation(makeDecisionMutation, {
-    refetchQueries: [query],
+    // refetchQueries: [query],
   })
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
 
@@ -356,25 +356,57 @@ const DecisionPage = ({ match }) => {
         id: review.id || undefined,
         input: reviewData,
       },
-      update: (proxy, { data: { updateReview } }) => {
-        const data = proxy.readQuery({
-          query,
-          variables: {
-            id: manuscript.id,
+      update: (cache, { data: { updateReview } }) => {
+        cache.modify({
+          id: cache.identify(manuscript),
+          fields: {
+            reviews(existingReviewRefs = [], { readField }) {
+              const newReviewRef = cache.writeFragment({
+                data: updateReview,
+                fragment: gql`
+                  fragment NewReview on Review {
+                    id
+                  }
+                `,
+              })
+
+              if (
+                existingReviewRefs.some(
+                  ref => readField('id', ref) === updateReview.id,
+                )
+              ) {
+                return existingReviewRefs
+              }
+
+              return [...existingReviewRefs, newReviewRef]
+            },
           },
         })
-        const reviewIndex = data.manuscript.reviews.findIndex(
-          review => review.id === updateReview.id,
-        )
-        if (reviewIndex < 0) {
-          data.manuscript.reviews.push(updateReview)
-        } else {
-          data.manuscript.reviews[reviewIndex] = updateReview
-        }
-        proxy.writeQuery({ query, data })
       },
     })
   }
+  // const manuscriptFragment = cache.readFragment({
+  //   id: cache.identify(manuscript),
+  //   fragment: gql`
+  //     fragment MyManuscript on Manuscript {
+  //       id
+  //       reviews
+  //     }
+  //   `,
+  // })
+
+  // cache.writeFragment()
+
+  // const reviewIndex = data.manuscript.reviews.findIndex(
+  //   review => review.id === updateReview.id,
+  // )
+  // if (reviewIndex < 0) {
+  //   data.manuscript.reviews.push(updateReview)
+  // } else {
+  //   data.manuscript.reviews[reviewIndex] = updateReview
+  // }
+  // cache.writeQuery({ query, data })
+  //   },
   // },
   //   }).then(() => {
   //     history.push('/dashboard')
