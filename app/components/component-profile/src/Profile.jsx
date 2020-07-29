@@ -1,16 +1,21 @@
 import React, { useCallback } from 'react'
 import { Button } from '@pubsweet/ui'
-// import { th } from '@pubsweet/ui-toolkit'
-// import styled from 'styled-components'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
 import { useDropzone } from 'react-dropzone'
 
-import { Spinner } from '../../shared'
+import {
+  Spinner,
+  Container,
+  SectionHeader,
+  SectionContent,
+  HeadingWithAction,
+  SectionRow,
+  Heading,
+  Title,
+} from '../../shared'
 import ChangeUsername from './ChangeUsername'
 import { BigProfileImage } from './ProfileImage'
-import PageWithHeader from './PageWithHeader'
-import { FormGrid, FormRow } from './FormGrid'
 
 const GET_CURRENT_USER = gql`
   query currentUser {
@@ -86,32 +91,38 @@ const Profile = () => {
   }
 
   return (
-    <>
-      <PageWithHeader header="Your profile">
-        <FormGrid rows={3}>
-          <FormRow>
-            <label>Profile picture</label>
-            <div>
-              <ProfileDropzone
-                profilePicture={data.currentUser.profilePicture}
-                updateProfilePicture={updateProfilePicture}
-              />
-            </div>
-          </FormRow>
-          <FormRow>
-            <label>ORCID</label>{' '}
-            <div>{data.currentUser.defaultIdentity.identifier}</div>
-          </FormRow>
-          <FormRow>
-            <label htmlFor="2">Username</label>
-            <div>
-              <ChangeUsername user={data.currentUser} />
-            </div>
-          </FormRow>
-          <Button onClick={() => logoutUser()}>Logout</Button>
-        </FormGrid>
-      </PageWithHeader>
-    </>
+    <Container>
+      <HeadingWithAction>
+        <Heading>Your profile</Heading>
+        <Button onClick={() => logoutUser()} primary>
+          Logout
+        </Button>
+      </HeadingWithAction>
+
+      <SectionContent>
+        <SectionHeader>
+          <Title>Profile picture</Title>
+        </SectionHeader>
+        <SectionRow key="profilepicture">
+          <div>
+            <ProfileDropzone
+              profilePicture={data.currentUser.profilePicture}
+              updateProfilePicture={updateProfilePicture}
+            />
+          </div>
+        </SectionRow>
+        <SectionRow>
+          <label>ORCID</label>{' '}
+          <div>{data.currentUser.defaultIdentity.identifier}</div>
+        </SectionRow>
+        <SectionRow>
+          <label htmlFor="2">Username</label>
+          <div>
+            <ChangeUsername user={data.currentUser} />
+          </div>
+        </SectionRow>
+      </SectionContent>
+    </Container>
   )
 }
 
