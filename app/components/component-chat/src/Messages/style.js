@@ -3,6 +3,7 @@ import { th } from '@pubsweet/ui-toolkit'
 
 import { HorizontalRule } from '../../../../globals'
 
+export { Spinner } from '../../../shared'
 export const Timestamp = styled(HorizontalRule)`
   margin: 24px 0;
   text-align: center;

@@ -74,6 +74,7 @@ export default {
           }
         }
         meta {
+          manuscriptId
           title
           declarations {
             openData

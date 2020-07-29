@@ -51,6 +51,29 @@ class Review extends BaseModel {
     }
   }
 
+  static get relationMappings() {
+    const { Manuscript, User } = require('@pubsweet/models')
+
+    return {
+      manuscript: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: Manuscript,
+        join: {
+          from: 'reviews.manuscriptId',
+          to: 'manuscripts.id',
+        },
+      },
+      user: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: User,
+        join: {
+          from: 'reviews.userId',
+          to: 'users.id',
+        },
+      },
+    }
+  }
+
   async $beforeDelete() {
     const File = require('../../model-file/src/file')
     const files = await File.findByObject({

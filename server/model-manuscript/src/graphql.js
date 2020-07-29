@@ -294,6 +294,23 @@ const resolvers = {
     submission(parent) {
       return JSON.stringify(parent.submission)
     },
+    async reviews(parent, _, ctx) {
+      return parent.reviews
+        ? parent.reviews
+        : (
+            await ctx.models.Manuscript.query().findById(parent.id)
+          ).$relatedQuery('reviews')
+    },
+    async teams(parent, _, ctx) {
+      return parent.teams
+        ? parent.teams
+        : (
+            await ctx.models.Manuscript.query().findById(parent.id)
+          ).$relatedQuery('teams')
+    },
+    meta(parent) {
+      return { ...parent.meta, manuscriptId: parent.id }
+    },
   },
   ManuscriptVersion: {
     submission(parent) {
@@ -420,6 +437,7 @@ const typeDefs = `
     publicationDates: [MetaDate]
     notes: [Note]
     keywords: String
+    manuscriptId: ID
   }
 
   type ArticleId {

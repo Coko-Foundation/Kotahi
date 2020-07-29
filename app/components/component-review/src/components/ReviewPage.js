@@ -87,6 +87,7 @@ const fragmentFields = `
   }
   status
   meta {
+    manuscriptId
     title
     source
     abstract

@@ -59,6 +59,7 @@ const createManuscriptMutation = gql`
         }
       }
       meta {
+        manuscriptId
         title
         declarations {
           openData

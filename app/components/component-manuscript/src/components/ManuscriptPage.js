@@ -1,9 +1,7 @@
-import { compose, withProps } from 'recompose'
-import { graphql } from '@apollo/client/react/hoc'
-import gql from 'graphql-tag'
-import { withLoader } from 'pubsweet-client'
-
+import React from 'react'
+import { useQuery, gql } from '@apollo/client'
 import Manuscript from './Manuscript'
+import { Spinner } from '../../../shared'
 
 const fragmentFields = `
   id
@@ -17,6 +15,7 @@ const fragmentFields = `
   meta {
     title
     source
+    manuscriptId
   }
   channels {
     id
@@ -38,18 +37,23 @@ const query = gql`
   }
 `
 
-export default compose(
-  graphql(query, {
-    options: ({ match }) => ({
-      variables: {
-        id: match.params.version,
-      },
-    }),
-  }),
-  withLoader(),
-  withProps(({ manuscript }) => ({
-    content: manuscript.meta.source,
-    file: manuscript.files.find(file => file.fileType === 'manuscript') || {},
-    channel: manuscript.channels.find(c => c.type === 'all'),
-  })),
-)(Manuscript)
+const ManuscriptPage = ({ match, ...props }) => {
+  const { data, loading, error } = useQuery(query, {
+    variables: {
+      id: match.params.version,
+    },
+  })
+
+  if (loading) return <Spinner />
+  if (error) return JSON.stringify(error)
+  const { manuscript } = data
+
+  return (
+    <Manuscript
+      channel={manuscript.channels.find(c => c.type === 'all')}
+      content={manuscript.meta?.source}
+      file={manuscript.files.find(file => file.fileType === 'manuscript') || {}}
+    />
+  )
+}
+export default ManuscriptPage

@@ -43,6 +43,7 @@ export default {
         }
         status
         meta {
+          manuscriptId
           title
           declarations {
             openData

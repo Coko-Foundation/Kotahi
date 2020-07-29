@@ -37,6 +37,10 @@ const GET_USERS = gql`
         admin
         email
         profilePicture
+        defaultIdentity {
+          id
+          name
+        }
         online
         created
       }

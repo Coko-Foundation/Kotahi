@@ -10,19 +10,19 @@ import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
 import AssignEditor from './assignEditors/AssignEditor'
 import ReviewMetadata from './metadata/ReviewMetadata'
 import Decision from './decision/Decision'
-// import EditorSection from './EditorSection'
+import EditorSection from './decision/EditorSection'
 import { AdminSection, Columns, Manuscript, Chat } from './style'
-
-// const addEditor = (manuscript, label) => ({
-//   content: <EditorSection manuscript={manuscript} />,
-//   key: manuscript.id,
-//   label,
-// })
 
 import { Spinner } from '../../../shared'
 
 import { getCommentContent } from './review/util'
 import MessageContainer from '../../../component-chat/src'
+
+const addEditor = (manuscript, label) => ({
+  content: <EditorSection manuscript={manuscript} />,
+  key: `editor_${manuscript.id}`,
+  label,
+})
 
 const reviewFields = `
   id
@@ -86,6 +86,7 @@ const fragmentFields = `
   }
   status
   meta {
+    manuscriptId
     title
     source
     abstract
@@ -245,10 +246,48 @@ const decisionSections = ({
     })
   }, [])
 
+  const decisionSection = {
+    content: (
+      <>
+        <AdminSection key="assign-editors">
+          <AssignEditorsReviewers
+            AssignEditor={AssignEditor}
+            manuscript={manuscript}
+          />
+        </AdminSection>
+        <AdminSection key="review-metadata">
+          <ReviewMetadata manuscript={manuscript} />
+        </AdminSection>
+        <AdminSection key="decision-review">
+          <DecisionReviews manuscript={manuscript} />
+        </AdminSection>
+        <AdminSection key="decision-form">
+          <DecisionForm
+            handleSubmit={handleSubmit}
+            isValid={isValid}
+            updateReview={updateReview}
+            uploadFile={uploadFile}
+          />
+        </AdminSection>
+      </>
+    ),
+    key: manuscript.id,
+    label: 'Metadata',
+  }
+
+  const editorSection = addEditor(manuscript, 'Content')
+
   if (manuscript.status !== 'revising') {
     decisionSections.push({
       content: (
-        <>
+        <Tabs
+          activeKey={manuscript.id}
+          sections={[decisionSection, editorSection]}
+          title="Manuscript"
+        />
+      ),
+      /*
+
           <AdminSection key="assign-editors">
             <AssignEditorsReviewers
               AssignEditor={AssignEditor}
@@ -270,7 +309,8 @@ const decisionSections = ({
             />
           </AdminSection>
         </>
-      ),
+      ), */
+
       key: manuscript.id,
       label: dateLabel(),
     })
@@ -289,12 +329,14 @@ const decisionSections = ({
 //   if (manuscript.status !== 'revising') {
 //     editorSections.push(addEditor(manuscript, dateLabel()))
 //   }
+
+//   return editorSections
 // }
 
 const DecisionPage = ({ match }) => {
   // Hooks from the old world
   const [makeDecision] = useMutation(makeDecisionMutation, {
-    refetchQueries: [query],
+    // refetchQueries: [query],
   })
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
 
@@ -356,40 +398,43 @@ const DecisionPage = ({ match }) => {
         id: review.id || undefined,
         input: reviewData,
       },
-      update: (proxy, { data: { updateReview } }) => {
-        const data = proxy.readQuery({
-          query,
-          variables: {
-            id: manuscript.id,
+      update: (cache, { data: { updateReview } }) => {
+        cache.modify({
+          id: cache.identify(manuscript),
+          fields: {
+            reviews(existingReviewRefs = [], { readField }) {
+              const newReviewRef = cache.writeFragment({
+                data: updateReview,
+                fragment: gql`
+                  fragment NewReview on Review {
+                    id
+                  }
+                `,
+              })
+
+              if (
+                existingReviewRefs.some(
+                  ref => readField('id', ref) === updateReview.id,
+                )
+              ) {
+                return existingReviewRefs
+              }
+
+              return [...existingReviewRefs, newReviewRef]
+            },
           },
         })
-        const reviewIndex = data.manuscript.reviews.findIndex(
-          review => review.id === updateReview.id,
-        )
-        if (reviewIndex < 0) {
-          data.manuscript.reviews.push(updateReview)
-        } else {
-          data.manuscript.reviews[reviewIndex] = updateReview
-        }
-        proxy.writeQuery({ query, data })
       },
     })
   }
-  // },
-  //   }).then(() => {
-  //     history.push('/dashboard')
-  //   })
-  // }
-
-  //
-
-  // console.log(props)
 
   const initialValues = (manuscript.reviews &&
     manuscript.reviews.find(review => review.isDecision)) || {
     comments: [],
     recommendation: null,
   }
+
+  // const editorSectionsResult = editorSections({ manuscript })
 
   return (
     <Columns>
@@ -428,30 +473,34 @@ const DecisionPage = ({ match }) => {
         >
           {props => (
             // Temp
-            /* <Tabs
-              activeKey={editorSections[editorSections.length - 1].key}
-              sections={editorSections}
-              title="Versions"
-            /> */
-            <Tabs
-              activeKey={
-                decisionSections({
+            <>
+              {/* <Tabs
+                activeKey={
+                  editorSectionsResult[editorSectionsResult.length - 1].key
+                }
+                sections={editorSectionsResult}
+                title="Versions"
+              /> */}
+              <Tabs
+                activeKey={
+                  decisionSections({
+                    manuscript,
+                    handleSubmit: props.handleSubmit,
+                    isValid: props.isValid,
+                    updateReview,
+                    uploadFile,
+                  })[decisionSections.length - 1].key
+                }
+                sections={decisionSections({
                   manuscript,
                   handleSubmit: props.handleSubmit,
                   isValid: props.isValid,
                   updateReview,
                   uploadFile,
-                })[decisionSections.length - 1].key
-              }
-              sections={decisionSections({
-                manuscript,
-                handleSubmit: props.handleSubmit,
-                isValid: props.isValid,
-                updateReview,
-                uploadFile,
-              })}
-              title="Versions"
-            />
+                })}
+                title="Versions"
+              />
+            </>
           )}
         </Formik>
       </Manuscript>

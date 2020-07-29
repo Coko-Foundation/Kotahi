@@ -1,16 +1,7 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import { Wax } from 'wax-prosemirror-core'
-// import styled from 'styled-components'
-
 import EditoriaLayout from './EditoriaLayout'
-
 import { config } from './config'
-
-// const StyledWax = styled(Wax)`
-//   // .wax-surface-scroll {
-//   //   height: ${props => (props.debug ? '50vh' : '100%')};
-//   // }
-// `
 
 const renderImage = file => {
   const reader = new FileReader()
@@ -28,8 +19,7 @@ const user = {
 }
 
 const Editoria = ({ content, readonly }) => (
-  <Fragment>
-    {/* <GlobalStyle /> */}
+  <>
     <Wax
       autoFocus
       config={config}
@@ -41,7 +31,7 @@ const Editoria = ({ content, readonly }) => (
       // onChange={source => console.log(source)}
       value={content}
     />
-  </Fragment>
+  </>
 )
 
 export default Editoria
