@@ -19,6 +19,7 @@ import {
   InnerMessageContainer,
   Byline,
   Placeholder,
+  Spinner,
 } from './style'
 
 const GET_MESSAGES = gql`
@@ -133,7 +134,7 @@ const Messages = ({ channelId }) => {
     }
   })
 
-  if (loading) return 'Loading...'
+  if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
 
   const firstMessage = data.messages.edges[0]

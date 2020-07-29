@@ -374,7 +374,7 @@ const SuperChatInput = props => {
                 // onFocus={props.onFocus}
                 onKeyDown={handleKeyPress}
                 placeholder="Your message here..."
-                // staticSuggestions={props.participants}
+                staticSuggestions={props.participants}
                 value={text}
               />
             </InputWrapper>
