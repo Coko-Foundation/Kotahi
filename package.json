@@ -172,6 +172,7 @@
     "prosemirror-gapcursor": "^1.1.3",
     "babel-plugin-styled-components": "1.10.5",
     "@pubsweet/ui": "12.6.0",
-    "formik": "^2.0.0"
+    "formik": "^2.0.0",
+    "prosemirror-model": "1.11.0"
   }
 }
