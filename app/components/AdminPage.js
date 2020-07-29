@@ -32,6 +32,7 @@ import Menu from './Menu'
 import { Spinner } from './shared'
 
 import currentRolesVar from '../shared/currentRolesVar'
+import RolesUpdater from './RolesUpdater'
 
 const getParams = routerPath => {
   const path = '/journal/versions/:version'
@@ -79,10 +80,7 @@ const AdminPage = ({ children, history, match }) => {
   const journal = useContext(JournalContext)
   const [conversion] = useContext(XpubContext)
 
-  // Get the current user every 5 seconds (this includes authorization info)
   const { loading, error, data } = useQuery(GET_CURRENT_USER, {
-    pollInterval: 5000,
-    notifyOnNetworkStatusChange: true,
     fetchPolicy: 'network-only',
     // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301
     onCompleted: useCallback(data => updateStuff(data), []),
@@ -199,7 +197,7 @@ const AdminPage = ({ children, history, match }) => {
           path="/journal/admin/manuscripts"
         />
       </Switch>
-      {/* <Router history={history}>{children}</Router> */}
+      <RolesUpdater />
     </Root>
   )
 }
