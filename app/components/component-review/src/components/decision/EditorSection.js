@@ -1,13 +1,13 @@
 import React from 'react'
-import { Wax /*, CreateSchema */ } from 'wax-prosemirror-core'
+import Wax from '../../../../wax-collab/src/Editoria'
 // import { XpubSchema } from 'wax-prosemirror-schema'
 // import 'wax-prosemirror-themes/themes/default-theme.css'
 
 import { EditorWrapper, Info } from '../style'
 
-const options = {
-  // schema: new CreateSchema(XpubSchema),
-}
+// const options = {
+//   // schema: new CreateSchema(XpubSchema),
+// }
 
 export default ({ manuscript }) =>
   ((manuscript.files || []).find(file => file.fileType === 'manuscript') || '')
@@ -15,11 +15,10 @@ export default ({ manuscript }) =>
   'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
     <EditorWrapper>
       <Wax
-        key={manuscript.id}
-        options={options}
+        // fileUpload={fileUpload}
+        // onChange={source => updateManuscript({ source })}
+        content={manuscript.meta.source}
         readonly
-        theme="default"
-        value={manuscript.meta.source}
       />
     </EditorWrapper>
   ) : (
