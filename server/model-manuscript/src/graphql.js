@@ -308,6 +308,9 @@ const resolvers = {
             await ctx.models.Manuscript.query().findById(parent.id)
           ).$relatedQuery('teams')
     },
+    meta(parent) {
+      return { ...parent.meta, manuscriptId: parent.id }
+    },
   },
   ManuscriptVersion: {
     submission(parent) {
@@ -434,6 +437,7 @@ const typeDefs = `
     publicationDates: [MetaDate]
     notes: [Note]
     keywords: String
+    manuscriptId: ID
   }
 
   type ArticleId {

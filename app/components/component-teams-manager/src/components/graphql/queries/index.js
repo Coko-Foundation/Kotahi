@@ -4,6 +4,7 @@ const fragmentFields = `
   id
   created
   meta {
+    manuscriptId
     title
   }
 `

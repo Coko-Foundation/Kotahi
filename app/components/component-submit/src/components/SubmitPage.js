@@ -47,6 +47,7 @@ const fragmentFields = `
   decision
   status
   meta {
+    manuscriptId
     title
     abstract
     declarations {

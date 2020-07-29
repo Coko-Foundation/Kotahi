@@ -33,6 +33,7 @@ const GET_MANUSCRIPTS = gql`
       manuscripts {
         id
         meta {
+          manuscriptId
           title
         }
         created
@@ -97,6 +98,7 @@ const Manuscripts = () => {
       offset: (page - 1) * limit,
       limit,
     },
+    fetchPolicy: 'network-only',
   })
 
   if (loading) return <Spinner />

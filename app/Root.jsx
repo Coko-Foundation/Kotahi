@@ -78,6 +78,9 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
     link,
     cache: new InMemoryCache({
       typePolicies: {
+        ManuscriptMeta: {
+          keyFields: ['manuscriptId'],
+        },
         Manuscript: {
           fields: {
             _currentRoles: {
