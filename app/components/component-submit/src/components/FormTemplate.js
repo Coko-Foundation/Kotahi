@@ -15,6 +15,7 @@ import { AbstractEditor } from 'xpub-edit'
 import { Section as Container, Select } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
+import LinksInput from './LinksInput'
 import Supplementary from './Supplementary'
 import Confirm from './Confirm'
 
@@ -101,6 +102,7 @@ elements.AbstractEditor = ({
 
 elements.AuthorsInput = AuthorsInput
 elements.Select = Select
+elements.LinksInput = LinksInput
 
 const rejectProps = (obj, keys) =>
   Object.keys(obj)

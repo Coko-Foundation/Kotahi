@@ -89,6 +89,14 @@ const elements = {
     shortDescription: textfield,
     validate,
   },
+  LinksInput: {
+    id: textfield,
+    title: textfield,
+    name: textfield,
+    order: orderfield,
+    shortDescription: textfield,
+    validate,
+  },
   AbstractEditor: {
     id: textfield,
     title: textfield,
