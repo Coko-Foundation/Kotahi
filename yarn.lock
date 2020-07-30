@@ -1850,12 +1850,35 @@
     lodash "^4.17.4"
     styled-components "^4.1.1"
 
-"@pubsweet/ui@12.5.0", "@pubsweet/ui@^12.6.0":
+"@pubsweet/ui@12.5.0":
   version "12.5.0"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-12.5.0.tgz#56882c88dd50885cf1871c8dcb95f77692ea0b86"
   integrity sha512-De6xVEPYGTV+CZrGUQWSFQzXexcdoO7LGyRdvDp9dDlfDNTO36U1Ltkpj5m0WomAj5NshkqQVqZfhBG1IxsKDw==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.3.1"
+    enzyme "^3.7.0"
+    enzyme-adapter-react-16 "^1.12.1"
+    formik "^1.4.2"
+    invariant "^2.2.3"
+    lodash "^4.17.4"
+    moment "^2.22.1"
+    prop-types "^15.5.10"
+    react "^16.9.0"
+    react-dom "^16.9.0"
+    react-feather "^1.0.8"
+    react-router-dom "^5.0.0"
+    react-select "^3.0.8"
+    react-tag-autocomplete "^5.5.0"
+    react-uid "^2.2.0"
+    recompose "^0.30.0"
+    styled-components "^4.1.1"
+
+"@pubsweet/ui@12.6.0", "@pubsweet/ui@^12.6.0":
+  version "12.6.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-12.6.0.tgz#52f304b3ac4824fe48a310177769549d019e270c"
+  integrity sha512-QYng7wVCB1ZoJ2AGVvNvf/BizgzEA60cgJXeeUiRykk0AQFqdpF+V/Skh7A8nwdl21knz6Xgoa84BbDQhNBSWQ==
+  dependencies:
+    "@pubsweet/ui-toolkit" "^2.3.2"
     enzyme "^3.7.0"
     enzyme-adapter-react-16 "^1.12.1"
     formik "^1.4.2"
@@ -12305,7 +12328,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-"prompt@github:flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87":
+prompt@flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87:
   version "1.0.0"
   resolved "https://codeload.github.com/flatiron/prompt/tar.gz/1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87"
   dependencies:
@@ -14590,13 +14613,13 @@ striptags@^3.1.0:
   resolved "https://registry.yarnpkg.com/striptags/-/striptags-3.1.1.tgz#c8c3e7fdd6fb4bb3a32a3b752e5b5e3e38093ebd"
   integrity sha1-yMPn/db7S7OjKjt1LltePjgJPr0=
 
-style-loader@0.19.1:
-  version "0.19.1"
-  resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-0.19.1.tgz#591ffc80bcefe268b77c5d9ebc0505d772619f85"
-  integrity sha512-IRE+ijgojrygQi3rsqT0U4dd+UcPCqcVvauZpCnQrGAlEe+FUIyrK93bUDScamesjP08JlQNsFJU+KmPedP5Og==
+style-loader@0.23.1:
+  version "0.23.1"
+  resolved "https://registry.yarnpkg.com/style-loader/-/style-loader-0.23.1.tgz#cb9154606f3e771ab6c4ab637026a1049174d925"
+  integrity sha512-XK+uv9kWwhZMZ1y7mysB+zoihsEj4wneFWAS5qoiLwzW0WzSqMrrsIy+a3zkQJq0ipFtBpX5W3MqyRIBF/WFGg==
   dependencies:
-    loader-utils "^1.0.2"
-    schema-utils "^0.3.0"
+    loader-utils "^1.1.0"
+    schema-utils "^1.0.0"
 
 style-search@^0.1.0:
   version "0.1.0"
