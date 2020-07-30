@@ -1850,12 +1850,35 @@
     lodash "^4.17.4"
     styled-components "^4.1.1"
 
-"@pubsweet/ui@12.5.0", "@pubsweet/ui@^12.6.0":
+"@pubsweet/ui@12.5.0":
   version "12.5.0"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-12.5.0.tgz#56882c88dd50885cf1871c8dcb95f77692ea0b86"
   integrity sha512-De6xVEPYGTV+CZrGUQWSFQzXexcdoO7LGyRdvDp9dDlfDNTO36U1Ltkpj5m0WomAj5NshkqQVqZfhBG1IxsKDw==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.3.1"
+    enzyme "^3.7.0"
+    enzyme-adapter-react-16 "^1.12.1"
+    formik "^1.4.2"
+    invariant "^2.2.3"
+    lodash "^4.17.4"
+    moment "^2.22.1"
+    prop-types "^15.5.10"
+    react "^16.9.0"
+    react-dom "^16.9.0"
+    react-feather "^1.0.8"
+    react-router-dom "^5.0.0"
+    react-select "^3.0.8"
+    react-tag-autocomplete "^5.5.0"
+    react-uid "^2.2.0"
+    recompose "^0.30.0"
+    styled-components "^4.1.1"
+
+"@pubsweet/ui@12.6.0", "@pubsweet/ui@^12.6.0":
+  version "12.6.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-12.6.0.tgz#52f304b3ac4824fe48a310177769549d019e270c"
+  integrity sha512-QYng7wVCB1ZoJ2AGVvNvf/BizgzEA60cgJXeeUiRykk0AQFqdpF+V/Skh7A8nwdl21knz6Xgoa84BbDQhNBSWQ==
+  dependencies:
+    "@pubsweet/ui-toolkit" "^2.3.2"
     enzyme "^3.7.0"
     enzyme-adapter-react-16 "^1.12.1"
     formik "^1.4.2"
@@ -3439,20 +3462,10 @@ babel-plugin-minify-type-constructors@^0.4.3:
   dependencies:
     babel-helper-is-void-0 "^0.4.3"
 
-babel-plugin-styled-components@1.10.3:
-  version "1.10.3"
-  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.10.3.tgz#ee77c3285cc2ac5eb82483a0e6e347f023ef6972"
-  integrity sha512-QtXncjByp1+joHjmkb83bVjTIVWYnHo9aHQjUmVfQ4IC6c4hDwrD466R/Wb1faNX5sAhJkpCJ2KWt+fASwd67g==
-  dependencies:
-    "@babel/helper-annotate-as-pure" "^7.0.0"
-    "@babel/helper-module-imports" "^7.0.0"
-    babel-plugin-syntax-jsx "^6.18.0"
-    lodash "^4.17.11"
-
-babel-plugin-styled-components@1.10.5, "babel-plugin-styled-components@>= 1":
-  version "1.10.5"
-  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.10.5.tgz#fc1d0929b8248026985ab312d1fc590d0b3a1ef4"
-  integrity sha512-FmQdLOJ6oPilWEnwf4Yp5guKr0pBYhrmWZDyjBI2Edr91M4yWTHboS8hvwcTnZkF5ZwS7C0uzIqKQiR+vdoqdA==
+babel-plugin-styled-components@1.11.0, "babel-plugin-styled-components@>= 1":
+  version "1.11.0"
+  resolved "https://registry.yarnpkg.com/babel-plugin-styled-components/-/babel-plugin-styled-components-1.11.0.tgz#bfccbd3f1dede9ee14e2329ed5293c126a49dcc8"
+  integrity sha512-X+3II2OfDD7AKEKzJfqJBhR48FfVHsImTETtYvZtJrGiBQmRP8UQKOCQL+hOhvHP0l4Fuwqk2bMCXAd3YADpwA==
   dependencies:
     "@babel/helper-annotate-as-pure" "^7.0.0"
     "@babel/helper-module-imports" "^7.0.0"
@@ -12305,7 +12318,7 @@ promise@^7.1.1:
   dependencies:
     asap "~2.0.3"
 
-"prompt@github:flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87":
+prompt@flatiron/prompt#1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87:
   version "1.0.0"
   resolved "https://codeload.github.com/flatiron/prompt/tar.gz/1c95d1d8d333b5fbc13fa5f0619f3dcf0d514f87"
   dependencies:
