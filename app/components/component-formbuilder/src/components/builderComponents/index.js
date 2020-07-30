@@ -5,6 +5,7 @@ import * as AbstractField from './AbstractField'
 import * as CheckBox from './CheckBox'
 import * as RadioBox from './RadioBox'
 import * as TextArea from './TextArea'
+import { Select } from '../../../../shared'
 
 export {
   OptionsField,
@@ -14,4 +15,5 @@ export {
   CheckBox,
   RadioBox,
   TextArea,
+  Select,
 }
