@@ -119,7 +119,7 @@
     "speed-measure-webpack-plugin": "1.3.3",
     "start-server-and-test": "1.11.2",
     "string-replace-loader": "1.3.0",
-    "style-loader": "0.19.1",
+    "style-loader": "0.23.1",
     "stylelint": "8.4.0",
     "stylelint-config-pubsweet": "0.0.3",
     "uglifyjs-webpack-plugin": "1.3.0",
