@@ -1,6 +1,5 @@
 import React from 'react'
 import { Select, TextField, ValidatedFieldFormik } from '@pubsweet/ui'
-// import { compose, withState, withHandlers } from 'recompose'
 import { Legend, Section } from '../styles'
 
 const ValidationMenu = input => (
