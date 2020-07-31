@@ -24,10 +24,12 @@ const permissions = shield(
   {
     Query: {
       paginatedManuscripts: isAdmin,
+      detailsForURL: allow,
     },
     Mutation: {
       createManuscript: isAuthenticated,
     },
+    URLMetadata: allow,
     // Fruit: isAuthenticated,
     // Customer: isAdmin,
   },

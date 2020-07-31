@@ -1,4 +1,5 @@
 const merge = require('lodash/merge')
+const detailsForURLResolver = require('./detailsForURLResolver')
 const form = require('../../../app/storage/forms/submit.json')
 const { ref } = require('objection')
 
@@ -283,6 +284,9 @@ const resolvers = {
 
       // return ctx.connectors.User.fetchAll(where, ctx, { eager })
     },
+    async detailsForURL(_, { url }) {
+      return detailsForURLResolver(url)
+    },
     async getFile() {
       return form
     },
@@ -325,6 +329,17 @@ const typeDefs = `
     manuscript(id: ID!): Manuscript!
     manuscripts: [Manuscript]!
     paginatedManuscripts(sort: String, offset: Int, limit: Int, filter: ManuscriptsFilter): PaginatedManuscripts
+    detailsForURL(url: String!): URLMetadata
+  }
+
+  type URLMetadata {
+    title: String
+    author: String
+    date: String
+    description: String
+    image: String
+    logo: String
+    publisher: String
   }
 
   input ManuscriptsFilter {
