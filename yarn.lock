@@ -1841,36 +1841,13 @@
     lodash "^4.17.4"
     styled-components "^4.1.1"
 
-"@pubsweet/ui-toolkit@^2.3.1", "@pubsweet/ui-toolkit@^2.3.2":
+"@pubsweet/ui-toolkit@^2.3.2":
   version "2.3.2"
   resolved "https://registry.yarnpkg.com/@pubsweet/ui-toolkit/-/ui-toolkit-2.3.2.tgz#44b9b97b399027ef90bf0c30768475284f437fb4"
   integrity sha512-VJ9zZI1uDOCicmuJV7uv98kK0J5hGpJKIeXpOSrgPgFw3dDFRjuuLa4W8L5aFa+FG42ZDZEj2CaOnfuZyB4HGA==
   dependencies:
     color "^3.0.0"
     lodash "^4.17.4"
-    styled-components "^4.1.1"
-
-"@pubsweet/ui@12.5.0":
-  version "12.5.0"
-  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-12.5.0.tgz#56882c88dd50885cf1871c8dcb95f77692ea0b86"
-  integrity sha512-De6xVEPYGTV+CZrGUQWSFQzXexcdoO7LGyRdvDp9dDlfDNTO36U1Ltkpj5m0WomAj5NshkqQVqZfhBG1IxsKDw==
-  dependencies:
-    "@pubsweet/ui-toolkit" "^2.3.1"
-    enzyme "^3.7.0"
-    enzyme-adapter-react-16 "^1.12.1"
-    formik "^1.4.2"
-    invariant "^2.2.3"
-    lodash "^4.17.4"
-    moment "^2.22.1"
-    prop-types "^15.5.10"
-    react "^16.9.0"
-    react-dom "^16.9.0"
-    react-feather "^1.0.8"
-    react-router-dom "^5.0.0"
-    react-select "^3.0.8"
-    react-tag-autocomplete "^5.5.0"
-    react-uid "^2.2.0"
-    recompose "^0.30.0"
     styled-components "^4.1.1"
 
 "@pubsweet/ui@12.6.0", "@pubsweet/ui@^12.6.0":
