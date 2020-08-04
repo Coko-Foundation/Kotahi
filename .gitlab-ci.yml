@@ -11,9 +11,9 @@ stages:
   # - demo
 
 build:
-  image: docker:19.03.1
+  image: docker:19.03.12
   services:
-    - docker:19.03.1-dind
+    - docker:19.03.12-dind
   stage: build
   script:
     - docker version
