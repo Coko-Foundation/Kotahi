@@ -85,13 +85,11 @@ const ReviewLayout = ({
   return (
     <Columns>
       <Manuscript>
-        {/* <Manuscript>
         <Tabs
           activeKey={editorSections[editorSections.length - 1].key}
           sections={editorSections}
           title="Versions"
         />
-      </Manuscript> */}
 
         <Tabs
           activeKey={reviewSections[reviewSections.length - 1].key}
