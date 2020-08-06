@@ -153,7 +153,7 @@ const SubmitPage = ({ match, history, ...props }) => {
 
   const [createFile] = useMutation(createFileMutation)
 
-  const createSupplementaryFile = file => {
+  const createSupplementaryFile = async file => {
     const meta = {
       filename: file.name,
       mimeType: file.type,
@@ -163,12 +163,13 @@ const SubmitPage = ({ match, history, ...props }) => {
       objectId: match.params.version,
     }
 
-    createFile({
+    const { data } = await createFile({
       variables: {
         file,
         meta,
       },
     })
+    return data
   }
 
   const [update] = useMutation(updateMutation)
