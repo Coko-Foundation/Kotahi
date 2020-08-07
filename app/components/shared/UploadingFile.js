@@ -1,35 +1,40 @@
 import React from 'react'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 
 const Icon = styled.div`
   background: ${th('colorFurniture')};
-  height: calc(${th('gridUnit')} * 15);
+  height: ${grid(10)};
   margin-bottom: ${th('gridUnit')};
   opacity: 0.5;
   position: relative;
-  width: calc(${th('gridUnit')} * 9);
+  width: ${grid(10)};
+  overflow: hidden;
+  padding: ${grid(1)};
+  img {
+    width: ${grid(8)};
+  }
 `
 
-const Progress = styled.div`
-  color: ${th('colorTextReverse')};
-  display: block;
-  position: absolute;
-  bottom: ${th('gridUnit')};
-  left: calc(${th('gridUnit')} * 4);
-`
+// const Progress = styled.div`
+//   color: ${th('colorTextReverse')};
+//   display: block;
+//   position: absolute;
+//   bottom: ${th('gridUnit')};
+//   left: ${grid(4)};
+// `
 
 const Extension = styled.div`
   background: ${th('colorText')};
   color: ${th('colorTextReverse')};
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
-  left: calc(${th('gridUnit')} * 2);
+  left: ${grid(2)};
   position: absolute;
   right: 0;
   text-align: center;
   text-transform: uppercase;
-  top: calc(${th('gridUnit')} * 2);
+  top: ${grid(2)};
 `
 
 const Filename = styled.div`
@@ -37,50 +42,21 @@ const Filename = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
   font-style: italic;
-  max-width: calc(${th('gridUnit')} * 30);
+  max-width: ${grid(30)};
+  text-overflow: ellipsis;
+  overflow: hidden;
 `
 
 const Uploading = styled.div`
   align-items: center;
-  display: inline-flex;
+  display: block;
   flex-direction: column;
-  margin-bottom: calc(${th('gridUnit')} * 3);
-  margin-right: calc(${th('gridUnit')} * 3);
+  margin-bottom: ${grid(3)};
+  margin-right: ${grid(3)};
   position: relative;
-  width: calc(${th('gridUnit')} * 30);
 `
 
 const Uploaded = styled(Uploading)`
-  &::before,
-  &::after {
-    cursor: pointer;
-    transition: transform ${th('transitionDuration')};
-    font-size: ${th('fontSizeBaseSmall')};
-    line-height: ${th('lineHeightBaseSmall')};
-    left: 65%;
-    padding: 0 ${th('gridUnit')} 0 ${th('gridUnit')};
-    position: absolute;
-    border: ${th('borderWidth')} ${th('borderStyle')} ${th('colorTextReverse')};
-    color: ${th('colorTextReverse')};
-    text-transform: uppercase;
-    transform: scaleX(0);
-    transform-origin: 0 0;
-  }
-
-  &::after {
-    background: ${th('colorError')};
-    content: 'Remove';
-    top: calc(${th('gridUnit')} * 5);
-    z-index: 2;
-  }
-
-  &::before {
-    background: ${th('colorPrimary')};
-    content: 'Replace';
-    top: calc(${th('gridUnit')} * 10);
-    z-index: 3;
-  }
-
   &:hover ${Extension} {
     background: ${th('colorTextReverse')};
     color: ${th('colorPrimary')};
@@ -89,7 +65,7 @@ const Uploaded = styled(Uploading)`
   &:hover ${Icon} {
     opacity: 1;
     background: ${th('colorPrimary')};
-    transform: skewY(6deg) rotate(-6deg);
+    // transform: skewY(6deg) rotate(-6deg);
   }
 
   &:hover::after,
@@ -118,16 +94,20 @@ const getFileExtension = ({ name }) => name.replace(/^.+\./, '')
 const UploadingFile = ({ file, progress, error, uploaded }) => {
   const Root = uploaded ? Uploaded : Uploading
 
+  const extension = getFileExtension(file)
+  const isImage = file?.mimeType.startsWith('image/')
+
   return (
     <Root>
       {!!error && <ErrorWrapper>{error}</ErrorWrapper>}
       <Icon>
-        {!!progress && <Progress>{progress * 100}%</Progress>}
-        <Extension>{getFileExtension(file)}</Extension>
+        {isImage && <img alt={file.name} src={file.url} />}
+        {/* {!!progress && <Progress>{progress * 100}%</Progress>} */}
+        <Extension>{extension}</Extension>
       </Icon>
       <Filename>
         {uploaded ? (
-          <a download={file.name} href={file.url}>
+          <a download={file.name} href={file.url} title={file.name}>
             {file.name}
           </a>
         ) : (
