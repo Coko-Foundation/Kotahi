@@ -81,7 +81,7 @@ const AssignEditor = ({
       }
     }}
     options={options}
-    placeholder="Assign an editor…"
+    placeholder={`Assign ${teamName}…`}
     value={value}
   />
 )
