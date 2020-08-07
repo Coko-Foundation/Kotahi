@@ -2959,14 +2959,14 @@ apollo-tracing@^0.11.1:
     apollo-server-env "^2.4.5"
     apollo-server-plugin-base "^0.9.1"
 
-apollo-upload-client@14.0.1:
-  version "14.0.1"
-  resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-14.0.1.tgz#62ca85c4e45d48c2e73cabcdd7cc639492dacb4b"
-  integrity sha512-2Ebh5LQukHpGNebAWRdf9i3t91mJbZAyEG7WVrw9Mx3bxKIQ+4iYmBz3XV+pK8lqs8332i4k3D46hGdXDc5/gg==
+apollo-upload-client@14.1.1:
+  version "14.1.1"
+  resolved "https://registry.yarnpkg.com/apollo-upload-client/-/apollo-upload-client-14.1.1.tgz#2b21bb3424293a56ad9c4b9678395f5898f9b9be"
+  integrity sha512-6H6AW5habDHH/9XCJ8l2qlkaohwIcO+Lt/8P2908/yx0TC0oaiDNVu+0v2YE/5gA6NP0RvztUodzJUZJz27C0g==
   dependencies:
     "@apollo/client" "^3.0.2"
     "@babel/runtime" "^7.10.5"
-    extract-files "^8.1.0"
+    extract-files "^9.0.0"
 
 apollo-upload-client@^11.0.0:
   version "11.0.0"
@@ -6853,10 +6853,10 @@ extract-files@^5.0.1:
   resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-5.0.1.tgz#c9492a8410be643e260a376f0151361993d5f659"
   integrity sha512-qRW6y9eKF0VbCyOoOEtFhzJ3uykAw8GKwQVXyAIqwocyEWW4m+v+evec34RwtUkkxxHh7NKBLJ6AnXM8W4dH5w==
 
-extract-files@^8.1.0:
-  version "8.1.0"
-  resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-8.1.0.tgz#46a0690d0fe77411a2e3804852adeaa65cd59288"
-  integrity sha512-PTGtfthZK79WUMk+avLmwx3NGdU8+iVFXC2NMGxKsn0MnihOG2lvumj+AZo8CTwTrwjXDgZ5tztbRlEdRjBonQ==
+extract-files@^9.0.0:
+  version "9.0.0"
+  resolved "https://registry.yarnpkg.com/extract-files/-/extract-files-9.0.0.tgz#8a7744f2437f81f5ed3250ed9f1550de902fe54a"
+  integrity sha512-CvdFfHkC95B4bBBk36hcEmvdR2awOdhhVUYH6S/zrVj3477zven/fJMYg7121h4T1xHZC+tetUpubpAhxwI7hQ==
 
 extract-text-webpack-plugin@3.0.2:
   version "3.0.2"
