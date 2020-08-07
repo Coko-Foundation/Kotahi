@@ -6,6 +6,6 @@ CREATE TABLE reviews (
     is_decision BOOLEAN DEFAULT FALSE,
     comments JSONB,
     user_id UUID,
-    manuscript_id UUID,
+    manuscript_id UUID REFERENCES manuscripts(id) ON DELETE CASCADE,
     type TEXT NOT NULL
 );

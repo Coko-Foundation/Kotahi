@@ -20,9 +20,9 @@ class Review extends BaseModel {
 
     await Promise.all(
       (this.comments || []).map(async comment => {
-        const files = await File.findByObject({
-          object: 'Review',
-          object_id: this.id,
+        const files = await File.query().where({
+          objectType: 'Review',
+          objectId: this.id,
         })
         const commentFile = files.find(file => file.fileType === comment.type)
         if (commentFile) {
@@ -76,9 +76,9 @@ class Review extends BaseModel {
 
   async $beforeDelete() {
     const File = require('../../model-file/src/file')
-    const files = await File.findByObject({
-      object_id: this.id,
-      object: 'Review',
+    const files = await File.query().where({
+      objectId: this.id,
+      objectType: 'Review',
     })
     if (files.length > 0) {
       files.forEach(async fl => {

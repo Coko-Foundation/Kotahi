@@ -8,7 +8,7 @@ const typeDefs = `
     id: ID!
     created: DateTime!
     updated: DateTime
-    comments: [Comment]
+    comments: [ReviewComment]
     recommendation: String
     isDecision: Boolean
     open: Boolean
@@ -16,21 +16,10 @@ const typeDefs = `
   }
 
   input ReviewInput {
-    comments: [CommentInput]
+    comments: [ReviewCommentInput]
     recommendation: String
     isDecision: Boolean
     manuscriptId: ID!
-  }
-
-  input CommentInput {
-    type: String
-    content: String
-  }
-
-  type Comment {
-    type: String
-    content: String
-    files: [File]
   }
 `
 
