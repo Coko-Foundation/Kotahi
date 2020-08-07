@@ -32,6 +32,7 @@ const resolvers = {
       const path = await upload(file)
       meta.url = `/static/${path}`
       const data = await new File(meta).save()
+
       return data
     },
   },
