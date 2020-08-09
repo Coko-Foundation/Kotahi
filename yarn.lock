@@ -1476,7 +1476,7 @@
   dependencies:
     prosemirror-view "^1.5.1"
 
-"@hapi/address@^4.0.1":
+"@hapi/address@^4.1.0":
   version "4.1.0"
   resolved "https://registry.yarnpkg.com/@hapi/address/-/address-4.1.0.tgz#d60c5c0d930e77456fdcde2598e77302e2955e1d"
   integrity sha512-SkszZf13HVgGmChdHo/PxchnSaCJ6cetVqLzyciudzZRT0jcOouIF/Q93mgjw8cce+D+4F4C1Z/WrfFN+O3VHQ==
@@ -1512,17 +1512,6 @@
     "@hapi/marker" "1.x.x"
     "@hapi/topo" "3.x.x"
     isemail "3.x.x"
-
-"@hapi/joi@^17.1.1":
-  version "17.1.1"
-  resolved "https://registry.yarnpkg.com/@hapi/joi/-/joi-17.1.1.tgz#9cc8d7e2c2213d1e46708c6260184b447c661350"
-  integrity sha512-p4DKeZAoeZW4g3u7ZeRo+vCDuSDgSvtsB/NpfjXEHTUjSeINAi/RrVOWiVQ1isaoLzMvFEhe8n5065mQq1AdQg==
-  dependencies:
-    "@hapi/address" "^4.0.1"
-    "@hapi/formula" "^2.0.0"
-    "@hapi/hoek" "^9.0.0"
-    "@hapi/pinpoint" "^2.0.0"
-    "@hapi/topo" "^5.0.0"
 
 "@hapi/marker@1.x.x":
   version "1.0.0"
@@ -9497,6 +9486,17 @@ joi@10.6.0:
     items "2.x.x"
     topo "2.x.x"
 
+joi@^17.1.1:
+  version "17.2.0"
+  resolved "https://registry.yarnpkg.com/joi/-/joi-17.2.0.tgz#81cba6c1145130482d57b6d50129c7ab0e7d8b0a"
+  integrity sha512-9ZC8pMSitNlenuwKARENBGVvvGYHNlwWe5rexo2WxyogaxCB5dNHAgFA1BJQ6nsJrt/jz1p5vSqDT6W6kciDDw==
+  dependencies:
+    "@hapi/address" "^4.1.0"
+    "@hapi/formula" "^2.0.0"
+    "@hapi/hoek" "^9.0.0"
+    "@hapi/pinpoint" "^2.0.0"
+    "@hapi/topo" "^5.0.0"
+
 jpeg-js@^0.4.0:
   version "0.4.0"
   resolved "https://registry.yarnpkg.com/jpeg-js/-/jpeg-js-0.4.0.tgz#39adab7245b6d11e918ba5d4b49263ff2fc6a2f9"
@@ -14781,10 +14781,10 @@ stack-utils@^1.0.1:
   resolved "https://registry.yarnpkg.com/stack-utils/-/stack-utils-1.0.2.tgz#33eba3897788558bebfc2db059dc158ec36cebb8"
   integrity sha512-MTX+MeG5U994cazkjd/9KNAapsHnibjMLnfXodlkXw76JEea0UiNzrqidzo1emMwk7w5Qhc9jd4Bn9TBb1MFwA==
 
-start-server-and-test@1.11.2:
-  version "1.11.2"
-  resolved "https://registry.yarnpkg.com/start-server-and-test/-/start-server-and-test-1.11.2.tgz#9144b7b6f25197148f159f261ae80119afbb17d5"
-  integrity sha512-rk1zS5WQvdbc8slE5hPtzfji1dFSnBAfm+vSjToZNrBvozHJvuAG80xE5u8N4tQjg3Ej1Crjc19J++r28HGJgg==
+start-server-and-test@1.11.3:
+  version "1.11.3"
+  resolved "https://registry.yarnpkg.com/start-server-and-test/-/start-server-and-test-1.11.3.tgz#d293d2cff2c2fa0a46bbcf6b292716dbc8042d01"
+  integrity sha512-7r2lvcnJPECSG+ydMzk1wLt3MdzsHnYj+kXgKyzbvTXul5XYEmYJJ3K7YUGNgo5w/vnZb8L/AZMyg1C17qBdzg==
   dependencies:
     bluebird "3.7.2"
     check-more-types "2.24.0"
@@ -14792,7 +14792,7 @@ start-server-and-test@1.11.2:
     execa "3.4.0"
     lazy-ass "1.6.0"
     ps-tree "1.2.0"
-    wait-on "5.1.0"
+    wait-on "5.2.0"
 
 state-toggle@^1.0.0:
   version "1.0.3"
@@ -16243,13 +16243,13 @@ waait@^1.0.2, waait@^1.0.5:
   resolved "https://registry.yarnpkg.com/waait/-/waait-1.0.5.tgz#6a3c7aaa88bd0a1a545e9d47890b9595bebf9aa7"
   integrity sha512-wp+unA4CpqxvBUKHHv8D86fK4jWByHAWyhEXXVHfVUZfK+16ylpj7hjQ58Z8j9ntu8XNukRQT8Fi5qbyJ8rkyw==
 
-wait-on@5.1.0:
-  version "5.1.0"
-  resolved "https://registry.yarnpkg.com/wait-on/-/wait-on-5.1.0.tgz#b697f21c6fea0908b9c7ad6ed56ace4736768b66"
-  integrity sha512-JM0kgaE+V0nCDvSl72iM05W8NDt2E2M56WC5mzR7M+T+k6xjt2yYpyom+xA8RasSunFGzbxIpAXbVzXqtweAnA==
+wait-on@5.2.0:
+  version "5.2.0"
+  resolved "https://registry.yarnpkg.com/wait-on/-/wait-on-5.2.0.tgz#6711e74422523279714a36d52cf49fb47c9d9597"
+  integrity sha512-U1D9PBgGw2XFc6iZqn45VBubw02VsLwnZWteQ1au4hUVHasTZuFSKRzlTB2dqgLhji16YVI8fgpEpwUdCr8B6g==
   dependencies:
-    "@hapi/joi" "^17.1.1"
     axios "^0.19.2"
+    joi "^17.1.1"
     lodash "^4.17.19"
     minimist "^1.2.5"
     rxjs "^6.5.5"
