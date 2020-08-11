@@ -32,7 +32,7 @@
     "history": "4.10.1",
     "jimp": "0.16.0",
     "joi": "10.6.0",
-    "loadable-components": "0.3.0",
+    "loadable-components": "0.4.0",
     "moment": "2.27.0",
     "passport-orcid": "0.0.4",
     "prop-types": "15.7.2",
