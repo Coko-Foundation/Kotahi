@@ -10093,10 +10093,10 @@ load-json-file@^4.0.0:
     pify "^3.0.0"
     strip-bom "^3.0.0"
 
-loadable-components@0.3.0:
-  version "0.3.0"
-  resolved "https://registry.yarnpkg.com/loadable-components/-/loadable-components-0.3.0.tgz#19c8b2cf57c22a00090aa0563b43dd92e1473d82"
-  integrity sha512-H1kvhGg6hnt9oiXjvZ19Gl4kbqIX8yx4w//XFaqrEEy/CkKXL8Jl+03GFd4seV9Mjmam+isE1rzoVIgzG9Pm0g==
+loadable-components@0.4.0:
+  version "0.4.0"
+  resolved "https://registry.yarnpkg.com/loadable-components/-/loadable-components-0.4.0.tgz#4470107bfaf02cc2278a3fc0d4040899f7afd10e"
+  integrity sha512-Oac90y+YEoQ2+zetiIwPl7LL/e+xAhlZUOSgzVyK2KwRbqbFqDQgeAYlxJCIwHO7wvVNUXEZt+2kg7pjL+kLCg==
 
 loader-runner@^2.4.0:
   version "2.4.0"
