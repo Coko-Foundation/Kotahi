@@ -20,7 +20,6 @@ import SubmitPage from '../components/component-submit/src/components/SubmitPage
 import ManuscriptPage from '../components/component-manuscript/src/components/ManuscriptPage'
 import ReviewersPage from '../components/component-review/src/components/ReviewersPage'
 import ReviewPage from '../components/component-review/src/components/ReviewPage'
-import TeamPage from '../components/component-teams-manager/src/components/TeamsManagerPage'
 import DecisionPage from '../components/component-review/src/components/DecisionPage'
 import FormBuilderPage from '../components/component-formbuilder/src/components/FormBuilderPage'
 import NewSubmissionPage from '../components/component-submit/src/components/NewSubmissionPage'
@@ -164,7 +163,6 @@ const AdminPage = ({ children, history, match }) => {
           exact
           path="/journal/versions/:version/submit"
         />
-        <PrivateRoute component={TeamPage} exact path="/journal/admin/teams" />
         <PrivateRoute
           component={FormBuilderPage}
           exact
@@ -183,12 +181,12 @@ const AdminPage = ({ children, history, match }) => {
         <PrivateRoute
           component={ReviewPage}
           exact
-          path="/journal/versions/:version/reviews/:review"
+          path="/journal/versions/:version/review"
         />
         <PrivateRoute
           component={DecisionPage}
           exact
-          path="/journal/versions/:version/decisions/:decision"
+          path="/journal/versions/:version/decision"
         />
         <PrivateRoute component={Profile} exact path="/journal/profile" />
         <PrivateRoute component={UsersManager} path="/journal/admin/users" />
