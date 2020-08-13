@@ -180,6 +180,7 @@ const decisionSections = ({
   uploadFile,
   isSubmitting,
   submitCount,
+  dirty,
 }) => {
   const decisionSections = []
   const manuscriptVersions = manuscript.manuscriptVersions || []
@@ -216,6 +217,7 @@ const decisionSections = ({
         </AdminSection>
         <AdminSection key="decision-form">
           <DecisionForm
+            dirty={dirty}
             handleSubmit={handleSubmit}
             isSubmitting={isSubmitting}
             isValid={isValid}
@@ -304,7 +306,7 @@ const DecisionPage = ({ match }) => {
     (manuscript &&
       manuscript.reviews &&
       manuscript.reviews.find(review => review.isDecision)) || {
-      comments: [],
+      decisionComment: {},
       isDecision: true,
       recommendation: null,
     }
@@ -384,6 +386,7 @@ const DecisionPage = ({ match }) => {
       updateReview,
       isSubmitting: props.isSubmitting,
       submitCount: props.submitCount,
+      dirty: props.dirty,
     })
 
   return (
@@ -392,37 +395,33 @@ const DecisionPage = ({ match }) => {
         <Formik
           displayName="decision"
           initialValues={reviewOrInitial(data.manuscript)}
-          // isInitialValid={({ manuscript }) => {
-          //   const rv =
-          //     manuscript.reviews.find(review => review.isDecision) || {}
-          //   const isRecommendation = rv.recommendation != null
-          //   const isCommented = getCommentContent(rv, 'note') !== ''
-
-          //   return isCommented && isRecommendation
-          // }}
-          onSubmit={() =>
+          onSubmit={values =>
             makeDecision({
               variables: {
                 id: manuscript.id,
-                decision: manuscript.reviews.find(review => review.isDecision)
-                  .recommendation,
+                decision: values.recommendation,
               },
             })
           }
-          // validate={(values, props) => {
-          //   const errors = {}
-          //   if (values.decisionComment?.content === '') {
-          //     errors.decisionComment = 'Required'
-          //   }
+          validate={(values, props) => {
+            const errors = {}
+            if (
+              ['', '<p></p>', undefined].includes(
+                values.decisionComment?.content,
+              )
+            ) {
+              errors.decisionComment = 'Decision letter is required'
+            }
 
-          //   if (values.recommendation === null) {
-          //     errors.recommendation = 'Required'
-          //   }
-          //   return errors
-          // }}
+            if (values.recommendation === null) {
+              errors.recommendation = 'Decision is required'
+            }
+            return errors
+          }}
+          // validateOnMount
         >
           {props => (
-            // Temp
+            // TODO: Find a nicer way to display the contents of a manuscript
             <>
               {/* <Tabs
                 activeKey={

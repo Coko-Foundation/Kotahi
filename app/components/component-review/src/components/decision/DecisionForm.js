@@ -1,7 +1,7 @@
 import React, { useContext } from 'react'
 import { NoteEditor } from 'xpub-edit'
 // import { cloneDeep, omit } from 'lodash'
-import { Field } from 'formik'
+import { Field, ErrorMessage } from 'formik'
 import {
   Button,
   // Flexbox,
@@ -23,7 +23,11 @@ import {
   SectionRow,
   SectionAction,
   FormStatus,
+  ErrorText,
+  ErrorWrap,
 } from '../style'
+
+// import Wax from '../../../../wax-collab/src/Editoria'
 
 const NoteDecision = ({ updateReview }) => (
   <>
@@ -49,26 +53,12 @@ const NoteDecision = ({ updateReview }) => (
         </>
       )}
     </Field>
-    {/* <Field
-      component={NoteInput}
-      key="commentinput"
-      name="comments"
-      updateReview={updateReview}
-      validate={required}
-    />
-    <FilesUpload
-      objectType="Review"
-      objectId=
-      key="attachmentinput"
-      fileType="note"
-      updateReview={updateReview}
-    /> */}
   </>
 )
 
 const NoteInput = ({
   field,
-  form: { values, setFieldValue },
+  form: { errors, setFieldValue, setFieldTouched },
   updateReview,
 }) => (
   // const review = useState()
@@ -86,13 +76,23 @@ const NoteInput = ({
   // }, [values])
 
   // console.log('Rendering', review.current)
-  <>
+  <ErrorWrap error={errors.decisionComment}>
+    {
+      // TODO: Use the best text editor there is!
+      /* <Wax
+      // fileUpload={fileUpload}
+      // onChange={source => updateManuscript({ source })}
+      content={field.value?.content}
+    /> */
+    }
+
     <NoteEditor
       data-testid="decisionComment"
+      debounceDelay={300}
       key="note-input"
-      onBlur={() => {}}
+      onBlur={() => setFieldTouched('decisionComment')}
       onChange={value => {
-        // review.current.decisionComment.content = value
+        setFieldValue('decisionComment', { content: value })
         updateReview({
           decisionComment: { content: value },
         })
@@ -100,26 +100,32 @@ const NoteInput = ({
       placeholder="Write/paste your decision letter here, or upload it using the upload button on the right."
       value={field.value?.content || ''}
     />
-  </>
+    <ErrorText>
+      <ErrorMessage name="decisionComment" />
+    </ErrorText>
+  </ErrorWrap>
 )
 
 const RecommendationInput = ({
   field,
-  form: { setFieldValue },
+  form: { setFieldValue, errors },
   updateReview,
 }) => {
   const journal = useContext(JournalContext)
   return (
-    <RadioGroup
-      {...field}
-      inline
-      onChange={val => {
-        setFieldValue(`recommendation`, val)
-        updateReview({ recommendation: val })
-      }}
-      options={journal.recommendations}
-      value={field.value === '' ? null : field.value}
-    />
+    <div>
+      <RadioGroup
+        {...field}
+        inline
+        onChange={val => {
+          setFieldValue('recommendation', val)
+          updateReview({ recommendation: val })
+        }}
+        options={journal.recommendations}
+        value={field.value === '' ? null : field.value}
+      />
+      <ErrorMessage name="recommendation" />
+    </div>
   )
 }
 
@@ -129,6 +135,7 @@ const DecisionForm = ({
   isValid,
   isSubmitting,
   submitCount,
+  dirty,
 }) => {
   let status = null
   if (isSubmitting) {
@@ -155,7 +162,11 @@ const DecisionForm = ({
           />
           <FormStatus>{status}</FormStatus>
           <SectionAction key="submit">
-            <Button disabled={!isValid || isSubmitting} primary type="submit">
+            <Button
+              disabled={!isValid || isSubmitting || !dirty}
+              primary
+              type="submit"
+            >
               Submit
             </Button>
           </SectionAction>

@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 
 export const Columns = styled.div`
@@ -81,6 +81,30 @@ export const FormStatus = styled.div`
   line-height: ${grid(5)};
   text-align: center;
   color: ${th('colorSecondary')};
+`
+
+export const ErrorWrap = styled.div`
+  .ProseMirror {
+    margin-bottom: ${grid(4)};
+  }
+  ${({ error }) =>
+    error &&
+    css`
+      .ProseMirror {
+        border-color: red;
+      }
+      ${ErrorText} {
+        margin-top: ${grid(-4)};
+        margin-bottom: ${grid(1)};
+      }
+    `}
+
+  [class*="MenuBar"] {
+    margin-top: 0;
+  }
+`
+export const ErrorText = styled.div`
+  color: red;
 `
 
 export {

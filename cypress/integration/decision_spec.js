@@ -6,11 +6,16 @@ describe('Completing a review', () => {
 
     cy.contains('Control Panel').click()
 
-    cy.get('[data-testid="decisionComment"]')
-      .click()
+    cy.get('[data-testid="decisionComment"]').click()
+    cy.focused().blur()
+
+    // Validations run on blur
+    cy.contains('Decision letter is required')
+    cy.get('[data-testid="decisionComment"] div[contenteditable="true"]')
+      .click({ force: true })
       .type(`Great paper, dear authors, congratulations!`)
 
-    cy.contains('Accept').click()
+    cy.contains('Accept').click({ force: true })
     cy.contains('Submit').click()
     cy.contains('Your decision has been saved.')
     cy.visit('/journal/dashboard')
