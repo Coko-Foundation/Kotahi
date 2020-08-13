@@ -15,6 +15,9 @@ describe('Completing a review', () => {
     cy.visit('/journal/dashboard')
     cy.contains('Accepted')
 
+    // Regression test, previously this count increased when a decision was made
+    cy.get('[data-testid="completed"]').should('have.text', '3completed')
+
     cy.task('dump', 'decision_completed')
   })
 })
