@@ -32,7 +32,7 @@ lint:
     - cd ${HOME}
     - npm run lint
 
-test:
+test-chrome:
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
   variables:
@@ -49,4 +49,24 @@ test:
   script:
     - cd ${HOME}
     # specify host here else it confuses the linked postgres image
-    - PGHOST=postgres yarn test:all
+    - PGHOST=postgres yarn test:all:chrome
+
+
+test-firefox:
+  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: test
+    POSTGRES_PASSWORD: pw
+    # connection details for tests
+    PGUSER: test
+    PGPASSWORD: pw
+    NODE_ENV: test
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    # specify host here else it confuses the linked postgres image
+    - PGHOST=postgres yarn test:all:firefox

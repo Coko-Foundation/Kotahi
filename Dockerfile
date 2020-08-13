@@ -1,13 +1,10 @@
-FROM node:12
+FROM cypress/browsers:node12.18.0-chrome83-ff77
 
 ENV HOME "/home/simplej"
 RUN mkdir -p ${HOME}
 WORKDIR ${HOME}
 
 ENV NODE_ENV "development"
-
-# Install dependencies for Cypress
-RUN apt-get -y update && apt-get -y install xvfb libgtk-3-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
 
 COPY . .
 
