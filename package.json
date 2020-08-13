@@ -145,7 +145,7 @@
     "test:server-and-client": "start-test server:test 'http://localhost:3000/healthcheck' client",
     "test:all:firefox": "start-test test:server-and-client 4000 test:firefox",
     "test:all:chrome": "start-test test:server-and-client 4000 test:chrome",
-    "test:firefox": "cypress run --browser firefox",
+    "test:firefox": "cypress run --browser firefox --headless",
     "test:chrome": "cypress run --browser chrome",
     "__cleanNodeModules": "find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' \\;",
     "build": "NODE_ENV=production pubsweet build",
