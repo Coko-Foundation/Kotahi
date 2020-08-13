@@ -1,3 +1,4 @@
+/* eslint-disable no-undef */
 import 'cypress-file-upload'
 
 // ***********************************************
@@ -27,6 +28,12 @@ import 'cypress-file-upload'
 // Cypress.Commands.overwrite("visit", (originalFn, url, options) => { ... })
 
 Cypress.Commands.add('setToken', token => {
-  console.log('Setting token', token)
   localStorage.setItem('token', token)
+})
+
+Cypress.Commands.add('login', name => {
+  cy.task('createToken', name).then(token => {
+    cy.setToken(token)
+    cy.visit('/journal/dashboard')
+  })
 })

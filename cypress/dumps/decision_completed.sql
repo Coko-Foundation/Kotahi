@@ -25,28 +25,28 @@ CREATE SCHEMA pgboss;
 ALTER SCHEMA pgboss OWNER TO test;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner:
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: 
 --
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner:
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: 
 --
 
 COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
@@ -420,6 +420,8 @@ INSERT INTO pgboss.version (version) VALUES ('11');
 -- Data for Name: channels; Type: TABLE DATA; Schema: public; Owner: test
 --
 
+INSERT INTO public.channels (id, manuscript_id, created, updated, topic, type) VALUES ('afd95c06-011b-46e3-9985-964283d51c4a', '93735475-08f6-436b-9db3-fe2364b9dbb2', '2020-08-12 16:16:44.916+02', '2020-08-12 16:16:44.916+02', 'Manuscript discussion', 'all');
+INSERT INTO public.channels (id, manuscript_id, created, updated, topic, type) VALUES ('75540565-6619-495f-a8c5-d6bf11ece72d', '93735475-08f6-436b-9db3-fe2364b9dbb2', '2020-08-12 16:16:44.916+02', '2020-08-12 16:16:44.916+02', 'Editorial discussion', 'editorial');
 
 
 --
@@ -438,12 +440,20 @@ INSERT INTO pgboss.version (version) VALUES ('11');
 -- Data for Name: identities; Type: TABLE DATA; Schema: public; Owner: test
 --
 
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('d341a633-cdce-4a7f-a9ad-5afc03cd0dd1', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.741+02', '2020-07-21 16:17:25.87+02', 'orcid', '0000-0002-0564-2016', 'Emily Clay', NULL, '{"accessToken": "079a1165-31e5-4b59-9a99-d80ff7a21ebf", "refreshToken": "ccadc737-defc-419e-823b-a9f3673848ba"}', true);
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('bcda196e-765a-42c8-94da-ca2e43b80f96', '3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.721+02', '2020-07-21 16:33:26.742+02', 'orcid', '0000-0002-5641-5729', 'Sinead Sullivan', NULL, '{"accessToken": "ef1ed3ec-8371-41b2-a136-fd196ae52a72", "refreshToken": "6972dace-d9a6-4cd3-a2ad-ec7eb3e457c7"}', true);
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('4af83984-6359-47c5-a075-5ddfa9c555d9', '0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.127+02', '2020-07-21 16:35:07.104+02', 'orcid', '0000-0002-7645-9921', 'Sherry Crofoot', NULL, '{"accessToken": "2ad4e130-0775-4e13-87fb-8e8f5a0570ae", "refreshToken": "159933d9-2020-4c02-bdfb-163af41017dc"}', true);
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('acfa1777-0aec-4fe1-bc16-92bb9d19e884', '85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.384+02', '2020-07-21 16:35:39.358+02', 'orcid', '0000-0002-9429-4446', 'Elaine Barnes', NULL, '{"accessToken": "dcf07bc7-e59c-41b3-9ce0-924ac20aeeea", "refreshToken": "ae49d6a1-8e62-419d-8767-4a3ec22c1950"}', true);
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('88c85115-d83c-42d7-a1a1-0139827977da', '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.975+02', '2020-07-21 16:36:26.059+02', 'orcid', '0000-0001-5956-7341', 'Gale Davis', NULL, '{"accessToken": "3e9f6f6c-7cc0-4afa-9fdf-6ed377c36aad", "refreshToken": "80b1e911-df97-43f1-9f11-17b61913f6d7"}', true);
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('049f91da-c84e-4b80-be2e-6e0cfca7a136', '231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.611+02', '2020-07-22 14:18:37.745+02', 'orcid', '0000-0003-2536-230X', 'Test Account', NULL, '{"accessToken": "eb551178-79e5-4189-8c5f-0a553092a9b5", "refreshToken": "4506fa5f-bd77-4867-afb4-0b07ea5302d6"}', true);
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('2fb8359c-239c-43fa-91f5-1ff2058272a6', '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.604+02', '2020-07-24 15:21:55.7+02', 'orcid', '0000-0003-1838-2441', 'Joanne Pilger', NULL, '{"accessToken": "842de329-ef16-4461-b83b-e8fe57238904", "refreshToken": "524fbdc5-9c67-4b4c-af17-2ce4cf294e88"}', true);
 
 
 --
 -- Data for Name: manuscripts; Type: TABLE DATA; Schema: public; Owner: test
 --
 
+INSERT INTO public.manuscripts (id, created, updated, parent_id, submitter_id, status, decision, authors, suggestions, meta, submission, type) VALUES ('93735475-08f6-436b-9db3-fe2364b9dbb2', '2020-08-12 16:16:44.9+02', '2020-08-13 15:12:29.223+02', NULL, '027afa6a-edbc-486e-bb31-71e12f8ea1c5', 'accepted', 'accepted', NULL, NULL, '{"notes": [{"content": "", "notesType": "fundingAcknowledgement"}, {"content": "", "notesType": "specialInstructions"}], "title": "My URL submission"}', '{"irb": "yes", "name": "Emily Clay", "cover": "This is my cover letter", "links": "https://doi.org/10.6084/m9.figshare.913521.v1, https://github.com/jure/mathtype_to_mathml", "ethics": "This is my ethics statement", "contact": "emily@example.com", "methods": ["Functional MRI", "Optical Imaging"], "datacode": "This is my data and code availability statement", "humanMRI": "3T", "keywords": "some, keyword", "packages": ["SPM", "FSL"], "subjects": "patients", "suggested": "Erica James, Matthew Matretzky", "objectType": "software", "affiliation": "Example University, Egland", "otherMethods": "Erica James, Matthew Matretzky", "humanMRIother": "7T", "otherPackages": "Jupyter, Stencila", "animal_research_approval": "yes"}', 'Manuscript');
 
 
 --
@@ -477,30 +487,55 @@ INSERT INTO public.migrations (id, run_at) VALUES ('1596838897-files.sql', '2020
 -- Data for Name: review_comments; Type: TABLE DATA; Schema: public; Owner: test
 --
 
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('f73fdbd8-6fb6-4d7a-a74a-ab2c2c07b572', '2020-08-13 15:09:33.838+02', '2020-08-13 15:09:33.838+02', '5a06fcf3-d368-4f65-917c-1acdb73fcc71', NULL, '<p>Great paper, congratulations! Gale Davis</p>', 'review', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('5c86da62-bc7f-4d23-8968-62bd5a56a52b', '2020-08-13 15:09:34.88+02', '2020-08-13 15:09:34.88+02', '5a06fcf3-d368-4f65-917c-1acdb73fcc71', NULL, '<p>This is a very important paper. Gale Davis</p>', 'confidential', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('ef96b249-dab6-4f7e-b24e-571b340b9b41', '2020-08-13 15:09:38.761+02', '2020-08-13 15:09:38.761+02', '7c6cd2f6-c23e-4902-96ac-df4801ac3d0a', NULL, '<p>Great paper, congratulations! Sherry Crofoot</p>', 'review', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('04a8a70e-7787-4fd6-bdca-bfac3aa86951', '2020-08-13 15:09:40.155+02', '2020-08-13 15:09:40.155+02', '7c6cd2f6-c23e-4902-96ac-df4801ac3d0a', NULL, '<p>This is a very important paper. Sherry Crofoot</p>', 'confidential', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('7ccda096-07c2-4569-ad0f-5b3574db205e', '2020-08-13 15:09:44.046+02', '2020-08-13 15:09:44.046+02', '3a34e0ef-6695-4268-b901-60de20f9cf4e', NULL, '<p>Great paper, congratulations! Elaine Barnes</p>', 'review', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('c8b7d1c9-aef2-47d0-a9ad-c9d46706e79e', '2020-08-13 15:09:45.548+02', '2020-08-13 15:09:45.548+02', '3a34e0ef-6695-4268-b901-60de20f9cf4e', NULL, '<p>This is a very important paper. Elaine Barnes</p>', 'confidential', 'ReviewComment');
 
 
 --
 -- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: test
 --
 
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('5a06fcf3-d368-4f65-917c-1acdb73fcc71', '2020-08-13 15:09:32.358+02', '2020-08-13 15:09:34.925+02', 'accepted', false, '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '93735475-08f6-436b-9db3-fe2364b9dbb2', 'Review');
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('7c6cd2f6-c23e-4902-96ac-df4801ac3d0a', '2020-08-13 15:09:36.501+02', '2020-08-13 15:09:40.159+02', 'accepted', false, '0da0bbec-9261-4706-b990-0c10aa3cc6b4', '93735475-08f6-436b-9db3-fe2364b9dbb2', 'Review');
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('3a34e0ef-6695-4268-b901-60de20f9cf4e', '2020-08-13 15:09:41.911+02', '2020-08-13 15:09:45.561+02', 'accepted', false, '85e1300e-003c-4e96-987b-23812f902477', '93735475-08f6-436b-9db3-fe2364b9dbb2', 'Review');
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('7d962c82-322e-4b02-8981-5f26479433ab', '2020-08-13 15:12:28.737+02', '2020-08-13 15:12:28.737+02', 'accepted', true, '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '93735475-08f6-436b-9db3-fe2364b9dbb2', 'Review');
 
 
 --
 -- Data for Name: team_members; Type: TABLE DATA; Schema: public; Owner: test
 --
 
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('6505126d-2ecd-498b-a27d-18eafbdbc8a6', '2020-08-12 16:16:44.923+02', '2020-08-12 16:16:44.923+02', NULL, 'c31e3116-6176-45b5-b52c-6f7cbfc86007', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('031ae180-e94e-458d-86b7-f2dc1d456e2e', '2020-08-12 16:17:14.795+02', '2020-08-12 16:17:14.795+02', NULL, 'bf800912-56c4-44eb-b425-64e51a9824fe', '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('c4ac4fc0-3fae-43b0-89ee-bf7f8fd9885f', '2020-08-12 16:17:43.262+02', '2020-08-13 15:09:41.898+02', 'completed', '0719d132-bb6c-49d9-9122-7911a48cfd60', '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('69e896c6-0fdb-421d-a638-1ef7670c03c9', '2020-08-12 16:17:43.884+02', '2020-08-13 15:09:41.898+02', 'completed', '0719d132-bb6c-49d9-9122-7911a48cfd60', '0da0bbec-9261-4706-b990-0c10aa3cc6b4', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('12c33ef5-4fc3-4d48-8309-a90c0461113c', '2020-08-12 16:17:44.547+02', '2020-08-13 15:09:45.782+02', 'completed', '0719d132-bb6c-49d9-9122-7911a48cfd60', '85e1300e-003c-4e96-987b-23812f902477', NULL);
 
 
 --
 -- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: test
 --
 
+INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('c31e3116-6176-45b5-b52c-6f7cbfc86007', '2020-08-12 16:16:44.916+02', '2020-08-12 16:16:44.916+02', 'Author', 'author', NULL, NULL, NULL, 'team', '93735475-08f6-436b-9db3-fe2364b9dbb2');
+INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('bf800912-56c4-44eb-b425-64e51a9824fe', '2020-08-12 16:17:14.789+02', '2020-08-12 16:17:14.789+02', 'Senior Editor', 'seniorEditor', NULL, NULL, NULL, 'team', '93735475-08f6-436b-9db3-fe2364b9dbb2');
+INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('0719d132-bb6c-49d9-9122-7911a48cfd60', '2020-08-12 16:17:43.258+02', '2020-08-13 15:09:41.898+02', 'Reviewers', 'reviewer', NULL, NULL, NULL, 'team', '93735475-08f6-436b-9db3-fe2364b9dbb2');
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: test
 --
 
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.597+02', '2020-07-24 16:43:54.939+02', NULL, NULL, '000000032536230X', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser5.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.734+02', '2020-08-12 16:17:13.598+02', NULL, NULL, '0000000205642016', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser2.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.719+02', '2020-08-12 16:17:14.868+02', true, NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.973+02', '2020-08-13 15:09:35.913+02', NULL, NULL, '0000000159567341', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser4.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.125+02', '2020-08-13 15:09:41.198+02', NULL, NULL, '0000000276459921', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser7.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.381+02', '2020-08-13 15:09:46.741+02', NULL, NULL, '0000000294294446', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser1.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.59+02', '2020-08-13 15:12:29.67+02', NULL, NULL, '0000000318382441', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser3.jpg', true);
 
 
 --
@@ -848,21 +883,4 @@ ALTER TABLE ONLY public.teams
 --
 -- PostgreSQL database dump complete
 --
-
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.381+02', '2020-07-24 16:43:03.114+02', NULL, NULL, '0000000294294446', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser1.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.734+02', '2020-07-24 16:43:15.46+02', NULL, NULL, '0000000205642016', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser2.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.59+02', '2020-07-24 16:43:26.378+02', NULL, NULL, '0000000318382441', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser3.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.973+02', '2020-07-24 16:43:43.943+02', NULL, NULL, '0000000159567341', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser4.jpg', true);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.597+02', '2020-07-24 16:43:54.939+02', NULL, NULL, '000000032536230X', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser5.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.719+02', '2020-07-24 16:49:06.488+02', true, NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', true);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.125+02', '2020-07-24 16:44:59.306+02', NULL, NULL, '0000000276459921', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser7.jpg', true);
-
-
-INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('d341a633-cdce-4a7f-a9ad-5afc03cd0dd1', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.741+02', '2020-07-21 16:17:25.87+02', 'orcid', '0000-0002-0564-2016', 'Emily Clay', NULL, '{"accessToken": "079a1165-31e5-4b59-9a99-d80ff7a21ebf", "refreshToken": "ccadc737-defc-419e-823b-a9f3673848ba"}', true);
-INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('bcda196e-765a-42c8-94da-ca2e43b80f96', '3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.721+02', '2020-07-21 16:33:26.742+02', 'orcid', '0000-0002-5641-5729', 'Sinead Sullivan', NULL, '{"accessToken": "ef1ed3ec-8371-41b2-a136-fd196ae52a72", "refreshToken": "6972dace-d9a6-4cd3-a2ad-ec7eb3e457c7"}', true);
-INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('4af83984-6359-47c5-a075-5ddfa9c555d9', '0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.127+02', '2020-07-21 16:35:07.104+02', 'orcid', '0000-0002-7645-9921', 'Sherry Crofoot', NULL, '{"accessToken": "2ad4e130-0775-4e13-87fb-8e8f5a0570ae", "refreshToken": "159933d9-2020-4c02-bdfb-163af41017dc"}', true);
-INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('acfa1777-0aec-4fe1-bc16-92bb9d19e884', '85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.384+02', '2020-07-21 16:35:39.358+02', 'orcid', '0000-0002-9429-4446', 'Elaine Barnes', NULL, '{"accessToken": "dcf07bc7-e59c-41b3-9ce0-924ac20aeeea", "refreshToken": "ae49d6a1-8e62-419d-8767-4a3ec22c1950"}', true);
-INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('88c85115-d83c-42d7-a1a1-0139827977da', '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.975+02', '2020-07-21 16:36:26.059+02', 'orcid', '0000-0001-5956-7341', 'Gale Davis', NULL, '{"accessToken": "3e9f6f6c-7cc0-4afa-9fdf-6ed377c36aad", "refreshToken": "80b1e911-df97-43f1-9f11-17b61913f6d7"}', true);
-INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('049f91da-c84e-4b80-be2e-6e0cfca7a136', '231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.611+02', '2020-07-22 14:18:37.745+02', 'orcid', '0000-0003-2536-230X', 'Test Account', NULL, '{"accessToken": "eb551178-79e5-4189-8c5f-0a553092a9b5", "refreshToken": "4506fa5f-bd77-4867-afb4-0b07ea5302d6"}', true);
-INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('2fb8359c-239c-43fa-91f5-1ff2058272a6', '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.604+02', '2020-07-24 15:21:55.7+02', 'orcid', '0000-0003-1838-2441', 'Joanne Pilger', NULL, '{"accessToken": "842de329-ef16-4461-b83b-e8fe57238904", "refreshToken": "524fbdc5-9c67-4b4c-af17-2ce4cf294e88"}', true);
 
