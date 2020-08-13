@@ -22,6 +22,7 @@ import {
   SectionRowGrid,
   SectionRow,
   SectionAction,
+  FormStatus,
 } from '../style'
 
 const NoteDecision = ({ updateReview }) => (
@@ -29,7 +30,6 @@ const NoteDecision = ({ updateReview }) => (
     <Field key="noteField" name="decisionComment">
       {formikBag => (
         <>
-          <p>NoteDecision: {JSON.stringify(formikBag.form.values)}</p>
           <NoteInput updateReview={updateReview} {...formikBag} />
           <FilesUpload
             containerId={formikBag.field.value?.id}
@@ -123,31 +123,46 @@ const RecommendationInput = ({
   )
 }
 
-const DecisionForm = ({ handleSubmit, updateReview, isValid }) => (
-  <Container key="decisionform">
-    <form onSubmit={handleSubmit}>
-      <SectionHeader>
-        <Title>Decision</Title>
-      </SectionHeader>
-      <SectionRow key="note">
-        <NoteDecision updateReview={updateReview} />
-      </SectionRow>
-      <SectionRowGrid>
-        <Field
-          component={RecommendationInput}
-          name="recommendation"
-          updateReview={updateReview}
-          validate={required}
-        />
+const DecisionForm = ({
+  handleSubmit,
+  updateReview,
+  isValid,
+  isSubmitting,
+  submitCount,
+}) => {
+  let status = null
+  if (isSubmitting) {
+    status = 'Your decision is submitting...'
+  } else if (submitCount) {
+    status = 'Your decision has been saved.'
+  }
 
-        <SectionAction key="submit">
-          <Button disabled={!isValid} primary type="submit">
-            Submit
-          </Button>
-        </SectionAction>
-      </SectionRowGrid>
-    </form>
-  </Container>
-)
+  return (
+    <Container key="decisionform">
+      <form onSubmit={handleSubmit}>
+        <SectionHeader>
+          <Title>Decision</Title>
+        </SectionHeader>
+        <SectionRow key="note">
+          <NoteDecision updateReview={updateReview} />
+        </SectionRow>
+        <SectionRowGrid>
+          <Field
+            component={RecommendationInput}
+            name="recommendation"
+            updateReview={updateReview}
+            validate={required}
+          />
+          <FormStatus>{status}</FormStatus>
+          <SectionAction key="submit">
+            <Button disabled={!isValid || isSubmitting} primary type="submit">
+              Submit
+            </Button>
+          </SectionAction>
+        </SectionRowGrid>
+      </form>
+    </Container>
+  )
+}
 
 export default DecisionForm

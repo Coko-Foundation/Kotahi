@@ -12,6 +12,7 @@ describe('Completing a review', () => {
 
     cy.contains('Accept').click()
     cy.contains('Submit').click()
+    cy.contains('Your decision has been saved.')
     cy.visit('/journal/dashboard')
     cy.contains('Accepted')
 

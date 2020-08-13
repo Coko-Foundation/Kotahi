@@ -178,6 +178,8 @@ const decisionSections = ({
   isValid,
   updateReview,
   uploadFile,
+  isSubmitting,
+  submitCount,
 }) => {
   const decisionSections = []
   const manuscriptVersions = manuscript.manuscriptVersions || []
@@ -215,7 +217,9 @@ const decisionSections = ({
         <AdminSection key="decision-form">
           <DecisionForm
             handleSubmit={handleSubmit}
+            isSubmitting={isSubmitting}
             isValid={isValid}
+            submitCount={submitCount}
             updateReview={updateReview}
             uploadFile={uploadFile}
           />
@@ -372,13 +376,22 @@ const DecisionPage = ({ match }) => {
   }
   // const editorSectionsResult = editorSections({ manuscript })
 
+  const sections = props =>
+    decisionSections({
+      manuscript,
+      handleSubmit: props.handleSubmit,
+      isValid: props.isValid,
+      updateReview,
+      isSubmitting: props.isSubmitting,
+      submitCount: props.submitCount,
+    })
+
   return (
     <Columns>
       <Manuscript>
         <Formik
           displayName="decision"
-          enableReinitialize
-          initialValues={existingReview}
+          initialValues={reviewOrInitial(data.manuscript)}
           // isInitialValid={({ manuscript }) => {
           //   const rv =
           //     manuscript.reviews.find(review => review.isDecision) || {}
@@ -387,7 +400,7 @@ const DecisionPage = ({ match }) => {
 
           //   return isCommented && isRecommendation
           // }}
-          onSubmit={() => {
+          onSubmit={() =>
             makeDecision({
               variables: {
                 id: manuscript.id,
@@ -395,7 +408,7 @@ const DecisionPage = ({ match }) => {
                   .recommendation,
               },
             })
-          }}
+          }
           // validate={(values, props) => {
           //   const errors = {}
           //   if (values.decisionComment?.content === '') {
@@ -419,20 +432,8 @@ const DecisionPage = ({ match }) => {
                 title="Versions"
               /> */}
               <Tabs
-                activeKey={
-                  decisionSections({
-                    manuscript,
-                    handleSubmit: props.handleSubmit,
-                    isValid: props.isValid,
-                    updateReview,
-                  })[decisionSections.length - 1].key
-                }
-                sections={decisionSections({
-                  manuscript,
-                  handleSubmit: props.handleSubmit,
-                  isValid: props.isValid,
-                  updateReview,
-                })}
+                activeKey={sections(props)[decisionSections.length - 1].key}
+                sections={sections(props)}
                 title="Versions"
               />
             </>

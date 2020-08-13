@@ -77,6 +77,12 @@ export const Container = styled.div`
   }
 `
 
+export const FormStatus = styled.div`
+  line-height: ${grid(5)};
+  text-align: center;
+  color: ${th('colorSecondary')};
+`
+
 export {
   Title,
   SectionHeader,
