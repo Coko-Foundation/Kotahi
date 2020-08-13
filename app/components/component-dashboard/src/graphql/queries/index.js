@@ -28,9 +28,8 @@ export default {
           id
           role
           name
-          object {
-            objectId
-            objectType
+          manuscript {
+            id
           }
           members {
             id

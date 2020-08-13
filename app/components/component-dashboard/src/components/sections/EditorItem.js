@@ -28,7 +28,7 @@ const EditorItemLinks = ({ version }) => (
     <Action to={`/journal/versions/${version.id}/submit`}>Summary Info</Action>
     <Action
       data-testid="control-panel"
-      to={`/journal/versions/${version.id}/decisions/${version.id}`}
+      to={`/journal/versions/${version.id}/decision`}
     >
       {version.decision && version.decision.status === 'submitted'
         ? `Decision: ${version.decision.recommendation}`

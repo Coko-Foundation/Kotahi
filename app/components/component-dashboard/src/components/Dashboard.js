@@ -41,7 +41,7 @@ const Dashboard = ({ history, ...props }) => {
   })
 
   if (loading) return <Spinner />
-  if (error) return error
+  if (error) return JSON.stringify(error)
   const dashboard = (data && data.manuscripts) || []
   const currentUser = data && data.currentUser
 

@@ -24,7 +24,7 @@ const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
 
       {(status === 'accepted' || status === 'completed') && (
         <ActionGroup>
-          <Action to={`/journal/versions/${version.id}/reviews`}>
+          <Action to={`/journal/versions/${version.id}/review`}>
             {status === 'completed' ? 'Completed' : 'Do Review'}
           </Action>
         </ActionGroup>
