@@ -5,8 +5,6 @@ const { ref } = require('objection')
 const resolvers = {
   Mutation: {
     async createManuscript(_, vars, ctx) {
-      const { Team } = require('@pubsweet/models')
-
       const { meta, files } = vars.input
 
       // We want the submission information to be stored as JSONB
@@ -31,55 +29,38 @@ const resolvers = {
         status: 'new',
         submission,
         submitterId: ctx.user.id,
+        // Create two channels: 1. free for all involved, 2. editorial
+        channels: [
+          {
+            topic: 'Manuscript discussion',
+            type: 'all',
+          },
+          {
+            topic: 'Editorial discussion',
+            type: 'editorial',
+          },
+        ],
+        files: files.map(file =>
+          Object.assign({}, file, {
+            fileType: 'manuscript',
+          }),
+        ),
+        reviews: [],
+        teams: [
+          {
+            role: 'author',
+            name: 'Author',
+            members: [{ user: { id: ctx.user.id } }],
+          },
+        ],
       }
 
-      // eslint-disable-next-line
-      const manuscript = await new ctx.models.Manuscript(
+      const manuscript = await ctx.models.Manuscript.query().upsertGraphAndFetch(
         emptyManuscript,
-      ).saveGraph()
-
-      // Create two channels: 1. free for all involved, 2. editorial
-      const allChannel = new ctx.models.Channel({
-        manuscriptId: manuscript.id,
-        topic: 'Manuscript discussion',
-        type: 'all',
-      }).save()
-
-      const editorialChannel = new ctx.models.Channel({
-        manuscriptId: manuscript.id,
-        topic: 'Editorial discussion',
-        type: 'editorial',
-      }).save()
-
-      manuscript.manuscriptVersions = []
-      manuscript.files = []
-      files.map(async file => {
-        const newFile = Object.assign({}, file, {
-          fileType: 'manuscript',
-          object: 'Manuscript',
-          objectId: manuscript.id,
-        })
-        manuscript.files.push(
-          // eslint-disable-next-line
-          await new ctx.models.File(newFile).save(),
-        )
-      })
-
-      manuscript.reviews = []
-
-      const createdTeam = await Team.query().upsertGraphAndFetch(
-        {
-          role: 'author',
-          name: 'Author',
-          objectId: manuscript.id,
-          objectType: 'Manuscript',
-          members: [{ user: { id: ctx.user.id } }],
-        },
         { relate: true },
       )
 
-      manuscript.teams = [createdTeam]
-      manuscript.channels = [allChannel, editorialChannel]
+      manuscript.manuscriptVersions = []
       return manuscript
     },
     async deleteManuscript(_, { id }, ctx) {
@@ -134,7 +115,7 @@ const resolvers = {
           recommendation: '',
           isDecision: false,
           userId: currentUserId,
-          manuscriptId: team.objectId,
+          manuscriptId: team.manuscriptId,
         }
         await new Review(review).save()
       }
@@ -184,8 +165,7 @@ const resolvers = {
 
       // Create a new team of reviewers if it doesn't exist
       const newTeam = await new ctx.models.Team({
-        objectId: manuscriptId,
-        objectType: 'Manuscript',
+        manuscriptId,
         members: [{ status: 'invited', userId }],
         role: 'reviewer',
         name: 'Reviewers',
@@ -219,7 +199,7 @@ const resolvers = {
 
       const manuscript = await Manuscript.query()
         .findById(id)
-        .eager('[teams, channels, reviews]')
+        .eager('[teams, channels, reviews.[user, comments], files]')
 
       if (!manuscript.meta) {
         manuscript.meta = {}
@@ -235,10 +215,6 @@ const resolvers = {
         },
       ]
       manuscript.decision = ''
-      manuscript.files = await ctx.models.File.findByObject({
-        object: 'Manuscript',
-        object_id: manuscript.id,
-      })
 
       manuscript.manuscriptVersions = await manuscript.getManuscriptVersions()
       // manuscript.channel = await ctx.connectors.Channel.model.find(
