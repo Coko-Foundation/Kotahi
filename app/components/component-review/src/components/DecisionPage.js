@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import moment from 'moment'
 
 import { Tabs } from '@pubsweet/ui'
@@ -15,7 +15,6 @@ import { AdminSection, Columns, Manuscript, Chat } from './style'
 
 import { Spinner } from '../../../shared'
 
-import { getCommentContent } from './review/util'
 import MessageContainer from '../../../component-chat/src'
 
 const addEditor = (manuscript, label) => ({
@@ -24,23 +23,34 @@ const addEditor = (manuscript, label) => ({
   label,
 })
 
+const commentFields = `
+  id
+  commentType
+  content
+  files {
+    id
+    created
+    label
+    filename
+    fileType
+    mimeType
+    size
+    url
+  }
+`
+
 const reviewFields = `
   id
   created
   updated
-  comments {
-    type
-    content
-    files {
-      id
-      created
-      label
-      filename
-      fileType
-      mimeType
-      size
-      url
-    }
+  decisionComment {
+    ${commentFields}
+  }
+  reviewComment {
+    ${commentFields}
+  }
+  confidentialComment {
+    ${commentFields}
   }
   isDecision
   recommendation
@@ -71,9 +81,8 @@ const fragmentFields = `
     id
     name
     role
-    object {
-      objectId
-      objectType
+    manuscript {
+      id
     }
     members {
       id
@@ -153,29 +162,6 @@ const updateReviewMutationQuery = gql`
   }
 `
 
-const uploadReviewFilesMutation = gql`
-  mutation($file: Upload!) {
-    upload(file: $file) {
-      url
-    }
-  }
-`
-
-// const createFileMutation = gql`
-//   mutation($file: Upload!) {
-//     createFile(file: $file) {
-//       id
-//       created
-//       label
-//       filename
-//       fileType
-//       mimeType
-//       size
-//       url
-//     }
-//   }
-// `
-
 const makeDecisionMutation = gql`
   mutation($id: ID!, $decision: String) {
     makeDecision(id: $id, decision: $decision) {
@@ -184,41 +170,6 @@ const makeDecisionMutation = gql`
     }
   }
 `
-
-// const updateCacheForFileCreation = (proxy, { data: { createFile } }) => {
-//   const data = proxy.readQuery({
-//     query,
-//     variables: {
-//       id: match.params.version,
-//     },
-//   })
-
-//   data.manuscript.reviews.map(review => {
-//     if (review.id === file.objectId) {
-//       review.comments.map(comment => {
-//         if (comment.type === createFile.fileType) {
-//           comment.files = [createFile]
-//         }
-//         return comment
-//       })
-//     }
-//     return review
-//   })
-
-//   proxy.writeQuery({ query, data })
-// }
-
-// const createFile = file => {
-
-//   mutate({
-//     variables: {
-//       file,
-//     },
-//     update:
-// },
-
-//
-
 const dateLabel = date => moment(date).format('YYYY-MM-DD')
 
 const decisionSections = ({
@@ -335,20 +286,32 @@ const decisionSections = ({
 
 const DecisionPage = ({ match }) => {
   // Hooks from the old world
-  const [makeDecision] = useMutation(makeDecisionMutation, {
-    // refetchQueries: [query],
-  })
+  const [makeDecision] = useMutation(makeDecisionMutation)
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
-
-  // File upload
-  const [uploadReviewFiles] = useMutation(uploadReviewFilesMutation)
 
   const { loading, error, data } = useQuery(query, {
     variables: {
       id: match.params.version,
     },
-    fetchPolicy: 'network-only',
+    // fetchPolicy: 'cache-and-network',
   })
+
+  const reviewOrInitial = manuscript =>
+    (manuscript &&
+      manuscript.reviews &&
+      manuscript.reviews.find(review => review.isDecision)) || {
+      comments: [],
+      isDecision: true,
+      recommendation: null,
+    }
+
+  // Find an existing review or create a placeholder, and hold a ref to it
+  const existingReview = useRef(reviewOrInitial(data?.manuscript))
+
+  // Update the value of that ref if the manuscript object changes
+  useEffect(() => {
+    existingReview.current = reviewOrInitial(data?.manuscript)
+  }, [data?.manuscript?.reviews])
 
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
@@ -361,41 +324,21 @@ const DecisionPage = ({ match }) => {
     channelId = manuscript.channels.find(c => c.type === 'editorial').id
   }
 
-  const uploadFile = (file, updateReview, type) =>
-    uploadReviewFiles({
-      variables: {
-        file,
-      },
-    }).then(({ data }) => {
-      // const newFile = {
-      //   url: data.upload.url,
-      //   filename: file.name,
-      //   size: file.size,
-      //   object: 'Review',
-      //   objectId: updateReview.id,
-      //   fileType: type,
-      // }
-      // createFile(newFile)
-    })
-
-  const updateReview = (data, file) => {
+  const updateReview = review => {
     const reviewData = {
-      isDecision: true,
+      recommendation: review.recommendation,
       manuscriptId: manuscript.id,
+      isDecision: true,
+      decisionComment: review.decisionComment && {
+        id: existingReview.current.decisionComment?.id,
+        commentType: 'decision',
+        content: review.decisionComment.content,
+      },
     }
 
-    if (data.comment) {
-      reviewData.comments = [data.comment]
-    }
-
-    if (data.recommendation) {
-      reviewData.recommendation = data.recommendation
-    }
-
-    const review = manuscript.reviews.find(review => review.isDecision) || {}
     return updateReviewMutation({
       variables: {
-        id: review.id || undefined,
+        id: existingReview.current.id || undefined,
         input: reviewData,
       },
       update: (cache, { data: { updateReview } }) => {
@@ -427,13 +370,6 @@ const DecisionPage = ({ match }) => {
       },
     })
   }
-
-  const initialValues = (manuscript.reviews &&
-    manuscript.reviews.find(review => review.isDecision)) || {
-    comments: [],
-    recommendation: null,
-  }
-
   // const editorSectionsResult = editorSections({ manuscript })
 
   return (
@@ -441,7 +377,8 @@ const DecisionPage = ({ match }) => {
       <Manuscript>
         <Formik
           displayName="decision"
-          initialValues={initialValues}
+          enableReinitialize
+          initialValues={existingReview}
           // isInitialValid={({ manuscript }) => {
           //   const rv =
           //     manuscript.reviews.find(review => review.isDecision) || {}
@@ -459,17 +396,17 @@ const DecisionPage = ({ match }) => {
               },
             })
           }}
-          validate={(values, props) => {
-            const errors = {}
-            if (getCommentContent(values, 'note') === '') {
-              errors.comments = 'Required'
-            }
+          // validate={(values, props) => {
+          //   const errors = {}
+          //   if (values.decisionComment?.content === '') {
+          //     errors.decisionComment = 'Required'
+          //   }
 
-            if (values.recommendation === null) {
-              errors.recommendation = 'Required'
-            }
-            return errors
-          }}
+          //   if (values.recommendation === null) {
+          //     errors.recommendation = 'Required'
+          //   }
+          //   return errors
+          // }}
         >
           {props => (
             // Temp
@@ -488,7 +425,6 @@ const DecisionPage = ({ match }) => {
                     handleSubmit: props.handleSubmit,
                     isValid: props.isValid,
                     updateReview,
-                    uploadFile,
                   })[decisionSections.length - 1].key
                 }
                 sections={decisionSections({
@@ -496,7 +432,6 @@ const DecisionPage = ({ match }) => {
                   handleSubmit: props.handleSubmit,
                   isValid: props.isValid,
                   updateReview,
-                  uploadFile,
                 })}
                 title="Versions"
               />

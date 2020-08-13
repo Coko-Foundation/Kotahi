@@ -1,23 +1,19 @@
 import React, { useContext } from 'react'
 import { NoteEditor } from 'xpub-edit'
-import { cloneDeep, omit } from 'lodash'
+// import { cloneDeep, omit } from 'lodash'
 import { Field } from 'formik'
 import {
   Button,
-  Flexbox,
+  // Flexbox,
   RadioGroup,
-  UploadButton,
-  UploadingFile,
+  // UploadButton,
+  // UploadingFile,
 } from '@pubsweet/ui'
 import { JournalContext } from '../../../../xpub-journal/src'
 import { required } from '../../../../xpub-validators/src'
+import { FilesUpload } from '../../../../shared'
 
-import {
-  getCommentFiles,
-  getCommentContent,
-  stripHtml,
-  createComments,
-} from '../review/util'
+import { reviewWithComment } from '../review/util'
 
 import {
   Container,
@@ -28,21 +24,45 @@ import {
   SectionAction,
 } from '../style'
 
-const NoteDecision = ({ updateReview, uploadFile }) => (
+const NoteDecision = ({ updateReview }) => (
   <>
-    <Field
+    <Field key="noteField" name="decisionComment">
+      {formikBag => (
+        <>
+          <p>NoteDecision: {JSON.stringify(formikBag.form.values)}</p>
+          <NoteInput updateReview={updateReview} {...formikBag} />
+          <FilesUpload
+            containerId={formikBag.field.value?.id}
+            containerName="reviewComment"
+            fieldName="decisionComment.files"
+            initializeContainer={async () => {
+              const review = reviewWithComment({
+                commentType: 'decision',
+                isDecision: true,
+                values: formikBag.form.values,
+                name: 'decisionComment',
+              })
+              const { data } = await updateReview(review)
+              return data.updateReview.decisionComment.id
+            }}
+          />
+        </>
+      )}
+    </Field>
+    {/* <Field
       component={NoteInput}
       key="commentinput"
       name="comments"
       updateReview={updateReview}
       validate={required}
     />
-    <Field
-      component={AttachmentsInput('note')}
+    <FilesUpload
+      objectType="Review"
+      objectId=
       key="attachmentinput"
+      fileType="note"
       updateReview={updateReview}
-      uploadFile={uploadFile}
-    />
+    /> */}
   </>
 )
 
@@ -51,65 +71,35 @@ const NoteInput = ({
   form: { values, setFieldValue },
   updateReview,
 }) => (
-  <NoteEditor
-    key="note-input"
-    onBlur={() => {}}
-    onChange={value => {
-      const { updateIndex, comment } = createComments(
-        values,
-        {
-          type: 'note',
-          content: stripHtml(value),
-        },
-        'note',
-      )
+  // const review = useState()
 
-      setFieldValue(`comments.${updateIndex}`, comment)
-      updateReview(
-        cloneDeep(omit({ comment }, ['comment.files', 'comment.__typename'])),
-      )
-    }}
-    placeholder="Write/paste your decision letter here, or upload it using the upload button on the right."
-    value={getCommentContent({ comments: field.value }, 'note')}
-  />
-)
+  // const review = useRef({})
 
-const AttachmentsInput = type => ({
-  field,
-  form: { values, setFieldValue },
-  updateReview,
-  uploadFile,
-}) => (
+  // useEffect(() => {
+  //   review.current = reviewWithComment({
+  //     id: values.decisionComment?.id,
+  //     values,
+  //     commentType: 'decision',
+  //     name: 'decisionComment',
+  //     isDecision: true,
+  //   })
+  // }, [values])
+
+  // console.log('Rendering', review.current)
   <>
-    <UploadButton
-      buttonText="↑ Upload files"
-      key="note-attachment"
-      onChange={event => {
-        const val = event.target.files[0]
-        const file = cloneDeep(val)
-        file.filename = val.name
-        file.type = type
-
-        const { updateIndex, comment } = createComments(
-          field.value,
-          { files: [file] },
-          type,
-        )
-
-        setFieldValue(`comments.${updateIndex}.files`, comment.files)
-
-        updateReview({}).then(({ data: { updateReview } }) => {
-          uploadFile(val, updateReview, type)
+    <NoteEditor
+      data-testid="decisionComment"
+      key="note-input"
+      onBlur={() => {}}
+      onChange={value => {
+        // review.current.decisionComment.content = value
+        updateReview({
+          decisionComment: { content: value },
         })
       }}
+      placeholder="Write/paste your decision letter here, or upload it using the upload button on the right."
+      value={field.value?.content || ''}
     />
-    <Flexbox>
-      {getCommentFiles(field.value, 'note').map(val => {
-        const file = cloneDeep(val)
-        file.name = file.filename
-        return <UploadingFile file={file} key={file.name} uploaded />
-      })}
-    </Flexbox>
   </>
 )
 
@@ -133,14 +123,14 @@ const RecommendationInput = ({
   )
 }
 
-const DecisionForm = ({ handleSubmit, uploadFile, updateReview, isValid }) => (
+const DecisionForm = ({ handleSubmit, updateReview, isValid }) => (
   <Container key="decisionform">
     <form onSubmit={handleSubmit}>
       <SectionHeader>
         <Title>Decision</Title>
       </SectionHeader>
       <SectionRow key="note">
-        <NoteDecision updateReview={updateReview} uploadFile={uploadFile} />
+        <NoteDecision updateReview={updateReview} />
       </SectionRow>
       <SectionRowGrid>
         <Field
