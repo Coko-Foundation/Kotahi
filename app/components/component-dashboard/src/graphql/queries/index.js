@@ -15,6 +15,7 @@ export default {
           id
         }
         reviews {
+          id
           open
           recommendation
           created
