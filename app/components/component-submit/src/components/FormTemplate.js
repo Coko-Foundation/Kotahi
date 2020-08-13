@@ -267,8 +267,9 @@ export default ({
             <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
             {element.component === 'SupplementaryFiles' && (
               <FilesUpload
+                containerId={manuscript.id}
+                containerName="manuscript"
                 fileType="supplementary"
-                manuscriptId={manuscript.id}
                 onChange={onChange}
               />
             )}

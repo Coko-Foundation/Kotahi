@@ -1,5 +1,5 @@
 import React from 'react'
-import { cloneDeep } from 'lodash'
+import { cloneDeep, get } from 'lodash'
 import { FieldArray } from 'formik'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
@@ -55,6 +55,7 @@ const DropzoneAndList = ({
   createFile,
   deleteFile,
   fileType,
+  fieldName,
 }) => (
   <>
     <Dropzone
@@ -66,7 +67,7 @@ const DropzoneAndList = ({
       }}
     >
       {({ getRootProps, getInputProps }) => (
-        <Root {...getRootProps()}>
+        <Root {...getRootProps()} data-testid="dropzone">
           <input {...getInputProps()} />
           <Message>
             Drag and drop your files here
@@ -78,8 +79,8 @@ const DropzoneAndList = ({
       )}
     </Dropzone>
     <Files>
-      {cloneDeep(values.files || [])
-        .filter(val => val.fileType === fileType)
+      {cloneDeep(get(values, fieldName) || [])
+        .filter(val => (fileType ? val.fileType === fileType : true))
         .map(val => {
           val.name = val.filename
           return <UploadingFile file={val} key={val.name} uploaded />
@@ -89,18 +90,14 @@ const DropzoneAndList = ({
 )
 
 const FilesUpload = ({
-  objectId,
-  objectType,
   fileType,
-  manuscriptId,
-  reviewCommentId,
+  fieldName = 'files',
+  containerId,
+  containerName,
+  initializeContainer,
 }) => {
   const [createFile] = useMutation(createFileMutation)
   // const [deleteFile] = useMutation(deleteFileMutation)
-
-  if (manuscriptId) {
-    reviewCommentId = null
-  }
 
   const createFileWithMeta = async file => {
     const meta = {
@@ -108,9 +105,12 @@ const FilesUpload = ({
       mimeType: file.type,
       size: file.size,
       fileType,
-      manuscriptId, // one of these two will be null
-      reviewCommentId,
     }
+
+    // Create a container/parent for these files if one doesn't exist
+    const localContainerId = containerId || (await initializeContainer())
+
+    meta[`${containerName}Id`] = localContainerId
 
     const { data } = await createFile({
       variables: {
@@ -123,11 +123,12 @@ const FilesUpload = ({
 
   return (
     <FieldArray
-      name="files"
+      name={fieldName}
       render={formikProps => (
         <DropzoneAndList
           createFile={createFileWithMeta}
           // deleteFile={deleteFile}
+          fieldName={fieldName}
           fileType={fileType}
           {...formikProps}
         />

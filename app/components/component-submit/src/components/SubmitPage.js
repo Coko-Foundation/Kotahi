@@ -25,9 +25,6 @@ const fragmentFields = `
     recommendation
     created
     isDecision
-    comments {
-      content
-    }
     user {
       id
       username
@@ -125,21 +122,6 @@ const updateMutation = gql`
 //   }
 // `
 
-const createFileMutation = gql`
-  mutation($file: Upload!, $meta: FileMetaInput) {
-    createFile(file: $file, meta: $meta) {
-      id
-      created
-      label
-      filename
-      fileType
-      mimeType
-      size
-      url
-    }
-  }
-`
-
 const SubmitPage = ({ match, history, ...props }) => {
   const [confirming, setConfirming] = useState(false)
 
@@ -150,27 +132,6 @@ const SubmitPage = ({ match, history, ...props }) => {
   const { data, loading, error } = useQuery(query, {
     variables: { id: match.params.version, form: 'submit' },
   })
-
-  const [createFile] = useMutation(createFileMutation)
-
-  const createSupplementaryFile = async file => {
-    const meta = {
-      filename: file.name,
-      mimeType: file.type,
-      size: file.size,
-      fileType: 'supplementary',
-      object: 'Manuscript',
-      objectId: match.params.version,
-    }
-
-    const { data } = await createFile({
-      variables: {
-        file,
-        meta,
-      },
-    })
-    return data
-  }
 
   const [update] = useMutation(updateMutation)
 
@@ -227,7 +188,6 @@ const SubmitPage = ({ match, history, ...props }) => {
       {props => (
         <Submit
           confirming={confirming}
-          createSupplementaryFile={createSupplementaryFile}
           forms={cloneDeep(getFile)}
           manuscript={manuscript}
           onChange={handleChange}
