@@ -10,30 +10,33 @@ class Review extends BaseModel {
     this.type = 'Review'
   }
 
-  async user() {
-    const { User } = require('@pubsweet/models')
-    return User.find(this.userId)
-  }
+  // async user() {
+  //   const { User } = require('@pubsweet/models')
+  //   return User.find(this.userId)
+  // }
 
-  async getComments() {
-    const File = require('../../model-file/src/file')
+  // async getComments() {
+  //   const File = require('../../model-file/src/file')
 
-    await Promise.all(
-      (this.comments || []).map(async comment => {
-        const files = await File.query().where({
-          objectType: 'Review',
-          objectId: this.id,
-        })
-        const commentFile = files.find(file => file.fileType === comment.type)
-        if (commentFile) {
-          comment.files = [commentFile]
-        }
-        return comment
-      }),
-    )
+  //   await Promise.all(
+  //     (this.comments || []).map(async comment => {
+  //       const files = await File.query().where({
+  //         objectType: 'Review',
+  //         objectId: this.id,
+  //       })
+  //       const commentFile = files.find(file => file.fileType === comment.type)
+  //       if (commentFile) {
+  //         comment.files = [commentFile]
+  //       }
+  //       return comment
+  //     }),
+  //   )
 
-    this.user = this.user()
-    return this.comments
+  //   this.user = this.user()
+  //   return this.comments
+  // }
+  static get relatedFindQueryMutates() {
+    return false
   }
 
   static get schema() {
@@ -44,15 +47,12 @@ class Review extends BaseModel {
         userId: { type: 'string', format: 'uuid' },
         user: { type: ['object', 'null'] },
         isDecision: { type: ['boolean', 'false'] },
-        comments: {
-          type: ['array', 'null'],
-        },
       },
     }
   }
 
   static get relationMappings() {
-    const { Manuscript, User } = require('@pubsweet/models')
+    const { Manuscript, User, ReviewComment } = require('@pubsweet/models')
 
     return {
       manuscript: {
@@ -71,21 +71,46 @@ class Review extends BaseModel {
           to: 'users.id',
         },
       },
+      comments: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: ReviewComment,
+        join: {
+          from: 'review_comments.reviewId',
+          to: 'reviews.id',
+        },
+      },
     }
   }
 
-  async $beforeDelete() {
-    const File = require('../../model-file/src/file')
-    const files = await File.query().where({
-      objectId: this.id,
-      objectType: 'Review',
-    })
-    if (files.length > 0) {
-      files.forEach(async fl => {
-        await new File(fl).delete()
-      })
+  async $afterGet() {
+    if (this.isDecision) {
+      this.decisionComment = await this.$relatedQuery('comments')
+        .where('commentType', 'decision')
+        .first()
+    } else {
+      this.reviewComment = await this.$relatedQuery('comments')
+        .where('commentType', 'review')
+        .first()
+
+      this.confidentialComment = await this.$relatedQuery('comments')
+        .where('commentType', 'confidential')
+        .first()
     }
+    return true
   }
+
+  // async $beforeDelete() {
+  //   const File = require('../../model-file/src/file')
+  //   const files = await File.query().where({
+  //     objectId: this.id,
+  //     objectType: 'Review',
+  //   })
+  //   if (files.length > 0) {
+  //     files.forEach(async fl => {
+  //       await new File(fl).delete()
+  //     })
+  //   }
+  // }
 }
 
 Review.type = 'Review'

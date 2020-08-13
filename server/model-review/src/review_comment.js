@@ -42,31 +42,13 @@ class ReviewComment extends BaseModel {
         },
       },
       files: {
-        relation: BaseModel.ManyToManyRelation,
+        relation: BaseModel.HasManyRelation,
         modelClass: File,
         join: {
           from: 'review_comments.id',
-          through: {
-            from: 'fileables.review_comment_id',
-            to: 'fileables.file_id',
-          },
-          to: 'files.id',
+          to: 'files.review_comment_id',
         },
       },
-    }
-  }
-
-  async $beforeDelete() {
-    // TODO: Do this with ON DELETE CASCADE?
-    const File = require('../../model-file/src/file')
-    const files = await File.query().where({
-      objectId: this.id,
-      objectType: 'ReviewComment',
-    })
-    if (files.length > 0) {
-      files.forEach(async fl => {
-        await new File(fl).delete()
-      })
     }
   }
 }
