@@ -16,9 +16,8 @@ const teamFields = `
   id
   name
   role
-  object {
-    objectId
-    objectType
+  manuscript {
+    id
   }
   members {
     id
@@ -81,7 +80,7 @@ const AssignEditor = ({
       }
     }}
     options={options}
-    placeholder="Assign an editor…"
+    placeholder={`Assign ${teamName}…`}
     value={value}
   />
 )
@@ -113,8 +112,7 @@ export default compose(
     props: ({ mutate, ownProps }) => {
       const createTeam = (userId, teamRole) => {
         const input = {
-          objectId: ownProps.manuscript.id,
-          objectType: 'Manuscript',
+          manuscriptId: ownProps.manuscript.id,
           name:
             teamRole === 'seniorEditor' ? 'Senior Editor' : 'Handling Editor',
           role: teamRole,

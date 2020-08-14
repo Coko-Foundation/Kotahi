@@ -62,6 +62,20 @@ describe('URL submission test', () => {
         'https://doi.org/10.6084/m9.figshare.913521.v1, https://github.com/jure/mathtype_to_mathml',
       )
 
+    // Supplementary file upload
+    cy.fixture('test-pdf.pdf', 'base64').then(fileContent => {
+      cy.get('[data-testid="dropzone"]').attachFile(
+        'test-pdf.pdf',
+        // {
+        //   fileContent,
+        //   fileName: 'test-pdf.pdf',
+        //   encoding: 'base64',
+        //   mimeType: 'application/pdf',
+        // },
+        { subjectType: 'drag-n-drop' },
+      )
+    })
+
     cy.get('[data-testid="submission.keywords"]')
       .click()
       .type('some, keywords')
@@ -144,7 +158,7 @@ describe('URL submission test', () => {
 
     cy.contains('Control Panel').click()
     cy.contains('This is my data and code availability statement')
-
+    cy.contains('test-pdf.pdf')
     cy.task('dump', 'senior_editor_assigned')
   })
 })

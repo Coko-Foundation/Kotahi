@@ -29,20 +29,10 @@ const getUserFromTeam = (version, role) => {
 }
 
 const countStatus = (version, status) => {
-  const teamMember = getUserFromTeam(version, 'reviewer')
-
-  if (status === 'rejected' || status === 'invited') {
-    return sumBy(teamMember, member => (member.status === status ? 1 : 0))
+  const teamMembers = getUserFromTeam(version, 'reviewer')
+  if (teamMembers) {
+    return sumBy(teamMembers, member => (member.status === status ? 1 : 0))
   }
-
-  if (status === 'accepted') {
-    return sumBy(version.reviews, review => (review.recommendation ? 0 : 1))
-  }
-
-  if (status === 'completed') {
-    return sumBy(version.reviews, review => (review.recommendation ? 1 : 0))
-  }
-
   return 0
 }
 

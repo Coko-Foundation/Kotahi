@@ -15,7 +15,7 @@ const getCompletedReviews = (manuscript, currentUser) => {
   if (!team.members) {
     return null
   }
-  const currentMember = team.members.find(m => m.user.id === currentUser.id)
+  const currentMember = team.members.find(m => m.user?.id === currentUser?.id)
   return currentMember && currentMember.status
 }
 

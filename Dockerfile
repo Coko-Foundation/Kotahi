@@ -1,4 +1,4 @@
-FROM node:12
+FROM cypress/browsers:node12.18.0-chrome83-ff77
 
 ENV HOME "/home/simplej"
 RUN mkdir -p ${HOME}
@@ -6,18 +6,19 @@ WORKDIR ${HOME}
 
 ENV NODE_ENV "development"
 
-# Install dependencies for Cypress
-RUN apt-get -y update && apt-get -y install xvfb libgtk-3-dev libnotify-dev libgconf-2-4 libnss3 libxss1 libasound2
-
-COPY . .
+# Only copy things needed for the yarn install
+COPY package.json yarn.lock ./
 
 # We do a development install because react-styleguidist is a dev dependency and we want to run tests
 RUN [ "yarn", "install", "--frozen-lockfile" ]
 
 ENV NODE_ENV ${NODE_ENV}
 
-RUN [ "npx", "pubsweet", "build"]
+# Disabling the build for now, as it runs in the test server again
+# RUN [ "npx", "pubsweet", "build"]
 
+# The copy everything else that changes frequently
+COPY . .
 EXPOSE ${PORT}
 
 CMD []

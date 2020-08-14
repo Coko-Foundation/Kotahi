@@ -1,17 +1,10 @@
 import React, { useContext } from 'react'
-import { cloneDeep, set } from 'lodash'
 import { Field } from 'formik'
 import { NoteEditor } from 'xpub-edit'
-import {
-  Button,
-  Flexbox,
-  RadioGroup,
-  UploadButton,
-  UploadingFile,
-} from '@pubsweet/ui'
+import { Button, RadioGroup } from '@pubsweet/ui'
 
 import { JournalContext } from '../../../../xpub-journal/src'
-import { getCommentFiles, stripHtml, createComments } from './util'
+import { reviewWithComment } from './util'
 import {
   AdminSection,
   Container,
@@ -21,46 +14,47 @@ import {
   SectionRow,
   SectionAction,
 } from '../style'
+import { FilesUpload } from '../../../../shared'
 
-const AttachmentsInput = ({
-  field,
-  form: { values },
-  updateReview,
-  uploadFile,
-  type,
-}) => (
-  <>
-    <UploadButton
-      buttonText="↑ Upload files"
-      onChange={event => {
-        const val = event.target.files[0]
-        const file = cloneDeep(val)
-        file.filename = val.name
-        file.type = type
+// const AttachmentsInput = ({
+//   field,
+//   form: { values },
+//   updateReview,
+//   uploadFile,
+//   type,
+// }) => (
+//   <>
+//     <UploadButton
+//       buttonText="↑ Upload files"
+//       onChange={event => {
+//         const val = event.target.files[0]
+//         const file = cloneDeep(val)
+//         file.filename = val.name
+//         file.type = type
 
-        const { updateIndex, comment } = createComments(
-          values,
-          { files: [file] },
-          type,
-        )
+//         const { updateIndex, comment } = createComments(
+//           values,
+//           { files: [file] },
+//           type,
+//         )
 
-        const data = cloneDeep(values)
-        set(data, `comments.${updateIndex}`, comment)
+//         const data = cloneDeep(values)
+//         set(data, `comments.${updateIndex}`, comment)
 
-        updateReview(data).then(({ data: { updateReview } }) => {
-          uploadFile(val, updateReview, type)
-        })
-      }}
-    />
-    <Flexbox>
-      {getCommentFiles(values, type).map(val => {
-        const file = cloneDeep(val)
-        file.name = file.filename
-        return <UploadingFile file={file} key={file.name} uploaded />
-      })}
-    </Flexbox>
-  </>
-)
+//         updateReview(data).then(({ data: { updateReview } }) => {
+//           uploadFile(val, updateReview, type)
+//         })
+//       }}
+//     />
+//     <Flexbox>
+//       {getCommentFiles(values, type).map(val => {
+//         const file = cloneDeep(val)
+//         file.name = file.filename
+//         return <UploadingFile file={file} key={file.name} uploaded />
+//       })}
+//     </Flexbox>
+//   </>
+// )
 
 const NoteInput = ({
   field,
@@ -69,26 +63,22 @@ const NoteInput = ({
   ...rest
 }) => (
   <NoteEditor
+    data-testid="reviewComment"
     key="note-comment"
     placeholder="Enter your review…"
     title="Comments to the Author"
     {...field}
     onBlur={value => {
-      const { comment } = createComments(
-        values,
-        {
-          type: 'note',
-          content: stripHtml(value),
-        },
-        'note',
-      )
-
-      setFieldValue(`comments.0`, comment)
-      const data = cloneDeep(values)
-      set(data, `comments.0`, comment)
-      updateReview(data)
+      // const review = reviewWithComment({
+      //   id: values.reviewComment?.id,
+      //   value,
+      //   values,
+      //   commentType: 'review',
+      //   name: 'reviewComment',
+      // })
+      updateReview({ reviewComment: { content: value } })
     }}
-    value={field.value || ''}
+    value={field.value?.content || ''}
   />
 )
 
@@ -98,26 +88,22 @@ const ConfidentialInput = ({
   updateReview,
 }) => (
   <NoteEditor
+    data-testid="confidentialComment"
     key="confidential-comment"
     placeholder="Enter a confidential note to the editor (optional)…"
     title="Confidential Comments to Editor (Optional)"
     {...field}
     onBlur={value => {
-      const { comment } = createComments(
-        values,
-        {
-          type: 'confidential',
-          content: stripHtml(value),
-        },
-        'confidential',
-      )
-
-      setFieldValue(`comments.1`, comment)
-      const data = cloneDeep(values)
-      set(data, `comments.1`, comment)
-      updateReview(data)
+      // const review = reviewWithComment({
+      //   id: values.confidentialComment?.id,
+      //   value,
+      //   values,
+      //   commentType: 'confidential',
+      //   name: 'confidentialComment',
+      // })
+      updateReview({ confidentialComment: { content: value } })
     }}
-    value={field.value || ''}
+    value={field.value?.content || ''}
   />
 )
 
@@ -127,39 +113,76 @@ const RecommendationInput = ({ field, form: { values }, updateReview }) => {
     <RadioGroup
       inline
       {...field}
+      data-testid="recommendation"
       onChange={val => {
-        const data = cloneDeep(values)
-        set(data, 'recommendation', val)
-        updateReview(data)
+        updateReview({ recommendation: val })
       }}
       options={journal.recommendations}
     />
   )
 }
-const ReviewComment = props => (
+const ReviewComment = ({ updateReview }) => (
   <>
     <AdminSection>
       <div name="note">
-        <Field key="noteField" name="comments.0.content">
-          {extraProps => <NoteInput {...props} {...extraProps} />}
-        </Field>
-        <Field
-          component={extraProps => (
-            <AttachmentsInput type="note" {...props} {...extraProps} />
+        <Field key="noteField" name="reviewComment">
+          {formikBag => (
+            <>
+              <NoteInput updateReview={updateReview} {...formikBag} />
+              <FilesUpload
+                containerId={formikBag.field.value?.id}
+                containerName="reviewComment"
+                fieldName="reviewComment.files"
+                initializeContainer={async () => {
+                  // If the container for the uploaded files is not present,
+                  // we have to create it. InitializeContainer will be called
+                  // if containerId is undefined
+                  const review = reviewWithComment({
+                    commentType: 'review',
+                    values: formikBag.form.values,
+                    name: 'reviewComment',
+                  })
+                  // This is an upsert
+                  const { data } = await updateReview(review)
+                  // And we the return the file container id, so
+                  // that we have somewhere to attach uploaded files
+                  return data.updateReview.reviewComment.id
+                }}
+              />
+            </>
           )}
-        />
+        </Field>
       </div>
     </AdminSection>
     <AdminSection>
       <div name="confidential">
-        <Field key="confidentialField" name="comments.1.content">
-          {extraProps => <ConfidentialInput {...props} {...extraProps} />}
-        </Field>
-        <Field
-          component={extraProps => (
-            <AttachmentsInput type="confidential" {...props} {...extraProps} />
+        <Field key="confidentialField" name="confidentialComment">
+          {formikBag => (
+            <>
+              <ConfidentialInput updateReview={updateReview} {...formikBag} />
+              <FilesUpload
+                containerId={formikBag.field.value?.id}
+                containerName="reviewComment"
+                fieldName="confidentialComment.files"
+                initializeContainer={async () => {
+                  // If the container for the uploaded files is not present,
+                  // we have to create it. InitializeContainer will be called
+                  // if containerId is undefined
+                  const review = reviewWithComment({
+                    commentType: 'confidential',
+                    values: formikBag.form.values,
+                    name: 'confidentialComment',
+                  })
+                  // This is an upsert
+                  const { data } = await updateReview(review)
+                  // And we the return the file container id, so
+                  // that we have somewhere to attach uploaded files
+                  return data.updateReview.confidentialComment.id
+                }}
+              />
+            </>
           )}
-        />
+        </Field>
       </div>
     </AdminSection>
   </>
@@ -181,11 +204,7 @@ const ReviewForm = ({
           <Title>Review</Title>
         </SectionHeader>
         <SectionRow key="note">
-          <ReviewComment
-            review={review}
-            updateReview={updateReview}
-            uploadFile={uploadFile}
-          />
+          <ReviewComment review={review} updateReview={updateReview} />
         </SectionRow>
         <SectionHeader>
           <Title>Recommendation</Title>

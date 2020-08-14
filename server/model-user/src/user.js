@@ -79,22 +79,17 @@ class User extends BaseModel {
     }
   }
 
-  // // eslint-disable-next-line class-methods-use-this
-  // setOwners() {
-  //   // FIXME: this is overriden to be a no-op, because setOwners() is called by
-  //   // the API on create for all entity types and setting `owners` on a User is
-  //   // not allowed. This should instead be solved by having separate code paths
-  //   // in the API for different entity types.
-  // }
-
   // This gives a view of the teams and team member structure to reflect
   // the current roles the user is performing. E.g. if they are a member
   // of a reviewer team and have the status of 'accepted', they will
   // have a 'accepted:reviewer' role present in the returned object
-  async currentRoles(object) {
+  async currentRoles(manuscript) {
     let teams
-    if (object && object.id) {
-      teams = await this.$relatedQuery('teams').where('objectId', object.id)
+    if (manuscript && manuscript.id) {
+      teams = await this.$relatedQuery('teams').where(
+        'manuscriptId',
+        manuscript.id,
+      )
     } else {
       teams = await this.$relatedQuery('teams')
     }
@@ -104,10 +99,10 @@ class User extends BaseModel {
       const role = `${t.status ? `${t.status}:` : ''}${t.role}`
 
       // If there's an existing role for this object, add to the list
-      if (t.objectId && Array.isArray(roles[t.objectId])) {
-        roles[t.objectId].push(role)
-      } else if (t.objectId) {
-        roles[t.objectId] = [role]
+      if (t.manuscriptId && Array.isArray(roles[t.manuscriptId])) {
+        roles[t.manuscriptId].push(role)
+      } else if (t.manuscriptId) {
+        roles[t.manuscriptId] = [role]
       }
     })
     return Object.keys(roles).map(id => ({ id, roles: roles[id] }))

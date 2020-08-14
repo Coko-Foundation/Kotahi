@@ -1,6 +1,7 @@
 import config from 'config'
 import request from 'pubsweet-client/src/helpers/api'
 import gql from 'graphql-tag'
+import currentRolesVar from '../../../shared/currentRolesVar'
 
 const generateTitle = name =>
   name
@@ -35,9 +36,8 @@ const createManuscriptMutation = gql`
         id
         role
         name
-        object {
-          objectId
-          objectType
+        manuscript {
+          id
         }
         members {
           id
@@ -154,6 +154,11 @@ const createManuscriptPromise = (
     mutation: createManuscriptMutation,
     variables: { input: manuscript },
     update: (cache, { data: { createManuscript } }) => {
+      const currentRoles = currentRolesVar()
+      currentRolesVar([
+        ...currentRoles,
+        { id: createManuscript.id, roles: ['author'] },
+      ])
       cache.modify({
         fields: {
           manuscripts(existingManuscriptRefs = []) {

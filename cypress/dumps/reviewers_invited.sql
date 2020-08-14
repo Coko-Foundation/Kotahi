@@ -145,9 +145,9 @@ CREATE TABLE public.aliases (
     id uuid NOT NULL,
     created timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
     updated timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
-    name character varying(255),
-    email character varying(255),
-    aff character varying(255)
+    name text,
+    email text,
+    aff text
 );
 
 
@@ -175,7 +175,6 @@ ALTER TABLE public.channel_members OWNER TO test;
 CREATE TABLE public.channels (
     id uuid NOT NULL,
     manuscript_id uuid,
-    team_id uuid,
     created timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated timestamp with time zone,
     topic text,
@@ -205,15 +204,16 @@ CREATE TABLE public.files (
     id uuid NOT NULL,
     created timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated timestamp with time zone,
-    object text,
-    object_id uuid,
     label text,
     file_type text,
     filename text,
     url text,
     mime_type text,
     size integer,
-    type text NOT NULL
+    type text NOT NULL,
+    manuscript_id uuid,
+    review_comment_id uuid,
+    CONSTRAINT exactly_one_file_owner CHECK (((((manuscript_id IS NOT NULL))::integer + ((review_comment_id IS NOT NULL))::integer) = 1))
 );
 
 
@@ -290,6 +290,24 @@ CREATE TABLE public.migrations (
 ALTER TABLE public.migrations OWNER TO test;
 
 --
+-- Name: review_comments; Type: TABLE; Schema: public; Owner: test
+--
+
+CREATE TABLE public.review_comments (
+    id uuid NOT NULL,
+    created timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated timestamp with time zone,
+    review_id uuid,
+    user_id uuid,
+    content text,
+    comment_type text,
+    type text
+);
+
+
+ALTER TABLE public.review_comments OWNER TO test;
+
+--
 -- Name: reviews; Type: TABLE; Schema: public; Owner: test
 --
 
@@ -299,7 +317,6 @@ CREATE TABLE public.reviews (
     updated timestamp with time zone,
     recommendation text,
     is_decision boolean DEFAULT false,
-    comments jsonb,
     user_id uuid,
     manuscript_id uuid,
     type text NOT NULL
@@ -335,11 +352,11 @@ CREATE TABLE public.teams (
     updated timestamp with time zone,
     name text,
     role text NOT NULL,
+    members jsonb,
     owners jsonb,
     global boolean,
     type text NOT NULL,
-    object_id uuid,
-    object_type character varying(255)
+    manuscript_id uuid
 );
 
 
@@ -403,8 +420,8 @@ INSERT INTO pgboss.version (version) VALUES ('11');
 -- Data for Name: channels; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.channels (id, manuscript_id, team_id, created, updated, topic, type) VALUES ('466f49f5-f4ca-46ca-82ca-693212ca9ba2', 'fb2534c6-ecbb-4846-a61d-609dc119e9b0', NULL, '2020-07-28 00:41:34.01+02', '2020-07-28 00:41:34.01+02', 'Editorial discussion', 'editorial');
-INSERT INTO public.channels (id, manuscript_id, team_id, created, updated, topic, type) VALUES ('d24525e7-f36e-4f5e-b0cb-e05ef0ea9062', 'fb2534c6-ecbb-4846-a61d-609dc119e9b0', NULL, '2020-07-28 00:41:34.011+02', '2020-07-28 00:41:34.011+02', 'Manuscript discussion', 'all');
+INSERT INTO public.channels (id, manuscript_id, created, updated, topic, type) VALUES ('afd95c06-011b-46e3-9985-964283d51c4a', '93735475-08f6-436b-9db3-fe2364b9dbb2', '2020-08-12 16:16:44.916+02', '2020-08-12 16:16:44.916+02', 'Manuscript discussion', 'all');
+INSERT INTO public.channels (id, manuscript_id, created, updated, topic, type) VALUES ('75540565-6619-495f-a8c5-d6bf11ece72d', '93735475-08f6-436b-9db3-fe2364b9dbb2', '2020-08-12 16:16:44.916+02', '2020-08-12 16:16:44.916+02', 'Editorial discussion', 'editorial');
 
 
 --
@@ -436,7 +453,7 @@ INSERT INTO public.identities (id, user_id, created, updated, type, identifier, 
 -- Data for Name: manuscripts; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.manuscripts (id, created, updated, parent_id, submitter_id, status, decision, authors, suggestions, meta, submission, type) VALUES ('fb2534c6-ecbb-4846-a61d-609dc119e9b0', '2020-07-28 00:41:33.983+02', '2020-07-28 00:42:03.231+02', NULL, '027afa6a-edbc-486e-bb31-71e12f8ea1c5', 'submitted', NULL, NULL, NULL, '{"notes": [{"content": "", "notesType": "fundingAcknowledgement"}, {"content": "", "notesType": "specialInstructions"}], "title": "My URL submission"}', '{"irb": "yes", "name": "Emily Clay", "cover": "This is my cover letter", "links": "https://doi.org/10.6084/m9.figshare.913521.v1, https://github.com/jure/mathtype_to_mathml", "contact": "emily@example.com", "methods": ["Functional MRI", "Optical Imaging"], "datacode": "This is my data and code availability statement", "humanMRI": "3T", "keywords": "some, keywords", "packages": ["SPM", "FSL"], "subjects": "patients", "suggested": "Erica James, Matthew Matretzky", "objectType": "software", "affiliation": "Example University, Egland", "otherMethods": "Erica James, Matthew Matretzk", "humanMRIother": "7T", "otherPackages": "Jupyter, Stencila", "animal_research_approval": "yes"}', 'Manuscript');
+INSERT INTO public.manuscripts (id, created, updated, parent_id, submitter_id, status, decision, authors, suggestions, meta, submission, type) VALUES ('93735475-08f6-436b-9db3-fe2364b9dbb2', '2020-08-12 16:16:44.9+02', '2020-08-12 16:17:12.499+02', NULL, '027afa6a-edbc-486e-bb31-71e12f8ea1c5', 'submitted', NULL, NULL, NULL, '{"notes": [{"content": "", "notesType": "fundingAcknowledgement"}, {"content": "", "notesType": "specialInstructions"}], "title": "My URL submission"}', '{"irb": "yes", "name": "Emily Clay", "cover": "This is my cover letter", "links": "https://doi.org/10.6084/m9.figshare.913521.v1, https://github.com/jure/mathtype_to_mathml", "ethics": "This is my ethics statement", "contact": "emily@example.com", "methods": ["Functional MRI", "Optical Imaging"], "datacode": "This is my data and code availability statement", "humanMRI": "3T", "keywords": "some, keyword", "packages": ["SPM", "FSL"], "subjects": "patients", "suggested": "Erica James, Matthew Matretzky", "objectType": "software", "affiliation": "Example University, Egland", "otherMethods": "Erica James, Matthew Matretzky", "humanMRIother": "7T", "otherPackages": "Jupyter, Stencila", "animal_research_approval": "yes"}', 'Manuscript');
 
 
 --
@@ -449,24 +466,27 @@ INSERT INTO public.manuscripts (id, created, updated, parent_id, submitter_id, s
 -- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.migrations (id, run_at) VALUES ('1524494862-entities.sql', '2020-07-21 16:01:00.856209+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1537450834-files.sql', '2020-07-21 16:01:00.866487+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1537450834-review.sql', '2020-07-21 16:01:00.876573+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1542276313-initial-user-migration.sql', '2020-07-21 16:01:00.887088+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1542801241-initial-team-migration.sql', '2020-07-21 16:01:00.898301+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1547596236-initial-team-member-migration.js', '2020-07-21 16:01:00.954317+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1548205275-move-members.js', '2020-07-21 16:01:01.009825+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1548205276-simplify-object.js', '2020-07-21 16:01:01.025532+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1548328420-add-alias-migration.js', '2020-07-21 16:01:01.068783+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1560771823-add-unique-constraints-to-users.sql', '2020-07-21 16:01:01.078878+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1580908536-add-identities.sql', '2020-07-21 16:01:01.092107+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1581371297-migrate-users-to-identities.js', '2020-07-21 16:01:01.107057+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1581450834-manuscript.sql', '2020-07-21 16:01:01.118725+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1582930582-drop-fragments-and-collections.js', '2020-07-21 16:01:01.12668+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1585323910-add-channels.sql', '2020-07-21 16:01:01.14497+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1585344885-add-messages.sql', '2020-07-21 16:01:01.15657+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1585513226-add-profile-pic.sql', '2020-07-21 16:01:01.162443+02');
-INSERT INTO public.migrations (id, run_at) VALUES ('1592915682-change-identities-constraint.sql', '2020-07-21 16:01:01.17359+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1524494862-entities.sql', '2020-08-12 14:59:10.439327+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1542276313-initial-user-migration.sql', '2020-08-12 14:59:10.452184+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1560771823-add-unique-constraints-to-users.sql', '2020-08-12 14:59:10.463129+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1580908536-add-identities.sql', '2020-08-12 14:59:10.477935+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1581371297-migrate-users-to-identities.js', '2020-08-12 14:59:10.499722+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1581450834-manuscript.sql', '2020-08-12 14:59:10.509542+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1582930582-drop-fragments-and-collections.js', '2020-08-12 14:59:10.519573+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1585323910-add-channels.sql', '2020-08-12 14:59:10.533012+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1585344885-add-messages.sql', '2020-08-12 14:59:10.544214+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1585513226-add-profile-pic.sql', '2020-08-12 14:59:10.549847+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1592915682-change-identities-constraint.sql', '2020-08-12 14:59:10.558714+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1596830547-review.sql', '2020-08-12 14:59:10.571826+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1596830548-add-review-comments.sql', '2020-08-12 14:59:10.583466+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1596830548-initial-team-migration.sql', '2020-08-12 14:59:10.611618+02');
+INSERT INTO public.migrations (id, run_at) VALUES ('1596838897-files.sql', '2020-08-12 14:59:10.627188+02');
+
+
+--
+-- Data for Name: review_comments; Type: TABLE DATA; Schema: public; Owner: test
+--
+
 
 
 --
@@ -479,20 +499,20 @@ INSERT INTO public.migrations (id, run_at) VALUES ('1592915682-change-identities
 -- Data for Name: team_members; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('af28eb3b-495e-485d-879d-4d609e146dc6', '2020-07-28 00:41:34.024+02', '2020-07-28 00:41:34.024+02', NULL, '0ecdfc46-2400-4818-8623-ee29ad2102cf', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('39066380-96b2-408e-8329-4ff3833f06be', '2020-07-28 00:42:07.541+02', '2020-07-28 00:42:07.541+02', NULL, '6eb1044b-1d8a-4d07-a84d-a167f152a5bf', '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('9927026f-4ffa-4805-bc00-cb9b097b7df4', '2020-07-28 00:45:13.354+02', '2020-07-28 00:45:13.354+02', 'invited', 'b107739f-9c14-4f89-9303-229dbfbd2140', '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('e69ca277-c295-44aa-a657-af0c7437840e', '2020-07-28 00:45:14.037+02', '2020-07-28 00:45:14.037+02', 'invited', 'b107739f-9c14-4f89-9303-229dbfbd2140', '0da0bbec-9261-4706-b990-0c10aa3cc6b4', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('2e64054b-6a0a-4768-9b37-8638b618141e', '2020-07-28 00:45:14.852+02', '2020-07-28 00:45:14.852+02', 'invited', 'b107739f-9c14-4f89-9303-229dbfbd2140', '85e1300e-003c-4e96-987b-23812f902477', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('6505126d-2ecd-498b-a27d-18eafbdbc8a6', '2020-08-12 16:16:44.923+02', '2020-08-12 16:16:44.923+02', NULL, 'c31e3116-6176-45b5-b52c-6f7cbfc86007', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('031ae180-e94e-458d-86b7-f2dc1d456e2e', '2020-08-12 16:17:14.795+02', '2020-08-12 16:17:14.795+02', NULL, 'bf800912-56c4-44eb-b425-64e51a9824fe', '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('c4ac4fc0-3fae-43b0-89ee-bf7f8fd9885f', '2020-08-12 16:17:43.262+02', '2020-08-12 16:17:43.262+02', 'invited', '0719d132-bb6c-49d9-9122-7911a48cfd60', '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('69e896c6-0fdb-421d-a638-1ef7670c03c9', '2020-08-12 16:17:43.884+02', '2020-08-12 16:17:43.884+02', 'invited', '0719d132-bb6c-49d9-9122-7911a48cfd60', '0da0bbec-9261-4706-b990-0c10aa3cc6b4', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('12c33ef5-4fc3-4d48-8309-a90c0461113c', '2020-08-12 16:17:44.547+02', '2020-08-12 16:17:44.547+02', 'invited', '0719d132-bb6c-49d9-9122-7911a48cfd60', '85e1300e-003c-4e96-987b-23812f902477', NULL);
 
 
 --
 -- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.teams (id, created, updated, name, role, owners, global, type, object_id, object_type) VALUES ('0ecdfc46-2400-4818-8623-ee29ad2102cf', '2020-07-28 00:41:34.01+02', '2020-07-28 00:41:34.01+02', 'Author', 'author', NULL, NULL, 'team', 'fb2534c6-ecbb-4846-a61d-609dc119e9b0', 'Manuscript');
-INSERT INTO public.teams (id, created, updated, name, role, owners, global, type, object_id, object_type) VALUES ('6eb1044b-1d8a-4d07-a84d-a167f152a5bf', '2020-07-28 00:42:07.533+02', '2020-07-28 00:42:07.533+02', 'Senior Editor', 'seniorEditor', NULL, NULL, 'team', 'fb2534c6-ecbb-4846-a61d-609dc119e9b0', 'Manuscript');
-INSERT INTO public.teams (id, created, updated, name, role, owners, global, type, object_id, object_type) VALUES ('b107739f-9c14-4f89-9303-229dbfbd2140', '2020-07-28 00:45:13.348+02', '2020-07-28 00:45:13.348+02', 'Reviewers', 'reviewer', NULL, NULL, 'team', 'fb2534c6-ecbb-4846-a61d-609dc119e9b0', 'Manuscript');
+INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('c31e3116-6176-45b5-b52c-6f7cbfc86007', '2020-08-12 16:16:44.916+02', '2020-08-12 16:16:44.916+02', 'Author', 'author', NULL, NULL, NULL, 'team', '93735475-08f6-436b-9db3-fe2364b9dbb2');
+INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('bf800912-56c4-44eb-b425-64e51a9824fe', '2020-08-12 16:17:14.789+02', '2020-08-12 16:17:14.789+02', 'Senior Editor', 'seniorEditor', NULL, NULL, NULL, 'team', '93735475-08f6-436b-9db3-fe2364b9dbb2');
+INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('0719d132-bb6c-49d9-9122-7911a48cfd60', '2020-08-12 16:17:43.258+02', '2020-08-12 16:17:43.258+02', 'Reviewers', 'reviewer', NULL, NULL, NULL, 'team', '93735475-08f6-436b-9db3-fe2364b9dbb2');
 
 
 --
@@ -503,9 +523,9 @@ INSERT INTO public.users (id, created, updated, admin, email, username, password
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.973+02', '2020-07-24 16:43:43.943+02', NULL, NULL, '0000000159567341', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser4.jpg', true);
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.597+02', '2020-07-24 16:43:54.939+02', NULL, NULL, '000000032536230X', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser5.jpg', false);
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.125+02', '2020-07-24 16:44:59.306+02', NULL, NULL, '0000000276459921', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser7.jpg', true);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.734+02', '2020-07-28 00:42:05.08+02', NULL, NULL, '0000000205642016', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser2.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.719+02', '2020-07-28 00:42:07.665+02', true, NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.59+02', '2020-07-28 00:45:11.921+02', NULL, NULL, '0000000318382441', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser3.jpg', true);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.734+02', '2020-08-12 16:17:13.598+02', NULL, NULL, '0000000205642016', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser2.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.719+02', '2020-08-12 16:17:14.868+02', true, NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.59+02', '2020-08-12 16:17:41.916+02', NULL, NULL, '0000000318382441', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser3.jpg', true);
 
 
 --
@@ -594,6 +614,14 @@ ALTER TABLE ONLY public.messages
 
 ALTER TABLE ONLY public.migrations
     ADD CONSTRAINT migrations_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: review_comments review_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+--
+
+ALTER TABLE ONLY public.review_comments
+    ADD CONSTRAINT review_comments_pkey PRIMARY KEY (id);
 
 
 --
@@ -701,17 +729,17 @@ CREATE UNIQUE INDEX is_default_idx ON public.identities USING btree (is_default,
 
 
 --
--- Name: team_members_team_id_user_id_index; Type: INDEX; Schema: public; Owner: test
+-- Name: team_members_team_id_user_id_idx; Type: INDEX; Schema: public; Owner: test
 --
 
-CREATE INDEX team_members_team_id_user_id_index ON public.team_members USING btree (team_id, user_id);
+CREATE INDEX team_members_team_id_user_id_idx ON public.team_members USING btree (team_id, user_id);
 
 
 --
--- Name: teams_object_id_object_type_index; Type: INDEX; Schema: public; Owner: test
+-- Name: teams_manuscript_id_idx; Type: INDEX; Schema: public; Owner: test
 --
 
-CREATE INDEX teams_object_id_object_type_index ON public.teams USING btree (object_id, object_type);
+CREATE INDEX teams_manuscript_id_idx ON public.teams USING btree (manuscript_id);
 
 
 --
@@ -739,11 +767,19 @@ ALTER TABLE ONLY public.channels
 
 
 --
--- Name: channels channels_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: files files_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
 --
 
-ALTER TABLE ONLY public.channels
-    ADD CONSTRAINT channels_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id);
+ALTER TABLE ONLY public.files
+    ADD CONSTRAINT files_manuscript_id_fkey FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts(id) ON DELETE CASCADE;
+
+
+--
+-- Name: files files_review_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+--
+
+ALTER TABLE ONLY public.files
+    ADD CONSTRAINT files_review_comment_id_fkey FOREIGN KEY (review_comment_id) REFERENCES public.review_comments(id) ON DELETE CASCADE;
 
 
 --
@@ -771,6 +807,30 @@ ALTER TABLE ONLY public.messages
 
 
 --
+-- Name: review_comments review_comments_review_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+--
+
+ALTER TABLE ONLY public.review_comments
+    ADD CONSTRAINT review_comments_review_id_fkey FOREIGN KEY (review_id) REFERENCES public.reviews(id) ON DELETE CASCADE;
+
+
+--
+-- Name: review_comments review_comments_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+--
+
+ALTER TABLE ONLY public.review_comments
+    ADD CONSTRAINT review_comments_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE SET NULL;
+
+
+--
+-- Name: reviews reviews_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+--
+
+ALTER TABLE ONLY public.reviews
+    ADD CONSTRAINT reviews_manuscript_id_fkey FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts(id) ON DELETE CASCADE;
+
+
+--
 -- Name: identities sidentities_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
 --
 
@@ -779,27 +839,35 @@ ALTER TABLE ONLY public.identities
 
 
 --
--- Name: team_members team_members_alias_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: team_members team_members_alias_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
 --
 
 ALTER TABLE ONLY public.team_members
-    ADD CONSTRAINT team_members_alias_id_foreign FOREIGN KEY (alias_id) REFERENCES public.aliases(id);
+    ADD CONSTRAINT team_members_alias_id_fkey FOREIGN KEY (alias_id) REFERENCES public.aliases(id);
 
 
 --
--- Name: team_members team_members_team_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: test
---
-
-ALTER TABLE ONLY public.team_members
-    ADD CONSTRAINT team_members_team_id_foreign FOREIGN KEY (team_id) REFERENCES public.teams(id) ON UPDATE CASCADE ON DELETE CASCADE;
-
-
---
--- Name: team_members team_members_user_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: team_members team_members_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
 --
 
 ALTER TABLE ONLY public.team_members
-    ADD CONSTRAINT team_members_user_id_foreign FOREIGN KEY (user_id) REFERENCES public.users(id) ON UPDATE CASCADE ON DELETE CASCADE;
+    ADD CONSTRAINT team_members_team_id_fkey FOREIGN KEY (team_id) REFERENCES public.teams(id) ON UPDATE CASCADE ON DELETE CASCADE;
+
+
+--
+-- Name: team_members team_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+--
+
+ALTER TABLE ONLY public.team_members
+    ADD CONSTRAINT team_members_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+
+
+--
+-- Name: teams teams_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+--
+
+ALTER TABLE ONLY public.teams
+    ADD CONSTRAINT teams_manuscript_id_fkey FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts(id) ON DELETE CASCADE;
 
 
 --

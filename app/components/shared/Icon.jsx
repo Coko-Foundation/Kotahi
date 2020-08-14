@@ -6,15 +6,13 @@ import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 
 const IconWrapper = styled.div`
-  display: flex;
-  -webkit-box-align: center;
+  display: ${({ inline }) => (inline ? 'inline-flex' : 'flex')};
   align-items: center;
-  -webkit-box-pack: center;
   justify-content: center;
   opacity: 1;
   position: relative;
   border-radius: 6px;
-  padding: ${props => (props.noPadding ? '0' : '8px 12px')};
+  padding: ${props => (props.noPadding || props.inline ? '0' : '8px 12px')};
 
   svg {
     stroke: ${props => props.color || props.theme.colorText};
@@ -29,6 +27,7 @@ export const Icon = ({
   color,
   size = 3,
   noPadding,
+  inline,
   ...props
 }) => {
   const name = _.upperFirst(_.camelCase(children))
@@ -37,6 +36,7 @@ export const Icon = ({
     <IconWrapper
       className={className}
       color={color}
+      inline={inline}
       noPadding={noPadding}
       role="img"
       size={size}

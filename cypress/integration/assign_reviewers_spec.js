@@ -1,9 +1,9 @@
-const login = name => {
-  cy.task('createToken', name).then(token => {
-    cy.setToken(token)
-    cy.visit('/journal/dashboard')
-  })
-}
+// const login = name => {
+//   cy.task('createToken', name).then(token => {
+//     cy.setToken(token)
+//     cy.visit('/journal/dashboard')
+//   })
+// }
 
 const inviteReviewer = name => {
   cy.get('*[aria-label*="Invite reviewers"]').click({
@@ -21,7 +21,7 @@ describe('Editor assigning reviewers', () => {
   it('can assign 3 reviewers', () => {
     cy.task('restore', 'senior_editor_assigned')
 
-    login('Joanne Pilger')
+    cy.login('Joanne Pilger')
 
     cy.contains('Control Panel').click()
     cy.contains('Manage Reviewers').click()

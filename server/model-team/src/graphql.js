@@ -62,9 +62,8 @@ const resolvers = {
       const t = await ctx.models.Team.query().findById(team.id)
       return t.$relatedQuery('members')
     },
-    object(team, vars, ctx) {
-      const { objectId, objectType } = team
-      return objectId && objectType ? { objectId, objectType } : null
+    manuscript(parent, vars, ctx) {
+      return ctx.models.Manuscript.query().findById(parent.manuscriptId)
     },
   },
   TeamMember: {
@@ -100,7 +99,7 @@ const typeDefs = `
     type: String!
     role: String!
     name: String
-    object: TeamObject
+    manuscript: Manuscript
     members: [TeamMember!]
     owners: [User]
     global: Boolean
@@ -136,16 +135,10 @@ const typeDefs = `
     aff: String
   }
 
-  type TeamObject {
-    objectId: ID!
-    objectType: String!
-  }
-
   input TeamInput {
     role: String
     name: String
-    objectId: ID
-    objectType: String
+    manuscriptId: ID
     members: [TeamMemberInput]
     global: Boolean
   }
@@ -153,8 +146,7 @@ const typeDefs = `
   input TeamWhereInput {
     role: String
     name: String
-    objectId: ID
-    objectType: String
+    manuscriptId: ID
     members: [TeamMemberInput]
     global: Boolean
     users: [ID!]

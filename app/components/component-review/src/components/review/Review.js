@@ -3,7 +3,6 @@ import styled from 'styled-components'
 import { NoteViewer } from 'xpub-edit'
 import { Attachment } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import { getCommentFiles } from './util'
 
 const Heading = styled.div``
 const Note = styled.div`
@@ -23,17 +22,12 @@ const filesToAttachment = file => ({
   url: file.url,
 })
 
-const findComments = (review = {}, type) => {
-  const comments = review.comments || []
-  return comments.find(comment => comment.type === type)
-}
-
 const ReviewComments = (review, type) => (
   <Note>
     <Content>
-      <NoteViewer value={findComments(review, type).content} />
+      <NoteViewer value={review[`${type}Comment`].content} />
     </Content>
-    {getCommentFiles(review, type).map(attachment => (
+    {review[`${type}Comment`].files.map(attachment => (
       <Attachment
         file={filesToAttachment(attachment)}
         key={attachment.url}
@@ -45,14 +39,14 @@ const ReviewComments = (review, type) => (
 
 const Review = ({ review }) => (
   <Container>
-    {findComments(review, 'note') && (
+    {review.reviewComment && (
       <div>
-        <Heading>Note</Heading>
+        <Heading>Review</Heading>
 
-        {ReviewComments(review, 'note')}
+        {ReviewComments(review, 'review')}
       </div>
     )}
-    {findComments(review, 'confidential') && (
+    {review.confidentialComment && (
       <div>
         <Heading>Confidential</Heading>
 

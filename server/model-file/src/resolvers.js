@@ -10,8 +10,8 @@ const randomBytes = promisify(crypto.randomBytes)
 const uploadsPath = config.get('pubsweet-server').uploads
 
 const upload = async file => {
-  const { stream, filename, encoding } = await file
-
+  const { createReadStream, filename, encoding } = await file
+  const stream = createReadStream()
   const raw = await randomBytes(16)
   const generatedFilename = raw.toString('hex') + path.extname(filename)
   const outPath = path.join(uploadsPath, generatedFilename)
@@ -32,6 +32,7 @@ const resolvers = {
       const path = await upload(file)
       meta.url = `/static/${path}`
       const data = await new File(meta).save()
+
       return data
     },
   },
