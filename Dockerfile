@@ -7,7 +7,7 @@ WORKDIR ${HOME}
 ENV NODE_ENV "development"
 
 # Only copy things needed for the yarn install
-COPY package.json yarn.lock .
+COPY package.json yarn.lock ./
 
 # We do a development install because react-styleguidist is a dev dependency and we want to run tests
 RUN [ "yarn", "install", "--frozen-lockfile" ]
