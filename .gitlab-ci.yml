@@ -69,4 +69,4 @@ test-firefox:
   script:
     - cd ${HOME}
     # specify host here else it confuses the linked postgres image
-    - MOZ_FORCE_DISABLE_E10S=1 PGHOST=postgres yarn test:all:firefox
+    - PGHOST=postgres yarn test:all:firefox
