@@ -13,7 +13,8 @@ RUN [ "yarn", "install", "--frozen-lockfile" ]
 
 ENV NODE_ENV ${NODE_ENV}
 
-RUN [ "npx", "pubsweet", "build"]
+# Disabling the build for now, as it runs in the test server again
+# RUN [ "npx", "pubsweet", "build"]
 
 EXPOSE ${PORT}
 
