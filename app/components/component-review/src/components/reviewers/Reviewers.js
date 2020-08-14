@@ -43,9 +43,7 @@ const Reviewers = ({
       <Heading>Reviewers</Heading>
       <Button
         onClick={() =>
-          history.push(
-            `/journal/versions/${manuscript.id}/decisions/${manuscript.id}`,
-          )
+          history.push(`/journal/versions/${manuscript.id}/decision`)
         }
         primary
       >

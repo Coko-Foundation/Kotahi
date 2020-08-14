@@ -12,7 +12,7 @@ class Team extends BaseModel {
   }
 
   static get relationMappings() {
-    const { Alias, TeamMember, User } = require('@pubsweet/models')
+    const { Alias, TeamMember, User, Manuscript } = require('@pubsweet/models')
 
     return {
       members: {
@@ -49,14 +49,21 @@ class Team extends BaseModel {
           to: 'aliases.id',
         },
       },
+      manuscript: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: Manuscript,
+        join: {
+          from: 'manuscripts.id',
+          to: 'teams.manuscript_id',
+        },
+      },
     }
   }
 
   static get schema() {
     return {
       properties: {
-        objectId: { type: ['string', 'null'], format: 'uuid' },
-        objectType: { type: ['string', 'null'] },
+        manuscriptId: { type: ['string', 'null'], format: 'uuid' },
         name: { type: 'string' },
         role: { type: ['string'] },
         owners: {

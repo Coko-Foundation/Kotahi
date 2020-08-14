@@ -1,7 +1,6 @@
 CREATE TABLE channels (
   id UUID PRIMARY KEY,
   manuscript_id uuid REFERENCES manuscripts(id) ON DELETE CASCADE,
-  team_id uuid REFERENCES teams(id),
   created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
   updated TIMESTAMP WITH TIME ZONE,
   topic TEXT,

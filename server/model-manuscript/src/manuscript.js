@@ -2,7 +2,6 @@ const BaseModel = require('@pubsweet/base-model')
 const omit = require('lodash/omit')
 const cloneDeep = require('lodash/cloneDeep')
 const sortBy = require('lodash/sortBy')
-const values = require('lodash/values')
 
 class Manuscript extends BaseModel {
   static get tableName() {
@@ -14,48 +13,48 @@ class Manuscript extends BaseModel {
     this.type = 'Manuscript'
   }
 
-  static async myManuscripts(myManuscripts) {
-    const mainManuscript = {}
-    myManuscripts.forEach(manuscript => {
-      if (!mainManuscript[manuscript.parentId || manuscript.id]) {
-        mainManuscript[manuscript.parentId || manuscript.id] = manuscript
-      } else {
-        const checkManuscript =
-          mainManuscript[manuscript.parentId || manuscript.id]
-        // Compare Dates
-        const dateCheckManuscript = new Date(checkManuscript.created).getTime()
-        const dateManuscript = new Date(manuscript.created).getTime()
-        if (dateManuscript >= dateCheckManuscript) {
-          mainManuscript[manuscript.parentId || manuscript.id] = manuscript
-        }
-      }
-    })
+  // static async myManuscripts(myManuscripts) {
+  //   const mainManuscript = {}
+  //   myManuscripts.forEach(manuscript => {
+  //     if (!mainManuscript[manuscript.parentId || manuscript.id]) {
+  //       mainManuscript[manuscript.parentId || manuscript.id] = manuscript
+  //     } else {
+  //       const checkManuscript =
+  //         mainManuscript[manuscript.parentId || manuscript.id]
+  //       // Compare Dates
+  //       const dateCheckManuscript = new Date(checkManuscript.created).getTime()
+  //       const dateManuscript = new Date(manuscript.created).getTime()
+  //       if (dateManuscript >= dateCheckManuscript) {
+  //         mainManuscript[manuscript.parentId || manuscript.id] = manuscript
+  //       }
+  //     }
+  //   })
 
-    const latestManuscripts = values(mainManuscript)
-    await Promise.all(
-      latestManuscripts.map(async manuscript => {
-        manuscript.teams = await new Manuscript(manuscript).getTeams()
-        manuscript.reviews = await new Manuscript(manuscript).getReviews()
-        manuscript.manuscriptVersions =
-          (await manuscript.getManuscriptVersions()) || []
-        return manuscript
-      }),
-    )
+  //   const latestManuscripts = values(mainManuscript)
+  //   await Promise.all(
+  //     latestManuscripts.map(async manuscript => {
+  //       manuscript.teams = await new Manuscript(manuscript).getTeams()
+  //       manuscript.reviews = await new Manuscript(manuscript).getReviews()
+  //       manuscript.manuscriptVersions =
+  //         (await manuscript.getManuscriptVersions()) || []
+  //       return manuscript
+  //     }),
+  //   )
 
-    return latestManuscripts
-  }
+  //   return latestManuscripts
+  // }
 
-  async getTeams() {
-    const { Team } = require('@pubsweet/models')
-    const myTeams = await Team.query()
-      .where({
-        objectId: this.id,
-        objectType: 'Manuscript',
-      })
-      .eager('members')
+  // async getTeams() {
+  //   const { Team } = require('@pubsweet/models')
+  //   const myTeams = await Team.query()
+  //     .where({
+  //       objectId: this.id,
+  //       objectType: 'Manuscript',
+  //     })
+  //     .eager('members')
 
-    return myTeams
-  }
+  //   return myTeams
+  // }
 
   async getReviews() {
     // TODO: Use relationships
@@ -73,15 +72,15 @@ class Manuscript extends BaseModel {
   }
 
   async getManuscriptVersions() {
-    const { File } = require('@pubsweet/models')
+    // const { File } = require('@pubsweet/models')
 
     const id = this.parentId || this.id
     const manuscripts = await Manuscript.query()
       .where('parent_id', id)
-      .eager('[teams, teams.members, reviews]')
+      .eager('[teams, teams.members, reviews, files]')
     const firstManuscript = await Manuscript.query()
       .findById(id)
-      .eager('[teams, teams.members, reviews]')
+      .eager('[teams, teams.members, reviews, files]')
     manuscripts.push(firstManuscript)
 
     const manuscriptVersionsArray = manuscripts.filter(
@@ -93,16 +92,6 @@ class Manuscript extends BaseModel {
     const manuscriptVersions = sortBy(
       manuscriptVersionsArray,
       manuscript => new Date(manuscript.created),
-    )
-
-    await Promise.all(
-      manuscriptVersions.map(async manuscript => {
-        manuscript.files = await File.findByObject({
-          object: 'Manuscript',
-          object_id: manuscript.id,
-        })
-        return manuscript
-      }),
     )
 
     return manuscriptVersions
@@ -122,9 +111,8 @@ class Manuscript extends BaseModel {
         team.role === 'handlingEditor',
     )
 
-    const manuscriptFiles = await File.findByObject({
-      object: 'Manuscript',
-      object_id: this.id,
+    const manuscriptFiles = await File.query().where({
+      manuscriptId: this.id,
     })
 
     const manuscriptDecision = manuscriptReviews.find(
@@ -147,7 +135,7 @@ class Manuscript extends BaseModel {
       // Copy Teams to the new Version
       await Promise.all(
         teams.map(async team => {
-          team.objectId = newManuscript.id
+          team.manuscriptId = newManuscript.id
           team.members = team.members.map(member => omit(member, 'id'))
           await new Team(omit(team, ['id'])).saveGraph()
         }),
@@ -158,7 +146,7 @@ class Manuscript extends BaseModel {
     await Promise.all(
       manuscriptFiles.map(async file => {
         const newFile = omit(file, ['id'])
-        newFile.objectId = newManuscript.id
+        newFile.manuscriptId = newManuscript.id
         await new File(newFile).save()
         return newFile
       }),
@@ -168,7 +156,7 @@ class Manuscript extends BaseModel {
   }
 
   static get relationMappings() {
-    const { Channel, User, Team, Review } = require('@pubsweet/models')
+    const { Channel, User, Team, Review, File } = require('@pubsweet/models')
 
     return {
       submitter: {
@@ -190,13 +178,17 @@ class Manuscript extends BaseModel {
       teams: {
         relation: BaseModel.HasManyRelation,
         modelClass: Team,
-        beforeInsert(model) {
-          model.objectType = 'Manuscript'
-        },
-        filter: { objectType: 'Manuscript' },
         join: {
           from: 'manuscripts.id',
-          to: 'teams.objectId',
+          to: 'teams.manuscriptId',
+        },
+      },
+      files: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: File,
+        join: {
+          from: 'manuscripts.id',
+          to: 'files.manuscriptId',
         },
       },
       reviews: {
@@ -299,35 +291,6 @@ class Manuscript extends BaseModel {
         submitterId: { type: ['string', 'null'], format: 'uuid' },
       },
     }
-  }
-
-  // TODO: Do this on the DB level with cascading deletes
-  async $beforeDelete() {
-    // const Review = require('../../review/src/review')
-    const { Review, Team, File } = require('@pubsweet/models')
-
-    const files = await File.findByObject({
-      object_id: this.id,
-      object: 'Manuscript',
-    })
-    if (files.length > 0) {
-      files.forEach(async fl => {
-        await new File(fl).delete()
-      })
-    }
-
-    const review = await Review.findByField('manuscript_id', this.id)
-    if (review.length > 0) {
-      review.forEach(async rv => {
-        await new Review(rv).delete()
-      })
-    }
-
-    this.teams = await this.getTeams()
-
-    this.teams.forEach(async team => {
-      await new Team(team).delete()
-    })
   }
 }
 

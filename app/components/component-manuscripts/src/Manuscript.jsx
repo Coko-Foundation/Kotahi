@@ -51,7 +51,7 @@ const User = ({ manuscript }) => {
         )}
       </Cell>
       <LastCell>
-        <Action to={`/journal/versions/${manuscript.id}/decisions/1`}>
+        <Action to={`/journal/versions/${manuscript.id}/decision`}>
           Control
         </Action>
         <Action to={`/journal/versions/${manuscript.id}/manuscript`}>

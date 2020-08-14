@@ -1,30 +1,37 @@
-import React from 'react'
+import React, { useRef, useEffect } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { Formik } from 'formik'
 // import { cloneDeep } from 'lodash'
-import { getCommentContent } from './review/util'
 import ReviewLayout from '../components/review/ReviewLayout'
 import { Spinner } from '../../../shared'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
+
+const commentFields = `
+id
+commentType
+content
+files {
+  id
+  created
+  label
+  filename
+  fileType
+  mimeType
+  size
+  url
+}
+`
 
 const reviewFields = `
   id
   created
   updated
-  comments {
-    type
-    content
-    files {
-      id
-      created
-      label
-      filename
-      fileType
-      mimeType
-      size
-      url
-    }
+  reviewComment {
+    ${commentFields}
+  }
+  confidentialComment {
+    ${commentFields}
   }
   isDecision
   recommendation
@@ -33,23 +40,6 @@ const reviewFields = `
     username
   }
 `
-
-// const teamFields = `
-//   id
-//   name
-//   role
-//   object {
-//     objectId
-//     objectType
-//   }
-//   members {
-//     id
-//     user {
-//       id
-//       username
-//     }
-//   }
-// `
 
 const fragmentFields = `
   id
@@ -72,9 +62,8 @@ const fragmentFields = `
     id
     name
     role
-    object {
-      objectId
-      objectType
+    manuscript {
+      id
     }
     members {
       id
@@ -163,86 +152,38 @@ const updateReviewMutationQuery = gql`
   }
 `
 
-const uploadReviewFilesMutation = gql`
-  mutation($file: Upload!) {
-    upload(file: $file) {
-      url
-    }
-  }
-`
-
-const createFileMutation = gql`
-  mutation($file: Upload!) {
-    createFile(file: $file) {
-      id
-      created
-      label
-      filename
-      fileType
-      mimeType
-      size
-      url
-    }
-  }
-`
-
 export default ({ match, ...props }) => {
   const currentUser = useCurrentUser()
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
   const [completeReview] = useMutation(completeReviewMutation)
 
-  // File upload
-  // const [uploadReviewFiles] = useMutation(uploadReviewFilesMutation)
-
-  const [createFileM] = useMutation(createFileMutation)
-  const createFile = file =>
-    createFileM({
-      variables: {
-        file,
-      },
-      update: (proxy, { data: { createFile } }) => {
-        const data = proxy.readQuery({
-          query,
-          variables: {
-            id: match.params.version,
-          },
-        })
-
-        data.manuscript.reviews.map(review => {
-          if (review.id === file.objectId) {
-            review.comments.map(comment => {
-              if (comment.type === createFile.fileType) {
-                comment.files = [createFile]
-              }
-              return comment
-            })
-          }
-          return review
-        })
-
-        proxy.writeQuery({ query, data })
-      },
-    })
-
   const { loading, error, data } = useQuery(query, {
     variables: {
       id: match.params.version,
     },
-    fetchPolicy: 'network-only',
   })
+
+  const reviewOrInitial = manuscript =>
+    (manuscript &&
+      manuscript.reviews &&
+      manuscript.reviews.find(
+        review => review?.user?.id === currentUser.id && !review.isDecision,
+      )) ||
+    {}
+
+  // Find an existing review or create a placeholder, and hold a ref to it
+  const existingReview = useRef(reviewOrInitial(data?.manuscript))
+
+  // Update the value of that ref if the manuscript object changes
+  useEffect(() => {
+    existingReview.current = reviewOrInitial(data?.manuscript)
+  }, [data?.manuscript?.reviews])
 
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
 
   const { manuscript } = data
   const channelId = manuscript.channels.find(c => c.type === 'editorial').id
-
-  const review =
-    (manuscript.reviews &&
-      manuscript.reviews.find(
-        review => review.user.id === currentUser.id && !review.isDecision,
-      )) ||
-    {}
 
   // eslint-disable-next-line
   const status = (
@@ -253,61 +194,55 @@ export default ({ match, ...props }) => {
   ).status
 
   const updateReview = (review, file) => {
-    ;(review.comments || []).map(comment => {
-      delete comment.files
-      delete comment.__typename
-      return comment
-    })
-
     const reviewData = {
       recommendation: review.recommendation,
-      comments: review.comments,
       manuscriptId: manuscript.id,
+      reviewComment: review.reviewComment && {
+        id: existingReview.current.reviewComment?.id,
+        commentType: 'review',
+        content: review.reviewComment.content,
+      },
+      confidentialComment: review.confidentialComment && {
+        id: existingReview.current.confidentialComment?.id,
+        commentType: 'confidential',
+        content: review.confidentialComment.content,
+      },
     }
 
     return updateReviewMutation({
       variables: {
-        id: review.id || undefined,
+        id: existingReview.current.id || undefined,
         input: reviewData,
       },
-      // update: (proxy, { data: { updateReview } }) => {
-      //   const data = JSON.parse(
-      //     JSON.stringify(
-      //       proxy.readQuery({
-      //         query,
-      //         variables: {
-      //           id: manuscript.id,
-      //         },
-      //       }),
-      //     ),
-      //   )
-      //   let reviewIndex = data.manuscript.reviews.findIndex(
-      //     review => review.id === updateReview.id,
-      //   )
-      //   reviewIndex = reviewIndex < 0 ? 0 : reviewIndex
-      //   data.manuscript.reviews[reviewIndex] = updateReview
-      //   proxy.writeQuery({ query, data })
-      // },
+      update: (cache, { data: { updateReview } }) => {
+        cache.modify({
+          id: cache.identify(manuscript),
+          fields: {
+            reviews(existingReviewRefs = [], { readField }) {
+              const newReviewRef = cache.writeFragment({
+                data: updateReview,
+                fragment: gql`
+                  fragment NewReview on Review {
+                    id
+                  }
+                `,
+              })
+
+              if (
+                existingReviewRefs.some(
+                  ref => readField('id', ref) === updateReview.id,
+                )
+              ) {
+                return existingReviewRefs
+              }
+
+              return [...existingReviewRefs, newReviewRef]
+            },
+          },
+        })
+      },
     })
   }
-
-  const uploadFile = (file, updateReview, type) =>
-    uploadReviewFilesMutation({
-      variables: {
-        file,
-      },
-    }).then(({ data }) => {
-      const newFile = {
-        url: data.upload.url,
-        filename: file.name,
-        mimeType: file.type,
-        size: file.size,
-        object: 'Review',
-        objectId: updateReview.id,
-        fileType: type,
-      }
-      createFile(newFile)
-    })
 
   const handleSubmit = async ({ reviewId, history }) => {
     await completeReview({
@@ -324,7 +259,7 @@ export default ({ match, ...props }) => {
       initialValues={
         (manuscript.reviews &&
           manuscript.reviews.find(
-            review => review.user.id === currentUser.id && !review.isDecision,
+            review => review?.user?.id === currentUser.id && !review.isDecision,
           )) || {
           id: null,
           comments: [],
@@ -332,12 +267,15 @@ export default ({ match, ...props }) => {
         }
       }
       onSubmit={values =>
-        handleSubmit({ reviewId: review.id, history: props.history })
+        handleSubmit({
+          reviewId: existingReview.current.id,
+          history: props.history,
+        })
       }
       validateOnMount={review => {
         if (!review.id) return false
         const hasRecommendation = review.recommendation !== null
-        const comment = getCommentContent(review, 'note')
+        const comment = review.decisionComment?.content
         const isCommented = comment !== null && comment !== ''
 
         return isCommented && hasRecommendation
@@ -348,183 +286,12 @@ export default ({ match, ...props }) => {
           channelId={channelId}
           currentUser={currentUser}
           manuscript={manuscript}
-          review={review}
+          review={existingReview}
           status={status}
           updateReview={updateReview}
-          uploadFile={uploadFile}
           {...formikProps}
         />
       )}
     </Formik>
   )
 }
-
-// export default compose(
-// graphql(query, {
-//   options: ({ match }) => ({
-//     variables: {
-//       id: match.params.version,
-//     },
-//   }),
-// }),
-// graphql(uploadReviewFilesMutation, { name: 'uploadReviewFilesMutation' }),
-// graphql(updateReviewMutation, { name: 'updateReviewMutation' }),
-// graphql(updateTeam, { name: 'updateTeam' }),
-// graphql(createFileMutation, {
-//   props: ({ mutate, ownProps: { match } }) => ({
-//     createFile: file => {
-//       mutate({
-//         variables: {
-//           file,
-//         },
-//         update: (proxy, { data: { createFile } }) => {
-//           const data = proxy.readQuery({
-//             query,
-//             variables: {
-//               id: match.params.version,
-//             },
-//           })
-
-//           data.manuscript.reviews.map(review => {
-//             if (review.id === file.objectId) {
-//               review.comments.map(comment => {
-//                 if (comment.type === createFile.fileType) {
-//                   comment.files = [createFile]
-//                 }
-//                 return comment
-//               })
-//             }
-//             return review
-//           })
-
-//           proxy.writeQuery({ query, data })
-//         },
-//       })
-//     },
-//   }),
-// }),
-// withLoader(),
-// withProps(
-//   ({
-//     manuscript,
-//     currentUser,
-//     match: {
-//       params: { journal },
-//     },
-//     updateReviewMutation,
-//     uploadReviewFilesMutation,
-//     updateTeam,
-//     createFile,
-//   }) => ({
-// journal: { id: journal },
-// review:
-//   manuscript.reviews.find(
-//     review => review.user.id === currentUser.id && !review.isDecision,
-//   ) || {},
-// status: (
-//   (
-//     (manuscript.teams.find(team => team.role === 'reviewer') || {})
-//       .status || []
-//   ).find(status => status.user === currentUser.id) || {}
-// ).status,
-// updateReview: (review, file) => {
-//   ;(review.comments || []).map(comment => {
-//     delete comment.files
-//     delete comment.__typename
-//     return comment
-//   })
-
-//   const reviewData = {
-//     recommendation: review.recommendation,
-//     comments: review.comments,
-//     manuscriptId: manuscript.id,
-//   }
-
-//   return updateReviewMutation({
-//     variables: {
-//       id: review.id || undefined,
-//       input: reviewData,
-//     },
-//     update: (proxy, { data: { updateReview } }) => {
-//       const data = JSON.parse(
-//         JSON.stringify(
-//           proxy.readQuery({
-//             query,
-//             variables: {
-//               id: manuscript.id,
-//             },
-//           }),
-//         ),
-//       )
-//       let reviewIndex = data.manuscript.reviews.findIndex(
-//         review => review.id === updateReview.id,
-//       )
-//       reviewIndex = reviewIndex < 0 ? 0 : reviewIndex
-//       data.manuscript.reviews[reviewIndex] = updateReview
-//       proxy.writeQuery({ query, data })
-//     },
-//   })
-// },
-// uploadFile: (file, updateReview, type) =>
-//   uploadReviewFilesMutation({
-//     variables: {
-//       file,
-//     },
-//   }).then(({ data }) => {
-//     const newFile = {
-//       url: data.upload.url,
-//       filename: file.name,
-//       mimeType: file.type,
-//       size: file.size,
-//       object: 'Review',
-//       objectId: updateReview.id,
-//       fileType: type,
-//     }
-//     createFile(newFile)
-//   }),
-//     completeReview: history => {
-//       const team = cloneDeep(manuscript.teams).find(
-//         team => team.role === 'reviewer',
-//       )
-//       team.members = team.members.map(m => {
-//         if (m.user.id === currentUser.id) {
-//           return { user: { id: m.user.id }, status: 'completed' }
-//         }
-//         return { user: { id: m.user.id }, status: m.status }
-//       })
-
-//       updateTeam({
-//         variables: {
-//           id: team.id,
-//           input: {
-//             members: team.members,
-//           },
-//         },
-//       }).then(() => {
-//         history.push('/dashboard')
-//       })
-//     },
-//   }),
-// ),
-//   withFormik({
-//     mapPropsToValues: props =>
-//       props.manuscript.reviews.find(
-//         review => review.user.id === props.currentUser.id && !review.isDecision,
-//       ) || {
-//         id: null,
-//         comments: [],
-//         recommendation: null,
-//       },
-//     isInitialValid: ({ review }) => {
-//       if (!review.id) return false
-//       const hasRecommendation = review.recommendation !== null
-//       const comment = getCommentContent(review, 'note')
-//       const isCommented = comment !== null && comment !== ''
-
-//       return isCommented && hasRecommendation
-//     },
-//     displayName: 'review',
-//     handleSubmit: (props, { props: { completeReview, history } }) =>
-//       completeReview(history),
-//   }),
-// )(ReviewLayout)

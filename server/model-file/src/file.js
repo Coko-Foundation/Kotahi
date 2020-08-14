@@ -1,5 +1,4 @@
 const BaseModel = require('@pubsweet/base-model')
-const logger = require('@pubsweet/logger')
 
 class File extends BaseModel {
   static get tableName() {
@@ -11,6 +10,29 @@ class File extends BaseModel {
     this.type = 'file'
   }
 
+  static get relationMappings() {
+    const { Manuscript, ReviewComment } = require('@pubsweet/models')
+
+    return {
+      manuscript: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: Manuscript,
+        join: {
+          from: 'manuscripts.id',
+          to: 'files.manuscript_id',
+        },
+      },
+      reviewComment: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: ReviewComment,
+        join: {
+          from: 'review_comments.id',
+          to: 'files.review_comments_id',
+        },
+      },
+    }
+  }
+
   static get schema() {
     return {
       properties: {
@@ -20,25 +42,11 @@ class File extends BaseModel {
         fileType: { type: ['string', 'null'] },
         filename: { type: ['string', 'null'] },
         size: { type: ['integer', 'null'] },
-        object: { type: ['string', 'null'] },
-        objectId: { type: 'string', format: 'uuid' },
+        reviewCommentId: { type: ['string', 'null'], format: 'uuid' },
+        manuscriptId: { type: ['string', 'null'], format: 'uuid' },
       },
     }
   }
-
-  static async findByObject({ object, object_id }) {
-    logger.debug('Finding Files by Object')
-
-    const results = await this.query()
-      .where('object', object)
-      .andWhere('object_id', object_id)
-
-    return results
-  }
-
-  // async $beforeDelete() {
-  //   await Team.deleteAssociated(this.data.type, this.id)
-  // }
 }
 
 File.type = 'file'

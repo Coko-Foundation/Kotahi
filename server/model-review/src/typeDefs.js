@@ -8,29 +8,37 @@ const typeDefs = `
     id: ID!
     created: DateTime!
     updated: DateTime
-    comments: [Comment]
     recommendation: String
     isDecision: Boolean
     open: Boolean
     user: User
+    reviewComment: ReviewComment
+    confidentialComment: ReviewComment
+    decisionComment: ReviewComment
   }
 
   input ReviewInput {
-    comments: [CommentInput]
+    reviewComment: ReviewCommentInput
+    confidentialComment: ReviewCommentInput
+    decisionComment: ReviewCommentInput
     recommendation: String
     isDecision: Boolean
     manuscriptId: ID!
   }
 
-  input CommentInput {
-    type: String
-    content: String
-  }
-
-  type Comment {
-    type: String
+  type ReviewComment implements Object {
+    id: ID!
+    created: DateTime!
+    updated: DateTime
+    commentType: String
     content: String
     files: [File]
+  }
+
+  input ReviewCommentInput {
+    id: ID
+    commentType: String
+    content: String
   }
 `
 

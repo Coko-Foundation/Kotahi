@@ -12,11 +12,10 @@ import {
 } from '@pubsweet/ui'
 import * as validators from 'xpub-validators'
 import { AbstractEditor } from 'xpub-edit'
-import { Section as Container, Select } from '../../../shared'
+import { Section as Container, Select, FilesUpload } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
 import LinksInput from './LinksInput'
-import Supplementary from './Supplementary'
 import Confirm from './Confirm'
 
 // TODO: https://github.com/formium/formik/issues/146#issuecomment-474775723
@@ -269,8 +268,10 @@ export default ({
             {/* <p>{JSON.stringify(element)}</p> */}
             <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
             {element.component === 'SupplementaryFiles' && (
-              <Supplementary
-                createSupplementaryFile={createSupplementaryFile}
+              <FilesUpload
+                containerId={manuscript.id}
+                containerName="manuscript"
+                fileType="supplementary"
                 onChange={onChange}
               />
             )}

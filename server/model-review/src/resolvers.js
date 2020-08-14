@@ -1,25 +1,33 @@
-const merge = require('lodash/merge')
-const Review = require('./review')
+// const merge = require('lodash/merge')
+// const Review = require('./review')
 
 const resolvers = {
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
-      if (id) {
-        const review = await ctx.models.Review.query().findById(id)
-        const update = merge({}, review, input)
-        // Load Review
-        const rvw = await ctx.models.Review.query().updateAndFetchById(
-          id,
-          update,
-        )
-        rvw.comments = await rvw.getComments()
+      // We process comment fields into array
+      input.user = ctx.user
+      const processedReview = Object.assign({}, input)
+      processedReview.comments = [
+        input.reviewComment,
+        input.confidentialComment,
+        input.decisionComment,
+      ].filter(Boolean)
 
-        return rvw
-      }
-      input.userId = ctx.user.id
-      const review = await new Review(input)
-      await review.save()
-      review.comments = await review.getComments()
+      delete processedReview.reviewComment
+      delete processedReview.confidentialComment
+      delete processedReview.decisionComment
+
+      const review = await ctx.models.Review.query().upsertGraphAndFetch(
+        {
+          id,
+          ...processedReview,
+        },
+        {
+          relate: true,
+          noUnrelate: true,
+          noDelete: true,
+        },
+      )
 
       return review
     },
@@ -41,6 +49,13 @@ const resolvers = {
 
       member.status = 'completed'
       return member.save()
+    },
+  },
+  ReviewComment: {
+    async files(parent, _, ctx) {
+      return parent.files
+        ? parent.files
+        : ctx.models.File.query().where({ reviewCommentId: parent.id })
     },
   },
 }

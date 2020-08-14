@@ -82,8 +82,7 @@ module.exports = app => {
         {
           role: 'reviewer',
           name: 'Reviewer',
-          objectId: version.id,
-          objectType: 'fragment',
+          manuscriptId: version.id,
           members: [{ user: { id: reviewer[0].id } }],
         },
         { relate: true },

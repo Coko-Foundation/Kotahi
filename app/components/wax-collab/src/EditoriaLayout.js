@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { InfoArea } from 'wax-prosemirror-components'
 import { componentPlugin } from 'wax-prosemirror-services'
 import { th, grid } from '@pubsweet/ui-toolkit'
@@ -15,8 +15,14 @@ const Layout = styled.div`
   display: grid;
 
   grid-template-areas: 'menu' 'editor';
-  grid-template-rows: 40px 1fr;
-  // flex-direction: column;
+  ${props =>
+    props.readonly
+      ? css`
+          grid-template-rows: 0 1fr;
+        `
+      : css`
+          grid-template-rows: 40px 1fr;
+        `} // flex-direction: column;
   // height: 100vh;
   // width: 100hh;
 `
@@ -70,7 +76,6 @@ const Menu = styled.div`
 
 export const Container = styled.div`
   background: ${th('colorBackgroundHue')};
-  padding: ${grid(2)};
 `
 // const LeftSideBar = componentPlugin("leftSideBar");
 // const RightSideBar = componentPlugin("rightSideBar");
@@ -79,15 +84,17 @@ const TopBar = componentPlugin('topBar')
 // const CommentsArea = componentPlugin("commentsArea");
 const WaxOverlays = componentPlugin('waxOverlays')
 
-const EditoriaLayout = ({ editor }) => (
+const EditoriaLayout = readonly => ({ editor }) => (
   // const {
   //   view: { main },
   // } = useContext(WaxContext)
   <Container>
-    <Layout>
-      <Menu>
-        <TopBar />
-      </Menu>
+    <Layout readonly={readonly}>
+      {!readonly && (
+        <Menu>
+          <TopBar />
+        </Menu>
+      )}
       <Editor className="wax-surface-scroll">{editor}</Editor>
     </Layout>
     <InfoArea />

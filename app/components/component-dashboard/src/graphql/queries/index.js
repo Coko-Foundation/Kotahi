@@ -15,6 +15,7 @@ export default {
           id
         }
         reviews {
+          id
           open
           recommendation
           created
@@ -28,9 +29,8 @@ export default {
           id
           role
           name
-          object {
-            objectId
-            objectType
+          manuscript {
+            id
           }
           members {
             id

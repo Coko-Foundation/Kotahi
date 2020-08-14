@@ -9,9 +9,8 @@ const teamFields = `
   id
   role
   name
-  object {
-    objectId
-    objectType
+  manuscript {
+    id
   }
   members {
     id
@@ -46,17 +45,6 @@ const fragmentFields = `
     open
     recommendation
     created
-    comments {
-      type
-      content
-      files {
-        fileType
-        id
-        label
-        url
-        filename
-      }
-    }
     user {
       id
       username
@@ -114,8 +102,8 @@ const ReviewersPage = ({ match, history }) => {
     update: (cache, { data: { addReviewer } }) => {
       cache.modify({
         id: cache.identify({
-          __typename: addReviewer.object.objectType,
-          id: addReviewer.object.objectId,
+          __typename: 'Manuscript',
+          id: addReviewer.manuscript.id,
         }),
         fields: {
           teams(existingTeamRefs = []) {

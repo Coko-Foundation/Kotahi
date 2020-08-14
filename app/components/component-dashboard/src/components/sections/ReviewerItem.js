@@ -1,16 +1,8 @@
 import React from 'react'
-import { Button } from '@pubsweet/ui'
+import { Action, ActionGroup } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
-import {
-  Item,
-  Divider,
-  Links,
-  LinkContainer,
-  Actions,
-  ActionContainer,
-} from '../../style'
+import { Item } from '../../style'
 
-import JournalLink from '../JournalLink'
 import VersionTitle from './VersionTitle'
 
 // TODO: only return links if version id is in reviewer.accepted array
@@ -31,52 +23,43 @@ const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
       <VersionTitle version={version} />
 
       {(status === 'accepted' || status === 'completed') && (
-        <Links>
-          <LinkContainer>
-            <JournalLink id={version.id} page="reviews" version={version}>
-              {status === 'completed' ? 'Completed' : 'Do Review'}
-            </JournalLink>
-          </LinkContainer>
-        </Links>
+        <ActionGroup>
+          <Action to={`/journal/versions/${version.id}/review`}>
+            {status === 'completed' ? 'Completed' : 'Do Review'}
+          </Action>
+        </ActionGroup>
       )}
 
       {status === 'invited' && (
-        <Actions>
-          <ActionContainer>
-            <Button
-              data-testid="accept-review"
-              onClick={() => {
-                reviewerRespond({
-                  variables: {
-                    currentUserId: currentUser.id,
-                    action: 'accepted',
-                    teamId: team.id,
-                  },
-                })
-              }}
-            >
-              accept
-            </Button>
-          </ActionContainer>
-
-          <Divider separator="|" />
-
-          <ActionContainer>
-            <Button
-              onClick={() => {
-                reviewerRespond({
-                  variables: {
-                    currentUserId: currentUser.id,
-                    action: 'rejected',
-                    teamId: team.id,
-                  },
-                })
-              }}
-            >
-              reject
-            </Button>
-          </ActionContainer>
-        </Actions>
+        <ActionGroup>
+          <Action
+            data-testid="accept-review"
+            onClick={() => {
+              reviewerRespond({
+                variables: {
+                  currentUserId: currentUser.id,
+                  action: 'accepted',
+                  teamId: team.id,
+                },
+              })
+            }}
+          >
+            Accept
+          </Action>
+          <Action
+            onClick={() => {
+              reviewerRespond({
+                variables: {
+                  currentUserId: currentUser.id,
+                  action: 'rejected',
+                  teamId: team.id,
+                },
+              })
+            }}
+          >
+            Reject
+          </Action>
+        </ActionGroup>
       )}
       {status === 'rejected' && 'rejected'}
     </Item>

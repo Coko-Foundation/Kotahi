@@ -8,8 +8,8 @@ const typeDefs = `
     fileType: String
     filename: String
     mimeType: String
-    object: String
-    objectId: ID!
+    manuscriptId: ID
+    reviewCommentId: ID
     label: String
     size: Int
   }
@@ -18,8 +18,8 @@ const typeDefs = `
     id: ID!
     created: DateTime!
     updated: DateTime
-    object: String
-    objectId: ID!
+    manuscriptId: ID
+    reviewCommentId: ID
     label: String
     fileType: String
     filename: String
