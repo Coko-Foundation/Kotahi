@@ -22,6 +22,16 @@ describe('URL submission test', () => {
       .click()
 
     cy.get('body').contains('Submission created')
+
+    cy.contains('Add a link').click()
+    cy.get('[name="submission.links.0.url"]')
+      .click()
+      .type('https://doi.org/10.6084/m9.figshare.913521.v1')
+    cy.contains('Add another link').click()
+    cy.get('[name="submission.links.1.url"]')
+      .click()
+      .type('https://github.com/jure/mathtype_to_mathml')
+
     cy.get('input[data-testid="meta.title"]')
       .click()
       .clear()
@@ -55,12 +65,6 @@ describe('URL submission test', () => {
     cy.get('[data-testid="submission.suggested"]')
       .click()
       .type('Erica James, Matthew Matretzky')
-
-    cy.get('[data-testid="submission.links"]')
-      .click()
-      .type(
-        'https://doi.org/10.6084/m9.figshare.913521.v1, https://github.com/jure/mathtype_to_mathml',
-      )
 
     // Supplementary file upload
     cy.fixture('test-pdf.pdf', 'base64').then(fileContent => {
@@ -159,21 +163,8 @@ describe('URL submission test', () => {
     cy.contains('Control Panel').click()
     cy.contains('This is my data and code availability statement')
     cy.contains('test-pdf.pdf')
+    cy.contains('https://github.com/jure/mathtype_to_mathml')
+    cy.contains('https://doi.org/10.6084/m9.figshare.913521.v1')
     cy.task('dump', 'senior_editor_assigned')
   })
 })
-
-// Example of a file upload
-//     2. Submit a PDF
-//     cy.fixture('test-pdf.pdf', 'base64').then(fileContent => {
-//       cy.get('[data-testid="dropzone"]').upload(
-//         {
-//           fileContent,
-//           fileName: 'test-pdf.pdf',
-//           encoding: 'base64',
-//           mimeType: 'application/pdf',
-//         },
-//         { subjectType: 'drag-n-drop' },
-//       )
-//     })
-// })

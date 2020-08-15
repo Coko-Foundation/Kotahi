@@ -5,6 +5,6 @@ describe('Form builder', () => {
     cy.contains('Forms').click()
     cy.contains('Research Object Submission Form')
     cy.contains('Name (TextField)').click()
-    cy.contains('submission.name')
+    cy.get('input[name="name"]').should('have.value', 'submission.name')
   })
 })

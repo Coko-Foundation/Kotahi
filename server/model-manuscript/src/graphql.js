@@ -1,4 +1,4 @@
-const merge = require('lodash/merge')
+// const merge = require('lodash/merge')
 const detailsForURLResolver = require('./detailsForURLResolver')
 const { ref } = require('objection')
 
@@ -125,7 +125,16 @@ const resolvers = {
     async updateManuscript(_, { id, input }, ctx) {
       const data = JSON.parse(input)
       const manuscript = await ctx.models.Manuscript.query().findById(id)
-      const update = merge({}, manuscript, data)
+      const update = Object.assign({}, manuscript, data)
+      // We specifically merge submission, as it itself has nested properties
+      // But we don't want to do a deep merge unconditionally, as that prevents
+      // any kind of deletion happening.
+      update.submission = Object.assign(
+        {},
+        manuscript.submission,
+        data.submission,
+      )
+      // const update.submission =
       return ctx.models.Manuscript.query().updateAndFetchById(id, update)
     },
     async makeDecision(_, { id, decision }, ctx) {
