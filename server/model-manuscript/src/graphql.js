@@ -1,6 +1,5 @@
 const merge = require('lodash/merge')
 const detailsForURLResolver = require('./detailsForURLResolver')
-const form = require('../../../app/storage/forms/submit.json')
 const { ref } = require('objection')
 
 const resolvers = {
@@ -262,9 +261,6 @@ const resolvers = {
     },
     async detailsForURL(_, { url }) {
       return detailsForURLResolver(url)
-    },
-    async getFile() {
-      return form
     },
   },
   // We want submission into to come out as a stringified JSON, so that we don't have to

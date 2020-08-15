@@ -1,12 +1,11 @@
-import React from 'react'
-import { withFormik } from 'formik'
-import { pick, isEmpty } from 'lodash'
+import React, { useState } from 'react'
+import { isEmpty } from 'lodash'
 import styled from 'styled-components'
-import { compose, withProps, withState, withHandlers } from 'recompose'
+// import { compose, withProps, withState, withHandlers } from 'recompose'
 import { Button, TextField, ValidatedFieldFormik } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { AbstractField, RadioBox } from './builderComponents'
-import { Page, Heading } from './molecules/Page'
+import { Page, Heading } from './style'
 
 const nameText = input => <TextField {...input} />
 
@@ -22,20 +21,20 @@ export const Section = styled.div`
   margin: calc(${th('gridUnit')} * 6) 0;
 `
 
-const onSubmit = (values, { onSubmitFn, properties, mode }) => {
-  if (mode === 'create') {
-    onSubmitFn(Object.assign({}, values))
-  } else {
-    onSubmitFn({ id: properties.properties.id }, Object.assign({}, values))
-  }
-}
+// const onSubmit = (values, { handleSubmit, mode }) => {
+//   if (mode === 'create') {
+//     handleSubmit(Object.assign({}, values))
+//   } else {
+//     handleSubmit(values)
+//   }
+// }
 
 const FormProperties = ({
   handleSubmit,
   properties,
   mode,
-  selectPopup,
-  showPopupValue,
+  setPopup,
+  popup,
   values,
   setFieldValue,
 }) =>
@@ -73,7 +72,7 @@ const FormProperties = ({
             name="haspopup"
             onChange={(input, value) => {
               setFieldValue('haspopup', input)
-              selectPopup(input)
+              setPopup(input)
             }}
             options={[
               {
@@ -87,7 +86,7 @@ const FormProperties = ({
             ]}
           />
         </Section>
-        {showPopupValue === 'true' && [
+        {popup === 'true' && [
           <Section id="popup.title" key="popup.title">
             <Legend>Popup Title</Legend>
             <ValidatedFieldFormik component={nameText} name="popuptitle" />
@@ -110,32 +109,69 @@ const FormProperties = ({
     </Page>
   )
 
-export default compose(
-  withProps(({ properties }) => {
-    const paths = [
-      'id',
-      'name',
-      'description',
-      'popupdescription',
-      'popuptitle',
-      'haspopup',
-    ]
-    return {
-      initialValues: pick(properties.properties, paths),
-    }
-  }),
-  withState(
-    'showPopupValue',
-    'selectPopup',
-    ({ properties }) => (properties.properties || {}).haspopup,
-  ),
-  withHandlers({
-    changeShowPopup: ({ selectPopup }) => value => selectPopup(() => value),
-  }),
-  withFormik({
-    displayName: 'FormSubmit',
-    mapPropsToValues: data => data.properties.properties,
-    handleSubmit: (props, { props: { mode, onSubmitFn, properties } }) =>
-      onSubmit(props, { mode, onSubmitFn, properties }),
-  }),
-)(FormProperties)
+const FormPropertiesWrapper = ({
+  properties,
+  mode,
+  handleSubmit,
+  ...props
+}) => {
+  const [popup, setPopup] = useState((properties.properties || {}).haspopup)
+  return (
+    // <Formik
+    //   initialValues={pick(properties.properties, [
+    //     'id',
+    //     'name',
+    //     'description',
+    //     'popupdescription',
+    //     'popuptitle',
+    //     'haspopup',
+    //   ])}
+    //   onSubmit={(values) => {
+    //     onSubmit(values, { mode, handleSubmit })
+    //   }}
+    // >
+    //   {props => (
+    <FormProperties
+      handleSubmit={handleSubmit}
+      mode={mode}
+      popup={popup}
+      properties={properties}
+      setFieldValue={props.setFieldValue}
+      setPopup={setPopup}
+      values={props.values}
+    />
+    // )}
+    // </Formik>
+  )
+}
+
+export default FormPropertiesWrapper
+// export default compose(
+// withProps(({ properties }) => {
+//   const paths = [
+//     'id',
+//     'name',
+//     'description',
+//     'popupdescription',
+//     'popuptitle',
+//     'haspopup',
+//   ]
+//   return {
+//     initialValues: pick(properties.properties, paths),
+//   }
+// }),
+// withState(
+//   'showPopupValue',
+//   'selectPopup',
+//   ({ properties }) => (properties.properties || {}).haspopup,
+// ),
+// withHandlers({
+//   changeShowPopup: ({ selectPopup }) => value => selectPopup(() => value),
+// }),
+//   withFormik({
+//     displayName: 'FormSubmit',
+//     mapPropsToValues: data => data.properties.properties,
+//     handleSubmit: (props, { props: { mode, handleSubmit, properties } }) =>
+//       onSubmit(props, { mode, handleSubmit, properties }),
+//   }),
+// )(FormProperties)

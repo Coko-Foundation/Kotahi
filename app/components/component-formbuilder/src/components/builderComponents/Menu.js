@@ -1,6 +1,6 @@
 import React from 'react'
 import { Select, TextField, ValidatedFieldFormik } from '@pubsweet/ui'
-import { Legend, Section } from '../styles'
+import { Legend, Section } from '../style'
 
 const ValidationMenu = input => (
   // const validations = useState([])

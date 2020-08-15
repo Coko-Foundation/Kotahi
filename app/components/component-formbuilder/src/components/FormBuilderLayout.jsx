@@ -2,43 +2,49 @@ import React from 'react'
 import { forEach } from 'lodash'
 import styled from 'styled-components'
 import { Tabs, Action } from '@pubsweet/ui'
-import { Columns, Details, Form } from './atoms/Columns'
+import { Columns, Details, Form } from './style'
 import ComponentProperties from './ComponentProperties'
 import FormBuilder from './FormBuilder'
 import FormProperties from './FormProperties'
+import {
+  Container,
+  HeadingWithAction,
+  Heading,
+  SectionContent,
+  SectionRow,
+} from '../../../shared'
 
 const DeleteIcon = styled(Action)`
   margin-left: 10px;
   line-height: 1.15;
 `
 
-const DetailsStyled = styled(Details)`
-  border-left: 1px solid black;
-  padding-left: 40px;
-`
-
 const FormBuilderLayout = ({
   getForms,
   properties,
   deleteForm,
-  deleteElement,
+  deleteFormElement,
   updateForm,
   createForm,
-  updateElements,
-  changeProperties,
-  changeTabs,
+  updateFormElement,
+  setProperties,
+  setActiveTab,
   activeTab,
 }) => {
   const Sections = []
   forEach(getForms, (form, key) => {
     Sections.push({
       content: (
-        <FormBuilder
-          changeProperties={changeProperties}
-          deleteElement={deleteElement}
-          form={form}
-          key={`form-builder-${key}`}
-        />
+        <SectionContent>
+          <SectionRow>
+            <FormBuilder
+              deleteFormElement={deleteFormElement}
+              form={form}
+              key={`form-builder-${key}`}
+              setProperties={setProperties}
+            />
+          </SectionRow>
+        </SectionContent>
       ),
       key: `${key}`,
       label: [
@@ -58,41 +64,54 @@ const FormBuilderLayout = ({
 
   Sections.push({
     content: (
-      <FormProperties
-        key="form-builder-new"
-        mode="create"
-        onSubmitFn={createForm}
-        properties={{}}
-      />
+      <SectionContent>
+        <SectionRow>
+          <FormProperties
+            key="form-builder-new"
+            mode="create"
+            onSubmitFn={createForm}
+            properties={{}}
+          />
+        </SectionRow>
+      </SectionContent>
     ),
     key: 'new',
     label: '+ Add Form',
   })
   return (
-    <Columns>
-      <Form>
-        <Tabs
-          activeKey={`${activeTab}`}
-          onChange={tab => {
-            changeProperties({
-              type: 'form',
-              properties: getForms[tab],
-            })
-            changeTabs(tab)
-          }}
-          sections={Sections}
-          title="builder"
-        />
-      </Form>
-      <DetailsStyled>
-        <ComponentProperties
-          changeTabs={changeTabs}
-          key={`${properties.type}-${(properties.properties || {}).id}`}
-          onSubmitFn={properties.type === 'form' ? updateForm : updateElements}
-          properties={properties}
-        />
-      </DetailsStyled>
-    </Columns>
+    <Container>
+      <HeadingWithAction>
+        <Heading>Form Builder</Heading>
+      </HeadingWithAction>
+      <Columns>
+        <Form>
+          <Tabs
+            activeKey={`${activeTab}`}
+            onChange={tab => {
+              setProperties({
+                type: 'form',
+                properties: getForms[tab],
+              })
+              setActiveTab(tab)
+            }}
+            sections={Sections}
+          />
+        </Form>
+        <Details>
+          <SectionContent>
+            <SectionRow>
+              <ComponentProperties
+                key={`${properties.type}-${(properties.properties || {}).id}`}
+                properties={properties}
+                setActiveTab={setActiveTab}
+                updateForm={updateForm}
+                updateFormElement={updateFormElement}
+              />
+            </SectionRow>
+          </SectionContent>
+        </Details>
+      </Columns>
+    </Container>
   )
 }
 

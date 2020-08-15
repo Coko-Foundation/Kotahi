@@ -136,7 +136,7 @@ const SubmitPage = ({ match, history, ...props }) => {
   const [update] = useMutation(updateMutation)
 
   if (loading) return <Spinner />
-  if (error) return error
+  if (error) return JSON.stringify(error)
 
   const manuscript = data?.manuscript
   const getFile = data?.getFile
