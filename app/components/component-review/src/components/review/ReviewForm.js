@@ -13,6 +13,7 @@ import {
   SectionRowGrid,
   SectionRow,
   SectionAction,
+  RecommendationInputContainer,
 } from '../style'
 import { FilesUpload } from '../../../../shared'
 
@@ -110,15 +111,17 @@ const ConfidentialInput = ({
 const RecommendationInput = ({ field, form: { values }, updateReview }) => {
   const journal = useContext(JournalContext)
   return (
-    <RadioGroup
-      inline
-      {...field}
-      data-testid="recommendation"
-      onChange={val => {
-        updateReview({ recommendation: val })
-      }}
-      options={journal.recommendations}
-    />
+    <RecommendationInputContainer>
+      <RadioGroup
+        inline
+        {...field}
+        data-testid="recommendation"
+        onChange={val => {
+          updateReview({ recommendation: val })
+        }}
+        options={journal.recommendations}
+      />
+    </RecommendationInputContainer>
   )
 }
 const ReviewComment = ({ updateReview }) => (

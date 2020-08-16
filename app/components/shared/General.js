@@ -60,6 +60,11 @@ export const SectionAction = styled.div`
   justify-self: end;
 `
 
+export const SectionActionInfo = styled.div`
+  line-height: ${grid(5)};
+  grid-column: 1 / span 2;
+`
+
 const Page = styled.div`
   padding: ${grid(2)};
 `

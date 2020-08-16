@@ -60,6 +60,7 @@ export default {
             date
           }
         }
+        published
         _currentRoles @client
       }
     }

@@ -1,6 +1,6 @@
 // const merge = require('lodash/merge')
 const detailsForURLResolver = require('./detailsForURLResolver')
-const { ref } = require('objection')
+const { ref, raw } = require('objection')
 
 const resolvers = {
   Mutation: {
@@ -201,6 +201,16 @@ const resolvers = {
 
       return reviewerTeam.$query().eager('members.[user]')
     },
+    async publishManuscript(_, { id }, ctx) {
+      let manuscript = await ctx.models.Manuscript.query().findById(id)
+
+      if (!manuscript.published) {
+        manuscript = ctx.models.Manuscript.query().updateAndFetchById(id, {
+          published: new Date(),
+        })
+      }
+      return manuscript
+    },
   },
   Query: {
     async manuscript(_, { id }, ctx) {
@@ -233,6 +243,24 @@ const resolvers = {
     },
     async manuscripts(_, { where }, ctx) {
       return ctx.models.Manuscript.query().eager('[teams, reviews]')
+    },
+    async publishedManuscripts(_, { offset, limit }, ctx) {
+      const query = ctx.models.Manuscript.query()
+        .where(raw('published IS NOT NULL'))
+        .eager('[reviews.[comments], files, submitter]')
+      const totalCount = await query.resultSize()
+      if (limit) {
+        query.limit(limit)
+      }
+
+      if (offset) {
+        query.offset(offset)
+      }
+      const manuscripts = await query
+      return {
+        totalCount,
+        manuscripts,
+      }
     },
     async paginatedManuscripts(_, { sort, offset, limit, filter }, ctx) {
       const query = ctx.models.Manuscript.query().eager('submitter')
@@ -311,6 +339,7 @@ const typeDefs = `
     manuscripts: [Manuscript]!
     paginatedManuscripts(sort: String, offset: Int, limit: Int, filter: ManuscriptsFilter): PaginatedManuscripts
     detailsForURL(url: String!): URLMetadata
+    publishedManuscripts(offset: Int, limit: Int): PaginatedManuscripts
   }
 
   type URLMetadata {
@@ -349,6 +378,7 @@ const typeDefs = `
     assignTeamEditor(id: ID!, input: String): [Team]
     addReviewer(manuscriptId: ID!, userId: ID!): Team
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
+    publishManuscript(id: ID!): Manuscript
   }
 
   type Manuscript implements Object {
@@ -367,6 +397,7 @@ const typeDefs = `
     submission: String
     channels: [Channel]
     submitter: User
+    published: DateTime
   }
 
   type ManuscriptVersion implements Object {
@@ -383,6 +414,7 @@ const typeDefs = `
     authors: [Author]
     meta: ManuscriptMeta
     submission: String
+    published: DateTime
   }
 
   input ManuscriptInput {

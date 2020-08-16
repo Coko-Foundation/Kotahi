@@ -50,7 +50,8 @@ export const NormalStatus = styled(Status)`
         `}
 `
 
-const label = status => {
+const label = (status, published) => {
+  const isPublished = !!published
   const labels = {
     accepted: 'Accepted',
     assignedToEditor: 'Assigned to editor',
@@ -62,14 +63,29 @@ const label = status => {
     invited: 'Invited', // reviewer status
     completed: 'Completed', // reviewer status
   }
-  return labels[status] || `Unknown (${status})`
+
+  if (isPublished) {
+    return labels[status]
+      ? `${labels[status]} & Published`
+      : `Unknown (${status} & Published})`
+  }
+  return labels[status] || `Unknown ${status}`
 }
 
-export const StatusBadge = ({ status, minimal }) => {
+// TODO: Make this configurable
+export const StatusBadge = ({ status, published, minimal }) => {
   if (status === 'accepted') {
-    return <SuccessStatus minimal={minimal}>{label(status)}</SuccessStatus>
+    return (
+      <SuccessStatus minimal={minimal}>
+        {label(status, published)}
+      </SuccessStatus>
+    )
   } else if (status === 'rejected') {
-    return <ErrorStatus minimal={minimal}>{label(status)}</ErrorStatus>
+    return (
+      <ErrorStatus minimal={minimal}>{label(status, published)}</ErrorStatus>
+    )
   }
-  return <NormalStatus minimal={minimal}>{label(status)}</NormalStatus>
+  return (
+    <NormalStatus minimal={minimal}>{label(status, published)}</NormalStatus>
+  )
 }

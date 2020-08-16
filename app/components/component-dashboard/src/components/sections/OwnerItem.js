@@ -32,7 +32,11 @@ const OwnerItem = ({ version, journals, deleteManuscript }) => {
     <Item>
       <div>
         {' '}
-        <StatusBadge minimal status={version.status} />
+        <StatusBadge
+          minimal
+          published={version.published}
+          status={version.status}
+        />
         <VersionTitle version={version} />
       </div>
       {actions}
