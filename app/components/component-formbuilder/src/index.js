@@ -1,3 +1,3 @@
-module.exports = {
-  server: () => require('./server/formRequestBackend'),
-}
+import FormBuilder from './components'
+
+export default FormBuilder
