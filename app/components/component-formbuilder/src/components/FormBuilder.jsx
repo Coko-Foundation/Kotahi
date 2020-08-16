@@ -1,15 +1,16 @@
 import React, { useState } from 'react'
 import styled, { withTheme } from 'styled-components'
 import { unescape } from 'lodash'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import { Icon, Action } from '@pubsweet/ui'
-import { Page } from './molecules/Page'
+import { Page, Heading } from './style'
 
 const Element = styled.div`
   display: flex;
-  border: 1px solid #000;
-  padding: 10px;
-  margin: 10px;
+  border: 1px solid ${th('colorBorder')};
+  padding: ${grid(2)} ${grid(1)};
+  border-radius: ${th('borderRadius')};
+  margin: ${grid(2)};
   justify-content: space-between;
 `
 
@@ -51,38 +52,40 @@ const Main = styled.div`
   justify-content: center;
 `
 
-const Info = styled.div`
-  color: ${th('colorPrimary')};
-  font-size: 2em;
-  font-weight: 400;
-  text-transform: uppercase;
-  display: inline-flex;
-  padding: calc(8px / 2);
-`
-
 const ElementTitle = styled.span``
 
 const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),
 })
 
-const BuilderElement = ({ elements, changeProperties, deleteElement, form }) =>
-  elements.map((value, key) => (
-    <Element key={`element-${value.id}`}>
-      <Action
-        onClick={() =>
-          changeProperties({
-            type: 'element',
-            properties: value,
-          })
-        }
-      >
-        <ElementTitle dangerouslySetInnerHTML={createMarkup(value.title)} /> (
-        {value.component})
-      </Action>
-      <Action onClick={() => deleteElement(form.id, value.id)}>x</Action>
-    </Element>
-  ))
+const BuilderElement = ({ elements, setProperties, deleteFormElement, form }) =>
+  [...elements]
+    .sort((obj1, obj2) => parseInt(obj1.order, 10) - parseInt(obj2.order, 10))
+    .map((value, key) => (
+      <Element key={`element-${value.id}`}>
+        <Action
+          onClick={() =>
+            setProperties({
+              type: 'element',
+              formId: form.id,
+              properties: value,
+            })
+          }
+        >
+          <ElementTitle dangerouslySetInnerHTML={createMarkup(value.title)} /> (
+          {value.component})
+        </Action>
+        <Action
+          onClick={() =>
+            deleteFormElement({
+              variables: { formId: form.id, elementId: value.id },
+            })
+          }
+        >
+          x
+        </Action>
+      </Element>
+    ))
 
 const AddButtonElement = ({ addElement }) => (
   <Root>
@@ -95,8 +98,10 @@ const AddButtonElement = ({ addElement }) => (
           })
         }
       >
-        <StatusIdle />
-        <Info>Add Element</Info>
+        <Heading>
+          <StatusIdle />
+          Add Element
+        </Heading>
       </Action>
     </Main>
   </Root>
@@ -106,8 +111,8 @@ const FormBuilder = ({
   form,
   // elements,
   // addElements,
-  changeProperties,
-  deleteElement,
+  setProperties,
+  deleteFormElement,
 }) => {
   const [elements, setElements] = useState(form.children || [])
   const addElement = element => {
@@ -122,11 +127,11 @@ const FormBuilder = ({
       <AddButtonElement addElement={addElement} form={form} id="add-element" />
       {elements && elements.length > 0 && (
         <BuilderElement
-          changeProperties={changeProperties}
-          deleteElement={deleteElement}
+          deleteFormElement={deleteFormElement}
           elements={elements}
           form={form}
           id="builder-element"
+          setProperties={setProperties}
         />
       )}
     </Page>

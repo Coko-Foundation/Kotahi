@@ -44,7 +44,19 @@ const getSupplementaryFiles = supplementary =>
 
 const showFieldData = (manuscript, fieldName) => {
   const data = get(manuscript, fieldName)
-  return Array.isArray(data) ? data.join(', ') : data
+  // TODO: Make this generic somehow. Perhaps with an additional fieldType?
+  if (Array.isArray(data) && fieldName === 'submission.links') {
+    return data.map(link => (
+      <p>
+        <a href={link.url} rel="noopener noreferrer" target="_blank">
+          {link.url}
+        </a>
+      </p>
+    ))
+  } else if (Array.isArray(data)) {
+    return data.join(', ')
+  }
+  return data
 }
 // Due to migration to new Data Model
 // Attachement component needs different data structure to work

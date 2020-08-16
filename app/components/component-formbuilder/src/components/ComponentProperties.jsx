@@ -1,21 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { map, omitBy } from 'lodash'
-import {
-  branch,
-  renderComponent,
-  compose,
-  withState,
-  withHandlers,
-  withProps,
-} from 'recompose'
+// import {
+//   branch,
+//   renderComponent,
+//   compose,
+//   withState,
+//   withHandlers,
+//   withProps,
+// } from 'recompose'
 import { ValidatedFieldFormik, Menu, Button } from '@pubsweet/ui'
-import { withFormik } from 'formik'
+import { Formik } from 'formik'
 
 import FormProperties from './FormProperties'
 import components from './config/Elements'
 import * as elements from './builderComponents'
-import { Page, Heading } from './molecules/Page'
-import { Section, Legend } from './styles'
+import { Section, Legend, Page, Heading } from './style'
 
 const MenuComponents = input => (
   <Menu
@@ -29,8 +28,8 @@ const MenuComponents = input => (
 
 const ComponentProperties = ({
   properties,
-  changeComponent,
-  selectComponentValue,
+  setComponent,
+  selectedComponent,
   handleSubmit,
   setFieldValue,
 }) => (
@@ -43,18 +42,18 @@ const ComponentProperties = ({
           component={MenuComponents}
           name="component"
           onChange={value => {
-            changeComponent(value)
+            setComponent(value)
             setFieldValue('component', value)
           }}
         />
       </Section>
-      {selectComponentValue &&
-        map(components[selectComponentValue], (value, key) => (
+      {selectedComponent &&
+        map(components[selectedComponent], (value, key) => (
           <Section key={key}>
             <Legend space>{`Field ${key}`}</Legend>
             <ValidatedFieldFormik
               component={elements[value.component].default}
-              key={`${selectComponentValue}-${key}`}
+              key={`${selectedComponent}-${key}`}
               name={key}
               onChange={event => {
                 let value = {}
@@ -77,45 +76,92 @@ const ComponentProperties = ({
   </Page>
 )
 
-const UpdateForm = ({ onSubmitFn, properties, changeTabs }) => (
+const UpdateForm = ({ handleSubmit, properties, setFieldValue }) => (
   <FormProperties
+    handleSubmit={handleSubmit}
     mode="update"
-    onSubmitFn={onSubmitFn}
     properties={properties}
+    setFieldValue={setFieldValue}
   />
 )
 
-const onSubmit = (values, { onSubmitFn, properties }) => {
-  if (!values.id || !values.component) return
-
-  const children = omitBy(values, value => value === '')
-  onSubmitFn({ id: properties.id }, Object.assign({}, { children }))
+const prepareForSubmit = values => {
+  const cleanedValues = omitBy(values, value => value === '')
+  return JSON.stringify(cleanedValues)
 }
 
-const ComponentForm = compose(
-  withProps(({ properties }) => ({
-    initialValues: { children: properties.properties },
-  })),
-  withFormik({
-    displayName: 'ComponentSubmit',
-    mapPropsToValues: data => data.properties.properties,
-    handleSubmit: (props, { props: { onSubmitFn, id, properties } }) =>
-      onSubmit(props, { onSubmitFn, properties }),
-  }),
-  withState(
-    'selectComponentValue',
-    'selectComponent',
-    ({ properties }) => properties.properties.component,
-  ),
-  withHandlers({
-    changeComponent: ({ selectComponent }) => component =>
-      selectComponent(() => component),
-  }),
-)(ComponentProperties)
+// const ComponentForm = compose(
+// withProps(({ properties }) => ({
+//   initialValues: { children: properties.properties },
+// })),
+// withFormik({
+//   displayName: 'ComponentSubmit',
+//   mapPropsToValues: data => data.properties.properties,
+//   handleSubmit: (props, { props: { onSubmitFn, id, properties } }) =>
+//     onSubmit(props, { onSubmitFn, properties }),
+// }),
+// withState(
+//   'selectComponentValue',
+//   'selectComponent',
+//   ({ properties }) => properties.properties.component,
+// ),
+// withHandlers({
+//   changeComponent: ({ selectComponent }) => component =>
+//     selectComponent(() => component),
+// }),
+// )(ComponentProperties)
 
-export default compose(
-  branch(
-    ({ properties }) => properties.type === 'form',
-    renderComponent(UpdateForm),
-  )(ComponentForm),
-)
+// export default compose(
+//   branch(
+//     ({ properties }) => properties.type === 'form',
+//     renderComponent(UpdateForm),
+//   )(ComponentForm),
+// )
+
+const ComponentForm = ({ updateForm, updateFormElement, ...props }) => {
+  const [selectedComponent, setComponent] = useState(
+    props.properties.properties.component,
+  )
+  return props.properties.type === 'form' ? (
+    <Formik
+      initialValues={props.properties.properties}
+      onSubmit={values =>
+        updateForm({
+          variables: { formId: values.id, form: prepareForSubmit(values) },
+        })
+      }
+    >
+      {formikProps => (
+        <UpdateForm
+          handleSubmit={formikProps.handleSubmit}
+          properties={props.properties}
+          setFieldValue={formikProps.setFieldValue}
+        />
+      )}
+    </Formik>
+  ) : (
+    <Formik
+      initialValues={props.properties.properties}
+      onSubmit={values =>
+        updateFormElement({
+          variables: {
+            formId: props.properties.formId,
+            element: prepareForSubmit(values),
+          },
+        })
+      }
+    >
+      {formikProps => (
+        <ComponentProperties
+          displayName="ComponentSubmit"
+          handleSubmit={formikProps.handleSubmit}
+          selectedComponent={selectedComponent}
+          setComponent={setComponent}
+          setFieldValue={formikProps.setFieldValue}
+        />
+      )}
+    </Formik>
+  )
+}
+
+export default ComponentForm

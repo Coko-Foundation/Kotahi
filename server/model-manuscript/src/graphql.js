@@ -1,5 +1,5 @@
-const merge = require('lodash/merge')
-const form = require('../../../app/storage/forms/submit.json')
+// const merge = require('lodash/merge')
+const detailsForURLResolver = require('./detailsForURLResolver')
 const { ref } = require('objection')
 
 const resolvers = {
@@ -125,7 +125,16 @@ const resolvers = {
     async updateManuscript(_, { id, input }, ctx) {
       const data = JSON.parse(input)
       const manuscript = await ctx.models.Manuscript.query().findById(id)
-      const update = merge({}, manuscript, data)
+      const update = Object.assign({}, manuscript, data)
+      // We specifically merge submission, as it itself has nested properties
+      // But we don't want to do a deep merge unconditionally, as that prevents
+      // any kind of deletion happening.
+      update.submission = Object.assign(
+        {},
+        manuscript.submission,
+        data.submission,
+      )
+      // const update.submission =
       return ctx.models.Manuscript.query().updateAndFetchById(id, update)
     },
     async makeDecision(_, { id, decision }, ctx) {
@@ -259,8 +268,8 @@ const resolvers = {
 
       // return ctx.connectors.User.fetchAll(where, ctx, { eager })
     },
-    async getFile() {
-      return form
+    async detailsForURL(_, { url }) {
+      return detailsForURLResolver(url)
     },
   },
   // We want submission into to come out as a stringified JSON, so that we don't have to
@@ -301,6 +310,17 @@ const typeDefs = `
     manuscript(id: ID!): Manuscript!
     manuscripts: [Manuscript]!
     paginatedManuscripts(sort: String, offset: Int, limit: Int, filter: ManuscriptsFilter): PaginatedManuscripts
+    detailsForURL(url: String!): URLMetadata
+  }
+
+  type URLMetadata {
+    title: String
+    author: String
+    date: String
+    description: String
+    image: String
+    logo: String
+    publisher: String
   }
 
   input ManuscriptsFilter {

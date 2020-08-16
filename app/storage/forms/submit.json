@@ -128,12 +128,12 @@
       "order": "5"
     },
     {
-      "title": "Links",
+      "title": "Research object links",
       "id": "1591192678688",
-      "component": "TextField",
+      "component": "LinksInput",
       "name": "submission.links",
       "placeholder": "Enter your links, separated by commas",
-      "order": "9",
+      "order": "-1",
       "parse": {
         "value": "split",
         "label": "Split"

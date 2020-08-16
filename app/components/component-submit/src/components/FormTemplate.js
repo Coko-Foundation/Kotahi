@@ -15,6 +15,7 @@ import { AbstractEditor } from 'xpub-edit'
 import { Section as Container, Select, FilesUpload } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
+import LinksInput from './LinksInput'
 import Confirm from './Confirm'
 
 // TODO: https://github.com/formium/formik/issues/146#issuecomment-474775723
@@ -100,6 +101,7 @@ elements.AbstractEditor = ({
 
 elements.AuthorsInput = AuthorsInput
 elements.Select = Select
+elements.LinksInput = LinksInput
 
 const rejectProps = (obj, keys) =>
   Object.keys(obj)
