@@ -10,5 +10,6 @@ CREATE TABLE manuscripts (
     suggestions JSONB,
     meta JSONB,
     submission JSONB,
+    published TIMESTAMP WITH TIME ZONE,
     type TEXT NOT NULL
 );

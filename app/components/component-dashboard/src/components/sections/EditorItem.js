@@ -58,7 +58,11 @@ const EditorItem = ({ version }) => (
   // <Authorize object={[version]} operation="can view my manuscripts section">
   <>
     <Item>
-      <StatusBadge minimal status={version.status} />
+      <StatusBadge
+        minimal
+        published={version.published}
+        status={version.status}
+      />
       <Meta>
         <MetadataStreamLined
           streamlinedReview={getDeclarationsObject(

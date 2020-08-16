@@ -11,11 +11,15 @@ import AssignEditor from './assignEditors/AssignEditor'
 import ReviewMetadata from './metadata/ReviewMetadata'
 import Decision from './decision/Decision'
 import EditorSection from './decision/EditorSection'
+import Publish from './Publish'
+
 import { AdminSection, Columns, Manuscript, Chat } from './style'
 
 import { Spinner } from '../../../shared'
 
 import MessageContainer from '../../../component-chat/src'
+
+import { query, updateReviewMutation, makeDecisionMutation } from './queries'
 
 const addEditor = (manuscript, label) => ({
   content: <EditorSection manuscript={manuscript} />,
@@ -23,153 +27,6 @@ const addEditor = (manuscript, label) => ({
   label,
 })
 
-const commentFields = `
-  id
-  commentType
-  content
-  files {
-    id
-    created
-    label
-    filename
-    fileType
-    mimeType
-    size
-    url
-  }
-`
-
-const reviewFields = `
-  id
-  created
-  updated
-  decisionComment {
-    ${commentFields}
-  }
-  reviewComment {
-    ${commentFields}
-  }
-  confidentialComment {
-    ${commentFields}
-  }
-  isDecision
-  recommendation
-  user {
-    id
-    username
-  }
-`
-
-const fragmentFields = `
-  id
-  created
-  files {
-    id
-    created
-    label
-    filename
-    fileType
-    mimeType
-    size
-    url
-  }
-  reviews {
-    ${reviewFields}
-  }
-  decision
-  teams {
-    id
-    name
-    role
-    manuscript {
-      id
-    }
-    members {
-      id
-      user {
-        id
-        username
-      }
-      status
-    }
-  }
-  status
-  meta {
-    manuscriptId
-    title
-    source
-    abstract
-    declarations {
-      openData
-      openPeerReview
-      preregistered
-      previouslySubmitted
-      researchNexus
-      streamlinedReview
-    }
-    articleSections
-    articleType
-    history {
-      type
-      date
-    }
-    notes {
-      notesType
-      content
-    }
-    keywords
-  }
-  submission
-  suggestions {
-    reviewers {
-      opposed
-      suggested
-    }
-    editors {
-      opposed
-      suggested
-    }
-  }
-`
-
-const query = gql`
-  query($id: ID!) {
-    currentUser {
-      id
-      username
-      admin
-    }
-
-    manuscript(id: $id) {
-      ${fragmentFields}
-      manuscriptVersions {
-        ${fragmentFields}
-      }
-      channels {
-        id
-        type
-        topic
-      }
-    }
-  }
-`
-
-const updateReviewMutationQuery = gql`
-  mutation($id: ID, $input: ReviewInput) {
-    updateReview(id: $id, input: $input) {
-      ${reviewFields}
-    }
-  }
-`
-
-const makeDecisionMutation = gql`
-  mutation($id: ID!, $decision: String) {
-    makeDecision(id: $id, decision: $decision) {
-      id
-      ${fragmentFields}
-    }
-  }
-`
 const dateLabel = date => moment(date).format('YYYY-MM-DD')
 
 const decisionSections = ({
@@ -225,6 +82,9 @@ const decisionSections = ({
             updateReview={updateReview}
             uploadFile={uploadFile}
           />
+        </AdminSection>
+        <AdminSection>
+          <Publish manuscript={manuscript} />
         </AdminSection>
       </>
     ),
@@ -293,7 +153,7 @@ const decisionSections = ({
 const DecisionPage = ({ match }) => {
   // Hooks from the old world
   const [makeDecision] = useMutation(makeDecisionMutation)
-  const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
+  const [doUpdateReview] = useMutation(updateReviewMutation)
 
   const { loading, error, data } = useQuery(query, {
     variables: {
@@ -342,7 +202,7 @@ const DecisionPage = ({ match }) => {
       },
     }
 
-    return updateReviewMutation({
+    return doUpdateReview({
       variables: {
         id: existingReview.current.id || undefined,
         input: reviewData,

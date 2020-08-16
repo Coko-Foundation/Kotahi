@@ -107,10 +107,15 @@ export const ErrorText = styled.div`
   color: red;
 `
 
+export const RecommendationInputContainer = styled.div`
+  line-height: ${grid(5)};
+`
+
 export {
   Title,
   SectionHeader,
   SectionRow,
   SectionRowGrid,
   SectionAction,
+  SectionActionInfo,
 } from '../../../shared'

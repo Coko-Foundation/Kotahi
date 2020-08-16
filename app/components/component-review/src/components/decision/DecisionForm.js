@@ -25,6 +25,7 @@ import {
   FormStatus,
   ErrorText,
   ErrorWrap,
+  RecommendationInputContainer,
 } from '../style'
 
 // import Wax from '../../../../wax-collab/src/Editoria'
@@ -113,7 +114,7 @@ const RecommendationInput = ({
 }) => {
   const journal = useContext(JournalContext)
   return (
-    <div>
+    <RecommendationInputContainer>
       <RadioGroup
         {...field}
         inline
@@ -125,7 +126,7 @@ const RecommendationInput = ({
         value={field.value === '' ? null : field.value}
       />
       <ErrorMessage name="recommendation" />
-    </div>
+    </RecommendationInputContainer>
   )
 }
 

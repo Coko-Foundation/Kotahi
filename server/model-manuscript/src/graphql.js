@@ -201,6 +201,16 @@ const resolvers = {
 
       return reviewerTeam.$query().eager('members.[user]')
     },
+    async publishManuscript(_, { id }, ctx) {
+      let manuscript = await ctx.models.Manuscript.query().findById(id)
+
+      if (!manuscript.published) {
+        manuscript = ctx.models.Manuscript.query().updateAndFetchById(id, {
+          published: new Date(),
+        })
+      }
+      return manuscript
+    },
   },
   Query: {
     async manuscript(_, { id }, ctx) {
@@ -349,6 +359,7 @@ const typeDefs = `
     assignTeamEditor(id: ID!, input: String): [Team]
     addReviewer(manuscriptId: ID!, userId: ID!): Team
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
+    publishManuscript(id: ID!): Manuscript
   }
 
   type Manuscript implements Object {
@@ -367,6 +378,7 @@ const typeDefs = `
     submission: String
     channels: [Channel]
     submitter: User
+    published: DateTime
   }
 
   type ManuscriptVersion implements Object {
@@ -383,6 +395,7 @@ const typeDefs = `
     authors: [Author]
     meta: ManuscriptMeta
     submission: String
+    published: DateTime
   }
 
   input ManuscriptInput {
