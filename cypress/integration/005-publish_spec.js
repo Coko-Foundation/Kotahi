@@ -14,6 +14,9 @@ describe('Publishing a submission', () => {
     cy.contains('Dashboard').click()
     cy.contains('Accepted & Published')
 
+    cy.visit('/')
+    cy.contains('My URL submission')
+
     cy.task('dump', 'published_submission')
   })
 })

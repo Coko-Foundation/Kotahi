@@ -1,6 +1,6 @@
 // const merge = require('lodash/merge')
 const detailsForURLResolver = require('./detailsForURLResolver')
-const { ref } = require('objection')
+const { ref, raw } = require('objection')
 
 const resolvers = {
   Mutation: {
@@ -244,6 +244,24 @@ const resolvers = {
     async manuscripts(_, { where }, ctx) {
       return ctx.models.Manuscript.query().eager('[teams, reviews]')
     },
+    async publishedManuscripts(_, { offset, limit }, ctx) {
+      const query = ctx.models.Manuscript.query()
+        .where(raw('published IS NOT NULL'))
+        .eager('[reviews.[comments], files, submitter]')
+      const totalCount = await query.resultSize()
+      if (limit) {
+        query.limit(limit)
+      }
+
+      if (offset) {
+        query.offset(offset)
+      }
+      const manuscripts = await query
+      return {
+        totalCount,
+        manuscripts,
+      }
+    },
     async paginatedManuscripts(_, { sort, offset, limit, filter }, ctx) {
       const query = ctx.models.Manuscript.query().eager('submitter')
 
@@ -321,6 +339,7 @@ const typeDefs = `
     manuscripts: [Manuscript]!
     paginatedManuscripts(sort: String, offset: Int, limit: Int, filter: ManuscriptsFilter): PaginatedManuscripts
     detailsForURL(url: String!): URLMetadata
+    publishedManuscripts(offset: Int, limit: Int): PaginatedManuscripts
   }
 
   type URLMetadata {
