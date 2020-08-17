@@ -7,7 +7,7 @@ In order to contribute to Kotahi, you're expected to follow a few sensible guide
 
 ## Discuss your contribution before you build
 
-Please let us know about the contribution you plan to make before you start it. Either comment on a relevant existing issue, or open a new [issue](https://gitlab.coko.foundation/simplej/simplej/issues) if you can't find an existing one. This helps us avoid duplicating effort and to ensure contributions are likely to be accepted. You can also ask in the chat room (https://mattermost.coko.foundation/coko/channels/simplej) if you are unsure.
+Please let us know about the contribution you plan to make before you start it. Either comment on a relevant existing issue, or open a new [issue](https://gitlab.coko.foundation/kotahi/kotahi/issues) if you can't find an existing one. This helps us avoid duplicating effort and to ensure contributions are likely to be accepted. You can also ask in the chat room (https://mattermost.coko.foundation/coko/channels/kotahi) if you are unsure.
 
 For contributions made as discussions and suggestions, you can at any time open an RFC (request for comments) in our issue tracker.
 
@@ -15,7 +15,7 @@ For contributions made as discussions and suggestions, you can at any time open 
 
 We maintain master as the production branch and tag it with release names. If you wish to contribute to Kotahi then you need to make a branch and then issue a pull request following this procedure:
 Create a user account on Coko's GitLab: http://gitlab.coko.foundation
-Clone master with `git clone git@gitlab.coko.foundation:simplej/simplej.git`
+Clone master with `git clone git@gitlab.coko.foundation:kotahi/kotahi.git`
 Create a new branch and work off of that. Please name the branch which sensibly identifies the feature you are working on. You can push the branch to GitLab at anytime.
 
 ## Getting your contributions merged
@@ -39,6 +39,5 @@ We use conventional commits and verify that commit messages match the pattern, y
 ## Bug reports, feature requests, support questions
 
 This is all done through GitLab using their native issue tracker
-Visit the master issue tracker for Kotahi (https://gitlab.coko.foundation/simplej/simplej/issues)
+Visit the master issue tracker for Kotahi (https://gitlab.coko.foundation/kotahi/kotahi/issues)
 Tag the issue with 'support', 'bug', or 'feature' to identify the nature of your issue
-
