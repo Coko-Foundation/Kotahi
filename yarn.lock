@@ -16842,10 +16842,10 @@ wax-prosemirror-services@0.0.10:
     wax-prosemirror-core "^0.0.10"
     wax-prosemirror-layouts "^0.0.10"
 
-wax-prosemirror-themes@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-themes/-/wax-prosemirror-themes-0.0.10.tgz#517f889624e68fcb4377d87d677eee51e2241eeb"
-  integrity sha512-3ul1rvDSVPflmu3TX9vIJQ/nqbR3+ojL8WKiXtTaimX4Sc06NlR68RtilhhDFdEde3LP4jHEk85WxmHUqJMJ4A==
+wax-prosemirror-themes@0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-themes/-/wax-prosemirror-themes-0.0.14.tgz#61440427b15b79bb299bb35c20b35d6102f3b73c"
+  integrity sha512-Ax4iAqn1Y2LAsdrHs6EigB5uzE4jp+hgMJHQFCBYwjLE/WYTeLMmsqbRi6rL665kxWgs/lEA7wpehh71n7KSfw==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.2.13"
     cokourier-prime-sans "git+https://gitlab.coko.foundation/julientaq/cokourier-sans-prime.git"
