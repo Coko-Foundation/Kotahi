@@ -69,7 +69,7 @@
     "wax-prosemirror-schema": "0.0.10",
     "wax-prosemirror-services": "0.0.10",
     "wax-prosemirror-themes": "0.0.10",
-    "wax-prosemirror-utilities": "0.0.10",
+    "wax-prosemirror-utilities": "0.0.14",
     "winston": "2.4.5",
     "xpub-edit": "2.6.11",
     "xpub-journal": "0.1.0",

@@ -16852,12 +16852,14 @@ wax-prosemirror-themes@0.0.10:
     typeface-fira-sans-condensed "^0.0.54"
     typeface-vollkorn "^0.0.54"
 
-wax-prosemirror-utilities@0.0.10:
-  version "0.0.10"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-utilities/-/wax-prosemirror-utilities-0.0.10.tgz#0e962e6e8a7a44000dacd720932a602e7729c37c"
-  integrity sha512-uTPHkUvF66MwnsrW67MrkD4ISnIH1/SSAaJ0+s9PWHi5wBqlWQ6ED7HmKK/MHlLwE7aVTwg8BXP7hI2s5jfaUg==
+wax-prosemirror-utilities@0.0.14:
+  version "0.0.14"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-utilities/-/wax-prosemirror-utilities-0.0.14.tgz#7db878d63f3a719693e50770d8592f38fb2d9eee"
+  integrity sha512-eFcjOXisz1zc/k58HEbOo7jayvgOzlOjJGTAcK+iE2wGmtggJ4JwGzCopv2bmq3xp1YzqnvujQSiWp5l9wsa+A==
   dependencies:
+    prosemirror-commands "^1.1.3"
     prosemirror-utils "^0.9.6"
+    uuid "^7.0.3"
 
 wbuf@^1.1.0, wbuf@^1.7.3:
   version "1.7.3"
