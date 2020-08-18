@@ -17411,7 +17411,14 @@ y-leveldb@^0.1.0:
     level "^6.0.1"
     lib0 "^0.2.31"
 
-y-protocols@1.0.0, y-protocols@^1.0.0:
+y-protocols@1.0.1:
+  version "1.0.1"
+  resolved "https://registry.yarnpkg.com/y-protocols/-/y-protocols-1.0.1.tgz#7855c900039a02b369590b8ae78bc6e1cbc13c9f"
+  integrity sha512-QP3fCM7c2gGfUi2nqf8gspyO4VW23zv3kNqPNdD3wNxMbuNQenMyoDVZYEo12jzR4RQ3aaDfPK62Sf31SVOmfg==
+  dependencies:
+    lib0 "^0.2.28"
+
+y-protocols@^1.0.0:
   version "1.0.0"
   resolved "https://registry.yarnpkg.com/y-protocols/-/y-protocols-1.0.0.tgz#d06035f9c8824b1fdc652c6a06b3c9aaca9261f0"
   integrity sha512-L/GB+ryTmrrE0ISLIsNmgXl8lmt+CF7wG9Gm6jQf1JQYKZuzX3+Tbz3b7ov/quXwguM5zcVlJ0zxG29SgQD5Ww==
