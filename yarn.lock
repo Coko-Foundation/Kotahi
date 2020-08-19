@@ -7901,7 +7901,7 @@ gonzales-pe@^4.0.3, gonzales-pe@^4.2.3:
   dependencies:
     minimist "^1.2.5"
 
-got@^11.5.1, got@~11.5.1:
+got@11.5.1, got@~11.5.1:
   version "11.5.1"
   resolved "https://registry.yarnpkg.com/got/-/got-11.5.1.tgz#bf098a270fe80b3fb88ffd5a043a59ebb0a391db"
   integrity sha512-reQEZcEBMTGnujmQ+Wm97mJs/OK6INtO6HmLI+xt3+9CvnRwWjXutUvb2mqr+Ao4Lu05Rx6+udx9sOQAmExMxA==
@@ -10761,7 +10761,7 @@ memoize-one@^5.0.0, memoize-one@~5.1.1:
   resolved "https://registry.yarnpkg.com/memoize-one/-/memoize-one-5.1.1.tgz#047b6e3199b508eaec03504de71229b8eb1d75c0"
   integrity sha512-HKeeBpWvqiVJD57ZUAsJNm71eHTykffzcLZVYWiVfQeI1rJtuEaS7hQiEpWfVVk18donPwJEcFKIkCmPJNOhHA==
 
-memory-cache@^0.2.0:
+memory-cache@0.2.0:
   version "0.2.0"
   resolved "https://registry.yarnpkg.com/memory-cache/-/memory-cache-0.2.0.tgz#7890b01d52c00c8ebc9d533e1f8eb17e3034871a"
   integrity sha1-eJCwHVLADI68nVM+H46xfjA0hxo=
@@ -10846,7 +10846,7 @@ merge@^1.2.0:
   resolved "https://registry.yarnpkg.com/merge/-/merge-1.2.1.tgz#38bebf80c3220a8a487b6fcfb3941bb11720c145"
   integrity sha512-VjFo4P5Whtj4vsLzsYBu5ayHhoHJ0UqNm7ibvShmbmoz7tGi0vXaoJbGdB+GmDMLUdg8DpQXEIeVDAe8MaABvQ==
 
-metascraper-author@^5.13.1:
+metascraper-author@5.13.1:
   version "5.13.1"
   resolved "https://registry.yarnpkg.com/metascraper-author/-/metascraper-author-5.13.1.tgz#fe00c0ffac180f45fd98b3f9d4d892a750218e58"
   integrity sha512-vDELulSYqa+3mTXL0eMucC6paK2kMXQ2WyJNJwiNkKnK0W3+9Q8ZzGDf42WBQjbdiDbC4nJskCBINCTO+VtB8w==
@@ -10854,28 +10854,28 @@ metascraper-author@^5.13.1:
     "@metascraper/helpers" "^5.13.1"
     lodash "~4.17.19"
 
-metascraper-date@^5.13.1:
+metascraper-date@5.13.1:
   version "5.13.1"
   resolved "https://registry.yarnpkg.com/metascraper-date/-/metascraper-date-5.13.1.tgz#f17beb3fa545a595472fa484376cd9626c5b4f2d"
   integrity sha512-xqpt//LL/TJa2N+iOFWZ99kgCLEIHX9XxQFis4L+GF5U7IalAs/nnHfkNfBU3ldiI5nKzUmG7CodzMEjYEPveA==
   dependencies:
     "@metascraper/helpers" "^5.13.1"
 
-metascraper-description@^5.13.1:
+metascraper-description@5.13.1:
   version "5.13.1"
   resolved "https://registry.yarnpkg.com/metascraper-description/-/metascraper-description-5.13.1.tgz#04ede72de3f2d31415ae1ee231b3900b92f9a1bd"
   integrity sha512-p0bn108z8lOyVZ0DE/MQFSIcbfLQ1AT7M6e/SHNYz6b17HJZPqlXhBO4AY85rluR6taeuMk0eyuksKSvS0BclA==
   dependencies:
     "@metascraper/helpers" "^5.13.1"
 
-metascraper-image@^5.13.1:
+metascraper-image@5.13.1:
   version "5.13.1"
   resolved "https://registry.yarnpkg.com/metascraper-image/-/metascraper-image-5.13.1.tgz#25815f852e7695e6c3027a982ad26dfd80fb6865"
   integrity sha512-TeDA0mdJwCNU4iFhdJXEkctunRjCaE/VGOhRFakc7I+wZYxMPJCUYd3LQUeD0Vu5dpnwJUqBepxU0kF7Z6oV5w==
   dependencies:
     "@metascraper/helpers" "^5.13.1"
 
-metascraper-logo-favicon@^5.13.1:
+metascraper-logo-favicon@5.13.1:
   version "5.13.1"
   resolved "https://registry.yarnpkg.com/metascraper-logo-favicon/-/metascraper-logo-favicon-5.13.1.tgz#28b8814669f6d402093f0d294e79497230e6539e"
   integrity sha512-LtnbTHDsBAIRR1G3fycZqMNMLxBWAOKTcS/FVWBzVpBJrsSh/P0mE7+OqHtfeAzLMbD1OTiVev4o0b9JUp68vg==
@@ -10884,21 +10884,21 @@ metascraper-logo-favicon@^5.13.1:
     got "~11.5.1"
     lodash "~4.17.19"
 
-metascraper-logo@^5.13.1:
+metascraper-logo@5.13.1:
   version "5.13.1"
   resolved "https://registry.yarnpkg.com/metascraper-logo/-/metascraper-logo-5.13.1.tgz#0ae355fce084d5177e03a3641691eba6cb8dc981"
   integrity sha512-RYCovxtby5jAtLnaATKpdUbXkBtZcnbMVvsR8hFDZzbXjVxBZOanqddOJp7TeKl5k1HmTuQIekV5WsN0cN9lZQ==
   dependencies:
     "@metascraper/helpers" "^5.13.1"
 
-metascraper-publisher@^5.13.1:
+metascraper-publisher@5.13.1:
   version "5.13.1"
   resolved "https://registry.yarnpkg.com/metascraper-publisher/-/metascraper-publisher-5.13.1.tgz#07cbe86ec50b06291aae972daac50419af85f853"
   integrity sha512-q1PEw81RboFHkeeFwgpG8hbyfl9CUvQcgE3UQMk5FXs+MI16qy458lxs42NGMIsSAyilX2pEsIdFxTEH0Ab22w==
   dependencies:
     "@metascraper/helpers" "^5.13.1"
 
-metascraper-title@^5.13.1:
+metascraper-title@5.13.1:
   version "5.13.1"
   resolved "https://registry.yarnpkg.com/metascraper-title/-/metascraper-title-5.13.1.tgz#7ab51fc0763bed48f49c313ad95bf5a3f514043d"
   integrity sha512-heWQe7p0/hwnL9DRZqRKiIdMi+y4BJj5Vo4AcI8vI2ZkugWNYkRGn3GmSrPJ0B1SRCu57/UtqOOmxPY3DCcKiQ==
@@ -10906,7 +10906,7 @@ metascraper-title@^5.13.1:
     "@metascraper/helpers" "^5.13.1"
     lodash "~4.17.19"
 
-metascraper@^5.13.1:
+metascraper@5.13.1:
   version "5.13.1"
   resolved "https://registry.yarnpkg.com/metascraper/-/metascraper-5.13.1.tgz#846ed788f8bbe2fd80fbfa8ac6b94fff1ee7cf83"
   integrity sha512-1954Hxrd0p0iA8qnTlIvzFC4A+v9IRgdaeV0IMmu0LxqLXyJpIVsOlTZ3Zhw14U9PJHwHEWd9awtzSBwJkoMMQ==
