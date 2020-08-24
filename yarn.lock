@@ -10907,12 +10907,12 @@ metascraper-author@5.14.4:
     "@metascraper/helpers" "^5.14.4"
     lodash "~4.17.20"
 
-metascraper-date@5.13.1:
-  version "5.13.1"
-  resolved "https://registry.yarnpkg.com/metascraper-date/-/metascraper-date-5.13.1.tgz#f17beb3fa545a595472fa484376cd9626c5b4f2d"
-  integrity sha512-xqpt//LL/TJa2N+iOFWZ99kgCLEIHX9XxQFis4L+GF5U7IalAs/nnHfkNfBU3ldiI5nKzUmG7CodzMEjYEPveA==
+metascraper-date@5.14.4:
+  version "5.14.4"
+  resolved "https://registry.yarnpkg.com/metascraper-date/-/metascraper-date-5.14.4.tgz#34e222190d07708c465dd961dac0a76fcad4bc9a"
+  integrity sha512-rENCSFc2mZ3mYPpSknkiFZND8w82quTG3vZq5gf/ayeX4aEEEyPgoqnDIbykA8omAmlSDa9Gb5yTgJ1B9bc/Wg==
   dependencies:
-    "@metascraper/helpers" "^5.13.1"
+    "@metascraper/helpers" "^5.14.4"
 
 metascraper-description@5.13.1:
   version "5.13.1"
