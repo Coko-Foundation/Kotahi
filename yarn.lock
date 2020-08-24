@@ -10921,12 +10921,12 @@ metascraper-description@5.13.1:
   dependencies:
     "@metascraper/helpers" "^5.13.1"
 
-metascraper-image@5.13.1:
-  version "5.13.1"
-  resolved "https://registry.yarnpkg.com/metascraper-image/-/metascraper-image-5.13.1.tgz#25815f852e7695e6c3027a982ad26dfd80fb6865"
-  integrity sha512-TeDA0mdJwCNU4iFhdJXEkctunRjCaE/VGOhRFakc7I+wZYxMPJCUYd3LQUeD0Vu5dpnwJUqBepxU0kF7Z6oV5w==
+metascraper-image@5.14.4:
+  version "5.14.4"
+  resolved "https://registry.yarnpkg.com/metascraper-image/-/metascraper-image-5.14.4.tgz#3e11725fcaf1c052fd041330e9fa06e01e638fd3"
+  integrity sha512-Nz5LAmFsrodsusZu0ZqPn9NVOy3APD/4EGSGLAjOzl9btJ/8h3M7DAKBhfXr+DKHcvSz3SIsWM7+zRr1Vahtcw==
   dependencies:
-    "@metascraper/helpers" "^5.13.1"
+    "@metascraper/helpers" "^5.14.4"
 
 metascraper-logo-favicon@5.13.1:
   version "5.13.1"
