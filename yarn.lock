@@ -10985,15 +10985,15 @@ metascraper-title@5.13.1:
     "@metascraper/helpers" "^5.13.1"
     lodash "~4.17.19"
 
-metascraper@5.13.1:
-  version "5.13.1"
-  resolved "https://registry.yarnpkg.com/metascraper/-/metascraper-5.13.1.tgz#846ed788f8bbe2fd80fbfa8ac6b94fff1ee7cf83"
-  integrity sha512-1954Hxrd0p0iA8qnTlIvzFC4A+v9IRgdaeV0IMmu0LxqLXyJpIVsOlTZ3Zhw14U9PJHwHEWd9awtzSBwJkoMMQ==
+metascraper@5.14.4:
+  version "5.14.4"
+  resolved "https://registry.yarnpkg.com/metascraper/-/metascraper-5.14.4.tgz#0646f32337f7cdbc02a60d13b3a8ed5f8f45ec3c"
+  integrity sha512-ONA44Q2bveyaYJ46FuoUne4vdWujuJxPPKY2rsIh8XyBixEgi2Ktd5IPisqj2vSwhZ7BNShECNNCUbLzLz+RhQ==
   dependencies:
-    "@metascraper/helpers" "^5.13.1"
+    "@metascraper/helpers" "^5.14.4"
     cheerio "~1.0.0-rc.3"
     cheerio-advanced-selectors "~2.0.1"
-    lodash "~4.17.19"
+    lodash "~4.17.20"
     whoops "~4.1.0"
 
 methods@^1.1.1, methods@^1.1.2, methods@~1.1.2:
