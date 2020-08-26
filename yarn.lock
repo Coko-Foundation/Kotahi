@@ -1888,6 +1888,32 @@
     url-regex-safe "~1.0.1"
     video-extensions "~1.1.0"
 
+"@metascraper/helpers@^5.14.5":
+  version "5.14.5"
+  resolved "https://registry.yarnpkg.com/@metascraper/helpers/-/helpers-5.14.5.tgz#2bae21de7bddd35387922225d8fe581f404fbca0"
+  integrity sha512-8JloYCQ1aHPLbOXCnAsPkk9am6dTFDib+aIjTp/SrC/R2lGy/13zkTf4kjd1Jwl4HJ4V/i+fH6FKlrdKxZFd1w==
+  dependencies:
+    audio-extensions "0.0.0"
+    chrono-node "2.1.8"
+    condense-whitespace "~2.0.0"
+    entities "~2.0.3"
+    file-extension "~4.0.5"
+    has-values "~2.0.1"
+    image-extensions "~1.1.0"
+    is-relative-url "~3.0.0"
+    is-uri "~1.2.0"
+    iso-639-3 "~2.1.0"
+    isostring "0.0.1"
+    lodash "~4.17.20"
+    memoize-one "~5.1.1"
+    mime-types "~2.1.27"
+    normalize-url "~5.1.0"
+    smartquotes "~2.3.1"
+    title "~3.4.2"
+    truncate "~2.1.0"
+    url-regex-safe "~1.0.1"
+    video-extensions "~1.1.0"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -4733,6 +4759,13 @@ chrono-node@2.1.7:
   version "2.1.7"
   resolved "https://registry.yarnpkg.com/chrono-node/-/chrono-node-2.1.7.tgz#e33b40c3c872708b9ec8612e11bceed4f72d2995"
   integrity sha512-6x+15cnjmbaOjdlEziRuT3gc9Qaf5contCe5jxMEKj58D8YYxbWNkrNNhbxAkjXj2VDfyAELk55C6nFPdRZGXQ==
+  dependencies:
+    dayjs "^1.8.29"
+
+chrono-node@2.1.8:
+  version "2.1.8"
+  resolved "https://registry.yarnpkg.com/chrono-node/-/chrono-node-2.1.8.tgz#5180afb086639d13777079163aa8dd84a596c8c0"
+  integrity sha512-Bn54l+yEX4yA+/8dYIz/tITSWcPFwy1N5KpUEndPngwUCr7hTDKqVAdBjiqPrbvgOeSvcOhe3yIBH+HsmzM3GA==
   dependencies:
     dayjs "^1.8.29"
 
@@ -10985,12 +11018,12 @@ metascraper-title@5.13.1:
     "@metascraper/helpers" "^5.13.1"
     lodash "~4.17.19"
 
-metascraper@5.14.4:
-  version "5.14.4"
-  resolved "https://registry.yarnpkg.com/metascraper/-/metascraper-5.14.4.tgz#0646f32337f7cdbc02a60d13b3a8ed5f8f45ec3c"
-  integrity sha512-ONA44Q2bveyaYJ46FuoUne4vdWujuJxPPKY2rsIh8XyBixEgi2Ktd5IPisqj2vSwhZ7BNShECNNCUbLzLz+RhQ==
+metascraper@5.14.5:
+  version "5.14.5"
+  resolved "https://registry.yarnpkg.com/metascraper/-/metascraper-5.14.5.tgz#75295c95b1586f30301550d4e0f40a54f52d3cf4"
+  integrity sha512-5xdJksHKl8zS1/nQD9s/sPgUIhTNypSO5CuPTo/1wT2P9WztW3Hx5lbUnVFmFfsTBiDuSjA3zjrSK42XSBYBWw==
   dependencies:
-    "@metascraper/helpers" "^5.14.4"
+    "@metascraper/helpers" "^5.14.5"
     cheerio "~1.0.0-rc.3"
     cheerio-advanced-selectors "~2.0.1"
     lodash "~4.17.20"
