@@ -57,7 +57,7 @@ const Frontpage = ({ history, ...props }) => {
               </div>
               <div>
                 Submitted research objects:
-                {manuscript.submission.links.map(link => (
+                {manuscript.submission?.links?.map(link => (
                   <p>
                     <a
                       href={link.url}
