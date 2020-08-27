@@ -12,7 +12,7 @@ const updateStuff = data => {
 
 const RolesUpdater = ({ children, history, match }) => {
   // This updates the current roles app-wide using Apollo's makeVar
-  const { error } = useQuery(GET_CURRENT_USER, {
+  const { data, error, loading } = useQuery(GET_CURRENT_USER, {
     pollInterval: 5000,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'network-only',
@@ -20,7 +20,7 @@ const RolesUpdater = ({ children, history, match }) => {
     onCompleted: useCallback(data => updateStuff(data), []),
   })
 
-  if (error && !error.networkError) {
+  if ((error && !error.networkError) || (!loading && !data?.currentUser)) {
     return <Redirect to="/login" />
   }
 
