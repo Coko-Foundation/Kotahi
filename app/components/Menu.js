@@ -105,6 +105,9 @@ const UserItem = styled(Link)`
 
 const UserInfo = styled.div`
   margin-left: ${grid(1)};
+  display: flex;
+  justify-content: center;
+  flex-direction: column;
 `
 
 const Menu = ({
@@ -134,10 +137,11 @@ const Menu = ({
 const UserComponent = ({ user, loginLink }) => (
   <Section>
     {user && (
-      <UserItem to="/journal/profile">
-        <UserAvatar size={64} user={user} />
+      <UserItem title="Go to your profile" to="/journal/profile">
+        <UserAvatar isClickable={false} size={48} user={user} />
         <UserInfo>
-          {user.defaultIdentity.name || user.username}
+          <p>{user.defaultIdentity.name || user.username}</p>
+          <p>{user.online ? '' : 'Offline'}</p>
           {/* ({user.username}) */}
           {user.admin ? ' (admin)' : ''}
         </UserInfo>

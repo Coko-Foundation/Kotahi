@@ -110,6 +110,7 @@ const AdminPage = ({ children, history, match }) => {
   let links = []
   const formBuilderLink = `/journal/admin/form-builder`
   const homeLink = '/journal/dashboard'
+  const profileLink = '/journal/profile'
 
   if (showLinks) {
     const params = getParams(pathname)
@@ -138,6 +139,10 @@ const AdminPage = ({ children, history, match }) => {
       name: 'Manuscripts',
       icon: 'file-text',
     })
+  }
+
+  if (currentUser) {
+    links.push({ link: profileLink, name: 'My profile', icon: 'user' })
   }
 
   return (
