@@ -103,7 +103,7 @@
     "copy-webpack-plugin": "4.6.0",
     "css-loader": "0.28.11",
     "cypress": "4.12.1",
-    "cypress-file-upload": "4.1.0",
+    "cypress-file-upload": "4.1.1",
     "eslint": "4.19.1",
     "eslint-config-pubsweet": "0.0.6",
     "eslint-plugin-import": "2.22.0",
