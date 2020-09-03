@@ -1939,6 +1939,32 @@
     url-regex-safe "~1.0.1"
     video-extensions "~1.1.0"
 
+"@metascraper/helpers@^5.14.7":
+  version "5.14.7"
+  resolved "https://registry.yarnpkg.com/@metascraper/helpers/-/helpers-5.14.7.tgz#ef4e42d863a228cf27097e6e0e6d331205198892"
+  integrity sha512-+nX+m7Fck026YwUg58Fqdgmt9atgJJlvnQ9TFxARoD9DKL1NJmFJj0BFFkqLwQey/h9I3T4Xs45zZULRJxQ1sA==
+  dependencies:
+    audio-extensions "0.0.0"
+    chrono-node "2.1.8"
+    condense-whitespace "~2.0.0"
+    entities "~2.0.3"
+    file-extension "~4.0.5"
+    has-values "~2.0.1"
+    image-extensions "~1.1.0"
+    is-relative-url "~3.0.0"
+    is-uri "~1.2.0"
+    iso-639-3 "~2.1.0"
+    isostring "0.0.1"
+    lodash "~4.17.20"
+    memoize-one "~5.1.1"
+    mime-types "~2.1.27"
+    normalize-url "~5.1.0"
+    smartquotes "~2.3.1"
+    title "~3.4.2"
+    truncate "~2.1.0"
+    url-regex-safe "~1.0.2"
+    video-extensions "~1.1.0"
+
 "@mrmlnc/readdir-enhanced@^2.2.1":
   version "2.2.1"
   resolved "https://registry.yarnpkg.com/@mrmlnc/readdir-enhanced/-/readdir-enhanced-2.2.1.tgz#524af240d1a360527b730475ecfa1344aa540dde"
@@ -11059,12 +11085,12 @@ metascraper-title@5.13.1:
     "@metascraper/helpers" "^5.13.1"
     lodash "~4.17.19"
 
-metascraper@5.14.5:
-  version "5.14.5"
-  resolved "https://registry.yarnpkg.com/metascraper/-/metascraper-5.14.5.tgz#75295c95b1586f30301550d4e0f40a54f52d3cf4"
-  integrity sha512-5xdJksHKl8zS1/nQD9s/sPgUIhTNypSO5CuPTo/1wT2P9WztW3Hx5lbUnVFmFfsTBiDuSjA3zjrSK42XSBYBWw==
+metascraper@5.14.8:
+  version "5.14.8"
+  resolved "https://registry.yarnpkg.com/metascraper/-/metascraper-5.14.8.tgz#73d08f4eb173391306fad735128a44cfee9931b4"
+  integrity sha512-b5woG0+Vkt8Dx1n04PlsqU8Ahv2lSsZbdo20+DbbFE3lGlOg/rFUGIMgAETngddGGR7aaJEoWIdEBswOrBcoqQ==
   dependencies:
-    "@metascraper/helpers" "^5.14.5"
+    "@metascraper/helpers" "^5.14.7"
     cheerio "~1.0.0-rc.3"
     cheerio-advanced-selectors "~2.0.1"
     lodash "~4.17.20"
@@ -16190,7 +16216,7 @@ tlds@^1.203.0:
   resolved "https://registry.yarnpkg.com/tlds/-/tlds-1.207.0.tgz#459264e644cf63ddc0965fece3898913286b1afd"
   integrity sha512-k7d7Q1LqjtAvhtEOs3yN14EabsNO8ZCoY6RESSJDB9lst3bTx3as/m1UuAeCKzYxiyhR1qq72ZPhpSf+qlqiwg==
 
-tlds@^1.208.0:
+tlds@^1.208.0, tlds@^1.209.0:
   version "1.209.0"
   resolved "https://registry.yarnpkg.com/tlds/-/tlds-1.209.0.tgz#13cfdc039331d49730ca7bfa9526fc9b319e2cec"
   integrity sha512-KVsZ1NSpBodpo42/JIwTyau7SqUxV/qQMp2epSDPa99885LpHWLaVCCt8CWzGe4X5YIVNr+b6bUys9e9eEb5OA==
@@ -16703,6 +16729,15 @@ url-regex-safe@~1.0.1:
     ip-regex "^4.1.0"
     re2 "^1.15.4"
     tlds "^1.208.0"
+
+url-regex-safe@~1.0.2:
+  version "1.0.2"
+  resolved "https://registry.yarnpkg.com/url-regex-safe/-/url-regex-safe-1.0.2.tgz#822cbab107d7f4f80342f0f0798acf63cac9fd1d"
+  integrity sha512-t1doIKbYDBRyqXZz7A98AXH/zimKmYapxFjBZwcz3BmqjB921rUPEUokAaShKyenaX3McOM8FbkWLvFvX3Jsyw==
+  dependencies:
+    ip-regex "^4.1.0"
+    re2 "^1.15.4"
+    tlds "^1.209.0"
 
 url-regex@~5.0.0:
   version "5.0.0"
