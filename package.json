@@ -120,7 +120,7 @@
     "husky": "0.14.3",
     "jest-cli": "22.4.4",
     "joi-browser": "10.6.1",
-    "lint-staged": "10.2.13",
+    "lint-staged": "10.3.0",
     "mini-css-extract-plugin": "0.11.0",
     "node-dev": "4.3.0",
     "prettier": "1.19.1",
