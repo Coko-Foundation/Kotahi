@@ -20,6 +20,19 @@ export const GET_CURRENT_USER = gql`
         id
         roles
       }
+      teams {
+        id
+        manuscript {
+          id
+          status
+        }
+        members {
+          status
+          user {
+            id
+          }
+        }
+      }
     }
   }
 `

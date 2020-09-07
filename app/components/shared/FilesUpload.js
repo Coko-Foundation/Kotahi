@@ -7,6 +7,7 @@ import { useMutation, gql } from '@apollo/client'
 import UploadingFile from './UploadingFile'
 import { Dropzone } from './Dropzone'
 import { Icon } from './Icon'
+import theme from '../../theme'
 
 const Root = styled.div`
   border: 1px dashed ${th('colorBorder')};
@@ -71,7 +72,7 @@ const DropzoneAndList = ({
           <input {...getInputProps()} />
           <Message>
             Drag and drop your files here
-            <Icon color={th('colorPrimary')} inline>
+            <Icon color={theme.colorPrimary} inline>
               file-plus
             </Icon>
           </Message>

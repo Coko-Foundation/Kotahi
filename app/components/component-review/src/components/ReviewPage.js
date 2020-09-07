@@ -161,6 +161,7 @@ export default ({ match, ...props }) => {
     variables: {
       id: match.params.version,
     },
+    partialRefetch: true,
   })
 
   const reviewOrInitial = manuscript =>

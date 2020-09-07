@@ -87,13 +87,12 @@ const resolvers = {
       }
       return id
     },
-    async reviewerResponse(_, { currentUserId, action, teamId }, context) {
+    async reviewerResponse(_, { action, teamId }, context) {
       const { Team, Review } = require('@pubsweet/models')
 
       if (action !== 'accepted' && action !== 'rejected')
         throw new Error(
-          `Invalid action provided to handleInvitation:
-           Must be either "accepted" or "rejected"`,
+          `Invalid action (revieweResponse): Must be either "accepted" or "rejected"`,
         )
 
       const team = await Team.query()
@@ -101,7 +100,7 @@ const resolvers = {
         .eager('members')
 
       team.members = team.members.map(m => {
-        if (m.userId === currentUserId) {
+        if (m.userId === context.user.id) {
           m.status = action
         }
         return m
@@ -114,7 +113,7 @@ const resolvers = {
         const review = {
           recommendation: '',
           isDecision: false,
-          userId: currentUserId,
+          userId: context.user.id,
           manuscriptId: team.manuscriptId,
         }
         await new Review(review).save()
