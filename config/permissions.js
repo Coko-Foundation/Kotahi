@@ -44,7 +44,7 @@ const userIsAdmin = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => ctx.user && ctx.user.admin,
 )
 
-const parentManuscriptIsPublished = rule({ cache: 'contextual' })(
+const parent_manuscript_is_published = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
     const manuscript = await ctx.models.Manuscript.query().findById(
       parent.manuscriptId,
@@ -53,7 +53,7 @@ const parentManuscriptIsPublished = rule({ cache: 'contextual' })(
   },
 )
 
-const reviewIsByCurrentUser = rule({ cache: 'contextual' })(
+const review_is_by_current_user = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
     const rows =
       ctx.user &&
@@ -156,6 +156,37 @@ const user_is_author = rule({ cache: 'strict' })(
   },
 )
 
+// ¯\_(ツ)_/¯
+const current_user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_complete = rule(
+  {
+    cache: 'strict',
+  },
+)(async (parent, args, ctx, info) => {
+  const manuscript = await ctx.models.File.relatedQuery('manuscript')
+    .for(parent.id)
+    .first()
+
+  const team = await ctx.models.Team.query()
+    .where({
+      manuscriptId: manuscript.id,
+      role: 'reviewer',
+    })
+    .first()
+
+  if (!team) {
+    return false
+  }
+  const members = await team
+    .$relatedQuery('members')
+    .where('userId', ctx.user.id)
+
+  if (members && members[0] && members[0].status !== 'completed') {
+    return true
+  }
+
+  return false
+})
+
 const permissions = shield(
   {
     Query: {
@@ -166,7 +197,7 @@ const permissions = shield(
       manuscripts: allow,
       manuscript: allow,
       messages: allow,
-      getFile: allow,
+      getFile: allow, // this is a query that gets the form
     },
     Mutation: {
       createManuscript: isAuthenticated,
@@ -174,6 +205,7 @@ const permissions = shield(
       createMessage: userIsAllowedToChat,
       updateReview: user_is_review_author_and_review_is_not_completed,
       reviewerResponse: user_is_invited_reviewer,
+      completeReview: user_is_review_author_and_review_is_not_completed,
     },
     Subscription: {
       messageCreated: userIsAllowedToChat,
@@ -185,7 +217,15 @@ const permissions = shield(
     User: allow,
     PaginatedManuscripts: allow,
     Manuscript: allow,
-    Review: or(parentManuscriptIsPublished, reviewIsByCurrentUser),
+    File: or(
+      parent_manuscript_is_published,
+      or(
+        current_user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_complete,
+        userIsEditor,
+        userIsAdmin,
+      ),
+    ),
+    Review: or(parent_manuscript_is_published, review_is_by_current_user),
     ReviewComment: allow,
     Channel: allow,
     Message: allow,
