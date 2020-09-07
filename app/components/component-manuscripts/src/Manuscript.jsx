@@ -27,7 +27,15 @@ const DELETE_MANUSCRIPT = gql`
 `
 
 const User = ({ manuscript }) => {
-  const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT)
+  const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT, {
+    update(cache, { data: { deleteManuscript } }) {
+      const id = cache.identify({
+        __typename: 'Manuscript',
+        id: deleteManuscript,
+      })
+      cache.evict({ id })
+    },
+  })
 
   return (
     <Row>
