@@ -1,9 +1,7 @@
-const resolvers = require('./resolvers')
-const typeDefs = require('./typeDefs')
+const graphql = require('./graphql')
 
 module.exports = {
-  resolvers,
-  typeDefs,
+  ...graphql,
   models: [
     { modelName: 'Review', model: require('./review') },
     { modelName: 'ReviewComment', model: require('./review_comment') },
