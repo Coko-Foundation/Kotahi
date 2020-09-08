@@ -1888,32 +1888,6 @@
     url-regex "~5.0.0"
     video-extensions "~1.1.0"
 
-"@metascraper/helpers@^5.14.4":
-  version "5.14.4"
-  resolved "https://registry.yarnpkg.com/@metascraper/helpers/-/helpers-5.14.4.tgz#9d04a087707eda9250bcd23dc176773ee5e2a1a3"
-  integrity sha512-jv8wloys3TpaKQ++nvGZFMxqGVNgylHmOwjBEdwe32MAetPfsRVcoI7RCo4RZSUNH/mFgirYjFrZS/1LLDIh3Q==
-  dependencies:
-    audio-extensions "0.0.0"
-    chrono-node "2.1.7"
-    condense-whitespace "~2.0.0"
-    entities "~2.0.3"
-    file-extension "~4.0.5"
-    has-values "~2.0.1"
-    image-extensions "~1.1.0"
-    is-relative-url "~3.0.0"
-    is-uri "~1.2.0"
-    iso-639-3 "~2.1.0"
-    isostring "0.0.1"
-    lodash "~4.17.20"
-    memoize-one "~5.1.1"
-    mime-types "~2.1.27"
-    normalize-url "~5.1.0"
-    smartquotes "~2.3.1"
-    title "~3.4.2"
-    truncate "~2.1.0"
-    url-regex-safe "~1.0.1"
-    video-extensions "~1.1.0"
-
 "@metascraper/helpers@^5.14.5":
   version "5.14.5"
   resolved "https://registry.yarnpkg.com/@metascraper/helpers/-/helpers-5.14.5.tgz#2bae21de7bddd35387922225d8fe581f404fbca0"
@@ -4804,13 +4778,6 @@ chrono-node@2.1.5:
   version "2.1.5"
   resolved "https://registry.yarnpkg.com/chrono-node/-/chrono-node-2.1.5.tgz#b691b0e925d75f0c9ebff518673af6543cc3b2d9"
   integrity sha512-KshuspQwOhVcZ/8cY11p2+230qIX8VE9P7W8LdwSMWbMwu3TKl6BcHLccmkCt4m+QUK23yuOMD61yPXmjC++bg==
-  dependencies:
-    dayjs "^1.8.29"
-
-chrono-node@2.1.7:
-  version "2.1.7"
-  resolved "https://registry.yarnpkg.com/chrono-node/-/chrono-node-2.1.7.tgz#e33b40c3c872708b9ec8612e11bceed4f72d2995"
-  integrity sha512-6x+15cnjmbaOjdlEziRuT3gc9Qaf5contCe5jxMEKj58D8YYxbWNkrNNhbxAkjXj2VDfyAELk55C6nFPdRZGXQ==
   dependencies:
     dayjs "^1.8.29"
 
@@ -11015,12 +10982,12 @@ metascraper-description@5.14.7:
   dependencies:
     "@metascraper/helpers" "^5.14.7"
 
-metascraper-image@5.14.4:
-  version "5.14.4"
-  resolved "https://registry.yarnpkg.com/metascraper-image/-/metascraper-image-5.14.4.tgz#3e11725fcaf1c052fd041330e9fa06e01e638fd3"
-  integrity sha512-Nz5LAmFsrodsusZu0ZqPn9NVOy3APD/4EGSGLAjOzl9btJ/8h3M7DAKBhfXr+DKHcvSz3SIsWM7+zRr1Vahtcw==
+metascraper-image@5.14.7:
+  version "5.14.7"
+  resolved "https://registry.yarnpkg.com/metascraper-image/-/metascraper-image-5.14.7.tgz#88e03d61abca13091c27fbbb3321982dcba7753d"
+  integrity sha512-UIlj3i0bDRex8OKpUaZdMxguvO7eGiBBRhHaZdZqI7AYXdwkRaM1+I/C9mnbtQuBqnMRy73hB09Mmn126SO1Kg==
   dependencies:
-    "@metascraper/helpers" "^5.14.4"
+    "@metascraper/helpers" "^5.14.7"
 
 metascraper-logo-favicon@5.13.1:
   version "5.13.1"
