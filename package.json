@@ -121,7 +121,7 @@
     "jest-cli": "22.4.4",
     "joi-browser": "10.6.1",
     "lint-staged": "10.3.0",
-    "mini-css-extract-plugin": "0.11.0",
+    "mini-css-extract-plugin": "0.11.1",
     "node-dev": "4.3.0",
     "prettier": "1.19.1",
     "react-hot-loader": "4.12.21",
