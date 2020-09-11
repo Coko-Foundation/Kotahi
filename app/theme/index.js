@@ -73,7 +73,7 @@ const cokoTheme = {
   // $borderColor: var($colorFurniture);
 
   /* Shadow (for tooltip) */
-  boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06)',
+  boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 4px 0 rgba(0, 0, 0, 0.06)',
   // boxShadow: '4px 4px 16px #cdcdcd',
   /* Transition */
   transitionDuration: '0.2s', // TODO -- julien: not 0.05s

@@ -1,18 +1,8 @@
-// const URLsubmission = {
-//   title:
-// }
-const login = name => {
-  cy.task('createToken', name).then(token => {
-    cy.setToken(token)
-    cy.visit('/journal/dashboard')
-  })
-}
-
 describe('URL submission test', () => {
   it('can submit a URL and some metadata', () => {
     cy.task('restore', 'initialState')
 
-    login('Emily Clay')
+    cy.login('Emily Clay')
 
     cy.get('button')
       .contains('New submission')
@@ -143,7 +133,7 @@ describe('URL submission test', () => {
     cy.task('restore', 'submission_complete')
 
     // Admin logs in to assign senior editor
-    login('Sinead Sullivan')
+    cy.login('Sinead Sullivan')
     cy.get('nav')
       .contains('Manuscripts')
       .click()
@@ -157,7 +147,7 @@ describe('URL submission test', () => {
       .contains('Joanne Pilger')
       .click()
 
-    login('Joanne Pilger')
+    cy.login('Joanne Pilger')
     cy.contains('My URL submission')
 
     cy.contains('Control Panel').click()

@@ -2,14 +2,11 @@ import { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 
 export default {
-  // TODO
-  // -- input padding: breaking the grid?
-  // -- small placeholder text? maybe by default?
   Input: css`
     border-color: ${props => {
       switch (props.validationStatus) {
         case 'success':
-          return props.theme.colorSuccess
+          return props.theme.colorBorder
         case 'warning':
           return props.theme.colorWarning
         case 'error':
@@ -21,7 +18,7 @@ export default {
     color: ${props => {
       switch (props.validationStatus) {
         case 'success':
-          return props.theme.colorSuccess
+          return props.theme.colorText
         case 'warning':
           return props.theme.colorWarning
         case 'error':
@@ -34,7 +31,19 @@ export default {
     transition: ${th('transitionDuration')} ${th('transitionTimingFunction')};
 
     &:focus {
-      border-color: ${th('colorPrimary')};
+      box-shadow: ${th('boxShadow')};
+      border-color: ${props => {
+        switch (props.validationStatus) {
+          case 'success':
+            return props.theme.colorSuccess
+          case 'warning':
+            return props.theme.colorWarning
+          case 'error':
+            return props.theme.colorError
+          default:
+            return props.theme.colorPrimary
+        }
+      }};
       color: inherit;
     }
 
