@@ -139,8 +139,18 @@ const SubmitPage = ({ match, history, ...props }) => {
   if (error) return JSON.stringify(error)
 
   const manuscript = data?.manuscript
-  const getFile = data?.getFile
+  const form = data?.getFile
 
+  // Set the initial values based on the form
+  let initialValues = {}
+  const fieldNames = form.children.map(field => field.name)
+  fieldNames.forEach(fieldName => set(initialValues, fieldName, null))
+  initialValues = Object.assign({}, manuscript, {
+    submission: Object.assign(
+      initialValues.submission,
+      JSON.parse(manuscript.submission),
+    ),
+  })
   const updateManuscript = input =>
     update({
       variables: {
@@ -176,9 +186,7 @@ const SubmitPage = ({ match, history, ...props }) => {
     <Formik
       displayName="submit"
       handleChange={handleChange}
-      initialValues={Object.assign({}, manuscript, {
-        submission: JSON.parse(manuscript.submission),
-      })}
+      initialValues={initialValues}
       onSubmit={async (values, { validateForm, setSubmitting, ...other }) => {
         // TODO: Change this to a more Formik idiomatic form
         const isValid = Object.keys(await validateForm()).length === 0
@@ -188,7 +196,7 @@ const SubmitPage = ({ match, history, ...props }) => {
       {props => (
         <Submit
           confirming={confirming}
-          forms={cloneDeep(getFile)}
+          forms={cloneDeep(form)}
           manuscript={manuscript}
           onChange={handleChange}
           toggleConfirming={toggleConfirming}

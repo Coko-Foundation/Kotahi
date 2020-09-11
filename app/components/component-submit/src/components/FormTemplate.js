@@ -8,7 +8,6 @@ import {
   CheckboxGroup,
   Button,
   Attachment,
-  ValidatedFieldFormik,
 } from '@pubsweet/ui'
 import * as validators from 'xpub-validators'
 import { AbstractEditor } from 'xpub-edit'
@@ -16,29 +15,8 @@ import { Section as Container, Select, FilesUpload } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
 import LinksInput from './LinksInput'
+import ValidatedFieldFormik from './ValidatedField'
 import Confirm from './Confirm'
-
-// TODO: https://github.com/formium/formik/issues/146#issuecomment-474775723
-// const useFocusOnError = ({ fieldRef, name }) => {
-//   const formik = useFormikContext()
-//   const prevSubmitCountRef = React.useRef(formik.submitCount)
-//   const firstErrorKey = Object.keys(formik.errors)[0]
-//   React.useEffect(() => {
-//     if (prevSubmitCountRef.current !== formik.submitCount && !formik.isValid) {
-//       if (fieldRef.current && firstErrorKey === name) fieldRef.current.focus()
-//     }
-//     prevSubmitCountRef.current = formik.submitCount
-//   }, [formik.submitCount, formik.isValid, firstErrorKey])
-// }
-
-// const Wrapper = styled.div`
-//   font-family: ${th('fontInterface')};
-//   line-height: 1.3;
-//   margin: auto;
-//   max-width: 60em;
-
-//   overflow: ${({ confirming }) => confirming && 'hidden'};
-// `
 
 const Intro = styled.div`
   font-style: italic;
@@ -57,9 +35,6 @@ const ModalWrapper = styled.div`
   top: 0;
 `
 
-// Due to migration to new Data Model
-// Attachement component needs different data structure to work
-// needs to change the pubsweet ui Attachement to support the new Data Model
 const filesToAttachment = file => ({
   name: file.filename,
   url: file.url,
@@ -347,7 +322,7 @@ export default ({
       ) : null}
 
       {values.status !== 'submitted' && form.haspopup === 'false' && (
-        <Button onClick={handleSubmit} primary type="submit">
+        <Button onClick={() => handleSubmit()} primary type="submit">
           Submit your research object
         </Button>
       )}
@@ -355,7 +330,17 @@ export default ({
       {values.status !== 'submitted' && form.haspopup === 'true' && (
         <div>
           <Button
-            onClick={() => validateForm() && toggleConfirming()}
+            onClick={async () => {
+              const hasErrors = Object.keys(await validateForm()).length !== 0
+
+              // If there are errors, do a fake submit
+              // to focus on the error
+              if (hasErrors) {
+                handleSubmit()
+              } else {
+                toggleConfirming()
+              }
+            }}
             primary
             type="button"
           >
