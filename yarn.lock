@@ -10972,12 +10972,12 @@ metascraper-logo-favicon@5.13.1:
     got "~11.5.1"
     lodash "~4.17.19"
 
-metascraper-logo@5.13.1:
-  version "5.13.1"
-  resolved "https://registry.yarnpkg.com/metascraper-logo/-/metascraper-logo-5.13.1.tgz#0ae355fce084d5177e03a3641691eba6cb8dc981"
-  integrity sha512-RYCovxtby5jAtLnaATKpdUbXkBtZcnbMVvsR8hFDZzbXjVxBZOanqddOJp7TeKl5k1HmTuQIekV5WsN0cN9lZQ==
+metascraper-logo@5.14.7:
+  version "5.14.7"
+  resolved "https://registry.yarnpkg.com/metascraper-logo/-/metascraper-logo-5.14.7.tgz#0ea9a3e6b4a177bfc92befe2686cfaf5e58dcc6a"
+  integrity sha512-Ok/iOI0vlvADecpVRUgdEbX5Rzcbb88oe+veAc+fZ5u6hXFIhAdnqilzxxJf0CKRd0pRTy0P5x+E33wBtBYAcw==
   dependencies:
-    "@metascraper/helpers" "^5.13.1"
+    "@metascraper/helpers" "^5.14.7"
 
 metascraper-publisher@5.13.1:
   version "5.13.1"
