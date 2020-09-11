@@ -13,9 +13,7 @@ describe('Submission with errors test', () => {
 
     cy.get('body').contains('Submission created')
 
-    cy.get('button')
-      .contains('Submit your research object')
-      .click()
+    cy.contains('button', 'Submit your research object').click()
 
     cy.get('body').contains('Enter at least 4 characters')
 
@@ -23,9 +21,7 @@ describe('Submission with errors test', () => {
       .click()
       .type('Emily Clay')
 
-    cy.get('button')
-      .contains('Submit your research object')
-      .click()
+    cy.contains('button', 'Submit your research object').click()
 
     cy.get('body').contains('Enter at least 2 characters')
 
@@ -39,9 +35,7 @@ describe('Submission with errors test', () => {
       .clear()
       .type('My Fixed URL Submission')
 
-    cy.get('button')
-      .contains('Submit your research object')
-      .click()
+    cy.contains('button', 'Submit your research object').click()
     cy.get('button')
       .contains('Submit your manuscript')
       .click()
