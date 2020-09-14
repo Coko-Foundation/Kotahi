@@ -186,6 +186,6 @@
     "babel-plugin-styled-components": "1.11.1",
     "@pubsweet/ui": "12.6.0",
     "formik": "^2.0.0",
-    "prosemirror-model": "1.11.0"
+    "prosemirror-model": "1.11.2"
   }
 }
