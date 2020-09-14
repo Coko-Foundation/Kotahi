@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import { isEmpty } from 'lodash'
 import styled from 'styled-components'
-// import { compose, withProps, withState, withHandlers } from 'recompose'
 import { Button, TextField, ValidatedFieldFormik } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { AbstractField, RadioBox } from './builderComponents'
@@ -20,14 +19,6 @@ export const Legend = styled.div`
 export const Section = styled.div`
   margin: calc(${th('gridUnit')} * 6) 0;
 `
-
-// const onSubmit = (values, { handleSubmit, mode }) => {
-//   if (mode === 'create') {
-//     handleSubmit(Object.assign({}, values))
-//   } else {
-//     handleSubmit(values)
-//   }
-// }
 
 const FormProperties = ({
   handleSubmit,

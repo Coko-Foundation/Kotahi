@@ -1,15 +1,13 @@
 import React, { useContext, useCallback, useRef } from 'react'
 import styled from 'styled-components'
-import { compose } from 'recompose'
 import { useQuery } from '@apollo/client'
 import {
-  withRouter,
+  useHistory,
   matchPath,
   Route,
   Switch,
   Redirect,
 } from 'react-router-dom'
-// import { Action } from '@pubsweet/ui'
 import { JournalContext } from './xpub-journal/src'
 import { XpubContext } from './xpub-with-context/src'
 
@@ -75,7 +73,8 @@ const updateStuff = data => {
   }
 }
 
-const AdminPage = ({ children, history, match }) => {
+const AdminPage = () => {
+  const history = useHistory()
   const journal = useContext(JournalContext)
   const [conversion] = useContext(XpubContext)
 
@@ -205,4 +204,4 @@ const AdminPage = ({ children, history, match }) => {
   )
 }
 
-export default compose(withRouter)(AdminPage)
+export default AdminPage

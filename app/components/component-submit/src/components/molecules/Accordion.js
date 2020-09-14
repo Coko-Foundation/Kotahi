@@ -1,6 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
 import styled from 'styled-components'
-import { compose, withState, withHandlers } from 'recompose'
 import { Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { JournalContext } from '../../../../xpub-journal/src'
@@ -96,38 +95,28 @@ const AccordionHeading = ({
   )
 }
 
-const Accordion = ({
-  open,
-  ordinal,
-  toggleOpen,
-  title,
-  status,
-  Component,
-  withDots,
-}) => (
-  <Root>
-    <JournalContext.Consumer>
-      {journal => (
-        <AccordionHeading
-          journal={journal}
-          name={title}
-          open={open}
-          ordinal={ordinal}
-          recommendation={status}
-          toggleOpen={toggleOpen}
-          withDots={withDots || false}
-        />
-      )}
-    </JournalContext.Consumer>
-    {open && <AccordionBody>{Component}</AccordionBody>}
-  </Root>
-)
+const Accordion = ({ ordinal, title, status, Component, withDots }) => {
+  const [open, setOpen] = useState(false)
+  const toggleOpen = setOpen(!open)
 
-export default compose(
-  withState('open', 'setOpen', ({ open }) => open || true),
-  withHandlers({
-    toggleOpen: props => () => {
-      props.setOpen(open => !open)
-    },
-  }),
-)(Accordion)
+  return (
+    <Root>
+      <JournalContext.Consumer>
+        {journal => (
+          <AccordionHeading
+            journal={journal}
+            name={title}
+            open={open}
+            ordinal={ordinal}
+            recommendation={status}
+            toggleOpen={toggleOpen}
+            withDots={withDots || false}
+          />
+        )}
+      </JournalContext.Consumer>
+      {open && <AccordionBody>{Component}</AccordionBody>}
+    </Root>
+  )
+}
+
+export default Accordion

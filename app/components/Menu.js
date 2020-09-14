@@ -2,7 +2,7 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 // import PropTypes from 'prop-types'
 import { th, grid, lighten } from '@pubsweet/ui-toolkit'
-import { Link } from 'react-router-dom'
+import { Link, useLocation } from 'react-router-dom'
 import { Icon } from '@pubsweet/ui'
 import { UserAvatar } from '../components/component-avatar/src'
 
@@ -116,23 +116,26 @@ const Menu = ({
   navLinkComponents,
   user,
   notice,
-}) => (
-  <Root className={className}>
-    <Section>
-      {/* TODO: Place this notice (used for offline notification) better */}
-      {notice}
-      <UserComponent loginLink={loginLink} user={user} />
-      {navLinkComponents &&
-        navLinkComponents.map((navInfo, idx) => (
-          <Item
-            {...navInfo}
-            active={window.location.pathname === navInfo.link}
-            key={navInfo.link}
-          />
-        ))}
-    </Section>
-  </Root>
-)
+}) => {
+  const location = useLocation()
+  return (
+    <Root className={className}>
+      <Section>
+        {/* TODO: Place this notice (used for offline notification) better */}
+        {notice}
+        <UserComponent loginLink={loginLink} user={user} />
+        {navLinkComponents &&
+          navLinkComponents.map((navInfo, idx) => (
+            <Item
+              {...navInfo}
+              active={location.pathname === navInfo.link}
+              key={navInfo.link}
+            />
+          ))}
+      </Section>
+    </Root>
+  )
+}
 
 const UserComponent = ({ user, loginLink }) => (
   <Section>
