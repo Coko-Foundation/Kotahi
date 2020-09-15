@@ -9,7 +9,7 @@
     "url": "https://gitlab.coko.foundation/simplej/simplej"
   },
   "dependencies": {
-    "@apollo/client": "3.1.5",
+    "@apollo/client": "3.2.0",
     "@apollo/react-testing": "3.1.4",
     "@babel/core": "7.11.6",
     "@guardian/prosemirror-invisibles": "1.2.1",
