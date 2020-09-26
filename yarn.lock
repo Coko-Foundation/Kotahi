@@ -11004,12 +11004,12 @@ merge@^1.2.0:
   resolved "https://registry.yarnpkg.com/merge/-/merge-1.2.1.tgz#38bebf80c3220a8a487b6fcfb3941bb11720c145"
   integrity sha512-VjFo4P5Whtj4vsLzsYBu5ayHhoHJ0UqNm7ibvShmbmoz7tGi0vXaoJbGdB+GmDMLUdg8DpQXEIeVDAe8MaABvQ==
 
-metascraper-author@5.14.7:
-  version "5.14.7"
-  resolved "https://registry.yarnpkg.com/metascraper-author/-/metascraper-author-5.14.7.tgz#85b089238fa15f7c3dd04194c3ef11b2006e02cf"
-  integrity sha512-VmlL8ae2YfHkVh1oXTnbgQkL57oGpefEAK6nzVVEp6y3lul7gZaD/u5PQSs3uazjhwPfsw2xXO/s3jLkflqvjQ==
+metascraper-author@5.14.12:
+  version "5.14.12"
+  resolved "https://registry.yarnpkg.com/metascraper-author/-/metascraper-author-5.14.12.tgz#a91ff53ac15d6a730ad51e1e3fa02a347df001c4"
+  integrity sha512-eKG/7+BaaLDFXozhtGC3aJcqErUvSbww3bsxwlwaZCjU9428ta2L20byDF1Ow3iLa3o7u9XPIv4xs1R+UtldaA==
   dependencies:
-    "@metascraper/helpers" "^5.14.7"
+    "@metascraper/helpers" "^5.14.12"
     lodash "~4.17.20"
 
 metascraper-date@5.14.7:
