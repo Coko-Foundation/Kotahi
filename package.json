@@ -21,7 +21,7 @@
     "apollo-link-context": "1.0.20",
     "apollo-link-schema": "1.2.5",
     "apollo-upload-client": "14.1.2",
-    "config": "3.3.1",
+    "config": "3.3.2",
     "faker": "4.1.0",
     "font-awesome": "4.7.0",
     "fs-extra": "4.0.3",
