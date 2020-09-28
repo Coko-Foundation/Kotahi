@@ -32,7 +32,7 @@ import {
 
 const NoteDecision = ({ updateReview }) => (
   <>
-    <Field key="noteField" name="decisionComment">
+    <Field name="decisionComment">
       {formikBag => (
         <>
           <NoteInput updateReview={updateReview} {...formikBag} />
@@ -90,7 +90,6 @@ const NoteInput = ({
     <NoteEditor
       data-testid="decisionComment"
       debounceDelay={300}
-      key="note-input"
       onBlur={() => setFieldTouched('decisionComment')}
       onChange={value => {
         setFieldValue('decisionComment', { content: value })
@@ -146,12 +145,12 @@ const DecisionForm = ({
   }
 
   return (
-    <Container key="decisionform">
+    <Container>
       <form onSubmit={handleSubmit}>
         <SectionHeader>
           <Title>Decision</Title>
         </SectionHeader>
-        <SectionRow key="note">
+        <SectionRow>
           <NoteDecision updateReview={updateReview} />
         </SectionRow>
         <SectionRowGrid>
@@ -162,7 +161,7 @@ const DecisionForm = ({
             validate={required}
           />
           <FormStatus>{status}</FormStatus>
-          <SectionAction key="submit">
+          <SectionAction>
             <Button
               disabled={!isValid || isSubmitting || !dirty}
               primary

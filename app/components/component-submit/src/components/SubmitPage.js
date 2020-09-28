@@ -1,10 +1,49 @@
 import React, { useState } from 'react'
 import { debounce, cloneDeep, set } from 'lodash'
-// import { compose, withProps, withState, withHandlers } from 'recompose'
 import { gql, useQuery, useMutation } from '@apollo/client'
-import { Formik } from 'formik'
 import Submit from './Submit'
 import { Spinner } from '../../../shared'
+import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
+
+const commentFields = `
+  id
+  commentType
+  content
+  files {
+    id
+    created
+    label
+    filename
+    fileType
+    mimeType
+    size
+    url
+  }
+`
+
+const reviewFields = `
+  id
+  created
+  updated
+  decisionComment {
+    ${commentFields}
+  }
+  reviewComment {
+    ${commentFields}
+  }
+  confidentialComment {
+    ${commentFields}
+  }
+  isDecision
+  recommendation
+  user {
+    id
+    defaultIdentity {
+      name
+    }
+    username
+  }
+`
 
 const fragmentFields = `
   id
@@ -20,15 +59,7 @@ const fragmentFields = `
     url
   }
   reviews {
-    id
-    open
-    recommendation
-    created
-    isDecision
-    user {
-      id
-      username
-    }
+    ${reviewFields}
   }
   teams {
     id
@@ -46,6 +77,7 @@ const fragmentFields = `
   meta {
     manuscriptId
     title
+    source
     abstract
     declarations {
       openData
@@ -97,6 +129,7 @@ const query = gql`
     manuscript(id: $id) {
       ${fragmentFields}
       manuscriptVersions {
+        parentId
         ${fragmentFields}
       }
     }
@@ -114,13 +147,23 @@ const updateMutation = gql`
   }
 `
 
-// const uploadSuplementaryFilesMutation = gql`
-//   mutation($file: Upload!) {
-//     upload(file: $file) {
-//       url
-//     }
-//   }
-// `
+const submitMutation = gql`
+  mutation($id: ID!, $input: String) {
+    submitManuscript(id: $id, input: $input) {
+      id
+      ${fragmentFields}
+    }
+  }
+`
+
+const createNewVersionMutation = gql`
+  mutation($id: ID!) {
+    createNewVersion(id: $id) {
+      id
+      ${fragmentFields}
+    }
+  }
+`
 
 const SubmitPage = ({ match, history, ...props }) => {
   const [confirming, setConfirming] = useState(false)
@@ -131,9 +174,12 @@ const SubmitPage = ({ match, history, ...props }) => {
 
   const { data, loading, error } = useQuery(query, {
     variables: { id: match.params.version, form: 'submit' },
+    partialRefetch: true,
   })
 
   const [update] = useMutation(updateMutation)
+  const [submit] = useMutation(submitMutation)
+  const [createNewVersion] = useMutation(createNewVersionMutation)
 
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
@@ -141,69 +187,52 @@ const SubmitPage = ({ match, history, ...props }) => {
   const manuscript = data?.manuscript
   const form = data?.getFile
 
-  // Set the initial values based on the form
-  let initialValues = {}
-  const fieldNames = form.children.map(field => field.name)
-  fieldNames.forEach(fieldName => set(initialValues, fieldName, null))
-  initialValues = Object.assign({}, manuscript, {
-    submission: Object.assign(
-      initialValues.submission,
-      JSON.parse(manuscript.submission),
-    ),
-  })
-  const updateManuscript = input =>
+  const updateManuscript = (versionId, manuscript) =>
     update({
       variables: {
-        id: match.params.version,
-        input: JSON.stringify(input),
+        id: versionId,
+        input: JSON.stringify(manuscript),
       },
     })
 
   const debouncers = {}
 
-  const handleChange = (value, path) => {
+  // This is passed as a custom onChange prop (not belonging/originating from Formik)
+  // to support continuous auto-saving
+  const handleChange = versionId => (value, path) => {
     const input = {}
     set(input, path, value)
-    debouncers[path] = debouncers[path] || debounce(updateManuscript, 300)
-    return debouncers[path](input)
+    debouncers[path] = debouncers[path] || debounce(updateManuscript, 3000)
+    return debouncers[path](versionId, input)
   }
 
-  const onSubmit = async manuscript => {
+  const onSubmit = async (versionId, manuscript) => {
     const updateManuscript = {
       status: 'submitted',
     }
 
-    await update({
+    await submit({
       variables: {
-        id: match.params.version,
+        id: versionId,
         input: JSON.stringify(updateManuscript),
       },
     })
     history.push('/journal/dashboard')
   }
 
+  const versions = gatherManuscriptVersions(manuscript)
+
   return (
-    <Formik
-      displayName="submit"
-      handleChange={handleChange}
-      initialValues={initialValues}
-      onSubmit={async (values, { validateForm, setSubmitting, ...other }) => {
-        // TODO: Change this to a more Formik idiomatic form
-        const isValid = Object.keys(await validateForm()).length === 0
-        return isValid ? onSubmit(values) : setSubmitting(false)
-      }}
-    >
-      {props => (
-        <Submit
-          confirming={confirming}
-          forms={cloneDeep(form)}
-          manuscript={manuscript}
-          onChange={handleChange}
-          toggleConfirming={toggleConfirming}
-          {...props}
-        />
-      )}
-    </Formik>
+    <Submit
+      confirming={confirming}
+      createNewVersion={createNewVersion}
+      form={cloneDeep(form)}
+      onChange={handleChange}
+      onSubmit={onSubmit}
+      toggleConfirming={toggleConfirming}
+      versions={versions}
+      {...props}
+    />
   )
 }
 

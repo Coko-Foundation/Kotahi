@@ -62,7 +62,7 @@ const AssignEditor = ({ teamRole, manuscript }) => {
 
   const members = team.members || []
   const value = members.length > 0 ? members[0].user.id : undefined
-  const teamName = get(config, `authsome.teams.${teamRole}.name`)
+  const teamName = get(config, `teams.${teamRole}.name`)
 
   const { data, loading, error } = useQuery(query)
 
@@ -88,6 +88,7 @@ const AssignEditor = ({ teamRole, manuscript }) => {
       })
     } else {
       const input = {
+        // Editors are always linked to the parent manuscript
         manuscriptId: manuscript.id,
         name: teamRole === 'seniorEditor' ? 'Senior Editor' : 'Handling Editor',
         role: teamRole,
@@ -116,40 +117,3 @@ const AssignEditor = ({ teamRole, manuscript }) => {
 }
 
 export default AssignEditor
-// export default compose(
-// graphql(query),
-// graphql(updateTeam, {
-//   props: ({ mutate, ownProps }) => {
-//     const updateTeam = (userId, teamRole) => {}
-
-//     return {
-//       updateTeam,
-//     }
-//   },
-// }),
-// graphql(createTeamMutation, {
-//   props: ({ mutate, ownProps }) => {
-//     const createTeam = (userId, teamRole) => {
-//       const input = {
-//         manuscriptId: ownProps.manuscript.id,
-//         name:
-//           teamRole === 'seniorEditor' ? 'Senior Editor' : 'Handling Editor',
-//         role: teamRole,
-//         members: [{ user: { id: userId } }],
-//       }
-
-//       mutate({
-//         variables: {
-//           input,
-//         },
-//       })
-//     }
-
-//     return {
-//       createTeam,
-//     }
-//   },
-// }),
-
-// withLoader(),
-// )(AssignEditor)

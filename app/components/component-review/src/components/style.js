@@ -67,10 +67,13 @@ export const EditorWrapper = styled.div`
 `
 
 export const Container = styled.div`
-  max-width: 90rem;
+  // max-width: 90rem;
   box-shadow: ${th('boxShadow')};
   background-color: ${th('colorBackground')};
-  border-radius: ${th('borderRadius')};
+  border-radius: ${({ flatTop }) =>
+    flatTop
+      ? css`0 ${th('borderRadius')} ${th('borderRadius')}`
+      : th('borderRadius')};
   // padding: ${grid(2)} ${grid(3)};
   &:not(:first-of-type) {
     margin-top: ${grid(4)};

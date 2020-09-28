@@ -47,7 +47,7 @@ const showFieldData = (manuscript, fieldName) => {
   // TODO: Make this generic somehow. Perhaps with an additional fieldType?
   if (Array.isArray(data) && fieldName === 'submission.links') {
     return data.map(link => (
-      <p>
+      <p key={link.url}>
         <a href={link.url} rel="noopener noreferrer" target="_blank">
           {link.url}
         </a>

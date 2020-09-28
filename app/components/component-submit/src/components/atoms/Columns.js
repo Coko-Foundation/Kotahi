@@ -8,12 +8,8 @@ const Columns = styled.div`
   justify-content: center;
 `
 
-const SubmissionVersion = styled.div`
-  grid-area: SubmissionVersion;
-`
-
 const Review = styled.div`
   grid-area: Review;
 `
 
-export { Columns, SubmissionVersion, Review }
+export { Columns, Review }

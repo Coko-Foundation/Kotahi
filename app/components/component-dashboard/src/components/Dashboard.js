@@ -25,42 +25,50 @@ const Dashboard = ({ history, ...props }) => {
   const { loading, data, error } = useQuery(queries.dashboard)
   const [reviewerRespond] = useMutation(mutations.reviewerResponseMutation)
 
-  const [deleteManuscript] = useMutation(mutations.deleteManuscriptMutation, {
-    update: (proxy, { data: { deleteManuscript } }) => {
-      const data = proxy.readQuery({ query: queries.dashboard })
-      const manuscripts = data.manuscripts.filter(
-        manuscript => manuscript.id !== deleteManuscript,
-      )
-      proxy.writeQuery({
-        query: queries.dashboard,
-        data: {
-          manuscripts,
-        },
-      })
-    },
-  })
+  // const [deleteManuscript] = useMutation(mutations.deleteManuscriptMutation, {
+  //   update: (cache, { data: { deleteManuscript } }) => {
+  //     const data = cache.readQuery({ query: queries.dashboard })
+  //     const manuscripts = data.manuscripts.filter(
+  //       manuscript => manuscript.id !== deleteManuscript,
+  //     )
+  //     cache.writeQuery({
+  //       query: queries.dashboard,
+  //       data: {
+  //         manuscripts,
+  //       },
+  //     })
+  //   },
+  // })
 
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
   const dashboard = (data && data.manuscripts) || []
   const currentUser = data && data.currentUser
 
-  const mySubmissions = dashboard.filter(submission =>
-    hasRole(submission, 'author'),
-  )
+  const latestVersion = manuscript =>
+    manuscript.manuscriptVersions?.[0] || manuscript
 
-  const toReview = dashboard.filter(submission =>
-    hasRole(submission, [
-      'reviewer',
-      'invited:reviewer',
-      'accepted:reviewer',
-      'completed:reviewer',
-    ]),
-  )
+  const mySubmissions = dashboard
+    .filter(submission => hasRole(submission, 'author'))
+    .map(latestVersion)
 
-  const manuscriptsImEditorOf = dashboard.filter(submission =>
-    hasRole(submission, ['seniorEditor', 'handlingEditor']),
-  )
+  const toReview = dashboard
+    .map(latestVersion)
+    .filter(submission =>
+      hasRole(submission, [
+        'reviewer',
+        'invited:reviewer',
+        'accepted:reviewer',
+        'completed:reviewer',
+      ]),
+    )
+
+  // Editors are always linked to the parent/original manuscript, not to versions
+  const manuscriptsImEditorOf = dashboard
+    .filter(submission =>
+      hasRole(submission, ['seniorEditor', 'handlingEditor']),
+    )
+    .map(latestVersion)
 
   return (
     <Container>
@@ -77,17 +85,17 @@ const Dashboard = ({ history, ...props }) => {
         </SectionHeader>
         {mySubmissions.length > 0 ? (
           mySubmissions.map(submission => (
-            <SectionRow key={`submission-${submission.id}`}>
-              <OwnerItem
-                deleteManuscript={() =>
-                  // eslint-disable-next-line no-alert
-                  window.confirm(
-                    'Are you sure you want to delete this submission?',
-                  ) && deleteManuscript({ variables: { id: submission.id } })
-                }
-                version={submission}
-              />
-            </SectionRow>
+            // Links are based on the original/parent manuscript version
+            <OwnerItem
+              key={submission.id}
+              // deleteManuscript={() =>
+              //   // eslint-disable-next-line no-alert
+              //   window.confirm(
+              //     'Are you sure you want to delete this submission?',
+              //   ) && deleteManuscript({ variables: { id: submission.id } })
+              // }
+              version={submission}
+            />
           ))
         ) : (
           <Placeholder>You have not submitted any manuscripts yet</Placeholder>

@@ -2,7 +2,7 @@ import React from 'react'
 import { Container, SectionHeader, SectionRowGrid, Title } from '../style'
 
 const AssignEditorsReviewers = ({ manuscript, AssignEditor }) => (
-  <Container>
+  <Container flatTop>
     <SectionHeader>
       <Title>Assign Editors</Title>
     </SectionHeader>

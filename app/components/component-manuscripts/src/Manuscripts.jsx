@@ -39,6 +39,25 @@ const GET_MANUSCRIPTS = gql`
         created
         updated
         status
+        manuscriptVersions {
+          id
+          meta {
+            manuscriptId
+            title
+          }
+          created
+          updated
+          status
+          submitter {
+            username
+            online
+            defaultIdentity {
+              id
+              name
+            }
+            profilePicture
+          }
+        }
         submitter {
           username
           online
@@ -114,20 +133,27 @@ const Manuscripts = () => {
           <Header>
             <tr>
               <SortHeader thisSortName="meta:title">Title</SortHeader>
-              <SortHeader thisSortName="created">Submitted</SortHeader>
+              <SortHeader thisSortName="created">Created</SortHeader>
+              <SortHeader thisSortName="updated">Updated</SortHeader>
               <SortHeader thisSortName="status">Status</SortHeader>
               <SortHeader thisSortName="submitterId">Author</SortHeader>
               <th />
             </tr>
           </Header>
           <tbody>
-            {manuscripts.map((manuscript, key) => (
-              <Manuscript
-                key={manuscript.id}
-                manuscript={manuscript}
-                number={key + 1}
-              />
-            ))}
+            {manuscripts.map((manuscript, key) => {
+              const latestVersion =
+                manuscript.manuscriptVersions?.[0] || manuscript
+              return (
+                <Manuscript
+                  key={latestVersion.id}
+                  manuscript={latestVersion}
+                  manuscriptId={manuscript.id}
+                  number={key + 1}
+                  submitter={manuscript.submitter}
+                />
+              )
+            })}
           </tbody>
         </Table>
         <Pagination
