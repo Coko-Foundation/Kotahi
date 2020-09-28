@@ -13,7 +13,7 @@ const IconWrapper = styled.div`
   position: relative;
   border-radius: 6px;
   padding: ${props => (props.noPadding || props.inline ? '0' : '8px 12px')};
-
+  top: ${props => props.top || 0};
   svg {
     stroke: ${props => props.color || props.theme.colorText};
     width: calc(${props => props.size} * ${th('gridUnit')});
@@ -28,6 +28,7 @@ export const Icon = ({
   size = 3,
   noPadding,
   inline,
+  top,
   ...props
 }) => {
   const name = _.upperFirst(_.camelCase(children))
@@ -40,6 +41,7 @@ export const Icon = ({
       noPadding={noPadding}
       role="img"
       size={size}
+      top={top}
     >
       {icons[name]({})}
     </IconWrapper>

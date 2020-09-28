@@ -9,8 +9,9 @@ import EditorElements from './EditorElements'
 
 const Layout = styled.div`
   background-color: ${th('colorBackground')};
-  border-radius: ${th('borderRadius')};
-  max-width: 90rem;
+  border-radius: 0 ${th('borderRadius')} ${th('borderRadius')}
+    ${th('borderRadius')};
+  // max-width: 90rem;
   box-shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
   display: grid;
 

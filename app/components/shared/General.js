@@ -49,6 +49,20 @@ export const SectionRow = styled.div`
   padding: ${grid(2)} ${grid(3)};
 `
 
+export const ClickableSectionRow = styled(SectionRow)`
+  color: ${th('colorText')};
+  :last-of-type {
+    border-radius: 0 0 ${th('borderRadius')} ${th('borderRadius')};
+  }
+  &:hover {
+    cursor: pointer;
+    background-color: ${th('colorBackgroundHue')};
+
+    svg {
+      stroke: ${th('colorPrimary')};
+    }
+  }
+`
 export const SectionRowGrid = styled(SectionRow)`
   display: grid;
   grid-template-columns: repeat(3, minmax(0, 1fr));
@@ -81,5 +95,6 @@ export { Page, Heading }
 export const HeadingWithAction = styled.div`
   display: grid;
   grid-template-columns: 1fr auto;
+  grid-gap: ${grid(2)};
   align-items: center;
 `
