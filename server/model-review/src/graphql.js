@@ -51,6 +51,13 @@ const resolvers = {
       return member.save()
     },
   },
+  Review: {
+    async user(parent, _, ctx) {
+      return parent.user
+        ? parent.user
+        : ctx.models.User.query().findById(parent.userId)
+    },
+  },
   ReviewComment: {
     async files(parent, _, ctx) {
       return parent.files

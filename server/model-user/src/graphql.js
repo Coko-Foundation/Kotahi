@@ -3,8 +3,15 @@ const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
 
 const resolvers = {
   Query: {
-    user(_, { id }, ctx) {
-      return ctx.models.User.query().findById(id)
+    user(_, { id, username }, ctx) {
+      if (id) {
+        return ctx.models.User.query().findById(id)
+      } else if (username) {
+        return ctx.models.User.query()
+          .where({ username })
+          .first()
+      }
+      return null
     },
     async users(_, vars, ctx) {
       return ctx.models.User.query()
