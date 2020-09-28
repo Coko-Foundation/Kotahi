@@ -106,16 +106,22 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
 const user_is_review_author_and_review_is_not_completed = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
-  const review = await ctx.models.Review.query().findById(args.id)
-  const manuscript = await ctx.models.Manuscript.query().findById(
-    review.manuscriptId,
-  )
+  let manuscriptId
+  if (args.id) {
+    ;({ manuscriptId } = await ctx.models.Review.query().findById(args.id))
+  } else {
+    ;({ manuscriptId } = args.input)
+  }
+
+  const manuscript = await ctx.models.Manuscript.query().findById(manuscriptId)
   const team = await ctx.models.Team.query()
     .where({
       manuscriptId: manuscript.id,
       role: 'reviewer',
     })
     .first()
+  if (!team) return false
+
   const members = await team
     .$relatedQuery('members')
     .where('userId', ctx.user.id)
@@ -125,6 +131,19 @@ const user_is_review_author_and_review_is_not_completed = rule({
   }
 
   return false
+})
+
+const user_is_editor_of_the_manuscript_of_the_review = rule({
+  cache: 'strict',
+})(async (parent, args, ctx, info) => {
+  let manuscriptId
+  if (args.id) {
+    ;({ manuscriptId } = await ctx.models.Review.query().findById(args.id))
+  } else {
+    ;({ manuscriptId } = args.input)
+  }
+
+  return _userIsEditor(ctx.user, manuscriptId)
 })
 
 const user_is_invited_reviewer = rule({ cache: 'strict' })(
@@ -187,62 +206,90 @@ const current_user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_
   return false
 })
 
-const permissions = shield(
-  {
-    Query: {
-      currentUser: isAuthenticated,
-      paginatedManuscripts: userIsAdmin,
-      detailsForURL: allow,
-      publishedManuscripts: allow,
-      manuscripts: allow,
-      manuscript: allow,
-      messages: allow,
-      getFile: allow, // this is a query that gets the form
-    },
-    Mutation: {
-      createManuscript: isAuthenticated,
-      updateManuscript: user_is_author,
-      createMessage: userIsAllowedToChat,
-      updateReview: user_is_review_author_and_review_is_not_completed,
-      reviewerResponse: user_is_invited_reviewer,
-      completeReview: user_is_review_author_and_review_is_not_completed,
-    },
-    Subscription: {
-      messageCreated: userIsAllowedToChat,
-    },
-    CurrentRole: allow,
-    Team: allow,
-    TeamMember: allow,
-    URLMetadata: allow,
-    User: allow,
-    PaginatedManuscripts: allow,
-    Manuscript: allow,
-    File: or(
-      parent_manuscript_is_published,
-      or(
-        current_user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_complete,
-        userIsEditor,
-        userIsAdmin,
-      ),
+const permissions = {
+  Query: {
+    currentUser: isAuthenticated,
+    paginatedManuscripts: userIsAdmin,
+    detailsForURL: allow,
+    publishedManuscripts: allow,
+    manuscripts: allow,
+    manuscript: allow,
+    messages: allow,
+    getFile: allow, // this is a query that gets the form
+    user: allow,
+  },
+  Mutation: {
+    createManuscript: isAuthenticated,
+    updateManuscript: user_is_author,
+    submitManuscript: user_is_author,
+    createMessage: userIsAllowedToChat,
+    updateReview: or(
+      user_is_review_author_and_review_is_not_completed,
+      user_is_editor_of_the_manuscript_of_the_review,
     ),
-    Review: or(parent_manuscript_is_published, review_is_by_current_user),
-    ReviewComment: allow,
-    Channel: allow,
-    Message: allow,
-    MessagesRelay: allow,
-    PageInfo: allow,
-    ManuscriptMeta: allow,
-    Note: allow,
-    Identity: allow,
+    reviewerResponse: user_is_invited_reviewer,
+    completeReview: or(
+      user_is_review_author_and_review_is_not_completed,
+      user_is_editor_of_the_manuscript_of_the_review,
+    ),
+    createNewVersion: allow,
   },
-  {
-    allowExternalErrors: false,
-    debug: true,
-    fallbackRule: or(userIsAdmin, userIsEditor),
+  Subscription: {
+    messageCreated: userIsAllowedToChat,
   },
-)
+  CurrentRole: allow,
+  Team: allow,
+  TeamMember: allow,
+  URLMetadata: allow,
+  User: allow,
+  PaginatedManuscripts: allow,
+  Manuscript: allow,
+  ManuscriptVersion: allow,
+  File: or(
+    parent_manuscript_is_published,
+    or(
+      current_user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_complete,
+      userIsEditor,
+      userIsAdmin,
+    ),
+  ),
+  Review: or(parent_manuscript_is_published, review_is_by_current_user),
+  ReviewComment: allow,
+  Channel: allow,
+  Message: allow,
+  MessagesRelay: allow,
+  PageInfo: allow,
+  ManuscriptMeta: allow,
+  Note: allow,
+  Identity: allow,
+}
 
-module.exports = permissions
+const fallbackRule = or(userIsAdmin, userIsEditor)
+
+// We only ever need to go two levels down, so no need for recursion
+const addOverrideRule = permissions => {
+  const adaptedPermissions = {}
+  Object.keys(permissions).forEach(key1 => {
+    const value = permissions[key1]
+    if (value.constructor.name !== 'Object') {
+      adaptedPermissions[key1] = or(fallbackRule, value)
+    } else {
+      adaptedPermissions[key1] = value
+      Object.keys(value).forEach(key2 => {
+        adaptedPermissions[key1][key2] = or(fallbackRule, value[key2])
+      })
+    }
+  })
+  return adaptedPermissions
+}
+
+const shieldWithPermissions = shield(addOverrideRule(permissions), {
+  allowExternalErrors: false,
+  debug: true,
+  fallbackRule,
+})
+
+module.exports = shieldWithPermissions
 
 // const userIsEditorOfManuscript = rule({
 //   cache: 'strict',
