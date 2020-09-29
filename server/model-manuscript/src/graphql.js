@@ -21,6 +21,14 @@ const ManuscriptResolvers = ({ isVersion }) => {
             await ctx.models.Manuscript.query().findById(parent.id)
           ).$relatedQuery('teams')
     },
+    async files(parent, _, ctx) {
+      return parent.files
+        ? parent.files
+        : (
+            await ctx.models.Manuscript.query().findById(parent.id)
+          ).$relatedQuery('files')
+    },
+
     meta(parent) {
       return { ...parent.meta, manuscriptId: parent.id }
     },
