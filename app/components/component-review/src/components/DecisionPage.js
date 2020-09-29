@@ -2,9 +2,14 @@ import React from 'react'
 import { useQuery } from '@apollo/client'
 import DecisionVersion from './DecisionVersion'
 
-import { Columns, Manuscript, Chat } from './style'
-
-import { Spinner, VersionSwitcher, ErrorBoundary } from '../../../shared'
+import {
+  Spinner,
+  VersionSwitcher,
+  ErrorBoundary,
+  Columns,
+  Manuscript,
+  Chat,
+} from '../../../shared'
 
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 
@@ -27,10 +32,17 @@ const DecisionPage = ({ match }) => {
   const versions = gatherManuscriptVersions(manuscript)
 
   // Protect if channels don't exist for whatever reason
-  let channelId
+  let editorialChannelId, allChannelId
   if (Array.isArray(manuscript.channels) && manuscript.channels.length) {
-    channelId = manuscript.channels.find(c => c.type === 'editorial').id
+    editorialChannelId = manuscript.channels.find(c => c.type === 'editorial')
+      .id
+    allChannelId = manuscript.channels.find(c => c.type === 'all').id
   }
+
+  const channels = [
+    { id: allChannelId, name: 'Discussion with author' },
+    { id: editorialChannelId, name: 'Editorial discussion' },
+  ]
 
   return (
     <Columns>
@@ -49,8 +61,9 @@ const DecisionPage = ({ match }) => {
           </VersionSwitcher>
         </ErrorBoundary>
       </Manuscript>
-
-      <Chat>{channelId && <MessageContainer channelId={channelId} />}</Chat>
+      <Chat>
+        <MessageContainer channels={channels} />
+      </Chat>
     </Columns>
   )
 }

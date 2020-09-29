@@ -35,7 +35,7 @@ const Decision = ({ decision, editor }) =>
     <SectionRow>Pending.</SectionRow>
   )
 
-const DecisionAndReviews = ({ manuscript }) => {
+const DecisionAndReviews = ({ manuscript, noGap }) => {
   const decision =
     manuscript.reviews &&
     !!manuscript.reviews.length &&
@@ -48,7 +48,7 @@ const DecisionAndReviews = ({ manuscript }) => {
 
   return (
     <>
-      <SectionContent>
+      <SectionContent noGap={noGap}>
         <SectionHeader>
           <Title>Decision</Title>
         </SectionHeader>

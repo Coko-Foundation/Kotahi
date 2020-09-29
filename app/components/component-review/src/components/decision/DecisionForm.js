@@ -11,12 +11,11 @@ import {
 } from '@pubsweet/ui'
 import { JournalContext } from '../../../../xpub-journal/src'
 import { required } from '../../../../xpub-validators/src'
-import { FilesUpload } from '../../../../shared'
+import { FilesUpload, SectionContent } from '../../../../shared'
 
 import { reviewWithComment } from '../review/util'
 
 import {
-  Container,
   Title,
   SectionHeader,
   SectionRowGrid,
@@ -145,7 +144,7 @@ const DecisionForm = ({
   }
 
   return (
-    <Container>
+    <SectionContent>
       <form onSubmit={handleSubmit}>
         <SectionHeader>
           <Title>Decision</Title>
@@ -172,7 +171,7 @@ const DecisionForm = ({
           </SectionAction>
         </SectionRowGrid>
       </form>
-    </Container>
+    </SectionContent>
   )
 }
 

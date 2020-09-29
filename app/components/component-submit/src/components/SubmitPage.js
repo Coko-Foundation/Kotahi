@@ -132,6 +132,11 @@ const query = gql`
         parentId
         ${fragmentFields}
       }
+      channels {
+        id
+        type
+        topic
+      }
     }
 
     getFile(form: $form)
@@ -229,6 +234,7 @@ const SubmitPage = ({ match, history, ...props }) => {
       form={cloneDeep(form)}
       onChange={handleChange}
       onSubmit={onSubmit}
+      parent={manuscript}
       toggleConfirming={toggleConfirming}
       versions={versions}
       {...props}

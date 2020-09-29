@@ -5,21 +5,36 @@ import CurrentVersion from './CurrentVersion'
 import DecisionAndReviews from './DecisionAndReviews'
 import CreateANewVersion from './CreateANewVersion'
 import FormTemplate from './FormTemplate'
-import { Container, Content, VersionSwitcher, Tabs } from '../../../shared'
+import MessageContainer from '../../../component-chat/src'
+import {
+  Content,
+  VersionSwitcher,
+  Tabs,
+  Columns,
+  Chat,
+  Manuscript,
+  ErrorBoundary,
+} from '../../../shared'
+
 // TODO: Improve the import, perhaps a shared component?
 import EditorSection from '../../../component-review/src/components/decision/EditorSection'
 
-const SubmittedVersion = ({ manuscript, currentVersion, createNewVersion }) => (
-  <>
-    <CreateANewVersion
-      createNewVersion={createNewVersion}
-      currentVersion={currentVersion}
-      manuscript={manuscript}
-    />
-    <DecisionAndReviews manuscript={manuscript} />
-    <CurrentVersion manuscript={manuscript} />
-  </>
-)
+const SubmittedVersion = ({ manuscript, currentVersion, createNewVersion }) => {
+  const reviseDecision = currentVersion && manuscript.status === 'revise'
+  return (
+    <>
+      {reviseDecision && (
+        <CreateANewVersion
+          createNewVersion={createNewVersion}
+          currentVersion={currentVersion}
+          manuscript={manuscript}
+        />
+      )}
+      <DecisionAndReviews manuscript={manuscript} noGap={!reviseDecision} />
+      <CurrentVersion manuscript={manuscript} />
+    </>
+  )
+}
 
 const Submit = ({
   versions = [],
@@ -27,6 +42,7 @@ const Submit = ({
   createNewVersion,
   toggleConfirming,
   confirming,
+  parent,
   onChange,
   onSubmit,
 }) => {
@@ -105,24 +121,36 @@ const Submit = ({
         key: versionId,
         label: 'Submitted info',
       }
-
-      decisionSections.push({
-        content: (
-          <Tabs
-            defaultActiveKey={version.id}
-            sections={[decisionSection, editorSection]}
-          />
-        ),
-        key: manuscript.id,
-        label,
-      })
     }
+    decisionSections.push({
+      content: (
+        <Tabs
+          defaultActiveKey={versionId}
+          sections={[decisionSection, editorSection]}
+        />
+      ),
+      key: manuscript.id,
+      label,
+    })
   })
 
+  // Protect if channels don't exist for whatever reason
+  let channelId
+  if (Array.isArray(parent.channels) && parent.channels.length) {
+    channelId = parent.channels.find(c => c.type === 'all').id
+  }
+
   return (
-    <Container>
-      <VersionSwitcher versions={decisionSections} />
-    </Container>
+    <Columns>
+      <Manuscript>
+        <ErrorBoundary>
+          <VersionSwitcher versions={decisionSections} />
+        </ErrorBoundary>
+      </Manuscript>
+      <Chat>
+        <MessageContainer channelId={channelId} />
+      </Chat>
+    </Columns>
   )
 }
 

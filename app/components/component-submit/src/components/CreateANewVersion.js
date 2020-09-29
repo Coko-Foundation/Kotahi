@@ -14,70 +14,70 @@ import {
   HeadingWithAction,
 } from '../../../shared'
 
-const CreateANewVersion = ({ manuscript, currentVersion, createNewVersion }) =>
-  currentVersion && manuscript.status === 'revise' ? (
-    <>
-      <SectionContent>
-        <SectionHeader>
-          <Title>Create a new version</Title>
-        </SectionHeader>
-        <SectionRow>
-          <HeadingWithAction>
-            <p>
-              You have been asked to <strong>revise</strong> your manuscript and
-              the corresponding reviews and decision are available below. You
-              can create a new version of your manuscript and resubmit it.
-            </p>
-            <Button
-              onClick={() =>
-                createNewVersion({
-                  variables: { id: manuscript.id },
-                  update: (cache, { data: { createNewVersion } }) => {
-                    // Always modify the main/original/parent manuscript
-                    const parentId = manuscript.parentId || manuscript.id
-                    cache.modify({
-                      id: cache.identify({
-                        id: parentId,
-                        __typename: 'Manuscript',
-                      }),
-                      fields: {
-                        manuscriptVersions(
-                          existingVersionRefs = [],
-                          { readField },
-                        ) {
-                          const newVersionRef = cache.writeFragment({
-                            data: createNewVersion,
-                            fragment: gql`
-                              fragment NewManuscriptVersion on Manuscript {
-                                id
-                              }
-                            `,
-                          })
-
-                          if (
-                            existingVersionRefs.some(
-                              ref =>
-                                readField('id', ref) === createNewVersion.id,
-                            )
-                          ) {
-                            return existingVersionRefs
+const CreateANewVersion = ({
+  manuscript,
+  currentVersion,
+  createNewVersion,
+}) => (
+  <SectionContent noGap>
+    <SectionHeader>
+      <Title>Create a new version</Title>
+    </SectionHeader>
+    <SectionRow>
+      <HeadingWithAction>
+        <p>
+          You have been asked to <strong>revise</strong> your manuscript and the
+          corresponding reviews and decision are available below. You can create
+          a new version of your manuscript and resubmit it.
+        </p>
+        <Button
+          onClick={() =>
+            createNewVersion({
+              variables: { id: manuscript.id },
+              update: (cache, { data: { createNewVersion } }) => {
+                // Always modify the main/original/parent manuscript
+                const parentId = manuscript.parentId || manuscript.id
+                cache.modify({
+                  id: cache.identify({
+                    id: parentId,
+                    __typename: 'Manuscript',
+                  }),
+                  fields: {
+                    manuscriptVersions(
+                      existingVersionRefs = [],
+                      { readField },
+                    ) {
+                      const newVersionRef = cache.writeFragment({
+                        data: createNewVersion,
+                        fragment: gql`
+                          fragment NewManuscriptVersion on Manuscript {
+                            id
                           }
+                        `,
+                      })
 
-                          return [newVersionRef, ...existingVersionRefs]
-                        },
-                      },
-                    })
+                      if (
+                        existingVersionRefs.some(
+                          ref => readField('id', ref) === createNewVersion.id,
+                        )
+                      ) {
+                        return existingVersionRefs
+                      }
+
+                      return [newVersionRef, ...existingVersionRefs]
+                    },
                   },
                 })
-              }
-              primary
-            >
-              Create a new version
-            </Button>
-          </HeadingWithAction>
-        </SectionRow>
-      </SectionContent>
-    </>
-  ) : null
+              },
+            })
+          }
+          primary
+        >
+          Create a new version
+        </Button>
+      </HeadingWithAction>
+    </SectionRow>
+  </SectionContent>
+)
 
 export default CreateANewVersion

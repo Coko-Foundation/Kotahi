@@ -4,13 +4,14 @@ import { Button } from '@pubsweet/ui'
 import { publishManuscriptMutation } from './queries'
 
 import {
-  Container,
   Title,
   SectionHeader,
   SectionRowGrid,
   SectionActionInfo,
   SectionAction,
 } from './style'
+
+import { SectionContent } from '../../../shared'
 
 const Publish = ({ manuscript }) => {
   // Hooks from the old world
@@ -19,7 +20,7 @@ const Publish = ({ manuscript }) => {
   const notAccepted = manuscript.status !== 'accepted'
 
   return (
-    <Container>
+    <SectionContent>
       <SectionHeader>
         <Title>Publishing</Title>
       </SectionHeader>
@@ -47,7 +48,7 @@ const Publish = ({ manuscript }) => {
           </Button>
         </SectionAction>
       </SectionRowGrid>
-    </Container>
+    </SectionContent>
   )
 }
 
