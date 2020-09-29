@@ -137,7 +137,7 @@ const Messages = ({ channelId }) => {
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
 
-  const firstMessage = data.messages.edges[0]
+  const firstMessage = data?.messages.edges[0]
 
   const fetchMoreOptions = {
     variables: { channelId, before: firstMessage && firstMessage.id },
