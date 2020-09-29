@@ -1,9 +1,9 @@
 import React, { useState, useEffect } from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { th, override } from '@pubsweet/ui-toolkit'
 
 const Tab = styled.div`
-  padding: ${th('gridUnit')} 1em;
+  padding: calc(${th('gridUnit')} - 1px) 1em;
   font-size: ${th('fontSizeBaseSmall')};
   font-weight: 500;
   background-color: ${({ active }) =>
@@ -17,16 +17,30 @@ const Tab = styled.div`
 `
 
 const TabsContainer = styled.div`
+  ${props =>
+    props.background &&
+    css`
+      background-color: ${th(props.background)};
+    `}
   display: flex;
+  ${props =>
+    props.gridArea &&
+    css`
+      grid-area: ${props.gridArea};
+    `}
 `
 
 const TabContainer = styled.div.attrs(props => ({
   'data-test-id': props['data-test-id'] || 'tab-container',
 }))``
 
-const Content = styled.div``
-
-const Tabs = ({ sections, onChange, defaultActiveKey = null }) => {
+const Tabs = ({
+  sections,
+  onChange,
+  defaultActiveKey = null,
+  tabsContainerGridArea,
+  background,
+}) => {
   const [activeKey, setActiveKey] = useState(defaultActiveKey)
 
   useEffect(() => {
@@ -45,7 +59,7 @@ const Tabs = ({ sections, onChange, defaultActiveKey = null }) => {
   ).content
   return (
     <>
-      <TabsContainer>
+      <TabsContainer background={background} gridArea={tabsContainerGridArea}>
         {sections.map(({ key, label }) => (
           <TabContainer
             key={key}
@@ -56,7 +70,7 @@ const Tabs = ({ sections, onChange, defaultActiveKey = null }) => {
         ))}
       </TabsContainer>
 
-      {activeKey && <Content>{currentContent}</Content>}
+      {activeKey && currentContent}
     </>
   )
 }
