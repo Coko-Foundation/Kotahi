@@ -162,12 +162,12 @@ const DecisionVersion = ({ label, current, version, parent }) => {
         <AdminSection key="review-metadata">
           <ReviewMetadata manuscript={version} />
         </AdminSection>
-        {version.status === 'submitted' && (
+        {current && (
           <AdminSection key="decision-review">
             <DecisionReviews manuscript={version} />
           </AdminSection>
         )}
-        {version.status === 'submitted' && (
+        {current && (
           <AdminSection key="decision-form">
             <DecisionForm
               dirty={dirty}
@@ -179,7 +179,7 @@ const DecisionVersion = ({ label, current, version, parent }) => {
             />
           </AdminSection>
         )}
-        {version.status === 'submitted' && (
+        {current && (
           <AdminSection>
             <Publish manuscript={version} />
           </AdminSection>
