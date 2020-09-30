@@ -32,7 +32,7 @@ describe('URL submission test', () => {
 
     cy.get('[data-testid="submission.affiliation"]')
       .click()
-      .type('Example University, Egland')
+      .type('Example University, England')
 
     cy.get('[data-testid="submission.contact"]')
       .click()
@@ -51,7 +51,7 @@ describe('URL submission test', () => {
       .type('This is my ethics statement')
 
     cy.get('*[aria-label="Type of Research Object"]').click({ force: true })
-    cy.get('#react-select-2-option-1').click()
+    cy.get('#react-select-3-option-1').click()
     cy.get('[data-testid="submission.suggested"]')
       .click()
       .type('Erica James, Matthew Matretzky')
@@ -77,17 +77,17 @@ describe('URL submission test', () => {
     cy.get('*[aria-label*="healthy subjects only or patients"]').click({
       force: true,
     })
-    cy.get('#react-select-3-option-1').click()
+    cy.get('#react-select-4-option-1').click()
 
     cy.get('*[aria-label*="involved human subjects"]').click({
       force: true,
     })
-    cy.get('#react-select-4-option-0').click()
+    cy.get('#react-select-5-option-0').click()
 
     cy.get('*[aria-label*="animal research approved"]').click({
       force: true,
     })
-    cy.get('#react-select-5-option-0').click()
+    cy.get('#react-select-6-option-0').click()
 
     cy.get('input[name="submission.methods"][value="Functional MRI"]').click()
     cy.get('input[name="submission.methods"][value="Optical Imaging"]').click()
@@ -99,7 +99,7 @@ describe('URL submission test', () => {
     cy.get('*[aria-label*="what field strength"]').click({
       force: true,
     })
-    cy.get('#react-select-6-option-3').click()
+    cy.get('#react-select-7-option-3').click()
 
     cy.get('[data-testid="submission.humanMRIother"]')
       .click()
