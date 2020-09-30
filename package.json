@@ -160,7 +160,8 @@
     "test:chrome": "cypress run --browser chrome",
     "__cleanNodeModules": "find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' \\;",
     "build": "NODE_ENV=production pubsweet build",
-    "seedFromDump": "node scripts/seedFromDump.js"
+    "seedFromDump": "node scripts/seedFromDump.js",
+    "console": "node --experimental-repl-await -r ./scripts/preload.js"
   },
   "jest": {
     "testEnvironment": "node",
