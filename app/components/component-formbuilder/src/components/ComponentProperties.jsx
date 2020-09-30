@@ -1,16 +1,7 @@
 import React, { useState } from 'react'
 import { map, omitBy } from 'lodash'
-// import {
-//   branch,
-//   renderComponent,
-//   compose,
-//   withState,
-//   withHandlers,
-//   withProps,
-// } from 'recompose'
 import { ValidatedFieldFormik, Menu, Button } from '@pubsweet/ui'
 import { Formik } from 'formik'
-
 import FormProperties from './FormProperties'
 import components from './config/Elements'
 import * as elements from './builderComponents'

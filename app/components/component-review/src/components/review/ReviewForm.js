@@ -7,7 +7,6 @@ import { JournalContext } from '../../../../xpub-journal/src'
 import { reviewWithComment } from './util'
 import {
   AdminSection,
-  Container,
   Title,
   SectionHeader,
   SectionRowGrid,
@@ -15,47 +14,8 @@ import {
   SectionAction,
   RecommendationInputContainer,
 } from '../style'
-import { FilesUpload } from '../../../../shared'
 
-// const AttachmentsInput = ({
-//   field,
-//   form: { values },
-//   updateReview,
-//   uploadFile,
-//   type,
-// }) => (
-//   <>
-//     <UploadButton
-//       buttonText="↑ Upload files"
-//       onChange={event => {
-//         const val = event.target.files[0]
-//         const file = cloneDeep(val)
-//         file.filename = val.name
-//         file.type = type
-
-//         const { updateIndex, comment } = createComments(
-//           values,
-//           { files: [file] },
-//           type,
-//         )
-
-//         const data = cloneDeep(values)
-//         set(data, `comments.${updateIndex}`, comment)
-
-//         updateReview(data).then(({ data: { updateReview } }) => {
-//           uploadFile(val, updateReview, type)
-//         })
-//       }}
-//     />
-//     <Flexbox>
-//       {getCommentFiles(values, type).map(val => {
-//         const file = cloneDeep(val)
-//         file.name = file.filename
-//         return <UploadingFile file={file} key={file.name} uploaded />
-//       })}
-//     </Flexbox>
-//   </>
-// )
+import { SectionContent, FilesUpload } from '../../../../shared'
 
 const NoteInput = ({
   field,
@@ -200,7 +160,7 @@ const ReviewForm = ({
   uploadFile,
   review,
 }) => (
-  <Container>
+  <SectionContent>
     <form onSubmit={handleSubmit}>
       <AdminSection>
         <SectionHeader>
@@ -230,7 +190,7 @@ const ReviewForm = ({
         </SectionRowGrid>
       </AdminSection>
     </form>
-  </Container>
+  </SectionContent>
 )
 
 export default ReviewForm

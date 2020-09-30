@@ -1,6 +1,5 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
-import { compose, withState, withHandlers } from 'recompose'
 import { Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { JournalContext } from '../../../../xpub-journal/src'
@@ -63,7 +62,7 @@ const ReviewHeading = ({
   )
 }
 
-const DecisionReview = ({ review, reviewer, open, toggleOpen }) => {
+const DecisionReview = ({ review, reviewer }) => {
   const { recommendation } = review
   const { name, ordinal } = reviewer
 
@@ -76,6 +75,10 @@ const DecisionReview = ({ review, reviewer, open, toggleOpen }) => {
   `
 
   const journal = useContext(JournalContext)
+
+  const [open, setOpen] = useState(false)
+  const toggleOpen = () => setOpen(!open)
+
   return (
     <Root>
       <ReviewHeading
@@ -96,11 +99,4 @@ const DecisionReview = ({ review, reviewer, open, toggleOpen }) => {
   )
 }
 
-export default compose(
-  withState('open', 'setOpen', ({ open }) => open),
-  withHandlers({
-    toggleOpen: props => () => {
-      props.setOpen(open => !open)
-    },
-  }),
-)(DecisionReview)
+export default DecisionReview

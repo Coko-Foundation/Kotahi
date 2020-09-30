@@ -25,10 +25,12 @@ const getUserFromTeam = (version, role) => {
 
 const EditorItemLinks = ({ version }) => (
   <ActionGroup>
-    <Action to={`/journal/versions/${version.id}/submit`}>Summary Info</Action>
+    <Action to={`/journal/versions/${version.parentId || version.id}/submit`}>
+      Summary Info
+    </Action>
     <Action
       data-testid="control-panel"
-      to={`/journal/versions/${version.id}/decision`}
+      to={`/journal/versions/${version.parentId || version.id}/decision`}
     >
       {version.decision && version.decision.status === 'submitted'
         ? `Decision: ${version.decision.recommendation}`

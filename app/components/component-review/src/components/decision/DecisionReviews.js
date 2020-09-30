@@ -1,8 +1,8 @@
 import React from 'react'
 import { Action } from '@pubsweet/ui'
 import DecisionReview from './DecisionReview'
-import { Container, SectionHeader, SectionRow, Title } from '../style'
-
+import { SectionHeader, SectionRow, Title } from '../style'
+import { SectionContent } from '../../../../shared'
 // TODO: read reviewer ordinal and name from project reviewer
 // const { status } =
 //     getUserFromTeam(manuscript, 'reviewer').filter(
@@ -20,7 +20,7 @@ const getCompletedReviews = (manuscript, currentUser) => {
 }
 
 const DecisionReviews = ({ manuscript }) => (
-  <Container>
+  <SectionContent>
     <SectionHeader>
       <Title>Reviews</Title>
     </SectionHeader>
@@ -51,7 +51,7 @@ const DecisionReviews = ({ manuscript }) => (
         Manage Reviewers
       </Action>
     </SectionRow>
-  </Container>
+  </SectionContent>
 )
 
 export default DecisionReviews

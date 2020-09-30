@@ -1,5 +1,56 @@
 import gql from 'graphql-tag'
 
+const manuscriptFragment = `
+reviews {
+  id
+  open
+  recommendation
+  created
+  isDecision
+  user {
+    id
+    username
+  }
+}
+teams {
+  id
+  role
+  name
+  manuscript {
+    id
+  }
+  members {
+    id
+    user {
+      id
+      username
+    }
+    status
+  }
+}
+status
+meta {
+  manuscriptId
+  title
+  declarations {
+    openData
+    openPeerReview
+    preregistered
+    previouslySubmitted
+    researchNexus
+    streamlinedReview
+  }
+  articleSections
+  articleType
+  history {
+    type
+    date
+  }
+}
+published
+_currentRoles @client
+`
+
 export default {
   dashboard: gql`
     {
@@ -13,55 +64,10 @@ export default {
         id
         manuscriptVersions {
           id
+          parentId
+          ${manuscriptFragment}
         }
-        reviews {
-          id
-          open
-          recommendation
-          created
-          isDecision
-          user {
-            id
-            username
-          }
-        }
-        teams {
-          id
-          role
-          name
-          manuscript {
-            id
-          }
-          members {
-            id
-            user {
-              id
-              username
-            }
-            status
-          }
-        }
-        status
-        meta {
-          manuscriptId
-          title
-          declarations {
-            openData
-            openPeerReview
-            preregistered
-            previouslySubmitted
-            researchNexus
-            streamlinedReview
-          }
-          articleSections
-          articleType
-          history {
-            type
-            date
-          }
-        }
-        published
-        _currentRoles @client
+        ${manuscriptFragment}
       }
     }
   `,

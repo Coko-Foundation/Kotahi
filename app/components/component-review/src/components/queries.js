@@ -34,6 +34,9 @@ const reviewFields = `
   user {
     id
     username
+    defaultIdentity {
+      name
+    }
   }
 `
 
@@ -66,6 +69,9 @@ const fragmentFields = `
       user {
         id
         username
+        defaultIdentity {
+          name
+        }
       }
       status
     }

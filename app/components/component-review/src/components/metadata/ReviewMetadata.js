@@ -6,7 +6,8 @@ import { Attachment } from '@pubsweet/ui'
 
 import form from '../../../../../storage/forms/submit.json'
 
-import { Container, Title, SectionHeader, SectionRowGrid } from '../style'
+import { Title, SectionHeader, SectionRowGrid } from '../style'
+import { SectionContent } from '../../../../shared'
 
 const Heading = styled.span`
   font-weight: inherit;
@@ -47,7 +48,7 @@ const showFieldData = (manuscript, fieldName) => {
   // TODO: Make this generic somehow. Perhaps with an additional fieldType?
   if (Array.isArray(data) && fieldName === 'submission.links') {
     return data.map(link => (
-      <p>
+      <p key={link.url}>
         <a href={link.url} rel="noopener noreferrer" target="_blank">
           {link.url}
         </a>
@@ -78,7 +79,7 @@ const ReviewMetadata = ({ manuscript: rawManuscript }) => {
   )
 
   return (
-    <Container>
+    <SectionContent>
       <SectionHeader>
         <Title>Metadata</Title>
       </SectionHeader>
@@ -118,7 +119,7 @@ const ReviewMetadata = ({ manuscript: rawManuscript }) => {
           )}
         </SectionRowGrid>
       )}
-    </Container>
+    </SectionContent>
   )
 }
 

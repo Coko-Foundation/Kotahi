@@ -168,6 +168,7 @@ const renderArray = (elementsComponentArray, onChange) => ({
             'description',
             'order',
             'value',
+            'shortDescription',
           ])}
           aria-label={element.shortDescription}
           component={elements[element.component]}
@@ -222,142 +223,153 @@ export default ({
   errors,
   validateForm,
   ...props
-}) => (
-  <Container>
-    <Heading1>{form.name}</Heading1>
-    <Intro
-      dangerouslySetInnerHTML={createMarkup(
-        (form.description || '').replace(
-          '###link###',
-          link(journal, manuscript),
-        ),
-      )}
-    />
-    <form onSubmit={handleSubmit}>
-      {groupElements(form.children || []).map((element, i) =>
-        !isArray(element) ? (
-          <Section
-            cssOverrides={JSON.parse(element.sectioncss || '{}')}
-            key={`${element.id}`}
-          >
-            {/* <p>{JSON.stringify(element)}</p> */}
-            <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
-            {element.component === 'SupplementaryFiles' && (
-              <FilesUpload
-                containerId={manuscript.id}
-                containerName="manuscript"
-                fileType="supplementary"
-                onChange={onChange}
-              />
-            )}
-            {element.component === 'AuthorsInput' && (
-              <AuthorsInput data-testid={element.name} onChange={onChange} />
-            )}
-            {element.component !== 'AuthorsInput' &&
-              element.component !== 'SupplementaryFiles' && (
-                <ValidatedFieldFormik
-                  aria-label={element.placeholder || element.title}
-                  component={elements[element.component]}
-                  data-testid={element.name} // TODO: Improve this
-                  key={`validate-${element.id}`}
-                  name={element.name}
-                  onChange={value => {
-                    // TODO: Perhaps split components remove conditions here
-                    let val
-                    if (value.target) {
-                      val = value.target.value
-                    } else if (value.value) {
-                      val = value.value
-                    } else {
-                      val = value
-                    }
-                    setFieldValue(element.name, val, true)
-                    onChange(val, element.name)
-                  }}
-                  readonly={false}
-                  setTouched={setTouched}
-                  {...rejectProps(element, [
-                    'component',
-                    'title',
-                    'sectioncss',
-                    'parse',
-                    'format',
-                    'validate',
-                    'validateValue',
-                    'description',
-                    'order',
-                  ])}
-                  validate={composeValidate(
-                    element.validate,
-                    element.validateValue,
-                  )}
-                  values={values}
+}) => {
+  const submitButton = text => (
+    <div>
+      <Button
+        onClick={async () => {
+          const hasErrors = Object.keys(await validateForm()).length !== 0
+
+          // If there are errors, do a fake submit
+          // to focus on the error
+          if (hasErrors) {
+            handleSubmit()
+          } else {
+            toggleConfirming()
+          }
+        }}
+        primary
+        type="button"
+      >
+        {text}
+      </Button>
+    </div>
+  )
+
+  return (
+    <Container>
+      <Heading1>{form.name}</Heading1>
+      <Intro
+        dangerouslySetInnerHTML={createMarkup(
+          (form.description || '').replace(
+            '###link###',
+            link(journal, manuscript),
+          ),
+        )}
+      />
+      <form onSubmit={handleSubmit}>
+        {groupElements(form.children || []).map((element, i) =>
+          !isArray(element) ? (
+            <Section
+              cssOverrides={JSON.parse(element.sectioncss || '{}')}
+              key={`${element.id}`}
+            >
+              {/* <p>{JSON.stringify(element)}</p> */}
+              <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
+              {element.component === 'SupplementaryFiles' && (
+                <FilesUpload
+                  containerId={manuscript.id}
+                  containerName="manuscript"
+                  fileType="supplementary"
+                  onChange={onChange}
                 />
               )}
-            <SubNote
-              dangerouslySetInnerHTML={createMarkup(element.description)}
+              {element.component === 'AuthorsInput' && (
+                <AuthorsInput data-testid={element.name} onChange={onChange} />
+              )}
+              {element.component !== 'AuthorsInput' &&
+                element.component !== 'SupplementaryFiles' && (
+                  <ValidatedFieldFormik
+                    aria-label={element.placeholder || element.title}
+                    component={elements[element.component]}
+                    data-testid={element.name} // TODO: Improve this
+                    key={`validate-${element.id}`}
+                    name={element.name}
+                    onChange={value => {
+                      // TODO: Perhaps split components remove conditions here
+                      let val
+                      if (value.target) {
+                        val = value.target.value
+                      } else if (value.value) {
+                        val = value.value
+                      } else {
+                        val = value
+                      }
+                      setFieldValue(element.name, val, true)
+                      onChange(val, element.name)
+                    }}
+                    readonly={false}
+                    setTouched={setTouched}
+                    {...rejectProps(element, [
+                      'component',
+                      'title',
+                      'sectioncss',
+                      'parse',
+                      'format',
+                      'validate',
+                      'validateValue',
+                      'description',
+                      'shortDescription',
+                      'order',
+                    ])}
+                    validate={composeValidate(
+                      element.validate,
+                      element.validateValue,
+                    )}
+                    values={values}
+                  />
+                )}
+              <SubNote
+                dangerouslySetInnerHTML={createMarkup(element.description)}
+              />
+            </Section>
+          ) : (
+            <ElementComponentArray
+              elementsComponentArray={element}
+              // eslint-disable-next-line
+            key={i}
+              onChange={onChange}
+              setFieldValue={setFieldValue}
+              setTouched={setTouched}
+            />
+          ),
+        )}
+
+        {filterFileManuscript(values.files || []).length > 0 ? (
+          <Section id="files.manuscript">
+            <Legend space>Submitted Manuscript</Legend>
+            <Attachment
+              file={filesToAttachment(filterFileManuscript(values.files)[0])}
+              key={filterFileManuscript(values.files)[0].url}
+              uploaded
             />
           </Section>
-        ) : (
-          <ElementComponentArray
-            elementsComponentArray={element}
-            // eslint-disable-next-line
-            key={i}
-            onChange={onChange}
-            setFieldValue={setFieldValue}
-            setTouched={setTouched}
-          />
-        ),
-      )}
+        ) : null}
 
-      {filterFileManuscript(values.files || []).length > 0 ? (
-        <Section id="files.manuscript">
-          <Legend space>Submitted Manuscript</Legend>
-          <Attachment
-            file={filesToAttachment(filterFileManuscript(values.files)[0])}
-            key={filterFileManuscript(values.files)[0].url}
-            uploaded
-          />
-        </Section>
-      ) : null}
+        {!['submitted', 'revise'].includes(values.status) &&
+          form.haspopup === 'false' && (
+            <Button onClick={() => handleSubmit()} primary type="submit">
+              Submit your research object
+            </Button>
+          )}
 
-      {values.status !== 'submitted' && form.haspopup === 'false' && (
-        <Button onClick={() => handleSubmit()} primary type="submit">
-          Submit your research object
-        </Button>
-      )}
+        {!['submitted', 'revise'].includes(values.status) &&
+          form.haspopup === 'true' &&
+          submitButton('Submit your research object')}
 
-      {values.status !== 'submitted' && form.haspopup === 'true' && (
-        <div>
-          <Button
-            onClick={async () => {
-              const hasErrors = Object.keys(await validateForm()).length !== 0
+        {values.status === 'revise' && submitButton('Submit your revision')}
 
-              // If there are errors, do a fake submit
-              // to focus on the error
-              if (hasErrors) {
-                handleSubmit()
-              } else {
-                toggleConfirming()
-              }
-            }}
-            primary
-            type="button"
-          >
-            Submit your research object
-          </Button>
-        </div>
-      )}
-      {confirming && (
-        <ModalWrapper>
-          <Confirm
-            errors={errors}
-            form={form}
-            submit={handleSubmit}
-            toggleConfirming={toggleConfirming}
-          />
-        </ModalWrapper>
-      )}
-    </form>
-  </Container>
-)
+        {confirming && (
+          <ModalWrapper>
+            <Confirm
+              errors={errors}
+              form={form}
+              submit={handleSubmit}
+              toggleConfirming={toggleConfirming}
+            />
+          </ModalWrapper>
+        )}
+      </form>
+    </Container>
+  )
+}

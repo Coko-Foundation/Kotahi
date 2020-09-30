@@ -59,7 +59,8 @@ const label = (status, published) => {
     new: 'Unsubmitted',
     rejected: 'Rejected',
     submitted: 'Submitted',
-    revise: 'Revising',
+    revise: 'Revise',
+    revising: 'Revising',
     invited: 'Invited', // reviewer status
     completed: 'Completed', // reviewer status
   }

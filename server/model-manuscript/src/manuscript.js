@@ -13,48 +13,13 @@ class Manuscript extends BaseModel {
     this.type = 'Manuscript'
   }
 
-  // static async myManuscripts(myManuscripts) {
-  //   const mainManuscript = {}
-  //   myManuscripts.forEach(manuscript => {
-  //     if (!mainManuscript[manuscript.parentId || manuscript.id]) {
-  //       mainManuscript[manuscript.parentId || manuscript.id] = manuscript
-  //     } else {
-  //       const checkManuscript =
-  //         mainManuscript[manuscript.parentId || manuscript.id]
-  //       // Compare Dates
-  //       const dateCheckManuscript = new Date(checkManuscript.created).getTime()
-  //       const dateManuscript = new Date(manuscript.created).getTime()
-  //       if (dateManuscript >= dateCheckManuscript) {
-  //         mainManuscript[manuscript.parentId || manuscript.id] = manuscript
-  //       }
-  //     }
-  //   })
-
-  //   const latestManuscripts = values(mainManuscript)
-  //   await Promise.all(
-  //     latestManuscripts.map(async manuscript => {
-  //       manuscript.teams = await new Manuscript(manuscript).getTeams()
-  //       manuscript.reviews = await new Manuscript(manuscript).getReviews()
-  //       manuscript.manuscriptVersions =
-  //         (await manuscript.getManuscriptVersions()) || []
-  //       return manuscript
-  //     }),
-  //   )
-
-  //   return latestManuscripts
-  // }
-
-  // async getTeams() {
-  //   const { Team } = require('@pubsweet/models')
-  //   const myTeams = await Team.query()
-  //     .where({
-  //       objectId: this.id,
-  //       objectType: 'Manuscript',
-  //     })
-  //     .eager('members')
-
-  //   return myTeams
-  // }
+  static get modifiers() {
+    return {
+      orderByCreated(builder) {
+        builder.orderBy('created', 'desc')
+      },
+    }
+  }
 
   async getReviews() {
     // TODO: Use relationships
@@ -98,61 +63,35 @@ class Manuscript extends BaseModel {
   }
 
   async createNewVersion() {
-    const { Team, File } = require('@pubsweet/models')
-
-    const manuscriptReviews = (await this.$query().eager('reviews')).reviews
-    const manuscriptTeams = (
-      await this.$query().eager('[teams, teams.members]')
-    ).teams
-    const teams = manuscriptTeams.filter(
-      team =>
-        team.role === 'author' ||
-        team.role === 'seniorEditor' ||
-        team.role === 'handlingEditor',
-    )
-
-    const manuscriptFiles = await File.query().where({
-      manuscriptId: this.id,
+    // Copy authors to the new version
+    const teams = await this.$relatedQuery('teams')
+      .where({ role: 'author' })
+      .withGraphFetched('members')
+    teams.forEach(t => {
+      delete t.id
+      t.members.forEach(tm => delete tm.id)
     })
 
-    const manuscriptDecision = manuscriptReviews.find(
-      review => review.isDecision,
-    )
+    // Copy files as well
+    const files = await this.$relatedQuery('files')
+    files.forEach(f => delete f.id)
 
-    const dataManuscript = await new Manuscript(
-      omit(cloneDeep(this), ['id', 'created', 'updated', 'decision']),
-    )
+    const newVersion = cloneDeep(this)
+    newVersion.teams = teams
+    newVersion.files = files
 
-    dataManuscript.status =
-      manuscriptDecision.recommendation === 'revise'
-        ? 'revising'
-        : manuscriptDecision.recommendation
-
-    dataManuscript.parentId = this.parentId || this.id
-    const newManuscript = await dataManuscript.save()
-
-    if (teams.length > 0) {
-      // Copy Teams to the new Version
-      await Promise.all(
-        teams.map(async team => {
-          team.manuscriptId = newManuscript.id
-          team.members = team.members.map(member => omit(member, 'id'))
-          await new Team(omit(team, ['id'])).saveGraph()
-        }),
-      )
+    if (this.decision === 'revise') {
+      newVersion.status = 'revising'
     }
 
-    // Copy Files to the new Version
-    await Promise.all(
-      manuscriptFiles.map(async file => {
-        const newFile = omit(file, ['id'])
-        newFile.manuscriptId = newManuscript.id
-        await new File(newFile).save()
-        return newFile
-      }),
+    // All versions should be linked to one parent, original manuscript
+    newVersion.parentId = this.parentId || this.id
+
+    const manuscript = await Manuscript.query().insertGraphAndFetch(
+      omit(cloneDeep(newVersion), ['id', 'created', 'updated', 'decision']),
     )
 
-    return this
+    return manuscript
   }
 
   static get relationMappings() {
@@ -201,6 +140,14 @@ class Manuscript extends BaseModel {
       },
       parent: {
         relation: BaseModel.HasOneRelation,
+        modelClass: Manuscript,
+        join: {
+          from: 'manuscripts.id',
+          to: 'manuscripts.parentId',
+        },
+      },
+      manuscriptVersions: {
+        relation: BaseModel.HasManyRelation,
         modelClass: Manuscript,
         join: {
           from: 'manuscripts.id',

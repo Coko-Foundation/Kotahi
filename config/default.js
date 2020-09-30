@@ -3,30 +3,25 @@ const components = require('./components.json')
 const logger = require('winston')
 
 module.exports = {
+  teams: {
+    seniorEditor: {
+      name: 'Senior Editor',
+    },
+    handlingEditor: {
+      name: 'Handling Editor',
+    },
+    managingEditor: {
+      name: 'Managing Editor',
+    },
+    reviewer: {
+      name: 'Reviewer',
+    },
+    author: {
+      name: 'Author',
+    },
+  },
   authsome: {
     mode: path.resolve(__dirname, 'authsome.js'),
-    teams: {
-      seniorEditor: {
-        name: 'Senior Editors',
-        permissions: '',
-      },
-      handlingEditor: {
-        name: 'Handling Editors',
-        permissions: '',
-      },
-      managingEditor: {
-        name: 'Managing Editors',
-        permissions: '',
-      },
-      reviewer: {
-        name: 'Reviewer',
-        permissions: '',
-      },
-      author: {
-        name: 'Authors',
-        permissions: '',
-      },
-    },
   },
   validations: path.resolve(__dirname, 'validations.js'),
   pubsweet: {
@@ -149,13 +144,13 @@ module.exports = {
   },
   publicKeys: [
     'pubsweet-client',
-    'authsome',
     'validations',
     'pubsweet-component-xpub-dashboard',
     'pubsweet-component-xpub-formbuilder',
     'pubsweet',
     'detectionMethodCorrelations',
     'journal',
+    'teams',
   ],
   schema: {},
   journal: require('./journal'),

@@ -2,6 +2,50 @@
 const detailsForURLResolver = require('./detailsForURLResolver')
 const { ref, raw } = require('objection')
 
+const ManuscriptResolvers = ({ isVersion }) => {
+  const resolvers = {
+    submission(parent) {
+      return JSON.stringify(parent.submission)
+    },
+    async reviews(parent, _, ctx) {
+      return parent.reviews
+        ? parent.reviews
+        : (
+            await ctx.models.Manuscript.query().findById(parent.id)
+          ).$relatedQuery('reviews')
+    },
+    async teams(parent, _, ctx) {
+      return parent.teams
+        ? parent.teams
+        : (
+            await ctx.models.Manuscript.query().findById(parent.id)
+          ).$relatedQuery('teams')
+    },
+    async files(parent, _, ctx) {
+      return parent.files
+        ? parent.files
+        : (
+            await ctx.models.Manuscript.query().findById(parent.id)
+          ).$relatedQuery('files')
+    },
+
+    meta(parent) {
+      return { ...parent.meta, manuscriptId: parent.id }
+    },
+  }
+  if (!isVersion) {
+    resolvers.manuscriptVersions = async (parent, _, ctx) => {
+      if (!parent.manuscriptVersions.length) {
+        return ctx.models.Manuscript.relatedQuery('manuscriptVersions')
+          .for(parent.id)
+          .orderBy('created', 'desc')
+      }
+      return parent.manuscriptVersions
+    }
+  }
+  return resolvers
+}
+
 const resolvers = {
   Mutation: {
     async createManuscript(_, vars, ctx) {
@@ -124,6 +168,7 @@ const resolvers = {
     async updateManuscript(_, { id, input }, ctx) {
       const data = JSON.parse(input)
       const manuscript = await ctx.models.Manuscript.query().findById(id)
+
       const update = Object.assign({}, manuscript, data)
       // We specifically merge submission, as it itself has nested properties
       // But we don't want to do a deep merge unconditionally, as that prevents
@@ -133,9 +178,35 @@ const resolvers = {
         manuscript.submission,
         data.submission,
       )
-      // const update.submission =
+      // if (manuscript.status === 'revise') {
+      //   return manuscript.createNewVersion(update)
+      // }
       return ctx.models.Manuscript.query().updateAndFetchById(id, update)
     },
+
+    async createNewVersion(_, { id }, ctx) {
+      const manuscript = await ctx.models.Manuscript.query().findById(id)
+      return manuscript.createNewVersion()
+    },
+    async submitManuscript(_, { id, input }, ctx) {
+      const data = JSON.parse(input)
+      const manuscript = await ctx.models.Manuscript.query().findById(id)
+      const update = Object.assign({}, manuscript, data)
+      // We specifically merge submission, as it itself has nested properties
+      // But we don't want to do a deep merge unconditionally, as that prevents
+      // any kind of deletion happening.
+      update.submission = Object.assign(
+        {},
+        manuscript.submission,
+        data.submission,
+      )
+
+      // if (manuscript.status === 'revise') {
+      //   return manuscript.createNewVersion(update)
+      // }
+      return ctx.models.Manuscript.query().updateAndFetchById(id, update)
+    },
+
     async makeDecision(_, { id, decision }, ctx) {
       const manuscript = await ctx.models.Manuscript.query().findById(id)
       manuscript.decision = decision
@@ -217,7 +288,9 @@ const resolvers = {
 
       const manuscript = await Manuscript.query()
         .findById(id)
-        .eager('[teams, channels, reviews.[user, comments], files]')
+        .withGraphFetched(
+          '[teams, channels, files, reviews.[user, comments], manuscriptVersions(orderByCreated)]',
+        )
 
       if (!manuscript.meta) {
         manuscript.meta = {}
@@ -241,7 +314,12 @@ const resolvers = {
       return manuscript
     },
     async manuscripts(_, { where }, ctx) {
-      return ctx.models.Manuscript.query().eager('[teams, reviews]')
+      return ctx.models.Manuscript.query()
+        .withGraphFetched(
+          '[teams, reviews, manuscriptVersions(orderByCreated)]',
+        )
+        .where({ parentId: null })
+        .orderBy('created', 'desc')
     },
     async publishedManuscripts(_, { offset, limit }, ctx) {
       const query = ctx.models.Manuscript.query()
@@ -262,7 +340,14 @@ const resolvers = {
       }
     },
     async paginatedManuscripts(_, { sort, offset, limit, filter }, ctx) {
-      const query = ctx.models.Manuscript.query().eager('submitter')
+      const query = ctx.models.Manuscript.query()
+        .where({ parentId: null })
+        .withGraphFetched('[submitter, manuscriptVersions(orderByCreated)]')
+        .modifiers({
+          orderByCreated(builder) {
+            builder.orderBy('created', 'desc')
+          },
+        })
 
       if (filter && filter.status) {
         query.where({ status: filter.status })
@@ -302,33 +387,8 @@ const resolvers = {
   // We want submission into to come out as a stringified JSON, so that we don't have to
   // change our queries if the submission form changes. We still want to store it as JSONB
   // so that we can easily search through the information within.
-  Manuscript: {
-    submission(parent) {
-      return JSON.stringify(parent.submission)
-    },
-    async reviews(parent, _, ctx) {
-      return parent.reviews
-        ? parent.reviews
-        : (
-            await ctx.models.Manuscript.query().findById(parent.id)
-          ).$relatedQuery('reviews')
-    },
-    async teams(parent, _, ctx) {
-      return parent.teams
-        ? parent.teams
-        : (
-            await ctx.models.Manuscript.query().findById(parent.id)
-          ).$relatedQuery('teams')
-    },
-    meta(parent) {
-      return { ...parent.meta, manuscriptId: parent.id }
-    },
-  },
-  ManuscriptVersion: {
-    submission(parent) {
-      return JSON.stringify(parent.submission)
-    },
-  },
+  Manuscript: ManuscriptResolvers({ isVersion: false }),
+  ManuscriptVersion: ManuscriptResolvers({ isVersion: true }),
 }
 
 const typeDefs = `
@@ -371,6 +431,7 @@ const typeDefs = `
   extend type Mutation {
     createManuscript(input: ManuscriptInput): Manuscript!
     updateManuscript(id: ID!, input: String): Manuscript!
+    submitManuscript(id: ID!, input: String): Manuscript!
     makeDecision(id: ID!, decision: String): Manuscript!
     deleteManuscript(id: ID!): ID!
     reviewerResponse(currentUserId: ID, action: String, teamId: ID! ): Team
@@ -378,6 +439,7 @@ const typeDefs = `
     addReviewer(manuscriptId: ID!, userId: ID!): Team
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): Manuscript
+    createNewVersion(id: ID!): Manuscript
   }
 
   type Manuscript implements Object {
@@ -413,7 +475,9 @@ const typeDefs = `
     authors: [Author]
     meta: ManuscriptMeta
     submission: String
+    submitter: User
     published: DateTime
+    parentId: ID
   }
 
   input ManuscriptInput {

@@ -1,8 +1,9 @@
 import React from 'react'
-import { Container, SectionHeader, SectionRowGrid, Title } from '../style'
+import { SectionHeader, SectionRowGrid, Title } from '../style'
+import { SectionContent } from '../../../../shared'
 
 const AssignEditorsReviewers = ({ manuscript, AssignEditor }) => (
-  <Container>
+  <SectionContent noGap>
     <SectionHeader>
       <Title>Assign Editors</Title>
     </SectionHeader>
@@ -10,6 +11,6 @@ const AssignEditorsReviewers = ({ manuscript, AssignEditor }) => (
       <AssignEditor manuscript={manuscript} teamRole="seniorEditor" />
       <AssignEditor manuscript={manuscript} teamRole="handlingEditor" />
     </SectionRowGrid>
-  </Container>
+  </SectionContent>
 )
 export default AssignEditorsReviewers

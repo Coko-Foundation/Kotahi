@@ -46,4 +46,8 @@ text-rendering: optimizeLegibility;
 a {
   color: ${th('colorPrimary')};
 }
+
+strong {
+  font-weight: bold;
+}
 `

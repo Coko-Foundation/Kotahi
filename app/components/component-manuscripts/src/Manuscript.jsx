@@ -26,7 +26,8 @@ const DELETE_MANUSCRIPT = gql`
   }
 `
 
-const User = ({ manuscript }) => {
+// manuscriptId is always the parent manuscript's id
+const User = ({ manuscriptId, manuscript, submitter }) => {
   const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT, {
     update(cache, { data: { deleteManuscript } }) {
       const id = cache.identify({
@@ -41,32 +42,32 @@ const User = ({ manuscript }) => {
     <Row>
       <Cell>{manuscript.meta && manuscript.meta.title}</Cell>
       <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
+      <Cell>{convertTimestampToDate(manuscript.updated)}</Cell>
       <Cell>
         <StatusBadge status={manuscript.status} />
       </Cell>
       <Cell>
-        {manuscript.submitter && (
+        {submitter && (
           <UserCombo>
-            <UserAvatar user={manuscript.submitter} />
+            <UserAvatar user={submitter} />
             <UserInfo>
-              <Primary>{manuscript.submitter.defaultIdentity.name}</Primary>
+              <Primary>{submitter.defaultIdentity.name}</Primary>
               <Secondary>
-                {manuscript.submitter.email ||
-                  `(${manuscript.submitter.username})`}
+                {submitter.email || `(${submitter.username})`}
               </Secondary>
             </UserInfo>
           </UserCombo>
         )}
       </Cell>
       <LastCell>
-        <Action to={`/journal/versions/${manuscript.id}/decision`}>
+        <Action to={`/journal/versions/${manuscriptId}/decision`}>
           Control
         </Action>
-        <Action to={`/journal/versions/${manuscript.id}/manuscript`}>
+        <Action to={`/journal/versions/${manuscriptId}/manuscript`}>
           View
         </Action>
         <Action
-          onClick={() => deleteManuscript({ variables: { id: manuscript.id } })}
+          onClick={() => deleteManuscript({ variables: { id: manuscriptId } })}
         >
           Delete
         </Action>

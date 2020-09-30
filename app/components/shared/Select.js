@@ -1,3 +1,4 @@
+/* eslint-disable no-nested-ternary */
 import React, { useContext } from 'react'
 import ReactSelect from 'react-select'
 import { ThemeContext } from 'styled-components'
@@ -10,10 +11,19 @@ const styles = th => ({
 
   control: (provided, state) => ({
     ...provided,
-    border: state.isFocused
-      ? `1px solid ${th.colorPrimary}`
-      : `1px solid ${th.colorBorder}`,
-    boxShadow: state.isFocused ? `0 0 0 1px ${th.colorPrimary}` : 'none',
+    border: !state.selectProps.standalone
+      ? state.isFocused
+        ? `1px solid ${th.colorPrimary}`
+        : `1px solid ${th.colorBorder}`
+      : 'none',
+    boxShadow: !state.selectProps.standalone
+      ? state.isFocused
+        ? `0 0 0 1px ${th.colorPrimary}`
+        : 'none'
+      : state.isFocused
+      ? `0 0 0 1px ${th.colorPrimary}`
+      : th.boxShadow,
+
     borderRadius: th.borderRadius,
     '&:hover': {
       boxShadow: `0 0 0 1px ${th.colorPrimary}`,

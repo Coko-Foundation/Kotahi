@@ -1,62 +1,156 @@
 import React from 'react'
-import { Tabs } from '@pubsweet/ui'
-import moment from 'moment'
+import { Formik } from 'formik'
+import { set } from 'lodash'
 import CurrentVersion from './CurrentVersion'
-import DecisionReviewColumn from './DecisionReviewColumn'
-import { Columns, SubmissionVersion } from './atoms/Columns'
+import DecisionAndReviews from './DecisionAndReviews'
+import CreateANewVersion from './CreateANewVersion'
 import FormTemplate from './FormTemplate'
-import { Container, Content } from '../../../shared'
+import MessageContainer from '../../../component-chat/src'
+import {
+  Content,
+  VersionSwitcher,
+  Tabs,
+  Columns,
+  Chat,
+  Manuscript,
+  ErrorBoundary,
+} from '../../../shared'
 
-const SubmittedVersionColumns = props => (
-  <Container>
-    <Columns>
-      <SubmissionVersion>
-        <CurrentVersion
-          forms={props.forms}
-          journal={props.journal}
-          manuscript={props.manuscript}
-          readonly
+// TODO: Improve the import, perhaps a shared component?
+import EditorSection from '../../../component-review/src/components/decision/EditorSection'
+
+const SubmittedVersion = ({ manuscript, currentVersion, createNewVersion }) => {
+  const reviseDecision = currentVersion && manuscript.status === 'revise'
+  return (
+    <>
+      {reviseDecision && (
+        <CreateANewVersion
+          createNewVersion={createNewVersion}
+          currentVersion={currentVersion}
+          manuscript={manuscript}
         />
-        ,
-      </SubmissionVersion>
-      <DecisionReviewColumn {...props} />
-    </Columns>
-  </Container>
-)
+      )}
+      <DecisionAndReviews manuscript={manuscript} noGap={!reviseDecision} />
+      <CurrentVersion manuscript={manuscript} />
+    </>
+  )
+}
 
-const Submit = ({ manuscript, forms, ...formProps }) => {
+const Submit = ({
+  versions = [],
+  form,
+  createNewVersion,
+  toggleConfirming,
+  confirming,
+  parent,
+  onChange,
+  onSubmit,
+}) => {
   const decisionSections = []
-  const manuscriptVersions = manuscript.manuscriptVersions || []
-  manuscriptVersions.forEach(versionElem => {
-    const submittedMoment = moment(versionElem.submitted)
-    const label = submittedMoment.format('YYYY-MM-DD')
+
+  const currentVersion = versions[0]
+
+  const addEditor = (manuscript, label) => ({
+    content: <EditorSection manuscript={manuscript} />,
+    key: `editor_${manuscript.id}`,
+    label,
+  })
+
+  // Set the initial values based on the form
+  const initialValues = {}
+  const fieldNames = form.children.map(field => field.name)
+  fieldNames.forEach(fieldName => set(initialValues, fieldName, ''))
+
+  versions.forEach((version, index) => {
+    const { manuscript, label } = version
+    const versionId = manuscript.id
+
+    const editorSection = addEditor(manuscript, 'Manuscript text')
+    let decisionSection
+
+    if (['new', 'revising'].includes(manuscript.status)) {
+      const versionValues = Object.assign({}, manuscript, {
+        submission: Object.assign(
+          initialValues.submission,
+          JSON.parse(manuscript.submission),
+        ),
+      })
+      decisionSection = {
+        content: (
+          <Content>
+            <Formik
+              displayName="submit"
+              // handleChange={props.handleChange}
+              initialValues={versionValues}
+              onSubmit={async (
+                values,
+                { validateForm, setSubmitting, ...other },
+              ) => {
+                // TODO: Change this to a more Formik idiomatic form
+                const isValid = Object.keys(await validateForm()).length === 0
+                return isValid
+                  ? onSubmit(versionId, values)
+                  : setSubmitting(false)
+              }}
+            >
+              {formProps => (
+                <FormTemplate
+                  confirming={confirming}
+                  onChange={onChange(versionId)}
+                  toggleConfirming={toggleConfirming}
+                  {...formProps}
+                  form={form}
+                  manuscript={manuscript}
+                />
+              )}
+            </Formik>
+          </Content>
+        ),
+        key: versionId,
+        label: 'Edit submission info',
+      }
+    } else {
+      decisionSection = {
+        content: (
+          <SubmittedVersion
+            createNewVersion={createNewVersion}
+            currentVersion={version === currentVersion}
+            manuscript={manuscript}
+          />
+        ),
+        key: versionId,
+        label: 'Submitted info',
+      }
+    }
     decisionSections.push({
       content: (
-        <SubmittedVersionColumns forms={forms} manuscript={versionElem} />
+        <Tabs
+          defaultActiveKey={versionId}
+          sections={[decisionSection, editorSection]}
+        />
       ),
-      key: versionElem.id,
+      key: manuscript.id,
       label,
     })
   })
 
-  decisionSections.push({
-    content: (
-      <Content>
-        <FormTemplate {...formProps} form={forms} manuscript={manuscript} />
-      </Content>
-    ),
-    key: manuscript.id,
-    label: 'Current Version',
-  })
+  // Protect if channels don't exist for whatever reason
+  let channelId
+  if (Array.isArray(parent.channels) && parent.channels.length) {
+    channelId = parent.channels.find(c => c.type === 'all').id
+  }
 
   return (
-    <Container>
-      <Tabs
-        activeKey={manuscript.id}
-        sections={decisionSections}
-        title="Versions"
-      />
-    </Container>
+    <Columns>
+      <Manuscript>
+        <ErrorBoundary>
+          <VersionSwitcher versions={decisionSections} />
+        </ErrorBoundary>
+      </Manuscript>
+      <Chat>
+        <MessageContainer channelId={channelId} />
+      </Chat>
+    </Columns>
   )
 }
 
