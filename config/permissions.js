@@ -53,7 +53,7 @@ const parent_manuscript_is_published = rule({ cache: 'contextual' })(
   },
 )
 
-const review_is_by_current_user = rule({ cache: 'contextual' })(
+const review_is_by_user = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
     const rows =
       ctx.user &&
@@ -175,8 +175,73 @@ const user_is_author = rule({ cache: 'strict' })(
   },
 )
 
+const user_is_author_of_files_associated_manuscript = rule({
+  cache: 'no_cache',
+})(async (parent, args, ctx, info) => {
+  let manuscriptId
+  if (args.meta && args.meta.manuscriptId) {
+    // Meta is supplied for createFile
+    // eslint-disable-next-line prefer-destructuring
+    manuscriptId = args.meta.manuscriptId
+  } else if (args.id) {
+    // id is supplied for deletion
+    const file = await ctx.models.File.query().findById(args.id)
+    // eslint-disable-next-line prefer-destructuring
+    manuscriptId = file.manuscriptId
+  } else {
+    return false
+  }
+
+  const team = await ctx.models.Team.query()
+    .where({
+      manuscriptId,
+      role: 'author',
+    })
+    .first()
+
+  if (!team) {
+    return false
+  }
+  const members = await team
+    .$relatedQuery('members')
+    .where('userId', ctx.user.id)
+
+  if (members && members[0]) {
+    return true
+  }
+
+  return false
+})
+const user_is_author_of_the_manuscript_of_the_file = rule({ cache: 'strict' })(
+  async (parent, args, ctx, info) => {
+    const manuscript = await ctx.models.File.relatedQuery('manuscript')
+      .for(parent.id)
+      .first()
+
+    const team = await ctx.models.Team.query()
+      .where({
+        manuscriptId: manuscript.id,
+        role: 'author',
+      })
+      .first()
+
+    if (!team) {
+      return false
+    }
+    const members = await team
+      .$relatedQuery('members')
+      .where('userId', ctx.user.id)
+
+    if (members && members[0]) {
+      return true
+    }
+
+    return false
+  },
+)
+
 // ¯\_(ツ)_/¯
-const current_user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_complete = rule(
+const user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_complete = rule(
   {
     cache: 'strict',
   },
@@ -219,6 +284,7 @@ const permissions = {
     user: allow,
   },
   Mutation: {
+    upload: isAuthenticated,
     createManuscript: isAuthenticated,
     updateManuscript: user_is_author,
     submitManuscript: user_is_author,
@@ -233,6 +299,8 @@ const permissions = {
       user_is_editor_of_the_manuscript_of_the_review,
     ),
     createNewVersion: allow,
+    createFile: user_is_author_of_files_associated_manuscript,
+    deleteFile: user_is_author_of_files_associated_manuscript,
   },
   Subscription: {
     messageCreated: userIsAllowedToChat,
@@ -248,12 +316,14 @@ const permissions = {
   File: or(
     parent_manuscript_is_published,
     or(
-      current_user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_complete,
+      user_is_author_of_the_manuscript_of_the_file,
+      user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_complete,
       userIsEditor,
       userIsAdmin,
     ),
   ),
-  Review: or(parent_manuscript_is_published, review_is_by_current_user),
+  UploadResult: allow,
+  Review: or(parent_manuscript_is_published, review_is_by_user),
   ReviewComment: allow,
   Channel: allow,
   Message: allow,

@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Action } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
 
 const Icon = styled.div`
@@ -91,7 +92,15 @@ const ErrorWrapper = styled.div`
 
 const getFileExtension = ({ name }) => name.replace(/^.+\./, '')
 
-const UploadingFile = ({ file, progress, error, uploaded }) => {
+const UploadingFile = ({
+  file,
+  progress,
+  error,
+  deleteFile,
+  uploaded,
+  index,
+  remove,
+}) => {
   const Root = uploaded ? Uploaded : Uploading
 
   const extension = getFileExtension(file)
@@ -114,6 +123,8 @@ const UploadingFile = ({ file, progress, error, uploaded }) => {
           file.name
         )}
       </Filename>
+
+      <Action onClick={() => deleteFile(file, index, remove)}>Remove</Action>
     </Root>
   )
 }

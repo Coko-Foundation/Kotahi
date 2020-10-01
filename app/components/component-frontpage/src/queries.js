@@ -26,6 +26,7 @@ export default {
             id
             url
             filename
+            fileType
           }
           meta {
             manuscriptId

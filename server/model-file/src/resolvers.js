@@ -35,6 +35,10 @@ const resolvers = {
 
       return data
     },
+    async deleteFile(_, { id }, ctx) {
+      await ctx.models.File.query().deleteById(id)
+      return id
+    },
   },
 }
 

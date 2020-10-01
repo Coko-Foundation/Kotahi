@@ -274,11 +274,22 @@ export default ({
                   onChange={onChange}
                 />
               )}
+              {element.component === 'VisualAbstract' && (
+                <FilesUpload
+                  accept="image/*"
+                  containerId={manuscript.id}
+                  containerName="manuscript"
+                  fileType="visualAbstract"
+                  multiple={false}
+                  onChange={onChange}
+                />
+              )}
               {element.component === 'AuthorsInput' && (
                 <AuthorsInput data-testid={element.name} onChange={onChange} />
               )}
               {element.component !== 'AuthorsInput' &&
-                element.component !== 'SupplementaryFiles' && (
+                element.component !== 'SupplementaryFiles' &&
+                element.component !== 'VisualAbstract' && (
                   <ValidatedFieldFormik
                     aria-label={element.placeholder || element.title}
                     component={elements[element.component]}

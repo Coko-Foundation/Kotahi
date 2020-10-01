@@ -7,7 +7,7 @@ import CreateANewVersion from './CreateANewVersion'
 import FormTemplate from './FormTemplate'
 import MessageContainer from '../../../component-chat/src'
 import {
-  Content,
+  SectionContent,
   VersionSwitcher,
   Tabs,
   Columns,
@@ -77,7 +77,7 @@ const Submit = ({
       })
       decisionSection = {
         content: (
-          <Content>
+          <SectionContent noGap>
             <Formik
               displayName="submit"
               // handleChange={props.handleChange}
@@ -104,7 +104,7 @@ const Submit = ({
                 />
               )}
             </Formik>
-          </Content>
+          </SectionContent>
         ),
         key: versionId,
         label: 'Edit submission info',

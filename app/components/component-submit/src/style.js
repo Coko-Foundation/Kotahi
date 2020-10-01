@@ -5,8 +5,8 @@ export { Container, Content, Heading } from '../../shared'
 
 export const Heading1 = styled.h1`
   margin: 0 0 calc(${th('gridUnit')} * 3);
-  font-size: ${th('fontSizeHeading1')};
-  line-height: ${th('lineHeightHeading1')};
+  font-size: ${th('fontSizeHeading3')};
+  line-height: ${th('lineHeightHeading3')};
 `
 
 export const Section = styled.div`
