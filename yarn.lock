@@ -1928,6 +1928,32 @@
     url-regex-safe "~1.0.2"
     video-extensions "~1.1.0"
 
+"@metascraper/helpers@^5.14.14":
+  version "5.14.14"
+  resolved "https://registry.yarnpkg.com/@metascraper/helpers/-/helpers-5.14.14.tgz#83054c5225cbfa5a0d537ff2db957434b99c17ae"
+  integrity sha512-sznekODvL+k5wTaU48Y8prdrPy/xTp3WxSAQrApBPeKPGEJTyfQWglkp+1W7xEDDrnJYzjOJDuq6EX3l9WYv1g==
+  dependencies:
+    audio-extensions "0.0.0"
+    chrono-node "2.1.8"
+    condense-whitespace "~2.0.0"
+    entities "~2.0.3"
+    file-extension "~4.0.5"
+    has-values "~2.0.1"
+    image-extensions "~1.1.0"
+    is-relative-url "~3.0.0"
+    is-uri "~1.2.0"
+    iso-639-3 "~2.1.0"
+    isostring "0.0.1"
+    lodash "~4.17.20"
+    memoize-one "~5.1.1"
+    mime-types "~2.1.27"
+    normalize-url "~5.2.0"
+    smartquotes "~2.3.1"
+    title "~3.4.2"
+    truncate "~2.1.0"
+    url-regex-safe "~1.0.2"
+    video-extensions "~1.1.0"
+
 "@metascraper/helpers@^5.14.7":
   version "5.14.7"
   resolved "https://registry.yarnpkg.com/@metascraper/helpers/-/helpers-5.14.7.tgz#ef4e42d863a228cf27097e6e0e6d331205198892"
@@ -11071,12 +11097,12 @@ metascraper-title@5.13.1:
     "@metascraper/helpers" "^5.13.1"
     lodash "~4.17.19"
 
-metascraper@5.14.12:
-  version "5.14.12"
-  resolved "https://registry.yarnpkg.com/metascraper/-/metascraper-5.14.12.tgz#00cd49881c46f6fee18ef774cc77484972a69063"
-  integrity sha512-nyTlmDHfxEsBJG+Mm2yoZiESLNyBuHVjIG16S79O5xL3xX7JKJ371Xz8v4GsPbdYADI/ZzQfDgxkCahFQ/1vmQ==
+metascraper@5.14.14:
+  version "5.14.14"
+  resolved "https://registry.yarnpkg.com/metascraper/-/metascraper-5.14.14.tgz#d029817403af10e868c2c1024e422157d54e280e"
+  integrity sha512-jKG4jOFLF+6uaP9fjZsEOih5sk7Ru5HDr1pc2R4D9DhTqfq8VJ8a28/QL55U+XMGWHuT4I7lfOo36GO7kqadcw==
   dependencies:
-    "@metascraper/helpers" "^5.14.12"
+    "@metascraper/helpers" "^5.14.14"
     cheerio "~1.0.0-rc.3"
     cheerio-advanced-selectors "~2.0.1"
     lodash "~4.17.20"
@@ -11755,6 +11781,11 @@ normalize-url@~5.1.0:
   version "5.1.0"
   resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-5.1.0.tgz#04b8f1b34ea49ff713fc20b2218eba41fb9974a3"
   integrity sha512-UxHuSWsSAmzSqN+DSjasaZWQ3QPtEisHdlr4y9MJ5zg0RcImv5fQt8QM0izJSCdsdmhJGK+ubcTpJXwVDmwSVQ==
+
+normalize-url@~5.2.0:
+  version "5.2.1"
+  resolved "https://registry.yarnpkg.com/normalize-url/-/normalize-url-5.2.1.tgz#492a22a8443e604b13cef4b3a97983d66f08bf65"
+  integrity sha512-bFT2ilr7p37ZPEQ9LO9HP/tdFIAE7Q4UoeojXNKeLjs0vXxZetM+C2K9jdbVS7b6ut66CflVLgk1yqHJVrXmiw==
 
 npm-bundled@^1.0.1:
   version "1.1.1"
