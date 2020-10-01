@@ -402,15 +402,6 @@
       "name": "submission.abstract",
       "placeholder": "Input your abstract...",
       "description": "<p>Please provide a short summary of your submission</p>",
-      "validate": [
-        {
-          "value": "maxChars",
-          "label": "maximum Characters"
-        }
-      ],
-      "validateValue": {
-        "maxChars": "500"
-      },
       "shortDescription": "Abstract"
     }
   ],
