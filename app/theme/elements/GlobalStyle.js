@@ -47,7 +47,7 @@ a {
   color: ${th('colorPrimary')};
 }
 
-strong {
+strong, b {
   font-weight: bold;
 }
 `

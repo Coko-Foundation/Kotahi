@@ -81,6 +81,15 @@ const elements = {
     order: orderfield,
     validate,
   },
+  VisualAbstract: {
+    id: textfield,
+    title: textfield,
+    name: textfield,
+    description: editorfield,
+    shortDescription: textfield,
+    order: orderfield,
+    validate,
+  },
   AuthorsInput: {
     id: textfield,
     title: textfield,

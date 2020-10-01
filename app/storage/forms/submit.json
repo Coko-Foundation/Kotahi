@@ -387,6 +387,22 @@
       "placeholder": "Enter the manuscript's title",
       "description": "<p></p>",
       "order": "0"
+    },
+    {
+      "title": "Visual Abstract",
+      "id": "1601471819978",
+      "component": "VisualAbstract",
+      "name": "visualAbstract",
+      "description": "<p>Provide a visual abstract or figure to represent your manuscript.</p>"
+    },
+    {
+      "title": "Abstract",
+      "id": "1601488776604",
+      "component": "AbstractEditor",
+      "name": "submission.abstract",
+      "placeholder": "Input your abstract...",
+      "description": "<p>Please provide a short summary of your submission</p>",
+      "shortDescription": "Abstract"
     }
   ],
   "description": "<p>Aperture is now accepting Research Object Submissions. Please fill out the form below to complete your submission.</p>",

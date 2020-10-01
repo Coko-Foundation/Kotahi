@@ -19,9 +19,10 @@ export const SectionContent = styled(Section)`
   padding: 0;
   box-shadow: ${th('boxShadow')};
   background-color: ${th('colorBackground')};
-  &:not(:first-of-type) {
-    margin-top: ${grid(3)};
-  }
+  margin-top: ${({ noGap }) => (noGap ? 0 : grid(2))};
+  // &:not(:first-of-type) {
+    // margin-top: ${grid(3)};
+  // }
   border-radius: ${({ noGap }) =>
     noGap
       ? css`0 ${th('borderRadius')} ${th('borderRadius')}`

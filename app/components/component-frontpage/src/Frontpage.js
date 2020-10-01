@@ -2,7 +2,7 @@ import React, { useContext } from 'react'
 import { useQuery } from '@apollo/client'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
-import { Container, Placeholder } from './style'
+import { Container, Placeholder, VisualAbstract } from './style'
 
 import {
   Spinner,
@@ -20,10 +20,14 @@ const Frontpage = ({ history, ...props }) => {
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
 
-  const frontpage = (data.publishedManuscripts?.manuscripts || []).map(m => ({
-    ...m,
-    submission: JSON.parse(m.submission),
-  }))
+  const frontpage = (data.publishedManuscripts?.manuscripts || []).map(m => {
+    const visualAbstract = m.files?.find(f => f.fileType === 'visualAbstract')
+    return {
+      ...m,
+      visualAbstract: visualAbstract?.url,
+      submission: JSON.parse(m.submission),
+    }
+  })
 
   return (
     <Container>
@@ -37,6 +41,15 @@ const Frontpage = ({ history, ...props }) => {
               <Title>{manuscript.meta.title}</Title>
             </SectionHeader>
             <SectionRow key={`manuscript-${manuscript.id}`}>
+              <p>
+                Visual abstract:{' '}
+                <VisualAbstract
+                  alt="Visual abstract"
+                  src={manuscript.visualAbstract}
+                />
+              </p>
+              <p>Abstract: {manuscript.submission?.abstract}</p>
+
               <p>
                 {manuscript.submitter.defaultIdentity.name} (
                 {manuscript.submission.affiliation})

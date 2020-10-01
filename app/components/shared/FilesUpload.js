@@ -32,6 +32,7 @@ const Message = styled.div`
   svg {
     margin-left: ${grid(1)};
   }
+  color: ${props => (props.disabled ? th('colorTextPlaceholder') : 'inherit')};
 `
 
 const createFileMutation = gql`
@@ -49,58 +50,108 @@ const createFileMutation = gql`
   }
 `
 
+const deleteFileMutation = gql`
+  mutation($id: ID!) {
+    deleteFile(id: $id)
+  }
+`
+
 const DropzoneAndList = ({
   form: { values, setFieldValue },
   push,
   insert,
+  remove,
   createFile,
   deleteFile,
   fileType,
   fieldName,
-}) => (
-  <>
-    <Dropzone
-      onDrop={async files => {
-        Array.from(files).forEach(async file => {
-          const data = await createFile(file)
-          push(data.createFile)
-        })
-      }}
-    >
-      {({ getRootProps, getInputProps }) => (
-        <Root {...getRootProps()} data-testid="dropzone">
-          <input {...getInputProps()} />
-          <Message>
-            Drag and drop your files here
-            <Icon color={theme.colorPrimary} inline>
-              file-plus
-            </Icon>
-          </Message>
-        </Root>
-      )}
-    </Dropzone>
-    <Files>
-      {cloneDeep(get(values, fieldName) || [])
-        .filter(val => (fileType ? val.fileType === fileType : true))
-        .map(val => {
-          val.name = val.filename
-          return <UploadingFile file={val} key={val.name} uploaded />
-        })}
-    </Files>
-  </>
-)
+  multiple,
+  accept,
+}) => {
+  // Disable the input in case we want a single file upload
+  // and a file has already been uploaded
+  const files = cloneDeep(get(values, fieldName) || [])
+    .map((file, index) => {
+      // This is so that we preserve the location of the file in the top-level
+      // files array (needed for deletion).
+      file.originalIndex = index
+      return file
+    })
+    .filter(val => (fileType ? val.fileType === fileType : true))
+    .map(val => {
+      val.name = val.filename
+      return val
+    })
 
+  const disabled = !multiple && files.length
+
+  return (
+    <>
+      <Dropzone
+        accept={accept}
+        disabled={disabled}
+        multiple={multiple}
+        onDrop={async files => {
+          Array.from(files).forEach(async file => {
+            const data = await createFile(file)
+            push(data.createFile)
+          })
+        }}
+      >
+        {({ getRootProps, getInputProps }) => (
+          <Root {...getRootProps()} data-testid="dropzone">
+            <input {...getInputProps()} />
+            <Message disabled={disabled}>
+              {disabled ? (
+                'Your file has been uploaded.'
+              ) : (
+                <>
+                  Drag and drop your files here
+                  <Icon color={theme.colorPrimary} inline>
+                    file-plus
+                  </Icon>
+                </>
+              )}
+            </Message>
+          </Root>
+        )}
+      </Dropzone>
+      <Files>
+        {files.map(file => (
+          <UploadingFile
+            deleteFile={deleteFile}
+            file={file}
+            index={file.originalIndex}
+            key={file.name}
+            remove={remove}
+            uploaded
+          />
+        ))}
+      </Files>
+    </>
+  )
+}
 const FilesUpload = ({
   fileType,
   fieldName = 'files',
   containerId,
   containerName,
   initializeContainer,
+  multiple = true,
+  accept,
 }) => {
-  const [createFile] = useMutation(createFileMutation)
-  // const [deleteFile] = useMutation(deleteFileMutation)
+  const [createF] = useMutation(createFileMutation)
+  const [deleteF] = useMutation(deleteFileMutation, {
+    update(cache, { data: { deleteFile } }) {
+      const id = cache.identify({
+        __typename: 'File',
+        id: deleteFile,
+      })
+      cache.evict({ id })
+    },
+  })
 
-  const createFileWithMeta = async file => {
+  const createFile = async file => {
     const meta = {
       filename: file.name,
       mimeType: file.type,
@@ -113,7 +164,7 @@ const FilesUpload = ({
 
     meta[`${containerName}Id`] = localContainerId
 
-    const { data } = await createFile({
+    const { data } = await createF({
       variables: {
         file,
         meta,
@@ -122,15 +173,23 @@ const FilesUpload = ({
     return data
   }
 
+  const deleteFile = async (file, index, remove) => {
+    const { data } = await deleteF({ variables: { id: file.id } })
+    remove(index)
+    return data
+  }
+
   return (
     <FieldArray
       name={fieldName}
       render={formikProps => (
         <DropzoneAndList
-          createFile={createFileWithMeta}
-          // deleteFile={deleteFile}
+          accept={accept}
+          createFile={createFile}
+          deleteFile={deleteFile}
           fieldName={fieldName}
           fileType={fileType}
+          multiple={multiple}
           {...formikProps}
         />
       )}
