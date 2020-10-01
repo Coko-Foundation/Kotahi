@@ -11097,12 +11097,12 @@ metascraper-title@5.13.1:
     "@metascraper/helpers" "^5.13.1"
     lodash "~4.17.19"
 
-metascraper@5.14.12:
-  version "5.14.12"
-  resolved "https://registry.yarnpkg.com/metascraper/-/metascraper-5.14.12.tgz#00cd49881c46f6fee18ef774cc77484972a69063"
-  integrity sha512-nyTlmDHfxEsBJG+Mm2yoZiESLNyBuHVjIG16S79O5xL3xX7JKJ371Xz8v4GsPbdYADI/ZzQfDgxkCahFQ/1vmQ==
+metascraper@5.14.14:
+  version "5.14.14"
+  resolved "https://registry.yarnpkg.com/metascraper/-/metascraper-5.14.14.tgz#d029817403af10e868c2c1024e422157d54e280e"
+  integrity sha512-jKG4jOFLF+6uaP9fjZsEOih5sk7Ru5HDr1pc2R4D9DhTqfq8VJ8a28/QL55U+XMGWHuT4I7lfOo36GO7kqadcw==
   dependencies:
-    "@metascraper/helpers" "^5.14.12"
+    "@metascraper/helpers" "^5.14.14"
     cheerio "~1.0.0-rc.3"
     cheerio-advanced-selectors "~2.0.1"
     lodash "~4.17.20"
