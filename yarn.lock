@@ -1902,32 +1902,6 @@
     url-regex "~5.0.0"
     video-extensions "~1.1.0"
 
-"@metascraper/helpers@^5.14.12":
-  version "5.14.12"
-  resolved "https://registry.yarnpkg.com/@metascraper/helpers/-/helpers-5.14.12.tgz#2f720bc0cb23905a35389506f557823abdf626c5"
-  integrity sha512-aG79lwsb6TD/1eH6nZt+2YC32RjUXZp8Z0vNvuUp62LkcbBCvEnJJ8QBhXxy76x39oVfoCqLjGXj0/GeFbr6SQ==
-  dependencies:
-    audio-extensions "0.0.0"
-    chrono-node "2.1.8"
-    condense-whitespace "~2.0.0"
-    entities "~2.0.3"
-    file-extension "~4.0.5"
-    has-values "~2.0.1"
-    image-extensions "~1.1.0"
-    is-relative-url "~3.0.0"
-    is-uri "~1.2.0"
-    iso-639-3 "~2.1.0"
-    isostring "0.0.1"
-    lodash "~4.17.20"
-    memoize-one "~5.1.1"
-    mime-types "~2.1.27"
-    normalize-url "~5.1.0"
-    smartquotes "~2.3.1"
-    title "~3.4.2"
-    truncate "~2.1.0"
-    url-regex-safe "~1.0.2"
-    video-extensions "~1.1.0"
-
 "@metascraper/helpers@^5.14.14":
   version "5.14.14"
   resolved "https://registry.yarnpkg.com/@metascraper/helpers/-/helpers-5.14.14.tgz#83054c5225cbfa5a0d537ff2db957434b99c17ae"
@@ -11045,12 +11019,12 @@ metascraper-author@5.14.14:
     "@metascraper/helpers" "^5.14.14"
     lodash "~4.17.20"
 
-metascraper-date@5.14.12:
-  version "5.14.12"
-  resolved "https://registry.yarnpkg.com/metascraper-date/-/metascraper-date-5.14.12.tgz#db88ed5ebc63c74b32de403cd545e69654fcca22"
-  integrity sha512-uVG3NkJ66k1hIOOUQuQBt/dC04KNqeMwYAU6tft8kbNslOaxv6kECQz0TngDOkAQPtxmsCH3qqHqDr9ZBElxdg==
+metascraper-date@5.14.14:
+  version "5.14.14"
+  resolved "https://registry.yarnpkg.com/metascraper-date/-/metascraper-date-5.14.14.tgz#4f93a4b216d802a2a9360311b3502d4711877bad"
+  integrity sha512-Q5uZF885Jt9JRH8s9QGufxfjPwyqQfd0MSV280oE0muzkG8NgR8V7psBVqRtbxISwWXnc9/gixaX2jXjc5gl2w==
   dependencies:
-    "@metascraper/helpers" "^5.14.12"
+    "@metascraper/helpers" "^5.14.14"
 
 metascraper-description@5.14.14:
   version "5.14.14"
