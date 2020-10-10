@@ -11033,12 +11033,12 @@ metascraper-description@5.14.14:
   dependencies:
     "@metascraper/helpers" "^5.14.14"
 
-metascraper-image@5.14.7:
-  version "5.14.7"
-  resolved "https://registry.yarnpkg.com/metascraper-image/-/metascraper-image-5.14.7.tgz#88e03d61abca13091c27fbbb3321982dcba7753d"
-  integrity sha512-UIlj3i0bDRex8OKpUaZdMxguvO7eGiBBRhHaZdZqI7AYXdwkRaM1+I/C9mnbtQuBqnMRy73hB09Mmn126SO1Kg==
+metascraper-image@5.14.14:
+  version "5.14.14"
+  resolved "https://registry.yarnpkg.com/metascraper-image/-/metascraper-image-5.14.14.tgz#31e6b4fb221c7e6b7edb1f08f885d276e0c8e484"
+  integrity sha512-vkza91FrDQH/JFuqJLzBSUcjXNbPXvvA5HfaoAealQUQyIaF6AyxwPGzGe9aJo9h5Iw5njysLWNwxZMrtOq1kw==
   dependencies:
-    "@metascraper/helpers" "^5.14.7"
+    "@metascraper/helpers" "^5.14.14"
 
 metascraper-logo-favicon@5.13.1:
   version "5.13.1"
