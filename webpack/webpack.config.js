@@ -19,31 +19,42 @@ module.exports = webpackEnv => {
   const isEnvDevelopment = webpackEnv === 'development'
   const isEnvProduction = webpackEnv === 'production'
 
+  const serverProtocol = process.env.SERVER_PROTOCOL
+  const serverHost = process.env.SERVER_HOST
+  const serverPort = process.env.SERVER_PORT
+  const serverUrl = `${serverHost}${serverPort ? `:${serverPort}` : ''}`
+  const serverUrlWithProtocol = `${serverProtocol}://${serverUrl}`
+
+  const devServerHost = process.env.CLIENT_HOST
+  const devServerPort = process.env.CLIENT_PORT
+
   return {
+    context: path.join(__dirname, '..', 'app'),
     devServer: {
-      port: 4000,
+      // contentBase: path.join(contentBase, 'public'),
+      disableHostCheck: true,
+      historyApiFallback: true,
+      host: devServerHost,
       hot: true,
-      contentBase: path.join(contentBase, 'public'),
-      publicPath: '/',
+      port: devServerPort,
       proxy: {
+        '/api': serverUrlWithProtocol,
+        '/auth': serverUrlWithProtocol,
+        '/convertDocxToHTML': serverUrlWithProtocol,
+        '/graphql': serverUrlWithProtocol,
+        '/public': serverUrlWithProtocol,
+        '/static/uploads': serverUrlWithProtocol,
+        '/static/profiles': serverUrlWithProtocol,
         '/subscriptions': {
-          target: 'ws://localhost:3000',
+          target: `ws://${serverUrl}`,
           ws: true,
         },
-        '/convertDocxToHTML': 'http://localhost:3000',
-        '/api': 'http://localhost:3000',
-        '/auth': 'http://localhost:3000',
-        '/graphql': 'http://localhost:3000',
-        '/static/uploads': 'http://localhost:3000',
-        '/static/profiles': 'http://localhost:3000',
-        '/public': 'http://localhost:3000',
       },
-      historyApiFallback: true,
+      publicPath: '/',
     },
     name: 'client application',
     target: 'web',
     mode: webpackEnv,
-    context: path.join(__dirname, '..', 'app'),
     entry: {
       app: isEnvDevelopment ? ['react-hot-loader/patch', './app'] : ['./app'],
     },

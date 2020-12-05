@@ -67,7 +67,6 @@
     "wax-prosemirror-plugins": "0.0.10",
     "wax-prosemirror-schema": "0.0.10",
     "wax-prosemirror-services": "0.0.10",
-    "wax-prosemirror-themes": "0.0.10",
     "wax-prosemirror-utilities": "0.0.10",
     "winston": "2.4.5",
     "xpub-edit": "2.6.11",
@@ -122,6 +121,8 @@
     "lint-staged": "10.4.0",
     "mini-css-extract-plugin": "0.11.2",
     "node-dev": "4.3.0",
+    "node-wait-for-it": "^0.2.0",
+    "nodemon": "^2.0.6",
     "prettier": "1.19.1",
     "react-hot-loader": "4.13.0",
     "react-router-redux": "5.0.0-alpha.9",
@@ -186,6 +187,7 @@
     "babel-plugin-styled-components": "1.11.1",
     "@pubsweet/ui": "12.6.0",
     "formik": "^2.0.0",
+    "pg-boss": "3.1.7",
     "prosemirror-model": "1.11.2"
   }
 }
