@@ -1,0 +1,46 @@
+version: '3'
+
+services:
+  server:
+    build:
+      context: .
+      dockerfile: ./Dockerfile-production
+      target: server
+      args:
+        - node_env=${NODE_ENV:-production}
+        - server_protocol=${SERVER_PROTOCOL}
+        - server_host=${SERVER_HOST}
+        - server_port=${SERVER_PORT}
+    ports:
+      - ${SERVER_PORT:-3000}:${SERVER_PORT:-3000}
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - POSTGRES_HOST=${POSTGRES_HOST}
+      - POSTGRES_PORT=${POSTGRES_PORT}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PUBSWEET_SECRET=${PUBSWEET_SECRET}
+      - SERVER_PROTOCOL=${SERVER_PROTOCOL}
+      - SERVER_HOST=${SERVER_HOST}
+      - SERVER_PORT=${SERVER_PORT}
+      - ORCID_CLIENT_ID=${ORCID_CLIENT_ID}
+      - ORCID_CLIENT_SECRET=${ORCID_CLIENT_SECRET}
+
+  job-xsweet:
+    image: pubsweet/job-xsweet
+    depends_on:
+      - server
+    command:
+      [
+        'bash',
+        './scripts/wait-for-it.sh',
+        'server:${SERVER_PORT}',
+        --,
+        'node',
+        'src/xsweet.js',
+      ]
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+    volumes:
+      - ./scripts/wait-for-it.sh:/home/node/scripts/wait-for-it.sh

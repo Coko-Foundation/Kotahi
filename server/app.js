@@ -90,6 +90,10 @@ const configureApp = app => {
   // app.use('/', index)
   app.use('/healthcheck', (req, res) => res.send('All good!'))
 
+  app.get('*', (req, res) => {
+    res.sendFile(path.join(__dirname, '..', '_build', 'index.html'))
+  })
+
   app.use((err, req, res, next) => {
     // development error handler, will print stacktrace
     if (app.get('env') === 'development' || app.get('env') === 'test') {

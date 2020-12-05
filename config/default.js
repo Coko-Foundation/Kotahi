@@ -1,6 +1,7 @@
 const path = require('path')
 const components = require('./components.json')
 const logger = require('winston')
+const { deferConfig } = require('config/defer')
 
 module.exports = {
   teams: {
@@ -40,6 +41,10 @@ module.exports = {
     port: 3000,
     logger,
     uploads: 'uploads',
+    baseUrl: deferConfig(
+      cfg =>
+        `['pubsweet-server'].protocol:://['pubsweet-server'].host:${cfg['pubsweet-server'].port}`,
+    ),
     typeDefs: `
       extend type User {
         name: String
