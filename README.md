@@ -9,45 +9,43 @@ Developer beware! This project is currently under very heavy development, so thi
 
 ### Running the app
 
-Start with installing the dependencies:
+We provide docker-compose and docker files to ensure consistency across environments. This of course means that the following instructions assume that you have `docker` and/or `docker-compose` installed on your system.
 
-```
-yarn
-```
+You can use the `docker-compose.yml` and `docker-compose.production.yml` files as a reference for the environment variables that are needed, as well as a kind of installation guide if for some reason you wish to not use docker.
 
-Create the file `local-development.json` inside the `config` folder.
+There is also the assumption that you have loaded the environment variables into your shell (eg. via `source your_environment_file.env`). If you place a file named `.env` in the project root folder, the `docker-compose` cli will automatically pick that up.
 
-```json
-{
-  "pubsweet-server": {
-    "secret": "<your-secret-here>"
-  }
-}
+#### Development
+
+To bring up the development environment, simply run:
+
+```sh
+docker-compose up
 ```
 
-Run the Docker container for the database:
+This will:
 
-```
-yarn start:services
-```
+- Run the server with `nodemon`, so that changes auto restart the server
+- Run the client with webpack dev server, with hot reload enabled
+- Bring up a postgres container for use in development
+- Register the `job-xsweet` service
 
-Now (in a separate terminal) run the server (backend PubSweet app):
+#### Production
 
-```
-yarn pubsweet start:server
-```
+To run the app for production with `docker-compose`:
 
-And the XSweet (Docx to HTML conversion) job runner:
-
-```
-docker run -e DATABASE_URL="postgres://yourusername@host.docker.internal/yourdatabase" -e WAIT_SERVICE_PORT="host.docker.internal:5432" pubsweet/job-xsweet
+```sh
+docker-compose -f docker-compose.production.yml up
 ```
 
-And in another terminal run the client (webpack-based PubSweet app):
+This does the following:
 
-```
-yarn pubsweet start:client
-```
+- Brings up the server, which will also serve a pre-built webpack static bundle
+- Register the `job-xsweet` service
+
+For production, we are making the assumption that you have a running postgres database somewhere. You only need to provide its location and credentials via the environment variables.
+
+Depending on your needs and setup, it might not be a good idea to use the `docker-compose` cli in production. If this is the case, and your container management solution cannot read `docker-compose` files, simply use the `docker-compose.production.yml` file as a reference for what is needed.
 
 # Other credits
 
