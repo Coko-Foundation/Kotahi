@@ -21,14 +21,14 @@ export const MentionsInputStyle = {
 }
 
 export const StyledMentionSuggestion = styled.div`
-  display: flex;
-  padding: 8px 12px;
   align-items: center;
   background: ${props =>
     props.focused ? th('colorBackgroundHue') : th('colorBackground')};
-  min-width: 156px;
-  line-height: 1.3;
   border-bottom: 1px solid ${th('colorBorder')};
+  display: flex;
+  line-height: 1.3;
+  min-width: 156px;
+  padding: 8px 12px;
 `
 
 export const MentionContent = styled.div`
@@ -37,19 +37,23 @@ export const MentionContent = styled.div`
 `
 
 export const MentionName = styled.span`
-  margin-left: 12px;
-  width: calc(184px - 62px);
-  ${Truncate};
+  color: ${props => (props.focused ? th('colorPrimary') : th('colorText'))};
   font-size: 14px;
   font-weight: 500;
-  color: ${props => (props.focused ? th('colorPrimary') : th('colorText'))};
+  margin-left: 12px;
+  width: calc(184px - 62px);
+
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
+  ${Truncate};
 `
 
 export const MentionUsername = styled.span`
-  margin-left: 12px;
+  color: ${props => (props.focused ? th('colorPrimary') : th('colorWarning'))};
   font-size: 13px;
   font-weight: 400;
+  margin-left: 12px;
   width: calc(184px - 62px);
+
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
   ${Truncate};
-  color: ${props => (props.focused ? th('colorPrimary') : th('colorWarning'))};
 `

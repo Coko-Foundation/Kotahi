@@ -1,3 +1,7 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
+/* eslint-disable consistent-return */
+
 // @flow
 import React from 'react'
 import { MentionsInput, Mention } from 'react-mentions'
@@ -48,6 +52,7 @@ const sortSuggestions = (a, b, queryString) => {
 
 const CustomMentionsInput = props => {
   const client = useApolloClient()
+
   const searchUsers = async (queryString, callback) => {
     const staticSuggestions = !props.staticSuggestions
       ? []

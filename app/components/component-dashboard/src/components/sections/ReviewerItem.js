@@ -1,3 +1,6 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-shadow */
+
 import React from 'react'
 import { Action, ActionGroup } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
@@ -16,6 +19,7 @@ const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
   const currentMember =
     team.members &&
     team.members.find(member => member.user.id === currentUser.id)
+
   const status = currentMember && currentMember.status
 
   return (

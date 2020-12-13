@@ -1,3 +1,7 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable no-param-reassign */
+
 import React from 'react'
 import styled from 'styled-components'
 import { Action, ActionGroup } from '@pubsweet/ui'
@@ -12,8 +16,8 @@ import VersionTitle from './VersionTitle'
 import prettyRoleText from '../../../../../shared/prettyRoleText'
 
 const VersionTitleLink = styled(JournalLink)`
-  text-decoration: none;
   color: #333;
+  text-decoration: none;
 `
 
 const getUserFromTeam = (version, role) => {

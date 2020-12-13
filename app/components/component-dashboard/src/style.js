@@ -29,6 +29,7 @@ const Body = styled.div`
   justify-content: space-between;
   margin-bottom: calc(${th('gridUnit')} * 4);
   padding-left: 1.5em;
+
   & > div:last-child {
     flex-shrink: 0;
   }
@@ -70,17 +71,17 @@ const Heading = styled.div`
 export { Page, Heading }
 
 export const HeadingWithAction = styled.div`
+  align-items: center;
   display: grid;
   grid-template-columns: 1fr auto;
-  align-items: center;
 `
 
 export { StatusBadge } from '../../shared'
 
 export const Placeholder = styled.div`
-  display: grid;
-  place-items: center;
   color: ${th('colorTextPlaceholder')};
+  display: grid;
   height: 100%;
   padding: 4em;
+  place-items: center;
 `

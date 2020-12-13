@@ -1,10 +1,12 @@
+/* eslint-disable react/prop-types */
+
 import React from 'react'
 import { useQuery, useMutation } from '@apollo/client'
 import { Button } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 
-import queries from '../graphql/queries/'
-import mutations from '../graphql/mutations/'
+import queries from '../graphql/queries'
+import mutations from '../graphql/mutations'
 import { Container, Placeholder } from '../style'
 import EditorItem from './sections/EditorItem'
 import OwnerItem from './sections/OwnerItem'
@@ -142,4 +144,5 @@ const Dashboard = ({ history, ...props }) => {
     </Container>
   )
 }
+
 export default Dashboard
