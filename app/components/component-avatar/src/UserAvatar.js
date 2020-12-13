@@ -1,7 +1,8 @@
+/* eslint-disable react/prop-types */
+
 import * as React from 'react'
-import { useQuery } from '@apollo/client'
+import { gql, useQuery } from '@apollo/client'
 import styled from 'styled-components'
-import gql from 'graphql-tag'
 import AvatarImage from './image'
 import { Container, AvatarLink, OnlineIndicator } from './style'
 import ConditionalWrap from '../../ConditionalWrap'
@@ -90,10 +91,9 @@ const Avatar = props => {
 }
 
 const AvatarHandler = props => {
-  const { showHoverProfile = true, isClickable } = props
+  const { showHoverProfile = true, isClickable, user, username } = props
 
-  if (props.user) {
-    const { user } = props
+  if (user) {
     return (
       <ConditionalWrap
         condition={showHoverProfile}
@@ -108,10 +108,8 @@ const AvatarHandler = props => {
     )
   }
 
-  if (!props.user && props.username) {
-    return (
-      <GetUserByUsername isClickable={isClickable} username={props.username} />
-    )
+  if (!user && username) {
+    return <GetUserByUsername isClickable={isClickable} username={username} />
   }
 
   return null

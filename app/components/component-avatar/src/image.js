@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import * as React from 'react'
 import VisibilitySensor from 'react-visibility-sensor'
 
@@ -14,6 +16,7 @@ import { Img, FallbackImg, LoadingImg } from './style'
 export default function Image(props) {
   const { type, size, mobilesize } = props
   const { ...rest } = props
+
   const fallbackSrc =
     type === 'user'
       ? '/static/profiles/default_avatar.svg'

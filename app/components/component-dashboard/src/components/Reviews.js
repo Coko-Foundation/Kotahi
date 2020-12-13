@@ -1,3 +1,6 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable no-shadow */
+
 import React from 'react'
 import styled from 'styled-components'
 import { sumBy } from 'lodash'
@@ -7,12 +10,10 @@ import { JournalContext } from '../../../xpub-journal/src'
 
 const Root = styled.div`
   display: inline-flex;
-  // justify-content: flex-end;
-  margin-bottom: 0.6em;
-  margin-top: 0.3em;
-
   font-family: ${th('fontReviewer')};
   font-size: 0.9em;
+  margin-bottom: 0.6em;
+  margin-top: 0.3em;
 `
 
 const BadgeContainer = styled.span`
@@ -30,9 +31,11 @@ const getUserFromTeam = (version, role) => {
 
 const countStatus = (version, status) => {
   const teamMembers = getUserFromTeam(version, 'reviewer')
+
   if (teamMembers) {
     return sumBy(teamMembers, member => (member.status === status ? 1 : 0))
   }
+
   return 0
 }
 

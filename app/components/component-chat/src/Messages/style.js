@@ -1,3 +1,5 @@
+/* stylelint-disable property-no-vendor-prefix */
+
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 
@@ -22,93 +24,93 @@ export const UnseenRobotext = styled(Timestamp)`
 `
 
 export const Time = styled.span`
-  text-align: center;
   color: ${th('colorText')};
   font-size: 14px;
   font-weight: 500;
   margin: 0 24px;
+  text-align: center;
 `
 
 export const MessagesGroup = styled.div`
-  padding-bottom: 8px;
-  flex-direction: column;
-  width: 100%;
-  max-width: 100%;
-  -webkit-box-pack: end;
-  justify-content: flex-end;
-  flex: 1 0 auto;
   background: rgb(255, 255, 255);
-  overflow: hidden auto;
+  -webkit-box-pack: end;
+  flex: 1 0 auto;
+  flex-direction: column;
   grid-area: read;
+  justify-content: flex-end;
+  max-width: 100%;
+  overflow: hidden auto;
+  padding-bottom: 8px;
+  width: 100%;
 `
 
 export const MessageGroupContainer = styled.div`
-  display: flex;
-  flex-direction: column;
   align-items: flex-start;
-  position: relative;
-  margin-top: 8px;
+  display: flex;
   flex: 0 0 auto;
+  flex-direction: column;
+  margin-top: 8px;
+  position: relative;
 `
 
 export const Message = styled.div`
+  align-self: stretch;
+  background: transparent;
   display: grid;
   grid-template-columns: 72px minmax(0px, 1fr);
-  align-self: stretch;
-  position: relative;
   padding-right: 16px;
-  background: transparent;
+  position: relative;
 `
 
 export const GutterContainer = styled.div`
   display: flex;
-  width: 72px;
-  min-width: 72px;
   max-width: 72px;
+  min-width: 72px;
   padding-left: 16px;
+  width: 72px;
 `
 
 export const InnerMessageContainer = styled.div`
   display: flex;
-  flex-direction: column;
-  position: relative;
   flex: 1 1 auto;
+  flex-direction: column;
   padding: 4px 0px;
+  position: relative;
 `
 
 export const Byline = styled.span`
-  display: flex;
-  font-size: 14px;
-  line-height: 16px;
-  font-weight: 500;
-  margin-bottom: 4px;
-  user-select: none;
+  align-items: center;
+  -webkit-box-align: center;
   color: rgb(36, 41, 46);
+  display: flex;
+  flex-wrap: wrap;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 16px;
+  margin-bottom: 4px;
   max-width: 100%;
   position: relative;
-  flex-wrap: wrap;
-  -webkit-box-align: center;
-  align-items: center;
+  user-select: none;
 `
 
 export const Bubble = styled.div`
+  align-self: flex-start;
+  border-radius: 16px;
+  clear: both;
+  color: rgb(36, 41, 46);
+  display: flex;
+  flex: 1 1 auto;
+  flex-direction: column;
+  font-size: 16px;
+  font-weight: 400;
+  line-height: ${th('lineHeightBase')};
+  overflow-wrap: break-word;
   vertical-align: middle;
   white-space: pre-line;
-  overflow-wrap: break-word;
-  word-break: break-word;
-  align-self: flex-start;
-  clear: both;
-  font-size: 16px;
-  line-height: ${th('lineHeightBase')};
-  color: rgb(36, 41, 46);
-  font-weight: 400;
-  display: flex;
-  flex-direction: column;
   width: 100%;
-  border-radius: 16px;
-  flex: 1 1 auto;
+  word-break: break-word;
 
-  // Classic tags used in Markdown renders (MessageRenderer)
+  /* Classic tags used in Markdown renders (MessageRenderer) */
   pre {
     font-family: ${th('fontCode')};
   }
@@ -123,11 +125,11 @@ export const Bubble = styled.div`
 `
 
 export const EmbedContainer = styled.div`
-  position: relative;
-  width: 100%;
-  margin-bottom: 32px;
   display: flex;
   justify-content: center;
+  margin-bottom: 32px;
+  position: relative;
+  width: 100%;
 `
 
 export const AspectRatio = styled(EmbedContainer)`
@@ -135,15 +137,15 @@ export const AspectRatio = styled(EmbedContainer)`
 `
 
 export const EmbedComponent = styled.iframe`
-  position: absolute;
   height: 100%;
+  position: absolute;
   width: 100%;
 `
 
 export const Placeholder = styled.div`
-  display: grid;
-  place-items: center;
   color: ${th('colorTextPlaceholder')};
+  display: grid;
   height: 100%;
   padding: 4em;
+  place-items: center;
 `

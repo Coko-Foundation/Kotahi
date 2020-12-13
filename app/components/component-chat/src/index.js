@@ -1,3 +1,5 @@
+/* eslint-disable react/prop-types */
+
 import React from 'react'
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
@@ -6,9 +8,10 @@ import ChatInput from './SuperChatInput/SuperChatInput'
 import { Tabs } from '../../shared'
 
 const MessageContainer = styled.section`
+  background: rgb(255, 255, 255);
   display: grid;
   min-width: 100%;
-  background: rgb(255, 255, 255);
+
   ${props =>
     props.channels
       ? css`
@@ -37,6 +40,7 @@ const Container = ({ channelId, channels }) => {
   if (!channelId && !channels) {
     return null
   }
+
   const tabs =
     channels &&
     channels.map(channel => ({
@@ -49,6 +53,7 @@ const Container = ({ channelId, channels }) => {
         </>
       ),
     }))
+
   return (
     <MessageContainer channels={channels}>
       {tabs ? (

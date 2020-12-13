@@ -1,6 +1,7 @@
+/* eslint-disable prefer-object-spread */
+
 import React, { useEffect } from 'react'
-import gql from 'graphql-tag'
-import { useQuery } from '@apollo/client'
+import { gql, useQuery } from '@apollo/client'
 import PropTypes from 'prop-types'
 import { UserAvatar } from '../../../component-avatar/src'
 import { sortAndGroupMessages } from '../../../../sortAndGroup'
@@ -85,9 +86,11 @@ const subscribeToNewMessages = (subscribeToMore, channelId) =>
     updateQuery: (prev, { subscriptionData }) => {
       if (!subscriptionData.data) return prev
       const { messageCreated } = subscriptionData.data
+
       const exists = prev.messages.edges.find(
         ({ id }) => id === messageCreated.id,
       )
+
       if (exists) return prev
 
       return Object.assign({}, prev, {
@@ -98,6 +101,7 @@ const subscribeToNewMessages = (subscribeToMore, channelId) =>
       })
     },
   })
+
 const Messages = ({ channelId }) => {
   const { loading, error, data, subscribeToMore, fetchMore } = useQuery(
     GET_MESSAGES,
@@ -112,6 +116,7 @@ const Messages = ({ channelId }) => {
     if (!main || !data || !data.messages || data.messages.length === 0) {
       return
     }
+
     const { scrollHeight, clientHeight } = main
     main.scrollTop = scrollHeight - clientHeight
   }
@@ -182,6 +187,7 @@ const Messages = ({ channelId }) => {
       )}
       {messages.map(group => {
         const initialMessage = group[0]
+
         if (
           initialMessage.user.id === 'robo' &&
           initialMessage.type === 'timestamp'

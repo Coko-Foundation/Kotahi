@@ -1,3 +1,5 @@
+/* eslint-disable react/destructuring-assignment */
+
 /*
   Actions arose from current designs (like the Appbar) where we had to blend
   links and buttons, but make them appear the same.
@@ -37,6 +39,7 @@ const ActionButton = styled.button`
   min-width: 0;
   padding: 0;
 
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
   ${common};
 `
 

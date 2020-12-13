@@ -1,3 +1,6 @@
+/* eslint-disable react/prop-types */
+/* eslint-disable react/destructuring-assignment */
+
 // @flow
 import * as React from 'react'
 import { Button } from '@pubsweet/ui'
@@ -37,11 +40,11 @@ import { useAppScroller } from '../../../../hooks/useAppScroller'
 import { MEDIA_BREAK } from '../../../layout'
 
 const MarkdownHint = styled.div`
+  color: ${th('colorTextPlaceholder')};
+  font-size: 12px;
   line-height: 1;
   min-height: 1em;
   padding-left: 16px;
-  font-size: 12px;
-  color: ${th('colorTextPlaceholder')};
 `
 
 // const QuotedMessage = connect()(
@@ -144,6 +147,7 @@ const SuperChatInput = props => {
     if (e.isComposing || e.keyCode === 229) {
       return
     }
+
     switch (e.key) {
       // Submit on Enter unless Shift is pressed
       case 'Enter': {
@@ -152,18 +156,20 @@ const SuperChatInput = props => {
         submit()
         return
       }
+
       // If backspace is pressed on the empty
       case 'Backspace': {
         if (text.length === 0) removeAttachments()
         break
       }
+
       default:
     }
   }
 
   const onChange = e => {
-    const text = e.target.value
-    changeText(text)
+    const textValue = e.target.value
+    changeText(textValue)
   }
 
   const sendMessage = ({ file, body }) =>

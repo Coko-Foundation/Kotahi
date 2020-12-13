@@ -3,10 +3,61 @@
   "version": "1.0.0-beta.1",
   "private": true,
   "description": "Kotahi - open journals",
-  "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://gitlab.coko.foundation/simplej/simplej"
+    "url": "https://gitlab.coko.foundation/kotahi/kotahi"
+  },
+  "license": "MIT",
+  "scripts": {
+    "__cleanNodeModules": "find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' \\;",
+    "build": "NODE_ENV=production pubsweet build",
+    "client": "pubsweet start:client",
+    "console": "node --experimental-repl-await -r ./scripts/preload.js",
+    "cz": "git-cz",
+    "lint": "npm run lint:js && npm run lint:style",
+    "lint:js": "eslint app/ scripts/ server/ config/ --ext js,jsx",
+    "lint:style": "stylelint app/**/*.scss app/**/*.css",
+    "precommit": "lint-staged",
+    "reset": "pubsweet setupdb --clobber",
+    "seedFromDump": "node scripts/seedFromDump.js",
+    "server": "pubsweet start:server",
+    "server:test": "node node_modules/pubsweet-server/src/start",
+    "start:server-and-client": "start-test server 'http://localhost:3000/healthcheck' client",
+    "start:services": "docker-compose up postgres",
+    "test:all:chrome": "start-test test:server-and-client 4000 test:chrome",
+    "test:all:firefox": "start-test test:server-and-client 4000 test:firefox",
+    "test:chrome": "cypress run --browser chrome",
+    "test:firefox": "cypress run --browser firefox --headless",
+    "test:server-and-client": "start-test server:test 'http://localhost:3000/healthcheck' client"
+  },
+  "husky": {
+    "hooks": {
+      "commit-msg": "commitlint -E HUSKY_GIT_PARAMS && lint-staged"
+    }
+  },
+  "config": {
+    "commitizen": {
+      "path": "cz-customizable"
+    }
+  },
+  "jest": {
+    "collectCoverage": true,
+    "collectCoverageFrom": [
+      "src/**/*.js",
+      "config/authsome.js"
+    ],
+    "setupTestFrameworkScriptFile": "<rootDir>/test/helpers/jest-setup.js",
+    "testEnvironment": "node",
+    "testRegex": "/test/authsome/.*.test.js$"
+  },
+  "resolutions": {
+    "@pubsweet/ui": "12.6.0",
+    "babel-plugin-styled-components": "1.11.1",
+    "bcrypt": "^3.0.6",
+    "formik": "^2.0.0",
+    "pg-boss": "3.1.7",
+    "prosemirror-gapcursor": "^1.1.3",
+    "prosemirror-model": "1.11.2"
   },
   "dependencies": {
     "@apollo/client": "3.2.2",
@@ -18,6 +69,7 @@
     "@pubsweet/job-xsweet": "2.1.11",
     "@pubsweet/model-user": "6.0.3",
     "@pubsweet/ui": "12.6.0",
+    "@pubsweet/ui-toolkit": "^2.3.5",
     "apollo-link-context": "1.0.20",
     "apollo-link-schema": "1.2.5",
     "apollo-upload-client": "14.1.2",
@@ -34,6 +86,7 @@
     "jimp": "0.16.1",
     "joi": "10.6.0",
     "loadable-components": "0.4.0",
+    "lodash": "^4.17.20",
     "memory-cache": "0.2.0",
     "metascraper": "5.14.14",
     "metascraper-author": "5.14.14",
@@ -90,8 +143,8 @@
     "@babel/plugin-syntax-import-meta": "7.10.4",
     "@babel/preset-env": "7.11.5",
     "@babel/preset-react": "7.10.4",
+    "@coko/lint": "^1.3.0",
     "babel-core": "7.0.0-bridge.0",
-    "babel-eslint": "10.1.0",
     "babel-jest": "23.6.0",
     "babel-loader": "8.1.0",
     "babel-plugin-styled-components": "1.11.1",
@@ -102,28 +155,14 @@
     "css-loader": "0.28.11",
     "cypress": "5.3.0",
     "cypress-file-upload": "4.1.1",
-    "eslint": "4.19.1",
-    "eslint-config-pubsweet": "0.0.6",
-    "eslint-plugin-import": "2.22.1",
-    "eslint-plugin-jest": "21.27.2",
-    "eslint-plugin-jsx-a11y": "6.3.1",
-    "eslint-plugin-node": "5.2.1",
-    "eslint-plugin-prettier": "2.7.0",
-    "eslint-plugin-promise": "3.8.0",
-    "eslint-plugin-react": "7.21.1",
-    "eslint-plugin-standard": "3.1.0",
     "extract-text-webpack-plugin": "3.0.2",
     "file-loader": "1.1.11",
     "html-webpack-plugin": "3.2.0",
-    "husky": "0.14.3",
     "jest-cli": "22.4.4",
     "joi-browser": "10.6.1",
-    "lint-staged": "10.4.0",
     "mini-css-extract-plugin": "0.11.2",
-    "node-dev": "4.3.0",
     "node-wait-for-it": "^0.2.0",
     "nodemon": "^2.0.6",
-    "prettier": "1.19.1",
     "react-hot-loader": "4.13.0",
     "react-router-redux": "5.0.0-alpha.9",
     "sass-loader": "6.0.7",
@@ -131,8 +170,6 @@
     "start-server-and-test": "1.11.5",
     "string-replace-loader": "1.3.0",
     "style-loader": "0.23.1",
-    "stylelint": "8.4.0",
-    "stylelint-config-pubsweet": "0.0.4",
     "uglifyjs-webpack-plugin": "1.3.0",
     "url-loader": "2.3.0",
     "webpack": "4.44.2",
@@ -141,53 +178,5 @@
     "webpack-dev-middleware": "3.7.2",
     "webpack-dev-server": "3.11.0",
     "webpack-hot-middleware": "2.25.0"
-  },
-  "scripts": {
-    "lint": "npm run lint:js && npm run lint:style",
-    "lint:js": "eslint app/ scripts/ server/ config/ --ext js,jsx",
-    "lint:style": "stylelint app/**/*.scss app/**/*.css",
-    "precommit": "lint-staged",
-    "reset": "pubsweet setupdb --clobber",
-    "server": "pubsweet start:server",
-    "server:test": "node node_modules/pubsweet-server/src/start",
-    "client": "pubsweet start:client",
-    "start:services": "docker-compose up postgres",
-    "start:server-and-client": "start-test server 'http://localhost:3000/healthcheck' client",
-    "test:server-and-client": "start-test server:test 'http://localhost:3000/healthcheck' client",
-    "test:all:firefox": "start-test test:server-and-client 4000 test:firefox",
-    "test:all:chrome": "start-test test:server-and-client 4000 test:chrome",
-    "test:firefox": "cypress run --browser firefox --headless",
-    "test:chrome": "cypress run --browser chrome",
-    "__cleanNodeModules": "find . -name 'node_modules' -type d -prune -print -exec rm -rf '{}' \\;",
-    "build": "NODE_ENV=production pubsweet build",
-    "seedFromDump": "node scripts/seedFromDump.js",
-    "console": "node --experimental-repl-await -r ./scripts/preload.js"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "testRegex": "/test/authsome/.*.test.js$",
-    "collectCoverage": true,
-    "collectCoverageFrom": [
-      "src/**/*.js",
-      "config/authsome.js"
-    ],
-    "setupTestFrameworkScriptFile": "<rootDir>/test/helpers/jest-setup.js"
-  },
-  "lint-staged": {
-    "*.{js,jsx}": [
-      "eslint --fix"
-    ],
-    "*.{json,md}": [
-      "prettier --write"
-    ]
-  },
-  "resolutions": {
-    "bcrypt": "^3.0.6",
-    "prosemirror-gapcursor": "^1.1.3",
-    "babel-plugin-styled-components": "1.11.1",
-    "@pubsweet/ui": "12.6.0",
-    "formik": "^2.0.0",
-    "pg-boss": "3.1.7",
-    "prosemirror-model": "1.11.2"
   }
 }

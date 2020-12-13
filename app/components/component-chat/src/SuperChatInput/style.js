@@ -1,3 +1,6 @@
+/* eslint-disable no-shadow */
+/* stylelint-disable declaration-no-important */
+
 import styled, { css } from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 
@@ -34,18 +37,21 @@ export const hexa = (hex, alpha) => {
   if (alpha >= 0) {
     return `rgba(${r}, ${g}, ${b}, ${alpha})`
   }
+
   return `rgb(${r}, ${g}, ${b})`
 }
 
 export const SvgWrapper = styled.div`
+  color: inherit;
   display: inline-block;
   flex: 0 0 ${props => (props.size ? `${props.size}px` : '32px')};
-  width: ${props => (props.size ? `${props.size}px` : '32px')};
   height: ${props => (props.size ? `${props.size}px` : '32px')};
-  min-width: ${props => (props.size ? `${props.size}px` : '32px')};
   min-height: ${props => (props.size ? `${props.size}px` : '32px')};
+  min-width: ${props => (props.size ? `${props.size}px` : '32px')};
   position: relative;
-  color: inherit;
+  width: ${props => (props.size ? `${props.size}px` : '32px')};
+
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
   ${props =>
     props.count &&
     css`
@@ -76,13 +82,15 @@ export const SvgWrapper = styled.div`
 export const QuoteWrapper = styled.div`
   border-left: 4px solid ${theme.bg.border};
   color: ${theme.text.alt};
-  padding: 4px 12px 4px 16px;
-  max-height: ${props => (props.expanded ? 'none' : '7em')};
-  margin-top: 4px;
-  margin-bottom: 8px;
-  overflow-y: hidden;
   cursor: pointer;
+  margin-bottom: 8px;
+  margin-top: 4px;
+  max-height: ${props => (props.expanded ? 'none' : '7em')};
+  overflow-y: hidden;
+  padding: 4px 12px 4px 16px;
   position: relative;
+
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
   ${SvgWrapper} {
     margin-left: -3px;
     margin-right: 2px;
@@ -94,85 +102,83 @@ export const monoStack = css`
 `
 
 export const FlexRow = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
 `
 
 export const ChatInputContainer = styled(FlexRow)`
-  grid-area: write;
-  flex: none;
   display: flex;
+  flex: none;
   flex-direction: column;
-  z-index: inherit;
+  grid-area: write;
+  margin: 0;
   position: relative;
   width: 100%;
-  margin: 0;
+  z-index: inherit;
+
   a {
     text-decoration: underline;
   }
 `
 
 export const ChatInputWrapper = styled.div`
+  align-items: flex-end;
+  background-color: ${th('colorBackground')};
   display: flex;
   flex-direction: row;
-  align-items: flex-end;
-  width: 100%;
   margin-bottom: ${th('gridUnit')};
   padding: 8px 12px 0 12px;
-  background-color: ${th('colorBackground')};
-  // border-top: 1px solid ${th('colorBorder')};
-  // box-shadow: -1px 0 0 ${th('colorBorder')}, 1px 0 0 ${th('colorBorder')};
+  width: 100%;
+
   @media (max-width: ${MEDIA_BREAK}px) {
     bottom: ${props => (props.focus ? '0' : 'auto')};
+    padding: 8px;
     position: relative;
     z-index: ${zIndex.mobileInput};
-    padding: 8px;
   }
 `
 
 export const Form = styled.form`
-  flex: auto;
-  display: flex;
-  min-width: 1px;
-  max-width: 100%;
   align-items: center;
-  margin-left: 4px;
-  border-radius: 24px;
   background-color: transparent;
+  border-radius: 24px;
+  display: flex;
+  flex: auto;
+  margin-left: 4px;
+  max-width: 100%;
+  min-width: 1px;
   position: relative;
 `
 
 export const InputWrapper = styled.div`
-  display: flex;
-  flex-direction: column;
   align-items: stretch;
-  flex: auto;
-  padding: ${props => (props.hasAttachment ? '16px' : '9px 16px 8px 16px')};
-  transition: padding 0.2s ease-in-out;
-  min-height: 40px;
-  max-width: calc(100% - 32px);
-  border-radius: 24px;
-  border: 1px solid
-    ${props => (props.networkDisabled ? th('colorWarning') : th('colorBorder'))};
-  transition: border 0.3s ease-out;
-  color: ${props =>
-    props.networkDisabled
-      ? th('colorText') // props.theme.special.default
-      : th('colorSecondary')}; // props.theme.text.secondary};
   background: ${props =>
     props.networkDisabled
       ? hexa(props.theme.special.default, 0.1)
       : th('colorBackground')};
+  border: 1px solid
+    ${props => (props.networkDisabled ? th('colorWarning') : th('colorBorder'))};
+  border-radius: 24px;
+  color: ${props =>
+    props.networkDisabled ? th('colorText') : th('colorSecondary')};
+  display: flex;
+  flex: auto;
+  flex-direction: column;
+  max-width: calc(100% - 32px);
+  min-height: 40px;
+  padding: ${props => (props.hasAttachment ? '16px' : '9px 16px 8px 16px')};
+  transition: padding 0.2s ease-in-out;
+  transition: border 0.3s ease-out;
+
   &:hover,
   &:focus {
     border-color: ${props =>
-      props.networkDisabled
-        ? th('borderColor') // props.theme.special.default
-        : th('colorWarning')}; // props.theme.text.alt
+      props.networkDisabled ? th('borderColor') : th('colorWarning')};
     transition: border-color 0.2s ease-in;
   }
+
   @media (max-width: ${MEDIA_BREAK}px) {
     padding-left: 16px;
   }
@@ -185,59 +191,70 @@ export const Input = styled(MentionsInput).attrs(props => ({
   autoComplete: 'on',
   autoCorrect: 'on',
 }))`
+  background: ${props =>
+    props.networkDisabled ? 'none' : th('colorBackground')};
   font-size: 16px; /* has to be 16px to avoid zoom on iOS */
   font-weight: 400;
   line-height: 1.4;
-  background: ${props =>
-    props.networkDisabled ? 'none' : th('colorBackground')};
+
   @media (max-width: ${MEDIA_BREAK}px) {
     font-size: 16px;
   }
+
   div,
   textarea {
     line-height: 1.4 !important;
     word-break: break-word;
   }
+
   &::placeholder {
     color: ${props =>
       props.networkDisabled
         ? hexa(th('colorWarning'), 0.8)
-        : th('colorSecondary')}; // props.theme.text.placeholder};
+        : th('colorSecondary')};
   }
+
   &::-webkit-input-placeholder {
     color: ${props =>
       props.networkDisabled
         ? hexa(th('colorWarning'), 0.8)
-        : th('colorSecondary')}; // props.theme.text.placeholder};
+        : th('colorSecondary')};
   }
+
   &:-moz-placeholder {
     color: ${props =>
       props.networkDisabled
         ? hexa(th('colorWarning'), 0.8)
-        : th('colorSecondary')}; // props.theme.text.placeholder};
+        : th('colorSecondary')};
   }
+
   &:-ms-input-placeholder {
     color: ${props =>
       props.networkDisabled
         ? hexa(th('colorWarning'), 0.8)
-        : th('colorSecondary')}; // props.theme.text.placeholder};
+        : th('colorSecondary')};
   }
+
   pre {
     ${monoStack};
-    font-size: 15px;
-    font-weight: 500;
+
+    /* stylelint-disable-next-line order/properties-alphabetical-order */
     background-color: ${theme.bg.wash};
     border: 1px solid ${th('colorBorder')};
     border-radius: 2px;
-    padding: 4px;
+    font-size: 15px;
+    font-weight: 500;
     margin-right: 16px;
+    padding: 4px;
   }
+
   blockquote {
-    line-height: 1.5;
     border-left: 4px solid ${th('colorBorder')};
     color: ${theme.text.alt};
+    line-height: 1.5;
     padding: 4px 12px 4px 16px;
   }
+
   ${props =>
     props.hasAttachment &&
     css`
@@ -249,93 +266,103 @@ export const Input = styled(MentionsInput).attrs(props => ({
 `
 
 export const MediaInput = styled.input`
-  width: 0.1px;
   height: 0.1px;
   opacity: 0;
   overflow: hidden;
   position: absolute;
+  width: 0.1px;
 `
 
 export const MediaLabel = styled.label`
-  border: none;
-  outline: 0;
-  display: inline-block;
   background: transparent;
-  transition: color 0.3s ease-out;
+  border: none;
   border-radius: 4px;
+  color: ${theme.text.alt};
+  display: inline-block;
+  outline: 0;
   padding: 4px;
   position: relative;
   top: 2px;
-  color: ${theme.text.alt};
+  transition: color 0.3s ease-out;
+
   &:hover {
-    cursor: pointer;
     color: ${theme.brand.default};
+    cursor: pointer;
   }
 `
 
 export const PhotoSizeError = styled.div`
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
   align-content: center;
-  padding: 8px 16px;
-  width: 100%;
+  align-items: center;
   background: ${theme.special.wash};
   border-top: 1px solid ${theme.special.border};
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+  width: 100%;
+
+  p {
+    color: ${theme.special.default};
+    font-size: 14px;
+    line-height: 1.4;
+    max-width: calc(100% - 48px);
+  }
+
+  div {
+    align-self: center;
+  }
+
   &:hover {
     cursor: pointer;
+
     p {
       color: ${theme.brand.default};
     }
   }
-  p {
-    font-size: 14px;
-    line-height: 1.4;
-    color: ${theme.special.default};
-    max-width: calc(100% - 48px);
-  }
-  div {
-    align-self: center;
-  }
 `
 
 export const RemovePreviewButton = styled.button`
-  position: absolute;
-  top: 0;
-  right: 0;
-  vertical-align: top;
   background-color: ${theme.text.placeholder};
-  color: ${theme.text.reverse};
   border: none;
   border-radius: 100%;
-  outline: none;
-  padding: 4px;
+  color: ${theme.text.reverse};
+  cursor: pointer;
   max-height: 24px;
   max-width: 24px;
-  cursor: pointer;
+  outline: none;
+  padding: 4px;
+  position: absolute;
+  right: 0;
+  top: 0;
+  vertical-align: top;
   z-index: 1;
+
   &:hover {
     background-color: ${theme.warn.alt};
   }
 `
 
 export const PreviewWrapper = styled.div`
-  position: relative;
+  border-bottom: 1px solid ${th('colorBorder')};
   padding: 0;
   padding-bottom: 8px;
-  border-bottom: 1px solid ${th('colorBorder')};
+  position: relative;
+
   ${QuoteWrapper} {
-    margin: 0;
-    margin-top: -6px;
-    margin-left: -12px;
     border-left: 0;
+    margin: 0;
+    margin-left: -12px;
+    margin-top: -6px;
   }
+
   & + & {
     padding-top: 16px;
+
     ${RemovePreviewButton} {
       top: 16px;
     }
   }
+
   & > img {
     border-radius: 8px;
     max-width: 37%;
