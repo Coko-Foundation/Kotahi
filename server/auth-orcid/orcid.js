@@ -15,12 +15,15 @@ module.exports = app => {
       {
         sandbox: process.env.NODE_ENV !== 'production',
         scope: '/authenticate',
-        callbackURL: config.get('pubsweet-server.baseUrl') + CALLBACK_URL,
+        // this works here only with webpack dev server's proxy (ie. clientUrl/auth -> serverUrl/auth)
+        // or when the server and client are served from the same url
+        callbackURL: config.get('pubsweet-client.baseUrl') + CALLBACK_URL,
         ...config.get('auth-orcid'),
       },
       async (accessToken, refreshToken, params, profile, done) => {
         // convert oauth response into a user object
         let user
+
         try {
           user = await User.query()
             .joinRelation('identities')
