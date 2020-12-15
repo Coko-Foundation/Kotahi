@@ -1,7 +1,10 @@
 const path = require('path')
-const components = require('./components.json')
 const logger = require('winston')
 const { deferConfig } = require('config/defer')
+
+const components = require('./components.json')
+const formComponents = require('./form-components.json')
+const journal = require('./journal')
 
 module.exports = {
   teams: {
@@ -34,17 +37,17 @@ module.exports = {
   },
   'pubsweet-component-xpub-formbuilder': {
     path: path.resolve(__dirname, '../app/storage/forms'),
-    components: require(path.resolve(__dirname, 'form-components.json')),
+    components: formComponents,
   },
   'pubsweet-server': {
     db: {},
     port: 3000,
     logger,
     uploads: 'uploads',
-    baseUrl: deferConfig(
-      cfg =>
-        `['pubsweet-server'].protocol:://['pubsweet-server'].host:${cfg['pubsweet-server'].port}`,
-    ),
+    baseUrl: deferConfig(cfg => {
+      const { protocol, host, port } = cfg['pubsweet-server']
+      return `${protocol}://${host}${port ? `:${port}` : ''}`
+    }),
     typeDefs: `
       extend type User {
         name: String
@@ -135,6 +138,10 @@ module.exports = {
     API_ENDPOINT: '/api',
     'login-redirect': '/journal/dashboard',
     theme: process.env.PUBSWEET_THEME,
+    baseUrl: deferConfig(cfg => {
+      const { protocol, host, port } = cfg['pubsweet-client']
+      return `${protocol}://${host}${port ? `:${port}` : ''}`
+    }),
   },
   'pubsweet-component-xpub-dashboard': {
     acceptUploadFiles: [
@@ -158,5 +165,5 @@ module.exports = {
     'teams',
   ],
   schema: {},
-  journal: require('./journal'),
+  journal,
 }

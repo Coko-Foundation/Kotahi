@@ -3,7 +3,13 @@ module.exports = {
     clientID: 'ORCID_CLIENT_ID',
     clientSecret: 'ORCID_CLIENT_SECRET',
   },
+  'pubsweet-client': {
+    protocol: 'CLIENT_PROTOCOL',
+    host: 'CLIENT_HOST',
+    port: 'CLIENT_PORT',
+  },
   'pubsweet-server': {
+    protocol: 'SERVER_PROTOCOL',
     host: 'SERVER_HOST',
     port: 'SERVER_PORT',
     secret: 'PUBSWEET_SECRET',

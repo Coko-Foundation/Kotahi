@@ -2366,6 +2366,14 @@
     "@hapi/joi" "^14.5.0"
     config "^3.0.1"
 
+"@pubsweet/logger@^0.2.49":
+  version "0.2.49"
+  resolved "https://registry.yarnpkg.com/@pubsweet/logger/-/logger-0.2.49.tgz#88f368683ef038e078b8a4bb7d76d63bf5f7e8ab"
+  integrity sha512-/V1PjZwBfOkhK/ZQYb8LvjZH6Q38wFGcsT3+A7I6DJP3MsCPN+WgOm3ebdQYumgWcatZrhRVATWQzhLYsAfS2Q==
+  dependencies:
+    "@hapi/joi" "^14.5.0"
+    config "^3.0.1"
+
 "@pubsweet/model-user@6.0.3":
   version "6.0.3"
   resolved "https://registry.yarnpkg.com/@pubsweet/model-user/-/model-user-6.0.3.tgz#b0ad3e307e293d9794f20bcc3797164732eb221b"
@@ -2383,6 +2391,13 @@
   integrity sha512-9SvVItqghaFowmNrr0SVlm8ecgGMQlgu39gZbGgbqmPSZpNUJtGEyM0xXJK1qpfOYmfzQqlwnKrtjmAU+jaQjg==
   dependencies:
     "@pubsweet/logger" "^0.2.46"
+
+"@pubsweet/models@^0.3.14":
+  version "0.3.14"
+  resolved "https://registry.yarnpkg.com/@pubsweet/models/-/models-0.3.14.tgz#2dbd935893e55a800e2a757443390e245efc78e7"
+  integrity sha512-mZz4vGuo7LcdL7iyxVTyKnZDvx2pyr8dQFJ9rrIs4QcOJ3oE5GTCjrgGW+sfP0Px6lHrmYQEIpnBlhgneEj2Pw==
+  dependencies:
+    "@pubsweet/logger" "^0.2.49"
 
 "@pubsweet/ui-toolkit@^2.3.2":
   version "2.3.2"
@@ -13413,7 +13428,7 @@ passport-strategy@1.x.x:
   resolved "https://registry.yarnpkg.com/passport-strategy/-/passport-strategy-1.0.0.tgz#b5539aa8fc225a3d1ad179476ddf236b440f52e4"
   integrity sha1-tVOaqPwiWj0a0XlHbd8ja0QPUuQ=
 
-passport@^0.4.0:
+passport@^0.4.0, passport@^0.4.1:
   version "0.4.1"
   resolved "https://registry.yarnpkg.com/passport/-/passport-0.4.1.tgz#941446a21cb92fc688d97a0861c38ce9f738f270"
   integrity sha512-IxXgZZs8d7uFSt3eqNjM9NQ3g3uQCW5avD8mRNoXV99Yig50vjuaez6dQK2qC0kVWPRTujxY0dWgGfT09adjYg==
