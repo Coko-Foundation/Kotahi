@@ -49,6 +49,7 @@ const parent_manuscript_is_published = rule({ cache: 'contextual' })(
     const manuscript = await ctx.models.Manuscript.query().findById(
       parent.manuscriptId,
     )
+
     return !!manuscript.published
   },
 )
@@ -214,6 +215,11 @@ const user_is_author_of_files_associated_manuscript = rule({
 })
 const user_is_author_of_the_manuscript_of_the_file = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
+
+    if (!ctx.user){
+      return false;
+    }
+
     const manuscript = await ctx.models.File.relatedQuery('manuscript')
       .for(parent.id)
       .first()
@@ -246,6 +252,11 @@ const user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_complete
     cache: 'strict',
   },
 )(async (parent, args, ctx, info) => {
+
+  if (!ctx.user){
+    return false;
+  }
+
   const manuscript = await ctx.models.File.relatedQuery('manuscript')
     .for(parent.id)
     .first()

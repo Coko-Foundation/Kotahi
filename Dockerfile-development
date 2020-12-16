@@ -4,7 +4,7 @@ RUN apt-get update \
     && apt-get upgrade -y \
     && apt-get install -y ranger vim
 
-WORKDIR /home/node/app
+WORKDIR /home/andy/src/kotahi
 
 COPY package.json .
 COPY yarn.lock .
