@@ -41,8 +41,6 @@ const Frontpage = ({ history, ...props }) => {
               <Title>{manuscript.meta.title}</Title>
             </SectionHeader>
             <SectionRow key={`manuscript-${manuscript.id}`}>
-              <p>Abstract: {manuscript.submission?.abstract}</p>
-
               <p>
                 Visual abstract:{' '}
                 <VisualAbstract
@@ -51,6 +49,7 @@ const Frontpage = ({ history, ...props }) => {
                 />
               </p>
 
+              <p>Abstract: {manuscript.submission?.abstract}</p>
               <p>
                 {manuscript.submitter.defaultIdentity.name} (
                 {manuscript.submission.affiliation})
@@ -102,5 +101,4 @@ const Frontpage = ({ history, ...props }) => {
     </Container>
   )
 }
-
 export default Frontpage
