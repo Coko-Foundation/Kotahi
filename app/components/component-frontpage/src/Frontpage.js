@@ -48,8 +48,8 @@ const Frontpage = ({ history, ...props }) => {
                   src={manuscript.visualAbstract}
                 />
               </p>
-
               <p>Abstract: {manuscript.submission?.abstract}</p>
+
               <p>
                 {manuscript.submitter.defaultIdentity.name} (
                 {manuscript.submission.affiliation})
