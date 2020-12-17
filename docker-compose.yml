@@ -22,8 +22,8 @@ services:
       - SERVER_HOST=server
       - SERVER_PORT=3000
     volumes:
-      - ./app:/home/andy/src/kotahi/app
-      - ./config:/home/andy/src/kotahi/config
+      - ./app:/home/node/app/app
+      - ./config:/home/node/app/config
 
   server:
     build:
@@ -63,8 +63,8 @@ services:
       - ORCID_CLIENT_ID=${ORCID_CLIENT_ID}
       - ORCID_CLIENT_SECRET=${ORCID_CLIENT_SECRET}
     volumes:
-      - ./config:/home/andy/src/kotahi/config
-      - ./server:/home/andy/src/kotahi/server
+      - ./config:/home/node/app/config
+      - ./server:/home/node/app/server
 
   job-xsweet:
     image: pubsweet/job-xsweet
@@ -73,7 +73,7 @@ services:
     command:
       [
         'bash',
-        '/home/andy/src/kotahi/scripts/wait-for-it.sh',
+        './scripts/wait-for-it.sh',
         'server:3000',
         --,
         'node',
@@ -82,7 +82,7 @@ services:
     environment:
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
     volumes:
-      - ./scripts/wait-for-it.sh:/home/andy/src/kotahi/scripts/wait-for-it.sh
+      - ./scripts/wait-for-it.sh:/home/node/scripts/wait-for-it.sh
 
   db:
     image: postgres:10-alpine
