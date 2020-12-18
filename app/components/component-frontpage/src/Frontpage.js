@@ -41,6 +41,7 @@ const Frontpage = ({ history, ...props }) => {
               <Title>{manuscript.meta.title}</Title>
             </SectionHeader>
             <SectionRow key={`manuscript-${manuscript.id}`}>
+              <p>Abstract: {manuscript.submission?.abstract}</p>
               <p>
                 Visual abstract:{' '}
                 <VisualAbstract
@@ -48,12 +49,7 @@ const Frontpage = ({ history, ...props }) => {
                   src={manuscript.visualAbstract}
                 />
               </p>
-              <p>Abstract: {manuscript.submission?.abstract}</p>
 
-              <p>
-                {manuscript.submitter.defaultIdentity.name} (
-                {manuscript.submission.affiliation})
-              </p>
               <div>
                 Submitted files:
                 {manuscript.files.map(file => (
@@ -68,6 +64,7 @@ const Frontpage = ({ history, ...props }) => {
                   </p>
                 ))}
               </div>
+
               <div>
                 Submitted research objects:
                 {manuscript.submission?.links?.map(link => (
@@ -82,16 +79,7 @@ const Frontpage = ({ history, ...props }) => {
                   </p>
                 ))}
               </div>
-              <div>
-                Reviews:
-                {manuscript.reviews.map(
-                  review =>
-                    review.reviewComment && (
-                      <p>&quot;{review.reviewComment?.content}&quot;</p>
-                    ),
-                )}
-              </div>
-              <div>Published: {manuscript.published}</div>
+
             </SectionRow>
           </SectionContent>
         ))
