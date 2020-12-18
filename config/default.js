@@ -140,7 +140,8 @@ module.exports = {
     theme: process.env.PUBSWEET_THEME,
     baseUrl: deferConfig(cfg => {
       const { protocol, host, port } = cfg['pubsweet-client']
-      return `${protocol}://${host}${port ? `:${port}` : ''}`
+      const hostname = host === '0.0.0.0' ? 'localhost' : host
+      return `${protocol}://${hostname}${port ? `:${port}` : ''}`
     }),
   },
   'pubsweet-component-xpub-dashboard': {
