@@ -1,8 +1,9 @@
-import React, { useContext } from 'react'
+import React, { useContext, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
 import { Container, Placeholder, VisualAbstract } from './style'
+
 
 import {
   Spinner,
@@ -12,15 +13,36 @@ import {
   SectionContent,
   Heading,
   HeadingWithAction,
+  Pagination,
 } from '../../shared'
 
+
 const Frontpage = ({ history, ...props }) => {
-  const { loading, data, error } = useQuery(queries.frontpage)
+
+  const [sortName, setSortName] = useState('created')
+  const [sortDirection, setSortDirection] = useState('DESC')
+  const [page, setPage] = useState(1)
+  const limit = 2
+  const sort = sortName && sortDirection && `${sortName}_${sortDirection}`
+    
+
+  const { loading, data, error } = useQuery(queries.frontpage, {
+    variables: {
+      sort,
+      offset: (page - 1) * limit,
+      limit,
+    },
+    fetchPolicy: 'network-only',
+  })
+  
   const journal = useContext(JournalContext)
+
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
 
-  const frontpage = (data.publishedManuscripts?.manuscripts || []).map(m => {
+  const totalCount = data.publishedManuscripts.totalCount
+
+  const frontpage  = (data.publishedManuscripts?.manuscripts || []).map(m => {
     const visualAbstract = m.files?.find(f => f.fileType === 'visualAbstract')
     return {
       ...m,
@@ -29,11 +51,20 @@ const Frontpage = ({ history, ...props }) => {
     }
   })
 
+ 
+
   return (
     <Container>
       <HeadingWithAction>
         <Heading>Recent publications in {journal.metadata.name}</Heading>
       </HeadingWithAction>
+      <Pagination
+          limit={limit}
+          page={page}
+          setPage={setPage}
+          totalCount={totalCount}
+          />
+
       {frontpage.length > 0 ? (
         frontpage.map(manuscript => (
           <SectionContent>
@@ -41,15 +72,20 @@ const Frontpage = ({ history, ...props }) => {
               <Title>{manuscript.meta.title}</Title>
             </SectionHeader>
             <SectionRow key={`manuscript-${manuscript.id}`}>
+
+              {manuscript.submission?.abstract ? 
               <p>Abstract: {manuscript.submission?.abstract}</p>
+              :  <br/> }
+              {manuscript.visualAbstract ? 
               <p>
                 Visual abstract:{' '}
                 <VisualAbstract
                   alt="Visual abstract"
                   src={manuscript.visualAbstract}
                 />
-              </p>
-
+              </p> : <br/> }
+              
+              {manuscript.files.length > 0 ? 
               <div>
                 Submitted files:
                 {manuscript.files.map(file => (
@@ -63,8 +99,9 @@ const Frontpage = ({ history, ...props }) => {
                     </a>
                   </p>
                 ))}
-              </div>
+              </div> : <br/> }
 
+              {manuscript.submission?.links ? 
               <div>
                 Submitted research objects:
                 {manuscript.submission?.links?.map(link => (
@@ -78,7 +115,7 @@ const Frontpage = ({ history, ...props }) => {
                     </a>
                   </p>
                 ))}
-              </div>
+              </div> : <br/> }
 
             </SectionRow>
           </SectionContent>

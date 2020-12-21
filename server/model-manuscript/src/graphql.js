@@ -321,11 +321,22 @@ const resolvers = {
         .where({ parentId: null })
         .orderBy('created', 'desc')
     },
-    async publishedManuscripts(_, { offset, limit }, ctx) {
+    async publishedManuscripts(_, { sort, offset, limit }, ctx) {
       const query = ctx.models.Manuscript.query()
         .where(raw('published IS NOT NULL'))
         .eager('[reviews.[comments], files, submitter]')
       const totalCount = await query.resultSize()
+
+      if (sort) {
+        const [sortName, sortDirection] = sort.split('_')
+
+        query.orderBy(ref(sortName), sortDirection)
+        // }
+        // // e.g. 'created_DESC' into 'created' and 'DESC' arguments
+        // query.orderBy(...sort.split('_'))
+      }
+
+
       if (limit) {
         query.limit(limit)
       }
@@ -398,7 +409,7 @@ const typeDefs = `
     manuscripts: [Manuscript]!
     paginatedManuscripts(sort: String, offset: Int, limit: Int, filter: ManuscriptsFilter): PaginatedManuscripts
     detailsForURL(url: String!): URLMetadata
-    publishedManuscripts(offset: Int, limit: Int): PaginatedManuscripts
+    publishedManuscripts(sort:String, offset: Int, limit: Int): PaginatedManuscripts
   }
 
   type URLMetadata {

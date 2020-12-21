@@ -2,8 +2,17 @@ import gql from 'graphql-tag'
 
 export default {
   frontpage: gql`
-    {
-      publishedManuscripts {
+   
+  query publishedManuscripts(
+    $sort: String
+    $offset: Int
+    $limit: Int
+  ) {
+    publishedManuscripts(
+      sort: $sort
+      offset: $offset
+      limit: $limit
+    ) {
         totalCount
         manuscripts {
           id
