@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
 import { Container, Placeholder, VisualAbstract } from './style'
-
+import Wax from '../../wax-collab/src/Editoria'
 
 import {
   Spinner,
@@ -24,7 +24,13 @@ const Frontpage = ({ history, ...props }) => {
   const [page, setPage] = useState(1)
   const limit = 2
   const sort = sortName && sortDirection && `${sortName}_${sortDirection}`
-    
+ 
+  const skipXSweet = file =>
+  !(
+    file.mimeType ===
+    'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+  )
+
 
   const { loading, data, error } = useQuery(queries.frontpage, {
     variables: {
@@ -86,9 +92,10 @@ const Frontpage = ({ history, ...props }) => {
               </p> : <br/> }
               
               {manuscript.files.length > 0 ? 
+
               <div>
-                Submitted files:
                 {manuscript.files.map(file => (
+		  skipXSweet(file) && 
                   <p>
                     <a
                       href={file.url}
@@ -99,6 +106,19 @@ const Frontpage = ({ history, ...props }) => {
                     </a>
                   </p>
                 ))}
+                {manuscript.files.map(file => (
+		  (! skipXSweet(file)) && 
+
+		    <p> 
+			<Wax 
+			content={manuscript.meta.source}
+			readonly
+			/>
+		    </p>
+
+                ))}
+
+
               </div> : <br/> }
 
               {manuscript.submission?.links ? 

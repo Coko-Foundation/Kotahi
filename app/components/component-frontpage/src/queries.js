@@ -36,12 +36,14 @@ export default {
             url
             filename
             fileType
+	    mimeType
           }
           meta {
             manuscriptId
             title
             articleSections
             articleType
+	    source
             history {
               type
               date
