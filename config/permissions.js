@@ -1,3 +1,6 @@
+/* eslint-disable import/no-unresolved */
+/* eslint-disable no-underscore-dangle */
+/* eslint-disable camelcase */
 // eslint-disable-next-line no-unused-vars
 const { rule, shield, and, or, not, allow, deny } = require('graphql-shield')
 
@@ -36,6 +39,7 @@ const _userIsMemberOfTeamWithRole = async (user, manuscriptId, role) => {
     .$relatedQuery('teams')
     .where({ role })
     .andWhere({ manuscriptId })
+
   const rows = await query.resultSize()
   return !!rows
 }
@@ -58,14 +62,12 @@ const review_is_by_user = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
     const rows =
       ctx.user &&
-      ctx.user
-        .$relatedQuery('teams')
-        .where({ role: 'reviewer' })
-        .resultSize()
+      ctx.user.$relatedQuery('teams').where({ role: 'reviewer' }).resultSize()
 
     return !!rows
   },
 )
+
 const isAuthenticated = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => !!ctx.user,
 )
@@ -79,7 +81,9 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
     if (ctx.user && ctx.user.admin) {
       return true
     }
+
     const channel = await ctx.models.Channel.query().findById(args.channelId)
+
     const manuscript = await ctx.models.Manuscript.query().findById(
       channel.manuscriptId,
     )
@@ -89,18 +93,24 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
       manuscript.id,
       'author',
     )
+
     const isReviewer = await _userIsMemberOfTeamWithRole(
       ctx.user,
       manuscript.id,
       'reviewer',
     )
+
     const isEditor = await _userIsEditor(ctx.user, manuscript.id)
 
     if (channel.type === 'all') {
       return isAuthor || isReviewer || isEditor
-    } else if (channel.type === 'editorial') {
+    }
+
+    if (channel.type === 'editorial') {
       return isReviewer || isEditor
     }
+
+    return false
   },
 )
 
@@ -108,6 +118,7 @@ const user_is_review_author_and_review_is_not_completed = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
   let manuscriptId
+
   if (args.id) {
     ;({ manuscriptId } = await ctx.models.Review.query().findById(args.id))
   } else {
@@ -115,12 +126,14 @@ const user_is_review_author_and_review_is_not_completed = rule({
   }
 
   const manuscript = await ctx.models.Manuscript.query().findById(manuscriptId)
+
   const team = await ctx.models.Team.query()
     .where({
       manuscriptId: manuscript.id,
       role: 'reviewer',
     })
     .first()
+
   if (!team) return false
 
   const members = await team
@@ -138,6 +151,7 @@ const user_is_editor_of_the_manuscript_of_the_review = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
   let manuscriptId
+
   if (args.id) {
     ;({ manuscriptId } = await ctx.models.Review.query().findById(args.id))
   } else {
@@ -150,6 +164,7 @@ const user_is_editor_of_the_manuscript_of_the_review = rule({
 const user_is_invited_reviewer = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     const team = await ctx.models.Team.query().findById(args.teamId)
+
     const member = await team
       .$relatedQuery('members')
       .where({ userId: ctx.user.id, status: 'invited' })
@@ -167,6 +182,7 @@ const user_is_author = rule({ cache: 'strict' })(
         role: 'author',
       })
       .first()
+
     const author = team
       .$relatedQuery('members')
       .where({ userId: ctx.user.id })
@@ -180,6 +196,7 @@ const user_is_author_of_files_associated_manuscript = rule({
   cache: 'no_cache',
 })(async (parent, args, ctx, info) => {
   let manuscriptId
+
   if (args.meta && args.meta.manuscriptId) {
     // Meta is supplied for createFile
     // eslint-disable-next-line prefer-destructuring
@@ -203,6 +220,7 @@ const user_is_author_of_files_associated_manuscript = rule({
   if (!team) {
     return false
   }
+
   const members = await team
     .$relatedQuery('members')
     .where('userId', ctx.user.id)
@@ -213,11 +231,11 @@ const user_is_author_of_files_associated_manuscript = rule({
 
   return false
 })
+
 const user_is_author_of_the_manuscript_of_the_file = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-
-    if (!ctx.user){
-      return false;
+    if (!ctx.user) {
+      return false
     }
 
     const manuscript = await ctx.models.File.relatedQuery('manuscript')
@@ -234,6 +252,7 @@ const user_is_author_of_the_manuscript_of_the_file = rule({ cache: 'strict' })(
     if (!team) {
       return false
     }
+
     const members = await team
       .$relatedQuery('members')
       .where('userId', ctx.user.id)
@@ -252,9 +271,8 @@ const user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_complete
     cache: 'strict',
   },
 )(async (parent, args, ctx, info) => {
-
-  if (!ctx.user){
-    return false;
+  if (!ctx.user) {
+    return false
   }
 
   const manuscript = await ctx.models.File.relatedQuery('manuscript')
@@ -271,6 +289,7 @@ const user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_complete
   if (!team) {
     return false
   }
+
   const members = await team
     .$relatedQuery('members')
     .where('userId', ctx.user.id)
@@ -348,10 +367,12 @@ const permissions = {
 const fallbackRule = or(userIsAdmin, userIsEditor)
 
 // We only ever need to go two levels down, so no need for recursion
+// eslint-disable-next-line no-shadow
 const addOverrideRule = permissions => {
   const adaptedPermissions = {}
   Object.keys(permissions).forEach(key1 => {
     const value = permissions[key1]
+
     if (value.constructor.name !== 'Object') {
       adaptedPermissions[key1] = or(fallbackRule, value)
     } else {
