@@ -19,9 +19,11 @@ const getNextUrl = () => {
 
 const getToken = props => {
   const { location } = props
+
   if (location && location.search && location.search.match(/^\?token=/)) {
     return location.search.replace(/^\?token=/, '')
   }
+
   return null
 }
 

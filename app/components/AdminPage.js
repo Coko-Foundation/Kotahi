@@ -11,17 +11,17 @@ import {
 import { JournalContext } from './xpub-journal/src'
 import { XpubContext } from './xpub-with-context/src'
 
-import UsersManager from '../components/component-users-manager/src/UsersManager'
-import Manuscripts from '../components/component-manuscripts/src/Manuscripts'
-import Dashboard from '../components/component-dashboard/src/components/Dashboard'
-import SubmitPage from '../components/component-submit/src/components/SubmitPage'
-import ManuscriptPage from '../components/component-manuscript/src/components/ManuscriptPage'
-import ReviewersPage from '../components/component-review/src/components/ReviewersPage'
-import ReviewPage from '../components/component-review/src/components/ReviewPage'
-import DecisionPage from '../components/component-review/src/components/DecisionPage'
-import FormBuilderPage from '../components/component-formbuilder/src/components/FormBuilderPage'
-import NewSubmissionPage from '../components/component-submit/src/components/NewSubmissionPage'
-import { Profile } from '../components/component-profile/src'
+import UsersManager from './component-users-manager/src/UsersManager'
+import Manuscripts from './component-manuscripts/src/Manuscripts'
+import Dashboard from './component-dashboard/src/components/Dashboard'
+import SubmitPage from './component-submit/src/components/SubmitPage'
+import ManuscriptPage from './component-manuscript/src/components/ManuscriptPage'
+import ReviewersPage from './component-review/src/components/ReviewersPage'
+import ReviewPage from './component-review/src/components/ReviewPage'
+import DecisionPage from './component-review/src/components/DecisionPage'
+import FormBuilderPage from './component-formbuilder/src/components/FormBuilderPage'
+import NewSubmissionPage from './component-submit/src/components/NewSubmissionPage'
+import { Profile } from './component-profile/src'
 
 import { GET_CURRENT_USER } from '../queries'
 
@@ -38,11 +38,10 @@ const getParams = routerPath => {
 
 const Root = styled.div`
   display: grid;
-  grid-template-columns: 200px auto;
   grid-template-areas: 'menu main';
-  max-height: 100vh;
+  grid-template-columns: 200px auto;
   height: 100vh;
-  overflow: hidden;
+  max-height: 100vh;
   ${({ converting }) =>
     converting &&
     `
@@ -51,9 +50,11 @@ const Root = styled.div`
        pointer-events: none;
      }
   `};
+  overflow: hidden;
 `
 
 // TODO: Redirect if token expires
+// eslint-disable-next-line react/prop-types
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -67,8 +68,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
   />
 )
 
+// eslint-disable-next-line consistent-return
 const updateStuff = data => {
   if (data?.currentUser) {
+    // eslint-disable-next-line no-underscore-dangle
     return currentRolesVar(data.currentUser._currentRoles)
   }
 }
@@ -81,6 +84,7 @@ const AdminPage = () => {
   const { loading, error, data } = useQuery(GET_CURRENT_USER, {
     fetchPolicy: 'network-only',
     // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301
+    // eslint-disable-next-line no-shadow
     onCompleted: useCallback(data => updateStuff(data), []),
   })
 
@@ -92,6 +96,7 @@ const AdminPage = () => {
   }
 
   let notice = ''
+
   if (error) {
     if (error.networkError) {
       notice = 'You are offline.'

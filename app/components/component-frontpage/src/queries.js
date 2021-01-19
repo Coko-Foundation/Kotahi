@@ -1,18 +1,10 @@
+// eslint-disable-next-line import/no-extraneous-dependencies
 import gql from 'graphql-tag'
 
 export default {
   frontpage: gql`
-   
-  query publishedManuscripts(
-    $sort: String
-    $offset: Int
-    $limit: Int
-  ) {
-    publishedManuscripts(
-      sort: $sort
-      offset: $offset
-      limit: $limit
-    ) {
+    query publishedManuscripts($sort: String, $offset: Int, $limit: Int) {
+      publishedManuscripts(sort: $sort, offset: $offset, limit: $limit) {
         totalCount
         manuscripts {
           id
@@ -36,14 +28,14 @@ export default {
             url
             filename
             fileType
-	    mimeType
+            mimeType
           }
           meta {
             manuscriptId
             title
             articleSections
             articleType
-	    source
+            source
             history {
               type
               date

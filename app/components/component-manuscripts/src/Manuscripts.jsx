@@ -141,9 +141,10 @@ const Manuscripts = () => {
             </tr>
           </Header>
           <tbody>
-            {manuscripts.map((manuscript, key) => {
+            {manuscripts.map(function (manuscript, key) {
               const latestVersion =
                 manuscript.manuscriptVersions?.[0] || manuscript
+
               return (
                 <Manuscript
                   key={latestVersion.id}

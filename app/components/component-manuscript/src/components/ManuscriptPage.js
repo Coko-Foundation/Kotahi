@@ -37,9 +37,11 @@ const query = gql`
   }
 `
 
+// eslint-disable-next-line react/prop-types
 const ManuscriptPage = ({ match, ...props }) => {
   const { data, loading, error } = useQuery(query, {
     variables: {
+      // eslint-disable-next-line react/prop-types
       id: match.params.version,
     },
   })
@@ -56,4 +58,5 @@ const ManuscriptPage = ({ match, ...props }) => {
     />
   )
 }
+
 export default ManuscriptPage

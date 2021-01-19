@@ -1,3 +1,6 @@
+/* eslint-disable no-param-reassign */
+/* eslint-disable global-require */
+/* eslint-disable import/no-extraneous-dependencies */
 const path = require('path')
 const config = require('config')
 
@@ -10,7 +13,6 @@ const helmet = require('helmet')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const passport = require('passport')
-const gqlApi = require('./graphql')
 // const index = require('./routes/index')
 // const api = require('./routes/api')
 const logger = require('@pubsweet/logger')
@@ -22,9 +24,10 @@ const registerComponents = require('pubsweet-server/src/register-components') //
 
 // Wax Collab requirements
 const WebSocket = require('ws')
+const EventEmitter = require('events')
 const wsUtils = require('./wax-collab/server-util.js')
 // const cookie = require('cookie')
-const EventEmitter = require('events')
+const gqlApi = require('./graphql')
 
 const configureApp = app => {
   const models = require('@pubsweet/models')
@@ -35,6 +38,7 @@ const configureApp = app => {
   app.use(bodyParser.json({ limit: '50mb' }))
   morgan.token('graphql', ({ body }, res, type) => {
     if (!body.operationName) return ''
+
     switch (type) {
       case 'query':
         return body.query.replace(/\s+/g, ' ')
@@ -66,6 +70,7 @@ const configureApp = app => {
       ),
     )
   }
+
   // Passport strategies
   app.use(passport.initialize())
   const authentication = require('pubsweet-server/src/authentication')
@@ -103,13 +108,20 @@ const configureApp = app => {
 
     if (err.name === 'ValidationError') {
       return res.status(STATUS.BAD_REQUEST).json({ message: err.message })
-    } else if (err.name === 'ConflictError') {
+    }
+
+    if (err.name === 'ConflictError') {
       return res.status(STATUS.CONFLICT).json({ message: err.message })
-    } else if (err.name === 'AuthorizationError') {
+    }
+
+    if (err.name === 'AuthorizationError') {
       return res.status(err.status).json({ message: err.message })
-    } else if (err.name === 'AuthenticationError') {
+    }
+
+    if (err.name === 'AuthenticationError') {
       return res.status(STATUS.UNAUTHORIZED).json({ message: err.message })
     }
+
     return res
       .status(err.status || STATUS.INTERNAL_SERVER_ERROR)
       .json({ message: err.message })
@@ -133,10 +145,12 @@ const configureApp = app => {
         serverProxy.emit('upgrade', request, socket, head, ...rest)
       } else {
         let user = null
+
         if (request.headers.cookie) {
           // const cookies = cookie.parse(request.headers.cookie)
           // const user = cookies.user_identifier
         }
+
         // TODO: Do real auth for Wax-collab
         user = 'test' // shortcut
 
@@ -145,6 +159,7 @@ const configureApp = app => {
           socket.destroy()
           return
         }
+
         wss.handleUpgrade(request, socket, head, ws => {
           wss.emit('connection', ws, request)
         })
