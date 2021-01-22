@@ -1,10 +1,7 @@
-/* eslint-disable import/no-unresolved */
-/* eslint-disable no-underscore-dangle */
-/* eslint-disable camelcase */
 // eslint-disable-next-line no-unused-vars
 const { rule, shield, and, or, not, allow, deny } = require('graphql-shield')
 
-const _userIsEditor = async (user, manuscriptId) => {
+const userIsEditorQuery = async (user, manuscriptId) => {
   if (!user) {
     return false
   }
@@ -28,9 +25,9 @@ const _userIsEditor = async (user, manuscriptId) => {
 
 const userIsEditor = rule({
   cache: 'contextual',
-})(async (parent, args, ctx, info) => _userIsEditor(ctx.user))
+})(async (parent, args, ctx, info) => userIsEditorQuery(ctx.user))
 
-const _userIsMemberOfTeamWithRole = async (user, manuscriptId, role) => {
+const userIsMemberOfTeamWithRoleQuery = async (user, manuscriptId, role) => {
   if (!user) {
     return false
   }
@@ -48,7 +45,7 @@ const userIsAdmin = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => ctx.user && ctx.user.admin,
 )
 
-const parent_manuscript_is_published = rule({ cache: 'contextual' })(
+const parentManuscriptIsPublished = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
     const manuscript = await ctx.models.Manuscript.query().findById(
       parent.manuscriptId,
@@ -58,7 +55,7 @@ const parent_manuscript_is_published = rule({ cache: 'contextual' })(
   },
 )
 
-const review_is_by_user = rule({ cache: 'contextual' })(
+const reviewIsByUser = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
     const rows =
       ctx.user &&
@@ -88,19 +85,19 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
       channel.manuscriptId,
     )
 
-    const isAuthor = await _userIsMemberOfTeamWithRole(
+    const isAuthor = await userIsMemberOfTeamWithRoleQuery(
       ctx.user,
       manuscript.id,
       'author',
     )
 
-    const isReviewer = await _userIsMemberOfTeamWithRole(
+    const isReviewer = await userIsMemberOfTeamWithRoleQuery(
       ctx.user,
       manuscript.id,
       'reviewer',
     )
 
-    const isEditor = await _userIsEditor(ctx.user, manuscript.id)
+    const isEditor = await userIsEditorQuery(ctx.user, manuscript.id)
 
     if (channel.type === 'all') {
       return isAuthor || isReviewer || isEditor
@@ -114,7 +111,7 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
   },
 )
 
-const user_is_review_author_and_review_is_not_completed = rule({
+const userIsReviewAuthorAndReviewIsNotCompleted = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
   let manuscriptId
@@ -147,7 +144,7 @@ const user_is_review_author_and_review_is_not_completed = rule({
   return false
 })
 
-const user_is_editor_of_the_manuscript_of_the_review = rule({
+const userIsEditorOfTheManuscriptOfTheReview = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
   let manuscriptId
@@ -158,10 +155,10 @@ const user_is_editor_of_the_manuscript_of_the_review = rule({
     ;({ manuscriptId } = args.input)
   }
 
-  return _userIsEditor(ctx.user, manuscriptId)
+  return userIsEditorQuery(ctx.user, manuscriptId)
 })
 
-const user_is_invited_reviewer = rule({ cache: 'strict' })(
+const userIsInvitedReviewer = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     const team = await ctx.models.Team.query().findById(args.teamId)
 
@@ -174,7 +171,7 @@ const user_is_invited_reviewer = rule({ cache: 'strict' })(
   },
 )
 
-const user_is_author = rule({ cache: 'strict' })(
+const userIsAuthor = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     const team = await ctx.models.Team.query()
       .where({
@@ -192,7 +189,7 @@ const user_is_author = rule({ cache: 'strict' })(
   },
 )
 
-const user_is_author_of_files_associated_manuscript = rule({
+const userIsAuthorOfFilesAssociatedManuscript = rule({
   cache: 'no_cache',
 })(async (parent, args, ctx, info) => {
   let manuscriptId
@@ -232,7 +229,7 @@ const user_is_author_of_files_associated_manuscript = rule({
   return false
 })
 
-const user_is_author_of_the_manuscript_of_the_file = rule({ cache: 'strict' })(
+const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     if (!ctx.user) {
       return false
@@ -266,11 +263,9 @@ const user_is_author_of_the_manuscript_of_the_file = rule({ cache: 'strict' })(
 )
 
 // ¯\_(ツ)_/¯
-const user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_complete = rule(
-  {
-    cache: 'strict',
-  },
-)(async (parent, args, ctx, info) => {
+const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
+  cache: 'strict',
+})(async (parent, args, ctx, info) => {
   if (!ctx.user) {
     return false
   }
@@ -316,21 +311,21 @@ const permissions = {
   Mutation: {
     upload: isAuthenticated,
     createManuscript: isAuthenticated,
-    updateManuscript: user_is_author,
-    submitManuscript: user_is_author,
+    updateManuscript: userIsAuthor,
+    submitManuscript: userIsAuthor,
     createMessage: userIsAllowedToChat,
     updateReview: or(
-      user_is_review_author_and_review_is_not_completed,
-      user_is_editor_of_the_manuscript_of_the_review,
+      userIsReviewAuthorAndReviewIsNotCompleted,
+      userIsEditorOfTheManuscriptOfTheReview,
     ),
-    reviewerResponse: user_is_invited_reviewer,
+    reviewerResponse: userIsInvitedReviewer,
     completeReview: or(
-      user_is_review_author_and_review_is_not_completed,
-      user_is_editor_of_the_manuscript_of_the_review,
+      userIsReviewAuthorAndReviewIsNotCompleted,
+      userIsEditorOfTheManuscriptOfTheReview,
     ),
     createNewVersion: allow,
-    createFile: user_is_author_of_files_associated_manuscript,
-    deleteFile: user_is_author_of_files_associated_manuscript,
+    createFile: userIsAuthorOfFilesAssociatedManuscript,
+    deleteFile: userIsAuthorOfFilesAssociatedManuscript,
   },
   Subscription: {
     messageCreated: userIsAllowedToChat,
@@ -344,16 +339,16 @@ const permissions = {
   Manuscript: allow,
   ManuscriptVersion: allow,
   File: or(
-    parent_manuscript_is_published,
+    parentManuscriptIsPublished,
     or(
-      user_is_author_of_the_manuscript_of_the_file,
-      user_is_the_reviewer_of_the_manuscript_of_the_file_and_review_not_complete,
+      userIsAuthorOfTheManuscriptOfTheFile,
+      userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete,
       userIsEditor,
       userIsAdmin,
     ),
   ),
   UploadResult: allow,
-  Review: or(parent_manuscript_is_published, review_is_by_user),
+  Review: or(parentManuscriptIsPublished, reviewIsByUser),
   ReviewComment: allow,
   Channel: allow,
   Message: allow,
