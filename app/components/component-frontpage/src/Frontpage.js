@@ -1,9 +1,11 @@
+import Accordion from '@pubsweet/ui/src/molecules/Accordion'
 import React, { useContext, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery } from '@apollo/client'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
 import { Container, Placeholder, VisualAbstract } from './style'
+import Wax from '../../wax-collab/src/Editoria'
 
 import {
   Spinner,
@@ -15,8 +17,6 @@ import {
   HeadingWithAction,
   Pagination,
 } from '../../shared'
-
-import { UserAction as Action } from '../../component-manuscripts/src/style'
 
 const Frontpage = ({ history, ...props }) => {
   const [sortName] = useState('created')
@@ -113,11 +113,9 @@ const Frontpage = ({ history, ...props }) => {
                     file =>
                       !skipXSweet(file) && (
                         <p>
-                          <Action
-                            to={`/journal/versions/${manuscript.id}/manuscript`}
-                          >
-                            View Manuscript Text
-                          </Action>
+                          <Accordion label="View Manuscript Text">
+                            <Wax content={manuscript.meta.source} readonly />
+                          </Accordion>
                         </p>
                       ),
                   )}
