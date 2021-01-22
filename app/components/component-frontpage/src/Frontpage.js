@@ -1,4 +1,5 @@
 import React, { useContext, useState } from 'react'
+import PropTypes from 'prop-types'
 import { useQuery } from '@apollo/client'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
@@ -17,14 +18,11 @@ import {
 
 import { UserAction as Action } from '../../component-manuscripts/src/style'
 
-// eslint-disable-next-line react/prop-types
 const Frontpage = ({ history, ...props }) => {
-  // eslint-disable-next-line no-unused-vars
-  const [sortName, setSortName] = useState('created')
-  // eslint-disable-next-line no-unused-vars
-  const [sortDirection, setSortDirection] = useState('DESC')
+  const [sortName] = useState('created')
+  const [sortDirection] = useState('DESC')
   const [page, setPage] = useState(1)
-  const limit = 10
+  const limit = 3
   const sort = sortName && sortDirection && `${sortName}_${sortDirection}`
 
   const skipXSweet = file =>
@@ -72,8 +70,7 @@ const Frontpage = ({ history, ...props }) => {
 
       {frontpage.length > 0 ? (
         frontpage.map(manuscript => (
-          // eslint-disable-next-line react/jsx-key
-          <SectionContent>
+          <SectionContent key={`manuscript-${manuscript.id}`}>
             <SectionHeader>
               <Title>{manuscript.meta.title}</Title>
             </SectionHeader>
@@ -156,6 +153,10 @@ const Frontpage = ({ history, ...props }) => {
       )}
     </Container>
   )
+}
+
+Frontpage.propTypes = {
+  history: PropTypes.node.isRequired,
 }
 
 export default Frontpage

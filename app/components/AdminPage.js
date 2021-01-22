@@ -32,8 +32,6 @@ import { Spinner } from './shared'
 import currentRolesVar from '../shared/currentRolesVar'
 import RolesUpdater from './RolesUpdater'
 
-
-
 const getParams = routerPath => {
   const path = '/journal/versions/:version'
   return matchPath(routerPath, path).params
@@ -74,12 +72,13 @@ PrivateRoute.propTypes = {
   component: PropTypes.node.isRequired,
 }
 
-// eslint-disable-next-line consistent-return
 const updateStuff = data => {
   if (data?.currentUser) {
     // eslint-disable-next-line no-underscore-dangle
     return currentRolesVar(data.currentUser._currentRoles)
   }
+
+  return false
 }
 
 const AdminPage = () => {
@@ -90,8 +89,7 @@ const AdminPage = () => {
   const { loading, error, data } = useQuery(GET_CURRENT_USER, {
     fetchPolicy: 'network-only',
     // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301
-    // eslint-disable-next-line no-shadow
-    onCompleted: useCallback(data => updateStuff(data), []),
+    onCompleted: useCallback(dataTemp => updateStuff(dataTemp), []),
   })
 
   const previousDataRef = useRef(null)
