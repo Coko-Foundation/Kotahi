@@ -362,11 +362,10 @@ const permissions = {
 const fallbackRule = or(userIsAdmin, userIsEditor)
 
 // We only ever need to go two levels down, so no need for recursion
-// eslint-disable-next-line no-shadow
-const addOverrideRule = permissions => {
+const addOverrideRule = perms => {
   const adaptedPermissions = {}
-  Object.keys(permissions).forEach(key1 => {
-    const value = permissions[key1]
+  Object.keys(perms).forEach(key1 => {
+    const value = perms[key1]
 
     if (value.constructor.name !== 'Object') {
       adaptedPermissions[key1] = or(fallbackRule, value)
