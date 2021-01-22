@@ -22,7 +22,7 @@ const Frontpage = ({ history, ...props }) => {
   const [sortName] = useState('created')
   const [sortDirection] = useState('DESC')
   const [page, setPage] = useState(1)
-  const limit = 3
+  const limit = 10
   const sort = sortName && sortDirection && `${sortName}_${sortDirection}`
 
   const skipXSweet = file =>
