@@ -8,6 +8,7 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import { JournalContext } from './xpub-journal/src'
 import { XpubContext } from './xpub-with-context/src'
 
@@ -30,6 +31,8 @@ import { Spinner } from './shared'
 
 import currentRolesVar from '../shared/currentRolesVar'
 import RolesUpdater from './RolesUpdater'
+
+
 
 const getParams = routerPath => {
   const path = '/journal/versions/:version'
@@ -54,7 +57,6 @@ const Root = styled.div`
 `
 
 // TODO: Redirect if token expires
-// eslint-disable-next-line react/prop-types
 const PrivateRoute = ({ component: Component, ...rest }) => (
   <Route
     {...rest}
@@ -67,6 +69,10 @@ const PrivateRoute = ({ component: Component, ...rest }) => (
     }
   />
 )
+
+PrivateRoute.propTypes = {
+  component: PropTypes.node.isRequired,
+}
 
 // eslint-disable-next-line consistent-return
 const updateStuff = data => {
