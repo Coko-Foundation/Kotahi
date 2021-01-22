@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import { useQuery, gql } from '@apollo/client'
 import Manuscript from './Manuscript'
@@ -37,14 +38,16 @@ const query = gql`
   }
 `
 
-// eslint-disable-next-line react/prop-types
 const ManuscriptPage = ({ match, ...props }) => {
   const { data, loading, error } = useQuery(query, {
     variables: {
-      // eslint-disable-next-line react/prop-types
       id: match.params.version,
     },
   })
+
+  ManuscriptPage.propTypes = {
+    match: PropTypes.node.isRequired,
+  }
 
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)

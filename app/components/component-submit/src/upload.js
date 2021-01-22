@@ -1,6 +1,5 @@
 import config from 'config'
 import request from 'pubsweet-client/src/helpers/api'
-// eslint-disable-next-line import/no-extraneous-dependencies
 import gql from 'graphql-tag'
 import currentRolesVar from '../../../shared/currentRolesVar'
 
@@ -204,7 +203,6 @@ export default ({
   journals,
   currentUser,
   setConversion,
-  // eslint-disable-next-line consistent-return
 }) => async files => {
   setConversion({ converting: true })
   let manuscriptData
@@ -251,4 +249,6 @@ export default ({
   } catch (error) {
     setConversion({ error })
   }
+
+  return false
 }

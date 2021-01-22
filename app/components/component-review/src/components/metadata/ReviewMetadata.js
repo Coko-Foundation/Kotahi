@@ -1,4 +1,4 @@
-/* eslint-disable react/prop-types */
+import PropTypes from 'prop-types'
 import React from 'react'
 import styled from 'styled-components'
 import { get } from 'lodash'
@@ -127,6 +127,10 @@ const ReviewMetadata = ({ manuscript: rawManuscript }) => {
       )}
     </SectionContent>
   )
+}
+
+ReviewMetadata.propTypes = {
+  manuscript: PropTypes.node.isRequired,
 }
 
 export default ReviewMetadata
