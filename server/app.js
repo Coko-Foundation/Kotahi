@@ -1,6 +1,5 @@
 /* eslint-disable no-param-reassign */
 /* eslint-disable global-require */
-/* eslint-disable import/no-extraneous-dependencies */
 const path = require('path')
 const config = require('config')
 

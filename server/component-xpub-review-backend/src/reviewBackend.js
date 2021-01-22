@@ -1,5 +1,3 @@
-/* eslint-disable global-require */
-/* eslint-disable import/no-extraneous-dependencies */
 const { pick } = require('lodash')
 const config = require('config')
 const passport = require('passport')
@@ -11,10 +9,10 @@ const { AuthorizationError } = require('@pubsweet/errors')
 
 const authBearer = passport.authenticate('bearer', { session: false })
 
+const { User, Fragment, Team, Collection } = require('@pubsweet/models')
+
 module.exports = app => {
   app.patch('/api/make-invitation', authBearer, async (req, res, next) => {
-    const { User, Fragment, Team, Collection } = require('@pubsweet/models')
-
     try {
       const version = await Fragment.find(req.body.versionId)
       const project = await Collection.find(req.body.projectId)
@@ -110,8 +108,6 @@ module.exports = app => {
 
   app.patch('/api/make-decision', authBearer, async (req, res, next) => {
     try {
-      const { User, Fragment, Collection } = require('@pubsweet/models')
-
       const version = await Fragment.find(req.body.versionId)
       const project = await Collection.find(req.body.projectId)
       const authors = await Promise.all(version.owners.map(id => User.find(id)))
