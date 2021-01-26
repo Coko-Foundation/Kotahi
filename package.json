@@ -24,6 +24,7 @@
     "server:test": "node node_modules/pubsweet-server/src/start",
     "start:server-and-client": "start-test server 'http://localhost:3000/healthcheck' client",
     "start:services": "docker-compose up postgres",
+    "storybook": "coko-storybook",
     "test:all:chrome": "start-test test:server-and-client 4000 test:chrome",
     "test:all:firefox": "start-test test:server-and-client 4000 test:firefox",
     "test:chrome": "cypress run --browser chrome",
@@ -56,6 +57,7 @@
     "bcrypt": "^3.0.6",
     "formik": "^2.0.0",
     "pg-boss": "3.1.7",
+    "prettier": "2.2.1",
     "prosemirror-gapcursor": "^1.1.3",
     "prosemirror-model": "1.11.2"
   },
@@ -146,6 +148,7 @@
     "@babel/preset-env": "7.11.5",
     "@babel/preset-react": "7.10.4",
     "@coko/lint": "^1.4.0",
+    "@coko/storybook": "^1.2.2",
     "babel-core": "7.0.0-bridge.0",
     "babel-jest": "23.6.0",
     "babel-loader": "8.1.0",
