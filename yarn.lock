@@ -3359,12 +3359,21 @@
     lodash "^4.17.4"
     styled-components "^4.1.1"
 
-"@pubsweet/ui@12.6.0", "@pubsweet/ui@^12.6.0":
-  version "12.6.0"
-  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-12.6.0.tgz#52f304b3ac4824fe48a310177769549d019e270c"
-  integrity sha512-QYng7wVCB1ZoJ2AGVvNvf/BizgzEA60cgJXeeUiRykk0AQFqdpF+V/Skh7A8nwdl21knz6Xgoa84BbDQhNBSWQ==
+"@pubsweet/ui-toolkit@^2.3.6":
+  version "2.3.6"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui-toolkit/-/ui-toolkit-2.3.6.tgz#86ef12620167731af608e022ac06cee2f80d3c9c"
+  integrity sha512-eNum2oSJQPw3Ea7Rrr7e0PhwDPKHz8y37NYMqfGe2/bJlIA15Qsh9w3ab0qGn2zjjL/iEPdh44XVY8xQ0Je+aQ==
   dependencies:
-    "@pubsweet/ui-toolkit" "^2.3.2"
+    color "^3.0.0"
+    lodash "^4.17.4"
+    styled-components "^4.1.1"
+
+"@pubsweet/ui@12.6.4", "@pubsweet/ui@^12.6.0":
+  version "12.6.4"
+  resolved "https://registry.yarnpkg.com/@pubsweet/ui/-/ui-12.6.4.tgz#f448f97c23bc68fbac3f121828911830fe66fb34"
+  integrity sha512-XhiLLnhILpMafY8lYu46ExmT4MPM0oTOGqqov3OtyWfEaLaeAvKsbEInueN3x4Gk8V2ZM4IA9mRZAWcEfDasPA==
+  dependencies:
+    "@pubsweet/ui-toolkit" "^2.3.6"
     enzyme "^3.7.0"
     enzyme-adapter-react-16 "^1.12.1"
     formik "^1.4.2"

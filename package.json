@@ -52,7 +52,7 @@
     "testRegex": "/test/authsome/.*.test.js$"
   },
   "resolutions": {
-    "@pubsweet/ui": "12.6.0",
+    "@pubsweet/ui": "12.6.4",
     "babel-plugin-styled-components": "1.11.1",
     "bcrypt": "^3.0.6",
     "formik": "^2.0.0",
@@ -71,7 +71,7 @@
     "@pubsweet/job-xsweet": "2.1.11",
     "@pubsweet/model-user": "6.0.3",
     "@pubsweet/models": "^0.3.14",
-    "@pubsweet/ui": "12.6.0",
+    "@pubsweet/ui": "12.6.4",
     "@pubsweet/ui-toolkit": "^2.3.5",
     "apollo-link-context": "1.0.20",
     "apollo-link-schema": "1.2.5",
