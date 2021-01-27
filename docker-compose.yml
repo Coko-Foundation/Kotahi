@@ -14,10 +14,11 @@ services:
         './webpack/webpack.development.config.js',
       ]
     ports:
-      - ${CLIENT_PORT:-4000}:8080
+      - ${CLIENT_PORT:-4000}:${CLIENT_PORT:-4000}
     environment:
       - NODE_ENV=development
       - CLIENT_HOST=0.0.0.0
+      - CLIENT_PORT=${CLIENT_PORT:-4000}
       - SERVER_PROTOCOL=http
       - SERVER_HOST=server
       - SERVER_PORT=3000
