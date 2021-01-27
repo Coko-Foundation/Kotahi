@@ -128,8 +128,7 @@ const Frontpage = ({ history, ...props }) => {
                 <div>
                   Submitted research objects:
                   {manuscript.submission?.links?.map(link => (
-                    // eslint-disable-next-line react/jsx-key
-                    <p>
+                    <p key={`manuscript-${manuscript.id}`}>
                       <a
                         href={link.url}
                         rel="noopener noreferrer"
