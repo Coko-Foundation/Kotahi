@@ -8,8 +8,8 @@ const JournalProvider = ({ journal, children }) => (
 )
 
 JournalProvider.propTypes = {
-  journal: PropTypes.node.isRequired,
-  children: PropTypes.node.isRequired,
+  journal: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  children: PropTypes.oneOfType([PropTypes.object]).isRequired,
 }
 
 export { JournalContext, JournalProvider }

@@ -76,18 +76,18 @@ const Frontpage = ({ history, ...props }) => {
             </SectionHeader>
             <SectionRow key={`manuscript-${manuscript.id}`}>
               {manuscript.submission?.abstract ? (
-                <p>Abstract: {manuscript.submission?.abstract}</p>
+                <h1>Abstract: {manuscript.submission?.abstract}</h1>
               ) : (
                 <br />
               )}
               {manuscript.visualAbstract ? (
-                <p>
-                  Visual abstract:{' '}
+                <div>
+                  <h1>Visual abstract</h1>
                   <VisualAbstract
                     alt="Visual abstract"
                     src={manuscript.visualAbstract}
                   />
-                </p>
+                </div>
               ) : (
                 <br />
               )}
@@ -98,25 +98,25 @@ const Frontpage = ({ history, ...props }) => {
                     file =>
                       skipXSweet(file) &&
                       file.fileType !== 'visualAbstract' && (
-                        <p>
-                          <a
-                            href={file.url}
-                            rel="noopener noreferrer"
-                            target="_blank"
-                          >
-                            {file.filename}
-                          </a>
-                        </p>
+                        <a
+                          href={file.url}
+                          key={`manuscript-${manuscript.id}`}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          {file.filename}
+                        </a>
                       ),
                   )}
                   {manuscript.files.map(
                     file =>
                       !skipXSweet(file) && (
-                        <p>
-                          <Accordion label="View Manuscript Text">
-                            <Wax content={manuscript.meta.source} readonly />
-                          </Accordion>
-                        </p>
+                        <Accordion
+                          key={`manuscript-${manuscript.id}`}
+                          label="View Manuscript Text"
+                        >
+                          <Wax content={manuscript.meta.source} readonly />
+                        </Accordion>
                       ),
                   )}
                 </div>
@@ -126,17 +126,16 @@ const Frontpage = ({ history, ...props }) => {
 
               {manuscript.submission?.links ? (
                 <div>
-                  Submitted research objects:
+                  <h1>Submitted research objects</h1>
                   {manuscript.submission?.links?.map(link => (
-                    <p key={`manuscript-${manuscript.id}`}>
-                      <a
-                        href={link.url}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        {link.url}
-                      </a>
-                    </p>
+                    <a
+                      href={link.url}
+                      key={`manuscript-${manuscript.id}`}
+                      rel="noopener noreferrer"
+                      target="_blank"
+                    >
+                      {link.url}
+                    </a>
                   ))}
                 </div>
               ) : (
@@ -153,7 +152,7 @@ const Frontpage = ({ history, ...props }) => {
 }
 
 Frontpage.propTypes = {
-  history: PropTypes.node.isRequired,
+  history: PropTypes.oneOfType([PropTypes.object]).isRequired,
 }
 
 export default Frontpage
