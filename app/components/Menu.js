@@ -1,31 +1,24 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import { th, grid, lighten } from '@pubsweet/ui-toolkit'
 import { Link, useLocation } from 'react-router-dom'
 import { Icon } from '@pubsweet/ui'
-import { UserAvatar } from '../components/component-avatar/src'
+import { UserAvatar } from './component-avatar/src'
 
 const Root = styled.nav`
-  grid-area: menu;
-  padding: ${grid(2)};
-  // display: flex;
-  // align-items: center;
-  // justify-content: space-between;
+  background: linear-gradient(
+    134deg,
+    ${th('colorPrimary')},
+    ${lighten('colorPrimary', 0.3)}
+  );
   border-right: 1px solid ${th('colorFurniture')};
-  // background: ${th('colorPrimary')};
-  // background: linear-gradient(45deg, #191654, #43C6AC);
-  background: linear-gradient(134deg, ${th('colorPrimary')}, ${lighten(
-  'colorPrimary',
-  0.3,
-)});
+  grid-area: menu;
   max-height: 100vh;
+  padding: ${grid(2)};
 `
 
-const Section = styled.div`
-  // display: flex;
-  // align-items: center;
-`
+const Section = styled.div``
 
 // const Logo = styled.span`
 //   // margin: ${grid(2)} 1rem ${grid(2)} 1rem;
@@ -48,32 +41,20 @@ const NavItem = ({ className, link, name, icon }) => (
   </Link>
 )
 
+NavItem.propTypes = {
+  className: PropTypes.string.isRequired,
+  link: PropTypes.string.isRequired,
+  name: PropTypes.string.isRequired,
+  icon: PropTypes.string.isRequired,
+}
+
 const Item = styled(NavItem)`
+  align-items: center;
   border-radius: 10px;
-  padding-left: ${grid(1)};
+  color: ${th('colorTextReverse')};
+  display: flex;
   height: ${grid(5)};
   line-height: ${grid(3)};
-
-  display: flex;
-  align-items: center;
-  color: ${th('colorTextReverse')};
-
-  &:hover {
-    color: ${th('colorText')};
-    stroke: ${th('colorText')};
-    background-color: ${lighten('colorPrimary', 0.5)};
-    svg {
-      stroke: ${th('colorText')};
-
-    }
-  }
-
-  svg {
-    &:hover {
-    }
-    width: 1em;
-    stroke: ${th('colorTextReverse')};
-  }
 
   ${props =>
     props.active &&
@@ -88,26 +69,36 @@ const Item = styled(NavItem)`
         stroke: ${th('colorText')};
       }
     `}
-  // align-items: center;
-  // display: inline-flex;
-  // margin: calc(${th('gridUnit')} * 3) 1rem calc(${th('gridUnit')} * 3) 0;
+
+  padding-left: ${grid(1)};
+
+  svg {
+    stroke: ${th('colorTextReverse')};
+    width: 1em;
+  }
+
+  &:hover {
+    background-color: ${lighten('colorPrimary', 0.5)};
+    color: ${th('colorText')};
+    stroke: ${th('colorText')};
+
+    svg {
+      stroke: ${th('colorText')};
+    }
+  }
 `
 
 const UserItem = styled(Link)`
-  // height: ${grid(5)};
-  // line-height: ${grid(2)};
   color: ${th('colorTextReverse')};
   display: flex;
   padding-bottom: ${grid(2)};
-  // margin-bottom: ${grid(2)};
-  // border-bottom: 1px solid ${th('colorFurniture')};
 `
 
 const UserInfo = styled.div`
-  margin-left: ${grid(1)};
   display: flex;
-  justify-content: center;
   flex-direction: column;
+  justify-content: center;
+  margin-left: ${grid(1)};
 `
 
 const Menu = ({
@@ -116,6 +107,7 @@ const Menu = ({
   navLinkComponents,
   user,
   notice,
+  profileLink,
 }) => {
   const location = useLocation()
   return (
@@ -123,7 +115,11 @@ const Menu = ({
       <Section>
         {/* TODO: Place this notice (used for offline notification) better */}
         {notice}
-        <UserComponent loginLink={loginLink} user={user} />
+        <UserComponent
+          loginLink={loginLink}
+          profileLink={profileLink}
+          user={user}
+        />
         {navLinkComponents &&
           navLinkComponents.map((navInfo, idx) => (
             <Item
@@ -137,10 +133,10 @@ const Menu = ({
   )
 }
 
-const UserComponent = ({ user, loginLink }) => (
+const UserComponent = ({ user, loginLink, profileLink }) => (
   <Section>
     {user && (
-      <UserItem title="Go to your profile" to="/journal/profile">
+      <UserItem title="Go to your profile" to={profileLink}>
         <UserAvatar isClickable={false} size={48} user={user} />
         <UserInfo>
           <p>{user.defaultIdentity.name || user.username}</p>
@@ -154,13 +150,27 @@ const UserComponent = ({ user, loginLink }) => (
   </Section>
 )
 
-// Menu.propTypes = {
-//   brandLink: PropTypes.string,
-//   brand: PropTypes.node,
-//   loginLink: PropTypes.string,
-//   onLogoutClick: PropTypes.func,
-//   user: PropTypes.object,
-//   navLinkComponents: PropTypes.arrayOf(PropTypes.element),
-// }
+Menu.propTypes = {
+  className: PropTypes.string.isRequired,
+  loginLink: PropTypes.string.isRequired,
+  navLinkComponents: PropTypes.arrayOf(PropTypes.object).isRequired,
+  user: PropTypes.oneOfType([PropTypes.object]),
+  notice: PropTypes.node.isRequired,
+  profileLink: PropTypes.string.isRequired,
+}
+
+Menu.defaultProps = {
+  user: undefined,
+}
+
+UserComponent.propTypes = {
+  user: PropTypes.oneOfType([PropTypes.object]),
+  loginLink: PropTypes.string.isRequired,
+  profileLink: PropTypes.string.isRequired,
+}
+
+UserComponent.defaultProps = {
+  user: undefined,
+}
 
 export default Menu

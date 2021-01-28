@@ -11,6 +11,8 @@ import {
 } from '@pubsweet/ui'
 import * as validators from 'xpub-validators'
 import { AbstractEditor } from 'xpub-edit'
+import PropTypes, { array } from 'prop-types'
+import config from 'config'
 import { Section as Container, Select, FilesUpload } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
@@ -74,6 +76,14 @@ elements.AbstractEditor = ({
   />
 )
 
+elements.AbstractEditor.propTypes = {
+  validationStatus: PropTypes.node.isRequired,
+  setTouched: PropTypes.node.isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.node.isRequired,
+  values: PropTypes.node.isRequired,
+}
+
 elements.AuthorsInput = AuthorsInput
 elements.Select = Select
 elements.LinksInput = LinksInput
@@ -81,17 +91,17 @@ elements.LinksInput = LinksInput
 const rejectProps = (obj, keys) =>
   Object.keys(obj)
     .filter(k => !keys.includes(k))
-    .map(k => Object.assign({}, { [k]: obj[k] }))
+    .map(k => ({ [k]: obj[k] }))
     .reduce(
       (res, o) =>
-        Object.values(o).includes('false')
-          ? Object.assign({}, res)
-          : Object.assign(res, o),
+        Object.values(o).includes('false') ? { ...res } : Object.assign(res, o),
       {},
     )
 
+const urlFrag = config.journal.metadata.toplevel_urlfragment
+
 const link = (journal, manuscript) =>
-  String.raw`<a href=/journal/versions/${manuscript.id}/manuscript>view here</a>`
+  String.raw`<a href=${urlFrag}/versions/${manuscript.id}/manuscript>view here</a>`
 
 const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),
@@ -109,16 +119,18 @@ const composeValidate = (vld = [], valueField = {}) => value => {
         validatorFn === 'required'
           ? validators[validatorFn](value)
           : validators[validatorFn](valueField[validatorFn])(value)
+
       if (error) {
         errors.push(error)
       }
+
       return validatorFn
     })
   return errors.length > 0 ? errors[0] : undefined
 }
 
-const groupElements = elements => {
-  const grouped = groupBy(elements, n => n.group || 'default')
+const groupElements = els => {
+  const grouped = groupBy(els, n => n.group || 'default')
 
   Object.keys(grouped).forEach(element => {
     grouped[element].sort(
@@ -135,7 +147,7 @@ const groupElements = elements => {
     startArr = startArr
       .slice(0, first)
       .concat([grouped[element]])
-      .concat(startArr.slice(first)) // eslint-disable-line no-use-before-define
+      .concat(startArr.slice(first))
   })
   return startArr
 }
@@ -149,6 +161,7 @@ const renderArray = (elementsComponentArray, onChange) => ({
     const element = elementsComponentArray.find(elv =>
       Object.values(elValues).includes(elv.type),
     )
+
     return (
       <Section
         cssOverrides={JSON.parse(element.sectioncss || '{}')}
@@ -180,6 +193,7 @@ const renderArray = (elementsComponentArray, onChange) => ({
               notesType: element.type,
               content: value,
             }
+
             replace(index, data, `${name}.[${index}]`, true)
             const notes = cloneDeep(values)
             set(notes, `${name}.[${index}]`, data)
@@ -195,18 +209,19 @@ const renderArray = (elementsComponentArray, onChange) => ({
     )
   })
 
-const ElementComponentArray = ({
-  elementsComponentArray,
-  onChange,
-  uploadFile,
-}) => (
+const ElementComponentArray = ({ elementsComponentArray, onChange }) => (
   <FieldArray
     name={elementsComponentArray[0].group}
     render={renderArray(elementsComponentArray, onChange)}
   />
 )
 
-export default ({
+ElementComponentArray.propTypes = {
+  elementsComponentArray: PropTypes.oneOfType([array]).isRequired,
+  onChange: PropTypes.func.isRequired,
+}
+
+const FormTemplate = ({
   form,
   handleSubmit,
   journal,
@@ -299,6 +314,7 @@ export default ({
                     onChange={value => {
                       // TODO: Perhaps split components remove conditions here
                       let val
+
                       if (value.target) {
                         val = value.target.value
                       } else if (value.value) {
@@ -306,6 +322,7 @@ export default ({
                       } else {
                         val = value
                       }
+
                       setFieldValue(element.name, val, true)
                       onChange(val, element.name)
                     }}
@@ -338,7 +355,7 @@ export default ({
             <ElementComponentArray
               elementsComponentArray={element}
               // eslint-disable-next-line
-            key={i}
+              key={i}
               onChange={onChange}
               setFieldValue={setFieldValue}
               setTouched={setTouched}
@@ -384,3 +401,23 @@ export default ({
     </Container>
   )
 }
+
+FormTemplate.propTypes = {
+  form: PropTypes.element.isRequired,
+  handleSubmit: PropTypes.element.isRequired,
+  journal: PropTypes.element.isRequired,
+  toggleConfirming: PropTypes.element.isRequired,
+  confirming: PropTypes.element.isRequired,
+  manuscript: PropTypes.element.isRequired,
+  setTouched: PropTypes.element.isRequired,
+  values: PropTypes.element.isRequired,
+  setFieldValue: PropTypes.element.isRequired,
+  createSupplementaryFile: PropTypes.element.isRequired,
+  onChange: PropTypes.element.isRequired,
+  onSubmit: PropTypes.element.isRequired,
+  submitSubmission: PropTypes.element.isRequired,
+  errors: PropTypes.element.isRequired,
+  validateForm: PropTypes.element.isRequired,
+}
+
+export default FormTemplate

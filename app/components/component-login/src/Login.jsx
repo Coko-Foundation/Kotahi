@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import config from 'config'
 import { th, grid, lighten } from '@pubsweet/ui-toolkit'
-import { H1, Button } from '@pubsweet/ui'
+import { Button } from '@pubsweet/ui'
 import styled from 'styled-components'
 
 const getNextUrl = () => {
@@ -19,9 +19,11 @@ const getNextUrl = () => {
 
 const getToken = props => {
   const { location } = props
+
   if (location && location.search && location.search.match(/^\?token=/)) {
     return location.search.replace(/^\?token=/, '')
   }
+
   return null
 }
 
@@ -56,10 +58,10 @@ const Content = styled.div`
   }
   margin-bottom: 1rem;
   img {
-    max-width:475px;
-    max-height:307px;
-    width:auto;
-    height:auto;
+    max-width: 475px;
+    max-height: 307px;
+    width: auto;
+    height: auto;
   }
 `
 
