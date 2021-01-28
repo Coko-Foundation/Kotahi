@@ -154,5 +154,4 @@ Dashboard.propTypes = {
   history: ReactRouterPropTypes.history.isRequired,
 }
 
-
 export default Dashboard

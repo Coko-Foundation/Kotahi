@@ -7,7 +7,6 @@ import { Item } from '../../style'
 
 import VersionTitle from './VersionTitle'
 
-
 // TODO: only return links if version id is in reviewer.accepted array
 // TODO: only return actions if not accepted or rejected
 // TODO: review id in link
