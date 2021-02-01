@@ -22,11 +22,17 @@ ARG node_env
 ARG server_protocol
 ARG server_host
 ARG server_port
+ARG client_protocol
+ARG client_host
+ARG client_port
 
 ENV NODE_ENV=$node_env
 ENV SERVER_PROTOCOL=$server_protocol
 ENV SERVER_HOST=$server_host
 ENV SERVER_PORT=$server_port
+ENV CLIENT_PROTOCOL=$client_protocol
+ENV CLIENT_HOST=$client_host
+ENV CLIENT_PORT=$client_port
 
 RUN yarn pubsweet build
 

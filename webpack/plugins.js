@@ -5,8 +5,8 @@ const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CopyWebpackPlugin = require('copy-webpack-plugin')
 const CompressionPlugin = require('compression-webpack-plugin')
 const HtmlWebpackPlugin = require('html-webpack-plugin')
-const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
-  .BundleAnalyzerPlugin
+// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer')
+//   .BundleAnalyzerPlugin
 
 module.exports = (opts = {}) => {
   const plugins = []
@@ -38,9 +38,15 @@ module.exports = (opts = {}) => {
   }
 
   plugins.push(
-    new webpack.DefinePlugin({
-      'process.env.NODE_ENV': `"${opts.env}"`,
-    }),
+    new webpack.EnvironmentPlugin([
+      'NODE_ENV',
+      'SERVER_PROTOCOL',
+      'SERVER_HOST',
+      'SERVER_PORT',
+      'CLIENT_PROTOCOL',
+      'CLIENT_HOST',
+      'CLIENT_PORT',
+    ]),
   )
 
   // put dynamically required modules into the build

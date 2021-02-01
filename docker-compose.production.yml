@@ -11,6 +11,9 @@ services:
         - server_protocol=${SERVER_PROTOCOL}
         - server_host=${SERVER_HOST}
         - server_port=${SERVER_PORT}
+        - client_protocol=${CLIENT_PROTOCOL}
+        - client_host=${CLIENT_HOST}
+        - client_port=${CLIENT_PORT}
     ports:
       - ${SERVER_PORT:-3000}:${SERVER_PORT:-3000}
     environment:
