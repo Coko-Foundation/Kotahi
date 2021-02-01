@@ -48,6 +48,7 @@ COPY --chown=node:node ./config ./config
 COPY --chown=node:node ./public ./public
 COPY --chown=node:node ./scripts ./scripts
 COPY --chown=node:node ./server ./server
+COPY --chown=node:node ./app/storage ./app/storage
 COPY --chown=node:node ./startServer.js .
 
 COPY --from=build /home/node/app/_build/assets ./_build
