@@ -74,13 +74,11 @@ const Frontpage = ({ history, ...props }) => {
             <SectionHeader>
               <Title>{manuscript.meta.title}</Title>
             </SectionHeader>
-            <SectionRow key={`manuscript-${manuscript.id}`}>
-              {manuscript.submission?.abstract ? (
+            <SectionRow>
+              {manuscript.submission?.abstract && (
                 <h1>Abstract: {manuscript.submission?.abstract}</h1>
-              ) : (
-                <br />
               )}
-              {manuscript.visualAbstract ? (
+              {manuscript.visualAbstract && (
                 <div>
                   <h1>Visual abstract</h1>
                   <VisualAbstract
@@ -88,11 +86,9 @@ const Frontpage = ({ history, ...props }) => {
                     src={manuscript.visualAbstract}
                   />
                 </div>
-              ) : (
-                <br />
               )}
 
-              {manuscript.files.length > 0 ? (
+              {manuscript.files.length > 0 && (
                 <div>
                   {manuscript.files.map(
                     file =>
@@ -100,7 +96,7 @@ const Frontpage = ({ history, ...props }) => {
                       file.fileType !== 'visualAbstract' && (
                         <a
                           href={file.url}
-                          key={`manuscript-${manuscript.id}`}
+                          key={`file-${file.id}`}
                           rel="noopener noreferrer"
                           target="_blank"
                         >
@@ -112,7 +108,7 @@ const Frontpage = ({ history, ...props }) => {
                     file =>
                       !skipXSweet(file) && (
                         <Accordion
-                          key={`manuscript-${manuscript.id}`}
+                          key={`file-${file.id}`}
                           label="View Manuscript Text"
                         >
                           <Wax content={manuscript.meta.source} readonly />
@@ -120,11 +116,9 @@ const Frontpage = ({ history, ...props }) => {
                       ),
                   )}
                 </div>
-              ) : (
-                <br />
               )}
 
-              {manuscript.submission?.links ? (
+              {manuscript.submission?.links && (
                 <div>
                   <h1>Submitted research objects</h1>
                   {manuscript.submission?.links?.map(link => (
@@ -138,8 +132,6 @@ const Frontpage = ({ history, ...props }) => {
                     </a>
                   ))}
                 </div>
-              ) : (
-                <br />
               )}
             </SectionRow>
           </SectionContent>

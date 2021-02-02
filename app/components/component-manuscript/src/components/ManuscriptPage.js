@@ -1,6 +1,6 @@
-import PropTypes from 'prop-types'
 import React from 'react'
 import { useQuery, gql } from '@apollo/client'
+import ReactRouterPropTypes from 'react-router-prop-types'
 import Manuscript from './Manuscript'
 import { Spinner } from '../../../shared'
 
@@ -46,7 +46,7 @@ const ManuscriptPage = ({ match, ...props }) => {
   })
 
   ManuscriptPage.propTypes = {
-    match: PropTypes.node.isRequired,
+    match: ReactRouterPropTypes.match.isRequired,
   }
 
   if (loading) return <Spinner />
