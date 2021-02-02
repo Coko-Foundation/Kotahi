@@ -74,7 +74,7 @@ const Frontpage = ({ history, ...props }) => {
             <SectionHeader>
               <Title>{manuscript.meta.title}</Title>
             </SectionHeader>
-            <SectionRow key={`manuscript-${manuscript.id}`}>
+            <SectionRow>
               {manuscript.submission?.abstract ? (
                 <h1>Abstract: {manuscript.submission?.abstract}</h1>
               ) : (
