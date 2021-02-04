@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { ApolloConsumer } from '@apollo/client'
 import config from 'config'
 import { Container, Content, UploadContainer, Heading } from '../style'
@@ -35,4 +36,9 @@ const Dashboard = props => {
     </Container>
   )
 }
+
+Dashboard.propTypes = {
+  history: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+}
+
 export default Dashboard

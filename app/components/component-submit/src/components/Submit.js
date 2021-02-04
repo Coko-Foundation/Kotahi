@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Formik } from 'formik'
 import { set } from 'lodash'
 import CurrentVersion from './CurrentVersion'
@@ -36,6 +37,15 @@ const SubmittedVersion = ({ manuscript, currentVersion, createNewVersion }) => {
   )
 }
 
+SubmittedVersion.propTypes = {
+  manuscript: PropTypes.objectOf(PropTypes.any),
+  currentVersion: PropTypes.bool.isRequired,
+  createNewVersion: PropTypes.bool.isRequired,
+}
+SubmittedVersion.defaultProps = {
+  manuscript: undefined,
+}
+
 const Submit = ({
   versions = [],
   form,
@@ -69,12 +79,14 @@ const Submit = ({
     let decisionSection
 
     if (['new', 'revising'].includes(manuscript.status)) {
-      const versionValues = Object.assign({}, manuscript, {
+      const versionValues = {
+        ...manuscript,
         submission: Object.assign(
           initialValues.submission,
           JSON.parse(manuscript.submission),
         ),
-      })
+      }
+
       decisionSection = {
         content: (
           <SectionContent noGap>
@@ -122,6 +134,7 @@ const Submit = ({
         label: 'Submitted info',
       }
     }
+
     decisionSections.push({
       content: (
         <Tabs
@@ -136,6 +149,7 @@ const Submit = ({
 
   // Protect if channels don't exist for whatever reason
   let channelId
+
   if (Array.isArray(parent.channels) && parent.channels.length) {
     channelId = parent.channels.find(c => c.type === 'all').id
   }
@@ -152,6 +166,57 @@ const Submit = ({
       </Chat>
     </Columns>
   )
+}
+
+Submit.propTypes = {
+  versions: PropTypes.arrayOf(
+    PropTypes.shape({
+      manuscript: PropTypes.objectOf(PropTypes.any),
+      label: PropTypes.string,
+    }),
+  ).isRequired,
+  form: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    children: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        sectioncss: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        component: PropTypes.string.isRequired,
+        group: PropTypes.string,
+        order: PropTypes.string, // number as string
+        placeholder: PropTypes.string,
+        validate: PropTypes.arrayOf(PropTypes.object.isRequired),
+        validateValue: PropTypes.objectOf(
+          PropTypes.oneOfType([
+            PropTypes.string.isRequired,
+            PropTypes.number.isRequired,
+          ]).isRequired,
+        ),
+      }).isRequired,
+    ).isRequired,
+    popuptitle: PropTypes.string.isRequired,
+    popupdescription: PropTypes.string.isRequired,
+    haspopup: PropTypes.string.isRequired, // bool as string
+  }).isRequired,
+  createNewVersion: PropTypes.func.isRequired,
+  toggleConfirming: PropTypes.func.isRequired,
+  confirming: PropTypes.bool.isRequired,
+  parent: PropTypes.shape({
+    channels: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        type: PropTypes.string.isRequired,
+      }),
+    ),
+  }),
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
+}
+Submit.defaultProps = {
+  parent: undefined,
 }
 
 export default Submit

@@ -79,6 +79,7 @@
     "config": "3.3.2",
     "faker": "4.1.0",
     "font-awesome": "4.7.0",
+    "formik": "^2.2.6",
     "fs-extra": "4.0.3",
     "got": "11.7.0",
     "graphql": "14.7.0",

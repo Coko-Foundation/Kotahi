@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { unescape, groupBy, isArray, get, set, cloneDeep } from 'lodash'
 import { FieldArray } from 'formik'
@@ -74,6 +75,18 @@ elements.AbstractEditor = ({
   />
 )
 
+elements.AbstractEditor.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  validationStatus: PropTypes.any, // Currently unused
+  setTouched: PropTypes.func.isRequired,
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.string.isRequired,
+  values: PropTypes.objectOf(PropTypes.string).isRequired,
+}
+elements.AbstractEditor.defaultProps = {
+  validationStatus: undefined,
+}
+
 elements.AuthorsInput = AuthorsInput
 elements.Select = Select
 elements.LinksInput = LinksInput
@@ -81,12 +94,12 @@ elements.LinksInput = LinksInput
 const rejectProps = (obj, keys) =>
   Object.keys(obj)
     .filter(k => !keys.includes(k))
-    .map(k => Object.assign({}, { [k]: obj[k] }))
+    .map(k => {
+      return { [k]: obj[k] }
+    })
     .reduce(
       (res, o) =>
-        Object.values(o).includes('false')
-          ? Object.assign({}, res)
-          : Object.assign(res, o),
+        Object.values(o).includes('false') ? { ...res } : Object.assign(res, o),
       {},
     )
 
@@ -109,16 +122,18 @@ const composeValidate = (vld = [], valueField = {}) => value => {
         validatorFn === 'required'
           ? validators[validatorFn](value)
           : validators[validatorFn](valueField[validatorFn])(value)
+
       if (error) {
         errors.push(error)
       }
+
       return validatorFn
     })
   return errors.length > 0 ? errors[0] : undefined
 }
 
-const groupElements = elements => {
-  const grouped = groupBy(elements, n => n.group || 'default')
+const groupElements = elems => {
+  const grouped = groupBy(elems, n => n.group || 'default')
 
   Object.keys(grouped).forEach(element => {
     grouped[element].sort(
@@ -149,6 +164,7 @@ const renderArray = (elementsComponentArray, onChange) => ({
     const element = elementsComponentArray.find(elv =>
       Object.values(elValues).includes(elv.type),
     )
+
     return (
       <Section
         cssOverrides={JSON.parse(element.sectioncss || '{}')}
@@ -180,6 +196,7 @@ const renderArray = (elementsComponentArray, onChange) => ({
               notesType: element.type,
               content: value,
             }
+
             replace(index, data, `${name}.[${index}]`, true)
             const notes = cloneDeep(values)
             set(notes, `${name}.[${index}]`, data)
@@ -206,7 +223,14 @@ const ElementComponentArray = ({
   />
 )
 
-export default ({
+ElementComponentArray.propTypes = {
+  elementsComponentArray: PropTypes.arrayOf(PropTypes.object).isRequired,
+  onChange: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  uploadFile: PropTypes.any.isRequired, // Currently unused and unsupplied.
+}
+
+const FormTemplate = ({
   form,
   handleSubmit,
   journal,
@@ -222,7 +246,6 @@ export default ({
   submitSubmission,
   errors,
   validateForm,
-  ...props
 }) => {
   const submitButton = text => (
     <div>
@@ -299,6 +322,7 @@ export default ({
                     onChange={value => {
                       // TODO: Perhaps split components remove conditions here
                       let val
+
                       if (value.target) {
                         val = value.target.value
                       } else if (value.value) {
@@ -306,6 +330,7 @@ export default ({
                       } else {
                         val = value
                       }
+
                       setFieldValue(element.name, val, true)
                       onChange(val, element.name)
                     }}
@@ -338,7 +363,7 @@ export default ({
             <ElementComponentArray
               elementsComponentArray={element}
               // eslint-disable-next-line
-            key={i}
+              key={i}
               onChange={onChange}
               setFieldValue={setFieldValue}
               setTouched={setTouched}
@@ -384,3 +409,66 @@ export default ({
     </Container>
   )
 }
+
+FormTemplate.propTypes = {
+  form: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    children: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        sectioncss: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        component: PropTypes.string.isRequired,
+        group: PropTypes.string,
+        order: PropTypes.string, // number as string
+        placeholder: PropTypes.string,
+        validate: PropTypes.arrayOf(PropTypes.object.isRequired),
+        validateValue: PropTypes.objectOf(
+          PropTypes.oneOfType([
+            PropTypes.string.isRequired,
+            PropTypes.number.isRequired,
+          ]).isRequired,
+        ),
+      }).isRequired,
+    ).isRequired,
+    popuptitle: PropTypes.string.isRequired,
+    popupdescription: PropTypes.string.isRequired,
+    haspopup: PropTypes.string.isRequired, // bool as string
+  }).isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  journal: PropTypes.any, // currently unused
+  toggleConfirming: PropTypes.func.isRequired,
+  confirming: PropTypes.bool.isRequired,
+  manuscript: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+  setTouched: PropTypes.func.isRequired,
+  values: PropTypes.shape({
+    files: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string,
+        url: PropTypes.string.isRequired,
+      }).isRequired,
+    ).isRequired,
+    status: PropTypes.string,
+  }).isRequired,
+  setFieldValue: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  createSupplementaryFile: PropTypes.any, // currently unused
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func,
+  submitSubmission: PropTypes.func,
+  errors: PropTypes.objectOf(PropTypes.any).isRequired,
+  validateForm: PropTypes.func.isRequired,
+}
+FormTemplate.defaultProps = {
+  journal: undefined,
+  onSubmit: undefined,
+  submitSubmission: undefined,
+  createSupplementaryFile: undefined,
+}
+
+export default FormTemplate
