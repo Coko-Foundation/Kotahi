@@ -1,7 +1,7 @@
 import Accordion from '@pubsweet/ui/src/molecules/Accordion'
 import React, { useContext, useState } from 'react'
-import PropTypes from 'prop-types'
 import { useQuery } from '@apollo/client'
+import ReactRouterPropTypes from 'react-router-prop-types'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
 import { Container, Placeholder, VisualAbstract } from './style'
@@ -144,7 +144,7 @@ const Frontpage = ({ history, ...props }) => {
 }
 
 Frontpage.propTypes = {
-  history: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
 }
 
 export default Frontpage
