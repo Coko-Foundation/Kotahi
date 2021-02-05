@@ -1,10 +1,9 @@
-/* eslint-disable react/prop-types */
 /* eslint-disable no-underscore-dangle */
-/* eslint-disable no-param-reassign */
-
 import React from 'react'
 import styled from 'styled-components'
 import { Action, ActionGroup } from '@pubsweet/ui'
+import config from 'config'
+import PropTypes from 'prop-types'
 import { Item, StatusBadge } from '../../style'
 import Meta from '../metadata/Meta'
 import MetadataSubmittedDate from '../metadata/MetadataSubmittedDate'
@@ -27,14 +26,16 @@ const getUserFromTeam = (version, role) => {
   return teams.length ? teams[0].members : []
 }
 
+const urlFrag = config.journal.metadata.toplevel_urlfragment
+
 const EditorItemLinks = ({ version }) => (
   <ActionGroup>
-    <Action to={`/journal/versions/${version.parentId || version.id}/submit`}>
+    <Action to={`${urlFrag}/versions/${version.parentId || version.id}/submit`}>
       Summary Info
     </Action>
     <Action
       data-testid="control-panel"
-      to={`/journal/versions/${version.parentId || version.id}/decision`}
+      to={`${urlFrag}/versions/${version.parentId || version.id}/decision`}
     >
       {version.decision && version.decision.status === 'submitted'
         ? `Decision: ${version.decision.recommendation}`
@@ -43,7 +44,12 @@ const EditorItemLinks = ({ version }) => (
   </ActionGroup>
 )
 
+EditorItemLinks.propTypes = {
+  version: PropTypes.element.isRequired,
+}
+
 const getDeclarationsObject = (version, value) => {
+  // eslint-disable-next-line no-param-reassign
   if (!version.meta) version.meta = {}
   const declarations = version.meta.declarations || {}
 
@@ -94,5 +100,9 @@ const EditorItem = ({ version }) => (
 
   // </Authorize>
 )
+
+EditorItem.propTypes = {
+  version: PropTypes.element.isRequired,
+}
 
 export default EditorItem

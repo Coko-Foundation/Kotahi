@@ -136,7 +136,7 @@ module.exports = {
   },
   'pubsweet-client': {
     API_ENDPOINT: '/api',
-    'login-redirect': '/journal/dashboard',
+    'login-redirect': `${journal.metadata.toplevel_urlfragment}/dashboard`,
     theme: process.env.PUBSWEET_THEME,
     baseUrl: deferConfig(cfg => {
       const { protocol, host, port } = cfg['pubsweet-client']

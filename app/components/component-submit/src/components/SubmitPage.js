@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import { debounce, cloneDeep, set } from 'lodash'
 import { gql, useQuery, useMutation } from '@apollo/client'
+import config from 'config'
+import ReactRouterPropTypes from 'react-router-prop-types'
 import Submit from './Submit'
 import { Spinner } from '../../../shared'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
@@ -170,11 +172,13 @@ const createNewVersionMutation = gql`
   }
 `
 
+const urlFrag = config.journal.metadata.toplevel_urlfragment
+
 const SubmitPage = ({ match, history, ...props }) => {
   const [confirming, setConfirming] = useState(false)
 
   const toggleConfirming = () => {
-    setConfirming(confirming => !confirming)
+    setConfirming(confirm => !confirm)
   }
 
   const { data, loading, error } = useQuery(query, {
@@ -192,11 +196,11 @@ const SubmitPage = ({ match, history, ...props }) => {
   const manuscript = data?.manuscript
   const form = data?.getFile
 
-  const updateManuscript = (versionId, manuscript) =>
+  const updateManuscript = (versionId, manuscriptInput) =>
     update({
       variables: {
         id: versionId,
-        input: JSON.stringify(manuscript),
+        input: JSON.stringify(manuscriptInput),
       },
     })
 
@@ -211,18 +215,18 @@ const SubmitPage = ({ match, history, ...props }) => {
     return debouncers[path](versionId, input)
   }
 
-  const onSubmit = async (versionId, manuscript) => {
-    const updateManuscript = {
+  const onSubmit = async versionId => {
+    const updateManuscriptInput = {
       status: 'submitted',
     }
 
     await submit({
       variables: {
         id: versionId,
-        input: JSON.stringify(updateManuscript),
+        input: JSON.stringify(updateManuscriptInput),
       },
     })
-    history.push('/journal/dashboard')
+    history.push(`${urlFrag}/dashboard`)
   }
 
   const versions = gatherManuscriptVersions(manuscript)
@@ -240,6 +244,11 @@ const SubmitPage = ({ match, history, ...props }) => {
       {...props}
     />
   )
+}
+
+SubmitPage.propTypes = {
+  history: ReactRouterPropTypes.history.isRequired,
+  match: ReactRouterPropTypes.match.isRequired,
 }
 
 export default SubmitPage

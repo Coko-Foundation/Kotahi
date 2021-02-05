@@ -3,7 +3,9 @@ import { useMutation, useQuery } from '@apollo/client'
 import gql from 'graphql-tag'
 import { Formik } from 'formik'
 // import { cloneDeep } from 'lodash'
-import ReviewLayout from '../components/review/ReviewLayout'
+import config from 'config'
+import ReactRouterPropTypes from 'react-router-prop-types'
+import ReviewLayout from './review/ReviewLayout'
 import { Spinner } from '../../../shared'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
 
@@ -152,7 +154,9 @@ const updateReviewMutationQuery = gql`
   }
 `
 
-export default ({ match, ...props }) => {
+const urlFrag = config.journal.metadata.toplevel__urlfragment
+
+const ReviewPage = ({ match, ...props }) => {
   const currentUser = useCurrentUser()
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
   const [completeReview] = useMutation(completeReviewMutation)
@@ -186,13 +190,11 @@ export default ({ match, ...props }) => {
   const { manuscript } = data
   const channelId = manuscript.channels.find(c => c.type === 'editorial').id
 
-  // eslint-disable-next-line
-  const status = (
+  const { status } =
     (
       (manuscript.teams.find(team => team.role === 'reviewer') || {}).status ||
       []
-    ).find(status => status.user === currentUser.id) || {}
-  ).status
+    ).find(statusTemp => statusTemp.user === currentUser.id) || {}
 
   const updateReview = (review, file) => {
     const reviewData = {
@@ -215,13 +217,13 @@ export default ({ match, ...props }) => {
         id: existingReview.current.id || undefined,
         input: reviewData,
       },
-      update: (cache, { data: { updateReview } }) => {
+      update: (cache, { data: { updateReviewTemp } }) => {
         cache.modify({
           id: cache.identify(manuscript),
           fields: {
             reviews(existingReviewRefs = [], { readField }) {
               const newReviewRef = cache.writeFragment({
-                data: updateReview,
+                data: updateReviewTemp,
                 fragment: gql`
                   fragment NewReview on Review {
                     id
@@ -252,7 +254,7 @@ export default ({ match, ...props }) => {
       },
     })
 
-    history.push('/journal/dashboard')
+    history.push(`${urlFrag}/dashboard`)
   }
 
   return (
@@ -296,3 +298,10 @@ export default ({ match, ...props }) => {
     </Formik>
   )
 }
+
+ReviewPage.propTypes = {
+  match: ReactRouterPropTypes.match.isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+}
+
+export default ReviewPage

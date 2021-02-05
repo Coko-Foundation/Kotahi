@@ -1,6 +1,7 @@
 import React from 'react'
 import { Route, Switch } from 'react-router-dom'
 
+import config from 'config'
 import Login from './components/component-login/src'
 
 import AdminPage from './components/AdminPage'
@@ -13,7 +14,7 @@ import {
 export default (
   <Switch>
     {/* AdminPage has nested routes within */}
-    <Route path="/journal">
+    <Route path={config.journal.metadata.toplevel_urlfragment}>
       <AdminPage />
     </Route>
     <Route component={Login} path="/login" />
