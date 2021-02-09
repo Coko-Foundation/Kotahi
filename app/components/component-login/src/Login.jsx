@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { Redirect } from 'react-router-dom'
 import config from 'config'
 import { th, grid, lighten } from '@pubsweet/ui-toolkit'
-import { H1, Button } from '@pubsweet/ui'
+import { Button } from '@pubsweet/ui'
 import styled from 'styled-components'
 
 const getNextUrl = () => {
@@ -57,6 +57,12 @@ const Content = styled.div`
     margin-bottom: ${grid(2)};
   }
   margin-bottom: 1rem;
+  img {
+    max-width: 475px;
+    max-height: 307px;
+    width: auto;
+    height: auto;
+  }
 `
 
 const Centered = styled.div`
@@ -114,10 +120,9 @@ const Login = ({ logo = null, ...props }) => {
           {journalName === 'Aperture' && (
             <img alt="Aperture" src="/public/logo-aperture.png" />
           )}
-          <H1>Login to {journalName}</H1>
-          {journalName} uses ORCID <StyledORCIDIcon /> to identify authors and
-          staff. Login with your ORCID account below or{' '}
-          <a href="https://orcid.org/signin">register at the ORCID website.</a>
+          {journalName === 'Kotahi' && (
+            <img alt="Kotahi" src="/public/logo-kotahi.png" />
+          )}
           <LoginButton
             onClick={() => (window.location = '/auth/orcid')}
             primary
@@ -125,7 +130,6 @@ const Login = ({ logo = null, ...props }) => {
             Login with ORCID
           </LoginButton>
         </Content>
-        <div>Powered by Kotahi</div>
       </Centered>
     </Container>
   )

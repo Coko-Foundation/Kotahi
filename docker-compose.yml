@@ -21,7 +21,7 @@ services:
       - CLIENT_PORT=${CLIENT_PORT:-4000}
       - SERVER_PROTOCOL=http
       - SERVER_HOST=server
-      - SERVER_PORT=3000
+      - SERVER_PORT=${SERVER_PORT:-3000}
     volumes:
       - ./app:/home/node/app/app
       - ./config:/home/node/app/config

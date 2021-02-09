@@ -3,6 +3,8 @@ import request from 'pubsweet-client/src/helpers/api'
 import gql from 'graphql-tag'
 import currentRolesVar from '../../../shared/currentRolesVar'
 
+const urlFrag = config.journal.metadata.toplevel_urlfragment
+
 const generateTitle = name =>
   name
     .replace(/[_-]+/g, ' ') // convert hyphens/underscores to space
@@ -184,7 +186,7 @@ const createManuscriptPromise = (
 
 const redirectPromise = (setConversionState, journals, history, data) => {
   setConversionState(() => ({ converting: false, completed: true }))
-  const route = `/journal/versions/${data.createManuscript.id}/submit`
+  const route = `${urlFrag}/versions/${data.createManuscript.id}/submit`
   // redirect after a short delay
   window.setTimeout(() => {
     history.push(route)
