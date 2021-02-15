@@ -110,6 +110,7 @@ const Login = ({ logo = null, ...props }) => {
   }
 
   const journalName = config.journal.metadata.name
+
   return redirectLink ? (
     <Redirect to={redirectLink} />
   ) : (

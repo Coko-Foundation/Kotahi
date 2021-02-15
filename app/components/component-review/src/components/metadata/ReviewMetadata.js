@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types'
 import React from 'react'
 import styled from 'styled-components'
 import { get } from 'lodash'
@@ -11,9 +12,9 @@ import { SectionContent } from '../../../../shared'
 
 const Heading = styled.span`
   font-weight: inherit;
+  overflow: hidden;
   padding: 0 1em 0 0;
   text-overflow: ellipsis;
-  overflow: hidden;
   white-space: nowrap;
 `
 
@@ -30,8 +31,8 @@ const Heading = styled.span`
 // `
 
 const Cell = styled.span`
-  padding: 0;
   grid-column: span 2 / span 2;
+  padding: 0;
 `
 
 const getNote = (notes, type) =>
@@ -45,6 +46,7 @@ const getSupplementaryFiles = supplementary =>
 
 const showFieldData = (manuscript, fieldName) => {
   const data = get(manuscript, fieldName)
+
   // TODO: Make this generic somehow. Perhaps with an additional fieldType?
   if (Array.isArray(data) && fieldName === 'submission.links') {
     return data.map(link => (
@@ -54,11 +56,15 @@ const showFieldData = (manuscript, fieldName) => {
         </a>
       </p>
     ))
-  } else if (Array.isArray(data)) {
+  }
+
+  if (Array.isArray(data)) {
     return data.join(', ')
   }
+
   return data
 }
+
 // Due to migration to new Data Model
 // Attachement component needs different data structure to work
 // needs to change the pubsweet ui Attachement to support the new Data Model
@@ -121,6 +127,10 @@ const ReviewMetadata = ({ manuscript: rawManuscript }) => {
       )}
     </SectionContent>
   )
+}
+
+ReviewMetadata.propTypes = {
+  manuscript: PropTypes.node.isRequired,
 }
 
 export default ReviewMetadata
