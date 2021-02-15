@@ -124,7 +124,7 @@ const Frontpage = ({ history, ...props }) => {
                   {manuscript.submission?.links?.map(link => (
                     <a
                       href={link.url}
-                      key={`manuscript-${manuscript.id}`}
+                      key={`url-${link.url}`}
                       rel="noopener noreferrer"
                       target="_blank"
                     >
