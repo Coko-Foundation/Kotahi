@@ -40,10 +40,17 @@ const SubmittedVersion = ({ manuscript, currentVersion, createNewVersion }) => {
 SubmittedVersion.propTypes = {
   manuscript: PropTypes.objectOf(PropTypes.any),
   currentVersion: PropTypes.bool.isRequired,
-  createNewVersion: PropTypes.bool.isRequired,
+  createNewVersion: PropTypes.func.isRequired,
 }
 SubmittedVersion.defaultProps = {
   manuscript: undefined,
+}
+
+const createBlankSubmissionBasedOnForm = form => {
+  const allBlankedFields = {}
+  const fieldNames = form.children.map(field => field.name)
+  fieldNames.forEach(fieldName => set(allBlankedFields, fieldName, ''))
+  return allBlankedFields.submission
 }
 
 const Submit = ({
@@ -66,10 +73,7 @@ const Submit = ({
     label,
   })
 
-  // Set the initial values based on the form
-  const initialValues = {}
-  const fieldNames = form.children.map(field => field.name)
-  fieldNames.forEach(fieldName => set(initialValues, fieldName, ''))
+  const submissionValues = createBlankSubmissionBasedOnForm(form)
 
   versions.forEach((version, index) => {
     const { manuscript, label } = version
@@ -79,12 +83,11 @@ const Submit = ({
     let decisionSection
 
     if (['new', 'revising'].includes(manuscript.status)) {
+      Object.assign(submissionValues, JSON.parse(manuscript.submission))
+
       const versionValues = {
         ...manuscript,
-        submission: Object.assign(
-          initialValues.submission,
-          JSON.parse(manuscript.submission),
-        ),
+        submission: submissionValues,
       }
 
       decisionSection = {
@@ -101,14 +104,16 @@ const Submit = ({
                 // TODO: Change this to a more Formik idiomatic form
                 const isValid = Object.keys(await validateForm()).length === 0
                 return isValid
-                  ? onSubmit(versionId, values)
+                  ? onSubmit(versionId, values) // values are currently ignored!
                   : setSubmitting(false)
               }}
             >
               {formProps => (
                 <FormTemplate
                   confirming={confirming}
-                  onChange={onChange(versionId)}
+                  onChange={(value, path) => {
+                    onChange(value, path, versionId)
+                  }}
                   toggleConfirming={toggleConfirming}
                   {...formProps}
                   form={form}

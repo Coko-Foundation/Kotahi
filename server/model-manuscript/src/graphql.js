@@ -1,6 +1,7 @@
-// const merge = require('lodash/merge')
-const detailsForURLResolver = require('./detailsForURLResolver')
+const merge = require('lodash/merge')
 const { ref, raw } = require('objection')
+const ManuscriptModel = require('./manuscript')
+const detailsForURLResolver = require('./detailsForURLResolver')
 
 const ManuscriptResolvers = ({ isVersion }) => {
   const resolvers = {
@@ -33,6 +34,7 @@ const ManuscriptResolvers = ({ isVersion }) => {
       return { ...parent.meta, manuscriptId: parent.id }
     },
   }
+
   if (!isVersion) {
     resolvers.manuscriptVersions = async (parent, _, ctx) => {
       if (!parent.manuscriptVersions.length) {
@@ -40,9 +42,11 @@ const ManuscriptResolvers = ({ isVersion }) => {
           .for(parent.id)
           .orderBy('created', 'desc')
       }
+
       return parent.manuscriptVersions
     }
   }
+
   return resolvers
 }
 
@@ -84,11 +88,9 @@ const resolvers = {
             type: 'editorial',
           },
         ],
-        files: files.map(file =>
-          Object.assign({}, file, {
-            fileType: 'manuscript',
-          }),
-        ),
+        files: files.map(file => {
+          return { ...file, fileType: 'manuscript' }
+        }),
         reviews: [],
         teams: [
           {
@@ -112,46 +114,45 @@ const resolvers = {
       const manuscript = await ctx.models.Manuscript.find(id)
 
       deleteManuscript.push(manuscript.id)
+
       if (manuscript.parentId) {
         const parentManuscripts = await ctx.models.Manuscript.findByField(
           'parent_id',
           manuscript.parentId,
         )
 
-        parentManuscripts.forEach(manuscript => {
-          deleteManuscript.push(manuscript.id)
+        parentManuscripts.forEach(ms => {
+          deleteManuscript.push(ms.id)
         })
       }
 
       // Delete Manuscript
       if (deleteManuscript.length > 0) {
-        deleteManuscript.forEach(async manuscript => {
-          await ctx.models.Manuscript.query().deleteById(manuscript)
+        deleteManuscript.forEach(async ms => {
+          await ctx.models.Manuscript.query().deleteById(ms)
         })
       }
+
       return id
     },
     async reviewerResponse(_, { action, teamId }, context) {
-      const { Team, Review } = require('@pubsweet/models')
+      // eslint-disable-next-line global-require
+      const { TeamModel, ReviewModel } = require('@pubsweet/models') // The application breaks if this is made global. Not sure why.
 
       if (action !== 'accepted' && action !== 'rejected')
         throw new Error(
           `Invalid action (revieweResponse): Must be either "accepted" or "rejected"`,
         )
 
-      const team = await Team.query()
-        .findById(teamId)
-        .eager('members')
-
-      team.members = team.members.map(m => {
-        if (m.userId === context.user.id) {
-          m.status = action
-        }
-        return m
-      })
+      const team = await TeamModel.query().findById(teamId).eager('members')
       if (!team) throw new Error('No team was found')
 
-      await new Team(team).saveGraph()
+      for (let i = 0; i < team.members.length; i += 1) {
+        if (team.members[i].userId === context.user.id)
+          team.members[i].status = action
+      }
+
+      await new TeamModel(team).saveGraph()
 
       if (action === 'accepted') {
         const review = {
@@ -160,28 +161,24 @@ const resolvers = {
           userId: context.user.id,
           manuscriptId: team.manuscriptId,
         }
-        await new Review(review).save()
+
+        await new ReviewModel(review).save()
       }
 
       return team
     },
     async updateManuscript(_, { id, input }, ctx) {
-      const data = JSON.parse(input)
+      const manuscriptDelta = JSON.parse(input)
       const manuscript = await ctx.models.Manuscript.query().findById(id)
+      const updatedManuscript = merge({}, manuscript, manuscriptDelta)
 
-      const update = Object.assign({}, manuscript, data)
-      // We specifically merge submission, as it itself has nested properties
-      // But we don't want to do a deep merge unconditionally, as that prevents
-      // any kind of deletion happening.
-      update.submission = Object.assign(
-        {},
-        manuscript.submission,
-        data.submission,
-      )
       // if (manuscript.status === 'revise') {
       //   return manuscript.createNewVersion(update)
       // }
-      return ctx.models.Manuscript.query().updateAndFetchById(id, update)
+      return ctx.models.Manuscript.query().updateAndFetchById(
+        id,
+        updatedManuscript,
+      )
     },
 
     async createNewVersion(_, { id }, ctx) {
@@ -189,22 +186,7 @@ const resolvers = {
       return manuscript.createNewVersion()
     },
     async submitManuscript(_, { id, input }, ctx) {
-      const data = JSON.parse(input)
-      const manuscript = await ctx.models.Manuscript.query().findById(id)
-      const update = Object.assign({}, manuscript, data)
-      // We specifically merge submission, as it itself has nested properties
-      // But we don't want to do a deep merge unconditionally, as that prevents
-      // any kind of deletion happening.
-      update.submission = Object.assign(
-        {},
-        manuscript.submission,
-        data.submission,
-      )
-
-      // if (manuscript.status === 'revise') {
-      //   return manuscript.createNewVersion(update)
-      // }
-      return ctx.models.Manuscript.query().updateAndFetchById(id, update)
+      return this.updateManuscript(_, { id, input }, ctx) // Currently submitManuscript does exactly the same as updateManuscript
     },
 
     async makeDecision(_, { id, decision }, ctx) {
@@ -232,6 +214,7 @@ const resolvers = {
             .$relatedQuery('users')
             .where('users.id', userId)
             .resultSize()) > 0
+
         if (!reviewerExists) {
           await new ctx.models.TeamMember({
             teamId: existingTeam.id,
@@ -239,6 +222,7 @@ const resolvers = {
             userId,
           }).save()
         }
+
         return existingTeam.$query().eager('members.[user]')
       }
 
@@ -279,14 +263,13 @@ const resolvers = {
           published: new Date(),
         })
       }
+
       return manuscript
     },
   },
   Query: {
     async manuscript(_, { id }, ctx) {
-      const Manuscript = require('./manuscript')
-
-      const manuscript = await Manuscript.query()
+      const manuscript = await ManuscriptModel.query()
         .findById(id)
         .withGraphFetched(
           '[teams, channels, files, reviews.[user, comments], manuscriptVersions(orderByCreated)]',
@@ -295,6 +278,7 @@ const resolvers = {
       if (!manuscript.meta) {
         manuscript.meta = {}
       }
+
       manuscript.meta.notes = (manuscript.meta || {}).notes || [
         {
           notesType: 'fundingAcknowledgement',
@@ -325,7 +309,9 @@ const resolvers = {
       const query = ctx.models.Manuscript.query()
         .where(raw('published IS NOT NULL'))
         .eager('[reviews.[comments], files, submitter]')
+
       const totalCount = await query.resultSize()
+
       if (limit) {
         query.limit(limit)
       }
@@ -333,6 +319,7 @@ const resolvers = {
       if (offset) {
         query.offset(offset)
       }
+
       const manuscripts = await query
       return {
         totalCount,

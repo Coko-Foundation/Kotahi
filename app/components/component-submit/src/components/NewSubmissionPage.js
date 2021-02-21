@@ -38,7 +38,9 @@ const Dashboard = props => {
 }
 
 Dashboard.propTypes = {
-  history: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 }
 
 export default Dashboard

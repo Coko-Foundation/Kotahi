@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import { debounce, cloneDeep, set } from 'lodash'
 import { gql, useQuery, useMutation } from '@apollo/client'
 import Submit from './Submit'
@@ -170,11 +171,11 @@ const createNewVersionMutation = gql`
   }
 `
 
-const SubmitPage = ({ match, history, ...props }) => {
+const SubmitPage = ({ match, history }) => {
   const [confirming, setConfirming] = useState(false)
 
   const toggleConfirming = () => {
-    setConfirming(confirming => !confirming)
+    setConfirming(currentConfirming => !currentConfirming)
   }
 
   const { data, loading, error } = useQuery(query, {
@@ -192,34 +193,33 @@ const SubmitPage = ({ match, history, ...props }) => {
   const manuscript = data?.manuscript
   const form = data?.getFile
 
-  const updateManuscript = (versionId, manuscript) =>
+  const updateManuscript = (versionId, manuscriptDelta) => {
     update({
       variables: {
         id: versionId,
-        input: JSON.stringify(manuscript),
+        input: JSON.stringify(manuscriptDelta),
       },
     })
+  }
 
   const debouncers = {}
 
   // This is passed as a custom onChange prop (not belonging/originating from Formik)
   // to support continuous auto-saving
-  const handleChange = versionId => (value, path) => {
-    const input = {}
-    set(input, path, value)
+  const handleChange = (value, path, versionId) => {
+    const manuscriptDelta = {} // Only the changed fields
+    set(manuscriptDelta, path, value)
     debouncers[path] = debouncers[path] || debounce(updateManuscript, 3000)
-    return debouncers[path](versionId, input)
+    return debouncers[path](versionId, manuscriptDelta)
   }
 
-  const onSubmit = async (versionId, manuscript) => {
-    const updateManuscript = {
-      status: 'submitted',
-    }
+  const onSubmit = async (versionId /*, manuscript */) => {
+    const delta = { status: 'submitted' }
 
     await submit({
       variables: {
         id: versionId,
-        input: JSON.stringify(updateManuscript),
+        input: JSON.stringify(delta),
       },
     })
     history.push('/journal/dashboard')
@@ -237,9 +237,19 @@ const SubmitPage = ({ match, history, ...props }) => {
       parent={manuscript}
       toggleConfirming={toggleConfirming}
       versions={versions}
-      {...props}
     />
   )
+}
+
+SubmitPage.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      version: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 }
 
 export default SubmitPage
