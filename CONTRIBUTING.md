@@ -14,15 +14,18 @@ For contributions made as discussions and suggestions, you can at any time open 
 ## Branches
 
 We maintain master as the production branch and tag it with release names. If you wish to contribute to Kotahi then you need to make a branch and then issue a pull request following this procedure:
-Create a user account on Coko's GitLab: http://gitlab.coko.foundation
-Clone master with `git clone git@gitlab.coko.foundation:kotahi/kotahi.git`
-Create a new branch and work off of that. Please name the branch which sensibly identifies the feature you are working on. You can push the branch to GitLab at anytime.
+
+- Create a user account on Coko's GitLab: http://gitlab.coko.foundation
+- Clone master with `git clone git@gitlab.coko.foundation:kotahi/kotahi.git`
+- Create a new branch and work off of that. Please name the branch to sensibly identify which feature you are working on. You can push the branch to GitLab at anytime.
 
 ## Getting your contributions merged
 
 This is a two part process, first ask for comments, then ask for the changes to be merged.
-Ask for feedback generate a Merge Request (Pull Request) from the GitLab interface but do not assign this request to anyone. You do this from the Gitlab UI on your branch.
+
+To ask for comments, generate a Merge Request (Pull Request) from the GitLab interface but do not assign this request to anyone. You do this from the Gitlab UI on your branch.
 Look at the feedback and alter your branch as necessary.
+
 To merge with master - generate a merge request (Pull Request). You do this from the Gitlab UI on your branch.
 We encourage feedback and discussion from as many people as possible on Merge Requests!
 
