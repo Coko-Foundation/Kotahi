@@ -7,7 +7,7 @@ eg. if your app is at `kotahi.myorg.com`, go to `kotahi.myorg.com/login`
 
 ## How do I setup ORCID for development?
 
-Getting past the login screen can be a challenge if you haven't set this up correctly. You need two things: an account at `sandbox.orcid.org` and a `mailinator` email. When `NODE_ENV` is set to `development`, the app will expect you to be using a sanbox account. Orcid's sandbox in turn will only send emails to mailinator accounts, so if you don't use mailinator, you won't be able to verify your email (and consequently not be able to set this up).
+Getting past the login screen can be a challenge if you haven't set this up correctly. You need two things: an account at `sandbox.orcid.org` and a `mailinator` email. When `NODE_ENV` is set to `development`, the app will expect you to be using a sandbox account. Orcid's sandbox in turn will only send emails to mailinator accounts, so if you don't use mailinator, you won't be able to verify your email (and consequently not be able to set this up).
 
 So here's how to set this up in less than 20 easy steps:
 
@@ -26,7 +26,7 @@ So here's how to set this up in less than 20 easy steps:
 13. Under "Redirect URIs", add the url of your kotahi client plus `/auth/orcid/callback`. So if in your browser you can see your app under `http://localhost:4000`, the value here should be `http://localhost:4000/auth/orcid/callback`. [1]
 14. Click on the floating save icon on the right.
 15. You should now be presented with a gray box that gives you a client id and a client secret.
-16. Go to your application's environment file and the values you just got.
+16. Go to your application's environment file and enter the values you just got.
 
 ```sh
 export ORCID_CLIENT_ID=your-orcid-client-id
@@ -40,3 +40,18 @@ You should now be able to use the login.
 _Disclaimer: ORCID is a separate organisation from Coko and we are in no way affiliated with them. This is meant as a guide to make a developer's life easier. If you encounter issues with ORCID services not working as expected, please contact their support._
 
 [1] Even though this URL does not exist for the client (ie. it isn't handled by our `react-router` setup), it will be redirected to the server via `webpack-dev-server`'s proxy.
+
+## Why is ORCID's login page not loading?
+
+ORCID seems to be reliant on Google Tag Manager, so ad-blocker or tracker-blocker extensions in your browser may interfere with authentication.
+
+## How can I create an admin user?
+
+Once you're logged in, go to the "My profile" page and copy the username (a string of digits). Open a terminal within your Docker **server** container, and perform the following, substituting your username:
+
+```sh
+yarn console
+x = await User.query().where({username:"0000000210481437"}).first()
+x.admin = true
+x.save()
+```
