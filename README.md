@@ -12,7 +12,7 @@ Developer beware! This project is currently under very heavy development, so thi
 We provide docker-compose and docker files to ensure consistency across environments. The following instructions assume that you have `docker` and/or `docker-compose` installed on your system.
 
 You can use the `docker-compose.yml` and `docker-compose.production.yml` files as a reference for the environment variables that are needed, as well as a kind of installation guide if for some reason you wish to not use docker.
-Environment variables must be loaded into your shell. Typically, they are set in a file named `.env` in your project root folder, where they will be found and used by the `docker-compose` cli, or can be run manually (e.g. via `source .env` on linux). To set up ORCID variables for login, read [FAQ.md](FAQ.md).
+Environment variables must be loaded into your shell. The `docker-compose` cli will automatically load any environment variables specified in the file `<project root>/.env`. You can also load these manually (e.g. via `source .env` on linux). To set up ORCID variables for login, read [FAQ.md](FAQ.md).
 
 #### Development
 
