@@ -1,9 +1,8 @@
-/* eslint-disable react/prop-types */
-/* eslint-disable no-shadow */
-
 import React from 'react'
 import { Action, ActionGroup } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
+import PropTypes from 'prop-types'
+import config from 'config'
 import { Item } from '../../style'
 
 import VersionTitle from './VersionTitle'
@@ -12,9 +11,9 @@ import VersionTitle from './VersionTitle'
 // TODO: only return actions if not accepted or rejected
 // TODO: review id in link
 
-const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
+const ReviewerItem = ({ version, currentUser, reviewerRespond }) => {
   const team =
-    (version.teams || []).find(team => team.role === 'reviewer') || {}
+    (version.teams || []).find(team_ => team_.role === 'reviewer') || {}
 
   const currentMember =
     team.members &&
@@ -22,13 +21,15 @@ const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
 
   const status = currentMember && currentMember.status
 
+  const urlFrag = config.journal.metadata.toplevel_urlfragment
+
   return (
     <Item>
       <VersionTitle version={version} />
 
       {(status === 'accepted' || status === 'completed') && (
         <ActionGroup>
-          <Action to={`/journal/versions/${version.id}/review`}>
+          <Action to={`${urlFrag}/versions/${version.id}/review`}>
             {status === 'completed' ? 'Completed' : 'Do Review'}
           </Action>
         </ActionGroup>
@@ -68,6 +69,12 @@ const ReviewerItem = ({ version, journals, currentUser, reviewerRespond }) => {
       {status === 'rejected' && 'rejected'}
     </Item>
   )
+}
+
+ReviewerItem.propTypes = {
+  version: PropTypes.string.isRequired,
+  currentUser: PropTypes.oneOfType([PropTypes.object]).isRequired,
+  reviewerRespond: PropTypes.func.isRequired,
 }
 
 export default ReviewerItem

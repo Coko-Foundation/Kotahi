@@ -2,6 +2,8 @@ import React from 'react'
 import styled from 'styled-components'
 import { Action, Button } from '@pubsweet/ui'
 import { grid } from '@pubsweet/ui-toolkit'
+import PropTypes from 'prop-types'
+import config from 'config'
 import ReviewerForm from './ReviewerForm'
 import {
   Container,
@@ -19,11 +21,13 @@ import { UserAvatar } from '../../../../component-avatar/src'
 
 const ReviewersList = styled.div`
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(${grid(15)}, 1fr));
   grid-gap: ${grid(2)};
+  grid-template-columns: repeat(auto-fill, minmax(${grid(15)}, 1fr));
 `
 
 const Reviewer = styled.div``
+
+const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const Reviewers = ({
   journal,
@@ -43,7 +47,7 @@ const Reviewers = ({
       <Heading>Reviewers</Heading>
       <Button
         onClick={() =>
-          history.push(`/journal/versions/${manuscript.id}/decision`)
+          history.push(`${urlFrag}/versions/${manuscript.id}/decision`)
         }
         primary
       >
@@ -73,7 +77,7 @@ const Reviewers = ({
         {reviewers && reviewers.length ? (
           <ReviewersList>
             {reviewers.map(reviewer => (
-              <Reviewer>
+              <Reviewer key={reviewer.id}>
                 <StatusBadge minimal status={reviewer.status} />
                 <UserAvatar key={reviewer.id} user={reviewer.user} />
                 {reviewer.user.defaultIdentity.name}
@@ -101,5 +105,19 @@ const Reviewers = ({
     </SectionContent>
   </Container>
 )
+
+Reviewers.propTypes = {
+  journal: PropTypes.node.isRequired,
+  isValid: PropTypes.node.isRequired,
+  loadOptions: PropTypes.node.isRequired,
+  version: PropTypes.node.isRequired,
+  reviewers: PropTypes.node.isRequired,
+  reviewerUsers: PropTypes.node.isRequired,
+  manuscript: PropTypes.node.isRequired,
+  handleSubmit: PropTypes.node.isRequired,
+  removeReviewer: PropTypes.node.isRequired,
+  teams: PropTypes.node.isRequired,
+  history: PropTypes.node.isRequired,
+}
 
 export default Reviewers

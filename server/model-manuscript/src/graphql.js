@@ -50,6 +50,17 @@ const ManuscriptResolvers = ({ isVersion }) => {
   return resolvers
 }
 
+const commonUpdateManuscript = async (_, { id, input }, ctx) => {
+  const manuscriptDelta = JSON.parse(input)
+  const manuscript = await ctx.models.Manuscript.query().findById(id)
+  const updatedManuscript = merge({}, manuscript, manuscriptDelta)
+
+  // if (manuscript.status === 'revise') {
+  //   return manuscript.createNewVersion(update)
+  // }
+  return ctx.models.Manuscript.query().updateAndFetchById(id, updatedManuscript)
+}
+
 const resolvers = {
   Mutation: {
     async createManuscript(_, vars, ctx) {
@@ -168,17 +179,7 @@ const resolvers = {
       return team
     },
     async updateManuscript(_, { id, input }, ctx) {
-      const manuscriptDelta = JSON.parse(input)
-      const manuscript = await ctx.models.Manuscript.query().findById(id)
-      const updatedManuscript = merge({}, manuscript, manuscriptDelta)
-
-      // if (manuscript.status === 'revise') {
-      //   return manuscript.createNewVersion(update)
-      // }
-      return ctx.models.Manuscript.query().updateAndFetchById(
-        id,
-        updatedManuscript,
-      )
+      return commonUpdateManuscript(_, { id, input }, ctx) // Currently submitManuscript and updateManuscript have identical action
     },
 
     async createNewVersion(_, { id }, ctx) {
@@ -186,7 +187,7 @@ const resolvers = {
       return manuscript.createNewVersion()
     },
     async submitManuscript(_, { id, input }, ctx) {
-      return this.updateManuscript(_, { id, input }, ctx) // Currently submitManuscript does exactly the same as updateManuscript
+      return commonUpdateManuscript(_, { id, input }, ctx) // Currently submitManuscript and updateManuscript have identical action
     },
 
     async makeDecision(_, { id, decision }, ctx) {
@@ -305,12 +306,21 @@ const resolvers = {
         .where({ parentId: null })
         .orderBy('created', 'desc')
     },
-    async publishedManuscripts(_, { offset, limit }, ctx) {
+    async publishedManuscripts(_, { sort, offset, limit }, ctx) {
       const query = ctx.models.Manuscript.query()
         .where(raw('published IS NOT NULL'))
         .eager('[reviews.[comments], files, submitter]')
 
       const totalCount = await query.resultSize()
+
+      if (sort) {
+        const [sortName, sortDirection] = sort.split('_')
+
+        query.orderBy(ref(sortName), sortDirection)
+        // }
+        // // e.g. 'created_DESC' into 'created' and 'DESC' arguments
+        // query.orderBy(...sort.split('_'))
+      }
 
       if (limit) {
         query.limit(limit)
@@ -385,7 +395,7 @@ const typeDefs = `
     manuscripts: [Manuscript]!
     paginatedManuscripts(sort: String, offset: Int, limit: Int, filter: ManuscriptsFilter): PaginatedManuscripts
     detailsForURL(url: String!): URLMetadata
-    publishedManuscripts(offset: Int, limit: Int): PaginatedManuscripts
+    publishedManuscripts(sort:String, offset: Int, limit: Int): PaginatedManuscripts
   }
 
   type URLMetadata {

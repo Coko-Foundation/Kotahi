@@ -8,20 +8,21 @@ import {
   Switch,
   Redirect,
 } from 'react-router-dom'
+import PropTypes from 'prop-types'
 import { JournalContext } from './xpub-journal/src'
 import { XpubContext } from './xpub-with-context/src'
 
-import UsersManager from '../components/component-users-manager/src/UsersManager'
-import Manuscripts from '../components/component-manuscripts/src/Manuscripts'
-import Dashboard from '../components/component-dashboard/src/components/Dashboard'
-import SubmitPage from '../components/component-submit/src/components/SubmitPage'
-import ManuscriptPage from '../components/component-manuscript/src/components/ManuscriptPage'
-import ReviewersPage from '../components/component-review/src/components/ReviewersPage'
-import ReviewPage from '../components/component-review/src/components/ReviewPage'
-import DecisionPage from '../components/component-review/src/components/DecisionPage'
-import FormBuilderPage from '../components/component-formbuilder/src/components/FormBuilderPage'
-import NewSubmissionPage from '../components/component-submit/src/components/NewSubmissionPage'
-import { Profile } from '../components/component-profile/src'
+import UsersManager from './component-users-manager/src/UsersManager'
+import Manuscripts from './component-manuscripts/src/Manuscripts'
+import Dashboard from './component-dashboard/src/components/Dashboard'
+import SubmitPage from './component-submit/src/components/SubmitPage'
+import ManuscriptPage from './component-manuscript/src/components/ManuscriptPage'
+import ReviewersPage from './component-review/src/components/ReviewersPage'
+import ReviewPage from './component-review/src/components/ReviewPage'
+import DecisionPage from './component-review/src/components/DecisionPage'
+import FormBuilderPage from './component-formbuilder/src/components/FormBuilderPage'
+import NewSubmissionPage from './component-submit/src/components/NewSubmissionPage'
+import { Profile } from './component-profile/src'
 
 import { GET_CURRENT_USER } from '../queries'
 
@@ -31,18 +32,16 @@ import { Spinner } from './shared'
 import currentRolesVar from '../shared/currentRolesVar'
 import RolesUpdater from './RolesUpdater'
 
-const getParams = routerPath => {
-  const path = '/journal/versions/:version'
+const getParams = ({ routerPath, path }) => {
   return matchPath(routerPath, path).params
 }
 
 const Root = styled.div`
   display: grid;
-  grid-template-columns: 200px auto;
   grid-template-areas: 'menu main';
-  max-height: 100vh;
+  grid-template-columns: 200px auto;
   height: 100vh;
-  overflow: hidden;
+  max-height: 100vh;
   ${({ converting }) =>
     converting &&
     `
@@ -51,26 +50,35 @@ const Root = styled.div`
        pointer-events: none;
      }
   `};
+  overflow: hidden;
 `
 
 // TODO: Redirect if token expires
-const PrivateRoute = ({ component: Component, ...rest }) => (
+const PrivateRoute = ({ component: Component, redirectLink, ...rest }) => (
   <Route
     {...rest}
     render={props =>
       localStorage.getItem('token') ? (
         <Component {...props} />
       ) : (
-        <Redirect to="/login?next=/journal/dashboard" />
+        <Redirect to={redirectLink} />
       )
     }
   />
 )
 
+PrivateRoute.propTypes = {
+  component: PropTypes.func.isRequired,
+  redirectLink: PropTypes.string.isRequired,
+}
+
 const updateStuff = data => {
   if (data?.currentUser) {
+    // eslint-disable-next-line no-underscore-dangle
     return currentRolesVar(data.currentUser._currentRoles)
   }
+
+  return false
 }
 
 const AdminPage = () => {
@@ -81,7 +89,7 @@ const AdminPage = () => {
   const { loading, error, data } = useQuery(GET_CURRENT_USER, {
     fetchPolicy: 'network-only',
     // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301
-    onCompleted: useCallback(data => updateStuff(data), []),
+    onCompleted: useCallback(dataTemp => updateStuff(dataTemp), []),
   })
 
   const previousDataRef = useRef(null)
@@ -92,6 +100,7 @@ const AdminPage = () => {
   }
 
   let notice = ''
+
   if (error) {
     if (error.networkError) {
       notice = 'You are offline.'
@@ -104,16 +113,20 @@ const AdminPage = () => {
 
   previousDataRef.current = data
 
+  const urlFrag = journal.metadata.toplevel_urlfragment
   const { pathname } = history.location
   const showLinks = pathname.match(/^\/(submit|manuscript)/g)
   let links = []
-  const formBuilderLink = `/journal/admin/form-builder`
-  const homeLink = '/journal/dashboard'
-  const profileLink = '/journal/profile'
+  const formBuilderLink = `${urlFrag}/admin/form-builder`
+  const homeLink = `${urlFrag}/dashboard`
+  const profileLink = `${urlFrag}/profile`
+  const loginLink = `/login?next=${homeLink}`
+  const path = `${urlFrag}/versions/:version`
+  const redirectLink = `/login?next=${homeLink}`
 
   if (showLinks) {
-    const params = getParams(pathname)
-    const baseLink = `/journal/versions/${params.version}`
+    const params = getParams(pathname, path)
+    const baseLink = `${urlFrag}/versions/${params.version}`
     const submitLink = `${baseLink}/submit`
     const manuscriptLink = `${baseLink}/manuscript`
 
@@ -130,11 +143,10 @@ const AdminPage = () => {
   }
 
   if (currentUser && currentUser.admin) {
-    // links.push({ link: '/journal/admin/teams', name: 'Teams', icon: 'grid' })
     links.push({ link: formBuilderLink, name: 'Forms', icon: 'check-square' })
-    links.push({ link: '/journal/admin/users', name: 'Users', icon: 'users' })
+    links.push({ link: `${urlFrag}/admin/users`, name: 'Users', icon: 'users' })
     links.push({
-      link: '/journal/admin/manuscripts',
+      link: `${urlFrag}/admin/manuscripts`,
       name: 'Manuscripts',
       icon: 'file-text',
     })
@@ -148,55 +160,79 @@ const AdminPage = () => {
     <Root converting={conversion.converting}>
       <Menu
         brand={journal.metadata.name}
-        brandLink="/journal/dashboard"
-        loginLink="/login?next=/journal/dashboard"
+        brandLink={homeLink}
+        className=""
+        loginLink={loginLink}
         navLinkComponents={links}
         notice={notice}
+        profileLink={profileLink}
         user={currentUser}
       />
       <Switch>
-        <PrivateRoute component={Dashboard} exact path="/journal/dashboard" />
+        <PrivateRoute
+          component={Dashboard}
+          exact
+          path={homeLink}
+          redirectLink={redirectLink}
+        />
 
         <PrivateRoute
           component={NewSubmissionPage}
           exact
-          path="/journal/newSubmission"
+          path={`${urlFrag}/newSubmission`}
+          redirectLink={redirectLink}
         />
         <PrivateRoute
           component={SubmitPage}
           exact
-          path="/journal/versions/:version/submit"
+          path={`${urlFrag}/versions/:version/submit`}
+          redirectLink={redirectLink}
         />
         <PrivateRoute
           component={FormBuilderPage}
           exact
-          path="/journal/admin/form-builder"
+          path={`${urlFrag}/admin/form-builder`}
+          redirectLink={redirectLink}
         />
         <PrivateRoute
           component={ManuscriptPage}
           exact
-          path="/journal/versions/:version/manuscript"
+          path={`${urlFrag}/versions/:version/manuscript`}
+          redirectLink={redirectLink}
         />
         <PrivateRoute
           component={ReviewersPage}
           exact
-          path="/journal/versions/:version/reviewers"
+          path={`${urlFrag}/versions/:version/reviewers`}
+          redirectLink={redirectLink}
         />
         <PrivateRoute
           component={ReviewPage}
           exact
-          path="/journal/versions/:version/review"
+          path={`${urlFrag}/versions/:version/review`}
+          redirectLink={redirectLink}
         />
         <PrivateRoute
           component={DecisionPage}
           exact
-          path="/journal/versions/:version/decision"
+          path={`${urlFrag}/versions/:version/decision`}
+          redirectLink={redirectLink}
         />
-        <PrivateRoute component={Profile} exact path="/journal/profile" />
-        <PrivateRoute component={UsersManager} path="/journal/admin/users" />
+        <PrivateRoute
+          component={Profile}
+          exact
+          path={`${urlFrag}/profile`}
+          redirectLink={redirectLink}
+        />
+        <PrivateRoute
+          component={UsersManager}
+          path={`${urlFrag}/admin/users`}
+          redirectLink={redirectLink}
+        />
         <PrivateRoute
           component={Manuscripts}
-          path="/journal/admin/manuscripts"
+          path={`${urlFrag}/admin/manuscripts`}
+          redirectLink={redirectLink}
         />
       </Switch>
       <RolesUpdater />

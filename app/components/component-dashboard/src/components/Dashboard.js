@@ -1,10 +1,10 @@
-/* eslint-disable react/prop-types */
-
 import React from 'react'
 import { useQuery, useMutation } from '@apollo/client'
 import { Button } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 
+import config from 'config'
+import ReactRouterPropTypes from 'react-router-prop-types'
 import queries from '../graphql/queries'
 import mutations from '../graphql/mutations'
 import { Container, Placeholder } from '../style'
@@ -72,11 +72,16 @@ const Dashboard = ({ history, ...props }) => {
     )
     .map(latestVersion)
 
+  const urlFrag = config.journal.metadata.toplevel_urlfragment
+
   return (
     <Container>
       <HeadingWithAction>
         <Heading>Dashboard</Heading>
-        <Button onClick={() => history.push('/journal/newSubmission')} primary>
+        <Button
+          onClick={() => history.push(`${urlFrag}/newSubmission`)}
+          primary
+        >
           ＋ New submission
         </Button>
       </HeadingWithAction>
@@ -143,6 +148,10 @@ const Dashboard = ({ history, ...props }) => {
       </SectionContent>
     </Container>
   )
+}
+
+Dashboard.propTypes = {
+  history: ReactRouterPropTypes.history.isRequired,
 }
 
 export default Dashboard

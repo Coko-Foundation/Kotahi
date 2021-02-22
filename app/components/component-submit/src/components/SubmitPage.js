@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
-import PropTypes from 'prop-types'
 import { debounce, cloneDeep, set } from 'lodash'
 import { gql, useQuery, useMutation } from '@apollo/client'
+import config from 'config'
+import ReactRouterPropTypes from 'react-router-prop-types'
 import Submit from './Submit'
 import { Spinner } from '../../../shared'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
@@ -171,11 +172,13 @@ const createNewVersionMutation = gql`
   }
 `
 
+const urlFrag = config.journal.metadata.toplevel_urlfragment
+
 const SubmitPage = ({ match, history }) => {
   const [confirming, setConfirming] = useState(false)
 
   const toggleConfirming = () => {
-    setConfirming(currentConfirming => !currentConfirming)
+    setConfirming(confirm => !confirm)
   }
 
   const { data, loading, error } = useQuery(query, {
@@ -213,7 +216,7 @@ const SubmitPage = ({ match, history }) => {
     return debouncers[path](versionId, manuscriptDelta)
   }
 
-  const onSubmit = async (versionId /*, manuscript */) => {
+  const onSubmit = async versionId => {
     const delta = { status: 'submitted' }
 
     await submit({
@@ -222,7 +225,7 @@ const SubmitPage = ({ match, history }) => {
         input: JSON.stringify(delta),
       },
     })
-    history.push('/journal/dashboard')
+    history.push(`${urlFrag}/dashboard`)
   }
 
   const versions = gatherManuscriptVersions(manuscript)
@@ -242,14 +245,8 @@ const SubmitPage = ({ match, history }) => {
 }
 
 SubmitPage.propTypes = {
-  match: PropTypes.shape({
-    params: PropTypes.shape({
-      version: PropTypes.string.isRequired,
-    }).isRequired,
-  }).isRequired,
-  history: PropTypes.shape({
-    push: PropTypes.func.isRequired,
-  }).isRequired,
+  history: ReactRouterPropTypes.history.isRequired,
+  match: ReactRouterPropTypes.match.isRequired,
 }
 
 export default SubmitPage

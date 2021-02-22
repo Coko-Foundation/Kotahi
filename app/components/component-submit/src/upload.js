@@ -3,6 +3,8 @@ import request from 'pubsweet-client/src/helpers/api'
 import gql from 'graphql-tag'
 import currentRolesVar from '../../../shared/currentRolesVar'
 
+const urlFrag = config.journal.metadata.toplevel_urlfragment
+
 const generateTitle = name =>
   name
     .replace(/[_-]+/g, ' ') // convert hyphens/underscores to space
@@ -86,6 +88,7 @@ const createManuscriptMutation = gql`
 
 const uploadPromise = (files, client) => {
   const [file] = files
+
   if (files.length > 1) {
     throw new Error('Only one manuscript file can be uploaded')
   }
@@ -127,6 +130,7 @@ const createManuscriptPromise = (
   let source
   let title
   let files = []
+
   if (file) {
     source = typeof response === 'string' ? response : undefined
     title = extractTitle(response) || generateTitle(file.name)
@@ -182,7 +186,7 @@ const createManuscriptPromise = (
 
 const redirectPromise = (setConversionState, journals, history, data) => {
   setConversionState(() => ({ converting: false, completed: true }))
-  const route = `/journal/versions/${data.createManuscript.id}/submit`
+  const route = `${urlFrag}/versions/${data.createManuscript.id}/submit`
   // redirect after a short delay
   window.setTimeout(() => {
     history.push(route)
@@ -205,10 +209,12 @@ export default ({
   setConversion({ converting: true })
   let manuscriptData
   let uploadResponse
+
   try {
     if (files) {
       const [file] = files
       const { data } = await uploadPromise(files, client)
+
       if (skipXSweet(file)) {
         uploadResponse = {
           fileURL: data.upload.url,
@@ -217,6 +223,7 @@ export default ({
       } else {
         uploadResponse = await DocxToHTMLPromise(file, data)
       }
+
       manuscriptData = await createManuscriptPromise(
         file,
         client,
@@ -234,6 +241,7 @@ export default ({
         undefined,
       )
     }
+
     return redirectPromise(
       setConversion,
       journals,
@@ -243,4 +251,6 @@ export default ({
   } catch (error) {
     setConversion({ error })
   }
+
+  return false
 }

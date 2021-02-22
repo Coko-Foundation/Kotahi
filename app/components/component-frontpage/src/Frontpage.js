@@ -1,8 +1,11 @@
-import React, { useContext } from 'react'
+import Accordion from '@pubsweet/ui/src/molecules/Accordion'
+import React, { useContext, useState } from 'react'
 import { useQuery } from '@apollo/client'
+import ReactRouterPropTypes from 'react-router-prop-types'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
 import { Container, Placeholder, VisualAbstract } from './style'
+import Wax from '../../wax-collab/src/Editoria'
 
 import {
   Spinner,
@@ -12,13 +15,37 @@ import {
   SectionContent,
   Heading,
   HeadingWithAction,
+  Pagination,
 } from '../../shared'
 
 const Frontpage = ({ history, ...props }) => {
-  const { loading, data, error } = useQuery(queries.frontpage)
+  const [sortName] = useState('created')
+  const [sortDirection] = useState('DESC')
+  const [page, setPage] = useState(1)
+  const limit = 10
+  const sort = sortName && sortDirection && `${sortName}_${sortDirection}`
+
+  const skipXSweet = file =>
+    !(
+      file.mimeType ===
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
+    )
+
+  const { loading, data, error } = useQuery(queries.frontpage, {
+    variables: {
+      sort,
+      offset: (page - 1) * limit,
+      limit,
+    },
+    fetchPolicy: 'network-only',
+  })
+
   const journal = useContext(JournalContext)
+
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
+
+  const { totalCount } = data.publishedManuscripts
 
   const frontpage = (data.publishedManuscripts?.manuscripts || []).map(m => {
     const visualAbstract = m.files?.find(f => f.fileType === 'visualAbstract')
@@ -34,64 +61,78 @@ const Frontpage = ({ history, ...props }) => {
       <HeadingWithAction>
         <Heading>Recent publications in {journal.metadata.name}</Heading>
       </HeadingWithAction>
+      <Pagination
+        limit={limit}
+        page={page}
+        setPage={setPage}
+        totalCount={totalCount}
+      />
+
       {frontpage.length > 0 ? (
         frontpage.map(manuscript => (
-          <SectionContent>
+          <SectionContent key={`manuscript-${manuscript.id}`}>
             <SectionHeader>
               <Title>{manuscript.meta.title}</Title>
             </SectionHeader>
-            <SectionRow key={`manuscript-${manuscript.id}`}>
-              <p>
-                Visual abstract:{' '}
-                <VisualAbstract
-                  alt="Visual abstract"
-                  src={manuscript.visualAbstract}
-                />
-              </p>
-              <p>Abstract: {manuscript.submission?.abstract}</p>
+            <SectionRow>
+              {manuscript.submission?.abstract && (
+                <h1>Abstract: {manuscript.submission?.abstract}</h1>
+              )}
+              {manuscript.visualAbstract && (
+                <div>
+                  <h1>Visual abstract</h1>
+                  <VisualAbstract
+                    alt="Visual abstract"
+                    src={manuscript.visualAbstract}
+                  />
+                </div>
+              )}
 
-              <p>
-                {manuscript.submitter.defaultIdentity.name} (
-                {manuscript.submission.affiliation})
-              </p>
-              <div>
-                Submitted files:
-                {manuscript.files.map(file => (
-                  <p>
-                    <a
-                      href={file.url}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      {file.filename}
-                    </a>
-                  </p>
-                ))}
-              </div>
-              <div>
-                Submitted research objects:
-                {manuscript.submission?.links?.map(link => (
-                  <p>
+              {manuscript.files.length > 0 && (
+                <div>
+                  {manuscript.files.map(
+                    file =>
+                      skipXSweet(file) &&
+                      file.fileType !== 'visualAbstract' && (
+                        <a
+                          href={file.url}
+                          key={`file-${file.id}`}
+                          rel="noopener noreferrer"
+                          target="_blank"
+                        >
+                          {file.filename}
+                        </a>
+                      ),
+                  )}
+                  {manuscript.files.map(
+                    file =>
+                      !skipXSweet(file) && (
+                        <Accordion
+                          key={`file-${file.id}`}
+                          label="View Manuscript Text"
+                        >
+                          <Wax content={manuscript.meta.source} readonly />
+                        </Accordion>
+                      ),
+                  )}
+                </div>
+              )}
+
+              {manuscript.submission?.links && (
+                <div>
+                  <h1>Submitted research objects</h1>
+                  {manuscript.submission?.links?.map(link => (
                     <a
                       href={link.url}
+                      key={`url-${link.url}`}
                       rel="noopener noreferrer"
                       target="_blank"
                     >
                       {link.url}
                     </a>
-                  </p>
-                ))}
-              </div>
-              <div>
-                Reviews:
-                {manuscript.reviews.map(
-                  review =>
-                    review.reviewComment && (
-                      <p>&quot;{review.reviewComment?.content}&quot;</p>
-                    ),
-                )}
-              </div>
-              <div>Published: {manuscript.published}</div>
+                  ))}
+                </div>
+              )}
             </SectionRow>
           </SectionContent>
         ))
@@ -101,4 +142,9 @@ const Frontpage = ({ history, ...props }) => {
     </Container>
   )
 }
+
+Frontpage.propTypes = {
+  history: ReactRouterPropTypes.history.isRequired,
+}
+
 export default Frontpage

@@ -12,6 +12,7 @@ import {
 } from '@pubsweet/ui'
 import * as validators from 'xpub-validators'
 import { AbstractEditor } from 'xpub-edit'
+import config from 'config'
 import { Section as Container, Select, FilesUpload } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
@@ -94,17 +95,17 @@ elements.LinksInput = LinksInput
 const rejectProps = (obj, keys) =>
   Object.keys(obj)
     .filter(k => !keys.includes(k))
-    .map(k => {
-      return { [k]: obj[k] }
-    })
+    .map(k => ({ [k]: obj[k] }))
     .reduce(
       (res, o) =>
         Object.values(o).includes('false') ? { ...res } : Object.assign(res, o),
       {},
     )
 
+const urlFrag = config.journal.metadata.toplevel_urlfragment
+
 const link = (journal, manuscript) =>
-  String.raw`<a href=/journal/versions/${manuscript.id}/manuscript>view here</a>`
+  String.raw`<a href=${urlFrag}/versions/${manuscript.id}/manuscript>view here</a>`
 
 const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),
@@ -132,8 +133,8 @@ const composeValidate = (vld = [], valueField = {}) => value => {
   return errors.length > 0 ? errors[0] : undefined
 }
 
-const groupElements = elems => {
-  const grouped = groupBy(elems, n => n.group || 'default')
+const groupElements = els => {
+  const grouped = groupBy(els, n => n.group || 'default')
 
   Object.keys(grouped).forEach(element => {
     grouped[element].sort(
@@ -150,7 +151,7 @@ const groupElements = elems => {
     startArr = startArr
       .slice(0, first)
       .concat([grouped[element]])
-      .concat(startArr.slice(first)) // eslint-disable-line no-use-before-define
+      .concat(startArr.slice(first))
   })
   return startArr
 }
@@ -212,11 +213,7 @@ const renderArray = (elementsComponentArray, onChange) => ({
     )
   })
 
-const ElementComponentArray = ({
-  elementsComponentArray,
-  onChange,
-  uploadFile,
-}) => (
+const ElementComponentArray = ({ elementsComponentArray, onChange }) => (
   <FieldArray
     name={elementsComponentArray[0].group}
     render={renderArray(elementsComponentArray, onChange)}
@@ -226,8 +223,6 @@ const ElementComponentArray = ({
 ElementComponentArray.propTypes = {
   elementsComponentArray: PropTypes.arrayOf(PropTypes.object).isRequired,
   onChange: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  uploadFile: PropTypes.any.isRequired, // Currently unused and unsupplied.
 }
 
 const FormTemplate = ({

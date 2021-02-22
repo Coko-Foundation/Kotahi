@@ -1,5 +1,6 @@
 import React from 'react'
 import { useQuery, gql } from '@apollo/client'
+import ReactRouterPropTypes from 'react-router-prop-types'
 import Manuscript from './Manuscript'
 import { Spinner } from '../../../shared'
 
@@ -44,6 +45,10 @@ const ManuscriptPage = ({ match, ...props }) => {
     },
   })
 
+  ManuscriptPage.propTypes = {
+    match: ReactRouterPropTypes.match.isRequired,
+  }
+
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
   const { manuscript } = data
@@ -56,4 +61,5 @@ const ManuscriptPage = ({ match, ...props }) => {
     />
   )
 }
+
 export default ManuscriptPage
