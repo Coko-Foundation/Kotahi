@@ -1,6 +1,5 @@
 const merge = require('lodash/merge')
 const { ref, raw } = require('objection')
-const ManuscriptModel = require('./manuscript')
 const detailsForURLResolver = require('./detailsForURLResolver')
 
 const ManuscriptResolvers = ({ isVersion }) => {
@@ -121,10 +120,10 @@ const resolvers = {
       return manuscript
     },
     async deleteManuscript(_, { id }, ctx) {
-      const deleteManuscript = []
+      const toDeleteList = []
       const manuscript = await ctx.models.Manuscript.find(id)
 
-      deleteManuscript.push(manuscript.id)
+      toDeleteList.push(manuscript.id)
 
       if (manuscript.parentId) {
         const parentManuscripts = await ctx.models.Manuscript.findByField(
@@ -133,22 +132,24 @@ const resolvers = {
         )
 
         parentManuscripts.forEach(ms => {
-          deleteManuscript.push(ms.id)
+          toDeleteList.push(ms.id)
         })
       }
 
       // Delete Manuscript
-      if (deleteManuscript.length > 0) {
-        deleteManuscript.forEach(async ms => {
-          await ctx.models.Manuscript.query().deleteById(ms)
-        })
+      if (toDeleteList.length > 0) {
+        await Promise.all(
+          toDeleteList.map(toDeleteItem =>
+            ctx.models.Manuscript.query().deleteById(toDeleteItem),
+          ),
+        )
       }
 
       return id
     },
     async reviewerResponse(_, { action, teamId }, context) {
       // eslint-disable-next-line global-require
-      const { TeamModel, ReviewModel } = require('@pubsweet/models') // The application breaks if this is made global. Not sure why.
+      const { TeamModel, ReviewModel } = require('@pubsweet/models') // Pubsweet models may initially be undefined, so we require only when resolver runs.
 
       if (action !== 'accepted' && action !== 'rejected')
         throw new Error(
@@ -270,6 +271,9 @@ const resolvers = {
   },
   Query: {
     async manuscript(_, { id }, ctx) {
+      // eslint-disable-next-line global-require
+      const ManuscriptModel = require('./manuscript') // Pubsweet models may initially be undefined, so we require only when resolver runs.
+
       const manuscript = await ManuscriptModel.query()
         .findById(id)
         .withGraphFetched(
