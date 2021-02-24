@@ -5027,7 +5027,7 @@ ajv@^6.1.0, ajv@^6.10.2, ajv@^6.12.0, ajv@^6.5.5:
     json-schema-traverse "^0.4.1"
     uri-js "^4.2.2"
 
-ajv@^6.10.0, ajv@^6.12.4, ajv@^6.12.5:
+ajv@^6.10.0, ajv@^6.12.4, ajv@^6.12.5, ajv@^6.12.6:
   version "6.12.6"
   resolved "https://registry.yarnpkg.com/ajv/-/ajv-6.12.6.tgz#baf5a62e802b07d977034586f8c3baf5adf26df4"
   integrity sha512-j3fVLgvTo527anyYyJOGTYJbG+vnnQYvE0m5mmkc1TK+nxAppkCLMIL0aZ4dblVCNoGShhm+kzE4ZUykBoMg4g==
@@ -16290,6 +16290,14 @@ objection@^2.1.6:
   integrity sha512-uNya9GuHlNeix7H0URthVE3+CmAlXmxkU69LAcRnncLjujJ8l1YX8JCB2GVSErTYS3Oc2xneF1ZWaR/MS8r63g==
   dependencies:
     ajv "^6.12.0"
+    db-errors "^0.2.3"
+
+objection@^2.2.14:
+  version "2.2.14"
+  resolved "https://registry.yarnpkg.com/objection/-/objection-2.2.14.tgz#e9cb5abb5f9ddb1153538b23e7cc2246d109bca8"
+  integrity sha512-5FP/1JoJMmyi8ezoH3oQyiayUGEQS33G+UPiFMe0Epj7KCFhpaApSJJlbKxPZG3GsegCiCigZsnSkgtJFFzwWw==
+  dependencies:
+    ajv "^6.12.6"
     db-errors "^0.2.3"
 
 objectorarray@^1.0.4:

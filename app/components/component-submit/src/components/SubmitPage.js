@@ -174,7 +174,7 @@ const createNewVersionMutation = gql`
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
-const SubmitPage = ({ match, history, ...props }) => {
+const SubmitPage = ({ match, history }) => {
   const [confirming, setConfirming] = useState(false)
 
   const toggleConfirming = () => {
@@ -196,34 +196,33 @@ const SubmitPage = ({ match, history, ...props }) => {
   const manuscript = data?.manuscript
   const form = data?.getFile
 
-  const updateManuscript = (versionId, manuscriptInput) =>
+  const updateManuscript = (versionId, manuscriptDelta) => {
     update({
       variables: {
         id: versionId,
-        input: JSON.stringify(manuscriptInput),
+        input: JSON.stringify(manuscriptDelta),
       },
     })
+  }
 
   const debouncers = {}
 
   // This is passed as a custom onChange prop (not belonging/originating from Formik)
   // to support continuous auto-saving
-  const handleChange = versionId => (value, path) => {
-    const input = {}
-    set(input, path, value)
+  const handleChange = (value, path, versionId) => {
+    const manuscriptDelta = {} // Only the changed fields
+    set(manuscriptDelta, path, value)
     debouncers[path] = debouncers[path] || debounce(updateManuscript, 3000)
-    return debouncers[path](versionId, input)
+    return debouncers[path](versionId, manuscriptDelta)
   }
 
   const onSubmit = async versionId => {
-    const updateManuscriptInput = {
-      status: 'submitted',
-    }
+    const delta = { status: 'submitted' }
 
     await submit({
       variables: {
         id: versionId,
-        input: JSON.stringify(updateManuscriptInput),
+        input: JSON.stringify(delta),
       },
     })
     history.push(`${urlFrag}/dashboard`)
@@ -241,7 +240,6 @@ const SubmitPage = ({ match, history, ...props }) => {
       parent={manuscript}
       toggleConfirming={toggleConfirming}
       versions={versions}
-      {...props}
     />
   )
 }

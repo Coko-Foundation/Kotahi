@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Button, PlainButton } from '@pubsweet/ui'
 import { unescape } from 'lodash'
@@ -24,6 +25,7 @@ const Paragraph = styled.p`
 const Divider = styled.span`
   margin: 0 ${th('gridUnit')};
 `
+
 const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),
 })
@@ -57,5 +59,15 @@ const Confirm = ({ toggleConfirming, form, submit, errors }) => (
     </article>
   </Wrapper>
 )
+
+Confirm.propTypes = {
+  toggleConfirming: PropTypes.func.isRequired,
+  form: PropTypes.shape({
+    popuptitle: PropTypes.string.isRequired,
+    popupdescription: PropTypes.string.isRequired,
+  }).isRequired,
+  submit: PropTypes.func.isRequired,
+  errors: PropTypes.objectOf(PropTypes.any).isRequired,
+}
 
 export default Confirm

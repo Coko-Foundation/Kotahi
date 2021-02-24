@@ -111,6 +111,7 @@
     "metascraper-title": "5.13.1",
     "moment": "2.27.0",
     "morgan": "^1.10.0",
+    "objection": "^2.2.14",
     "passport": "^0.4.1",
     "passport-orcid": "0.0.4",
     "prop-types": "15.7.2",

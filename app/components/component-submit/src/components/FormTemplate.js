@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { unescape, groupBy, isArray, get, set, cloneDeep } from 'lodash'
 import { FieldArray } from 'formik'
@@ -11,7 +12,6 @@ import {
 } from '@pubsweet/ui'
 import * as validators from 'xpub-validators'
 import { AbstractEditor } from 'xpub-edit'
-import PropTypes, { array } from 'prop-types'
 import config from 'config'
 import { Section as Container, Select, FilesUpload } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
@@ -77,11 +77,15 @@ elements.AbstractEditor = ({
 )
 
 elements.AbstractEditor.propTypes = {
-  validationStatus: PropTypes.node.isRequired,
-  setTouched: PropTypes.node.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  validationStatus: PropTypes.any, // Currently unused
+  setTouched: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.node.isRequired,
-  values: PropTypes.node.isRequired,
+  value: PropTypes.string.isRequired,
+  values: PropTypes.objectOf(PropTypes.string).isRequired,
+}
+elements.AbstractEditor.defaultProps = {
+  validationStatus: undefined,
 }
 
 elements.AuthorsInput = AuthorsInput
@@ -217,7 +221,7 @@ const ElementComponentArray = ({ elementsComponentArray, onChange }) => (
 )
 
 ElementComponentArray.propTypes = {
-  elementsComponentArray: PropTypes.oneOfType([array]).isRequired,
+  elementsComponentArray: PropTypes.arrayOf(PropTypes.object).isRequired,
   onChange: PropTypes.func.isRequired,
 }
 
@@ -237,7 +241,6 @@ const FormTemplate = ({
   submitSubmission,
   errors,
   validateForm,
-  ...props
 }) => {
   const submitButton = text => (
     <div>
@@ -403,21 +406,64 @@ const FormTemplate = ({
 }
 
 FormTemplate.propTypes = {
-  form: PropTypes.element.isRequired,
-  handleSubmit: PropTypes.element.isRequired,
-  journal: PropTypes.element.isRequired,
-  toggleConfirming: PropTypes.element.isRequired,
-  confirming: PropTypes.element.isRequired,
-  manuscript: PropTypes.element.isRequired,
-  setTouched: PropTypes.element.isRequired,
-  values: PropTypes.element.isRequired,
-  setFieldValue: PropTypes.element.isRequired,
-  createSupplementaryFile: PropTypes.element.isRequired,
-  onChange: PropTypes.element.isRequired,
-  onSubmit: PropTypes.element.isRequired,
-  submitSubmission: PropTypes.element.isRequired,
-  errors: PropTypes.element.isRequired,
-  validateForm: PropTypes.element.isRequired,
+  form: PropTypes.shape({
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string,
+    children: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        sectioncss: PropTypes.string,
+        id: PropTypes.string.isRequired,
+        component: PropTypes.string.isRequired,
+        group: PropTypes.string,
+        order: PropTypes.string, // number as string
+        placeholder: PropTypes.string,
+        validate: PropTypes.arrayOf(PropTypes.object.isRequired),
+        validateValue: PropTypes.objectOf(
+          PropTypes.oneOfType([
+            PropTypes.string.isRequired,
+            PropTypes.number.isRequired,
+          ]).isRequired,
+        ),
+      }).isRequired,
+    ).isRequired,
+    popuptitle: PropTypes.string.isRequired,
+    popupdescription: PropTypes.string.isRequired,
+    haspopup: PropTypes.string.isRequired, // bool as string
+  }).isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  journal: PropTypes.any, // currently unused
+  toggleConfirming: PropTypes.func.isRequired,
+  confirming: PropTypes.bool.isRequired,
+  manuscript: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+  setTouched: PropTypes.func.isRequired,
+  values: PropTypes.shape({
+    files: PropTypes.arrayOf(
+      PropTypes.shape({
+        name: PropTypes.string,
+        url: PropTypes.string.isRequired,
+      }).isRequired,
+    ).isRequired,
+    status: PropTypes.string,
+  }).isRequired,
+  setFieldValue: PropTypes.func.isRequired,
+  // eslint-disable-next-line react/forbid-prop-types
+  createSupplementaryFile: PropTypes.any, // currently unused
+  onChange: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func,
+  submitSubmission: PropTypes.func,
+  errors: PropTypes.objectOf(PropTypes.any).isRequired,
+  validateForm: PropTypes.func.isRequired,
+}
+FormTemplate.defaultProps = {
+  journal: undefined,
+  onSubmit: undefined,
+  submitSubmission: undefined,
+  createSupplementaryFile: undefined,
 }
 
 export default FormTemplate
