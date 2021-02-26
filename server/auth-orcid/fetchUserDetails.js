@@ -1,12 +1,13 @@
-const superagent = require('superagent')
+// eslint-disable-next-line import/no-extraneous-dependencies
+const superagent = require('superagent') // gyp errors when I try to yarn add superagent
 const _ = require('lodash')
 const logger = require('@pubsweet/logger')
 const { Identity } = require('@pubsweet/models')
 
 const apiRoot =
-  process.env.NODE_ENV === 'production'
-    ? 'https://pub.orcid.org/v3.0'
-    : 'https://pub.sandbox.orcid.org/v3.0'
+  process.env.USE_SANDBOXED_ORCID.toLowerCase() === 'true'
+    ? 'https://pub.sandbox.orcid.org/v3.0'
+    : 'https://pub.orcid.org/v3.0'
 
 // request data from orcid API
 const request = (identity, endpoint) =>
@@ -32,6 +33,7 @@ module.exports = async user => {
   })
 
   logger.debug('processing response from orcid api')
+
   const [personResponse, employmentsResponse] = await Promise.all([
     request(identity, 'person'),
     request(identity, 'employments'),

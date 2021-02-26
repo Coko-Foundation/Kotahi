@@ -32,6 +32,7 @@ services:
       - SERVER_PORT=${SERVER_PORT}
       - ORCID_CLIENT_ID=${ORCID_CLIENT_ID}
       - ORCID_CLIENT_SECRET=${ORCID_CLIENT_SECRET}
+      - USE_SANDBOXED_ORCID=${USE_SANDBOXED_ORCID:-false}
 
   job-xsweet:
     image: pubsweet/job-xsweet
