@@ -148,12 +148,15 @@ const resolvers = {
       return id
     },
     async reviewerResponse(_, { action, teamId }, context) {
-      // eslint-disable-next-line global-require
-      const { TeamModel, ReviewModel } = require('@pubsweet/models') // Pubsweet models may initially be undefined, so we require only when resolver runs.
+      const {
+        Team: TeamModel,
+        Review: ReviewModel,
+        // eslint-disable-next-line global-require
+      } = require('@pubsweet/models') // Pubsweet models may initially be undefined, so we require only when resolver runs.
 
       if (action !== 'accepted' && action !== 'rejected')
         throw new Error(
-          `Invalid action (revieweResponse): Must be either "accepted" or "rejected"`,
+          `Invalid action (reviewerResponse): Must be either "accepted" or "rejected"`,
         )
 
       const team = await TeamModel.query().findById(teamId).eager('members')

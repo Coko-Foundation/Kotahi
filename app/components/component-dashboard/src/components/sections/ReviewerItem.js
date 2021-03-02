@@ -72,7 +72,24 @@ const ReviewerItem = ({ version, currentUser, reviewerRespond }) => {
 }
 
 ReviewerItem.propTypes = {
-  version: PropTypes.string.isRequired,
+  version: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    meta: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+    }).isRequired,
+    teams: PropTypes.arrayOf(
+      PropTypes.shape({
+        role: PropTypes.string.isRequired,
+        members: PropTypes.arrayOf(
+          PropTypes.shape({
+            user: PropTypes.shape({
+              id: PropTypes.string.isRequired,
+            }).isRequired,
+          }).isRequired,
+        ).isRequired,
+      }).isRequired,
+    ).isRequired,
+  }).isRequired,
   currentUser: PropTypes.oneOfType([PropTypes.object]).isRequired,
   reviewerRespond: PropTypes.func.isRequired,
 }
