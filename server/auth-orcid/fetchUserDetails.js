@@ -1,5 +1,4 @@
-// eslint-disable-next-line import/no-extraneous-dependencies
-const superagent = require('superagent') // gyp errors when I try to yarn add superagent
+const superagent = require('superagent')
 const _ = require('lodash')
 const logger = require('@pubsweet/logger')
 const { Identity } = require('@pubsweet/models')
