@@ -6,7 +6,7 @@ module.exports = {
   },
   'pubsweet-client': {
     protocol: 'CLIENT_PROTOCOL',
-    host: 'CLIENT_HOST',
+    host: 'PUBLIC_CLIENT_HOST',
     port: 'CLIENT_PORT',
   },
   'pubsweet-server': {

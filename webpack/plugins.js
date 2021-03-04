@@ -46,6 +46,7 @@ module.exports = (opts = {}) => {
       'CLIENT_PROTOCOL',
       'CLIENT_HOST',
       'CLIENT_PORT',
+      'PUBLIC_CLIENT_HOST',
       'USE_SANDBOXED_ORCID',
     ]),
   )

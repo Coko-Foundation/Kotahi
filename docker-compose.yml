@@ -17,11 +17,13 @@ services:
       - ${CLIENT_PORT:-4000}:${CLIENT_PORT:-4000}
     environment:
       - NODE_ENV=development
+      - CLIENT_PROTOCOL=${CLIENT_PROTOCOL:-http}
       - CLIENT_HOST=0.0.0.0
       - CLIENT_PORT=${CLIENT_PORT:-4000}
       - SERVER_PROTOCOL=http
       - SERVER_HOST=server
       - SERVER_PORT=${SERVER_PORT:-3000}
+      - PUBLIC_CLIENT_HOST=${PUBLIC_CLIENT_HOST:-0.0.0.0}
     volumes:
       - ./app:/home/node/app/app
       - ./config:/home/node/app/config
