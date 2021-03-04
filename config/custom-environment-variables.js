@@ -1,5 +1,6 @@
 module.exports = {
   'auth-orcid': {
+    useSandboxedOrcid: 'USE_SANDBOXED_ORCID',
     clientID: 'ORCID_CLIENT_ID',
     clientSecret: 'ORCID_CLIENT_SECRET',
   },

@@ -68,6 +68,7 @@ services:
       - CLIENT_PORT=${CLIENT_PORT:-4000}
       - ORCID_CLIENT_ID=${ORCID_CLIENT_ID}
       - ORCID_CLIENT_SECRET=${ORCID_CLIENT_SECRET}
+      - USE_SANDBOXED_ORCID=${USE_SANDBOXED_ORCID:-true}
     volumes:
       - ./config:/home/node/app/config
       - ./server:/home/node/app/server

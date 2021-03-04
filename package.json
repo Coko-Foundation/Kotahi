@@ -133,6 +133,7 @@
     "react-visibility-sensor": "5.1.1",
     "regenerator-runtime": "^0.13.7",
     "styled-components": "4.4.1",
+    "superagent": "^3.8.3",
     "supertest": "3.4.2",
     "waait": "^1.0.5",
     "wax-prosemirror-core": "0.0.10",

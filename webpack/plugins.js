@@ -47,6 +47,7 @@ module.exports = (opts = {}) => {
       'CLIENT_HOST',
       'CLIENT_PORT',
       'PUBLIC_CLIENT_HOST',
+      'USE_SANDBOXED_ORCID',
     ]),
   )
 
