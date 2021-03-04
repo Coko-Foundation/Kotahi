@@ -55,3 +55,7 @@ x = await User.query().where({username:"0000000210481437"}).first()
 x.admin = true
 x.save()
 ```
+
+## What should PUBLIC_CLIENT_HOST be set to?
+
+This environment variable is currently only needed when deploying a _development_ build to a server (not to localhost). Set it to the server's name, e.g. `subdomain.myserver.com`.
