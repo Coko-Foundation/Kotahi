@@ -1,7 +1,5 @@
-/* eslint-disable react/jsx-filename-extension */
 import React from 'react'
-import gql from 'graphql-tag'
-import { useMutation } from '@apollo/client'
+import { gql, useMutation } from '@apollo/client'
 // import { Action } from '@pubsweet/ui'
 import config from 'config'
 import PropTypes from 'prop-types'
@@ -83,9 +81,22 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
 }
 
 User.propTypes = {
-  manuscriptId: PropTypes.number.isRequired,
-  manuscript: PropTypes.element.isRequired,
-  submitter: PropTypes.element.isRequired,
+  manuscriptId: PropTypes.string.isRequired,
+  manuscript: PropTypes.shape({
+    meta: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+    }).isRequired,
+    created: PropTypes.string.isRequired,
+    updated: PropTypes.string,
+    status: PropTypes.string.isRequired,
+  }).isRequired,
+  submitter: PropTypes.shape({
+    defaultIdentity: PropTypes.shape({
+      name: PropTypes.string.isRequired,
+    }).isRequired,
+    email: PropTypes.string,
+    username: PropTypes.string.isRequired,
+  }).isRequired,
 }
 
 export default User

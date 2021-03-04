@@ -62,7 +62,28 @@ const DecisionReviews = ({ manuscript }) => (
 )
 
 DecisionReviews.propTypes = {
-  manuscript: PropTypes.element.isRequired,
+  manuscript: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    reviews: PropTypes.arrayOf(
+      PropTypes.shape({
+        user: PropTypes.shape({
+          id: PropTypes.string.isRequired,
+        }).isRequired,
+      }).isRequired,
+    ).isRequired,
+    teams: PropTypes.arrayOf(
+      PropTypes.shape({
+        role: PropTypes.string.isRequired,
+        members: PropTypes.arrayOf(
+          PropTypes.shape({
+            user: PropTypes.shape({
+              id: PropTypes.string.isRequired,
+            }).isRequired,
+          }).isRequired,
+        ).isRequired,
+      }).isRequired,
+    ).isRequired,
+  }).isRequired,
 }
 
 export default DecisionReviews

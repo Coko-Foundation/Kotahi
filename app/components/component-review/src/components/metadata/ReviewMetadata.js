@@ -130,7 +130,22 @@ const ReviewMetadata = ({ manuscript: rawManuscript }) => {
 }
 
 ReviewMetadata.propTypes = {
-  manuscript: PropTypes.node.isRequired,
+  manuscript: PropTypes.shape({
+    meta: PropTypes.shape({
+      notes: PropTypes.arrayOf(
+        PropTypes.shape({
+          notesType: PropTypes.string.isRequired,
+          content: PropTypes.string.isRequired,
+        }).isRequired,
+      ).isRequired,
+    }).isRequired,
+    files: PropTypes.arrayOf(
+      PropTypes.shape({
+        url: PropTypes.string.isRequired,
+        filename: PropTypes.string.isRequired,
+      }).isRequired,
+    ).isRequired,
+  }).isRequired,
 }
 
 export default ReviewMetadata

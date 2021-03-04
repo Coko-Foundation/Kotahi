@@ -45,7 +45,14 @@ const EditorItemLinks = ({ version }) => (
 )
 
 EditorItemLinks.propTypes = {
-  version: PropTypes.element.isRequired,
+  version: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    parentId: PropTypes.string,
+    decision: PropTypes.shape({
+      status: PropTypes.string.isRequired,
+      recommendation: PropTypes.string.isRequired,
+    }),
+  }).isRequired,
 }
 
 const getDeclarationsObject = (version, value) => {
@@ -102,7 +109,31 @@ const EditorItem = ({ version }) => (
 )
 
 EditorItem.propTypes = {
-  version: PropTypes.element.isRequired,
+  version: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    parentId: PropTypes.string,
+    decision: PropTypes.shape({
+      status: PropTypes.string.isRequired,
+      recommendation: PropTypes.string.isRequired,
+    }),
+    meta: PropTypes.shape({
+      title: PropTypes.string.isRequired,
+    }).isRequired,
+    // eslint-disable-next-line react/forbid-prop-types
+    published: PropTypes.any, // TODO require boolean rather than any truthy or falsey value
+    status: PropTypes.string.isRequired,
+    teams: PropTypes.arrayOf(
+      PropTypes.shape({
+        role: PropTypes.string.isRequired,
+        members: PropTypes.arrayOf(
+          PropTypes.shape({
+            status: PropTypes.string,
+          }).isRequired,
+        ).isRequired,
+      }).isRequired,
+    ).isRequired,
+    _currentRoles: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  }).isRequired,
 }
 
 export default EditorItem
