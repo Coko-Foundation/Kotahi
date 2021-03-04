@@ -17,6 +17,7 @@ services:
       - ${CLIENT_PORT:-4000}:${CLIENT_PORT:-4000}
     environment:
       - NODE_ENV=development
+      - CLIENT_PROTOCOL=${CLIENT_PROTOCOL:-http}
       - CLIENT_HOST=0.0.0.0
       - CLIENT_PORT=${CLIENT_PORT:-4000}
       - SERVER_PROTOCOL=http

@@ -2,7 +2,8 @@
  * subscription (websocket) server for GraphQL
  */
 const { execute, subscribe } = require('graphql')
-const { SubscriptionServer } = require('subscriptions-transport-ws')
+// eslint-disable-next-line import/no-extraneous-dependencies
+const { SubscriptionServer } = require('subscriptions-transport-ws') // TODO: Should we rewrite subscriptions to use Apollo v2?
 
 const logger = require('@pubsweet/logger')
 
@@ -11,10 +12,12 @@ const { token } = require('pubsweet-server/src/authentication') // TODO: Fix imp
 
 module.exports = {
   addSubscriptions: server => {
+    /* eslint-disable global-require */
     const models = require('@pubsweet/models')
     const helpers = require('pubsweet-server/src/helpers/authorization')
-
     const { User } = require('@pubsweet/models')
+    /* eslint-enable global-require */
+
     SubscriptionServer.create(
       {
         schema: graphqlSchema,
@@ -22,8 +25,11 @@ module.exports = {
         subscribe,
         onConnect: async (connectionParams, webSocket, context) => {
           if (!connectionParams.authToken) {
-            throw new Error('Missing auth token')
+            logger.info('Missing auth token')
+            return false
+            // throw new Error('Missing auth token')
           }
+
           const addTocontext = await new Promise((resolve, reject) => {
             token.verify(connectionParams.authToken, (_, id) => {
               if (!id) {
@@ -34,6 +40,7 @@ module.exports = {
               resolve({ userId: id, models, helpers })
             })
           })
+
           // Record a user's online status
           const user = await User.query().updateAndFetchById(
             addTocontext.userId,
@@ -45,6 +52,7 @@ module.exports = {
         },
         onDisconnect: async (webSocket, context) => {
           const initialContext = await context.initPromise
+
           // Record that a user is no longer online
           if (initialContext.user && initialContext.user.id) {
             await User.query()
