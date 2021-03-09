@@ -1,0 +1,48 @@
+variables:
+  IMAGE_ORG: iliusa77
+  IMAGE_NAME: kotahi
+
+stages:
+  #- build
+  #- test
+  #- deploy
+
+build:
+  image: docker:19.03.13
+  services:
+    - docker:19.03.13-dind
+  stage: build
+  script:
+    - if [ -z "$DOCKERHUB_USERNAME_ELIFE" ] || [ -z "$DOCKERHUB_PASSWORD_ELIFE" ]; then echo "Not pushing" && exit 0; fi
+    - docker login -u $DOCKERHUB_USERNAME_ELIFE -p $DOCKERHUB_PASSWORD_ELIFE
+    - docker pull $IMAGE_ORG/$IMAGE_NAME:latest || true
+    - docker build --file ./Dockerfile-ci --cache-from $CI_REGISTRY_IMAGE:latest --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME:latest .
+    - docker push $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+    - docker push $IMAGE_ORG/$IMAGE_NAME:latest
+
+lint:
+  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - cd ${HOME}
+    - npm run lint
+
+deploy:
+  stage: deploy
+  #image: registry.gitlab.com/gitlab-org/cloud-deploy/aws-base:latest
+  image: docker:19.03.13
+  before_script:
+    - export SSH_KEY=$SSH_KEY_ELIFE
+    - export DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME_ELIFE
+    - export DOCKERHUB_PASSWORD=$DOCKERHUB_PASSWORD_ELIFE
+    - export REGISTRY=$REGISTRY
+    - export IMAGE_ORG=$IMAGE_ORG
+    - export IMAGE_NAME=$IMAGE_NAME
+  script:
+    - ssh ubuntu@elife.kotahi.cloud -i $SSH_KEY
+    - sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD 
+    - sudo docker pull $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+
+
