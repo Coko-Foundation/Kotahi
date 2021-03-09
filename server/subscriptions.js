@@ -26,20 +26,26 @@ module.exports = {
         onConnect: async (connectionParams, webSocket, context) => {
           if (!connectionParams.authToken) {
             logger.info('Missing auth token')
-            return false
+            return false // TODO Upgrade to Apollo 2 or 3 and throw instead of returning false
             // throw new Error('Missing auth token')
           }
 
-          const addTocontext = await new Promise((resolve, reject) => {
-            token.verify(connectionParams.authToken, (_, id) => {
-              if (!id) {
-                logger.info('Bad auth token')
-                reject(new Error('Bad auth token'))
-              }
+          let addTocontext
 
-              resolve({ userId: id, models, helpers })
+          try {
+            addTocontext = await new Promise((resolve, reject) => {
+              token.verify(connectionParams.authToken, (_, id) => {
+                if (!id) {
+                  logger.info('Bad auth token')
+                  reject(new Error('Bad auth token'))
+                }
+
+                resolve({ userId: id, models, helpers })
+              })
             })
-          })
+          } catch {
+            return false // TODO: Upgrade to Apollo 2 or 3 and remove the try/catch block
+          }
 
           // Record a user's online status
           const user = await User.query().updateAndFetchById(
