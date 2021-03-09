@@ -17,7 +17,7 @@ const doReview = name => {
   cy.contains('Accept').click()
   cy.contains('Submit').click()
 
-  cy.visit('/journal/dashboard')
+  cy.visit('/kotahi/dashboard')
   cy.contains('Completed')
 }
 

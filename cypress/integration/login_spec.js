@@ -3,7 +3,7 @@ describe('Login test', () => {
     cy.task('restore', 'initialState')
     cy.task('createToken', 'Sinead Sullivan').then(token => {
       cy.setToken(token)
-      cy.visit('/journal/dashboard')
+      cy.visit('/kotahi/dashboard')
     })
 
     // console.log(localStorage.getItem('token'))

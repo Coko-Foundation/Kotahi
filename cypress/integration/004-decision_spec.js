@@ -18,7 +18,7 @@ describe('Completing a review', () => {
     cy.contains('Accept').click({ force: true })
     cy.contains('Submit').click()
     cy.contains('Your decision has been saved.')
-    cy.visit('/journal/dashboard')
+    cy.visit('/kotahi/dashboard')
     cy.contains('Accepted')
 
     // Regression test, previously this count increased when a decision was made

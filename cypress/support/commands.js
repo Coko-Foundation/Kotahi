@@ -34,6 +34,6 @@ Cypress.Commands.add('setToken', token => {
 Cypress.Commands.add('login', name => {
   cy.task('createToken', name).then(token => {
     cy.setToken(token)
-    cy.visit('/journal/dashboard')
+    cy.visit('/kotahi/dashboard')
   })
 })
