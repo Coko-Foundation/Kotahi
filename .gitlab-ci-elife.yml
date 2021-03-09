@@ -3,9 +3,9 @@ variables:
   IMAGE_NAME: kotahi
 
 stages:
-  #- build
-  #- test
-  #- deploy
+  - build
+  # - test
+  - deploy
 
 build:
   image: docker:19.03.13
@@ -20,14 +20,14 @@ build:
     - docker push $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
     - docker push $IMAGE_ORG/$IMAGE_NAME:latest
 
-lint:
-  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
-  stage: test
-  variables:
-    GIT_STRATEGY: none
-  script:
-    - cd ${HOME}
-    - npm run lint
+# lint:
+#   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+#   stage: test
+#   variables:
+#     GIT_STRATEGY: none
+#   script:
+#     - cd ${HOME}
+#     - npm run lint
 
 deploy:
   stage: deploy
@@ -37,12 +37,17 @@ deploy:
     - export SSH_KEY=$SSH_KEY_ELIFE
     - export DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME_ELIFE
     - export DOCKERHUB_PASSWORD=$DOCKERHUB_PASSWORD_ELIFE
-    - export REGISTRY=$REGISTRY
     - export IMAGE_ORG=$IMAGE_ORG
     - export IMAGE_NAME=$IMAGE_NAME
+    - eval $(ssh-agent -s)
+    - echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+    - mkdir -p ~/.ssh
+    - chmod 700 ~/.ssh
+    - ssh-keyscan elife.kotahi.cloud >> ~/.ssh/known_hosts
+    - chmod 644 ~/.ssh/known_hosts
   script:
-    - ssh ubuntu@elife.kotahi.cloud -i $SSH_KEY
-    - sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD 
-    - sudo docker pull $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
-
-
+    - | 
+      ssh ubuntu@elife.kotahi.cloud "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
+      sudo docker pull $IMAGE_ORG/$IMAGE_NAME:latest && 
+      sudo supervisorctl stop kotahi && 
+      sudo supervisorctl start kotahi"
