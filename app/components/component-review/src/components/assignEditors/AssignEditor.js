@@ -1,12 +1,12 @@
 import React from 'react'
 import config from 'config'
 import { get } from 'lodash'
-import { useQuery, useMutation } from '@apollo/client'
-import gql from 'graphql-tag'
+import { gql, useQuery, useMutation } from '@apollo/client'
+import PropTypes from 'prop-types'
 import { Select } from '../../../../shared'
 
 const editorOption = user => ({
-  label: user.defaultIdentity.name,
+  label: user.defaultIdentity?.name || user.email || user.username,
   value: user.id,
 })
 
@@ -31,6 +31,7 @@ const query = gql`
     users {
       id
       username
+      email
       admin
       defaultIdentity {
         id
@@ -57,8 +58,7 @@ const createTeamMutation = gql`
 `
 
 const AssignEditor = ({ teamRole, manuscript }) => {
-  const team =
-    (manuscript.teams || []).find(team => team.role === teamRole) || {}
+  const team = (manuscript.teams || []).find(t => t.role === teamRole) || {}
 
   const members = team.members || []
   const value = members.length > 0 ? members[0].user.id : undefined
@@ -77,10 +77,10 @@ const AssignEditor = ({ teamRole, manuscript }) => {
 
   const assignRole = async (userId, role) => {
     if (value) {
-      const team = manuscript.teams.find(team => team.role === teamRole)
+      const teamToUpdate = manuscript.teams.find(t => t.role === teamRole)
       updateTeam({
         variables: {
-          id: team.id,
+          id: teamToUpdate.id,
           input: {
             members: [{ user: { id: userId } }],
           },
@@ -114,6 +114,18 @@ const AssignEditor = ({ teamRole, manuscript }) => {
       value={value}
     />
   )
+}
+
+AssignEditor.propTypes = {
+  teamRole: PropTypes.string.isRequired,
+  manuscript: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    teams: PropTypes.arrayOf(
+      PropTypes.shape({
+        role: PropTypes.string.isRequired,
+      }).isRequired,
+    ).isRequired,
+  }).isRequired,
 }
 
 export default AssignEditor
