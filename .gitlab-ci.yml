@@ -38,16 +38,18 @@ test-chrome:
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
-    POSTGRES_USER: test
+    POSTGRES_USER: kotahitest
     POSTGRES_PASSWORD: pw
     # connection details for tests
-    PGUSER: test
+    PGUSER: kotahitest
     PGPASSWORD: pw
     NODE_ENV: test
   services:
     - postgres
   script:
     - cd ${HOME}
+    - apt-get install postgresql-client
+    - psql -U kotahitest -d kotahitest -c "create extension pgcrypto;"
     # specify host here else it confuses the linked postgres image
     - PGHOST=postgres yarn test:all:chrome
 
@@ -58,10 +60,10 @@ test-firefox:
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
-    POSTGRES_USER: test
+    POSTGRES_USER: kotahitest
     POSTGRES_PASSWORD: pw
     # connection details for tests
-    PGUSER: test
+    PGUSER: kotahitest
     PGPASSWORD: pw
     NODE_ENV: test
   services:
