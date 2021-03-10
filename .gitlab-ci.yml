@@ -48,7 +48,8 @@ test-chrome:
     - postgres
   script:
     - cd ${HOME}
-    - apt-get install postgresql-client
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss setup
     - psql -U kotahitest -d kotahitest -c "create extension pgcrypto;"
     # specify host here else it confuses the linked postgres image
     - PGHOST=postgres yarn test:all:chrome
