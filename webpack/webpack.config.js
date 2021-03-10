@@ -7,6 +7,10 @@ const rules = require('./common-rules')
 
 const contentBase = path.resolve(__dirname, '..', '_build', 'assets')
 
+// Loads environment variables from e.g. .env.development, same as server/app.js
+const dotenvPath = path.resolve(`.env.${config.util.getEnv('NODE_ENV')}`)
+require('dotenv').config({ path: dotenvPath })
+
 // can't use node-config in webpack so save whitelisted client config into the build and alias it below
 const clientConfig = pick(config, config.publicKeys)
 fs.ensureDirSync(contentBase)
