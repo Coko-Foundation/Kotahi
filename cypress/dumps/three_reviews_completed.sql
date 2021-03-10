@@ -94,7 +94,9 @@ CREATE TABLE pgboss.archive (
     expirein interval NOT NULL,
     createdon timestamp with time zone NOT NULL,
     completedon timestamp with time zone,
-    archivedon timestamp with time zone DEFAULT now() NOT NULL
+    archivedon timestamp with time zone DEFAULT now() NOT NULL,
+    keepuntil timestamp with time zone,
+    on_complete boolean
 );
 
 
@@ -120,18 +122,39 @@ CREATE TABLE pgboss.job (
     singletonon timestamp without time zone,
     expirein interval DEFAULT '00:15:00'::interval NOT NULL,
     createdon timestamp with time zone DEFAULT now() NOT NULL,
-    completedon timestamp with time zone
+    completedon timestamp with time zone,
+    keepuntil timestamp with time zone DEFAULT (now() + '30 days'::interval) NOT NULL,
+    on_complete boolean DEFAULT true NOT NULL
 );
 
 
 ALTER TABLE pgboss.job OWNER TO test;
 
 --
+-- Name: schedule; Type: TABLE; Schema: pgboss; Owner: test
+--
+
+CREATE TABLE pgboss.schedule (
+    name text NOT NULL,
+    cron text NOT NULL,
+    timezone text,
+    data jsonb,
+    options jsonb,
+    created_on timestamp with time zone DEFAULT now() NOT NULL,
+    updated_on timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE pgboss.schedule OWNER TO test;
+
+--
 -- Name: version; Type: TABLE; Schema: pgboss; Owner: test
 --
 
 CREATE TABLE pgboss.version (
-    version text NOT NULL
+    version integer NOT NULL,
+    maintained_on timestamp with time zone,
+    cron_on timestamp with time zone
 );
 
 
@@ -396,13 +419,26 @@ ALTER TABLE public.users OWNER TO test;
 -- Data for Name: job; Type: TABLE DATA; Schema: pgboss; Owner: test
 --
 
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('876670c0-8195-11eb-815e-59df8a5d915a', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, false, '2021-03-10 12:41:18.669507+01', '2021-03-10 12:41:18.675148+01', '__pgboss__maintenance', NULL, '00:15:00', '2021-03-10 12:41:18.669507+01', '2021-03-10 12:41:18.693727+01', '2021-03-10 12:49:18.669507+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('87686c90-8195-11eb-815e-59df8a5d915a', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, false, '2021-03-10 12:41:18.685423+01', '2021-03-10 12:41:22.689863+01', NULL, '2021-03-10 11:41:00', '00:15:00', '2021-03-10 12:41:18.685423+01', '2021-03-10 12:41:22.824712+01', '2021-03-10 12:42:18.685423+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('89da2fe0-8195-11eb-815e-59df8a5d915a', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, false, '2021-03-10 12:42:01.782499+01', '2021-03-10 12:48:02.953124+01', NULL, '2021-03-10 11:42:00', '00:15:00', '2021-03-10 12:41:22.782499+01', '2021-03-10 12:48:02.980596+01', '2021-03-10 12:43:01.782499+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('7ac41380-8196-11eb-815e-59df8a5d915a', '__pgboss__cron', 0, NULL, 'created', 2, 0, 0, false, '2021-03-10 12:49:01.96878+01', NULL, NULL, '2021-03-10 11:49:00', '00:15:00', '2021-03-10 12:48:06.96878+01', NULL, '2021-03-10 12:50:01.96878+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('7862a3e0-8196-11eb-815e-59df8a5d915a', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, false, '2021-03-10 12:48:02.975253+01', '2021-03-10 12:48:06.958274+01', NULL, '2021-03-10 11:48:00', '00:15:00', '2021-03-10 12:48:02.975253+01', '2021-03-10 12:48:06.970586+01', '2021-03-10 12:49:02.975253+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('876ab680-8195-11eb-815e-59df8a5d915a', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, false, '2021-03-10 12:43:18.696869+01', '2021-03-10 12:48:18.70568+01', '__pgboss__maintenance', NULL, '00:15:00', '2021-03-10 12:41:18.696869+01', '2021-03-10 12:48:18.766285+01', '2021-03-10 12:51:18.696869+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('81ccc410-8196-11eb-815e-59df8a5d915a', '__pgboss__maintenance', 0, NULL, 'created', 0, 0, 0, false, '2021-03-10 12:50:18.770247+01', NULL, '__pgboss__maintenance', NULL, '00:15:00', '2021-03-10 12:48:18.770247+01', NULL, '2021-03-10 12:58:18.770247+01', false);
+
+
+--
+-- Data for Name: schedule; Type: TABLE DATA; Schema: pgboss; Owner: test
+--
+
 
 
 --
 -- Data for Name: version; Type: TABLE DATA; Schema: pgboss; Owner: test
 --
 
-INSERT INTO pgboss.version (version) VALUES ('11');
+INSERT INTO pgboss.version (version, maintained_on, cron_on) VALUES (16, '2021-03-10 12:48:18.764191+01', '2021-03-10 12:48:06.965457+01');
 
 
 --
@@ -421,8 +457,8 @@ INSERT INTO pgboss.version (version) VALUES ('11');
 -- Data for Name: channels; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.channels (id, manuscript_id, created, updated, topic, type) VALUES ('a183114f-ed43-43d2-9852-e95b546c94f0', 'feb4db67-c975-446e-9131-1b92943cf8ed', '2020-08-16 23:19:04.294+02', '2020-08-16 23:19:04.294+02', 'Manuscript discussion', 'all');
-INSERT INTO public.channels (id, manuscript_id, created, updated, topic, type) VALUES ('9a85e645-3b16-4e1c-8e84-73af36c48712', 'feb4db67-c975-446e-9131-1b92943cf8ed', '2020-08-16 23:19:04.294+02', '2020-08-16 23:19:04.294+02', 'Editorial discussion', 'editorial');
+INSERT INTO public.channels (id, manuscript_id, created, updated, topic, type) VALUES ('fbb752f5-fb46-4ab6-9896-bcf34a384c92', '06ea851c-619c-453e-a12e-6568da11252c', '2021-03-10 12:48:02.828+01', '2021-03-10 12:48:02.828+01', 'Manuscript discussion', 'all');
+INSERT INTO public.channels (id, manuscript_id, created, updated, topic, type) VALUES ('1e410fdb-9afe-4a6f-97b5-526e384d4df3', '06ea851c-619c-453e-a12e-6568da11252c', '2021-03-10 12:48:02.828+01', '2021-03-10 12:48:02.828+01', 'Editorial discussion', 'editorial');
 
 
 --
@@ -435,7 +471,7 @@ INSERT INTO public.channels (id, manuscript_id, created, updated, topic, type) V
 -- Data for Name: files; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.files (id, created, updated, label, file_type, filename, url, mime_type, size, type, manuscript_id, review_comment_id) VALUES ('cbc2943a-bd1e-46d2-a7eb-aea5109893ed', '2020-08-16 23:19:25.243+02', '2020-08-16 23:19:25.243+02', NULL, 'supplementary', 'test-pdf.pdf', '/static/uploads/fa2c9dcd868b920e3cae84ab494f3468.pdf', 'application/pdf', 142400, 'file', 'feb4db67-c975-446e-9131-1b92943cf8ed', NULL);
+INSERT INTO public.files (id, created, updated, label, file_type, filename, url, mime_type, size, type, manuscript_id, review_comment_id) VALUES ('81ffbef0-c77e-46dc-a86c-864f7f1f336c', '2021-03-10 12:48:21.069+01', '2021-03-10 12:48:21.069+01', NULL, 'supplementary', 'test-pdf.pdf', '/static/uploads/508239154500088a36827c250d0b83b7.pdf', 'application/pdf', 142400, 'file', '06ea851c-619c-453e-a12e-6568da11252c', NULL);
 
 
 --
@@ -455,7 +491,7 @@ INSERT INTO public.identities (id, user_id, created, updated, type, identifier, 
 -- Data for Name: manuscripts; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.manuscripts (id, created, updated, parent_id, submitter_id, status, decision, authors, suggestions, meta, submission, published, type) VALUES ('feb4db67-c975-446e-9131-1b92943cf8ed', '2020-08-16 23:19:04.249+02', '2020-08-16 23:19:34.445+02', NULL, '027afa6a-edbc-486e-bb31-71e12f8ea1c5', 'submitted', NULL, NULL, NULL, '{"title": "My URL submission"}', '{"irb": "yes", "name": "Emily Clay", "cover": "This is my cover letter", "links": [{"url": "https://doi.org/10.6084/m9.figshare.913521.v1"}, {"url": "https://github.com/jure/mathtype_to_mathml"}], "ethics": "This is my ethics statement", "contact": "emily@example.com", "methods": ["Functional MRI", "Optical Imaging"], "datacode": "This is my data and code availability statement", "humanMRI": "3T", "keywords": "some, keywords", "packages": ["SPM", "FSL"], "subjects": "patients", "suggested": "Erica James, Matthew Matretzky", "objectType": "software", "affiliation": "Example University, Egland", "otherMethods": "Erica James, Matthew Matretzky", "humanMRIother": "7T", "otherPackages": "Jupyter, Stencila", "animal_research_approval": "yes"}', NULL, 'Manuscript');
+INSERT INTO public.manuscripts (id, created, updated, parent_id, submitter_id, status, decision, authors, suggestions, meta, submission, published, type) VALUES ('06ea851c-619c-453e-a12e-6568da11252c', '2021-03-10 12:48:02.815+01', '2021-03-10 12:48:28.803+01', NULL, '027afa6a-edbc-486e-bb31-71e12f8ea1c5', 'submitted', NULL, NULL, NULL, '{"notes": [{"content": "", "notesType": "fundingAcknowledgement"}, {"content": "", "notesType": "specialInstructions"}], "title": "My URL submission"}', '{"irb": "yes", "name": "Emily Clay", "cover": "This is my cover letter", "links": [{"url": "https://doi.org/10.6084/m9.figshare.913521.v1"}, {"url": "https://github.com/jure/mathtype_to_mathml"}], "ethics": "This is my ethics statement", "contact": "emily@example.com", "methods": ["Functional MRI", "Optical Imaging"], "datacode": "This is my data and code availability statement", "humanMRI": "3T", "keywords": "some, keywords", "packages": ["SPM", "FSL"], "subjects": "patients", "suggested": "Erica James, Matthew Matretzky", "objectType": "software", "affiliation": "Example University, England", "otherMethods": "Erica James, Matthew Matretzky", "humanMRIother": "7T", "animal_research_approval": "yes"}', NULL, 'Manuscript');
 
 
 --
@@ -489,41 +525,41 @@ INSERT INTO public.migrations (id, run_at) VALUES ('1596838897-files.sql', '2020
 -- Data for Name: review_comments; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('8a085610-99ef-4017-bb3c-c70f3ab1e748', '2020-08-16 23:19:57.152+02', '2020-08-16 23:19:57.152+02', '4d506030-cbb8-4368-be90-58c973c5abaa', NULL, '<p>Great paper, congratulations! Gale Davis</p>', 'review', 'ReviewComment');
-INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('a5015c5e-7a13-49dd-a2da-5d10aa765d9b', '2020-08-16 23:19:58.157+02', '2020-08-16 23:19:58.157+02', '4d506030-cbb8-4368-be90-58c973c5abaa', NULL, '<p>This is a very important paper. Gale Davis</p>', 'confidential', 'ReviewComment');
-INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('aaacdb10-de74-493e-9b8c-b4f0a3a96b3d', '2020-08-16 23:20:02.302+02', '2020-08-16 23:20:02.302+02', '4ea2e924-c1db-42b7-9bc1-4bbb8fc7693e', NULL, '<p>Great paper, congratulations! Sherry Crofoot</p>', 'review', 'ReviewComment');
-INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('e01ae54a-c4a1-4e05-ab81-60e072839c29', '2020-08-16 23:20:03.686+02', '2020-08-16 23:20:03.686+02', '4ea2e924-c1db-42b7-9bc1-4bbb8fc7693e', NULL, '<p>This is a very important paper. Sherry Crofoot</p>', 'confidential', 'ReviewComment');
-INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('64335342-b092-446a-9f49-82f5a803ca29', '2020-08-16 23:20:08.092+02', '2020-08-16 23:20:08.092+02', '9441bece-c44d-479a-8901-1b2a1878e41d', NULL, '<p>Great paper, congratulations! Elaine Barnes</p>', 'review', 'ReviewComment');
-INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('068fe9e5-f9a6-402f-95c1-51163322a529', '2020-08-16 23:20:09.639+02', '2020-08-16 23:20:09.639+02', '9441bece-c44d-479a-8901-1b2a1878e41d', NULL, '<p>This is a very important paper. Elaine Barnes</p>', 'confidential', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('352a2a97-39b9-4554-bc90-24d236918756', '2021-03-10 12:48:37.862+01', '2021-03-10 12:48:37.862+01', '8a7a09b9-b744-4bc9-afd4-c481e403524c', NULL, '<p>Great paper, congratulations! Gale Davis</p>', 'review', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('cdc0e685-e4dd-4361-9762-6aac497af696', '2021-03-10 12:48:38.833+01', '2021-03-10 12:48:38.833+01', '8a7a09b9-b744-4bc9-afd4-c481e403524c', NULL, '<p>This is a very important paper. Gale Davis</p>', 'confidential', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('4cd30bfd-35d1-4713-a337-dcbec45da406', '2021-03-10 12:48:41.6+01', '2021-03-10 12:48:41.6+01', 'de9fc676-6fa9-41d3-98de-60030b9510e4', NULL, '<p>Great paper, congratulations! Sherry Crofoot</p>', 'review', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('75e7fdcf-72ec-462d-8f3e-0f714deee421', '2021-03-10 12:48:42.64+01', '2021-03-10 12:48:42.64+01', 'de9fc676-6fa9-41d3-98de-60030b9510e4', NULL, '<p>This is a very important paper. Sherry Crofoot</p>', 'confidential', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('d7759f61-fb6e-462e-b593-86f56f0c573d', '2021-03-10 12:48:45.395+01', '2021-03-10 12:48:45.395+01', 'bf04fdcb-0d1c-4321-9908-2c4a17fbb0dd', NULL, '<p>Great paper, congratulations! Elaine Barnes</p>', 'review', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('6be69e32-1656-433f-abea-cd5adbf621fb', '2021-03-10 12:48:46.411+01', '2021-03-10 12:48:46.411+01', 'bf04fdcb-0d1c-4321-9908-2c4a17fbb0dd', NULL, '<p>This is a very important paper. Elaine Barnes</p>', 'confidential', 'ReviewComment');
 
 
 --
 -- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('4d506030-cbb8-4368-be90-58c973c5abaa', '2020-08-16 23:19:55.686+02', '2020-08-16 23:19:58.165+02', 'accepted', false, '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', 'feb4db67-c975-446e-9131-1b92943cf8ed', 'Review');
-INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('4ea2e924-c1db-42b7-9bc1-4bbb8fc7693e', '2020-08-16 23:20:00.095+02', '2020-08-16 23:20:03.694+02', 'accepted', false, '0da0bbec-9261-4706-b990-0c10aa3cc6b4', 'feb4db67-c975-446e-9131-1b92943cf8ed', 'Review');
-INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('9441bece-c44d-479a-8901-1b2a1878e41d', '2020-08-16 23:20:05.907+02', '2020-08-16 23:20:09.643+02', 'accepted', false, '85e1300e-003c-4e96-987b-23812f902477', 'feb4db67-c975-446e-9131-1b92943cf8ed', 'Review');
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('8a7a09b9-b744-4bc9-afd4-c481e403524c', '2021-03-10 12:48:36.506+01', '2021-03-10 12:48:38.838+01', 'accepted', false, '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '06ea851c-619c-453e-a12e-6568da11252c', 'Review');
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('de9fc676-6fa9-41d3-98de-60030b9510e4', '2021-03-10 12:48:40.188+01', '2021-03-10 12:48:42.636+01', 'accepted', false, '0da0bbec-9261-4706-b990-0c10aa3cc6b4', '06ea851c-619c-453e-a12e-6568da11252c', 'Review');
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('bf04fdcb-0d1c-4321-9908-2c4a17fbb0dd', '2021-03-10 12:48:44.015+01', '2021-03-10 12:48:46.41+01', 'accepted', false, '85e1300e-003c-4e96-987b-23812f902477', '06ea851c-619c-453e-a12e-6568da11252c', 'Review');
 
 
 --
 -- Data for Name: team_members; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('a55c62d5-5c7c-42e3-9953-1b7010d73021', '2020-08-16 23:19:04.336+02', '2020-08-16 23:19:04.336+02', NULL, '2b25ff83-7d5b-4385-87be-23eb6cc17f19', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('85256f3e-00c4-4d8e-a4de-5c1e42fa934f', '2020-08-16 23:19:37.339+02', '2020-08-16 23:19:37.339+02', NULL, '6ebd51ae-bcda-4fc5-b829-206df41f4a8c', '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('28e6898c-3ba7-4897-9850-5f76df197534', '2020-08-16 23:19:47.533+02', '2020-08-16 23:20:05.896+02', 'completed', 'bd154ffd-d72a-43df-bfb6-bdb4766a115b', '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('cb8d3d1f-5fe3-46f5-b49b-811734ece039', '2020-08-16 23:19:48.172+02', '2020-08-16 23:20:05.896+02', 'completed', 'bd154ffd-d72a-43df-bfb6-bdb4766a115b', '0da0bbec-9261-4706-b990-0c10aa3cc6b4', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('3c2ffed8-88ca-4eef-94b2-318c318fb738', '2020-08-16 23:19:48.851+02', '2020-08-16 23:20:09.939+02', 'completed', 'bd154ffd-d72a-43df-bfb6-bdb4766a115b', '85e1300e-003c-4e96-987b-23812f902477', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('df69d471-bead-42b6-a8b5-d1bff0a36040', '2021-03-10 12:48:02.832+01', '2021-03-10 12:48:02.832+01', NULL, 'dccbd509-505f-4ad6-8ceb-8a42b62c917b', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('88b45daf-2a54-4bf2-b30d-a8ec04e492c1', '2021-03-10 12:48:31.351+01', '2021-03-10 12:48:31.351+01', NULL, '9dcae384-76c8-416b-9da2-5ca7eaedc59c', '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('6298c397-dc09-4a80-a7fa-da8cdb1f241d', '2021-03-10 12:48:34.248+01', '2021-03-10 12:48:39.038+01', 'completed', 'e045f242-e85e-4807-85ce-9b6a0095dd56', '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('a2c4ed1d-ca05-4f3b-b314-eecdcd6a7e3b', '2021-03-10 12:48:34.664+01', '2021-03-10 12:48:42.847+01', 'completed', 'e045f242-e85e-4807-85ce-9b6a0095dd56', '0da0bbec-9261-4706-b990-0c10aa3cc6b4', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('5a495eac-2b5b-41cb-b619-d4f2732cd5a0', '2021-03-10 12:48:35.069+01', '2021-03-10 12:48:46.605+01', 'completed', 'e045f242-e85e-4807-85ce-9b6a0095dd56', '85e1300e-003c-4e96-987b-23812f902477', NULL);
 
 
 --
 -- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: test
 --
 
-INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('2b25ff83-7d5b-4385-87be-23eb6cc17f19', '2020-08-16 23:19:04.294+02', '2020-08-16 23:19:04.294+02', 'Author', 'author', NULL, NULL, NULL, 'team', 'feb4db67-c975-446e-9131-1b92943cf8ed');
-INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('6ebd51ae-bcda-4fc5-b829-206df41f4a8c', '2020-08-16 23:19:37.334+02', '2020-08-16 23:19:37.334+02', 'Senior Editor', 'seniorEditor', NULL, NULL, NULL, 'team', 'feb4db67-c975-446e-9131-1b92943cf8ed');
-INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('bd154ffd-d72a-43df-bfb6-bdb4766a115b', '2020-08-16 23:19:47.53+02', '2020-08-16 23:20:05.896+02', 'Reviewers', 'reviewer', NULL, NULL, NULL, 'team', 'feb4db67-c975-446e-9131-1b92943cf8ed');
+INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('dccbd509-505f-4ad6-8ceb-8a42b62c917b', '2021-03-10 12:48:02.828+01', '2021-03-10 12:48:02.828+01', 'Author', 'author', NULL, NULL, NULL, 'team', '06ea851c-619c-453e-a12e-6568da11252c');
+INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('9dcae384-76c8-416b-9da2-5ca7eaedc59c', '2021-03-10 12:48:31.342+01', '2021-03-10 12:48:31.342+01', 'Senior Editor', 'seniorEditor', NULL, NULL, NULL, 'team', '06ea851c-619c-453e-a12e-6568da11252c');
+INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('e045f242-e85e-4807-85ce-9b6a0095dd56', '2021-03-10 12:48:34.246+01', '2021-03-10 12:48:34.246+01', 'Reviewers', 'reviewer', NULL, NULL, NULL, 'team', '06ea851c-619c-453e-a12e-6568da11252c');
 
 
 --
@@ -531,12 +567,12 @@ INSERT INTO public.teams (id, created, updated, name, role, members, owners, glo
 --
 
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.597+02', '2020-07-24 16:43:54.939+02', NULL, NULL, '000000032536230X', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser5.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.734+02', '2020-08-16 23:19:35.648+02', NULL, NULL, '0000000205642016', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser2.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.719+02', '2020-08-16 23:19:37.463+02', true, NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.973+02', '2020-08-16 23:19:59.464+02', NULL, NULL, '0000000159567341', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser4.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.125+02', '2020-08-16 23:20:05.006+02', NULL, NULL, '0000000276459921', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser7.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.381+02', '2020-08-16 23:20:12.189+02', NULL, NULL, '0000000294294446', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser1.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.59+02', '2020-08-16 23:20:12.651+02', NULL, NULL, '0000000318382441', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser3.jpg', true);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.734+02', '2021-03-10 12:48:29.621+01', NULL, NULL, '0000000205642016', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser2.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.719+02', '2021-03-10 12:48:31.456+01', true, NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.973+02', '2021-03-10 12:48:39.636+01', NULL, NULL, '0000000159567341', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser4.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.125+02', '2021-03-10 12:48:43.459+01', NULL, NULL, '0000000276459921', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser7.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.381+02', '2021-03-10 12:48:47.29+01', NULL, NULL, '0000000294294446', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser1.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.59+02', '2021-03-10 12:48:47.619+01', NULL, NULL, '0000000318382441', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser3.jpg', true);
 
 
 --
@@ -545,6 +581,14 @@ INSERT INTO public.users (id, created, updated, admin, email, username, password
 
 ALTER TABLE ONLY pgboss.job
     ADD CONSTRAINT job_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schedule schedule_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: test
+--
+
+ALTER TABLE ONLY pgboss.schedule
+    ADD CONSTRAINT schedule_pkey PRIMARY KEY (name);
 
 
 --

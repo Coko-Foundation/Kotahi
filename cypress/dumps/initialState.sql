@@ -94,7 +94,9 @@ CREATE TABLE pgboss.archive (
     expirein interval NOT NULL,
     createdon timestamp with time zone NOT NULL,
     completedon timestamp with time zone,
-    archivedon timestamp with time zone DEFAULT now() NOT NULL
+    archivedon timestamp with time zone DEFAULT now() NOT NULL,
+    keepuntil timestamp with time zone,
+    on_complete boolean
 );
 
 
@@ -120,18 +122,39 @@ CREATE TABLE pgboss.job (
     singletonon timestamp without time zone,
     expirein interval DEFAULT '00:15:00'::interval NOT NULL,
     createdon timestamp with time zone DEFAULT now() NOT NULL,
-    completedon timestamp with time zone
+    completedon timestamp with time zone,
+    keepuntil timestamp with time zone DEFAULT (now() + '30 days'::interval) NOT NULL,
+    on_complete boolean DEFAULT true NOT NULL
 );
 
 
 ALTER TABLE pgboss.job OWNER TO test;
 
 --
+-- Name: schedule; Type: TABLE; Schema: pgboss; Owner: test
+--
+
+CREATE TABLE pgboss.schedule (
+    name text NOT NULL,
+    cron text NOT NULL,
+    timezone text,
+    data jsonb,
+    options jsonb,
+    created_on timestamp with time zone DEFAULT now() NOT NULL,
+    updated_on timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE pgboss.schedule OWNER TO test;
+
+--
 -- Name: version; Type: TABLE; Schema: pgboss; Owner: test
 --
 
 CREATE TABLE pgboss.version (
-    version text NOT NULL
+    version integer NOT NULL,
+    maintained_on timestamp with time zone,
+    cron_on timestamp with time zone
 );
 
 
@@ -396,13 +419,23 @@ ALTER TABLE public.users OWNER TO test;
 -- Data for Name: job; Type: TABLE DATA; Schema: pgboss; Owner: test
 --
 
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('876670c0-8195-11eb-815e-59df8a5d915a', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, false, '2021-03-10 12:41:18.669507+01', '2021-03-10 12:41:18.675148+01', '__pgboss__maintenance', NULL, '00:15:00', '2021-03-10 12:41:18.669507+01', '2021-03-10 12:41:18.693727+01', '2021-03-10 12:49:18.669507+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('876ab680-8195-11eb-815e-59df8a5d915a', '__pgboss__maintenance', 0, NULL, 'created', 0, 0, 0, false, '2021-03-10 12:43:18.696869+01', NULL, '__pgboss__maintenance', NULL, '00:15:00', '2021-03-10 12:41:18.696869+01', NULL, '2021-03-10 12:51:18.696869+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('89da2fe0-8195-11eb-815e-59df8a5d915a', '__pgboss__cron', 0, NULL, 'created', 2, 0, 0, false, '2021-03-10 12:42:01.782499+01', NULL, NULL, '2021-03-10 11:42:00', '00:15:00', '2021-03-10 12:41:22.782499+01', NULL, '2021-03-10 12:43:01.782499+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('87686c90-8195-11eb-815e-59df8a5d915a', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, false, '2021-03-10 12:41:18.685423+01', '2021-03-10 12:41:22.689863+01', NULL, '2021-03-10 11:41:00', '00:15:00', '2021-03-10 12:41:18.685423+01', '2021-03-10 12:41:22.824712+01', '2021-03-10 12:42:18.685423+01', false);
+
+
+--
+-- Data for Name: schedule; Type: TABLE DATA; Schema: pgboss; Owner: test
+--
+
 
 
 --
 -- Data for Name: version; Type: TABLE DATA; Schema: pgboss; Owner: test
 --
 
-INSERT INTO pgboss.version (version) VALUES ('11');
+INSERT INTO pgboss.version (version, maintained_on, cron_on) VALUES (16, '2021-03-10 12:41:18.691912+01', '2021-03-10 12:41:22.737495+01');
 
 
 --
@@ -514,8 +547,8 @@ INSERT INTO public.users (id, created, updated, admin, email, username, password
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.59+02', '2020-07-24 16:43:26.378+02', NULL, NULL, '0000000318382441', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser3.jpg', false);
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.973+02', '2020-07-24 16:43:43.943+02', NULL, NULL, '0000000159567341', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser4.jpg', true);
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.597+02', '2020-07-24 16:43:54.939+02', NULL, NULL, '000000032536230X', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser5.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.719+02', '2020-07-24 16:49:06.488+02', true, NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', true);
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.125+02', '2020-07-24 16:44:59.306+02', NULL, NULL, '0000000276459921', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser7.jpg', true);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.719+02', '2021-03-10 12:41:10.044+01', true, NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', false);
 
 
 --
@@ -524,6 +557,14 @@ INSERT INTO public.users (id, created, updated, admin, email, username, password
 
 ALTER TABLE ONLY pgboss.job
     ADD CONSTRAINT job_pkey PRIMARY KEY (id);
+
+
+--
+-- Name: schedule schedule_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: test
+--
+
+ALTER TABLE ONLY pgboss.schedule
+    ADD CONSTRAINT schedule_pkey PRIMARY KEY (name);
 
 
 --
