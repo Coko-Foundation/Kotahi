@@ -1,5 +1,5 @@
 variables:
-  IMAGE_ORG: iliusa77
+  IMAGE_ORG: kotahi
   IMAGE_NAME: kotahi
 
 stages:
