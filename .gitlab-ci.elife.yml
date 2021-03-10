@@ -1,5 +1,5 @@
 variables:
-  IMAGE_ORG: iliusa77
+  IMAGE_ORG: kotahi
   IMAGE_NAME: kotahi
 
 stages:
@@ -42,50 +42,51 @@ deploy:
       sudo supervisorctl stop kotahi && 
       sudo supervisorctl start kotahi"
 
-# lint:
-#   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#   script:
-#     - cd ${HOME}
-#     - npm run lint
+lint:
+  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - cd ${HOME}
+    - npm run lint
 
-# test-chrome:
-#   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: test
-#     POSTGRES_PASSWORD: pw
-#     # connection details for tests
-#     PGUSER: test
-#     PGPASSWORD: pw
-#     NODE_ENV: test
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     # specify host here else it confuses the linked postgres image
-#     - PGHOST=postgres yarn test:all:chrome
+test-chrome:
+  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: test
+    POSTGRES_PASSWORD: pw
+    # connection details for tests
+    PGUSER: test
+    PGPASSWORD: pw
+    NODE_ENV: test
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    # specify host here else it confuses the linked postgres image
+    - PGHOST=postgres yarn test:all:chrome
 
-# test-firefox:
-#   allow_failure: true # at this point Cypress' support for Firefox is not stable
-#   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: test
-#     POSTGRES_PASSWORD: pw
-#     # connection details for tests
-#     PGUSER: test
-#     PGPASSWORD: pw
-#     NODE_ENV: test
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     # specify host here else it confuses the linked postgres image
-#     - PGHOST=postgres yarn test:all:firefox
+test-firefox:
+  allow_failure: true # at this point Cypress' support for Firefox is not stable
+  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: test
+    POSTGRES_PASSWORD: pw
+    # connection details for tests
+    PGUSER: test
+    PGPASSWORD: pw
+    NODE_ENV: test
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    # specify host here else it confuses the linked postgres image
+    - PGHOST=postgres yarn test:all:firefox
+
