@@ -17,6 +17,8 @@ build:
   services:
     - docker:20.10.5-dind
   stage: build
+  before_script:
+    - cp app/brand-instances-configs/coko.json app/brandConfig.json
   script:
     - if [ -z "$DOCKERHUB_USERNAME" ] || [ -z "$DOCKERHUB_PASSWORD" ]; then echo "Not pushing" && exit 0; fi
     - docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD

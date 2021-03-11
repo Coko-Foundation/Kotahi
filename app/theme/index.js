@@ -13,12 +13,14 @@ import {
   Logo,
 } from './elements'
 
+import brandConfig from '../brandConfig.json'
+
 const cokoTheme = {
   /* Colors */
   colorBackground: 'white',
   colorSecondaryBackground: '#f9fafb', // custom
-  colorPrimary: '#3AAE2A',
-  colorSecondary: '#9e9e9e',
+  colorPrimary: brandConfig.primaryColor,
+  colorSecondary: brandConfig.secondaryColor,
   colorFurniture: '#E8E8E8',
   colorBorder: '#AAA',
   colorBackgroundHue: '#f4f5f7',

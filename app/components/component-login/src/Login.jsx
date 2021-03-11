@@ -5,6 +5,9 @@ import { th, grid, lighten } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
 import styled from 'styled-components'
 
+
+import brandConfig from '../../../brandConfig.json'
+
 const getNextUrl = () => {
   const url = new URL(window.location.href)
 
@@ -117,12 +120,7 @@ const Login = ({ logo = null, ...props }) => {
     <Container>
       <Centered>
         <Content>
-          {journalName === 'Aperture' && (
-            <img alt="Aperture" src="/public/logo-aperture.png" />
-          )}
-          {journalName === 'Kotahi' && (
-            <img alt="Kotahi" src="/public/logo-kotahi.png" />
-          )}
+          <img alt={brandConfig.brandName} src={brandConfig.logoPath} />
           <LoginButton
             onClick={() => (window.location = '/auth/orcid')}
             primary
