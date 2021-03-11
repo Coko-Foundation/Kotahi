@@ -18,7 +18,6 @@ const rootEl = document.getElementById('root')
 
 ReactDOM.render(
   <XpubProvider>
-    <h1>Hello.... it&apos;s me.</h1>
     <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
       <Root history={history} routes={routes} theme={theme} />
     </JournalProvider>
