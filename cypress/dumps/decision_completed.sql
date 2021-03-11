@@ -16,44 +16,44 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: pgboss; Type: SCHEMA; Schema: -; Owner: test
+-- Name: pgboss; Type: SCHEMA; Schema: -; Owner: kotahitest
 --
 
 CREATE SCHEMA pgboss;
 
 
-ALTER SCHEMA pgboss OWNER TO test;
+ALTER SCHEMA pgboss OWNER TO kotahitest;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: 
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
--- Name: job_state; Type: TYPE; Schema: pgboss; Owner: test
+-- Name: job_state; Type: TYPE; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE TYPE pgboss.job_state AS ENUM (
@@ -67,14 +67,14 @@ CREATE TYPE pgboss.job_state AS ENUM (
 );
 
 
-ALTER TYPE pgboss.job_state OWNER TO test;
+ALTER TYPE pgboss.job_state OWNER TO kotahitest;
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: archive; Type: TABLE; Schema: pgboss; Owner: test
+-- Name: archive; Type: TABLE; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE TABLE pgboss.archive (
@@ -94,14 +94,16 @@ CREATE TABLE pgboss.archive (
     expirein interval NOT NULL,
     createdon timestamp with time zone NOT NULL,
     completedon timestamp with time zone,
-    archivedon timestamp with time zone DEFAULT now() NOT NULL
+    archivedon timestamp with time zone DEFAULT now() NOT NULL,
+    keepuntil timestamp with time zone,
+    on_complete boolean
 );
 
 
-ALTER TABLE pgboss.archive OWNER TO test;
+ALTER TABLE pgboss.archive OWNER TO kotahitest;
 
 --
--- Name: job; Type: TABLE; Schema: pgboss; Owner: test
+-- Name: job; Type: TABLE; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE TABLE pgboss.job (
@@ -120,25 +122,46 @@ CREATE TABLE pgboss.job (
     singletonon timestamp without time zone,
     expirein interval DEFAULT '00:15:00'::interval NOT NULL,
     createdon timestamp with time zone DEFAULT now() NOT NULL,
-    completedon timestamp with time zone
+    completedon timestamp with time zone,
+    keepuntil timestamp with time zone DEFAULT (now() + '30 days'::interval) NOT NULL,
+    on_complete boolean DEFAULT true NOT NULL
 );
 
 
-ALTER TABLE pgboss.job OWNER TO test;
+ALTER TABLE pgboss.job OWNER TO kotahitest;
 
 --
--- Name: version; Type: TABLE; Schema: pgboss; Owner: test
+-- Name: schedule; Type: TABLE; Schema: pgboss; Owner: kotahitest
+--
+
+CREATE TABLE pgboss.schedule (
+    name text NOT NULL,
+    cron text NOT NULL,
+    timezone text,
+    data jsonb,
+    options jsonb,
+    created_on timestamp with time zone DEFAULT now() NOT NULL,
+    updated_on timestamp with time zone DEFAULT now() NOT NULL
+);
+
+
+ALTER TABLE pgboss.schedule OWNER TO kotahitest;
+
+--
+-- Name: version; Type: TABLE; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE TABLE pgboss.version (
-    version text NOT NULL
+    version integer NOT NULL,
+    maintained_on timestamp with time zone,
+    cron_on timestamp with time zone
 );
 
 
-ALTER TABLE pgboss.version OWNER TO test;
+ALTER TABLE pgboss.version OWNER TO kotahitest;
 
 --
--- Name: aliases; Type: TABLE; Schema: public; Owner: test
+-- Name: aliases; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.aliases (
@@ -151,10 +174,10 @@ CREATE TABLE public.aliases (
 );
 
 
-ALTER TABLE public.aliases OWNER TO test;
+ALTER TABLE public.aliases OWNER TO kotahitest;
 
 --
--- Name: channel_members; Type: TABLE; Schema: public; Owner: test
+-- Name: channel_members; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.channel_members (
@@ -166,10 +189,10 @@ CREATE TABLE public.channel_members (
 );
 
 
-ALTER TABLE public.channel_members OWNER TO test;
+ALTER TABLE public.channel_members OWNER TO kotahitest;
 
 --
--- Name: channels; Type: TABLE; Schema: public; Owner: test
+-- Name: channels; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.channels (
@@ -182,10 +205,10 @@ CREATE TABLE public.channels (
 );
 
 
-ALTER TABLE public.channels OWNER TO test;
+ALTER TABLE public.channels OWNER TO kotahitest;
 
 --
--- Name: entities; Type: TABLE; Schema: public; Owner: test
+-- Name: entities; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.entities (
@@ -194,10 +217,10 @@ CREATE TABLE public.entities (
 );
 
 
-ALTER TABLE public.entities OWNER TO test;
+ALTER TABLE public.entities OWNER TO kotahitest;
 
 --
--- Name: files; Type: TABLE; Schema: public; Owner: test
+-- Name: files; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.files (
@@ -217,10 +240,10 @@ CREATE TABLE public.files (
 );
 
 
-ALTER TABLE public.files OWNER TO test;
+ALTER TABLE public.files OWNER TO kotahitest;
 
 --
--- Name: identities; Type: TABLE; Schema: public; Owner: test
+-- Name: identities; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.identities (
@@ -237,10 +260,10 @@ CREATE TABLE public.identities (
 );
 
 
-ALTER TABLE public.identities OWNER TO test;
+ALTER TABLE public.identities OWNER TO kotahitest;
 
 --
--- Name: manuscripts; Type: TABLE; Schema: public; Owner: test
+-- Name: manuscripts; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.manuscripts (
@@ -260,10 +283,10 @@ CREATE TABLE public.manuscripts (
 );
 
 
-ALTER TABLE public.manuscripts OWNER TO test;
+ALTER TABLE public.manuscripts OWNER TO kotahitest;
 
 --
--- Name: messages; Type: TABLE; Schema: public; Owner: test
+-- Name: messages; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.messages (
@@ -276,10 +299,10 @@ CREATE TABLE public.messages (
 );
 
 
-ALTER TABLE public.messages OWNER TO test;
+ALTER TABLE public.messages OWNER TO kotahitest;
 
 --
--- Name: migrations; Type: TABLE; Schema: public; Owner: test
+-- Name: migrations; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.migrations (
@@ -288,10 +311,10 @@ CREATE TABLE public.migrations (
 );
 
 
-ALTER TABLE public.migrations OWNER TO test;
+ALTER TABLE public.migrations OWNER TO kotahitest;
 
 --
--- Name: review_comments; Type: TABLE; Schema: public; Owner: test
+-- Name: review_comments; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.review_comments (
@@ -306,10 +329,10 @@ CREATE TABLE public.review_comments (
 );
 
 
-ALTER TABLE public.review_comments OWNER TO test;
+ALTER TABLE public.review_comments OWNER TO kotahitest;
 
 --
--- Name: reviews; Type: TABLE; Schema: public; Owner: test
+-- Name: reviews; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.reviews (
@@ -324,10 +347,10 @@ CREATE TABLE public.reviews (
 );
 
 
-ALTER TABLE public.reviews OWNER TO test;
+ALTER TABLE public.reviews OWNER TO kotahitest;
 
 --
--- Name: team_members; Type: TABLE; Schema: public; Owner: test
+-- Name: team_members; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.team_members (
@@ -341,10 +364,10 @@ CREATE TABLE public.team_members (
 );
 
 
-ALTER TABLE public.team_members OWNER TO test;
+ALTER TABLE public.team_members OWNER TO kotahitest;
 
 --
--- Name: teams; Type: TABLE; Schema: public; Owner: test
+-- Name: teams; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.teams (
@@ -361,10 +384,10 @@ CREATE TABLE public.teams (
 );
 
 
-ALTER TABLE public.teams OWNER TO test;
+ALTER TABLE public.teams OWNER TO kotahitest;
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: test
+-- Name: users; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.users (
@@ -384,62 +407,77 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO test;
+ALTER TABLE public.users OWNER TO kotahitest;
 
 --
--- Data for Name: archive; Type: TABLE DATA; Schema: pgboss; Owner: test
---
-
-
-
---
--- Data for Name: job; Type: TABLE DATA; Schema: pgboss; Owner: test
+-- Data for Name: archive; Type: TABLE DATA; Schema: pgboss; Owner: kotahitest
 --
 
 
 
 --
--- Data for Name: version; Type: TABLE DATA; Schema: pgboss; Owner: test
+-- Data for Name: job; Type: TABLE DATA; Schema: pgboss; Owner: kotahitest
 --
 
-INSERT INTO pgboss.version (version) VALUES ('11');
-
-
---
--- Data for Name: aliases; Type: TABLE DATA; Schema: public; Owner: test
---
-
-
-
---
--- Data for Name: channel_members; Type: TABLE DATA; Schema: public; Owner: test
---
-
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('876670c0-8195-11eb-815e-59df8a5d915a', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, false, '2021-03-10 12:41:18.669507+01', '2021-03-10 12:41:18.675148+01', '__pgboss__maintenance', NULL, '00:15:00', '2021-03-10 12:41:18.669507+01', '2021-03-10 12:41:18.693727+01', '2021-03-10 12:49:18.669507+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('87686c90-8195-11eb-815e-59df8a5d915a', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, false, '2021-03-10 12:41:18.685423+01', '2021-03-10 12:41:22.689863+01', NULL, '2021-03-10 11:41:00', '00:15:00', '2021-03-10 12:41:18.685423+01', '2021-03-10 12:41:22.824712+01', '2021-03-10 12:42:18.685423+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('89da2fe0-8195-11eb-815e-59df8a5d915a', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, false, '2021-03-10 12:42:01.782499+01', '2021-03-10 12:48:02.953124+01', NULL, '2021-03-10 11:42:00', '00:15:00', '2021-03-10 12:41:22.782499+01', '2021-03-10 12:48:02.980596+01', '2021-03-10 12:43:01.782499+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('7862a3e0-8196-11eb-815e-59df8a5d915a', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, false, '2021-03-10 12:48:02.975253+01', '2021-03-10 12:48:06.958274+01', NULL, '2021-03-10 11:48:00', '00:15:00', '2021-03-10 12:48:02.975253+01', '2021-03-10 12:48:06.970586+01', '2021-03-10 12:49:02.975253+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('876ab680-8195-11eb-815e-59df8a5d915a', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, false, '2021-03-10 12:43:18.696869+01', '2021-03-10 12:48:18.70568+01', '__pgboss__maintenance', NULL, '00:15:00', '2021-03-10 12:41:18.696869+01', '2021-03-10 12:48:18.766285+01', '2021-03-10 12:51:18.696869+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('81ccc410-8196-11eb-815e-59df8a5d915a', '__pgboss__maintenance', 0, NULL, 'created', 0, 0, 0, false, '2021-03-10 12:50:18.770247+01', NULL, '__pgboss__maintenance', NULL, '00:15:00', '2021-03-10 12:48:18.770247+01', NULL, '2021-03-10 12:58:18.770247+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('7ac41380-8196-11eb-815e-59df8a5d915a', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, false, '2021-03-10 12:49:01.96878+01', '2021-03-10 12:58:27.334014+01', NULL, '2021-03-10 11:49:00', '00:15:00', '2021-03-10 12:48:06.96878+01', '2021-03-10 12:58:27.508234+01', '2021-03-10 12:50:01.96878+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('eeef0a20-8197-11eb-815e-59df8a5d915a', '__pgboss__cron', 0, NULL, 'created', 2, 0, 0, false, '2021-03-10 12:59:01.362534+01', NULL, NULL, '2021-03-10 11:59:00', '00:15:00', '2021-03-10 12:58:31.362534+01', NULL, '2021-03-10 13:00:01.362534+01', false);
+INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('ec9c4080-8197-11eb-815e-59df8a5d915a', '__pgboss__cron', 0, NULL, 'completed', 2, 0, 0, false, '2021-03-10 12:58:27.46456+01', '2021-03-10 12:58:31.341102+01', NULL, '2021-03-10 11:58:00', '00:15:00', '2021-03-10 12:58:27.46456+01', '2021-03-10 12:58:31.365053+01', '2021-03-10 12:59:27.46456+01', false);
 
 
 --
--- Data for Name: channels; Type: TABLE DATA; Schema: public; Owner: test
---
-
-INSERT INTO public.channels (id, manuscript_id, created, updated, topic, type) VALUES ('a183114f-ed43-43d2-9852-e95b546c94f0', 'feb4db67-c975-446e-9131-1b92943cf8ed', '2020-08-16 23:19:04.294+02', '2020-08-16 23:19:04.294+02', 'Manuscript discussion', 'all');
-INSERT INTO public.channels (id, manuscript_id, created, updated, topic, type) VALUES ('9a85e645-3b16-4e1c-8e84-73af36c48712', 'feb4db67-c975-446e-9131-1b92943cf8ed', '2020-08-16 23:19:04.294+02', '2020-08-16 23:19:04.294+02', 'Editorial discussion', 'editorial');
-
-
---
--- Data for Name: entities; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: schedule; Type: TABLE DATA; Schema: pgboss; Owner: kotahitest
 --
 
 
 
 --
--- Data for Name: files; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: version; Type: TABLE DATA; Schema: pgboss; Owner: kotahitest
 --
 
-INSERT INTO public.files (id, created, updated, label, file_type, filename, url, mime_type, size, type, manuscript_id, review_comment_id) VALUES ('cbc2943a-bd1e-46d2-a7eb-aea5109893ed', '2020-08-16 23:19:25.243+02', '2020-08-16 23:19:25.243+02', NULL, 'supplementary', 'test-pdf.pdf', '/static/uploads/fa2c9dcd868b920e3cae84ab494f3468.pdf', 'application/pdf', 142400, 'file', 'feb4db67-c975-446e-9131-1b92943cf8ed', NULL);
+INSERT INTO pgboss.version (version, maintained_on, cron_on) VALUES (16, '2021-03-10 12:48:18.764191+01', '2021-03-10 12:58:31.357863+01');
 
 
 --
--- Data for Name: identities; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: aliases; Type: TABLE DATA; Schema: public; Owner: kotahitest
+--
+
+
+
+--
+-- Data for Name: channel_members; Type: TABLE DATA; Schema: public; Owner: kotahitest
+--
+
+
+
+--
+-- Data for Name: channels; Type: TABLE DATA; Schema: public; Owner: kotahitest
+--
+
+INSERT INTO public.channels (id, manuscript_id, created, updated, topic, type) VALUES ('fbb752f5-fb46-4ab6-9896-bcf34a384c92', '06ea851c-619c-453e-a12e-6568da11252c', '2021-03-10 12:48:02.828+01', '2021-03-10 12:48:02.828+01', 'Manuscript discussion', 'all');
+INSERT INTO public.channels (id, manuscript_id, created, updated, topic, type) VALUES ('1e410fdb-9afe-4a6f-97b5-526e384d4df3', '06ea851c-619c-453e-a12e-6568da11252c', '2021-03-10 12:48:02.828+01', '2021-03-10 12:48:02.828+01', 'Editorial discussion', 'editorial');
+
+
+--
+-- Data for Name: entities; Type: TABLE DATA; Schema: public; Owner: kotahitest
+--
+
+
+
+--
+-- Data for Name: files; Type: TABLE DATA; Schema: public; Owner: kotahitest
+--
+
+INSERT INTO public.files (id, created, updated, label, file_type, filename, url, mime_type, size, type, manuscript_id, review_comment_id) VALUES ('81ffbef0-c77e-46dc-a86c-864f7f1f336c', '2021-03-10 12:48:21.069+01', '2021-03-10 12:48:21.069+01', NULL, 'supplementary', 'test-pdf.pdf', '/static/uploads/508239154500088a36827c250d0b83b7.pdf', 'application/pdf', 142400, 'file', '06ea851c-619c-453e-a12e-6568da11252c', NULL);
+
+
+--
+-- Data for Name: identities; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('d341a633-cdce-4a7f-a9ad-5afc03cd0dd1', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.741+02', '2020-07-21 16:17:25.87+02', 'orcid', '0000-0002-0564-2016', 'Emily Clay', NULL, '{"accessToken": "079a1165-31e5-4b59-9a99-d80ff7a21ebf", "refreshToken": "ccadc737-defc-419e-823b-a9f3673848ba"}', true);
@@ -452,20 +490,20 @@ INSERT INTO public.identities (id, user_id, created, updated, type, identifier, 
 
 
 --
--- Data for Name: manuscripts; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: manuscripts; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
-INSERT INTO public.manuscripts (id, created, updated, parent_id, submitter_id, status, decision, authors, suggestions, meta, submission, published, type) VALUES ('feb4db67-c975-446e-9131-1b92943cf8ed', '2020-08-16 23:19:04.249+02', '2020-08-16 23:20:23.033+02', NULL, '027afa6a-edbc-486e-bb31-71e12f8ea1c5', 'accepted', 'accepted', NULL, NULL, '{"title": "My URL submission"}', '{"irb": "yes", "name": "Emily Clay", "cover": "This is my cover letter", "links": [{"url": "https://doi.org/10.6084/m9.figshare.913521.v1"}, {"url": "https://github.com/jure/mathtype_to_mathml"}], "ethics": "This is my ethics statement", "contact": "emily@example.com", "methods": ["Functional MRI", "Optical Imaging"], "datacode": "This is my data and code availability statement", "humanMRI": "3T", "keywords": "some, keywords", "packages": ["SPM", "FSL"], "subjects": "patients", "suggested": "Erica James, Matthew Matretzky", "objectType": "software", "affiliation": "Example University, Egland", "otherMethods": "Erica James, Matthew Matretzky", "humanMRIother": "7T", "otherPackages": "Jupyter, Stencila", "animal_research_approval": "yes"}', NULL, 'Manuscript');
-
-
---
--- Data for Name: messages; Type: TABLE DATA; Schema: public; Owner: test
---
-
+INSERT INTO public.manuscripts (id, created, updated, parent_id, submitter_id, status, decision, authors, suggestions, meta, submission, published, type) VALUES ('06ea851c-619c-453e-a12e-6568da11252c', '2021-03-10 12:48:02.815+01', '2021-03-10 12:58:31.137+01', NULL, '027afa6a-edbc-486e-bb31-71e12f8ea1c5', 'accepted', 'accepted', NULL, NULL, '{"notes": [{"content": "", "notesType": "fundingAcknowledgement"}, {"content": "", "notesType": "specialInstructions"}], "title": "My URL submission"}', '{"irb": "yes", "name": "Emily Clay", "cover": "This is my cover letter", "links": [{"url": "https://doi.org/10.6084/m9.figshare.913521.v1"}, {"url": "https://github.com/jure/mathtype_to_mathml"}], "ethics": "This is my ethics statement", "contact": "emily@example.com", "methods": ["Functional MRI", "Optical Imaging"], "datacode": "This is my data and code availability statement", "humanMRI": "3T", "keywords": "some, keywords", "packages": ["SPM", "FSL"], "subjects": "patients", "suggested": "Erica James, Matthew Matretzky", "objectType": "software", "affiliation": "Example University, England", "otherMethods": "Erica James, Matthew Matretzky", "humanMRIother": "7T", "animal_research_approval": "yes"}', NULL, 'Manuscript');
 
 
 --
--- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: messages; Type: TABLE DATA; Schema: public; Owner: kotahitest
+--
+
+
+
+--
+-- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 INSERT INTO public.migrations (id, run_at) VALUES ('1524494862-entities.sql', '2020-08-16 22:36:46.642584+02');
@@ -486,64 +524,63 @@ INSERT INTO public.migrations (id, run_at) VALUES ('1596838897-files.sql', '2020
 
 
 --
--- Data for Name: review_comments; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: review_comments; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
-INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('8a085610-99ef-4017-bb3c-c70f3ab1e748', '2020-08-16 23:19:57.152+02', '2020-08-16 23:19:57.152+02', '4d506030-cbb8-4368-be90-58c973c5abaa', NULL, '<p>Great paper, congratulations! Gale Davis</p>', 'review', 'ReviewComment');
-INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('a5015c5e-7a13-49dd-a2da-5d10aa765d9b', '2020-08-16 23:19:58.157+02', '2020-08-16 23:19:58.157+02', '4d506030-cbb8-4368-be90-58c973c5abaa', NULL, '<p>This is a very important paper. Gale Davis</p>', 'confidential', 'ReviewComment');
-INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('aaacdb10-de74-493e-9b8c-b4f0a3a96b3d', '2020-08-16 23:20:02.302+02', '2020-08-16 23:20:02.302+02', '4ea2e924-c1db-42b7-9bc1-4bbb8fc7693e', NULL, '<p>Great paper, congratulations! Sherry Crofoot</p>', 'review', 'ReviewComment');
-INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('e01ae54a-c4a1-4e05-ab81-60e072839c29', '2020-08-16 23:20:03.686+02', '2020-08-16 23:20:03.686+02', '4ea2e924-c1db-42b7-9bc1-4bbb8fc7693e', NULL, '<p>This is a very important paper. Sherry Crofoot</p>', 'confidential', 'ReviewComment');
-INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('64335342-b092-446a-9f49-82f5a803ca29', '2020-08-16 23:20:08.092+02', '2020-08-16 23:20:08.092+02', '9441bece-c44d-479a-8901-1b2a1878e41d', NULL, '<p>Great paper, congratulations! Elaine Barnes</p>', 'review', 'ReviewComment');
-INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('068fe9e5-f9a6-402f-95c1-51163322a529', '2020-08-16 23:20:09.639+02', '2020-08-16 23:20:09.639+02', '9441bece-c44d-479a-8901-1b2a1878e41d', NULL, '<p>This is a very important paper. Elaine Barnes</p>', 'confidential', 'ReviewComment');
-INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('7aa82dbc-0761-4165-a240-06870f5fe162', '2020-08-16 23:20:22.471+02', '2020-08-16 23:20:22.471+02', '00cf409b-e997-40a3-a834-5485ae5342ec', NULL, '<p>Great paper, dear authors, congratulations!</p>', 'decision', 'ReviewComment');
-
-
---
--- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: test
---
-
-INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('4d506030-cbb8-4368-be90-58c973c5abaa', '2020-08-16 23:19:55.686+02', '2020-08-16 23:19:58.165+02', 'accepted', false, '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', 'feb4db67-c975-446e-9131-1b92943cf8ed', 'Review');
-INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('4ea2e924-c1db-42b7-9bc1-4bbb8fc7693e', '2020-08-16 23:20:00.095+02', '2020-08-16 23:20:03.694+02', 'accepted', false, '0da0bbec-9261-4706-b990-0c10aa3cc6b4', 'feb4db67-c975-446e-9131-1b92943cf8ed', 'Review');
-INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('9441bece-c44d-479a-8901-1b2a1878e41d', '2020-08-16 23:20:05.907+02', '2020-08-16 23:20:09.643+02', 'accepted', false, '85e1300e-003c-4e96-987b-23812f902477', 'feb4db67-c975-446e-9131-1b92943cf8ed', 'Review');
-INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('473b30ec-c5fa-4005-9e96-c9a92e88009c', '2020-08-16 23:20:22.316+02', '2020-08-16 23:20:22.316+02', 'accepted', true, '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', 'feb4db67-c975-446e-9131-1b92943cf8ed', 'Review');
-INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('00cf409b-e997-40a3-a834-5485ae5342ec', '2020-08-16 23:20:22.463+02', '2020-08-16 23:20:22.463+02', NULL, true, '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', 'feb4db67-c975-446e-9131-1b92943cf8ed', 'Review');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('352a2a97-39b9-4554-bc90-24d236918756', '2021-03-10 12:48:37.862+01', '2021-03-10 12:48:37.862+01', '8a7a09b9-b744-4bc9-afd4-c481e403524c', NULL, '<p>Great paper, congratulations! Gale Davis</p>', 'review', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('cdc0e685-e4dd-4361-9762-6aac497af696', '2021-03-10 12:48:38.833+01', '2021-03-10 12:48:38.833+01', '8a7a09b9-b744-4bc9-afd4-c481e403524c', NULL, '<p>This is a very important paper. Gale Davis</p>', 'confidential', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('4cd30bfd-35d1-4713-a337-dcbec45da406', '2021-03-10 12:48:41.6+01', '2021-03-10 12:48:41.6+01', 'de9fc676-6fa9-41d3-98de-60030b9510e4', NULL, '<p>Great paper, congratulations! Sherry Crofoot</p>', 'review', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('75e7fdcf-72ec-462d-8f3e-0f714deee421', '2021-03-10 12:48:42.64+01', '2021-03-10 12:48:42.64+01', 'de9fc676-6fa9-41d3-98de-60030b9510e4', NULL, '<p>This is a very important paper. Sherry Crofoot</p>', 'confidential', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('d7759f61-fb6e-462e-b593-86f56f0c573d', '2021-03-10 12:48:45.395+01', '2021-03-10 12:48:45.395+01', 'bf04fdcb-0d1c-4321-9908-2c4a17fbb0dd', NULL, '<p>Great paper, congratulations! Elaine Barnes</p>', 'review', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('6be69e32-1656-433f-abea-cd5adbf621fb', '2021-03-10 12:48:46.411+01', '2021-03-10 12:48:46.411+01', 'bf04fdcb-0d1c-4321-9908-2c4a17fbb0dd', NULL, '<p>This is a very important paper. Elaine Barnes</p>', 'confidential', 'ReviewComment');
+INSERT INTO public.review_comments (id, created, updated, review_id, user_id, content, comment_type, type) VALUES ('029db44c-0777-47d0-8adf-3c1ebe155df8', '2021-03-10 12:58:30.843+01', '2021-03-10 12:58:30.843+01', '13ff518f-2ffe-4800-aedc-dd2e2ba62069', NULL, '<p>Great paper, dear authors, congratulations!</p>', 'decision', 'ReviewComment');
 
 
 --
--- Data for Name: team_members; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('a55c62d5-5c7c-42e3-9953-1b7010d73021', '2020-08-16 23:19:04.336+02', '2020-08-16 23:19:04.336+02', NULL, '2b25ff83-7d5b-4385-87be-23eb6cc17f19', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('85256f3e-00c4-4d8e-a4de-5c1e42fa934f', '2020-08-16 23:19:37.339+02', '2020-08-16 23:19:37.339+02', NULL, '6ebd51ae-bcda-4fc5-b829-206df41f4a8c', '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('28e6898c-3ba7-4897-9850-5f76df197534', '2020-08-16 23:19:47.533+02', '2020-08-16 23:20:05.896+02', 'completed', 'bd154ffd-d72a-43df-bfb6-bdb4766a115b', '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('cb8d3d1f-5fe3-46f5-b49b-811734ece039', '2020-08-16 23:19:48.172+02', '2020-08-16 23:20:05.896+02', 'completed', 'bd154ffd-d72a-43df-bfb6-bdb4766a115b', '0da0bbec-9261-4706-b990-0c10aa3cc6b4', NULL);
-INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('3c2ffed8-88ca-4eef-94b2-318c318fb738', '2020-08-16 23:19:48.851+02', '2020-08-16 23:20:09.939+02', 'completed', 'bd154ffd-d72a-43df-bfb6-bdb4766a115b', '85e1300e-003c-4e96-987b-23812f902477', NULL);
-
-
---
--- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: test
---
-
-INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('2b25ff83-7d5b-4385-87be-23eb6cc17f19', '2020-08-16 23:19:04.294+02', '2020-08-16 23:19:04.294+02', 'Author', 'author', NULL, NULL, NULL, 'team', 'feb4db67-c975-446e-9131-1b92943cf8ed');
-INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('6ebd51ae-bcda-4fc5-b829-206df41f4a8c', '2020-08-16 23:19:37.334+02', '2020-08-16 23:19:37.334+02', 'Senior Editor', 'seniorEditor', NULL, NULL, NULL, 'team', 'feb4db67-c975-446e-9131-1b92943cf8ed');
-INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('bd154ffd-d72a-43df-bfb6-bdb4766a115b', '2020-08-16 23:19:47.53+02', '2020-08-16 23:20:05.896+02', 'Reviewers', 'reviewer', NULL, NULL, NULL, 'team', 'feb4db67-c975-446e-9131-1b92943cf8ed');
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('8a7a09b9-b744-4bc9-afd4-c481e403524c', '2021-03-10 12:48:36.506+01', '2021-03-10 12:48:38.838+01', 'accepted', false, '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '06ea851c-619c-453e-a12e-6568da11252c', 'Review');
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('de9fc676-6fa9-41d3-98de-60030b9510e4', '2021-03-10 12:48:40.188+01', '2021-03-10 12:48:42.636+01', 'accepted', false, '0da0bbec-9261-4706-b990-0c10aa3cc6b4', '06ea851c-619c-453e-a12e-6568da11252c', 'Review');
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('bf04fdcb-0d1c-4321-9908-2c4a17fbb0dd', '2021-03-10 12:48:44.015+01', '2021-03-10 12:48:46.41+01', 'accepted', false, '85e1300e-003c-4e96-987b-23812f902477', '06ea851c-619c-453e-a12e-6568da11252c', 'Review');
+INSERT INTO public.reviews (id, created, updated, recommendation, is_decision, user_id, manuscript_id, type) VALUES ('13ff518f-2ffe-4800-aedc-dd2e2ba62069', '2021-03-10 12:58:30.518+01', '2021-03-10 12:58:30.518+01', 'accepted', true, '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '06ea851c-619c-453e-a12e-6568da11252c', 'Review');
 
 
 --
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: team_members; Type: TABLE DATA; Schema: public; Owner: kotahitest
+--
+
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('df69d471-bead-42b6-a8b5-d1bff0a36040', '2021-03-10 12:48:02.832+01', '2021-03-10 12:48:02.832+01', NULL, 'dccbd509-505f-4ad6-8ceb-8a42b62c917b', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('88b45daf-2a54-4bf2-b30d-a8ec04e492c1', '2021-03-10 12:48:31.351+01', '2021-03-10 12:48:31.351+01', NULL, '9dcae384-76c8-416b-9da2-5ca7eaedc59c', '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('6298c397-dc09-4a80-a7fa-da8cdb1f241d', '2021-03-10 12:48:34.248+01', '2021-03-10 12:48:39.038+01', 'completed', 'e045f242-e85e-4807-85ce-9b6a0095dd56', '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('a2c4ed1d-ca05-4f3b-b314-eecdcd6a7e3b', '2021-03-10 12:48:34.664+01', '2021-03-10 12:48:42.847+01', 'completed', 'e045f242-e85e-4807-85ce-9b6a0095dd56', '0da0bbec-9261-4706-b990-0c10aa3cc6b4', NULL);
+INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('5a495eac-2b5b-41cb-b619-d4f2732cd5a0', '2021-03-10 12:48:35.069+01', '2021-03-10 12:48:46.605+01', 'completed', 'e045f242-e85e-4807-85ce-9b6a0095dd56', '85e1300e-003c-4e96-987b-23812f902477', NULL);
+
+
+--
+-- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: kotahitest
+--
+
+INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('dccbd509-505f-4ad6-8ceb-8a42b62c917b', '2021-03-10 12:48:02.828+01', '2021-03-10 12:48:02.828+01', 'Author', 'author', NULL, NULL, NULL, 'team', '06ea851c-619c-453e-a12e-6568da11252c');
+INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('9dcae384-76c8-416b-9da2-5ca7eaedc59c', '2021-03-10 12:48:31.342+01', '2021-03-10 12:48:31.342+01', 'Senior Editor', 'seniorEditor', NULL, NULL, NULL, 'team', '06ea851c-619c-453e-a12e-6568da11252c');
+INSERT INTO public.teams (id, created, updated, name, role, members, owners, global, type, manuscript_id) VALUES ('e045f242-e85e-4807-85ce-9b6a0095dd56', '2021-03-10 12:48:34.246+01', '2021-03-10 12:48:34.246+01', 'Reviewers', 'reviewer', NULL, NULL, NULL, 'team', '06ea851c-619c-453e-a12e-6568da11252c');
+
+
+--
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.597+02', '2020-07-24 16:43:54.939+02', NULL, NULL, '000000032536230X', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser5.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.734+02', '2020-08-16 23:19:35.648+02', NULL, NULL, '0000000205642016', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser2.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.719+02', '2020-08-16 23:19:37.463+02', true, NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.973+02', '2020-08-16 23:19:59.464+02', NULL, NULL, '0000000159567341', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser4.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.125+02', '2020-08-16 23:20:05.006+02', NULL, NULL, '0000000276459921', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser7.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.381+02', '2020-08-16 23:20:12.189+02', NULL, NULL, '0000000294294446', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser1.jpg', false);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.59+02', '2020-08-16 23:20:23.732+02', NULL, NULL, '0000000318382441', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser3.jpg', true);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.734+02', '2021-03-10 12:48:29.621+01', NULL, NULL, '0000000205642016', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser2.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.719+02', '2021-03-10 12:48:31.456+01', true, NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.973+02', '2021-03-10 12:48:39.636+01', NULL, NULL, '0000000159567341', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser4.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.125+02', '2021-03-10 12:48:43.459+01', NULL, NULL, '0000000276459921', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser7.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.381+02', '2021-03-10 12:48:47.29+01', NULL, NULL, '0000000294294446', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser1.jpg', false);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.59+02', '2021-03-10 12:58:31.983+01', NULL, NULL, '0000000318382441', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser3.jpg', true);
 
 
 --
--- Name: job job_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: test
+-- Name: job job_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: kotahitest
 --
 
 ALTER TABLE ONLY pgboss.job
@@ -551,7 +588,15 @@ ALTER TABLE ONLY pgboss.job
 
 
 --
--- Name: version version_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: test
+-- Name: schedule schedule_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: kotahitest
+--
+
+ALTER TABLE ONLY pgboss.schedule
+    ADD CONSTRAINT schedule_pkey PRIMARY KEY (name);
+
+
+--
+-- Name: version version_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: kotahitest
 --
 
 ALTER TABLE ONLY pgboss.version
@@ -559,7 +604,7 @@ ALTER TABLE ONLY pgboss.version
 
 
 --
--- Name: aliases aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: aliases aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.aliases
@@ -567,7 +612,7 @@ ALTER TABLE ONLY public.aliases
 
 
 --
--- Name: channel_members channel_members_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: channel_members channel_members_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.channel_members
@@ -575,7 +620,7 @@ ALTER TABLE ONLY public.channel_members
 
 
 --
--- Name: channels channels_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: channels channels_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.channels
@@ -583,7 +628,7 @@ ALTER TABLE ONLY public.channels
 
 
 --
--- Name: entities entities_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: entities entities_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.entities
@@ -591,7 +636,7 @@ ALTER TABLE ONLY public.entities
 
 
 --
--- Name: files files_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: files files_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.files
@@ -599,7 +644,7 @@ ALTER TABLE ONLY public.files
 
 
 --
--- Name: identities identities_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: identities identities_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.identities
@@ -607,7 +652,7 @@ ALTER TABLE ONLY public.identities
 
 
 --
--- Name: manuscripts manuscripts_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: manuscripts manuscripts_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.manuscripts
@@ -615,7 +660,7 @@ ALTER TABLE ONLY public.manuscripts
 
 
 --
--- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.messages
@@ -623,7 +668,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.migrations
@@ -631,7 +676,7 @@ ALTER TABLE ONLY public.migrations
 
 
 --
--- Name: review_comments review_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: review_comments review_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.review_comments
@@ -639,7 +684,7 @@ ALTER TABLE ONLY public.review_comments
 
 
 --
--- Name: reviews reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: reviews reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.reviews
@@ -647,7 +692,7 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- Name: team_members team_members_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: team_members team_members_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.team_members
@@ -655,7 +700,7 @@ ALTER TABLE ONLY public.team_members
 
 
 --
--- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.teams
@@ -663,7 +708,7 @@ ALTER TABLE ONLY public.teams
 
 
 --
--- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.users
@@ -671,7 +716,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.users
@@ -679,7 +724,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.users
@@ -687,77 +732,77 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: archive_archivedon_idx; Type: INDEX; Schema: pgboss; Owner: test
+-- Name: archive_archivedon_idx; Type: INDEX; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE INDEX archive_archivedon_idx ON pgboss.archive USING btree (archivedon);
 
 
 --
--- Name: archive_id_idx; Type: INDEX; Schema: pgboss; Owner: test
+-- Name: archive_id_idx; Type: INDEX; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE INDEX archive_id_idx ON pgboss.archive USING btree (id);
 
 
 --
--- Name: job_name; Type: INDEX; Schema: pgboss; Owner: test
+-- Name: job_name; Type: INDEX; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE INDEX job_name ON pgboss.job USING btree (name text_pattern_ops);
 
 
 --
--- Name: job_singletonkey; Type: INDEX; Schema: pgboss; Owner: test
+-- Name: job_singletonkey; Type: INDEX; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE UNIQUE INDEX job_singletonkey ON pgboss.job USING btree (name, singletonkey) WHERE ((state < 'completed'::pgboss.job_state) AND (singletonon IS NULL));
 
 
 --
--- Name: job_singletonkeyon; Type: INDEX; Schema: pgboss; Owner: test
+-- Name: job_singletonkeyon; Type: INDEX; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE UNIQUE INDEX job_singletonkeyon ON pgboss.job USING btree (name, singletonon, singletonkey) WHERE (state < 'expired'::pgboss.job_state);
 
 
 --
--- Name: job_singletonon; Type: INDEX; Schema: pgboss; Owner: test
+-- Name: job_singletonon; Type: INDEX; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE UNIQUE INDEX job_singletonon ON pgboss.job USING btree (name, singletonon) WHERE ((state < 'expired'::pgboss.job_state) AND (singletonkey IS NULL));
 
 
 --
--- Name: channel_members_idx; Type: INDEX; Schema: public; Owner: test
+-- Name: channel_members_idx; Type: INDEX; Schema: public; Owner: kotahitest
 --
 
 CREATE INDEX channel_members_idx ON public.channel_members USING btree (user_id, channel_id);
 
 
 --
--- Name: is_default_idx; Type: INDEX; Schema: public; Owner: test
+-- Name: is_default_idx; Type: INDEX; Schema: public; Owner: kotahitest
 --
 
 CREATE UNIQUE INDEX is_default_idx ON public.identities USING btree (is_default, user_id) WHERE (is_default IS TRUE);
 
 
 --
--- Name: team_members_team_id_user_id_idx; Type: INDEX; Schema: public; Owner: test
+-- Name: team_members_team_id_user_id_idx; Type: INDEX; Schema: public; Owner: kotahitest
 --
 
 CREATE INDEX team_members_team_id_user_id_idx ON public.team_members USING btree (team_id, user_id);
 
 
 --
--- Name: teams_manuscript_id_idx; Type: INDEX; Schema: public; Owner: test
+-- Name: teams_manuscript_id_idx; Type: INDEX; Schema: public; Owner: kotahitest
 --
 
 CREATE INDEX teams_manuscript_id_idx ON public.teams USING btree (manuscript_id);
 
 
 --
--- Name: channel_members channel_members_channel_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: channel_members channel_members_channel_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.channel_members
@@ -765,7 +810,7 @@ ALTER TABLE ONLY public.channel_members
 
 
 --
--- Name: channel_members channel_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: channel_members channel_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.channel_members
@@ -773,7 +818,7 @@ ALTER TABLE ONLY public.channel_members
 
 
 --
--- Name: channels channels_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: channels channels_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.channels
@@ -781,7 +826,7 @@ ALTER TABLE ONLY public.channels
 
 
 --
--- Name: files files_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: files files_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.files
@@ -789,7 +834,7 @@ ALTER TABLE ONLY public.files
 
 
 --
--- Name: files files_review_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: files files_review_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.files
@@ -797,7 +842,7 @@ ALTER TABLE ONLY public.files
 
 
 --
--- Name: manuscripts manuscripts_submitter_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: manuscripts manuscripts_submitter_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.manuscripts
@@ -805,7 +850,7 @@ ALTER TABLE ONLY public.manuscripts
 
 
 --
--- Name: messages messages_channel_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: messages messages_channel_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.messages
@@ -813,7 +858,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: messages messages_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: messages messages_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.messages
@@ -821,7 +866,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: review_comments review_comments_review_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: review_comments review_comments_review_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.review_comments
@@ -829,7 +874,7 @@ ALTER TABLE ONLY public.review_comments
 
 
 --
--- Name: review_comments review_comments_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: review_comments review_comments_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.review_comments
@@ -837,7 +882,7 @@ ALTER TABLE ONLY public.review_comments
 
 
 --
--- Name: reviews reviews_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: reviews reviews_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.reviews
@@ -845,7 +890,7 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- Name: identities sidentities_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: identities sidentities_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.identities
@@ -853,7 +898,7 @@ ALTER TABLE ONLY public.identities
 
 
 --
--- Name: team_members team_members_alias_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: team_members team_members_alias_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.team_members
@@ -861,7 +906,7 @@ ALTER TABLE ONLY public.team_members
 
 
 --
--- Name: team_members team_members_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: team_members team_members_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.team_members
@@ -869,7 +914,7 @@ ALTER TABLE ONLY public.team_members
 
 
 --
--- Name: team_members team_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: team_members team_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.team_members
@@ -877,7 +922,7 @@ ALTER TABLE ONLY public.team_members
 
 
 --
--- Name: teams teams_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: teams teams_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.teams

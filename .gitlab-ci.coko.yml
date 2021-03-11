@@ -11,9 +11,11 @@ stages:
   # - demo
 
 build:
-  image: docker:19.03.13
+  image: docker:20.10.5
+  variables:
+    DOCKER_BUILDKIT: 1
   services:
-    - docker:19.03.13-dind
+    - docker:20.10.5-dind
   stage: build
   script:
     - if [ -z "$DOCKERHUB_USERNAME" ] || [ -z "$DOCKERHUB_PASSWORD" ]; then echo "Not pushing" && exit 0; fi
@@ -24,6 +26,7 @@ build:
     - docker push $IMAGE_ORG/$IMAGE_NAME:latest
 
 lint:
+  allow_failure: true
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
   variables:
@@ -38,16 +41,19 @@ test-chrome:
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
-    POSTGRES_USER: test
+    POSTGRES_USER: kotahitest
     POSTGRES_PASSWORD: pw
     # connection details for tests
-    PGUSER: test
+    PGUSER: kotahitest
     PGPASSWORD: pw
     NODE_ENV: test
   services:
     - postgres
   script:
     - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahitest -d kotahitest -c "create extension pgcrypto;"
     # specify host here else it confuses the linked postgres image
     - PGHOST=postgres yarn test:all:chrome
 
@@ -58,15 +64,18 @@ test-firefox:
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
-    POSTGRES_USER: test
+    POSTGRES_USER: kotahitest
     POSTGRES_PASSWORD: pw
     # connection details for tests
-    PGUSER: test
+    PGUSER: kotahitest
     PGPASSWORD: pw
     NODE_ENV: test
   services:
     - postgres
   script:
     - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahitest -d kotahitest -c "create extension pgcrypto;"
     # specify host here else it confuses the linked postgres image
     - PGHOST=postgres yarn test:all:firefox

@@ -16,44 +16,44 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: pgboss; Type: SCHEMA; Schema: -; Owner: test
+-- Name: pgboss; Type: SCHEMA; Schema: -; Owner: kotahitest
 --
 
 CREATE SCHEMA pgboss;
 
 
-ALTER SCHEMA pgboss OWNER TO test;
+ALTER SCHEMA pgboss OWNER TO kotahitest;
 
 --
--- Name: plpgsql; Type: EXTENSION; Schema: -; Owner: 
+-- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS plpgsql WITH SCHEMA pg_catalog;
 
 
 --
--- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION plpgsql; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION plpgsql IS 'PL/pgSQL procedural language';
 
 
 --
--- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner: 
+-- Name: pgcrypto; Type: EXTENSION; Schema: -; Owner:
 --
 
 CREATE EXTENSION IF NOT EXISTS pgcrypto WITH SCHEMA public;
 
 
 --
--- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner: 
+-- Name: EXTENSION pgcrypto; Type: COMMENT; Schema: -; Owner:
 --
 
 COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
--- Name: job_state; Type: TYPE; Schema: pgboss; Owner: test
+-- Name: job_state; Type: TYPE; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE TYPE pgboss.job_state AS ENUM (
@@ -67,14 +67,14 @@ CREATE TYPE pgboss.job_state AS ENUM (
 );
 
 
-ALTER TYPE pgboss.job_state OWNER TO test;
+ALTER TYPE pgboss.job_state OWNER TO kotahitest;
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: archive; Type: TABLE; Schema: pgboss; Owner: test
+-- Name: archive; Type: TABLE; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE TABLE pgboss.archive (
@@ -98,10 +98,10 @@ CREATE TABLE pgboss.archive (
 );
 
 
-ALTER TABLE pgboss.archive OWNER TO test;
+ALTER TABLE pgboss.archive OWNER TO kotahitest;
 
 --
--- Name: job; Type: TABLE; Schema: pgboss; Owner: test
+-- Name: job; Type: TABLE; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE TABLE pgboss.job (
@@ -124,10 +124,10 @@ CREATE TABLE pgboss.job (
 );
 
 
-ALTER TABLE pgboss.job OWNER TO test;
+ALTER TABLE pgboss.job OWNER TO kotahitest;
 
 --
--- Name: version; Type: TABLE; Schema: pgboss; Owner: test
+-- Name: version; Type: TABLE; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE TABLE pgboss.version (
@@ -135,10 +135,10 @@ CREATE TABLE pgboss.version (
 );
 
 
-ALTER TABLE pgboss.version OWNER TO test;
+ALTER TABLE pgboss.version OWNER TO kotahitest;
 
 --
--- Name: aliases; Type: TABLE; Schema: public; Owner: test
+-- Name: aliases; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.aliases (
@@ -151,10 +151,10 @@ CREATE TABLE public.aliases (
 );
 
 
-ALTER TABLE public.aliases OWNER TO test;
+ALTER TABLE public.aliases OWNER TO kotahitest;
 
 --
--- Name: channel_members; Type: TABLE; Schema: public; Owner: test
+-- Name: channel_members; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.channel_members (
@@ -166,10 +166,10 @@ CREATE TABLE public.channel_members (
 );
 
 
-ALTER TABLE public.channel_members OWNER TO test;
+ALTER TABLE public.channel_members OWNER TO kotahitest;
 
 --
--- Name: channels; Type: TABLE; Schema: public; Owner: test
+-- Name: channels; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.channels (
@@ -183,10 +183,10 @@ CREATE TABLE public.channels (
 );
 
 
-ALTER TABLE public.channels OWNER TO test;
+ALTER TABLE public.channels OWNER TO kotahitest;
 
 --
--- Name: entities; Type: TABLE; Schema: public; Owner: test
+-- Name: entities; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.entities (
@@ -195,10 +195,10 @@ CREATE TABLE public.entities (
 );
 
 
-ALTER TABLE public.entities OWNER TO test;
+ALTER TABLE public.entities OWNER TO kotahitest;
 
 --
--- Name: files; Type: TABLE; Schema: public; Owner: test
+-- Name: files; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.files (
@@ -217,10 +217,10 @@ CREATE TABLE public.files (
 );
 
 
-ALTER TABLE public.files OWNER TO test;
+ALTER TABLE public.files OWNER TO kotahitest;
 
 --
--- Name: identities; Type: TABLE; Schema: public; Owner: test
+-- Name: identities; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.identities (
@@ -237,10 +237,10 @@ CREATE TABLE public.identities (
 );
 
 
-ALTER TABLE public.identities OWNER TO test;
+ALTER TABLE public.identities OWNER TO kotahitest;
 
 --
--- Name: manuscripts; Type: TABLE; Schema: public; Owner: test
+-- Name: manuscripts; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.manuscripts (
@@ -259,10 +259,10 @@ CREATE TABLE public.manuscripts (
 );
 
 
-ALTER TABLE public.manuscripts OWNER TO test;
+ALTER TABLE public.manuscripts OWNER TO kotahitest;
 
 --
--- Name: messages; Type: TABLE; Schema: public; Owner: test
+-- Name: messages; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.messages (
@@ -275,10 +275,10 @@ CREATE TABLE public.messages (
 );
 
 
-ALTER TABLE public.messages OWNER TO test;
+ALTER TABLE public.messages OWNER TO kotahitest;
 
 --
--- Name: migrations; Type: TABLE; Schema: public; Owner: test
+-- Name: migrations; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.migrations (
@@ -287,10 +287,10 @@ CREATE TABLE public.migrations (
 );
 
 
-ALTER TABLE public.migrations OWNER TO test;
+ALTER TABLE public.migrations OWNER TO kotahitest;
 
 --
--- Name: reviews; Type: TABLE; Schema: public; Owner: test
+-- Name: reviews; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.reviews (
@@ -306,10 +306,10 @@ CREATE TABLE public.reviews (
 );
 
 
-ALTER TABLE public.reviews OWNER TO test;
+ALTER TABLE public.reviews OWNER TO kotahitest;
 
 --
--- Name: team_members; Type: TABLE; Schema: public; Owner: test
+-- Name: team_members; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.team_members (
@@ -323,10 +323,10 @@ CREATE TABLE public.team_members (
 );
 
 
-ALTER TABLE public.team_members OWNER TO test;
+ALTER TABLE public.team_members OWNER TO kotahitest;
 
 --
--- Name: teams; Type: TABLE; Schema: public; Owner: test
+-- Name: teams; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.teams (
@@ -343,10 +343,10 @@ CREATE TABLE public.teams (
 );
 
 
-ALTER TABLE public.teams OWNER TO test;
+ALTER TABLE public.teams OWNER TO kotahitest;
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: test
+-- Name: users; Type: TABLE; Schema: public; Owner: kotahitest
 --
 
 CREATE TABLE public.users (
@@ -366,41 +366,41 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO test;
+ALTER TABLE public.users OWNER TO kotahitest;
 
 --
--- Data for Name: archive; Type: TABLE DATA; Schema: pgboss; Owner: test
---
-
-
-
---
--- Data for Name: job; Type: TABLE DATA; Schema: pgboss; Owner: test
+-- Data for Name: archive; Type: TABLE DATA; Schema: pgboss; Owner: kotahitest
 --
 
 
 
 --
--- Data for Name: version; Type: TABLE DATA; Schema: pgboss; Owner: test
+-- Data for Name: job; Type: TABLE DATA; Schema: pgboss; Owner: kotahitest
+--
+
+
+
+--
+-- Data for Name: version; Type: TABLE DATA; Schema: pgboss; Owner: kotahitest
 --
 
 INSERT INTO pgboss.version (version) VALUES ('11');
 
 
 --
--- Data for Name: aliases; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: aliases; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 
 
 --
--- Data for Name: channel_members; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: channel_members; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 
 
 --
--- Data for Name: channels; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: channels; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 INSERT INTO public.channels (id, manuscript_id, team_id, created, updated, topic, type) VALUES ('ff5e86ef-2eaf-4327-afc2-9eb968c28fd0', '2357fc20-b99d-4b6f-a715-7d26a05becc3', NULL, '2020-07-27 00:53:31.57+02', '2020-07-27 00:53:31.57+02', 'Manuscript discussion', 'all');
@@ -408,19 +408,19 @@ INSERT INTO public.channels (id, manuscript_id, team_id, created, updated, topic
 
 
 --
--- Data for Name: entities; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: entities; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 
 
 --
--- Data for Name: files; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: files; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 
 
 --
--- Data for Name: identities; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: identities; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('d341a633-cdce-4a7f-a9ad-5afc03cd0dd1', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.741+02', '2020-07-21 16:17:25.87+02', 'orcid', '0000-0002-0564-2016', 'Emily Clay', NULL, '{"accessToken": "079a1165-31e5-4b59-9a99-d80ff7a21ebf", "refreshToken": "ccadc737-defc-419e-823b-a9f3673848ba"}', true);
@@ -433,20 +433,20 @@ INSERT INTO public.identities (id, user_id, created, updated, type, identifier, 
 
 
 --
--- Data for Name: manuscripts; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: manuscripts; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 INSERT INTO public.manuscripts (id, created, updated, parent_id, submitter_id, status, decision, authors, suggestions, meta, submission, type) VALUES ('2357fc20-b99d-4b6f-a715-7d26a05becc3', '2020-07-27 00:53:31.558+02', '2020-07-27 00:53:56.661+02', NULL, '027afa6a-edbc-486e-bb31-71e12f8ea1c5', 'submitted', NULL, NULL, NULL, '{"notes": [{"content": "", "notesType": "fundingAcknowledgement"}, {"content": "", "notesType": "specialInstructions"}], "title": "My URL submission"}', '{"irb": "yes", "name": "Emily Clay", "cover": "This is my cover letter", "links": "https://doi.org/10.6084/m9.figshare.913521.v1, https://github.com/jure/mathtype_to_mathml", "ethics": "This is my ethics statement", "contact": "emily@example.com", "methods": ["Functional MRI", "Optical Imaging"], "datacode": "This is my data and code availability statement", "humanMRI": "3T", "keywords": "some, keywords", "packages": ["SPM", "FSL"], "subjects": "patients", "suggested": "Erica James, Matthew Matretzky", "objectType": "software", "affiliation": "Example University, Egland", "otherMethods": "Erica James, Matthew Matretzky", "humanMRIother": "7T", "otherPackages": "Jupyter, Stencila", "animal_research_approval": "yes"}', 'Manuscript');
 
 
 --
--- Data for Name: messages; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: messages; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 
 
 --
--- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 INSERT INTO public.migrations (id, run_at) VALUES ('1524494862-entities.sql', '2020-07-21 16:01:00.856209+02');
@@ -470,27 +470,27 @@ INSERT INTO public.migrations (id, run_at) VALUES ('1592915682-change-identities
 
 
 --
--- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 
 
 --
--- Data for Name: team_members; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: team_members; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 INSERT INTO public.team_members (id, created, updated, status, team_id, user_id, alias_id) VALUES ('46aae2bc-0014-494b-84b9-78347f985031', '2020-07-27 00:53:31.583+02', '2020-07-27 00:53:31.583+02', NULL, '6e56669b-d835-4a06-b121-922fcaa52c47', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', NULL);
 
 
 --
--- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 INSERT INTO public.teams (id, created, updated, name, role, owners, global, type, object_id, object_type) VALUES ('6e56669b-d835-4a06-b121-922fcaa52c47', '2020-07-27 00:53:31.576+02', '2020-07-27 00:53:31.576+02', 'Author', 'author', NULL, NULL, 'team', '2357fc20-b99d-4b6f-a715-7d26a05becc3', 'Manuscript');
 
 
 --
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: test
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: kotahitest
 --
 
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.381+02', '2020-07-24 16:43:03.114+02', NULL, NULL, '0000000294294446', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser1.jpg', false);
@@ -503,7 +503,7 @@ INSERT INTO public.users (id, created, updated, admin, email, username, password
 
 
 --
--- Name: job job_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: test
+-- Name: job job_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: kotahitest
 --
 
 ALTER TABLE ONLY pgboss.job
@@ -511,7 +511,7 @@ ALTER TABLE ONLY pgboss.job
 
 
 --
--- Name: version version_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: test
+-- Name: version version_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: kotahitest
 --
 
 ALTER TABLE ONLY pgboss.version
@@ -519,7 +519,7 @@ ALTER TABLE ONLY pgboss.version
 
 
 --
--- Name: aliases aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: aliases aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.aliases
@@ -527,7 +527,7 @@ ALTER TABLE ONLY public.aliases
 
 
 --
--- Name: channel_members channel_members_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: channel_members channel_members_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.channel_members
@@ -535,7 +535,7 @@ ALTER TABLE ONLY public.channel_members
 
 
 --
--- Name: channels channels_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: channels channels_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.channels
@@ -543,7 +543,7 @@ ALTER TABLE ONLY public.channels
 
 
 --
--- Name: entities entities_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: entities entities_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.entities
@@ -551,7 +551,7 @@ ALTER TABLE ONLY public.entities
 
 
 --
--- Name: files files_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: files files_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.files
@@ -559,7 +559,7 @@ ALTER TABLE ONLY public.files
 
 
 --
--- Name: identities identities_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: identities identities_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.identities
@@ -567,7 +567,7 @@ ALTER TABLE ONLY public.identities
 
 
 --
--- Name: manuscripts manuscripts_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: manuscripts manuscripts_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.manuscripts
@@ -575,7 +575,7 @@ ALTER TABLE ONLY public.manuscripts
 
 
 --
--- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.messages
@@ -583,7 +583,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.migrations
@@ -591,7 +591,7 @@ ALTER TABLE ONLY public.migrations
 
 
 --
--- Name: reviews reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: reviews reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.reviews
@@ -599,7 +599,7 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- Name: team_members team_members_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: team_members team_members_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.team_members
@@ -607,7 +607,7 @@ ALTER TABLE ONLY public.team_members
 
 
 --
--- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.teams
@@ -615,7 +615,7 @@ ALTER TABLE ONLY public.teams
 
 
 --
--- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.users
@@ -623,7 +623,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.users
@@ -631,7 +631,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: test
+-- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.users
@@ -639,77 +639,77 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: archive_archivedon_idx; Type: INDEX; Schema: pgboss; Owner: test
+-- Name: archive_archivedon_idx; Type: INDEX; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE INDEX archive_archivedon_idx ON pgboss.archive USING btree (archivedon);
 
 
 --
--- Name: archive_id_idx; Type: INDEX; Schema: pgboss; Owner: test
+-- Name: archive_id_idx; Type: INDEX; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE INDEX archive_id_idx ON pgboss.archive USING btree (id);
 
 
 --
--- Name: job_name; Type: INDEX; Schema: pgboss; Owner: test
+-- Name: job_name; Type: INDEX; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE INDEX job_name ON pgboss.job USING btree (name text_pattern_ops);
 
 
 --
--- Name: job_singletonkey; Type: INDEX; Schema: pgboss; Owner: test
+-- Name: job_singletonkey; Type: INDEX; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE UNIQUE INDEX job_singletonkey ON pgboss.job USING btree (name, singletonkey) WHERE ((state < 'completed'::pgboss.job_state) AND (singletonon IS NULL));
 
 
 --
--- Name: job_singletonkeyon; Type: INDEX; Schema: pgboss; Owner: test
+-- Name: job_singletonkeyon; Type: INDEX; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE UNIQUE INDEX job_singletonkeyon ON pgboss.job USING btree (name, singletonon, singletonkey) WHERE (state < 'expired'::pgboss.job_state);
 
 
 --
--- Name: job_singletonon; Type: INDEX; Schema: pgboss; Owner: test
+-- Name: job_singletonon; Type: INDEX; Schema: pgboss; Owner: kotahitest
 --
 
 CREATE UNIQUE INDEX job_singletonon ON pgboss.job USING btree (name, singletonon) WHERE ((state < 'expired'::pgboss.job_state) AND (singletonkey IS NULL));
 
 
 --
--- Name: channel_members_idx; Type: INDEX; Schema: public; Owner: test
+-- Name: channel_members_idx; Type: INDEX; Schema: public; Owner: kotahitest
 --
 
 CREATE INDEX channel_members_idx ON public.channel_members USING btree (user_id, channel_id);
 
 
 --
--- Name: is_default_idx; Type: INDEX; Schema: public; Owner: test
+-- Name: is_default_idx; Type: INDEX; Schema: public; Owner: kotahitest
 --
 
 CREATE UNIQUE INDEX is_default_idx ON public.identities USING btree (is_default, user_id) WHERE (is_default IS TRUE);
 
 
 --
--- Name: team_members_team_id_user_id_index; Type: INDEX; Schema: public; Owner: test
+-- Name: team_members_team_id_user_id_index; Type: INDEX; Schema: public; Owner: kotahitest
 --
 
 CREATE INDEX team_members_team_id_user_id_index ON public.team_members USING btree (team_id, user_id);
 
 
 --
--- Name: teams_object_id_object_type_index; Type: INDEX; Schema: public; Owner: test
+-- Name: teams_object_id_object_type_index; Type: INDEX; Schema: public; Owner: kotahitest
 --
 
 CREATE INDEX teams_object_id_object_type_index ON public.teams USING btree (object_id, object_type);
 
 
 --
--- Name: channel_members channel_members_channel_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: channel_members channel_members_channel_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.channel_members
@@ -717,7 +717,7 @@ ALTER TABLE ONLY public.channel_members
 
 
 --
--- Name: channel_members channel_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: channel_members channel_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.channel_members
@@ -725,7 +725,7 @@ ALTER TABLE ONLY public.channel_members
 
 
 --
--- Name: channels channels_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: channels channels_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.channels
@@ -733,7 +733,7 @@ ALTER TABLE ONLY public.channels
 
 
 --
--- Name: channels channels_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: channels channels_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.channels
@@ -741,7 +741,7 @@ ALTER TABLE ONLY public.channels
 
 
 --
--- Name: manuscripts manuscripts_submitter_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: manuscripts manuscripts_submitter_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.manuscripts
@@ -749,7 +749,7 @@ ALTER TABLE ONLY public.manuscripts
 
 
 --
--- Name: messages messages_channel_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: messages messages_channel_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.messages
@@ -757,7 +757,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: messages messages_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: messages messages_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.messages
@@ -765,7 +765,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: identities sidentities_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: identities sidentities_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.identities
@@ -773,7 +773,7 @@ ALTER TABLE ONLY public.identities
 
 
 --
--- Name: team_members team_members_alias_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: team_members team_members_alias_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.team_members
@@ -781,7 +781,7 @@ ALTER TABLE ONLY public.team_members
 
 
 --
--- Name: team_members team_members_team_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: team_members team_members_team_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.team_members
@@ -789,7 +789,7 @@ ALTER TABLE ONLY public.team_members
 
 
 --
--- Name: team_members team_members_user_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: test
+-- Name: team_members team_members_user_id_foreign; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
 --
 
 ALTER TABLE ONLY public.team_members

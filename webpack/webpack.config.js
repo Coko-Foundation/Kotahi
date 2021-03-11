@@ -1,7 +1,10 @@
 const path = require('path')
 const fs = require('fs-extra')
-const config = require('config')
 const { pick } = require('lodash')
+// Loads environment variables from e.g. .env.development, same as server/app.js
+const dotenvPath = path.resolve(`.env.${process.env.NODE_ENV || 'development'}`)
+require('dotenv').config({ path: dotenvPath })
+const config = require('config')
 
 const rules = require('./common-rules')
 
@@ -19,14 +22,14 @@ module.exports = webpackEnv => {
   const isEnvDevelopment = webpackEnv === 'development'
   const isEnvProduction = webpackEnv === 'production'
 
-  const serverProtocol = process.env.SERVER_PROTOCOL
-  const serverHost = process.env.SERVER_HOST
-  const serverPort = process.env.SERVER_PORT
+  const serverProtocol = process.env.SERVER_PROTOCOL || 'http'
+  const serverHost = process.env.SERVER_HOST || '0.0.0.0'
+  const serverPort = process.env.SERVER_PORT || 3000
   const serverUrl = `${serverHost}${serverPort ? `:${serverPort}` : ''}`
   const serverUrlWithProtocol = `${serverProtocol}://${serverUrl}`
 
-  const devServerHost = process.env.CLIENT_HOST
-  const devServerPort = process.env.CLIENT_PORT
+  const devServerHost = process.env.CLIENT_HOST || '0.0.0.0'
+  const devServerPort = process.env.CLIENT_PORT || 4000
 
   return {
     context: path.join(__dirname, '..', 'app'),

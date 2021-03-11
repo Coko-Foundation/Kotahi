@@ -29,6 +29,35 @@ This will:
 - Bring up a postgres container for use in development
 - Register the `job-xsweet` service (which converts .docx files to HTML)
 
+#### Running integration tests
+
+Create a local postgres database named `kotahitest` and a superuser `kotahitest` using `psql`:
+
+```
+> psql
+user=# create database kotahitest;
+user=# create user kotahitest with superuser;
+```
+
+And then install the `pgcrypto` extension to the `kotahitest` database:
+
+```
+> psql -d kotahitest -U kotahitest
+kotahitest=# create extension pgcrypto;
+```
+
+Migrate the test database using `NODE_ENV=test yarn pubsweet migrate` and run the tests for Chrome:
+
+```
+NODE_ENV=test yarn test:all:chrome
+```
+
+Or Firefox:
+
+```
+NODE_ENV=test yarn test:all:firefox
+```
+
 #### Production
 
 To run the app for production with `docker-compose`:

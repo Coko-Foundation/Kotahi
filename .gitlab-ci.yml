@@ -1,6 +1,6 @@
 stages:
   - run-pipeline
-  
+
 elife-pipeline:
   stage: run-pipeline
   trigger:

@@ -1,9 +1,9 @@
 const path = require('path')
-const config = require('config')
 
-const dotenvPath = path.resolve(`.env.${config.util.getEnv('NODE_ENV')}`)
+const dotenvPath = path.resolve(`.env.${process.env.NODE_ENV || 'development'}`)
 require('dotenv').config({ path: dotenvPath })
 
+const config = require('config')
 const express = require('express')
 const morgan = require('morgan')
 const helmet = require('helmet')

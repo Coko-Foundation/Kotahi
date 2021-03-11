@@ -6,9 +6,10 @@ describe('Publishing a submission', () => {
 
     cy.contains('Control Panel').click()
 
-    cy.get('button')
-      .contains('Publish')
-      .click()
+    // TODO: Remove this, there must be a bug here.
+    // eslint-disable-next-line
+    cy.wait(1000)
+    cy.get('button').contains('Publish').click()
     cy.contains('submission was published')
 
     cy.contains('Dashboard').click()
