@@ -15,7 +15,7 @@ import routes from './routes'
 const history = createBrowserHistory()
 
 const rootEl = document.getElementById('root')
-
+console.log('test tmp')
 ReactDOM.render(
   <XpubProvider>
     <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
