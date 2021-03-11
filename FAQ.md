@@ -61,13 +61,18 @@ x.save()
 The console (`yarn console`) gives you a Node.js REPL with asyns/await support and models preloaded. You can access all of those as you can in the server-side code.
 
 A few examples:
+
 ```js
 // returns all manuscripts
 const manuscripts = await Manuscript.query()
 ```
+
 ```js
 // get a channels messages
-const channel = await Channel.query().where({manuscriptId: 'someUuid', type: 'editorial'})
+const channel = await Channel.query().where({
+  manuscriptId: 'someUuid',
+  type: 'editorial',
+})
 const messages = await channel.$relatedQuery('messages')
 ```
 
