@@ -1,7 +1,7 @@
 import VisibilitySensor from 'react-visibility-sensor'
 import { Link } from 'react-router-dom'
 import React from 'react'
-// import PropTypes from 'prop-types'
+import PropTypes from 'prop-types'
 import { Spinner } from '../shared'
 import { HasNextPage, NextPageButton } from './style'
 
@@ -11,14 +11,16 @@ const NextPageButtonWrapper = props => {
     fetchMore,
     href,
     children,
-    automatic = true,
-    topOffset = -250,
-    bottomOffset = -250,
+    automatic,
+    topOffset,
+    bottomOffset,
   } = props
+
   const onChange = isVisible => {
     if (isFetchingMore || !isVisible) return undefined
     return fetchMore()
   }
+
   return (
     <HasNextPage
       as={href ? Link : 'div'}
@@ -54,14 +56,23 @@ const NextPageButtonWrapper = props => {
 }
 
 // TODO: Set default props
-// NextPageButtonWrapper.propTypes = {
-//   isFetchingMore: PropTypes.bool,
-//   href: PropTypes.object,
-//   fetchMore: PropTypes.func.isRequired,
-//   children: PropTypes.string,
-//   automatic: PropTypes.bool,
-//   topOffset: PropTypes.number,
-//   bottomOffset: PropTypes.number,
-// }
+NextPageButtonWrapper.propTypes = {
+  isFetchingMore: PropTypes.bool,
+  href: PropTypes.string,
+  fetchMore: PropTypes.func.isRequired,
+  children: PropTypes.string,
+  automatic: PropTypes.bool,
+  topOffset: PropTypes.number,
+  bottomOffset: PropTypes.number,
+}
+
+NextPageButtonWrapper.defaultProps = {
+  isFetchingMore: false,
+  href: undefined,
+  children: undefined,
+  automatic: true,
+  topOffset: -250,
+  bottomOffset: -250,
+}
 
 export default NextPageButtonWrapper

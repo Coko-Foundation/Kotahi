@@ -32,11 +32,13 @@ export function stripTypenames(obj) {
   })
   return obj
 }
+
 // Construct an ApolloClient. If a function is passed as the first argument,
 // it will be called with the default client config as an argument, and should
 // return the desired config.
 const makeApolloClient = (makeConfig, connectToWebSocket) => {
   const uploadLink = createUploadLink()
+
   const authLink = setContext((_, { headers }) => {
     const token = localStorage.getItem('token')
     return {
@@ -51,6 +53,7 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
     if (operation.variables) {
       operation.variables = stripTypenames(operation.variables)
     }
+
     return forward(operation)
   })
 
@@ -58,6 +61,7 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
 
   if (connectToWebSocket) {
     const wsProtocol = window.location.protocol === 'https:' ? 'wss' : 'ws'
+
     const wsLink = new WebSocketLink({
       uri: `${wsProtocol}://${window.location.host}/subscriptions`,
       options: {
@@ -65,6 +69,7 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
         connectionParams: () => ({ authToken: localStorage.getItem('token') }),
       },
     })
+
     link = split(
       ({ query }) => {
         const { kind, operation } = getMainDefinition(query)
@@ -74,6 +79,7 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
       link,
     )
   }
+
   const config = {
     link,
     cache: new InMemoryCache({
@@ -87,7 +93,7 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
               read(existing, { cache, args, readField }) {
                 const currentRoles = currentRolesVar()
                 const currentId = readField('id')
-                const r = currentRoles.find(r => r.id === currentId)
+                const r = currentRoles.find(ro => ro.id === currentId)
                 return (r && r.roles) || []
               },
             },
@@ -99,7 +105,7 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
               read(existing, { cache, args, readField }) {
                 const currentRoles = currentRolesVar()
                 const currentId = readField('id')
-                const r = currentRoles.find(r => r.id === currentId)
+                const r = currentRoles.find(ro => ro.id === currentId)
                 return (r && r.roles) || []
               },
             },
@@ -108,6 +114,7 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
       },
     }),
   }
+
   return new ApolloClient(makeConfig ? makeConfig(config) : config)
 }
 
