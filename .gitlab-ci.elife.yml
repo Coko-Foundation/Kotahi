@@ -36,7 +36,7 @@ deploy:
     - ssh-keyscan elife.kotahi.cloud >> ~/.ssh/known_hosts
     - chmod 644 ~/.ssh/known_hosts
   script:
-    - | 
+    - |
       ssh ubuntu@elife.kotahi.cloud "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
       sudo docker pull $IMAGE_ORG/$IMAGE_NAME:latest && 
       sudo supervisorctl stop kotahi && 

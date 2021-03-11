@@ -14,4 +14,3 @@ coko-pipeline:
     include:
       - local: .gitlab-ci.coko.yml
     strategy: depend
-
