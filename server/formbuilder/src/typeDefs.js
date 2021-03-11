@@ -7,7 +7,7 @@ const typeDefs = `
 
   extend type Mutation {
     createForm(form: String!): Form
-    updateForm(form: String!, id: String!): Form
+    updateForm(form: String!, formId: String!): Form
     updateFormElement(element: String!, formId: String!): Form
     deleteFormElement(formId: ID!, elementId: ID!): Form
     deleteForms(formId: ID!): Form

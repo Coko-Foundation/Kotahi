@@ -10,8 +10,8 @@ const createFormMutation = gql`
 `
 
 const updateFormMutation = gql`
-  mutation($form: String!, $id: String!) {
-    updateForm(form: $form, id: $id)
+  mutation($form: String!, $formId: String!) {
+    updateForm(form: $form, formId: $formId)
   }
 `
 
