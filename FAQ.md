@@ -2,7 +2,7 @@
 
 ## All I see is a "Recent publications" page with no publications. How do I login?
 
-Go to `/login` on your browser.  
+Go to `/login` on your browser.
 eg. if your app is at `kotahi.myorg.com`, go to `kotahi.myorg.com/login`
 
 ## How do I setup ORCID for development?
@@ -55,6 +55,23 @@ x = await User.query().where({username:"0000000210481437"}).first()
 x.admin = true
 x.save()
 ```
+
+# What else can I do in the console?
+
+The console (`yarn console`) gives you a Node.js REPL with asyns/await support and models preloaded. You can access all of those as you can in the server-side code.
+
+A few examples:
+```js
+// returns all manuscripts
+const manuscripts = await Manuscript.query()
+```
+```js
+// get a channels messages
+const channel = await Channel.query().where({manuscriptId: 'someUuid', type: 'editorial'})
+const messages = await channel.$relatedQuery('messages')
+```
+
+And so on. For more information about the capabilities of the underlying Objection.js ORM, check out [its documentation](https://vincit.github.io/objection.js/).
 
 ## What should PUBLIC_CLIENT_HOST be set to?
 
