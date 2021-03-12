@@ -1,0 +1,14 @@
+{
+  assignees: ['jure'],
+  labels: ['renovate'],
+  rebaseWhen: 'auto',
+  automerge: true,
+  semanticCommits: true,
+  major: {
+    automerge: false
+  },
+  extends: [
+    'config:base',
+  ],
+};
+
