@@ -10,7 +10,6 @@ const Inline = styled.div`
 
 const UnbulletedList = styled.div`
   list-style-type: none;
-  margin-left: -40px;
 `
 
 const Spacing = styled.div`
@@ -38,7 +37,7 @@ const renderOptions = ({ form: { values }, push, remove }) => (
         </Button>
       </li>
       {(values.options || []).map((option, index) => (
-        <li>
+        <li key={option.value}>
           <Spacing>
             <Option>
               Option:&nbsp;
