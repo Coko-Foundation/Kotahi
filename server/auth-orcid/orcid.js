@@ -31,6 +31,7 @@ module.exports = app => {
             .where('identities.type', 'orcid')
             .throwIfNotFound()
             .first()
+          user.firstLogin = false
         } catch (err) {
           // swallow not found error
           if (err.name !== 'NotFoundError') {
@@ -57,6 +58,7 @@ module.exports = app => {
 
             user.defaultIdentity.name = `${userDetails.firstName} ${userDetails.lastName}`
             user.defaultIdentity.aff = userDetails.institution
+            user.firstLogin = true
             user.saveGraph()
           }
         } catch (err) {
@@ -81,7 +83,11 @@ module.exports = app => {
     }),
     (req, res) => {
       const jwt = authentication.token.create(req.user)
-      res.redirect(`/login?token=${jwt}`)
+      res.redirect(
+        `/login?token=${jwt}&redirectUrl=${
+          req.user.firstLogin ? '/kotahi/profile' : '/kotahi/dashboard'
+        }`,
+      )
     },
   )
 }

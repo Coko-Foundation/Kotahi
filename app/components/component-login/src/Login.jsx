@@ -1,11 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { Redirect } from 'react-router-dom'
 import config from 'config'
 import { th, grid, lighten } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
 import styled from 'styled-components'
 
-
+import getQueryStringByName from '../../../shared/getQueryStringByName'
 import brandConfig from '../../../brandConfig.json'
 
 const getNextUrl = () => {
@@ -18,16 +18,6 @@ const getNextUrl = () => {
     config['pubsweet-client']['login-redirect']
 
   return `${url.searchParams.get('next') || redirectLink}`
-}
-
-const getToken = props => {
-  const { location } = props
-
-  if (location && location.search && location.search.match(/^\?token=/)) {
-    return location.search.replace(/^\?token=/, '')
-  }
-
-  return null
 }
 
 const LoginButton = styled(Button)`
@@ -101,12 +91,11 @@ const StyledORCIDIcon = styled(ORCIDIcon)`
 `
 
 const Login = ({ logo = null, ...props }) => {
-  const token = getToken(props)
+  const token = getQueryStringByName('token')
   // If a JWT token is supplied as a query param (e.g. from OAuth)
   // go ahead and fetch the redirect URL
-  const initialRedirectLink = token ? getNextUrl() : null
-  const [redirectLink] = useState(initialRedirectLink)
-
+  let redirectLink = token ? getNextUrl() : null
+  redirectLink = (redirectLink && getQueryStringByName('redirectUrl')) ? getQueryStringByName('redirectUrl') : redirectLink
   if (token) {
     window.localStorage.setItem('token', token)
     return <Redirect to={redirectLink} />
