@@ -4,6 +4,7 @@
   rebaseWhen: 'auto',
   automerge: true,
   semanticCommits: true,
+  prConcurrentLimit: 10,
   major: {
     automerge: false
   },
