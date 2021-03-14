@@ -43,19 +43,18 @@ test-chrome:
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
-    POSTGRES_USER: kotahitest
-    POSTGRES_PASSWORD: pw
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
     # connection details for tests
-    PGUSER: kotahitest
-    PGPASSWORD: pw
-    NODE_ENV: test
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
   services:
     - postgres
   script:
     - cd ${HOME}
     - apt-get -y install postgresql-client
     # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahitest -d kotahitest -c "create extension pgcrypto;"
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # specify host here else it confuses the linked postgres image
     - PGHOST=postgres yarn test:all:chrome
 
@@ -66,18 +65,17 @@ test-firefox:
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
-    POSTGRES_USER: kotahitest
-    POSTGRES_PASSWORD: pw
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
     # connection details for tests
-    PGUSER: kotahitest
-    PGPASSWORD: pw
-    NODE_ENV: test
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
   services:
     - postgres
   script:
     - cd ${HOME}
     - apt-get -y install postgresql-client
     # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahitest -d kotahitest -c "create extension pgcrypto;"
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # specify host here else it confuses the linked postgres image
     - PGHOST=postgres yarn test:all:firefox

@@ -1,9 +1,7 @@
 const path = require('path')
 const fs = require('fs-extra')
 const { pick } = require('lodash')
-// Loads environment variables from e.g. .env.development, same as server/app.js
-const dotenvPath = path.resolve(`.env.${process.env.NODE_ENV || 'development'}`)
-require('dotenv').config({ path: dotenvPath })
+require('dotenv').config()
 const config = require('config')
 
 const rules = require('./common-rules')

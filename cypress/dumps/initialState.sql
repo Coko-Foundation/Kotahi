@@ -16,13 +16,13 @@ SET client_min_messages = warning;
 SET row_security = off;
 
 --
--- Name: pgboss; Type: SCHEMA; Schema: -; Owner: kotahitest
+-- Name: pgboss; Type: SCHEMA; Schema: -; Owner: kotahidev
 --
 
 CREATE SCHEMA pgboss;
 
 
-ALTER SCHEMA pgboss OWNER TO kotahitest;
+ALTER SCHEMA pgboss OWNER TO kotahidev;
 
 --
 -- Name: plpgsql; Type: EXTENSION; Schema: -; Owner:
@@ -53,7 +53,7 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
--- Name: job_state; Type: TYPE; Schema: pgboss; Owner: kotahitest
+-- Name: job_state; Type: TYPE; Schema: pgboss; Owner: kotahidev
 --
 
 CREATE TYPE pgboss.job_state AS ENUM (
@@ -67,14 +67,14 @@ CREATE TYPE pgboss.job_state AS ENUM (
 );
 
 
-ALTER TYPE pgboss.job_state OWNER TO kotahitest;
+ALTER TYPE pgboss.job_state OWNER TO kotahidev;
 
 SET default_tablespace = '';
 
 SET default_with_oids = false;
 
 --
--- Name: archive; Type: TABLE; Schema: pgboss; Owner: kotahitest
+-- Name: archive; Type: TABLE; Schema: pgboss; Owner: kotahidev
 --
 
 CREATE TABLE pgboss.archive (
@@ -100,10 +100,10 @@ CREATE TABLE pgboss.archive (
 );
 
 
-ALTER TABLE pgboss.archive OWNER TO kotahitest;
+ALTER TABLE pgboss.archive OWNER TO kotahidev;
 
 --
--- Name: job; Type: TABLE; Schema: pgboss; Owner: kotahitest
+-- Name: job; Type: TABLE; Schema: pgboss; Owner: kotahidev
 --
 
 CREATE TABLE pgboss.job (
@@ -128,10 +128,10 @@ CREATE TABLE pgboss.job (
 );
 
 
-ALTER TABLE pgboss.job OWNER TO kotahitest;
+ALTER TABLE pgboss.job OWNER TO kotahidev;
 
 --
--- Name: schedule; Type: TABLE; Schema: pgboss; Owner: kotahitest
+-- Name: schedule; Type: TABLE; Schema: pgboss; Owner: kotahidev
 --
 
 CREATE TABLE pgboss.schedule (
@@ -145,10 +145,10 @@ CREATE TABLE pgboss.schedule (
 );
 
 
-ALTER TABLE pgboss.schedule OWNER TO kotahitest;
+ALTER TABLE pgboss.schedule OWNER TO kotahidev;
 
 --
--- Name: version; Type: TABLE; Schema: pgboss; Owner: kotahitest
+-- Name: version; Type: TABLE; Schema: pgboss; Owner: kotahidev
 --
 
 CREATE TABLE pgboss.version (
@@ -158,10 +158,10 @@ CREATE TABLE pgboss.version (
 );
 
 
-ALTER TABLE pgboss.version OWNER TO kotahitest;
+ALTER TABLE pgboss.version OWNER TO kotahidev;
 
 --
--- Name: aliases; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: aliases; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.aliases (
@@ -174,10 +174,10 @@ CREATE TABLE public.aliases (
 );
 
 
-ALTER TABLE public.aliases OWNER TO kotahitest;
+ALTER TABLE public.aliases OWNER TO kotahidev;
 
 --
--- Name: channel_members; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: channel_members; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.channel_members (
@@ -189,10 +189,10 @@ CREATE TABLE public.channel_members (
 );
 
 
-ALTER TABLE public.channel_members OWNER TO kotahitest;
+ALTER TABLE public.channel_members OWNER TO kotahidev;
 
 --
--- Name: channels; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: channels; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.channels (
@@ -205,10 +205,10 @@ CREATE TABLE public.channels (
 );
 
 
-ALTER TABLE public.channels OWNER TO kotahitest;
+ALTER TABLE public.channels OWNER TO kotahidev;
 
 --
--- Name: entities; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: entities; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.entities (
@@ -217,10 +217,10 @@ CREATE TABLE public.entities (
 );
 
 
-ALTER TABLE public.entities OWNER TO kotahitest;
+ALTER TABLE public.entities OWNER TO kotahidev;
 
 --
--- Name: files; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: files; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.files (
@@ -240,10 +240,10 @@ CREATE TABLE public.files (
 );
 
 
-ALTER TABLE public.files OWNER TO kotahitest;
+ALTER TABLE public.files OWNER TO kotahidev;
 
 --
--- Name: identities; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: identities; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.identities (
@@ -260,10 +260,10 @@ CREATE TABLE public.identities (
 );
 
 
-ALTER TABLE public.identities OWNER TO kotahitest;
+ALTER TABLE public.identities OWNER TO kotahidev;
 
 --
--- Name: manuscripts; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: manuscripts; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.manuscripts (
@@ -283,10 +283,10 @@ CREATE TABLE public.manuscripts (
 );
 
 
-ALTER TABLE public.manuscripts OWNER TO kotahitest;
+ALTER TABLE public.manuscripts OWNER TO kotahidev;
 
 --
--- Name: messages; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: messages; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.messages (
@@ -299,10 +299,10 @@ CREATE TABLE public.messages (
 );
 
 
-ALTER TABLE public.messages OWNER TO kotahitest;
+ALTER TABLE public.messages OWNER TO kotahidev;
 
 --
--- Name: migrations; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: migrations; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.migrations (
@@ -311,10 +311,10 @@ CREATE TABLE public.migrations (
 );
 
 
-ALTER TABLE public.migrations OWNER TO kotahitest;
+ALTER TABLE public.migrations OWNER TO kotahidev;
 
 --
--- Name: review_comments; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: review_comments; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.review_comments (
@@ -329,10 +329,10 @@ CREATE TABLE public.review_comments (
 );
 
 
-ALTER TABLE public.review_comments OWNER TO kotahitest;
+ALTER TABLE public.review_comments OWNER TO kotahidev;
 
 --
--- Name: reviews; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: reviews; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.reviews (
@@ -347,10 +347,10 @@ CREATE TABLE public.reviews (
 );
 
 
-ALTER TABLE public.reviews OWNER TO kotahitest;
+ALTER TABLE public.reviews OWNER TO kotahidev;
 
 --
--- Name: team_members; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: team_members; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.team_members (
@@ -364,10 +364,10 @@ CREATE TABLE public.team_members (
 );
 
 
-ALTER TABLE public.team_members OWNER TO kotahitest;
+ALTER TABLE public.team_members OWNER TO kotahidev;
 
 --
--- Name: teams; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: teams; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.teams (
@@ -384,10 +384,10 @@ CREATE TABLE public.teams (
 );
 
 
-ALTER TABLE public.teams OWNER TO kotahitest;
+ALTER TABLE public.teams OWNER TO kotahidev;
 
 --
--- Name: users; Type: TABLE; Schema: public; Owner: kotahitest
+-- Name: users; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
 CREATE TABLE public.users (
@@ -407,16 +407,16 @@ CREATE TABLE public.users (
 );
 
 
-ALTER TABLE public.users OWNER TO kotahitest;
+ALTER TABLE public.users OWNER TO kotahidev;
 
 --
--- Data for Name: archive; Type: TABLE DATA; Schema: pgboss; Owner: kotahitest
+-- Data for Name: archive; Type: TABLE DATA; Schema: pgboss; Owner: kotahidev
 --
 
 
 
 --
--- Data for Name: job; Type: TABLE DATA; Schema: pgboss; Owner: kotahitest
+-- Data for Name: job; Type: TABLE DATA; Schema: pgboss; Owner: kotahidev
 --
 
 INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount, retrydelay, retrybackoff, startafter, startedon, singletonkey, singletonon, expirein, createdon, completedon, keepuntil, on_complete) VALUES ('876670c0-8195-11eb-815e-59df8a5d915a', '__pgboss__maintenance', 0, NULL, 'completed', 0, 0, 0, false, '2021-03-10 12:41:18.669507+01', '2021-03-10 12:41:18.675148+01', '__pgboss__maintenance', NULL, '00:15:00', '2021-03-10 12:41:18.669507+01', '2021-03-10 12:41:18.693727+01', '2021-03-10 12:49:18.669507+01', false);
@@ -426,50 +426,50 @@ INSERT INTO pgboss.job (id, name, priority, data, state, retrylimit, retrycount,
 
 
 --
--- Data for Name: schedule; Type: TABLE DATA; Schema: pgboss; Owner: kotahitest
+-- Data for Name: schedule; Type: TABLE DATA; Schema: pgboss; Owner: kotahidev
 --
 
 
 
 --
--- Data for Name: version; Type: TABLE DATA; Schema: pgboss; Owner: kotahitest
+-- Data for Name: version; Type: TABLE DATA; Schema: pgboss; Owner: kotahidev
 --
 
 INSERT INTO pgboss.version (version, maintained_on, cron_on) VALUES (16, '2021-03-10 12:41:18.691912+01', '2021-03-10 12:41:22.737495+01');
 
 
 --
--- Data for Name: aliases; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: aliases; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 
 
 --
--- Data for Name: channel_members; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: channel_members; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 
 
 --
--- Data for Name: channels; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: channels; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 
 
 --
--- Data for Name: entities; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: entities; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 
 
 --
--- Data for Name: files; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: files; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 
 
 --
--- Data for Name: identities; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: identities; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('d341a633-cdce-4a7f-a9ad-5afc03cd0dd1', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.741+02', '2020-07-21 16:17:25.87+02', 'orcid', '0000-0002-0564-2016', 'Emily Clay', NULL, '{"accessToken": "079a1165-31e5-4b59-9a99-d80ff7a21ebf", "refreshToken": "ccadc737-defc-419e-823b-a9f3673848ba"}', true);
@@ -482,19 +482,19 @@ INSERT INTO public.identities (id, user_id, created, updated, type, identifier, 
 
 
 --
--- Data for Name: manuscripts; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: manuscripts; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 
 
 --
--- Data for Name: messages; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: messages; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 
 
 --
--- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: migrations; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 INSERT INTO public.migrations (id, run_at) VALUES ('1524494862-entities.sql', '2020-08-16 22:36:46.642584+02');
@@ -515,31 +515,31 @@ INSERT INTO public.migrations (id, run_at) VALUES ('1596838897-files.sql', '2020
 
 
 --
--- Data for Name: review_comments; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: review_comments; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 
 
 --
--- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: reviews; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 
 
 --
--- Data for Name: team_members; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: team_members; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 
 
 --
--- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: teams; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 
 
 --
--- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: kotahitest
+-- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online) VALUES ('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.381+02', '2020-07-24 16:43:03.114+02', NULL, NULL, '0000000294294446', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser1.jpg', false);
@@ -552,7 +552,7 @@ INSERT INTO public.users (id, created, updated, admin, email, username, password
 
 
 --
--- Name: job job_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: kotahitest
+-- Name: job job_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: kotahidev
 --
 
 ALTER TABLE ONLY pgboss.job
@@ -560,7 +560,7 @@ ALTER TABLE ONLY pgboss.job
 
 
 --
--- Name: schedule schedule_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: kotahitest
+-- Name: schedule schedule_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: kotahidev
 --
 
 ALTER TABLE ONLY pgboss.schedule
@@ -568,7 +568,7 @@ ALTER TABLE ONLY pgboss.schedule
 
 
 --
--- Name: version version_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: kotahitest
+-- Name: version version_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: kotahidev
 --
 
 ALTER TABLE ONLY pgboss.version
@@ -576,7 +576,7 @@ ALTER TABLE ONLY pgboss.version
 
 
 --
--- Name: aliases aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: aliases aliases_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.aliases
@@ -584,7 +584,7 @@ ALTER TABLE ONLY public.aliases
 
 
 --
--- Name: channel_members channel_members_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: channel_members channel_members_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.channel_members
@@ -592,7 +592,7 @@ ALTER TABLE ONLY public.channel_members
 
 
 --
--- Name: channels channels_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: channels channels_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.channels
@@ -600,7 +600,7 @@ ALTER TABLE ONLY public.channels
 
 
 --
--- Name: entities entities_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: entities entities_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.entities
@@ -608,7 +608,7 @@ ALTER TABLE ONLY public.entities
 
 
 --
--- Name: files files_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: files files_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.files
@@ -616,7 +616,7 @@ ALTER TABLE ONLY public.files
 
 
 --
--- Name: identities identities_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: identities identities_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.identities
@@ -624,7 +624,7 @@ ALTER TABLE ONLY public.identities
 
 
 --
--- Name: manuscripts manuscripts_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: manuscripts manuscripts_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.manuscripts
@@ -632,7 +632,7 @@ ALTER TABLE ONLY public.manuscripts
 
 
 --
--- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: messages messages_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.messages
@@ -640,7 +640,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: migrations migrations_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.migrations
@@ -648,7 +648,7 @@ ALTER TABLE ONLY public.migrations
 
 
 --
--- Name: review_comments review_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: review_comments review_comments_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.review_comments
@@ -656,7 +656,7 @@ ALTER TABLE ONLY public.review_comments
 
 
 --
--- Name: reviews reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: reviews reviews_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.reviews
@@ -664,7 +664,7 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- Name: team_members team_members_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: team_members team_members_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.team_members
@@ -672,7 +672,7 @@ ALTER TABLE ONLY public.team_members
 
 
 --
--- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: teams teams_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.teams
@@ -680,7 +680,7 @@ ALTER TABLE ONLY public.teams
 
 
 --
--- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: users users_email_key; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.users
@@ -688,7 +688,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: users users_pkey; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.users
@@ -696,7 +696,7 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: users users_username_key; Type: CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.users
@@ -704,77 +704,77 @@ ALTER TABLE ONLY public.users
 
 
 --
--- Name: archive_archivedon_idx; Type: INDEX; Schema: pgboss; Owner: kotahitest
+-- Name: archive_archivedon_idx; Type: INDEX; Schema: pgboss; Owner: kotahidev
 --
 
 CREATE INDEX archive_archivedon_idx ON pgboss.archive USING btree (archivedon);
 
 
 --
--- Name: archive_id_idx; Type: INDEX; Schema: pgboss; Owner: kotahitest
+-- Name: archive_id_idx; Type: INDEX; Schema: pgboss; Owner: kotahidev
 --
 
 CREATE INDEX archive_id_idx ON pgboss.archive USING btree (id);
 
 
 --
--- Name: job_name; Type: INDEX; Schema: pgboss; Owner: kotahitest
+-- Name: job_name; Type: INDEX; Schema: pgboss; Owner: kotahidev
 --
 
 CREATE INDEX job_name ON pgboss.job USING btree (name text_pattern_ops);
 
 
 --
--- Name: job_singletonkey; Type: INDEX; Schema: pgboss; Owner: kotahitest
+-- Name: job_singletonkey; Type: INDEX; Schema: pgboss; Owner: kotahidev
 --
 
 CREATE UNIQUE INDEX job_singletonkey ON pgboss.job USING btree (name, singletonkey) WHERE ((state < 'completed'::pgboss.job_state) AND (singletonon IS NULL));
 
 
 --
--- Name: job_singletonkeyon; Type: INDEX; Schema: pgboss; Owner: kotahitest
+-- Name: job_singletonkeyon; Type: INDEX; Schema: pgboss; Owner: kotahidev
 --
 
 CREATE UNIQUE INDEX job_singletonkeyon ON pgboss.job USING btree (name, singletonon, singletonkey) WHERE (state < 'expired'::pgboss.job_state);
 
 
 --
--- Name: job_singletonon; Type: INDEX; Schema: pgboss; Owner: kotahitest
+-- Name: job_singletonon; Type: INDEX; Schema: pgboss; Owner: kotahidev
 --
 
 CREATE UNIQUE INDEX job_singletonon ON pgboss.job USING btree (name, singletonon) WHERE ((state < 'expired'::pgboss.job_state) AND (singletonkey IS NULL));
 
 
 --
--- Name: channel_members_idx; Type: INDEX; Schema: public; Owner: kotahitest
+-- Name: channel_members_idx; Type: INDEX; Schema: public; Owner: kotahidev
 --
 
 CREATE INDEX channel_members_idx ON public.channel_members USING btree (user_id, channel_id);
 
 
 --
--- Name: is_default_idx; Type: INDEX; Schema: public; Owner: kotahitest
+-- Name: is_default_idx; Type: INDEX; Schema: public; Owner: kotahidev
 --
 
 CREATE UNIQUE INDEX is_default_idx ON public.identities USING btree (is_default, user_id) WHERE (is_default IS TRUE);
 
 
 --
--- Name: team_members_team_id_user_id_idx; Type: INDEX; Schema: public; Owner: kotahitest
+-- Name: team_members_team_id_user_id_idx; Type: INDEX; Schema: public; Owner: kotahidev
 --
 
 CREATE INDEX team_members_team_id_user_id_idx ON public.team_members USING btree (team_id, user_id);
 
 
 --
--- Name: teams_manuscript_id_idx; Type: INDEX; Schema: public; Owner: kotahitest
+-- Name: teams_manuscript_id_idx; Type: INDEX; Schema: public; Owner: kotahidev
 --
 
 CREATE INDEX teams_manuscript_id_idx ON public.teams USING btree (manuscript_id);
 
 
 --
--- Name: channel_members channel_members_channel_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: channel_members channel_members_channel_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.channel_members
@@ -782,7 +782,7 @@ ALTER TABLE ONLY public.channel_members
 
 
 --
--- Name: channel_members channel_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: channel_members channel_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.channel_members
@@ -790,7 +790,7 @@ ALTER TABLE ONLY public.channel_members
 
 
 --
--- Name: channels channels_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: channels channels_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.channels
@@ -798,7 +798,7 @@ ALTER TABLE ONLY public.channels
 
 
 --
--- Name: files files_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: files files_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.files
@@ -806,7 +806,7 @@ ALTER TABLE ONLY public.files
 
 
 --
--- Name: files files_review_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: files files_review_comment_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.files
@@ -814,7 +814,7 @@ ALTER TABLE ONLY public.files
 
 
 --
--- Name: manuscripts manuscripts_submitter_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: manuscripts manuscripts_submitter_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.manuscripts
@@ -822,7 +822,7 @@ ALTER TABLE ONLY public.manuscripts
 
 
 --
--- Name: messages messages_channel_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: messages messages_channel_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.messages
@@ -830,7 +830,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: messages messages_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: messages messages_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.messages
@@ -838,7 +838,7 @@ ALTER TABLE ONLY public.messages
 
 
 --
--- Name: review_comments review_comments_review_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: review_comments review_comments_review_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.review_comments
@@ -846,7 +846,7 @@ ALTER TABLE ONLY public.review_comments
 
 
 --
--- Name: review_comments review_comments_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: review_comments review_comments_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.review_comments
@@ -854,7 +854,7 @@ ALTER TABLE ONLY public.review_comments
 
 
 --
--- Name: reviews reviews_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: reviews reviews_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.reviews
@@ -862,7 +862,7 @@ ALTER TABLE ONLY public.reviews
 
 
 --
--- Name: identities sidentities_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: identities sidentities_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.identities
@@ -870,7 +870,7 @@ ALTER TABLE ONLY public.identities
 
 
 --
--- Name: team_members team_members_alias_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: team_members team_members_alias_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.team_members
@@ -878,7 +878,7 @@ ALTER TABLE ONLY public.team_members
 
 
 --
--- Name: team_members team_members_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: team_members team_members_team_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.team_members
@@ -886,7 +886,7 @@ ALTER TABLE ONLY public.team_members
 
 
 --
--- Name: team_members team_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: team_members team_members_user_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.team_members
@@ -894,7 +894,7 @@ ALTER TABLE ONLY public.team_members
 
 
 --
--- Name: teams teams_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahitest
+-- Name: teams teams_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
 
 ALTER TABLE ONLY public.teams

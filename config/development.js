@@ -1,8 +1,10 @@
 module.exports = {
   'pubsweet-server': {
     db: {
-      database: 'simplej',
-      user: 'test',
+      database: 'kotahidev',
+      user: 'kotahidev',
+      password: 'kotahidev',
+      host: 'localhost',
     },
     protocol: 'http',
     host: 'localhost',
