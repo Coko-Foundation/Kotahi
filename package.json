@@ -85,6 +85,7 @@
     "express": "^4.17.1",
     "faker": "4.1.0",
     "font-awesome": "4.7.0",
+    "formik": "2.1.4",
     "fs-extra": "4.0.3",
     "got": "11.7.0",
     "graphql": "14.7.0",
