@@ -7,7 +7,7 @@ eg. if your app is at `kotahi.myorg.com`, go to `kotahi.myorg.com/login`
 
 ## How do I setup ORCID for development?
 
-Getting past the login screen can be a challenge if you haven't set this up correctly. You need two things: an account at `sandbox.orcid.org` and a `mailinator` email. When `NODE_ENV` is set to `development`, the app will expect you to be using a sandbox account. Orcid's sandbox in turn will only send emails to mailinator accounts, so if you don't use mailinator, you won't be able to verify your email (and consequently not be able to set this up).
+Getting past the login screen can be a challenge if you haven't set this up correctly. You need two things: an account at `sandbox.orcid.org` and a `mailinator` email. When `NODE_ENV` is set to `development`, the app will expect you to be using a sandbox account. ORCID's sandbox in turn will only send emails to mailinator accounts, so if you don't use mailinator, you won't be able to verify your email (and consequently not be able to set this up).
 
 So here's how to set this up in less than 20 easy steps:
 
@@ -81,3 +81,23 @@ And so on. For more information about the capabilities of the underlying Objecti
 ## What should PUBLIC_CLIENT_HOST be set to?
 
 This environment variable is currently only needed when deploying a _development_ build to a server (not to localhost). Set it to the server's name, e.g. `subdomain.myserver.com`.
+
+# What if I want to use my own PostgreSQL instance (i.e. not via `docker-compose`)?
+
+Create a local postgres database named `kotahidev` and a superuser `kotahidev` using `psql`, set a password for it too. We're using `kotahidev`, as the app is configured for that by default, but your database details can of course be different.
+
+```
+> psql
+user=# create database kotahidev;
+user=# create user kotahidev with superuser;
+user=# alter role kotahidev with password 'kotahidev';
+```
+
+And then install the `pgcrypto` extension to the `kotahidev` database:
+
+```
+> psql -d kotahidev -U kotahidev
+kotahidev=# create extension pgcrypto;
+```
+
+Migrate the test database using `yarn dotenv pubsweet migrate`.

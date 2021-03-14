@@ -1,7 +1,7 @@
 # Kotahi
 
 Kotahi is a manuscript submission system, based on the discontinued [xpub-collabra](https://gitlab.coko.foundation/xpub/xpub) project.
-It is currently under development by the [Coko Foundation](https://coko.foundation/) and is being built with [Pubsweet](https://gitlab.coko.foundation/pubsweet/pubsweet).
+It is currently under development by the [Coko Foundation](https://coko.foundation/) and is being built with [PubSweet](https://gitlab.coko.foundation/pubsweet/pubsweet).
 
 ## Installation
 
@@ -12,7 +12,9 @@ Developer beware! This project is currently under very heavy development, so thi
 We provide docker-compose and docker files to ensure consistency across environments. The following instructions assume that you have `docker` and/or `docker-compose` installed on your system.
 
 You can use the `docker-compose.yml` and `docker-compose.production.yml` files as a reference for the environment variables that are needed, as well as a kind of installation guide if for some reason you wish to not use docker.
-Environment variables must be loaded into your shell. The `docker-compose` cli will automatically load any environment variables specified in the file `<project root>/.env`. You can also load these manually (e.g. via `source .env` on linux). To set up ORCID variables for login, read [FAQ.md](FAQ.md).
+Environment variables must be loaded into your shell. The `docker-compose` cli will automatically load any environment variables specified in the file `<project root>/.env`. I addition the server and client will also load the `.env`, even when not usign `docker-compose`. Kotahi ships with an example `.env.example` file that lists all of the available environment variables - you can use it as a guide for your own `.env` file.
+To load these environment variables for certain scripts, you can use the `dotenv` CLI, e.g. `yarn dotenv yarn test:chrome`.
+To set up ORCID variables for login, read [FAQ.md](FAQ.md).
 
 #### Development
 
@@ -31,32 +33,15 @@ This will:
 
 #### Running integration tests
 
-Create a local postgres database named `kotahitest` and a superuser `kotahitest` using `psql`:
+If you're using `docker-compose` to stand up a PostgreSQL database, everything will already be configured and you only need to
 
 ```
-> psql
-user=# create database kotahitest;
-user=# create user kotahitest with superuser;
+> yarn dotenv yarn test:chrome
 ```
 
-And then install the `pgcrypto` extension to the `kotahitest` database:
+This will load the test runner in your local environment and using the correct environment variables (set in your `.env` file).
 
-```
-> psql -d kotahitest -U kotahitest
-kotahitest=# create extension pgcrypto;
-```
-
-Migrate the test database using `NODE_ENV=test yarn pubsweet migrate` and run the tests for Chrome:
-
-```
-NODE_ENV=test yarn test:all:chrome
-```
-
-Or Firefox:
-
-```
-NODE_ENV=test yarn test:all:firefox
-```
+Note: The environment variables are needed mainly because Cypress generates an authentication token using the User model directly (to bypass ORCID OAuth login which is not possible to emulate via Cypress), and so needs to connect to the database in the same way as the app.
 
 #### Production
 
