@@ -12,7 +12,7 @@ Developer beware! This project is currently under very heavy development, so thi
 We provide docker-compose and docker files to ensure consistency across environments. The following instructions assume that you have `docker` and/or `docker-compose` installed on your system.
 
 You can use the `docker-compose.yml` and `docker-compose.production.yml` files as a reference for the environment variables that are needed, as well as a kind of installation guide if for some reason you wish to not use docker.
-Environment variables must be loaded into your shell. The `docker-compose` cli will automatically load any environment variables specified in the file `<project root>/.env`. I addition the server and client will also load the `.env`, even when not usign `docker-compose`. Kotahi ships with an example `.env.example` file that lists all of the available environment variables - you can use it as a guide for your own `.env` file.
+Environment variables must be loaded into your shell. The `docker-compose` cli will automatically load any environment variables specified in the file `<project root>/.env`. In addition the server and client will also load the `.env`, even when not using `docker-compose`. Kotahi ships with an example `.env.example` file that lists all of the available environment variables - you can use it as a guide for your own `.env` file.
 To load these environment variables for certain scripts, you can use the `dotenv` CLI, e.g. `yarn dotenv yarn test:chrome`.
 To set up ORCID variables for login, read [FAQ.md](FAQ.md).
 
