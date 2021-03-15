@@ -2,7 +2,7 @@
 // The global requires here are used to avoid cyclical dependencies
 // The param reassigns are intentional, used as a way to set Express routes
 const path = require('path')
-require('dotenv').config()
+require('dotenv').config({ path: path.join(__dirname, '../.env') })
 
 const config = require('config')
 const express = require('express')

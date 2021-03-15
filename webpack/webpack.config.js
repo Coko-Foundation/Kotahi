@@ -1,7 +1,7 @@
 const path = require('path')
 const fs = require('fs-extra')
 const { pick } = require('lodash')
-require('dotenv').config()
+require('dotenv').config({ path: path.join(__dirname, '../.env') })
 const config = require('config')
 
 const rules = require('./common-rules')

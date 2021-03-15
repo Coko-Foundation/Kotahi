@@ -11,11 +11,12 @@
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
 
-const seed = require('../../scripts/clearAndSeed')
-
 const { execSync } = require('child_process')
 const path = require('path')
+require('dotenv').config({ path: path.join(__dirname, '../../.env') })
+
 const { readFileSync } = require('fs')
+const seed = require('../../scripts/clearAndSeed')
 
 const dumpFile = name => path.join(__dirname, '..', 'dumps', `${name}.sql`)
 
@@ -38,15 +39,18 @@ module.exports = (on, config) => {
           `pg_dump --column-inserts -d simplej > ${dumpFile(name)}`,
         )
       }
+
       return true
     },
     restore: async name => seed(readFileSync(dumpFile(name), 'utf-8')),
     createToken: async name => {
       const { User } = require('@pubsweet/models')
       const authentication = require('pubsweet-server/src/authentication')
+
       const user = await User.query()
         .where({ username: testUsers[name] })
         .first()
+
       return authentication.token.create(user)
     },
   })

@@ -36,7 +36,7 @@ This will:
 If you're using `docker-compose` to stand up a PostgreSQL database, everything will already be configured and you only need to
 
 ```
-> yarn dotenv yarn test:chrome
+> yarn test:chrome
 ```
 
 This will load the test runner in your local environment and using the correct environment variables (set in your `.env` file).

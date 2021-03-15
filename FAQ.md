@@ -100,4 +100,4 @@ And then install the `pgcrypto` extension to the `kotahidev` database:
 kotahidev=# create extension pgcrypto;
 ```
 
-Migrate the test database using `yarn dotenv pubsweet migrate`.
+Migrate the test database using `yarn dotenv yarn pubsweet migrate`.
