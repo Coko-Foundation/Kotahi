@@ -15,12 +15,23 @@ import {
 
 import brandConfig from '../brandConfig.json'
 
+const validateInstanceConfigColors = (colorCode) => {
+  const defaultInstanceColor = '#2fca66';
+  const hexaDecimalRegex = /^#[0-9A-F]{6}$/i;
+  const shortHexaDecimalRegex = /^#([0-9A-F]{3}){1,2}$/i;
+
+  if (colorCode.length <= 4) {
+    return colorCode.match(shortHexaDecimalRegex) ? colorCode : defaultInstanceColor
+  }
+  return colorCode.match(hexaDecimalRegex) ? colorCode : defaultInstanceColor
+}
+
 const cokoTheme = {
   /* Colors */
   colorBackground: 'white',
   colorSecondaryBackground: '#f9fafb', // custom
-  colorPrimary: brandConfig.primaryColor,
-  colorSecondary: brandConfig.secondaryColor,
+  colorPrimary: validateInstanceConfigColors(brandConfig.primaryColor),
+  colorSecondary: validateInstanceConfigColors(brandConfig.secondaryColor),
   colorFurniture: '#E8E8E8',
   colorBorder: '#AAA',
   colorBackgroundHue: '#f4f5f7',
