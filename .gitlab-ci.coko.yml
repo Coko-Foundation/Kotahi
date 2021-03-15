@@ -45,6 +45,9 @@ test-chrome:
     # setup data for postgres image
     POSTGRES_USER: kotahidev
     POSTGRES_PASSWORD: kotahidev
+    # used by psql
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
   services:
     - postgres
   script:
@@ -66,6 +69,9 @@ test-firefox:
     # setup data for postgres image
     POSTGRES_USER: kotahidev
     POSTGRES_PASSWORD: kotahidev
+    # used by psql
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
   services:
     - postgres
   script:
