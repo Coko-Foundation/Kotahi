@@ -15,14 +15,17 @@ import {
 
 import brandConfig from '../brandConfig.json'
 
-const validateInstanceConfigColors = (colorCode) => {
-  const defaultInstanceColor = '#2fca66';
-  const hexaDecimalRegex = /^#[0-9A-F]{6}$/i;
-  const shortHexaDecimalRegex = /^#([0-9A-F]{3}){1,2}$/i;
+const validateInstanceConfigColors = colorCode => {
+  const defaultInstanceColor = '#2fac66'
+  const hexaDecimalRegex = /^#[0-9A-F]{6}$/i
+  const shortHexaDecimalRegex = /^#([0-9A-F]{3}){1,2}$/i
 
   if (colorCode.length <= 4) {
-    return colorCode.match(shortHexaDecimalRegex) ? colorCode : defaultInstanceColor
+    return colorCode.match(shortHexaDecimalRegex)
+      ? colorCode
+      : defaultInstanceColor
   }
+
   return colorCode.match(hexaDecimalRegex) ? colorCode : defaultInstanceColor
 }
 
