@@ -4,24 +4,24 @@ variables:
   ELIFE_SERVER_IP: 54.87.88.111
 
 stages:
-  # - build
+  - build
   - deploy
-  # - test
+  - test
 
-# build:
-#   image: docker:19.03.13
-#   services:
-#     - docker:19.03.13-dind
-#   stage: build
-#   before_script:
-#     - cp app/brand-instances-configs/elife.json app/brandConfig.json
-#   script:
-#     - if [ -z "$DOCKERHUB_USERNAME_ELIFE" ] || [ -z "$DOCKERHUB_PASSWORD_ELIFE" ]; then echo "Not pushing" && exit 0; fi
-#     - docker login -u $DOCKERHUB_USERNAME_ELIFE -p $DOCKERHUB_PASSWORD_ELIFE
-#     - docker pull $IMAGE_ORG/$IMAGE_NAME:latest || true
-#     - docker build --file ./Dockerfile-ci --cache-from $CI_REGISTRY_IMAGE:latest --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME:latest .
-#     - docker push $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
-#     - docker push $IMAGE_ORG/$IMAGE_NAME:latest
+build:
+  image: docker:19.03.13
+  services:
+    - docker:19.03.13-dind
+  stage: build
+  before_script:
+    - cp app/brand-instances-configs/elife.json app/brandConfig.json
+  script:
+    - if [ -z "$DOCKERHUB_USERNAME_ELIFE" ] || [ -z "$DOCKERHUB_PASSWORD_ELIFE" ]; then echo "Not pushing" && exit 0; fi
+    - docker login -u $DOCKERHUB_USERNAME_ELIFE -p $DOCKERHUB_PASSWORD_ELIFE
+    - docker pull $IMAGE_ORG/$IMAGE_NAME:latest || true
+    - docker build --file ./Dockerfile-ci --cache-from $CI_REGISTRY_IMAGE:latest --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME:latest .
+    - docker push $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+    - docker push $IMAGE_ORG/$IMAGE_NAME:latest
 
 deploy:
   stage: deploy
@@ -45,58 +45,58 @@ deploy:
       sudo supervisorctl stop kotahi && 
       sudo supervisorctl start kotahi"
 
-# lint:
-#   allow_failure: true
-#   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#   script:
-#     - cd ${HOME}
-#     - npm run lint
+lint:
+  allow_failure: true
+  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - cd ${HOME}
+    - npm run lint
 
-# test-chrome:
-#   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahitest
-#     POSTGRES_PASSWORD: pw
-#     # connection details for tests
-#     PGUSER: kotahitest
-#     PGPASSWORD: pw
-#     NODE_ENV: test
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     # this is needed for pgboss initial setup
-#     - psql -h postgres -U kotahitest -d kotahitest -c "create extension pgcrypto;"
-#     # specify host here else it confuses the linked postgres image
-#     - PGHOST=postgres yarn test:all:chrome
+test-chrome:
+  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: kotahitest
+    POSTGRES_PASSWORD: pw
+    # connection details for tests
+    PGUSER: kotahitest
+    PGPASSWORD: pw
+    NODE_ENV: test
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahitest -d kotahitest -c "create extension pgcrypto;"
+    # specify host here else it confuses the linked postgres image
+    - PGHOST=postgres yarn test:all:chrome
 
-# test-firefox:
-#   allow_failure: true # at this point Cypress' support for Firefox is not stable
-#   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahitest
-#     POSTGRES_PASSWORD: pw
-#     # connection details for tests
-#     PGUSER: kotahitest
-#     PGPASSWORD: pw
-#     NODE_ENV: test
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     # this is needed for pgboss initial setup
-#     - psql -h postgres -U kotahitest -d kotahitest -c "create extension pgcrypto;"
-#     # specify host here else it confuses the linked postgres image
-#     - PGHOST=postgres yarn test:all:firefox
+test-firefox:
+  allow_failure: true # at this point Cypress' support for Firefox is not stable
+  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: kotahitest
+    POSTGRES_PASSWORD: pw
+    # connection details for tests
+    PGUSER: kotahitest
+    PGPASSWORD: pw
+    NODE_ENV: test
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahitest -d kotahitest -c "create extension pgcrypto;"
+    # specify host here else it confuses the linked postgres image
+    - PGHOST=postgres yarn test:all:firefox
 
