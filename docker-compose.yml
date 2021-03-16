@@ -24,6 +24,9 @@ services:
       - SERVER_HOST=server
       - SERVER_PORT=${SERVER_PORT:-3000}
       - PUBLIC_CLIENT_HOST=${PUBLIC_CLIENT_HOST:-0.0.0.0}
+      - ORCID_AUTH_REDIRECT_PORT=${ORCID_AUTH_REDIRECT_PORT:-4000}
+      - ORCID_AUTH_REDIRECT_HOSTNAME=${ORCID_AUTH_REDIRECT_HOSTNAME:-localhost}
+      - ORCID_AUTH_REDIRECT_PROTOCOL=${ORCID_AUTH_REDIRECT_PROTOCOL:-http}
     volumes:
       - ./app:/home/node/app/app
       - ./config:/home/node/app/config
