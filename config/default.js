@@ -139,9 +139,13 @@ module.exports = {
     'login-redirect': `${journal.metadata.toplevel_urlfragment}/dashboard`,
     theme: process.env.PUBSWEET_THEME,
     baseUrl: deferConfig(cfg => {
-      const { protocol, host, port } = cfg['pubsweet-client']
-      const hostname = host === '0.0.0.0' ? 'localhost' : host
-      return `${protocol}://${hostname}${port ? `:${port}` : ''}`
+      const {
+        ORCID_AUTH_REDIRECT_PORT,
+        ORCID_AUTH_REDIRECT_HOSTNAME,
+        ORCID_AUTH_REDIRECT_PROTOCOL,
+      } = process.env
+
+      return `${ORCID_AUTH_REDIRECT_PROTOCOL}://${ORCID_AUTH_REDIRECT_HOSTNAME}:${ORCID_AUTH_REDIRECT_PORT}`
     }),
   },
   'pubsweet-component-xpub-dashboard': {
