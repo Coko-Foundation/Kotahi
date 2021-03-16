@@ -37,7 +37,7 @@ deploy:
     - chmod 700 ~/.ssh
     #- ssh-keyscan elife.kotahi.cloud >> ~/.ssh/known_hosts
     #- echo "last command code is $?"
-    - chmod 644 ~/.ssh/known_hosts
+    #- chmod 644 ~/.ssh/known_hosts
   script:
     - |
       ssh -o "StrictHostKeyChecking no" ubuntu@elife.kotahi.cloud "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
