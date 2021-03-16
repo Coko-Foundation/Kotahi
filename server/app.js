@@ -49,7 +49,12 @@ const configureApp = app => {
 
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(cookieParser())
-  app.use(helmet())
+  app.use(
+    helmet({
+      contentSecurityPolicy:
+        process.env.NODE_ENV === 'production' ? undefined : false, // Disable contentSecurityPolicy for non-prod use, so GraphQl Playground works
+    }),
+  )
   app.use(express.static(path.resolve('.', '_build')))
 
   app.use('/public', express.static(path.resolve(__dirname, '../public')))
