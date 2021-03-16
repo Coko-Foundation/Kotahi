@@ -36,7 +36,7 @@ deploy:
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
     - ssh-keyscan elife.kotahi.cloud >> ~/.ssh/known_hosts
-    - echo "last command code: $?"
+    - echo "last command code is $?"
     - chmod 644 ~/.ssh/known_hosts
   script:
     - |
