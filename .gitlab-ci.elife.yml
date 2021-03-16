@@ -35,12 +35,12 @@ deploy:
     - echo "$SSH_KEY" | tr -d '\r' | ssh-add -
     - mkdir -p ~/.ssh
     - chmod 700 ~/.ssh
-    - ssh-keyscan elife.kotahi.cloud >> ~/.ssh/known_hosts
-    - echo "last command code is $?"
+    #- ssh-keyscan elife.kotahi.cloud >> ~/.ssh/known_hosts
+    #- echo "last command code is $?"
     - chmod 644 ~/.ssh/known_hosts
   script:
     - |
-      ssh ubuntu@elife.kotahi.cloud "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
+      ssh -o "StrictHostKeyChecking no" ubuntu@elife.kotahi.cloud "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
       sudo docker pull $IMAGE_ORG/$IMAGE_NAME:latest && 
       sudo supervisorctl stop kotahi && 
       sudo supervisorctl start kotahi"
