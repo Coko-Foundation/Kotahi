@@ -20,7 +20,7 @@ const ACCEPTED_AND_PUBLISHED_TITLE = 'Badge__SuccessStatus';
 
 export const Dashboard = {
     getSubmitButton() {
-        return cy.get(BUTTON).contains('New Submission');
+        return cy.get(BUTTON).contains('New submission');
     },
     clickSubmit() {
         this.getSubmitButton().click();

@@ -37,3 +37,43 @@ Cypress.Commands.add('login', name => {
     cy.visit('/kotahi/dashboard')
   })
 })
+
+Cypress.Commands.add('fillInput', { prevSubject: true }, (subject, text) => {
+  return cy.wrap(subject).click().clear().type(text);
+});
+
+Cypress.Commands.add('getByDataTestId', (dataTestId) => {
+  cy.get(`[data-testid='${dataTestId}']`);
+});
+
+Cypress.Commands.add('getByContainsDataTestId', (dataTestId) => {
+  cy.get(`[data-testid*='${dataTestId}']`);
+});
+
+Cypress.Commands.add('getByClass', (className) => {
+  cy.get(`[class='${className}']`);
+});
+
+Cypress.Commands.add('getByContainsClass', (className) => {
+  cy.get(`[class*='${className}']`);
+});
+
+Cypress.Commands.add('getByContainsAreaLabel', (areaLabel) => {
+  cy.get(`[aria-label*='${areaLabel}']`);
+});
+
+Cypress.Commands.add('getByName', (name) => {
+  cy.get(`[name='${name}']`);
+});
+
+Cypress.Commands.add('getByContainsName', (name) => {
+  cy.get(`[name*='${name}']`);
+});
+
+Cypress.Commands.add('getByContainsId', (id) => {
+  cy.get(`[id*='${id}']`);
+});
+
+Cypress.Commands.add('getByNameAndValue', (name, value) => {
+  cy.get(`[name='${name}'][value=${value}]`);
+});
