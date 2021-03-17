@@ -14,6 +14,7 @@ const passport = require('passport')
 const logger = require('@pubsweet/logger')
 const STATUS = require('http-status-codes')
 const registerComponents = require('pubsweet-server/src/register-components') // TODO: Fix import
+const compression = require('compression')
 
 // Wax Collab requirements
 const WebSocket = require('ws')
@@ -24,6 +25,7 @@ const gqlApi = require('./graphql')
 const configureApp = app => {
   const models = require('@pubsweet/models')
   const authsome = require('pubsweet-server/src/helpers/authsome') // TODO: Fix import
+  app.use(compression())
 
   app.locals.models = models
 
