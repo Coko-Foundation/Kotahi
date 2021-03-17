@@ -46,9 +46,9 @@ services:
       [
         'node_modules/.bin/nodemon',
         'startServer.js',
-        '--watch',
+        '--',
         'server',
-        '--watch',
+        '--',
         'config',
         '--ext',
         'js,graphql',
