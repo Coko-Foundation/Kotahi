@@ -1,5 +1,5 @@
 # IMAGE FOR BUILDING
-FROM node:12.20-alpine as build
+FROM node:15.11-alpine as build
 
 RUN apk add --no-cache git python make g++
 
@@ -34,14 +34,15 @@ ENV CLIENT_PROTOCOL=$client_protocol
 ENV CLIENT_HOST=$client_host
 ENV CLIENT_PORT=$client_port
 
-RUN yarn pubsweet build
+RUN yarn webpack --config webpack/webpack.production.config.js
 
 # IMAGE FOR RUNNING
-FROM node:12.20-alpine as server
+FROM node:15.11-alpine as server
 
 WORKDIR /home/node/app
 
 RUN chown -R node:node .
+RUN apk add bash coreutils
 USER node
 
 COPY --chown=node:node ./config ./config
@@ -55,5 +56,4 @@ COPY --from=build /home/node/app/_build/assets ./_build
 COPY --from=build /home/node/app/production_node_modules ./node_modules
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
-
 CMD ["node", "./startServer.js"]
