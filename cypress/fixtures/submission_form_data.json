@@ -1,0 +1,15 @@
+{
+  "doi": "https://doi.org/10.6084/m9.figshare.913521.v1",
+  "git": "https://github.com/jure/mathtype_to_mathml",
+  "title": "My URL submission",
+  "affiliation": "Example University, England",
+  "contact": "emily@example.com",
+  "cover": "This is my cover letter",
+  "datacode": "This is my data and code availability statement",
+  "ethics": "This is my ethics statement",
+  "suggested": "Erica James, Matthew Matretzky",
+  "keywords": "some, keywords",
+  "humanMRIother": "7T",
+  "otherPackages": "Jupyter, Stencila",
+  "references": "Hyde, 2020"
+}

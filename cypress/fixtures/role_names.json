@@ -1,0 +1,12 @@
+{
+  "role": {
+    "author": "Emily Clay",
+    "admin": "Sinead Sullivan",
+    "seniorEditor": "Joanne Pilger",
+    "reviewers": {
+      "reviewer1": "Gale Davis",
+      "reviewer2": "Sherry Crofoot",
+      "reviewer3": "Elaine Barnes"
+    }
+  }
+}
