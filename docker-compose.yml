@@ -105,3 +105,14 @@ services:
       - POSTGRES_PASSWORD
     volumes:
       - ./scripts/test.sql:/docker-entrypoint-initdb.d/test.sql
+
+  minio:
+    image: minio/minio
+    command: ["server", "/data"]
+    volumes:
+      - ./minio/data:/data
+    ports:
+      - 9000:9000
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-test} #Access key length should be at least 3 characters
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-password} #Secret key length should be at least 8 characters

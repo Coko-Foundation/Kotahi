@@ -16,3 +16,5 @@ config/local*.*
 .vscode/launch.json
 .DS_Store
 config/*.env
+minio/data/*
+minio\data\*
