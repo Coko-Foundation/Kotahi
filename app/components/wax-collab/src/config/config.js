@@ -1,14 +1,3 @@
-// import * as Y from 'yjs'
-// import { WebsocketProvider } from 'y-websocket'
-// import {
-//   ySyncPlugin,
-//   yCursorPlugin,
-//   yUndoPlugin,
-//   undo,
-//   redo,
-// } from 'y-prosemirror'
-
-// import * as sharedTypes from '../provider'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 
 import {
@@ -41,23 +30,6 @@ import invisibles, {
   // paragraph,
 } from '@guardian/prosemirror-invisibles'
 
-// const ydoc = new Y.Doc();
-// const provider = new WebsocketProvider(
-//   "ws://localhost:1234",
-//   "waxingandwaning",
-//   ydoc
-// );
-
-// const colors = [{ light: '#6eeb8333', dark: '#6eeb83' },
-// { light: '#ecd44433', dark: '#ecd444' }]
-// const type = ydoc.getXmlFragment("prosemirror");
-
-// const opts = [sharedTypes.prosemirrorEditorContent, { permanentUserData: sharedTypes.permanentUserData, colors }]
-// const opts = [sharedTypes.prosemirrorEditorContent]
-// sharedTypes.awareness.setLocalStateField('user', _.sample(users))
-
-// console.log(ydoc, provider, type);
-
 export default {
   MenuService: [
     {
@@ -76,12 +48,7 @@ export default {
 
   ShortCutsService: {},
 
-  PmPlugins: [
-    invisibles([hardBreak()]),
-    // ySyncPlugin(...opts),
-    // yCursorPlugin(sharedTypes.awareness),
-    // yUndoPlugin(),
-  ],
+  PmPlugins: [invisibles([hardBreak()])],
 
   services: [
     new PlaceholderService(),
