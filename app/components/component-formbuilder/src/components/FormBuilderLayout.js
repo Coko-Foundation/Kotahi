@@ -108,11 +108,7 @@ const FormBuilderLayout = ({
                 fieldOrForm={fieldOrForm}
                 formId={activeForm.id}
                 isField={!!activeField}
-                key={
-                  fieldOrForm.id /* `${fieldOrForm.id}${
-                  fieldOrForm.component ? `-${fieldOrForm.component}` : ''
-                }` */
-                }
+                key={fieldOrForm.id}
                 updateForm={updateForm}
                 updateFormElement={updateFormElement}
               />

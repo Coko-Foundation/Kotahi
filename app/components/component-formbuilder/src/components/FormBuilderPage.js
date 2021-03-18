@@ -63,7 +63,6 @@ const FormBuilderPage = () => {
     refetchQueries: [{ query }],
   })
 
-  // const [properties, setProperties] = useState({ type: 'form', properties: {} })
   const [activeFormId, setActiveFormId] = useState()
   const [activeFieldId, setActiveFieldId] = useState()
 

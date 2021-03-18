@@ -124,20 +124,6 @@ const FormPropertiesWrapper = ({
 }) => {
   const [popup, setPopup] = useState((properties || {}).haspopup)
   return (
-    // <Formik
-    //   initialValues={pick(properties.properties, [
-    //     'id',
-    //     'name',
-    //     'description',
-    //     'popupdescription',
-    //     'popuptitle',
-    //     'haspopup',
-    //   ])}
-    //   onSubmit={(values) => {
-    //     onSubmit(values, { mode, handleSubmit })
-    //   }}
-    // >
-    //   {props => (
     <FormProperties
       handleSubmit={onSubmit}
       mode={mode}
@@ -146,8 +132,6 @@ const FormPropertiesWrapper = ({
       setFieldValue={setFieldValue}
       setPopup={setPopup}
     />
-    // )}
-    // </Formik>
   )
 }
 
@@ -166,32 +150,3 @@ FormPropertiesWrapper.propTypes = {
 }
 
 export default FormPropertiesWrapper
-// export default compose(
-// withProps(({ properties }) => {
-//   const paths = [
-//     'id',
-//     'name',
-//     'description',
-//     'popupdescription',
-//     'popuptitle',
-//     'haspopup',
-//   ]
-//   return {
-//     initialValues: pick(properties.properties, paths),
-//   }
-// }),
-// withState(
-//   'showPopupValue',
-//   'selectPopup',
-//   ({ properties }) => (properties.properties || {}).haspopup,
-// ),
-// withHandlers({
-//   changeShowPopup: ({ selectPopup }) => value => selectPopup(() => value),
-// }),
-//   withFormik({
-//     displayName: 'FormSubmit',
-//     mapPropsToValues: data => data.properties.properties,
-//     handleSubmit: (props, { props: { mode, handleSubmit, properties } }) =>
-//       onSubmit(props, { mode, handleSubmit, properties }),
-//   }),
-// )(FormProperties)

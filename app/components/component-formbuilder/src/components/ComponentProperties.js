@@ -98,34 +98,6 @@ const prepareForSubmit = values => {
   return JSON.stringify(cleanedValues)
 }
 
-// const ComponentForm = compose(
-// withProps(({ properties }) => ({
-//   initialValues: { children: properties.properties },
-// })),
-// withFormik({
-//   displayName: 'ComponentSubmit',
-//   mapPropsToValues: data => data.properties.properties,
-//   handleSubmit: (props, { props: { onSubmitFn, id, properties } }) =>
-//     onSubmit(props, { onSubmitFn, properties }),
-// }),
-// withState(
-//   'selectComponentValue',
-//   'selectComponent',
-//   ({ properties }) => properties.properties.component,
-// ),
-// withHandlers({
-//   changeComponent: ({ selectComponent }) => component =>
-//     selectComponent(() => component),
-// }),
-// )(ComponentProperties)
-
-// export default compose(
-//   branch(
-//     ({ properties }) => properties.type === 'form',
-//     renderComponent(UpdateForm),
-//   )(ComponentForm),
-// )
-
 const ComponentForm = ({
   fieldOrForm,
   isField,
