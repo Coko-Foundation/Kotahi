@@ -18,10 +18,21 @@ To set up ORCID variables for login, read [FAQ.md](FAQ.md).
 
 #### Development
 
+1. To enable HTTPS please add self signed certificate, which is located in /certs/ssl_certificate_key.key in keychain
+    How to do it on MacOS: https://www.youtube.com/watch?time_continue=102&v=TGrX8XgSuZ4&feature=emb_logo
+    How to do it on Windows: https://support.kaspersky.com/CyberTrace/1.0/en-US/174127.htm
+
+2. In hosts file, which is located in:
+    Windows - `C:\Windows\System32\Drivers\etc\hosts`
+    MacOS - `/etc/hosts`
+
+Please add the following line: `127.0.0.1    dev.kotahi.com` (warning: gap between IP and domain name should be a TAB, not a space!)
+
+
 To bring up the development environment, simply run:
 
 ```sh
-docker-compose up
+docker-compose -f docker-compose.dev.yml up 
 ```
 
 This will:
