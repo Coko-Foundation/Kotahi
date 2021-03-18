@@ -20,12 +20,6 @@ module.exports = webpackEnv => {
   const isEnvDevelopment = webpackEnv === 'development'
   const isEnvProduction = webpackEnv === 'production'
 
-  const serverProtocol = process.env.SERVER_PROTOCOL || 'http'
-  const serverHost = process.env.SERVER_HOST || '0.0.0.0'
-  const serverPort = process.env.SERVER_PORT || 3000
-  const serverUrl = `${serverHost}${serverPort ? `:${serverPort}` : ''}`
-  const serverUrlWithProtocol = `${serverProtocol}://${serverUrl}`
-
   const devServerHost = process.env.CLIENT_HOST || '0.0.0.0'
   const devServerPort = process.env.CLIENT_PORT || 4000
 
@@ -38,19 +32,6 @@ module.exports = webpackEnv => {
       host: devServerHost,
       hot: true,
       port: devServerPort,
-      proxy: {
-        '/api': serverUrlWithProtocol,
-        '/auth': serverUrlWithProtocol,
-        '/convertDocxToHTML': serverUrlWithProtocol,
-        '/graphql': serverUrlWithProtocol,
-        '/public': serverUrlWithProtocol,
-        '/static/uploads': serverUrlWithProtocol,
-        '/static/profiles': serverUrlWithProtocol,
-        '/subscriptions': {
-          target: `ws://${serverUrl}`,
-          ws: true,
-        },
-      },
       publicPath: '/',
     },
     name: 'client application',
