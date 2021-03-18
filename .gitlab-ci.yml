@@ -2,6 +2,9 @@ stages:
   - run-pipeline
 
 elife-pipeline:
+  only:
+    refs:
+      - main
   stage: run-pipeline
   trigger:
     include:

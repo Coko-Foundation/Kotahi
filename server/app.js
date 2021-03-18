@@ -14,16 +14,16 @@ const passport = require('passport')
 const logger = require('@pubsweet/logger')
 const STATUS = require('http-status-codes')
 const registerComponents = require('pubsweet-server/src/register-components') // TODO: Fix import
+const compression = require('compression')
 
 // Wax Collab requirements
-const WebSocket = require('ws')
 const EventEmitter = require('events')
-const wsUtils = require('./wax-collab/server-util.js')
 const gqlApi = require('./graphql')
 
 const configureApp = app => {
   const models = require('@pubsweet/models')
   const authsome = require('pubsweet-server/src/helpers/authsome') // TODO: Fix import
+  app.use(compression())
 
   app.locals.models = models
 
@@ -124,10 +124,6 @@ const configureApp = app => {
       .json({ message: err.message })
   })
 
-  // Set up a separate websocket for Wax-Collab
-  const wss = new WebSocket.Server({ noServer: true })
-  wss.on('connection', (conn, req) => wsUtils.setupWSConnection(conn, req))
-
   // Actions to perform when the HTTP server starts listening
   app.onListen = async server => {
     const { addSubscriptions } = require('./subscriptions')
@@ -140,26 +136,6 @@ const configureApp = app => {
     server.on('upgrade', (request, socket, head, ...rest) => {
       if (request.url === '/subscriptions') {
         serverProxy.emit('upgrade', request, socket, head, ...rest)
-      } else {
-        let user = null
-
-        if (request.headers.cookie) {
-          // const cookies = cookie.parse(request.headers.cookie)
-          // const user = cookies.user_identifier
-        }
-
-        // TODO: Do real auth for Wax-collab
-        user = 'test' // shortcut
-
-        if (!user) {
-          // console.log('Failed to authenticate', user)
-          socket.destroy()
-          return
-        }
-
-        wss.handleUpgrade(request, socket, head, ws => {
-          wss.emit('connection', ws, request)
-        })
       }
     })
 

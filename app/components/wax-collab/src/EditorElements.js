@@ -1,3 +1,4 @@
+/* stylelint-disable selector-type-no-unknown */
 import { css } from 'styled-components'
 
 /* All styles regarding ProseMirror surface and elements */
@@ -6,19 +7,21 @@ export default css`
   .ProseMirror {
     counter-reset: footnote;
     font-family: ${props => props.theme.fontReading};
+
     &:focus {
       outline: none;
     }
   }
+
   .ProseMirror footnote {
-    font-size: 0;
-    display: inline-block;
-    text-align: center;
-    width: 17px;
-    height: 17px;
     background: black;
     color: white;
     cursor: pointer;
+    display: inline-block;
+    font-size: 0;
+    height: 17px;
+    text-align: center;
+    width: 17px;
   }
 
   h1 {
@@ -30,24 +33,26 @@ export default css`
   p {
     margin-bottom: 1em;
   }
+
   .ProseMirror footnote::after {
-    content: counter(footnote);
-    position: relative;
     bottom: 2px;
-    font-size: 16px;
+    content: counter(footnote);
     counter-increment: footnote;
+    font-size: 16px;
+    position: relative;
   }
+
   hr {
-    padding: 2px 10px;
     border: none;
     margin: 1em 0;
+    padding: 2px 10px;
   }
 
   hr:after {
+    background-color: silver;
     content: '';
     display: block;
     height: 1px;
-    background-color: silver;
     line-height: 2px;
   }
 
@@ -63,11 +68,12 @@ export default css`
   em {
     font-style: italic;
   }
+
   blockquote {
-    padding-left: 1em;
     border-left: 3px solid #eee;
     margin-left: 0;
     margin-right: 0;
+    padding-left: 1em;
   }
 
   img {
@@ -82,25 +88,25 @@ export default css`
   /* Tables */
 
   table {
+    border: 1px solid #eee;
     border-collapse: initial;
     border-spacing: 0;
     border-width: 0 thin thin 0;
-    border: 1px solid #eee;
-    table-layout: fixed;
-    width: 100%;
     margin: 0;
     overflow: hidden;
     page-break-inside: avoid;
+    table-layout: fixed;
+    width: 100%;
   }
 
   th,
   td {
     border: 1px solid #eee;
+    box-sizing: border-box;
     /*width: 200px;*/
     padding: 2px 5px;
-    vertical-align: top;
-    box-sizing: border-box;
     position: relative;
+    vertical-align: top;
   }
 
   .tableWrapper {
@@ -108,31 +114,32 @@ export default css`
   }
 
   .column-resize-handle {
+    background-color: #adf;
+    bottom: 0;
+    pointer-events: none;
     position: absolute;
     right: -2px;
     top: 0;
-    bottom: 0;
     width: 4px;
     z-index: 20;
-    background-color: #adf;
-    pointer-events: none;
   }
 
   .ProseMirror.resize-cursor {
     cursor: ew-resize;
     cursor: col-resize;
   }
+
   /* Give selected cells a blue overlay */
   .selectedCell:after {
-    z-index: 2;
-    position: absolute;
+    background: rgba(200, 200, 255, 0.4);
+    bottom: 0;
     content: '';
     left: 0;
+    pointer-events: none;
+    position: absolute;
     right: 0;
     top: 0;
-    bottom: 0;
-    background: rgba(200, 200, 255, 0.4);
-    pointer-events: none;
+    z-index: 2;
   }
 
   /* placeholder */
@@ -140,8 +147,8 @@ export default css`
     color: #aaa;
     float: left;
     font-style: italic;
-    pointer-events: none;
     height: 0;
+    pointer-events: none;
   }
 
   p.empty-node:first-child::before {
@@ -158,8 +165,8 @@ export default css`
     caret-color: inherit;
     color: gray;
     display: inline-block;
-    font-weight: 400;
     font-style: normal;
+    font-weight: 400;
     line-height: 1em;
     width: 0;
   }
@@ -177,8 +184,8 @@ export default css`
   }
 
   span.deletion {
-    text-decoration: line-through;
     color: red;
+    text-decoration: line-through;
   }
 
   span.insertion {
@@ -201,11 +208,11 @@ export default css`
   }
 
   [data-track]::before {
-    content: '';
-    position: absolute;
     border-left: 2px solid blue;
-    left: -10px;
+    content: '';
     height: 100%;
+    left: -10px;
+    position: absolute;
   }
 
   li[data-track]::before,
@@ -218,34 +225,7 @@ export default css`
     border-radius: 3px 3px 0 0;
   }
 
-  // Cursor
-
-  .ProseMirror-yjs-cursor {
-    position: absolute;
-    border-left: black;
-    border-left-style: solid;
-    border-left-width: 2px;
-    border-color: orange;
-    height: 1.33em;
-    word-break: normal;
-    pointer-events: none;
-  }
-  .ProseMirror-yjs-cursor > div {
-    position: relative;
-    top: -1.05em;
-    left: -2px;
-    font-size: 13px;
-    background-color: rgb(250, 129, 0);
-    font-style: lighter;
-    font-weight: normal;
-    line-height: normal;
-    user-select: none;
-    color: white;
-    padding-left: 2px;
-    padding-right: 2px;
-  }
-
   code {
-    font-family: monospace, monospace;
+    font-family: monospace;
   }
 `
