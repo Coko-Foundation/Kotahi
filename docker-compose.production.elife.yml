@@ -1,0 +1,75 @@
+version: '3'
+
+services:
+  server:
+    image: kotahi/kotahi-prod:latest
+    depends_on:
+      - db
+    build:
+      context: .
+      dockerfile: ./Dockerfile-production
+      args:
+        - node_env=${NODE_ENV:-production}
+        - server_protocol=${SERVER_PROTOCOL}
+        - server_host=${SERVER_HOST}
+        - server_port=${SERVER_PORT}
+        - client_protocol=${CLIENT_PROTOCOL}
+        - client_host=${CLIENT_HOST}
+        - client_port=${CLIENT_PORT}
+    ports:
+      - ${SERVER_PORT:-3000}:${SERVER_PORT:-3000}
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - POSTGRES_HOST=${POSTGRES_HOST:-db}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PUBSWEET_SECRET=${PUBSWEET_SECRET}
+      - CLIENT_PROTOCOL=${CLIENT_PROTOCOL}
+      - CLIENT_HOST=${CLIENT_HOST}
+      - CLIENT_PORT=${CLIENT_PORT}
+      - PUBLIC_CLIENT_HOST=${PUBLIC_CLIENT_HOST:-0.0.0.0}
+      - SERVER_PROTOCOL=${SERVER_PROTOCOL}
+      - SERVER_HOST=${SERVER_HOST}
+      - SERVER_PORT=${SERVER_PORT}
+      - ORCID_CLIENT_ID=${ORCID_CLIENT_ID}
+      - ORCID_CLIENT_SECRET=${ORCID_CLIENT_SECRET}
+      - USE_SANDBOXED_ORCID=${USE_SANDBOXED_ORCID:-false}
+    # entrypoint:
+    #   [
+    #     'bash',
+    #     './scripts/wait-for-it.sh',
+    #     '${POSTGRES_HOST:-db}:${POSTGRES_PORT:-5432}',
+    #     '--',
+    #     'sh',
+    #     'scripts/setupProdServer.sh',
+    #   ]
+  db:
+    image: postgres:10-alpine
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_DB
+      - POSTGRES_PASSWORD
+    volumes:
+      - ./scripts/test.sql:/docker-entrypoint-initdb.d/test.sql
+
+  job-xsweet:
+    image: pubsweet/job-xsweet
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST:-db}:${POSTGRES_PORT}/${POSTGRES_DB}
+    depends_on:
+      - server
+    command:
+      [
+        'bash',
+        './scripts/wait-for-it.sh',
+        'server:${SERVER_PORT}',
+        --,
+        'node',
+        'src/xsweet.js',
+      ]
+    volumes:
+      - ./scripts/wait-for-it.sh:/home/node/scripts/wait-for-it.sh

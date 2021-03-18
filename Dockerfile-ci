@@ -1,4 +1,4 @@
-FROM cypress/browsers:node12.18.0-chrome83-ff77
+FROM cypress/browsers:node14.16.0-chrome89-ff86
 
 ENV HOME "/home/simplej"
 RUN mkdir -p ${HOME}

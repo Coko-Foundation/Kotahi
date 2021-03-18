@@ -101,3 +101,7 @@ kotahidev=# create extension pgcrypto;
 ```
 
 Migrate the test database using `yarn dotenv yarn pubsweet migrate`.
+
+# Does Kotahi support collaborative real-time text editing?
+
+Kotahi uses the Wax editor which is not configured for real-time collaboration out of the box, but can be (and was) made to support it. It was previously configured to support it, but the feature was removed in https://gitlab.coko.foundation/kotahi/kotahi/-/merge_requests/230/diffs?commit_id=6fd9eec258ce21d4db8cf1e593bb8b891b3f3c50 due to its experimental nature and it not being required by the known workflows. Reverting that would be a good choice for a starting point, should you wish to reimplement it.

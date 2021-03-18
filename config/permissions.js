@@ -300,7 +300,6 @@ const permissions = {
   Query: {
     currentUser: isAuthenticated,
     paginatedManuscripts: userIsAdmin,
-    detailsForURL: allow,
     publishedManuscripts: allow,
     manuscripts: allow,
     manuscript: allow,
@@ -333,7 +332,6 @@ const permissions = {
   CurrentRole: allow,
   Team: allow,
   TeamMember: allow,
-  URLMetadata: allow,
   User: allow,
   PaginatedManuscripts: allow,
   Manuscript: allow,

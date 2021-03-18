@@ -1,6 +1,5 @@
 const merge = require('lodash/merge')
 const { ref, raw } = require('objection')
-const detailsForURLResolver = require('./detailsForURLResolver')
 
 const ManuscriptResolvers = ({ isVersion }) => {
   const resolvers = {
@@ -384,9 +383,6 @@ const resolvers = {
 
       // return ctx.connectors.User.fetchAll(where, ctx, { eager })
     },
-    async detailsForURL(_, { url }) {
-      return detailsForURLResolver(url)
-    },
   },
   // We want submission into to come out as a stringified JSON, so that we don't have to
   // change our queries if the submission form changes. We still want to store it as JSONB
@@ -401,18 +397,7 @@ const typeDefs = `
     manuscript(id: ID!): Manuscript!
     manuscripts: [Manuscript]!
     paginatedManuscripts(sort: String, offset: Int, limit: Int, filter: ManuscriptsFilter): PaginatedManuscripts
-    detailsForURL(url: String!): URLMetadata
     publishedManuscripts(sort:String, offset: Int, limit: Int): PaginatedManuscripts
-  }
-
-  type URLMetadata {
-    title: String
-    author: String
-    date: String
-    description: String
-    image: String
-    logo: String
-    publisher: String
   }
 
   input ManuscriptsFilter {
