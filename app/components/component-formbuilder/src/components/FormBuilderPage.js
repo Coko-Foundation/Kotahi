@@ -35,53 +35,61 @@ const deleteFormMutation = gql`
 
 const query = gql`
   query {
-    currentUser {
-      id
-      username
-      admin
-    }
-
     getForms
   }
 `
 
-const FormBuilderPage = props => {
+const FormBuilderPage = () => {
   const { loading, data, error } = useQuery(query)
 
-  const [deleteForm] = useMutation(deleteFormMutation)
-  const [deleteFormElement] = useMutation(deleteFormElementMutation)
+  // TODO Structure forms for graphql and retrieve IDs from these mutations to allow Apollo Cache to do its magic, rather than forcing refetch.
+  const [deleteForm] = useMutation(deleteFormMutation, {
+    refetchQueries: [{ query }],
+  })
 
-  const [updateForm] = useMutation(updateFormMutation)
-  const [updateFormElement] = useMutation(updateFormElementMutation)
-  const [createForm] = useMutation(createFormMutation)
+  const [deleteFormElement] = useMutation(deleteFormElementMutation, {
+    refetchQueries: [{ query }],
+  })
 
-  const [properties, setProperties] = useState({ type: 'form', properties: {} })
-  const [activeTab, setActiveTab] = useState()
+  const [updateForm] = useMutation(updateFormMutation, {
+    refetchQueries: [{ query }],
+  })
+
+  const [updateFormElement] = useMutation(updateFormElementMutation, {
+    refetchQueries: [{ query }],
+  })
+
+  const [createForm] = useMutation(createFormMutation, {
+    refetchQueries: [{ query }],
+  })
+
+  // const [properties, setProperties] = useState({ type: 'form', properties: {} })
+  const [activeFormId, setActiveFormId] = useState()
+  const [activeFieldId, setActiveFieldId] = useState()
 
   useEffect(() => {
     if (!loading && data) {
       if (data.getForms.length) {
-        setActiveTab(0)
-        setProperties({ type: 'form', properties: data.getForms[0] })
+        setActiveFormId(data.getForms[0].id)
       } else {
-        setActiveTab('new')
+        setActiveFormId('new')
       }
     }
   }, [loading, data])
 
-  if (loading || activeTab === undefined) return <Spinner />
+  if (loading || !activeFormId) return <Spinner />
   if (error) return JSON.stringify(error)
 
   return (
     <FormBuilderLayout
-      activeTab={activeTab}
+      activeFieldId={activeFieldId}
+      activeFormId={activeFormId}
       createForm={createForm}
       deleteForm={deleteForm}
       deleteFormElement={deleteFormElement}
-      getForms={data.getForms}
-      properties={properties}
-      setActiveTab={setActiveTab}
-      setProperties={setProperties}
+      forms={data.getForms}
+      setActiveFieldId={setActiveFieldId}
+      setActiveFormId={setActiveFormId}
       updateForm={updateForm}
       updateFormElement={updateFormElement}
     />

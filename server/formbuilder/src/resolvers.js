@@ -3,11 +3,11 @@ const fs = require('fs')
 const path = require('path')
 const { readFiles, mkdirp } = require('./util')
 
-const writeJson = (path, object) =>
-  fs.writeFileSync(path, JSON.stringify(object, null, 2))
+const writeJson = (filePath, object) =>
+  fs.writeFileSync(filePath, JSON.stringify(object, null, 2))
 
-const mergeFiles = path =>
-  readFiles(path).then(files => {
+const mergeFiles = folderPath =>
+  readFiles(folderPath).then(files => {
     const forms = []
     files.forEach((item, index) => {
       const content = JSON.parse(item.content)
@@ -24,10 +24,11 @@ const resolvers = {
         const folderPath = `${config.get(
           'pubsweet-component-xpub-formbuilder.path',
         )}/`
-        const path = `${folderPath}${formId}.json`
 
-        if (fs.existsSync(path)) {
-          fs.unlinkSync(path)
+        const filePath = `${folderPath}${formId}.json`
+
+        if (fs.existsSync(filePath)) {
+          fs.unlinkSync(filePath)
         }
 
         const forms = await mergeFiles(folderPath)
@@ -43,32 +44,34 @@ const resolvers = {
           'pubsweet-component-xpub-formbuilder.path',
         )}/`
 
-        const path = `${folderPath}/${formId}.json`
-        const forms = JSON.parse(fs.readFileSync(path, 'utf8'))
+        const filePath = `${folderPath}/${formId}.json`
+        const form = JSON.parse(fs.readFileSync(filePath, 'utf8'))
 
-        if (forms.children) {
-          const children = forms.children.filter(el => el.id !== elementId)
-          forms.children = children
-          writeJson(path, forms)
+        if (form.children) {
+          const children = form.children.filter(el => el.id !== elementId)
+          form.children = children
+          writeJson(filePath, form)
         }
 
-        const form = await mergeFiles(folderPath)
-        return form
+        const forms = await mergeFiles(folderPath)
+        return forms
       } catch (err) {
         throw new Error(err)
       }
     },
     async createForm(_, { form }, ctx) {
       try {
-        form = JSON.parse(form)
+        const formObj = JSON.parse(form)
+
         const folderPath = `${config.get(
           'pubsweet-component-xpub-formbuilder.path',
         )}/`
-        const path = `${folderPath}/${form.id}.json`
 
-        if (!fs.existsSync(path)) {
+        const filePath = `${folderPath}/${formObj.id}.json`
+
+        if (!fs.existsSync(filePath)) {
           mkdirp(folderPath)
-          writeJson(path, form)
+          writeJson(filePath, formObj)
         }
 
         const forms = await mergeFiles(folderPath)
@@ -80,24 +83,26 @@ const resolvers = {
     },
     async updateForm(_, { form, formId }, ctx) {
       // DONE
-      form = JSON.parse(form)
+      let formObj = JSON.parse(form)
+
       try {
         const folderPath = `${config.get(
           'pubsweet-component-xpub-formbuilder.path',
         )}/`
-        let path = `${folderPath}${formId}.json`
 
-        if (fs.existsSync(path)) {
-          let forms = JSON.parse(fs.readFileSync(path, 'utf8'))
-          forms = Object.assign(forms, form)
-          form = forms
-          if (formId !== form.id) {
-            fs.unlinkSync(path)
-            path = `${folderPath}${form.id}.json`
+        let filePath = `${folderPath}${formId}.json`
+
+        if (fs.existsSync(filePath)) {
+          const oldForm = JSON.parse(fs.readFileSync(filePath, 'utf8'))
+          formObj = { ...oldForm, ...formObj }
+
+          if (formId !== formObj.id) {
+            fs.unlinkSync(filePath)
+            filePath = `${folderPath}${formObj.id}.json`
           }
         }
 
-        writeJson(path, form)
+        writeJson(filePath, formObj)
 
         const forms = await mergeFiles(folderPath)
 
@@ -108,24 +113,26 @@ const resolvers = {
     },
     async updateFormElement(_, { element, formId }, ctx) {
       // DONE
-      element = JSON.parse(element)
+      const elementObj = JSON.parse(element)
 
       const folderPath = `${config.get(
         'pubsweet-component-xpub-formbuilder.path',
       )}/`
-      const path = `${folderPath}${formId}.json`
-      const form = JSON.parse(fs.readFileSync(path, 'utf8'))
+
+      const filePath = `${folderPath}${formId}.json`
+      const form = JSON.parse(fs.readFileSync(filePath, 'utf8'))
+
       if (!form.children) {
-        form.children = [element]
-      } else if (form.children.some(e => e.id === element.id)) {
+        form.children = [elementObj]
+      } else if (form.children.some(e => e.id === elementObj.id)) {
         form.children = form.children.map(value =>
-          value.id === element.id ? element : value,
+          value.id === elementObj.id ? elementObj : value,
         )
       } else {
-        form.children.push(element)
+        form.children.push(elementObj)
       }
 
-      writeJson(path, form)
+      writeJson(filePath, form)
       return mergeFiles(folderPath)
     },
   },
@@ -155,8 +162,9 @@ const resolvers = {
         const folderPath = `${config.get(
           'pubsweet-component-xpub-formbuilder.path',
         )}/`
-        const path = `${folderPath}${formId}.json`
-        const forms = JSON.parse(fs.readFileSync(path, 'utf8'))
+
+        const filePath = `${folderPath}${formId}.json`
+        const forms = JSON.parse(fs.readFileSync(filePath, 'utf8'))
 
         return forms
       } catch (err) {

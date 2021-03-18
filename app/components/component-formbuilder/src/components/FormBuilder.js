@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import styled, { withTheme } from 'styled-components'
 import { unescape } from 'lodash'
@@ -61,7 +61,7 @@ const createMarkup = encodedHtml => ({
 
 const BuilderElement = ({
   elements,
-  setProperties,
+  setActiveFieldId,
   deleteFormElement,
   formId,
 }) => {
@@ -71,26 +71,18 @@ const BuilderElement = ({
 
   return orderedElements.map(element => (
     <Element key={`element-${element.id}`}>
-      <Action
-        onClick={() =>
-          setProperties({
-            type: 'element',
-            formId,
-            properties: element,
-          })
-        }
-      >
+      <Action onClick={() => setActiveFieldId(element.id)}>
         <ElementTitle dangerouslySetInnerHTML={createMarkup(element.title)} /> (
         {element.component})
       </Action>
       <Action
-        onClick={() =>
+        onClick={() => {
           deleteFormElement({
             variables: { formId, elementId: element.id },
           })
-        }
+        }}
       >
-        x
+        🗙
       </Action>
     </Element>
   ))
@@ -101,11 +93,11 @@ BuilderElement.propTypes = {
     PropTypes.shape({
       id: PropTypes.string.isRequired,
       title: PropTypes.string.isRequired,
-      component: PropTypes.string.isRequired,
+      component: PropTypes.string,
       order: PropTypes.string,
     }).isRequired,
   ).isRequired,
-  setProperties: PropTypes.func.isRequired,
+  setActiveFieldId: PropTypes.func.isRequired,
   deleteFormElement: PropTypes.func.isRequired,
   formId: PropTypes.string.isRequired,
 }
@@ -134,24 +126,30 @@ AddButtonElement.propTypes = {
   addElement: PropTypes.func.isRequired,
 }
 
-const FormBuilder = ({ form, setProperties, deleteFormElement }) => {
-  const [elements, setElements] = useState(form.children || [])
-
-  const addElement = element => {
-    setElements([...elements, element])
-  }
-
+const FormBuilder = ({
+  form,
+  setActiveFieldId,
+  addFormElement,
+  deleteFormElement,
+}) => {
   return (
     <Page>
-      <AddButtonElement addElement={addElement} />
-      {elements && elements.length > 0 && (
+      {form.children && form.children.length > 0 && (
         <BuilderElement
           deleteFormElement={deleteFormElement}
-          elements={elements}
+          elements={form.children}
           formId={form.id}
-          setProperties={setProperties}
+          setActiveFieldId={setActiveFieldId}
         />
       )}
+      <AddButtonElement
+        addElement={newElement => {
+          addFormElement({
+            variables: { element: JSON.stringify(newElement), formId: form.id },
+          })
+          setActiveFieldId(newElement.id)
+        }}
+      />
     </Page>
   )
 }
@@ -163,12 +161,13 @@ FormBuilder.propTypes = {
       PropTypes.shape({
         id: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
-        component: PropTypes.string.isRequired,
+        component: PropTypes.string,
         order: PropTypes.string,
       }).isRequired,
     ).isRequired,
   }).isRequired,
-  setProperties: PropTypes.func.isRequired,
+  setActiveFieldId: PropTypes.func.isRequired,
+  addFormElement: PropTypes.func.isRequired,
   deleteFormElement: PropTypes.func.isRequired,
 }
 

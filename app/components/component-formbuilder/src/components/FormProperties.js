@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import PropTypes from 'prop-types'
 import { isEmpty } from 'lodash'
 import styled from 'styled-components'
 import { Button, TextField, ValidatedFieldFormik } from '@pubsweet/ui'
@@ -22,14 +23,13 @@ export const Section = styled.div`
 
 const FormProperties = ({
   handleSubmit,
-  properties,
   mode,
-  setPopup,
   popup,
-  values,
+  properties,
   setFieldValue,
+  setPopup,
 }) =>
-  isEmpty(properties.properties) && mode !== 'create' ? (
+  isEmpty(properties) && mode !== 'create' ? ( // TODO Move this check to the wrapper so we don't have to pass in the entire properties just for this
     <Page>
       <span>&nbsp;</span>
     </Page>
@@ -38,7 +38,7 @@ const FormProperties = ({
       <form onSubmit={handleSubmit}>
         <Heading>{mode === 'create' ? 'Create Form' : 'Update Form'}</Heading>
         <Section id="form.id" key="form.id">
-          <Legend>ID Form</Legend>
+          <Legend>Form ID</Legend>
           <ValidatedFieldFormik component={idText} name="id" />
         </Section>
         <Section id="form.name" key="form.name">
@@ -100,13 +100,29 @@ const FormProperties = ({
     </Page>
   )
 
+FormProperties.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  mode: PropTypes.string.isRequired,
+  popup: PropTypes.string.isRequired,
+  properties: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    haspopup: PropTypes.string.isRequired,
+    popuptitle: PropTypes.string,
+    popupdescription: PropTypes.string,
+  }).isRequired,
+  setFieldValue: PropTypes.func.isRequired,
+  setPopup: PropTypes.func.isRequired,
+}
+
 const FormPropertiesWrapper = ({
-  properties,
+  onSubmit,
   mode,
-  handleSubmit,
-  ...props
+  properties,
+  setFieldValue,
 }) => {
-  const [popup, setPopup] = useState((properties.properties || {}).haspopup)
+  const [popup, setPopup] = useState((properties || {}).haspopup)
   return (
     // <Formik
     //   initialValues={pick(properties.properties, [
@@ -123,17 +139,30 @@ const FormPropertiesWrapper = ({
     // >
     //   {props => (
     <FormProperties
-      handleSubmit={handleSubmit}
+      handleSubmit={onSubmit}
       mode={mode}
       popup={popup}
       properties={properties}
-      setFieldValue={props.setFieldValue}
+      setFieldValue={setFieldValue}
       setPopup={setPopup}
-      values={props.values}
     />
     // )}
     // </Formik>
   )
+}
+
+FormPropertiesWrapper.propTypes = {
+  onSubmit: PropTypes.func.isRequired,
+  mode: PropTypes.string.isRequired,
+  properties: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    name: PropTypes.string.isRequired,
+    description: PropTypes.string.isRequired,
+    haspopup: PropTypes.string.isRequired,
+    popuptitle: PropTypes.string,
+    popupdescription: PropTypes.string,
+  }).isRequired,
+  setFieldValue: PropTypes.func.isRequired,
 }
 
 export default FormPropertiesWrapper

@@ -28,48 +28,62 @@ const valueInput = input => (
   <TextField label="Value Option" placeholder="Enter value…" {...input} />
 )
 
-const renderOptions = ({ form: { values }, push, remove }) => (
-  <ul>
-    <UnbulletedList>
-      <li>
-        <Button onClick={() => push()} plain type="button">
-          Add another option
-        </Button>
-      </li>
-      {(values.options || []).map((option, index) => (
-        <li key={option.value}>
-          <Spacing>
-            <Option>
-              Option:&nbsp;
-              {values.options.length > 1 && (
-                <Button onClick={() => remove(index)} type="button">
-                  Remove
-                </Button>
-              )}
-            </Option>
-            <div>
-              <Inline>
-                <ValidatedFieldFormik
-                  component={keyInput}
-                  name={`options.${index}.label`}
-                  required
-                />
-              </Inline>
+const renderOptions = ({ form: { values }, push, remove }) => {
+  const hasNewOption = values.options.some(
+    opt => opt === undefined || !opt.label || !opt.value,
+  )
 
-              <Inline>
-                <ValidatedFieldFormik
-                  component={valueInput}
-                  name={`options.${index}.value`}
-                  required
-                />
-              </Inline>
-            </div>
-          </Spacing>
+  return (
+    <ul>
+      <UnbulletedList>
+        {(values.options || []).map((option, index) => (
+          // index as key is better than using label or value, which would cause rerender and lose focus during editing.
+          // TODO: store an internal ID for each option, and use that as key; OR provide a way of editing an option that doesn't update the option list until the user clicks away (or a modal editor)
+          // eslint-disable-next-line react/no-array-index-key
+          <li key={index}>
+            <Spacing>
+              <Option>
+                Option:&nbsp;
+                {values.options.length > 1 && (
+                  <Button onClick={() => remove(index)} type="button">
+                    Remove
+                  </Button>
+                )}
+              </Option>
+              <div>
+                <Inline>
+                  <ValidatedFieldFormik
+                    component={keyInput}
+                    name={`options.${index}.label`}
+                    required
+                  />
+                </Inline>
+
+                <Inline>
+                  <ValidatedFieldFormik
+                    component={valueInput}
+                    name={`options.${index}.value`}
+                    required
+                  />
+                </Inline>
+              </div>
+            </Spacing>
+          </li>
+        ))}
+        <li>
+          <Button
+            disabled={hasNewOption}
+            onClick={() => push()}
+            plain
+            type="button"
+          >
+            Add another option
+          </Button>
         </li>
-      ))}
-    </UnbulletedList>
-  </ul>
-)
+      </UnbulletedList>
+    </ul>
+  )
+}
 
 const OptionsField = () => (
   <FieldArray component={renderOptions} name="options" />
