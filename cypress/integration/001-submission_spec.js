@@ -1,160 +1,117 @@
+import { DashboardPage } from "../page-object/dashboard-page"
+import { NewSubmissionPage } from "../page-object/new-submission-page"
+import { SubmissionFormPage } from "../page-object/submission-form-page"
+import { Menu } from "../page-object/page-component/menu"
+import { ManuscriptsPage } from "../page-object/manuscripts-page"
+import { ControlPage } from "../page-object/control-page"
+
 describe('URL submission test', () => {
   it('can submit a URL and some metadata', () => {
-    cy.task('restore', 'initialState')
+    // task to restore the database as per the  dumps/initialState.sql
+    cy.task('restore', 'initialState');
 
-    cy.login('Emily Clay')
+    // login as author
+    cy.fixture("role_names").then(name => {
+      cy.login(name.role.author);
+    });
 
-    cy.get('button')
-      .contains('New submission')
-      .click()
-    cy.get('button')
-      .contains('Submit a URL instead')
-      .click()
+    // submit new manuscript
+    DashboardPage.clickSubmit();
 
-    cy.get('body').contains('Submission created')
+    NewSubmissionPage.clickSubmitURL();
+    NewSubmissionPage.getSubmissionMessage().should('contain', 'Submission created');
 
-    cy.contains('Add a link').click()
-    cy.get('[name="submission.links.0.url"]')
-      .click()
-      .type('https://doi.org/10.6084/m9.figshare.913521.v1')
-    cy.contains('Add another link').click()
-    cy.get('[name="submission.links.1.url"]')
-      .click()
-      .type('https://github.com/jure/mathtype_to_mathml')
+    // complete the submission form 
+    SubmissionFormPage.clickAddLink();
 
-    cy.get('input[data-testid="meta.title"]')
-      .click()
-      .clear()
-      .type('My URL submission')
-    cy.get('[data-testid="submission.name"]')
-      .click()
-      .type('Emily Clay')
+    cy.fixture("submission_form_data").then(data => {
+      SubmissionFormPage.fillInUrl(0, data.doi);
+      SubmissionFormPage.fillInUrl(0, data.git);
+      SubmissionFormPage.fillInTitle(data.title);
 
-    cy.get('[data-testid="submission.affiliation"]')
-      .click()
-      .type('Example University, England')
+      cy.fixture("role_names").then(name => {
+        SubmissionFormPage.fillInName(name.role.author);
+      });
 
-    cy.get('[data-testid="submission.contact"]')
-      .click()
-      .type('emily@example.com')
+      SubmissionFormPage.fillInAffiliation(data.affiliation);
+      SubmissionFormPage.fillInContact(data.contact);
+      SubmissionFormPage.fillInCover(data.cover);
+      SubmissionFormPage.fillInDataCode(data.dataCode);
+      SubmissionFormPage.fillInEthicsField(data.ethics);
+      SubmissionFormPage.clickTypeOfResearchDropdown()
+      SubmissionFormPage.selectDropdownOption(1)
+      SubmissionFormPage.fillInSuggested(data.suggested);
 
-    cy.get('[data-testid="submission.cover"] div[contenteditable="true"]')
-      .click()
-      .type('This is my cover letter')
+      // Supplementary file upload
+      cy.fixture("test-pdf.pdf", 'base64').then(pdf => {
+        SubmissionFormPage.attachFile("test-pdf.pdf");
+      });
 
-    cy.get('[data-testid="submission.datacode"] div[contenteditable="true"]')
-      .click()
-      .type('This is my data and code availability statement')
+      SubmissionFormPage.fillInKeywords(data.keywords);
+      SubmissionFormPage.clickHealthySubjectsStudyDropdown()
+      SubmissionFormPage.selectDropdownOption(1)
+      SubmissionFormPage.clickInvolvedHumanSubjectsDropdown()
+      SubmissionFormPage.selectDropdownOption(0)
+      SubmissionFormPage.clickAnimalResearchApprovedDropdown()
+      SubmissionFormPage.selectDropdownOption(0);
+      SubmissionFormPage.clickMethodsUsedCheckboxWithText(`"${data.methods.firstMethod}"`);
+      SubmissionFormPage.clickMethodsUsedCheckboxWithText(`"${data.methods.secondMethod}"`);
+      SubmissionFormPage.fillInOtherMethods(data.suggested);
+      SubmissionFormPage.clickFieldSthrenghtDropdown();
+      SubmissionFormPage.selectDropdownOption(3);
+      SubmissionFormPage.fillInHumanMriOther(data.humanMRIother);
+      SubmissionFormPage.clickProcessingPackageWithText(data.processinPackages.text1);
+      SubmissionFormPage.clickProcessingPackageWithText(data.processinPackages.text2);
+      SubmissionFormPage.fillInOtherPackages(data.otherPackages);
+      SubmissionFormPage.fillReferences(data.references);
+      // submit form
+      SubmissionFormPage.clickSubmitResearch();
+      SubmissionFormPage.clickSubmitManuscript();
 
-    cy.get('[data-testid="submission.ethics"] div[contenteditable="true"]')
-      .click()
-      .type('This is my ethics statement')
+      // assert form exists in dashboard
+      DashboardPage.getSectionTitleWithText('My Submissions');
+      DashboardPage.getSubmissionTitle(0).should("contain", data.title);
+    });
 
-    cy.get('*[aria-label="Type of Research Object"]').click({ force: true })
-    cy.get('#react-select-3-option-1').click()
-    cy.get('[data-testid="submission.suggested"]')
-      .click()
-      .type('Erica James, Matthew Matretzky')
-
-    // Supplementary file upload
-    cy.fixture('test-pdf.pdf', 'base64').then(fileContent => {
-      cy.get('[data-testid="dropzone"]').attachFile(
-        'test-pdf.pdf',
-        // {
-        //   fileContent,
-        //   fileName: 'test-pdf.pdf',
-        //   encoding: 'base64',
-        //   mimeType: 'application/pdf',
-        // },
-        { subjectType: 'drag-n-drop' },
-      )
-    })
-
-    cy.get('[data-testid="submission.keywords"]')
-      .click()
-      .type('some, keywords')
-
-    cy.get('*[aria-label*="healthy subjects only or patients"]').click({
-      force: true,
-    })
-    cy.get('#react-select-4-option-1').click()
-
-    cy.get('*[aria-label*="involved human subjects"]').click({
-      force: true,
-    })
-    cy.get('#react-select-5-option-0').click()
-
-    cy.get('*[aria-label*="animal research approved"]').click({
-      force: true,
-    })
-    cy.get('#react-select-6-option-0').click()
-
-    cy.get('input[name="submission.methods"][value="Functional MRI"]').click()
-    cy.get('input[name="submission.methods"][value="Optical Imaging"]').click()
-
-    cy.get('[data-testid="submission.otherMethods"]')
-      .click()
-      .type('Erica James, Matthew Matretzky')
-
-    cy.get('*[aria-label*="what field strength"]').click({
-      force: true,
-    })
-    cy.get('#react-select-7-option-3').click()
-
-    cy.get('[data-testid="submission.humanMRIother"]')
-      .click()
-      .type('7T')
-
-    cy.get('input[name="submission.packages"][value="SPM"]').click()
-    cy.get('input[name="submission.packages"][value="FSL"]').click()
-
-    cy.get('[data-testid="submission.otherPackages"]')
-      .click()
-      .type('Jupyter, Stencila')
-
-    cy.get('[data-testid="submission.references"] div[contenteditable="true"]')
-      .click()
-      .type('Hyde, 2020')
-
-    cy.get('button')
-      .contains('Submit your research object')
-      .click()
-    cy.get('button')
-      .contains('Submit your manuscript')
-      .click()
-
-    cy.get('body').contains('My Submissions')
-    cy.get('body').contains('My URL submission')
-
-    cy.task('dump', 'submission_complete')
-  })
+    // task to dump data in dumps/submission_complete.sql
+    cy.task('dump', 'submission_complete');
+  });
 
   it('senior editor can view the submission', () => {
-    cy.task('restore', 'submission_complete')
+    // task to restore the database as per the  dumps/submission_complete.sql
+    cy.task('restore', 'submission_complete');
 
-    // Admin logs in to assign senior editor
-    cy.login('Sinead Sullivan')
-    cy.get('nav')
-      .contains('Manuscripts')
-      .click()
-    cy.get('tr[class*="Table__Row"]')
-      .contains('Control')
-      .click()
-    cy.contains('My URL submission')
+    cy.fixture("submission_form_data").then(data => {
+      cy.fixture("role_names").then(name => {
+        // login as admin
+        cy.login(name.role.admin);
 
-    cy.get('*[aria-label="Assign seniorEditor"]').click({ force: true })
-    cy.get('*[id*="react-select"]')
-      .contains('Joanne Pilger')
-      .click()
+        // select Control on the Manuscripts page
+        Menu.clickManuscripts();
 
-    cy.login('Joanne Pilger')
-    cy.contains('My URL submission')
+        ManuscriptsPage.selectOptionWithText("Control");
 
-    cy.contains('Control Panel').click()
-    cy.contains('This is my data and code availability statement')
-    cy.contains('test-pdf.pdf')
-    cy.contains('https://github.com/jure/mathtype_to_mathml')
-    cy.contains('https://doi.org/10.6084/m9.figshare.913521.v1')
-    cy.task('dump', 'senior_editor_assigned')
-  })
-})
+        ControlPage.getMetadataCell(3).should('contain', data.title);
+        // assign seniorEditor
+        ControlPage.clickAssignEditorDropdown();
+        ControlPage.selectEditorByName(name.role.seniorEditor);
+
+        // login as seniorEditor
+        cy.login(name.role.seniorEditor);
+      });
+
+      // assert Manuscript exist
+      DashboardPage.getVersionTitle().should("contain", data.title);
+      // click ControPanel and assert manuscript
+      DashboardPage.clickControlPanel();
+
+      ControlPage.getMetadataCell(8).should('contain', data.dataCode);
+      ControlPage.getMetadataCell(25).should('contain', data.pdf);
+      ControlPage.getMetadataCell(0).should('contain', data.doi);
+      ControlPage.getMetadataCell(0).should('contain', data.git);
+    });
+
+    // task to dump data in dumps/senior_editor_assigned.sql
+    cy.task('dump', 'senior_editor_assigned');
+  });
+});

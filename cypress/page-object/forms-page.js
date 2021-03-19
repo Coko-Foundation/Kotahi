@@ -4,7 +4,7 @@
  * which contains a number of options & fields to fill in / dropdowns.
  */
 const FORM_TITLE_TAB = '[data-test-id="tab-container"] > div';
-const FORM_OPTION_LIST = '[class*=FormBuilder__Element] > button';
+const FORM_OPTION_LIST = '[class*=FormBuilder__Element] > button:nth-child(1)';
 const NAME_FIELD = 'name';
 
 export const FormsPage = {

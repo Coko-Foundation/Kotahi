@@ -1,38 +1,44 @@
+import { DashboardPage } from "../page-object/dashboard-page"
+import { ReviewPage } from "../page-object/review-page"
+
+//login as reviewer, accept and do review, leave comments and submit
 const doReview = name => {
-  cy.login(name)
+  cy.login(name);
 
-  cy.get('[data-testid="accept-review"]').click()
-  cy.contains('Do Review').click()
+  DashboardPage.clickAcceptReview();
+  DashboardPage.clickDoReview();
 
-  cy.contains('My URL submission')
-  cy.contains('This is my data and code availability statement')
+  cy.fixture("submission_form_data").then(data => {
+  ReviewPage.getReviewMetadataCell(3).should('contain', data.title);
+  ReviewPage.getReviewMetadataCell(8).should('contain', data.dataCode);
+  });
 
-  cy.get('[data-testid="reviewComment"]')
-    .click()
-    .type(`Great paper, congratulations! ${name}`)
-  cy.get('[data-testid="confidentialComment"]')
-    .click()
-    .type(`This is a very important paper. ${name}`)
+  ReviewPage.fillInReviewComment(`Great paper, congratulations! ${name}`);
+  ReviewPage.fillInConfidentialComment(`This is a very important paper. ${name}`);
+  ReviewPage.clickAccept();
+  ReviewPage.clickSubmit();
 
-  cy.contains('Accept').click()
-  cy.contains('Submit').click()
+  cy.visit('/kotahi/dashboard');
 
-  cy.visit('/kotahi/dashboard')
-  cy.contains('Completed')
-}
+  DashboardPage.getDoReviewButton().should('contain', 'Completed');
+};
 
 describe('Completing a review', () => {
   it('accept and do a review', () => {
-    cy.task('restore', 'reviewers_invited')
+    cy.task('restore', 'reviewers_invited');
+    cy.fixture("role_names").then(name => {
+      // Reviewers
+      doReview(name.role.reviewers.reviewer1);
+      doReview(name.role.reviewers.reviewer2);
+      doReview(name.role.reviewers.reviewer3);
 
-    doReview('Gale Davis') // Reviewers
-    doReview('Sherry Crofoot')
-    doReview('Elaine Barnes')
+      // login as seniorEditor and assert the 3 reviews are completed
+      cy.login(name.role.seniorEditor);
 
-    cy.login('Joanne Pilger') // Senior editor
+      DashboardPage.getCompletedReviewsButton().should('have.text', '3completed');
+    });
 
-    cy.get('[data-testid="completed"]').should('have.text', '3completed')
-
-    cy.task('dump', 'three_reviews_completed')
-  })
-})
+    // task to dump data in dumps/three_reviews_completed.sql
+    cy.task('dump', 'three_reviews_completed');
+  });
+});

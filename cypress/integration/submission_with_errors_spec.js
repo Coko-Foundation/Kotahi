@@ -1,45 +1,36 @@
+import { DashboardPage } from "../page-object/dashboard-page";
+import { NewSubmissionPage } from "../page-object/new-submission-page";
+import { SubmissionFormPage } from "../page-object/submission-form-page";
+
 describe('Submission with errors test', () => {
   it('can submit a URL and some metadata', () => {
-    cy.task('restore', 'initialState')
+     // task to restore the database as per the  dumps/initialState.sql
+    cy.task('restore', 'initialState');
 
-    cy.login('Emily Clay')
+    // login as author and attempt to submit an incompleted submission form
+    cy.fixture("role_names").then(name => {
+      cy.login(name.role.author);
 
-    cy.get('button')
-      .contains('New submission')
-      .click()
-    cy.get('button')
-      .contains('Submit a URL instead')
-      .click()
+      DashboardPage.clickSubmit();
 
-    cy.get('body').contains('Submission created')
+      NewSubmissionPage.clickSubmitURL();
+      NewSubmissionPage.getSubmissionMessage().should('contain', 'Submission created');
 
-    cy.contains('button', 'Submit your research object').click()
+      SubmissionFormPage.clickSubmitResearch()
+      SubmissionFormPage.getValidationErrorMessage('Enter at least 4 characters').should('exist');
+      SubmissionFormPage.fillInName(name.role.author);
+      SubmissionFormPage.clickSubmitResearch();
+      SubmissionFormPage.getValidationErrorMessage('Enter at least 2 characters').should('exist')
+      SubmissionFormPage.fillInKeywords('some, keywords');
+    });
 
-    cy.get('body').contains('Enter at least 4 characters')
+      // Change the title so that we can look for it
+      cy.fixture("submission_form_data").then(data => {
+      SubmissionFormPage.fillInTitle(data.newTitle);
+      SubmissionFormPage.clickSubmitResearch();
+      SubmissionFormPage.clickSubmitManuscript();
 
-    cy.get('[data-testid="submission.name"]')
-      .click()
-      .type('Emily Clay')
-
-    cy.contains('button', 'Submit your research object').click()
-
-    cy.get('body').contains('Enter at least 2 characters')
-
-    cy.get('[data-testid="submission.keywords"]')
-      .click()
-      .type('some, keywords')
-
-    // Change the title so that we can look for it
-    cy.get('input[data-testid="meta.title"]')
-      .click()
-      .clear()
-      .type('My Fixed URL Submission')
-
-    cy.contains('button', 'Submit your research object').click()
-    cy.get('button')
-      .contains('Submit your manuscript')
-      .click()
-
-    cy.get('body').contains('My Fixed URL Submission')
-  })
-})
+      DashboardPage.getSubmissionTitle(0).should('contain', data.newTitle);
+    });
+  });
+});

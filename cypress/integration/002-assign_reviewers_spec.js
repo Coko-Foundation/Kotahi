@@ -1,3 +1,7 @@
+import { ControlPage } from "../page-object/control-page"
+import { DashboardPage } from "../page-object/dashboard-page"
+import { Menu } from "../page-object/page-component/menu"
+import { ReviewersPage } from "../page-object/reviewers-page"
 // const login = name => {
 //   cy.task('createToken', name).then(token => {
 //     cy.setToken(token)
@@ -5,45 +9,40 @@
 //   })
 // }
 
-const inviteReviewer = name => {
-  cy.get('*[aria-label*="Invite reviewers"]').click({
-    force: true,
-  })
-  cy.get('*[id*="react-select"]')
-    .contains(name)
-    .click()
-  cy.get('button')
-    .contains('Invite reviewer')
-    .click()
-}
-
 describe('Editor assigning reviewers', () => {
   it('can assign 3 reviewers', () => {
-    cy.task('restore', 'senior_editor_assigned')
+    // task to restore the database as per the  dumps/senior_editor_assigned.sql
+    cy.task('restore', 'senior_editor_assigned');
 
-    cy.login('Joanne Pilger')
+    cy.fixture("role_names").then(name => {
+      // login as seniorEditor
+      cy.login(name.role.seniorEditor);
 
-    cy.contains('Control Panel').click()
-    cy.contains('Manage Reviewers').click()
+      // go to control page and assign 3 reviewers
+      DashboardPage.clickControlPanel();
 
-    cy.contains('Invite reviewers')
+      ControlPage.clickManageReviewers();
 
-    // Invite first reviewer
-    inviteReviewer('Gale Davis')
-    cy.get('div[class*="Reviewers__Reviewer-"]').should('have.length', 1)
-    // 2nd
-    inviteReviewer('Sherry Crofoot')
-    cy.get('div[class*="Reviewers__Reviewer-"]').should('have.length', 2)
-    // 3rd
-    inviteReviewer('Elaine Barnes')
-    cy.get('div[class*="Reviewers__Reviewer-"]').should('have.length', 3)
+      ReviewersPage.clickInviteReviewerDropdown();
+      // Invite first reviewer'Gale Davis'
+      ReviewersPage.inviteReviewer(name.role.reviewers.reviewer1);
+      ReviewersPage.getNumberOfInvitedReviewers().should('eq', 1);
+      // 2nd 'Sherry Crofoot'
+      ReviewersPage.clickInviteReviewerDropdown();
+      ReviewersPage.inviteReviewer(name.role.reviewers.reviewer2);
+      ReviewersPage.getInvitedReviewersList().should('have.length', 2);
+      // 3rd 'Elaine Barnes'
+      ReviewersPage.clickInviteReviewerDropdown();
+      ReviewersPage.inviteReviewer(name.role.reviewers.reviewer3);
+      ReviewersPage.getInvitedReviewersList().should('have.length', 3);
 
-    cy.get('nav')
-      .contains('Dashboard')
-      .click()
+      // go to dashboard and assert number of invited reviewer
+      Menu.clickDashboard();
 
-    cy.get('[data-testid="invited"]').should('have.text', '3invited')
-
-    cy.task('dump', 'reviewers_invited')
-  })
-})
+      DashboardPage.getInvitedReviewersButton().should('have.text', '3invited');
+    });
+    
+    // task to dump data in dumps/reviewers_invited.sql
+    cy.task('dump', 'reviewers_invited');
+  });
+});

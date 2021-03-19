@@ -5,11 +5,21 @@
   "affiliation": "Example University, England",
   "contact": "emily@example.com",
   "cover": "This is my cover letter",
-  "datacode": "This is my data and code availability statement",
+  "dataCode": "This is my data and code availability statement",
   "ethics": "This is my ethics statement",
   "suggested": "Erica James, Matthew Matretzky",
   "keywords": "some, keywords",
+  "methods": {
+    "firstMethod": "Functional MRI",
+    "secondMethod": "Optical Imaging"
+  },
   "humanMRIother": "7T",
   "otherPackages": "Jupyter, Stencila",
-  "references": "Hyde, 2020"
+  "references": "Hyde, 2020",
+  "pdf": "test-pdf.pdf",
+  "processinPackages": {
+    "text1": "SPM",
+    "text2": "FSL"
+  },
+  "newTitle": "My Fixed URL Submission"
 }
