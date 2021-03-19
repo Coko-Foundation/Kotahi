@@ -58,7 +58,6 @@ module.exports = app => {
 
             user.defaultIdentity.name = `${userDetails.firstName} ${userDetails.lastName}`
             user.defaultIdentity.aff = userDetails.institution
-            user.firstLogin = true
             user.saveGraph()
           }
         } catch (err) {
@@ -66,7 +65,7 @@ module.exports = app => {
           return
         }
 
-        done(null, user)
+        done(null, { ...user, firstLogin: true })
       },
     ),
   )
