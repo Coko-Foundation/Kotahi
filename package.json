@@ -25,8 +25,8 @@
     "start:server-and-client": "start-test server 'http://localhost:3000/healthcheck' client",
     "start:services": "docker-compose up db",
     "storybook": "coko-storybook",
-    "test:all:chrome": "start-test test:server-and-client 4000 test:chrome",
-    "test:all:firefox": "start-test test:server-and-client 4000 test:firefox",
+    "test:all:chrome": "start-test test:server-and-client 'https://localhost:4000' test:chrome",
+    "test:all:firefox": "start-test test:server-and-client 'https://localhost:4000' test:firefox",
     "test:chrome": "cypress run --browser chrome",
     "test:firefox": "cypress run --browser firefox --headless",
     "test:server-and-client": "start-test server:test 'http://localhost:3000/healthcheck' client"
@@ -81,6 +81,7 @@
     "apollo-link-context": "1.0.20",
     "apollo-link-schema": "1.2.5",
     "apollo-upload-client": "14.1.2",
+    "bcrypt": "3.0.8",
     "body-parser": "^1.19.0",
     "compression": "^1.7.4",
     "config": "3.3.2",

@@ -20,12 +20,25 @@ module.exports = webpackEnv => {
   const isEnvDevelopment = webpackEnv === 'development'
   const isEnvProduction = webpackEnv === 'production'
 
+  const serverProtocol = process.env.SERVER_PROTOCOL || 'http'
+  const serverHost = process.env.SERVER_HOST || '0.0.0.0'
+  const serverPort = process.env.SERVER_PORT || 3000
+  const serverUrl = `${serverHost}${serverPort ? `:${serverPort}` : ''}`
+  const serverUrlWithProtocol = `${serverProtocol}://${serverUrl}`
+
   const devServerHost = process.env.CLIENT_HOST || '0.0.0.0'
   const devServerPort = process.env.CLIENT_PORT || 4000
 
   return {
     context: path.join(__dirname, '..', 'app'),
     devServer: {
+      https: true,
+      key: fs.readFileSync(
+        path.join(__dirname, '../certs/ssl_certificate_key.key'),
+      ),
+      cert: fs.readFileSync(
+        path.join(__dirname, '../certs/ssl_certificate.crt'),
+      ),
       // contentBase: path.join(contentBase, 'public'),
       disableHostCheck: true,
       historyApiFallback: true,
@@ -33,6 +46,19 @@ module.exports = webpackEnv => {
       hot: true,
       port: devServerPort,
       publicPath: '/',
+      proxy: {
+        '/api': serverUrlWithProtocol,
+        '/auth': serverUrlWithProtocol,
+        '/convertDocxToHTML': serverUrlWithProtocol,
+        '/graphql': serverUrlWithProtocol,
+        '/public': serverUrlWithProtocol,
+        '/static/uploads': serverUrlWithProtocol,
+        '/static/profiles': serverUrlWithProtocol,
+        '/subscriptions': {
+          target: `ws://${serverUrl}`,
+          ws: true,
+        },
+      },
     },
     name: 'client application',
     target: 'web',

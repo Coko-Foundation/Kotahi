@@ -7,7 +7,7 @@ require('dotenv').config({ path: path.join(__dirname, '../.env') })
 const config = require('config')
 const express = require('express')
 const morgan = require('morgan')
-const helmet = require('helmet')
+// const helmet = require('helmet')
 const cookieParser = require('cookie-parser')
 const bodyParser = require('body-parser')
 const passport = require('passport')
@@ -49,12 +49,13 @@ const configureApp = app => {
 
   app.use(bodyParser.urlencoded({ extended: false }))
   app.use(cookieParser())
-  app.use(
-    helmet({
-      contentSecurityPolicy:
-        process.env.NODE_ENV === 'production' ? undefined : false, // Disable contentSecurityPolicy for non-prod use, so GraphQl Playground works
-    }),
-  )
+  // TODO: With this requests all try to go to https even when it does not exist
+  // app.use(
+  //   helmet({
+  //     contentSecurityPolicy:
+  //       process.env.NODE_ENV === 'production' ? undefined : false, // Disable contentSecurityPolicy for non-prod use, so GraphQl Playground works
+  //   }),
+  // )
   app.use(express.static(path.resolve('.', '_build')))
 
   app.use('/public', express.static(path.resolve(__dirname, '../public')))

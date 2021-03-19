@@ -53,6 +53,7 @@ const FormBuilderLayout = ({
           key="delete-form"
           onClick={e => {
             e.preventDefault()
+            e.stopPropagation()
             deleteForm({
               variables: { formId: form.id },
             })
@@ -93,7 +94,8 @@ const FormBuilderLayout = ({
       <Columns>
         <Form>
           <Tabs
-            activeKey={`${activeFormId}`}
+            activeKey={activeFormId ?? 'new'}
+            key={activeFormId}
             onChange={tab => {
               setActiveFormId(tab)
               setActiveFieldId(null)

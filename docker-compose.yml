@@ -27,6 +27,7 @@ services:
     volumes:
       - ./app:/home/node/app/app
       - ./config:/home/node/app/config
+      - ./certs:/home/node/app/certs
 
   server:
     build:
@@ -72,7 +73,7 @@ services:
       - USE_SANDBOXED_ORCID=${USE_SANDBOXED_ORCID:-true}
       - ORCID_AUTH_REDIRECT_PORT=${ORCID_AUTH_REDIRECT_PORT:-4000}
       - ORCID_AUTH_REDIRECT_HOSTNAME=${ORCID_AUTH_REDIRECT_HOSTNAME:-localhost}
-      - ORCID_AUTH_REDIRECT_PROTOCOL=${ORCID_AUTH_REDIRECT_PROTOCOL:-http}
+      - ORCID_AUTH_REDIRECT_PROTOCOL=${ORCID_AUTH_REDIRECT_PROTOCOL:-https}
     volumes:
       - ./config:/home/node/app/config
       - ./server:/home/node/app/server
@@ -106,9 +107,20 @@ services:
     volumes:
       - ./scripts/test.sql:/docker-entrypoint-initdb.d/test.sql
 
+  # nginx:
+  #   image: nginx:1.19
+  #   depends_on:
+  #     - client
+  #   ports:
+  #     - 443:443
+  #     - 88:80
+  #   volumes:
+  #     - ./nginx/conf.d:/etc/nginx/conf.d
+  #     - ./certs:/etc/nginx/certs
+
   minio:
     image: minio/minio
-    command: ["server", "/data"]
+    command: ['server', '/data']
     volumes:
       - ./minio/data:/data
     ports:
