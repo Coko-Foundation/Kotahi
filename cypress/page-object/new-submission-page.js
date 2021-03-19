@@ -3,12 +3,11 @@
  * Page object representing the available submission options:
  * submission through uploading a manuscript or through using an URL.
  */
-
 const UPLOAD_MANUSCRIPT_BUTTON = 'UploadManuscript__Info';
 const SUBMIT_URL_BUTTON = 'button';
 const SUBMISSION_MESSAGE = 'body';
 
-export const NewSubmission = {
+export const NewSubmissionPage = {
     getUploadManuscriptButton() {
         return cy.getByContainsClass(UPLOAD_MANUSCRIPT_BUTTON);
     },

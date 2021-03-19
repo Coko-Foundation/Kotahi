@@ -5,7 +5,6 @@
  * It contains various input fields & dropdowns,
  * listed in the same order they appear on the page.
  */
-
 const ADD_A_LINK_BUTTON = 'li > button';
 const ENTER_URL_FIELD = 'submission.links.';
 const TITLE_FIELD = 'meta.title';
@@ -23,6 +22,9 @@ const KEYWORDS_FIELD = 'submission.keywords';
 const HEALTHY_SUBJECTS_STUDY_DROPDOWN = 'healthy subjects only or patients';
 const INVOLVED_HUMAN_SUBJECTS_DROPDOWN = 'involved human subjects';
 const ANIMAL_RESEARCH_APPROVED_DROPDOWN = 'animal research approved';
+const METHODS_USED_CHECKBOX = 'submission.methods';
+const OTHER_METHODS_FIELD = 'submission.otherMethods';
+const FILED_STRENGTH_DROPDOWN = 'what field strength';
 const HUMAN_MRI_OTHER_FIELD = 'submission.humanMRIother';
 const PROCESSING_PACKAGES_CHECKBOX_LIST = 'submission.packages';
 const OTHER_PACKAGES_FIELD = 'submission.otherPackages';
@@ -30,6 +32,7 @@ const REFERENCES_FIELD = 'submission.references';
 const SUBMIT_RESEARCH_BUTTON = 'form > div > button';
 const SUBMIT_MANUSCRIPT_BUTTON = 'button[type=submit]';
 const VALIDATION_ERROR_MESSAGE = 'ValidatedField__MessageWrapper';
+const CONTENT_ETIDABLE_VALUE = '[contenteditable="true"]';
 
 export const SubmissionFormPage = {
     getAddLinkButton() {
@@ -48,7 +51,7 @@ export const SubmissionFormPage = {
         return cy.getByDataTestId(TITLE_FIELD);
     },
     fillInTitle(title) {
-        this.getTitleField().cy.fillInput(title);
+        this.getTitleField().fillInput(title);
     },
     getNameField() {
         return cy.getByDataTestId(NAME_FIELD);
@@ -72,25 +75,25 @@ export const SubmissionFormPage = {
         return cy.getByDataTestId(COVER_FIELD);
     },
     fillInCover(cover) {
-        this.getCoverField().fillInput(cover);
+        this.getCoverField().find(CONTENT_ETIDABLE_VALUE).fillInput(cover);
     },
     getDataCodeField() {
         return cy.getByDataTestId(DATA_CODE_FIELD);
     },
     fillInDataCode(dataCode) {
-        this.getDataCodeField().fillInput(dataCode);
+        this.getDataCodeField().find(CONTENT_ETIDABLE_VALUE).fillInput(dataCode);
     },
     getEthicsField() {
         return cy.getByDataTestId(ETHICS_FIELD);
     },
     fillInEthicsField(ethics) {
-        this.getEthicsField().fillInput(ethics);
+        this.getEthicsField().find(CONTENT_ETIDABLE_VALUE).fillInput(ethics);
     },
     getTypeOfResearchDropdown() {
         return cy.getByContainsAreaLabel(TYPE_OF_RESEARCH_DROPDOWN);
     },
     clickTypeOfResearchDropdown() {
-        this.getTypeOfResearchDropdown().click({force: true});
+        this.getTypeOfResearchDropdown().click({ force: true });
     },
     selectDropdownOption(nth) {
         return cy.get(DROPDOWN_OPTION_LIST).eq(nth).click();
@@ -112,7 +115,7 @@ export const SubmissionFormPage = {
             //   encoding: 'base64',
             //   mimeType: 'application/pdf',
             // },
-            {subjectType: 'drag-n-drop'})
+            { subjectType: 'drag-n-drop' })
     },
     getKeywordsField() {
         return cy.getByDataTestId(KEYWORDS_FIELD);
@@ -124,19 +127,37 @@ export const SubmissionFormPage = {
         return cy.getByContainsAreaLabel(HEALTHY_SUBJECTS_STUDY_DROPDOWN);
     },
     clickHealthySubjectsStudyDropdown() {
-        this.getHealthySubjectsStudyDropdown().click({force: true});
+        this.getHealthySubjectsStudyDropdown().click({ force: true });
     },
     getInvolvedHumanSubjectsDropdown() {
         return cy.getByContainsAreaLabel(INVOLVED_HUMAN_SUBJECTS_DROPDOWN);
     },
     clickInvolvedHumanSubjectsDropdown() {
-        this.getInvolvedHumanSubjectsDropdown().click({force: true});
+        this.getInvolvedHumanSubjectsDropdown().click({ force: true });
     },
     getAnimalResearchApprovedDropdown() {
         return cy.getByContainsAreaLabel(ANIMAL_RESEARCH_APPROVED_DROPDOWN);
     },
     clickAnimalResearchApprovedDropdown() {
-        this.getAnimalResearchApprovedDropdown().click({force: true});
+        this.getAnimalResearchApprovedDropdown().click({ force: true });
+    },
+    getMethodsUsedCheckboxWithText(value) {
+        return cy.getByNameAndValue(METHODS_USED_CHECKBOX, value);
+    },
+    clickMethodsUsedCheckboxWithText(value) {
+        this.getMethodsUsedCheckboxWithText(value).click();
+    },
+    getOtherMethodsField() {
+        return cy.getByDataTestId(OTHER_METHODS_FIELD);
+    },
+    fillInOtherMethods(text) {
+        this.getOtherMethodsField().fillInput(text);
+    },
+    getFieldSthrenghtDropdown() {
+        return cy.getByContainsAreaLabel(FILED_STRENGTH_DROPDOWN);
+    },
+    clickFieldSthrenghtDropdown() {
+        this.getFieldSthrenghtDropdown().click({force : true});
     },
     getHumanMriOtherField() {
         return cy.getByDataTestId(HUMAN_MRI_OTHER_FIELD);
@@ -160,7 +181,7 @@ export const SubmissionFormPage = {
         return cy.getByDataTestId(REFERENCES_FIELD);
     },
     fillReferences(references) {
-        this.getReferencesField().fillInput(references);
+        this.getReferencesField().find(CONTENT_ETIDABLE_VALUE).fillInput(references);
     },
     getSubmitResearchButton() {
         return cy.get(SUBMIT_RESEARCH_BUTTON);

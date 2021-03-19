@@ -8,6 +8,7 @@ const INVITE_REVIEWER_DROPDOWN = 'Invite reviewers';
 const INVITE_REVIEWER_OPTION_LIST = 'react-select';
 const SUBMIT_BUTTON = 'button[type="submit"]';
 const BACK_BUTTON = 'button[type="button"]';
+const INVITED_REVIEWERS = 'div[class*="Reviewers__Reviewer-"]';
 
 export const ReviewersPage = {
     getSectionTitleWithText(title) {
@@ -40,5 +41,15 @@ export const ReviewersPage = {
     inviteReviewer(name) {
         this.clickInviteReviewerDropdown();
         this.selectReviewerNamed(name);
+        this.clickSubmit();
+    },
+    getInvitedReviewersList() {
+        return cy.get(INVITED_REVIEWERS);
+    },
+    getNumberOfInvitedReviewers() {
+        return this.getInvitedReviewersList().its("length");
+    },
+    getInvitedReviewer(nth) {
+        return this.getInvitedReviewersList().eq(nth);
     }
 }

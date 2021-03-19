@@ -1,23 +1,31 @@
+import { ControlPage } from "../page-object/control-page"
+import { DashboardPage } from "../page-object/dashboard-page"
+import { Menu } from "../page-object/page-component/menu"
+import { PublicationPage } from "../page-object/publication-page"
+
 describe('Publishing a submission', () => {
   it('publish an accepted submission', () => {
-    cy.task('restore', 'decision_completed')
+    cy.task('restore', 'decision_completed');
 
-    cy.login('Joanne Pilger') // Senior editor
+    //login as seniorEditor, publish the manuscript and assert the publication
+    cy.fixture("role_names").then(name => {
+      cy.login(name.role.seniorEditor) 
 
-    cy.contains('Control Panel').click()
+      DashboardPage.clickControlPanel();
 
-    // TODO: Remove this, there must be a bug here.
-    // eslint-disable-next-line
-    cy.wait(1000)
-    cy.get('button').contains('Publish').click()
-    cy.contains('submission was published')
+      ControlPage.clickPublish();
+      ControlPage.getPublishInfoMessage().should('contain', 'submission was published');
 
-    cy.contains('Dashboard').click()
-    cy.contains('Accepted & Published')
+      Menu.clickDashboard();
 
-    cy.visit('/')
-    cy.contains('My URL submission')
+      DashboardPage.getAcceptedAndPublishedButton().should('contain', 'Accepted & Published');
+      
+      cy.visit('/');
 
-    cy.task('dump', 'published_submission')
-  })
-})
+      PublicationPage.getPublicationTitle().should('eq', 'My URL submission');
+    });
+
+    // task to dump data in dumps/published_submission.sql
+    cy.task('dump', 'published_submission');
+  });
+});

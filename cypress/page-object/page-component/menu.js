@@ -5,7 +5,6 @@
  * as well as the Forms, Users, Manuscripts options for admin users.
  * These options are available on all other pages.
  */
-
 const MENU_BUTTON = 'Menu__Item';
 const USER_BUTTON = 'Menu__UserItem';
 
