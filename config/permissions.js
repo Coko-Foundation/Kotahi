@@ -304,7 +304,7 @@ const permissions = {
     manuscripts: allow,
     manuscript: allow,
     messages: allow,
-    getFile: allow, // this is a query that gets the form
+    getForm: allow,
     user: allow,
   },
   Mutation: {

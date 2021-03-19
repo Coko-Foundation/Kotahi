@@ -1,6 +1,5 @@
 const config = require('config')
 const fs = require('fs')
-const path = require('path')
 const { readFiles, mkdirp } = require('./util')
 
 const writeJson = (filePath, object) =>
@@ -137,13 +136,6 @@ const resolvers = {
     },
   },
   Query: {
-    async getFile() {
-      return JSON.parse(
-        fs.readFileSync(
-          path.join(__dirname, '../../../app/storage/forms/submit.json'),
-        ),
-      )
-    },
     async getForms() {
       try {
         const folderPath = `${config.get(
@@ -164,9 +156,9 @@ const resolvers = {
         )}/`
 
         const filePath = `${folderPath}${formId}.json`
-        const forms = JSON.parse(fs.readFileSync(filePath, 'utf8'))
+        const form = JSON.parse(fs.readFileSync(filePath, 'utf8'))
 
-        return forms
+        return form
       } catch (err) {
         throw new Error(err)
       }

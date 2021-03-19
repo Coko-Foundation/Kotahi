@@ -121,7 +121,7 @@ const fragmentFields = `
 `
 
 const query = gql`
-  query($id: ID!, $form: String!) {
+  query($id: ID!, $formId: String!) {
     currentUser {
       id
       username
@@ -141,7 +141,7 @@ const query = gql`
       }
     }
 
-    getFile(form: $form)
+    getForm(formId: $formId)
   }
 `
 
@@ -182,7 +182,7 @@ const SubmitPage = ({ match, history }) => {
   }
 
   const { data, loading, error } = useQuery(query, {
-    variables: { id: match.params.version, form: 'submit' },
+    variables: { id: match.params.version, formId: 'submit' },
     partialRefetch: true,
   })
 
@@ -194,7 +194,7 @@ const SubmitPage = ({ match, history }) => {
   if (error) return JSON.stringify(error)
 
   const manuscript = data?.manuscript
-  const form = data?.getFile
+  const form = data?.getForm
 
   const updateManuscript = (versionId, manuscriptDelta) => {
     update({
