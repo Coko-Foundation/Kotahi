@@ -1,6 +1,6 @@
 {
-  "logoPath": "/public/logo-kotahi.png",
-  "primaryColor": "#0A9",
-  "secondaryColor": "#0A9",
-  "brandName": "Elife!"
+  "logoPath": "/public/logo-elife.svg",
+  "primaryColor": "#0A9DD9",
+  "secondaryColor": "#0A9DD9",
+  "brandName": "Elife"
 }
