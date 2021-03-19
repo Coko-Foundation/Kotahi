@@ -40,13 +40,15 @@ By default you can then access your app at [https://localhost:4000](https://loca
 
 #### Running integration tests
 
-If you're using `docker-compose` to stand up a PostgreSQL database, everything will already be configured and you only need to
+If you're using `docker-compose` to stand up your app, everything will already be configured and you only need to
 
 ```
-> yarn test:chrome
+> yarn run test:chrome
 ```
 
 This will load the test runner in your local environment and using the correct environment variables (set in your `.env` file).
+
+Note: On Windows use `npm` to run Cypress related tasks (e.g.`npm run test:chrome`) as there are issues with `yarn`, see [issue #116](https://gitlab.coko.foundation/kotahi/kotahi/-/issues/116).
 
 Note: The environment variables are needed mainly because Cypress generates an authentication token using the User model directly (to bypass ORCID OAuth login which is not possible to emulate via Cypress), and so needs to connect to the database in the same way as the app.
 
