@@ -69,7 +69,7 @@ const FormBuilderPage = () => {
   useEffect(() => {
     if (!loading && data) {
       if (data.getForms.length) {
-        setActiveFormId(data.getForms[0].id)
+        setActiveFormId(prevFormId => prevFormId ?? data.getForms[0].id)
       } else {
         setActiveFormId('new')
       }
