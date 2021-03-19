@@ -36,7 +36,7 @@ services:
       - USE_SANDBOXED_ORCID=${USE_SANDBOXED_ORCID:-false}
 
   job-xsweet:
-    image: pubsweet/job-xsweet
+    image: pubsweet/job-xsweet:1.5.0
     depends_on:
       - server
     command:

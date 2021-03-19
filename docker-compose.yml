@@ -79,7 +79,7 @@ services:
       - ./server:/home/node/app/server
 
   job-xsweet:
-    image: pubsweet/job-xsweet
+    image: pubsweet/job-xsweet:1.5.0
     depends_on:
       - server
     command:
