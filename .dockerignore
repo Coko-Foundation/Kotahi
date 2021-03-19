@@ -26,7 +26,7 @@ app.pid
 *.env
 
 # app
-_build/
+#_build/
 config/local*
 cypress/
 data/

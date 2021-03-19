@@ -1,7 +1,7 @@
 # IMAGE FOR BUILDING
 FROM node:15.11-alpine as build
 
-RUN apk add --no-cache git python make g++
+RUN apk add --no-cache git python make g++ bash
 
 WORKDIR /home/node/app
 
