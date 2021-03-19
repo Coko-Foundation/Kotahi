@@ -12,9 +12,9 @@ class User extends BaseModel {
   }
 
   $formatJson(json) {
-    json = super.$formatJson(json)
-    delete json.passwordHash
-    return json
+    const cleanedJson = super.$formatJson(json)
+    delete cleanedJson.passwordHash
+    return cleanedJson
   }
 
   static get tableName() {
@@ -22,6 +22,7 @@ class User extends BaseModel {
   }
 
   static get relationMappings() {
+    // eslint-disable-next-line global-require
     const { Team, TeamMember, Identity } = require('@pubsweet/models')
 
     return {
@@ -74,7 +75,8 @@ class User extends BaseModel {
           type: ['string', 'object', 'null'],
           format: 'date-time',
         },
-        profilePicture: { type: ['string', 'null'] },
+        profilePicture: { type: ['boolean', 'null'] },
+        firstLogin: { type: ['boolean', 'null'] },
       },
     }
   }
@@ -85,6 +87,7 @@ class User extends BaseModel {
   // have a 'accepted:reviewer' role present in the returned object
   async currentRoles(manuscript) {
     let teams
+
     if (manuscript && manuscript.id) {
       teams = await this.$relatedQuery('teams').where(
         'manuscriptId',
@@ -93,6 +96,7 @@ class User extends BaseModel {
     } else {
       teams = await this.$relatedQuery('teams')
     }
+
     const roles = {}
 
     teams.forEach(t => {
@@ -136,14 +140,14 @@ class User extends BaseModel {
   }
 
   static async findOneWithIdentity(userId, identityType) {
+    // eslint-disable-next-line global-require
     const { Identity } = require('@pubsweet/models')
+
     const user = (
       await this.query()
         .alias('u')
         .leftJoin(
-          Identity.query()
-            .where('type', identityType)
-            .as('i'),
+          Identity.query().where('type', identityType).as('i'),
           'u.id',
           'i.userId',
         )
