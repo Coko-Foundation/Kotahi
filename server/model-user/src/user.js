@@ -76,7 +76,6 @@ class User extends BaseModel {
           format: 'date-time',
         },
         profilePicture: { type: ['boolean', 'null'] },
-        firstLogin: { type: ['boolean', 'null'] },
       },
     }
   }

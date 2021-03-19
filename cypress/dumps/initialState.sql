@@ -403,8 +403,7 @@ CREATE TABLE public.users (
     password_reset_timestamp timestamp with time zone,
     type text NOT NULL,
     profile_picture text,
-    online boolean,
-    first_login boolean
+    online boolean
 );
 
 
