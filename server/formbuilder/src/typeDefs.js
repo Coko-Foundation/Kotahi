@@ -1,7 +1,6 @@
 const typeDefs = `
   extend type Query {
-    getFile(form: String!): Form
-    getForm(form: String!): Form
+    getForm(formId: String!): Form
     getForms: Form
   }
 
