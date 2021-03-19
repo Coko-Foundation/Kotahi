@@ -23,7 +23,7 @@ So here's how to set this up in less than 20 easy steps:
 10. Go to your mailinator inbox. Open the email you received from orcid and click on the "Verify your email address" button.
 11. Go back to your developer tools section in ORCID. Click on "Register for the free ORCID public API", check the consent box and click on "Continue".
 12. You should now be presented with a form. Fill in your application's name, website and description. What you put in these fields shouldn't matter, as this will only be used for development. (tip: if you get an error that your website's URL is invalid, try something generic and include the protocol - eg. `http://www.google.com`)
-13. Under "Redirect URIs", add the url of your kotahi client plus `/auth/orcid/callback`. So if in your browser you can see your app under `http://localhost:4000`, the value here should be `http://localhost:4000/auth/orcid/callback`. [1]
+13. Under "Redirect URIs", add the url of your kotahi client plus `/auth/orcid/callback`. So if in your browser you can see your app under `https://localhost:4000`, the value here should be `https://localhost:4000/auth/orcid/callback`. [1]
 14. Click on the floating save icon on the right.
 15. You should now be presented with a gray box that gives you a client id and a client secret.
 16. Go to your application's environment file and enter the values you just got.

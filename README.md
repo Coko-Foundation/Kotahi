@@ -18,29 +18,25 @@ To set up ORCID variables for login, read [FAQ.md](FAQ.md).
 
 #### Development
 
-1. To enable HTTPS please add self signed certificate, which is located in /certs/ssl_certificate_key.key in keychain
-    How to do it on MacOS: https://www.youtube.com/watch?time_continue=102&v=TGrX8XgSuZ4&feature=emb_logo
-    How to do it on Windows: https://support.kaspersky.com/CyberTrace/1.0/en-US/174127.htm
-
-2. In hosts file, which is located in:
-    Windows - `C:\Windows\System32\Drivers\etc\hosts`
-    MacOS - `/etc/hosts`
-
-Please add the following line: `127.0.0.1    dev.kotahi.com` (warning: gap between IP and domain name should be a TAB, not a space!)
-
-
 To bring up the development environment, simply run:
 
 ```sh
-docker-compose -f docker-compose.dev.yml up 
+docker-compose -f up
 ```
 
 This will:
 
 - Run the server with `nodemon`, so that changes auto restart the server
 - Run the client with webpack dev server, with hot reload enabled
+- Start a Minio container for storage
 - Bring up a postgres container for use in development
 - Register the `job-xsweet` service (which converts .docx files to HTML)
+
+By default you can then access your app at [https://localhost:4000](https://localhost:4000). Since HTTPS in development is using self-signed certificates, browsers will complain about it being insecure. There are several options to disable these checks for `localhost`, to name a few:
+
+1. Go to `chrome://flags/#allow-insecure-localhost` and enable it (Chrome)
+2. Or click anywhere on the page and type `thisisunsafe` (yes, really) (Chrome)
+3. Click 'Advanced...' and 'Accept the Risk and Continue' (Firefox)
 
 #### Running integration tests
 
