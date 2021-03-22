@@ -62,7 +62,7 @@ test-chrome:
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
   before_script:
-    - cp ./package.json ${HOME}
+    - cp ./* ${HOME}
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
@@ -89,7 +89,7 @@ test-firefox:
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
   before_script:
-    - cp ./package.json ${HOME}
+    - cp ./* ${HOME}
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
