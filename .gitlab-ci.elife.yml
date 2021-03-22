@@ -74,7 +74,7 @@ test-chrome:
   services:
     - postgres
   script:
-    - cd ${HOME}
+    - cd ${HOME}/app
     # this is needed for pgboss initial setup
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
@@ -98,7 +98,7 @@ test-firefox:
   services:
     - postgres
   script:
-    - cd ${HOME}
+    - cd ${HOME}/app
     # this is needed for pgboss initial setup
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
