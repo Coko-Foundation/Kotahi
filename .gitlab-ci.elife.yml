@@ -4,8 +4,8 @@ variables:
   ELIFE_SERVER_IP: 54.87.88.111
 
 stages:
-  - build
-  - deploy
+  #- build
+  #- deploy
   - test
 
 build:
