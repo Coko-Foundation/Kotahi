@@ -33,12 +33,8 @@ module.exports = webpackEnv => {
     context: path.join(__dirname, '..', 'app'),
     devServer: {
       https: true,
-      key: fs.readFileSync(
-        path.join(__dirname, '../certs/ssl_certificate_key.key'),
-      ),
-      cert: fs.readFileSync(
-        path.join(__dirname, '../certs/ssl_certificate.crt'),
-      ),
+      key: fs.readFileSync(path.join(__dirname, '../certs/private.key')),
+      cert: fs.readFileSync(path.join(__dirname, '../certs/certificate.crt')),
       // contentBase: path.join(contentBase, 'public'),
       disableHostCheck: true,
       historyApiFallback: true,
