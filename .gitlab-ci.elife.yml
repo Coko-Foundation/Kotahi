@@ -61,6 +61,8 @@ lint:
 test-chrome:
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
+  before_script:
+    - cp ./package.json ${HOME}
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
@@ -74,7 +76,7 @@ test-chrome:
   services:
     - postgres
   script:
-    - cd ${HOME}/app
+    - cd ${HOME}
     # this is needed for pgboss initial setup
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
@@ -86,6 +88,8 @@ test-firefox:
   allow_failure: true # at this point Cypress' support for Firefox is not stable
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
+  before_script:
+    - cp ./package.json ${HOME}
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
