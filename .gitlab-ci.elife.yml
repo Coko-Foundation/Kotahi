@@ -62,7 +62,7 @@ test-chrome:
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
   before_script:
-    - cp ./* ${HOME}
+    - cp -r ./* ${HOME}
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
@@ -89,7 +89,7 @@ test-firefox:
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
   stage: test
   before_script:
-    - cp ./* ${HOME}
+    - cp -r ./* ${HOME}
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
@@ -102,7 +102,7 @@ test-firefox:
   services:
     - postgres
   script:
-    - cd ${HOME}/app
+    - cd ${HOME}
     # this is needed for pgboss initial setup
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
