@@ -129,7 +129,7 @@ const ComponentForm = ({
 
   return (
     <Formik
-      initialValues={fieldOrForm}
+      initialValues={{ options: [], ...fieldOrForm }}
       key={fieldOrForm.id}
       onSubmit={values =>
         updateFormElement({
