@@ -42,11 +42,10 @@ deploy:
     - |
       ssh ubuntu@$ELIFE_SERVER_IP "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
       sudo docker pull $IMAGE_ORG/$IMAGE_NAME:latest &&
-      sudo supervisorctl restart kotahi 
-      #sudo supervisorctl stop kotahi &&
-      #cd /home/ubuntu/kotahi &&
-      #sudo docker-compose down &&
-      #sudo supervisorctl start kotahi"
+      sudo supervisorctl stop kotahi &&
+      cd /home/ubuntu/kotahi &&
+      sudo docker-compose down &&
+      sudo supervisorctl start kotahi"
 
 lint:
   allow_failure: true
