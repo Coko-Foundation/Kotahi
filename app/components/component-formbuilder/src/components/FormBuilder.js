@@ -7,12 +7,16 @@ import { Icon, Action } from '@pubsweet/ui'
 import { Page, Heading } from './style'
 
 const Element = styled.div`
-  border: 1px solid ${th('colorBorder')};
+  background-color: ${th('colorSecondaryBackground')};
   border-radius: ${th('borderRadius')};
   display: flex;
   justify-content: space-between;
   margin: ${grid(2)};
-  padding: ${grid(2)} ${grid(1)};
+  padding: ${grid(1)};
+
+  &.active {
+    background-color: ${th('colorSelected')};
+  }
 `
 
 const StatusIcon = withTheme(({ children, theme }) => (
@@ -60,23 +64,29 @@ const createMarkup = encodedHtml => ({
 })
 
 const BuilderElement = ({
-  elements,
+  element,
+  isActive,
   setActiveFieldId,
   deleteFormElement,
   formId,
 }) => {
-  const orderedElements = [...elements].sort(
-    (obj1, obj2) => parseInt(obj1.order, 10) - parseInt(obj2.order, 10),
-  )
-
-  return orderedElements.map(element => (
-    <Element key={`element-${element.id}`}>
-      <Action onClick={() => setActiveFieldId(element.id)}>
-        <ElementTitle dangerouslySetInnerHTML={createMarkup(element.title)} /> (
-        {element.component})
+  return (
+    <Element
+      className={isActive ? 'active' : undefined}
+      key={`element-${element.id}`}
+      onClick={() => setActiveFieldId(element.id)}
+    >
+      <Action>
+        <ElementTitle
+          dangerouslySetInnerHTML={createMarkup(
+            element.shortDescription ?? element.title,
+          )}
+        />{' '}
+        ({element.component})
       </Action>
       <Action
-        onClick={() => {
+        onClick={event => {
+          event.stopPropagation()
           deleteFormElement({
             variables: { formId, elementId: element.id },
           })
@@ -85,24 +95,24 @@ const BuilderElement = ({
         🗙
       </Action>
     </Element>
-  ))
+  )
 }
 
 BuilderElement.propTypes = {
-  elements: PropTypes.arrayOf(
-    PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      title: PropTypes.string.isRequired,
-      component: PropTypes.string,
-      order: PropTypes.string,
-    }).isRequired,
-  ).isRequired,
+  element: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    shortDescription: PropTypes.string,
+    title: PropTypes.string.isRequired,
+    component: PropTypes.string,
+    order: PropTypes.string,
+  }).isRequired,
+  isActive: PropTypes.bool.isRequired,
   setActiveFieldId: PropTypes.func.isRequired,
   deleteFormElement: PropTypes.func.isRequired,
   formId: PropTypes.string.isRequired,
 }
 
-const AddButtonElement = ({ addElement }) => (
+const AddElementButton = ({ addElement }) => (
   <Root>
     <Main>
       <Action
@@ -122,27 +132,34 @@ const AddButtonElement = ({ addElement }) => (
   </Root>
 )
 
-AddButtonElement.propTypes = {
+AddElementButton.propTypes = {
   addElement: PropTypes.func.isRequired,
 }
 
 const FormBuilder = ({
+  activeFieldId,
   form,
   setActiveFieldId,
   addFormElement,
   deleteFormElement,
 }) => {
+  const orderedElements = [...form.children].sort(
+    (obj1, obj2) => parseInt(obj1.order, 10) - parseInt(obj2.order, 10),
+  )
+
   return (
     <Page>
-      {form.children && form.children.length > 0 && (
+      {orderedElements.map(element => (
         <BuilderElement
           deleteFormElement={deleteFormElement}
-          elements={form.children}
+          element={element}
           formId={form.id}
+          isActive={activeFieldId === element.id}
+          key={`element-${element.id}`}
           setActiveFieldId={setActiveFieldId}
         />
-      )}
-      <AddButtonElement
+      ))}
+      <AddElementButton
         addElement={newElement => {
           addFormElement({
             variables: { element: JSON.stringify(newElement), formId: form.id },
@@ -155,6 +172,7 @@ const FormBuilder = ({
 }
 
 FormBuilder.propTypes = {
+  activeFieldId: PropTypes.string,
   form: PropTypes.shape({
     id: PropTypes.string.isRequired,
     children: PropTypes.arrayOf(
@@ -169,6 +187,10 @@ FormBuilder.propTypes = {
   setActiveFieldId: PropTypes.func.isRequired,
   addFormElement: PropTypes.func.isRequired,
   deleteFormElement: PropTypes.func.isRequired,
+}
+
+FormBuilder.defaultProps = {
+  activeFieldId: null,
 }
 
 export default FormBuilder

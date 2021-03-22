@@ -38,6 +38,7 @@ const FormBuilderLayout = ({
         <SectionContent>
           <SectionRow>
             <FormBuilder
+              activeFieldId={activeFieldId}
               addFormElement={updateFormElement}
               deleteFormElement={deleteFormElement}
               form={form}
