@@ -75,7 +75,7 @@ test-chrome:
     - postgres
   script:
     - cd ${HOME}
-    - apt-get -y install postgresql-client
+    #- apt-get -y install postgresql-client
     # this is needed for pgboss initial setup
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
@@ -100,7 +100,7 @@ test-firefox:
     - postgres
   script:
     - cd ${HOME}
-    - apt-get -y install postgresql-client
+    #- apt-get -y install postgresql-client
     # this is needed for pgboss initial setup
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
