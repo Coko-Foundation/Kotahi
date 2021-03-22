@@ -24,10 +24,12 @@ const FormBuilderLayout = ({
   activeFormId,
   activeFieldId,
   deleteForm,
-  deleteFormElement,
+  deleteField,
+  moveFieldDown,
+  moveFieldUp,
   updateForm,
   createForm,
-  updateFormElement,
+  updateField,
   setActiveFieldId,
   setActiveFormId,
 }) => {
@@ -39,9 +41,11 @@ const FormBuilderLayout = ({
           <SectionRow>
             <FormBuilder
               activeFieldId={activeFieldId}
-              addFormElement={updateFormElement}
-              deleteFormElement={deleteFormElement}
+              addField={updateField}
+              deleteField={deleteField}
               form={form}
+              moveFieldDown={fieldId => moveFieldDown(form, fieldId)}
+              moveFieldUp={fieldId => moveFieldUp(form, fieldId)}
               setActiveFieldId={setActiveFieldId}
             />
           </SectionRow>
@@ -112,8 +116,8 @@ const FormBuilderLayout = ({
                 formId={activeForm.id}
                 isField={!!activeField}
                 key={fieldOrForm.id}
+                updateField={updateField}
                 updateForm={updateForm}
-                updateFormElement={updateFormElement}
               />
             </SectionRow>
           </SectionContent>
@@ -138,10 +142,12 @@ FormBuilderLayout.propTypes = {
   activeFormId: PropTypes.string.isRequired,
   activeFieldId: PropTypes.string,
   deleteForm: PropTypes.func.isRequired,
-  deleteFormElement: PropTypes.func.isRequired,
+  deleteField: PropTypes.func.isRequired,
+  moveFieldDown: PropTypes.func.isRequired,
+  moveFieldUp: PropTypes.func.isRequired,
   updateForm: PropTypes.func.isRequired,
   createForm: PropTypes.func.isRequired,
-  updateFormElement: PropTypes.func.isRequired,
+  updateField: PropTypes.func.isRequired,
   setActiveFieldId: PropTypes.func.isRequired,
   setActiveFormId: PropTypes.func.isRequired,
 }

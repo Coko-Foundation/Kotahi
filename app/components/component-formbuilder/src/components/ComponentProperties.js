@@ -103,7 +103,7 @@ const ComponentForm = ({
   isField,
   formId,
   updateForm,
-  updateFormElement,
+  updateField,
 }) => {
   const [componentType, setComponentType] = useState(fieldOrForm.component)
 
@@ -132,7 +132,7 @@ const ComponentForm = ({
       initialValues={{ options: [], ...fieldOrForm }}
       key={fieldOrForm.id}
       onSubmit={values =>
-        updateFormElement({
+        updateField({
           variables: {
             formId,
             element: prepareForSubmit(values),
@@ -160,7 +160,7 @@ ComponentForm.propTypes = {
   isField: PropTypes.bool.isRequired,
   formId: PropTypes.string.isRequired,
   updateForm: PropTypes.func.isRequired,
-  updateFormElement: PropTypes.func.isRequired,
+  updateField: PropTypes.func.isRequired,
 }
 
 export default ComponentForm

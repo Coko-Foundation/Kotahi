@@ -19,6 +19,16 @@ const Element = styled.div`
   }
 `
 
+const MainAction = styled(Action)`
+  flex-grow: 1;
+  text-align: left;
+`
+
+const IconAction = styled(Action)`
+  flex-grow: 0;
+  margin: 0 ${grid(1)};
+`
+
 const StatusIcon = withTheme(({ children, theme }) => (
   <Icon color={theme.colorPrimary}>{children}</Icon>
 ))
@@ -66,8 +76,10 @@ const createMarkup = encodedHtml => ({
 const BuilderElement = ({
   element,
   isActive,
+  moveFieldDown,
+  moveFieldUp,
   setActiveFieldId,
-  deleteFormElement,
+  deleteField,
   formId,
 }) => {
   return (
@@ -76,24 +88,38 @@ const BuilderElement = ({
       key={`element-${element.id}`}
       onClick={() => setActiveFieldId(element.id)}
     >
-      <Action>
+      <MainAction>
         <ElementTitle
           dangerouslySetInnerHTML={createMarkup(
             element.shortDescription ?? element.title,
           )}
         />{' '}
         ({element.component})
-      </Action>
-      <Action
+      </MainAction>
+      <IconAction
+        onClick={event => {
+          moveFieldUp(element.id)
+        }}
+      >
+        ▲
+      </IconAction>
+      <IconAction
+        onClick={event => {
+          moveFieldDown(element.id)
+        }}
+      >
+        ▼
+      </IconAction>
+      <IconAction
         onClick={event => {
           event.stopPropagation()
-          deleteFormElement({
+          deleteField({
             variables: { formId, elementId: element.id },
           })
         }}
       >
         🗙
-      </Action>
+      </IconAction>
     </Element>
   )
 }
@@ -107,8 +133,10 @@ BuilderElement.propTypes = {
     order: PropTypes.string,
   }).isRequired,
   isActive: PropTypes.bool.isRequired,
+  moveFieldUp: PropTypes.func.isRequired,
+  moveFieldDown: PropTypes.func.isRequired,
   setActiveFieldId: PropTypes.func.isRequired,
-  deleteFormElement: PropTypes.func.isRequired,
+  deleteField: PropTypes.func.isRequired,
   formId: PropTypes.string.isRequired,
 }
 
@@ -140,28 +168,28 @@ const FormBuilder = ({
   activeFieldId,
   form,
   setActiveFieldId,
-  addFormElement,
-  deleteFormElement,
+  addField,
+  deleteField,
+  moveFieldUp,
+  moveFieldDown,
 }) => {
-  const orderedElements = [...form.children].sort(
-    (obj1, obj2) => parseInt(obj1.order, 10) - parseInt(obj2.order, 10),
-  )
-
   return (
     <Page>
-      {orderedElements.map(element => (
+      {form.children.map(element => (
         <BuilderElement
-          deleteFormElement={deleteFormElement}
+          deleteField={deleteField}
           element={element}
           formId={form.id}
           isActive={activeFieldId === element.id}
           key={`element-${element.id}`}
+          moveFieldDown={moveFieldDown}
+          moveFieldUp={moveFieldUp}
           setActiveFieldId={setActiveFieldId}
         />
       ))}
       <AddElementButton
         addElement={newElement => {
-          addFormElement({
+          addField({
             variables: { element: JSON.stringify(newElement), formId: form.id },
           })
           setActiveFieldId(newElement.id)
@@ -185,8 +213,10 @@ FormBuilder.propTypes = {
     ).isRequired,
   }).isRequired,
   setActiveFieldId: PropTypes.func.isRequired,
-  addFormElement: PropTypes.func.isRequired,
-  deleteFormElement: PropTypes.func.isRequired,
+  addField: PropTypes.func.isRequired,
+  deleteField: PropTypes.func.isRequired,
+  moveFieldUp: PropTypes.func.isRequired,
+  moveFieldDown: PropTypes.func.isRequired,
 }
 
 FormBuilder.defaultProps = {

@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
+import { omitBy } from 'lodash'
 import FormBuilderLayout from './FormBuilderLayout'
 import { Spinner } from '../../../shared'
 
@@ -39,6 +40,11 @@ const query = gql`
   }
 `
 
+const prepareForSubmit = values => {
+  const cleanedValues = omitBy(values, value => value === '')
+  return JSON.stringify(cleanedValues)
+}
+
 const FormBuilderPage = () => {
   const { loading, data, error } = useQuery(query)
 
@@ -66,6 +72,40 @@ const FormBuilderPage = () => {
   const [activeFormId, setActiveFormId] = useState()
   const [activeFieldId, setActiveFieldId] = useState()
 
+  const moveFieldUp = (form, fieldId) => {
+    const currentIndex = form.children.findIndex(field => field.id === fieldId)
+    if (currentIndex < 1) return
+
+    const fieldsToSwapA = form.children[currentIndex - 1]
+    const fieldsToSwapB = form.children[currentIndex]
+    const newFields = [...form.children]
+    newFields.splice(currentIndex - 1, 2, fieldsToSwapB, fieldsToSwapA)
+
+    updateForm({
+      variables: {
+        formId: form.id,
+        form: prepareForSubmit({ ...form, children: newFields }),
+      },
+    })
+  }
+
+  const moveFieldDown = (form, fieldId) => {
+    const currentIndex = form.children.findIndex(field => field.id === fieldId)
+    if (currentIndex < 0 || currentIndex >= form.children.length - 1) return
+
+    const fieldsToSwapA = form.children[currentIndex]
+    const fieldsToSwapB = form.children[currentIndex + 1]
+    const newFields = [...form.children]
+    newFields.splice(currentIndex, 2, fieldsToSwapB, fieldsToSwapA)
+
+    updateForm({
+      variables: {
+        formId: form.id,
+        form: prepareForSubmit({ ...form, children: newFields }),
+      },
+    })
+  }
+
   useEffect(() => {
     if (!loading && data) {
       if (data.getForms.length) {
@@ -84,13 +124,15 @@ const FormBuilderPage = () => {
       activeFieldId={activeFieldId}
       activeFormId={activeFormId}
       createForm={createForm}
+      deleteField={deleteFormElement}
       deleteForm={deleteForm}
-      deleteFormElement={deleteFormElement}
       forms={data.getForms}
+      moveFieldDown={moveFieldDown}
+      moveFieldUp={moveFieldUp}
       setActiveFieldId={setActiveFieldId}
       setActiveFormId={setActiveFormId}
+      updateField={updateFormElement}
       updateForm={updateForm}
-      updateFormElement={updateFormElement}
     />
   )
 }

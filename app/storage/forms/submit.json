@@ -3,6 +3,31 @@
   "id": "submit",
   "children": [
     {
+      "title": "Research object links",
+      "id": "1591192678688",
+      "component": "LinksInput",
+      "name": "submission.links",
+      "placeholder": "Enter your links, separated by commas",
+      "order": "-1",
+      "parse": {
+        "value": "split",
+        "label": "Split"
+      },
+      "format": {
+        "value": "join",
+        "label": "Join"
+      }
+    },
+    {
+      "title": "Title",
+      "id": "1593634996801",
+      "component": "TextField",
+      "name": "meta.title",
+      "placeholder": "Enter the manuscript's title",
+      "description": "<p></p>",
+      "order": "0"
+    },
+    {
       "title": "Name",
       "id": "1531303631370",
       "component": "TextField",
@@ -36,28 +61,29 @@
       "placeholder": "Enter your contact information"
     },
     {
-      "title": "Keywords",
-      "id": "1531303777701",
-      "component": "TextField",
-      "name": "submission.keywords",
-      "placeholder": "Enter keywords...",
-      "parse": "split",
-      "format": "join",
-      "order": "11",
-      "validateValue": {
-        "minChars": "2",
-        "maxChars": "6"
-      },
-      "validate": [
-        {
-          "value": "minChars",
-          "label": "minimum Characters"
-        },
-        {
-          "value": "required",
-          "label": "Required"
-        }
-      ]
+      "title": "Cover letter",
+      "id": "1591172762874",
+      "component": "AbstractEditor",
+      "name": "submission.cover",
+      "description": "<p>Cover letter describing submission, relevant implications, and timely information to consider</p>",
+      "order": "4",
+      "placeholder": "Enter your cover letter"
+    },
+    {
+      "title": "Data and Code availability statements",
+      "id": "1591173076622",
+      "component": "AbstractEditor",
+      "name": "submission.datacode",
+      "placeholder": "Enter your data and code availability statement",
+      "order": "5"
+    },
+    {
+      "title": "Ethics statement",
+      "id": "1591173029656",
+      "component": "AbstractEditor",
+      "name": "submission.ethics",
+      "placeholder": "Enter your ethics statements",
+      "order": "6"
     },
     {
       "title": "Type of Research Object",
@@ -103,45 +129,28 @@
       "order": "10"
     },
     {
-      "title": "Cover letter",
-      "id": "1591172762874",
-      "component": "AbstractEditor",
-      "name": "submission.cover",
-      "description": "<p>Cover letter describing submission, relevant implications, and timely information to consider</p>",
-      "order": "4",
-      "placeholder": "Enter your cover letter"
-    },
-    {
-      "title": "Ethics statement",
-      "id": "1591173029656",
-      "component": "AbstractEditor",
-      "name": "submission.ethics",
-      "placeholder": "Enter your ethics statements",
-      "order": "6"
-    },
-    {
-      "title": "Data and Code availability statements",
-      "id": "1591173076622",
-      "component": "AbstractEditor",
-      "name": "submission.datacode",
-      "placeholder": "Enter your data and code availability statement",
-      "order": "5"
-    },
-    {
-      "title": "Research object links",
-      "id": "1591192678688",
-      "component": "LinksInput",
-      "name": "submission.links",
-      "placeholder": "Enter your links, separated by commas",
-      "order": "-1",
-      "parse": {
-        "value": "split",
-        "label": "Split"
+      "title": "Keywords",
+      "id": "1531303777701",
+      "component": "TextField",
+      "name": "submission.keywords",
+      "placeholder": "Enter keywords...",
+      "parse": "split",
+      "format": "join",
+      "order": "11",
+      "validateValue": {
+        "minChars": "2",
+        "maxChars": "6"
       },
-      "format": {
-        "value": "join",
-        "label": "Join"
-      }
+      "validate": [
+        {
+          "value": "minChars",
+          "label": "minimum Characters"
+        },
+        {
+          "value": "required",
+          "label": "Required"
+        }
+      ]
     },
     {
       "title": "Did your study involve healthy subjects only or patients (note that patient studies may also involve healthy subjects)",
@@ -378,15 +387,6 @@
       "name": "submission.references",
       "order": "21",
       "shortDescription": "References"
-    },
-    {
-      "title": "Title",
-      "id": "1593634996801",
-      "component": "TextField",
-      "name": "meta.title",
-      "placeholder": "Enter the manuscript's title",
-      "description": "<p></p>",
-      "order": "0"
     },
     {
       "title": "Visual Abstract",
