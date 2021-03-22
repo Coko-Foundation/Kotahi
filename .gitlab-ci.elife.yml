@@ -78,7 +78,7 @@ test-chrome:
     # this is needed for pgboss initial setup
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
-    - cp .env.example .env
+    #- cp .env.example .env
     # specify host here else it confuses the linked postgres image
     - POSTGRES_HOST=postgres yarn test:all:chrome
 
@@ -102,7 +102,7 @@ test-firefox:
     # this is needed for pgboss initial setup
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
-    - cp .env.example .env
+    #- cp .env.example .env
     # specify host here else it confuses the linked postgres image
     - POSTGRES_HOST=postgres yarn test:all:firefox
 
