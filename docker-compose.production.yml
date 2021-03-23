@@ -14,6 +14,7 @@ services:
         - client_protocol=${CLIENT_PROTOCOL}
         - client_host=${CLIENT_HOST}
         - client_port=${CLIENT_PORT}
+        - instance_name=${INSTANCE_NAME:-elife}
     ports:
       - ${SERVER_PORT:-3000}:${SERVER_PORT:-3000}
     environment:
