@@ -6,6 +6,11 @@ const components = require('./components.json')
 const formComponents = require('./form-components.json')
 const journal = require('./journal')
 
+const formTemplatePath = {
+  elife: '../app/storage/forms',
+  coko: '../app/storage/forms-coko',
+}
+
 module.exports = {
   teams: {
     seniorEditor: {
@@ -36,7 +41,7 @@ module.exports = {
     path: `${__dirname}/mailer`,
   },
   'pubsweet-component-xpub-formbuilder': {
-    path: path.resolve(__dirname, '../app/storage/forms'),
+    path: path.resolve(__dirname, formTemplatePath[process.env.INSTANCE_NAME]),
     components: formComponents,
   },
   'pubsweet-server': {
