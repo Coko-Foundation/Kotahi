@@ -95,6 +95,12 @@ UpdateForm.propTypes = {
 
 const prepareForSubmit = values => {
   const cleanedValues = omitBy(values, value => value === '')
+  if (
+    cleanedValues.component !== 'Select' &&
+    cleanedValues.component !== 'CheckboxGroup' &&
+    cleanedValues.component !== 'RadioGroup'
+  )
+    cleanedValues.options = undefined
   return JSON.stringify(cleanedValues)
 }
 

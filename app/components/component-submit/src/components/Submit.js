@@ -50,7 +50,7 @@ const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
   const fieldNames = form.children.map(field => field.name)
   fieldNames.forEach(fieldName => set(allBlankedFields, fieldName, ''))
-  return allBlankedFields.submission
+  return allBlankedFields.submission ?? {}
 }
 
 const Submit = ({
@@ -201,8 +201,8 @@ Submit.propTypes = {
         ),
       }).isRequired,
     ).isRequired,
-    popuptitle: PropTypes.string.isRequired,
-    popupdescription: PropTypes.string.isRequired,
+    popuptitle: PropTypes.string,
+    popupdescription: PropTypes.string,
     haspopup: PropTypes.string.isRequired, // bool as string
   }).isRequired,
   createNewVersion: PropTypes.func.isRequired,
