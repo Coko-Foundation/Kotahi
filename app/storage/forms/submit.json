@@ -8,7 +8,6 @@
       "component": "LinksInput",
       "name": "submission.links",
       "placeholder": "Enter your links, separated by commas",
-      "order": "-1",
       "parse": {
         "value": "split",
         "label": "Split"
@@ -24,8 +23,7 @@
       "component": "TextField",
       "name": "meta.title",
       "placeholder": "Enter the manuscript's title",
-      "description": "<p></p>",
-      "order": "0"
+      "description": "<p></p>"
     },
     {
       "title": "Name",
@@ -33,7 +31,6 @@
       "component": "TextField",
       "name": "submission.name",
       "placeholder": "Enter your name",
-      "order": "1",
       "validate": [
         {
           "value": "minChars",
@@ -49,15 +46,13 @@
       "id": "1531303727228",
       "component": "TextField",
       "name": "submission.affiliation",
-      "placeholder": "Enter your affiliation",
-      "order": "2"
+      "placeholder": "Enter your affiliation"
     },
     {
       "title": "Email and contact information",
       "id": "1531726163478",
       "component": "TextField",
       "name": "submission.contact",
-      "order": "3",
       "placeholder": "Enter your contact information"
     },
     {
@@ -66,7 +61,6 @@
       "component": "AbstractEditor",
       "name": "submission.cover",
       "description": "<p>Cover letter describing submission, relevant implications, and timely information to consider</p>",
-      "order": "4",
       "placeholder": "Enter your cover letter"
     },
     {
@@ -74,16 +68,14 @@
       "id": "1591173076622",
       "component": "AbstractEditor",
       "name": "submission.datacode",
-      "placeholder": "Enter your data and code availability statement",
-      "order": "5"
+      "placeholder": "Enter your data and code availability statement"
     },
     {
       "title": "Ethics statement",
       "id": "1591173029656",
       "component": "AbstractEditor",
       "name": "submission.ethics",
-      "placeholder": "Enter your ethics statements",
-      "order": "6"
+      "placeholder": "Enter your ethics statements"
     },
     {
       "title": "Type of Research Object",
@@ -107,8 +99,7 @@
           "value": "notebook",
           "label": "Notebook"
         }
-      ],
-      "order": "7"
+      ]
     },
     {
       "title": "Suggested reviewers",
@@ -117,16 +108,14 @@
       "placeholder": "Add reviewer names...",
       "name": "submission.suggested",
       "parse": "split",
-      "format": "join",
-      "order": "8"
+      "format": "join"
     },
     {
       "title": "Upload supplementary materials",
       "id": "1531305332347",
       "component": "SupplementaryFiles",
       "description": "<p>Upload your files.</p>",
-      "name": "fileName",
-      "order": "10"
+      "name": "fileName"
     },
     {
       "title": "Keywords",
@@ -136,7 +125,6 @@
       "placeholder": "Enter keywords...",
       "parse": "split",
       "format": "join",
-      "order": "11",
       "validateValue": {
         "minChars": "2",
         "maxChars": "6"
@@ -168,8 +156,7 @@
         }
       ],
       "description": "<p></p>",
-      "shortDescription": "Patients/healthy subjects",
-      "order": "12"
+      "shortDescription": "Patients/healthy subjects"
     },
     {
       "title": "If your research involved human subjects, was the research approved by the relevant Institutional Review Board or ethics panel?",
@@ -191,8 +178,7 @@
         }
       ],
       "description": "<p><i>NOTE: Any human subjects studies without IRB approval will be automatically rejected.</i></p>",
-      "shortDescription": "Ethics panel",
-      "order": "13"
+      "shortDescription": "Ethics panel"
     },
     {
       "title": "Was any animal research approved by the relevant IACUC or other animal research panel?",
@@ -214,7 +200,6 @@
           "value": "N/A"
         }
       ],
-      "order": "14",
       "shortDescription": "Animal research panel"
     },
     {
@@ -276,7 +261,6 @@
           "value": "Computational modeling"
         }
       ],
-      "order": "15",
       "shortDescription": "Methods"
     },
     {
@@ -285,7 +269,6 @@
       "component": "TextField",
       "name": "submission.otherMethods",
       "placeholder": "Enter any additional methods used, if applicable",
-      "order": "16",
       "shortDescription": "Other methods"
     },
     {
@@ -293,7 +276,6 @@
       "id": "1591344209443",
       "component": "Select",
       "name": "submission.humanMRI",
-      "order": "17",
       "options": [
         {
           "label": "1T",
@@ -327,7 +309,6 @@
       "id": "1591345370930",
       "component": "TextField",
       "name": "submission.humanMRIother",
-      "order": "18",
       "validate": [],
       "validateValue": {
         "minChars": "10"
@@ -369,7 +350,6 @@
           "value": "LONI Pipeline"
         }
       ],
-      "order": "19",
       "shortDescription": "Processing packages"
     },
     {
@@ -377,15 +357,13 @@
       "id": "1591345560536",
       "component": "TextField",
       "name": "submission.otherPackages",
-      "shortDescription": "Other processing packages",
-      "order": "20"
+      "shortDescription": "Other processing packages"
     },
     {
       "title": "Provide references using author date format:",
       "id": "1591345620839",
       "component": "AbstractEditor",
       "name": "submission.references",
-      "order": "21",
       "shortDescription": "References"
     },
     {

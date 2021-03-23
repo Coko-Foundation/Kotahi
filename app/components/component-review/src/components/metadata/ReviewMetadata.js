@@ -80,17 +80,13 @@ const ReviewMetadata = ({ manuscript: rawManuscript }) => {
     submission: JSON.parse(rawManuscript.submission),
   }
 
-  const sortedFormElements = form.children.sort((a, b) =>
-    parseInt(a.order || '0', 10) > parseInt(b.order || '0', 10) ? 1 : -1,
-  )
-
   return (
     <SectionContent>
       <SectionHeader>
         <Title>Metadata</Title>
       </SectionHeader>
 
-      {sortedFormElements.map(element => (
+      {form.children.map(element => (
         <SectionRowGrid key={element.id}>
           <Heading>{element.shortDescription || element.title}</Heading>
           <Cell>{showFieldData(manuscript, element.name)}</Cell>

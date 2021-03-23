@@ -134,11 +134,13 @@ const composeValidate = (vld = [], valueField = {}) => value => {
 }
 
 const groupElements = els => {
+  // TODO is grouping ever used? Can we get rid of this function? Ordering is now redundant
   const grouped = groupBy(els, n => n.group || 'default')
 
   Object.keys(grouped).forEach(element => {
     grouped[element].sort(
-      (obj1, obj2) => parseInt(obj1.order, 10) - parseInt(obj2.order, 10),
+      (obj1, obj2) =>
+        parseInt(obj1.order || '0', 10) - parseInt(obj2.order || '0', 10),
     )
   })
 
@@ -146,7 +148,7 @@ const groupElements = els => {
   delete grouped.default
 
   Object.keys(grouped).forEach(element => {
-    const { order } = grouped[element][0]
+    const order = grouped[element][0].order ?? '0'
     const first = startArr.findIndex(elem => elem.order === order)
     startArr = startArr
       .slice(0, first)
