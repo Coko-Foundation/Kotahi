@@ -35,6 +35,7 @@ services:
       - ORCID_CLIENT_ID=${ORCID_CLIENT_ID}
       - ORCID_CLIENT_SECRET=${ORCID_CLIENT_SECRET}
       - USE_SANDBOXED_ORCID=${USE_SANDBOXED_ORCID:-false}
+      - INSTANCE_NAME=${INSTANCE_NAME:-elife}
 
   job-xsweet:
     image: pubsweet/job-xsweet:1.5.0
