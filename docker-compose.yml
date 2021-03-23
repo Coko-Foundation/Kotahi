@@ -24,6 +24,7 @@ services:
       - SERVER_HOST=server
       - SERVER_PORT=${SERVER_PORT:-3000}
       - PUBLIC_CLIENT_HOST=${PUBLIC_CLIENT_HOST:-0.0.0.0}
+      - INSTANCE_NAME=${INSTANCE_NAME:-elife}
     volumes:
       - ./app:/home/node/app/app
       - ./config:/home/node/app/config

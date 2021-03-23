@@ -225,7 +225,14 @@ const SubmitPage = ({ match, history }) => {
         input: JSON.stringify(delta),
       },
     })
-    history.push(`${urlFrag}/dashboard`)
+
+    if(process.env.INSTANCE_NAME === 'coko') {
+      history.push(`${urlFrag}/dashboard`)
+    }
+
+    if(process.env.INSTANCE_NAME === 'elife') {
+      history.push(`${urlFrag}/admin/manuscripts`)
+    }
   }
 
   const versions = gatherManuscriptVersions(manuscript)
