@@ -25,6 +25,7 @@ ARG server_port
 ARG client_protocol
 ARG client_host
 ARG client_port
+ARG instance_name
 
 ENV NODE_ENV=$node_env
 ENV SERVER_PROTOCOL=$server_protocol
@@ -33,6 +34,7 @@ ENV SERVER_PORT=$server_port
 ENV CLIENT_PROTOCOL=$client_protocol
 ENV CLIENT_HOST=$client_host
 ENV CLIENT_PORT=$client_port
+ENV INSTANCE_NAME=$instance_name
 
 RUN yarn webpack --config webpack/webpack.production.config.js
 
