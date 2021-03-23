@@ -1,8 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { unescape, groupBy, isArray, get, set, cloneDeep } from 'lodash'
-import { FieldArray } from 'formik'
+import { unescape, get, set } from 'lodash'
 import {
   TextField,
   RadioGroup,
@@ -133,100 +132,6 @@ const composeValidate = (vld = [], valueField = {}) => value => {
   return errors.length > 0 ? errors[0] : undefined
 }
 
-const groupElements = els => {
-  // TODO is grouping ever used? Can we get rid of this function? Ordering is now redundant
-  const grouped = groupBy(els, n => n.group || 'default')
-
-  Object.keys(grouped).forEach(element => {
-    grouped[element].sort(
-      (obj1, obj2) =>
-        parseInt(obj1.order || '0', 10) - parseInt(obj2.order || '0', 10),
-    )
-  })
-
-  let startArr = grouped.default
-  delete grouped.default
-
-  Object.keys(grouped).forEach(element => {
-    const order = grouped[element][0].order ?? '0'
-    const first = startArr.findIndex(elem => elem.order === order)
-    startArr = startArr
-      .slice(0, first)
-      .concat([grouped[element]])
-      .concat(startArr.slice(first))
-  })
-  return startArr
-}
-
-const renderArray = (elementsComponentArray, onChange) => ({
-  form: { values, setTouched },
-  replace,
-  name,
-}) =>
-  get(values, name).map((elValues, index) => {
-    const element = elementsComponentArray.find(elv =>
-      Object.values(elValues).includes(elv.type),
-    )
-
-    return (
-      <Section
-        cssOverrides={JSON.parse(element.sectioncss || '{}')}
-        key={`${element.id}`}
-      >
-        <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
-        {/* <p>{JSON.stringify(values)}</p> */}
-        <ValidatedFieldFormik
-          {...rejectProps(element, [
-            'component',
-            'title',
-            'sectioncss',
-            'parse',
-            'format',
-            'validate',
-            'validateValue',
-            'description',
-            'order',
-            'value',
-            'shortDescription',
-          ])}
-          aria-label={element.shortDescription}
-          component={elements[element.component]}
-          data-testid={element.name}
-          key={`notes-validate-${element.id}`}
-          name={`${name}.${index}.content`}
-          onChange={value => {
-            const data = {
-              notesType: element.type,
-              content: value,
-            }
-
-            replace(index, data, `${name}.[${index}]`, true)
-            const notes = cloneDeep(values)
-            set(notes, `${name}.[${index}]`, data)
-            onChange(notes.meta.notes, `${name}`)
-          }}
-          readonly={false}
-          setTouched={setTouched}
-          validate={composeValidate(element.validate, element.validateValue)}
-          values={values}
-        />
-        <SubNote dangerouslySetInnerHTML={createMarkup(element.description)} />
-      </Section>
-    )
-  })
-
-const ElementComponentArray = ({ elementsComponentArray, onChange }) => (
-  <FieldArray
-    name={elementsComponentArray[0].group}
-    render={renderArray(elementsComponentArray, onChange)}
-  />
-)
-
-ElementComponentArray.propTypes = {
-  elementsComponentArray: PropTypes.arrayOf(PropTypes.object).isRequired,
-  onChange: PropTypes.func.isRequired,
-}
-
 const FormTemplate = ({
   form,
   handleSubmit,
@@ -278,95 +183,83 @@ const FormTemplate = ({
         )}
       />
       <form onSubmit={handleSubmit}>
-        {groupElements(form.children || []).map((element, i) =>
-          !isArray(element) ? (
-            <Section
-              cssOverrides={JSON.parse(element.sectioncss || '{}')}
-              key={`${element.id}`}
-            >
-              {/* <p>{JSON.stringify(element)}</p> */}
-              <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
-              {element.component === 'SupplementaryFiles' && (
-                <FilesUpload
-                  containerId={manuscript.id}
-                  containerName="manuscript"
-                  fileType="supplementary"
-                  onChange={onChange}
-                />
-              )}
-              {element.component === 'VisualAbstract' && (
-                <FilesUpload
-                  accept="image/*"
-                  containerId={manuscript.id}
-                  containerName="manuscript"
-                  fileType="visualAbstract"
-                  multiple={false}
-                  onChange={onChange}
-                />
-              )}
-              {element.component === 'AuthorsInput' && (
-                <AuthorsInput data-testid={element.name} onChange={onChange} />
-              )}
-              {element.component !== 'AuthorsInput' &&
-                element.component !== 'SupplementaryFiles' &&
-                element.component !== 'VisualAbstract' && (
-                  <ValidatedFieldFormik
-                    aria-label={element.placeholder || element.title}
-                    component={elements[element.component]}
-                    data-testid={element.name} // TODO: Improve this
-                    key={`validate-${element.id}`}
-                    name={element.name}
-                    onChange={value => {
-                      // TODO: Perhaps split components remove conditions here
-                      let val
-
-                      if (value.target) {
-                        val = value.target.value
-                      } else if (value.value) {
-                        val = value.value
-                      } else {
-                        val = value
-                      }
-
-                      setFieldValue(element.name, val, true)
-                      onChange(val, element.name)
-                    }}
-                    readonly={false}
-                    setTouched={setTouched}
-                    {...rejectProps(element, [
-                      'component',
-                      'title',
-                      'sectioncss',
-                      'parse',
-                      'format',
-                      'validate',
-                      'validateValue',
-                      'description',
-                      'shortDescription',
-                      'order',
-                    ])}
-                    validate={composeValidate(
-                      element.validate,
-                      element.validateValue,
-                    )}
-                    values={values}
-                  />
-                )}
-              <SubNote
-                dangerouslySetInnerHTML={createMarkup(element.description)}
+        {(form.children || []).map((element, i) => (
+          <Section
+            cssOverrides={JSON.parse(element.sectioncss || '{}')}
+            key={`${element.id}`}
+          >
+            <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
+            {element.component === 'SupplementaryFiles' && (
+              <FilesUpload
+                containerId={manuscript.id}
+                containerName="manuscript"
+                fileType="supplementary"
+                onChange={onChange}
               />
-            </Section>
-          ) : (
-            <ElementComponentArray
-              elementsComponentArray={element}
-              // eslint-disable-next-line
-              key={i}
-              onChange={onChange}
-              setFieldValue={setFieldValue}
-              setTouched={setTouched}
+            )}
+            {element.component === 'VisualAbstract' && (
+              <FilesUpload
+                accept="image/*"
+                containerId={manuscript.id}
+                containerName="manuscript"
+                fileType="visualAbstract"
+                multiple={false}
+                onChange={onChange}
+              />
+            )}
+            {element.component === 'AuthorsInput' && (
+              <AuthorsInput data-testid={element.name} onChange={onChange} />
+            )}
+            {element.component !== 'AuthorsInput' &&
+              element.component !== 'SupplementaryFiles' &&
+              element.component !== 'VisualAbstract' && (
+                <ValidatedFieldFormik
+                  aria-label={element.placeholder || element.title}
+                  component={elements[element.component]}
+                  data-testid={element.name} // TODO: Improve this
+                  key={`validate-${element.id}`}
+                  name={element.name}
+                  onChange={value => {
+                    // TODO: Perhaps split components remove conditions here
+                    let val
+
+                    if (value.target) {
+                      val = value.target.value
+                    } else if (value.value) {
+                      val = value.value
+                    } else {
+                      val = value
+                    }
+
+                    setFieldValue(element.name, val, true)
+                    onChange(val, element.name)
+                  }}
+                  readonly={false}
+                  setTouched={setTouched}
+                  {...rejectProps(element, [
+                    'component',
+                    'title',
+                    'sectioncss',
+                    'parse',
+                    'format',
+                    'validate',
+                    'validateValue',
+                    'description',
+                    'shortDescription',
+                    'order',
+                  ])}
+                  validate={composeValidate(
+                    element.validate,
+                    element.validateValue,
+                  )}
+                  values={values}
+                />
+              )}
+            <SubNote
+              dangerouslySetInnerHTML={createMarkup(element.description)}
             />
-          ),
-        )}
+          </Section>
+        ))}
 
         {filterFileManuscript(values.files || []).length > 0 ? (
           <Section id="files.manuscript">
@@ -430,8 +323,8 @@ FormTemplate.propTypes = {
         ),
       }).isRequired,
     ).isRequired,
-    popuptitle: PropTypes.string.isRequired,
-    popupdescription: PropTypes.string.isRequired,
+    popuptitle: PropTypes.string,
+    popupdescription: PropTypes.string,
     haspopup: PropTypes.string.isRequired, // bool as string
   }).isRequired,
   handleSubmit: PropTypes.func.isRequired,
