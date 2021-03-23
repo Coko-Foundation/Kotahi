@@ -7,10 +7,6 @@ const textfield = {
   component: 'TextField',
 }
 
-const orderfield = {
-  component: 'TextField',
-}
-
 const optionfield = {
   component: 'OptionsField',
 }
@@ -78,7 +74,6 @@ const elements = {
     name: textfield,
     description: editorfield,
     shortDescription: textfield,
-    order: orderfield,
     validate,
   },
   VisualAbstract: {
@@ -87,14 +82,12 @@ const elements = {
     name: textfield,
     description: editorfield,
     shortDescription: textfield,
-    order: orderfield,
     validate,
   },
   AuthorsInput: {
     id: textfield,
     title: textfield,
     name: textfield,
-    order: orderfield,
     shortDescription: textfield,
     validate,
   },
@@ -102,7 +95,6 @@ const elements = {
     id: textfield,
     title: textfield,
     name: textfield,
-    order: orderfield,
     shortDescription: textfield,
     validate,
   },
@@ -112,7 +104,6 @@ const elements = {
     name: textfield,
     placeholder: textfield,
     description: editorfield,
-    order: orderfield,
     validate,
     shortDescription: textfield,
   },
@@ -123,7 +114,6 @@ const elements = {
     placeholder: textfield,
     description: editorfield,
     shortDescription: textfield,
-    order: orderfield,
     validate,
     parse: {
       component: 'Menu',
@@ -164,7 +154,6 @@ const elements = {
     name: textfield,
     description: editorfield,
     options: optionfield,
-    order: orderfield,
     shortDescription: textfield,
     validate,
   },
@@ -175,7 +164,6 @@ const elements = {
     placeholder: textfield,
     description: editorfield,
     options: optionfield,
-    order: orderfield,
     shortDescription: textfield,
     validate,
   },
@@ -185,7 +173,6 @@ const elements = {
     name: textfield,
     description: editorfield,
     options: optionfield,
-    order: orderfield,
     inline: radiofield,
     sectioncss: textarea,
     shortDescription: textfield,

@@ -9,9 +9,11 @@ stages:
   - test
 
 build:
-  image: docker:19.03.13
+  image: docker:20.10.5
+  variables:
+    DOCKER_BUILDKIT: 1
   services:
-    - docker:19.03.13-dind
+    - docker:20.10.5-dind
   stage: build
   before_script:
     - cp app/brand-instances-configs/elife.json app/brandConfig.json
@@ -20,8 +22,11 @@ build:
     - docker login -u $DOCKERHUB_USERNAME_ELIFE -p $DOCKERHUB_PASSWORD_ELIFE
     - docker pull $IMAGE_ORG/$IMAGE_NAME:latest || true
     - docker build --file ./Dockerfile-production --cache-from $CI_REGISTRY_IMAGE:latest --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME:latest .
+    - docker build --file ./Dockerfile-ci --cache-from $IMAGE_ORG/$IMAGE_NAME-dev:latest --tag $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME-dev:latest .
     - docker push $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
     - docker push $IMAGE_ORG/$IMAGE_NAME:latest
+    - docker push $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+    - docker push $IMAGE_ORG/$IMAGE_NAME-dev:latest
 
 deploy:
   stage: deploy
@@ -42,15 +47,14 @@ deploy:
     - |
       ssh ubuntu@$ELIFE_SERVER_IP "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
       sudo docker pull $IMAGE_ORG/$IMAGE_NAME:latest &&
-      sudo supervisorctl restart kotahi 
-      #sudo supervisorctl stop kotahi &&
-      #cd /home/ubuntu/kotahi &&
-      #sudo docker-compose down &&
-      #sudo supervisorctl start kotahi"
+      sudo supervisorctl stop kotahi &&
+      cd /home/ubuntu/kotahi &&
+      sudo docker-compose down &&
+      sudo supervisorctl start kotahi"
 
 lint:
   allow_failure: true
-  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
   variables:
     GIT_STRATEGY: none
@@ -59,7 +63,7 @@ lint:
     - npm run lint
 
 test-chrome:
-  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
   variables:
     GIT_STRATEGY: none
@@ -75,7 +79,7 @@ test-chrome:
     - postgres
   script:
     - cd ${HOME}
-    - apk add --no-cache postgresql-client
+    - apt-get -y install postgresql-client
     # this is needed for pgboss initial setup
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
@@ -85,7 +89,7 @@ test-chrome:
 
 test-firefox:
   allow_failure: true # at this point Cypress' support for Firefox is not stable
-  image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
   variables:
     GIT_STRATEGY: none
@@ -100,11 +104,10 @@ test-firefox:
     - postgres
   script:
     - cd ${HOME}
-    - apk add --no-cache postgresql-client
+    - apt-get -y install postgresql-client
     # this is needed for pgboss initial setup
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
     - cp .env.example .env
     # specify host here else it confuses the linked postgres image
     - POSTGRES_HOST=postgres yarn test:all:firefox
-

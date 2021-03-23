@@ -1,7 +1,7 @@
 # IMAGE FOR BUILDING
 FROM node:15.11-alpine as build
 
-RUN apk add --no-cache git python make g++ bash su-exec
+RUN apk add --no-cache git python make g++ bash 
 
 WORKDIR /home/node/app
 
@@ -42,7 +42,7 @@ FROM node:15.11-alpine as server
 WORKDIR /home/node/app
 
 RUN chown -R node:node .
-RUN apk add bash coreutils
+RUN apk add bash coreutils postgresql-client
 USER node
 
 COPY --chown=node:node ./config ./config
