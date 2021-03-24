@@ -1,3 +1,4 @@
+/* eslint-disable */
 const path = require('path')
 const logger = require('winston')
 const { deferConfig } = require('config/defer')
@@ -6,6 +7,13 @@ const components = require('./components.json')
 const formComponents = require('./form-components.json')
 const journal = require('./journal')
 
+console.log('logging in config default')
+console.log('process.env')
+console.log(process.env)
+console.log('process.env.INSTANCE_NAME')
+console.log(process.env.INSTANCE_NAME)
+console.log('typeof instance name')
+console.log(typeof process.env.INSTANCE_NAME)
 module.exports = {
   teams: {
     seniorEditor: {
@@ -39,12 +47,23 @@ module.exports = {
     // path: path.resolve(__dirname, formTemplatePath[process.env.INSTANCE_NAME]),
     path: deferConfig(cfg => {
       const formTemplatePath = {
-        http: '../app/storage/forms',
-        https: '../app/storage/forms-coko',
+        elife: '../app/storage/forms',
+        coko: '../app/storage/forms-coko',
       }
 
+      console.log('pubsweet-component-xpub-formbuilder')
+      console.log('process.env')
+      console.log(process.env)
+      console.log('process.env.INSTANCE_NAME')
+      console.log(process.env.INSTANCE_NAME)
+      console.log('typeof instance name')
+      console.log(typeof process.env.INSTANCE_NAME)
+
       const pathToFormTemplateFolder =
-        formTemplatePath[process.env.CLIENT_PROTOCOL]
+        formTemplatePath[String(process.env.INSTANCE_NAME)]
+
+      console.log('pathToFormTemplateFolder')
+      console.log(pathToFormTemplateFolder)
 
       return path.resolve(__dirname, pathToFormTemplateFolder)
     }),
