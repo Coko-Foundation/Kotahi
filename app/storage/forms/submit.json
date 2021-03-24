@@ -8,7 +8,7 @@
       "id": "1616424088561",
       "component": "TextField",
       "name": "submission.articleId",
-      "description": "<p>undefined</p>",
+      "description": "",
       "validate": [
         {
           "value": "required",
@@ -74,7 +74,12 @@
       "id": "1616424092971",
       "component": "Select",
       "name": "submission.evalType",
-      "validate": []
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required"
+        }
+      ]
     },
     {
       "options": [],
