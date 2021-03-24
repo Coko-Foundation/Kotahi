@@ -1,6 +1,7 @@
 variables:
   IMAGE_ORG: kotahi
   IMAGE_NAME: kotahi
+  INSTANCE_NAME: elife
   ELIFE_SERVER_IP: 54.87.88.111
 
 stages:
@@ -88,6 +89,7 @@ test-chrome:
     PGPASSWORD: kotahidev
     # this is used to ignore self signed certs
     START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: $INSTANCE_NAME
   services:
     - postgres
   script:
@@ -113,6 +115,7 @@ test-firefox:
     PGUSER: kotahidev
     PGPASSWORD: kotahidev
     START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: $INSTANCE_NAME
   services:
     - postgres
   script:
