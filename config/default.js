@@ -7,8 +7,8 @@ const formComponents = require('./form-components.json')
 const journal = require('./journal')
 
 const formTemplatePath = {
-  elife: '../app/storage/forms',
-  coko: '../app/storage/forms-coko',
+  http: '../app/storage/forms',
+  https: '../app/storage/forms-coko',
 }
 
 module.exports = {
@@ -45,7 +45,7 @@ module.exports = {
     path: deferConfig(cfg => {
       return path.resolve(
         __dirname,
-        formTemplatePath[process.env.INSTANCE_NAME],
+        formTemplatePath[process.env.CLIENT_PROTOCOL],
       )
     }),
     components: formComponents,
