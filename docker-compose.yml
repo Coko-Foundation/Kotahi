@@ -75,7 +75,7 @@ services:
       - ORCID_AUTH_REDIRECT_PORT=${ORCID_AUTH_REDIRECT_PORT:-4000}
       - ORCID_AUTH_REDIRECT_HOSTNAME=${ORCID_AUTH_REDIRECT_HOSTNAME:-localhost}
       - ORCID_AUTH_REDIRECT_PROTOCOL=${ORCID_AUTH_REDIRECT_PROTOCOL:-https}
-      - INSTANCE_NAME=${INSTANCE_NAME:-https}
+      - INSTANCE_NAME=${INSTANCE_NAME:-elife}
     volumes:
       - ./config:/home/node/app/config
       - ./server:/home/node/app/server
