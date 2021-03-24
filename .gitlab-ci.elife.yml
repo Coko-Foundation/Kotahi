@@ -24,12 +24,12 @@ build:
       docker pull $IMAGE_ORG/$IMAGE_NAME:latest || true
       docker build \
         --build-arg node_env=production \
-        --build-arg server_protocol='' \
-        --build-arg server_host='' \
+        --build-arg server_protocol='http' \
+        --build-arg server_host='0.0.0.0' \
         --build-arg server_port=3000 \
-        --build-arg client_protocol='' \
-        --build-arg client_host='' \
-        --build-arg client_port='' \
+        --build-arg client_protocol='https' \
+        --build-arg client_host='elife.kotahi.cloud' \
+        --build-arg client_port='4000' \
         --build-arg instance_name=elife \ 
         --file ./Dockerfile-production \
         --cache-from $CI_REGISTRY_IMAGE:latest \
