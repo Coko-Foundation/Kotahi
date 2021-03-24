@@ -17,6 +17,7 @@ build:
   stage: build
   before_script:
     - cp app/brand-instances-configs/elife.json app/brandConfig.json
+    - export INSTANCE_NAME=elife
   script:
     - if [ -z "$DOCKERHUB_USERNAME_ELIFE" ] || [ -z "$DOCKERHUB_PASSWORD_ELIFE" ]; then echo "Not pushing" && exit 0; fi
     - docker login -u $DOCKERHUB_USERNAME_ELIFE -p $DOCKERHUB_PASSWORD_ELIFE

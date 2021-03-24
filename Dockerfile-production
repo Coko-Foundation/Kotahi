@@ -34,7 +34,7 @@ ENV SERVER_PORT=$server_port
 ENV CLIENT_PROTOCOL=$client_protocol
 ENV CLIENT_HOST=$client_host
 ENV CLIENT_PORT=$client_port
-ENV INSTANCE_NAME=elife
+ENV INSTANCE_NAME=$instance_name
 
 RUN yarn webpack --config webpack/webpack.production.config.js
 
