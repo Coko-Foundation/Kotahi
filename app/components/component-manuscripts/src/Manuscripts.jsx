@@ -1,6 +1,8 @@
 import React, { useState } from 'react'
 import gql from 'graphql-tag'
 import { useQuery } from '@apollo/client'
+import { Button } from '@pubsweet/ui'
+import config from 'config'
 
 import Manuscript from './Manuscript'
 import {
@@ -15,7 +17,9 @@ import {
   Spinner,
   Pagination,
 } from './style'
+import { HeadingWithAction } from '../../shared'
 
+const urlFrag = config.journal.metadata.toplevel_urlfragment
 const GET_MANUSCRIPTS = gql`
   query Manuscripts(
     $sort: String
@@ -72,7 +76,7 @@ const GET_MANUSCRIPTS = gql`
   }
 `
 
-const Manuscripts = () => {
+const Manuscripts = ({ history, ...props }) => {
   const SortHeader = ({ thisSortName, children }) => {
     const changeSort = () => {
       if (sortName !== thisSortName) {
@@ -127,7 +131,23 @@ const Manuscripts = () => {
 
   return (
     <Container>
-      <Heading>Manuscripts</Heading>
+      
+      {process.env.INSTANCE_NAME === 'elife' && 
+      <HeadingWithAction>
+        <Heading>Manuscripts</Heading>
+        <Button
+            onClick={() => history.push(`${urlFrag}/newSubmission`)}
+            primary
+          >
+            ＋ New submission
+        </Button>
+      </HeadingWithAction>
+      }
+
+      {process.env.INSTANCE_NAME === 'coko' && 
+        <Heading>Manuscripts</Heading>
+      }
+
       <Content>
         <Table>
           <Header>
