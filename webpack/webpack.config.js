@@ -42,6 +42,9 @@ module.exports = webpackEnv => {
       hot: true,
       port: devServerPort,
       publicPath: '/',
+      watchOptions: {
+        poll: true,
+      },
       proxy: {
         '/api': serverUrlWithProtocol,
         '/auth': serverUrlWithProtocol,
