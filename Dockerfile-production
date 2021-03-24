@@ -25,6 +25,7 @@ ARG server_port
 ARG client_protocol
 ARG client_host
 ARG client_port
+ARG instance_name
 
 ENV NODE_ENV=$node_env
 ENV SERVER_PROTOCOL=$server_protocol
