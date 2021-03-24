@@ -22,15 +22,7 @@ build:
        if [ -z "$DOCKERHUB_USERNAME_ELIFE" ] || [ -z "$DOCKERHUB_PASSWORD_ELIFE" ]; then echo "Not pushing" && exit 0; fi
        docker login -u $DOCKERHUB_USERNAME_ELIFE -p $DOCKERHUB_PASSWORD_ELIFE
        docker pull $IMAGE_ORG/$IMAGE_NAME:latest || true
-       docker build --build-arg 
-       node_env=production 
-       server_protocol='http' 
-       server_host='0.0.0.0' 
-       server_port=3000 
-       client_protocol='https' 
-       client_host='elife.kotahi.cloud' 
-       client_port='4000' 
-       instance_name=elife 
+       docker build --build-arg node_env=production server_protocol=http server_host=0.0.0.0 server_port=3000 client_protocol=https client_host='elife.kotahi.cloud' client_port=4000 instance_name=elife 
        --file ./Dockerfile-production 
        --cache-from $CI_REGISTRY_IMAGE:latest 
        --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA 
