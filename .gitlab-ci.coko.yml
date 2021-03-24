@@ -48,7 +48,7 @@ test-chrome:
     PGUSER: kotahidev
     PGPASSWORD: kotahidev
     # this is used to ignore self signed certs
-    START_SERVER_AND_TEST_INSECURE: 1
+    #START_SERVER_AND_TEST_INSECURE: 1
   services:
     - postgres
   script:
@@ -73,7 +73,7 @@ test-firefox:
     # used by psql
     PGUSER: kotahidev
     PGPASSWORD: kotahidev
-    START_SERVER_AND_TEST_INSECURE: 1
+    #START_SERVER_AND_TEST_INSECURE: 1
   services:
     - postgres
   script:
