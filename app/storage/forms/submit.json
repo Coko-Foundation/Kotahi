@@ -53,7 +53,7 @@
           "label": "Required"
         }
       ],
-      "shortDescription": "enter some description"
+      "shortDescription": ""
     },
     {
       "options": [
@@ -83,7 +83,8 @@
       "component": "TextField",
       "name": "submission.creator",
       "validate": []
-    }],
+    }
+  ],
   "description": "<p>Aperture is now accepting Research Object Submissions. Please fill out the form below to complete your submission.</p>",
   "haspopup": "true",
   "popuptitle": "By submitting the manuscript, you agree to the following statements.",
