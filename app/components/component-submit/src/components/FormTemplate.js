@@ -18,6 +18,7 @@ import AuthorsInput from './AuthorsInput'
 import LinksInput from './LinksInput'
 import ValidatedFieldFormik from './ValidatedField'
 import Confirm from './Confirm'
+import { articleStatuses } from '../../../../globals'
 
 const Intro = styled.div`
   font-style: italic;
@@ -148,6 +149,7 @@ const FormTemplate = ({
   submitSubmission,
   errors,
   validateForm,
+  match,
 }) => {
   const submitButton = text => (
     <div>
@@ -157,7 +159,7 @@ const FormTemplate = ({
 
           // If there are errors, do a fake submit
           // to focus on the error
-          if (hasErrors) {
+          if (hasErrors || values.status === articleStatuses.evaluated || values.status === articleStatuses.submitted) {
             handleSubmit()
           } else {
             toggleConfirming()
@@ -272,16 +274,35 @@ const FormTemplate = ({
           </Section>
         ) : null}
 
-        {!['submitted', 'revise'].includes(values.status) &&
-          form.haspopup === 'false' && (
-            <Button onClick={() => handleSubmit()} primary type="submit">
-              Submit your research object
-            </Button>
-          )}
+        {process.env.INSTANCE_NAME === 'coko' &&
+          <>
+            {!['submitted', 'revise'].includes(values.status) &&
+              form.haspopup === 'false' && (
+                <Button onClick={() => handleSubmit()} primary type="submit">
+                  Submit your research object
+                </Button>
+              )}
 
-        {!['submitted', 'revise'].includes(values.status) &&
-          form.haspopup === 'true' &&
-          submitButton('Submit your research object')}
+            {!['submitted', 'revise'].includes(values.status) &&
+              form.haspopup === 'true' &&
+              submitButton('Submit your research object')}
+          </>
+        }
+
+        {process.env.INSTANCE_NAME === 'elife' &&
+          <>
+            {!['revise'].includes(values.status) &&
+              form.haspopup === 'false' && (
+                <Button onClick={() => handleSubmit()} primary type="submit">
+                  Submit your research object
+                </Button>
+              )}
+
+            {!['revise'].includes(values.status) &&
+              form.haspopup === 'true' &&
+              submitButton(match.url.includes('/evaluation') ? 'Submit Evaluation' : 'Submit your research object')}
+          </>
+        }
 
         {values.status === 'revise' && submitButton('Submit your revision')}
 

@@ -20,6 +20,7 @@ import {
 } from './style'
 
 import { convertTimestampToDate } from '../../../shared/time-formatting'
+import { articleStatuses } from '../../../globals'
 
 const DELETE_MANUSCRIPT = gql`
   mutation($id: ID!) {
@@ -64,9 +65,16 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
         )}
       </Cell>
       <LastCell>
-        <Action to={`${urlFrag}/versions/${manuscriptId}/decision`}>
-          Control
-        </Action>
+        {process.env.INSTANCE_NAME === 'elife' && [articleStatuses.submitted, articleStatuses.evaluated].includes(manuscript.status) &&
+          <Action to={`${urlFrag}/versions/${manuscriptId}/evaluation`}>
+            Evaluation
+          </Action>
+        }
+        {process.env.INSTANCE_NAME === 'coko' && 
+          <Action to={`${urlFrag}/versions/${manuscriptId}/decision`}>
+            Control
+          </Action>
+        }
         <Action to={`${urlFrag}/versions/${manuscriptId}/manuscript`}>
           View
         </Action>

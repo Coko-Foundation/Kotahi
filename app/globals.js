@@ -83,3 +83,9 @@ export const HorizontalRule = styled(FlexRow)`
     margin: 0 16px;
   }
 `
+
+export const articleStatuses = {
+  submitted: 'submitted',
+  evaluated: 'evaluated',
+  new: 'new'
+}

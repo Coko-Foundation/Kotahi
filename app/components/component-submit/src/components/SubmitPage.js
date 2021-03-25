@@ -217,7 +217,7 @@ const SubmitPage = ({ match, history }) => {
   }
 
   const onSubmit = async versionId => {
-    const delta = { status: 'submitted' }
+    const delta = { status: match.url.includes('/evaluation') ? 'evaluated' : 'submitted' }
 
     await submit({
       variables: {
@@ -247,6 +247,7 @@ const SubmitPage = ({ match, history }) => {
       parent={manuscript}
       toggleConfirming={toggleConfirming}
       versions={versions}
+      match={match}
     />
   )
 }

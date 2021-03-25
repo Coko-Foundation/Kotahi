@@ -62,6 +62,7 @@ const Submit = ({
   parent,
   onChange,
   onSubmit,
+  match,
 }) => {
   const decisionSections = []
 
@@ -82,7 +83,7 @@ const Submit = ({
     const editorSection = addEditor(manuscript, 'Manuscript text')
     let decisionSection
 
-    if (['new', 'revising'].includes(manuscript.status)) {
+    if (['new', 'revising', 'submitted', 'evaluated'].includes(manuscript.status)) {
       Object.assign(submissionValues, JSON.parse(manuscript.submission))
 
       const versionValues = {
@@ -118,6 +119,7 @@ const Submit = ({
                   {...formProps}
                   form={form}
                   manuscript={manuscript}
+                  match={match}
                 />
               )}
             </Formik>
