@@ -1,7 +1,7 @@
-import { ControlPage } from "../page-object/control-page"
-import { DashboardPage } from "../page-object/dashboard-page"
-import { Menu } from "../page-object/page-component/menu"
-import { PublicationPage } from "../page-object/publication-page"
+import { ControlPage } from "../../page-object/control-page"
+import { DashboardPage } from "../../page-object/dashboard-page"
+import { Menu } from "../../page-object/page-component/menu"
+import { PublicationPage } from "../../page-object/publication-page"
 
 describe('Publishing a submission', () => {
   it('publish an accepted submission', () => {

@@ -1,6 +1,6 @@
-import { DashboardPage } from "../page-object/dashboard-page";
-import { NewSubmissionPage } from "../page-object/new-submission-page";
-import { SubmissionFormPage } from "../page-object/submission-form-page";
+import { DashboardPage } from "../../page-object/dashboard-page";
+import { NewSubmissionPage } from "../../page-object/new-submission-page";
+import { SubmissionFormPage } from "../../page-object/submission-form-page";
 
 describe('Submission with errors test', () => {
   it('can submit a URL and some metadata', () => {

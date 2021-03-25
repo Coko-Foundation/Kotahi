@@ -1,11 +1,11 @@
 /* eslint-disable jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
-import { DashboardPage } from '../page-object/dashboard-page'
-import { NewSubmissionPage } from '../page-object/new-submission-page'
-import { SubmissionFormPage } from '../page-object/submission-form-page'
-import { Menu } from '../page-object/page-component/menu'
-import { ManuscriptsPage } from '../page-object/manuscripts-page'
-import { ControlPage } from '../page-object/control-page'
+import { DashboardPage } from '../../page-object/dashboard-page'
+import { NewSubmissionPage } from '../../page-object/new-submission-page'
+import { SubmissionFormPage } from '../../page-object/submission-form-page'
+import { Menu } from '../../page-object/page-component/menu'
+import { ManuscriptsPage } from '../../page-object/manuscripts-page'
+import { ControlPage } from '../../page-object/control-page'
 
 describe('URL submission test', () => {
   it('can submit a URL and some metadata', () => {

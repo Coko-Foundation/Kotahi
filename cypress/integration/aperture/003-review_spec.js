@@ -1,7 +1,7 @@
 /* eslint-disable jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
-import { DashboardPage } from '../page-object/dashboard-page'
-import { ReviewPage } from '../page-object/review-page'
+import { DashboardPage } from '../../page-object/dashboard-page'
+import { ReviewPage } from '../../page-object/review-page'
 
 // login as reviewer, accept and do review, leave comments and submit
 const doReview = name => {

@@ -1,5 +1,5 @@
-import { ControlPage } from "../page-object/control-page"
-import { DashboardPage } from "../page-object/dashboard-page"
+import { ControlPage } from "../../page-object/control-page"
+import { DashboardPage } from "../../page-object/dashboard-page"
 
 describe('Completing a review', () => {
   it('accept and do a review', () => {

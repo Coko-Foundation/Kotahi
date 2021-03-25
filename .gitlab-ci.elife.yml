@@ -99,7 +99,137 @@ test-chrome:
     # use the example env for tests
     - cp .env.example .env
     # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:chrome
+    - POSTGRES_HOST=postgres yarn test:all:chrome:elife
+
+test-chrome-samsung:
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
+    # used by psql
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
+    # this is used to ignore self signed certs
+    START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: elife
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+    # use the example env for tests
+    - cp .env.example .env
+    # specify host here else it confuses the linked postgres image
+    - POSTGRES_HOST=postgres yarn test:all:chrome:elife:samsung
+
+test-chrome-samsung-tablet:
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
+    # used by psql
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
+    # this is used to ignore self signed certs
+    START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: elife
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+    # use the example env for tests
+    - cp .env.example .env
+    # specify host here else it confuses the linked postgres image
+    - POSTGRES_HOST=postgres yarn test:all:chrome:elife:samsung:tablet
+
+test-chrome-iPhone:
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
+    # used by psql
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
+    # this is used to ignore self signed certs
+    START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: elife
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+    # use the example env for tests
+    - cp .env.example .env
+    # specify host here else it confuses the linked postgres image
+    - POSTGRES_HOST=postgres yarn test:all:chrome:elife:iPhone
+
+test-chrome-iPhone-tablet:
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
+    # used by psql
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
+    # this is used to ignore self signed certs
+    START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: elife
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+    # use the example env for tests
+    - cp .env.example .env
+    # specify host here else it confuses the linked postgres image
+    - POSTGRES_HOST=postgres yarn test:all:chrome:elife:iPhone:tablet
+
+test-chrome-hd-laptop:
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
+    # used by psql
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
+    # this is used to ignore self signed certs
+    START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: elife
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+    # use the example env for tests
+    - cp .env.example .env
+    # specify host here else it confuses the linked postgres image
+    - POSTGRES_HOST=postgres yarn test:all:chrome:elife:hd:laptop
 
 test-firefox:
   allow_failure: true # at this point Cypress' support for Firefox is not stable
@@ -125,4 +255,134 @@ test-firefox:
     # use the example env for tests
     - cp .env.example .env
     # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:firefox
+    - POSTGRES_HOST=postgres yarn test:all:firefox:elife
+
+test-firefox-samsung:
+  allow_failure: true # at this point Cypress' support for Firefox is not stable
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
+    # used by psql
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
+    START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: elife
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+    # use the example env for tests
+    - cp .env.example .env
+    # specify host here else it confuses the linked postgres image
+    - POSTGRES_HOST=postgres yarn test:all:firefox:elife:samsung
+
+test-firefox-samsung-tablet:
+  allow_failure: true # at this point Cypress' support for Firefox is not stable
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
+    # used by psql
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
+    START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: elife
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+    # use the example env for tests
+    - cp .env.example .env
+    # specify host here else it confuses the linked postgres image
+    - POSTGRES_HOST=postgres yarn test:all:firefox:elife:samsung:tablet
+
+test-firefox-iPhone:
+  allow_failure: true # at this point Cypress' support for Firefox is not stable
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
+    # used by psql
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
+    START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: elife
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+    # use the example env for tests
+    - cp .env.example .env
+    # specify host here else it confuses the linked postgres image
+    - POSTGRES_HOST=postgres yarn test:all:firefox:elife:iPhone
+
+test-firefox-iPhone-tablet:
+  allow_failure: true # at this point Cypress' support for Firefox is not stable
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
+    # used by psql
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
+    START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: elife
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+    # use the example env for tests
+    - cp .env.example .env
+    # specify host here else it confuses the linked postgres image
+    - POSTGRES_HOST=postgres yarn test:all:firefox:elife:iPhone:tablet
+
+test-firefox-hd-laptop:
+  allow_failure: true # at this point Cypress' support for Firefox is not stable
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
+    # used by psql
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
+    START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: elife
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+    # use the example env for tests
+    - cp .env.example .env
+    # specify host here else it confuses the linked postgres image
+    - POSTGRES_HOST=postgres yarn test:all:firefox:elife:hd:laptop

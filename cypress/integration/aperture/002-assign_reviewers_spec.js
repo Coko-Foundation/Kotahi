@@ -1,7 +1,7 @@
-import { ControlPage } from "../page-object/control-page"
-import { DashboardPage } from "../page-object/dashboard-page"
-import { Menu } from "../page-object/page-component/menu"
-import { ReviewersPage } from "../page-object/reviewers-page"
+import { ControlPage } from "../../page-object/control-page"
+import { DashboardPage } from "../../page-object/dashboard-page"
+import { Menu } from "../../page-object/page-component/menu"
+import { ReviewersPage } from "../../page-object/reviewers-page"
 // const login = name => {
 //   cy.task('createToken', name).then(token => {
 //     cy.setToken(token)

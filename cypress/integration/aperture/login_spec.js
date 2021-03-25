@@ -1,5 +1,5 @@
-import { DashboardPage } from "../page-object/dashboard-page"
-import { Menu } from "../page-object/page-component/menu"
+import { DashboardPage } from "../../page-object/dashboard-page"
+import { Menu } from "../../page-object/page-component/menu"
 
 describe('Login test', () => {
   it('Can log in as admin (and logout)', () => {

@@ -1,5 +1,5 @@
-import { FormsPage } from '../page-object/forms-page'
-import { Menu } from '../page-object/page-component/menu'
+import { FormsPage } from '../../page-object/forms-page'
+import { Menu } from '../../page-object/page-component/menu'
 
 describe('Form builder', () => {
   it('views a form field', () => {
