@@ -82,9 +82,17 @@ module.exports = app => {
     }),
     (req, res) => {
       const jwt = authentication.token.create(req.user)
+
+      const redirectURLforSubsequentLogins =
+        process.env.INSTANCE_NAME === 'elife'
+          ? '/kotahi/admin/manuscripts'
+          : '/kotahi/dashboard'
+
       res.redirect(
         `/login?token=${jwt}&redirectUrl=${
-          req.user.firstLogin ? '/kotahi/profile' : '/kotahi/dashboard'
+          req.user.firstLogin
+            ? '/kotahi/profile'
+            : redirectURLforSubsequentLogins
         }`,
       )
     },
