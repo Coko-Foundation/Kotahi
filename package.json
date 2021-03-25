@@ -48,7 +48,7 @@
     "test:all:firefox:elife:iPhone": "start-test test:server-and-client 4000 test:firefox:elife:iPhone",
     "test:all:firefox:elife:iPhone:tablet": "start-test test:server-and-client 4000 test:firefox:elife:iPhone:tablet",
     "test:all:firefox:elife:hd:laptop": "start-test test:server-and-client 4000 test:firefox:elife:hd:laptop",
-    "test:firefox:elife": "cypress run --browser firefox --headless --spec 'cypress/integration/aperture/**.js'",
+    "test:firefox:elife": "cypress run --browser firefox --headless --spec 'cypress/integration/elife/**.js'",
     "test:firefox:elife:samsung": "cypress run --env userAgent=phoneSamsung --browser firefox --headless --spec 'cypress/integration/elife/**.js'",
     "test:firefox:elife:samsung:tablet": "cypress run --env userAgent=tabletSamsung --browser firefox --headless --spec 'cypress/integration/elife/**.js'",
     "test:firefox:elife:iPhone": "cypress run --env userAgent=phoneSafari --browser firefox --spec 'cypress/integration/elife/**.js'",
