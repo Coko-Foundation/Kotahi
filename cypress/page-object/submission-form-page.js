@@ -34,6 +34,9 @@ const SUBMIT_MANUSCRIPT_BUTTON = 'button[type=submit]';
 const VALIDATION_ERROR_MESSAGE = 'ValidatedField__MessageWrapper';
 const CONTENT_ETIDABLE_VALUE = '[contenteditable="true"]';
 
+const FORM_OPTION_LIST ='[class*=style__Section]'
+const EVALUATION_TYPE_DROPDOWN = '[id=react-select-7-input]'
+
 export const SubmissionFormPage = {
     getAddLinkButton() {
         return cy.get(ADD_A_LINK_BUTTON);
@@ -197,5 +200,18 @@ export const SubmissionFormPage = {
     },
     getValidationErrorMessage(error) {
         return cy.getByContainsClass(VALIDATION_ERROR_MESSAGE).contains(error);
+    },
+
+
+    getFormOptionList(nth) {
+        return cy.get(FORM_OPTION_LIST).eq(nth)
+    },
+    clickElementFromFormOptionList(nth) {
+        cy.get(FORM_OPTION_LIST).eq(nth).click()
+    },
+    getDropdownOption(nth) {
+        return cy.get(DROPDOWN_OPTION_LIST).eq(nth);
     }
+    
 }
+

@@ -5,6 +5,7 @@
  * View or Delete.
  */
 const MANUSCRIPTS_OPTIONS_LIST = '[class*=Table__LastCell] > a';
+const BUTTON = 'button';
 
 export const ManuscriptsPage = {
     getManuscriptsOptionsList() {
@@ -12,5 +13,11 @@ export const ManuscriptsPage = {
     },
     selectOptionWithText(text) {
         this.getManuscriptsOptionsList().contains(text).click();
+    },
+    getSubmitButton() {
+        return cy.get(BUTTON).contains('New submission');
+    },
+    clickSubmit() {
+        this.getSubmitButton().click();
     }
 }

@@ -1,0 +1,13 @@
+{
+  "title": "Research Object Submission Form",
+  "field1": "Article ID",
+  "field2": "Article URL",
+  "field3": "Description",
+  "field4": "Evaluation Content",
+  "field5": "Evaluation Type",
+  "field6": "Creator",
+  "fieldOption": "Required",
+  "evaluationTypeOption1": "Evaluation Summary",
+  "evaluationTypeOption2": "Peer Review",
+  "evaluationTypeOption3": "Author Response"
+}
