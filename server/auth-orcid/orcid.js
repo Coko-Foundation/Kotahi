@@ -23,6 +23,7 @@ module.exports = app => {
       async (accessToken, refreshToken, params, profile, done) => {
         // convert oauth response into a user object
         let user
+        let firstLogin = false
 
         try {
           user = await User.query()
@@ -31,7 +32,6 @@ module.exports = app => {
             .where('identities.type', 'orcid')
             .throwIfNotFound()
             .first()
-          user.firstLogin = false
         } catch (err) {
           // swallow not found error
           if (err.name !== 'NotFoundError') {
@@ -59,13 +59,14 @@ module.exports = app => {
             user.defaultIdentity.name = `${userDetails.firstName} ${userDetails.lastName}`
             user.defaultIdentity.aff = userDetails.institution
             user.saveGraph()
+            firstLogin = true
           }
         } catch (err) {
           done(err)
           return
         }
 
-        done(null, { ...user, firstLogin: true })
+        done(null, { ...user, firstLogin })
       },
     ),
   )
@@ -82,9 +83,17 @@ module.exports = app => {
     }),
     (req, res) => {
       const jwt = authentication.token.create(req.user)
+
+      const redirectURLforSubsequentLogins =
+        process.env.INSTANCE_NAME === 'elife'
+          ? '/kotahi/admin/manuscripts'
+          : '/kotahi/dashboard'
+
       res.redirect(
         `/login?token=${jwt}&redirectUrl=${
-          req.user.firstLogin ? '/kotahi/profile' : '/kotahi/dashboard'
+          req.user.firstLogin
+            ? '/kotahi/profile'
+            : redirectURLforSubsequentLogins
         }`,
       )
     },
