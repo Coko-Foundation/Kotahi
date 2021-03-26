@@ -34,10 +34,10 @@ const SUBMIT_MANUSCRIPT_BUTTON = 'button[type=submit]';
 const VALIDATION_ERROR_MESSAGE = 'ValidatedField__MessageWrapper';
 const CONTENT_ETIDABLE_VALUE = '[contenteditable="true"]';
 
-const FORM_OPTION_LIST ='[class*=style__Section]';
+const FORM_OPTION_LIST = '[class*=style__Section]';
 const ARTICLE_ID = 'submission.articleId';
-const ARTICLE_URL ='submission.articleURL';
-const DESCRIPTION ='submission.description';
+const ARTICLE_URL = 'submission.articleURL';
+const DESCRIPTION = 'submission.description';
 const EVALUATION_CONTENT = 'submission.evaluationContent';
 
 export const SubmissionFormPage = {
@@ -163,7 +163,7 @@ export const SubmissionFormPage = {
         return cy.getByContainsAreaLabel(FILED_STRENGTH_DROPDOWN);
     },
     clickFieldSthrenghtDropdown() {
-        this.getFieldSthrenghtDropdown().click({force : true});
+        this.getFieldSthrenghtDropdown().click({ force: true });
     },
     getHumanMriOtherField() {
         return cy.getByDataTestId(HUMAN_MRI_OTHER_FIELD);
@@ -240,4 +240,4 @@ export const SubmissionFormPage = {
         this.getEvaluationContent().find(CONTENT_ETIDABLE_VALUE).fillInput(evaluationContent);
     }
 }
-
+export default SubmissionFormPage

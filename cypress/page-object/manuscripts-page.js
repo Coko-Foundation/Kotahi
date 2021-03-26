@@ -36,3 +36,4 @@ export const ManuscriptsPage = {
         return cy.get(CONTROL_BUTTON);
     }
 }
+export default ManuscriptsPage

@@ -25,7 +25,7 @@ describe('Manuscripts page tests', () => {
         NewSubmissionPage.clickSubmitURL()
 
         //fill the submit form and submit it
-        cy.fixture('form_option').then(data => {
+        return cy.fixture('form_option').then(data => {
             SubmissionFormPage.fillInArticleld(data.field1)
             SubmissionFormPage.fillInArticleUrl(data.field2)
             SubmissionFormPage.fillInDescription(data.field3)
@@ -34,11 +34,11 @@ describe('Manuscripts page tests', () => {
             SubmissionFormPage.selectDropdownOption(1)
             SubmissionFormPage.clickSubmitResearch()
             SubmissionFormPage.clickSubmitManuscript()
-        })
 
-        // asserts on the manuscripts page
-        ManuscriptsPage.getManuscriptsPageTitle().should('be.visible')
-        ManuscriptsPage.getEvaluationButton().should('be.visible')
+            // asserts on the manuscripts page
+            ManuscriptsPage.getManuscriptsPageTitle().should('be.visible')
+            ManuscriptsPage.getEvaluationButton().should('be.visible')
+        })
     })
 
     it('check Control and Evaluation buttons is not visible', () => {
