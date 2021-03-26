@@ -6,6 +6,9 @@
  */
 const MANUSCRIPTS_OPTIONS_LIST = '[class*=Table__LastCell] > a';
 const BUTTON = 'button';
+const MANUSCRIPTS_PAGE_TITLE = '[class*=General__Heading-sc]'
+const EVALUATION_BUTTON = '[href*=evaluation]'
+const CONTROL_BUTTON = '[href*=control]'
 
 export const ManuscriptsPage = {
     getManuscriptsOptionsList() {
@@ -19,5 +22,17 @@ export const ManuscriptsPage = {
     },
     clickSubmit() {
         this.getSubmitButton().click();
+    },
+    getManuscriptsPageTitle() {
+        return cy.get(MANUSCRIPTS_PAGE_TITLE)
+    },
+    getEvaluationButton() {
+        return cy.get(EVALUATION_BUTTON);
+    },
+    clickEvaluation() {
+        this.getEvaluationButton().click()
+    },
+    getControlButton() {
+        return cy.get(CONTROL_BUTTON);
     }
 }

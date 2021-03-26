@@ -34,8 +34,11 @@ const SUBMIT_MANUSCRIPT_BUTTON = 'button[type=submit]';
 const VALIDATION_ERROR_MESSAGE = 'ValidatedField__MessageWrapper';
 const CONTENT_ETIDABLE_VALUE = '[contenteditable="true"]';
 
-const FORM_OPTION_LIST ='[class*=style__Section]'
-const EVALUATION_TYPE_DROPDOWN = '[id=react-select-7-input]'
+const FORM_OPTION_LIST ='[class*=style__Section]';
+const ARTICLE_ID = 'submission.articleId';
+const ARTICLE_URL ='submission.articleURL';
+const DESCRIPTION ='submission.description';
+const EVALUATION_CONTENT = 'submission.evaluationContent';
 
 export const SubmissionFormPage = {
     getAddLinkButton() {
@@ -211,7 +214,30 @@ export const SubmissionFormPage = {
     },
     getDropdownOption(nth) {
         return cy.get(DROPDOWN_OPTION_LIST).eq(nth);
+    },
+    getArticleld() {
+        return cy.getByDataTestId(ARTICLE_ID);
+    },
+    fillInArticleld(articleId) {
+        this.getArticleld().fillInput(articleId);
+    },
+    getArticleUrl() {
+        return cy.getByDataTestId(ARTICLE_URL);
+    },
+    fillInArticleUrl(articleUrl) {
+        this.getArticleUrl().fillInput(articleUrl);
+    },
+    getDescription() {
+        return cy.getByDataTestId(DESCRIPTION);
+    },
+    fillInDescription(description) {
+        this.getDescription().fillInput(description);
+    },
+    getEvaluationContent() {
+        return cy.getByDataTestId(EVALUATION_CONTENT);
+    },
+    fillInEvaluationContent(evaluationContent) {
+        this.getEvaluationContent().find(CONTENT_ETIDABLE_VALUE).fillInput(evaluationContent);
     }
-    
 }
 
