@@ -32,10 +32,7 @@ build:
       # --build-arg client_protocol=http \
       # --build-arg client_host=0.0.0.0 \
       # --build-arg client_port=4000 \      
-      --file ./Dockerfile-ci \
-      --cache-from $IMAGE_ORG/$IMAGE_NAME:latest \
-      --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA \
-      --tag $IMAGE_ORG/$IMAGE_NAME:latest .
+      --file ./Dockerfile-ci --cache-from $IMAGE_ORG/$IMAGE_NAME:latest --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME:latest .
       docker push $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
       docker push $IMAGE_ORG/$IMAGE_NAME:latest
 
