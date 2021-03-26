@@ -84,8 +84,7 @@ lint:
   services:
     - postgres
 
-test-chrome:
-  <<: *run_test_template
+.script_template: &run_script_template
   script:
     - cd ${HOME}
     - apt-get -y install postgresql-client
@@ -93,6 +92,11 @@ test-chrome:
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
     - cp .env.example .env
+
+test-chrome:
+  <<: *run_test_template
+  script:
+    <<: *run_script_template
     # specify host here else it confuses the linked postgres image
     - POSTGRES_HOST=postgres yarn test:all:chrome:elife
 
