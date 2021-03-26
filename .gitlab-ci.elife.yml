@@ -92,13 +92,15 @@ lint:
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
     - cp .env.example .env
+    - # specify host here else it confuses the linked postgres image
+    - POSTGRES_HOST=postgres yarn test:all:chrome:$TEST_ITEM
 
 test-chrome:
   <<: *run_test_template
+  variables:
+    TEST_ITEM: elife
   script:
     <<: *run_script_template
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:chrome:elife
 
 test-chrome-samsung:
   <<: *run_test_template
