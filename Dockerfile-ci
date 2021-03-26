@@ -1,10 +1,26 @@
 FROM cypress/browsers:node14.16.0-chrome89-ff86
 
-ENV HOME "/home/simplej"
-RUN mkdir -p ${HOME}
-WORKDIR ${HOME}
+ARG node_env
+ARG server_protocol
+ARG server_host
+ARG server_port
+ARG client_protocol
+ARG client_host
+ARG client_port
+ARG instance_name
 
 ENV NODE_ENV "development"
+ENV SERVER_PROTOCOL "http"
+ENV SERVER_HOST= "0.0.0.0"
+ENV SERVER_PORT "3000"
+ENV CLIENT_PROTOCOL "http"
+ENV CLIENT_HOST "0.0.0.0"
+ENV CLIENT_PORT "4000"
+ENV INSTANCE_NAME "coko"
+ENV HOME "/home/simplej"
+
+RUN mkdir -p ${HOME}
+WORKDIR ${HOME}
 
 # Only copy things needed for the yarn install
 COPY package.json yarn.lock ./
