@@ -1,11 +1,13 @@
 import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import { NoteEditor } from 'xpub-edit'
 // import { cloneDeep, omit } from 'lodash'
 import { Field, ErrorMessage } from 'formik'
 import {
   Button,
   // Flexbox,
-  RadioGroup,
+  RadioGroup as UnstableRadioGroup,
   // UploadButton,
   // UploadingFile,
 } from '@pubsweet/ui'
@@ -29,6 +31,11 @@ import {
 
 // import Wax from '../../../../wax-collab/src/Editoria'
 
+// This solves issue #38, which caused the entire page to blank in chrome upon selection change, due to strange styling of radio buttons.
+const RadioGroup = styled(UnstableRadioGroup)`
+  position: relative;
+`
+
 const NoteDecision = ({ updateReview }) => (
   <>
     <Field name="decisionComment">
@@ -46,6 +53,7 @@ const NoteDecision = ({ updateReview }) => (
                 values: formikBag.form.values,
                 name: 'decisionComment',
               })
+
               const { data } = await updateReview(review)
               return data.updateReview.decisionComment.id
             }}
@@ -55,6 +63,10 @@ const NoteDecision = ({ updateReview }) => (
     </Field>
   </>
 )
+
+NoteDecision.propTypes = {
+  updateReview: PropTypes.func.isRequired,
+}
 
 const NoteInput = ({
   field,
@@ -105,9 +117,25 @@ const NoteInput = ({
   </ErrorWrap>
 )
 
+NoteInput.propTypes = {
+  field: PropTypes.shape({
+    value: PropTypes.shape({
+      content: PropTypes.string,
+    }),
+  }).isRequired,
+  form: PropTypes.shape({
+    errors: PropTypes.shape({
+      decisionComment: PropTypes.string,
+    }).isRequired,
+    setFieldValue: PropTypes.func.isRequired,
+    setFieldTouched: PropTypes.func.isRequired,
+  }).isRequired,
+  updateReview: PropTypes.func.isRequired,
+}
+
 const RecommendationInput = ({
   field,
-  form: { setFieldValue, errors },
+  form: { setFieldValue },
   updateReview,
 }) => {
   const journal = useContext(JournalContext)
@@ -128,6 +156,13 @@ const RecommendationInput = ({
   )
 }
 
+RecommendationInput.propTypes = {
+  field: PropTypes.shape({ value: PropTypes.string }).isRequired,
+  form: PropTypes.shape({ setFieldValue: PropTypes.func.isRequired })
+    .isRequired,
+  updateReview: PropTypes.func.isRequired,
+}
+
 const DecisionForm = ({
   handleSubmit,
   updateReview,
@@ -137,6 +172,7 @@ const DecisionForm = ({
   dirty,
 }) => {
   let status = null
+
   if (isSubmitting) {
     status = 'Your decision is submitting...'
   } else if (submitCount) {
@@ -173,6 +209,15 @@ const DecisionForm = ({
       </form>
     </SectionContent>
   )
+}
+
+DecisionForm.propTypes = {
+  handleSubmit: PropTypes.func.isRequired,
+  updateReview: PropTypes.func.isRequired,
+  isValid: PropTypes.bool.isRequired,
+  isSubmitting: PropTypes.bool.isRequired,
+  submitCount: PropTypes.number.isRequired,
+  dirty: PropTypes.bool.isRequired,
 }
 
 export default DecisionForm
