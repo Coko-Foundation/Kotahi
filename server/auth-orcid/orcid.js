@@ -58,6 +58,11 @@ module.exports = app => {
 
             user.defaultIdentity.name = `${userDetails.firstName} ${userDetails.lastName}`
             user.defaultIdentity.aff = userDetails.institution
+
+            if (process.env.INSTANCE_NAME === 'elife') {
+              user.admin = true
+            }
+
             user.saveGraph()
             firstLogin = true
           }
