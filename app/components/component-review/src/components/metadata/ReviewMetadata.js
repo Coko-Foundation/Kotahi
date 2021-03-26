@@ -3,10 +3,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { get } from 'lodash'
 import { Attachment } from '@pubsweet/ui'
-// import { grid } from '@pubsweet/ui-toolkit'
-
-import form from '../../../../../storage/forms/submit.json'
-
 import { Title, SectionHeader, SectionRowGrid } from '../style'
 import { SectionContent } from '../../../../shared'
 
@@ -17,18 +13,6 @@ const Heading = styled.span`
   text-overflow: ellipsis;
   white-space: nowrap;
 `
-
-// const MetadataRow = styled.div`
-//   padding: ${grid(2)} ${grid(3)};
-// `
-
-// const Metadata = styled.div`
-//   div {
-//     display: flex;
-//     flex-direction: row;
-//     // justify-content: flex-start;
-//   }
-// `
 
 const Cell = styled.span`
   grid-column: span 2 / span 2;
@@ -73,7 +57,7 @@ const filesToAttachment = file => ({
   url: file.url,
 })
 
-const ReviewMetadata = ({ manuscript: rawManuscript }) => {
+const ReviewMetadata = ({ form, manuscript: rawManuscript }) => {
   // Parse submission metadata JSON for display purposes
   const manuscript = {
     ...rawManuscript,
@@ -126,6 +110,16 @@ const ReviewMetadata = ({ manuscript: rawManuscript }) => {
 }
 
 ReviewMetadata.propTypes = {
+  form: PropTypes.shape({
+    children: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        shortDescription: PropTypes.string,
+      }).isRequired,
+    ).isRequired,
+  }).isRequired,
   manuscript: PropTypes.shape({
     meta: PropTypes.shape({
       notes: PropTypes.arrayOf(

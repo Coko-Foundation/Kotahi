@@ -1,4 +1,5 @@
 import React, { useRef, useEffect } from 'react'
+import PropTypes from 'prop-types'
 import { Formik } from 'formik'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import config from 'config'
@@ -28,7 +29,7 @@ const addEditor = (manuscript, label) => ({
   label,
 })
 
-const DecisionVersion = ({ label, current, version, parent }) => {
+const DecisionVersion = ({ form, current, version, parent }) => {
   // Hooks from the old world
   const [makeDecision] = useMutation(makeDecisionMutation)
   const [doUpdateReview] = useMutation(updateReviewMutation)
@@ -79,13 +80,13 @@ const DecisionVersion = ({ label, current, version, parent }) => {
         id: existingReview.current.id || undefined,
         input: reviewData,
       },
-      update: (cache, { data: { updateReview } }) => {
+      update: (cache, { data: { updateReview: updatedReview } }) => {
         cache.modify({
           id: cache.identify(manuscript),
           fields: {
             reviews(existingReviewRefs = [], { readField }) {
               const newReviewRef = cache.writeFragment({
-                data: updateReview,
+                data: updatedReview,
                 fragment: gql`
                   fragment NewReview on Review {
                     id
@@ -95,7 +96,7 @@ const DecisionVersion = ({ label, current, version, parent }) => {
 
               if (
                 existingReviewRefs.some(
-                  ref => readField('id', ref) === updateReview.id,
+                  ref => readField('id', ref) === updatedReview.id,
                 )
               ) {
                 return existingReviewRefs
@@ -154,13 +155,15 @@ const DecisionVersion = ({ label, current, version, parent }) => {
                     </p>
                   )
                 }
+
+                return null
               })}
             </SectionRow>
           </SectionContent>
         )}
         {!current && <DecisionAndReviews manuscript={version} />}
         <AdminSection key="review-metadata">
-          <ReviewMetadata manuscript={version} />
+          <ReviewMetadata form={form} manuscript={version} />
         </AdminSection>
         {current && (
           <AdminSection key="decision-review">
@@ -204,6 +207,7 @@ const DecisionVersion = ({ label, current, version, parent }) => {
       }
       validate={(values, props) => {
         const errors = {}
+
         if (
           ['', '<p></p>', undefined].includes(values.decisionComment?.content)
         ) {
@@ -213,6 +217,7 @@ const DecisionVersion = ({ label, current, version, parent }) => {
         if (values.recommendation === null) {
           errors.recommendation = 'Decision is required'
         }
+
         return errors
       }}
     >
@@ -224,6 +229,72 @@ const DecisionVersion = ({ label, current, version, parent }) => {
       )}
     </Formik>
   )
+}
+
+DecisionVersion.propTypes = {
+  form: PropTypes.shape({
+    children: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        shortDescription: PropTypes.string,
+      }).isRequired,
+    ).isRequired,
+  }).isRequired,
+  current: PropTypes.bool.isRequired,
+  version: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    meta: PropTypes.shape({
+      notes: PropTypes.arrayOf(
+        PropTypes.shape({
+          notesType: PropTypes.string.isRequired,
+          content: PropTypes.string.isRequired,
+        }).isRequired,
+      ).isRequired,
+    }).isRequired,
+    files: PropTypes.arrayOf(
+      PropTypes.shape({
+        url: PropTypes.string.isRequired,
+        filename: PropTypes.string.isRequired,
+      }).isRequired,
+    ).isRequired,
+    reviews: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        isDecision: PropTypes.bool.isRequired,
+        decisionComment: PropTypes.shape({
+          content: PropTypes.string,
+        }),
+        user: PropTypes.shape({
+          username: PropTypes.string.isRequired,
+          defaultIdentity: PropTypes.shape({
+            name: PropTypes.string.isRequired,
+          }),
+        }).isRequired,
+        recommendation: PropTypes.string.isRequired,
+      }).isRequired,
+    ).isRequired,
+  }).isRequired,
+  parent: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    teams: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        members: PropTypes.arrayOf(
+          PropTypes.shape({
+            user: PropTypes.shape({
+              id: PropTypes.string.isRequired,
+              defaultIdentity: PropTypes.shape({
+                name: PropTypes.string.isRequired,
+              }),
+            }),
+          }).isRequired,
+        ),
+        role: PropTypes.string.isRequired,
+      }).isRequired,
+    ),
+  }).isRequired,
 }
 
 export default DecisionVersion

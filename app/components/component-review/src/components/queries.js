@@ -135,6 +135,8 @@ export const query = gql`
         topic
       }
     }
+
+    getForms
   }
 `
 

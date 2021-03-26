@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { useQuery } from '@apollo/client'
 import DecisionVersion from './DecisionVersion'
 
@@ -28,11 +29,21 @@ const DecisionPage = ({ match }) => {
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
 
-  const { manuscript } = data
+  const { manuscript, getForms } = data
+
+  const form = getForms?.find(f => f.id === 'submit') ?? {
+    name: '',
+    id: '',
+    children: [],
+    description: '',
+    haspopup: 'false',
+  }
+
   const versions = gatherManuscriptVersions(manuscript)
 
   // Protect if channels don't exist for whatever reason
   let editorialChannelId, allChannelId
+
   if (Array.isArray(manuscript.channels) && manuscript.channels.length) {
     editorialChannelId = manuscript.channels.find(c => c.type === 'editorial')
       .id
@@ -52,8 +63,8 @@ const DecisionPage = ({ match }) => {
             {versions.map((version, index) => (
               <DecisionVersion
                 current={index === 0}
+                form={form}
                 key={version.manuscript.id}
-                label={version.label}
                 parent={manuscript}
                 version={version.manuscript}
               />
@@ -66,6 +77,14 @@ const DecisionPage = ({ match }) => {
       </Chat>
     </Columns>
   )
+}
+
+DecisionPage.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      version: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
 }
 
 export default DecisionPage
