@@ -85,7 +85,6 @@ lint:
     - postgres
 
 .script_template: &run_script_template
-  script:
     - cd ${HOME}
     - apt-get -y install postgresql-client
     # this is needed for pgboss initial setup
