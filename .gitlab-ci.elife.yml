@@ -84,158 +84,190 @@ lint:
   services:
     - postgres
 
-#.script_template: &run_script_template
-#    - cd ${HOME}
-#    - apt-get -y install postgresql-client
-#    # this is needed for pgboss initial setup
-#    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#    # use the example env for tests
-#    - cp .env.example .env
-#    - # specify host here else it confuses the linked postgres image
-#    - POSTGRES_HOST=postgres yarn test:all:chrome:$TEST_ITEM
-
-test-chrome:
-  <<: *run_test_template
-  variables:
-    TEST_ITEM: elife
-  script:
+.script_template: &run_script_template
     - cd ${HOME}
     - apt-get -y install postgresql-client
     # this is needed for pgboss initial setup
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
     - cp .env.example .env
+    
+test-chrome:
+  <<: *run_test_template
+  script:
+    - *run_script_template
     # specify host here else it confuses the linked postgres image
     - POSTGRES_HOST=postgres yarn test:all:chrome:elife
 
-test-chrome-samsung:
-  <<: *run_test_template
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:chrome:elife:samsung
+# .test_template: &run_test_template
+#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+#   stage: test
+#   variables:
+#     GIT_STRATEGY: none
+#     # setup data for postgres image
+#     POSTGRES_USER: kotahidev
+#     POSTGRES_PASSWORD: kotahidev
+#     # used by psql
+#     PGUSER: kotahidev
+#     PGPASSWORD: kotahidev
+#     # this is used to ignore self signed certs
+#     START_SERVER_AND_TEST_INSECURE: 1
+#     INSTANCE_NAME: elife
+#   services:
+#     - postgres
 
-test-chrome-samsung-tablet:
-  <<: *run_test_template
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:chrome:elife:samsung:tablet
+# #.script_template: &run_script_template
+# #    - cd ${HOME}
+# #    - apt-get -y install postgresql-client
+# #    # this is needed for pgboss initial setup
+# #    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+# #    # use the example env for tests
+# #    - cp .env.example .env
+# #    - # specify host here else it confuses the linked postgres image
+# #    - POSTGRES_HOST=postgres yarn test:all:chrome:$TEST_ITEM
 
-test-chrome-iPhone:
-  <<: *run_test_template
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:chrome:elife:iPhone
+# test-chrome:
+#   <<: *run_test_template
+#   variables:
+#     TEST_ITEM: elife
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife
 
-test-chrome-iPhone-tablet:
-  <<: *run_test_template
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:chrome:elife:iPhone:tablet
+# test-chrome-samsung:
+#   <<: *run_test_template
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:samsung
 
-test-chrome-hd-laptop:
-  <<: *run_test_template
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:chrome:elife:hd:laptop
+# test-chrome-samsung-tablet:
+#   <<: *run_test_template
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:samsung:tablet
 
-test-firefox:
-  <<: *run_test_template
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:firefox:elife
+# test-chrome-iPhone:
+#   <<: *run_test_template
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:iPhone
 
-test-firefox-samsung:
-  <<: *run_test_template
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:firefox:elife:samsung
+# test-chrome-iPhone-tablet:
+#   <<: *run_test_template
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:iPhone:tablet
 
-test-firefox-samsung-tablet:
-  <<: *run_test_template
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:firefox:elife:samsung:tablet
+# test-chrome-hd-laptop:
+#   <<: *run_test_template
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:hd:laptop
 
-test-firefox-iPhone:
-  <<: *run_test_template
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:firefox:elife:iPhone
+# test-firefox:
+#   <<: *run_test_template
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - POSTGRES_HOST=postgres yarn test:all:firefox:elife
 
-test-firefox-iPhone-tablet:
-  <<: *run_test_template
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:firefox:elife:iPhone:tablet
+# test-firefox-samsung:
+#   <<: *run_test_template
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - POSTGRES_HOST=postgres yarn test:all:firefox:elife:samsung
 
-test-firefox-hd-laptop:
-  <<: *run_test_template
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:firefox:elife:hd:laptop
+# test-firefox-samsung-tablet:
+#   <<: *run_test_template
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - POSTGRES_HOST=postgres yarn test:all:firefox:elife:samsung:tablet
+
+# test-firefox-iPhone:
+#   <<: *run_test_template
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - POSTGRES_HOST=postgres yarn test:all:firefox:elife:iPhone
+
+# test-firefox-iPhone-tablet:
+#   <<: *run_test_template
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - POSTGRES_HOST=postgres yarn test:all:firefox:elife:iPhone:tablet
+
+# test-firefox-hd-laptop:
+#   <<: *run_test_template
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - POSTGRES_HOST=postgres yarn test:all:firefox:elife:hd:laptop
