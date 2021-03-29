@@ -23,6 +23,7 @@ build:
       docker login -u $DOCKERHUB_USERNAME_ELIFE -p $DOCKERHUB_PASSWORD_ELIFE
       docker pull $IMAGE_ORG/$IMAGE_NAME:latest || true
       docker build \
+      --build-arg instance_name=elife \
       --file ./Dockerfile-production \
       --cache-from $CI_REGISTRY_IMAGE:latest \
       --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA \
