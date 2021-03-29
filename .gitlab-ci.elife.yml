@@ -80,12 +80,13 @@ lint:
     PGUSER: kotahidev
     PGPASSWORD: kotahidev
     INSTANCE_NAME: elife
-
-.script_template: &run_script_template
+  services:
+    - postgres
+  script:
     - cd ${HOME}
     - apt-get -y install postgresql-client
     # this is needed for pgboss initial setup
-    - psql -h localhost -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
     - cp .env.example .env
     # specify host here else it confuses the linked postgres image
@@ -95,10 +96,8 @@ test-chrome:
   <<: *run_test_template
   variables:
     TEST_ITEM: "chrome:elife"
-  script:
-    - *run_script_template
-  services:
-    - postgres
+
+
 
 # test-chrome-samsung:
 #   <<: *run_test_template
