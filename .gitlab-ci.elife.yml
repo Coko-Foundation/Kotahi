@@ -85,7 +85,6 @@ lint:
     - cd ${HOME}
     - apt-get -y install postgresql-client
     # this is needed for pgboss initial setup
-    - docker ps
     - psql -h localhost -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     # use the example env for tests
     - cp .env.example .env
