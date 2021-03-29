@@ -18,7 +18,19 @@ RUN yarn install --frozen-lockfile --production=false
 
 COPY . .
 
+RUN yarn webpack --config webpack/webpack.production.config.js
+
+# IMAGE FOR RUNNING
+FROM node:15.11-alpine as server
+
 ARG instance_name
+ARG node_env
+ARG server_protocol
+ARG server_host
+ARG server_port
+ARG client_protocol
+ARG client_host
+ARG client_port
 
 ENV INSTANCE_NAME $instance_name
 ENV NODE_ENV "production"
@@ -28,11 +40,6 @@ ENV SERVER_PORT "3000"
 ENV CLIENT_PROTOCOL "http"
 ENV CLIENT_HOST "0.0.0.0"
 ENV CLIENT_PORT "4000"
-
-RUN yarn webpack --config webpack/webpack.production.config.js
-
-# IMAGE FOR RUNNING
-FROM node:15.11-alpine as server
 
 WORKDIR /home/node/app
 
