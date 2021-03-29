@@ -80,8 +80,6 @@ lint:
     PGUSER: kotahidev
     PGPASSWORD: kotahidev
     INSTANCE_NAME: elife
-  services:
-    - postgres
 
 .script_template: &run_script_template
     - cd ${HOME}
@@ -99,6 +97,8 @@ test-chrome:
     TEST_ITEM: "chrome:elife"
   script:
     - *run_script_template
+  services:
+    - postgres
 
 # test-chrome-samsung:
 #   <<: *run_test_template
