@@ -20,6 +20,7 @@ import {
 import { HeadingWithAction } from '../../shared'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
+
 const GET_MANUSCRIPTS = gql`
   query Manuscripts(
     $sort: String
@@ -131,28 +132,30 @@ const Manuscripts = ({ history, ...props }) => {
 
   return (
     <Container>
-      
-      {process.env.INSTANCE_NAME === 'elife' && 
-      <HeadingWithAction>
-        <Heading>Manuscripts</Heading>
-        <Button
+      {process.env.INSTANCE_NAME === 'elife' && (
+        <HeadingWithAction>
+          <Heading>Manuscripts</Heading>
+          <Button
             onClick={() => history.push(`${urlFrag}/newSubmission`)}
             primary
           >
             ＋ New submission
-        </Button>
-      </HeadingWithAction>
-      }
+          </Button>
+        </HeadingWithAction>
+      )}
 
-      {process.env.INSTANCE_NAME === 'coko' && 
-        <Heading>Manuscripts</Heading>
-      }
+      {process.env.INSTANCE_NAME === 'coko' && <Heading>Manuscripts</Heading>}
 
       <Content>
         <Table>
           <Header>
             <tr>
-              <SortHeader thisSortName="meta:title">Title</SortHeader>
+              {process.env.INSTANCE_NAME === 'coko' && (
+                <SortHeader thisSortName="meta:title">Title</SortHeader>
+              )}
+              {process.env.INSTANCE_NAME === 'elife' && (
+                <SortHeader thisSortName="meta:title">Article URL</SortHeader>
+              )}
               <SortHeader thisSortName="created">Created</SortHeader>
               <SortHeader thisSortName="updated">Updated</SortHeader>
               <SortHeader thisSortName="status">Status</SortHeader>
@@ -162,8 +165,12 @@ const Manuscripts = ({ history, ...props }) => {
           </Header>
           <tbody>
             {manuscripts.map((manuscript, key) => {
+              console.log('manuscript')
+              console.log(manuscript)
+
               const latestVersion =
                 manuscript.manuscriptVersions?.[0] || manuscript
+
               return (
                 <Manuscript
                   key={latestVersion.id}

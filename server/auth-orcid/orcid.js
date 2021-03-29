@@ -89,18 +89,22 @@ module.exports = app => {
     (req, res) => {
       const jwt = authentication.token.create(req.user)
 
-      const redirectURLforSubsequentLogins =
-        process.env.INSTANCE_NAME === 'elife'
-          ? '/kotahi/admin/manuscripts'
-          : '/kotahi/dashboard'
+      let redirectionURL
 
-      res.redirect(
-        `/login?token=${jwt}&redirectUrl=${
-          req.user.firstLogin
-            ? '/kotahi/profile'
-            : redirectURLforSubsequentLogins
-        }`,
-      )
+      if (process.env.INSTANCE_NAME === 'coko') {
+        redirectionURL = '/kotahi/dashboard'
+
+        if (req.user.firstLogin) {
+          redirectionURL = '/kotahi/profile'
+        }
+      }
+
+      if (process.env.INSTANCE_NAME === 'elife') {
+        // temporary .. because all users are admins - is temporary feature
+        redirectionURL = '/kotahi/admin/manuscripts'
+      }
+
+      res.redirect(`/login?token=${jwt}&redirectUrl=${redirectionURL}`)
     },
   )
 }
