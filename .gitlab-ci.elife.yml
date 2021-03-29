@@ -175,3 +175,4 @@ test-chrome:
 #     TEST_ITEM: "firefox:elife:hd:laptop"
 #   script:
 #     - *run_script_template
+
