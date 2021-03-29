@@ -47,8 +47,10 @@ services:
       - POSTGRES_USER
       - POSTGRES_DB
       - POSTGRES_PASSWORD
+      - PGDATA=/var/lib/postgresql/data/kotahi
     volumes:
       - ./scripts/test.sql:/docker-entrypoint-initdb.d/test.sql
+      - ./db-data:/var/lib/postgresql/data/kotahi:z
 
   job-xsweet:
     image: pubsweet/job-xsweet:1.5.0
@@ -78,3 +80,7 @@ services:
     environment:
       MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-test} #Access key length should be at least 3 characters
       MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-password} #Secret key length should be at least 8 characters
+
+volumes:
+  db-data:
+    driver: local
