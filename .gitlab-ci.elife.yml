@@ -79,7 +79,7 @@ lint:
     PGUSER: kotahidev
     PGPASSWORD: kotahidev
     # this is used to ignore self signed certs
-    START_SERVER_AND_TEST_INSECURE: 1
+    #START_SERVER_AND_TEST_INSECURE: 1
     INSTANCE_NAME: elife
   services:
     - postgres
@@ -94,11 +94,10 @@ lint:
     
 test-chrome:
   <<: *run_test_template
-  variables:
-    TEST_ITEM: elife
   script:
     - *run_script_template
-    - POSTGRES_HOST=postgres yarn test:all:chrome:$TEST_ITEM
+    # specify host here else it confuses the linked postgres image
+    - POSTGRES_HOST=postgres yarn test:all:chrome:elife
 
 # .test_template: &run_test_template
 #   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
