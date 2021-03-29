@@ -18,7 +18,9 @@ RUN yarn install --frozen-lockfile --production=false
 
 COPY . .
 
-ENV INSTANCE_NAME "elife"
+ARG instance_name
+
+ENV INSTANCE_NAME $instance_name
 ENV NODE_ENV "production"
 ENV SERVER_PROTOCOL "http"
 ENV SERVER_HOST "localhost"
