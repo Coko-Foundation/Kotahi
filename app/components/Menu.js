@@ -1,5 +1,5 @@
 import React from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import { th, grid, lighten } from '@pubsweet/ui-toolkit'
 import { Link, useLocation } from 'react-router-dom'
@@ -20,20 +20,6 @@ const Root = styled.nav`
 
 const Section = styled.div``
 
-// const Logo = styled.span`
-//   // margin: ${grid(2)} 1rem ${grid(2)} 1rem;
-
-//   ${override('ui.AppBar.Logo')};
-// `
-
-// const LogoLink = styled(Action)`
-//   & > * {
-//     height: calc(${th('gridUnit')} * 6);
-//   }
-
-//   ${override('ui.AppBar.LogoLink')};
-// `
-
 const NavItem = ({ className, link, name, icon }) => (
   <Link className={className} to={link}>
     <Icon>{icon}</Icon>
@@ -48,32 +34,20 @@ NavItem.propTypes = {
   icon: PropTypes.string.isRequired,
 }
 
-const Item = styled(NavItem)`
+export const Item = styled(NavItem)`
   align-items: center;
+  background-color: ${props =>
+    props.active ? th('colorBackgroundHue') : 'unset'};
   border-radius: 10px;
-  color: ${th('colorTextReverse')};
+  color: ${props => (props.active ? th('colorText') : th('colorTextReverse'))};
   display: flex;
   height: ${grid(5)};
   line-height: ${grid(3)};
-
-  ${props =>
-    props.active &&
-    css`
-      background-color: ${lighten('colorBackgroundHue', 0)};
-      color: ${th('colorText')};
-      &:hover {
-        background-color: ${th('colorFurniture')};
-        color: ${th('colorText')};
-      }
-      svg {
-        stroke: ${th('colorText')};
-      }
-    `}
-
   padding-left: ${grid(1)};
 
   svg {
-    stroke: ${th('colorTextReverse')};
+    stroke: ${props =>
+      props.active ? th('colorText') : th('colorTextReverse')};
     width: 1em;
   }
 
