@@ -1,5 +1,6 @@
 /* eslint-disable no-nested-ternary */
 import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
 import ReactSelect from 'react-select'
 import { ThemeContext } from 'styled-components'
 
@@ -46,13 +47,34 @@ const styles = th => ({
   }),
 })
 
-export const Select = props => {
+// eslint-disable-next-line import/prefer-default-export
+export const Select = ({ value, isMulti, options, ...otherProps }) => {
   const theme = useContext(ThemeContext)
-  let selectedOption = props.value
-  if (!props.isMulti) {
-    selectedOption = props.options.find(option => option.value === props.value)
+  let selectedOption = value
+
+  if (!isMulti && value) {
+    selectedOption = options.find(option => option.value === value)
   }
+
   return (
-    <ReactSelect {...props} styles={styles(theme)} value={selectedOption} />
+    <ReactSelect
+      isMulti={isMulti}
+      options={options}
+      {...otherProps}
+      styles={styles(theme)}
+      value={selectedOption}
+    />
   )
+}
+
+Select.propTypes = {
+  // eslint-disable-next-line react/forbid-prop-types
+  value: PropTypes.any,
+  isMulti: PropTypes.bool,
+  options: PropTypes.arrayOf(PropTypes.any.isRequired).isRequired,
+}
+
+Select.defaultProps = {
+  value: undefined,
+  isMulti: false,
 }

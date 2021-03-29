@@ -1,8 +1,8 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Formik } from 'formik'
 import { gql, useQuery, useMutation } from '@apollo/client'
-import Reviewers from '../components/reviewers/Reviewers'
-import ReviewerContainer from '../components/reviewers/ReviewerContainer'
+import Reviewers from './reviewers/Reviewers'
 import { Spinner } from '../../../shared'
 
 const teamFields = `
@@ -99,16 +99,16 @@ const ReviewersPage = ({ match, history }) => {
   })
 
   const [addReviewer] = useMutation(addReviewerMutation, {
-    update: (cache, { data: { addReviewer } }) => {
+    update: (cache, { data: { addReviewer: revisedReviewersObject } }) => {
       cache.modify({
         id: cache.identify({
           __typename: 'Manuscript',
-          id: addReviewer.manuscript.id,
+          id: revisedReviewersObject.manuscript.id,
         }),
         fields: {
           teams(existingTeamRefs = []) {
             const newTeamRef = cache.writeFragment({
-              data: addReviewer,
+              data: revisedReviewersObject,
               fragment: gql`
                 fragment NewTeam on Team {
                   id
@@ -129,14 +129,17 @@ const ReviewersPage = ({ match, history }) => {
       })
     },
   })
+
   const [removeReviewer] = useMutation(removeReviewerMutation)
 
   if (loading) {
     return <Spinner />
   }
+
   if (error) return error
 
   const { manuscript, users } = data
+
   const reviewersTeam =
     manuscript.teams.find(team => team.role === 'reviewer') || {}
 
@@ -157,13 +160,23 @@ const ReviewersPage = ({ match, history }) => {
           history={history}
           manuscript={manuscript}
           removeReviewer={removeReviewer}
-          Reviewer={ReviewerContainer}
           reviewers={reviewers}
           reviewerUsers={users}
         />
       )}
     </Formik>
   )
+}
+
+ReviewersPage.propTypes = {
+  match: PropTypes.shape({
+    params: PropTypes.shape({
+      version: PropTypes.string.isRequired,
+    }).isRequired,
+  }).isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 }
 
 export default ReviewersPage

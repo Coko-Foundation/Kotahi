@@ -30,16 +30,12 @@ const Reviewer = styled.div``
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const Reviewers = ({
-  journal,
   isValid,
-  loadOptions,
-  version,
   reviewers,
   reviewerUsers,
   manuscript,
   handleSubmit,
   removeReviewer,
-  teams,
   history,
 }) => (
   <Container>
@@ -63,8 +59,6 @@ const Reviewers = ({
         <ReviewerForm
           handleSubmit={handleSubmit}
           isValid={isValid}
-          journal={journal}
-          loadOptions={loadOptions}
           reviewerUsers={reviewerUsers}
         />
       </SectionRow>
@@ -107,17 +101,29 @@ const Reviewers = ({
 )
 
 Reviewers.propTypes = {
-  journal: PropTypes.node.isRequired,
-  isValid: PropTypes.node.isRequired,
-  loadOptions: PropTypes.node.isRequired,
-  version: PropTypes.node.isRequired,
-  reviewers: PropTypes.node.isRequired,
-  reviewerUsers: PropTypes.node.isRequired,
-  manuscript: PropTypes.node.isRequired,
-  handleSubmit: PropTypes.node.isRequired,
-  removeReviewer: PropTypes.node.isRequired,
-  teams: PropTypes.node.isRequired,
-  history: PropTypes.node.isRequired,
+  isValid: PropTypes.bool.isRequired,
+  reviewers: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      status: PropTypes.string.isRequired,
+      user: PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        username: PropTypes.string.isRequired,
+        defaultIdentity: PropTypes.shape({
+          name: PropTypes.string.isRequired,
+        }),
+      }).isRequired,
+    }).isRequired,
+  ).isRequired,
+  reviewerUsers: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
+  manuscript: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  removeReviewer: PropTypes.func.isRequired,
+  history: PropTypes.shape({
+    push: PropTypes.func.isRequired,
+  }).isRequired,
 }
 
 export default Reviewers

@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { Field } from 'formik'
 import { Button } from '@pubsweet/ui'
 import { required } from 'xpub-validators'
@@ -16,16 +17,11 @@ const OptionRenderer = option => (
 
 const FieldAndButton = styled.div`
   display: grid;
-  grid-template-columns: ${grid(30)} ${grid(10)};
   grid-gap: ${grid(2)};
+  grid-template-columns: ${grid(30)} ${grid(10)};
 `
-const ReviewerInput = ({
-  field,
-  form: { values, setFieldValue },
-  push,
-  replace,
-  reviewerUsers,
-}) => (
+
+const ReviewerInput = ({ field, form: { setFieldValue }, reviewerUsers }) => (
   <Select
     {...field}
     aria-label="Invite reviewers"
@@ -41,13 +37,15 @@ const ReviewerInput = ({
   />
 )
 
-const ReviewerForm = ({
-  reset,
-  isValid,
-  handleSubmit,
-  onSubmit,
-  reviewerUsers,
-}) => (
+ReviewerInput.propTypes = {
+  field: PropTypes.shape({}).isRequired,
+  form: PropTypes.shape({
+    setFieldValue: PropTypes.func.isRequired,
+  }).isRequired,
+  reviewerUsers: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
+}
+
+const ReviewerForm = ({ isValid, handleSubmit, reviewerUsers }) => (
   <form onSubmit={handleSubmit}>
     <FieldAndButton>
       <Field
@@ -62,5 +60,11 @@ const ReviewerForm = ({
     </FieldAndButton>
   </form>
 )
+
+ReviewerForm.propTypes = {
+  isValid: PropTypes.bool.isRequired,
+  handleSubmit: PropTypes.func.isRequired,
+  reviewerUsers: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
+}
 
 export default ReviewerForm
