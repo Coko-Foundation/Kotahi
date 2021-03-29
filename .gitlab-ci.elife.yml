@@ -110,6 +110,7 @@ test-chrome:
     PGPASSWORD: kotahidev
     # this is used to ignore self signed certs
     #START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: elife
   services:
     - postgres
   script:
