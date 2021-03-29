@@ -1,6 +1,4 @@
 import React from 'react'
-import { ThemeProvider } from 'styled-components'
-import theme from '../app/theme'
 import { Item } from '../app/components/Menu'
 
 export const Base = args => <Item {...args} />
@@ -29,13 +27,6 @@ export default {
     name: { control: { type: 'text' } },
     icon: { control: { type: 'text' } },
   },
-  decorators: [
-    Story => (
-      <ThemeProvider theme={theme}>
-        <Story />
-      </ThemeProvider>
-    ),
-  ],
   parameters: {
     backgrounds: {
       default: 'dark',
