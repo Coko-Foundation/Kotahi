@@ -2,10 +2,11 @@
 /* eslint-disable jest/expect-expect */
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { ReviewPage } from '../../page-object/review-page'
+import { dashboard } from '../../support/routes'
 
 // login as reviewer, accept and do review, leave comments and submit
 const doReview = name => {
-  cy.login(name)
+  cy.login(name, dashboard)
 
   DashboardPage.clickAcceptReview()
   DashboardPage.clickDoReview()
@@ -22,7 +23,7 @@ const doReview = name => {
   ReviewPage.clickAccept()
   ReviewPage.clickSubmit()
 
-  cy.visit('/kotahi/dashboard')
+  cy.visit(dashboard)
 
   DashboardPage.getDoReviewButton().should('contain', 'Completed')
 }
@@ -37,7 +38,7 @@ describe('Completing a review', () => {
       doReview(name.role.reviewers.reviewer3)
 
       // login as seniorEditor and assert the 3 reviews are completed
-      cy.login(name.role.seniorEditor)
+      cy.login(name.role.seniorEditor, dashboard)
 
       DashboardPage.getCompletedReviewsButton().should(
         'have.text',

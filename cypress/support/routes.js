@@ -1,0 +1,6 @@
+export const login = '/login'
+export const dashboard = '/kotahi/dashboard'
+export const manuscripts = '/kotahi/admin/manuscripts'
+export const formBuilder = '/kotahi/admin/form-builder'
+export const users = '/kotahi/admin/users'
+export const profile = '/kotahi/profile'

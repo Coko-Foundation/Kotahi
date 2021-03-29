@@ -31,49 +31,53 @@ Cypress.Commands.add('setToken', token => {
   localStorage.setItem('token', token)
 })
 
-Cypress.Commands.add('login', name => {
+Cypress.Commands.add('login', (name, page) => {
   cy.task('createToken', name).then(token => {
     cy.setToken(token)
-    cy.visit('/kotahi/dashboard')
+    cy.visit(page)
   })
 })
 
 Cypress.Commands.add('fillInput', { prevSubject: true }, (subject, text) => {
-  return cy.wrap(subject).click().clear().type(text);
-});
+  return cy.wrap(subject).click().clear().type(text)
+})
 
-Cypress.Commands.add('getByDataTestId', (dataTestId) => {
-  cy.get(`[data-testid='${dataTestId}']`);
-});
+Cypress.Commands.add('getByDataTestId', dataTestId => {
+  cy.get(`[data-testid='${dataTestId}']`)
+})
 
-Cypress.Commands.add('getByContainsDataTestId', (dataTestId) => {
-  cy.get(`[data-testid*='${dataTestId}']`);
-});
+Cypress.Commands.add('getByContainsDataTestId', dataTestId => {
+  cy.get(`[data-testid*='${dataTestId}']`)
+})
 
-Cypress.Commands.add('getByClass', (className) => {
-  cy.get(`[class='${className}']`);
-});
+Cypress.Commands.add('getByClass', className => {
+  cy.get(`[class='${className}']`)
+})
 
-Cypress.Commands.add('getByContainsClass', (className) => {
-  cy.get(`[class*='${className}']`);
-});
+Cypress.Commands.add('getByContainsClass', className => {
+  cy.get(`[class*='${className}']`)
+})
 
-Cypress.Commands.add('getByContainsAreaLabel', (areaLabel) => {
-  cy.get(`[aria-label*='${areaLabel}']`);
-});
+Cypress.Commands.add('getByContainsAreaLabel', areaLabel => {
+  cy.get(`[aria-label*='${areaLabel}']`)
+})
 
-Cypress.Commands.add('getByName', (name) => {
-  cy.get(`[name='${name}']`);
-});
+Cypress.Commands.add('getByName', name => {
+  cy.get(`[name='${name}']`)
+})
 
-Cypress.Commands.add('getByContainsName', (name) => {
-  cy.get(`[name*='${name}']`);
-});
+Cypress.Commands.add('getByContainsName', name => {
+  cy.get(`[name*='${name}']`)
+})
 
-Cypress.Commands.add('getByContainsId', (id) => {
-  cy.get(`[id*='${id}']`);
-});
+Cypress.Commands.add('getById', id => {
+  cy.get(`[id='${id}']`)
+})
+
+Cypress.Commands.add('getByContainsId', id => {
+  cy.get(`[id*='${id}']`)
+})
 
 Cypress.Commands.add('getByNameAndValue', (name, value) => {
-  cy.get(`[name='${name}'][value=${value}]`);
-});
+  cy.get(`[name='${name}'][value=${value}]`)
+})

@@ -6,6 +6,7 @@ import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { ControlPage } from '../../page-object/control-page'
+import { dashboard } from '../../support/routes'
 
 describe('URL submission test', () => {
   it('can submit a URL and some metadata', () => {
@@ -14,7 +15,7 @@ describe('URL submission test', () => {
 
     // login as author
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.author)
+      cy.login(name.role.author, dashboard)
     })
 
     // submit new manuscript
@@ -97,7 +98,7 @@ describe('URL submission test', () => {
     cy.fixture('submission_form_data').then(data => {
       cy.fixture('role_names').then(name => {
         // login as admin
-        cy.login(name.role.admin)
+        cy.login(name.role.admin, dashboard)
 
         // select Control on the Manuscripts page
         Menu.clickManuscripts()
@@ -110,7 +111,7 @@ describe('URL submission test', () => {
         ControlPage.selectEditorByName(name.role.seniorEditor)
 
         // login as seniorEditor
-        cy.login(name.role.seniorEditor)
+        cy.login(name.role.seniorEditor, dashboard)
       })
 
       // assert Manuscript exist
