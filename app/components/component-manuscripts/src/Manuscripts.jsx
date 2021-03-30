@@ -41,6 +41,7 @@ const GET_MANUSCRIPTS = gql`
           manuscriptId
           title
         }
+        submission
         created
         updated
         status
@@ -127,8 +128,12 @@ const Manuscripts = ({ history, ...props }) => {
 
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
-
-  const { manuscripts, totalCount } = data.paginatedManuscripts
+  
+  const manuscripts = data.paginatedManuscripts.manuscripts.map(el => {
+    return { ...el, submission: JSON.parse(el.submission) }
+  })
+ 
+  const { totalCount } = data.paginatedManuscripts
 
   return (
     <Container>
@@ -154,7 +159,7 @@ const Manuscripts = ({ history, ...props }) => {
                 <SortHeader thisSortName="meta:title">Title</SortHeader>
               )}
               {process.env.INSTANCE_NAME === 'elife' && (
-                <SortHeader thisSortName="meta:title">Article URL</SortHeader>
+                <SortHeader thisSortName="submission:articleId">Article Id</SortHeader>
               )}
               <SortHeader thisSortName="created">Created</SortHeader>
               <SortHeader thisSortName="updated">Updated</SortHeader>
@@ -165,9 +170,6 @@ const Manuscripts = ({ history, ...props }) => {
           </Header>
           <tbody>
             {manuscripts.map((manuscript, key) => {
-              console.log('manuscript')
-              console.log(manuscript)
-
               const latestVersion =
                 manuscript.manuscriptVersions?.[0] || manuscript
 
