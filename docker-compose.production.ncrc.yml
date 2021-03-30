@@ -1,0 +1,86 @@
+version: '3'
+
+services:
+  server:
+    image: kotahi/kotahi:latest
+    depends_on:
+      - db
+    ports:
+      - ${SERVER_PORT:-3000}:${SERVER_PORT:-3000}
+    environment:
+      - NODE_ENV=${NODE_ENV:-production}
+      - POSTGRES_HOST=${POSTGRES_HOST:-db}
+      - POSTGRES_PORT=${POSTGRES_PORT:-5432}
+      - POSTGRES_DB=${POSTGRES_DB}
+      - POSTGRES_USER=${POSTGRES_USER}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD}
+      - PUBSWEET_SECRET=${PUBSWEET_SECRET}
+      - CLIENT_PROTOCOL=${CLIENT_PROTOCOL}
+      - CLIENT_HOST=${CLIENT_HOST}
+      - CLIENT_PORT=${CLIENT_PORT}
+      - PUBLIC_CLIENT_HOST=${PUBLIC_CLIENT_HOST:-0.0.0.0}
+      - SERVER_PROTOCOL=${SERVER_PROTOCOL}
+      - SERVER_HOST=${SERVER_HOST}
+      - SERVER_PORT=${SERVER_PORT}
+      - ORCID_CLIENT_ID=${ORCID_CLIENT_ID}
+      - ORCID_CLIENT_SECRET=${ORCID_CLIENT_SECRET}
+      - USE_SANDBOXED_ORCID=${USE_SANDBOXED_ORCID:-false}
+      - ORCID_AUTH_REDIRECT_PORT=${ORCID_AUTH_REDIRECT_PORT:-4000}
+      - ORCID_AUTH_REDIRECT_HOSTNAME=${ORCID_AUTH_REDIRECT_HOSTNAME:-localhost}
+      - ORCID_AUTH_REDIRECT_PROTOCOL=${ORCID_AUTH_REDIRECT_PROTOCOL:-http}
+      - INSTANCE_NAME=${INSTANCE_NAME:-ncrc}
+    entrypoint:
+      [
+        'bash',
+        './scripts/wait-for-it.sh',
+        '${POSTGRES_HOST:-db}:${POSTGRES_PORT:-5432}',
+        '--',
+        'sh',
+        'scripts/setupProdServer.sh',
+      ]
+    command: ['node', './startServer.js']
+  db:
+    image: postgres:10-alpine
+    ports:
+      - ${POSTGRES_PORT:-5432}:5432
+    environment:
+      - POSTGRES_USER
+      - POSTGRES_DB
+      - POSTGRES_PASSWORD
+      - PGDATA=/var/lib/postgresql/data/kotahi
+    volumes:
+      - ./scripts/test.sql:/docker-entrypoint-initdb.d/test.sql
+      - ./db-data:/var/lib/postgresql/data/kotahi:z
+
+  job-xsweet:
+    image: pubsweet/job-xsweet:1.5.0
+    environment:
+      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST:-db}:${POSTGRES_PORT}/${POSTGRES_DB}
+    depends_on:
+      - server
+    command:
+      [
+        'bash',
+        './scripts/wait-for-it.sh',
+        'server:${SERVER_PORT}',
+        --,
+        'node',
+        'src/xsweet.js',
+      ]
+    volumes:
+      - ./scripts/wait-for-it.sh:/home/node/scripts/wait-for-it.sh
+
+  minio:
+    image: minio/minio
+    command: ['server', '/data']
+    volumes:
+      - ./minio/data:/data
+    ports:
+      - 9000:9000
+    environment:
+      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-test} #Access key length should be at least 3 characters
+      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-password} #Secret key length should be at least 8 characters
+
+volumes:
+  db-data:
+    driver: local

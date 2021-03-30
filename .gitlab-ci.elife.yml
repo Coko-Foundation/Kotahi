@@ -1,7 +1,6 @@
 variables:
   IMAGE_ORG: kotahi
   IMAGE_NAME: kotahi
-  ELIFE_SERVER_IP: 54.87.88.111
 
 stages:
   - build

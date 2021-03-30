@@ -11,6 +11,16 @@ elife-pipeline:
       - local: .gitlab-ci.elife.yml
     strategy: depend
 
+ncrc-pipeline:
+  only:
+    refs:
+      - main
+  stage: run-pipeline
+  trigger:
+    include:
+      - local: .gitlab-ci.ncrc.yml
+    strategy: depend
+
 coko-pipeline:
   stage: run-pipeline
   trigger:

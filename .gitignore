@@ -18,3 +18,5 @@ config/local*.*
 config/*.env
 minio/data/*
 minio\data\*
+db-data\*
+db-data/*
