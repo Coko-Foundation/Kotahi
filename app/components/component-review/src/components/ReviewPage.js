@@ -1,6 +1,5 @@
 import React, { useRef, useEffect } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
-import gql from 'graphql-tag'
+import { useMutation, useQuery, gql } from '@apollo/client'
 import { Formik } from 'formik'
 // import { cloneDeep } from 'lodash'
 import config from 'config'
@@ -134,6 +133,8 @@ const query = gql`
         topic
       }
     }
+
+    getForms
   }
 `
 
@@ -187,7 +188,16 @@ const ReviewPage = ({ match, ...props }) => {
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
 
-  const { manuscript } = data
+  const { manuscript, getForms } = data
+
+  const submissionForm = getForms?.find(f => f.id === 'submit') ?? {
+    name: '',
+    id: '',
+    children: [],
+    description: '',
+    haspopup: 'false',
+  }
+
   const channelId = manuscript.channels.find(c => c.type === 'editorial').id
 
   const { status } =
@@ -291,6 +301,7 @@ const ReviewPage = ({ match, ...props }) => {
           manuscript={manuscript}
           review={existingReview}
           status={status}
+          submissionForm={submissionForm}
           updateReview={updateReview}
           {...formikProps}
         />

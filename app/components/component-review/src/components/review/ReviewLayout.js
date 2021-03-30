@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 
 import moment from 'moment'
 import { Tabs } from '@pubsweet/ui'
@@ -16,45 +17,47 @@ const addEditor = (manuscript, label) => ({
   label,
 })
 
+const hasManuscriptFile = manuscript =>
+  !!manuscript?.files?.find(file => file.fileType === 'manuscript')
+
 const ReviewLayout = ({
   currentUser,
   manuscript,
   review,
-  reviewer,
   handleSubmit,
   isValid,
   status,
   updateReview,
   uploadFile,
   channelId,
+  submissionForm,
 }) => {
   const reviewSections = []
   const editorSections = []
   const manuscriptVersions = manuscript.manuscriptVersions || []
 
-  manuscriptVersions.forEach(manuscript => {
+  manuscriptVersions.forEach(msVersion => {
     const label = moment().format('YYYY-MM-DD')
     reviewSections.push({
       content: (
         <div>
-          <ReviewMetadata manuscript={manuscript} />
+          <ReviewMetadata form={submissionForm} manuscript={msVersion} />
           <Review
             review={
-              manuscript.reviews &&
-              manuscript.reviews.find(
-                review =>
-                  (review.user.id === currentUser.id && !review.isDecision) ||
-                  {},
+              msVersion.reviews &&
+              msVersion.reviews.find(
+                r => r.user.id === currentUser.id && !r.isDecision,
               )
             }
           />
         </div>
       ),
-      key: manuscript.id,
+      key: msVersion.id,
       label,
     })
 
-    editorSections.push(addEditor(manuscript, label))
+    if (hasManuscriptFile(msVersion))
+      editorSections.push(addEditor(msVersion, label))
   }, [])
 
   if (manuscript.status !== 'revising') {
@@ -62,14 +65,13 @@ const ReviewLayout = ({
     reviewSections.push({
       content: (
         <div>
-          <ReviewMetadata manuscript={manuscript} />
+          <ReviewMetadata form={submissionForm} manuscript={manuscript} />
           {status === 'completed' ? (
             <Review review={review} />
           ) : (
             <ReviewForm
               handleSubmit={handleSubmit}
               isValid={isValid}
-              review={review}
               updateReview={updateReview}
               uploadFile={uploadFile}
             />
@@ -80,16 +82,20 @@ const ReviewLayout = ({
       label,
     })
 
-    editorSections.push(addEditor(manuscript, label))
+    if (hasManuscriptFile(manuscript))
+      editorSections.push(addEditor(manuscript, label))
   }
+
   return (
     <Columns>
       <Manuscript>
-        <Tabs
-          activeKey={editorSections[editorSections.length - 1].key}
-          sections={editorSections}
-          title="Versions"
-        />
+        {editorSections.length > 0 && (
+          <Tabs
+            activeKey={editorSections[editorSections.length - 1].key}
+            sections={editorSections}
+            title="Versions"
+          />
+        )}
 
         <Tabs
           activeKey={reviewSections[reviewSections.length - 1].key}
@@ -102,6 +108,77 @@ const ReviewLayout = ({
       </Chat>
     </Columns>
   )
+}
+
+ReviewLayout.propTypes = {
+  currentUser: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }).isRequired,
+  manuscript: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+    status: PropTypes.string.isRequired,
+    meta: PropTypes.shape({
+      notes: PropTypes.arrayOf(
+        PropTypes.shape({
+          notesType: PropTypes.string.isRequired,
+          content: PropTypes.string.isRequired,
+        }).isRequired,
+      ).isRequired,
+    }).isRequired,
+    files: PropTypes.arrayOf(
+      PropTypes.shape({
+        url: PropTypes.string.isRequired,
+        filename: PropTypes.string.isRequired,
+      }).isRequired,
+    ).isRequired,
+    manuscriptVersions: PropTypes.arrayOf(
+      PropTypes.shape({
+        reviews: PropTypes.arrayOf(),
+        id: PropTypes.string.isRequired,
+        meta: PropTypes.shape({
+          notes: PropTypes.arrayOf(
+            PropTypes.shape({
+              notesType: PropTypes.string.isRequired,
+              content: PropTypes.string.isRequired,
+            }).isRequired,
+          ).isRequired,
+        }).isRequired,
+        files: PropTypes.arrayOf(
+          PropTypes.shape({
+            url: PropTypes.string.isRequired,
+            filename: PropTypes.string.isRequired,
+          }).isRequired,
+        ).isRequired,
+      }).isRequired,
+    ),
+  }).isRequired,
+  review: PropTypes.shape({
+    reviewComment: PropTypes.string,
+    confidentialComment: PropTypes.string,
+    recommendation: PropTypes.string,
+  }),
+  handleSubmit: PropTypes.func.isRequired,
+  isValid: PropTypes.bool.isRequired,
+  status: PropTypes.string,
+  updateReview: PropTypes.func.isRequired,
+  uploadFile: PropTypes.func,
+  channelId: PropTypes.string.isRequired,
+  submissionForm: PropTypes.shape({
+    children: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        shortDescription: PropTypes.string,
+      }).isRequired,
+    ).isRequired,
+  }).isRequired,
+}
+
+ReviewLayout.defaultProps = {
+  review: undefined,
+  status: undefined,
+  uploadFile: undefined,
 }
 
 export default ReviewLayout

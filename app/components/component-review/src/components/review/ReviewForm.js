@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+import PropTypes from 'prop-types'
 import { Field } from 'formik'
 import { NoteEditor } from 'xpub-edit'
 import { Button, RadioGroup } from '@pubsweet/ui'
@@ -17,12 +18,7 @@ import {
 
 import { SectionContent, FilesUpload } from '../../../../shared'
 
-const NoteInput = ({
-  field,
-  form: { values, setFieldValue, setTouched },
-  updateReview,
-  ...rest
-}) => (
+const NoteInput = ({ field, updateReview }) => (
   <NoteEditor
     data-testid="reviewComment"
     key="note-comment"
@@ -30,24 +26,22 @@ const NoteInput = ({
     title="Comments to the Author"
     {...field}
     onBlur={value => {
-      // const review = reviewWithComment({
-      //   id: values.reviewComment?.id,
-      //   value,
-      //   values,
-      //   commentType: 'review',
-      //   name: 'reviewComment',
-      // })
       updateReview({ reviewComment: { content: value } })
     }}
     value={field.value?.content || ''}
   />
 )
 
-const ConfidentialInput = ({
-  field,
-  form: { values, setFieldValue },
-  updateReview,
-}) => (
+NoteInput.propTypes = {
+  field: PropTypes.shape({
+    value: PropTypes.shape({
+      content: PropTypes.string,
+    }),
+  }).isRequired,
+  updateReview: PropTypes.func.isRequired,
+}
+
+const ConfidentialInput = ({ field, updateReview }) => (
   <NoteEditor
     data-testid="confidentialComment"
     key="confidential-comment"
@@ -55,20 +49,22 @@ const ConfidentialInput = ({
     title="Confidential Comments to Editor (Optional)"
     {...field}
     onBlur={value => {
-      // const review = reviewWithComment({
-      //   id: values.confidentialComment?.id,
-      //   value,
-      //   values,
-      //   commentType: 'confidential',
-      //   name: 'confidentialComment',
-      // })
       updateReview({ confidentialComment: { content: value } })
     }}
     value={field.value?.content || ''}
   />
 )
 
-const RecommendationInput = ({ field, form: { values }, updateReview }) => {
+ConfidentialInput.propTypes = {
+  field: PropTypes.shape({
+    value: PropTypes.shape({
+      content: PropTypes.string,
+    }),
+  }).isRequired,
+  updateReview: PropTypes.func.isRequired,
+}
+
+const RecommendationInput = ({ field, updateReview }) => {
   const journal = useContext(JournalContext)
   return (
     <RecommendationInputContainer>
@@ -84,6 +80,14 @@ const RecommendationInput = ({ field, form: { values }, updateReview }) => {
     </RecommendationInputContainer>
   )
 }
+
+RecommendationInput.propTypes = {
+  field: PropTypes.shape({
+    value: PropTypes.string,
+  }).isRequired,
+  updateReview: PropTypes.func.isRequired,
+}
+
 const ReviewComment = ({ updateReview }) => (
   <>
     <AdminSection>
@@ -105,6 +109,7 @@ const ReviewComment = ({ updateReview }) => (
                     values: formikBag.form.values,
                     name: 'reviewComment',
                   })
+
                   // This is an upsert
                   const { data } = await updateReview(review)
                   // And we the return the file container id, so
@@ -136,6 +141,7 @@ const ReviewComment = ({ updateReview }) => (
                     values: formikBag.form.values,
                     name: 'confidentialComment',
                   })
+
                   // This is an upsert
                   const { data } = await updateReview(review)
                   // And we the return the file container id, so
@@ -151,15 +157,11 @@ const ReviewComment = ({ updateReview }) => (
   </>
 )
 
-const ReviewForm = ({
-  journal,
-  isValid,
-  isSubmitting,
-  handleSubmit,
-  updateReview,
-  uploadFile,
-  review,
-}) => (
+ReviewComment.propTypes = {
+  updateReview: PropTypes.func.isRequired,
+}
+
+const ReviewForm = ({ isValid, isSubmitting, handleSubmit, updateReview }) => (
   <SectionContent>
     <form onSubmit={handleSubmit}>
       <AdminSection>
@@ -167,7 +169,7 @@ const ReviewForm = ({
           <Title>Review</Title>
         </SectionHeader>
         <SectionRow key="note">
-          <ReviewComment review={review} updateReview={updateReview} />
+          <ReviewComment updateReview={updateReview} />
         </SectionRow>
         <SectionHeader>
           <Title>Recommendation</Title>
@@ -175,11 +177,7 @@ const ReviewForm = ({
         <SectionRowGrid>
           <Field name="recommendation" updateReview={updateReview}>
             {props => (
-              <RecommendationInput
-                journal={journal}
-                updateReview={updateReview}
-                {...props}
-              />
+              <RecommendationInput updateReview={updateReview} {...props} />
             )}
           </Field>
           <SectionAction key="submit">
@@ -192,5 +190,16 @@ const ReviewForm = ({
     </form>
   </SectionContent>
 )
+
+ReviewForm.propTypes = {
+  isValid: PropTypes.bool.isRequired,
+  isSubmitting: PropTypes.bool,
+  handleSubmit: PropTypes.func.isRequired,
+  updateReview: PropTypes.func.isRequired,
+}
+
+ReviewForm.defaultProps = {
+  isSubmitting: false,
+}
 
 export default ReviewForm
