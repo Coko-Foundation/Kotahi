@@ -21,5 +21,9 @@
     "text1": "SPM",
     "text2": "FSL"
   },
-  "newTitle": "My Fixed URL Submission"
+  "newTitle": "My Fixed URL Submission",
+  "articleId": "123",
+  "description": "This is my description",
+  "evaluationContent": "This is my evaluation content",
+  "evaluationType": "Peer Review"
 }

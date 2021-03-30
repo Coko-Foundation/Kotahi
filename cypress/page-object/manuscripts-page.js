@@ -10,6 +10,8 @@ const MANUSCRIPTS_PAGE_TITLE = '[class*=General__Heading-sc]'
 const EVALUATION_BUTTON = '[href*=evaluation]'
 const CONTROL_BUTTON = '[href*=control]'
 const CREATED_CARET = 'Carets__Caret'
+const AUTHOR_FIELD = 'UserCombo__Primary'
+const STATUS_FIELD = 'Badge__Status'
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -38,6 +40,18 @@ export const ManuscriptsPage = {
   },
   getCreatedCaret(nth) {
     return cy.getByContainsClass(CREATED_CARET).eq(nth)
+  },
+  getAuthorField(nth) {
+    return cy.getByContainsClass(AUTHOR_FIELD).eq(nth)
+  },
+  getAuthor(nth) {
+    return this.getAuthorField(nth).invoke('text')
+  },
+  getStatusField(nth) {
+    return cy.getByContainsClass(STATUS_FIELD).eq(nth)
+  },
+  getStatus(nth) {
+    return this.getStatusField(nth).invoke('text')
   },
 }
 export default ManuscriptsPage
