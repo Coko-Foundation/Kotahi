@@ -34,6 +34,7 @@ const urlFrag = config.journal.metadata.toplevel_urlfragment
 // manuscriptId is always the parent manuscript's id
 const User = ({ manuscriptId, manuscript, submitter }) => {
   const [publishManuscript] = useMutation(publishManuscriptMutation)
+
   const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT, {
     update(cache, { data: { deleteManuscriptId } }) {
       const id = cache.identify({
@@ -46,16 +47,16 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
   })
 
   const publishManuscriptHandler = () => {
-    publishManuscript({ 
+    publishManuscript({
       variables: { id: manuscript.id },
       update: (cache, { data }) => {
         cache.modify({
           id: cache.identify(manuscript),
           fields: {
-            status: data.publishManuscript.status
+            status: data.publishManuscript.status,
           },
         })
-      }
+      },
     })
   }
 
@@ -87,7 +88,7 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
       </Cell>
       <LastCell>
         {process.env.INSTANCE_NAME === 'elife' &&
-          [articleStatuses.submitted, articleStatuses.evaluated].includes(
+          [articleStatuses.submitted, articleStatuses.evaluated, articleStatuses.new].includes(
             manuscript.status,
           ) && (
             <Action to={`${urlFrag}/versions/${manuscriptId}/evaluation`}>
@@ -107,13 +108,9 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
         >
           Delete
         </Action>
-        {process.env.INSTANCE_NAME === 'elife' && 
-          <Action
-            onClick={publishManuscriptHandler}
-          >
-            Publish
-          </Action>
-        }
+        {process.env.INSTANCE_NAME === 'elife' && (
+          <Action onClick={publishManuscriptHandler}>Publish</Action>
+        )}
       </LastCell>
     </Row>
   )
