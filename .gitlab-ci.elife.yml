@@ -79,9 +79,14 @@ deploy:
     # used by psql
     PGUSER: kotahidev
     PGPASSWORD: kotahidev
-    INSTANCE_NAME: elife
   services:
     - postgres
+
+    
+test-chrome:
+  <<: *run_test_template
+  variables:
+    TEST_ITEM: "chrome:elife"
   script:
     - cd ${HOME}
     - apt-get -y install postgresql-client
@@ -91,11 +96,7 @@ deploy:
     - cp .env.example .env
     # specify host here else it confuses the linked postgres image
     - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
-    
-test-chrome:
-  <<: *run_test_template
-  variables:
-    TEST_ITEM: "chrome:elife"
+
 
 # test-chrome:
 #   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
