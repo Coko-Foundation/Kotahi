@@ -1,8 +1,9 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import { Field } from 'formik'
 import { NoteEditor } from 'xpub-edit'
-import { Button, RadioGroup } from '@pubsweet/ui'
+import { Button, RadioGroup as UnstableRadioGroup } from '@pubsweet/ui'
 
 import { JournalContext } from '../../../../xpub-journal/src'
 import { reviewWithComment } from './util'
@@ -17,6 +18,11 @@ import {
 } from '../style'
 
 import { SectionContent, FilesUpload } from '../../../../shared'
+
+// See issue #38
+const RadioGroup = styled(UnstableRadioGroup)`
+  position: relative;
+`
 
 const NoteInput = ({ field, updateReview }) => (
   <NoteEditor
