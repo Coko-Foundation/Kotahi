@@ -1,6 +1,6 @@
 import config from 'config'
 import request from 'pubsweet-client/src/helpers/api'
-import gql from 'graphql-tag'
+import { gql } from '@apollo/client'
 import currentRolesVar from '../../../shared/currentRolesVar'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
