@@ -21,6 +21,7 @@ import {
 
 import { convertTimestampToDate } from '../../../shared/time-formatting'
 import { articleStatuses } from '../../../globals'
+import { publishManuscriptMutation } from '../../component-review/src/components/queries'
 
 const DELETE_MANUSCRIPT = gql`
   mutation($id: ID!) {
@@ -32,6 +33,7 @@ const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 // manuscriptId is always the parent manuscript's id
 const User = ({ manuscriptId, manuscript, submitter }) => {
+  const [publishManuscript] = useMutation(publishManuscriptMutation)
   const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT, {
     update(cache, { data: { deleteManuscriptId } }) {
       const id = cache.identify({
@@ -42,6 +44,20 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
       cache.evict({ id })
     },
   })
+
+  const publishManuscriptHandler = () => {
+    publishManuscript({ 
+      variables: { id: manuscript.id },
+      update: (cache, { data }) => {
+        cache.modify({
+          id: cache.identify(manuscript),
+          fields: {
+            status: data.publishManuscript.status
+          },
+        })
+      }
+    })
+  }
 
   return (
     <Row>
@@ -83,6 +99,13 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
         >
           Delete
         </Action>
+        {process.env.INSTANCE_NAME === 'elife' && 
+          <Action
+            onClick={publishManuscriptHandler}
+          >
+            Publish
+          </Action>
+        }
       </LastCell>
     </Row>
   )

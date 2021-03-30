@@ -1,5 +1,6 @@
 const merge = require('lodash/merge')
 const { ref, raw } = require('objection')
+const axios = require('axios')
 
 const ManuscriptResolvers = ({ isVersion }) => {
   const resolvers = {
@@ -262,7 +263,33 @@ const resolvers = {
     async publishManuscript(_, { id }, ctx) {
       let manuscript = await ctx.models.Manuscript.query().findById(id)
 
-      if (!manuscript.published) {
+      if (process.env.INSTANCE_NAME === 'elife') {
+        const requestBody = {
+          uri: manuscript.submission.articleURL,
+          text: manuscript.submission.evaluationContent,
+          tags: [
+            manuscript.submission.evalType
+          ],
+          // group: "q5X6RWJ6",
+        }
+
+        try {
+          const response = await axios.post('https://api.hypothes.is/api/annotations', requestBody, {
+            headers: {
+              'Authorization': 'Bearer 6879-C9eSHATI6gsjTD0GmZ9NIojOPDnntsdt76iE1AKlyzA'
+            }
+          })
+          const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(id, {
+            published: new Date(),
+            status: 'published',
+          })
+          return updatedManuscript
+        } catch {
+          return
+        }
+      }
+
+      if (!manuscript.published && process.env.INSTANCE_NAME === 'coko') {
         manuscript = ctx.models.Manuscript.query().updateAndFetchById(id, {
           published: new Date(),
         })

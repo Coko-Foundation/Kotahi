@@ -162,6 +162,7 @@ export const publishManuscriptMutation = gql`
     publishManuscript(id: $id) {
       id
       published
+      status
     }
   }
 `

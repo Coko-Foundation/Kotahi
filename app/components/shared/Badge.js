@@ -64,6 +64,7 @@ const label = (status, published) => {
     invited: 'Invited', // reviewer status
     completed: 'Completed', // reviewer status
     evaluated: 'evaluated',
+    published: 'published',
   }
 
   if (isPublished) {
