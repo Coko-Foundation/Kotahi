@@ -66,6 +66,7 @@ deploy:
 #   script:
 #     - cd ${HOME}
 #     - npm run lint
+#
 
 .test_template: &run_test_template
   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
