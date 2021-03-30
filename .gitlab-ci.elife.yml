@@ -81,21 +81,24 @@ deploy:
     PGPASSWORD: kotahidev
   services:
     - postgres
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - hostname
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
+
+.test_script: &run_test_script   
+  - cd ${HOME}
+  - apt-get -y install postgresql-client
+  # this is needed for pgboss initial setup
+  - hostname
+  - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+  # use the example env for tests
+  - cp .env.example .env
+  # specify host here else it confuses the linked postgres image
+  - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
     
 test-chrome:
   <<: *run_test_template
   variables:
     TEST_ITEM: "chrome:elife"
+  script:
+    - *run_test_script
 
 # test-chrome:
 #   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
