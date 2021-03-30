@@ -68,37 +68,7 @@ deploy:
 #     - cd ${HOME}
 #     - npm run lint
 
-.test_template: &run_test_template
-  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-  stage: test
-  variables:
-    GIT_STRATEGY: none
-    # setup data for postgres image
-    POSTGRES_USER: kotahidev
-    POSTGRES_PASSWORD: kotahidev
-    # used by psql
-    PGUSER: kotahidev
-    PGPASSWORD: kotahidev
-  services:
-    - postgres
-
-    
-test-chrome:
-  <<: *run_test_template
-  variables:
-    TEST_ITEM: "chrome:elife"
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
-
-
-# test-chrome:
+# .test_template: &run_test_template
 #   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
 #   stage: test
 #   variables:
@@ -109,9 +79,6 @@ test-chrome:
 #     # used by psql
 #     PGUSER: kotahidev
 #     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#     INSTANCE_NAME: elife
 #   services:
 #     - postgres
 #   script:
@@ -122,7 +89,38 @@ test-chrome:
 #     # use the example env for tests
 #     - cp .env.example .env
 #     # specify host here else it confuses the linked postgres image
-#     - POSTGRES_HOST=postgres yarn test:all:chrome
+#     - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
+    
+# test-chrome:
+#   <<: *run_test_template
+#   variables:
+#     TEST_ITEM: "chrome:elife"
+
+test-chrome:
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+    # setup data for postgres image
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
+    # used by psql
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
+    # this is used to ignore self signed certs
+    #START_SERVER_AND_TEST_INSECURE: 1
+    INSTANCE_NAME: elife
+  services:
+    - postgres
+  script:
+    - cd ${HOME}
+    - apt-get -y install postgresql-client
+    # this is needed for pgboss initial setup
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+    # use the example env for tests
+    - cp .env.example .env
+    # specify host here else it confuses the linked postgres image
+    - POSTGRES_HOST=postgres yarn test:all:chrome:elife
 
 # test-chrome-samsung:
 #   <<: *run_test_template
