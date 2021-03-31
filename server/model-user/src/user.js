@@ -75,7 +75,7 @@ class User extends BaseModel {
           type: ['string', 'object', 'null'],
           format: 'date-time',
         },
-        profilePicture: { type: ['boolean', 'null'] },
+        profilePicture: { type: ['string', 'null'] },
       },
     }
   }
