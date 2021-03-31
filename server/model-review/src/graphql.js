@@ -5,8 +5,7 @@ const resolvers = {
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
       // We process comment fields into array
-      input.user = ctx.user
-      const processedReview = Object.assign({}, input)
+      const processedReview = { ...input, user: ctx.user }
       processedReview.comments = [
         input.reviewComment,
         input.confidentialComment,
@@ -34,9 +33,11 @@ const resolvers = {
 
     async completeReview(_, { id }, ctx) {
       const review = await ctx.models.Review.query().findById(id)
+
       const manuscript = await ctx.models.Manuscript.query().findById(
         review.manuscriptId,
       )
+
       const team = await manuscript
         .$relatedQuery('teams')
         .where('role', 'reviewer')
