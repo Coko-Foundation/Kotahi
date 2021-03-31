@@ -206,7 +206,7 @@ const ReviewPage = ({ match, ...props }) => {
       []
     ).find(statusTemp => statusTemp.user === currentUser.id) || {}
 
-  const updateReview = (review, file) => {
+  const updateReview = review => {
     const reviewData = {
       recommendation: review.recommendation,
       manuscriptId: manuscript.id,
@@ -243,7 +243,7 @@ const ReviewPage = ({ match, ...props }) => {
 
               if (
                 existingReviewRefs.some(
-                  ref => readField('id', ref) === updateReview.id,
+                  ref => readField('id', ref) === updateReviewTemp.id,
                 )
               ) {
                 return existingReviewRefs

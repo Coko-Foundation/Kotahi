@@ -34,6 +34,7 @@ const urlFrag = config.journal.metadata.toplevel_urlfragment
 // manuscriptId is always the parent manuscript's id
 const User = ({ manuscriptId, manuscript, submitter }) => {
   const [publishManuscript] = useMutation(publishManuscriptMutation)
+
   const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT, {
     update(cache, { data: { deleteManuscriptId } }) {
       const id = cache.identify({
@@ -46,22 +47,27 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
   })
 
   const publishManuscriptHandler = () => {
-    publishManuscript({ 
+    publishManuscript({
       variables: { id: manuscript.id },
       update: (cache, { data }) => {
         cache.modify({
           id: cache.identify(manuscript),
           fields: {
-            status: data.publishManuscript.status
+            status: data.publishManuscript.status,
           },
         })
-      }
+      },
     })
   }
 
   return (
     <Row>
-      <Cell>{manuscript.meta && manuscript.meta.title}</Cell>
+      {process.env.INSTANCE_NAME === 'coko' && (
+        <Cell>{manuscript.meta && manuscript.meta.title}</Cell>
+      )}
+      {process.env.INSTANCE_NAME === 'elife' && (
+        <Cell>{manuscript.submission && manuscript.submission.articleId}</Cell>
+      )}
       <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
       <Cell>{convertTimestampToDate(manuscript.updated)}</Cell>
       <Cell>
@@ -81,16 +87,19 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
         )}
       </Cell>
       <LastCell>
-        {process.env.INSTANCE_NAME === 'elife' && [articleStatuses.submitted, articleStatuses.evaluated].includes(manuscript.status) &&
-          <Action to={`${urlFrag}/versions/${manuscriptId}/evaluation`}>
-            Evaluation
-          </Action>
-        }
-        {process.env.INSTANCE_NAME === 'coko' && 
+        {process.env.INSTANCE_NAME === 'elife' &&
+          [articleStatuses.submitted, articleStatuses.evaluated, articleStatuses.new].includes(
+            manuscript.status,
+          ) && (
+            <Action to={`${urlFrag}/versions/${manuscriptId}/evaluation`}>
+              Evaluation
+            </Action>
+          )}
+        {process.env.INSTANCE_NAME === 'coko' && (
           <Action to={`${urlFrag}/versions/${manuscriptId}/decision`}>
             Control
           </Action>
-        }
+        )}
         <Action to={`${urlFrag}/versions/${manuscriptId}/manuscript`}>
           View
         </Action>
@@ -99,13 +108,9 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
         >
           Delete
         </Action>
-        {process.env.INSTANCE_NAME === 'elife' && 
-          <Action
-            onClick={publishManuscriptHandler}
-          >
-            Publish
-          </Action>
-        }
+        {process.env.INSTANCE_NAME === 'elife' && (
+          <Action onClick={publishManuscriptHandler}>Publish</Action>
+        )}
       </LastCell>
     </Row>
   )
@@ -118,8 +123,12 @@ User.propTypes = {
       title: PropTypes.string.isRequired,
     }).isRequired,
     created: PropTypes.string.isRequired,
+    id: PropTypes.string,
     updated: PropTypes.string,
     status: PropTypes.string.isRequired,
+    // Disabled because submission can have different fields
+    // eslint-disable-next-line
+    submission: PropTypes.object,
   }).isRequired,
   submitter: PropTypes.shape({
     defaultIdentity: PropTypes.shape({
