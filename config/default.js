@@ -41,6 +41,7 @@ module.exports = {
       const formTemplatePath = {
         elife: '../app/storage/forms',
         coko: '../app/storage/forms-coko',
+        ncrc: '../app/storage/forms-coko',
       }
 
       const pathToFormTemplateFolder =
