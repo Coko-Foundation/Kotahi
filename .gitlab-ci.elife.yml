@@ -78,6 +78,7 @@ deploy:
     # used by psql
     PGUSER: kotahidev
     PGPASSWORD: kotahidev
+    INSTANCE_NAME: elife
   services:
     - postgres
   script:
