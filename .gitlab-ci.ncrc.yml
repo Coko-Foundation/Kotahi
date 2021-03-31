@@ -5,7 +5,7 @@ variables:
 stages:
   - build
   - deploy
-  - test
+  #- test
 
 build:
   image: docker:20.10.5
@@ -68,43 +68,43 @@ deploy:
 #     - npm run lint
 #
 
-.test_template: &run_test_template
-  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-  stage: test
-  variables:
-    GIT_STRATEGY: none
-    # setup data for postgres image
-    POSTGRES_USER: kotahidev
-    POSTGRES_PASSWORD: kotahidev
-    # used by psql
-    PGUSER: kotahidev
-    PGPASSWORD: kotahidev
-  services:
-    - postgres
+# .test_template: &run_test_template
+#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+#   stage: test
+#   variables:
+#     GIT_STRATEGY: none
+#     # setup data for postgres image
+#     POSTGRES_USER: kotahidev
+#     POSTGRES_PASSWORD: kotahidev
+#     # used by psql
+#     PGUSER: kotahidev
+#     PGPASSWORD: kotahidev
+#   services:
+#     - postgres
 
-test-chrome:
-  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-  stage: test
-  variables:
-    GIT_STRATEGY: none
-    # setup data for postgres image
-    POSTGRES_USER: kotahidev
-    POSTGRES_PASSWORD: kotahidev
-    # used by psql
-    PGUSER: kotahidev
-    PGPASSWORD: kotahidev
-    # this is used to ignore self signed certs
-    #START_SERVER_AND_TEST_INSECURE: 1
-  services:
-    - postgres
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - hostname
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - POSTGRES_HOST=postgres yarn test:all:chrome:ncrc
+# test-chrome:
+#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+#   stage: test
+#   variables:
+#     GIT_STRATEGY: none
+#     # setup data for postgres image
+#     POSTGRES_USER: kotahidev
+#     POSTGRES_PASSWORD: kotahidev
+#     # used by psql
+#     PGUSER: kotahidev
+#     PGPASSWORD: kotahidev
+#     # this is used to ignore self signed certs
+#     #START_SERVER_AND_TEST_INSECURE: 1
+#   services:
+#     - postgres
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - hostname
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - POSTGRES_HOST=postgres yarn test:all:chrome:ncrc
 
