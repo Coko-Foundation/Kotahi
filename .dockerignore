@@ -32,6 +32,7 @@ cypress/
 data/
 coverage/
 logs/
+minio/
 stories/
 tmp/
 uploads/*

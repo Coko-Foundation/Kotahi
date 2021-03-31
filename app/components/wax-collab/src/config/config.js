@@ -1,9 +1,10 @@
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 
+import { DefaultSchema } from 'wax-prosemirror-utilities'
+
 import {
   AnnotationToolGroupService,
   ImageService,
-  PlaceholderService,
   InlineAnnotationsService,
   LinkService,
   // ListsService,
@@ -31,6 +32,7 @@ import invisibles, {
 } from '@guardian/prosemirror-invisibles'
 
 export default {
+  SchemaService: DefaultSchema,
   MenuService: [
     {
       templateArea: 'topBar',
@@ -51,7 +53,6 @@ export default {
   PmPlugins: [invisibles([hardBreak()])],
 
   services: [
-    new PlaceholderService(),
     new ImageService(),
     // new ListsService(),
     new InlineAnnotationsService(),
