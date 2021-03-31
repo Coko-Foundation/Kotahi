@@ -1,7 +1,7 @@
 variables:
   IMAGE_ORG: kotahi
   IMAGE_NAME: kotahi
-  INSTALL_PGCRYPTO_EXT: psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+  INSTALL_PGCRYPTO_EXT: 'psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"'
 
 stages:
   - build
@@ -81,7 +81,8 @@ deploy:
     PGPASSWORD: kotahidev
   services:
     - postgres
-  script:
+
+.test_script: &run_script_template
     - cd ${HOME}
     - apt-get -y install postgresql-client
     # use the example env for tests
@@ -95,6 +96,8 @@ test-chrome:
   <<: *run_test_template
   variables:
     TEST_ITEM: chrome:elife
+  script:
+    - *run_script_template
 
 
 # test-chrome:
