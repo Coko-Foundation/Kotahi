@@ -86,6 +86,7 @@ deploy:
    - apt-get -y install postgresql-client
    # use the example env for tests
    - cp .env.example .env
+   - echo "INSTANCE_NAME=elife" >> .env
     
 test-chrome:
   <<: *run_test_template
