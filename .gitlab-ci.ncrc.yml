@@ -23,6 +23,9 @@ build:
       docker pull $IMAGE_ORG/$IMAGE_NAME:latest || true
       docker build \
       --build-arg instance_name=ncrc \
+      --build-arg public_client_host=ncrc.kotahi.cloud \
+      --build-arg public_client_port=443 \
+      --build-arg public_client_protocol=https \
       --file ./Dockerfile-production \
       --cache-from $CI_REGISTRY_IMAGE:latest \
       --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA \
