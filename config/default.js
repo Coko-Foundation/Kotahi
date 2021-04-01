@@ -6,6 +6,11 @@ const components = require('./components.json')
 const formComponents = require('./form-components.json')
 const journal = require('./journal')
 
+// eslint-disable-next-line
+console.log('process.env.INSTANCE_NAME')
+// eslint-disable-next-line
+console.log(process.env.INSTANCE_NAME)
+
 module.exports = {
   teams: {
     seniorEditor: {
@@ -43,6 +48,10 @@ module.exports = {
         coko: '../app/storage/forms-coko',
         ncrc: '../app/storage/forms-ncrc',
       }
+      // eslint-disable-next-line
+      console.log('process.env.INSTANCE_NAME')
+      // eslint-disable-next-line
+      console.log(process.env.INSTANCE_NAME)
 
       const pathToFormTemplateFolder =
         formTemplatePath[String(process.env.INSTANCE_NAME)]
