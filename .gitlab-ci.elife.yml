@@ -105,16 +105,16 @@ deploy:
 #     - *run_script_template
 
 .vars_template: &vars_insert
-   GIT_STRATEGY: none
-   POSTGRES_USER: kotahidev
-   POSTGRES_PASSWORD: kotahidev
-   PGUSER: kotahidev
-   PGPASSWORD: kotahidev
+  variables:
+    GIT_STRATEGY: none
+    POSTGRES_USER: kotahidev
+    POSTGRES_PASSWORD: kotahidev
+    PGUSER: kotahidev
+    PGPASSWORD: kotahidev
 
 test-chrome:
   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
-  variables:
   <<: *vars_insert
   services:
     - postgres
