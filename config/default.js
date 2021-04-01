@@ -161,12 +161,21 @@ module.exports = {
     theme: process.env.PUBSWEET_THEME,
     baseUrl: deferConfig(cfg => {
       const {
-        ORCID_AUTH_REDIRECT_PORT,
-        ORCID_AUTH_REDIRECT_HOSTNAME,
-        ORCID_AUTH_REDIRECT_PROTOCOL,
-      } = process.env
+        publicProtocol,
+        protocol,
+        publicHost,
+        host,
+        publicPort,
+        port,
+      } = cfg['pubsweet-client']
 
-      return `${ORCID_AUTH_REDIRECT_PROTOCOL}://${ORCID_AUTH_REDIRECT_HOSTNAME}:${ORCID_AUTH_REDIRECT_PORT}`
+      const protocolToUse = publicProtocol || protocol
+      let hostToUse = publicHost || host || 'localhost'
+      if (hostToUse === '0.0.0.0') hostToUse = 'localhost'
+      const portToUse = publicPort || port
+      return `${protocolToUse}://${hostToUse}${
+        portToUse ? `:${portToUse}` : ''
+      }`
     }),
   },
   'pubsweet-component-xpub-dashboard': {
