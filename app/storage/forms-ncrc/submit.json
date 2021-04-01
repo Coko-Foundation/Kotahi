@@ -68,8 +68,8 @@
             "value": "randomizedControlTrial"
           },
           {
-            "label": "Non-Rnadomized Trial",
-            "value": "nonRnadomizedTrial"
+            "label": "Non-Randomized Trial",
+            "value": "nonRandomizedTrial"
           },
           {
             "label": "Modeling/Simulation",

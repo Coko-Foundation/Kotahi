@@ -12,6 +12,8 @@ import {
   Primary,
   Secondary,
   UserInfo,
+  StyledTopic,
+  StyledTableLabel,
   // SuccessStatus,
   // ErrorStatus,
   // NormalStatus,
@@ -20,6 +22,7 @@ import {
 } from './style'
 
 import { convertTimestampToDate } from '../../../shared/time-formatting'
+import { convertCamelCaseToText } from '../../../shared/convertCamelCaseToText'
 import { articleStatuses } from '../../../globals'
 import { publishManuscriptMutation } from '../../component-review/src/components/queries'
 
@@ -70,9 +73,25 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
       )}
       <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
       <Cell>{convertTimestampToDate(manuscript.updated)}</Cell>
+      {process.env.INSTANCE_NAME === 'ncrc' && 
+        <Cell>
+          {manuscript.submission.topics.map((topic, index) => {
+            return <StyledTopic key={index} title={convertCamelCaseToText(topic)}>
+                {convertCamelCaseToText(topic)}
+              </StyledTopic>
+          })}
+        </Cell>
+      }
       <Cell>
         <StatusBadge status={manuscript.status} />
       </Cell>
+      {process.env.INSTANCE_NAME === 'ncrc' && 
+      <Cell>
+        <StyledTableLabel>
+          {manuscript.submission && convertCamelCaseToText(manuscript.submission.labels)}
+        </StyledTableLabel>
+      </Cell>
+      }
       <Cell>
         {submitter && (
           <UserCombo>

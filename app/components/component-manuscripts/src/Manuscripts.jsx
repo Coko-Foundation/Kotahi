@@ -80,6 +80,13 @@ const GET_MANUSCRIPTS = gql`
 
 const Manuscripts = ({ history, ...props }) => {
   const SortHeader = ({ thisSortName, children }) => {
+    if(!thisSortName) {
+      return (
+        <th>
+          {children}
+        </th>
+      )
+    }
     const changeSort = () => {
       if (sortName !== thisSortName) {
         setSortName(thisSortName)
@@ -163,7 +170,13 @@ const Manuscripts = ({ history, ...props }) => {
               )}
               <SortHeader thisSortName="created">Created</SortHeader>
               <SortHeader thisSortName="updated">Updated</SortHeader>
+              {process.env.INSTANCE_NAME === 'ncrc' &&
+                <SortHeader>Topic</SortHeader>
+              }
               <SortHeader thisSortName="status">Status</SortHeader>
+              {process.env.INSTANCE_NAME === 'ncrc' &&
+                <SortHeader thisSortName="submission:labels">Label</SortHeader>
+              }
               <SortHeader thisSortName="submitterId">Author</SortHeader>
               <th />
             </tr>
