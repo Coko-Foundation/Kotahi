@@ -4,7 +4,7 @@
  * where users can see the list of submitted manuscripts & select Control,
  * View or Delete.
  */
-const MANUSCRIPTS_OPTIONS_LIST = '[class*=Table__LastCell] > a'
+const MANUSCRIPTS_OPTIONS_LIST = '[class*=style__UserAction]'
 const BUTTON = 'button'
 const MANUSCRIPTS_PAGE_TITLE = '[class*=General__Heading-sc]'
 const EVALUATION_BUTTON = '[href*=evaluation]'
@@ -12,6 +12,8 @@ const CONTROL_BUTTON = '[href*=control]'
 const CREATED_CARET = 'Carets__Caret'
 const AUTHOR_FIELD = 'UserCombo__Primary'
 const STATUS_FIELD = 'Badge__Status'
+const MANUSCRIPTS_TABLE_HEAD = '[class*=Table__Header] > tr >th'
+const ARTICLE_ID = '[class*=Table__Row]>td:nth-child(1)'
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -19,6 +21,9 @@ export const ManuscriptsPage = {
   },
   selectOptionWithText(text) {
     this.getManuscriptsOptionsList().contains(text).click()
+  },
+  getOptionWithText(text) {
+    return this.getManuscriptsOptionsList().contains(text)
   },
   getSubmitButton() {
     return cy.get(BUTTON).contains('New submission')
@@ -52,6 +57,15 @@ export const ManuscriptsPage = {
   },
   getStatus(nth) {
     return this.getStatusField(nth).invoke('text')
+  },
+  getTabelHead(nth) {
+    return cy.get(MANUSCRIPTS_TABLE_HEAD).eq(nth)
+  },
+  getArticleIdColumn(nth) {
+    return cy.get(ARTICLE_ID).eq(nth)
+  },
+  clickArticleId() {
+    cy.get(MANUSCRIPTS_TABLE_HEAD).eq(0).click()
   },
 }
 export default ManuscriptsPage
