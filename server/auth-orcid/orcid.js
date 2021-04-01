@@ -6,16 +6,20 @@ const fetchUserDetails = require('./fetchUserDetails')
 
 const CALLBACK_URL = '/auth/orcid/callback'
 
+const {
+  PUBLIC_CLIENT_PROTOCOL,
+  PUBLIC_CLIENT_HOST,
+  PUBLIC_CLIENT_PORT,
+} = process.env
+
+const orcidBackURL = `${PUBLIC_CLIENT_PROTOCOL}://${PUBLIC_CLIENT_HOST}:${PUBLIC_CLIENT_PORT}`
+// eslint-disable-next-line
+console.log('orcid logging: ', orcidBackURL)
+
 module.exports = app => {
   // eslint-disable-next-line global-require
   const { User } = require('@pubsweet/models')
 
-  // eslint-disable-next-line
-  console.log('---------------------------------')
-  // eslint-disable-next-line
-  console.log('config get pubsweet client baseUrl')
-  // eslint-disable-next-line
-  console.log(config.get('pubsweet-client.baseUrl'))
   // set up OAuth client
   passport.use(
     new OrcidStrategy(
@@ -24,7 +28,7 @@ module.exports = app => {
         scope: '/authenticate',
         // this works here only with webpack dev server's proxy (ie. clientUrl/auth -> serverUrl/auth)
         // or when the server and client are served from the same url
-        callbackURL: config.get('pubsweet-client.baseUrl') + CALLBACK_URL,
+        callbackURL: orcidBackURL + CALLBACK_URL,
         ...config.get('auth-orcid'),
       },
       async (accessToken, refreshToken, params, profile, done) => {
