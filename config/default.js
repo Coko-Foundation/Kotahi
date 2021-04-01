@@ -169,21 +169,6 @@ module.exports = {
         port,
       } = cfg['pubsweet-client']
 
-      // eslint-disable-next-line
-      console.log('-----------------------------')
-      // eslint-disable-next-line
-      console.log('protocolToUse')
-      // eslint-disable-next-line
-      console.log(protocolToUse)
-      // eslint-disable-next-line
-      console.log('hostToUse')
-      // eslint-disable-next-line
-      console.log(hostToUse)
-      // eslint-disable-next-line
-      console.log('portToUse')
-      // eslint-disable-next-line
-      console.log(portToUse)
-
       const protocolToUse = publicProtocol || protocol
       let hostToUse = publicHost || host || 'localhost'
       if (hostToUse === '0.0.0.0') hostToUse = 'localhost'

@@ -9,6 +9,13 @@ const CALLBACK_URL = '/auth/orcid/callback'
 module.exports = app => {
   // eslint-disable-next-line global-require
   const { User } = require('@pubsweet/models')
+
+  // eslint-disable-next-line
+  console.log('---------------------------------')
+  // eslint-disable-next-line
+  console.log('config get pubsweet client baseUrl')
+  // eslint-disable-next-line
+  console.log(config.get('pubsweet-client.baseUrl'))
   // set up OAuth client
   passport.use(
     new OrcidStrategy(
