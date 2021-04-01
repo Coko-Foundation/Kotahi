@@ -230,7 +230,7 @@ const SubmitPage = ({ match, history }) => {
       history.push(`${urlFrag}/dashboard`)
     }
 
-    if(process.env.INSTANCE_NAME === 'elife') {
+    if(['elife', 'ncrc'].includes(process.env.INSTANCE_NAME)) {
       history.push(`${urlFrag}/admin/manuscripts`)
     }
   }

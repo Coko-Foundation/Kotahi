@@ -59,7 +59,7 @@ module.exports = app => {
             user.defaultIdentity.name = `${userDetails.firstName} ${userDetails.lastName}`
             user.defaultIdentity.aff = userDetails.institution
 
-            if (process.env.INSTANCE_NAME === 'elife') {
+            if (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME)) {
               user.admin = true
             }
 
@@ -99,7 +99,7 @@ module.exports = app => {
         }
       }
 
-      if (process.env.INSTANCE_NAME === 'elife') {
+      if (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME)) {
         // temporary .. because all users are admins - is temporary feature
         redirectionURL = '/kotahi/admin/manuscripts'
       }

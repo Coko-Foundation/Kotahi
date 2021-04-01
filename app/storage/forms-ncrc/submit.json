@@ -1,0 +1,231 @@
+{
+    "children": [
+      {
+        "title": "Article URL",
+        "id": "1617195421539",
+        "component": "TextField",
+        "name": "submission.articleURL",
+        "description": "<p></p>",
+        "validate": [
+          {
+            "value": "required",
+            "label": "Required"
+          }
+        ]
+      },
+      {
+        "title": "Article Description",
+        "id": "1617195483503",
+        "component": "TextField",
+        "name": "submission.articleDescription",
+        "validate": [
+          {
+            "value": "required",
+            "label": "Required"
+          }
+        ]
+      },
+      {
+        "title": "Our take",
+        "id": "1617195546630",
+        "component": "AbstractEditor",
+        "name": "submission.ourTake",
+        "validate": [
+          {
+            "value": "required",
+            "label": "Required"
+          }
+        ]
+      },
+      {
+        "options": [
+          {
+            "label": "Case-series",
+            "value": "caseSeries"
+          },
+          {
+            "label": "Case-control",
+            "value": "caseControl"
+          },
+          {
+            "label": "Cross-sectional",
+            "value": "crossSectional"
+          },
+          {
+            "label": "Prospective cohort",
+            "value": "prospectiveCohort"
+          },
+          {
+            "label": "Retrospective cohort",
+            "value": "retrospectiveCohort"
+          },
+          {
+            "label": "Ecological",
+            "value": "ecological"
+          },
+          {
+            "label": "Randomized Control Trial",
+            "value": "randomizedControlTrial"
+          },
+          {
+            "label": "Non-Rnadomized Trial",
+            "value": "nonRnadomizedTrial"
+          },
+          {
+            "label": "Modeling/Simulation",
+            "value": "modelingSimulation"
+          },
+          {
+            "label": "Other",
+            "value": "other"
+          }
+        ],
+        "title": "Study design",
+        "id": "1617195606326",
+        "component": "Select",
+        "name": "submission.studyDesign",
+        "validate": [
+          {
+            "value": "required",
+            "label": "Required"
+          }
+        ]
+      },
+      {
+        "title": "Study population and setting",
+        "id": "1617196039750",
+        "component": "AbstractEditor",
+        "name": "submission.studyPopulationAndSetting",
+        "validate": [
+          {
+            "value": "required",
+            "label": "Required"
+          }
+        ]
+      },
+      {
+        "title": "Summary of main findings",
+        "id": "1617196078810",
+        "component": "AbstractEditor",
+        "name": "submission.summaryOfMainFindings",
+        "validate": [
+          {
+            "value": "required",
+            "label": "Required"
+          }
+        ]
+      },
+      {
+        "title": "Study strengths",
+        "id": "1617196181149",
+        "component": "AbstractEditor",
+        "name": "submission.studyStrengths",
+        "validate": [
+          {
+            "value": "required",
+            "label": "Required"
+          }
+        ]
+      },
+      {
+        "title": "Limitations",
+        "id": "1617196237717",
+        "component": "AbstractEditor",
+        "name": "submission.limitations",
+        "validate": [
+          {
+            "value": "required",
+            "label": "Required"
+          }
+        ]
+      },
+      {
+        "title": "Value added",
+        "id": "1617196283857",
+        "component": "AbstractEditor",
+        "name": "submission.valueAdded",
+        "validate": [
+          {
+            "value": "required",
+            "label": "Required"
+          }
+        ]
+      },
+      {
+        "options": [
+          {
+            "label": "Ready to evaluate",
+            "value": "readyToEvaluate"
+          },
+          {
+            "label": "Evaluated",
+            "value": "evaluated"
+          },
+          {
+            "label": "Ready to publish",
+            "value": "readyToPublish"
+          }
+        ],
+        "title": "Labels",
+        "id": "1617196325513",
+        "component": "Select",
+        "name": "submission.labels",
+        "validate": [
+          {
+            "value": "required",
+            "label": "Required"
+          }
+        ]
+      },
+      {
+        "options": [
+          {
+            "label": "ecology and spillover",
+            "value": "ecologyAndSpillover"
+          },
+          {
+            "label": "vaccines",
+            "value": "vaccines"
+          },
+          {
+            "label": "non-pharmaceutical and pharmaceutical interventions",
+            "value": "nonPharmaceuticalAndPharmaceuticalInterventions"
+          },
+          {
+            "label": "epidemiology",
+            "value": "epidemiology"
+          },
+          {
+            "label": "diagnostics",
+            "value": "diagnostics"
+          },
+          {
+            "label": "modeling",
+            "value": "modeling"
+          },
+          {
+            "label": "clinical presentation",
+            "value": "clinicalPresentation"
+          },
+          {
+            "label": "prognostic risk factors",
+            "value": "prognosticRiskFactors"
+          }
+        ],
+        "title": "Topics",
+        "id": "1617196386967",
+        "component": "CheckboxGroup",
+        "name": "submission.topics",
+        "validate": [
+          {
+            "value": "required",
+            "label": "Required"
+          }
+        ]
+      }
+    ],
+    "id": "NCRC Submission Form",
+    "name": "NCRC Submission Form",
+    "description": "<p>NCRC Form</p>",
+    "haspopup": "false"
+  }

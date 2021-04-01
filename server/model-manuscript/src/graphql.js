@@ -263,7 +263,7 @@ const resolvers = {
     async publishManuscript(_, { id }, ctx) {
       let manuscript = await ctx.models.Manuscript.query().findById(id)
 
-      if (process.env.INSTANCE_NAME === 'elife') {
+      if (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME)) {
         const requestBody = {
           uri: manuscript.submission.articleURL,
           text: manuscript.submission.evaluationContent,

@@ -202,6 +202,7 @@
     "dotenv-cli": "^4.0.0",
     "file-loader": "1.1.11",
     "html-webpack-plugin": "3.2.0",
+    "husky": "^6.0.0",
     "jest-cli": "22.4.4",
     "joi-browser": "10.6.1",
     "mini-css-extract-plugin": "0.11.2",

@@ -137,7 +137,7 @@ const Manuscripts = ({ history, ...props }) => {
 
   return (
     <Container>
-      {process.env.INSTANCE_NAME === 'elife' && (
+      {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
         <HeadingWithAction>
           <Heading>Manuscripts</Heading>
           <Button
@@ -158,7 +158,7 @@ const Manuscripts = ({ history, ...props }) => {
               {process.env.INSTANCE_NAME === 'coko' && (
                 <SortHeader thisSortName="meta:title">Title</SortHeader>
               )}
-              {process.env.INSTANCE_NAME === 'elife' && (
+              {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
                 <SortHeader thisSortName="submission:articleId">Article Id</SortHeader>
               )}
               <SortHeader thisSortName="created">Created</SortHeader>

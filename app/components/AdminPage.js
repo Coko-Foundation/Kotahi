@@ -234,7 +234,7 @@ const AdminPage = () => {
           path={`${urlFrag}/admin/manuscripts`}
           redirectLink={redirectLink}
         />
-        {process.env.INSTANCE_NAME === 'elife' &&
+        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
           <PrivateRoute
             component={SubmitPage}
             exact

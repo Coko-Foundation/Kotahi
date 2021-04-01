@@ -65,7 +65,7 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
       {process.env.INSTANCE_NAME === 'coko' && (
         <Cell>{manuscript.meta && manuscript.meta.title}</Cell>
       )}
-      {process.env.INSTANCE_NAME === 'elife' && (
+      {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
         <Cell>{manuscript.submission && manuscript.submission.articleId}</Cell>
       )}
       <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
@@ -87,7 +87,7 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
         )}
       </Cell>
       <LastCell>
-        {process.env.INSTANCE_NAME === 'elife' &&
+        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
           [articleStatuses.submitted, articleStatuses.evaluated, articleStatuses.new].includes(
             manuscript.status,
           ) && (
@@ -108,7 +108,7 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
         >
           Delete
         </Action>
-        {process.env.INSTANCE_NAME === 'elife' && (
+        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
           <Action onClick={publishManuscriptHandler}>Publish</Action>
         )}
       </LastCell>

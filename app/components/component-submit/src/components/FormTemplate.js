@@ -289,12 +289,12 @@ const FormTemplate = ({
           </>
         }
 
-        {process.env.INSTANCE_NAME === 'elife' &&
+        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
           <>
             {!['revise'].includes(values.status) &&
               form.haspopup === 'false' && (
                 <Button onClick={() => handleSubmit()} primary type="submit">
-                  Submit your research object
+                  {match.url.includes('/evaluation') ? 'Submit Evaluation' : 'Submit your research object'}
                 </Button>
               )}
 
