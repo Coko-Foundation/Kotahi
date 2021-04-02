@@ -2,7 +2,7 @@ version: '3'
 
 services:
   server:
-    image: kotahi/kotahi:latest
+    image: kotahi/kotahi-elife:latest
     depends_on:
       - db
     ports:
