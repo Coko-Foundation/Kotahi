@@ -80,13 +80,10 @@ const GET_MANUSCRIPTS = gql`
 
 const Manuscripts = ({ history, ...props }) => {
   const SortHeader = ({ thisSortName, children }) => {
-    if(!thisSortName) {
-      return (
-        <th>
-          {children}
-        </th>
-      )
+    if (!thisSortName) {
+      return <th>{children}</th>
     }
+
     const changeSort = () => {
       if (sortName !== thisSortName) {
         setSortName(thisSortName)
@@ -135,11 +132,11 @@ const Manuscripts = ({ history, ...props }) => {
 
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
-  
+
   const manuscripts = data.paginatedManuscripts.manuscripts.map(el => {
     return { ...el, submission: JSON.parse(el.submission) }
   })
- 
+
   const { totalCount } = data.paginatedManuscripts
 
   return (
@@ -156,27 +153,31 @@ const Manuscripts = ({ history, ...props }) => {
         </HeadingWithAction>
       )}
 
-      {process.env.INSTANCE_NAME === 'coko' && <Heading>Manuscripts</Heading>}
+      {process.env.INSTANCE_NAME === 'aperture' && (
+        <Heading>Manuscripts</Heading>
+      )}
 
       <Content>
         <Table>
           <Header>
             <tr>
-              {process.env.INSTANCE_NAME === 'coko' && (
+              {process.env.INSTANCE_NAME === 'aperture' && (
                 <SortHeader thisSortName="meta:title">Title</SortHeader>
               )}
               {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
-                <SortHeader thisSortName="submission:articleId">Article Id</SortHeader>
+                <SortHeader thisSortName="submission:articleId">
+                  Article Id
+                </SortHeader>
               )}
               <SortHeader thisSortName="created">Created</SortHeader>
               <SortHeader thisSortName="updated">Updated</SortHeader>
-              {process.env.INSTANCE_NAME === 'ncrc' &&
+              {process.env.INSTANCE_NAME === 'ncrc' && (
                 <SortHeader>Topic</SortHeader>
-              }
+              )}
               <SortHeader thisSortName="status">Status</SortHeader>
-              {process.env.INSTANCE_NAME === 'ncrc' &&
+              {process.env.INSTANCE_NAME === 'ncrc' && (
                 <SortHeader thisSortName="submission:labels">Label</SortHeader>
-              }
+              )}
               <SortHeader thisSortName="submitterId">Author</SortHeader>
               <th />
             </tr>

@@ -138,7 +138,7 @@ const AdminPage = () => {
       : null
   }
 
-  if (currentUser && process.env.INSTANCE_NAME === 'coko') {
+  if (currentUser && process.env.INSTANCE_NAME === 'aperture') {
     links.push({ link: homeLink, name: 'Dashboard', icon: 'home' })
   }
 
@@ -234,14 +234,14 @@ const AdminPage = () => {
           path={`${urlFrag}/admin/manuscripts`}
           redirectLink={redirectLink}
         />
-        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
+        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
           <PrivateRoute
             component={SubmitPage}
             exact
             path={`${urlFrag}/versions/:version/evaluation`}
             redirectLink={redirectLink}
           />
-        }
+        )}
       </Switch>
       <RolesUpdater />
     </Root>

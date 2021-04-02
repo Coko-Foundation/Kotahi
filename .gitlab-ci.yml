@@ -21,9 +21,9 @@ ncrc-pipeline:
       - local: .gitlab-ci.ncrc.yml
     strategy: depend
 
-coko-pipeline:
+aperture-pipeline:
   stage: run-pipeline
   trigger:
     include:
-      - local: .gitlab-ci.coko.yml
+      - local: .gitlab-ci.aperture.yml
     strategy: depend

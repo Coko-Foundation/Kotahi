@@ -45,7 +45,7 @@ module.exports = {
     path: deferConfig(cfg => {
       const formTemplatePath = {
         elife: '../app/storage/forms',
-        coko: '../app/storage/forms-coko',
+        aperture: '../app/storage/forms-aperture',
         ncrc: '../app/storage/forms-ncrc',
       }
       // eslint-disable-next-line

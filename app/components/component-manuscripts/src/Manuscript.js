@@ -65,7 +65,7 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
 
   return (
     <Row>
-      {process.env.INSTANCE_NAME === 'coko' && (
+      {process.env.INSTANCE_NAME === 'aperture' && (
         <Cell>{manuscript.meta && manuscript.meta.title}</Cell>
       )}
       {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
@@ -119,7 +119,7 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
               Evaluation
             </Action>
           )}
-        {process.env.INSTANCE_NAME === 'coko' && (
+        {process.env.INSTANCE_NAME === 'aperture' && (
           <Action to={`${urlFrag}/versions/${manuscriptId}/decision`}>
             Control
           </Action>

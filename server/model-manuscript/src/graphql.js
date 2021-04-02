@@ -267,29 +267,37 @@ const resolvers = {
         const requestBody = {
           uri: manuscript.submission.articleURL,
           text: manuscript.submission.evaluationContent,
-          tags: [
-            manuscript.submission.evalType
-          ],
+          tags: [manuscript.submission.evalType],
           // group: "q5X6RWJ6",
         }
 
         try {
-          const response = await axios.post('https://api.hypothes.is/api/annotations', requestBody, {
-            headers: {
-              'Authorization': 'Bearer 6879-C9eSHATI6gsjTD0GmZ9NIojOPDnntsdt76iE1AKlyzA'
-            }
-          })
-          const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(id, {
-            published: new Date(),
-            status: 'published',
-          })
+          const response = await axios.post(
+            'https://api.hypothes.is/api/annotations',
+            requestBody,
+            {
+              headers: {
+                Authorization:
+                  'Bearer 6879-C9eSHATI6gsjTD0GmZ9NIojOPDnntsdt76iE1AKlyzA',
+              },
+            },
+          )
+
+          const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
+            id,
+            {
+              published: new Date(),
+              status: 'published',
+            },
+          )
+
           return updatedManuscript
         } catch {
           return
         }
       }
 
-      if (!manuscript.published && process.env.INSTANCE_NAME === 'coko') {
+      if (!manuscript.published && process.env.INSTANCE_NAME === 'aperture') {
         manuscript = ctx.models.Manuscript.query().updateAndFetchById(id, {
           published: new Date(),
         })

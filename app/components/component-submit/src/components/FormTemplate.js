@@ -159,7 +159,11 @@ const FormTemplate = ({
 
           // If there are errors, do a fake submit
           // to focus on the error
-          if (hasErrors || values.status === articleStatuses.evaluated || values.status === articleStatuses.submitted) {
+          if (
+            hasErrors ||
+            values.status === articleStatuses.evaluated ||
+            values.status === articleStatuses.submitted
+          ) {
             handleSubmit()
           } else {
             toggleConfirming()
@@ -274,7 +278,7 @@ const FormTemplate = ({
           </Section>
         ) : null}
 
-        {process.env.INSTANCE_NAME === 'coko' &&
+        {process.env.INSTANCE_NAME === 'aperture' && (
           <>
             {!['submitted', 'revise'].includes(values.status) &&
               form.haspopup === 'false' && (
@@ -287,22 +291,27 @@ const FormTemplate = ({
               form.haspopup === 'true' &&
               submitButton('Submit your research object')}
           </>
-        }
+        )}
 
-        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
+        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
           <>
-            {!['revise'].includes(values.status) &&
-              form.haspopup === 'false' && (
-                <Button onClick={() => handleSubmit()} primary type="submit">
-                  {match.url.includes('/evaluation') ? 'Submit Evaluation' : 'Submit your research object'}
-                </Button>
-              )}
+            {!['revise'].includes(values.status) && form.haspopup === 'false' && (
+              <Button onClick={() => handleSubmit()} primary type="submit">
+                {match.url.includes('/evaluation')
+                  ? 'Submit Evaluation'
+                  : 'Submit your research object'}
+              </Button>
+            )}
 
             {!['revise'].includes(values.status) &&
               form.haspopup === 'true' &&
-              submitButton(match.url.includes('/evaluation') ? 'Submit Evaluation' : 'Submit your research object')}
+              submitButton(
+                match.url.includes('/evaluation')
+                  ? 'Submit Evaluation'
+                  : 'Submit your research object',
+              )}
           </>
-        }
+        )}
 
         {values.status === 'revise' && submitButton('Submit your revision')}
 

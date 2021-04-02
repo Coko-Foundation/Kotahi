@@ -217,7 +217,9 @@ const SubmitPage = ({ match, history }) => {
   }
 
   const onSubmit = async versionId => {
-    const delta = { status: match.url.includes('/evaluation') ? 'evaluated' : 'submitted' }
+    const delta = {
+      status: match.url.includes('/evaluation') ? 'evaluated' : 'submitted',
+    }
 
     await submit({
       variables: {
@@ -226,11 +228,11 @@ const SubmitPage = ({ match, history }) => {
       },
     })
 
-    if(process.env.INSTANCE_NAME === 'coko') {
+    if (process.env.INSTANCE_NAME === 'aperture') {
       history.push(`${urlFrag}/dashboard`)
     }
 
-    if(['elife', 'ncrc'].includes(process.env.INSTANCE_NAME)) {
+    if (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME)) {
       history.push(`${urlFrag}/admin/manuscripts`)
     }
   }
@@ -242,12 +244,12 @@ const SubmitPage = ({ match, history }) => {
       confirming={confirming}
       createNewVersion={createNewVersion}
       form={cloneDeep(form)}
+      match={match}
       onChange={handleChange}
       onSubmit={onSubmit}
       parent={manuscript}
       toggleConfirming={toggleConfirming}
       versions={versions}
-      match={match}
     />
   )
 }

@@ -102,7 +102,7 @@ module.exports = app => {
 
       let redirectionURL
 
-      if (process.env.INSTANCE_NAME === 'coko') {
+      if (process.env.INSTANCE_NAME === 'aperture') {
         redirectionURL = '/kotahi/dashboard'
 
         if (req.user.firstLogin) {
