@@ -73,25 +73,28 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
       )}
       <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
       <Cell>{convertTimestampToDate(manuscript.updated)}</Cell>
-      {process.env.INSTANCE_NAME === 'ncrc' && 
+      {process.env.INSTANCE_NAME === 'ncrc' && (
         <Cell>
-          {manuscript.submission.topics.map((topic, index) => {
-            return <StyledTopic key={index} title={convertCamelCaseToText(topic)}>
+          {manuscript.submission?.topics?.map((topic, index) => {
+            return (
+              <StyledTopic key={index} title={convertCamelCaseToText(topic)}>
                 {convertCamelCaseToText(topic)}
               </StyledTopic>
+            )
           })}
         </Cell>
-      }
+      )}
       <Cell>
         <StatusBadge status={manuscript.status} />
       </Cell>
-      {process.env.INSTANCE_NAME === 'ncrc' && 
-      <Cell>
-        <StyledTableLabel>
-          {manuscript.submission && convertCamelCaseToText(manuscript.submission.labels)}
-        </StyledTableLabel>
-      </Cell>
-      }
+      {process.env.INSTANCE_NAME === 'ncrc' && (
+        <Cell>
+          <StyledTableLabel>
+            {manuscript.submission &&
+              convertCamelCaseToText(manuscript.submission.labels)}
+          </StyledTableLabel>
+        </Cell>
+      )}
       <Cell>
         {submitter && (
           <UserCombo>
@@ -107,9 +110,11 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
       </Cell>
       <LastCell>
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
-          [articleStatuses.submitted, articleStatuses.evaluated, articleStatuses.new].includes(
-            manuscript.status,
-          ) && (
+          [
+            articleStatuses.submitted,
+            articleStatuses.evaluated,
+            articleStatuses.new,
+          ].includes(manuscript.status) && (
             <Action to={`${urlFrag}/versions/${manuscriptId}/evaluation`}>
               Evaluation
             </Action>
