@@ -1,13 +1,58 @@
 {
-  "title": "Research Object Submission Form",
-  "field1": "Article ID",
-  "field2": "Article URL",
-  "field3": "Description",
-  "field4": "Evaluation Content",
-  "field5": "Evaluation Type",
-  "field6": "Creator",
-  "fieldOption": "Required",
-  "evaluationTypeOption1": "Evaluation Summary",
-  "evaluationTypeOption2": "Peer Review",
-  "evaluationTypeOption3": "Author Response"
+  "elife": {
+    "title": "Research Object Submission Form",
+    "articleId": "Article ID",
+    "articleUrl": "Article URL",
+    "description": "Description",
+    "evaluationContent": "Evaluation Content",
+    "evaluationType": "Evaluation Type",
+    "creator": "Creator",
+    "required": "Required",
+    "evaluationTypes" : {
+      "evaluationSummary": "Evaluation Summary",
+      "peerReview": "Peer Review",
+      "authorResponse": "Author Response"
+    }
+  },
+  "ncrc": {
+    "title": "NCRC Submission Form",
+    "articleUrl" : "Article URL",
+    "description": "Article Description",
+    "ourTake": "Our take",
+    "studyDesign": "Study design",
+    "studyPopulation": "Study population and setting",
+    "mainFindings": "Summary of main findings",
+    "studyStrengths": "Study strengths",
+    "limitations": "Limitations",
+    "valueAdded": "Value added",
+    "labels": "Labels",
+    "topics": "Topics",
+    "studyDesignTypes": {
+      "caseSeries": "Case-series",
+      "caseControl": "Case-control",
+      "crossSectional": "Cross-sectional",
+      "prospectiveCohort": "Prospective cohort",
+      "retrospectiveCohort": "Retrospective cohort",
+      "ecological": "Ecological",
+      "ranomizedControlTrial": "Randomized Control Trial",
+      "nonRandomizedTrial": "Non-Randomized Trial",
+      "modelingSimulation": "Modeling/Simulation",
+      "other": "Other"
+    },
+    "labelTypes": {
+      "readyToEvaluate": "Ready to evaluate",
+      "evaluated": "Evaluated",
+      "readyToPublish": "Ready to publish"
+    },
+    "topicTypes": {
+      "ecologyAndSpillover": "ecologyAndSpillover",
+      "vaccines": "vaccines",
+      "interventions": "nonPharmaceuticalAndPharmaceuticalInterventions",
+      "epidemiology": "epidemiology",
+      "diagnostics": "diagnostics",
+      "modeling": "modeling",
+      "clinicalPresentation": "clinicalPresentation",
+      "prognosticRiskFactors": "prognosticRiskFactors"
+    }
+  }
 }

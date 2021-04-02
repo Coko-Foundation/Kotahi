@@ -42,6 +42,8 @@ const DESCRIPTION_FIELD = 'submission.description'
 const EVALUATION_CONTENT_FIELD = 'submission.evaluationContent'
 const CREATOR_FIELD = 'submission.creator'
 
+const TOPICS_CHECKBOX_LIST = 'submission.topics'
+
 export const SubmissionFormPage = {
   getAddLinkButton() {
     return cy.get(ADD_A_LINK_BUTTON)
@@ -251,6 +253,12 @@ export const SubmissionFormPage = {
   },
   fillInCreator(creator) {
     this.getCreatorField().fillInput(creator)
+  },
+  getTopicsCheckboxWithText(value) {
+    return cy.getByNameAndValue(TOPICS_CHECKBOX_LIST, value)
+  },
+  clickTopicsCheckboxWithText(value) {
+    this.getTopicsCheckboxWithText(value).click()
   },
 }
 export default SubmissionFormPage

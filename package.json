@@ -53,7 +53,9 @@
     "test:firefox:elife:samsung:tablet": "cypress run --env userAgent=tabletSamsung --browser firefox --headless --spec 'cypress/integration/elife/**.js'",
     "test:firefox:elife:iPhone": "cypress run --env userAgent=phoneSafari --browser firefox --spec 'cypress/integration/elife/**.js'",
     "test:firefox:elife:iPhone:tablet": "cypress run --env userAgent=tabletSafari --browser firefox --headless --spec 'cypress/integration/elife/**.js'",
-    "test:firefox:elife:hd:laptop": "cypress run --env userAgent=hdLaptop --browser chrome --spec 'cypress/integration/elife/**.js'"
+    "test:firefox:elife:hd:laptop": "cypress run --env userAgent=hdLaptop --browser chrome --spec 'cypress/integration/elife/**.js'",
+    "test:all:chrome:ncrc": "start-test test:server-and-client 4000 test:chrome:ncrc",
+    "test:chrome:ncrc": "cypress run --browser chrome --headless --spec 'cypress/integration/ncrc/**.js'"
   },
   "husky": {
     "hooks": {

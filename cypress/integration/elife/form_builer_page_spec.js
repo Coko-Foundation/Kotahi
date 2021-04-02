@@ -1,9 +1,8 @@
 import { FormsPage } from '../../page-object/forms-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
-import { Menu } from '../../page-object/page-component/menu'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
-import { dashboard } from '../../support/routes'
+import { formBuilder, manuscripts } from '../../support/routes'
 
 describe('Form builder page tests', () => {
   // check the title and the elements in Form Builder
@@ -14,23 +13,38 @@ describe('Form builder page tests', () => {
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
-        cy.login(name.role.admin, dashboard)
+        cy.login(name.role.admin, formBuilder)
       })
-
-      // enter the from page and assert the fileds
-      Menu.clickForms()
     })
 
-    it('check title and elements from form buider', () => {
+    it('check title and elements from form builder', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
-        FormsPage.getFormTitleTab(0).should('contain', data.title)
-        FormsPage.getFormBuilderElementName(0).should('contain', data.field1)
-        FormsPage.getFormBuilderElementName(1).should('contain', data.field2)
-        FormsPage.getFormBuilderElementName(2).should('contain', data.field3)
-        FormsPage.getFormBuilderElementName(3).should('contain', data.field4)
-        FormsPage.getFormBuilderElementName(4).should('contain', data.field5)
-        FormsPage.getFormBuilderElementName(5).should('contain', data.field6)
+        FormsPage.getFormTitleTab(0).should('contain', data.elife.articleId)
+        FormsPage.getFormBuilderElementName(0).should(
+          'contain',
+          data.elife.articleUrl,
+        )
+        FormsPage.getFormBuilderElementName(1).should(
+          'contain',
+          data.elife.description,
+        )
+        FormsPage.getFormBuilderElementName(2).should(
+          'contain',
+          data.elife.evaluationContent,
+        )
+        FormsPage.getFormBuilderElementName(3).should(
+          'contain',
+          data.elife.evaluationType,
+        )
+        FormsPage.getFormBuilderElementName(4).should(
+          'contain',
+          data.elife.creator,
+        )
+        FormsPage.getFormBuilderElementName(5).should(
+          'contain',
+          data.elife.required,
+        )
       })
     })
 
@@ -63,11 +77,8 @@ describe('Form builder page tests', () => {
       cy.task('restore', 'initialState')
       // login as admin
       cy.fixture('role_names').then(name => {
-        cy.login(name.role.admin, dashboard)
+        cy.login(name.role.admin, manuscripts)
       })
-
-      // enter the from page and assert the fileds
-      Menu.clickManuscripts()
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitURL()
     })
@@ -76,12 +87,30 @@ describe('Form builder page tests', () => {
     it('check if the form contain all the colums', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
-        SubmissionFormPage.getFormOptionList(0).should('contain', data.field1)
-        SubmissionFormPage.getFormOptionList(1).should('contain', data.field2)
-        SubmissionFormPage.getFormOptionList(2).should('contain', data.field3)
-        SubmissionFormPage.getFormOptionList(3).should('contain', data.field4)
-        SubmissionFormPage.getFormOptionList(4).should('contain', data.field5)
-        SubmissionFormPage.getFormOptionList(5).should('contain', data.field6)
+        SubmissionFormPage.getFormOptionList(0).should(
+          'contain',
+          data.elife.articleId,
+        )
+        SubmissionFormPage.getFormOptionList(1).should(
+          'contain',
+          data.elife.articleUrl,
+        )
+        SubmissionFormPage.getFormOptionList(2).should(
+          'contain',
+          data.elife.description,
+        )
+        SubmissionFormPage.getFormOptionList(3).should(
+          'contain',
+          data.elife.evaluationContent,
+        )
+        SubmissionFormPage.getFormOptionList(4).should(
+          'contain',
+          data.elife.evaluationType,
+        )
+        SubmissionFormPage.getFormOptionList(5).should(
+          'contain',
+          data.elife.creator,
+        )
       })
     })
 
@@ -92,43 +121,43 @@ describe('Form builder page tests', () => {
       cy.fixture('form_option').then(data => {
         SubmissionFormPage.getFormOptionList(0).should(
           'contain',
-          data.fieldOption,
+          data.elife.required,
         )
         SubmissionFormPage.getFormOptionList(1).should(
           'contain',
-          data.fieldOption,
+          data.elife.required,
         )
         SubmissionFormPage.getFormOptionList(2).should(
           'contain',
-          data.fieldOption,
+          data.elife.required,
         )
         SubmissionFormPage.getFormOptionList(3).should(
           'contain',
-          data.fieldOption,
+          data.elife.required,
         )
         SubmissionFormPage.getFormOptionList(4).should(
           'contain',
-          data.fieldOption,
+          data.elife.required,
         )
       })
     })
 
-    // check if the options: Evaluation Summary, Peer Review and Author Response are avaible in Evaluation Type field
+    // check if the options: Evaluation Summary, Peer Review and Author Response are available in Evaluation Type field
     it('check Evaluation Type filed options', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         SubmissionFormPage.clickElementFromFormOptionList(4)
         SubmissionFormPage.getDropdownOption(0).should(
           'contain',
-          data.evaluationTypeOption1,
+          data.elife.evaluationTypes.evaluationSummary,
         )
         SubmissionFormPage.getDropdownOption(1).should(
           'contain',
-          data.evaluationTypeOption2,
+          data.elife.evaluationTypes.peerReview,
         )
         SubmissionFormPage.getDropdownOption(2).should(
           'contain',
-          data.evaluationTypeOption3,
+          data.elife.evaluationTypes.authorResponse,
         )
       })
     })

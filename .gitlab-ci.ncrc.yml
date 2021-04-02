@@ -70,31 +70,31 @@ deploy:
 #     - cd ${HOME}
 #     - npm run lint
 
-# test-chrome:
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     # used by psql
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     # this is needed for pgboss initial setup
-#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#     # use the example env for tests
-#     - cp .env.example .env
-#     # specify host here else it confuses the linked postgres image
-#     - echo $INSTANCE_NAME
-#     - POSTGRES_HOST=postgres yarn test:all:chrome:ncrc
+ test-chrome:
+   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+   stage: test
+   variables:
+     GIT_STRATEGY: none
+     # setup data for postgres image
+     POSTGRES_USER: kotahidev
+     POSTGRES_PASSWORD: kotahidev
+     # used by psql
+     PGUSER: kotahidev
+     PGPASSWORD: kotahidev
+     # this is used to ignore self signed certs
+     #START_SERVER_AND_TEST_INSECURE: 1
+   services:
+     - postgres
+   script:
+     - cd ${HOME}
+     - apt-get -y install postgresql-client
+     # this is needed for pgboss initial setup
+     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+     # use the example env for tests
+     - cp .env.example .env
+     # specify host here else it confuses the linked postgres image
+     - echo $INSTANCE_NAME
+     - POSTGRES_HOST=postgres yarn test:all:chrome:ncrc
 
 # test-chrome-samsung:
 #   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
