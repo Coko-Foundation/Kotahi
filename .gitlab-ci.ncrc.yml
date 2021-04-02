@@ -1,6 +1,6 @@
 variables:
   IMAGE_ORG: kotahi
-  IMAGE_NAME: kotahi
+  IMAGE_NAME: kotahi-ncrc
 
 stages:
   - build
