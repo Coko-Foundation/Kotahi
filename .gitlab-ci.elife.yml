@@ -99,11 +99,11 @@ deploy:
 #    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
 #    # specify host here else it confuses the linked postgres image
 #    - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
-    
+
 # test-chrome:
 #   <<: *run_test_template
 #   variables:
-#     TEST_ITEM: "chrome:elife" 
+#     TEST_ITEM: "chrome:elife"
 #   script:
 #     - *run_script_template
 
@@ -142,7 +142,6 @@ test-chrome:
     # specify host here else it confuses the linked postgres image
     - echo $INSTANCE_NAME
     - POSTGRES_HOST=postgres yarn test:all:chrome:elife
-
 # test-chrome-samsung:
 #   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
 #   stage: test
@@ -251,7 +250,7 @@ test-chrome:
 #     - apt-get -y install postgresql-client
 #     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
 #     - cp .env.example .env
-#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:hd:laptop   
+#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:hd:laptop
 
 # test-firefox:
 #   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
