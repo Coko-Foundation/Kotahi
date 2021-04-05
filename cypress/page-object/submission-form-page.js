@@ -32,8 +32,9 @@ const REFERENCES_FIELD = 'submission.references'
 const SUBMIT_RESEARCH_BUTTON = 'form > div > button'
 const SUBMIT_MANUSCRIPT_BUTTON = 'button[type=submit]'
 const VALIDATION_ERROR_MESSAGE = 'ValidatedField__MessageWrapper'
-const CONTENT_ETIDABLE_VALUE = '[contenteditable="true"]'
+const CONTENT_EDITABLE_VALUE = '[contenteditable="true"]'
 
+// specific to elife
 const FORM_OPTION_LIST = '[class*=style__Section]'
 const FORM_OPTION_VALUE = 'singleValue'
 const ARTICLE_ID_FIELD = 'submission.articleId'
@@ -42,6 +43,15 @@ const DESCRIPTION_FIELD = 'submission.description'
 const EVALUATION_CONTENT_FIELD = 'submission.evaluationContent'
 const CREATOR_FIELD = 'submission.creator'
 
+// specific to ncrc
+const ARTICLE_DESCRIPTION_FIELD = 'submission.articleDescription'
+const OUR_TAKE_FIELD = 'submission.ourTake'
+const DROPDOWN = 'placeholder'
+const STUDY_SETTING_FIELD = 'submission.studyPopulationAndSetting'
+const MAIN_FINDINGS_FIELD = 'submission.summaryOfMainFindings'
+const STUDY_STRENGTHS_FIELD = 'submission.studyStrengths'
+const LIMITATIONS_FIELD = 'submission.limitations'
+const VALUE_ADDED_FIELD = 'submission.valueAdded'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
 
 export const SubmissionFormPage = {
@@ -85,19 +95,19 @@ export const SubmissionFormPage = {
     return cy.getByDataTestId(COVER_FIELD)
   },
   fillInCover(cover) {
-    this.getCoverField().find(CONTENT_ETIDABLE_VALUE).fillInput(cover)
+    this.getCoverField().find(CONTENT_EDITABLE_VALUE).fillInput(cover)
   },
   getDataCodeField() {
     return cy.getByDataTestId(DATA_CODE_FIELD)
   },
   fillInDataCode(dataCode) {
-    this.getDataCodeField().find(CONTENT_ETIDABLE_VALUE).fillInput(dataCode)
+    this.getDataCodeField().find(CONTENT_EDITABLE_VALUE).fillInput(dataCode)
   },
   getEthicsField() {
     return cy.getByDataTestId(ETHICS_FIELD)
   },
   fillInEthicsField(ethics) {
-    this.getEthicsField().find(CONTENT_ETIDABLE_VALUE).fillInput(ethics)
+    this.getEthicsField().find(CONTENT_EDITABLE_VALUE).fillInput(ethics)
   },
   getTypeOfResearchDropdown() {
     return cy.getByContainsAreaLabel(TYPE_OF_RESEARCH_DROPDOWN)
@@ -193,7 +203,7 @@ export const SubmissionFormPage = {
     return cy.getByDataTestId(REFERENCES_FIELD)
   },
   fillReferences(references) {
-    this.getReferencesField().find(CONTENT_ETIDABLE_VALUE).fillInput(references)
+    this.getReferencesField().find(CONTENT_EDITABLE_VALUE).fillInput(references)
   },
   getSubmitResearchButton() {
     return cy.get(SUBMIT_RESEARCH_BUTTON)
@@ -245,7 +255,7 @@ export const SubmissionFormPage = {
   },
   fillInEvaluationContent(evaluationContent) {
     this.getEvaluationContent()
-      .find(CONTENT_ETIDABLE_VALUE)
+      .find(CONTENT_EDITABLE_VALUE)
       .fillInput(evaluationContent)
   },
   getCreatorField() {
@@ -253,6 +263,72 @@ export const SubmissionFormPage = {
   },
   fillInCreator(creator) {
     this.getCreatorField().fillInput(creator)
+  },
+  getArticleDescriptionField() {
+    return cy.getByName(ARTICLE_DESCRIPTION_FIELD)
+  },
+  fillInArticleDescription(description) {
+    this.getArticleDescriptionField().fillInput(description)
+  },
+  getOurTakeField() {
+    return cy.getByName(OUR_TAKE_FIELD)
+  },
+  fillInOurTake(ourTake) {
+    this.getOurTakeField().fillInput(ourTake)
+  },
+  getOurTakeContent() {
+    return this.getOurTakeField().find('p')
+  },
+  getStudySettingField() {
+    return cy.getByName(STUDY_SETTING_FIELD)
+  },
+  fillInStudySetting(studySetting) {
+    this.getStudySettingField().fillInput(studySetting)
+  },
+  getStudySettingContent() {
+    return this.getStudySettingField().find('p')
+  },
+  getMainFindingsField() {
+    return cy.getByName(MAIN_FINDINGS_FIELD)
+  },
+  fillInMainFindings(mainFindings) {
+    this.getMainFindingsField().fillInput(mainFindings)
+  },
+  getMainFindingsContent() {
+    return this.getMainFindingsField().find('p')
+  },
+  getStudyStrengthsField() {
+    return cy.getByName(STUDY_STRENGTHS_FIELD)
+  },
+  fillInStudyStrengths(studyStrengths) {
+    this.getStudyStrengthsField().fillInput(studyStrengths)
+  },
+  getStudyStrengthsContent() {
+    return this.getStudyStrengthsField().find('p')
+  },
+  getLimitationsField() {
+    return cy.getByName(LIMITATIONS_FIELD)
+  },
+  fillInLimitations(limitations) {
+    this.getLimitationsField().fillInput(limitations)
+  },
+  getLimitationsContent() {
+    return this.getLimitationsField().find('p')
+  },
+  getValueAddedField() {
+    return cy.getByName(VALUE_ADDED_FIELD)
+  },
+  fillInValueAdded(valueAdded) {
+    this.getValueAddedField().fillInput(valueAdded)
+  },
+  getValueAddedContent() {
+    return this.getValueAddedField().find('p')
+  },
+  getDropdown(nth) {
+    return cy.getByContainsClass(DROPDOWN).eq(nth)
+  },
+  clickDropdown(nth) {
+    this.getDropdown(nth).click({ force: true })
   },
   getTopicsCheckboxWithText(value) {
     return cy.getByNameAndValue(TOPICS_CHECKBOX_LIST, value)

@@ -14,6 +14,8 @@ const AUTHOR_FIELD = 'UserCombo__Primary'
 const STATUS_FIELD = 'Badge__Status'
 const MANUSCRIPTS_TABLE_HEAD = '[class*=Table__Header] > tr >th'
 const ARTICLE_ID = '[class*=Table__Row]>td:nth-child(1)'
+const ARTICLE_LABEL = 'style__StyledTableLabel'
+const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -58,14 +60,20 @@ export const ManuscriptsPage = {
   getStatus(nth) {
     return this.getStatusField(nth).invoke('text')
   },
-  getTabelHead(nth) {
+  getTableHead(nth) {
     return cy.get(MANUSCRIPTS_TABLE_HEAD).eq(nth)
   },
-  getArticleIdColumn(nth) {
+  getArticleIdByRow(nth) {
     return cy.get(ARTICLE_ID).eq(nth)
   },
-  clickArticleId() {
-    cy.get(MANUSCRIPTS_TABLE_HEAD).eq(0).click()
+  clickTableHead(nth) {
+    this.getTableHead(nth).click()
+  },
+  getArticleLabel() {
+    return cy.getByContainsClass(ARTICLE_LABEL)
+  },
+  getArticleTopic(nth) {
+    return cy.get(ARTICLE_TOPIC).eq(nth)
   },
 }
 export default ManuscriptsPage
