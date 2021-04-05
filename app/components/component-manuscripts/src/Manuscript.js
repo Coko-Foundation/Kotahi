@@ -63,7 +63,7 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
     })
   }
 
-  const filterByTopic = (topic) => {
+  const filterByTopic = topic => {
     props.setSelectedTopic(topic)
     history.replace(`${urlFrag}/admin/manuscripts?topic=${topic}`)
   }
@@ -80,10 +80,16 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
       <Cell>{convertTimestampToDate(manuscript.updated)}</Cell>
       {process.env.INSTANCE_NAME === 'ncrc' && (
         <Cell>
-          {manuscript.submission.topics.map((topic) => {
-            return <StyledTopic key={topic} title={convertCamelCaseToText(topic)} onClick={() => filterByTopic(topic)}>
+          {manuscript.submission?.topics?.map(topic => {
+            return (
+              <StyledTopic
+                key={topic}
+                onClick={() => filterByTopic(topic)}
+                title={convertCamelCaseToText(topic)}
+              >
                 {convertCamelCaseToText(topic)}
               </StyledTopic>
+            )
           })}
         </Cell>
       )}
