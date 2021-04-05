@@ -378,12 +378,12 @@ const resolvers = {
       }
     },
     async paginatedManuscripts(_, { sort, offset, limit, filter }, ctx) {
-      let parsedSubmission;
+      let parsedSubmission
 
-      if(filter.submission) {
+      if (filter.submission) {
         parsedSubmission = JSON.parse(filter.submission)
       }
-      
+
       const query = ctx.models.Manuscript.query()
         .where({ parentId: null })
         .withGraphFetched('[submitter, manuscriptVersions(orderByCreated)]')
