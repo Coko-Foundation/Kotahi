@@ -1,5 +1,4 @@
-import React, { useState } from 'react'
-import gql from 'graphql-tag'
+import React, { useEffect, useState } from 'react'
 import { useQuery } from '@apollo/client'
 import { Button } from '@pubsweet/ui'
 import config from 'config'
@@ -18,65 +17,10 @@ import {
   Pagination,
 } from './style'
 import { HeadingWithAction } from '../../shared'
+import { GET_MANUSCRIPTS } from '../../../queries'
+import getQueryStringByName from '../../../shared/getQueryStringByName'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
-
-const GET_MANUSCRIPTS = gql`
-  query Manuscripts(
-    $sort: String
-    $filter: ManuscriptsFilter
-    $offset: Int
-    $limit: Int
-  ) {
-    paginatedManuscripts(
-      sort: $sort
-      filter: $filter
-      offset: $offset
-      limit: $limit
-    ) {
-      totalCount
-      manuscripts {
-        id
-        meta {
-          manuscriptId
-          title
-        }
-        submission
-        created
-        updated
-        status
-        manuscriptVersions {
-          id
-          meta {
-            manuscriptId
-            title
-          }
-          created
-          updated
-          status
-          submitter {
-            username
-            online
-            defaultIdentity {
-              id
-              name
-            }
-            profilePicture
-          }
-        }
-        submitter {
-          username
-          online
-          defaultIdentity {
-            id
-            name
-          }
-          profilePicture
-        }
-      }
-    }
-  }
-`
 
 const Manuscripts = ({ history, ...props }) => {
   const SortHeader = ({ thisSortName, children }) => {
@@ -118,17 +62,23 @@ const Manuscripts = ({ history, ...props }) => {
   const [sortName, setSortName] = useState('created')
   const [sortDirection, setSortDirection] = useState('DESC')
   const [page, setPage] = useState(1)
+  const [selectedTopic, setSelectedTopic] = useState(getQueryStringByName('topic'))
   const limit = 10
   const sort = sortName && sortDirection && `${sortName}_${sortDirection}`
-
-  const { loading, error, data } = useQuery(GET_MANUSCRIPTS, {
+  
+  const { loading, error, data, refetch } = useQuery(GET_MANUSCRIPTS, {
     variables: {
       sort,
       offset: (page - 1) * limit,
       limit,
+      filter: { submission: JSON.stringify({ topics: selectedTopic }) }
     },
     fetchPolicy: 'network-only',
   })
+
+  useEffect(() => {
+    refetch()
+  }, [selectedTopic])
 
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
@@ -194,6 +144,8 @@ const Manuscripts = ({ history, ...props }) => {
                   manuscriptId={manuscript.id}
                   number={key + 1}
                   submitter={manuscript.submitter}
+                  history={history}
+                  setSelectedTopic={setSelectedTopic}
                 />
               )
             })}

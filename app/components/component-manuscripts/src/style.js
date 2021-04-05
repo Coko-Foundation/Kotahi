@@ -34,21 +34,22 @@ export const UserAction = styled(Action)`
 
 export const StyledTopic = styled.p`
   background-color: red;
-  padding: 0 10px;
-  margin-bottom: 5px;
   border-radius: 7px;
   color: white;
-  width: fit-content;
-  overflow: hidden;
-  white-space: nowrap;
-  text-overflow: ellipsis;
+  cursor: pointer;
+  margin-bottom: 5px;
   max-width: 150px;
+  overflow: hidden;
+  padding: 0 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: fit-content;
 `
 
 export const StyledTableLabel = styled.p`
   background-color: #ccc;
+  border-radius: 7px;
   padding: 0 10px;
   text-align: center;
-  border-radius: 7px;
   white-space: nowrap;
 `

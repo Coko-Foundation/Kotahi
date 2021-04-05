@@ -82,3 +82,60 @@ export const SEARCH_USERS = gql`
     }
   }
 `
+
+export const GET_MANUSCRIPTS = gql`
+  query Manuscripts(
+    $sort: String
+    $filter: ManuscriptsFilter
+    $offset: Int
+    $limit: Int
+  ) {
+    paginatedManuscripts(
+      sort: $sort
+      filter: $filter
+      offset: $offset
+      limit: $limit
+    ) {
+      totalCount
+      manuscripts {
+        id
+        meta {
+          manuscriptId
+          title
+        }
+        submission
+        created
+        updated
+        status
+        manuscriptVersions {
+          id
+          meta {
+            manuscriptId
+            title
+          }
+          created
+          updated
+          status
+          submitter {
+            username
+            online
+            defaultIdentity {
+              id
+              name
+            }
+            profilePicture
+          }
+        }
+        submitter {
+          username
+          online
+          defaultIdentity {
+            id
+            name
+          }
+          profilePicture
+        }
+      }
+    }
+  }
+`

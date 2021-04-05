@@ -272,7 +272,7 @@ const resolvers = {
         }
 
         try {
-          const response = await axios.post(
+          await axios.post(
             'https://api.hypothes.is/api/annotations',
             requestBody,
             {
@@ -293,7 +293,7 @@ const resolvers = {
 
           return updatedManuscript
         } catch {
-          return
+          return null
         }
       }
 
@@ -378,6 +378,8 @@ const resolvers = {
       }
     },
     async paginatedManuscripts(_, { sort, offset, limit, filter }, ctx) {
+      const parsedSubmission = JSON.parse(filter?.submission)
+
       const query = ctx.models.Manuscript.query()
         .where({ parentId: null })
         .withGraphFetched('[submitter, manuscriptVersions(orderByCreated)]')
@@ -391,6 +393,12 @@ const resolvers = {
         query.where({ status: filter.status })
       }
 
+      if (process.env.INSTANCE_NAME === 'ncrc') {
+        if (filter && parsedSubmission.topics ) {
+          query.whereRaw("(submission->'topics')::jsonb \\? ?", [parsedSubmission.topics])
+        }
+      }
+     
       const totalCount = await query.resultSize()
 
       if (sort) {
@@ -437,6 +445,7 @@ const typeDefs = `
 
   input ManuscriptsFilter {
     status: String
+    submission: String
   }
 
   type PaginatedManuscripts {

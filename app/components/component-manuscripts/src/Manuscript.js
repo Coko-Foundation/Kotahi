@@ -35,7 +35,7 @@ const DELETE_MANUSCRIPT = gql`
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 // manuscriptId is always the parent manuscript's id
-const User = ({ manuscriptId, manuscript, submitter }) => {
+const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
   const [publishManuscript] = useMutation(publishManuscriptMutation)
 
   const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT, {
@@ -63,6 +63,11 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
     })
   }
 
+  const filterByTopic = (topic) => {
+    props.setSelectedTopic(topic)
+    history.replace(`${urlFrag}/admin/manuscripts?topic=${topic}`)
+  }
+
   return (
     <Row>
       {process.env.INSTANCE_NAME === 'aperture' && (
@@ -75,12 +80,10 @@ const User = ({ manuscriptId, manuscript, submitter }) => {
       <Cell>{convertTimestampToDate(manuscript.updated)}</Cell>
       {process.env.INSTANCE_NAME === 'ncrc' && (
         <Cell>
-          {manuscript.submission?.topics?.map((topic, index) => {
-            return (
-              <StyledTopic key={index} title={convertCamelCaseToText(topic)}>
+          {manuscript.submission.topics.map((topic) => {
+            return <StyledTopic key={topic} title={convertCamelCaseToText(topic)} onClick={() => filterByTopic(topic)}>
                 {convertCamelCaseToText(topic)}
               </StyledTopic>
-            )
           })}
         </Cell>
       )}
@@ -161,6 +164,9 @@ User.propTypes = {
     email: PropTypes.string,
     username: PropTypes.string.isRequired,
   }).isRequired,
+  // eslint-disable-next-line
+  history: PropTypes.object,
+  setSelectedTopic: PropTypes.func.isRequired,
 }
 
 export default User
