@@ -25,5 +25,14 @@
   "articleId": "123",
   "description": "This is my description",
   "evaluationContent": "This is my evaluation content",
-  "evaluationType": "Peer Review"
+  "evaluationType": "Peer Review",
+  "ourTake": "This is our take",
+  "studyDesign": "Case-series",
+  "studySetting": "This is the study setting",
+  "mainFindings": "These are the main findings",
+  "studyStrengths": "This is the study strength",
+  "limitations": "These are the limitations",
+  "valueAdded": "This is the value added",
+  "label": "Ready to evaluate",
+  "topic": "modeling"
 }

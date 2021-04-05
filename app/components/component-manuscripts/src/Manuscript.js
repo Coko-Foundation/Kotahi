@@ -80,7 +80,7 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
       <Cell>{convertTimestampToDate(manuscript.updated)}</Cell>
       {process.env.INSTANCE_NAME === 'ncrc' && (
         <Cell>
-          {manuscript.submission.topics.map(topic => {
+          {manuscript.submission?.topics?.map(topic => {
             return (
               <StyledTopic
                 key={topic}
