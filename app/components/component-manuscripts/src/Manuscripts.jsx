@@ -71,14 +71,14 @@ const Manuscripts = ({ history, ...props }) => {
       sort,
       offset: (page - 1) * limit,
       limit,
-      filter: { submission: JSON.stringify({ topics: selectedTopic }) }
+      filter: history.location.search ? { submission: JSON.stringify({ topics: selectedTopic }) } : {}
     },
     fetchPolicy: 'network-only',
   })
 
   useEffect(() => {
     refetch()
-  }, [selectedTopic])
+  }, [history.location.search])
 
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`

@@ -378,8 +378,12 @@ const resolvers = {
       }
     },
     async paginatedManuscripts(_, { sort, offset, limit, filter }, ctx) {
-      const parsedSubmission = JSON.parse(filter?.submission)
+      let parsedSubmission;
 
+      if(filter.submission) {
+        parsedSubmission = JSON.parse(filter.submission)
+      }
+      
       const query = ctx.models.Manuscript.query()
         .where({ parentId: null })
         .withGraphFetched('[submitter, manuscriptVersions(orderByCreated)]')
@@ -394,11 +398,13 @@ const resolvers = {
       }
 
       if (process.env.INSTANCE_NAME === 'ncrc') {
-        if (filter && parsedSubmission.topics ) {
-          query.whereRaw("(submission->'topics')::jsonb \\? ?", [parsedSubmission.topics])
+        if (filter && parsedSubmission) {
+          query.whereRaw("(submission->'topics')::jsonb \\? ?", [
+            parsedSubmission.topics,
+          ])
         }
       }
-     
+
       const totalCount = await query.resultSize()
 
       if (sort) {
