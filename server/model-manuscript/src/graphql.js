@@ -299,71 +299,71 @@ const resolvers = {
         }
       }
 
-      if (process.env.INSTANCE_NAME === 'ncrc') {
-        // eslint-disable-next-line
-        const submissionForm = require('../../../app/storage/forms-ncrc/submit.json')
-        const spreadsheetId = '1OvWJj7ZTFhniC4KbFNbskuYSNMftsG2ocKuY-i9ezVA'
+      // if (process.env.INSTANCE_NAME === 'ncrc') {
+      //   // eslint-disable-next-line
+      //   const submissionForm = require('../../../app/storage/forms-ncrc/submit.json')
+      //   const spreadsheetId = '1OvWJj7ZTFhniC4KbFNbskuYSNMftsG2ocKuY-i9ezVA'
 
-        const fieldsOrder = submissionForm.children
-          .filter(el => el.name)
-          .map(formElement => formElement.name.split('.')[1])
+      //   const fieldsOrder = submissionForm.children
+      //     .filter(el => el.name)
+      //     .map(formElement => formElement.name.split('.')[1])
 
-        const formatSubmissionData = rawSubmissionData => {
-          return Object.keys(rawSubmissionData).reduce((acc, key) => {
-            return { ...acc, [key]: rawSubmissionData[key].toString() }
-          }, {})
-        }
+      //   const formatSubmissionData = rawSubmissionData => {
+      //     return Object.keys(rawSubmissionData).reduce((acc, key) => {
+      //       return { ...acc, [key]: rawSubmissionData[key].toString() }
+      //     }, {})
+      //   }
 
-        const publishArticleInGoogleSheets = async submissionData => {
-          const formattedSubmissionData = formatSubmissionData(submissionData)
+      //   const publishArticleInGoogleSheets = async submissionData => {
+      //     const formattedSubmissionData = formatSubmissionData(submissionData)
 
-          const { articleURL } = formattedSubmissionData
-          const doc = new GoogleSpreadsheet(spreadsheetId)
+      //     const { articleURL } = formattedSubmissionData
+      //     const doc = new GoogleSpreadsheet(spreadsheetId)
 
-          await doc.useServiceAccountAuth({
-            client_email: credentials.client_email,
-            private_key: credentials.private_key,
-          })
+      //     await doc.useServiceAccountAuth({
+      //       client_email: credentials.client_email,
+      //       private_key: credentials.private_key,
+      //     })
 
-          await doc.loadInfo()
-          const sheet = doc.sheetsByIndex[0]
-          const rows = await sheet.getRows()
+      //     await doc.loadInfo()
+      //     const sheet = doc.sheetsByIndex[0]
+      //     const rows = await sheet.getRows()
 
-          const indexOfExistingArticle = rows.findIndex(
-            row => row.articleURL === articleURL,
-          )
+      //     const indexOfExistingArticle = rows.findIndex(
+      //       row => row.articleURL === articleURL,
+      //     )
 
-          if (indexOfExistingArticle !== -1) {
-            fieldsOrder.forEach(fieldName => {
-              rows[indexOfExistingArticle][fieldName] =
-                formattedSubmissionData[fieldName] || ''
-            })
-            await rows[indexOfExistingArticle].save()
-          } else {
-            await sheet.addRow({ ...formattedSubmissionData })
-          }
-        }
+      //     if (indexOfExistingArticle !== -1) {
+      //       fieldsOrder.forEach(fieldName => {
+      //         rows[indexOfExistingArticle][fieldName] =
+      //           formattedSubmissionData[fieldName] || ''
+      //       })
+      //       await rows[indexOfExistingArticle].save()
+      //     } else {
+      //       await sheet.addRow({ ...formattedSubmissionData })
+      //     }
+      //   }
 
-        try {
-          await publishArticleInGoogleSheets(manuscript.submission)
+      //   try {
+      //     await publishArticleInGoogleSheets(manuscript.submission)
 
-          const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
-            id,
-            {
-              published: new Date(),
-              status: 'published',
-            },
-          )
+      //     const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
+      //       id,
+      //       {
+      //         published: new Date(),
+      //         status: 'published',
+      //       },
+      //     )
 
-          return updatedManuscript
-        } catch (e) {
-          // eslint-disable-next-line
-          console.log('error while publishing in google spreadsheet')
-          // eslint-disable-next-line
-          console.log(e)
-          return null
-        }
-      }
+      //     return updatedManuscript
+      //   } catch (e) {
+      //     // eslint-disable-next-line
+      //     console.log('error while publishing in google spreadsheet')
+      //     // eslint-disable-next-line
+      //     console.log(e)
+      //     return null
+      //   }
+      // }
 
       if (!manuscript.published && process.env.INSTANCE_NAME === 'aperture') {
         manuscript = ctx.models.Manuscript.query().updateAndFetchById(id, {

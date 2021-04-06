@@ -20,10 +20,16 @@ const compression = require('compression')
 const EventEmitter = require('events')
 const gqlApi = require('./graphql')
 
+console.log('process.version')
+console.log(process.version)
+
 const configureApp = app => {
   const models = require('@pubsweet/models')
   const authsome = require('pubsweet-server/src/helpers/authsome') // TODO: Fix import
   app.use(compression())
+
+  console.log('process.version')
+  console.log(process.version)
 
   app.locals.models = models
 
