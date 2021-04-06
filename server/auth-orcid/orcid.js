@@ -6,13 +6,7 @@ const fetchUserDetails = require('./fetchUserDetails')
 
 const CALLBACK_URL = '/auth/orcid/callback'
 
-const {
-  PUBLIC_CLIENT_PROTOCOL,
-  PUBLIC_CLIENT_HOST,
-  PUBLIC_CLIENT_PORT,
-} = process.env
-
-const orcidBackURL = `${PUBLIC_CLIENT_PROTOCOL}://${PUBLIC_CLIENT_HOST}:${PUBLIC_CLIENT_PORT}`
+const orcidBackURL = config['pubsweet-client'].baseUrl
 // eslint-disable-next-line
 console.log('orcid logging: ', orcidBackURL)
 
