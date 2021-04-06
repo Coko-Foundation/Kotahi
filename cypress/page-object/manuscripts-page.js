@@ -16,6 +16,8 @@ const MANUSCRIPTS_TABLE_HEAD = '[class*=Table__Header] > tr >th'
 const ARTICLE_ID = '[class*=Table__Row]>td:nth-child(1)'
 const ARTICLE_LABEL = 'style__StyledTableLabel'
 const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
+const TABLE_ROW = 'Table__Row'
+const LABEL = '[class*=Table__Row]>td:nth-child(6)'
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -74,6 +76,15 @@ export const ManuscriptsPage = {
   },
   getArticleTopic(nth) {
     return cy.get(ARTICLE_TOPIC).eq(nth)
+  },
+  clickArticleTopic(nth) {
+    this.getArticleTopic(nth).click()
+  },
+  getTableRows() {
+    return cy.getByContainsClass(TABLE_ROW).its('length')
+  },
+  getLabelRow(nth) {
+    return cy.get(LABEL).eq(nth)
   },
 }
 export default ManuscriptsPage
