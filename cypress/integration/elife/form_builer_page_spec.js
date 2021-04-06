@@ -20,30 +20,29 @@ describe('Form builder page tests', () => {
     it('check title and elements from form builder', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
-        FormsPage.getFormTitleTab(0).should('contain', data.elife.articleId)
         FormsPage.getFormBuilderElementName(0).should(
           'contain',
-          data.elife.articleUrl,
+          data.elife.articleId,
         )
         FormsPage.getFormBuilderElementName(1).should(
           'contain',
-          data.elife.description,
+          data.elife.articleUrl,
         )
         FormsPage.getFormBuilderElementName(2).should(
           'contain',
-          data.elife.evaluationContent,
+          data.elife.description,
         )
         FormsPage.getFormBuilderElementName(3).should(
           'contain',
-          data.elife.evaluationType,
+          data.elife.evaluationContent,
         )
         FormsPage.getFormBuilderElementName(4).should(
           'contain',
-          data.elife.creator,
+          data.elife.evaluationType,
         )
         FormsPage.getFormBuilderElementName(5).should(
           'contain',
-          data.elife.required,
+          data.elife.creator,
         )
       })
     })
@@ -83,8 +82,8 @@ describe('Form builder page tests', () => {
       NewSubmissionPage.clickSubmitURL()
     })
 
-    // check if the form contain all the colums
-    it('check if the form contain all the colums', () => {
+    // check if the form contain all the columns
+    it('check if the form contain all the columns', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         SubmissionFormPage.getFormOptionList(0).should(
