@@ -56,12 +56,13 @@ const commonUpdateManuscript = async (_, { id, input }, ctx) => {
 
   const updatedManuscript = {
     ...manuscript,
+    ...manuscriptDelta,
     submission: {
       ...manuscript.submission,
       ...manuscriptDelta.submission,
     },
   }
-
+  
   // if (manuscript.status === 'revise') {
   //   return manuscript.createNewVersion(update)
   // }
