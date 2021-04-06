@@ -1,6 +1,8 @@
 const merge = require('lodash/merge')
 const { ref, raw } = require('objection')
 const axios = require('axios')
+const { GoogleSpreadsheet } = require('google-spreadsheet')
+const credentials = require('../../../google_sheets_credentials.json')
 
 const ManuscriptResolvers = ({ isVersion }) => {
   const resolvers = {
@@ -263,7 +265,7 @@ const resolvers = {
     async publishManuscript(_, { id }, ctx) {
       let manuscript = await ctx.models.Manuscript.query().findById(id)
 
-      if (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME)) {
+      if (['elife'].includes(process.env.INSTANCE_NAME)) {
         const requestBody = {
           uri: manuscript.submission.articleURL,
           text: manuscript.submission.evaluationContent,
@@ -293,6 +295,72 @@ const resolvers = {
 
           return updatedManuscript
         } catch {
+          return null
+        }
+      }
+
+      if (process.env.INSTANCE_NAME === 'ncrc') {
+        // eslint-disable-next-line
+        const submissionForm = require('../../../app/storage/forms-ncrc/submit.json')
+        const spreadsheetId = '1OvWJj7ZTFhniC4KbFNbskuYSNMftsG2ocKuY-i9ezVA'
+
+        const fieldsOrder = submissionForm.children
+          .filter(el => el.name)
+          .map(formElement => formElement.name.split('.')[1])
+
+        const formatSubmissionData = rawSubmissionData => {
+          return Object.keys(rawSubmissionData).reduce((acc, key) => {
+            return { ...acc, [key]: rawSubmissionData[key].toString() }
+          }, {})
+        }
+
+        const publishArticleInGoogleSheets = async submissionData => {
+          const formattedSubmissionData = formatSubmissionData(submissionData)
+
+          const { articleURL } = formattedSubmissionData
+          const doc = new GoogleSpreadsheet(spreadsheetId)
+
+          await doc.useServiceAccountAuth({
+            client_email: credentials.client_email,
+            private_key: credentials.private_key,
+          })
+
+          await doc.loadInfo()
+          const sheet = doc.sheetsByIndex[0]
+          const rows = await sheet.getRows()
+
+          const indexOfExistingArticle = rows.findIndex(
+            row => row.articleURL === articleURL,
+          )
+
+          if (indexOfExistingArticle !== -1) {
+            fieldsOrder.forEach(fieldName => {
+              rows[indexOfExistingArticle][fieldName] =
+                formattedSubmissionData[fieldName] || ''
+            })
+            await rows[indexOfExistingArticle].save()
+          } else {
+            await sheet.addRow({ ...formattedSubmissionData })
+          }
+        }
+
+        try {
+          await publishArticleInGoogleSheets(manuscript.submission)
+
+          const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
+            id,
+            {
+              published: new Date(),
+              status: 'published',
+            },
+          )
+
+          return updatedManuscript
+        } catch (e) {
+          // eslint-disable-next-line
+          console.log('error while publishing in google spreadsheet')
+          // eslint-disable-next-line
+          console.log(e)
           return null
         }
       }
@@ -398,7 +466,7 @@ const resolvers = {
       }
 
       if (process.env.INSTANCE_NAME === 'ncrc') {
-        if (filter && parsedSubmission) {
+        if (filter && parsedSubmission && parsedSubmission.topics) {
           query.whereRaw("(submission->'topics')::jsonb \\? ?", [
             parsedSubmission.topics,
           ])
