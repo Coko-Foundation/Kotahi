@@ -1,4 +1,3 @@
-const merge = require('lodash/merge')
 const { ref, raw } = require('objection')
 const axios = require('axios')
 const { GoogleSpreadsheet } = require('google-spreadsheet')
@@ -54,7 +53,14 @@ const ManuscriptResolvers = ({ isVersion }) => {
 const commonUpdateManuscript = async (_, { id, input }, ctx) => {
   const manuscriptDelta = JSON.parse(input)
   const manuscript = await ctx.models.Manuscript.query().findById(id)
-  const updatedManuscript = merge({}, manuscript, manuscriptDelta)
+
+  const updatedManuscript = {
+    ...manuscript,
+    submission: {
+      ...manuscript.submission,
+      ...manuscriptDelta.submission,
+    },
+  }
 
   // if (manuscript.status === 'revise') {
   //   return manuscript.createNewVersion(update)
