@@ -1,7 +1,7 @@
 const { ref, raw } = require('objection')
 const axios = require('axios')
 const { GoogleSpreadsheet } = require('google-spreadsheet')
-const credentials = require('../../../google_sheets_credentials.json')
+// const credentials = require('../../../google_sheets_credentials.json')
 
 const ManuscriptResolvers = ({ isVersion }) => {
   const resolvers = {
