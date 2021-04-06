@@ -78,9 +78,9 @@ const messages = await channel.$relatedQuery('messages')
 
 And so on. For more information about the capabilities of the underlying Objection.js ORM, check out [its documentation](https://vincit.github.io/objection.js/).
 
-## What should PUBLIC_CLIENT_HOST be set to?
+## What should PUBLIC_CLIENT_PROTOCOL, PUBLIC_CLIENT_HOST and PUBLIC_CLIENT_PORT be set to?
 
-This environment variable is currently only needed when deploying a _development_ build to a server (not to localhost). Set it to the server's name, e.g. `subdomain.myserver.com`.
+These environment variables are only needed for an instance where the client's public address is different to the address by which the server accesses it. For instance, when deploying behind a proxy, or when deploying a _development_ instance to a remote server (not to localhost). Otherwise, you can leave these unset.
 
 # What if I want to use my own PostgreSQL instance (i.e. not via `docker-compose`)?
 
@@ -105,3 +105,7 @@ Migrate the test database using `yarn dotenv yarn pubsweet migrate`.
 # Does Kotahi support collaborative real-time text editing?
 
 Kotahi uses the Wax editor which is not configured for real-time collaboration out of the box, but can be (and was) made to support it. It was previously configured to support it, but the feature was removed in https://gitlab.coko.foundation/kotahi/kotahi/-/merge_requests/230/diffs?commit_id=6fd9eec258ce21d4db8cf1e593bb8b891b3f3c50 due to its experimental nature and it not being required by the known workflows. Reverting that would be a good choice for a starting point, should you wish to reimplement it.
+
+# How do I se the logo and branding colours?
+
+`app/brandConfig.json` allows logo, colors and brand name to be specified. Colors must be specified in hex format, e.g. "#9e9e9e".
