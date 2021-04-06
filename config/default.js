@@ -10,6 +10,8 @@ const journal = require('./journal')
 console.log('process.env.INSTANCE_NAME')
 // eslint-disable-next-line
 console.log(process.env.INSTANCE_NAME)
+// eslint-disable-next-line
+console.log('process.env.NODE_VERSION', process.env.NODE_VERSION)
 
 module.exports = {
   teams: {
