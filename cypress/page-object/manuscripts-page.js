@@ -13,7 +13,7 @@ const CREATED_CARET = 'Carets__Caret'
 const AUTHOR_FIELD = 'UserCombo__Primary'
 const STATUS_FIELD = 'Badge__Status'
 const MANUSCRIPTS_TABLE_HEAD = '[class*=Table__Header] > tr >th'
-const ARTICLE_ID = '[class*=Table__Row]>td:nth-child(1)'
+const ARTICLE_TITLE = '[class*=Table__Row]>td:nth-child(1)'
 const ARTICLE_LABEL = 'style__StyledTableLabel'
 const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 const TABLE_ROW = 'Table__Row'
@@ -65,8 +65,8 @@ export const ManuscriptsPage = {
   getTableHead(nth) {
     return cy.get(MANUSCRIPTS_TABLE_HEAD).eq(nth)
   },
-  getArticleIdByRow(nth) {
-    return cy.get(ARTICLE_ID).eq(nth)
+  getArticleTitleByRow(nth) {
+    return cy.get(ARTICLE_TITLE).eq(nth)
   },
   clickTableHead(nth) {
     this.getTableHead(nth).click()

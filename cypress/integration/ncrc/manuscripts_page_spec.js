@@ -172,12 +172,13 @@ describe('manuscripts page tests', () => {
       })
     })
   })
-  context('filter by topics and sort by label', () => {
+  context('filter and sort articles', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitURL()
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
+        SubmissionFormPage.fillInArticleDescription('123')
         SubmissionFormPage.clickElementFromFormOptionList(9)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(
@@ -186,6 +187,7 @@ describe('manuscripts page tests', () => {
         Menu.clickManuscripts()
         ManuscriptsPage.clickSubmit()
         NewSubmissionPage.clickSubmitURL()
+        SubmissionFormPage.fillInArticleDescription('abc')
         SubmissionFormPage.clickElementFromFormOptionList(9)
         SubmissionFormPage.selectDropdownOption(1)
         SubmissionFormPage.clickTopicsCheckboxWithText(
@@ -197,6 +199,7 @@ describe('manuscripts page tests', () => {
         Menu.clickManuscripts()
         ManuscriptsPage.clickSubmit()
         NewSubmissionPage.clickSubmitURL()
+        SubmissionFormPage.fillInArticleDescription('def')
         SubmissionFormPage.clickElementFromFormOptionList(9)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(
@@ -238,6 +241,16 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getLabelRow(0).should('contain', 'evaluated')
       ManuscriptsPage.getLabelRow(1).should('contain', 'ready to evaluat')
       ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluat')
+    })
+    it('sort article by Description', () => {
+      ManuscriptsPage.getTableHead(0).should('contain', 'Description')
+      ManuscriptsPage.getArticleTitleByRow(0).should('contain', 'def')
+      ManuscriptsPage.getArticleTitleByRow(1).should('contain', 'abc')
+      ManuscriptsPage.getArticleTitleByRow(2).should('contain', '123')
+      ManuscriptsPage.clickTableHead(0)
+      ManuscriptsPage.getArticleTitleByRow(0).should('contain', '123')
+      ManuscriptsPage.getArticleTitleByRow(1).should('contain', 'abc')
+      ManuscriptsPage.getArticleTitleByRow(2).should('contain', 'def')
     })
   })
 })
