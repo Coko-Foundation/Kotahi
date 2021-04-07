@@ -130,6 +130,8 @@ describe('Manuscripts page tests', () => {
           SubmissionFormPage.clickElementFromFormOptionList(4)
           SubmissionFormPage.selectDropdownOption(1)
           SubmissionFormPage.fillInCreator(name.role.admin)
+          // eslint-disable-next-line
+          cy.wait(2000)
           SubmissionFormPage.clickSubmitResearch()
           SubmissionFormPage.clickSubmitManuscript()
         })
@@ -218,7 +220,10 @@ describe('Manuscripts page tests', () => {
       ManuscriptsPage.getTableHead(0).should('contain', 'Article Id')
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
-        ManuscriptsPage.getArticleTitleByRow(0).should('contain', data.articleId)
+        ManuscriptsPage.getArticleTitleByRow(0).should(
+          'contain',
+          data.articleId,
+        )
       })
     })
   })

@@ -159,6 +159,7 @@ describe('manuscripts page tests', () => {
         ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
         ManuscriptsPage.clickEvaluation(0)
         SubmissionFormPage.fillInValueAdded('Evaluated')
+        SubmissionFormPage.clickTopicsCheckboxWithText('vaccines')
         // eslint-disable-next-line
         cy.wait(2500)
         SubmissionFormPage.clickSubmitManuscript()
@@ -209,6 +210,8 @@ describe('manuscripts page tests', () => {
           data.ncrc.topicTypes.diagnostics,
         )
         Menu.clickManuscripts()
+        // eslint-disable-next-line
+        cy.wait(2000)
       })
     })
     it('filter article after topic and url contain that topic', () => {
@@ -236,11 +239,11 @@ describe('manuscripts page tests', () => {
     })
     it('sort article by label', () => {
       ManuscriptsPage.getLabelRow(1).should('contain', 'evaluated')
-      ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluat')
+      ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluate')
       ManuscriptsPage.clickTableHead(5)
       ManuscriptsPage.getLabelRow(0).should('contain', 'evaluated')
-      ManuscriptsPage.getLabelRow(1).should('contain', 'ready to evaluat')
-      ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluat')
+      ManuscriptsPage.getLabelRow(1).should('contain', 'ready to evaluate')
+      ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluate')
     })
     it('sort article by Description', () => {
       ManuscriptsPage.getTableHead(0).should('contain', 'Description')
