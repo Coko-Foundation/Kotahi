@@ -73,8 +73,11 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
       {process.env.INSTANCE_NAME === 'aperture' && (
         <Cell>{manuscript.meta && manuscript.meta.title}</Cell>
       )}
-      {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
+      {['elife'].includes(process.env.INSTANCE_NAME) && (
         <Cell>{manuscript.submission && manuscript.submission.articleId}</Cell>
+      )}
+      {['ncrc'].includes(process.env.INSTANCE_NAME) && (
+        <Cell><span style={{wordBreak: "break-word"}}>{manuscript.submission && manuscript.submission.articleDescription}</span></Cell>
       )}
       <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
       <Cell>{convertTimestampToDate(manuscript.updated)}</Cell>

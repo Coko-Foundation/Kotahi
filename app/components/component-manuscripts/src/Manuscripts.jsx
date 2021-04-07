@@ -114,9 +114,14 @@ const Manuscripts = ({ history, ...props }) => {
               {process.env.INSTANCE_NAME === 'aperture' && (
                 <SortHeader thisSortName="meta:title">Title</SortHeader>
               )}
-              {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
+              {['elife'].includes(process.env.INSTANCE_NAME) && (
                 <SortHeader thisSortName="submission:articleId">
                   Article Id
+                </SortHeader>
+              )}
+               {['ncrc'].includes(process.env.INSTANCE_NAME) && (
+                <SortHeader thisSortName="submission:articleDescription">
+                  Description
                 </SortHeader>
               )}
               <SortHeader thisSortName="created">Created</SortHeader>
