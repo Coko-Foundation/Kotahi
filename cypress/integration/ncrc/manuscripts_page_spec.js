@@ -121,6 +121,8 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickDropdown(-1)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
+        // eslint-disable-next-line
+        cy.wait(2000)
         SubmissionFormPage.clickSubmitManuscript()
       })
     })
@@ -157,7 +159,8 @@ describe('manuscripts page tests', () => {
         ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
         ManuscriptsPage.clickEvaluation(0)
         SubmissionFormPage.fillInValueAdded('Evaluated')
-        SubmissionFormPage.clickTopicsCheckboxWithText('vaccines')
+        // eslint-disable-next-line
+        cy.wait(2500)
         SubmissionFormPage.clickSubmitManuscript()
         ManuscriptsPage.clickEvaluation()
         // eslint-disable-next-line
@@ -177,21 +180,31 @@ describe('manuscripts page tests', () => {
       cy.fixture('form_option').then(data => {
         SubmissionFormPage.clickElementFromFormOptionList(9)
         SubmissionFormPage.selectDropdownOption(0)
-        SubmissionFormPage.clickTopicsCheckboxWithText(data.ncrc.topicTypes.vaccines)
+        SubmissionFormPage.clickTopicsCheckboxWithText(
+          data.ncrc.topicTypes.vaccines,
+        )
         Menu.clickManuscripts()
         ManuscriptsPage.clickSubmit()
         NewSubmissionPage.clickSubmitURL()
         SubmissionFormPage.clickElementFromFormOptionList(9)
         SubmissionFormPage.selectDropdownOption(1)
-        SubmissionFormPage.clickTopicsCheckboxWithText(data.ncrc.topicTypes.ecologyAndSpillover)
-        SubmissionFormPage.clickTopicsCheckboxWithText(data.ncrc.topicTypes.diagnostics)
+        SubmissionFormPage.clickTopicsCheckboxWithText(
+          data.ncrc.topicTypes.ecologyAndSpillover,
+        )
+        SubmissionFormPage.clickTopicsCheckboxWithText(
+          data.ncrc.topicTypes.diagnostics,
+        )
         Menu.clickManuscripts()
         ManuscriptsPage.clickSubmit()
         NewSubmissionPage.clickSubmitURL()
         SubmissionFormPage.clickElementFromFormOptionList(9)
         SubmissionFormPage.selectDropdownOption(0)
-        SubmissionFormPage.clickTopicsCheckboxWithText(data.ncrc.topicTypes.modeling)
-        SubmissionFormPage.clickTopicsCheckboxWithText(data.ncrc.topicTypes.diagnostics)
+        SubmissionFormPage.clickTopicsCheckboxWithText(
+          data.ncrc.topicTypes.modeling,
+        )
+        SubmissionFormPage.clickTopicsCheckboxWithText(
+          data.ncrc.topicTypes.diagnostics,
+        )
         Menu.clickManuscripts()
       })
     })
@@ -206,7 +219,10 @@ describe('manuscripts page tests', () => {
       cy.url().should('contain', 'diagnostics')
       ManuscriptsPage.getArticleTopic(0).should('contain', 'modeling')
       ManuscriptsPage.getArticleTopic(1).should('contain', 'diagnostics')
-      ManuscriptsPage.getArticleTopic(2).should('contain', 'ecology and spillover')
+      ManuscriptsPage.getArticleTopic(2).should(
+        'contain',
+        'ecology and spillover',
+      )
       ManuscriptsPage.getArticleTopic(3).should('contain', 'diagnostics')
       Menu.clickManuscripts()
       ManuscriptsPage.clickArticleTopic(0)

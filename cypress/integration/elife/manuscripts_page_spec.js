@@ -189,6 +189,8 @@ describe('Manuscripts page tests', () => {
         SubmissionFormPage.clickElementFromFormOptionList(4)
         SubmissionFormPage.selectDropdownOption(-1)
         SubmissionFormPage.fillInCreator('creator')
+        // eslint-disable-next-line
+        cy.wait(2000)
         SubmissionFormPage.clickSubmitResearch()
         ManuscriptsPage.clickEvaluation()
         // eslint-disable-next-line
