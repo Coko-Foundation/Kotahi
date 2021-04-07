@@ -42,12 +42,6 @@ const filesToAttachment = file => ({
   url: file.url,
 })
 
-const stripHtml = htmlString => {
-  const temp = document.createElement('span')
-  temp.innerHTML = htmlString
-  return temp.textContent
-}
-
 const filterFileManuscript = files =>
   files.filter(
     file =>
@@ -67,11 +61,16 @@ elements.AbstractEditor = ({
   ...rest
 }) => (
   <AbstractEditor
+    bulletlist
+    joinaboveblock
+    liftitem
+    link
+    orderedlist
     value={get(values, rest.name) || ''}
     {...rest}
     onChange={val => {
       setTouched(set({}, rest.name, true))
-      onChange(stripHtml(val))
+      onChange(val)
     }}
   />
 )
@@ -383,6 +382,9 @@ FormTemplate.propTypes = {
   submitSubmission: PropTypes.func,
   errors: PropTypes.objectOf(PropTypes.any).isRequired,
   validateForm: PropTypes.func.isRequired,
+  match: PropTypes.shape({
+    url: PropTypes.string.isRequired,
+  }).isRequired,
 }
 FormTemplate.defaultProps = {
   journal: undefined,
