@@ -3,6 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { get } from 'lodash'
 import { Attachment } from '@pubsweet/ui'
+import { AbstractEditor } from 'xpub-edit'
 import { Title, SectionHeader, SectionRowGrid } from '../style'
 import { SectionContent } from '../../../../shared'
 
@@ -19,6 +20,11 @@ const Cell = styled.span`
   padding: 0;
 `
 
+const UnadornedEditor = styled(AbstractEditor)`
+  border: none;
+  padding: 0;
+`
+
 const getNote = (notes, type) =>
   notes.find(note => note.notesType === type) || {}
 
@@ -28,7 +34,7 @@ const getNote = (notes, type) =>
 const getSupplementaryFiles = supplementary =>
   (supplementary || []).filter(file => file.fileType === 'supplementary') || []
 
-const showFieldData = (manuscript, fieldName) => {
+const showFieldData = (manuscript, fieldName, form) => {
   const data = get(manuscript, fieldName)
 
   // TODO: Make this generic somehow. Perhaps with an additional fieldType?
@@ -45,6 +51,10 @@ const showFieldData = (manuscript, fieldName) => {
   if (Array.isArray(data)) {
     return data.join(', ')
   }
+
+  const fieldDefinition = form.children?.find(field => field.name === fieldName)
+  if (data && fieldDefinition?.component === 'AbstractEditor')
+    return <UnadornedEditor readonly value={data} />
 
   return data
 }
@@ -73,7 +83,7 @@ const ReviewMetadata = ({ form, manuscript: rawManuscript }) => {
       {form.children.map(element => (
         <SectionRowGrid key={element.id}>
           <Heading>{element.shortDescription || element.title}</Heading>
-          <Cell>{showFieldData(manuscript, element.name)}</Cell>
+          <Cell>{showFieldData(manuscript, element.name, form)}</Cell>
         </SectionRowGrid>
       ))}
       <SectionRowGrid>
@@ -115,6 +125,7 @@ ReviewMetadata.propTypes = {
       PropTypes.shape({
         id: PropTypes.string.isRequired,
         name: PropTypes.string.isRequired,
+        component: PropTypes.string.isRequired,
         title: PropTypes.string.isRequired,
         shortDescription: PropTypes.string,
       }).isRequired,
