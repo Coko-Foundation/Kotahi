@@ -305,6 +305,7 @@ const permissions = {
     manuscript: allow,
     messages: allow,
     getForm: allow,
+    getForms: allow,
     user: allow,
   },
   Mutation: {
