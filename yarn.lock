@@ -2509,6 +2509,21 @@
     tmp-promise "^2.0.0"
     umzug "^2.1.0"
 
+"@pubsweet/db-manager@^3.1.23":
+  version "3.1.23"
+  resolved "https://registry.yarnpkg.com/@pubsweet/db-manager/-/db-manager-3.1.23.tgz#0d5f814605419f1dc53d6b4f306c4bfd279a9e9a"
+  integrity sha512-/cJq4nntAV5EzuctXapktQqYtj7ywMbcrQt0XMN6QRE5XzBZYevDUGdZdp+2GKhdUG/8pEsPFjDeHMgi1xWbyg==
+  dependencies:
+    "@hapi/joi" "^14.3.0"
+    "@pubsweet/logger" "^0.2.58"
+    fs-extra "^8.1.0"
+    knex "^0.21.1"
+    lodash "^4.17.11"
+    objection "^2.1.3"
+    pg "^7.8.0"
+    tmp-promise "^2.0.0"
+    umzug "^2.1.0"
+
 "@pubsweet/errors@^2.0.36", "@pubsweet/errors@^2.0.40", "@pubsweet/errors@^2.0.44":
   version "2.0.44"
   resolved "https://registry.yarnpkg.com/@pubsweet/errors/-/errors-2.0.44.tgz#0270e4bc19702e79f5583f6161577a87536c57a1"
@@ -2516,16 +2531,16 @@
   dependencies:
     http-status-codes "^1.3.0"
 
-"@pubsweet/job-xsweet@^2.1.11":
-  version "2.1.20"
-  resolved "https://registry.yarnpkg.com/@pubsweet/job-xsweet/-/job-xsweet-2.1.20.tgz#325eac40ac7765c7060105875bab59749bea8ee3"
-  integrity sha512-B5XPFMJY6gXDNFaW5cUW3+SO8EkTk5SFLOI85pQtX1TBm6ek4HpnAAJC0BH09IYDV22LUg36SQPVZISLFj1Rog==
+"@pubsweet/job-xsweet@^2.2.0":
+  version "2.2.0"
+  resolved "https://registry.yarnpkg.com/@pubsweet/job-xsweet/-/job-xsweet-2.2.0.tgz#5a0c095cdb4a3232060555957a047701684d9411"
+  integrity sha512-yvYL9qkWZxDsFHCTFhShTPklox5PaR2Uz5DypkJWDHx4g91q/Hab9uDCBYKfQgjkFNoYN7jihz7FUHODbKzDsw==
   dependencies:
-    "@pubsweet/db-manager" "^3.1.19"
-    "@pubsweet/logger" "^0.2.54"
+    "@pubsweet/db-manager" "^3.1.23"
+    "@pubsweet/logger" "^0.2.58"
     express-fileupload v1.1.1-alpha.2
     node-wait-for-it "^0.2.0"
-    pubsweet-server "^13.12.3"
+    pubsweet-server "^13.12.7"
     tmp-promise "^2.0.0"
     waait "^1.0.5"
 
@@ -2533,6 +2548,14 @@
   version "0.2.54"
   resolved "https://registry.yarnpkg.com/@pubsweet/logger/-/logger-0.2.54.tgz#fff6da0fcb97f834d1d9220ff1df4e90fc5799c0"
   integrity sha512-jVAgv0/6B0mmK1RSIpaMS+v/EwFcVUXifCKVZkNph8UjpGAyWeFrI0+GakssIT9fZ/yCKHoGoPdh1n7A5gVQqA==
+  dependencies:
+    "@hapi/joi" "^14.5.0"
+    config "^3.0.1"
+
+"@pubsweet/logger@^0.2.58":
+  version "0.2.58"
+  resolved "https://registry.yarnpkg.com/@pubsweet/logger/-/logger-0.2.58.tgz#baab6a6f627e0861fd8d485f5f34fe92ffdca68c"
+  integrity sha512-8KmpEnEeqKLWWANcYbFyjEt/AHUwHVvJ/mMq3AYLPuwNmr2oifxfO3aps3YOFzAAdH3ayvhOXrL7P5D/HJkctg==
   dependencies:
     "@hapi/joi" "^14.5.0"
     config "^3.0.1"
@@ -16324,7 +16347,7 @@ pubsweet-client@^10.2.5:
     styled-normalize "^8.0.6"
     subscriptions-transport-ws "^0.9.12"
 
-pubsweet-server@13.12.3, pubsweet-server@^13.11.6, pubsweet-server@^13.12.3:
+pubsweet-server@13.12.3, pubsweet-server@^13.11.6, pubsweet-server@^13.12.3, pubsweet-server@^13.12.7:
   version "13.12.3"
   resolved "https://registry.yarnpkg.com/pubsweet-server/-/pubsweet-server-13.12.3.tgz#f5fade9667000d2be8bc448f15b1df9a89fb58b2"
   integrity sha512-tl3LemBnFBBo5x/UucwevGDBYb2Jg7mwcYaxQ4tkzVHCoFqC9BB5wx9qGVHM9EwcwhiNMK+vqmzvDClFZrrbvw==

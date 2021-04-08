@@ -38,7 +38,7 @@ services:
       - INSTANCE_NAME=${INSTANCE_NAME:-elife}
 
   job-xsweet:
-    image: pubsweet/job-xsweet:1.5.0
+    image: cokoapps/job-xsweet:1.5.1
     depends_on:
       - server
     command:

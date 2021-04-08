@@ -97,7 +97,7 @@
     "@pubsweet/base-model": "4.0.0",
     "@pubsweet/component-send-email": "0.4.3",
     "@pubsweet/errors": "^2.0.40",
-    "@pubsweet/job-xsweet": "^2.1.11",
+    "@pubsweet/job-xsweet": "^2.2.0",
     "@pubsweet/logger": "^0.2.50",
     "@pubsweet/model-user": "6.0.3",
     "@pubsweet/models": "^0.3.15",

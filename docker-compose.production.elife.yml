@@ -52,7 +52,7 @@ services:
       - ./db-data:/var/lib/postgresql/data/kotahi:z
 
   job-xsweet:
-    image: pubsweet/job-xsweet:1.5.0
+    image: cokoapps/job-xsweet:1.5.1
     environment:
       - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST:-db}:${POSTGRES_PORT}/${POSTGRES_DB}
     depends_on:
