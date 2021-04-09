@@ -1,4 +1,6 @@
 /// <reference types="Cypress" />
+import { ManuscriptsPage } from './manuscripts-page'
+
 /**
  * Page object representing the form which has
  * to be completed to correctly submit a research paper.
@@ -217,6 +219,10 @@ export const SubmissionFormPage = {
   clickSubmitManuscript() {
     this.getSubmitManuscriptButton().click()
   },
+  clickSubmitManuscriptAndWaitPageLoad() {
+    this.clickSubmitManuscript()
+    ManuscriptsPage.getTableHeader().should('be.visible')
+  },
   getValidationErrorMessage(error) {
     return cy.getByContainsClass(VALIDATION_ERROR_MESSAGE).contains(error)
   },
@@ -335,6 +341,10 @@ export const SubmissionFormPage = {
   },
   clickTopicsCheckboxWithText(value) {
     this.getTopicsCheckboxWithText(value).click()
+  },
+  waitThreeSec() {
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(3000)
   },
 }
 export default SubmissionFormPage

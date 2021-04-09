@@ -14,6 +14,7 @@ describe('manuscripts page tests', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.admin, manuscripts)
     })
+    ManuscriptsPage.getTableHeader().should('be.visible')
   })
   context('elements visibility', () => {
     it('submit button should be visible & dashboard page should not exist', () => {
@@ -23,20 +24,20 @@ describe('manuscripts page tests', () => {
 
     it('evaluation button should be visible for unsubmitted articles', () => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitURL()
+      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
       // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleDescription(data.articleId)
       })
-      Menu.clickManuscripts()
+      Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getEvaluationButton()
         .scrollIntoView()
         .should('be.visible')
     })
     it('label & topics should be visible on manuscripts page', () => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitURL()
+      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
       // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -44,7 +45,7 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.selectDropdownOption(1)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.clickTopicsCheckboxWithText('epidemiology')
-        Menu.clickManuscripts()
+        Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.getArticleLabel()
           .should('be.visible')
           .and('contain', 'evaluated')
@@ -56,7 +57,7 @@ describe('manuscripts page tests', () => {
   context('unsubmitted article tests', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitURL()
+      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
     })
 
     it('unsubmitted article is evaluated', () => {
@@ -64,7 +65,7 @@ describe('manuscripts page tests', () => {
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleDescription(data.title)
       })
-      Menu.clickManuscripts()
+      Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.clickEvaluation()
       cy.url().should('contain', 'evaluation')
       SubmissionFormPage.getArticleUrl().should('have.value', '')
@@ -92,7 +93,7 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickDropdown(-1)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
-        SubmissionFormPage.clickSubmitManuscript()
+        SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
         ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
         ManuscriptsPage.getArticleTopic(0)
           .should('be.visible')
@@ -104,7 +105,7 @@ describe('manuscripts page tests', () => {
   context('submitted and evaluated article tests', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitURL()
+      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
       // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -122,8 +123,8 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         // eslint-disable-next-line
-        cy.wait(2000)
-        SubmissionFormPage.clickSubmitManuscript()
+        SubmissionFormPage.waitThreeSec()
+        SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
       })
     })
     it('manuscripts page should contain the correct details after submission', () => {
@@ -149,7 +150,7 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
       ManuscriptsPage.clickEvaluation(0)
 
-      SubmissionFormPage.clickSubmitManuscript()
+      SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
 
       ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
     })
@@ -161,8 +162,8 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.fillInValueAdded('Evaluated')
         SubmissionFormPage.clickTopicsCheckboxWithText('vaccines')
         // eslint-disable-next-line
-        cy.wait(2500)
-        SubmissionFormPage.clickSubmitManuscript()
+        SubmissionFormPage.waitThreeSec()
+        SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
         ManuscriptsPage.clickEvaluation()
         // eslint-disable-next-line
         SubmissionFormPage.getValueAddedField().should(
@@ -176,7 +177,7 @@ describe('manuscripts page tests', () => {
   context('filter and sort articles', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitURL()
+      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         SubmissionFormPage.fillInArticleDescription('123')
@@ -185,9 +186,9 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickTopicsCheckboxWithText(
           data.ncrc.topicTypes.vaccines,
         )
-        Menu.clickManuscripts()
+        Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.clickSubmit()
-        NewSubmissionPage.clickSubmitURL()
+        NewSubmissionPage.clickSubmitUrlAndVerifyLink()
         SubmissionFormPage.fillInArticleDescription('abc')
         SubmissionFormPage.clickElementFromFormOptionList(9)
         SubmissionFormPage.selectDropdownOption(1)
@@ -197,9 +198,9 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickTopicsCheckboxWithText(
           data.ncrc.topicTypes.diagnostics,
         )
-        Menu.clickManuscripts()
+        Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.clickSubmit()
-        NewSubmissionPage.clickSubmitURL()
+        NewSubmissionPage.clickSubmitUrlAndVerifyLink()
         SubmissionFormPage.fillInArticleDescription('def')
         SubmissionFormPage.clickElementFromFormOptionList(9)
         SubmissionFormPage.selectDropdownOption(0)
@@ -209,9 +210,8 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickTopicsCheckboxWithText(
           data.ncrc.topicTypes.diagnostics,
         )
-        Menu.clickManuscripts()
+        Menu.clickManuscriptsAndAssertPageLoad()
         // eslint-disable-next-line
-        cy.wait(2000)
       })
     })
     it('filter article after topic and url contain that topic', () => {
@@ -219,7 +219,7 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getTableRows().should('eq', 1)
       cy.url().should('contain', 'vaccines')
       ManuscriptsPage.getArticleTopic(0).should('contain', 'vaccines')
-      Menu.clickManuscripts()
+      Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.clickArticleTopic(1)
       ManuscriptsPage.getTableRows().should('eq', 2)
       cy.url().should('contain', 'diagnostics')
@@ -230,7 +230,7 @@ describe('manuscripts page tests', () => {
         'ecology and spillover',
       )
       ManuscriptsPage.getArticleTopic(3).should('contain', 'diagnostics')
-      Menu.clickManuscripts()
+      Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.clickArticleTopic(0)
       ManuscriptsPage.getTableRows().should('eq', 1)
       cy.url().should('contain', 'modeling')
