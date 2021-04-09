@@ -213,6 +213,10 @@ export const SubmissionFormPage = {
   clickSubmitResearch() {
     this.getSubmitResearchButton().click()
   },
+  clickSubmitResearchAndWaitPageLoad() {
+    this.clickSubmitResearch()
+    ManuscriptsPage.getTableHeader().should('be.visible')
+  },
   getSubmitManuscriptButton() {
     return cy.get(SUBMIT_MANUSCRIPT_BUTTON)
   },

@@ -1,4 +1,6 @@
 /// <reference types="Cypress" />
+import { evaluate } from '../support/routes'
+
 /**
  * Page component representing the fourth option in the left side menu,
  * where users can see the list of submitted manuscripts & select Control,
@@ -44,6 +46,10 @@ export const ManuscriptsPage = {
   },
   clickEvaluation() {
     this.getEvaluationButton().click()
+  },
+  clickEvaluationAndVerifyUrl() {
+    this.clickEvaluation()
+    cy.url({ timeout: 10000 }).should('contain', evaluate)
   },
   getControlButton() {
     return cy.get(CONTROL_BUTTON)

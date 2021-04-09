@@ -148,7 +148,7 @@ describe('manuscripts page tests', () => {
     })
     it('evaluate article and check status is changed', () => {
       ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
-      ManuscriptsPage.clickEvaluation(0)
+      ManuscriptsPage.clickEvaluation()
 
       SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
 
@@ -158,7 +158,7 @@ describe('manuscripts page tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
-        ManuscriptsPage.clickEvaluation(0)
+        ManuscriptsPage.clickEvaluation()
         SubmissionFormPage.fillInValueAdded('Evaluated')
         SubmissionFormPage.clickTopicsCheckboxWithText('vaccines')
         // eslint-disable-next-line
