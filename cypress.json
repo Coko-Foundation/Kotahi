@@ -1,5 +1,4 @@
 {
   "baseUrl": "http://localhost:4000",
-  "nodeVersion": "system",
-  "defaultCommandTimeout": 8000
+  "nodeVersion": "system"
 }
