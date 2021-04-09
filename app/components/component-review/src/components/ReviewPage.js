@@ -5,7 +5,7 @@ import { Formik } from 'formik'
 import config from 'config'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import ReviewLayout from './review/ReviewLayout'
-import { Spinner } from '../../../shared'
+import { Heading, Page, Spinner } from '../../../shared'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
 
 const commentFields = `
@@ -155,7 +155,7 @@ const updateReviewMutationQuery = gql`
   }
 `
 
-const urlFrag = config.journal.metadata.toplevel__urlfragment
+const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const ReviewPage = ({ match, ...props }) => {
   const currentUser = useCurrentUser()
@@ -186,7 +186,15 @@ const ReviewPage = ({ match, ...props }) => {
   }, [data?.manuscript?.reviews])
 
   if (loading) return <Spinner />
-  if (error) return `Error! ${error.message}`
+
+  if (error) {
+    console.warn(error.message)
+    return (
+      <Page>
+        <Heading>This review is no longer accessible.</Heading>
+      </Page>
+    )
+  }
 
   const { manuscript, getForms } = data
 
