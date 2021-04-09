@@ -224,7 +224,7 @@
         ]
       }
     ],
-    "id": "NCRC Submission Form",
+    "id": "submit",
     "name": "NCRC Submission Form",
     "description": "<p>NCRC Form</p>",
     "haspopup": "false"

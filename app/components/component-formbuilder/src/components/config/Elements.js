@@ -147,6 +147,23 @@ const elements = {
         ],
       },
     },
+    DoiValidation: {
+      component: 'RadioBox',
+      props: {
+        inline: true,
+        options: [
+          {
+            value: 'true',
+            label: 'Yes',
+          },
+          {
+            value: 'false',
+            label: 'No',
+          },
+        ],
+        label: 'DOI Validation',
+      },
+    },
   },
   CheckboxGroup: {
     id: textfield,
