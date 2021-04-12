@@ -41,7 +41,7 @@ const ComponentProperties = ({
       {selectedComponent &&
         map(components[selectedComponent], (value, key) => (
           <Section key={key}>
-            <Legend space>{`Field ${key}`}</Legend>
+            <Legend space>{`Field ${key === 'DoiValidation' ? components[selectedComponent][key].props.label : key}`}</Legend>
             <ValidatedFieldFormik
               component={elements[value.component].default}
               key={`${selectedComponent}-${key}`}
