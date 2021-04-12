@@ -116,7 +116,7 @@ const composeValidate = (
   vld = [],
   valueField = {},
   fieldName,
-  doiValidation = "false",
+  doiValidation = false,
   client,
 ) => value => {
   const validator = vld || []
@@ -138,9 +138,7 @@ const composeValidate = (
       return validatorFn
     })
 
-  if (errors.length === 0 && fieldName === 'submission.articleURL' && doiValidation === "true") {
-    console.log('element.doiValidation')
-    console.log(doiValidation)
+  if (errors.length === 0 && fieldName === 'submission.articleURL' && doiValidation) {
     return client
       .query({
         query: VALIDATE_DOI,
@@ -287,7 +285,7 @@ const FormTemplate = ({
                     element.validate,
                     element.validateValue,
                     element.name,
-                    element.DoiValidation,
+                    JSON.parse(element.DoiValidation ? element.DoiValidation : false),
                     client,
                   )}
                   values={values}
