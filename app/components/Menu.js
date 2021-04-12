@@ -120,7 +120,7 @@ const UserComponent = ({ user, loginLink, profileLink }) => (
         </UserInfo>
       </UserItem>
     )}
-    {!user && <Item link={loginLink} name="Login" />}
+    {!user && <Item icon="logIn" link={loginLink} name="Login" />}
   </Section>
 )
 
