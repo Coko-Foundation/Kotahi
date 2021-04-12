@@ -307,6 +307,7 @@ const permissions = {
     getForm: allow,
     getForms: allow,
     user: allow,
+    validateDOI: allow,
   },
   Mutation: {
     upload: isAuthenticated,

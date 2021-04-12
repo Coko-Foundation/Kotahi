@@ -507,6 +507,23 @@ const resolvers = {
 
       // return ctx.connectors.User.fetchAll(where, ctx, { eager })
     },
+
+    async validateDOI(_, { articleURL }, ctx) {
+      const DOI = encodeURI(articleURL.split('.org/')[1])
+      try {
+        await axios.get(`https://api.crossref.org/works/${DOI}/agency`)
+
+        return {
+          isDOIValid: true
+        }
+      } catch(err) {
+        // eslint-disable-next-line
+        console.log(err)
+        return {
+          isDOIValid: false
+        }
+      }
+    }
   },
   // We want submission into to come out as a stringified JSON, so that we don't have to
   // change our queries if the submission form changes. We still want to store it as JSONB
@@ -522,11 +539,16 @@ const typeDefs = `
     manuscripts: [Manuscript]!
     paginatedManuscripts(sort: String, offset: Int, limit: Int, filter: ManuscriptsFilter): PaginatedManuscripts
     publishedManuscripts(sort:String, offset: Int, limit: Int): PaginatedManuscripts
+    validateDOI(articleURL: String): validateDOIResponse
   }
 
   input ManuscriptsFilter {
     status: String
     submission: String
+  }
+
+  type validateDOIResponse {
+    isDOIValid: Boolean
   }
 
   type PaginatedManuscripts {

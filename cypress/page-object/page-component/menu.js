@@ -1,4 +1,6 @@
 /// <reference types="Cypress" />
+import { ManuscriptsPage } from '../manuscripts-page'
+
 /**
  * Page component which represents the left side menu bar,
  * which contains the Logged User, Dashboard & My profile options (for non-admin users),
@@ -33,6 +35,10 @@ export const Menu = {
   },
   clickManuscripts() {
     this.getManuscriptsButton().click()
+  },
+  clickManuscriptsAndAssertPageLoad() {
+    this.clickManuscripts()
+    ManuscriptsPage.getTableHeader().should('be.visible')
   },
   getMyProfileButton() {
     return cy.getByContainsClass(MENU_BUTTON).contains('My profile')

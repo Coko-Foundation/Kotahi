@@ -19,6 +19,8 @@ import LinksInput from './LinksInput'
 import ValidatedFieldFormik from './ValidatedField'
 import Confirm from './Confirm'
 import { articleStatuses } from '../../../../globals'
+import { VALIDATE_DOI } from '../../../../queries/index'
+import { useApolloClient } from '@apollo/client'
 
 const Intro = styled.div`
   font-style: italic;
@@ -110,7 +112,7 @@ const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),
 })
 
-const composeValidate = (vld = [], valueField = {}) => value => {
+const composeValidate = (vld = [], valueField = {}, fieldName, client) => value => {
   const validator = vld || []
 
   if (validator.length === 0) return undefined
@@ -129,6 +131,20 @@ const composeValidate = (vld = [], valueField = {}) => value => {
 
       return validatorFn
     })
+
+    if(errors.length === 0 && fieldName === 'submission.articleURL') {
+      return client.query({
+        query: VALIDATE_DOI, 
+        variables: {
+          articleURL: value
+        }
+      }).then(res => {
+        if (!res.data.validateDOI.isDOIValid) {
+          return 'DOI is invalid'
+        }
+        return undefined
+      })
+    }
   return errors.length > 0 ? errors[0] : undefined
 }
 
@@ -150,6 +166,7 @@ const FormTemplate = ({
   validateForm,
   match,
 }) => {
+  const client = useApolloClient()
   const submitButton = text => (
     <div>
       <Button
@@ -256,6 +273,8 @@ const FormTemplate = ({
                   validate={composeValidate(
                     element.validate,
                     element.validateValue,
+                    element.name,
+                    client
                   )}
                   values={values}
                 />

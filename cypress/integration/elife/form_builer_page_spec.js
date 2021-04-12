@@ -1,3 +1,4 @@
+/* eslint-disable jest/expect-expect */
 import { FormsPage } from '../../page-object/forms-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
@@ -15,6 +16,7 @@ describe('Form builder page tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, formBuilder)
       })
+      FormsPage.verifyPageLoaded()
     })
 
     it('check title and elements from form builder', () => {
@@ -78,8 +80,9 @@ describe('Form builder page tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
       })
+      ManuscriptsPage.getTableHeader().should('be.visible')
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitURL()
+      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
     })
 
     // check if the form contain all the columns

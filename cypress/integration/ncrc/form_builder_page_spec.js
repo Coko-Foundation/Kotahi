@@ -1,3 +1,4 @@
+/* eslint-disable jest/expect-expect */
 import { formBuilder, manuscripts } from '../../support/routes'
 import { FormsPage } from '../../page-object/forms-page'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
@@ -14,6 +15,7 @@ describe('form builder tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, formBuilder)
       })
+      FormsPage.verifyPageLoaded()
     })
     it('check form entries are correct', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -84,8 +86,9 @@ describe('form builder tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
       })
+      ManuscriptsPage.getTableHeader().should('be.visible')
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitURL()
+      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
     })
 
     it('check submission form contains the same fields', () => {
