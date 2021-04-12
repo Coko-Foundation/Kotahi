@@ -2,10 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Formik } from 'formik'
 import { set } from 'lodash'
-import CurrentVersion from './CurrentVersion'
 import DecisionAndReviews from './DecisionAndReviews'
 import CreateANewVersion from './CreateANewVersion'
 import FormTemplate from './FormTemplate'
+import ReviewMetadata from '../../../component-review/src/components/metadata/ReviewMetadata'
 import MessageContainer from '../../../component-chat/src'
 import {
   SectionContent,
@@ -20,7 +20,12 @@ import {
 // TODO: Improve the import, perhaps a shared component?
 import EditorSection from '../../../component-review/src/components/decision/EditorSection'
 
-const SubmittedVersion = ({ manuscript, currentVersion, createNewVersion }) => {
+const SubmittedVersion = ({
+  manuscript,
+  currentVersion,
+  createNewVersion,
+  form,
+}) => {
   const reviseDecision = currentVersion && manuscript.status === 'revise'
   return (
     <>
@@ -32,7 +37,7 @@ const SubmittedVersion = ({ manuscript, currentVersion, createNewVersion }) => {
         />
       )}
       <DecisionAndReviews manuscript={manuscript} noGap={!reviseDecision} />
-      <CurrentVersion manuscript={manuscript} />
+      <ReviewMetadata form={form} manuscript={manuscript} />
     </>
   )
 }
@@ -41,6 +46,17 @@ SubmittedVersion.propTypes = {
   manuscript: PropTypes.objectOf(PropTypes.any),
   currentVersion: PropTypes.bool.isRequired,
   createNewVersion: PropTypes.func.isRequired,
+  form: PropTypes.shape({
+    children: PropTypes.arrayOf(
+      PropTypes.shape({
+        id: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        component: PropTypes.string.isRequired,
+        title: PropTypes.string.isRequired,
+        shortDescription: PropTypes.string,
+      }).isRequired,
+    ).isRequired,
+  }).isRequired,
 }
 SubmittedVersion.defaultProps = {
   manuscript: undefined,
@@ -83,7 +99,9 @@ const Submit = ({
     const editorSection = addEditor(manuscript, 'Manuscript text')
     let decisionSection
 
-    if (['new', 'revising', 'submitted', 'evaluated'].includes(manuscript.status)) {
+    if (
+      ['new', 'revising', 'submitted', 'evaluated'].includes(manuscript.status)
+    ) {
       Object.assign(submissionValues, JSON.parse(manuscript.submission))
 
       const versionValues = {
@@ -134,6 +152,7 @@ const Submit = ({
           <SubmittedVersion
             createNewVersion={createNewVersion}
             currentVersion={version === currentVersion}
+            form={form}
             manuscript={manuscript}
           />
         ),
@@ -220,6 +239,9 @@ Submit.propTypes = {
   }),
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  match: PropTypes.shape({
+    url: PropTypes.string.isRequired,
+  }).isRequired,
 }
 Submit.defaultProps = {
   parent: undefined,
