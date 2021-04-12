@@ -62,7 +62,7 @@ const commonUpdateManuscript = async (_, { id, input }, ctx) => {
       ...manuscriptDelta.submission,
     },
   }
-  
+
   // if (manuscript.status === 'revise') {
   //   return manuscript.createNewVersion(update)
   // }
@@ -510,20 +510,21 @@ const resolvers = {
 
     async validateDOI(_, { articleURL }, ctx) {
       const DOI = encodeURI(articleURL.split('.org/')[1])
+
       try {
         await axios.get(`https://api.crossref.org/works/${DOI}/agency`)
 
         return {
-          isDOIValid: true
+          isDOIValid: true,
         }
-      } catch(err) {
+      } catch (err) {
         // eslint-disable-next-line
         console.log(err)
         return {
-          isDOIValid: false
+          isDOIValid: false,
         }
       }
-    }
+    },
   },
   // We want submission into to come out as a stringified JSON, so that we don't have to
   // change our queries if the submission form changes. We still want to store it as JSONB

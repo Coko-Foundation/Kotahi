@@ -12,6 +12,7 @@ import {
 import * as validators from 'xpub-validators'
 import { AbstractEditor } from 'xpub-edit'
 import config from 'config'
+import { useApolloClient } from '@apollo/client'
 import { Section as Container, Select, FilesUpload } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
@@ -20,7 +21,6 @@ import ValidatedFieldFormik from './ValidatedField'
 import Confirm from './Confirm'
 import { articleStatuses } from '../../../../globals'
 import { VALIDATE_DOI } from '../../../../queries/index'
-import { useApolloClient } from '@apollo/client'
 
 const Intro = styled.div`
   font-style: italic;
@@ -112,7 +112,12 @@ const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),
 })
 
-const composeValidate = (vld = [], valueField = {}, fieldName, client) => value => {
+const composeValidate = (
+  vld = [],
+  valueField = {},
+  fieldName,
+  client,
+) => value => {
   const validator = vld || []
 
   if (validator.length === 0) return undefined
@@ -132,19 +137,23 @@ const composeValidate = (vld = [], valueField = {}, fieldName, client) => value 
       return validatorFn
     })
 
-    if(errors.length === 0 && fieldName === 'submission.articleURL') {
-      return client.query({
-        query: VALIDATE_DOI, 
+  if (errors.length === 0 && fieldName === 'submission.articleURL') {
+    return client
+      .query({
+        query: VALIDATE_DOI,
         variables: {
-          articleURL: value
-        }
-      }).then(res => {
+          articleURL: value,
+        },
+      })
+      .then(res => {
         if (!res.data.validateDOI.isDOIValid) {
           return 'DOI is invalid'
         }
+
         return undefined
       })
-    }
+  }
+
   return errors.length > 0 ? errors[0] : undefined
 }
 
@@ -167,6 +176,7 @@ const FormTemplate = ({
   match,
 }) => {
   const client = useApolloClient()
+
   const submitButton = text => (
     <div>
       <Button
@@ -274,7 +284,7 @@ const FormTemplate = ({
                     element.validate,
                     element.validateValue,
                     element.name,
-                    client
+                    client,
                   )}
                   values={values}
                 />
