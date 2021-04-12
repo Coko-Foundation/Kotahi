@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { forEach } from 'lodash'
-import styled from 'styled-components'
-import { Tabs, Action } from '@pubsweet/ui'
+import styled, { withTheme } from 'styled-components'
+import { Tabs, Action, Icon } from '@pubsweet/ui'
 import { Columns, Details, Form } from './style'
 import ComponentProperties from './ComponentProperties'
 import FormBuilder from './FormBuilder'
@@ -14,10 +14,24 @@ import {
   SectionRow,
 } from '../../../shared'
 
-const DeleteIcon = styled(Action)`
+const IconAction = styled(Action)`
   line-height: 1.15;
+  vertical-align: text-top;
+`
+
+const RightIconAction = styled(IconAction)`
   margin-left: 10px;
 `
+
+const UnpaddedIcon = styled(Icon)`
+  line-height: 1.15;
+  padding: 0;
+  vertical-align: text-top;
+`
+
+const ControlIcon = withTheme(({ children, theme }) => (
+  <UnpaddedIcon color={theme.colorPrimary}>{children}</UnpaddedIcon>
+))
 
 const FormBuilderLayout = ({
   forms,
@@ -54,7 +68,7 @@ const FormBuilderLayout = ({
       key: `${form.id}`,
       label: [
         form.name,
-        <DeleteIcon
+        <RightIconAction
           key="delete-form"
           onClick={e => {
             e.preventDefault()
@@ -65,8 +79,8 @@ const FormBuilderLayout = ({
             setActiveFormId(forms.find(f => f.id !== form.id)?.id ?? 'new')
           }}
         >
-          🗙
-        </DeleteIcon>,
+          <ControlIcon size={2.5}>x</ControlIcon>
+        </RightIconAction>,
       ],
     })
   })
@@ -74,7 +88,12 @@ const FormBuilderLayout = ({
   sections.push({
     content: <SectionContent />,
     key: 'new',
-    label: '✚ Add Form',
+    label: [
+      <ControlIcon key="new-form" size={2.5}>
+        plus
+      </ControlIcon>,
+      ' New Form',
+    ],
   })
 
   const activeForm = forms.find(f => f.id === activeFormId) ?? {

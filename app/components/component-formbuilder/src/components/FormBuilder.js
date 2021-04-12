@@ -33,6 +33,17 @@ const StatusIcon = withTheme(({ children, theme }) => (
   <Icon color={theme.colorPrimary}>{children}</Icon>
 ))
 
+const UnpaddedIcon = styled(Icon)`
+  padding: 0;
+  vertical-align: text-top;
+`
+
+const SmallIcon = withTheme(({ children, theme }) => (
+  <UnpaddedIcon color={theme.colorPrimary} size={2.5}>
+    {children}
+  </UnpaddedIcon>
+))
+
 const Status = styled.div`
   align-items: center;
   color: ${th('colorPrimary')};
@@ -101,14 +112,14 @@ const BuilderElement = ({
           moveFieldUp(element.id)
         }}
       >
-        ▲
+        <SmallIcon>arrowUp</SmallIcon>
       </IconAction>
       <IconAction
         onClick={event => {
           moveFieldDown(element.id)
         }}
       >
-        ▼
+        <SmallIcon>arrowDown</SmallIcon>
       </IconAction>
       <IconAction
         onClick={event => {
@@ -118,7 +129,7 @@ const BuilderElement = ({
           })
         }}
       >
-        🗙
+        <SmallIcon>x</SmallIcon>
       </IconAction>
     </Element>
   )
