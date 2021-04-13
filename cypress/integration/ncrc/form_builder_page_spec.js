@@ -94,7 +94,7 @@ describe('form builder tests', () => {
       })
       ManuscriptsPage.getTableHeader().should('be.visible')
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
     })
 
     it('check submission form contains the same fields', () => {
@@ -207,6 +207,5 @@ describe('form builder tests', () => {
         }
       })
     })
-
   })
 })

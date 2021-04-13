@@ -24,7 +24,7 @@ describe('Manuscripts page tests', () => {
     })
     it('evaluation button is visible on unsubmited status article', () => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -47,7 +47,7 @@ describe('Manuscripts page tests', () => {
       })
       ManuscriptsPage.getTableHeader().should('be.visible')
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -82,15 +82,15 @@ describe('Manuscripts page tests', () => {
 
     it('sort article after Article id', () => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       SubmissionFormPage.fillInArticleld('456')
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       SubmissionFormPage.fillInArticleld('abc')
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       SubmissionFormPage.fillInArticleld('def')
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getArticleTitleByRow(0).should('contain', 'def')
@@ -119,7 +119,7 @@ describe('Manuscripts page tests', () => {
         ManuscriptsPage.getEvaluationButton().should('not.exist')
         ManuscriptsPage.clickSubmit()
 
-        NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+        NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
 
         // fill the submit form and submit it
         // eslint-disable-next-line jest/valid-expect-in-promise
@@ -241,11 +241,10 @@ describe('Manuscripts page tests', () => {
 
     it('message for DOI invalid is visible ', () => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
-      SubmissionFormPage.fillInArticleUrl("google.com")
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+      SubmissionFormPage.fillInArticleUrl('google.com')
       SubmissionFormPage.fillInDescription('2')
       SubmissionFormPage.getValidationErrorMessage('DOI is invalid')
     })
   })
 })
-

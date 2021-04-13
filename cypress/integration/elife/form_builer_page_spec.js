@@ -88,7 +88,7 @@ describe('Form builder page tests', () => {
       })
       ManuscriptsPage.getTableHeader().should('be.visible')
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
     })
 
     // check if the form contain all the columns

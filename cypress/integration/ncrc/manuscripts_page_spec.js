@@ -258,7 +258,6 @@ describe('manuscripts page tests', () => {
     })
   })
   context('DOI validation', () => {
-
     it('message for DOI invalid is visible ', () => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
