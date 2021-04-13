@@ -60,6 +60,7 @@ COPY --chown=node:node ./server ./server
 COPY --chown=node:node ./app/storage ./app/storage
 COPY --chown=node:node ./startServer.js .
 COPY --chown=node:node ./google_sheets_credentials.json .
+COPY --chown=node:node ./profiles ./static/profiles
 
 COPY --from=build /home/node/app/_build/assets ./_build
 COPY --from=build /home/node/app/production_node_modules ./node_modules
