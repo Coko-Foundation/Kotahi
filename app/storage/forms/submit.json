@@ -22,6 +22,7 @@
       "id": "1616424090017",
       "component": "TextField",
       "name": "submission.articleURL",
+      "DoiValidation": "true",
       "validate": [
         {
           "value": "required",
