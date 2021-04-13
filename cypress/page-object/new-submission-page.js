@@ -1,5 +1,6 @@
 /// <reference types="Cypress" />
 import { submit } from '../support/routes'
+import { SubmissionFormPage } from './submission-form-page'
 
 /**
  * Page object representing the available submission options:
@@ -22,9 +23,10 @@ export const NewSubmissionPage = {
   clickSubmitURL() {
     this.getSubmitURLButton().click()
   },
-  clickSubmitUrlAndVerifyLink() {
+  clickSubmitUrlAndWaitPageLoad() {
     this.clickSubmitURL()
-    cy.url({ timeout: 15000 }).should('contain', submit)
+    cy.url({ timeout: 10000 }).should('contain', submit)
+    SubmissionFormPage.getPageTitle().should('be.visible')
   },
   getSubmissionMessage() {
     return cy.get(SUBMISSION_MESSAGE).invoke('text')

@@ -7,6 +7,7 @@ import { ManuscriptsPage } from './manuscripts-page'
  * It contains various input fields & dropdowns,
  * listed in the same order they appear on the page.
  */
+const PAGE_TITLE = '[class*=style__Heading]'
 const ADD_A_LINK_BUTTON = 'li > button'
 const ENTER_URL_FIELD = 'submission.links.'
 const TITLE_FIELD = 'meta.title'
@@ -57,6 +58,9 @@ const VALUE_ADDED_FIELD = 'submission.valueAdded'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
 
 export const SubmissionFormPage = {
+  getPageTitle() {
+    return cy.get(PAGE_TITLE, { timeout: 10000 })
+  },
   getAddLinkButton() {
     return cy.get(ADD_A_LINK_BUTTON)
   },
@@ -229,6 +233,9 @@ export const SubmissionFormPage = {
   },
   getValidationErrorMessage(error) {
     return cy.getByContainsClass(VALIDATION_ERROR_MESSAGE).contains(error)
+  },
+  getValidationErrorMessage2() {
+    return cy.getByContainsClass(VALIDATION_ERROR_MESSAGE)
   },
   getFormOptionValue(nth) {
     return cy.getByContainsClass(FORM_OPTION_VALUE).eq(nth)

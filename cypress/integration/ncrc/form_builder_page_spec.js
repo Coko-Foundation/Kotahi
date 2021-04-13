@@ -77,6 +77,12 @@ describe('form builder tests', () => {
       FormsPage.getComponentType().should('contain', 'CheckboxGroup')
       FormsPage.getFieldValidate().should('contain', 'Required')
     })
+    it('check DOI validation has default selected Yes and select No', () => {
+      FormsPage.clickFormOption(0)
+      FormsPage.getDoiValidation(0).should('have.prop', 'checked')
+      FormsPage.clickOptionsDoiVaildation(1)
+      FormsPage.getDoiValidation(1).should('have.prop', 'checked')
+    })
   })
   context('check submission form corresponds to form builder', () => {
     beforeEach(() => {
@@ -201,5 +207,6 @@ describe('form builder tests', () => {
         }
       })
     })
+
   })
 })

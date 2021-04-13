@@ -8,6 +8,8 @@ const FORM_OPTION_LIST = '[class*=FormBuilder__Element] > button:nth-child(1)'
 const NAME_FIELD = 'name'
 const COMPONENT_TYPE = '[role=listbox]'
 const FIELD_VALIDATE = '[class*=react-select__value-container]'
+const DOI_VALIDATION = '[class*=RadioBox__RadioGroup]'
+const UPDATE_FORM_BUTTON = '[type=submit]'
 
 export const FormsPage = {
   verifyPageLoaded() {
@@ -38,6 +40,15 @@ export const FormsPage = {
   getFieldValidate() {
     return cy.get(FIELD_VALIDATE)
   },
+  getDoiValidation(nth) {
+    return cy.get(DOI_VALIDATION).eq(nth).scrollIntoView()
+  },
+  clickOptionsDoiVaildation(nth) {
+    this.getDoiValidation(nth).click()
+  },
+  clickUpdateForm() {
+    return cy.get(UPDATE_FORM_BUTTON).click()
+  }
 }
 
 export default FormsPage

@@ -70,6 +70,12 @@ describe('Form builder page tests', () => {
       FormsPage.getComponentType().should('contain', 'TextField')
       FormsPage.getFieldValidate().should('not.contain', 'Required')
     })
+    it('check DOI validation has default selected Yes and select No', () => {
+      FormsPage.clickFormOption(1)
+      FormsPage.getDoiValidation(0).should('have.prop', 'checked')
+      FormsPage.clickOptionsDoiVaildation(1)
+      FormsPage.getDoiValidation(1).should('have.prop', 'checked')
+    })
   })
 
   context('check the Submission form based on form builder', () => {

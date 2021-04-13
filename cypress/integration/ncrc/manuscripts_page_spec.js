@@ -25,7 +25,7 @@ describe('manuscripts page tests', () => {
 
     it('evaluation button should be visible for unsubmitted articles', () => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -38,7 +38,7 @@ describe('manuscripts page tests', () => {
     })
     it('label & topics should be visible on manuscripts page', () => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -58,7 +58,7 @@ describe('manuscripts page tests', () => {
   context('unsubmitted article tests', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
     })
 
     it('unsubmitted article is evaluated', () => {
@@ -106,7 +106,7 @@ describe('manuscripts page tests', () => {
   context('submitted and evaluated article tests', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -178,7 +178,7 @@ describe('manuscripts page tests', () => {
   context('filter and sort articles', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         SubmissionFormPage.fillInArticleDescription('123')
@@ -189,7 +189,7 @@ describe('manuscripts page tests', () => {
         )
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.clickSubmit()
-        NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+        NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
         SubmissionFormPage.fillInArticleDescription('abc')
         SubmissionFormPage.clickElementFromFormOptionList(9)
         SubmissionFormPage.selectDropdownOption(1)
@@ -201,7 +201,7 @@ describe('manuscripts page tests', () => {
         )
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.clickSubmit()
-        NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+        NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
         SubmissionFormPage.fillInArticleDescription('def')
         SubmissionFormPage.clickElementFromFormOptionList(9)
         SubmissionFormPage.selectDropdownOption(0)
@@ -255,6 +255,16 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getArticleTitleByRow(0).should('contain', '123')
       ManuscriptsPage.getArticleTitleByRow(1).should('contain', 'abc')
       ManuscriptsPage.getArticleTitleByRow(2).should('contain', 'def')
+    })
+  })
+  context('DOI validation', () => {
+
+    it('message for DOI invalid is visible ', () => {
+      ManuscriptsPage.clickSubmit()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+      SubmissionFormPage.fillInArticleUrl('google.com')
+      SubmissionFormPage.fillInArticleDescription('2')
+      SubmissionFormPage.getValidationErrorMessage('DOI is invalid')
     })
   })
 })

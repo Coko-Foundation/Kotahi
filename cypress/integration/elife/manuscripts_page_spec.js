@@ -226,4 +226,26 @@ describe('Manuscripts page tests', () => {
       })
     })
   })
+  context('DOI validation', () => {
+    beforeEach(() => {
+      // task to restore the database as per the  dumps/initialState.sql
+      cy.task('restore', 'initialState')
+
+      // login as admin
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('role_names').then(name => {
+        cy.login(name.role.admin, manuscripts)
+      })
+      ManuscriptsPage.getTableHeader().should('be.visible')
+    })
+
+    it('message for DOI invalid is visible ', () => {
+      ManuscriptsPage.clickSubmit()
+      NewSubmissionPage.clickSubmitUrlAndVerifyLink()
+      SubmissionFormPage.fillInArticleUrl("google.com")
+      SubmissionFormPage.fillInDescription('2')
+      SubmissionFormPage.getValidationErrorMessage('DOI is invalid')
+    })
+  })
 })
+
