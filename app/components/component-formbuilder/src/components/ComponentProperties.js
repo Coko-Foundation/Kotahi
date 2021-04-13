@@ -41,7 +41,11 @@ const ComponentProperties = ({
       {selectedComponent &&
         map(components[selectedComponent], (value, key) => (
           <Section key={key}>
-            <Legend space>{`Field ${key === 'DoiValidation' ? components[selectedComponent][key].props.label : key}`}</Legend>
+            <Legend space>{`Field ${
+              key === 'DoiValidation'
+                ? components[selectedComponent][key].props.label
+                : key
+            }`}</Legend>
             <ValidatedFieldFormik
               component={elements[value.component].default}
               key={`${selectedComponent}-${key}`}
@@ -116,7 +120,11 @@ const ComponentForm = ({
   if (!isField)
     return (
       <Formik
-        initialValues={fieldOrForm}
+        initialValues={{
+          description: '',
+          popupdescription: '',
+          ...fieldOrForm,
+        }}
         onSubmit={values =>
           updateForm({
             variables: { formId: values.id, form: prepareForSubmit(values) },
@@ -135,7 +143,7 @@ const ComponentForm = ({
 
   return (
     <Formik
-      initialValues={{ options: [], ...fieldOrForm }}
+      initialValues={{ options: [], description: '', ...fieldOrForm }}
       key={fieldOrForm.id}
       onSubmit={values =>
         updateField({
