@@ -43,9 +43,15 @@ deploy:
   stage: deploy
   image: jshimko/kube-tools-aws:latest
   environment: production
+  # before_script:
+  #   - touch ~/.elife_k8s_config
+  #   - echo "${ELIFE_K8S_CLUSTER_CONFIG}" >> ~/.elife_k8s_config
   script:
       - |
-        aws --region=$AWS_DEFAULT_REGION eks update-kubeconfig --name $ELIFE_CLUSTER_NAME --kubeconfig ${ELIFE_KUBECONFIG}
+        aws --version
+        kubectl version
+        helm version
+        aws --region=$AWS_DEFAULT_REGION eks update-kubeconfig --name $ELIFE_CLUSTER_NAME
         kubectl cluster-info
         # helm repo add kotahi https://charts.bitnami.com/bitnami
         # helm dependency build helm/elife-kotahi
