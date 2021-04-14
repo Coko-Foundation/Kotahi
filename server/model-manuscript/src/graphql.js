@@ -62,6 +62,10 @@ const commonUpdateManuscript = async (_, { id, input }, ctx) => {
       ...manuscript.submission,
       ...manuscriptDelta.submission,
     },
+    meta: {
+      ...manuscript.meta,
+      ...manuscriptDelta.meta,
+    },
   }
 
   // if (manuscript.status === 'revise') {
@@ -274,10 +278,13 @@ const resolvers = {
       let manuscript = await ctx.models.Manuscript.query().findById(id)
 
       if (['elife'].includes(process.env.INSTANCE_NAME)) {
-        const turndownService = new TurndownService({bulletListMarker: '-'})
+        const turndownService = new TurndownService({ bulletListMarker: '-' })
+
         const requestBody = {
           uri: manuscript.submission.articleURL,
-          text: turndownService.turndown(manuscript.submission.evaluationContent),
+          text: turndownService.turndown(
+            manuscript.submission.evaluationContent,
+          ),
           tags: [manuscript.submission.evalType],
           // group: "q5X6RWJ6",
         }

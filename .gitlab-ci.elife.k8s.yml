@@ -37,26 +37,29 @@ stages:
 
 deploy:
   stage: deploy
-  #image: jshimko/kube-tools-aws:latest
-  image: ubuntu:18.04
+  image: jshimko/kube-tools-aws:latest
+  #image: ubuntu:18.04
   variables:
     AWS_ACCESS_KEY_ID: $ELIFE_AWS_ACCESS_KEY_ID
     AWS_SECRET_ACCESS_KEY: $ELIFE_AWS_SECRET_ACCESS_KEY
     AWS_DEFAULT_REGION: $ELIFE_AWS_DEFAULT_REGION
     ELIFE_CLUSTER_NAME: eks-elife-kotahi
+    TZ: Europe/Rome
   # before_script:
   #   - touch ~/.elife_k8s_config
   #   - echo "${ELIFE_K8S_CLUSTER_CONFIG}" >> ~/.elife_k8s_config
   script:
       - |
-        apt update
-        apt install awscli curl wget -y
-        curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
-        chmod +x ./kubectl && sudo mv ./kubectl /usr/local/bin/kubectl
-        aws --version
-        kubectl version
+        #ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && echo $TZ > /etc/timezone
+        #apt update
+        #apt install awscli curl wget -y
+        #curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
+        #chmod +x ./kubectl
+        #mv ./kubectl /usr/local/bin/kubectl
+        #aws --version
+        kubectl config --kubeconfig=$ELIFE_CLUSTER_NAME set-cluster $ELIFE_CLUSTER_NAME --server=${ELIFE_K8S_CLUSTER_HOST} --certificate-authority=${ELIFE_K8S_CLUSTER_CA_CERTIFICATE}
         #aws --region=$AWS_DEFAULT_REGION eks update-kubeconfig --name $ELIFE_CLUSTER_NAME
-        #kubectl cluster-info
+        kubectl cluster-info
         # helm repo add kotahi https://charts.bitnami.com/bitnami
         # helm dependency build helm/elife-kotahi
         # helm upgrade -i elife-kotahi \
