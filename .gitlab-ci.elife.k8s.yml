@@ -54,7 +54,8 @@ deploy:
         apt update
         apt install awscli curl wget -y
         curl -LO https://storage.googleapis.com/kubernetes-release/release/`curl -s https://storage.googleapis.com/kubernetes-release/release/stable.txt`/bin/linux/amd64/kubectl
-        chmod +x ./kubectl && sudo mv ./kubectl /usr/local/bin/kubectl
+        chmod +x ./kubectl
+        mv ./kubectl /usr/local/bin/kubectl
         aws --version
         kubectl version
         #aws --region=$AWS_DEFAULT_REGION eks update-kubeconfig --name $ELIFE_CLUSTER_NAME
