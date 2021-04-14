@@ -41,7 +41,7 @@ stages:
 
 deploy:
   stage: deploy
-  image: jshimko/kube-tools-awsЖlatest
+  image: jshimko/kube-tools-aws:latest
   environment: production
   script:
       - |
