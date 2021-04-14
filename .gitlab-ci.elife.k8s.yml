@@ -44,10 +44,9 @@ deploy:
   image: bitnami/kubectl:latest
   environment: production
   script:
-    - |
       #aws --region=$AWS_DEFAULT_REGION eks update-kubeconfig --name $ELIFE_CLUSTER_NAME --kubeconfig ${ELIFE_KUBECONFIG}
-      kubectl config --kubeconfig=${ELIFE_KUBECONFIG} set-cluster development --server=${ELIFE_K8S_CLUSTER_HOST} --certificate-authority=${ELIFE_K8S_CLUSTER_CA_CERTIFICATE}
-      kubectl cluster-info
+      - kubectl config --kubeconfig=${ELIFE_KUBECONFIG} set-cluster development --server=${ELIFE_K8S_CLUSTER_HOST} --certificate-authority=${ELIFE_K8S_CLUSTER_CA_CERTIFICATE}
+      - kubectl cluster-info
       # helm repo add kotahi https://charts.bitnami.com/bitnami
       # helm dependency build helm/elife-kotahi
       # helm upgrade -i elife-kotahi \
