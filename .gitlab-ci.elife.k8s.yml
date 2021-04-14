@@ -50,7 +50,7 @@ deploy:
       - |
         aws --version
         kubectl version
-        helm version
+        #helm version
         aws --region=$AWS_DEFAULT_REGION eks update-kubeconfig --name $ELIFE_CLUSTER_NAME
         kubectl cluster-info
         # helm repo add kotahi https://charts.bitnami.com/bitnami
