@@ -41,7 +41,7 @@ stages:
 
 deploy:
   stage: deploy
-  image: jakexks/kubectl-helm-aws:latest
+  image: jshimko/kube-tools-awsЖlatest
   environment: production
   script:
       - |
