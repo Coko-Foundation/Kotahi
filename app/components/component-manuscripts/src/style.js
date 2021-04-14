@@ -29,7 +29,10 @@ export {
 // Specific
 
 export const UserAction = styled(Action)`
+  cursor: pointer;
+  display: block;
   font-size: inherit;
+  width: fit-content;
 `
 
 export const StyledTopic = styled.p`

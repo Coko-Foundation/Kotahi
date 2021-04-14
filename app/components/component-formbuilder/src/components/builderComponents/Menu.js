@@ -24,6 +24,7 @@ const ValidationMenu = input => (
           </Section>
         )
       }
+
       return null
     })}
   </>

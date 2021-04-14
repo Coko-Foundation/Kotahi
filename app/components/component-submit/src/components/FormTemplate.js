@@ -187,31 +187,34 @@ const FormTemplate = ({
 }) => {
   const client = useApolloClient()
 
-  const submitButton = (text, haspopup = false) => (
-    <div>
-      <Button
-        onClick={async () => {
-          const hasErrors = Object.keys(await validateForm()).length !== 0
+  const submitButton = (text, haspopup = false) => {
+    return (
+      <div>
+        <Button
+          onClick={async () => {
+            const hasErrors = Object.keys(await validateForm()).length !== 0
 
-          // If there are errors, do a fake submit
-          // to focus on the error
-          if (
-            hasErrors ||
-            values.status === articleStatuses.evaluated ||
-            (values.status === articleStatuses.submitted && !haspopup)
-          ) {
-            handleSubmit()
-          } else {
-            toggleConfirming()
-          }
-        }}
-        primary
-        type="button"
-      >
-        {text}
-      </Button>
-    </div>
-  )
+            // If there are errors, do a fake submit
+            // to focus on the error
+            if (
+              hasErrors ||
+              values.status === articleStatuses.evaluated ||
+              values.status === articleStatuses.submitted ||
+              !haspopup
+            ) {
+              handleSubmit()
+            } else {
+              toggleConfirming()
+            }
+          }}
+          primary
+          type="button"
+        >
+          {text}
+        </Button>
+      </div>
+    )
+  }
 
   const submitButtonText = match.url.includes('/evaluation')
     ? 'Submit Evaluation'

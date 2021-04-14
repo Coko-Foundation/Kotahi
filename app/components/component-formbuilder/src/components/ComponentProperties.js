@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { map, omitBy } from 'lodash'
-import { ValidatedFieldFormik, Menu, Button } from '@pubsweet/ui'
+import { isEmpty, map, omitBy } from 'lodash'
 import { Formik } from 'formik'
+
+import { ValidatedFieldFormik, Menu, Button } from '@pubsweet/ui'
+
 import FormProperties from './FormProperties'
 import components from './config/Elements'
 import * as elements from './builderComponents'
@@ -50,9 +52,14 @@ const ComponentProperties = ({
               component={elements[value.component].default}
               key={`${selectedComponent}-${key}`}
               name={key}
-              onChange={val =>
+              onChange={val => {
+                if (isEmpty(val)) {
+                  setFieldValue(key, null)
+                  return
+                }
+
                 setFieldValue(key, val.target ? val.target.value : val)
-              }
+              }}
               {...value.props}
             />
           </Section>
