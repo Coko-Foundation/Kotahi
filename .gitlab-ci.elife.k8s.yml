@@ -48,9 +48,8 @@ deploy:
      - echo "${ELIFE_K8S_CLUSTER_CONFIG}" >> ~/.kube/config
   script:
       - |
-        #kubectl config --kubeconfig=$ELIFE_CLUSTER_NAME set-cluster $ELIFE_CLUSTER_NAME --server=${ELIFE_K8S_CLUSTER_HOST} --certificate-authority=${ELIFE_K8S_CLUSTER_CA_CERTIFICATE}
         aws --region=$AWS_DEFAULT_REGION eks update-kubeconfig --name $ELIFE_CLUSTER_NAME
-        kubectl cluster-info
+        helm repo list
         # helm repo add kotahi https://charts.bitnami.com/bitnami
         # helm dependency build helm/elife-kotahi
         # helm upgrade -i elife-kotahi \
