@@ -1,0 +1,8 @@
+apiVersion: v2
+name: elife-kotahi
+description: eLife Kotahi application
+type: application
+home: https://gitlab.coko.foundation/kotahi/kotahi
+version: 0.1.0
+appVersion: latest
+dependencies: []

@@ -1,0 +1,107 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert -c -o elife-kotahi
+    kompose.version: 1.22.0 (955b78124)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: server
+  name: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: server
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert -c -o elife-kotahi
+        kompose.version: 1.22.0 (955b78124)
+      creationTimestamp: null
+      labels:
+        io.kompose.service: server
+    spec:
+      containers:
+        - env:
+            - name: INSTANCE_NAME
+              valueFrom:
+                configMapKeyRef:
+                  key: INSTANCE_NAME
+                  name: env
+            - name: NODE_ENV
+              value: production
+            - name: ORCID_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  key: ORCID_CLIENT_ID
+                  name: orcid-secret
+            - name: ORCID_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: ORCID_CLIENT_SECRET
+                  name: orcid-secret
+            - name: POSTGRES_DB
+              valueFrom:
+                secretKeyRef:
+                  key: postgresql-database
+                  name: elife-kotahi-prod-rds-postgres
+            - name: POSTGRES_HOST
+              valueFrom:
+                secretKeyRef:
+                  key: postgresql-host
+                  name: elife-kotahi-prod-rds-postgres
+            - name: POSTGRES_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: postgresql-password
+                  name: elife-kotahi-prod-rds-postgres
+            - name: POSTGRES_PORT
+              valueFrom:
+                secretKeyRef:
+                  key: postgresql-port
+                  name: elife-kotahi-prod-rds-postgres
+            - name: POSTGRES_USER
+              valueFrom:
+                secretKeyRef:
+                  key: postgresql-username
+                  name: elife-kotahi-prod-rds-postgres
+            - name: PUBLIC_CLIENT_HOST
+              valueFrom:
+                configMapKeyRef:
+                  key: PUBLIC_CLIENT_HOST
+                  name: env
+            - name: PUBLIC_CLIENT_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: PUBLIC_CLIENT_PORT
+                  name: env
+            - name: PUBLIC_CLIENT_PROTOCOL
+              valueFrom:
+                configMapKeyRef:
+                  key: PUBLIC_CLIENT_PROTOCOL
+                  name: env
+            - name: PUBSWEET_SECRET
+              valueFrom:
+                secretKeyRef:
+                  key: PUBSWEET_SECRET
+                  name: orcid-secret
+            - name: SERVER_PORT
+              valueFrom:
+                configMapKeyRef:
+                  key: SERVER_PORT
+                  name: env
+            - name: USE_SANDBOXED_ORCID
+              valueFrom:
+                configMapKeyRef:
+                  key: USE_SANDBOXED_ORCID
+                  name: env
+          image: "{{ .Values.images.frontend.repository }}:{{ .Values.images.frontend.tag }}"
+          command: ["node"]
+          args: ["./startServer.js"]
+          name: server
+          ports:
+            - containerPort: 3000
+      restartPolicy: Always
+status: {}

@@ -1,0 +1,4 @@
+images:
+  backend:
+    repository: kotahi/kotahi-elife
+    tag: latest

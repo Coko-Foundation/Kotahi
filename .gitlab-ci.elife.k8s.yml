@@ -49,9 +49,8 @@ deploy:
   script:
       - |
         aws --region=$AWS_DEFAULT_REGION eks update-kubeconfig --name $ELIFE_CLUSTER_NAME
-        helm repo list
-        # helm repo add kotahi https://charts.bitnami.com/bitnami
-        # helm dependency build helm/elife-kotahi
+        helm repo add kotahi https://charts.bitnami.com/bitnami
+        helm dependency build helm/elife-kotahi
         # helm upgrade -i elife-kotahi \
         #       --set hostname=k8s.kotahi.cloud \
         #       --wait \
