@@ -29,6 +29,9 @@ export {
 // Specific
 
 export const UserAction = styled(Action)`
+  display: block;
+  width: fit-content;
+  cursor: pointer;
   font-size: inherit;
 `
 
