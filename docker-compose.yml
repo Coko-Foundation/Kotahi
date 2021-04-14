@@ -80,7 +80,7 @@ services:
       - ./server:/home/node/app/server
 
   job-xsweet:
-    image: cokoapps/job-xsweet:1.5.1
+    image: pubsweet/job-xsweet:1.5.1
     depends_on:
       - server
     command:
@@ -93,7 +93,11 @@ services:
         'src/xsweet.js',
       ]
     environment:
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@db:5432/${POSTGRES_DB}
+      - POSTGRES_HOST=db
+      - POSTGRES_PORT=5432
+      - POSTGRES_DB=${POSTGRES_DB:-kotahi_dev}
+      - POSTGRES_USER=${POSTGRES_USER:-dev}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
     volumes:
       - ./scripts/wait-for-it.sh:/home/node/scripts/wait-for-it.sh
 
@@ -102,9 +106,9 @@ services:
     ports:
       - ${POSTGRES_PORT:-5432}:5432
     environment:
-      - POSTGRES_USER
-      - POSTGRES_DB
-      - POSTGRES_PASSWORD
+      - POSTGRES_DB=${POSTGRES_DB:-kotahi_dev}
+      - POSTGRES_USER=${POSTGRES_USER:-dev}
+      - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
     volumes:
       - ./scripts/test.sql:/docker-entrypoint-initdb.d/test.sql
 

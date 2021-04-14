@@ -38,7 +38,7 @@ services:
       - INSTANCE_NAME=${INSTANCE_NAME:-elife}
 
   job-xsweet:
-    image: cokoapps/job-xsweet:1.5.1
+    image: pubsweet/job-xsweet:1.5.1
     depends_on:
       - server
     command:
@@ -51,6 +51,10 @@ services:
         'src/xsweet.js',
       ]
     environment:
-      - DATABASE_URL=postgres://${POSTGRES_USER}:${POSTGRES_PASSWORD}@${POSTGRES_HOST}:${POSTGRES_PORT}/${POSTGRES_DB}
+      - POSTGRES_HOST
+      - POSTGRES_USER
+      - POSTGRES_PORT
+      - POSTGRES_PASSWORD
+      - POSTGRES_DB
     volumes:
       - ./scripts/wait-for-it.sh:/home/node/scripts/wait-for-it.sh
