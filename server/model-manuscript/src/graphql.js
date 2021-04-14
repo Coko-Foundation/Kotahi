@@ -1,4 +1,5 @@
 const { ref, raw } = require('objection')
+const TurndownService = require('turndown')
 const axios = require('axios')
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const credentials = require('../../../google_sheets_credentials.json')
@@ -273,9 +274,10 @@ const resolvers = {
       let manuscript = await ctx.models.Manuscript.query().findById(id)
 
       if (['elife'].includes(process.env.INSTANCE_NAME)) {
+        const turndownService = new TurndownService({bulletListMarker: '-'})
         const requestBody = {
           uri: manuscript.submission.articleURL,
-          text: manuscript.submission.evaluationContent,
+          text: turndownService.turndown(manuscript.submission.evaluationContent),
           tags: [manuscript.submission.evalType],
           // group: "q5X6RWJ6",
         }
