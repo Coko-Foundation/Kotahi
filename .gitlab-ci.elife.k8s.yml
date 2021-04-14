@@ -1,10 +1,6 @@
 variables:
   IMAGE_ORG: kotahi
   IMAGE_NAME: kotahi-elife
-  AWS_ACCESS_KEY_ID: $ELIFE_AWS_ACCESS_KEY_ID
-  AWS_SECRET_ACCESS_KEY: $ELIFE_AWS_SECRET_ACCESS_KEY
-  AWS_DEFAULT_REGION: $ELIFE_AWS_DEFAULT_REGION
-  ELIFE_CLUSTER_NAME: eks-elife-kotahi
 
 stages:
   #- build
@@ -42,7 +38,11 @@ stages:
 deploy:
   stage: deploy
   image: jshimko/kube-tools-aws:latest
-  environment: production
+  variables:
+    AWS_ACCESS_KEY_ID: $ELIFE_AWS_ACCESS_KEY_ID
+    AWS_SECRET_ACCESS_KEY: $ELIFE_AWS_SECRET_ACCESS_KEY
+    AWS_DEFAULT_REGION: $ELIFE_AWS_DEFAULT_REGION
+    ELIFE_CLUSTER_NAME: eks-elife-kotahi
   # before_script:
   #   - touch ~/.elife_k8s_config
   #   - echo "${ELIFE_K8S_CLUSTER_CONFIG}" >> ~/.elife_k8s_config
