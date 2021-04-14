@@ -118,6 +118,7 @@ const composeValidate = (
   fieldName,
   doiValidation = false,
   client,
+  componentType,
 ) => value => {
   const validator = vld || []
 
@@ -126,10 +127,14 @@ const composeValidate = (
   validator
     .map(v => v.value)
     .map(validatorFn => {
+      // if there is YSWYG component and it's empty - the value is a paragraph
+      const valueFormatted =
+        componentType === 'AbstractEditor' && value === '<p></p>' ? '' : value
+
       const error =
         validatorFn === 'required'
-          ? validators[validatorFn](value)
-          : validators[validatorFn](valueField[validatorFn])(value)
+          ? validators[validatorFn](valueFormatted)
+          : validators[validatorFn](valueField[validatorFn])(valueFormatted)
 
       if (error) {
         errors.push(error)
@@ -138,7 +143,11 @@ const composeValidate = (
       return validatorFn
     })
 
-  if (errors.length === 0 && fieldName === 'submission.articleURL' && doiValidation) {
+  if (
+    errors.length === 0 &&
+    fieldName === 'submission.articleURL' &&
+    doiValidation
+  ) {
     return client
       .query({
         query: VALIDATE_DOI,
@@ -178,7 +187,7 @@ const FormTemplate = ({
 }) => {
   const client = useApolloClient()
 
-  const submitButton = text => (
+  const submitButton = (text, haspopup = false) => (
     <div>
       <Button
         onClick={async () => {
@@ -189,7 +198,7 @@ const FormTemplate = ({
           if (
             hasErrors ||
             values.status === articleStatuses.evaluated ||
-            values.status === articleStatuses.submitted
+            (values.status === articleStatuses.submitted && !haspopup)
           ) {
             handleSubmit()
           } else {
@@ -204,6 +213,11 @@ const FormTemplate = ({
     </div>
   )
 
+  const submitButtonText = match.url.includes('/evaluation')
+    ? 'Submit Evaluation'
+    : 'Submit your research object'
+
+  const hasPopup = form.haspopup ? JSON.parse(form.haspopup) : false
   return (
     <Container>
       <Heading1>{form.name}</Heading1>
@@ -215,87 +229,92 @@ const FormTemplate = ({
           ),
         )}
       />
-      <form onSubmit={handleSubmit}>
-        {(form.children || []).map((element, i) => (
-          <Section
-            cssOverrides={JSON.parse(element.sectioncss || '{}')}
-            key={`${element.id}`}
-          >
-            <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
-            {element.component === 'SupplementaryFiles' && (
-              <FilesUpload
-                containerId={manuscript.id}
-                containerName="manuscript"
-                fileType="supplementary"
-                onChange={onChange}
-              />
-            )}
-            {element.component === 'VisualAbstract' && (
-              <FilesUpload
-                accept="image/*"
-                containerId={manuscript.id}
-                containerName="manuscript"
-                fileType="visualAbstract"
-                multiple={false}
-                onChange={onChange}
-              />
-            )}
-            {element.component === 'AuthorsInput' && (
-              <AuthorsInput data-testid={element.name} onChange={onChange} />
-            )}
-            {element.component !== 'AuthorsInput' &&
-              element.component !== 'SupplementaryFiles' &&
-              element.component !== 'VisualAbstract' && (
-                <ValidatedFieldFormik
-                  aria-label={element.placeholder || element.title}
-                  component={elements[element.component]}
-                  data-testid={element.name} // TODO: Improve this
-                  key={`validate-${element.id}`}
-                  name={element.name}
-                  onChange={value => {
-                    // TODO: Perhaps split components remove conditions here
-                    let val
-
-                    if (value.target) {
-                      val = value.target.value
-                    } else if (value.value) {
-                      val = value.value
-                    } else {
-                      val = value
-                    }
-
-                    setFieldValue(element.name, val, true)
-                    onChange(val, element.name)
-                  }}
-                  readonly={false}
-                  setTouched={setTouched}
-                  {...rejectProps(element, [
-                    'component',
-                    'title',
-                    'sectioncss',
-                    'parse',
-                    'format',
-                    'validate',
-                    'validateValue',
-                    'description',
-                    'shortDescription',
-                    'order',
-                  ])}
-                  validate={composeValidate(
-                    element.validate,
-                    element.validateValue,
-                    element.name,
-                    JSON.parse(element.DoiValidation ? element.DoiValidation : false),
-                    client,
-                  )}
-                  values={values}
+      <form>
+        {(form.children || []).map((element, i) => {
+          return (
+            <Section
+              cssOverrides={JSON.parse(element.sectioncss || '{}')}
+              key={`${element.id}`}
+            >
+              <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
+              {element.component === 'SupplementaryFiles' && (
+                <FilesUpload
+                  containerId={manuscript.id}
+                  containerName="manuscript"
+                  fileType="supplementary"
+                  onChange={onChange}
                 />
               )}
-            <SubNote
-              dangerouslySetInnerHTML={createMarkup(element.description)}
-            />
-          </Section>
-        ))}
+              {element.component === 'VisualAbstract' && (
+                <FilesUpload
+                  accept="image/*"
+                  containerId={manuscript.id}
+                  containerName="manuscript"
+                  fileType="visualAbstract"
+                  multiple={false}
+                  onChange={onChange}
+                />
+              )}
+              {element.component === 'AuthorsInput' && (
+                <AuthorsInput data-testid={element.name} onChange={onChange} />
+              )}
+              {element.component !== 'AuthorsInput' &&
+                element.component !== 'SupplementaryFiles' &&
+                element.component !== 'VisualAbstract' && (
+                  <ValidatedFieldFormik
+                    aria-label={element.placeholder || element.title}
+                    component={elements[element.component]}
+                    data-testid={element.name} // TODO: Improve this
+                    key={`validate-${element.id}`}
+                    name={element.name}
+                    onChange={value => {
+                      // TODO: Perhaps split components remove conditions here
+                      let val
+
+                      if (value.target) {
+                        val = value.target.value
+                      } else if (value.value) {
+                        val = value.value
+                      } else {
+                        val = value
+                      }
+
+                      setFieldValue(element.name, val, true)
+                      onChange(val, element.name)
+                    }}
+                    readonly={false}
+                    setTouched={setTouched}
+                    {...rejectProps(element, [
+                      'component',
+                      'title',
+                      'sectioncss',
+                      'parse',
+                      'format',
+                      'validate',
+                      'validateValue',
+                      'description',
+                      'shortDescription',
+                      'order',
+                    ])}
+                    validate={composeValidate(
+                      element.validate,
+                      element.validateValue,
+                      element.name,
+                      JSON.parse(
+                        element.DoiValidation ? element.DoiValidation : false,
+                      ),
+                      client,
+                      element.component,
+                    )}
+                    values={values}
+                  />
+                )}
+              <SubNote
+                dangerouslySetInnerHTML={createMarkup(element.description)}
+              />
+            </Section>
+          )
+        })}
 
         {filterFileManuscript(values.files || []).length > 0 ? (
           <Section id="files.manuscript">
@@ -308,42 +327,15 @@ const FormTemplate = ({
           </Section>
         ) : null}
 
-        {process.env.INSTANCE_NAME === 'aperture' && (
-          <>
-            {!['submitted', 'revise'].includes(values.status) &&
-              form.haspopup === 'false' && (
-                <Button onClick={() => handleSubmit()} primary type="submit">
-                  Submit your research object
-                </Button>
-              )}
+        {process.env.INSTANCE_NAME === 'aperture' &&
+          !['submitted', 'revise'].includes(values.status) &&
+          submitButton(submitButtonText, hasPopup)}
 
-            {!['submitted', 'revise'].includes(values.status) &&
-              form.haspopup === 'true' &&
-              submitButton('Submit your research object')}
-          </>
-        )}
+        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
+          !['revise'].includes(values.status) &&
+          submitButton(submitButtonText, hasPopup)}
 
-        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
-          <>
-            {!['revise'].includes(values.status) && form.haspopup === 'false' && (
-              <Button onClick={() => handleSubmit()} primary type="submit">
-                {match.url.includes('/evaluation')
-                  ? 'Submit Evaluation'
-                  : 'Submit your research object'}
-              </Button>
-            )}
-
-            {!['revise'].includes(values.status) &&
-              form.haspopup === 'true' &&
-              submitButton(
-                match.url.includes('/evaluation')
-                  ? 'Submit Evaluation'
-                  : 'Submit your research object',
-              )}
-          </>
-        )}
-
-        {values.status === 'revise' && submitButton('Submit your revision')}
+        {values.status === 'revise' && submitButton(submitButtonText)}
 
         {confirming && (
           <ModalWrapper>
