@@ -26,7 +26,7 @@ build:
       --build-arg public_client_host=elife.kotahi.cloud \
       --build-arg public_client_port=443 \
       --build-arg public_client_protocol=https \
-      --file ./Dockerfile-production \
+      --file ./Dockerfile-production-test \
       --cache-from $CI_REGISTRY_IMAGE:latest \
       --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA \
       --tag $IMAGE_ORG/$IMAGE_NAME:latest .
