@@ -1,9 +1,11 @@
 import React, { useContext, useState } from 'react'
+import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { JournalContext } from '../../../../xpub-journal/src'
 import Review from '../review/Review'
+import useCurrentUser from '../../../../../hooks/useCurrentUser'
 
 const ToggleReview = ({ open, toggle }) => (
   <Button onClick={toggle} plain>
@@ -19,12 +21,12 @@ const Bullet = ({ journal, recommendation }) => {
       : 'black'
 
   const Dot = styled.span`
+    background-color: ${recommendationColor};
     border-radius: 100%;
     display: inline-block;
     height: 10px;
     margin-right: 10px;
     width: 10px;
-    background-color: ${recommendationColor};
   `
 
   return <Dot />
@@ -39,11 +41,13 @@ const ReviewHeading = ({
   toggleOpen,
 }) => {
   const Root = styled.div`
-    display: flex;
     align-items: baseline;
+    display: flex;
   `
+
   const Ordinal = styled.span``
   const Name = styled.span``
+
   const Controls = styled.span`
     flex-grow: 1;
     text-align: right;
@@ -63,6 +67,7 @@ const ReviewHeading = ({
 }
 
 const DecisionReview = ({ review, reviewer }) => {
+  const currentUser = useCurrentUser()
   const { recommendation } = review
   const { name, ordinal } = reviewer
 
@@ -92,11 +97,38 @@ const DecisionReview = ({ review, reviewer }) => {
 
       {open && (
         <ReviewBody>
-          <Review review={review} />
+          <Review review={review} user={currentUser} />
         </ReviewBody>
       )}
     </Root>
   )
+}
+
+DecisionReview.propTypes = {
+  // eslint-disable-next-line
+  review: PropTypes.object,
+  // eslint-disable-next-line
+  reviewer: PropTypes.object,
+}
+
+ReviewHeading.propTypes = {
+  // eslint-disable-next-line
+  journal: PropTypes.object,
+  name: PropTypes.string.isRequired,
+  open: PropTypes.bool.isRequired,
+  ordinal: PropTypes.number.isRequired,
+  recommendation: PropTypes.string.isRequired,
+  toggleOpen: PropTypes.func.isRequired,
+}
+ToggleReview.propTypes = {
+  open: PropTypes.bool.isRequired,
+  toggle: PropTypes.bool.isRequired,
+}
+
+Bullet.propTypes = {
+  // eslint-disable-next-line
+  journal: PropTypes.object,
+  recommendation: PropTypes.string.isRequired,
 }
 
 export default DecisionReview

@@ -42,7 +42,7 @@ const ReviewComments = (review, type) => (
   </Note>
 )
 
-const Review = ({ review }) => (
+const Review = ({ review, user }) => (
   <Container>
     {review?.reviewComment && (
       <div>
@@ -51,13 +51,13 @@ const Review = ({ review }) => (
         {ReviewComments(review, 'review')}
       </div>
     )}
-    {review?.confidentialComment && (
+    {review?.confidentialComment && user.admin ? (
       <div>
         <Heading>Confidential</Heading>
 
         {ReviewComments(review, 'confidential')}
       </div>
-    )}
+    ) : null}
     {review?.recommendation && (
       <div>
         <Heading>Recommendation</Heading>
@@ -74,6 +74,14 @@ Review.propTypes = {
     confidentialComment: PropTypes.string,
     recommendation: PropTypes.string,
   }).isRequired,
+  user: {
+    admin: PropTypes.bool,
+  },
 }
 
+Review.defaultProps = {
+  user: {
+    admin: false,
+  },
+}
 export default Review
