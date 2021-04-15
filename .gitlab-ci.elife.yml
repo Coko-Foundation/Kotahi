@@ -4,8 +4,8 @@ variables:
 
 stages:
   - build
-  - deploy
-  - test
+  # - deploy
+  # - test
 
 build:
   image: docker:20.10.5
@@ -21,6 +21,7 @@ build:
       if [ -z "$DOCKERHUB_USERNAME_ELIFE" ] || [ -z "$DOCKERHUB_PASSWORD_ELIFE" ]; then echo "Not pushing" && exit 0; fi
       docker login -u $DOCKERHUB_USERNAME_ELIFE -p $DOCKERHUB_PASSWORD_ELIFE
       docker pull $IMAGE_ORG/$IMAGE_NAME:latest || true
+      scripts/should_i_build.sh &&
       docker build \
       --build-arg instance_name=elife \
       --build-arg public_client_host=elife.kotahi.cloud \
@@ -36,29 +37,29 @@ build:
       docker push $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
       docker push $IMAGE_ORG/$IMAGE_NAME-dev:latest
 
-deploy:
-  stage: deploy
-  image: docker:19.03.13
-  before_script:
-    - export SSH_KEY=$SSH_KEY_ELIFE
-    - export DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME_ELIFE
-    - export DOCKERHUB_PASSWORD=$DOCKERHUB_PASSWORD_ELIFE
-    - export IMAGE_ORG=$IMAGE_ORG
-    - export IMAGE_NAME=$IMAGE_NAME
-    - eval $(ssh-agent -s)
-    - echo "$SSH_KEY" | tr -d '\r' | ssh-add -
-    - mkdir -p ~/.ssh
-    - chmod 700 ~/.ssh
-    - ssh-keyscan $ELIFE_SERVER_IP >> ~/.ssh/known_hosts
-    - chmod 644 ~/.ssh/known_hosts
-  script:
-    - |
-      ssh ubuntu@$ELIFE_SERVER_IP "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-      sudo docker pull $IMAGE_ORG/$IMAGE_NAME:latest &&
-      sudo supervisorctl stop kotahi &&
-      cd /home/ubuntu/kotahi &&
-      sudo docker-compose down &&
-      sudo supervisorctl start kotahi"
+# deploy:
+#   stage: deploy
+#   image: docker:19.03.13
+#   before_script:
+#     - export SSH_KEY=$SSH_KEY_ELIFE
+#     - export DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME_ELIFE
+#     - export DOCKERHUB_PASSWORD=$DOCKERHUB_PASSWORD_ELIFE
+#     - export IMAGE_ORG=$IMAGE_ORG
+#     - export IMAGE_NAME=$IMAGE_NAME
+#     - eval $(ssh-agent -s)
+#     - echo "$SSH_KEY" | tr -d '\r' | ssh-add -
+#     - mkdir -p ~/.ssh
+#     - chmod 700 ~/.ssh
+#     - ssh-keyscan $ELIFE_SERVER_IP >> ~/.ssh/known_hosts
+#     - chmod 644 ~/.ssh/known_hosts
+#   script:
+#     - |
+#       ssh ubuntu@$ELIFE_SERVER_IP "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
+#       sudo docker pull $IMAGE_ORG/$IMAGE_NAME:latest &&
+#       sudo supervisorctl stop kotahi &&
+#       cd /home/ubuntu/kotahi &&
+#       sudo docker-compose down &&
+#       sudo supervisorctl start kotahi"
 
 # lint:
 #   allow_failure: true
@@ -116,32 +117,34 @@ deploy:
 #     PGUSER: kotahidev
 #     PGPASSWORD: kotahidev
 
-test-chrome:
-  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-  stage: test
-  variables:
-    GIT_STRATEGY: none
-    # setup data for postgres image
-    POSTGRES_USER: kotahidev
-    POSTGRES_PASSWORD: kotahidev
-    # used by psql
-    PGUSER: kotahidev
-    PGPASSWORD: kotahidev
-    # this is used to ignore self signed certs
-    #START_SERVER_AND_TEST_INSECURE: 1
-  services:
-    - postgres
-  script:
-    - cd ${HOME}
-    - apt-get update
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - echo $INSTANCE_NAME
-    - POSTGRES_HOST=postgres yarn test:all:chrome:elife
+# test-chrome:
+#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+#   stage: test
+#   variables:
+#     GIT_STRATEGY: none
+#     # setup data for postgres image
+#     POSTGRES_USER: kotahidev
+#     POSTGRES_PASSWORD: kotahidev
+#     # used by psql
+#     PGUSER: kotahidev
+#     PGPASSWORD: kotahidev
+#     # this is used to ignore self signed certs
+#     #START_SERVER_AND_TEST_INSECURE: 1
+#   services:
+#     - postgres
+#   script:
+#     - cd ${HOME}
+#     - apt-get update
+#     - apt-get -y install postgresql-client
+#     # this is needed for pgboss initial setup
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     # use the example env for tests
+#     - cp .env.example .env
+#     # specify host here else it confuses the linked postgres image
+#     - echo $INSTANCE_NAME
+#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife
+
+
 # test-chrome-samsung:
 #   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
 #   stage: test
