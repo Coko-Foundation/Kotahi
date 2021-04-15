@@ -48,6 +48,8 @@ RUN if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else
 # IMAGE FOR RUNNING
 FROM node:12.21-alpine as server
 
+ARG packagechanged
+
 WORKDIR /home/node/app
 
 RUN chown -R node:node .
@@ -63,8 +65,8 @@ COPY --chown=node:node ./startServer.js .
 COPY --chown=node:node ./google_sheets_credentials.json .
 COPY --chown=node:node ./profiles ./profiles
 
-COPY --from=build /home/node/app/_build/assets ./_build
-COPY --from=build /home/node/app/production_node_modules ./node_modules
+COPY --from=build /home/node/app/_build/assets ./_build 
+COPY if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else --from=build /home/node/app/production_node_modules ./node_modules ; fi
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
 CMD ["node", "./startServer.js"]
