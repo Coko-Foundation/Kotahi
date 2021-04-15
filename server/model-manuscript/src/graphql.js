@@ -494,10 +494,13 @@ const resolvers = {
       if (sort) {
         const [sortName, sortDirection] = sort.split('_')
 
-        query.orderBy(ref(sortName), sortDirection)
-        // }
-        // // e.g. 'created_DESC' into 'created' and 'DESC' arguments
-        // query.orderBy(...sort.split('_'))
+        if (sortName.includes('submission:')) {
+          const fieldName = sortName.split(':')[1]
+          const result = `LOWER(submission->>'${fieldName}') ${sortDirection}`
+          query.orderByRaw(result)
+        } else {
+          query.orderBy(ref(sortName), sortDirection)
+        }
       }
 
       if (limit) {
