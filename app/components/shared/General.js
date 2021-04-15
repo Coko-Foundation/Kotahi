@@ -13,6 +13,8 @@ export const Content = styled.div`
   box-shadow: ${th('boxShadow')};
   background-color: ${th('colorBackground')};
   border-radius: ${th('borderRadius')};
+  margin-top: ${grid(2)};
+  overflow-x: scroll;
 `
 
 export const SectionContent = styled(Section)`
