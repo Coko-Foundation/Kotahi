@@ -36,7 +36,7 @@ COPY yarn.lock .
 # Install production node modules for server use
 RUN if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else yarn install --frozen-lockfile --production=true ; fi
 # Copy to another folder for later use
-RUN mv node_modules production_node_modules
+RUN if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else mv node_modules production_node_modules ; fi
 
 # Install development node modules for building webpack bundle
 RUN if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else yarn install --frozen-lockfile --production=false ; fi
