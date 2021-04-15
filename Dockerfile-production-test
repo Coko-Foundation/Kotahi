@@ -65,7 +65,7 @@ COPY --chown=node:node ./profiles ./profiles
 
 COPY --from=build /home/node/app/_build/assets ./_build 
 ARG packagechanged
-COPY if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else --from=build /home/node/app/production_node_modules ./node_modules ; fi
+RUN if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else cp --from=build /home/node/app/production_node_modules ./node_modules ; fi
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
 CMD ["node", "./startServer.js"]
