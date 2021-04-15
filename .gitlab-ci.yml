@@ -11,16 +11,6 @@ elife-pipeline:
       - local: .gitlab-ci.elife.yml
     strategy: depend
 
-elife-k8s-pipeline:
-  only:
-    refs:
-      - main
-  stage: run-pipeline
-  trigger:
-    include:
-      - local: .gitlab-ci.elife.k8s.yml
-    strategy: depend
-
 ncrc-pipeline:
   only:
     refs:
