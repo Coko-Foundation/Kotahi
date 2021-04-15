@@ -43,7 +43,7 @@ RUN if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else
 
 COPY . .
 
-RUN yarn webpack --config webpack/webpack.production.config.js
+RUN if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else yarn webpack --config webpack/webpack.production.config.js ; fi 
 
 # IMAGE FOR RUNNING
 FROM node:12.21-alpine as server
