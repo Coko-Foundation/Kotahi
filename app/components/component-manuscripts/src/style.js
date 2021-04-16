@@ -23,6 +23,8 @@ export {
   ErrorStatus,
   NormalStatus,
   StatusBadge,
+  ScrollableContent,
+  ManuscriptsTable,
 } from '../../shared'
 
 // TODO: Extract common above

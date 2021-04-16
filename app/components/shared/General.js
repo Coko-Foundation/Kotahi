@@ -15,6 +15,13 @@ export const Content = styled.div`
   border-radius: ${th('borderRadius')};
 `
 
+export const ScrollableContent = styled(Content)`
+  @media (max-width: 1400px) {
+    margin-top: ${grid(2)};
+    overflow-x: scroll;
+  }
+`
+
 export const SectionContent = styled(Section)`
   padding: 0;
   box-shadow: ${th('boxShadow')};

@@ -13,6 +13,12 @@ export const Table = styled.table`
   }
 `
 
+export const ManuscriptsTable = styled(Table)`
+  @media (max-width: 1400px) {
+    margin-top: 0;
+  }
+`
+
 export const Header = styled.thead`
   text-align: left;
   font-variant: all-small-caps;
