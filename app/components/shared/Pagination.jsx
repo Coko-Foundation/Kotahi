@@ -47,11 +47,17 @@ const Page = styled.div`
     `}
 `
 
-const PaginationContainer = styled.div`
+export const PaginationContainer = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
   padding: ${grid(2)} ${grid(3)};
+`
+
+export const PaginationContainerShadowed = styled(PaginationContainer)`
+  background-color: ${th('colorBackground')};
+  border-radius: ${th('borderRadius')};
+  box-shadow: ${th('boxShadow')};
 `
 
 const PaginationInfo = styled.div`
@@ -89,7 +95,13 @@ const NextButton = styled(PreviousButton)`
   border-radius: 0 ${th('borderRadius')} ${th('borderRadius')} 0;
 `
 
-export const Pagination = ({ setPage, limit, page, totalCount }) => {
+export const Pagination = ({ 
+  setPage,
+  limit,
+  page,
+  totalCount,
+  PaginationContainer,
+}) => {
   const Previous = () => (
     <PreviousButton>
       <Action disabled={page <= 1} onClick={() => setPage(page - 1)}>

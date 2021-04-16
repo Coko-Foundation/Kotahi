@@ -16,6 +16,7 @@ import {
   CaretDown,
   Carets,
 } from './style'
+import { PaginationContainer } from '../../../components/shared/Pagination'
 
 const GET_USERS = gql`
   query Users(
@@ -124,6 +125,7 @@ const UsersManager = () => {
           page={page}
           setPage={setPage}
           totalCount={totalCount}
+          PaginationContainer={PaginationContainer}
         />
       </Content>
     </Container>

@@ -6,9 +6,9 @@ import config from 'config'
 import Manuscript from './Manuscript'
 import {
   Container,
-  Table,
+  ManuscriptsTable,
   Header,
-  Content,
+  ScrollableContent,
   Heading,
   Carets,
   CaretUp,
@@ -19,6 +19,7 @@ import {
 import { HeadingWithAction } from '../../shared'
 import { GET_MANUSCRIPTS } from '../../../queries'
 import getQueryStringByName from '../../../shared/getQueryStringByName'
+import { PaginationContainerShadowed } from '../../../components/shared/Pagination'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -107,8 +108,8 @@ const Manuscripts = ({ history, ...props }) => {
         <Heading>Manuscripts</Heading>
       )}
 
-      <Content>
-        <Table>
+      <ScrollableContent>
+        <ManuscriptsTable>
           <Header>
             <tr>
               {process.env.INSTANCE_NAME === 'aperture' && (
@@ -155,14 +156,15 @@ const Manuscripts = ({ history, ...props }) => {
               )
             })}
           </tbody>
-        </Table>
-        <Pagination
-          limit={limit}
-          page={page}
-          setPage={setPage}
-          totalCount={totalCount}
-        />
-      </Content>
+        </ManuscriptsTable>
+      </ScrollableContent>
+      <Pagination
+        limit={limit}
+        page={page}
+        setPage={setPage}
+        totalCount={totalCount}
+        PaginationContainer={PaginationContainerShadowed}
+      />
     </Container>
   )
 }
