@@ -280,6 +280,30 @@ const resolvers = {
       if (['elife'].includes(process.env.INSTANCE_NAME)) {
         const turndownService = new TurndownService({ bulletListMarker: '-' })
 
+        turndownService.addRule('unorderedLists', {
+          filter: ['ul'],
+          replacement(content, node) {
+            return [...node.childNodes]
+              .map((childNode, index) => {
+                return `• ${turndownService.turndown(childNode.innerHTML)}\n\n`
+              })
+              .join('')
+          },
+        })
+
+        turndownService.addRule('orderedLists', {
+          filter: ['ol'],
+          replacement(content, node) {
+            return [...node.childNodes]
+              .map((childNode, index) => {
+                return `${index + 1}) ${turndownService.turndown(
+                  childNode.innerHTML,
+                )}\n\n`
+              })
+              .join('')
+          },
+        })
+
         const requestBody = {
           uri: manuscript.submission.articleURL,
           text: turndownService.turndown(
