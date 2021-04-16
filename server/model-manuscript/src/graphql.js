@@ -283,26 +283,38 @@ const resolvers = {
         turndownService.addRule('unorderedLists', {
           filter: ['ul'],
           replacement(content, node) {
-            return [...node.childNodes]
+            const unorderedListResult = [...node.childNodes]
               .map((childNode, index) => {
                 return `• ${turndownService.turndown(childNode.innerHTML)}\n\n`
               })
               .join('')
+            // eslint-disable-next-line
+            console.log('unordered list:', unorderedListResult)
+            return unorderedListResult
           },
         })
 
         turndownService.addRule('orderedLists', {
           filter: ['ol'],
           replacement(content, node) {
-            return [...node.childNodes]
+            const orderedListResult = [...node.childNodes]
               .map((childNode, index) => {
                 return `${index + 1}) ${turndownService.turndown(
                   childNode.innerHTML,
                 )}\n\n`
               })
               .join('')
+            // eslint-disable-next-line
+            console.log('ordered list: ', orderedListResult)
+            return orderedListResult
           },
         })
+
+        // eslint-disable-next-line
+        console.log(
+          'turndown result: ',
+          turndownService.turndown(manuscript.submission.evaluationContent),
+        )
 
         const requestBody = {
           uri: manuscript.submission.articleURL,
