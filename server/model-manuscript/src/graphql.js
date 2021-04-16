@@ -78,12 +78,24 @@ const resolvers = {
   Mutation: {
     async createManuscript(_, vars, ctx) {
       const { meta, files } = vars.input
+      const emptySubmission = {
+        labels: "",
+        topics: [],
+        ourTake: "<p></p>",
+        valueAdded: "<p></p>",
+        limitations: "<p></p>",
+        studyDesign: "",
+        studyStrengths: "<p></p>",
+        articleDescription: "",
+        summaryOfMainFindings: "<p></p>",
+        studyPopulationAndSetting: "<p></p>"
+    }
 
       // We want the submission information to be stored as JSONB
       // but we want the input to come in as a JSON string
       const submission = vars.input.submission
         ? JSON.parse(vars.input.submission)
-        : {}
+        : emptySubmission
 
       const emptyManuscript = {
         meta: Object.assign(meta, {
