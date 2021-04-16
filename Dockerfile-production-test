@@ -1,7 +1,6 @@
 # IMAGE FOR BUILDING
 FROM node:12.21-alpine as build
 
-ARG packagechanged
 ARG instance_name
 ARG node_env
 ARG server_protocol
@@ -30,20 +29,9 @@ RUN apk add --no-cache git python make g++ bash
 
 WORKDIR /home/node/app
 
-COPY package.json .
-COPY yarn.lock .
-
-# Install production node modules for server use
-RUN if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else yarn install --frozen-lockfile --production=true ; fi
-# Copy to another folder for later use
-RUN if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else mv node_modules production_node_modules ; fi
-
-# Install development node modules for building webpack bundle
-RUN if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else yarn install --frozen-lockfile --production=false ; fi
-
 COPY . .
 
-RUN if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else yarn webpack --config webpack/webpack.production.config.js ; fi 
+RUN yarn webpack --config webpack/webpack.production.config.js
 
 # IMAGE FOR RUNNING
 FROM node:12.21-alpine as server
@@ -54,6 +42,7 @@ RUN chown -R node:node .
 RUN apk add bash coreutils postgresql-client
 USER node
 
+COPY --chown=node:node ./node_modules ./node_modules
 COPY --chown=node:node ./config ./config
 COPY --chown=node:node ./public ./public
 COPY --chown=node:node ./scripts ./scripts
@@ -63,9 +52,7 @@ COPY --chown=node:node ./startServer.js .
 COPY --chown=node:node ./google_sheets_credentials.json .
 COPY --chown=node:node ./profiles ./profiles
 
-ARG packagechanged
-RUN if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else COPY --from=build /home/node/app/_build/assets ./_build ; fi
-RUN if [[ -z "$packagechanged" ]] ; then echo packagechanged not provided ; else COPY --from=build /home/node/app/production_node_modules ./node_modules ; fi
+COPY --from=build /home/node/app/_build/assets ./_build
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
 CMD ["node", "./startServer.js"]
