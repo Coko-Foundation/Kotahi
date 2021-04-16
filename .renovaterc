@@ -1,5 +1,6 @@
 {
-  "assignees": ["jure"],
+  "enabled": false,
+  "assignees": ["benwh"],
   "labels": ["renovate"],
   "rebaseWhen": "auto",
   "automerge": true,
