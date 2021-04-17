@@ -121,7 +121,7 @@ const fragmentFields = `
 `
 
 const query = gql`
-  query($id: ID!, $formId: String!) {
+  query($id: ID!) {
     currentUser {
       id
       username
@@ -141,7 +141,9 @@ const query = gql`
       }
     }
 
-    getForm(formId: $formId)
+    formForPurpose(purpose: "submit") {
+      structure
+    }
   }
 `
 
@@ -182,7 +184,7 @@ const SubmitPage = ({ match, history }) => {
   }
 
   const { data, loading, error } = useQuery(query, {
-    variables: { id: match.params.version, formId: 'submit' },
+    variables: { id: match.params.version },
     partialRefetch: true,
   })
 
@@ -194,7 +196,7 @@ const SubmitPage = ({ match, history }) => {
   if (error) return JSON.stringify(error)
 
   const manuscript = data?.manuscript
-  const form = data?.getForm
+  const form = data?.formForPurpose?.structure
 
   const updateManuscript = (versionId, manuscriptDelta) => {
     update({

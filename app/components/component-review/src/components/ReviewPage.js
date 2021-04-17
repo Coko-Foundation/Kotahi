@@ -134,7 +134,9 @@ const query = gql`
       }
     }
 
-    getForms
+    formForPurpose(purpose: "submit") {
+      structure
+    }
   }
 `
 
@@ -196,11 +198,10 @@ const ReviewPage = ({ match, ...props }) => {
     )
   }
 
-  const { manuscript, getForms } = data
+  const { manuscript, formForPurpose } = data
 
-  const submissionForm = getForms?.find(f => f.id === 'submit') ?? {
+  const submissionForm = formForPurpose?.structure ?? {
     name: '',
-    id: '',
     children: [],
     description: '',
     haspopup: 'false',

@@ -29,11 +29,10 @@ const DecisionPage = ({ match }) => {
   if (loading) return <Spinner />
   if (error) return `Error! ${error.message}`
 
-  const { manuscript, getForms } = data
+  const { manuscript, formForPurpose } = data
 
-  const form = getForms?.find(f => f.id === 'submit') ?? {
+  const form = formForPurpose?.structure ?? {
     name: '',
-    id: '',
     children: [],
     description: '',
     haspopup: 'false',

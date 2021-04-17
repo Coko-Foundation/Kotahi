@@ -136,7 +136,9 @@ export const query = gql`
       }
     }
 
-    getForms
+    formForPurpose(purpose: "submit") {
+      structure
+    }
   }
 `
 
