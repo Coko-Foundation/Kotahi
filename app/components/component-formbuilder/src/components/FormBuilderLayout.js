@@ -3,8 +3,10 @@ import PropTypes from 'prop-types'
 import { forEach } from 'lodash'
 import styled, { withTheme } from 'styled-components'
 import { Tabs, Action, Icon } from '@pubsweet/ui'
+import { v4 as uuid } from 'uuid'
 import { Columns, Details, Form } from './style'
 import ComponentProperties from './ComponentProperties'
+import FormProperties from './FormProperties'
 import FormBuilder from './FormBuilder'
 import {
   Container,
@@ -76,7 +78,7 @@ const FormBuilderLayout = ({
             deleteForm({
               variables: { formId: form.id },
             })
-            setActiveFormId(forms.find(f => f.id !== form.id)?.id ?? 'new')
+            setActiveFormId(forms.find(f => f.id !== form.id)?.id ?? null)
           }}
         >
           <ControlIcon size={2.5}>x</ControlIcon>
@@ -97,18 +99,19 @@ const FormBuilderLayout = ({
   })
 
   const activeForm = forms.find(f => f.id === activeFormId) ?? {
-    children: [],
-    id: '',
-    name: '',
-    description: '',
-    haspopup: 'false',
+    id: uuid(),
+    purpose: '',
+    structure: {
+      children: [],
+      name: '',
+      description: '',
+      haspopup: 'false',
+    },
   }
 
-  const activeField = activeForm.children.find(
+  const activeField = activeForm.structure.children.find(
     elem => elem.id === activeFieldId,
   )
-
-  const fieldOrForm = activeField ?? activeForm
 
   return (
     <Container>
@@ -130,14 +133,20 @@ const FormBuilderLayout = ({
         <Details>
           <SectionContent>
             <SectionRow>
-              <ComponentProperties
-                fieldOrForm={fieldOrForm}
-                formId={activeForm.id}
-                isField={!!activeField}
-                key={fieldOrForm.id}
-                updateField={updateField}
-                updateForm={updateForm}
-              />
+              {activeField ? (
+                <ComponentProperties
+                  field={activeField}
+                  formId={activeForm.id}
+                  key={activeField.id}
+                  updateField={updateField}
+                />
+              ) : (
+                <FormProperties
+                  form={activeForm}
+                  key={activeForm.id}
+                  updateForm={updateForm}
+                />
+              )}
             </SectionRow>
           </SectionContent>
         </Details>
@@ -150,12 +159,15 @@ FormBuilderLayout.propTypes = {
   forms: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      children: PropTypes.arrayOf(
-        PropTypes.shape({
-          id: PropTypes.string.isRequired,
-          component: PropTypes.string,
-        }).isRequired,
-      ).isRequired,
+      purpose: PropTypes.string,
+      structure: PropTypes.shape({
+        children: PropTypes.arrayOf(
+          PropTypes.shape({
+            id: PropTypes.string.isRequired,
+            component: PropTypes.string,
+          }).isRequired,
+        ).isRequired,
+      }).isRequired,
     }).isRequired,
   ).isRequired,
   activeFormId: PropTypes.string.isRequired,

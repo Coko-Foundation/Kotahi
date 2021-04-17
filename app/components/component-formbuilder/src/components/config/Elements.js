@@ -147,7 +147,7 @@ const elements = {
         ],
       },
     },
-    DoiValidation: {
+    doiValidation: {
       component: 'RadioBox',
       props: {
         inline: true,

@@ -165,6 +165,7 @@
     "superagent": "^3.8.3",
     "supertest": "3.4.2",
     "turndown": "^7.0.0",
+    "uuid": "^8.3.2",
     "waait": "^1.0.5",
     "wax-prosemirror-core": "0.0.40",
     "wax-prosemirror-plugins": "0.0.40",

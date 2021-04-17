@@ -304,7 +304,7 @@ const FormTemplate = ({
                       element.validateValue,
                       element.name,
                       JSON.parse(
-                        element.DoiValidation ? element.DoiValidation : false,
+                        element.doiValidation ? element.doiValidation : false,
                       ),
                       client,
                       element.component,

@@ -5,26 +5,34 @@ import FormBuilderLayout from './FormBuilderLayout'
 import { Spinner } from '../../../shared'
 
 const createFormMutation = gql`
-  mutation($form: String!) {
-    createForm(form: $form)
+  mutation($form: FormInput!) {
+    createForm(form: $form) {
+      id
+    }
   }
 `
 
 const updateFormMutation = gql`
-  mutation($form: String!, $formId: String!) {
-    updateForm(form: $form, formId: $formId)
+  mutation($form: FormInput!) {
+    updateForm(form: $form) {
+      id
+    }
   }
 `
 
 const updateFormElementMutation = gql`
-  mutation($element: String!, $formId: String!) {
-    updateFormElement(element: $element, formId: $formId)
+  mutation($element: FormElementStructure!, $formId: String!) {
+    updateFormElement(element: $element, formId: $formId) {
+      id
+    }
   }
 `
 
 const deleteFormElementMutation = gql`
   mutation($formId: ID!, $elementId: ID!) {
-    deleteFormElement(formId: $formId, elementId: $elementId)
+    deleteFormElement(formId: $formId, elementId: $elementId) {
+      id
+    }
   }
 `
 
@@ -36,13 +44,19 @@ const deleteFormMutation = gql`
 
 const query = gql`
   query {
-    getForms
+    forms {
+      id
+      created
+      updated
+      purpose
+      structure
+    }
   }
 `
 
 const prepareForSubmit = values => {
   const cleanedValues = omitBy(values, value => value === '')
-  return JSON.stringify(cleanedValues)
+  return cleanedValues
 }
 
 const FormBuilderPage = () => {
@@ -73,43 +87,49 @@ const FormBuilderPage = () => {
   const [activeFieldId, setActiveFieldId] = useState()
 
   const moveFieldUp = (form, fieldId) => {
-    const currentIndex = form.children.findIndex(field => field.id === fieldId)
+    const fields = form.structure.children
+    const currentIndex = fields.findIndex(field => field.id === fieldId)
     if (currentIndex < 1) return
 
-    const fieldsToSwapA = form.children[currentIndex - 1]
-    const fieldsToSwapB = form.children[currentIndex]
-    const newFields = [...form.children]
+    const fieldsToSwapA = fields[currentIndex - 1]
+    const fieldsToSwapB = fields[currentIndex]
+    const newFields = [...fields]
     newFields.splice(currentIndex - 1, 2, fieldsToSwapB, fieldsToSwapA)
 
     updateForm({
       variables: {
-        formId: form.id,
-        form: prepareForSubmit({ ...form, children: newFields }),
+        form: prepareForSubmit({
+          ...form,
+          structure: { ...form.structure, children: newFields },
+        }),
       },
     })
   }
 
   const moveFieldDown = (form, fieldId) => {
-    const currentIndex = form.children.findIndex(field => field.id === fieldId)
-    if (currentIndex < 0 || currentIndex >= form.children.length - 1) return
+    const fields = form.structure.children
+    const currentIndex = fields.findIndex(field => field.id === fieldId)
+    if (currentIndex < 0 || currentIndex >= fields.length - 1) return
 
-    const fieldsToSwapA = form.children[currentIndex]
-    const fieldsToSwapB = form.children[currentIndex + 1]
-    const newFields = [...form.children]
+    const fieldsToSwapA = fields[currentIndex]
+    const fieldsToSwapB = fields[currentIndex + 1]
+    const newFields = [...fields]
     newFields.splice(currentIndex, 2, fieldsToSwapB, fieldsToSwapA)
 
     updateForm({
       variables: {
-        formId: form.id,
-        form: prepareForSubmit({ ...form, children: newFields }),
+        form: prepareForSubmit({
+          ...form,
+          structure: { ...form.structure, children: newFields },
+        }),
       },
     })
   }
 
   useEffect(() => {
     if (!loading && data) {
-      if (data.getForms.length) {
-        setActiveFormId(prevFormId => prevFormId ?? data.getForms[0].id)
+      if (data.forms.length) {
+        setActiveFormId(prevFormId => prevFormId ?? data.forms[0].id)
       } else {
         setActiveFormId('new')
       }
@@ -126,7 +146,7 @@ const FormBuilderPage = () => {
       createForm={createForm}
       deleteField={deleteFormElement}
       deleteForm={deleteForm}
-      forms={data.getForms}
+      forms={data.forms}
       moveFieldDown={moveFieldDown}
       moveFieldUp={moveFieldUp}
       setActiveFieldId={setActiveFieldId}

@@ -6,7 +6,7 @@
       "component": "TextField",
       "name": "submission.articleURL",
       "description": "<p></p>",
-      "DoiValidation": "true",
+      "doiValidation": "true",
       "validate": [
         {
           "value": "required",
@@ -19,7 +19,7 @@
       "id": "1617195483503",
       "component": "TextField",
       "name": "submission.articleDescription",
-      "DoiValidation": "false",
+      "doiValidation": "false",
       "validate": [
         {
           "value": "required",
