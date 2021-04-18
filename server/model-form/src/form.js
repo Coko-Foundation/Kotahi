@@ -46,11 +46,37 @@ class Form extends BaseModel {
                     type: ['array', 'null'],
                   },
                   title: { type: ['string', 'null'] },
+                  shortDescription: { type: ['string', 'null'] },
                   id: { type: 'string', format: 'uuid' },
                   component: { type: ['string', 'null'] },
                   name: { type: 'string' },
                   description: { type: ['string', 'null'] },
                   doiValidation: { type: ['string', 'null'] },
+                  placeholder: { type: ['string', 'null'] },
+                  parse: {
+                    oneOf: [
+                      { type: ['string', 'null'] },
+                      {
+                        type: 'object',
+                        properties: {
+                          label: { type: 'string' },
+                          value: { type: 'string' },
+                        },
+                      },
+                    ],
+                  },
+                  format: {
+                    oneOf: [
+                      { type: ['string', 'null'] },
+                      {
+                        type: 'object',
+                        properties: {
+                          label: { type: 'string' },
+                          value: { type: 'string' },
+                        },
+                      },
+                    ],
+                  },
                   validate: {
                     items: {
                       type: 'object',
@@ -61,6 +87,14 @@ class Form extends BaseModel {
                       },
                     },
                     type: ['array', 'null'],
+                  },
+                  validateValue: {
+                    type: ['object', 'null'],
+                    properties: {
+                      minChars: { type: ['string', 'null'] },
+                      maxChars: { type: ['string', 'null'] },
+                      minSize: { type: ['string', 'null'] },
+                    },
                   },
                 },
               },

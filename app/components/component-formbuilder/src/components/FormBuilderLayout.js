@@ -69,7 +69,7 @@ const FormBuilderLayout = ({
       ),
       key: `${form.id}`,
       label: [
-        form.name,
+        form.structure.name,
         <RightIconAction
           key="delete-form"
           onClick={e => {

@@ -2,7 +2,7 @@
   "children": [
     {
       "title": "Article URL",
-      "id": "1617195421539",
+      "id": "29512053-bad0-43cd-ad4f-1ec689c72a63",
       "component": "TextField",
       "name": "submission.articleURL",
       "description": "<p></p>",
@@ -10,32 +10,35 @@
       "validate": [
         {
           "value": "required",
-          "label": "Required"
+          "label": "Required",
+          "id": "45007837-4d55-44eb-a83a-a1443a35ce25"
         }
       ]
     },
     {
       "title": "Article Description",
-      "id": "1617195483503",
+      "id": "dd48def7-9f7b-4062-b0c0-716537876934",
       "component": "TextField",
       "name": "submission.articleDescription",
       "doiValidation": "false",
       "validate": [
         {
           "value": "required",
-          "label": "Required"
+          "label": "Required",
+          "id": "a565bb48-de35-40a0-b13c-3ee579343e3c"
         }
       ]
     },
     {
       "title": "Our take",
-      "id": "1617195546630",
+      "id": "13e673b4-0a25-4a02-92e6-e2a3a8b59daf",
       "component": "AbstractEditor",
       "name": "submission.ourTake",
       "validate": [
         {
           "value": "required",
-          "label": "Required"
+          "label": "Required",
+          "id": "2d5e8deb-e03c-4f5c-9a23-f376321b040f"
         }
       ]
     },
@@ -43,113 +46,129 @@
       "options": [
         {
           "label": "Case-series",
-          "value": "caseSeries"
+          "value": "caseSeries",
+          "id": "cf9b7939-88c9-4274-84cc-34ed28312190"
         },
         {
           "label": "Case-control",
-          "value": "caseControl"
+          "value": "caseControl",
+          "id": "d57ab71c-3e5c-42ee-9a76-fdac1fb34cc6"
         },
         {
           "label": "Cross-sectional",
-          "value": "crossSectional"
+          "value": "crossSectional",
+          "id": "ff3ff470-9bc3-4268-8a44-eeca13fac5f4"
         },
         {
           "label": "Prospective cohort",
-          "value": "prospectiveCohort"
+          "value": "prospectiveCohort",
+          "id": "146b862e-7517-492f-ad72-dcabcda78474"
         },
         {
           "label": "Retrospective cohort",
-          "value": "retrospectiveCohort"
+          "value": "retrospectiveCohort",
+          "id": "45116933-149e-4db7-9a5c-7e3f135ad097"
         },
         {
           "label": "Ecological",
-          "value": "ecological"
+          "value": "ecological",
+          "id": "e41775ac-299d-4a66-91a0-b5c3165b07f0"
         },
         {
           "label": "Randomized Control Trial",
-          "value": "randomizedControlTrial"
+          "value": "randomizedControlTrial",
+          "id": "6eb9a65f-8209-47cd-84fa-e643d3b7c25f"
         },
         {
           "label": "Non-Randomized Trial",
-          "value": "nonRandomizedTrial"
+          "value": "nonRandomizedTrial",
+          "id": "144521ad-e924-4a10-ba8f-d456cc89094e"
         },
         {
           "label": "Modeling/Simulation",
-          "value": "modelingSimulation"
+          "value": "modelingSimulation",
+          "id": "2716ede2-8e73-4059-8c5e-ea28c9ceb439"
         },
         {
           "label": "Other",
-          "value": "other"
+          "value": "other",
+          "id": "6762369e-3f95-40fa-acd5-33fd8c7b8b35"
         }
       ],
       "title": "Study design",
-      "id": "1617195606326",
+      "id": "5f00b2cc-3adb-4671-bfdf-67b2679e58a9",
       "component": "Select",
       "name": "submission.studyDesign",
       "validate": [
         {
           "value": "required",
-          "label": "Required"
+          "label": "Required",
+          "id": "7446430b-d31e-4253-a7ea-c16e22055a74"
         }
       ]
     },
     {
       "title": "Study population and setting",
-      "id": "1617196039750",
+      "id": "64b05f22-1f4a-41ea-9dbd-1528c81d6383",
       "component": "AbstractEditor",
       "name": "submission.studyPopulationAndSetting",
       "validate": [
         {
           "value": "required",
-          "label": "Required"
+          "label": "Required",
+          "id": "eba51ef1-97a6-4b6d-9537-427354ec2c9f"
         }
       ]
     },
     {
       "title": "Summary of main findings",
-      "id": "1617196078810",
+      "id": "421aab67-569f-4539-8bc6-97376c64538f",
       "component": "AbstractEditor",
       "name": "submission.summaryOfMainFindings",
       "validate": [
         {
           "value": "required",
-          "label": "Required"
+          "label": "Required",
+          "id": "c07bc691-f618-43c7-953d-99ac9081096e"
         }
       ]
     },
     {
       "title": "Study strengths",
-      "id": "1617196181149",
+      "id": "4209cfa4-95de-48d4-ae3f-c98b29a9a847",
       "component": "AbstractEditor",
       "name": "submission.studyStrengths",
       "validate": [
         {
           "value": "required",
-          "label": "Required"
+          "label": "Required",
+          "id": "56c4bdee-8846-4abc-b125-181da32939b3"
         }
       ]
     },
     {
       "title": "Limitations",
-      "id": "1617196237717",
+      "id": "6531975d-1e8e-4bf1-831e-61e7b52a912e",
       "component": "AbstractEditor",
       "name": "submission.limitations",
       "validate": [
         {
           "value": "required",
-          "label": "Required"
+          "label": "Required",
+          "id": "d54b8471-0897-4fc0-8d49-9e0fcf8b073b"
         }
       ]
     },
     {
       "title": "Value added",
-      "id": "1617196283857",
+      "id": "dd57894d-ef5e-4c36-aa17-d9daed83a116",
       "component": "AbstractEditor",
       "name": "submission.valueAdded",
       "validate": [
         {
           "value": "required",
-          "label": "Required"
+          "label": "Required",
+          "id": "8bbcd968-325d-4ddb-a4a6-907fa7e0333d"
         }
       ]
     },
@@ -157,25 +176,29 @@
       "options": [
         {
           "label": "Ready to evaluate",
-          "value": "readyToEvaluate"
+          "value": "readyToEvaluate",
+          "id": "90eeb071-b99c-482c-9b62-3ed3e98bd6e8"
         },
         {
           "label": "Evaluated",
-          "value": "evaluated"
+          "value": "evaluated",
+          "id": "e10b7c15-7c3d-4eb6-b490-6194003a87d8"
         },
         {
           "label": "Ready to publish",
-          "value": "readyToPublish"
+          "value": "readyToPublish",
+          "id": "939e2f13-19ad-4c28-8a6a-142a97ddbbd2"
         }
       ],
       "title": "Labels",
-      "id": "1617196325513",
+      "id": "a94dd0b8-99a0-4555-9e59-0895fafa464e",
       "component": "Select",
       "name": "submission.labels",
       "validate": [
         {
           "value": "required",
-          "label": "Required"
+          "label": "Required",
+          "id": "29274cdc-89e0-4ea2-90e8-d2437d23f1b6"
         }
       ]
     },
@@ -183,50 +206,58 @@
       "options": [
         {
           "label": "ecology and spillover",
-          "value": "ecologyAndSpillover"
+          "value": "ecologyAndSpillover",
+          "id": "21703cd4-5a73-4701-b828-6fc3bf913908"
         },
         {
           "label": "vaccines",
-          "value": "vaccines"
+          "value": "vaccines",
+          "id": "6a3a41ea-c12d-48a5-8f00-d9eec0980b17"
         },
         {
           "label": "non-pharmaceutical and pharmaceutical interventions",
-          "value": "nonPharmaceuticalAndPharmaceuticalInterventions"
+          "value": "nonPharmaceuticalAndPharmaceuticalInterventions",
+          "id": "c1caf4b9-e9b7-42e2-8724-28a72abdd179"
         },
         {
           "label": "epidemiology",
-          "value": "epidemiology"
+          "value": "epidemiology",
+          "id": "4c12f2bb-e90a-41d2-a76b-1f2f98b89ae5"
         },
         {
           "label": "diagnostics",
-          "value": "diagnostics"
+          "value": "diagnostics",
+          "id": "1896c629-5559-447f-be12-e74dbf2a4a76"
         },
         {
           "label": "modeling",
-          "value": "modeling"
+          "value": "modeling",
+          "id": "3ef38a6c-de1d-49de-8e48-b548aa08cfd7"
         },
         {
           "label": "clinical presentation",
-          "value": "clinicalPresentation"
+          "value": "clinicalPresentation",
+          "id": "d39b8a6e-4968-48b5-bad4-f7c5ec5269c0"
         },
         {
           "label": "prognostic risk factors",
-          "value": "prognosticRiskFactors"
+          "value": "prognosticRiskFactors",
+          "id": "1d5428c0-b2ce-4d90-90c6-e8a6a6c53dbc"
         }
       ],
       "title": "Topics",
-      "id": "1617196386967",
+      "id": "fef9af15-9d7b-4164-bb5b-9277b6f96704",
       "component": "CheckboxGroup",
       "name": "submission.topics",
       "validate": [
         {
           "value": "required",
-          "label": "Required"
+          "label": "Required",
+          "id": "14b32182-e4a5-4a99-bb23-b673b500b521"
         }
       ]
     }
   ],
-  "id": "submit",
   "name": "NCRC Submission Form",
   "description": "<p>NCRC Form</p>",
   "haspopup": "false"
