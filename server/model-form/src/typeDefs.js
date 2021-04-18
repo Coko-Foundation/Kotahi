@@ -1,22 +1,24 @@
 const typeDefs = `
-input FormInput {
-  id: ID!
-  created: String!
-  updated: String
-  purpose: String!
-  structure: FormStructure!
-}
-type Form {
-  id: ID!
-  created: String!
-  updated: String
-  purpose: String!
-  structure: FormStructure!
-}
+  input FormInput {
+    id: ID!
+    created: String
+    updated: String
+    purpose: String!
+    structure: FormStructure!
+  }
 
-scalar FormStructure
+  type Form {
+    id: ID!
+    created: String!
+    updated: String
+    purpose: String!
+    structure: FormStructure!
+  }
 
-type CreateFormPayload {
+  scalar FormStructure
+  scalar FormElementStructure
+
+  type CreateFormPayload {
     recordId: ID
     record: Form
     query: Query
@@ -39,8 +41,6 @@ type CreateFormPayload {
     deleteFormElement(formId: ID!, elementId: ID!): Form
     deleteForm(formId: ID!): DeleteFormPayload
   }
-
-  scalar FormElementStructure
 `
 
 module.exports = typeDefs
