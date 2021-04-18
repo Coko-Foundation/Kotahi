@@ -27,7 +27,7 @@ class Form extends BaseModel {
           properties: {
             name: { type: ['string', 'null'] },
             description: { type: ['string', 'null'] },
-            haspopup: { type: 'bool' },
+            haspopup: { type: 'string' },
             popuptitle: { type: ['string', 'null'] },
             popupdescription: { type: ['string', 'null'] },
             children: {
@@ -49,7 +49,7 @@ class Form extends BaseModel {
                   shortDescription: { type: ['string', 'null'] },
                   id: { type: 'string', format: 'uuid' },
                   component: { type: ['string', 'null'] },
-                  name: { type: 'string' },
+                  name: { type: ['string', 'null'] },
                   description: { type: ['string', 'null'] },
                   doiValidation: { type: ['string', 'null'] },
                   placeholder: { type: ['string', 'null'] },

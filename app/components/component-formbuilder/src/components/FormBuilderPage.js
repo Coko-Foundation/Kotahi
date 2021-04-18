@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
-import { omitBy } from 'lodash'
+import { cloneDeep, omitBy } from 'lodash'
 import FormBuilderLayout from './FormBuilderLayout'
 import { Spinner } from '../../../shared'
 
@@ -21,7 +21,7 @@ const updateFormMutation = gql`
 `
 
 const updateFormElementMutation = gql`
-  mutation($element: FormElementStructure!, $formId: String!) {
+  mutation($element: FormElementInput!, $formId: String!) {
     updateFormElement(element: $element, formId: $formId) {
       id
     }
@@ -49,13 +49,46 @@ const query = gql`
       created
       updated
       purpose
-      structure
+      structure {
+        name
+        description
+        haspopup
+        popuptitle
+        popupdescription
+        children {
+          title
+          shortDescription
+          id
+          component
+          name
+          description
+          doiValidation
+          placeholder
+          parse
+          format
+          options {
+            id
+            label
+            value
+          }
+          validate {
+            id
+            label
+            value
+          }
+          validateValue {
+            minChars
+            maxChars
+            minSize
+          }
+        }
+      }
     }
   }
 `
 
 const prepareForSubmit = values => {
-  const cleanedValues = omitBy(values, value => value === '')
+  const cleanedValues = omitBy(cloneDeep(values), value => value === '')
   return cleanedValues
 }
 
