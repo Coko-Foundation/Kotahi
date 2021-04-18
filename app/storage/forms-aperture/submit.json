@@ -5,16 +5,7 @@
       "title": "Research object links",
       "id": "bf0c8b8f-7523-4c7d-a74c-7635838f1451",
       "component": "LinksInput",
-      "name": "submission.links",
-      "placeholder": "Enter your links, separated by commas",
-      "parse": {
-        "value": "split",
-        "label": "Split"
-      },
-      "format": {
-        "value": "join",
-        "label": "Join"
-      }
+      "name": "submission.links"
     },
     {
       "title": "Title",

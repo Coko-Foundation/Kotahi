@@ -53,30 +53,8 @@ class Form extends BaseModel {
                   description: { type: ['string', 'null'] },
                   doiValidation: { type: ['string', 'null'] },
                   placeholder: { type: ['string', 'null'] },
-                  parse: {
-                    oneOf: [
-                      { type: ['string', 'null'] },
-                      {
-                        type: 'object',
-                        properties: {
-                          label: { type: 'string' },
-                          value: { type: 'string' },
-                        },
-                      },
-                    ],
-                  },
-                  format: {
-                    oneOf: [
-                      { type: ['string', 'null'] },
-                      {
-                        type: 'object',
-                        properties: {
-                          label: { type: 'string' },
-                          value: { type: 'string' },
-                        },
-                      },
-                    ],
-                  },
+                  parse: { type: ['string', 'null'] },
+                  format: { type: ['string', 'null'] },
                   validate: {
                     items: {
                       type: 'object',
