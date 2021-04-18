@@ -1,4 +1,4 @@
-apiVersion: v2
+apiVersion: v1
 name: elife-kotahi
 description: eLife Kotahi application
 type: application

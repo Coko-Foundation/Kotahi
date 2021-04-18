@@ -97,7 +97,7 @@ spec:
                 configMapKeyRef:
                   key: USE_SANDBOXED_ORCID
                   name: env
-          image: "{{ .Values.images.frontend.repository }}:{{ .Values.images.frontend.tag }}"
+          image: "{{ .Values.images.backend.repository }}:{{ .Values.images.backend.tag }}"
           command: ["node"]
           args: ["./startServer.js"]
           name: server
