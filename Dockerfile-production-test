@@ -35,7 +35,11 @@ COPY . .
 
 RUN ls -la
 
+RUN mv ./node_modules_dev ./node_modules
+
 RUN yarn webpack --config webpack/webpack.production.config.js
+
+RUN rm -rf ./node_modules
 
 # IMAGE FOR RUNNING
 FROM node:12.21-alpine as server
@@ -46,8 +50,6 @@ RUN chown -R node:node .
 RUN apk add bash coreutils postgresql-client
 USER node
 
-COPY --chown=node:node ./node_modules ./node_modules
-#COPY --chown=node:node ./node_modules_prod ./node_modules_prod
 COPY --chown=node:node ./config ./config
 COPY --chown=node:node ./public ./public
 COPY --chown=node:node ./scripts ./scripts
@@ -58,7 +60,6 @@ COPY --chown=node:node ./google_sheets_credentials.json .
 COPY --chown=node:node ./profiles ./profiles
 
 COPY --from=build /home/node/app/_build/assets ./_build
-RUN rm -rf /home/node/app/node_modules
 COPY --from=build /home/node/app/node_modules_prod ./node_modules
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
