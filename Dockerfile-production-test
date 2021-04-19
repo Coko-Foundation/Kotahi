@@ -31,6 +31,7 @@ WORKDIR /home/node/app
 
 COPY . .
 
+COPY --chown=node:node ./node_modules ./node_modules
 RUN ls -la | grep node_modules
 
 RUN yarn webpack --config webpack/webpack.production.config.js
