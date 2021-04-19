@@ -1,8 +1,9 @@
-const { ref, raw } = require('objection')
+const { ref } = require('objection')
 const TurndownService = require('turndown')
 const axios = require('axios')
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const credentials = require('../../../google_sheets_credentials.json')
+const Form = require('../../model-form/src/form')
 
 const ManuscriptResolvers = ({ isVersion }) => {
   const resolvers = {
@@ -51,22 +52,25 @@ const ManuscriptResolvers = ({ isVersion }) => {
   return resolvers
 }
 
+const merge = (destination, source) => {
+  const updatedManuscript = { ...destination }
+
+  Object.values(source).forEach(n => {
+    if (typeof updatedManuscript[n] !== 'object' || Array.isArray(source[n])) {
+      updatedManuscript[n] = source[n]
+    } else if (typeof source[n] === 'object' && !Array.isArray(source[n])) {
+      updatedManuscript[n] = merge(updatedManuscript[n], source[n])
+    }
+  })
+
+  return updatedManuscript
+}
+
 const commonUpdateManuscript = async (_, { id, input }, ctx) => {
   const manuscriptDelta = JSON.parse(input)
   const manuscript = await ctx.models.Manuscript.query().findById(id)
 
-  const updatedManuscript = {
-    ...manuscript,
-    ...manuscriptDelta,
-    submission: {
-      ...manuscript.submission,
-      ...manuscriptDelta.submission,
-    },
-    meta: {
-      ...manuscript.meta,
-      ...manuscriptDelta.meta,
-    },
-  }
+  const updatedManuscript = merge(manuscript, manuscriptDelta)
 
   // if (manuscript.status === 'revise') {
   //   return manuscript.createNewVersion(update)
@@ -77,29 +81,33 @@ const commonUpdateManuscript = async (_, { id, input }, ctx) => {
 const resolvers = {
   Mutation: {
     async createManuscript(_, vars, ctx) {
-      const config = require('config')
-      const folderPath = `${config.get(
-        'pubsweet-component-xpub-formbuilder.path',
-      )}/`
-      const submissionForm = require(`${folderPath}submit.json`)
+      const submissionForm = await Form.findOneByField('purpose', 'submit')
+
       const { meta, files } = vars.input
-      const parsedSubmissionForm = submissionForm.children
+
+      const parsedFormStructure = submissionForm.structure.children
         .map(formElement => {
           const parsedName = formElement.name.split('.')[1]
-          if(parsedName) {
+
+          if (parsedName) {
             return {
               name: parsedName,
-              component: formElement.component
+              component: formElement.component,
             }
           }
+
+          return undefined
         })
         .filter(x => x !== undefined)
 
-      const emptySubmission = parsedSubmissionForm.reduce((acc, curr) => {
-        acc[curr.name] = (curr.component === "CheckboxGroup" || curr.component ===  "LinksInput") ? [] : ""
+      const emptySubmission = parsedFormStructure.reduce((acc, curr) => {
+        acc[curr.name] =
+          curr.component === 'CheckboxGroup' || curr.component === 'LinksInput'
+            ? []
+            : ''
         return {
           ...acc,
-        };
+        }
       }, {})
 
       // We want the submission information to be stored as JSONB
@@ -311,8 +319,7 @@ const resolvers = {
                 return `• ${turndownService.turndown(childNode.innerHTML)}\n\n`
               })
               .join('')
-            // eslint-disable-next-line
-            console.log('unordered list:', unorderedListResult)
+
             return unorderedListResult
           },
         })
@@ -327,17 +334,10 @@ const resolvers = {
                 )}\n\n`
               })
               .join('')
-            // eslint-disable-next-line
-            console.log('ordered list: ', orderedListResult)
+
             return orderedListResult
           },
         })
-
-        // eslint-disable-next-line
-        console.log(
-          'turndown result: ',
-          turndownService.turndown(manuscript.submission.evaluationContent),
-        )
 
         const requestBody = {
           uri: manuscript.submission.articleURL,
@@ -492,8 +492,8 @@ const resolvers = {
     },
     async publishedManuscripts(_, { sort, offset, limit }, ctx) {
       const query = ctx.models.Manuscript.query()
-        .where(raw('published IS NOT NULL'))
-        .eager('[reviews.[comments], files, submitter]')
+        .whereNotNull('published')
+        .withGraphFetched('[reviews.[comments], files, submitter]')
 
       const totalCount = await query.resultSize()
 

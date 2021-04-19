@@ -53,30 +53,30 @@ export const zIndex = new (function() {
 })()
 
 export const Truncate = () => css`
-  text-overflow: ellipsis;
-  overflow: hidden;
-  white-space: nowrap;
   min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 `
 
 export const FlexRow = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: row;
   justify-content: flex-start;
-  align-items: center;
 `
 
 export const HorizontalRule = styled(FlexRow)`
-  position: relative;
-  justify-content: center;
   align-items: center;
   align-self: stretch;
   color: ${th('colorBorder')};
+  justify-content: center;
+  position: relative;
 
   hr {
+    border-top: 1px solid ${th('colorBorder')};
     display: inline-block;
     flex: 1 0 auto;
-    border-top: 1px solid ${th('colorBorder')};
   }
 
   div {
@@ -87,5 +87,6 @@ export const HorizontalRule = styled(FlexRow)`
 export const articleStatuses = {
   submitted: 'submitted',
   evaluated: 'evaluated',
-  new: 'new'
+  new: 'new',
+  published: 'published',
 }

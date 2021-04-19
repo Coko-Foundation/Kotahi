@@ -48,7 +48,7 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
       cache.evict({ id })
     },
   })
-
+  
   const publishManuscriptHandler = () => {
     publishManuscript({
       variables: { id: manuscript.id },
@@ -67,7 +67,7 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
     props.setSelectedTopic(topic)
     history.replace(`${urlFrag}/admin/manuscripts?topic=${topic}`)
   }
-
+  
   return (
     <Row>
       {process.env.INSTANCE_NAME === 'aperture' && (
@@ -126,6 +126,7 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
             articleStatuses.submitted,
             articleStatuses.evaluated,
             articleStatuses.new,
+            articleStatuses.published,
           ].includes(manuscript.status) && (
             <Action to={`${urlFrag}/versions/${manuscriptId}/evaluation`}>
               Evaluation
@@ -144,7 +145,7 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
         >
           Delete
         </Action>
-        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
+        {(['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && manuscript.status !== articleStatuses.published ) && (
           <Action onClick={publishManuscriptHandler}>Publish</Action>
         )}
       </LastCell>

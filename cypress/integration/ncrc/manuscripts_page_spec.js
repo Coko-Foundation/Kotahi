@@ -94,7 +94,7 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickDropdown(-1)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
-        SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
+        SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
         ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
         ManuscriptsPage.getArticleTopic(0)
           .should('be.visible')
@@ -125,7 +125,7 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         // eslint-disable-next-line
         SubmissionFormPage.waitThreeSec()
-        SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
+        SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
       })
     })
     it('manuscripts page should contain the correct details after submission', () => {
@@ -151,7 +151,7 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
       ManuscriptsPage.clickEvaluation()
 
-      SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
+      SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
 
       ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
     })
@@ -164,7 +164,7 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickTopicsCheckboxWithText('vaccines')
         // eslint-disable-next-line
         SubmissionFormPage.waitThreeSec()
-        SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
+        SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
         ManuscriptsPage.clickEvaluation()
         // eslint-disable-next-line
         SubmissionFormPage.getValueAddedField().should(
@@ -239,6 +239,7 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getArticleTopic(1).should('contain', 'diagnostics')
     })
     it('sort article by label', () => {
+      ManuscriptsPage.getArticleLabel().should('have.length', 3)
       ManuscriptsPage.getLabelRow(1).should('contain', 'evaluated')
       ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluate')
       ManuscriptsPage.clickTableHead(5)

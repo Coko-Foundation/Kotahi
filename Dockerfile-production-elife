@@ -1,5 +1,4 @@
-# IMAGE FOR BUILDING
-FROM node:12.21-alpine as build
+FROM node:12.21-alpine
 
 ARG instance_name
 ARG node_env
@@ -25,37 +24,17 @@ ENV PUBLIC_CLIENT_HOST $public_client_host
 ENV PUBLIC_CLIENT_PORT $public_client_port
 ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
 
-RUN apk add --no-cache git python make g++ bash unzip
+RUN apk add --no-cache git python make g++ bash tar
 
 WORKDIR /home/node/app
 
 COPY . .
-
-#RUN unzip -q -o node_modules_prod.zip && \
-RUN  unzip -q -o node_modules_dev.zip && \
-    mv ./node_modules_dev ./node_modules && \
+RUN chown -R node:node .
+ADD ./node_modules_dev.tar.gz .
+RUN mv ./node_modules_dev ./node_modules && \
     yarn webpack --config webpack/webpack.production.config.js
 
-# IMAGE FOR RUNNING
-FROM node:12.21-alpine as server
-
-WORKDIR /home/node/app
-
-RUN chown -R node:node . && \
-    apk add bash coreutils postgresql-client
-USER node
-
-COPY --chown=node:node ./config ./config 
-COPY --chown=node:node ./public ./public 
-COPY --chown=node:node ./scripts ./scripts 
-COPY --chown=node:node ./server ./server 
-COPY --chown=node:node ./app/storage ./app/storage 
-COPY --chown=node:node ./startServer.js . 
-COPY --chown=node:node ./google_sheets_credentials.json . 
-COPY --chown=node:node ./profiles ./profiles 
-
-COPY --from=build /home/node/app/_build/assets ./_build 
-COPY --from=build /home/node/app/node_modules ./node_modules
+RUN cp -r /home/node/app/_build/assets/* /home/node/app/_build
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
 CMD ["node", "./startServer.js"]
