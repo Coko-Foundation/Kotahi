@@ -47,7 +47,7 @@ RUN apk add bash coreutils postgresql-client
 USER node
 
 COPY --chown=node:node ./node_modules ./node_modules
-COPY --chown=node:node ./node_modules_prod ./node_modules_prod
+#COPY --chown=node:node ./node_modules_prod ./node_modules_prod
 COPY --chown=node:node ./config ./config
 COPY --chown=node:node ./public ./public
 COPY --chown=node:node ./scripts ./scripts
