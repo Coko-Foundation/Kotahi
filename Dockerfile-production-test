@@ -55,8 +55,9 @@ COPY --chown=node:node ./config ./config && \
      --chown=node:node ./app/storage ./app/storage && \
      --chown=node:node ./startServer.js . && \
      --chown=node:node ./google_sheets_credentials.json . && \
-     --chown=node:node ./profiles ./profiles && \
-     --from=build /home/node/app/_build/assets ./_build && \
+     --chown=node:node ./profiles ./profiles 
+
+COPY --from=build /home/node/app/_build/assets ./_build && \
      --from=build /home/node/app/node_modules_prod ./node_modules
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
