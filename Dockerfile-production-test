@@ -27,9 +27,9 @@ ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
 
 RUN apk add --no-cache git python make g++ bash 
 
-RUN ls -la
-
 WORKDIR /home/node/app
+
+RUN ls -la
 
 COPY . .
 
