@@ -37,11 +37,11 @@ const FormProperties = ({
         <Heading>{mode === 'create' ? 'Create Form' : 'Update Form'}</Heading>
         <Section id="form.purpose" key="form.purpose">
           <Legend>Form purpose identifier</Legend>
-          <ValidatedFieldFormik component={TextField} name="purpose" />
+          <ValidatedFieldFormik component={TextField} name="purpose" required />
         </Section>
         <Section id="form.name" key="form.name">
           <Legend>Form Name</Legend>
-          <ValidatedFieldFormik component={TextField} name="name" />
+          <ValidatedFieldFormik component={TextField} name="name" required />
         </Section>
         <Section id="form.description" key="form.description">
           <Legend>Description</Legend>
@@ -102,10 +102,10 @@ const FormProperties = ({
 FormProperties.propTypes = {
   onSubmit: PropTypes.func.isRequired,
   mode: PropTypes.string.isRequired,
-  purpose: PropTypes.string.isRequired,
+  purpose: PropTypes.string,
   structure: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+    name: PropTypes.string,
+    description: PropTypes.string,
     haspopup: PropTypes.string.isRequired,
     popuptitle: PropTypes.string,
     popupdescription: PropTypes.string,
@@ -113,33 +113,32 @@ FormProperties.propTypes = {
   setFieldValue: PropTypes.func.isRequired,
 }
 
-const prepareForSubmit = values => {
-  const cleanedValues = omitBy(values, value => value === '')
-  if (
-    cleanedValues.component !== 'Select' &&
-    cleanedValues.component !== 'CheckboxGroup' &&
-    cleanedValues.component !== 'RadioGroup'
-  )
-    cleanedValues.options = undefined
-
-  return cleanedValues
+FormProperties.defaultProps = {
+  purpose: '',
 }
 
-const FormForm = ({ form, updateForm }) => {
+const prepareForSubmit = (form, values) => {
+  const cleanedValues = omitBy(values, value => value === '')
+
+  const { purpose, created, updated, ...rest } = cleanedValues
+  const newForm = { id: form.id, purpose, structure: rest }
+  return newForm
+}
+
+const FormForm = ({ form, updateForm, createForm }) => {
   return (
     <Formik
       initialValues={{
         description: '',
         popupdescription: '',
-        doiValidation: 'false',
         ...form.structure,
         purpose: form.purpose,
       }}
-      onSubmit={values =>
-        updateForm({
-          variables: { form: prepareForSubmit(values) },
-        })
-      }
+      onSubmit={values => {
+        if (form.id)
+          updateForm({ variables: { form: prepareForSubmit(form, values) } })
+        else createForm({ variables: { form: prepareForSubmit(form, values) } })
+      }}
     >
       {formikProps => (
         <FormProperties
@@ -156,16 +155,18 @@ const FormForm = ({ form, updateForm }) => {
 
 FormForm.propTypes = {
   form: PropTypes.shape({
+    id: PropTypes.string,
     structure: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-      description: PropTypes.string.isRequired,
+      name: PropTypes.string,
+      description: PropTypes.string,
       haspopup: PropTypes.string.isRequired,
       popuptitle: PropTypes.string,
       popupdescription: PropTypes.string,
     }).isRequired,
-    purpose: PropTypes.string.isRequired,
+    purpose: PropTypes.string,
   }).isRequired,
   updateForm: PropTypes.func.isRequired,
+  createForm: PropTypes.func.isRequired,
 }
 
 export default FormForm

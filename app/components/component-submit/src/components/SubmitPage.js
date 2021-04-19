@@ -1,11 +1,12 @@
 import React, { useState } from 'react'
-import { debounce, cloneDeep, set } from 'lodash'
+import { debounce, set } from 'lodash'
 import { gql, useQuery, useMutation } from '@apollo/client'
 import config from 'config'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import Submit from './Submit'
 import { Spinner } from '../../../shared'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
+import pruneEmpty from '../../../../shared/pruneEmpty'
 
 const commentFields = `
   id
@@ -142,7 +143,40 @@ const query = gql`
     }
 
     formForPurpose(purpose: "submit") {
-      structure
+      structure {
+        name
+        description
+        haspopup
+        popuptitle
+        popupdescription
+        children {
+          title
+          shortDescription
+          id
+          component
+          name
+          description
+          doiValidation
+          placeholder
+          parse
+          format
+          options {
+            id
+            label
+            value
+          }
+          validate {
+            id
+            label
+            value
+          }
+          validateValue {
+            minChars
+            maxChars
+            minSize
+          }
+        }
+      }
     }
   }
 `
@@ -245,7 +279,7 @@ const SubmitPage = ({ match, history }) => {
     <Submit
       confirming={confirming}
       createNewVersion={createNewVersion}
-      form={cloneDeep(form)}
+      form={pruneEmpty(form)}
       match={match}
       onChange={handleChange}
       onSubmit={onSubmit}

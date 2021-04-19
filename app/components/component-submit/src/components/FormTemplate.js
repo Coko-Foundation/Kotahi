@@ -297,7 +297,6 @@ const FormTemplate = ({
                       'validateValue',
                       'description',
                       'shortDescription',
-                      'order',
                     ])}
                     validate={composeValidate(
                       element.validate,
@@ -367,7 +366,6 @@ FormTemplate.propTypes = {
         id: PropTypes.string.isRequired,
         component: PropTypes.string.isRequired,
         group: PropTypes.string,
-        order: PropTypes.string, // number as string
         placeholder: PropTypes.string,
         validate: PropTypes.arrayOf(PropTypes.object.isRequired),
         validateValue: PropTypes.objectOf(

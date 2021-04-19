@@ -3,7 +3,7 @@ const Form = require('./form')
 const resolvers = {
   Mutation: {
     deleteForm: async (_, { formId }) => {
-      Form.query().deleteById(formId)
+      await Form.query().deleteById(formId)
       return { query: {} }
     },
     deleteFormElement: async (_, { formId, elementId }) => {
@@ -17,8 +17,7 @@ const resolvers = {
       })
     },
     createForm: async (_, { form }) => {
-      const newForm = Form.query().insertAndFetch(form)
-      return { recordId: newForm.id, record: newForm, query: {} }
+      return Form.query().insertAndFetch(form)
     },
     updateForm: async (_, { form }) => {
       return Form.query().patchAndFetchById(form.id, form)

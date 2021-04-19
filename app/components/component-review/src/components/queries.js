@@ -137,7 +137,40 @@ export const query = gql`
     }
 
     formForPurpose(purpose: "submit") {
-      structure
+      structure {
+        name
+        description
+        haspopup
+        popuptitle
+        popupdescription
+        children {
+          title
+          shortDescription
+          id
+          component
+          name
+          description
+          doiValidation
+          placeholder
+          parse
+          format
+          options {
+            id
+            label
+            value
+          }
+          validate {
+            id
+            label
+            value
+          }
+          validateValue {
+            minChars
+            maxChars
+            minSize
+          }
+        }
+      }
     }
   }
 `

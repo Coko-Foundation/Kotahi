@@ -7,6 +7,12 @@ const typeDefs = `
     structure: FormStructureInput!
   }
 
+  input CreateFormInput {
+    created: DateTime
+    purpose: String!
+    structure: FormStructureInput!
+  }
+
   input FormStructureInput {
     name: String
     description: String
@@ -89,12 +95,6 @@ const typeDefs = `
     minSize: String
   }
 
-  type CreateFormPayload {
-    recordId: ID
-    record: Form
-    query: Query
-  }
-
   type DeleteFormPayload {
     query: Query
   }
@@ -106,7 +106,7 @@ const typeDefs = `
   }
 
   extend type Mutation {
-    createForm(form: FormInput!): CreateFormPayload
+    createForm(form: CreateFormInput!): Form
     updateForm(form: FormInput!): Form
     updateFormElement(element: FormElementInput!, formId: String!): Form
     deleteFormElement(formId: ID!, elementId: ID!): Form

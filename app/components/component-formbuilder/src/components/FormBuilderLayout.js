@@ -3,7 +3,6 @@ import PropTypes from 'prop-types'
 import { forEach } from 'lodash'
 import styled, { withTheme } from 'styled-components'
 import { Tabs, Action, Icon } from '@pubsweet/ui'
-import { v4 as uuid } from 'uuid'
 import { Columns, Details, Form } from './style'
 import ComponentProperties from './ComponentProperties'
 import FormProperties from './FormProperties'
@@ -99,7 +98,6 @@ const FormBuilderLayout = ({
   })
 
   const activeForm = forms.find(f => f.id === activeFormId) ?? {
-    id: uuid(),
     purpose: '',
     structure: {
       children: [],
@@ -142,6 +140,7 @@ const FormBuilderLayout = ({
                 />
               ) : (
                 <FormProperties
+                  createForm={createForm}
                   form={activeForm}
                   key={activeForm.id}
                   updateForm={updateForm}

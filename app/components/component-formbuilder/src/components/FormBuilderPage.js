@@ -3,9 +3,10 @@ import { useQuery, useMutation, gql } from '@apollo/client'
 import { cloneDeep, omitBy } from 'lodash'
 import FormBuilderLayout from './FormBuilderLayout'
 import { Spinner } from '../../../shared'
+import pruneEmpty from '../../../../shared/pruneEmpty'
 
 const createFormMutation = gql`
-  mutation($form: FormInput!) {
+  mutation($form: CreateFormInput!) {
     createForm(form: $form) {
       id
     }
@@ -38,7 +39,13 @@ const deleteFormElementMutation = gql`
 
 const deleteFormMutation = gql`
   mutation($formId: ID!) {
-    deleteForms(formId: $formId)
+    deleteForm(formId: $formId) {
+      query {
+        forms {
+          id
+        }
+      }
+    }
   }
 `
 
@@ -172,6 +179,8 @@ const FormBuilderPage = () => {
   if (loading || !activeFormId) return <Spinner />
   if (error) return JSON.stringify(error)
 
+  const cleanedForms = pruneEmpty(data.forms)
+
   return (
     <FormBuilderLayout
       activeFieldId={activeFieldId}
@@ -179,7 +188,7 @@ const FormBuilderPage = () => {
       createForm={createForm}
       deleteField={deleteFormElement}
       deleteForm={deleteForm}
-      forms={data.forms}
+      forms={cleanedForms}
       moveFieldDown={moveFieldDown}
       moveFieldUp={moveFieldUp}
       setActiveFieldId={setActiveFieldId}
