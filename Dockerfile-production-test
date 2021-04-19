@@ -37,11 +37,10 @@ COPY . .
 
 RUN ls -la
 
-RUN unzip -q -o node_modules_prod.zip
-RUN unzip -q -o node_modules_dev.zip
-RUN mv ./node_modules_dev ./node_modules
-
-RUN ls -la
+RUN unzip -q -o node_modules_prod.zip && \
+    unzip -q -o node_modules_dev.zip && \
+    mv ./node_modules_dev ./node_modules && \
+    ls -la
 
 RUN yarn webpack --config webpack/webpack.production.config.js
 
