@@ -27,12 +27,13 @@ ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
 
 RUN apk add --no-cache git python make g++ bash 
 
-COPY --chown=node:node ./node_modules /home/node/app/node_modules
+RUN ls -la
 
 WORKDIR /home/node/app
-RUN ls -la | grep node_modules
 
 COPY . .
+
+RUN ls -la
 
 RUN yarn webpack --config webpack/webpack.production.config.js
 
