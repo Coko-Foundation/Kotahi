@@ -1,0 +1,67 @@
+# IMAGE FOR BUILDING
+FROM node:12.21-alpine as build
+
+RUN apk add --no-cache unzip
+
+ARG instance_name
+ARG node_env
+ARG server_protocol
+ARG server_host
+ARG server_port
+ARG client_protocol
+ARG client_host
+ARG client_port
+ARG public_client_host
+ARG public_client_protocol
+ARG public_client_port
+
+ENV INSTANCE_NAME $instance_name
+ENV NODE_ENV "production"
+ENV SERVER_PROTOCOL "http"
+ENV SERVER_HOST "localhost"
+ENV SERVER_PORT "3000"
+ENV CLIENT_PROTOCOL "http"
+ENV CLIENT_HOST "0.0.0.0"
+ENV CLIENT_PORT "4000"
+ENV PUBLIC_CLIENT_HOST $public_client_host
+ENV PUBLIC_CLIENT_PORT $public_client_port
+ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
+
+RUN apk add --no-cache git python make g++ bash 
+
+WORKDIR /home/node/app
+
+COPY . .
+
+#RUN unzip -q -o node_modules_prod.zip && \
+RUN  unzip -q -o node_modules_dev.zip && \
+    mv ./node_modules_dev ./node_modules && \
+    yarn webpack --config webpack/webpack.production.config.js
+    #rm -rf ./node_modules
+
+# IMAGE FOR RUNNING
+FROM node:12.21-alpine as server
+
+WORKDIR /home/node/app
+
+RUN chown -R node:node . && \
+    apk add bash coreutils postgresql-client
+USER node
+
+COPY --chown=node:node ./config ./config 
+COPY --chown=node:node ./public ./public 
+COPY --chown=node:node ./scripts ./scripts 
+COPY --chown=node:node ./server ./server 
+COPY --chown=node:node ./app/storage ./app/storage 
+COPY --chown=node:node ./startServer.js . 
+COPY --chown=node:node ./google_sheets_credentials.json . 
+COPY --chown=node:node ./profiles ./profiles 
+
+COPY --from=build /home/node/app/_build/assets ./_build 
+COPY --from=build /home/node/app/node_modules ./node_modules
+#COPY --from=build /home/node/app/node_modules_prod ./node_modules
+
+RUN ls -la ./node_modules
+
+ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
+CMD ["node", "./startServer.js"]
