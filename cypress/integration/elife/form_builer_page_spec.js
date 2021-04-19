@@ -30,11 +30,12 @@ describe('Form builder page tests', () => {
           data.elife.evaluationType,
           data.elife.creator,
         ]
+
         // eslint-disable-next-line no-plusplus
         for (let i = 0; i < 6; i++) {
           FormsPage.getFormBuilderElementName(i).should(
             'contain',
-            formElements[i]
+            formElements[i],
           )
         }
       })
@@ -42,7 +43,8 @@ describe('Form builder page tests', () => {
 
     // check the type of the field and if is required
     it('check form fields type and if are required', () => {
-      const requiredField = 'Required';
+      const requiredField = 'Required'
+
       const typeField = [
         'TextField',
         'TextField',
@@ -51,16 +53,19 @@ describe('Form builder page tests', () => {
         'Select',
         'TextField',
       ]
+
       // eslint-disable-next-line no-plusplus
       for (let i = 0; i < 6; i++) {
         FormsPage.clickFormOption(i)
         FormsPage.getComponentType().should('contain', typeField[i])
-      };
+      }
+
       // eslint-disable-next-line no-plusplus
       for (let j = 0; j < 5; j++) {
         FormsPage.clickFormOption(j)
         FormsPage.getFieldValidate().should('contain', requiredField)
       }
+
       FormsPage.clickFormOption(5)
       FormsPage.getFieldValidate().should('not.contain', 'Required')
     })
@@ -97,6 +102,7 @@ describe('Form builder page tests', () => {
           data.elife.evaluationType,
           data.elife.creator,
         ]
+
         // eslint-disable-next-line no-plusplus
         for (let i = 0; i < 6; i++) {
           SubmissionFormPage.getFormOptionList(i).should(
@@ -127,16 +133,19 @@ describe('Form builder page tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         SubmissionFormPage.clickElementFromFormOptionList(4)
+
         const dropDownOption = [
           data.elife.evaluationTypes.evaluationSummary,
           data.elife.evaluationTypes.peerReview,
           data.elife.evaluationTypes.authorResponse,
         ]
+
         // eslint-disable-next-line no-plusplus
         for (let i = 0; i < 3; i++) {
           SubmissionFormPage.getDropdownOption(i).should(
             'contain',
-            dropDownOption[i])
+            dropDownOption[i],
+          )
         }
       })
     })

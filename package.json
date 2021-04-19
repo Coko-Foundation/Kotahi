@@ -178,7 +178,6 @@
     "xpub-journal": "0.1.0",
     "xpub-validators": "0.0.28",
     "xpub-with-context": "0.2.0"
-    
   },
   "devDependencies": {
     "@babel/core": "7.11.6",
