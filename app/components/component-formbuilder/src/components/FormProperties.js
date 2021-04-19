@@ -1,15 +1,12 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty } from 'lodash'
+import { isEmpty, omitBy } from 'lodash'
 import styled from 'styled-components'
 import { Button, TextField, ValidatedFieldFormik } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
+import { Formik } from 'formik'
 import { AbstractField, RadioBox } from './builderComponents'
 import { Page, Heading } from './style'
-
-const nameText = input => <TextField {...input} />
-
-const idText = input => <TextField {...input} />
 
 export const Legend = styled.div`
   font-size: ${th('fontSizeBase')};
@@ -22,28 +19,29 @@ export const Section = styled.div`
 `
 
 const FormProperties = ({
-  handleSubmit,
+  onSubmit,
   mode,
-  popup,
-  properties,
+  purpose,
   setFieldValue,
-  setPopup,
-}) =>
-  isEmpty(properties) && mode !== 'create' ? ( // TODO Move this check to the wrapper so we don't have to pass in the entire properties just for this
+  structure,
+}) => {
+  const [popup, setPopup] = useState(structure.haspopup)
+
+  return isEmpty(structure) && mode !== 'create' ? (
     <Page>
       <span>&nbsp;</span>
     </Page>
   ) : (
     <Page>
-      <form onSubmit={handleSubmit}>
+      <form onSubmit={onSubmit}>
         <Heading>{mode === 'create' ? 'Create Form' : 'Update Form'}</Heading>
-        <Section id="form.id" key="form.id">
-          <Legend>Form ID</Legend>
-          <ValidatedFieldFormik component={idText} name="id" />
+        <Section id="form.purpose" key="form.purpose">
+          <Legend>Form purpose identifier</Legend>
+          <ValidatedFieldFormik component={TextField} name="purpose" required />
         </Section>
         <Section id="form.name" key="form.name">
           <Legend>Form Name</Legend>
-          <ValidatedFieldFormik component={nameText} name="name" />
+          <ValidatedFieldFormik component={TextField} name="name" required />
         </Section>
         <Section id="form.description" key="form.description">
           <Legend>Description</Legend>
@@ -80,7 +78,7 @@ const FormProperties = ({
         {popup === 'true' && [
           <Section id="popup.title" key="popup.title">
             <Legend>Popup Title</Legend>
-            <ValidatedFieldFormik component={nameText} name="popuptitle" />
+            <ValidatedFieldFormik component={TextField} name="popuptitle" />
           </Section>,
           <Section id="popup.description" key="popup.description">
             <Legend>Description</Legend>
@@ -99,54 +97,76 @@ const FormProperties = ({
       </form>
     </Page>
   )
+}
 
 FormProperties.propTypes = {
-  handleSubmit: PropTypes.func.isRequired,
+  onSubmit: PropTypes.func.isRequired,
   mode: PropTypes.string.isRequired,
-  popup: PropTypes.string.isRequired,
-  properties: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
+  purpose: PropTypes.string,
+  structure: PropTypes.shape({
+    name: PropTypes.string,
+    description: PropTypes.string,
     haspopup: PropTypes.string.isRequired,
     popuptitle: PropTypes.string,
     popupdescription: PropTypes.string,
   }).isRequired,
   setFieldValue: PropTypes.func.isRequired,
-  setPopup: PropTypes.func.isRequired,
 }
 
-const FormPropertiesWrapper = ({
-  onSubmit,
-  mode,
-  properties,
-  setFieldValue,
-}) => {
-  const [popup, setPopup] = useState((properties || {}).haspopup)
+FormProperties.defaultProps = {
+  purpose: '',
+}
+
+const prepareForSubmit = (form, values) => {
+  const cleanedValues = omitBy(values, value => value === '')
+
+  const { purpose, created, updated, ...rest } = cleanedValues
+  const newForm = { id: form.id, purpose, structure: rest }
+  return newForm
+}
+
+const FormForm = ({ form, updateForm, createForm }) => {
   return (
-    <FormProperties
-      handleSubmit={onSubmit}
-      mode={mode}
-      popup={popup}
-      properties={properties}
-      setFieldValue={setFieldValue}
-      setPopup={setPopup}
-    />
+    <Formik
+      initialValues={{
+        description: '',
+        popupdescription: '',
+        ...form.structure,
+        purpose: form.purpose,
+      }}
+      onSubmit={values => {
+        if (form.id)
+          updateForm({ variables: { form: prepareForSubmit(form, values) } })
+        else createForm({ variables: { form: prepareForSubmit(form, values) } })
+      }}
+    >
+      {formikProps => (
+        <FormProperties
+          mode="update"
+          onSubmit={formikProps.handleSubmit}
+          purpose={form.purpose}
+          setFieldValue={formikProps.setFieldValue}
+          structure={form.structure}
+        />
+      )}
+    </Formik>
   )
 }
 
-FormPropertiesWrapper.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  mode: PropTypes.string.isRequired,
-  properties: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    haspopup: PropTypes.string.isRequired,
-    popuptitle: PropTypes.string,
-    popupdescription: PropTypes.string,
+FormForm.propTypes = {
+  form: PropTypes.shape({
+    id: PropTypes.string,
+    structure: PropTypes.shape({
+      name: PropTypes.string,
+      description: PropTypes.string,
+      haspopup: PropTypes.string.isRequired,
+      popuptitle: PropTypes.string,
+      popupdescription: PropTypes.string,
+    }).isRequired,
+    purpose: PropTypes.string,
   }).isRequired,
-  setFieldValue: PropTypes.func.isRequired,
+  updateForm: PropTypes.func.isRequired,
+  createForm: PropTypes.func.isRequired,
 }
 
-export default FormPropertiesWrapper
+export default FormForm

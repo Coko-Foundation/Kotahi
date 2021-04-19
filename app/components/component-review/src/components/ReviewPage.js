@@ -134,7 +134,42 @@ const query = gql`
       }
     }
 
-    getForms
+    formForPurpose(purpose: "submit") {
+      structure {
+        name
+        description
+        haspopup
+        popuptitle
+        popupdescription
+        children {
+          title
+          shortDescription
+          id
+          component
+          name
+          description
+          doiValidation
+          placeholder
+          parse
+          format
+          options {
+            id
+            label
+            value
+          }
+          validate {
+            id
+            label
+            value
+          }
+          validateValue {
+            minChars
+            maxChars
+            minSize
+          }
+        }
+      }
+    }
   }
 `
 
@@ -196,11 +231,10 @@ const ReviewPage = ({ match, ...props }) => {
     )
   }
 
-  const { manuscript, getForms } = data
+  const { manuscript, formForPurpose } = data
 
-  const submissionForm = getForms?.find(f => f.id === 'submit') ?? {
+  const submissionForm = formForPurpose?.structure ?? {
     name: '',
-    id: '',
     children: [],
     description: '',
     haspopup: 'false',

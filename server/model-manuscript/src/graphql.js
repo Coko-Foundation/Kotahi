@@ -3,6 +3,7 @@ const TurndownService = require('turndown')
 const axios = require('axios')
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const credentials = require('../../../google_sheets_credentials.json')
+const Form = require('../../model-form/src/form')
 
 const ManuscriptResolvers = ({ isVersion }) => {
   const resolvers = {
@@ -54,13 +55,13 @@ const ManuscriptResolvers = ({ isVersion }) => {
 const merge = (destination, source) => {
   const updatedManuscript = { ...destination }
 
-  for (const n in source) {
+  Object.values(source).forEach(n => {
     if (typeof updatedManuscript[n] !== 'object' || Array.isArray(source[n])) {
       updatedManuscript[n] = source[n]
     } else if (typeof source[n] === 'object' && !Array.isArray(source[n])) {
       updatedManuscript[n] = merge(updatedManuscript[n], source[n])
     }
-  }
+  })
 
   return updatedManuscript
 }
@@ -80,16 +81,11 @@ const commonUpdateManuscript = async (_, { id, input }, ctx) => {
 const resolvers = {
   Mutation: {
     async createManuscript(_, vars, ctx) {
-      const config = require('config')
+      const submissionForm = await Form.findOneByField('purpose', 'submit')
 
-      const folderPath = `${config.get(
-        'pubsweet-component-xpub-formbuilder.path',
-      )}/`
-
-      const submissionForm = require(`${folderPath}submit.json`)
       const { meta, files } = vars.input
 
-      const parsedSubmissionForm = submissionForm.children
+      const parsedFormStructure = submissionForm.structure.children
         .map(formElement => {
           const parsedName = formElement.name.split('.')[1]
 
@@ -99,10 +95,12 @@ const resolvers = {
               component: formElement.component,
             }
           }
+
+          return undefined
         })
         .filter(x => x !== undefined)
 
-      const emptySubmission = parsedSubmissionForm.reduce((acc, curr) => {
+      const emptySubmission = parsedFormStructure.reduce((acc, curr) => {
         acc[curr.name] =
           curr.component === 'CheckboxGroup' || curr.component === 'LinksInput'
             ? []
@@ -309,7 +307,7 @@ const resolvers = {
     },
     async publishManuscript(_, { id }, ctx) {
       let manuscript = await ctx.models.Manuscript.query().findById(id)
-   
+
       if (['elife'].includes(process.env.INSTANCE_NAME)) {
         const turndownService = new TurndownService({ bulletListMarker: '-' })
 
@@ -351,12 +349,18 @@ const resolvers = {
         }
 
         try {
-          const requestParam = manuscript.hypothesisPublicationId ? `/${manuscript.hypothesisPublicationId}` : ''
-          const requestFunction = manuscript.hypothesisPublicationId ? axios.patch : axios.post
-          const requestURL = 'https://api.hypothes.is/api/annotations' + requestParam
+          const requestParam = manuscript.hypothesisPublicationId
+            ? `/${manuscript.hypothesisPublicationId}`
+            : ''
+
+          const requestFunction = manuscript.hypothesisPublicationId
+            ? axios.patch
+            : axios.post
+
+          const requestURL = `https://api.hypothes.is/api/annotations${requestParam}`
 
           const publishedManuscript = await requestFunction(
-            requestURL, 
+            requestURL,
             requestBody,
             {
               headers: {

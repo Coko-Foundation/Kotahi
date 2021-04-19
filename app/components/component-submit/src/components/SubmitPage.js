@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import { debounce, cloneDeep, set } from 'lodash'
+import { debounce, set } from 'lodash'
 import { gql, useQuery, useMutation } from '@apollo/client'
 import config from 'config'
 import ReactRouterPropTypes from 'react-router-prop-types'
@@ -7,6 +7,7 @@ import Submit from './Submit'
 import { Spinner } from '../../../shared'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 import { publishManuscriptMutation } from '../../../component-review/src/components/queries'
+import pruneEmpty from '../../../../shared/pruneEmpty'
 
 const commentFields = `
   id
@@ -122,7 +123,7 @@ const fragmentFields = `
 `
 
 const query = gql`
-  query($id: ID!, $formId: String!) {
+  query($id: ID!) {
     currentUser {
       id
       username
@@ -143,7 +144,42 @@ const query = gql`
       }
     }
 
-    getForm(formId: $formId)
+    formForPurpose(purpose: "submit") {
+      structure {
+        name
+        description
+        haspopup
+        popuptitle
+        popupdescription
+        children {
+          title
+          shortDescription
+          id
+          component
+          name
+          description
+          doiValidation
+          placeholder
+          parse
+          format
+          options {
+            id
+            label
+            value
+          }
+          validate {
+            id
+            label
+            value
+          }
+          validateValue {
+            minChars
+            maxChars
+            minSize
+          }
+        }
+      }
+    }
   }
 `
 
@@ -192,7 +228,7 @@ const SubmitPage = ({ match, history }) => {
   }
 
   const { data, loading, error } = useQuery(query, {
-    variables: { id: match.params.version, formId: 'submit' },
+    variables: { id: match.params.version },
     partialRefetch: true,
   })
 
@@ -205,7 +241,7 @@ const SubmitPage = ({ match, history }) => {
   if (error) return JSON.stringify(error)
 
   const manuscript = data?.manuscript
-  const form = data?.getForm
+  const form = data?.formForPurpose?.structure
 
   const updateManuscript = (versionId, manuscriptDelta) => {
     update({
@@ -224,14 +260,14 @@ const SubmitPage = ({ match, history }) => {
     debouncers[path] = debouncers[path] || debounce(updateManuscript, 3000)
     return debouncers[path](versionId, manuscriptDelta)
   }
-  
-  const republish = (manuscriptId) => {
+
+  const republish = manuscriptId => {
     publishManuscript({
-      variables: { 
-        id: manuscriptId
+      variables: {
+        id: manuscriptId,
       },
     })
-    
+
     if (['aperture', 'colab'].includes(process.env.INSTANCE_NAME)) {
       history.push(`${urlFrag}/dashboard`)
     }
@@ -268,12 +304,12 @@ const SubmitPage = ({ match, history }) => {
     <Submit
       confirming={confirming}
       createNewVersion={createNewVersion}
-      form={cloneDeep(form)}
+      form={pruneEmpty(form)}
       match={match}
       onChange={handleChange}
       onSubmit={onSubmit}
-      republish={republish}
       parent={manuscript}
+      republish={republish}
       toggleConfirming={toggleConfirming}
       versions={versions}
     />

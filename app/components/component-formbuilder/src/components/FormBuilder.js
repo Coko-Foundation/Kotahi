@@ -4,6 +4,7 @@ import styled, { withTheme } from 'styled-components'
 import { unescape } from 'lodash'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Icon, Action } from '@pubsweet/ui'
+import { v4 as uuid } from 'uuid'
 import { Page, Heading } from './style'
 
 const Element = styled.div`
@@ -157,7 +158,7 @@ const AddElementButton = ({ addElement }) => (
         onClick={() =>
           addElement({
             title: 'New Component',
-            id: `${Date.now()}`,
+            id: uuid(),
           })
         }
       >
@@ -185,7 +186,7 @@ const FormBuilder = ({
 }) => {
   return (
     <Page>
-      {form.children.map(element => (
+      {form.structure.children.map(element => (
         <BuilderElement
           deleteField={deleteField}
           element={element}
@@ -200,7 +201,7 @@ const FormBuilder = ({
       <AddElementButton
         addElement={newElement => {
           addField({
-            variables: { element: JSON.stringify(newElement), formId: form.id },
+            variables: { element: newElement, formId: form.id },
           })
           setActiveFieldId(newElement.id)
         }}
@@ -212,14 +213,17 @@ const FormBuilder = ({
 FormBuilder.propTypes = {
   activeFieldId: PropTypes.string,
   form: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    children: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        component: PropTypes.string,
-      }).isRequired,
-    ).isRequired,
+    id: PropTypes.string,
+    purpose: PropTypes.string,
+    structure: PropTypes.shape({
+      children: PropTypes.arrayOf(
+        PropTypes.shape({
+          id: PropTypes.string.isRequired,
+          title: PropTypes.string.isRequired,
+          component: PropTypes.string,
+        }).isRequired,
+      ).isRequired,
+    }),
   }).isRequired,
   setActiveFieldId: PropTypes.func.isRequired,
   addField: PropTypes.func.isRequired,

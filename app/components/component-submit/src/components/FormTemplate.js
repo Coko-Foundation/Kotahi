@@ -204,6 +204,7 @@ const FormTemplate = ({
 
               return
             }
+
             const hasErrors = Object.keys(await validateForm()).length !== 0
 
             // If there are errors, do a fake submit
@@ -232,7 +233,8 @@ const FormTemplate = ({
     ? 'Submit Evaluation'
     : 'Submit your research object'
 
-  if ( manuscript.status === articleStatuses.published ) submitButtonText = 'Re-Publish'
+  if (manuscript.status === articleStatuses.published)
+    submitButtonText = 'Re-Publish'
 
   const hasPopup = form.haspopup ? JSON.parse(form.haspopup) : false
   return (
@@ -289,7 +291,6 @@ const FormTemplate = ({
                       'validateValue',
                       'description',
                       'shortDescription',
-                      'order',
                     ])}
                     aria-label={element.placeholder || element.title}
                     component={elements[element.component]}
@@ -318,7 +319,7 @@ const FormTemplate = ({
                       element.validateValue,
                       element.name,
                       JSON.parse(
-                        element.DoiValidation ? element.DoiValidation : false,
+                        element.doiValidation ? element.doiValidation : false,
                       ),
                       client,
                       element.component,
@@ -381,7 +382,6 @@ FormTemplate.propTypes = {
         id: PropTypes.string.isRequired,
         component: PropTypes.string.isRequired,
         group: PropTypes.string,
-        order: PropTypes.string, // number as string
         placeholder: PropTypes.string,
         validate: PropTypes.arrayOf(PropTypes.object.isRequired),
         validateValue: PropTypes.objectOf(

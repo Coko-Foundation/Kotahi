@@ -1,11 +1,8 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
-import { isEmpty, map, omitBy } from 'lodash'
+import { isEmpty, omitBy } from 'lodash'
 import { Formik } from 'formik'
-
 import { ValidatedFieldFormik, Menu, Button } from '@pubsweet/ui'
-
-import FormProperties from './FormProperties'
 import components from './config/Elements'
 import * as elements from './builderComponents'
 import { Section, Legend, Page, Heading } from './style'
@@ -25,32 +22,35 @@ const ComponentProperties = ({
   selectedComponent,
   setComponentType,
   setFieldValue,
-}) => (
-  <Page>
-    <form onSubmit={onSubmit}>
-      <Heading>Component Properties</Heading>
-      <Section>
-        <Legend space>Component Type</Legend>
-        <ValidatedFieldFormik
-          component={MenuComponents}
-          name="component"
-          onChange={value => {
-            setComponentType(value)
-            setFieldValue('component', value)
-          }}
-        />
-      </Section>
-      {selectedComponent &&
-        map(components[selectedComponent], (value, key) => (
+}) => {
+  const componentProperties = components[selectedComponent] ?? {}
+
+  const editableProperties = Object.entries(componentProperties).filter(
+    ([key, value]) => key !== 'id',
+  )
+
+  return (
+    <Page key={selectedComponent}>
+      <form onSubmit={onSubmit}>
+        <Heading>Component Properties</Heading>
+        <Section>
+          <Legend space>Component Type</Legend>
+          <ValidatedFieldFormik
+            component={MenuComponents}
+            name="component"
+            onChange={value => {
+              setComponentType(value)
+              setFieldValue('component', value)
+            }}
+          />
+        </Section>
+        {editableProperties.map(([key, value]) => (
           <Section key={key}>
             <Legend space>{`Field ${
-              key === 'DoiValidation'
-                ? components[selectedComponent][key].props.label
-                : key
+              key === 'doiValidation' ? value.props.label : key
             }`}</Legend>
             <ValidatedFieldFormik
               component={elements[value.component].default}
-              key={`${selectedComponent}-${key}`}
               name={key}
               onChange={val => {
                 if (isEmpty(val)) {
@@ -64,12 +64,13 @@ const ComponentProperties = ({
             />
           </Section>
         ))}
-      <Button primary type="submit">
-        Update Component
-      </Button>
-    </form>
-  </Page>
-)
+        <Button primary type="submit">
+          Update Component
+        </Button>
+      </form>
+    </Page>
+  )
+}
 
 ComponentProperties.propTypes = {
   onSubmit: PropTypes.func.isRequired,
@@ -82,28 +83,6 @@ ComponentProperties.defaultProps = {
   selectedComponent: null,
 }
 
-const UpdateForm = ({ onSubmit, properties, setFieldValue }) => (
-  <FormProperties
-    mode="update"
-    onSubmit={onSubmit}
-    properties={properties}
-    setFieldValue={setFieldValue}
-  />
-)
-
-UpdateForm.propTypes = {
-  onSubmit: PropTypes.func.isRequired,
-  properties: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string.isRequired,
-    haspopup: PropTypes.string.isRequired,
-    popuptitle: PropTypes.string,
-    popupdescription: PropTypes.string,
-  }).isRequired,
-  setFieldValue: PropTypes.func.isRequired,
-}
-
 const prepareForSubmit = values => {
   const cleanedValues = omitBy(values, value => value === '')
   if (
@@ -112,46 +91,21 @@ const prepareForSubmit = values => {
     cleanedValues.component !== 'RadioGroup'
   )
     cleanedValues.options = undefined
-  return JSON.stringify(cleanedValues)
+  return cleanedValues
 }
 
-const ComponentForm = ({
-  fieldOrForm,
-  isField,
-  formId,
-  updateForm,
-  updateField,
-}) => {
-  const [componentType, setComponentType] = useState(fieldOrForm.component)
-
-  if (!isField)
-    return (
-      <Formik
-        initialValues={{
-          description: '',
-          popupdescription: '',
-          ...fieldOrForm,
-        }}
-        onSubmit={values =>
-          updateForm({
-            variables: { formId: values.id, form: prepareForSubmit(values) },
-          })
-        }
-      >
-        {formikProps => (
-          <UpdateForm
-            onSubmit={formikProps.handleSubmit}
-            properties={fieldOrForm}
-            setFieldValue={formikProps.setFieldValue}
-          />
-        )}
-      </Formik>
-    )
+const ComponentForm = ({ field, formId, updateField }) => {
+  const [componentType, setComponentType] = useState(field.component)
 
   return (
     <Formik
-      initialValues={{ options: [], description: '', ...fieldOrForm }}
-      key={fieldOrForm.id}
+      initialValues={{
+        options: [],
+        description: '',
+        doiValidation: 'false',
+        ...field,
+      }}
+      key={field.id}
       onSubmit={values =>
         updateField({
           variables: {
@@ -174,13 +128,11 @@ const ComponentForm = ({
 }
 
 ComponentForm.propTypes = {
-  fieldOrForm: PropTypes.shape({
+  field: PropTypes.shape({
     id: PropTypes.string.isRequired,
     component: PropTypes.string,
   }).isRequired,
-  isField: PropTypes.bool.isRequired,
   formId: PropTypes.string.isRequired,
-  updateForm: PropTypes.func.isRequired,
   updateField: PropTypes.func.isRequired,
 }
 
