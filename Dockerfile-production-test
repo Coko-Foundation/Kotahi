@@ -48,14 +48,14 @@ RUN chown -R node:node . && \
     apk add bash coreutils postgresql-client
 USER node
 
-COPY --chown=node:node ./config ./config && \
-     --chown=node:node ./public ./public && \
-     --chown=node:node ./scripts ./scripts && \
-     --chown=node:node ./server ./server && \
-     --chown=node:node ./app/storage ./app/storage && \
-     --chown=node:node ./startServer.js . && \
-     --chown=node:node ./google_sheets_credentials.json . && \
-     --chown=node:node ./profiles ./profiles 
+COPY --chown=node:node ./config ./config 
+COPY --chown=node:node ./public ./public 
+COPY --chown=node:node ./scripts ./scripts 
+COPY --chown=node:node ./server ./server 
+COPY --chown=node:node ./app/storage ./app/storage 
+COPY --chown=node:node ./startServer.js . 
+COPY --chown=node:node ./google_sheets_credentials.json . 
+COPY --chown=node:node ./profiles ./profiles 
 
 COPY --from=build /home/node/app/_build/assets ./_build 
 COPY --from=build /home/node/app/node_modules ./node_modules
