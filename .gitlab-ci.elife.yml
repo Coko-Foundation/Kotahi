@@ -20,19 +20,8 @@ build:
     - |
       if [ -z "$DOCKERHUB_USERNAME_ELIFE" ] || [ -z "$DOCKERHUB_PASSWORD_ELIFE" ]; then echo "Not pushing" && exit 0; fi
       docker login -u $DOCKERHUB_USERNAME_ELIFE -p $DOCKERHUB_PASSWORD_ELIFE
-      docker pull $IMAGE_ORG/$IMAGE_NAME:latest || true
-      # docker build \
-      # --build-arg instance_name=elife \
-      # --build-arg public_client_host=elife.kotahi.cloud \
-      # --build-arg public_client_port=443 \
-      # --build-arg public_client_protocol=https \
-      # --file ./Dockerfile-production \
-      # --cache-from $CI_REGISTRY_IMAGE:latest \
-      # --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA \
-      # --tag $IMAGE_ORG/$IMAGE_NAME:latest .
+      docker pull $IMAGE_ORG/$IMAGE_NAME-dev:latest || true
       docker build --build-arg instance_name=elife --file ./Dockerfile-ci --cache-from $IMAGE_ORG/$IMAGE_NAME-dev:latest --tag $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME-dev:latest .
-      docker push $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
-      docker push $IMAGE_ORG/$IMAGE_NAME:latest
       docker push $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
       docker push $IMAGE_ORG/$IMAGE_NAME-dev:latest
 
