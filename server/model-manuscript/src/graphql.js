@@ -388,10 +388,10 @@ const resolvers = {
 
       if (process.env.INSTANCE_NAME === 'ncrc') {
         // eslint-disable-next-line
-        const submissionForm = require('../../../app/storage/forms-ncrc/submit.json')
+        const submissionForm = await Form.findOneByField('purpose', 'submit')
         const spreadsheetId = '1OvWJj7ZTFhniC4KbFNbskuYSNMftsG2ocKuY-i9ezVA'
 
-        const fieldsOrder = submissionForm.children
+        const fieldsOrder = submissionForm.structure.children
           .filter(el => el.name)
           .map(formElement => formElement.name.split('.')[1])
 
