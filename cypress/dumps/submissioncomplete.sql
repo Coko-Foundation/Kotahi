@@ -220,6 +220,22 @@ CREATE TABLE public.files (
 ALTER TABLE public.files OWNER TO kotahidev;
 
 --
+-- Name: forms; Type: TABLE; Schema: public; Owner: kotahidev
+--
+
+CREATE TABLE public.forms (
+    id UUID NOT NULL DEFAULT public.gen_random_uuid(),
+    type TEXT NOT NULL DEFAULT 'form',
+    created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    updated TIMESTAMP WITH TIME ZONE,
+    purpose TEXT NOT NULL,
+    structure JSONB NOT NULL,
+    CONSTRAINT pkey_forms PRIMARY KEY (id)
+);
+
+ALTER TABLE public.forms OWNER TO kotahidev;
+
+--
 -- Name: identities; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
@@ -416,6 +432,130 @@ INSERT INTO public.channels (id, manuscript_id, team_id, created, updated, topic
 --
 -- Data for Name: files; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
+
+
+
+--
+-- Data for Name: forms; Type: TABLE DATA; Schema: public; Owner: kotahidev
+--
+
+INSERT INTO public.forms (purpose, structure) VALUES ('submit', '{
+  "name": "eLife Submission Form",
+  "children": [
+    {
+      "options": [],
+      "title": "Article ID",
+      "id": "bf66a4ed-427b-4329-b6f7-6c53eeec5ac6",
+      "component": "TextField",
+      "name": "submission.articleId",
+      "description": "",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "48179c76-55b3-41b8-b330-6115dcbd9b2a"
+        }
+      ]
+    },
+    {
+      "options": [],
+      "title": "Article URL",
+      "id": "5a22ec26-3885-432c-8c80-b207a62a7b04",
+      "component": "TextField",
+      "name": "submission.articleURL",
+      "doiValidation": "true",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "15c4e0f8-888e-4c83-b0c6-0f6250eea43a"
+        }
+      ]
+    },
+    {
+      "options": [],
+      "title": "bioRxiv article URL",
+      "id": "b100e6a0-b00e-413c-823b-862351e9690f",
+      "component": "TextField",
+      "name": "submission.biorxivURL",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "20708da4-7999-49c0-9881-d28f2ce9f825"
+        }
+      ]
+    },
+    {
+      "options": [],
+      "title": "Description",
+      "id": "ec5e5f89-282c-42e9-bde2-d35816152362",
+      "component": "TextField",
+      "name": "submission.description",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "7778fd1c-3e8f-42c8-8e42-71c33ea3daa2"
+        }
+      ]
+    },
+    {
+      "title": "Evaluation Content",
+      "id": "e6b54b3e-3ecf-4d00-b67e-6d4b387de5be",
+      "component": "AbstractEditor",
+      "name": "submission.evaluationContent",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "c99ade6e-8981-4acd-b85c-f7df49eaf901"
+        }
+      ]
+    },
+    {
+      "options": [
+        {
+          "label": "Evaluation Summary",
+          "value": "evalutationSummary",
+          "id": "e35b17c8-2a88-4d68-b4b0-4c338fca4c89"
+        },
+        {
+          "label": "Peer Review",
+          "value": "peerReview",
+          "id": "dfe49834-1139-4238-a12d-329bc8362993"
+        },
+        {
+          "value": "authorResponse",
+          "label": "Author Response",
+          "id": "2b4c67ea-03c9-4b23-89f2-cf53f1b344d9"
+        }
+      ],
+      "title": "Evaluation Type",
+      "id": "40137c8c-a3ae-4f99-8da3-d1efd498c394",
+      "component": "Select",
+      "name": "submission.evalType",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "b992febf-c0ab-4a48-9c87-e6f67d8c0d2c"
+        }
+      ]
+    },
+    {
+      "options": [],
+      "title": "Creator",
+      "id": "521b03c0-67ef-461e-8d07-055dc56c7007",
+      "component": "TextField",
+      "name": "submission.creator",
+      "validate": []
+    }
+  ],
+  "description": "<p>eLife Form</p>",
+  "haspopup": "false"
+}
+');
 
 
 
