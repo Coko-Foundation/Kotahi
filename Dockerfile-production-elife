@@ -53,11 +53,10 @@ COPY --chown=node:node ./app/storage ./app/storage
 COPY --chown=node:node ./startServer.js . 
 COPY --chown=node:node ./google_sheets_credentials.json . 
 COPY --chown=node:node ./profiles ./profiles 
-
-COPY --from=build /home/node/app/package.json ./package.json
-COPY --from=build /home/node/app/yarn.lock ./yarn.lock
+COPY --chown=node:node ./package.json .
+COPY --chown=node:node ./yarn.lock .
 COPY --from=build /home/node/app/_build/assets ./_build 
-COPY --from=build /home/node/app/node_modules ./node_modules
+ADD ./node_modules_dev.zip .
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
 CMD ["node", "./startServer.js"]
