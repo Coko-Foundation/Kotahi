@@ -51,22 +51,25 @@ const ManuscriptResolvers = ({ isVersion }) => {
   return resolvers
 }
 
+const merge = (destination, source) => {
+  const updatedManuscript = Object.assign({}, destination)
+
+  for (let n in source) {
+      if (typeof updatedManuscript[n] !== 'object' || Array.isArray(source[n])) {
+        updatedManuscript[n] = source[n]
+      } else if (typeof source[n] === 'object' && !Array.isArray(source[n])) {
+        updatedManuscript[n] = merge(updatedManuscript[n], source[n])
+      }
+  }
+  
+  return updatedManuscript
+};
+
 const commonUpdateManuscript = async (_, { id, input }, ctx) => {
   const manuscriptDelta = JSON.parse(input)
   const manuscript = await ctx.models.Manuscript.query().findById(id)
 
-  const updatedManuscript = {
-    ...manuscript,
-    ...manuscriptDelta,
-    submission: {
-      ...manuscript.submission,
-      ...manuscriptDelta.submission,
-    },
-    meta: {
-      ...manuscript.meta,
-      ...manuscriptDelta.meta,
-    },
-  }
+  const updatedManuscript = merge(manuscript, manuscriptDelta)
 
   // if (manuscript.status === 'revise') {
   //   return manuscript.createNewVersion(update)
