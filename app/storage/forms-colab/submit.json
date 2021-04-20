@@ -1,25 +1,15 @@
 {
   "name": "Research Object Submission Form",
-  "id": "submit",
   "children": [
     {
       "title": "Research object links",
-      "id": "1591192678688",
+      "id": "534eb7b9-f1fc-43b7-ba79-184efb30c8e7",
       "component": "LinksInput",
-      "name": "submission.links",
-      "placeholder": "Enter your links, separated by commas",
-      "parse": {
-        "value": "split",
-        "label": "Split"
-      },
-      "format": {
-        "value": "join",
-        "label": "Join"
-      }
+      "name": "submission.links"
     },
     {
       "title": "Title",
-      "id": "1593634996801",
+      "id": "8afe555d-30e5-4bc8-9826-6a9dc5d34760",
       "component": "TextField",
       "name": "meta.title",
       "placeholder": "Enter the manuscript's title",
@@ -27,14 +17,15 @@
     },
     {
       "title": "Name",
-      "id": "1531303631370",
+      "id": "d9d64549-7bd3-4960-b53f-87e59fc91a97",
       "component": "TextField",
       "name": "submission.name",
       "placeholder": "Enter your name",
       "validate": [
         {
           "value": "minChars",
-          "label": "minimum Characters"
+          "label": "minimum Characters",
+          "id": "9f4daa00-3627-4d47-b349-db4ea434c570"
         }
       ],
       "validateValue": {
@@ -43,21 +34,21 @@
     },
     {
       "title": "Affiliation",
-      "id": "1531303727228",
+      "id": "21a80900-76b6-4c20-be49-b943c3b91f39",
       "component": "TextField",
       "name": "submission.affiliation",
       "placeholder": "Enter your affiliation"
     },
     {
       "title": "Email and contact information",
-      "id": "1531726163478",
+      "id": "dc56ca73-4b7e-4c5e-9809-5411bc76ad70",
       "component": "TextField",
       "name": "submission.contact",
       "placeholder": "Enter your contact information"
     },
     {
       "title": "Cover letter",
-      "id": "1591172762874",
+      "id": "e2ad9814-8a57-4ebf-80d5-d95d712bd7c5",
       "component": "AbstractEditor",
       "name": "submission.cover",
       "description": "<p>Cover letter describing submission, relevant implications, and timely information to consider</p>",
@@ -65,45 +56,49 @@
     },
     {
       "title": "Data and Code availability statements",
-      "id": "1591173076622",
+      "id": "0c45e517-2751-45e6-8a1a-b15efd5fbb1f",
       "component": "AbstractEditor",
       "name": "submission.datacode",
       "placeholder": "Enter your data and code availability statement"
     },
     {
       "title": "Ethics statement",
-      "id": "1591173029656",
+      "id": "57f806cc-b60a-4040-8e39-de84604f1de7",
       "component": "AbstractEditor",
       "name": "submission.ethics",
       "placeholder": "Enter your ethics statements"
     },
     {
       "title": "Type of Research Object",
-      "id": "1531303833528",
+      "id": "f9075229-073b-4c7e-834d-3fa5efc7683f",
       "component": "Select",
       "name": "submission.objectType",
       "options": [
         {
           "value": "dataset",
-          "label": "Dataset"
+          "label": "Dataset",
+          "id": "a0cfcf47-7fb6-43df-ad45-edcd7d7246cc"
         },
         {
           "value": "software",
-          "label": "Software"
+          "label": "Software",
+          "id": "45538a11-2dfc-40aa-bcd5-fe926f7446af"
         },
         {
           "value": "figure",
-          "label": "Figure"
+          "label": "Figure",
+          "id": "4a97d3c9-8de6-489f-8cd2-63f83f7007d9"
         },
         {
           "value": "notebook",
-          "label": "Notebook"
+          "label": "Notebook",
+          "id": "2b5ada46-a709-4fcb-a16a-b75f64bc3f24"
         }
       ]
     },
     {
       "title": "Suggested reviewers",
-      "id": "1531304848635",
+      "id": "eb9a37e2-70ac-475d-b613-2b25a0861e1e",
       "component": "TextField",
       "placeholder": "Add reviewer names...",
       "name": "submission.suggested",
@@ -112,14 +107,14 @@
     },
     {
       "title": "Upload supplementary materials",
-      "id": "1531305332347",
+      "id": "26ba70a0-5a98-426f-9477-ed40514574e4",
       "component": "SupplementaryFiles",
       "description": "<p>Upload your files.</p>",
       "name": "fileName"
     },
     {
       "title": "Keywords",
-      "id": "1531303777701",
+      "id": "c92c8d81-e1a5-4a52-9c52-5908df397f6f",
       "component": "TextField",
       "name": "submission.keywords",
       "placeholder": "Enter keywords...",
@@ -132,27 +127,31 @@
       "validate": [
         {
           "value": "minChars",
-          "label": "minimum Characters"
+          "label": "minimum Characters",
+          "id": "b58639fc-dd26-4d48-8f7a-fd7b47d27f95"
         },
         {
           "value": "required",
-          "label": "Required"
+          "label": "Required",
+          "id": "1ea50f87-edde-47ac-b789-abb7115db5c4"
         }
       ]
     },
     {
       "title": "Did your study involve healthy subjects only or patients (note that patient studies may also involve healthy subjects)",
-      "id": "1591193412418",
+      "id": "bfc85518-dd16-4906-9f9a-d7182f8825c4",
       "component": "Select",
       "name": "submission.subjects",
       "options": [
         {
           "label": "Healthy subjects",
-          "value": "healthy_subjects"
+          "value": "healthy_subjects",
+          "id": "e21c5d86-4d89-4af3-84f8-e39f2c4be1f7"
         },
         {
           "label": "Patients",
-          "value": "patients"
+          "value": "patients",
+          "id": "9b6b193a-bcbf-4fca-9ea0-94faf4f03516"
         }
       ],
       "description": "<p></p>",
@@ -160,21 +159,24 @@
     },
     {
       "title": "If your research involved human subjects, was the research approved by the relevant Institutional Review Board or ethics panel?",
-      "id": "1591193588182",
+      "id": "0a7d3452-2e71-4882-b807-fefbe627df98",
       "component": "Select",
       "name": "submission.irb",
       "options": [
         {
           "label": "Yes",
-          "value": "yes"
+          "value": "yes",
+          "id": "1f468a54-e761-43df-ba41-da59e4663347"
         },
         {
           "label": "No",
-          "value": "no"
+          "value": "no",
+          "id": "5903646a-ce26-4b7e-9ed0-691665704b9c"
         },
         {
           "label": " Not applicable (My Research Object does not involve human subjects) ",
-          "value": "N/A"
+          "value": "N/A",
+          "id": "56dcb442-c205-4fb8-95fb-73a8664deb13"
         }
       ],
       "description": "<p><i>NOTE: Any human subjects studies without IRB approval will be automatically rejected.</i></p>",
@@ -182,90 +184,106 @@
     },
     {
       "title": "Was any animal research approved by the relevant IACUC or other animal research panel?",
-      "id": "1591343661290",
+      "id": "60213c9b-7cc1-4541-8685-e640017986ab",
       "component": "Select",
       "name": "submission.animal_research_approval",
       "description": "<p><i>NOTE: Any animal studies without IACUC approval will be automatically rejected.</i></p>",
       "options": [
         {
           "label": "Yes",
-          "value": "yes"
+          "value": "yes",
+          "id": "cabe2138-ab33-4291-8327-321bbd9fb0da"
         },
         {
           "label": "No",
-          "value": "no"
+          "value": "no",
+          "id": "6c0cedbb-72b5-4695-9c07-22b4f67c954c"
         },
         {
           "label": " Not applicable (My Research Object does not involve animal subjects)",
-          "value": "N/A"
+          "value": "N/A",
+          "id": "34758b25-d14a-4aac-97ca-16dfcb61c2e6"
         }
       ],
       "shortDescription": "Animal research panel"
     },
     {
       "title": "Please indicate which methods were used in your research:",
-      "id": "1591343849679",
+      "id": "56d75f5e-1a58-4281-aefa-a96b7ced5c16",
       "component": "CheckboxGroup",
       "name": "submission.methods",
       "options": [
         {
           "label": "Structural MRI",
-          "value": "Structural MRI"
+          "value": "Structural MRI",
+          "id": "a0c44634-60e3-4e88-9d10-4726399779f7"
         },
         {
           "label": "Functional MRI",
-          "value": "Functional MRI"
+          "value": "Functional MRI",
+          "id": "a3b9a7e3-5109-489b-8ccf-9293fb401efb"
         },
         {
           "label": "Diffusion MRI",
-          "value": "Diffusion MRI"
+          "value": "Diffusion MRI",
+          "id": "14c4c147-ad59-44fb-9571-8f9c246505dc"
         },
         {
           "label": "EEG/ERP",
-          "value": "EEG/ERP"
+          "value": "EEG/ERP",
+          "id": "cedc1517-7227-47f4-a080-8d474fa2661f"
         },
         {
           "label": "Neurophysiology",
-          "value": "Neurophysiology"
+          "value": "Neurophysiology",
+          "id": "3cb7217e-123e-4961-9c36-7e60eccbbe30"
         },
         {
           "label": "PET",
-          "value": "PET"
+          "value": "PET",
+          "id": "6ec63aea-5f84-4125-9803-a8aab7c5f295"
         },
         {
           "label": "MEG",
-          "value": "MEG"
+          "value": "MEG",
+          "id": "65056bd5-b122-4312-9514-d143a55b220d"
         },
         {
           "label": "Optical Imaging",
-          "value": "Optical Imaging"
+          "value": "Optical Imaging",
+          "id": "3ebda3d1-47b9-483a-9cc8-1195e19d0132"
         },
         {
           "label": "Postmortem anatomy",
-          "value": "Postmortem anatomy"
+          "value": "Postmortem anatomy",
+          "id": "a85839f2-0025-41ce-8641-bfdb08368949"
         },
         {
           "label": "TMS",
-          "value": "TMS"
+          "value": "TMS",
+          "id": "f619cb7e-2c2d-4a79-b787-887ed2abec8a"
         },
         {
           "label": "Behavior",
-          "value": "Behavior"
+          "value": "Behavior",
+          "id": "258f4475-1ce0-43d7-9976-687b5b85a8f8"
         },
         {
           "label": "Neuropsychological testing",
-          "value": "Neuropsychological testing"
+          "value": "Neuropsychological testing",
+          "id": "dd736e0e-97ce-42c3-8d78-8f40f31deb60"
         },
         {
           "label": "Computational modeling",
-          "value": "Computational modeling"
+          "value": "Computational modeling",
+          "id": "aafefcde-814a-471d-a2be-ff0d74298220"
         }
       ],
       "shortDescription": "Methods"
     },
     {
       "title": "If you used other research methods, please specify:",
-      "id": "1591344092275",
+      "id": "2127d4e3-4b29-4bb7-9c97-740fa96fb166",
       "component": "TextField",
       "name": "submission.otherMethods",
       "placeholder": "Enter any additional methods used, if applicable",
@@ -273,40 +291,46 @@
     },
     {
       "title": "For human MRI, what field strength scanner do you use?",
-      "id": "1591344209443",
+      "id": "a3b8c566-a9cf-4f3c-97f7-26c168876eb7",
       "component": "Select",
       "name": "submission.humanMRI",
       "options": [
         {
           "label": "1T",
-          "value": "1T"
+          "value": "1T",
+          "id": "c88aa55d-9897-40bb-8612-f805d3a01c62"
         },
         {
           "label": "1.5T",
-          "value": "1.5T"
+          "value": "1.5T",
+          "id": "1c47df67-3054-46d2-8994-2daf327089e4"
         },
         {
           "label": "2T",
-          "value": "2T"
+          "value": "2T",
+          "id": "fcec2633-3419-4333-b003-c74b7e98b780"
         },
         {
           "label": "3T",
-          "value": "3T"
+          "value": "3T",
+          "id": "5de1dd23-1ed4-4f30-b961-4925e860d190"
         },
         {
           "label": "4T",
-          "value": "4T"
+          "value": "4T",
+          "id": "d9492f78-9a93-4369-85fd-a4b74a7e216f"
         },
         {
           "label": "7T",
-          "value": "7T"
+          "value": "7T",
+          "id": "97671356-b3c0-4de3-b711-75be5932c3b5"
         }
       ],
       "shortDescription": "MRI strength"
     },
     {
       "title": "If other, please specify:",
-      "id": "1591345370930",
+      "id": "408b4f32-fa7b-4dd1-9803-1e7669d6dfd5",
       "component": "TextField",
       "name": "submission.humanMRIother",
       "validate": [],
@@ -317,65 +341,72 @@
     },
     {
       "title": "Which processing packages did you use for your study?",
-      "id": "1591345419676",
+      "id": "ba690a38-25fa-41f6-adcb-e067a11d894f",
       "component": "CheckboxGroup",
       "name": "submission.packages",
       "options": [
         {
           "label": "AFNI",
-          "value": "AFNI"
+          "value": "AFNI",
+          "id": "ea4d155e-85c3-430b-b185-f47f1621b138"
         },
         {
           "label": "SPM",
-          "value": "SPM"
+          "value": "SPM",
+          "id": "0468acc8-d1cf-48e8-b54b-ae8995ff90a9"
         },
         {
           "label": "Brain Voyager",
-          "value": "Brain Voyager"
+          "value": "Brain Voyager",
+          "id": "9cc98e0b-5cd9-4932-ab09-ab02d1cc50ae"
         },
         {
           "label": "FSL",
-          "value": "FSL"
+          "value": "FSL",
+          "id": "54b3c038-6d83-4eb5-b0c5-8232ab76b4ff"
         },
         {
           "label": "Analyze",
-          "value": "Analyze"
+          "value": "Analyze",
+          "id": "0977fc54-f2c2-4ea6-9602-aacf3beae653"
         },
         {
           "label": "Free Surfer",
-          "value": "Free Surfer"
+          "value": "Free Surfer",
+          "id": "76d31c46-bb6c-421f-b8aa-fe752c867cf6"
         },
         {
           "label": "LONI Pipeline",
-          "value": "LONI Pipeline"
+          "value": "LONI Pipeline",
+          "id": "407854de-e30f-4989-b61c-398bfa8bc0dc"
         }
       ],
       "shortDescription": "Processing packages"
     },
     {
       "title": "If you used any other processing packages, please list them here:",
-      "id": "1591345560536",
+      "id": "1aa17251-b64b-40df-aa86-ba9e7da2b5d7",
       "component": "TextField",
       "name": "submission.otherPackages",
       "shortDescription": "Other processing packages"
     },
     {
       "title": "Provide references using author date format:",
-      "id": "1591345620839",
+      "id": "3d9ae5b9-3f05-4b3d-84fa-816de128cd06",
       "component": "AbstractEditor",
       "name": "submission.references",
       "shortDescription": "References"
     },
     {
       "title": "Visual Abstract",
-      "id": "1601471819978",
+      "id": "a539e90c-e235-48ad-9399-a152f538f59a",
       "component": "VisualAbstract",
       "name": "visualAbstract",
       "description": "<p>Provide a visual abstract or figure to represent your manuscript.</p>"
     },
     {
       "title": "Abstract",
-      "id": "1601488776604",
+      "id": "8064fbe5-104a-4108-bea9-b66501f1c404",
       "component": "AbstractEditor",
       "name": "submission.abstract",
       "placeholder": "Input your abstract...",
