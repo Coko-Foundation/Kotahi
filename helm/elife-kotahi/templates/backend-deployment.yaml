@@ -102,6 +102,6 @@ spec:
           args: ["./startServer.js"]
           name: server
           ports:
-            - containerPort: 3000
+            - containerPort: {{ .Values.backend.deployment.containerPort }}
       restartPolicy: Always
 status: {}

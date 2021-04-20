@@ -61,7 +61,7 @@ COPY --from=build /home/node/app/_build/assets ./_build
 COPY --from=build /home/node/app/node_modules ./node_modules
 #COPY --from=build /home/node/app/node_modules_prod ./node_modules
 
-RUN ls -la ./node_modules
+RUN ls -la ./node_modules/.bin
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
 CMD ["node", "./startServer.js"]
