@@ -1,8 +1,6 @@
 # IMAGE FOR BUILDING
 FROM node:12.21-alpine as build
 
-RUN apk add --no-cache unzip
-
 ARG instance_name
 ARG node_env
 ARG server_protocol
@@ -27,7 +25,7 @@ ENV PUBLIC_CLIENT_HOST $public_client_host
 ENV PUBLIC_CLIENT_PORT $public_client_port
 ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
 
-RUN apk add --no-cache git python make g++ bash 
+RUN apk add --no-cache git python make g++ bash unzip
 
 WORKDIR /home/node/app
 
@@ -37,7 +35,6 @@ COPY . .
 RUN  unzip -q -o node_modules_dev.zip && \
     mv ./node_modules_dev ./node_modules && \
     yarn webpack --config webpack/webpack.production.config.js
-    #rm -rf ./node_modules
 
 # IMAGE FOR RUNNING
 FROM node:12.21-alpine as server
@@ -59,9 +56,6 @@ COPY --chown=node:node ./profiles ./profiles
 
 COPY --from=build /home/node/app/_build/assets ./_build 
 COPY --from=build /home/node/app/node_modules ./node_modules
-#COPY --from=build /home/node/app/node_modules_prod ./node_modules
-
-RUN ls -la ./node_modules/.bin
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
 CMD ["node", "./startServer.js"]
