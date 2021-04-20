@@ -502,8 +502,8 @@ const resolvers = {
     },
     async publishedManuscripts(_, { sort, offset, limit }, ctx) {
       const query = ctx.models.Manuscript.query()
-        .where(raw('published IS NOT NULL'))
-        .eager('[reviews.[comments], files, submitter]')
+        .whereNotNull('published')
+        .withGraphFetched('[reviews.[comments], files, submitter]')
 
       const totalCount = await query.resultSize()
 
