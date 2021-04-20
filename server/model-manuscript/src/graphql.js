@@ -78,29 +78,39 @@ const resolvers = {
   Mutation: {
     async createManuscript(_, vars, ctx) {
       const config = require('config')
+
       const folderPath = `${config.get(
         'pubsweet-component-xpub-formbuilder.path',
       )}/`
+
       const submissionForm = require(`${folderPath}submit.json`)
       const { meta, files } = vars.input
+
       const parsedSubmissionForm = submissionForm.children
         .map(formElement => {
           const parsedName = formElement.name.split('.')[1]
-          if(parsedName) {
+
+          if (parsedName) {
             return {
               name: parsedName,
-              component: formElement.component
+              component: formElement.component,
             }
           }
         })
         .filter(x => x !== undefined)
 
       const emptySubmission = parsedSubmissionForm.reduce((acc, curr) => {
-        acc[curr.name] = (curr.component === "CheckboxGroup" || curr.component ===  "LinksInput") ? [] : ""
+        acc[curr.name] =
+          curr.component === 'CheckboxGroup' || curr.component === 'LinksInput'
+            ? []
+            : ''
         return {
           ...acc,
-        };
+        }
       }, {})
+
+      // eslint-disable-next-line
+      console.log('vars.input.submission ', vars.input.submission)
 
       // We want the submission information to be stored as JSONB
       // but we want the input to come in as a JSON string

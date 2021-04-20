@@ -12,9 +12,6 @@ import { XpubProvider } from './components/xpub-with-context/src'
 import * as journal from '../config/journal'
 import routes from './routes'
 
-// eslint-disable-next-line
-console.log('test tmp for debugging purposes')
-
 const history = createBrowserHistory()
 
 const rootEl = document.getElementById('root')
