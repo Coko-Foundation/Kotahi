@@ -56,7 +56,8 @@ COPY --chown=node:node ./profiles ./profiles
 COPY --chown=node:node ./package.json .
 COPY --chown=node:node ./yarn.lock .
 COPY --from=build /home/node/app/_build/assets ./_build 
-ADD ./node_modules_dev.zip .
+#ADD ./node_modules_dev.zip .
+COPY --from=build /home/node/app/node_modules ./node_modules
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
 CMD ["node", "./startServer.js"]
