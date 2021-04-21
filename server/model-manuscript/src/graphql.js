@@ -112,9 +112,6 @@ const resolvers = {
         }
       }, {})
 
-      // eslint-disable-next-line
-      console.log('vars.input.submission ', vars.input.submission)
-
       // We want the submission information to be stored as JSONB
       // but we want the input to come in as a JSON string
       const submission = vars.input.submission
@@ -324,8 +321,7 @@ const resolvers = {
                 return `• ${turndownService.turndown(childNode.innerHTML)}\n\n`
               })
               .join('')
-            // eslint-disable-next-line
-            console.log('unordered list:', unorderedListResult)
+
             return unorderedListResult
           },
         })
@@ -340,17 +336,10 @@ const resolvers = {
                 )}\n\n`
               })
               .join('')
-            // eslint-disable-next-line
-            console.log('ordered list: ', orderedListResult)
+
             return orderedListResult
           },
         })
-
-        // eslint-disable-next-line
-        console.log(
-          'turndown result: ',
-          turndownService.turndown(manuscript.submission.evaluationContent),
-        )
 
         const requestBody = {
           uri: manuscript.submission.articleURL,
@@ -508,20 +497,7 @@ const resolvers = {
         .whereNotNull('published')
         .withGraphFetched('[reviews.[comments], files, submitter]')
 
-      let totalCount = 0
-      // eslint-disable-next-line
-      console.log('before try')
-
-      try {
-        totalCount = await query.resultSize()
-      } catch (e) {
-        // eslint-disable-next-line
-        console.log('error')
-        // eslint-disable-next-line
-        console.log(e)
-      }
-      // eslint-disable-next-line
-      console.log('after catch')
+      const totalCount = await query.resultSize()
 
       if (sort) {
         const [sortName, sortDirection] = sort.split('_')

@@ -7,8 +7,6 @@ const fetchUserDetails = require('./fetchUserDetails')
 const CALLBACK_URL = '/auth/orcid/callback'
 
 const orcidBackURL = config['pubsweet-client'].baseUrl
-// eslint-disable-next-line
-console.log('orcid logging: ', orcidBackURL)
 
 module.exports = app => {
   // eslint-disable-next-line global-require
