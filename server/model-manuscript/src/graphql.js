@@ -509,13 +509,19 @@ const resolvers = {
         .withGraphFetched('[reviews.[comments], files, submitter]')
 
       let totalCount = 0
+      // eslint-disable-next-line
+      console.log('before try')
 
       try {
         totalCount = await query.resultSize()
       } catch (e) {
         // eslint-disable-next-line
+        console.log('error')
+        // eslint-disable-next-line
         console.log(e)
       }
+      // eslint-disable-next-line
+      console.log('after catch')
 
       if (sort) {
         const [sortName, sortDirection] = sort.split('_')
