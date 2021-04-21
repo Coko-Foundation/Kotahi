@@ -52,18 +52,18 @@ const ManuscriptResolvers = ({ isVersion }) => {
 }
 
 const merge = (destination, source) => {
-  const updatedManuscript = Object.assign({}, destination)
+  const updatedManuscript = { ...destination }
 
-  for (let n in source) {
-      if (typeof updatedManuscript[n] !== 'object' || Array.isArray(source[n])) {
-        updatedManuscript[n] = source[n]
-      } else if (typeof source[n] === 'object' && !Array.isArray(source[n])) {
-        updatedManuscript[n] = merge(updatedManuscript[n], source[n])
-      }
+  for (const n in source) {
+    if (typeof updatedManuscript[n] !== 'object' || Array.isArray(source[n])) {
+      updatedManuscript[n] = source[n]
+    } else if (typeof source[n] === 'object' && !Array.isArray(source[n])) {
+      updatedManuscript[n] = merge(updatedManuscript[n], source[n])
+    }
   }
-  
+
   return updatedManuscript
-};
+}
 
 const commonUpdateManuscript = async (_, { id, input }, ctx) => {
   const manuscriptDelta = JSON.parse(input)
@@ -508,7 +508,14 @@ const resolvers = {
         .whereNotNull('published')
         .withGraphFetched('[reviews.[comments], files, submitter]')
 
-      const totalCount = await query.resultSize()
+      let totalCount = 0
+
+      try {
+        totalCount = await query.resultSize()
+      } catch (e) {
+        // eslint-disable-next-line
+        console.log(e)
+      }
 
       if (sort) {
         const [sortName, sortDirection] = sort.split('_')
