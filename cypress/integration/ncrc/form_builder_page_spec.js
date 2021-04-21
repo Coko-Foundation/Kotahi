@@ -125,7 +125,7 @@ describe('form builder tests', () => {
     })
 
     it('check required message is displayed for all fields', () => {
-      SubmissionFormPage.clickSubmitManuscript()
+      SubmissionFormPage.clickSubmitResearch()
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         // eslint-disable-next-line no-plusplus

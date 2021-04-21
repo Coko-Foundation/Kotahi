@@ -74,6 +74,7 @@ describe('Manuscripts page tests', () => {
         SubmissionFormPage.fillInEvaluationContent(data.evaluationContent)
         SubmissionFormPage.clickElementFromFormOptionList(4)
         SubmissionFormPage.selectDropdownOption(1)
+        SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearch()
         SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
       })
@@ -128,10 +129,13 @@ describe('Manuscripts page tests', () => {
           SubmissionFormPage.fillInArticleUrl(data.doi)
           SubmissionFormPage.fillInDescription(data.description)
           SubmissionFormPage.fillInEvaluationContent(data.evaluationContent)
+          // eslint-disable-next-line
+          SubmissionFormPage.waitThreeSec()
           SubmissionFormPage.clickElementFromFormOptionList(4)
           SubmissionFormPage.selectDropdownOption(1)
           SubmissionFormPage.fillInCreator(name.role.admin)
           // eslint-disable-next-line
+          SubmissionFormPage.waitThreeSec()
           SubmissionFormPage.clickSubmitResearch()
           SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
         })
@@ -192,6 +196,7 @@ describe('Manuscripts page tests', () => {
         SubmissionFormPage.selectDropdownOption(-1)
         SubmissionFormPage.fillInCreator('creator')
         // eslint-disable-next-line
+        SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
         ManuscriptsPage.clickEvaluation()
         // eslint-disable-next-line
