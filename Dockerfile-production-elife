@@ -32,8 +32,9 @@ WORKDIR /home/node/app
 COPY . .
 
 #RUN unzip -q -o node_modules_prod.zip && \
-RUN  unzip -q -o node_modules_dev.zip && \
-    mv ./node_modules_dev ./node_modules && \
+#RUN  unzip -q -o node_modules_dev.zip && \
+ADD ./node_modules_dev.tar.gz .
+RUN mv ./node_modules_dev ./node_modules && \
     yarn webpack --config webpack/webpack.production.config.js
 
 # IMAGE FOR RUNNING
@@ -57,7 +58,8 @@ COPY --chown=node:node ./package.json .
 COPY --chown=node:node ./yarn.lock .
 COPY --from=build /home/node/app/_build/assets ./_build 
 #ADD ./node_modules_dev.zip .
-COPY --from=build /home/node/app/node_modules ./node_modules
+#COPY --from=build /home/node/app/node_modules ./node_modules
+ADD ./node_modules_dev.tar.gz .
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
 CMD ["node", "./startServer.js"]
