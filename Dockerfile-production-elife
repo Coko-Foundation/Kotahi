@@ -35,7 +35,7 @@ ADD ./node_modules_dev.tar.gz .
 RUN mv ./node_modules_dev ./node_modules && \
     yarn webpack --config webpack/webpack.production.config.js
 
-COPY /home/node/app/_build/assets /home/node/app/_build
+RUN cp /home/node/app/_build/assets/* /home/node/app/_build
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
 CMD ["node", "./startServer.js"]
