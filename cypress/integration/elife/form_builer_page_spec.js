@@ -19,55 +19,49 @@ describe('Form builder page tests', () => {
       FormsPage.verifyPageLoaded()
     })
 
-    it('check title and elements from form builder', () => {
+    it('check elements from form builder', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
-        FormsPage.getFormBuilderElementName(0).should(
-          'contain',
+        const formElements = [
           data.elife.articleId,
-        )
-        FormsPage.getFormBuilderElementName(1).should(
-          'contain',
           data.elife.articleUrl,
-        )
-        FormsPage.getFormBuilderElementName(2).should(
-          'contain',
           data.elife.description,
-        )
-        FormsPage.getFormBuilderElementName(3).should(
-          'contain',
           data.elife.evaluationContent,
-        )
-        FormsPage.getFormBuilderElementName(4).should(
-          'contain',
           data.elife.evaluationType,
-        )
-        FormsPage.getFormBuilderElementName(5).should(
-          'contain',
           data.elife.creator,
-        )
+        ]
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0; i < 6; i++) {
+          FormsPage.getFormBuilderElementName(i).should(
+            'contain',
+            formElements[i]
+          )
+        }
       })
     })
 
     // check the type of the field and if is required
-    it('first element check to have options TextField and Required selected', () => {
-      FormsPage.clickFormOption(0)
-      FormsPage.getComponentType().should('contain', 'TextField')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(1)
-      FormsPage.getComponentType().should('contain', 'TextField')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(2)
-      FormsPage.getComponentType().should('contain', 'TextField')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(3)
-      FormsPage.getComponentType().should('contain', 'AbstractEditor')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(4)
-      FormsPage.getComponentType().should('contain', 'Select')
-      FormsPage.getFieldValidate().should('contain', 'Required')
+    it('check form fields type and if are required', () => {
+      const requiredField = 'Required';
+      const typeField = [
+        'TextField',
+        'TextField',
+        'TextField',
+        'AbstractEditor',
+        'Select',
+        'TextField',
+      ]
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < 6; i++) {
+        FormsPage.clickFormOption(i)
+        FormsPage.getComponentType().should('contain', typeField[i])
+      };
+      // eslint-disable-next-line no-plusplus
+      for (let j = 0; j < 5; j++) {
+        FormsPage.clickFormOption(j)
+        FormsPage.getFieldValidate().should('contain', requiredField)
+      }
       FormsPage.clickFormOption(5)
-      FormsPage.getComponentType().should('contain', 'TextField')
       FormsPage.getFieldValidate().should('not.contain', 'Required')
     })
     it('check DOI validation has default selected Yes and select No', () => {
@@ -95,30 +89,21 @@ describe('Form builder page tests', () => {
     it('check if the form contain all the columns', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
-        SubmissionFormPage.getFormOptionList(0).should(
-          'contain',
+        const formElements = [
           data.elife.articleId,
-        )
-        SubmissionFormPage.getFormOptionList(1).should(
-          'contain',
           data.elife.articleUrl,
-        )
-        SubmissionFormPage.getFormOptionList(2).should(
-          'contain',
           data.elife.description,
-        )
-        SubmissionFormPage.getFormOptionList(3).should(
-          'contain',
           data.elife.evaluationContent,
-        )
-        SubmissionFormPage.getFormOptionList(4).should(
-          'contain',
           data.elife.evaluationType,
-        )
-        SubmissionFormPage.getFormOptionList(5).should(
-          'contain',
           data.elife.creator,
-        )
+        ]
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0; i < 6; i++) {
+          SubmissionFormPage.getFormOptionList(i).should(
+            'contain',
+            formElements[i],
+          )
+        }
       })
     })
 
@@ -127,26 +112,13 @@ describe('Form builder page tests', () => {
       SubmissionFormPage.clickSubmitResearch()
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
-        SubmissionFormPage.getFormOptionList(0).should(
-          'contain',
-          data.elife.required,
-        )
-        SubmissionFormPage.getFormOptionList(1).should(
-          'contain',
-          data.elife.required,
-        )
-        SubmissionFormPage.getFormOptionList(2).should(
-          'contain',
-          data.elife.required,
-        )
-        SubmissionFormPage.getFormOptionList(3).should(
-          'contain',
-          data.elife.required,
-        )
-        SubmissionFormPage.getFormOptionList(4).should(
-          'contain',
-          data.elife.required,
-        )
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0; i < 5; i++) {
+          SubmissionFormPage.getFormOptionList(i).should(
+            'contain',
+            data.elife.required,
+          )
+        }
       })
     })
 
@@ -155,18 +127,17 @@ describe('Form builder page tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         SubmissionFormPage.clickElementFromFormOptionList(4)
-        SubmissionFormPage.getDropdownOption(0).should(
-          'contain',
+        const dropDownOption = [
           data.elife.evaluationTypes.evaluationSummary,
-        )
-        SubmissionFormPage.getDropdownOption(1).should(
-          'contain',
           data.elife.evaluationTypes.peerReview,
-        )
-        SubmissionFormPage.getDropdownOption(2).should(
-          'contain',
           data.elife.evaluationTypes.authorResponse,
-        )
+        ]
+        // eslint-disable-next-line no-plusplus
+        for (let i = 0; i < 3; i++) {
+          SubmissionFormPage.getDropdownOption(i).should(
+            'contain',
+            dropDownOption[i])
+        }
       })
     })
   })
