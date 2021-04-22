@@ -330,7 +330,7 @@ const FormTemplate = ({
           </Section>
         ) : null}
 
-        {process.env.INSTANCE_NAME === 'aperture' &&
+        {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) &&
           !['submitted', 'revise'].includes(values.status) &&
           submitButton(submitButtonText, hasPopup)}
 

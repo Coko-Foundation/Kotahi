@@ -442,7 +442,10 @@ const resolvers = {
         }
       }
 
-      if (!manuscript.published && process.env.INSTANCE_NAME === 'aperture') {
+      if (
+        !manuscript.published &&
+        ['aperture', 'colab'].includes(process.env.INSTANCE_NAME)
+      ) {
         manuscript = ctx.models.Manuscript.query().updateAndFetchById(id, {
           published: new Date(),
         })

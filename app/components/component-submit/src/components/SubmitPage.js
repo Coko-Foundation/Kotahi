@@ -228,7 +228,7 @@ const SubmitPage = ({ match, history }) => {
       },
     })
 
-    if (process.env.INSTANCE_NAME === 'aperture') {
+    if (['aperture', 'colab'].includes(process.env.INSTANCE_NAME)) {
       history.push(`${urlFrag}/dashboard`)
     }
 

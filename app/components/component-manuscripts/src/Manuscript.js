@@ -48,7 +48,7 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
       cache.evict({ id })
     },
   })
-  
+
   const publishManuscriptHandler = () => {
     publishManuscript({
       variables: { id: manuscript.id },
@@ -67,17 +67,21 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
     props.setSelectedTopic(topic)
     history.replace(`${urlFrag}/admin/manuscripts?topic=${topic}`)
   }
-  
+
   return (
     <Row>
-      {process.env.INSTANCE_NAME === 'aperture' && (
+      {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
         <Cell>{manuscript.meta && manuscript.meta.title}</Cell>
       )}
       {['elife'].includes(process.env.INSTANCE_NAME) && (
         <Cell>{manuscript.submission && manuscript.submission.articleId}</Cell>
       )}
       {['ncrc'].includes(process.env.INSTANCE_NAME) && (
-        <Cell><span style={{wordBreak: "break-word"}}>{manuscript.submission && manuscript.submission.articleDescription}</span></Cell>
+        <Cell>
+          <span style={{ wordBreak: 'break-word' }}>
+            {manuscript.submission && manuscript.submission.articleDescription}
+          </span>
+        </Cell>
       )}
       <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
       <Cell>{convertTimestampToDate(manuscript.updated)}</Cell>
@@ -132,7 +136,7 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
               Evaluation
             </Action>
           )}
-        {process.env.INSTANCE_NAME === 'aperture' && (
+        {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
           <Action to={`${urlFrag}/versions/${manuscriptId}/decision`}>
             Control
           </Action>
@@ -145,9 +149,10 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
         >
           Delete
         </Action>
-        {(['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && manuscript.status !== articleStatuses.published ) && (
-          <Action onClick={publishManuscriptHandler}>Publish</Action>
-        )}
+        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
+          manuscript.status !== articleStatuses.published && (
+            <Action onClick={publishManuscriptHandler}>Publish</Action>
+          )}
       </LastCell>
     </Row>
   )

@@ -138,7 +138,10 @@ const AdminPage = () => {
       : null
   }
 
-  if (currentUser && process.env.INSTANCE_NAME === 'aperture') {
+  if (
+    currentUser &&
+    ['aperture', 'colab'].includes(process.env.INSTANCE_NAME)
+  ) {
     links.push({ link: homeLink, name: 'Dashboard', icon: 'home' })
   }
 

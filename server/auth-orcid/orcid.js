@@ -94,7 +94,7 @@ module.exports = app => {
 
       let redirectionURL
 
-      if (process.env.INSTANCE_NAME === 'aperture') {
+      if (['aperture', 'colab'].includes(process.env.INSTANCE_NAME)) {
         redirectionURL = '/kotahi/dashboard'
 
         if (req.user.firstLogin) {
