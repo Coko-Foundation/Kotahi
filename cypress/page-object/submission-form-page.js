@@ -362,7 +362,7 @@ export const SubmissionFormPage = {
   },
   waitThreeSec() {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(23000)
+    cy.wait(3000)
   },
 }
 export default SubmissionFormPage
