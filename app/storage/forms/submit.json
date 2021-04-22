@@ -32,6 +32,19 @@
     },
     {
       "options": [],
+      "title": "bioRxiv article URL",
+      "id": "1686423020010",
+      "component": "TextField",
+      "name": "submission.biorxivURL",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required"
+        }
+      ]
+    },
+    {
+      "options": [],
       "title": "Description",
       "id": "1616424091139",
       "component": "TextField",

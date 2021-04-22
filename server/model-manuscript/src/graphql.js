@@ -342,7 +342,7 @@ const resolvers = {
         })
 
         const requestBody = {
-          uri: manuscript.submission.articleURL,
+          uri: manuscript.submission.biorxivURL,
           text: turndownService.turndown(
             manuscript.submission.evaluationContent,
           ),
