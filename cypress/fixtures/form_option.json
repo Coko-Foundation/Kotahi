@@ -3,6 +3,7 @@
     "title": "Research Object Submission Form",
     "articleId": "Article ID",
     "articleUrl": "Article URL",
+    "bioRxivArticleUrl": "bioRxiv article URL",
     "description": "Description",
     "evaluationContent": "Evaluation Content",
     "evaluationType": "Evaluation Type",

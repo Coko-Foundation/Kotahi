@@ -45,6 +45,7 @@ const ARTICLE_URL_FIELD = 'submission.articleURL'
 const DESCRIPTION_FIELD = 'submission.description'
 const EVALUATION_CONTENT_FIELD = 'submission.evaluationContent'
 const CREATOR_FIELD = 'submission.creator'
+const BIORXIV_ARTICLE_URL_FIELD = 'submission.biorxivURL'
 
 // specific to ncrc
 const ARTICLE_DESCRIPTION_FIELD = 'submission.articleDescription'
@@ -261,6 +262,12 @@ export const SubmissionFormPage = {
   fillInArticleUrl(articleUrl) {
     this.getArticleUrl().fillInput(articleUrl)
   },
+  getBioRxivArticleUrl() {
+    return cy.getByDataTestId(BIORXIV_ARTICLE_URL_FIELD)
+  },
+  fillInBioRxivArticleUrl(bioRxivArticleUrl) {
+    this.getBioRxivArticleUrl().fillInput(bioRxivArticleUrl)
+  },
   getDescription() {
     return cy.getByDataTestId(DESCRIPTION_FIELD)
   },
@@ -355,7 +362,7 @@ export const SubmissionFormPage = {
   },
   waitThreeSec() {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
-    cy.wait(3000)
+    cy.wait(23000)
   },
 }
 export default SubmissionFormPage

@@ -70,13 +70,13 @@ describe('Manuscripts page tests', () => {
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleld(data.articleId)
         SubmissionFormPage.fillInArticleUrl(data.doi)
+        SubmissionFormPage.fillInBioRxivArticleUrl(data.articleId)
         SubmissionFormPage.fillInDescription(data.description)
         SubmissionFormPage.fillInEvaluationContent(data.evaluationContent)
-        SubmissionFormPage.clickElementFromFormOptionList(4)
+        SubmissionFormPage.clickElementFromFormOptionList(5)
         SubmissionFormPage.selectDropdownOption(1)
         SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearch()
-        SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
       })
       ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
     })
@@ -106,7 +106,7 @@ describe('Manuscripts page tests', () => {
     })
   })
 
-  context('Submitted and evaluated article tests', () => {
+  context.only('Submitted and evaluated article tests', () => {
     beforeEach(() => {
       // task to restore the database as per the  dumps/initialState.sql
       cy.task('restore', 'initialState')
@@ -127,17 +127,17 @@ describe('Manuscripts page tests', () => {
         cy.fixture('submission_form_data').then(data => {
           SubmissionFormPage.fillInArticleld(data.articleId)
           SubmissionFormPage.fillInArticleUrl(data.doi)
+          SubmissionFormPage.fillInBioRxivArticleUrl(data.articleId)
           SubmissionFormPage.fillInDescription(data.description)
           SubmissionFormPage.fillInEvaluationContent(data.evaluationContent)
           // eslint-disable-next-line
           SubmissionFormPage.waitThreeSec()
-          SubmissionFormPage.clickElementFromFormOptionList(4)
+          SubmissionFormPage.clickElementFromFormOptionList(5)
           SubmissionFormPage.selectDropdownOption(1)
           SubmissionFormPage.fillInCreator(name.role.admin)
           // eslint-disable-next-line
           SubmissionFormPage.waitThreeSec()
           SubmissionFormPage.clickSubmitResearch()
-          SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
         })
       })
     })
@@ -189,10 +189,10 @@ describe('Manuscripts page tests', () => {
         })
         ManuscriptsPage.clickEvaluation()
         SubmissionFormPage.fillInArticleld('123 - Evaluated')
-        SubmissionFormPage.fillInArticleUrl('new url')
+        SubmissionFormPage.fillInArticleUrl('https://doi.org/10.1101/2020.12.22.423946')
         SubmissionFormPage.fillInDescription('new description')
         SubmissionFormPage.fillInEvaluationContent('new content')
-        SubmissionFormPage.clickElementFromFormOptionList(4)
+        SubmissionFormPage.clickElementFromFormOptionList(5)
         SubmissionFormPage.selectDropdownOption(-1)
         SubmissionFormPage.fillInCreator('creator')
         // eslint-disable-next-line
