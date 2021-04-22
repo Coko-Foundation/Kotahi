@@ -42,6 +42,7 @@ module.exports = {
         elife: '../app/storage/forms',
         aperture: '../app/storage/forms-aperture',
         ncrc: '../app/storage/forms-ncrc',
+        colab: '../app/storage/forms-colab',
       }
 
       const pathToFormTemplateFolder =
