@@ -16,9 +16,6 @@ const history = createBrowserHistory()
 
 const rootEl = document.getElementById('root')
 
-// eslint-disable-next-line
-console.log('123')
-
 ReactDOM.render(
   <XpubProvider>
     <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
