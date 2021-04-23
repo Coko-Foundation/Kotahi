@@ -22,7 +22,7 @@ describe('Manuscripts page tests', () => {
     it('check Submit button is visible', () => {
       ManuscriptsPage.getSubmitButton().should('be.visible')
     })
-    it('evaluation button is visible on unsubmited status article', () => {
+    it('evaluation button is visible and publish button is not visible on unsubmited status article', () => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
@@ -32,6 +32,7 @@ describe('Manuscripts page tests', () => {
       })
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getEvaluationButton().should('be.visible')
+      ManuscriptsPage.getOptionWithText('Publish').should('not.exist')
     })
   })
 
@@ -106,7 +107,7 @@ describe('Manuscripts page tests', () => {
     })
   })
 
-  context.only('Submitted and evaluated article tests', () => {
+  context('Submitted and evaluated article tests', () => {
     beforeEach(() => {
       // task to restore the database as per the  dumps/initialState.sql
       cy.task('restore', 'initialState')
@@ -146,9 +147,9 @@ describe('Manuscripts page tests', () => {
       ManuscriptsPage.getManuscriptsPageTitle().should('be.visible')
       ManuscriptsPage.getEvaluationButton().should('be.visible')
       ManuscriptsPage.getControlButton().should('not.exist')
-      ManuscriptsPage.getOptionWithText('Publish').should('be.visible')
+      ManuscriptsPage.getOptionWithText('Publish').should('not.exist')
     })
-    it('evaluate article and check status is changed', () => {
+    it('evaluate article and check status is changed and Publish button is visible', () => {
       ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
       ManuscriptsPage.clickEvaluation()
 
@@ -156,6 +157,7 @@ describe('Manuscripts page tests', () => {
 
       ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
       ManuscriptsPage.getEvaluationButton().should('be.visible')
+      ManuscriptsPage.getOptionWithText('Publish').should('be.visible')
     })
     it('submission details should be visible', () => {
       ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
@@ -189,7 +191,9 @@ describe('Manuscripts page tests', () => {
         })
         ManuscriptsPage.clickEvaluation()
         SubmissionFormPage.fillInArticleld('123 - Evaluated')
-        SubmissionFormPage.fillInArticleUrl('https://doi.org/10.1101/2020.12.22.423946')
+        SubmissionFormPage.fillInArticleUrl(
+          'https://doi.org/10.1101/2020.12.22.423946',
+        )
         SubmissionFormPage.fillInDescription('new description')
         SubmissionFormPage.fillInEvaluationContent('new content')
         SubmissionFormPage.clickElementFromFormOptionList(5)

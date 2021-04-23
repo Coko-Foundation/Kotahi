@@ -23,7 +23,7 @@ describe('manuscripts page tests', () => {
       Menu.getDashboardButton().should('not.exist')
     })
 
-    it('evaluation button should be visible for unsubmitted articles', () => {
+    it('evaluation button should be visible and publish button should not be visible for unsubmitted articles', () => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
@@ -35,6 +35,7 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getEvaluationButton()
         .scrollIntoView()
         .should('be.visible')
+      ManuscriptsPage.getOptionWithText('Publish').should('not.exist')
     })
     it('label & topics should be visible on manuscripts page', () => {
       ManuscriptsPage.clickSubmit()
@@ -147,13 +148,14 @@ describe('manuscripts page tests', () => {
       })
       ManuscriptsPage.getArticleLabel().should('contain', 'ready to evaluate')
     })
-    it('evaluate article and check status is changed', () => {
+    it('evaluate article and check status is changed and publish button is visible', () => {
       ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
       ManuscriptsPage.clickEvaluation()
 
       SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
 
       ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
+      ManuscriptsPage.getOptionWithText('Publish').should('be.visible')
     })
     it('evaluation changes should be visible', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
