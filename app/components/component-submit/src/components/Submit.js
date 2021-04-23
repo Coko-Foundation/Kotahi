@@ -127,19 +127,21 @@ const Submit = ({
                   : setSubmitting(false)
               }}
             >
-              {formProps => (
-                <FormTemplate
-                  confirming={confirming}
-                  onChange={(value, path) => {
-                    onChange(value, path, versionId)
-                  }}
-                  toggleConfirming={toggleConfirming}
-                  {...formProps}
-                  form={form}
-                  manuscript={manuscript}
-                  match={match}
-                />
-              )}
+              {formProps => {
+                return (
+                  <FormTemplate
+                    confirming={confirming}
+                    onChange={(value, path) => {
+                      onChange(value, path, versionId)
+                    }}
+                    toggleConfirming={toggleConfirming}
+                    {...formProps}
+                    form={form}
+                    manuscript={manuscript}
+                    match={match}
+                  />
+                )
+              }}
             </Formik>
           </SectionContent>
         ),

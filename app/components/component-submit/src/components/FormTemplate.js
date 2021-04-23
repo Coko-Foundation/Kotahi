@@ -54,6 +54,7 @@ const filterFileManuscript = files =>
 
 // Add the AbstractEditor and AuthorsInput to the list of available form elements
 const elements = { TextField, RadioGroup, CheckboxGroup }
+
 elements.AbstractEditor = ({
   validationStatus,
   setTouched,
@@ -61,21 +62,26 @@ elements.AbstractEditor = ({
   value,
   values,
   ...rest
-}) => (
-  <AbstractEditor
-    bulletlist
-    joinaboveblock
-    liftitem
-    link
-    orderedlist
-    value={get(values, rest.name) || ''}
-    {...rest}
-    onChange={val => {
-      setTouched(set({}, rest.name, true))
-      onChange(val)
-    }}
-  />
-)
+}) => {
+  return (
+    <AbstractEditor
+      bulletlist
+      joinaboveblock
+      liftitem
+      link
+      orderedlist
+      value={get(values, rest.name) || ''}
+      {...rest}
+      onBlur={() => {
+        setTouched(set({}, rest.name, true))
+      }}
+      onChange={val => {
+        setTouched(set({}, rest.name, true))
+        onChange(val)
+      }}
+    />
+  )
+}
 
 elements.AbstractEditor.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types
