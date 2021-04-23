@@ -94,7 +94,7 @@ export const ManuscriptsPage = {
     return cy.get(LABEL).eq(nth)
   },
   getTableHeader() {
-    return cy.get(TABLE_HEADER, { timeout: 10000 })
+    return cy.get(TABLE_HEADER, { timeout: 15000 })
   },
 }
 export default ManuscriptsPage

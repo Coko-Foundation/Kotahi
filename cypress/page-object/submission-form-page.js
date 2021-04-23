@@ -298,7 +298,9 @@ export const SubmissionFormPage = {
     return cy.getByName(OUR_TAKE_FIELD)
   },
   fillInOurTake(ourTake) {
-    this.getOurTakeField().fillInput(ourTake)
+    this.getOurTakeField()
+    .find(CONTENT_EDITABLE_VALUE)
+    .fillInput(ourTake)
   },
   getOurTakeContent() {
     return this.getOurTakeField().find('p')
@@ -307,7 +309,9 @@ export const SubmissionFormPage = {
     return cy.getByName(STUDY_SETTING_FIELD)
   },
   fillInStudySetting(studySetting) {
-    this.getStudySettingField().fillInput(studySetting)
+    this.getStudySettingField()
+    .find(CONTENT_EDITABLE_VALUE)
+    .fillInput(studySetting)
   },
   getStudySettingContent() {
     return this.getStudySettingField().find('p')
@@ -316,7 +320,9 @@ export const SubmissionFormPage = {
     return cy.getByName(MAIN_FINDINGS_FIELD)
   },
   fillInMainFindings(mainFindings) {
-    this.getMainFindingsField().fillInput(mainFindings)
+    this.getMainFindingsField()
+    .find(CONTENT_EDITABLE_VALUE)
+    .fillInput(mainFindings)
   },
   getMainFindingsContent() {
     return this.getMainFindingsField().find('p')
@@ -325,7 +331,9 @@ export const SubmissionFormPage = {
     return cy.getByName(STUDY_STRENGTHS_FIELD)
   },
   fillInStudyStrengths(studyStrengths) {
-    this.getStudyStrengthsField().fillInput(studyStrengths)
+    this.getStudyStrengthsField()
+    .find(CONTENT_EDITABLE_VALUE)
+    .fillInput(studyStrengths)
   },
   getStudyStrengthsContent() {
     return this.getStudyStrengthsField().find('p')
@@ -334,7 +342,9 @@ export const SubmissionFormPage = {
     return cy.getByName(LIMITATIONS_FIELD)
   },
   fillInLimitations(limitations) {
-    this.getLimitationsField().fillInput(limitations)
+    this.getLimitationsField()
+    .find(CONTENT_EDITABLE_VALUE)
+    .fillInput(limitations)
   },
   getLimitationsContent() {
     return this.getLimitationsField().find('p')
@@ -343,7 +353,9 @@ export const SubmissionFormPage = {
     return cy.getByName(VALUE_ADDED_FIELD)
   },
   fillInValueAdded(valueAdded) {
-    this.getValueAddedField().fillInput(valueAdded)
+    this.getValueAddedField()
+    .find(CONTENT_EDITABLE_VALUE)
+    .fillInput(valueAdded)
   },
   getValueAddedContent() {
     return this.getValueAddedField().find('p')
