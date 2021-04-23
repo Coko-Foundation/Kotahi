@@ -1,10 +1,6 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  annotations:
-    kompose.cmd: kompose convert -c -o elife-kotahi
-    kompose.version: 1.22.0 (955b78124)
-  creationTimestamp: null
   labels:
     io.kompose.service: server
   name: server
@@ -16,10 +12,6 @@ spec:
   strategy: {}
   template:
     metadata:
-      annotations:
-        kompose.cmd: kompose convert -c -o elife-kotahi
-        kompose.version: 1.22.0 (955b78124)
-      creationTimestamp: null
       labels:
         io.kompose.service: server
     spec:
@@ -46,27 +38,27 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: postgresql-database
-                  name: elife-kotahi-prod-rds-postgres
+                  name: {{ .Values.rds-secret }}
             - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
                   key: postgresql-host
-                  name: elife-kotahi-prod-rds-postgres
+                  name: {{ .Values.rds-secret }}
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   key: postgresql-password
-                  name: elife-kotahi-prod-rds-postgres
+                  name: {{ .Values.rds-secret }}
             - name: POSTGRES_PORT
               valueFrom:
                 secretKeyRef:
                   key: postgresql-port
-                  name: elife-kotahi-prod-rds-postgres
+                  name: {{ .Values.rds-secret }}
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   key: postgresql-username
-                  name: elife-kotahi-prod-rds-postgres
+                  name: {{ .Values.rds-secret }}
             - name: PUBLIC_CLIENT_HOST
               valueFrom:
                 configMapKeyRef:
