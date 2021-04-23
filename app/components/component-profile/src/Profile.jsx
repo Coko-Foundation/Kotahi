@@ -47,8 +47,7 @@ const ProfileDropzone = ({ profilePicture, updateProfilePicture }) => {
       },
       body,
     })
-    result = await result.text()
-    updateProfilePicture(result)
+    updateProfilePicture()
   }, [])
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop })
 
@@ -66,8 +65,7 @@ const ProfileDropzone = ({ profilePicture, updateProfilePicture }) => {
 }
 
 const Profile = () => {
-  const { loading, error, data, client } = useQuery(GET_CURRENT_USER)
-
+  const { loading, error, data, client, refetch } = useQuery(GET_CURRENT_USER)
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
 
@@ -79,16 +77,7 @@ const Profile = () => {
   }
 
   // This is a bridge between the fetch results and the Apollo cache/state
-  const updateProfilePicture = profilePicture => {
-    const cacheData = client.readQuery({ query: GET_CURRENT_USER })
-    const updatedData = {
-      currentUser: {
-        ...cacheData.currentUser,
-        profilePicture,
-      },
-    }
-    client.writeData({ data: updatedData })
-  }
+  const updateProfilePicture = () => refetch()
 
   return (
     <Container>
