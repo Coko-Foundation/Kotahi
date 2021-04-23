@@ -38,27 +38,27 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: postgresql-database
-                  name: "{{ .Values.rds-secret }}"
+                  name: "{{ .Values.rdssecret }}"
             - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
                   key: postgresql-host
-                  name: "{{ .Values.rds-secret }}"
+                  name: "{{ .Values.rdssecret }}"
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   key: postgresql-password
-                  name: "{{ .Values.rds-secret }}"
+                  name: "{{ .Values.rdssecret }}"
             - name: POSTGRES_PORT
               valueFrom:
                 secretKeyRef:
                   key: postgresql-port
-                  name: "{{ .Values.rds-secret }}"
+                  name: "{{ .Values.rdssecret }}"
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   key: postgresql-username
-                  name: "{{ .Values.rds-secret }}"
+                  name: "{{ .Values.rdssecret }}"
             - name: PUBLIC_CLIENT_HOST
               valueFrom:
                 configMapKeyRef:
