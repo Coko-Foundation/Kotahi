@@ -80,7 +80,7 @@ test-firefox:
     - postgres
   script:
     - cd ${HOME}
-    - - apt-get update
+    - apt-get update
     - apt-get -y install postgresql-client
     # this is needed for pgboss initial setup
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
