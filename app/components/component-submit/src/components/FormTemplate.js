@@ -271,6 +271,18 @@ const FormTemplate = ({
                 element.component !== 'SupplementaryFiles' &&
                 element.component !== 'VisualAbstract' && (
                   <ValidatedFieldFormik
+                    {...rejectProps(element, [
+                      'component',
+                      'title',
+                      'sectioncss',
+                      'parse',
+                      'format',
+                      'validate',
+                      'validateValue',
+                      'description',
+                      'shortDescription',
+                      'order',
+                    ])}
                     aria-label={element.placeholder || element.title}
                     component={elements[element.component]}
                     data-testid={element.name} // TODO: Improve this
@@ -288,23 +300,11 @@ const FormTemplate = ({
                         val = value
                       }
 
-                      setFieldValue(element.name, val, true)
+                      setFieldValue(element.name, val, false)
                       onChange(val, element.name)
                     }}
                     readonly={false}
                     setTouched={setTouched}
-                    {...rejectProps(element, [
-                      'component',
-                      'title',
-                      'sectioncss',
-                      'parse',
-                      'format',
-                      'validate',
-                      'validateValue',
-                      'description',
-                      'shortDescription',
-                      'order',
-                    ])}
                     validate={composeValidate(
                       element.validate,
                       element.validateValue,

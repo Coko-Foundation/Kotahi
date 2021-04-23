@@ -126,6 +126,8 @@ const Submit = ({
                   ? onSubmit(versionId, values) // values are currently ignored!
                   : setSubmitting(false)
               }}
+              validateOnBlur
+              validateOnChange={false}
             >
               {formProps => {
                 return (
