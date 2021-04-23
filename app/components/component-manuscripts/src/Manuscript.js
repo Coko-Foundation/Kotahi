@@ -150,7 +150,7 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
           Delete
         </Action>
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
-          manuscript.status !== articleStatuses.published && (
+          manuscript.status === articleStatuses.evaluated && (
             <Action onClick={publishManuscriptHandler}>Publish</Action>
           )}
       </LastCell>
