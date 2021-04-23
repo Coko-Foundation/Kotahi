@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import { debounce, cloneDeep, set } from 'lodash'
 import { gql, useQuery, useMutation } from '@apollo/client'
 import config from 'config'
@@ -174,8 +174,16 @@ const createNewVersionMutation = gql`
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
+let debouncers = {}
+
 const SubmitPage = ({ match, history }) => {
   const [confirming, setConfirming] = useState(false)
+
+  useEffect(() => {
+    return () => {
+      debouncers = {}
+    }
+  }, [])
 
   const toggleConfirming = () => {
     setConfirming(confirm => !confirm)
@@ -204,8 +212,6 @@ const SubmitPage = ({ match, history }) => {
       },
     })
   }
-
-  const debouncers = {}
 
   // This is passed as a custom onChange prop (not belonging/originating from Formik)
   // to support continuous auto-saving
