@@ -139,7 +139,7 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getControlButton().should('not.exist')
       ManuscriptsPage.getOptionWithText('View').should('be.visible')
       ManuscriptsPage.getOptionWithText('Delete').should('be.visible')
-      ManuscriptsPage.getOptionWithText('Publish').should('be.visible')
+      ManuscriptsPage.getOptionWithText('Publish').should('not.exist')
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         ManuscriptsPage.getArticleTopic(0)
@@ -155,7 +155,9 @@ describe('manuscripts page tests', () => {
       SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
 
       ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
-      ManuscriptsPage.getOptionWithText('Publish').should('be.visible')
+      ManuscriptsPage.getOptionWithText('Publish')
+        .scrollIntoView()
+        .should('be.visible')
     })
     it('evaluation changes should be visible', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -241,7 +243,9 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getArticleTopic(1).should('contain', 'diagnostics')
     })
     it('sort article by label', () => {
+      cy.wait(3000)
       ManuscriptsPage.getArticleLabel().should('have.length', 3)
+      ManuscriptsPage.getLabelRow(0).should('contain', 'ready to evaluate')
       ManuscriptsPage.getLabelRow(1).should('contain', 'evaluated')
       ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluate')
       ManuscriptsPage.clickTableHead(5)
