@@ -185,6 +185,7 @@ const FormTemplate = ({
   setFieldValue,
   createSupplementaryFile,
   onChange,
+  republish,
   onSubmit,
   submitSubmission,
   errors,
@@ -198,6 +199,11 @@ const FormTemplate = ({
       <div>
         <Button
           onClick={async () => {
+            if (manuscript.hypothesisPublicationId) {
+              republish(manuscript.id)
+
+              return
+            }
             const hasErrors = Object.keys(await validateForm()).length !== 0
 
             // If there are errors, do a fake submit
@@ -222,9 +228,11 @@ const FormTemplate = ({
     )
   }
 
-  const submitButtonText = match.url.includes('/evaluation')
+  let submitButtonText = match.url.includes('/evaluation')
     ? 'Submit Evaluation'
     : 'Submit your research object'
+
+  if ( manuscript.status === articleStatuses.published ) submitButtonText = 'Re-Publish'
 
   const hasPopup = form.haspopup ? JSON.parse(form.haspopup) : false
   return (
@@ -395,6 +403,8 @@ FormTemplate.propTypes = {
   confirming: PropTypes.bool.isRequired,
   manuscript: PropTypes.shape({
     id: PropTypes.string.isRequired,
+    hypothesisPublicationId: PropTypes.string,
+    status: PropTypes.string,
   }).isRequired,
   setTouched: PropTypes.func.isRequired,
   values: PropTypes.shape({
@@ -411,6 +421,7 @@ FormTemplate.propTypes = {
   createSupplementaryFile: PropTypes.any, // currently unused
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func,
+  republish: PropTypes.func.isRequired,
   submitSubmission: PropTypes.func,
   errors: PropTypes.objectOf(PropTypes.any).isRequired,
   validateForm: PropTypes.func.isRequired,

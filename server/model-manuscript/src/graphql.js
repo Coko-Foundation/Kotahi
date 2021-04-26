@@ -1,4 +1,4 @@
-const { ref, raw } = require('objection')
+const { ref } = require('objection')
 const TurndownService = require('turndown')
 const axios = require('axios')
 const { GoogleSpreadsheet } = require('google-spreadsheet')
@@ -309,7 +309,7 @@ const resolvers = {
     },
     async publishManuscript(_, { id }, ctx) {
       let manuscript = await ctx.models.Manuscript.query().findById(id)
-
+   
       if (['elife'].includes(process.env.INSTANCE_NAME)) {
         const turndownService = new TurndownService({ bulletListMarker: '-' })
 
@@ -351,8 +351,12 @@ const resolvers = {
         }
 
         try {
-          await axios.post(
-            'https://api.hypothes.is/api/annotations',
+          const requestParam = manuscript.hypothesisPublicationId ? `/${manuscript.hypothesisPublicationId}` : ''
+          const requestFunction = manuscript.hypothesisPublicationId ? axios.patch : axios.post
+          const requestURL = 'https://api.hypothes.is/api/annotations' + requestParam
+
+          const publishedManuscript = await requestFunction(
+            requestURL, 
             requestBody,
             {
               headers: {
@@ -367,11 +371,13 @@ const resolvers = {
             {
               published: new Date(),
               status: 'published',
+              hypothesisPublicationId: publishedManuscript.data.id,
             },
           )
 
           return updatedManuscript
-        } catch {
+        } catch (e) {
+          console.error(e)
           return null
         }
       }
@@ -672,6 +678,7 @@ const typeDefs = `
     channels: [Channel]
     submitter: User
     published: DateTime
+    hypothesisPublicationId: String
   }
 
   type ManuscriptVersion implements Object {

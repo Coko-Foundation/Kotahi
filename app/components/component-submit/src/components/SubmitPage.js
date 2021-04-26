@@ -6,6 +6,7 @@ import ReactRouterPropTypes from 'react-router-prop-types'
 import Submit from './Submit'
 import { Spinner } from '../../../shared'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
+import { publishManuscriptMutation } from '../../../component-review/src/components/queries'
 
 const commentFields = `
   id
@@ -129,6 +130,7 @@ const query = gql`
     }
 
     manuscript(id: $id) {
+      hypothesisPublicationId
       ${fragmentFields}
       manuscriptVersions {
         parentId
@@ -197,6 +199,7 @@ const SubmitPage = ({ match, history }) => {
   const [update] = useMutation(updateMutation)
   const [submit] = useMutation(submitMutation)
   const [createNewVersion] = useMutation(createNewVersionMutation)
+  const [publishManuscript] = useMutation(publishManuscriptMutation)
 
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
@@ -220,6 +223,22 @@ const SubmitPage = ({ match, history }) => {
     set(manuscriptDelta, path, value)
     debouncers[path] = debouncers[path] || debounce(updateManuscript, 3000)
     return debouncers[path](versionId, manuscriptDelta)
+  }
+  
+  const republish = (manuscriptId) => {
+    publishManuscript({
+      variables: { 
+        id: manuscriptId
+      },
+    })
+    
+    if (['aperture', 'colab'].includes(process.env.INSTANCE_NAME)) {
+      history.push(`${urlFrag}/dashboard`)
+    }
+
+    if (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME)) {
+      history.push(`${urlFrag}/admin/manuscripts`)
+    }
   }
 
   const onSubmit = async versionId => {
@@ -253,6 +272,7 @@ const SubmitPage = ({ match, history }) => {
       match={match}
       onChange={handleChange}
       onSubmit={onSubmit}
+      republish={republish}
       parent={manuscript}
       toggleConfirming={toggleConfirming}
       versions={versions}

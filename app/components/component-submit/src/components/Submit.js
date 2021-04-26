@@ -77,6 +77,7 @@ const Submit = ({
   confirming,
   parent,
   onChange,
+  republish,
   onSubmit,
   match,
 }) => {
@@ -100,7 +101,7 @@ const Submit = ({
     let decisionSection
 
     if (
-      ['new', 'revising', 'submitted', 'evaluated'].includes(manuscript.status)
+      ['new', 'revising', 'submitted', 'evaluated', 'published'].includes(manuscript.status)
     ) {
       Object.assign(submissionValues, JSON.parse(manuscript.submission))
 
@@ -141,6 +142,7 @@ const Submit = ({
                     form={form}
                     manuscript={manuscript}
                     match={match}
+                    republish={republish}
                   />
                 )
               }}
@@ -243,6 +245,7 @@ Submit.propTypes = {
   }),
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func.isRequired,
+  republish: PropTypes.func.isRequired,
   match: PropTypes.shape({
     url: PropTypes.string.isRequired,
   }).isRequired,

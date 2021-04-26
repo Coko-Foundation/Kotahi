@@ -1,0 +1,1 @@
+ALTER TABLE manuscripts ADD hypothesis_publication_id TEXT
