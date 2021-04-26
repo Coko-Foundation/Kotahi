@@ -199,7 +199,7 @@ const FormTemplate = ({
       <div>
         <Button
           onClick={async () => {
-            if (manuscript.hypothesisPublicationId) {
+            if (manuscript.status === articleStatuses.published) {
               republish(manuscript.id)
 
               return
