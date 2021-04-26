@@ -20,3 +20,4 @@ minio/data/*
 minio\data\*
 db-data\*
 db-data/*
+/.idea
