@@ -155,7 +155,9 @@ describe('manuscripts page tests', () => {
       SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
 
       ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
-      ManuscriptsPage.getOptionWithText('Publish').should('be.visible')
+      ManuscriptsPage.getOptionWithText('Publish')
+        .scrollIntoView()
+        .should('be.visible')
     })
     it('evaluation changes should be visible', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -218,6 +220,8 @@ describe('manuscripts page tests', () => {
       })
     })
     it('filter article after topic and url contain that topic', () => {
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000)
       ManuscriptsPage.clickArticleTopic(-1)
       ManuscriptsPage.getTableRows().should('eq', 1)
       cy.url().should('contain', 'vaccines')
