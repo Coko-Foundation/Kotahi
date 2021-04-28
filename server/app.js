@@ -15,10 +15,25 @@ const logger = require('@pubsweet/logger')
 const STATUS = require('http-status-codes')
 const registerComponents = require('pubsweet-server/src/register-components') // TODO: Fix import
 const compression = require('compression')
+const AWS = require('aws-sdk')
 
 // Wax Collab requirements
 const EventEmitter = require('events')
 const gqlApi = require('./graphql')
+
+const s3ConnectionObject = {
+  accessKeyId: process.env.S3_ACCESS_KEY_ID,
+  secretAccessKey: process.env.S3_ACCESS_KEY_SECRET,
+  endpoint: process.env.S3_ENDPOINT,
+  s3ForcePathStyle: true,
+  signatureVersion: 'v4',
+}
+
+if (process.env.NODE_ENV === 'production') {
+  s3ConnectionObject.region = process.env.S3_REGION
+}
+
+const s3Bucket = new AWS.S3(s3ConnectionObject)
 
 const configureApp = app => {
   const models = require('@pubsweet/models')
@@ -41,6 +56,12 @@ const configureApp = app => {
         return body.operationName
     }
   })
+
+  app.use((req, res, next) => {
+    res.s3 = s3Bucket
+    next()
+  })
+
   app.use(
     morgan(config.get('pubsweet-server').morganLogFormat || 'combined', {
       stream: logger.stream,
