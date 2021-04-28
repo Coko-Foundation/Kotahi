@@ -17,6 +17,7 @@ const seed = async () => {
 
   if (count > 0) {
     console.log('  Form(s) already exist in database. Skipping.')
+    process.exit()
   } else {
     const formPath = formPaths[process.env.INSTANCE_NAME]
 
@@ -36,6 +37,7 @@ const seed = async () => {
 
     await Form.query().insert(submissionForm)
     console.log(`  Added submission form ${formPath} to database.`)
+    process.exit()
   }
 }
 
