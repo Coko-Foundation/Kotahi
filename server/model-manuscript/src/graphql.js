@@ -2,6 +2,7 @@ const { ref } = require('objection')
 const TurndownService = require('turndown')
 const axios = require('axios')
 const { GoogleSpreadsheet } = require('google-spreadsheet')
+const { mergeWith, isArray } = require('lodash')
 const credentials = require('../../../google_sheets_credentials.json')
 const Form = require('../../model-form/src/form')
 
@@ -52,25 +53,17 @@ const ManuscriptResolvers = ({ isVersion }) => {
   return resolvers
 }
 
-const merge = (destination, source) => {
-  const updatedManuscript = { ...destination }
-
-  Object.values(source).forEach(n => {
-    if (typeof updatedManuscript[n] !== 'object' || Array.isArray(source[n])) {
-      updatedManuscript[n] = source[n]
-    } else if (typeof source[n] === 'object' && !Array.isArray(source[n])) {
-      updatedManuscript[n] = merge(updatedManuscript[n], source[n])
-    }
-  })
-
-  return updatedManuscript
+const mergeArrays = (destination, source) => {
+  if (isArray(destination)) {
+    return source;
+  }
 }
 
 const commonUpdateManuscript = async (_, { id, input }, ctx) => {
   const manuscriptDelta = JSON.parse(input)
   const manuscript = await ctx.models.Manuscript.query().findById(id)
 
-  const updatedManuscript = merge(manuscript, manuscriptDelta)
+  const updatedManuscript = mergeWith(manuscript, manuscriptDelta, mergeArrays)
 
   // if (manuscript.status === 'revise') {
   //   return manuscript.createNewVersion(update)
