@@ -1,6 +1,6 @@
 CREATE EXTENSION IF NOT EXISTS "pgcrypto";
 
-CREATE TABLE forms (
+CREATE TABLE IF NOT EXISTS forms (
     id UUID NOT NULL DEFAULT public.gen_random_uuid(),
     type TEXT NOT NULL DEFAULT 'form',
     created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,

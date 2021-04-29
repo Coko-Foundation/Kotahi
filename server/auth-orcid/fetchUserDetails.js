@@ -2,9 +2,11 @@ const superagent = require('superagent')
 const _ = require('lodash')
 const logger = require('@pubsweet/logger')
 const { Identity } = require('@pubsweet/models')
+const config = require('config')
 
 const apiRoot =
-  process.env.USE_SANDBOXED_ORCID.toLowerCase() === 'true'
+  config['auth-orcid'].useSandboxedOrcid &&
+  config['auth-orcid'].useSandboxedOrcid.toLowerCase() === 'true'
     ? 'https://pub.sandbox.orcid.org/v3.0'
     : 'https://pub.orcid.org/v3.0'
 

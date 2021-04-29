@@ -16,7 +16,9 @@ module.exports = app => {
   passport.use(
     new OrcidStrategy(
       {
-        sandbox: process.env.USE_SANDBOXED_ORCID.toLowerCase() === 'true',
+        sandbox:
+          config['auth-orcid'].useSandboxedOrcid &&
+          config['auth-orcid'].useSandboxedOrcid.toLowerCase() === 'true',
         scope: '/authenticate',
         // this works here only with webpack dev server's proxy (ie. clientUrl/auth -> serverUrl/auth)
         // or when the server and client are served from the same url
