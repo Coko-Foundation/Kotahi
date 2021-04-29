@@ -461,7 +461,7 @@ const resolvers = {
     async manuscript(_, { id }, ctx) {
       // eslint-disable-next-line global-require
       const ManuscriptModel = require('./manuscript') // Pubsweet models may initially be undefined, so we require only when resolver runs.
-
+      
       const manuscript = await ManuscriptModel.query()
         .findById(id)
         .withGraphFetched(
@@ -488,6 +488,17 @@ const resolvers = {
       // manuscript.channel = await ctx.connectors.Channel.model.find(
       //   manuscript.channelId,
       // )
+
+      if (!ctx.user.admin) {
+        const manuscriptObj = Object.assign({}, manuscript)
+
+        manuscriptObj.reviews.forEach((review, index) => {
+          delete manuscriptObj.reviews[index].confidentialComment
+        })
+
+        return manuscriptObj
+      }
+
       return manuscript
     },
     async manuscripts(_, { where }, ctx) {
