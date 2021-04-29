@@ -7,14 +7,11 @@ import { Menu } from '../../page-object/page-component/menu'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { ControlPage } from '../../page-object/control-page'
 import { dashboard } from '../../support/routes'
-import seedForms from '../../../scripts/seedForms'
 
 describe('URL submission test', () => {
   it('can submit a URL and some metadata', () => {
     // task to restore the database as per the  dumps/initialState.sql
     cy.task('restore', 'initialState')
-
-    seedForms()
 
     // login as author
     cy.fixture('role_names').then(name => {

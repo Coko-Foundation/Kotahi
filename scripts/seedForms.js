@@ -1,3 +1,4 @@
+#! usr/bin/env node
 /* eslint-disable global-require */
 /* eslint-disable import/no-dynamic-require */
 /* eslint-disable no-console */
@@ -40,4 +41,4 @@ const seed = async () => {
   }
 }
 
-module.exports = seed
+seed()
