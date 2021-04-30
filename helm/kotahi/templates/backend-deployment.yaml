@@ -110,8 +110,10 @@ spec:
                   key: USE_SANDBOXED_ORCID
                   name: env
           image: "{{ .Values.images.backend.repository }}:{{ .Values.images.backend.tag }}"
-          command: ["node"]
-          args: ["./startServer.js"]
+          command: ["/bin/sh", "-c"]
+          args:
+            - node_modules/.bin/pubsweet migrate;
+              node ./startServer.js;
           name: server
           ports:
             - containerPort: {{ .Values.backend.deployment.containerPort }}
