@@ -101,10 +101,6 @@ const prepareForSubmit = values => {
 
 const FormBuilderPage = () => {
   const { loading, data, error } = useQuery(query)
-// eslint-disable-next-line
-  console.log('DATAZZZZZZZZ')
-  // eslint-disable-next-line
-  console.log(data)
 
   // TODO Structure forms for graphql and retrieve IDs from these mutations to allow Apollo Cache to do its magic, rather than forcing refetch.
   const [deleteForm] = useMutation(deleteFormMutation, {
@@ -173,27 +169,12 @@ const FormBuilderPage = () => {
   useEffect(() => {
     if (!loading && data) {
       if (data.forms.length) {
-        // eslint-disable-next-line
-        console.log('IF, loading: ')
-        // eslint-disable-next-line
-        console.log(loading)
-        // eslint-disable-next-line
-        console.log('IF, DATA: ')
-        // eslint-disable-next-line
-        console.log(data)
         setActiveFormId(prevFormId => prevFormId ?? data.forms[0].id)
       } else {
-        // eslint-disable-next-line
-        console.log('ELSE')
-
         setActiveFormId('new')
       }
     }
   }, [loading, data])
-// eslint-disable-next-line
-  console.log('activeFormId')
-  // eslint-disable-next-line
-  console.log(activeFormId)
 
   if (loading || !activeFormId) return <Spinner />
   if (error) return JSON.stringify(error)
