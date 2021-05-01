@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import { isEmpty, omitBy } from 'lodash'
 import { Formik } from 'formik'
 import { ValidatedFieldFormik, Menu, Button } from '@pubsweet/ui'
+import { v4 as uuid } from 'uuid'
 import components from './config/Elements'
 import * as elements from './builderComponents'
 import { Section, Legend, Page, Heading } from './style'
@@ -91,6 +92,16 @@ const prepareForSubmit = values => {
     cleanedValues.component !== 'RadioGroup'
   )
     cleanedValues.options = undefined
+
+  cleanedValues.options = cleanedValues.options?.map(x => ({
+    id: uuid(),
+    ...x,
+  }))
+  cleanedValues.validate = cleanedValues.validate?.map(x => ({
+    id: uuid(),
+    ...x,
+  }))
+
   return cleanedValues
 }
 
