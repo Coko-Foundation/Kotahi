@@ -43,6 +43,7 @@ const ComponentProperties = ({
               setComponentType(value)
               setFieldValue('component', value)
             }}
+            required
           />
         </Section>
         {editableProperties.map(([key, value]) => (
@@ -61,6 +62,7 @@ const ComponentProperties = ({
 
                 setFieldValue(key, val.target ? val.target.value : val)
               }}
+              required={key === 'name' || key === 'title'}
               {...value.props}
             />
           </Section>

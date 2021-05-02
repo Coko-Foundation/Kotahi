@@ -212,6 +212,12 @@ const createNewVersionMutation = gql`
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
+const cleanForm = form => {
+  if (!form) return form
+  // Remove any form items that are incomplete/invalid
+  return { ...form, children: form.children.filter(f => f.component && f.name) }
+}
+
 let debouncers = {}
 
 const SubmitPage = ({ match, history }) => {
@@ -241,7 +247,7 @@ const SubmitPage = ({ match, history }) => {
   if (error) return JSON.stringify(error)
 
   const manuscript = data?.manuscript
-  const form = data?.formForPurpose?.structure
+  const form = cleanForm(data?.formForPurpose?.structure)
 
   const updateManuscript = (versionId, manuscriptDelta) => {
     update({
