@@ -62,8 +62,8 @@ const waxConfig = {
 
 const Grid = styled.div`
   display: grid;
-
   grid-template-areas: 'menu' 'editor';
+
   ${props =>
     props.readonly
       ? css`
@@ -72,6 +72,9 @@ const Grid = styled.div`
       : css`
           grid-template-rows: 40px 1fr;
         `}
+
+  position: relative;
+  z-index: 0;
 `
 
 const EditorDiv = styled.div`
