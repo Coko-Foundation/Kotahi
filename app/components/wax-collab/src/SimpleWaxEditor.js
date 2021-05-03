@@ -94,6 +94,9 @@ const ReadOnlyEditorDiv = styled.div`
   grid-area: editor;
   overflow: auto;
   position: relative;
+
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
+  ${EditorElements}
 `
 
 const Menu = styled.div`
