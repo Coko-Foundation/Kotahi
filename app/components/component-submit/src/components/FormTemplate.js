@@ -118,7 +118,7 @@ const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),
 })
 
-const composeValidate = (
+export const composeValidate = (
   vld = [],
   valueField = {},
   fieldName,

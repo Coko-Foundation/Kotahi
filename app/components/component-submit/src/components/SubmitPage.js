@@ -122,7 +122,7 @@ const fragmentFields = `
   submission
 `
 
-const query = gql`
+export const query = gql`
   query($id: ID!) {
     currentUser {
       id
