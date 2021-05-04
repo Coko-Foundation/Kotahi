@@ -112,8 +112,7 @@ spec:
           image: "{{ .Values.images.backend.repository }}:{{ .Values.images.backend.tag }}"
           command: ["/bin/sh", "-c"]
           args:
-            - node_modules/.bin/pubsweet migrate;
-              node ./startServer.js;
+            - node_modules/.bin/pubsweet migrate;node ./startServer.js;
           name: server
           ports:
             - containerPort: {{ .Values.backend.deployment.containerPort }}
