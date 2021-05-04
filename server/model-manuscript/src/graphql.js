@@ -54,9 +54,8 @@ const ManuscriptResolvers = ({ isVersion }) => {
 }
 
 const mergeArrays = (destination, source) => {
-  if (isArray(destination)) {
-    return source;
-  }
+  if (isArray(destination)) return source
+  return undefined
 }
 
 const commonUpdateManuscript = async (_, { id, input }, ctx) => {
@@ -80,7 +79,7 @@ const resolvers = {
 
       const parsedFormStructure = submissionForm.structure.children
         .map(formElement => {
-          const parsedName = formElement.name.split('.')[1]
+          const parsedName = formElement.name && formElement.name.split('.')[1]
 
           if (parsedName) {
             return {
@@ -358,7 +357,7 @@ const resolvers = {
             {
               headers: {
                 Authorization:
-                  'Bearer 6879-C9eSHATI6gsjTD0GmZ9NIojOPDnntsdt76iE1AKlyzA',
+                  'Bearer 6879-8W9VUGwOMjWHULVjVkqYb4J44v5gtfSPce1uOISuqSY',
               },
             },
           )
@@ -461,7 +460,7 @@ const resolvers = {
     async manuscript(_, { id }, ctx) {
       // eslint-disable-next-line global-require
       const ManuscriptModel = require('./manuscript') // Pubsweet models may initially be undefined, so we require only when resolver runs.
-      
+
       const manuscript = await ManuscriptModel.query()
         .findById(id)
         .withGraphFetched(
@@ -490,7 +489,7 @@ const resolvers = {
       // )
 
       if (!ctx.user.admin) {
-        const manuscriptObj = Object.assign({}, manuscript)
+        const manuscriptObj = { ...manuscript }
 
         manuscriptObj.reviews.forEach((review, index) => {
           delete manuscriptObj.reviews[index].confidentialComment
