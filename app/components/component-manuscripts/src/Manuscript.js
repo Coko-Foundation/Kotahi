@@ -34,6 +34,21 @@ const DELETE_MANUSCRIPT = gql`
   }
 `
 
+export const validateManuscript = (submission, form, client) => (
+  form.children.map((element) => {
+    return composeValidate(
+      element.validate,
+      element.validateValue,
+      element.name,
+      JSON.parse(
+        element.doiValidation ? element.doiValidation : false,
+      ),
+      client,
+      element.component,
+    )(submission[element.name.split('.')[1]])
+  }).filter(Boolean)
+)
+
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 // manuscriptId is always the parent manuscript's id
@@ -60,24 +75,8 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
 
   const form = data?.formForPurpose?.structure
 
-  const validateManuscript = submission =>
-    form.children
-      .map(element => {
-        return composeValidate(
-          element.validate,
-          element.validateValue,
-          element.name,
-          JSON.parse(element.doiValidation ? element.doiValidation : false),
-          client,
-          element.component,
-        )(submission[element.name.split('.')[1]])
-      })
-      .filter(Boolean)
-
   const publishManuscriptHandler = async () => {
-    const areThereInvalidFields = await Promise.all(
-      validateManuscript(manuscript.submission),
-    )
+    const areThereInvalidFields = await Promise.all(validateManuscript(manuscript.submission, form, client))
 
     if (areThereInvalidFields.filter(Boolean).length === 0) {
       publishManuscript({

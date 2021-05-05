@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { debounce, set } from 'lodash'
-import { gql, useQuery, useMutation } from '@apollo/client'
+import { gql, useQuery, useMutation, useApolloClient } from '@apollo/client'
 import config from 'config'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import Submit from './Submit'
@@ -8,6 +8,7 @@ import { Spinner } from '../../../shared'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 import { publishManuscriptMutation } from '../../../component-review/src/components/queries'
 import pruneEmpty from '../../../../shared/pruneEmpty'
+import { validateManuscript } from '../../../component-manuscripts/src/Manuscript'
 
 const commentFields = `
   id
@@ -243,10 +244,9 @@ const SubmitPage = ({ match, history }) => {
   const [createNewVersion] = useMutation(createNewVersionMutation)
   const [publishManuscript] = useMutation(publishManuscriptMutation)
 
-  const [manuscriptChangedFields, setManuscriptChangedFields] = useState({
-    submission: {},
-  })
-
+  const [manuscriptChangedFields, setManuscriptChangedFields] = useState({submission: {}})
+  const client = useApolloClient()
+  
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
 
@@ -279,12 +279,16 @@ const SubmitPage = ({ match, history }) => {
     return debouncers[path](versionId, manuscriptDelta)
   }
 
-  const republish = async (manuscriptId, manuscriptDelta) => {
+  const republish = async manuscriptId => {
+    const areThereInvalidFields = await Promise.all(validateManuscript({...JSON.parse(manuscript.submission), ...manuscriptChangedFields.submission}, form, client))
+    if(areThereInvalidFields.filter(Boolean).length !== 0) {
+      return
+    }
     await updateManuscript(manuscriptId, manuscriptChangedFields)
     await publishManuscript({
       variables: {
         id: manuscriptId,
-        input: JSON.stringify(manuscriptDelta),
+        input: JSON.stringify(manuscriptChangedFields),
       },
     })
 
