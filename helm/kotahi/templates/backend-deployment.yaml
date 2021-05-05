@@ -112,7 +112,7 @@ spec:
           image: "{{ .Values.images.backend.repository }}:{{ .Values.images.backend.tag }}"
           command: ["/bin/sh", "-c"]
           args:
-            - scripts/setupProdServer.sh;node ./startServer.js;
+            - bash scripts/setupProdServer.sh;node ./startServer.js;
           name: server
           ports:
             - containerPort: {{ .Values.backend.deployment.containerPort }}
