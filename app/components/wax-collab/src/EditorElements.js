@@ -59,6 +59,14 @@ export default css`
   ul,
   ol {
     padding-left: 30px;
+
+    & li p {
+      margin-bottom: 0.2em;
+    }
+
+    & li:last-child p {
+      margin-bottom: 1em;
+    }
   }
 
   strong {

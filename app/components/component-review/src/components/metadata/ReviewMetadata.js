@@ -3,7 +3,7 @@ import React from 'react'
 import styled from 'styled-components'
 import { get } from 'lodash'
 import { Attachment } from '@pubsweet/ui'
-import { AbstractEditor } from 'xpub-edit'
+import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 import { Title, SectionHeader, SectionRowGrid } from '../style'
 import { SectionContent } from '../../../../shared'
 
@@ -17,11 +17,6 @@ const Heading = styled.span`
 
 const Cell = styled.span`
   grid-column: span 2 / span 2;
-  padding: 0;
-`
-
-const UnadornedEditor = styled(AbstractEditor)`
-  border: none;
   padding: 0;
 `
 
@@ -54,7 +49,7 @@ const showFieldData = (manuscript, fieldName, form) => {
 
   const fieldDefinition = form.children?.find(field => field.name === fieldName)
   if (data && fieldDefinition?.component === 'AbstractEditor')
-    return <UnadornedEditor readonly value={data} />
+    return <SimpleWaxEditor readonly value={data} />
 
   return data
 }

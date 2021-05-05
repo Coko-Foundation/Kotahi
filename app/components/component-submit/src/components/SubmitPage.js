@@ -237,19 +237,22 @@ const SubmitPage = ({ match, history }) => {
     variables: { id: match.params.version },
     partialRefetch: true,
   })
-  
+
   const [update] = useMutation(updateMutation)
   const [submit] = useMutation(submitMutation)
   const [createNewVersion] = useMutation(createNewVersionMutation)
   const [publishManuscript] = useMutation(publishManuscriptMutation)
-  const [manuscriptChangedFields, setManuscriptChangedFields] = useState({submission: {}})
-  
+
+  const [manuscriptChangedFields, setManuscriptChangedFields] = useState({
+    submission: {},
+  })
+
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
-  
+
   const manuscript = data?.manuscript
   const form = cleanForm(data?.formForPurpose?.structure)
-  
+
   const updateManuscript = (versionId, manuscriptDelta) => {
     return update({
       variables: {
@@ -269,7 +272,7 @@ const SubmitPage = ({ match, history }) => {
         submission: {
           ...s.submission,
           ...manuscriptDelta.submission,
-        }
+        },
       }
     })
     debouncers[path] = debouncers[path] || debounce(updateManuscript, 3000)
@@ -284,7 +287,7 @@ const SubmitPage = ({ match, history }) => {
         input: JSON.stringify(manuscriptDelta),
       },
     })
-    
+
     if (['aperture', 'colab'].includes(process.env.INSTANCE_NAME)) {
       history.push(`${urlFrag}/dashboard`)
     }
@@ -296,6 +299,7 @@ const SubmitPage = ({ match, history }) => {
 
   const onSubmit = async versionId => {
     await updateManuscript(versionId, manuscriptChangedFields)
+
     const delta = {
       status: match.url.includes('/evaluation') ? 'evaluated' : 'submitted',
     }
@@ -317,7 +321,7 @@ const SubmitPage = ({ match, history }) => {
   }
 
   const versions = gatherManuscriptVersions(manuscript)
-  
+
   return (
     <Submit
       confirming={confirming}

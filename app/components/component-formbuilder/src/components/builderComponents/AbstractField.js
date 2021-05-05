@@ -1,8 +1,6 @@
 import React from 'react'
-import { AbstractEditor } from 'xpub-edit'
+import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 
-const AbstractInput = ({ validationStatus, ...input }) => (
-  <AbstractEditor placeholder="Enter text" title="" {...input} />
-)
+const AbstractInput = props => <SimpleWaxEditor {...props} />
 
 export default AbstractInput
