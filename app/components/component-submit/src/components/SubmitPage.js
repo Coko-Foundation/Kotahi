@@ -237,20 +237,21 @@ const SubmitPage = ({ match, history }) => {
     variables: { id: match.params.version },
     partialRefetch: true,
   })
-
+  
   const [update] = useMutation(updateMutation)
   const [submit] = useMutation(submitMutation)
   const [createNewVersion] = useMutation(createNewVersionMutation)
   const [publishManuscript] = useMutation(publishManuscriptMutation)
-
+  const [manuscriptChangedFields, setManuscriptChangedFields] = useState({submission: {}})
+  
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
-
+  
   const manuscript = data?.manuscript
   const form = cleanForm(data?.formForPurpose?.structure)
-
+  
   const updateManuscript = (versionId, manuscriptDelta) => {
-    update({
+    return update({
       variables: {
         id: versionId,
         input: JSON.stringify(manuscriptDelta),
@@ -263,17 +264,27 @@ const SubmitPage = ({ match, history }) => {
   const handleChange = (value, path, versionId) => {
     const manuscriptDelta = {} // Only the changed fields
     set(manuscriptDelta, path, value)
+    setManuscriptChangedFields(s => {
+      return {
+        submission: {
+          ...s.submission,
+          ...manuscriptDelta.submission,
+        }
+      }
+    })
     debouncers[path] = debouncers[path] || debounce(updateManuscript, 3000)
     return debouncers[path](versionId, manuscriptDelta)
   }
 
-  const republish = manuscriptId => {
-    publishManuscript({
+  const republish = async (manuscriptId, manuscriptDelta) => {
+    await updateManuscript(manuscriptId, manuscriptChangedFields)
+    await publishManuscript({
       variables: {
         id: manuscriptId,
+        input: JSON.stringify(manuscriptDelta),
       },
     })
-
+    
     if (['aperture', 'colab'].includes(process.env.INSTANCE_NAME)) {
       history.push(`${urlFrag}/dashboard`)
     }
@@ -284,6 +295,7 @@ const SubmitPage = ({ match, history }) => {
   }
 
   const onSubmit = async versionId => {
+    await updateManuscript(versionId, manuscriptChangedFields)
     const delta = {
       status: match.url.includes('/evaluation') ? 'evaluated' : 'submitted',
     }
@@ -305,7 +317,7 @@ const SubmitPage = ({ match, history }) => {
   }
 
   const versions = gatherManuscriptVersions(manuscript)
-
+  
   return (
     <Submit
       confirming={confirming}
