@@ -10,9 +10,9 @@ import {
   Attachment,
 } from '@pubsweet/ui'
 import * as validators from 'xpub-validators'
-import { AbstractEditor } from 'xpub-edit'
 import config from 'config'
 import { useApolloClient } from '@apollo/client'
+import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
 import { Section as Container, Select, FilesUpload } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
@@ -37,6 +37,7 @@ const ModalWrapper = styled.div`
   position: fixed;
   right: 0;
   top: 0;
+  z-index: 100;
 `
 
 const filesToAttachment = file => ({
@@ -52,7 +53,7 @@ const filterFileManuscript = files =>
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   )
 
-// Add the AbstractEditor and AuthorsInput to the list of available form elements
+// Add AbstractEditor, AuthorsInput, Select and LinksInput to the list of available form elements
 const elements = { TextField, RadioGroup, CheckboxGroup }
 
 elements.AbstractEditor = ({
@@ -62,26 +63,21 @@ elements.AbstractEditor = ({
   value,
   values,
   ...rest
-}) => {
-  return (
-    <AbstractEditor
-      bulletlist
-      joinaboveblock
-      liftitem
-      link
-      orderedlist
-      value={get(values, rest.name) || ''}
-      {...rest}
-      onBlur={() => {
-        setTouched(set({}, rest.name, true))
-      }}
-      onChange={val => {
-        setTouched(set({}, rest.name, true))
-        onChange(val)
-      }}
-    />
-  )
-}
+}) => (
+  <SimpleWaxEditor
+    validationStatus={validationStatus}
+    value={get(values, rest.name) || ''}
+    {...rest}
+    onBlur={() => {
+      setTouched(set({}, rest.name, true))
+    }}
+    onChange={val => {
+      setTouched(set({}, rest.name, true))
+      const cleanedVal = val === '<p class="paragraph"></p>' ? '' : val
+      onChange(cleanedVal)
+    }}
+  />
+)
 
 elements.AbstractEditor.propTypes = {
   // eslint-disable-next-line react/forbid-prop-types

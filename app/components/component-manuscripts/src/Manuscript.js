@@ -51,7 +51,7 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
     },
   })
 
-  const { data, loading, error } = useQuery(query, {
+  const { data } = useQuery(query, {
     variables: { id: manuscriptId },
     partialRefetch: true,
   })
@@ -60,32 +60,33 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
 
   const form = data?.formForPurpose?.structure
 
-  const validateManuscript = (submission) => (
-    form.children.map((element) => {
-      return composeValidate(
-        element.validate,
-        element.validateValue,
-        element.name,
-        JSON.parse(
-          element.doiValidation ? element.doiValidation : false,
-        ),
-        client,
-        element.component,
-      )(submission[element.name.split('.')[1]])
-    }).filter(Boolean)
-  )
+  const validateManuscript = submission =>
+    form.children
+      .map(element => {
+        return composeValidate(
+          element.validate,
+          element.validateValue,
+          element.name,
+          JSON.parse(element.doiValidation ? element.doiValidation : false),
+          client,
+          element.component,
+        )(submission[element.name.split('.')[1]])
+      })
+      .filter(Boolean)
 
   const publishManuscriptHandler = async () => {
-    const areThereInvalidFields = await Promise.all(validateManuscript(manuscript.submission))
+    const areThereInvalidFields = await Promise.all(
+      validateManuscript(manuscript.submission),
+    )
 
-    if(areThereInvalidFields.filter(Boolean).length === 0) {
+    if (areThereInvalidFields.filter(Boolean).length === 0) {
       publishManuscript({
         variables: { id: manuscript.id },
-        update: (cache, { data }) => {
+        update: (cache, { dataTemp }) => {
           cache.modify({
             id: cache.identify(manuscript),
             fields: {
-              status: data.publishManuscript.status,
+              status: dataTemp.publishManuscript.status,
             },
           })
         },
