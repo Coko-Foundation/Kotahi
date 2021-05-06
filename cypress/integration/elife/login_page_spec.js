@@ -1,3 +1,4 @@
+/* eslint-disable jest/expect-expect */
 import { Menu } from '../../page-object/page-component/menu'
 import { LoginPage } from '../../page-object/login-page'
 import { manuscripts, login } from '../../support/routes'
@@ -30,6 +31,7 @@ describe('Login page tests', () => {
     cy.fixture('branding_settings').then(settings => {
       // task to restore the database as per the  dumps/initialState.sql
       cy.task('restore', 'initialState')
+      cy.task('seedForms')
 
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -56,6 +58,7 @@ describe('Login page tests', () => {
   it('dashboard page should not be visible to the logged in user', () => {
     // task to restore the database as per the  dumps/initialState.sql
     cy.task('restore', 'initialState')
+    cy.task('seedForms')
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise

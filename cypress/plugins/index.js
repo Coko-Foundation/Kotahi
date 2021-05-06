@@ -18,6 +18,8 @@ require('dotenv').config({ path: path.join(__dirname, '../../.env') })
 const { readFileSync } = require('fs')
 const seed = require('../../scripts/clearAndSeed')
 
+const seedForms = require('../../scripts/seedForms')
+
 const dumpFile = name => path.join(__dirname, '..', 'dumps', `${name}.sql`)
 
 const testUsers = {
@@ -44,7 +46,9 @@ module.exports = (on, config) => {
     },
     restore: async name => seed(readFileSync(dumpFile(name), 'utf-8')),
     createToken: async name => {
+      // eslint-disable-next-line global-require
       const { User } = require('@pubsweet/models')
+      // eslint-disable-next-line global-require
       const authentication = require('pubsweet-server/src/authentication')
 
       const user = await User.query()
@@ -53,37 +57,49 @@ module.exports = (on, config) => {
 
       return authentication.token.create(user)
     },
+    seedForms: async () => {
+      // eslint-disable-next-line no-console
+      console.log('Seeding forms...')
+      await seedForms()
+      return null
+    },
   })
-  
+
   /**
- * We use specific userAgent value to simulate multiple resolutions, as well as simulate the Safari browser
- * Resolutions based on: iPhone 11, Samsung Galaxy A50, iPad Pro, Samsung Galaxy Tab S7+
- * @param {object} configOverride: in this constant we override the existing cypress config options
- * @param {object} configOverride.userAgent: if it's set to none, the default config values are taken
- */
-const configOverride = {};
-if (config.env.userAgent === 'tabletSafari') {
-  configOverride.userAgent = 'Mozilla/5.0 (iPad; CPU OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1'
-  configOverride.viewportWidth = 2732
-  configOverride.viewportHeight = 2048
-} else if (config.env.userAgent === 'tabletSamsung') {
-  configOverride.userAgent = 'Mozilla/5.0 (Linux; Android 10; SAMSUNG SM-T970) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/12.1.4.3'
-  configOverride.viewportWidth = 1752
-  configOverride.viewportHeight = 2800
-} else if (config.env.userAgent === 'phoneSamsung') {
-  configOverride.userAgent = 'Mozilla/5.0 (Linux; Android 10; SAMSUNG SM-G980U) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/12.1.4.3'
-  configOverride.viewportHeight = 2340
-  configOverride.viewportWidth = 1080
-} else if (config.env.userAgent === 'phoneSafari') {
-  configOverride.userAgent = 'Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1'
-  configOverride.viewportHeight = 1792
-  configOverride.viewportWidth = 828
-} else if (config.env.userAgent === 'hdLaptop') {
-  configOverride.userAgent = 'none'
-  configOverride.viewportHeight = 768
-  configOverride.viewportWidth = 1366
-} else {
-  configOverride.userAgent = 'none'
-}
-return configOverride
+   * We use specific userAgent value to simulate multiple resolutions, as well as simulate the Safari browser
+   * Resolutions based on: iPhone 11, Samsung Galaxy A50, iPad Pro, Samsung Galaxy Tab S7+
+   * @param {object} configOverride: in this constant we override the existing cypress config options
+   * @param {object} configOverride.userAgent: if it's set to none, the default config values are taken
+   */
+  const configOverride = {}
+
+  if (config.env.userAgent === 'tabletSafari') {
+    configOverride.userAgent =
+      'Mozilla/5.0 (iPad; CPU OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1'
+    configOverride.viewportWidth = 2732
+    configOverride.viewportHeight = 2048
+  } else if (config.env.userAgent === 'tabletSamsung') {
+    configOverride.userAgent =
+      'Mozilla/5.0 (Linux; Android 10; SAMSUNG SM-T970) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/12.1.4.3'
+    configOverride.viewportWidth = 1752
+    configOverride.viewportHeight = 2800
+  } else if (config.env.userAgent === 'phoneSamsung') {
+    configOverride.userAgent =
+      'Mozilla/5.0 (Linux; Android 10; SAMSUNG SM-G980U) AppleWebKit/537.36 (KHTML, like Gecko) SamsungBrowser/12.1.4.3'
+    configOverride.viewportHeight = 2340
+    configOverride.viewportWidth = 1080
+  } else if (config.env.userAgent === 'phoneSafari') {
+    configOverride.userAgent =
+      'Mozilla/5.0 (iPhone; CPU iPhone OS 13_5_1 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Version/13.1.1 Mobile/15E148 Safari/604.1'
+    configOverride.viewportHeight = 1792
+    configOverride.viewportWidth = 828
+  } else if (config.env.userAgent === 'hdLaptop') {
+    configOverride.userAgent = 'none'
+    configOverride.viewportHeight = 768
+    configOverride.viewportWidth = 1366
+  } else {
+    configOverride.userAgent = 'none'
+  }
+
+  return configOverride
 }

@@ -4,185 +4,12 @@ import { gql, useQuery, useMutation, useApolloClient } from '@apollo/client'
 import config from 'config'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import Submit from './Submit'
+import query, { fragmentFields } from '../userManuscriptFormQuery'
 import { Spinner } from '../../../shared'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 import { publishManuscriptMutation } from '../../../component-review/src/components/queries'
 import pruneEmpty from '../../../../shared/pruneEmpty'
 import { validateManuscript } from '../../../component-manuscripts/src/Manuscript'
-
-const commentFields = `
-  id
-  commentType
-  content
-  files {
-    id
-    created
-    label
-    filename
-    fileType
-    mimeType
-    size
-    url
-  }
-`
-
-const reviewFields = `
-  id
-  created
-  updated
-  decisionComment {
-    ${commentFields}
-  }
-  reviewComment {
-    ${commentFields}
-  }
-  confidentialComment {
-    ${commentFields}
-  }
-  isDecision
-  recommendation
-  user {
-    id
-    defaultIdentity {
-      name
-    }
-    username
-  }
-`
-
-const fragmentFields = `
-  id
-  created
-  files {
-    id
-    created
-    label
-    filename
-    fileType
-    mimeType
-    size
-    url
-  }
-  reviews {
-    ${reviewFields}
-  }
-  teams {
-    id
-    role
-    members {
-      id
-      user {
-        id
-        username
-      }
-    }
-  }
-  decision
-  status
-  meta {
-    manuscriptId
-    title
-    source
-    abstract
-    declarations {
-      openData
-      openPeerReview
-      preregistered
-      previouslySubmitted
-      researchNexus
-      streamlinedReview
-    }
-    articleSections
-    articleType
-    history {
-      type
-      date
-    }
-    notes {
-      notesType
-      content
-    }
-    keywords
-  }
-  suggestions {
-    reviewers {
-      opposed
-      suggested
-    }
-    editors {
-      opposed
-      suggested
-    }
-  }
-  authors {
-    firstName
-    lastName
-    email
-    affiliation
-  }
-  submission
-`
-
-export const query = gql`
-  query($id: ID!) {
-    currentUser {
-      id
-      username
-      admin
-    }
-
-    manuscript(id: $id) {
-      hypothesisPublicationId
-      ${fragmentFields}
-      manuscriptVersions {
-        parentId
-        ${fragmentFields}
-      }
-      channels {
-        id
-        type
-        topic
-      }
-    }
-
-    formForPurpose(purpose: "submit") {
-      structure {
-        name
-        description
-        haspopup
-        popuptitle
-        popupdescription
-        children {
-          title
-          shortDescription
-          id
-          component
-          name
-          description
-          doiValidation
-          placeholder
-          parse
-          format
-          options {
-            id
-            label
-            value
-          }
-          validate {
-            id
-            label
-            value
-          }
-          validateValue {
-            minChars
-            maxChars
-            minSize
-          }
-        }
-      }
-    }
-  }
-`
 
 const updateMutation = gql`
   mutation($id: ID!, $input: String) {
@@ -244,9 +71,12 @@ const SubmitPage = ({ match, history }) => {
   const [createNewVersion] = useMutation(createNewVersionMutation)
   const [publishManuscript] = useMutation(publishManuscriptMutation)
 
-  const [manuscriptChangedFields, setManuscriptChangedFields] = useState({submission: {}})
+  const [manuscriptChangedFields, setManuscriptChangedFields] = useState({
+    submission: {},
+  })
+
   const client = useApolloClient()
-  
+
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
 
@@ -280,10 +110,21 @@ const SubmitPage = ({ match, history }) => {
   }
 
   const republish = async manuscriptId => {
-    const areThereInvalidFields = await Promise.all(validateManuscript({...JSON.parse(manuscript.submission), ...manuscriptChangedFields.submission}, form, client))
-    if(areThereInvalidFields.filter(Boolean).length !== 0) {
+    const areThereInvalidFields = await Promise.all(
+      validateManuscript(
+        {
+          ...JSON.parse(manuscript.submission),
+          ...manuscriptChangedFields.submission,
+        },
+        form,
+        client,
+      ),
+    )
+
+    if (areThereInvalidFields.filter(Boolean).length !== 0) {
       return
     }
+
     await updateManuscript(manuscriptId, manuscriptChangedFields)
     await publishManuscript({
       variables: {
