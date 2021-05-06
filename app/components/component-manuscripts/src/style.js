@@ -37,6 +37,17 @@ export const UserAction = styled(Action)`
   width: fit-content;
 `
 
+export const SelectAllField = styled.div`
+  display:flex;
+  align-items: center;
+  margin-top: 10px;
+`
+export const SelectedManuscriptsNumber = styled.p`
+  font-weight: bold; 
+  margin-left: 10px;
+  margin-right: 15px;
+`
+
 export const StyledTopic = styled.p`
   background-color: red;
   border-radius: 7px;

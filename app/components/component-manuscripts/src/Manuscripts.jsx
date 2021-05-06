@@ -1,8 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import { useQuery } from '@apollo/client'
-import { Button } from '@pubsweet/ui'
+import { useQuery, useMutation } from '@apollo/client'
+import { Button, Checkbox } from '@pubsweet/ui'
 import config from 'config'
-
 import Manuscript from './Manuscript'
 import {
   Container,
@@ -15,11 +14,15 @@ import {
   CaretDown,
   Spinner,
   Pagination,
+  SelectAllField,
+  SelectedManuscriptsNumber,
 } from './style'
 import { HeadingWithAction } from '../../shared'
 import { GET_MANUSCRIPTS } from '../../../queries'
 import getQueryStringByName from '../../../shared/getQueryStringByName'
 import { PaginationContainerShadowed } from '../../shared/Pagination'
+import { articleStatuses } from '../../../globals'
+import { DELETE_MANUSCRIPTS } from '../../../queries'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -67,7 +70,20 @@ const Manuscripts = ({ history, ...props }) => {
   const [selectedTopic, setSelectedTopic] = useState(
     getQueryStringByName('topic'),
   )
+  const [selectedNewManuscripts, setSelectedNewManuscripts] = useState([])
+  const toggleNewManuscriptCheck = (id) => {
+    setSelectedNewManuscripts(s => {
+      return selectedNewManuscripts.includes(id) ? s.filter(manuscriptId => manuscriptId !== id) : [...s, id]
+    })
+  }
 
+  const toggleAllNewManuscriptsCheck = () => {
+    const selectedManuscripts = newManuscriptsCount === selectedNewManuscripts.length 
+    ? [] 
+    : manuscripts.filter((manuscript) => manuscript.status === articleStatuses.new).map(manuscript => manuscript.id)
+    
+    setSelectedNewManuscripts(selectedManuscripts) 
+  }
   const limit = 10
   const sort = sortName && sortDirection && `${sortName}_${sortDirection}`
 
@@ -83,6 +99,17 @@ const Manuscripts = ({ history, ...props }) => {
     fetchPolicy: 'network-only',
   })
 
+  const [deleteManuscripts] = useMutation(DELETE_MANUSCRIPTS, {
+    update(cache, { data: { selectedNewManuscripts } }) {
+      const ids = cache.identify({
+        __typename: 'Manuscript',
+        id: selectedNewManuscripts,
+      })
+
+      cache.evict({ ids })
+    },
+  })
+
   useEffect(() => {
     refetch()
   }, [history.location.search])
@@ -94,6 +121,7 @@ const Manuscripts = ({ history, ...props }) => {
     return { ...el, submission: JSON.parse(el.submission) }
   })
 
+  const newManuscriptsCount = manuscripts.filter(manuscript => manuscript.status === articleStatuses.new).length
   const { totalCount } = data.paginatedManuscripts
 
   return (
@@ -112,6 +140,22 @@ const Manuscripts = ({ history, ...props }) => {
 
       {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
         <Heading>Manuscripts</Heading>
+      )}
+
+      {['ncrc'].includes(process.env.INSTANCE_NAME) && (
+        <SelectAllField>
+          <Checkbox 
+            label={"Select All"} 
+            onChange={toggleAllNewManuscriptsCheck} 
+            checked={!newManuscriptsCount ? false : newManuscriptsCount === selectedNewManuscripts.length}  
+          />
+          <SelectedManuscriptsNumber>{`${selectedNewManuscripts.length} articles selected`}</SelectedManuscriptsNumber>
+          <Button primary onClick={() => {
+              deleteManuscripts({ variables: { ids: selectedNewManuscripts } })
+              setSelectedNewManuscripts([])
+            }
+          }>Delete</Button>
+        </SelectAllField>
       )}
 
       <ScrollableContent>
@@ -151,6 +195,8 @@ const Manuscripts = ({ history, ...props }) => {
 
               return (
                 <Manuscript
+                  selectedNewManuscripts={selectedNewManuscripts}
+                  toggleNewManuscriptCheck={toggleNewManuscriptCheck}
                   history={history}
                   key={latestVersion.id}
                   manuscript={latestVersion}

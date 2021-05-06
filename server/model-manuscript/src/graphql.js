@@ -156,6 +156,17 @@ const resolvers = {
       manuscript.manuscriptVersions = []
       return manuscript
     },
+    async deleteManuscripts(_, { ids }, ctx) {
+      if (ids.length > 0) {
+        await Promise.all(
+          ids.map(toDeleteItem =>
+            ctx.models.Manuscript.query().deleteById(toDeleteItem),
+          ),
+        )
+      }
+
+      return ids
+    },
     async deleteManuscript(_, { id }, ctx) {
       const toDeleteList = []
       const manuscript = await ctx.models.Manuscript.find(id)
@@ -660,6 +671,7 @@ const typeDefs = `
     submitManuscript(id: ID!, input: String): Manuscript!
     makeDecision(id: ID!, decision: String): Manuscript!
     deleteManuscript(id: ID!): ID!
+    deleteManuscripts(ids: [ID]!): [ID]!
     reviewerResponse(currentUserId: ID, action: String, teamId: ID! ): Team
     assignTeamEditor(id: ID!, input: String): [Team]
     addReviewer(manuscriptId: ID!, userId: ID!): Team

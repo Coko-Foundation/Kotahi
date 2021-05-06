@@ -91,6 +91,18 @@ export const VALIDATE_DOI = gql`
   }
 `
 
+export const DELETE_MANUSCRIPT = gql`
+  mutation($id: ID!) {
+    deleteManuscript(id: $id)
+  }
+`
+
+export const DELETE_MANUSCRIPTS = gql`
+  mutation($ids: [ID]!) {
+    deleteManuscripts(ids: $ids)
+  }
+`
+
 export const GET_MANUSCRIPTS = gql`
   query Manuscripts(
     $sort: String

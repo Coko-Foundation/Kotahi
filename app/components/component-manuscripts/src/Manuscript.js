@@ -27,12 +27,8 @@ import { articleStatuses } from '../../../globals'
 import { publishManuscriptMutation } from '../../component-review/src/components/queries'
 import query from '../../component-submit/src/userManuscriptFormQuery'
 import { composeValidate } from '../../component-submit/src/components/FormTemplate'
-
-const DELETE_MANUSCRIPT = gql`
-  mutation($id: ID!) {
-    deleteManuscript(id: $id)
-  }
-`
+import { Checkbox } from '@pubsweet/ui'
+import { DELETE_MANUSCRIPT } from '../../../queries'
 
 export const validateManuscript = (submission, form, client) =>
   form.children
@@ -51,7 +47,7 @@ export const validateManuscript = (submission, form, client) =>
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 // manuscriptId is always the parent manuscript's id
-const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
+const User = ({ manuscriptId, manuscript, submitter, history, toggleNewManuscriptCheck, selectedNewManuscripts, ...props }) => {
   const [publishManuscript] = useMutation(publishManuscriptMutation)
 
   const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT, {
@@ -109,6 +105,9 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
       )}
       {['ncrc'].includes(process.env.INSTANCE_NAME) && (
         <Cell>
+          {manuscript.status === articleStatuses.new && (
+            <Checkbox checked={selectedNewManuscripts.includes(manuscript.id)} onChange={() => toggleNewManuscriptCheck(manuscript.id)} />
+          )}
           <span style={{ wordBreak: 'break-word' }}>
             {manuscript.submission && manuscript.submission.articleDescription}
           </span>
