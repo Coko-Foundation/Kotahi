@@ -25,7 +25,7 @@ import { convertTimestampToDate } from '../../../shared/time-formatting'
 import { convertCamelCaseToText } from '../../../shared/convertCamelCaseToText'
 import { articleStatuses } from '../../../globals'
 import { publishManuscriptMutation } from '../../component-review/src/components/queries'
-import { query } from '../../component-submit/src/components/SubmitPage'
+import query from '../../component-submit/src/userManuscriptFormQuery'
 import { composeValidate } from '../../component-submit/src/components/FormTemplate'
 
 const DELETE_MANUSCRIPT = gql`
@@ -34,20 +34,19 @@ const DELETE_MANUSCRIPT = gql`
   }
 `
 
-export const validateManuscript = (submission, form, client) => (
-  form.children.map((element) => {
-    return composeValidate(
-      element.validate,
-      element.validateValue,
-      element.name,
-      JSON.parse(
-        element.doiValidation ? element.doiValidation : false,
-      ),
-      client,
-      element.component,
-    )(submission[element.name.split('.')[1]])
-  }).filter(Boolean)
-)
+export const validateManuscript = (submission, form, client) =>
+  form.children
+    .map(element => {
+      return composeValidate(
+        element.validate,
+        element.validateValue,
+        element.name,
+        JSON.parse(element.doiValidation ? element.doiValidation : false),
+        client,
+        element.component,
+      )(submission[element.name.split('.')[1]])
+    })
+    .filter(Boolean)
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -76,7 +75,9 @@ const User = ({ manuscriptId, manuscript, submitter, history, ...props }) => {
   const form = data?.formForPurpose?.structure
 
   const publishManuscriptHandler = async () => {
-    const areThereInvalidFields = await Promise.all(validateManuscript(manuscript.submission, form, client))
+    const areThereInvalidFields = await Promise.all(
+      validateManuscript(manuscript.submission, form, client),
+    )
 
     if (areThereInvalidFields.filter(Boolean).length === 0) {
       publishManuscript({

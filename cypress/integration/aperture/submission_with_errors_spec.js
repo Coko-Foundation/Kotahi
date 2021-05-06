@@ -1,3 +1,4 @@
+/* eslint-disable jest/expect-expect */
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
@@ -7,6 +8,7 @@ describe('Submission with errors test', () => {
   it('can submit a URL and some metadata', () => {
     // task to restore the database as per the  dumps/initialState.sql
     cy.task('restore', 'initialState')
+    cy.task('seedForms')
 
     // login as author and attempt to submit an incomplete submission form
     // eslint-disable-next-line jest/valid-expect-in-promise

@@ -13,6 +13,8 @@ describe('URL submission test', () => {
     // task to restore the database as per the  dumps/initialState.sql
     cy.task('restore', 'initialState')
 
+    cy.task('seedForms')
+
     // login as author
     cy.fixture('role_names').then(name => {
       cy.login(name.role.author, dashboard)
