@@ -96,7 +96,7 @@ module.exports = app => {
 
       let redirectionURL
 
-      if (['aperture', 'colab'].includes(process.env.INSTANCE_NAME)) {
+      if (['aperture', 'colab', 'ncrc'].includes(process.env.INSTANCE_NAME)) {
         redirectionURL = '/kotahi/dashboard'
 
         if (req.user.firstLogin) {
@@ -104,7 +104,7 @@ module.exports = app => {
         }
       }
 
-      if (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME)) {
+      if (['elife'].includes(process.env.INSTANCE_NAME)) {
         // temporary .. because all users are admins - is temporary feature
         redirectionURL = '/kotahi/admin/manuscripts'
       }

@@ -85,8 +85,9 @@ const Dashboard = ({ history, ...props }) => {
           ＋ New submission
         </Button>
       </HeadingWithAction>
-
-      <SectionContent>
+  {
+    !['ncrc'].includes(process.env.INSTANCE_NAME) &&
+      <SectionContent >
         <SectionHeader>
           <Title>My Submissions</Title>
         </SectionHeader>
@@ -94,20 +95,23 @@ const Dashboard = ({ history, ...props }) => {
           mySubmissions.map(submission => (
             // Links are based on the original/parent manuscript version
             <OwnerItem
-              key={submission.id}
-              // deleteManuscript={() =>
-              //   // eslint-disable-next-line no-alert
-              //   window.confirm(
+            key={submission.id}
+            // deleteManuscript={() =>
+            //   // eslint-disable-next-line no-alert
+            //   window.confirm(
               //     'Are you sure you want to delete this submission?',
               //   ) && deleteManuscript({ variables: { id: submission.id } })
               // }
               version={submission}
-            />
-          ))
-        ) : (
-          <Placeholder>You have not submitted any manuscripts yet</Placeholder>
-        )}
+              />
+              ))
+              ) : (
+                <Placeholder>You have not submitted any manuscripts yet</Placeholder>
+                )}
       </SectionContent>
+  }
+  {
+    !['ncrc'].includes(process.env.INSTANCE_NAME) &&
       <SectionContent>
         <SectionHeader>
           <Title>To Review</Title>
@@ -127,6 +131,7 @@ const Dashboard = ({ history, ...props }) => {
           <Placeholder>You have not been assigned any reviews yet</Placeholder>
         )}
       </SectionContent>
+    }
 
       <SectionContent>
         <SectionHeader>
