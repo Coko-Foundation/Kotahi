@@ -368,7 +368,7 @@ const resolvers = {
             {
               headers: {
                 Authorization:
-                  'Bearer 6879-8W9VUGwOMjWHULVjVkqYb4J44v5gtfSPce1uOISuqSY',
+                  'Bearer 6879-oriyww1JUkfOoEsBbrmibBSy6-lgiL_u9lUpoOJwFfI',
               },
             },
           )
