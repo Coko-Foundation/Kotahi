@@ -70,7 +70,6 @@ const Profile = () => {
   if (error) return JSON.stringify(error)
   
   const localStorage = window.localStorage || undefined
-  const testVariable = 'test'
   const logoutUser = () => {
     localStorage.removeItem('token')
     client.resetStore()
@@ -90,7 +89,7 @@ const Profile = () => {
 
       <SectionContent>
         <SectionHeader>
-          <Title>Profile picture</Title>
+          <Title>Profile TEST picture</Title>
         </SectionHeader>
         <SectionRow key="profilepicture">
           <div>
