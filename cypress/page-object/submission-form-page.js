@@ -49,7 +49,6 @@ const BIORXIV_ARTICLE_URL_FIELD = 'submission.biorxivURL'
 
 // specific to ncrc
 const ARTICLE_DESCRIPTION_FIELD = 'submission.articleDescription'
-//const OUR_TAKE_FIELD = 'submission.ourTake'
 const OUR_TAKE_FIELD = '[class*=SimpleWaxEditor__EditorDiv]'
 const DROPDOWN = 'placeholder'
 const STUDY_SETTING_FIELD = '[class*=SimpleWaxEditor__EditorDiv]'
