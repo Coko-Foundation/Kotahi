@@ -21,7 +21,7 @@ describe('manuscripts page tests', () => {
   context('elements visibility', () => {
     it('submit button should be visible & dashboard page should not exist', () => {
       ManuscriptsPage.getSubmitButton().should('be.visible')
-      Menu.getDashboardButton().should('not.exist')
+      Menu.getDashboardButton().should('be.visible')
     })
 
     it('evaluation button should be visible and publish button should not be visible for unsubmitted articles', () => {
