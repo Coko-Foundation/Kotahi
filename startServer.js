@@ -1,3 +1,6 @@
 const { startServer } = require('pubsweet-server')
 
-startServer()
+const seedForms = require('./scripts/seedForms')(async () => {
+  await seedForms()
+  startServer()
+})()
