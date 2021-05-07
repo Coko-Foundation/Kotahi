@@ -89,7 +89,7 @@ const Profile = () => {
 
       <SectionContent>
         <SectionHeader>
-          <Title>Profile TEST picture</Title>
+          <Title>Profile picture</Title>
         </SectionHeader>
         <SectionRow key="profilepicture">
           <div>
