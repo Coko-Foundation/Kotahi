@@ -3,6 +3,7 @@ import { gql, useMutation, useQuery, useApolloClient } from '@apollo/client'
 // import { Action } from '@pubsweet/ui'
 import config from 'config'
 import PropTypes from 'prop-types'
+import { Checkbox } from '@pubsweet/ui'
 import { UserAvatar } from '../../component-avatar/src'
 import {
   Row,
@@ -27,7 +28,6 @@ import { articleStatuses } from '../../../globals'
 import { publishManuscriptMutation } from '../../component-review/src/components/queries'
 import query from '../../component-submit/src/userManuscriptFormQuery'
 import { composeValidate } from '../../component-submit/src/components/FormTemplate'
-import { Checkbox } from '@pubsweet/ui'
 import { DELETE_MANUSCRIPT } from '../../../queries'
 
 export const validateManuscript = (submission, form, client) =>
@@ -47,7 +47,16 @@ export const validateManuscript = (submission, form, client) =>
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 // manuscriptId is always the parent manuscript's id
-const User = ({ manuscriptId, manuscript, submitter, history, toggleNewManuscriptCheck, selectedNewManuscripts, ...props }) => {
+const User = ({
+  manuscriptId,
+  manuscript,
+  submitter,
+  history,
+  toggleNewManuscriptCheck,
+  selectedNewManuscripts,
+  setSelectedStatus,
+  ...props
+}) => {
   const [publishManuscript] = useMutation(publishManuscriptMutation)
 
   const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT, {
@@ -95,6 +104,11 @@ const User = ({ manuscriptId, manuscript, submitter, history, toggleNewManuscrip
     history.replace(`${urlFrag}/admin/manuscripts?topic=${topic}`)
   }
 
+  const filterByArticleStatus = status => {
+    setSelectedStatus(status)
+    history.replace(`${urlFrag}/admin/manuscripts?articleStatus=${status}`)
+  }
+
   return (
     <Row>
       {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
@@ -106,7 +120,10 @@ const User = ({ manuscriptId, manuscript, submitter, history, toggleNewManuscrip
       {['ncrc'].includes(process.env.INSTANCE_NAME) && (
         <Cell>
           {manuscript.status === articleStatuses.new && (
-            <Checkbox checked={selectedNewManuscripts.includes(manuscript.id)} onChange={() => toggleNewManuscriptCheck(manuscript.id)} />
+            <Checkbox
+              checked={selectedNewManuscripts.includes(manuscript.id)}
+              onChange={() => toggleNewManuscriptCheck(manuscript.id)}
+            />
           )}
           <span style={{ wordBreak: 'break-word' }}>
             {manuscript.submission && manuscript.submission.articleDescription}
@@ -131,7 +148,9 @@ const User = ({ manuscriptId, manuscript, submitter, history, toggleNewManuscrip
         </Cell>
       )}
       <Cell>
-        <StatusBadge status={manuscript.status} />
+        <span onClick={() => filterByArticleStatus(manuscript.status)}>
+          <StatusBadge status={manuscript.status} />
+        </span>
       </Cell>
       {process.env.INSTANCE_NAME === 'ncrc' && (
         <Cell>

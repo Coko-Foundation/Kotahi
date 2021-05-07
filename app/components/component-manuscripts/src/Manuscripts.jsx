@@ -18,11 +18,10 @@ import {
   SelectedManuscriptsNumber,
 } from './style'
 import { HeadingWithAction } from '../../shared'
-import { GET_MANUSCRIPTS } from '../../../queries'
+import { GET_MANUSCRIPTS, DELETE_MANUSCRIPTS } from '../../../queries'
 import getQueryStringByName from '../../../shared/getQueryStringByName'
 import { PaginationContainerShadowed } from '../../shared/Pagination'
 import { articleStatuses } from '../../../globals'
-import { DELETE_MANUSCRIPTS } from '../../../queries'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -70,20 +69,32 @@ const Manuscripts = ({ history, ...props }) => {
   const [selectedTopic, setSelectedTopic] = useState(
     getQueryStringByName('topic'),
   )
+
+  const [selectedStatus, setSelectedStatus] = useState(
+    getQueryStringByName('status'),
+  )
+
   const [selectedNewManuscripts, setSelectedNewManuscripts] = useState([])
-  const toggleNewManuscriptCheck = (id) => {
+
+  const toggleNewManuscriptCheck = id => {
     setSelectedNewManuscripts(s => {
-      return selectedNewManuscripts.includes(id) ? s.filter(manuscriptId => manuscriptId !== id) : [...s, id]
+      return selectedNewManuscripts.includes(id)
+        ? s.filter(manuscriptId => manuscriptId !== id)
+        : [...s, id]
     })
   }
 
   const toggleAllNewManuscriptsCheck = () => {
-    const selectedManuscripts = newManuscriptsCount === selectedNewManuscripts.length 
-    ? [] 
-    : manuscripts.filter((manuscript) => manuscript.status === articleStatuses.new).map(manuscript => manuscript.id)
-    
-    setSelectedNewManuscripts(selectedManuscripts) 
+    const selectedManuscripts =
+      newManuscriptsCount === selectedNewManuscripts.length
+        ? []
+        : manuscripts
+            .filter(manuscript => manuscript.status === articleStatuses.new)
+            .map(manuscript => manuscript.id)
+
+    setSelectedNewManuscripts(selectedManuscripts)
   }
+
   const limit = 10
   const sort = sortName && sortDirection && `${sortName}_${sortDirection}`
 
@@ -93,7 +104,12 @@ const Manuscripts = ({ history, ...props }) => {
       offset: (page - 1) * limit,
       limit,
       filter: history.location.search
-        ? { submission: JSON.stringify({ topics: selectedTopic }) }
+        ? {
+            status: selectedStatus,
+            submission: JSON.stringify({
+              topics: selectedTopic,
+            }),
+          }
         : {},
     },
     fetchPolicy: 'network-only',
@@ -121,7 +137,10 @@ const Manuscripts = ({ history, ...props }) => {
     return { ...el, submission: JSON.parse(el.submission) }
   })
 
-  const newManuscriptsCount = manuscripts.filter(manuscript => manuscript.status === articleStatuses.new).length
+  const newManuscriptsCount = manuscripts.filter(
+    manuscript => manuscript.status === articleStatuses.new,
+  ).length
+
   const { totalCount } = data.paginatedManuscripts
 
   return (
@@ -144,17 +163,25 @@ const Manuscripts = ({ history, ...props }) => {
 
       {['ncrc'].includes(process.env.INSTANCE_NAME) && (
         <SelectAllField>
-          <Checkbox 
-            label={"Select All"} 
-            onChange={toggleAllNewManuscriptsCheck} 
-            checked={!newManuscriptsCount ? false : newManuscriptsCount === selectedNewManuscripts.length}  
+          <Checkbox
+            checked={
+              !newManuscriptsCount
+                ? false
+                : newManuscriptsCount === selectedNewManuscripts.length
+            }
+            label="Select All"
+            onChange={toggleAllNewManuscriptsCheck}
           />
           <SelectedManuscriptsNumber>{`${selectedNewManuscripts.length} articles selected`}</SelectedManuscriptsNumber>
-          <Button primary onClick={() => {
+          <Button
+            onClick={() => {
               deleteManuscripts({ variables: { ids: selectedNewManuscripts } })
               setSelectedNewManuscripts([])
-            }
-          }>Delete</Button>
+            }}
+            primary
+          >
+            Delete
+          </Button>
         </SelectAllField>
       )}
 
@@ -195,15 +222,16 @@ const Manuscripts = ({ history, ...props }) => {
 
               return (
                 <Manuscript
-                  selectedNewManuscripts={selectedNewManuscripts}
-                  toggleNewManuscriptCheck={toggleNewManuscriptCheck}
                   history={history}
                   key={latestVersion.id}
                   manuscript={latestVersion}
                   manuscriptId={manuscript.id}
                   number={key + 1}
+                  selectedNewManuscripts={selectedNewManuscripts}
+                  setSelectedStatus={setSelectedStatus}
                   setSelectedTopic={setSelectedTopic}
                   submitter={manuscript.submitter}
+                  toggleNewManuscriptCheck={toggleNewManuscriptCheck}
                 />
               )
             })}
