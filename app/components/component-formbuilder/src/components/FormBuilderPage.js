@@ -71,6 +71,8 @@ const query = gql`
           description
           doiValidation
           placeholder
+          inline
+          sectioncss
           parse
           format
           options {

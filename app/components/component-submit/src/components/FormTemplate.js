@@ -40,6 +40,10 @@ const ModalWrapper = styled.div`
   z-index: 100;
 `
 
+const SafeRadioGroup = styled(RadioGroup)`
+  position: relative;
+`
+
 const filesToAttachment = file => ({
   name: file.filename,
   url: file.url,
@@ -54,7 +58,7 @@ const filterFileManuscript = files =>
   )
 
 // Add AbstractEditor, AuthorsInput, Select and LinksInput to the list of available form elements
-const elements = { TextField, RadioGroup, CheckboxGroup }
+const elements = { TextField, RadioGroup: SafeRadioGroup, CheckboxGroup }
 
 elements.AbstractEditor = ({
   validationStatus,

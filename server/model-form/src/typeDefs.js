@@ -34,6 +34,8 @@ const typeDefs = `
     placeholder: String
     parse: String
     format: String
+    inline: String
+    sectioncss: String
     validate: [FormElementOptionInput!]
     validateValue: FormElementValidationInput
   }
@@ -79,6 +81,8 @@ const typeDefs = `
     placeholder: String
     parse: String
     format: String
+    inline: String
+    sectioncss: String
     validate: [FormElementOption!]
     validateValue: FormElementValidation
   }
