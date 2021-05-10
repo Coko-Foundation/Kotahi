@@ -264,6 +264,41 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getArticleTitleByRow(1).should('contain', 'abc')
       ManuscriptsPage.getArticleTitleByRow(2).should('contain', 'def')
     })
+    it('filter article after status and url contain that status', () => {
+      ManuscriptsPage.clickSubmit()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+      // fill the submit form and submit it
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('submission_form_data').then(data => {
+        SubmissionFormPage.fillInArticleUrl(data.doi)
+        SubmissionFormPage.fillInArticleDescription(data.title)
+        SubmissionFormPage.fillInOurTake(data.ourTake)
+        SubmissionFormPage.clickDropdown(0)
+        SubmissionFormPage.selectDropdownOption(0)
+        SubmissionFormPage.fillInStudySetting(data.studySetting)
+        SubmissionFormPage.fillInMainFindings(data.mainFindings)
+        SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+        SubmissionFormPage.fillInLimitations(data.limitations)
+        SubmissionFormPage.fillInValueAdded(data.valueAdded)
+        SubmissionFormPage.clickDropdown(-1)
+        SubmissionFormPage.selectDropdownOption(0)
+        SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
+        // eslint-disable-next-line
+        SubmissionFormPage.waitThreeSec()
+        SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
+      })
+     // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000)
+      ManuscriptsPage.clickArticleStatus(-1)
+      ManuscriptsPage.getTableRows().should('eq', 3)
+      ManuscriptsPage.getArticleStatus(0).should('contain', 'Unsubmitted')
+      cy.url().should('contain', 'new')
+     Menu.clickManuscriptsAndAssertPageLoad()
+      ManuscriptsPage.clickArticleStatus(0)
+      ManuscriptsPage.getTableRows().should('eq', 1)
+      ManuscriptsPage.getArticleStatus(0).should('contain', 'Submitted')
+      cy.url().should('contain', 'submitted')
+    })
   })
   context('DOI validation', () => {
     it('message for DOI invalid is visible ', () => {

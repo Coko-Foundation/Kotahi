@@ -21,6 +21,7 @@ const ARTICLE_LABEL = 'style__StyledTableLabel'
 const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 const TABLE_ROW = 'Table__Row'
 const LABEL = '[class*=Table__Row]>td:nth-child(6)'
+const ARTICLE_STATUS = '[class*=Badge__Status]'
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -96,5 +97,11 @@ export const ManuscriptsPage = {
   getTableHeader() {
     return cy.get(TABLE_HEADER, { timeout: 15000 })
   },
+  getArticleStatus(nth) {
+    return cy.get(ARTICLE_STATUS).eq(nth)
+  },
+  clickArticleStatus(nth) {
+    this.getArticleStatus(nth).click()
+  }
 }
 export default ManuscriptsPage
