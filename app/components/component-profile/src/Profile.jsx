@@ -68,9 +68,8 @@ const Profile = () => {
   const { loading, error, data, client, refetch } = useQuery(GET_CURRENT_USER)
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
-
+  
   const localStorage = window.localStorage || undefined
-
   const logoutUser = () => {
     localStorage.removeItem('token')
     client.resetStore()
