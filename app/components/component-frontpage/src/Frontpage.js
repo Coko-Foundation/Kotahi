@@ -17,7 +17,7 @@ import {
   HeadingWithAction,
   Pagination,
 } from '../../shared'
-import { PaginationContainer } from '../../../components/shared/Pagination'
+import { PaginationContainer } from '../../shared/Pagination'
 
 const Frontpage = ({ history, ...props }) => {
   const [sortName] = useState('created')
@@ -65,9 +65,9 @@ const Frontpage = ({ history, ...props }) => {
       <Pagination
         limit={limit}
         page={page}
+        PaginationContainer={PaginationContainer}
         setPage={setPage}
         totalCount={totalCount}
-        PaginationContainer={PaginationContainer}
       />
 
       {frontpage.length > 0 ? (

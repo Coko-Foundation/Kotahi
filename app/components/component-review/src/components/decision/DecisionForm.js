@@ -29,8 +29,6 @@ import {
   RecommendationInputContainer,
 } from '../style'
 
-// import Wax from '../../../../wax-collab/src/Editoria'
-
 // This solves issue #38, which caused the entire page to blank in chrome upon selection change, due to strange styling of radio buttons.
 const RadioGroup = styled(UnstableRadioGroup)`
   position: relative;

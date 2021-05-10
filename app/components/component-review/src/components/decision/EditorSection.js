@@ -1,14 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import Wax from '../../../../wax-collab/src/Editoria'
-// import { XpubSchema } from 'wax-prosemirror-schema'
-// import 'wax-prosemirror-themes/themes/default-theme.css'
-
 import { EditorWrapper, Info } from '../style'
-
-// const options = {
-//   // schema: new CreateSchema(XpubSchema),
-// }
 
 const EditorSection = ({ manuscript }) => {
   const manuscriptFile = manuscript?.files?.find(
@@ -27,12 +20,7 @@ const EditorSection = ({ manuscript }) => {
 
   return (
     <EditorWrapper>
-      <Wax
-        // fileUpload={fileUpload}
-        // onChange={source => updateManuscript({ source })}
-        content={manuscript.meta.source}
-        readonly
-      />
+      <Wax content={manuscript.meta.source} readonly />
     </EditorWrapper>
   )
 }

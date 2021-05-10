@@ -4,7 +4,6 @@ import { manuscripts } from '../../support/routes'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 
 describe('Login page tests', () => {
-
   it('branding settings should be visible after login', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('branding_settings').then(settings => {
