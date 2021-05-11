@@ -28,6 +28,7 @@ const TabsContainer = styled.div`
     css`
       grid-area: ${props.gridArea};
     `}
+  margin-top: ${() => ['ncrc'].includes(process.env.INSTANCE_NAME) ? '16px' : '0'}
 `
 
 const TabContainer = styled.div.attrs(props => ({

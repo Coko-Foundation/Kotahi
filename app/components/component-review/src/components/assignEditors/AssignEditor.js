@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import config from 'config'
 import { get } from 'lodash'
 import { gql, useQuery, useMutation } from '@apollo/client'
@@ -58,10 +58,62 @@ const createTeamMutation = gql`
 `
 
 const AssignEditor = ({ teamRole, manuscript }) => {
-  const team = (manuscript.teams || []).find(t => t.role === teamRole) || {}
+  const [team, setTeam] = useState([])
+  const [teams, setTeams] = useState([])
+  const [selectedEditor, setSelectedEditor] = useState(undefined)
+  const [members, setMembers] = useState([])
 
-  const members = team.members || []
-  const value = members.length > 0 ? members[0].user.id : undefined
+  useEffect(() => {
+    setTeam((manuscript.teams || []).find(t => t.role === teamRole) || {})
+    setTeams(manuscript.teams || [])
+  }, [manuscript])
+  
+  useEffect(() => {
+    setTeam(teams.find(t => t.role === teamRole) || {})
+  }, [teams])
+
+  useEffect(() => {
+    setMembers(team.members || [])
+  }, [team])
+
+  useEffect(() => {
+    setSelectedEditor(members.length > 0 ? members[0].user.id : undefined)
+  }, [members])
+
+  useEffect(() => {
+    if (selectedEditor) {
+      if (teams.find(t => t.role === teamRole)) {
+        updateTeam({
+          variables: {
+            id: team.id,
+            input: {
+              members: [{ user: { id: selectedEditor } }],
+            },
+          },
+        })
+      } else {
+        const input = {
+          // Editors are always linked to the parent manuscript
+          manuscriptId: manuscript.id,
+          name: teamRole === 'seniorEditor' ? 'Senior Editor' : 'Handling Editor',
+          role: teamRole,
+          members: [{ user: { id: selectedEditor } }],
+        }
+        createTeam({
+          variables: {
+            input,
+          },
+        }).then(({ data }) => {
+          setTeams([...teams, {
+            id: data.createTeam.id,
+            role: teamRole,
+            members: [{ user: { id: selectedEditor } }],
+          }])
+        })
+      }
+    }
+  }, [selectedEditor])
+
   const teamName = get(config, `teams.${teamRole}.name`)
 
   const { data, loading, error } = useQuery(query)
@@ -75,43 +127,15 @@ const AssignEditor = ({ teamRole, manuscript }) => {
 
   const options = (data.users || []).map(user => editorOption(user))
 
-  const assignRole = async (userId, role) => {
-    if (value) {
-      const teamToUpdate = manuscript.teams.find(t => t.role === teamRole)
-      updateTeam({
-        variables: {
-          id: teamToUpdate.id,
-          input: {
-            members: [{ user: { id: userId } }],
-          },
-        },
-      })
-    } else {
-      const input = {
-        // Editors are always linked to the parent manuscript
-        manuscriptId: manuscript.id,
-        name: teamRole === 'seniorEditor' ? 'Senior Editor' : 'Handling Editor',
-        role: teamRole,
-        members: [{ user: { id: userId } }],
-      }
-
-      createTeam({
-        variables: {
-          input,
-        },
-      })
-    }
-  }
-
   return (
     <Select
       aria-label={`Assign ${teamRole}`}
       data-testid={`assign${teamRole}`}
       label={teamName}
-      onChange={selected => assignRole(selected.value, teamRole)}
+      onChange={selected => setSelectedEditor(selected.value)}
       options={options}
       placeholder={`Assign ${teamName}…`}
-      value={value}
+      value={selectedEditor}
     />
   )
 }

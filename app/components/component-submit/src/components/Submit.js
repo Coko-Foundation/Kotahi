@@ -19,6 +19,8 @@ import {
 
 // TODO: Improve the import, perhaps a shared component?
 import EditorSection from '../../../component-review/src/components/decision/EditorSection'
+import AssignEditorsReviewers from '../../../component-review/src/components/assignEditors/AssignEditorsReviewers'
+import AssignEditor from '../../../component-review/src/components/assignEditors/AssignEditor'
 
 const SubmittedVersion = ({
   manuscript,
@@ -169,10 +171,18 @@ const Submit = ({
 
     decisionSections.push({
       content: (
-        <Tabs
-          defaultActiveKey={versionId}
-          sections={[decisionSection, editorSection]}
-        />
+        <>
+          {['ncrc'].includes(process.env.INSTANCE_NAME) &&
+            <AssignEditorsReviewers
+              AssignEditor={AssignEditor}
+              manuscript={manuscript}
+            />
+          }
+          <Tabs
+            defaultActiveKey={versionId}
+            sections={[decisionSection, editorSection]}
+          />
+        </>
       ),
       key: manuscript.id,
       label,
