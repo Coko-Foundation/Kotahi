@@ -55,7 +55,19 @@
     "test:firefox:elife:iPhone:tablet": "cypress run --env userAgent=tabletSafari --browser firefox --headless --spec 'cypress/integration/elife/**.js'",
     "test:firefox:elife:hd:laptop": "cypress run --env userAgent=hdLaptop --browser chrome --spec 'cypress/integration/elife/**.js'",
     "test:all:chrome:ncrc": "start-test test:server-and-client 4000 test:chrome:ncrc",
-    "test:chrome:ncrc": "cypress run --browser chrome --headless --spec 'cypress/integration/ncrc/**.js'"
+    "test:chrome:ncrc": "cypress run --browser chrome --headless --spec 'cypress/integration/ncrc/**.js'",
+    "test:all:firefox:ncrc": "start-test test:server-and-client 4000 test:firefox:ncrc",
+    "test:all:firefox:ncrc:samsung": "start-test test:server-and-client 4000 test:firefox:ncrc:samsung",
+    "test:all:firefox:ncrc:samsung:tablet": "start-test test:server-and-client 4000 test:firefox:ncrc:samsung:tablet",
+    "test:all:firefox:ncrc:iPhone": "start-test test:server-and-client 4000 test:firefox:ncrc:iPhone",
+    "test:all:firefox:ncrc:iPhone:tablet": "start-test test:server-and-client 4000 test:firefox:ncrc:iPhone:tablet",
+    "test:all:firefox:ncrc:hd:laptop": "start-test test:server-and-client 4000 test:firefox:ncrc:hd:laptop",
+    "test:firefox:ncrc": "cypress run --browser firefox --headless --spec 'cypress/integration/ncrc/**.js'",
+    "test:firefox:ncrc:samsung": "cypress run --env userAgent=phoneSamsung --browser firefox --headless --spec 'cypress/integration/ncrc/**.js'",
+    "test:firefox:ncrc:samsung:tablet": "cypress run --env userAgent=tabletSamsung --browser firefox --headless --spec 'cypress/integration/ncrc/**.js'",
+    "test:firefox:ncrc:iPhone": "cypress run --env userAgent=phoneSafari --browser firefox --spec 'cypress/integration/ncrc/**.js'",
+    "test:firefox:ncrc:iPhone:tablet": "cypress run --env userAgent=tabletSafari --browser firefox --headless --spec 'cypress/integration/ncrc/**.js'",
+    "test:firefox:ncrc:hd:laptop": "cypress run --env userAgent=hdLaptop --browser chrome --spec 'cypress/integration/ncrc/**.js'"
   },
   "husky": {
     "hooks": {
