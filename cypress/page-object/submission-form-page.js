@@ -60,7 +60,7 @@ const TOPICS_CHECKBOX_LIST = 'submission.topics'
 
 export const SubmissionFormPage = {
   getPageTitle() {
-    return cy.get(PAGE_TITLE, { timeout: 10000 })
+    return cy.get(PAGE_TITLE)
   },
   getAddLinkButton() {
     return cy.get(ADD_A_LINK_BUTTON)
@@ -220,6 +220,7 @@ export const SubmissionFormPage = {
   },
   clickSubmitResearchAndWaitPageLoad() {
     this.clickSubmitResearch()
+    cy.awaitDisappearSpinner()
     ManuscriptsPage.getTableHeader().should('be.visible')
   },
   getSubmitManuscriptButton() {

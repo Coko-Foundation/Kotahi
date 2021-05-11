@@ -16,6 +16,7 @@ describe('manuscripts page tests', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.admin, manuscripts)
     })
+
     ManuscriptsPage.getTableHeader().should('be.visible')
   })
   context('elements visibility', () => {
@@ -62,7 +63,6 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
     })
-
     it('unsubmitted article is evaluated', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -217,7 +217,6 @@ describe('manuscripts page tests', () => {
           data.ncrc.topicTypes.diagnostics,
         )
         Menu.clickManuscriptsAndAssertPageLoad()
-        // eslint-disable-next-line
       })
     })
     it('filter article after topic and url contain that topic', () => {
@@ -287,26 +286,17 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
       })
-     // eslint-disable-next-line cypress/no-unnecessary-waiting
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000)
       ManuscriptsPage.clickArticleStatus(-1)
       ManuscriptsPage.getTableRows().should('eq', 3)
       ManuscriptsPage.getArticleStatus(0).should('contain', 'Unsubmitted')
       cy.url().should('contain', 'new')
-     Menu.clickManuscriptsAndAssertPageLoad()
+      Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.clickArticleStatus(0)
       ManuscriptsPage.getTableRows().should('eq', 1)
       ManuscriptsPage.getArticleStatus(0).should('contain', 'Submitted')
       cy.url().should('contain', 'submitted')
-    })
-  })
-  context('DOI validation', () => {
-    it('message for DOI invalid is visible ', () => {
-      ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
-      SubmissionFormPage.fillInArticleUrl('google.com')
-      SubmissionFormPage.fillInArticleDescription('2')
-      SubmissionFormPage.getValidationErrorMessage('DOI is invalid')
     })
   })
 })

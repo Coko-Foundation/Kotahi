@@ -140,6 +140,14 @@ describe('form builder tests', () => {
       })
     })
 
+    it('message for DOI invalid is visible ', () => {
+      SubmissionFormPage.fillInArticleUrl('google.com')
+      SubmissionFormPage.fillInArticleDescription('2')
+      SubmissionFormPage.getValidationErrorMessage('DOI is invalid').should(
+        'be.visible',
+      )
+    })
+
     it('check study design dropdown options', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {

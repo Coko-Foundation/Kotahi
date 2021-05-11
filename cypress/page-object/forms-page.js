@@ -13,7 +13,8 @@ const UPDATE_FORM_BUTTON = '[type=submit]'
 
 export const FormsPage = {
   verifyPageLoaded() {
-    return cy.get(FORM_TITLE_TAB, { timeout: 10000 }).eq(0).should('be.visible')
+    cy.awaitDisappearSpinner()
+    return cy.get(FORM_TITLE_TAB).eq(0).should('be.visible')
   },
   getFormTitleTab(nth) {
     return cy.get(FORM_TITLE_TAB).eq(nth)
@@ -48,7 +49,7 @@ export const FormsPage = {
   },
   clickUpdateForm() {
     return cy.get(UPDATE_FORM_BUTTON).click()
-  }
+  },
 }
 
 export default FormsPage
