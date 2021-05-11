@@ -138,6 +138,8 @@ build:
 #     PGPASSWORD: kotahidev
 
 test-chrome:
+  except:
+    - schedules
   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
   variables:
@@ -276,8 +278,12 @@ test-chrome:
 #     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:hd:laptop
 
 test-firefox:
+  only:
+    - schedules
   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
+  # rules:
+  #   - if: '$TARGETTASKNAME== "test-firefox"'
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
