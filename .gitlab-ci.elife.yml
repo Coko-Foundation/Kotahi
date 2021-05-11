@@ -278,6 +278,8 @@ test-chrome:
 test-firefox:
   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
+  rules:
+    - if: '$TARGETTASKNAME== "test-firefox"'
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
