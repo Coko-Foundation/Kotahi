@@ -143,9 +143,9 @@ describe('form builder tests', () => {
     it('message for DOI invalid is visible ', () => {
       SubmissionFormPage.fillInArticleUrl('google.com')
       SubmissionFormPage.fillInArticleDescription('2')
-      SubmissionFormPage.getValidationErrorMessage('DOI is invalid').should(
-        'be.visible',
-      )
+      SubmissionFormPage.getValidationErrorMessage('DOI is invalid')
+        .scrollIntoView()
+        .should('be.visible')
     })
 
     it('check study design dropdown options', () => {

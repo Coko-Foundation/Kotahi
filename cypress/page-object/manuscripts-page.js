@@ -20,7 +20,7 @@ const ARTICLE_TITLE = '[class*=Table__Row]>td:nth-child(1)'
 const ARTICLE_LABEL = 'style__StyledTableLabel'
 const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 const TABLE_ROW = 'Table__Row'
-const LABEL = '[class*=Table__Row]>td:nth-child(6)'
+const LABEL = 'style__StyledTableLabel'
 const ARTICLE_STATUS = '[class*=Badge__Status]'
 const ARTICLE_CHECKBOX = '[class*=Table__Cell] > label > [type*=checkbox]'
 const SELECT_ALL_CHECKBOX = '[type=checkbox]'
@@ -98,7 +98,7 @@ export const ManuscriptsPage = {
     return cy.getByContainsClass(TABLE_ROW).its('length')
   },
   getLabelRow(nth) {
-    return cy.get(LABEL).eq(nth)
+    return cy.getByContainsClass(LABEL).eq(nth)
   },
   getTableHeader() {
     return cy.get(TABLE_HEADER, { timeout: 15000 })
