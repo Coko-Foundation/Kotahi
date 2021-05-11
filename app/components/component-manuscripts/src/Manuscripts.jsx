@@ -85,14 +85,34 @@ const Manuscripts = ({ history, ...props }) => {
   }
 
   const toggleAllNewManuscriptsCheck = () => {
-    const selectedManuscripts =
-      newManuscriptsCount === selectedNewManuscripts.length
-        ? []
-        : manuscripts
-            .filter(manuscript => manuscript.status === articleStatuses.new)
-            .map(manuscript => manuscript.id)
+    const newManuscriptsFromCurrentPage = manuscripts.filter(
+      manuscript => manuscript.status === articleStatuses.new,
+    )
 
-    setSelectedNewManuscripts(selectedManuscripts)
+    const newManuscriptsFromCurrentPageIds = newManuscriptsFromCurrentPage.map(
+      manuscript => manuscript.id,
+    )
+
+    const isEveryNewManuscriptIsSelectedFromCurrentPage = newManuscriptsFromCurrentPage.every(
+      manuscript => selectedNewManuscripts.includes(manuscript.id),
+    )
+
+    setSelectedNewManuscripts(currentSelectedManuscripts => {
+      return isEveryNewManuscriptIsSelectedFromCurrentPage
+        ? currentSelectedManuscripts.filter(selectedManuscript => {
+            if (newManuscriptsFromCurrentPageIds.includes(selectedManuscript))
+              return false
+            return true
+          })
+        : [
+            ...new Set([
+              ...currentSelectedManuscripts,
+              ...manuscripts
+                .filter(manuscript => manuscript.status === articleStatuses.new)
+                .map(manuscript => manuscript.id),
+            ]),
+          ]
+    })
   }
 
   const limit = 10
@@ -137,10 +157,6 @@ const Manuscripts = ({ history, ...props }) => {
     return { ...el, submission: JSON.parse(el.submission) }
   })
 
-  const newManuscriptsCount = manuscripts.filter(
-    manuscript => manuscript.status === articleStatuses.new,
-  ).length
-
   const { totalCount } = data.paginatedManuscripts
 
   return (
@@ -165,9 +181,12 @@ const Manuscripts = ({ history, ...props }) => {
         <SelectAllField>
           <Checkbox
             checked={
-              !newManuscriptsCount
-                ? false
-                : newManuscriptsCount === selectedNewManuscripts.length
+              manuscripts.filter(
+                manuscript => manuscript.status === articleStatuses.new,
+              ).length ===
+              manuscripts.filter(manuscript =>
+                selectedNewManuscripts.includes(manuscript.id),
+              ).length
             }
             label="Select All"
             onChange={toggleAllNewManuscriptsCheck}
