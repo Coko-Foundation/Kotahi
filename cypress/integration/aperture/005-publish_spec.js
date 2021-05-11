@@ -1,3 +1,4 @@
+/* eslint-disable jest/expect-expect */
 import { ControlPage } from '../../page-object/control-page'
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { Menu } from '../../page-object/page-component/menu'
@@ -7,6 +8,7 @@ import { dashboard } from '../../support/routes'
 describe('Publishing a submission', () => {
   it('publish an accepted submission', () => {
     cy.task('restore', 'decision_completed')
+    cy.task('seedForms')
 
     // login as seniorEditor, publish the manuscript and assert the publication
     // eslint-disable-next-line jest/valid-expect-in-promise

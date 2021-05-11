@@ -12,7 +12,6 @@ describe('URL submission test', () => {
   it('can submit a URL and some metadata', () => {
     // task to restore the database as per the  dumps/initialState.sql
     cy.task('restore', 'initialState')
-
     cy.task('seedForms')
 
     // login as author
@@ -96,6 +95,7 @@ describe('URL submission test', () => {
   it('senior editor can view the submission', () => {
     // task to restore the database as per the  dumps/submission_complete.sql
     cy.task('restore', 'submission_complete')
+    cy.task('seedForms')
 
     cy.fixture('submission_form_data').then(data => {
       cy.fixture('role_names').then(name => {

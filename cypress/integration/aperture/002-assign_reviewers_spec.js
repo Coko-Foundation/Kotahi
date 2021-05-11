@@ -1,3 +1,4 @@
+/* eslint-disable jest/expect-expect */
 import { ControlPage } from '../../page-object/control-page'
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { Menu } from '../../page-object/page-component/menu'
@@ -15,6 +16,7 @@ describe('Editor assigning reviewers', () => {
   it('can assign 3 reviewers', () => {
     // task to restore the database as per the  dumps/senior_editor_assigned.sql
     cy.task('restore', 'senior_editor_assigned')
+    cy.task('seedForms')
 
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
