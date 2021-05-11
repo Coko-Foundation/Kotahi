@@ -138,8 +138,6 @@ build:
 #     PGPASSWORD: kotahidev
 
 test-chrome:
-  except:
-    - schedules
   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
   variables:
@@ -277,31 +275,27 @@ test-chrome:
 #     - cp .env.example .env
 #     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:hd:laptop
 
-test-firefox:
-  only:
-    - schedules
-  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-  stage: test
-  # rules:
-  #   - if: '$TARGETTASKNAME== "test-firefox"'
-  variables:
-    GIT_STRATEGY: none
-    # setup data for postgres image
-    POSTGRES_USER: kotahidev
-    POSTGRES_PASSWORD: kotahidev
-    # used by psql
-    PGUSER: kotahidev
-    PGPASSWORD: kotahidev
-    # this is used to ignore self signed certs
-    #START_SERVER_AND_TEST_INSECURE: 1
-  services:
-    - postgres
-  script:
-    - cd ${HOME}
-    - apt-get -y install postgresql-client
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    - cp .env.example .env
-    - POSTGRES_HOST=postgres yarn test:all:firefox:elife
+# test-firefox:
+#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+#   stage: test
+#   variables:
+#     GIT_STRATEGY: none
+#     # setup data for postgres image
+#     POSTGRES_USER: kotahidev
+#     POSTGRES_PASSWORD: kotahidev
+#     # used by psql
+#     PGUSER: kotahidev
+#     PGPASSWORD: kotahidev
+#     # this is used to ignore self signed certs
+#     #START_SERVER_AND_TEST_INSECURE: 1
+#   services:
+#     - postgres
+#   script:
+#     - cd ${HOME}
+#     - apt-get -y install postgresql-client
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     - cp .env.example .env
+#     - POSTGRES_HOST=postgres yarn test:all:firefox:elife
 
 # test-firefox-samsung:
 #   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA

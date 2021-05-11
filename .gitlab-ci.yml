@@ -2,6 +2,8 @@ stages:
   - run-pipeline
 
 elife-pipeline:
+  except:
+    - schedules
   only:
     refs:
       - main
@@ -9,6 +11,18 @@ elife-pipeline:
   trigger:
     include:
       - local: .gitlab-ci.elife.yml
+    strategy: depend
+
+elife-test-firefox:
+  only:
+    refs:
+      - schedules
+    variables:
+      - $SCHEDULE_TYPE == "test-firefox"
+  stage: run-pipeline
+  trigger:
+    include:
+      - local: .gitlab-ci.elife-test-firefox.yml
     strategy: depend
 
 ncrc-pipeline:
