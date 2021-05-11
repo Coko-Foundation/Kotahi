@@ -348,6 +348,9 @@ const resolvers = {
             manuscript.submission.evaluationContent,
           ),
           tags: [manuscript.submission.evalType],
+          permissions: {
+            read: ['group:q5X6RWJ6'],
+          },
           group: 'q5X6RWJ6',
         }
 
