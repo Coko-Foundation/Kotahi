@@ -282,8 +282,8 @@ test-firefox:
     - schedules
   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
-  rules:
-    - if: '$TARGETTASKNAME== "test-firefox"'
+  # rules:
+  #   - if: '$TARGETTASKNAME== "test-firefox"'
   variables:
     GIT_STRATEGY: none
     # setup data for postgres image
