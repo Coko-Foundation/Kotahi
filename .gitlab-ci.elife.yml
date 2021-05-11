@@ -1,11 +1,21 @@
 variables:
   IMAGE_ORG: kotahi
   IMAGE_NAME: kotahi-elife
+  REGION: us-east-1
 
 stages:
+  #cache
   - build
   #- deploy
   - test
+
+# cache:
+#   image:
+#     name: banst/awscli
+#     entrypoint: [""]
+#   script:
+#     - aws configure set region $REGION
+#     - aws s3 cp s3://elife-node-modules/node_modules_dev.tar.gz .
 
 build:
   image: docker:20.10.5
@@ -14,6 +24,8 @@ build:
   services:
     - docker:20.10.5-dind
   stage: build
+  # dependencies: 
+  #   - cache
   before_script:
     - cp app/brand-instances-configs/elife.json app/brandConfig.json
   script:
@@ -24,30 +36,50 @@ build:
       docker build --build-arg instance_name=elife --file ./Dockerfile-ci --cache-from $IMAGE_ORG/$IMAGE_NAME-dev:latest --tag $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME-dev:latest .
       docker push $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
       docker push $IMAGE_ORG/$IMAGE_NAME-dev:latest
+      # docker build \
+      # --build-arg instance_name=elife \
+      # --build-arg public_client_host=elife.kotahi.cloud \
+      # --build-arg public_client_port=443 \
+      # --build-arg public_client_protocol=https \
+      # --file ./Dockerfile-production-elife \
+      # --cache-from $IMAGE_ORG/$IMAGE_NAME:latest \
+      # --tag $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA \
+      # --tag ${env.IMAGE_ORG}/${env.IMAGE_NAME}:latest .
+      # docker push $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
+      # docker push $IMAGE_ORG/$IMAGE_NAME:latest
+      # rm -rf node_modules_dev.tar.gz
 
 # deploy:
 #   stage: deploy
-#   image: docker:19.03.13
-#   before_script:
-#     - export SSH_KEY=$SSH_KEY_ELIFE
-#     - export DOCKERHUB_USERNAME=$DOCKERHUB_USERNAME_ELIFE
-#     - export DOCKERHUB_PASSWORD=$DOCKERHUB_PASSWORD_ELIFE
-#     - export IMAGE_ORG=$IMAGE_ORG
-#     - export IMAGE_NAME=$IMAGE_NAME
-#     - eval $(ssh-agent -s)
-#     - echo "$SSH_KEY" | tr -d '\r' | ssh-add -
-#     - mkdir -p ~/.ssh
-#     - chmod 700 ~/.ssh
-#     - ssh-keyscan $ELIFE_SERVER_IP >> ~/.ssh/known_hosts
-#     - chmod 644 ~/.ssh/known_hosts
+#   image: ubuntu:18.04
 #   script:
 #     - |
-#       ssh ubuntu@$ELIFE_SERVER_IP "sudo docker login -u $DOCKERHUB_USERNAME -p $DOCKERHUB_PASSWORD &&
-#       sudo docker pull $IMAGE_ORG/$IMAGE_NAME:latest &&
-#       sudo supervisorctl stop kotahi &&
-#       cd /home/ubuntu/kotahi &&
-#       sudo docker-compose down &&
-#       sudo supervisorctl start kotahi"
+#       aws --region=$REGION eks update-kubeconfig --name eks-elife-kotahi
+#       curl https://baltocdn.com/helm/signing.asc | sudo apt-key add -
+#       curl -s https://packages.cloud.google.com/apt/doc/apt-key.gpg | sudo apt-key add -
+#       apt-get install apt-transport-https --yes
+#       echo "deb https://baltocdn.com/helm/stable/debian/ all main" | sudo tee /etc/apt/sources.list.d/helm-stable-debian.list
+#       echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
+#       apt-get update
+#       apt-get install helm kubectl -y
+#       #helm del ${instance_name}-kotahi-prod
+#       helm upgrade elife-kotahi-prod ./helm/kotahi \
+#       --set images.backend.repository=$IMAGE_ORG/$IMAGE_NAME \
+#       --set images.backend.tag=$CI_COMMIT_SHA \
+#       --set images.jobxsweet.repository=pubsweet/job-xsweet \
+#       --set images.jobxsweet.tag=1.5.1 \
+#       --set backend.deployment.containerPort=3000 \
+#       --set backend.ingress.port=80 \
+#       --set backend.ingress.targetPort=3000 \
+#       --set backend.service.port=80 \
+#       --set backend.service.targetPort=3000 \
+#       --set rdssecret=elife-kotahi-prod-rds-postgres \
+#       --set s3secret=elife-kotahi-prod-s3-attachment \
+#       --install \
+#       --force \
+#       --wait
+#       helm ls
+#       kubectl get pods | grep server && kubectl get pods | grep job-xsweet
 
 # lint:
 #   allow_failure: true
