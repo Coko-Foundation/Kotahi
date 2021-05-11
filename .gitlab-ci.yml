@@ -26,6 +26,8 @@ elife-test-firefox:
     strategy: depend
 
 ncrc-pipeline:
+  except:
+    - schedules
   only:
     refs:
       - main
@@ -36,6 +38,8 @@ ncrc-pipeline:
     strategy: depend
 
 aperture-pipeline:
+  except:
+    - schedules
   stage: run-pipeline
   trigger:
     include:
