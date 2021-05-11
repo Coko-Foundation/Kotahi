@@ -81,3 +81,9 @@ Cypress.Commands.add('getByContainsId', id => {
 Cypress.Commands.add('getByNameAndValue', (name, value) => {
   cy.get(`[name='${name}'][value=${value}]`)
 })
+
+Cypress.Commands.add('awaitDisappearSpinner', () => {
+  cy.get('[class*=Spinner__LoadingPage]', { timeout: 20000 }).should(
+    'not.exist',
+  )
+})

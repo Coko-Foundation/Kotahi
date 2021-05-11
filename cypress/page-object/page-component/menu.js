@@ -38,6 +38,7 @@ export const Menu = {
   },
   clickManuscriptsAndAssertPageLoad() {
     this.clickManuscripts()
+    cy.awaitDisappearSpinner()
     ManuscriptsPage.getTableHeader().should('be.visible')
   },
   getMyProfileButton() {

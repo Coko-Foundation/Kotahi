@@ -22,6 +22,9 @@ const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 const TABLE_ROW = 'Table__Row'
 const LABEL = '[class*=Table__Row]>td:nth-child(6)'
 const ARTICLE_STATUS = '[class*=Badge__Status]'
+const ARTICLE_CHECKBOX = '[class*=Table__Cell] > label > [type*=checkbox]'
+const SELECT_ALL_CHECKBOX = '[type=checkbox]'
+const NUMBER_OF_ARTICLES_SELECTED = 'style__SelectedManuscriptsNumber'
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -88,6 +91,9 @@ export const ManuscriptsPage = {
   clickArticleTopic(nth) {
     this.getArticleTopic(nth).click()
   },
+  getTableRow() {
+    return cy.getByContainsClass(TABLE_ROW)
+  },
   getTableRows() {
     return cy.getByContainsClass(TABLE_ROW).its('length')
   },
@@ -102,6 +108,30 @@ export const ManuscriptsPage = {
   },
   clickArticleStatus(nth) {
     this.getArticleStatus(nth).click()
-  }
+  },
+  getAllArticleCheckboxes() {
+    return cy.get(ARTICLE_CHECKBOX)
+  },
+  getArticleCheckbox(nth) {
+    return this.getAllArticleCheckboxes().eq(nth)
+  },
+  clickArticleCheckbox(nth) {
+    this.getArticleCheckbox(nth).click()
+  },
+  getAllArticleCheckboxesLength() {
+    return this.getAllArticleCheckboxes().its('length')
+  },
+  getSelectAllCheckbox() {
+    return cy.get(SELECT_ALL_CHECKBOX).eq(0)
+  },
+  getSelectedArticlesCount() {
+    return cy.getByContainsClass(NUMBER_OF_ARTICLES_SELECTED).invoke('text')
+  },
+  getDeleteButton() {
+    return cy.get(BUTTON).contains('Delete')
+  },
+  clickDelete() {
+    this.getDeleteButton().click()
+  },
 }
 export default ManuscriptsPage

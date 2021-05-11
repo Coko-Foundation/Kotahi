@@ -26,6 +26,7 @@ export const NewSubmissionPage = {
   clickSubmitUrlAndWaitPageLoad() {
     this.clickSubmitURL()
     cy.url({ timeout: 10000 }).should('contain', submit)
+    cy.awaitDisappearSpinner()
     SubmissionFormPage.getPageTitle().should('be.visible')
   },
   getSubmissionMessage() {
