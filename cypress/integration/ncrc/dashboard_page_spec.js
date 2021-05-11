@@ -1,3 +1,4 @@
+/* eslint-disable jest/expect-expect */
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { manuscripts } from '../../support/routes'
