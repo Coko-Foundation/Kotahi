@@ -32,7 +32,9 @@ describe('Manuscripts page tests', () => {
         SubmissionFormPage.fillInArticleld(data.articleId)
       })
       Menu.clickManuscriptsAndAssertPageLoad()
-      ManuscriptsPage.getEvaluationButton().should('be.visible')
+      ManuscriptsPage.getEvaluationButton()
+        .scrollIntoView()
+        .should('be.visible')
       ManuscriptsPage.getOptionWithText('Publish').should('not.exist')
     })
   })
@@ -148,7 +150,9 @@ describe('Manuscripts page tests', () => {
     it('after submitting an article, user is redirect to Manuscripts page', () => {
       // asserts on the manuscripts page
       ManuscriptsPage.getManuscriptsPageTitle().should('be.visible')
-      ManuscriptsPage.getEvaluationButton().should('be.visible')
+      ManuscriptsPage.getEvaluationButton()
+        .scrollIntoView()
+        .should('be.visible')
       ManuscriptsPage.getControlButton().should('not.exist')
       ManuscriptsPage.getOptionWithText('Publish').should('not.exist')
     })
@@ -159,7 +163,9 @@ describe('Manuscripts page tests', () => {
       SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
 
       ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
-      ManuscriptsPage.getEvaluationButton().should('be.visible')
+      ManuscriptsPage.getEvaluationButton()
+        .scrollIntoView()
+        .should('be.visible')
       ManuscriptsPage.getOptionWithText('Publish').should('be.visible')
     })
     it('submission details should be visible', () => {
