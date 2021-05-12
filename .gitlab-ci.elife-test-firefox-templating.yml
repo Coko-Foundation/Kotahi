@@ -39,15 +39,19 @@ stages:
     #START_SERVER_AND_TEST_INSECURE: 1
   services:
     - postgres
-  script:
-    - cd ${HOME}
-    - apt-get update
-    - apt-get -y install postgresql-client
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    - cp .env.example .env
-    - POSTGRES_HOST=postgres yarn test:all:firefox:$INSTANCE_NAME
 
+.test_script: &run_test_script   
+  - cd ${HOME}
+  - apt-get update
+  - apt-get -y install postgresql-client
+  - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+  - cp .env.example .env
+  - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
+    
 test-firefox:
+  <<: *run_test_template
   variables:
-    INSTANCE_NAME: elife
-<<: *run_test_template
+    TEST_ITEM: "elife"
+  script:
+    - *run_test_script
+
