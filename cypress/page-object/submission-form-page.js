@@ -14,9 +14,9 @@ const TITLE_FIELD = 'meta.title'
 const NAME_FIELD = 'submission.name'
 const AFFILIATION_FIELD = 'submission.affiliation'
 const CONTACT_FIELD = 'submission.contact'
-const COVER_FIELD = 'submission.cover'
-const DATA_CODE_FIELD = 'submission.datacode'
-const ETHICS_FIELD = 'submission.ethics'
+// const COVER_FIELD = 'submission.cover'
+// const DATA_CODE_FIELD = 'submission.datacode'
+// const ETHICS_FIELD = 'submission.ethics'
 const TYPE_OF_RESEARCH_DROPDOWN = 'Type of Research Object'
 const DROPDOWN_OPTION_LIST = '[class*=MenuList] > [id*=option]'
 const SUGGESTED_FIELD = 'submission.suggested'
@@ -31,11 +31,12 @@ const FILED_STRENGTH_DROPDOWN = 'what field strength'
 const HUMAN_MRI_OTHER_FIELD = 'submission.humanMRIother'
 const PROCESSING_PACKAGES_CHECKBOX_LIST = 'submission.packages'
 const OTHER_PACKAGES_FIELD = 'submission.otherPackages'
-const REFERENCES_FIELD = 'submission.references'
+// const REFERENCES_FIELD = 'submission.references'
 const SUBMIT_RESEARCH_BUTTON = 'form > div > button'
 const SUBMIT_MANUSCRIPT_BUTTON = 'button[type=submit]'
 const VALIDATION_ERROR_MESSAGE = 'ValidatedField__MessageWrapper'
 const CONTENT_EDITABLE_VALUE = '[contenteditable="true"]'
+const SUBMISSION_FORM_INPUT_BOX = 'SimpleWaxEditor__EditorDiv'
 
 // specific to elife
 const FORM_OPTION_LIST = '[class*=style__Section]'
@@ -98,23 +99,29 @@ export const SubmissionFormPage = {
   fillInContact(contact) {
     this.getContactField().fillInput(contact)
   },
-  getCoverField() {
-    return cy.getByDataTestId(COVER_FIELD)
+  // getCoverField() {
+  //   return cy.getByContainsClass(COVER_FIELD)
+  // },
+  getAllWaxInputBoxes() {
+    return cy.getByContainsClass(SUBMISSION_FORM_INPUT_BOX)
+  },
+  getWaxInputBox(nth) {
+    return this.getAllWaxInputBoxes().eq(nth)
   },
   fillInCover(cover) {
-    this.getCoverField().find(CONTENT_EDITABLE_VALUE).fillInput(cover)
+    this.getWaxInputBox(0).find(CONTENT_EDITABLE_VALUE).fillInput(cover)
   },
-  getDataCodeField() {
-    return cy.getByDataTestId(DATA_CODE_FIELD)
-  },
+  // getDataCodeField() {
+  //   return cy.getByDataTestId(DATA_CODE_FIELD)
+  // },
   fillInDataCode(dataCode) {
-    this.getDataCodeField().find(CONTENT_EDITABLE_VALUE).fillInput(dataCode)
+    this.getWaxInputBox(1).find(CONTENT_EDITABLE_VALUE).fillInput(dataCode)
   },
-  getEthicsField() {
-    return cy.getByDataTestId(ETHICS_FIELD)
-  },
+  // getEthicsField() {
+  //   return cy.getByDataTestId(ETHICS_FIELD)
+  // },
   fillInEthicsField(ethics) {
-    this.getEthicsField().find(CONTENT_EDITABLE_VALUE).fillInput(ethics)
+    this.getWaxInputBox(2).find(CONTENT_EDITABLE_VALUE).fillInput(ethics)
   },
   getTypeOfResearchDropdown() {
     return cy.getByContainsAreaLabel(TYPE_OF_RESEARCH_DROPDOWN)
@@ -206,11 +213,11 @@ export const SubmissionFormPage = {
   fillInOtherPackages(otherPackages) {
     this.getOtherPackagesField().fillInput(otherPackages)
   },
-  getReferencesField() {
-    return cy.getByDataTestId(REFERENCES_FIELD)
-  },
+  // getReferencesField() {
+  //   return cy.getByDataTestId(REFERENCES_FIELD)
+  // },
   fillReferences(references) {
-    this.getReferencesField().find(CONTENT_EDITABLE_VALUE).fillInput(references)
+    this.getWaxInputBox(3).find(CONTENT_EDITABLE_VALUE).fillInput(references)
   },
   getSubmitResearchButton() {
     return cy.get(SUBMIT_RESEARCH_BUTTON)
