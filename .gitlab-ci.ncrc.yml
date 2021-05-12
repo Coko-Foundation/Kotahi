@@ -123,47 +123,48 @@ test-chrome:
   script:
     - *run_test_script
 
-test-chrome-samsung:
-  before_script:
-    - *run_test_before_script
-  <<: *run_test_template
-  variables:
-    TEST_ITEM: "chrome:ncrc:samsung"
-  script:
-    - *run_test_script
+## commented Wed May 12 15:55:40 EEST 2021 by beatrice.suarasan@endava.com request
+# test-chrome-samsung:
+#   before_script:
+#     - *run_test_before_script
+#   <<: *run_test_template
+#   variables:
+#     TEST_ITEM: "chrome:ncrc:samsung"
+#   script:
+#     - *run_test_script
 
-test-chrome-samsung-tablet:
-  before_script:
-    - *run_test_before_script
-  <<: *run_test_template
-  variables:
-    TEST_ITEM: "chrome:ncrc:samsung:tablet"
-  script:
-    - *run_test_script
+# test-chrome-samsung-tablet:
+#   before_script:
+#     - *run_test_before_script
+#   <<: *run_test_template
+#   variables:
+#     TEST_ITEM: "chrome:ncrc:samsung:tablet"
+#   script:
+#     - *run_test_script
 
-test-chrome-iPhone:
-  before_script:
-    - *run_test_before_script
-  <<: *run_test_template
-  variables:
-    TEST_ITEM: "chrome:ncrc:iPhone"
-  script:
-    - *run_test_script
+# test-chrome-iPhone:
+#   before_script:
+#     - *run_test_before_script
+#   <<: *run_test_template
+#   variables:
+#     TEST_ITEM: "chrome:ncrc:iPhone"
+#   script:
+#     - *run_test_script
 
-test-chrome-iPhone-tablet:
-  before_script:
-    - *run_test_before_script
-  <<: *run_test_template
-  variables:
-    TEST_ITEM: "chrome:ncrc:iPhone:tablet"
-  script:
-    - *run_test_script
+# test-chrome-iPhone-tablet:
+#   before_script:
+#     - *run_test_before_script
+#   <<: *run_test_template
+#   variables:
+#     TEST_ITEM: "chrome:ncrc:iPhone:tablet"
+#   script:
+#     - *run_test_script
 
-test-chrome-hd-laptop:
-  before_script:
-    - *run_test_before_script
-  <<: *run_test_template
-  variables:
-    TEST_ITEM: "chrome:ncrc:hd:laptop"
-  script:
-    - *run_test_script
+# test-chrome-hd-laptop:
+#   before_script:
+#     - *run_test_before_script
+#   <<: *run_test_template
+#   variables:
+#     TEST_ITEM: "chrome:ncrc:hd:laptop"
+#   script:
+#     - *run_test_script
