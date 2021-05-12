@@ -1,116 +1,130 @@
 {
   "name": "eLife Submission Form",
   "children": [
-    {
-      "options": [],
-      "title": "Article ID",
-      "id": "bf66a4ed-427b-4329-b6f7-6c53eeec5ac6",
-      "component": "TextField",
-      "name": "submission.articleId",
-      "description": "",
-      "validate": [
-        {
-          "value": "required",
-          "label": "Required",
-          "id": "48179c76-55b3-41b8-b330-6115dcbd9b2a"
-        }
-      ]
-    },
-    {
-      "options": [],
-      "title": "Article URL",
-      "id": "5a22ec26-3885-432c-8c80-b207a62a7b04",
-      "component": "TextField",
-      "name": "submission.articleURL",
-      "doiValidation": "true",
-      "validate": [
-        {
-          "value": "required",
-          "label": "Required",
-          "id": "15c4e0f8-888e-4c83-b0c6-0f6250eea43a"
-        }
-      ]
-    },
-    {
-      "options": [],
-      "title": "bioRxiv article URL",
-      "id": "b100e6a0-b00e-413c-823b-862351e9690f",
-      "component": "TextField",
-      "name": "submission.biorxivURL",
-      "validate": [
-        {
-          "value": "required",
-          "label": "Required",
-          "id": "20708da4-7999-49c0-9881-d28f2ce9f825"
-        }
-      ]
-    },
-    {
-      "options": [],
-      "title": "Description",
-      "id": "ec5e5f89-282c-42e9-bde2-d35816152362",
-      "component": "TextField",
-      "name": "submission.description",
-      "validate": [
-        {
-          "value": "required",
-          "label": "Required",
-          "id": "7778fd1c-3e8f-42c8-8e42-71c33ea3daa2"
-        }
-      ]
-    },
-    {
-      "title": "Evaluation Content",
-      "id": "e6b54b3e-3ecf-4d00-b67e-6d4b387de5be",
-      "component": "AbstractEditor",
-      "name": "submission.evaluationContent",
-      "validate": [
-        {
-          "value": "required",
-          "label": "Required",
-          "id": "c99ade6e-8981-4acd-b85c-f7df49eaf901"
-        }
-      ]
-    },
-    {
-      "options": [
-        {
-          "label": "Evaluation Summary",
-          "value": "evalutationSummary",
-          "id": "e35b17c8-2a88-4d68-b4b0-4c338fca4c89"
-        },
-        {
-          "label": "Peer Review",
-          "value": "peerReview",
-          "id": "dfe49834-1139-4238-a12d-329bc8362993"
-        },
-        {
-          "value": "authorResponse",
-          "label": "Author Response",
-          "id": "2b4c67ea-03c9-4b23-89f2-cf53f1b344d9"
-        }
-      ],
-      "title": "Evaluation Type",
-      "id": "40137c8c-a3ae-4f99-8da3-d1efd498c394",
-      "component": "Select",
-      "name": "submission.evalType",
-      "validate": [
-        {
-          "value": "required",
-          "label": "Required",
-          "id": "b992febf-c0ab-4a48-9c87-e6f67d8c0d2c"
-        }
-      ]
-    },
-    {
-      "options": [],
-      "title": "Creator",
-      "id": "521b03c0-67ef-461e-8d07-055dc56c7007",
-      "component": "TextField",
-      "name": "submission.creator",
-      "validate": []
-    }
+      {
+          "id": "bf66a4ed-427b-4329-b6f7-6c53eeec5ac6",
+          "name": "submission.articleId",
+          "title": "Article ID",
+          "options": [],
+          "validate": [
+              {
+                  "id": "48179c76-55b3-41b8-b330-6115dcbd9b2a",
+                  "label": "Required",
+                  "value": "required"
+              }
+          ],
+          "component": "TextField"
+      },
+      {
+          "id": "5a22ec26-3885-432c-8c80-b207a62a7b04",
+          "name": "submission.articleURL",
+          "title": "Article URL",
+          "options": [],
+          "validate": [
+              {
+                  "id": "15c4e0f8-888e-4c83-b0c6-0f6250eea43a",
+                  "label": "Required",
+                  "value": "required"
+              }
+          ],
+          "component": "TextField",
+          "doiValidation": "true"
+      },
+      {
+          "id": "b100e6a0-b00e-413c-823b-862351e9690f",
+          "name": "submission.biorxivURL",
+          "title": "bioRxiv article URL",
+          "options": [],
+          "validate": [
+              {
+                  "id": "20708da4-7999-49c0-9881-d28f2ce9f825",
+                  "label": "Required",
+                  "value": "required"
+              }
+          ],
+          "component": "TextField"
+      },
+      {
+          "id": "ec5e5f89-282c-42e9-bde2-d35816152362",
+          "name": "submission.description",
+          "title": "Description",
+          "options": [],
+          "validate": [
+              {
+                  "id": "7778fd1c-3e8f-42c8-8e42-71c33ea3daa2",
+                  "label": "Required",
+                  "value": "required"
+              }
+          ],
+          "component": "TextField"
+      },
+      {
+          "id": "520615da-c193-4722-9509-3d849f3b6dc2",
+          "name": "submission.reviewDate",
+          "title": "Review date",
+          "component": "TextField",
+          "placeholder": "review date",
+          "doiValidation": "false"
+      },
+      {
+          "id": "12909732-e675-4270-bb3b-3b4d8d39dace",
+          "name": "submission.review1",
+          "title": "Review 1",
+          "component": "AbstractEditor",
+          "placeholder": "Review 1",
+          "doiValidation": "false"
+      },
+      {
+          "id": "a7cd4965-0741-4b11-aa07-5cf89165a551",
+          "name": "submission.review1Creator",
+          "title": "Review 1 creator",
+          "component": "TextField",
+          "doiValidation": "false"
+      },
+      {
+          "id": "6285b767-66be-4e5f-aa36-b00ec2730177",
+          "name": "submission.review2",
+          "title": "Review 2",
+          "component": "AbstractEditor",
+          "placeholder": "Review 2",
+          "doiValidation": "false"
+      },
+      {
+          "id": "2fa4f519-5342-4128-ab82-f5e10c4764ee",
+          "name": "submission.review2creator",
+          "title": "Review 2 creator",
+          "component": "TextField",
+          "doiValidation": "false"
+      },
+      {
+          "id": "bc3dfe1f-ed4c-40bf-9dff-26dc45af260a",
+          "name": "submission.review3",
+          "title": "Review 3",
+          "component": "AbstractEditor",
+          "doiValidation": "false"
+      },
+      {
+          "id": "3fc01c57-62b2-422e-b5ae-1e76826050c8",
+          "name": "submission.review3creator",
+          "title": "Review 3 creator",
+          "component": "TextField",
+          "doiValidation": "false"
+      },
+      {
+          "id": "05867f53-ea10-4d3b-8220-48200b92cd4f",
+          "name": "submission.summary",
+          "title": "Summary",
+          "component": "AbstractEditor",
+          "doiValidation": "false"
+      },
+      {
+          "id": "0a64672c-0fc2-4e99-a023-d89240523a32",
+          "name": "submission.summarycreator",
+          "title": "Summary creator",
+          "component": "TextField",
+          "doiValidation": "false"
+      }
   ],
-  "description": "<p>eLife Form</p>",
-  "haspopup": "false"
+  "haspopup": "false",
+  "description": "<p>eLife Form</p>"
 }
