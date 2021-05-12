@@ -76,7 +76,7 @@ describe('manuscripts page checkboxes tests', () => {
         SubmissionFormPage.fillInArticleUrl(data.doi)
         SubmissionFormPage.fillInArticleDescription(data.title)
         SubmissionFormPage.fillInOurTake(data.ourTake)
-        SubmissionFormPage.clickDropdown(0)
+        SubmissionFormPage.clickDropdown(2)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.fillInStudySetting(data.studySetting)
         SubmissionFormPage.fillInMainFindings(data.mainFindings)
