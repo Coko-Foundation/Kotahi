@@ -1,6 +1,11 @@
 variables:
   IMAGE_ORG: kotahi
   IMAGE_NAME: kotahi-elife
+  POSTGRES_HOST_AUTH_METHOD: trust
+  POSTGRES_USER: kotahidev
+  POSTGRES_PASSWORD: kotahidev
+  PGUSER: kotahidev
+  PGPASSWORD: kotahidev
 
 stages:
   # - build
@@ -42,14 +47,16 @@ stages:
 
 .test_script: &run_test_script   
   - cd ${HOME}
-  - apt-get update
-  - apt-get -y install postgresql-client
+  #- apt-get update
+  #- apt-get -y install postgresql-client
   #- psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
   - cp .env.example .env
   - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
     
 test-firefox:
   before_script:
+    - apt-get update
+    - apt-get -y install postgresql-client
     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
   <<: *run_test_template
   variables:
