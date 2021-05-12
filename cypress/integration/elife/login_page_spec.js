@@ -10,6 +10,9 @@ describe('Login page tests', () => {
     cy.fixture('branding_settings').then(settings => {
       cy.visit(login)
 
+      LoginPage.getBackground().should('be.visible')
+      LoginPage.getLogo().should('be.visible')
+      LoginPage.getLoginButton().should('be.visible')
       // assert settings are specific to eLife instance
       LoginPage.getBackground()
         .should('have.css', 'background')
@@ -38,7 +41,7 @@ describe('Login page tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
       })
-
+      cy.awaitDisappearSpinner()
       Menu.getBackground()
         .should('have.css', 'background')
         .and('contains', settings.elife.primaryColor)
@@ -65,7 +68,7 @@ describe('Login page tests', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.admin, manuscripts)
     })
-
+    cy.awaitDisappearSpinner()
     Menu.getDashboardButton().should('not.exist')
   })
 })
