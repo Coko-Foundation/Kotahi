@@ -47,20 +47,20 @@ stages:
 
 .test_script: &run_test_script   
   - cd ${HOME}
-  #- apt-get update
-  #- apt-get -y install postgresql-client
-  #- psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
   - cp .env.example .env
   - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
+
+.test_before_script: &run_test_before_script  
+  - apt-get update
+  - apt-get -y install postgresql-client
+  - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
     
 test-firefox:
   before_script:
-    - apt-get update
-    - apt-get -y install postgresql-client
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+    - *run_test_before_script
   <<: *run_test_template
   variables:
-    TEST_ITEM: "elife"
+    TEST_ITEM: "firefox:elife"
   script:
     - *run_test_script
 
