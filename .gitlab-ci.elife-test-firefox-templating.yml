@@ -37,15 +37,15 @@ stages:
   services:
     - postgres
 
-.test_script: &run_test_script   
-  - cd ${HOME}
-  - cp .env.example .env
-  - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
-
 .test_before_script: &run_test_before_script  
   - apt-get update
   - apt-get -y install postgresql-client
   - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+
+.test_script: &run_test_script   
+  - cd ${HOME}
+  - cp .env.example .env
+  - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
     
 test-firefox:
   before_script:
@@ -56,3 +56,47 @@ test-firefox:
   script:
     - *run_test_script
 
+test-firefox-samsung:
+  before_script:
+    - *run_test_before_script
+  <<: *run_test_template
+  variables:
+    TEST_ITEM: "firefox:elife:samsung"
+  script:
+    - *run_test_script
+
+test-firefox-samsung-tablet:
+  before_script:
+    - *run_test_before_script
+  <<: *run_test_template
+  variables:
+    TEST_ITEM: "firefox:elife:samsung:tablet"
+  script:
+    - *run_test_script
+
+test-firefox-iPhone:
+  before_script:
+    - *run_test_before_script
+  <<: *run_test_template
+  variables:
+    TEST_ITEM: "firefox:elife:iPhone"
+  script:
+    - *run_test_script
+
+test-firefox-iPhone-tablet:
+  before_script:
+    - *run_test_before_script
+  <<: *run_test_template
+  variables:
+    TEST_ITEM: "firefox:elife:iPhone:tablet"
+  script:
+    - *run_test_script
+
+test-firefox-hd-laptop:
+  before_script:
+    - *run_test_before_script
+  <<: *run_test_template
+  variables:
+    TEST_ITEM: "firefox:elife:hd:laptop"
+  script:
+    - *run_test_script
