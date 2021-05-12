@@ -2,9 +2,14 @@ variables:
   IMAGE_ORG: kotahi
   IMAGE_NAME: kotahi-elife
   REGION: us-east-1
+  POSTGRES_HOST_AUTH_METHOD: trust
+  POSTGRES_USER: kotahidev
+  POSTGRES_PASSWORD: kotahidev
+  PGUSER: kotahidev
+  PGPASSWORD: kotahidev
 
 stages:
-  #cache
+  #- cache
   - build
   #- deploy
   - test
@@ -62,7 +67,7 @@ build:
 #       echo "deb http://apt.kubernetes.io/ kubernetes-xenial main" | sudo tee /etc/apt/sources.list.d/kubernetes.list
 #       apt-get update
 #       apt-get install helm kubectl -y
-#       #helm del ${instance_name}-kotahi-prod
+#       #helm del elife-kotahi-prod
 #       helm upgrade elife-kotahi-prod ./helm/kotahi \
 #       --set images.backend.repository=$IMAGE_ORG/$IMAGE_NAME \
 #       --set images.backend.tag=$CI_COMMIT_SHA \
@@ -81,329 +86,85 @@ build:
 #       helm ls
 #       kubectl get pods | grep server && kubectl get pods | grep job-xsweet
 
-# lint:
-#   allow_failure: true
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#   script:
-#     - cd ${HOME}
-#     - npm run lint
-
-## TODO: implement this template without error "(node:965) UnhandledPromiseRejectionWarning: TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string. Received undefined"
-## Issue: https://gitlab.coko.foundation/kotahi/kotahi/-/issues/183
-# .test_template: &run_test_template
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     # used by psql
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#   services:
-#     - postgres
-
-## TODO: implement this template without error "psql: could not translate host name "postgres" to address: Name or service not known"
-## Issue: https://gitlab.coko.foundation/kotahi/kotahi/-/issues/183
-# .script_template: &run_script_template
-#    - cd ${HOME}
-#    - apt-get -y install postgresql-client
-#    # use the example env for tests
-#    - cp .env.example .env
-#    # this is needed for pgboss initial setup
-#    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#    # specify host here else it confuses the linked postgres image
-#    - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
-
-# test-chrome:
-#   <<: *run_test_template
-#   variables:
-#     TEST_ITEM: "chrome:elife"
-#   script:
-#     - *run_script_template
-
-## TODO: when insert this template get an error: "(node:965) UnhandledPromiseRejectionWarning: TypeError [ERR_INVALID_ARG_TYPE]: The "path" argument must be of type string"
-# .vars_template: &vars_insert
-#   variables:
-#     GIT_STRATEGY: none
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-
-test-chrome:
+lint:
+  allow_failure: true
   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
   stage: test
   variables:
     GIT_STRATEGY: none
-    # setup data for postgres image
-    POSTGRES_USER: kotahidev
-    POSTGRES_PASSWORD: kotahidev
-    # used by psql
-    PGUSER: kotahidev
-    PGPASSWORD: kotahidev
-    # this is used to ignore self signed certs
-    #START_SERVER_AND_TEST_INSECURE: 1
-  services:
-    - postgres
   script:
     - cd ${HOME}
-    - apt-get update
-    - apt-get -y install postgresql-client
-    # this is needed for pgboss initial setup
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    # use the example env for tests
-    - cp .env.example .env
-    # specify host here else it confuses the linked postgres image
-    - echo $INSTANCE_NAME
-    - POSTGRES_HOST=postgres yarn test:all:chrome:elife
+    - npm run lint
 
+.test_template: &run_test_template
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+  services:
+    - postgres
 
-# test-chrome-samsung:
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     # used by psql
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#     - cp .env.example .env
-#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:samsung
+.test_before_script: &run_test_before_script  
+  - apt-get update
+  - apt-get -y install postgresql-client
+  - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
 
-# test-chrome-samsung-tablet:
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     # used by psql
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#     - cp .env.example .env
-#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:samsung:tablet
+.test_script: &run_test_script   
+  - cd ${HOME}
+  - cp .env.example .env
+  - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
+    
+test-chrome:
+  before_script:
+    - *run_test_before_script
+  <<: *run_test_template
+  variables:
+    TEST_ITEM: "chrome:elife"
+  script:
+    - *run_test_script
 
-# test-chrome-iPhone:
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     # used by psql
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#     - cp .env.example .env
-#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:iPhone
+test-chrome-samsung:
+  before_script:
+    - *run_test_before_script
+  <<: *run_test_template
+  variables:
+    TEST_ITEM: "chrome:elife:samsung"
+  script:
+    - *run_test_script
 
-# test-chrome-iPhone-tablet:
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     # used by psql
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#     - cp .env.example .env
-#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:iPhone:tablet
+test-chrome-samsung-tablet:
+  before_script:
+    - *run_test_before_script
+  <<: *run_test_template
+  variables:
+    TEST_ITEM: "chrome:elife:samsung:tablet"
+  script:
+    - *run_test_script
 
-# test-chrome-hd-laptop:
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     # used by psql
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#     - cp .env.example .env
-#     - POSTGRES_HOST=postgres yarn test:all:chrome:elife:hd:laptop
+test-chrome-iPhone:
+  before_script:
+    - *run_test_before_script
+  <<: *run_test_template
+  variables:
+    TEST_ITEM: "chrome:elife:iPhone"
+  script:
+    - *run_test_script
 
-# test-firefox:
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     # used by psql
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#     - cp .env.example .env
-#     - POSTGRES_HOST=postgres yarn test:all:firefox:elife
+test-chrome-iPhone-tablet:
+  before_script:
+    - *run_test_before_script
+  <<: *run_test_template
+  variables:
+    TEST_ITEM: "chrome:elife:iPhone:tablet"
+  script:
+    - *run_test_script
 
-# test-firefox-samsung:
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     # used by psql
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#     - cp .env.example .env
-#     - POSTGRES_HOST=postgres yarn test:all:firefox:elife:samsung
-
-# test-firefox-samsung-tablet:
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     # used by psql
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#     - cp .env.example .env
-#     - POSTGRES_HOST=postgres yarn test:all:firefox:elife:samsung:tablet
-
-# test-firefox-iPhone:
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     # used by psql
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#     - cp .env.example .env
-#     - POSTGRES_HOST=postgres yarn test:all:firefox:elife:iPhone
-
-# test-firefox-iPhone-tablet:
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     # used by psql
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#     - cp .env.example .env
-#     - POSTGRES_HOST=postgres yarn test:all:firefox:elife:iPhone:tablet
-
-# test-firefox-hd-laptop:
-#   image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
-#   stage: test
-#   variables:
-#     GIT_STRATEGY: none
-#     # setup data for postgres image
-#     POSTGRES_USER: kotahidev
-#     POSTGRES_PASSWORD: kotahidev
-#     # used by psql
-#     PGUSER: kotahidev
-#     PGPASSWORD: kotahidev
-#     # this is used to ignore self signed certs
-#     #START_SERVER_AND_TEST_INSECURE: 1
-#   services:
-#     - postgres
-#   script:
-#     - cd ${HOME}
-#     - apt-get -y install postgresql-client
-#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-#     - cp .env.example .env
-#     - POSTGRES_HOST=postgres yarn test:all:firefox:elife:hd:laptop
+test-chrome-hd-laptop:
+  before_script:
+    - *run_test_before_script
+  <<: *run_test_template
+  variables:
+    TEST_ITEM: "chrome:elife:hd:laptop"
+  script:
+    - *run_test_script
 
