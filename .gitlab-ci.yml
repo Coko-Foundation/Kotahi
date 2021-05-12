@@ -25,6 +25,18 @@ elife-test-firefox:
       - local: .gitlab-ci.elife-test-firefox.yml
     strategy: depend
 
+elife-test-firefox-templating:
+  only:
+    refs:
+      - schedules
+    variables:
+      - $SCHEDULE_TYPE == "test-templating"
+  stage: run-pipeline
+  trigger:
+    include:
+      - local: .gitlab-ci.elife-test-firefox-templating.yml
+    strategy: depend
+
 ncrc-test-firefox:
   only:
     refs:
