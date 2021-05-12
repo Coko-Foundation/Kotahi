@@ -44,11 +44,13 @@ stages:
   - cd ${HOME}
   - apt-get update
   - apt-get -y install postgresql-client
-  - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+  #- psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
   - cp .env.example .env
   - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
     
 test-firefox:
+  before_script:
+    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
   <<: *run_test_template
   variables:
     TEST_ITEM: "elife"
