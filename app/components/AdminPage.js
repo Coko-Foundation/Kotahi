@@ -23,6 +23,8 @@ import DecisionPage from './component-review/src/components/DecisionPage'
 import FormBuilderPage from './component-formbuilder/src/components/FormBuilderPage'
 import NewSubmissionPage from './component-submit/src/components/NewSubmissionPage'
 import { Profile } from './component-profile/src'
+import ArticleEvaluationResultPage from './component-evaluation-result'
+import ArticleEvaluationSummaryPage from './component-evaluation-summary'
 
 import { GET_CURRENT_USER } from '../queries'
 
@@ -242,6 +244,22 @@ const AdminPage = () => {
             component={SubmitPage}
             exact
             path={`${urlFrag}/versions/:version/evaluation`}
+            redirectLink={redirectLink}
+          />
+        )}
+        {['elife'].includes(process.env.INSTANCE_NAME) && (
+          <PrivateRoute
+            component={ArticleEvaluationResultPage}
+            exact
+            path={`${urlFrag}/versions/:version/article-evaluation-result/:evaluationNumber`}
+            redirectLink={redirectLink}
+          />
+        )}
+        {['elife'].includes(process.env.INSTANCE_NAME) && (
+          <PrivateRoute
+            component={ArticleEvaluationSummaryPage}
+            exact
+            path={`${urlFrag}/versions/:version/article-evaluation-summary`}
             redirectLink={redirectLink}
           />
         )}
