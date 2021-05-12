@@ -16,7 +16,7 @@ describe('manuscripts page tests', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.admin, manuscripts)
     })
-
+    cy.awaitDisappearSpinner()
     ManuscriptsPage.getTableHeader().should('be.visible')
   })
   context('elements visibility', () => {
@@ -105,7 +105,7 @@ describe('manuscripts page tests', () => {
       })
     })
   })
-  context('submitted and evaluated article tests', () => {
+  context.only('submitted and evaluated article tests', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()

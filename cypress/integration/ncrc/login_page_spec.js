@@ -16,6 +16,7 @@ describe('Login page tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
       })
+      cy.awaitDisappearSpinner()
 
       Menu.getBackground()
         .should('have.css', 'background')
@@ -43,7 +44,7 @@ describe('Login page tests', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.admin, manuscripts)
     })
-
+    cy.awaitDisappearSpinner()
     Menu.getDashboardButton().should('be.visible')
   })
 })

@@ -44,19 +44,13 @@ const FORM_OPTION_VALUE = 'singleValue'
 const ARTICLE_ID_FIELD = 'submission.articleId'
 const ARTICLE_URL_FIELD = 'submission.articleURL'
 const DESCRIPTION_FIELD = 'submission.description'
-const EVALUATION_CONTENT_FIELD = '[class*=SimpleWaxEditor__EditorDiv]'
+// const EVALUATION_CONTENT_FIELD = '[class*=SimpleWaxEditor__EditorDiv]'
 const CREATOR_FIELD = 'submission.creator'
 const BIORXIV_ARTICLE_URL_FIELD = 'submission.biorxivURL'
 
 // specific to ncrc
 const ARTICLE_DESCRIPTION_FIELD = 'submission.articleDescription'
-const OUR_TAKE_FIELD = '[class*=SimpleWaxEditor__EditorDiv]'
 const DROPDOWN = 'placeholder'
-const STUDY_SETTING_FIELD = '[class*=SimpleWaxEditor__EditorDiv]'
-const MAIN_FINDINGS_FIELD = '[class*=SimpleWaxEditor__EditorDiv]'
-const STUDY_STRENGTHS_FIELD = '[class*=SimpleWaxEditor__EditorDiv]'
-const LIMITATIONS_FIELD = '[class*=SimpleWaxEditor__EditorDiv]'
-const VALUE_ADDED_FIELD = '[class*=SimpleWaxEditor__EditorDiv]'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
 
 export const SubmissionFormPage = {
@@ -283,7 +277,8 @@ export const SubmissionFormPage = {
     this.getDescription().fillInput(description)
   },
   getEvaluationContent() {
-    return cy.get(EVALUATION_CONTENT_FIELD)
+    // return cy.get(EVALUATION_CONTENT_FIELD)
+    return this.getWaxInputBox(0)
   },
   fillInEvaluationContent(evaluationContent) {
     this.getEvaluationContent()
@@ -303,7 +298,7 @@ export const SubmissionFormPage = {
     this.getArticleDescriptionField().fillInput(description)
   },
   getOurTakeField() {
-    return cy.get(OUR_TAKE_FIELD).eq(0)
+    return this.getWaxInputBox(0)
   },
   fillInOurTake(ourTake) {
     this.getOurTakeField().find(CONTENT_EDITABLE_VALUE).fillInput(ourTake)
@@ -312,7 +307,7 @@ export const SubmissionFormPage = {
     return this.getOurTakeField().find('p')
   },
   getStudySettingField() {
-    return cy.get(STUDY_SETTING_FIELD).eq(1)
+    return this.getWaxInputBox(1)
   },
   fillInStudySetting(studySetting) {
     this.getStudySettingField()
@@ -323,7 +318,7 @@ export const SubmissionFormPage = {
     return this.getStudySettingField().find('p')
   },
   getMainFindingsField() {
-    return cy.get(MAIN_FINDINGS_FIELD).eq(2)
+    return this.getWaxInputBox(2)
   },
   fillInMainFindings(mainFindings) {
     this.getMainFindingsField()
@@ -334,7 +329,7 @@ export const SubmissionFormPage = {
     return this.getMainFindingsField().find('p')
   },
   getStudyStrengthsField() {
-    return cy.get(STUDY_STRENGTHS_FIELD).eq(3)
+    return this.getWaxInputBox(3)
   },
   fillInStudyStrengths(studyStrengths) {
     this.getStudyStrengthsField()
@@ -345,7 +340,7 @@ export const SubmissionFormPage = {
     return this.getStudyStrengthsField().find('p')
   },
   getLimitationsField() {
-    return cy.get(LIMITATIONS_FIELD).eq(4)
+    return this.getWaxInputBox(4)
   },
   fillInLimitations(limitations) {
     this.getLimitationsField()
@@ -356,7 +351,7 @@ export const SubmissionFormPage = {
     return this.getLimitationsField().find('p')
   },
   getValueAddedField() {
-    return cy.get(VALUE_ADDED_FIELD).eq(5)
+    return this.getWaxInputBox(5)
   },
   fillInValueAdded(valueAdded) {
     this.getValueAddedField().find(CONTENT_EDITABLE_VALUE).fillInput(valueAdded)
