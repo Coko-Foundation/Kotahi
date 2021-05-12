@@ -52,6 +52,7 @@ const BIORXIV_ARTICLE_URL_FIELD = 'submission.biorxivURL'
 const ARTICLE_DESCRIPTION_FIELD = 'submission.articleDescription'
 const DROPDOWN = 'placeholder'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
+const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
 
 export const SubmissionFormPage = {
   getPageTitle() {
@@ -375,5 +376,8 @@ export const SubmissionFormPage = {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(3000)
   },
+  getAssigEditor(nth) {
+    return cy.get(ASSIGN_EDITORS_DROPDOWN).eq(nth)
+  }
 }
 export default SubmissionFormPage
