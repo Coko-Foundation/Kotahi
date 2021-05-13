@@ -5,15 +5,18 @@
     "articleUrl": "Article URL",
     "bioRxivArticleUrl": "bioRxiv article URL",
     "description": "Description",
-    "evaluationContent": "Evaluation Content",
-    "evaluationType": "Evaluation Type",
+
+    "reviewDate": "Review date",
+    "review1": "Review 1",
+    "review1Creator": "Review 1 creator",
+    "review2": "Review 2",
+    "review2Creator": "Review 2 creator",
+    "review3": "Review 3",
+    "review3Creator": "Review 3 creator",
+    "summary": "Summary",
+    "summaryCreator": "Summary creator",
     "creator": "Creator",
-    "required": "Required",
-    "evaluationTypes" : {
-      "evaluationSummary": "Evaluation Summary",
-      "peerReview": "Peer Review",
-      "authorResponse": "Author Response"
-    }
+    "required": "Required"
   },
   "ncrc": {
     "title": "NCRC Submission Form",

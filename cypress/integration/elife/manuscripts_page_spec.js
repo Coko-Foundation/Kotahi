@@ -67,21 +67,33 @@ describe('Manuscripts page tests', () => {
 
       SubmissionFormPage.getArticleUrl().should('have.value', '')
       SubmissionFormPage.getDescription().should('have.value', '')
-      SubmissionFormPage.getEvaluationContent()
-        .find('p')
-        .should('have.value', '')
-      SubmissionFormPage.getFormOptionValue(-1).should('have.value', '')
+      SubmissionFormPage.getReviewDate().should('have.value', '')
+      SubmissionFormPage.getReview1().find('p').should('contain', '')
+      SubmissionFormPage.getReview1Creator().should('have.value', '')
+      SubmissionFormPage.getReview2().find('p').should('contain', '')
+      SubmissionFormPage.getReview2Creator().should('have.value', '')
+      SubmissionFormPage.getReview3().find('p').should('contain', '')
+      SubmissionFormPage.getReview3Creator().should('have.value', '')
+      SubmissionFormPage.getSummary().find('p').should('contain', '')
+      SubmissionFormPage.getSummaryCreator().should('have.value', '')
+
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleld(data.articleId)
         SubmissionFormPage.fillInArticleUrl(data.doi)
         SubmissionFormPage.fillInBioRxivArticleUrl(data.articleId)
         SubmissionFormPage.fillInDescription(data.description)
-        SubmissionFormPage.fillInEvaluationContent(data.evaluationContent)
-        SubmissionFormPage.clickElementFromFormOptionList(5)
-        SubmissionFormPage.selectDropdownOption(1)
+        SubmissionFormPage.fillInReviewDate(data.reviewDate)
+        SubmissionFormPage.fillInReview1(data.review1)
+        SubmissionFormPage.fillInReview1Creator(data.creator)
+        SubmissionFormPage.fillInReview2(data.review2)
+        SubmissionFormPage.fillInReview2Creator(data.creator)
+        SubmissionFormPage.fillInReview3(data.review3)
+        SubmissionFormPage.fillInReview3Creator(data.creator)
+        SubmissionFormPage.fillInSummary(data.summary)
+        SubmissionFormPage.fillInSummaryCreator(data.creator)
         SubmissionFormPage.waitThreeSec()
-        SubmissionFormPage.clickSubmitResearch()
+        SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
       })
       ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
     })
@@ -135,15 +147,18 @@ describe('Manuscripts page tests', () => {
           SubmissionFormPage.fillInArticleUrl(data.doi)
           SubmissionFormPage.fillInBioRxivArticleUrl(data.articleId)
           SubmissionFormPage.fillInDescription(data.description)
-          SubmissionFormPage.fillInEvaluationContent(data.evaluationContent)
+          SubmissionFormPage.fillInReviewDate(data.reviewDate)
+          SubmissionFormPage.fillInReview1(data.review1)
+          SubmissionFormPage.fillInReview1Creator(data.creator)
+          SubmissionFormPage.fillInReview2(data.review2)
+          SubmissionFormPage.fillInReview2Creator(data.creator)
+          SubmissionFormPage.fillInReview3(data.review3)
+          SubmissionFormPage.fillInReview3Creator(data.creator)
+          SubmissionFormPage.fillInSummary(data.summary)
+          SubmissionFormPage.fillInSummaryCreator(data.creator)
           // eslint-disable-next-line
           SubmissionFormPage.waitThreeSec()
-          SubmissionFormPage.clickElementFromFormOptionList(5)
-          SubmissionFormPage.selectDropdownOption(1)
-          SubmissionFormPage.fillInCreator(name.role.admin)
-          // eslint-disable-next-line
-          SubmissionFormPage.waitThreeSec()
-          SubmissionFormPage.clickSubmitResearch()
+          SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
         })
       })
     })
@@ -180,14 +195,16 @@ describe('Manuscripts page tests', () => {
           'have.value',
           data.description,
         )
-        SubmissionFormPage.getEvaluationContent()
-          .find('p')
-          .should('contain', data.evaluationContent)
-        // eslint-disable-next-line
-        SubmissionFormPage.getFormOptionValue(-1).should(
-          'contain',
-          data.evaluationType,
-        )
+        SubmissionFormPage.getReviewDate().should('have.value', data.reviewDate)
+        SubmissionFormPage.getReview1().find('p').should('contain', data.review1)
+        SubmissionFormPage.getReview1Creator().should('have.value', data.creator)
+        SubmissionFormPage.getReview2().find('p').should('contain', data.review2)
+        SubmissionFormPage.getReview2Creator().should('have.value', data.creator)
+        SubmissionFormPage.getReview3().find('p').should('contain', data.review3)
+        SubmissionFormPage.getReview3Creator().should('have.value', data.creator)
+        SubmissionFormPage.getSummary().find('p').should('contain', data.summary)
+        SubmissionFormPage.getSummaryCreator().should('have.value', data.creator)
+
       })
     })
     it('evaluation changes should be visible', () => {
@@ -204,10 +221,16 @@ describe('Manuscripts page tests', () => {
           'https://doi.org/10.1101/2020.12.22.423946',
         )
         SubmissionFormPage.fillInDescription('new description')
-        SubmissionFormPage.fillInEvaluationContent('new content')
-        SubmissionFormPage.clickElementFromFormOptionList(5)
-        SubmissionFormPage.selectDropdownOption(-1)
-        SubmissionFormPage.fillInCreator('creator')
+        SubmissionFormPage.fillInReviewDate('10/03/2050')
+        SubmissionFormPage.fillInReview1('review 1 is completed')
+        SubmissionFormPage.fillInReview1Creator('test.test')
+        SubmissionFormPage.fillInReview2('review 2 is completed')
+        SubmissionFormPage.fillInReview2Creator('test.test')
+        SubmissionFormPage.fillInReview3('review 3 is completed')
+        SubmissionFormPage.fillInReview3Creator('test.test')
+        SubmissionFormPage.fillInSummary('review summay is completed')
+        SubmissionFormPage.fillInSummaryCreator('test.test')
+        
         // eslint-disable-next-line
         SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
@@ -223,14 +246,15 @@ describe('Manuscripts page tests', () => {
           'not.have.value',
           data.description,
         )
-        SubmissionFormPage.getEvaluationContent()
-          .find('p')
-          .should('not.contain', data.evaluationContent)
-        // eslint-disable-next-line
-        SubmissionFormPage.getFormOptionValue(-1).should(
-          'not.contain',
-          data.evaluationType,
-        )
+        SubmissionFormPage.getReviewDate().should('not.have.value', data.reviewDate)
+        SubmissionFormPage.getReview1().find('p').should('not.contain', data.review1)
+        SubmissionFormPage.getReview1Creator().should('not.have.value', data.creator)
+        SubmissionFormPage.getReview2().find('p').should('not.contain', data.review2)
+        SubmissionFormPage.getReview2Creator().should('not.have.value', data.creator)
+        SubmissionFormPage.getReview3().find('p').should('not.contain', data.review3)
+        SubmissionFormPage.getReview3Creator().should('not.have.value', data.creator)
+        SubmissionFormPage.getSummary().find('p').should('not.contain', data.summary)
+        SubmissionFormPage.getSummaryCreator().should('not.have.value', data.creator)
       })
     })
     it('assert atricle id is the first table head and contains submitted atricle id title', () => {
@@ -257,7 +281,6 @@ describe('Manuscripts page tests', () => {
       })
       ManuscriptsPage.getTableHeader().should('be.visible')
     })
-
     it('message for DOI invalid is visible ', () => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()

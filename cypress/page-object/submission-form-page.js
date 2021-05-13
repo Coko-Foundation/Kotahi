@@ -44,9 +44,12 @@ const FORM_OPTION_VALUE = 'singleValue'
 const ARTICLE_ID_FIELD = 'submission.articleId'
 const ARTICLE_URL_FIELD = 'submission.articleURL'
 const DESCRIPTION_FIELD = 'submission.description'
-// const EVALUATION_CONTENT_FIELD = '[class*=SimpleWaxEditor__EditorDiv]'
-const CREATOR_FIELD = 'submission.creator'
 const BIORXIV_ARTICLE_URL_FIELD = 'submission.biorxivURL'
+const REVIEW_DATE_FEILD =  'submission.reviewDate'
+const REVIEW_1_CREATOR_FIELD = 'submission.review1Creator'
+const REVIEW_2_CREATOR_FIELD = 'submission.review2creator'
+const REVIEW_3_CREATOR_FIELD = 'submission.review3creator'
+const SUMMARY_CREATOR_FIELD = 'submission.summarycreator'
 
 // specific to ncrc
 const ARTICLE_DESCRIPTION_FIELD = 'submission.articleDescription'
@@ -276,20 +279,70 @@ export const SubmissionFormPage = {
   fillInDescription(description) {
     this.getDescription().fillInput(description)
   },
-  getEvaluationContent() {
+  getReviewDate() {
+    return cy.getByDataTestId(REVIEW_DATE_FEILD)
+  },
+  fillInReviewDate(reviewDate) {
+    this.getReviewDate().fillInput(reviewDate)
+  },
+  getReview1() {
     // return cy.get(EVALUATION_CONTENT_FIELD)
     return this.getWaxInputBox(0)
   },
-  fillInEvaluationContent(evaluationContent) {
-    this.getEvaluationContent()
+  fillInReview1(review1) {
+    this.getReview1()
       .find(CONTENT_EDITABLE_VALUE)
-      .fillInput(evaluationContent)
+      .fillInput(review1)
   },
-  getCreatorField() {
-    return cy.getByDataTestId(CREATOR_FIELD)
+  getReview1Creator() {
+    return cy.getByDataTestId(REVIEW_1_CREATOR_FIELD)
   },
-  fillInCreator(creator) {
-    this.getCreatorField().fillInput(creator)
+  fillInReview1Creator(review1Creator) {
+    this.getReview1Creator().fillInput(review1Creator)
+  },
+
+  getReview2() {
+    return this.getWaxInputBox(1)
+  },
+  fillInReview2(review2) {
+    this.getReview2()
+      .find(CONTENT_EDITABLE_VALUE)
+      .fillInput(review2)
+  },
+  getReview2Creator() {
+    return cy.getByDataTestId(REVIEW_2_CREATOR_FIELD)
+  },
+  fillInReview2Creator(review2Creator) {
+    this.getReview2Creator().fillInput(review2Creator)
+  },
+  getReview3() {
+    
+    return this.getWaxInputBox(2)
+  },
+  fillInReview3(review3) {
+    this.getReview3()
+      .find(CONTENT_EDITABLE_VALUE)
+      .fillInput(review3)
+  },
+  getReview3Creator() {
+    return cy.getByDataTestId(REVIEW_3_CREATOR_FIELD)
+  },
+  fillInReview3Creator(review3Creator) {
+    this.getReview3Creator().fillInput(review3Creator)
+  },
+  getSummary() {
+    return this.getWaxInputBox(3)
+  },
+  fillInSummary(summary) {
+    this.getSummary()
+      .find(CONTENT_EDITABLE_VALUE)
+      .fillInput(summary)
+  },
+  getSummaryCreator() {
+    return cy.getByDataTestId(SUMMARY_CREATOR_FIELD)
+  },
+  fillInSummaryCreator(summaryCreator) {
+    this.getSummaryCreator().fillInput(summaryCreator)
   },
   getArticleDescriptionField() {
     return cy.getByName(ARTICLE_DESCRIPTION_FIELD)

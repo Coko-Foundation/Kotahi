@@ -28,13 +28,19 @@ describe('Form builder page tests', () => {
           data.elife.articleUrl,
           data.elife.bioRxivArticleUrl,
           data.elife.description,
-          data.elife.evaluationContent,
-          data.elife.evaluationType,
-          data.elife.creator,
+          data.elife.reviewDate,
+          data.elife.review1,
+          data.elife.review1Creator,
+          data.elife.review2,
+          data.elife.review2Creator,
+          data.elife.review3,
+          data.elife.review3Creator,
+          data.elife.summary,
+          data.elife.summaryCreator,
         ]
 
         // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 12; i++) {
           FormsPage.getFormBuilderElementName(i).should(
             'contain',
             formElements[i],
@@ -52,25 +58,34 @@ describe('Form builder page tests', () => {
         'TextField',
         'TextField',
         'TextField',
-        'AbstractEditor',
-        'Select',
         'TextField',
+        'AbstractEditor',
+        'TextField',
+        'AbstractEditor',
+        'TextField',
+        'AbstractEditor',
+        'TextField',
+        'AbstractEditor',
+        'TextField'
       ]
 
       // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < 7; i++) {
+      for (let i = 0; i < 12; i++) {
         FormsPage.clickFormOption(i)
         FormsPage.getComponentType().should('contain', typeField[i])
       }
 
       // eslint-disable-next-line no-plusplus
-      for (let j = 0; j < 6; j++) {
+      for (let j = 0; j < 4; j++) {
         FormsPage.clickFormOption(j)
         FormsPage.getFieldValidate().should('contain', requiredField)
       }
 
-      FormsPage.clickFormOption(6)
-      FormsPage.getFieldValidate().should('not.contain', 'Required')
+      // eslint-disable-next-line no-plusplus
+      for (let k = 5; k < 12; k++) {
+      FormsPage.clickFormOption(k)
+      FormsPage.getFieldValidate().should('not.contain', requiredField)
+      }
     })
     it('check DOI validation has default selected Yes and select No', () => {
       FormsPage.clickFormOption(1)
@@ -103,13 +118,19 @@ describe('Form builder page tests', () => {
           data.elife.articleUrl,
           data.elife.bioRxivArticleUrl,
           data.elife.description,
-          data.elife.evaluationContent,
-          data.elife.evaluationType,
-          data.elife.creator,
+          data.elife.reviewDate,
+          data.elife.review1,
+          data.elife.review1Creator,
+          data.elife.review2,
+          data.elife.review2Creator,
+          data.elife.review3,
+          data.elife.review3Creator,
+          data.elife.summary,
+          data.elife.summaryCreator,
         ]
 
         // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < 7; i++) {
+        for (let i = 0; i < 12; i++) {
           SubmissionFormPage.getFormOptionList(i).should(
             'contain',
             formElements[i],
@@ -124,32 +145,10 @@ describe('Form builder page tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < 6; i++) {
+        for (let i = 0; i < 4; i++) {
           SubmissionFormPage.getFormOptionList(i).should(
             'contain',
             data.elife.required,
-          )
-        }
-      })
-    })
-
-    // check if the options: Evaluation Summary, Peer Review and Author Response are available in Evaluation Type field
-    it('check Evaluation Type filed options', () => {
-      // eslint-disable-next-line jest/valid-expect-in-promise
-      cy.fixture('form_option').then(data => {
-        SubmissionFormPage.clickElementFromFormOptionList(5)
-
-        const dropDownOption = [
-          data.elife.evaluationTypes.evaluationSummary,
-          data.elife.evaluationTypes.peerReview,
-          data.elife.evaluationTypes.authorResponse,
-        ]
-
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < 3; i++) {
-          SubmissionFormPage.getDropdownOption(i).should(
-            'contain',
-            dropDownOption[i],
           )
         }
       })
