@@ -370,8 +370,7 @@ const resolvers = {
             requestBody,
             {
               headers: {
-                Authorization:
-                  'Bearer 6879-oriyww1JUkfOoEsBbrmibBSy6-lgiL_u9lUpoOJwFfI',
+                Authorization: `Bearer ${process.env.HYPOTHESIS_API_KEY}`,
               },
             },
           )
