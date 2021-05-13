@@ -1,9 +1,33 @@
 /* eslint-disable jest/expect-expect */
 import { Menu } from '../../page-object/page-component/menu'
-import { manuscripts } from '../../support/routes'
+import { login, manuscripts } from '../../support/routes'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
+import { LoginPage } from '../../page-object/login-page'
 
 describe('Login page tests', () => {
+  it('page should display eLife branding settings', () => {
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture('branding_settings').then(settings => {
+      cy.visit(login)
+
+      LoginPage.getBackground().should('be.visible')
+      LoginPage.getLogo().should('be.visible')
+      LoginPage.getLoginButton().should('be.visible')
+      // assert settings are specific to eLife instance
+      LoginPage.getBackground()
+        .should('have.css', 'background-image')
+        .and('contains', settings.ncrc.primaryColor)
+      LoginPage.getLogo()
+        .should('have.attr', 'alt')
+        .and('eq', settings.ncrc.brandName)
+      LoginPage.getLogo()
+        .should('have.attr', 'src')
+        .and('eq', settings.ncrc.logoPath)
+      LoginPage.getLoginButton()
+        .should('have.css', 'background-color')
+        .and('contains', settings.ncrc.primaryColor)
+    })
+  })
   it('branding settings should be visible after login', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('branding_settings').then(settings => {
@@ -19,7 +43,7 @@ describe('Login page tests', () => {
       cy.awaitDisappearSpinner()
 
       Menu.getBackground()
-        .should('have.css', 'background')
+        .should('have.css', 'background-image')
         .and('contains', settings.ncrc.primaryColor)
 
       ManuscriptsPage.getCreatedCaret(0)
@@ -29,7 +53,7 @@ describe('Login page tests', () => {
         .should('have.css', 'color')
         .and('eq', settings.ncrc.primaryColor)
       ManuscriptsPage.getSubmitButton()
-        .should('have.css', 'background')
+        .should('have.css', 'background-color')
         .should('contain', settings.ncrc.primaryColor)
     })
   })
