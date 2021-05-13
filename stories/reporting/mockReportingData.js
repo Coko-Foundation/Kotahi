@@ -34,6 +34,7 @@ const personNames = [
 const randomInt = max => Math.floor(Math.random() * max)
 const lowishRandomInt = max => Math.floor(Math.random() ** 2 * max)
 const highishRandomInt = max => Math.floor(Math.random() ** 0.5 * max)
+const randomName = () => personNames[randomInt(personNames.length)]
 
 const generateSparkBars = (values, onClick, labelMapper) => {
   const highest = Math.max.apply(null, values)
@@ -59,10 +60,10 @@ export const generateResearchObjectsData = () =>
     // eslint-disable-next-line jsx-a11y/anchor-is-valid
     { content: <a href="#">Manuscript {1234 + i}</a> },
     { content: name },
-    { content: 'Dataset' },
+    { content: `${randomName()}, ${randomName()}` },
+    { content: `${randomName()}, ${randomName()}, ${randomName()}` },
     { content: 'Reviewed' },
     { content: '8 days' },
-    { content: 'Accepted' },
     { content: '2021-05-23' },
   ])
 
