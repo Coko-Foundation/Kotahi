@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
-import { th } from '@pubsweet/ui-toolkit'
+import { lighten } from '@pubsweet/ui-toolkit'
 
 const Container = styled.div`
   position: relative;
@@ -22,7 +22,7 @@ const Value = styled.div`
 `
 
 const Bar = styled.div`
-  background-color: ${th('colorSecondary')};
+  background-color: ${lighten('colorSecondary', 0.99)};
 
   ${props =>
     props.onClick &&

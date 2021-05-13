@@ -1,7 +1,7 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
-import { lighten } from '@pubsweet/ui-toolkit'
+import { th, lighten } from '@pubsweet/ui-toolkit'
 
 const Row = styled.div`
   align-content: stretch;
@@ -20,7 +20,7 @@ const Row = styled.div`
         `
       : css`
           &:hover {
-            background-color: ${lighten('colorPrimary', 0.99)};
+            box-shadow inset 0 0 4px ${th('colorPrimary')};
           }
         `}
 
