@@ -88,7 +88,7 @@ build:
 
 lint:
   allow_failure: true
-  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
   stage: test
   variables:
     GIT_STRATEGY: none
@@ -97,7 +97,7 @@ lint:
     - npm run lint
 
 .test_template: &run_test_template
-  image: $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
   stage: test
   variables:
     GIT_STRATEGY: none
