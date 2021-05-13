@@ -5,7 +5,7 @@ import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { LoginPage } from '../../page-object/login-page'
 
 describe('Login page tests', () => {
-  it('page should display eLife branding settings', () => {
+  it('page should display NCRC branding settings', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('branding_settings').then(settings => {
       cy.visit(login)
