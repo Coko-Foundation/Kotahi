@@ -34,6 +34,11 @@ spec:
                 secretKeyRef:
                   key: ORCID_CLIENT_SECRET
                   name: orcid-secret
+            - name: HYPOTHESIS_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: HYPOTHESIS_API_KEY
+                  name: orcid-secret
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
