@@ -40,6 +40,7 @@ export const ErrorStatus = styled(Status)`
 export const NormalStatus = styled(Status)`
   // background-color: ${th('colorWarning')};
   // color: ${th('colorTextReverse')};
+  cursor: pointer;
   ${props =>
     props.minimal
       ? css`
