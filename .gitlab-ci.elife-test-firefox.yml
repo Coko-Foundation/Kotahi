@@ -22,11 +22,10 @@ build:
     - cp app/brand-instances-configs/elife.json app/brandConfig.json
   script:
     - |
-      echo "integration files list:"
-      ls -la cypress/integration/elife
       if [ -z "$DOCKERHUB_USERNAME_ELIFE" ] || [ -z "$DOCKERHUB_PASSWORD_ELIFE" ]; then echo "Not pushing" && exit 0; fi
       docker login -u $DOCKERHUB_USERNAME_ELIFE -p $DOCKERHUB_PASSWORD_ELIFE
-      docker build --build-arg instance_name=elife --file ./Dockerfile-ci --tag $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME-dev:latest .
+      docker pull $IMAGE_ORG/$IMAGE_NAME-dev:latest || true
+      docker build --build-arg instance_name=elife --file ./Dockerfile-ci --cache-from $IMAGE_ORG/$IMAGE_NAME-dev:latest --tag $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME-dev:latest .
       docker push $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
       docker push $IMAGE_ORG/$IMAGE_NAME-dev:latest
  
