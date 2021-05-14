@@ -62,6 +62,23 @@ const Manuscripts = ({ history, ...props }) => {
     )
   }
 
+  const searchHandler = () => {
+    const searchQuery = history.location.search
+    if(searchQuery && searchQuery.includes('status')) {
+      return {
+        status: selectedStatus
+      }
+    }
+    if(searchQuery && searchQuery.includes('topic')) {
+      return {
+        submission: JSON.stringify({
+          topics: selectedTopic,
+        })
+      }
+    }
+    return {}
+  }
+
   const [sortName, setSortName] = useState('created')
   const [sortDirection, setSortDirection] = useState('DESC')
   const [page, setPage] = useState(1)
@@ -123,14 +140,7 @@ const Manuscripts = ({ history, ...props }) => {
       sort,
       offset: (page - 1) * limit,
       limit,
-      filter: history.location.search
-        ? {
-            status: selectedStatus,
-            submission: JSON.stringify({
-              topics: selectedTopic,
-            }),
-          }
-        : {},
+      filter: searchHandler(),
     },
     fetchPolicy: 'network-only',
   })
@@ -148,6 +158,7 @@ const Manuscripts = ({ history, ...props }) => {
 
   useEffect(() => {
     refetch()
+    setPage(1)
   }, [history.location.search])
 
   if (loading) return <Spinner />
