@@ -106,7 +106,7 @@ const User = ({
 
   const filterByArticleStatus = status => {
     setSelectedStatus(status)
-    history.replace(`${urlFrag}/admin/manuscripts?articleStatus=${status}`)
+    history.replace(`${urlFrag}/admin/manuscripts?status=${status}`)
   }
 
   return (
