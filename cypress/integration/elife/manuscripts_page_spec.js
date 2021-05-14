@@ -1,9 +1,15 @@
+/* eslint-disable jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
-import { manuscripts } from '../../support/routes'
+import {
+  evaluationResultUrl,
+  evaluationSummaryUrl,
+  manuscripts,
+} from '../../support/routes'
 import { Menu } from '../../page-object/page-component/menu'
+import { ResultAndSummaryPage } from '../../page-object/page-component/result_and_summary-page'
 
 describe('Manuscripts page tests', () => {
   context('Elements visibility', () => {
@@ -17,6 +23,7 @@ describe('Manuscripts page tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
       })
+      cy.awaitDisappearSpinner()
       ManuscriptsPage.getTableHeader().should('be.visible')
     })
 
@@ -50,6 +57,7 @@ describe('Manuscripts page tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
       })
+      cy.awaitDisappearSpinner()
       ManuscriptsPage.getTableHeader().should('be.visible')
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
@@ -133,7 +141,7 @@ describe('Manuscripts page tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
-
+        cy.awaitDisappearSpinner()
         ManuscriptsPage.getTableHeader().should('be.visible')
         ManuscriptsPage.getEvaluationButton().should('not.exist')
         ManuscriptsPage.clickSubmit()
@@ -196,15 +204,34 @@ describe('Manuscripts page tests', () => {
           data.description,
         )
         SubmissionFormPage.getReviewDate().should('have.value', data.reviewDate)
-        SubmissionFormPage.getReview1().find('p').should('contain', data.review1)
-        SubmissionFormPage.getReview1Creator().should('have.value', data.creator)
-        SubmissionFormPage.getReview2().find('p').should('contain', data.review2)
-        SubmissionFormPage.getReview2Creator().should('have.value', data.creator)
-        SubmissionFormPage.getReview3().find('p').should('contain', data.review3)
-        SubmissionFormPage.getReview3Creator().should('have.value', data.creator)
-        SubmissionFormPage.getSummary().find('p').should('contain', data.summary)
-        SubmissionFormPage.getSummaryCreator().should('have.value', data.creator)
-
+        SubmissionFormPage.getReview1()
+          .find('p')
+          .should('contain', data.review1)
+        SubmissionFormPage.getReview1Creator().should(
+          'have.value',
+          data.creator,
+        )
+        SubmissionFormPage.getReview2()
+          .find('p')
+          .should('contain', data.review2)
+        SubmissionFormPage.getReview2Creator().should(
+          'have.value',
+          data.creator,
+        )
+        SubmissionFormPage.getReview3()
+          .find('p')
+          .should('contain', data.review3)
+        SubmissionFormPage.getReview3Creator().should(
+          'have.value',
+          data.creator,
+        )
+        SubmissionFormPage.getSummary()
+          .find('p')
+          .should('contain', data.summary)
+        SubmissionFormPage.getSummaryCreator().should(
+          'have.value',
+          data.creator,
+        )
       })
     })
     it('evaluation changes should be visible', () => {
@@ -230,7 +257,7 @@ describe('Manuscripts page tests', () => {
         SubmissionFormPage.fillInReview3Creator('test.test')
         SubmissionFormPage.fillInSummary('review summay is completed')
         SubmissionFormPage.fillInSummaryCreator('test.test')
-        
+
         // eslint-disable-next-line
         SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
@@ -246,15 +273,38 @@ describe('Manuscripts page tests', () => {
           'not.have.value',
           data.description,
         )
-        SubmissionFormPage.getReviewDate().should('not.have.value', data.reviewDate)
-        SubmissionFormPage.getReview1().find('p').should('not.contain', data.review1)
-        SubmissionFormPage.getReview1Creator().should('not.have.value', data.creator)
-        SubmissionFormPage.getReview2().find('p').should('not.contain', data.review2)
-        SubmissionFormPage.getReview2Creator().should('not.have.value', data.creator)
-        SubmissionFormPage.getReview3().find('p').should('not.contain', data.review3)
-        SubmissionFormPage.getReview3Creator().should('not.have.value', data.creator)
-        SubmissionFormPage.getSummary().find('p').should('not.contain', data.summary)
-        SubmissionFormPage.getSummaryCreator().should('not.have.value', data.creator)
+        SubmissionFormPage.getReviewDate().should(
+          'not.have.value',
+          data.reviewDate,
+        )
+        SubmissionFormPage.getReview1()
+          .find('p')
+          .should('not.contain', data.review1)
+        SubmissionFormPage.getReview1Creator().should(
+          'not.have.value',
+          data.creator,
+        )
+        SubmissionFormPage.getReview2()
+          .find('p')
+          .should('not.contain', data.review2)
+        SubmissionFormPage.getReview2Creator().should(
+          'not.have.value',
+          data.creator,
+        )
+        SubmissionFormPage.getReview3()
+          .find('p')
+          .should('not.contain', data.review3)
+        SubmissionFormPage.getReview3Creator().should(
+          'not.have.value',
+          data.creator,
+        )
+        SubmissionFormPage.getSummary()
+          .find('p')
+          .should('not.contain', data.summary)
+        SubmissionFormPage.getSummaryCreator().should(
+          'not.have.value',
+          data.creator,
+        )
       })
     })
     it('assert atricle id is the first table head and contains submitted atricle id title', () => {
@@ -279,6 +329,7 @@ describe('Manuscripts page tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
       })
+      cy.awaitDisappearSpinner()
       ManuscriptsPage.getTableHeader().should('be.visible')
     })
     it('message for DOI invalid is visible ', () => {
@@ -287,6 +338,149 @@ describe('Manuscripts page tests', () => {
       SubmissionFormPage.fillInArticleUrl('google.com')
       SubmissionFormPage.fillInDescription('2')
       SubmissionFormPage.getValidationErrorMessage('DOI is invalid')
+    })
+  })
+  context('Evaluation and summary page tests', () => {
+    // this method is use to avoid script errors
+    // eslint-disable-next-line handle-callback-err
+    Cypress.on('uncaught:exception', (err, runnable) => {
+      // returning false here prevents Cypress from
+      // failing the test
+      return false
+    })
+    before(() => {
+      // task to restore the database as per the  dumps/initialState.sql
+      cy.task('restore', 'initialState')
+      cy.task('seedForms')
+
+      // login as admin
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('role_names').then(name => {
+        cy.login(name.role.admin, manuscripts)
+        cy.awaitDisappearSpinner()
+        ManuscriptsPage.getTableHeader().should('be.visible')
+        ManuscriptsPage.getEvaluationButton().should('not.exist')
+        ManuscriptsPage.clickSubmit()
+
+        NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+
+        // fill the submit form and submit it
+        // eslint-disable-next-line jest/valid-expect-in-promise
+        cy.fixture('submission_form_data').then(data => {
+          SubmissionFormPage.fillInArticleld(data.articleId)
+          SubmissionFormPage.fillInArticleUrl(data.doi)
+          SubmissionFormPage.fillInBioRxivArticleUrl(data.articleId)
+          SubmissionFormPage.fillInDescription(data.description)
+          SubmissionFormPage.fillInReviewDate(data.reviewDate)
+          SubmissionFormPage.fillInReview1(data.review1)
+          SubmissionFormPage.fillInReview1Creator(data.creator)
+          SubmissionFormPage.fillInReview2(data.review2)
+          SubmissionFormPage.fillInReview2Creator(data.creator)
+          SubmissionFormPage.fillInReview3(data.review3)
+          SubmissionFormPage.fillInReview3Creator(data.creator)
+          SubmissionFormPage.fillInSummary(data.summary)
+          SubmissionFormPage.fillInSummaryCreator(data.creator)
+          // eslint-disable-next-line
+          SubmissionFormPage.waitThreeSec()
+        })
+      })
+    })
+    beforeEach(() => {
+      cy.url().then(url => {
+        const regex = /\/(([\w*\d-]){30,})\//
+        const id = url.match(regex)[1]
+        cy.wrap(id).as('manuscriptId')
+      })
+      // login as admin
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('role_names').then(name => {
+        cy.login(name.role.admin, manuscripts)
+        cy.awaitDisappearSpinner()
+      })
+    })
+    it('check evaluation page for review 1', () => {
+      cy.get('@manuscriptId').then(id => {
+        const url = evaluationResultUrl(id, 1)
+        cy.visit(url)
+      })
+      cy.awaitDisappearSpinner()
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('submission_form_data').then(data => {
+        ResultAndSummaryPage.getDescription().should(
+          'contain',
+          data.description,
+        )
+        ResultAndSummaryPage.getEvaluationType().should(
+          'contain',
+          data.peerReview,
+        )
+        ResultAndSummaryPage.getReview().should('contain', data.review1)
+        ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getDate().should('contain', data.reviewDate)
+      })
+    })
+    it('check evaluation page for review 2', () => {
+      cy.get('@manuscriptId').then(id => {
+        const url = evaluationResultUrl(id, 2)
+        cy.visit(url)
+      })
+      cy.awaitDisappearSpinner()
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('submission_form_data').then(data => {
+        ResultAndSummaryPage.getDescription().should(
+          'contain',
+          data.description,
+        )
+        ResultAndSummaryPage.getEvaluationType().should(
+          'contain',
+          data.peerReview,
+        )
+        ResultAndSummaryPage.getReview().should('contain', data.review2)
+        ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getDate().should('contain', data.reviewDate)
+      })
+    })
+    it('check evaluation page for review 3', () => {
+      cy.get('@manuscriptId').then(id => {
+        const url = evaluationResultUrl(id, 3)
+        cy.visit(url)
+      })
+      cy.awaitDisappearSpinner()
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('submission_form_data').then(data => {
+        ResultAndSummaryPage.getDescription().should(
+          'contain',
+          data.description,
+        )
+        ResultAndSummaryPage.getEvaluationType().should(
+          'contain',
+          data.peerReview,
+        )
+        ResultAndSummaryPage.getReview().should('contain', data.review3)
+        ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getDate().should('contain', data.reviewDate)
+      })
+    })
+    it('check evaluation summary page', () => {
+      cy.get('@manuscriptId').then(id => {
+        const url = evaluationSummaryUrl(id)
+        cy.visit(url)
+      })
+      cy.awaitDisappearSpinner()
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('submission_form_data').then(data => {
+        ResultAndSummaryPage.getDescription().should(
+          'contain',
+          data.description,
+        )
+        ResultAndSummaryPage.getEvaluationType().should(
+          'contain',
+          data.evaluationSummary,
+        )
+        ResultAndSummaryPage.getReview().should('contain', data.summary)
+        ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getDate().should('contain', data.reviewDate)
+      })
     })
   })
 })

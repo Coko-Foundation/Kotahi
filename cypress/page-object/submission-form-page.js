@@ -45,7 +45,7 @@ const ARTICLE_ID_FIELD = 'submission.articleId'
 const ARTICLE_URL_FIELD = 'submission.articleURL'
 const DESCRIPTION_FIELD = 'submission.description'
 const BIORXIV_ARTICLE_URL_FIELD = 'submission.biorxivURL'
-const REVIEW_DATE_FEILD =  'submission.reviewDate'
+const REVIEW_DATE_FEILD = 'submission.reviewDate'
 const REVIEW_1_CREATOR_FIELD = 'submission.review1Creator'
 const REVIEW_2_CREATOR_FIELD = 'submission.review2creator'
 const REVIEW_3_CREATOR_FIELD = 'submission.review3creator'
@@ -290,9 +290,7 @@ export const SubmissionFormPage = {
     return this.getWaxInputBox(0)
   },
   fillInReview1(review1) {
-    this.getReview1()
-      .find(CONTENT_EDITABLE_VALUE)
-      .fillInput(review1)
+    this.getReview1().find(CONTENT_EDITABLE_VALUE).fillInput(review1)
   },
   getReview1Creator() {
     return cy.getByDataTestId(REVIEW_1_CREATOR_FIELD)
@@ -305,9 +303,7 @@ export const SubmissionFormPage = {
     return this.getWaxInputBox(1)
   },
   fillInReview2(review2) {
-    this.getReview2()
-      .find(CONTENT_EDITABLE_VALUE)
-      .fillInput(review2)
+    this.getReview2().find(CONTENT_EDITABLE_VALUE).fillInput(review2)
   },
   getReview2Creator() {
     return cy.getByDataTestId(REVIEW_2_CREATOR_FIELD)
@@ -316,13 +312,10 @@ export const SubmissionFormPage = {
     this.getReview2Creator().fillInput(review2Creator)
   },
   getReview3() {
-    
     return this.getWaxInputBox(2)
   },
   fillInReview3(review3) {
-    this.getReview3()
-      .find(CONTENT_EDITABLE_VALUE)
-      .fillInput(review3)
+    this.getReview3().find(CONTENT_EDITABLE_VALUE).fillInput(review3)
   },
   getReview3Creator() {
     return cy.getByDataTestId(REVIEW_3_CREATOR_FIELD)
@@ -334,9 +327,7 @@ export const SubmissionFormPage = {
     return this.getWaxInputBox(3)
   },
   fillInSummary(summary) {
-    this.getSummary()
-      .find(CONTENT_EDITABLE_VALUE)
-      .fillInput(summary)
+    this.getSummary().find(CONTENT_EDITABLE_VALUE).fillInput(summary)
   },
   getSummaryCreator() {
     return cy.getByDataTestId(SUMMARY_CREATOR_FIELD)

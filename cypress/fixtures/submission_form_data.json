@@ -38,5 +38,7 @@
   "limitations": "These are the limitations",
   "valueAdded": "This is the value added",
   "label": "Ready to evaluate",
-  "topic": "modeling"
+  "topic": "modeling",
+  "evaluationSummary": "Evaluation summary",
+  "peerReview": "Peer review"
 }
