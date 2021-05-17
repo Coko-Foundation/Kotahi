@@ -77,7 +77,7 @@ export const generateEditorsData = () => {
   const publishedCounts = []
 
   for (let i = 0; i < 50; i += 1) {
-    names.push(personNames[randomInt(personNames.length)])
+    names.push(randomName())
     const assignedCount = highishRandomInt(40)
     assignedCounts.push(assignedCount)
     const givenToReviewersCount = highishRandomInt(assignedCount + 1)
@@ -130,7 +130,7 @@ export const generateReviewersData = () => {
   const reccRejectCounts = []
 
   for (let i = 0; i < 50; i += 1) {
-    names.push(personNames[randomInt(personNames.length)])
+    names.push(randomName())
     const invitesCount = lowishRandomInt(8)
     invitedCounts.push(invitesCount)
     const declinedCount = lowishRandomInt(invitesCount + 1)
@@ -214,7 +214,7 @@ export const generateAuthorsData = () => {
   const publishedCounts = []
 
   for (let i = 0; i < 50; i += 1) {
-    names.push(personNames[randomInt(personNames.length)])
+    names.push(randomName())
     unsubmittedCounts.push(Math.floor(Math.random() ** 4 * 10))
     const submittedCount = lowishRandomInt(3)
     submittedCounts.push(submittedCount)
