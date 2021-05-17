@@ -12,6 +12,8 @@ spec:
   strategy: {}
   template:
     metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         io.kompose.service: server
     spec:
