@@ -1,6 +1,21 @@
 import React from 'react'
 import { SparkBar } from '../../app/components/component-reporting/src'
 
+export const generateSystemData = () => {
+  return {
+    avgPublishTimeDays: 8.765,
+    avgReviewTimeDays: 5.678,
+    unsubmittedCount: 12,
+    submittedCount: 34,
+    unassignedCount: 5,
+    reviewedCount: 18,
+    rejectedCount: 4,
+    revisingCount: 9,
+    acceptedCount: 5,
+    publishedCount: 4,
+  }
+}
+
 const personNames = [
   'Joe Bloggs',
   'Abigail Avery',
@@ -63,7 +78,6 @@ export const generateResearchObjectsData = () =>
     { content: `${randomName()}, ${randomName()}` },
     { content: `${randomName()}, ${randomName()}, ${randomName()}` },
     { content: 'Reviewed' },
-    { content: '8 days' },
     { content: '2021-05-23' },
   ])
 

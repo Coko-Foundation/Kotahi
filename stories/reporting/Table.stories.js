@@ -22,7 +22,6 @@ ResearchObjects.args = {
     { width: '12em', flexGrow: 3 },
     { width: '14em', flexGrow: 3 },
     { width: '6em' },
-    { width: '6em' },
     { width: '7em' },
   ],
   headings: [
@@ -33,7 +32,6 @@ ResearchObjects.args = {
     'Editors',
     'Reviewers',
     'Status',
-    'Review duration',
     'Published date',
   ],
   rows: generateResearchObjectsData(),

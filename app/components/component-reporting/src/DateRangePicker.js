@@ -3,6 +3,10 @@ import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
 import { th, lighten } from '@pubsweet/ui-toolkit'
 
+const InlineBlock = styled.div`
+  display: inline-block;
+`
+
 const Input = styled.input`
   border: 1px solid
     ${props => (props.isInvalid ? th('colorError') : th('colorBorder'))};
@@ -26,7 +30,7 @@ const DateRangePicker = ({ endDate, max, setDateRange, startDate }) => {
   const endIsInvalid = endDate > max
   const startIsInvalid = startDate > max || startDate > endDate
   return (
-    <div>
+    <InlineBlock>
       <Input
         isInvalid={startIsInvalid}
         max={getDateUtcString(endDate)}
@@ -46,7 +50,7 @@ const DateRangePicker = ({ endDate, max, setDateRange, startDate }) => {
         type="date"
         value={getDateUtcString(endDate)}
       />
-    </div>
+    </InlineBlock>
   )
 }
 
