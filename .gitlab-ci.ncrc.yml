@@ -114,30 +114,30 @@ lint:
   - cp .env.example .env
   - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
     
-# test-chrome:
-#   before_script:
-#     - *run_test_before_script
-#   <<: *run_test_template
-#   variables:
-#     TEST_ITEM: "chrome:ncrc"
-#   script:
-#     - *run_test_script
-
 test-chrome:
-  image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
-  stage: test
+  before_script:
+    - *run_test_before_script
+  <<: *run_test_template
   variables:
-    GIT_STRATEGY: none
     TEST_ITEM: "chrome:ncrc"
-  services:
-    - postgres
   script:
-    - apt-get update
-    - apt-get -y install postgresql-client
-    - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
-    - cd ${HOME}
-    - cp .env.example .env
-    - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
+    - *run_test_script
+
+# test-chrome:
+#   image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
+#   stage: test
+#   variables:
+#     GIT_STRATEGY: none
+#     TEST_ITEM: "chrome:ncrc"
+#   services:
+#     - postgres
+#   script:
+#     - apt-get update
+#     - apt-get -y install postgresql-client
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     - cd ${HOME}
+#     - cp .env.example .env
+#     - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
 
 ## commented Wed May 12 15:55:40 EEST 2021 by beatrice.suarasan@endava.com request
 # test-chrome-samsung:
