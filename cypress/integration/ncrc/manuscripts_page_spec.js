@@ -57,6 +57,20 @@ describe('manuscripts page tests', () => {
         ManuscriptsPage.getArticleTopic(1).should('contain', 'epidemiology')
       })
     })
+    it('editors column should be visible', () => {
+      ManuscriptsPage.clickSubmit()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+      // fill the submit form and submit it
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('submission_form_data').then(data => {
+        SubmissionFormPage.fillInArticleDescription(data.articleId)
+      })
+      Menu.clickManuscriptsAndAssertPageLoad()
+      ManuscriptsPage.getTableHead(-1)
+        .scrollIntoView()
+        .should('contain', 'Editor')
+        .and('be.visible')
+    })
   })
   context('unsubmitted article tests', () => {
     beforeEach(() => {
@@ -105,7 +119,7 @@ describe('manuscripts page tests', () => {
       })
     })
   })
-  context.only('submitted and evaluated article tests', () => {
+  context('submitted and evaluated article tests', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()

@@ -25,6 +25,7 @@ const ARTICLE_STATUS = '[class*=Badge__Status]'
 const ARTICLE_CHECKBOX = '[class*=Table__Cell] > label > [type*=checkbox]'
 const SELECT_ALL_CHECKBOX = '[type=checkbox]'
 const NUMBER_OF_ARTICLES_SELECTED = 'style__SelectedManuscriptsNumber'
+const EDITOR_NAME_CELL = 'style__StyledAuthor'
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -132,6 +133,9 @@ export const ManuscriptsPage = {
   },
   clickDelete() {
     this.getDeleteButton().click()
+  },
+  getEditorName() {
+    return cy.getByContainsClass(EDITOR_NAME_CELL)
   },
 }
 export default ManuscriptsPage
