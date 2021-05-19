@@ -127,6 +127,20 @@ export const GET_MANUSCRIPTS = gql`
         created
         updated
         status
+        teams {
+          id
+          role
+          members {
+            id
+            user {
+              defaultIdentity {
+                name
+              }
+              id
+              username
+            }
+          }
+        }
         manuscriptVersions {
           id
           meta {

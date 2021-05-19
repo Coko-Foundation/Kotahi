@@ -560,7 +560,7 @@ const resolvers = {
 
       const query = ctx.models.Manuscript.query()
         .where({ parentId: null })
-        .withGraphFetched('[submitter, manuscriptVersions(orderByCreated)]')
+        .withGraphFetched('[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]')
         .modifiers({
           orderByCreated(builder) {
             builder.orderBy('created', 'desc')

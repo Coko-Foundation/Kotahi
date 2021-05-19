@@ -242,7 +242,11 @@ const Manuscripts = ({ history, ...props }) => {
                 <SortHeader thisSortName="submission:labels">Label</SortHeader>
               )}
               <SortHeader thisSortName="submitterId">Author</SortHeader>
-              <th />
+              {['ncrc'].includes(process.env.INSTANCE_NAME) && (
+                <SortHeader >
+                  Editor
+                </SortHeader>
+              )}
             </tr>
           </Header>
           <tbody>

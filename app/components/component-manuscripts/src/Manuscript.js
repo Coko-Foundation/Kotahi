@@ -1,5 +1,5 @@
 import React from 'react'
-import { gql, useMutation, useQuery, useApolloClient } from '@apollo/client'
+import { useMutation, useQuery, useApolloClient } from '@apollo/client'
 // import { Action } from '@pubsweet/ui'
 import config from 'config'
 import PropTypes from 'prop-types'
@@ -14,6 +14,7 @@ import {
   Secondary,
   UserInfo,
   StyledTopic,
+  StyledAuthor,
   StyledTableLabel,
   // SuccessStatus,
   // ErrorStatus,
@@ -50,6 +51,7 @@ const urlFrag = config.journal.metadata.toplevel_urlfragment
 const User = ({
   manuscriptId,
   manuscript,
+  teams,
   submitter,
   history,
   toggleNewManuscriptCheck,
@@ -173,6 +175,11 @@ const User = ({
           </UserCombo>
         )}
       </Cell>
+      {['ncrc'].includes(process.env.INSTANCE_NAME) && (
+        <Cell>
+          {manuscript.teams.map(team => <StyledAuthor key={team.id}>{team.members[0].user.defaultIdentity.name}</StyledAuthor>)}
+        </Cell>
+      )}
       <LastCell>
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
           [
@@ -210,6 +217,7 @@ const User = ({
 User.propTypes = {
   manuscriptId: PropTypes.string.isRequired,
   manuscript: PropTypes.shape({
+    teams: PropTypes.arrayOf(PropTypes.object).isRequired,
     meta: PropTypes.shape({
       title: PropTypes.string.isRequired,
     }).isRequired,
@@ -228,6 +236,10 @@ User.propTypes = {
     email: PropTypes.string,
     username: PropTypes.string.isRequired,
   }).isRequired,
+  teams: PropTypes.arrayOf(PropTypes.object).isRequired,
+  toggleNewManuscriptCheck: PropTypes.func.isRequired,
+  selectedNewManuscripts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setSelectedStatus: PropTypes.func.isRequired,
   // eslint-disable-next-line
   history: PropTypes.object,
   setSelectedTopic: PropTypes.func.isRequired,

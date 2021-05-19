@@ -62,6 +62,10 @@ export const StyledTopic = styled.p`
   width: fit-content;
 `
 
+export const StyledAuthor = styled.p`
+  white-space: nowrap;
+`
+
 export const StyledTableLabel = styled.p`
   background-color: #ccc;
   border-radius: 7px;
