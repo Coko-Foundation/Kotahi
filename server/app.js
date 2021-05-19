@@ -21,19 +21,22 @@ const AWS = require('aws-sdk')
 const EventEmitter = require('events')
 const gqlApi = require('./graphql')
 
+AWS.config.logger = console
+
 const s3ConnectionObject = {
-  accessKeyId: process.env.S3_ACCESS_KEY_ID,
-  secretAccessKey: process.env.S3_ACCESS_KEY_SECRET,
-  endpoint: process.env.S3_ENDPOINT,
+  accessKeyId: config.s3.accessKeyId,
+  secretAccessKey: config.s3.secretAccessKey,
+  endpoint: config.s3.endpoint,
   s3ForcePathStyle: true,
   signatureVersion: 'v4',
+  apiVersion: '2006-03-01',
 }
 
 if (process.env.NODE_ENV === 'production') {
-  s3ConnectionObject.region = process.env.S3_REGION
+  s3ConnectionObject.region = config.s3.region
 }
 
-const s3Bucket = new AWS.S3(s3ConnectionObject)
+const s3 = new AWS.S3(s3ConnectionObject)
 
 const configureApp = app => {
   const models = require('@pubsweet/models')
@@ -58,7 +61,7 @@ const configureApp = app => {
   })
 
   app.use((req, res, next) => {
-    res.s3 = s3Bucket
+    res.s3 = s3
     next()
   })
 
