@@ -1,3 +1,4 @@
+/* eslint-disable global-require */
 const passport = require('passport')
 const { ApolloServer } = require('apollo-server-express')
 const isEmpty = require('lodash/isEmpty')
@@ -32,6 +33,7 @@ const permissions = require('../config/permissions')
 
 const api = app => {
   app.use('/graphql', authBearerAndPublic)
+
   const server = new ApolloServer({
     schema: applyMiddleware(schema, permissions),
     context: async ({ req, res }) => ({
@@ -39,6 +41,7 @@ const api = app => {
       user: await getUser(req.user),
       loaders: loaders(),
       models: require('@pubsweet/models'),
+      s3: res.s3,
     }),
     formatError: err => {
       const error = isEmpty(err.originalError) ? err : err.originalError
@@ -48,6 +51,7 @@ const api = app => {
       const isPubsweetDefinedError = Object.values(errors).some(
         pubsweetError => error instanceof pubsweetError,
       )
+
       // err is always a GraphQLError which should be passed to the client
       if (!isEmpty(err.originalError) && !isPubsweetDefinedError)
         return {
@@ -68,6 +72,7 @@ const api = app => {
     },
     ...extraApolloConfig,
   })
+
   server.applyMiddleware({ app })
 }
 
