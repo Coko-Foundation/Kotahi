@@ -77,3 +77,5 @@ Conventions for code changes, branching and merge requests are covered in [CONTR
 # Other credits
 
 The real-time chat functionality was heavily inspired by https://github.com/withspectrum/spectrum, from data model approach to copying and adapting certain bits of their React app. Thank you, Spectrum!
+
+debug: checking NCRC test-chrome pipeline
