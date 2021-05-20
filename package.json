@@ -67,7 +67,7 @@
     "test:firefox:ncrc:samsung:tablet": "cypress run --env userAgent=tabletSamsung --browser firefox --headless --spec 'cypress/integration/ncrc/**.js'",
     "test:firefox:ncrc:iPhone": "cypress run --env userAgent=phoneSafari --browser firefox --spec 'cypress/integration/ncrc/**.js'",
     "test:firefox:ncrc:iPhone:tablet": "cypress run --env userAgent=tabletSafari --browser firefox --headless --spec 'cypress/integration/ncrc/**.js'",
-    "test:firefox:ncrc:hd:laptop": "cypress run --env userAgent=hdLaptop --browser chrome --spec 'cypress/integration/ncrc/**.js'"
+    "test:firefox:ncrc:hd:laptop": "cypress run --env userAgent=hdLaptop --browser firefox --spec 'cypress/integration/ncrc/**.js'"
   },
   "husky": {
     "hooks": {
