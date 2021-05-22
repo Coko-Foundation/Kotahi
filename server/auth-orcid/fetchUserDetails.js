@@ -59,6 +59,7 @@ module.exports = async user => {
     last: ${lastName},
     email: ${email},
     institution: ${institution}`)
+
   return {
     firstName,
     lastName,

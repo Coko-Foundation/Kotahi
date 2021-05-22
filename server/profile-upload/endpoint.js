@@ -28,6 +28,7 @@ const upload = multer({
 })
 
 module.exports = app => {
+  // eslint-disable-next-line global-require
   const { User } = require('@pubsweet/models')
   app.post(
     '/api/uploadProfile',
@@ -42,6 +43,7 @@ module.exports = app => {
       const profilePath = `profiles/${user.username}${path.extname(
         req.file.path,
       )}`
+
       await image.writeAsync(profilePath)
 
       user.profilePicture = `/static/${profilePath}`

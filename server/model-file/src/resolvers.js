@@ -25,12 +25,14 @@ const upload = async file => {
     outStream.on('error', reject)
   })
 }
+
 const resolvers = {
   Query: {},
   Mutation: {
     async createFile(_, { file, meta }, ctx) {
-      const path = await upload(file)
-      meta.url = `/static/${path}`
+      const filePath = await upload(file)
+      // eslint-disable-next-line no-param-reassign
+      meta.url = `/static/${filePath}`
       const data = await new File(meta).save()
 
       return data

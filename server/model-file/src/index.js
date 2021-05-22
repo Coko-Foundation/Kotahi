@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+
 const resolvers = require('./resolvers')
 const typeDefs = require('./typeDefs')
 

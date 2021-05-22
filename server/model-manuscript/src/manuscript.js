@@ -23,12 +23,14 @@ class Manuscript extends BaseModel {
 
   async getReviews() {
     // TODO: Use relationships
+    /* eslint-disable-next-line global-require */
     const Review = require('../../model-review/src/review')
 
     const manuscriptReviews = await Review.findByField('manuscript_id', this.id)
 
     await Promise.all(
       manuscriptReviews.map(async review => {
+        // eslint-disable-next-line no-param-reassign
         review.comments = await review.getComments()
       }),
     )
@@ -40,12 +42,15 @@ class Manuscript extends BaseModel {
     // const { File } = require('@pubsweet/models')
 
     const id = this.parentId || this.id
+
     const manuscripts = await Manuscript.query()
       .where('parent_id', id)
       .eager('[teams, teams.members, reviews, files]')
+
     const firstManuscript = await Manuscript.query()
       .findById(id)
       .eager('[teams, teams.members, reviews, files]')
+
     manuscripts.push(firstManuscript)
 
     const manuscriptVersionsArray = manuscripts.filter(
@@ -67,13 +72,17 @@ class Manuscript extends BaseModel {
     const teams = await this.$relatedQuery('teams')
       .where({ role: 'author' })
       .withGraphFetched('members')
+
     teams.forEach(t => {
+      // eslint-disable-next-line no-param-reassign
       delete t.id
+      // eslint-disable-next-line no-param-reassign
       t.members.forEach(tm => delete tm.id)
     })
 
     // Copy files as well
     const files = await this.$relatedQuery('files')
+    // eslint-disable-next-line no-param-reassign
     files.forEach(f => delete f.id)
 
     const newVersion = cloneDeep(this)
@@ -95,6 +104,7 @@ class Manuscript extends BaseModel {
   }
 
   static get relationMappings() {
+    /* eslint-disable-next-line global-require */
     const { Channel, User, Team, Review, File } = require('@pubsweet/models')
 
     return {
@@ -237,7 +247,7 @@ class Manuscript extends BaseModel {
         submission: {},
         submitterId: { type: ['string', 'null'], format: 'uuid' },
         published: { type: ['string', 'object', 'null'], format: 'date-time' },
-        hypothesisPublicationId: { type: ['string', 'null'] }
+        hypothesisPublicationId: { type: ['string', 'null'] },
       },
     }
   }

@@ -29,6 +29,7 @@ class Identity extends BaseModel {
     return {
       user: {
         relation: BaseModel.BelongsToOneRelation,
+        // eslint-disable-next-line global-require
         modelClass: require('./user'),
         join: {
           from: 'identities.userId',

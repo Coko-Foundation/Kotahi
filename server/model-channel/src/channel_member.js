@@ -6,6 +6,7 @@ class ChannelMember extends BaseModel {
   }
 
   static get relationMappings() {
+    /* eslint-disable-next-line global-require */
     const { Channel, User } = require('@pubsweet/models')
 
     return {

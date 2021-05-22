@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+
 const graphql = require('./graphql')
 
 module.exports = {

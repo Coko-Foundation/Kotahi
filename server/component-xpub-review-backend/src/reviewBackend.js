@@ -11,6 +11,7 @@ const authBearer = passport.authenticate('bearer', { session: false })
 
 module.exports = app => {
   app.patch('/api/make-invitation', authBearer, async (req, res, next) => {
+    /* eslint-disable-next-line global-require */
     const { User, Fragment, Team, Collection } = require('@pubsweet/models')
 
     try {
@@ -32,6 +33,7 @@ module.exports = app => {
       }
 
       const canViewVersion = await authsome.can(req.user, 'GET', version)
+
       const canPatchVersion = await authsome.can(
         req.user,
         'PATCH',
@@ -40,9 +42,11 @@ module.exports = app => {
 
       if (!canPatchVersion || !canViewVersion) throw new AuthorizationError()
       let versionUpdateData = req.body.reviewers
+
       if (canPatchVersion.filter) {
         versionUpdateData = canPatchVersion.filter(versionUpdateData)
       }
+
       await version.updateProperties({ reviewers: versionUpdateData })
       await version.save()
 
@@ -71,11 +75,13 @@ module.exports = app => {
       }
 
       const canViewProject = await authsome.can(req.user, 'GET', project)
+
       const canPatchProject = await authsome.can(
         req.user,
         'PATCH',
         currentAndUpdateProject,
       )
+
       if (!canPatchProject || !canViewProject) throw new AuthorizationError()
 
       await Team.query().upsertGraphAndFetch(
@@ -103,6 +109,7 @@ module.exports = app => {
 
   app.patch('/api/make-decision', authBearer, async (req, res, next) => {
     try {
+      /* eslint-disable-next-line global-require */
       const { User, Fragment, Collection } = require('@pubsweet/models')
 
       const version = await Fragment.find(req.body.versionId)
@@ -118,6 +125,7 @@ module.exports = app => {
       }
 
       const canViewVersion = await authsome.can(req.user, 'GET', version)
+
       const canPatchVersion = await authsome.can(
         req.user,
         'PATCH',
@@ -126,14 +134,17 @@ module.exports = app => {
 
       if (!canPatchVersion || !canViewVersion) throw new AuthorizationError()
       let versionUpdateData = { decision: req.body.decision }
+
       if (canPatchVersion.filter) {
         versionUpdateData = canPatchVersion.filter(versionUpdateData)
       }
+
       await version.updateProperties(versionUpdateData)
 
       let nextVersionData
       let projectUpdateData = {}
       let message
+
       switch (version.decision.recommendation) {
         case 'accept':
           projectUpdateData.status = 'accepted'
@@ -159,6 +170,7 @@ module.exports = app => {
             'files',
             'notes',
           ])
+
           nextVersionData = {
             fragmentType: 'version',
             created: new Date(),
@@ -177,16 +189,20 @@ module.exports = app => {
 
       let nextVersion
       let canViewNextVersion
+
       if (nextVersionData) {
         const canCreateVersion = await authsome.can(req.user, 'POST', {
           path: '/collections/:collectionId/fragments',
           collection: project,
           fragment: nextVersionData,
         })
+
         if (!canCreateVersion) throw new AuthorizationError()
+
         if (canCreateVersion.filter) {
           nextVersionData = canCreateVersion.filter(nextVersionData)
         }
+
         nextVersion = new Fragment(nextVersionData)
 
         canViewNextVersion = await authsome.can(req.user, 'GET', nextVersion)
@@ -195,15 +211,19 @@ module.exports = app => {
       currentAndUpdate = { current: project, update: req.body }
 
       const canViewProject = await authsome.can(req.user, 'GET', project)
+
       const canPatchProject = await authsome.can(
         req.user,
         'PATCH',
         currentAndUpdate,
       )
+
       if (!canPatchProject || !canViewProject) throw new AuthorizationError()
+
       if (canPatchProject.filter) {
         projectUpdateData = canPatchProject.filter(projectUpdateData)
       }
+
       await project.updateProperties(projectUpdateData)
 
       await Promise.all([

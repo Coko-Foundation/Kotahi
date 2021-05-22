@@ -151,6 +151,8 @@
     "memory-cache": "0.2.0",
     "moment": "2.27.0",
     "morgan": "^1.10.0",
+    "multer": "^1.4.2",
+    "node-fetch": "^2.6.1",
     "objection": "^2.2.14",
     "passport": "^0.4.1",
     "passport-orcid": "0.0.4",

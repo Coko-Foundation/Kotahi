@@ -1,5 +1,6 @@
-const Channel = require('../channel')
 const fetch = require('node-fetch')
+
+const Channel = require('../channel')
 
 const resolvers = {
   Query: {
@@ -9,25 +10,18 @@ const resolvers = {
     },
     teamByName: async (_, { name }, context) => {
       const Team = context.connectors.Team.model
-      return Team.query()
-        .where({ name })
-        .eager('[channels, members]')
-        .first()
+      return Team.query().where({ name }).eager('[channels, members]').first()
     },
     channelsByTeamName: async (_, { teamName }, context) =>
-      Channel.query()
-        .joinRelation('team')
-        .where({ 'team.name': teamName }),
+      Channel.query().joinRelation('team').where({ 'team.name': teamName }),
     channels: async () => Channel.query().where({ teamId: null }),
-    findByDOI: async (_, { doi }) =>
-      Channel.query()
-        .where({ doi })
-        .first(),
+    findByDOI: async (_, { doi }) => Channel.query().where({ doi }).first(),
     searchOnCrossref: async (_, { searchTerm }, context) => {
       // https://api.crossref.org/works?query=renear+ontologies
       const res = await fetch(
         `https://api.crossref.org/works?query=${searchTerm}`,
       )
+
       const json = await res.json()
 
       const works = json.message.items.map(item => ({
@@ -36,6 +30,7 @@ const resolvers = {
         author: JSON.stringify(item.author),
         year: item.created['date-time'],
       }))
+
       return works
     },
   },

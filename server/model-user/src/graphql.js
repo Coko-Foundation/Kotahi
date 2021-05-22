@@ -6,11 +6,12 @@ const resolvers = {
     user(_, { id, username }, ctx) {
       if (id) {
         return ctx.models.User.query().findById(id)
-      } else if (username) {
-        return ctx.models.User.query()
-          .where({ username })
-          .first()
       }
+
+      if (username) {
+        return ctx.models.User.query().where({ username }).first()
+      }
+
       return null
     },
     async users(_, vars, ctx) {
@@ -50,6 +51,7 @@ const resolvers = {
     async currentUser(_, vars, ctx) {
       if (!ctx.user) return null
       const user = await ctx.models.User.find(ctx.user.id)
+      // eslint-disable-next-line no-underscore-dangle
       user._currentRoles = await user.currentRoles()
       return user
     },
@@ -60,6 +62,7 @@ const resolvers = {
           .where({ teamId })
           .where('username', 'ilike', `${query}%`)
       }
+
       return ctx.models.User.model
         .query()
         .where('username', 'ilike', `${query}%`)
@@ -79,6 +82,7 @@ const resolvers = {
         name: input.name,
         isDefault: true,
       }
+
       user.defaultIdentity = identity
 
       try {
@@ -102,7 +106,9 @@ const resolvers = {
     },
     async updateUser(_, { id, input }, ctx) {
       if (input.password) {
+        // eslint-disable-next-line no-param-reassign
         input.passwordHash = await ctx.models.User.hashPassword(input.password)
+        // eslint-disable-next-line no-param-reassign
         delete input.password
       }
 
@@ -110,19 +116,23 @@ const resolvers = {
     },
     // Authentication
     async loginUser(_, { input }, ctx) {
+      /* eslint-disable-next-line global-require */
       const authentication = require('pubsweet-server/src/authentication')
 
       let isValid = false
       let user
+
       try {
         user = await ctx.models.User.findByUsername(input.username)
         isValid = await user.validPassword(input.password)
       } catch (err) {
         logger.debug(err)
       }
+
       if (!isValid) {
         throw new AuthorizationError('Wrong username or password.')
       }
+
       return {
         user,
         token: authentication.token.create(user),
@@ -140,12 +150,14 @@ const resolvers = {
       const identity = await ctx.models.Identity.query()
         .where({ userId: parent.id, isDefault: true })
         .first()
+
       return identity
     },
     async identities(parent, args, ctx) {
       const identities = await ctx.models.Identity.query().where({
         userId: parent.id,
       })
+
       return identities
     },
   },
