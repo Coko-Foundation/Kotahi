@@ -1,3 +1,5 @@
+/* eslint-disable jest/expect-expect */
+
 import { manuscripts } from '../../support/routes'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
@@ -19,6 +21,7 @@ describe('manuscripts page assign editors tests', () => {
     SubmissionFormPage.fillInArticleDescription('123')
     Menu.clickManuscriptsAndAssertPageLoad()
   })
+
   it('assign editors dropdown are visible, and are selected editors', () => {
     ManuscriptsPage.clickEvaluation()
     cy.url().should('contain', 'evaluation')
@@ -49,6 +52,7 @@ describe('manuscripts page assign editors tests', () => {
       )
     })
   })
+
   it('check editor name appears in table', () => {
     ManuscriptsPage.clickEvaluation()
     cy.awaitDisappearSpinner()

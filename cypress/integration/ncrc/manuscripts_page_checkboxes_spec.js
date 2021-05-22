@@ -1,3 +1,5 @@
+/* eslint-disable jest/expect-expect */
+
 import { manuscripts } from '../../support/routes'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
@@ -87,7 +89,7 @@ describe('manuscripts page checkboxes tests', () => {
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         // eslint-disable-next-line
-                SubmissionFormPage.waitThreeSec()
+        SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
       })
       ManuscriptsPage.getAllArticleCheckboxes().should('not.exist')
