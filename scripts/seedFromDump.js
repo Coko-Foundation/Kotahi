@@ -1,8 +1,8 @@
-const seed = require('./clearAndSeed')
-
 // // const { execSync } = require('child_process')
-const path = require('path')
 const { readFileSync } = require('fs')
+const path = require('path')
+
+const seed = require('./clearAndSeed')
 
 const dumpFile = name =>
   path.join(__dirname, '..', 'cypress', 'dumps', `${name}.sql`)

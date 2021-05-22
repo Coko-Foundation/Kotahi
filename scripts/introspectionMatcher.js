@@ -30,6 +30,7 @@ fetch(`http://localhost:3000/graphql`, {
     const filteredData = result.data.__schema.types.filter(
       type => type.possibleTypes !== null,
     )
+
     result.data.__schema.types = filteredData
     fs.writeFile(
       './app/fragmentTypes.json',

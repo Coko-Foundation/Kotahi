@@ -110,6 +110,7 @@
     "@guardian/prosemirror-invisibles": "1.2.1",
     "@pubsweet/base-model": "4.0.0",
     "@pubsweet/component-send-email": "0.4.3",
+    "@pubsweet/db-manager": "^3.1.24",
     "@pubsweet/errors": "^2.0.40",
     "@pubsweet/job-xsweet": "^2.2.1",
     "@pubsweet/logger": "^0.2.50",
