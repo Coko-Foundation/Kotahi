@@ -51,18 +51,19 @@ export const ViewGrid = styled.main.attrs({
 └──┴────────┴──┘
 */
 export const SingleColumnGrid = styled.div`
-  display: grid;
-  justify-self: center;
-  grid-template-columns: ${MIN_MAX_WIDTH}px;
-  grid-template-areas: 'primary';
   background: ${th('colorBackground')};
+  display: grid;
+  grid-template-areas: 'primary';
+  grid-template-columns: ${MIN_MAX_WIDTH}px;
+  justify-self: center;
   overflow-y: auto;
+
   @media (max-width: ${MEDIA_BREAK}px) {
-    width: 100%;
-    max-width: 100%;
-    grid-template-columns: 1fr;
     border-left: 0;
     border-right: 0;
+    grid-template-columns: 1fr;
+    max-width: 100%;
+    width: 100%;
   }
 `
 
@@ -77,18 +78,19 @@ export const SingleColumnGrid = styled.div`
 */
 export const PrimarySecondaryColumnGrid = styled.div`
   display: grid;
-  justify-self: center;
+  grid-gap: ${COL_GAP}px;
+  grid-template-areas: 'primary secondary';
   grid-template-columns:
     minmax(${MIN_PRIMARY_COLUMN_WIDTH}px, ${MAX_PRIMARY_COLUMN_WIDTH}px)
     minmax(${MIN_SECONDARY_COLUMN_WIDTH}px, ${MAX_SECONDARY_COLUMN_WIDTH}px);
   grid-template-rows: 100%;
-  grid-template-areas: 'primary secondary';
-  grid-gap: ${COL_GAP}px;
+  justify-self: center;
   max-width: ${MAX_WIDTH}px;
+
   @media (max-width: ${MEDIA_BREAK}px) {
+    grid-gap: 0;
     grid-template-columns: 1fr;
     grid-template-rows: min-content 1fr;
-    grid-gap: 0;
     min-width: 100%;
   }
 `
@@ -104,21 +106,22 @@ export const PrimarySecondaryColumnGrid = styled.div`
 */
 export const SecondaryPrimaryColumnGrid = styled.div`
   display: grid;
-  justify-self: center;
+  grid-gap: ${COL_GAP}px;
+  grid-template-areas: 'secondary primary';
   grid-template-columns:
     minmax(${MIN_SECONDARY_COLUMN_WIDTH}px, ${MAX_SECONDARY_COLUMN_WIDTH}px)
     minmax(${MIN_PRIMARY_COLUMN_WIDTH}px, ${MAX_PRIMARY_COLUMN_WIDTH}px);
   grid-template-rows: 100%;
-  grid-template-areas: 'secondary primary';
-  grid-gap: ${COL_GAP}px;
-  max-width: ${MAX_WIDTH}px;
+  justify-self: center;
   margin: 0 24px;
+  max-width: ${MAX_WIDTH}px;
+
   @media (max-width: ${MEDIA_BREAK}px) {
+    grid-gap: 0;
     grid-template-columns: 1fr;
     grid-template-rows: 1fr;
-    grid-gap: 0;
-    min-width: 100%;
     max-width: 100%;
+    min-width: 100%;
   }
 `
 
@@ -132,74 +135,79 @@ export const SecondaryPrimaryColumnGrid = styled.div`
 └─────────────┘
 */
 export const CenteredGrid = styled.div`
-  display: grid;
-  justify-self: center;
-  grid-template-columns: ${MAX_WIDTH}px;
   align-self: center;
-  max-width: ${MAX_PRIMARY_COLUMN_WIDTH}px;
+  display: grid;
+  /* grid-template-columns: ${MAX_WIDTH}px; */
   grid-template-columns: minmax(
     ${MIN_PRIMARY_COLUMN_WIDTH}px,
     ${MAX_PRIMARY_COLUMN_WIDTH}px
   );
+  justify-self: center;
+  max-width: ${MAX_PRIMARY_COLUMN_WIDTH}px;
+
   @media (max-width: ${MEDIA_BREAK}px) {
     align-self: flex-start;
-    width: 100%;
-    max-width: 100%;
     grid-template-columns: 1fr;
     height: calc(100vh - ${TITLEBAR_HEIGHT}px);
+    max-width: 100%;
+    width: 100%;
   }
 `
 
 export const PrimaryColumn = styled.section`
-  border-left: 1px solid ${th('colorBorder')};
-  border-right: 1px solid ${th('colorBorder')};
   border-bottom: 1px solid ${th('colorBorder')};
+  border-left: 1px solid ${th('colorBorder')};
   border-radius: 0 0 4px 4px;
+  border-right: 1px solid ${th('colorBorder')};
+  display: grid;
+  grid-area: primary;
+  grid-template-rows: 1fr;
   height: 100%;
   max-width: ${props =>
     !props.fullWidth ? `${MAX_PRIMARY_COLUMN_WIDTH}px` : 'none'};
-  grid-area: primary;
-  display: grid;
-  grid-template-rows: 1fr;
+
   @media (max-width: ${MEDIA_BREAK}px) {
+    border-bottom: 0;
     border-left: 0;
     border-right: 0;
-    border-bottom: 0;
     grid-column-start: 1;
-    max-width: 100%;
     height: calc(100vh - ${TITLEBAR_HEIGHT}px);
+    max-width: 100%;
   }
 `
 
 export const SecondaryColumn = styled.section`
+  grid-area: secondary;
   height: 100vh;
   overflow: hidden;
   overflow-y: auto;
+  padding-bottom: 48px;
   position: sticky;
   top: 0;
-  padding-bottom: 48px;
-  grid-area: secondary;
+
   &::-webkit-scrollbar {
-    width: 0px;
-    height: 0px;
     background: transparent; /* make scrollbar transparent */
+    height: 0px;
+    width: 0px;
   }
+
   @media (max-width: ${MEDIA_BREAK}px) {
-    height: calc(100vh - ${TITLEBAR_HEIGHT}px);
     display: none;
+    height: calc(100vh - ${TITLEBAR_HEIGHT}px);
   }
 `
 
 export const ChatInputWrapper = styled.div`
-  position: sticky;
   bottom: 0;
   left: 0;
+  position: sticky;
   width: 100%;
   z-index: 3000;
+
   @media (max-width: ${MEDIA_BREAK}px) {
-    width: 100vw;
-    position: fixed;
     bottom: 0;
     left: 0;
+    position: fixed;
+    width: 100vw;
   }
 `

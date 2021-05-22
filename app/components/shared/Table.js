@@ -2,12 +2,13 @@ import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 
 export const Table = styled.table`
-  margin-top: ${grid(2)};
-  width: 100%;
-  border-radius: ${th('borderRadius')};
   border-collapse: collapse;
+  border-radius: ${th('borderRadius')};
   font-size: ${th('fontSizeBaseSmall')};
+  margin-top: ${grid(2)};
   overflow: hidden;
+  width: 100%;
+
   td {
     width: 25%;
   }
@@ -20,11 +21,10 @@ export const ManuscriptsTable = styled(Table)`
 `
 
 export const Header = styled.thead`
-  text-align: left;
-  font-variant: all-small-caps;
-  border-bottom: 1px solid ${th('colorFurniture')};
-
   background-color: ${th('colorSecondaryBackground')};
+  border-bottom: 1px solid ${th('colorFurniture')};
+  font-variant: all-small-caps;
+  text-align: left;
 
   th {
     padding: ${grid(1)} ${grid(3)};
@@ -32,8 +32,8 @@ export const Header = styled.thead`
 `
 
 export const Row = styled.tr`
-  max-height: ${grid(8)};
   border-bottom: 1px solid ${th('colorFurniture')};
+  max-height: ${grid(8)};
 
   &:hover {
     background-color: ${th('colorBackgroundHue')};
@@ -42,9 +42,10 @@ export const Row = styled.tr`
 
 export const Cell = styled.td`
   padding-bottom: ${grid(2)};
-  padding-top: calc(${grid(2)} - 1px);
   padding-left: ${grid(3)};
   padding-right: ${grid(3)};
+  padding-top: calc(${grid(2)} - 1px);
+
   button {
     font-size: ${th('fontSizeBaseSmall')};
   }

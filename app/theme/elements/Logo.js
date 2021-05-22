@@ -1,13 +1,14 @@
 import { css } from 'styled-components'
 
 export default css`
-  width: 150px;
   margin-left: auto;
   margin-right: auto;
+  width: 150px;
+
   img {
-    max-width: 100%;
+    filter: grayscale(100%);
     margin-bottom: 30px;
     margin-top: 30px;
-    filter: grayscale(100%);
+    max-width: 100%;
   }
 `

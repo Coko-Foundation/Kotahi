@@ -7,6 +7,7 @@ import CreateANewVersion from './CreateANewVersion'
 import FormTemplate from './FormTemplate'
 import ReviewMetadata from '../../../component-review/src/components/metadata/ReviewMetadata'
 import MessageContainer from '../../../component-chat/src'
+
 import {
   SectionContent,
   VersionSwitcher,
@@ -103,7 +104,9 @@ const Submit = ({
     let decisionSection
 
     if (
-      ['new', 'revising', 'submitted', 'evaluated', 'published'].includes(manuscript.status)
+      ['new', 'revising', 'submitted', 'evaluated', 'published'].includes(
+        manuscript.status,
+      )
     ) {
       Object.assign(submissionValues, JSON.parse(manuscript.submission))
 
@@ -172,12 +175,12 @@ const Submit = ({
     decisionSections.push({
       content: (
         <>
-          {['ncrc'].includes(process.env.INSTANCE_NAME) &&
+          {['ncrc'].includes(process.env.INSTANCE_NAME) && (
             <AssignEditorsReviewers
               AssignEditor={AssignEditor}
               manuscript={manuscript}
             />
-          }
+          )}
           <Tabs
             defaultActiveKey={versionId}
             sections={[decisionSection, editorSection]}

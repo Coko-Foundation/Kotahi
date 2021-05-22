@@ -1,3 +1,5 @@
+/* eslint-disable import/prefer-default-export */
+
 export function convertCamelCaseToText(text) {
   if (typeof text !== 'string') return ''
   const result = text.replace(/([A-Z])/g, ' $1')

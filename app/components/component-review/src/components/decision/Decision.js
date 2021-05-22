@@ -26,8 +26,8 @@ const Decision = ({ review }) => (
   <div>
     <div>
       {findComments(review, 'note') && [
-        <Heading>Note</Heading>,
-        <Note>
+        <Heading key={0}>Note</Heading>,
+        <Note key={1}>
           <Content>
             <NoteViewer value={findComments(review, 'note').content} />
           </Content>

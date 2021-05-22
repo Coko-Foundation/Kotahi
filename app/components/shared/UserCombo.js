@@ -2,9 +2,9 @@ import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 
 export const UserCombo = styled.div`
+  align-items: center;
   display: flex;
   line-height: ${grid(2.5)};
-  align-items: center;
 `
 
 export const Primary = styled.div`

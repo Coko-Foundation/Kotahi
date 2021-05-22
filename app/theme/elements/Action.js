@@ -3,8 +3,8 @@ import { th } from '@pubsweet/ui-toolkit'
 
 const underlineFade = css`
   &:before {
-    transition: ${th('transitionDuration')} ease;
     opacity: 0;
+    transition: ${th('transitionDuration')} ease;
   }
 
   &:hover:before {
@@ -33,20 +33,21 @@ const underlineAnimation = css`
   }
 
   &:before {
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 2px;
-    bottom: 0;
-    left: 0;
     background-color: ${th('colorPrimary')};
+    bottom: 0;
+    content: '';
+    height: 2px;
+    left: 0;
+    position: absolute;
     visibility: hidden;
+    width: 100%;
   }
 
   &:hover:before {
     visibility: visible;
   }
 
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
   ${underlineFade};
 `
 

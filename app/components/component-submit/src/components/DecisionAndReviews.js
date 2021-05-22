@@ -1,8 +1,9 @@
 import React from 'react'
 // import styled from 'styled-components'
+
 // TODO: Sort out the imports, perhaps make DecisionReview a shared component?
 import Review from '../../../component-review/src/components/decision/DecisionReview'
-import { UserAvatar } from '../../../../components/component-avatar/src'
+import { UserAvatar } from '../../../component-avatar/src'
 
 import {
   SectionHeader,

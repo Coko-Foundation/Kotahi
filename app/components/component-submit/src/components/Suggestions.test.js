@@ -22,19 +22,12 @@ const suggestionsObject = {
   readonly: true,
 }
 
-const getSuggested = object =>
-  object
-    .children('div')
-    .first()
-    .text()
+const getSuggested = object => object.children('div').first().text()
 
-const getOpposed = object =>
-  object
-    .children('div')
-    .last()
-    .text()
+const getOpposed = object => object.children('div').last().text()
 
 const makeWrapper = (props = { readonly: true, suggestions: {} }) => {
+  // eslint-disable-next-line prefer-object-spread
   const manuscript = Object.assign(
     {
       suggestions: {

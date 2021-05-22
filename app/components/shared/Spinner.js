@@ -30,6 +30,7 @@ const LoadingPage = styled.div`
   padding-bottom: calc(${th('gridUnit')} * 2);
 `
 
+/* eslint-disable import/prefer-default-export */
 export const Spinner = () => (
   <LoadingPage>
     <SpinnerAnimation />

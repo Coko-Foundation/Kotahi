@@ -1,3 +1,6 @@
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+
 import React from 'react'
 import { useMutation, useQuery, useApolloClient } from '@apollo/client'
 // import { Action } from '@pubsweet/ui'
@@ -177,7 +180,11 @@ const User = ({
       </Cell>
       {['ncrc'].includes(process.env.INSTANCE_NAME) && (
         <Cell>
-          {manuscript.teams.map(team => <StyledAuthor key={team.id}>{team.members[0].user.defaultIdentity.name}</StyledAuthor>)}
+          {manuscript.teams.map(team => (
+            <StyledAuthor key={team.id}>
+              {team.members[0].user.defaultIdentity.name}
+            </StyledAuthor>
+          ))}
         </Cell>
       )}
       <LastCell>

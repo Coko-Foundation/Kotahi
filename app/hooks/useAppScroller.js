@@ -1,3 +1,6 @@
+/* eslint-disable import/prefer-default-export */
+/* eslint-disable consistent-return */
+
 import { useState, useEffect } from 'react'
 
 export const useAppScroller = () => {

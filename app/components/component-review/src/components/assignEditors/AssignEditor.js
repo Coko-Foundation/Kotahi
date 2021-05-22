@@ -67,7 +67,7 @@ const AssignEditor = ({ teamRole, manuscript }) => {
     setTeam((manuscript.teams || []).find(t => t.role === teamRole) || {})
     setTeams(manuscript.teams || [])
   }, [manuscript])
-  
+
   useEffect(() => {
     setTeam(teams.find(t => t.role === teamRole) || {})
   }, [teams])
@@ -95,20 +95,25 @@ const AssignEditor = ({ teamRole, manuscript }) => {
         const input = {
           // Editors are always linked to the parent manuscript
           manuscriptId: manuscript.id,
-          name: teamRole === 'seniorEditor' ? 'Senior Editor' : 'Handling Editor',
+          name:
+            teamRole === 'seniorEditor' ? 'Senior Editor' : 'Handling Editor',
           role: teamRole,
           members: [{ user: { id: selectedEditor } }],
         }
+
         createTeam({
           variables: {
             input,
           },
         }).then(({ data }) => {
-          setTeams([...teams, {
-            id: data.createTeam.id,
-            role: teamRole,
-            members: [{ user: { id: selectedEditor } }],
-          }])
+          setTeams([
+            ...teams,
+            {
+              id: data.createTeam.id,
+              role: teamRole,
+              members: [{ user: { id: selectedEditor } }],
+            },
+          ])
         })
       }
     }

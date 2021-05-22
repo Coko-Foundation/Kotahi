@@ -7,6 +7,7 @@ const Container = styled.div`
   margin-top: ${props => grid(props.top)};
 `
 
+/* eslint-disable import/prefer-default-export */
 export const VersionSwitcher = ({ versions = [], children, top = 2 }) => {
   // One can pass in versions as prop or as children
   let normalizedVersions

@@ -19,6 +19,7 @@ import FormProperties from '../components/FormProperties'
 Enzyme.configure({ adapter: new Adapter() })
 
 jest.mock('config', () => {
+  // eslint-disable-next-line global-require
   const path = require('path')
 
   return {
@@ -83,6 +84,7 @@ const mocks = [
 ]
 
 describe('FormBuilderPage', () => {
+  // eslint-disable-next-line jest/no-test-callback
   it('runs', done => {
     const page = mount(
       <MemoryRouter>

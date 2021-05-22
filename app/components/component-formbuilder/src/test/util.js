@@ -1,16 +1,19 @@
 import { merge } from 'lodash'
 
+/* eslint-disable import/prefer-default-export */
 export const diveTo = (
   shallowWrapper,
   identifier,
   options = { context: {} },
 ) => {
   const element = shallowWrapper.getElement()
+
   if (!(element && element.type)) {
     throw new Error(
       `Failed to dive to ${identifier} - is it not in the component tree?`,
     )
   }
+
   const instance = shallowWrapper.instance()
 
   if (instance && instance.constructor.displayName === identifier) {

@@ -12,40 +12,39 @@ import { Spinner } from '../../../shared'
 // }
 
 const Info = styled.span`
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  display: flex;
   align-items: center;
-  justify-content: center;
+  display: flex;
   height: 500px;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 `
 
 const Columns = styled.div`
   display: grid;
-  // grid-column-gap: 2em;
   grid-template-areas: 'manuscript chat';
   grid-template-columns: 3fr 2fr;
+  height: 100vh;
   justify-content: center;
   overflow: hidden;
-  height: 100vh;
 `
 
 const ManuscriptContainer = styled.div`
   grid-area: manuscript;
   overflow-y: scroll;
+
   .wax-container {
-    top: 10%;
     height: 90%;
+    top: 10%;
   }
 `
 
 const Chat = styled.div`
   border-left: 1px solid ${th('colorFurniture')};
+  display: flex;
   grid-area: chat;
   height: 100vh;
-  // overflow-y: scroll;
-  display: flex;
 `
 
 const Manuscript = ({

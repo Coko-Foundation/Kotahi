@@ -38,12 +38,12 @@ export const UserAction = styled(Action)`
 `
 
 export const SelectAllField = styled.div`
-  display:flex;
   align-items: center;
+  display: flex;
   margin-top: 10px;
 `
 export const SelectedManuscriptsNumber = styled.p`
-  font-weight: bold; 
+  font-weight: bold;
   margin-left: 10px;
   margin-right: 15px;
 `

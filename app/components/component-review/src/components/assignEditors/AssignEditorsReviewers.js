@@ -13,4 +13,5 @@ const AssignEditorsReviewers = ({ manuscript, AssignEditor }) => (
     </SectionRowGrid>
   </SectionContent>
 )
+
 export default AssignEditorsReviewers

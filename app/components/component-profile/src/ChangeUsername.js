@@ -19,6 +19,7 @@ const InlineTextField = styled(TextField)`
   display: inline;
   width: calc(${th('gridUnit')} * 24);
 `
+
 const ChangeUsername = ({ user }) => {
   const [updateCurrentUsername] = useMutation(UPDATE_CURRENT_USERNAME)
   const [username, setUsername] = useState(user.username)
@@ -26,6 +27,7 @@ const ChangeUsername = ({ user }) => {
   const updateUsername = async updatedUsername => {
     await updateCurrentUsername({ variables: { username: updatedUsername } })
   }
+
   return (
     <>
       <InlineTextField

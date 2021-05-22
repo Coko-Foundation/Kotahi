@@ -26,7 +26,8 @@ const Page = styled.div`
       z-index: ${zIndex.form};
 
       button {
-        &[disabled], &[disabled]:hover  {
+        &[disabled],
+        &[disabled]:hover {
           opacity: 1;
           color: ${th('colorPrimary')};
 
@@ -38,10 +39,8 @@ const Page = styled.div`
         // color: ${th('colorPrimary')};
 
         &:before:[disabled] {
-
           visibility: visible;
           opacity: 1;
-
         }
       }
     `}
@@ -95,11 +94,12 @@ const NextButton = styled(PreviousButton)`
   border-radius: 0 ${th('borderRadius')} ${th('borderRadius')} 0;
 `
 
-export const Pagination = ({ 
+export const Pagination = ({
   setPage,
   limit,
   page,
   totalCount,
+  // eslint-disable-next-line no-shadow
   PaginationContainer,
 }) => {
   const Previous = () => (

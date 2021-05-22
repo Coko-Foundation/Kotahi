@@ -14,14 +14,16 @@ export const Caret = styled.svg`
 `
 
 export const Carets = styled.span`
+  align-items: center;
   display: inline-flex;
   flex-direction: column;
-  align-items: center;
-  vertical-align: middle;
   margin-left: ${grid(0.5)};
+  vertical-align: middle;
+
   svg {
     height: ${grid(1.5)};
   }
+
   svg:nth-of-type(2) {
     margin-top: ${grid(-0.5)};
   }

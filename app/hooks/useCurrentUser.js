@@ -12,5 +12,6 @@ export default function useCurrentUser() {
   if (data && data.currentUser) {
     return data.currentUser
   }
+
   return null
 }

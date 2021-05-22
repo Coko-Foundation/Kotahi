@@ -16,7 +16,8 @@ import {
   CaretDown,
   Carets,
 } from './style'
-import { PaginationContainer } from '../../../components/shared/Pagination'
+
+import { PaginationContainer } from '../../shared/Pagination'
 
 const GET_USERS = gql`
   query Users(
@@ -73,6 +74,8 @@ const UsersManager = () => {
         )
         // return sortDirection
       }
+
+      return null
     }
 
     return (
@@ -111,6 +114,7 @@ const UsersManager = () => {
               <SortHeader thisSortName="username">Name</SortHeader>
               <SortHeader thisSortName="created">Created</SortHeader>
               <SortHeader thisSortName="admin">Admin</SortHeader>
+              {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
               <th />
             </tr>
           </Header>
@@ -120,12 +124,13 @@ const UsersManager = () => {
             ))}
           </tbody>
         </Table>
+
         <Pagination
           limit={limit}
           page={page}
+          PaginationContainer={PaginationContainer}
           setPage={setPage}
           totalCount={totalCount}
-          PaginationContainer={PaginationContainer}
         />
       </Content>
     </Container>

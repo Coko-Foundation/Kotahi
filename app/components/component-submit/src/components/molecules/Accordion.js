@@ -7,9 +7,10 @@ import { JournalContext } from '../../../../xpub-journal/src'
 const Root = styled.div``
 
 const AccordionBody = styled.div``
+
 const Title = styled.span`
-  font-size: ${th('fontSizeHeading5')};
   font-family: ${th('fontHeading')};
+  font-size: ${th('fontSizeHeading5')};
   line-height: ${th('lineHeightHeading5')};
 `
 
@@ -27,12 +28,12 @@ const Bullet = ({ journal, recommendation }) => {
       : 'black'
 
   const Dot = styled.span`
+    background-color: ${recommendationColor};
     border-radius: 100%;
     display: inline-block;
     height: 10px;
     margin-right: 10px;
     width: 10px;
-    background-color: ${recommendationColor};
   `
 
   return <Dot />
@@ -48,9 +49,10 @@ const AccordionHeading = ({
   component,
   withDots,
 }) => {
+  // eslint-disable-next-line no-shadow
   const Root = styled.div`
-    display: flex;
     align-items: baseline;
+    display: flex;
     margin-bottom: calc(${th('gridUnit')} * 3);
   `
 
@@ -58,11 +60,11 @@ const AccordionHeading = ({
   const Controls = styled.span``
 
   const Head = styled.div`
-    ${() => !withDots && 'border-bottom: 1px solid #000;'};
     align-items: baseline;
     display: flex;
     flex: 1;
     justify-content: space-between;
+    ${() => !withDots && 'border-bottom: 1px solid #000;'};
   `
 
   const Dots = styled.span`
@@ -70,10 +72,10 @@ const AccordionHeading = ({
     background-position: 0 90%;
     background-repeat: repeat-x;
     background-size: 6px 1px;
-    position: relative;
-    height: 1px;
     flex: 1;
+    height: 1px;
     margin-left: 10px;
+    position: relative;
   `
 
   return (

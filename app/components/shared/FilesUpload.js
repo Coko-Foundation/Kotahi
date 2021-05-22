@@ -4,6 +4,7 @@ import { FieldArray } from 'formik'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
 import { useMutation, gql } from '@apollo/client'
+
 import UploadingFile from './UploadingFile'
 import { Dropzone } from './Dropzone'
 import { Icon } from './Icon'
@@ -11,28 +12,29 @@ import theme from '../../theme'
 
 const Root = styled.div`
   border: 1px dashed ${th('colorBorder')};
-  height: ${grid(8)};
   border-radius: ${th('borderRadius')};
-  text-align: center;
+  height: ${grid(8)};
   line-height: ${grid(8)};
+  text-align: center;
 `
 
 const Files = styled.div`
-  margin-top: ${grid(2)};
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: ${grid(2)};
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  margin-top: ${grid(2)};
 `
 
 const Message = styled.div`
-  display: flex;
-  width: 100%;
   align-items: center;
+  color: ${props => (props.disabled ? th('colorTextPlaceholder') : 'inherit')};
+  display: flex;
   justify-content: center;
+  width: 100%;
+
   svg {
     margin-left: ${grid(1)};
   }
-  color: ${props => (props.disabled ? th('colorTextPlaceholder') : 'inherit')};
 `
 
 const createFileMutation = gql`
@@ -74,11 +76,13 @@ const DropzoneAndList = ({
     .map((file, index) => {
       // This is so that we preserve the location of the file in the top-level
       // files array (needed for deletion).
+      /* eslint-disable-next-line no-param-reassign */
       file.originalIndex = index
       return file
     })
     .filter(val => (fileType ? val.fileType === fileType : true))
     .map(val => {
+      // eslint-disable-next-line no-param-reassign
       val.name = val.filename
       return val
     })
@@ -91,8 +95,8 @@ const DropzoneAndList = ({
         accept={accept}
         disabled={disabled}
         multiple={multiple}
-        onDrop={async files => {
-          Array.from(files).forEach(async file => {
+        onDrop={async dropFiles => {
+          Array.from(dropFiles).forEach(async file => {
             const data = await createFile(file)
             push(data.createFile)
           })
@@ -131,6 +135,7 @@ const DropzoneAndList = ({
     </>
   )
 }
+
 const FilesUpload = ({
   fileType,
   fieldName = 'files',
@@ -141,12 +146,14 @@ const FilesUpload = ({
   accept,
 }) => {
   const [createF] = useMutation(createFileMutation)
+
   const [deleteF] = useMutation(deleteFileMutation, {
     update(cache, { data: { deleteFile } }) {
       const id = cache.identify({
         __typename: 'File',
         id: deleteFile,
       })
+
       cache.evict({ id })
     },
   })
@@ -170,6 +177,7 @@ const FilesUpload = ({
         meta,
       },
     })
+
     return data
   }
 
@@ -196,4 +204,6 @@ const FilesUpload = ({
     />
   )
 }
+
+/* eslint-disable import/prefer-default-export */
 export { FilesUpload }
