@@ -74,7 +74,7 @@ const CreateANewVersion = ({
           }
           primary
         >
-          Create a new version
+          Create a new version...
         </Button>
       </HeadingWithAction>
     </SectionRow>
