@@ -131,8 +131,8 @@ const Frontpage = ({ history, ...props }) => {
                         >
                           <ManuscriptBox>
                             <FullWaxEditor
-                              value={manuscript.meta.source}
                               readonly
+                              value={manuscript.meta.source}
                             />
                           </ManuscriptBox>
                         </Accordion>
