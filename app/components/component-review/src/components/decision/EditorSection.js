@@ -39,8 +39,13 @@ EditorSection.propTypes = {
       source: PropTypes.string,
     }).isRequired,
   }).isRequired,
-  onChange: PropTypes.func.isRequired,
-  readonly: PropTypes.bool.isRequired,
+  onChange: PropTypes.func,
+  readonly: PropTypes.bool,
+}
+
+EditorSection.defaultProps = {
+  onChange: undefined,
+  readonly: false,
 }
 
 export default EditorSection

@@ -24,7 +24,7 @@ import { query, updateReviewMutation, makeDecisionMutation } from './queries'
 import DecisionAndReviews from '../../../component-submit/src/components/DecisionAndReviews'
 
 const addEditor = (manuscript, label) => ({
-  content: <EditorSection manuscript={manuscript} />,
+  content: <EditorSection manuscript={manuscript} readonly />,
   key: `editor_${manuscript.id}`,
   label,
 })
