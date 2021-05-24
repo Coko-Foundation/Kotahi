@@ -1,4 +1,5 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { cloneDeep, get } from 'lodash'
 import { FieldArray } from 'formik'
 import { grid, th } from '@pubsweet/ui-toolkit'
@@ -87,7 +88,7 @@ const DropzoneAndList = ({
       return val
     })
 
-  const disabled = !multiple && files.length
+  const disabled = !multiple && !!files.length
 
   return (
     <>
@@ -134,6 +135,28 @@ const DropzoneAndList = ({
       </Files>
     </>
   )
+}
+
+DropzoneAndList.propTypes = {
+  form: PropTypes.shape({
+    values: PropTypes.shape({}).isRequired,
+    setFieldValue: PropTypes.func.isRequired,
+  }).isRequired,
+  push: PropTypes.func.isRequired,
+  insert: PropTypes.func.isRequired,
+  remove: PropTypes.func.isRequired,
+  createFile: PropTypes.func.isRequired,
+  deleteFile: PropTypes.func.isRequired,
+  fileType: PropTypes.string,
+  fieldName: PropTypes.string.isRequired,
+  multiple: PropTypes.bool,
+  accept: PropTypes.string,
+}
+
+DropzoneAndList.defaultProps = {
+  fileType: null,
+  multiple: true,
+  accept: undefined,
 }
 
 const FilesUpload = ({
@@ -205,5 +228,24 @@ const FilesUpload = ({
   )
 }
 
-/* eslint-disable import/prefer-default-export */
+FilesUpload.propTypes = {
+  fileType: PropTypes.string,
+  fieldName: PropTypes.string,
+  containerId: PropTypes.string,
+  containerName: PropTypes.string.isRequired,
+  initializeContainer: PropTypes.func,
+  multiple: PropTypes.bool,
+  accept: PropTypes.string,
+}
+
+FilesUpload.defaultProps = {
+  fileType: null,
+  fieldName: 'files',
+  containerId: null,
+  multiple: true,
+  accept: undefined,
+  initializeContainer: undefined,
+}
+
+// eslint-disable-next-line import/prefer-default-export
 export { FilesUpload }
