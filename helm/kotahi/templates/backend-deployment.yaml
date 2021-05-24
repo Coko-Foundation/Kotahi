@@ -86,6 +86,16 @@ spec:
                 secretKeyRef:
                   key: PUBSWEET_SECRET
                   name: orcid-secret
+            - name: GOOGLE_SPREADSHEET_CLIENT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  key: GOOGLE_SPREADSHEET_CLIENT_EMAIL
+                  name: orcid-secret
+            - name: GOOGLE_SPREADSHEET_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: GOOGLE_SPREADSHEET_PRIVATE_KEY
+                  name: orcid-secret
             - name: S3_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
