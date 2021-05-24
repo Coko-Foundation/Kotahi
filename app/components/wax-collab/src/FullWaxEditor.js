@@ -4,16 +4,23 @@ import { Wax, ComponentPlugin } from 'wax-prosemirror-core'
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
+import { columnResizing, tableEditing } from 'prosemirror-tables'
 import { DefaultSchema } from 'wax-prosemirror-utilities'
 import {
   AnnotationToolGroupService,
+  BaseService,
+  BaseToolGroupService,
+  DisplayToolGroupService,
   InlineAnnotationsService,
   LinkService,
   ListsService,
   ListToolGroupService,
-  DisplayToolGroupService,
+  TablesService,
+  TableToolGroupService,
   TextBlockLevelService,
   TextToolGroupService,
+  EditorInfoToolGroupServices,
+  BottomInfoService,
 } from 'wax-prosemirror-services'
 import EditorElements from './EditorElements'
 
@@ -24,12 +31,14 @@ const waxConfig = {
       templateArea: 'topBar',
       toolGroups: [
         {
-          name: 'Annotations',
-          exclude: ['Code', 'StrikeThrough', 'Underline', 'SmallCaps'],
+          name: 'Base',
+          exclude: ['Save'],
         },
         {
-          name: 'Lists',
+          name: 'Annotations',
+          exclude: ['Code', 'StrikeThrough', 'SmallCaps'],
         },
+        'Lists',
         {
           name: 'Text',
           exclude: [
@@ -40,23 +49,36 @@ const waxConfig = {
             'SourceNote',
           ],
         },
+        'Tables',
       ],
     },
+    {
+      templateArea: 'BottomRightInfo',
+      toolGroups: [{ name: 'InfoToolGroup', exclude: ['ShortCutsInfo'] }],
+    },
   ],
+
+  PmPlugins: [columnResizing(), tableEditing()],
 
   RulesService: [emDash, ellipsis],
 
   ShortCutsService: {},
 
   services: [
-    new ListsService(),
+    new AnnotationToolGroupService(),
+    new BaseService(),
+    new BaseToolGroupService(),
+    new DisplayToolGroupService(),
     new InlineAnnotationsService(),
     new LinkService(),
-    new TextBlockLevelService(),
-    new DisplayToolGroupService(),
-    new TextToolGroupService(),
-    new AnnotationToolGroupService(),
+    new ListsService(),
     new ListToolGroupService(),
+    new TablesService(),
+    new TableToolGroupService(),
+    new TextBlockLevelService(),
+    new TextToolGroupService(),
+    new EditorInfoToolGroupServices(),
+    new BottomInfoService(),
   ],
 }
 
@@ -112,6 +134,7 @@ const Menu = styled.div`
   border: 1px solid ${th('colorBorder')};
   border-bottom: 1px solid ${th('colorFurniture')};
   display: flex;
+  font-size: 80%;
   grid-area: menu;
   position: sticky;
   top: -20px;
@@ -130,8 +153,17 @@ const Menu = styled.div`
   }
 `
 
+const InfoContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  width: 100%;
+  z-index: 999;
+`
+
 const TopBar = ComponentPlugin('topBar')
 const WaxOverlays = ComponentPlugin('waxOverlays')
+const CounterInfo = ComponentPlugin('BottomRightInfo')
 
 // eslint-disable-next-line react/prop-types
 const WaxLayout = readonly => ({ editor }) => (
@@ -151,6 +183,9 @@ const WaxLayout = readonly => ({ editor }) => (
       )}
     </Grid>
     <WaxOverlays />
+    <InfoContainer>
+      <CounterInfo />
+    </InfoContainer>
   </div>
 )
 

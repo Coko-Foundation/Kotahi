@@ -69,6 +69,10 @@ export default css`
     }
   }
 
+  u {
+    text-decoration: underline;
+  }
+
   strong {
     font-weight: bold;
   }
