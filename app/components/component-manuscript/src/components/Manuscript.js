@@ -2,7 +2,7 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
-import Wax from '../../../wax-collab/src/Editoria'
+import FullWaxEditor from '../../../wax-collab/src/FullWaxEditor'
 
 import MessageContainer from '../../../component-chat/src'
 import { Spinner } from '../../../shared'
@@ -61,16 +61,7 @@ const Manuscript = ({
     file.mimeType ===
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
       <ManuscriptContainer>
-        {content ? (
-          <Wax
-            // fileUpload={fileUpload}
-            // onChange={source => updateManuscript({ source })}
-            content={content}
-            readonly
-          />
-        ) : (
-          <Spinner />
-        )}
+        {content ? <FullWaxEditor readonly value={content} /> : <Spinner />}
       </ManuscriptContainer>
     ) : (
       <Info>No supported view of the file</Info>

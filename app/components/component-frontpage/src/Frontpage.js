@@ -1,11 +1,13 @@
 import Accordion from '@pubsweet/ui/src/molecules/Accordion'
 import React, { useContext, useState } from 'react'
+import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
 import { Container, Placeholder, VisualAbstract } from './style'
-import Wax from '../../wax-collab/src/Editoria'
+import FullWaxEditor from '../../wax-collab/src/FullWaxEditor'
 
 import {
   Spinner,
@@ -18,6 +20,18 @@ import {
   Pagination,
 } from '../../shared'
 import { PaginationContainer } from '../../shared/Pagination'
+
+const ManuscriptBox = styled.div`
+  border: 1px solid ${th('colorBorder')};
+  border-radius: ${th('borderRadius')};
+  margin-bottom: ${grid(0.5)};
+`
+
+const Subheading = styled.h3`
+  font-size: ${th('fontSizeHeading6')};
+  font-weight: bold;
+  margin-top: ${grid(2.0)};
+`
 
 const Frontpage = ({ history, ...props }) => {
   const [sortName] = useState('created')
@@ -78,20 +92,22 @@ const Frontpage = ({ history, ...props }) => {
             </SectionHeader>
             <SectionRow>
               {manuscript.submission?.abstract && (
-                <h1>Abstract: {manuscript.submission?.abstract}</h1>
+                <Subheading>
+                  Abstract: {manuscript.submission?.abstract}
+                </Subheading>
               )}
               {manuscript.visualAbstract && (
-                <div>
-                  <h1>Visual abstract</h1>
+                <>
+                  <Subheading>Visual abstract</Subheading>
                   <VisualAbstract
                     alt="Visual abstract"
                     src={manuscript.visualAbstract}
                   />
-                </div>
+                </>
               )}
 
               {manuscript.files.length > 0 && (
-                <div>
+                <>
                   {manuscript.files.map(
                     file =>
                       skipXSweet(file) &&
@@ -113,28 +129,34 @@ const Frontpage = ({ history, ...props }) => {
                           key={`file-${file.id}`}
                           label="View Manuscript Text"
                         >
-                          <Wax content={manuscript.meta.source} readonly />
+                          <ManuscriptBox>
+                            <FullWaxEditor
+                              value={manuscript.meta.source}
+                              readonly
+                            />
+                          </ManuscriptBox>
                         </Accordion>
                       ),
                   )}
-                </div>
+                </>
               )}
 
-              {manuscript.submission?.links && (
-                <div>
-                  <h1>Submitted research objects</h1>
-                  {manuscript.submission?.links?.map(link => (
-                    <a
-                      href={link.url}
-                      key={`url-${link.url}`}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      {link.url}
-                    </a>
-                  ))}
-                </div>
-              )}
+              {manuscript.submission?.links &&
+                manuscript.submission.links.length > 0 && (
+                  <>
+                    <Subheading>Submitted research objects</Subheading>
+                    {manuscript.submission?.links?.map(link => (
+                      <a
+                        href={link.url}
+                        key={`url-${link.url}`}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        {link.url}
+                      </a>
+                    ))}
+                  </>
+                )}
             </SectionRow>
           </SectionContent>
         ))

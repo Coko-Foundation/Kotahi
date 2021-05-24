@@ -83,16 +83,11 @@ const Submit = ({
   republish,
   onSubmit,
   match,
+  updateManuscript,
 }) => {
   const decisionSections = []
 
   const currentVersion = versions[0]
-
-  const addEditor = (manuscript, label) => ({
-    content: <EditorSection manuscript={manuscript} />,
-    key: `editor_${manuscript.id}`,
-    label,
-  })
 
   const submissionValues = createBlankSubmissionBasedOnForm(form)
 
@@ -100,7 +95,17 @@ const Submit = ({
     const { manuscript, label } = version
     const versionId = manuscript.id
 
-    const editorSection = addEditor(manuscript, 'Manuscript text')
+    const editorSection = {
+      content: (
+        <EditorSection
+          manuscript={manuscript}
+          onChange={source => updateManuscript(versionId, { meta: { source } })}
+        />
+      ),
+      key: `editor_${manuscript.id}`,
+      label: 'Manuscript text',
+    }
+
     let decisionSection
 
     if (
@@ -262,6 +267,7 @@ Submit.propTypes = {
   match: PropTypes.shape({
     url: PropTypes.string.isRequired,
   }).isRequired,
+  updateManuscript: PropTypes.func.isRequired,
 }
 Submit.defaultProps = {
   parent: undefined,

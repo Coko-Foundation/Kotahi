@@ -178,6 +178,7 @@ const SubmitPage = ({ match, history }) => {
       parent={manuscript}
       republish={republish}
       toggleConfirming={toggleConfirming}
+      updateManuscript={updateManuscript}
       versions={versions}
     />
   )
