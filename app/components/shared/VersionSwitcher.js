@@ -7,6 +7,11 @@ const Container = styled.div`
   margin-top: ${props => grid(props.top)};
 `
 
+const generateLabel = (created, versionNumber, count) => {
+  if (versionNumber >= count) return `Current version (${versionNumber})`
+  return `${new Date(created).toISOString().slice(0, 10)} (${versionNumber})`
+}
+
 /* eslint-disable import/prefer-default-export */
 export const VersionSwitcher = ({ versions = [], children, top = 2 }) => {
   // One can pass in versions as prop or as children
@@ -43,9 +48,16 @@ export const VersionSwitcher = ({ versions = [], children, top = 2 }) => {
         onChange={option => {
           selectVersionKey(option.value)
         }}
-        options={normalizedVersions.map(d => ({
+        options={normalizedVersions.map((d, i) => ({
           value: d.key,
-          label: mode === 'props' ? d.label : d.props.label,
+          label:
+            d.label ??
+            d.props.label ??
+            generateLabel(
+              d.props.version.created,
+              normalizedVersions.length - i,
+              normalizedVersions.length,
+            ),
         }))}
         placeholder="Select version..."
         standalone
