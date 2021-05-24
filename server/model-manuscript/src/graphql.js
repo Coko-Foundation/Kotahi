@@ -3,7 +3,6 @@ const TurndownService = require('turndown')
 const axios = require('axios')
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const { mergeWith, isArray } = require('lodash')
-const credentials = require('../../../google_sheets_credentials.json')
 const Form = require('../../model-form/src/form')
 
 const ManuscriptResolvers = ({ isVersion }) => {
@@ -413,8 +412,8 @@ const resolvers = {
           const doc = new GoogleSpreadsheet(spreadsheetId)
 
           await doc.useServiceAccountAuth({
-            client_email: credentials.client_email,
-            private_key: credentials.private_key,
+            client_email: process.env.GOOGLE_SPREADSHEET_CLIENT_EMAIL,
+            private_key: process.env.GOOGLE_SPREADSHEET_PRIVATE_KEY,
           })
 
           await doc.loadInfo()
