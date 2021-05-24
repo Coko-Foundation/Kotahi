@@ -18,7 +18,7 @@ const EditorSection = ({ manuscript, onChange }) => {
   )
     return <Info>No supported view of the file</Info>
 
-  return <FullWaxEditor readonly value={manuscript.meta.source} />
+  return <FullWaxEditor onChange={onChange} value={manuscript.meta.source} />
 }
 
 EditorSection.propTypes = {
