@@ -1,21 +1,21 @@
 import React, { useState, useEffect } from 'react'
 import styled, { css } from 'styled-components'
-import { th, override } from '@pubsweet/ui-toolkit'
+import { th, lighten, override } from '@pubsweet/ui-toolkit'
 
 const Tab = styled.div`
   background-color: ${({ active }) =>
-    active ? th('colorBackground') : th('colorFurniture')};
+    active ? lighten('colorPrimary', 0.6) : th('colorFurniture')};
   border-bottom: 2px solid
     ${({ active }) => (active ? th('colorPrimary') : th('colorFurniture'))};
   border-radius: ${th('borderRadius')} ${th('borderRadius')} 0 0;
-  color: ${({ active }) => (active ? th('colorPrimary') : th('colorText'))};
+  color: ${th('colorText')};
   cursor: pointer;
   font-size: ${th('fontSizeBaseSmall')};
   font-weight: 500;
   padding: calc(${th('gridUnit')} - 1px) 1em;
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */
-  ${override('ui.Tab')};
+  ${override('ui.Tab')}
 `
 
 const TabsContainer = styled.div`
