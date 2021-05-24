@@ -12,7 +12,7 @@ import { Columns, Manuscript, Chat } from '../../../../shared'
 import MessageContainer from '../../../../component-chat/src'
 
 const addEditor = (manuscript, label) => ({
-  content: <EditorSection manuscript={manuscript} />,
+  content: <EditorSection manuscript={manuscript} readonly />,
   key: manuscript.id,
   label,
 })

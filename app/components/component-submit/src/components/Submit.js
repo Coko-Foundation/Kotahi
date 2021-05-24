@@ -100,6 +100,9 @@ const Submit = ({
         <EditorSection
           manuscript={manuscript}
           onChange={source => updateManuscript(versionId, { meta: { source } })}
+          readonly={
+            manuscript.status !== 'new' && manuscript.status !== 'revising'
+          }
         />
       ),
       key: `editor_${manuscript.id}`,

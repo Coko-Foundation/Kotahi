@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import FullWaxEditor from '../../../../wax-collab/src/FullWaxEditor'
 import { Info } from '../style'
 
-const EditorSection = ({ manuscript, onChange }) => {
+const EditorSection = ({ manuscript, onChange, readonly }) => {
   const manuscriptFile = manuscript?.files?.find(
     file => file.fileType === 'manuscript',
   )
@@ -18,7 +18,13 @@ const EditorSection = ({ manuscript, onChange }) => {
   )
     return <Info>No supported view of the file</Info>
 
-  return <FullWaxEditor onChange={onChange} value={manuscript.meta.source} />
+  return (
+    <FullWaxEditor
+      onChange={readonly ? null : onChange}
+      readonly={readonly}
+      value={manuscript.meta.source}
+    />
+  )
 }
 
 EditorSection.propTypes = {
@@ -34,6 +40,7 @@ EditorSection.propTypes = {
     }).isRequired,
   }).isRequired,
   onChange: PropTypes.func.isRequired,
+  readonly: PropTypes.bool.isRequired,
 }
 
 export default EditorSection
