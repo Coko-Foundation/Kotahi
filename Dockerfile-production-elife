@@ -30,6 +30,7 @@ WORKDIR /home/node/app
 
 COPY . .
 RUN chown -R node:node .
+RUN cat yarn.lock | grep '1.1.1.tgz#ad66300cc49500455cf1243bb129c9e7d883321e'
 ADD ./node_modules_dev.tar.gz .
 RUN mv ./node_modules_dev ./node_modules && \
     yarn webpack --config webpack/webpack.production.config.js
