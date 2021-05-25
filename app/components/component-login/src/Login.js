@@ -1,9 +1,10 @@
 import React from 'react'
 import { Redirect } from 'react-router-dom'
 import config from 'config'
-import { th, grid, lighten } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
 import styled from 'styled-components'
+import { lightenBy } from '../../../shared/lightenDarken'
 
 import getQueryStringByName from '../../../shared/getQueryStringByName'
 import brandConfig from '../../../brandConfig.json'
@@ -31,7 +32,7 @@ const Container = styled.div`
   background: linear-gradient(
     134deg,
     ${th('colorPrimary')},
-    ${lighten('colorPrimary', 0.3)}
+    ${lightenBy('colorPrimary', 0.3)}
   );
   display: grid;
   height: 100vh;

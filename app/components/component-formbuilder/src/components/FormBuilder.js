@@ -6,6 +6,7 @@ import { th, grid } from '@pubsweet/ui-toolkit'
 import { Icon, Action } from '@pubsweet/ui'
 import { v4 as uuid } from 'uuid'
 import { Page, Heading } from './style'
+import { lightenBy } from '../../../../shared/lightenDarken'
 
 const Element = styled.div`
   background-color: ${th('colorSecondaryBackground')};
@@ -16,7 +17,7 @@ const Element = styled.div`
   padding: ${grid(1)};
 
   &.active {
-    background-color: ${th('colorSelected')};
+    background-color: ${lightenBy('colorPrimary', 0.7)};
   }
 `
 
