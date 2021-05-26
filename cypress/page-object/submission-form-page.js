@@ -422,6 +422,6 @@ export const SubmissionFormPage = {
   },
   getAssigEditor(nth) {
     return cy.get(ASSIGN_EDITORS_DROPDOWN).eq(nth)
-  }
+  },
 }
 export default SubmissionFormPage

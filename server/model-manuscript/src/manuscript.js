@@ -42,12 +42,15 @@ class Manuscript extends BaseModel {
     // const { File } = require('@pubsweet/models')
 
     const id = this.parentId || this.id
+
     const manuscripts = await Manuscript.query()
       .where('parent_id', id)
       .eager('[teams, teams.members, reviews, files]')
+
     const firstManuscript = await Manuscript.query()
       .findById(id)
       .eager('[teams, teams.members, reviews, files]')
+
     manuscripts.push(firstManuscript)
 
     const manuscriptVersionsArray = manuscripts.filter(
@@ -69,6 +72,7 @@ class Manuscript extends BaseModel {
     const teams = await this.$relatedQuery('teams')
       .where({ role: 'author' })
       .withGraphFetched('members')
+
     teams.forEach(t => {
       // eslint-disable-next-line
       delete t.id
@@ -244,7 +248,7 @@ class Manuscript extends BaseModel {
         submission: {},
         submitterId: { type: ['string', 'null'], format: 'uuid' },
         published: { type: ['string', 'object', 'null'], format: 'date-time' },
-        hypothesisPublicationId: { type: ['string', 'null'] }
+        hypothesisPublicationId: { type: ['string', 'null'] },
       },
     }
   }

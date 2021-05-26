@@ -5,7 +5,12 @@ const { mergeWith, isArray } = require('lodash')
 const credentials = require('../../../google_sheets_credentials.json')
 const Form = require('../../model-form/src/form')
 const publishToCrossref = require('../../publishing/crossref')
-const { publishToHypothesis, deletePublication } = require('../../publishing/hypothesis')
+
+const {
+  publishToHypothesis,
+  deletePublication,
+} = require('../../publishing/hypothesis')
+
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 
 const ManuscriptResolvers = ({ isVersion }) => {
@@ -178,10 +183,15 @@ const resolvers = {
 
       toDeleteList.push(manuscript.id)
 
-      if(process.env.INSTANCE_NAME === 'elife') {
-        const deletePromises = Object.values(manuscript.evaluationsHypothesisMap).filter(Boolean).map(publicationId => {
-          return deletePublication(publicationId)
-        })
+      if (process.env.INSTANCE_NAME === 'elife') {
+        const deletePromises = Object.values(
+          manuscript.evaluationsHypothesisMap,
+        )
+          .filter(Boolean)
+          .map(publicationId => {
+            return deletePublication(publicationId)
+          })
+
         await Promise.all(deletePromises)
       }
 
@@ -324,26 +334,41 @@ const resolvers = {
       let manuscript = await ctx.models.Manuscript.query().findById(id)
 
       if (['elife'].includes(process.env.INSTANCE_NAME)) {
-        if(manuscript.evaluationsHypothesisMap === null) {
+        if (manuscript.evaluationsHypothesisMap === null) {
           manuscript.evaluationsHypothesisMap = {}
         }
+
         const evaluationValues = Object.entries(manuscript.submission)
           .filter(
             ([prop, value]) =>
               !Number.isNaN(Number(prop.split('review')[1])) &&
-              prop.includes('review')
-          ).map(([propName, value]) => value)
-          evaluationValues.push(manuscript.submission.summary)
-          const areEvaluationsEmpty = evaluationValues.map(evaluationValue => {
-            return checkIsAbstractValueEmpty(evaluationValue)
-          }).every(isEmpty => isEmpty === true)
+              prop.includes('review'),
+          )
+          .map(([propName, value]) => value)
 
-        if(areEvaluationsEmpty && manuscript.status === 'evaluated') {
+        evaluationValues.push(manuscript.submission.summary)
+
+        const areEvaluationsEmpty = evaluationValues
+          .map(evaluationValue => {
+            return checkIsAbstractValueEmpty(evaluationValue)
+          })
+          .every(isEmpty => isEmpty === true)
+
+        if (areEvaluationsEmpty && manuscript.status === 'evaluated') {
           return manuscript
         }
-        const newArticleStatus = (areEvaluationsEmpty && manuscript.status === 'published') ? 'evaluated' : 'published'
+
+        const newArticleStatus =
+          areEvaluationsEmpty && manuscript.status === 'published'
+            ? 'evaluated'
+            : 'published'
+
         await publishToCrossref(manuscript)
-        const newEvaluationsHypothesisMap = await publishToHypothesis(manuscript)
+
+        const newEvaluationsHypothesisMap = await publishToHypothesis(
+          manuscript,
+        )
+
         const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
           id,
           {
@@ -352,6 +377,7 @@ const resolvers = {
             evaluationsHypothesisMap: newEvaluationsHypothesisMap,
           },
         )
+
         return updatedManuscript
       }
 

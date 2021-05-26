@@ -50,7 +50,9 @@ const Frontpage = ({ history, ...props }) => {
 
   const { totalCount } = data.publishedManuscripts
 
-  const publishedManuscripts = (data.publishedManuscripts?.manuscripts || []).map(m => {
+  const publishedManuscripts = (
+    data.publishedManuscripts?.manuscripts || []
+  ).map(m => {
     const visualAbstract = m.files?.find(f => f.fileType === 'visualAbstract')
     return {
       ...m,
@@ -60,30 +62,50 @@ const Frontpage = ({ history, ...props }) => {
     }
   })
 
-  const reviews = publishedManuscripts.map(({ submission, evaluationsHypothesisMap }) => {
-    if(Object.keys(evaluationsHypothesisMap).length !== 1) {
-      return Object.keys(evaluationsHypothesisMap).filter(key => key !== "__typename").map(key => {
-        return {[key]: submission[key],}
-      })
-    }
-    return null
-  }).filter(Boolean)
+  const reviews = publishedManuscripts
+    .map(({ submission, evaluationsHypothesisMap }) => {
+      if (Object.keys(evaluationsHypothesisMap).length !== 1) {
+        return Object.keys(evaluationsHypothesisMap)
+          .filter(key => key !== '__typename')
+          .map(key => {
+            return { [key]: submission[key] }
+          })
+      }
+
+      return null
+    })
+    .filter(Boolean)
 
   const reviewTitle = (reviewKey, manuscriptId) => {
-    if(reviewKey.includes('review')) {
-      return <>
+    if (reviewKey.includes('review')) {
+      return (
+        <>
+          <div>
+            Review #{reviewKey.split('review')[1]}
+            <a
+              href={`${urlFrag}/versions/${manuscriptId}/article-evaluation-result/${
+                reviewKey.split('review')[1]
+              }`}
+            >
+              &#128279;
+            </a>
+          </div>
+        </>
+      )
+    }
+
+    return (
+      <>
         <div>
-          Review #{reviewKey.split('review')[1]}
-          <a href={`${urlFrag}/versions/${manuscriptId}/article-evaluation-result/${reviewKey.split('review')[1]}`}>&#128279;</a>
+          Evaluation Summary
+          <a
+            href={`${urlFrag}/versions/${manuscriptId}/article-evaluation-summary`}
+          >
+            &#128279;
+          </a>
         </div>
       </>
-    }
-    return <>
-    <div>
-      Evaluation Summary
-      <a href={`${urlFrag}/versions/${manuscriptId}/article-evaluation-summary`}>&#128279;</a>
-    </div>
-  </>
+    )
   }
 
   return (
@@ -102,11 +124,11 @@ const Frontpage = ({ history, ...props }) => {
       {publishedManuscripts.length > 0 ? (
         publishedManuscripts.map((manuscript, index) => (
           <SectionContent key={`manuscript-${manuscript.id}`}>
-            {!['elife'].includes(process.env.INSTANCE_NAME) && 
+            {!['elife'].includes(process.env.INSTANCE_NAME) && (
               <SectionHeader>
                 <Title>{manuscript.meta.title}</Title>
               </SectionHeader>
-            }
+            )}
             {['elife'].includes(process.env.INSTANCE_NAME) && (
               <>
                 <SectionHeader>
@@ -115,14 +137,20 @@ const Frontpage = ({ history, ...props }) => {
                 {reviews[index].map(review => {
                   const reviewKey = Object.keys(review)[0]
                   const reviewValue = Object.values(review)[0]
-                  return reviewValue && <Accordion
-                    key={`${reviewKey}-${manuscript.id}`}
-                    label={reviewTitle(reviewKey, manuscript.id)}
-                  >
-                    <ArticleEvaluation dangerouslySetInnerHTML={(() => {
-                      return { __html: reviewValue }
-                    })()}></ArticleEvaluation>
-                  </Accordion>
+                  return (
+                    reviewValue && (
+                      <Accordion
+                        key={`${reviewKey}-${manuscript.id}`}
+                        label={reviewTitle(reviewKey, manuscript.id)}
+                      >
+                        <ArticleEvaluation
+                          dangerouslySetInnerHTML={(() => {
+                            return { __html: reviewValue }
+                          })()}
+                        />
+                      </Accordion>
+                    )
+                  )
                 })}
               </>
             )}
