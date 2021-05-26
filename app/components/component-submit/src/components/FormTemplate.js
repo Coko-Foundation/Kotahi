@@ -403,7 +403,6 @@ FormTemplate.propTypes = {
   confirming: PropTypes.bool.isRequired,
   manuscript: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    hypothesisPublicationId: PropTypes.string,
     status: PropTypes.string,
   }).isRequired,
   setTouched: PropTypes.func.isRequired,

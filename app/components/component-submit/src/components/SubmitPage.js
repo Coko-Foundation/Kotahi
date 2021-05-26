@@ -129,7 +129,6 @@ const SubmitPage = ({ match, history }) => {
     await publishManuscript({
       variables: {
         id: manuscriptId,
-        input: JSON.stringify(manuscriptChangedFields),
       },
     })
 

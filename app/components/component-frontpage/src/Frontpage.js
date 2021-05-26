@@ -6,6 +6,7 @@ import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
 import { Container, Placeholder, VisualAbstract } from './style'
 import Wax from '../../wax-collab/src/Editoria'
+import { ArticleEvaluation } from '../../component-evaluation-result/style'
 
 import {
   Spinner,
@@ -42,20 +43,48 @@ const Frontpage = ({ history, ...props }) => {
   })
 
   const journal = useContext(JournalContext)
+  const urlFrag = journal.metadata.toplevel_urlfragment
 
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
 
   const { totalCount } = data.publishedManuscripts
 
-  const frontpage = (data.publishedManuscripts?.manuscripts || []).map(m => {
+  const publishedManuscripts = (data.publishedManuscripts?.manuscripts || []).map(m => {
     const visualAbstract = m.files?.find(f => f.fileType === 'visualAbstract')
     return {
       ...m,
       visualAbstract: visualAbstract?.url,
       submission: JSON.parse(m.submission),
+      evaluationsHypothesisMap: JSON.parse(m.evaluationsHypothesisMap),
     }
   })
+
+  const reviews = publishedManuscripts.map(({ submission, evaluationsHypothesisMap }) => {
+    if(Object.keys(evaluationsHypothesisMap).length !== 1) {
+      return Object.keys(evaluationsHypothesisMap).filter(key => key !== "__typename").map(key => {
+        return {[key]: submission[key],}
+      })
+    }
+    return null
+  }).filter(Boolean)
+
+  const reviewTitle = (reviewKey, manuscriptId) => {
+    if(reviewKey.includes('review')) {
+      return <>
+        <div>
+          Review #{reviewKey.split('review')[1]}
+          <a href={`${urlFrag}/versions/${manuscriptId}/article-evaluation-result/${reviewKey.split('review')[1]}`}>&#128279;</a>
+        </div>
+      </>
+    }
+    return <>
+    <div>
+      Evaluation Summary
+      <a href={`${urlFrag}/versions/${manuscriptId}/article-evaluation-summary`}>&#128279;</a>
+    </div>
+  </>
+  }
 
   return (
     <Container>
@@ -70,12 +99,33 @@ const Frontpage = ({ history, ...props }) => {
         totalCount={totalCount}
       />
 
-      {frontpage.length > 0 ? (
-        frontpage.map(manuscript => (
+      {publishedManuscripts.length > 0 ? (
+        publishedManuscripts.map((manuscript, index) => (
           <SectionContent key={`manuscript-${manuscript.id}`}>
-            <SectionHeader>
-              <Title>{manuscript.meta.title}</Title>
-            </SectionHeader>
+            {!['elife'].includes(process.env.INSTANCE_NAME) && 
+              <SectionHeader>
+                <Title>{manuscript.meta.title}</Title>
+              </SectionHeader>
+            }
+            {['elife'].includes(process.env.INSTANCE_NAME) && (
+              <>
+                <SectionHeader>
+                  <Title>{manuscript.submission.description}</Title>
+                </SectionHeader>
+                {reviews[index].map(review => {
+                  const reviewKey = Object.keys(review)[0]
+                  const reviewValue = Object.values(review)[0]
+                  return reviewValue && <Accordion
+                    key={`${reviewKey}-${manuscript.id}`}
+                    label={reviewTitle(reviewKey, manuscript.id)}
+                  >
+                    <ArticleEvaluation dangerouslySetInnerHTML={(() => {
+                      return { __html: reviewValue }
+                    })()}></ArticleEvaluation>
+                  </Accordion>
+                })}
+              </>
+            )}
             <SectionRow>
               {manuscript.submission?.abstract && (
                 <h1>Abstract: {manuscript.submission?.abstract}</h1>

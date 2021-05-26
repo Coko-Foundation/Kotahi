@@ -23,12 +23,14 @@ class Manuscript extends BaseModel {
 
   async getReviews() {
     // TODO: Use relationships
+    // eslint-disable-next-line
     const Review = require('../../model-review/src/review')
 
     const manuscriptReviews = await Review.findByField('manuscript_id', this.id)
 
     await Promise.all(
       manuscriptReviews.map(async review => {
+        // eslint-disable-next-line
         review.comments = await review.getComments()
       }),
     )
@@ -68,16 +70,20 @@ class Manuscript extends BaseModel {
       .where({ role: 'author' })
       .withGraphFetched('members')
     teams.forEach(t => {
+      // eslint-disable-next-line
       delete t.id
+      // eslint-disable-next-line
       t.members.forEach(tm => delete tm.id)
     })
 
     // Copy files as well
     const files = await this.$relatedQuery('files')
+    // eslint-disable-next-line
     files.forEach(f => delete f.id)
 
     const newVersion = cloneDeep(this)
     newVersion.teams = teams
+    // eslint-disable-next-line
     newVersion.files = files
 
     if (this.decision === 'revise') {
@@ -95,6 +101,7 @@ class Manuscript extends BaseModel {
   }
 
   static get relationMappings() {
+    // eslint-disable-next-line
     const { Channel, User, Team, Review, File } = require('@pubsweet/models')
 
     return {

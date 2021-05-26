@@ -59,14 +59,6 @@
           "component": "TextField"
       },
       {
-          "id": "520615da-c193-4722-9509-3d849f3b6dc2",
-          "name": "submission.reviewDate",
-          "title": "Review date",
-          "component": "TextField",
-          "placeholder": "review date",
-          "doiValidation": "false"
-      },
-      {
           "id": "12909732-e675-4270-bb3b-3b4d8d39dace",
           "name": "submission.review1",
           "title": "Review 1",
@@ -76,11 +68,19 @@
       },
       {
           "id": "a7cd4965-0741-4b11-aa07-5cf89165a551",
-          "name": "submission.review1Creator",
+          "name": "submission.review1creator",
           "title": "Review 1 creator",
           "component": "TextField",
           "doiValidation": "false"
       },
+      {
+      	  "id": "520615da-c193-4722-9509-3d849f3b6dc2",
+      	  "name": "submission.review1date",
+      	  "title": "Review 1 date",
+      	  "component": "TextField",
+      	  "placeholder": "review 1 date",
+      	  "doiValidation": "false"
+    	},
       {
           "id": "6285b767-66be-4e5f-aa36-b00ec2730177",
           "name": "submission.review2",
@@ -96,6 +96,14 @@
           "component": "TextField",
           "doiValidation": "false"
       },
+			{
+					"id": "ab864ade-bc8c-11eb-8529-0242ac130003",
+					"name": "submission.review2date",
+					"title": "Review 2 date",
+					"component": "TextField",
+					"placeholder": "review 2 date",
+					"doiValidation": "false"
+			},
       {
           "id": "bc3dfe1f-ed4c-40bf-9dff-26dc45af260a",
           "name": "submission.review3",
@@ -110,6 +118,14 @@
           "component": "TextField",
           "doiValidation": "false"
       },
+			{
+					"id": "ab864dc2-bc8c-11eb-8529-0242ac130003",
+					"name": "submission.review3date",
+					"title": "Review 3 date",
+					"component": "TextField",
+					"placeholder": "review 3 date",
+					"doiValidation": "false"
+			},
       {
           "id": "05867f53-ea10-4d3b-8220-48200b92cd4f",
           "name": "submission.summary",
@@ -123,7 +139,15 @@
           "title": "Summary creator",
           "component": "TextField",
           "doiValidation": "false"
-      }
+      },
+			{
+					"id": "ab8654b6-bc8c-11eb-8529-0242ac130003",
+					"name": "submission.summarydate",
+					"title": "Summary date",
+					"component": "TextField",
+					"placeholder": "summary date",
+					"doiValidation": "false"
+			}
   ],
   "haspopup": "false",
   "description": "<p>eLife Form</p>"
