@@ -4,17 +4,21 @@ import config from 'config'
 import fnv from 'fnv-plus'
 import { Icon } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
-import { darkenBy } from '../../../shared/lightenDarken'
+import { lightenBy } from '../../../shared/lightenDarken'
 
 const FloatRightButton = styled.a`
   align-items: center;
-  background-color: ${darkenBy('colorSecondary', 0.2)};
+  background-color: ${th('colorPrimary')};
   border-radius: ${th('borderRadius')};
   color: ${th('colorTextReverse')};
   display: flex;
   float: right;
   margin-left: 20px;
-  padding: 2px 12px;
+  padding: 4px 12px;
+
+  &:hover {
+    background-color: ${lightenBy('colorPrimary', 0.2)};
+  }
 
   svg {
     margin-right: 0.1em;
