@@ -248,7 +248,7 @@ class Manuscript extends BaseModel {
         submission: {},
         submitterId: { type: ['string', 'null'], format: 'uuid' },
         published: { type: ['string', 'object', 'null'], format: 'date-time' },
-        hypothesisPublicationId: { type: ['string', 'null'] },
+        evaluationsHypothesisMap: {},
       },
     }
   }
