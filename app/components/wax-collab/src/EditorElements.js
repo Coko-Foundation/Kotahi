@@ -1,6 +1,6 @@
 /* stylelint-disable selector-type-no-unknown */
 import { css } from 'styled-components'
-import { lighten } from '@pubsweet/ui-toolkit'
+import { lightenBy } from '../../../shared/lightenDarken'
 
 /* All styles regarding ProseMirror surface and elements */
 
@@ -123,7 +123,7 @@ export default css`
   }
 
   th {
-    background-color: ${lighten('colorPrimary', 0.9)};
+    background-color: ${lightenBy('colorPrimary', 0.7)};
   }
 
   .tableWrapper {

@@ -35,7 +35,6 @@ const cokoTheme = {
   colorSecondaryBackground: '#f9fafb', // custom
   colorPrimary: validateInstanceConfigColors(brandConfig.primaryColor),
   colorSecondary: validateInstanceConfigColors(brandConfig.secondaryColor),
-  colorSelected: `${validateInstanceConfigColors(brandConfig.primaryColor)}30`, // TODO Make this a solid and fully configurable color
   colorFurniture: '#E8E8E8',
   colorBorder: '#AAA',
   colorBackgroundHue: '#f4f5f7',

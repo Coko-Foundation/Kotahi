@@ -1,16 +1,17 @@
 import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { th, grid, lighten } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import { Link, useLocation } from 'react-router-dom'
 import { Icon } from '@pubsweet/ui'
 import { UserAvatar } from './component-avatar/src'
+import { lightenBy } from '../shared/lightenDarken'
 
 const Root = styled.nav`
   background: linear-gradient(
     134deg,
     ${th('colorPrimary')},
-    ${lighten('colorPrimary', 0.3)}
+    ${lightenBy('colorPrimary', 0.3)}
   );
   border-right: 1px solid ${th('colorFurniture')};
   grid-area: menu;
@@ -52,7 +53,7 @@ export const Item = styled(NavItem)`
   }
 
   &:hover {
-    background-color: ${lighten('colorPrimary', 0.5)};
+    background-color: ${lightenBy('colorPrimary', 0.5)};
     color: ${th('colorText')};
     stroke: ${th('colorText')};
 

@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react'
 import styled, { css } from 'styled-components'
-import { th, lighten, override } from '@pubsweet/ui-toolkit'
+import { th, override } from '@pubsweet/ui-toolkit'
+import { lightenBy } from '../../shared/lightenDarken'
 
 const Tab = styled.div`
   background-color: ${({ active }) =>
-    active ? lighten('colorPrimary', 0.6) : th('colorFurniture')};
+    active ? lightenBy('colorPrimary', 0.6) : th('colorFurniture')};
   border-bottom: 2px solid
     ${({ active }) => (active ? th('colorPrimary') : th('colorFurniture'))};
   border-radius: ${th('borderRadius')} ${th('borderRadius')} 0 0;

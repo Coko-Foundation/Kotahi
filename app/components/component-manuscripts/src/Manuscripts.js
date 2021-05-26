@@ -22,6 +22,7 @@ import { GET_MANUSCRIPTS, DELETE_MANUSCRIPTS } from '../../../queries'
 import getQueryStringByName from '../../../shared/getQueryStringByName'
 import { PaginationContainerShadowed } from '../../shared/Pagination'
 import { articleStatuses } from '../../../globals'
+import VideoChatButton from './VideoChatButton'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -178,6 +179,7 @@ const Manuscripts = ({ history, ...props }) => {
 
   return (
     <Container>
+      <VideoChatButton />
       {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
         <HeadingWithAction>
           <Heading>Manuscripts</Heading>
