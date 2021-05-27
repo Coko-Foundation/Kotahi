@@ -10,17 +10,22 @@ import {
   AnnotationToolGroupService,
   BaseService,
   BaseToolGroupService,
+  BottomInfoService,
   DisplayToolGroupService,
+  EditorInfoToolGroupServices,
+  ImageService,
+  ImageToolGroupService,
   InlineAnnotationsService,
   LinkService,
   ListsService,
   ListToolGroupService,
+  // MathService,
+  SpecialCharactersService,
+  SpecialCharactersToolGroupService,
   TablesService,
   TableToolGroupService,
   TextBlockLevelService,
   TextToolGroupService,
-  EditorInfoToolGroupServices,
-  BottomInfoService,
 } from 'wax-prosemirror-services'
 import EditorElements from './EditorElements'
 
@@ -50,6 +55,8 @@ const waxConfig = {
           ],
         },
         'Tables',
+        'Images',
+        'SpecialCharacters',
       ],
     },
     {
@@ -68,17 +75,22 @@ const waxConfig = {
     new AnnotationToolGroupService(),
     new BaseService(),
     new BaseToolGroupService(),
+    new BottomInfoService(),
     new DisplayToolGroupService(),
+    new EditorInfoToolGroupServices(),
+    new ImageService(),
+    new ImageToolGroupService(),
     new InlineAnnotationsService(),
     new LinkService(),
     new ListsService(),
     new ListToolGroupService(),
+    // new MathService(),
+    new SpecialCharactersService(),
+    new SpecialCharactersToolGroupService(),
     new TablesService(),
     new TableToolGroupService(),
     new TextBlockLevelService(),
     new TextToolGroupService(),
-    new EditorInfoToolGroupServices(),
-    new BottomInfoService(),
   ],
 }
 
@@ -189,19 +201,33 @@ const WaxLayout = readonly => ({ editor }) => (
   </div>
 )
 
+// TODO Save this image via the server
+const renderImage = file => {
+  const reader = new FileReader()
+  return new Promise((resolve, reject) => {
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = () => reject(reader.error)
+    // Some extra delay to make the asynchronicity visible
+    setTimeout(() => {
+      reader.readAsDataURL(file)
+    }, 150)
+  })
+}
+
 const FullWaxEditor = ({
   value,
   validationStatus,
   readonly,
   autoFocus,
   placeholder,
+  fileUpload,
   ...rest
 }) => (
   <div className={validationStatus}>
     <Wax
       autoFocus={autoFocus}
       config={waxConfig}
-      // fileUpload={file => renderImage(file)}
+      fileUpload={file => renderImage(file)}
       layout={WaxLayout(readonly)}
       placeholder={placeholder}
       readonly={readonly}
@@ -217,6 +243,7 @@ FullWaxEditor.propTypes = {
   readonly: PropTypes.bool,
   autoFocus: PropTypes.bool,
   placeholder: PropTypes.string,
+  fileUpload: PropTypes.func,
 }
 
 FullWaxEditor.defaultProps = {
@@ -225,6 +252,7 @@ FullWaxEditor.defaultProps = {
   readonly: false,
   autoFocus: false,
   placeholder: '',
+  fileUpload: () => {},
 }
 
 export default FullWaxEditor

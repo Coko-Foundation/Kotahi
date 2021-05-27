@@ -7,11 +7,22 @@ import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { DefaultSchema } from 'wax-prosemirror-utilities'
 import {
   AnnotationToolGroupService,
+  BaseService,
+  BaseToolGroupService,
+  BottomInfoService,
+  DisplayToolGroupService,
+  EditorInfoToolGroupServices,
+  ImageService,
+  ImageToolGroupService,
   InlineAnnotationsService,
   LinkService,
   ListsService,
   ListToolGroupService,
-  DisplayToolGroupService,
+  //MathService,
+  SpecialCharactersService,
+  SpecialCharactersToolGroupService,
+  TablesService,
+  TableToolGroupService,
   TextBlockLevelService,
   TextToolGroupService,
 } from 'wax-prosemirror-services'
@@ -49,14 +60,25 @@ const waxConfig = {
   ShortCutsService: {},
 
   services: [
-    new ListsService(),
+    // TODO: A Wax bug causes two editors with different services loaded to mess each other up. Workaround: load all services used by FullWaxEditor.
+    new AnnotationToolGroupService(),
+    new BaseService(), // TODO remove once Wax is fixed
+    new BaseToolGroupService(), // TODO remove once Wax is fixed
+    new BottomInfoService(), // TODO remove once Wax is fixed
+    new DisplayToolGroupService(),
+    new EditorInfoToolGroupServices(), // TODO remove once Wax is fixed
+    new ImageService(), // TODO remove once Wax is fixed
+    new ImageToolGroupService(), // TODO remove once Wax is fixed
     new InlineAnnotationsService(),
     new LinkService(),
-    new TextBlockLevelService(),
-    new DisplayToolGroupService(),
-    new TextToolGroupService(),
-    new AnnotationToolGroupService(),
+    new ListsService(),
     new ListToolGroupService(),
+    new SpecialCharactersService(), // TODO remove once Wax is fixed
+    new SpecialCharactersToolGroupService(), // TODO remove once Wax is fixed
+    new TablesService(), // TODO remove once Wax is fixed
+    new TableToolGroupService(), // TODO remove once Wax is fixed
+    new TextBlockLevelService(),
+    new TextToolGroupService(),
   ],
 }
 
