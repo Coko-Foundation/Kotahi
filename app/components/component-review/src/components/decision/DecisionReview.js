@@ -122,7 +122,7 @@ ReviewHeading.propTypes = {
 }
 ToggleReview.propTypes = {
   open: PropTypes.bool.isRequired,
-  toggle: PropTypes.bool.isRequired,
+  toggle: PropTypes.func.isRequired,
 }
 
 Bullet.propTypes = {
