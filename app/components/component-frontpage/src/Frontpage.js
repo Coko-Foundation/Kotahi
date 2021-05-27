@@ -43,7 +43,6 @@ const Frontpage = ({ history, ...props }) => {
   })
 
   const journal = useContext(JournalContext)
-  const urlFrag = journal.metadata.toplevel_urlfragment
 
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
@@ -81,7 +80,7 @@ const Frontpage = ({ history, ...props }) => {
           <div>
             Review #{reviewKey.split('review')[1]}
             <a
-              href={`${urlFrag}/versions/${manuscriptId}/article-evaluation-result/${
+              href={`/versions/${manuscriptId}/article-evaluation-result/${
                 reviewKey.split('review')[1]
               }`}
             >
@@ -97,7 +96,7 @@ const Frontpage = ({ history, ...props }) => {
         <div>
           Evaluation Summary
           <a
-            href={`${urlFrag}/versions/${manuscriptId}/article-evaluation-summary`}
+            href={`/versions/${manuscriptId}/article-evaluation-summary`}
           >
             &#128279;
           </a>

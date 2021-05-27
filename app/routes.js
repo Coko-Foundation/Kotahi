@@ -21,7 +21,7 @@ export default (
     </Route>
     <Route component={Login} path="/login" />
     <Route component={Frontpage} exact path="/" />
-    <Route component={ManuscriptDetails} path="/:manuscriptId" />
+    <Route component={ManuscriptDetails} exact path="/:manuscriptId" />
     {['elife'].includes(process.env.INSTANCE_NAME) && (
       <Route
         component={ArticleEvaluationResultPage}
