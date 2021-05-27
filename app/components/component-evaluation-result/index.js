@@ -18,7 +18,7 @@ const ArticleEvaluationResultPage = ({ match }) => {
     <Container>
       <Heading>
         <h2>{submission.description}</h2>
-        <span>{submission.reviewDate}</span>
+        <span>{submission[`review${match.params.evaluationNumber}date`]}</span>
       </Heading>
       <p>Peer review</p>
       <ArticleEvaluation
@@ -29,6 +29,11 @@ const ArticleEvaluationResultPage = ({ match }) => {
       <a href={submission.articleURL}>link to original article</a>
     </Container>
   )
+}
+
+ArticleEvaluationResultPage.propTypes = {
+  // eslint-disable-next-line
+  match: PropTypes.object.isRequired,
 }
 
 export default ArticleEvaluationResultPage

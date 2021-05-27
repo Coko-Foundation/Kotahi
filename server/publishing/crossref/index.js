@@ -114,7 +114,7 @@ const publishToCrossref = async manuscript => {
         manuscript.id,
         reviewNumber,
       )
-      templateCopy.doi_batch.body[0].peer_review[0].doi_data[0].resource[0] = `${process.env.PUBLIC_CLIENT_PROTOCOL}://${process.env.PUBLIC_CLIENT_HOST}:${process.env.PUBLIC_CLIENT_PORT}/kotahi/versions/${manuscript.id}/article-evaluation-result/${reviewNumber}`
+      templateCopy.doi_batch.body[0].peer_review[0].doi_data[0].resource[0] = `${process.env.PUBLIC_CLIENT_PROTOCOL}://${process.env.PUBLIC_CLIENT_HOST}:${process.env.PUBLIC_CLIENT_PORT}/versions/${manuscript.id}/article-evaluation-result/${reviewNumber}`
       templateCopy.doi_batch.body[0].peer_review[0].program[0].related_item[0] = {
         // description: [`${manuscript.submission.description}`],
         inter_work_relation: [
@@ -178,7 +178,7 @@ const publishToCrossref = async manuscript => {
       manuscript.id,
     )
 
-    templateCopy.doi_batch.body[0].peer_review[0].doi_data[0].resource[0] = `${process.env.PUBLIC_CLIENT_PROTOCOL}://${process.env.PUBLIC_CLIENT_HOST}:${process.env.PUBLIC_CLIENT_PORT}/kotahi/versions/${manuscript.id}/article-evaluation-summary`
+    templateCopy.doi_batch.body[0].peer_review[0].doi_data[0].resource[0] = `${process.env.PUBLIC_CLIENT_PROTOCOL}://${process.env.PUBLIC_CLIENT_HOST}:${process.env.PUBLIC_CLIENT_PORT}/versions/${manuscript.id}/article-evaluation-summary`
     templateCopy.doi_batch.body[0].peer_review[0].program[0].related_item[0] = {
       // description: [`${manuscript.submission.description}`],
       inter_work_relation: [

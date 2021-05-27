@@ -54,6 +54,11 @@ const publishToHypothesis = async manuscript => {
         !manuscript.evaluationsHypothesisMap[prop],
     )
     .map(([propName]) => propName)
+    .filter(propName => {
+      const reviewNumber = manuscript.submission[propName].split('review')[1]
+
+      return manuscript.submission[`review${reviewNumber}date`]
+    })
 
   const shouldDeleteReviews = Object.entries(manuscript.submission)
     .filter(
@@ -74,6 +79,11 @@ const publishToHypothesis = async manuscript => {
         !checkIsAbstractValueEmpty(value),
     )
     .map(([propName]) => propName)
+    .filter(propName => {
+      const reviewNumber = manuscript.submission[propName].split('review')[1]
+
+      return manuscript.submission[`review${reviewNumber}date`]
+    })
 
   if (
     !manuscript.evaluationsHypothesisMap.summary &&

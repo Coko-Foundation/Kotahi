@@ -64,12 +64,10 @@ const Frontpage = ({ history, ...props }) => {
 
   const reviews = publishedManuscripts
     .map(({ submission, evaluationsHypothesisMap }) => {
-      if (Object.keys(evaluationsHypothesisMap).length !== 1) {
-        return Object.keys(evaluationsHypothesisMap)
-          .filter(key => key !== '__typename')
-          .map(key => {
-            return { [key]: submission[key] }
-          })
+      if (Object.keys(evaluationsHypothesisMap).length > 0) {
+        return Object.keys(evaluationsHypothesisMap).map(key => {
+          return { [key]: submission[key] }
+        })
       }
 
       return null
