@@ -18,7 +18,7 @@ import {
   LinkService,
   ListsService,
   ListToolGroupService,
-  //MathService,
+  // MathService,
   SpecialCharactersService,
   SpecialCharactersToolGroupService,
   TablesService,
