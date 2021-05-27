@@ -30,6 +30,7 @@ describe('Manuscripts page tests', () => {
     it('check Submit button is visible', () => {
       ManuscriptsPage.getSubmitButton().should('be.visible')
     })
+    // eslint-disable-next-line jest/no-focused-tests
     it('evaluation button is visible and publish button is not visible on unsubmited status article', () => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
@@ -75,15 +76,18 @@ describe('Manuscripts page tests', () => {
 
       SubmissionFormPage.getArticleUrl().should('have.value', '')
       SubmissionFormPage.getDescription().should('have.value', '')
-      SubmissionFormPage.getReviewDate().should('have.value', '')
       SubmissionFormPage.getReview1().find('p').should('contain', '')
       SubmissionFormPage.getReview1Creator().should('have.value', '')
+      SubmissionFormPage.getReview1Date().should('have.value', '')
       SubmissionFormPage.getReview2().find('p').should('contain', '')
       SubmissionFormPage.getReview2Creator().should('have.value', '')
+      SubmissionFormPage.getReview2Date().should('have.value', '')
       SubmissionFormPage.getReview3().find('p').should('contain', '')
       SubmissionFormPage.getReview3Creator().should('have.value', '')
+      SubmissionFormPage.getReview3Date().should('have.value', '')
       SubmissionFormPage.getSummary().find('p').should('contain', '')
       SubmissionFormPage.getSummaryCreator().should('have.value', '')
+      SubmissionFormPage.getSummaryDate().should('have.value', '')
 
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -91,15 +95,18 @@ describe('Manuscripts page tests', () => {
         SubmissionFormPage.fillInArticleUrl(data.doi)
         SubmissionFormPage.fillInBioRxivArticleUrl(data.articleId)
         SubmissionFormPage.fillInDescription(data.description)
-        SubmissionFormPage.fillInReviewDate(data.reviewDate)
         SubmissionFormPage.fillInReview1(data.review1)
         SubmissionFormPage.fillInReview1Creator(data.creator)
+        SubmissionFormPage.fillInReview1Date(data.review1Date)
         SubmissionFormPage.fillInReview2(data.review2)
         SubmissionFormPage.fillInReview2Creator(data.creator)
+        SubmissionFormPage.fillInReview2Date(data.review2Date)
         SubmissionFormPage.fillInReview3(data.review3)
         SubmissionFormPage.fillInReview3Creator(data.creator)
+        SubmissionFormPage.fillInReview3Date(data.review3Date)
         SubmissionFormPage.fillInSummary(data.summary)
         SubmissionFormPage.fillInSummaryCreator(data.creator)
+        SubmissionFormPage.fillInSummaryDate(data.summaryDate)
         SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
       })
@@ -155,15 +162,18 @@ describe('Manuscripts page tests', () => {
           SubmissionFormPage.fillInArticleUrl(data.doi)
           SubmissionFormPage.fillInBioRxivArticleUrl(data.articleId)
           SubmissionFormPage.fillInDescription(data.description)
-          SubmissionFormPage.fillInReviewDate(data.reviewDate)
           SubmissionFormPage.fillInReview1(data.review1)
           SubmissionFormPage.fillInReview1Creator(data.creator)
+          SubmissionFormPage.fillInReview1Date(data.review1Date)
           SubmissionFormPage.fillInReview2(data.review2)
           SubmissionFormPage.fillInReview2Creator(data.creator)
+          SubmissionFormPage.fillInReview2Date(data.review2Date)
           SubmissionFormPage.fillInReview3(data.review3)
           SubmissionFormPage.fillInReview3Creator(data.creator)
+          SubmissionFormPage.fillInReview3Date(data.review3Date)
           SubmissionFormPage.fillInSummary(data.summary)
           SubmissionFormPage.fillInSummaryCreator(data.creator)
+          SubmissionFormPage.fillInSummaryDate(data.summaryDate)
           // eslint-disable-next-line
           SubmissionFormPage.waitThreeSec()
           SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
@@ -203,13 +213,16 @@ describe('Manuscripts page tests', () => {
           'have.value',
           data.description,
         )
-        SubmissionFormPage.getReviewDate().should('have.value', data.reviewDate)
         SubmissionFormPage.getReview1()
           .find('p')
           .should('contain', data.review1)
         SubmissionFormPage.getReview1Creator().should(
           'have.value',
           data.creator,
+        )
+        SubmissionFormPage.getReview1Date().should(
+          'have.value',
+          data.review1Date,
         )
         SubmissionFormPage.getReview2()
           .find('p')
@@ -218,6 +231,10 @@ describe('Manuscripts page tests', () => {
           'have.value',
           data.creator,
         )
+        SubmissionFormPage.getReview2Date().should(
+          'have.value',
+          data.review2Date,
+        )
         SubmissionFormPage.getReview3()
           .find('p')
           .should('contain', data.review3)
@@ -225,12 +242,20 @@ describe('Manuscripts page tests', () => {
           'have.value',
           data.creator,
         )
+        SubmissionFormPage.getReview3Date().should(
+          'have.value',
+          data.review3Date,
+        )
         SubmissionFormPage.getSummary()
           .find('p')
           .should('contain', data.summary)
         SubmissionFormPage.getSummaryCreator().should(
           'have.value',
           data.creator,
+        )
+        SubmissionFormPage.getSummaryDate().should(
+          'have.value',
+          data.summaryDate,
         )
       })
     })
@@ -248,15 +273,18 @@ describe('Manuscripts page tests', () => {
           'https://doi.org/10.1101/2020.12.22.423946',
         )
         SubmissionFormPage.fillInDescription('new description')
-        SubmissionFormPage.fillInReviewDate('10/03/2050')
         SubmissionFormPage.fillInReview1('review 1 is completed')
         SubmissionFormPage.fillInReview1Creator('test.test')
+        SubmissionFormPage.fillInReview1Date('10/03/2050')
         SubmissionFormPage.fillInReview2('review 2 is completed')
         SubmissionFormPage.fillInReview2Creator('test.test')
+        SubmissionFormPage.fillInReview2Date('10/04/2050')
         SubmissionFormPage.fillInReview3('review 3 is completed')
         SubmissionFormPage.fillInReview3Creator('test.test')
+        SubmissionFormPage.fillInReview3Date('10/03/2050')
         SubmissionFormPage.fillInSummary('review summay is completed')
         SubmissionFormPage.fillInSummaryCreator('test.test')
+        SubmissionFormPage.fillInSummaryDate('10/03/2050')
 
         // eslint-disable-next-line
         SubmissionFormPage.waitThreeSec()
@@ -273,16 +301,16 @@ describe('Manuscripts page tests', () => {
           'not.have.value',
           data.description,
         )
-        SubmissionFormPage.getReviewDate().should(
-          'not.have.value',
-          data.reviewDate,
-        )
         SubmissionFormPage.getReview1()
           .find('p')
           .should('not.contain', data.review1)
         SubmissionFormPage.getReview1Creator().should(
           'not.have.value',
           data.creator,
+        )
+        SubmissionFormPage.getReview1Date().should(
+          'not.have.value',
+          data.review1Date,
         )
         SubmissionFormPage.getReview2()
           .find('p')
@@ -291,6 +319,10 @@ describe('Manuscripts page tests', () => {
           'not.have.value',
           data.creator,
         )
+        SubmissionFormPage.getReview2Date().should(
+          'not.have.value',
+          data.review2Date,
+        )
         SubmissionFormPage.getReview3()
           .find('p')
           .should('not.contain', data.review3)
@@ -298,12 +330,20 @@ describe('Manuscripts page tests', () => {
           'not.have.value',
           data.creator,
         )
+        SubmissionFormPage.getReview3Date().should(
+          'not.have.value',
+          data.review3Date,
+        )
         SubmissionFormPage.getSummary()
           .find('p')
           .should('not.contain', data.summary)
         SubmissionFormPage.getSummaryCreator().should(
           'not.have.value',
           data.creator,
+        )
+        SubmissionFormPage.getSummaryDate().should(
+          'not.have.value',
+          data.summaryDate,
         )
       })
     })
@@ -371,15 +411,18 @@ describe('Manuscripts page tests', () => {
           SubmissionFormPage.fillInArticleUrl(data.doi)
           SubmissionFormPage.fillInBioRxivArticleUrl(data.articleId)
           SubmissionFormPage.fillInDescription(data.description)
-          SubmissionFormPage.fillInReviewDate(data.reviewDate)
           SubmissionFormPage.fillInReview1(data.review1)
           SubmissionFormPage.fillInReview1Creator(data.creator)
+          SubmissionFormPage.fillInReview1Date(data.review1Date)
           SubmissionFormPage.fillInReview2(data.review2)
           SubmissionFormPage.fillInReview2Creator(data.creator)
+          SubmissionFormPage.fillInReview2Date(data.review2Date)
           SubmissionFormPage.fillInReview3(data.review3)
           SubmissionFormPage.fillInReview3Creator(data.creator)
+          SubmissionFormPage.fillInReview3Date(data.review3Date)
           SubmissionFormPage.fillInSummary(data.summary)
           SubmissionFormPage.fillInSummaryCreator(data.creator)
+          SubmissionFormPage.fillInSummaryDate(data.summaryDate)
           // eslint-disable-next-line
           SubmissionFormPage.waitThreeSec()
         })
@@ -416,7 +459,7 @@ describe('Manuscripts page tests', () => {
         )
         ResultAndSummaryPage.getReview().should('contain', data.review1)
         ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
-        ResultAndSummaryPage.getDate().should('contain', data.reviewDate)
+        ResultAndSummaryPage.getDate().should('contain', data.review1Date)
       })
     })
     it('check evaluation page for review 2', () => {
@@ -437,7 +480,7 @@ describe('Manuscripts page tests', () => {
         )
         ResultAndSummaryPage.getReview().should('contain', data.review2)
         ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
-        ResultAndSummaryPage.getDate().should('contain', data.reviewDate)
+        ResultAndSummaryPage.getDate().should('contain', data.review2Date)
       })
     })
     it('check evaluation page for review 3', () => {
@@ -458,7 +501,7 @@ describe('Manuscripts page tests', () => {
         )
         ResultAndSummaryPage.getReview().should('contain', data.review3)
         ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
-        ResultAndSummaryPage.getDate().should('contain', data.reviewDate)
+        ResultAndSummaryPage.getDate().should('contain', data.review3Date)
       })
     })
     it('check evaluation summary page', () => {
@@ -479,7 +522,7 @@ describe('Manuscripts page tests', () => {
         )
         ResultAndSummaryPage.getReview().should('contain', data.summary)
         ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
-        ResultAndSummaryPage.getDate().should('contain', data.reviewDate)
+        ResultAndSummaryPage.getDate().should('contain', data.summaryDate)
       })
     })
   })

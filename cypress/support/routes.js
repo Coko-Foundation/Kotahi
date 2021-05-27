@@ -8,9 +8,9 @@ export const submit = '/submit'
 export const evaluate = '/evaluate'
 
 export function evaluationResultUrl(id, int) {
-  return `/kotahi/versions/${id}/article-evaluation-result/${int}`
+  return `/versions/${id}/article-evaluation-result/${int}`
 }
 
 export function evaluationSummaryUrl(id) {
-  return `/kotahi/versions/${id}/article-evaluation-summary`
+  return `/versions/${id}/article-evaluation-summary`
 }

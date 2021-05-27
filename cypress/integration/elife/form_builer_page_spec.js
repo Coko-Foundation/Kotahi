@@ -28,19 +28,22 @@ describe('Form builder page tests', () => {
           data.elife.articleUrl,
           data.elife.bioRxivArticleUrl,
           data.elife.description,
-          data.elife.reviewDate,
           data.elife.review1,
           data.elife.review1Creator,
+          data.elife.review1Date,
           data.elife.review2,
           data.elife.review2Creator,
+          data.elife.review2Date,
           data.elife.review3,
           data.elife.review3Creator,
+          data.elife.review3Date,
           data.elife.summary,
           data.elife.summaryCreator,
+          data.elife.summaryDate,
         ]
 
         // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 16; i++) {
           FormsPage.getFormBuilderElementName(i).should(
             'contain',
             formElements[i],
@@ -58,19 +61,22 @@ describe('Form builder page tests', () => {
         'TextField',
         'TextField',
         'TextField',
+        'AbstractEditor',
+        'TextField',
         'TextField',
         'AbstractEditor',
         'TextField',
-        'AbstractEditor',
         'TextField',
         'AbstractEditor',
         'TextField',
+        'TextField',
         'AbstractEditor',
-        'TextField'
+        'TextField',
+        'TextField',
       ]
 
       // eslint-disable-next-line no-plusplus
-      for (let i = 0; i < 12; i++) {
+      for (let i = 0; i < 16; i++) {
         FormsPage.clickFormOption(i)
         FormsPage.getComponentType().should('contain', typeField[i])
       }
@@ -82,9 +88,9 @@ describe('Form builder page tests', () => {
       }
 
       // eslint-disable-next-line no-plusplus
-      for (let k = 5; k < 12; k++) {
-      FormsPage.clickFormOption(k)
-      FormsPage.getFieldValidate().should('not.contain', requiredField)
+      for (let k = 5; k < 16; k++) {
+        FormsPage.clickFormOption(k)
+        FormsPage.getFieldValidate().should('not.contain', requiredField)
       }
     })
     it('check DOI validation has default selected Yes and select No', () => {
@@ -118,19 +124,22 @@ describe('Form builder page tests', () => {
           data.elife.articleUrl,
           data.elife.bioRxivArticleUrl,
           data.elife.description,
-          data.elife.reviewDate,
           data.elife.review1,
           data.elife.review1Creator,
+          data.elife.review1Date,
           data.elife.review2,
           data.elife.review2Creator,
+          data.elife.review2Date,
           data.elife.review3,
           data.elife.review3Creator,
+          data.elife.review3Date,
           data.elife.summary,
           data.elife.summaryCreator,
+          data.elife.summaryDate,
         ]
 
         // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < 12; i++) {
+        for (let i = 0; i < 16; i++) {
           SubmissionFormPage.getFormOptionList(i).should(
             'contain',
             formElements[i],

@@ -45,8 +45,11 @@ const ARTICLE_ID_FIELD = 'submission.articleId'
 const ARTICLE_URL_FIELD = 'submission.articleURL'
 const DESCRIPTION_FIELD = 'submission.description'
 const BIORXIV_ARTICLE_URL_FIELD = 'submission.biorxivURL'
-const REVIEW_DATE_FEILD = 'submission.reviewDate'
-const REVIEW_1_CREATOR_FIELD = 'submission.review1Creator'
+const REVIEW_1_DATE_FEILD = 'submission.review1date'
+const REVIEW_2_DATE_FEILD = 'submission.review2date'
+const REVIEW_3_DATE_FEILD = 'submission.review3date'
+const SUMMARY_DATE = 'submission.summarydate'
+const REVIEW_1_CREATOR_FIELD = 'submission.review1creator'
 const REVIEW_2_CREATOR_FIELD = 'submission.review2creator'
 const REVIEW_3_CREATOR_FIELD = 'submission.review3creator'
 const SUMMARY_CREATOR_FIELD = 'submission.summarycreator'
@@ -280,11 +283,11 @@ export const SubmissionFormPage = {
   fillInDescription(description) {
     this.getDescription().fillInput(description)
   },
-  getReviewDate() {
-    return cy.getByDataTestId(REVIEW_DATE_FEILD)
+  getReview1Date() {
+    return cy.getByDataTestId(REVIEW_1_DATE_FEILD)
   },
-  fillInReviewDate(reviewDate) {
-    this.getReviewDate().fillInput(reviewDate)
+  fillInReview1Date(review1Date) {
+    this.getReview1Date().fillInput(review1Date)
   },
   getReview1() {
     // return cy.get(EVALUATION_CONTENT_FIELD)
@@ -299,7 +302,6 @@ export const SubmissionFormPage = {
   fillInReview1Creator(review1Creator) {
     this.getReview1Creator().fillInput(review1Creator)
   },
-
   getReview2() {
     return this.getWaxInputBox(1)
   },
@@ -311,6 +313,12 @@ export const SubmissionFormPage = {
   },
   fillInReview2Creator(review2Creator) {
     this.getReview2Creator().fillInput(review2Creator)
+  },
+  getReview2Date() {
+    return cy.getByDataTestId(REVIEW_2_DATE_FEILD)
+  },
+  fillInReview2Date(review2Date) {
+    this.getReview2Date().fillInput(review2Date)
   },
   getReview3() {
     return this.getWaxInputBox(2)
@@ -324,6 +332,12 @@ export const SubmissionFormPage = {
   fillInReview3Creator(review3Creator) {
     this.getReview3Creator().fillInput(review3Creator)
   },
+  getReview3Date() {
+    return cy.getByDataTestId(REVIEW_3_DATE_FEILD)
+  },
+  fillInReview3Date(review3Date) {
+    this.getReview3Date().fillInput(review3Date)
+  },
   getSummary() {
     return this.getWaxInputBox(3)
   },
@@ -336,6 +350,14 @@ export const SubmissionFormPage = {
   fillInSummaryCreator(summaryCreator) {
     this.getSummaryCreator().fillInput(summaryCreator)
   },
+
+  getSummaryDate() {
+    return cy.getByDataTestId(SUMMARY_DATE)
+  },
+  fillInSummaryDate(summaryDate) {
+    this.getSummaryDate().fillInput(summaryDate)
+  },
+
   getArticleDescriptionField() {
     return cy.getByName(ARTICLE_DESCRIPTION_FIELD)
   },
