@@ -20713,7 +20713,7 @@ wax-prosemirror-schema@0.0.40, wax-prosemirror-schema@^0.0.40:
   integrity sha512-i2ueWi/1sgtEnNZOXc3q3hAXrC5ogwVoPKU+vV7oBoPDZ9WvGFYwzMKljydRYO+TpfARxIDXk+i7foBZladaeg==
   dependencies:
     prosemirror-schema-list "^1.1.4"
-    prosemirror-tables "^1.1.1"
+    prosemirror-tables "^0.7.11"
     wax-prosemirror-utilities "^0.0.40"
 
 wax-prosemirror-services@0.0.40, wax-prosemirror-services@^0.0.40:
