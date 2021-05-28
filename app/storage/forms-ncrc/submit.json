@@ -256,6 +256,15 @@
           "id": "14b32182-e4a5-4a99-bb23-b673b500b521"
         }
       ]
+    },
+    {
+      "title": "Abstract",
+      "id": "e93b5e84-a049-4a0f-9a7a-b573aea4f905",
+      "component": "TextField",
+      "name": "submission.abstract",
+      "description": "<p></p>",
+      "doiValidation": "false",
+      "validate": []
     }
   ],
   "name": "NCRC Submission Form",

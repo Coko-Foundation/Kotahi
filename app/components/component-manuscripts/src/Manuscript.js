@@ -19,6 +19,8 @@ import {
   StyledTopic,
   StyledAuthor,
   StyledTableLabel,
+  ReactTooltipStyled,
+  InfoIcon,
   // SuccessStatus,
   // ErrorStatus,
   // NormalStatus,
@@ -150,6 +152,12 @@ const User = ({
               </StyledTopic>
             )
           })}
+        </Cell>
+      )}
+      {process.env.INSTANCE_NAME === 'ncrc' && (
+        <Cell>
+            <ReactTooltipStyled effect="float" place="top" id="abstractToolTip" />
+            <InfoIcon data-tip={manuscript.submission.abstract} data-for="abstractToolTip">i</InfoIcon>
         </Cell>
       )}
       <Cell>

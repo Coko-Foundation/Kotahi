@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { Action } from '@pubsweet/ui'
+import ReactTooltip from 'react-tooltip';
 
 export {
   Row,
@@ -35,6 +36,20 @@ export const UserAction = styled(Action)`
   display: block;
   font-size: inherit;
   width: fit-content;
+`
+
+export const ReactTooltipStyled = styled(ReactTooltip)`
+  max-width: 80vw;
+`;
+
+export const InfoIcon = styled.div`
+  background-color: #7CBFF9;
+  border-radius: 50%;
+  color: white;
+  height: 25px;
+  margin-left: 11px;
+  text-align: center;
+  width: 25px;
 `
 
 export const SelectAllField = styled.div`
