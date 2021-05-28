@@ -1,3 +1,5 @@
+/* eslint-disable jest/valid-expect-in-promise */
+/* eslint-disable prettier/prettier */
 /* eslint-disable jest/expect-expect */
 import { manuscripts } from '../../support/routes'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
@@ -20,11 +22,11 @@ describe('manuscripts page tests', () => {
     ManuscriptsPage.getTableHeader().should('be.visible')
   })
   context('elements visibility', () => {
-    it('submit button should be visible & dashboard page should not exist', () => {
+    it('submit button, live chat button and dashboard page should be visible', () => {
       ManuscriptsPage.getSubmitButton().should('be.visible')
+      ManuscriptsPage.getLiveChatButton().should('be.visible')
       Menu.getDashboardButton().should('be.visible')
     })
-
     it('evaluation button should be visible and publish button should not be visible for unsubmitted articles', () => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
@@ -318,6 +320,17 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getTableRows().should('eq', 1)
       ManuscriptsPage.getArticleStatus(0).should('contain', 'Submitted')
       cy.url().should('contain', 'submitted')
+    })
+  })
+  context('video chat button', () => {
+    it('check video chat link return 200', () => {
+      ManuscriptsPage.getLiveChatButton()
+        .then(link => {
+          cy
+            .request(link.prop('href'))
+            .its('status')
+            .should('eq', 200)
+        })
     })
   })
 })

@@ -8,6 +8,7 @@ import { evaluate } from '../support/routes'
  */
 const MANUSCRIPTS_OPTIONS_LIST = '[class*=style__UserAction]'
 const BUTTON = 'button'
+const LIVE_CHAT_BUTTON = '[class*=VideoChatButton]'
 const MANUSCRIPTS_PAGE_TITLE = '[class*=General__Heading-sc]'
 const EVALUATION_BUTTON = '[href*=evaluation]'
 const CONTROL_BUTTON = '[href*=control]'
@@ -42,6 +43,12 @@ export const ManuscriptsPage = {
   },
   clickSubmit() {
     this.getSubmitButton().click()
+  },
+  getLiveChatButton() {
+    return cy.get(LIVE_CHAT_BUTTON)
+  },
+  clickLiveChatButton() {
+    this.getLiveChatButton().click()
   },
   getManuscriptsPageTitle() {
     return cy.get(MANUSCRIPTS_PAGE_TITLE)
