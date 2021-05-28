@@ -1,5 +1,6 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
+import PropTypes from 'prop-types'
 
 import { Container } from '../shared'
 import query from '../component-submit/src/userManuscriptFormQuery'
@@ -21,7 +22,7 @@ const ArticleEvaluationSummaryPage = ({ match }) => {
     <Container>
       <Heading>
         <h2>{submission.description}</h2>
-        <span>{submission.reviewDate}</span>
+        <span>{submission.summarydate}</span>
       </Heading>
       <p>Evaluation summary</p>
       <ArticleEvaluation
@@ -32,6 +33,11 @@ const ArticleEvaluationSummaryPage = ({ match }) => {
       <a href={submission.articleURL}>link to original article</a>
     </Container>
   )
+}
+
+ArticleEvaluationSummaryPage.propTypes = {
+  // eslint-disable-next-line
+  match: PropTypes.object.isRequired,
 }
 
 export default ArticleEvaluationSummaryPage

@@ -55,7 +55,7 @@ const publishToHypothesis = async manuscript => {
     )
     .map(([propName]) => propName)
     .filter(propName => {
-      const reviewNumber = manuscript.submission[propName].split('review')[1]
+      const reviewNumber = propName.split('review')[1]
 
       return manuscript.submission[`review${reviewNumber}date`]
     })
@@ -80,7 +80,7 @@ const publishToHypothesis = async manuscript => {
     )
     .map(([propName]) => propName)
     .filter(propName => {
-      const reviewNumber = manuscript.submission[propName].split('review')[1]
+      const reviewNumber = propName.split('review')[1]
 
       return manuscript.submission[`review${reviewNumber}date`]
     })
