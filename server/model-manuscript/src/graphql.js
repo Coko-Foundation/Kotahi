@@ -344,9 +344,15 @@ const resolvers = {
               !Number.isNaN(Number(prop.split('review')[1])) &&
               prop.includes('review'),
           )
-          .map(([propName, value]) => value)
+          .map(([propName, value]) => [
+            value,
+            manuscript.submission[`${propName}date`],
+          ])
 
-        evaluationValues.push(manuscript.submission.summary)
+        evaluationValues.push([
+          manuscript.submission.summary,
+          manuscript.submission.summarydate,
+        ])
 
         const areEvaluationsEmpty = evaluationValues
           .map(evaluationValue => {

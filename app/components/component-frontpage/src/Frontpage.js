@@ -4,7 +4,13 @@ import { useQuery } from '@apollo/client'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
-import { Container, Placeholder, VisualAbstract } from './style'
+import {
+  Container,
+  Placeholder,
+  VisualAbstract,
+  ReviewWrapper,
+  ReviewLink,
+} from './style'
 import Wax from '../../wax-collab/src/Editoria'
 import { ArticleEvaluation } from '../../component-evaluation-result/style'
 
@@ -79,13 +85,13 @@ const Frontpage = ({ history, ...props }) => {
         <>
           <div>
             Review #{reviewKey.split('review')[1]}
-            <a
+            <ReviewLink
               href={`/versions/${manuscriptId}/article-evaluation-result/${
                 reviewKey.split('review')[1]
               }`}
             >
               &#128279;
-            </a>
+            </ReviewLink>
           </div>
         </>
       )
@@ -95,11 +101,11 @@ const Frontpage = ({ history, ...props }) => {
       <>
         <div>
           Evaluation Summary
-          <a
+          <ReviewLink
             href={`/versions/${manuscriptId}/article-evaluation-summary`}
           >
             &#128279;
-          </a>
+          </ReviewLink>
         </div>
       </>
     )
@@ -140,11 +146,13 @@ const Frontpage = ({ history, ...props }) => {
                         key={`${reviewKey}-${manuscript.id}`}
                         label={reviewTitle(reviewKey, manuscript.id)}
                       >
-                        <ArticleEvaluation
-                          dangerouslySetInnerHTML={(() => {
-                            return { __html: reviewValue }
-                          })()}
-                        />
+                        <ReviewWrapper>
+                          <ArticleEvaluation
+                            dangerouslySetInnerHTML={(() => {
+                              return { __html: reviewValue }
+                            })()}
+                          />
+                        </ReviewWrapper>
                       </Accordion>
                     )
                   )
