@@ -4,7 +4,7 @@ import config from 'config'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
 import styled from 'styled-components'
-import { lightenBy } from '../../../shared/lightenDarken'
+import lightenBy from '../../../shared/lightenBy'
 
 import getQueryStringByName from '../../../shared/getQueryStringByName'
 import brandConfig from '../../../brandConfig.json'

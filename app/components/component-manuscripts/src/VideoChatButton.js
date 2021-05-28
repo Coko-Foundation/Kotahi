@@ -4,7 +4,7 @@ import config from 'config'
 import fnv from 'fnv-plus'
 import { Icon } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
-import { lightenBy } from '../../../shared/lightenDarken'
+import lightenBy from '../../../shared/lightenBy'
 
 const FloatRightButton = styled.a`
   align-items: center;

@@ -1,6 +1,6 @@
 /* stylelint-disable selector-type-no-unknown */
 import { css } from 'styled-components'
-import { lightenBy } from '../../../shared/lightenDarken'
+import lightenBy from '../../../shared/lightenBy'
 
 /* All styles regarding ProseMirror surface and elements */
 

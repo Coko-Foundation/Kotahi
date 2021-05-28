@@ -5,7 +5,7 @@ import { th, grid } from '@pubsweet/ui-toolkit'
 import { Link, useLocation } from 'react-router-dom'
 import { Icon } from '@pubsweet/ui'
 import { UserAvatar } from './component-avatar/src'
-import { lightenBy } from '../shared/lightenDarken'
+import lightenBy from '../shared/lightenBy'
 
 const Root = styled.nav`
   background: linear-gradient(

@@ -6,7 +6,7 @@ import { th, grid } from '@pubsweet/ui-toolkit'
 import { Icon, Action } from '@pubsweet/ui'
 import { v4 as uuid } from 'uuid'
 import { Page, Heading } from './style'
-import { lightenBy } from '../../../../shared/lightenDarken'
+import lightenBy from '../../../../shared/lightenBy'
 
 const Element = styled.div`
   background-color: ${th('colorSecondaryBackground')};
