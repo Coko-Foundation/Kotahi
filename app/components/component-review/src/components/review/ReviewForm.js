@@ -27,9 +27,13 @@ const NoteInput = ({ field, updateReview }) => (
   <>
     <div>Comments to the author:</div>
     <SimpleWaxEditor
-      {...field}
+      data-testid="reviewComment"
       key="note-comment"
       placeholder="Enter your review…"
+      {...field}
+      onChange={val => {
+        updateReview({ reviewComment: { content: val } })
+      }}
       value={field.value?.content || ''}
     />
   </>
@@ -48,9 +52,13 @@ const ConfidentialInput = ({ field, updateReview }) => (
   <>
     <div>Confidential comments to editor (optional):</div>
     <SimpleWaxEditor
-      {...field}
+      data-testid="confidentialComment"
       key="confidential-comment"
       placeholder="Enter a confidential note to the editor (optional)…"
+      {...field}
+      onChange={val => {
+        updateReview({ confidentialComment: { content: val } })
+      }}
       value={field.value?.content || ''}
     />
   </>
