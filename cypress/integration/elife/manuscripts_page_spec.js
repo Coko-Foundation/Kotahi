@@ -1,3 +1,5 @@
+/* eslint-disable jest/valid-expect-in-promise */
+/* eslint-disable prettier/prettier */
 /* eslint-disable jest/expect-expect */
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
@@ -20,8 +22,9 @@ describe('Manuscripts page tests', () => {
       ManuscriptsPage.getTableHeader().should('be.visible')
     })
 
-    it('check Submit button is visible', () => {
+    it('check Submit and Video Chat buttons are visible', () => {
       ManuscriptsPage.getSubmitButton().should('be.visible')
+      ManuscriptsPage.getLiveChatButton().should('be.visible')
     })
     it('evaluation button is visible and publish button is not visible on unsubmited status article', () => {
       ManuscriptsPage.clickSubmit()
@@ -266,4 +269,28 @@ describe('Manuscripts page tests', () => {
       SubmissionFormPage.getValidationErrorMessage('DOI is invalid')
     })
   })
+  context('video chat button', () => {
+    beforeEach(() => {
+      // task to restore the database as per the  dumps/initialState.sql
+      cy.task('restore', 'initialState')
+      cy.task('seedForms')
+
+      // login as admin
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('role_names').then(name => {
+        cy.login(name.role.admin, manuscripts)
+      })
+      ManuscriptsPage.getTableHeader().should('be.visible')
+    })
+    it('check the video chat link, and if it returns 200', () => {
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      // eslint-disable-next-line prettier/prettier
+      ManuscriptsPage.getLiveChatButton().invoke('attr', 'href').should('contain', '//8x8.vc/coko/')
+      ManuscriptsPage.getLiveChatButton()
+        .then(link => {
+        cy.request(link.prop('href')).its('status').should('eq', 200)
+      })
+    })
+  })
 })
+

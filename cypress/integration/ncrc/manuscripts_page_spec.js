@@ -323,7 +323,8 @@ describe('manuscripts page tests', () => {
     })
   })
   context('video chat button', () => {
-    it('check video chat link return 200', () => {
+    it('check the video chat link, and if it returns 200', () => {
+      ManuscriptsPage.getLiveChatButton().invoke('attr', 'href').should('contain', '//8x8.vc/coko/')
       ManuscriptsPage.getLiveChatButton()
         .then(link => {
           cy
