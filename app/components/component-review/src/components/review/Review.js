@@ -70,8 +70,24 @@ const Review = ({ review, user }) => (
 
 Review.propTypes = {
   review: PropTypes.shape({
-    reviewComment: PropTypes.string,
-    confidentialComment: PropTypes.string,
+    reviewComment: PropTypes.shape({
+      content: PropTypes.string.isRequired,
+      files: PropTypes.arrayOf(
+        PropTypes.shape({
+          filename: PropTypes.string.isRequired,
+          url: PropTypes.string.isRequired,
+        }).isRequired,
+      ).isRequired,
+    }),
+    confidentialComment: PropTypes.shape({
+      content: PropTypes.string.isRequired,
+      files: PropTypes.arrayOf(
+        PropTypes.shape({
+          filename: PropTypes.string.isRequired,
+          url: PropTypes.string.isRequired,
+        }).isRequired,
+      ).isRequired,
+    }),
     recommendation: PropTypes.string,
   }).isRequired,
   user: {
