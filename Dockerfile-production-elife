@@ -30,7 +30,6 @@ WORKDIR /home/node/app
 
 COPY . .
 RUN chown -R node:node .
-RUN ls -la app/components/component-manuscripts/src/
 ADD ./node_modules_dev.tar.gz .
 RUN mv ./node_modules_dev ./node_modules && \
     yarn webpack --config webpack/webpack.production.config.js
