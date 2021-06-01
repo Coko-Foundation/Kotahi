@@ -1,11 +1,11 @@
-import React from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Wax, ComponentPlugin } from 'wax-prosemirror-core'
+import { Wax, WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
+import { DefaultSchema, DocumentHelpers } from 'wax-prosemirror-utilities'
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { columnResizing, tableEditing } from 'prosemirror-tables'
-import { DefaultSchema } from 'wax-prosemirror-utilities'
 import {
   AnnotationToolGroupService,
   BaseService,
@@ -20,6 +20,8 @@ import {
   ListsService,
   ListToolGroupService,
   // MathService,
+  NoteService,
+  NoteToolGroupService,
   SpecialCharactersService,
   SpecialCharactersToolGroupService,
   TablesService,
@@ -39,11 +41,24 @@ const waxConfig = {
           name: 'Base',
           exclude: ['Save'],
         },
+        // {
+        //   name: 'Annotations',
+        //   exclude: ['SmallCaps'],
+        //   more: [
+        //     'Superscript',
+        //     'Subscript',
+        //     // 'SmallCaps',
+        //     'Underline',
+        //     'StrikeThrough',
+        //     'Code',
+        //   ],
+        // },
         {
           name: 'Annotations',
           exclude: ['Code', 'StrikeThrough', 'SmallCaps'],
         },
         'Lists',
+        // 'Notes', // TODO: enable once I figure out displaying the NotesContainer
         {
           name: 'Text',
           exclude: [
@@ -56,7 +71,7 @@ const waxConfig = {
         },
         'Tables',
         'Images',
-        'SpecialCharacters',
+        // 'SpecialCharacters', // TODO: enable once I can style the popup appropriately
       ],
     },
     {
@@ -85,6 +100,8 @@ const waxConfig = {
     new ListsService(),
     new ListToolGroupService(),
     // new MathService(),
+    new NoteService(),
+    new NoteToolGroupService(),
     new SpecialCharactersService(),
     new SpecialCharactersToolGroupService(),
     new TablesService(),
@@ -173,33 +190,96 @@ const InfoContainer = styled.div`
   z-index: 999;
 `
 
+const NotesAreaContainer = styled.div`
+  background: #fff;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  outline: 3px solid red;
+  overflow-y: scroll;
+  position: absolute;
+  width: 100%;
+  /* PM styles  for note content*/
+  /*${EditorElements};*/
+
+  .ProseMirror {
+    display: inline;
+  }
+`
+
+const NotesContainer = styled.div`
+  counter-reset: footnote-view;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: ${grid(4)};
+  width: 65%;
+`
+
+const getNotes = main => {
+  const notes = DocumentHelpers.findChildrenByType(
+    main.state.doc,
+    main.state.schema.nodes.footnote,
+    true,
+  )
+
+  return notes
+}
+
 const TopBar = ComponentPlugin('topBar')
 const WaxOverlays = ComponentPlugin('waxOverlays')
+const NotesArea = ComponentPlugin('notesArea')
 const CounterInfo = ComponentPlugin('BottomRightInfo')
 
 // eslint-disable-next-line react/prop-types
-const WaxLayout = readonly => ({ editor }) => (
-  <div>
-    <Grid readonly={readonly}>
-      {readonly ? (
-        <ReadOnlyEditorDiv className="wax-surface-scroll">
-          {editor}
-        </ReadOnlyEditorDiv>
-      ) : (
-        <>
-          <Menu>
-            <TopBar />
-          </Menu>
-          <EditorDiv className="wax-surface-scroll">{editor}</EditorDiv>
-        </>
-      )}
-    </Grid>
-    <WaxOverlays />
-    <InfoContainer>
-      <CounterInfo />
-    </InfoContainer>
-  </div>
-)
+const WaxLayout = readonly => ({ editor }) => {
+  const {
+    view: { main },
+  } = useContext(WaxContext)
+
+  const notes = main && getNotes(main)
+  const thereAreNotes = !!notes && !!notes.length
+  const [hasNotes, setHasNotes] = useState(thereAreNotes)
+
+  const delayedShowNotes = () =>
+    useCallback(
+      setTimeout(() => setHasNotes(thereAreNotes), 100),
+      [],
+    )
+
+  useEffect(() => {}, [delayedShowNotes])
+
+  return (
+    <div>
+      <Grid readonly={readonly}>
+        {readonly ? (
+          <ReadOnlyEditorDiv className="wax-surface-scroll">
+            {editor}
+          </ReadOnlyEditorDiv>
+        ) : (
+          <>
+            <Menu>
+              <TopBar />
+            </Menu>
+            <EditorDiv className="wax-surface-scroll">{editor}</EditorDiv>
+          </>
+        )}
+        {/* TODO Enable once I figure out how to display the NotesContainer */}
+        {hasNotes && false && (
+          <NotesAreaContainer>
+            <NotesContainer id="notes-container">
+              <NotesArea view={main} />
+            </NotesContainer>
+          </NotesAreaContainer>
+        )}
+      </Grid>
+      <WaxOverlays />
+      <InfoContainer>
+        <CounterInfo />
+      </InfoContainer>
+    </div>
+  )
+}
 
 // TODO Save this image via the server
 const renderImage = file => {

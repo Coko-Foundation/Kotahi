@@ -19,6 +19,8 @@ import {
   ListsService,
   ListToolGroupService,
   // MathService,
+  NoteService,
+  NoteToolGroupService,
   SpecialCharactersService,
   SpecialCharactersToolGroupService,
   TablesService,
@@ -73,6 +75,9 @@ const waxConfig = {
     new LinkService(),
     new ListsService(),
     new ListToolGroupService(),
+    // new MathService(),
+    new NoteService(),
+    new NoteToolGroupService(),
     new SpecialCharactersService(), // TODO remove once Wax is fixed
     new SpecialCharactersToolGroupService(), // TODO remove once Wax is fixed
     new TablesService(), // TODO remove once Wax is fixed
