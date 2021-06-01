@@ -2,9 +2,8 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Field } from 'formik'
-import { NoteEditor } from 'xpub-edit'
 import { Button, RadioGroup as UnstableRadioGroup } from '@pubsweet/ui'
-
+import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 import { JournalContext } from '../../../../xpub-journal/src'
 import { reviewWithComment } from './util'
 import {
@@ -25,17 +24,19 @@ const RadioGroup = styled(UnstableRadioGroup)`
 `
 
 const NoteInput = ({ field, updateReview }) => (
-  <NoteEditor
-    data-testid="reviewComment"
-    key="note-comment"
-    placeholder="Enter your review…"
-    title="Comments to the Author"
-    {...field}
-    onBlur={value => {
-      updateReview({ reviewComment: { content: value } })
-    }}
-    value={field.value?.content || ''}
-  />
+  <>
+    <div>Comments to the author:</div>
+    <SimpleWaxEditor
+      data-testid="reviewComment"
+      key="note-comment"
+      placeholder="Enter your review…"
+      {...field}
+      onChange={val => {
+        updateReview({ reviewComment: { content: val } })
+      }}
+      value={field.value?.content || ''}
+    />
+  </>
 )
 
 NoteInput.propTypes = {
@@ -48,17 +49,19 @@ NoteInput.propTypes = {
 }
 
 const ConfidentialInput = ({ field, updateReview }) => (
-  <NoteEditor
-    data-testid="confidentialComment"
-    key="confidential-comment"
-    placeholder="Enter a confidential note to the editor (optional)…"
-    title="Confidential Comments to Editor (Optional)"
-    {...field}
-    onBlur={value => {
-      updateReview({ confidentialComment: { content: value } })
-    }}
-    value={field.value?.content || ''}
-  />
+  <>
+    <div>Confidential comments to editor (optional):</div>
+    <SimpleWaxEditor
+      data-testid="confidentialComment"
+      key="confidential-comment"
+      placeholder="Enter a confidential note to the editor (optional)…"
+      {...field}
+      onChange={val => {
+        updateReview({ confidentialComment: { content: val } })
+      }}
+      value={field.value?.content || ''}
+    />
+  </>
 )
 
 ConfidentialInput.propTypes = {
