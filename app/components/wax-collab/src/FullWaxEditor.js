@@ -41,6 +41,7 @@ const waxConfig = {
           name: 'Base',
           exclude: ['Save'],
         },
+        // TODO: style "more" submenu to not obstruct "more" button. Then enable this:
         // {
         //   name: 'Annotations',
         //   exclude: ['SmallCaps'],
