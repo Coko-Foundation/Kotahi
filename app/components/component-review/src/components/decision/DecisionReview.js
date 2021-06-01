@@ -13,24 +13,33 @@ const ToggleReview = ({ open, toggle }) => (
   </Button>
 )
 
-const Bullet = ({ journal, recommendation }) => {
-  const recommendationColor = () =>
-    recommendation
-      ? journal.recommendations.find(item => item.value === recommendation)
-          .color
-      : 'black'
+const Bullet = styled.span`
+  background-color: black;
+  background-color: ${props =>
+    props.recommendation
+      ? props.journal.recommendations.find(
+          item => item.value === props.recommendation,
+        ).color
+      : 'black'};
+  border-radius: 100%;
+  display: inline-block;
+  height: 10px;
+  margin-right: 10px;
+  width: 10px;
+`
 
-  const Dot = styled.span`
-    background-color: ${recommendationColor};
-    border-radius: 100%;
-    display: inline-block;
-    height: 10px;
-    margin-right: 10px;
-    width: 10px;
-  `
+const ReviewHeadingRoot = styled.div`
+  align-items: baseline;
+  display: flex;
+`
 
-  return <Dot />
-}
+const Ordinal = styled.span``
+const Name = styled.span``
+
+const Controls = styled.span`
+  flex-grow: 1;
+  text-align: right;
+`
 
 const ReviewHeading = ({
   journal,
@@ -40,21 +49,8 @@ const ReviewHeading = ({
   recommendation,
   toggleOpen,
 }) => {
-  const Root = styled.div`
-    align-items: baseline;
-    display: flex;
-  `
-
-  const Ordinal = styled.span``
-  const Name = styled.span``
-
-  const Controls = styled.span`
-    flex-grow: 1;
-    text-align: right;
-  `
-
   return (
-    <Root>
+    <ReviewHeadingRoot>
       <Bullet journal={journal} recommendation={recommendation} />
       <Ordinal>Review {ordinal}</Ordinal>
       &nbsp;
@@ -62,22 +58,22 @@ const ReviewHeading = ({
       <Controls>
         <ToggleReview open={open} toggle={toggleOpen} />
       </Controls>
-    </Root>
+    </ReviewHeadingRoot>
   )
 }
+
+const Root = styled.div`
+  margin-bottom: calc(${th('gridUnit')} * 3);
+`
+
+const ReviewBody = styled.div`
+  margin-left: 1em;
+`
 
 const DecisionReview = ({ review, reviewer }) => {
   const currentUser = useCurrentUser()
   const { recommendation } = review
   const { name, ordinal } = reviewer
-
-  const Root = styled.div`
-    margin-bottom: calc(${th('gridUnit')} * 3);
-  `
-
-  const ReviewBody = styled.div`
-    margin-left: 1em;
-  `
 
   const journal = useContext(JournalContext)
 
