@@ -155,8 +155,13 @@ const User = ({
       )}
       {process.env.INSTANCE_NAME === 'ncrc' && (
         <Cell>
-            <ReactTooltipStyled effect="float" place="top" id="abstractToolTip" />
-            <InfoIcon data-tip={manuscript.submission.abstract} data-for="abstractToolTip">i</InfoIcon>
+          <ReactTooltipStyled effect="float" id="abstractToolTip" place="top" />
+          <InfoIcon
+            data-for="abstractToolTip"
+            data-tip={manuscript.submission.abstract}
+          >
+            i
+          </InfoIcon>
         </Cell>
       )}
       <Cell>
