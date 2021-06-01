@@ -1,5 +1,5 @@
 /* eslint-disable import/extensions */
-
+import { css } from 'styled-components'
 import {
   Action,
   ActionGroup,
@@ -112,6 +112,15 @@ const cokoTheme = {
       Radio,
       TextField,
       Menu,
+    },
+    Wax: {
+      MenuButton: css`
+        color: #111;
+
+        > svg {
+          fill: #333;
+        }
+      `,
     },
   },
 }
