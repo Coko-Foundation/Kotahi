@@ -41,22 +41,17 @@ const waxConfig = {
           name: 'Base',
           exclude: ['Save'],
         },
-        // TODO: style "more" submenu to not obstruct "more" button. Then enable this:
-        // {
-        //   name: 'Annotations',
-        //   exclude: ['SmallCaps'],
-        //   more: [
-        //     'Superscript',
-        //     'Subscript',
-        //     // 'SmallCaps',
-        //     'Underline',
-        //     'StrikeThrough',
-        //     'Code',
-        //   ],
-        // },
         {
           name: 'Annotations',
-          exclude: ['Code', 'StrikeThrough', 'SmallCaps'],
+          exclude: ['SmallCaps'],
+          more: [
+            'Superscript',
+            'Subscript',
+            // 'SmallCaps', // TODO: add once fixed
+            'Underline',
+            'StrikeThrough',
+            'Code',
+          ],
         },
         'Lists',
         // 'Notes', // TODO: enable once I figure out displaying the NotesContainer
@@ -178,7 +173,6 @@ const Menu = styled.div`
 
   div {
     align-items: center;
-    display: flex;
     justify-content: center;
   }
 `
@@ -200,12 +194,13 @@ const NotesAreaContainer = styled.div`
   overflow-y: scroll;
   position: absolute;
   width: 100%;
-  /* PM styles  for note content*/
-  /*${EditorElements};*/
 
   .ProseMirror {
     display: inline;
   }
+
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
+  ${EditorElements}
 `
 
 const NotesContainer = styled.div`
