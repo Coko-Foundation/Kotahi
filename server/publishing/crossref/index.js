@@ -24,10 +24,12 @@ const requestToCrossref = async xmlFiles => {
     formData.append('login_passwd', process.env.CROSSREF_PASSWORD)
     formData.append('fname', fs.createReadStream(file))
 
-    const crossrefURL =
-      process.env.NODE_ENV === 'production'
-        ? 'https://doi.crossref.org/servlet/deposit'
-        : 'https://test.crossref.org/servlet/deposit'
+    // const crossrefURL =
+    //   process.env.NODE_ENV === 'production'
+    //     ? 'https://doi.crossref.org/servlet/deposit'
+    //     : 'https://test.crossref.org/servlet/deposit'
+
+    const crossrefURL = 'https://test.crossref.org/servlet/deposit'
 
     const res = await axios.post(crossrefURL, formData, {
       headers: formData.getHeaders(),
