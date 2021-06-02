@@ -41,6 +41,16 @@ spec:
                 secretKeyRef:
                   key: HYPOTHESIS_API_KEY
                   name: orcid-secret
+            - name: CROSSREF_LOGIN
+              valueFrom:
+                secretKeyRef:
+                  key: CROSSREF_LOGIN
+                  name: orcid-secret
+            - name: CROSSREF_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: CROSSREF_PASSWORD
+                  name: orcid-secret
             - name: POSTGRES_DB
               valueFrom:
                 secretKeyRef:
