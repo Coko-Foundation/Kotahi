@@ -251,4 +251,12 @@ export default css`
   code {
     font-family: monospace;
   }
+
+  .small-caps {
+    font-variant: small-caps;
+  }
+
+  a {
+    color: blue;
+  }
 `
