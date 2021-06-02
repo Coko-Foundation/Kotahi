@@ -272,7 +272,7 @@ DecisionVersion.propTypes = {
             name: PropTypes.string.isRequired,
           }),
         }).isRequired,
-        recommendation: PropTypes.string.isRequired,
+        recommendation: PropTypes.string,
       }).isRequired,
     ).isRequired,
   }).isRequired,

@@ -1,5 +1,6 @@
 /* stylelint-disable selector-type-no-unknown */
 import { css } from 'styled-components'
+import { darken, grid } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../shared/lightenBy'
 
 /* All styles regarding ProseMirror surface and elements */
@@ -15,14 +16,27 @@ export default css`
   }
 
   .ProseMirror footnote {
-    background: black;
-    color: white;
+    align-items: center;
+    background: ${lightenBy('colorPrimary', 0.7)};
+    border-radius: ${grid(1)};
+    color: ${darken('colorPrimary', 0.5)};
     cursor: pointer;
-    display: inline-block;
-    font-size: 0;
-    height: 17px;
-    text-align: center;
-    width: 17px;
+    display: inline-flex;
+    height: ${grid(2)};
+    justify-content: center;
+    line-height: 0;
+    min-width: ${grid(2)};
+    vertical-align: top;
+
+    &:hover {
+      background: ${lightenBy('colorPrimary', 0.3)};
+    }
+
+    ::after {
+      content: counter(footnote);
+      counter-increment: footnote;
+      font-size: ${grid(1.75)};
+    }
   }
 
   h1 {
@@ -33,14 +47,6 @@ export default css`
 
   p {
     margin-bottom: 1em;
-  }
-
-  .ProseMirror footnote::after {
-    bottom: 2px;
-    content: counter(footnote);
-    counter-increment: footnote;
-    font-size: 16px;
-    position: relative;
   }
 
   hr {

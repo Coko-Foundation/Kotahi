@@ -24,6 +24,7 @@ class Manuscript extends BaseModel {
   async getReviews() {
     // TODO: Use relationships
     /* eslint-disable-next-line global-require */
+    // eslint-disable-next-line
     const Review = require('../../model-review/src/review')
 
     const manuscriptReviews = await Review.findByField('manuscript_id', this.id)
@@ -31,6 +32,7 @@ class Manuscript extends BaseModel {
     await Promise.all(
       manuscriptReviews.map(async review => {
         // eslint-disable-next-line no-param-reassign
+        // eslint-disable-next-line
         review.comments = await review.getComments()
       }),
     )
@@ -74,19 +76,20 @@ class Manuscript extends BaseModel {
       .withGraphFetched('members')
 
     teams.forEach(t => {
-      // eslint-disable-next-line no-param-reassign
+      // eslint-disable-next-line
       delete t.id
-      // eslint-disable-next-line no-param-reassign
+      // eslint-disable-next-line
       t.members.forEach(tm => delete tm.id)
     })
 
     // Copy files as well
     const files = await this.$relatedQuery('files')
-    // eslint-disable-next-line no-param-reassign
+    // eslint-disable-next-line
     files.forEach(f => delete f.id)
 
     const newVersion = cloneDeep(this)
     newVersion.teams = teams
+    // eslint-disable-next-line
     newVersion.files = files
 
     if (this.decision === 'revise') {
@@ -247,7 +250,7 @@ class Manuscript extends BaseModel {
         submission: {},
         submitterId: { type: ['string', 'null'], format: 'uuid' },
         published: { type: ['string', 'object', 'null'], format: 'date-time' },
-        hypothesisPublicationId: { type: ['string', 'null'] },
+        evaluationsHypothesisMap: {},
       },
     }
   }

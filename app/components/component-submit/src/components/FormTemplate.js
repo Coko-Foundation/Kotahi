@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { unescape, get, set } from 'lodash'
+import { unescape, set } from 'lodash'
 import {
   TextField,
   RadioGroup,
@@ -64,32 +64,28 @@ elements.AbstractEditor = ({
   validationStatus,
   setTouched,
   onChange,
-  value,
-  values,
   ...rest
-}) => (
-  <SimpleWaxEditor
-    validationStatus={validationStatus}
-    value={get(values, rest.name) || ''}
-    {...rest}
-    onBlur={() => {
-      setTouched(set({}, rest.name, true))
-    }}
-    onChange={val => {
-      setTouched(set({}, rest.name, true))
-      const cleanedVal = val === '<p class="paragraph"></p>' ? '' : val
-      onChange(cleanedVal)
-    }}
-  />
-)
+}) => {
+  return (
+    <SimpleWaxEditor
+      validationStatus={validationStatus}
+      {...rest}
+      onBlur={() => {
+        setTouched(set({}, rest.name, true))
+      }}
+      onChange={val => {
+        setTouched(set({}, rest.name, true))
+        const cleanedVal = val === '<p class="paragraph"></p>' ? '' : val
+        onChange(cleanedVal)
+      }}
+    />
+  )
+}
 
 elements.AbstractEditor.propTypes = {
-  // eslint-disable-next-line react/forbid-prop-types
-  validationStatus: PropTypes.any, // Currently unused
+  validationStatus: PropTypes.string,
   setTouched: PropTypes.func.isRequired,
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.string.isRequired,
-  values: PropTypes.objectOf(PropTypes.string).isRequired,
 }
 elements.AbstractEditor.defaultProps = {
   validationStatus: undefined,
@@ -403,7 +399,6 @@ FormTemplate.propTypes = {
   confirming: PropTypes.bool.isRequired,
   manuscript: PropTypes.shape({
     id: PropTypes.string.isRequired,
-    hypothesisPublicationId: PropTypes.string,
     status: PropTypes.string,
   }).isRequired,
   setTouched: PropTypes.func.isRequired,

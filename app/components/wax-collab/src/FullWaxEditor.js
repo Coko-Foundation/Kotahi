@@ -1,26 +1,33 @@
-import React from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
-import { Wax, ComponentPlugin } from 'wax-prosemirror-core'
+import { Wax, WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
+import { DefaultSchema, DocumentHelpers } from 'wax-prosemirror-utilities'
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { columnResizing, tableEditing } from 'prosemirror-tables'
-import { DefaultSchema } from 'wax-prosemirror-utilities'
 import {
   AnnotationToolGroupService,
   BaseService,
   BaseToolGroupService,
+  BottomInfoService,
   DisplayToolGroupService,
+  EditorInfoToolGroupServices,
+  ImageService,
+  ImageToolGroupService,
   InlineAnnotationsService,
   LinkService,
   ListsService,
   ListToolGroupService,
+  // MathService,
+  NoteService,
+  NoteToolGroupService,
+  SpecialCharactersService,
+  SpecialCharactersToolGroupService,
   TablesService,
   TableToolGroupService,
   TextBlockLevelService,
   TextToolGroupService,
-  EditorInfoToolGroupServices,
-  BottomInfoService,
 } from 'wax-prosemirror-services'
 import EditorElements from './EditorElements'
 
@@ -36,9 +43,18 @@ const waxConfig = {
         },
         {
           name: 'Annotations',
-          exclude: ['Code', 'StrikeThrough', 'SmallCaps'],
+          exclude: ['SmallCaps'],
+          more: [
+            'Superscript',
+            'Subscript',
+            // 'SmallCaps', // TODO: add once fixed
+            'Underline',
+            'StrikeThrough',
+            'Code',
+          ],
         },
         'Lists',
+        // 'Notes', // TODO: enable once I figure out displaying the NotesContainer
         {
           name: 'Text',
           exclude: [
@@ -50,6 +66,8 @@ const waxConfig = {
           ],
         },
         'Tables',
+        'Images',
+        // 'SpecialCharacters', // TODO: enable once I can style the popup appropriately
       ],
     },
     {
@@ -68,17 +86,24 @@ const waxConfig = {
     new AnnotationToolGroupService(),
     new BaseService(),
     new BaseToolGroupService(),
+    new BottomInfoService(),
     new DisplayToolGroupService(),
+    new EditorInfoToolGroupServices(),
+    new ImageService(),
+    new ImageToolGroupService(),
     new InlineAnnotationsService(),
     new LinkService(),
     new ListsService(),
     new ListToolGroupService(),
+    // new MathService(),
+    new NoteService(),
+    new NoteToolGroupService(),
+    new SpecialCharactersService(),
+    new SpecialCharactersToolGroupService(),
     new TablesService(),
     new TableToolGroupService(),
     new TextBlockLevelService(),
     new TextToolGroupService(),
-    new EditorInfoToolGroupServices(),
-    new BottomInfoService(),
   ],
 }
 
@@ -148,7 +173,6 @@ const Menu = styled.div`
 
   div {
     align-items: center;
-    display: flex;
     justify-content: center;
   }
 `
@@ -161,33 +185,110 @@ const InfoContainer = styled.div`
   z-index: 999;
 `
 
+const NotesAreaContainer = styled.div`
+  background: #fff;
+  display: flex;
+  flex-direction: row;
+  height: 100%;
+  outline: 3px solid red;
+  overflow-y: scroll;
+  position: absolute;
+  width: 100%;
+
+  .ProseMirror {
+    display: inline;
+  }
+
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
+  ${EditorElements}
+`
+
+const NotesContainer = styled.div`
+  counter-reset: footnote-view;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-bottom: ${grid(4)};
+  width: 65%;
+`
+
+const getNotes = main => {
+  const notes = DocumentHelpers.findChildrenByType(
+    main.state.doc,
+    main.state.schema.nodes.footnote,
+    true,
+  )
+
+  return notes
+}
+
 const TopBar = ComponentPlugin('topBar')
 const WaxOverlays = ComponentPlugin('waxOverlays')
+const NotesArea = ComponentPlugin('notesArea')
 const CounterInfo = ComponentPlugin('BottomRightInfo')
 
 // eslint-disable-next-line react/prop-types
-const WaxLayout = readonly => ({ editor }) => (
-  <div>
-    <Grid readonly={readonly}>
-      {readonly ? (
-        <ReadOnlyEditorDiv className="wax-surface-scroll">
-          {editor}
-        </ReadOnlyEditorDiv>
-      ) : (
-        <>
-          <Menu>
-            <TopBar />
-          </Menu>
-          <EditorDiv className="wax-surface-scroll">{editor}</EditorDiv>
-        </>
-      )}
-    </Grid>
-    <WaxOverlays />
-    <InfoContainer>
-      <CounterInfo />
-    </InfoContainer>
-  </div>
-)
+const WaxLayout = readonly => ({ editor }) => {
+  const {
+    view: { main },
+  } = useContext(WaxContext)
+
+  const notes = main && getNotes(main)
+  const thereAreNotes = !!notes && !!notes.length
+  const [hasNotes, setHasNotes] = useState(thereAreNotes)
+
+  const delayedShowNotes = () =>
+    useCallback(
+      setTimeout(() => setHasNotes(thereAreNotes), 100),
+      [],
+    )
+
+  useEffect(() => {}, [delayedShowNotes])
+
+  return (
+    <div>
+      <Grid readonly={readonly}>
+        {readonly ? (
+          <ReadOnlyEditorDiv className="wax-surface-scroll">
+            {editor}
+          </ReadOnlyEditorDiv>
+        ) : (
+          <>
+            <Menu>
+              <TopBar />
+            </Menu>
+            <EditorDiv className="wax-surface-scroll">{editor}</EditorDiv>
+          </>
+        )}
+        {/* TODO Enable once I figure out how to display the NotesContainer */}
+        {hasNotes && false && (
+          <NotesAreaContainer>
+            <NotesContainer id="notes-container">
+              <NotesArea view={main} />
+            </NotesContainer>
+          </NotesAreaContainer>
+        )}
+      </Grid>
+      <WaxOverlays />
+      <InfoContainer>
+        <CounterInfo />
+      </InfoContainer>
+    </div>
+  )
+}
+
+// TODO Save this image via the server
+const renderImage = file => {
+  const reader = new FileReader()
+  return new Promise((resolve, reject) => {
+    reader.onload = () => resolve(reader.result)
+    reader.onerror = () => reject(reader.error)
+    // Some extra delay to make the asynchronicity visible
+    setTimeout(() => {
+      reader.readAsDataURL(file)
+    }, 150)
+  })
+}
 
 const FullWaxEditor = ({
   value,
@@ -195,13 +296,14 @@ const FullWaxEditor = ({
   readonly,
   autoFocus,
   placeholder,
+  fileUpload,
   ...rest
 }) => (
   <div className={validationStatus}>
     <Wax
       autoFocus={autoFocus}
       config={waxConfig}
-      // fileUpload={file => renderImage(file)}
+      fileUpload={file => renderImage(file)}
       layout={WaxLayout(readonly)}
       placeholder={placeholder}
       readonly={readonly}
@@ -217,6 +319,7 @@ FullWaxEditor.propTypes = {
   readonly: PropTypes.bool,
   autoFocus: PropTypes.bool,
   placeholder: PropTypes.string,
+  fileUpload: PropTypes.func,
 }
 
 FullWaxEditor.defaultProps = {
@@ -225,6 +328,7 @@ FullWaxEditor.defaultProps = {
   readonly: false,
   autoFocus: false,
   placeholder: '',
+  fileUpload: () => {},
 }
 
 export default FullWaxEditor

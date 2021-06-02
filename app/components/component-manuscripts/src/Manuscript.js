@@ -56,7 +56,6 @@ const urlFrag = config.journal.metadata.toplevel_urlfragment
 const User = ({
   manuscriptId,
   manuscript,
-  teams,
   submitter,
   history,
   toggleNewManuscriptCheck,
@@ -156,8 +155,13 @@ const User = ({
       )}
       {process.env.INSTANCE_NAME === 'ncrc' && (
         <Cell>
-            <ReactTooltipStyled effect="float" place="top" id="abstractToolTip" />
-            <InfoIcon data-tip={manuscript.submission.abstract} data-for="abstractToolTip">i</InfoIcon>
+          <ReactTooltipStyled effect="float" id="abstractToolTip" place="top" />
+          <InfoIcon
+            data-for="abstractToolTip"
+            data-tip={manuscript.submission.abstract}
+          >
+            i
+          </InfoIcon>
         </Cell>
       )}
       <Cell>
@@ -232,7 +236,7 @@ const User = ({
 User.propTypes = {
   manuscriptId: PropTypes.string.isRequired,
   manuscript: PropTypes.shape({
-    teams: PropTypes.arrayOf(PropTypes.object).isRequired,
+    teams: PropTypes.arrayOf(PropTypes.object),
     meta: PropTypes.shape({
       title: PropTypes.string.isRequired,
     }).isRequired,
@@ -251,13 +255,14 @@ User.propTypes = {
     email: PropTypes.string,
     username: PropTypes.string.isRequired,
   }).isRequired,
-  teams: PropTypes.arrayOf(PropTypes.object).isRequired,
   toggleNewManuscriptCheck: PropTypes.func.isRequired,
   selectedNewManuscripts: PropTypes.arrayOf(PropTypes.object).isRequired,
   setSelectedStatus: PropTypes.func.isRequired,
-  // eslint-disable-next-line
-  history: PropTypes.object,
+  history: PropTypes.shape({}),
   setSelectedTopic: PropTypes.func.isRequired,
+}
+User.defaultProps = {
+  history: undefined,
 }
 
 export default User
