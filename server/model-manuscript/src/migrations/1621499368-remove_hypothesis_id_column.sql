@@ -1,0 +1,1 @@
+ALTER TABLE manuscripts DROP COLUMN hypothesis_publication_id

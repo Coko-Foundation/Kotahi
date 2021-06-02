@@ -23,14 +23,22 @@ class Manuscript extends BaseModel {
 
   async getReviews() {
     // TODO: Use relationships
+<<<<<<< HEAD
     /* eslint-disable-next-line global-require */
+=======
+    // eslint-disable-next-line
+>>>>>>> elife-publishing-actions
     const Review = require('../../model-review/src/review')
 
     const manuscriptReviews = await Review.findByField('manuscript_id', this.id)
 
     await Promise.all(
       manuscriptReviews.map(async review => {
+<<<<<<< HEAD
         // eslint-disable-next-line no-param-reassign
+=======
+        // eslint-disable-next-line
+>>>>>>> elife-publishing-actions
         review.comments = await review.getComments()
       }),
     )
@@ -74,19 +82,30 @@ class Manuscript extends BaseModel {
       .withGraphFetched('members')
 
     teams.forEach(t => {
+<<<<<<< HEAD
       // eslint-disable-next-line no-param-reassign
       delete t.id
       // eslint-disable-next-line no-param-reassign
+=======
+      // eslint-disable-next-line
+      delete t.id
+      // eslint-disable-next-line
+>>>>>>> elife-publishing-actions
       t.members.forEach(tm => delete tm.id)
     })
 
     // Copy files as well
     const files = await this.$relatedQuery('files')
+<<<<<<< HEAD
     // eslint-disable-next-line no-param-reassign
+=======
+    // eslint-disable-next-line
+>>>>>>> elife-publishing-actions
     files.forEach(f => delete f.id)
 
     const newVersion = cloneDeep(this)
     newVersion.teams = teams
+    // eslint-disable-next-line
     newVersion.files = files
 
     if (this.decision === 'revise') {
@@ -104,7 +123,11 @@ class Manuscript extends BaseModel {
   }
 
   static get relationMappings() {
+<<<<<<< HEAD
     /* eslint-disable-next-line global-require */
+=======
+    // eslint-disable-next-line
+>>>>>>> elife-publishing-actions
     const { Channel, User, Team, Review, File } = require('@pubsweet/models')
 
     return {
@@ -247,7 +270,7 @@ class Manuscript extends BaseModel {
         submission: {},
         submitterId: { type: ['string', 'null'], format: 'uuid' },
         published: { type: ['string', 'object', 'null'], format: 'date-time' },
-        hypothesisPublicationId: { type: ['string', 'null'] },
+        evaluationsHypothesisMap: {},
       },
     }
   }

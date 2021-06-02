@@ -122,7 +122,6 @@ const query = gql`
     }
 
     manuscript(id: $id) {
-      hypothesisPublicationId
       ${fragmentFields}
       manuscriptVersions {
         parentId

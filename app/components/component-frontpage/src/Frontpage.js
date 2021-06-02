@@ -6,8 +6,15 @@ import ReactRouterPropTypes from 'react-router-prop-types'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
-import { Container, Placeholder, VisualAbstract } from './style'
 import FullWaxEditor from '../../wax-collab/src/FullWaxEditor'
+import {
+  Container,
+  Placeholder,
+  VisualAbstract,
+  ReviewWrapper,
+  ReviewLink,
+} from './style'
+import { ArticleEvaluation } from '../../component-evaluation-result/style'
 
 import {
   Spinner,
@@ -62,14 +69,61 @@ const Frontpage = ({ history, ...props }) => {
 
   const { totalCount } = data.publishedManuscripts
 
-  const frontpage = (data.publishedManuscripts?.manuscripts || []).map(m => {
+  const publishedManuscripts = (
+    data.publishedManuscripts?.manuscripts || []
+  ).map(m => {
     const visualAbstract = m.files?.find(f => f.fileType === 'visualAbstract')
     return {
       ...m,
       visualAbstract: visualAbstract?.url,
       submission: JSON.parse(m.submission),
+      evaluationsHypothesisMap: JSON.parse(m.evaluationsHypothesisMap),
     }
   })
+
+  const reviews = publishedManuscripts
+    .map(({ submission, evaluationsHypothesisMap }) => {
+      if (Object.keys(evaluationsHypothesisMap).length > 0) {
+        return Object.keys(evaluationsHypothesisMap).map(key => {
+          return { [key]: submission[key] }
+        })
+      }
+
+      return null
+    })
+    .filter(Boolean)
+
+  const reviewTitle = (reviewKey, manuscriptId) => {
+    if (reviewKey.includes('review')) {
+      return (
+        <>
+          <div>
+            Review #{reviewKey.split('review')[1]}
+            <ReviewLink
+              href={`/versions/${manuscriptId}/article-evaluation-result/${
+                reviewKey.split('review')[1]
+              }`}
+            >
+              &#128279;
+            </ReviewLink>
+          </div>
+        </>
+      )
+    }
+
+    return (
+      <>
+        <div>
+          Evaluation Summary
+          <ReviewLink
+            href={`/versions/${manuscriptId}/article-evaluation-summary`}
+          >
+            &#128279;
+          </ReviewLink>
+        </div>
+      </>
+    )
+  }
 
   return (
     <Container>
@@ -84,12 +138,41 @@ const Frontpage = ({ history, ...props }) => {
         totalCount={totalCount}
       />
 
-      {frontpage.length > 0 ? (
-        frontpage.map(manuscript => (
+      {publishedManuscripts.length > 0 ? (
+        publishedManuscripts.map((manuscript, index) => (
           <SectionContent key={`manuscript-${manuscript.id}`}>
-            <SectionHeader>
-              <Title>{manuscript.meta.title}</Title>
-            </SectionHeader>
+            {!['elife'].includes(process.env.INSTANCE_NAME) && (
+              <SectionHeader>
+                <Title>{manuscript.meta.title}</Title>
+              </SectionHeader>
+            )}
+            {['elife'].includes(process.env.INSTANCE_NAME) && (
+              <>
+                <SectionHeader>
+                  <Title>{manuscript.submission.description}</Title>
+                </SectionHeader>
+                {reviews[index].map(review => {
+                  const reviewKey = Object.keys(review)[0]
+                  const reviewValue = Object.values(review)[0]
+                  return (
+                    reviewValue && (
+                      <Accordion
+                        key={`${reviewKey}-${manuscript.id}`}
+                        label={reviewTitle(reviewKey, manuscript.id)}
+                      >
+                        <ReviewWrapper>
+                          <ArticleEvaluation
+                            dangerouslySetInnerHTML={(() => {
+                              return { __html: reviewValue }
+                            })()}
+                          />
+                        </ReviewWrapper>
+                      </Accordion>
+                    )
+                  )
+                })}
+              </>
+            )}
             <SectionRow>
               {manuscript.submission?.abstract && (
                 <Subheading>

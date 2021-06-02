@@ -22,3 +22,11 @@ export const VisualAbstract = styled.img`
   max-height: ${grid(40)};
   max-width: ${grid(40)};
 `
+
+export const ReviewLink = styled.a`
+  margin-left: 10px;
+`
+
+export const ReviewWrapper = styled.div`
+  margin: 0 10px;
+`

@@ -8,6 +8,7 @@ import { Menu } from '../../page-object/page-component/menu'
 
 describe('manuscripts page assign editors tests', () => {
   beforeEach(() => {
+  before(() => {
     cy.task('restore', 'initialState')
     cy.task('seedForms')
     // login as admin
@@ -26,6 +27,10 @@ describe('manuscripts page assign editors tests', () => {
     ManuscriptsPage.clickEvaluation()
     cy.url().should('contain', 'evaluation')
     cy.awaitDisappearSpinner()
+  it('assign editors dropdown are visible, and are selected editors', () => {
+    ManuscriptsPage.clickEvaluation()
+    cy.url().should('contain', 'evaluation')
+    SubmissionFormPage.waitThreeSec()
     SubmissionFormPage.getAssigEditor(0).should(
       'contain',
       'Assign Senior Editor…',
@@ -76,5 +81,17 @@ describe('manuscripts page assign editors tests', () => {
         .eq(-1)
         .should('contain', name.role.reviewers.reviewer1)
     })
+    SubmissionFormPage.getAssigEditor(0).click()
+    SubmissionFormPage.selectDropdownOption(0)
+    SubmissionFormPage.waitThreeSec()
+    SubmissionFormPage.getAssigEditor(0).should('contain', 'Elaine Barnes')
+    SubmissionFormPage.getAssigEditor(1).should(
+      'contain',
+      'Assign Handling Editor…',
+    )
+    SubmissionFormPage.getAssigEditor(1).click()
+    SubmissionFormPage.selectDropdownOption(0)
+    SubmissionFormPage.waitThreeSec()
+    SubmissionFormPage.getAssigEditor(1).should('contain', 'Elaine Barnes')
   })
 })
