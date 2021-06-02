@@ -16,6 +16,9 @@ const deletePublication = publicationId => {
 }
 
 const publishToHypothesis = async manuscript => {
+  console.log('publish to hypothesis')
+  console.log('manuscript')
+  console.log(manuscript)
   const turndownService = new TurndownService({ bulletListMarker: '-' })
   turndownService.addRule('unorderedLists', {
     filter: ['ul'],
@@ -60,6 +63,9 @@ const publishToHypothesis = async manuscript => {
       return manuscript.submission[`review${reviewNumber}date`]
     })
 
+  console.log('shouldCreateReviews')
+  console.log(shouldCreateReviews)
+
   const shouldDeleteReviews = Object.entries(manuscript.submission)
     .filter(
       ([prop, value]) =>
@@ -69,6 +75,9 @@ const publishToHypothesis = async manuscript => {
         checkIsAbstractValueEmpty(value),
     )
     .map(([propName]) => propName)
+
+  console.log('shouldDeleteReviews')
+  console.log(shouldDeleteReviews)
 
   const shouldUpdateReviews = Object.entries(manuscript.submission)
     .filter(
@@ -84,6 +93,9 @@ const publishToHypothesis = async manuscript => {
 
       return manuscript.submission[`review${reviewNumber}date`]
     })
+
+  console.log('shouldUpdateReviews')
+  console.log(shouldUpdateReviews)
 
   if (
     !manuscript.evaluationsHypothesisMap.summary &&
@@ -130,6 +142,9 @@ const publishToHypothesis = async manuscript => {
     }))
   })
 
+  console.log('createPromises')
+  console.log(createPromises)
+
   const deletePromises = shouldDeleteReviews.map(propName => {
     const publicationId = manuscript.evaluationsHypothesisMap[propName]
     return deletePublication(publicationId).then(res => {
@@ -138,6 +153,9 @@ const publishToHypothesis = async manuscript => {
       }
     })
   })
+
+  console.log('deletePromises')
+  console.log(deletePromises)
 
   const updatePromises = shouldUpdateReviews.map(propName => {
     const requestBody = {
@@ -161,6 +179,8 @@ const publishToHypothesis = async manuscript => {
       }))
   })
 
+  console.log('updatePromises')
+  console.log(updatePromises)
   const createResults = await Promise.all(createPromises)
   const deleteResults = await Promise.all(deletePromises)
   const updateResults = await Promise.all(updatePromises)
@@ -175,6 +195,9 @@ const publishToHypothesis = async manuscript => {
       ...curr,
     }
   }, {})
+
+  console.log('newHypothesisEvaluationMap')
+  console.log(newHypothesisEvaluationMap)
 
   return newHypothesisEvaluationMap
 }
