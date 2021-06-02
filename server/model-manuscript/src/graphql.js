@@ -182,7 +182,10 @@ const resolvers = {
 
       toDeleteList.push(manuscript.id)
 
-      if (process.env.INSTANCE_NAME === 'elife') {
+      if (
+        process.env.INSTANCE_NAME === 'elife' &&
+        manuscript.evaluationsHypothesisMap !== null
+      ) {
         const deletePromises = Object.values(
           manuscript.evaluationsHypothesisMap,
         )
@@ -336,6 +339,9 @@ const resolvers = {
         if (manuscript.evaluationsHypothesisMap === null) {
           manuscript.evaluationsHypothesisMap = {}
         }
+
+        console.log('manuscript.evaluationsHypothesisMap')
+        console.log(manuscript.evaluationsHypothesisMap)
 
         const evaluationValues = Object.entries(manuscript.submission)
           .filter(
