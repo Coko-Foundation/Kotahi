@@ -211,7 +211,10 @@ const Submit = ({
     <Columns>
       <Manuscript>
         <ErrorBoundary>
-          <VersionSwitcher versions={decisionSections} />
+          <VersionSwitcher
+            key={decisionSections.length}
+            versions={decisionSections}
+          />
         </ErrorBoundary>
       </Manuscript>
       <Chat>
