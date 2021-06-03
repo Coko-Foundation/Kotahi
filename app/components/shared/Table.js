@@ -41,6 +41,7 @@ export const Row = styled.tr`
 `
 
 export const Cell = styled.td`
+  ${({ minWidth }) => minWidth && `min-width: ${minWidth}`};
   padding-bottom: ${grid(2)};
   padding-left: ${grid(3)};
   padding-right: ${grid(3)};

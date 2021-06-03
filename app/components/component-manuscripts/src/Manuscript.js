@@ -26,6 +26,7 @@ import {
   // NormalStatus,
   UserAction as Action,
   StatusBadge,
+  StyledDescriptionWrapper,
 } from './style'
 
 import { convertTimestampToDate } from '../../../shared/time-formatting'
@@ -115,6 +116,11 @@ const User = ({
     history.replace(`${urlFrag}/admin/manuscripts?status=${status}`)
   }
 
+  const tooltipContent =
+    manuscript.submission.abstract.length > 1000
+      ? `${manuscript.submission.abstract.slice(0, 1000)}...`
+      : manuscript.submission.abstract
+
   return (
     <Row>
       {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
@@ -124,16 +130,29 @@ const User = ({
         <Cell>{manuscript.submission && manuscript.submission.articleId}</Cell>
       )}
       {['ncrc'].includes(process.env.INSTANCE_NAME) && (
-        <Cell>
-          {manuscript.status === articleStatuses.new && (
-            <Checkbox
-              checked={selectedNewManuscripts.includes(manuscript.id)}
-              onChange={() => toggleNewManuscriptCheck(manuscript.id)}
-            />
-          )}
-          <span style={{ wordBreak: 'break-word' }}>
-            {manuscript.submission && manuscript.submission.articleDescription}
-          </span>
+        <Cell minWidth="150px">
+          <StyledDescriptionWrapper>
+            {manuscript.status === articleStatuses.new && (
+              <Checkbox
+                checked={selectedNewManuscripts.includes(manuscript.id)}
+                onChange={() => toggleNewManuscriptCheck(manuscript.id)}
+              />
+            )}
+            <span style={{ wordBreak: 'break-word' }}>
+              {manuscript.submission &&
+                manuscript.submission.articleDescription}
+            </span>
+            <>
+              <ReactTooltipStyled
+                effect="float"
+                id="abstractToolTip"
+                place="right"
+              />
+              <InfoIcon data-for="abstractToolTip" data-tip={tooltipContent}>
+                i
+              </InfoIcon>
+            </>
+          </StyledDescriptionWrapper>
         </Cell>
       )}
       <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
@@ -153,17 +172,6 @@ const User = ({
           })}
         </Cell>
       )}
-      {process.env.INSTANCE_NAME === 'ncrc' && (
-        <Cell>
-          <ReactTooltipStyled effect="float" id="abstractToolTip" place="top" />
-          <InfoIcon
-            data-for="abstractToolTip"
-            data-tip={manuscript.submission.abstract}
-          >
-            i
-          </InfoIcon>
-        </Cell>
-      )}
       <Cell>
         <span onClick={() => filterByArticleStatus(manuscript.status)}>
           <StatusBadge status={manuscript.status} />
@@ -177,24 +185,27 @@ const User = ({
           </StyledTableLabel>
         </Cell>
       )}
-      <Cell>
-        {submitter && (
-          <UserCombo>
-            <UserAvatar user={submitter} />
-            <UserInfo>
-              <Primary>{submitter.defaultIdentity.name}</Primary>
-              <Secondary>
-                {submitter.email || `(${submitter.username})`}
-              </Secondary>
-            </UserInfo>
-          </UserCombo>
-        )}
-      </Cell>
+      {process.env.INSTANCE_NAME !== 'ncrc' && (
+        <Cell>
+          {submitter && (
+            <UserCombo>
+              <UserAvatar user={submitter} />
+              <UserInfo>
+                <Primary>{submitter.defaultIdentity.name}</Primary>
+                <Secondary>
+                  {submitter.email || `(${submitter.username})`}
+                </Secondary>
+              </UserInfo>
+            </UserCombo>
+          )}
+        </Cell>
+      )}
       {['ncrc'].includes(process.env.INSTANCE_NAME) && (
         <Cell>
           {manuscript.teams.map(team => (
             <StyledAuthor key={team.id}>
-              {team.members[0].user.defaultIdentity.name}
+              {team.role !== 'author' &&
+                team.members[0].user.defaultIdentity.name}
             </StyledAuthor>
           ))}
         </Cell>

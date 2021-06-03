@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { Action } from '@pubsweet/ui'
-import ReactTooltip from 'react-tooltip';
+import ReactTooltip from 'react-tooltip'
 
 export {
   Row,
@@ -39,15 +39,17 @@ export const UserAction = styled(Action)`
 `
 
 export const ReactTooltipStyled = styled(ReactTooltip)`
-  max-width: 80vw;
-`;
+  max-width: 70vw;
+`
 
 export const InfoIcon = styled.div`
-  background-color: #7CBFF9;
+  background-color: #7cbff9;
   border-radius: 50%;
   color: white;
   height: 25px;
   margin-left: 11px;
+  min-height: 25px;
+  min-width: 25px;
   text-align: center;
   width: 25px;
 `
@@ -87,4 +89,9 @@ export const StyledTableLabel = styled.p`
   padding: 0 10px;
   text-align: center;
   white-space: nowrap;
+`
+
+export const StyledDescriptionWrapper = styled.div`
+  align-items: center;
+  display: flex;
 `
