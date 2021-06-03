@@ -81,18 +81,6 @@ const Frontpage = ({ history, ...props }) => {
     }
   })
 
-  const reviews = publishedManuscripts
-    .map(({ submission, evaluationsHypothesisMap }) => {
-      if (Object.keys(evaluationsHypothesisMap).length > 0) {
-        return Object.keys(evaluationsHypothesisMap).map(key => {
-          return { [key]: submission[key] }
-        })
-      }
-
-      return null
-    })
-    .filter(Boolean)
-
   const reviewTitle = (reviewKey, manuscriptId) => {
     if (reviewKey.includes('review')) {
       return (
@@ -151,26 +139,37 @@ const Frontpage = ({ history, ...props }) => {
                 <SectionHeader>
                   <Title>{manuscript.submission.description}</Title>
                 </SectionHeader>
-                {reviews[index].map(review => {
-                  const reviewKey = Object.keys(review)[0]
-                  const reviewValue = Object.values(review)[0]
-                  return (
-                    reviewValue && (
-                      <Accordion
-                        key={`${reviewKey}-${manuscript.id}`}
-                        label={reviewTitle(reviewKey, manuscript.id)}
-                      >
-                        <ReviewWrapper>
-                          <ArticleEvaluation
-                            dangerouslySetInnerHTML={(() => {
-                              return { __html: reviewValue }
-                            })()}
-                          />
-                        </ReviewWrapper>
-                      </Accordion>
+                {publishedManuscripts
+                  .map(({ submission, evaluationsHypothesisMap }) => {
+                    if (Object.keys(evaluationsHypothesisMap).length > 0) {
+                      return Object.keys(evaluationsHypothesisMap).map(key => {
+                        return { [key]: submission[key] }
+                      })
+                    }
+
+                    return null
+                  })
+                  .filter(Boolean)
+                  [index].map(review => {
+                    const reviewKey = Object.keys(review)[0]
+                    const reviewValue = Object.values(review)[0]
+                    return (
+                      reviewValue && (
+                        <Accordion
+                          key={`${reviewKey}-${manuscript.id}`}
+                          label={reviewTitle(reviewKey, manuscript.id)}
+                        >
+                          <ReviewWrapper>
+                            <ArticleEvaluation
+                              dangerouslySetInnerHTML={(() => {
+                                return { __html: reviewValue }
+                              })()}
+                            />
+                          </ReviewWrapper>
+                        </Accordion>
+                      )
                     )
-                  )
-                })}
+                  })}
               </>
             )}
             <SectionRow>

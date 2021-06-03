@@ -146,7 +146,7 @@ const User = ({
               <InfoIcon
                 data-for="abstractToolTip"
                 data-tip={
-                  manuscript.submission.abstract.length > 1000
+                  manuscript.submission.abstract?.length > 1000
                     ? `${manuscript.submission.abstract.slice(0, 1000)}...`
                     : manuscript.submission.abstract
                 }

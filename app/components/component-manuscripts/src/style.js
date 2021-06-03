@@ -40,6 +40,7 @@ export const UserAction = styled(Action)`
 
 export const ReactTooltipStyled = styled(ReactTooltip)`
   max-width: 70vw;
+  word-break: break-word;
 `
 
 export const InfoIcon = styled.div`
