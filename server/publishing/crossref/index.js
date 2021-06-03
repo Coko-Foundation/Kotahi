@@ -18,16 +18,12 @@ const sequenceMapping = {
 }
 
 const requestToCrossref = async xmlFiles => {
-  console.log('request to crossref')
-
   const publishPromises = xmlFiles.map(async file => {
     const formData = new FormData()
     formData.append('login_id', process.env.CROSSREF_LOGIN)
     formData.append('login_passwd', process.env.CROSSREF_PASSWORD)
     formData.append('fname', fs.createReadStream(file))
 
-    console.log('formData')
-    console.log(formData)
     // const crossrefURL =
     //   process.env.NODE_ENV === 'production'
     //     ? 'https://doi.crossref.org/servlet/deposit'
@@ -220,8 +216,6 @@ const publishToCrossref = async manuscript => {
 
   await fsPromised.mkdir(dirName)
 
-  console.log('dir created')
-
   const fileCreationPromises = xmls.map(async xml => {
     const fileName = xml.reviewNumber
       ? `review${xml.reviewNumber}.xml`
@@ -232,8 +226,6 @@ const publishToCrossref = async manuscript => {
   })
 
   const xmlFiles = await Promise.all(fileCreationPromises)
-  console.log('xmlFiles')
-  console.log(xmlFiles)
   await requestToCrossref(xmlFiles)
   fs.rmdirSync(dirName, {
     recursive: true,
