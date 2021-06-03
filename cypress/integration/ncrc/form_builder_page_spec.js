@@ -35,10 +35,11 @@ describe('form builder tests', () => {
           data.ncrc.valueAdded,
           data.ncrc.labels,
           data.ncrc.topics,
+          data.ncrc.abstract,
         ]
 
         // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < 11; i++) {
+        for (let i = 0; i < 12; i++) {
           FormsPage.getFormBuilderElementName(i).should('contain', dataArray[i])
         }
       })
@@ -77,6 +78,9 @@ describe('form builder tests', () => {
       FormsPage.clickFormOption(10)
       FormsPage.getComponentType().should('contain', 'CheckboxGroup')
       FormsPage.getFieldValidate().should('contain', 'Required')
+      FormsPage.clickFormOption(11)
+      FormsPage.getComponentType().should('contain', 'TextField')
+      FormsPage.getFieldValidate().should('not.contain', 'Required')
     })
     it('check DOI validation has default selected Yes and select No', () => {
       FormsPage.clickFormOption(0)
@@ -114,10 +118,11 @@ describe('form builder tests', () => {
           data.ncrc.valueAdded,
           data.ncrc.labels,
           data.ncrc.topics,
+          data.ncrc.abstract,
         ]
 
         // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < 11; i++) {
+        for (let i = 0; i < 12; i++) {
           SubmissionFormPage.getFormOptionList(i).should(
             'contain',
             dataArray[i],

@@ -43,5 +43,6 @@
   "label": "Ready to evaluate",
   "topic": "modeling",
   "evaluationSummary": "Evaluation summary",
-  "peerReview": "Peer review"
+  "peerReview": "Peer review",
+  "abstract" : "Article description"
 }

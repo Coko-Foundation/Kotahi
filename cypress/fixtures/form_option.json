@@ -61,6 +61,7 @@
       "modeling": "modeling",
       "clinicalPresentation": "clinicalPresentation",
       "prognosticRiskFactors": "prognosticRiskFactors"
-    }
+    },
+    "abstract": "Abstract"
   }
 }

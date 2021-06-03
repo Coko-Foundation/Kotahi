@@ -59,6 +59,7 @@ const ARTICLE_DESCRIPTION_FIELD = 'submission.articleDescription'
 const DROPDOWN = 'placeholder'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
 const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
+const ABSTRACT_FIELD = 'submission.abstract'
 
 export const SubmissionFormPage = {
   getPageTitle() {
@@ -444,6 +445,12 @@ export const SubmissionFormPage = {
   },
   getAssigEditor(nth) {
     return cy.get(ASSIGN_EDITORS_DROPDOWN).eq(nth)
+  },
+  getAbstractField() {
+    return cy.getByDataTestId(ABSTRACT_FIELD)
+  },
+  fillInAbstract(abstract) {
+    this.getAbstractField().fillInput(abstract)
   },
 }
 export default SubmissionFormPage

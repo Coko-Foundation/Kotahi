@@ -382,16 +382,15 @@ describe('Manuscripts page tests', () => {
       SubmissionFormPage.getValidationErrorMessage('DOI is invalid')
     })
   })
-  context('video chat button', () => {
-    beforeEach(() => {
+
   context('Evaluation and summary page tests', () => {
     // this method is use to avoid script errors
     // eslint-disable-next-line handle-callback-err
-    Cypress.on('uncaught:exception', (err, runnable) => {
-      // returning false here prevents Cypress from
-      // failing the test
-      return false
-    })
+    // Cypress.on('uncaught:exception', (err, runnable) => {
+    //   // returning false here prevents Cypress from
+    //   // failing the test
+    //   return false
+    // })
     before(() => {
       // task to restore the database as per the  dumps/initialState.sql
       cy.task('restore', 'initialState')
@@ -402,46 +401,39 @@ describe('Manuscripts page tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
       })
+      cy.awaitDisappearSpinner()
       ManuscriptsPage.getTableHeader().should('be.visible')
-    })
-    it('check the video chat link, and if it returns 200', () => {
+    
+      ManuscriptsPage.getTableHeader().should('be.visible')
+      ManuscriptsPage.getEvaluationButton().should('not.exist')
+      ManuscriptsPage.clickSubmit()
+
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+
+      // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
-      // eslint-disable-next-line prettier/prettier
-      ManuscriptsPage.getLiveChatButton().invoke('attr', 'href').should('contain', '//8x8.vc/coko/')
-      ManuscriptsPage.getLiveChatButton()
-        .then(link => {
-        cy.request(link.prop('href')).its('status').should('eq', 200)
-        cy.awaitDisappearSpinner()
-        ManuscriptsPage.getTableHeader().should('be.visible')
-        ManuscriptsPage.getEvaluationButton().should('not.exist')
-        ManuscriptsPage.clickSubmit()
-
-        NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
-
-        // fill the submit form and submit it
-        // eslint-disable-next-line jest/valid-expect-in-promise
-        cy.fixture('submission_form_data').then(data => {
-          SubmissionFormPage.fillInArticleld(data.articleId)
-          SubmissionFormPage.fillInArticleUrl(data.doi)
-          SubmissionFormPage.fillInBioRxivArticleUrl(data.articleId)
-          SubmissionFormPage.fillInDescription(data.description)
-          SubmissionFormPage.fillInReview1(data.review1)
-          SubmissionFormPage.fillInReview1Creator(data.creator)
-          SubmissionFormPage.fillInReview1Date(data.review1Date)
-          SubmissionFormPage.fillInReview2(data.review2)
-          SubmissionFormPage.fillInReview2Creator(data.creator)
-          SubmissionFormPage.fillInReview2Date(data.review2Date)
-          SubmissionFormPage.fillInReview3(data.review3)
-          SubmissionFormPage.fillInReview3Creator(data.creator)
-          SubmissionFormPage.fillInReview3Date(data.review3Date)
-          SubmissionFormPage.fillInSummary(data.summary)
-          SubmissionFormPage.fillInSummaryCreator(data.creator)
-          SubmissionFormPage.fillInSummaryDate(data.summaryDate)
-          // eslint-disable-next-line
-          SubmissionFormPage.waitThreeSec()
-        })
+      cy.fixture('submission_form_data').then(data => {
+        SubmissionFormPage.fillInArticleld(data.articleId)
+        SubmissionFormPage.fillInArticleUrl(data.doi)
+        SubmissionFormPage.fillInBioRxivArticleUrl(data.articleId)
+        SubmissionFormPage.fillInDescription(data.description)
+        SubmissionFormPage.fillInReview1(data.review1)
+        SubmissionFormPage.fillInReview1Creator(data.creator)
+        SubmissionFormPage.fillInReview1Date(data.review1Date)
+        SubmissionFormPage.fillInReview2(data.review2)
+        SubmissionFormPage.fillInReview2Creator(data.creator)
+        SubmissionFormPage.fillInReview2Date(data.review2Date)
+        SubmissionFormPage.fillInReview3(data.review3)
+        SubmissionFormPage.fillInReview3Creator(data.creator)
+        SubmissionFormPage.fillInReview3Date(data.review3Date)
+        SubmissionFormPage.fillInSummary(data.summary)
+        SubmissionFormPage.fillInSummaryCreator(data.creator)
+        SubmissionFormPage.fillInSummaryDate(data.summaryDate)
+        // eslint-disable-next-line
+        SubmissionFormPage.waitThreeSec()
       })
     })
+
     beforeEach(() => {
       cy.url().then(url => {
         const regex = /\/(([\w*\d-]){30,})\//
@@ -540,5 +532,23 @@ describe('Manuscripts page tests', () => {
       })
     })
   })
+  context('video chat button', () => {
+    beforeEach(() => {
+      // login as admin
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('role_names').then(name => {
+        cy.login(name.role.admin, manuscripts)
+      })
+      ManuscriptsPage.getTableHeader().should('be.visible')
+    })
+    it('check the video chat link, and if it returns 200', () => {
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      // eslint-disable-next-line prettier/prettier
+      ManuscriptsPage.getLiveChatButton().invoke('attr', 'href').should('contain', '//8x8.vc/coko/')
+      ManuscriptsPage.getLiveChatButton()
+        .then(link => {
+          cy.request(link.prop('href')).its('status').should('eq', 200)
+        })
+    })
+  })
 })
-
