@@ -62,6 +62,7 @@ const publishToHypothesis = async manuscript => {
 
       return manuscript.submission[`review${reviewNumber}date`]
     })
+    .reverse()
 
   console.log('shouldCreateReviews')
   console.log(shouldCreateReviews)
@@ -123,7 +124,7 @@ const publishToHypothesis = async manuscript => {
 
   const requestURL = `https://api.hypothes.is/api/annotations`
 
-  const createPromises = shouldCreateReviews.map(propName => {
+  const createPromises = shouldCreateReviews.map((propName, index) => {
     const requestBody = {
       uri: manuscript.submission.biorxivURL,
       text: turndownService.turndown(manuscript.submission[propName]),
@@ -137,9 +138,13 @@ const publishToHypothesis = async manuscript => {
       requestBody.group = 'q5X6RWJ6'
     }
 
-    return axios.post(requestURL, requestBody, headers).then(response => ({
-      [propName]: response.data.id,
-    }))
+    return new Promise((resolve, reject) => {
+      setTimeout(async () => {
+        await axios.post(requestURL, requestBody, headers).then(response => resolve({
+          [propName]: response.data.id,
+        }))
+      }, 1000*60*index)
+    })
   })
 
   console.log('createPromises')
@@ -181,9 +186,9 @@ const publishToHypothesis = async manuscript => {
 
   console.log('updatePromises')
   console.log(updatePromises)
-  const createResults = await Promise.all(createPromises)
   const deleteResults = await Promise.all(deletePromises)
   const updateResults = await Promise.all(updatePromises)
+  const createResults = await Promise.all(createPromises)
 
   const newHypothesisEvaluationMap = [
     ...createResults,
