@@ -76,6 +76,7 @@ const Submit = ({
   versions = [],
   form,
   createNewVersion,
+  currentUser,
   toggleConfirming,
   confirming,
   parent,
@@ -95,14 +96,17 @@ const Submit = ({
     const { manuscript, label } = version
     const versionId = manuscript.id
 
+    const userCanEditManuscriptAndFormData =
+      version === currentVersion &&
+      (['new', 'revising'].includes(manuscript.status) ||
+        (currentUser.admin && manuscript.status !== 'rejected'))
+
     const editorSection = {
       content: (
         <EditorSection
           manuscript={manuscript}
           onChange={source => updateManuscript(versionId, { meta: { source } })}
-          readonly={
-            manuscript.status !== 'new' && manuscript.status !== 'revising'
-          }
+          readonly={!userCanEditManuscriptAndFormData}
         />
       ),
       key: `editor_${manuscript.id}`,
@@ -111,11 +115,7 @@ const Submit = ({
 
     let decisionSection
 
-    if (
-      ['new', 'revising', 'submitted', 'evaluated', 'published'].includes(
-        manuscript.status,
-      )
-    ) {
+    if (userCanEditManuscriptAndFormData) {
       Object.assign(submissionValues, JSON.parse(manuscript.submission))
 
       const versionValues = {
@@ -257,6 +257,9 @@ Submit.propTypes = {
     haspopup: PropTypes.string.isRequired, // bool as string
   }).isRequired,
   createNewVersion: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape({
+    admin: PropTypes.bool.isRequired,
+  }),
   toggleConfirming: PropTypes.func.isRequired,
   confirming: PropTypes.bool.isRequired,
   parent: PropTypes.shape({
@@ -276,6 +279,7 @@ Submit.propTypes = {
   updateManuscript: PropTypes.func.isRequired,
 }
 Submit.defaultProps = {
+  currentUser: { admin: false },
   parent: undefined,
 }
 

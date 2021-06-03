@@ -80,6 +80,7 @@ const SubmitPage = ({ match, history }) => {
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
 
+  const currentUser = data?.currentUser
   const manuscript = data?.manuscript
   const form = cleanForm(data?.formForPurpose?.structure)
 
@@ -170,6 +171,7 @@ const SubmitPage = ({ match, history }) => {
     <Submit
       confirming={confirming}
       createNewVersion={createNewVersion}
+      currentUser={currentUser}
       form={pruneEmpty(form)}
       match={match}
       onChange={handleChange}
