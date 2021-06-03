@@ -116,11 +116,6 @@ const User = ({
     history.replace(`${urlFrag}/admin/manuscripts?status=${status}`)
   }
 
-  const tooltipContent =
-    manuscript.submission.abstract.length > 1000
-      ? `${manuscript.submission.abstract.slice(0, 1000)}...`
-      : manuscript.submission.abstract
-
   return (
     <Row>
       {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
@@ -148,7 +143,14 @@ const User = ({
                 id="abstractToolTip"
                 place="right"
               />
-              <InfoIcon data-for="abstractToolTip" data-tip={tooltipContent}>
+              <InfoIcon
+                data-for="abstractToolTip"
+                data-tip={
+                  manuscript.submission.abstract.length > 1000
+                    ? `${manuscript.submission.abstract.slice(0, 1000)}...`
+                    : manuscript.submission.abstract
+                }
+              >
                 i
               </InfoIcon>
             </>
