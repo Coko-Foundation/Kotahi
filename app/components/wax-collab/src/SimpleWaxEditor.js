@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Wax, ComponentPlugin } from 'wax-prosemirror-core'
 import styled, { css } from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th } from '@pubsweet/ui-toolkit'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { DefaultSchema } from 'wax-prosemirror-utilities'
 import {
@@ -38,7 +38,14 @@ const waxConfig = {
       toolGroups: [
         {
           name: 'Annotations',
-          exclude: ['Code', 'StrikeThrough', 'Underline', 'SmallCaps'],
+          more: [
+            'Superscript',
+            'Subscript',
+            'SmallCaps',
+            'Underline',
+            'StrikeThrough',
+            'Code',
+          ],
         },
         {
           name: 'Lists',
@@ -140,16 +147,6 @@ const Menu = styled.div`
   top: -20px;
   user-select: none;
   z-index: 10;
-
-  button {
-    padding: ${grid(0.25)};
-  }
-
-  div {
-    align-items: center;
-    display: flex;
-    justify-content: center;
-  }
 `
 
 const TopBar = ComponentPlugin('topBar')

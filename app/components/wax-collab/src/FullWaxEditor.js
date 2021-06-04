@@ -43,17 +43,17 @@ const waxConfig = {
         },
         {
           name: 'Annotations',
-          exclude: ['SmallCaps'],
           more: [
             'Superscript',
             'Subscript',
-            // 'SmallCaps', // TODO: add once fixed
+            'SmallCaps',
             'Underline',
             'StrikeThrough',
             'Code',
           ],
         },
         'Lists',
+        'SpecialCharacters',
         // 'Notes', // TODO: enable once I figure out displaying the NotesContainer
         {
           name: 'Text',
@@ -67,7 +67,6 @@ const waxConfig = {
         },
         'Tables',
         'Images',
-        // 'SpecialCharacters', // TODO: enable once I can style the popup appropriately
       ],
     },
     {
@@ -165,16 +164,6 @@ const Menu = styled.div`
   top: -20px;
   user-select: none;
   z-index: 10;
-
-  button {
-    margin: ${grid(0.25)};
-    padding: ${grid(0.05)};
-  }
-
-  div {
-    align-items: center;
-    justify-content: center;
-  }
 `
 
 const InfoContainer = styled.div`

@@ -1,5 +1,6 @@
 /* eslint-disable import/extensions */
 import { css } from 'styled-components'
+import Color from 'color'
 import {
   Action,
   ActionGroup,
@@ -12,29 +13,29 @@ import {
   Menu,
   Logo,
 } from './elements'
-
 import brandConfig from '../brandConfig.json'
+import lightenBy from '../shared/lightenBy'
+
+const defaultInstanceColor = '#2fac66'
 
 const validateInstanceConfigColors = colorCode => {
-  const defaultInstanceColor = '#2fac66'
-  const hexaDecimalRegex = /^#[0-9A-F]{6}$/i
-  const shortHexaDecimalRegex = /^#([0-9A-F]{3}){1,2}$/i
-
-  if (colorCode.length <= 4) {
-    return colorCode.match(shortHexaDecimalRegex)
-      ? colorCode
-      : defaultInstanceColor
+  try {
+    Color(colorCode)
+    return colorCode
+  } catch (err) {
+    return defaultInstanceColor
   }
-
-  return colorCode.match(hexaDecimalRegex) ? colorCode : defaultInstanceColor
 }
+
+const colorPrimary = validateInstanceConfigColors(brandConfig.primaryColor)
+const colorSecondary = validateInstanceConfigColors(brandConfig.secondaryColor)
 
 const cokoTheme = {
   /* Colors */
   colorBackground: 'white',
   colorSecondaryBackground: '#f9fafb', // custom
-  colorPrimary: validateInstanceConfigColors(brandConfig.primaryColor),
-  colorSecondary: validateInstanceConfigColors(brandConfig.secondaryColor),
+  colorPrimary,
+  colorSecondary,
   colorFurniture: '#E8E8E8',
   colorBorder: '#AAA',
   colorBackgroundHue: '#f4f5f7',
@@ -116,9 +117,56 @@ const cokoTheme = {
     Wax: {
       MenuButton: css`
         color: #111;
+        margin: 2px;
+        padding: 1px;
 
         > svg {
           fill: #333;
+        }
+      `,
+      CharactersListComponent: css`
+        padding: 0;
+      `,
+      SpecialCharactersGroup: css`
+        padding: 0px;
+      `,
+      GroupTitle: css`
+        font-size: 85%;
+        letter-spacing: 2pt;
+        margin: 4px 12px;
+        padding: 0;
+        text-transform: uppercase;
+
+        :first-child {
+          margin-top: 0;
+        }
+      `,
+      SpecialCharacterButton: css`
+        align-items: center;
+        background-color: #eee;
+        border: none;
+        border-radius: 9px;
+        color: #333;
+        display: flex;
+        height: auto;
+        justify-content: center;
+        margin: 4px;
+        min-width: 1px;
+        padding: 0 4px 3px;
+        width: auto;
+
+        &:hover {
+          background-color: ${lightenBy('colorPrimary', 0.4)};
+        }
+
+        & span {
+          color: inherit;
+          display: block;
+          font-size: 18px;
+
+          &:hover {
+            color: inherit;
+          }
         }
       `,
     },
