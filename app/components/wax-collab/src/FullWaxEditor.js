@@ -53,8 +53,8 @@ const waxConfig = {
             'Code',
           ],
         },
-        'Lists',
         'SpecialCharacters',
+        'Lists',
         // 'Notes', // TODO: enable once I figure out displaying the NotesContainer
         {
           name: 'Text',
@@ -122,6 +122,10 @@ const Grid = styled.div`
 
   position: relative;
   z-index: 0;
+
+  :focus-within {
+    z-index: 10000;
+  }
 `
 
 const EditorDiv = styled.div`

@@ -39,18 +39,10 @@ const waxConfig = {
       toolGroups: [
         {
           name: 'Annotations',
-          more: [
-            'Superscript',
-            'Subscript',
-            'SmallCaps',
-            'Underline',
-            'StrikeThrough',
-            'Code',
-          ],
+          exclude: ['StrikeThrough', 'Code'],
         },
-        {
-          name: 'Lists',
-        },
+        'SpecialCharacters',
+        'Lists',
         {
           name: 'Text',
           exclude: [
@@ -110,6 +102,10 @@ const Grid = styled.div`
 
   position: relative;
   z-index: 0;
+
+  :focus-within {
+    z-index: 10000;
+  }
 `
 
 const EditorDiv = styled.div`
