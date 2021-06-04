@@ -19,18 +19,23 @@ describe('tooltip tests', () => {
     cy.awaitDisappearSpinner()
     ManuscriptsPage.clickSubmit()
     NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
-    // eslint-disable-next-line jest/valid-expect-in-promise
-    cy.fixture("submission_form_data").then(date => {
-      SubmissionFormPage.fillInAbstract(date.abstract)
-    })
-    Menu.clickManuscriptsAndAssertPageLoad()
-  })
 
-  it('check tooltip text and length to be less than 1000', () => {
+  })
+  it('check tooltip text', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture("submission_form_data").then(data => {
+      SubmissionFormPage.fillInAbstract(data.abstract)
+      Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getTooltip().should('contain', data.abstract)
-      ManuscriptsPage.getTooltip().should('have.length.lessThan', 1000)
+    })
+  })
+
+  it('check length for the tooltip text, to be less than 1000', () => {
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture("submission_form_data").then(data => {
+      SubmissionFormPage.fillInAbstract(data.abstractWithMoreThan1000Characters)
+      Menu.clickManuscriptsAndAssertPageLoad()
+      ManuscriptsPage.getTooltip().should('contain', "...").should('have.lengthOf.lessThan', 1004)
     })
   })
 
