@@ -1,6 +1,5 @@
 import styled from 'styled-components'
 import { Action } from '@pubsweet/ui'
-import ReactTooltip from 'react-tooltip'
 
 export {
   Row,
@@ -36,11 +35,6 @@ export const UserAction = styled(Action)`
   display: block;
   font-size: inherit;
   width: fit-content;
-`
-
-export const ReactTooltipStyled = styled(ReactTooltip)`
-  max-width: 70vw;
-  word-break: break-word;
 `
 
 export const InfoIcon = styled.div`

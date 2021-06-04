@@ -7,6 +7,9 @@ import { useMutation, useQuery, useApolloClient } from '@apollo/client'
 import config from 'config'
 import PropTypes from 'prop-types'
 import { Checkbox } from '@pubsweet/ui'
+import Tooltip from 'rc-tooltip'
+import 'rc-tooltip/assets/bootstrap_white.css'
+import './style.css'
 import { UserAvatar } from '../../component-avatar/src'
 import {
   Row,
@@ -19,7 +22,6 @@ import {
   StyledTopic,
   StyledAuthor,
   StyledTableLabel,
-  ReactTooltipStyled,
   InfoIcon,
   // SuccessStatus,
   // ErrorStatus,
@@ -138,21 +140,29 @@ const User = ({
                 manuscript.submission.articleDescription}
             </span>
             <>
-              <ReactTooltipStyled
-                effect="float"
-                id="abstractToolTip"
-                place="right"
-              />
-              <InfoIcon
-                data-for="abstractToolTip"
-                data-tip={
-                  manuscript.submission.abstract?.length > 1000
-                    ? `${manuscript.submission.abstract.slice(0, 1000)}...`
-                    : manuscript.submission.abstract
+              <Tooltip
+                overlay={
+                  <span>
+                    {manuscript.submission.abstract?.length > 1000
+                      ? `${manuscript.submission.abstract.slice(0, 1000)}...`
+                      : manuscript.submission.abstract}
+                  </span>
                 }
+                overlayInnerStyle={{
+                  backgroundColor: 'black',
+                  color: 'white',
+                  borderColor: 'black',
+                }}
+                overlayStyle={{
+                  width: '65vw',
+                  wordBreak: 'break-word',
+                  display: `${!manuscript.submission.abstract && 'none'}`,
+                }}
+                placement="bottomLeft"
+                trigger={['hover']}
               >
-                i
-              </InfoIcon>
+                <InfoIcon>i</InfoIcon>
+              </Tooltip>
             </>
           </StyledDescriptionWrapper>
         </Cell>
