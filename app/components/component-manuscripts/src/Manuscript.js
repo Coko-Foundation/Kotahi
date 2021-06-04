@@ -154,7 +154,7 @@ const User = ({
                   borderColor: 'black',
                 }}
                 overlayStyle={{
-                  width: '65vw',
+                  maxWidth: '65vw',
                   wordBreak: 'break-word',
                   display: `${!manuscript.submission.abstract && 'none'}`,
                 }}
