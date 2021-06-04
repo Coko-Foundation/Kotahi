@@ -3,7 +3,7 @@ import { useQuery } from '@apollo/client'
 import PropTypes from 'prop-types'
 
 import { Container } from '../shared'
-import query from '../component-submit/src/userManuscriptFormQuery'
+import query from './reviewQuery'
 
 import { Heading, ArticleEvaluation } from './style'
 

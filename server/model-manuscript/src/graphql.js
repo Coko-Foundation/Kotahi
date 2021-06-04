@@ -505,7 +505,7 @@ const resolvers = {
       //   manuscript.channelId,
       // )
 
-      if (!ctx.user.admin) {
+      if (ctx.user && !ctx.user.admin) {
         const manuscriptObj = { ...manuscript }
 
         manuscriptObj.reviews.forEach((review, index) => {
