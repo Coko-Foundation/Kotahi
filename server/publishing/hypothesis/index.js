@@ -143,7 +143,7 @@ const publishToHypothesis = async manuscript => {
         await axios.post(requestURL, requestBody, headers).then(response => resolve({
           [propName]: response.data.id,
         }))
-      }, 1000*60*index)
+      }, 3000*index)
     })
   })
 
