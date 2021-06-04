@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useEffect, useState } from 'react'
+import React, { useCallback, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { debounce } from 'lodash'
 import { Wax, WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
@@ -14,6 +14,7 @@ import {
   BottomInfoService,
   DisplayToolGroupService,
   EditorInfoToolGroupServices,
+  FindAndReplaceService,
   ImageService,
   ImageToolGroupService,
   InlineAnnotationsService,
@@ -33,6 +34,7 @@ import {
 import EditorElements from './EditorElements'
 
 const waxConfig = {
+  EnableTrackChangeService: false, // This line is needed by NoteService
   SchemaService: DefaultSchema,
   MenuService: [
     {
@@ -55,7 +57,6 @@ const waxConfig = {
         },
         'SpecialCharacters',
         'Lists',
-        // 'Notes', // TODO: enable once I figure out displaying the NotesContainer
         {
           name: 'Text',
           exclude: [
@@ -66,6 +67,7 @@ const waxConfig = {
             'SourceNote',
           ],
         },
+        'Notes',
         'Tables',
         'Images',
       ],
@@ -89,13 +91,14 @@ const waxConfig = {
     new BottomInfoService(),
     new DisplayToolGroupService(),
     new EditorInfoToolGroupServices(),
+    new FindAndReplaceService(), // Needed by NoteService
     new ImageService(),
     new ImageToolGroupService(),
     new InlineAnnotationsService(),
     new LinkService(),
     new ListsService(),
     new ListToolGroupService(),
-    // new MathService(),
+    // new MathService(), // TODO Enable once fixed
     new NoteService(),
     new NoteToolGroupService(),
     new SpecialCharactersService(),
@@ -181,12 +184,24 @@ const InfoContainer = styled.div`
 
 const NotesAreaContainer = styled.div`
   background: #fff;
-  display: flex;
-  flex-direction: row;
-  height: 100%;
-  outline: 3px solid red;
+  bottom: ${grid(-2)};
+  box-shadow: 0 ${grid(-0.3)} ${grid(0.5)} ${grid(-0.2)} gray;
+  height: 20vh;
   overflow-y: scroll;
-  position: absolute;
+  position: sticky;
+  width: 100%;
+
+  .ProseMirror {
+    display: inline;
+  }
+
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
+  ${EditorElements}
+`
+
+const ReadOnlyNotesAreaContainer = styled.div`
+  background: #fff;
+  border-top: 1px solid ${th('colorFurniture')};
   width: 100%;
 
   .ProseMirror {
@@ -201,9 +216,14 @@ const NotesContainer = styled.div`
   counter-reset: footnote-view;
   display: flex;
   flex-direction: column;
-  height: 100%;
-  padding-bottom: ${grid(4)};
-  width: 65%;
+  padding-bottom: 0;
+  width: 90%;
+`
+
+const Heading = styled.div`
+  color: ${th('colorPrimary')};
+  margin: 3px 7px;
+  text-transform: uppercase;
 `
 
 const getNotes = main => {
@@ -227,17 +247,7 @@ const WaxLayout = readonly => ({ editor }) => {
     view: { main },
   } = useContext(WaxContext)
 
-  const notes = main && getNotes(main)
-  const thereAreNotes = !!notes && !!notes.length
-  const [hasNotes, setHasNotes] = useState(thereAreNotes)
-
-  const delayedShowNotes = () =>
-    useCallback(
-      setTimeout(() => setHasNotes(thereAreNotes), 100),
-      [],
-    )
-
-  useEffect(() => {}, [delayedShowNotes])
+  const notes = (main && getNotes(main)) ?? []
 
   return (
     <div>
@@ -252,17 +262,25 @@ const WaxLayout = readonly => ({ editor }) => {
               <TopBar />
             </Menu>
             <EditorDiv className="wax-surface-scroll">{editor}</EditorDiv>
+            {notes.length > 0 && (
+              <NotesAreaContainer>
+                <Heading>Notes</Heading>
+                <NotesContainer id="notes-container">
+                  <NotesArea view={main} />
+                </NotesContainer>
+              </NotesAreaContainer>
+            )}
           </>
         )}
-        {/* TODO Enable once I figure out how to display the NotesContainer */}
-        {hasNotes && false && (
-          <NotesAreaContainer>
-            <NotesContainer id="notes-container">
-              <NotesArea view={main} />
-            </NotesContainer>
-          </NotesAreaContainer>
-        )}
       </Grid>
+      {readonly && notes.length > 0 && (
+        <ReadOnlyNotesAreaContainer>
+          <Heading>Notes</Heading>
+          <NotesContainer id="notes-container">
+            <NotesArea view={main} />
+          </NotesContainer>
+        </ReadOnlyNotesAreaContainer>
+      )}
       <WaxOverlays />
       <InfoContainer>
         <CounterInfo />
@@ -295,7 +313,7 @@ const FullWaxEditor = ({
   fileUpload,
   ...rest
 }) => {
-  const debounceChange = useCallback(debounce(onChange, 1000), [])
+  const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
     <div className={validationStatus}>
       <Wax
@@ -304,8 +322,8 @@ const FullWaxEditor = ({
         fileUpload={file => renderImage(file)}
         layout={WaxLayout(readonly)}
         onBlur={val => {
-          onChange(val)
-          onBlur(val)
+          onChange && onChange(val)
+          onBlur && onBlur(val)
         }}
         onChange={debounceChange}
         placeholder={placeholder}
