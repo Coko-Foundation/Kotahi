@@ -1,5 +1,6 @@
 import React, { useCallback, useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
+import { debounce } from 'lodash'
 import { Wax, WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
 import { DefaultSchema, DocumentHelpers } from 'wax-prosemirror-utilities'
 import styled, { css } from 'styled-components'
@@ -284,29 +285,41 @@ const FullWaxEditor = ({
   validationStatus,
   readonly,
   autoFocus,
+  onBlur,
+  onChange,
   placeholder,
   fileUpload,
   ...rest
-}) => (
-  <div className={validationStatus}>
-    <Wax
-      autoFocus={autoFocus}
-      config={waxConfig}
-      fileUpload={file => renderImage(file)}
-      layout={WaxLayout(readonly)}
-      placeholder={placeholder}
-      readonly={readonly}
-      value={value}
-      {...rest}
-    />
-  </div>
-)
+}) => {
+  const debounceChange = useCallback(debounce(onChange, 1000), [])
+  return (
+    <div className={validationStatus}>
+      <Wax
+        autoFocus={autoFocus}
+        config={waxConfig}
+        fileUpload={file => renderImage(file)}
+        layout={WaxLayout(readonly)}
+        onBlur={val => {
+          onChange(val)
+          onBlur(val)
+        }}
+        onChange={debounceChange}
+        placeholder={placeholder}
+        readonly={readonly}
+        value={value}
+        {...rest}
+      />
+    </div>
+  )
+}
 
 FullWaxEditor.propTypes = {
   value: PropTypes.string,
   validationStatus: PropTypes.string,
   readonly: PropTypes.bool,
   autoFocus: PropTypes.bool,
+  onBlur: PropTypes.func,
+  onChange: PropTypes.func,
   placeholder: PropTypes.string,
   fileUpload: PropTypes.func,
 }
@@ -316,6 +329,8 @@ FullWaxEditor.defaultProps = {
   validationStatus: undefined,
   readonly: false,
   autoFocus: false,
+  onBlur: () => {},
+  onChange: () => {},
   placeholder: '',
   fileUpload: () => {},
 }

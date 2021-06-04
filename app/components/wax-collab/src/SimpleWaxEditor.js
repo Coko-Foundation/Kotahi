@@ -1,7 +1,8 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Wax, ComponentPlugin } from 'wax-prosemirror-core'
 import styled, { css } from 'styled-components'
+import { debounce } from 'lodash'
 import { th } from '@pubsweet/ui-toolkit'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { DefaultSchema } from 'wax-prosemirror-utilities'
@@ -178,28 +179,40 @@ const SimpleWaxEditor = ({
   validationStatus,
   readonly,
   autoFocus,
+  onBlur,
+  onChange,
   placeholder,
   ...rest
-}) => (
-  <div className={validationStatus}>
-    <Wax
-      autoFocus={autoFocus}
-      config={waxConfig}
-      // fileUpload={file => renderImage(file)}
-      layout={WaxLayout(readonly)}
-      placeholder={placeholder}
-      readonly={readonly}
-      value={value}
-      {...rest}
-    />
-  </div>
-)
+}) => {
+  const debounceChange = useCallback(debounce(onChange, 1000), [])
+  return (
+    <div className={validationStatus}>
+      <Wax
+        autoFocus={autoFocus}
+        config={waxConfig}
+        // fileUpload={file => renderImage(file)}
+        layout={WaxLayout(readonly)}
+        onBlur={val => {
+          onChange(val)
+          onBlur(val)
+        }}
+        onChange={debounceChange}
+        placeholder={placeholder}
+        readonly={readonly}
+        value={value}
+        {...rest}
+      />
+    </div>
+  )
+}
 
 SimpleWaxEditor.propTypes = {
   value: PropTypes.string,
   validationStatus: PropTypes.string,
   readonly: PropTypes.bool,
   autoFocus: PropTypes.bool,
+  onBlur: PropTypes.func,
+  onChange: PropTypes.func,
   placeholder: PropTypes.string,
 }
 
@@ -208,6 +221,8 @@ SimpleWaxEditor.defaultProps = {
   validationStatus: undefined,
   readonly: false,
   autoFocus: false,
+  onBlur: () => {},
+  onChange: () => {},
   placeholder: '',
 }
 
