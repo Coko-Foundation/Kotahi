@@ -137,18 +137,16 @@ const publishToHypothesis = async manuscript => {
       }
       requestBody.group = 'q5X6RWJ6'
     }
-
-    return new Promise((resolve, reject) => {
-      setTimeout(async () => {
-        await axios.post(requestURL, requestBody, headers).then(response => resolve({
-          [propName]: response.data.id,
-        }))
-      }, 3000*index)
-    })
+    return { requestBody, propName }
   })
 
-  console.log('createPromises')
-  console.log(createPromises)
+  const createPromisesResponses = []
+
+  for(const { requestBody, propName } of createPromises) {
+      await axios.post(requestURL, requestBody, headers).then(response => {
+        createPromisesResponses.push({[propName]: response.data.id,})
+      })
+  }
 
   const deletePromises = shouldDeleteReviews.map(propName => {
     const publicationId = manuscript.evaluationsHypothesisMap[propName]
@@ -188,10 +186,9 @@ const publishToHypothesis = async manuscript => {
   console.log(updatePromises)
   const deleteResults = await Promise.all(deletePromises)
   const updateResults = await Promise.all(updatePromises)
-  const createResults = await Promise.all(createPromises)
 
   const newHypothesisEvaluationMap = [
-    ...createResults,
+    ...createPromisesResponses,
     ...deleteResults,
     ...updateResults,
   ].reduce((acc, curr) => {
