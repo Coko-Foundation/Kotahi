@@ -161,6 +161,7 @@ const User = ({
                 placement="bottomLeft"
                 trigger={['hover']}
                 getTooltipContainer={el => el}
+                destroyTooltipOnHide={{keepParent: false}}
               >
                 <InfoIcon>i</InfoIcon>
               </Tooltip>
