@@ -34,6 +34,7 @@ export const UserAction = styled(Action)`
   cursor: pointer;
   display: block;
   font-size: inherit;
+  opacity: ${({ isDisabled }) => (isDisabled ? '0.5' : '1')};
   width: fit-content;
 `
 

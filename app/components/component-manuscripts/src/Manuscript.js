@@ -1,7 +1,7 @@
 /* eslint-disable jsx-a11y/no-static-element-interactions */
 /* eslint-disable jsx-a11y/click-events-have-key-events */
 
-import React from 'react'
+import React, { useState } from 'react'
 import { useMutation, useQuery, useApolloClient } from '@apollo/client'
 // import { Action } from '@pubsweet/ui'
 import config from 'config'
@@ -67,6 +67,7 @@ const User = ({
   ...props
 }) => {
   const [publishManuscript] = useMutation(publishManuscriptMutation)
+  const [isPublishingBlocked, setIsPublishingBlocked] = useState(false)
 
   const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT, {
     update(cache, { data: { deleteManuscriptId } }) {
@@ -89,12 +90,18 @@ const User = ({
   const form = data?.formForPurpose?.structure
 
   const publishManuscriptHandler = async () => {
+    if (isPublishingBlocked) {
+      return
+    }
+
+    setIsPublishingBlocked(true)
+
     const areThereInvalidFields = await Promise.all(
       validateManuscript(manuscript.submission, form, client),
     )
 
     if (areThereInvalidFields.filter(Boolean).length === 0) {
-      publishManuscript({
+      await publishManuscript({
         variables: { id: manuscript.id },
         update: (cache, { dataTemp }) => {
           cache.modify({
@@ -105,6 +112,7 @@ const User = ({
           })
         },
       })
+      setIsPublishingBlocked(false)
     }
   }
 
@@ -141,6 +149,8 @@ const User = ({
             </span>
             <>
               <Tooltip
+                destroyTooltipOnHide={{ keepParent: false }}
+                getTooltipContainer={el => el}
                 overlay={
                   <span>
                     {manuscript.submission.abstract?.length > 1000
@@ -160,8 +170,6 @@ const User = ({
                 }}
                 placement="bottomLeft"
                 trigger={['hover']}
-                getTooltipContainer={el => el}
-                destroyTooltipOnHide={{keepParent: false}}
               >
                 <InfoIcon>i</InfoIcon>
               </Tooltip>
@@ -251,7 +259,12 @@ const User = ({
         </Action>
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
           manuscript.status === articleStatuses.evaluated && (
-            <Action onClick={publishManuscriptHandler}>Publish</Action>
+            <Action
+              isDisabled={isPublishingBlocked}
+              onClick={publishManuscriptHandler}
+            >
+              Publish
+            </Action>
           )}
       </LastCell>
     </Row>

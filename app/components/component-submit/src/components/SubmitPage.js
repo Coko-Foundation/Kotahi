@@ -50,6 +50,7 @@ let debouncers = {}
 
 const SubmitPage = ({ match, history }) => {
   const [confirming, setConfirming] = useState(false)
+  const [isPublishingBlocked, setIsPublishingBlocked] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -111,6 +112,12 @@ const SubmitPage = ({ match, history }) => {
   }
 
   const republish = async manuscriptId => {
+    if (isPublishingBlocked) {
+      return
+    }
+
+    setIsPublishingBlocked(true)
+
     const areThereInvalidFields = await Promise.all(
       validateManuscript(
         {
