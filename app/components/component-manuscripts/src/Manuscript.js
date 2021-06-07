@@ -160,6 +160,7 @@ const User = ({
                 }}
                 placement="bottomLeft"
                 trigger={['hover']}
+                getTooltipContainer={el => el}
               >
                 <InfoIcon>i</InfoIcon>
               </Tooltip>
