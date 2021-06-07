@@ -21,12 +21,20 @@ describe('tooltip tests', () => {
     NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
 
   })
+  it('check empty tooltip', () => {
+    Menu.clickManuscriptsAndAssertPageLoad()
+    ManuscriptsPage.getTooltipText().should('not.exist')
+    ManuscriptsPage.getTooltipIcon().should('be.visible').trigger('mouseover')
+    ManuscriptsPage.getTooltipText().invoke('text').should('eq', '')
+  })
   it('check tooltip text', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture("submission_form_data").then(data => {
       SubmissionFormPage.fillInAbstract(data.abstract)
       Menu.clickManuscriptsAndAssertPageLoad()
-      ManuscriptsPage.getTooltip().should('contain', data.abstract)
+      ManuscriptsPage.getTooltipText().should('not.exist')
+      ManuscriptsPage.getTooltipIcon().should('be.visible').trigger('mouseover')
+      ManuscriptsPage.getTooltipText().should('contain', data.abstract)
     })
   })
 
@@ -35,7 +43,9 @@ describe('tooltip tests', () => {
     cy.fixture("submission_form_data").then(data => {
       SubmissionFormPage.fillInAbstract(data.abstractWithMoreThan1000Characters)
       Menu.clickManuscriptsAndAssertPageLoad()
-      ManuscriptsPage.getTooltip().should('contain', "...").should('have.lengthOf.lessThan', 1004)
+      ManuscriptsPage.getTooltipText().should('not.exist')
+      ManuscriptsPage.getTooltipIcon().trigger('mouseover')
+      ManuscriptsPage.getTooltipText().should('contain', "...").should('have.lengthOf.lessThan', 1004)
     })
   })
 

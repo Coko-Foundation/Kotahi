@@ -27,7 +27,8 @@ const ARTICLE_CHECKBOX = '[class*=Table__Cell] > label > [type*=checkbox]'
 const SELECT_ALL_CHECKBOX = '[type=checkbox]'
 const NUMBER_OF_ARTICLES_SELECTED = 'style__SelectedManuscriptsNumber'
 const EDITOR_NAME_CELL = 'style__StyledAuthor'
-const TOOLTIP = '[class*=style__InfoIcon]'
+const TOOLTIP_ICON = 'style__InfoIcon'
+const TOOLTIP_TEXT = 'rc-tooltip-inner'
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -145,8 +146,11 @@ export const ManuscriptsPage = {
   getEditorName() {
     return cy.getByContainsClass(EDITOR_NAME_CELL)
   },
-  getTooltip() {
-    return cy.get(TOOLTIP).invoke('attr', 'data-tip')
+  getTooltipIcon() {
+    return cy.getByContainsClass(TOOLTIP_ICON)
+  },
+  getTooltipText() {
+    return cy.getByContainsClass(TOOLTIP_TEXT)
   },
 }
 export default ManuscriptsPage
