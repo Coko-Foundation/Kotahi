@@ -24,7 +24,7 @@ ENV PUBLIC_CLIENT_HOST $public_client_host
 ENV PUBLIC_CLIENT_PORT $public_client_port
 ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
 
-RUN apk add --no-cache git python make g++ bash tar
+RUN apk add --no-cache git python make g++ bash tar redis
 
 WORKDIR /home/node/app
 
