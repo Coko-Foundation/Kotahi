@@ -1,4 +1,5 @@
 {
+  "required": "Required",
   "elife": {
     "title": "Research Object Submission Form",
     "articleId": "Article ID",
@@ -19,8 +20,7 @@
     "summary": "Summary",
     "summaryCreator": "Summary creator",
     "summaryDate": "Summary date",
-    "creator": "Creator",
-    "required": "Required"
+    "creator": "Creator"
   },
   "ncrc": {
     "title": "NCRC Submission Form",
@@ -28,13 +28,29 @@
     "description": "Article Description",
     "ourTake": "Our take",
     "studyDesign": "Study design",
-    "studyPopulation": "Study population and setting",
     "mainFindings": "Summary of main findings",
     "studyStrengths": "Study strengths",
     "limitations": "Limitations",
     "valueAdded": "Value added",
     "labels": "Labels",
     "topics": "Topics",
+    "abstract": "Abstract",
+    "firstAuthor": "First Author",
+    "datePublished": "Date Published",
+    "studyPopulation": "Study population setting",
+    "keywords": "Keywords",
+    "journal": "Journal",
+    "editFinished": "Edit finished",
+    "reviewer": "Reviewer",
+    "editDate": "Edit date",
+    "finalTakeWordcount": "Final take wordcount",
+    "compendiumFeature": "Compendiun feature",
+    "reviewCreator": "Review creator",
+    "compendiumFeatureTypes": {
+      "no": "No",
+      "mediumLow": "Yes, Medium/Low Impact Article",
+      "high": "Yes, High Impact Article"
+    },
     "studyDesignTypes": {
       "caseSeries": "Case-series",
       "caseControl": "Case-control",
@@ -61,7 +77,6 @@
       "modeling": "modeling",
       "clinicalPresentation": "clinicalPresentation",
       "prognosticRiskFactors": "prognosticRiskFactors"
-    },
-    "abstract": "Abstract"
+    }
   }
 }
