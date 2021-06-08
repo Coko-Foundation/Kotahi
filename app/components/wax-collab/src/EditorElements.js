@@ -259,4 +259,106 @@ export default css`
   a {
     color: blue;
   }
+
+  /* == Math Nodes ======================================== */
+
+  .math-node {
+    cursor: auto;
+    font-family: 'Consolas', 'Ubuntu Mono', monospace;
+    font-size: 0.95em;
+    min-height: 1em;
+    min-width: 1em;
+
+    .ProseMirror {
+      background: #eee;
+      box-shadow: none;
+      color: rgb(132, 33, 162);
+      min-height: 100%;
+      padding: 0;
+    }
+  }
+
+  .math-node.empty-math .math-render::before {
+    color: red;
+    content: '(empty)';
+  }
+
+  .math-node .math-render.parse-error::before {
+    color: red;
+    content: '(math error)';
+    cursor: help;
+  }
+
+  /* -- Inline Math --------------------------------------- */
+
+  math-inline {
+    display: inline;
+    white-space: nowrap;
+  }
+
+  math-inline .math-render {
+    cursor: pointer;
+    display: inline-block;
+    font-size: 0.85em;
+  }
+
+  math-inline .math-src .ProseMirror {
+    display: inline;
+  }
+
+  math-inline .math-src::after,
+  math-inline .math-src::before {
+    color: #b0b0b0;
+    content: '$';
+  }
+
+  /* -- Block Math ---------------------------------------- */
+
+  math-display {
+    display: block;
+  }
+
+  math-display .math-render {
+    display: block;
+  }
+
+  math-display.ProseMirror-selectednode {
+    background-color: #eee;
+  }
+
+  math-display .math-src .ProseMirror {
+    display: block;
+    width: 100%;
+  }
+
+  math-display .math-src::after,
+  math-display .math-src::before {
+    color: #b0b0b0;
+    content: '$$';
+    text-align: left;
+  }
+
+  math-display .katex-display {
+    margin: 0;
+  }
+
+  /* -- Other Math ---------------------------------------- */
+
+  .math-node.ProseMirror-selectednode {
+    outline: none;
+  }
+
+  .math-node .math-src {
+    color: rgb(132, 33, 162);
+    display: none;
+    tab-size: 4;
+  }
+
+  .math-node.ProseMirror-selectednode .math-src {
+    display: flex;
+  }
+
+  .math-node.ProseMirror-selectednode .math-render {
+    display: none;
+  }
 `
