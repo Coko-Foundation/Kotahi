@@ -23,7 +23,10 @@ const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 const TABLE_ROW = 'Table__Row'
 const LABEL = 'style__StyledTableLabel'
 const ARTICLE_STATUS = '[class*=Badge__Status]'
-const ARTICLE_CHECKBOX = '[class*=Table__Cell] > label > [type*=checkbox]'
+
+const ARTICLE_CHECKBOX =
+  '[class*=style__StyledDescriptionWrapper] > label > [type*=checkbox]'
+
 const SELECT_ALL_CHECKBOX = '[type=checkbox]'
 const NUMBER_OF_ARTICLES_SELECTED = 'style__SelectedManuscriptsNumber'
 const EDITOR_NAME_CELL = 'style__StyledAuthor'
