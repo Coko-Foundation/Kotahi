@@ -1,3 +1,4 @@
+/* eslint-disable no-restricted-syntax, no-await-in-loop */
 const TurndownService = require('turndown')
 const axios = require('axios')
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
@@ -8,6 +9,8 @@ const headers = {
   },
 }
 
+const requestURL = `https://api.hypothes.is/api/annotations`
+
 const deletePublication = publicationId => {
   return axios.delete(
     `https://api.hypothes.is/api/annotations/${publicationId}`,
@@ -16,9 +19,6 @@ const deletePublication = publicationId => {
 }
 
 const publishToHypothesis = async manuscript => {
-  console.log('publish to hypothesis')
-  console.log('manuscript')
-  console.log(manuscript)
   const turndownService = new TurndownService({ bulletListMarker: '-' })
   turndownService.addRule('unorderedLists', {
     filter: ['ul'],
@@ -48,158 +48,123 @@ const publishToHypothesis = async manuscript => {
     },
   })
 
-  const shouldCreateReviews = Object.entries(manuscript.submission)
+  const fields = Object.entries(manuscript.submission)
     .filter(
       ([prop, value]) =>
         !Number.isNaN(Number(prop.split('review')[1])) &&
-        prop.includes('review') &&
+        prop.includes('review'),
+    )
+    .map(([prop]) => Number(prop.split('review')[1]))
+    .sort((a, b) => b - a)
+    .map(number => `review${number}`)
+
+  fields.push('summary')
+
+  const fieldsWithAction = fields
+    .map(propName => {
+      const value = manuscript.submission[propName]
+      let action = ''
+
+      if (
+        manuscript.evaluationsHypothesisMap[propName] &&
+        checkIsAbstractValueEmpty(value)
+      ) {
+        action = 'delete'
+      }
+
+      if (
         !checkIsAbstractValueEmpty(value) &&
-        !manuscript.evaluationsHypothesisMap[prop],
-    )
-    .map(([propName]) => propName)
-    .filter(propName => {
-      const reviewNumber = propName.split('review')[1]
-
-      return manuscript.submission[`review${reviewNumber}date`]
-    })
-    .reverse()
-
-  console.log('shouldCreateReviews')
-  console.log(shouldCreateReviews)
-
-  const shouldDeleteReviews = Object.entries(manuscript.submission)
-    .filter(
-      ([prop, value]) =>
-        !Number.isNaN(Number(prop.split('review')[1])) &&
-        prop.includes('review') &&
-        manuscript.evaluationsHypothesisMap[prop] &&
-        checkIsAbstractValueEmpty(value),
-    )
-    .map(([propName]) => propName)
-
-  console.log('shouldDeleteReviews')
-  console.log(shouldDeleteReviews)
-
-  const shouldUpdateReviews = Object.entries(manuscript.submission)
-    .filter(
-      ([prop, value]) =>
-        !Number.isNaN(Number(prop.split('review')[1])) &&
-        prop.includes('review') &&
-        manuscript.evaluationsHypothesisMap[prop] &&
-        !checkIsAbstractValueEmpty(value),
-    )
-    .map(([propName]) => propName)
-    .filter(propName => {
-      const reviewNumber = propName.split('review')[1]
-
-      return manuscript.submission[`review${reviewNumber}date`]
-    })
-
-  console.log('shouldUpdateReviews')
-  console.log(shouldUpdateReviews)
-
-  if (
-    !manuscript.evaluationsHypothesisMap.summary &&
-    !checkIsAbstractValueEmpty(manuscript.submission.summary)
-  ) {
-    // Create summary
-    shouldCreateReviews.push('summary')
-  }
-
-  if (
-    manuscript.evaluationsHypothesisMap.summary &&
-    checkIsAbstractValueEmpty(manuscript.submission.summary)
-  ) {
-    // Delete summary
-    shouldDeleteReviews.push('summary')
-  }
-
-  if (
-    manuscript.evaluationsHypothesisMap.summary &&
-    !checkIsAbstractValueEmpty(manuscript.submission.summary)
-  ) {
-    // Update summary
-    shouldUpdateReviews.push('summary')
-  }
-
-  const requestURL = `https://api.hypothes.is/api/annotations`
-
-  const createPromises = shouldCreateReviews.map((propName, index) => {
-    const requestBody = {
-      uri: manuscript.submission.biorxivURL,
-      text: turndownService.turndown(manuscript.submission[propName]),
-      tags: [propName === 'summary' ? 'evaluationSummary' : 'peerReview'],
-    }
-
-    if (process.env.NODE_ENV === 'production') {
-      requestBody.permissions = {
-        read: ['group:q5X6RWJ6'],
+        !manuscript.evaluationsHypothesisMap[propName]
+      ) {
+        action = 'create'
       }
-      requestBody.group = 'q5X6RWJ6'
-    }
-    return { requestBody, propName }
-  })
 
-  const createPromisesResponses = []
+      if (
+        manuscript.evaluationsHypothesisMap[propName] &&
+        !checkIsAbstractValueEmpty(value)
+      ) {
+        action = 'update'
+      }
 
-  for(const { requestBody, propName } of createPromises) {
-      await axios.post(requestURL, requestBody, headers).then(response => {
-        createPromisesResponses.push({[propName]: response.data.id,})
-      })
-  }
-
-  const deletePromises = shouldDeleteReviews.map(propName => {
-    const publicationId = manuscript.evaluationsHypothesisMap[propName]
-    return deletePublication(publicationId).then(res => {
       return {
-        [propName]: '',
+        propName,
+        value,
+        action,
       }
     })
-  })
+    .filter(field => field.action)
 
-  console.log('deletePromises')
-  console.log(deletePromises)
-
-  const updatePromises = shouldUpdateReviews.map(propName => {
-    const requestBody = {
-      uri: manuscript.submission.biorxivURL,
-      text: turndownService.turndown(manuscript.submission[propName]),
-      tags: [propName === 'summary' ? 'evaluationSummary' : 'peerReview'],
-    }
-
-    if (process.env.NODE_ENV === 'production') {
-      requestBody.permissions = {
-        read: ['group:q5X6RWJ6'],
+  const actions = {
+    create: propName => {
+      const requestBody = {
+        uri: manuscript.submission.biorxivURL,
+        text: turndownService.turndown(manuscript.submission[propName]),
+        tags: [propName === 'summary' ? 'evaluationSummary' : 'peerReview'],
       }
-      requestBody.group = 'q5X6RWJ6'
-    }
 
-    const publicationId = manuscript.evaluationsHypothesisMap[propName]
-    return axios
-      .patch(`${requestURL}/${publicationId}`, requestBody, headers)
-      .then(() => ({
-        [propName]: publicationId,
-      }))
+      if (process.env.NODE_ENV === 'production') {
+        requestBody.permissions = {
+          read: ['group:q5X6RWJ6'],
+        }
+        requestBody.group = 'q5X6RWJ6'
+      }
+
+      return () => {
+        return axios.post(requestURL, requestBody, headers).then(response => ({
+          [propName]: response.data.id,
+        }))
+      }
+    },
+    update: propName => {
+      const requestBody = {
+        uri: manuscript.submission.biorxivURL,
+        text: turndownService.turndown(manuscript.submission[propName]),
+        tags: [propName === 'summary' ? 'evaluationSummary' : 'peerReview'],
+      }
+
+      if (process.env.NODE_ENV === 'production') {
+        requestBody.permissions = {
+          read: ['group:q5X6RWJ6'],
+        }
+        requestBody.group = 'q5X6RWJ6'
+      }
+
+      return () => {
+        const publicationId = manuscript.evaluationsHypothesisMap[propName]
+
+        return axios
+          .patch(`${requestURL}/${publicationId}`, requestBody, headers)
+          .then(() => ({
+            [propName]: publicationId,
+          }))
+      }
+    },
+    delete: propName => {
+      const publicationId = manuscript.evaluationsHypothesisMap[propName]
+
+      return () => {
+        return deletePublication(publicationId).then(() => ({}))
+      }
+    },
+  }
+
+  const actionPromises = fieldsWithAction.map(field => {
+    return actions[field.action](field.propName)
   })
 
-  console.log('updatePromises')
-  console.log(updatePromises)
-  const deleteResults = await Promise.all(deletePromises)
-  const updateResults = await Promise.all(updatePromises)
+  const results = []
 
-  const newHypothesisEvaluationMap = [
-    ...createPromisesResponses,
-    ...deleteResults,
-    ...updateResults,
-  ].reduce((acc, curr) => {
+  for (const request of actionPromises) {
+    const result = await request()
+    results.push(result)
+  }
+
+  const newHypothesisEvaluationMap = results.reduce((acc, curr) => {
     return {
       ...acc,
       ...curr,
     }
   }, {})
-
-  console.log('newHypothesisEvaluationMap')
-  console.log(newHypothesisEvaluationMap)
 
   return newHypothesisEvaluationMap
 }
