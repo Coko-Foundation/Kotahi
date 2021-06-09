@@ -278,7 +278,6 @@ const Report = ({
       <SelectionLine>
         Show{' '}
         <select
-          defaultValue={reportTypes[0]}
           onChange={e => setReportType(e.target.value)}
           value={reportType}
         >
