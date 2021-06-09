@@ -13,7 +13,7 @@ import {
   LinkService,
   ListsService,
   ListToolGroupService,
-  // MathService,
+  MathService,
   NoteService,
   NoteToolGroupService,
   SpecialCharactersService,
@@ -22,6 +22,8 @@ import {
   TextToolGroupService,
 } from 'wax-prosemirror-services'
 import EditorElements from './EditorElements'
+
+import './katex/katex.css'
 
 const waxConfig = {
   SchemaService: DefaultSchema,
@@ -60,7 +62,7 @@ const waxConfig = {
     new LinkService(),
     new ListsService(),
     new ListToolGroupService(),
-    // new MathService(),
+    new MathService(),
     new NoteService(),
     new NoteToolGroupService(),
     new SpecialCharactersService(),

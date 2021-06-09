@@ -21,7 +21,7 @@ import {
   LinkService,
   ListsService,
   ListToolGroupService,
-  // MathService,
+  MathService,
   NoteService,
   NoteToolGroupService,
   SpecialCharactersService,
@@ -32,6 +32,8 @@ import {
   TextToolGroupService,
 } from 'wax-prosemirror-services'
 import EditorElements from './EditorElements'
+
+import './katex/katex.css'
 
 const waxConfig = {
   EnableTrackChangeService: false, // This line is needed by NoteService
@@ -98,7 +100,7 @@ const waxConfig = {
     new LinkService(),
     new ListsService(),
     new ListToolGroupService(),
-    // new MathService(), // TODO Enable once fixed
+    new MathService(),
     new NoteService(),
     new NoteToolGroupService(),
     new SpecialCharactersService(),
