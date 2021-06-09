@@ -27,13 +27,12 @@ const getBarColor = (
 }
 
 const someData = [
-  { name: '18-24', value: 31.47 },
-  { name: '25-29', value: 26.69 },
-  { name: '30-34', value: 15.69 },
-  { name: '35-39', value: 8.22 },
-  { name: '40-49', value: 8.63 },
-  { name: '50+', value: 2.63 },
-  { name: 'unknow', value: 6.67 },
+  { name: 'All manuscripts', value: 123 },
+  { name: 'Submitted', value: 103 },
+  { name: 'Editor assigned', value: 85 },
+  { name: 'Decision complete', value: 32 },
+  { name: 'Accepted', value: 21 },
+  { name: 'Published', value: 18 },
 ]
 
 const Container = styled.div`
