@@ -31,4 +31,8 @@ export const ArticleEvaluation = styled.div`
   & u {
     text-decoration: underline;
   }
+
+  & .small-caps {
+    font-variant: small-caps;
+  }
 `
