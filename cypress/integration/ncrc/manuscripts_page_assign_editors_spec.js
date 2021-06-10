@@ -26,27 +26,27 @@ describe('manuscripts page assign editors tests', () => {
     ManuscriptsPage.clickEvaluation()
     cy.url().should('contain', 'evaluation')
     cy.awaitDisappearSpinner()
-    SubmissionFormPage.getAssigEditor(0).should(
+    SubmissionFormPage.getAssignEditor(0).should(
       'contain',
       'Assign Senior Editor…',
     )
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
-      SubmissionFormPage.getAssigEditor(0).click()
+      SubmissionFormPage.getAssignEditor(0).click()
       SubmissionFormPage.selectDropdownOption(0)
       SubmissionFormPage.waitThreeSec()
-      SubmissionFormPage.getAssigEditor(0).should(
+      SubmissionFormPage.getAssignEditor(0).should(
         'contain',
         name.role.reviewers.reviewer3,
       )
-      SubmissionFormPage.getAssigEditor(1).should(
+      SubmissionFormPage.getAssignEditor(1).should(
         'contain',
         'Assign Handling Editor…',
       )
-      SubmissionFormPage.getAssigEditor(1).click()
+      SubmissionFormPage.getAssignEditor(1).click()
       SubmissionFormPage.selectDropdownOption(0)
       SubmissionFormPage.waitThreeSec()
-      SubmissionFormPage.getAssigEditor(1).should(
+      SubmissionFormPage.getAssignEditor(1).should(
         'contain',
         name.role.reviewers.reviewer3,
       )
@@ -56,7 +56,7 @@ describe('manuscripts page assign editors tests', () => {
   it('check editor name appears in table', () => {
     ManuscriptsPage.clickEvaluation()
     cy.awaitDisappearSpinner()
-    SubmissionFormPage.getAssigEditor(0).click()
+    SubmissionFormPage.getAssignEditor(0).click()
     SubmissionFormPage.selectDropdownOption(0)
     Menu.clickManuscriptsAndAssertPageLoad()
     // eslint-disable-next-line jest/valid-expect-in-promise
@@ -67,7 +67,7 @@ describe('manuscripts page assign editors tests', () => {
     })
     ManuscriptsPage.clickEvaluation()
     cy.awaitDisappearSpinner()
-    SubmissionFormPage.getAssigEditor(1).click()
+    SubmissionFormPage.getAssignEditor(1).click()
     SubmissionFormPage.selectDropdownOption(3)
     Menu.clickManuscriptsAndAssertPageLoad()
     // eslint-disable-next-line jest/valid-expect-in-promise

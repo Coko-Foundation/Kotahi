@@ -1,5 +1,6 @@
 /// <reference types="Cypress" />
 import { ManuscriptsPage } from './manuscripts-page'
+import { submit } from '../support/routes'
 
 /**
  * Page object representing the form which has
@@ -56,6 +57,12 @@ const SUMMARY_CREATOR_FIELD = 'submission.summarycreator'
 
 // specific to ncrc
 const ARTICLE_DESCRIPTION_FIELD = 'submission.articleDescription'
+const FIRST_AUTHOR_FIELD = 'submission.firstAuthor'
+const DATE_PUBLISHED_FIELD = 'submission.datePublished'
+const JOURNAL_FIELD = 'submission.journal'
+const REVIEWER_FIELD = 'submission.reviewer'
+const EDIT_DATE_FIELD = 'submission.editDate'
+const REVIEW_CREATOR_FIELD = 'submission.reviewCreator'
 const DROPDOWN = 'placeholder'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
 const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
@@ -229,6 +236,7 @@ export const SubmissionFormPage = {
   },
   clickSubmitResearchAndWaitPageLoad() {
     this.clickSubmitResearch()
+    cy.url().should('not.contain', submit)
     cy.awaitDisappearSpinner()
     ManuscriptsPage.getTableHeader().should('be.visible')
   },
@@ -240,6 +248,8 @@ export const SubmissionFormPage = {
   },
   clickSubmitManuscriptAndWaitPageLoad() {
     this.clickSubmitManuscript()
+    cy.url().should('not.contain', submit)
+    cy.awaitDisappearSpinner()
     ManuscriptsPage.getTableHeader().should('be.visible')
   },
   getValidationErrorMessage(error) {
@@ -386,7 +396,7 @@ export const SubmissionFormPage = {
     return this.getStudySettingField().find('p')
   },
   getMainFindingsField() {
-    return this.getWaxInputBox(2)
+    return this.getWaxInputBox(1)
   },
   fillInMainFindings(mainFindings) {
     this.getMainFindingsField()
@@ -397,7 +407,7 @@ export const SubmissionFormPage = {
     return this.getMainFindingsField().find('p')
   },
   getStudyStrengthsField() {
-    return this.getWaxInputBox(3)
+    return this.getWaxInputBox(2)
   },
   fillInStudyStrengths(studyStrengths) {
     this.getStudyStrengthsField()
@@ -408,7 +418,7 @@ export const SubmissionFormPage = {
     return this.getStudyStrengthsField().find('p')
   },
   getLimitationsField() {
-    return this.getWaxInputBox(4)
+    return this.getWaxInputBox(3)
   },
   fillInLimitations(limitations) {
     this.getLimitationsField()
@@ -419,7 +429,7 @@ export const SubmissionFormPage = {
     return this.getLimitationsField().find('p')
   },
   getValueAddedField() {
-    return this.getWaxInputBox(5)
+    return this.getWaxInputBox(4)
   },
   fillInValueAdded(valueAdded) {
     this.getValueAddedField().find(CONTENT_EDITABLE_VALUE).fillInput(valueAdded)
@@ -443,8 +453,44 @@ export const SubmissionFormPage = {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(3000)
   },
-  getAssigEditor(nth) {
+  getAssignEditor(nth) {
     return cy.get(ASSIGN_EDITORS_DROPDOWN).eq(nth)
+  },
+  getFirstAuthorField() {
+    return cy.getByDataTestId(FIRST_AUTHOR_FIELD)
+  },
+  fillInFirstAuthor(firstAuthor) {
+    this.getFirstAuthorField().fillInput(firstAuthor)
+  },
+  getDatePublishedField() {
+    return cy.getByDataTestId(DATE_PUBLISHED_FIELD)
+  },
+  fillInDatePublished(datePublished) {
+    this.getDatePublishedField().fillInput(datePublished)
+  },
+  getJournalField() {
+    return cy.getByDataTestId(JOURNAL_FIELD)
+  },
+  fillInJournal(journal) {
+    this.getJournalField().fillInput(journal)
+  },
+  getReviewerField() {
+    return cy.getByDataTestId(REVIEWER_FIELD)
+  },
+  fillInReviewer(reviewer) {
+    this.getReviewerField().fillInput(reviewer)
+  },
+  getEditDateField() {
+    return cy.getByDataTestId(EDIT_DATE_FIELD)
+  },
+  fillInEditDate(editDate) {
+    this.getEditDateField().fillInput(editDate)
+  },
+  getReviewCreatorField() {
+    return cy.getByDataTestId(REVIEW_CREATOR_FIELD)
+  },
+  fillInReviewCreator(reviewCreator) {
+    this.getReviewCreatorField().fillInput(reviewCreator)
   },
   getAbstractField() {
     return cy.getByDataTestId(ABSTRACT_FIELD)

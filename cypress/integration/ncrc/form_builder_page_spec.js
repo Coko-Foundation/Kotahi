@@ -18,6 +18,7 @@ describe('form builder tests', () => {
       })
       FormsPage.verifyPageLoaded()
     })
+
     it('check form entries are correct', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
@@ -54,6 +55,7 @@ describe('form builder tests', () => {
         }
       })
     })
+
     it('check form field type & assert field is mandatory', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
@@ -242,11 +244,13 @@ describe('form builder tests', () => {
         }
       })
     })
+
     it('check edit finished dropdown options', () => {
       SubmissionFormPage.clickElementFromFormOptionList(16)
       SubmissionFormPage.getDropdownOption(0).should('contain', 'True')
       SubmissionFormPage.getDropdownOption(1).should('contain', 'False')
     })
+
     it('check compendium feature dropdown options', () => {
       SubmissionFormPage.clickElementFromFormOptionList(20)
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -265,6 +269,7 @@ describe('form builder tests', () => {
         )
       })
     })
+
     it('check label dropdown options', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
@@ -285,6 +290,7 @@ describe('form builder tests', () => {
         }
       })
     })
+
     it('check topic checkbox options', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {

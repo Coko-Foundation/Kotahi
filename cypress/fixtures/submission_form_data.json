@@ -42,6 +42,8 @@
   "valueAdded": "This is the value added",
   "label": "Ready to evaluate",
   "topic": "modeling",
+  "journal": "This is the journal",
+  "date": "01/01/2001",
   "evaluationSummary": "Evaluation summary",
   "peerReview": "Peer review",
   "abstract" : "Article description",
