@@ -358,7 +358,7 @@
       "title": "Compendium feature",
       "id": "3d21cd7c-5264-48a5-b19a-792f9191bb99",
       "component": "Select",
-      "name": "submission.wordcount",
+      "name": "submission.compendiumFeature",
       "options": [
         {
           "label": "No",
