@@ -157,7 +157,7 @@ describe('Form builder page tests', () => {
         for (let i = 0; i < 4; i++) {
           SubmissionFormPage.getFormOptionList(i).should(
             'contain',
-            data.elife.required,
+            data.required,
           )
         }
       })
