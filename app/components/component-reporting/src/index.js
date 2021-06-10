@@ -4,6 +4,7 @@ import SparkBar from './SparkBar'
 import DateRangePicker from './DateRangePicker'
 import Report from './Report'
 import ConcentricStepsChart from './ConcentricStepsChart'
+import DurationsChart from './DurationsChart'
 import CardCollection, { Card } from './CardCollection'
 
 export {
@@ -13,6 +14,7 @@ export {
   SparkBar,
   DateRangePicker,
   ConcentricStepsChart,
+  DurationsChart,
   CardCollection,
   Card,
 }
