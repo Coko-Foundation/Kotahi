@@ -173,3 +173,21 @@ export const GET_MANUSCRIPTS = gql`
     }
   }
 `
+export const IMPORT_MANUSCRIPTS = gql`
+  mutation {
+    importManuscripts {
+      totalCount
+      manuscripts {
+        id
+        submission
+        created
+        updated
+        status
+        meta {
+          manuscriptId
+          title
+        }
+      }
+    }
+  }
+`

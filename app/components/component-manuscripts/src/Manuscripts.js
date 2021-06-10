@@ -16,9 +16,14 @@ import {
   Pagination,
   SelectAllField,
   SelectedManuscriptsNumber,
+  StyledButton,
 } from './style'
 import { HeadingWithAction } from '../../shared'
-import { GET_MANUSCRIPTS, DELETE_MANUSCRIPTS } from '../../../queries'
+import {
+  GET_MANUSCRIPTS,
+  DELETE_MANUSCRIPTS,
+  IMPORT_MANUSCRIPTS,
+} from '../../../queries'
 import getQueryStringByName from '../../../shared/getQueryStringByName'
 import { PaginationContainerShadowed } from '../../shared/Pagination'
 import { articleStatuses } from '../../../globals'
@@ -151,6 +156,8 @@ const Manuscripts = ({ history, ...props }) => {
     fetchPolicy: 'network-only',
   })
 
+  const [importManuscripts] = useMutation(IMPORT_MANUSCRIPTS)
+
   const [deleteManuscripts] = useMutation(DELETE_MANUSCRIPTS, {
     // eslint-disable-next-line no-shadow
     update(cache, { data: { selectedNewManuscripts } }) {
@@ -183,12 +190,17 @@ const Manuscripts = ({ history, ...props }) => {
       {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
         <HeadingWithAction>
           <Heading>Manuscripts</Heading>
-          <Button
-            onClick={() => history.push(`${urlFrag}/newSubmission`)}
-            primary
-          >
-            ＋ New submission
-          </Button>
+          <div>
+            <StyledButton
+              onClick={() => history.push(`${urlFrag}/newSubmission`)}
+              primary
+            >
+              ＋ New submission
+            </StyledButton>
+            <StyledButton onClick={importManuscripts} primary>
+              Refresh
+            </StyledButton>
+          </div>
         </HeadingWithAction>
       )}
 

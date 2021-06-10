@@ -11,6 +11,7 @@ const {
 } = require('../../publishing/hypothesis')
 
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
+const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
 
 const ManuscriptResolvers = ({ isVersion }) => {
   const resolvers = {
@@ -164,6 +165,11 @@ const resolvers = {
 
       manuscript.manuscriptVersions = []
       return manuscript
+    },
+    async importManuscripts(_, props, ctx) {
+      const manuscripts = await importArticlesFromBiorxiv(ctx)
+
+      return manuscripts
     },
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
@@ -332,6 +338,7 @@ const resolvers = {
 
       return reviewerTeam.$query().eager('members.[user]')
     },
+
     async publishManuscript(_, { id }, ctx) {
       let manuscript = await ctx.models.Manuscript.query().findById(id)
 
@@ -339,9 +346,6 @@ const resolvers = {
         if (manuscript.evaluationsHypothesisMap === null) {
           manuscript.evaluationsHypothesisMap = {}
         }
-
-        console.log('manuscript.evaluationsHypothesisMap')
-        console.log(manuscript.evaluationsHypothesisMap)
 
         const evaluationValues = Object.entries(manuscript.submission)
           .filter(
@@ -609,6 +613,7 @@ const resolvers = {
       }
 
       const manuscripts = await query
+
       return {
         totalCount,
         manuscripts,
@@ -687,6 +692,7 @@ const typeDefs = `
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): Manuscript
     createNewVersion(id: ID!): Manuscript
+    importManuscripts: PaginatedManuscripts
   }
 
   type Manuscript implements Object {

@@ -1,5 +1,6 @@
 import styled from 'styled-components'
-import { Action } from '@pubsweet/ui'
+import { Button, Action } from '@pubsweet/ui'
+import ReactTooltip from 'rc-tooltip'
 
 export {
   Row,
@@ -30,12 +31,20 @@ export {
 // TODO: Extract common above
 // Specific
 
+export const StyledButton = styled(Button)`
+  margin: 0 20px;
+`
+
 export const UserAction = styled(Action)`
   cursor: pointer;
   display: block;
   font-size: inherit;
   opacity: ${({ isDisabled }) => (isDisabled ? '0.5' : '1')};
   width: fit-content;
+`
+
+export const ReactTooltipStyled = styled(ReactTooltip)`
+  max-width: 80vw;
 `
 
 export const InfoIcon = styled.div`

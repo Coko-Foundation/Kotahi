@@ -292,7 +292,7 @@ User.propTypes = {
     }).isRequired,
     email: PropTypes.string,
     username: PropTypes.string.isRequired,
-  }).isRequired,
+  }),
   toggleNewManuscriptCheck: PropTypes.func.isRequired,
   selectedNewManuscripts: PropTypes.arrayOf(PropTypes.object).isRequired,
   setSelectedStatus: PropTypes.func.isRequired,
@@ -301,6 +301,7 @@ User.propTypes = {
 }
 User.defaultProps = {
   history: undefined,
+  submitter: {},
 }
 
 export default User
