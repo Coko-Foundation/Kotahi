@@ -33,6 +33,7 @@ const suggestionsText = (source, property) => {
   if (source && source[property]) {
     return source[property]
   }
+
   return 'none'
 }
 

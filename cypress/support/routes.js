@@ -6,3 +6,11 @@ export const users = '/kotahi/admin/users'
 export const profile = '/kotahi/profile'
 export const submit = '/submit'
 export const evaluate = '/evaluate'
+
+export function evaluationResultUrl(id, int) {
+  return `/versions/${id}/article-evaluation-result/${int}`
+}
+
+export function evaluationSummaryUrl(id) {
+  return `/versions/${id}/article-evaluation-summary`
+}

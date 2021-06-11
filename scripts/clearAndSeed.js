@@ -43,7 +43,9 @@ const seed = async dumpSql => {
   while (!ready) {
     // eslint-disable-next-line
     const result = await db.raw(`set search_path to 'public';`)
+    // eslint-disable-next-line global-require
     const { User } = require('@pubsweet/models')
+
     try {
       // eslint-disable-next-line
       const users = await User.query()
@@ -53,6 +55,7 @@ const seed = async dumpSql => {
       console.log(e)
     }
   }
+
   return true
 }
 

@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { NoteEditor } from 'xpub-edit'
 // import { cloneDeep, omit } from 'lodash'
 import { Field, ErrorMessage } from 'formik'
 import {
@@ -14,7 +13,7 @@ import {
 import { JournalContext } from '../../../../xpub-journal/src'
 import { required } from '../../../../xpub-validators/src'
 import { FilesUpload, SectionContent } from '../../../../shared'
-
+import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 import { reviewWithComment } from '../review/util'
 
 import {
@@ -96,10 +95,7 @@ const NoteInput = ({
     /> */
     }
 
-    <NoteEditor
-      data-testid="decisionComment"
-      debounceDelay={300}
-      onBlur={() => setFieldTouched('decisionComment')}
+    <SimpleWaxEditor
       onChange={value => {
         setFieldValue('decisionComment', { content: value })
         updateReview({

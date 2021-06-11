@@ -15,12 +15,12 @@ ARG public_client_port
 
 ENV INSTANCE_NAME $instance_name
 ENV NODE_ENV "production"
-ENV SERVER_PROTOCOL "http"
-ENV SERVER_HOST "localhost"
-ENV SERVER_PORT "3000"
-ENV CLIENT_PROTOCOL "http"
-ENV CLIENT_HOST "0.0.0.0"
-ENV CLIENT_PORT "4000"
+ENV SERVER_PROTOCOL $server_protocol
+ENV SERVER_HOST $server_host
+ENV SERVER_PORT $server_port
+ENV CLIENT_PROTOCOL $client_protocol
+ENV CLIENT_HOST $client_host
+ENV CLIENT_PORT $client_port
 ENV PUBLIC_CLIENT_HOST $public_client_host
 ENV PUBLIC_CLIENT_PORT $public_client_port
 ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
@@ -59,7 +59,6 @@ COPY --chown=node:node ./scripts ./scripts
 COPY --chown=node:node ./server ./server
 COPY --chown=node:node ./app/storage ./app/storage
 COPY --chown=node:node ./startServer.js .
-COPY --chown=node:node ./google_sheets_credentials.json .
 COPY --chown=node:node ./profiles ./profiles
 
 COPY --from=build /home/node/app/_build/assets ./_build

@@ -50,6 +50,7 @@ const LinksInput = ({
     set(data, event.target?.name, event.target?.value)
     onChange(get(data, name))
   }
+
   return (
     <ul>
       <UnbulletedList>
@@ -71,6 +72,7 @@ const LinksInput = ({
           // eslint-disable-next-line react/no-array-index-key
           <li key={`link-${index}`}>
             <Spacing>
+              {/* eslint-disable-next-line jsx-a11y/anchor-is-valid */}
               <Link>
                 Link:&nbsp;
                 {value.length > 1 && (
@@ -101,6 +103,7 @@ const LinksInput = ({
     </ul>
   )
 }
+
 const LinksInputFieldArray = ({ onChange, name, value }) => (
   <FieldArray name={name}>
     {({ form, remove, push }) => (

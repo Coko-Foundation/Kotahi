@@ -28,6 +28,9 @@ export const FormsPage = {
   clickFormOption(nth) {
     this.getFormOptionList().eq(nth).click({ force: true })
   },
+  clickFormOptionWithText(text) {
+    this.getFormOptionList().contains(text).click({ force: true })
+  },
   getFormBuilderElementName(nth) {
     return cy.get(FORM_OPTION_LIST).eq(nth)
   },

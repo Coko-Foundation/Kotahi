@@ -1,11 +1,20 @@
 import Accordion from '@pubsweet/ui/src/molecules/Accordion'
 import React, { useContext, useState } from 'react'
+import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
-import { Container, Placeholder, VisualAbstract } from './style'
-import Wax from '../../wax-collab/src/Editoria'
+import FullWaxEditor from '../../wax-collab/src/FullWaxEditor'
+import {
+  Container,
+  Placeholder,
+  VisualAbstract,
+  ReviewWrapper,
+  ReviewLink,
+} from './style'
+import { ArticleEvaluation } from '../../component-evaluation-result/style'
 
 import {
   Spinner,
@@ -18,6 +27,18 @@ import {
   Pagination,
 } from '../../shared'
 import { PaginationContainer } from '../../shared/Pagination'
+
+const ManuscriptBox = styled.div`
+  border: 1px solid ${th('colorBorder')};
+  border-radius: ${th('borderRadius')};
+  margin-bottom: ${grid(0.5)};
+`
+
+const Subheading = styled.h3`
+  font-size: ${th('fontSizeHeading6')};
+  font-weight: bold;
+  margin-top: ${grid(2.0)};
+`
 
 const Frontpage = ({ history, ...props }) => {
   const [sortName] = useState('created')
@@ -48,14 +69,49 @@ const Frontpage = ({ history, ...props }) => {
 
   const { totalCount } = data.publishedManuscripts
 
-  const frontpage = (data.publishedManuscripts?.manuscripts || []).map(m => {
+  const publishedManuscripts = (
+    data.publishedManuscripts?.manuscripts || []
+  ).map(m => {
     const visualAbstract = m.files?.find(f => f.fileType === 'visualAbstract')
     return {
       ...m,
       visualAbstract: visualAbstract?.url,
       submission: JSON.parse(m.submission),
+      evaluationsHypothesisMap: JSON.parse(m.evaluationsHypothesisMap),
     }
   })
+
+  const reviewTitle = (reviewKey, manuscriptId) => {
+    if (reviewKey.includes('review')) {
+      return (
+        <>
+          <div>
+            Review #{reviewKey.split('review')[1]}
+            <ReviewLink
+              href={`/versions/${manuscriptId}/article-evaluation-result/${
+                reviewKey.split('review')[1]
+              }`}
+            >
+              &#128279;
+            </ReviewLink>
+          </div>
+        </>
+      )
+    }
+
+    return (
+      <>
+        <div>
+          Evaluation Summary
+          <ReviewLink
+            href={`/versions/${manuscriptId}/article-evaluation-summary`}
+          >
+            &#128279;
+          </ReviewLink>
+        </div>
+      </>
+    )
+  }
 
   return (
     <Container>
@@ -70,28 +126,70 @@ const Frontpage = ({ history, ...props }) => {
         totalCount={totalCount}
       />
 
-      {frontpage.length > 0 ? (
-        frontpage.map(manuscript => (
+      {publishedManuscripts.length > 0 ? (
+        publishedManuscripts.map((manuscript, index) => (
           <SectionContent key={`manuscript-${manuscript.id}`}>
-            <SectionHeader>
-              <Title>{manuscript.meta.title}</Title>
-            </SectionHeader>
+            {!['elife'].includes(process.env.INSTANCE_NAME) && (
+              <SectionHeader>
+                <Title>{manuscript.meta.title}</Title>
+              </SectionHeader>
+            )}
+            {['elife'].includes(process.env.INSTANCE_NAME) && (
+              <>
+                <SectionHeader>
+                  <Title>{manuscript.submission.description}</Title>
+                </SectionHeader>
+                {publishedManuscripts
+                  .map(({ submission, evaluationsHypothesisMap }) => {
+                    if (Object.keys(evaluationsHypothesisMap).length > 0) {
+                      return Object.keys(evaluationsHypothesisMap).map(key => {
+                        return { [key]: submission[key] }
+                      })
+                    }
+
+                    return null
+                  })
+                  .filter(Boolean)
+                  [index].map(review => {
+                    const reviewKey = Object.keys(review)[0]
+                    const reviewValue = Object.values(review)[0]
+                    return (
+                      reviewValue && (
+                        <Accordion
+                          key={`${reviewKey}-${manuscript.id}`}
+                          label={reviewTitle(reviewKey, manuscript.id)}
+                        >
+                          <ReviewWrapper>
+                            <ArticleEvaluation
+                              dangerouslySetInnerHTML={(() => {
+                                return { __html: reviewValue }
+                              })()}
+                            />
+                          </ReviewWrapper>
+                        </Accordion>
+                      )
+                    )
+                  })}
+              </>
+            )}
             <SectionRow>
               {manuscript.submission?.abstract && (
-                <h1>Abstract: {manuscript.submission?.abstract}</h1>
+                <Subheading>
+                  Abstract: {manuscript.submission?.abstract}
+                </Subheading>
               )}
               {manuscript.visualAbstract && (
-                <div>
-                  <h1>Visual abstract</h1>
+                <>
+                  <Subheading>Visual abstract</Subheading>
                   <VisualAbstract
                     alt="Visual abstract"
                     src={manuscript.visualAbstract}
                   />
-                </div>
+                </>
               )}
 
               {manuscript.files.length > 0 && (
-                <div>
+                <>
                   {manuscript.files.map(
                     file =>
                       skipXSweet(file) &&
@@ -113,28 +211,34 @@ const Frontpage = ({ history, ...props }) => {
                           key={`file-${file.id}`}
                           label="View Manuscript Text"
                         >
-                          <Wax content={manuscript.meta.source} readonly />
+                          <ManuscriptBox>
+                            <FullWaxEditor
+                              readonly
+                              value={manuscript.meta.source}
+                            />
+                          </ManuscriptBox>
                         </Accordion>
                       ),
                   )}
-                </div>
+                </>
               )}
 
-              {manuscript.submission?.links && (
-                <div>
-                  <h1>Submitted research objects</h1>
-                  {manuscript.submission?.links?.map(link => (
-                    <a
-                      href={link.url}
-                      key={`url-${link.url}`}
-                      rel="noopener noreferrer"
-                      target="_blank"
-                    >
-                      {link.url}
-                    </a>
-                  ))}
-                </div>
-              )}
+              {manuscript.submission?.links &&
+                manuscript.submission.links.length > 0 && (
+                  <>
+                    <Subheading>Submitted research objects</Subheading>
+                    {manuscript.submission?.links?.map(link => (
+                      <a
+                        href={link.url}
+                        key={`url-${link.url}`}
+                        rel="noopener noreferrer"
+                        target="_blank"
+                      >
+                        {link.url}
+                      </a>
+                    ))}
+                  </>
+                )}
             </SectionRow>
           </SectionContent>
         ))

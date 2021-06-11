@@ -11,5 +11,4 @@ module.exports = [
   // include other packages when this repo is mounted in a workspace
   // /components\/client\/[^/\\]+\/(?!node_modules)/,
   // /packages\/[^/\\]+\/(?!node_modules)/,
-  /node_modules\/xpub-edit/,
 ]

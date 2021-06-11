@@ -1,9 +1,11 @@
 import React from 'react'
+import PropTypes from 'prop-types'
 import { cloneDeep, get } from 'lodash'
 import { FieldArray } from 'formik'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
 import { useMutation, gql } from '@apollo/client'
+
 import UploadingFile from './UploadingFile'
 import { Dropzone } from './Dropzone'
 import { Icon } from './Icon'
@@ -11,28 +13,29 @@ import theme from '../../theme'
 
 const Root = styled.div`
   border: 1px dashed ${th('colorBorder')};
-  height: ${grid(8)};
   border-radius: ${th('borderRadius')};
-  text-align: center;
+  height: ${grid(8)};
   line-height: ${grid(8)};
+  text-align: center;
 `
 
 const Files = styled.div`
-  margin-top: ${grid(2)};
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
   grid-gap: ${grid(2)};
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  margin-top: ${grid(2)};
 `
 
 const Message = styled.div`
-  display: flex;
-  width: 100%;
   align-items: center;
+  color: ${props => (props.disabled ? th('colorTextPlaceholder') : 'inherit')};
+  display: flex;
   justify-content: center;
+  width: 100%;
+
   svg {
     margin-left: ${grid(1)};
   }
-  color: ${props => (props.disabled ? th('colorTextPlaceholder') : 'inherit')};
 `
 
 const createFileMutation = gql`
@@ -74,16 +77,18 @@ const DropzoneAndList = ({
     .map((file, index) => {
       // This is so that we preserve the location of the file in the top-level
       // files array (needed for deletion).
+      /* eslint-disable-next-line no-param-reassign */
       file.originalIndex = index
       return file
     })
     .filter(val => (fileType ? val.fileType === fileType : true))
     .map(val => {
+      // eslint-disable-next-line no-param-reassign
       val.name = val.filename
       return val
     })
 
-  const disabled = !multiple && files.length
+  const disabled = !multiple && !!files.length
 
   return (
     <>
@@ -91,8 +96,8 @@ const DropzoneAndList = ({
         accept={accept}
         disabled={disabled}
         multiple={multiple}
-        onDrop={async files => {
-          Array.from(files).forEach(async file => {
+        onDrop={async dropFiles => {
+          Array.from(dropFiles).forEach(async file => {
             const data = await createFile(file)
             push(data.createFile)
           })
@@ -131,6 +136,29 @@ const DropzoneAndList = ({
     </>
   )
 }
+
+DropzoneAndList.propTypes = {
+  form: PropTypes.shape({
+    values: PropTypes.shape({}).isRequired,
+    setFieldValue: PropTypes.func.isRequired,
+  }).isRequired,
+  push: PropTypes.func.isRequired,
+  insert: PropTypes.func.isRequired,
+  remove: PropTypes.func.isRequired,
+  createFile: PropTypes.func.isRequired,
+  deleteFile: PropTypes.func.isRequired,
+  fileType: PropTypes.string,
+  fieldName: PropTypes.string.isRequired,
+  multiple: PropTypes.bool,
+  accept: PropTypes.string,
+}
+
+DropzoneAndList.defaultProps = {
+  fileType: null,
+  multiple: true,
+  accept: undefined,
+}
+
 const FilesUpload = ({
   fileType,
   fieldName = 'files',
@@ -141,12 +169,14 @@ const FilesUpload = ({
   accept,
 }) => {
   const [createF] = useMutation(createFileMutation)
+
   const [deleteF] = useMutation(deleteFileMutation, {
     update(cache, { data: { deleteFile } }) {
       const id = cache.identify({
         __typename: 'File',
         id: deleteFile,
       })
+
       cache.evict({ id })
     },
   })
@@ -170,6 +200,7 @@ const FilesUpload = ({
         meta,
       },
     })
+
     return data
   }
 
@@ -196,4 +227,25 @@ const FilesUpload = ({
     />
   )
 }
+
+FilesUpload.propTypes = {
+  fileType: PropTypes.string,
+  fieldName: PropTypes.string,
+  containerId: PropTypes.string,
+  containerName: PropTypes.string.isRequired,
+  initializeContainer: PropTypes.func,
+  multiple: PropTypes.bool,
+  accept: PropTypes.string,
+}
+
+FilesUpload.defaultProps = {
+  fileType: null,
+  fieldName: 'files',
+  containerId: null,
+  multiple: true,
+  accept: undefined,
+  initializeContainer: undefined,
+}
+
+// eslint-disable-next-line import/prefer-default-export
 export { FilesUpload }

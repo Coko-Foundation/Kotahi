@@ -28,4 +28,10 @@ module.exports = {
       password: 'POSTGRES_PASSWORD',
     },
   },
+  s3: {
+    accessKeyId: 'S3_ACCESS_KEY_ID',
+    secretAccessKey: 'S3_ACCESS_KEY_SECRET',
+    endpoint: 'S3_ENDPOINT',
+    region: 'S3_REGION',
+  },
 }

@@ -1,5 +1,7 @@
 /* stylelint-disable selector-type-no-unknown */
 import { css } from 'styled-components'
+import { darken, grid } from '@pubsweet/ui-toolkit'
+import lightenBy from '../../../shared/lightenBy'
 
 /* All styles regarding ProseMirror surface and elements */
 
@@ -14,14 +16,27 @@ export default css`
   }
 
   .ProseMirror footnote {
-    background: black;
-    color: white;
+    align-items: center;
+    background: ${lightenBy('colorPrimary', 0.7)};
+    border-radius: ${grid(1)};
+    color: ${darken('colorPrimary', 0.5)};
     cursor: pointer;
-    display: inline-block;
-    font-size: 0;
-    height: 17px;
-    text-align: center;
-    width: 17px;
+    display: inline-flex;
+    height: ${grid(2)};
+    justify-content: center;
+    line-height: 0;
+    min-width: ${grid(2)};
+    vertical-align: top;
+
+    &:hover {
+      background: ${lightenBy('colorPrimary', 0.3)};
+    }
+
+    ::after {
+      content: counter(footnote);
+      counter-increment: footnote;
+      font-size: ${grid(1.75)};
+    }
   }
 
   h1 {
@@ -32,14 +47,6 @@ export default css`
 
   p {
     margin-bottom: 1em;
-  }
-
-  .ProseMirror footnote::after {
-    bottom: 2px;
-    content: counter(footnote);
-    counter-increment: footnote;
-    font-size: 16px;
-    position: relative;
   }
 
   hr {
@@ -67,6 +74,10 @@ export default css`
     & li:last-child p {
       margin-bottom: 1em;
     }
+  }
+
+  u {
+    text-decoration: underline;
   }
 
   strong {
@@ -115,6 +126,10 @@ export default css`
     padding: 2px 5px;
     position: relative;
     vertical-align: top;
+  }
+
+  th {
+    background-color: ${lightenBy('colorPrimary', 0.7)};
   }
 
   .tableWrapper {
@@ -235,5 +250,115 @@ export default css`
 
   code {
     font-family: monospace;
+  }
+
+  .small-caps {
+    font-variant: small-caps;
+  }
+
+  a {
+    color: blue;
+  }
+
+  /* == Math Nodes ======================================== */
+
+  .math-node {
+    cursor: auto;
+    font-family: 'Consolas', 'Ubuntu Mono', monospace;
+    font-size: 0.95em;
+    min-height: 1em;
+    min-width: 1em;
+
+    .ProseMirror {
+      background: #eee;
+      box-shadow: none;
+      color: rgb(132, 33, 162);
+      min-height: 100%;
+      padding: 0;
+    }
+  }
+
+  .math-node.empty-math .math-render::before {
+    color: red;
+    content: '(empty)';
+  }
+
+  .math-node .math-render.parse-error::before {
+    color: red;
+    content: '(math error)';
+    cursor: help;
+  }
+
+  /* -- Inline Math --------------------------------------- */
+
+  math-inline {
+    display: inline;
+    white-space: nowrap;
+  }
+
+  math-inline .math-render {
+    cursor: pointer;
+    display: inline-block;
+    font-size: 0.85em;
+  }
+
+  math-inline .math-src .ProseMirror {
+    display: inline;
+  }
+
+  math-inline .math-src::after,
+  math-inline .math-src::before {
+    color: #b0b0b0;
+    content: '$';
+  }
+
+  /* -- Block Math ---------------------------------------- */
+
+  math-display {
+    display: block;
+  }
+
+  math-display .math-render {
+    display: block;
+  }
+
+  math-display.ProseMirror-selectednode {
+    background-color: #eee;
+  }
+
+  math-display .math-src .ProseMirror {
+    display: block;
+    width: 100%;
+  }
+
+  math-display .math-src::after,
+  math-display .math-src::before {
+    color: #b0b0b0;
+    content: '$$';
+    text-align: left;
+  }
+
+  math-display .katex-display {
+    margin: 0;
+  }
+
+  /* -- Other Math ---------------------------------------- */
+
+  .math-node.ProseMirror-selectednode {
+    outline: none;
+  }
+
+  .math-node .math-src {
+    color: rgb(132, 33, 162);
+    display: none;
+    tab-size: 4;
+  }
+
+  .math-node.ProseMirror-selectednode .math-src {
+    display: flex;
+  }
+
+  .math-node.ProseMirror-selectednode .math-render {
+    display: none;
   }
 `

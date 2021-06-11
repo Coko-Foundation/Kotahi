@@ -35,8 +35,8 @@ build:
     - cp app/brand-instances-configs/ncrc.json app/brandConfig.json
   script:
     - |
-      if [ -z "$DOCKERHUB_USERNAME_ncrc" ] || [ -z "$DOCKERHUB_PASSWORD_ncrc" ]; then echo "Not pushing" && exit 0; fi
-      docker login -u $DOCKERHUB_USERNAME_ncrc -p $DOCKERHUB_PASSWORD_ncrc
+      if [ -z "$DOCKERHUB_USERNAME_ELIFE" ] || [ -z "$DOCKERHUB_PASSWORD_ELIFE" ]; then echo "Not pushing" && exit 0; fi
+      docker login -u $DOCKERHUB_USERNAME_ELIFE -p $DOCKERHUB_PASSWORD_ELIFE
       docker pull $IMAGE_ORG/$IMAGE_NAME-dev:latest || true
       docker build --build-arg instance_name=ncrc --file ./Dockerfile-ci --cache-from $IMAGE_ORG/$IMAGE_NAME-dev:latest --tag $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME-dev:latest .
       docker push $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
@@ -122,6 +122,22 @@ test-chrome:
     TEST_ITEM: "chrome:ncrc"
   script:
     - *run_test_script
+
+# test-chrome:
+#   image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
+#   stage: test
+#   variables:
+#     GIT_STRATEGY: none
+#     TEST_ITEM: "chrome:ncrc"
+#   services:
+#     - postgres
+#   script:
+#     - apt-get update
+#     - apt-get -y install postgresql-client
+#     - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+#     - cd ${HOME}
+#     - cp .env.example .env
+#     - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
 
 ## commented Wed May 12 15:55:40 EEST 2021 by beatrice.suarasan@endava.com request
 # test-chrome-samsung:

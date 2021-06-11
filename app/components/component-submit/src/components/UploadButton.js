@@ -7,8 +7,8 @@ const Button = styled.button.attrs(() => ({
 }))`
   background: transparent;
   border: ${th('borderWidth')} dashed ${th('colorBorder')};
-  height: calc(${th('gridUnit')} * 3);
   cursor: pointer;
+  height: calc(${th('gridUnit')} * 3);
   margin-bottom: calc(${th('gridUnit')} * 3);
   padding: ${th('gridUnit')};
 `
@@ -16,7 +16,7 @@ const Button = styled.button.attrs(() => ({
 const UploadButton = ({ name, buttonText, onChange }) => {
   let fileInput
   return (
-    <React.Fragment>
+    <>
       <Button onClick={() => fileInput.click()}>{buttonText}</Button>
       <input
         multiple
@@ -26,7 +26,7 @@ const UploadButton = ({ name, buttonText, onChange }) => {
         style={{ display: 'none' }}
         type="file"
       />
-    </React.Fragment>
+    </>
   )
 }
 

@@ -31,7 +31,6 @@ export default {
     transition: ${th('transitionDuration')} ${th('transitionTimingFunction')};
 
     &:focus {
-      box-shadow: ${th('boxShadow')};
       border-color: ${props => {
         switch (props.validationStatus) {
           case 'success':
@@ -44,6 +43,7 @@ export default {
             return props.theme.colorPrimary
         }
       }};
+      box-shadow: ${th('boxShadow')};
       color: inherit;
     }
 

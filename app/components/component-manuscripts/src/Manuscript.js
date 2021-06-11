@@ -1,9 +1,15 @@
-import React from 'react'
-import { gql, useMutation, useQuery, useApolloClient } from '@apollo/client'
+/* eslint-disable jsx-a11y/no-static-element-interactions */
+/* eslint-disable jsx-a11y/click-events-have-key-events */
+
+import React, { useState } from 'react'
+import { useMutation, useQuery, useApolloClient } from '@apollo/client'
 // import { Action } from '@pubsweet/ui'
 import config from 'config'
 import PropTypes from 'prop-types'
 import { Checkbox } from '@pubsweet/ui'
+import Tooltip from 'rc-tooltip'
+import 'rc-tooltip/assets/bootstrap_white.css'
+import './style.css'
 import { UserAvatar } from '../../component-avatar/src'
 import {
   Row,
@@ -14,12 +20,15 @@ import {
   Secondary,
   UserInfo,
   StyledTopic,
+  StyledAuthor,
   StyledTableLabel,
+  InfoIcon,
   // SuccessStatus,
   // ErrorStatus,
   // NormalStatus,
   UserAction as Action,
   StatusBadge,
+  StyledDescriptionWrapper,
 } from './style'
 
 import { convertTimestampToDate } from '../../../shared/time-formatting'
@@ -58,6 +67,7 @@ const User = ({
   ...props
 }) => {
   const [publishManuscript] = useMutation(publishManuscriptMutation)
+  const [isPublishingBlocked, setIsPublishingBlocked] = useState(false)
 
   const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT, {
     update(cache, { data: { deleteManuscriptId } }) {
@@ -80,12 +90,18 @@ const User = ({
   const form = data?.formForPurpose?.structure
 
   const publishManuscriptHandler = async () => {
+    if (isPublishingBlocked) {
+      return
+    }
+
+    setIsPublishingBlocked(true)
+
     const areThereInvalidFields = await Promise.all(
       validateManuscript(manuscript.submission, form, client),
     )
 
     if (areThereInvalidFields.filter(Boolean).length === 0) {
-      publishManuscript({
+      await publishManuscript({
         variables: { id: manuscript.id },
         update: (cache, { dataTemp }) => {
           cache.modify({
@@ -96,6 +112,7 @@ const User = ({
           })
         },
       })
+      setIsPublishingBlocked(false)
     }
   }
 
@@ -106,7 +123,7 @@ const User = ({
 
   const filterByArticleStatus = status => {
     setSelectedStatus(status)
-    history.replace(`${urlFrag}/admin/manuscripts?articleStatus=${status}`)
+    history.replace(`${urlFrag}/admin/manuscripts?status=${status}`)
   }
 
   return (
@@ -118,16 +135,46 @@ const User = ({
         <Cell>{manuscript.submission && manuscript.submission.articleId}</Cell>
       )}
       {['ncrc'].includes(process.env.INSTANCE_NAME) && (
-        <Cell>
-          {manuscript.status === articleStatuses.new && (
-            <Checkbox
-              checked={selectedNewManuscripts.includes(manuscript.id)}
-              onChange={() => toggleNewManuscriptCheck(manuscript.id)}
-            />
-          )}
-          <span style={{ wordBreak: 'break-word' }}>
-            {manuscript.submission && manuscript.submission.articleDescription}
-          </span>
+        <Cell minWidth="150px">
+          <StyledDescriptionWrapper>
+            {manuscript.status === articleStatuses.new && (
+              <Checkbox
+                checked={selectedNewManuscripts.includes(manuscript.id)}
+                onChange={() => toggleNewManuscriptCheck(manuscript.id)}
+              />
+            )}
+            <span style={{ wordBreak: 'break-word' }}>
+              {manuscript.submission &&
+                manuscript.submission.articleDescription}
+            </span>
+            <>
+              <Tooltip
+                destroyTooltipOnHide={{ keepParent: false }}
+                getTooltipContainer={el => el}
+                overlay={
+                  <span>
+                    {manuscript.submission.abstract?.length > 1000
+                      ? `${manuscript.submission.abstract.slice(0, 1000)}...`
+                      : manuscript.submission.abstract}
+                  </span>
+                }
+                overlayInnerStyle={{
+                  backgroundColor: 'black',
+                  color: 'white',
+                  borderColor: 'black',
+                }}
+                overlayStyle={{
+                  maxWidth: '65vw',
+                  wordBreak: 'break-word',
+                  display: `${!manuscript.submission.abstract && 'none'}`,
+                }}
+                placement="bottomLeft"
+                trigger={['hover']}
+              >
+                <InfoIcon>i</InfoIcon>
+              </Tooltip>
+            </>
+          </StyledDescriptionWrapper>
         </Cell>
       )}
       <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
@@ -160,19 +207,31 @@ const User = ({
           </StyledTableLabel>
         </Cell>
       )}
-      <Cell>
-        {submitter && (
-          <UserCombo>
-            <UserAvatar user={submitter} />
-            <UserInfo>
-              <Primary>{submitter.defaultIdentity.name}</Primary>
-              <Secondary>
-                {submitter.email || `(${submitter.username})`}
-              </Secondary>
-            </UserInfo>
-          </UserCombo>
-        )}
-      </Cell>
+      {process.env.INSTANCE_NAME !== 'ncrc' && (
+        <Cell>
+          {submitter && (
+            <UserCombo>
+              <UserAvatar user={submitter} />
+              <UserInfo>
+                <Primary>{submitter.defaultIdentity.name}</Primary>
+                <Secondary>
+                  {submitter.email || `(${submitter.username})`}
+                </Secondary>
+              </UserInfo>
+            </UserCombo>
+          )}
+        </Cell>
+      )}
+      {['ncrc'].includes(process.env.INSTANCE_NAME) && (
+        <Cell>
+          {manuscript.teams.map(team => (
+            <StyledAuthor key={team.id}>
+              {team.role !== 'author' &&
+                team.members[0].user.defaultIdentity.name}
+            </StyledAuthor>
+          ))}
+        </Cell>
+      )}
       <LastCell>
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
           [
@@ -200,7 +259,12 @@ const User = ({
         </Action>
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
           manuscript.status === articleStatuses.evaluated && (
-            <Action onClick={publishManuscriptHandler}>Publish</Action>
+            <Action
+              isDisabled={isPublishingBlocked}
+              onClick={publishManuscriptHandler}
+            >
+              Publish
+            </Action>
           )}
       </LastCell>
     </Row>
@@ -210,6 +274,7 @@ const User = ({
 User.propTypes = {
   manuscriptId: PropTypes.string.isRequired,
   manuscript: PropTypes.shape({
+    teams: PropTypes.arrayOf(PropTypes.object),
     meta: PropTypes.shape({
       title: PropTypes.string.isRequired,
     }).isRequired,
@@ -227,10 +292,16 @@ User.propTypes = {
     }).isRequired,
     email: PropTypes.string,
     username: PropTypes.string.isRequired,
-  }).isRequired,
-  // eslint-disable-next-line
-  history: PropTypes.object,
+  }),
+  toggleNewManuscriptCheck: PropTypes.func.isRequired,
+  selectedNewManuscripts: PropTypes.arrayOf(PropTypes.object).isRequired,
+  setSelectedStatus: PropTypes.func.isRequired,
+  history: PropTypes.shape({}),
   setSelectedTopic: PropTypes.func.isRequired,
+}
+User.defaultProps = {
+  history: undefined,
+  submitter: {},
 }
 
 export default User

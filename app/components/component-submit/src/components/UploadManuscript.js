@@ -135,12 +135,14 @@ const Info = styled.div`
 `
 
 const SubInfo = styled.div`
-  text-align: center;
   color: #333;
   line-height: 32px;
+  text-align: center;
 `
 
 const UploadManuscript = ({ acceptFiles, ...props }) => {
+  const { client, history, journals, currentUser } = props
+
   // const [error, setError] = useState(false)
   // const [completed, setCompleted] = useState(false)
   const [conversion, setConversion] = useContext(XpubContext)
@@ -151,10 +153,10 @@ const UploadManuscript = ({ acceptFiles, ...props }) => {
   // setConversion({ error: 'yes' })
 
   const uploadManuscript = upload({
-    client: props.client,
-    history: props.history,
-    journals: props.journals,
-    currentUser: props.currentUser,
+    client,
+    history,
+    journals,
+    currentUser,
     setConversion,
   })
 

@@ -1,15 +1,25 @@
 const { ref } = require('objection')
-const TurndownService = require('turndown')
 const axios = require('axios')
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const { mergeWith, isArray } = require('lodash')
-const credentials = require('../../../google_sheets_credentials.json')
 const Form = require('../../model-form/src/form')
+const publishToCrossref = require('../../publishing/crossref')
+
+const {
+  publishToHypothesis,
+  deletePublication,
+} = require('../../publishing/hypothesis')
+
+const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
+const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
 
 const ManuscriptResolvers = ({ isVersion }) => {
   const resolvers = {
     submission(parent) {
       return JSON.stringify(parent.submission)
+    },
+    evaluationsHypothesisMap(parent) {
+      return JSON.stringify(parent.evaluationsHypothesisMap)
     },
     async reviews(parent, _, ctx) {
       return parent.reviews
@@ -156,6 +166,11 @@ const resolvers = {
       manuscript.manuscriptVersions = []
       return manuscript
     },
+    async importManuscripts(_, props, ctx) {
+      const manuscripts = await importArticlesFromBiorxiv(ctx)
+
+      return manuscripts
+    },
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
         await Promise.all(
@@ -172,6 +187,21 @@ const resolvers = {
       const manuscript = await ctx.models.Manuscript.find(id)
 
       toDeleteList.push(manuscript.id)
+
+      if (
+        process.env.INSTANCE_NAME === 'elife' &&
+        manuscript.evaluationsHypothesisMap !== null
+      ) {
+        const deletePromises = Object.values(
+          manuscript.evaluationsHypothesisMap,
+        )
+          .filter(Boolean)
+          .map(publicationId => {
+            return deletePublication(publicationId)
+          })
+
+        await Promise.all(deletePromises)
+      }
 
       if (manuscript.parentId) {
         const parentManuscripts = await ctx.models.Manuscript.findByField(
@@ -308,87 +338,62 @@ const resolvers = {
 
       return reviewerTeam.$query().eager('members.[user]')
     },
+
     async publishManuscript(_, { id }, ctx) {
       let manuscript = await ctx.models.Manuscript.query().findById(id)
 
       if (['elife'].includes(process.env.INSTANCE_NAME)) {
-        const turndownService = new TurndownService({ bulletListMarker: '-' })
-
-        turndownService.addRule('unorderedLists', {
-          filter: ['ul'],
-          replacement(content, node) {
-            const unorderedListResult = [...node.childNodes]
-              .map((childNode, index) => {
-                return `• ${turndownService.turndown(childNode.innerHTML)}\n\n`
-              })
-              .join('')
-
-            return unorderedListResult
-          },
-        })
-
-        turndownService.addRule('orderedLists', {
-          filter: ['ol'],
-          replacement(content, node) {
-            const orderedListResult = [...node.childNodes]
-              .map((childNode, index) => {
-                return `${index + 1}) ${turndownService.turndown(
-                  childNode.innerHTML,
-                )}\n\n`
-              })
-              .join('')
-
-            return orderedListResult
-          },
-        })
-
-        const requestBody = {
-          uri: manuscript.submission.biorxivURL,
-          text: turndownService.turndown(
-            manuscript.submission.evaluationContent,
-          ),
-          tags: [manuscript.submission.evalType],
-          permissions: {
-            read: ['group:q5X6RWJ6'],
-          },
-          group: 'q5X6RWJ6',
+        if (manuscript.evaluationsHypothesisMap === null) {
+          manuscript.evaluationsHypothesisMap = {}
         }
 
-        try {
-          const requestParam = manuscript.hypothesisPublicationId
-            ? `/${manuscript.hypothesisPublicationId}`
-            : ''
-
-          const requestFunction = manuscript.hypothesisPublicationId
-            ? axios.patch
-            : axios.post
-
-          const requestURL = `https://api.hypothes.is/api/annotations${requestParam}`
-
-          const publishedManuscript = await requestFunction(
-            requestURL,
-            requestBody,
-            {
-              headers: {
-                Authorization: `Bearer ${process.env.HYPOTHESIS_API_KEY}`,
-              },
-            },
+        const evaluationValues = Object.entries(manuscript.submission)
+          .filter(
+            ([prop, value]) =>
+              !Number.isNaN(Number(prop.split('review')[1])) &&
+              prop.includes('review'),
           )
+          .map(([propName, value]) => [
+            value,
+            manuscript.submission[`${propName}date`],
+          ])
 
-          const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
-            id,
-            {
-              published: new Date(),
-              status: 'published',
-              hypothesisPublicationId: publishedManuscript.data.id,
-            },
-          )
+        evaluationValues.push([
+          manuscript.submission.summary,
+          manuscript.submission.summarydate,
+        ])
 
-          return updatedManuscript
-        } catch (e) {
-          console.error(e)
-          return null
+        const areEvaluationsEmpty = evaluationValues
+          .map(evaluationValue => {
+            return checkIsAbstractValueEmpty(evaluationValue)
+          })
+          .every(isEmpty => isEmpty === true)
+
+        if (areEvaluationsEmpty && manuscript.status === 'evaluated') {
+          return manuscript
         }
+
+        const newArticleStatus =
+          areEvaluationsEmpty && manuscript.status === 'published'
+            ? 'evaluated'
+            : 'published'
+
+        await publishToCrossref(manuscript)
+
+        const newEvaluationsHypothesisMap = await publishToHypothesis(
+          manuscript,
+        )
+
+        const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
+          id,
+          {
+            published: new Date(),
+            status: newArticleStatus,
+            evaluationsHypothesisMap: newEvaluationsHypothesisMap,
+          },
+        )
+
+        return updatedManuscript
       }
 
       if (process.env.INSTANCE_NAME === 'ncrc') {
@@ -413,8 +418,11 @@ const resolvers = {
           const doc = new GoogleSpreadsheet(spreadsheetId)
 
           await doc.useServiceAccountAuth({
-            client_email: credentials.client_email,
-            private_key: credentials.private_key,
+            client_email: process.env.GOOGLE_SPREADSHEET_CLIENT_EMAIL,
+            private_key: process.env.GOOGLE_SPREADSHEET_PRIVATE_KEY.replace(
+              /\\n/g,
+              '\n',
+            ),
           })
 
           await doc.loadInfo()
@@ -501,7 +509,7 @@ const resolvers = {
       //   manuscript.channelId,
       // )
 
-      if (!ctx.user.admin) {
+      if (ctx.user && !ctx.user.admin) {
         const manuscriptObj = { ...manuscript }
 
         manuscriptObj.reviews.forEach((review, index) => {
@@ -524,6 +532,7 @@ const resolvers = {
     async publishedManuscripts(_, { sort, offset, limit }, ctx) {
       const query = ctx.models.Manuscript.query()
         .whereNotNull('published')
+        .where('status', 'published')
         .withGraphFetched('[reviews.[comments], files, submitter]')
 
       const totalCount = await query.resultSize()
@@ -560,7 +569,9 @@ const resolvers = {
 
       const query = ctx.models.Manuscript.query()
         .where({ parentId: null })
-        .withGraphFetched('[submitter, manuscriptVersions(orderByCreated)]')
+        .withGraphFetched(
+          '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
+        )
         .modifiers({
           orderByCreated(builder) {
             builder.orderBy('created', 'desc')
@@ -602,6 +613,7 @@ const resolvers = {
       }
 
       const manuscripts = await query
+
       return {
         totalCount,
         manuscripts,
@@ -680,6 +692,7 @@ const typeDefs = `
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): Manuscript
     createNewVersion(id: ID!): Manuscript
+    importManuscripts: PaginatedManuscripts
   }
 
   type Manuscript implements Object {
@@ -699,7 +712,7 @@ const typeDefs = `
     channels: [Channel]
     submitter: User
     published: DateTime
-    hypothesisPublicationId: String
+    evaluationsHypothesisMap: String
   }
 
   type ManuscriptVersion implements Object {
@@ -719,6 +732,7 @@ const typeDefs = `
     submitter: User
     published: DateTime
     parentId: ID
+    evaluationsHypothesisMap: String
   }
 
   input ManuscriptInput {

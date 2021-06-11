@@ -7,6 +7,7 @@ import CreateANewVersion from './CreateANewVersion'
 import FormTemplate from './FormTemplate'
 import ReviewMetadata from '../../../component-review/src/components/metadata/ReviewMetadata'
 import MessageContainer from '../../../component-chat/src'
+
 import {
   SectionContent,
   VersionSwitcher,
@@ -75,6 +76,7 @@ const Submit = ({
   versions = [],
   form,
   createNewVersion,
+  currentUser,
   toggleConfirming,
   confirming,
   parent,
@@ -82,16 +84,11 @@ const Submit = ({
   republish,
   onSubmit,
   match,
+  updateManuscript,
 }) => {
   const decisionSections = []
 
   const currentVersion = versions[0]
-
-  const addEditor = (manuscript, label) => ({
-    content: <EditorSection manuscript={manuscript} />,
-    key: `editor_${manuscript.id}`,
-    label,
-  })
 
   const submissionValues = createBlankSubmissionBasedOnForm(form)
 
@@ -99,12 +96,26 @@ const Submit = ({
     const { manuscript, label } = version
     const versionId = manuscript.id
 
-    const editorSection = addEditor(manuscript, 'Manuscript text')
+    const userCanEditManuscriptAndFormData =
+      version === currentVersion &&
+      (['new', 'revising'].includes(manuscript.status) ||
+        (currentUser.admin && manuscript.status !== 'rejected'))
+
+    const editorSection = {
+      content: (
+        <EditorSection
+          manuscript={manuscript}
+          onChange={source => updateManuscript(versionId, { meta: { source } })}
+          readonly={!userCanEditManuscriptAndFormData}
+        />
+      ),
+      key: `editor_${manuscript.id}`,
+      label: 'Manuscript text',
+    }
+
     let decisionSection
 
-    if (
-      ['new', 'revising', 'submitted', 'evaluated', 'published'].includes(manuscript.status)
-    ) {
+    if (userCanEditManuscriptAndFormData) {
       Object.assign(submissionValues, JSON.parse(manuscript.submission))
 
       const versionValues = {
@@ -172,12 +183,12 @@ const Submit = ({
     decisionSections.push({
       content: (
         <>
-          {['ncrc'].includes(process.env.INSTANCE_NAME) &&
+          {['ncrc'].includes(process.env.INSTANCE_NAME) && (
             <AssignEditorsReviewers
               AssignEditor={AssignEditor}
               manuscript={manuscript}
             />
-          }
+          )}
           <Tabs
             defaultActiveKey={versionId}
             sections={[decisionSection, editorSection]}
@@ -200,7 +211,10 @@ const Submit = ({
     <Columns>
       <Manuscript>
         <ErrorBoundary>
-          <VersionSwitcher versions={decisionSections} />
+          <VersionSwitcher
+            key={decisionSections.length}
+            versions={decisionSections}
+          />
         </ErrorBoundary>
       </Manuscript>
       <Chat>
@@ -243,6 +257,9 @@ Submit.propTypes = {
     haspopup: PropTypes.string.isRequired, // bool as string
   }).isRequired,
   createNewVersion: PropTypes.func.isRequired,
+  currentUser: PropTypes.shape({
+    admin: PropTypes.bool.isRequired,
+  }),
   toggleConfirming: PropTypes.func.isRequired,
   confirming: PropTypes.bool.isRequired,
   parent: PropTypes.shape({
@@ -259,8 +276,10 @@ Submit.propTypes = {
   match: PropTypes.shape({
     url: PropTypes.string.isRequired,
   }).isRequired,
+  updateManuscript: PropTypes.func.isRequired,
 }
 Submit.defaultProps = {
+  currentUser: { admin: false },
   parent: undefined,
 }
 

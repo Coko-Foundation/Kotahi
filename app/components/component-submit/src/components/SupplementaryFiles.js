@@ -7,10 +7,10 @@ const SupplementaryFiles = ({ manuscript }) => (
     {(manuscript.files || []).filter(file => file.type === 'supplementary')
       .length > 0
       ? [
-          <Legend htmlFor="supplementary">
+          <Legend htmlFor="supplementary" key={1}>
             Supplementary materials uploaded
           </Legend>,
-          <div>
+          <div key={2}>
             {manuscript.files
               .filter(file => file.type === 'supplementary')
               .map(attachment => (

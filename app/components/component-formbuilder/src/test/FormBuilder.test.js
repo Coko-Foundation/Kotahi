@@ -5,7 +5,7 @@ import { Action } from '@pubsweet/ui'
 
 import { diveTo } from './util'
 import FormBuilder from '../components/FormBuilder'
-import forms from './config/test.json'
+// import forms from './config/test.json'
 import formsnoelements from './config/testnoelements.json'
 
 jest.mock('config', () => ({
@@ -38,6 +38,7 @@ Enzyme.configure({ adapter: new Adapter() })
 
 describe('FormBuilder', () => {
   const makeWrapper = (props = {}) => {
+    // eslint-disable-next-line prefer-object-spread, no-param-reassign
     props = Object.assign(
       {
         form: formsnoelements[0],
@@ -66,23 +67,24 @@ describe('FormBuilder', () => {
   // TODO: This has started failing by upgrading enzyme. There
   // are a few issues with these tests that need to be fixed
   // anyway.
-  it.skip('shows add element button and form elements', () => {
-    const formbuilder = makeWrapper({ form: forms[0] })
+  // eslint-disable-next-line jest/no-commented-out-tests
+  // it.skip('shows add element button and form elements', () => {
+  //   const formbuilder = makeWrapper({ form: forms[0] })
 
-    expect(
-      diveTo(formbuilder, 'lifecycle(FormBuilder)', {})
-        .dive()
-        .find('#builder-element')
-        .dive()
-        .at(0),
-    ).toHaveLength(2)
+  //   expect(
+  //     diveTo(formbuilder, 'lifecycle(FormBuilder)', {})
+  //       .dive()
+  //       .find('#builder-element')
+  //       .dive()
+  //       .at(0),
+  //   ).toHaveLength(2)
 
-    expect(
-      diveTo(formbuilder, 'lifecycle(FormBuilder)', {})
-        .dive()
-        .find('#add-element'),
-    ).toHaveLength(1)
-  })
+  //   expect(
+  //     diveTo(formbuilder, 'lifecycle(FormBuilder)', {})
+  //       .dive()
+  //       .find('#add-element'),
+  //   ).toHaveLength(1)
+  // })
 
   it('adds empty element to the form', () => {
     const formbuilder = makeWrapper()

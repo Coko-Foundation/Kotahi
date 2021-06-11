@@ -52,6 +52,7 @@ class Review extends BaseModel {
   }
 
   static get relationMappings() {
+    /* eslint-disable global-require */
     const { Manuscript, User, ReviewComment } = require('@pubsweet/models')
 
     return {
@@ -96,6 +97,7 @@ class Review extends BaseModel {
         .where('commentType', 'confidential')
         .first()
     }
+
     return true
   }
 

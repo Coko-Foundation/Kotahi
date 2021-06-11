@@ -42,6 +42,7 @@ export default {
           }
           published
           submission
+          evaluationsHypothesisMap
           submitter {
             defaultIdentity {
               name

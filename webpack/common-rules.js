@@ -1,5 +1,6 @@
-const babelIncludes = require('./babel-includes')
 const MiniCssExtractPlugin = require('mini-css-extract-plugin')
+
+const babelIncludes = require('./babel-includes')
 
 module.exports = [
   { test: /\.tsx?$/, loader: 'ts-loader' },

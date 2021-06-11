@@ -1,6 +1,8 @@
 /* eslint-disable class-methods-use-this */
 /* eslint-disable handle-callback-err */
 /* eslint-disable react/sort-comp */
+/* eslint-disable react/destructuring-assignment */
+
 import React from 'react'
 
 class ErrorBoundary extends React.Component {
@@ -29,4 +31,5 @@ class ErrorBoundary extends React.Component {
   }
 }
 
+/* eslint-disable import/prefer-default-export */
 export { ErrorBoundary }

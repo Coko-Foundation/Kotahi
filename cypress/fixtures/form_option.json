@@ -1,19 +1,26 @@
 {
+  "required": "Required",
   "elife": {
     "title": "Research Object Submission Form",
     "articleId": "Article ID",
     "articleUrl": "Article URL",
     "bioRxivArticleUrl": "bioRxiv article URL",
     "description": "Description",
-    "evaluationContent": "Evaluation Content",
-    "evaluationType": "Evaluation Type",
-    "creator": "Creator",
-    "required": "Required",
-    "evaluationTypes" : {
-      "evaluationSummary": "Evaluation Summary",
-      "peerReview": "Peer Review",
-      "authorResponse": "Author Response"
-    }
+
+    "reviewDate": "Review date",
+    "review1": "Review 1",
+    "review1Creator": "Review 1 creator",
+    "review1Date": "Review 1 date",
+    "review2": "Review 2",
+    "review2Creator": "Review 2 creator",
+    "review2Date": "Review 2 date",
+    "review3": "Review 3",
+    "review3Creator": "Review 3 creator",
+    "review3Date": "Review 3 date",
+    "summary": "Summary",
+    "summaryCreator": "Summary creator",
+    "summaryDate": "Summary date",
+    "creator": "Creator"
   },
   "ncrc": {
     "title": "NCRC Submission Form",
@@ -21,13 +28,29 @@
     "description": "Article Description",
     "ourTake": "Our take",
     "studyDesign": "Study design",
-    "studyPopulation": "Study population and setting",
     "mainFindings": "Summary of main findings",
     "studyStrengths": "Study strengths",
     "limitations": "Limitations",
     "valueAdded": "Value added",
     "labels": "Labels",
     "topics": "Topics",
+    "abstract": "Abstract",
+    "firstAuthor": "First Author",
+    "datePublished": "Date Published",
+    "studyPopulation": "Study population setting",
+    "keywords": "Keywords",
+    "journal": "Journal",
+    "editFinished": "Edit finished",
+    "reviewer": "Reviewer",
+    "editDate": "Edit date",
+    "finalTakeWordcount": "Final take wordcount",
+    "compendiumFeature": "Compendium feature",
+    "reviewCreator": "Review creator",
+    "compendiumFeatureTypes": {
+      "no": "No",
+      "mediumLow": "Yes, Medium/Low Impact Article",
+      "high": "Yes, High Impact Article"
+    },
     "studyDesignTypes": {
       "caseSeries": "Case-series",
       "caseControl": "Case-control",

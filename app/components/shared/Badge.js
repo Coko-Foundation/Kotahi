@@ -4,8 +4,8 @@ import { grid, th } from '@pubsweet/ui-toolkit'
 
 const Status = styled.span`
   border-radius: 8px;
-  font-variant: all-small-caps;
   font-size: ${th('fontSizeBaseSmall')};
+  font-variant: all-small-caps;
   ${props =>
     !props.minimal &&
     css`
@@ -38,8 +38,7 @@ export const ErrorStatus = styled(Status)`
 `
 
 export const NormalStatus = styled(Status)`
-  // background-color: ${th('colorWarning')};
-  // color: ${th('colorTextReverse')};
+  cursor: pointer;
   ${props =>
     props.minimal
       ? css`
@@ -52,6 +51,7 @@ export const NormalStatus = styled(Status)`
 
 const label = (status, published) => {
   const isPublished = !!published
+
   const labels = {
     accepted: 'Accepted',
     assignedToEditor: 'Assigned to editor',
@@ -72,6 +72,7 @@ const label = (status, published) => {
       ? `${labels[status]} & Published`
       : `Unknown (${status} & Published})`
   }
+
   return labels[status] || `Unknown ${status}`
 }
 
@@ -83,11 +84,14 @@ export const StatusBadge = ({ status, published, minimal }) => {
         {label(status, published)}
       </SuccessStatus>
     )
-  } else if (status === 'rejected') {
+  }
+
+  if (status === 'rejected') {
     return (
       <ErrorStatus minimal={minimal}>{label(status, published)}</ErrorStatus>
     )
   }
+
   return (
     <NormalStatus minimal={minimal}>{label(status, published)}</NormalStatus>
   )

@@ -1,3 +1,5 @@
+/* eslint-disable jest/valid-expect-in-promise */
+/* eslint-disable prettier/prettier */
 /* eslint-disable jest/expect-expect */
 import { manuscripts } from '../../support/routes'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
@@ -19,9 +21,11 @@ describe('manuscripts page tests', () => {
     cy.awaitDisappearSpinner()
     ManuscriptsPage.getTableHeader().should('be.visible')
   })
+
   context('elements visibility', () => {
-    it('submit button should be visible & dashboard page should not exist', () => {
+    it('submit button, live chat button and dashboard page should be visible', () => {
       ManuscriptsPage.getSubmitButton().should('be.visible')
+      ManuscriptsPage.getLiveChatButton().should('be.visible')
       Menu.getDashboardButton().should('be.visible')
     })
 
@@ -39,30 +43,48 @@ describe('manuscripts page tests', () => {
         .should('be.visible')
       ManuscriptsPage.getOptionWithText('Publish').should('not.exist')
     })
+
     it('label & topics should be visible on manuscripts page', () => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.clickDropdown(-1)
+        SubmissionFormPage.clickDropdown(-3)
         SubmissionFormPage.selectDropdownOption(1)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.clickTopicsCheckboxWithText('epidemiology')
         Menu.clickManuscriptsAndAssertPageLoad()
-        ManuscriptsPage.getArticleLabel()
-          .should('be.visible')
-          .and('contain', 'evaluated')
         ManuscriptsPage.getArticleTopic(0).should('contain', data.topic)
         ManuscriptsPage.getArticleTopic(1).should('contain', 'epidemiology')
+        ManuscriptsPage.getArticleLabel()
+            .should('be.visible')
+            .and('contain', 'evaluated')
       })
     })
+
+    it('editors column should be visible', () => {
+      ManuscriptsPage.clickSubmit()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+      // fill the submit form and submit it
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('submission_form_data').then(data => {
+        SubmissionFormPage.fillInArticleDescription(data.articleId)
+      })
+      Menu.clickManuscriptsAndAssertPageLoad()
+      ManuscriptsPage.getTableHead(-1)
+        .scrollIntoView()
+        .should('contain', 'Editor')
+        .and('be.visible')
+    })
   })
+
   context('unsubmitted article tests', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
     })
+
     it('unsubmitted article is evaluated', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -88,14 +110,19 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.fillInOurTake(data.ourTake)
         SubmissionFormPage.clickDropdown(2)
         SubmissionFormPage.selectDropdownOption(0)
-        SubmissionFormPage.fillInStudySetting(data.studySetting)
         SubmissionFormPage.fillInMainFindings(data.mainFindings)
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickDropdown(-1)
+        SubmissionFormPage.clickDropdown(-3)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
+        SubmissionFormPage.fillInFirstAuthor(data.creator)
+        SubmissionFormPage.fillInDatePublished(data.date)
+        SubmissionFormPage.fillInJournal(data.journal)
+        SubmissionFormPage.fillInReviewer(data.creator)
+        SubmissionFormPage.fillInEditDate(data.date)
+        SubmissionFormPage.fillInReviewCreator(data.creator)
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
         ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
         ManuscriptsPage.getArticleTopic(0)
@@ -105,7 +132,8 @@ describe('manuscripts page tests', () => {
       })
     })
   })
-  context.only('submitted and evaluated article tests', () => {
+
+  context('submitted and evaluated article tests', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
@@ -113,23 +141,29 @@ describe('manuscripts page tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleUrl(data.doi)
-        SubmissionFormPage.fillInArticleDescription(data.title)
+        SubmissionFormPage.fillInArticleDescription(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
         SubmissionFormPage.clickDropdown(2)
         SubmissionFormPage.selectDropdownOption(0)
-        SubmissionFormPage.fillInStudySetting(data.studySetting)
         SubmissionFormPage.fillInMainFindings(data.mainFindings)
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickDropdown(-1)
+        SubmissionFormPage.clickDropdown(-3)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
+        SubmissionFormPage.fillInFirstAuthor(data.creator)
+        SubmissionFormPage.fillInDatePublished(data.date)
+        SubmissionFormPage.fillInJournal(data.journal)
+        SubmissionFormPage.fillInReviewer(data.creator)
+        SubmissionFormPage.fillInEditDate(data.date)
+        SubmissionFormPage.fillInReviewCreator(data.creator)
         // eslint-disable-next-line
         SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
       })
     })
+
     it('manuscripts page should contain the correct details after submission', () => {
       cy.url().should('contain', 'manuscripts')
       ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
@@ -150,6 +184,7 @@ describe('manuscripts page tests', () => {
       })
       ManuscriptsPage.getArticleLabel().should('contain', 'ready to evaluate')
     })
+
     it('evaluate article and check status is changed and publish button is visible', () => {
       ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
       ManuscriptsPage.clickEvaluation()
@@ -161,6 +196,7 @@ describe('manuscripts page tests', () => {
         .scrollIntoView()
         .should('be.visible')
     })
+
     it('evaluation changes should be visible', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -181,6 +217,7 @@ describe('manuscripts page tests', () => {
       })
     })
   })
+
   context('filter and sort articles', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
@@ -188,7 +225,7 @@ describe('manuscripts page tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         SubmissionFormPage.fillInArticleDescription('123')
-        SubmissionFormPage.clickElementFromFormOptionList(9)
+        SubmissionFormPage.clickElementFromFormOptionList(8)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(
           data.ncrc.topicTypes.vaccines,
@@ -197,7 +234,7 @@ describe('manuscripts page tests', () => {
         ManuscriptsPage.clickSubmit()
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
         SubmissionFormPage.fillInArticleDescription('abc')
-        SubmissionFormPage.clickElementFromFormOptionList(9)
+        SubmissionFormPage.clickElementFromFormOptionList(8)
         SubmissionFormPage.selectDropdownOption(1)
         SubmissionFormPage.clickTopicsCheckboxWithText(
           data.ncrc.topicTypes.ecologyAndSpillover,
@@ -209,7 +246,7 @@ describe('manuscripts page tests', () => {
         ManuscriptsPage.clickSubmit()
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
         SubmissionFormPage.fillInArticleDescription('def')
-        SubmissionFormPage.clickElementFromFormOptionList(9)
+        SubmissionFormPage.clickElementFromFormOptionList(8)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(
           data.ncrc.topicTypes.modeling,
@@ -220,6 +257,7 @@ describe('manuscripts page tests', () => {
         Menu.clickManuscriptsAndAssertPageLoad()
       })
     })
+
     it('filter article after topic and url contain that topic', () => {
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000)
@@ -245,6 +283,7 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getArticleTopic(0).should('contain', 'modeling')
       ManuscriptsPage.getArticleTopic(1).should('contain', 'diagnostics')
     })
+
     it('sort article by label', () => {
       ManuscriptsPage.getArticleLabel().should('have.length', 3)
       ManuscriptsPage.getTableRow().eq(2).should('be.visible')
@@ -260,6 +299,7 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getLabelRow(1).should('contain', 'ready to evaluate')
       ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluate')
     })
+
     it('sort article by Description', () => {
       ManuscriptsPage.getTableHead(0).should('contain', 'Description')
       ManuscriptsPage.getArticleTitleByRow(0).should('contain', 'def')
@@ -270,6 +310,7 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getArticleTitleByRow(1).should('contain', 'abc')
       ManuscriptsPage.getArticleTitleByRow(2).should('contain', 'def')
     })
+
     it('filter article after status and url contain that status', () => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
@@ -277,18 +318,23 @@ describe('manuscripts page tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleUrl(data.doi)
-        SubmissionFormPage.fillInArticleDescription(data.title)
+        SubmissionFormPage.fillInArticleDescription(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
         SubmissionFormPage.clickDropdown(2)
         SubmissionFormPage.selectDropdownOption(0)
-        SubmissionFormPage.fillInStudySetting(data.studySetting)
         SubmissionFormPage.fillInMainFindings(data.mainFindings)
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickDropdown(-1)
+        SubmissionFormPage.clickDropdown(-3)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
+        SubmissionFormPage.fillInFirstAuthor(data.creator)
+        SubmissionFormPage.fillInDatePublished(data.date)
+        SubmissionFormPage.fillInJournal(data.journal)
+        SubmissionFormPage.fillInReviewer(data.creator)
+        SubmissionFormPage.fillInEditDate(data.date)
+        SubmissionFormPage.fillInReviewCreator(data.creator)
         // eslint-disable-next-line
         SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
@@ -304,6 +350,19 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getTableRows().should('eq', 1)
       ManuscriptsPage.getArticleStatus(0).should('contain', 'Submitted')
       cy.url().should('contain', 'submitted')
+    })
+  })
+
+  context('video chat button', () => {
+    it('check the video chat link, and if it returns 200', () => {
+      ManuscriptsPage.getLiveChatButton().invoke('attr', 'href').should('contain', '//8x8.vc/coko/')
+      ManuscriptsPage.getLiveChatButton()
+        .then(link => {
+          cy
+            .request(link.prop('href'))
+            .its('status')
+            .should('eq', 200)
+        })
     })
   })
 })

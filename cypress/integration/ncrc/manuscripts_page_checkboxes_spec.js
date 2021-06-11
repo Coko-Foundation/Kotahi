@@ -1,3 +1,5 @@
+/* eslint-disable jest/expect-expect */
+
 import { manuscripts } from '../../support/routes'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
@@ -74,20 +76,25 @@ describe('manuscripts page checkboxes tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleUrl(data.doi)
-        SubmissionFormPage.fillInArticleDescription(data.title)
+        SubmissionFormPage.fillInArticleDescription(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
         SubmissionFormPage.clickDropdown(2)
         SubmissionFormPage.selectDropdownOption(0)
-        SubmissionFormPage.fillInStudySetting(data.studySetting)
         SubmissionFormPage.fillInMainFindings(data.mainFindings)
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickDropdown(-1)
+        SubmissionFormPage.clickDropdown(-3)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
+        SubmissionFormPage.fillInFirstAuthor(data.creator)
+        SubmissionFormPage.fillInDatePublished(data.date)
+        SubmissionFormPage.fillInJournal(data.journal)
+        SubmissionFormPage.fillInReviewer(data.creator)
+        SubmissionFormPage.fillInEditDate(data.date)
+        SubmissionFormPage.fillInReviewCreator(data.creator)
         // eslint-disable-next-line
-                SubmissionFormPage.waitThreeSec()
+        SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
       })
       ManuscriptsPage.getAllArticleCheckboxes().should('not.exist')

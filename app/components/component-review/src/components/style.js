@@ -8,8 +8,8 @@ export const AdminSection = styled.div`
 export const Roles = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-around;
   font-size: 0.8em;
+  justify-content: space-around;
   margin-bottom: 0.6em;
   margin-left: 0.5em;
   margin-top: 0;
@@ -26,13 +26,13 @@ export const Role = styled.div`
 `
 
 export const Info = styled.span`
-  padding: 0;
-  margin: 0;
-  list-style: none;
-  display: flex;
   align-items: center;
-  justify-content: center;
+  display: flex;
   height: 500px;
+  justify-content: center;
+  list-style: none;
+  margin: 0;
+  padding: 0;
 `
 
 export const EditorWrapper = styled.div`
@@ -56,9 +56,9 @@ export const EditorWrapper = styled.div`
 // `
 
 export const FormStatus = styled.div`
+  color: ${th('colorSecondary')};
   line-height: ${grid(5)};
   text-align: center;
-  color: ${th('colorSecondary')};
 `
 
 export const ErrorWrap = styled.div`

@@ -191,6 +191,12 @@ module.exports = {
     'journal',
     'teams',
   ],
+  s3: {
+    accessKeyId: 'test',
+    secretAccessKey: 'password',
+    endpoint: 'http://localhost:9000',
+    region: 'us-east-1',
+  },
   schema: {},
   journal,
 }

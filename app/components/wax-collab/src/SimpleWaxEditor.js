@@ -1,23 +1,31 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Wax, ComponentPlugin } from 'wax-prosemirror-core'
 import styled, { css } from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { debounce } from 'lodash'
+import { th } from '@pubsweet/ui-toolkit'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { DefaultSchema } from 'wax-prosemirror-utilities'
 import {
   AnnotationToolGroupService,
+  DisplayToolGroupService,
   InlineAnnotationsService,
   LinkService,
   ListsService,
   ListToolGroupService,
-  DisplayToolGroupService,
+  MathService,
+  NoteService,
+  NoteToolGroupService,
+  SpecialCharactersService,
+  SpecialCharactersToolGroupService,
   TextBlockLevelService,
   TextToolGroupService,
 } from 'wax-prosemirror-services'
 import EditorElements from './EditorElements'
 
-const waxConfig = {
+import './katex/katex.css'
+
+const waxConfig = () => ({
   SchemaService: DefaultSchema,
   MenuService: [
     {
@@ -25,11 +33,10 @@ const waxConfig = {
       toolGroups: [
         {
           name: 'Annotations',
-          exclude: ['Code', 'StrikeThrough', 'Underline', 'SmallCaps'],
+          exclude: ['StrikeThrough', 'Code'],
         },
-        {
-          name: 'Lists',
-        },
+        'SpecialCharacters',
+        'Lists',
         {
           name: 'Text',
           exclude: [
@@ -49,16 +56,21 @@ const waxConfig = {
   ShortCutsService: {},
 
   services: [
-    new ListsService(),
+    new AnnotationToolGroupService(),
+    new DisplayToolGroupService(),
     new InlineAnnotationsService(),
     new LinkService(),
-    new TextBlockLevelService(),
-    new DisplayToolGroupService(),
-    new TextToolGroupService(),
-    new AnnotationToolGroupService(),
+    new ListsService(),
     new ListToolGroupService(),
+    new MathService(),
+    new NoteService(),
+    new NoteToolGroupService(),
+    new SpecialCharactersService(),
+    new SpecialCharactersToolGroupService(),
+    new TextBlockLevelService(),
+    new TextToolGroupService(),
   ],
-}
+})
 
 const Grid = styled.div`
   display: grid;
@@ -72,9 +84,6 @@ const Grid = styled.div`
       : css`
           grid-template-rows: 40px 1fr;
         `}
-
-  position: relative;
-  z-index: 0;
 `
 
 const EditorDiv = styled.div`
@@ -112,16 +121,10 @@ const Menu = styled.div`
   position: sticky;
   top: -20px;
   user-select: none;
-  z-index: 10;
+  z-index: 1;
 
-  button {
-    padding: ${grid(0.25)};
-  }
-
-  div {
-    align-items: center;
-    display: flex;
-    justify-content: center;
+  :focus-within {
+    z-index: 1000;
   }
 `
 
@@ -154,28 +157,40 @@ const SimpleWaxEditor = ({
   validationStatus,
   readonly,
   autoFocus,
+  onBlur,
+  onChange,
   placeholder,
   ...rest
-}) => (
-  <div className={validationStatus}>
-    <Wax
-      autoFocus={autoFocus}
-      config={waxConfig}
-      // fileUpload={file => renderImage(file)}
-      layout={WaxLayout(readonly)}
-      placeholder={placeholder}
-      readonly={readonly}
-      value={value}
-      {...rest}
-    />
-  </div>
-)
+}) => {
+  const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
+  return (
+    <div className={validationStatus}>
+      <Wax
+        autoFocus={autoFocus}
+        config={waxConfig()}
+        // fileUpload={file => renderImage(file)}
+        layout={WaxLayout(readonly)}
+        onBlur={val => {
+          onChange && onChange(val)
+          onBlur && onBlur(val)
+        }}
+        onChange={debounceChange}
+        placeholder={placeholder}
+        readonly={readonly}
+        value={value}
+        {...rest}
+      />
+    </div>
+  )
+}
 
 SimpleWaxEditor.propTypes = {
   value: PropTypes.string,
   validationStatus: PropTypes.string,
   readonly: PropTypes.bool,
   autoFocus: PropTypes.bool,
+  onBlur: PropTypes.func,
+  onChange: PropTypes.func,
   placeholder: PropTypes.string,
 }
 
@@ -184,6 +199,8 @@ SimpleWaxEditor.defaultProps = {
   validationStatus: undefined,
   readonly: false,
   autoFocus: false,
+  onBlur: () => {},
+  onChange: () => {},
   placeholder: '',
 }
 

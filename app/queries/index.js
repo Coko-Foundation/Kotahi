@@ -127,6 +127,20 @@ export const GET_MANUSCRIPTS = gql`
         created
         updated
         status
+        teams {
+          id
+          role
+          members {
+            id
+            user {
+              defaultIdentity {
+                name
+              }
+              id
+              username
+            }
+          }
+        }
         manuscriptVersions {
           id
           meta {
@@ -154,6 +168,24 @@ export const GET_MANUSCRIPTS = gql`
             name
           }
           profilePicture
+        }
+      }
+    }
+  }
+`
+export const IMPORT_MANUSCRIPTS = gql`
+  mutation {
+    importManuscripts {
+      totalCount
+      manuscripts {
+        id
+        submission
+        created
+        updated
+        status
+        meta {
+          manuscriptId
+          title
         }
       }
     }

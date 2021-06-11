@@ -18,6 +18,7 @@ describe('form builder tests', () => {
       })
       FormsPage.verifyPageLoaded()
     })
+
     it('check form entries are correct', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
@@ -28,55 +29,103 @@ describe('form builder tests', () => {
           data.ncrc.description,
           data.ncrc.ourTake,
           data.ncrc.studyDesign,
-          data.ncrc.studyPopulation,
           data.ncrc.mainFindings,
           data.ncrc.studyStrengths,
           data.ncrc.limitations,
           data.ncrc.valueAdded,
           data.ncrc.labels,
           data.ncrc.topics,
+          data.ncrc.abstract,
+          data.ncrc.firstAuthor,
+          data.ncrc.datePublished,
+          data.ncrc.studyPopulation,
+          data.ncrc.keywords,
+          data.ncrc.journal,
+          data.ncrc.editFinished,
+          data.ncrc.reviewer,
+          data.ncrc.editDate,
+          data.ncrc.finalTakeWordcount,
+          data.ncrc.compendiumFeature,
+          data.ncrc.reviewCreator,
         ]
 
         // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < 11; i++) {
+        for (let i = 0; i < 22; i++) {
           FormsPage.getFormBuilderElementName(i).should('contain', dataArray[i])
         }
       })
     })
+
     it('check form field type & assert field is mandatory', () => {
-      FormsPage.clickFormOption(0)
-      FormsPage.getComponentType().should('contain', 'TextField')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(1)
-      FormsPage.getComponentType().should('contain', 'TextField')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(2)
-      FormsPage.getComponentType().should('contain', 'AbstractEditor')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(3)
-      FormsPage.getComponentType().should('contain', 'Select')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(4)
-      FormsPage.getComponentType().should('contain', 'AbstractEditor')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(5)
-      FormsPage.getComponentType().should('contain', 'AbstractEditor')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(6)
-      FormsPage.getComponentType().should('contain', 'AbstractEditor')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(7)
-      FormsPage.getComponentType().should('contain', 'AbstractEditor')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(8)
-      FormsPage.getComponentType().should('contain', 'AbstractEditor')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(9)
-      FormsPage.getComponentType().should('contain', 'Select')
-      FormsPage.getFieldValidate().should('contain', 'Required')
-      FormsPage.clickFormOption(10)
-      FormsPage.getComponentType().should('contain', 'CheckboxGroup')
-      FormsPage.getFieldValidate().should('contain', 'Required')
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('form_option').then(data => {
+        FormsPage.clickFormOptionWithText(data.ncrc.articleUrl)
+        FormsPage.getComponentType().should('contain', 'TextField')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.description)
+        FormsPage.getComponentType().should('contain', 'TextField')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.ourTake)
+        FormsPage.getComponentType().should('contain', 'AbstractEditor')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.studyDesign)
+        FormsPage.getComponentType().should('contain', 'Select')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.mainFindings)
+        FormsPage.getComponentType().should('contain', 'AbstractEditor')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.studyStrengths)
+        FormsPage.getComponentType().should('contain', 'AbstractEditor')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.limitations)
+        FormsPage.getComponentType().should('contain', 'AbstractEditor')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.valueAdded)
+        FormsPage.getComponentType().should('contain', 'AbstractEditor')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.labels)
+        FormsPage.getComponentType().should('contain', 'Select')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.topics)
+        FormsPage.getComponentType().should('contain', 'CheckboxGroup')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.abstract)
+        FormsPage.getComponentType().should('contain', 'TextField')
+        FormsPage.getFieldValidate().should('not.contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.firstAuthor)
+        FormsPage.getComponentType().should('contain', 'TextField')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.datePublished)
+        FormsPage.getComponentType().should('contain', 'TextField')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.studyPopulation)
+        FormsPage.getComponentType().should('contain', 'AbstractEditor')
+        FormsPage.getFieldValidate().should('not.contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.keywords)
+        FormsPage.getComponentType().should('contain', 'TextField')
+        FormsPage.getFieldValidate().should('not.contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.journal)
+        FormsPage.getComponentType().should('contain', 'TextField')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.editFinished)
+        FormsPage.getComponentType().should('contain', 'Select')
+        FormsPage.getFieldValidate().should('not.contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.reviewer)
+        FormsPage.getComponentType().should('contain', 'TextField')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.editDate)
+        FormsPage.getComponentType().should('contain', 'TextField')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.finalTakeWordcount)
+        FormsPage.getComponentType().should('contain', 'TextField')
+        FormsPage.getFieldValidate().should('not.contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.compendiumFeature)
+        FormsPage.getComponentType().should('contain', 'Select')
+        FormsPage.getFieldValidate().should('not.contain', 'Required')
+        FormsPage.clickFormOptionWithText(data.ncrc.reviewCreator)
+        FormsPage.getComponentType().should('contain', 'TextField')
+        FormsPage.getFieldValidate().should('contain', 'Required')
+      })
     })
     it('check DOI validation has default selected Yes and select No', () => {
       FormsPage.clickFormOption(0)
@@ -94,6 +143,7 @@ describe('form builder tests', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
       })
+      cy.awaitDisappearSpinner()
       ManuscriptsPage.getTableHeader().should('be.visible')
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
@@ -107,17 +157,28 @@ describe('form builder tests', () => {
           data.ncrc.description,
           data.ncrc.ourTake,
           data.ncrc.studyDesign,
-          data.ncrc.studyPopulation,
           data.ncrc.mainFindings,
           data.ncrc.studyStrengths,
           data.ncrc.limitations,
           data.ncrc.valueAdded,
           data.ncrc.labels,
           data.ncrc.topics,
+          data.ncrc.abstract,
+          data.ncrc.firstAuthor,
+          data.ncrc.datePublished,
+          data.ncrc.studyPopulation,
+          data.ncrc.keywords,
+          data.ncrc.journal,
+          data.ncrc.editFinished,
+          data.ncrc.reviewer,
+          data.ncrc.editDate,
+          data.ncrc.finalTakeWordcount,
+          data.ncrc.compendiumFeature,
+          data.ncrc.reviewCreator,
         ]
 
         // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < 11; i++) {
+        for (let i = 0; i < 22; i++) {
           SubmissionFormPage.getFormOptionList(i).should(
             'contain',
             dataArray[i],
@@ -126,18 +187,26 @@ describe('form builder tests', () => {
       })
     })
 
-    it('check required message is displayed for all fields', () => {
+    it('check required message is displayed for all required fields', () => {
       SubmissionFormPage.clickSubmitResearch()
-      // eslint-disable-next-line jest/valid-expect-in-promise
-      cy.fixture('form_option').then(data => {
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < 11; i++) {
-          SubmissionFormPage.getFormOptionList(i).should(
-            'contain',
-            data.elife.required,
-          )
-        }
-      })
+
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < 10; i++) {
+        SubmissionFormPage.getFormOptionList(i).should('contain', 'Required')
+      }
+
+      SubmissionFormPage.getFormOptionList(10).should('not.contain', 'Required')
+      SubmissionFormPage.getFormOptionList(11).should('contain', 'Required')
+      SubmissionFormPage.getFormOptionList(12).should('contain', 'Required')
+      SubmissionFormPage.getFormOptionList(13).should('not.contain', 'Required')
+      SubmissionFormPage.getFormOptionList(14).should('not.contain', 'Required')
+      SubmissionFormPage.getFormOptionList(15).should('contain', 'Required')
+      SubmissionFormPage.getFormOptionList(16).should('not.contain', 'Required')
+      SubmissionFormPage.getFormOptionList(17).should('contain', 'Required')
+      SubmissionFormPage.getFormOptionList(18).should('contain', 'Required')
+      SubmissionFormPage.getFormOptionList(19).should('not.contain', 'Required')
+      SubmissionFormPage.getFormOptionList(20).should('not.contain', 'Required')
+      SubmissionFormPage.getFormOptionList(21).should('contain', 'Required')
     })
 
     it('message for DOI invalid is visible ', () => {
@@ -175,6 +244,32 @@ describe('form builder tests', () => {
         }
       })
     })
+
+    it('check edit finished dropdown options', () => {
+      SubmissionFormPage.clickElementFromFormOptionList(16)
+      SubmissionFormPage.getDropdownOption(0).should('contain', 'True')
+      SubmissionFormPage.getDropdownOption(1).should('contain', 'False')
+    })
+
+    it('check compendium feature dropdown options', () => {
+      SubmissionFormPage.clickElementFromFormOptionList(20)
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('form_option').then(data => {
+        SubmissionFormPage.getDropdownOption(0).should(
+          'contain',
+          data.ncrc.compendiumFeatureTypes.no,
+        )
+        SubmissionFormPage.getDropdownOption(1).should(
+          'contain',
+          data.ncrc.compendiumFeatureTypes.mediumLow,
+        )
+        SubmissionFormPage.getDropdownOption(2).should(
+          'contain',
+          data.ncrc.compendiumFeatureTypes.high,
+        )
+      })
+    })
+
     it('check label dropdown options', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
@@ -184,7 +279,7 @@ describe('form builder tests', () => {
           data.ncrc.labelTypes.readyToPublish,
         ]
 
-        SubmissionFormPage.clickElementFromFormOptionList(9)
+        SubmissionFormPage.clickElementFromFormOptionList(8)
 
         // eslint-disable-next-line no-plusplus
         for (let i = 0; i < 3; i++) {
@@ -195,6 +290,7 @@ describe('form builder tests', () => {
         }
       })
     })
+
     it('check topic checkbox options', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {

@@ -44,14 +44,17 @@ const resolvers = {
     createMessage: async (_, { content, channelId }, context) => {
       const pubsub = await getPubsub()
       const userId = context.user.id
+
       const savedMessage = await new Message({
         content,
         userId,
         channelId,
       }).save()
+
       const message = await Message.query()
         .findById(savedMessage.id)
         .eager('user')
+
       pubsub.publish(`${MESSAGE_CREATED}.${channelId}`, message.id)
 
       return message
@@ -60,9 +63,7 @@ const resolvers = {
   Subscription: {
     messageCreated: {
       resolve: async (messageId, _, context) => {
-        const message = await Message.query()
-          .findById(messageId)
-          .eager('user')
+        const message = await Message.query().findById(messageId).eager('user')
         return message
       },
       subscribe: async (_, vars, context) => {

@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+
 module.exports = {
   metadata: require('./metadata'),
   decisions: require('./decisions'),

@@ -8,10 +8,11 @@ const Icon = styled.div`
   height: ${grid(10)};
   margin-bottom: ${th('gridUnit')};
   opacity: 0.5;
-  position: relative;
-  width: ${grid(10)};
   overflow: hidden;
   padding: ${grid(1)};
+  position: relative;
+  width: ${grid(10)};
+
   img {
     width: ${grid(8)};
   }
@@ -29,8 +30,8 @@ const Extension = styled.div`
   background: ${th('colorText')};
   color: ${th('colorTextReverse')};
   font-size: ${th('fontSizeBaseSmall')};
-  line-height: ${th('lineHeightBaseSmall')};
   left: ${grid(2)};
+  line-height: ${th('lineHeightBaseSmall')};
   position: absolute;
   right: 0;
   text-align: center;
@@ -41,11 +42,11 @@ const Extension = styled.div`
 const Filename = styled.div`
   color: ${th('colorText')};
   font-size: ${th('fontSizeBaseSmall')};
-  line-height: ${th('lineHeightBaseSmall')};
   font-style: italic;
+  line-height: ${th('lineHeightBaseSmall')};
   max-width: ${grid(30)};
-  text-overflow: ellipsis;
   overflow: hidden;
+  text-overflow: ellipsis;
 `
 
 const Uploading = styled.div`
@@ -64,9 +65,8 @@ const Uploaded = styled(Uploading)`
   }
 
   &:hover ${Icon} {
-    opacity: 1;
     background: ${th('colorPrimary')};
-    // transform: skewY(6deg) rotate(-6deg);
+    opacity: 1;
   }
 
   &:hover::after,
@@ -81,8 +81,8 @@ const ErrorWrapper = styled.div`
     ${th('colorTextReverse')};
   color: ${th('colorTextReverse')};
   font-size: ${th('fontSizeBaseSmall')};
-  line-height: ${th('lineHeightBaseSmall')};
   letter-spacing: 0.01em;
+  line-height: ${th('lineHeightBaseSmall')};
   opacity: 1;
   padding: ${th('gridUnit')} ${th('gridUnit')};
   position: absolute;

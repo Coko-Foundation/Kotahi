@@ -96,19 +96,11 @@ describe('FormBuilder Layout', () => {
       formbuilder.find('[data-test-id="tab-container"]').children(),
     ).toHaveLength(1)
 
-    expect(
-      formbuilder
-        .find(FormProperties)
-        .find('form')
-        .text(),
-    ).toContain('Create Form')
+    expect(formbuilder.find(FormProperties).find('form').text()).toContain(
+      'Create Form',
+    )
 
-    expect(
-      formbuilder
-        .find(FormProperties)
-        .at(1)
-        .find('form'),
-    ).toHaveLength(0)
+    expect(formbuilder.find(FormProperties).at(1).find('form')).toHaveLength(0)
   })
 
   it('shows three tabs and make the first active', () => {
@@ -126,17 +118,9 @@ describe('FormBuilder Layout', () => {
     ).toHaveLength(3)
 
     expect(
-      formbuilder
-        .find(FormBuilder)
-        .find('BuilderElement')
-        .children(),
+      formbuilder.find(FormBuilder).find('BuilderElement').children(),
     ).toHaveLength(testforms[0].children.length)
 
-    expect(
-      formbuilder
-        .find(FormProperties)
-        .at(0)
-        .find('form'),
-    ).toHaveLength(1)
+    expect(formbuilder.find(FormProperties).at(0).find('form')).toHaveLength(1)
   })
 })

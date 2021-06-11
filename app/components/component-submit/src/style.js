@@ -4,13 +4,12 @@ import { th, grid } from '@pubsweet/ui-toolkit'
 export { Container, Content, Heading } from '../../shared'
 
 export const Heading1 = styled.h1`
-  margin: 0 0 calc(${th('gridUnit')} * 3);
   font-size: ${th('fontSizeHeading3')};
   line-height: ${th('lineHeightHeading3')};
+  margin: 0 0 calc(${th('gridUnit')} * 3);
 `
 
 export const Section = styled.div`
-  margin: calc(${th('gridUnit')} * 6) 0;
   display: flex;
   flex-direction: ${({ cssOverrides }) =>
     cssOverrides && cssOverrides['flex-direction']
@@ -19,6 +18,7 @@ export const Section = styled.div`
   flex-wrap: ${({ cssOverrides }) =>
     cssOverrides && cssOverrides.wrap ? cssOverrides.wrap : 'nowrap'};
   justify-content: space-between;
+  margin: calc(${th('gridUnit')} * 6) 0;
 `
 
 export const Legend = styled.div`
@@ -26,10 +26,11 @@ export const Legend = styled.div`
   font-weight: 600;
   margin-bottom: ${({ space, theme }) => space && theme.gridUnit};
 `
+
 export const SubNote = styled.span`
+  color: ${th('colorTextPlaceholder')};
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
-  color: ${th('colorTextPlaceholder')};
   width: 100%;
 `
 

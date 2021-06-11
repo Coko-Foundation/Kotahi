@@ -85,53 +85,55 @@ const Dashboard = ({ history, ...props }) => {
           ＋ New submission
         </Button>
       </HeadingWithAction>
-  {
-    !['ncrc'].includes(process.env.INSTANCE_NAME) &&
-      <SectionContent >
-        <SectionHeader>
-          <Title>My Submissions</Title>
-        </SectionHeader>
-        {mySubmissions.length > 0 ? (
-          mySubmissions.map(submission => (
-            // Links are based on the original/parent manuscript version
-            <OwnerItem
-            key={submission.id}
-            // deleteManuscript={() =>
-            //   // eslint-disable-next-line no-alert
-            //   window.confirm(
-              //     'Are you sure you want to delete this submission?',
-              //   ) && deleteManuscript({ variables: { id: submission.id } })
-              // }
-              version={submission}
+      {!['ncrc'].includes(process.env.INSTANCE_NAME) && (
+        <SectionContent>
+          <SectionHeader>
+            <Title>My Submissions</Title>
+          </SectionHeader>
+          {mySubmissions.length > 0 ? (
+            mySubmissions.map(submission => (
+              // Links are based on the original/parent manuscript version
+              <OwnerItem
+                key={submission.id}
+                // deleteManuscript={() =>
+                //   // eslint-disable-next-line no-alert
+                //   window.confirm(
+                //     'Are you sure you want to delete this submission?',
+                //   ) && deleteManuscript({ variables: { id: submission.id } })
+                // }
+                version={submission}
               />
-              ))
-              ) : (
-                <Placeholder>You have not submitted any manuscripts yet</Placeholder>
-                )}
-      </SectionContent>
-  }
-  {
-    !['ncrc'].includes(process.env.INSTANCE_NAME) &&
-      <SectionContent>
-        <SectionHeader>
-          <Title>To Review</Title>
-        </SectionHeader>
-        {toReview.length > 0 ? (
-          toReview.map(review => (
-            <SectionRow key={review.id}>
-              <ReviewerItem
-                currentUser={currentUser}
-                key={review.id}
-                reviewerRespond={reviewerRespond}
-                version={review}
-              />
-            </SectionRow>
-          ))
-        ) : (
-          <Placeholder>You have not been assigned any reviews yet</Placeholder>
-        )}
-      </SectionContent>
-    }
+            ))
+          ) : (
+            <Placeholder>
+              You have not submitted any manuscripts yet
+            </Placeholder>
+          )}
+        </SectionContent>
+      )}
+      {!['ncrc'].includes(process.env.INSTANCE_NAME) && (
+        <SectionContent>
+          <SectionHeader>
+            <Title>To Review</Title>
+          </SectionHeader>
+          {toReview.length > 0 ? (
+            toReview.map(review => (
+              <SectionRow key={review.id}>
+                <ReviewerItem
+                  currentUser={currentUser}
+                  key={review.id}
+                  reviewerRespond={reviewerRespond}
+                  version={review}
+                />
+              </SectionRow>
+            ))
+          ) : (
+            <Placeholder>
+              You have not been assigned any reviews yet
+            </Placeholder>
+          )}
+        </SectionContent>
+      )}
 
       <SectionContent>
         <SectionHeader>

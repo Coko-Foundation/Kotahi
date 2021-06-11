@@ -50,6 +50,7 @@ let debouncers = {}
 
 const SubmitPage = ({ match, history }) => {
   const [confirming, setConfirming] = useState(false)
+  const [isPublishingBlocked, setIsPublishingBlocked] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -80,6 +81,7 @@ const SubmitPage = ({ match, history }) => {
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
 
+  const currentUser = data?.currentUser
   const manuscript = data?.manuscript
   const form = cleanForm(data?.formForPurpose?.structure)
 
@@ -110,6 +112,12 @@ const SubmitPage = ({ match, history }) => {
   }
 
   const republish = async manuscriptId => {
+    if (isPublishingBlocked) {
+      return
+    }
+
+    setIsPublishingBlocked(true)
+
     const areThereInvalidFields = await Promise.all(
       validateManuscript(
         {
@@ -129,7 +137,6 @@ const SubmitPage = ({ match, history }) => {
     await publishManuscript({
       variables: {
         id: manuscriptId,
-        input: JSON.stringify(manuscriptChangedFields),
       },
     })
 
@@ -171,6 +178,7 @@ const SubmitPage = ({ match, history }) => {
     <Submit
       confirming={confirming}
       createNewVersion={createNewVersion}
+      currentUser={currentUser}
       form={pruneEmpty(form)}
       match={match}
       onChange={handleChange}
@@ -178,6 +186,7 @@ const SubmitPage = ({ match, history }) => {
       parent={manuscript}
       republish={republish}
       toggleConfirming={toggleConfirming}
+      updateManuscript={updateManuscript}
       versions={versions}
     />
   )

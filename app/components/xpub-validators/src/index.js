@@ -23,6 +23,7 @@ export const minChars = min => {
 
   return value => {
     const text = striptags(value)
+
     if (!text || text.length < min) {
       return message
     }

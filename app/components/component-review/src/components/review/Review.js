@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { NoteViewer } from 'xpub-edit'
 import { Attachment } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 
 const Heading = styled.div``
 
@@ -30,7 +30,7 @@ const filesToAttachment = file => ({
 const ReviewComments = (review, type) => (
   <Note>
     <Content>
-      <NoteViewer value={review[`${type}Comment`].content} />
+      <SimpleWaxEditor readonly value={review[`${type}Comment`].content} />
     </Content>
     {review[`${type}Comment`].files.map(attachment => (
       <Attachment
@@ -70,8 +70,24 @@ const Review = ({ review, user }) => (
 
 Review.propTypes = {
   review: PropTypes.shape({
-    reviewComment: PropTypes.string,
-    confidentialComment: PropTypes.string,
+    reviewComment: PropTypes.shape({
+      content: PropTypes.string.isRequired,
+      files: PropTypes.arrayOf(
+        PropTypes.shape({
+          filename: PropTypes.string.isRequired,
+          url: PropTypes.string.isRequired,
+        }).isRequired,
+      ).isRequired,
+    }),
+    confidentialComment: PropTypes.shape({
+      content: PropTypes.string.isRequired,
+      files: PropTypes.arrayOf(
+        PropTypes.shape({
+          filename: PropTypes.string.isRequired,
+          url: PropTypes.string.isRequired,
+        }).isRequired,
+      ).isRequired,
+    }),
     recommendation: PropTypes.string,
   }).isRequired,
   user: {

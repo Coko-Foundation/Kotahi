@@ -1,8 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
-
-import { NoteViewer } from 'xpub-edit'
 import { Attachment } from '@pubsweet/ui'
+import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 
 const Heading = styled.div``
 const Note = styled.div``
@@ -26,10 +25,13 @@ const Decision = ({ review }) => (
   <div>
     <div>
       {findComments(review, 'note') && [
-        <Heading>Note</Heading>,
-        <Note>
+        <Heading key={0}>Note</Heading>,
+        <Note key={1}>
           <Content>
-            <NoteViewer value={findComments(review, 'note').content} />
+            <SimpleWaxEditor
+              readonly
+              value={findComments(review, 'note').content}
+            />
           </Content>
           {findComments(review, 'note') &&
             (findComments(review, 'note').files || []).map(attachment => (

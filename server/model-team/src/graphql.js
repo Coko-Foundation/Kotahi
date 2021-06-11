@@ -3,11 +3,10 @@ const eager = '[members.[user, alias]]'
 const resolvers = {
   Query: {
     team(_, { id }, ctx) {
-      return ctx.models.Team.query()
-        .findById(id)
-        .eager(eager)
+      return ctx.models.Team.query().findById(id).eager(eager)
     },
     teams(_, { where }, ctx) {
+      // eslint-disable-next-line no-param-reassign
       where = where || {}
       // if (where.users) {
       //   const { users } = where
@@ -21,9 +20,7 @@ const resolvers = {
       //   where._relations = [{ relation: 'aliases', object: alias }]
       // }
 
-      return ctx.models.Team.query()
-        .where(where)
-        .eager(eager)
+      return ctx.models.Team.query().where(where).eager(eager)
     },
   },
   Mutation: {
@@ -37,6 +34,7 @@ const resolvers = {
         allowUpsert: '[members, members.alias]',
         eager: '[members.[user.teams, alias]]',
       }
+
       return ctx.models.Team.query().insertGraphAndFetch(input, options)
     },
     updateTeam(_, { id, input }, ctx) {

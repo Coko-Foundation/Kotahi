@@ -4,17 +4,18 @@
  * containing the logout option(index 0), change profile picture option (index 1)
  * & change username option (index 2).
  */
-const BUTTON = 'button';
-const USERNAME_FIELD = '[class*=ChangeUsername] > input';
+const BUTTON = 'button'
+const USERNAME_FIELD = '[class*=ChangeUsername] > input'
 
+// eslint-disable-next-line import/prefer-default-export
 export const ProfilePage = {
-    getButtonByIndex(nth) {
-        return cy.get(BUTTON).eq(nth);
-    },
-    getUsernameField() {
-        return cy.get(USERNAME_FIELD);
-    },
-    changeUsername(username) {
-        this.getUsernameField().fillInput(username);
-    }
+  getButtonByIndex(nth) {
+    return cy.get(BUTTON).eq(nth)
+  },
+  getUsernameField() {
+    return cy.get(USERNAME_FIELD)
+  },
+  changeUsername(username) {
+    this.getUsernameField().fillInput(username)
+  },
 }

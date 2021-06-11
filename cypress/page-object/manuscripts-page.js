@@ -8,6 +8,7 @@ import { evaluate } from '../support/routes'
  */
 const MANUSCRIPTS_OPTIONS_LIST = '[class*=style__UserAction]'
 const BUTTON = 'button'
+const LIVE_CHAT_BUTTON = '[class*=VideoChatButton]'
 const MANUSCRIPTS_PAGE_TITLE = '[class*=General__Heading-sc]'
 const EVALUATION_BUTTON = '[href*=evaluation]'
 const CONTROL_BUTTON = '[href*=control]'
@@ -22,9 +23,15 @@ const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 const TABLE_ROW = 'Table__Row'
 const LABEL = 'style__StyledTableLabel'
 const ARTICLE_STATUS = '[class*=Badge__Status]'
-const ARTICLE_CHECKBOX = '[class*=Table__Cell] > label > [type*=checkbox]'
+
+const ARTICLE_CHECKBOX =
+  '[class*=style__StyledDescriptionWrapper] > label > [type*=checkbox]'
+
 const SELECT_ALL_CHECKBOX = '[type=checkbox]'
 const NUMBER_OF_ARTICLES_SELECTED = 'style__SelectedManuscriptsNumber'
+const EDITOR_NAME_CELL = 'style__StyledAuthor'
+const TOOLTIP_ICON = 'style__InfoIcon'
+const TOOLTIP_TEXT = 'rc-tooltip-inner'
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -41,6 +48,12 @@ export const ManuscriptsPage = {
   },
   clickSubmit() {
     this.getSubmitButton().click()
+  },
+  getLiveChatButton() {
+    return cy.get(LIVE_CHAT_BUTTON)
+  },
+  clickLiveChatButton() {
+    this.getLiveChatButton().click()
   },
   getManuscriptsPageTitle() {
     return cy.get(MANUSCRIPTS_PAGE_TITLE)
@@ -132,6 +145,15 @@ export const ManuscriptsPage = {
   },
   clickDelete() {
     this.getDeleteButton().click()
+  },
+  getEditorName() {
+    return cy.getByContainsClass(EDITOR_NAME_CELL)
+  },
+  getTooltipIcon() {
+    return cy.getByContainsClass(TOOLTIP_ICON)
+  },
+  getTooltipText() {
+    return cy.getByContainsClass(TOOLTIP_TEXT)
   },
 }
 export default ManuscriptsPage

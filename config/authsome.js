@@ -40,6 +40,7 @@ class AuthsomeMode {
       ).teams
 
     let membershipCondition
+
     if (object) {
       // We're asking if a user is a member of a team for a specific object
       membershipCondition = team => {
@@ -199,6 +200,7 @@ class AuthsomeMode {
     if (this.user.id === this.object.id) {
       return true
     }
+
     return {
       filter: user =>
         pickBy(user, (_, key) => ['id', 'username', 'type'].includes(key)),
@@ -288,6 +290,7 @@ class AuthsomeMode {
     if (!this.isAuthenticated()) {
       return false
     }
+
     return true
   }
 
@@ -304,11 +307,13 @@ class AuthsomeMode {
     this.user = await getUserAndTeams(this.userId, this.context)
 
     const { collection } = this.object
+
     if (collection) {
       const permission = await this.checkTeamMembers(
         ['isAuthor', 'isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
         collection,
       )
+
       return permission
     }
 
@@ -328,12 +333,14 @@ class AuthsomeMode {
     this.user = await getUserAndTeams(this.userId, this.context)
 
     const { collection } = this.object
+
     if (collection) {
       const permission =
         this.isAuthor(collection) ||
         (await this.isAssignedHandlingEditor(collection)) ||
         (await this.isAssignedSeniorEditor(collection)) ||
         (await this.isAssignedReviewerEditor(collection))
+
       return permission
     }
 
@@ -360,9 +367,11 @@ class AuthsomeMode {
     if (!this.isAuthenticated()) {
       return false
     }
+
     this.user = await getUserAndTeams(this.userId, this.context)
 
     const { role, object } = this.object.team
+
     if (role === 'handlingEditor') {
       return this.isAssignedSeniorEditor(object)
     }
@@ -462,12 +471,14 @@ class AuthsomeMode {
   async canMakeInvitation() {
     this.user = await getUserAndTeams(this.userId, this.context)
     const { current } = this.object
+
     if (current) {
       return this.checkTeamMembers(
         ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
         current,
       )
     }
+
     return false
   }
 
@@ -486,6 +497,7 @@ class AuthsomeMode {
 
   async canViewManuscripts() {
     this.user = await getUserAndTeams(this.userId, this.context)
+
     const manuscripts = await Promise.all(
       this.object.map(
         async manuscript =>
@@ -508,6 +520,7 @@ const getUserAndTeams = async (userId, context) => {
   if (!user) return false
   // If it runs on the client, it will have teams in there already.
   // On the server, we need to add the team ids.
+
   if (!user.teams && user.$relatedQuery) {
     user.teams = (await user.$relatedQuery('teams')).map(team => team.id)
   }

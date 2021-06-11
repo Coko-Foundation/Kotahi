@@ -83,11 +83,13 @@ describe('/api/make-decision route', () => {
   })
   it('sends email on acceptance', async () => {
     const app = makeApp()
+
     const response = await app.patch('/api/make-decision').send({
       decision: { recommendation: 'accept', note: { content: 'blah blah' } },
       versionId: 1,
       projectId: 2,
     })
+
     expect(response.body.version).toBeDefined()
     expect(response.body.project).toBeDefined()
     expect(response.body.nextVersion).not.toBeDefined()
@@ -103,11 +105,13 @@ describe('/api/make-decision route', () => {
   it('rejects if not authorised', async () => {
     authsome.can.mockReturnValue(false)
     const app = makeApp()
+
     const response = await app.patch('/api/make-decision').send({
       decision: { recommendation: 'accept', note: { content: 'blah blah' } },
       versionId: 1,
       projectId: 2,
     })
+
     expect(response.status).toBe(403)
     expect(transport.send).not.toHaveBeenCalled()
   })
@@ -120,6 +124,7 @@ describe('/api/make-invitation route', () => {
   it('sends invitation email', async () => {
     authsome.can.mockReturnValue(true)
     const app = makeApp()
+
     const response = await app.patch('/api/make-invitation').send({
       versionId: '1',
       projectId: '2',
@@ -150,6 +155,7 @@ describe('/api/make-invitation route', () => {
   it('rejects if not authorised', async () => {
     authsome.can.mockReturnValue(false)
     const app = makeApp()
+
     const response = await app.patch('/api/make-invitation').send({
       versionId: '1',
       projectId: '2',

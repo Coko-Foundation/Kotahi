@@ -1,9 +1,9 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import Wax from '../../../../wax-collab/src/Editoria'
-import { EditorWrapper, Info } from '../style'
+import FullWaxEditor from '../../../../wax-collab/src/FullWaxEditor'
+import { Info } from '../style'
 
-const EditorSection = ({ manuscript }) => {
+const EditorSection = ({ manuscript, onChange, readonly }) => {
   const manuscriptFile = manuscript?.files?.find(
     file => file.fileType === 'manuscript',
   )
@@ -19,9 +19,11 @@ const EditorSection = ({ manuscript }) => {
     return <Info>No supported view of the file</Info>
 
   return (
-    <EditorWrapper>
-      <Wax content={manuscript.meta.source} readonly />
-    </EditorWrapper>
+    <FullWaxEditor
+      onChange={readonly ? null : onChange}
+      readonly={readonly}
+      value={manuscript.meta.source}
+    />
   )
 }
 
@@ -37,6 +39,13 @@ EditorSection.propTypes = {
       source: PropTypes.string,
     }).isRequired,
   }).isRequired,
+  onChange: PropTypes.func,
+  readonly: PropTypes.bool,
+}
+
+EditorSection.defaultProps = {
+  onChange: undefined,
+  readonly: false,
 }
 
 export default EditorSection

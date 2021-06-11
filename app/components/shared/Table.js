@@ -1,0 +1,57 @@
+import styled from 'styled-components'
+import { th, grid } from '@pubsweet/ui-toolkit'
+
+export const Table = styled.table`
+  border-collapse: collapse;
+  border-radius: ${th('borderRadius')};
+  font-size: ${th('fontSizeBaseSmall')};
+  margin-top: ${grid(2)};
+  overflow: hidden;
+  width: 100%;
+
+  td {
+    width: 25%;
+  }
+`
+
+export const ManuscriptsTable = styled(Table)`
+  @media (max-width: 1400px) {
+    margin-top: 0;
+  }
+`
+
+export const Header = styled.thead`
+  background-color: ${th('colorSecondaryBackground')};
+  border-bottom: 1px solid ${th('colorFurniture')};
+  font-variant: all-small-caps;
+  text-align: left;
+
+  th {
+    padding: ${grid(1)} ${grid(3)};
+  }
+`
+
+export const Row = styled.tr`
+  border-bottom: 1px solid ${th('colorFurniture')};
+  max-height: ${grid(8)};
+
+  &:hover {
+    background-color: ${th('colorBackgroundHue')};
+  }
+`
+
+export const Cell = styled.td`
+  ${({ minWidth }) => minWidth && `min-width: ${minWidth}`};
+  padding-bottom: ${grid(2)};
+  padding-left: ${grid(3)};
+  padding-right: ${grid(3)};
+  padding-top: calc(${grid(2)} - 1px);
+
+  button {
+    font-size: ${th('fontSizeBaseSmall')};
+  }
+`
+
+export const LastCell = styled(Cell)`
+  text-align: right;
+`

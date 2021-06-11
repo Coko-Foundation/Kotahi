@@ -35,6 +35,7 @@ export const sortAndGroupMessages = messages => {
 
     const sameUser =
       messages[i].user.id !== 'robo' && messages[i].user.id === checkId
+
     const oldMessage = (current, previous) => {
       // => boolean
       /*
@@ -82,12 +83,14 @@ export const sortAndGroupMessages = messages => {
           newArray.push(messages[i])
         }
       }
+
       // and maintain the checkid
       checkId = messages[i].user.id
       // if the next message is from a new user
     } else {
       // we push the previous user's messages to the masterarray
       masterArray.push(newArray)
+
       // if the new users message is older than our preferred variance
       if (i > 0 && oldMessage(messages[i], messages[i - 1])) {
         // push a robo timestamp

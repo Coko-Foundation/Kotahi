@@ -108,19 +108,6 @@
       ]
     },
     {
-      "title": "Study population and setting",
-      "id": "64b05f22-1f4a-41ea-9dbd-1528c81d6383",
-      "component": "AbstractEditor",
-      "name": "submission.studyPopulationAndSetting",
-      "validate": [
-        {
-          "value": "required",
-          "label": "Required",
-          "id": "eba51ef1-97a6-4b6d-9537-427354ec2c9f"
-        }
-      ]
-    },
-    {
       "title": "Summary of main findings",
       "id": "421aab67-569f-4539-8bc6-97376c64538f",
       "component": "AbstractEditor",
@@ -254,6 +241,152 @@
           "value": "required",
           "label": "Required",
           "id": "14b32182-e4a5-4a99-bb23-b673b500b521"
+        }
+      ]
+    },
+    {
+      "title": "Abstract",
+      "id": "e93b5e84-a049-4a0f-9a7a-b573aea4f905",
+      "component": "TextField",
+      "name": "submission.abstract",
+      "description": "<p></p>",
+      "doiValidation": "false",
+      "validate": []
+    },
+    {
+      "title": "First Author",
+      "id": "49a42019-748a-4fd1-a0e3-210a43ce8225",
+      "component": "TextField",
+      "name": "submission.firstAuthor",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "dbbabc17-c2e2-476d-901a-c6bae38c8fe6"
+        }
+      ]
+    },
+    {
+      "title": "Date Published",
+      "id": "43fcd173-40fd-411c-a89c-6bdd958bed70",
+      "component": "TextField",
+      "name": "submission.datePublished",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "659e9a15-df54-48a9-9755-539b94a198c1"
+        }
+      ]
+    },
+    {
+      "title": "Study population setting",
+      "id": "8e502920-62bd-4841-8e00-927171908766",
+      "component": "AbstractEditor",
+      "name": "submission.studyPopulationSetting"
+    },
+    {
+      "title": "Keywords",
+      "id": "2c4fb5cd-1e88-434c-b28a-7837c57c89ab",
+      "component": "TextField",
+      "name": "submission.keywords"
+    },
+    {
+      "title": "Journal",
+      "id": "150d401e-0e1c-4122-a661-26516a8e6838",
+      "component": "TextField",
+      "name": "submission.journal",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "0899564d-2f70-42fa-b06f-19e309cfa248"
+        }
+      ]
+    },
+    {
+      "title": "Edit finished",
+      "id": "b955971d-6d57-4ac9-a273-c3404da321b0",
+      "component": "Select",
+      "name": "submission.editFinished",
+      "options": [
+        {
+          "label": "True",
+          "value": "true",
+          "id": "01ae2c83-3e24-4770-a8ec-f38a8202f203"
+        },
+        {
+          "label": "False",
+          "value": "false",
+          "id": "812dd846-eebb-498b-9329-2cd431a13e39"
+        }
+      ]
+    },
+    {
+      "title": "Reviewer",
+      "id": "2552df53-765b-489a-9626-01a4f8ccdd5c",
+      "component": "TextField",
+      "name": "submission.reviewer",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "e1b7f787-e00c-413f-ba2a-3742c9a93e42"
+        }
+      ]
+    },
+    {
+      "title": "Edit date",
+      "id": "f60c6272-bd21-466b-9943-2837f7b2fcf5",
+      "component": "TextField",
+      "name": "submission.editDate",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "43dcda08-274d-46f4-942e-d5d3ecadd296"
+        }
+      ]
+    },
+    {
+      "title": "Final take wordcount",
+      "id": "06331c11-d10a-483f-bbbe-c6ac9d8b9e4c",
+      "component": "TextField",
+      "name": "submission.wordcount"
+    },
+    {
+      "title": "Compendium feature",
+      "id": "3d21cd7c-5264-48a5-b19a-792f9191bb99",
+      "component": "Select",
+      "name": "submission.compendiumFeature",
+      "options": [
+        {
+          "label": "No",
+          "value": "no",
+          "id": "e2a3aa81-8ef7-4b0f-8d7d-21c50f4722f5"
+        },
+        {
+          "label": "Yes, Medium/Low Impact Article",
+          "value": "mediumLowImpact",
+          "id": "df999306-efaa-4a50-8c3b-fc6b6a02f4ad"
+        },
+        {
+          "label": "Yes, High Impact Article",
+          "value": "highImpact",
+          "id": "41c7130f-7e9e-444b-9832-9f2c9c30472d"
+        }
+      ]
+    },
+    {
+      "title": "Review creator",
+      "id": "12a0d30b-e91a-434d-9985-01820f48fdc4",
+      "component": "TextField",
+      "name": "submission.reviewCreator",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "b1d25468-eb0c-498e-9aaf-ad18b756a4fd"
         }
       ]
     }

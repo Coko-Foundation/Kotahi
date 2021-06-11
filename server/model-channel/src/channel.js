@@ -12,6 +12,7 @@ class Channel extends BaseModel {
       Message,
       Team,
       Manuscript,
+      /* eslint-disable-next-line global-require */
     } = require('@pubsweet/models')
 
     return {

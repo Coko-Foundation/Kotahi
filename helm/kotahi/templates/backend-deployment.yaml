@@ -12,6 +12,8 @@ spec:
   strategy: {}
   template:
     metadata:
+      annotations:
+        rollme: {{ randAlphaNum 5 | quote }}
       labels:
         io.kompose.service: server
     spec:
@@ -38,6 +40,16 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: HYPOTHESIS_API_KEY
+                  name: orcid-secret
+            - name: CROSSREF_LOGIN
+              valueFrom:
+                secretKeyRef:
+                  key: CROSSREF_LOGIN
+                  name: orcid-secret
+            - name: CROSSREF_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  key: CROSSREF_PASSWORD
                   name: orcid-secret
             - name: POSTGRES_DB
               valueFrom:
@@ -83,6 +95,16 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: PUBSWEET_SECRET
+                  name: orcid-secret
+            - name: GOOGLE_SPREADSHEET_CLIENT_EMAIL
+              valueFrom:
+                secretKeyRef:
+                  key: GOOGLE_SPREADSHEET_CLIENT_EMAIL
+                  name: orcid-secret
+            - name: GOOGLE_SPREADSHEET_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  key: GOOGLE_SPREADSHEET_PRIVATE_KEY
                   name: orcid-secret
             - name: S3_ACCESS_KEY_ID
               valueFrom:

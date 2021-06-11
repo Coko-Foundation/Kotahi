@@ -34,6 +34,7 @@ const CreateANewVersion = ({
           onClick={() =>
             createNewVersion({
               variables: { id: manuscript.id },
+              // eslint-disable-next-line no-shadow
               update: (cache, { data: { createNewVersion } }) => {
                 // Always modify the main/original/parent manuscript
                 const parentId = manuscript.parentId || manuscript.id
@@ -73,7 +74,7 @@ const CreateANewVersion = ({
           }
           primary
         >
-          Create a new version
+          Create a new version...
         </Button>
       </HeadingWithAction>
     </SectionRow>
