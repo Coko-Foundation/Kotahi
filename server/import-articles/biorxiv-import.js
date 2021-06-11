@@ -123,73 +123,77 @@ const getData = async ctx => {
     }
   }, {})
 
-  const newManuscripts = withoutDuplicates.map(
-    ({
-      rel_doi,
-      rel_site,
-      version,
-      rel_title,
-      rel_abs,
-      rel_date,
-      rel_authors,
-    }) => {
-      const manuscriptTopics = Object.entries(topics)
-        .filter(([topicName, topicKeywords]) => {
-          return (
-            !!topicKeywords[0].filter(keyword => rel_abs.includes(keyword))
-              .length &&
-            !!topicKeywords[1].filter(keyword => rel_abs.includes(keyword))
-              .length
-          )
-        })
-        .map(([topicName]) => topicName)
+  const newManuscripts = withoutDuplicates
+    .map(
+      ({
+        rel_doi,
+        rel_site,
+        version,
+        rel_title,
+        rel_abs,
+        rel_date,
+        rel_authors,
+      }) => {
+        const manuscriptTopics = Object.entries(topics)
+          .filter(([topicName, topicKeywords]) => {
+            return (
+              !!topicKeywords[0].filter(keyword => rel_abs.includes(keyword))
+                .length &&
+              !!topicKeywords[1].filter(keyword => rel_abs.includes(keyword))
+                .length
+            )
+          })
+          .map(([topicName]) => topicName)
 
-      return {
-        status: 'new',
-        isImported: true,
-        importSource: biorxivImportSourceId.id,
-        importSourceServer: rel_site.toLowerCase(),
-        submission: {
-          ...emptySubmission,
-          firstAuthor: rel_authors
-            ? rel_authors.map(({ author_name }) => author_name).join(', ')
-            : [],
-          datePublished: rel_date,
-          articleURL: `https://${rel_site.toLowerCase()}.org/content/${rel_doi}v${version}`,
-          articleDescription: rel_title,
-          abstract: rel_abs,
-          topics: manuscriptTopics.length ? [manuscriptTopics[0]] : [],
-        },
-        meta: {
-          title: '',
-          notes: [
+        if (!manuscriptTopics.length) return null
+
+        return {
+          status: 'new',
+          isImported: true,
+          importSource: biorxivImportSourceId.id,
+          importSourceServer: rel_site.toLowerCase(),
+          submission: {
+            ...emptySubmission,
+            firstAuthor: rel_authors
+              ? rel_authors.map(({ author_name }) => author_name).join(', ')
+              : [],
+            datePublished: rel_date,
+            articleURL: `https://${rel_site.toLowerCase()}.org/content/${rel_doi}v${version}`,
+            articleDescription: rel_title,
+            abstract: rel_abs,
+            topics: manuscriptTopics.length ? [manuscriptTopics[0]] : [],
+          },
+          meta: {
+            title: '',
+            notes: [
+              {
+                notesType: 'fundingAcknowledgement',
+                content: '',
+              },
+              {
+                notesType: 'specialInstructions',
+                content: '',
+              },
+            ],
+          },
+          submitterId: null,
+          channels: [
             {
-              notesType: 'fundingAcknowledgement',
-              content: '',
+              topic: 'Manuscript discussion',
+              type: 'all',
             },
             {
-              notesType: 'specialInstructions',
-              content: '',
+              topic: 'Editorial discussion',
+              type: 'editorial',
             },
           ],
-        },
-        submitterId: null,
-        channels: [
-          {
-            topic: 'Manuscript discussion',
-            type: 'all',
-          },
-          {
-            topic: 'Editorial discussion',
-            type: 'editorial',
-          },
-        ],
-        files: [],
-        reviews: [],
-        teams: [],
-      }
-    },
-  )
+          files: [],
+          reviews: [],
+          teams: [],
+        }
+      },
+    )
+    .filter(Boolean)
 
   if (!newManuscripts.length) {
     isImportInProgress = false
