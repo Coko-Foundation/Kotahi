@@ -19,7 +19,6 @@ describe('tooltip tests', () => {
     cy.awaitDisappearSpinner()
     ManuscriptsPage.clickSubmit()
     NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
-
   })
   it('check empty tooltip', () => {
     Menu.clickManuscriptsAndAssertPageLoad()
@@ -29,7 +28,7 @@ describe('tooltip tests', () => {
   })
   it('check tooltip text', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
-    cy.fixture("submission_form_data").then(data => {
+    cy.fixture('submission_form_data').then(data => {
       SubmissionFormPage.fillInAbstract(data.abstract)
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getTooltipText().should('not.exist')
@@ -40,13 +39,14 @@ describe('tooltip tests', () => {
 
   it('check length for the tooltip text, to be less than 1000', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
-    cy.fixture("submission_form_data").then(data => {
+    cy.fixture('submission_form_data').then(data => {
       SubmissionFormPage.fillInAbstract(data.abstractWithMoreThan1000Characters)
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getTooltipText().should('not.exist')
       ManuscriptsPage.getTooltipIcon().trigger('mouseover')
-      ManuscriptsPage.getTooltipText().should('contain', "...").should('have.lengthOf.lessThan', 1004)
+      ManuscriptsPage.getTooltipText()
+        .should('contain', '...')
+        .should('have.lengthOf.lessThan', 1004)
     })
   })
-
 })

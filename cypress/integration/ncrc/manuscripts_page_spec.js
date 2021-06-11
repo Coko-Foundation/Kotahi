@@ -58,8 +58,8 @@ describe('manuscripts page tests', () => {
         ManuscriptsPage.getArticleTopic(0).should('contain', data.topic)
         ManuscriptsPage.getArticleTopic(1).should('contain', 'epidemiology')
         ManuscriptsPage.getArticleLabel()
-            .should('be.visible')
-            .and('contain', 'evaluated')
+          .should('be.visible')
+          .and('contain', 'evaluated')
       })
     })
 
@@ -355,14 +355,12 @@ describe('manuscripts page tests', () => {
 
   context('video chat button', () => {
     it('check the video chat link, and if it returns 200', () => {
-      ManuscriptsPage.getLiveChatButton().invoke('attr', 'href').should('contain', '//8x8.vc/coko/')
       ManuscriptsPage.getLiveChatButton()
-        .then(link => {
-          cy
-            .request(link.prop('href'))
-            .its('status')
-            .should('eq', 200)
-        })
+        .invoke('attr', 'href')
+        .should('contain', '//8x8.vc/coko/')
+      ManuscriptsPage.getLiveChatButton().then(link => {
+        cy.request(link.prop('href')).its('status').should('eq', 200)
+      })
     })
   })
 })
