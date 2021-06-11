@@ -25,7 +25,7 @@ import EditorElements from './EditorElements'
 
 import './katex/katex.css'
 
-const waxConfig = {
+const waxConfig = () => ({
   SchemaService: DefaultSchema,
   MenuService: [
     {
@@ -70,7 +70,7 @@ const waxConfig = {
     new TextBlockLevelService(),
     new TextToolGroupService(),
   ],
-}
+})
 
 const Grid = styled.div`
   display: grid;
@@ -170,7 +170,7 @@ const SimpleWaxEditor = ({
     <div className={validationStatus}>
       <Wax
         autoFocus={autoFocus}
-        config={waxConfig}
+        config={waxConfig()}
         // fileUpload={file => renderImage(file)}
         layout={WaxLayout(readonly)}
         onBlur={val => {
