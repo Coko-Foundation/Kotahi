@@ -152,8 +152,8 @@ const getData = async ctx => {
         submission: {
           ...emptySubmission,
           firstAuthor: rel_authors
-            .map(({ author_name }) => author_name)
-            .join(', '),
+            ? rel_authors.map(({ author_name }) => author_name).join(', ')
+            : [],
           datePublished: rel_date,
           articleURL: `https://${rel_site.toLowerCase()}.org/content/${rel_doi}v${version}`,
           articleDescription: rel_title,
