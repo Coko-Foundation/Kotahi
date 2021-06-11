@@ -92,7 +92,7 @@ const getData = async ctx => {
   const withoutDuplicates = importedManuscripts.filter(
     ({ rel_doi, version, rel_site }) =>
       !currentDOIs.includes(
-        `https://${rel_site.toLowerCase()}/content/${rel_doi}v${version}`,
+        `https://${rel_site.toLowerCase()}.org/content/${rel_doi}v${version}`,
       ),
   )
 
@@ -124,7 +124,15 @@ const getData = async ctx => {
   }, {})
 
   const newManuscripts = withoutDuplicates.map(
-    ({ rel_doi, rel_site, version, rel_title, rel_abs }) => {
+    ({
+      rel_doi,
+      rel_site,
+      version,
+      rel_title,
+      rel_abs,
+      rel_date,
+      rel_authors,
+    }) => {
       const manuscriptTopics = Object.entries(topics)
         .filter(([topicName, topicKeywords]) => {
           return (
@@ -143,7 +151,11 @@ const getData = async ctx => {
         importSourceServer: rel_site.toLowerCase(),
         submission: {
           ...emptySubmission,
-          articleURL: `https://${rel_site.toLowerCase()}/content/${rel_doi}v${version}`,
+          firstAuthor: rel_authors
+            .map(({ author_name }) => author_name)
+            .join(', '),
+          datePublished: rel_date,
+          articleURL: `https://${rel_site.toLowerCase()}.org/content/${rel_doi}v${version}`,
           articleDescription: rel_title,
           abstract: rel_abs,
           topics: manuscriptTopics.length ? [manuscriptTopics[0]] : [],
