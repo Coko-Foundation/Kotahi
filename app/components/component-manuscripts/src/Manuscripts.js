@@ -197,9 +197,12 @@ const Manuscripts = ({ history, ...props }) => {
             >
               ＋ New submission
             </StyledButton>
-            <StyledButton onClick={importManuscripts} primary>
-              Refresh
-            </StyledButton>
+
+            {process.env.INSTANCE_NAME === 'ncrc' && (
+              <StyledButton onClick={importManuscripts} primary>
+                Refresh
+              </StyledButton>
+            )}
           </div>
         </HeadingWithAction>
       )}
