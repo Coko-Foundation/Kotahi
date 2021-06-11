@@ -84,13 +84,6 @@ const Grid = styled.div`
       : css`
           grid-template-rows: 40px 1fr;
         `}
-
-  position: relative;
-  z-index: 0;
-
-  :focus-within {
-    z-index: 10000;
-  }
 `
 
 const EditorDiv = styled.div`
@@ -128,7 +121,11 @@ const Menu = styled.div`
   position: sticky;
   top: -20px;
   user-select: none;
-  z-index: 10;
+  z-index: 1;
+
+  :focus-within {
+    z-index: 1000;
+  }
 `
 
 const TopBar = ComponentPlugin('topBar')
