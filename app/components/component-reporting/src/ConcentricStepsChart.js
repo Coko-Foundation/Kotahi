@@ -36,7 +36,7 @@ const someData = [
 ]
 
 const Container = styled.div`
-  height: 300px;
+  height: 250px;
   width: 300px;
 `
 

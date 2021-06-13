@@ -5,6 +5,7 @@ import {
   CardCollection,
   Card,
   ConcentricStepsChart,
+  DurationsChart,
 } from '../../app/components/component-reporting/src'
 
 const Header = styled.div`
@@ -26,20 +27,35 @@ export const Base = args => (
       <Header>Editors&rsquo; workflow</Header>
       <ConcentricStepsChart />
     </Card>
-    <Card>
+    <Card
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Header>Reviewers&rsquo; workflow</Header>
       <ConcentricStepsChart />
     </Card>
-    <Card>
-      <ConcentricStepsChart />
-    </Card>
-    <Card>
-      <ConcentricStepsChart />
+    <Card
+      style={{
+        display: 'flex',
+        flexDirection: 'column',
+        flexWrap: 'wrap',
+        justifyContent: 'center',
+        alignItems: 'center',
+      }}
+    >
+      <Header>Submission durations</Header>
+      <DurationsChart />
     </Card>
   </CardCollection>
 )
 
 Base.args = {
-  style: { width: 800, height: 800 },
+  style: { width: 800, height: 600 },
 }
 
 export default {
