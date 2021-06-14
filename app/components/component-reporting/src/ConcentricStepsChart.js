@@ -1,5 +1,4 @@
 import React from 'react'
-import PropTypes from 'prop-types'
 import {
   Customized,
   RadialBarChart,
@@ -7,33 +6,6 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import styled from 'styled-components'
-import Color from 'color'
-
-const getBarColor = (
-  barIndex,
-  barsCount,
-  lightness = 0.6,
-  saturation = 0.6,
-) => {
-  const baseHue = 243
-  const targetHue = 22
-
-  const hue =
-    barIndex === 0
-      ? baseHue
-      : baseHue + ((targetHue - baseHue) * barIndex) / (barsCount - 1)
-
-  return Color.hsl(hue, saturation * 100, lightness * 100).hex()
-}
-
-const someData = [
-  { name: 'All manuscripts', value: 123 },
-  { name: 'Submitted', value: 103 },
-  { name: 'Editor assigned', value: 85 },
-  { name: 'Decision complete', value: 32 },
-  { name: 'Accepted', value: 21 },
-  { name: 'Published', value: 18 },
-]
 
 const Container = styled.div`
   height: 250px;
@@ -43,7 +15,7 @@ const Container = styled.div`
 const pc = percentageString =>
   parseFloat(percentageString.trimRight('%')) * 0.01
 
-const CustomLabels = ({
+const getCustomLabelsWithColors = colors => ({
   barGap,
   cx,
   cy,
@@ -88,7 +60,7 @@ const CustomLabels = ({
       ))}
       {data.map((datum, index) => (
         <text
-          fill={getBarColor(index, data.length, 0.3, 1.0)}
+          fill={colors[index]}
           key={`lbl-${datum.name}`}
           style={{ fontSize: `${fontSize}px` }}
           textAnchor="end"
@@ -102,25 +74,7 @@ const CustomLabels = ({
   )
 }
 
-CustomLabels.propTypes = {
-  barGap: PropTypes.number.isRequired,
-  cx: PropTypes.string.isRequired,
-  cy: PropTypes.string.isRequired,
-  data: PropTypes.arrayOf(
-    PropTypes.shape({ name: PropTypes.string.isRequired }).isRequired,
-  ).isRequired,
-  height: PropTypes.number.isRequired,
-  innerRadius: PropTypes.string.isRequired,
-  outerRadius: PropTypes.string.isRequired,
-  width: PropTypes.number.isRequired,
-}
-
-const ConcentricStepsChart = () => {
-  const dataWithColors = someData.map((datum, i) => ({
-    ...datum,
-    fill: getBarColor(i, someData.length, 0.6),
-  }))
-
+const ConcentricStepsChart = ({ data, barColors, labelColors }) => {
   return (
     <Container>
       <ResponsiveContainer height="100%" width="100%">
@@ -128,7 +82,7 @@ const ConcentricStepsChart = () => {
           barSize={14}
           cx="50%"
           cy="50%"
-          data={dataWithColors}
+          data={data.map((d, i) => ({ ...d, fill: barColors[i] }))}
           endAngle={270}
           innerRadius="20%"
           outerRadius="100%"
@@ -142,7 +96,7 @@ const ConcentricStepsChart = () => {
             minAngle={15}
           />
           <Customized
-            component={CustomLabels}
+            component={getCustomLabelsWithColors(labelColors)}
             height="100%"
             key="labels"
             width="100%"

@@ -1,4 +1,5 @@
 import React from 'react'
+import Color from 'color'
 import { SparkBar } from '../../app/components/component-reporting/src'
 
 export const generateSystemData = () => {
@@ -262,4 +263,49 @@ export const generateAuthorsData = () => {
   ])
 
   return result
+}
+
+const getBarColor = (
+  barIndex,
+  barsCount,
+  lightness = 0.6,
+  saturation = 0.6,
+) => {
+  const baseHue = 243
+  const targetHue = 22
+
+  const hue =
+    barIndex === 0
+      ? baseHue
+      : baseHue + ((targetHue - baseHue) * barIndex) / (barsCount - 1)
+
+  return Color.hsl(hue, saturation * 100, lightness * 100).hex()
+}
+
+export const getEditorsConcentricBarChartData = () => {
+  const data = [
+    { name: 'All manuscripts', value: 123 },
+    { name: 'Submitted', value: 103 },
+    { name: 'Editor assigned', value: 85 },
+    { name: 'Decision complete', value: 32 },
+    { name: 'Accepted', value: 21 },
+    { name: 'Published', value: 18 },
+  ]
+
+  const barColors = data.map((_, i) => getBarColor(i, data.length, 0.6))
+  const labelColors = data.map((_, i) => getBarColor(i, data.length, 0.3, 1.0))
+  return { data, barColors, labelColors }
+}
+
+export const getReviewersConcentricBarChartData = () => {
+  const data = [
+    { name: 'All manuscripts', value: 123 },
+    { name: 'Reviewer invited', value: 83 },
+    { name: 'Invite accepted', value: 62 },
+    { name: 'Review completed', value: 38 },
+  ]
+
+  const barColors = data.map((_, i) => getBarColor(i, data.length, 0.6))
+  const labelColors = data.map((_, i) => getBarColor(i, data.length, 0.3, 1.0))
+  return { data, barColors, labelColors }
 }

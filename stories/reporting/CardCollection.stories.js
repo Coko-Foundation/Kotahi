@@ -7,6 +7,10 @@ import {
   ConcentricStepsChart,
   DurationsChart,
 } from '../../app/components/component-reporting/src'
+import {
+  getEditorsConcentricBarChartData,
+  getReviewersConcentricBarChartData,
+} from './mockReportingData'
 
 const Header = styled.div`
   color: ${th('colorPrimary')};
@@ -25,7 +29,7 @@ export const Base = args => (
       }}
     >
       <Header>Editors&rsquo; workflow</Header>
-      <ConcentricStepsChart />
+      <ConcentricStepsChart {...getEditorsConcentricBarChartData()} />
     </Card>
     <Card
       style={{
@@ -37,7 +41,7 @@ export const Base = args => (
       }}
     >
       <Header>Reviewers&rsquo; workflow</Header>
-      <ConcentricStepsChart />
+      <ConcentricStepsChart {...getReviewersConcentricBarChartData()} />
     </Card>
     <Card
       style={{
