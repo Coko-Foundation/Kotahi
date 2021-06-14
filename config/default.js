@@ -194,8 +194,9 @@ module.exports = {
   s3: {
     accessKeyId: 'test',
     secretAccessKey: 'password',
-    endpoint: 'http://localhost:9000',
+    endpoint: 'http://minio:9000',
     region: 'us-east-1',
+    bucket: 'kotahi',
   },
   schema: {},
   journal,
