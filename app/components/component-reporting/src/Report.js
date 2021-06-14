@@ -23,7 +23,7 @@ const Note = styled.div`
 `
 
 const reportTypes = [
-  'System',
+  'Summary',
   'Manuscript',
   'Handling editor',
   'Managing editor',
@@ -40,14 +40,14 @@ const getReport = (
   reportType,
   startDate,
   endDate,
-  getSystemData,
+  getSummaryData,
   getManuscriptsData,
   getHandlingEditorsData,
   getManagingEditorsData,
   getReviewersData,
   getAuthorsData,
 ) => {
-  if (reportType === 'System') {
+  if (reportType === 'Summary') {
     const {
       avgPublishTimeDays,
       avgReviewTimeDays,
@@ -59,7 +59,7 @@ const getReport = (
       revisingCount,
       acceptedCount,
       publishedCount,
-    } = getSystemData(startDate, endDate)
+    } = getSummaryData(startDate, endDate)
 
     return (
       <Table
@@ -257,7 +257,7 @@ const getReport = (
 }
 
 const Report = ({
-  getSystemData,
+  getSummaryData,
   getManuscriptsData,
   getHandlingEditorsData,
   getManagingEditorsData,
@@ -300,7 +300,7 @@ const Report = ({
         reportType,
         startDate,
         endDate,
-        getSystemData,
+        getSummaryData,
         getManuscriptsData,
         getHandlingEditorsData,
         getManagingEditorsData,
@@ -312,7 +312,7 @@ const Report = ({
 }
 
 Report.propTypes = {
-  getSystemData: PropTypes.func.isRequired,
+  getSummaryData: PropTypes.func.isRequired,
   getManuscriptsData: PropTypes.func.isRequired,
   getHandlingEditorsData: PropTypes.func.isRequired,
   getManagingEditorsData: PropTypes.func.isRequired,

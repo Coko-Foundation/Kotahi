@@ -2,7 +2,7 @@ import React from 'react'
 import Color from 'color'
 import { SparkBar } from '../../app/components/component-reporting/src'
 
-export const generateSystemData = () => {
+export const generateSummaryData = () => {
   return {
     avgPublishTimeDays: 8.765,
     avgReviewTimeDays: 5.678,

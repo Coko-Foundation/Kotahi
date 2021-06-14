@@ -1,7 +1,7 @@
 import React from 'react'
 import { Report } from '../../app/components/component-reporting/src'
 import {
-  generateSystemData,
+  generateSummaryData,
   generateResearchObjectsData,
   generateEditorsData,
   generateReviewersData,
@@ -11,7 +11,7 @@ import {
 export const Base = args => <Report {...args} />
 
 Base.args = {
-  getSystemData: generateSystemData,
+  getSummaryData: generateSummaryData,
   getManuscriptsData: generateResearchObjectsData,
   getHandlingEditorsData: generateEditorsData,
   getManagingEditorsData: generateEditorsData,
