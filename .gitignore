@@ -18,6 +18,9 @@ config/local*.*
 config/*.env
 minio/data/*
 minio\data\*
+.minio.sys
 db-data\*
 db-data/*
 /.idea
+
+
