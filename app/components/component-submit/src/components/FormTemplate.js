@@ -257,7 +257,6 @@ const FormTemplate = ({
                   containerId={manuscript.id}
                   containerName="manuscript"
                   fileType="supplementary"
-                  onChange={onChange}
                 />
               )}
               {element.component === 'VisualAbstract' && (
@@ -267,7 +266,6 @@ const FormTemplate = ({
                   containerName="manuscript"
                   fileType="visualAbstract"
                   multiple={false}
-                  onChange={onChange}
                 />
               )}
               {element.component === 'AuthorsInput' && (
