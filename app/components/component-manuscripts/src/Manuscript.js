@@ -126,6 +126,12 @@ const User = ({
     history.replace(`${urlFrag}/admin/manuscripts?status=${status}`)
   }
 
+  const abstractContent = manuscript.submission.abstract.split(
+    /<p[^<]*>(.*?)<\/p>/g,
+  )
+
+  const formattedAbstract = abstractContent[1] || abstractContent[0]
+
   return (
     <Row>
       {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
@@ -153,9 +159,9 @@ const User = ({
                 getTooltipContainer={el => el}
                 overlay={
                   <span>
-                    {manuscript.submission.abstract?.length > 1000
-                      ? `${manuscript.submission.abstract.slice(0, 1000)}...`
-                      : manuscript.submission.abstract}
+                    {formattedAbstract?.length > 1000
+                      ? `${formattedAbstract.slice(0, 1000)}...`
+                      : formattedAbstract}
                   </span>
                 }
                 overlayInnerStyle={{
@@ -166,7 +172,7 @@ const User = ({
                 overlayStyle={{
                   maxWidth: '65vw',
                   wordBreak: 'break-word',
-                  display: `${!manuscript.submission.abstract && 'none'}`,
+                  display: `${!formattedAbstract && 'none'}`,
                 }}
                 placement="bottomLeft"
                 trigger={['hover']}
