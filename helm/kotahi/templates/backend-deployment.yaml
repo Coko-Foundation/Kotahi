@@ -126,6 +126,11 @@ spec:
                 secretKeyRef:
                   key: S3_REGION
                   name: "{{ .Values.s3secret }}"
+            - name: S3_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  key: S3_BUCKET
+                  name: orcid-secret
             - name: SERVER_PORT
               valueFrom:
                 configMapKeyRef:
