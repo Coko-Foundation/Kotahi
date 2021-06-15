@@ -55,7 +55,7 @@ describe('manuscripts page checkboxes tests', () => {
       ManuscriptsPage.getSelectedArticlesCount().should('contain', 0)
     })
     it('delete a selected article', () => {
-      ManuscriptsPage.getTableRows().should('eq', 3)
+      ManuscriptsPage.getTableRowsCount().should('eq', 3)
       ManuscriptsPage.getSelectAllCheckbox().click()
       ManuscriptsPage.clickDelete()
       ManuscriptsPage.getTableRow().should('not.exist')

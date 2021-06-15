@@ -32,6 +32,8 @@ const NUMBER_OF_ARTICLES_SELECTED = 'style__SelectedManuscriptsNumber'
 const EDITOR_NAME_CELL = 'style__StyledAuthor'
 const TOOLTIP_ICON = 'style__InfoIcon'
 const TOOLTIP_TEXT = 'rc-tooltip-inner'
+const ARTICLES_COUNT = '[class*=Pagination] > strong'
+const PAGINATION_PAGE_BUTTON = '[class*=Pagination__Page] > button'
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -49,6 +51,12 @@ export const ManuscriptsPage = {
   clickSubmit() {
     this.getSubmitButton().click()
   },
+  getRefreshButton() {
+    return cy.get(BUTTON).contains('Refresh')
+  },
+  clickRefreshButton() {
+    this.getRefreshButton().click()
+  },
   getLiveChatButton() {
     return cy.get(LIVE_CHAT_BUTTON)
   },
@@ -58,16 +66,24 @@ export const ManuscriptsPage = {
   getManuscriptsPageTitle() {
     return cy.get(MANUSCRIPTS_PAGE_TITLE)
   },
-  getEvaluationButton() {
-    return cy.get(EVALUATION_BUTTON)
+  getEvaluationButton(nth) {
+    return cy.get(EVALUATION_BUTTON).eq(nth)
   },
   clickEvaluation() {
-    this.getEvaluationButton().click()
+    this.getEvaluationButton(0).click()
   },
   clickEvaluationAndVerifyUrl() {
     this.clickEvaluation()
     cy.url({ timeout: 10000 }).should('contain', evaluate)
   },
+  clickEvaluationNth(nth) {
+    this.getEvaluationButton(nth).click()
+  },
+  clickEvaluationNthAndVerifyUrl(nth) {
+    this.clickEvaluationNth(nth)
+    cy.url({ timeout: 10000 }).should('contain', evaluate)
+  },
+
   getControlButton() {
     return cy.get(CONTROL_BUTTON)
   },
@@ -101,13 +117,19 @@ export const ManuscriptsPage = {
   getArticleTopic(nth) {
     return cy.get(ARTICLE_TOPIC).eq(nth)
   },
+  getArticleTopicByRow(nth) {
+    return this.getNthTableRow(nth).find(ARTICLE_TOPIC)
+  },
   clickArticleTopic(nth) {
     this.getArticleTopic(nth).click()
   },
   getTableRow() {
     return cy.getByContainsClass(TABLE_ROW)
   },
-  getTableRows() {
+  getNthTableRow(nth) {
+    return this.getTableRow().eq(nth)
+  },
+  getTableRowsCount() {
     return cy.getByContainsClass(TABLE_ROW).its('length')
   },
   getLabelRow(nth) {
@@ -154,6 +176,15 @@ export const ManuscriptsPage = {
   },
   getTooltipText() {
     return cy.getByContainsClass(TOOLTIP_TEXT)
+  },
+  getNumberOfAvailableArticles() {
+    return cy.get(ARTICLES_COUNT).eq(-1)
+  },
+  getPaginationButtons() {
+    return cy.get(PAGINATION_PAGE_BUTTON)
+  },
+  clickPaginationButton(nth) {
+    this.getPaginationButtons().eq(nth).click({ force: true })
   },
 }
 export default ManuscriptsPage
