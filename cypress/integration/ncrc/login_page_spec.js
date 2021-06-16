@@ -32,7 +32,7 @@ describe('Login page tests', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('branding_settings').then(settings => {
       // task to restore the database as per the  dumps/initialState.sql
-      cy.task('restore', 'initialState')
+      cy.task('restore', 'initial_state_ncrc')
       cy.task('seedForms')
 
       // login as admin
@@ -60,7 +60,7 @@ describe('Login page tests', () => {
 
   it('dashboard page should be visible to the logged in user', () => {
     // task to restore the database as per the  dumps/initialState.sql
-    cy.task('restore', 'initialState')
+    cy.task('restore', 'initial_state_ncrc')
     cy.task('seedForms')
 
     // login as admin

@@ -88,7 +88,7 @@ describe('refresh button tests', () => {
 
       const twoWeeksAgo = new Date(today - 12096e5)
       // checking the oldest article imported
-      ManuscriptsPage.clickEvaluationAndVerifyUrl()
+      ManuscriptsPage.clickEvaluationNthAndVerifyUrl(0)
       SubmissionFormPage.getDatePublishedField()
         .should('have.attr', 'value')
         .then(value => {

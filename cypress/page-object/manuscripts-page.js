@@ -22,7 +22,6 @@ const ARTICLE_LABEL = 'style__StyledTableLabel'
 const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 const TABLE_ROW = 'Table__Row'
 const LABEL = 'style__StyledTableLabel'
-const ARTICLE_STATUS = '[class*=Badge__Status]'
 
 const ARTICLE_CHECKBOX =
   '[class*=style__StyledDescriptionWrapper] > label > [type*=checkbox]'
@@ -66,18 +65,21 @@ export const ManuscriptsPage = {
   getManuscriptsPageTitle() {
     return cy.get(MANUSCRIPTS_PAGE_TITLE)
   },
-  getEvaluationButton(nth) {
+  getEvaluationButton() {
+    return cy.get(EVALUATION_BUTTON)
+  },
+  getNthEvaluationButton(nth) {
     return cy.get(EVALUATION_BUTTON).eq(nth)
   },
   clickEvaluation() {
-    this.getEvaluationButton(0).click()
+    this.getEvaluationButton().click()
   },
   clickEvaluationAndVerifyUrl() {
     this.clickEvaluation()
     cy.url({ timeout: 10000 }).should('contain', evaluate)
   },
   clickEvaluationNth(nth) {
-    this.getEvaluationButton(nth).click()
+    this.getNthEvaluationButton(nth).click()
   },
   clickEvaluationNthAndVerifyUrl(nth) {
     this.clickEvaluationNth(nth)
@@ -101,6 +103,9 @@ export const ManuscriptsPage = {
   },
   getStatus(nth) {
     return this.getStatusField(nth).invoke('text')
+  },
+  clickStatus(nth) {
+    this.getStatusField(nth).click()
   },
   getTableHead(nth) {
     return cy.get(MANUSCRIPTS_TABLE_HEAD).eq(nth)
@@ -137,12 +142,6 @@ export const ManuscriptsPage = {
   },
   getTableHeader() {
     return cy.get(TABLE_HEADER, { timeout: 15000 })
-  },
-  getArticleStatus(nth) {
-    return cy.get(ARTICLE_STATUS).eq(nth)
-  },
-  clickArticleStatus(nth) {
-    this.getArticleStatus(nth).click()
   },
   getAllArticleCheckboxes() {
     return cy.get(ARTICLE_CHECKBOX)

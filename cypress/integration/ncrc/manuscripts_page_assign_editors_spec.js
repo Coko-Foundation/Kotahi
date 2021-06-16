@@ -8,7 +8,7 @@ import { Menu } from '../../page-object/page-component/menu'
 
 describe('manuscripts page assign editors tests', () => {
   beforeEach(() => {
-    cy.task('restore', 'initialState')
+    cy.task('restore', 'initial_state_ncrc')
     cy.task('seedForms')
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise

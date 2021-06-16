@@ -10,7 +10,7 @@ import { Menu } from '../../page-object/page-component/menu'
 describe('manuscripts page tests', () => {
   beforeEach(() => {
     // task to restore the database as per the  dumps/initialState.sql
-    cy.task('restore', 'initialState')
+    cy.task('restore', 'initial_state_ncrc')
     cy.task('seedForms')
 
     // login as admin
@@ -341,7 +341,7 @@ describe('manuscripts page tests', () => {
       })
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000)
-      ManuscriptsPage.clickArticleStatus(-1)
+      ManuscriptsPage.clickStatus(-1)
       ManuscriptsPage.getTableRowsCount().should('eq', 3)
       ManuscriptsPage.getStatus(0).should('contain', 'Unsubmitted')
       cy.url().should('contain', 'new')

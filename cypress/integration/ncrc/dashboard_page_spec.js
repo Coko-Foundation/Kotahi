@@ -6,7 +6,7 @@ import { manuscripts } from '../../support/routes'
 describe('Dashboard page tests', () => {
   beforeEach(() => {
     // task to restore the database as per the  dumps/initialState.sql
-    cy.task('restore', 'initialState')
+    cy.task('restore', 'initial_state_ncrc')
     cy.task('seedForms')
 
     // login as admin
