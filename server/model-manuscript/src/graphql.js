@@ -471,6 +471,7 @@ const resolvers = {
       ) {
         manuscript = ctx.models.Manuscript.query().updateAndFetchById(id, {
           published: new Date(),
+          status: 'published',
         })
       }
 

@@ -23,6 +23,8 @@ export const VisualAbstract = styled.img`
   max-width: ${grid(40)};
 `
 
+export const Abstract = styled.div``
+
 export const ReviewLink = styled.a`
   margin-left: 10px;
 `

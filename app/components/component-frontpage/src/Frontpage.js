@@ -11,6 +11,7 @@ import {
   Container,
   Placeholder,
   VisualAbstract,
+  Abstract,
   ReviewWrapper,
   ReviewLink,
 } from './style'
@@ -174,9 +175,14 @@ const Frontpage = ({ history, ...props }) => {
             )}
             <SectionRow>
               {manuscript.submission?.abstract && (
-                <Subheading>
-                  Abstract: {manuscript.submission?.abstract}
-                </Subheading>
+                <>
+                  <Subheading>Abstract:</Subheading>
+                  <Abstract
+                    dangerouslySetInnerHTML={(() => {
+                      return { __html: manuscript.submission?.abstract }
+                    })()}
+                  />
+                </>
               )}
               {manuscript.visualAbstract && (
                 <>
