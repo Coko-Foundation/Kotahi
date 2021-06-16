@@ -493,7 +493,7 @@ export const SubmissionFormPage = {
     this.getReviewCreatorField().fillInput(reviewCreator)
   },
   getAbstractField() {
-    return cy.getByDataTestId(ABSTRACT_FIELD)
+    return this.getWaxInputBox(5)
   },
   fillInAbstract(abstract) {
     this.getAbstractField().fillInput(abstract)
