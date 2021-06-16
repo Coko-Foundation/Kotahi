@@ -79,7 +79,7 @@ describe('refresh button tests', () => {
             })
         })
     })
-    it.only('import date range should be last 2 weeks', () => {
+    it('import date range should be last 2 weeks', () => {
       const date = new Date()
 
       const today = new Date(
