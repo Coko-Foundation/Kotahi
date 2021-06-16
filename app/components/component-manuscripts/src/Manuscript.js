@@ -126,14 +126,10 @@ const User = ({
     history.replace(`${urlFrag}/admin/manuscripts?status=${status}`)
   }
 
-  let abstractContent, formattedAbstract
+  let formattedAbstract
 
   if (manuscript.submission.abstract) {
-    abstractContent = manuscript.submission.abstract?.split(
-      /<p[^<]*>(.*?)<\/p>/g,
-    )
-    
-    formattedAbstract = ((abstractContent && abstractContent[1])) || abstractContent[0]
+    formattedAbstract = manuscript.submission.abstract.replace(/<[^>]*>/g, '')
   }
 
   return (
