@@ -176,7 +176,7 @@ const getData = async ctx => {
               },
             ],
           },
-          submitterId: null,
+          submitterId: ctx.user.id,
           channels: [
             {
               topic: 'Manuscript discussion',
@@ -189,7 +189,13 @@ const getData = async ctx => {
           ],
           files: [],
           reviews: [],
-          teams: [],
+          teams: [
+            {
+              role: 'author',
+              name: 'Author',
+              members: [{ user: { id: ctx.user.id } }],
+            },
+          ],
         }
       },
     )
@@ -202,7 +208,18 @@ const getData = async ctx => {
   }
 
   try {
-    const inserted = await ctx.models.Manuscript.query().insert(newManuscripts)
+    const insertedManuscripts = await ctx.models.Manuscript.query().insert(
+      newManuscripts,
+    )
+
+    const teamsToInsert = insertedManuscripts.map(manuscript => {
+      return {
+        manuscriptId: manuscript.id,
+        ...manuscript.teams[0],
+      }
+    })
+
+    const insertedTeams = await ctx.models.Team.query().insert(teamsToInsert)
 
     if (lastImportDate.length) {
       await ArticleImportHistory.query()
@@ -221,7 +238,10 @@ const getData = async ctx => {
 
     isImportInProgress = false
 
-    return inserted
+    return {
+      insertedManuscripts,
+      insertedTeams,
+    }
   } catch (e) {
     /* eslint-disable-next-line */
     console.error(e.message)
