@@ -142,6 +142,7 @@ spec:
                   key: USE_SANDBOXED_ORCID
                   name: env
           image: "{{ .Values.images.backend.repository }}:{{ .Values.images.backend.tag }}"
+          imagePullPolicy: Always
           command: ["/bin/sh", "-c"]
           args:
             - bash scripts/setupProdServer.sh;node ./startServer.js;
