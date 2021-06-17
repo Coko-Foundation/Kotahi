@@ -2,20 +2,33 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import Color from 'color'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../shared/lightenBy'
 import DateRangePicker from './DateRangePicker'
 import CardCollection, { Card } from './CardCollection'
 import ConcentricStepsChart from './ConcentricStepsChart'
 import DurationsChart from './DurationsChart'
 import Table from './Table'
+import SparkBar from './SparkBar'
+
+const Page = styled.div`
+  height: 100vh;
+  overflow-y: auto;
+  padding: 0 ${grid(2)};
+`
 
 const Heading = styled.div`
   color: ${th('colorPrimary')};
   font-family: ${th('fontReading')};
   font-size: ${th('fontSizeHeading3')};
+  line-height: ${th('lineHeightHeading3')};
   margin: ${th('gridUnit')} 0;
-  text-transform: uppercase;
+`
+
+export const Content = styled.div`
+  background-color: ${th('colorBackgroundHue')};
+  border-radius: ${th('borderRadius')};
+  box-shadow: ${th('boxShadow')};
 `
 
 const CardHeader = styled.div`
@@ -77,6 +90,49 @@ const getBarColor = (
       : baseHue + ((targetHue - baseHue) * barIndex) / (barsCount - 1)
 
   return Color.hsl(hue, saturation * 100, lightness * 100).hex()
+}
+
+const generateSparkBars = (
+  values,
+  onClick,
+  labelMapper,
+  columnIndex,
+  color,
+) => {
+  const highest = Math.max.apply(null, values)
+  return values.map(v =>
+    typeof v === 'number' ? (
+      // eslint-disable-next-line react/jsx-key
+      <SparkBar
+        color={color}
+        label={labelMapper && labelMapper(v, columnIndex)}
+        onClick={onClick}
+        rangeMax={highest}
+        value={v}
+      />
+    ) : (
+      v
+    ),
+  )
+}
+
+const getTableDataWithSparkBars = (columns, labelMapper) => {
+  const columnSparkBarContents = columns.map(
+    (val, columnIndex) =>
+      generateSparkBars(
+        val,
+        () => {},
+        labelMapper,
+        columnIndex,
+        lightenBy('colorSecondary', 0.7),
+      ), // TODO make these clickable
+  )
+
+  return columns[0].map((_, i) => {
+    const row = []
+    columnSparkBarContents.forEach(column => row.push({ content: column[i] }))
+    return row
+  })
 }
 
 const getReport = (
@@ -304,7 +360,9 @@ const getReport = (
           'Accepted',
           'Published',
         ]}
-        rows={getHandlingEditorsData(startDate, endDate)}
+        rows={getTableDataWithSparkBars(
+          getHandlingEditorsData(startDate, endDate),
+        )}
         sizings={[
           { width: '12em', flexGrow: 3 },
           { width: '7em', flexGrow: 1 },
@@ -330,7 +388,9 @@ const getReport = (
           'Accepted',
           'Published',
         ]}
-        rows={getManagingEditorsData(startDate, endDate)}
+        rows={getTableDataWithSparkBars(
+          getManagingEditorsData(startDate, endDate),
+        )}
         sizings={[
           { width: '12em', flexGrow: 3 },
           { width: '7em', flexGrow: 1 },
@@ -357,7 +417,11 @@ const getReport = (
           'Recommended to revise',
           'Recommended to reject',
         ]}
-        rows={getReviewersData(startDate, endDate)}
+        rows={getTableDataWithSparkBars(
+          getReviewersData(startDate, endDate),
+          (val, column) =>
+            column === 4 ? `${val} day${val === 1 ? '' : 's'}` : val,
+        )}
         sizings={[
           { width: '12em', flexGrow: 3 },
           { width: '7em', flexGrow: 1 },
@@ -384,7 +448,7 @@ const getReport = (
           'Accepted',
           'Published',
         ]}
-        rows={getAuthorsData(startDate, endDate)}
+        rows={getTableDataWithSparkBars(getAuthorsData(startDate, endDate))}
         sizings={[
           { width: '12em', flexGrow: 3 },
           { width: '7em', flexGrow: 1 },
@@ -418,7 +482,7 @@ const Report = ({
   const [reportType, setReportType] = useState(reportTypes[0])
 
   return (
-    <div>
+    <Page>
       <Heading>Reports</Heading>
       <SelectionLine>
         Show{' '}
@@ -441,18 +505,20 @@ const Report = ({
           startDate={startDate}
         />
       </SelectionLine>
-      {getReport(
-        reportType,
-        startDate,
-        endDate,
-        getSummaryData,
-        getManuscriptsData,
-        getHandlingEditorsData,
-        getManagingEditorsData,
-        getReviewersData,
-        getAuthorsData,
-      )}
-    </div>
+      <Content>
+        {getReport(
+          reportType,
+          startDate,
+          endDate,
+          getSummaryData,
+          getManuscriptsData,
+          getHandlingEditorsData,
+          getManagingEditorsData,
+          getReviewersData,
+          getAuthorsData,
+        )}
+      </Content>
+    </Page>
   )
 }
 

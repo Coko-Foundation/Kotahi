@@ -8,6 +8,7 @@ import {
   DurationsChart,
 } from '../../app/components/component-reporting/src'
 import {
+  generateDurationsData,
   getEditorsConcentricBarChartData,
   getReviewersConcentricBarChartData,
 } from './mockReportingData'
@@ -86,7 +87,7 @@ export const Base = args => (
       }}
     >
       <Header>Submission durations</Header>
-      <DurationsChart />
+      <DurationsChart data={generateDurationsData()} />
     </Card>
   </CardCollection>
 )

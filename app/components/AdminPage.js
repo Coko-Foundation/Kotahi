@@ -22,6 +22,7 @@ import ReviewPage from './component-review/src/components/ReviewPage'
 import DecisionPage from './component-review/src/components/DecisionPage'
 import FormBuilderPage from './component-formbuilder/src/components/FormBuilderPage'
 import NewSubmissionPage from './component-submit/src/components/NewSubmissionPage'
+import ReportPage from './component-reporting/src/ReportPage'
 import { Profile } from './component-profile/src'
 
 import { GET_CURRENT_USER } from '../queries'
@@ -120,6 +121,9 @@ const AdminPage = () => {
   const formBuilderLink = `${urlFrag}/admin/form-builder`
   const homeLink = `${urlFrag}/dashboard`
   const profileLink = `${urlFrag}/profile`
+  const manuscriptsLink = `${urlFrag}/admin/manuscripts`
+  const reportsLink = `${urlFrag}/admin/reports`
+  const userAdminLink = `${urlFrag}/admin/users`
   const loginLink = `/login?next=${homeLink}`
   const path = `${urlFrag}/versions/:version`
   const redirectLink = `/login?next=${homeLink}`
@@ -147,12 +151,13 @@ const AdminPage = () => {
 
   if (currentUser && currentUser.admin) {
     links.push({ link: formBuilderLink, name: 'Forms', icon: 'check-square' })
-    links.push({ link: `${urlFrag}/admin/users`, name: 'Users', icon: 'users' })
+    links.push({ link: userAdminLink, name: 'Users', icon: 'users' })
     links.push({
-      link: `${urlFrag}/admin/manuscripts`,
+      link: manuscriptsLink,
       name: 'Manuscripts',
       icon: 'file-text',
     })
+    links.push({ link: reportsLink, name: 'Reports', icon: 'activity' })
   }
 
   if (currentUser) {
@@ -194,7 +199,7 @@ const AdminPage = () => {
         <PrivateRoute
           component={FormBuilderPage}
           exact
-          path={`${urlFrag}/admin/form-builder`}
+          path={formBuilderLink}
           redirectLink={redirectLink}
         />
         <PrivateRoute
@@ -224,17 +229,22 @@ const AdminPage = () => {
         <PrivateRoute
           component={Profile}
           exact
-          path={`${urlFrag}/profile`}
+          path={profileLink}
           redirectLink={redirectLink}
         />
         <PrivateRoute
           component={UsersManager}
-          path={`${urlFrag}/admin/users`}
+          path={userAdminLink}
           redirectLink={redirectLink}
         />
         <PrivateRoute
           component={Manuscripts}
-          path={`${urlFrag}/admin/manuscripts`}
+          path={manuscriptsLink}
+          redirectLink={redirectLink}
+        />
+        <PrivateRoute
+          component={ReportPage}
+          path={reportsLink}
           redirectLink={redirectLink}
         />
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (

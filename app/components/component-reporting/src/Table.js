@@ -16,7 +16,11 @@ const Table = ({ headings, rows, sizings }) => {
       )}
       {rows.map((row, index) => (
         <TableRow
-          cells={row.map((cell, i) => ({ ...cell, ...sizings[i] }))}
+          cells={row.map((cell, i) => {
+            return cell.content
+              ? { ...cell, ...sizings[i] }
+              : { content: cell, ...sizings[i] }
+          })}
           // eslint-disable-next-line react/no-array-index-key
           key={index}
         />
@@ -35,10 +39,15 @@ Table.propTypes = {
   headings: PropTypes.arrayOf(PropTypes.node.isRequired),
   rows: PropTypes.arrayOf(
     PropTypes.arrayOf(
-      PropTypes.shape({
-        content: PropTypes.node.isRequired,
-        isHeading: PropTypes.bool,
-      }).isRequired,
+      PropTypes.oneOfType([
+        PropTypes.string.isRequired,
+        PropTypes.number.isRequired,
+        PropTypes.node.isRequired,
+        PropTypes.shape({
+          content: PropTypes.node.isRequired,
+          isHeading: PropTypes.bool,
+        }).isRequired,
+      ]).isRequired,
     ).isRequired,
   ).isRequired,
 }

@@ -1,7 +1,6 @@
 import React from 'react'
 import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
-import lightenBy from '../../../shared/lightenBy'
 
 const Container = styled.div`
   position: relative;
@@ -22,7 +21,7 @@ const Value = styled.div`
 `
 
 const Bar = styled.div`
-  background-color: ${lightenBy('colorSecondary', 0.8)};
+  background-color: ${props => props.color};
 
   ${props =>
     props.onClick &&
@@ -34,14 +33,14 @@ const Bar = styled.div`
   width: ${props => props.barWidthPercent};
 `
 
-const SparkBar = ({ label, value, rangeMax, onClick }) => {
+const SparkBar = ({ label, value, rangeMax, onClick, color }) => {
   const barWidthPercent =
     rangeMax > 0 ? `${Math.round((value / rangeMax) * 100)}%` : '0'
 
   return (
     <Container>
       <Value onClick={onClick}>{label ?? value}</Value>
-      <Bar barWidthPercent={barWidthPercent} onClick={onClick}>
+      <Bar barWidthPercent={barWidthPercent} color={color} onClick={onClick}>
         &nbsp;
       </Bar>
     </Container>
@@ -49,15 +48,17 @@ const SparkBar = ({ label, value, rangeMax, onClick }) => {
 }
 
 SparkBar.propTypes = {
-  label: PropTypes.string,
+  label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
   value: PropTypes.number.isRequired,
   rangeMax: PropTypes.number.isRequired,
   onClick: PropTypes.func,
+  color: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 }
 
 SparkBar.defaultProps = {
   label: undefined,
   onClick: undefined,
+  color: 'cornflowerblue',
 }
 
 export default SparkBar

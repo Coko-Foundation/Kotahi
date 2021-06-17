@@ -13,6 +13,13 @@ export const Reviewers = ResearchObjects.bind()
 export const ManagingEditors = ResearchObjects.bind()
 export const Authors = ResearchObjects.bind()
 
+const pivot = columns => {
+  const rows = []
+  for (let i = 0; i < columns[0].length; i += 1)
+    rows.push(columns.map(col => col[i]))
+  return rows
+}
+
 ResearchObjects.args = {
   sizings: [
     { width: '6.5em' },
@@ -56,7 +63,7 @@ HandlingEditors.args = {
     'Accepted',
     'Published',
   ],
-  rows: generateEditorsData(),
+  rows: pivot(generateEditorsData()),
 }
 
 ManagingEditors.args = HandlingEditors.args
@@ -82,7 +89,7 @@ Reviewers.args = {
     'Recommended to revise',
     'Recommended to reject',
   ],
-  rows: generateReviewersData(),
+  rows: pivot(generateReviewersData()),
 }
 
 Authors.args = {
@@ -104,7 +111,7 @@ Authors.args = {
     'Accepted',
     'Published',
   ],
-  rows: generateAuthorsData(),
+  rows: pivot(generateAuthorsData()),
 }
 
 export default {
