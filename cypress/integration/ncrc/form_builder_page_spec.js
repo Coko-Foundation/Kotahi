@@ -127,12 +127,6 @@ describe('form builder tests', () => {
         FormsPage.getFieldValidate().should('contain', 'Required')
       })
     })
-    it('check DOI validation has default selected Yes and select No', () => {
-      FormsPage.clickFormOption(0)
-      FormsPage.getDoiValidation(0).should('have.prop', 'checked')
-      FormsPage.clickOptionsDoiVaildation(1)
-      FormsPage.getDoiValidation(1).should('have.prop', 'checked')
-    })
   })
   context('check submission form corresponds to form builder', () => {
     beforeEach(() => {
@@ -209,12 +203,12 @@ describe('form builder tests', () => {
       SubmissionFormPage.getFormOptionList(21).should('contain', 'Required')
     })
 
-    it('message for DOI invalid is visible ', () => {
+    it('message for DOI invalid should not exist ', () => {
       SubmissionFormPage.fillInArticleUrl('google.com')
       SubmissionFormPage.fillInArticleDescription('2')
-      SubmissionFormPage.getValidationErrorMessage('DOI is invalid')
-        .scrollIntoView()
-        .should('be.visible')
+      SubmissionFormPage.getValidationErrorMessage('DOI is invalid').should(
+        'not.exist',
+      )
     })
 
     it('check study design dropdown options', () => {

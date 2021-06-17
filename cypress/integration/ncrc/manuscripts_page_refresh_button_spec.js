@@ -14,8 +14,8 @@ import { Menu } from '../../page-object/page-component/menu'
 describe('refresh button tests', () => {
   beforeEach(() => {
     // task to restore the database as per the  dumps/initialState.sql
-    cy.task('restore', 'initial_state_ncrc')
-    cy.task('seedForms')
+    // cy.task('restore', 'initial_state_ncrc')
+    // cy.task('seedForms')
 
     // login as admin
     cy.fixture('role_names').then(name => {
@@ -30,14 +30,14 @@ describe('refresh button tests', () => {
   })
 
   context('functionality check', () => {
-    beforeEach(() => {
-      ManuscriptsPage.clickRefreshButton()
-      // wait for data to be imported
-      // eslint-disable-next-line cypress/no-unnecessary-waiting
-      cy.wait(15000)
-      cy.reload()
-      cy.awaitDisappearSpinner()
-    })
+    // beforeEach(() => {
+    //   ManuscriptsPage.clickRefreshButton()
+    //   // wait for data to be imported
+    //   // eslint-disable-next-line cypress/no-unnecessary-waiting
+    //   cy.wait(15000)
+    //   cy.reload()
+    //   cy.awaitDisappearSpinner()
+    // })
     it('check table has data', () => {
       ManuscriptsPage.getNumberOfAvailableArticles()
         .invoke('text')
@@ -119,6 +119,51 @@ describe('refresh button tests', () => {
             .should('be.gte', 1)
         }
       })
+    })
+    it('check imported article has data', () => {
+      const randomArticle = Math.floor(Math.random() * 10)
+      ManuscriptsPage.clickEvaluationNthAndVerifyUrl(randomArticle)
+      SubmissionFormPage.getArticleUrl().should('not.have.value', '')
+      SubmissionFormPage.getArticleDescriptionField().should(
+        'not.have.value',
+        '',
+      )
+      SubmissionFormPage.getCheckedTopics().should('exist')
+      SubmissionFormPage.getCheckedTopicsCount().should('be.gte', 1)
+      SubmissionFormPage.getAbstractContent().should('not.be.eq', '')
+      SubmissionFormPage.getFirstAuthorField().should('not.have.value', '')
+      SubmissionFormPage.getDatePublishedField().should('not.have.value', '')
+    })
+    it.only('check imported article can be evaluated', () => {
+      const randomArticle = Math.floor(Math.random() * 10)
+      ManuscriptsPage.clickEvaluationNthAndVerifyUrl(randomArticle)
+      SubmissionFormPage.getArticleDescriptionField()
+        .invoke('text')
+        .then(title => {
+          cy.fixture('submission_form_data').then(data => {
+            SubmissionFormPage.fillInOurTake(data.ourTake)
+            SubmissionFormPage.clickDropdown(2)
+            SubmissionFormPage.selectDropdownOption(0)
+            SubmissionFormPage.fillInMainFindings(data.mainFindings)
+            SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+            SubmissionFormPage.fillInLimitations(data.limitations)
+            SubmissionFormPage.fillInValueAdded(data.valueAdded)
+            SubmissionFormPage.clickDropdown(-3)
+            SubmissionFormPage.selectDropdownOption(0)
+            SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
+            SubmissionFormPage.fillInFirstAuthor(data.creator)
+            SubmissionFormPage.fillInDatePublished(data.date)
+            SubmissionFormPage.fillInJournal(data.journal)
+            SubmissionFormPage.fillInReviewer(data.creator)
+            SubmissionFormPage.fillInEditDate(data.date)
+            SubmissionFormPage.fillInReviewCreator(data.creator)
+            SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
+          })
+          cy.visit(manuscriptStatus + evaluated)
+          cy.awaitDisappearSpinner()
+          ManuscriptsPage.getArticleTitleByRow(0).should('be.eq', title)
+          ManuscriptsPage.getStatus(0).should('be.eq', 'Evaluated')
+        })
     })
   })
 })

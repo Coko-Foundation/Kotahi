@@ -1,6 +1,6 @@
 /// <reference types="Cypress" />
 import { ManuscriptsPage } from './manuscripts-page'
-import { submit } from '../support/routes'
+import { evaluate, submit } from '../support/routes'
 
 /**
  * Page object representing the form which has
@@ -66,7 +66,6 @@ const REVIEW_CREATOR_FIELD = 'submission.reviewCreator'
 const DROPDOWN = 'placeholder'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
 const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
-const ABSTRACT_FIELD = 'submission.abstract'
 
 export const SubmissionFormPage = {
   getPageTitle() {
@@ -236,7 +235,7 @@ export const SubmissionFormPage = {
   },
   clickSubmitResearchAndWaitPageLoad() {
     this.clickSubmitResearch()
-    cy.url().should('not.contain', submit)
+    cy.url().should('not.contain', submit).and('not.contain', evaluate)
     cy.awaitDisappearSpinner()
     ManuscriptsPage.getTableHeader().should('be.visible')
   },
@@ -382,7 +381,7 @@ export const SubmissionFormPage = {
     this.getOurTakeField().find(CONTENT_EDITABLE_VALUE).fillInput(ourTake)
   },
   getOurTakeContent() {
-    return this.getOurTakeField().find('p')
+    return this.getOurTakeField().find('p').invoke('text')
   },
   getStudySettingField() {
     return this.getWaxInputBox(1)
@@ -446,6 +445,12 @@ export const SubmissionFormPage = {
   getTopicsCheckboxWithText(value) {
     return cy.getByNameAndValue(TOPICS_CHECKBOX_LIST, value)
   },
+  getCheckedTopics() {
+    return cy.get(`[name="${TOPICS_CHECKBOX_LIST}"][checked]`)
+  },
+  getCheckedTopicsCount() {
+    return cy.get(`[name="${TOPICS_CHECKBOX_LIST}"][checked]`).its('length')
+  },
   clickTopicsCheckboxWithText(value) {
     this.getTopicsCheckboxWithText(value).click()
   },
@@ -497,6 +502,9 @@ export const SubmissionFormPage = {
   },
   fillInAbstract(abstract) {
     this.getAbstractField().fillInput(abstract)
+  },
+  getAbstractContent() {
+    return this.getAbstractField().find('p').invoke('text')
   },
 }
 export default SubmissionFormPage

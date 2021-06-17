@@ -95,7 +95,7 @@ describe('manuscripts page tests', () => {
       cy.url().should('contain', 'evaluation')
       SubmissionFormPage.getArticleUrl().should('have.value', '')
       // eslint-disable-next-line
-      SubmissionFormPage.getOurTakeContent().should('have.value', '')
+      SubmissionFormPage.getOurTakeContent().should('be.eq', '')
       SubmissionFormPage.getDropdown(0).should('have.value', '')
       SubmissionFormPage.getStudySettingContent().should('have.value', '')
       SubmissionFormPage.getMainFindingsContent().should('have.value', '')
