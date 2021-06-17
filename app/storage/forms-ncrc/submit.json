@@ -6,7 +6,7 @@
       "component": "TextField",
       "name": "submission.articleURL",
       "description": "<p></p>",
-      "doiValidation": "true",
+      "doiValidation": "false",
       "validate": [
         {
           "value": "required",
