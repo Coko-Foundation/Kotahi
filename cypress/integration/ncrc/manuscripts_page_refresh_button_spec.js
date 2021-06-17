@@ -134,7 +134,7 @@ describe('refresh button tests', () => {
       SubmissionFormPage.getFirstAuthorField().should('not.have.value', '')
       SubmissionFormPage.getDatePublishedField().should('not.have.value', '')
     })
-    it.only('check imported article can be evaluated', () => {
+    it('check imported article can be evaluated', () => {
       const randomArticle = Math.floor(Math.random() * 10)
       ManuscriptsPage.clickEvaluationNthAndVerifyUrl(randomArticle)
       SubmissionFormPage.getArticleDescriptionField()
