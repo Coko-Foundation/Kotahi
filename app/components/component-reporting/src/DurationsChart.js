@@ -7,24 +7,6 @@ const Container = styled.div`
   width: 750px;
 `
 
-const generateBaseData = () => {
-  const result = []
-  let prevDate = Date.now()
-
-  for (let i = 0; i < 100; i += 1) {
-    const date = prevDate + Math.random() * Math.random() * 24 * 60 * 60
-    const reviewDuration = Math.random() * Math.random() * 15 + 0.5
-
-    const fullDuration =
-      reviewDuration + Math.random() * Math.random() * 9 + 0.5
-
-    result.push({ date, reviewDuration, fullDuration })
-    prevDate = date
-  }
-
-  return result
-}
-
 const generateSeries = data => {
   const reviewSeries = []
   const completionSeries = []
@@ -156,14 +138,13 @@ const getTicks = (startTimestamp, endTimestamp, interval) => {
   return result
 }
 
-const DurationsChart = () => {
-  const baseData = generateBaseData()
-  const endDate = baseData[baseData.length - 1].date
-  const startDate = baseData[0].date
-  const { reviewSeries, completionSeries } = generateSeries(baseData)
+const DurationsChart = ({ data }) => {
+  const endDate = data[data.length - 1].date
+  const startDate = data[0].date
+  const { reviewSeries, completionSeries } = generateSeries(data)
 
   const [reviewAvgs, completionAvgs] = generateMovingAverages(
-    baseData,
+    data,
     week,
     24 * 60 * 60,
   )

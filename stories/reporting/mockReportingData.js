@@ -2,6 +2,24 @@ import React from 'react'
 import Color from 'color'
 import { SparkBar } from '../../app/components/component-reporting/src'
 
+export const generateDurationsData = () => {
+  const result = []
+  let prevDate = Date.now()
+
+  for (let i = 0; i < 100; i += 1) {
+    const date = prevDate + Math.random() * Math.random() * 24 * 60 * 60
+    const reviewDuration = Math.random() * Math.random() * 15 + 0.5
+
+    const fullDuration =
+      reviewDuration + Math.random() * Math.random() * 9 + 0.5
+
+    result.push({ date, reviewDuration, fullDuration })
+    prevDate = date
+  }
+
+  return result
+}
+
 export const generateSummaryData = () => {
   return {
     avgPublishTimeDays: 8.765,
@@ -9,11 +27,17 @@ export const generateSummaryData = () => {
     unsubmittedCount: 12,
     submittedCount: 34,
     unassignedCount: 5,
+    reviewInvitedCount: 27,
+    reviewInviteAcceptedCount: 25,
     reviewedCount: 18,
     rejectedCount: 4,
     revisingCount: 9,
     acceptedCount: 5,
     publishedCount: 4,
+    publishedTodayCount: 4,
+    avgPublishedDailyCount: 2.7,
+    avgRevisingDailyCount: 11.3,
+    durationsData: generateDurationsData(),
   }
 }
 
