@@ -14,8 +14,8 @@ import { Menu } from '../../page-object/page-component/menu'
 describe('refresh button tests', () => {
   beforeEach(() => {
     // task to restore the database as per the  dumps/initialState.sql
-    // cy.task('restore', 'initial_state_ncrc')
-    // cy.task('seedForms')
+    cy.task('restore', 'initial_state_ncrc')
+    cy.task('seedForms')
 
     // login as admin
     cy.fixture('role_names').then(name => {
@@ -30,14 +30,14 @@ describe('refresh button tests', () => {
   })
 
   context('functionality check', () => {
-    // beforeEach(() => {
-    //   ManuscriptsPage.clickRefreshButton()
-    //   // wait for data to be imported
-    //   // eslint-disable-next-line cypress/no-unnecessary-waiting
-    //   cy.wait(15000)
-    //   cy.reload()
-    //   cy.awaitDisappearSpinner()
-    // })
+    beforeEach(() => {
+      ManuscriptsPage.clickRefreshButton()
+      // wait for data to be imported
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(15000)
+      cy.reload()
+      cy.awaitDisappearSpinner()
+    })
     it('check table has data', () => {
       ManuscriptsPage.getNumberOfAvailableArticles()
         .invoke('text')
