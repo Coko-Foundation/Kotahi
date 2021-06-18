@@ -128,7 +128,7 @@ const User = ({
 
   let formattedAbstract
 
-  if (manuscript.submission.abstract) {
+  if (manuscript.submission?.abstract) {
     formattedAbstract = manuscript.submission.abstract.replace(/<[^>]*>/g, '')
   }
 
