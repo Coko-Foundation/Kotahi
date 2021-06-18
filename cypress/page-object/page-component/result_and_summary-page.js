@@ -3,13 +3,17 @@
  * Page object which represents the results and summary
  */
 
-const HEADING = '[class*=style__Heading]'
+const CONTAINER = '[class*=General__Container]'
+const HEADING = 'style__Heading'
 const EVALUATION_TYPE = '[class*=General__Container] > p'
 const REVIEW = '[class*=style__ArticleEvaluation] > p'
 
 export const ResultAndSummaryPage = {
+  getContainer() {
+    return cy.get(CONTAINER, { timeout: 15000 })
+  },
   getDescription() {
-    return cy.get(HEADING, { timeout: 15000 }).find('h2')
+    return cy.getByContainsClass(HEADING).find('h2')
   },
   getEvaluationType() {
     return cy.get(EVALUATION_TYPE)
