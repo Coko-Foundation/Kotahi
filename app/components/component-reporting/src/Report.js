@@ -1,13 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import Color from 'color'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../shared/lightenBy'
 import DateRangePicker from './DateRangePicker'
-import CardCollection, { Card } from './CardCollection'
-import ConcentricStepsChart from './ConcentricStepsChart'
-import DurationsChart from './DurationsChart'
+import SummaryReport from './SummaryReport'
 import Table from './Table'
 import SparkBar from './SparkBar'
 
@@ -31,34 +28,8 @@ export const Content = styled.div`
   box-shadow: ${th('boxShadow')};
 `
 
-const CardHeader = styled.div`
-  color: ${th('colorPrimary')};
-  font-size: 120%;
-  margin-top: 1em;
-  text-align: center;
-
-  :first-child {
-    margin-top: 0;
-  }
-`
-
-const BigNumber = styled.div`
-  font-size: 300%;
-  line-height: 120%;
-`
-
-const NoteRight = styled.div`
-  text-align: right;
-  width: 100%;
-`
-
 const SelectionLine = styled.div`
   margin-bottom: 1.5em;
-`
-
-const Note = styled.div`
-  color: ${lightenBy('colorText', 0.2)};
-  font-size: 75%;
 `
 
 const reportTypes = [
@@ -69,28 +40,6 @@ const reportTypes = [
   'Reviewer',
   'Author',
 ]
-
-const getDaysStringTo1Dp = valueDays => {
-  const roundedDays = Math.round(valueDays * 10) / 10
-  return `${roundedDays} day${roundedDays === 1 ? '' : 's'}`
-}
-
-const getBarColor = (
-  barIndex,
-  barsCount,
-  lightness = 0.6,
-  saturation = 0.6,
-) => {
-  const baseHue = 243
-  const targetHue = 22
-
-  const hue =
-    barIndex === 0
-      ? baseHue
-      : baseHue + ((targetHue - baseHue) * barIndex) / (barsCount - 1)
-
-  return Color.hsl(hue, saturation * 100, lightness * 100).hex()
-}
 
 const generateSparkBars = (
   values,
@@ -147,177 +96,7 @@ const getReport = (
   getAuthorsData,
 ) => {
   if (reportType === 'Summary') {
-    const {
-      avgPublishTimeDays,
-      avgReviewTimeDays,
-      unsubmittedCount,
-      submittedCount,
-      unassignedCount,
-      reviewInvitedCount,
-      reviewInviteAcceptedCount,
-      reviewedCount,
-      rejectedCount,
-      revisingCount,
-      acceptedCount,
-      publishedCount,
-      publishedTodayCount,
-      avgPublishedDailyCount,
-      avgRevisingDailyCount,
-      durationsData,
-    } = getSummaryData(startDate, endDate)
-
-    const getEditorsConcentricBarChartData = () => {
-      const data = [
-        { name: 'All manuscripts', value: unsubmittedCount + submittedCount },
-        { name: 'Submitted', value: submittedCount },
-        { name: 'Editor assigned', value: submittedCount - unassignedCount },
-        {
-          name: 'Decision complete',
-          value: rejectedCount + revisingCount + acceptedCount,
-        },
-        { name: 'Accepted', value: acceptedCount },
-        { name: 'Published', value: publishedCount },
-      ]
-
-      const barColors = data.map((_, i) => getBarColor(i, data.length, 0.6))
-
-      const labelColors = data.map((_, i) =>
-        getBarColor(i, data.length, 0.3, 1.0),
-      )
-
-      return { data, barColors, labelColors }
-    }
-
-    const getReviewersConcentricBarChartData = () => {
-      const data = [
-        { name: 'All manuscripts', value: unsubmittedCount + submittedCount },
-        { name: 'Reviewer invited', value: reviewInvitedCount },
-        { name: 'Invite accepted', value: reviewInviteAcceptedCount },
-        { name: 'Review completed', value: reviewedCount },
-      ]
-
-      const barColors = data.map((_, i) => getBarColor(i, data.length, 0.6))
-
-      const labelColors = data.map((_, i) =>
-        getBarColor(i, data.length, 0.3, 1.0),
-      )
-
-      return { data, barColors, labelColors }
-    }
-
-    return (
-      <>
-        <CardCollection style={{ width: 950, height: 680 }}>
-          <Card
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <CardHeader>Editors&rsquo; workflow</CardHeader>
-            <ConcentricStepsChart {...getEditorsConcentricBarChartData()} />
-          </Card>
-          <Card
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <CardHeader>Reviewers&rsquo; workflow</CardHeader>
-            <ConcentricStepsChart {...getReviewersConcentricBarChartData()} />
-          </Card>
-          <Card
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              alignItems: 'center',
-              width: '150px',
-            }}
-          >
-            <CardHeader>Manuscripts published today</CardHeader>
-            <BigNumber>{publishedTodayCount}</BigNumber>
-            <NoteRight>Average {avgPublishedDailyCount}</NoteRight>
-            <CardHeader>Manuscripts currently in revision</CardHeader>
-            <BigNumber>{revisingCount}</BigNumber>
-            <NoteRight>Average {avgRevisingDailyCount}</NoteRight>
-          </Card>
-          <Card
-            style={{
-              display: 'flex',
-              flexDirection: 'column',
-              flexWrap: 'wrap',
-              justifyContent: 'center',
-              alignItems: 'center',
-            }}
-          >
-            <CardHeader>Submission durations</CardHeader>
-            <DurationsChart data={durationsData} />
-          </Card>
-        </CardCollection>
-        <Table
-          headings={[]}
-          rows={[
-            [
-              {
-                content: (
-                  <div>
-                    Average time to publish
-                    <Note>From submission to published</Note>
-                  </div>
-                ),
-                isHeading: true,
-              },
-              { content: getDaysStringTo1Dp(avgPublishTimeDays) },
-            ],
-            [
-              { content: 'Average time to review', isHeading: true },
-              { content: getDaysStringTo1Dp(avgReviewTimeDays) },
-            ],
-            [
-              { content: 'Unsubmitted', isHeading: true },
-              { content: unsubmittedCount },
-            ],
-            [
-              { content: 'Submitted', isHeading: true },
-              { content: submittedCount },
-            ],
-            [
-              { content: 'Unassigned', isHeading: true },
-              { content: unassignedCount },
-            ],
-            [
-              { content: 'Reviewed', isHeading: true },
-              { content: reviewedCount },
-            ],
-            [
-              { content: 'Rejected', isHeading: true },
-              { content: rejectedCount },
-            ],
-            [
-              { content: 'Awaiting revision', isHeading: true },
-              { content: revisingCount },
-            ],
-            [
-              { content: 'Accepted', isHeading: true },
-              { content: acceptedCount },
-            ],
-            [
-              { content: 'Published', isHeading: true },
-              { content: publishedCount },
-            ],
-          ]}
-          sizings={[{ width: '12em' }, { width: '7em' }]}
-        />
-      </>
-    )
+    return <SummaryReport {...getSummaryData(startDate, endDate)} />
   }
 
   if (reportType === 'Manuscript') {
