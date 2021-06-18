@@ -383,7 +383,7 @@ describe('Manuscripts page tests', () => {
     })
   })
 
-  context('Evaluation and summary page tests', () => {
+  context.only('Evaluation and summary page tests', () => {
     // this method is use to avoid script errors
     // eslint-disable-next-line handle-callback-err
     // Cypress.on('uncaught:exception', (err, runnable) => {
@@ -464,7 +464,7 @@ describe('Manuscripts page tests', () => {
           data.peerReview,
         )
         ResultAndSummaryPage.getReview().should('contain', data.review1)
-        ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
         ResultAndSummaryPage.getDate().should('contain', data.review1Date)
       })
     })
@@ -485,7 +485,7 @@ describe('Manuscripts page tests', () => {
           data.peerReview,
         )
         ResultAndSummaryPage.getReview().should('contain', data.review2)
-        ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
         ResultAndSummaryPage.getDate().should('contain', data.review2Date)
       })
     })
@@ -506,7 +506,7 @@ describe('Manuscripts page tests', () => {
           data.peerReview,
         )
         ResultAndSummaryPage.getReview().should('contain', data.review3)
-        ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
         ResultAndSummaryPage.getDate().should('contain', data.review3Date)
       })
     })
@@ -527,7 +527,7 @@ describe('Manuscripts page tests', () => {
           data.evaluationSummary,
         )
         ResultAndSummaryPage.getReview().should('contain', data.summary)
-        ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
         ResultAndSummaryPage.getDate().should('contain', data.summaryDate)
       })
     })

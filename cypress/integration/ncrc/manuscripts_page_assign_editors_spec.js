@@ -63,6 +63,7 @@ describe('manuscripts page assign editors tests', () => {
     cy.fixture('role_names').then(name => {
       ManuscriptsPage.getEditorName()
         .eq(-1)
+        .scrollIntoView()
         .should('contain', name.role.reviewers.reviewer3)
     })
     ManuscriptsPage.clickEvaluation()
@@ -74,6 +75,7 @@ describe('manuscripts page assign editors tests', () => {
     cy.fixture('role_names').then(name => {
       ManuscriptsPage.getEditorName()
         .eq(-1)
+        .scrollIntoView()
         .should('contain', name.role.reviewers.reviewer1)
     })
   })

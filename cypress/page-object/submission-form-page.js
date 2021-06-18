@@ -360,14 +360,12 @@ export const SubmissionFormPage = {
   fillInSummaryCreator(summaryCreator) {
     this.getSummaryCreator().fillInput(summaryCreator)
   },
-
   getSummaryDate() {
     return cy.getByDataTestId(SUMMARY_DATE)
   },
   fillInSummaryDate(summaryDate) {
     this.getSummaryDate().fillInput(summaryDate)
   },
-
   getArticleDescriptionField() {
     return cy.getByName(ARTICLE_DESCRIPTION_FIELD)
   },
