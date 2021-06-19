@@ -127,6 +127,7 @@ export const GET_MANUSCRIPTS = gql`
         created
         updated
         status
+        published
         teams {
           id
           role

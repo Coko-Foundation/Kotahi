@@ -202,7 +202,10 @@ const User = ({
       )}
       <Cell>
         <span onClick={() => filterByArticleStatus(manuscript.status)}>
-          <StatusBadge status={manuscript.status} />
+          <StatusBadge
+            published={manuscript.published}
+            status={manuscript.status}
+          />
         </span>
       </Cell>
       {process.env.INSTANCE_NAME === 'ncrc' && (
