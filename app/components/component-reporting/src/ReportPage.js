@@ -1,11 +1,32 @@
 import React from 'react'
 import { useQuery, gql } from '@apollo/client'
 import Report from './Report'
-import { generateSummaryData } from './mockReportingData'
 import { Spinner } from '../../shared'
 
 const getReportData = gql`
   query reportData($startDate: DateTime, $endDate: DateTime) {
+    summaryActivity(startDate: $startDate, endDate: $endDate) {
+      avgPublishTimeDays
+      avgReviewTimeDays
+      unsubmittedCount
+      submittedCount
+      unassignedCount
+      reviewInvitedCount
+      reviewInviteAcceptedCount
+      reviewedCount
+      rejectedCount
+      revisingCount
+      acceptedCount
+      publishedCount
+      publishedTodayCount
+      avgPublishedDailyCount
+      avgRevisingDailyCount
+      durationsData {
+        date
+        reviewDuration
+        fullDuration
+      }
+    }
     manuscriptsActivity(startDate: $startDate, endDate: $endDate) {
       manuscriptNumber
       entryDate
@@ -94,7 +115,7 @@ const ReportPage = () => {
       }
       getManuscriptsData={() => removeTypeName(data?.manuscriptsActivity)}
       getReviewersData={() => removeTypeName(data?.reviewersActivity)}
-      getSummaryData={generateSummaryData}
+      getSummaryData={() => data?.summaryActivity}
     />
   )
 }
