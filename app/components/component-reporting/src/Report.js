@@ -210,6 +210,10 @@ const getReport = (
 }
 
 const Report = ({
+  startDate,
+  endDate,
+  setStartDate,
+  setEndDate,
   getSummaryData,
   getManuscriptsData,
   getHandlingEditorsData,
@@ -217,12 +221,6 @@ const Report = ({
   getReviewersData,
   getAuthorsData,
 }) => {
-  const [endDate, setEndDate] = useState(Date.now())
-
-  const [startDate, setStartDate] = useState(
-    Date.now() - 7 * 24 * 60 * 60 * 1000,
-  )
-
   const [reportType, setReportType] = useState(reportTypes[0])
 
   return (
@@ -267,6 +265,10 @@ const Report = ({
 }
 
 Report.propTypes = {
+  startDate: PropTypes.number.isRequired,
+  endDate: PropTypes.number.isRequired,
+  setStartDate: PropTypes.func.isRequired,
+  setEndDate: PropTypes.func.isRequired,
   getSummaryData: PropTypes.func.isRequired,
   getManuscriptsData: PropTypes.func.isRequired,
   getHandlingEditorsData: PropTypes.func.isRequired,
