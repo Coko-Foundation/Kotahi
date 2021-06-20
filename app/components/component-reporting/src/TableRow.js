@@ -72,7 +72,7 @@ const TableRow = ({ cells, isHeadingRow }) => {
 TableRow.propTypes = {
   cells: PropTypes.arrayOf(
     PropTypes.shape({
-      content: PropTypes.node.isRequired,
+      content: PropTypes.node,
       flexGrow: PropTypes.number,
       isHeading: PropTypes.bool,
       width: PropTypes.string.isRequired,

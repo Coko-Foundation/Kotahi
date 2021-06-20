@@ -1,4 +1,3 @@
-import React from 'react'
 import Color from 'color'
 
 export const generateDurationsData = () => {
@@ -75,138 +74,108 @@ const lowishRandomInt = max => Math.floor(Math.random() ** 2 * max)
 const highishRandomInt = max => Math.floor(Math.random() ** 0.5 * max)
 const randomName = () => personNames[randomInt(personNames.length)]
 
-export const generateResearchObjectsData = () =>
-  personNames.map((name, i) => [
-    { content: `${1234 + i}` },
-    { content: '2021-05-10' },
-    // eslint-disable-next-line jsx-a11y/anchor-is-valid
-    { content: <a href="#">Manuscript {1234 + i}</a> },
-    { content: name },
-    { content: `${randomName()}, ${randomName()}` },
-    { content: `${randomName()}, ${randomName()}, ${randomName()}` },
-    { content: 'Reviewed' },
-    { content: '2021-05-23' },
-  ])
-
-export const generateEditorsData = () => {
-  const names = []
-  const assignedCounts = []
-  const givenToReviewersCounts = []
-  const revisedCounts = []
-  const rejectedCounts = []
-  const acceptedCounts = []
-  const publishedCounts = []
+export const generateResearchObjectsData = () => {
+  const result = []
 
   for (let i = 0; i < 50; i += 1) {
-    names.push(randomName())
+    result.push({
+      id: (1234 + i).toString(),
+      entryDate: '2021-05-10',
+      title: `Manuscript ${1234 + i}`,
+      authorName: randomName(),
+      editors: [{ name: randomName() }, { name: randomName() }],
+      reviewers: [
+        { name: randomName() },
+        { name: randomName() },
+        { name: randomName() },
+      ],
+      status: 'Reviewed',
+      publishedDate: '2021-05-23',
+    })
+  }
+
+  return result
+}
+
+export const generateEditorsData = () => {
+  const result = []
+
+  for (let i = 0; i < 50; i += 1) {
     const assignedCount = highishRandomInt(40)
-    assignedCounts.push(assignedCount)
     const givenToReviewersCount = highishRandomInt(assignedCount + 1)
-    givenToReviewersCounts.push(givenToReviewersCount)
-    revisedCounts.push(randomInt(givenToReviewersCount + 1))
     const rejectedCount = lowishRandomInt(givenToReviewersCount + 1)
-    rejectedCounts.push(rejectedCount)
 
     const acceptedCount = highishRandomInt(
       givenToReviewersCount - rejectedCount + 1,
     )
 
-    acceptedCounts.push(acceptedCount)
-    publishedCounts.push(highishRandomInt(acceptedCount + 1))
+    result.push({
+      name: randomName(),
+      assignedCount,
+      givenToReviewersCount,
+      revisedCount: randomInt(givenToReviewersCount + 1),
+      rejectedCount,
+      acceptedCount,
+      publishedCount: highishRandomInt(acceptedCount + 1),
+    })
   }
 
-  return [
-    names,
-    assignedCounts,
-    givenToReviewersCounts,
-    revisedCounts,
-    rejectedCounts,
-    acceptedCounts,
-    publishedCounts,
-  ]
+  return result
 }
 
 export const generateReviewersData = () => {
-  const names = []
-  const invitedCounts = []
-  const declinedCounts = []
-  const reviewsCompletedCounts = []
-  const avgDurationCounts = []
-  const reccAcceptCounts = []
-  const reccReviseCounts = []
-  const reccRejectCounts = []
+  const result = []
 
   for (let i = 0; i < 50; i += 1) {
-    names.push(randomName())
     const invitesCount = lowishRandomInt(8)
-    invitedCounts.push(invitesCount)
     const declinedCount = lowishRandomInt(invitesCount + 1)
-    declinedCounts.push(declinedCount)
 
     const reviewsCompletedCount = highishRandomInt(
       invitesCount - declinedCount + 1,
     )
 
-    reviewsCompletedCounts.push(reviewsCompletedCount)
-    avgDurationCounts.push(
-      reviewsCompletedCount > 0 ? lowishRandomInt(20) / 2 + 0.5 : 0,
-    )
     const reccReviseCount = randomInt(reviewsCompletedCount + 1)
-    reccReviseCounts.push(reccReviseCount)
 
     const reccAcceptCount = highishRandomInt(
       reviewsCompletedCount - reccReviseCount + 1,
     )
 
-    reccAcceptCounts.push(reccAcceptCount)
-    reccRejectCounts.push(
-      reviewsCompletedCount - reccReviseCount - reccAcceptCount,
-    )
+    result.push({
+      name: randomName(),
+      invitesCount,
+      declinedCount,
+      reviewsCompletedCount,
+      avgReviewDuration:
+        reviewsCompletedCount > 0 ? lowishRandomInt(20) / 2 + 0.5 : 0,
+      reccReviseCount,
+      reccAcceptCount,
+      reccRejectCount:
+        reviewsCompletedCount - reccReviseCount - reccAcceptCount,
+    })
   }
 
-  return [
-    names,
-    invitedCounts,
-    declinedCounts,
-    reviewsCompletedCounts,
-    avgDurationCounts,
-    reccAcceptCounts,
-    reccReviseCounts,
-    reccRejectCounts,
-  ]
+  return result
 }
 
 export const generateAuthorsData = () => {
-  const names = []
-  const unsubmittedCounts = []
-  const submittedCounts = []
-  const rejectedCounts = []
-  const revisionCounts = []
-  const acceptedCounts = []
-  const publishedCounts = []
+  const result = []
 
   for (let i = 0; i < 50; i += 1) {
-    names.push(randomName())
-    unsubmittedCounts.push(Math.floor(Math.random() ** 4 * 10))
     const submittedCount = lowishRandomInt(3)
-    submittedCounts.push(submittedCount)
     const rejectedCount = lowishRandomInt(submittedCount + 1)
-    rejectedCounts.push(rejectedCount)
-    revisionCounts.push(randomInt(submittedCount - rejectedCount + 1))
     const acceptedCount = randomInt(submittedCount - rejectedCount + 1)
-    acceptedCounts.push(acceptedCount)
-    publishedCounts.push(highishRandomInt(acceptedCount + 1))
+    result.push({
+      name: randomName(),
+      unsubmittedCount: Math.floor(Math.random() ** 4 * 10),
+      submittedCount,
+      rejectedCount,
+      revisionCount: randomInt(submittedCount - rejectedCount + 1),
+      acceptedCount,
+      publishedCount: highishRandomInt(acceptedCount + 1),
+    })
   }
 
-  return [
-    names,
-    unsubmittedCounts,
-    submittedCounts,
-    rejectedCounts,
-    revisionCounts,
-    acceptedCounts,
-    publishedCounts,
-  ]
+  return result
 }
 
 const getBarColor = (

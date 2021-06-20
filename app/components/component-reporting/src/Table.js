@@ -18,7 +18,7 @@ const Table = ({ columnSchemas, rows }) => {
       {rows.map((row, index) => (
         <TableRow
           cells={row.map((cell, i) => {
-            return cell.content
+            return cell?.content
               ? { ...cell, ...columnSchemas[i] }
               : { content: cell, ...columnSchemas[i] }
           })}
@@ -40,14 +40,14 @@ Table.propTypes = {
   rows: PropTypes.arrayOf(
     PropTypes.arrayOf(
       PropTypes.oneOfType([
-        PropTypes.string.isRequired,
-        PropTypes.number.isRequired,
-        PropTypes.node.isRequired,
+        PropTypes.string,
+        PropTypes.number,
+        PropTypes.node,
         PropTypes.shape({
           content: PropTypes.node.isRequired,
           isHeading: PropTypes.bool,
-        }).isRequired,
-      ]).isRequired,
+        }),
+      ]),
     ).isRequired,
   ).isRequired,
 }

@@ -1,27 +1,26 @@
 import React from 'react'
 import { Table } from '../../app/components/component-reporting/src'
-import {
-  generateResearchObjectsData,
-  generateEditorsData,
-  generateReviewersData,
-  generateAuthorsData,
-} from './mockReportingData'
 
-export const ResearchObjects = args => <Table {...args} />
-export const HandlingEditors = ResearchObjects.bind()
-export const Reviewers = ResearchObjects.bind()
-export const ManagingEditors = ResearchObjects.bind()
-export const Authors = ResearchObjects.bind()
+export const Base = args => <Table {...args} />
+export const WithHeadings = Base.bind()
+export const WithSomeHeadings = Base.bind()
 
-const pivot = columns => {
-  const rows = []
-  for (let i = 0; i < columns[0].length; i += 1)
-    rows.push(columns.map(col => col[i]))
-  return rows
-}
+const rows = [
+  [
+    1234,
+    '2021-05-10',
+    `Wigwams for Gooses' Bridles: a comparative study`,
+    'Jack Horner',
+    'Editor 1, Editor 2',
+    'Reviewer 1, Reviewer 2, Reviewer 3',
+    { content: 'revising', isHeading: true },
+    null,
+  ],
+]
 
-ResearchObjects.args = {
-  sizings: [
+Base.args = {
+  // prettier-ignore
+  columnSchemas: [
     { width: '6.5em' },
     { width: '7em' },
     { width: '16em', flexGrow: 4 },
@@ -31,87 +30,37 @@ ResearchObjects.args = {
     { width: '6em' },
     { width: '7em' },
   ],
-  headings: [
-    'Manuscript number',
-    'Entry date',
-    'Title',
-    'Corresponding author',
-    'Editors',
-    'Reviewers',
-    'Status',
-    'Published date',
-  ],
-  rows: generateResearchObjectsData(),
+  rows,
 }
 
-HandlingEditors.args = {
-  sizings: [
-    { width: '12em', flexGrow: 3 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
+WithHeadings.args = {
+  // prettier-ignore
+  columnSchemas: [
+    { heading: 'Manuscript number', width: '6.5em' },
+    { heading: 'Entry date', width: '7em' },
+    { heading: 'Title', width: '16em', flexGrow: 4 },
+    { heading: 'Corresponding author', width: '12em', flexGrow: 1 },
+    { heading: 'Editors', width: '12em', flexGrow: 3 },
+    { heading: 'Reviewers', width: '14em', flexGrow: 3 },
+    { heading: 'Status', width: '6em' },
+    { heading: 'Published date', width: '7em' },
   ],
-  headings: [
-    'Editor name',
-    'Manuscripts assigned',
-    'Assigned for review',
-    'Revised',
-    'Rejected',
-    'Accepted',
-    'Published',
-  ],
-  rows: pivot(generateEditorsData()),
+  rows,
 }
 
-ManagingEditors.args = HandlingEditors.args
-
-Reviewers.args = {
-  sizings: [
-    { width: '12em', flexGrow: 3 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
+WithSomeHeadings.args = {
+  // prettier-ignore
+  columnSchemas: [
+    { width: '6.5em' },
+    { width: '7em' },
+    { heading: 'Title', width: '16em', flexGrow: 4 },
+    { width: '12em', flexGrow: 1 },
+    { heading: 'Editors', width: '12em', flexGrow: 3 },
+    { heading: 'Reviewers', width: '14em', flexGrow: 3 },
+    { width: '6em' },
+    { width: '7em' },
   ],
-  headings: [
-    'Reviewer name',
-    'Review invites',
-    'Invites declined',
-    'Reviews completed',
-    'Average review duration',
-    'Recommended to accept',
-    'Recommended to revise',
-    'Recommended to reject',
-  ],
-  rows: pivot(generateReviewersData()),
-}
-
-Authors.args = {
-  sizings: [
-    { width: '12em', flexGrow: 3 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-    { width: '7em', flexGrow: 1 },
-  ],
-  headings: [
-    'Author name',
-    'Unsubmitted',
-    'Submitted',
-    'Rejected',
-    'Revision requested',
-    'Accepted',
-    'Published',
-  ],
-  rows: pivot(generateAuthorsData()),
+  rows,
 }
 
 export default {
