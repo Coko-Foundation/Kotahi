@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { forEach, map } from 'lodash'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../shared/lightenBy'
 import DateRangePicker from './DateRangePicker'
@@ -41,47 +42,36 @@ const reportTypes = [
   'Author',
 ]
 
-const generateSparkBars = (
-  values,
-  onClick,
-  labelMapper,
-  columnIndex,
-  color,
-) => {
-  const highest = Math.max.apply(null, values)
-  return values.map(v =>
-    typeof v === 'number' ? (
-      // eslint-disable-next-line react/jsx-key
-      <SparkBar
-        color={color}
-        label={labelMapper && labelMapper(v, columnIndex)}
-        onClick={onClick}
-        rangeMax={highest}
-        value={v}
-      />
-    ) : (
-      v
-    ),
-  )
-}
+const getTableDataWithSparkBars = (rows, labelMapper) => {
+  if (rows.length < 1) return []
 
-const getTableDataWithSparkBars = (columns, labelMapper) => {
-  const columnSparkBarContents = columns.map(
-    (val, columnIndex) =>
-      generateSparkBars(
-        val,
-        () => {},
-        labelMapper,
-        columnIndex,
-        lightenBy('colorSecondary', 0.7),
-      ), // TODO make these clickable
-  )
-
-  return columns[0].map((_, i) => {
-    const row = []
-    columnSparkBarContents.forEach(column => row.push({ content: column[i] }))
-    return row
+  // Find maximum values in each column (or 0 for non-numeric or negative data)
+  const columnMaxima = {}
+  forEach(rows[0], (_, key) => {
+    columnMaxima[key] = rows.reduce((max, row) => {
+      let val = row[key]
+      if (typeof val !== 'number') val = 0
+      return Math.max(max, val)
+    }, 0)
   })
+
+  // Return all rows, substituting a SparkBar for numbers. If a labelMapper function is supplied, derive cell text using this.
+  return rows.map(row =>
+    map(row, (val, key) => {
+      if (typeof val !== 'number')
+        return labelMapper ? labelMapper(val, key) : val
+      return (
+        // eslint-disable-next-line react/jsx-key
+        <SparkBar
+          color={lightenBy('colorSecondary', 0.7)}
+          label={labelMapper && labelMapper(val, key)}
+          onClick={undefined}
+          rangeMax={columnMaxima[key]}
+          value={val}
+        />
+      )
+    }),
+  )
 }
 
 const getReport = (
@@ -100,29 +90,32 @@ const getReport = (
   }
 
   if (reportType === 'Manuscript') {
+    const rows = getTableDataWithSparkBars(
+      getManuscriptsData(startDate, endDate),
+      (val, key) => {
+        if (key === 'editors' || key === 'reviewers')
+          return val.reduce(
+            (accum, curr) => (accum ? `${accum}, ${curr.name}` : curr.name),
+            null,
+          )
+        return val
+      },
+    )
+
     return (
       <Table
-        headings={[
-          'Manuscript number',
-          'Entry date',
-          'Title',
-          'Corresponding author',
-          'Editors',
-          'Reviewers',
-          'Status',
-          'Published date',
+        // prettier-ignore
+        columnSchemas={[
+          { heading: 'Manuscript number', name: 'id', width: '6.5em' },
+          { heading: 'Entry date', name: 'entryDate', width: '7em' },
+          { heading: 'Title', name: 'title', width: '16em', flexGrow: 4 },
+          { heading: 'Corresponding author', name: 'authorName', width: '12em', flexGrow: 1 },
+          { heading: 'Editors', name: 'editors', width: '12em', flexGrow: 3 },
+          { heading: 'Reviewers', name: 'reviewers', width: '14em', flexGrow: 3 },
+          { heading: 'Status', name: 'status', width: '6em' },
+          { heading: 'Published date', name: 'publishedDate', width: '7em' },
         ]}
-        rows={getManuscriptsData(startDate, endDate)}
-        sizings={[
-          { width: '6.5em' },
-          { width: '7em' },
-          { width: '16em', flexGrow: 4 },
-          { width: '12em', flexGrow: 1 },
-          { width: '12em', flexGrow: 3 },
-          { width: '14em', flexGrow: 3 },
-          { width: '6em' },
-          { width: '7em' },
-        ]}
+        rows={rows}
       />
     )
   }
@@ -130,27 +123,19 @@ const getReport = (
   if (reportType === 'Handling editor') {
     return (
       <Table
-        headings={[
-          'Editor name',
-          'Manuscripts assigned',
-          'Assigned for review',
-          'Revised',
-          'Rejected',
-          'Accepted',
-          'Published',
+        // prettier-ignore
+        columnSchemas={[
+          { heading: 'Editor name', name: 'name', width: '12em', flexGrow: 3 },
+          { heading: 'Manuscripts assigned', name: 'assignedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Assigned for review', name: 'givenToReviewersCount', width: '7em', flexGrow: 1 },
+          { heading: 'Revised', name: 'revisedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Rejected', name: 'rejectedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Accepted', name: 'acceptedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Published', name: 'publishedCount', width: '7em', flexGrow: 1 },
         ]}
         rows={getTableDataWithSparkBars(
           getHandlingEditorsData(startDate, endDate),
         )}
-        sizings={[
-          { width: '12em', flexGrow: 3 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-        ]}
       />
     )
   }
@@ -158,27 +143,19 @@ const getReport = (
   if (reportType === 'Managing editor') {
     return (
       <Table
-        headings={[
-          'Editor name',
-          'Manuscripts assigned',
-          'Assigned for review',
-          'Revised',
-          'Rejected',
-          'Accepted',
-          'Published',
+        // prettier-ignore
+        columnSchemas={[
+          { heading: 'Editor name', name: 'name', width: '12em', flexGrow: 3 },
+          { heading: 'Manuscripts assigned', name: 'assignedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Assigned for review', name: 'givenToReviewersCount', width: '7em', flexGrow: 1 },
+          { heading: 'Revised', name: 'revisedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Rejected', name: 'rejectedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Accepted', name: 'acceptedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Published', name: 'publishedCount', width: '7em', flexGrow: 1 },
         ]}
         rows={getTableDataWithSparkBars(
           getManagingEditorsData(startDate, endDate),
         )}
-        sizings={[
-          { width: '12em', flexGrow: 3 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-        ]}
       />
     )
   }
@@ -186,31 +163,24 @@ const getReport = (
   if (reportType === 'Reviewer') {
     return (
       <Table
-        headings={[
-          'Reviewer name',
-          'Review invites',
-          'Invites declined',
-          'Reviews completed',
-          'Average review duration',
-          'Recommended to accept',
-          'Recommended to revise',
-          'Recommended to reject',
+        // prettier-ignore
+        columnSchemas={[
+          { heading: 'Reviewer name', name: 'name', width: '12em', flexGrow: 3 },
+          { heading: 'Review invites', name: 'invitesCount', width: '7em', flexGrow: 1 },
+          { heading: 'Invites declined', name: 'declinedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Reviews completed', name: 'reviewsCompletedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Average review duration', name: 'avgReviewDuration', width: '7em', flexGrow: 1 },
+          { heading: 'Recommended to accept', name: 'reccAcceptCount', width: '7em', flexGrow: 1 },
+          { heading: 'Recommended to revise', name: 'reccReviseCount', width: '7em', flexGrow: 1 },
+          { heading: 'Recommended to reject', name: 'reccRejectCount', width: '7em', flexGrow: 1 },
         ]}
         rows={getTableDataWithSparkBars(
           getReviewersData(startDate, endDate),
           (val, column) =>
-            column === 4 ? `${val} day${val === 1 ? '' : 's'}` : val,
+            column === 'avgReviewDuration'
+              ? `${val} day${val === 1 ? '' : 's'}`
+              : val,
         )}
-        sizings={[
-          { width: '12em', flexGrow: 3 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-        ]}
       />
     )
   }
@@ -218,25 +188,17 @@ const getReport = (
   if (reportType === 'Author') {
     return (
       <Table
-        headings={[
-          'Author name',
-          'Unsubmitted',
-          'Submitted',
-          'Rejected',
-          'Revision requested',
-          'Accepted',
-          'Published',
+        // prettier-ignore
+        columnSchemas={[
+          { heading: 'Author name', name: 'name', width: '12em', flexGrow: 3 },
+          { heading: 'Unsubmitted', name: 'unsubmittedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Submitted', name: 'submittedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Rejected', name: 'rejectedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Revision requested', name: 'revisionCount', width: '7em', flexGrow: 1 },
+          { heading: 'Accepted', name: 'acceptedCount', width: '7em', flexGrow: 1 },
+          { heading: 'Published', name: 'publishedCount', width: '7em', flexGrow: 1 },
         ]}
         rows={getTableDataWithSparkBars(getAuthorsData(startDate, endDate))}
-        sizings={[
-          { width: '12em', flexGrow: 3 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-          { width: '7em', flexGrow: 1 },
-        ]}
       />
     )
   }

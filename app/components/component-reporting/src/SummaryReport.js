@@ -150,7 +150,8 @@ const SummaryReport = ({
         </ChartCard>
       </CardCollection>
       <Table
-        headings={[]}
+        columnSchemas={[{ width: '12em' }, { width: '7em' }]}
+        // prettier-ignore
         rows={[
           [
             {
@@ -162,46 +163,18 @@ const SummaryReport = ({
               ),
               isHeading: true,
             },
-            { content: getDaysStringTo1Dp(avgPublishTimeDays) },
+            getDaysStringTo1Dp(avgPublishTimeDays),
           ],
-          [
-            { content: 'Average time to review', isHeading: true },
-            { content: getDaysStringTo1Dp(avgReviewTimeDays) },
-          ],
-          [
-            { content: 'Unsubmitted', isHeading: true },
-            { content: unsubmittedCount },
-          ],
-          [
-            { content: 'Submitted', isHeading: true },
-            { content: submittedCount },
-          ],
-          [
-            { content: 'Unassigned', isHeading: true },
-            { content: unassignedCount },
-          ],
-          [
-            { content: 'Reviewed', isHeading: true },
-            { content: reviewedCount },
-          ],
-          [
-            { content: 'Rejected', isHeading: true },
-            { content: rejectedCount },
-          ],
-          [
-            { content: 'Awaiting revision', isHeading: true },
-            { content: revisingCount },
-          ],
-          [
-            { content: 'Accepted', isHeading: true },
-            { content: acceptedCount },
-          ],
-          [
-            { content: 'Published', isHeading: true },
-            { content: publishedCount },
-          ],
+          [{ content: 'Average time to review', isHeading: true }, getDaysStringTo1Dp(avgReviewTimeDays)],
+          [{ content: 'Unsubmitted', isHeading: true }, unsubmittedCount],
+          [{ content: 'Submitted', isHeading: true }, submittedCount],
+          [{ content: 'Unassigned', isHeading: true }, unassignedCount],
+          [{ content: 'Reviewed', isHeading: true }, reviewedCount],
+          [{ content: 'Rejected', isHeading: true }, rejectedCount],
+          [{ content: 'Awaiting revision', isHeading: true }, revisingCount],
+          [{ content: 'Accepted', isHeading: true }, acceptedCount],
+          [{ content: 'Published', isHeading: true }, publishedCount],
         ]}
-        sizings={[{ width: '12em' }, { width: '7em' }]}
       />
     </>
   )

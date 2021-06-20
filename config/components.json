@@ -11,6 +11,7 @@
   "@pubsweet/job-xsweet",
   "./server/model-channel/src",
   "./server/model-message/src",
+  "./server/reports/src",
   "./server/profile-upload",
   "./server/auth-orcid"
 ]

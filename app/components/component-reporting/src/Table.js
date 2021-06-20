@@ -2,14 +2,15 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import TableRow from './TableRow'
 
-const Table = ({ headings, rows, sizings }) => {
+const Table = ({ columnSchemas, rows }) => {
+  const hasHeadings = columnSchemas.some(col => !!col.heading)
   return (
     <div>
-      {headings && (
+      {hasHeadings && (
         <TableRow
-          cells={headings.map((content, i) => ({
-            content,
-            ...sizings[i],
+          cells={columnSchemas.map(col => ({
+            ...col,
+            content: col.heading,
           }))}
           isHeadingRow
         />
@@ -18,11 +19,10 @@ const Table = ({ headings, rows, sizings }) => {
         <TableRow
           cells={row.map((cell, i) => {
             return cell.content
-              ? { ...cell, ...sizings[i] }
-              : { content: cell, ...sizings[i] }
+              ? { ...cell, ...columnSchemas[i] }
+              : { content: cell, ...columnSchemas[i] }
           })}
-          // eslint-disable-next-line react/no-array-index-key
-          key={index}
+          key={row.key ?? index}
         />
       ))}
     </div>
@@ -30,13 +30,13 @@ const Table = ({ headings, rows, sizings }) => {
 }
 
 Table.propTypes = {
-  sizings: PropTypes.arrayOf(
+  columnSchemas: PropTypes.arrayOf(
     PropTypes.shape({
       flexGrow: PropTypes.number,
+      heading: PropTypes.node,
       width: PropTypes.string.isRequired,
     }).isRequired,
-  ).isRequired,
-  headings: PropTypes.arrayOf(PropTypes.node.isRequired),
+  ),
   rows: PropTypes.arrayOf(
     PropTypes.arrayOf(
       PropTypes.oneOfType([
@@ -52,7 +52,7 @@ Table.propTypes = {
   ).isRequired,
 }
 Table.defaultProps = {
-  headings: null,
+  columnSchemas: [],
 }
 
 export default Table

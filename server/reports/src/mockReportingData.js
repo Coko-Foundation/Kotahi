@@ -1,6 +1,6 @@
-import Color from 'color'
+const Color = require('color')
 
-export const generateDurationsData = () => {
+const generateDurationsData = () => {
   const result = []
   let prevDate = Date.now()
 
@@ -18,7 +18,7 @@ export const generateDurationsData = () => {
   return result
 }
 
-export const generateSummaryData = () => {
+const generateSummaryData = () => {
   return {
     avgPublishTimeDays: 8.765,
     avgReviewTimeDays: 5.678,
@@ -74,7 +74,7 @@ const lowishRandomInt = max => Math.floor(Math.random() ** 2 * max)
 const highishRandomInt = max => Math.floor(Math.random() ** 0.5 * max)
 const randomName = () => personNames[randomInt(personNames.length)]
 
-export const generateResearchObjectsData = () => {
+const generateResearchObjectsData = () => {
   const result = []
 
   for (let i = 0; i < 50; i += 1) {
@@ -97,7 +97,7 @@ export const generateResearchObjectsData = () => {
   return result
 }
 
-export const generateEditorsData = () => {
+const generateEditorsData = () => {
   const result = []
 
   for (let i = 0; i < 50; i += 1) {
@@ -123,7 +123,7 @@ export const generateEditorsData = () => {
   return result
 }
 
-export const generateReviewersData = () => {
+const generateReviewersData = () => {
   const result = []
 
   for (let i = 0; i < 50; i += 1) {
@@ -157,7 +157,7 @@ export const generateReviewersData = () => {
   return result
 }
 
-export const generateAuthorsData = () => {
+const generateAuthorsData = () => {
   const result = []
 
   for (let i = 0; i < 50; i += 1) {
@@ -195,7 +195,7 @@ const getBarColor = (
   return Color.hsl(hue, saturation * 100, lightness * 100).hex()
 }
 
-export const getEditorsConcentricBarChartData = () => {
+const getEditorsConcentricBarChartData = () => {
   const data = [
     { name: 'All manuscripts', value: 123 },
     { name: 'Submitted', value: 103 },
@@ -210,7 +210,7 @@ export const getEditorsConcentricBarChartData = () => {
   return { data, barColors, labelColors }
 }
 
-export const getReviewersConcentricBarChartData = () => {
+const getReviewersConcentricBarChartData = () => {
   const data = [
     { name: 'All manuscripts', value: 123 },
     { name: 'Reviewer invited', value: 83 },
@@ -221,4 +221,15 @@ export const getReviewersConcentricBarChartData = () => {
   const barColors = data.map((_, i) => getBarColor(i, data.length, 0.6))
   const labelColors = data.map((_, i) => getBarColor(i, data.length, 0.3, 1.0))
   return { data, barColors, labelColors }
+}
+
+module.exports = {
+  generateDurationsData,
+  generateSummaryData,
+  generateResearchObjectsData,
+  generateEditorsData,
+  generateReviewersData,
+  generateAuthorsData,
+  getEditorsConcentricBarChartData,
+  getReviewersConcentricBarChartData,
 }
