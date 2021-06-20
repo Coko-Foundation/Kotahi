@@ -95,9 +95,11 @@ const getReport = (
       (val, key) => {
         if (key === 'editors' || key === 'reviewers')
           return val.reduce(
-            (accum, curr) => (accum ? `${accum}, ${curr.name}` : curr.name),
+            (accum, curr) =>
+              accum ? `${accum}, ${curr.username}` : curr.username,
             null,
           )
+        if (key === 'correspondingAuthor') return val.username
         return val
       },
     )
@@ -106,10 +108,10 @@ const getReport = (
       <Table
         // prettier-ignore
         columnSchemas={[
-          { heading: 'Manuscript number', name: 'id', width: '6.5em' },
+          { heading: 'Manuscript number', name: 'manuscriptNumber', width: '6.5em' },
           { heading: 'Entry date', name: 'entryDate', width: '7em' },
           { heading: 'Title', name: 'title', width: '16em', flexGrow: 4 },
-          { heading: 'Corresponding author', name: 'authorName', width: '12em', flexGrow: 1 },
+          { heading: 'Corresponding author', name: 'correspondingAuthor', width: '12em', flexGrow: 1 },
           { heading: 'Editors', name: 'editors', width: '12em', flexGrow: 3 },
           { heading: 'Reviewers', name: 'reviewers', width: '14em', flexGrow: 3 },
           { heading: 'Status', name: 'status', width: '6em' },
@@ -176,10 +178,11 @@ const getReport = (
         ]}
         rows={getTableDataWithSparkBars(
           getReviewersData(startDate, endDate),
-          (val, column) =>
-            column === 'avgReviewDuration'
-              ? `${val} day${val === 1 ? '' : 's'}`
-              : val,
+          (val, column) => {
+            if (column !== 'avgReviewDuration') return val
+            const roundedVal = Math.round(val * 10) / 10
+            return `${roundedVal} day${roundedVal === 1 ? '' : 's'}`
+          },
         )}
       />
     )

@@ -79,15 +79,15 @@ const generateResearchObjectsData = () => {
 
   for (let i = 0; i < 50; i += 1) {
     result.push({
-      id: (1234 + i).toString(),
+      manuscriptNumber: (1234 + i).toString(),
       entryDate: '2021-05-10',
       title: `Manuscript ${1234 + i}`,
-      authorName: randomName(),
-      editors: [{ name: randomName() }, { name: randomName() }],
+      correspondingAuthor: { username: randomName() },
+      editors: [{ username: randomName() }, { username: randomName() }],
       reviewers: [
-        { name: randomName() },
-        { name: randomName() },
-        { name: randomName() },
+        { username: randomName() },
+        { username: randomName() },
+        { username: randomName() },
       ],
       status: 'Reviewed',
       publishedDate: '2021-05-23',
@@ -146,7 +146,9 @@ const generateReviewersData = () => {
       declinedCount,
       reviewsCompletedCount,
       avgReviewDuration:
-        reviewsCompletedCount > 0 ? lowishRandomInt(20) / 2 + 0.5 : 0,
+        reviewsCompletedCount > 0
+          ? Math.random() * Math.random() * 10 + 0.25
+          : 0,
       reccReviseCount,
       reccAcceptCount,
       reccRejectCount:

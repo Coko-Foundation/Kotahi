@@ -1,18 +1,56 @@
 import React from 'react'
 import { useQuery, gql } from '@apollo/client'
 import Report from './Report'
-import {
-  generateSummaryData,
-  generateResearchObjectsData,
-  generateEditorsData,
-  generateReviewersData,
-  // generateAuthorsData,
-} from './mockReportingData'
+import { generateSummaryData } from './mockReportingData'
 import { Spinner } from '../../shared'
 
-const getAuthorsReportData = gql`
-  query authorsReportData($startDate: DateTime, $endDate: DateTime) {
-    activeAuthors(startDate: $startDate, endDate: $endDate) {
+const getReportData = gql`
+  query reportData($startDate: DateTime, $endDate: DateTime) {
+    manuscriptsActivity(startDate: $startDate, endDate: $endDate) {
+      manuscriptNumber
+      entryDate
+      title
+      correspondingAuthor {
+        username
+      }
+      editors {
+        username
+      }
+      reviewers {
+        username
+      }
+      status
+      publishedDate
+    }
+    handlingEditorsActivity(startDate: $startDate, endDate: $endDate) {
+      name
+      assignedCount
+      givenToReviewersCount
+      revisedCount
+      rejectedCount
+      acceptedCount
+      publishedCount
+    }
+    managingEditorsActivity(startDate: $startDate, endDate: $endDate) {
+      name
+      assignedCount
+      givenToReviewersCount
+      revisedCount
+      rejectedCount
+      acceptedCount
+      publishedCount
+    }
+    reviewersActivity(startDate: $startDate, endDate: $endDate) {
+      name
+      invitesCount
+      declinedCount
+      reviewsCompletedCount
+      avgReviewDuration
+      reccReviseCount
+      reccAcceptCount
+      reccRejectCount
+    }
+    authorsActivity(startDate: $startDate, endDate: $endDate) {
       name
       unsubmittedCount
       submittedCount
@@ -35,7 +73,7 @@ const removeTypeName = rows => {
 }
 
 const ReportPage = () => {
-  const { data, loading, error } = useQuery(getAuthorsReportData, {
+  const { data, loading, error } = useQuery(getReportData, {
     variables: {
       startDate: 0,
       endDate: 0,
@@ -47,11 +85,15 @@ const ReportPage = () => {
 
   return (
     <Report
-      getAuthorsData={() => removeTypeName(data?.activeAuthors)}
-      getHandlingEditorsData={generateEditorsData}
-      getManagingEditorsData={generateEditorsData}
-      getManuscriptsData={generateResearchObjectsData}
-      getReviewersData={generateReviewersData}
+      getAuthorsData={() => removeTypeName(data?.authorsActivity)}
+      getHandlingEditorsData={() =>
+        removeTypeName(data?.handlingEditorsActivity)
+      }
+      getManagingEditorsData={() =>
+        removeTypeName(data?.managingEditorsActivity)
+      }
+      getManuscriptsData={() => removeTypeName(data?.manuscriptsActivity)}
+      getReviewersData={() => removeTypeName(data?.reviewersActivity)}
       getSummaryData={generateSummaryData}
     />
   )
