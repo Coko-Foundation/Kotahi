@@ -78,7 +78,7 @@ const label = (status, published) => {
 
 // TODO: Make this configurable
 export const StatusBadge = ({ status, published, minimal }) => {
-  if (status === 'accepted') {
+  if (status === 'accepted' || status === 'published') {
     return (
       <SuccessStatus minimal={minimal}>
         {label(status, published)}
