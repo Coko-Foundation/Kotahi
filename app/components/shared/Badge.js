@@ -68,12 +68,12 @@ const label = (status, published) => {
   }
 
   if (isPublished) {
-    return labels[status]
-      ? `${labels[status]} & Published`
-      : `Unknown (${status} & Published})`
+    if (['accepted', 'evaluated', 'published'].includes(status))
+      return 'Published'
+    return `${labels[status] ?? `Unknown (${status})`} & Published`
   }
 
-  return labels[status] || `Unknown ${status}`
+  return labels[status] ?? `Unknown (${status})`
 }
 
 // TODO: Make this configurable
