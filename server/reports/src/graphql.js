@@ -1,4 +1,5 @@
 // const logger = require('@pubsweet/logger')
+
 const {
   generateAuthorsData,
   generateEditorsData,
@@ -7,12 +8,67 @@ const {
   generateSummaryData,
 } = require('./mockReportingData')
 
-// const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
+// Return mean of array, ignoring null or undefined items; return NaN if no valid values found
+const mean = values => {
+  let sum = 0
+  let count = 0
+  values.forEach(v => {
+    if (v !== null && v !== undefined) {
+      sum += v
+      count += 1
+    }
+  })
+  return sum / count
+}
+
+const dayMilliseconds = 24 * 60 * 60 * 1000
+
+// Get duration from first reviewer assigned until last review update (for first revision of manuscript only)
+const getReviewingDuration = manuscript => {
+  const nonDecisionReviews = manuscript.reviews.filter(r => !r.isDecision)
+  if (nonDecisionReviews.length < 1) return null
+
+  // Ignore 'decision' reviews, which are not really reviews but decisions made by the editor.
+  const latestReview = nonDecisionReviews.reduce(
+    (accum, curr) => Math.max(accum, curr.updated.getTime()),
+    nonDecisionReviews[0].updated.getTime(),
+  )
+
+  // We can tell when the first reviewer was assigned from when the 'Reviewers' team was created.
+  const reviewingStart = manuscript.teams
+    .find(t => t.name === 'Reviewers')
+    .created.getTime()
+
+  return latestReview - reviewingStart
+}
 
 const resolvers = {
   Query: {
-    summaryActivity(_, { startDate, endDate }, ctx) {
-      return generateSummaryData()
+    async summaryActivity(_, { startDate, endDate }, ctx) {
+      const query = ctx.models.Manuscript.query()
+        .withGraphFetched(
+          '[teams, reviews, manuscriptVersions(orderByCreated)]',
+        )
+        .where('created', '>=', new Date(startDate))
+        .where('created', '<', new Date(endDate))
+        .where({ parentId: null })
+        .orderBy('created')
+
+      const manuscripts = await query
+
+      const avgPublishTimeDays =
+        mean(
+          manuscripts.map(m =>
+            m.published
+              ? m.published.getTime() - m.submittedDate.getTime()
+              : null,
+          ),
+        ) / dayMilliseconds
+
+      const avgReviewTimeDays =
+        mean(manuscripts.map(m => getReviewingDuration(m))) / dayMilliseconds
+
+      return { ...generateSummaryData(), avgReviewTimeDays, avgPublishTimeDays }
     },
     manuscriptsActivity(_, { startDate, endDate }, ctx) {
       return generateResearchObjectsData()

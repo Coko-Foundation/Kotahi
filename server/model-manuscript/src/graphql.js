@@ -68,16 +68,19 @@ const mergeArrays = (destination, source) => {
   return undefined
 }
 
-const commonUpdateManuscript = async (_, { id, input }, ctx) => {
-  const manuscriptDelta = JSON.parse(input)
-  const manuscript = await ctx.models.Manuscript.query().findById(id)
+const commonUpdateManuscript = async (id, input, ctx) => {
+  const msDelta = JSON.parse(input)
+  const ms = await ctx.models.Manuscript.query().findById(id)
+  const updatedMs = mergeWith(ms, msDelta, mergeArrays)
 
-  const updatedManuscript = mergeWith(manuscript, manuscriptDelta, mergeArrays)
+  if (
+    updatedMs.status &&
+    updatedMs.status !== 'new' &&
+    !updatedMs.submittedDate
+  )
+    updatedMs.submittedDate = new Date()
 
-  // if (manuscript.status === 'revise') {
-  //   return manuscript.createNewVersion(update)
-  // }
-  return ctx.models.Manuscript.query().updateAndFetchById(id, updatedManuscript)
+  return ctx.models.Manuscript.query().updateAndFetchById(id, updatedMs)
 }
 
 const resolvers = {
@@ -261,7 +264,7 @@ const resolvers = {
       return team
     },
     async updateManuscript(_, { id, input }, ctx) {
-      return commonUpdateManuscript(_, { id, input }, ctx) // Currently submitManuscript and updateManuscript have identical action
+      return commonUpdateManuscript(id, input, ctx) // Currently submitManuscript and updateManuscript have identical action
     },
 
     async createNewVersion(_, { id }, ctx) {
@@ -269,7 +272,7 @@ const resolvers = {
       return manuscript.createNewVersion()
     },
     async submitManuscript(_, { id, input }, ctx) {
-      return commonUpdateManuscript(_, { id, input }, ctx) // Currently submitManuscript and updateManuscript have identical action
+      return commonUpdateManuscript(id, input, ctx) // Currently submitManuscript and updateManuscript have identical action
     },
 
     async makeDecision(_, { id, decision }, ctx) {
@@ -711,6 +714,7 @@ const typeDefs = `
     submission: String
     channels: [Channel]
     submitter: User
+    submittedDate: DateTime
     published: DateTime
     evaluationsHypothesisMap: String
   }
