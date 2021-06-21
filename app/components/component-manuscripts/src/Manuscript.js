@@ -201,6 +201,7 @@ const User = ({
       <Cell>
         <span onClick={() => filterByArticleStatus(manuscript.status)}>
           <StatusBadge
+            clickable
             published={manuscript.published}
             status={manuscript.status}
           />
