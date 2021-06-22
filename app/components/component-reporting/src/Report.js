@@ -12,7 +12,7 @@ import SparkBar from './SparkBar'
 const Page = styled.div`
   height: 100vh;
   overflow-y: auto;
-  padding: 0 ${grid(2)};
+  padding: 0 ${grid(2)} ${grid(3)} ${grid(2)};
 `
 
 const Heading = styled.div`
