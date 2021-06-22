@@ -11,7 +11,7 @@ const checkIsAbstractValueEmpty = value => {
           val === '<p></p>' ||
           val === '<p class="paragraph"></p>',
       )
-      .some(verifiedValue => verifiedValue === true)
+      .every(verifiedValue => verifiedValue === true)
   }
 
   return (

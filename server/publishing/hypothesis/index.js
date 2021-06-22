@@ -60,39 +60,56 @@ const publishToHypothesis = async manuscript => {
 
   fields.push('summary')
 
-  const fieldsWithAction = fields
-    .map(propName => {
-      const value = manuscript.submission[propName]
-      let action = ''
+  const definedActions = fields.map(async propName => {
+    const value = manuscript.submission[propName]
+    let action = ''
 
-      if (
-        manuscript.evaluationsHypothesisMap[propName] &&
-        checkIsAbstractValueEmpty(value)
-      ) {
-        action = 'delete'
-      }
+    if (
+      manuscript.evaluationsHypothesisMap[propName] &&
+      checkIsAbstractValueEmpty(value)
+    ) {
+      action = 'delete'
+    }
 
-      if (
-        !checkIsAbstractValueEmpty(value) &&
-        !manuscript.evaluationsHypothesisMap[propName]
-      ) {
+    if (
+      !checkIsAbstractValueEmpty(value) &&
+      !manuscript.evaluationsHypothesisMap[propName]
+    ) {
+      action = 'create'
+    }
+
+    if (
+      manuscript.evaluationsHypothesisMap[propName] &&
+      !checkIsAbstractValueEmpty(value)
+    ) {
+      const annotationIdFromHypothesis =
+        manuscript.evaluationsHypothesisMap[propName]
+
+      action = 'update'
+
+      try {
+        await axios.get(`${requestURL}/${annotationIdFromHypothesis}`, {
+          headers,
+        })
+      } catch (e) {
         action = 'create'
       }
+    }
 
-      if (
-        manuscript.evaluationsHypothesisMap[propName] &&
-        !checkIsAbstractValueEmpty(value)
-      ) {
-        action = 'update'
-      }
-
-      return {
+    return new Promise(resolve => {
+      resolve({
         propName,
         value,
         action,
-      }
+      })
     })
-    .filter(field => field.action)
+  })
+
+  const fieldsWithActionsPrepared = await Promise.all(definedActions)
+
+  const fieldsWithAction = fieldsWithActionsPrepared.filter(
+    field => field.action,
+  )
 
   const actions = {
     create: propName => {
