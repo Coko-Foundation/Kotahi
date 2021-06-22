@@ -535,7 +535,6 @@ const resolvers = {
       return manuscript
     },
     async manuscripts(_, { where }, ctx) {
-      ctx.models.TeamMember.query().withGraphFetched('[team.[manuscript]]')
       return ctx.models.Manuscript.query()
         .withGraphFetched(
           '[teams, reviews, manuscriptVersions(orderByCreated)]',
