@@ -114,6 +114,8 @@ services:
 
   db:
     image: postgres:10-alpine
+    sysctls:
+      kernel.shmmax: 100663296
     ports:
       - ${POSTGRES_PORT:-5432}:5432
     environment:
@@ -122,6 +124,18 @@ services:
       - POSTGRES_PASSWORD=${POSTGRES_PASSWORD:-password}
     volumes:
       - ./scripts/test.sql:/docker-entrypoint-initdb.d/test.sql
+    command:
+      - 'postgres'
+      - '-c'
+      - 'max_connections=1000'
+      - '-c'
+      - 'shared_buffers=3GB'
+      - '-c'
+      - 'sort_mem=4096'
+      - '-c'
+      - 'effective_cache_size=4000'
+      - '-c'
+      - 'wal_buffers=8'
 
   # nginx:
   #   image: nginx:1.19

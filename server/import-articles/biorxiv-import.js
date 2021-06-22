@@ -16,15 +16,7 @@ const {
   pharmaceuticalInterventions,
 } = require('./topics')
 
-let isImportInProgress = false
-
 const getData = async ctx => {
-  if (isImportInProgress) {
-    return
-  }
-
-  isImportInProgress = true
-
   const dateTwoWeeksAgo =
     +new Date(new Date(Date.now()).toISOString().split('T')[0]) - 12096e5
 
@@ -189,37 +181,30 @@ const getData = async ctx => {
           ],
           files: [],
           reviews: [],
-          teams: [
-            {
-              role: 'author',
-              name: 'Author',
-              members: [{ user: { id: ctx.user.id } }],
-            },
-          ],
+          teams: [],
         }
       },
     )
     .filter(Boolean)
 
   if (!newManuscripts.length) {
-    isImportInProgress = false
-
     return []
   }
 
   try {
-    const insertedManuscripts = await ctx.models.Manuscript.query().insert(
+    const inserted = await ctx.models.Manuscript.query().upsertGraphAndFetch(
       newManuscripts,
+      { relate: true },
     )
 
-    const teamsToInsert = insertedManuscripts.map(manuscript => {
-      return {
-        manuscriptId: manuscript.id,
-        ...manuscript.teams[0],
-      }
-    })
+    // const teamsToInsert = insertedManuscripts.map(manuscript => {
+    //   return {
+    //     manuscriptId: manuscript.id,
+    //     ...manuscript.teams[0],
+    //   }
+    // })
 
-    const insertedTeams = await ctx.models.Team.query().insert(teamsToInsert)
+    // const insertedTeams = await ctx.models.Team.query().insert(teamsToInsert)
 
     if (lastImportDate.length) {
       await ArticleImportHistory.query()
@@ -236,16 +221,10 @@ const getData = async ctx => {
       })
     }
 
-    isImportInProgress = false
-
-    return {
-      insertedManuscripts,
-      insertedTeams,
-    }
+    return inserted
   } catch (e) {
     /* eslint-disable-next-line */
     console.error(e.message)
-    isImportInProgress = false
   }
 }
 

@@ -1,5 +1,5 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions */
-/* eslint-disable jsx-a11y/click-events-have-key-events */
+/* eslint-disable jsx-a11y/no-static-element-interactions, import/no-unresolved, jsx-a11y/click-events-have-key-events */
+/* eslint-disable */
 
 import React, { useState } from 'react'
 import { useMutation, useQuery, useApolloClient } from '@apollo/client'
@@ -129,7 +129,13 @@ const User = ({
   let formattedAbstract
 
   if (manuscript.submission?.abstract) {
-    formattedAbstract = manuscript.submission.abstract.replace(/<[^>]*>/g, '')
+    if (Array.isArray(manuscript.submission.abstract)) {
+      formattedAbstract = manuscript.submission.abstract
+        .join(' ')
+        .replace(/<[^>]*>/g, '')
+    } else {
+      formattedAbstract = manuscript.submission.abstract.replace(/<[^>]*>/g, '')
+    }
   }
 
   return (

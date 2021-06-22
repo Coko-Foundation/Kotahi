@@ -12,6 +12,9 @@ const {
 
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
+const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
+
+let isImportInProgress = false
 
 const ManuscriptResolvers = ({ isVersion }) => {
   const resolvers = {
@@ -167,9 +170,19 @@ const resolvers = {
       return manuscript
     },
     async importManuscripts(_, props, ctx) {
-      const manuscripts = await importArticlesFromBiorxiv(ctx)
+      if (isImportInProgress) {
+        return null
+      }
 
-      return manuscripts
+      isImportInProgress = true
+
+      const manuscriptsFromBiorxiv = await importArticlesFromBiorxiv(ctx)
+
+      const manuscriptsFromPubmed = await importArticlesFromPubmed(ctx)
+
+      isImportInProgress = false
+
+      return manuscriptsFromBiorxiv.concat(manuscriptsFromPubmed)
     },
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
@@ -522,6 +535,7 @@ const resolvers = {
       return manuscript
     },
     async manuscripts(_, { where }, ctx) {
+      ctx.models.TeamMember.query().withGraphFetched('[team.[manuscript]]')
       return ctx.models.Manuscript.query()
         .withGraphFetched(
           '[teams, reviews, manuscriptVersions(orderByCreated)]',

@@ -9,7 +9,7 @@ module.exports = {
     protocol: 'http',
     host: 'localhost',
     port: 3000,
-    pool: { min: 0, max: 10, idleTimeoutMillis: 1000 },
+    pool: { min: 0, max: 300, idleTimeoutMillis: 30000 },
     secret: 'secret-string',
   },
   'pubsweet-client': {
