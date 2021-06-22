@@ -2,6 +2,7 @@ import React from 'react'
 import styled, { css } from 'styled-components'
 import PropTypes from 'prop-types'
 import { th, lighten } from '@pubsweet/ui-toolkit'
+import { getStartOfDayUtc, getEndOfDayUtc, getDateUtcString } from './dateUtils'
 
 const InlineBlock = styled.div`
   display: inline-block;
@@ -17,47 +18,61 @@ const Input = styled.input`
     `}
 `
 
-const getDateUtcString = date => {
-  return new Date(date).toISOString().slice(0, 10)
-}
-
-const getMillisecondsFromUtcString = utcString => {
-  const date = new Date(utcString)
-  return date.getTime()
-}
-
+// max specifies the latest date allowed, but as the date-range returned extends until
+// 23:59:59 UTC at the end of the endDate, it can overshoot max by some hours
 const DateRangePicker = ({ endDate, max, setDateRange, startDate }) => {
-  const endIsInvalid = endDate > max
-  const startIsInvalid = startDate > max || startDate > endDate
+  const trueMax = getEndOfDayUtc(max)
+  const trueStart = getStartOfDayUtc(startDate)
+  const trueEnd = getEndOfDayUtc(endDate)
+  const endIsInvalid = trueEnd > trueMax
+  const startIsInvalid = trueStart > trueMax || trueStart > trueEnd
   return (
     <InlineBlock>
       <Input
         isInvalid={startIsInvalid}
-        max={getDateUtcString(endDate)}
+        max={getDateUtcString(trueEnd)}
         onChange={e =>
-          setDateRange(getMillisecondsFromUtcString(e.target.value), endDate)
+          setDateRange(
+            getStartOfDayUtc(e.target.value).getTime(),
+            trueEnd.getTime(),
+          )
         }
         type="date"
-        value={getDateUtcString(startDate)}
+        value={getDateUtcString(trueStart)}
       />
       {' — '}
       <Input
         isInvalid={endIsInvalid}
-        max={getDateUtcString(max)}
-        onChange={e =>
-          setDateRange(startDate, getMillisecondsFromUtcString(e.target.value))
-        }
+        max={getDateUtcString(trueMax)}
+        onChange={e => {
+          let newStart = trueStart.getTime()
+          const newEnd = getEndOfDayUtc(e.target.value).getTime()
+          if (newStart >= newEnd) newStart = getStartOfDayUtc(newEnd).getTime()
+          setDateRange(newStart, newEnd)
+        }}
         type="date"
-        value={getDateUtcString(endDate)}
+        value={getDateUtcString(trueEnd)}
       />
     </InlineBlock>
   )
 }
 
 DateRangePicker.propTypes = {
-  startDate: PropTypes.number.isRequired,
-  endDate: PropTypes.number.isRequired,
-  max: PropTypes.number.isRequired,
+  startDate: PropTypes.oneOfType([
+    PropTypes.number.isRequired,
+    PropTypes.string.isRequired,
+    PropTypes.object.isRequired,
+  ]).isRequired,
+  endDate: PropTypes.oneOfType([
+    PropTypes.number.isRequired,
+    PropTypes.string.isRequired,
+    PropTypes.object.isRequired,
+  ]).isRequired,
+  max: PropTypes.oneOfType([
+    PropTypes.number.isRequired,
+    PropTypes.string.isRequired,
+    PropTypes.object.isRequired,
+  ]).isRequired,
   setDateRange: PropTypes.func.isRequired,
 }
 

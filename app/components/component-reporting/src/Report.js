@@ -23,6 +23,11 @@ const Heading = styled.div`
   margin: ${th('gridUnit')} 0;
 `
 
+const MinorNote = styled.span`
+  color: ${lightenBy('colorText', 0.5)};
+  font-size: 80%;
+`
+
 export const Content = styled.div`
   background-color: ${th('colorBackgroundHue')};
   border-radius: ${th('borderRadius')};
@@ -245,7 +250,8 @@ const Report = ({
             setEndDate(end)
           }}
           startDate={startDate}
-        />
+        />{' '}
+        <MinorNote>UTC</MinorNote>
       </SelectionLine>
       <Content>
         {getReport(

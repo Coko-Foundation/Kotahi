@@ -8,7 +8,7 @@ const {
   generateSummaryData,
 } = require('./mockReportingData')
 
-// Return mean of array, ignoring null or undefined items; return NaN if no valid values found
+// Return mean of array, ignoring null or undefined items; return null if no valid values found
 const mean = values => {
   let sum = 0
   let count = 0
@@ -18,6 +18,7 @@ const mean = values => {
       count += 1
     }
   })
+  if (count === 0) return null
   return sum / count
 }
 
@@ -68,7 +69,36 @@ const resolvers = {
       const avgReviewTimeDays =
         mean(manuscripts.map(m => getReviewingDuration(m))) / dayMilliseconds
 
-      return { ...generateSummaryData(), avgReviewTimeDays, avgPublishTimeDays }
+      let unsubmittedCount = 0
+      let submittedCount = 0
+      let unassignedCount = 0
+      // let reviewInvitedCount = 0
+      // let reviewInviteAcceptedCount = 0
+      // let reviewedCount = 0
+      // let rejectedCount = 0
+      // let revisingCount = 0
+      // let acceptedCount = 0
+      // let publishedCount = 0
+
+      manuscripts.forEach(m => {
+        if (!m.status || m.status === 'new') unsubmittedCount += 1
+        else submittedCount += 1
+        if (
+          !m.teams.some(t =>
+            ['Senior Editor', 'Handling Editor'].includes(t.name),
+          )
+        )
+          unassignedCount += 1
+      })
+
+      return {
+        ...generateSummaryData(),
+        avgReviewTimeDays,
+        avgPublishTimeDays,
+        unsubmittedCount,
+        submittedCount,
+        unassignedCount,
+      }
     },
     manuscriptsActivity(_, { startDate, endDate }, ctx) {
       return generateResearchObjectsData()

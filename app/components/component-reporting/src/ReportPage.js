@@ -1,6 +1,7 @@
 import React, { useState } from 'react'
 import { useQuery, gql } from '@apollo/client'
 import Report from './Report'
+import { getStartOfDayUtc, getEndOfDayUtc } from './dateUtils'
 import { Spinner } from '../../shared'
 
 const getReportData = gql`
@@ -96,8 +97,11 @@ const removeTypeName = rows => {
 const defaultReportDuration = 31 * 24 * 60 * 60 * 1000 // 31 days
 
 const ReportPage = () => {
-  const [startDate, setStartDate] = useState(Date.now() - defaultReportDuration)
-  const [endDate, setEndDate] = useState(Date.now())
+  const [startDate, setStartDate] = useState(
+    getStartOfDayUtc(Date.now() - defaultReportDuration).getTime(),
+  )
+
+  const [endDate, setEndDate] = useState(getEndOfDayUtc(Date.now()).getTime())
 
   const { data, loading, error } = useQuery(getReportData, {
     variables: {
