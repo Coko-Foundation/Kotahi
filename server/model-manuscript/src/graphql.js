@@ -584,11 +584,7 @@ const resolvers = {
         .withGraphFetched(
           '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
         )
-        .modifiers({
-          orderByCreated(builder) {
-            builder.orderBy('created', 'desc')
-          },
-        })
+        .modify('orderBy', sort)
 
       if (filter && filter.status) {
         query.where({ status: filter.status })
@@ -603,18 +599,6 @@ const resolvers = {
       }
 
       const totalCount = await query.resultSize()
-
-      if (sort) {
-        const [sortName, sortDirection] = sort.split('_')
-
-        if (sortName.includes('submission:')) {
-          const fieldName = sortName.split(':')[1]
-          const result = `LOWER(submission->>'${fieldName}') ${sortDirection}`
-          query.orderByRaw(result)
-        } else {
-          query.orderBy(ref(sortName), sortDirection)
-        }
-      }
 
       if (limit) {
         query.limit(limit)

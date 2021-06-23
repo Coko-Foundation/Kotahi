@@ -18,6 +18,23 @@ class Manuscript extends BaseModel {
       orderByCreated(builder) {
         builder.orderBy('created', 'desc')
       },
+      orderBy(query, sort) {
+        if (!sort) {
+          query.orderBy('created', 'desc')
+        } else {
+          const [sortName, sortDirection] = sort.split('_')
+
+          if (sortName.includes('submission:')) {
+            const fieldName = sortName.split(':')[1]
+            const result = `LOWER(submission->>'${fieldName}') ${sortDirection}, id ${sortDirection}`
+            query.orderByRaw(result)
+          } else {
+            query.orderByRaw(
+              `${sortName} ${sortDirection}, id ${sortDirection}`,
+            )
+          }
+        }
+      },
     }
   }
 
