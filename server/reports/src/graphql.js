@@ -43,6 +43,32 @@ const getReviewingDuration = manuscript => {
   return latestReview - reviewingStart
 }
 
+const getDurationUntilPublished = m =>
+  m.published ? m.published.getTime() - m.submittedDate.getTime() : null
+
+const wasSubmitted = manuscript =>
+  manuscript.status && manuscript.status !== 'new'
+
+const wasAssignedToEditor = manuscript =>
+  manuscript.teams.some(t =>
+    ['Senior Editor', 'Handling Editor'].includes(t.name),
+  )
+
+const reviewerWasInvited = manuscript =>
+  manuscript.teams.some(t => t.name === 'Reviewers')
+
+const reviewInviteWasAccepted = manuscript =>
+  manuscript.reviews.some(r => !r.isDecision)
+
+const wasReviewed = manuscript =>
+  manuscript.reviews.some(r => !r.isDecision && r.recommendation)
+
+const wasAccepted = manuscript =>
+  ['accepted', 'published'].includes(manuscript.status)
+
+// const isAcceptedNotPublished = manuscript =>
+//   manuscript.status === 'accepted' && !manuscript.published
+
 const resolvers = {
   Query: {
     async summaryActivity(_, { startDate, endDate }, ctx) {
@@ -58,13 +84,8 @@ const resolvers = {
       const manuscripts = await query
 
       const avgPublishTimeDays =
-        mean(
-          manuscripts.map(m =>
-            m.published
-              ? m.published.getTime() - m.submittedDate.getTime()
-              : null,
-          ),
-        ) / dayMilliseconds
+        mean(manuscripts.map(m => getDurationUntilPublished(m))) /
+        dayMilliseconds
 
       const avgReviewTimeDays =
         mean(manuscripts.map(m => getReviewingDuration(m))) / dayMilliseconds
@@ -72,23 +93,29 @@ const resolvers = {
       let unsubmittedCount = 0
       let submittedCount = 0
       let unassignedCount = 0
-      // let reviewInvitedCount = 0
-      // let reviewInviteAcceptedCount = 0
-      // let reviewedCount = 0
-      // let rejectedCount = 0
-      // let revisingCount = 0
-      // let acceptedCount = 0
-      // let publishedCount = 0
+      let reviewInvitedCount = 0
+      let reviewInviteAcceptedCount = 0
+      let reviewedCount = 0
+      let rejectedCount = 0
+      let revisingCount = 0
+      let acceptedCount = 0
+      let publishedCount = 0
+      // publishedTodayCount: 4,
+      // avgPublishedDailyCount: 2.7,
+      // avgRevisingDailyCount: 11.3,
+      // durationsData: generateDurationsData(),
 
       manuscripts.forEach(m => {
-        if (!m.status || m.status === 'new') unsubmittedCount += 1
-        else submittedCount += 1
-        if (
-          !m.teams.some(t =>
-            ['Senior Editor', 'Handling Editor'].includes(t.name),
-          )
-        )
-          unassignedCount += 1
+        if (wasSubmitted(m)) submittedCount += 1
+        else unsubmittedCount += 1
+        if (!wasAssignedToEditor(m)) unassignedCount += 1
+        if (reviewerWasInvited(m)) reviewInvitedCount += 1
+        if (reviewInviteWasAccepted(m)) reviewInviteAcceptedCount += 1
+        if (wasReviewed(m)) reviewedCount += 1
+        if (m.status === 'rejected') rejectedCount += 1
+        if (['revise', 'revising'].includes(m.status)) revisingCount += 1
+        if (wasAccepted(m)) acceptedCount += 1
+        if (m.published) publishedCount += 1
       })
 
       return {
@@ -98,6 +125,13 @@ const resolvers = {
         unsubmittedCount,
         submittedCount,
         unassignedCount,
+        reviewInvitedCount,
+        reviewInviteAcceptedCount,
+        reviewedCount,
+        rejectedCount,
+        revisingCount,
+        acceptedCount,
+        publishedCount,
       }
     },
     manuscriptsActivity(_, { startDate, endDate }, ctx) {
