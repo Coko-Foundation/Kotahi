@@ -125,6 +125,12 @@ const publishToHypothesis = async manuscript => {
         tags: [propName === 'summary' ? 'evaluationSummary' : 'peerReview'],
       }
 
+      if (process.env.NODE_ENV !== 'production') {
+        requestBody.permissions = {
+          read: ['group:__world__'],
+        }
+      }
+
       if (process.env.NODE_ENV === 'production') {
         requestBody.permissions = {
           read: ['group:q5X6RWJ6'],
@@ -143,6 +149,12 @@ const publishToHypothesis = async manuscript => {
         uri: manuscript.submission.biorxivURL,
         text: turndownService.turndown(manuscript.submission[propName]),
         tags: [propName === 'summary' ? 'evaluationSummary' : 'peerReview'],
+      }
+
+      if (process.env.NODE_ENV !== 'production') {
+        requestBody.permissions = {
+          read: ['group:__world__'],
+        }
       }
 
       if (process.env.NODE_ENV === 'production') {
