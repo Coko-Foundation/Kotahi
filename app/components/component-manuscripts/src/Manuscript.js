@@ -103,14 +103,6 @@ const User = ({
     if (areThereInvalidFields.filter(Boolean).length === 0) {
       await publishManuscript({
         variables: { id: manuscript.id },
-        update: (cache, { dataTemp }) => {
-          cache.modify({
-            id: cache.identify(manuscript),
-            fields: {
-              status: dataTemp.publishManuscript.status,
-            },
-          })
-        },
       })
       setIsPublishingBlocked(false)
     }
