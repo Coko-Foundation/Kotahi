@@ -181,6 +181,17 @@ const getData = async ctx => {
         return
       }
 
+      let formattedTopic = ''
+
+      if (
+        topic === 'pharmaceuticalInterventions' ||
+        topic === 'nonPharmaceuticalInterventions'
+      ) {
+        formattedTopic = 'nonPharmaceuticalAndPharmaceuticalInterventions'
+      } else {
+        formattedTopic = topic
+      }
+
       const formData = new FormData()
 
       await delay(3000 * index)
@@ -315,7 +326,7 @@ const getData = async ctx => {
                           .replace(/\n/gi, '')
                       : Abstract.AbstractText._text
                     : '',
-                  topics: topic ? [topic] : [],
+                  topics: topic ? [formattedTopic] : [],
                   journal: Journal.Title._text,
                 },
                 meta: {

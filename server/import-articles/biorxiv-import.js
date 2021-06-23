@@ -139,6 +139,29 @@ const getData = async ctx => {
 
         if (!manuscriptTopics.length) return null
 
+        const removeDuplicates = arr => {
+          return arr.filter((value, index) => arr.indexOf(value) === index)
+        }
+
+        const formatImportedTopics = topicsList => {
+          const formattedTopics = []
+
+          topicsList.forEach(topicElement => {
+            if (
+              topicElement === 'pharmaceuticalInterventions' ||
+              topicElement === 'nonPharmaceuticalInterventions'
+            ) {
+              formattedTopics.push(
+                'nonPharmaceuticalAndPharmaceuticalInterventions',
+              )
+            } else {
+              formattedTopics.push(topicElement)
+            }
+          })
+
+          return removeDuplicates(formattedTopics)
+        }
+
         return {
           status: 'new',
           isImported: true,
@@ -153,8 +176,10 @@ const getData = async ctx => {
             articleURL: `https://${rel_site.toLowerCase()}.org/content/${rel_doi}v${version}`,
             articleDescription: rel_title,
             abstract: rel_abs,
-            topics: manuscriptTopics.length ? [manuscriptTopics[0]] : [],
             journal: rel_site,
+            topics: manuscriptTopics.length
+              ? formatImportedTopics(manuscriptTopics)
+              : [],
           },
           meta: {
             title: '',
