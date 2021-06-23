@@ -44,7 +44,7 @@ const NoteRight = styled.div`
 
 const Note = styled.div`
   color: ${lightenBy('colorText', 0.2)};
-  font-size: 75%;
+  font-size: ${th('fontSizeBaseSmall')};
 `
 
 const getBarColor = (
@@ -144,13 +144,13 @@ const SummaryReport = ({
           </CardHeader>
           <BigNumber>{publishedTodayCount}</BigNumber>
           <NoteRight>
-            Average {avgPublishedDailyCount}
+            Month average {avgPublishedDailyCount}
             <Tooltip content="Based on weekdays for the previous month" />
           </NoteRight>
           <CardHeader>Manuscripts currently in revision</CardHeader>
           <BigNumber>{revisingCount}</BigNumber>
           <NoteRight>
-            Average {avgRevisingDailyCount}
+            Month average {avgRevisingDailyCount}
             <Tooltip content="Based on weekdays for the previous month" />
           </NoteRight>
         </BigNumbersCard>
