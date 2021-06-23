@@ -106,9 +106,10 @@ const resolvers = {
       // durationsData: generateDurationsData(),
 
       manuscripts.forEach(m => {
-        if (wasSubmitted(m)) submittedCount += 1
+        const wasSubm = wasSubmitted(m)
+        if (wasSubm) submittedCount += 1
         else unsubmittedCount += 1
-        if (!wasAssignedToEditor(m)) unassignedCount += 1
+        if (wasSubm && !wasAssignedToEditor(m)) unassignedCount += 1
         if (reviewerWasInvited(m)) reviewInvitedCount += 1
         if (reviewInviteWasAccepted(m)) reviewInviteAcceptedCount += 1
         if (wasReviewed(m)) reviewedCount += 1
