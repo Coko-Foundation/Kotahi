@@ -6,6 +6,7 @@ import Table from './Table'
 import CardCollection, { Card } from './CardCollection'
 import ConcentricStepsChart from './ConcentricStepsChart'
 import DurationsChart from './DurationsChart'
+import Tooltip from './Tooltip'
 import lightenBy from '../../../shared/lightenBy'
 
 const ChartCard = styled(Card)`
@@ -137,15 +138,26 @@ const SummaryReport = ({
           <ConcentricStepsChart {...getReviewersConcentricBarChartData()} />
         </ChartCard>
         <BigNumbersCard>
-          <CardHeader>Manuscripts published today</CardHeader>
+          <CardHeader>
+            Manuscripts published today
+            <Tooltip content="From midnight local time" />
+          </CardHeader>
           <BigNumber>{publishedTodayCount}</BigNumber>
-          <NoteRight>Average {avgPublishedDailyCount}</NoteRight>
+          <NoteRight>
+            Average {avgPublishedDailyCount}
+            <Tooltip content="Based on weekdays for the previous month" />
+          </NoteRight>
           <CardHeader>Manuscripts currently in revision</CardHeader>
           <BigNumber>{revisingCount}</BigNumber>
-          <NoteRight>Average {avgRevisingDailyCount}</NoteRight>
+          <NoteRight>
+            Average {avgRevisingDailyCount}
+            <Tooltip content="Based on weekdays for the previous month" />
+          </NoteRight>
         </BigNumbersCard>
         <ChartCard>
-          <CardHeader>Submission durations</CardHeader>
+          <CardHeader>
+            Reviewing and editing durations for individual manuscripts
+          </CardHeader>
           <DurationsChart data={durationsData} />
         </ChartCard>
       </CardCollection>

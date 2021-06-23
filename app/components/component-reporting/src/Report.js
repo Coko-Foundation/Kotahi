@@ -8,6 +8,7 @@ import DateRangePicker from './DateRangePicker'
 import SummaryReport from './SummaryReport'
 import Table from './Table'
 import SparkBar from './SparkBar'
+import Tooltip from './Tooltip'
 
 const Page = styled.div`
   height: 100vh;
@@ -241,7 +242,20 @@ const Report = ({
             <option key={t} label={t} value={t} />
           ))}
         </select>{' '}
-        activity for manuscripts arriving{' '}
+        <span>
+          activity for manuscripts arriving
+          <Tooltip
+            content={
+              <>
+                Metrics are shown for manuscripts that were first entered
+                <br />
+                into the system between these dates. Date boundaries are
+                <br />
+                at midnight in Universal Time.
+              </>
+            }
+          />
+        </span>{' '}
         <DateRangePicker
           endDate={endDate}
           max={Date.now()}
