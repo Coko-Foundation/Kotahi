@@ -111,6 +111,15 @@ const publishToCrossref = async manuscript => {
         }
       }
 
+      templateCopy.doi_batch.body[0].peer_review[0] = {
+        ...templateCopy.doi_batch.body[0].peer_review[0],
+        $: {
+          type: 'referee-report',
+          stage: 'pre-publication',
+          'revision-round': '0',
+        },
+      }
+
       templateCopy.doi_batch.body[0].peer_review[0].titles[0].title[0] = `Review: ${manuscript.submission.description}`
       templateCopy.doi_batch.body[0].peer_review[0].doi_data[0].doi[0] = generateElifeDOI(
         manuscript.id,
@@ -174,6 +183,14 @@ const publishToCrossref = async manuscript => {
       }
     }
 
+    templateCopy.doi_batch.body[0].peer_review[0] = {
+      ...templateCopy.doi_batch.body[0].peer_review[0],
+      $: {
+        type: 'aggregate',
+        stage: 'pre-publication',
+        'revision-round': '0',
+      },
+    }
     templateCopy.doi_batch.body[0].peer_review[0].titles[0].title[0] = `Summary of: ${manuscript.submission.description}`
 
     templateCopy.doi_batch.body[0].peer_review[0].doi_data[0].doi[0] = generateElifeDOI(

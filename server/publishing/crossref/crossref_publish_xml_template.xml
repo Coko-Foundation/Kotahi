@@ -16,7 +16,7 @@
      	<registrant>Crossref</registrant>
   	</head>
   	<body>
-     	<peer_review stage="pre-publication" revision-round="1">
+     	<peer_review stage="pre-publication" revision-round="0" type="">
          	<contributors>
            	<person_name contributor_role="reviewer" sequence="first">
               	<given_name>Wilson</given_name>
