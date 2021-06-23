@@ -11,11 +11,17 @@ const headers = {
 
 const requestURL = `https://api.hypothes.is/api/annotations`
 
-const deletePublication = publicationId => {
-  return axios.delete(
-    `https://api.hypothes.is/api/annotations/${publicationId}`,
-    { ...headers, data: {} },
-  )
+const deletePublication = async publicationId => {
+  try {
+    const response = await axios.delete(
+      `https://api.hypothes.is/api/annotations/${publicationId}`,
+      { ...headers, data: {} },
+    )
+
+    return response
+  } catch (e) {
+    return null
+  }
 }
 
 const publishToHypothesis = async manuscript => {
