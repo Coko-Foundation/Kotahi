@@ -71,7 +71,7 @@ const wasAccepted = manuscript =>
 
 const resolvers = {
   Query: {
-    async summaryActivity(_, { startDate, endDate }, ctx) {
+    async summaryActivity(_, { startDate, endDate, timeZoneOffset }, ctx) {
       const query = ctx.models.Manuscript.query()
         .withGraphFetched(
           '[teams, reviews, manuscriptVersions(orderByCreated)]',
@@ -155,7 +155,7 @@ const resolvers = {
 
 const typeDefs = `
   extend type Query {
-    summaryActivity(startDate: DateTime, endDate: DateTime) : SummaryActivity
+    summaryActivity(startDate: DateTime, endDate: DateTime, timeZoneOffset: Int) : SummaryActivity
     manuscriptsActivity(startDate: DateTime, endDate: DateTime): [ManuscriptActivity]
     handlingEditorsActivity(startDate: DateTime, endDate: DateTime): [HandlingEditorActivity]
     managingEditorsActivity(startDate: DateTime, endDate: DateTime): [HandlingEditorActivity]

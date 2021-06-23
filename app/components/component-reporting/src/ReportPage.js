@@ -5,8 +5,16 @@ import { getStartOfDayUtc, getEndOfDayUtc } from './dateUtils'
 import { Spinner } from '../../shared'
 
 const getReportData = gql`
-  query reportData($startDate: DateTime, $endDate: DateTime) {
-    summaryActivity(startDate: $startDate, endDate: $endDate) {
+  query reportData(
+    $startDate: DateTime
+    $endDate: DateTime
+    $timeZoneOffset: Int
+  ) {
+    summaryActivity(
+      startDate: $startDate
+      endDate: $endDate
+      timeZoneOffset: $timeZoneOffset
+    ) {
       avgPublishTimeDays
       avgReviewTimeDays
       unsubmittedCount
@@ -107,6 +115,7 @@ const ReportPage = () => {
     variables: {
       startDate,
       endDate,
+      timeZoneOffset: new Date().getTimezoneOffset(),
     },
   })
 
