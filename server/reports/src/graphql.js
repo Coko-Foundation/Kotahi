@@ -69,70 +69,74 @@ const wasAccepted = manuscript =>
 // const isAcceptedNotPublished = manuscript =>
 //   manuscript.status === 'accepted' && !manuscript.published
 
+const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
+  const query = ctx.models.Manuscript.query()
+    .withGraphFetched('[teams, reviews, manuscriptVersions(orderByCreated)]')
+    .where('created', '>=', new Date(startDate))
+    .where('created', '<', new Date(endDate))
+    .where({ parentId: null })
+    .orderBy('created')
+
+  const manuscripts = await query
+
+  const avgPublishTimeDays =
+    mean(manuscripts.map(m => getDurationUntilPublished(m))) / dayMilliseconds
+
+  const avgReviewTimeDays =
+    mean(manuscripts.map(m => getReviewingDuration(m))) / dayMilliseconds
+
+  let unsubmittedCount = 0
+  let submittedCount = 0
+  let unassignedCount = 0
+  let reviewInvitedCount = 0
+  let reviewInviteAcceptedCount = 0
+  let reviewedCount = 0
+  let rejectedCount = 0
+  let revisingCount = 0
+  let acceptedCount = 0
+  let publishedCount = 0
+
+  manuscripts.forEach(m => {
+    const wasSubm = wasSubmitted(m)
+    if (wasSubm) submittedCount += 1
+    else unsubmittedCount += 1
+    if (wasSubm && !wasAssignedToEditor(m)) unassignedCount += 1
+    if (reviewerWasInvited(m)) reviewInvitedCount += 1
+    if (reviewInviteWasAccepted(m)) reviewInviteAcceptedCount += 1
+    if (wasReviewed(m)) reviewedCount += 1
+    if (m.status === 'rejected') rejectedCount += 1
+    if (['revise', 'revising'].includes(m.status)) revisingCount += 1
+    if (wasAccepted(m)) acceptedCount += 1
+    if (m.published) publishedCount += 1
+  })
+
+  return {
+    avgReviewTimeDays,
+    avgPublishTimeDays,
+    unsubmittedCount,
+    submittedCount,
+    unassignedCount,
+    reviewInvitedCount,
+    reviewInviteAcceptedCount,
+    reviewedCount,
+    rejectedCount,
+    revisingCount,
+    acceptedCount,
+    publishedCount,
+  }
+}
+
 const resolvers = {
   Query: {
     async summaryActivity(_, { startDate, endDate, timeZoneOffset }, ctx) {
-      const query = ctx.models.Manuscript.query()
-        .withGraphFetched(
-          '[teams, reviews, manuscriptVersions(orderByCreated)]',
-        )
-        .where('created', '>=', new Date(startDate))
-        .where('created', '<', new Date(endDate))
-        .where({ parentId: null })
-        .orderBy('created')
-
-      const manuscripts = await query
-
-      const avgPublishTimeDays =
-        mean(manuscripts.map(m => getDurationUntilPublished(m))) /
-        dayMilliseconds
-
-      const avgReviewTimeDays =
-        mean(manuscripts.map(m => getReviewingDuration(m))) / dayMilliseconds
-
-      let unsubmittedCount = 0
-      let submittedCount = 0
-      let unassignedCount = 0
-      let reviewInvitedCount = 0
-      let reviewInviteAcceptedCount = 0
-      let reviewedCount = 0
-      let rejectedCount = 0
-      let revisingCount = 0
-      let acceptedCount = 0
-      let publishedCount = 0
       // publishedTodayCount: 4,
       // avgPublishedDailyCount: 2.7,
       // avgRevisingDailyCount: 11.3,
       // durationsData: generateDurationsData(),
 
-      manuscripts.forEach(m => {
-        const wasSubm = wasSubmitted(m)
-        if (wasSubm) submittedCount += 1
-        else unsubmittedCount += 1
-        if (wasSubm && !wasAssignedToEditor(m)) unassignedCount += 1
-        if (reviewerWasInvited(m)) reviewInvitedCount += 1
-        if (reviewInviteWasAccepted(m)) reviewInviteAcceptedCount += 1
-        if (wasReviewed(m)) reviewedCount += 1
-        if (m.status === 'rejected') rejectedCount += 1
-        if (['revise', 'revising'].includes(m.status)) revisingCount += 1
-        if (wasAccepted(m)) acceptedCount += 1
-        if (m.published) publishedCount += 1
-      })
-
       return {
         ...generateSummaryData(),
-        avgReviewTimeDays,
-        avgPublishTimeDays,
-        unsubmittedCount,
-        submittedCount,
-        unassignedCount,
-        reviewInvitedCount,
-        reviewInviteAcceptedCount,
-        reviewedCount,
-        rejectedCount,
-        revisingCount,
-        acceptedCount,
-        publishedCount,
+        ...(await getDateRangeSummaryStats(startDate, endDate, ctx)),
       }
     },
     manuscriptsActivity(_, { startDate, endDate }, ctx) {
