@@ -154,6 +154,7 @@ const getData = async ctx => {
             articleDescription: rel_title,
             abstract: rel_abs,
             topics: manuscriptTopics.length ? [manuscriptTopics[0]] : [],
+            journal: rel_site,
           },
           meta: {
             title: '',
