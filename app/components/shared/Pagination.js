@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Action } from '@pubsweet/ui'
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
@@ -66,8 +66,11 @@ const PaginationInfo = styled.div`
 `
 
 const Paginators = styled.div`
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
 `
+
+const PageDots = styled(Page)``
 
 const PreviousButton = styled.div`
   border: 1px solid ${th('colorFurniture')};
@@ -94,6 +97,50 @@ const NextButton = styled(PreviousButton)`
   border-radius: 0 ${th('borderRadius')} ${th('borderRadius')} 0;
 `
 
+const Previous = ({ page, setPage, switchPages, first }) => (
+  <>
+    <PreviousButton>
+      <Action disabled={page <= 1} onClick={() => setPage(1)}>
+        <Icon noPadding>chevrons_left</Icon>
+      </Action>
+      <Action disabled={first <= 1} onClick={() => switchPages(-10)}>
+        <Icon noPadding>chevron_left</Icon>
+      </Action>
+    </PreviousButton>
+  </>
+)
+
+const Next = ({ page, pages, switchPages, setPage, lastPages, firstPages }) => {
+  const lastPage = page >= pages.length
+
+  return (
+    <>
+      <NextButton>
+        <Action
+          disabled={firstPages.includes(lastPages[0] - 1)}
+          onClick={() => switchPages(10)}
+        >
+          <Icon noPadding>chevron_right</Icon>
+        </Action>
+        <Action disabled={lastPage} onClick={() => setPage(pages.length)}>
+          <Icon noPadding>chevrons_right</Icon>
+        </Action>
+      </NextButton>
+    </>
+  )
+}
+
+const PageNumber = ({ pageNumber, setPage, page }) => {
+  const active = page === pageNumber
+  return (
+    <Page active={active}>
+      <Action disabled={active} onClick={() => setPage(pageNumber)}>
+        {pageNumber}
+      </Action>
+    </Page>
+  )
+}
+
 export const Pagination = ({
   setPage,
   limit,
@@ -102,36 +149,6 @@ export const Pagination = ({
   // eslint-disable-next-line no-shadow
   PaginationContainer,
 }) => {
-  const Previous = () => (
-    <PreviousButton>
-      <Action disabled={page <= 1} onClick={() => setPage(page - 1)}>
-        <Icon noPadding>chevron_left</Icon>
-      </Action>
-    </PreviousButton>
-  )
-
-  const Next = () => {
-    const lastPage = page >= pages.length
-    return (
-      <NextButton>
-        <Action disabled={lastPage} onClick={() => setPage(page + 1)}>
-          <Icon noPadding>chevron_right</Icon>
-        </Action>
-      </NextButton>
-    )
-  }
-
-  const PageNumber = ({ pageNumber }) => {
-    const active = page === pageNumber
-    return (
-      <Page active={active}>
-        <Action disabled={active} onClick={() => setPage(pageNumber)}>
-          {pageNumber}
-        </Action>
-      </Page>
-    )
-  }
-
   // e.g. Get [1,2,3] from totalCount 9, limit 3
   const pages = [...new Array(Math.ceil(totalCount / limit)).keys()].map(
     p => p + 1,
@@ -140,6 +157,18 @@ export const Pagination = ({
   const firstResult = (page - 1) * limit + 1
   const lastResult = Math.min((page - 1) * limit + limit, totalCount)
 
+  const lastPages = pages.slice(pages.length - 3, pages.length)
+
+  const [first, setFirst] = useState(page - 1)
+  const [last, setLast] = useState(page + 9)
+  const [firstPages, setFirstPages] = useState(pages.slice(first, last))
+
+  const switchPages = n => {
+    setFirst(first + n)
+    setLast(last + n)
+    setFirstPages(pages.slice(first + n, last + n))
+  }
+
   return (
     <PaginationContainer>
       <PaginationInfo>
@@ -147,11 +176,42 @@ export const Pagination = ({
         of <strong>{totalCount}</strong> results
       </PaginationInfo>
       <Paginators>
-        <Previous />
-        {pages.map(pageNumber => (
-          <PageNumber key={pageNumber} pageNumber={pageNumber} />
-        ))}
-        <Next />
+        <Previous {...{ page, setPage, switchPages, first }} />
+        {pages.length > 20 ? (
+          <>
+            {firstPages.map(pageNumber => (
+              <PageNumber
+                {...{ pageNumber, setPage, page }}
+                key={pageNumber}
+                pageNumber={pageNumber}
+              />
+            ))}
+
+            {!firstPages.includes(lastPages[0]) ? (
+              <>
+                <PageDots>...</PageDots>
+                {lastPages.map(pageNumber => (
+                  <PageNumber
+                    {...{ pageNumber, setPage, page }}
+                    key={pageNumber}
+                    pageNumber={pageNumber}
+                  />
+                ))}
+              </>
+            ) : null}
+          </>
+        ) : (
+          pages.map(pageNumber => (
+            <PageNumber
+              {...{ pageNumber, setPage, page }}
+              key={pageNumber}
+              pageNumber={pageNumber}
+            />
+          ))
+        )}
+        <Next
+          {...{ pages, page, switchPages, setPage, lastPages, firstPages }}
+        />
       </Paginators>
     </PaginationContainer>
   )
