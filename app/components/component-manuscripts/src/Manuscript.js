@@ -162,50 +162,53 @@ const User = ({
         <Cell>{manuscript.submission && manuscript.submission.articleId}</Cell>
       )}
       {['ncrc'].includes(process.env.INSTANCE_NAME) && (
-        <Cell minWidth="150px">
-          <StyledDescriptionWrapper>
-            {manuscript.status === articleStatuses.new &&
-              !manuscript.submission.labels && (
-                <Checkbox
-                  checked={selectedNewManuscripts.includes(manuscript.id)}
-                  onChange={() => toggleNewManuscriptCheck(manuscript.id)}
-                />
-              )}
-            <span style={{ wordBreak: 'break-word' }}>
-              <a href={manuscript.submission.articleURL} target="_blank">
-                {manuscript.submission &&
-                  manuscript.submission.articleDescription}
-              </a>
-            </span>
-            <>
-              <Tooltip
-                destroyTooltipOnHide={{ keepParent: false }}
-                getTooltipContainer={el => el}
-                overlay={
-                  <span>
-                    {formattedAbstract?.length > 1000
-                      ? `${formattedAbstract.slice(0, 1000)}...`
-                      : formattedAbstract}
-                  </span>
-                }
-                overlayInnerStyle={{
-                  backgroundColor: 'black',
-                  color: 'white',
-                  borderColor: 'black',
-                }}
-                overlayStyle={{
-                  maxWidth: '65vw',
-                  wordBreak: 'break-word',
-                  display: `${!formattedAbstract && 'none'}`,
-                }}
-                placement="bottomLeft"
-                trigger={['hover']}
-              >
-                <InfoIcon>i</InfoIcon>
-              </Tooltip>
-            </>
-          </StyledDescriptionWrapper>
-        </Cell>
+        <>
+          <Cell minWidth="150px">
+            <StyledDescriptionWrapper>
+              {manuscript.status === articleStatuses.new &&
+                !manuscript.submission.labels && (
+                  <Checkbox
+                    checked={selectedNewManuscripts.includes(manuscript.id)}
+                    onChange={() => toggleNewManuscriptCheck(manuscript.id)}
+                  />
+                )}
+              <span style={{ wordBreak: 'break-word' }}>
+                <a href={manuscript.submission.articleURL} target="_blank">
+                  {manuscript.submission &&
+                    manuscript.submission.articleDescription}
+                </a>
+              </span>
+              <>
+                <Tooltip
+                  destroyTooltipOnHide={{ keepParent: false }}
+                  getTooltipContainer={el => el}
+                  overlay={
+                    <span>
+                      {formattedAbstract?.length > 1000
+                        ? `${formattedAbstract.slice(0, 1000)}...`
+                        : formattedAbstract}
+                    </span>
+                  }
+                  overlayInnerStyle={{
+                    backgroundColor: 'black',
+                    color: 'white',
+                    borderColor: 'black',
+                  }}
+                  overlayStyle={{
+                    maxWidth: '65vw',
+                    wordBreak: 'break-word',
+                    display: `${!formattedAbstract && 'none'}`,
+                  }}
+                  placement="bottomLeft"
+                  trigger={['hover']}
+                >
+                  <InfoIcon>i</InfoIcon>
+                </Tooltip>
+              </>
+            </StyledDescriptionWrapper>
+          </Cell>
+          <Cell>{manuscript.submission.journal}</Cell>
+        </>
       )}
       <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
       <Cell>{convertTimestampToDate(manuscript.updated)}</Cell>
