@@ -596,6 +596,12 @@ const resolvers = {
             parsedSubmission.topics,
           ])
         }
+
+        if (filter && parsedSubmission && parsedSubmission.label) {
+          query.whereRaw(
+            `submission->>'labels' LIKE '%${parsedSubmission.label}%'`,
+          )
+        }
       }
 
       const totalCount = await query.resultSize()

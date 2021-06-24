@@ -55,6 +55,11 @@ export const validateManuscript = (submission, form, client) =>
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
+const updateUrlParameter = (url, param, value) => {
+  var regex = new RegExp('(' + param + '=)[^&]+')
+  return url.replace(regex, '$1' + value)
+}
+
 // manuscriptId is always the parent manuscript's id
 const User = ({
   manuscriptId,
@@ -64,6 +69,8 @@ const User = ({
   toggleNewManuscriptCheck,
   selectedNewManuscripts,
   setSelectedStatus,
+  setSelectedTopic,
+  setSelectedLabel,
   ...props
 }) => {
   const [publishManuscript] = useMutation(publishManuscriptMutation)
@@ -108,16 +115,30 @@ const User = ({
     }
   }
 
+  const filterArticle = (propertyName, propertyValue, updateFn) => {
+    const currentURL = window.location.href.split('?')
+    if (currentURL.length === 1) {
+      currentURL.push('')
+    }
+    const updatedQueryString = currentURL[1].includes(`${propertyName}=`)
+      ? updateUrlParameter(currentURL[1], propertyName, propertyValue)
+      : currentURL[1] + `&${propertyName}=` + propertyValue
+
+    updateFn(propertyValue)
+    history.replace('/kotahi/admin/manuscripts?' + updatedQueryString)
+  }
+
   const filterByTopic = topic => {
-    props.setSelectedTopic(topic)
-    history.replace(`${urlFrag}/admin/manuscripts?topic=${topic}`)
+    filterArticle('topic', topic, setSelectedTopic)
   }
 
   const filterByArticleStatus = status => {
-    setSelectedStatus(status)
-    history.replace(`${urlFrag}/admin/manuscripts?status=${status}`)
+    filterArticle('status', status, setSelectedStatus)
   }
 
+  const filterByArticleLabel = label => {
+    filterArticle('label', label, setSelectedLabel)
+  }
   let formattedAbstract
 
   if (manuscript.submission?.abstract) {
@@ -209,7 +230,9 @@ const User = ({
       </Cell>
       {process.env.INSTANCE_NAME === 'ncrc' && (
         <Cell>
-          <StyledTableLabel>
+          <StyledTableLabel
+            onClick={() => filterByArticleLabel(manuscript.submission.labels)}
+          >
             {manuscript.submission &&
               convertCamelCaseToText(manuscript.submission.labels)}
           </StyledTableLabel>

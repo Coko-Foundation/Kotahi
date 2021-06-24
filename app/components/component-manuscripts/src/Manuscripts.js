@@ -72,22 +72,24 @@ const Manuscripts = ({ history, ...props }) => {
 
   const searchHandler = () => {
     const searchQuery = history.location.search
+    const filterQuery = { submission: {} }
 
     if (searchQuery && searchQuery.includes('status')) {
-      return {
-        status: selectedStatus,
-      }
+      filterQuery.status = selectedStatus
     }
 
     if (searchQuery && searchQuery.includes('topic')) {
-      return {
-        submission: JSON.stringify({
-          topics: selectedTopic,
-        }),
-      }
+      filterQuery.submission.topics = selectedTopic
     }
 
-    return {}
+    if (searchQuery && searchQuery.includes('label')) {
+      filterQuery.submission.label = selectedLabel
+    }
+
+    return {
+      ...filterQuery,
+      submission: JSON.stringify(filterQuery.submission),
+    }
   }
 
   const [sortName, setSortName] = useState('created')
@@ -100,6 +102,10 @@ const Manuscripts = ({ history, ...props }) => {
 
   const [selectedStatus, setSelectedStatus] = useState(
     getQueryStringByName('status'),
+  )
+
+  const [selectedLabel, setSelectedLabel] = useState(
+    getQueryStringByName('label'),
   )
 
   const [selectedNewManuscripts, setSelectedNewManuscripts] = useState([])
@@ -285,6 +291,7 @@ const Manuscripts = ({ history, ...props }) => {
                   manuscriptId={manuscript.id}
                   number={key + 1}
                   selectedNewManuscripts={selectedNewManuscripts}
+                  setSelectedLabel={setSelectedLabel}
                   setSelectedStatus={setSelectedStatus}
                   setSelectedTopic={setSelectedTopic}
                   submitter={manuscript.submitter}
