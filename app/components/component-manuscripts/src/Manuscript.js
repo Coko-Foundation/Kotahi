@@ -172,8 +172,10 @@ const User = ({
                 />
               )}
             <span style={{ wordBreak: 'break-word' }}>
-              {manuscript.submission &&
-                manuscript.submission.articleDescription}
+              <a href={manuscript.submission.articleURL} target="_blank">
+                {manuscript.submission &&
+                  manuscript.submission.articleDescription}
+              </a>
             </span>
             <>
               <Tooltip

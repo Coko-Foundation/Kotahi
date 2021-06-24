@@ -157,7 +157,7 @@ const Manuscripts = ({ history, ...props }) => {
     })
   }
 
-  const limit = 10
+  const limit = process.env.INSTANCE_NAME === 'ncrc' ? 100 : 10
   const sort = sortName && sortDirection && `${sortName}_${sortDirection}`
 
   const { loading, error, data, refetch } = useQuery(GET_MANUSCRIPTS, {
