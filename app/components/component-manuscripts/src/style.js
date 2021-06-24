@@ -32,6 +32,7 @@ export {
 // Specific
 
 export const StyledButton = styled(Button)`
+  cursor: pointer;
   margin: 0 20px;
 `
 

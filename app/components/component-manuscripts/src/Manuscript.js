@@ -29,6 +29,7 @@ import {
   UserAction as Action,
   StatusBadge,
   StyledDescriptionWrapper,
+  StyledButton,
 } from './style'
 
 import { convertTimestampToDate } from '../../../shared/time-formatting'
@@ -71,6 +72,7 @@ const User = ({
   setSelectedStatus,
   setSelectedTopic,
   setSelectedLabel,
+  setReadyToEvaluateLabel,
   ...props
 }) => {
   const [publishManuscript] = useMutation(publishManuscriptMutation)
@@ -162,12 +164,13 @@ const User = ({
       {['ncrc'].includes(process.env.INSTANCE_NAME) && (
         <Cell minWidth="150px">
           <StyledDescriptionWrapper>
-            {manuscript.status === articleStatuses.new && (
-              <Checkbox
-                checked={selectedNewManuscripts.includes(manuscript.id)}
-                onChange={() => toggleNewManuscriptCheck(manuscript.id)}
-              />
-            )}
+            {manuscript.status === articleStatuses.new &&
+              !manuscript.submission.labels && (
+                <Checkbox
+                  checked={selectedNewManuscripts.includes(manuscript.id)}
+                  onChange={() => toggleNewManuscriptCheck(manuscript.id)}
+                />
+              )}
             <span style={{ wordBreak: 'break-word' }}>
               {manuscript.submission &&
                 manuscript.submission.articleDescription}
@@ -230,12 +233,21 @@ const User = ({
       </Cell>
       {process.env.INSTANCE_NAME === 'ncrc' && (
         <Cell>
-          <StyledTableLabel
-            onClick={() => filterByArticleLabel(manuscript.submission.labels)}
-          >
-            {manuscript.submission &&
-              convertCamelCaseToText(manuscript.submission.labels)}
-          </StyledTableLabel>
+          {manuscript.submission && manuscript.submission.labels ? (
+            <StyledTableLabel
+              onClick={() => filterByArticleLabel(manuscript.submission.labels)}
+            >
+              {manuscript.submission &&
+                convertCamelCaseToText(manuscript.submission.labels)}
+            </StyledTableLabel>
+          ) : (
+            <StyledButton
+              onClick={() => setReadyToEvaluateLabel(manuscript.id)}
+              primary
+            >
+              Select
+            </StyledButton>
+          )}
         </Cell>
       )}
       {process.env.INSTANCE_NAME !== 'ncrc' && (

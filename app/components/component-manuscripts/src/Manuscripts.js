@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React, { useEffect, useState } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
 import { Button, Checkbox } from '@pubsweet/ui'
@@ -28,6 +29,7 @@ import getQueryStringByName from '../../../shared/getQueryStringByName'
 import { PaginationContainerShadowed } from '../../shared/Pagination'
 import { articleStatuses } from '../../../globals'
 import VideoChatButton from './VideoChatButton'
+import { updateMutation } from '../../component-submit/src/components/SubmitPage'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -120,7 +122,9 @@ const Manuscripts = ({ history, ...props }) => {
 
   const toggleAllNewManuscriptsCheck = () => {
     const newManuscriptsFromCurrentPage = manuscripts.filter(
-      manuscript => manuscript.status === articleStatuses.new,
+      manuscript =>
+        manuscript.status === articleStatuses.new &&
+        !manuscript.submission.labels,
     )
 
     const newManuscriptsFromCurrentPageIds = newManuscriptsFromCurrentPage.map(
@@ -142,7 +146,11 @@ const Manuscripts = ({ history, ...props }) => {
             ...new Set([
               ...currentSelectedManuscripts,
               ...manuscripts
-                .filter(manuscript => manuscript.status === articleStatuses.new)
+                .filter(
+                  manuscript =>
+                    manuscript.status === articleStatuses.new &&
+                    !manuscript.submission.labels,
+                )
                 .map(manuscript => manuscript.id),
             ]),
           ]
@@ -176,6 +184,8 @@ const Manuscripts = ({ history, ...props }) => {
     },
   })
 
+  const [update] = useMutation(updateMutation)
+
   useEffect(() => {
     refetch()
     setPage(1)
@@ -189,6 +199,27 @@ const Manuscripts = ({ history, ...props }) => {
   })
 
   const { totalCount } = data.paginatedManuscripts
+
+  const setReadyToEvaluateLabel = id => {
+    return update({
+      variables: {
+        id,
+        input: JSON.stringify({
+          submission: {
+            labels: 'readyToEvaluate',
+          },
+        }),
+      },
+    })
+  }
+
+  const bulkSetLabelReadyToEvaluate = (selectedNewManuscripts, manuscripts) => {
+    manuscripts
+      .filter(manuscript => !selectedNewManuscripts.includes(manuscript.id))
+      .forEach(manuscript => {
+        setReadyToEvaluateLabel(manuscript.id)
+      })
+  }
 
   return (
     <Container>
@@ -234,6 +265,7 @@ const Manuscripts = ({ history, ...props }) => {
           <SelectedManuscriptsNumber>{`${selectedNewManuscripts.length} articles selected`}</SelectedManuscriptsNumber>
           <Button
             onClick={() => {
+              bulkSetLabelReadyToEvaluate(selectedNewManuscripts, manuscripts)
               deleteManuscripts({ variables: { ids: selectedNewManuscripts } })
               setSelectedNewManuscripts([])
             }}
@@ -291,6 +323,7 @@ const Manuscripts = ({ history, ...props }) => {
                   manuscriptId={manuscript.id}
                   number={key + 1}
                   selectedNewManuscripts={selectedNewManuscripts}
+                  setReadyToEvaluateLabel={setReadyToEvaluateLabel}
                   setSelectedLabel={setSelectedLabel}
                   setSelectedStatus={setSelectedStatus}
                   setSelectedTopic={setSelectedTopic}
