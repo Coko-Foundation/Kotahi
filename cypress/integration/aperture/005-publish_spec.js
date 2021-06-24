@@ -27,7 +27,7 @@ describe('Publishing a submission', () => {
 
       DashboardPage.getAcceptedAndPublishedButton().should(
         'contain',
-        'Accepted & Published',
+        'Published',
       )
 
       cy.visit('/')
