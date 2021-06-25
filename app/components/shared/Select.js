@@ -8,6 +8,7 @@ const styles = th => ({
   menu: (provided, state) => ({
     ...provided,
     borderRadius: th.borderRadius,
+    zIndex: 2,
   }),
 
   control: (provided, state) => ({
