@@ -140,6 +140,9 @@ export const SubmissionFormPage = {
   selectDropdownOption(nth) {
     return cy.get(DROPDOWN_OPTION_LIST).eq(nth).click()
   },
+  selectDropdownOptionWithText(text) {
+    return cy.get(DROPDOWN_OPTION_LIST).contains(text).click()
+  },
   getSuggestedField() {
     return cy.getByDataTestId(SUGGESTED_FIELD)
   },

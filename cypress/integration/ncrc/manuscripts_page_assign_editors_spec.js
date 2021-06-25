@@ -53,30 +53,124 @@ describe('manuscripts page assign editors tests', () => {
     })
   })
 
-  it('check editor name appears in table', () => {
-    ManuscriptsPage.clickEvaluation()
-    cy.awaitDisappearSpinner()
-    SubmissionFormPage.getAssignEditor(0).click()
-    SubmissionFormPage.selectDropdownOption(0)
-    Menu.clickManuscriptsAndAssertPageLoad()
+  it('check all three editor names appears in the table', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
+      ManuscriptsPage.clickEvaluationAndVerifyUrl()
+      cy.awaitDisappearSpinner()
+      SubmissionFormPage.getAssignEditor(0).click()
+      SubmissionFormPage.selectDropdownOptionWithText(
+        name.role.reviewers.reviewer1,
+      )
+      SubmissionFormPage.getAssignEditor(1).click()
+      SubmissionFormPage.selectDropdownOptionWithText(
+        name.role.reviewers.reviewer2,
+      )
+      SubmissionFormPage.getAssignEditor(2).click()
+      SubmissionFormPage.selectDropdownOptionWithText(
+        name.role.reviewers.reviewer3,
+      )
+      Menu.clickManuscriptsAndAssertPageLoad()
+      cy.awaitDisappearSpinner()
+      ManuscriptsPage.getEditorName()
+        .eq(-3)
+        .scrollIntoView()
+        .should('contain', name.role.reviewers.reviewer1)
+      ManuscriptsPage.getEditorName()
+        .eq(-2)
+        .scrollIntoView()
+        .should('contain', name.role.reviewers.reviewer2)
       ManuscriptsPage.getEditorName()
         .eq(-1)
         .scrollIntoView()
         .should('contain', name.role.reviewers.reviewer3)
     })
-    ManuscriptsPage.clickEvaluation()
-    cy.awaitDisappearSpinner()
-    SubmissionFormPage.getAssignEditor(1).click()
-    SubmissionFormPage.selectDropdownOption(3)
-    Menu.clickManuscriptsAndAssertPageLoad()
+  })
+  it('assign senior editor only', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
+      ManuscriptsPage.clickEvaluationAndVerifyUrl()
+      cy.awaitDisappearSpinner()
+      SubmissionFormPage.getAssignEditor(0).click()
+      SubmissionFormPage.selectDropdownOptionWithText(
+        name.role.reviewers.reviewer3,
+      )
+      Menu.clickManuscriptsAndAssertPageLoad()
+      ManuscriptsPage.getEditorName()
+        .eq(-1)
+        .scrollIntoView()
+        .should('contain', name.role.reviewers.reviewer3)
+      ManuscriptsPage.clickEvaluationAndVerifyUrl()
+      SubmissionFormPage.getAssignEditor(0).should(
+        'contain',
+        name.role.reviewers.reviewer3,
+      )
+      SubmissionFormPage.getAssignEditor(1).should(
+        'contain',
+        'Assign Handling Editor…',
+      )
+      SubmissionFormPage.getAssignEditor(2).should(
+        'contain',
+        'Assign Handling Editor…',
+      )
+    })
+  })
+  it('assign first handling editor only', () => {
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture('role_names').then(name => {
+      ManuscriptsPage.clickEvaluationAndVerifyUrl()
+      cy.awaitDisappearSpinner()
+      SubmissionFormPage.getAssignEditor(1).click()
+      SubmissionFormPage.selectDropdownOptionWithText(
+        name.role.reviewers.reviewer1,
+      )
+      Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getEditorName()
         .eq(-1)
         .scrollIntoView()
         .should('contain', name.role.reviewers.reviewer1)
+      ManuscriptsPage.clickEvaluationAndVerifyUrl()
+      SubmissionFormPage.getAssignEditor(0).should(
+        'contain',
+        'Assign Senior Editor…',
+      )
+      SubmissionFormPage.getAssignEditor(1).should(
+        'contain',
+        name.role.reviewers.reviewer1,
+      )
+      SubmissionFormPage.getAssignEditor(2).should(
+        'contain',
+        'Assign Handling Editor…',
+      )
+    })
+  })
+  it('assign second handling editor only', () => {
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture('role_names').then(name => {
+      ManuscriptsPage.clickEvaluationAndVerifyUrl()
+      cy.awaitDisappearSpinner()
+      SubmissionFormPage.getAssignEditor(2).click()
+      SubmissionFormPage.selectDropdownOptionWithText(
+        name.role.reviewers.reviewer1,
+      )
+      Menu.clickManuscriptsAndAssertPageLoad()
+      ManuscriptsPage.getEditorName()
+        .eq(-1)
+        .scrollIntoView()
+        .should('contain', name.role.reviewers.reviewer1)
+      ManuscriptsPage.clickEvaluationAndVerifyUrl()
+      SubmissionFormPage.getAssignEditor(0).should(
+        'contain',
+        'Assign Senior Editor…',
+      )
+      SubmissionFormPage.getAssignEditor(1).should(
+        'contain',
+        'Assign Handling Editor…',
+      )
+      SubmissionFormPage.getAssignEditor(2).should(
+        'contain',
+        name.role.reviewers.reviewer1,
+      )
     })
   })
 })
