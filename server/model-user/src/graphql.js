@@ -112,7 +112,7 @@ const resolvers = {
         delete input.password
       }
 
-      return ctx.models.User.update(id, input, ctx)
+      return ctx.models.User.query().updateAndFetchById(id, JSON.parse(input))
     },
     // Authentication
     async loginUser(_, { input }, ctx) {
@@ -189,7 +189,7 @@ const typeDefs = `
   extend type Mutation {
     createUser(input: UserInput): User
     deleteUser(id: ID): User
-    updateUser(id: ID, input: UserInput): User
+    updateUser(id: ID, input: String): User
     updateCurrentUsername(username: String): User
   }
 
@@ -262,6 +262,7 @@ const typeDefs = `
     email: String!
     password: String
     rev: String
+    admin: Boolean
   }
 
   # Authentication
