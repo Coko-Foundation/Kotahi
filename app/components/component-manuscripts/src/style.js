@@ -101,3 +101,17 @@ export const StyledDescriptionWrapper = styled.div`
   align-items: center;
   display: flex;
 `
+
+export const BulkDeleteModalContainer = styled.div`
+  background-color: white;
+  padding: 10px;
+`
+
+export const BulkDeleteModalButtons = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+export const BulkDeleteModalButton = styled(Button)`
+  cursor: pointer;
+`
