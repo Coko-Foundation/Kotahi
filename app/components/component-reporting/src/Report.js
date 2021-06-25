@@ -92,7 +92,13 @@ const getReport = (
   getAuthorsData,
 ) => {
   if (reportType === 'Summary') {
-    return <SummaryReport {...getSummaryData(startDate, endDate)} />
+    return (
+      <SummaryReport
+        endDate={endDate}
+        startDate={startDate}
+        {...getSummaryData(startDate, endDate)}
+      />
+    )
   }
 
   if (reportType === 'Manuscript') {

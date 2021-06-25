@@ -28,12 +28,21 @@ const getReportData = gql`
       acceptedCount
       publishedCount
       publishedTodayCount
+      revisingNowCount
       avgPublishedDailyCount
       avgRevisingDailyCount
       durationsData {
         date
         reviewDuration
         fullDuration
+      }
+      reviewAvgsTrace {
+        x
+        y
+      }
+      completionAvgsTrace {
+        x
+        y
       }
     }
     manuscriptsActivity(startDate: $startDate, endDate: $endDate) {

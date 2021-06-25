@@ -70,6 +70,8 @@ const getDaysStringTo1Dp = valueDays => {
 }
 
 const SummaryReport = ({
+  startDate,
+  endDate,
   avgPublishTimeDays,
   avgReviewTimeDays,
   unsubmittedCount,
@@ -86,6 +88,8 @@ const SummaryReport = ({
   avgPublishedDailyCount,
   avgRevisingDailyCount,
   durationsData,
+  reviewAvgsTrace,
+  completionAvgsTrace,
 }) => {
   const getEditorsConcentricBarChartData = () => {
     const data = [
@@ -144,21 +148,27 @@ const SummaryReport = ({
           </CardHeader>
           <BigNumber>{publishedTodayCount}</BigNumber>
           <NoteRight>
-            Month average {avgPublishedDailyCount}
-            <Tooltip content="Based on weekdays for the previous month" />
+            Average {avgPublishedDailyCount}
+            <Tooltip content="Based on the selected date range" />
           </NoteRight>
           <CardHeader>Manuscripts currently in revision</CardHeader>
           <BigNumber>{revisingCount}</BigNumber>
           <NoteRight>
-            Month average {avgRevisingDailyCount}
-            <Tooltip content="Based on weekdays for the previous month" />
+            Average {avgRevisingDailyCount}
+            <Tooltip content="Based on the selected date range" />
           </NoteRight>
         </BigNumbersCard>
         <ChartCard>
           <CardHeader>
             Reviewing and editing durations for individual manuscripts
           </CardHeader>
-          <DurationsChart data={durationsData} />
+          <DurationsChart
+            completionAvgs={completionAvgsTrace}
+            data={durationsData}
+            endDate={endDate}
+            reviewAvgs={reviewAvgsTrace}
+            startDate={startDate}
+          />
         </ChartCard>
       </CardCollection>
       <Table

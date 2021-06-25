@@ -1,4 +1,5 @@
 // const logger = require('@pubsweet/logger')
+const generateMovingAverages = require('./movingAverages')
 
 const {
   generateAuthorsData,
@@ -43,8 +44,12 @@ const getReviewingDuration = manuscript => {
   return latestReview - reviewingStart
 }
 
-const getDurationUntilPublished = m =>
-  m.published ? m.published.getTime() - m.submittedDate.getTime() : null
+const getDurationUntilPublished = m => {
+  let start = m.submittedDate
+  if (!start) start = m.created
+
+  return m.published && start ? m.published.getTime() - start.getTime() : null
+}
 
 const wasSubmitted = manuscript =>
   manuscript.status && manuscript.status !== 'new'
@@ -71,7 +76,7 @@ const wasAccepted = manuscript =>
 
 const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
   const query = ctx.models.Manuscript.query()
-    .withGraphFetched('[teams, reviews, manuscriptVersions(orderByCreated)]')
+    .withGraphFetched('[teams, reviews]')
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null })
@@ -126,17 +131,105 @@ const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
   }
 }
 
+const getLastMidnightInTimeZone = timeZoneOffset => {
+  const transposedDate = new Date(Date.now() + timeZoneOffset * 60000)
+  transposedDate.setUTCHours(0)
+  transposedDate.setUTCMinutes(0)
+  transposedDate.setUTCSeconds(0)
+  transposedDate.setUTCMilliseconds(0)
+  return new Date(transposedDate.getTime() - timeZoneOffset * 60000)
+}
+
+const getPublishedTodayCount = async (timeZoneOffset, ctx) => {
+  const midnight = getLastMidnightInTimeZone(timeZoneOffset)
+
+  const query = ctx.models.Manuscript.query()
+    .where('published', '>=', midnight)
+    .andWhere({ parentId: null })
+
+  return query.resultSize()
+}
+
+const getRevisingNowCount = async ctx => {
+  const query = ctx.models.Manuscript.query()
+    .where(builder => builder.whereIn('status', ['revise', 'revising']))
+    .andWhere({ parentId: null })
+
+  return query.resultSize()
+}
+
+/** Find the first element that meets the startCondition function, and return the subarray starting at that index + startAdjustment.
+ * If no element meets startCondition, return an empty array
+ */
+const trim = (array, startCondition) => {
+  const start = array.findIndex(element => startCondition(element))
+  if (start < 0) return []
+  return array.slice(start)
+}
+
+const day = 24 * 60 * 60 * 1000
+const week = day * 7
+
+const getDurationsTraces = async (startDate, endDate, ctx) => {
+  const windowSizeForAvg = week
+  const smoothingSize = day
+
+  const dataStart = startDate - windowSizeForAvg / 2
+
+  const query = ctx.models.Manuscript.query()
+    .withGraphFetched('[reviews]')
+    .where('created', '>=', new Date(dataStart))
+    .where('created', '<', new Date(endDate))
+    .where({ parentId: null })
+
+  const manuscripts = await query
+
+  const durations = []
+
+  manuscripts.forEach(m => {
+    const submittedDate = m.submittedDate ? m.submittedDate.getTime() : null
+    if (!submittedDate || submittedDate >= endDate) return // continue
+    const decision = m.reviews.find(r => r.isDecision)
+    const reviewedDate = decision ? decision.created : null
+    let completedDate = null
+    if (m.published) completedDate = m.published
+    else if (m.status === 'rejected' && decision)
+      completedDate = decision.updated
+
+    durations.push({
+      date: submittedDate,
+      reviewDuration: reviewedDate ? (reviewedDate - submittedDate) / day : 0, // TODO fallback to null, not 0
+      fullDuration: completedDate ? (completedDate - submittedDate) / day : 0, // TODO fallback to null, not 0
+    })
+  })
+
+  const sortedDurations = durations.sort(d => d.date)
+
+  const [reviewAvgs, completionAvgs] = generateMovingAverages(
+    sortedDurations,
+    windowSizeForAvg,
+    smoothingSize,
+  )
+
+  return {
+    durationsData: trim(sortedDurations, d => d.date >= startDate),
+    reviewAvgsTrace: reviewAvgs,
+    completionAvgsTrace: completionAvgs,
+  }
+}
+
 const resolvers = {
   Query: {
     async summaryActivity(_, { startDate, endDate, timeZoneOffset }, ctx) {
-      // publishedTodayCount: 4,
       // avgPublishedDailyCount: 2.7,
       // avgRevisingDailyCount: 11.3,
-      // durationsData: generateDurationsData(),
 
       return {
         ...generateSummaryData(),
         ...(await getDateRangeSummaryStats(startDate, endDate, ctx)),
+        publishedTodayCount: await getPublishedTodayCount(timeZoneOffset, ctx),
+        revisingNowCount: await getRevisingNowCount(ctx),
+        ...(await getDurationsTraces(startDate, endDate, ctx)),
       }
     },
     manuscriptsActivity(_, { startDate, endDate }, ctx) {
@@ -182,14 +275,22 @@ const typeDefs = `
     publishedCount: Int!
     publishedTodayCount: Int!
     avgPublishedDailyCount: Float!
+    revisingNowCount: Int!
     avgRevisingDailyCount: Float!
     durationsData: [ManuscriptDuration]
+    reviewAvgsTrace: [Vector]
+    completionAvgsTrace: [Vector]
   }
 
   type ManuscriptDuration {
     date: DateTime!
     reviewDuration: Float
     fullDuration: Float
+  }
+
+  type Vector {
+    x: Float!
+    y: Float!
   }
 
   type ManuscriptActivity {
