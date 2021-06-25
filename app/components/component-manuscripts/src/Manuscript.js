@@ -275,6 +275,7 @@ const User = ({
           {manuscript.teams.map(team => (
             <StyledAuthor key={team.id}>
               {team.role !== 'author' &&
+                team.role !== 'reviewer' &&
                 team.members[0].user.defaultIdentity.name}
             </StyledAuthor>
           ))}
