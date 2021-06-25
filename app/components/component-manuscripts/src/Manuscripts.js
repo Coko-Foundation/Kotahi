@@ -30,6 +30,8 @@ import { PaginationContainerShadowed } from '../../shared/Pagination'
 import { articleStatuses } from '../../../globals'
 import VideoChatButton from './VideoChatButton'
 import { updateMutation } from '../../component-submit/src/components/SubmitPage'
+import Modal from '../../component-modal/src'
+import BulkDeleteModal from './BulkDeleteModal'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -97,6 +99,7 @@ const Manuscripts = ({ history, ...props }) => {
   const [sortName, setSortName] = useState('created')
   const [sortDirection, setSortDirection] = useState('DESC')
   const [page, setPage] = useState(1)
+  const [isOpenBulkDeletionModal, setIsOpenBulkDeletionModal] = useState(false)
 
   const [selectedTopic, setSelectedTopic] = useState(
     getQueryStringByName('topic'),
@@ -221,6 +224,23 @@ const Manuscripts = ({ history, ...props }) => {
       })
   }
 
+  const openModalBulkDeleteConfirmation = () => {
+    setIsOpenBulkDeletionModal(true)
+  }
+
+  const closeModalBulkDeleteConfirmation = () => {
+    setIsOpenBulkDeletionModal(false)
+  }
+
+  const confirmBulkDelete = () => {
+    bulkSetLabelReadyToEvaluate(selectedNewManuscripts, manuscripts)
+    deleteManuscripts({
+      variables: { ids: selectedNewManuscripts },
+    })
+    setSelectedNewManuscripts([])
+    closeModalBulkDeleteConfirmation()
+  }
+
   return (
     <Container>
       <VideoChatButton />
@@ -263,14 +283,7 @@ const Manuscripts = ({ history, ...props }) => {
             onChange={toggleAllNewManuscriptsCheck}
           />
           <SelectedManuscriptsNumber>{`${selectedNewManuscripts.length} articles selected`}</SelectedManuscriptsNumber>
-          <Button
-            onClick={() => {
-              bulkSetLabelReadyToEvaluate(selectedNewManuscripts, manuscripts)
-              deleteManuscripts({ variables: { ids: selectedNewManuscripts } })
-              setSelectedNewManuscripts([])
-            }}
-            primary
-          >
+          <Button onClick={openModalBulkDeleteConfirmation} primary>
             Delete
           </Button>
         </SelectAllField>
@@ -345,6 +358,17 @@ const Manuscripts = ({ history, ...props }) => {
         setPage={setPage}
         totalCount={totalCount}
       />
+      {['ncrc'].includes(process.env.INSTANCE_NAME) && (
+        <Modal
+          isOpen={isOpenBulkDeletionModal}
+          onRequestClose={closeModalBulkDeleteConfirmation}
+        >
+          <BulkDeleteModal
+            confirmBulkDelete={confirmBulkDelete}
+            closeModal={closeModalBulkDeleteConfirmation}
+          />
+        </Modal>
+      )}
     </Container>
   )
 }
