@@ -185,5 +185,11 @@ export const ManuscriptsPage = {
   clickPaginationButton(nth) {
     this.getPaginationButtons().eq(nth).click({ force: true })
   },
+  getSelectButton() {
+    return cy.get(BUTTON).contains('Select')
+  },
+  clickSelect() {
+    this.getSelectButton().click()
+  },
 }
 export default ManuscriptsPage

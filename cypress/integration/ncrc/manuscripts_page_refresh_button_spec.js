@@ -1,3 +1,4 @@
+/* eslint-disable jest/expect-expect */
 /* eslint-disable jest/valid-expect-in-promise,jest/valid-expect */
 import {
   manuscripts,
