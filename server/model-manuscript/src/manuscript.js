@@ -173,6 +173,7 @@ class Manuscript extends BaseModel {
   static get schema() {
     return {
       properties: {
+        shortId: { type: 'integer' },
         parentId: { type: ['string', 'null'], format: 'uuid' },
         manuscriptVersions: { type: ['object', 'null'] },
         files: {

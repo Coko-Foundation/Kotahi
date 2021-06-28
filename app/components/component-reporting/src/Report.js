@@ -118,7 +118,7 @@ const getReport = (
       <Table
         // prettier-ignore
         columnSchemas={[
-          { heading: 'Manuscript number', name: 'manuscriptNumber', width: '6.5em' },
+          { heading: 'Manuscript number', name: 'shortId', width: '6.5em' },
           { heading: 'Entry date', name: 'entryDate', width: '7em' },
           { heading: 'Title', name: 'title', width: '16em', flexGrow: 4 },
           { heading: 'Author', name: 'authors', width: '12em', flexGrow: 1 },

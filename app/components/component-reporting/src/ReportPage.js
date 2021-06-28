@@ -46,7 +46,7 @@ const getReportData = gql`
       }
     }
     manuscriptsActivity(startDate: $startDate, endDate: $endDate) {
-      manuscriptNumber
+      shortId
       entryDate
       title
       authors {

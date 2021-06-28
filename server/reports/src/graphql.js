@@ -326,7 +326,7 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
     statusLabel = capitalize(statusLabel)
 
     return {
-      manuscriptNumber: 'TBD',
+      shortId: m.shortId.toString(),
       entryDate: getIsoDateString(m.created),
       title: m.meta.title,
       authors: getTeamUserIdentities(m, 'Author'),
@@ -411,7 +411,7 @@ const typeDefs = `
   }
 
   type ManuscriptActivity {
-    manuscriptNumber: String!
+    shortId: String!
     entryDate: DateTime!
     title: String!
     authors: [Identity!]!
