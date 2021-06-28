@@ -10,6 +10,7 @@ import { ManuscriptsPage } from '../manuscripts-page'
 const MENU_BUTTON = 'Menu__Item'
 const USER_BUTTON = 'Menu__UserItem'
 const BACKGROUND = 'Menu__Root'
+const MESSAGE_NOT_AUTHORISED = 'AdminPage__Root'
 
 export const Menu = {
   getDashboardButton() {
@@ -55,6 +56,9 @@ export const Menu = {
   },
   getBackground() {
     return cy.getByContainsClass(BACKGROUND)
+  },
+  getMessageNotAuthorisedUser() {
+    return cy.getByContainsClass(MESSAGE_NOT_AUTHORISED)
   },
 }
 export default Menu

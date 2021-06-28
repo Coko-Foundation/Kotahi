@@ -1,8 +1,15 @@
 /* eslint-disable jest/expect-expect */
 import { Menu } from '../../page-object/page-component/menu'
-import { login, manuscripts } from '../../support/routes'
+import {
+  dashboard,
+  formBuilder,
+  login,
+  manuscripts,
+  users,
+} from '../../support/routes'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { LoginPage } from '../../page-object/login-page'
+import { DashboardPage } from '../../page-object/dashboard-page'
 
 describe('Login page tests', () => {
   it('page should display NCRC branding settings', () => {
@@ -70,5 +77,54 @@ describe('Login page tests', () => {
     })
     cy.awaitDisappearSpinner()
     Menu.getDashboardButton().should('be.visible')
+  })
+  it('login as Reviewer/Editor', () => {
+    // task to restore the database as per the  dumps/initialState.sql
+    cy.task('restore', 'initial_state_ncrc')
+    cy.task('seedForms')
+
+    // login as admin
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture('role_names').then(name => {
+      cy.login(name.role.reviewers.reviewer1, dashboard)
+    })
+    cy.awaitDisappearSpinner()
+    Menu.getDashboardButton().should('be.visible')
+    DashboardPage.getSectionTitleWithText("Manuscripts I'm editor of").should(
+      'be.visible',
+    )
+    Menu.getFormsButton().should('not.exist')
+    Menu.getUsersButton().should('not.exist')
+    Menu.getManuscriptsButton().should('not.exist')
+    Menu.getMyProfileButton().should('be.visible')
+  })
+  it('as Reviewer/Editor try to acees the admin-specific pages', () => {
+    // task to restore the database as per the  dumps/initialState.sql
+    cy.task('restore', 'initial_state_ncrc')
+    cy.task('seedForms')
+
+    // login as admin
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture('role_names').then(name => {
+      cy.login(name.role.reviewers.reviewer1, users)
+    })
+    cy.awaitDisappearSpinner()
+    Menu.getDashboardButton().should('be.visible')
+    Menu.getMessageNotAuthorisedUser().should(
+      'contain',
+      'Error! Not Authorised!',
+    )
+    cy.visit(formBuilder)
+    cy.awaitDisappearSpinner()
+    Menu.getMessageNotAuthorisedUser().should(
+      'contain',
+      'Error! Not Authorised!',
+    )
+    cy.visit(manuscripts)
+    cy.awaitDisappearSpinner()
+    Menu.getMessageNotAuthorisedUser().should(
+      'contain',
+      'Error! Not Authorised!',
+    )
   })
 })
