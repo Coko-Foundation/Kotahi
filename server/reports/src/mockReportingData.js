@@ -59,42 +59,6 @@ const generateEditorsData = () => {
   return result
 }
 
-const generateReviewersData = () => {
-  const result = []
-
-  for (let i = 0; i < 50; i += 1) {
-    const invitesCount = lowishRandomInt(8)
-    const declinedCount = lowishRandomInt(invitesCount + 1)
-
-    const reviewsCompletedCount = highishRandomInt(
-      invitesCount - declinedCount + 1,
-    )
-
-    const reccReviseCount = randomInt(reviewsCompletedCount + 1)
-
-    const reccAcceptCount = highishRandomInt(
-      reviewsCompletedCount - reccReviseCount + 1,
-    )
-
-    result.push({
-      name: randomName(),
-      invitesCount,
-      declinedCount,
-      reviewsCompletedCount,
-      avgReviewDuration:
-        reviewsCompletedCount > 0
-          ? Math.random() * Math.random() * 10 + 0.25
-          : 0,
-      reccReviseCount,
-      reccAcceptCount,
-      reccRejectCount:
-        reviewsCompletedCount - reccReviseCount - reccAcceptCount,
-    })
-  }
-
-  return result
-}
-
 const generateAuthorsData = () => {
   const result = []
 
@@ -118,6 +82,5 @@ const generateAuthorsData = () => {
 
 module.exports = {
   generateEditorsData,
-  generateReviewersData,
   generateAuthorsData,
 }

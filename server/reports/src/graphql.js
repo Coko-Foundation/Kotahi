@@ -4,7 +4,6 @@ const generateMovingAverages = require('./movingAverages')
 const {
   generateAuthorsData,
   generateEditorsData,
-  generateReviewersData,
 } = require('./mockReportingData')
 
 const capitalize = text => {
@@ -338,6 +337,140 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
   })
 }
 
+const getHandlingEditorsActivity = async (startDate, endDate, ctx) => {
+  const query = ctx.models.Manuscript.query()
+    .withGraphFetched(
+      '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated)]',
+    )
+    .where('created', '>=', new Date(startDate))
+    .where('created', '<', new Date(endDate))
+    .where({ parentId: null })
+    .orderBy('created')
+
+  const manuscripts = await query
+
+  const editorsData = {} // Map by user id
+
+  manuscripts.forEach(m => {
+    const editors = getTeamUserIdentities(m, 'Handling Editor')
+    const wasGivenToReviewers = !!m.teams.find(t => t.name === 'Reviewers')
+    const wasRevised = m.manuscriptVersions.length > 0
+
+    editors.forEach(e => {
+      let editorData = editorsData[e.id]
+
+      if (!editorData) {
+        editorData = {
+          name: e.name,
+          assignedCount: 0,
+          givenToReviewersCount: 0,
+          revisedCount: 0,
+          rejectedCount: 0,
+          acceptedCount: 0,
+          publishedCount: 0,
+        }
+        editorsData[e.id] = editorData
+      }
+
+      editorData.assignedCount += 1
+      if (wasGivenToReviewers) editorData.givenToReviewersCount += 1
+      if (wasRevised) editorData.revisedCount += 1
+      if (m.status === 'rejected') editorData.rejectedCount += 1
+      else if (m.published || m.status === 'accepted')
+        editorData.acceptedCount += 1
+      if (m.published) editorData.publishedCount += 1
+    })
+  })
+
+  return Object.values(editorsData)
+}
+
+const getReviewersActivity = async (startDate, endDate, ctx) => {
+  const query = ctx.models.Manuscript.query()
+    .withGraphFetched(
+      '[teams.[users.[defaultIdentity], members], reviews, manuscriptVersions(orderByCreated)]',
+    )
+    .where('created', '>=', new Date(startDate))
+    .where('created', '<', new Date(endDate))
+    .where({ parentId: null })
+    .orderBy('created')
+
+  const manuscripts = await query
+
+  const reviewersData = {} // Map by user id
+
+  manuscripts.forEach(m => {
+    const reviewersTeam = m.teams.find(t => t.name === 'Reviewers')
+    if (!reviewersTeam) return // continue
+
+    reviewersTeam.members.forEach(member => {
+      const reviewer = {
+        inviteDate: member.created,
+        id: member.userId,
+        status: member.status,
+      }
+
+      const review = m.reviews.find(
+        r => !r.isDecision && r.userId === reviewer.id,
+      )
+
+      if (!review) return // continue
+
+      // eslint-disable-next-line no-param-reassign
+      reviewer.recommendation = review.recommendation
+      // eslint-disable-next-line no-param-reassign
+      reviewer.duration = review.updated - reviewer.inviteDate
+
+      let reviewerData = reviewersData[reviewer.id]
+
+      if (!reviewerData) {
+        const reviewerUser = reviewersTeam.users.find(u => u.id === reviewer.id)
+
+        const name = reviewerUser
+          ? reviewerUser.defaultIdentity.name
+          : reviewer.id
+
+        reviewerData = {
+          name,
+          invitesCount: 0,
+          declinedCount: 0,
+          reviewsCompletedCount: 0,
+          reviewDurationsTotal: 0,
+          reviewsCount: 0,
+          reccReviseCount: 0,
+          reccAcceptCount: 0,
+          reccRejectCount: 0,
+        }
+        reviewersData[reviewer.id] = reviewerData
+      }
+
+      reviewerData.invitesCount += 1
+      if (reviewer.status === 'declined') reviewerData.declinedCount += 1
+      else if (reviewer.status === 'completed')
+        reviewerData.reviewsCompletedCount += 1
+      reviewerData.reviewDurationsTotal += reviewer.duration
+      reviewerData.reviewsCount += 1
+      if (reviewer.recommendation === 'revise')
+        reviewerData.reccReviseCount += 1
+      else if (reviewer.recommendation === 'accept')
+        reviewerData.reccAcceptCount += 1
+      else if (reviewer.recommendation === 'reject')
+        reviewerData.reccRejectCount += 1
+    })
+  })
+
+  return Object.values(reviewersData).map(d => ({
+    name: d.name,
+    invitesCount: d.invitesCount,
+    declinedCount: d.declinedCount,
+    reviewsCompletedCount: d.reviewsCompletedCount,
+    avgReviewDuration: d.reviewDurationsTotal / d.reviewsCount / day,
+    reccReviseCount: d.reccReviseCount,
+    reccAcceptCount: d.reccAcceptCount,
+    reccRejectCount: d.reccRejectCount,
+  }))
+}
+
 const resolvers = {
   Query: {
     async summaryActivity(_, { startDate, endDate, timeZoneOffset }, ctx) {
@@ -353,13 +486,13 @@ const resolvers = {
       return getManuscriptsActivity(startDate, endDate, ctx)
     },
     handlingEditorsActivity(_, { startDate, endDate }, ctx) {
+      return getHandlingEditorsActivity(startDate, endDate, ctx)
+    },
+    seniorEditorsActivity(_, { startDate, endDate }, ctx) {
       return generateEditorsData()
     },
-    managingEditorsActivity(_, { startDate, endDate }, ctx) {
-      return generateEditorsData()
-    },
-    reviewersActivity(_, { startDate, endDate }, ctx) {
-      return generateReviewersData()
+    async reviewersActivity(_, { startDate, endDate }, ctx) {
+      return getReviewersActivity(startDate, endDate, ctx)
     },
     authorsActivity(_, { startDate, endDate }, ctx) {
       return generateAuthorsData()
@@ -372,7 +505,7 @@ const typeDefs = `
     summaryActivity(startDate: DateTime, endDate: DateTime, timeZoneOffset: Int) : SummaryActivity
     manuscriptsActivity(startDate: DateTime, endDate: DateTime): [ManuscriptActivity]
     handlingEditorsActivity(startDate: DateTime, endDate: DateTime): [HandlingEditorActivity]
-    managingEditorsActivity(startDate: DateTime, endDate: DateTime): [HandlingEditorActivity]
+    seniorEditorsActivity(startDate: DateTime, endDate: DateTime): [HandlingEditorActivity]
     reviewersActivity(startDate: DateTime, endDate: DateTime): [ReviewerActivity]
     authorsActivity(startDate: DateTime, endDate: DateTime): [AuthorActivity]
   }

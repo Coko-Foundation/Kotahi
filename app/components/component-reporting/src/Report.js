@@ -43,7 +43,7 @@ const reportTypes = [
   'Summary',
   'Manuscript',
   'Handling editor',
-  'Managing editor',
+  'Senior editor',
   'Reviewer',
   'Author',
 ]
@@ -152,7 +152,7 @@ const getReport = (
     )
   }
 
-  if (reportType === 'Managing editor') {
+  if (reportType === 'Senior editor') {
     return (
       <Table
         // prettier-ignore
