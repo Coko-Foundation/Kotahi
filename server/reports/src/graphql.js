@@ -1,7 +1,4 @@
-// const logger = require('@pubsweet/logger')
 const generateMovingAverages = require('./movingAverages')
-
-const { generateAuthorsData } = require('./mockReportingData')
 
 const capitalize = text => {
   if (text.length <= 0) return ''
@@ -471,6 +468,51 @@ const getReviewersActivity = async (startDate, endDate, ctx) => {
   }))
 }
 
+const getAuthorsActivity = async (startDate, endDate, ctx) => {
+  const query = ctx.models.Manuscript.query()
+    .withGraphFetched(
+      '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated)]',
+    )
+    .where('created', '>=', new Date(startDate))
+    .where('created', '<', new Date(endDate))
+    .where({ parentId: null })
+    .orderBy('created')
+
+  const manuscripts = await query
+
+  const authorsData = {} // Map by user id
+
+  manuscripts.forEach(m => {
+    const authors = getTeamUserIdentities(m, 'Author')
+
+    authors.forEach(a => {
+      let authorData = authorsData[a.id]
+
+      if (!authorData) {
+        authorData = {
+          name: a.name,
+          unsubmittedCount: 0,
+          submittedCount: 0,
+          rejectedCount: 0,
+          revisionCount: 0,
+          acceptedCount: 0,
+          publishedCount: 0,
+        }
+        authorsData[a.id] = authorData
+      }
+
+      if (!m.status || m.status === 'new') authorData.unsubmittedCount += 1
+      else authorData.submittedCount += 1
+      if (m.status === 'rejected') authorData.rejectedCount += 1
+      if (m.manuscriptVersions.length > 0) authorData.revisionCount += 1
+      if (m.published || m.status === 'accepted') authorData.acceptedCount += 1
+      if (m.published) authorData.publishedCount += 1
+    })
+  })
+
+  return Object.values(authorsData)
+}
+
 const resolvers = {
   Query: {
     async summaryActivity(_, { startDate, endDate, timeZoneOffset }, ctx) {
@@ -496,17 +538,17 @@ const resolvers = {
         ...dailyAverageStats,
       }
     },
-    async manuscriptsActivity(_, { startDate, endDate }, ctx) {
+    manuscriptsActivity(_, { startDate, endDate }, ctx) {
       return getManuscriptsActivity(startDate, endDate, ctx)
     },
     editorsActivity(_, { startDate, endDate }, ctx) {
       return getEditorsActivity(startDate, endDate, ctx)
     },
-    async reviewersActivity(_, { startDate, endDate }, ctx) {
+    reviewersActivity(_, { startDate, endDate }, ctx) {
       return getReviewersActivity(startDate, endDate, ctx)
     },
     authorsActivity(_, { startDate, endDate }, ctx) {
-      return generateAuthorsData()
+      return getAuthorsActivity(startDate, endDate, ctx)
     },
   },
 }
