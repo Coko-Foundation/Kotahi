@@ -34,6 +34,7 @@ const TOOLTIP_ICON = 'style__InfoIcon'
 const TOOLTIP_TEXT = 'rc-tooltip-inner'
 const ARTICLES_COUNT = '[class*=Pagination] > strong'
 const PAGINATION_PAGE_BUTTON = 'Page '
+const CONFIRMATION_MESSAGE = '[class*=BulkDeleteModalContainer] > p'
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -173,6 +174,21 @@ export const ManuscriptsPage = {
   },
   clickDelete() {
     this.getDeleteButton().click()
+  },
+  getConfirButton() {
+    return cy.get(BUTTON).contains('Confirm')
+  },
+  clickConfirm() {
+    this.getConfirButton().click()
+  },
+  getConfirmationMessageForBulkDelete() {
+    return cy.get(CONFIRMATION_MESSAGE)
+  },
+  getCloseButton() {
+    return cy.get(BUTTON).contains('Close')
+  },
+  clickClose() {
+    this.getCloseButton().click()
   },
   getEditorName() {
     return cy.getByContainsClass(EDITOR_NAME_CELL)
