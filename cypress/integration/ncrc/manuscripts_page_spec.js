@@ -145,6 +145,15 @@ describe('manuscripts page tests', () => {
         ManuscriptsPage.getTableJournal().should('contain', data.journal)
       })
     })
+    it('article URL should be visible in the table', () => {
+      cy.fixture('submission_form_data').then(data => {
+        SubmissionFormPage.fillInArticleUrl(data.doi)
+        SubmissionFormPage.fillInArticleDescription(data.articleId)
+        Menu.clickManuscriptsAndAssertPageLoad()
+        ManuscriptsPage.getTableRowsCount().should('eq', 1)
+        ManuscriptsPage.getArticleTitleByRow(0).find('a').should('have.attr','href', data.doi)
+      })
+    })
   })
 
   context('submitted and evaluated article tests', () => {
