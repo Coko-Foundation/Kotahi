@@ -33,32 +33,6 @@ const lowishRandomInt = max => Math.floor(Math.random() ** 2 * max)
 const highishRandomInt = max => Math.floor(Math.random() ** 0.5 * max)
 const randomName = () => personNames[randomInt(personNames.length)]
 
-const generateEditorsData = () => {
-  const result = []
-
-  for (let i = 0; i < 50; i += 1) {
-    const assignedCount = highishRandomInt(40)
-    const givenToReviewersCount = highishRandomInt(assignedCount + 1)
-    const rejectedCount = lowishRandomInt(givenToReviewersCount + 1)
-
-    const acceptedCount = highishRandomInt(
-      givenToReviewersCount - rejectedCount + 1,
-    )
-
-    result.push({
-      name: randomName(),
-      assignedCount,
-      givenToReviewersCount,
-      revisedCount: randomInt(givenToReviewersCount + 1),
-      rejectedCount,
-      acceptedCount,
-      publishedCount: highishRandomInt(acceptedCount + 1),
-    })
-  }
-
-  return result
-}
-
 const generateAuthorsData = () => {
   const result = []
 
@@ -81,6 +55,5 @@ const generateAuthorsData = () => {
 }
 
 module.exports = {
-  generateEditorsData,
   generateAuthorsData,
 }

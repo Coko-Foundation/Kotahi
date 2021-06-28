@@ -1,10 +1,7 @@
 // const logger = require('@pubsweet/logger')
 const generateMovingAverages = require('./movingAverages')
 
-const {
-  generateAuthorsData,
-  generateEditorsData,
-} = require('./mockReportingData')
+const { generateAuthorsData } = require('./mockReportingData')
 
 const capitalize = text => {
   if (text.length <= 0) return ''
@@ -337,7 +334,7 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
   })
 }
 
-const getHandlingEditorsActivity = async (startDate, endDate, ctx) => {
+const getEditorsActivity = async (startDate, endDate, ctx) => {
   const query = ctx.models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated)]',
@@ -353,6 +350,9 @@ const getHandlingEditorsActivity = async (startDate, endDate, ctx) => {
 
   manuscripts.forEach(m => {
     const editors = getTeamUserIdentities(m, 'Handling Editor')
+    getTeamUserIdentities(m, 'Senior Editor').forEach(ed => {
+      if (!editors.some(e => e.id === ed.id)) editors.push(ed)
+    })
     const wasGivenToReviewers = !!m.teams.find(t => t.name === 'Reviewers')
     const wasRevised = m.manuscriptVersions.length > 0
 
@@ -499,11 +499,8 @@ const resolvers = {
     async manuscriptsActivity(_, { startDate, endDate }, ctx) {
       return getManuscriptsActivity(startDate, endDate, ctx)
     },
-    handlingEditorsActivity(_, { startDate, endDate }, ctx) {
-      return getHandlingEditorsActivity(startDate, endDate, ctx)
-    },
-    seniorEditorsActivity(_, { startDate, endDate }, ctx) {
-      return generateEditorsData()
+    editorsActivity(_, { startDate, endDate }, ctx) {
+      return getEditorsActivity(startDate, endDate, ctx)
     },
     async reviewersActivity(_, { startDate, endDate }, ctx) {
       return getReviewersActivity(startDate, endDate, ctx)
@@ -518,8 +515,7 @@ const typeDefs = `
   extend type Query {
     summaryActivity(startDate: DateTime, endDate: DateTime, timeZoneOffset: Int) : SummaryActivity
     manuscriptsActivity(startDate: DateTime, endDate: DateTime): [ManuscriptActivity]
-    handlingEditorsActivity(startDate: DateTime, endDate: DateTime): [HandlingEditorActivity]
-    seniorEditorsActivity(startDate: DateTime, endDate: DateTime): [HandlingEditorActivity]
+    editorsActivity(startDate: DateTime, endDate: DateTime): [EditorActivity]
     reviewersActivity(startDate: DateTime, endDate: DateTime): [ReviewerActivity]
     authorsActivity(startDate: DateTime, endDate: DateTime): [AuthorActivity]
   }
@@ -568,17 +564,7 @@ const typeDefs = `
     publishedDate: DateTime
   }
 
-  type HandlingEditorActivity {
-    name: String!
-    assignedCount: Int!
-    givenToReviewersCount: Int!
-    revisedCount: Int!
-    rejectedCount: Int!
-    acceptedCount: Int!
-    publishedCount: Int!
-  }
-
-  type ManagingEditorActivity {
+  type EditorActivity {
     name: String!
     assignedCount: Int!
     givenToReviewersCount: Int!

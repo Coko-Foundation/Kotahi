@@ -61,16 +61,7 @@ const getReportData = gql`
       status
       publishedDate
     }
-    handlingEditorsActivity(startDate: $startDate, endDate: $endDate) {
-      name
-      assignedCount
-      givenToReviewersCount
-      revisedCount
-      rejectedCount
-      acceptedCount
-      publishedCount
-    }
-    seniorEditorsActivity(startDate: $startDate, endDate: $endDate) {
+    editorsActivity(startDate: $startDate, endDate: $endDate) {
       name
       assignedCount
       givenToReviewersCount
@@ -135,10 +126,7 @@ const ReportPage = () => {
     <Report
       endDate={endDate}
       getAuthorsData={() => removeTypeName(data?.authorsActivity)}
-      getHandlingEditorsData={() =>
-        removeTypeName(data?.handlingEditorsActivity)
-      }
-      getManagingEditorsData={() => removeTypeName(data?.seniorEditorsActivity)}
+      getEditorsData={() => removeTypeName(data?.editorsActivity)}
       getManuscriptsData={() => removeTypeName(data?.manuscriptsActivity)}
       getReviewersData={() => removeTypeName(data?.reviewersActivity)}
       getSummaryData={() => data?.summaryActivity}

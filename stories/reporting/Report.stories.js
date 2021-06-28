@@ -13,8 +13,7 @@ export const Base = args => <Report {...args} />
 Base.args = {
   getSummaryData: generateSummaryData,
   getManuscriptsData: generateResearchObjectsData,
-  getHandlingEditorsData: generateEditorsData,
-  getManagingEditorsData: generateEditorsData,
+  getEditorsData: generateEditorsData,
   getReviewersData: generateReviewersData,
   getAuthorsData: generateAuthorsData,
 }

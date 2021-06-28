@@ -39,14 +39,7 @@ const SelectionLine = styled.div`
   margin-bottom: 1.5em;
 `
 
-const reportTypes = [
-  'Summary',
-  'Manuscript',
-  'Handling editor',
-  'Senior editor',
-  'Reviewer',
-  'Author',
-]
+const reportTypes = ['Summary', 'Manuscript', 'Editor', 'Reviewer', 'Author']
 
 const getTableDataWithSparkBars = (rows, labelMapper) => {
   if (rows.length < 1) return []
@@ -86,8 +79,7 @@ const getReport = (
   endDate,
   getSummaryData,
   getManuscriptsData,
-  getHandlingEditorsData,
-  getManagingEditorsData,
+  getEditorsData,
   getReviewersData,
   getAuthorsData,
 ) => {
@@ -132,7 +124,7 @@ const getReport = (
     )
   }
 
-  if (reportType === 'Handling editor') {
+  if (reportType === 'Editor') {
     return (
       <Table
         // prettier-ignore
@@ -145,29 +137,7 @@ const getReport = (
           { heading: 'Accepted', name: 'acceptedCount', width: '7em', flexGrow: 1 },
           { heading: 'Published', name: 'publishedCount', width: '7em', flexGrow: 1 },
         ]}
-        rows={getTableDataWithSparkBars(
-          getHandlingEditorsData(startDate, endDate),
-        )}
-      />
-    )
-  }
-
-  if (reportType === 'Senior editor') {
-    return (
-      <Table
-        // prettier-ignore
-        columnSchemas={[
-          { heading: 'Editor name', name: 'name', width: '12em', flexGrow: 3 },
-          { heading: 'Manuscripts assigned', name: 'assignedCount', width: '7em', flexGrow: 1 },
-          { heading: 'Assigned for review', name: 'givenToReviewersCount', width: '7em', flexGrow: 1 },
-          { heading: 'Revised', name: 'revisedCount', width: '7em', flexGrow: 1 },
-          { heading: 'Rejected', name: 'rejectedCount', width: '7em', flexGrow: 1 },
-          { heading: 'Accepted', name: 'acceptedCount', width: '7em', flexGrow: 1 },
-          { heading: 'Published', name: 'publishedCount', width: '7em', flexGrow: 1 },
-        ]}
-        rows={getTableDataWithSparkBars(
-          getManagingEditorsData(startDate, endDate),
-        )}
+        rows={getTableDataWithSparkBars(getEditorsData(startDate, endDate))}
       />
     )
   }
@@ -226,8 +196,7 @@ const Report = ({
   setEndDate,
   getSummaryData,
   getManuscriptsData,
-  getHandlingEditorsData,
-  getManagingEditorsData,
+  getEditorsData,
   getReviewersData,
   getAuthorsData,
 }) => {
@@ -278,8 +247,7 @@ const Report = ({
           endDate,
           getSummaryData,
           getManuscriptsData,
-          getHandlingEditorsData,
-          getManagingEditorsData,
+          getEditorsData,
           getReviewersData,
           getAuthorsData,
         )}
@@ -295,8 +263,7 @@ Report.propTypes = {
   setEndDate: PropTypes.func.isRequired,
   getSummaryData: PropTypes.func.isRequired,
   getManuscriptsData: PropTypes.func.isRequired,
-  getHandlingEditorsData: PropTypes.func.isRequired,
-  getManagingEditorsData: PropTypes.func.isRequired,
+  getEditorsData: PropTypes.func.isRequired,
   getReviewersData: PropTypes.func.isRequired,
   getAuthorsData: PropTypes.func.isRequired,
 }
