@@ -119,6 +119,9 @@ export const ManuscriptsPage = {
   getArticleLabel() {
     return cy.getByContainsClass(ARTICLE_LABEL)
   },
+  clickArticleLabel(nth) {
+    this.getArticleLabel().eq(nth).click()
+  },
   getArticleTopic(nth) {
     return cy.get(ARTICLE_TOPIC).eq(nth)
   },

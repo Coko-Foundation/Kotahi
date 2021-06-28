@@ -291,14 +291,35 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getLabelRow(0).should('contain', 'ready to evaluate')
       ManuscriptsPage.getLabelRow(1).should('contain', 'evaluated')
       ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluate')
-      ManuscriptsPage.clickTableHead(5)
+      ManuscriptsPage.clickTableHead(6)
       ManuscriptsPage.getArticleLabel().should('have.length', 3)
       ManuscriptsPage.getLabelRow(0).scrollIntoView().should('be.visible')
       ManuscriptsPage.getLabelRow(1).scrollIntoView().should('be.visible')
       ManuscriptsPage.getLabelRow(2).scrollIntoView().should('be.visible')
-      ManuscriptsPage.getLabelRow(0).should('contain', 'evaluated')
+       ManuscriptsPage.getLabelRow(0).should('contain', 'evaluated')
       ManuscriptsPage.getLabelRow(1).should('contain', 'ready to evaluate')
       ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluate')
+    })
+
+    it('filter article after label and url contain that label', () => {
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000)
+      ManuscriptsPage.clickArticleLabel(-1)
+      ManuscriptsPage.getTableRowsCount().should('eq', 2)
+      cy.url().should('contain', 'readyToEvaluate')
+      ManuscriptsPage.getLabelRow(0).should('contain', 'ready to evaluate')
+      ManuscriptsPage.getLabelRow(1).should('contain', 'ready to evaluate')
+      Menu.clickManuscriptsAndAssertPageLoad()
+      ManuscriptsPage.clickArticleLabel(1)
+      ManuscriptsPage.getTableRowsCount().should('eq', 1)
+      cy.url().should('contain', 'evaluated')
+       ManuscriptsPage.getLabelRow(0).should('contain', 'evaluated')
+       Menu.clickManuscriptsAndAssertPageLoad()
+       ManuscriptsPage.clickArticleLabel(0)
+      ManuscriptsPage.getTableRowsCount().should('eq', 2)
+      cy.url().should('contain', 'readyToEvaluate')
+      ManuscriptsPage.getLabelRow(0).should('contain', 'ready to evaluate')
+      ManuscriptsPage.getLabelRow(1).should('contain', 'ready to evaluate')
     })
 
     it('sort article by Description', () => {
@@ -321,7 +342,7 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.fillInArticleUrl(data.doi)
         SubmissionFormPage.fillInArticleDescription(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
-        SubmissionFormPage.clickDropdown(2)
+        SubmissionFormPage.clickDropdown(3)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.fillInMainFindings(data.mainFindings)
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
@@ -352,6 +373,58 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getStatus(0).should('contain', 'Submitted')
       cy.url().should('contain', 'submitted')
     })
+
+    it('combined filtering after status, topic and label, link content that combination', () => {
+      ManuscriptsPage.clickSubmit()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+      // fill the submit form and submit it
+      // eslint-disable-next-line jest/valid-expect-in-promise
+      cy.fixture('submission_form_data').then(data => {
+        SubmissionFormPage.fillInArticleUrl(data.doi)
+        SubmissionFormPage.fillInArticleDescription(data.articleId)
+        SubmissionFormPage.fillInOurTake(data.ourTake)
+        SubmissionFormPage.clickDropdown(3)
+        SubmissionFormPage.selectDropdownOption(5)
+        SubmissionFormPage.fillInMainFindings(data.mainFindings)
+        SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+        SubmissionFormPage.fillInLimitations(data.limitations)
+        SubmissionFormPage.fillInValueAdded(data.valueAdded)
+        SubmissionFormPage.clickDropdown(-3)
+        SubmissionFormPage.selectDropdownOption(0)
+        SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
+        SubmissionFormPage.fillInFirstAuthor(data.creator)
+        SubmissionFormPage.fillInDatePublished(data.date)
+        SubmissionFormPage.fillInJournal(data.journal)
+        SubmissionFormPage.fillInReviewer(data.creator)
+        SubmissionFormPage.fillInEditDate(data.date)
+        SubmissionFormPage.fillInReviewCreator(data.creator)
+        // eslint-disable-next-line
+        SubmissionFormPage.waitThreeSec()
+        SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
+      })
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000)
+      ManuscriptsPage.clickStatus(-1)
+      ManuscriptsPage.getTableRowsCount().should('eq', 3)
+      ManuscriptsPage.getStatus(0).should('contain', 'Unsubmitted')
+      cy.url().should('contain', 'new')
+      ManuscriptsPage.clickArticleTopic(1)
+      ManuscriptsPage.getTableRowsCount().should('eq', 2)
+      cy.url().should('contain', 'status=new&topic=diagnostics')
+      ManuscriptsPage.clickArticleLabel(0)
+      ManuscriptsPage.getTableRowsCount().should('eq', 1)
+      cy.url().should('contain', 'status=new&topic=diagnostics&label=readyToEvaluate')
+      
+    })
+
+
+
+
+
+
+
+
+
   })
 
   context('video chat button', () => {
