@@ -64,8 +64,10 @@ const getBarColor = (
   return Color.hsl(hue, saturation * 100, lightness * 100).hex()
 }
 
+const to1Dp = value => Math.round(value * 10) / 10
+
 const getDaysStringTo1Dp = valueDays => {
-  const roundedDays = Math.round(valueDays * 10) / 10
+  const roundedDays = to1Dp(valueDays)
   return `${roundedDays} day${roundedDays === 1 ? '' : 's'}`
 }
 
@@ -86,7 +88,7 @@ const SummaryReport = ({
   publishedCount,
   publishedTodayCount,
   avgPublishedDailyCount,
-  avgRevisingDailyCount,
+  avgInProgressDailyCount,
   durationsData,
   reviewAvgsTrace,
   completionAvgsTrace,
@@ -148,13 +150,13 @@ const SummaryReport = ({
           </CardHeader>
           <BigNumber>{publishedTodayCount}</BigNumber>
           <NoteRight>
-            Average {avgPublishedDailyCount}
+            Average {to1Dp(avgPublishedDailyCount)}
             <Tooltip content="Based on the selected date range" />
           </NoteRight>
-          <CardHeader>Manuscripts currently in revision</CardHeader>
+          <CardHeader>Manuscripts in progress</CardHeader>
           <BigNumber>{revisingCount}</BigNumber>
           <NoteRight>
-            Average {avgRevisingDailyCount}
+            Average {to1Dp(avgInProgressDailyCount)}
             <Tooltip content="Based on the selected date range" />
           </NoteRight>
         </BigNumbersCard>

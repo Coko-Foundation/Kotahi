@@ -34,7 +34,7 @@ export const generateSummaryData = () => {
     publishedCount: 4,
     publishedTodayCount: 4,
     avgPublishedDailyCount: 2.7,
-    avgRevisingDailyCount: 11.3,
+    avgInProgressDailyCount: 11.3,
     durationsData: generateDurationsData(),
   }
 }

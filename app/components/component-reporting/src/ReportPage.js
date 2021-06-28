@@ -30,7 +30,7 @@ const getReportData = gql`
       publishedTodayCount
       revisingNowCount
       avgPublishedDailyCount
-      avgRevisingDailyCount
+      avgInProgressDailyCount
       durationsData {
         date
         reviewDuration
@@ -49,14 +49,14 @@ const getReportData = gql`
       manuscriptNumber
       entryDate
       title
-      correspondingAuthor {
-        username
+      authors {
+        name
       }
       editors {
-        username
+        name
       }
       reviewers {
-        username
+        name
       }
       status
       publishedDate

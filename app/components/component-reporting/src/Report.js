@@ -105,13 +105,11 @@ const getReport = (
     const rows = getTableDataWithSparkBars(
       getManuscriptsData(startDate, endDate),
       (val, key) => {
-        if (key === 'editors' || key === 'reviewers')
+        if (['editors', 'reviewers', 'authors'].includes(key))
           return val.reduce(
-            (accum, curr) =>
-              accum ? `${accum}, ${curr.username}` : curr.username,
+            (accum, curr) => (accum ? `${accum}, ${curr.name}` : curr.name),
             null,
           )
-        if (key === 'correspondingAuthor') return val.username
         return val
       },
     )
@@ -123,7 +121,7 @@ const getReport = (
           { heading: 'Manuscript number', name: 'manuscriptNumber', width: '6.5em' },
           { heading: 'Entry date', name: 'entryDate', width: '7em' },
           { heading: 'Title', name: 'title', width: '16em', flexGrow: 4 },
-          { heading: 'Corresponding author', name: 'correspondingAuthor', width: '12em', flexGrow: 1 },
+          { heading: 'Author', name: 'authors', width: '12em', flexGrow: 1 },
           { heading: 'Editors', name: 'editors', width: '12em', flexGrow: 3 },
           { heading: 'Reviewers', name: 'reviewers', width: '14em', flexGrow: 3 },
           { heading: 'Status', name: 'status', width: '6em' },

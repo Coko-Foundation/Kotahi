@@ -4,10 +4,15 @@ const generateMovingAverages = require('./movingAverages')
 const {
   generateAuthorsData,
   generateEditorsData,
-  generateResearchObjectsData,
   generateReviewersData,
-  generateSummaryData,
 } = require('./mockReportingData')
+
+const capitalize = text => {
+  if (text.length <= 0) return ''
+  return text.charAt(0).toUpperCase() + text.slice(1)
+}
+
+const getIsoDateString = date => (date ? date.toISOString().slice(0, 10) : null)
 
 // Return mean of array, ignoring null or undefined items; return null if no valid values found
 const mean = values => {
@@ -49,6 +54,13 @@ const getDurationUntilPublished = m => {
   if (!start) start = m.created
 
   return m.published && start ? m.published.getTime() - start.getTime() : null
+}
+
+const getCompletedDate = manuscript => {
+  if (manuscript.published) return manuscript.published
+  const decision = manuscript.reviews.find(r => r.isDecision)
+  if (manuscript.status === 'rejected' && decision) return decision.updated
+  return null
 }
 
 const wasSubmitted = manuscript =>
@@ -181,6 +193,7 @@ const getDurationsTraces = async (startDate, endDate, ctx) => {
     .where('created', '>=', new Date(dataStart))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null })
+    .orderBy('created')
 
   const manuscripts = await query
 
@@ -191,19 +204,24 @@ const getDurationsTraces = async (startDate, endDate, ctx) => {
     if (!submittedDate || submittedDate >= endDate) return // continue
     const decision = m.reviews.find(r => r.isDecision)
     const reviewedDate = decision ? decision.created : null
-    let completedDate = null
-    if (m.published) completedDate = m.published
-    else if (m.status === 'rejected' && decision)
-      completedDate = decision.updated
+    const completedDate = getCompletedDate(m)
+
+    const reviewDuration = reviewedDate
+      ? (reviewedDate - submittedDate) / day
+      : 0 // TODO fallback to null, not 0
+
+    const fullDuration = completedDate
+      ? (completedDate - submittedDate) / day
+      : reviewDuration // TODO fallback to null, not reviewDuration
 
     durations.push({
       date: submittedDate,
-      reviewDuration: reviewedDate ? (reviewedDate - submittedDate) / day : 0, // TODO fallback to null, not 0
-      fullDuration: completedDate ? (completedDate - submittedDate) / day : 0, // TODO fallback to null, not 0
+      reviewDuration,
+      fullDuration,
     })
   })
 
-  const sortedDurations = durations.sort(d => d.date)
+  const sortedDurations = durations.sort((d0, d1) => d0.date - d1.date)
 
   const [reviewAvgs, completionAvgs] = generateMovingAverages(
     sortedDurations,
@@ -218,22 +236,121 @@ const getDurationsTraces = async (startDate, endDate, ctx) => {
   }
 }
 
+const getDailyAverageStats = async (startDate, endDate, ctx) => {
+  const dataStart = startDate - 365 * day // TODO: any better way to ensure we get all manuscripts still in progress during this date range?
+
+  const query = ctx.models.Manuscript.query()
+    .withGraphFetched('[reviews]')
+    .where('created', '>=', new Date(dataStart))
+    .where('created', '<', new Date(endDate))
+    .where({ parentId: null })
+    .orderBy('created')
+
+  const manuscripts = await query
+
+  const orderedSubmissionDates = manuscripts.map(m => m.submittedDate).sort()
+
+  const orderedCompletionDates = manuscripts
+    .map(m => getCompletedDate(m))
+    .sort()
+
+  const publishedTotal = manuscripts.filter(
+    m => m.published && m.published >= startDate,
+  ).length
+
+  let submI = 0
+  let compI = 0
+  let inProgressCount = 0
+
+  let dailyInProgressTotal = 0
+
+  for (let d = startDate + day; d < endDate; d += day) {
+    while (
+      submI < orderedSubmissionDates.length &&
+      orderedSubmissionDates[submI] <= d
+    ) {
+      inProgressCount += 1
+      submI += 1
+    }
+
+    while (
+      compI < orderedCompletionDates.length &&
+      orderedCompletionDates[compI] <= d
+    ) {
+      inProgressCount -= 1
+      compI += 1
+    }
+
+    dailyInProgressTotal += inProgressCount
+  }
+
+  const durationDays = (endDate - startDate) / day
+  return {
+    avgPublishedDailyCount: publishedTotal / durationDays,
+    avgInProgressDailyCount: dailyInProgressTotal / durationDays,
+  }
+}
+
+const getTeamUserIdentities = (manuscript, teamName) => {
+  const team = manuscript.teams.find(t => t.name === teamName)
+  if (!team) return []
+  const idents = []
+  team.users.forEach(u => {
+    if (!idents.includes(u.defaultIdentity)) idents.push(u.defaultIdentity)
+  })
+  return idents
+}
+
+const getManuscriptsActivity = async (startDate, endDate, ctx) => {
+  const query = ctx.models.Manuscript.query()
+    .withGraphFetched('[teams.[users.[defaultIdentity]]]')
+    .where('created', '>=', new Date(startDate))
+    .where('created', '<', new Date(endDate))
+    .where({ parentId: null })
+    .orderBy('created')
+
+  const manuscripts = await query
+
+  return manuscripts.map(m => {
+    const editors = getTeamUserIdentities(m, 'Senior Editor')
+    getTeamUserIdentities(m, 'Handling Editor').forEach(ident => {
+      if (!editors.some(i => i.id === ident.id)) editors.push(ident)
+    })
+
+    let statusLabel
+    if (m.published) {
+      if (m.status === 'accepted') statusLabel = 'published'
+      else statusLabel = `published, ${m.status}`
+    } else statusLabel = m.status
+
+    statusLabel = capitalize(statusLabel)
+
+    return {
+      manuscriptNumber: 'TBD',
+      entryDate: getIsoDateString(m.created),
+      title: m.meta.title,
+      authors: getTeamUserIdentities(m, 'Author'),
+      editors,
+      reviewers: getTeamUserIdentities(m, 'Reviewers'),
+      status: statusLabel,
+      publishedDate: getIsoDateString(m.published),
+    }
+  })
+}
+
 const resolvers = {
   Query: {
     async summaryActivity(_, { startDate, endDate, timeZoneOffset }, ctx) {
-      // avgPublishedDailyCount: 2.7,
-      // avgRevisingDailyCount: 11.3,
-
       return {
-        ...generateSummaryData(),
         ...(await getDateRangeSummaryStats(startDate, endDate, ctx)),
         publishedTodayCount: await getPublishedTodayCount(timeZoneOffset, ctx),
         revisingNowCount: await getRevisingNowCount(ctx),
         ...(await getDurationsTraces(startDate, endDate, ctx)),
+        ...(await getDailyAverageStats(startDate, endDate, ctx)),
       }
     },
-    manuscriptsActivity(_, { startDate, endDate }, ctx) {
-      return generateResearchObjectsData()
+    async manuscriptsActivity(_, { startDate, endDate }, ctx) {
+      return getManuscriptsActivity(startDate, endDate, ctx)
     },
     handlingEditorsActivity(_, { startDate, endDate }, ctx) {
       return generateEditorsData()
@@ -276,7 +393,7 @@ const typeDefs = `
     publishedTodayCount: Int!
     avgPublishedDailyCount: Float!
     revisingNowCount: Int!
-    avgRevisingDailyCount: Float!
+    avgInProgressDailyCount: Float!
     durationsData: [ManuscriptDuration]
     reviewAvgsTrace: [Vector]
     completionAvgsTrace: [Vector]
@@ -297,11 +414,11 @@ const typeDefs = `
     manuscriptNumber: String!
     entryDate: DateTime!
     title: String!
-    correspondingAuthor: User!
-    editors: [User!]!
-    reviewers: [User!]!
+    authors: [Identity!]!
+    editors: [Identity!]!
+    reviewers: [Identity!]!
     status: String!
-    publishedDate: DateTime!
+    publishedDate: DateTime
   }
 
   type HandlingEditorActivity {
