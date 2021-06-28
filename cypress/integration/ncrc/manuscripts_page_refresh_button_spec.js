@@ -66,6 +66,10 @@ describe('refresh button tests', () => {
         })
     })
 
+    it('the table should contain 100 entries', () => {
+      ManuscriptsPage.getTableRowsCount().should('eq', 100)
+    })
+
     it('at least one topic should exist per imported article', () => {
       ManuscriptsPage.getTableRowsCount().then(length => {
         // eslint-disable-next-line no-plusplus

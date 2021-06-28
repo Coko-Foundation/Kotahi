@@ -21,6 +21,7 @@ const ARTICLE_TITLE = '[class*=Table__Row]>td:nth-child(1)'
 const ARTICLE_LABEL = 'style__StyledTableLabel'
 const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 const TABLE_ROW = 'Table__Row'
+const TABLE_CELL = 'Table__Cell'
 const LABEL = 'style__StyledTableLabel'
 
 const ARTICLE_CHECKBOX =
@@ -32,7 +33,7 @@ const EDITOR_NAME_CELL = 'style__StyledAuthor'
 const TOOLTIP_ICON = 'style__InfoIcon'
 const TOOLTIP_TEXT = 'rc-tooltip-inner'
 const ARTICLES_COUNT = '[class*=Pagination] > strong'
-const PAGINATION_PAGE_BUTTON = '[class*=Pagination__Page] > button'
+const PAGINATION_PAGE_BUTTON = 'Page '
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -140,6 +141,9 @@ export const ManuscriptsPage = {
   getTableRowsCount() {
     return cy.getByContainsClass(TABLE_ROW).its('length')
   },
+  getTableJournal() {
+    return cy.getByContainsClass(TABLE_CELL).eq(1)
+  },
   getLabelRow(nth) {
     return cy.getByContainsClass(LABEL).eq(nth)
   },
@@ -182,11 +186,11 @@ export const ManuscriptsPage = {
   getNumberOfAvailableArticles() {
     return cy.get(ARTICLES_COUNT).eq(-1)
   },
-  getPaginationButtons() {
-    return cy.get(PAGINATION_PAGE_BUTTON)
+  getPaginationButton(nth) {
+    return cy.getByContainsAriaLabel(`${PAGINATION_PAGE_BUTTON}${nth}`)
   },
   clickPaginationButton(nth) {
-    this.getPaginationButtons().eq(nth).click({ force: true })
+    this.getPaginationButton(nth).click({ force: true })
   },
   getSelectButton() {
     return cy.get(BUTTON).contains('Select')

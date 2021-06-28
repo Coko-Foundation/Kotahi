@@ -78,6 +78,10 @@ describe('manuscripts page tests', () => {
         .should('contain', 'Editor')
         .and('be.visible')
     })
+
+    it('journal column should be visible', () => {
+      ManuscriptsPage.getTableHead(1).should('contain', 'Journal').and('be.visible')
+    })
   })
 
   context('unsubmitted article tests', () => {
@@ -130,6 +134,15 @@ describe('manuscripts page tests', () => {
           .should('be.visible')
           .should('contain', data.topic)
         ManuscriptsPage.getArticleLabel().should('contain', 'ready to evaluate')
+      })
+    })
+
+    it('journal field data should be visible in the table', () => {
+      cy.fixture('submission_form_data').then(data => {
+        SubmissionFormPage.fillInJournal(data.journal)
+        Menu.clickManuscriptsAndAssertPageLoad()
+        ManuscriptsPage.getTableRowsCount().should('eq', 1)
+        ManuscriptsPage.getTableJournal().should('contain', data.journal)
       })
     })
   })

@@ -16,7 +16,7 @@ export const ReviewersPage = {
     return cy.getByContainsClass(SECTION_TITLE).contains(title)
   },
   getInviteReviewerDropdown() {
-    return cy.getByContainsAreaLabel(INVITE_REVIEWER_DROPDOWN)
+    return cy.getByContainsAriaLabel(INVITE_REVIEWER_DROPDOWN)
   },
   clickInviteReviewerDropdown() {
     this.getInviteReviewerDropdown().click({ force: true })

@@ -132,7 +132,7 @@ export const SubmissionFormPage = {
     this.getWaxInputBox(2).find(CONTENT_EDITABLE_VALUE).fillInput(ethics)
   },
   getTypeOfResearchDropdown() {
-    return cy.getByContainsAreaLabel(TYPE_OF_RESEARCH_DROPDOWN)
+    return cy.getByContainsAriaLabel(TYPE_OF_RESEARCH_DROPDOWN)
   },
   clickTypeOfResearchDropdown() {
     this.getTypeOfResearchDropdown().click({ force: true })
@@ -171,19 +171,19 @@ export const SubmissionFormPage = {
     this.getKeywordsField().fillInput(keywords)
   },
   getHealthySubjectsStudyDropdown() {
-    return cy.getByContainsAreaLabel(HEALTHY_SUBJECTS_STUDY_DROPDOWN)
+    return cy.getByContainsAriaLabel(HEALTHY_SUBJECTS_STUDY_DROPDOWN)
   },
   clickHealthySubjectsStudyDropdown() {
     this.getHealthySubjectsStudyDropdown().click({ force: true })
   },
   getInvolvedHumanSubjectsDropdown() {
-    return cy.getByContainsAreaLabel(INVOLVED_HUMAN_SUBJECTS_DROPDOWN)
+    return cy.getByContainsAriaLabel(INVOLVED_HUMAN_SUBJECTS_DROPDOWN)
   },
   clickInvolvedHumanSubjectsDropdown() {
     this.getInvolvedHumanSubjectsDropdown().click({ force: true })
   },
   getAnimalResearchApprovedDropdown() {
-    return cy.getByContainsAreaLabel(ANIMAL_RESEARCH_APPROVED_DROPDOWN)
+    return cy.getByContainsAriaLabel(ANIMAL_RESEARCH_APPROVED_DROPDOWN)
   },
   clickAnimalResearchApprovedDropdown() {
     this.getAnimalResearchApprovedDropdown().click({ force: true })
@@ -201,7 +201,7 @@ export const SubmissionFormPage = {
     this.getOtherMethodsField().fillInput(text)
   },
   getFieldSthrenghtDropdown() {
-    return cy.getByContainsAreaLabel(FILED_STRENGTH_DROPDOWN)
+    return cy.getByContainsAriaLabel(FILED_STRENGTH_DROPDOWN)
   },
   clickFieldSthrenghtDropdown() {
     this.getFieldSthrenghtDropdown().click({ force: true })
