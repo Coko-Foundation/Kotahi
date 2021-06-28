@@ -1,5 +1,7 @@
 const logger = require('@pubsweet/logger')
 const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
+const { existsSync } = require('fs')
+const path = require('path')
 
 const resolvers = {
   Query: {
@@ -50,7 +52,26 @@ const resolvers = {
     // Authentication
     async currentUser(_, vars, ctx) {
       if (!ctx.user) return null
+      const avatarPlaceholder = '/static/profiles/default_avatar.svg'
       const user = await ctx.models.User.find(ctx.user.id)
+      const profilePicture = user.profilePicture ? user.profilePicture : ''
+
+      const profilePicturePath = path.join(
+        __dirname,
+        '../../..',
+        profilePicture.replace('/static/', ''),
+      )
+
+      if (
+        profilePicture !== avatarPlaceholder &&
+        !existsSync(profilePicturePath)
+      ) {
+        await ctx.models.User.query()
+          .update({ profilePicture: avatarPlaceholder })
+          .where('id', user.id)
+        user.profilePicture = avatarPlaceholder
+      }
+
       // eslint-disable-next-line no-underscore-dangle
       user._currentRoles = await user.currentRoles()
       return user
