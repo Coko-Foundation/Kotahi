@@ -474,12 +474,26 @@ const getReviewersActivity = async (startDate, endDate, ctx) => {
 const resolvers = {
   Query: {
     async summaryActivity(_, { startDate, endDate, timeZoneOffset }, ctx) {
+      const [
+        dateRangeSummaryStats,
+        publishedTodayCount,
+        revisingNowCount,
+        durationsTraces,
+        dailyAverageStats,
+      ] = await Promise.all([
+        getDateRangeSummaryStats(startDate, endDate, ctx),
+        getPublishedTodayCount(timeZoneOffset, ctx),
+        getRevisingNowCount(ctx),
+        getDurationsTraces(startDate, endDate, ctx),
+        getDailyAverageStats(startDate, endDate, ctx),
+      ])
+
       return {
-        ...(await getDateRangeSummaryStats(startDate, endDate, ctx)),
-        publishedTodayCount: await getPublishedTodayCount(timeZoneOffset, ctx),
-        revisingNowCount: await getRevisingNowCount(ctx),
-        ...(await getDurationsTraces(startDate, endDate, ctx)),
-        ...(await getDailyAverageStats(startDate, endDate, ctx)),
+        ...dateRangeSummaryStats,
+        publishedTodayCount,
+        revisingNowCount,
+        ...durationsTraces,
+        ...dailyAverageStats,
       }
     },
     async manuscriptsActivity(_, { startDate, endDate }, ctx) {
