@@ -147,7 +147,11 @@ const DecisionVersion = ({ form, current, version, parent }) => {
             </SectionHeader>
             <SectionRow>
               {parent.teams?.map(team => {
-                if (['seniorEditor', 'handlingEditor'].includes(team.role)) {
+                if (
+                  ['seniorEditor', 'handlingEditor', 'editor'].includes(
+                    team.role,
+                  )
+                ) {
                   return (
                     <p key={team.id}>
                       {get(config, `teams.${team.role}.name`)}:{' '}

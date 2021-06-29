@@ -42,6 +42,7 @@ const api = app => {
       loaders: loaders(),
       models: require('@pubsweet/models'),
       s3: res.s3,
+      s3Bucket: res.s3Bucket,
     }),
     formatError: err => {
       const error = isEmpty(err.originalError) ? err : err.originalError

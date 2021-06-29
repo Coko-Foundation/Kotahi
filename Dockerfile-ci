@@ -17,6 +17,7 @@ ENV CLIENT_PROTOCOL "http"
 ENV CLIENT_HOST "0.0.0.0"
 ENV CLIENT_PORT "4000"
 ENV INSTANCE_NAME $instance_name
+ENV MANUSCRIPTS_TABLE_COLUMNS $manuscripts_table_columns
 ENV HOME "/home/simplej"
 
 RUN mkdir -p ${HOME}

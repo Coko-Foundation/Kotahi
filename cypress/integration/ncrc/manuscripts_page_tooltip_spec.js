@@ -9,7 +9,7 @@ import { Menu } from '../../page-object/page-component/menu'
 
 describe('tooltip tests', () => {
   beforeEach(() => {
-    cy.task('restore', 'initialState')
+    cy.task('restore', 'initial_state_ncrc')
     cy.task('seedForms')
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
@@ -33,7 +33,7 @@ describe('tooltip tests', () => {
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getTooltipText().should('not.exist')
       ManuscriptsPage.getTooltipIcon().should('be.visible').trigger('mouseover')
-      ManuscriptsPage.getTooltipText().should('contain', data.abstract)
+      ManuscriptsPage.getTooltipText().should('contain', data.abstract).and('not.contain', '<p class="paragraph">')
     })
   })
 

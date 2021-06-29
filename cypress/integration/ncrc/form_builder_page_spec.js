@@ -8,8 +8,8 @@ import { SubmissionFormPage } from '../../page-object/submission-form-page'
 describe('form builder tests', () => {
   context('check form builder elements visibility', () => {
     beforeEach(() => {
-      // task to restore the database as per the  dumps/initialState.sql
-      cy.task('restore', 'initialState')
+      // task to restore the database as per the dumps/initial_state_ncrc.sql
+      cy.task('restore', 'initial_state_ncrc')
       cy.task('seedForms')
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -90,7 +90,7 @@ describe('form builder tests', () => {
         FormsPage.getComponentType().should('contain', 'CheckboxGroup')
         FormsPage.getFieldValidate().should('contain', 'Required')
         FormsPage.clickFormOptionWithText(data.ncrc.abstract)
-        FormsPage.getComponentType().should('contain', 'TextField')
+        FormsPage.getComponentType().should('contain', 'AbstractEditor')
         FormsPage.getFieldValidate().should('not.contain', 'Required')
         FormsPage.clickFormOptionWithText(data.ncrc.firstAuthor)
         FormsPage.getComponentType().should('contain', 'TextField')
@@ -127,17 +127,11 @@ describe('form builder tests', () => {
         FormsPage.getFieldValidate().should('contain', 'Required')
       })
     })
-    it('check DOI validation has default selected Yes and select No', () => {
-      FormsPage.clickFormOption(0)
-      FormsPage.getDoiValidation(0).should('have.prop', 'checked')
-      FormsPage.clickOptionsDoiVaildation(1)
-      FormsPage.getDoiValidation(1).should('have.prop', 'checked')
-    })
   })
   context('check submission form corresponds to form builder', () => {
     beforeEach(() => {
-      // task to restore the database as per the  dumps/initialState.sql
-      cy.task('restore', 'initialState')
+      // task to restore the database as per the dumps/initial_state_ncrc.sql
+      cy.task('restore', 'initial_state_ncrc')
       cy.task('seedForms')
       // login as admin
       cy.fixture('role_names').then(name => {
@@ -209,12 +203,12 @@ describe('form builder tests', () => {
       SubmissionFormPage.getFormOptionList(21).should('contain', 'Required')
     })
 
-    it('message for DOI invalid is visible ', () => {
+    it('message for DOI invalid should not exist ', () => {
       SubmissionFormPage.fillInArticleUrl('google.com')
       SubmissionFormPage.fillInArticleDescription('2')
-      SubmissionFormPage.getValidationErrorMessage('DOI is invalid')
-        .scrollIntoView()
-        .should('be.visible')
+      SubmissionFormPage.getValidationErrorMessage('DOI is invalid').should(
+        'not.exist',
+      )
     })
 
     it('check study design dropdown options', () => {

@@ -50,7 +50,7 @@ export const ControlPage = {
     return cy.getByContainsClass(PUBLISH_INFO_MESSAGE).invoke('text')
   },
   getAssignEditorDropdown() {
-    return cy.getByContainsAreaLabel(ASSIGN_EDITOR_DROPDOWN)
+    return cy.getByContainsAriaLabel(ASSIGN_EDITOR_DROPDOWN)
   },
   clickAssignEditorDropdown() {
     this.getAssignEditorDropdown().click({ force: true })

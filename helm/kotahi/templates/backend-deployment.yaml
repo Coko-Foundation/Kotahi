@@ -24,6 +24,11 @@ spec:
                 configMapKeyRef:
                   key: INSTANCE_NAME
                   name: env
+            - name: MANUSCRIPTS_TABLE_COLUMNS
+              valueFrom:
+                configMapKeyRef:
+                  key: MANUSCRIPTS_TABLE_COLUMNS
+                  name: env
             - name: NODE_ENV
               value: production
             - name: ORCID_CLIENT_ID
@@ -126,6 +131,11 @@ spec:
                 secretKeyRef:
                   key: S3_REGION
                   name: "{{ .Values.s3secret }}"
+            - name: S3_BUCKET
+              valueFrom:
+                secretKeyRef:
+                  key: S3_BUCKET
+                  name: orcid-secret
             - name: SERVER_PORT
               valueFrom:
                 configMapKeyRef:
@@ -137,6 +147,7 @@ spec:
                   key: USE_SANDBOXED_ORCID
                   name: env
           image: "{{ .Values.images.backend.repository }}:{{ .Values.images.backend.tag }}"
+          imagePullPolicy: Always
           command: ["/bin/sh", "-c"]
           args:
             - bash scripts/setupProdServer.sh;node ./startServer.js;

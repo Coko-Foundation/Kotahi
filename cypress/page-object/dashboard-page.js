@@ -7,6 +7,7 @@
  */
 
 const BUTTON = 'button'
+const HEADER = 'General__Heading'
 const SECTION_TITLE = 'General__Title'
 const SECTION_PLACEHOLDER = 'style__Placeholder'
 const SUBMISSION_TITLE = 'VersionTitle'
@@ -24,6 +25,9 @@ const VERSION_TITLE = 'VersionTitle__Root-sc'
 export const DashboardPage = {
   getSubmitButton() {
     return cy.get(BUTTON).contains('New submission')
+  },
+  getHeader() {
+    return cy.getByContainsClass(HEADER)
   },
   clickSubmit() {
     this.getSubmitButton().click()

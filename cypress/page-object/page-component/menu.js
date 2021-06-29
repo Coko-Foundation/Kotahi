@@ -1,4 +1,5 @@
 /// <reference types="Cypress" />
+import { DashboardPage } from '../dashboard-page'
 import { ManuscriptsPage } from '../manuscripts-page'
 
 /**
@@ -10,6 +11,7 @@ import { ManuscriptsPage } from '../manuscripts-page'
 const MENU_BUTTON = 'Menu__Item'
 const USER_BUTTON = 'Menu__UserItem'
 const BACKGROUND = 'Menu__Root'
+const MESSAGE_NOT_AUTHORISED = 'AdminPage__Root'
 
 export const Menu = {
   getDashboardButton() {
@@ -17,6 +19,11 @@ export const Menu = {
   },
   clickDashboard() {
     this.getDashboardButton().click()
+  },
+  clickDashboardAndVerifyPageLoaded() {
+    this.getDashboardButton().click()
+    cy.awaitDisappearSpinner()
+    DashboardPage.getHeader().should('contain', 'Dashboard')
   },
   getFormsButton() {
     return cy.getByContainsClass(MENU_BUTTON).contains('Forms')
@@ -55,6 +62,9 @@ export const Menu = {
   },
   getBackground() {
     return cy.getByContainsClass(BACKGROUND)
+  },
+  getMessageNotAuthorisedUser() {
+    return cy.getByContainsClass(MESSAGE_NOT_AUTHORISED)
   },
 }
 export default Menu

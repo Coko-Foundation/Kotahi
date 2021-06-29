@@ -49,6 +49,7 @@ module.exports = (opts = {}) => {
       'PUBLIC_CLIENT_HOST',
       'USE_SANDBOXED_ORCID',
       'INSTANCE_NAME',
+      'MANUSCRIPTS_TABLE_COLUMNS',
     ]),
   )
 

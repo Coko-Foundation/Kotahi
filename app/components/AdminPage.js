@@ -197,18 +197,6 @@ const AdminPage = () => {
           redirectLink={redirectLink}
         />
         <PrivateRoute
-          component={FormBuilderPage}
-          exact
-          path={formBuilderLink}
-          redirectLink={redirectLink}
-        />
-        <PrivateRoute
-          component={ManuscriptPage}
-          exact
-          path={`${urlFrag}/versions/:version/manuscript`}
-          redirectLink={redirectLink}
-        />
-        <PrivateRoute
           component={ReviewersPage}
           exact
           path={`${urlFrag}/versions/:version/reviewers`}
@@ -232,21 +220,6 @@ const AdminPage = () => {
           path={profileLink}
           redirectLink={redirectLink}
         />
-        <PrivateRoute
-          component={UsersManager}
-          path={userAdminLink}
-          redirectLink={redirectLink}
-        />
-        <PrivateRoute
-          component={Manuscripts}
-          path={manuscriptsLink}
-          redirectLink={redirectLink}
-        />
-        <PrivateRoute
-          component={ReportPage}
-          path={reportsLink}
-          redirectLink={redirectLink}
-        />
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
           <PrivateRoute
             component={SubmitPage}
@@ -254,6 +227,37 @@ const AdminPage = () => {
             path={`${urlFrag}/versions/:version/evaluation`}
             redirectLink={redirectLink}
           />
+        )}
+        {currentUser && currentUser.admin && (
+          <>
+            <PrivateRoute
+              component={FormBuilderPage}
+              exact
+              path={`${urlFrag}/admin/form-builder`}
+              redirectLink={redirectLink}
+            />
+            <PrivateRoute
+              component={ManuscriptPage}
+              exact
+              path={`${urlFrag}/versions/:version/manuscript`}
+              redirectLink={redirectLink}
+            />
+            <PrivateRoute
+              component={UsersManager}
+              path={`${urlFrag}/admin/users`}
+              redirectLink={redirectLink}
+            />
+            <PrivateRoute
+              component={Manuscripts}
+              path={`${urlFrag}/admin/manuscripts`}
+              redirectLink={redirectLink}
+            />
+            <PrivateRoute
+              component={ReportPage}
+              path={reportsLink}
+              redirectLink={redirectLink}
+            />
+          </>
         )}
       </Switch>
       <RolesUpdater />

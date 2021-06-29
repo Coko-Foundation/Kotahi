@@ -2,6 +2,9 @@ const { ref } = require('objection')
 const axios = require('axios')
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const { mergeWith, isArray } = require('lodash')
+const { pubsubManager } = require('pubsweet-server')
+
+const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
 const publishToCrossref = require('../../publishing/crossref')
 
@@ -12,6 +15,9 @@ const {
 
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
+const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
+
+let isImportInProgress = false
 
 const ManuscriptResolvers = ({ isVersion }) => {
   const resolvers = {
@@ -170,9 +176,23 @@ const resolvers = {
       return manuscript
     },
     async importManuscripts(_, props, ctx) {
-      const manuscripts = await importArticlesFromBiorxiv(ctx)
+      if (isImportInProgress) {
+        return null
+      }
 
-      return manuscripts
+      isImportInProgress = true
+
+      const pubsub = await getPubsub()
+      const manuscriptsFromBiorxiv = await importArticlesFromBiorxiv(ctx)
+
+      const manuscriptsFromPubmed = await importArticlesFromPubmed(ctx)
+
+      isImportInProgress = false
+      pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
+        manuscriptsImportStatus: true,
+      })
+
+      return manuscriptsFromBiorxiv.concat(manuscriptsFromPubmed)
     },
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
@@ -480,6 +500,15 @@ const resolvers = {
       return manuscript
     },
   },
+  Subscription: {
+    manuscriptsImportStatus: {
+      subscribe: async (_, vars, context) => {
+        const pubsub = await getPubsub()
+
+        return pubsub.asyncIterator(['IMPORT_MANUSCRIPTS_STATUS'])
+      },
+    },
+  },
   Query: {
     async manuscript(_, { id }, ctx) {
       // eslint-disable-next-line global-require
@@ -535,7 +564,6 @@ const resolvers = {
     async publishedManuscripts(_, { sort, offset, limit }, ctx) {
       const query = ctx.models.Manuscript.query()
         .whereNotNull('published')
-        .where('status', 'published')
         .withGraphFetched('[reviews.[comments], files, submitter]')
 
       const totalCount = await query.resultSize()
@@ -575,11 +603,7 @@ const resolvers = {
         .withGraphFetched(
           '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
         )
-        .modifiers({
-          orderByCreated(builder) {
-            builder.orderBy('created', 'desc')
-          },
-        })
+        .modify('orderBy', sort)
 
       if (filter && filter.status) {
         query.where({ status: filter.status })
@@ -593,19 +617,18 @@ const resolvers = {
         }
       }
 
-      const totalCount = await query.resultSize()
-
-      if (sort) {
-        const [sortName, sortDirection] = sort.split('_')
-
-        if (sortName.includes('submission:')) {
-          const fieldName = sortName.split(':')[1]
-          const result = `LOWER(submission->>'${fieldName}') ${sortDirection}`
-          query.orderByRaw(result)
-        } else {
-          query.orderBy(ref(sortName), sortDirection)
-        }
+      if (
+        ['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) &&
+        filter &&
+        parsedSubmission &&
+        parsedSubmission.label
+      ) {
+        query.whereRaw(
+          `submission->>'labels' LIKE '%${parsedSubmission.label}%'`,
+        )
       }
+
+      const totalCount = await query.resultSize()
 
       if (limit) {
         query.limit(limit)
@@ -681,6 +704,10 @@ const typeDefs = `
   #   updated_ASC
   #   updated_DESC
   # }
+  
+  extend type Subscription {
+    manuscriptsImportStatus: Boolean
+  }
 
   extend type Mutation {
     createManuscript(input: ManuscriptInput): Manuscript!

@@ -32,6 +32,7 @@ export {
 // Specific
 
 export const StyledButton = styled(Button)`
+  cursor: pointer;
   margin: 0 20px;
 `
 
@@ -91,6 +92,9 @@ export const StyledAuthor = styled.p`
 export const StyledTableLabel = styled.p`
   background-color: #ccc;
   border-radius: 7px;
+  cursor: ${['ncrc', 'colab'].includes(process.env.INSTANCE_NAME)
+    ? 'pointer'
+    : 'default'};
   padding: 0 10px;
   text-align: center;
   white-space: nowrap;
@@ -99,4 +103,18 @@ export const StyledTableLabel = styled.p`
 export const StyledDescriptionWrapper = styled.div`
   align-items: center;
   display: flex;
+`
+
+export const BulkDeleteModalContainer = styled.div`
+  background-color: white;
+  padding: 10px;
+`
+
+export const BulkDeleteModalButtons = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+export const BulkDeleteModalButton = styled(Button)`
+  cursor: pointer;
 `

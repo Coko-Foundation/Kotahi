@@ -16,15 +16,7 @@ const {
   pharmaceuticalInterventions,
 } = require('./topics')
 
-let isImportInProgress = false
-
 const getData = async ctx => {
-  if (isImportInProgress) {
-    return
-  }
-
-  isImportInProgress = true
-
   const dateTwoWeeksAgo =
     +new Date(new Date(Date.now()).toISOString().split('T')[0]) - 12096e5
 
@@ -92,7 +84,7 @@ const getData = async ctx => {
   const withoutDuplicates = importedManuscripts.filter(
     ({ rel_doi, version, rel_site }) =>
       !currentDOIs.includes(
-        `https://${rel_site.toLowerCase()}/content/${rel_doi}v${version}`,
+        `https://${rel_site.toLowerCase()}.org/content/${rel_doi}v${version}`,
       ),
   )
 
@@ -123,70 +115,122 @@ const getData = async ctx => {
     }
   }, {})
 
-  const newManuscripts = withoutDuplicates.map(
-    ({ rel_doi, rel_site, version, rel_title, rel_abs }) => {
-      const manuscriptTopics = Object.entries(topics)
-        .filter(([topicName, topicKeywords]) => {
-          return (
-            !!topicKeywords[0].filter(keyword => rel_abs.includes(keyword))
-              .length &&
-            !!topicKeywords[1].filter(keyword => rel_abs.includes(keyword))
-              .length
-          )
-        })
-        .map(([topicName]) => topicName)
+  const newManuscripts = withoutDuplicates
+    .map(
+      ({
+        rel_doi,
+        rel_site,
+        version,
+        rel_title,
+        rel_abs,
+        rel_date,
+        rel_authors,
+      }) => {
+        const manuscriptTopics = Object.entries(topics)
+          .filter(([topicName, topicKeywords]) => {
+            return (
+              !!topicKeywords[0].filter(keyword => rel_abs.includes(keyword))
+                .length &&
+              !!topicKeywords[1].filter(keyword => rel_abs.includes(keyword))
+                .length
+            )
+          })
+          .map(([topicName]) => topicName)
 
-      return {
-        status: 'new',
-        isImported: true,
-        importSource: biorxivImportSourceId.id,
-        importSourceServer: rel_site.toLowerCase(),
-        submission: {
-          ...emptySubmission,
-          articleURL: `https://${rel_site.toLowerCase()}/content/${rel_doi}v${version}`,
-          articleDescription: rel_title,
-          abstract: rel_abs,
-          topics: manuscriptTopics.length ? [manuscriptTopics[0]] : [],
-        },
-        meta: {
-          title: '',
-          notes: [
+        if (!manuscriptTopics.length) return null
+
+        const removeDuplicates = arr => {
+          return arr.filter((value, index) => arr.indexOf(value) === index)
+        }
+
+        const formatImportedTopics = topicsList => {
+          const formattedTopics = []
+
+          topicsList.forEach(topicElement => {
+            if (
+              topicElement === 'pharmaceuticalInterventions' ||
+              topicElement === 'nonPharmaceuticalInterventions'
+            ) {
+              formattedTopics.push(
+                'nonPharmaceuticalAndPharmaceuticalInterventions',
+              )
+            } else {
+              formattedTopics.push(topicElement)
+            }
+          })
+
+          return removeDuplicates(formattedTopics)
+        }
+
+        return {
+          status: 'new',
+          isImported: true,
+          importSource: biorxivImportSourceId.id,
+          importSourceServer: rel_site.toLowerCase(),
+          submission: {
+            ...emptySubmission,
+            firstAuthor: rel_authors
+              ? rel_authors.map(({ author_name }) => author_name).join(', ')
+              : [],
+            datePublished: rel_date,
+            articleURL: `https://${rel_site.toLowerCase()}.org/content/${rel_doi}v${version}`,
+            articleDescription: rel_title,
+            abstract: rel_abs,
+            journal: rel_site,
+            topics: manuscriptTopics.length
+              ? formatImportedTopics(manuscriptTopics)
+              : [],
+          },
+          meta: {
+            title: '',
+            notes: [
+              {
+                notesType: 'fundingAcknowledgement',
+                content: '',
+              },
+              {
+                notesType: 'specialInstructions',
+                content: '',
+              },
+            ],
+          },
+          submitterId: ctx.user.id,
+          channels: [
             {
-              notesType: 'fundingAcknowledgement',
-              content: '',
+              topic: 'Manuscript discussion',
+              type: 'all',
             },
             {
-              notesType: 'specialInstructions',
-              content: '',
+              topic: 'Editorial discussion',
+              type: 'editorial',
             },
           ],
-        },
-        submitterId: null,
-        channels: [
-          {
-            topic: 'Manuscript discussion',
-            type: 'all',
-          },
-          {
-            topic: 'Editorial discussion',
-            type: 'editorial',
-          },
-        ],
-        files: [],
-        reviews: [],
-        teams: [],
-      }
-    },
-  )
+          files: [],
+          reviews: [],
+          teams: [],
+        }
+      },
+    )
+    .filter(Boolean)
 
   if (!newManuscripts.length) {
-    isImportInProgress = false
-
     return []
   }
 
   try {
-    const inserted = await ctx.models.Manuscript.query().insert(newManuscripts)
+    const inserted = await ctx.models.Manuscript.query().upsertGraphAndFetch(
+      newManuscripts,
+      { relate: true },
+    )
+
+    // const teamsToInsert = insertedManuscripts.map(manuscript => {
+    //   return {
+    //     manuscriptId: manuscript.id,
+    //     ...manuscript.teams[0],
+    //   }
+    // })
+
+    // const insertedTeams = await ctx.models.Team.query().insert(teamsToInsert)
 
     if (lastImportDate.length) {
       await ArticleImportHistory.query()
@@ -203,13 +247,10 @@ const getData = async ctx => {
       })
     }
 
-    isImportInProgress = false
-
     return inserted
   } catch (e) {
     /* eslint-disable-next-line */
     console.error(e.message)
-    isImportInProgress = false
   }
 }
 

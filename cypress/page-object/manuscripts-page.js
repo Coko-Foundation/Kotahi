@@ -21,17 +21,20 @@ const ARTICLE_TITLE = '[class*=Table__Row]>td:nth-child(1)'
 const ARTICLE_LABEL = 'style__StyledTableLabel'
 const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 const TABLE_ROW = 'Table__Row'
+const TABLE_CELL = 'Table__Cell'
 const LABEL = 'style__StyledTableLabel'
-const ARTICLE_STATUS = '[class*=Badge__Status]'
 
-const ARTICLE_CHECKBOX =
-  '[class*=style__StyledDescriptionWrapper] > label > [type*=checkbox]'
+const ARTICLE_CHECKBOX = '[class*=Table__Cell] label > [type*=checkbox]'
 
 const SELECT_ALL_CHECKBOX = '[type=checkbox]'
 const NUMBER_OF_ARTICLES_SELECTED = 'style__SelectedManuscriptsNumber'
 const EDITOR_NAME_CELL = 'style__StyledAuthor'
 const TOOLTIP_ICON = 'style__InfoIcon'
 const TOOLTIP_TEXT = 'rc-tooltip-inner'
+const ARTICLES_COUNT = '[class*=Pagination] > strong'
+const PAGINATION_PAGE_BUTTON = 'Page '
+const CONFIRMATION_MESSAGE = '[class*=BulkDeleteModalContainer] > p'
+const IMPORT_CONFIRMATION_POPUP = '[class*=Toastify] > [role=alert]'
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -49,6 +52,12 @@ export const ManuscriptsPage = {
   clickSubmit() {
     this.getSubmitButton().click()
   },
+  getRefreshButton() {
+    return cy.get(BUTTON).contains('Refresh')
+  },
+  clickRefreshButton() {
+    this.getRefreshButton().click()
+  },
   getLiveChatButton() {
     return cy.get(LIVE_CHAT_BUTTON)
   },
@@ -61,6 +70,9 @@ export const ManuscriptsPage = {
   getEvaluationButton() {
     return cy.get(EVALUATION_BUTTON)
   },
+  getNthEvaluationButton(nth) {
+    return cy.get(EVALUATION_BUTTON).eq(nth)
+  },
   clickEvaluation() {
     this.getEvaluationButton().click()
   },
@@ -68,6 +80,15 @@ export const ManuscriptsPage = {
     this.clickEvaluation()
     cy.url({ timeout: 10000 }).should('contain', evaluate)
   },
+  clickEvaluationNth(nth) {
+    this.getNthEvaluationButton(nth).click()
+  },
+  clickEvaluationNthAndVerifyUrl(nth) {
+    this.clickEvaluationNth(nth)
+    cy.awaitDisappearSpinner()
+    cy.url({ timeout: 10000 }).should('contain', evaluate)
+  },
+
   getControlButton() {
     return cy.get(CONTROL_BUTTON)
   },
@@ -86,6 +107,9 @@ export const ManuscriptsPage = {
   getStatus(nth) {
     return this.getStatusField(nth).invoke('text')
   },
+  clickStatus(nth) {
+    this.getStatusField(nth).click()
+  },
   getTableHead(nth) {
     return cy.get(MANUSCRIPTS_TABLE_HEAD).eq(nth)
   },
@@ -98,8 +122,14 @@ export const ManuscriptsPage = {
   getArticleLabel() {
     return cy.getByContainsClass(ARTICLE_LABEL)
   },
+  clickArticleLabel(nth) {
+    this.getArticleLabel().eq(nth).click()
+  },
   getArticleTopic(nth) {
     return cy.get(ARTICLE_TOPIC).eq(nth)
+  },
+  getArticleTopicByRow(nth) {
+    return this.getNthTableRow(nth).find(ARTICLE_TOPIC)
   },
   clickArticleTopic(nth) {
     this.getArticleTopic(nth).click()
@@ -107,20 +137,20 @@ export const ManuscriptsPage = {
   getTableRow() {
     return cy.getByContainsClass(TABLE_ROW)
   },
-  getTableRows() {
+  getNthTableRow(nth) {
+    return this.getTableRow().eq(nth)
+  },
+  getTableRowsCount() {
     return cy.getByContainsClass(TABLE_ROW).its('length')
+  },
+  getTableJournal() {
+    return cy.getByContainsClass(TABLE_CELL).eq(1)
   },
   getLabelRow(nth) {
     return cy.getByContainsClass(LABEL).eq(nth)
   },
   getTableHeader() {
     return cy.get(TABLE_HEADER, { timeout: 15000 })
-  },
-  getArticleStatus(nth) {
-    return cy.get(ARTICLE_STATUS).eq(nth)
-  },
-  clickArticleStatus(nth) {
-    this.getArticleStatus(nth).click()
   },
   getAllArticleCheckboxes() {
     return cy.get(ARTICLE_CHECKBOX)
@@ -146,6 +176,21 @@ export const ManuscriptsPage = {
   clickDelete() {
     this.getDeleteButton().click()
   },
+  getConfirmButton() {
+    return cy.get(BUTTON).contains('Confirm')
+  },
+  clickConfirm() {
+    this.getConfirmButton().click()
+  },
+  getConfirmationMessageForBulkDelete() {
+    return cy.get(CONFIRMATION_MESSAGE)
+  },
+  getCloseButton() {
+    return cy.get(BUTTON).contains('Close')
+  },
+  clickClose() {
+    this.getCloseButton().click()
+  },
   getEditorName() {
     return cy.getByContainsClass(EDITOR_NAME_CELL)
   },
@@ -154,6 +199,24 @@ export const ManuscriptsPage = {
   },
   getTooltipText() {
     return cy.getByContainsClass(TOOLTIP_TEXT)
+  },
+  getNumberOfAvailableArticles() {
+    return cy.get(ARTICLES_COUNT).eq(-1)
+  },
+  getPaginationButton(nth) {
+    return cy.getByContainsAriaLabel(`${PAGINATION_PAGE_BUTTON}${nth}`)
+  },
+  clickPaginationButton(nth) {
+    this.getPaginationButton(nth).click({ force: true })
+  },
+  getSelectButton() {
+    return cy.get(BUTTON).contains('Select')
+  },
+  clickSelect() {
+    this.getSelectButton().click()
+  },
+  getSuccessfulImportPopup() {
+    return cy.get(IMPORT_CONFIRMATION_POPUP, { timeout: 600000 })
   },
 }
 export default ManuscriptsPage

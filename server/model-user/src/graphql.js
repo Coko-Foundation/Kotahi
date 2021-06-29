@@ -1,5 +1,7 @@
 const logger = require('@pubsweet/logger')
 const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
+const { existsSync } = require('fs')
+const path = require('path')
 
 const resolvers = {
   Query: {
@@ -50,7 +52,26 @@ const resolvers = {
     // Authentication
     async currentUser(_, vars, ctx) {
       if (!ctx.user) return null
+      const avatarPlaceholder = '/static/profiles/default_avatar.svg'
       const user = await ctx.models.User.find(ctx.user.id)
+      const profilePicture = user.profilePicture ? user.profilePicture : ''
+
+      const profilePicturePath = path.join(
+        __dirname,
+        '../../..',
+        profilePicture.replace('/static/', ''),
+      )
+
+      if (
+        profilePicture !== avatarPlaceholder &&
+        !existsSync(profilePicturePath)
+      ) {
+        await ctx.models.User.query()
+          .update({ profilePicture: avatarPlaceholder })
+          .where('id', user.id)
+        user.profilePicture = avatarPlaceholder
+      }
+
       // eslint-disable-next-line no-underscore-dangle
       user._currentRoles = await user.currentRoles()
       return user
@@ -101,8 +122,14 @@ const resolvers = {
         }
       }
     },
-    deleteUser(_, { id }, ctx) {
-      return ctx.models.User.delete(id, ctx)
+    async deleteUser(_, { id }, ctx) {
+      const user = await ctx.models.User.query().findById(id)
+      await ctx.models.Manuscript.query()
+        .update({ submitterId: null })
+        .where({ submitterId: id })
+
+      await ctx.models.User.query().where({ id }).delete()
+      return user
     },
     async updateUser(_, { id, input }, ctx) {
       if (input.password) {
@@ -112,7 +139,7 @@ const resolvers = {
         delete input.password
       }
 
-      return ctx.models.User.update(id, input, ctx)
+      return ctx.models.User.query().updateAndFetchById(id, JSON.parse(input))
     },
     // Authentication
     async loginUser(_, { input }, ctx) {
@@ -189,7 +216,7 @@ const typeDefs = `
   extend type Mutation {
     createUser(input: UserInput): User
     deleteUser(id: ID): User
-    updateUser(id: ID, input: UserInput): User
+    updateUser(id: ID, input: String): User
     updateCurrentUsername(username: String): User
   }
 
@@ -262,6 +289,7 @@ const typeDefs = `
     email: String!
     password: String
     rev: String
+    admin: Boolean
   }
 
   # Authentication

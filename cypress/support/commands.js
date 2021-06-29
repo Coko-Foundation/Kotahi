@@ -58,8 +58,8 @@ Cypress.Commands.add('getByContainsClass', className => {
   cy.get(`[class*='${className}']`)
 })
 
-Cypress.Commands.add('getByContainsAreaLabel', areaLabel => {
-  cy.get(`[aria-label*='${areaLabel}']`)
+Cypress.Commands.add('getByContainsAriaLabel', ariaLabel => {
+  cy.get(`[aria-label*='${ariaLabel}']`)
 })
 
 Cypress.Commands.add('getByName', name => {
@@ -83,7 +83,7 @@ Cypress.Commands.add('getByNameAndValue', (name, value) => {
 })
 
 Cypress.Commands.add('awaitDisappearSpinner', () => {
-  cy.get('[class*=Spinner__LoadingPage]', { timeout: 20000 }).should(
+  cy.get('[class*=Spinner__LoadingPage]', { timeout: 50000 }).should(
     'not.exist',
   )
 })

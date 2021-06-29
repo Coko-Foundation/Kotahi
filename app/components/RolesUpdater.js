@@ -16,7 +16,7 @@ const updateStuff = data => {
 const RolesUpdater = ({ children }) => {
   // This updates the current roles app-wide using Apollo's makeVar
   const { data, error, loading } = useQuery(GET_CURRENT_USER, {
-    pollInterval: 5000,
+    // pollInterval: 5000,
     notifyOnNetworkStatusChange: true,
     fetchPolicy: 'network-only',
     // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301

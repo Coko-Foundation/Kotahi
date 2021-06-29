@@ -6,7 +6,7 @@
       "component": "TextField",
       "name": "submission.articleURL",
       "description": "<p></p>",
-      "doiValidation": "true",
+      "doiValidation": "false",
       "validate": [
         {
           "value": "required",
@@ -247,7 +247,7 @@
     {
       "title": "Abstract",
       "id": "e93b5e84-a049-4a0f-9a7a-b573aea4f905",
-      "component": "TextField",
+      "component": "AbstractEditor",
       "name": "submission.abstract",
       "description": "<p></p>",
       "doiValidation": "false",

@@ -33,6 +33,7 @@ services:
       - S3_ENDPOINT=${S3_ENDPOINT}
       - S3_REGION=${S3_REGION}
       - HYPOTHESIS_API_KEY=${HYPOTHESIS_API_KEY}
+      - MANUSCRIPTS_TABLE_COLUMNS=${MANUSCRIPTS_TABLE_COLUMNS}
     entrypoint:
       [
         'bash',

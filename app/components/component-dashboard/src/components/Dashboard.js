@@ -68,7 +68,7 @@ const Dashboard = ({ history, ...props }) => {
   // Editors are always linked to the parent/original manuscript, not to versions
   const manuscriptsImEditorOf = dashboard
     .filter(submission =>
-      hasRole(submission, ['seniorEditor', 'handlingEditor']),
+      hasRole(submission, ['seniorEditor', 'handlingEditor', 'editor']),
     )
     .map(latestVersion)
 

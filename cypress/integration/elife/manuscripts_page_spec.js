@@ -349,7 +349,7 @@ describe('Manuscripts page tests', () => {
         )
       })
     })
-    it('assert atricle id is the first table head and contains submitted atricle id title', () => {
+    it('assert article id is the first table head and contains submitted atricle id title', () => {
       ManuscriptsPage.getTableHead(0).should('contain', 'Article Id')
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -453,6 +453,7 @@ describe('Manuscripts page tests', () => {
         cy.visit(url)
       })
       cy.awaitDisappearSpinner()
+      ResultAndSummaryPage.getContainer().should('exist').and('be.visible')
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         ResultAndSummaryPage.getDescription().should(
@@ -464,7 +465,7 @@ describe('Manuscripts page tests', () => {
           data.peerReview,
         )
         ResultAndSummaryPage.getReview().should('contain', data.review1)
-        ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
         ResultAndSummaryPage.getDate().should('contain', data.review1Date)
       })
     })
@@ -474,6 +475,7 @@ describe('Manuscripts page tests', () => {
         cy.visit(url)
       })
       cy.awaitDisappearSpinner()
+      ResultAndSummaryPage.getContainer().should('exist').and('be.visible')
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         ResultAndSummaryPage.getDescription().should(
@@ -485,7 +487,7 @@ describe('Manuscripts page tests', () => {
           data.peerReview,
         )
         ResultAndSummaryPage.getReview().should('contain', data.review2)
-        ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
         ResultAndSummaryPage.getDate().should('contain', data.review2Date)
       })
     })
@@ -495,6 +497,7 @@ describe('Manuscripts page tests', () => {
         cy.visit(url)
       })
       cy.awaitDisappearSpinner()
+      ResultAndSummaryPage.getContainer().should('exist').and('be.visible')
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         ResultAndSummaryPage.getDescription().should(
@@ -506,7 +509,7 @@ describe('Manuscripts page tests', () => {
           data.peerReview,
         )
         ResultAndSummaryPage.getReview().should('contain', data.review3)
-        ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
         ResultAndSummaryPage.getDate().should('contain', data.review3Date)
       })
     })
@@ -516,6 +519,7 @@ describe('Manuscripts page tests', () => {
         cy.visit(url)
       })
       cy.awaitDisappearSpinner()
+      ResultAndSummaryPage.getContainer().should('exist').and('be.visible')
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         ResultAndSummaryPage.getDescription().should(
@@ -527,7 +531,7 @@ describe('Manuscripts page tests', () => {
           data.evaluationSummary,
         )
         ResultAndSummaryPage.getReview().should('contain', data.summary)
-        ResultAndSummaryPage.getLinkTooriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
         ResultAndSummaryPage.getDate().should('contain', data.summaryDate)
       })
     })

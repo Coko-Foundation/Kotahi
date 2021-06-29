@@ -33,5 +33,6 @@ module.exports = {
     secretAccessKey: 'S3_ACCESS_KEY_SECRET',
     endpoint: 'S3_ENDPOINT',
     region: 'S3_REGION',
+    bucket: 'S3_BUCKET',
   },
 }

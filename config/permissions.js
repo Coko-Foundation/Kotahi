@@ -11,7 +11,8 @@ const userIsEditorQuery = async (user, manuscriptId) => {
     .where(builder =>
       builder
         .where({ role: 'seniorEditor' })
-        .orWhere({ role: 'handlingEditor' }),
+        .orWhere({ role: 'handlingEditor' })
+        .orWhere({ role: 'editor' }),
     )
 
   // Manuscript is optional...
@@ -180,12 +181,16 @@ const userIsAuthor = rule({ cache: 'strict' })(
       })
       .first()
 
-    const author = team
-      .$relatedQuery('members')
-      .where({ userId: ctx.user.id })
-      .first()
+    if (team) {
+      const author = team
+        .$relatedQuery('members')
+        .where({ userId: ctx.user.id })
+        .first()
 
-    return !!author
+      return !!author
+    }
+
+    return false
   },
 )
 

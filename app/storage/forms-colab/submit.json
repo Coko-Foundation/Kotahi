@@ -2,6 +2,36 @@
   "name": "Research Object Submission Form",
   "children": [
     {
+      "options": [
+        {
+          "label": "Ready to evaluate",
+          "value": "readyToEvaluate",
+          "id": "90eeb071-b99c-482c-9b62-3ed3e98bd6e8"
+        },
+        {
+          "label": "Evaluated",
+          "value": "evaluated",
+          "id": "e10b7c15-7c3d-4eb6-b490-6194003a87d8"
+        },
+        {
+          "label": "Ready to publish",
+          "value": "readyToPublish",
+          "id": "939e2f13-19ad-4c28-8a6a-142a97ddbbd2"
+        }
+      ],
+      "title": "Labels",
+      "id": "a94dd0b8-99a0-4555-9e59-0895fafa464e",
+      "component": "Select",
+      "name": "submission.labels",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "29274cdc-89e0-4ea2-90e8-d2437d23f1b6"
+        }
+      ]
+    },
+    {
       "title": "Research object links",
       "id": "534eb7b9-f1fc-43b7-ba79-184efb30c8e7",
       "component": "LinksInput",

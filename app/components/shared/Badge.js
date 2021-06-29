@@ -11,6 +11,11 @@ const Status = styled.span`
     css`
       padding: ${grid(0.5)} ${grid(1)};
     `}
+  ${props =>
+    props.clickable &&
+    css`
+      cursor: pointer;
+    `}
 `
 
 export const SuccessStatus = styled(Status)`
@@ -38,7 +43,6 @@ export const ErrorStatus = styled(Status)`
 `
 
 export const NormalStatus = styled(Status)`
-  cursor: pointer;
   ${props =>
     props.minimal
       ? css`
@@ -68,19 +72,19 @@ const label = (status, published) => {
   }
 
   if (isPublished) {
-    return labels[status]
-      ? `${labels[status]} & Published`
-      : `Unknown (${status} & Published})`
+    if (['accepted', 'evaluated', 'published'].includes(status))
+      return 'Published'
+    return `${labels[status] ?? `Unknown (${status})`} & Published`
   }
 
-  return labels[status] || `Unknown ${status}`
+  return labels[status] ?? `Unknown (${status})`
 }
 
 // TODO: Make this configurable
-export const StatusBadge = ({ status, published, minimal }) => {
-  if (status === 'accepted') {
+export const StatusBadge = ({ status, published, minimal, clickable }) => {
+  if (status === 'accepted' || status === 'published') {
     return (
-      <SuccessStatus minimal={minimal}>
+      <SuccessStatus clickable={clickable} minimal={minimal}>
         {label(status, published)}
       </SuccessStatus>
     )
@@ -88,11 +92,15 @@ export const StatusBadge = ({ status, published, minimal }) => {
 
   if (status === 'rejected') {
     return (
-      <ErrorStatus minimal={minimal}>{label(status, published)}</ErrorStatus>
+      <ErrorStatus clickable={clickable} minimal={minimal}>
+        {label(status, published)}
+      </ErrorStatus>
     )
   }
 
   return (
-    <NormalStatus minimal={minimal}>{label(status, published)}</NormalStatus>
+    <NormalStatus clickable={clickable} minimal={minimal}>
+      {label(status, published)}
+    </NormalStatus>
   )
 }

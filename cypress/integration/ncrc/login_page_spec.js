@@ -1,8 +1,17 @@
 /* eslint-disable jest/expect-expect */
 import { Menu } from '../../page-object/page-component/menu'
-import { login, manuscripts } from '../../support/routes'
+import {
+  dashboard,
+  formBuilder,
+  login,
+  manuscripts,
+  users,
+} from '../../support/routes'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { LoginPage } from '../../page-object/login-page'
+import { DashboardPage } from '../../page-object/dashboard-page'
+import { UsersPage } from '../../page-object/users-page'
+import { FormsPage } from '../../page-object/forms-page'
 
 describe('Login page tests', () => {
   it('page should display NCRC branding settings', () => {
@@ -31,8 +40,8 @@ describe('Login page tests', () => {
   it('branding settings should be visible after login', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('branding_settings').then(settings => {
-      // task to restore the database as per the  dumps/initialState.sql
-      cy.task('restore', 'initialState')
+      // task to restore the database as per the dumps/initial_state_ncrc.sql
+      cy.task('restore', 'initial_state_ncrc')
       cy.task('seedForms')
 
       // login as admin
@@ -59,8 +68,8 @@ describe('Login page tests', () => {
   })
 
   it('dashboard page should be visible to the logged in user', () => {
-    // task to restore the database as per the  dumps/initialState.sql
-    cy.task('restore', 'initialState')
+    // task to restore the database as per the dumps/initial_state_ncrc.sql
+    cy.task('restore', 'initial_state_ncrc')
     cy.task('seedForms')
 
     // login as admin
@@ -70,5 +79,46 @@ describe('Login page tests', () => {
     })
     cy.awaitDisappearSpinner()
     Menu.getDashboardButton().should('be.visible')
+  })
+  it('login as Reviewer/Editor', () => {
+    // task to restore the database as per the dumps/initial_state_ncrc.sql
+    cy.task('restore', 'initial_state_ncrc')
+    cy.task('seedForms')
+
+    // login as admin
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture('role_names').then(name => {
+      cy.login(name.role.reviewers.reviewer1, dashboard)
+    })
+    cy.awaitDisappearSpinner()
+    Menu.getDashboardButton().should('be.visible')
+    DashboardPage.getSectionTitleWithText("Manuscripts I'm editor of").should(
+      'be.visible',
+    )
+    Menu.getFormsButton().should('not.exist')
+    Menu.getUsersButton().should('not.exist')
+    Menu.getManuscriptsButton().should('not.exist')
+    Menu.getMyProfileButton().should('be.visible')
+  })
+  it('as Reviewer/Editor try to access the admin-specific pages', () => {
+    // task to restore the database as per the dumps/initial_state_ncrc.sql
+    cy.task('restore', 'initial_state_ncrc')
+    cy.task('seedForms')
+
+    // login as admin
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture('role_names').then(name => {
+      cy.login(name.role.reviewers.reviewer1, users)
+    })
+    cy.awaitDisappearSpinner()
+    UsersPage.getTitle().should('not.exist')
+    UsersPage.getDeleteButton().should('not.exist')
+    cy.visit(formBuilder)
+    cy.awaitDisappearSpinner()
+    FormsPage.getFormOptionList().should('not.exist')
+    cy.visit(manuscripts)
+    cy.awaitDisappearSpinner()
+    ManuscriptsPage.getTableHeader().should('not.exist')
+    ManuscriptsPage.getLiveChatButton().should('not.exist')
   })
 })

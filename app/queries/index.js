@@ -127,6 +127,7 @@ export const GET_MANUSCRIPTS = gql`
         created
         updated
         status
+        published
         teams {
           id
           role
@@ -189,5 +190,10 @@ export const IMPORT_MANUSCRIPTS = gql`
         }
       }
     }
+  }
+`
+export const IMPORTED_MANUSCRIPTS_SUBSCRIPTION = gql`
+  subscription manuscriptsImportStatus {
+    manuscriptsImportStatus
   }
 `

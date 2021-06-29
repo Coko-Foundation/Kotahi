@@ -10,8 +10,11 @@ const Root = styled.div`
 
 export default ({ version, className }) => {
   const title =
+    // eslint-disable-next-line no-nested-ternary
     version && version.meta && version.meta.title
       ? version.meta.title
+      : process.env.INSTANCE_NAME === 'ncrc'
+      ? JSON.parse(version.submission).articleDescription
       : 'Untitled'
 
   return <Root>{title}</Root>

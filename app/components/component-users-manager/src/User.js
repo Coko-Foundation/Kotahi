@@ -17,8 +17,20 @@ const DELETE_USER = gql`
   }
 `
 
+const UPDATE_USER = gql`
+  mutation($id: ID!, $input: String) {
+    updateUser(id: $id, input: $input) {
+      id
+      admin
+    }
+  }
+`
+
 const User = ({ user }) => {
   const [deleteUser] = useMutation(DELETE_USER)
+  const [updateUser] = useMutation(UPDATE_USER)
+
+  const makeUserText = user.admin ? 'Reviewer' : 'Admin'
 
   return (
     <Row>
@@ -37,6 +49,23 @@ const User = ({ user }) => {
         <Action onClick={() => deleteUser({ variables: { id: user.id } })}>
           Delete
         </Action>
+        <br />
+        {process.env.INSTANCE_NAME === 'ncrc' && (
+          <Action
+            onClick={() =>
+              updateUser({
+                variables: {
+                  id: user.id,
+                  input: JSON.stringify({
+                    admin: !user.admin,
+                  }),
+                },
+              })
+            }
+          >
+            Make {makeUserText}
+          </Action>
+        )}
       </LastCell>
     </Row>
   )

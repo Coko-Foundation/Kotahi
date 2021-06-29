@@ -1,6 +1,6 @@
 /// <reference types="Cypress" />
 import { ManuscriptsPage } from './manuscripts-page'
-import { submit } from '../support/routes'
+import { evaluate, submit } from '../support/routes'
 
 /**
  * Page object representing the form which has
@@ -57,16 +57,19 @@ const SUMMARY_CREATOR_FIELD = 'submission.summarycreator'
 
 // specific to ncrc
 const ARTICLE_DESCRIPTION_FIELD = 'submission.articleDescription'
+const STUDY_DESIGN_DROPDOWN = 'Study design'
+const LABELS_DROPDOWN = 'Labels'
+const EDIT_FINISHED_DROPDOWN = 'Edit finished'
+const COMPENDIUM_FEATURE_DROPDOWN = 'Compendium feature'
 const FIRST_AUTHOR_FIELD = 'submission.firstAuthor'
 const DATE_PUBLISHED_FIELD = 'submission.datePublished'
 const JOURNAL_FIELD = 'submission.journal'
 const REVIEWER_FIELD = 'submission.reviewer'
 const EDIT_DATE_FIELD = 'submission.editDate'
 const REVIEW_CREATOR_FIELD = 'submission.reviewCreator'
-const DROPDOWN = 'placeholder'
+// const DROPDOWN = '[class*=ValueContainer] > [class*=placeholder]'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
 const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
-const ABSTRACT_FIELD = 'submission.abstract'
 
 export const SubmissionFormPage = {
   getPageTitle() {
@@ -133,13 +136,16 @@ export const SubmissionFormPage = {
     this.getWaxInputBox(2).find(CONTENT_EDITABLE_VALUE).fillInput(ethics)
   },
   getTypeOfResearchDropdown() {
-    return cy.getByContainsAreaLabel(TYPE_OF_RESEARCH_DROPDOWN)
+    return cy.getByContainsAriaLabel(TYPE_OF_RESEARCH_DROPDOWN)
   },
   clickTypeOfResearchDropdown() {
     this.getTypeOfResearchDropdown().click({ force: true })
   },
   selectDropdownOption(nth) {
     return cy.get(DROPDOWN_OPTION_LIST).eq(nth).click()
+  },
+  selectDropdownOptionWithText(text) {
+    return cy.get(DROPDOWN_OPTION_LIST).contains(text).click()
   },
   getSuggestedField() {
     return cy.getByDataTestId(SUGGESTED_FIELD)
@@ -169,22 +175,46 @@ export const SubmissionFormPage = {
     this.getKeywordsField().fillInput(keywords)
   },
   getHealthySubjectsStudyDropdown() {
-    return cy.getByContainsAreaLabel(HEALTHY_SUBJECTS_STUDY_DROPDOWN)
+    return cy.getByContainsAriaLabel(HEALTHY_SUBJECTS_STUDY_DROPDOWN)
   },
   clickHealthySubjectsStudyDropdown() {
     this.getHealthySubjectsStudyDropdown().click({ force: true })
   },
   getInvolvedHumanSubjectsDropdown() {
-    return cy.getByContainsAreaLabel(INVOLVED_HUMAN_SUBJECTS_DROPDOWN)
+    return cy.getByContainsAriaLabel(INVOLVED_HUMAN_SUBJECTS_DROPDOWN)
   },
   clickInvolvedHumanSubjectsDropdown() {
     this.getInvolvedHumanSubjectsDropdown().click({ force: true })
   },
   getAnimalResearchApprovedDropdown() {
-    return cy.getByContainsAreaLabel(ANIMAL_RESEARCH_APPROVED_DROPDOWN)
+    return cy.getByContainsAriaLabel(ANIMAL_RESEARCH_APPROVED_DROPDOWN)
   },
   clickAnimalResearchApprovedDropdown() {
     this.getAnimalResearchApprovedDropdown().click({ force: true })
+  },
+  getStudyDesignDropdown() {
+    return cy.getByContainsAriaLabel(STUDY_DESIGN_DROPDOWN)
+  },
+  clickStudyDesignDropdown() {
+    this.getStudyDesignDropdown().click({ force: true })
+  },
+  getLabelsDropdown() {
+    return cy.getByContainsAriaLabel(LABELS_DROPDOWN)
+  },
+  clickLabelsDropdown() {
+    this.getLabelsDropdown().click({ force: true })
+  },
+  getEditFinishedDropdown() {
+    return cy.getByContainsAriaLabel(EDIT_FINISHED_DROPDOWN)
+  },
+  clickEditFinishedDropdown() {
+    this.getEditFinishedDropdown().click({ force: true })
+  },
+  getCompendiumFeatureDropdown() {
+    return cy.getByContainsAriaLabel(COMPENDIUM_FEATURE_DROPDOWN)
+  },
+  clickCompendiumFeatureDropdown() {
+    this.getCompendiumFeatureDropdown().click({ force: true })
   },
   getMethodsUsedCheckboxWithText(value) {
     return cy.getByNameAndValue(METHODS_USED_CHECKBOX, value)
@@ -199,7 +229,7 @@ export const SubmissionFormPage = {
     this.getOtherMethodsField().fillInput(text)
   },
   getFieldSthrenghtDropdown() {
-    return cy.getByContainsAreaLabel(FILED_STRENGTH_DROPDOWN)
+    return cy.getByContainsAriaLabel(FILED_STRENGTH_DROPDOWN)
   },
   clickFieldSthrenghtDropdown() {
     this.getFieldSthrenghtDropdown().click({ force: true })
@@ -236,7 +266,7 @@ export const SubmissionFormPage = {
   },
   clickSubmitResearchAndWaitPageLoad() {
     this.clickSubmitResearch()
-    cy.url().should('not.contain', submit)
+    cy.url().should('not.contain', submit).and('not.contain', evaluate)
     cy.awaitDisappearSpinner()
     ManuscriptsPage.getTableHeader().should('be.visible')
   },
@@ -361,14 +391,12 @@ export const SubmissionFormPage = {
   fillInSummaryCreator(summaryCreator) {
     this.getSummaryCreator().fillInput(summaryCreator)
   },
-
   getSummaryDate() {
     return cy.getByDataTestId(SUMMARY_DATE)
   },
   fillInSummaryDate(summaryDate) {
     this.getSummaryDate().fillInput(summaryDate)
   },
-
   getArticleDescriptionField() {
     return cy.getByName(ARTICLE_DESCRIPTION_FIELD)
   },
@@ -382,7 +410,7 @@ export const SubmissionFormPage = {
     this.getOurTakeField().find(CONTENT_EDITABLE_VALUE).fillInput(ourTake)
   },
   getOurTakeContent() {
-    return this.getOurTakeField().find('p')
+    return this.getOurTakeField().find('p').invoke('text')
   },
   getStudySettingField() {
     return this.getWaxInputBox(1)
@@ -437,14 +465,14 @@ export const SubmissionFormPage = {
   getValueAddedContent() {
     return this.getValueAddedField().find('p')
   },
-  getDropdown(nth) {
-    return cy.getByContainsClass(DROPDOWN).eq(nth)
-  },
-  clickDropdown(nth) {
-    this.getDropdown(nth).click({ force: true })
-  },
   getTopicsCheckboxWithText(value) {
     return cy.getByNameAndValue(TOPICS_CHECKBOX_LIST, value)
+  },
+  getCheckedTopics() {
+    return cy.get(`[name="${TOPICS_CHECKBOX_LIST}"][checked]`)
+  },
+  getCheckedTopicsCount() {
+    return cy.get(`[name="${TOPICS_CHECKBOX_LIST}"][checked]`).its('length')
   },
   clickTopicsCheckboxWithText(value) {
     this.getTopicsCheckboxWithText(value).click()
@@ -493,10 +521,13 @@ export const SubmissionFormPage = {
     this.getReviewCreatorField().fillInput(reviewCreator)
   },
   getAbstractField() {
-    return cy.getByDataTestId(ABSTRACT_FIELD)
+    return this.getWaxInputBox(5)
   },
   fillInAbstract(abstract) {
     this.getAbstractField().fillInput(abstract)
+  },
+  getAbstractContent() {
+    return this.getAbstractField().find('p').invoke('text')
   },
 }
 export default SubmissionFormPage

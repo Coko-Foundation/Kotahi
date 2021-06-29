@@ -62,6 +62,7 @@ const configureApp = app => {
 
   app.use((req, res, next) => {
     res.s3 = s3
+    res.s3Bucket = config.s3.bucket
     next()
   })
 

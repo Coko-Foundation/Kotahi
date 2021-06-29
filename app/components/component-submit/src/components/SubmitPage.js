@@ -11,7 +11,7 @@ import { publishManuscriptMutation } from '../../../component-review/src/compone
 import pruneEmpty from '../../../../shared/pruneEmpty'
 import { validateManuscript } from '../../../component-manuscripts/src/Manuscript'
 
-const updateMutation = gql`
+export const updateMutation = gql`
   mutation($id: ID!, $input: String) {
     updateManuscript(id: $id, input: $input) {
       id

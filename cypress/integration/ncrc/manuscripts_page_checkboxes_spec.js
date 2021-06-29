@@ -9,7 +9,7 @@ import { Menu } from '../../page-object/page-component/menu'
 describe('manuscripts page checkboxes tests', () => {
   context('unsubmitted manuscripts checkbox tests', () => {
     before(() => {
-      cy.task('restore', 'initialState')
+      cy.task('restore', 'initial_state_ncrc')
       cy.task('seedForms')
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -54,16 +54,28 @@ describe('manuscripts page checkboxes tests', () => {
       ManuscriptsPage.getSelectAllCheckbox().click()
       ManuscriptsPage.getSelectedArticlesCount().should('contain', 0)
     })
-    it('delete a selected article', () => {
-      ManuscriptsPage.getTableRows().should('eq', 3)
+    it('click Close to not delete the articles', () => {
+      ManuscriptsPage.getTableRowsCount().should('eq', 3)
       ManuscriptsPage.getSelectAllCheckbox().click()
       ManuscriptsPage.clickDelete()
+      ManuscriptsPage.clickClose()
+      ManuscriptsPage.getSelectedArticlesCount().should('contain', 3)
+    })
+    it('delete selected article', () => {
+      ManuscriptsPage.getTableRowsCount().should('eq', 3)
+      ManuscriptsPage.getSelectAllCheckbox().click()
+      ManuscriptsPage.clickDelete()
+      ManuscriptsPage.getConfirmationMessageForBulkDelete().should(
+        'contain',
+        'Please confirm you would like to delete selected articles',
+      )
+      ManuscriptsPage.clickConfirm()
       ManuscriptsPage.getTableRow().should('not.exist')
     })
   })
   context('submitted manuscripts checkbox tests', () => {
     it('checkbox should not be visible for submitted manuscripts', () => {
-      cy.task('restore', 'initialState')
+      cy.task('restore', 'initial_state_ncrc')
       cy.task('seedForms')
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -78,13 +90,13 @@ describe('manuscripts page checkboxes tests', () => {
         SubmissionFormPage.fillInArticleUrl(data.doi)
         SubmissionFormPage.fillInArticleDescription(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
-        SubmissionFormPage.clickDropdown(2)
+        SubmissionFormPage.clickStudyDesignDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.fillInMainFindings(data.mainFindings)
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickDropdown(-3)
+        SubmissionFormPage.clickLabelsDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
