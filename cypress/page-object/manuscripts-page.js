@@ -175,11 +175,11 @@ export const ManuscriptsPage = {
   clickDelete() {
     this.getDeleteButton().click()
   },
-  getConfirButton() {
+  getConfirmButton() {
     return cy.get(BUTTON).contains('Confirm')
   },
   clickConfirm() {
-    this.getConfirButton().click()
+    this.getConfirmButton().click()
   },
   getConfirmationMessageForBulkDelete() {
     return cy.get(CONFIRMATION_MESSAGE)

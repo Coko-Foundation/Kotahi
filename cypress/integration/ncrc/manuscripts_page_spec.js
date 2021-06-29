@@ -50,7 +50,7 @@ describe('manuscripts page tests', () => {
       // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.clickDropdown(-3)
+        SubmissionFormPage.clickLabelsDropdown()
         SubmissionFormPage.selectDropdownOption(1)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.clickTopicsCheckboxWithText('epidemiology')
@@ -113,13 +113,13 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.fillInArticleUrl(data.doi)
         SubmissionFormPage.fillInArticleDescription(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
-        SubmissionFormPage.clickDropdown(2)
+        SubmissionFormPage.clickStudyDesignDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.fillInMainFindings(data.mainFindings)
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickDropdown(-3)
+        SubmissionFormPage.clickLabelsDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
@@ -166,13 +166,13 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.fillInArticleUrl(data.doi)
         SubmissionFormPage.fillInArticleDescription(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
-        SubmissionFormPage.clickDropdown(2)
+        SubmissionFormPage.clickStudyDesignDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.fillInMainFindings(data.mainFindings)
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickDropdown(-3)
+        SubmissionFormPage.clickLabelsDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
@@ -204,6 +204,7 @@ describe('manuscripts page tests', () => {
           .scrollIntoView()
           .should('be.visible')
           .should('contain', data.topic)
+        ManuscriptsPage.getArticleTitleByRow(0).find('a').should('have.attr','href', data.doi)
       })
       ManuscriptsPage.getArticleLabel().should('contain', 'ready to evaluate')
     })
@@ -364,13 +365,13 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.fillInArticleUrl(data.doi)
         SubmissionFormPage.fillInArticleDescription(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
-        SubmissionFormPage.clickDropdown(3)
+        SubmissionFormPage.clickStudyDesignDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.fillInMainFindings(data.mainFindings)
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickDropdown(-3)
+        SubmissionFormPage.clickLabelsDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
@@ -405,13 +406,13 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.fillInArticleUrl(data.doi)
         SubmissionFormPage.fillInArticleDescription(data.articleId)
         SubmissionFormPage.fillInOurTake(data.ourTake)
-        SubmissionFormPage.clickDropdown(3)
+        SubmissionFormPage.clickStudyDesignDropdown()
         SubmissionFormPage.selectDropdownOption(5)
         SubmissionFormPage.fillInMainFindings(data.mainFindings)
         SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
         SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInValueAdded(data.valueAdded)
-        SubmissionFormPage.clickDropdown(-3)
+        SubmissionFormPage.clickLabelsDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
@@ -438,15 +439,6 @@ describe('manuscripts page tests', () => {
       cy.url().should('contain', 'status=new&topic=diagnostics&label=readyToEvaluate')
       
     })
-
-
-
-
-
-
-
-
-
   })
 
   context('video chat button', () => {
@@ -497,6 +489,7 @@ describe('manuscripts page tests', () => {
     it('check label field after bulk delete', () => {
       ManuscriptsPage.clickArticleCheckbox(1)
       ManuscriptsPage.clickDelete()
+      ManuscriptsPage.clickConfirm()
       ManuscriptsPage.getNumberOfAvailableArticles().should('contain', 1)
       ManuscriptsPage.getArticleLabel().should('contain', 'ready to evaluate')
     })

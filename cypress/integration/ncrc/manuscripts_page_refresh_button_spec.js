@@ -145,13 +145,13 @@ describe('refresh button tests', () => {
         .then(title => {
           cy.fixture('submission_form_data').then(data => {
             SubmissionFormPage.fillInOurTake(data.ourTake)
-            SubmissionFormPage.clickDropdown(2)
+            SubmissionFormPage.clickStudyDesignDropdown()
             SubmissionFormPage.selectDropdownOption(0)
             SubmissionFormPage.fillInMainFindings(data.mainFindings)
             SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
             SubmissionFormPage.fillInLimitations(data.limitations)
             SubmissionFormPage.fillInValueAdded(data.valueAdded)
-            SubmissionFormPage.clickDropdown(-3)
+            SubmissionFormPage.clickLabelsDropdown()
             SubmissionFormPage.selectDropdownOption(0)
             SubmissionFormPage.fillInFirstAuthor(data.creator)
             SubmissionFormPage.fillInDatePublished(data.date)

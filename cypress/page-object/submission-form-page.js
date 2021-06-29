@@ -57,13 +57,17 @@ const SUMMARY_CREATOR_FIELD = 'submission.summarycreator'
 
 // specific to ncrc
 const ARTICLE_DESCRIPTION_FIELD = 'submission.articleDescription'
+const STUDY_DESIGN_DROPDOWN = 'Study design'
+const LABELS_DROPDOWN = 'Labels'
+const EDIT_FINISHED_DROPDOWN = 'Edit finished'
+const COMPENDIUM_FEATURE_DROPDOWN = 'Compendium feature'
 const FIRST_AUTHOR_FIELD = 'submission.firstAuthor'
 const DATE_PUBLISHED_FIELD = 'submission.datePublished'
 const JOURNAL_FIELD = 'submission.journal'
 const REVIEWER_FIELD = 'submission.reviewer'
 const EDIT_DATE_FIELD = 'submission.editDate'
 const REVIEW_CREATOR_FIELD = 'submission.reviewCreator'
-const DROPDOWN = 'placeholder'
+const DROPDOWN = '[class*=ValueContainer] > [class*=placeholder]'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
 const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
 
@@ -187,6 +191,30 @@ export const SubmissionFormPage = {
   },
   clickAnimalResearchApprovedDropdown() {
     this.getAnimalResearchApprovedDropdown().click({ force: true })
+  },
+  getStudyDesignDropdown() {
+    return cy.getByContainsAriaLabel(STUDY_DESIGN_DROPDOWN)
+  },
+  clickStudyDesignDropdown() {
+    this.getStudyDesignDropdown().click({ force: true })
+  },
+  getLabelsDropdown() {
+    return cy.getByContainsAriaLabel(LABELS_DROPDOWN)
+  },
+  clickLabelsDropdown() {
+    this.getLabelsDropdown().click({ force: true })
+  },
+  getEditFinishedDropdown() {
+    return cy.getByContainsAriaLabel(EDIT_FINISHED_DROPDOWN)
+  },
+  clickEditFinishedDropdown() {
+    this.getEditFinishedDropdown().click({ force: true })
+  },
+  getCompendiumFeatureDropdown() {
+    return cy.getByContainsAriaLabel(COMPENDIUM_FEATURE_DROPDOWN)
+  },
+  clickCompendiumFeatureDropdown() {
+    this.getCompendiumFeatureDropdown().click({ force: true })
   },
   getMethodsUsedCheckboxWithText(value) {
     return cy.getByNameAndValue(METHODS_USED_CHECKBOX, value)
@@ -438,10 +466,7 @@ export const SubmissionFormPage = {
     return this.getValueAddedField().find('p')
   },
   getDropdown(nth) {
-    return cy.getByContainsClass(DROPDOWN).eq(nth)
-  },
-  clickDropdown(nth) {
-    this.getDropdown(nth).click({ force: true })
+    return cy.get(DROPDOWN).eq(nth)
   },
   getTopicsCheckboxWithText(value) {
     return cy.getByNameAndValue(TOPICS_CHECKBOX_LIST, value)
