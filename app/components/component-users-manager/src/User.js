@@ -50,20 +50,22 @@ const User = ({ user }) => {
           Delete
         </Action>
         <br />
-        <Action
-          onClick={() =>
-            updateUser({
-              variables: {
-                id: user.id,
-                input: JSON.stringify({
-                  admin: !user.admin,
-                }),
-              },
-            })
-          }
-        >
-          Make {makeUserText}
-        </Action>
+        {process.env.INSTANCE_NAME === 'ncrc' && (
+          <Action
+            onClick={() =>
+              updateUser({
+                variables: {
+                  id: user.id,
+                  input: JSON.stringify({
+                    admin: !user.admin,
+                  }),
+                },
+              })
+            }
+          >
+            Make {makeUserText}
+          </Action>
+        )}
       </LastCell>
     </Row>
   )
