@@ -23,7 +23,19 @@ const mean = values => {
   return sum / count
 }
 
-const dayMilliseconds = 24 * 60 * 60 * 1000
+/** Find the first element that meets the startCondition function, and return the subarray starting at that index.
+ * If no element meets startCondition, return an empty array
+ */
+const trim = (array, startCondition) => {
+  const start = array.findIndex(element => startCondition(element))
+  if (start < 0) return []
+  return array.slice(start)
+}
+
+const day = 24 * 60 * 60 * 1000
+const week = day * 7
+
+const dateSorter = (d0, d1) => d0.getTime() - d1.getTime()
 
 /** Return the datetime of the most recent midnight in the given timezone */
 const getLastMidnightInTimeZone = timeZoneOffset => {
@@ -35,19 +47,22 @@ const getLastMidnightInTimeZone = timeZoneOffset => {
   return new Date(transposedDate.getTime() - timeZoneOffset * 60000)
 }
 
+const getVersionsAsArray = manuscript => {
+  if (manuscript.manuscriptVersions)
+    return [manuscript, ...manuscript.manuscriptVersions]
+  return [manuscript]
+}
+
 /** Find the earliest manuscript version providing non-falsey result for func; return that result. Otherwise null.
  * func should expect as its single parameter a manuscript version.
  * Assumes versions are already date-ordered.
  */
 const seekFromEarliestVersion = (m, func) => {
-  let result = func(m)
-  if (result) return result
+  const manuscripts = getVersionsAsArray(m)
 
-  if (m.manuscriptVersions) {
-    for (let i = 0; i < m.manuscriptVersions.length; i += 1) {
-      result = func(m.manuscriptVersions[i])
-      if (result) return result
-    }
+  for (let i = 0; i < manuscripts.length; i += 1) {
+    const result = func(manuscripts[i])
+    if (result) return result
   }
 
   return null
@@ -58,17 +73,13 @@ const seekFromEarliestVersion = (m, func) => {
  * Assumes versions are already date-ordered.
  */
 const seekFromLatestVersion = (m, func) => {
-  let result
+  const manuscripts = getVersionsAsArray(m)
 
-  if (m.manuscriptVersions) {
-    for (let i = m.manuscriptVersions.length - 1; i >= 0; i -= 1) {
-      result = func(m.manuscriptVersions[i])
-      if (result) return result
-    }
+  for (let i = manuscripts.length - 1; i >= 0; i -= 1) {
+    const result = func(manuscripts[i])
+    if (result) return result
   }
 
-  result = func(m)
-  if (result) return result
   return null
 }
 
@@ -77,6 +88,8 @@ const getLastVersion = m => {
   if (!m.manuscriptVersions || m.manuscriptVersions.length <= 0) return m
   return m.manuscriptVersions[m.manuscriptVersions.length - 1]
 }
+
+const getFinalStatus = m => getLastVersion(m).status
 
 /** Get reviews for a single ms version, excluding "decision" reviews */
 const getTrueReviews = m =>
@@ -146,7 +159,7 @@ const reviewerWasInvited = manuscript =>
   )
 
 const reviewInviteWasAccepted = manuscript =>
-  seekFromEarliestVersion(manuscript, m => getTrueReviews(m).length > 0)
+  !!seekFromEarliestVersion(manuscript, m => getTrueReviews(m).length > 0)
 
 const wasReviewed = manuscript =>
   seekFromEarliestVersion(manuscript, m =>
@@ -176,10 +189,10 @@ const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
   const manuscripts = await query
 
   const avgPublishTimeDays =
-    mean(manuscripts.map(m => getDurationUntilPublished(m))) / dayMilliseconds
+    mean(manuscripts.map(m => getDurationUntilPublished(m))) / day
 
   const avgReviewTimeDays =
-    mean(manuscripts.map(m => getReviewingDuration(m))) / dayMilliseconds
+    mean(manuscripts.map(m => getReviewingDuration(m))) / day
 
   let unsubmittedCount = 0
   let submittedCount = 0
@@ -224,33 +237,19 @@ const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
 
 const getPublishedTodayCount = async (timeZoneOffset, ctx) => {
   const midnight = getLastMidnightInTimeZone(timeZoneOffset)
-
-  const query = ctx.models.Manuscript.query()
-    .where('published', '>=', midnight)
-    .andWhere({ parentId: null })
-
+  const query = ctx.models.Manuscript.query().where('published', '>=', midnight) // TODO this will double-count manuscripts republished twice today
   return query.resultSize()
 }
 
 const getRevisingNowCount = async ctx => {
-  const query = ctx.models.Manuscript.query()
-    .where(builder => builder.whereIn('status', ['revise', 'revising']))
-    .andWhere({ parentId: null })
+  const manuscripts = await ctx.models.Manuscript.query()
+    .withGraphFetched('[manuscriptVersions(orderByCreated)]')
+    .where({ parentId: null })
 
-  return query.resultSize()
+  return manuscripts.filter(m =>
+    ['revise', 'revising'].includes(getFinalStatus(m)),
+  ).length
 }
-
-/** Find the first element that meets the startCondition function, and return the subarray starting at that index + startAdjustment.
- * If no element meets startCondition, return an empty array
- */
-const trim = (array, startCondition) => {
-  const start = array.findIndex(element => startCondition(element))
-  if (start < 0) return []
-  return array.slice(start)
-}
-
-const day = 24 * 60 * 60 * 1000
-const week = day * 7
 
 const getDurationsTraces = async (startDate, endDate, ctx) => {
   const windowSizeForAvg = week
@@ -258,27 +257,22 @@ const getDurationsTraces = async (startDate, endDate, ctx) => {
 
   const dataStart = startDate - windowSizeForAvg / 2
 
-  const query = ctx.models.Manuscript.query()
+  const manuscripts = await ctx.models.Manuscript.query()
     .withGraphFetched('[reviews, manuscriptVersions(orderByCreated).[reviews]]')
     .where('created', '>=', new Date(dataStart))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null })
     .orderBy('created')
 
-  const manuscripts = await query
-
   const durations = []
 
   manuscripts.forEach(m => {
     const submittedDate = m.submittedDate ? m.submittedDate.getTime() : null
     if (!submittedDate || submittedDate >= endDate) return // continue
-    const decision = m.reviews.find(r => r.isDecision)
-    const reviewedDate = decision ? decision.created : null
     const completedDate = getCompletedDate(m)
 
-    const reviewDuration = reviewedDate
-      ? (reviewedDate - submittedDate) / day
-      : 0 // TODO fallback to null, not 0
+    let reviewDuration = getReviewingDuration(m) / day
+    if (!reviewDuration) reviewDuration = 0 // TODO fallback to null, not 0
 
     const fullDuration = completedDate
       ? (completedDate - submittedDate) / day
@@ -309,24 +303,27 @@ const getDurationsTraces = async (startDate, endDate, ctx) => {
 const getDailyAverageStats = async (startDate, endDate, ctx) => {
   const dataStart = startDate - 365 * day // TODO: any better way to ensure we get all manuscripts still in progress during this date range?
 
-  const query = ctx.models.Manuscript.query()
+  const manuscripts = await ctx.models.Manuscript.query()
     .withGraphFetched('[reviews, manuscriptVersions(orderByCreated).[reviews]]')
     .where('created', '>=', new Date(dataStart))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null })
     .orderBy('created')
 
-  const manuscripts = await query
-
-  const orderedSubmissionDates = manuscripts.map(m => m.submittedDate).sort()
+  const orderedSubmissionDates = manuscripts
+    .map(m => m.submittedDate)
+    .filter(d => d)
+    .sort(dateSorter)
 
   const orderedCompletionDates = manuscripts
     .map(m => getCompletedDate(m))
-    .sort()
+    .filter(d => d)
+    .sort(dateSorter)
 
-  const publishedTotal = manuscripts.filter(
-    m => m.published && m.published >= startDate,
-  ).length
+  const publishedTotal = manuscripts.filter(m => {
+    const pubDate = getLastPublishedDate(m)
+    return pubDate && pubDate >= startDate
+  }).length
 
   let submI = 0
   let compI = 0
@@ -362,18 +359,24 @@ const getDailyAverageStats = async (startDate, endDate, ctx) => {
 }
 
 const getTeamUserIdentities = (manuscript, teamName) => {
-  const team = manuscript.teams.find(t => t.name === teamName)
-  if (!team) return []
   const idents = []
-  team.users.forEach(u => {
-    if (!idents.includes(u.defaultIdentity)) idents.push(u.defaultIdentity)
+  const manuscripts = getVersionsAsArray(manuscript)
+  manuscripts.forEach(m => {
+    const team = m.teams.find(t => t.name === teamName)
+    if (!team) return // continue
+    team.users.forEach(u => {
+      if (!idents.some(i => i.userId === u.defaultIdentity.userId))
+        idents.push(u.defaultIdentity)
+    })
   })
   return idents
 }
 
 const getManuscriptsActivity = async (startDate, endDate, ctx) => {
   const query = ctx.models.Manuscript.query()
-    .withGraphFetched('[teams.[users.[defaultIdentity]]]')
+    .withGraphFetched(
+      '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity]]]]',
+    )
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null })
@@ -387,23 +390,25 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
       if (!editors.some(i => i.id === ident.id)) editors.push(ident)
     })
 
+    const lastVer = getLastVersion(m)
     let statusLabel
-    if (m.published) {
-      if (m.status === 'accepted') statusLabel = 'published'
-      else statusLabel = `published, ${m.status}`
-    } else statusLabel = m.status
+    if (lastVer.published) {
+      if (['accepted', 'published'].includes(lastVer.status))
+        statusLabel = 'published'
+      else statusLabel = `published, ${lastVer.status}`
+    } else statusLabel = lastVer.status
 
     statusLabel = capitalize(statusLabel)
 
     return {
       shortId: m.shortId.toString(),
       entryDate: getIsoDateString(m.created),
-      title: m.meta.title,
+      title: lastVer.meta.title,
       authors: getTeamUserIdentities(m, 'Author'),
       editors,
       reviewers: getTeamUserIdentities(m, 'Reviewers'),
       status: statusLabel,
-      publishedDate: getIsoDateString(m.published),
+      publishedDate: getIsoDateString(getLastPublishedDate(m)),
     }
   })
 }
