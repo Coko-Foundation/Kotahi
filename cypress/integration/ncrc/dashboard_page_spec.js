@@ -5,7 +5,7 @@ import { manuscripts } from '../../support/routes'
 
 describe('Dashboard page tests', () => {
   beforeEach(() => {
-    // task to restore the database as per the  dumps/initialState.sql
+    // task to restore the database as per the dumps/initial_state_ncrc.sql
     cy.task('restore', 'initial_state_ncrc')
     cy.task('seedForms')
 

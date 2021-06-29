@@ -14,7 +14,7 @@ import { SubmissionFormPage } from '../../page-object/submission-form-page'
 describe('refresh button tests', () => {
   context('visibility check', () => {
     it('check button exists and is visible', () => {
-      // task to restore the database as per the  dumps/initialState.sql
+      // task to restore the database as per the dumps/initial_state_ncrc.sql
       cy.task('restore', 'initial_state_ncrc')
       cy.task('seedForms')
 
@@ -31,7 +31,7 @@ describe('refresh button tests', () => {
 
   context('functionality check', () => {
     before(() => {
-      // task to restore the database as per the  dumps/initialState.sql
+      // task to restore the database as per the dumps/initial_state_ncrc.sql
       cy.task('restore', 'initial_state_ncrc')
       cy.task('seedForms')
       // login as admin

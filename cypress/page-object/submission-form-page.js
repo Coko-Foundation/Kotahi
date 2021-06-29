@@ -67,7 +67,7 @@ const JOURNAL_FIELD = 'submission.journal'
 const REVIEWER_FIELD = 'submission.reviewer'
 const EDIT_DATE_FIELD = 'submission.editDate'
 const REVIEW_CREATOR_FIELD = 'submission.reviewCreator'
-const DROPDOWN = '[class*=ValueContainer] > [class*=placeholder]'
+// const DROPDOWN = '[class*=ValueContainer] > [class*=placeholder]'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
 const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
 
@@ -464,9 +464,6 @@ export const SubmissionFormPage = {
   },
   getValueAddedContent() {
     return this.getValueAddedField().find('p')
-  },
-  getDropdown(nth) {
-    return cy.get(DROPDOWN).eq(nth)
   },
   getTopicsCheckboxWithText(value) {
     return cy.getByNameAndValue(TOPICS_CHECKBOX_LIST, value)

@@ -9,7 +9,7 @@ import { Menu } from '../../page-object/page-component/menu'
 
 describe('manuscripts page tests', () => {
   beforeEach(() => {
-    // task to restore the database as per the  dumps/initialState.sql
+    // task to restore the database as per the dumps/initial_state_ncrc.sql
     cy.task('restore', 'initial_state_ncrc')
     cy.task('seedForms')
 
@@ -101,13 +101,13 @@ describe('manuscripts page tests', () => {
       SubmissionFormPage.getArticleUrl().should('have.value', '')
       // eslint-disable-next-line
       SubmissionFormPage.getOurTakeContent().should('be.eq', '')
-      SubmissionFormPage.getDropdown(0).should('have.value', '')
+      SubmissionFormPage.getStudyDesignDropdown().should('have.value', '')
       SubmissionFormPage.getStudySettingContent().should('have.value', '')
       SubmissionFormPage.getMainFindingsContent().should('have.value', '')
       SubmissionFormPage.getStudyStrengthsContent().should('have.value', '')
       SubmissionFormPage.getLimitationsContent().should('have.value', '')
       SubmissionFormPage.getValueAddedContent().should('have.value', '')
-      SubmissionFormPage.getDropdown(1).should('have.value', '')
+      SubmissionFormPage.getLabelsDropdown().should('have.value', '')
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleUrl(data.doi)

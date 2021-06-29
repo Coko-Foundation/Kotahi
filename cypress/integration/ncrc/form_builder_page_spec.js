@@ -8,7 +8,7 @@ import { SubmissionFormPage } from '../../page-object/submission-form-page'
 describe('form builder tests', () => {
   context('check form builder elements visibility', () => {
     beforeEach(() => {
-      // task to restore the database as per the  dumps/initialState.sql
+      // task to restore the database as per the dumps/initial_state_ncrc.sql
       cy.task('restore', 'initial_state_ncrc')
       cy.task('seedForms')
       // login as admin
@@ -130,7 +130,7 @@ describe('form builder tests', () => {
   })
   context('check submission form corresponds to form builder', () => {
     beforeEach(() => {
-      // task to restore the database as per the  dumps/initialState.sql
+      // task to restore the database as per the dumps/initial_state_ncrc.sql
       cy.task('restore', 'initial_state_ncrc')
       cy.task('seedForms')
       // login as admin
