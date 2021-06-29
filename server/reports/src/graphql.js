@@ -1,13 +1,15 @@
 const generateMovingAverages = require('./movingAverages')
 
+/** Capitalize the first letter of the string */
 const capitalize = text => {
   if (text.length <= 0) return ''
   return text.charAt(0).toUpperCase() + text.slice(1)
 }
 
+/** Get date string in the form yyyy-mm-dd */
 const getIsoDateString = date => (date ? date.toISOString().slice(0, 10) : null)
 
-// Return mean of array, ignoring null or undefined items; return null if no valid values found
+/** Return mean of array, ignoring null or undefined items; return null if no valid values found */
 const mean = values => {
   let sum = 0
   let count = 0
@@ -23,36 +25,110 @@ const mean = values => {
 
 const dayMilliseconds = 24 * 60 * 60 * 1000
 
-// Get duration from first reviewer assigned until last review update (for first revision of manuscript only)
-const getReviewingDuration = manuscript => {
-  const nonDecisionReviews = manuscript.reviews.filter(r => !r.isDecision)
-  if (nonDecisionReviews.length < 1) return null
-
-  // Ignore 'decision' reviews, which are not really reviews but decisions made by the editor.
-  const latestReview = nonDecisionReviews.reduce(
-    (accum, curr) => Math.max(accum, curr.updated.getTime()),
-    nonDecisionReviews[0].updated.getTime(),
-  )
-
-  // We can tell when the first reviewer was assigned from when the 'Reviewers' team was created.
-  const reviewingStart = manuscript.teams
-    .find(t => t.name === 'Reviewers')
-    .created.getTime()
-
-  return latestReview - reviewingStart
+/** Return the datetime of the most recent midnight in the given timezone */
+const getLastMidnightInTimeZone = timeZoneOffset => {
+  const transposedDate = new Date(Date.now() + timeZoneOffset * 60000)
+  transposedDate.setUTCHours(0)
+  transposedDate.setUTCMinutes(0)
+  transposedDate.setUTCSeconds(0)
+  transposedDate.setUTCMilliseconds(0)
+  return new Date(transposedDate.getTime() - timeZoneOffset * 60000)
 }
 
+/** Find the earliest manuscript version providing non-falsey result for func; return that result. Otherwise null.
+ * func should expect as its single parameter a manuscript version.
+ * Assumes versions are already date-ordered.
+ */
+const seekFromEarliestVersion = (m, func) => {
+  let result = func(m)
+  if (result) return result
+
+  if (m.manuscriptVersions) {
+    for (let i = 0; i < m.manuscriptVersions.length; i += 1) {
+      result = func(m.manuscriptVersions[i])
+      if (result) return result
+    }
+  }
+
+  return null
+}
+
+/** Find the latest manuscript version providing non-falsey result for func; return that result. Otherwise null.
+ * func should expect as its single parameter a manuscript version.
+ * Assumes versions are already date-ordered.
+ */
+const seekFromLatestVersion = (m, func) => {
+  let result
+
+  if (m.manuscriptVersions) {
+    for (let i = m.manuscriptVersions.length - 1; i >= 0; i -= 1) {
+      result = func(m.manuscriptVersions[i])
+      if (result) return result
+    }
+  }
+
+  result = func(m)
+  if (result) return result
+  return null
+}
+
+/** Get the last manuscript version. Assumes the versions are already date ordered. */
+const getLastVersion = m => {
+  if (!m.manuscriptVersions || m.manuscriptVersions.length <= 0) return m
+  return m.manuscriptVersions[m.manuscriptVersions.length - 1]
+}
+
+/** Get reviews for a single ms version, excluding "decision" reviews */
+const getTrueReviews = m =>
+  m.reviews ? m.reviews.filter(r => !r.isDecision) : []
+
+/** Get duration from first reviewer assigned until last review update (for first revision of manuscript only) */
+const getReviewingDuration = manuscript => {
+  const reviewingStart = seekFromEarliestVersion(manuscript, m => {
+    if (!m.teams) return null
+    const reviewersTeam = m.teams.find(t => t.name === 'Reviewers')
+    if (!reviewersTeam) return null
+    return reviewersTeam.created.getTime()
+  })
+
+  if (!reviewingStart) return null
+
+  const reviewingEnd = seekFromLatestVersion(manuscript, m => {
+    const reviews = getTrueReviews(m)
+    if (reviews.length <= 0) return null
+    return reviews.reduce(
+      (accum, curr) => Math.max(accum, curr.updated.getTime()),
+      reviews[0].updated.getTime(),
+    )
+  })
+
+  if (!reviewingEnd) return null
+
+  return reviewingEnd - reviewingStart
+}
+
+const getLastPublishedDate = manuscript =>
+  seekFromLatestVersion(manuscript, m => m.published)
+
+/** From submission until last publish date */
 const getDurationUntilPublished = m => {
   let start = m.submittedDate
   if (!start) start = m.created
-
-  return m.published && start ? m.published.getTime() - start.getTime() : null
+  const publishedDate = getLastPublishedDate(m)
+  return publishedDate && start
+    ? publishedDate.getTime() - start.getTime()
+    : null
 }
 
-const getCompletedDate = manuscript => {
-  if (manuscript.published) return manuscript.published
-  const decision = manuscript.reviews.find(r => r.isDecision)
-  if (manuscript.status === 'rejected' && decision) return decision.updated
+const getCompletedDate = m => {
+  const lastPublishedDate = getLastPublishedDate(m)
+  if (lastPublishedDate) return lastPublishedDate
+
+  const rejectionReview = getLastVersion(m).reviews.find(
+    r => r.isDecision && r.recommendation === 'reject',
+  )
+
+  if (rejectionReview) return rejectionReview.updated
   return null
 }
 
@@ -60,28 +136,38 @@ const wasSubmitted = manuscript =>
   manuscript.status && manuscript.status !== 'new'
 
 const wasAssignedToEditor = manuscript =>
-  manuscript.teams.some(t =>
-    ['Senior Editor', 'Handling Editor'].includes(t.name),
+  seekFromEarliestVersion(manuscript, m =>
+    m.teams.some(t => ['Senior Editor', 'Handling Editor'].includes(t.name)),
   )
 
 const reviewerWasInvited = manuscript =>
-  manuscript.teams.some(t => t.name === 'Reviewers')
+  seekFromEarliestVersion(manuscript, m =>
+    m.teams.some(t => t.name === 'Reviewers'),
+  )
 
 const reviewInviteWasAccepted = manuscript =>
-  manuscript.reviews.some(r => !r.isDecision)
+  seekFromEarliestVersion(manuscript, m => getTrueReviews(m).length > 0)
 
 const wasReviewed = manuscript =>
-  manuscript.reviews.some(r => !r.isDecision && r.recommendation)
+  seekFromEarliestVersion(manuscript, m =>
+    getTrueReviews(m).some(r => r.recommendation),
+  )
 
 const wasAccepted = manuscript =>
-  ['accepted', 'published'].includes(manuscript.status)
+  seekFromLatestVersion(manuscript, m =>
+    ['accepted', 'published'].includes(m.status),
+  )
 
-// const isAcceptedNotPublished = manuscript =>
-//   manuscript.status === 'accepted' && !manuscript.published
+const wasRejected = m => getLastVersion(m).status === 'rejected'
+
+const isRevising = m =>
+  ['revise', 'revising'].includes(getLastVersion(m).status)
 
 const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
   const query = ctx.models.Manuscript.query()
-    .withGraphFetched('[teams, reviews]')
+    .withGraphFetched(
+      '[teams, reviews, manuscriptVersions(orderByCreated).[teams, reviews]]',
+    )
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null })
@@ -114,10 +200,10 @@ const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
     if (reviewerWasInvited(m)) reviewInvitedCount += 1
     if (reviewInviteWasAccepted(m)) reviewInviteAcceptedCount += 1
     if (wasReviewed(m)) reviewedCount += 1
-    if (m.status === 'rejected') rejectedCount += 1
-    if (['revise', 'revising'].includes(m.status)) revisingCount += 1
+    if (wasRejected(m)) rejectedCount += 1
+    if (isRevising(m)) revisingCount += 1
     if (wasAccepted(m)) acceptedCount += 1
-    if (m.published) publishedCount += 1
+    if (getLastPublishedDate(m)) publishedCount += 1
   })
 
   return {
@@ -134,15 +220,6 @@ const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
     acceptedCount,
     publishedCount,
   }
-}
-
-const getLastMidnightInTimeZone = timeZoneOffset => {
-  const transposedDate = new Date(Date.now() + timeZoneOffset * 60000)
-  transposedDate.setUTCHours(0)
-  transposedDate.setUTCMinutes(0)
-  transposedDate.setUTCSeconds(0)
-  transposedDate.setUTCMilliseconds(0)
-  return new Date(transposedDate.getTime() - timeZoneOffset * 60000)
 }
 
 const getPublishedTodayCount = async (timeZoneOffset, ctx) => {
@@ -182,7 +259,7 @@ const getDurationsTraces = async (startDate, endDate, ctx) => {
   const dataStart = startDate - windowSizeForAvg / 2
 
   const query = ctx.models.Manuscript.query()
-    .withGraphFetched('[reviews]')
+    .withGraphFetched('[reviews, manuscriptVersions(orderByCreated).[reviews]]')
     .where('created', '>=', new Date(dataStart))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null })
@@ -233,7 +310,7 @@ const getDailyAverageStats = async (startDate, endDate, ctx) => {
   const dataStart = startDate - 365 * day // TODO: any better way to ensure we get all manuscripts still in progress during this date range?
 
   const query = ctx.models.Manuscript.query()
-    .withGraphFetched('[reviews]')
+    .withGraphFetched('[reviews, manuscriptVersions(orderByCreated).[reviews]]')
     .where('created', '>=', new Date(dataStart))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null })
@@ -334,7 +411,7 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
 const getEditorsActivity = async (startDate, endDate, ctx) => {
   const query = ctx.models.Manuscript.query()
     .withGraphFetched(
-      '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated)]',
+      '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity]]]]',
     )
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
@@ -385,7 +462,7 @@ const getEditorsActivity = async (startDate, endDate, ctx) => {
 const getReviewersActivity = async (startDate, endDate, ctx) => {
   const query = ctx.models.Manuscript.query()
     .withGraphFetched(
-      '[teams.[users.[defaultIdentity], members], reviews, manuscriptVersions(orderByCreated)]',
+      '[teams.[users.[defaultIdentity], members], reviews, manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity], members]]]',
     )
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
@@ -471,7 +548,7 @@ const getReviewersActivity = async (startDate, endDate, ctx) => {
 const getAuthorsActivity = async (startDate, endDate, ctx) => {
   const query = ctx.models.Manuscript.query()
     .withGraphFetched(
-      '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated)]',
+      '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity]]]]',
     )
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
