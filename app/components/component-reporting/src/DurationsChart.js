@@ -95,7 +95,7 @@ const DurationsChart = ({
             unit=" days"
           />
           <Line
-            animationDuration={20000}
+            animationDuration={1000}
             data={reviewSeries}
             dataKey="y"
             dot={false}
@@ -105,7 +105,7 @@ const DurationsChart = ({
           />
           <Line
             animationBegin={1000}
-            animationDuration={20000}
+            animationDuration={1000}
             data={completionSeries}
             dataKey="y"
             dot={false}
