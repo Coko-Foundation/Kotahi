@@ -47,7 +47,6 @@ services:
       - S3_REGION=${S3_REGION}
       - MANUSCRIPTS_TABLE_COLUMNS=${MANUSCRIPTS_TABLE_COLUMNS}
 
-
   job-xsweet:
     image: pubsweet/job-xsweet:1.5.1
     depends_on:

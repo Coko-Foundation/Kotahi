@@ -578,13 +578,14 @@ const User = ({
     <Row>
       {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
         <Cell>
-          {process.env.INSTANCE_NAME === 'colab' && manuscript.status === articleStatuses.new &&
-                !manuscript.submission.labels && (
-                  <Checkbox
-                    checked={selectedNewManuscripts.includes(manuscript.id)}
-                    onChange={() => toggleNewManuscriptCheck(manuscript.id)}
-                  />
-                )}
+          {process.env.INSTANCE_NAME === 'colab' &&
+            manuscript.status === articleStatuses.new &&
+            !manuscript.submission.labels && (
+              <Checkbox
+                checked={selectedNewManuscripts.includes(manuscript.id)}
+                onChange={() => toggleNewManuscriptCheck(manuscript.id)}
+              />
+            )}
           {manuscript.meta && manuscript.meta.title}
         </Cell>
       )}
@@ -710,7 +711,9 @@ const User = ({
             <StyledAuthor key={team.id}>
               {team.role !== 'author' &&
                 team.role !== 'reviewer' &&
-                team.members && team.members[0] && team.members[0].user.defaultIdentity.name}
+                team.members &&
+                team.members[0] &&
+                team.members[0].user.defaultIdentity.name}
             </StyledAuthor>
           ))}
         </Cell>

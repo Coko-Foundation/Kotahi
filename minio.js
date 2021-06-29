@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
 const AWS = require('aws-sdk')
+
 const accesskeid = process.env.S3_ACCESS_KEY_ID
 const secretaccesskey = process.env.S3_ACCESS_KEY_SECRET
 const s3endpoint = process.env.S3_ENDPOINT

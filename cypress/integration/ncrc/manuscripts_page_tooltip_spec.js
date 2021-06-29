@@ -33,7 +33,9 @@ describe('tooltip tests', () => {
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getTooltipText().should('not.exist')
       ManuscriptsPage.getTooltipIcon().should('be.visible').trigger('mouseover')
-      ManuscriptsPage.getTooltipText().should('contain', data.abstract).and('not.contain', '<p class="paragraph">')
+      ManuscriptsPage.getTooltipText()
+        .should('contain', data.abstract)
+        .and('not.contain', '<p class="paragraph">')
     })
   })
 
