@@ -12,7 +12,7 @@ export default ({ version, className }) => {
   const title =
     version && version.meta && version.meta.title
       ? version.meta.title
-      : 'Untitled'
+      : process.env.INSTANCE_NAME === 'ncrc' ? JSON.parse(version.submission).articleDescription : 'Untitled'
 
   return <Root>{title}</Root>
 }

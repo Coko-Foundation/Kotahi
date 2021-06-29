@@ -47,6 +47,7 @@ meta {
     date
   }
 }
+submission
 published
 _currentRoles @client
 `
