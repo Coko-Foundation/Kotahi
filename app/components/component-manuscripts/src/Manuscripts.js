@@ -1,6 +1,8 @@
 /* eslint-disable no-shadow */
 import React, { useEffect, useState } from 'react'
-import { useQuery, useMutation } from '@apollo/client'
+import { ToastContainer, toast } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { useQuery, useMutation, useSubscription } from '@apollo/client'
 import { Button, Checkbox } from '@pubsweet/ui'
 import config from 'config'
 import Manuscript from './Manuscript'
@@ -24,6 +26,7 @@ import {
   GET_MANUSCRIPTS,
   DELETE_MANUSCRIPTS,
   IMPORT_MANUSCRIPTS,
+  IMPORTED_MANUSCRIPTS_SUBSCRIPTION,
 } from '../../../queries'
 import getQueryStringByName from '../../../shared/getQueryStringByName'
 import { PaginationContainerShadowed } from '../../shared/Pagination'
@@ -173,6 +176,19 @@ const Manuscripts = ({ history, ...props }) => {
     fetchPolicy: 'network-only',
   })
 
+  useSubscription(IMPORTED_MANUSCRIPTS_SUBSCRIPTION, {
+    onSubscriptionData: data => {
+      const {
+        subscriptionData: {
+          data: { manuscriptsImportStatus },
+        },
+      } = data
+
+      toast.success(
+        manuscriptsImportStatus && 'Manuscripts successfully imported',
+      )
+    },
+  })
   const [importManuscripts] = useMutation(IMPORT_MANUSCRIPTS)
 
   const [deleteManuscripts] = useMutation(DELETE_MANUSCRIPTS, {
@@ -243,6 +259,17 @@ const Manuscripts = ({ history, ...props }) => {
 
   return (
     <Container>
+      <ToastContainer
+        autoClose={5000}
+        closeOnClick
+        draggable
+        hideProgressBar={false}
+        newestOnTop={false}
+        pauseOnFocusLoss
+        pauseOnHover
+        position="top-center"
+        rtl={false}
+      />
       <VideoChatButton />
       {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
         <HeadingWithAction>
@@ -364,8 +391,8 @@ const Manuscripts = ({ history, ...props }) => {
           onRequestClose={closeModalBulkDeleteConfirmation}
         >
           <BulkDeleteModal
-            confirmBulkDelete={confirmBulkDelete}
             closeModal={closeModalBulkDeleteConfirmation}
+            confirmBulkDelete={confirmBulkDelete}
           />
         </Modal>
       )}

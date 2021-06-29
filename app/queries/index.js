@@ -192,3 +192,8 @@ export const IMPORT_MANUSCRIPTS = gql`
     }
   }
 `
+export const IMPORTED_MANUSCRIPTS_SUBSCRIPTION = gql`
+  subscription manuscriptsImportStatus {
+    manuscriptsImportStatus
+  }
+`

@@ -2,6 +2,9 @@ const { ref } = require('objection')
 const axios = require('axios')
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const { mergeWith, isArray } = require('lodash')
+const { pubsubManager } = require('pubsweet-server')
+
+const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
 const publishToCrossref = require('../../publishing/crossref')
 
@@ -176,11 +179,15 @@ const resolvers = {
 
       isImportInProgress = true
 
+      const pubsub = await getPubsub()
       const manuscriptsFromBiorxiv = await importArticlesFromBiorxiv(ctx)
 
       const manuscriptsFromPubmed = await importArticlesFromPubmed(ctx)
 
       isImportInProgress = false
+      pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
+        manuscriptsImportStatus: true,
+      })
 
       return manuscriptsFromBiorxiv.concat(manuscriptsFromPubmed)
     },
@@ -490,6 +497,15 @@ const resolvers = {
       return manuscript
     },
   },
+  Subscription: {
+    manuscriptsImportStatus: {
+      subscribe: async (_, vars, context) => {
+        const pubsub = await getPubsub()
+
+        return pubsub.asyncIterator(['IMPORT_MANUSCRIPTS_STATUS'])
+      },
+    },
+  },
   Query: {
     async manuscript(_, { id }, ctx) {
       // eslint-disable-next-line global-require
@@ -680,6 +696,10 @@ const typeDefs = `
   #   updated_ASC
   #   updated_DESC
   # }
+  
+  extend type Subscription {
+    manuscriptsImportStatus: Boolean
+  }
 
   extend type Mutation {
     createManuscript(input: ManuscriptInput): Manuscript!
