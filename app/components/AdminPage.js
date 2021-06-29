@@ -210,6 +210,11 @@ const AdminPage = () => {
               path={`${urlFrag}/admin/users`}
               redirectLink={redirectLink}
             />
+            <PrivateRoute
+              component={Manuscripts}
+              path={`${urlFrag}/admin/manuscripts`}
+              redirectLink={redirectLink}
+            />
           </>
         )}
         <PrivateRoute
@@ -234,11 +239,6 @@ const AdminPage = () => {
           component={Profile}
           exact
           path={`${urlFrag}/profile`}
-          redirectLink={redirectLink}
-        />
-        <PrivateRoute
-          component={Manuscripts}
-          path={`${urlFrag}/admin/manuscripts`}
           redirectLink={redirectLink}
         />
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
