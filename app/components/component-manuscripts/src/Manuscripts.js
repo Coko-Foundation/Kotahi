@@ -220,6 +220,7 @@ const Manuscripts = ({ history, ...props }) => {
   const { totalCount } = data.paginatedManuscripts
 
   const setReadyToEvaluateLabel = id => {
+    toggleNewManuscriptCheck(id)
     return update({
       variables: {
         id,

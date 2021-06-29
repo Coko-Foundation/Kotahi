@@ -191,18 +191,27 @@ const AdminPage = () => {
           path={`${urlFrag}/versions/:version/submit`}
           redirectLink={redirectLink}
         />
-        <PrivateRoute
-          component={FormBuilderPage}
-          exact
-          path={`${urlFrag}/admin/form-builder`}
-          redirectLink={redirectLink}
-        />
-        <PrivateRoute
-          component={ManuscriptPage}
-          exact
-          path={`${urlFrag}/versions/:version/manuscript`}
-          redirectLink={redirectLink}
-        />
+        {currentUser && currentUser.admin && (
+          <>
+            <PrivateRoute
+              component={FormBuilderPage}
+              exact
+              path={`${urlFrag}/admin/form-builder`}
+              redirectLink={redirectLink}
+            />
+            <PrivateRoute
+              component={ManuscriptPage}
+              exact
+              path={`${urlFrag}/versions/:version/manuscript`}
+              redirectLink={redirectLink}
+            />
+            <PrivateRoute
+              component={UsersManager}
+              path={`${urlFrag}/admin/users`}
+              redirectLink={redirectLink}
+            />
+          </>
+        )}
         <PrivateRoute
           component={ReviewersPage}
           exact
@@ -225,11 +234,6 @@ const AdminPage = () => {
           component={Profile}
           exact
           path={`${urlFrag}/profile`}
-          redirectLink={redirectLink}
-        />
-        <PrivateRoute
-          component={UsersManager}
-          path={`${urlFrag}/admin/users`}
           redirectLink={redirectLink}
         />
         <PrivateRoute
