@@ -177,7 +177,7 @@ const isRevising = m =>
   ['revise', 'revising'].includes(getLastVersion(m).status)
 
 const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
-  const query = ctx.models.Manuscript.query()
+  const manuscripts = await ctx.models.Manuscript.query()
     .withGraphFetched(
       '[teams, reviews, manuscriptVersions(orderByCreated).[teams, reviews]]',
     )
@@ -185,8 +185,6 @@ const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
     .where('created', '<', new Date(endDate))
     .where({ parentId: null })
     .orderBy('created')
-
-  const manuscripts = await query
 
   const avgPublishTimeDays =
     mean(manuscripts.map(m => getDurationUntilPublished(m))) / day
@@ -373,7 +371,7 @@ const getTeamUserIdentities = (manuscript, teamName) => {
 }
 
 const getManuscriptsActivity = async (startDate, endDate, ctx) => {
-  const query = ctx.models.Manuscript.query()
+  const manuscripts = await ctx.models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity]]]]',
     )
@@ -381,8 +379,6 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
     .where('created', '<', new Date(endDate))
     .where({ parentId: null })
     .orderBy('created')
-
-  const manuscripts = await query
 
   return manuscripts.map(m => {
     const editors = getTeamUserIdentities(m, 'Senior Editor')
@@ -414,7 +410,7 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
 }
 
 const getEditorsActivity = async (startDate, endDate, ctx) => {
-  const query = ctx.models.Manuscript.query()
+  const manuscripts = await ctx.models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity]]]]',
     )
@@ -423,8 +419,6 @@ const getEditorsActivity = async (startDate, endDate, ctx) => {
     .where({ parentId: null })
     .orderBy('created')
 
-  const manuscripts = await query
-
   const editorsData = {} // Map by user id
 
   manuscripts.forEach(m => {
@@ -432,7 +426,11 @@ const getEditorsActivity = async (startDate, endDate, ctx) => {
     getTeamUserIdentities(m, 'Senior Editor').forEach(ed => {
       if (!editors.some(e => e.id === ed.id)) editors.push(ed)
     })
-    const wasGivenToReviewers = !!m.teams.find(t => t.name === 'Reviewers')
+
+    const wasGivenToReviewers = !!seekFromEarliestVersion(m, manuscript =>
+      manuscript.teams.find(t => t.name === 'Reviewers'),
+    )
+
     const wasRevised = m.manuscriptVersions.length > 0
 
     editors.forEach(e => {
@@ -454,10 +452,12 @@ const getEditorsActivity = async (startDate, endDate, ctx) => {
       editorData.assignedCount += 1
       if (wasGivenToReviewers) editorData.givenToReviewersCount += 1
       if (wasRevised) editorData.revisedCount += 1
-      if (m.status === 'rejected') editorData.rejectedCount += 1
-      else if (m.published || m.status === 'accepted')
+      const status = getFinalStatus(m)
+      const wasPublished = !!getLastPublishedDate(m)
+      if (status === 'rejected') editorData.rejectedCount += 1
+      else if (wasPublished || status === 'accepted')
         editorData.acceptedCount += 1
-      if (m.published) editorData.publishedCount += 1
+      if (wasPublished) editorData.publishedCount += 1
     })
   })
 
@@ -465,78 +465,80 @@ const getEditorsActivity = async (startDate, endDate, ctx) => {
 }
 
 const getReviewersActivity = async (startDate, endDate, ctx) => {
-  const query = ctx.models.Manuscript.query()
+  const manuscripts = await ctx.models.Manuscript.query()
     .withGraphFetched(
-      '[teams.[users.[defaultIdentity], members], reviews, manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity], members]]]',
+      '[teams.[users.[defaultIdentity], members], reviews, manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity], members], reviews]]',
     )
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
     .where({ parentId: null })
     .orderBy('created')
 
-  const manuscripts = await query
-
   const reviewersData = {} // Map by user id
 
-  manuscripts.forEach(m => {
-    const reviewersTeam = m.teams.find(t => t.name === 'Reviewers')
-    if (!reviewersTeam) return // continue
+  manuscripts.forEach(manuscript =>
+    getVersionsAsArray(manuscript).forEach(m => {
+      const reviewersTeam = m.teams.find(t => t.name === 'Reviewers')
+      if (!reviewersTeam) return // continue
 
-    reviewersTeam.members.forEach(member => {
-      const reviewer = {
-        inviteDate: member.created,
-        id: member.userId,
-        status: member.status,
-      }
-
-      const review = m.reviews.find(
-        r => !r.isDecision && r.userId === reviewer.id,
-      )
-
-      if (!review) return // continue
-
-      // eslint-disable-next-line no-param-reassign
-      reviewer.recommendation = review.recommendation
-      // eslint-disable-next-line no-param-reassign
-      reviewer.duration = review.updated - reviewer.inviteDate
-
-      let reviewerData = reviewersData[reviewer.id]
-
-      if (!reviewerData) {
-        const reviewerUser = reviewersTeam.users.find(u => u.id === reviewer.id)
-
-        const name = reviewerUser
-          ? reviewerUser.defaultIdentity.name
-          : reviewer.id
-
-        reviewerData = {
-          name,
-          invitesCount: 0,
-          declinedCount: 0,
-          reviewsCompletedCount: 0,
-          reviewDurationsTotal: 0,
-          reviewsCount: 0,
-          reccReviseCount: 0,
-          reccAcceptCount: 0,
-          reccRejectCount: 0,
+      reviewersTeam.members.forEach(member => {
+        const reviewer = {
+          inviteDate: member.created,
+          id: member.userId,
+          status: member.status,
         }
-        reviewersData[reviewer.id] = reviewerData
-      }
 
-      reviewerData.invitesCount += 1
-      if (reviewer.status === 'declined') reviewerData.declinedCount += 1
-      else if (reviewer.status === 'completed')
-        reviewerData.reviewsCompletedCount += 1
-      reviewerData.reviewDurationsTotal += reviewer.duration
-      reviewerData.reviewsCount += 1
-      if (reviewer.recommendation === 'revise')
-        reviewerData.reccReviseCount += 1
-      else if (reviewer.recommendation === 'accept')
-        reviewerData.reccAcceptCount += 1
-      else if (reviewer.recommendation === 'reject')
-        reviewerData.reccRejectCount += 1
-    })
-  })
+        const review = m.reviews.find(
+          r => !r.isDecision && r.userId === reviewer.id,
+        )
+
+        if (!review) return // continue
+
+        // eslint-disable-next-line no-param-reassign
+        reviewer.recommendation = review.recommendation
+        // eslint-disable-next-line no-param-reassign
+        reviewer.duration = review.updated - reviewer.inviteDate
+
+        let reviewerData = reviewersData[reviewer.id]
+
+        if (!reviewerData) {
+          const reviewerUser = reviewersTeam.users.find(
+            u => u.id === reviewer.id,
+          )
+
+          const name = reviewerUser
+            ? reviewerUser.defaultIdentity.name
+            : reviewer.id
+
+          reviewerData = {
+            name,
+            invitesCount: 0,
+            declinedCount: 0,
+            reviewsCompletedCount: 0,
+            reviewDurationsTotal: 0,
+            reviewsCount: 0,
+            reccReviseCount: 0,
+            reccAcceptCount: 0,
+            reccRejectCount: 0,
+          }
+          reviewersData[reviewer.id] = reviewerData
+        }
+
+        reviewerData.invitesCount += 1
+        if (reviewer.status === 'declined') reviewerData.declinedCount += 1
+        else if (reviewer.status === 'completed')
+          reviewerData.reviewsCompletedCount += 1
+        reviewerData.reviewDurationsTotal += reviewer.duration
+        reviewerData.reviewsCount += 1
+        if (reviewer.recommendation === 'revise')
+          reviewerData.reccReviseCount += 1
+        else if (reviewer.recommendation === 'accept')
+          reviewerData.reccAcceptCount += 1
+        else if (reviewer.recommendation === 'reject')
+          reviewerData.reccRejectCount += 1
+      })
+    }),
+  )
 
   return Object.values(reviewersData).map(d => ({
     name: d.name,
@@ -585,10 +587,14 @@ const getAuthorsActivity = async (startDate, endDate, ctx) => {
 
       if (!m.status || m.status === 'new') authorData.unsubmittedCount += 1
       else authorData.submittedCount += 1
-      if (m.status === 'rejected') authorData.rejectedCount += 1
-      if (m.manuscriptVersions.length > 0) authorData.revisionCount += 1
-      if (m.published || m.status === 'accepted') authorData.acceptedCount += 1
-      if (m.published) authorData.publishedCount += 1
+      const finalStatus = getFinalStatus(m)
+      const wasPublished = !!getLastPublishedDate(m)
+      if (finalStatus === 'rejected') authorData.rejectedCount += 1
+      if (finalStatus === 'revise' || m.manuscriptVersions.length > 0)
+        authorData.revisionCount += 1
+      if (wasPublished || finalStatus === 'accepted')
+        authorData.acceptedCount += 1
+      if (wasPublished) authorData.publishedCount += 1
     })
   })
 
