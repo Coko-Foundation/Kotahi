@@ -299,7 +299,7 @@ const Manuscripts = ({ history, ...props }) => {
         <Heading>Manuscripts</Heading>
       )}
 
-      {['ncrc'].includes(process.env.INSTANCE_NAME) && (
+      {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
         <SelectAllField>
           <Checkbox
             checked={
@@ -352,7 +352,7 @@ const Manuscripts = ({ history, ...props }) => {
                 <SortHeader>Topic</SortHeader>
               )}
               <SortHeader thisSortName="status">Status</SortHeader>
-              {process.env.INSTANCE_NAME === 'ncrc' && (
+              {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
                 <SortHeader thisSortName="submission:labels">Label</SortHeader>
               )}
               {!['ncrc'].includes(process.env.INSTANCE_NAME) && (
@@ -395,7 +395,7 @@ const Manuscripts = ({ history, ...props }) => {
         setPage={setPage}
         totalCount={totalCount}
       />
-      {['ncrc'].includes(process.env.INSTANCE_NAME) && (
+      {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
         <Modal
           isOpen={isOpenBulkDeletionModal}
           onRequestClose={closeModalBulkDeleteConfirmation}

@@ -156,7 +156,16 @@ const User = ({
   return (
     <Row>
       {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
-        <Cell>{manuscript.meta && manuscript.meta.title}</Cell>
+        <Cell>
+          {process.env.INSTANCE_NAME === 'colab' && manuscript.status === articleStatuses.new &&
+                !manuscript.submission.labels && (
+                  <Checkbox
+                    checked={selectedNewManuscripts.includes(manuscript.id)}
+                    onChange={() => toggleNewManuscriptCheck(manuscript.id)}
+                  />
+                )}
+          {manuscript.meta && manuscript.meta.title}
+        </Cell>
       )}
       {['elife'].includes(process.env.INSTANCE_NAME) && (
         <Cell>{manuscript.submission && manuscript.submission.articleId}</Cell>
@@ -240,7 +249,7 @@ const User = ({
           />
         </span>
       </Cell>
-      {process.env.INSTANCE_NAME === 'ncrc' && (
+      {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
         <Cell>
           {manuscript.submission && manuscript.submission.labels ? (
             <StyledTableLabel
