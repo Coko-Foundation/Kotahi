@@ -301,7 +301,9 @@ const Manuscripts = ({ history, ...props }) => {
           <Checkbox
             checked={
               manuscripts.filter(
-                manuscript => manuscript.status === articleStatuses.new,
+                manuscript =>
+                  manuscript.status === articleStatuses.new &&
+                  !manuscript.submission.labels,
               ).length ===
               manuscripts.filter(manuscript =>
                 selectedNewManuscripts.includes(manuscript.id),
