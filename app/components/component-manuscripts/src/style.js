@@ -91,7 +91,9 @@ export const StyledAuthor = styled.p`
 
 export const StyledTableLabel = styled.p`
   background-color: #ccc;
-  cursor: ${process.env.INSTANCE_NAME === 'ncrc' ? 'pointer' : 'default'};
+  cursor: ${['ncrc', 'colab'].includes(process.env.INSTANCE_NAME)
+    ? 'pointer'
+    : 'default'};
   border-radius: 7px;
   padding: 0 10px;
   text-align: center;

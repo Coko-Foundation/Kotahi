@@ -612,12 +612,17 @@ const resolvers = {
             parsedSubmission.topics,
           ])
         }
+      }
 
-        if (filter && parsedSubmission && parsedSubmission.label) {
-          query.whereRaw(
-            `submission->>'labels' LIKE '%${parsedSubmission.label}%'`,
-          )
-        }
+      if (
+        ['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) &&
+        filter &&
+        parsedSubmission &&
+        parsedSubmission.label
+      ) {
+        query.whereRaw(
+          `submission->>'labels' LIKE '%${parsedSubmission.label}%'`,
+        )
       }
 
       const totalCount = await query.resultSize()
