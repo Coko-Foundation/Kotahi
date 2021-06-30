@@ -110,10 +110,7 @@ describe('manuscripts page assign editors tests', () => {
         'contain',
         'Assign Handling Editor…',
       )
-      SubmissionFormPage.getAssignEditor(2).should(
-        'contain',
-        'Assign Handling Editor…',
-      )
+      SubmissionFormPage.getAssignEditor(2).should('contain', 'Assign Editor…')
     })
   })
   it('assign first handling editor only', () => {
@@ -139,10 +136,7 @@ describe('manuscripts page assign editors tests', () => {
         'contain',
         name.role.reviewers.reviewer1,
       )
-      SubmissionFormPage.getAssignEditor(2).should(
-        'contain',
-        'Assign Handling Editor…',
-      )
+      SubmissionFormPage.getAssignEditor(2).should('contain', 'Assign Editor…')
     })
   })
   it('assign second handling editor only', () => {

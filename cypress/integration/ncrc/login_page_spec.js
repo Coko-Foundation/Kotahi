@@ -10,6 +10,8 @@ import {
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { LoginPage } from '../../page-object/login-page'
 import { DashboardPage } from '../../page-object/dashboard-page'
+import { UsersPage } from '../../page-object/users-page'
+import { FormsPage } from '../../page-object/forms-page'
 
 describe('Login page tests', () => {
   it('page should display NCRC branding settings', () => {
@@ -98,7 +100,7 @@ describe('Login page tests', () => {
     Menu.getManuscriptsButton().should('not.exist')
     Menu.getMyProfileButton().should('be.visible')
   })
-  it('as Reviewer/Editor try to acees the admin-specific pages', () => {
+  it('as Reviewer/Editor try to access the admin-specific pages', () => {
     // task to restore the database as per the dumps/initial_state_ncrc.sql
     cy.task('restore', 'initial_state_ncrc')
     cy.task('seedForms')
@@ -109,22 +111,14 @@ describe('Login page tests', () => {
       cy.login(name.role.reviewers.reviewer1, users)
     })
     cy.awaitDisappearSpinner()
-    Menu.getDashboardButton().should('be.visible')
-    Menu.getMessageNotAuthorisedUser().should(
-      'contain',
-      'Error! Not Authorised!',
-    )
+    UsersPage.getTitle().should('not.exist')
+    UsersPage.getDeleteButton().should('not.exist')
     cy.visit(formBuilder)
     cy.awaitDisappearSpinner()
-    Menu.getMessageNotAuthorisedUser().should(
-      'contain',
-      'Error! Not Authorised!',
-    )
+    FormsPage.getFormOptionList().should('not.exist')
     cy.visit(manuscripts)
     cy.awaitDisappearSpinner()
-    Menu.getMessageNotAuthorisedUser().should(
-      'contain',
-      'Error! Not Authorised!',
-    )
+    ManuscriptsPage.getTableHeader().should('not.exist')
+    ManuscriptsPage.getLiveChatButton().should('not.exist')
   })
 })
