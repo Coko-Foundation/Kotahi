@@ -123,7 +123,7 @@ const resolvers = {
       }
     },
     deleteUser(_, { id }, ctx) {
-      return ctx.models.User.delete(id, ctx)
+      return ctx.models.User.query().delete(id, ctx)
     },
     async updateUser(_, { id, input }, ctx) {
       if (input.password) {
