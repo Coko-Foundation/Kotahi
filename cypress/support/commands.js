@@ -83,7 +83,7 @@ Cypress.Commands.add('getByNameAndValue', (name, value) => {
 })
 
 Cypress.Commands.add('awaitDisappearSpinner', () => {
-  cy.get('[class*=Spinner__LoadingPage]', { timeout: 20000 }).should(
+  cy.get('[class*=Spinner__LoadingPage]', { timeout: 50000 }).should(
     'not.exist',
   )
 })

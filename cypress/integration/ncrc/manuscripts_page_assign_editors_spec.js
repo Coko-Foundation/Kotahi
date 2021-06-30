@@ -19,6 +19,7 @@ describe('manuscripts page assign editors tests', () => {
     ManuscriptsPage.clickSubmit()
     NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
     SubmissionFormPage.fillInArticleDescription('123')
+    SubmissionFormPage.waitThreeSec()
     Menu.clickManuscriptsAndAssertPageLoad()
   })
 
@@ -173,4 +174,23 @@ describe('manuscripts page assign editors tests', () => {
       )
     })
   })
+  // to be implemented in #489
+  // eslint-disable-next-line jest/no-commented-out-tests
+  // it('editor should see article title in dashboard', () => {
+  //   ManuscriptsPage.clickEvaluation()
+  //   cy.url().should('contain', 'evaluation')
+  //   cy.awaitDisappearSpinner()
+  //   // eslint-disable-next-line jest/valid-expect-in-promise
+  //   cy.fixture('role_names').then(name => {
+  //     SubmissionFormPage.getAssignEditor(0).click()
+  //     SubmissionFormPage.selectDropdownOption(0)
+  //     SubmissionFormPage.waitThreeSec()
+  //     SubmissionFormPage.getAssignEditor(0).should(
+  //       'contain',
+  //       name.role.reviewers.reviewer3,
+  //     )
+  //     cy.login(name.role.reviewers.reviewer3, dashboard)
+  //     DashboardPage.getVersionTitle().should('contain', '123')
+  //   })
+  // })
 })

@@ -35,6 +35,7 @@ const TOOLTIP_TEXT = 'rc-tooltip-inner'
 const ARTICLES_COUNT = '[class*=Pagination] > strong'
 const PAGINATION_PAGE_BUTTON = 'Page '
 const CONFIRMATION_MESSAGE = '[class*=BulkDeleteModalContainer] > p'
+const IMPORT_CONFIRMATION_POPUP = '[class*=Toastify] > [role=alert]'
 
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
@@ -85,6 +86,7 @@ export const ManuscriptsPage = {
   },
   clickEvaluationNthAndVerifyUrl(nth) {
     this.clickEvaluationNth(nth)
+    cy.awaitDisappearSpinner()
     cy.url({ timeout: 10000 }).should('contain', evaluate)
   },
 
@@ -213,6 +215,9 @@ export const ManuscriptsPage = {
   },
   clickSelect() {
     this.getSelectButton().click()
+  },
+  getSuccessfulImportPopup() {
+    return cy.get(IMPORT_CONFIRMATION_POPUP, { timeout: 600000 })
   },
 }
 export default ManuscriptsPage

@@ -10,6 +10,8 @@ import {
 } from '../../support/routes'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
+import { DashboardPage } from '../../page-object/dashboard-page'
+import { Menu } from '../../page-object/page-component/menu'
 
 describe('refresh button tests', () => {
   context('visibility check', () => {
@@ -32,7 +34,7 @@ describe('refresh button tests', () => {
   context('functionality check', () => {
     before(() => {
       // task to restore the database as per the dumps/initial_state_ncrc.sql
-      cy.task('restore', 'initial_state_ncrc')
+      // cy.task('restore', 'initial_state_ncrc')
       cy.task('seedForms')
       // login as admin
       cy.fixture('role_names').then(name => {
@@ -43,8 +45,10 @@ describe('refresh button tests', () => {
 
       ManuscriptsPage.clickRefreshButton()
       // wait for data to be imported
-      // eslint-disable-next-line cypress/no-unnecessary-waiting
-      cy.wait(20000)
+      ManuscriptsPage.getSuccessfulImportPopup()
+        .should('exist')
+        .and('be.visible')
+        .and('contain', 'Manuscripts successfully imported')
       cy.reload()
       cy.awaitDisappearSpinner()
     })
@@ -168,6 +172,24 @@ describe('refresh button tests', () => {
             .invoke('text')
             .should('be.eq', title)
           ManuscriptsPage.getStatus(0).should('be.eq', 'evaluated')
+        })
+    })
+    it('reviewer should see article description on dashboard page', () => {
+      const randomArticle = Math.floor(Math.random() * 10)
+      ManuscriptsPage.clickEvaluationNthAndVerifyUrl(randomArticle)
+      SubmissionFormPage.getArticleDescriptionField()
+        .invoke('val')
+        .then(title => {
+          cy.fixture('role_names').then(name => {
+            SubmissionFormPage.getAssignEditor(0).click()
+            SubmissionFormPage.selectDropdownOptionWithText(name.role.admin)
+            SubmissionFormPage.waitThreeSec()
+            Menu.clickManuscriptsAndAssertPageLoad()
+            ManuscriptsPage.getEditorName().should('contain', name.role.admin)
+          })
+          Menu.clickDashboard()
+          cy.awaitDisappearSpinner()
+          DashboardPage.getVersionTitle().should('contain', title)
         })
     })
   })
