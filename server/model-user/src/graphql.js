@@ -122,8 +122,14 @@ const resolvers = {
         }
       }
     },
-    deleteUser(_, { id }, ctx) {
-      return ctx.models.User.query().delete(id, ctx)
+    async deleteUser(_, { id }, ctx) {
+      const user = await ctx.models.User.query().findById(id)
+      await ctx.models.Manuscript.query()
+        .update({ submitterId: null })
+        .where({ submitterId: id })
+
+      await ctx.models.User.query().where({ id }).delete()
+      return user
     },
     async updateUser(_, { id, input }, ctx) {
       if (input.password) {
