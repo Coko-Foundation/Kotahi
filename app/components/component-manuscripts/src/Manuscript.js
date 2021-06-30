@@ -174,7 +174,7 @@ const User = ({
                 )}
               <span style={{ wordBreak: 'break-word' }}>
                 {manuscript.submission.articleURL ? (
-                  <a href={manuscript.submission.articleURL.includes('https://') ? manuscript.submission.articleURL : 'https://' + manuscript.submission.articleURL} target="_blank">
+                  <a href={manuscript.submission.articleURL} target="_blank">
                     {manuscript.submission &&
                       manuscript.submission.articleDescription}
                   </a>
