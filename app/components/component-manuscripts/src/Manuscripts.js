@@ -220,7 +220,10 @@ const Manuscripts = ({ history, ...props }) => {
   const { totalCount } = data.paginatedManuscripts
 
   const setReadyToEvaluateLabel = id => {
-    toggleNewManuscriptCheck(id)
+    if (selectedNewManuscripts.includes(id)) {
+      toggleNewManuscriptCheck(id)
+    }
+
     return update({
       variables: {
         id,
@@ -305,15 +308,19 @@ const Manuscripts = ({ history, ...props }) => {
                   manuscript.status === articleStatuses.new &&
                   !manuscript.submission.labels,
               ).length ===
-              manuscripts.filter(manuscript =>
-                selectedNewManuscripts.includes(manuscript.id),
-              ).length
+                manuscripts.filter(manuscript =>
+                  selectedNewManuscripts.includes(manuscript.id),
+                ).length && selectedNewManuscripts.length !== 0
             }
             label="Select All"
             onChange={toggleAllNewManuscriptsCheck}
           />
           <SelectedManuscriptsNumber>{`${selectedNewManuscripts.length} articles selected`}</SelectedManuscriptsNumber>
-          <Button onClick={openModalBulkDeleteConfirmation} primary>
+          <Button
+            disabled={selectedNewManuscripts.length === 0}
+            onClick={openModalBulkDeleteConfirmation}
+            primary
+          >
             Delete
           </Button>
         </SelectAllField>
