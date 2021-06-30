@@ -10,7 +10,7 @@ const AssignEditorsReviewers = ({ manuscript, AssignEditor }) => (
     <SectionRowGrid>
       <AssignEditor manuscript={manuscript} teamRole="seniorEditor" />
       <AssignEditor manuscript={manuscript} teamRole="handlingEditor" />
-      <AssignEditor manuscript={manuscript} teamRole="handlingEditor" />
+      <AssignEditor manuscript={manuscript} teamRole="editor" />
     </SectionRowGrid>
   </SectionContent>
 )

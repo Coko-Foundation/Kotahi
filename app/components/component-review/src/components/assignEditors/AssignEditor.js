@@ -92,11 +92,12 @@ const AssignEditor = ({ teamRole, manuscript }) => {
           },
         })
       } else {
+        const editor = teamRole === 'editor' ? 'Editor' : 'Handling Editor'
+
         const input = {
           // Editors are always linked to the parent manuscript
           manuscriptId: manuscript.id,
-          name:
-            teamRole === 'seniorEditor' ? 'Senior Editor' : 'Handling Editor',
+          name: teamRole === 'seniorEditor' ? 'Senior Editor' : editor,
           role: teamRole,
           members: [{ user: { id: selectedEditor } }],
         }

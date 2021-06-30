@@ -14,6 +14,9 @@ module.exports = {
     handlingEditor: {
       name: 'Handling Editor',
     },
+    editor: {
+      name: 'Editor',
+    },
     managingEditor: {
       name: 'Managing Editor',
     },

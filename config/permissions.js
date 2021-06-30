@@ -11,7 +11,8 @@ const userIsEditorQuery = async (user, manuscriptId) => {
     .where(builder =>
       builder
         .where({ role: 'seniorEditor' })
-        .orWhere({ role: 'handlingEditor' }),
+        .orWhere({ role: 'handlingEditor' })
+        .orWhere({ role: 'editor' }),
     )
 
   // Manuscript is optional...

@@ -115,11 +115,21 @@ class AuthsomeMode {
    *
    * @returns {boolean}
    */
+  isAssignedEditor(object) {
+    return this.isTeamMember('editor', object)
+  }
+
+  /**
+   * Checks if user is an editor (any editor) globally
+   *
+   * @returns {boolean}
+   */
   async isGlobalEditor(object) {
     const seniorEditor = await this.isTeamMember('seniorEditor')
     const handlingEditor = await this.isTeamMember('handlingEditor')
+    const editor = await this.isTeamMember('editor')
 
-    return seniorEditor || handlingEditor
+    return seniorEditor || handlingEditor || editor
   }
 
   /**
@@ -161,6 +171,7 @@ class AuthsomeMode {
         'isAssignedSeniorEditor',
         'isAssignedHandlingEditor',
         'isAssignedReviewerEditor',
+        'isAssignedEditor',
       ],
       manuscript,
     )
@@ -233,6 +244,7 @@ class AuthsomeMode {
             'isAssignedSeniorEditor',
             'isAssignedHandlingEditor',
             'isManagingEditor',
+            'isAssignedEditor',
           ],
           { id: fragment.collections[0] },
         )
@@ -262,6 +274,7 @@ class AuthsomeMode {
                 'isAssignedHandlingEditor',
                 'isManagingEditor',
                 'isAssignedReviewerEditor',
+                'isAssignedEditor',
               ],
               manuscript,
             )
@@ -310,7 +323,12 @@ class AuthsomeMode {
 
     if (collection) {
       const permission = await this.checkTeamMembers(
-        ['isAuthor', 'isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+        [
+          'isAuthor',
+          'isAssignedSeniorEditor',
+          'isAssignedHandlingEditor',
+          'isAssignedEditor',
+        ],
         collection,
       )
 
@@ -339,7 +357,8 @@ class AuthsomeMode {
         this.isAuthor(collection) ||
         (await this.isAssignedHandlingEditor(collection)) ||
         (await this.isAssignedSeniorEditor(collection)) ||
-        (await this.isAssignedReviewerEditor(collection))
+        (await this.isAssignedReviewerEditor(collection)) ||
+        (await this.isAssignedEditor(collection))
 
       return permission
     }
@@ -438,7 +457,11 @@ class AuthsomeMode {
     permission = permission
       ? true
       : (await this.checkTeamMembers(
-          ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+          [
+            'isAssignedSeniorEditor',
+            'isAssignedHandlingEditor',
+            'isAssignedEditor',
+          ],
           collection,
         )) &&
         Object.keys(update).every(value => schemaEditors.indexOf(value) >= 0)
@@ -474,7 +497,11 @@ class AuthsomeMode {
 
     if (current) {
       return this.checkTeamMembers(
-        ['isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+        [
+          'isAssignedSeniorEditor',
+          'isAssignedHandlingEditor',
+          'isAssignedEditor',
+        ],
         current,
       )
     }
@@ -490,6 +517,7 @@ class AuthsomeMode {
         'isAssignedSeniorEditor',
         'isAssignedHandlingEditor',
         'isAssignedReviewerEditor',
+        'isAssignedEditor',
       ],
       { id: object.manuscriptId },
     )
@@ -502,7 +530,12 @@ class AuthsomeMode {
       this.object.map(
         async manuscript =>
           (await this.checkTeamMembers(
-            ['isAdmin', 'isAssignedSeniorEditor', 'isAssignedHandlingEditor'],
+            [
+              'isAdmin',
+              'isAssignedSeniorEditor',
+              'isAssignedHandlingEditor',
+              'isAssignedEditor',
+            ],
             manuscript,
           )) &&
           (manuscript.status === 'revising' ||
