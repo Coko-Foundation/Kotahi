@@ -289,7 +289,7 @@ const User = ({
             <StyledAuthor key={team.id}>
               {team.role !== 'author' &&
                 team.role !== 'reviewer' &&
-                team.members[0].user.defaultIdentity.name}
+                team.members && team.members[0] && team.members[0].user.defaultIdentity.name}
             </StyledAuthor>
           ))}
         </Cell>
