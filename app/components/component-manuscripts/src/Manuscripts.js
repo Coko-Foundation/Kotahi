@@ -1,6 +1,7 @@
 /* eslint-disable no-shadow */
 import React, { useEffect, useState } from 'react'
 import { ToastContainer, toast } from 'react-toastify'
+import { get } from 'lodash'
 import 'react-toastify/dist/ReactToastify.css'
 import { useQuery, useMutation, useSubscription } from '@apollo/client'
 import { Button, Checkbox } from '@pubsweet/ui'
@@ -35,8 +36,61 @@ import VideoChatButton from './VideoChatButton'
 import { updateMutation } from '../../component-submit/src/components/SubmitPage'
 import Modal from '../../component-modal/src'
 import BulkDeleteModal from './BulkDeleteModal'
+import manuscriptsTableConfig from './manuscriptsTableConfig'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
+
+const renderManuscriptsTableHeaders = ({ SortHeader }) => {
+  const renderActions = {
+    'meta.title': () => {
+      return <SortHeader thisSortName="meta:title">Title</SortHeader>
+    },
+    'submission.articleId': () => {
+      return (
+        <SortHeader thisSortName="submission:articleId">Article Id</SortHeader>
+      )
+    },
+    'submission.articleDescription': () => {
+      return (
+        <SortHeader thisSortName="submission:articleDescription">
+          Description
+        </SortHeader>
+      )
+    },
+    'submission.journal': () => {
+      return <SortHeader>Journal</SortHeader>
+    },
+    created: () => {
+      return <SortHeader thisSortName="created">Created</SortHeader>
+    },
+    updated: () => {
+      return <SortHeader thisSortName="updated">Updated</SortHeader>
+    },
+    'submission.topics': () => {
+      return <SortHeader>Topic</SortHeader>
+    },
+    status: () => {
+      return <SortHeader thisSortName="status">Status</SortHeader>
+    },
+    'submission.labels': () => {
+      return <SortHeader thisSortName="submission:labels">Label</SortHeader>
+    },
+    author: () => {
+      return <SortHeader thisSortName="submitterId">Author</SortHeader>
+    },
+    editor: () => {
+      return <SortHeader>Editor</SortHeader>
+    },
+  }
+
+  return fieldName => {
+    if (get(renderActions, fieldName)) {
+      return get(renderActions, fieldName)()
+    }
+
+    return <SortHeader>{fieldName}</SortHeader>
+  }
+}
 
 const Manuscripts = ({ history, ...props }) => {
   const SortHeader = ({ thisSortName, children }) => {
@@ -261,6 +315,10 @@ const Manuscripts = ({ history, ...props }) => {
     closeModalBulkDeleteConfirmation()
   }
 
+  const renderManuscriptsTableHeader = renderManuscriptsTableHeaders({
+    SortHeader,
+  })
+
   return (
     <Container>
       <ToastContainer
@@ -330,37 +388,9 @@ const Manuscripts = ({ history, ...props }) => {
         <ManuscriptsTable>
           <Header>
             <tr>
-              {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
-                <SortHeader thisSortName="meta:title">Title</SortHeader>
-              )}
-              {['elife'].includes(process.env.INSTANCE_NAME) && (
-                <SortHeader thisSortName="submission:articleId">
-                  Article Id
-                </SortHeader>
-              )}
-              {['ncrc'].includes(process.env.INSTANCE_NAME) && (
-                <SortHeader thisSortName="submission:articleDescription">
-                  Description
-                </SortHeader>
-              )}
-              {['ncrc'].includes(process.env.INSTANCE_NAME) && (
-                <SortHeader>Journal</SortHeader>
-              )}
-              <SortHeader thisSortName="created">Created</SortHeader>
-              <SortHeader thisSortName="updated">Updated</SortHeader>
-              {process.env.INSTANCE_NAME === 'ncrc' && (
-                <SortHeader>Topic</SortHeader>
-              )}
-              <SortHeader thisSortName="status">Status</SortHeader>
-              {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
-                <SortHeader thisSortName="submission:labels">Label</SortHeader>
-              )}
-              {!['ncrc'].includes(process.env.INSTANCE_NAME) && (
-                <SortHeader thisSortName="submitterId">Author</SortHeader>
-              )}
-              {['ncrc'].includes(process.env.INSTANCE_NAME) && (
-                <SortHeader>Editor</SortHeader>
-              )}
+              {manuscriptsTableConfig.map(field => {
+                return renderManuscriptsTableHeader(field)
+              })}
             </tr>
           </Header>
           <tbody>

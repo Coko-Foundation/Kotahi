@@ -26,6 +26,7 @@ services:
       - PUBLIC_CLIENT_HOST=${PUBLIC_CLIENT_HOST:-0.0.0.0}
       - INSTANCE_NAME=${INSTANCE_NAME:-elife}
       - USE_SANDBOXED_ORCID=${USE_SANDBOXED_ORCID:-true}
+      - MANUSCRIPTS_TABLE_COLUMNS=${MANUSCRIPTS_TABLE_COLUMNS}
     volumes:
       - ./app:/home/node/app/app
       - ./config:/home/node/app/config
@@ -85,6 +86,7 @@ services:
       - HYPOTHESIS_API_KEY=${HYPOTHESIS_API_KEY}
       - CROSSREF_LOGIN=${CROSSREF_LOGIN}
       - CROSSREF_PASSWORD=${CROSSREF_PASSWORD}
+      - MANUSCRIPTS_TABLE_COLUMNS=${MANUSCRIPTS_TABLE_COLUMNS}
     volumes:
       - ./config:/home/node/app/config
       - ./server:/home/node/app/server
