@@ -229,7 +229,13 @@ const getData = async ctx => {
               return articleUrl.split('doi.org/')[1]
             }
 
-            return articleUrl.split('content/')[1].split(selectVersionRegexp)[0]
+            if (articleUrl.split('content/')[1]) {
+              return articleUrl
+                .split('content/')[1]
+                .split(selectVersionRegexp)[0]
+            }
+
+            return null
           }
 
           return null
