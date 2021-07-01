@@ -1,4 +1,5 @@
 /// <reference types="Cypress" />
+import { DashboardPage } from '../dashboard-page'
 import { ManuscriptsPage } from '../manuscripts-page'
 
 /**
@@ -18,6 +19,11 @@ export const Menu = {
   },
   clickDashboard() {
     this.getDashboardButton().click()
+  },
+  clickDashboardAndVerifyPageLoaded() {
+    this.getDashboardButton().click()
+    cy.awaitDisappearSpinner()
+    DashboardPage.getHeader().should('contain', 'Dashboard')
   },
   getFormsButton() {
     return cy.getByContainsClass(MENU_BUTTON).contains('Forms')

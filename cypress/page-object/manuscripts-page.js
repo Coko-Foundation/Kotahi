@@ -24,8 +24,7 @@ const TABLE_ROW = 'Table__Row'
 const TABLE_CELL = 'Table__Cell'
 const LABEL = 'style__StyledTableLabel'
 
-const ARTICLE_CHECKBOX =
-  '[class*=style__StyledDescriptionWrapper] > label > [type*=checkbox]'
+const ARTICLE_CHECKBOX = '[class*=Table__Cell] label > [type*=checkbox]'
 
 const SELECT_ALL_CHECKBOX = '[type=checkbox]'
 const NUMBER_OF_ARTICLES_SELECTED = 'style__SelectedManuscriptsNumber'
