@@ -235,6 +235,8 @@ const getData = async ctx => {
                 .split(selectVersionRegexp)[0]
             }
 
+            console.log('broken url should be here')
+            console.log(articleUrl)
             return null
           }
 
