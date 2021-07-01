@@ -24,6 +24,11 @@ spec:
                 configMapKeyRef:
                   key: INSTANCE_NAME
                   name: env
+            - name: MANUSCRIPTS_TABLE_COLUMNS
+              valueFrom:
+                configMapKeyRef:
+                  key: MANUSCRIPTS_TABLE_COLUMNS
+                  name: env
             - name: NODE_ENV
               value: production
             - name: ORCID_CLIENT_ID
