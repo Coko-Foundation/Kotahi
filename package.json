@@ -170,6 +170,7 @@
     "pubsweet-server": "^13.11.6",
     "rc-tooltip": "5.1.1",
     "react": "^16.13.1",
+    "react-date-picker": "^8.2.0",
     "react-dom": "^16.13.1",
     "react-dropzone": "10.2.2",
     "react-feather": "^1.1.6",
