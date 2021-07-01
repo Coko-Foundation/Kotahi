@@ -1,3 +1,7 @@
-export default (process.env.MANUSCRIPTS_TABLE_COLUMNS || [])
+console.log('process.env.MANUSCRIPTS_TABLE_COLUMNS')
+console.log(process.env.MANUSCRIPTS_TABLE_COLUMNS)
+console.log('typeof process.env.MANUSCRIPTS_TABLE_COLUMNS')
+console.log(typeof process.env.MANUSCRIPTS_TABLE_COLUMNS)
+export default (process.env.MANUSCRIPTS_TABLE_COLUMNS || '')
   .split(',')
   .map(columnName => columnName.trim())
