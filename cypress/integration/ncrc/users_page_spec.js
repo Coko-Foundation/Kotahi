@@ -82,24 +82,17 @@ describe('users page tests', () => {
         Menu.getManuscriptsButton().should('not.exist')
         Menu.getUsersButton().should('not.exist')
 
-        cy.visit(manuscripts)
-        cy.awaitDisappearSpinner()
-        Menu.getMessageNotAuthorisedUser().should(
-          'contain',
-          'Error! Not Authorised!',
-        )
         cy.visit(users)
         cy.awaitDisappearSpinner()
-        Menu.getMessageNotAuthorisedUser().should(
-          'contain',
-          'Error! Not Authorised!',
-        )
+        UsersPage.getTitle().should('not.exist')
+        UsersPage.getDeleteButton().should('not.exist')
         cy.visit(formBuilder)
         cy.awaitDisappearSpinner()
-        Menu.getMessageNotAuthorisedUser().should(
-          'contain',
-          'Error! Not Authorised!',
-        )
+        FormsPage.getFormOptionList().should('not.exist')
+        cy.visit(manuscripts)
+        cy.awaitDisappearSpinner()
+        ManuscriptsPage.getTableHeader().should('not.exist')
+        ManuscriptsPage.getLiveChatButton().should('not.exist')
       })
     })
   })
