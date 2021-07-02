@@ -25,6 +25,7 @@ const teamFields = `
       }
     }
     status
+    isShared
   }
 `
 
@@ -93,8 +94,28 @@ const query = gql`
   }
 `
 
+const updateTeamMemberMutation = gql`
+  mutation($id: ID!, $input: String) {
+    updateTeamMember(id: $id, input: $input) {
+      id
+      user {
+        id
+        username
+        profilePicture
+        online
+        defaultIdentity {
+          id
+          name
+        }
+      }
+      status
+      isShared
+    }
+  }
+`
+
 const ReviewersPage = ({ match, history }) => {
-  const { data, error, loading } = useQuery(query, {
+  const { data, error, loading, refetch } = useQuery(query, {
     variables: { id: match.params.version },
   })
 
@@ -131,6 +152,7 @@ const ReviewersPage = ({ match, history }) => {
   })
 
   const [removeReviewer] = useMutation(removeReviewerMutation)
+  const [updateTeamMember] = useMutation(updateTeamMemberMutation)
 
   if (loading) {
     return <Spinner />
@@ -160,8 +182,10 @@ const ReviewersPage = ({ match, history }) => {
           history={history}
           manuscript={manuscript}
           removeReviewer={removeReviewer}
+          updateTeamMember={updateTeamMember}
           reviewers={reviewers}
           reviewerUsers={users}
+          refetchManuscriptData={refetch}
         />
       )}
     </Formik>

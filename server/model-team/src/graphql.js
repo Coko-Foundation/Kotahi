@@ -50,6 +50,12 @@ const resolvers = {
         },
       )
     },
+    updateTeamMember(_, { id, input }, ctx) {
+      return ctx.models.TeamMember.query().updateAndFetchById(
+        id,
+        JSON.parse(input),
+      )
+    },
   },
   User: {
     teams: (parent, _, ctx) =>
@@ -86,6 +92,7 @@ const typeDefs = `
     createTeam(input: TeamInput): Team
     deleteTeam(id: ID): Team
     updateTeam(id: ID, input: TeamInput): Team
+    updateTeamMember(id: ID!, input: String): TeamMember
   }
 
   extend type User {
@@ -108,6 +115,7 @@ const typeDefs = `
     user: TeamMemberUserInput
     alias: AliasInput
     status: String
+    isShared: Boolean
   }
 
   input TeamMemberUserInput {
@@ -119,6 +127,7 @@ const typeDefs = `
     user: User
     status: String
     alias: Alias
+    isShared: Boolean
   }
 
   type Alias {
