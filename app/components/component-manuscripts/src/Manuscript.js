@@ -3,7 +3,7 @@
 
 import React, { useState } from 'react'
 import { useMutation, useQuery, useApolloClient } from '@apollo/client'
-import {get} from 'lodash'
+import { get } from 'lodash'
 // import { Action } from '@pubsweet/ui'
 import config from 'config'
 import PropTypes from 'prop-types'
@@ -75,163 +75,209 @@ const renderManuscriptColumn = ({
   filterByArticleLabel,
   setReadyToEvaluateLabel,
 }) => {
-
   const renderManuscriptColumnsActions = {
     'meta.title': () => {
-      return <Cell>
-      {process.env.INSTANCE_NAME === 'colab' && manuscript.status === articleStatuses.new &&
+      return (
+        <Cell>
+          {process.env.INSTANCE_NAME === 'colab' &&
+            manuscript.status === articleStatuses.new &&
             !manuscript.submission.labels && (
               <Checkbox
                 checked={selectedNewManuscripts.includes(manuscript.id)}
                 onChange={() => toggleNewManuscriptCheck(manuscript.id)}
               />
             )}
-      {manuscript.meta && manuscript.meta.title}
-    </Cell>
+          {manuscript.meta && manuscript.meta.title}
+          {process.env.INSTANCE_NAME === 'colab' && (
+            <>
+              <Tooltip
+                destroyTooltipOnHide={{ keepParent: false }}
+                getTooltipContainer={el => el}
+                overlay={
+                  <span>
+                    {formattedAbstract?.length > 1000
+                      ? `${formattedAbstract.slice(0, 1000)}...`
+                      : formattedAbstract}
+                  </span>
+                }
+                overlayInnerStyle={{
+                  backgroundColor: 'black',
+                  color: 'white',
+                  borderColor: 'black',
+                }}
+                overlayStyle={{
+                  maxWidth: '65vw',
+                  wordBreak: 'break-word',
+                  display: `${!formattedAbstract && 'none'}`,
+                }}
+                placement="bottomLeft"
+                trigger={['hover']}
+              >
+                <InfoIcon>i</InfoIcon>
+              </Tooltip>
+            </>
+          )}
+        </Cell>
+      )
     },
     'submission.articleId': () => {
-      return <Cell>{manuscript.submission && manuscript.submission.articleId}</Cell>
+      return (
+        <Cell>{manuscript.submission && manuscript.submission.articleId}</Cell>
+      )
     },
     'submission.articleDescription': () => {
-      return <Cell minWidth="150px">
-      <StyledDescriptionWrapper>
-        {manuscript.status === articleStatuses.new &&
-          !manuscript.submission.labels && (
-            <Checkbox
-              checked={selectedNewManuscripts.includes(manuscript.id)}
-              onChange={() => toggleNewManuscriptCheck(manuscript.id)}
-            />
-          )}
-        <span style={{ wordBreak: 'break-word' }}>
-          {manuscript.submission.articleURL ? (
-            <a href={manuscript.submission.articleURL} target="_blank">
-              {manuscript.submission &&
-                manuscript.submission.articleDescription}
-            </a>
-          ) : (
-            manuscript.submission.articleDescription
-          )}
-        </span>
-        <>
-          <Tooltip
-            destroyTooltipOnHide={{ keepParent: false }}
-            getTooltipContainer={el => el}
-            overlay={
-              <span>
-                {formattedAbstract?.length > 1000
-                  ? `${formattedAbstract.slice(0, 1000)}...`
-                  : formattedAbstract}
-              </span>
-            }
-            overlayInnerStyle={{
-              backgroundColor: 'black',
-              color: 'white',
-              borderColor: 'black',
-            }}
-            overlayStyle={{
-              maxWidth: '65vw',
-              wordBreak: 'break-word',
-              display: `${!formattedAbstract && 'none'}`,
-            }}
-            placement="bottomLeft"
-            trigger={['hover']}
-          >
-            <InfoIcon>i</InfoIcon>
-          </Tooltip>
-        </>
-      </StyledDescriptionWrapper>
-    </Cell>
+      return (
+        <Cell minWidth="150px">
+          <StyledDescriptionWrapper>
+            {manuscript.status === articleStatuses.new &&
+              !manuscript.submission.labels && (
+                <Checkbox
+                  checked={selectedNewManuscripts.includes(manuscript.id)}
+                  onChange={() => toggleNewManuscriptCheck(manuscript.id)}
+                />
+              )}
+            <span style={{ wordBreak: 'break-word' }}>
+              {manuscript.submission.articleURL ? (
+                <a href={manuscript.submission.articleURL} target="_blank">
+                  {manuscript.submission &&
+                    manuscript.submission.articleDescription}
+                </a>
+              ) : (
+                manuscript.submission.articleDescription
+              )}
+            </span>
+            <>
+              <Tooltip
+                destroyTooltipOnHide={{ keepParent: false }}
+                getTooltipContainer={el => el}
+                overlay={
+                  <span>
+                    {formattedAbstract?.length > 1000
+                      ? `${formattedAbstract.slice(0, 1000)}...`
+                      : formattedAbstract}
+                  </span>
+                }
+                overlayInnerStyle={{
+                  backgroundColor: 'black',
+                  color: 'white',
+                  borderColor: 'black',
+                }}
+                overlayStyle={{
+                  maxWidth: '65vw',
+                  wordBreak: 'break-word',
+                  display: `${!formattedAbstract && 'none'}`,
+                }}
+                placement="bottomLeft"
+                trigger={['hover']}
+              >
+                <InfoIcon>i</InfoIcon>
+              </Tooltip>
+            </>
+          </StyledDescriptionWrapper>
+        </Cell>
+      )
     },
     'submission.journal': () => {
       return <Cell>{manuscript.submission.journal}</Cell>
     },
-    'created': () => {
+    created: () => {
       return <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
     },
-    'updated': () => {
-      return  <Cell>{convertTimestampToDate(manuscript.updated)}</Cell>
+    updated: () => {
+      return <Cell>{convertTimestampToDate(manuscript.updated)}</Cell>
     },
     'submission.topics': () => {
-      return <Cell>
-      {manuscript.submission?.topics?.map(topic => {
-        return (
-          <StyledTopic
-            key={topic}
-            onClick={() => filterByTopic(topic)}
-            title={convertCamelCaseToText(topic)}
-          >
-            {convertCamelCaseToText(topic)}
-          </StyledTopic>
-        )
-      })}
-    </Cell>
+      return (
+        <Cell>
+          {manuscript.submission?.topics?.map(topic => {
+            return (
+              <StyledTopic
+                key={topic}
+                onClick={() => filterByTopic(topic)}
+                title={convertCamelCaseToText(topic)}
+              >
+                {convertCamelCaseToText(topic)}
+              </StyledTopic>
+            )
+          })}
+        </Cell>
+      )
     },
-    'status': () => {
-      return <Cell>
-      <span onClick={() => filterByArticleStatus(manuscript.status)}>
-        <StatusBadge
-          clickable
-          published={manuscript.published}
-          status={manuscript.status}
-        />
-      </span>
-    </Cell>
+    status: () => {
+      return (
+        <Cell>
+          <span onClick={() => filterByArticleStatus(manuscript.status)}>
+            <StatusBadge
+              clickable
+              published={manuscript.published}
+              status={manuscript.status}
+            />
+          </span>
+        </Cell>
+      )
     },
     'submission.labels': () => {
-      return <Cell>
-      {manuscript.submission && manuscript.submission.labels ? (
-        <StyledTableLabel
-          onClick={() => filterByArticleLabel(manuscript.submission.labels)}
-        >
-          {manuscript.submission &&
-            convertCamelCaseToText(manuscript.submission.labels)}
-        </StyledTableLabel>
-      ) : (
-        <StyledButton
-          onClick={() => setReadyToEvaluateLabel(manuscript.id)}
-          primary
-        >
-          Select
-        </StyledButton>
-      )}
-    </Cell>
+      return (
+        <Cell>
+          {manuscript.submission && manuscript.submission.labels ? (
+            <StyledTableLabel
+              onClick={() => filterByArticleLabel(manuscript.submission.labels)}
+            >
+              {manuscript.submission &&
+                convertCamelCaseToText(manuscript.submission.labels)}
+            </StyledTableLabel>
+          ) : (
+            <StyledButton
+              onClick={() => setReadyToEvaluateLabel(manuscript.id)}
+              primary
+            >
+              Select
+            </StyledButton>
+          )}
+        </Cell>
+      )
     },
-    'author': () => {
-      return <Cell>
-      {manuscript.submitter && (
-        <UserCombo>
-          <UserAvatar user={manuscript.submitter} />
-          <UserInfo>
-            <Primary>{manuscript.submitter.defaultIdentity.name}</Primary>
-            <Secondary>
-              {manuscript.submitter.email || `(${manuscript.submitter.username})`}
-            </Secondary>
-          </UserInfo>
-        </UserCombo>
-      )}
-    </Cell>
+    author: () => {
+      return (
+        <Cell>
+          {manuscript.submitter && (
+            <UserCombo>
+              <UserAvatar user={manuscript.submitter} />
+              <UserInfo>
+                <Primary>{manuscript.submitter.defaultIdentity.name}</Primary>
+                <Secondary>
+                  {manuscript.submitter.email ||
+                    `(${manuscript.submitter.username})`}
+                </Secondary>
+              </UserInfo>
+            </UserCombo>
+          )}
+        </Cell>
+      )
     },
-    'editor': () => {
-      return <Cell>
-      {manuscript.teams.map(team => (
-        <StyledAuthor key={team.id}>
-          {team.role !== 'author' &&
-            team.role !== 'reviewer' &&
-            team.members && team.members[0] && team.members[0].user.defaultIdentity.name}
-        </StyledAuthor>
-      ))}
-    </Cell>
-    }
+    editor: () => {
+      return (
+        <Cell>
+          {manuscript.teams.map(team => (
+            <StyledAuthor key={team.id}>
+              {team.role !== 'author' &&
+                team.role !== 'reviewer' &&
+                team.members &&
+                team.members[0] &&
+                team.members[0].user.defaultIdentity.name}
+            </StyledAuthor>
+          ))}
+        </Cell>
+      )
+    },
   }
 
-  return (fieldName) => {
+  return fieldName => {
     if (get(renderManuscriptColumnsActions, fieldName)) {
       return get(renderManuscriptColumnsActions, fieldName)()
     }
 
-    return <Cell>
-      {get(manuscript, fieldName, null)}
-    </Cell>
+    return <Cell>{get(manuscript, fieldName, null)}</Cell>
   }
 }
 
@@ -418,4 +464,3 @@ User.defaultProps = {
 }
 
 export default User
-
