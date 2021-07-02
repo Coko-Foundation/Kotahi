@@ -41,6 +41,11 @@ const Subheading = styled.h3`
   margin-top: ${grid(2.0)};
 `
 
+console.log('process.env.MANUSCRIPTS_TABLE_COLUMNS')
+console.log(process.env.MANUSCRIPTS_TABLE_COLUMNS)
+console.log('typeof process.env.MANUSCRIPTS_TABLE_COLUMNS')
+console.log(typeof process.env.MANUSCRIPTS_TABLE_COLUMNS)
+
 const Frontpage = ({ history, ...props }) => {
   const [sortName] = useState('created')
   const [sortDirection] = useState('DESC')
