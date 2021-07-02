@@ -88,16 +88,18 @@ const Reviewers = ({
                   <StatusBadge minimal status={reviewer.status} />
                   <UserAvatar key={reviewer.id} user={reviewer.user} />
                   {reviewer.user.defaultIdentity.name}
-                  <Checkbox
-                    checked={reviewer.isShared}
-                    label="Shared"
-                    name={`checkbox-shared-reviewer-${reviewer.id}`}
-                    onChange={() =>
-                      toggleReviewerSharedStatus(reviewer.id, {
-                        isShared: !reviewer.isShared,
-                      })
-                    }
-                  />
+                  {process.env.INSTANCE_NAME === 'colab' && (
+                    <Checkbox
+                      checked={reviewer.isShared}
+                      label="Shared"
+                      name={`checkbox-shared-reviewer-${reviewer.id}`}
+                      onChange={() =>
+                        toggleReviewerSharedStatus(reviewer.id, {
+                          isShared: !reviewer.isShared,
+                        })
+                      }
+                    />
+                  )}
                   <div>
                     <Action
                       onClick={() =>
