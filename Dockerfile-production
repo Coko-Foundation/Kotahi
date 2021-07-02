@@ -12,6 +12,7 @@ ARG client_port
 ARG public_client_host
 ARG public_client_protocol
 ARG public_client_port
+ARG manuscripts_table_columns
 
 ENV INSTANCE_NAME $instance_name
 ENV NODE_ENV "production"

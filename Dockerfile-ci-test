@@ -9,6 +9,7 @@ ARG server_port
 ARG client_protocol
 ARG client_host
 ARG client_port
+ARG manuscripts_table_columns
 
 ENV NODE_ENV "development"
 ENV SERVER_PROTOCOL "http"
