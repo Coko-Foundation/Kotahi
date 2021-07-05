@@ -19,6 +19,10 @@ const VersionTitleLink = styled(JournalLink)`
   text-decoration: none;
 `
 
+const StyledActionGroup = styled(ActionGroup)`
+  text-align: right;
+`
+
 const getUserFromTeam = (version, role) => {
   if (!version.teams) return []
 
@@ -29,7 +33,7 @@ const getUserFromTeam = (version, role) => {
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const EditorItemLinks = ({ version }) => (
-  <ActionGroup>
+  <StyledActionGroup>
     <Action to={`${urlFrag}/versions/${version.parentId || version.id}/submit`}>
       Summary Info
     </Action>
@@ -41,7 +45,7 @@ const EditorItemLinks = ({ version }) => (
         ? `Decision: ${version.decision.recommendation}`
         : 'Control Panel'}
     </Action>
-  </ActionGroup>
+  </StyledActionGroup>
 )
 
 EditorItemLinks.propTypes = {
@@ -100,7 +104,20 @@ const EditorItem = ({ version }) => (
       <VersionTitleLink id={version.id} page="decisions" version={version}>
         <VersionTitle version={version} />
       </VersionTitleLink>
-      <EditorItemLinks version={version} />
+      <div>
+        {process.env.INSTANCE_NAME === 'ncrc' && (
+          <p
+            style={{
+              textAlign: 'right',
+              width: '600px',
+              wordBreak: 'break-all',
+            }}
+          >
+            {JSON.parse(version.submission).articleDescription}
+          </p>
+        )}
+        <EditorItemLinks version={version} />
+      </div>
     </Item>
     <Reviews version={version} />
   </>
