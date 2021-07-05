@@ -201,3 +201,11 @@ export const publishManuscriptMutation = gql`
     }
   }
 `
+
+export const sharedReviews = gql`
+  query($id: ID) {
+    sharedReviews(id: $id) {
+      ${reviewFields}
+    }
+  }
+`

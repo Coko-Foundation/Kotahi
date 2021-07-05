@@ -1,7 +1,34 @@
-// const merge = require('lodash/merge')
+const { flatten } = require('lodash')
 // const Review = require('./review')
 
 const resolvers = {
+  Query: {
+    async sharedReviews(_, { id }, ctx) {
+      const query = await ctx.models.Team.query()
+        .where({
+          manuscriptId: id,
+        })
+        .withGraphFetched('members.[user.reviews]')
+
+      const teams = await query
+
+      const members = flatten(
+        teams
+          .filter(team => team.role === 'reviewer')
+          .map(team => {
+            return team.members
+          }),
+      ).filter(member => {
+        return member.user.id === ctx.user.id || member.isShared
+      })
+
+      const reviews = members.map(teamMember => {
+        return teamMember.user.reviews
+      })
+
+      return flatten(reviews)
+    },
+  },
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
       // We process comment fields into array
@@ -72,6 +99,10 @@ const typeDefs = `
   extend type Mutation {
     updateReview(id: ID, input: ReviewInput): Review!
     completeReview(id: ID!): TeamMember
+  }
+
+  extend type Query {
+    sharedReviews(id: ID): [Review]
   }
 
   type Review implements Object {

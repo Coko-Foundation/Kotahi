@@ -20,7 +20,12 @@ import {
   SectionRow,
   Title,
 } from '../../../shared'
-import { query, updateReviewMutation, makeDecisionMutation } from './queries'
+import {
+  query,
+  updateReviewMutation,
+  makeDecisionMutation,
+  sharedReviews,
+} from './queries'
 import DecisionAndReviews from '../../../component-submit/src/components/DecisionAndReviews'
 
 const addEditor = (manuscript, label) => ({
@@ -50,6 +55,15 @@ const DecisionVersion = ({ form, current, version, parent }) => {
     // fetchPolicy: 'cache-and-network',
   })
 
+  const { data: sharedReviewsList, loading: loadingSharedReviews } = useQuery(
+    sharedReviews,
+    {
+      variables: {
+        id: version.id,
+      },
+    },
+  )
+
   // Find an existing review or create a placeholder, and hold a ref to it
   const existingReview = useRef(reviewOrInitial(data?.manuscript))
 
@@ -58,7 +72,7 @@ const DecisionVersion = ({ form, current, version, parent }) => {
     existingReview.current = reviewOrInitial(data?.manuscript)
   }, [data?.manuscript?.reviews])
 
-  if (loading) return <Spinner />
+  if (loading || loadingSharedReviews) return <Spinner />
   if (error) return `Error! ${error.message}`
 
   const { manuscript } = data
@@ -171,7 +185,10 @@ const DecisionVersion = ({ form, current, version, parent }) => {
         </AdminSection>
         {current && (
           <AdminSection key="decision-review">
-            <DecisionReviews manuscript={version} />
+            <DecisionReviews
+              manuscript={version}
+              sharedReviews={sharedReviewsList.sharedReviews}
+            />
           </AdminSection>
         )}
         {current && (
