@@ -529,5 +529,11 @@ export const SubmissionFormPage = {
   getAbstractContent() {
     return this.getAbstractField().find('p').invoke('text')
   },
+  getAbstractFieldColab() {
+    return this.getWaxInputBox(4)
+  },
+  fillInAbstractColab(abstract) {
+    this.getAbstractFieldColab().fillInput(abstract)
+  },
 }
 export default SubmissionFormPage
