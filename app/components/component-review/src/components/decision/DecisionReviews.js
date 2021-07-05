@@ -45,12 +45,14 @@ const DecisionReviews = ({ manuscript, sharedReviews }) => {
           .map((review, index) => (
             <SectionRow key={review.id}>
               <DecisionReview
+                manuscriptId={manuscript.id}
                 open
                 review={review}
                 reviewer={{
                   name: review.user.username,
                   ordinal: index + 1,
                 }}
+                teams={manuscript.teams}
               />
             </SectionRow>
           ))

@@ -1,0 +1,1 @@
+ALTER TABLE reviews ADD is_hidden_from_author BOOLEAN

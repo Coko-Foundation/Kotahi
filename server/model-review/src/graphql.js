@@ -11,6 +11,8 @@ const resolvers = {
         .withGraphFetched('members.[user.reviews]')
 
       const teams = await query
+      const authorTeam = teams.filter(team => team.role === 'author')
+      const authorUser = authorTeam[0].members[0].user
 
       const members = flatten(
         teams
@@ -22,11 +24,15 @@ const resolvers = {
         return member.user.id === ctx.user.id || member.isShared
       })
 
-      const reviews = members.map(teamMember => {
-        return teamMember.user.reviews
+      const reviews = flatten(
+        members.map(teamMember => {
+          return teamMember.user.reviews
+        }),
+      ).filter(review => {
+        return !(review.isHiddenFromAuthor && ctx.user.id === authorUser.id)
       })
 
-      return flatten(reviews)
+      return reviews
     },
   },
   Mutation: {
@@ -116,6 +122,7 @@ const typeDefs = `
     reviewComment: ReviewComment
     confidentialComment: ReviewComment
     decisionComment: ReviewComment
+    isHiddenFromAuthor: Boolean
   }
 
   input ReviewInput {
@@ -125,6 +132,7 @@ const typeDefs = `
     recommendation: String
     isDecision: Boolean
     manuscriptId: ID!
+    isHiddenFromAuthor: Boolean
   }
 
   type ReviewComment implements Object {

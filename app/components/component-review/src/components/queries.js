@@ -30,6 +30,7 @@ const reviewFields = `
     ${commentFields}
   }
   isDecision
+  isHiddenFromAuthor
   recommendation
   user {
     id

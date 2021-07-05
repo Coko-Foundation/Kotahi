@@ -47,6 +47,7 @@ class Review extends BaseModel {
         userId: { type: 'string', format: 'uuid' },
         user: { type: ['object', 'null'] },
         isDecision: { type: ['boolean', 'false'] },
+        isHiddenFromAuthor: { type: ['boolean', 'false'] },
       },
     }
   }
