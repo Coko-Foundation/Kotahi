@@ -9,6 +9,7 @@ const INVITE_REVIEWER_OPTION_LIST = 'react-select'
 const SUBMIT_BUTTON = 'button[type="submit"]'
 const BACK_BUTTON = 'button[type="button"]'
 const INVITED_REVIEWERS = 'div[class*="Reviewers__Reviewer-"]'
+const SHARED_CHECKBOX = '[name*=checkbox-shared-reviewer]'
 
 // eslint-disable-next-line import/prefer-default-export
 export const ReviewersPage = {
@@ -52,5 +53,11 @@ export const ReviewersPage = {
   },
   getInvitedReviewer(nth) {
     return this.getInvitedReviewersList().eq(nth)
+  },
+  getSharedCheckbox(nth) {
+    return cy.get(SHARED_CHECKBOX).eq(nth)
+  },
+  clickSharedCheckbox(nth) {
+    return this.getSharedCheckbox(nth).click()
   },
 }
