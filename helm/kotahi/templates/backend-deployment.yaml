@@ -96,6 +96,11 @@ spec:
                 secretKeyRef:
                   key: PUBSWEET_SECRET
                   name: orcid-secret
+            - name: GOOGLE_SPREADSHEET_ID
+              valueFrom:
+                secretKeyRef:
+                  key: GOOGLE_SPREADSHEET_ID
+                  name: orcid-secret
             - name: GOOGLE_SPREADSHEET_CLIENT_EMAIL
               valueFrom:
                 secretKeyRef:
