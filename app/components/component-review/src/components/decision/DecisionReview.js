@@ -65,7 +65,9 @@ const ReviewHeading = ({
   })
 
   const isCurrentUserEditor = editorTeam.length
-    ? !!editorTeam[0].members.filter(user => user.id === currentUser.id).length
+    ? !!editorTeam[0].members.filter(
+        member => member.user.id === currentUser.id,
+      ).length
     : false
 
   const toggleIsHiddenFromAuthor = (reviewId, reviewHiddenFromAuthor) => {
