@@ -60,12 +60,12 @@ const ReviewHeading = ({
 
   const [updateReview] = useMutation(updateReviewMutation)
 
-  const authorTeam = teams.filter(team => {
-    return team.role === 'author'
+  const editorTeam = teams.filter(team => {
+    return team.role === 'editor'
   })
 
-  const isCurrentUserAuthor = authorTeam.length
-    ? authorTeam[0].members[0].user.id === currentUser.id
+  const isCurrentUserEditor = editorTeam.length
+    ? !!editorTeam[0].members.filter(user => user.id === currentUser.id).length
     : false
 
   const toggleIsHiddenFromAuthor = (reviewId, reviewHiddenFromAuthor) => {
@@ -86,7 +86,7 @@ const ReviewHeading = ({
       <Controls>
         <ToggleReview open={open} toggle={toggleOpen} />
       </Controls>
-      {process.env.INSTANCE_NAME === 'colab' && !isCurrentUserAuthor && (
+      {process.env.INSTANCE_NAME === 'colab' && isCurrentUserEditor && (
         <Checkbox
           checked={isHiddenFromAuthor}
           label="Hide review to author"
