@@ -16,6 +16,7 @@ import prettyRoleText from '../../../../../shared/prettyRoleText'
 
 const VersionTitleLink = styled(JournalLink)`
   color: #333;
+  max-width: 60%;
   text-decoration: none;
 `
 
@@ -104,20 +105,7 @@ const EditorItem = ({ version }) => (
       <VersionTitleLink id={version.id} page="decisions" version={version}>
         <VersionTitle version={version} />
       </VersionTitleLink>
-      <div>
-        {process.env.INSTANCE_NAME === 'ncrc' && (
-          <p
-            style={{
-              textAlign: 'right',
-              width: '600px',
-              wordBreak: 'break-all',
-            }}
-          >
-            {JSON.parse(version.submission).articleDescription}
-          </p>
-        )}
-        <EditorItemLinks version={version} />
-      </div>
+      <EditorItemLinks version={version} />
     </Item>
     <Reviews version={version} />
   </>
