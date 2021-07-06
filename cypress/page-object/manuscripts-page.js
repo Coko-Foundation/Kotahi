@@ -35,7 +35,7 @@ const ARTICLES_COUNT = '[class*=Pagination] > strong'
 const PAGINATION_PAGE_BUTTON = 'Page '
 const CONFIRMATION_MESSAGE = '[class*=BulkDeleteModalContainer] > p'
 const IMPORT_CONFIRMATION_POPUP = '[class*=Toastify] > [role=alert]'
-
+const CONTROL = '[href*=decision]'
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
     return cy.get(MANUSCRIPTS_OPTIONS_LIST)
@@ -91,6 +91,9 @@ export const ManuscriptsPage = {
 
   getControlButton() {
     return cy.get(CONTROL_BUTTON)
+  },
+  clickControl() {
+    return cy.get(CONTROL).click()
   },
   getCreatedCaret(nth) {
     return cy.getByContainsClass(CREATED_CARET).eq(nth)
