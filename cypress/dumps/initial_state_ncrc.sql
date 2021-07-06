@@ -380,7 +380,8 @@ CREATE TABLE public.team_members (
     status character varying(255),
     team_id uuid,
     user_id uuid,
-    alias_id uuid
+    alias_id uuid,
+    is_shared boolean
 );
 
 
