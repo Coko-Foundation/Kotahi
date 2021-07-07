@@ -32,6 +32,7 @@ const reviewFields = `
   isDecision
   isHiddenFromAuthor
   isHiddenReviewerName
+  canBePublishedPublicly
   recommendation
   user {
     id

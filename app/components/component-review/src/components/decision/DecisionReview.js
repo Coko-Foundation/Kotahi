@@ -8,6 +8,7 @@ import { JournalContext } from '../../../../xpub-journal/src'
 import Review from '../review/Review'
 import useCurrentUser from '../../../../../hooks/useCurrentUser'
 import { updateReviewMutation } from '../queries'
+import ShareIcon from '../../../../../shared/icons/share'
 
 const ToggleReview = ({ open, toggle }) => (
   <Button onClick={toggle} plain>
@@ -60,6 +61,7 @@ const ReviewHeading = ({
   manuscriptId,
   teams,
   currentUser,
+  canBePublishedPublicly,
 }) => {
   if (!currentUser) return null
 
@@ -115,6 +117,12 @@ const ReviewHeading = ({
       &nbsp;
       <Name>
         {isHiddenReviewerName && isCurrentUserAuthor ? 'Anonymous' : name}
+        {isCurrentUserEditor && canBePublishedPublicly && (
+          <>
+            &nbsp;
+            <ShareIcon />
+          </>
+        )}
       </Name>
       <Controls>
         <ToggleReview open={open} toggle={toggleOpen} />
@@ -158,6 +166,7 @@ const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
     isHiddenFromAuthor,
     isHiddenReviewerName,
     id,
+    canBePublishedPublicly,
   } = review
 
   const { name, ordinal } = reviewer
@@ -169,6 +178,7 @@ const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
   return (
     <Root>
       <ReviewHeading
+        canBePublishedPublicly={canBePublishedPublicly}
         currentUser={currentUser}
         id={id}
         isHiddenFromAuthor={isHiddenFromAuthor}

@@ -36,6 +36,7 @@ const reviewFields = `
   }
   isDecision
   recommendation
+  canBePublishedPublicly
   user {
     id
     username
@@ -262,6 +263,7 @@ const ReviewPage = ({ match, ...props }) => {
         commentType: 'confidential',
         content: review.confidentialComment.content,
       },
+      canBePublishedPublicly: review.canBePublishedPublicly,
     }
 
     return updateReviewMutation({

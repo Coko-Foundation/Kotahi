@@ -125,6 +125,7 @@ const typeDefs = `
     decisionComment: ReviewComment
     isHiddenFromAuthor: Boolean
     isHiddenReviewerName: Boolean
+    canBePublishedPublicly: Boolean
   }
 
   input ReviewInput {
@@ -136,6 +137,7 @@ const typeDefs = `
     manuscriptId: ID!
     isHiddenFromAuthor: Boolean
     isHiddenReviewerName: Boolean
+    canBePublishedPublicly: Boolean
   }
 
   type ReviewComment implements Object {
