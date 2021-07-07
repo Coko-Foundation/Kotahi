@@ -31,6 +31,7 @@ const reviewFields = `
   }
   isDecision
   isHiddenFromAuthor
+  isHiddenReviewerName
   recommendation
   user {
     id

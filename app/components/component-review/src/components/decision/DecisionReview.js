@@ -43,6 +43,10 @@ const Controls = styled.span`
   text-align: right;
 `
 
+const StyledCheckbox = styled(Checkbox)`
+  margin-left: 10px;
+`
+
 const ReviewHeading = ({
   id,
   journal,
@@ -51,6 +55,7 @@ const ReviewHeading = ({
   ordinal,
   recommendation,
   isHiddenFromAuthor,
+  isHiddenReviewerName,
   toggleOpen,
   manuscriptId,
   teams,
@@ -63,6 +68,14 @@ const ReviewHeading = ({
   const editorTeam = teams.filter(team => {
     return team.role.toLowerCase().includes('editor')
   })
+
+  const authorTeam = teams.filter(team => {
+    return team.role.toLowerCase().includes('author')
+  })
+
+  const isCurrentUserAuthor = authorTeam.length
+    ? authorTeam[0].members[0].user.id === currentUser.id
+    : false
 
   const isCurrentUserEditor = editorTeam.length
     ? !!editorTeam
@@ -80,21 +93,50 @@ const ReviewHeading = ({
     })
   }
 
+  const toggleIsHiddenReviewerNameFromPublishedAndAuthor = (
+    reviewId,
+    reviewerNameHiddenFromPublishedAndAuthor,
+  ) => {
+    updateReview({
+      variables: {
+        id: reviewId,
+        input: {
+          isHiddenReviewerName: reviewerNameHiddenFromPublishedAndAuthor,
+          manuscriptId,
+        },
+      },
+    })
+  }
+
   return (
     <ReviewHeadingRoot>
       <Bullet journal={journal} recommendation={recommendation} />
       <Ordinal>Review {ordinal}</Ordinal>
       &nbsp;
-      <Name>{name || 'Anonymous'}</Name>
+      <Name>
+        {isHiddenReviewerName && isCurrentUserAuthor ? 'Anonymous' : name}
+      </Name>
       <Controls>
         <ToggleReview open={open} toggle={toggleOpen} />
       </Controls>
       {process.env.INSTANCE_NAME === 'colab' && isCurrentUserEditor && (
-        <Checkbox
-          checked={isHiddenFromAuthor}
-          label="Hide review to author"
-          onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
-        />
+        <>
+          <Checkbox
+            checked={isHiddenFromAuthor}
+            label="Hide review to author"
+            onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
+          />
+          <StyledCheckbox
+            checked={isHiddenReviewerName}
+            label="Hide reviewer name"
+            onChange={() =>
+              toggleIsHiddenReviewerNameFromPublishedAndAuthor(
+                id,
+                !isHiddenReviewerName,
+              )
+            }
+          />
+        </>
       )}
     </ReviewHeadingRoot>
   )
@@ -110,7 +152,14 @@ const ReviewBody = styled.div`
 
 const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
   const currentUser = useCurrentUser()
-  const { recommendation, isHiddenFromAuthor, id } = review
+
+  const {
+    recommendation,
+    isHiddenFromAuthor,
+    isHiddenReviewerName,
+    id,
+  } = review
+
   const { name, ordinal } = reviewer
   const journal = useContext(JournalContext)
 
@@ -123,6 +172,7 @@ const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
         currentUser={currentUser}
         id={id}
         isHiddenFromAuthor={isHiddenFromAuthor}
+        isHiddenReviewerName={isHiddenReviewerName}
         journal={journal}
         manuscriptId={manuscriptId}
         name={name}

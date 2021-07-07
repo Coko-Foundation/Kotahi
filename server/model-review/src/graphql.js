@@ -1,4 +1,4 @@
-const { flatten } = require('lodash')
+// const { flatten } = require('lodash')
 // const Review = require('./review')
 
 const resolvers = {
@@ -14,23 +14,31 @@ const resolvers = {
       const authorTeam = teams.filter(team => team.role === 'author')
       const authorUser = authorTeam[0].members[0].user
 
-      const members = flatten(
-        teams
-          .filter(team => team.role === 'reviewer')
-          .map(team => {
-            return team.members
-          }),
-      ).filter(member => {
-        return member.user.id === ctx.user.id || member.isShared
-      })
+      const members = teams
+        .filter(team => team.role === 'reviewer')
+        .map(team => {
+          return team.members
+        })
+        .flat()
+        .filter(member => {
+          return member.user.id === ctx.user.id || member.isShared
+        })
 
-      const reviews = flatten(
-        members.map(teamMember => {
-          return teamMember.user.reviews
-        }),
-      ).filter(review => {
-        return !(review.isHiddenFromAuthor && ctx.user.id === authorUser.id)
-      })
+      const reviews = members
+        .map(teamMember => {
+          return teamMember.user.reviews.map(review => {
+            return { ...review, user: teamMember.user }
+          })
+        })
+        .flat()
+        .filter(review => {
+          return !(review.isHiddenFromAuthor && ctx.user.id === authorUser.id)
+        })
+        .map(review => {
+          return review.isHiddenReviewerName && ctx.user.id === authorUser.id
+            ? { ...review, user: { ...review.user, username: '' } }
+            : review
+        })
 
       return reviews
     },
@@ -85,13 +93,6 @@ const resolvers = {
       return member.save()
     },
   },
-  Review: {
-    async user(parent, _, ctx) {
-      return parent.user
-        ? parent.user
-        : ctx.models.User.query().findById(parent.userId)
-    },
-  },
   ReviewComment: {
     async files(parent, _, ctx) {
       return parent.files
@@ -123,6 +124,7 @@ const typeDefs = `
     confidentialComment: ReviewComment
     decisionComment: ReviewComment
     isHiddenFromAuthor: Boolean
+    isHiddenReviewerName: Boolean
   }
 
   input ReviewInput {
@@ -133,6 +135,7 @@ const typeDefs = `
     isDecision: Boolean
     manuscriptId: ID!
     isHiddenFromAuthor: Boolean
+    isHiddenReviewerName: Boolean
   }
 
   type ReviewComment implements Object {

@@ -48,6 +48,7 @@ class Review extends BaseModel {
         user: { type: ['object', 'null'] },
         isDecision: { type: ['boolean', 'false'] },
         isHiddenFromAuthor: { type: ['boolean', 'false'] },
+        isHiddenReviewerName: { type: ['boolean', 'false'] },
       },
     }
   }
