@@ -32,6 +32,9 @@ const resolvers = {
         })
         .flat()
         .filter(review => {
+          return review.manuscriptId === id
+        })
+        .filter(review => {
           return !(review.isHiddenFromAuthor && ctx.user.id === authorUser.id)
         })
         .map(review => {
