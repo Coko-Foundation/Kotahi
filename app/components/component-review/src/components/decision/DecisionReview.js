@@ -61,13 +61,14 @@ const ReviewHeading = ({
   const [updateReview] = useMutation(updateReviewMutation)
 
   const editorTeam = teams.filter(team => {
-    return team.role === 'editor'
+    return team.role.toLowerCase().includes('editor')
   })
 
   const isCurrentUserEditor = editorTeam.length
-    ? !!editorTeam[0].members.filter(
-        member => member.user.id === currentUser.id,
-      ).length
+    ? !!editorTeam
+        .map(team => team.members)
+        .flat()
+        .filter(member => member.user.id === currentUser.id).length
     : false
 
   const toggleIsHiddenFromAuthor = (reviewId, reviewHiddenFromAuthor) => {
