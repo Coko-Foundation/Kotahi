@@ -167,23 +167,25 @@ const ReviewComment = ({ updateReview }) => (
         </Field>
       </div>
     </AdminSection>
-    <Field key="canBePublishedPublicly" name="canBePublishedPublicly">
-      {formikBag => {
-        return (
-          <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-            <Checkbox
-              {...formikBag.field}
-              checked={formikBag.field.value}
-              label="I accept review can be published publicly."
-              onChange={e => {
-                formikBag.field.onChange(e)
-                updateReview({ canBePublishedPublicly: e.target.checked })
-              }}
-            />
-          </div>
-        )
-      }}
-    </Field>
+    {process.env.INSTANCE_NAME === 'colab' && (
+      <Field key="canBePublishedPublicly" name="canBePublishedPublicly">
+        {formikBag => {
+          return (
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Checkbox
+                {...formikBag.field}
+                checked={formikBag.field.value}
+                label="I accept review can be published publicly."
+                onChange={e => {
+                  formikBag.field.onChange(e)
+                  updateReview({ canBePublishedPublicly: e.target.checked })
+                }}
+              />
+            </div>
+          )
+        }}
+      </Field>
+    )}
   </>
 )
 

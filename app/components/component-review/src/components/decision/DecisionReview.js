@@ -117,12 +117,14 @@ const ReviewHeading = ({
       &nbsp;
       <Name>
         {isHiddenReviewerName && isCurrentUserAuthor ? 'Anonymous' : name}
-        {isCurrentUserEditor && canBePublishedPublicly && (
-          <>
-            &nbsp;
-            <ShareIcon />
-          </>
-        )}
+        {isCurrentUserEditor &&
+          canBePublishedPublicly &&
+          process.env.INSTANCE_NAME === 'colab' && (
+            <>
+              &nbsp;
+              <ShareIcon />
+            </>
+          )}
       </Name>
       <Controls>
         <ToggleReview open={open} toggle={toggleOpen} />
