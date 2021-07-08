@@ -27,6 +27,7 @@ services:
       - INSTANCE_NAME=${INSTANCE_NAME:-elife}
       - USE_SANDBOXED_ORCID=${USE_SANDBOXED_ORCID:-true}
       - MANUSCRIPTS_TABLE_COLUMNS=${MANUSCRIPTS_TABLE_COLUMNS}
+      - GOOGLE_SPREADSHEET_ID=${GOOGLE_SPREADSHEET_ID}
     volumes:
       - ./app:/home/node/app/app
       - ./config:/home/node/app/config
