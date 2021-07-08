@@ -1,6 +1,5 @@
 const { ref } = require('objection')
 const axios = require('axios')
-const { GoogleSpreadsheet } = require('google-spreadsheet')
 const { mergeWith, isArray } = require('lodash')
 const { pubsubManager } = require('pubsweet-server')
 
@@ -16,6 +15,7 @@ const {
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
+const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
 
 let isImportInProgress = false
 
@@ -417,65 +417,26 @@ const resolvers = {
       }
 
       if (process.env.INSTANCE_NAME === 'ncrc') {
-        // eslint-disable-next-line
-        const submissionForm = await Form.findOneByField('purpose', 'submit')
-        const spreadsheetId = '1OvWJj7ZTFhniC4KbFNbskuYSNMftsG2ocKuY-i9ezVA'
-
-        const fieldsOrder = submissionForm.structure.children
-          .filter(el => el.name)
-          .map(formElement => formElement.name.split('.')[1])
-
-        const formatSubmissionData = rawSubmissionData => {
-          return Object.keys(rawSubmissionData).reduce((acc, key) => {
-            return { ...acc, [key]: rawSubmissionData[key].toString() }
-          }, {})
-        }
-
-        const publishArticleInGoogleSheets = async submissionData => {
-          const formattedSubmissionData = formatSubmissionData(submissionData)
-
-          const { articleURL } = formattedSubmissionData
-          const doc = new GoogleSpreadsheet(spreadsheetId)
-
-          await doc.useServiceAccountAuth({
-            client_email: process.env.GOOGLE_SPREADSHEET_CLIENT_EMAIL,
-            private_key: process.env.GOOGLE_SPREADSHEET_PRIVATE_KEY.replace(
-              /\\n/g,
-              '\n',
-            ),
-          })
-
-          await doc.loadInfo()
-          const sheet = doc.sheetsByIndex[0]
-          const rows = await sheet.getRows()
-
-          const indexOfExistingArticle = rows.findIndex(
-            row => row.articleURL === articleURL,
-          )
-
-          if (indexOfExistingArticle !== -1) {
-            fieldsOrder.forEach(fieldName => {
-              rows[indexOfExistingArticle][fieldName] =
-                formattedSubmissionData[fieldName] || ''
-            })
-            await rows[indexOfExistingArticle].save()
-          } else {
-            await sheet.addRow({ ...formattedSubmissionData })
-          }
-        }
-
         try {
-          await publishArticleInGoogleSheets(manuscript.submission)
+          const manuscriptId = await publishToGoogleSpreadSheet(manuscript)
+          console.log('manuscriptId')
+          console.log(manuscriptId)
 
-          const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
-            id,
-            {
-              published: new Date(),
-              status: 'published',
-            },
-          )
+          if (manuscriptId) {
+            const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
+              manuscriptId,
+              {
+                published: new Date(),
+                status: 'published',
+              },
+            )
 
-          return updatedManuscript
+            console.log('updatedManuscript')
+            console.log(updatedManuscript)
+            return updatedManuscript
+          }
+
+          return null
         } catch (e) {
           // eslint-disable-next-line
           console.log('error while publishing in google spreadsheet')
