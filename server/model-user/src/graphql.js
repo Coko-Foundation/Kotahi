@@ -3,6 +3,8 @@ const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
 const { existsSync } = require('fs')
 const path = require('path')
 
+const sendEmailNotification = require('../../email-notifications')
+
 const resolvers = {
   Query: {
     user(_, { id, username }, ctx) {
@@ -48,6 +50,23 @@ const resolvers = {
       }
 
       // return ctx.models.User.fetchAll(where, ctx, { eager })
+    },
+    async sendEmail(_, { input }, ctx) {
+      console.log('input')
+      console.log(input)
+      console.log('typeof input')
+      console.log(typeof input)
+      // const { data, receiver, template } = input
+
+      // try {
+      //   await sendEmailNotification(receiver, template, data)
+      //   return true
+      // } catch (e) {
+      //   /* eslint-disable-next-line */
+      //   console.log('email was not sent', e)
+      //   return false
+      // }
+      return false
     },
     // Authentication
     async currentUser(_, vars, ctx) {
@@ -206,6 +225,7 @@ const typeDefs = `
     users: [User]
     paginatedUsers(sort: UsersSort, offset: Int, limit: Int, filter: UsersFilter): PaginatedUsers
     searchUsers(teamId: ID, query: String): [User]
+    sendEmail(input: String): Boolean
   }
 
   type PaginatedUsers {
