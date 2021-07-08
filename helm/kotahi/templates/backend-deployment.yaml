@@ -111,6 +111,21 @@ spec:
                 secretKeyRef:
                   key: GOOGLE_SPREADSHEET_PRIVATE_KEY
                   name: orcid-secret
+            - name: GMAIL_NOTIFICATION_EMAIL_AUTH
+              valueFrom:
+                secretKeyRef:
+                  key: GMAIL_NOTIFICATION_EMAIL_AUTH
+                  name: orcid-secret
+            - name: GMAIL_NOTIFICATION_EMAIL_SENDER 
+              valueFrom:
+                secretKeyRef:
+                  key: GMAIL_NOTIFICATION_EMAIL_SENDER
+                  name: orcid-secret
+            - name: GMAIL_NOTIFICATION_PASSWORD 
+              valueFrom:
+                secretKeyRef:
+                  key: GMAIL_NOTIFICATION_PASSWORD
+                  name: orcid-secret
             - name: S3_ACCESS_KEY_ID
               valueFrom:
                 secretKeyRef:
