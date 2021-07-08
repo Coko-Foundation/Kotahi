@@ -1,4 +1,4 @@
-export const EvaluationCompleteEmailTemplate = (
+const EvaluationCompleteEmailTemplate = (
   authorFirstName,
   articleTitle,
   link,
@@ -22,4 +22,4 @@ export const EvaluationCompleteEmailTemplate = (
   return result.replace(/\n/g, '')
 }
 
-export default EvaluationCompleteEmailTemplate
+module.exports = EvaluationCompleteEmailTemplate

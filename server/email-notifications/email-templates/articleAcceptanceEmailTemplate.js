@@ -25,4 +25,4 @@ const ArticleAcceptanceEmailTemplate = (
   return result.replace(/\n/g, '')
 }
 
-export default ArticleAcceptanceEmailTemplate
+module.exports = ArticleAcceptanceEmailTemplate
