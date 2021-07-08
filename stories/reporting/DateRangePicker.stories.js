@@ -36,10 +36,5 @@ Base.args = {
 
 export default {
   title: 'Reporting/DateRangePicker',
-  component: DateRangePickerStateful,
-  argTypes: {
-    startDate: { control: { type: 'number' } },
-    endDate: { control: { type: 'number' } },
-    max: { control: { type: 'number' } },
-  },
+  component: DateRangePicker,
 }

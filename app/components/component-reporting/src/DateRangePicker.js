@@ -2,7 +2,12 @@ import React from 'react'
 import DatePicker from 'react-date-picker'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
-import { getStartOfDayUtc, getEndOfDayUtc } from './dateUtils'
+import {
+  getStartOfDayUtc,
+  getEndOfDayUtc,
+  transposeUtcToLocal,
+  transposeLocalToUtc,
+} from './dateUtils'
 
 const InlineBlock = styled.div`
   display: inline-block;
@@ -21,47 +26,54 @@ const DateRangePicker = ({ endDate, max, setDateRange, startDate }) => {
       <DatePicker
         clearIcon={null}
         format="yyyy-MM-dd"
-        maxDate={trueEnd}
-        minDate={minDate}
+        maxDate={transposeUtcToLocal(trueEnd)}
+        minDate={transposeUtcToLocal(minDate)}
         onChange={val =>
-          setDateRange(getStartOfDayUtc(val).getTime(), trueEnd.getTime())
+          setDateRange(
+            getStartOfDayUtc(transposeLocalToUtc(val)).getTime(),
+            trueEnd.getTime(),
+          )
         }
-        value={trueStart}
+        value={transposeUtcToLocal(trueStart)}
       />
       {' — '}
       <DatePicker
         clearIcon={null}
         format="yyyy-MM-dd"
-        maxDate={trueMax}
-        minDate={minDate}
+        maxDate={transposeUtcToLocal(trueMax)}
+        minDate={transposeUtcToLocal(minDate)}
         onChange={val => {
           let newStart = trueStart.getTime()
-          const newEnd = getEndOfDayUtc(val).getTime()
+          const newEnd = getEndOfDayUtc(transposeLocalToUtc(val)).getTime()
           if (newStart >= newEnd) newStart = getStartOfDayUtc(newEnd).getTime()
           setDateRange(newStart, newEnd)
         }}
-        value={trueEnd}
+        value={transposeUtcToLocal(trueEnd)}
       />
     </InlineBlock>
   )
 }
 
 DateRangePicker.propTypes = {
+  /** Number (ms since epoch), string or Date object: Start date will be the UTC date containing this date-time  */
   startDate: PropTypes.oneOfType([
     PropTypes.number.isRequired,
     PropTypes.string.isRequired,
     PropTypes.object.isRequired,
   ]).isRequired,
+  /** Number (ms since epoch), string or Date object: End date will be the UTC date containing this date-time  */
   endDate: PropTypes.oneOfType([
     PropTypes.number.isRequired,
     PropTypes.string.isRequired,
     PropTypes.object.isRequired,
   ]).isRequired,
+  /** Number (ms since epoch), string or Date object: The UTC date containing this date-time specifies the maximum end date */
   max: PropTypes.oneOfType([
     PropTypes.number.isRequired,
     PropTypes.string.isRequired,
     PropTypes.object.isRequired,
   ]).isRequired,
+  /** callback with params (newStart, newEnd). newStart is midnight UTC at beginning of start date; newEnd is midnight UTC at end of end date. */
   setDateRange: PropTypes.func.isRequired,
 }
 
