@@ -80,6 +80,25 @@ describe('review page', () => {
                 ControlPage.getShowButton().should('not.exist')
             })
         })
+        it('checkbox can be published publicaly is visible', () => {
+            ReviewersPage.clickSharedCheckbox(0)
+            ReviewersPage.waitThreeSec()
+            ReviewersPage.clickBackToControlPage()
+            // eslint-disable-next-line jest/valid-expect-in-promise
+            cy.fixture('role_names').then(name => {
+                cy.login(name.role.reviewers.reviewer1, dashboard)
+                cy.awaitDisappearSpinner()
+                DashboardPage.clickAcceptReview()
+                DashboardPage.clickDoReviewAndVerifyPageLoaded()
+                // eslint-disable-next-line jest/valid-expect-in-promise
+                cy.fixture("submission_form_data").then(data => {
+                    ReviewPage.fillInReviewComment(data.review1)
+                })
+                ReviewPage.getCanBePublishedPublicalyCheckbox().should('be.visible')
+                ReviewPage.clickCanBePublishedPublicly()
+                ReviewPage.getCanBePublishedPublicalyCheckbox().should('have.value', 'true')
+            })
+        })
     })
     context('hide review and review name from author', () => {
         beforeEach(() => {
