@@ -28,6 +28,7 @@ const REVIEW_MESSAGE =
 const REVIEW_OPTION_CHECKBOX = '[type=checkbox]'
 const REVIEWER_NAME = '[class*=DecisionReview__Name]'
 const NO_REVIEWS_MESSAGE = '[class*=General__SectionRow]'
+const ACCEPTED_TO_PULISH_REVIEW_ICON = '[class*=DecisionReview__Name] >svg'
 
 // eslint-disable-next-line import/prefer-default-export
 export const ControlPage = {
@@ -130,5 +131,8 @@ export const ControlPage = {
   },
   getNoReviewsMessage() {
     return cy.get(NO_REVIEWS_MESSAGE)
+  },
+  getAcceptedToPublishReview() {
+    return cy.get(ACCEPTED_TO_PULISH_REVIEW_ICON)
   },
 }

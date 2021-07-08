@@ -361,7 +361,8 @@ CREATE TABLE public.reviews (
     manuscript_id uuid,
     type text NOT NULL,
     is_hidden_from_author BOOLEAN,
-    is_hidden_reviewer_name BOOLEAN
+    is_hidden_reviewer_name BOOLEAN,
+    can_be_published_publicly BOOLEAN
 );
 
 
