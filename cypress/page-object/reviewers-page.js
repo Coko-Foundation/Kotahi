@@ -1,3 +1,4 @@
+/* eslint-disable cypress/no-unnecessary-waiting */
 /// <reference types="Cypress" />
 /**
  * Page object representing the page where reviewers
@@ -7,7 +8,7 @@ const SECTION_TITLE = 'General__Title'
 const INVITE_REVIEWER_DROPDOWN = 'Invite reviewers'
 const INVITE_REVIEWER_OPTION_LIST = 'react-select'
 const SUBMIT_BUTTON = 'button[type="submit"]'
-const BACK_BUTTON = 'button[type="button"]'
+const BUTTON = 'button[type="button"]'
 const INVITED_REVIEWERS = 'div[class*="Reviewers__Reviewer-"]'
 const SHARED_CHECKBOX = '[name*=checkbox-shared-reviewer]'
 
@@ -34,16 +35,18 @@ export const ReviewersPage = {
   clickSubmit() {
     this.getSubmitButton().click()
   },
-  getBackButton() {
-    return cy.get(BACK_BUTTON)
+  getBackToControlPageButton() {
+    return cy.get(BUTTON).contains('Back to control panel')
   },
-  clickBack() {
-    this.getBackButton().click()
+  clickBackToControlPage() {
+    this.getBackToControlPageButton().click()
   },
   inviteReviewer(name) {
     this.clickInviteReviewerDropdown()
     this.selectReviewerNamed(name)
     this.clickSubmit()
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(1000)
   },
   getInvitedReviewersList() {
     return cy.get(INVITED_REVIEWERS)
@@ -59,5 +62,9 @@ export const ReviewersPage = {
   },
   clickSharedCheckbox(nth) {
     return this.getSharedCheckbox(nth).click()
+  },
+  waitThreeSec() {
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(3000)
   },
 }

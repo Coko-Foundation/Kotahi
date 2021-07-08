@@ -1,5 +1,6 @@
 /// <reference types="Cypress" />
 import { evaluate } from '../support/routes'
+import { ControlPage } from './control-page'
 
 /**
  * Page component representing the fourth option in the left side menu,
@@ -88,12 +89,20 @@ export const ManuscriptsPage = {
     cy.awaitDisappearSpinner()
     cy.url({ timeout: 10000 }).should('contain', evaluate)
   },
-
   getControlButton() {
     return cy.get(CONTROL_BUTTON)
   },
+  getControl() {
+    return cy.get(CONTROL)
+  },
   clickControl() {
-    return cy.get(CONTROL).click()
+    this.getControl().click()
+  },
+  clickControAndVerifyPageLoaded() {
+    this.getControl().click()
+    cy.awaitDisappearSpinner()
+    cy.url({ timeout: 10000 }).should('contain', 'decision')
+    ControlPage.getAssignEditorDropdown().should('be.visible')
   },
   getCreatedCaret(nth) {
     return cy.getByContainsClass(CREATED_CARET).eq(nth)
