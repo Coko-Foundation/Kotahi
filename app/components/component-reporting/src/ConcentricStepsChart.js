@@ -6,6 +6,7 @@ import {
   ResponsiveContainer,
 } from 'recharts'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 
 const Container = styled.div`
   height: 250px;
@@ -105,6 +106,20 @@ const ConcentricStepsChart = ({ data, barColors, labelColors }) => {
       </ResponsiveContainer>
     </Container>
   )
+}
+
+ConcentricStepsChart.propTypes = {
+  /** Bar names and sizes */
+  data: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      value: PropTypes.number.isRequired,
+    }).isRequired,
+  ).isRequired,
+  /** Any valid CSS colour specifications */
+  barColors: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+  /** Any valid CSS colour specifications */
+  labelColors: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
 }
 
 export default ConcentricStepsChart
