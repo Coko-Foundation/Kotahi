@@ -1,4 +1,5 @@
 /// <reference types="Cypress" />
+
 /**
  * Page object which represents the Dashboard, which contains
  * a submission button in the top right corner,
@@ -64,6 +65,11 @@ export const DashboardPage = {
   },
   clickDoReview() {
     this.getDoReviewButton().click()
+  },
+  clickDoReviewAndVerifyPageLoaded() {
+    this.getDoReviewButton().click()
+    cy.awaitDisappearSpinner()
+    cy.url({ timeout: 10000 }).should('contain', 'review')
   },
   getCompletedReviewsButton() {
     return cy.getByDataTestId(COMPLETED_REVIEWS_BUTTON)

@@ -46,8 +46,6 @@ export const ReviewPage = {
   clickSubmit() {
     this.getSubmitButton().click()
   },
-
-  //
   getDecisionCommentField() {
     return cy.GET(ABSTRACT_EDITOR_FIELD)
   },
@@ -68,5 +66,9 @@ export const ReviewPage = {
   },
   clickPublish() {
     this.getSubmitButton().eq(1).click()
+  },
+  waitThreeSec() {
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(3000)
   },
 }

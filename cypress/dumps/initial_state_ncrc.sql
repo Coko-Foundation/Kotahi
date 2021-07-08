@@ -363,7 +363,9 @@ CREATE TABLE public.reviews (
     is_decision boolean DEFAULT false,
     user_id uuid,
     manuscript_id uuid,
-    type text NOT NULL
+    type text NOT NULL,
+    is_hidden_from_author BOOLEAN,
+    is_hidden_reviewer_name BOOLEAN
 );
 
 
