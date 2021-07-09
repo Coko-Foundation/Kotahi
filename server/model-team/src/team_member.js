@@ -44,6 +44,7 @@ class TeamMember extends BaseModel {
         teamId: { type: 'string', format: 'uuid' },
         aliasId: { type: ['string', 'null'], format: 'uuid' },
         status: { type: ['string', 'null'] },
+        isShared: { type: ['boolean', 'null'] },
       },
     }
   }
