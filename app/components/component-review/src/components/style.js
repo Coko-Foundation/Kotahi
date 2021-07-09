@@ -1,7 +1,7 @@
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
-import { Typeahead } from 'react-typeahead'
+import { Typeahead } from 'react-bootstrap-typeahead'
 
 export const AdminSection = styled.div`
   margin-bottom: calc(${th('gridUnit')} * 3);
@@ -111,18 +111,18 @@ export const StyledTypeahead = styled(Typeahead)`
     width: 100%;
   }
 
-  .typeahead-selector {
+  .dropdown-menu {
     background-color: white;
     border: 1px solid #aaa;
     border-radius: 8px;
     box-sizing: border-box;
-    list-style-type: none;
     margin-top: 8px;
     position: absolute;
     width: 100%;
+    z-index: 2;
   }
 
-  .typeahead-option {
+  .dropdown-item {
     color: black;
     display: block;
     padding: 12px;
