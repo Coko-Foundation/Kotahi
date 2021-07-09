@@ -99,7 +99,7 @@ const Submit = ({
     const userCanEditManuscriptAndFormData =
       version === currentVersion &&
       (['new', 'revising'].includes(manuscript.status) ||
-        (currentUser.admin && manuscript.status !== 'rejected' && false))
+        (currentUser.admin && manuscript.status !== 'rejected'))
 
     const editorSection = {
       content: (
