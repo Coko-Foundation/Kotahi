@@ -1,5 +1,7 @@
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import { Button } from '@pubsweet/ui'
+import { Typeahead } from 'react-typeahead'
 
 export const AdminSection = styled.div`
   margin-bottom: calc(${th('gridUnit')} * 3);
@@ -87,6 +89,50 @@ export const ErrorText = styled.div`
 
 export const RecommendationInputContainer = styled.div`
   line-height: ${grid(5)};
+`
+
+export const StyledNotifyButton = styled(Button)`
+  cursor: pointer;
+  height: 40px;
+`
+
+export const StyledTypeahead = styled(Typeahead)`
+  position: relative;
+
+  input {
+    border: 1px solid #aaa;
+    border-color: #aaa;
+    border-radius: 8px;
+    font-size: 15px;
+    height: 40px;
+    outline: 0;
+    padding: 0 8px;
+    transition: 0.2s ease;
+    width: 100%;
+  }
+
+  .typeahead-selector {
+    background-color: white;
+    border: 1px solid #aaa;
+    border-radius: 8px;
+    box-sizing: border-box;
+    list-style-type: none;
+    margin-top: 8px;
+    position: absolute;
+    width: 100%;
+  }
+
+  .typeahead-option {
+    color: black;
+    display: block;
+    padding: 12px;
+    width: 100%;
+
+    &:hover {
+      background-color: #eee;
+    }
+  }
+
 `
 
 export {

@@ -8,6 +8,7 @@ import DecisionForm from './decision/DecisionForm'
 import DecisionReviews from './decision/DecisionReviews'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
 import AssignEditor from './assignEditors/AssignEditor'
+import EmailNotifications from './emailNotifications'
 import ReviewMetadata from './metadata/ReviewMetadata'
 import EditorSection from './decision/EditorSection'
 import Publish from './Publish'
@@ -148,6 +149,9 @@ const DecisionVersion = ({ form, current, version, parent }) => {
         )}
         {current && (
           <AdminSection>
+            {process.env.INSTANCE_NAME === 'colab' && (
+              <EmailNotifications manuscript={manuscript} />
+            )}
             <AssignEditorsReviewers
               AssignEditor={AssignEditor}
               manuscript={parent}

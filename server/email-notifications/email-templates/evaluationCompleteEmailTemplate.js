@@ -1,8 +1,8 @@
-const EvaluationCompleteEmailTemplate = (
+const EvaluationCompleteEmailTemplate = ({
   authorFirstName,
   articleTitle,
   link,
-) => {
+}) => {
   const result = `<p>
       <b>Dear ${authorFirstName},</b>
       <br>

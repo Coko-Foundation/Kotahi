@@ -51,23 +51,6 @@ const resolvers = {
 
       // return ctx.models.User.fetchAll(where, ctx, { eager })
     },
-    async sendEmail(_, { input }, ctx) {
-      console.log('input')
-      console.log(input)
-      console.log('typeof input')
-      console.log(typeof input)
-      // const { data, receiver, template } = input
-
-      // try {
-      //   await sendEmailNotification(receiver, template, data)
-      //   return true
-      // } catch (e) {
-      //   /* eslint-disable-next-line */
-      //   console.log('email was not sent', e)
-      //   return false
-      // }
-      return false
-    },
     // Authentication
     async currentUser(_, vars, ctx) {
       if (!ctx.user) return null
@@ -190,6 +173,24 @@ const resolvers = {
       await user.save()
       return user
     },
+    async sendEmail(_, { input }, ctx) {
+      const inputParsed = JSON.parse(input)
+      /* eslint-disable-next-line */
+      const { manuscript, selectedEmail, selectedTemplate } = inputParsed
+
+      try {
+        await sendEmailNotification(selectedEmail, selectedTemplate, {
+          authorFirstName: 'Test Name',
+          articleTitle: 'test title',
+          link: 'testlink.com',
+        })
+        return { success: true }
+      } catch (e) {
+        /* eslint-disable-next-line */
+        console.log('email was not sent', e)
+        return { success: false }
+      }
+    },
   },
   User: {
     async defaultIdentity(parent, args, ctx) {
@@ -225,7 +226,10 @@ const typeDefs = `
     users: [User]
     paginatedUsers(sort: UsersSort, offset: Int, limit: Int, filter: UsersFilter): PaginatedUsers
     searchUsers(teamId: ID, query: String): [User]
-    sendEmail(input: String): Boolean
+  }
+
+  type SendEmailResponse {
+    success: Boolean
   }
 
   type PaginatedUsers {
@@ -238,6 +242,7 @@ const typeDefs = `
     deleteUser(id: ID): User
     updateUser(id: ID, input: String): User
     updateCurrentUsername(username: String): User
+    sendEmail(input: String): SendEmailResponse
   }
 
   input UsersFilter {

@@ -6360,6 +6360,11 @@ classnames@2.x, classnames@^2.2.1, classnames@^2.2.3, classnames@^2.2.6:
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.3.1.tgz#dfcfa3891e306ec1dad105d0e88f4417b8535e8e"
   integrity sha512-OlQdbZ7gLfGarSqxesMesDa5uz7KFbID8Kpq/SxIoNGDqY8lSYs0D+hhtBXhcdB3rcbXArFr7vlHheLk1voeNA==
 
+classnames@^1.2.0:
+  version "1.2.2"
+  resolved "https://registry.yarnpkg.com/classnames/-/classnames-1.2.2.tgz#e96a2a0222d84925dd8fadb205d66e12f888edf9"
+  integrity sha1-6WoqAiLYSSXdj62yBdZuEviI7fk=
+
 classnames@^2.2.5:
   version "2.2.6"
   resolved "https://registry.yarnpkg.com/classnames/-/classnames-2.2.6.tgz#43935bffdd291f326dad0a205309b38d00f650ce"
@@ -7112,6 +7117,14 @@ create-hmac@^1.1.0, create-hmac@^1.1.4, create-hmac@^1.1.7:
     ripemd160 "^2.0.0"
     safe-buffer "^5.0.1"
     sha.js "^2.4.8"
+
+create-react-class@^15.5.2:
+  version "15.7.0"
+  resolved "https://registry.yarnpkg.com/create-react-class/-/create-react-class-15.7.0.tgz#7499d7ca2e69bb51d13faf59bd04f0c65a1d6c1e"
+  integrity sha512-QZv4sFWG9S5RUvkTYWbflxeZX+JG7Cz0Tn33rQBJ+WFQTqTfUTjMjiv9tnfXazjsO5r0KhPs+AqCjyrQX6h2ng==
+  dependencies:
+    loose-envify "^1.3.1"
+    object-assign "^4.1.1"
 
 create-react-context@0.3.0:
   version "0.3.0"
@@ -9934,6 +9947,11 @@ fuse.js@^3.6.1:
   version "3.6.1"
   resolved "https://registry.yarnpkg.com/fuse.js/-/fuse.js-3.6.1.tgz#7de85fdd6e1b3377c23ce010892656385fd9b10c"
   integrity sha512-hT9yh/tiinkmirKrlv4KWOjztdoZo1mx9Qh4KvWqC7isoXwdUY3PNWUxceF4/qO9R6riA2C29jdTOeQOIROjgw==
+
+fuzzy@^0.1.0:
+  version "0.1.3"
+  resolved "https://registry.yarnpkg.com/fuzzy/-/fuzzy-0.1.3.tgz#4c76ec2ff0ac1a36a9dccf9a00df8623078d4ed8"
+  integrity sha1-THbsL/CsGjap3M+aAN+GIweNTtg=
 
 gauge@~2.7.3:
   version "2.7.4"
@@ -17269,6 +17287,16 @@ react-transition-group@^4.3.0:
     dom-helpers "^5.0.1"
     loose-envify "^1.4.0"
     prop-types "^15.6.2"
+
+react-typeahead@^2.0.0-alpha.8:
+  version "2.0.0-alpha.8"
+  resolved "https://registry.yarnpkg.com/react-typeahead/-/react-typeahead-2.0.0-alpha.8.tgz#7f025f8ee74202f04fa8427cafea2732d514f58a"
+  integrity sha1-fwJfjudCAvBPqEJ8r+onMtUU9Yo=
+  dependencies:
+    classnames "^1.2.0"
+    create-react-class "^15.5.2"
+    fuzzy "^0.1.0"
+    prop-types "^15.5.10"
 
 react-uid@^2.2.0:
   version "2.3.1"

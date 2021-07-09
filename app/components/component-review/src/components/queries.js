@@ -212,3 +212,26 @@ export const sharedReviews = gql`
     }
   }
 `
+
+export const getUsers = gql`
+  {
+    users {
+      id
+      username
+      email
+      admin
+      defaultIdentity {
+        id
+        name
+      }
+    }
+  }
+`
+
+export const sendEmail = gql`
+  mutation($input: String) {
+    sendEmail(input: $input) {
+      success
+    }
+  }
+`

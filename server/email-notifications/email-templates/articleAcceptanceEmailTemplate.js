@@ -1,8 +1,8 @@
-const ArticleAcceptanceEmailTemplate = (
+const ArticleAcceptanceEmailTemplate = ({
   authorFirstName,
   articleTitle,
   link,
-) => {
+}) => {
   const result = `<p>
         <b>Dear ${authorFirstName},</b>
         <br>
