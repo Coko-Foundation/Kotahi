@@ -132,7 +132,6 @@ export const StyledTypeahead = styled(Typeahead)`
       background-color: #eee;
     }
   }
-
 `
 
 export {
