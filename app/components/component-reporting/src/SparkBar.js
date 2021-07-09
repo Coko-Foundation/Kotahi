@@ -49,9 +49,13 @@ const SparkBar = ({ label, value, rangeMax, onClick, color }) => {
 
 SparkBar.propTypes = {
   label: PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
+  /** Bar width will be value/rangeMax * available space */
   value: PropTypes.number.isRequired,
+  /** Bar width will be value/rangeMax * available space */
   rangeMax: PropTypes.number.isRequired,
+  /** If onClick callback is set, the cursor will be "pointer" on hover. */
   onClick: PropTypes.func,
+  /** bar color */
   color: PropTypes.oneOfType([PropTypes.string, PropTypes.func]),
 }
 

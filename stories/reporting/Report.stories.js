@@ -10,8 +10,15 @@ import {
 
 export const Base = args => <Report {...args} />
 
+const endDate = Date.now()
+const startDate = endDate - 30 * 24 * 60 * 60 * 1000
+
 Base.args = {
-  getSummaryData: generateSummaryData,
+  startDate,
+  endDate,
+  setStartDate: () => {},
+  setEndDate: () => {},
+  getSummaryData: () => generateSummaryData(startDate, endDate),
   getManuscriptsData: generateResearchObjectsData,
   getEditorsData: generateEditorsData,
   getReviewersData: generateReviewersData,

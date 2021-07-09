@@ -34,6 +34,9 @@ const NoteRight = styled.div`
   width: 100%;
 `
 
+const endDate = Date.now()
+const startDate = endDate - 30 * 24 * 60 * 60 * 1000
+
 export const Base = args => (
   <CardCollection {...args}>
     <Card
@@ -87,7 +90,7 @@ export const Base = args => (
       }}
     >
       <Header>Submission durations</Header>
-      <DurationsChart data={generateDurationsData()} />
+      <DurationsChart {...generateDurationsData(startDate, endDate)} />
     </Card>
   </CardCollection>
 )

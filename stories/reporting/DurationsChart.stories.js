@@ -4,7 +4,10 @@ import { generateDurationsData } from './mockReportingData'
 
 export const Base = args => <DurationsChart {...args} />
 
-Base.args = { data: generateDurationsData() }
+const endDate = Date.now()
+const startDate = endDate - 30 * 24 * 60 * 60 * 1000
+
+Base.args = generateDurationsData(startDate, endDate)
 
 export default {
   title: 'Reporting/DurationsChart',

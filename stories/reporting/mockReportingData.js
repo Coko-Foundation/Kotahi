@@ -1,25 +1,45 @@
 import Color from 'color'
+import generateMovingAverages from '../../server/reports/src/movingAverages'
 
-export const generateDurationsData = () => {
-  const result = []
-  let prevDate = Date.now()
+const day = 24 * 60 * 60 * 1000
+const week = 7 * day
 
-  for (let i = 0; i < 100; i += 1) {
-    const date = prevDate + Math.random() * Math.random() * 24 * 60 * 60
+export const generateDurationsData = (startDate, endDate) => {
+  const durationsData = []
+  let prevDate = startDate
+
+  while (prevDate < endDate) {
+    const date = prevDate + Math.random() * Math.random() * 24 * 60 * 60 * 1000
+    if (date >= endDate) break
+
     const reviewDuration = Math.random() * Math.random() * 15 + 0.5
 
     const fullDuration =
       reviewDuration + Math.random() * Math.random() * 9 + 0.5
 
-    result.push({ date, reviewDuration, fullDuration })
+    durationsData.push({ date, reviewDuration, fullDuration })
     prevDate = date
   }
 
-  return result
+  const [reviewAvgsTrace, completionAvgsTrace] = generateMovingAverages(
+    durationsData,
+    week,
+    day,
+  )
+
+  return {
+    durationsData,
+    startDate,
+    endDate,
+    reviewAvgsTrace,
+    completionAvgsTrace,
+  }
 }
 
-export const generateSummaryData = () => {
+export const generateSummaryData = (startDate, endDate) => {
   return {
+    startDate,
+    endDate,
     avgPublishTimeDays: 8.765,
     avgReviewTimeDays: 5.678,
     unsubmittedCount: 12,
@@ -35,7 +55,7 @@ export const generateSummaryData = () => {
     publishedTodayCount: 4,
     avgPublishedDailyCount: 2.7,
     avgInProgressDailyCount: 11.3,
-    durationsData: generateDurationsData(),
+    ...generateDurationsData(startDate, endDate),
   }
 }
 

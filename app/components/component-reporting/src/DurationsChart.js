@@ -1,6 +1,7 @@
 import React from 'react'
 import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 
 const Container = styled.div`
   height: 300px;
@@ -66,11 +67,11 @@ const getTicks = (startTimestamp, endTimestamp, interval) => {
 const DurationsChart = ({
   startDate,
   endDate,
-  data,
-  reviewAvgs,
-  completionAvgs,
+  durationsData,
+  reviewAvgsTrace,
+  completionAvgsTrace,
 }) => {
-  const { reviewSeries, completionSeries } = generateSeries(data)
+  const { reviewSeries, completionSeries } = generateSeries(durationsData)
 
   return (
     <Container>
@@ -95,7 +96,7 @@ const DurationsChart = ({
             unit=" days"
           />
           <Line
-            animationDuration={1000}
+            animationDuration={(1000 * reviewSeries.length) / 12}
             data={reviewSeries}
             dataKey="y"
             dot={false}
@@ -105,7 +106,7 @@ const DurationsChart = ({
           />
           <Line
             animationBegin={1000}
-            animationDuration={1000}
+            animationDuration={(1000 * completionSeries.length) / 12}
             data={completionSeries}
             dataKey="y"
             dot={false}
@@ -116,7 +117,7 @@ const DurationsChart = ({
           <Line
             animationBegin={1800}
             animationDuration={1000}
-            data={reviewAvgs}
+            data={reviewAvgsTrace}
             dataKey="y"
             dot={false}
             stroke="#ffa900"
@@ -127,7 +128,7 @@ const DurationsChart = ({
           <Line
             animationBegin={1800}
             animationDuration={1000}
-            data={completionAvgs}
+            data={completionAvgsTrace}
             dataKey="y"
             dot={false}
             stroke="#475ae8"
@@ -139,6 +140,38 @@ const DurationsChart = ({
       </ResponsiveContainer>
     </Container>
   )
+}
+
+DurationsChart.propTypes = {
+  /** Start of date (x) axis, ms since epoch */
+  startDate: PropTypes.number.isRequired,
+  /** End of date (x) axis, ms since epoch */
+  endDate: PropTypes.number.isRequired,
+  /** Manuscripts expressed as an array of {date, reviewDuration, fullDuration},
+   * where date is submitted datetime (ms since epoch),
+   * reviewDuration is days from submission until last review completed (or null if reviews still pending),
+   * and completionDuration is days from submission until either the most recent publication date or rejection date (or null if not published or rejected) */
+  durationsData: PropTypes.arrayOf(
+    PropTypes.shape({
+      date: PropTypes.number.isRequired,
+      reviewDuration: PropTypes.number,
+      fullDuration: PropTypes.number,
+    }).isRequired,
+  ).isRequired,
+  /** x,y coordinates for a continuous trace showing running average review durations */
+  reviewAvgsTrace: PropTypes.arrayOf(
+    PropTypes.shape({
+      x: PropTypes.number.isRequired,
+      y: PropTypes.number.isRequired,
+    }),
+  ).isRequired,
+  /** x,y coordinates for a continuous trace showing running average completion (published or rejected) durations */
+  completionAvgsTrace: PropTypes.arrayOf(
+    PropTypes.shape({
+      x: PropTypes.number.isRequired,
+      y: PropTypes.number.isRequired,
+    }),
+  ).isRequired,
 }
 
 export default DurationsChart

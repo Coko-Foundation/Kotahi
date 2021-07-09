@@ -257,7 +257,9 @@ const Report = ({
 }
 
 Report.propTypes = {
+  /** Start of range for reporting, ms since epoch */
   startDate: PropTypes.number.isRequired,
+  /** End of range for reporting, ms since epoch */
   endDate: PropTypes.number.isRequired,
   setStartDate: PropTypes.func.isRequired,
   setEndDate: PropTypes.func.isRequired,

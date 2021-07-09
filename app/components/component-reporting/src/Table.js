@@ -30,6 +30,7 @@ const Table = ({ columnSchemas, rows }) => {
 }
 
 Table.propTypes = {
+  /** Properties for each column */
   columnSchemas: PropTypes.arrayOf(
     PropTypes.shape({
       flexGrow: PropTypes.number,
@@ -37,6 +38,7 @@ Table.propTypes = {
       width: PropTypes.string.isRequired,
     }).isRequired,
   ),
+  /** Rows of cells. Each cell can be specified either as plain content (string, number or React node) or an object {content, isHeading} */
   rows: PropTypes.arrayOf(
     PropTypes.arrayOf(
       PropTypes.oneOfType([

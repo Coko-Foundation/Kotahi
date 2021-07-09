@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 import Color from 'color'
 import { th } from '@pubsweet/ui-toolkit'
 import Table from './Table'
@@ -165,10 +166,10 @@ const SummaryReport = ({
             Reviewing and editing durations for individual manuscripts
           </CardHeader>
           <DurationsChart
-            completionAvgs={completionAvgsTrace}
-            data={durationsData}
+            completionAvgsTrace={completionAvgsTrace}
+            durationsData={durationsData}
             endDate={endDate}
-            reviewAvgs={reviewAvgsTrace}
+            reviewAvgsTrace={reviewAvgsTrace}
             startDate={startDate}
           />
         </ChartCard>
@@ -202,6 +203,45 @@ const SummaryReport = ({
       />
     </>
   )
+}
+
+SummaryReport.propTypes = {
+  startDate: PropTypes.number.isRequired,
+  endDate: PropTypes.number.isRequired,
+  avgPublishTimeDays: PropTypes.number.isRequired,
+  avgReviewTimeDays: PropTypes.number.isRequired,
+  unsubmittedCount: PropTypes.number.isRequired,
+  submittedCount: PropTypes.number.isRequired,
+  unassignedCount: PropTypes.number.isRequired,
+  reviewInvitedCount: PropTypes.number.isRequired,
+  reviewInviteAcceptedCount: PropTypes.number.isRequired,
+  reviewedCount: PropTypes.number.isRequired,
+  rejectedCount: PropTypes.number.isRequired,
+  revisingCount: PropTypes.number.isRequired,
+  acceptedCount: PropTypes.number.isRequired,
+  publishedCount: PropTypes.number.isRequired,
+  publishedTodayCount: PropTypes.number.isRequired,
+  avgPublishedDailyCount: PropTypes.number.isRequired,
+  avgInProgressDailyCount: PropTypes.number.isRequired,
+  durationsData: PropTypes.arrayOf(
+    PropTypes.shape({
+      date: PropTypes.number.isRequired,
+      reviewDuration: PropTypes.number,
+      fullDuration: PropTypes.number,
+    }).isRequired,
+  ).isRequired,
+  reviewAvgsTrace: PropTypes.arrayOf(
+    PropTypes.shape({
+      x: PropTypes.number.isRequired,
+      y: PropTypes.number.isRequired,
+    }),
+  ).isRequired,
+  completionAvgsTrace: PropTypes.arrayOf(
+    PropTypes.shape({
+      x: PropTypes.number.isRequired,
+      y: PropTypes.number.isRequired,
+    }),
+  ).isRequired,
 }
 
 export default SummaryReport
