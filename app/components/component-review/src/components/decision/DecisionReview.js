@@ -126,9 +126,6 @@ const ReviewHeading = ({
             </>
           )}
       </Name>
-      <Controls>
-        <ToggleReview open={open} toggle={toggleOpen} />
-      </Controls>
       {process.env.INSTANCE_NAME === 'colab' && isCurrentUserEditor && (
         <>
           <Checkbox
@@ -148,6 +145,9 @@ const ReviewHeading = ({
           />
         </>
       )}
+      <Controls>
+        <ToggleReview open={open} toggle={toggleOpen} />
+      </Controls>
     </ReviewHeadingRoot>
   )
 }
