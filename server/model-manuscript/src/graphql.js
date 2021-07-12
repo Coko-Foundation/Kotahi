@@ -1,3 +1,4 @@
+/* eslint-disable prefer-destructuring */
 const { ref } = require('objection')
 const axios = require('axios')
 const { mergeWith, isArray } = require('lodash')
@@ -79,6 +80,12 @@ const commonUpdateManuscript = async (_, { id, input }, ctx) => {
   const manuscript = await ctx.models.Manuscript.query().findById(id)
 
   const updatedManuscript = mergeWith(manuscript, manuscriptDelta, mergeArrays)
+
+  if (process.env.INSTANCE_NAME === 'ncrc') {
+    updatedManuscript.submission.editDate = new Date()
+      .toISOString()
+      .split('T')[0]
+  }
 
   // if (manuscript.status === 'revise') {
   //   return manuscript.createNewVersion(update)
@@ -162,6 +169,12 @@ const resolvers = {
             members: [{ user: { id: ctx.user.id } }],
           },
         ],
+      }
+
+      if (process.env.INSTANCE_NAME === 'ncrc') {
+        emptyManuscript.submission.editDate = new Date()
+          .toISOString()
+          .split('T')[0]
       }
 
       const manuscript = await ctx.models.Manuscript.query().upsertGraphAndFetch(
@@ -419,8 +432,6 @@ const resolvers = {
       if (process.env.INSTANCE_NAME === 'ncrc') {
         try {
           const manuscriptId = await publishToGoogleSpreadSheet(manuscript)
-          console.log('manuscriptId')
-          console.log(manuscriptId)
 
           if (manuscriptId) {
             const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
@@ -428,11 +439,13 @@ const resolvers = {
               {
                 published: new Date(),
                 status: 'published',
+                submission: {
+                  ...manuscript.submission,
+                  editDate: new Date().toISOString().split('T')[0],
+                },
               },
             )
 
-            console.log('updatedManuscript')
-            console.log(updatedManuscript)
             return updatedManuscript
           }
 

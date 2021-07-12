@@ -25,7 +25,7 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
     cross_post: '',
     edit_finished: submission.editFinished || '',
     reviewer: submission.reviewer || '',
-    edit_date: submission.editDate || '',
+    edit_date: new Date().toISOString().split('T')[0],
     final_take_wordcount: submission.wordcount || '',
     compendium_feature: submission.compendiumFeature || '',
     Study_Design: submission.studyDesign || '',
@@ -63,12 +63,17 @@ const publishToGoogleSpreadSheet = async manuscript => {
         rows[indexOfExistingArticle][fieldName] =
           forPublishingData[fieldName] || ''
       })
+      // eslint-disable-next-line
       console.log('updating row')
+      // eslint-disable-next-line
       console.log(rows[indexOfExistingArticle])
       await rows[indexOfExistingArticle].save()
     } else {
+      // eslint-disable-next-line
       console.log('insert new row')
+      // eslint-disable-next-line
       console.log('forPublishingData')
+      // eslint-disable-next-line
       console.log(forPublishingData)
       await sheet.addRow({ ...forPublishingData })
     }

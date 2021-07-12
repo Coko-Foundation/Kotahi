@@ -339,14 +339,7 @@
       "title": "Edit date",
       "id": "f60c6272-bd21-466b-9943-2837f7b2fcf5",
       "component": "TextField",
-      "name": "submission.editDate",
-      "validate": [
-        {
-          "value": "required",
-          "label": "Required",
-          "id": "43dcda08-274d-46f4-942e-d5d3ecadd296"
-        }
-      ]
+      "name": "submission.editDate"
     },
     {
       "title": "Final take wordcount",
