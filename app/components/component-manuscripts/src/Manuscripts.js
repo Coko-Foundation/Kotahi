@@ -391,9 +391,11 @@ const Manuscripts = ({ history, ...props }) => {
               {manuscriptsTableConfig.map(field => {
                 return renderManuscriptsTableHeader(field)
               })}
+              {/* eslint-disable-next-line */}
+              <th></th>
             </tr>
           </Header>
-          <tbody>
+          <tbody style={{ backgroundColor: 'white' }}>
             {manuscripts.map((manuscript, key) => {
               const latestVersion =
                 manuscript.manuscriptVersions?.[0] || manuscript
