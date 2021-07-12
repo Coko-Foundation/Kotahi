@@ -73,7 +73,7 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.fillInArticleDescription(data.articleId)
       })
       Menu.clickManuscriptsAndAssertPageLoad()
-      ManuscriptsPage.getTableHead(-1)
+      ManuscriptsPage.getTableHead(-2)
         .scrollIntoView()
         .should('contain', 'Editor')
         .and('be.visible')
@@ -126,7 +126,6 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.fillInDatePublished(data.date)
         SubmissionFormPage.fillInJournal(data.journal)
         SubmissionFormPage.fillInReviewer(data.creator)
-        SubmissionFormPage.fillInEditDate(data.date)
         SubmissionFormPage.fillInReviewCreator(data.creator)
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
         ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
@@ -179,7 +178,6 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.fillInDatePublished(data.date)
         SubmissionFormPage.fillInJournal(data.journal)
         SubmissionFormPage.fillInReviewer(data.creator)
-        SubmissionFormPage.fillInEditDate(data.date)
         SubmissionFormPage.fillInReviewCreator(data.creator)
         // eslint-disable-next-line
         SubmissionFormPage.waitThreeSec()
@@ -378,7 +376,6 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.fillInDatePublished(data.date)
         SubmissionFormPage.fillInJournal(data.journal)
         SubmissionFormPage.fillInReviewer(data.creator)
-        SubmissionFormPage.fillInEditDate(data.date)
         SubmissionFormPage.fillInReviewCreator(data.creator)
         // eslint-disable-next-line
         SubmissionFormPage.waitThreeSec()
@@ -419,7 +416,6 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.fillInDatePublished(data.date)
         SubmissionFormPage.fillInJournal(data.journal)
         SubmissionFormPage.fillInReviewer(data.creator)
-        SubmissionFormPage.fillInEditDate(data.date)
         SubmissionFormPage.fillInReviewCreator(data.creator)
         // eslint-disable-next-line
         SubmissionFormPage.waitThreeSec()

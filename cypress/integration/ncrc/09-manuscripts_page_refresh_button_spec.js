@@ -62,16 +62,13 @@ describe('refresh button tests', () => {
       ManuscriptsPage.getTableHeader().should('be.visible')
     })
 
-    it('check table has data', () => {
+    it('the table should contain 100 entries', () => {
+      ManuscriptsPage.getTableRowsCount().should('eq', 100)
       ManuscriptsPage.getNumberOfAvailableArticles()
         .invoke('text')
         .then(text => {
-          expect(parseInt(text, 10)).to.be.gt(0)
+          expect(parseInt(text, 10)).to.be.gte(100)
         })
-    })
-
-    it('the table should contain 100 entries', () => {
-      ManuscriptsPage.getTableRowsCount().should('eq', 100)
     })
 
     it('at least one topic should exist per imported article', () => {
@@ -161,7 +158,6 @@ describe('refresh button tests', () => {
             SubmissionFormPage.fillInDatePublished(data.date)
             SubmissionFormPage.fillInJournal(data.journal)
             SubmissionFormPage.fillInReviewer(data.creator)
-            SubmissionFormPage.fillInEditDate(data.date)
             SubmissionFormPage.fillInReviewCreator(data.creator)
             SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
           })

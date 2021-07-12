@@ -103,7 +103,6 @@ describe('manuscripts page checkboxes tests', () => {
         SubmissionFormPage.fillInDatePublished(data.date)
         SubmissionFormPage.fillInJournal(data.journal)
         SubmissionFormPage.fillInReviewer(data.creator)
-        SubmissionFormPage.fillInEditDate(data.date)
         SubmissionFormPage.fillInReviewCreator(data.creator)
         // eslint-disable-next-line
         SubmissionFormPage.waitThreeSec()
