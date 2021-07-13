@@ -243,6 +243,7 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickTopicsCheckboxWithText(
           data.ncrc.topicTypes.vaccines,
         )
+        SubmissionFormPage.fillInJournal('123')
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.clickSubmit()
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
@@ -255,6 +256,7 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickTopicsCheckboxWithText(
           data.ncrc.topicTypes.diagnostics,
         )
+        SubmissionFormPage.fillInJournal('abc')
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.clickSubmit()
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
@@ -267,6 +269,7 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickTopicsCheckboxWithText(
           data.ncrc.topicTypes.diagnostics,
         )
+        SubmissionFormPage.fillInJournal('def')
         Menu.clickManuscriptsAndAssertPageLoad()
       })
     })
@@ -297,20 +300,35 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getArticleTopic(1).should('contain', 'diagnostics')
     })
 
-    it('sort article by label', () => {
+    it('filter article by label from dropdown list, and url should contain that label', () => {
       ManuscriptsPage.getArticleLabel().should('have.length', 3)
       ManuscriptsPage.getTableRow().eq(2).should('be.visible')
       ManuscriptsPage.getLabelRow(0).should('contain', 'ready to evaluate')
       ManuscriptsPage.getLabelRow(1).should('contain', 'evaluated')
       ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluate')
       ManuscriptsPage.clickTableHead(6)
-      ManuscriptsPage.getArticleLabel().should('have.length', 3)
+      ManuscriptsPage.selectDropdownOptionWithText('Ready to evaluate')
+      ManuscriptsPage.getArticleLabel().should('have.length', 2)
       ManuscriptsPage.getLabelRow(0).scrollIntoView().should('be.visible')
       ManuscriptsPage.getLabelRow(1).scrollIntoView().should('be.visible')
-      ManuscriptsPage.getLabelRow(2).scrollIntoView().should('be.visible')
-       ManuscriptsPage.getLabelRow(0).should('contain', 'evaluated')
+      ManuscriptsPage.getLabelRow(0).should('contain', 'ready to evaluate')
       ManuscriptsPage.getLabelRow(1).should('contain', 'ready to evaluate')
-      ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluate')
+      cy.url().should('contain', 'readyToEvaluate')
+    })
+
+    it('filter article by topic from dropdown list, and url should contain that topic', () => {
+      ManuscriptsPage.getTableRowsCount().should('eq', 3)
+      ManuscriptsPage.clickTableHead(4)
+      ManuscriptsPage.selectDropdownOptionWithText('diagnostics')
+      ManuscriptsPage.getTableRowsCount().should('eq', 2)
+      ManuscriptsPage.getArticleTopic(0).should('contain', 'modeling')
+      ManuscriptsPage.getArticleTopic(1).should('contain', 'diagnostics')
+      ManuscriptsPage.getArticleTopic(2).should(
+        'contain',
+        'ecology and spillover',
+      )
+      ManuscriptsPage.getArticleTopic(3).should('contain', 'diagnostics')
+      cy.url().should('contain', 'diagnostics')
     })
 
     it('filter article after label and url contain that label', () => {
@@ -340,6 +358,16 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.getArticleTitleByRow(1).should('contain', 'abc')
       ManuscriptsPage.getArticleTitleByRow(2).should('contain', '123')
       ManuscriptsPage.clickTableHead(0)
+      ManuscriptsPage.getArticleTitleByRow(0).should('contain', '123')
+      ManuscriptsPage.getArticleTitleByRow(1).should('contain', 'abc')
+      ManuscriptsPage.getArticleTitleByRow(2).should('contain', 'def')
+    })
+    it('sort article by Journal', () => {
+      ManuscriptsPage.getTableHead(1).should('contain', 'Journal')
+      ManuscriptsPage.getArticleTitleByRow(0).should('contain', 'def')
+      ManuscriptsPage.getArticleTitleByRow(1).should('contain', 'abc')
+      ManuscriptsPage.getArticleTitleByRow(2).should('contain', '123')
+      ManuscriptsPage.clickTableHead(1)
       ManuscriptsPage.getArticleTitleByRow(0).should('contain', '123')
       ManuscriptsPage.getArticleTitleByRow(1).should('contain', 'abc')
       ManuscriptsPage.getArticleTitleByRow(2).should('contain', 'def')
@@ -384,6 +412,42 @@ describe('manuscripts page tests', () => {
       cy.url().should('contain', 'submitted')
     })
 
+    it('filter article after status from dropdown list and url contain that status', () => {
+      ManuscriptsPage.clickSubmit()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+      // fill the submit form and submit it
+      cy.fixture('submission_form_data').then(data => {
+        SubmissionFormPage.fillInArticleUrl(data.doi)
+        SubmissionFormPage.fillInArticleDescription(data.articleId)
+        SubmissionFormPage.fillInOurTake(data.ourTake)
+        SubmissionFormPage.clickStudyDesignDropdown()
+        SubmissionFormPage.selectDropdownOption(0)
+        SubmissionFormPage.fillInMainFindings(data.mainFindings)
+        SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+        SubmissionFormPage.fillInLimitations(data.limitations)
+        SubmissionFormPage.fillInValueAdded(data.valueAdded)
+        SubmissionFormPage.clickLabelsDropdown()
+        SubmissionFormPage.selectDropdownOption(0)
+        SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
+        SubmissionFormPage.fillInFirstAuthor(data.creator)
+        SubmissionFormPage.fillInDatePublished(data.date)
+        SubmissionFormPage.fillInJournal(data.journal)
+        SubmissionFormPage.fillInReviewer(data.creator)
+        SubmissionFormPage.fillInReviewCreator(data.creator)
+        // eslint-disable-next-line
+        SubmissionFormPage.waitThreeSec()
+        SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
+      })
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000)
+      ManuscriptsPage.getTableRowsCount().should('eq', 4)
+      ManuscriptsPage.clickTableHead(5)
+      ManuscriptsPage.selectDropdownOptionWithText('Submitted')
+      ManuscriptsPage.getTableRowsCount().should('eq', 1)
+      ManuscriptsPage.getStatus(0).should('contain', 'Submitted')
+      cy.url().should('contain', 'submitted')
+    })
+
     it('combined filtering after status, topic and label, link content that combination', () => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
@@ -422,7 +486,49 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.clickArticleLabel(0)
       ManuscriptsPage.getTableRowsCount().should('eq', 1)
       cy.url().should('contain', 'status=new&topic=diagnostics&label=readyToEvaluate')
-      
+    })
+
+    it('combined filtering after status, topic and label from dropdown list, link content that combination', () => {
+      ManuscriptsPage.clickSubmit()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+      // fill the submit form and submit it
+      cy.fixture('submission_form_data').then(data => {
+        SubmissionFormPage.fillInArticleUrl(data.doi)
+        SubmissionFormPage.fillInArticleDescription(data.articleId)
+        SubmissionFormPage.fillInOurTake(data.ourTake)
+        SubmissionFormPage.clickStudyDesignDropdown()
+        SubmissionFormPage.selectDropdownOption(5)
+        SubmissionFormPage.fillInMainFindings(data.mainFindings)
+        SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+        SubmissionFormPage.fillInLimitations(data.limitations)
+        SubmissionFormPage.fillInValueAdded(data.valueAdded)
+        SubmissionFormPage.clickLabelsDropdown()
+        SubmissionFormPage.selectDropdownOption(0)
+        SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
+        SubmissionFormPage.fillInFirstAuthor(data.creator)
+        SubmissionFormPage.fillInDatePublished(data.date)
+        SubmissionFormPage.fillInJournal(data.journal)
+        SubmissionFormPage.fillInReviewer(data.creator)
+        SubmissionFormPage.fillInReviewCreator(data.creator)
+        // eslint-disable-next-line
+        SubmissionFormPage.waitThreeSec()
+        SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
+      })
+      // eslint-disable-next-line cypress/no-unnecessary-waiting
+      cy.wait(3000)
+      ManuscriptsPage.getTableRowsCount().should('eq', 4)
+      ManuscriptsPage.clickTableHead(5)
+      ManuscriptsPage.selectDropdownOptionWithText('Unsubmitted')
+      ManuscriptsPage.getTableRowsCount().should('eq', 3)
+      cy.url().should('contain', 'new')
+      ManuscriptsPage.clickTableHead(4)
+      ManuscriptsPage.selectDropdownOptionWithText('diagnostics')
+      ManuscriptsPage.getTableRowsCount().should('eq', 2)
+      cy.url().should('contain', 'status=new&topic=diagnostics')
+      ManuscriptsPage.clickTableHead(6)
+      ManuscriptsPage.selectDropdownOptionWithText('Ready to evaluate')
+      ManuscriptsPage.getTableRowsCount().should('eq', 1)
+      cy.url().should('contain', 'status=new&topic=diagnostics&label=readyToEvaluate')
     })
   })
 

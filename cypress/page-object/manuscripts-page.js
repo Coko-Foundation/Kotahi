@@ -37,6 +37,7 @@ const PAGINATION_PAGE_BUTTON = 'Page '
 const CONFIRMATION_MESSAGE = '[class*=BulkDeleteModalContainer] > p'
 const IMPORT_CONFIRMATION_POPUP = '[class*=Toastify] > [role=alert]'
 const CONTROL = '[href*=decision]'
+const DROPDOWN_OPTION_LIST = '[class*=MenuList] > [id*=option]'
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
     return cy.get(MANUSCRIPTS_OPTIONS_LIST)
@@ -229,6 +230,12 @@ export const ManuscriptsPage = {
   },
   getSuccessfulImportPopup() {
     return cy.get(IMPORT_CONFIRMATION_POPUP, { timeout: 600000 })
+  },
+  selectDropdownOption(nth) {
+    return cy.get(DROPDOWN_OPTION_LIST).eq(nth).click()
+  },
+  selectDropdownOptionWithText(text) {
+    return cy.get(DROPDOWN_OPTION_LIST).contains(text).click()
   },
 }
 export default ManuscriptsPage
