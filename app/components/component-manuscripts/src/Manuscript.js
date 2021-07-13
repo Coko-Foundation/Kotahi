@@ -69,8 +69,8 @@ const renderManuscriptColumn = ({
   toggleNewManuscriptCheck,
   formattedAbstract,
   convertTimestampToDate,
-  filterByTopic,
   convertCamelCaseToText,
+  filterByTopic,
   filterByArticleStatus,
   filterByArticleLabel,
   setReadyToEvaluateLabel,
@@ -293,6 +293,13 @@ const User = ({
   setSelectedTopic,
   setSelectedLabel,
   setReadyToEvaluateLabel,
+  selectedStatus,
+  selectedLabel,
+  selectedTopic,
+  filterArticle,
+  filterByTopic,
+  filterByArticleStatus,
+  filterByArticleLabel,
   ...props
 }) => {
   const [publishManuscript] = useMutation(publishManuscriptMutation)
@@ -337,30 +344,6 @@ const User = ({
     }
   }
 
-  const filterArticle = (propertyName, propertyValue, updateFn) => {
-    const currentURL = window.location.href.split('?')
-    if (currentURL.length === 1) {
-      currentURL.push('')
-    }
-    const updatedQueryString = currentURL[1].includes(`${propertyName}=`)
-      ? updateUrlParameter(currentURL[1], propertyName, propertyValue)
-      : currentURL[1] + `&${propertyName}=` + propertyValue
-
-    updateFn(propertyValue)
-    history.replace('/kotahi/admin/manuscripts?' + updatedQueryString)
-  }
-
-  const filterByTopic = topic => {
-    filterArticle('topic', topic, setSelectedTopic)
-  }
-
-  const filterByArticleStatus = status => {
-    filterArticle('status', status, setSelectedStatus)
-  }
-
-  const filterByArticleLabel = label => {
-    filterArticle('label', label, setSelectedLabel)
-  }
   let formattedAbstract
 
   if (manuscript.submission?.abstract) {

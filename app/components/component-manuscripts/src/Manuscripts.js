@@ -21,8 +21,9 @@ import {
   SelectAllField,
   SelectedManuscriptsNumber,
   StyledButton,
+  TableHeader,
 } from './style'
-import { HeadingWithAction } from '../../shared'
+import { HeadingWithAction, Select } from '../../shared'
 import {
   GET_MANUSCRIPTS,
   DELETE_MANUSCRIPTS,
@@ -37,10 +38,28 @@ import { updateMutation } from '../../component-submit/src/components/SubmitPage
 import Modal from '../../component-modal/src'
 import BulkDeleteModal from './BulkDeleteModal'
 import manuscriptsTableConfig from './manuscriptsTableConfig'
+import submissionForm from '../../../storage/forms-ncrc/submit.json'
+
+const topics = submissionForm.children.find(el => {
+  return el.title === 'Topics'
+}).options
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
-const renderManuscriptsTableHeaders = ({ SortHeader }) => {
+const updateUrlParameter = (url, param, value) => {
+  const regex = new RegExp(`(${param}=)[^&]+`)
+  return url.replace(regex, `$1${value}`)
+}
+
+const renderManuscriptsTableHeaders = ({
+  SortHeader,
+  selectedStatus,
+  selectedTopic,
+  selectedLabel,
+  filterByArticleLabel,
+  filterByArticleStatus,
+  filterByTopic,
+}) => {
   const renderActions = {
     'meta.title': () => {
       return <SortHeader thisSortName="meta:title">Title</SortHeader>
@@ -58,7 +77,11 @@ const renderManuscriptsTableHeaders = ({ SortHeader }) => {
       )
     },
     'submission.journal': () => {
-      return <SortHeader>Journal</SortHeader>
+      return (
+        <SortHeader cursor="pointer" thisSortName="submission:journal">
+          Journal
+        </SortHeader>
+      )
     },
     created: () => {
       return <SortHeader thisSortName="created">Created</SortHeader>
@@ -67,13 +90,78 @@ const renderManuscriptsTableHeaders = ({ SortHeader }) => {
       return <SortHeader thisSortName="updated">Updated</SortHeader>
     },
     'submission.topics': () => {
-      return <SortHeader>Topic</SortHeader>
+      return (
+        <SortHeader>
+          <Select
+            aria-label="Topic"
+            data-testid="topics"
+            label="Topic"
+            onChange={selected => filterByTopic(selected.value)}
+            options={[
+              {
+                label: 'Select...',
+                value: '',
+              },
+              ...topics,
+            ]}
+            placeholder="Topic"
+            value={selectedTopic}
+          />
+        </SortHeader>
+      )
     },
     status: () => {
-      return <SortHeader thisSortName="status">Status</SortHeader>
+      return (
+        <SortHeader>
+          <Select
+            aria-label="Status"
+            data-testid="status"
+            label="Status"
+            onChange={selected => filterByArticleStatus(selected.value)}
+            options={[
+              { label: 'Select...', value: '' },
+              { label: 'Unsubmitted', value: 'new' },
+              { label: 'Submitted', value: 'submitted' },
+              { label: 'Evaluated', value: 'evaluated' },
+              { label: 'Published', value: 'published' },
+            ]}
+            placeholder="Status"
+            value={selectedStatus}
+          />
+        </SortHeader>
+      )
     },
     'submission.labels': () => {
-      return <SortHeader thisSortName="submission:labels">Label</SortHeader>
+      return (
+        <SortHeader>
+          <Select
+            aria-label="Labels"
+            data-testid="labels"
+            label="Label"
+            onChange={selected => filterByArticleLabel(selected.value)}
+            options={[
+              {
+                label: 'Select...',
+                value: '',
+              },
+              {
+                label: 'Ready to evaluate',
+                value: 'readyToEvaluate',
+              },
+              {
+                label: 'Evaluated',
+                value: 'evaluated',
+              },
+              {
+                label: 'Ready to publish',
+                value: 'readyToPublish',
+              },
+            ]}
+            placeholder="Labels"
+            value={selectedLabel}
+          />
+        </SortHeader>
+      )
     },
     author: () => {
       return <SortHeader thisSortName="submitterId">Author</SortHeader>
@@ -93,9 +181,9 @@ const renderManuscriptsTableHeaders = ({ SortHeader }) => {
 }
 
 const Manuscripts = ({ history, ...props }) => {
-  const SortHeader = ({ thisSortName, children }) => {
+  const SortHeader = ({ thisSortName, children, cursor }) => {
     if (!thisSortName) {
-      return <th>{children}</th>
+      return <TableHeader cursor={cursor}>{children}</TableHeader>
     }
 
     const changeSort = () => {
@@ -125,9 +213,9 @@ const Manuscripts = ({ history, ...props }) => {
     }
 
     return (
-      <th onClick={changeSort}>
+      <TableHeader cursor={cursor} onClick={changeSort}>
         {children} {UpDown()}
-      </th>
+      </TableHeader>
     )
   }
 
@@ -171,6 +259,37 @@ const Manuscripts = ({ history, ...props }) => {
   )
 
   const [selectedNewManuscripts, setSelectedNewManuscripts] = useState([])
+
+  const filterArticle = (propertyName, propertyValue, updateFn) => {
+    const currentURL = window.location.href.split('?')
+
+    if (currentURL.length === 1) {
+      currentURL.push('')
+    }
+
+    let updatedQueryString = currentURL[1].includes(`${propertyName}=`)
+      ? updateUrlParameter(currentURL[1], propertyName, propertyValue)
+      : `${currentURL[1]}&${propertyName}=${propertyValue}`
+
+    if (!propertyValue) {
+      updatedQueryString = updatedQueryString.replace(`&${propertyName}=`, '')
+    }
+
+    updateFn(propertyValue)
+    history.replace(`/kotahi/admin/manuscripts?${updatedQueryString}`)
+  }
+
+  const filterByTopic = topic => {
+    filterArticle('topic', topic, setSelectedTopic)
+  }
+
+  const filterByArticleStatus = status => {
+    filterArticle('status', status, setSelectedStatus)
+  }
+
+  const filterByArticleLabel = label => {
+    filterArticle('label', label, setSelectedLabel)
+  }
 
   const toggleNewManuscriptCheck = id => {
     setSelectedNewManuscripts(s => {
@@ -317,6 +436,12 @@ const Manuscripts = ({ history, ...props }) => {
 
   const renderManuscriptsTableHeader = renderManuscriptsTableHeaders({
     SortHeader,
+    selectedTopic,
+    selectedStatus,
+    selectedLabel,
+    filterByTopic,
+    filterByArticleStatus,
+    filterByArticleLabel,
   })
 
   return (
@@ -402,12 +527,19 @@ const Manuscripts = ({ history, ...props }) => {
 
               return (
                 <Manuscript
+                  filterArticle={filterArticle}
+                  filterByArticleLabel={filterByArticleLabel}
+                  filterByArticleStatus={filterByArticleStatus}
+                  filterByTopic={filterByTopic}
                   history={history}
                   key={latestVersion.id}
                   manuscript={latestVersion}
                   manuscriptId={manuscript.id}
                   number={key + 1}
+                  selectedLabel={selectedLabel}
                   selectedNewManuscripts={selectedNewManuscripts}
+                  selectedStatus={selectedStatus}
+                  selectedTopic={selectedTopic}
                   setReadyToEvaluateLabel={setReadyToEvaluateLabel}
                   setSelectedLabel={setSelectedLabel}
                   setSelectedStatus={setSelectedStatus}
