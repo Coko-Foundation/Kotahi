@@ -5,7 +5,7 @@ import { manuscripts, login } from '../../support/routes'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 
 describe('Login page tests', () => {
-  it('page should display eLife branding settings', () => {
+  it('page should display colab branding settings', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('branding_settings').then(settings => {
       cy.visit(login)

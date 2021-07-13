@@ -9,7 +9,7 @@
     "logoPath": "/public/logo-ncrc.jpg",
     "brandName": "Novel Coronavirus Research Compendium"
   },
-  "colab" : {
+  "colab": {
     "primaryColor": "#bc2325",
     "logoPath": "/public/biophysics-colab.png",
     "brandName": "Colab"
