@@ -86,7 +86,7 @@ describe('manuscripts page tests', () => {
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
     })
 
-    it.only('unsubmitted article is evaluated', () => {
+    it('unsubmitted article is evaluated', () => {
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleDescription(data.title)
       })
@@ -149,7 +149,7 @@ describe('manuscripts page tests', () => {
     })
   })
 
-  context.only('submitted and evaluated article tests', () => {
+  context('submitted and evaluated article tests', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
