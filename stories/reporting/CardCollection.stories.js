@@ -29,8 +29,8 @@ const BigNumber = styled.div`
   line-height: 120%;
 `
 
-const NoteRight = styled.div`
-  text-align: right;
+const NoteCenter = styled.div`
+  text-align: center;
   width: 100%;
 `
 
@@ -75,10 +75,10 @@ export const Base = args => (
     >
       <Header>Manuscripts published today</Header>
       <BigNumber>4</BigNumber>
-      <NoteRight>Average 2</NoteRight>
+      <NoteCenter>Average 2</NoteCenter>
       <Header>Manuscripts currently in revision</Header>
       <BigNumber>12</BigNumber>
-      <NoteRight>Average 9</NoteRight>
+      <NoteCenter>Average 9</NoteCenter>
     </Card>
     <Card
       style={{

@@ -2,7 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import Color from 'color'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import Table from './Table'
 import CardCollection, { Card } from './CardCollection'
 import ConcentricStepsChart from './ConcentricStepsChart'
@@ -38,14 +38,23 @@ const BigNumber = styled.div`
   line-height: 120%;
 `
 
-const NoteRight = styled.div`
-  text-align: right;
+const NoteCenter = styled.div`
+  text-align: center;
   width: 100%;
 `
 
 const Note = styled.div`
   color: ${lightenBy('colorText', 0.2)};
   font-size: ${th('fontSizeBaseSmall')};
+`
+
+const Container = styled.div`
+  display: flex;
+  flex-direction: row;
+`
+
+const TableContainer = styled.div`
+  padding: ${grid(1)} 0 0 ${grid(5)};
 `
 
 const getBarColor = (
@@ -134,7 +143,7 @@ const SummaryReport = ({
   }
 
   return (
-    <>
+    <Container>
       <CardCollection style={{ width: 950, height: 680 }}>
         <ChartCard>
           <CardHeader>Editors&rsquo; workflow</CardHeader>
@@ -150,16 +159,16 @@ const SummaryReport = ({
             <Tooltip content="From midnight local time" />
           </CardHeader>
           <BigNumber>{publishedTodayCount}</BigNumber>
-          <NoteRight>
+          <NoteCenter>
             Average {to1Dp(avgPublishedDailyCount)}
             <Tooltip content="Based on the selected date range" />
-          </NoteRight>
+          </NoteCenter>
           <CardHeader>Manuscripts in progress</CardHeader>
           <BigNumber>{revisingCount}</BigNumber>
-          <NoteRight>
+          <NoteCenter>
             Average {to1Dp(avgInProgressDailyCount)}
             <Tooltip content="Based on the selected date range" />
-          </NoteRight>
+          </NoteCenter>
         </BigNumbersCard>
         <ChartCard>
           <CardHeader>
@@ -174,10 +183,11 @@ const SummaryReport = ({
           />
         </ChartCard>
       </CardCollection>
-      <Table
-        columnSchemas={[{ width: '12em' }, { width: '7em' }]}
-        // prettier-ignore
-        rows={[
+      <TableContainer>
+        <Table
+          columnSchemas={[{ width: '12em' }, { width: '7em' }]}
+          // prettier-ignore
+          rows={[
           [
             {
               content: (
@@ -200,8 +210,9 @@ const SummaryReport = ({
           [{ content: 'Accepted', isHeading: true }, acceptedCount],
           [{ content: 'Published', isHeading: true }, publishedCount],
         ]}
-      />
-    </>
+        />
+      </TableContainer>
+    </Container>
   )
 }
 
