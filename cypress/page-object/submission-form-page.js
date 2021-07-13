@@ -514,6 +514,22 @@ export const SubmissionFormPage = {
   fillInEditDate(editDate) {
     this.getEditDateField().fillInput(editDate)
   },
+  checkEditDateIsUpdated() {
+    const getTodayDate = () => {
+      const date = new Date()
+      const year = date.getFullYear()
+      let month = date.getMonth() + 1
+      const day = date.getDate()
+
+      if (month <= 9) {
+        month = `0${month}`
+      }
+
+      return `${year}-${month}-${day}`
+    }
+
+    this.getEditDateField().should('have.value', getTodayDate())
+  },
   getReviewCreatorField() {
     return cy.getByDataTestId(REVIEW_CREATOR_FIELD)
   },
