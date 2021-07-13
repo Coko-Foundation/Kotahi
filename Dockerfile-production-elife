@@ -27,7 +27,7 @@ ENV PUBLIC_CLIENT_HOST $public_client_host
 ENV PUBLIC_CLIENT_PORT $public_client_port
 ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
 ENV MANUSCRIPTS_TABLE_COLUMNS $manuscripts_table_columns
-ENV MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH $manuscripts_table_columns
+ENV MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH $manuscripts_table_first_column_width
 
 RUN apk add --no-cache git python make g++ bash tar
 
