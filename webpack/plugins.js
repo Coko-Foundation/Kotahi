@@ -50,6 +50,7 @@ module.exports = (opts = {}) => {
       'USE_SANDBOXED_ORCID',
       'INSTANCE_NAME',
       'MANUSCRIPTS_TABLE_COLUMNS',
+      'MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH',
     ]),
   )
 

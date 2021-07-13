@@ -127,7 +127,7 @@ const renderManuscriptColumn = ({
     },
     'submission.articleDescription': () => {
       return (
-        <Cell minWidth="150px">
+        <Cell>
           <StyledDescriptionWrapper>
             {manuscript.status === articleStatuses.new &&
               !manuscript.submission.labels && (

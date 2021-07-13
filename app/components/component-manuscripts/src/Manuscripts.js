@@ -44,6 +44,16 @@ const topics = submissionForm.children.find(el => {
   return el.title === 'Topics'
 }).options
 
+const firstColumnWidth =
+  process.env.INSTANCE_NAME === 'ncrc'
+    ? process.env.MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH
+    : '150px'
+// eslint-disable-next-line
+console.log(
+  'firstColumnWidth',
+  process.env.MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH,
+)
+
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const updateUrlParameter = (url, param, value) => {
@@ -511,6 +521,15 @@ const Manuscripts = ({ history, ...props }) => {
 
       <ScrollableContent>
         <ManuscriptsTable>
+          <colgroup>
+            <col style={{ width: firstColumnWidth }} />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+            <col />
+          </colgroup>
           <Header>
             <tr>
               {manuscriptsTableConfig.map(field => {

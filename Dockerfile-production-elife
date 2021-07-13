@@ -14,7 +14,6 @@ ARG public_client_port
 ARG manuscripts_table_columns
 ARG manuscripts_table_first_column_width
 
-
 ENV INSTANCE_NAME $instance_name
 ENV NODE_ENV "production"
 ENV SERVER_PROTOCOL "http"

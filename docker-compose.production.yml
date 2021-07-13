@@ -19,6 +19,7 @@ services:
         - public_client_port=${PUBLIC_CLIENT_PORT}
         - instance_name=${INSTANCE_NAME:-elife}
         - manuscripts_table_columns=${MANUSCRIPTS_TABLE_COLUMNS}
+        - manuscripts_table_first_column_width=${MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH}
 
     ports:
       - ${SERVER_PORT:-3000}:${SERVER_PORT:-3000}
@@ -46,7 +47,7 @@ services:
       - S3_ENDPOINT=${S3_ENDPOINT}
       - S3_REGION=${S3_REGION}
       - MANUSCRIPTS_TABLE_COLUMNS=${MANUSCRIPTS_TABLE_COLUMNS}
-
+      - MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH=${MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH}
 
   job-xsweet:
     image: pubsweet/job-xsweet:1.5.1
