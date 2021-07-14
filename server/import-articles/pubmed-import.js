@@ -266,8 +266,8 @@ const getData = async ctx => {
           })
         : singlePubmedArticles(PubmedArticleSet.PubmedArticle.MedlineCitation)
 
-      const newManuscripts = PubmedArticleSet.PubmedArticle.map(
-        ({ MedlineCitation }) => {
+      const newManuscripts = withoutDuplicates
+        .map(({ MedlineCitation }) => {
           const {
             AuthorList,
             ArticleTitle,
@@ -366,8 +366,8 @@ const getData = async ctx => {
                 teams: [],
               }
             : null
-        },
-      ).filter(Boolean)
+        })
+        .filter(Boolean)
 
       if (!newManuscripts.length) {
         return []
