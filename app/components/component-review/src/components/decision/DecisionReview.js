@@ -37,7 +37,10 @@ const ReviewHeadingRoot = styled.div`
 `
 
 const Ordinal = styled.span``
-const Name = styled.span``
+
+const Name = styled.span`
+  display: flex;
+`
 
 const Controls = styled.span`
   flex-grow: 1;
@@ -117,7 +120,7 @@ const ReviewHeading = ({
       &nbsp;
       <Name>
         {isHiddenReviewerName && isCurrentUserAuthor ? 'Anonymous' : name}
-        {isCurrentUserEditor &&
+        {(isCurrentUserEditor || currentUser.admin) &&
           canBePublishedPublicly &&
           process.env.INSTANCE_NAME === 'colab' && (
             <>
@@ -126,25 +129,26 @@ const ReviewHeading = ({
             </>
           )}
       </Name>
-      {process.env.INSTANCE_NAME === 'colab' && isCurrentUserEditor && (
-        <>
-          <StyledCheckbox
-            checked={isHiddenFromAuthor}
-            label="Hide review to author"
-            onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
-          />
-          <StyledCheckbox
-            checked={isHiddenReviewerName}
-            label="Hide reviewer name"
-            onChange={() =>
-              toggleIsHiddenReviewerNameFromPublishedAndAuthor(
-                id,
-                !isHiddenReviewerName,
-              )
-            }
-          />
-        </>
-      )}
+      {process.env.INSTANCE_NAME === 'colab' &&
+        (isCurrentUserEditor || currentUser.admin) && (
+          <>
+            <StyledCheckbox
+              checked={isHiddenFromAuthor}
+              label="Hide review"
+              onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
+            />
+            <StyledCheckbox
+              checked={isHiddenReviewerName}
+              label="Hide reviewer name"
+              onChange={() =>
+                toggleIsHiddenReviewerNameFromPublishedAndAuthor(
+                  id,
+                  !isHiddenReviewerName,
+                )
+              }
+            />
+          </>
+        )}
       <Controls>
         <ToggleReview open={open} toggle={toggleOpen} />
       </Controls>
