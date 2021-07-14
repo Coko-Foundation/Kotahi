@@ -128,7 +128,7 @@ const ReviewHeading = ({
       </Name>
       {process.env.INSTANCE_NAME === 'colab' && isCurrentUserEditor && (
         <>
-          <Checkbox
+          <StyledCheckbox
             checked={isHiddenFromAuthor}
             label="Hide review to author"
             onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
