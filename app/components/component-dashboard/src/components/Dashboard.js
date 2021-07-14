@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
 import { Button } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
@@ -29,6 +29,16 @@ const latestVersion = manuscript =>
   manuscript.manuscriptVersions?.[0] || manuscript
 
 const Dashboard = ({ history, ...props }) => {
+  const [
+    dataManuscriptImEditorOfQuery,
+    setDataManuscriptImEditorOfQuery,
+  ] = useState(null)
+
+  const [
+    dataManuscriptImReviewerOfQuery,
+    setDataManuscriptImReviewerOfQuery,
+  ] = useState(null)
+
   const {
     loading: loadingCurrentUser,
     data: dataCurrentUser,
@@ -36,22 +46,29 @@ const Dashboard = ({ history, ...props }) => {
   } = useQuery(queries.dashboard)
 
   const {
-    loading: loadingManuscriptImEditorOfQuery,
-    data: dataManuscriptImEditorOfQuery,
-    error: errorManuscriptImEditorOfQuery,
-  } = useQuery(manuscriptImEditorOfQuery)
-
-  const {
     loading: loadingManuscriptImAuthorOfQuery,
     data: dataManuscriptImAuthorOfQuery,
     error: errorManuscriptImAuthorOfQuery,
   } = useQuery(manuscriptImAuthorOfQuery)
 
+  // onCompleted is used instead of data, because sometimes data is undefined, and it's not a response from BE, looks like apollo bug
   const {
     loading: loadingManuscriptImReviewerOfQuery,
-    data: dataManuscriptImReviewerOfQuery,
     error: errorManuscriptImReviewerOfQuery,
-  } = useQuery(manuscriptImReviewerOfQuery)
+  } = useQuery(manuscriptImReviewerOfQuery, {
+    onCompleted: data => {
+      setDataManuscriptImReviewerOfQuery(data)
+    },
+  })
+
+  const {
+    loading: loadingManuscriptImEditorOfQuery,
+    error: errorManuscriptImEditorOfQuery,
+  } = useQuery(manuscriptImEditorOfQuery, {
+    onCompleted: data => {
+      setDataManuscriptImEditorOfQuery(data)
+    },
+  })
 
   const [reviewerRespond] = useMutation(mutations.reviewerResponseMutation)
 
