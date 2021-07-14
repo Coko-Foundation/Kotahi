@@ -111,7 +111,8 @@ const Dashboard = ({ history, ...props }) => {
           <SectionHeader>
             <Title>My Submissions</Title>
           </SectionHeader>
-          {dataManuscriptImAuthorOfQuery.manuscriptsImAuthorOf.length > 0 ? (
+          {dataManuscriptImAuthorOfQuery &&
+          dataManuscriptImAuthorOfQuery.manuscriptsImAuthorOf.length > 0 ? (
             dataManuscriptImAuthorOfQuery.manuscriptsImAuthorOf
               .map(latestVersion)
               .map(submission => (
@@ -139,8 +140,8 @@ const Dashboard = ({ history, ...props }) => {
           <SectionHeader>
             <Title>To Review</Title>
           </SectionHeader>
-          {dataManuscriptImReviewerOfQuery.manuscriptsImReviewerOf.length >
-          0 ? (
+          {dataManuscriptImReviewerOfQuery &&
+          dataManuscriptImReviewerOfQuery.manuscriptsImReviewerOf.length > 0 ? (
             dataManuscriptImReviewerOfQuery.manuscriptsImReviewerOf
               .map(latestVersion)
               .map(review => (
@@ -165,7 +166,8 @@ const Dashboard = ({ history, ...props }) => {
         <SectionHeader>
           <Title>Manuscripts I&apos;m editor of</Title>
         </SectionHeader>
-        {dataManuscriptImEditorOfQuery.manuscriptImEditorOf.length > 0 ? (
+        {dataManuscriptImEditorOfQuery &&
+        dataManuscriptImEditorOfQuery.manuscriptImEditorOf.length > 0 ? (
           dataManuscriptImEditorOfQuery.manuscriptImEditorOf
             .map(latestVersion)
             .map(manuscript => (

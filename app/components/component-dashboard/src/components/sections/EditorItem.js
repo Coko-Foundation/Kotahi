@@ -137,7 +137,7 @@ EditorItem.propTypes = {
         ).isRequired,
       }).isRequired,
     ).isRequired,
-    _currentRoles: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    currentRoles: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   }).isRequired,
 }
 
