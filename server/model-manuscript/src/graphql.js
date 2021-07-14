@@ -651,9 +651,6 @@ const resolvers = {
 
       const query = ctx.models.Manuscript.query()
         .where({ parentId: null })
-        .withGraphFetched(
-          '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
-        )
         .modify('orderBy', sort)
 
       if (filter && filter.status) {
@@ -691,9 +688,18 @@ const resolvers = {
 
       const manuscripts = await query
 
+      const detailedManuscripts = await ctx.models.Manuscript.query()
+        .whereIn(
+          'manuscripts.id',
+          manuscripts.map(manuscript => manuscript.id),
+        )
+        .withGraphFetched(
+          '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
+        )
+
       return {
         totalCount,
-        manuscripts,
+        manuscripts: detailedManuscripts,
       }
 
       // return ctx.connectors.User.fetchAll(where, ctx, { eager })
