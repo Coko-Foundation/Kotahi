@@ -98,7 +98,7 @@ const EditorItem = ({ version }) => (
         {getSubmitedDate(version) ? (
           <MetadataSubmittedDate submitted={getSubmitedDate(version).date} />
         ) : null}
-        &nbsp;You are {prettyRoleText(version._currentRoles)}.
+        &nbsp;You are {prettyRoleText(version.currentRoles)}.
       </Meta>
     </Item>
     <Item>

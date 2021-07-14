@@ -52,6 +52,155 @@ published
 _currentRoles @client
 `
 
+export const manuscriptImReviewerOfQuery = gql`
+  query manuscriptsImReviewerOf {
+    manuscriptsImReviewerOf {
+      id
+      submission
+      meta {
+        manuscriptId
+        title
+        declarations {
+          openData
+          openPeerReview
+          preregistered
+          previouslySubmitted
+          researchNexus
+          streamlinedReview
+        }
+        articleSections
+        articleType
+        history {
+          type
+          date
+        }
+      }
+      manuscriptVersions {
+        id
+        parentId
+        ${manuscriptFragment}
+      }
+      teams {
+        id
+        role
+        name
+        manuscript {
+          id
+        }
+        members {
+          id
+          user {
+            id
+            username
+          }
+          status
+        }
+      }
+    }
+  }
+`
+
+export const manuscriptImAuthorOfQuery = gql`
+  query manuscriptsImAuthorOf {
+    manuscriptsImAuthorOf {
+      manuscriptVersions {
+        id
+        parentId
+        ${manuscriptFragment}
+      }
+      id
+      status
+      meta {
+        manuscriptId
+        title
+        declarations {
+          openData
+          openPeerReview
+          preregistered
+          previouslySubmitted
+          researchNexus
+          streamlinedReview
+        }
+        articleSections
+        articleType
+        history {
+          type
+          date
+        }
+      }
+      submission
+      published
+    }
+  }
+`
+
+export const manuscriptImEditorOfQuery = gql`
+  query manuscriptImEditorOf {
+    manuscriptImEditorOf {
+      manuscriptVersions {
+        id
+        parentId
+        ${manuscriptFragment}
+      }
+      id
+      created
+      published
+      submission
+      status
+      meta {
+        manuscriptId
+        title
+        declarations {
+          openData
+          openPeerReview
+          preregistered
+          previouslySubmitted
+          researchNexus
+          streamlinedReview
+        }
+        articleSections
+        articleType
+        history {
+          type
+          date
+        }
+      }
+      teams {
+        id
+        role
+        name
+        manuscript {
+          id
+        }
+        members {
+          id
+          user {
+            id
+            username
+          }
+          status
+        }
+      }
+      reviews {
+        id
+        open
+        recommendation
+        created
+        isDecision
+        user {
+          id
+          username
+        }
+      }
+      currentRoles
+    }
+  }
+`
+
+// currentRoles
+// reviews
+// submission
+
 export default {
   dashboard: gql`
     {
@@ -59,16 +208,6 @@ export default {
         id
         username
         admin
-      }
-
-      manuscripts {
-        id
-        manuscriptVersions {
-          id
-          parentId
-          ${manuscriptFragment}
-        }
-        ${manuscriptFragment}
       }
     }
   `,

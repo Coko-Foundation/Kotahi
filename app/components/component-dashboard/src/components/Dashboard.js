@@ -5,7 +5,11 @@ import { Button } from '@pubsweet/ui'
 
 import config from 'config'
 import ReactRouterPropTypes from 'react-router-prop-types'
-import queries from '../graphql/queries'
+import queries, {
+  manuscriptImEditorOfQuery,
+  manuscriptImAuthorOfQuery,
+  manuscriptImReviewerOfQuery,
+} from '../graphql/queries'
 import mutations from '../graphql/mutations'
 import { Container, Placeholder } from '../style'
 import EditorItem from './sections/EditorItem'
@@ -21,10 +25,34 @@ import {
   HeadingWithAction,
 } from '../../../shared'
 
-import hasRole from '../../../../shared/hasRole'
+const latestVersion = manuscript =>
+  manuscript.manuscriptVersions?.[0] || manuscript
 
 const Dashboard = ({ history, ...props }) => {
-  const { loading, data, error } = useQuery(queries.dashboard)
+  const {
+    loading: loadingCurrentUser,
+    data: dataCurrentUser,
+    error: errorCurrentUser,
+  } = useQuery(queries.dashboard)
+
+  const {
+    loading: loadingManuscriptImEditorOfQuery,
+    data: dataManuscriptImEditorOfQuery,
+    error: errorManuscriptImEditorOfQuery,
+  } = useQuery(manuscriptImEditorOfQuery)
+
+  const {
+    loading: loadingManuscriptImAuthorOfQuery,
+    data: dataManuscriptImAuthorOfQuery,
+    error: errorManuscriptImAuthorOfQuery,
+  } = useQuery(manuscriptImAuthorOfQuery)
+
+  const {
+    loading: loadingManuscriptImReviewerOfQuery,
+    data: dataManuscriptImReviewerOfQuery,
+    error: errorManuscriptImReviewerOfQuery,
+  } = useQuery(manuscriptImReviewerOfQuery)
+
   const [reviewerRespond] = useMutation(mutations.reviewerResponseMutation)
 
   // const [deleteManuscript] = useMutation(mutations.deleteManuscriptMutation, {
@@ -42,35 +70,28 @@ const Dashboard = ({ history, ...props }) => {
   //   },
   // })
 
-  if (loading) return <Spinner />
-  if (error) return JSON.stringify(error)
-  const dashboard = (data && data.manuscripts) || []
-  const currentUser = data && data.currentUser
-
-  const latestVersion = manuscript =>
-    manuscript.manuscriptVersions?.[0] || manuscript
-
-  const mySubmissions = dashboard
-    .filter(submission => hasRole(submission, 'author'))
-    .map(latestVersion)
-
-  const toReview = dashboard
-    .map(latestVersion)
-    .filter(submission =>
-      hasRole(submission, [
-        'reviewer',
-        'invited:reviewer',
-        'accepted:reviewer',
-        'completed:reviewer',
-      ]),
+  if (
+    loadingManuscriptImAuthorOfQuery ||
+    loadingManuscriptImReviewerOfQuery ||
+    loadingManuscriptImEditorOfQuery ||
+    loadingCurrentUser
+  )
+    return <Spinner />
+  if (
+    errorManuscriptImAuthorOfQuery ||
+    errorManuscriptImReviewerOfQuery ||
+    errorManuscriptImEditorOfQuery ||
+    errorCurrentUser
+  )
+    return JSON.stringify(
+      errorManuscriptImAuthorOfQuery ||
+        errorManuscriptImReviewerOfQuery ||
+        errorManuscriptImEditorOfQuery ||
+        errorCurrentUser,
     )
+  const currentUser = dataCurrentUser && dataCurrentUser.currentUser
 
   // Editors are always linked to the parent/original manuscript, not to versions
-  const manuscriptsImEditorOf = dashboard
-    .filter(submission =>
-      hasRole(submission, ['seniorEditor', 'handlingEditor', 'editor']),
-    )
-    .map(latestVersion)
 
   const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -90,20 +111,22 @@ const Dashboard = ({ history, ...props }) => {
           <SectionHeader>
             <Title>My Submissions</Title>
           </SectionHeader>
-          {mySubmissions.length > 0 ? (
-            mySubmissions.map(submission => (
-              // Links are based on the original/parent manuscript version
-              <OwnerItem
-                key={submission.id}
-                // deleteManuscript={() =>
-                //   // eslint-disable-next-line no-alert
-                //   window.confirm(
-                //     'Are you sure you want to delete this submission?',
-                //   ) && deleteManuscript({ variables: { id: submission.id } })
-                // }
-                version={submission}
-              />
-            ))
+          {dataManuscriptImAuthorOfQuery.manuscriptsImAuthorOf.length > 0 ? (
+            dataManuscriptImAuthorOfQuery.manuscriptsImAuthorOf
+              .map(latestVersion)
+              .map(submission => (
+                // Links are based on the original/parent manuscript version
+                <OwnerItem
+                  key={submission.id}
+                  // deleteManuscript={() =>
+                  //   // eslint-disable-next-line no-alert
+                  //   window.confirm(
+                  //     'Are you sure you want to delete this submission?',
+                  //   ) && deleteManuscript({ variables: { id: submission.id } })
+                  // }
+                  version={submission}
+                />
+              ))
           ) : (
             <Placeholder>
               You have not submitted any manuscripts yet
@@ -116,17 +139,20 @@ const Dashboard = ({ history, ...props }) => {
           <SectionHeader>
             <Title>To Review</Title>
           </SectionHeader>
-          {toReview.length > 0 ? (
-            toReview.map(review => (
-              <SectionRow key={review.id}>
-                <ReviewerItem
-                  currentUser={currentUser}
-                  key={review.id}
-                  reviewerRespond={reviewerRespond}
-                  version={review}
-                />
-              </SectionRow>
-            ))
+          {dataManuscriptImReviewerOfQuery.manuscriptsImReviewerOf.length >
+          0 ? (
+            dataManuscriptImReviewerOfQuery.manuscriptsImReviewerOf
+              .map(latestVersion)
+              .map(review => (
+                <SectionRow key={review.id}>
+                  <ReviewerItem
+                    currentUser={currentUser}
+                    key={review.id}
+                    reviewerRespond={reviewerRespond}
+                    version={review}
+                  />
+                </SectionRow>
+              ))
           ) : (
             <Placeholder>
               You have not been assigned any reviews yet
@@ -139,12 +165,14 @@ const Dashboard = ({ history, ...props }) => {
         <SectionHeader>
           <Title>Manuscripts I&apos;m editor of</Title>
         </SectionHeader>
-        {manuscriptsImEditorOf.length > 0 ? (
-          manuscriptsImEditorOf.map(manuscript => (
-            <SectionRow key={`manuscript-${manuscript.id}`}>
-              <EditorItem version={manuscript} />
-            </SectionRow>
-          ))
+        {dataManuscriptImEditorOfQuery.manuscriptImEditorOf.length > 0 ? (
+          dataManuscriptImEditorOfQuery.manuscriptImEditorOf
+            .map(latestVersion)
+            .map(manuscript => (
+              <SectionRow key={`manuscript-${manuscript.id}`}>
+                <EditorItem version={manuscript} />
+              </SectionRow>
+            ))
         ) : (
           <SectionRow>
             <Placeholder>

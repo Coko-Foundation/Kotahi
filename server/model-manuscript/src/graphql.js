@@ -1,7 +1,7 @@
 /* eslint-disable prefer-destructuring */
 const { ref } = require('objection')
 const axios = require('axios')
-const { mergeWith, isArray } = require('lodash')
+const { mergeWith, isArray, uniqBy } = require('lodash')
 const { pubsubManager } = require('pubsweet-server')
 
 const { getPubsub } = pubsubManager
@@ -57,7 +57,10 @@ const ManuscriptResolvers = ({ isVersion }) => {
 
   if (!isVersion) {
     resolvers.manuscriptVersions = async (parent, _, ctx) => {
-      if (!parent.manuscriptVersions.length) {
+      if (
+        (parent.manuscriptVersions && !parent.manuscriptVersions.length) ||
+        !parent.manuscriptVersions
+      ) {
         return ctx.models.Manuscript.relatedQuery('manuscriptVersions')
           .for(parent.id)
           .orderBy('created', 'desc')
@@ -524,6 +527,83 @@ const resolvers = {
 
       return manuscript
     },
+    async manuscriptsImReviewerOf(_, input, ctx) {
+      const teamMemberManuscripts = await ctx.models.TeamMember.query()
+        .where({ userId: ctx.user.id })
+        .withGraphFetched('[team.[manuscript]]')
+
+      const onlyReviewerTeams = teamMemberManuscripts.filter(teamMember => {
+        return [
+          'reviewer',
+          'invited:reviewer',
+          'accepted:reviewer',
+          'completed:reviewer',
+        ].includes(teamMember.team.role)
+      })
+
+      const manuscripts = uniqBy(
+        onlyReviewerTeams.map(teamMember => {
+          return { ...teamMember.team.manuscript, userId: teamMember.userId }
+        }),
+        'id',
+      )
+
+      return manuscripts
+    },
+    async manuscriptsImAuthorOf(_, input, ctx) {
+      const teamMemberManuscripts = await ctx.models.TeamMember.query()
+        .where({ userId: ctx.user.id })
+        .withGraphFetched('[team.[manuscript]]')
+
+      const onlyAuthorTeams = teamMemberManuscripts.filter(teamMember => {
+        return ['author'].includes(teamMember.team.role)
+      })
+
+      const manuscripts = uniqBy(
+        onlyAuthorTeams.map(teamMember => {
+          return { ...teamMember.team.manuscript, userId: teamMember.userId }
+        }),
+        'id',
+      )
+
+      return manuscripts
+    },
+    async manuscriptImEditorOf(_, input, ctx) {
+      const teamMemberManuscripts = await ctx.models.TeamMember.query()
+        .where({ userId: ctx.user.id })
+        .withGraphFetched('[team.[manuscript.[reviews]]]')
+
+      const onlyEditorTeams = teamMemberManuscripts.filter(teamMember => {
+        return ['seniorEditor', 'handlingEditor', 'editor'].includes(
+          teamMember.team.role,
+        )
+      })
+
+      const manuscripts = uniqBy(
+        onlyEditorTeams.map(teamMember => {
+          return { ...teamMember.team.manuscript, userId: teamMember.userId }
+        }),
+        'id',
+      )
+
+      const formattedManuscripts = manuscripts.map(manuscript => {
+        const currentRoles = teamMemberManuscripts
+          .filter(teamMember => {
+            return teamMember.userId === manuscript.userId
+          })
+          .map(teamMember => teamMember.team.role)
+
+        const teams = teamMemberManuscripts
+          .filter(teamMember => {
+            return teamMember.team.manuscriptId === manuscript.id
+          })
+          .map(teamMember => teamMember.team)
+
+        return { ...manuscript, currentRoles, teams }
+      })
+
+      return formattedManuscripts
+    },
     async manuscripts(_, { where }, ctx) {
       return ctx.models.Manuscript.query()
         .withGraphFetched(
@@ -652,6 +732,9 @@ const typeDefs = `
     paginatedManuscripts(sort: String, offset: Int, limit: Int, filter: ManuscriptsFilter): PaginatedManuscripts
     publishedManuscripts(sort:String, offset: Int, limit: Int): PaginatedManuscripts
     validateDOI(articleURL: String): validateDOIResponse
+    manuscriptImEditorOf: [Manuscript]
+    manuscriptsImAuthorOf: [Manuscript]
+    manuscriptsImReviewerOf: [Manuscript]
   }
 
   input ManuscriptsFilter {
@@ -703,7 +786,7 @@ const typeDefs = `
     manuscriptVersions: [ManuscriptVersion]
     files: [File]
     teams: [Team]
-    reviews: [Review!]
+    reviews: [Review]
     status: String
     decision: String
     suggestions: Suggestions
@@ -714,6 +797,7 @@ const typeDefs = `
     submitter: User
     published: DateTime
     evaluationsHypothesisMap: String
+    currentRoles: [String]
   }
 
   type ManuscriptVersion implements Object {
