@@ -100,7 +100,7 @@ const renderManuscriptsTableHeaders = ({
       return <SortHeader thisSortName="updated">Updated</SortHeader>
     },
     'submission.topics': () => {
-      return (
+      return process.env.INSTANCE_NAME === 'ncrc' ? (
         <SortHeader>
           <Select
             aria-label="Topic"
@@ -118,10 +118,12 @@ const renderManuscriptsTableHeaders = ({
             value={selectedTopic}
           />
         </SortHeader>
+      ) : (
+        <SortHeader>Topic</SortHeader>
       )
     },
     status: () => {
-      return (
+      return process.env.INSTANCE_NAME === 'ncrc' ? (
         <SortHeader>
           <Select
             aria-label="Status"
@@ -139,10 +141,12 @@ const renderManuscriptsTableHeaders = ({
             value={selectedStatus}
           />
         </SortHeader>
+      ) : (
+        <SortHeader thisSortName="status">Status</SortHeader>
       )
     },
     'submission.labels': () => {
-      return (
+      return process.env.INSTANCE_NAME === 'ncrc' ? (
         <SortHeader>
           <Select
             aria-label="Labels"
@@ -171,6 +175,8 @@ const renderManuscriptsTableHeaders = ({
             value={selectedLabel}
           />
         </SortHeader>
+      ) : (
+        <SortHeader>Label</SortHeader>
       )
     },
     author: () => {
