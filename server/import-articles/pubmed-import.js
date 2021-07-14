@@ -328,7 +328,7 @@ const getData = async ctx => {
                               textWithAttributes._attributes
                                 ? textWithAttributes._attributes.Label
                                 : ''
-                            }</b> </br> ${textWithAttributes._text}</p>`,
+                            }</b> <br/> ${textWithAttributes._text}</p>`,
                         )
                           .join('')
                           .replace(/\n/gi, '')
