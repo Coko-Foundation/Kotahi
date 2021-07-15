@@ -199,7 +199,7 @@ describe('review page', () => {
         })
     })
 
-    context.only('admin user can see the icons', () => {
+    context('admin user can see the icons', () => {
         beforeEach(() => {
             cy.task('restore', 'initialState')
             cy.task('seedForms')
