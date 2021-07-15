@@ -123,7 +123,7 @@ const renderManuscriptsTableHeaders = ({
       )
     },
     status: () => {
-      return process.env.INSTANCE_NAME === 'ncrc' ? (
+      return ['aperture', 'ncrc'].includes(process.env.INSTANCE_NAME) ? (
         <SortHeader>
           <Select
             aria-label="Status"
