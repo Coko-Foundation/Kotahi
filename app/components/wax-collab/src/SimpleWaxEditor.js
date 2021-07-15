@@ -8,7 +8,9 @@ import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { DefaultSchema } from 'wax-prosemirror-utilities'
 import {
   AnnotationToolGroupService,
+  BottomInfoService,
   DisplayToolGroupService,
+  EditorInfoToolGroupServices,
   InlineAnnotationsService,
   LinkService,
   ListsService,
@@ -49,6 +51,10 @@ const waxConfig = () => ({
         },
       ],
     },
+    {
+      templateArea: 'BottomRightInfo',
+      toolGroups: [{ name: 'InfoToolGroup', exclude: ['ShortCutsInfo'] }],
+    },
   ],
 
   RulesService: [emDash, ellipsis],
@@ -57,7 +63,9 @@ const waxConfig = () => ({
 
   services: [
     new AnnotationToolGroupService(),
+    new BottomInfoService(),
     new DisplayToolGroupService(),
+    new EditorInfoToolGroupServices(),
     new InlineAnnotationsService(),
     new LinkService(),
     new ListsService(),
@@ -128,8 +136,20 @@ const Menu = styled.div`
   }
 `
 
+const InfoContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  width: 100%;
+
+  div:focus-within > & {
+    z-index: 1000;
+  }
+`
+
 const TopBar = ComponentPlugin('topBar')
 const WaxOverlays = ComponentPlugin('waxOverlays')
+const CounterInfo = ComponentPlugin('BottomRightInfo')
 
 // eslint-disable-next-line react/prop-types
 const WaxLayout = readonly => ({ editor }) => (
@@ -149,6 +169,11 @@ const WaxLayout = readonly => ({ editor }) => (
       )}
     </Grid>
     <WaxOverlays />
+    {!readonly && (
+      <InfoContainer>
+        <CounterInfo />
+      </InfoContainer>
+    )}
   </div>
 )
 
@@ -185,9 +210,12 @@ const SimpleWaxEditor = ({
 }
 
 SimpleWaxEditor.propTypes = {
+  /** editor content HTML */
   value: PropTypes.string,
+  /** either undefined or 'error' to highlight with error color */
   validationStatus: PropTypes.string,
   readonly: PropTypes.bool,
+  /** Should this element be given focus on initial rendering? */
   autoFocus: PropTypes.bool,
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
