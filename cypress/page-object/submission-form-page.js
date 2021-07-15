@@ -38,6 +38,7 @@ const SUBMIT_MANUSCRIPT_BUTTON = 'button[type=submit]'
 const VALIDATION_ERROR_MESSAGE = 'ValidatedField__MessageWrapper'
 const CONTENT_EDITABLE_VALUE = '[contenteditable="true"]'
 const SUBMISSION_FORM_INPUT_BOX = 'SimpleWaxEditor__EditorDiv'
+const WORD_COUNT_INFO = 'Counter Info'
 
 // specific to elife
 const FORM_OPTION_LIST = '[class*=style__Section]'
@@ -550,6 +551,9 @@ export const SubmissionFormPage = {
   },
   fillInAbstractColab(abstract) {
     this.getAbstractFieldColab().fillInput(abstract)
+  },
+  getWordCountInfo() {
+    return cy.getByTitle(WORD_COUNT_INFO)
   },
 }
 export default SubmissionFormPage

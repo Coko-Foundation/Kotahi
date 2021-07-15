@@ -86,6 +86,18 @@ describe('manuscripts page tests', () => {
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
     })
 
+    it('word count button should be visible & display info', () => {
+      SubmissionFormPage.getWordCountInfo().its('length').should('eq', 7)
+
+      // eslint-disable-next-line no-plusplus
+      for(let i=0; i < 7; i++) {
+        SubmissionFormPage.getWordCountInfo().eq(i).scrollIntoView().should('be.visible')
+      }
+
+      SubmissionFormPage.fillInOurTake('word count test')
+      SubmissionFormPage.getWordCountInfo().eq(0).should('contain', '3').and('contain', 'words')
+    })
+
     it('unsubmitted article is evaluated', () => {
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInArticleDescription(data.title)
