@@ -49,16 +49,20 @@ const Dashboard = ({ history, ...props }) => {
     loading: loadingManuscriptImAuthorOfQuery,
     data: dataManuscriptImAuthorOfQuery,
     error: errorManuscriptImAuthorOfQuery,
-  } = useQuery(manuscriptImAuthorOfQuery)
+  } = useQuery(manuscriptImAuthorOfQuery, {
+    fetchPolicy: 'no-cache',
+  })
 
   // onCompleted is used instead of data, because sometimes data is undefined, and it's not a response from BE, looks like apollo bug
   const {
     loading: loadingManuscriptImReviewerOfQuery,
     error: errorManuscriptImReviewerOfQuery,
+    refetch: refetchManuscriptImReviewerOfQuery,
   } = useQuery(manuscriptImReviewerOfQuery, {
     onCompleted: data => {
       setDataManuscriptImReviewerOfQuery(data)
     },
+    fetchPolicy: 'no-cache',
   })
 
   const {
@@ -68,6 +72,7 @@ const Dashboard = ({ history, ...props }) => {
     onCompleted: data => {
       setDataManuscriptImEditorOfQuery(data)
     },
+    fetchPolicy: 'no-cache',
   })
 
   const [reviewerRespond] = useMutation(mutations.reviewerResponseMutation)
@@ -166,6 +171,7 @@ const Dashboard = ({ history, ...props }) => {
                   <ReviewerItem
                     currentUser={currentUser}
                     key={review.id}
+                    refetchReviewer={refetchManuscriptImReviewerOfQuery}
                     reviewerRespond={reviewerRespond}
                     version={review}
                   />
