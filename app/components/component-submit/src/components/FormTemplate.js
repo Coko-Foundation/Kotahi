@@ -66,11 +66,6 @@ elements.AbstractEditor = ({
   onChange,
   ...rest
 }) => {
-  // TODO: Remove this hack fix for issue #454 once the fixed version of Wax is available.
-  const hackFixedValue = rest.value
-    .replace(/<b>/g, '<strong>')
-    .replace(/<\/b>/g, '</strong>')
-
   return (
     <SimpleWaxEditor
       validationStatus={validationStatus}
@@ -83,7 +78,6 @@ elements.AbstractEditor = ({
         const cleanedVal = val === '<p class="paragraph"></p>' ? '' : val
         onChange(cleanedVal)
       }}
-      value={hackFixedValue}
     />
   )
 }
