@@ -185,6 +185,7 @@ const SimpleWaxEditor = ({
   onBlur,
   onChange,
   placeholder,
+  spellCheck,
   ...rest
 }) => {
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
@@ -192,6 +193,7 @@ const SimpleWaxEditor = ({
     <div className={validationStatus}>
       <Wax
         autoFocus={autoFocus}
+        browserSpellCheck={spellCheck}
         config={waxConfig()}
         // fileUpload={file => renderImage(file)}
         layout={WaxLayout(readonly)}
@@ -220,6 +222,8 @@ SimpleWaxEditor.propTypes = {
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
+  /** Should enable browser's native spellcheck? */
+  spellCheck: PropTypes.bool,
 }
 
 SimpleWaxEditor.defaultProps = {
@@ -230,6 +234,7 @@ SimpleWaxEditor.defaultProps = {
   onBlur: () => {},
   onChange: () => {},
   placeholder: '',
+  spellCheck: true,
 }
 
 export default SimpleWaxEditor
