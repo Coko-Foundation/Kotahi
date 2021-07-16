@@ -65,6 +65,7 @@ const ReviewHeading = ({
   teams,
   currentUser,
   canBePublishedPublicly,
+  reviewUserId,
 }) => {
   if (!currentUser) return null
 
@@ -93,7 +94,11 @@ const ReviewHeading = ({
     updateReview({
       variables: {
         id: reviewId,
-        input: { isHiddenFromAuthor: reviewHiddenFromAuthor, manuscriptId },
+        input: {
+          isHiddenFromAuthor: reviewHiddenFromAuthor,
+          manuscriptId,
+          userId: reviewUserId,
+        },
       },
     })
   }
@@ -108,6 +113,7 @@ const ReviewHeading = ({
         input: {
           isHiddenReviewerName: reviewerNameHiddenFromPublishedAndAuthor,
           manuscriptId,
+          userId: reviewUserId,
         },
       },
     })
@@ -195,6 +201,7 @@ const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
         open={open}
         ordinal={ordinal}
         recommendation={recommendation}
+        reviewUserId={review.user.id}
         teams={teams}
         toggleOpen={toggleOpen}
       />

@@ -49,7 +49,12 @@ const resolvers = {
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
       // We process comment fields into array
-      const processedReview = { ...input, user: ctx.user }
+      const reviewUser = await ctx.models.User.query().where({
+        id: input.userId,
+      })
+
+      const processedReview = { ...input, user: reviewUser }
+
       processedReview.comments = [
         input.reviewComment,
         input.confidentialComment,
@@ -129,6 +134,7 @@ const typeDefs = `
     isHiddenFromAuthor: Boolean
     isHiddenReviewerName: Boolean
     canBePublishedPublicly: Boolean
+    userId: String
   }
 
   input ReviewInput {
@@ -141,6 +147,7 @@ const typeDefs = `
     isHiddenFromAuthor: Boolean
     isHiddenReviewerName: Boolean
     canBePublishedPublicly: Boolean
+    userId: String
   }
 
   type ReviewComment implements Object {
