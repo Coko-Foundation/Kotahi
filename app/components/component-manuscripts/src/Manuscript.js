@@ -78,7 +78,7 @@ const renderManuscriptColumn = ({
   const renderManuscriptColumnsActions = {
     'meta.title': () => {
       return (
-        <Cell>
+        <Cell key="title">
           {process.env.INSTANCE_NAME === 'colab' &&
             manuscript.status === articleStatuses.new &&
             !manuscript.submission.labels && (
@@ -122,12 +122,14 @@ const renderManuscriptColumn = ({
     },
     'submission.articleId': () => {
       return (
-        <Cell>{manuscript.submission && manuscript.submission.articleId}</Cell>
+        <Cell key="id">
+          {manuscript.submission && manuscript.submission.articleId}
+        </Cell>
       )
     },
     'submission.articleDescription': () => {
       return (
-        <Cell>
+        <Cell key="desc">
           <StyledDescriptionWrapper>
             {manuscript.status === articleStatuses.new &&
               !manuscript.submission.labels && (
@@ -178,17 +180,21 @@ const renderManuscriptColumn = ({
       )
     },
     'submission.journal': () => {
-      return <Cell>{manuscript.submission.journal}</Cell>
+      return <Cell key="journal">{manuscript.submission.journal}</Cell>
     },
     created: () => {
-      return <Cell>{convertTimestampToDate(manuscript.created)}</Cell>
+      return (
+        <Cell key="created">{convertTimestampToDate(manuscript.created)}</Cell>
+      )
     },
     updated: () => {
-      return <Cell>{convertTimestampToDate(manuscript.updated)}</Cell>
+      return (
+        <Cell key="updated">{convertTimestampToDate(manuscript.updated)}</Cell>
+      )
     },
     'submission.topics': () => {
       return (
-        <Cell>
+        <Cell key="topics">
           {manuscript.submission?.topics?.map(topic => {
             return (
               <StyledTopic
@@ -205,7 +211,7 @@ const renderManuscriptColumn = ({
     },
     status: () => {
       return (
-        <Cell>
+        <Cell key="status">
           <span onClick={() => filterByArticleStatus(manuscript.status)}>
             <StatusBadge
               clickable
@@ -218,7 +224,7 @@ const renderManuscriptColumn = ({
     },
     'submission.labels': () => {
       return (
-        <Cell>
+        <Cell key="labels">
           {manuscript.submission && manuscript.submission.labels ? (
             <StyledTableLabel
               onClick={() => filterByArticleLabel(manuscript.submission.labels)}
@@ -239,7 +245,7 @@ const renderManuscriptColumn = ({
     },
     author: () => {
       return (
-        <Cell>
+        <Cell key="author">
           {manuscript.submitter && (
             <UserCombo>
               <UserAvatar user={manuscript.submitter} />
@@ -257,7 +263,7 @@ const renderManuscriptColumn = ({
     },
     editor: () => {
       return (
-        <Cell>
+        <Cell key="editor">
           {manuscript.teams.map(team => (
             <StyledAuthor key={team.id}>
               {team.role !== 'author' &&
@@ -277,7 +283,7 @@ const renderManuscriptColumn = ({
       return get(renderManuscriptColumnsActions, fieldName)()
     }
 
-    return <Cell>{get(manuscript, fieldName, null)}</Cell>
+    return <Cell key={fieldName}>{get(manuscript, fieldName, null)}</Cell>
   }
 }
 

@@ -72,36 +72,54 @@ const renderManuscriptsTableHeaders = ({
 }) => {
   const renderActions = {
     'meta.title': () => {
-      return <SortHeader thisSortName="meta:title">Title</SortHeader>
+      return (
+        <SortHeader key="title" thisSortName="meta:title">
+          Title
+        </SortHeader>
+      )
     },
     'submission.articleId': () => {
       return (
-        <SortHeader thisSortName="submission:articleId">Article Id</SortHeader>
+        <SortHeader key="id" thisSortName="submission:articleId">
+          Article Id
+        </SortHeader>
       )
     },
     'submission.articleDescription': () => {
       return (
-        <SortHeader thisSortName="submission:articleDescription">
+        <SortHeader key="desc" thisSortName="submission:articleDescription">
           Description
         </SortHeader>
       )
     },
     'submission.journal': () => {
       return (
-        <SortHeader cursor="pointer" thisSortName="submission:journal">
+        <SortHeader
+          cursor="pointer"
+          key="journal"
+          thisSortName="submission:journal"
+        >
           Journal
         </SortHeader>
       )
     },
     created: () => {
-      return <SortHeader thisSortName="created">Created</SortHeader>
+      return (
+        <SortHeader key="created" thisSortName="created">
+          Created
+        </SortHeader>
+      )
     },
     updated: () => {
-      return <SortHeader thisSortName="updated">Updated</SortHeader>
+      return (
+        <SortHeader key="updated" thisSortName="updated">
+          Updated
+        </SortHeader>
+      )
     },
     'submission.topics': () => {
       return process.env.INSTANCE_NAME === 'ncrc' ? (
-        <SortHeader>
+        <SortHeader key="topics">
           <Select
             aria-label="Topic"
             data-testid="topics"
@@ -119,12 +137,12 @@ const renderManuscriptsTableHeaders = ({
           />
         </SortHeader>
       ) : (
-        <SortHeader>Topic</SortHeader>
+        <SortHeader key="topic">Topic</SortHeader>
       )
     },
     status: () => {
       return ['aperture', 'ncrc'].includes(process.env.INSTANCE_NAME) ? (
-        <SortHeader>
+        <SortHeader key="status">
           <Select
             aria-label="Status"
             data-testid="status"
@@ -142,12 +160,14 @@ const renderManuscriptsTableHeaders = ({
           />
         </SortHeader>
       ) : (
-        <SortHeader thisSortName="status">Status</SortHeader>
+        <SortHeader key="status" thisSortName="status">
+          Status
+        </SortHeader>
       )
     },
     'submission.labels': () => {
       return process.env.INSTANCE_NAME === 'ncrc' ? (
-        <SortHeader>
+        <SortHeader key="labels">
           <Select
             aria-label="Labels"
             data-testid="labels"
@@ -176,14 +196,18 @@ const renderManuscriptsTableHeaders = ({
           />
         </SortHeader>
       ) : (
-        <SortHeader>Label</SortHeader>
+        <SortHeader key="label">Label</SortHeader>
       )
     },
     author: () => {
-      return <SortHeader thisSortName="submitterId">Author</SortHeader>
+      return (
+        <SortHeader key="author" thisSortName="submitterId">
+          Author
+        </SortHeader>
+      )
     },
     editor: () => {
-      return <SortHeader>Editor</SortHeader>
+      return <SortHeader key="editor">Editor</SortHeader>
     },
   }
 
@@ -192,7 +216,7 @@ const renderManuscriptsTableHeaders = ({
       return get(renderActions, fieldName)()
     }
 
-    return <SortHeader>{fieldName}</SortHeader>
+    return <SortHeader key={fieldName}>{fieldName}</SortHeader>
   }
 }
 
