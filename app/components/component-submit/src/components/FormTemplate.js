@@ -308,6 +308,7 @@ const FormTemplate = ({
                     }}
                     readonly={element.name === 'submission.editDate'}
                     setTouched={setTouched}
+                    spellCheck
                     validate={composeValidate(
                       element.validate,
                       element.validateValue,

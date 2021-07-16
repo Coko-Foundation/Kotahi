@@ -234,7 +234,7 @@ SimpleWaxEditor.defaultProps = {
   onBlur: () => {},
   onChange: () => {},
   placeholder: '',
-  spellCheck: true,
+  spellCheck: false,
 }
 
 export default SimpleWaxEditor
