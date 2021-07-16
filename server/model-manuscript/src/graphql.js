@@ -494,6 +494,8 @@ const resolvers = {
           '[teams, channels, files, reviews.[user, comments], manuscriptVersions(orderByCreated)]',
         )
 
+      if (!manuscript) return null
+
       if (!manuscript.meta) {
         manuscript.meta = {}
       }
