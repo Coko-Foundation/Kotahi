@@ -57,6 +57,7 @@ const getReportData = gql`
       }
       reviewers {
         name
+        status
       }
       status
       publishedDate

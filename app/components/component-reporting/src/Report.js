@@ -2,6 +2,7 @@ import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { forEach, map } from 'lodash'
+import { Icon } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../shared/lightenBy'
 import DateRangePicker from './DateRangePicker'
@@ -78,6 +79,39 @@ const getTableDataWithSparkBars = (rows, labelMapper) => {
   )
 }
 
+const renderReviewerNamesWithStatuses = reviewers => {
+  if (reviewers.length <= 0) return null
+  return (
+    <>
+      {reviewers.map((r, i) => (
+        <>
+          {i > 0 ? `, ${r.name}` : r.name}
+          {r.status === 'invited' && (
+            <Icon color="cornflowerblue" key={`${r.name}-inv`} size={2}>
+              mail
+            </Icon>
+          )}
+          {r.status === 'accepted' && (
+            <Icon color="steelblue" key={`${r.name}-acc`} size={2}>
+              square
+            </Icon>
+          )}
+          {r.status === 'rejected' && (
+            <Icon color="darkred" key={`${r.name}-rej`} size={2}>
+              slash
+            </Icon>
+          )}
+          {r.status === 'completed' && (
+            <Icon color="green" key={`${r.name}-com`} size={2}>
+              check-square
+            </Icon>
+          )}
+        </>
+      ))}
+    </>
+  )
+}
+
 const getReport = (
   reportType,
   startDate,
@@ -102,11 +136,12 @@ const getReport = (
     const rows = getTableDataWithSparkBars(
       getManuscriptsData(startDate, endDate),
       (val, key) => {
-        if (['editors', 'reviewers', 'authors'].includes(key))
+        if (['editors', 'authors'].includes(key))
           return val.reduce(
             (accum, curr) => (accum ? `${accum}, ${curr.name}` : curr.name),
             null,
           )
+        if (key === 'reviewers') return renderReviewerNamesWithStatuses(val)
         return val
       },
     )

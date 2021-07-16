@@ -370,10 +370,26 @@ const getTeamUserIdentities = (manuscript, teamName) => {
   return idents
 }
 
+const getReviewersAndLatestStatuses = ms => {
+  const allReviewers = getTeamUserIdentities(ms, 'Reviewers').map(i => ({
+    id: i.userId,
+    name: i.name,
+  }))
+
+  const currentTeam = getLastVersion(ms).teams.find(t => t.name === 'Reviewers')
+  if (!currentTeam) return allReviewers
+
+  currentTeam.members.forEach(m => {
+    const reviewer = allReviewers.find(r => r.id === m.userId)
+    if (reviewer) reviewer.status = m.status
+  })
+  return allReviewers
+}
+
 const getManuscriptsActivity = async (startDate, endDate, ctx) => {
   const manuscripts = await ctx.models.Manuscript.query()
     .withGraphFetched(
-      '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity]]]]',
+      '[teams.[users.[defaultIdentity], members], manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity], members]]]',
     )
     .where('created', '>=', new Date(startDate))
     .where('created', '<', new Date(endDate))
@@ -402,7 +418,7 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
       title: lastVer.meta.title,
       authors: getTeamUserIdentities(m, 'Author'),
       editors,
-      reviewers: getTeamUserIdentities(m, 'Reviewers'),
+      reviewers: getReviewersAndLatestStatuses(m),
       status: statusLabel,
       publishedDate: getIsoDateString(getLastPublishedDate(m)),
     }
@@ -683,13 +699,19 @@ const typeDefs = `
     y: Float!
   }
 
+  type ReviewerIdentityWithStatus {
+    id: ID!
+    name: String!
+    status: String
+  }
+
   type ManuscriptActivity {
     shortId: String!
     entryDate: DateTime!
     title: String!
     authors: [Identity!]!
     editors: [Identity!]!
-    reviewers: [Identity!]!
+    reviewers: [ReviewerIdentityWithStatus!]!
     status: String!
     publishedDate: DateTime
   }
