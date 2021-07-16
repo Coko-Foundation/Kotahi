@@ -2,8 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import Color from 'color'
-import { th, grid } from '@pubsweet/ui-toolkit'
-import Table from './Table'
+import { th } from '@pubsweet/ui-toolkit'
 import CardCollection, { Card } from './CardCollection'
 import ConcentricStepsChart from './ConcentricStepsChart'
 import DurationsChart from './DurationsChart'
@@ -44,8 +43,9 @@ const NoteCenter = styled.div`
 `
 
 const Note = styled.div`
-  color: ${lightenBy('colorText', 0.2)};
+  color: ${lightenBy('colorText', 0.4)};
   font-size: ${th('fontSizeBaseSmall')};
+  line-height: ${th('lineHeightBaseSmall')};
 `
 
 const Container = styled.div`
@@ -53,8 +53,26 @@ const Container = styled.div`
   flex-direction: row;
 `
 
-const TableContainer = styled.div`
-  padding: ${grid(1)} 0 0 ${grid(5)};
+const StatsContainer = styled.div`
+  min-width: 19em;
+`
+
+const Stat = styled.div`
+  margin-bottom: 0.75em;
+`
+
+const StatTitle = styled.div`
+  display: inline-block;
+  text-align: right;
+  vertical-align: top;
+  width: 11em;
+`
+
+const StatContent = styled.div`
+  display: inline-block;
+  padding-left: 1em;
+  vertical-align: top;
+  width: 5.5em;
 `
 
 const getBarColor = (
@@ -183,35 +201,53 @@ const SummaryReport = ({
           />
         </ChartCard>
       </CardCollection>
-      <TableContainer>
-        <Table
-          columnSchemas={[{ width: '12em' }, { width: '7em' }]}
-          // prettier-ignore
-          rows={[
-          [
-            {
-              content: (
-                <div>
-                  Average time to publish
-                  <Note>From submission to published</Note>
-                </div>
-              ),
-              isHeading: true,
-            },
-            getDaysStringTo1Dp(avgPublishTimeDays),
-          ],
-          [{ content: 'Average time to review', isHeading: true }, getDaysStringTo1Dp(avgReviewTimeDays)],
-          [{ content: 'Unsubmitted', isHeading: true }, unsubmittedCount],
-          [{ content: 'Submitted', isHeading: true }, submittedCount],
-          [{ content: 'Unassigned', isHeading: true }, unassignedCount],
-          [{ content: 'Reviewed', isHeading: true }, reviewedCount],
-          [{ content: 'Rejected', isHeading: true }, rejectedCount],
-          [{ content: 'Awaiting revision', isHeading: true }, revisingCount],
-          [{ content: 'Accepted', isHeading: true }, acceptedCount],
-          [{ content: 'Published', isHeading: true }, publishedCount],
-        ]}
-        />
-      </TableContainer>
+      <StatsContainer>
+        <Card>
+          <Stat>
+            <StatTitle>
+              Average time to publish
+              <Note>From submission to published</Note>
+            </StatTitle>
+            <StatContent>{getDaysStringTo1Dp(avgPublishTimeDays)}</StatContent>
+          </Stat>
+          <Stat>
+            <StatTitle>Average time to review</StatTitle>
+            <StatContent>{getDaysStringTo1Dp(avgReviewTimeDays)}</StatContent>
+          </Stat>
+          <Stat>
+            <StatTitle>Unsubmitted</StatTitle>
+            <StatContent>{unsubmittedCount}</StatContent>
+          </Stat>
+          <Stat>
+            <StatTitle>Submitted</StatTitle>
+            <StatContent>{submittedCount}</StatContent>
+          </Stat>
+          <Stat>
+            <StatTitle>Unassigned</StatTitle>
+            <StatContent>{unassignedCount}</StatContent>
+          </Stat>
+          <Stat>
+            <StatTitle>Reviewed</StatTitle>
+            <StatContent>{reviewedCount}</StatContent>
+          </Stat>
+          <Stat>
+            <StatTitle>Rejected</StatTitle>
+            <StatContent>{rejectedCount}</StatContent>
+          </Stat>
+          <Stat>
+            <StatTitle>Awaiting revision</StatTitle>
+            <StatContent>{revisingCount}</StatContent>
+          </Stat>
+          <Stat>
+            <StatTitle>Accepted</StatTitle>
+            <StatContent>{acceptedCount}</StatContent>
+          </Stat>
+          <Stat>
+            <StatTitle>Published</StatTitle>
+            <StatContent>{publishedCount}</StatContent>
+          </Stat>
+        </Card>
+      </StatsContainer>
     </Container>
   )
 }
