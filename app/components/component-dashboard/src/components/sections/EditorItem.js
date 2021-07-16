@@ -16,7 +16,12 @@ import prettyRoleText from '../../../../../shared/prettyRoleText'
 
 const VersionTitleLink = styled(JournalLink)`
   color: #333;
+  max-width: 60%;
   text-decoration: none;
+`
+
+const StyledActionGroup = styled(ActionGroup)`
+  text-align: right;
 `
 
 const getUserFromTeam = (version, role) => {
@@ -29,7 +34,7 @@ const getUserFromTeam = (version, role) => {
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const EditorItemLinks = ({ version }) => (
-  <ActionGroup>
+  <StyledActionGroup>
     <Action to={`${urlFrag}/versions/${version.parentId || version.id}/submit`}>
       Summary Info
     </Action>
@@ -41,7 +46,7 @@ const EditorItemLinks = ({ version }) => (
         ? `Decision: ${version.decision.recommendation}`
         : 'Control Panel'}
     </Action>
-  </ActionGroup>
+  </StyledActionGroup>
 )
 
 EditorItemLinks.propTypes = {
@@ -93,7 +98,7 @@ const EditorItem = ({ version }) => (
         {getSubmitedDate(version) ? (
           <MetadataSubmittedDate submitted={getSubmitedDate(version).date} />
         ) : null}
-        &nbsp;You are {prettyRoleText(version._currentRoles)}.
+        &nbsp;You are {prettyRoleText(version.currentRoles)}.
       </Meta>
     </Item>
     <Item>
@@ -132,7 +137,7 @@ EditorItem.propTypes = {
         ).isRequired,
       }).isRequired,
     ).isRequired,
-    _currentRoles: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
+    currentRoles: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   }).isRequired,
 }
 

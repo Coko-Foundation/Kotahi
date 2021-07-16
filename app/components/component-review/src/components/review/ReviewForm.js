@@ -2,7 +2,11 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Field } from 'formik'
-import { Button, RadioGroup as UnstableRadioGroup } from '@pubsweet/ui'
+import {
+  Button,
+  RadioGroup as UnstableRadioGroup,
+  Checkbox,
+} from '@pubsweet/ui'
 import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 import { JournalContext } from '../../../../xpub-journal/src'
 import { reviewWithComment } from './util'
@@ -163,6 +167,25 @@ const ReviewComment = ({ updateReview }) => (
         </Field>
       </div>
     </AdminSection>
+    {process.env.INSTANCE_NAME === 'colab' && (
+      <Field key="canBePublishedPublicly" name="canBePublishedPublicly">
+        {formikBag => {
+          return (
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Checkbox
+                {...formikBag.field}
+                checked={formikBag.field.value}
+                label="I accept review can be published publicly."
+                onChange={e => {
+                  formikBag.field.onChange(e)
+                  updateReview({ canBePublishedPublicly: e.target.checked })
+                }}
+              />
+            </div>
+          )
+        }}
+      </Field>
+    )}
   </>
 )
 

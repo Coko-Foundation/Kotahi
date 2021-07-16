@@ -24,11 +24,6 @@ spec:
                 configMapKeyRef:
                   key: INSTANCE_NAME
                   name: env
-            - name: MANUSCRIPTS_TABLE_COLUMNS
-              valueFrom:
-                configMapKeyRef:
-                  key: MANUSCRIPTS_TABLE_COLUMNS
-                  name: env
             - name: NODE_ENV
               value: production
             - name: ORCID_CLIENT_ID
@@ -101,6 +96,11 @@ spec:
                 secretKeyRef:
                   key: PUBSWEET_SECRET
                   name: orcid-secret
+            - name: GOOGLE_SPREADSHEET_ID
+              valueFrom:
+                secretKeyRef:
+                  key: GOOGLE_SPREADSHEET_ID
+                  name: orcid-secret
             - name: GOOGLE_SPREADSHEET_CLIENT_EMAIL
               valueFrom:
                 secretKeyRef:
@@ -110,6 +110,21 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: GOOGLE_SPREADSHEET_PRIVATE_KEY
+                  name: orcid-secret
+            - name: GMAIL_NOTIFICATION_EMAIL_AUTH
+              valueFrom:
+                secretKeyRef:
+                  key: GMAIL_NOTIFICATION_EMAIL_AUTH
+                  name: orcid-secret
+            - name: GMAIL_NOTIFICATION_EMAIL_SENDER 
+              valueFrom:
+                secretKeyRef:
+                  key: GMAIL_NOTIFICATION_EMAIL_SENDER
+                  name: orcid-secret
+            - name: GMAIL_NOTIFICATION_PASSWORD 
+              valueFrom:
+                secretKeyRef:
+                  key: GMAIL_NOTIFICATION_PASSWORD
                   name: orcid-secret
             - name: S3_ACCESS_KEY_ID
               valueFrom:

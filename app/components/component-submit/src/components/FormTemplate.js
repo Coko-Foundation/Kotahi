@@ -306,8 +306,9 @@ const FormTemplate = ({
                       setFieldValue(element.name, val, false)
                       onChange(val, element.name)
                     }}
-                    readonly={false}
+                    readonly={element.name === 'submission.editDate'}
                     setTouched={setTouched}
+                    spellCheck
                     validate={composeValidate(
                       element.validate,
                       element.validateValue,

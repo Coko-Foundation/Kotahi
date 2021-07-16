@@ -64,6 +64,10 @@ module.exports = app => {
             user.defaultIdentity.name = `${userDetails.firstName} ${userDetails.lastName}`
             user.defaultIdentity.aff = userDetails.institution
 
+            if (userDetails.email) {
+              user.email = userDetails.email
+            }
+
             if (['elife'].includes(process.env.INSTANCE_NAME)) {
               user.admin = true
             }

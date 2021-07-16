@@ -8,6 +8,8 @@ ARG server_port
 ARG client_protocol
 ARG client_host
 ARG client_port
+ARG manuscripts_table_columns
+ARG manuscripts_table_first_column_width
 
 ENV NODE_ENV "development"
 ENV SERVER_PROTOCOL "http"
@@ -18,6 +20,7 @@ ENV CLIENT_HOST "0.0.0.0"
 ENV CLIENT_PORT "4000"
 ENV INSTANCE_NAME $instance_name
 ENV MANUSCRIPTS_TABLE_COLUMNS $manuscripts_table_columns
+ENV MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH $manuscripts_table_first_column_width
 ENV HOME "/home/simplej"
 
 RUN mkdir -p ${HOME}

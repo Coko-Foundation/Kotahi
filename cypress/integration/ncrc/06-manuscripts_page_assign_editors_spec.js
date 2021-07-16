@@ -1,10 +1,11 @@
 /* eslint-disable jest/expect-expect */
 
-import { manuscripts } from '../../support/routes'
+import { dashboard, manuscripts } from '../../support/routes'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { Menu } from '../../page-object/page-component/menu'
+import { DashboardPage } from '../../page-object/dashboard-page'
 
 describe('manuscripts page assign editors tests', () => {
   beforeEach(() => {
@@ -170,21 +171,21 @@ describe('manuscripts page assign editors tests', () => {
   })
   // to be implemented in #489
   // eslint-disable-next-line jest/no-commented-out-tests
-  // it('editor should see article title in dashboard', () => {
-  //   ManuscriptsPage.clickEvaluation()
-  //   cy.url().should('contain', 'evaluation')
-  //   cy.awaitDisappearSpinner()
-  //   // eslint-disable-next-line jest/valid-expect-in-promise
-  //   cy.fixture('role_names').then(name => {
-  //     SubmissionFormPage.getAssignEditor(0).click()
-  //     SubmissionFormPage.selectDropdownOption(0)
-  //     SubmissionFormPage.waitThreeSec()
-  //     SubmissionFormPage.getAssignEditor(0).should(
-  //       'contain',
-  //       name.role.reviewers.reviewer3,
-  //     )
-  //     cy.login(name.role.reviewers.reviewer3, dashboard)
-  //     DashboardPage.getVersionTitle().should('contain', '123')
-  //   })
-  // })
+  it('editor should see article title in dashboard', () => {
+    ManuscriptsPage.clickEvaluation()
+    cy.url().should('contain', 'evaluation')
+    cy.awaitDisappearSpinner()
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture('role_names').then(name => {
+      SubmissionFormPage.getAssignEditor(0).click()
+      SubmissionFormPage.selectDropdownOption(0)
+      SubmissionFormPage.waitThreeSec()
+      SubmissionFormPage.getAssignEditor(0).should(
+        'contain',
+        name.role.reviewers.reviewer3,
+      )
+      cy.login(name.role.reviewers.reviewer3, dashboard)
+      DashboardPage.getVersionTitle().should('contain', '123')
+    })
+  })
 })

@@ -26,40 +26,47 @@ const getCompletedReviews = (manuscript, currentUser) => {
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
-const DecisionReviews = ({ manuscript }) => (
-  <SectionContent>
-    <SectionHeader>
-      <Title>Reviews</Title>
-    </SectionHeader>
-    {manuscript.reviews && manuscript.reviews.length ? (
-      manuscript.reviews
-        .filter(
-          review =>
-            getCompletedReviews(manuscript, review.user) === 'completed' &&
-            review.isDecision === false,
-        )
-        .map((review, index) => (
-          <SectionRow key={review.id}>
-            <DecisionReview
-              open
-              review={review}
-              reviewer={{
-                name: review.user.username,
-                ordinal: index + 1,
-              }}
-            />
-          </SectionRow>
-        ))
-    ) : (
-      <SectionRow>No reviews completed yet.</SectionRow>
-    )}
-    <SectionRow>
-      <Action to={`${urlFrag}/versions/${manuscript.id}/reviewers`}>
-        Manage Reviewers
-      </Action>
-    </SectionRow>
-  </SectionContent>
-)
+const DecisionReviews = ({ manuscript, sharedReviews }) => {
+  const reviews =
+    process.env.INSTANCE_NAME === 'colab' ? sharedReviews : manuscript.reviews
+
+  return (
+    <SectionContent>
+      <SectionHeader>
+        <Title>Reviews</Title>
+      </SectionHeader>
+      {reviews && reviews.length ? (
+        reviews
+          .filter(
+            review =>
+              getCompletedReviews(manuscript, review.user) === 'completed' &&
+              review.isDecision === false,
+          )
+          .map((review, index) => (
+            <SectionRow key={review.id}>
+              <DecisionReview
+                manuscriptId={manuscript.id}
+                open
+                review={review}
+                reviewer={{
+                  name: review.user.username,
+                  ordinal: index + 1,
+                }}
+                teams={manuscript.teams}
+              />
+            </SectionRow>
+          ))
+      ) : (
+        <SectionRow>No reviews completed yet.</SectionRow>
+      )}
+      <SectionRow>
+        <Action to={`${urlFrag}/versions/${manuscript.id}/reviewers`}>
+          Manage Reviewers
+        </Action>
+      </SectionRow>
+    </SectionContent>
+  )
+}
 
 DecisionReviews.propTypes = {
   manuscript: PropTypes.shape({

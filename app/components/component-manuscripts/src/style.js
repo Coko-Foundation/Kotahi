@@ -118,3 +118,7 @@ export const BulkDeleteModalButtons = styled.div`
 export const BulkDeleteModalButton = styled(Button)`
   cursor: pointer;
 `
+
+export const TableHeader = styled.th`
+  ${({ cursor }) => cursor && `cursor: ${cursor}`};
+`

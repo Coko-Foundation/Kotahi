@@ -3,6 +3,8 @@ const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
 const { existsSync } = require('fs')
 const path = require('path')
 
+const sendEmailNotification = require('../../email-notifications')
+
 const resolvers = {
   Query: {
     user(_, { id, username }, ctx) {
@@ -171,6 +173,24 @@ const resolvers = {
       await user.save()
       return user
     },
+    async sendEmail(_, { input }, ctx) {
+      const inputParsed = JSON.parse(input)
+      /* eslint-disable-next-line */
+      const { manuscript, selectedEmail, selectedTemplate } = inputParsed
+
+      try {
+        await sendEmailNotification(selectedEmail, selectedTemplate, {
+          authorFirstName: 'Test Name',
+          articleTitle: 'test title',
+          link: 'testlink.com',
+        })
+        return { success: true }
+      } catch (e) {
+        /* eslint-disable-next-line */
+        console.log('email was not sent', e)
+        return { success: false }
+      }
+    },
   },
   User: {
     async defaultIdentity(parent, args, ctx) {
@@ -208,6 +228,10 @@ const typeDefs = `
     searchUsers(teamId: ID, query: String): [User]
   }
 
+  type SendEmailResponse {
+    success: Boolean
+  }
+
   type PaginatedUsers {
     totalCount: Int
     users: [User]
@@ -218,6 +242,7 @@ const typeDefs = `
     deleteUser(id: ID): User
     updateUser(id: ID, input: String): User
     updateCurrentUsername(username: String): User
+    sendEmail(input: String): SendEmailResponse
   }
 
   input UsersFilter {

@@ -1,8 +1,8 @@
-const ArticleAcceptanceEmailTemplate = (
+const ArticleAcceptanceEmailTemplate = ({
   authorFirstName,
   articleTitle,
   link,
-) => {
+}) => {
   const result = `<p>
         <b>Dear ${authorFirstName},</b>
         <br>
@@ -25,4 +25,4 @@ const ArticleAcceptanceEmailTemplate = (
   return result.replace(/\n/g, '')
 }
 
-export default ArticleAcceptanceEmailTemplate
+module.exports = ArticleAcceptanceEmailTemplate

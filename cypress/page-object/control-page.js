@@ -19,11 +19,24 @@ const ERROR_TEXT = 'style__ErrorText-'
 const ACCEPT_RADIO_BUTTON = 'span[color=green]'
 const SUBMIT_BUTTON = '[class*=General__SectionAction] > button[type=submit]'
 const FORM_STATUS = 'style__FormStatus-'
+const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
+const SHOW_BUTTON = '[class*=DecisionReview__Controls]>[type*=button]'
+
+const REVIEW_MESSAGE =
+  '[class*=SimpleWaxEditor__ReadOnly]>div>[class*=paragraph]'
+
+const REVIEW_OPTION_CHECKBOX = '[type=checkbox]'
+const REVIEWER_NAME = '[class*=DecisionReview__Name]'
+const NO_REVIEWS_MESSAGE = '[class*=General__SectionRow]'
+const ACCEPTED_TO_PULISH_REVIEW_ICON = '[class*=DecisionReview__Name] >svg'
 
 // eslint-disable-next-line import/prefer-default-export
 export const ControlPage = {
   getManageReviewersButton() {
     return cy.get(MANAGE_REVIEWERS_BUTTON)
+  },
+  getAssignEditor(nth) {
+    return cy.get(ASSIGN_EDITORS_DROPDOWN).eq(nth)
   },
   clickManageReviewers() {
     this.getManageReviewersButton().click()
@@ -83,5 +96,43 @@ export const ControlPage = {
   },
   getFormStatus() {
     return cy.getByContainsClass(FORM_STATUS)
+  },
+  getShowButton() {
+    return cy.get(SHOW_BUTTON)
+  },
+  clickShow() {
+    this.getShowButton().click()
+  },
+  getReviewMessage() {
+    return cy.get(REVIEW_MESSAGE)
+  },
+  getHideReviewToAuthorCheckbox() {
+    return cy.get(REVIEW_OPTION_CHECKBOX).eq(0)
+  },
+  clickHideReviewToAuthor() {
+    this.getHideReviewToAuthorCheckbox().click()
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(2000)
+  },
+  getHideReviewerNameCheckbox() {
+    return cy.get(REVIEW_OPTION_CHECKBOX).eq(1)
+  },
+  clickHideReviewerNameToAuthor() {
+    this.getHideReviewerNameCheckbox().click()
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(2000)
+  },
+  getReviewerName() {
+    return cy.get(REVIEWER_NAME)
+  },
+  waitThreeSec() {
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(3000)
+  },
+  getNoReviewsMessage() {
+    return cy.get(NO_REVIEWS_MESSAGE)
+  },
+  getAcceptedToPublishReview() {
+    return cy.get(ACCEPTED_TO_PULISH_REVIEW_ICON)
   },
 }

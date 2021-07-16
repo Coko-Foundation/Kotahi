@@ -6,7 +6,7 @@ export const Table = styled.table`
   border-radius: ${th('borderRadius')};
   font-size: ${th('fontSizeBaseSmall')};
   margin-top: ${grid(2)};
-  overflow: hidden;
+  table-layout: fixed;
   width: 100%;
 
   td {

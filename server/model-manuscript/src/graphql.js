@@ -1,7 +1,7 @@
+/* eslint-disable prefer-destructuring */
 const { ref } = require('objection')
 const axios = require('axios')
-const { GoogleSpreadsheet } = require('google-spreadsheet')
-const { mergeWith, isArray } = require('lodash')
+const { mergeWith, isArray, uniqBy } = require('lodash')
 const { pubsubManager } = require('pubsweet-server')
 
 const { getPubsub } = pubsubManager
@@ -16,6 +16,7 @@ const {
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
+const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
 
 let isImportInProgress = false
 
@@ -56,7 +57,10 @@ const ManuscriptResolvers = ({ isVersion }) => {
 
   if (!isVersion) {
     resolvers.manuscriptVersions = async (parent, _, ctx) => {
-      if (!parent.manuscriptVersions.length) {
+      if (
+        (parent.manuscriptVersions && !parent.manuscriptVersions.length) ||
+        !parent.manuscriptVersions
+      ) {
         return ctx.models.Manuscript.relatedQuery('manuscriptVersions')
           .for(parent.id)
           .orderBy('created', 'desc')
@@ -85,6 +89,9 @@ const commonUpdateManuscript = async (id, input, ctx) => {
     !updatedMs.submittedDate
   )
     updatedMs.submittedDate = new Date()
+
+  if (process.env.INSTANCE_NAME === 'ncrc')
+    updatedMs.submission.editDate = new Date().toISOString().split('T')[0]
 
   return ctx.models.Manuscript.query().updateAndFetchById(id, updatedMs)
 }
@@ -165,6 +172,12 @@ const resolvers = {
             members: [{ user: { id: ctx.user.id } }],
           },
         ],
+      }
+
+      if (process.env.INSTANCE_NAME === 'ncrc') {
+        emptyManuscript.submission.editDate = new Date()
+          .toISOString()
+          .split('T')[0]
       }
 
       const manuscript = await ctx.models.Manuscript.query().upsertGraphAndFetch(
@@ -420,65 +433,26 @@ const resolvers = {
       }
 
       if (process.env.INSTANCE_NAME === 'ncrc') {
-        // eslint-disable-next-line
-        const submissionForm = await Form.findOneByField('purpose', 'submit')
-        const spreadsheetId = '1OvWJj7ZTFhniC4KbFNbskuYSNMftsG2ocKuY-i9ezVA'
-
-        const fieldsOrder = submissionForm.structure.children
-          .filter(el => el.name)
-          .map(formElement => formElement.name.split('.')[1])
-
-        const formatSubmissionData = rawSubmissionData => {
-          return Object.keys(rawSubmissionData).reduce((acc, key) => {
-            return { ...acc, [key]: rawSubmissionData[key].toString() }
-          }, {})
-        }
-
-        const publishArticleInGoogleSheets = async submissionData => {
-          const formattedSubmissionData = formatSubmissionData(submissionData)
-
-          const { articleURL } = formattedSubmissionData
-          const doc = new GoogleSpreadsheet(spreadsheetId)
-
-          await doc.useServiceAccountAuth({
-            client_email: process.env.GOOGLE_SPREADSHEET_CLIENT_EMAIL,
-            private_key: process.env.GOOGLE_SPREADSHEET_PRIVATE_KEY.replace(
-              /\\n/g,
-              '\n',
-            ),
-          })
-
-          await doc.loadInfo()
-          const sheet = doc.sheetsByIndex[0]
-          const rows = await sheet.getRows()
-
-          const indexOfExistingArticle = rows.findIndex(
-            row => row.articleURL === articleURL,
-          )
-
-          if (indexOfExistingArticle !== -1) {
-            fieldsOrder.forEach(fieldName => {
-              rows[indexOfExistingArticle][fieldName] =
-                formattedSubmissionData[fieldName] || ''
-            })
-            await rows[indexOfExistingArticle].save()
-          } else {
-            await sheet.addRow({ ...formattedSubmissionData })
-          }
-        }
-
         try {
-          await publishArticleInGoogleSheets(manuscript.submission)
+          const manuscriptId = await publishToGoogleSpreadSheet(manuscript)
 
-          const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
-            id,
-            {
-              published: new Date(),
-              status: 'published',
-            },
-          )
+          if (manuscriptId) {
+            const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
+              manuscriptId,
+              {
+                published: new Date(),
+                status: 'published',
+                submission: {
+                  ...manuscript.submission,
+                  editDate: new Date().toISOString().split('T')[0],
+                },
+              },
+            )
 
-          return updatedManuscript
+            return updatedManuscript
+          }
+
+          return null
         } catch (e) {
           // eslint-disable-next-line
           console.log('error while publishing in google spreadsheet')
@@ -553,6 +527,83 @@ const resolvers = {
 
       return manuscript
     },
+    async manuscriptsImReviewerOf(_, input, ctx) {
+      const teamMemberManuscripts = await ctx.models.TeamMember.query()
+        .where({ userId: ctx.user.id })
+        .withGraphFetched('[team.[manuscript]]')
+
+      const onlyReviewerTeams = teamMemberManuscripts.filter(teamMember => {
+        return [
+          'reviewer',
+          'invited:reviewer',
+          'accepted:reviewer',
+          'completed:reviewer',
+        ].includes(teamMember.team.role)
+      })
+
+      const manuscripts = uniqBy(
+        onlyReviewerTeams.map(teamMember => {
+          return { ...teamMember.team.manuscript, userId: teamMember.userId }
+        }),
+        'id',
+      )
+
+      return manuscripts
+    },
+    async manuscriptsImAuthorOf(_, input, ctx) {
+      const teamMemberManuscripts = await ctx.models.TeamMember.query()
+        .where({ userId: ctx.user.id })
+        .withGraphFetched('[team.[manuscript]]')
+
+      const onlyAuthorTeams = teamMemberManuscripts.filter(teamMember => {
+        return ['author'].includes(teamMember.team.role)
+      })
+
+      const manuscripts = uniqBy(
+        onlyAuthorTeams.map(teamMember => {
+          return { ...teamMember.team.manuscript, userId: teamMember.userId }
+        }),
+        'id',
+      )
+
+      return manuscripts
+    },
+    async manuscriptImEditorOf(_, input, ctx) {
+      const teamMemberManuscripts = await ctx.models.TeamMember.query()
+        .where({ userId: ctx.user.id })
+        .withGraphFetched('[team.[manuscript.[reviews]]]')
+
+      const onlyEditorTeams = teamMemberManuscripts.filter(teamMember => {
+        return ['seniorEditor', 'handlingEditor', 'editor'].includes(
+          teamMember.team.role,
+        )
+      })
+
+      const manuscripts = uniqBy(
+        onlyEditorTeams.map(teamMember => {
+          return { ...teamMember.team.manuscript, userId: teamMember.userId }
+        }),
+        'id',
+      )
+
+      const formattedManuscripts = manuscripts.map(manuscript => {
+        const currentRoles = teamMemberManuscripts
+          .filter(teamMember => {
+            return teamMember.userId === manuscript.userId
+          })
+          .map(teamMember => teamMember.team.role)
+
+        const teams = teamMemberManuscripts
+          .filter(teamMember => {
+            return teamMember.team.manuscriptId === manuscript.id
+          })
+          .map(teamMember => teamMember.team)
+
+        return { ...manuscript, currentRoles, teams }
+      })
+
+      return formattedManuscripts
+    },
     async manuscripts(_, { where }, ctx) {
       return ctx.models.Manuscript.query()
         .withGraphFetched(
@@ -600,9 +651,6 @@ const resolvers = {
 
       const query = ctx.models.Manuscript.query()
         .where({ parentId: null })
-        .withGraphFetched(
-          '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
-        )
         .modify('orderBy', sort)
 
       if (filter && filter.status) {
@@ -640,9 +688,18 @@ const resolvers = {
 
       const manuscripts = await query
 
+      const detailedManuscripts = await ctx.models.Manuscript.query()
+        .whereIn(
+          'manuscripts.id',
+          manuscripts.map(manuscript => manuscript.id),
+        )
+        .withGraphFetched(
+          '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
+        )
+
       return {
         totalCount,
-        manuscripts,
+        manuscripts: detailedManuscripts,
       }
 
       // return ctx.connectors.User.fetchAll(where, ctx, { eager })
@@ -681,6 +738,9 @@ const typeDefs = `
     paginatedManuscripts(sort: String, offset: Int, limit: Int, filter: ManuscriptsFilter): PaginatedManuscripts
     publishedManuscripts(sort:String, offset: Int, limit: Int): PaginatedManuscripts
     validateDOI(articleURL: String): validateDOIResponse
+    manuscriptImEditorOf: [Manuscript]
+    manuscriptsImAuthorOf: [Manuscript]
+    manuscriptsImReviewerOf: [Manuscript]
   }
 
   input ManuscriptsFilter {
@@ -732,7 +792,7 @@ const typeDefs = `
     manuscriptVersions: [ManuscriptVersion]
     files: [File]
     teams: [Team]
-    reviews: [Review!]
+    reviews: [Review]
     status: String
     decision: String
     suggestions: Suggestions
@@ -744,6 +804,7 @@ const typeDefs = `
     submittedDate: DateTime
     published: DateTime
     evaluationsHypothesisMap: String
+    currentRoles: [String]
   }
 
   type ManuscriptVersion implements Object {

@@ -51,11 +51,11 @@ class Team extends BaseModel {
         },
       },
       manuscript: {
-        relation: BaseModel.BelongsToOneRelation,
+        relation: BaseModel.HasOneRelation,
         modelClass: Manuscript,
         join: {
-          from: 'manuscripts.id',
-          to: 'teams.manuscript_id',
+          from: 'teams.manuscriptId',
+          to: 'manuscripts.id',
         },
       },
     }

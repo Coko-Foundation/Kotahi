@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import { Action, Button } from '@pubsweet/ui'
+import { Action, Button, Checkbox } from '@pubsweet/ui'
 import { grid } from '@pubsweet/ui-toolkit'
 import PropTypes from 'prop-types'
 import config from 'config'
@@ -37,68 +37,94 @@ const Reviewers = ({
   handleSubmit,
   removeReviewer,
   history,
-}) => (
-  <Container>
-    <HeadingWithAction>
-      <Heading>Reviewers</Heading>
-      <Button
-        onClick={() =>
-          history.push(`${urlFrag}/versions/${manuscript.id}/decision`)
-        }
-        primary
-      >
-        Back to control panel
-      </Button>
-    </HeadingWithAction>
-    <SectionContent>
-      <SectionHeader>
-        <Title>Invite reviewers</Title>
-      </SectionHeader>
+  updateTeamMember,
+  refetchManuscriptData,
+}) => {
+  const toggleReviewerSharedStatus = async (id, delta) => {
+    await updateTeamMember({
+      variables: {
+        id,
+        input: JSON.stringify(delta),
+      },
+    })
+    refetchManuscriptData()
+  }
 
-      <SectionRow>
-        <ReviewerForm
-          handleSubmit={handleSubmit}
-          isValid={isValid}
-          reviewerUsers={reviewerUsers}
-        />
-      </SectionRow>
-    </SectionContent>
-    <SectionContent>
-      <SectionHeader>
-        <Title>Reviewer status</Title>
-      </SectionHeader>
-      <SectionRow>
-        {reviewers && reviewers.length ? (
-          <ReviewersList>
-            {reviewers.map(reviewer => (
-              <Reviewer key={reviewer.id}>
-                <StatusBadge minimal status={reviewer.status} />
-                <UserAvatar key={reviewer.id} user={reviewer.user} />
-                {reviewer.user.defaultIdentity.name}
-                <div>
-                  <Action
-                    onClick={() =>
-                      removeReviewer({
-                        variables: {
-                          userId: reviewer.user.id,
-                          manuscriptId: manuscript.id,
-                        },
-                      })
-                    }
-                  >
-                    Delete
-                  </Action>
-                </div>
-              </Reviewer>
-            ))}
-          </ReviewersList>
-        ) : (
-          <p>No reviewers have been invited yet</p>
-        )}
-      </SectionRow>
-    </SectionContent>
-  </Container>
-)
+  return (
+    <Container>
+      <HeadingWithAction>
+        <Heading>Reviewers</Heading>
+        <Button
+          onClick={() =>
+            history.push(`${urlFrag}/versions/${manuscript.id}/decision`)
+          }
+          primary
+        >
+          Back to control panel
+        </Button>
+      </HeadingWithAction>
+      <SectionContent>
+        <SectionHeader>
+          <Title>Invite reviewers</Title>
+        </SectionHeader>
+
+        <SectionRow>
+          <ReviewerForm
+            handleSubmit={handleSubmit}
+            isValid={isValid}
+            reviewerUsers={reviewerUsers}
+          />
+        </SectionRow>
+      </SectionContent>
+      <SectionContent>
+        <SectionHeader>
+          <Title>Reviewer status</Title>
+        </SectionHeader>
+        <SectionRow>
+          {reviewers && reviewers.length ? (
+            <ReviewersList>
+              {reviewers.map(reviewer => (
+                <Reviewer key={reviewer.id}>
+                  <StatusBadge minimal status={reviewer.status} />
+                  <UserAvatar key={reviewer.id} user={reviewer.user} />
+                  {reviewer.user.defaultIdentity.name}
+                  {process.env.INSTANCE_NAME === 'colab' && (
+                    <Checkbox
+                      checked={reviewer.isShared}
+                      label="Shared"
+                      name={`checkbox-shared-reviewer-${reviewer.id}`}
+                      onChange={() =>
+                        toggleReviewerSharedStatus(reviewer.id, {
+                          isShared: !reviewer.isShared,
+                        })
+                      }
+                    />
+                  )}
+                  <div>
+                    <Action
+                      onClick={() =>
+                        removeReviewer({
+                          variables: {
+                            userId: reviewer.user.id,
+                            manuscriptId: manuscript.id,
+                          },
+                        })
+                      }
+                    >
+                      Delete
+                    </Action>
+                  </div>
+                </Reviewer>
+              ))}
+            </ReviewersList>
+          ) : (
+            <p>No reviewers have been invited yet</p>
+          )}
+        </SectionRow>
+      </SectionContent>
+    </Container>
+  )
+}
 
 Reviewers.propTypes = {
   isValid: PropTypes.bool.isRequired,

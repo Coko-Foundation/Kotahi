@@ -23,7 +23,7 @@ class User extends BaseModel {
 
   static get relationMappings() {
     // eslint-disable-next-line global-require
-    const { Team, TeamMember, Identity } = require('@pubsweet/models')
+    const { Team, TeamMember, Identity, Review } = require('@pubsweet/models')
 
     return {
       identities: {
@@ -57,6 +57,14 @@ class User extends BaseModel {
             extra: ['status'],
           },
           to: 'teams.id',
+        },
+      },
+      reviews: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: Review,
+        join: {
+          from: 'users.id',
+          to: 'reviews.userId',
         },
       },
     }

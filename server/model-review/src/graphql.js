@@ -1,7 +1,51 @@
-// const merge = require('lodash/merge')
+// const { flatten } = require('lodash')
 // const Review = require('./review')
 
 const resolvers = {
+  Query: {
+    async sharedReviews(_, { id }, ctx) {
+      const query = await ctx.models.Team.query()
+        .where({
+          manuscriptId: id,
+        })
+        .withGraphFetched('members.[user.reviews]')
+
+      const teams = await query
+      const authorTeam = teams.filter(team => team.role === 'author')
+      const authorUser = authorTeam[0].members[0].user
+
+      const members = teams
+        .filter(team => team.role === 'reviewer')
+        .map(team => {
+          return team.members
+        })
+        .flat()
+        .filter(member => {
+          return member.user.id === ctx.user.id || member.isShared
+        })
+
+      const reviews = members
+        .map(teamMember => {
+          return teamMember.user.reviews.map(review => {
+            return { ...review, user: teamMember.user }
+          })
+        })
+        .flat()
+        .filter(review => {
+          return review.manuscriptId === id
+        })
+        .filter(review => {
+          return !(review.isHiddenFromAuthor && ctx.user.id === authorUser.id)
+        })
+        .map(review => {
+          return review.isHiddenReviewerName && ctx.user.id === authorUser.id
+            ? { ...review, user: { ...review.user, username: '' } }
+            : review
+        })
+
+      return reviews
+    },
+  },
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
       // We process comment fields into array
@@ -52,13 +96,6 @@ const resolvers = {
       return member.save()
     },
   },
-  Review: {
-    async user(parent, _, ctx) {
-      return parent.user
-        ? parent.user
-        : ctx.models.User.query().findById(parent.userId)
-    },
-  },
   ReviewComment: {
     async files(parent, _, ctx) {
       return parent.files
@@ -74,6 +111,10 @@ const typeDefs = `
     completeReview(id: ID!): TeamMember
   }
 
+  extend type Query {
+    sharedReviews(id: ID): [Review]
+  }
+
   type Review implements Object {
     id: ID!
     created: DateTime!
@@ -85,6 +126,9 @@ const typeDefs = `
     reviewComment: ReviewComment
     confidentialComment: ReviewComment
     decisionComment: ReviewComment
+    isHiddenFromAuthor: Boolean
+    isHiddenReviewerName: Boolean
+    canBePublishedPublicly: Boolean
   }
 
   input ReviewInput {
@@ -94,6 +138,9 @@ const typeDefs = `
     recommendation: String
     isDecision: Boolean
     manuscriptId: ID!
+    isHiddenFromAuthor: Boolean
+    isHiddenReviewerName: Boolean
+    canBePublishedPublicly: Boolean
   }
 
   type ReviewComment implements Object {

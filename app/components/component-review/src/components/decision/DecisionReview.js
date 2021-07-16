@@ -1,11 +1,14 @@
 import React, { useContext, useState } from 'react'
+import { useMutation } from '@apollo/client'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Button } from '@pubsweet/ui'
+import { Button, Checkbox } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { JournalContext } from '../../../../xpub-journal/src'
 import Review from '../review/Review'
 import useCurrentUser from '../../../../../hooks/useCurrentUser'
+import { updateReviewMutation } from '../queries'
+import ShareIcon from '../../../../../shared/icons/share'
 
 const ToggleReview = ({ open, toggle }) => (
   <Button onClick={toggle} plain>
@@ -34,27 +37,118 @@ const ReviewHeadingRoot = styled.div`
 `
 
 const Ordinal = styled.span``
-const Name = styled.span``
+
+const Name = styled.span`
+  display: flex;
+`
 
 const Controls = styled.span`
   flex-grow: 1;
   text-align: right;
 `
 
+const StyledCheckbox = styled(Checkbox)`
+  margin-left: 10px;
+`
+
 const ReviewHeading = ({
+  id,
   journal,
   name,
   open,
   ordinal,
   recommendation,
+  isHiddenFromAuthor,
+  isHiddenReviewerName,
   toggleOpen,
+  manuscriptId,
+  teams,
+  currentUser,
+  canBePublishedPublicly,
 }) => {
+  if (!currentUser) return null
+
+  const [updateReview] = useMutation(updateReviewMutation)
+
+  const editorTeam = teams.filter(team => {
+    return team.role.toLowerCase().includes('editor')
+  })
+
+  const authorTeam = teams.filter(team => {
+    return team.role.toLowerCase().includes('author')
+  })
+
+  const isCurrentUserAuthor = authorTeam.length
+    ? authorTeam[0].members[0].user.id === currentUser.id
+    : false
+
+  const isCurrentUserEditor = editorTeam.length
+    ? !!editorTeam
+        .map(team => team.members)
+        .flat()
+        .filter(member => member.user.id === currentUser.id).length
+    : false
+
+  const toggleIsHiddenFromAuthor = (reviewId, reviewHiddenFromAuthor) => {
+    updateReview({
+      variables: {
+        id: reviewId,
+        input: { isHiddenFromAuthor: reviewHiddenFromAuthor, manuscriptId },
+      },
+    })
+  }
+
+  const toggleIsHiddenReviewerNameFromPublishedAndAuthor = (
+    reviewId,
+    reviewerNameHiddenFromPublishedAndAuthor,
+  ) => {
+    updateReview({
+      variables: {
+        id: reviewId,
+        input: {
+          isHiddenReviewerName: reviewerNameHiddenFromPublishedAndAuthor,
+          manuscriptId,
+        },
+      },
+    })
+  }
+
   return (
     <ReviewHeadingRoot>
       <Bullet journal={journal} recommendation={recommendation} />
       <Ordinal>Review {ordinal}</Ordinal>
       &nbsp;
-      <Name>{name || 'Anonymous'}</Name>
+      <Name>
+        {isHiddenReviewerName && isCurrentUserAuthor ? 'Anonymous' : name}
+        {(isCurrentUserEditor || currentUser.admin) &&
+          canBePublishedPublicly &&
+          process.env.INSTANCE_NAME === 'colab' && (
+            <>
+              &nbsp;
+              <ShareIcon />
+            </>
+          )}
+      </Name>
+      {process.env.INSTANCE_NAME === 'colab' &&
+        (isCurrentUserEditor || currentUser.admin) && (
+          <>
+            <StyledCheckbox
+              checked={isHiddenFromAuthor}
+              label="Hide review"
+              onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
+            />
+            <StyledCheckbox
+              checked={isHiddenReviewerName}
+              label="Hide reviewer name"
+              onChange={() =>
+                toggleIsHiddenReviewerNameFromPublishedAndAuthor(
+                  id,
+                  !isHiddenReviewerName,
+                )
+              }
+            />
+          </>
+        )}
       <Controls>
         <ToggleReview open={open} toggle={toggleOpen} />
       </Controls>
@@ -70,11 +164,18 @@ const ReviewBody = styled.div`
   margin-left: 1em;
 `
 
-const DecisionReview = ({ review, reviewer }) => {
+const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
   const currentUser = useCurrentUser()
-  const { recommendation } = review
-  const { name, ordinal } = reviewer
 
+  const {
+    recommendation,
+    isHiddenFromAuthor,
+    isHiddenReviewerName,
+    id,
+    canBePublishedPublicly,
+  } = review
+
+  const { name, ordinal } = reviewer
   const journal = useContext(JournalContext)
 
   const [open, setOpen] = useState(false)
@@ -83,11 +184,18 @@ const DecisionReview = ({ review, reviewer }) => {
   return (
     <Root>
       <ReviewHeading
+        canBePublishedPublicly={canBePublishedPublicly}
+        currentUser={currentUser}
+        id={id}
+        isHiddenFromAuthor={isHiddenFromAuthor}
+        isHiddenReviewerName={isHiddenReviewerName}
         journal={journal}
+        manuscriptId={manuscriptId}
         name={name}
         open={open}
         ordinal={ordinal}
         recommendation={recommendation}
+        teams={teams}
         toggleOpen={toggleOpen}
       />
 

@@ -38,6 +38,7 @@ const SUBMIT_MANUSCRIPT_BUTTON = 'button[type=submit]'
 const VALIDATION_ERROR_MESSAGE = 'ValidatedField__MessageWrapper'
 const CONTENT_EDITABLE_VALUE = '[contenteditable="true"]'
 const SUBMISSION_FORM_INPUT_BOX = 'SimpleWaxEditor__EditorDiv'
+const WORD_COUNT_INFO = 'Counter Info'
 
 // specific to elife
 const FORM_OPTION_LIST = '[class*=style__Section]'
@@ -514,6 +515,22 @@ export const SubmissionFormPage = {
   fillInEditDate(editDate) {
     this.getEditDateField().fillInput(editDate)
   },
+  checkEditDateIsUpdated() {
+    const getTodayDate = () => {
+      const date = new Date()
+      const year = date.getFullYear()
+      let month = date.getMonth() + 1
+      const day = date.getDate()
+
+      if (month <= 9) {
+        month = `0${month}`
+      }
+
+      return `${year}-${month}-${day}`
+    }
+
+    this.getEditDateField().should('have.value', getTodayDate())
+  },
   getReviewCreatorField() {
     return cy.getByDataTestId(REVIEW_CREATOR_FIELD)
   },
@@ -528,6 +545,15 @@ export const SubmissionFormPage = {
   },
   getAbstractContent() {
     return this.getAbstractField().find('p').invoke('text')
+  },
+  getAbstractFieldColab() {
+    return this.getWaxInputBox(4)
+  },
+  fillInAbstractColab(abstract) {
+    this.getAbstractFieldColab().fillInput(abstract)
+  },
+  getWordCountInfo() {
+    return cy.getByTitle(WORD_COUNT_INFO)
   },
 }
 export default SubmissionFormPage

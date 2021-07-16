@@ -30,6 +30,9 @@ const reviewFields = `
     ${commentFields}
   }
   isDecision
+  isHiddenFromAuthor
+  isHiddenReviewerName
+  canBePublishedPublicly
   recommendation
   user {
     id
@@ -198,6 +201,37 @@ export const publishManuscriptMutation = gql`
       id
       published
       status
+    }
+  }
+`
+
+export const sharedReviews = gql`
+  query($id: ID) {
+    sharedReviews(id: $id) {
+      ${reviewFields}
+    }
+  }
+`
+
+export const getUsers = gql`
+  {
+    users {
+      id
+      username
+      email
+      admin
+      defaultIdentity {
+        id
+        name
+      }
+    }
+  }
+`
+
+export const sendEmail = gql`
+  mutation($input: String) {
+    sendEmail(input: $input) {
+      success
     }
   }
 `

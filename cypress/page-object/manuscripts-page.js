@@ -1,5 +1,6 @@
 /// <reference types="Cypress" />
 import { evaluate } from '../support/routes'
+import { ControlPage } from './control-page'
 
 /**
  * Page component representing the fourth option in the left side menu,
@@ -35,7 +36,8 @@ const ARTICLES_COUNT = '[class*=Pagination] > strong'
 const PAGINATION_PAGE_BUTTON = 'Page '
 const CONFIRMATION_MESSAGE = '[class*=BulkDeleteModalContainer] > p'
 const IMPORT_CONFIRMATION_POPUP = '[class*=Toastify] > [role=alert]'
-
+const CONTROL = '[href*=decision]'
+const DROPDOWN_OPTION_LIST = '[class*=MenuList] > [id*=option]'
 export const ManuscriptsPage = {
   getManuscriptsOptionsList() {
     return cy.get(MANUSCRIPTS_OPTIONS_LIST)
@@ -88,9 +90,20 @@ export const ManuscriptsPage = {
     cy.awaitDisappearSpinner()
     cy.url({ timeout: 10000 }).should('contain', evaluate)
   },
-
   getControlButton() {
     return cy.get(CONTROL_BUTTON)
+  },
+  getControl() {
+    return cy.get(CONTROL)
+  },
+  clickControl() {
+    this.getControl().click()
+  },
+  clickControAndVerifyPageLoaded() {
+    this.getControl().click()
+    cy.awaitDisappearSpinner()
+    cy.url({ timeout: 10000 }).should('contain', 'decision')
+    ControlPage.getAssignEditorDropdown().should('be.visible')
   },
   getCreatedCaret(nth) {
     return cy.getByContainsClass(CREATED_CARET).eq(nth)
@@ -217,6 +230,12 @@ export const ManuscriptsPage = {
   },
   getSuccessfulImportPopup() {
     return cy.get(IMPORT_CONFIRMATION_POPUP, { timeout: 600000 })
+  },
+  selectDropdownOption(nth) {
+    return cy.get(DROPDOWN_OPTION_LIST).eq(nth).click()
+  },
+  selectDropdownOptionWithText(text) {
+    return cy.get(DROPDOWN_OPTION_LIST).contains(text).click()
   },
 }
 export default ManuscriptsPage

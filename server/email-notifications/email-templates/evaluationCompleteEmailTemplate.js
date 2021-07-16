@@ -1,8 +1,8 @@
-export const EvaluationCompleteEmailTemplate = (
+const EvaluationCompleteEmailTemplate = ({
   authorFirstName,
   articleTitle,
   link,
-) => {
+}) => {
   const result = `<p>
       <b>Dear ${authorFirstName},</b>
       <br>
@@ -22,4 +22,4 @@ export const EvaluationCompleteEmailTemplate = (
   return result.replace(/\n/g, '')
 }
 
-export default EvaluationCompleteEmailTemplate
+module.exports = EvaluationCompleteEmailTemplate
