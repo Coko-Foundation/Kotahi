@@ -76,7 +76,9 @@ describe('manuscripts page tests', () => {
     })
 
     it('journal column should be visible', () => {
-      ManuscriptsPage.getTableHead(1).should('contain', 'Journal').and('be.visible')
+      ManuscriptsPage.getTableHead(1)
+        .should('contain', 'Journal')
+        .and('be.visible')
     })
   })
 
@@ -90,12 +92,18 @@ describe('manuscripts page tests', () => {
       SubmissionFormPage.getWordCountInfo().its('length').should('eq', 7)
 
       // eslint-disable-next-line no-plusplus
-      for(let i=0; i < 7; i++) {
-        SubmissionFormPage.getWordCountInfo().eq(i).scrollIntoView().should('be.visible')
+      for (let i = 0; i < 7; i++) {
+        SubmissionFormPage.getWordCountInfo()
+          .eq(i)
+          .scrollIntoView()
+          .should('be.visible')
       }
 
       SubmissionFormPage.fillInOurTake('word count test')
-      SubmissionFormPage.getWordCountInfo().eq(0).should('contain', '3').and('contain', 'words')
+      SubmissionFormPage.getWordCountInfo()
+        .eq(0)
+        .should('contain', '3')
+        .and('contain', 'words')
     })
 
     it('unsubmitted article is evaluated', () => {
@@ -156,7 +164,9 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.fillInArticleDescription(data.articleId)
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.getTableRowsCount().should('eq', 1)
-        ManuscriptsPage.getArticleTitleByRow(0).find('a').should('have.attr','href', data.doi)
+        ManuscriptsPage.getArticleTitleByRow(0)
+          .find('a')
+          .should('have.attr', 'href', data.doi)
       })
     })
   })
@@ -207,7 +217,9 @@ describe('manuscripts page tests', () => {
           .scrollIntoView()
           .should('be.visible')
           .should('contain', data.topic)
-        ManuscriptsPage.getArticleTitleByRow(0).find('a').should('have.attr','href', data.doi)
+        ManuscriptsPage.getArticleTitleByRow(0)
+          .find('a')
+          .should('have.attr', 'href', data.doi)
       })
       ManuscriptsPage.getArticleLabel().should('contain', 'ready to evaluate')
     })
@@ -355,9 +367,9 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.clickArticleLabel(1)
       ManuscriptsPage.getTableRowsCount().should('eq', 1)
       cy.url().should('contain', 'evaluated')
-       ManuscriptsPage.getLabelRow(0).should('contain', 'evaluated')
-       Menu.clickManuscriptsAndAssertPageLoad()
-       ManuscriptsPage.clickArticleLabel(0)
+      ManuscriptsPage.getLabelRow(0).should('contain', 'evaluated')
+      Menu.clickManuscriptsAndAssertPageLoad()
+      ManuscriptsPage.clickArticleLabel(0)
       ManuscriptsPage.getTableRowsCount().should('eq', 2)
       cy.url().should('contain', 'readyToEvaluate')
       ManuscriptsPage.getLabelRow(0).should('contain', 'ready to evaluate')
@@ -497,7 +509,10 @@ describe('manuscripts page tests', () => {
       cy.url().should('contain', 'status=new&topic=diagnostics')
       ManuscriptsPage.clickArticleLabel(0)
       ManuscriptsPage.getTableRowsCount().should('eq', 1)
-      cy.url().should('contain', 'status=new&topic=diagnostics&label=readyToEvaluate')
+      cy.url().should(
+        'contain',
+        'status=new&topic=diagnostics&label=readyToEvaluate',
+      )
     })
 
     it('combined filtering after status, topic and label from dropdown list, link content that combination', () => {
@@ -540,20 +555,21 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.clickTableHead(6)
       ManuscriptsPage.selectDropdownOptionWithText('Ready to evaluate')
       ManuscriptsPage.getTableRowsCount().should('eq', 1)
-      cy.url().should('contain', 'status=new&topic=diagnostics&label=readyToEvaluate')
+      cy.url().should(
+        'contain',
+        'status=new&topic=diagnostics&label=readyToEvaluate',
+      )
     })
   })
 
   context('video chat button', () => {
     it('check the video chat link, and if it returns 200', () => {
-      ManuscriptsPage.getLiveChatButton().invoke('attr', 'href').should('contain', '//8x8.vc/coko/')
       ManuscriptsPage.getLiveChatButton()
-        .then(link => {
-          cy
-            .request(link.prop('href'))
-            .its('status')
-            .should('eq', 200)
-        })
+        .invoke('attr', 'href')
+        .should('contain', '//8x8.vc/coko/')
+      ManuscriptsPage.getLiveChatButton().then(link => {
+        cy.request(link.prop('href')).its('status').should('eq', 200)
+      })
     })
   })
   context('select button from Label column', () => {
@@ -561,7 +577,7 @@ describe('manuscripts page tests', () => {
       cy.task('restore', 'initial_state_ncrc')
       cy.task('seedForms')
       // login as admin
-        cy.fixture('role_names').then(name => {
+      cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
       })
       cy.awaitDisappearSpinner()

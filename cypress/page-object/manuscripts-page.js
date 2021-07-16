@@ -138,14 +138,23 @@ export const ManuscriptsPage = {
   clickArticleLabel(nth) {
     this.getArticleLabel().eq(nth).click()
   },
+  getAllArticleTopics() {
+    return cy.get(ARTICLE_TOPIC)
+  },
   getArticleTopic(nth) {
-    return cy.get(ARTICLE_TOPIC).eq(nth)
+    return this.getAllArticleTopics().eq(nth)
+  },
+  getArticleTopicWithText(text) {
+    return this.getAllArticleTopics().contains(text)
   },
   getArticleTopicByRow(nth) {
     return this.getNthTableRow(nth).find(ARTICLE_TOPIC)
   },
   clickArticleTopic(nth) {
     this.getArticleTopic(nth).click()
+  },
+  clickArticleTopicWithText(text) {
+    this.getArticleTopicWithText(text).click()
   },
   getTableRow() {
     return cy.getByContainsClass(TABLE_ROW)

@@ -77,12 +77,18 @@ describe('Manuscripts page tests', () => {
       SubmissionFormPage.getWordCountInfo().its('length').should('eq', 4)
 
       // eslint-disable-next-line no-plusplus
-      for (let i=0; i < 4; i++) {
-        SubmissionFormPage.getWordCountInfo().eq(i).scrollIntoView().should('be.visible')
+      for (let i = 0; i < 4; i++) {
+        SubmissionFormPage.getWordCountInfo()
+          .eq(i)
+          .scrollIntoView()
+          .should('be.visible')
       }
 
       SubmissionFormPage.fillInReview1('word count test')
-      SubmissionFormPage.getWordCountInfo().eq(0).should('contain', '3').and('contain', 'words')
+      SubmissionFormPage.getWordCountInfo()
+        .eq(0)
+        .should('contain', '3')
+        .and('contain', 'words')
     })
 
     it('unsubmitted article is evaluated', () => {
@@ -416,7 +422,7 @@ describe('Manuscripts page tests', () => {
       })
       cy.awaitDisappearSpinner()
       ManuscriptsPage.getTableHeader().should('be.visible')
-    
+
       ManuscriptsPage.getTableHeader().should('be.visible')
       ManuscriptsPage.getEvaluationButton().should('not.exist')
       ManuscriptsPage.clickSubmit()
@@ -561,11 +567,12 @@ describe('Manuscripts page tests', () => {
     it('check the video chat link, and if it returns 200', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       // eslint-disable-next-line prettier/prettier
-      ManuscriptsPage.getLiveChatButton().invoke('attr', 'href').should('contain', '//8x8.vc/coko/')
       ManuscriptsPage.getLiveChatButton()
-        .then(link => {
-          cy.request(link.prop('href')).its('status').should('eq', 200)
-        })
+        .invoke('attr', 'href')
+        .should('contain', '//8x8.vc/coko/')
+      ManuscriptsPage.getLiveChatButton().then(link => {
+        cy.request(link.prop('href')).its('status').should('eq', 200)
+      })
     })
   })
 })
