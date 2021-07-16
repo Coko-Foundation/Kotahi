@@ -49,9 +49,11 @@ const resolvers = {
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
       // We process comment fields into array
-      const reviewUser = await ctx.models.User.query().where({
-        id: input.userId,
-      })
+      const reviewUser = input.userId
+        ? await ctx.models.User.query().where({
+            id: input.userId,
+          })
+        : ctx.user
 
       const processedReview = { ...input, user: reviewUser }
 
