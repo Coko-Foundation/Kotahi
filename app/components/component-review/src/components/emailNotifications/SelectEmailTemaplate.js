@@ -12,7 +12,10 @@ const emailTemplateOptions = [
   },
 ]
 
-const SelectEmailTemplate = ({ onChangeEmailTemplate, selectedEmailTemplate }) => {
+const SelectEmailTemplate = ({
+  onChangeEmailTemplate,
+  selectedEmailTemplate,
+}) => {
   return (
     <Select
       aria-label="Notification_email_select"

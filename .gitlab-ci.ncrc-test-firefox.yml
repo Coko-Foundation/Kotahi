@@ -37,22 +37,22 @@ build:
   services:
     - postgres
 
-.test_before_script: &run_test_before_script  
+.test_before_script: &run_test_before_script
   - apt-get update
   - apt-get -y install postgresql-client
   - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
 
-.test_script: &run_test_script   
+.test_script: &run_test_script
   - cd ${HOME}
   - cp .env.example .env
   - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
-    
+
 test-firefox:
   before_script:
     - *run_test_before_script
   <<: *run_test_template
   variables:
-    TEST_ITEM: "firefox:ncrc"
+    TEST_ITEM: 'firefox:ncrc'
   script:
     - *run_test_script
 
@@ -61,7 +61,7 @@ test-firefox-samsung:
     - *run_test_before_script
   <<: *run_test_template
   variables:
-    TEST_ITEM: "firefox:ncrc:samsung"
+    TEST_ITEM: 'firefox:ncrc:samsung'
   script:
     - *run_test_script
 
@@ -70,7 +70,7 @@ test-firefox-samsung-tablet:
     - *run_test_before_script
   <<: *run_test_template
   variables:
-    TEST_ITEM: "firefox:ncrc:samsung:tablet"
+    TEST_ITEM: 'firefox:ncrc:samsung:tablet'
   script:
     - *run_test_script
 
@@ -79,7 +79,7 @@ test-firefox-iPhone:
     - *run_test_before_script
   <<: *run_test_template
   variables:
-    TEST_ITEM: "firefox:ncrc:iPhone"
+    TEST_ITEM: 'firefox:ncrc:iPhone'
   script:
     - *run_test_script
 
@@ -88,7 +88,7 @@ test-firefox-iPhone-tablet:
     - *run_test_before_script
   <<: *run_test_template
   variables:
-    TEST_ITEM: "firefox:ncrc:iPhone:tablet"
+    TEST_ITEM: 'firefox:ncrc:iPhone:tablet'
   script:
     - *run_test_script
 
@@ -97,6 +97,6 @@ test-firefox-hd-laptop:
     - *run_test_before_script
   <<: *run_test_template
   variables:
-    TEST_ITEM: "firefox:ncrc:hd:laptop"
+    TEST_ITEM: 'firefox:ncrc:hd:laptop'
   script:
     - *run_test_script

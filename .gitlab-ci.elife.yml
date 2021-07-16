@@ -29,7 +29,7 @@ build:
   services:
     - docker:20.10.5-dind
   stage: build
-  # dependencies: 
+  # dependencies:
   #   - cache
   before_script:
     - cp app/brand-instances-configs/elife.json app/brandConfig.json
@@ -104,25 +104,24 @@ lint:
   services:
     - postgres
 
-.test_before_script: &run_test_before_script  
+.test_before_script: &run_test_before_script
   - apt-get update
   - apt-get -y install postgresql-client
   - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
 
-.test_script: &run_test_script   
+.test_script: &run_test_script
   - cd ${HOME}
   - cp .env.example .env
   - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
-    
+
 test-chrome:
   before_script:
     - *run_test_before_script
   <<: *run_test_template
   variables:
-    TEST_ITEM: "chrome:elife"
+    TEST_ITEM: 'chrome:elife'
   script:
     - *run_test_script
-
 ## commented Wed May 12 15:55:40 EEST 2021 by beatrice.suarasan@endava.com request
 # test-chrome-samsung:
 #   before_script:

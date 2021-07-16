@@ -181,11 +181,11 @@ const ReviewersPage = ({ match, history }) => {
           {...props}
           history={history}
           manuscript={manuscript}
+          refetchManuscriptData={refetch}
           removeReviewer={removeReviewer}
-          updateTeamMember={updateTeamMember}
           reviewers={reviewers}
           reviewerUsers={users}
-          refetchManuscriptData={refetch}
+          updateTeamMember={updateTeamMember}
         />
       )}
     </Formik>

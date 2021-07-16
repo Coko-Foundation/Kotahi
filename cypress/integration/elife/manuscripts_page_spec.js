@@ -77,12 +77,18 @@ describe('Manuscripts page tests', () => {
       SubmissionFormPage.getWordCountInfo().its('length').should('eq', 4)
 
       // eslint-disable-next-line no-plusplus
-      for (let i=0; i < 4; i++) {
-        SubmissionFormPage.getWordCountInfo().eq(i).scrollIntoView().should('be.visible')
+      for (let i = 0; i < 4; i++) {
+        SubmissionFormPage.getWordCountInfo()
+          .eq(i)
+          .scrollIntoView()
+          .should('be.visible')
       }
 
       SubmissionFormPage.fillInReview1('word count test')
-      SubmissionFormPage.getWordCountInfo().eq(0).should('contain', '3').and('contain', 'words')
+      SubmissionFormPage.getWordCountInfo()
+        .eq(0)
+        .should('contain', '3')
+        .and('contain', 'words')
     })
 
     it('unsubmitted article is evaluated', () => {
