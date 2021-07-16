@@ -84,29 +84,29 @@ const renderReviewerNamesWithStatuses = reviewers => {
   return (
     <>
       {reviewers.map((r, i) => (
-        <>
+        <span key={r.name}>
           {i > 0 ? `, ${r.name}` : r.name}
           {r.status === 'invited' && (
-            <Icon color="cornflowerblue" key={`${r.name}-inv`} size={2}>
+            <Icon color="cornflowerblue" key="inv" size={2}>
               mail
             </Icon>
           )}
           {r.status === 'accepted' && (
-            <Icon color="steelblue" key={`${r.name}-acc`} size={2}>
+            <Icon color="steelblue" key="acc" size={2}>
               square
             </Icon>
           )}
           {r.status === 'rejected' && (
-            <Icon color="darkred" key={`${r.name}-rej`} size={2}>
+            <Icon color="darkred" key="rej" size={2}>
               slash
             </Icon>
           )}
           {r.status === 'completed' && (
-            <Icon color="green" key={`${r.name}-com`} size={2}>
+            <Icon color="green" key="com" size={2}>
               check-square
             </Icon>
           )}
-        </>
+        </span>
       ))}
     </>
   )
