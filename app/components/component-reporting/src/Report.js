@@ -16,6 +16,11 @@ const Page = styled.div`
   padding: 0 ${grid(2)} ${grid(3)} ${grid(2)};
 `
 
+const Select = styled.select`
+  border: 1px solid ${th('colorBorder')};
+  padding: 5px;
+`
+
 const Heading = styled.div`
   color: ${th('colorPrimary')};
   font-family: ${th('fontReading')};
@@ -207,14 +212,14 @@ const Report = ({
       <Heading>Reports</Heading>
       <SelectionLine>
         Show{' '}
-        <select
+        <Select
           onChange={e => setReportType(e.target.value)}
           value={reportType}
         >
           {reportTypes.map(t => (
             <option key={t} label={t} value={t} />
           ))}
-        </select>{' '}
+        </Select>{' '}
         <span>
           activity for manuscripts arriving
           <Tooltip
