@@ -418,9 +418,18 @@ const Manuscripts = ({ history, ...props }) => {
 
   const [update] = useMutation(updateMutation)
 
+  const resetFilters = () => {
+    if (history.location.search === '') {
+      setSelectedTopic('topic')
+      setSelectedStatus('status')
+      setSelectedLabel('label')
+    }
+  }
+
   useEffect(() => {
     refetch()
     setPage(1)
+    resetFilters()
   }, [history.location.search])
 
   if (loading) return <Spinner />
