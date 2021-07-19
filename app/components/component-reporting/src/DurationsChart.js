@@ -1,5 +1,12 @@
 import React from 'react'
-import { LineChart, Line, XAxis, YAxis, ResponsiveContainer } from 'recharts'
+import {
+  LineChart,
+  Line,
+  XAxis,
+  YAxis,
+  Label,
+  ResponsiveContainer,
+} from 'recharts'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 
@@ -64,6 +71,16 @@ const getTicks = (startTimestamp, endTimestamp, interval) => {
   return result
 }
 
+const DurationsLabel = () => {
+  return (
+    <text transform="rotate(-90, 32, 260)" x={32} y={260}>
+      <tspan>Days spent on </tspan>
+      <tspan fill="#ffa900">review, </tspan>
+      <tspan fill="#475ae8">post-review</tspan>
+    </text>
+  )
+}
+
 const DurationsChart = ({
   startDate,
   endDate,
@@ -87,14 +104,16 @@ const DurationsChart = ({
             tickFormatter={dateFormatter}
             ticks={getTicks(startDate, endDate, 7)}
             type="number"
-          />
-          <YAxis
-            axisLine={false}
-            dataKey="y"
-            name="duration"
-            type="number"
-            unit=" days"
-          />
+          >
+            <Label
+              offset={-5}
+              position="insideBottom"
+              value="Submission time"
+            />
+          </XAxis>
+          <YAxis axisLine={false} dataKey="y" name="duration" type="number">
+            <Label content={<DurationsLabel />} position="insideLeft" />
+          </YAxis>
           <Line
             animationDuration={(1000 * reviewSeries.length) / 12}
             data={reviewSeries}
