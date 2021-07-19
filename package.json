@@ -67,7 +67,21 @@
     "test:firefox:ncrc:samsung:tablet": "cypress run --env userAgent=tabletSamsung --browser firefox --headless --spec 'cypress/integration/ncrc/**.js'",
     "test:firefox:ncrc:iPhone": "cypress run --env userAgent=phoneSafari --browser firefox --spec 'cypress/integration/ncrc/**.js'",
     "test:firefox:ncrc:iPhone:tablet": "cypress run --env userAgent=tabletSafari --browser firefox --headless --spec 'cypress/integration/ncrc/**.js'",
-    "test:firefox:ncrc:hd:laptop": "cypress run --env userAgent=hdLaptop --browser firefox --spec 'cypress/integration/ncrc/**.js'"
+    "test:firefox:ncrc:hd:laptop": "cypress run --env userAgent=hdLaptop --browser firefox --spec 'cypress/integration/ncrc/**.js'",
+    "test:all:chrome:colab": "start-test test:server-and-client 4000 test:chrome:colab",
+    "test:chrome:colab": "cypress run --browser chrome --headless --spec 'cypress/integration/colab/**.js'",
+    "test:all:firefox:colab": "start-test test:server-and-client 4000 test:firefox:colab",
+    "test:all:firefox:colab:samsung": "start-test test:server-and-client 4000 test:firefox:colab:samsung",
+    "test:all:firefox:colab:samsung:tablet": "start-test test:server-and-client 4000 test:firefox:colab:samsung:tablet",
+    "test:all:firefox:colab:iPhone": "start-test test:server-and-client 4000 test:firefox:colab:iPhone",
+    "test:all:firefox:colab:iPhone:tablet": "start-test test:server-and-client 4000 test:firefox:colab:iPhone:tablet",
+    "test:all:firefox:colab:hd:laptop": "start-test test:server-and-client 4000 test:firefox:colab:hd:laptop",
+    "test:firefox:colab": "cypress run --browser firefox --headless --spec 'cypress/integration/colab/**.js'",
+    "test:firefox:colab:samsung": "cypress run --env userAgent=phoneSamsung --browser firefox --headless --spec 'cypress/integration/colab/**.js'",
+    "test:firefox:colab:samsung:tablet": "cypress run --env userAgent=tabletSamsung --browser firefox --headless --spec 'cypress/integration/colab/**.js'",
+    "test:firefox:colab:iPhone": "cypress run --env userAgent=phoneSafari --browser firefox --spec 'cypress/integration/colab/**.js'",
+    "test:firefox:colab:iPhone:tablet": "cypress run --env userAgent=tabletSafari --browser firefox --headless --spec 'cypress/integration/colab/**.js'",
+    "test:firefox:colab:hd:laptop": "cypress run --env userAgent=hdLaptop --browser firefox --spec 'cypress/integration/colab/**.js'"
   },
   "husky": {
     "hooks": {

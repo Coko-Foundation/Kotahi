@@ -77,12 +77,12 @@ export const StyledTopic = styled.p`
   color: white;
   cursor: pointer;
   margin-bottom: 5px;
-  max-width: 150px;
+  max-width: fit-content;
+  min-width: 80px;
   overflow: hidden;
   padding: 0 10px;
   text-overflow: ellipsis;
   white-space: nowrap;
-  width: fit-content;
 `
 
 export const StyledAuthor = styled.p`
@@ -97,7 +97,9 @@ export const StyledTableLabel = styled.p`
     : 'default'};
   padding: 0 10px;
   text-align: center;
+  text-overflow: ellipsis;
   white-space: nowrap;
+  width: fit-content;
 `
 
 export const StyledDescriptionWrapper = styled.div`

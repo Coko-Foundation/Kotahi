@@ -17,6 +17,7 @@ const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
 const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
+// const importArticlesFromEuropePMC = require('../../import-articles/europepmc-import')
 
 let isImportInProgress = false
 
@@ -189,6 +190,7 @@ const resolvers = {
       return manuscript
     },
     async importManuscripts(_, props, ctx) {
+      // importArticlesFromEuropePMC(ctx)
       if (isImportInProgress) {
         return null
       }
@@ -695,7 +697,7 @@ const resolvers = {
           'manuscripts.id',
           manuscripts.map(manuscript => manuscript.id),
         )
-        .withGraphFetched(
+        .withGraphJoined(
           '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
         )
 

@@ -10,7 +10,7 @@
     "brandName": "Novel Coronavirus Research Compendium"
   },
   "colab": {
-    "primaryColor": "#bc2325",
+    "primaryColor": "rgb(188, 35, 37)",
     "logoPath": "/public/biophysics-colab.png",
     "brandName": "Colab"
   }
