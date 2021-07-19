@@ -270,11 +270,11 @@ const getDurationsTraces = async (startDate, endDate, ctx) => {
     const completedDate = getCompletedDate(m)
 
     let reviewDuration = getReviewingDuration(m) / day
-    if (!reviewDuration) reviewDuration = 0 // TODO fallback to null, not 0
+    if (!reviewDuration && reviewDuration !== 0) reviewDuration = null
 
     const fullDuration = completedDate
       ? (completedDate - submittedDate) / day
-      : reviewDuration // TODO fallback to null, not reviewDuration
+      : null
 
     durations.push({
       date: submittedDate,

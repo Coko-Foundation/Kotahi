@@ -9,7 +9,7 @@ export const generateDurationsData = (startDate, endDate) => {
   let prevDate = startDate
 
   while (prevDate < endDate) {
-    const date = prevDate + Math.random() * Math.random() * 24 * 60 * 60 * 1000
+    const date = prevDate + Math.random() * Math.random() * 48 * 60 * 60 * 1000
     if (date >= endDate) break
 
     const reviewDuration = Math.random() * Math.random() * 15 + 0.5
@@ -17,7 +17,13 @@ export const generateDurationsData = (startDate, endDate) => {
     const fullDuration =
       reviewDuration + Math.random() * Math.random() * 9 + 0.5
 
-    durationsData.push({ date, reviewDuration, fullDuration })
+    if (reviewDuration * day + date < endDate) {
+      if (fullDuration * day + date < endDate)
+        durationsData.push({ date, reviewDuration, fullDuration })
+      else durationsData.push({ date, reviewDuration, fullDuration: null })
+    } else
+      durationsData.push({ date, reviewDuration: null, fullDuration: null })
+
     prevDate = date
   }
 

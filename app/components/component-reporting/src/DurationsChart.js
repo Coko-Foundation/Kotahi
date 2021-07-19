@@ -18,17 +18,40 @@ const Container = styled.div`
 const generateSeries = data => {
   const reviewSeries = []
   const completionSeries = []
+  const incompleteStarts = []
+  let maxDuration = 0
 
   data.forEach(datum => {
-    reviewSeries.push({ x: datum.date, y: 0 })
-    reviewSeries.push({ x: datum.date, y: datum.reviewDuration })
-    reviewSeries.push(null)
-    completionSeries.push({ x: datum.date, y: datum.reviewDuration })
-    completionSeries.push({ x: datum.date, y: datum.fullDuration })
-    completionSeries.push(null)
+    if (datum.reviewDuration === null) {
+      incompleteStarts.push({ x: datum.date, y: 0 })
+    } else {
+      reviewSeries.push({ x: datum.date, y: 0 })
+      reviewSeries.push({ x: datum.date, y: datum.reviewDuration })
+      reviewSeries.push(null)
+
+      if (datum.reviewDuration > maxDuration) maxDuration = datum.reviewDuration
+
+      if (datum.fullDuration === null) {
+        incompleteStarts.push({ x: datum.date, y: datum.reviewDuration })
+      } else {
+        completionSeries.push({ x: datum.date, y: datum.reviewDuration })
+        completionSeries.push({ x: datum.date, y: datum.fullDuration })
+        completionSeries.push(null)
+
+        if (datum.fullDuration > maxDuration) maxDuration = datum.fullDuration
+      }
+    }
   })
 
-  return { reviewSeries, completionSeries }
+  const rangeMax = Math.max(1, Math.ceil(maxDuration)) // integer, at least 1
+  const incompleteSeries = []
+  incompleteStarts.forEach(item => {
+    incompleteSeries.push(item)
+    incompleteSeries.push({ x: item.x, y: rangeMax })
+    incompleteSeries.push(null)
+  })
+
+  return { reviewSeries, completionSeries, incompleteSeries, rangeMax }
 }
 
 const day = 24 * 60 * 60 * 1000
@@ -73,11 +96,16 @@ const getTicks = (startTimestamp, endTimestamp, interval) => {
 
 const DurationsLabel = () => {
   return (
-    <text transform="rotate(-90, 32, 260)" x={32} y={260}>
-      <tspan>Days spent on </tspan>
-      <tspan fill="#ffa900">review, </tspan>
-      <tspan fill="#475ae8">post-review</tspan>
-    </text>
+    <>
+      <text transform="rotate(-90, 14, 260)" x={14} y={260}>
+        <tspan>Days spent on </tspan>
+        <tspan fill="#ffa900">review, </tspan>
+        <tspan fill="#475ae8">post-review</tspan>
+      </text>
+      <text fill="#dddddd" transform="rotate(-90, 32, 260)" x={32} y={260}>
+        (or incomplete)
+      </text>
+    </>
   )
 }
 
@@ -88,7 +116,12 @@ const DurationsChart = ({
   reviewAvgsTrace,
   completionAvgsTrace,
 }) => {
-  const { reviewSeries, completionSeries } = generateSeries(durationsData)
+  const {
+    reviewSeries,
+    completionSeries,
+    incompleteSeries,
+    rangeMax,
+  } = generateSeries(durationsData)
 
   return (
     <Container>
@@ -111,9 +144,25 @@ const DurationsChart = ({
               value="Submission time"
             />
           </XAxis>
-          <YAxis axisLine={false} dataKey="y" name="duration" type="number">
+          <YAxis
+            axisLine={false}
+            dataKey="y"
+            domain={[0, rangeMax]}
+            name="duration"
+            type="number"
+          >
             <Label content={<DurationsLabel />} position="insideLeft" />
           </YAxis>
+          <Line
+            animationBegin={1500}
+            animationDuration={(1000 * incompleteSeries.length) / 12}
+            data={incompleteSeries}
+            dataKey="y"
+            dot={false}
+            stroke="#dddddd"
+            strokeLinejoin="bevel"
+            strokeWidth={2}
+          />
           <Line
             animationDuration={(1000 * reviewSeries.length) / 12}
             data={reviewSeries}
