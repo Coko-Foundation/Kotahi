@@ -70,6 +70,7 @@ const DecisionAndReviews = ({ manuscript, noGap }) => {
                   name: review.user.username,
                   ordinal: index + 1,
                 }}
+                teams={manuscript.teams}
               />
             </SectionRow>
           ))
