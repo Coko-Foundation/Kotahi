@@ -43,7 +43,46 @@ export const Content = styled.div`
 
 const SelectionLine = styled.div`
   margin-bottom: 1.5em;
+  position: relative;
+  z-index: 3;
 `
+
+const CompletedIcon = () => (
+  <div style={{ display: 'inline-block' }} title="Completed">
+    <div
+      style={{
+        width: '0.3em',
+        overflowX: 'visible',
+        display: 'inline-block',
+      }}
+    >
+      <Icon color="green" key="com" size={2}>
+        check
+      </Icon>
+    </div>
+    <Icon color="darkgreen" key="com" size={2}>
+      check
+    </Icon>
+  </div>
+)
+
+const InvitedIcon = () => (
+  <Icon color="cornflowerblue" key="inv" size={2} title="Invited">
+    send
+  </Icon>
+)
+
+const AcceptedIcon = () => (
+  <Icon color="lightgreen" key="inv" size={2} title="Accepted">
+    check
+  </Icon>
+)
+
+const RejectedIcon = () => (
+  <Icon color="darkred" key="inv" size={2} title="Declined">
+    slash
+  </Icon>
+)
 
 const reportTypes = ['Summary', 'Manuscript', 'Editor', 'Reviewer', 'Author']
 
@@ -86,26 +125,10 @@ const renderReviewerNamesWithStatuses = reviewers => {
       {reviewers.map((r, i) => (
         <span key={r.name}>
           {i > 0 ? `, ${r.name}` : r.name}
-          {r.status === 'invited' && (
-            <Icon color="cornflowerblue" key="inv" size={2}>
-              mail
-            </Icon>
-          )}
-          {r.status === 'accepted' && (
-            <Icon color="steelblue" key="acc" size={2}>
-              square
-            </Icon>
-          )}
-          {r.status === 'rejected' && (
-            <Icon color="darkred" key="rej" size={2}>
-              slash
-            </Icon>
-          )}
-          {r.status === 'completed' && (
-            <Icon color="green" key="com" size={2}>
-              check-square
-            </Icon>
-          )}
+          {r.status === 'invited' && <InvitedIcon />}
+          {r.status === 'accepted' && <AcceptedIcon />}
+          {r.status === 'rejected' && <RejectedIcon />}
+          {r.status === 'completed' && <CompletedIcon />}
         </span>
       ))}
     </>
