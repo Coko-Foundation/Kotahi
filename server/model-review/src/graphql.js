@@ -1,6 +1,8 @@
 // const { flatten } = require('lodash')
 // const Review = require('./review')
 
+const { get } = require('lodash')
+
 const resolvers = {
   Query: {
     async sharedReviews(_, { id }, ctx) {
@@ -12,7 +14,7 @@ const resolvers = {
 
       const teams = await query
       const authorTeam = teams.filter(team => team.role === 'author')
-      const authorUser = authorTeam[0].members[0].user
+      const authorUser = get(authorTeam, 'members[0].user', {})
 
       const members = teams
         .filter(team => team.role === 'reviewer')
