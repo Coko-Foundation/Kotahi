@@ -2,6 +2,213 @@
   "name": "Research Object Submission Form",
   "children": [
     {
+      "title": "Title",
+      "id": "8afe555d-30e5-4bc8-9826-6a9dc5d34760",
+      "component": "TextField",
+      "name": "meta.title",
+      "placeholder": "Enter the manuscript's title",
+      "description": "<p></p>",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "14b32182-e4a5-4a99-bb23-b673b500b521"
+        }
+      ]
+    },
+    {
+      "title": "DOI",
+      "id": "29512053-bad0-43cd-ad4f-1ec689c72a63",
+      "component": "TextField",
+      "name": "submission.doi",
+      "description": "<p></p>",
+      "doiValidation": "false",
+      "validate": []
+    },
+    {
+      "title": "Abstract",
+      "id": "e93b5e84-a049-4a0f-9a7a-b573aea4f905",
+      "component": "AbstractEditor",
+      "name": "submission.abstract",
+      "description": "<p></p>",
+      "doiValidation": "false",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "090dbe42-e86d-11eb-9a03-0242ac130003"
+        }
+      ]
+    },
+    {
+      "title": "First Author",
+      "id": "49a42019-748a-4fd1-a0e3-210a43ce8225",
+      "component": "TextField",
+      "name": "submission.firstAuthor",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "dbbabc17-c2e2-476d-901a-c6bae38c8fe6"
+        }
+      ]
+    },
+    {
+      "title": "Date Published",
+      "id": "43fcd173-40fd-411c-a89c-6bdd958bed70",
+      "component": "TextField",
+      "name": "submission.datePublished",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "659e9a15-df54-48a9-9755-539b94a198c1"
+        }
+      ]
+    },
+    {
+      "title": "Link",
+      "id": "f3228a30-e87c-11eb-9a03-0242ac130003",
+      "component": "TextField",
+      "name": "submission.link",
+      "description": "<p></p>",
+      "doiValidation": "false",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "fbac4704-e87c-11eb-9a03-0242ac130003"
+        }
+      ]
+    },
+    {
+      "options": [
+        {
+          "label": "ecology and spillover",
+          "value": "ecologyAndSpillover",
+          "id": "21703cd4-5a73-4701-b828-6fc3bf913908"
+        },
+        {
+          "label": "vaccines",
+          "value": "vaccines",
+          "id": "6a3a41ea-c12d-48a5-8f00-d9eec0980b17"
+        },
+        {
+          "label": "non-pharmaceutical and pharmaceutical interventions",
+          "value": "nonPharmaceuticalAndPharmaceuticalInterventions",
+          "id": "c1caf4b9-e9b7-42e2-8724-28a72abdd179"
+        },
+        {
+          "label": "epidemiology",
+          "value": "epidemiology",
+          "id": "4c12f2bb-e90a-41d2-a76b-1f2f98b89ae5"
+        },
+        {
+          "label": "diagnostics",
+          "value": "diagnostics",
+          "id": "1896c629-5559-447f-be12-e74dbf2a4a76"
+        },
+        {
+          "label": "modeling",
+          "value": "modeling",
+          "id": "3ef38a6c-de1d-49de-8e48-b548aa08cfd7"
+        },
+        {
+          "label": "clinical presentation",
+          "value": "clinicalPresentation",
+          "id": "d39b8a6e-4968-48b5-bad4-f7c5ec5269c0"
+        },
+        {
+          "label": "prognostic risk factors",
+          "value": "prognosticRiskFactors",
+          "id": "1d5428c0-b2ce-4d90-90c6-e8a6a6c53dbc"
+        }
+      ],
+      "title": "Topics",
+      "id": "fef9af15-9d7b-4164-bb5b-9277b6f96704",
+      "component": "CheckboxGroup",
+      "name": "submission.topics",
+      "validate": []
+    },
+    {
+      "title": "Our take",
+      "id": "13e673b4-0a25-4a02-92e6-e2a3a8b59daf",
+      "component": "AbstractEditor",
+      "name": "submission.ourTake",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "2d5e8deb-e03c-4f5c-9a23-f376321b040f"
+        }
+      ]
+    },
+    {
+      "title": "Main findings",
+      "id": "421aab67-569f-4539-8bc6-97376c64538f",
+      "component": "AbstractEditor",
+      "name": "submission.mainFindings",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "c07bc691-f618-43c7-953d-99ac9081096e"
+        }
+      ]
+    },
+    {
+      "title": "Study strengths",
+      "id": "4209cfa4-95de-48d4-ae3f-c98b29a9a847",
+      "component": "AbstractEditor",
+      "name": "submission.studyStrengths",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "56c4bdee-8846-4abc-b125-181da32939b3"
+        }
+      ]
+    },
+    {
+      "title": "Limitations",
+      "id": "6531975d-1e8e-4bf1-831e-61e7b52a912e",
+      "component": "AbstractEditor",
+      "name": "submission.limitations",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "d54b8471-0897-4fc0-8d49-9e0fcf8b073b"
+        }
+      ]
+    },
+    {
+      "title": "Keywords",
+      "id": "2c4fb5cd-1e88-434c-b28a-7837c57c89ab",
+      "component": "TextField",
+      "name": "submission.keywords",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "4e546ce4-e86d-11eb-9a03-0242ac130003"
+        }
+      ]
+    },
+    {
+      "title": "Journal",
+      "id": "150d401e-0e1c-4122-a661-26516a8e6838",
+      "component": "TextField",
+      "name": "submission.journal",
+      "validate": []
+    },
+    {
+      "title": "Edit date",
+      "id": "f60c6272-bd21-466b-9943-2837f7b2fcf5",
+      "component": "TextField",
+      "name": "submission.editDate"
+    },
+    {
       "options": [
         {
           "label": "Ready to evaluate",
@@ -23,425 +230,20 @@
       "id": "a94dd0b8-99a0-4555-9e59-0895fafa464e",
       "component": "Select",
       "name": "submission.labels",
+      "validate": []
+    },
+    {
+      "title": "Review creator",
+      "id": "12a0d30b-e91a-434d-9985-01820f48fdc4",
+      "component": "TextField",
+      "name": "submission.reviewCreator",
       "validate": [
         {
           "value": "required",
           "label": "Required",
-          "id": "29274cdc-89e0-4ea2-90e8-d2437d23f1b6"
+          "id": "b1d25468-eb0c-498e-9aaf-ad18b756a4fd"
         }
       ]
-    },
-    {
-      "title": "Research object links",
-      "id": "534eb7b9-f1fc-43b7-ba79-184efb30c8e7",
-      "component": "LinksInput",
-      "name": "submission.links"
-    },
-    {
-      "title": "Title",
-      "id": "8afe555d-30e5-4bc8-9826-6a9dc5d34760",
-      "component": "TextField",
-      "name": "meta.title",
-      "placeholder": "Enter the manuscript's title",
-      "description": "<p></p>"
-    },
-    {
-      "title": "Name",
-      "id": "d9d64549-7bd3-4960-b53f-87e59fc91a97",
-      "component": "TextField",
-      "name": "submission.name",
-      "placeholder": "Enter your name",
-      "validate": [
-        {
-          "value": "minChars",
-          "label": "minimum Characters",
-          "id": "9f4daa00-3627-4d47-b349-db4ea434c570"
-        }
-      ],
-      "validateValue": {
-        "minChars": "4"
-      }
-    },
-    {
-      "title": "Affiliation",
-      "id": "21a80900-76b6-4c20-be49-b943c3b91f39",
-      "component": "TextField",
-      "name": "submission.affiliation",
-      "placeholder": "Enter your affiliation"
-    },
-    {
-      "title": "Email and contact information",
-      "id": "dc56ca73-4b7e-4c5e-9809-5411bc76ad70",
-      "component": "TextField",
-      "name": "submission.contact",
-      "placeholder": "Enter your contact information"
-    },
-    {
-      "title": "Cover letter",
-      "id": "e2ad9814-8a57-4ebf-80d5-d95d712bd7c5",
-      "component": "AbstractEditor",
-      "name": "submission.cover",
-      "description": "<p>Cover letter describing submission, relevant implications, and timely information to consider</p>",
-      "placeholder": "Enter your cover letter"
-    },
-    {
-      "title": "Data and Code availability statements",
-      "id": "0c45e517-2751-45e6-8a1a-b15efd5fbb1f",
-      "component": "AbstractEditor",
-      "name": "submission.datacode",
-      "placeholder": "Enter your data and code availability statement"
-    },
-    {
-      "title": "Ethics statement",
-      "id": "57f806cc-b60a-4040-8e39-de84604f1de7",
-      "component": "AbstractEditor",
-      "name": "submission.ethics",
-      "placeholder": "Enter your ethics statements"
-    },
-    {
-      "title": "Type of Research Object",
-      "id": "f9075229-073b-4c7e-834d-3fa5efc7683f",
-      "component": "Select",
-      "name": "submission.objectType",
-      "options": [
-        {
-          "value": "dataset",
-          "label": "Dataset",
-          "id": "a0cfcf47-7fb6-43df-ad45-edcd7d7246cc"
-        },
-        {
-          "value": "software",
-          "label": "Software",
-          "id": "45538a11-2dfc-40aa-bcd5-fe926f7446af"
-        },
-        {
-          "value": "figure",
-          "label": "Figure",
-          "id": "4a97d3c9-8de6-489f-8cd2-63f83f7007d9"
-        },
-        {
-          "value": "notebook",
-          "label": "Notebook",
-          "id": "2b5ada46-a709-4fcb-a16a-b75f64bc3f24"
-        }
-      ]
-    },
-    {
-      "title": "Suggested reviewers",
-      "id": "eb9a37e2-70ac-475d-b613-2b25a0861e1e",
-      "component": "TextField",
-      "placeholder": "Add reviewer names...",
-      "name": "submission.suggested",
-      "parse": "split",
-      "format": "join"
-    },
-    {
-      "title": "Upload supplementary materials",
-      "id": "26ba70a0-5a98-426f-9477-ed40514574e4",
-      "component": "SupplementaryFiles",
-      "description": "<p>Upload your files.</p>",
-      "name": "fileName"
-    },
-    {
-      "title": "Keywords",
-      "id": "c92c8d81-e1a5-4a52-9c52-5908df397f6f",
-      "component": "TextField",
-      "name": "submission.keywords",
-      "placeholder": "Enter keywords...",
-      "parse": "split",
-      "format": "join",
-      "validateValue": {
-        "minChars": "2",
-        "maxChars": "6"
-      },
-      "validate": [
-        {
-          "value": "minChars",
-          "label": "minimum Characters",
-          "id": "b58639fc-dd26-4d48-8f7a-fd7b47d27f95"
-        },
-        {
-          "value": "required",
-          "label": "Required",
-          "id": "1ea50f87-edde-47ac-b789-abb7115db5c4"
-        }
-      ]
-    },
-    {
-      "title": "Did your study involve healthy subjects only or patients (note that patient studies may also involve healthy subjects)",
-      "id": "bfc85518-dd16-4906-9f9a-d7182f8825c4",
-      "component": "Select",
-      "name": "submission.subjects",
-      "options": [
-        {
-          "label": "Healthy subjects",
-          "value": "healthy_subjects",
-          "id": "e21c5d86-4d89-4af3-84f8-e39f2c4be1f7"
-        },
-        {
-          "label": "Patients",
-          "value": "patients",
-          "id": "9b6b193a-bcbf-4fca-9ea0-94faf4f03516"
-        }
-      ],
-      "description": "<p></p>",
-      "shortDescription": "Patients/healthy subjects"
-    },
-    {
-      "title": "If your research involved human subjects, was the research approved by the relevant Institutional Review Board or ethics panel?",
-      "id": "0a7d3452-2e71-4882-b807-fefbe627df98",
-      "component": "Select",
-      "name": "submission.irb",
-      "options": [
-        {
-          "label": "Yes",
-          "value": "yes",
-          "id": "1f468a54-e761-43df-ba41-da59e4663347"
-        },
-        {
-          "label": "No",
-          "value": "no",
-          "id": "5903646a-ce26-4b7e-9ed0-691665704b9c"
-        },
-        {
-          "label": " Not applicable (My Research Object does not involve human subjects) ",
-          "value": "N/A",
-          "id": "56dcb442-c205-4fb8-95fb-73a8664deb13"
-        }
-      ],
-      "description": "<p><i>NOTE: Any human subjects studies without IRB approval will be automatically rejected.</i></p>",
-      "shortDescription": "Ethics panel"
-    },
-    {
-      "title": "Was any animal research approved by the relevant IACUC or other animal research panel?",
-      "id": "60213c9b-7cc1-4541-8685-e640017986ab",
-      "component": "Select",
-      "name": "submission.animal_research_approval",
-      "description": "<p><i>NOTE: Any animal studies without IACUC approval will be automatically rejected.</i></p>",
-      "options": [
-        {
-          "label": "Yes",
-          "value": "yes",
-          "id": "cabe2138-ab33-4291-8327-321bbd9fb0da"
-        },
-        {
-          "label": "No",
-          "value": "no",
-          "id": "6c0cedbb-72b5-4695-9c07-22b4f67c954c"
-        },
-        {
-          "label": " Not applicable (My Research Object does not involve animal subjects)",
-          "value": "N/A",
-          "id": "34758b25-d14a-4aac-97ca-16dfcb61c2e6"
-        }
-      ],
-      "shortDescription": "Animal research panel"
-    },
-    {
-      "title": "Please indicate which methods were used in your research:",
-      "id": "56d75f5e-1a58-4281-aefa-a96b7ced5c16",
-      "component": "CheckboxGroup",
-      "name": "submission.methods",
-      "options": [
-        {
-          "label": "Structural MRI",
-          "value": "Structural MRI",
-          "id": "a0c44634-60e3-4e88-9d10-4726399779f7"
-        },
-        {
-          "label": "Functional MRI",
-          "value": "Functional MRI",
-          "id": "a3b9a7e3-5109-489b-8ccf-9293fb401efb"
-        },
-        {
-          "label": "Diffusion MRI",
-          "value": "Diffusion MRI",
-          "id": "14c4c147-ad59-44fb-9571-8f9c246505dc"
-        },
-        {
-          "label": "EEG/ERP",
-          "value": "EEG/ERP",
-          "id": "cedc1517-7227-47f4-a080-8d474fa2661f"
-        },
-        {
-          "label": "Neurophysiology",
-          "value": "Neurophysiology",
-          "id": "3cb7217e-123e-4961-9c36-7e60eccbbe30"
-        },
-        {
-          "label": "PET",
-          "value": "PET",
-          "id": "6ec63aea-5f84-4125-9803-a8aab7c5f295"
-        },
-        {
-          "label": "MEG",
-          "value": "MEG",
-          "id": "65056bd5-b122-4312-9514-d143a55b220d"
-        },
-        {
-          "label": "Optical Imaging",
-          "value": "Optical Imaging",
-          "id": "3ebda3d1-47b9-483a-9cc8-1195e19d0132"
-        },
-        {
-          "label": "Postmortem anatomy",
-          "value": "Postmortem anatomy",
-          "id": "a85839f2-0025-41ce-8641-bfdb08368949"
-        },
-        {
-          "label": "TMS",
-          "value": "TMS",
-          "id": "f619cb7e-2c2d-4a79-b787-887ed2abec8a"
-        },
-        {
-          "label": "Behavior",
-          "value": "Behavior",
-          "id": "258f4475-1ce0-43d7-9976-687b5b85a8f8"
-        },
-        {
-          "label": "Neuropsychological testing",
-          "value": "Neuropsychological testing",
-          "id": "dd736e0e-97ce-42c3-8d78-8f40f31deb60"
-        },
-        {
-          "label": "Computational modeling",
-          "value": "Computational modeling",
-          "id": "aafefcde-814a-471d-a2be-ff0d74298220"
-        }
-      ],
-      "shortDescription": "Methods"
-    },
-    {
-      "title": "If you used other research methods, please specify:",
-      "id": "2127d4e3-4b29-4bb7-9c97-740fa96fb166",
-      "component": "TextField",
-      "name": "submission.otherMethods",
-      "placeholder": "Enter any additional methods used, if applicable",
-      "shortDescription": "Other methods"
-    },
-    {
-      "title": "For human MRI, what field strength scanner do you use?",
-      "id": "a3b8c566-a9cf-4f3c-97f7-26c168876eb7",
-      "component": "Select",
-      "name": "submission.humanMRI",
-      "options": [
-        {
-          "label": "1T",
-          "value": "1T",
-          "id": "c88aa55d-9897-40bb-8612-f805d3a01c62"
-        },
-        {
-          "label": "1.5T",
-          "value": "1.5T",
-          "id": "1c47df67-3054-46d2-8994-2daf327089e4"
-        },
-        {
-          "label": "2T",
-          "value": "2T",
-          "id": "fcec2633-3419-4333-b003-c74b7e98b780"
-        },
-        {
-          "label": "3T",
-          "value": "3T",
-          "id": "5de1dd23-1ed4-4f30-b961-4925e860d190"
-        },
-        {
-          "label": "4T",
-          "value": "4T",
-          "id": "d9492f78-9a93-4369-85fd-a4b74a7e216f"
-        },
-        {
-          "label": "7T",
-          "value": "7T",
-          "id": "97671356-b3c0-4de3-b711-75be5932c3b5"
-        }
-      ],
-      "shortDescription": "MRI strength"
-    },
-    {
-      "title": "If other, please specify:",
-      "id": "408b4f32-fa7b-4dd1-9803-1e7669d6dfd5",
-      "component": "TextField",
-      "name": "submission.humanMRIother",
-      "validate": [],
-      "validateValue": {
-        "minChars": "10"
-      },
-      "shortDescription": "Other MRI strength"
-    },
-    {
-      "title": "Which processing packages did you use for your study?",
-      "id": "ba690a38-25fa-41f6-adcb-e067a11d894f",
-      "component": "CheckboxGroup",
-      "name": "submission.packages",
-      "options": [
-        {
-          "label": "AFNI",
-          "value": "AFNI",
-          "id": "ea4d155e-85c3-430b-b185-f47f1621b138"
-        },
-        {
-          "label": "SPM",
-          "value": "SPM",
-          "id": "0468acc8-d1cf-48e8-b54b-ae8995ff90a9"
-        },
-        {
-          "label": "Brain Voyager",
-          "value": "Brain Voyager",
-          "id": "9cc98e0b-5cd9-4932-ab09-ab02d1cc50ae"
-        },
-        {
-          "label": "FSL",
-          "value": "FSL",
-          "id": "54b3c038-6d83-4eb5-b0c5-8232ab76b4ff"
-        },
-        {
-          "label": "Analyze",
-          "value": "Analyze",
-          "id": "0977fc54-f2c2-4ea6-9602-aacf3beae653"
-        },
-        {
-          "label": "Free Surfer",
-          "value": "Free Surfer",
-          "id": "76d31c46-bb6c-421f-b8aa-fe752c867cf6"
-        },
-        {
-          "label": "LONI Pipeline",
-          "value": "LONI Pipeline",
-          "id": "407854de-e30f-4989-b61c-398bfa8bc0dc"
-        }
-      ],
-      "shortDescription": "Processing packages"
-    },
-    {
-      "title": "If you used any other processing packages, please list them here:",
-      "id": "1aa17251-b64b-40df-aa86-ba9e7da2b5d7",
-      "component": "TextField",
-      "name": "submission.otherPackages",
-      "shortDescription": "Other processing packages"
-    },
-    {
-      "title": "Provide references using author date format:",
-      "id": "3d9ae5b9-3f05-4b3d-84fa-816de128cd06",
-      "component": "AbstractEditor",
-      "name": "submission.references",
-      "shortDescription": "References"
-    },
-    {
-      "title": "Visual Abstract",
-      "id": "a539e90c-e235-48ad-9399-a152f538f59a",
-      "component": "VisualAbstract",
-      "name": "visualAbstract",
-      "description": "<p>Provide a visual abstract or figure to represent your manuscript.</p>"
-    },
-    {
-      "title": "Abstract",
-      "id": "8064fbe5-104a-4108-bea9-b66501f1c404",
-      "component": "AbstractEditor",
-      "name": "submission.abstract",
-      "placeholder": "Input your abstract...",
-      "description": "<p>Please provide a short summary of your submission</p>",
-      "shortDescription": "Abstract"
     }
   ],
   "description": "<p>Aperture is now accepting Research Object Submissions. Please fill out the form below to complete your submission.</p>",

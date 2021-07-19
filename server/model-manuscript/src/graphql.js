@@ -17,7 +17,7 @@ const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
 const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
-// const importArticlesFromEuropePMC = require('../../import-articles/europepmc-import')
+const importArticlesFromEuropePMC = require('../../import-articles/europepmc-import')
 
 let isImportInProgress = false
 
@@ -91,8 +91,9 @@ const commonUpdateManuscript = async (id, input, ctx) => {
   )
     updatedMs.submittedDate = new Date()
 
-  if (process.env.INSTANCE_NAME === 'ncrc')
+  if (['ncrc', 'colab'].includes(process.env.INSTANCE_NAME)) {
     updatedMs.submission.editDate = new Date().toISOString().split('T')[0]
+  }
 
   return ctx.models.Manuscript.query().updateAndFetchById(id, updatedMs)
 }
@@ -175,7 +176,7 @@ const resolvers = {
         ],
       }
 
-      if (process.env.INSTANCE_NAME === 'ncrc') {
+      if (['ncrc', 'colab'].includes(process.env.INSTANCE_NAME)) {
         emptyManuscript.submission.editDate = new Date()
           .toISOString()
           .split('T')[0]
@@ -190,7 +191,6 @@ const resolvers = {
       return manuscript
     },
     async importManuscripts(_, props, ctx) {
-      // importArticlesFromEuropePMC(ctx)
       if (isImportInProgress) {
         return null
       }
@@ -198,16 +198,30 @@ const resolvers = {
       isImportInProgress = true
 
       const pubsub = await getPubsub()
-      const manuscriptsFromBiorxiv = await importArticlesFromBiorxiv(ctx)
 
-      const manuscriptsFromPubmed = await importArticlesFromPubmed(ctx)
+      if (process.env.INSTANCE_NAME === 'ncrc') {
+        const manuscriptsFromBiorxiv = await importArticlesFromBiorxiv(ctx)
 
-      isImportInProgress = false
-      pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
-        manuscriptsImportStatus: true,
-      })
+        const manuscriptsFromPubmed = await importArticlesFromPubmed(ctx)
+        isImportInProgress = false
 
-      return manuscriptsFromBiorxiv.concat(manuscriptsFromPubmed)
+        pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
+          manuscriptsImportStatus: true,
+        })
+
+        return manuscriptsFromBiorxiv.concat(manuscriptsFromPubmed)
+      }
+
+      if (process.env.INSTANCE_NAME === 'colab') {
+        const importedManuscripts = await importArticlesFromEuropePMC(ctx)
+        isImportInProgress = false
+
+        pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
+          manuscriptsImportStatus: true,
+        })
+
+        return importedManuscripts
+      }
     },
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
@@ -470,6 +484,7 @@ const resolvers = {
       ) {
         manuscript = ctx.models.Manuscript.query().updateAndFetchById(id, {
           published: new Date(),
+          // for Colab instance submission.editDate should be updated
         })
       }
 

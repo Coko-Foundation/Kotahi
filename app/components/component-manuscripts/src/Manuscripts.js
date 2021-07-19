@@ -509,7 +509,7 @@ const Manuscripts = ({ history, ...props }) => {
               ＋ New submission
             </StyledButton>
 
-            {process.env.INSTANCE_NAME === 'ncrc' && (
+            {['ncrc'].includes(process.env.INSTANCE_NAME) && (
               <StyledButton onClick={importManuscripts} primary>
                 Refresh
               </StyledButton>
@@ -519,7 +519,14 @@ const Manuscripts = ({ history, ...props }) => {
       )}
 
       {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
-        <Heading>Manuscripts</Heading>
+        <HeadingWithAction>
+          <Heading>Manuscripts</Heading>
+          {['colab'].includes(process.env.INSTANCE_NAME) && (
+            <StyledButton onClick={importManuscripts} primary>
+              Refresh
+            </StyledButton>
+          )}
+        </HeadingWithAction>
       )}
 
       {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
