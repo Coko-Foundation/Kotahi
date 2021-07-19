@@ -144,7 +144,7 @@ const getData = async ctx => {
             ...emptySubmission,
             firstAuthor: authors,
             abstract,
-            datePublished,
+            datePublished: datePublished.replaceAll('-', '/'),
             journal: server,
 
             link: `https://${server.toLowerCase()}.org/content/${doi}v${version}`,
