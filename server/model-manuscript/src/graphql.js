@@ -707,14 +707,24 @@ const resolvers = {
 
       const manuscripts = await query
 
-      const detailedManuscripts = await ctx.models.Manuscript.query()
-        .whereIn(
-          'manuscripts.id',
-          manuscripts.map(manuscript => manuscript.id),
-        )
-        .withGraphJoined(
-          '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
-        )
+      console.log('manuscripts received')
+
+      let detailedManuscripts = []
+
+      try {
+        detailedManuscripts = await ctx.models.Manuscript.query()
+          .whereIn(
+            'manuscripts.id',
+            manuscripts.map(manuscript => manuscript.id),
+          )
+          .withGraphJoined(
+            '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
+          )
+
+        console.log('everything is good')
+      } catch (e) {
+        console.log('error....')
+      }
 
       return {
         totalCount,
