@@ -157,7 +157,10 @@ const AdminPage = () => {
       name: 'Manuscripts',
       icon: 'file-text',
     })
-    links.push({ link: reportsLink, name: 'Reports', icon: 'activity' })
+
+    if (process.env.INSTANCE_NAME === 'aperture') {
+      links.push({ link: reportsLink, name: 'Reports', icon: 'activity' })
+    }
   }
 
   if (currentUser) {
