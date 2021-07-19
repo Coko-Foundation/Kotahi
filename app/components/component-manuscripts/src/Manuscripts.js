@@ -420,9 +420,9 @@ const Manuscripts = ({ history, ...props }) => {
 
   const resetFilters = () => {
     if (history.location.search === '') {
-      setSelectedTopic('topic')
-      setSelectedStatus('status')
-      setSelectedLabel('label')
+      setSelectedTopic('')
+      setSelectedStatus('')
+      setSelectedLabel('')
     }
   }
 
