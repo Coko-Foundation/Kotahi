@@ -134,7 +134,7 @@ const getData = async ctx => {
         version,
         date: datePublished,
         server,
-      }) => {
+       }) => {
         return {
           status: 'new',
           isImported: true,
@@ -144,7 +144,7 @@ const getData = async ctx => {
             ...emptySubmission,
             firstAuthor: authors,
             abstract,
-            datePublished: datePublished.replaceAll('-', '/'),
+            datePublished: datePublished.replace(/-/g, '/'),
             journal: server,
 
             link: `https://${server.toLowerCase()}.org/content/${doi}v${version}`,
