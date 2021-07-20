@@ -38,7 +38,9 @@ const EmailNotifications = ({ manuscript }) => {
     return null
   }
 
-  const options = (data.users || []).map(user => editorOption(user))
+  const options = (data.users || [])
+    .filter(user => user.email)
+    .map(user => editorOption(user))
 
   return (
     <SectionContent noGap>
