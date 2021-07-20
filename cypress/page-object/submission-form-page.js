@@ -72,6 +72,9 @@ const REVIEW_CREATOR_FIELD = 'submission.reviewCreator'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
 const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
 
+// specific to colab
+const DOI_FIELD = 'submission.doi'
+
 export const SubmissionFormPage = {
   getPageTitle() {
     return cy.get(PAGE_TITLE)
@@ -554,6 +557,12 @@ export const SubmissionFormPage = {
   },
   getWordCountInfo() {
     return cy.getByTitle(WORD_COUNT_INFO)
+  },
+  getDoiFiled() {
+    return cy.getByDataTestId(DOI_FIELD)
+  },
+  fillInDoi(doi) {
+    this.getDoiFiled().fillInput(doi)
   },
 }
 export default SubmissionFormPage

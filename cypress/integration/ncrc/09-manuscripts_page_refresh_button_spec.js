@@ -16,8 +16,8 @@ import { Menu } from '../../page-object/page-component/menu'
 describe('refresh button tests', () => {
   context('visibility check', () => {
     it('check button exists and is visible', () => {
-      // task to restore the database as per the dumps/initial_state_ncrc.sql
-      cy.task('restore', 'initial_state_ncrc')
+      // task to restore the database as per the dumps/initial_state_other.sql
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
 
       // login as admin
@@ -33,8 +33,8 @@ describe('refresh button tests', () => {
 
   context('functionality check', () => {
     before(() => {
-      // task to restore the database as per the dumps/initial_state_ncrc.sql
-      // cy.task('restore', 'initial_state_ncrc')
+      // task to restore the database as per the dumps/initial_state_other.sql
+      // cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
       // login as admin
       cy.fixture('role_names').then(name => {

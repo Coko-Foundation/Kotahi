@@ -9,8 +9,8 @@ import { Menu } from '../../page-object/page-component/menu'
 
 describe('manuscripts page tests', () => {
   beforeEach(() => {
-    // task to restore the database as per the dumps/initial_state_ncrc.sql
-    cy.task('restore', 'initial_state_ncrc')
+    // task to restore the database as per the dumps/initial_state_other.sql
+    cy.task('restore', 'initial_state_other')
     cy.task('seedForms')
 
     // login as admin
@@ -574,7 +574,7 @@ describe('manuscripts page tests', () => {
   })
   context('select button from Label column', () => {
     beforeEach(() => {
-      cy.task('restore', 'initial_state_ncrc')
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
       // login as admin
       cy.fixture('role_names').then(name => {

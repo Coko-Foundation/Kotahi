@@ -296,9 +296,12 @@ CREATE TABLE public.manuscripts (
     submission jsonb,
     published timestamp with time zone,
     type text NOT NULL,
+    evaluations_hypothesis_map jsonb,
     is_imported boolean,
     import_source uuid,
-    import_source_server text
+    import_source_server text,
+    short_id integer,
+    submitted_date timestamp with time zone
 
 );
 

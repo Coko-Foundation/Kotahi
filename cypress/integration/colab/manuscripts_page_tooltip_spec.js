@@ -10,7 +10,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 
 describe('tooltip tests', () => {
   beforeEach(() => {
-    cy.task('restore', 'initial_state_ncrc')
+    cy.task('restore', 'initial_state_other')
     cy.task('seedForms')
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise

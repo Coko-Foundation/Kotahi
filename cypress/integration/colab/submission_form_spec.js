@@ -6,8 +6,8 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 
 describe('manuscripts page tests', () => {
   beforeEach(() => {
-    // task to restore the database as per the dumps/initial_state_ncrc.sql
-    cy.task('restore', 'initial_state_ncrc')
+    // task to restore the database as per the dumps/initial_state_other.sql
+    cy.task('restore', 'initial_state_other')
     cy.task('seedForms')
 
     // login as admin
@@ -36,4 +36,6 @@ describe('manuscripts page tests', () => {
       .should('contain', '3')
       .and('contain', 'words')
   })
+
+  it("edit date should reflect today's date", () => {})
 })

@@ -8,8 +8,8 @@ import { SubmissionFormPage } from '../../page-object/submission-form-page'
 describe('form builder tests', () => {
   context('check form builder elements visibility', () => {
     beforeEach(() => {
-      // task to restore the database as per the dumps/initial_state_ncrc.sql
-      cy.task('restore', 'initial_state_ncrc')
+      // task to restore the database as per the dumps/initial_state_other.sql
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -27,26 +27,26 @@ describe('form builder tests', () => {
         const dataArray = [
           data.ncrc.articleUrl,
           data.ncrc.description,
-          data.ncrc.ourTake,
+          data.common.ourTake,
           data.ncrc.studyDesign,
           data.ncrc.mainFindings,
-          data.ncrc.studyStrengths,
-          data.ncrc.limitations,
+          data.common.studyStrengths,
+          data.common.limitations,
           data.ncrc.valueAdded,
-          data.ncrc.labels,
-          data.ncrc.topics,
-          data.ncrc.abstract,
-          data.ncrc.firstAuthor,
-          data.ncrc.datePublished,
+          data.common.labels,
+          data.common.topics,
+          data.common.abstract,
+          data.common.firstAuthor,
+          data.common.datePublished,
           data.ncrc.studyPopulation,
-          data.ncrc.keywords,
-          data.ncrc.journal,
+          data.common.keywords,
+          data.common.journal,
           data.ncrc.editFinished,
           data.ncrc.reviewer,
-          data.ncrc.editDate,
+          data.common.editDate,
           data.ncrc.finalTakeWordcount,
           data.ncrc.compendiumFeature,
-          data.ncrc.reviewCreator,
+          data.common.reviewCreator,
         ]
 
         // eslint-disable-next-line no-plusplus
@@ -65,7 +65,7 @@ describe('form builder tests', () => {
         FormsPage.clickFormOptionWithText(data.ncrc.description)
         FormsPage.getComponentType().should('contain', 'TextField')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.ourTake)
+        FormsPage.clickFormOptionWithText(data.common.ourTake)
         FormsPage.getComponentType().should('contain', 'AbstractEditor')
         FormsPage.getFieldValidate().should('contain', 'Required')
         FormsPage.clickFormOptionWithText(data.ncrc.studyDesign)
@@ -74,37 +74,37 @@ describe('form builder tests', () => {
         FormsPage.clickFormOptionWithText(data.ncrc.mainFindings)
         FormsPage.getComponentType().should('contain', 'AbstractEditor')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.studyStrengths)
+        FormsPage.clickFormOptionWithText(data.common.studyStrengths)
         FormsPage.getComponentType().should('contain', 'AbstractEditor')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.limitations)
+        FormsPage.clickFormOptionWithText(data.common.limitations)
         FormsPage.getComponentType().should('contain', 'AbstractEditor')
         FormsPage.getFieldValidate().should('contain', 'Required')
         FormsPage.clickFormOptionWithText(data.ncrc.valueAdded)
         FormsPage.getComponentType().should('contain', 'AbstractEditor')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.labels)
+        FormsPage.clickFormOptionWithText(data.common.labels)
         FormsPage.getComponentType().should('contain', 'Select')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.topics)
+        FormsPage.clickFormOptionWithText(data.common.topics)
         FormsPage.getComponentType().should('contain', 'CheckboxGroup')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.abstract)
+        FormsPage.clickFormOptionWithText(data.common.abstract)
         FormsPage.getComponentType().should('contain', 'AbstractEditor')
         FormsPage.getFieldValidate().should('not.contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.firstAuthor)
+        FormsPage.clickFormOptionWithText(data.common.firstAuthor)
         FormsPage.getComponentType().should('contain', 'TextField')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.datePublished)
+        FormsPage.clickFormOptionWithText(data.common.datePublished)
         FormsPage.getComponentType().should('contain', 'TextField')
         FormsPage.getFieldValidate().should('contain', 'Required')
         FormsPage.clickFormOptionWithText(data.ncrc.studyPopulation)
         FormsPage.getComponentType().should('contain', 'AbstractEditor')
         FormsPage.getFieldValidate().should('not.contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.keywords)
+        FormsPage.clickFormOptionWithText(data.common.keywords)
         FormsPage.getComponentType().should('contain', 'TextField')
         FormsPage.getFieldValidate().should('not.contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.journal)
+        FormsPage.clickFormOptionWithText(data.common.journal)
         FormsPage.getComponentType().should('contain', 'TextField')
         FormsPage.getFieldValidate().should('contain', 'Required')
         FormsPage.clickFormOptionWithText(data.ncrc.editFinished)
@@ -113,7 +113,7 @@ describe('form builder tests', () => {
         FormsPage.clickFormOptionWithText(data.ncrc.reviewer)
         FormsPage.getComponentType().should('contain', 'TextField')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.editDate)
+        FormsPage.clickFormOptionWithText(data.common.editDate)
         FormsPage.getComponentType().should('contain', 'TextField')
         FormsPage.getFieldValidate().should('not.contain', 'Required')
         FormsPage.clickFormOptionWithText(data.ncrc.finalTakeWordcount)
@@ -122,7 +122,7 @@ describe('form builder tests', () => {
         FormsPage.clickFormOptionWithText(data.ncrc.compendiumFeature)
         FormsPage.getComponentType().should('contain', 'Select')
         FormsPage.getFieldValidate().should('not.contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.ncrc.reviewCreator)
+        FormsPage.clickFormOptionWithText(data.common.reviewCreator)
         FormsPage.getComponentType().should('contain', 'TextField')
         FormsPage.getFieldValidate().should('contain', 'Required')
       })
@@ -130,8 +130,8 @@ describe('form builder tests', () => {
   })
   context('check submission form corresponds to form builder', () => {
     beforeEach(() => {
-      // task to restore the database as per the dumps/initial_state_ncrc.sql
-      cy.task('restore', 'initial_state_ncrc')
+      // task to restore the database as per the dumps/initial_state_other.sql
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
       // login as admin
       cy.fixture('role_names').then(name => {
@@ -149,26 +149,26 @@ describe('form builder tests', () => {
         const dataArray = [
           data.ncrc.articleUrl,
           data.ncrc.description,
-          data.ncrc.ourTake,
+          data.common.ourTake,
           data.ncrc.studyDesign,
           data.ncrc.mainFindings,
-          data.ncrc.studyStrengths,
-          data.ncrc.limitations,
+          data.common.studyStrengths,
+          data.common.limitations,
           data.ncrc.valueAdded,
-          data.ncrc.labels,
-          data.ncrc.topics,
-          data.ncrc.abstract,
-          data.ncrc.firstAuthor,
-          data.ncrc.datePublished,
+          data.common.labels,
+          data.common.topics,
+          data.common.abstract,
+          data.common.firstAuthor,
+          data.common.datePublished,
           data.ncrc.studyPopulation,
-          data.ncrc.keywords,
-          data.ncrc.journal,
+          data.common.keywords,
+          data.common.journal,
           data.ncrc.editFinished,
           data.ncrc.reviewer,
-          data.ncrc.editDate,
+          data.common.editDate,
           data.ncrc.finalTakeWordcount,
           data.ncrc.compendiumFeature,
-          data.ncrc.reviewCreator,
+          data.common.reviewCreator,
         ]
 
         // eslint-disable-next-line no-plusplus
@@ -268,9 +268,9 @@ describe('form builder tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         const dataArray = [
-          data.ncrc.labelTypes.readyToEvaluate,
-          data.ncrc.labelTypes.evaluated,
-          data.ncrc.labelTypes.readyToPublish,
+          data.common.labelTypes.readyToEvaluate,
+          data.common.labelTypes.evaluated,
+          data.common.labelTypes.readyToPublish,
         ]
 
         SubmissionFormPage.clickElementFromFormOptionList(8)
@@ -289,14 +289,14 @@ describe('form builder tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('form_option').then(data => {
         const valueArray = [
-          data.ncrc.topicTypes.ecologyAndSpillover,
-          data.ncrc.topicTypes.vaccines,
-          data.ncrc.topicTypes.interventions,
-          data.ncrc.topicTypes.epidemiology,
-          data.ncrc.topicTypes.diagnostics,
-          data.ncrc.topicTypes.modeling,
-          data.ncrc.topicTypes.clinicalPresentation,
-          data.ncrc.topicTypes.prognosticRiskFactors,
+          data.common.topicTypes.ecologyAndSpillover,
+          data.common.topicTypes.vaccines,
+          data.common.topicTypes.interventions,
+          data.common.topicTypes.epidemiology,
+          data.common.topicTypes.diagnostics,
+          data.common.topicTypes.modeling,
+          data.common.topicTypes.clinicalPresentation,
+          data.common.topicTypes.prognosticRiskFactors,
         ]
 
         // eslint-disable-next-line no-plusplus

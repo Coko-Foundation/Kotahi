@@ -15,8 +15,8 @@ import { ResultAndSummaryPage } from '../../page-object/page-component/result_an
 describe('Manuscripts page tests', () => {
   context('Elements visibility', () => {
     beforeEach(() => {
-      // task to restore the database as per the  dumps/initialState.sql
-      cy.task('restore', 'initialState')
+      // task to restore the database as per the  dumps/initial_state_other.sql
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
 
       // login as admin
@@ -51,8 +51,8 @@ describe('Manuscripts page tests', () => {
 
   context('unsubmitetd article tests', () => {
     beforeEach(() => {
-      // task to restore the database as per the  dumps/initialState.sql
-      cy.task('restore', 'initialState')
+      // task to restore the database as per the  dumps/initial_state_other.sql
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
 
       // login as admin
@@ -161,8 +161,8 @@ describe('Manuscripts page tests', () => {
 
   context('Submitted and evaluated article tests', () => {
     beforeEach(() => {
-      // task to restore the database as per the  dumps/initialState.sql
-      cy.task('restore', 'initialState')
+      // task to restore the database as per the  dumps/initial_state_other.sql
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
 
       // login as admin
@@ -381,8 +381,8 @@ describe('Manuscripts page tests', () => {
   })
   context('DOI validation', () => {
     beforeEach(() => {
-      // task to restore the database as per the  dumps/initialState.sql
-      cy.task('restore', 'initialState')
+      // task to restore the database as per the  dumps/initial_state_other.sql
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
 
       // login as admin
@@ -402,7 +402,7 @@ describe('Manuscripts page tests', () => {
     })
   })
 
-  context('Evaluation and summary page tests', () => {
+  context.only('Evaluation and summary page tests', () => {
     // this method is use to avoid script errors
     // eslint-disable-next-line handle-callback-err
     // Cypress.on('uncaught:exception', (err, runnable) => {
@@ -411,8 +411,8 @@ describe('Manuscripts page tests', () => {
     //   return false
     // })
     before(() => {
-      // task to restore the database as per the  dumps/initialState.sql
-      cy.task('restore', 'initialState')
+      // task to restore the database as per the  dumps/initial_state_other.sql
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
 
       // login as admin
@@ -483,9 +483,10 @@ describe('Manuscripts page tests', () => {
           'contain',
           data.peerReview,
         )
-        ResultAndSummaryPage.getReview().should('contain', data.review1)
-        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
         ResultAndSummaryPage.getDate().should('contain', data.review1Date)
+        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getReview().should('contain', data.review1)
+
       })
     })
     it('check evaluation page for review 2', () => {
@@ -505,9 +506,9 @@ describe('Manuscripts page tests', () => {
           'contain',
           data.peerReview,
         )
-        ResultAndSummaryPage.getReview().should('contain', data.review2)
-        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
         ResultAndSummaryPage.getDate().should('contain', data.review2Date)
+        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getReview().should('contain', data.review2)
       })
     })
     it('check evaluation page for review 3', () => {
@@ -527,9 +528,9 @@ describe('Manuscripts page tests', () => {
           'contain',
           data.peerReview,
         )
-        ResultAndSummaryPage.getReview().should('contain', data.review3)
-        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
         ResultAndSummaryPage.getDate().should('contain', data.review3Date)
+        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getReview().should('contain', data.review3)
       })
     })
     it('check evaluation summary page', () => {
@@ -549,9 +550,9 @@ describe('Manuscripts page tests', () => {
           'contain',
           data.evaluationSummary,
         )
-        ResultAndSummaryPage.getReview().should('contain', data.summary)
-        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
         ResultAndSummaryPage.getDate().should('contain', data.summaryDate)
+        ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
+        ResultAndSummaryPage.getReview().should('contain', data.summary)
       })
     })
   })

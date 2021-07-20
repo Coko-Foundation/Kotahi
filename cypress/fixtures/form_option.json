@@ -1,7 +1,7 @@
 {
   "required": "Required",
+  "formTitle": "Research Object Submission Form",
   "elife": {
-    "title": "Research Object Submission Form",
     "articleId": "Article ID",
     "articleUrl": "Article URL",
     "bioRxivArticleUrl": "bioRxiv article URL",
@@ -26,26 +26,13 @@
     "title": "NCRC Submission Form",
     "articleUrl": "Article URL",
     "description": "Article Description",
-    "ourTake": "Our take",
-    "studyDesign": "Study design",
     "mainFindings": "Summary of main findings",
-    "studyStrengths": "Study strengths",
-    "limitations": "Limitations",
     "valueAdded": "Value added",
-    "labels": "Labels",
-    "topics": "Topics",
-    "abstract": "Abstract",
-    "firstAuthor": "First Author",
-    "datePublished": "Date Published",
     "studyPopulation": "Study population setting",
-    "keywords": "Keywords",
-    "journal": "Journal",
     "editFinished": "Edit finished",
     "reviewer": "Reviewer",
-    "editDate": "Edit date",
     "finalTakeWordcount": "Final take wordcount",
     "compendiumFeature": "Compendium feature",
-    "reviewCreator": "Review creator",
     "compendiumFeatureTypes": {
       "no": "No",
       "mediumLow": "Yes, Medium/Low Impact Article",
@@ -62,7 +49,21 @@
       "nonRandomizedTrial": "Non-Randomized Trial",
       "modelingSimulation": "Modeling/Simulation",
       "other": "Other"
-    },
+    }
+  },
+  "common":  {
+    "abstract": "Abstract",
+    "firstAuthor": "First Author",
+    "datePublished": "Date Published",
+    "topics": "Topics",
+    "ourTake": "Our take",
+    "studyStrengths": "Study strengths",
+    "limitations": "Limitations",
+    "keywords": "Keywords",
+    "journal": "Journal",
+    "editDate": "Edit date",
+    "reviewCreator": "Review creator",
+    "labels": "Labels",
     "labelTypes": {
       "readyToEvaluate": "Ready to evaluate",
       "evaluated": "Evaluated",
@@ -78,5 +79,11 @@
       "clinicalPresentation": "clinicalPresentation",
       "prognosticRiskFactors": "prognosticRiskFactors"
     }
+  },
+  "colab": {
+    "title": "Title",
+    "doi": "DOI",
+    "link": "Link",
+    "mainFindings": "Main findings"
   }
 }

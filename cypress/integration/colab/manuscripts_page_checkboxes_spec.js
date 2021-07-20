@@ -10,7 +10,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 describe('manuscripts page checkboxes tests', () => {
   context('unsubmitted manuscripts checkbox tests', () => {
     before(() => {
-      cy.task('restore', 'initial_state_ncrc')
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -76,7 +76,7 @@ describe('manuscripts page checkboxes tests', () => {
   })
   context('submitted manuscripts checkbox tests', () => {
     it('checkbox should not be visible for submitted manuscripts', () => {
-      cy.task('restore', 'initial_state_ncrc')
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise

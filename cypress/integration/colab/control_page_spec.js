@@ -13,7 +13,7 @@ import { ReviewPage } from '../../page-object/review-page'
 describe('review page', () => {
   context('shared message', () => {
     beforeEach(() => {
-      cy.task('restore', 'initialState')
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {

@@ -11,8 +11,8 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 
 describe('manuscripts page tests', () => {
   beforeEach(() => {
-    // task to restore the database as per the dumps/initial_state_ncrc.sql
-    cy.task('restore', 'initial_state_ncrc')
+    // task to restore the database as per the dumps/initial_state_other.sql
+    cy.task('restore', 'initial_state_other')
     cy.task('seedForms')
 
     // login as admin
@@ -118,7 +118,7 @@ describe('manuscripts page tests', () => {
   })
   context('select button from Label column', () => {
     beforeEach(() => {
-      cy.task('restore', 'initial_state_ncrc')
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise

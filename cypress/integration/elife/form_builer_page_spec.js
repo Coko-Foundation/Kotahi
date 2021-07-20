@@ -9,8 +9,8 @@ describe('Form builder page tests', () => {
   // check the title and the elements in Form Builder
   context('check Form builder elements visibility', () => {
     beforeEach(() => {
-      // task to restore the database as per the  dumps/initialState.sql
-      cy.task('restore', 'initialState')
+      // task to restore the database as per the  dumps/initial_state_other.sql
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise

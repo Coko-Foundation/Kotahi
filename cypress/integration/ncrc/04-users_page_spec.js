@@ -13,8 +13,8 @@ import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 
 describe('users page tests', () => {
   beforeEach(() => {
-    // task to restore the database as per the dumps/initial_state_ncrc.sql
-    cy.task('restore', 'initial_state_ncrc')
+    // task to restore the database as per the dumps/initial_state_other.sql
+    cy.task('restore', 'initial_state_other')
     cy.task('seedForms')
 
     // login as admin
