@@ -14,14 +14,15 @@ We provide docker-compose and docker files to ensure consistency across environm
 You can use the `docker-compose.yml` and `docker-compose.production.yml` files as a reference for the environment variables that are needed, as well as a kind of installation guide if for some reason you wish to not use docker.
 Environment variables must be loaded into your shell. The `docker-compose` cli will automatically load any environment variables specified in the file `<project root>/.env`. In addition the server and client will also load the `.env`, even when not using `docker-compose`. Kotahi ships with an example `.env.example` file that lists all of the available environment variables - you can use it as a guide for your own `.env` file.
 To load these environment variables for certain scripts, you can use the `dotenv` CLI, e.g. `yarn dotenv yarn test:chrome`.
-To set up ORCID variables for login, read [FAQ.md](FAQ.md).
+
+ORCID OAuth variables must be set up before you can login. See [FAQ.md](FAQ.md).
 
 #### Development
 
 To bring up the development environment, simply run:
 
 ```sh
-docker-compose -f up
+docker-compose up
 ```
 
 This will:
@@ -32,7 +33,7 @@ This will:
 - Bring up a postgres container for use in development
 - Register the `job-xsweet` service (which converts .docx files to HTML)
 
-By default you can then access your app at [https://localhost:4000](https://localhost:4000). Since HTTPS in development is using self-signed certificates, browsers will complain about it being insecure. There are several options to disable these checks for `localhost`, to name a few:
+By default you can then access your app at [http://localhost:4000](http://localhost:4000). If you have configured to use HTTPS protocol instead (and are using self-signed certificates), browsers will complain about it being insecure. There are several options to disable these checks for `localhost`, to name a few:
 
 1. Go to `chrome://flags/#allow-insecure-localhost` and enable it (Chrome)
 2. Or click anywhere on the page and type `thisisunsafe` (yes, really) (Chrome)

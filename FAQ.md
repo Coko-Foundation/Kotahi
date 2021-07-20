@@ -7,9 +7,9 @@ eg. if your app is at `kotahi.myorg.com`, go to `kotahi.myorg.com/login`
 
 ## How do I setup ORCID for development?
 
-Getting past the login screen can be a challenge if you haven't set this up correctly. You need two things: an account at `sandbox.orcid.org` and a `mailinator` email. When `NODE_ENV` is set to `development`, the app will expect you to be using a sandbox account. ORCID's sandbox in turn will only send emails to mailinator accounts, so if you don't use mailinator, you won't be able to verify your email (and consequently not be able to set this up).
+Login requires [ORCID](https://orcid.org/) to be set up correctly. By default, if `NODE_ENV` is set to `development`, the app will expect you to be using an account on ORCID's sandbox (this can be overridden via the `USE_SANDBOXED_ORCID` flag). ORCID's sandbox will only send emails to mailinator accounts, so you have to register on ORCID's sandbox with a mailinator one-time email address.
 
-So here's how to set this up in less than 20 easy steps:
+Here's how to set this up in less than 20 easy steps:
 
 1. Go to [mailinator.com](mailinator.com)
 2. In the search bar at the top of the page enter your desired username (we'll use `mycokotestemail` for this guide) and click "GO". (tip: choose a username that is unlikely to be used already by someone else)
@@ -22,20 +22,21 @@ So here's how to set this up in less than 20 easy steps:
 9. Click on the "Verify your email address to get started" button.
 10. Go to your mailinator inbox. Open the email you received from orcid and click on the "Verify your email address" button.
 11. Go back to your developer tools section in ORCID. Click on "Register for the free ORCID public API", check the consent box and click on "Continue".
-12. You should now be presented with a form. Fill in your application's name, website and description. What you put in these fields shouldn't matter, as this will only be used for development. (tip: if you get an error that your website's URL is invalid, try something generic and include the protocol - eg. `http://www.google.com`)
-13. Under "Redirect URIs", add the url of your kotahi client plus `/auth/orcid/callback`. So if in your browser you can see your app under `https://localhost:4000`, the value here should be `https://localhost:4000/auth/orcid/callback`. [1]
+12. You should now be presented with a form. Fill in your application's name, website and description. What you put in these fields shouldn't matter, as this will only be used for development, so you could enter e.g. `kotahi dev`, `http://www.google.com` (any valid URL), `description`.
+13. Under "Redirect URIs", add the url of your kotahi client plus `/auth/orcid/callback`. So if in your browser you can see your app under `http://localhost:4000`, the value here should be `http://localhost:4000/auth/orcid/callback`. [1] (Note: ORCID supports multiple redirect URIs, so you can add both http and https URIs if needed.)
 14. Click on the floating save icon on the right.
 15. You should now be presented with a gray box that gives you a client id and a client secret.
-16. Go to your application's environment file and enter the values you just got.
+16. Edit your environment file (copy `.env.orcid.example` to `.env` if you don't have one yet) to include the client id and client secret from the step above, e.g.
 
-```sh
-export ORCID_CLIENT_ID=your-orcid-client-id
-export ORCID_CLIENT_SECRET=your-orcid-client-secret
+```
+USE_SANDBOXED_ORCID=true
+ORCID_CLIENT_ID=APP-B6O346VLWWXBQ427
+ORCID_CLIENT_SECRET=b37055db-4405-4dfb-a547-d393cd63bb2a
 ```
 
-17. Source your environment file to your shell and start the app.
+17. (Re-)Start the app via `docker compose up`.
 
-You should now be able to use the login.
+You should now be able to use the login at `http://localhost:4000/login`.
 
 _Disclaimer: ORCID is a separate organisation from Coko and we are in no way affiliated with them. This is meant as a guide to make a developer's life easier. If you encounter issues with ORCID services not working as expected, please contact their support._
 
@@ -55,6 +56,8 @@ x = await User.query().where({username:"0000000210481437"}).first()
 x.admin = true
 x.save()
 ```
+
+Now if you visit `http://localhost:4000/kotahi/admin` it should show `(admin)` below your name at the top left.
 
 # What else can I do in the console?
 
