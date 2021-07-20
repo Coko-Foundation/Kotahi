@@ -67,7 +67,9 @@ const reviewIsByUser = rule({ cache: 'contextual' })(
 )
 
 const isAuthenticated = rule({ cache: 'contextual' })(
-  async (parent, args, ctx, info) => !!ctx.user,
+  async (parent, args, ctx, info) => {
+    return !!ctx.user
+  },
 )
 
 // Who can send a message to a channel?
@@ -341,6 +343,8 @@ const permissions = {
     updateForm: userIsAdmin,
     updateFormElement: userIsAdmin,
     deleteFormElement: userIsAdmin,
+    updateCurrentEmail: isAuthenticated,
+    updateCurrentUsername: isAuthenticated,
   },
   Subscription: {
     messageCreated: userIsAllowedToChat,
@@ -378,7 +382,7 @@ const permissions = {
   Identity: allow,
 }
 
-const fallbackRule = or(userIsAdmin, userIsEditor)
+const fallbackRule = or(userIsAdmin, userIsEditor, isAuthenticated)
 
 // We only ever need to go two levels down, so no need for recursion
 const addOverrideRule = perms => {

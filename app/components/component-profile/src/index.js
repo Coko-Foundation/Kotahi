@@ -1,4 +1,7 @@
-import Profile from './Profile'
+import React from 'react'
+import ProfilePage from './Profile'
 
 // eslint-disable-next-line import/prefer-default-export
-export { Profile }
+export const Profile = props => {
+  return <ProfilePage {...props} />
+}

@@ -168,10 +168,37 @@ const resolvers = {
       }
     },
     async updateCurrentUsername(_, { username }, ctx) {
-      const user = await ctx.models.User.find(ctx.user)
+      const user = await ctx.models.User.find(ctx.user.id)
       user.username = username
       await user.save()
       return user
+    },
+    async updateCurrentEmail(_, { email }, ctx) {
+      if (ctx.user.email === email) {
+        return { success: true }
+      }
+
+      const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
+      const emailValidationResult = emailValidationRegexp.test(email)
+
+      if (!emailValidationResult) {
+        return { success: false, error: 'Email is invalid' }
+      }
+
+      const userWithSuchEmail = await ctx.models.User.query().where({ email })
+
+      if (userWithSuchEmail[0]) {
+        return { success: false, error: 'Email is already taken' }
+      }
+
+      try {
+        await ctx.models.User.query()
+          .update({ email })
+          .where({ id: ctx.user.id })
+        return { success: true }
+      } catch (e) {
+        return { success: false, error: 'Something went wrong' }
+      }
     },
     async sendEmail(_, { input }, ctx) {
       const inputParsed = JSON.parse(input)
@@ -243,6 +270,12 @@ const typeDefs = `
     updateUser(id: ID, input: String): User
     updateCurrentUsername(username: String): User
     sendEmail(input: String): SendEmailResponse
+    updateCurrentEmail(email: String): UpdateEmailResponse
+  }
+
+  type UpdateEmailResponse {
+    success: Boolean
+    error: String
   }
 
   input UsersFilter {

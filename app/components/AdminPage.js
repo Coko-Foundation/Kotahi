@@ -55,18 +55,28 @@ const Root = styled.div`
 `
 
 // TODO: Redirect if token expires
-const PrivateRoute = ({ component: Component, redirectLink, ...rest }) => (
-  <Route
-    {...rest}
-    render={props =>
-      localStorage.getItem('token') ? (
-        <Component {...props} />
-      ) : (
-        <Redirect to={redirectLink} />
-      )
-    }
-  />
-)
+const PrivateRoute = ({ component: Component, redirectLink, ...rest }) => {
+  if (
+    process.env.INSTANCE_NAME === 'colab' &&
+    rest.currentUser &&
+    !rest.currentUser.email
+  ) {
+    return <Redirect to="/kotahi/profile" />
+  }
+
+  return (
+    <Route
+      {...rest}
+      render={props => {
+        return localStorage.getItem('token') ? (
+          <Component {...rest} {...props} />
+        ) : (
+          <Redirect to={redirectLink} />
+        )
+      }}
+    />
+  )
+}
 
 PrivateRoute.propTypes = {
   component: PropTypes.func.isRequired,
@@ -87,11 +97,14 @@ const AdminPage = () => {
   const journal = useContext(JournalContext)
   const [conversion] = useContext(XpubContext)
 
-  const { loading, error, data } = useQuery(GET_CURRENT_USER, {
-    fetchPolicy: 'network-only',
-    // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301
-    onCompleted: useCallback(dataTemp => updateStuff(dataTemp), []),
-  })
+  const { loading, error, data, refetch: refetchCurrentUser } = useQuery(
+    GET_CURRENT_USER,
+    {
+      fetchPolicy: 'network-only',
+      // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301
+      onCompleted: useCallback(dataTemp => updateStuff(dataTemp), []),
+    },
+  )
 
   const previousDataRef = useRef(null)
 
@@ -181,7 +194,15 @@ const AdminPage = () => {
       />
       <Switch>
         <PrivateRoute
+          component={Profile}
+          exact
+          path={profileLink}
+          redirectLink={redirectLink}
+          refetchCurrentUser={refetchCurrentUser}
+        />
+        <PrivateRoute
           component={Dashboard}
+          currentUser={currentUser}
           exact
           path={homeLink}
           redirectLink={redirectLink}
@@ -189,40 +210,40 @@ const AdminPage = () => {
 
         <PrivateRoute
           component={NewSubmissionPage}
+          currentUser={currentUser}
           exact
           path={`${urlFrag}/newSubmission`}
           redirectLink={redirectLink}
         />
         <PrivateRoute
           component={SubmitPage}
+          currentUser={currentUser}
           exact
           path={`${urlFrag}/versions/:version/submit`}
           redirectLink={redirectLink}
         />
         <PrivateRoute
           component={ReviewersPage}
+          currentUser={currentUser}
           exact
           path={`${urlFrag}/versions/:version/reviewers`}
           redirectLink={redirectLink}
         />
         <PrivateRoute
           component={ReviewPage}
+          currentUser={currentUser}
           exact
           path={`${urlFrag}/versions/:version/review`}
           redirectLink={redirectLink}
         />
         <PrivateRoute
           component={DecisionPage}
+          currentUser={currentUser}
           exact
           path={`${urlFrag}/versions/:version/decision`}
           redirectLink={redirectLink}
         />
-        <PrivateRoute
-          component={Profile}
-          exact
-          path={profileLink}
-          redirectLink={redirectLink}
-        />
+
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
           <PrivateRoute
             component={SubmitPage}
@@ -235,28 +256,33 @@ const AdminPage = () => {
           <>
             <PrivateRoute
               component={FormBuilderPage}
+              currentUser={currentUser}
               exact
               path={`${urlFrag}/admin/form-builder`}
               redirectLink={redirectLink}
             />
             <PrivateRoute
               component={ManuscriptPage}
+              currentUser={currentUser}
               exact
               path={`${urlFrag}/versions/:version/manuscript`}
               redirectLink={redirectLink}
             />
             <PrivateRoute
               component={UsersManager}
+              currentUser={currentUser}
               path={`${urlFrag}/admin/users`}
               redirectLink={redirectLink}
             />
             <PrivateRoute
               component={Manuscripts}
+              currentUser={currentUser}
               path={`${urlFrag}/admin/manuscripts`}
               redirectLink={redirectLink}
             />
             <PrivateRoute
               component={ReportPage}
+              currentUser={currentUser}
               path={reportsLink}
               redirectLink={redirectLink}
             />

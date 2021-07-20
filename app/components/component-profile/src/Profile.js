@@ -18,6 +18,7 @@ import {
 } from '../../shared'
 import ChangeUsername from './ChangeUsername'
 import { BigProfileImage } from './ProfileImage'
+import ChangeEmail from './ChangeEmail'
 
 const GET_CURRENT_USER = gql`
   query currentUser {
@@ -25,6 +26,7 @@ const GET_CURRENT_USER = gql`
       id
       profilePicture
       username
+      email
       defaultIdentity {
         identifier
         email
@@ -70,7 +72,7 @@ const ProfileDropzone = ({ profilePicture, updateProfilePicture }) => {
   )
 }
 
-const Profile = () => {
+const Profile = ({ refetchCurrentUser }) => {
   const { loading, error, data, client, refetch } = useQuery(GET_CURRENT_USER)
   if (loading) return <Spinner />
   if (error) return JSON.stringify(error)
@@ -116,6 +118,17 @@ const Profile = () => {
             <ChangeUsername user={data.currentUser} />
           </div>
         </SectionRow>
+        {process.env.INSTANCE_NAME === 'colab' && (
+          <SectionRow>
+            <label>Email</label>{' '}
+            <div>
+              <ChangeEmail
+                refetchCurrentUser={refetchCurrentUser}
+                user={data.currentUser}
+              />
+            </div>
+          </SectionRow>
+        )}
       </SectionContent>
     </Container>
   )

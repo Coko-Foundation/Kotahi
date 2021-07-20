@@ -7,6 +7,7 @@ export const GET_CURRENT_USER = gql`
       profilePicture
       username
       admin
+      email
       defaultIdentity {
         identifier
         email
@@ -44,6 +45,7 @@ export const GET_USER = gql`
       username
       profilePicture
       online
+      email
     }
   }
 `
