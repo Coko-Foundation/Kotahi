@@ -37,5 +37,7 @@ describe('manuscripts page tests', () => {
       .and('contain', 'words')
   })
 
-  it("edit date should reflect today's date", () => {})
+  it("edit date should reflect today's date", () => {
+    SubmissionFormPage.checkEditDateIsUpdated()
+  })
 })
