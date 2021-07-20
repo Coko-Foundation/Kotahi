@@ -37,17 +37,29 @@ class MovingAverageCalculator {
 
 const smooth = (data, period) => {
   const result = []
-  if (data.length <= 0) return result
+  let nextTimeToMark = Number.NEGATIVE_INFINITY
+  let lastDatum = null
+  let lastDatumWasIncluded = false
+  data.forEach(d => {
+    let datumIsIncluded = false
 
-  result.push(data[0])
-  let nextTimeToMark = data[0].x + period
-
-  for (let i = 1; i < data.length; i += 1) {
-    if (data[i].x >= nextTimeToMark) {
-      result.push(data[i])
-      nextTimeToMark += period
+    if (!d && lastDatum) {
+      if (!lastDatumWasIncluded) result.push(lastDatum)
+      result.push(d)
+      datumIsIncluded = true
     }
-  }
+
+    if (d && d.x >= nextTimeToMark) {
+      result.push(d)
+      datumIsIncluded = true
+      nextTimeToMark = d.x + period
+    }
+
+    lastDatum = d
+    lastDatumWasIncluded = datumIsIncluded
+  })
+
+  if (lastDatum && !lastDatumWasIncluded) result.push(lastDatum)
 
   return result
 }
