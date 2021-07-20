@@ -24,7 +24,7 @@ describe('manuscripts page tests', () => {
     DashboardPage.getHeader().should('be.visible')
   })
 
-  context.only('filter and sort articles', () => {
+  context('filter and sort articles', () => {
     beforeEach(() => {
       DashboardPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()

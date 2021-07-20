@@ -265,7 +265,7 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickElementFromFormOptionList(8)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(
-          data.ncrc.topicTypes.vaccines,
+          data.common.topicTypes.vaccines,
         )
         SubmissionFormPage.fillInJournal('123')
         Menu.clickManuscriptsAndAssertPageLoad()
@@ -275,10 +275,10 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickElementFromFormOptionList(8)
         SubmissionFormPage.selectDropdownOption(1)
         SubmissionFormPage.clickTopicsCheckboxWithText(
-          data.ncrc.topicTypes.ecologyAndSpillover,
+          data.common.topicTypes.ecologyAndSpillover,
         )
         SubmissionFormPage.clickTopicsCheckboxWithText(
-          data.ncrc.topicTypes.diagnostics,
+          data.common.topicTypes.diagnostics,
         )
         SubmissionFormPage.fillInJournal('abc')
         Menu.clickManuscriptsAndAssertPageLoad()
@@ -288,10 +288,10 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickElementFromFormOptionList(8)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(
-          data.ncrc.topicTypes.modeling,
+          data.common.topicTypes.modeling,
         )
         SubmissionFormPage.clickTopicsCheckboxWithText(
-          data.ncrc.topicTypes.diagnostics,
+          data.common.topicTypes.diagnostics,
         )
         SubmissionFormPage.fillInJournal('def')
         Menu.clickManuscriptsAndAssertPageLoad()

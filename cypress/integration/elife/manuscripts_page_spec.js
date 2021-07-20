@@ -402,7 +402,7 @@ describe('Manuscripts page tests', () => {
     })
   })
 
-  context.only('Evaluation and summary page tests', () => {
+  context('Evaluation and summary page tests', () => {
     // this method is use to avoid script errors
     // eslint-disable-next-line handle-callback-err
     // Cypress.on('uncaught:exception', (err, runnable) => {
@@ -486,7 +486,6 @@ describe('Manuscripts page tests', () => {
         ResultAndSummaryPage.getDate().should('contain', data.review1Date)
         ResultAndSummaryPage.getLinkToOriginalArticle().should('be.visible')
         ResultAndSummaryPage.getReview().should('contain', data.review1)
-
       })
     })
     it('check evaluation page for review 2', () => {
