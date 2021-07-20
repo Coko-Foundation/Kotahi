@@ -22,7 +22,7 @@ describe('review page', () => {
         DashboardPage.clickSubmit()
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
         Menu.clickManuscriptsAndAssertPageLoad()
-        ManuscriptsPage.clickControAndVerifyPageLoaded()
+        ManuscriptsPage.clickControlAndVerifyPageLoaded()
         ControlPage.getAssignEditor(3).click()
         ControlPage.selectEditorByName(name.role.reviewers.reviewer1)
         ControlPage.clickManageReviewers()
@@ -49,7 +49,7 @@ describe('review page', () => {
         cy.login(name.role.admin, manuscripts)
       })
       cy.awaitDisappearSpinner()
-      ManuscriptsPage.clickControAndVerifyPageLoaded()
+      ManuscriptsPage.clickControlAndVerifyPageLoaded()
       ControlPage.clickShow()
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -75,7 +75,7 @@ describe('review page', () => {
         cy.login(name.role.admin, manuscripts)
       })
       cy.awaitDisappearSpinner()
-      ManuscriptsPage.clickControAndVerifyPageLoaded()
+      ManuscriptsPage.clickControlAndVerifyPageLoaded()
       ControlPage.getShowButton().should('not.exist')
     })
     it('checkbox can be published publicaly is visible', () => {
@@ -140,7 +140,7 @@ describe('review page', () => {
         DashboardPage.clickSubmit()
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
         Menu.clickManuscriptsAndAssertPageLoad()
-        ManuscriptsPage.clickControAndVerifyPageLoaded()
+        ManuscriptsPage.clickControlAndVerifyPageLoaded()
         ControlPage.getAssignEditor(3).click()
         ControlPage.selectEditorByName(name.role.reviewers.reviewer1)
         ControlPage.clickManageReviewers()
@@ -159,7 +159,7 @@ describe('review page', () => {
         ReviewPage.waitThreeSec()
         cy.login(name.role.admin, manuscripts)
         cy.awaitDisappearSpinner()
-        ManuscriptsPage.clickControAndVerifyPageLoaded()
+        ManuscriptsPage.clickControlAndVerifyPageLoaded()
         ControlPage.clickShow()
         cy.fixture('submission_form_data').then(data => {
           ControlPage.getReviewMessage().should('contain', data.review1)
@@ -189,7 +189,7 @@ describe('review page', () => {
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
         cy.awaitDisappearSpinner()
-        ManuscriptsPage.clickControAndVerifyPageLoaded()
+        ManuscriptsPage.clickControlAndVerifyPageLoaded()
         ControlPage.clickShow()
         ControlPage.getReviewerName().should('contain', 'Anonymous')
       })
@@ -209,7 +209,7 @@ describe('review page', () => {
         cy.login(name.role.admin, manuscripts)
         cy.awaitDisappearSpinner()
         Menu.clickManuscriptsAndAssertPageLoad()
-        ManuscriptsPage.clickControAndVerifyPageLoaded()
+        ManuscriptsPage.clickControlAndVerifyPageLoaded()
         ControlPage.getAssignEditor(3).click()
         ControlPage.selectEditorByName(name.role.reviewers.reviewer2)
         ControlPage.clickManageReviewers()
@@ -229,7 +229,7 @@ describe('review page', () => {
         ReviewPage.waitThreeSec()
         cy.login(name.role.admin, manuscripts)
         cy.awaitDisappearSpinner()
-        ManuscriptsPage.clickControAndVerifyPageLoaded()
+        ManuscriptsPage.clickControlAndVerifyPageLoaded()
         ControlPage.clickShow()
         cy.fixture('submission_form_data').then(data => {
           ControlPage.getReviewMessage().should('contain', data.review1)

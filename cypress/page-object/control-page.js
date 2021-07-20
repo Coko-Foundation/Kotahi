@@ -135,4 +135,20 @@ export const ControlPage = {
   getAcceptedToPublishReview() {
     return cy.get(ACCEPTED_TO_PULISH_REVIEW_ICON)
   },
+  checkEditDateIsUpdated() {
+    const getTodayDate = () => {
+      const date = new Date()
+      const year = date.getFullYear()
+      let month = date.getMonth() + 1
+      const day = date.getDate()
+
+      if (month <= 9) {
+        month = `0${month}`
+      }
+
+      return `${year}-${month}-${day}`
+    }
+
+    this.getMetadataCell(13).should('contain', getTodayDate())
+  },
 }

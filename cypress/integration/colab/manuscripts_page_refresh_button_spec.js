@@ -12,6 +12,7 @@ import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { Menu } from '../../page-object/page-component/menu'
+import { ControlPage } from '../../page-object/control-page'
 
 describe('refresh button tests', () => {
   context('visibility check', () => {
@@ -62,41 +63,38 @@ describe('refresh button tests', () => {
       ManuscriptsPage.getTableHeader().should('be.visible')
     })
 
-    it('the table should contain 100 entries', () => {
-      ManuscriptsPage.getTableRowsCount().should('eq', 100)
+    it('the table should contain imported articles', () => {
       ManuscriptsPage.getNumberOfAvailableArticles()
         .invoke('text')
         .then(text => {
-          expect(parseInt(text, 10)).to.be.gte(100)
+          expect(parseInt(text, 10)).to.be.gte(1)
         })
-    })
-
-    it('at least one topic should exist per imported article', () => {
-      ManuscriptsPage.getTableRowsCount().then(length => {
-        // eslint-disable-next-line no-plusplus
-        for (let i = 0; i < length; i++) {
-          ManuscriptsPage.getStatus(i).should('be.eq', 'Unsubmitted')
-          ManuscriptsPage.getArticleTopicByRow(i)
-            .its('length')
-            .should('be.gte', 1)
-        }
-      })
     })
 
     it('check imported article has data', () => {
       const randomArticle = Math.floor(Math.random() * 10)
-      ManuscriptsPage.clickEvaluationNthAndVerifyUrl(randomArticle)
-      SubmissionFormPage.getArticleUrl().should('not.have.value', '')
-      SubmissionFormPage.getArticleDescriptionField().should(
-        'not.have.value',
-        '',
-      )
-      SubmissionFormPage.getCheckedTopics().should('exist')
-      SubmissionFormPage.getCheckedTopicsCount().should('be.gte', 1)
-      SubmissionFormPage.getAbstractContent().should('not.be.eq', '')
-      SubmissionFormPage.getFirstAuthorField().should('not.have.value', '')
-      SubmissionFormPage.getDatePublishedField().should('not.have.value', '')
-      SubmissionFormPage.getJournalField().should('not.have.value', '')
+      ManuscriptsPage.clickControlNthAndVerifyPageLoaded(randomArticle)
+
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < 6; i++) {
+        ControlPage.getMetadataCell(i).invoke('text').should('not.be', '')
+      }
+
+      ControlPage.getMetadataCell(12).invoke('text').should('not.be', '')
+    })
+
+    it('editDate should be populated after selecting label', () => {
+      ManuscriptsPage.clickSelect()
+      ManuscriptsPage.getArticleLabel().should('exist')
+      ManuscriptsPage.clickControlNthAndVerifyPageLoaded(0)
+
+      // eslint-disable-next-line no-plusplus
+      for (let i = 0; i < 6; i++) {
+        ControlPage.getMetadataCell(i).invoke('text').should('not.be', '')
+      }
+
+      ControlPage.getMetadataCell(12).invoke('text').should('not.be', '')
+      ControlPage.checkEditDateIsUpdated()
     })
 
     it('check only unsubmitted articles are available', () => {
@@ -138,50 +136,16 @@ describe('refresh button tests', () => {
         })
     })
 
-    it('check imported article can be evaluated', () => {
+    it('editor should see article description on dashboard page', () => {
       const randomArticle = Math.floor(Math.random() * 10)
-      ManuscriptsPage.clickEvaluationNthAndVerifyUrl(randomArticle)
-      SubmissionFormPage.getArticleDescriptionField()
-        .invoke('val')
-        .then(title => {
-          cy.fixture('submission_form_data').then(data => {
-            SubmissionFormPage.fillInOurTake(data.ourTake)
-            SubmissionFormPage.clickStudyDesignDropdown()
-            SubmissionFormPage.selectDropdownOption(0)
-            SubmissionFormPage.fillInMainFindings(data.mainFindings)
-            SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
-            SubmissionFormPage.fillInLimitations(data.limitations)
-            SubmissionFormPage.fillInValueAdded(data.valueAdded)
-            SubmissionFormPage.clickLabelsDropdown()
-            SubmissionFormPage.selectDropdownOption(0)
-            SubmissionFormPage.fillInFirstAuthor(data.creator)
-            SubmissionFormPage.fillInDatePublished(data.date)
-            SubmissionFormPage.fillInJournal(data.journal)
-            SubmissionFormPage.fillInReviewer(data.creator)
-            SubmissionFormPage.fillInReviewCreator(data.creator)
-            SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
-          })
-          cy.visit(manuscriptStatus + evaluated)
-          cy.awaitDisappearSpinner()
-          ManuscriptsPage.getArticleTitleByRow(0)
-            .find('span')
-            .invoke('text')
-            .should('be.eq', title)
-          ManuscriptsPage.getStatus(0).should('be.eq', 'evaluated')
-        })
-    })
-    it('reviewer should see article description on dashboard page', () => {
-      const randomArticle = Math.floor(Math.random() * 10)
-      ManuscriptsPage.clickEvaluationNthAndVerifyUrl(randomArticle)
-      SubmissionFormPage.getArticleDescriptionField()
-        .invoke('val')
+      ManuscriptsPage.clickControlNthAndVerifyPageLoaded(randomArticle)
+      ControlPage.getMetadataCell(0)
+        .invoke('text')
         .then(title => {
           cy.fixture('role_names').then(name => {
-            SubmissionFormPage.getAssignEditor(0).click()
+            SubmissionFormPage.getAssignEditor(3).click()
             SubmissionFormPage.selectDropdownOptionWithText(name.role.admin)
             SubmissionFormPage.waitThreeSec()
-            Menu.clickManuscriptsAndAssertPageLoad()
-            ManuscriptsPage.getEditorName().should('contain', name.role.admin)
           })
           Menu.clickDashboard()
           cy.awaitDisappearSpinner()
