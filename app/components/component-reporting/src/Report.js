@@ -47,6 +47,17 @@ const SelectionLine = styled.div`
   z-index: 3;
 `
 
+const ReviewNote = styled.div`
+  color: ${lightenBy('colorText', 0.5)};
+  font-size: ${th('fontSizeBaseSmall')};
+  line-height: ${th('lineHeightBaseSmall')};
+
+  & strong {
+    color: ${th('colorText')};
+    font-weight: normal;
+  }
+`
+
 const CompletedIcon = () => (
   <div style={{ display: 'inline-block' }} title="Completed">
     <div
@@ -118,10 +129,10 @@ const getTableDataWithSparkBars = (rows, labelMapper) => {
   )
 }
 
-const renderReviewerNamesWithStatuses = reviewers => {
+const ReviewerNamesWithStatuses = ({ reviewers }) => {
   if (reviewers.length <= 0) return null
   return (
-    <>
+    <div>
       {reviewers.map((r, i) => (
         <span key={r.name}>
           {i > 0 ? `, ${r.name}` : r.name}
@@ -131,6 +142,41 @@ const renderReviewerNamesWithStatuses = reviewers => {
           {r.status === 'completed' && <CompletedIcon />}
         </span>
       ))}
+    </div>
+  )
+}
+
+/** Returns text like "Review took 1 day" or "Reviews took 3.1, 2.2 days"
+ * or if a review is still in progress, "Previous reviews took 1.2, 2.3 days". If no reviews are completed yet, returns null.
+ * The numbers themselves are displayed in &lt;strong&gt;&lt;/strong&gt;. */
+const ReviewDurations = ({ durations }) => {
+  const isCurrentlyReviewing =
+    durations.length > 0 && durations[durations.length - 1] === null
+
+  const completedDurations = isCurrentlyReviewing
+    ? durations.slice(0, durations.length - 1)
+    : durations
+
+  if (completedDurations.length <= 0) return null
+
+  return (
+    <ReviewNote>
+      {isCurrentlyReviewing ? 'Previous review' : 'Review'}
+      {completedDurations.length > 1 ? 's' : ''} took{' '}
+      <strong>
+        {completedDurations.map(d => Math.round(d * 10) / 10).join(', ')}
+      </strong>{' '}
+      day
+      {completedDurations.length > 1 || completedDurations[0] !== 1 ? 's' : ''}
+    </ReviewNote>
+  )
+}
+
+const renderReviewInfo = ({ reviewers, durations }) => {
+  return (
+    <>
+      <ReviewerNamesWithStatuses reviewers={reviewers} />
+      <ReviewDurations durations={durations} />
     </>
   )
 }
@@ -156,18 +202,27 @@ const getReport = (
   }
 
   if (reportType === 'Manuscript') {
-    const rows = getTableDataWithSparkBars(
-      getManuscriptsData(startDate, endDate),
-      (val, key) => {
-        if (['editors', 'authors'].includes(key))
-          return val.reduce(
-            (accum, curr) => (accum ? `${accum}, ${curr.name}` : curr.name),
-            null,
-          )
-        if (key === 'reviewers') return renderReviewerNamesWithStatuses(val)
-        return val
-      },
-    )
+    const data = getManuscriptsData(startDate, endDate).map(d => ({
+      shortId: d.shortId,
+      entryDate: d.entryDate,
+      title: d.title,
+      authors: d.authors,
+      editors: d.editors,
+      reviews: { reviewers: d.reviewers, durations: d.versionReviewDurations },
+      status: d.status,
+      publishedDate: d.publishedDate,
+    }))
+
+    const rows = getTableDataWithSparkBars(data, (val, key) => {
+      if (['editors', 'authors'].includes(key))
+        return val.reduce(
+          (accum, curr) => (accum ? `${accum}, ${curr.name}` : curr.name),
+          null,
+        )
+      if (key === 'reviews') return renderReviewInfo(val)
+
+      return val
+    })
 
     return (
       <Table
@@ -178,7 +233,7 @@ const getReport = (
           { heading: 'Title', name: 'title', width: '16em', flexGrow: 4 },
           { heading: 'Author', name: 'authors', width: '12em', flexGrow: 1 },
           { heading: 'Editors', name: 'editors', width: '12em', flexGrow: 3 },
-          { heading: 'Reviewers', name: 'reviewers', width: '14em', flexGrow: 3 },
+          { heading: 'Reviewers', name: 'reviews', width: '14em', flexGrow: 3 },
           { heading: 'Status', name: 'status', width: '6em' },
           { heading: 'Published date', name: 'publishedDate', width: '7em' },
         ]}

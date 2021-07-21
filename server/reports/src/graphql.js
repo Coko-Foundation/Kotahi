@@ -386,6 +386,33 @@ const getReviewersAndLatestStatuses = ms => {
   return allReviewers
 }
 
+/** True if all members of this review team are either completed or rejected, and at least one has completed. */
+const allReviewersAreComplete = team => {
+  return (
+    team &&
+    team.members &&
+    team.members.every(m => ['completed', 'rejected'].includes(m.status)) &&
+    team.members.some(m => m.status === 'completed')
+  )
+}
+
+/** Returns an array of review durations for each manuscript version.
+ * The last duration will be null if the review is still in progress. */
+const getVersionReviewDurations = ms => {
+  const reviewDurations = []
+  const versions = getVersionsAsArray(ms)
+  versions.forEach((v, i) => {
+    const reviewTeam = v.teams.find(t => t.name === 'Reviewers')
+    if (!reviewTeam && i === versions.length - 1) return // continue
+    if (i === versions.length - 1 && !allReviewersAreComplete(reviewTeam))
+      reviewDurations.push(null)
+    else if (reviewTeam)
+      reviewDurations.push((reviewTeam.updated - reviewTeam.created) / day)
+    else reviewDurations.push(0)
+  })
+  return reviewDurations
+}
+
 const getManuscriptsActivity = async (startDate, endDate, ctx) => {
   const manuscripts = await ctx.models.Manuscript.query()
     .withGraphFetched(
@@ -421,6 +448,7 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
       reviewers: getReviewersAndLatestStatuses(m),
       status: statusLabel,
       publishedDate: getIsoDateString(getLastPublishedDate(m)),
+      versionReviewDurations: getVersionReviewDurations(m),
     }
   })
 }
@@ -714,6 +742,7 @@ const typeDefs = `
     reviewers: [ReviewerIdentityWithStatus!]!
     status: String!
     publishedDate: DateTime
+    versionReviewDurations: [Float]!
   }
 
   type EditorActivity {

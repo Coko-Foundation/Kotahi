@@ -61,6 +61,7 @@ const getReportData = gql`
       }
       status
       publishedDate
+      versionReviewDurations
     }
     editorsActivity(startDate: $startDate, endDate: $endDate) {
       name

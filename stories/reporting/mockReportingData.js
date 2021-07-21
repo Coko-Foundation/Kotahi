@@ -108,7 +108,7 @@ export const generateResearchObjectsData = () => {
       id: (1234 + i).toString(),
       entryDate: '2021-05-10',
       title: `Manuscript ${1234 + i}`,
-      authorName: randomName(),
+      authors: [{ name: randomName() }],
       editors: [{ name: randomName() }, { name: randomName() }],
       reviewers: [
         { name: randomName() },
@@ -117,6 +117,7 @@ export const generateResearchObjectsData = () => {
       ],
       status: 'Reviewed',
       publishedDate: '2021-05-23',
+      versionReviewDurations: [1.23, 4.56, 7.89, null],
     })
   }
 
