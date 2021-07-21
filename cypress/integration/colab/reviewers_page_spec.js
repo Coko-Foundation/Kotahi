@@ -11,7 +11,7 @@ import { ReviewersPage } from '../../page-object/reviewers-page'
 
 describe('reviewers', () => {
   beforeEach(() => {
-    cy.task('restore', 'initialState')
+    cy.task('restore', 'initial_state_other')
     cy.task('seedForms')
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise

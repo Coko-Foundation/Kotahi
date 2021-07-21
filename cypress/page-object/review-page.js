@@ -16,7 +16,7 @@ const SUBMIT_BUTTON = '[class*=General__SectionAction] > button'
 const ERROR_TEXT = 'style__ErrorText-'
 const FORM_STATUS = 'style__FormStatus-'
 const PUBLISH_BUTTON = 'button[type="button"]'
-const CAN_BE_PUBLISHED_PUBLICALY_CHECKBOX = '[name=canBePublishedPublicly]'
+const CAN_BE_PUBLISHED_PUBLICLY_CHECKBOX = '[name=canBePublishedPublicly]'
 
 // eslint-disable-next-line import/prefer-default-export
 export const ReviewPage = {
@@ -72,11 +72,11 @@ export const ReviewPage = {
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(3000)
   },
-  getCanBePublishedPublicalyCheckbox() {
-    return cy.get(CAN_BE_PUBLISHED_PUBLICALY_CHECKBOX)
+  getCanBePublishedPubliclyCheckbox() {
+    return cy.get(CAN_BE_PUBLISHED_PUBLICLY_CHECKBOX)
   },
   clickCanBePublishedPublicly() {
-    this.getCanBePublishedPublicalyCheckbox().click()
+    this.getCanBePublishedPubliclyCheckbox().click()
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000)
   },

@@ -1,6 +1,8 @@
 /// <reference types="Cypress" />
 import { DashboardPage } from '../dashboard-page'
 import { ManuscriptsPage } from '../manuscripts-page'
+import { FormsPage } from '../forms-page'
+import { UsersPage } from '../users-page'
 
 /**
  * Page component which represents the left side menu bar,
@@ -31,11 +33,21 @@ export const Menu = {
   clickForms() {
     this.getFormsButton().click()
   },
+  clickFormsAndVerifyPageLoaded() {
+    this.getFormsButton().click()
+    cy.awaitDisappearSpinner()
+    FormsPage.getNameField().should('be.visible')
+  },
   getUsersButton() {
     return cy.getByContainsClass(MENU_BUTTON).contains('Users')
   },
   clickUsers() {
     this.getUsersButton().click()
+  },
+  clickUsersAndVerifyPageLoaded() {
+    this.getUsersButton().click()
+    cy.awaitDisappearSpinner()
+    UsersPage.getTitle().should('be.visible')
   },
   getManuscriptsButton() {
     return cy.getByContainsClass(MENU_BUTTON).contains('Manuscripts')

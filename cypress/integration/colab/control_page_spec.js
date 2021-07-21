@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier */
+/* eslint-disable prettier/prettier,jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
 
 import { dashboard, manuscripts } from '../../support/routes'
@@ -15,7 +15,6 @@ describe('review page', () => {
     beforeEach(() => {
       cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, dashboard)
         cy.awaitDisappearSpinner()
@@ -33,13 +32,11 @@ describe('review page', () => {
       ReviewersPage.clickSharedCheckbox(0)
       ReviewersPage.waitThreeSec()
       ReviewersPage.clickBackToControlPage()
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers.reviewer1, dashboard)
         cy.awaitDisappearSpinner()
         DashboardPage.clickAcceptReview()
         DashboardPage.clickDoReviewAndVerifyPageLoaded()
-        // eslint-disable-next-line jest/valid-expect-in-promise
         cy.fixture('submission_form_data').then(data => {
           ReviewPage.fillInReviewComment(data.review1)
         })
@@ -51,7 +48,6 @@ describe('review page', () => {
       cy.awaitDisappearSpinner()
       ManuscriptsPage.clickControlAndVerifyPageLoaded()
       ControlPage.clickShow()
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         ControlPage.getReviewMessage().should('contain', data.review1)
       })
@@ -59,13 +55,11 @@ describe('review page', () => {
     it('shared message is not visible', () => {
       ReviewersPage.clickBackToControlPage()
       ReviewersPage.waitThreeSec()
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers.reviewer1, dashboard)
         cy.awaitDisappearSpinner()
         DashboardPage.clickAcceptReview()
         DashboardPage.clickDoReviewAndVerifyPageLoaded()
-        // eslint-disable-next-line jest/valid-expect-in-promise
         cy.fixture('submission_form_data').then(data => {
           ReviewPage.fillInReviewComment(data.review1)
         })
@@ -78,24 +72,22 @@ describe('review page', () => {
       ManuscriptsPage.clickControlAndVerifyPageLoaded()
       ControlPage.getShowButton().should('not.exist')
     })
-    it('checkbox can be published publicaly is visible', () => {
+    it('checkbox can be published publicly is visible', () => {
       ReviewersPage.clickSharedCheckbox(0)
       ReviewersPage.waitThreeSec()
       ReviewersPage.clickBackToControlPage()
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers.reviewer1, dashboard)
       })
       cy.awaitDisappearSpinner()
       DashboardPage.clickAcceptReview()
       DashboardPage.clickDoReviewAndVerifyPageLoaded()
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         ReviewPage.fillInReviewComment(data.review1)
       })
-      ReviewPage.getCanBePublishedPublicalyCheckbox().should('be.visible')
+      ReviewPage.getCanBePublishedPubliclyCheckbox().scrollIntoView().should('be.visible')
       ReviewPage.clickCanBePublishedPublicly()
-      ReviewPage.getCanBePublishedPublicalyCheckbox().should(
+      ReviewPage.getCanBePublishedPubliclyCheckbox().should(
         'have.value',
         'true',
       )
@@ -104,19 +96,17 @@ describe('review page', () => {
       ReviewersPage.clickSharedCheckbox(0)
       ReviewersPage.waitThreeSec()
       ReviewersPage.clickBackToControlPage()
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers.reviewer1, dashboard)
       })
       cy.awaitDisappearSpinner()
       DashboardPage.clickAcceptReview()
       DashboardPage.clickDoReviewAndVerifyPageLoaded()
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         ReviewPage.fillInReviewComment(data.review1)
       })
       ReviewPage.clickCanBePublishedPublicly()
-      ReviewPage.getCanBePublishedPublicalyCheckbox().should(
+      ReviewPage.getCanBePublishedPubliclyCheckbox().should(
         'have.value',
         'true',
       )
@@ -131,9 +121,8 @@ describe('review page', () => {
 
   context('hide review and review name from author', () => {
     beforeEach(() => {
-      cy.task('restore', 'initialState')
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, dashboard)
         cy.awaitDisappearSpinner()
@@ -171,7 +160,6 @@ describe('review page', () => {
     })
     it('review is hidden from the author of the article', () => {
       ControlPage.clickHideReviewToAuthor()
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
         cy.awaitDisappearSpinner()
@@ -185,7 +173,6 @@ describe('review page', () => {
     })
     it('hide reviewer name', () => {
       ControlPage.clickHideReviewerNameToAuthor()
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.admin, manuscripts)
         cy.awaitDisappearSpinner()
@@ -198,9 +185,8 @@ describe('review page', () => {
 
   context('admin user can see the icons', () => {
     beforeEach(() => {
-      cy.task('restore', 'initialState')
+      cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
-      // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         cy.login(name.role.reviewers.reviewer1, dashboard)
         cy.awaitDisappearSpinner()
