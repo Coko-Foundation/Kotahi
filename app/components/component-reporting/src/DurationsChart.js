@@ -141,7 +141,7 @@ const DurationsChart = ({
             <Label
               offset={-5}
               position="insideBottom"
-              value="Submission time"
+              value="Submission date"
             />
           </XAxis>
           <YAxis
