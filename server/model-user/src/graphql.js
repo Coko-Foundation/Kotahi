@@ -203,12 +203,32 @@ const resolvers = {
     async sendEmail(_, { input }, ctx) {
       const inputParsed = JSON.parse(input)
       /* eslint-disable-next-line */
-      const { manuscript, selectedEmail, selectedTemplate } = inputParsed
+      const { manuscript, selectedEmail, selectedTemplate, externalEmail,  externalName} = inputParsed
+
+      const receiverEmail = externalEmail || selectedEmail
+
+      let authorFirstName = externalName
+
+      if (selectedEmail) {
+        const [userReceiver] = await ctx.models.User.query()
+          .where({ email: selectedEmail })
+          .withGraphFetched('[defaultIdentity]')
+
+        /* eslint-disable-next-line */
+        authorFirstName = userReceiver.defaultIdentity.name.split(' ')[0]
+      }
+
+      const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
+      const emailValidationResult = emailValidationRegexp.test(receiverEmail)
+
+      if (!emailValidationResult || !authorFirstName) {
+        return { success: false }
+      }
 
       try {
-        await sendEmailNotification(selectedEmail, selectedTemplate, {
-          authorFirstName: 'Test Name',
-          articleTitle: 'test title',
+        await sendEmailNotification(receiverEmail, selectedTemplate, {
+          authorFirstName,
+          articleTitle: manuscript.meta.title,
           link: 'testlink.com',
         })
         return { success: true }

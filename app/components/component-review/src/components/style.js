@@ -96,44 +96,6 @@ export const StyledNotifyButton = styled(Button)`
   height: 40px;
 `
 
-export const StyledTypeahead = styled(Typeahead)`
-  position: relative;
-
-  input {
-    border: 1px solid #aaa;
-    border-color: #aaa;
-    border-radius: 8px;
-    font-size: 15px;
-    height: 40px;
-    outline: 0;
-    padding: 0 8px;
-    transition: 0.2s ease;
-    width: 100%;
-  }
-
-  .dropdown-menu {
-    background-color: white;
-    border: 1px solid #aaa;
-    border-radius: 8px;
-    box-sizing: border-box;
-    margin-top: 8px;
-    position: absolute;
-    width: 100%;
-    z-index: 2;
-  }
-
-  .dropdown-item {
-    color: black;
-    display: block;
-    padding: 12px;
-    width: 100%;
-
-    &:hover {
-      background-color: #eee;
-    }
-  }
-`
-
 export {
   Title,
   SectionHeader,

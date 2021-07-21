@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
 import { useMutation, useQuery } from '@apollo/client'
+import styled from 'styled-components'
 import {
   SectionHeader,
   SectionRowGrid,
@@ -16,26 +17,45 @@ const editorOption = user => ({
   value: user.email,
 })
 
+const RowGridStyled = styled(SectionRowGrid)`
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+`
+
 const EmailNotifications = ({ manuscript }) => {
   const [selectedEmail, setSelectedEmail] = useState('')
+  const [externalEmail, setExternalEmail] = useState('')
+  const [externalName, setExternalName] = useState('')
   const [selectedTemplate, setSelectedTemplate] = useState('')
+  const [isNewUser, setIsNewUser] = useState(false)
 
   const { data, loading, error } = useQuery(getUsers)
 
   const [sendEmailMutation] = useMutation(sendEmail)
 
+  if (loading || error) {
+    return null
+  }
+
   const sendEmailHandler = async () => {
-    if (!selectedEmail || !selectedTemplate || !manuscript) return
+    if (!selectedTemplate || !manuscript) return
+
+    const input = isNewUser
+      ? { externalEmail, externalName, selectedTemplate, manuscript }
+      : { selectedEmail, selectedTemplate, manuscript }
+
+    if (isNewUser && (!externalName || !externalEmail)) return
+
+    if (!isNewUser && !selectedEmail) return
 
     await sendEmailMutation({
       variables: {
-        input: JSON.stringify({ selectedEmail, selectedTemplate, manuscript }),
+        input: JSON.stringify(input),
       },
     })
   }
 
-  if (loading || error) {
-    return null
+  const handlerForNewUserToggle = () => {
+    setIsNewUser(s => !s)
   }
 
   const options = (data.users || [])
@@ -47,11 +67,17 @@ const EmailNotifications = ({ manuscript }) => {
       <SectionHeader>
         <Title>Notifications</Title>
       </SectionHeader>
-      <SectionRowGrid>
+      <RowGridStyled>
         <SelectReceiver
+          externalEmail={externalEmail}
+          externalName={externalName}
+          isNewUser={isNewUser}
           onChangeReceiver={setSelectedEmail}
           options={options}
           selectedReceiver={selectedEmail}
+          setExternalEmail={setExternalEmail}
+          setExternalName={setExternalName}
+          setIsNewUser={handlerForNewUserToggle}
         />
         <SelectEmailTemplate
           onChangeEmailTemplate={setSelectedTemplate}
@@ -60,7 +86,7 @@ const EmailNotifications = ({ manuscript }) => {
         <StyledNotifyButton onClick={sendEmailHandler} primary>
           Notify
         </StyledNotifyButton>
-      </SectionRowGrid>
+      </RowGridStyled>
     </SectionContent>
   )
 }

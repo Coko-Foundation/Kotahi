@@ -1,25 +1,56 @@
 import React from 'react'
-import { StyledTypeahead } from '../style'
-import 'react-bootstrap-typeahead/css/Typeahead.css'
+import styled from 'styled-components'
+import { Checkbox, TextField } from '@pubsweet/ui'
 
-const SelectReceiver = ({ onChangeReceiver, selectedReceiver, options }) => {
+import { Select } from '../../../../shared'
+
+const InputField = styled(TextField)`
+  height: 40px;
+  margin-bottom: 0;
+`
+
+const SelectReceiver = ({
+  onChangeReceiver,
+  selectedReceiver,
+  options,
+  isNewUser,
+  setIsNewUser,
+  externalEmail,
+  externalName,
+  setExternalEmail,
+  setExternalName,
+}) => {
   return (
-    <StyledTypeahead
-      id="receiver-typeahead"
-      onChange={selected => {
-        if (selected.length) {
-          onChangeReceiver(
-            options.filter(option => selected[0] === option.label)[0].value,
-          )
-        }
-      }}
-      onInputChange={value => {
-        onChangeReceiver(value)
-      }}
-      options={options.map(option => option.label)}
-      placeholder="Choose a receiver"
-      value={selectedReceiver}
-    />
+    <>
+      <Checkbox checked={isNewUser} label="New User" onChange={setIsNewUser} />
+      {!isNewUser && (
+        <Select
+          aria-label="Choose receiver"
+          label="Choose receiver"
+          onChange={selected => {
+            onChangeReceiver(selected.value)
+          }}
+          options={options}
+          placeholder="Choose receiver"
+          value={selectedReceiver}
+          width="100%"
+        />
+      )}
+      {isNewUser && (
+        <>
+          <InputField
+            onChange={e => setExternalEmail(e.target.value)}
+            placeholder="Email"
+            value={externalEmail}
+          />
+          <InputField
+            onChange={e => setExternalName(e.target.value)}
+            placeholder="Name"
+            value={externalName}
+          />
+        </>
+      )}
+    </>
   )
 }
 
