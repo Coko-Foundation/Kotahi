@@ -712,14 +712,29 @@ const resolvers = {
       let detailedManuscripts = []
 
       try {
-        detailedManuscripts = await ctx.models.Manuscript.query()
-          .whereIn(
-            'manuscripts.id',
-            manuscripts.map(manuscript => manuscript.id),
-          )
-          .withGraphJoined(
-            '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
-          )
+        detailedManuscripts = await ctx.models.Manuscript.transaction(
+          async trx => {
+            const queryResult = await ctx.models.Manuscript.query(trx)
+              .whereIn(
+                'manuscripts.id',
+                manuscripts.map(manuscript => manuscript.id),
+              )
+              .withGraphJoined(
+                '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
+              )
+
+            return queryResult
+          },
+        )
+
+        // detailedManuscripts = await ctx.models.Manuscript.query()
+        //   .whereIn(
+        //     'manuscripts.id',
+        //     manuscripts.map(manuscript => manuscript.id),
+        //   )
+        //   .withGraphJoined(
+        //     '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
+        //   )
 
         console.log('everything is good')
       } catch (e) {
