@@ -43,6 +43,17 @@ const ReviewLayout = ({
 
   const decisionRadio = manuscript.status
 
+  const formatDecisionComment = input => {
+    const comment = input.decisionComment.content
+    const placeholder = '"<i>The evaluation summary will appear here.</i>"'
+
+    if (comment === '<p class="paragraph"></p>' || comment === '') {
+      return placeholder
+    }
+
+    return input.decisionComment.content
+  }
+
   manuscriptVersions.forEach(msVersion => {
     const label = moment().format('YYYY-MM-DD')
     reviewSections.push({
@@ -85,11 +96,7 @@ const ReviewLayout = ({
           )}
           {['colab'].includes(process.env.INSTANCE_NAME) && (
             <ArticleEvaluationSummaryPage
-              decisionComment={
-                decisionComment
-                  ? decisionComment.decisionComment.content
-                  : '"<i>The evaluation summary will appear here.</i>"'
-              }
+              decisionComment={formatDecisionComment(decisionComment)}
               decisionRadio={decisionRadio}
               updateReview={updateReview}
             />
