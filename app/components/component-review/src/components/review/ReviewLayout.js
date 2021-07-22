@@ -85,7 +85,11 @@ const ReviewLayout = ({
           )}
           {['colab'].includes(process.env.INSTANCE_NAME) && (
             <ArticleEvaluationSummaryPage
-              decisionComment={decisionComment.decisionComment.content}
+              decisionComment={
+                decisionComment
+                  ? decisionComment.decisionComment.content
+                  : '"<i>The evaluation summary will appear here.</i>"'
+              }
               decisionRadio={decisionRadio}
               updateReview={updateReview}
             />
