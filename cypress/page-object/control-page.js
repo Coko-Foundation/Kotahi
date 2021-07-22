@@ -13,7 +13,7 @@ const DECISION_COMMENT_FIELD =
 const PUBLISH_BUTTON = '[class*=General__SectionAction] > button[type=button]'
 const PUBLISH_INFO_MESSAGE = 'General__SectionActionInfo'
 const ASSIGN_EDITOR_DROPDOWN = 'Assign seniorEditor'
-const EDITOR_OPTION_LIST = '[class*=MenuList] > [id*=option]'
+const DROPDOWN_OPTION_LIST = '[class*=MenuList] > [id*=option]'
 const METADATA_CELL = 'ReviewMetadata__Cell'
 const ERROR_TEXT = 'style__ErrorText-'
 const ACCEPT_RADIO_BUTTON = 'span[color=green]'
@@ -28,7 +28,16 @@ const REVIEW_MESSAGE =
 const REVIEW_OPTION_CHECKBOX = '[type=checkbox]'
 const REVIEWER_NAME = '[class*=DecisionReview__Name]'
 const NO_REVIEWS_MESSAGE = '[class*=General__SectionRow]'
-const ACCEPTED_TO_PULISH_REVIEW_ICON = '[class*=DecisionReview__Name] >svg'
+const ACCEPTED_TO_PUBLISH_REVIEW_ICON = '[class*=DecisionReview__Name] > svg'
+const EMAIL_NOTIFICATION_SECTION = 'emailNotifications__RowGridStyled'
+const NEW_USER_CHECKBOX = '[class*=emailNotifications__RowGridStyled] > label'
+const NEW_USER_EMAIL_FIELD = '[placeholder="Email"]'
+const NEW_USER_NAME_FIELD = '[placeholder="Name"]'
+
+const EMAIL_NOTIFICATION_DROPDOWNS =
+  '[class*=emailNotifications__RowGridStyled] > div'
+
+const NOTIFY_BUTTON = '[class*=emailNotifications__RowGridStyled] > button'
 
 // eslint-disable-next-line import/prefer-default-export
 export const ControlPage = {
@@ -68,11 +77,11 @@ export const ControlPage = {
   clickAssignEditorDropdown() {
     this.getAssignEditorDropdown().click({ force: true })
   },
-  getEditorOptionList() {
-    return cy.get(EDITOR_OPTION_LIST)
+  getDropdownOptionList() {
+    return cy.get(DROPDOWN_OPTION_LIST)
   },
-  selectEditorByName(name) {
-    this.getEditorOptionList().contains(name).click()
+  selectDropdownOptionByName(name) {
+    this.getDropdownOptionList().contains(name).click()
   },
   getMetadataCell(nth) {
     return cy.getByContainsClass(METADATA_CELL).eq(nth)
@@ -133,7 +142,7 @@ export const ControlPage = {
     return cy.get(NO_REVIEWS_MESSAGE)
   },
   getAcceptedToPublishReview() {
-    return cy.get(ACCEPTED_TO_PULISH_REVIEW_ICON)
+    return cy.get(ACCEPTED_TO_PUBLISH_REVIEW_ICON)
   },
   checkEditDateIsUpdated() {
     const getTodayDate = () => {
@@ -150,5 +159,38 @@ export const ControlPage = {
     }
 
     this.getMetadataCell(13).should('contain', getTodayDate())
+  },
+  getEmailNotificationSection() {
+    return cy.getByContainsClass(EMAIL_NOTIFICATION_SECTION)
+  },
+  getNewUserCheckbox() {
+    return cy.get(NEW_USER_CHECKBOX)
+  },
+  clickNewUser() {
+    this.getNewUserCheckbox().click()
+  },
+  getNewUserEmailField() {
+    return cy.get(NEW_USER_EMAIL_FIELD)
+  },
+  fillInNewUserEmail(email) {
+    this.getNewUserEmailField().fillInput(email)
+  },
+  getNewUserNameField() {
+    return cy.get(NEW_USER_NAME_FIELD)
+  },
+  fillInNewUserName(name) {
+    this.getNewUserNameField().fillInput(name)
+  },
+  getEmailNotificationDropdowns() {
+    return cy.get(EMAIL_NOTIFICATION_DROPDOWNS)
+  },
+  clickEmailNotificationNthDropdown(nth) {
+    this.getEmailNotificationDropdowns().eq(nth).click()
+  },
+  getNotifyButton() {
+    return cy.get(NOTIFY_BUTTON)
+  },
+  clickNotify() {
+    this.getNotifyButton().click()
   },
 }

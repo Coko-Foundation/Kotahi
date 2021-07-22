@@ -110,7 +110,7 @@ describe('URL submission test', () => {
         ControlPage.getMetadataCell(1).should('contain', data.title)
         // assign seniorEditor
         ControlPage.clickAssignEditorDropdown()
-        ControlPage.selectEditorByName(name.role.seniorEditor)
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
 
         // login as seniorEditor
         cy.login(name.role.seniorEditor, dashboard)

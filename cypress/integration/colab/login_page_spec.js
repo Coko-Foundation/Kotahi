@@ -52,7 +52,7 @@ describe('Login page tests', () => {
       ManuscriptsPage.getCreatedCaret(1)
         .should('have.css', 'color')
         .and('eq', settings.colab.primaryColor)
-      ManuscriptsPage.getSubmitButton()
+      ManuscriptsPage.getRefreshButton()
         .should('have.css', 'background-color')
         .should('contain', settings.colab.primaryColor)
     })
