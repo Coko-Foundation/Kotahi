@@ -10,6 +10,7 @@ import Review from './Review'
 import EditorSection from '../decision/EditorSection'
 import { Columns, Manuscript, Chat } from '../../../../shared'
 import MessageContainer from '../../../../component-chat/src'
+import ArticleEvaluationSummaryPage from '../../../../component-decision-viewer'
 
 const addEditor = (manuscript, label) => ({
   content: <EditorSection manuscript={manuscript} readonly />,
@@ -35,6 +36,12 @@ const ReviewLayout = ({
   const reviewSections = []
   const editorSections = []
   const manuscriptVersions = manuscript.manuscriptVersions || []
+
+  const decisionComment = manuscript.reviews.find(
+    reviewIsDecision => reviewIsDecision.isDecision,
+  )
+
+  const decisionRadio = manuscript.status
 
   manuscriptVersions.forEach(msVersion => {
     const label = moment().format('YYYY-MM-DD')
@@ -74,6 +81,13 @@ const ReviewLayout = ({
               isValid={isValid}
               updateReview={updateReview}
               uploadFile={uploadFile}
+            />
+          )}
+          {['colab'].includes(process.env.INSTANCE_NAME) && (
+            <ArticleEvaluationSummaryPage
+              decisionComment={decisionComment.decisionComment.content}
+              decisionRadio={decisionRadio}
+              updateReview={updateReview}
             />
           )}
         </div>

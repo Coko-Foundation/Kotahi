@@ -34,6 +34,9 @@ const reviewFields = `
   confidentialComment {
     ${commentFields}
   }
+  decisionComment {
+    ${commentFields}
+  }
   isDecision
   recommendation
   canBePublishedPublicly

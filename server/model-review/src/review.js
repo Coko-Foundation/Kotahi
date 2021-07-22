@@ -79,27 +79,24 @@ class Review extends BaseModel {
         relation: BaseModel.HasManyRelation,
         modelClass: ReviewComment,
         join: {
-          from: 'review_comments.reviewId',
-          to: 'reviews.id',
+          from: 'reviews.id',
+          to: 'review_comments.reviewId',
         },
       },
     }
   }
 
   async $afterGet() {
-    if (this.isDecision) {
-      this.decisionComment = await this.$relatedQuery('comments')
-        .where('commentType', 'decision')
-        .first()
-    } else {
-      this.reviewComment = await this.$relatedQuery('comments')
-        .where('commentType', 'review')
-        .first()
+    this.decisionComment = await this.$relatedQuery('comments')
+      .where('commentType', 'decision')
+      .first()
+    this.reviewComment = await this.$relatedQuery('comments')
+      .where('commentType', 'review')
+      .first()
 
-      this.confidentialComment = await this.$relatedQuery('comments')
-        .where('commentType', 'confidential')
-        .first()
-    }
+    this.confidentialComment = await this.$relatedQuery('comments')
+      .where('commentType', 'confidential')
+      .first()
 
     return true
   }
