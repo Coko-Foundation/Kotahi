@@ -12,7 +12,7 @@ const {
   epidemiology,
   diagnostics,
   modeling,
-  clinicalPresentation,
+  clinicalPresentationAndPrognosticFactors,
   pharmaceuticalInterventions,
 } = require('./topics')
 
@@ -21,14 +21,14 @@ const getData = async ctx => {
     +new Date(new Date(Date.now()).toISOString().split('T')[0]) - 12096e5
 
   const topics = {
-    ecologyAndSpillover,
+    'ecology and spillover': ecologyAndSpillover,
     vaccines,
-    nonPharmaceuticalInterventions,
+    'non-pharmaceutical interventions': nonPharmaceuticalInterventions,
     epidemiology,
     diagnostics,
     modeling,
-    clinicalPresentation,
-    pharmaceuticalInterventions,
+    'clinical-presentation / prognostic-risk-factors': clinicalPresentationAndPrognosticFactors,
+    'pharmaceutical interventions': pharmaceuticalInterventions,
   }
 
   const [checkIfSourceExists] = await ArticleImportSources.query().where({
@@ -147,16 +147,7 @@ const getData = async ctx => {
           const formattedTopics = []
 
           topicsList.forEach(topicElement => {
-            if (
-              topicElement === 'pharmaceuticalInterventions' ||
-              topicElement === 'nonPharmaceuticalInterventions'
-            ) {
-              formattedTopics.push(
-                'nonPharmaceuticalAndPharmaceuticalInterventions',
-              )
-            } else {
-              formattedTopics.push(topicElement)
-            }
+            formattedTopics.push(topicElement)
           })
 
           return removeDuplicates(formattedTopics)

@@ -1,4 +1,4 @@
-exports.clinicalPresentation = [
+exports.clinicalPresentationAndPrognosticFactors = [
   [
     'clinical presentation',
     'clinical characteristics',

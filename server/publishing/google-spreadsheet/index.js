@@ -11,7 +11,7 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
     uuid: manuscript.id,
     title_journal: `${submission.articleDescription} ${importSourceServer})`,
     Title: submission.articleDescription || '',
-    Topic: submission.topics.join(', ') || '',
+    Topic: submission.topics.join(';') || '',
     'First Author': submission.firstAuthor || '',
     'Date Published': submission.datePublished || '',
     link: submission.articleURL || '',
@@ -20,17 +20,16 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
     study_population_setting: submission.studyPopulationSetting || '',
     study_strength: submission.studyStrengths || '',
     limitations: submission.limitations || '',
-    keywords: submission.keywords || '',
     journal: submission.journal || '',
     cross_post: '',
-    edit_finished: submission.editFinished || '',
     reviewer: submission.reviewer || '',
     edit_date: new Date().toISOString().split('T')[0],
-    final_take_wordcount: submission.wordcount || '',
     compendium_feature: submission.compendiumFeature || '',
     Study_Design: submission.studyDesign || '',
     Subtopic_Tag: '',
     review_creator: submission.reviewCreator || '',
+    edit_finished: 'TRUE',
+    Subtopic_tag: submission.subTopics.join(';') || '',
   }
 }
 

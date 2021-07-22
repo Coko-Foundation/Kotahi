@@ -190,10 +190,140 @@
       ]
     },
     {
+      "options" : [
+        {
+          "label": "epidemiology_populations-most-vulnerable",
+          "value": "epidemiology_populations-most-vulnerable",
+          "id": "f2426f62-eac6-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "epidemiology_incubation-period-signs-and-symptoms-and-viral-shedding",
+          "value": "epidemiology_incubation-period-signs-and-symptoms-and-viral-shedding",
+          "id": "faebe260-eac6-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "epidemiology_population-based-prevalence-and-burden-of-disease",
+          "value": "epidemiology_population-based-prevalence-and-burden-of-disease",
+          "id": "032ea84a-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "epidemiology_transmission",
+          "value": "epidemiology_transmission",
+          "id": "0e83c0e0-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "epidemiology_risk-for-infection",
+          "value": "epidemiology_risk-for-infection",
+          "id": "0e83c37e-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "epidemiology_virus-mutations-tracking-spread-and-evolution-in-people",
+          "value": "epidemiology_virus-mutations-tracking-spread-and-evolution-in-people",
+          "id": "0e83c536-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "ecology-spillover_evolutionary-origin-and-zoonotic-spillover-of-sars-cov-2",
+          "value": "ecology-spillover_evolutionary-origin-and-zoonotic-spillover-of-sars-cov-2",
+          "id": "0e83c6bc-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "ecology-spillover_sars-cov-2-infection-in-domestic-animals",
+          "value": "ecology-spillover_sars-cov-2-infection-in-domestic-animals",
+          "id": "0e83c838-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "non-pharmaceutical-interventions_testing-and-contact-tracing",
+          "value": "non-pharmaceutical-interventions_testing-and-contact-tracing",
+          "id": "0e83c9d2-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "non-pharmaceutical-interventions_masks",
+          "value": "non-pharmaceutical-interventions_masks",
+          "id": "0e83caf4-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "non-pharmaceutical-interventions_school-and-business-closures",
+          "value": "non-pharmaceutical-interventions_school-and-business-closures",
+          "id": "0e83cbda-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "non-pharmaceutical-interventions_symptom-screening",
+          "value": "non-pharmaceutical-interventions_symptom-screening",
+          "id": "0e83cd56-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "vaccines_trial-results",
+          "value": "vaccines_trial-results",
+          "id": "0e83ceaa-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "vaccines_other-vaccine-and-virology-related-topics",
+          "value": "vaccines_other-vaccine-and-virology-related-topics",
+          "id": "0e83d008-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "vaccines_trial-protocols",
+          "value": "vaccines_trial-protocols",
+          "id": "0e83d116-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "clinical-presentation-prognostic-risk-factors_ace-inhibitors",
+          "value": "clinical-presentation-prognostic-risk-factors_ace-inhibitors",
+          "id": "0e83d256-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "clinical-presentation-prognostic-risk-factors_coagulopathy",
+          "value": "clinical-presentation-prognostic-risk-factors_coagulopathy",
+          "id": "0e83d3b4-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "clinical-presentation-prognostic-risk-factors_non-respiratory-presentation",
+          "value": "clinical-presentation-prognostic-risk-factors_non-respiratory-presentation",
+          "id": "0e83d4d6-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "clinical-presentation-prognostic-risk-factors_long-term-sequelae",
+          "value": "clinical-presentation-prognostic-risk-factors_long-term-sequelae",
+          "id": "0e83d666-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "clinical-presentation-prognostic-risk-factors_immune-response",
+          "value": "clinical-presentation-prognostic-risk-factors_immune-response",
+          "id": "0e83d81e-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "clinical-presentation-prognostic-risk-factors_pediatrics",
+          "value": "clinical-presentation-prognostic-risk-factors_pediatrics",
+          "id": "0e83d97c-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "clinical-presentation-prognostic-risk-factors_pregnancy",
+          "value": "clinical-presentation-prognostic-risk-factors_pregnancy",
+          "id": "0e83dae4-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "clinical-presentation-prognostic-risk-factors_prognostic-tools",
+          "value": "clinical-presentation-prognostic-risk-factors_prognostic-tools",
+          "id": "0e83dbca-eac7-11eb-9a03-0242ac130003"
+        }
+      ],
+      "title": "Sub Topics",
+      "id": "73ca76d0-eae3-11eb-9a03-0242ac130003",
+      "component": "CheckboxGroup",
+      "name": "submission.subTopics",
+      "validate": [
+        {
+          "value": "required",
+          "label": "Required",
+          "id": "53d7598a-ea28-11eb-9a03-0242ac130003"
+        }
+      ]
+    },
+    {
       "options": [
         {
           "label": "ecology and spillover",
-          "value": "ecologyAndSpillover",
+          "value": "ecology and spillover",
           "id": "21703cd4-5a73-4701-b828-6fc3bf913908"
         },
         {
@@ -202,8 +332,8 @@
           "id": "6a3a41ea-c12d-48a5-8f00-d9eec0980b17"
         },
         {
-          "label": "non-pharmaceutical and pharmaceutical interventions",
-          "value": "nonPharmaceuticalAndPharmaceuticalInterventions",
+          "label": "non-pharmaceutical interventions",
+          "value": "non-pharmaceutical interventions",
           "id": "c1caf4b9-e9b7-42e2-8724-28a72abdd179"
         },
         {
@@ -222,13 +352,13 @@
           "id": "3ef38a6c-de1d-49de-8e48-b548aa08cfd7"
         },
         {
-          "label": "clinical presentation",
-          "value": "clinicalPresentation",
+          "label": "pharmaceutical interventions",
+          "value": "pharmaceutical interventions",
           "id": "d39b8a6e-4968-48b5-bad4-f7c5ec5269c0"
         },
         {
-          "label": "prognostic risk factors",
-          "value": "prognosticRiskFactors",
+          "label": "clinical-presentation / prognostic-risk-factors",
+          "value": "clinical-presentation / prognostic-risk-factors",
           "id": "1d5428c0-b2ce-4d90-90c6-e8a6a6c53dbc"
         }
       ],
@@ -286,12 +416,6 @@
       "name": "submission.studyPopulationSetting"
     },
     {
-      "title": "Keywords",
-      "id": "2c4fb5cd-1e88-434c-b28a-7837c57c89ab",
-      "component": "TextField",
-      "name": "submission.keywords"
-    },
-    {
       "title": "Journal",
       "id": "150d401e-0e1c-4122-a661-26516a8e6838",
       "component": "TextField",
@@ -301,24 +425,6 @@
           "value": "required",
           "label": "Required",
           "id": "0899564d-2f70-42fa-b06f-19e309cfa248"
-        }
-      ]
-    },
-    {
-      "title": "Edit finished",
-      "id": "b955971d-6d57-4ac9-a273-c3404da321b0",
-      "component": "Select",
-      "name": "submission.editFinished",
-      "options": [
-        {
-          "label": "True",
-          "value": "true",
-          "id": "01ae2c83-3e24-4770-a8ec-f38a8202f203"
-        },
-        {
-          "label": "False",
-          "value": "false",
-          "id": "812dd846-eebb-498b-9329-2cd431a13e39"
         }
       ]
     },
@@ -342,30 +448,19 @@
       "name": "submission.editDate"
     },
     {
-      "title": "Final take wordcount",
-      "id": "06331c11-d10a-483f-bbbe-c6ac9d8b9e4c",
-      "component": "TextField",
-      "name": "submission.wordcount"
-    },
-    {
       "title": "Compendium feature",
       "id": "3d21cd7c-5264-48a5-b19a-792f9191bb99",
       "component": "Select",
       "name": "submission.compendiumFeature",
       "options": [
         {
-          "label": "No",
-          "value": "no",
-          "id": "e2a3aa81-8ef7-4b0f-8d7d-21c50f4722f5"
-        },
-        {
           "label": "Yes, Medium/Low Impact Article",
-          "value": "mediumLowImpact",
+          "value": "Yes, Medium/Low Impact Article",
           "id": "df999306-efaa-4a50-8c3b-fc6b6a02f4ad"
         },
         {
           "label": "Yes, High Impact Article",
-          "value": "highImpact",
+          "value": "Yes, High Impact Article",
           "id": "41c7130f-7e9e-444b-9832-9f2c9c30472d"
         }
       ]
