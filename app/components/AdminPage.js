@@ -171,9 +171,7 @@ const AdminPage = () => {
       icon: 'file-text',
     })
 
-    if (process.env.INSTANCE_NAME === 'aperture') {
-      links.push({ link: reportsLink, name: 'Reports', icon: 'activity' })
-    }
+    links.push({ link: reportsLink, name: 'Reports', icon: 'activity' })
   }
 
   if (currentUser) {
