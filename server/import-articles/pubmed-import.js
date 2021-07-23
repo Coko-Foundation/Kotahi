@@ -183,14 +183,7 @@ const getData = async ctx => {
 
       let formattedTopic = ''
 
-      if (
-        topic === 'pharmaceuticalInterventions' ||
-        topic === 'nonPharmaceuticalInterventions'
-      ) {
-        formattedTopic = 'nonPharmaceuticalAndPharmaceuticalInterventions'
-      } else {
-        formattedTopic = topic
-      }
+      formattedTopic = topic
 
       const formData = new FormData()
 
