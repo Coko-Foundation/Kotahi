@@ -121,4 +121,17 @@ describe('Login page tests', () => {
     ManuscriptsPage.getTableHeader().should('not.exist')
     ManuscriptsPage.getLiveChatButton().should('not.exist')
   })
+  it('reports option should be visible to the admin user', () => {
+    // task to restore the database as per the  dumps/initialState.sql
+    cy.task('restore', 'initial_state_other')
+    cy.task('seedForms')
+
+    // login as admin
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture('role_names').then(name => {
+      cy.login(name.role.admin, dashboard)
+    })
+    cy.awaitDisappearSpinner()
+    Menu.getReportsButton().should('be.visible')
+  })
 })

@@ -256,7 +256,7 @@ describe('manuscripts page tests', () => {
     })
   })
 
-  context.only('filter and sort articles', () => {
+  context('filter and sort articles', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
