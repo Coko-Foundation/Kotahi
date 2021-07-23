@@ -37,21 +37,21 @@ const ReviewLayout = ({
   const editorSections = []
   const manuscriptVersions = manuscript.manuscriptVersions || []
 
-  const decisionComment = manuscript.reviews.find(
-    reviewIsDecision => reviewIsDecision.isDecision,
-  )
+  const decisionComment =
+    manuscript.reviews.find(reviewIsDecision => reviewIsDecision.isDecision) ||
+    {}
 
   const decisionRadio = manuscript.status
 
   const formatDecisionComment = input => {
-    const comment = input.decisionComment.content
+    const comment = input.decisionComment ? input.decisionComment.content : ''
     const placeholder = '"<i>The evaluation summary will appear here.</i>"'
 
     if (comment === '<p class="paragraph"></p>' || comment === '') {
       return placeholder
     }
 
-    return input.decisionComment.content
+    return comment
   }
 
   manuscriptVersions.forEach(msVersion => {
