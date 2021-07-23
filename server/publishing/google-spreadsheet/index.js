@@ -1,6 +1,23 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const { convert } = require('html-to-text')
 
+const formatTopicCrossPostMapping = topics => {
+  const mapping = {
+    Clinical_presentation: 'clinical-presentation-prognostic-risk-factors',
+    Ecology_and_spillover: 'ecology-spillover',
+    Epidemiology: 'epidemiology',
+    Nonpharmaceutical_interventions: 'non-pharmaceutical-interventions',
+    Vaccine_development: 'vaccines',
+    Diagnostics: 'diagnostics',
+    Disease_modeling: 'modeling',
+    Pharmaceutical_interventions: 'pharmaceutical-interventions',
+  }
+
+  return topics.map(topic => {
+    return mapping[topic]
+  })
+}
+
 const mapFieldsToSpreadsheetColumns = manuscript => {
   const { submission } = manuscript
 
@@ -8,11 +25,22 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
     ? `(${manuscript.importSourceServer})`
     : ''
 
+  const topics = manuscript.isImported
+    ? submission.initialTopicsOnImport
+    : submission.topics
+
+  // eslint-disable-next-line
+  const cross_post = manuscript.isImported
+    ? submission.topics.filter(topic => {
+        return !submission.initialTopicsOnImport.includes(topic)
+      })
+    : submission.topics
+
   return {
     uuid: manuscript.id,
     title_journal: `${submission.articleDescription} ${importSourceServer})`,
     Title: submission.articleDescription || '',
-    Topic: submission.topics.join(';') || '',
+    Topic: topics.join(';') || '',
     'First Author': submission.firstAuthor || '',
     'Date Published': submission.datePublished || '',
     link: submission.articleURL || '',
@@ -30,15 +58,14 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
       convert(submission.limitations || '', { wordwrap: false }),
     ),
     journal: submission.journal || '',
-    cross_post: '',
+    cross_post: formatTopicCrossPostMapping(cross_post).join(';') || '',
     reviewer: submission.reviewer || '',
     edit_date: new Date().toISOString().split('T')[0],
     compendium_feature: submission.compendiumFeature || '',
     Study_Design: submission.studyDesign || '',
-    Subtopic_Tag: '',
     review_creator: submission.reviewCreator || '',
     edit_finished: 'TRUE',
-    Subtopic_tag: submission.subTopics.join(';') || '',
+    Subtopic_Tag: submission.subTopics.join(';') || '',
   }
 }
 

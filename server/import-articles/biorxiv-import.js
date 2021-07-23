@@ -20,15 +20,15 @@ const getData = async ctx => {
   const dateTwoWeeksAgo =
     +new Date(new Date(Date.now()).toISOString().split('T')[0]) - 12096e5
 
-  const topics = {
-    'ecology and spillover': ecologyAndSpillover,
-    vaccines,
-    'non-pharmaceutical interventions': nonPharmaceuticalInterventions,
-    epidemiology,
-    diagnostics,
-    modeling,
-    'clinical-presentation / prognostic-risk-factors': clinicalPresentationAndPrognosticFactors,
-    'pharmaceutical interventions': pharmaceuticalInterventions,
+  const articleTopics = {
+    Ecology_and_spillover: ecologyAndSpillover,
+    Vaccine_development: vaccines,
+    Nonpharmaceutical_interventions: nonPharmaceuticalInterventions,
+    Epidemiology: epidemiology,
+    Diagnostics: diagnostics,
+    Disease_modeling: modeling,
+    Clinical_presentation: clinicalPresentationAndPrognosticFactors,
+    Pharmaceutical_interventions: pharmaceuticalInterventions,
   }
 
   const [checkIfSourceExists] = await ArticleImportSources.query().where({
@@ -126,7 +126,7 @@ const getData = async ctx => {
         rel_date,
         rel_authors,
       }) => {
-        const manuscriptTopics = Object.entries(topics)
+        const manuscriptTopics = Object.entries(articleTopics)
           .filter(([topicName, topicKeywords]) => {
             return (
               !!topicKeywords[0].filter(keyword => rel_abs.includes(keyword))
@@ -153,6 +153,10 @@ const getData = async ctx => {
           return removeDuplicates(formattedTopics)
         }
 
+        const topics = manuscriptTopics.length
+          ? formatImportedTopics(manuscriptTopics)
+          : []
+
         return {
           status: 'new',
           isImported: true,
@@ -168,9 +172,8 @@ const getData = async ctx => {
             articleDescription: rel_title,
             abstract: rel_abs,
             journal: rel_site,
-            topics: manuscriptTopics.length
-              ? formatImportedTopics(manuscriptTopics)
-              : [],
+            topics,
+            initialTopicsOnImport: topics,
           },
           meta: {
             title: '',

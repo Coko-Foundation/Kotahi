@@ -46,7 +46,7 @@
       "options": [
         {
           "label": "Case-series",
-          "value": "caseSeries",
+          "value": "case-series",
           "id": "cf9b7939-88c9-4274-84cc-34ed28312190"
         },
         {
@@ -56,17 +56,17 @@
         },
         {
           "label": "Cross-sectional",
-          "value": "crossSectional",
+          "value": "cross-sectional",
           "id": "ff3ff470-9bc3-4268-8a44-eeca13fac5f4"
         },
         {
           "label": "Prospective cohort",
-          "value": "prospectiveCohort",
+          "value": "prospective-cohort",
           "id": "146b862e-7517-492f-ad72-dcabcda78474"
         },
         {
           "label": "Retrospective cohort",
-          "value": "retrospectiveCohort",
+          "value": "retrospective-cohort",
           "id": "45116933-149e-4db7-9a5c-7e3f135ad097"
         },
         {
@@ -76,7 +76,7 @@
         },
         {
           "label": "Randomized Control Trial",
-          "value": "randomizedControlTrial",
+          "value": "randomized-controlled-trial",
           "id": "6eb9a65f-8209-47cd-84fa-e643d3b7c25f"
         },
         {
@@ -86,7 +86,7 @@
         },
         {
           "label": "Modeling/Simulation",
-          "value": "modelingSimulation",
+          "value": "modeling-simulation",
           "id": "2716ede2-8e73-4059-8c5e-ea28c9ceb439"
         },
         {
@@ -318,42 +318,42 @@
       "options": [
         {
           "label": "ecology and spillover",
-          "value": "ecology and spillover",
+          "value": "Ecology_and_spillover",
           "id": "21703cd4-5a73-4701-b828-6fc3bf913908"
         },
         {
           "label": "vaccines",
-          "value": "vaccines",
+          "value": "Vaccine_development",
           "id": "6a3a41ea-c12d-48a5-8f00-d9eec0980b17"
         },
         {
           "label": "non-pharmaceutical interventions",
-          "value": "non-pharmaceutical interventions",
+          "value": "Nonpharmaceutical_interventions",
           "id": "c1caf4b9-e9b7-42e2-8724-28a72abdd179"
         },
         {
           "label": "epidemiology",
-          "value": "epidemiology",
+          "value": "Epidemiology",
           "id": "4c12f2bb-e90a-41d2-a76b-1f2f98b89ae5"
         },
         {
           "label": "diagnostics",
-          "value": "diagnostics",
+          "value": "Diagnostics",
           "id": "1896c629-5559-447f-be12-e74dbf2a4a76"
         },
         {
           "label": "modeling",
-          "value": "modeling",
+          "value": "Disease_modeling",
           "id": "3ef38a6c-de1d-49de-8e48-b548aa08cfd7"
         },
         {
           "label": "pharmaceutical interventions",
-          "value": "pharmaceutical interventions",
+          "value": "Pharmaceutical_interventions",
           "id": "d39b8a6e-4968-48b5-bad4-f7c5ec5269c0"
         },
         {
           "label": "clinical-presentation / prognostic-risk-factors",
-          "value": "clinical-presentation / prognostic-risk-factors",
+          "value": "Clinical_presentation",
           "id": "1d5428c0-b2ce-4d90-90c6-e8a6a6c53dbc"
         }
       ],
