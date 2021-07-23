@@ -74,13 +74,11 @@
     },
     "studyDesignTypes": {
       "caseSeries": "Case-series",
-      "caseControl": "Case-control",
       "crossSectional": "Cross-sectional",
       "prospectiveCohort": "Prospective cohort",
       "retrospectiveCohort": "Retrospective cohort",
       "ecological": "Ecological",
       "randomizedControlTrial": "Randomized Control Trial",
-      "nonRandomizedTrial": "Non-Randomized Trial",
       "modelingSimulation": "Modeling/Simulation",
       "other": "Other"
     }

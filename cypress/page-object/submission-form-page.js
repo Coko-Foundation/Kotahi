@@ -473,6 +473,9 @@ export const SubmissionFormPage = {
   getTopicsCheckboxWithText(value) {
     return cy.getByNameAndValue(TOPICS_CHECKBOX_LIST, value)
   },
+  getTopicsCheckboxContainsText(value) {
+    return cy.getByNameAndContainsValue(TOPICS_CHECKBOX_LIST, value)
+  },
   getSubTopicsCheckboxContainingText(value) {
     return cy.getByNameAndValue(SUB_TOPICS_CHECKBOX_LIST, value)
   },
@@ -484,6 +487,9 @@ export const SubmissionFormPage = {
   },
   clickTopicsCheckboxWithText(value) {
     this.getTopicsCheckboxWithText(value).click()
+  },
+  clickTopicsCheckboxContainsText(value) {
+    this.getTopicsCheckboxContainsText(value).click()
   },
   waitThreeSec() {
     // eslint-disable-next-line cypress/no-unnecessary-waiting

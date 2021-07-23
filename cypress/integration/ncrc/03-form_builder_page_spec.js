@@ -199,13 +199,11 @@ describe('form builder tests', () => {
       cy.fixture('form_option').then(data => {
         const dataArray = [
           data.ncrc.studyDesignTypes.caseSeries,
-          data.ncrc.studyDesignTypes.caseControl,
           data.ncrc.studyDesignTypes.crossSectional,
           data.ncrc.studyDesignTypes.prospectiveCohort,
           data.ncrc.studyDesignTypes.retrospectiveCohort,
           data.ncrc.studyDesignTypes.ecological,
           data.ncrc.studyDesignTypes.randomizedControlTrial,
-          data.ncrc.studyDesignTypes.nonRandomizedTrial,
           data.ncrc.studyDesignTypes.modelingSimulation,
           data.ncrc.studyDesignTypes.other,
         ]

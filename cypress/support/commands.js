@@ -82,6 +82,10 @@ Cypress.Commands.add('getByNameAndValue', (name, value) => {
   cy.get(`[name='${name}'][value=${value}]`)
 })
 
+Cypress.Commands.add('getByNameAndContainsValue', (name, value) => {
+  cy.get(`[name='${name}'][value*=${value}]`)
+})
+
 Cypress.Commands.add('getByTitle', title => {
   cy.get(`[title='${title}']`)
 })

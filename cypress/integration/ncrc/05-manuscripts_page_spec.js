@@ -50,9 +50,9 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickLabelsDropdown()
         SubmissionFormPage.selectDropdownOption(1)
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
-        SubmissionFormPage.clickTopicsCheckboxWithText('epidemiology')
+        SubmissionFormPage.clickTopicsCheckboxWithText('Epidemiology')
         Menu.clickManuscriptsAndAssertPageLoad()
-        ManuscriptsPage.getArticleTopic(0).should('contain', data.topic)
+        ManuscriptsPage.getArticleTopic(0).should('contain', data.topic.toLowerCase())
         ManuscriptsPage.getArticleTopic(1).should('contain', 'epidemiology')
         ManuscriptsPage.getArticleLabel()
           .scrollIntoView()
@@ -145,7 +145,7 @@ describe('manuscripts page tests', () => {
         ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
         ManuscriptsPage.getArticleTopic(0)
           .should('be.visible')
-          .should('contain', data.topic)
+          .should('contain', data.topic.toLowerCase())
         ManuscriptsPage.getArticleLabel().should('contain', 'ready to evaluate')
       })
     })
@@ -216,7 +216,7 @@ describe('manuscripts page tests', () => {
         ManuscriptsPage.getArticleTopic(0)
           .scrollIntoView()
           .should('be.visible')
-          .should('contain', data.topic)
+          .should('contain', data.topic.toLowerCase())
         ManuscriptsPage.getArticleTitleByRow(0)
           .find('a')
           .should('have.attr', 'href', data.doi)
@@ -241,7 +241,7 @@ describe('manuscripts page tests', () => {
         ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
         ManuscriptsPage.clickEvaluation()
         SubmissionFormPage.fillInValueAdded('Evaluated')
-        SubmissionFormPage.clickTopicsCheckboxWithText('vaccines')
+        SubmissionFormPage.clickTopicsCheckboxContainsText('Vaccine')
         // eslint-disable-next-line
         SubmissionFormPage.waitThreeSec()
         SubmissionFormPage.clickSubmitResearchAndWaitPageLoad()
@@ -256,7 +256,7 @@ describe('manuscripts page tests', () => {
     })
   })
 
-  context('filter and sort articles', () => {
+  context.only('filter and sort articles', () => {
     beforeEach(() => {
       ManuscriptsPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
@@ -265,7 +265,7 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickElementFromFormOptionList(8)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(
-          data.common.topicTypes.vaccines,
+          data.ncrc.topicTypes.vaccines,
         )
         SubmissionFormPage.fillInJournal('123')
         Menu.clickManuscriptsAndAssertPageLoad()
@@ -275,10 +275,10 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickElementFromFormOptionList(8)
         SubmissionFormPage.selectDropdownOption(1)
         SubmissionFormPage.clickTopicsCheckboxWithText(
-          data.common.topicTypes.ecologyAndSpillover,
+          data.ncrc.topicTypes.ecologyAndSpillover,
         )
         SubmissionFormPage.clickTopicsCheckboxWithText(
-          data.common.topicTypes.diagnostics,
+          data.ncrc.topicTypes.diagnostics,
         )
         SubmissionFormPage.fillInJournal('abc')
         Menu.clickManuscriptsAndAssertPageLoad()
@@ -288,10 +288,10 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickElementFromFormOptionList(8)
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.clickTopicsCheckboxWithText(
-          data.common.topicTypes.modeling,
+          data.ncrc.topicTypes.modeling,
         )
         SubmissionFormPage.clickTopicsCheckboxWithText(
-          data.common.topicTypes.diagnostics,
+          data.ncrc.topicTypes.diagnostics,
         )
         SubmissionFormPage.fillInJournal('def')
         Menu.clickManuscriptsAndAssertPageLoad()
@@ -506,12 +506,12 @@ describe('manuscripts page tests', () => {
       cy.url().should('contain', 'new')
       ManuscriptsPage.clickArticleTopic(1)
       ManuscriptsPage.getTableRowsCount().should('eq', 2)
-      cy.url().should('contain', 'status=new&topic=diagnostics')
+      cy.url().should('contain', 'status=new&topic=Diagnostics')
       ManuscriptsPage.clickArticleLabel(0)
       ManuscriptsPage.getTableRowsCount().should('eq', 1)
       cy.url().should(
         'contain',
-        'status=new&topic=diagnostics&label=readyToEvaluate',
+        'status=new&topic=Diagnostics&label=readyToEvaluate',
       )
     })
 
@@ -551,13 +551,13 @@ describe('manuscripts page tests', () => {
       ManuscriptsPage.clickTableHead(4)
       ManuscriptsPage.selectDropdownOptionWithText('diagnostics')
       ManuscriptsPage.getTableRowsCount().should('eq', 2)
-      cy.url().should('contain', 'status=new&topic=diagnostics')
+      cy.url().should('contain', 'status=new&topic=Diagnostics')
       ManuscriptsPage.clickTableHead(6)
       ManuscriptsPage.selectDropdownOptionWithText('Ready to evaluate')
       ManuscriptsPage.getTableRowsCount().should('eq', 1)
       cy.url().should(
         'contain',
-        'status=new&topic=diagnostics&label=readyToEvaluate',
+        'status=new&topic=Diagnostics&label=readyToEvaluate',
       )
     })
   })
