@@ -60,6 +60,12 @@ export const Menu = {
     cy.awaitDisappearSpinner()
     ManuscriptsPage.getTableHeader().should('be.visible')
   },
+  getReportsButton() {
+    return cy.getByContainsClass(MENU_BUTTON).contains('Reports')
+  },
+  clickReports() {
+    this.getReportsButton().click()
+  },
   getMyProfileButton() {
     return cy.getByContainsClass(MENU_BUTTON).contains('My profile')
   },

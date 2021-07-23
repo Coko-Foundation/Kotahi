@@ -69,6 +69,7 @@ const REVIEWER_FIELD = 'submission.reviewer'
 const EDIT_DATE_FIELD = 'submission.editDate'
 const REVIEW_CREATOR_FIELD = 'submission.reviewCreator'
 // const DROPDOWN = '[class*=ValueContainer] > [class*=placeholder]'
+const SUB_TOPICS_CHECKBOX_LIST = 'submission.subTopics'
 const TOPICS_CHECKBOX_LIST = 'submission.topics'
 const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
 
@@ -471,6 +472,9 @@ export const SubmissionFormPage = {
   },
   getTopicsCheckboxWithText(value) {
     return cy.getByNameAndValue(TOPICS_CHECKBOX_LIST, value)
+  },
+  getSubTopicsCheckboxContainingText(value) {
+    return cy.getByNameAndValue(SUB_TOPICS_CHECKBOX_LIST, value)
   },
   getCheckedTopics() {
     return cy.get(`[name="${TOPICS_CHECKBOX_LIST}"][checked]`)

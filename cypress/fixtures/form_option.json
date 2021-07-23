@@ -30,12 +30,45 @@
     "mainFindings": "Summary of main findings",
     "valueAdded": "Value added",
     "studyPopulation": "Study population setting",
-    "editFinished": "Edit finished",
+    "subTopics": "Sub Topics",
+    "subTopicTypes": {
+      "epidemiologyPopulationsMostVulnerable": "epidemiology_populations-most-vulnerable",
+      "epidemiologyIncubationPeriodSignsAndSymptomsAndViralShedding": "epidemiology_incubation-period-signs-and-symptoms-and-viral-shedding",
+      "epidemiologyPopulationBasedPrevalenceAndBurdenOfDisease": "epidemiology_population-based-prevalence-and-burden-of-disease",
+      "epidemiologyTransmission": "epidemiology_transmission",
+      "epidemiologyRiskForInfection": "epidemiology_risk-for-infection",
+      "epidemiologyVirusMutationsTrackingSpreadAndEvolutionInPeople": "epidemiology_virus-mutations-tracking-spread-and-evolution-in-people",
+      "ecologySpilloverEvolutionaryOriginAndZoonoticSpilloverOfSarsCov2": "ecology-spillover_evolutionary-origin-and-zoonotic-spillover-of-sars-cov-2",
+      "ecologySpilloverSarsCov2InfectionInDomesticAnimals": "ecology-spillover_sars-cov-2-infection-in-domestic-animals",
+      "nonPharmaceuticalInterventionsTestingAndContactTracing": "non-pharmaceutical-interventions_testing-and-contact-tracing",
+      "nonPharmaceuticalInterventionsMasks": "non-pharmaceutical-interventions_masks",
+      "nonPharmaceuticalInterventionsSchoolAndBusinessClosures": "non-pharmaceutical-interventions_school-and-business-closures",
+      "nonPharmaceuticalInterventionsSymptomScreening": "non-pharmaceutical-interventions_symptom-screening",
+      "vaccinesTrialResults": "vaccines_trial-results",
+      "vaccinesOtherVaccineAndVirologyRelatedTopics": "vaccines_other-vaccine-and-virology-related-topics",
+      "vaccinesTrialProtocols": "vaccines_trial-protocols",
+      "clinicalPresentationPrognosticRiskFactorsAceInhibitors": "clinical-presentation-prognostic-risk-factors_ace-inhibitors",
+      "clinicalPresentationPrognosticRiskFactorsCoagulopathy": "clinical-presentation-prognostic-risk-factors_coagulopathy",
+      "clinicalPresentationPrognosticRiskFactorsNonRespiratoryPresentation": "clinical-presentation-prognostic-risk-factors_non-respiratory-presentation",
+      "clinicalPresentationPrognosticRiskFactorsLongTermSequelae": "clinical-presentation-prognostic-risk-factors_long-term-sequelae",
+      "clinicalPresentationPrognosticRiskFactorsImmuneResponse": "clinical-presentation-prognostic-risk-factors_immune-response",
+      "clinicalPresentationPrognosticRiskFactorsPediatrics": "clinical-presentation-prognostic-risk-factors_pediatrics",
+      "clinicalPresentationPrognosticRiskFactorsPregnancy": "clinical-presentation-prognostic-risk-factors_pregnancy",
+      "clinicalPresentationPrognosticRiskFactorsPrognosticTools": "clinical-presentation-prognostic-risk-factors_prognostic-tools"
+    },
+    "topicTypes": {
+      "ecologyAndSpillover": "Ecology_and_spillover",
+      "vaccines": "Vaccine_development",
+      "nonPharmaceuticalInterventions": "Nonpharmaceutical_interventions",
+      "epidemiology": "Epidemiology",
+      "diagnostics": "Diagnostics",
+      "modeling": "Disease_modeling",
+      "clinicalPresentation": "Clinical_presentation",
+      "pharmaceuticalInterventions": "Pharmaceutical_interventions"
+    },
     "reviewer": "Reviewer",
-    "finalTakeWordcount": "Final take wordcount",
     "compendiumFeature": "Compendium feature",
     "compendiumFeatureTypes": {
-      "no": "No",
       "mediumLow": "Yes, Medium/Low Impact Article",
       "high": "Yes, High Impact Article"
     },
@@ -46,7 +79,7 @@
       "prospectiveCohort": "Prospective cohort",
       "retrospectiveCohort": "Retrospective cohort",
       "ecological": "Ecological",
-      "ranomizedControlTrial": "Randomized Control Trial",
+      "randomizedControlTrial": "Randomized Control Trial",
       "nonRandomizedTrial": "Non-Randomized Trial",
       "modelingSimulation": "Modeling/Simulation",
       "other": "Other"
@@ -60,7 +93,6 @@
     "ourTake": "Our take",
     "studyStrengths": "Study strengths",
     "limitations": "Limitations",
-    "keywords": "Keywords",
     "journal": "Journal",
     "editDate": "Edit date",
     "reviewCreator": "Review creator",
@@ -85,6 +117,7 @@
     "title": "Title",
     "doi": "DOI",
     "link": "Link",
-    "mainFindings": "Main findings"
+    "mainFindings": "Main findings",
+    "keywords": "Keywords"
   }
 }

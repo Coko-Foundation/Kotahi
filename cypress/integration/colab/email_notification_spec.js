@@ -117,7 +117,6 @@ describe('email notification tests', () => {
         ControlPage.getNotifyButton()
         ControlPage.clickNotify()
         cy.wait('@graphql').then(response => {
-            cy.window()
             expect(response.response.body.data.sendEmail).to.have.property('success', true)
             expect(response.response.statusCode).to.eq(200)
         })

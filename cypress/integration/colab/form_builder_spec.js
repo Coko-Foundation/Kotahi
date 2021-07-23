@@ -36,7 +36,7 @@ describe('form builder tests', () => {
           data.colab.mainFindings,
           data.common.studyStrengths,
           data.common.limitations,
-          data.common.keywords,
+          data.colab.keywords,
           data.common.journal,
           data.common.editDate,
           data.common.labels,
@@ -86,7 +86,7 @@ describe('form builder tests', () => {
         FormsPage.clickFormOptionWithText(data.common.limitations)
         FormsPage.getComponentType().should('contain', 'AbstractEditor')
         FormsPage.getFieldValidate().should('contain', 'Required')
-        FormsPage.clickFormOptionWithText(data.common.keywords)
+        FormsPage.clickFormOptionWithText(data.colab.keywords)
         FormsPage.getComponentType().should('contain', 'TextField')
         FormsPage.getFieldValidate().should('contain', 'Required')
         FormsPage.clickFormOptionWithText(data.common.journal)
@@ -133,7 +133,7 @@ describe('form builder tests', () => {
           data.colab.mainFindings,
           data.common.studyStrengths,
           data.common.limitations,
-          data.common.keywords,
+          data.colab.keywords,
           data.common.journal,
           data.common.editDate,
           data.common.labels,
