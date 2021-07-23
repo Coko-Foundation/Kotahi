@@ -163,6 +163,7 @@
     "graphql-tools": "4.0.8",
     "helmet": "^4.4.1",
     "history": "4.10.1",
+    "html-to-text": "^8.0.0",
     "http-status-codes": "^2.1.4",
     "jimp": "0.16.1",
     "joi": "10.6.0",

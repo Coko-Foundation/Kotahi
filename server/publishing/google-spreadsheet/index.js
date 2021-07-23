@@ -1,4 +1,5 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet')
+const { convert } = require('html-to-text')
 
 const mapFieldsToSpreadsheetColumns = manuscript => {
   const { submission } = manuscript
@@ -15,11 +16,19 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
     'First Author': submission.firstAuthor || '',
     'Date Published': submission.datePublished || '',
     link: submission.articleURL || '',
-    'Our Take': submission.ourTake || '',
-    value_added: submission.valueAdded || '',
-    study_population_setting: submission.studyPopulationSetting || '',
-    study_strength: submission.studyStrengths || '',
-    limitations: submission.limitations || '',
+    'Our Take': String(convert(submission.ourTake || '', { wordwrap: false })),
+    value_added: String(
+      convert(submission.valueAdded || '', { wordwrap: false }),
+    ),
+    study_population_setting: String(
+      convert(submission.studyPopulationSetting || '', { wordwrap: false }),
+    ),
+    study_strength: String(
+      convert(submission.studyStrengths || '', { wordwrap: false }),
+    ),
+    limitations: String(
+      convert(submission.limitations || '', { wordwrap: false }),
+    ),
     journal: submission.journal || '',
     cross_post: '',
     reviewer: submission.reviewer || '',
@@ -36,7 +45,11 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
 const publishToGoogleSpreadSheet = async manuscript => {
   try {
     const forPublishingData = mapFieldsToSpreadsheetColumns(manuscript)
+    console.log('forPublishingData')
+    console.log(forPublishingData)
 
+    // tmp return for testing purposes
+    return
     const { link } = forPublishingData
 
     const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREADSHEET_ID)
