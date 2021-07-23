@@ -312,11 +312,6 @@
       "component": "CheckboxGroup",
       "name": "submission.subTopics",
       "validate": [
-        {
-          "value": "required",
-          "label": "Required",
-          "id": "53d7598a-ea28-11eb-9a03-0242ac130003"
-        }
       ]
     },
     {
