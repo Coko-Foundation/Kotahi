@@ -50,11 +50,6 @@
           "id": "cf9b7939-88c9-4274-84cc-34ed28312190"
         },
         {
-          "label": "Case-control",
-          "value": "caseControl",
-          "id": "d57ab71c-3e5c-42ee-9a76-fdac1fb34cc6"
-        },
-        {
           "label": "Cross-sectional",
           "value": "cross-sectional",
           "id": "ff3ff470-9bc3-4268-8a44-eeca13fac5f4"
@@ -78,11 +73,6 @@
           "label": "Randomized Control Trial",
           "value": "randomized-controlled-trial",
           "id": "6eb9a65f-8209-47cd-84fa-e643d3b7c25f"
-        },
-        {
-          "label": "Non-Randomized Trial",
-          "value": "nonRandomizedTrial",
-          "id": "144521ad-e924-4a10-ba8f-d456cc89094e"
         },
         {
           "label": "Modeling/Simulation",
