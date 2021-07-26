@@ -28,10 +28,13 @@ class Manuscript extends BaseModel {
             const fieldName = sortName.split(':')[1]
             const result = `LOWER(manuscripts.submission->>'${fieldName}') ${sortDirection}, id ${sortDirection}`
             query.orderByRaw(result)
+          } else if (sortName.includes('meta:')) {
+            const fieldName = sortName.split(':')[1]
+            const result = `LOWER(manuscripts.meta->>'${fieldName}') ${sortDirection}, id ${sortDirection}`
+            query.orderByRaw(result)
           } else {
-            query.orderByRaw(
-              `${sortName} ${sortDirection}, id ${sortDirection}`,
-            )
+            const result = `${sortName} ${sortDirection}, id ${sortDirection}`
+            query.orderByRaw(result)
           }
         }
       },
