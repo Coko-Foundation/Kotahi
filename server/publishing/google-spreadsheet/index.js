@@ -66,6 +66,9 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
     review_creator: submission.reviewCreator || '',
     edit_finished: 'TRUE',
     Subtopic_Tag: submission.subTopics.join(';') || '',
+    main_findings: convert(submission.summaryOfMainFindings || '', {
+      wordwrap: false,
+    }),
   }
 }
 
