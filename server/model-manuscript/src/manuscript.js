@@ -26,7 +26,7 @@ class Manuscript extends BaseModel {
 
           if (sortName.includes('submission:')) {
             const fieldName = sortName.split(':')[1]
-            const result = `LOWER(submission->>'${fieldName}') ${sortDirection}, id ${sortDirection}`
+            const result = `LOWER(manuscripts.submission->>'${fieldName}') ${sortDirection}, id ${sortDirection}`
             query.orderByRaw(result)
           } else {
             query.orderByRaw(

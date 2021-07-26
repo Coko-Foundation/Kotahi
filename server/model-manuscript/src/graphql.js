@@ -680,6 +680,7 @@ const resolvers = {
 
       try {
         detailedManuscripts = await ctx.models.Manuscript.query()
+          .modify('orderBy', sort)
           .whereIn(
             'manuscripts.id',
             manuscripts.map(manuscript => manuscript.id),
