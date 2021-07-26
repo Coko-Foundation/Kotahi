@@ -38,7 +38,7 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
 
   return {
     uuid: manuscript.id,
-    title_journal: `${submission.articleDescription} ${importSourceServer})`,
+    title_journal: `${submission.articleDescription} ${importSourceServer}`,
     Title: submission.articleDescription || '',
     Topic: topics.join(';') || '',
     'First Author': submission.firstAuthor || '',
