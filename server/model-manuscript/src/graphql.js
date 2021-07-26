@@ -1,7 +1,7 @@
 /* eslint-disable prefer-destructuring */
 const { ref } = require('objection')
 const axios = require('axios')
-const { mergeWith, isArray, uniqBy } = require('lodash')
+const { mergeWith, isArray } = require('lodash')
 const { pubsubManager } = require('pubsweet-server')
 const logger = require('@pubsweet/logger')
 
@@ -549,24 +549,16 @@ const resolvers = {
 
       return manuscript
     },
-    /** Get latest version of each manuscript the user is a current reviewer of */
-    async manuscriptsImReviewerOf(_, input, ctx) {
+    async manuscriptsUserHasCurrentRoleIn(_, input, ctx) {
+      // Get all manuscript versions that this user has a role in
       const teamMemberManuscripts = await ctx.models.TeamMember.query()
         .where({ userId: ctx.user.id })
         .withGraphFetched('[team.[manuscript]]')
 
-      const onlyReviewerTeams = teamMemberManuscripts.filter(teamMember => {
-        return [
-          'reviewer',
-          'invited:reviewer',
-          'accepted:reviewer',
-          'completed:reviewer',
-        ].includes(teamMember.team.role)
-      })
-
+      // Get IDs of the top-level manuscripts
       const topLevelManuscriptIds = [
         ...new Set(
-          onlyReviewerTeams.map(
+          teamMemberManuscripts.map(
             teamMember =>
               teamMember.team.manuscript.parentId ||
               teamMember.team.manuscript.id,
@@ -574,6 +566,7 @@ const resolvers = {
         ),
       ]
 
+      // Get those top-level manuscripts with all versions, all with teams and members
       const manuscripts = await ctx.models.Manuscript.query()
         .withGraphFetched(
           '[teams.[members], manuscriptVersions(orderByCreated).[teams.[members]]]',
@@ -589,101 +582,12 @@ const resolvers = {
             ? m.manuscriptVersions[m.manuscriptVersions.length - 1]
             : m
 
-        const currentRoles = latestVersion.teams
-          .filter(t => t.members.some(member => member.userId === ctx.user.id))
-          .map(t => t.role)
-
         if (
-          currentRoles.some(r =>
-            [
-              'reviewer',
-              'invited:reviewer',
-              'accepted:reviewer',
-              'completed:reviewer',
-            ].includes(r),
+          latestVersion.teams.some(t =>
+            t.members.some(member => member.userId === ctx.user.id),
           )
         )
-          filteredManuscripts.push(latestVersion)
-      })
-
-      return filteredManuscripts
-    },
-    async manuscriptsImAuthorOf(_, input, ctx) {
-      const teamMemberManuscripts = await ctx.models.TeamMember.query()
-        .where({ userId: ctx.user.id })
-        .withGraphFetched(
-          '[team.[manuscript.[manuscriptVersions(orderByCreated)]]]',
-        )
-
-      const onlyAuthorTeamsAndOnlyTopLevelManuscripts = teamMemberManuscripts.filter(
-        teamMember => {
-          return (
-            ['author'].includes(teamMember.team.role) &&
-            !teamMember.team.manuscript.parentId
-          )
-        },
-      )
-
-      const manuscripts = uniqBy(
-        onlyAuthorTeamsAndOnlyTopLevelManuscripts.map(teamMember => {
-          return { ...teamMember.team.manuscript, userId: teamMember.userId }
-        }),
-        'id',
-      )
-
-      return manuscripts
-    },
-    /** Get latest version of each manuscript the user is a current editor of;
-     * add a currentRoles field in each, listing the user's current roles for that manuscript. */
-    async manuscriptsImEditorOf(_, input, ctx) {
-      const teamMemberManuscripts = await ctx.models.TeamMember.query()
-        .where({ userId: ctx.user.id })
-        .withGraphFetched('[team.[manuscript]]')
-
-      const onlyEditorTeams = teamMemberManuscripts.filter(teamMember => {
-        return ['seniorEditor', 'handlingEditor', 'editor'].includes(
-          teamMember.team.role,
-        )
-      })
-
-      const topLevelManuscriptIds = [
-        ...new Set(
-          onlyEditorTeams.map(
-            teamMember =>
-              teamMember.team.manuscript.parentId ||
-              teamMember.team.manuscript.id,
-          ),
-        ),
-      ]
-
-      const manuscripts = await ctx.models.Manuscript.query()
-        .withGraphFetched(
-          '[teams.[members], manuscriptVersions(orderByCreated).[teams.[members]]]',
-        )
-        .whereIn('id', topLevelManuscriptIds)
-        .orderBy('created', 'desc')
-
-      const filteredManuscripts = []
-
-      manuscripts.forEach(m => {
-        const latestVersion =
-          m.manuscriptVersions && m.manuscriptVersions.length > 0
-            ? m.manuscriptVersions[m.manuscriptVersions.length - 1]
-            : m
-
-        const currentRoles = latestVersion.teams
-          .filter(t => t.members.some(member => member.userId === ctx.user.id))
-          .map(t => t.role)
-
-        if (
-          currentRoles.some(r =>
-            ['seniorEditor', 'handlingEditor', 'editor'].includes(r),
-          )
-        )
-          filteredManuscripts.push({
-            ...latestVersion,
-            currentRoles,
-          })
+          filteredManuscripts.push(m)
       })
 
       return filteredManuscripts
@@ -828,9 +732,7 @@ const typeDefs = `
     paginatedManuscripts(sort: String, offset: Int, limit: Int, filter: ManuscriptsFilter): PaginatedManuscripts
     publishedManuscripts(sort:String, offset: Int, limit: Int): PaginatedManuscripts
     validateDOI(articleURL: String): validateDOIResponse
-    manuscriptsImEditorOf: [Manuscript]
-    manuscriptsImAuthorOf: [Manuscript]
-    manuscriptsImReviewerOf: [Manuscript]
+    manuscriptsUserHasCurrentRoleIn: [Manuscript]
   }
 
   input ManuscriptsFilter {

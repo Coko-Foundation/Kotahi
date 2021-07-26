@@ -1,15 +1,11 @@
-import React, { useState } from 'react'
+import React from 'react'
 import { useQuery, useMutation } from '@apollo/client'
 import { Button } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 
 import config from 'config'
 import ReactRouterPropTypes from 'react-router-prop-types'
-import queries, {
-  manuscriptImEditorOfQuery,
-  manuscriptImAuthorOfQuery,
-  manuscriptImReviewerOfQuery,
-} from '../graphql/queries'
+import queries from '../graphql/queries'
 import mutations from '../graphql/mutations'
 import { Container, Placeholder } from '../style'
 import EditorItem from './sections/EditorItem'
@@ -36,52 +32,25 @@ const getLatestVersion = manuscript => {
   return manuscript.manuscriptVersions[manuscript.manuscriptVersions.length - 1]
 }
 
+/** Filter to return those manuscripts with the given user in one of the given roles.
+ * Roles is an array of role-name strings.
+ */
+const getManuscriptsUserHasRoleIn = (manuscripts, userId, roles) =>
+  manuscripts.filter(m =>
+    m.teams.some(
+      t =>
+        roles.includes(t.role) &&
+        t.members.some(member => member.user.id === userId),
+    ),
+  )
+
+const getRoles = (m, userId) =>
+  m.teams
+    .filter(t => t.members.some(member => member.user.id === userId))
+    .map(t => t.role)
+
 const Dashboard = ({ history, ...props }) => {
-  const [
-    dataManuscriptImEditorOfQuery,
-    setDataManuscriptImEditorOfQuery,
-  ] = useState(null)
-
-  const [
-    dataManuscriptImReviewerOfQuery,
-    setDataManuscriptImReviewerOfQuery,
-  ] = useState(null)
-
-  const {
-    loading: loadingCurrentUser,
-    data: dataCurrentUser,
-    error: errorCurrentUser,
-  } = useQuery(queries.dashboard)
-
-  const {
-    loading: loadingManuscriptImAuthorOfQuery,
-    data: dataManuscriptImAuthorOfQuery,
-    error: errorManuscriptImAuthorOfQuery,
-  } = useQuery(manuscriptImAuthorOfQuery, {
-    fetchPolicy: 'no-cache',
-  })
-
-  // onCompleted is used instead of data, because sometimes data is undefined, and it's not a response from BE, looks like apollo bug
-  const {
-    loading: loadingManuscriptImReviewerOfQuery,
-    error: errorManuscriptImReviewerOfQuery,
-    refetch: refetchManuscriptImReviewerOfQuery,
-  } = useQuery(manuscriptImReviewerOfQuery, {
-    onCompleted: data => {
-      setDataManuscriptImReviewerOfQuery(data)
-    },
-    fetchPolicy: 'no-cache',
-  })
-
-  const {
-    loading: loadingManuscriptImEditorOfQuery,
-    error: errorManuscriptImEditorOfQuery,
-  } = useQuery(manuscriptImEditorOfQuery, {
-    onCompleted: data => {
-      setDataManuscriptImEditorOfQuery(data)
-    },
-    fetchPolicy: 'no-cache',
-  })
+  const { loading, data, error } = useQuery(queries.dashboard)
 
   const [reviewerRespond] = useMutation(mutations.reviewerResponseMutation)
 
@@ -100,38 +69,35 @@ const Dashboard = ({ history, ...props }) => {
   //   },
   // })
 
-  if (
-    loadingManuscriptImAuthorOfQuery ||
-    loadingManuscriptImReviewerOfQuery ||
-    loadingManuscriptImEditorOfQuery ||
-    loadingCurrentUser
+  if (loading) return <Spinner />
+  if (error) return JSON.stringify(error)
+  const currentUser = data && data.currentUser
+
+  const latestVersions = data.manuscriptsUserHasCurrentRoleIn.map(
+    getLatestVersion,
   )
-    return <Spinner />
-  if (
-    errorManuscriptImAuthorOfQuery ||
-    errorManuscriptImReviewerOfQuery ||
-    errorManuscriptImEditorOfQuery ||
-    errorCurrentUser
+
+  const authorLatestVersions = getManuscriptsUserHasRoleIn(
+    latestVersions,
+    currentUser.id,
+    ['author'],
   )
-    return JSON.stringify(
-      errorManuscriptImAuthorOfQuery ||
-        errorManuscriptImReviewerOfQuery ||
-        errorManuscriptImEditorOfQuery ||
-        errorCurrentUser,
-    )
-  const currentUser = dataCurrentUser && dataCurrentUser.currentUser
+
+  const reviewerLatestVersions = getManuscriptsUserHasRoleIn(
+    latestVersions,
+    currentUser.id,
+    ['reviewer', 'invited:reviewer', 'accepted:reviewer', 'completed:reviewer'],
+  )
+
+  const editorLatestVersions = getManuscriptsUserHasRoleIn(
+    latestVersions,
+    currentUser.id,
+    ['seniorEditor', 'handlingEditor', 'editor'],
+  )
 
   // Editors are always linked to the parent/original manuscript, not to versions
 
   const urlFrag = config.journal.metadata.toplevel_urlfragment
-
-  const mySubmissionsLatestVersions =
-    dataManuscriptImAuthorOfQuery &&
-    dataManuscriptImAuthorOfQuery.manuscriptsImAuthorOf.length > 0
-      ? dataManuscriptImAuthorOfQuery.manuscriptsImAuthorOf.map(
-          getLatestVersion,
-        )
-      : null
 
   return (
     <Container>
@@ -149,8 +115,8 @@ const Dashboard = ({ history, ...props }) => {
           <SectionHeader>
             <Title>My Submissions</Title>
           </SectionHeader>
-          {mySubmissionsLatestVersions ? (
-            mySubmissionsLatestVersions.map(version => (
+          {authorLatestVersions.length > 0 ? (
+            authorLatestVersions.map(version => (
               // Links are based on the original/parent manuscript version
               <OwnerItem
                 key={version.id}
@@ -175,21 +141,17 @@ const Dashboard = ({ history, ...props }) => {
           <SectionHeader>
             <Title>To Review</Title>
           </SectionHeader>
-          {dataManuscriptImReviewerOfQuery &&
-          dataManuscriptImReviewerOfQuery.manuscriptsImReviewerOf.length > 0 ? (
-            dataManuscriptImReviewerOfQuery.manuscriptsImReviewerOf.map(
-              version => (
-                <SectionRow key={version.id}>
-                  <ReviewerItem
-                    currentUser={currentUser}
-                    key={version.id}
-                    refetchReviewer={refetchManuscriptImReviewerOfQuery}
-                    reviewerRespond={reviewerRespond}
-                    version={version}
-                  />
-                </SectionRow>
-              ),
-            )
+          {reviewerLatestVersions.length > 0 ? (
+            reviewerLatestVersions.map(version => (
+              <SectionRow key={version.id}>
+                <ReviewerItem
+                  currentUser={currentUser}
+                  key={version.id}
+                  reviewerRespond={reviewerRespond}
+                  version={version}
+                />
+              </SectionRow>
+            ))
           ) : (
             <Placeholder>
               You have not been assigned any reviews yet
@@ -202,15 +164,15 @@ const Dashboard = ({ history, ...props }) => {
         <SectionHeader>
           <Title>Manuscripts I&apos;m editor of</Title>
         </SectionHeader>
-        {dataManuscriptImEditorOfQuery &&
-        dataManuscriptImEditorOfQuery.manuscriptsImEditorOf.length > 0 ? (
-          dataManuscriptImEditorOfQuery.manuscriptsImEditorOf.map(
-            manuscript => (
-              <SectionRow key={`manuscript-${manuscript.id}`}>
-                <EditorItem version={manuscript} />
-              </SectionRow>
-            ),
-          )
+        {editorLatestVersions.length > 0 ? (
+          editorLatestVersions.map(manuscript => (
+            <SectionRow key={`manuscript-${manuscript.id}`}>
+              <EditorItem
+                currentRoles={getRoles(manuscript, currentUser.id)}
+                version={manuscript}
+              />
+            </SectionRow>
+          ))
         ) : (
           <SectionRow>
             <Placeholder>

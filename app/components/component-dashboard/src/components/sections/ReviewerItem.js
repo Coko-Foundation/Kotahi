@@ -11,12 +11,7 @@ import VersionTitle from './VersionTitle'
 // TODO: only return actions if not accepted or rejected
 // TODO: review id in link
 
-const ReviewerItem = ({
-  version,
-  currentUser,
-  reviewerRespond,
-  refetchReviewer,
-}) => {
+const ReviewerItem = ({ version, currentUser, reviewerRespond }) => {
   const team =
     (version.teams || []).find(team_ => team_.role === 'reviewer') || {}
 
@@ -44,30 +39,28 @@ const ReviewerItem = ({
         <ActionGroup>
           <Action
             data-testid="accept-review"
-            onClick={async () => {
-              await reviewerRespond({
+            onClick={() =>
+              reviewerRespond({
                 variables: {
                   currentUserId: currentUser.id,
                   action: 'accepted',
                   teamId: team.id,
                 },
               })
-              await refetchReviewer()
-            }}
+            }
           >
             Accept
           </Action>
           <Action
-            onClick={async () => {
-              await reviewerRespond({
+            onClick={() =>
+              reviewerRespond({
                 variables: {
                   currentUserId: currentUser.id,
                   action: 'rejected',
                   teamId: team.id,
                 },
               })
-              refetchReviewer()
-            }}
+            }
           >
             Reject
           </Action>
@@ -99,7 +92,6 @@ ReviewerItem.propTypes = {
   }).isRequired,
   currentUser: PropTypes.oneOfType([PropTypes.object]).isRequired,
   reviewerRespond: PropTypes.func.isRequired,
-  refetchReviewer: PropTypes.func.isRequired,
 }
 
 export default ReviewerItem

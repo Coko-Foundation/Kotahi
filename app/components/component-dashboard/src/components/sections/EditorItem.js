@@ -78,7 +78,7 @@ const getSubmitedDate = version =>
     history => history.type === 'submitted',
   ) || []
 
-const EditorItem = ({ version }) => (
+const EditorItem = ({ version, currentRoles }) => (
   // <Authorize object={[version]} operation="can view my manuscripts section">
   <>
     <Item>
@@ -98,7 +98,7 @@ const EditorItem = ({ version }) => (
         {getSubmitedDate(version) ? (
           <MetadataSubmittedDate submitted={getSubmitedDate(version).date} />
         ) : null}
-        &nbsp;You are {prettyRoleText(version.currentRoles)}.
+        &nbsp;You are {prettyRoleText(currentRoles)}.
       </Meta>
     </Item>
     <Item>
@@ -137,8 +137,8 @@ EditorItem.propTypes = {
         ).isRequired,
       }).isRequired,
     ).isRequired,
-    currentRoles: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
   }).isRequired,
+  currentRoles: PropTypes.arrayOf(PropTypes.string.isRequired).isRequired,
 }
 
 export default EditorItem
