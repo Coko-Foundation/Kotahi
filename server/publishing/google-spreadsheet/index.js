@@ -72,11 +72,6 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
 const publishToGoogleSpreadSheet = async manuscript => {
   try {
     const forPublishingData = mapFieldsToSpreadsheetColumns(manuscript)
-    console.log('forPublishingData')
-    console.log(forPublishingData)
-
-    // tmp return for testing purposes
-    return
     const { link } = forPublishingData
 
     const doc = new GoogleSpreadsheet(process.env.GOOGLE_SPREADSHEET_ID)
