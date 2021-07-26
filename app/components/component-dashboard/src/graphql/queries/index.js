@@ -135,8 +135,8 @@ export const manuscriptImAuthorOfQuery = gql`
 `
 
 export const manuscriptImEditorOfQuery = gql`
-  query manuscriptImEditorOf {
-    manuscriptImEditorOf {
+  query manuscriptsImEditorOf {
+    manuscriptsImEditorOf {
       manuscriptVersions {
         id
         parentId

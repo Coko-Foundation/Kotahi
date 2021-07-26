@@ -308,7 +308,7 @@ const permissions = {
     currentUser: isAuthenticated,
     paginatedManuscripts: userIsAdmin,
     publishedManuscripts: allow,
-    manuscriptImEditorOf: allow,
+    manuscriptsImEditorOf: allow,
     manuscriptsImAuthorOf: allow,
     manuscriptsImReviewerOf: allow,
     manuscripts: allow,

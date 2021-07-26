@@ -25,8 +25,16 @@ import {
   HeadingWithAction,
 } from '../../../shared'
 
-const latestVersion = manuscript =>
-  manuscript.manuscriptVersions?.[0] || manuscript
+const getLatestVersion = manuscript => {
+  if (
+    !manuscript ||
+    !manuscript.manuscriptVersions ||
+    manuscript.manuscriptVersions.length <= 0
+  )
+    return manuscript
+
+  return manuscript.manuscriptVersions[manuscript.manuscriptVersions.length - 1]
+}
 
 const Dashboard = ({ history, ...props }) => {
   const [
@@ -117,6 +125,14 @@ const Dashboard = ({ history, ...props }) => {
 
   const urlFrag = config.journal.metadata.toplevel_urlfragment
 
+  const mySubmissionsLatestVersions =
+    dataManuscriptImAuthorOfQuery &&
+    dataManuscriptImAuthorOfQuery.manuscriptsImAuthorOf.length > 0
+      ? dataManuscriptImAuthorOfQuery.manuscriptsImAuthorOf.map(
+          getLatestVersion,
+        )
+      : null
+
   return (
     <Container>
       <HeadingWithAction>
@@ -133,23 +149,20 @@ const Dashboard = ({ history, ...props }) => {
           <SectionHeader>
             <Title>My Submissions</Title>
           </SectionHeader>
-          {dataManuscriptImAuthorOfQuery &&
-          dataManuscriptImAuthorOfQuery.manuscriptsImAuthorOf.length > 0 ? (
-            dataManuscriptImAuthorOfQuery.manuscriptsImAuthorOf
-              .map(latestVersion)
-              .map(submission => (
-                // Links are based on the original/parent manuscript version
-                <OwnerItem
-                  key={submission.id}
-                  // deleteManuscript={() =>
-                  //   // eslint-disable-next-line no-alert
-                  //   window.confirm(
-                  //     'Are you sure you want to delete this submission?',
-                  //   ) && deleteManuscript({ variables: { id: submission.id } })
-                  // }
-                  version={submission}
-                />
-              ))
+          {mySubmissionsLatestVersions ? (
+            mySubmissionsLatestVersions.map(version => (
+              // Links are based on the original/parent manuscript version
+              <OwnerItem
+                key={version.id}
+                // deleteManuscript={() =>
+                //   // eslint-disable-next-line no-alert
+                //   window.confirm(
+                //     'Are you sure you want to delete this submission?',
+                //   ) && deleteManuscript({ variables: { id: submission.id } })
+                // }
+                version={version}
+              />
+            ))
           ) : (
             <Placeholder>
               You have not submitted any manuscripts yet
@@ -164,19 +177,19 @@ const Dashboard = ({ history, ...props }) => {
           </SectionHeader>
           {dataManuscriptImReviewerOfQuery &&
           dataManuscriptImReviewerOfQuery.manuscriptsImReviewerOf.length > 0 ? (
-            dataManuscriptImReviewerOfQuery.manuscriptsImReviewerOf
-              .map(latestVersion)
-              .map(review => (
-                <SectionRow key={review.id}>
+            dataManuscriptImReviewerOfQuery.manuscriptsImReviewerOf.map(
+              version => (
+                <SectionRow key={version.id}>
                   <ReviewerItem
                     currentUser={currentUser}
-                    key={review.id}
+                    key={version.id}
                     refetchReviewer={refetchManuscriptImReviewerOfQuery}
                     reviewerRespond={reviewerRespond}
-                    version={review}
+                    version={version}
                   />
                 </SectionRow>
-              ))
+              ),
+            )
           ) : (
             <Placeholder>
               You have not been assigned any reviews yet
@@ -190,14 +203,14 @@ const Dashboard = ({ history, ...props }) => {
           <Title>Manuscripts I&apos;m editor of</Title>
         </SectionHeader>
         {dataManuscriptImEditorOfQuery &&
-        dataManuscriptImEditorOfQuery.manuscriptImEditorOf.length > 0 ? (
-          dataManuscriptImEditorOfQuery.manuscriptImEditorOf
-            .map(latestVersion)
-            .map(manuscript => (
+        dataManuscriptImEditorOfQuery.manuscriptsImEditorOf.length > 0 ? (
+          dataManuscriptImEditorOfQuery.manuscriptsImEditorOf.map(
+            manuscript => (
               <SectionRow key={`manuscript-${manuscript.id}`}>
                 <EditorItem version={manuscript} />
               </SectionRow>
-            ))
+            ),
+          )
         ) : (
           <SectionRow>
             <Placeholder>

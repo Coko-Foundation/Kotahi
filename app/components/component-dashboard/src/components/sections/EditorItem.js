@@ -24,7 +24,7 @@ const StyledActionGroup = styled(ActionGroup)`
   text-align: right;
 `
 
-const getUserFromTeam = (version, role) => {
+const getMembersOfTeam = (version, role) => {
   if (!version.teams) return []
 
   const teams = version.teams.filter(team => team.teamType === role)
@@ -94,7 +94,7 @@ const EditorItem = ({ version }) => (
             'streamlinedReview',
           )}
         />
-        <MetadataAuthors authors={getUserFromTeam(version, 'author')} />
+        <MetadataAuthors authors={getMembersOfTeam(version, 'author')} />
         {getSubmitedDate(version) ? (
           <MetadataSubmittedDate submitted={getSubmitedDate(version).date} />
         ) : null}
