@@ -18,6 +18,8 @@ const sequenceMapping = {
 }
 
 const requestToCrossref = async xmlFiles => {
+  console.log('requestToCrossref')
+
   const publishPromises = xmlFiles.map(async file => {
     const formData = new FormData()
     formData.append('login_id', process.env.CROSSREF_LOGIN)
@@ -69,6 +71,9 @@ const publishToCrossref = async manuscript => {
     .map(([reviewNr]) => reviewNr.replace('review', ''))
 
   const jsonResult = await parser.parseStringPromise(template)
+
+  console.log('notEmptyReviews')
+  console.log(notEmptyReviews)
 
   const xmls = notEmptyReviews
     .map(reviewNumber => {
@@ -154,6 +159,8 @@ const publishToCrossref = async manuscript => {
     })
     .filter(Boolean)
 
+  console.log('after xmls')
+
   if (manuscript.submission.summary && manuscript.submission.summarydate) {
     const templateCopy = JSON.parse(JSON.stringify(jsonResult))
     const [month, day, year] = manuscript.submission.summarydate.split('/')
@@ -213,6 +220,8 @@ const publishToCrossref = async manuscript => {
     xmls.push({ summary: true, xml: builder.buildObject(templateCopy) })
   }
 
+  console.log('after submission summary')
+
   const dirName = `${+new Date()}-${manuscript.id}`
   // eslint-disable-next-line
   console.log('xml_1')
@@ -231,6 +240,7 @@ const publishToCrossref = async manuscript => {
   // eslint-disable-next-line
   if (xmls[3]) console.log(xmls[3].xml)
 
+  console.log('before mkdir')
   await fsPromised.mkdir(dirName)
 
   const fileCreationPromises = xmls.map(async xml => {
@@ -241,6 +251,8 @@ const publishToCrossref = async manuscript => {
     await fsPromised.appendFile(`${dirName}/${fileName}`, xml.xml)
     return `${dirName}/${fileName}`
   })
+
+  console.log('xmls are created')
 
   const xmlFiles = await Promise.all(fileCreationPromises)
   await requestToCrossref(xmlFiles)
