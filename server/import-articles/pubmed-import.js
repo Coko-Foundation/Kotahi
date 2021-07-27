@@ -2,10 +2,12 @@
 const axios = require('axios')
 const xml2json = require('xml-js')
 const FormData = require('form-data')
+const fetch = require('node-fetch')
 
 const ArticleImportSources = require('../model-article-import-sources/src/articleImportSources')
 const ArticleImportHistory = require('../model-article-import-history/src/articleImportHistory')
 const Form = require('../model-form/src/form')
+const flattenObj = require('../utils/flattenObj')
 
 const selectVersionRegexp = /(v)(?!.*\1)/g
 
@@ -204,12 +206,13 @@ const getData = async ctx => {
 
       const url = `https://eutils.ncbi.nlm.nih.gov/entrez/eutils/efetch.fcgi`
 
-      const idsResponse = await axios.post(url, formData, {
-        headers: formData.getHeaders(),
-      })
+      const idsResponse = await fetch(url, {
+        method: 'post',
+        body: formData,
+      }).then(response => response.text())
 
       const { PubmedArticleSet } = await JSON.parse(
-        xml2json.xml2json(idsResponse.data, {
+        xml2json.xml2json(idsResponse, {
           compact: true,
           spaces: 2,
         }),
@@ -284,6 +287,16 @@ const getData = async ctx => {
 
           const topics = topic ? [formattedTopic] : []
 
+          // for some titles HTML is returned, need to find _text property in nested object
+          const flattedArticleTitle = flattenObj(ArticleTitle)
+
+          // the name of nested property in objects is always _text
+          const titlePropName = Object.keys(flattedArticleTitle).find(key =>
+            key.includes('_text'),
+          )
+
+          const articleTitle = flattedArticleTitle[titlePropName]
+
           return publishedDate
             ? {
                 status: 'new',
@@ -314,7 +327,7 @@ const getData = async ctx => {
                     : [],
                   datePublished: publishedDate,
                   articleURL: `https://doi.org/${pubmedDOI(MedlineCitation)}`,
-                  articleDescription: ArticleTitle._text,
+                  articleDescription: articleTitle,
                   abstract: Abstract
                     ? Abstract.AbstractText.length
                       ? Abstract.AbstractText.map(
