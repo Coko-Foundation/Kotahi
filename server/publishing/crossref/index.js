@@ -22,10 +22,18 @@ const requestToCrossref = async xmlFiles => {
 
   const publishPromises = xmlFiles.map(async file => {
     const formData = new FormData()
+    console.log('process.env.CROSSREF_LOGIN')
+    console.log(process.env.CROSSREF_LOGIN)
+    console.log('process.env.CROSSREF_PASSWORD')
+    console.log(process.env.CROSSREF_PASSWORD)
+    console.log('file')
+    console.log(file)
     formData.append('login_id', process.env.CROSSREF_LOGIN)
     formData.append('login_passwd', process.env.CROSSREF_PASSWORD)
     formData.append('fname', fs.createReadStream(file))
 
+    console.log('formData')
+    console.log(formData)
     // const crossrefURL =
     //   process.env.NODE_ENV === 'production'
     //     ? 'https://doi.crossref.org/servlet/deposit'
