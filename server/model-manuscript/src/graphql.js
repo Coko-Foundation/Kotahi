@@ -438,7 +438,13 @@ const resolvers = {
             : 'published'
 
         console.log('before publish to crossref')
-        await publishToCrossref(manuscript)
+
+        try {
+          await publishToCrossref(manuscript)
+        } catch (e) {
+          console.log('error publishing to crossref')
+          console.log(e)
+        }
 
         console.log('before publish to hypothesis')
 
