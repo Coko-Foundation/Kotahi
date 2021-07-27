@@ -424,7 +424,11 @@ const resolvers = {
           })
           .every(isEmpty => isEmpty === true)
 
+        console.log('areEvaluationsEmpty')
+        console.log(areEvaluationsEmpty)
+
         if (areEvaluationsEmpty && manuscript.status === 'evaluated') {
+          console.log('evaluations are empty and status is evaluated')
           return manuscript
         }
 
@@ -433,11 +437,16 @@ const resolvers = {
             ? 'evaluated'
             : 'published'
 
+        console.log('before publish to crossref')
         await publishToCrossref(manuscript)
+
+        console.log('before publish to hypothesis')
 
         const newEvaluationsHypothesisMap = await publishToHypothesis(
           manuscript,
         )
+
+        console.log('after publish to hypothesis')
 
         const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
           id,

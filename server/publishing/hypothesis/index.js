@@ -201,6 +201,9 @@ const publishToHypothesis = async manuscript => {
     }
   }, {})
 
+  console.log('newHypothesisEvaluationMap')
+  console.log(newHypothesisEvaluationMap)
+
   return newHypothesisEvaluationMap
 }
 
