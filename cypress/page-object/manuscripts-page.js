@@ -103,13 +103,13 @@ export const ManuscriptsPage = {
     this.getControl().click()
     cy.awaitDisappearSpinner()
     cy.url({ timeout: 10000 }).should('contain', 'decision')
-    ControlPage.getAssignEditorDropdown().should('be.visible')
+    ControlPage.getAssignSeniorEditorDropdown().should('be.visible')
   },
   clickControlNthAndVerifyPageLoaded(nth) {
     this.getControl().eq(nth).click()
     cy.awaitDisappearSpinner()
     cy.url({ timeout: 10000 }).should('contain', 'decision')
-    ControlPage.getAssignEditorDropdown().should('be.visible')
+    ControlPage.getAssignSeniorEditorDropdown().should('be.visible')
   },
   getCreatedCaret(nth) {
     return cy.getByContainsClass(CREATED_CARET).eq(nth)

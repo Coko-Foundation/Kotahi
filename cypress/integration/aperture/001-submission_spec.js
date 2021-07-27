@@ -109,7 +109,7 @@ describe('URL submission test', () => {
 
         ControlPage.getMetadataCell(1).should('contain', data.title)
         // assign seniorEditor
-        ControlPage.clickAssignEditorDropdown()
+        ControlPage.clickAssignSeniorEditorDropdown()
         ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
 
         // login as seniorEditor

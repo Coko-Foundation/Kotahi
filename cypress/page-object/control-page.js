@@ -12,11 +12,14 @@ const DECISION_COMMENT_FIELD =
 
 const PUBLISH_BUTTON = '[class*=General__SectionAction] > button[type=button]'
 const PUBLISH_INFO_MESSAGE = 'General__SectionActionInfo'
-const ASSIGN_EDITOR_DROPDOWN = 'Assign seniorEditor'
+const ASSIGN_SENIOR_EDITOR_DROPDOWN = 'Assign seniorEditor'
+const ASSIGN_HANDLING_EDITOR_DROPDOWN = 'Assign handlingEditor'
+const ASSIGN_EDITOR_DROPDOWN = 'Assign editor'
 const DROPDOWN_OPTION_LIST = '[class*=MenuList] > [id*=option]'
 const METADATA_CELL = 'ReviewMetadata__Cell'
 const ERROR_TEXT = 'style__ErrorText-'
 const ACCEPT_RADIO_BUTTON = 'span[color=green]'
+const REVISE_RADIO_BUTTON = 'span[color=orange]'
 const SUBMIT_BUTTON = '[class*=General__SectionAction] > button[type=submit]'
 const FORM_STATUS = 'style__FormStatus-'
 const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
@@ -71,6 +74,18 @@ export const ControlPage = {
   getPublishInfoMessage() {
     return cy.getByContainsClass(PUBLISH_INFO_MESSAGE).invoke('text')
   },
+  getAssignSeniorEditorDropdown() {
+    return cy.getByContainsAriaLabel(ASSIGN_SENIOR_EDITOR_DROPDOWN)
+  },
+  clickAssignSeniorEditorDropdown() {
+    this.getAssignSeniorEditorDropdown().click({ force: true })
+  },
+  getAssignHandlingEditorDropdown() {
+    return cy.getByContainsAriaLabel(ASSIGN_HANDLING_EDITOR_DROPDOWN)
+  },
+  clickAssignHandlingEditorDropdown() {
+    this.getAssignHandlingEditorDropdown().click({ force: true })
+  },
   getAssignEditorDropdown() {
     return cy.getByContainsAriaLabel(ASSIGN_EDITOR_DROPDOWN)
   },
@@ -96,6 +111,12 @@ export const ControlPage = {
   },
   clickAccept() {
     this.getAcceptRadioButton().click()
+  },
+  getReviseRadioButton() {
+    return cy.get(REVISE_RADIO_BUTTON)
+  },
+  clickRevise() {
+    this.getReviseRadioButton().click()
   },
   getSubmitButton() {
     return cy.get(SUBMIT_BUTTON)

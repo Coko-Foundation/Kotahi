@@ -17,6 +17,13 @@ const ERROR_TEXT = 'style__ErrorText-'
 const FORM_STATUS = 'style__FormStatus-'
 const PUBLISH_BUTTON = 'button[type="button"]'
 const CAN_BE_PUBLISHED_PUBLICLY_CHECKBOX = '[name=canBePublishedPublicly]'
+const PAGE_SECTIONS = 'General__SectionContent'
+const SECTION_HEADER = 'h2[class]'
+const DECISION_TEXT = 'SimpleWaxEditor__ReadOnlyEditorDiv'
+const DECISION_RECOMMENDATION = 'style__RecommendationInputContainer'
+
+const DECISION_BUTTON_SELECTED =
+  '[class*=component-decision-viewer__RadioGroup] [checked]'
 
 // eslint-disable-next-line import/prefer-default-export
 export const ReviewPage = {
@@ -39,7 +46,7 @@ export const ReviewPage = {
     return cy.get(ACCEPT_RADIO_BUTTON)
   },
   clickAccept() {
-    this.getAcceptRadioButton().click()
+    this.getAcceptRadioButton().eq(0).click()
   },
   getSubmitButton() {
     return cy.get(SUBMIT_BUTTON)
@@ -79,5 +86,20 @@ export const ReviewPage = {
     this.getCanBePublishedPubliclyCheckbox().click()
     // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(1000)
+  },
+  getAllPageSections() {
+    return cy.getByContainsClass(PAGE_SECTIONS)
+  },
+  getAllSectionHeaders() {
+    return cy.get(SECTION_HEADER)
+  },
+  getDecisionText() {
+    return cy.getByContainsClass(DECISION_TEXT)
+  },
+  getDecisionRecommendation() {
+    return cy.getByContainsClass(DECISION_RECOMMENDATION)
+  },
+  getDecisionSelectedButton() {
+    return cy.get(DECISION_BUTTON_SELECTED)
   },
 }

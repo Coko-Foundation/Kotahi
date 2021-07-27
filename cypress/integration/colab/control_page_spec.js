@@ -10,7 +10,7 @@ import { ControlPage } from '../../page-object/control-page'
 import { ReviewersPage } from '../../page-object/reviewers-page'
 import { ReviewPage } from '../../page-object/review-page'
 
-describe('review page', () => {
+describe('control page tests', () => {
   context('shared message', () => {
     beforeEach(() => {
       cy.task('restore', 'initial_state_other')
@@ -22,7 +22,7 @@ describe('review page', () => {
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.clickControlAndVerifyPageLoaded()
-        ControlPage.getAssignEditor(3).click()
+        ControlPage.clickAssignSeniorEditorDropdown()
         ControlPage.selectDropdownOptionByName(name.role.reviewers.reviewer1)
         ControlPage.clickManageReviewers()
         ReviewersPage.inviteReviewer(name.role.reviewers.reviewer1)
@@ -85,7 +85,9 @@ describe('review page', () => {
       cy.fixture('submission_form_data').then(data => {
         ReviewPage.fillInReviewComment(data.review1)
       })
-      ReviewPage.getCanBePublishedPubliclyCheckbox().scrollIntoView().should('be.visible')
+      ReviewPage.getCanBePublishedPubliclyCheckbox()
+        .scrollIntoView()
+        .should('be.visible')
       ReviewPage.clickCanBePublishedPublicly()
       ReviewPage.getCanBePublishedPubliclyCheckbox().should(
         'have.value',
@@ -130,7 +132,7 @@ describe('review page', () => {
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.clickControlAndVerifyPageLoaded()
-        ControlPage.getAssignEditor(3).click()
+        ControlPage.clickAssignSeniorEditorDropdown()
         ControlPage.selectDropdownOptionByName(name.role.reviewers.reviewer1)
         ControlPage.clickManageReviewers()
         ReviewersPage.inviteReviewer(name.role.reviewers.reviewer1)
