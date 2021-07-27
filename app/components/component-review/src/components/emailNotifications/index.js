@@ -11,6 +11,8 @@ import { SectionContent } from '../../../../shared'
 import SelectReceiver from './SelectReceiver'
 import SelectEmailTemplate from './SelectEmailTemaplate'
 import { getUsers, sendEmail } from '../queries'
+import { CREATE_MESSAGE } from '../../../../../queries'
+import useCurrentUser from '../../../../../hooks/useCurrentUser'
 
 const editorOption = user => ({
   label: user.defaultIdentity?.name || user.email || user.username,
@@ -31,9 +33,50 @@ const EmailNotifications = ({ manuscript }) => {
   const { data, loading, error } = useQuery(getUsers)
 
   const [sendEmailMutation] = useMutation(sendEmail)
+  const [sendChannelMessage] = useMutation(CREATE_MESSAGE)
+  const currentUser = useCurrentUser()
 
   if (loading || error) {
     return null
+  }
+
+  const handlerForNewUserToggle = () => {
+    setIsNewUser(s => !s)
+  }
+
+  const options = (data.users || [])
+    .filter(user => user.email)
+    .map(user => editorOption(user))
+
+  const logMessageAfterEmailSent = message => {
+    const emailTemplateOptions = [
+      {
+        label: 'Author Acceptance notification',
+        value: 'articleAcceptanceEmailTemplate',
+      },
+      {
+        label: 'Evaluation Complete notification',
+        value: 'evaluationCompleteEmailTemplate',
+      },
+    ]
+
+    const selectedTempl = emailTemplateOptions.find(
+      template => template.value === message.selectedTemplate,
+    ).label
+
+    const receiverName = message.externalEmail
+      ? message.externalName
+      : options.find(user => user.value === message.selectedEmail).label
+
+    const body = `${selectedTempl} sent by ${currentUser.defaultIdentity.name} to ${receiverName}`
+
+    const channelId = message.manuscript.channels.find(
+      channel => channel.topic === 'Manuscript discussion',
+    ).id
+
+    sendChannelMessage({
+      variables: { content: body, channelId },
+    })
   }
 
   const sendEmailHandler = async () => {
@@ -52,15 +95,8 @@ const EmailNotifications = ({ manuscript }) => {
         input: JSON.stringify(input),
       },
     })
+    logMessageAfterEmailSent(input)
   }
-
-  const handlerForNewUserToggle = () => {
-    setIsNewUser(s => !s)
-  }
-
-  const options = (data.users || [])
-    .filter(user => user.email)
-    .map(user => editorOption(user))
 
   return (
     <SectionContent noGap>
