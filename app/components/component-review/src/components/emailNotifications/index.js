@@ -13,6 +13,7 @@ import SelectEmailTemplate from './SelectEmailTemaplate'
 import { getUsers, sendEmail } from '../queries'
 import { CREATE_MESSAGE } from '../../../../../queries'
 import useCurrentUser from '../../../../../hooks/useCurrentUser'
+import { convertTimestampToDate } from '../../../../../shared/time-formatting'
 
 const editorOption = user => ({
   label: user.defaultIdentity?.name || user.email || user.username,
@@ -68,7 +69,11 @@ const EmailNotifications = ({ manuscript }) => {
       ? message.externalName
       : options.find(user => user.value === message.selectedEmail).label
 
-    const body = `${selectedTempl} sent by ${currentUser.defaultIdentity.name} to ${receiverName}`
+    const date = Date.now()
+
+    const body = `${convertTimestampToDate(date)} - ${selectedTempl} sent by ${
+      currentUser.defaultIdentity.name
+    } to ${receiverName}`
 
     const channelId = message.manuscript.channels.find(
       channel => channel.topic === 'Editorial discussion',
