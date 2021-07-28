@@ -75,6 +75,7 @@ const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
 
 // specific to colab
 const DOI_FIELD = 'submission.doi'
+const LINK_FIELD = 'submission.link'
 
 export const SubmissionFormPage = {
   getPageTitle() {
@@ -285,7 +286,6 @@ export const SubmissionFormPage = {
     this.clickSubmitManuscript()
     cy.url().should('not.contain', submit)
     cy.awaitDisappearSpinner()
-    ManuscriptsPage.getTableHeader().should('be.visible')
   },
   getValidationErrorMessage(error) {
     return cy.getByContainsClass(VALIDATION_ERROR_MESSAGE).contains(error)
@@ -573,6 +573,12 @@ export const SubmissionFormPage = {
   },
   fillInDoi(doi) {
     this.getDoiFiled().fillInput(doi)
+  },
+  getLinkFiled() {
+    return cy.getByDataTestId(LINK_FIELD)
+  },
+  fillInLink(link) {
+    this.getLinkFiled().fillInput(link)
   },
 }
 export default SubmissionFormPage

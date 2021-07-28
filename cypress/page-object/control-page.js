@@ -26,9 +26,11 @@ const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
 const SHOW_BUTTON = '[class*=DecisionReview__Controls]>[type*=button]'
 
 const REVIEW_MESSAGE =
-  '[class*=SimpleWaxEditor__ReadOnly]>div>[class*=paragraph]'
+  '[class*=DecisionReview__Root] [class*=SimpleWaxEditor__ReadOnly] > div > [class*=paragraph]'
 
-const REVIEW_OPTION_CHECKBOX = '[type=checkbox]'
+const REVIEW_OPTION_CHECKBOX =
+  '[class*=DecisionReview__StyledCheckbox] > [type=checkbox]'
+
 const REVIEWER_NAME = '[class*=DecisionReview__Name]'
 const NO_REVIEWS_MESSAGE = '[class*=General__SectionRow]'
 const ACCEPTED_TO_PUBLISH_REVIEW_ICON = '[class*=DecisionReview__Name] > svg'

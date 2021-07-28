@@ -9,6 +9,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 import { ControlPage } from '../../page-object/control-page'
 import { ReviewersPage } from '../../page-object/reviewers-page'
 import { ReviewPage } from '../../page-object/review-page'
+import { SubmissionFormPage } from '../../page-object/submission-form-page'
 
 describe('control page tests', () => {
   context('shared message', () => {
@@ -185,7 +186,7 @@ describe('control page tests', () => {
     })
   })
 
-  context('admin user can see the icons', () => {
+  context.only('admin user can see the icons', () => {
     beforeEach(() => {
       cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
@@ -194,11 +195,26 @@ describe('control page tests', () => {
         cy.awaitDisappearSpinner()
         DashboardPage.clickSubmit()
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+        cy.fixture('submission_form_data').then(data => {
+          SubmissionFormPage.fillInDoi(data.doi)
+          SubmissionFormPage.fillInAbstractColab(data.abstract)
+          SubmissionFormPage.fillInFirstAuthor(data.creator)
+          SubmissionFormPage.fillInDatePublished(data.date)
+          SubmissionFormPage.fillInLink(data.doi)
+          SubmissionFormPage.fillInOurTake(data.ourTake)
+          SubmissionFormPage.fillInMainFindings(data.mainFindings)
+          SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+          SubmissionFormPage.fillInLimitations(data.limitations)
+          SubmissionFormPage.fillInKeywords(data.keywords)
+          SubmissionFormPage.fillInReviewCreator(data.creator)
+        })
+        SubmissionFormPage.clickSubmitResearch()
+        SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
         cy.login(name.role.admin, manuscripts)
         cy.awaitDisappearSpinner()
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.clickControlAndVerifyPageLoaded()
-        ControlPage.getAssignEditor(3).click()
+        ControlPage.clickAssignSeniorEditorDropdown()
         ControlPage.selectDropdownOptionByName(name.role.reviewers.reviewer2)
         ControlPage.clickManageReviewers()
         ReviewersPage.inviteReviewer(name.role.reviewers.reviewer2)
@@ -231,11 +247,19 @@ describe('control page tests', () => {
     })
     it('admin user hide reviewer name', () => {
       ControlPage.clickHideReviewerNameToAuthor()
+      cy.fixture('role_names').then(name => {
+        cy.login(name.role.reviewers.reviewer1, dashboard)
+      })
+      DashboardPage.getVersionTitle().click()
       ControlPage.getReviewerName().should('contain', 'Anonymous')
       ControlPage.getHideReviewerNameCheckbox().should('be.visible')
     })
     it('admin user hide review', () => {
       ControlPage.clickHideReviewToAuthor()
+      ControlPage.clickHideReviewerNameToAuthor()
+      cy.fixture('role_names').then(name => {
+        cy.login(name.role.reviewers.reviewer1, dashboard)
+      })
       ControlPage.getHideReviewToAuthorCheckbox().should('be.visible')
     })
   })
