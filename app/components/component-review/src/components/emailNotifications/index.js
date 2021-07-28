@@ -71,7 +71,7 @@ const EmailNotifications = ({ manuscript }) => {
     const body = `${selectedTempl} sent by ${currentUser.defaultIdentity.name} to ${receiverName}`
 
     const channelId = message.manuscript.channels.find(
-      channel => channel.topic === 'Manuscript discussion',
+      channel => channel.topic === 'Editorial discussion',
     ).id
 
     sendChannelMessage({
