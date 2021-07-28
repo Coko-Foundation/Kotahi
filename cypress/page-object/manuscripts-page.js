@@ -250,7 +250,7 @@ export const ManuscriptsPage = {
     return cy.get(DROPDOWN_OPTION_LIST).eq(nth).click()
   },
   selectDropdownOptionWithText(text) {
-    return cy.get(DROPDOWN_OPTION_LIST).contains(text).click()
+    return cy.get(DROPDOWN_OPTION_LIST).contains(text).click({ force: true })
   },
 }
 export default ManuscriptsPage

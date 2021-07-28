@@ -1,4 +1,4 @@
-/* eslint-disable jest/valid-expect-in-promise */
+/* eslint-disable jest/valid-expect-in-promise,cypress/no-unnecessary-waiting */
 /* eslint-disable prettier/prettier */
 /* eslint-disable jest/expect-expect */
 import { manuscripts } from '../../support/routes'
@@ -299,29 +299,30 @@ describe('manuscripts page tests', () => {
     })
 
     it('filter article after topic and url contain that topic', () => {
-      // eslint-disable-next-line cypress/no-unnecessary-waiting
-      cy.wait(3000)
-      ManuscriptsPage.clickArticleTopic(-1)
-      ManuscriptsPage.getTableRowsCount().should('eq', 1)
-      cy.url().should('contain', 'vaccines')
-      ManuscriptsPage.getArticleTopic(0).should('contain', 'vaccines')
-      Menu.clickManuscriptsAndAssertPageLoad()
-      ManuscriptsPage.clickArticleTopic(1)
-      ManuscriptsPage.getTableRowsCount().should('eq', 2)
-      cy.url().should('contain', 'diagnostics')
-      ManuscriptsPage.getArticleTopic(0).should('contain', 'modeling')
-      ManuscriptsPage.getArticleTopic(1).should('contain', 'diagnostics')
-      ManuscriptsPage.getArticleTopic(2).should(
-        'contain',
-        'ecology and spillover',
-      )
-      ManuscriptsPage.getArticleTopic(3).should('contain', 'diagnostics')
-      Menu.clickManuscriptsAndAssertPageLoad()
-      ManuscriptsPage.clickArticleTopic(0)
-      ManuscriptsPage.getTableRowsCount().should('eq', 1)
-      cy.url().should('contain', 'modeling')
-      ManuscriptsPage.getArticleTopic(0).should('contain', 'modeling')
-      ManuscriptsPage.getArticleTopic(1).should('contain', 'diagnostics')
+      cy.fixture('form_option').then(data => {
+        cy.wait(3000)
+        ManuscriptsPage.clickArticleTopic(-1)
+        ManuscriptsPage.getTableRowsCount().should('eq', 1)
+        cy.url().should('contain', data.ncrc.topicTypes.vaccines)
+        ManuscriptsPage.getArticleTopic(0).should('contain', data.ncrc.topicTypes.vaccines.toLowerCase())
+        Menu.clickManuscriptsAndAssertPageLoad()
+        ManuscriptsPage.clickArticleTopic(1)
+        ManuscriptsPage.getTableRowsCount().should('eq', 2)
+        cy.url().should('contain', data.ncrc.topicTypes.diagnostics)
+        ManuscriptsPage.getArticleTopic(0).should('contain', data.ncrc.topicTypes.modeling.toLowerCase())
+        ManuscriptsPage.getArticleTopic(1).should('contain', data.ncrc.topicTypes.diagnostics.toLowerCase())
+        ManuscriptsPage.getArticleTopic(2).should(
+            'contain',
+            data.ncrc.topicTypes.ecologyAndSpillover.toLowerCase(),
+        )
+        ManuscriptsPage.getArticleTopic(3).should('contain', data.ncrc.topicTypes.diagnostics.toLowerCase())
+        Menu.clickManuscriptsAndAssertPageLoad()
+        ManuscriptsPage.clickArticleTopic(0)
+        ManuscriptsPage.getTableRowsCount().should('eq', 1)
+        cy.url().should('contain', 'modeling')
+        ManuscriptsPage.getArticleTopic(0).should('contain', data.ncrc.topicTypes.modeling.toLowerCase())
+        ManuscriptsPage.getArticleTopic(1).should('contain', data.ncrc.topicTypes.diagnostics.toLowerCase())
+      })
     })
 
     it('filter article by label from dropdown list, and url should contain that label', () => {
@@ -341,18 +342,20 @@ describe('manuscripts page tests', () => {
     })
 
     it('filter article by topic from dropdown list, and url should contain that topic', () => {
-      ManuscriptsPage.getTableRowsCount().should('eq', 3)
-      ManuscriptsPage.clickTableHead(4)
-      ManuscriptsPage.selectDropdownOptionWithText('diagnostics')
-      ManuscriptsPage.getTableRowsCount().should('eq', 2)
-      ManuscriptsPage.getArticleTopic(0).should('contain', 'modeling')
-      ManuscriptsPage.getArticleTopic(1).should('contain', 'diagnostics')
-      ManuscriptsPage.getArticleTopic(2).should(
-        'contain',
-        'ecology and spillover',
-      )
-      ManuscriptsPage.getArticleTopic(3).should('contain', 'diagnostics')
-      cy.url().should('contain', 'diagnostics')
+      cy.fixture('form_option').then(data => {
+        ManuscriptsPage.getTableRowsCount().should('eq', 3)
+        ManuscriptsPage.clickTableHead(4)
+        ManuscriptsPage.selectDropdownOptionWithText(data.ncrc.topicTypes.diagnostics.toLowerCase())
+        ManuscriptsPage.getTableRowsCount().should('eq', 2)
+        ManuscriptsPage.getArticleTopic(0).should('contain', data.ncrc.topicTypes.modeling.toLowerCase())
+        ManuscriptsPage.getArticleTopic(1).should('contain', data.ncrc.topicTypes.diagnostics.toLowerCase())
+        ManuscriptsPage.getArticleTopic(2).should(
+            'contain',
+            data.ncrc.topicTypes.ecologyAndSpillover.toLowerCase(),
+        )
+        ManuscriptsPage.getArticleTopic(3).should('contain', data.ncrc.topicTypes.diagnostics.toLowerCase())
+        cy.url().should('contain', data.ncrc.topicTypes.diagnostics)
+      })
     })
 
     it('filter article after label and url contain that label', () => {
