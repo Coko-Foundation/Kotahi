@@ -83,6 +83,16 @@
           "label": "Other",
           "value": "other",
           "id": "6762369e-3f95-40fa-acd5-33fd8c7b8b35"
+        },
+        {
+          "label": "Non-Randomized Trial",
+          "value": "nonRandomizedTrial",
+          "id": "144521ad-e924-4a10-ba8f-d456cc89094e"
+        },
+        {
+          "label": "Case-control",
+          "value": "caseControl",
+          "id": "d57ab71c-3e5c-42ee-9a76-fdac1fb34cc6"
         }
       ],
       "title": "Study design",
@@ -252,8 +262,8 @@
           "id": "0e83d008-eac7-11eb-9a03-0242ac130003"
         },
         {
-          "label": "vaccines_trial-protocols",
-          "value": "vaccines_trial-protocols",
+          "label": "vaccines_trial-protocol",
+          "value": "vaccines_trial-protocol",
           "id": "0e83d116-eac7-11eb-9a03-0242ac130003"
         },
         {
@@ -295,6 +305,56 @@
           "label": "clinical-presentation-prognostic-risk-factors_prognostic-tools",
           "value": "clinical-presentation-prognostic-risk-factors_prognostic-tools",
           "id": "0e83dbca-eac7-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "modeling_covid-19-mortality-morbidity-and-demand-for-healthcare-services",
+          "value": "modeling_covid-19-mortality-morbidity-and-demand-for-healthcare-services",
+          "id": "1616f558-f061-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "modeling_impact-on-healthcare-services-for-non-respiratory-diseases",
+          "value": "modeling_impact-on-healthcare-services-for-non-respiratory-diseases",
+          "id": "1616f882-f061-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "modeling_masks",
+          "value": "modeling_masks",
+          "id": "1616f986-f061-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "modeling_school-and-business-closures",
+          "value": "modeling_school-and-business-closures",
+          "id": "1616fc56-f061-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "modeling_stay-at-home-orders-and-mobility-restrictions",
+          "value": "modeling_stay-at-home-orders-and-mobility-restrictions",
+          "id": "1616fd32-f061-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "modeling_testing-and-contact-tracing",
+          "value": "modeling_testing-and-contact-tracing",
+          "id": "1616fdf0-f061-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "modeling_transmission-dynamics",
+          "value": "modeling_transmission-dynamics",
+          "id": "1616feae-f061-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "modeling_symptom-screening",
+          "value": "modeling_symptom-screening",
+          "id": "1616ff62-f061-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "modeling_vaccines",
+          "value": "modeling_vaccines",
+          "id": "16170016-f061-11eb-9a03-0242ac130003"
+        },
+        {
+          "label": "non-pharmaceutical-interventions_stay-at-home-orders-and-mobility-restrictions",
+          "value": "non-pharmaceutical-interventions_stay-at-home-orders-and-mobility-restrictions",
+          "id": "161700c0-f061-11eb-9a03-0242ac130003"
         }
       ],
       "title": "Sub Topics",

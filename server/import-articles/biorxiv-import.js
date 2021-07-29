@@ -154,7 +154,7 @@ const getData = async ctx => {
         }
 
         const topics = manuscriptTopics.length
-          ? formatImportedTopics(manuscriptTopics)
+          ? [formatImportedTopics(manuscriptTopics)[0]]
           : []
 
         return {

@@ -69,6 +69,8 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
     main_findings: convert(submission.summaryOfMainFindings || '', {
       wordwrap: false,
     }),
+    keywords: 'NA',
+    final_take_wordcount: '5',
   }
 }
 
