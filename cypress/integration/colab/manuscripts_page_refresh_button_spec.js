@@ -143,7 +143,7 @@ describe('refresh button tests', () => {
         .invoke('text')
         .then(title => {
           cy.fixture('role_names').then(name => {
-            SubmissionFormPage.getAssignEditor(3).click()
+            SubmissionFormPage.getAssignEditor(4).click()
             SubmissionFormPage.selectDropdownOptionWithText(name.role.admin)
             SubmissionFormPage.waitThreeSec()
           })

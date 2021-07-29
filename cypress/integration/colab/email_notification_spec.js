@@ -1,4 +1,4 @@
-/* eslint-disable prettier/prettier,jest/valid-expect-in-promise,jest/valid-expect */
+/* eslint-disable prettier/prettier,jest/valid-expect-in-promise,jest/valid-expect,cypress/no-unnecessary-waiting */
 /* eslint-disable jest/expect-expect */
 
 import { dashboard } from '../../support/routes'
@@ -61,7 +61,6 @@ describe('email notification tests', () => {
         cy.fixture('submission_form_data').then(data => {
             ControlPage.selectDropdownOptionByName(data.authorAcceptanceNotification)
         })
-        ControlPage.getNotifyButton()
         ControlPage.clickNotify()
         cy.wait('@graphql').then(response => {
             expect(response.response.body.data.sendEmail).to.have.property('success', true)
@@ -78,7 +77,6 @@ describe('email notification tests', () => {
         cy.fixture('submission_form_data').then(data => {
             ControlPage.selectDropdownOptionByName(data.evaluationCompleteNotification)
         })
-        ControlPage.getNotifyButton()
         ControlPage.clickNotify()
         cy.wait('@graphql').then(response => {
             expect(response.response.body.data.sendEmail).to.have.property('success', true)
@@ -96,7 +94,6 @@ describe('email notification tests', () => {
         cy.fixture('submission_form_data').then(data => {
             ControlPage.selectDropdownOptionByName(data.authorAcceptanceNotification)
         })
-        ControlPage.getNotifyButton()
         ControlPage.clickNotify()
         cy.wait('@graphql').then(response => {
             expect(response.response.body.data.sendEmail).to.have.property('success', true)
@@ -114,11 +111,153 @@ describe('email notification tests', () => {
         cy.fixture('submission_form_data').then(data => {
             ControlPage.selectDropdownOptionByName(data.evaluationCompleteNotification)
         })
-        ControlPage.getNotifyButton()
         ControlPage.clickNotify()
         cy.wait('@graphql').then(response => {
             expect(response.response.body.data.sendEmail).to.have.property('success', true)
             expect(response.response.statusCode).to.eq(200)
+        })
+    })
+    it('check api response is false if email is incorrect', () => {
+        ControlPage.clickNewUser(0)
+        cy.fixture('role_names').then(name => {
+            ControlPage.fillInNewUserName(name.role.admin)
+            ControlPage.fillInNewUserEmail('test')
+        })
+        cy.intercept('POST', '/graphql').as('graphql')
+        ControlPage.clickEmailNotificationNthDropdown(-1)
+        cy.fixture('submission_form_data').then(data => {
+            ControlPage.selectDropdownOptionByName(data.authorAcceptanceNotification)
+        })
+        ControlPage.clickNotify()
+        cy.wait('@graphql').then(response => {
+            expect(response.response.body.data.sendEmail).to.have.property('success', false)
+        })
+        ControlPage.clickEmailNotificationNthDropdown(-1)
+        cy.fixture('submission_form_data').then(data => {
+            ControlPage.selectDropdownOptionByName(data.evaluationCompleteNotification)
+        })
+        ControlPage.clickNotify()
+        cy.wait('@graphql').then(response => {
+            expect(response.response.body.data.sendEmail).to.have.property('success', false)
+        })
+    })
+    context('log notification events tests', () => {
+        beforeEach(() => {
+            ControlPage.clickNthChatTab(-1)
+            ControlPage.getLogMessage().should('not.exist')
+            ControlPage.clickEmailNotificationNthDropdown(0)
+            cy.fixture('role_names').then(name => {
+                ControlPage.selectDropdownOptionByName(name.role.admin)
+                ControlPage.clickEmailNotificationNthDropdown(-1)
+                cy.fixture('submission_form_data').then(data => {
+                    ControlPage.selectDropdownOptionByName(data.authorAcceptanceNotification)
+                    ControlPage.clickNotify()
+                    ControlPage.clickEmailNotificationNthDropdown(1)
+                    ControlPage.selectDropdownOptionByName(data.evaluationCompleteNotification)
+                    ControlPage.clickNotify()
+                    ControlPage.clickNewUser(0)
+                    ControlPage.fillInNewUserEmail('test@123.com')
+                    ControlPage.fillInNewUserName(data.creator)
+                    ControlPage.clickEmailNotificationNthDropdown(-1)
+                    ControlPage.selectDropdownOptionByName(data.authorAcceptanceNotification)
+                    ControlPage.clickNotify()
+                    ControlPage.clickEmailNotificationNthDropdown(-1)
+                    ControlPage.selectDropdownOptionByName(data.evaluationCompleteNotification)
+                    ControlPage.clickNotify()
+                })
+            })
+        })
+        it('the editor chat should display notifications for each notification sent', () => {
+            cy.fixture('role_names').then(name => {
+                cy.fixture('submission_form_data').then(data => {
+                    const timeNow = () => {
+                        const date = new Date()
+                        let month = date.getMonth()
+                        const monthArray = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December']
+                        month = monthArray[month]
+                        const day = date.getDate()
+                        const year = date.getFullYear()
+                        const hour = date.getHours()
+                        return `${month} ${day}, ${year} at ${hour}`
+                    }
+
+                    ControlPage.getLogMessage().should('have.length', 4)
+                    ControlPage.getLogMessage().should('be.visible').and('contain',`${timeNow()}` ).and('contain', `${data.authorAcceptanceLog} ${name.role.admin} to ${name.role.admin}`)
+                    ControlPage.getLogMessage().should('be.visible').and('contain',`${timeNow()}` ).and('contain', `${data.evaluationCompleteLog} ${name.role.admin} to ${name.role.admin}`)
+                    ControlPage.getLogMessage().should('be.visible').and('contain',`${timeNow()}` ).and('contain', `${data.authorAcceptanceLog} ${name.role.admin} to ${data.creator}`)
+                    ControlPage.getLogMessage().should('be.visible').and('contain',`${timeNow()}` ).and('contain', `${data.evaluationCompleteLog} ${name.role.admin} to ${data.creator}`)
+                })
+            })
+        })
+        it('other editors should see the notification logs', () => {
+            cy.fixture('role_names').then(name => {
+                ControlPage.clickAssignSeniorEditorDropdown()
+                ControlPage.selectDropdownOptionByName(name.role.reviewers.reviewer1)
+                ControlPage.clickAssignSeniorEditorDropdown()
+                ControlPage.selectDropdownOptionByName(name.role.reviewers.reviewer2)
+                cy.wait(3000)
+                cy.login(name.role.reviewers.reviewer1, dashboard)
+                cy.awaitDisappearSpinner()
+                DashboardPage.clickControlPanel()
+                ControlPage.clickNthChatTab(-1)
+                ControlPage.getLogMessage().should('be.visible').and('have.length', 4)
+                cy.login(name.role.reviewers.reviewer2, dashboard)
+                cy.awaitDisappearSpinner()
+                DashboardPage.clickControlPanel()
+                ControlPage.clickNthChatTab(-1)
+                ControlPage.getLogMessage().should('be.visible').and('have.length', 4)
+            })
+        })
+        it('unsuccessful notifications should not trigger a log', () => {
+                cy.fixture('submission_form_data').then(data => {
+                    ControlPage.fillInNewUserName(data.creator)
+                    ControlPage.fillInNewUserEmail('test')
+                    ControlPage.clickEmailNotificationNthDropdown(-1)
+                    ControlPage.selectDropdownOptionByName(data.authorAcceptanceNotification)
+                    ControlPage.clickNotify()
+                    ControlPage.getLogMessage().should('have.length', 4)
+                    ControlPage.clickEmailNotificationNthDropdown(-1)
+                    ControlPage.selectDropdownOptionByName(data.evaluationCompleteNotification)
+                    ControlPage.clickNotify()
+                    ControlPage.getLogMessage().should('have.length', 4)
+            })
+        })
+        it('notification logs should not be visible in the author chat tab', () => {
+            ControlPage.clickNthChatTab(0)
+            ControlPage.getLogMessage().should('not.exist')
+        })
+        it('other editors can send notifications & see the new logs', () => {
+            cy.fixture('role_names').then(name => {
+                ControlPage.clickAssignSeniorEditorDropdown()
+                ControlPage.selectDropdownOptionByName(name.role.reviewers.reviewer1)
+                ControlPage.clickAssignSeniorEditorDropdown()
+                ControlPage.selectDropdownOptionByName(name.role.reviewers.reviewer2)
+                cy.wait(3000)
+                cy.login(name.role.reviewers.reviewer1, dashboard)
+                cy.awaitDisappearSpinner()
+                DashboardPage.clickControlPanel()
+                ControlPage.clickNthChatTab(-1)
+                ControlPage.clickEmailNotificationNthDropdown(0)
+                ControlPage.selectDropdownOptionByName(name.role.reviewers.reviewer2)
+                ControlPage.clickEmailNotificationNthDropdown(-1)
+                cy.fixture('submission_form_data').then(data => {
+                    ControlPage.selectDropdownOptionByName(data.authorAcceptanceNotification)
+                    ControlPage.clickNotify()
+                    ControlPage.getLogMessage().should('be.visible').and('have.length', 5)
+                    ControlPage.getLogMessage().should('be.visible').and('contain', `${data.authorAcceptanceLog} ${name.role.reviewers.reviewer1} to ${name.role.reviewers.reviewer2}`)
+                    cy.login(name.role.reviewers.reviewer2, dashboard)
+                    cy.awaitDisappearSpinner()
+                    DashboardPage.clickControlPanel()
+                    ControlPage.clickNthChatTab(-1)
+                    ControlPage.clickEmailNotificationNthDropdown(0)
+                    ControlPage.selectDropdownOptionByName(name.role.reviewers.reviewer1)
+                    ControlPage.clickEmailNotificationNthDropdown(-1)
+                    ControlPage.selectDropdownOptionByName(data.evaluationCompleteNotification)
+                    ControlPage.clickNotify()
+                    ControlPage.getLogMessage().should('be.visible').and('have.length', 6)
+                    ControlPage.getLogMessage().should('be.visible').and('contain', `${data.evaluationCompleteLog} ${name.role.reviewers.reviewer2} to ${name.role.reviewers.reviewer1}`)
+                })
+            })
         })
     })
 })

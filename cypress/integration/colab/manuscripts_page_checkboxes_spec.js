@@ -74,7 +74,7 @@ describe('manuscripts page checkboxes tests', () => {
       ManuscriptsPage.getTableRow().should('not.exist')
     })
   })
-  context('submitted manuscripts checkbox tests', () => {
+  context.only('submitted manuscripts checkbox tests', () => {
     it('checkbox should not be visible for submitted manuscripts', () => {
       cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
@@ -88,15 +88,19 @@ describe('manuscripts page checkboxes tests', () => {
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.clickLabelsDropdown()
-        SubmissionFormPage.selectDropdownOption(0)
-        SubmissionFormPage.fillInTitle('123')
-        SubmissionFormPage.fillInName(data.creator)
+        SubmissionFormPage.fillInDoi(data.doi)
+        SubmissionFormPage.fillInAbstractColab(data.abstract)
+        SubmissionFormPage.fillInFirstAuthor(data.creator)
+        SubmissionFormPage.fillInDatePublished(data.date)
+        SubmissionFormPage.fillInLink(data.doi)
+        SubmissionFormPage.fillInOurTake(data.ourTake)
+        SubmissionFormPage.fillInMainFindings(data.mainFindings)
+        SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+        SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInKeywords(data.keywords)
-        // eslint-disable-next-line
-        SubmissionFormPage.waitThreeSec()
+        SubmissionFormPage.fillInReviewCreator(data.creator)
         SubmissionFormPage.clickSubmitResearch()
-        SubmissionFormPage.clickSubmitManuscript()
+        SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
       })
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getAllArticleCheckboxes().should('not.exist')

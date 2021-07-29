@@ -43,6 +43,8 @@ const EMAIL_NOTIFICATION_DROPDOWNS =
   '[class*=emailNotifications__RowGridStyled] > div'
 
 const NOTIFY_BUTTON = '[class*=emailNotifications__RowGridStyled] > button'
+const CHAT_TAB = '[class*=General__Chat] [data-test-id=tab-container]'
+const EMAIL_NOTIFICATION_LOG_MESSAGE = 'style__InnerMessageContainer'
 
 // eslint-disable-next-line import/prefer-default-export
 export const ControlPage = {
@@ -215,5 +217,14 @@ export const ControlPage = {
   },
   clickNotify() {
     this.getNotifyButton().click()
+  },
+  getChatTab() {
+    return cy.get(CHAT_TAB)
+  },
+  clickNthChatTab(nth) {
+    this.getChatTab().eq(nth).click()
+  },
+  getLogMessage() {
+    return cy.getByContainsClass(EMAIL_NOTIFICATION_LOG_MESSAGE)
   },
 }

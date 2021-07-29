@@ -560,7 +560,7 @@ export const SubmissionFormPage = {
     return this.getAbstractField().find('p').invoke('text')
   },
   getAbstractFieldColab() {
-    return this.getWaxInputBox(4)
+    return this.getWaxInputBox(0)
   },
   fillInAbstractColab(abstract) {
     this.getAbstractFieldColab().fillInput(abstract)

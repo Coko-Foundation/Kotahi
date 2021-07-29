@@ -48,23 +48,6 @@ describe('manuscripts page tests', () => {
         Menu.clickManuscriptsAndAssertPageLoad()
       })
     })
-
-    it('sort article by label', () => {
-      ManuscriptsPage.getArticleLabel().should('have.length', 3)
-      ManuscriptsPage.getTableRow().eq(2).should('be.visible')
-      ManuscriptsPage.getLabelRow(0).should('contain', 'ready to evaluate')
-      ManuscriptsPage.getLabelRow(1).should('contain', 'evaluated')
-      ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluate')
-      ManuscriptsPage.clickTableHead(4)
-      ManuscriptsPage.getArticleLabel().should('have.length', 3)
-      ManuscriptsPage.getLabelRow(0).scrollIntoView().should('be.visible')
-      ManuscriptsPage.getLabelRow(1).scrollIntoView().should('be.visible')
-      ManuscriptsPage.getLabelRow(2).scrollIntoView().should('be.visible')
-      ManuscriptsPage.getLabelRow(0).should('contain', 'evaluated')
-      ManuscriptsPage.getLabelRow(1).should('contain', 'ready to evaluate')
-      ManuscriptsPage.getLabelRow(2).should('contain', 'ready to evaluate')
-    })
-
     it('filter article after label and url contain that label', () => {
       // eslint-disable-next-line cypress/no-unnecessary-waiting
       cy.wait(3000)
@@ -92,15 +75,19 @@ describe('manuscripts page tests', () => {
       // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.clickLabelsDropdown()
-        SubmissionFormPage.selectDropdownOption(0)
-        SubmissionFormPage.fillInTitle('456')
-        SubmissionFormPage.fillInName(data.creator)
+        SubmissionFormPage.fillInDoi(data.doi)
+        SubmissionFormPage.fillInAbstractColab(data.abstract)
+        SubmissionFormPage.fillInFirstAuthor(data.creator)
+        SubmissionFormPage.fillInDatePublished(data.date)
+        SubmissionFormPage.fillInLink(data.doi)
+        SubmissionFormPage.fillInOurTake(data.ourTake)
+        SubmissionFormPage.fillInMainFindings(data.mainFindings)
+        SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+        SubmissionFormPage.fillInLimitations(data.limitations)
         SubmissionFormPage.fillInKeywords(data.keywords)
-        // eslint-disable-next-line
-        SubmissionFormPage.waitThreeSec()
+        SubmissionFormPage.fillInReviewCreator(data.creator)
         SubmissionFormPage.clickSubmitResearch()
-        SubmissionFormPage.clickSubmitManuscript()
+        SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()
       })
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getAllArticleCheckboxes().should('not.exist')
