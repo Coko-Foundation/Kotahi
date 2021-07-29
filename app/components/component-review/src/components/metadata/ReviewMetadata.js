@@ -54,6 +54,11 @@ const showFieldData = (manuscript, fieldName, form) => {
   return data
 }
 
+const shouldShowInPreview = (fieldName, form) => {
+  const fieldDefinition = form.children?.find(field => field.name === fieldName)
+  return fieldDefinition.includeInReviewerPreview
+}
+
 // Due to migration to new Data Model
 // Attachement component needs different data structure to work
 // needs to change the pubsweet ui Attachement to support the new Data Model
@@ -62,7 +67,11 @@ const filesToAttachment = file => ({
   url: file.url,
 })
 
-const ReviewMetadata = ({ form, manuscript: rawManuscript }) => {
+const ReviewMetadata = ({
+  form,
+  manuscript: rawManuscript,
+  showPreviewMetadataOnly,
+}) => {
   // Parse submission metadata JSON for display purposes
   const manuscript = {
     ...rawManuscript,
@@ -71,44 +80,52 @@ const ReviewMetadata = ({ form, manuscript: rawManuscript }) => {
 
   return (
     <SectionContent>
-      <SectionHeader>
-        <Title>Metadata</Title>
-      </SectionHeader>
+      {!showPreviewMetadataOnly && (
+        <SectionHeader>
+          <Title>Metadata</Title>
+        </SectionHeader>
+      )}
 
-      {form.children.map(element => (
-        <SectionRowGrid key={element.id}>
-          <Heading>{element.shortDescription || element.title}</Heading>
-          <Cell>{showFieldData(manuscript, element.name, form)}</Cell>
-        </SectionRowGrid>
-      ))}
-      <SectionRowGrid>
-        <Heading>Special Instructions</Heading>
-        <Cell>
-          {getNote(manuscript.meta.notes || [], 'specialInstructions')
-            .content || 'None'}
-        </Cell>
-      </SectionRowGrid>
-      {getSupplementaryFiles(manuscript.files).length > 0 && (
-        <SectionRowGrid>
-          <Heading>
-            {getSupplementaryFiles(manuscript.files).length} supplementary{' '}
-            {getSupplementaryFiles(manuscript.files).length === 1
-              ? 'file'
-              : 'files'}
-            :
-          </Heading>
-          {!!getSupplementaryFiles(manuscript.files).length && (
+      {form.children.map(element =>
+        !showPreviewMetadataOnly || shouldShowInPreview(element.name, form) ? (
+          <SectionRowGrid key={element.id}>
+            <Heading>{element.shortDescription || element.title}</Heading>
+            <Cell>{showFieldData(manuscript, element.name, form)}</Cell>
+          </SectionRowGrid>
+        ) : null,
+      )}
+      {!showPreviewMetadataOnly && (
+        <>
+          <SectionRowGrid>
+            <Heading>Special Instructions</Heading>
             <Cell>
-              {getSupplementaryFiles(manuscript.files).map(file => (
-                <Attachment
-                  file={filesToAttachment(file)}
-                  key={file.url}
-                  uploaded
-                />
-              ))}
+              {getNote(manuscript.meta.notes || [], 'specialInstructions')
+                .content || 'None'}
             </Cell>
+          </SectionRowGrid>
+          {getSupplementaryFiles(manuscript.files).length > 0 && (
+            <SectionRowGrid>
+              <Heading>
+                {getSupplementaryFiles(manuscript.files).length} supplementary{' '}
+                {getSupplementaryFiles(manuscript.files).length === 1
+                  ? 'file'
+                  : 'files'}
+                :
+              </Heading>
+              {!!getSupplementaryFiles(manuscript.files).length && (
+                <Cell>
+                  {getSupplementaryFiles(manuscript.files).map(file => (
+                    <Attachment
+                      file={filesToAttachment(file)}
+                      key={file.url}
+                      uploaded
+                    />
+                  ))}
+                </Cell>
+              )}
+            </SectionRowGrid>
           )}
-        </SectionRowGrid>
+        </>
       )}
     </SectionContent>
   )
@@ -133,15 +150,20 @@ ReviewMetadata.propTypes = {
           notesType: PropTypes.string.isRequired,
           content: PropTypes.string.isRequired,
         }).isRequired,
-      ).isRequired,
+      ),
     }).isRequired,
     files: PropTypes.arrayOf(
       PropTypes.shape({
         url: PropTypes.string.isRequired,
         filename: PropTypes.string.isRequired,
       }).isRequired,
-    ).isRequired,
+    ),
   }).isRequired,
+  showPreviewMetadataOnly: PropTypes.bool,
+}
+
+ReviewMetadata.defaultProps = {
+  showPreviewMetadataOnly: false,
 }
 
 export default ReviewMetadata

@@ -1,9 +1,11 @@
 import React from 'react'
+import { useHistory } from 'react-router-dom'
 import { Action, ActionGroup } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 import PropTypes from 'prop-types'
 import config from 'config'
 import { Item } from '../../style'
+import { ClickableSectionRow } from '../../../../shared'
 
 import VersionTitle from './VersionTitle'
 
@@ -23,51 +25,67 @@ const ReviewerItem = ({ version, currentUser, reviewerRespond }) => {
 
   const urlFrag = config.journal.metadata.toplevel_urlfragment
 
+  const history = useHistory()
+
+  const mainActionLink =
+    status === 'invited' || status === 'rejected'
+      ? `${urlFrag}/versions/${version.id}/reviewPreview`
+      : `${urlFrag}/versions/${version.id}/review`
+
   return (
-    <Item>
-      <VersionTitle version={version} />
+    <div
+      onClick={() => history.push(mainActionLink)}
+      onKeyDown={e => e.key === 'Enter' && history.push(mainActionLink)}
+      role="button"
+      tabIndex={0}
+    >
+      <ClickableSectionRow>
+        <Item>
+          <VersionTitle version={version} />
 
-      {(status === 'accepted' || status === 'completed') && (
-        <ActionGroup>
-          <Action to={`${urlFrag}/versions/${version.id}/review`}>
-            {status === 'completed' ? 'Completed' : 'Do Review'}
-          </Action>
-        </ActionGroup>
-      )}
+          {(status === 'accepted' || status === 'completed') && (
+            <ActionGroup>
+              <Action to={`${urlFrag}/versions/${version.id}/review`}>
+                {status === 'completed' ? 'Completed' : 'Do Review'}
+              </Action>
+            </ActionGroup>
+          )}
 
-      {status === 'invited' && (
-        <ActionGroup>
-          <Action
-            data-testid="accept-review"
-            onClick={() =>
-              reviewerRespond({
-                variables: {
-                  currentUserId: currentUser.id,
-                  action: 'accepted',
-                  teamId: team.id,
-                },
-              })
-            }
-          >
-            Accept
-          </Action>
-          <Action
-            onClick={() =>
-              reviewerRespond({
-                variables: {
-                  currentUserId: currentUser.id,
-                  action: 'rejected',
-                  teamId: team.id,
-                },
-              })
-            }
-          >
-            Reject
-          </Action>
-        </ActionGroup>
-      )}
-      {status === 'rejected' && 'rejected'}
-    </Item>
+          {status === 'invited' && (
+            <ActionGroup>
+              <Action
+                data-testid="accept-review"
+                onClick={() =>
+                  reviewerRespond({
+                    variables: {
+                      currentUserId: currentUser.id,
+                      action: 'accepted',
+                      teamId: team.id,
+                    },
+                  })
+                }
+              >
+                Accept
+              </Action>
+              <Action
+                onClick={() =>
+                  reviewerRespond({
+                    variables: {
+                      currentUserId: currentUser.id,
+                      action: 'rejected',
+                      teamId: team.id,
+                    },
+                  })
+                }
+              >
+                Reject
+              </Action>
+            </ActionGroup>
+          )}
+          {status === 'rejected' && 'rejected'}
+        </Item>
+      </ClickableSectionRow>
+    </div>
   )
 }
 

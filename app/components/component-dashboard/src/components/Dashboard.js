@@ -143,14 +143,12 @@ const Dashboard = ({ history, ...props }) => {
           </SectionHeader>
           {reviewerLatestVersions.length > 0 ? (
             reviewerLatestVersions.map(version => (
-              <SectionRow key={version.id}>
-                <ReviewerItem
-                  currentUser={currentUser}
-                  key={version.id}
-                  reviewerRespond={reviewerRespond}
-                  version={version}
-                />
-              </SectionRow>
+              <ReviewerItem
+                currentUser={currentUser}
+                key={version.id}
+                reviewerRespond={reviewerRespond}
+                version={version}
+              />
             ))
           ) : (
             <Placeholder>

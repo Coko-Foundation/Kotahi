@@ -75,6 +75,7 @@ const elements = {
     description: editorfield,
     shortDescription: textfield,
     validate,
+    includeInReviewerPreview: radiofield,
   },
   VisualAbstract: {
     id: textfield,
@@ -83,6 +84,7 @@ const elements = {
     description: editorfield,
     shortDescription: textfield,
     validate,
+    includeInReviewerPreview: radiofield,
   },
   AuthorsInput: {
     id: textfield,
@@ -90,6 +92,7 @@ const elements = {
     name: textfield,
     shortDescription: textfield,
     validate,
+    includeInReviewerPreview: radiofield,
   },
   LinksInput: {
     id: textfield,
@@ -97,6 +100,7 @@ const elements = {
     name: textfield,
     shortDescription: textfield,
     validate,
+    includeInReviewerPreview: radiofield,
   },
   AbstractEditor: {
     id: textfield,
@@ -106,6 +110,7 @@ const elements = {
     description: editorfield,
     validate,
     shortDescription: textfield,
+    includeInReviewerPreview: radiofield,
   },
   TextField: {
     id: textfield,
@@ -164,6 +169,7 @@ const elements = {
         label: 'DOI Validation',
       },
     },
+    includeInReviewerPreview: radiofield,
   },
   CheckboxGroup: {
     id: textfield,
@@ -173,6 +179,7 @@ const elements = {
     options: optionfield,
     shortDescription: textfield,
     validate,
+    includeInReviewerPreview: radiofield,
   },
   Select: {
     id: textfield,
@@ -183,6 +190,7 @@ const elements = {
     options: optionfield,
     shortDescription: textfield,
     validate,
+    includeInReviewerPreview: radiofield,
   },
   RadioGroup: {
     id: textfield,
@@ -194,6 +202,7 @@ const elements = {
     sectioncss: textarea,
     shortDescription: textfield,
     validate,
+    includeInReviewerPreview: radiofield,
   },
 }
 

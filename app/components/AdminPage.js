@@ -19,6 +19,7 @@ import SubmitPage from './component-submit/src/components/SubmitPage'
 import ManuscriptPage from './component-manuscript/src/components/ManuscriptPage'
 import ReviewersPage from './component-review/src/components/ReviewersPage'
 import ReviewPage from './component-review/src/components/ReviewPage'
+import ReviewPreviewPage from './component-review/src/components/ReviewPreviewPage'
 import DecisionPage from './component-review/src/components/DecisionPage'
 import FormBuilderPage from './component-formbuilder/src/components/FormBuilderPage'
 import NewSubmissionPage from './component-submit/src/components/NewSubmissionPage'
@@ -232,6 +233,13 @@ const AdminPage = () => {
           currentUser={currentUser}
           exact
           path={`${urlFrag}/versions/:version/review`}
+          redirectLink={redirectLink}
+        />
+        <PrivateRoute
+          component={ReviewPreviewPage}
+          currentUser={currentUser}
+          exact
+          path={`${urlFrag}/versions/:version/reviewPreview`}
           redirectLink={redirectLink}
         />
         <PrivateRoute

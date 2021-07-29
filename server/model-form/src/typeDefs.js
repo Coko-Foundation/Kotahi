@@ -32,6 +32,7 @@ const typeDefs = `
     description: String
     doiValidation: String
     placeholder: String
+    includeInReviewerPreview: String
     parse: String
     format: String
     inline: String
@@ -79,6 +80,7 @@ const typeDefs = `
     description: String
     doiValidation: String
     placeholder: String
+    includeInReviewerPreview: String
     parse: String
     format: String
     inline: String

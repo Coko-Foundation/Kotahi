@@ -155,6 +155,7 @@ export const query = gql`
           description
           doiValidation
           placeholder
+          includeInReviewerPreview
           parse
           format
           options {
