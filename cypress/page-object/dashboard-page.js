@@ -21,6 +21,7 @@ const INVITED_REVIEWERS_BUTTON = 'invited'
 const COMPLETED_REVIEWS_BUTTON = 'completed'
 const ACCEPTED_AND_PUBLISHED_TITLE = 'Badge__SuccessStatus'
 const VERSION_TITLE = 'VersionTitle__Root-sc'
+const ARTICLE_LINK = '[class*=General__SectionRow] a[href]'
 
 // eslint-disable-next-line import/prefer-default-export
 export const DashboardPage = {
@@ -79,5 +80,11 @@ export const DashboardPage = {
   },
   getVersionTitle() {
     return cy.getByContainsClass(VERSION_TITLE)
+  },
+  getCompletedReviewButton() {
+    return cy.get(ARTICLE_LINK).contains('Completed')
+  },
+  clickCompletedReviewButton() {
+    this.getCompletedReviewButton().click()
   },
 }

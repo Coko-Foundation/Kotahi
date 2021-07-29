@@ -20,6 +20,7 @@ const METADATA_CELL = 'ReviewMetadata__Cell'
 const ERROR_TEXT = 'style__ErrorText-'
 const ACCEPT_RADIO_BUTTON = 'span[color=green]'
 const REVISE_RADIO_BUTTON = 'span[color=orange]'
+const REJECT_RADIO_BUTTON = 'span[color=red]'
 const SUBMIT_BUTTON = '[class*=General__SectionAction] > button[type=submit]'
 const FORM_STATUS = 'style__FormStatus-'
 const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
@@ -121,6 +122,12 @@ export const ControlPage = {
   },
   clickRevise() {
     this.getReviseRadioButton().click()
+  },
+  getRejectRadioButton() {
+    return cy.get(REJECT_RADIO_BUTTON)
+  },
+  clickReject() {
+    this.getRejectRadioButton().click()
   },
   getSubmitButton() {
     return cy.get(SUBMIT_BUTTON)

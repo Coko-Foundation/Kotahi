@@ -74,7 +74,7 @@ describe('manuscripts page checkboxes tests', () => {
       ManuscriptsPage.getTableRow().should('not.exist')
     })
   })
-  context.only('submitted manuscripts checkbox tests', () => {
+  context('submitted manuscripts checkbox tests', () => {
     it('checkbox should not be visible for submitted manuscripts', () => {
       cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
@@ -89,14 +89,14 @@ describe('manuscripts page checkboxes tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInDoi(data.doi)
-        SubmissionFormPage.fillInAbstractColab(data.abstract)
+        SubmissionFormPage.getWaxInputBox(0).fillInput(data.abstract)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
         SubmissionFormPage.fillInDatePublished(data.date)
         SubmissionFormPage.fillInLink(data.doi)
-        SubmissionFormPage.fillInOurTake(data.ourTake)
-        SubmissionFormPage.fillInMainFindings(data.mainFindings)
-        SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
-        SubmissionFormPage.fillInLimitations(data.limitations)
+        SubmissionFormPage.getWaxInputBox(1).fillInput(data.ourTake)
+        SubmissionFormPage.getWaxInputBox(2).fillInput(data.mainFindings)
+        SubmissionFormPage.getWaxInputBox(3).fillInput(data.studyStrengths)
+        SubmissionFormPage.getWaxInputBox(4).fillInput(data.limitations)
         SubmissionFormPage.fillInKeywords(data.keywords)
         SubmissionFormPage.fillInReviewCreator(data.creator)
         SubmissionFormPage.clickSubmitResearch()

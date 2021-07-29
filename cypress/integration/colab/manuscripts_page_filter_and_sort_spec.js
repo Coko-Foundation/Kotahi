@@ -29,7 +29,6 @@ describe('manuscripts page tests', () => {
       DashboardPage.clickSubmit()
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // eslint-disable-next-line jest/valid-expect-in-promise
-      cy.fixture('form_option').then(data => {
         SubmissionFormPage.clickLabelsDropdown()
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.fillInTitle('123')
@@ -46,7 +45,6 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.fillInTitle('def')
         Menu.clickManuscriptsAndAssertPageLoad()
-      })
     })
     it('filter article after label and url contain that label', () => {
       // eslint-disable-next-line cypress/no-unnecessary-waiting
@@ -76,14 +74,14 @@ describe('manuscripts page tests', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInDoi(data.doi)
-        SubmissionFormPage.fillInAbstractColab(data.abstract)
+        SubmissionFormPage.getWaxInputBox(0).fillInput(data.abstract)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
         SubmissionFormPage.fillInDatePublished(data.date)
         SubmissionFormPage.fillInLink(data.doi)
-        SubmissionFormPage.fillInOurTake(data.ourTake)
-        SubmissionFormPage.fillInMainFindings(data.mainFindings)
-        SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
-        SubmissionFormPage.fillInLimitations(data.limitations)
+        SubmissionFormPage.getWaxInputBox(1).fillInput(data.ourTake)
+        SubmissionFormPage.getWaxInputBox(2).fillInput(data.mainFindings)
+        SubmissionFormPage.getWaxInputBox(3).fillInput(data.studyStrengths)
+        SubmissionFormPage.getWaxInputBox(4).fillInput(data.limitations)
         SubmissionFormPage.fillInKeywords(data.keywords)
         SubmissionFormPage.fillInReviewCreator(data.creator)
         SubmissionFormPage.clickSubmitResearch()

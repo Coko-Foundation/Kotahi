@@ -186,7 +186,7 @@ describe('control page tests', () => {
     })
   })
 
-  context.only('admin user can see the icons', () => {
+  context('admin user can see the icons', () => {
     beforeEach(() => {
       cy.task('restore', 'initial_state_other')
       cy.task('seedForms')
@@ -197,14 +197,14 @@ describe('control page tests', () => {
         NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
         cy.fixture('submission_form_data').then(data => {
           SubmissionFormPage.fillInDoi(data.doi)
-          SubmissionFormPage.fillInAbstractColab(data.abstract)
+          SubmissionFormPage.getWaxInputBox(0).fillInput(data.abstract)
           SubmissionFormPage.fillInFirstAuthor(data.creator)
           SubmissionFormPage.fillInDatePublished(data.date)
           SubmissionFormPage.fillInLink(data.doi)
-          SubmissionFormPage.fillInOurTake(data.ourTake)
-          SubmissionFormPage.fillInMainFindings(data.mainFindings)
-          SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
-          SubmissionFormPage.fillInLimitations(data.limitations)
+          SubmissionFormPage.getWaxInputBox(1).fillInput(data.ourTake)
+          SubmissionFormPage.getWaxInputBox(2).fillInput(data.mainFindings)
+          SubmissionFormPage.getWaxInputBox(3).fillInput(data.studyStrengths)
+          SubmissionFormPage.getWaxInputBox(4).fillInput(data.limitations)
           SubmissionFormPage.fillInKeywords(data.keywords)
           SubmissionFormPage.fillInReviewCreator(data.creator)
         })

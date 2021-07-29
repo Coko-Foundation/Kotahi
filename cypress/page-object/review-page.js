@@ -11,6 +11,8 @@ const ABSTRACT_EDITOR_FIELD =
 // const REVIEW_COMMENT_FIELD = 'reviewComment'
 // const CONFIDENTIAL_COMMENT_FIELD = 'confidentialComment'
 const ACCEPT_RADIO_BUTTON = 'span[color=green]'
+const REVISE_RADIO_BUTTON = 'span[color=orange]'
+const REJECT_RADIO_BUTTON = 'span[color=red]'
 const SUBMIT_BUTTON = '[class*=General__SectionAction] > button'
 // const DECISION_COMMENT_FIELD = 'decisionComment'
 const ERROR_TEXT = 'style__ErrorText-'
@@ -47,6 +49,18 @@ export const ReviewPage = {
   },
   clickAccept() {
     this.getAcceptRadioButton().eq(0).click()
+  },
+  getReviseRadioButton() {
+    return cy.get(REVISE_RADIO_BUTTON)
+  },
+  clickRevise() {
+    this.getReviseRadioButton().eq(0).click()
+  },
+  getRejectRadioButton() {
+    return cy.get(REJECT_RADIO_BUTTON)
+  },
+  clickReject() {
+    this.getRejectRadioButton().eq(0).click()
   },
   getSubmitButton() {
     return cy.get(SUBMIT_BUTTON)
