@@ -95,12 +95,17 @@ const EmailNotifications = ({ manuscript }) => {
 
     if (!isNewUser && !selectedEmail) return
 
-    await sendEmailMutation({
+    const response = await sendEmailMutation({
       variables: {
         input: JSON.stringify(input),
       },
     })
-    logMessageAfterEmailSent(input)
+
+    const responseStatus = response.data.sendEmail.success
+
+    if (responseStatus) {
+      logMessageAfterEmailSent(input)
+    }
   }
 
   return (
