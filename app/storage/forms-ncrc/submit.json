@@ -86,12 +86,12 @@
         },
         {
           "label": "Non-Randomized Trial",
-          "value": "nonRandomizedTrial",
+          "value": "non-randomized-trial",
           "id": "144521ad-e924-4a10-ba8f-d456cc89094e"
         },
         {
           "label": "Case-control",
-          "value": "caseControl",
+          "value": "case-control",
           "id": "d57ab71c-3e5c-42ee-9a76-fdac1fb34cc6"
         }
       ],
