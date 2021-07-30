@@ -612,7 +612,7 @@ const resolvers = {
         .withGraphFetched(
           '[teams, reviews, manuscriptVersions(orderByCreated)]',
         )
-        .where({ parentId: null })
+        .where({ parentId: null, isHidden: null })
         .orderBy('created', 'desc')
     },
     async publishedManuscripts(_, { sort, offset, limit }, ctx) {
@@ -653,7 +653,7 @@ const resolvers = {
       }
 
       const query = ctx.models.Manuscript.query()
-        .where({ parentId: null, isHidden: false })
+        .where({ parentId: null, isHidden: null })
         .modify('orderBy', sort)
 
       if (filter && filter.status) {
