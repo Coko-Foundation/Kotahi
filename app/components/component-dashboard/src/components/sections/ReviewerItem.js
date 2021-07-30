@@ -45,7 +45,10 @@ const ReviewerItem = ({ version, currentUser, reviewerRespond }) => {
 
           {(status === 'accepted' || status === 'completed') && (
             <ActionGroup>
-              <Action to={`${urlFrag}/versions/${version.id}/review`}>
+              <Action
+                onClick={e => e.stopPropagation()}
+                to={`${urlFrag}/versions/${version.id}/review`}
+              >
                 {status === 'completed' ? 'Completed' : 'Do Review'}
               </Action>
             </ActionGroup>
@@ -55,7 +58,8 @@ const ReviewerItem = ({ version, currentUser, reviewerRespond }) => {
             <ActionGroup>
               <Action
                 data-testid="accept-review"
-                onClick={() =>
+                onClick={e => {
+                  e.stopPropagation()
                   reviewerRespond({
                     variables: {
                       currentUserId: currentUser.id,
@@ -63,12 +67,13 @@ const ReviewerItem = ({ version, currentUser, reviewerRespond }) => {
                       teamId: team.id,
                     },
                   })
-                }
+                }}
               >
                 Accept
               </Action>
               <Action
-                onClick={() =>
+                onClick={e => {
+                  e.stopPropagation()
                   reviewerRespond({
                     variables: {
                       currentUserId: currentUser.id,
@@ -76,7 +81,7 @@ const ReviewerItem = ({ version, currentUser, reviewerRespond }) => {
                       teamId: team.id,
                     },
                   })
-                }
+                }}
               >
                 Reject
               </Action>
