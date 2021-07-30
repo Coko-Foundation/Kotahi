@@ -206,6 +206,8 @@ describe('form builder tests', () => {
           data.ncrc.studyDesignTypes.randomizedControlTrial,
           data.ncrc.studyDesignTypes.modelingSimulation,
           data.ncrc.studyDesignTypes.other,
+          data.ncrc.studyDesignTypes.nonRandomizedTrial,
+          data.ncrc.studyDesignTypes.caseControl,
         ]
 
         SubmissionFormPage.clickElementFromFormOptionList(3)
@@ -245,7 +247,7 @@ describe('form builder tests', () => {
             .nonPharmaceuticalInterventionsSymptomScreening,
           data.ncrc.subTopicTypes.vaccinesTrialResults,
           data.ncrc.subTopicTypes.vaccinesOtherVaccineAndVirologyRelatedTopics,
-          data.ncrc.subTopicTypes.vaccinesTrialProtocols,
+          data.ncrc.subTopicTypes.vaccinesTrialProtocol,
           data.ncrc.subTopicTypes
             .clinicalPresentationPrognosticRiskFactorsAceInhibitors,
           data.ncrc.subTopicTypes
@@ -262,6 +264,20 @@ describe('form builder tests', () => {
             .clinicalPresentationPrognosticRiskFactorsPregnancy,
           data.ncrc.subTopicTypes
             .clinicalPresentationPrognosticRiskFactorsPrognosticTools,
+          data.ncrc.subTopicTypes
+            .modelingCovid19MortalityMorbidityAndDemandForHealthcareServices,
+          data.ncrc.subTopicTypes
+            .modelingImpactOnHealthcareServicesForNonRespiratoryDiseases,
+          data.ncrc.subTopicTypes.modelingMasks,
+          data.ncrc.subTopicTypes.modelingSchoolAndBusinessClosures,
+          data.ncrc.subTopicTypes
+            .modelingStayAtHomeOrdersAndMobilityRestrictions,
+          data.ncrc.subTopicTypes.modelingTestingAndContactTracing,
+          data.ncrc.subTopicTypes.modelingTransmissionDynamics,
+          data.ncrc.subTopicTypes.modelingSymptomScreening,
+          data.ncrc.subTopicTypes.modelingVaccines,
+          data.ncrc.subTopicTypes
+            .nonPharmaceuticalInterventionsStayAtHomeOrdersAndMobilityRestrictions,
         ]
 
         for (let i = 0; i < subTopics.length; i++) {

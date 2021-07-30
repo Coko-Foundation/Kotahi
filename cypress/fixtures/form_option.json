@@ -46,7 +46,7 @@
       "nonPharmaceuticalInterventionsSymptomScreening": "non-pharmaceutical-interventions_symptom-screening",
       "vaccinesTrialResults": "vaccines_trial-results",
       "vaccinesOtherVaccineAndVirologyRelatedTopics": "vaccines_other-vaccine-and-virology-related-topics",
-      "vaccinesTrialProtocols": "vaccines_trial-protocols",
+      "vaccinesTrialProtocol": "vaccines_trial-protocol",
       "clinicalPresentationPrognosticRiskFactorsAceInhibitors": "clinical-presentation-prognostic-risk-factors_ace-inhibitors",
       "clinicalPresentationPrognosticRiskFactorsCoagulopathy": "clinical-presentation-prognostic-risk-factors_coagulopathy",
       "clinicalPresentationPrognosticRiskFactorsNonRespiratoryPresentation": "clinical-presentation-prognostic-risk-factors_non-respiratory-presentation",
@@ -54,7 +54,17 @@
       "clinicalPresentationPrognosticRiskFactorsImmuneResponse": "clinical-presentation-prognostic-risk-factors_immune-response",
       "clinicalPresentationPrognosticRiskFactorsPediatrics": "clinical-presentation-prognostic-risk-factors_pediatrics",
       "clinicalPresentationPrognosticRiskFactorsPregnancy": "clinical-presentation-prognostic-risk-factors_pregnancy",
-      "clinicalPresentationPrognosticRiskFactorsPrognosticTools": "clinical-presentation-prognostic-risk-factors_prognostic-tools"
+      "clinicalPresentationPrognosticRiskFactorsPrognosticTools": "clinical-presentation-prognostic-risk-factors_prognostic-tools",
+      "modelingCovid19MortalityMorbidityAndDemandForHealthcareServices": "modeling_covid-19-mortality-morbidity-and-demand-for-healthcare-services",
+      "modelingImpactOnHealthcareServicesForNonRespiratoryDiseases": "modeling_impact-on-healthcare-services-for-non-respiratory-diseases",
+        "modelingMasks": "modeling_masks",
+      "modelingSchoolAndBusinessClosures": "modeling_school-and-business-closures",
+      "modelingStayAtHomeOrdersAndMobilityRestrictions": "modeling_stay-at-home-orders-and-mobility-restrictions",
+      "modelingTestingAndContactTracing": "modeling_testing-and-contact-tracing",
+      "modelingTransmissionDynamics": "modeling_transmission-dynamics",
+      "modelingSymptomScreening": "modeling_symptom-screening",
+      "modelingVaccines": "modeling_vaccines",
+      "nonPharmaceuticalInterventionsStayAtHomeOrdersAndMobilityRestrictions": "non-pharmaceutical-interventions_stay-at-home-orders-and-mobility-restrictions"
     },
     "topicTypes": {
       "ecologyAndSpillover": "Ecology_and_spillover",
@@ -80,7 +90,9 @@
       "ecological": "Ecological",
       "randomizedControlTrial": "Randomized Control Trial",
       "modelingSimulation": "Modeling/Simulation",
-      "other": "Other"
+      "other": "Other",
+      "nonRandomizedTrial": "non-randomized-trial",
+      "caseControl": "case-control"
     }
   },
   "common": {

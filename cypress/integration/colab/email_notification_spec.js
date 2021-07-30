@@ -366,7 +366,7 @@ describe('email notification tests', () => {
         ControlPage.fillInNewUserName(data.creator)
         ControlPage.clickEmailNotificationNthDropdown(-1)
         ControlPage.selectDropdownOptionByName(
-            data.authorAcceptanceNotification,
+          data.authorAcceptanceNotification,
         )
         ControlPage.clickNotify()
         ControlPage.getLogMessage().should('have.length', 4)
@@ -376,7 +376,7 @@ describe('email notification tests', () => {
         ControlPage.fillInNewUserEmail('test@123.com')
         ControlPage.clickEmailNotificationNthDropdown(-1)
         ControlPage.selectDropdownOptionByName(
-            data.evaluationCompleteNotification,
+          data.evaluationCompleteNotification,
         )
         ControlPage.clickNotify()
         ControlPage.getLogMessage().should('have.length', 4)
@@ -391,8 +391,8 @@ describe('email notification tests', () => {
           ControlPage.clickNthChatTab(-1)
           ControlPage.clickEmailNotificationNthDropdown(1)
           ControlPage.selectDropdownOptionByName(
-                data.authorAcceptanceNotification,
-            )
+            data.authorAcceptanceNotification,
+          )
           ControlPage.clickNotify()
           ControlPage.getLogMessage().should('have.length', 4)
         })
