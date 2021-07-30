@@ -653,7 +653,7 @@ const resolvers = {
       }
 
       const query = ctx.models.Manuscript.query()
-        .where({ parentId: null })
+        .where({ parentId: null, isHidden: false })
         .modify('orderBy', sort)
 
       if (filter && filter.status) {
