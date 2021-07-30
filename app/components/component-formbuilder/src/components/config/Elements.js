@@ -63,7 +63,24 @@ const radiofield = {
         label: 'No',
       },
     ],
-    label: 'Inline',
+  },
+}
+
+const reviewerPreviewField = {
+  component: 'RadioBox',
+  props: {
+    inline: true,
+    options: [
+      {
+        value: 'true',
+        label: 'Yes',
+      },
+      {
+        value: 'false',
+        label: 'No',
+      },
+    ],
+    label: "Include in reviewers' preview?",
   },
 }
 
@@ -75,7 +92,7 @@ const elements = {
     description: editorfield,
     shortDescription: textfield,
     validate,
-    includeInReviewerPreview: radiofield,
+    includeInReviewerPreview: reviewerPreviewField,
   },
   VisualAbstract: {
     id: textfield,
@@ -84,7 +101,7 @@ const elements = {
     description: editorfield,
     shortDescription: textfield,
     validate,
-    includeInReviewerPreview: radiofield,
+    includeInReviewerPreview: reviewerPreviewField,
   },
   AuthorsInput: {
     id: textfield,
@@ -92,7 +109,7 @@ const elements = {
     name: textfield,
     shortDescription: textfield,
     validate,
-    includeInReviewerPreview: radiofield,
+    includeInReviewerPreview: reviewerPreviewField,
   },
   LinksInput: {
     id: textfield,
@@ -100,7 +117,7 @@ const elements = {
     name: textfield,
     shortDescription: textfield,
     validate,
-    includeInReviewerPreview: radiofield,
+    includeInReviewerPreview: reviewerPreviewField,
   },
   AbstractEditor: {
     id: textfield,
@@ -110,7 +127,7 @@ const elements = {
     description: editorfield,
     validate,
     shortDescription: textfield,
-    includeInReviewerPreview: radiofield,
+    includeInReviewerPreview: reviewerPreviewField,
   },
   TextField: {
     id: textfield,
@@ -123,7 +140,7 @@ const elements = {
     parse: {
       component: 'Menu',
       props: {
-        label: 'Split with Comma Seperate',
+        label: 'Special parsing',
         options: [
           {
             value: 'false',
@@ -131,7 +148,7 @@ const elements = {
           },
           {
             value: 'split',
-            label: 'Split',
+            label: 'Split at commas',
           },
         ],
       },
@@ -139,7 +156,7 @@ const elements = {
     format: {
       component: 'Menu',
       props: {
-        label: 'Join with Comma',
+        label: 'Special formatting',
         options: [
           {
             value: 'false',
@@ -147,7 +164,7 @@ const elements = {
           },
           {
             value: 'join',
-            label: 'Join',
+            label: 'Join with commas',
           },
         ],
       },
@@ -169,7 +186,7 @@ const elements = {
         label: 'DOI Validation',
       },
     },
-    includeInReviewerPreview: radiofield,
+    includeInReviewerPreview: reviewerPreviewField,
   },
   CheckboxGroup: {
     id: textfield,
@@ -179,7 +196,7 @@ const elements = {
     options: optionfield,
     shortDescription: textfield,
     validate,
-    includeInReviewerPreview: radiofield,
+    includeInReviewerPreview: reviewerPreviewField,
   },
   Select: {
     id: textfield,
@@ -190,7 +207,7 @@ const elements = {
     options: optionfield,
     shortDescription: textfield,
     validate,
-    includeInReviewerPreview: radiofield,
+    includeInReviewerPreview: reviewerPreviewField,
   },
   RadioGroup: {
     id: textfield,
@@ -202,7 +219,7 @@ const elements = {
     sectioncss: textarea,
     shortDescription: textfield,
     validate,
-    includeInReviewerPreview: radiofield,
+    includeInReviewerPreview: reviewerPreviewField,
   },
 }
 
