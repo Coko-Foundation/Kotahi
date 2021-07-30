@@ -1,2 +1,2 @@
-ALTER TABLE manuscripts ADD is_imported BOOLEAN;
+ALTER TABLE manuscripts ADD is_hidden BOOLEAN;
   
