@@ -172,7 +172,8 @@ const AdminPage = () => {
       icon: 'file-text',
     })
 
-    links.push({ link: reportsLink, name: 'Reports', icon: 'activity' })
+    if (process.env.INSTANCE_NAME !== 'ncrc')
+      links.push({ link: reportsLink, name: 'Reports', icon: 'activity' })
   }
 
   if (currentUser) {
