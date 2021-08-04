@@ -183,10 +183,6 @@ const getData = async ctx => {
         return
       }
 
-      let formattedTopic = ''
-
-      formattedTopic = topic
-
       const formData = new FormData()
 
       await delay(3000 * index)
@@ -285,7 +281,7 @@ const getData = async ctx => {
 
           const publishedDate = [year, month, day].filter(Boolean).join('-')
 
-          const topics = topic ? [formattedTopic] : []
+          const topics = topic ? [topic] : []
 
           // for some titles HTML is returned, need to find _text property in nested object
           const flattedArticleTitle = flattenObj(ArticleTitle)

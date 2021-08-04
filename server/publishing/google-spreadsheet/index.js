@@ -18,6 +18,10 @@ const formatTopicCrossPostMapping = topics => {
   })
 }
 
+const getDistinct = arr => {
+  return arr.filter((member, i) => arr.indexOf(member) === i)
+}
+
 const mapFieldsToSpreadsheetColumns = manuscript => {
   const { submission } = manuscript
 
@@ -29,11 +33,9 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
     ? submission.initialTopicsOnImport
     : submission.topics
 
-  // eslint-disable-next-line
+  // eslint-disable-next-line camelcase
   const cross_post = manuscript.isImported
-    ? submission.topics.filter(topic => {
-        return !submission.initialTopicsOnImport.includes(topic)
-      })
+    ? getDistinct(submission.initialTopicsOnImport.concat(submission.topics))
     : submission.topics
 
   return {
@@ -65,7 +67,8 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
     Study_Design: submission.studyDesign || '',
     review_creator: submission.reviewCreator || '',
     edit_finished: 'TRUE',
-    Subtopic_Tag: submission.subTopics.join(';') || '',
+    Subtopic_Tag:
+      (submission.subTopics && submission.subTopics.join(';')) || '',
     main_findings: convert(submission.summaryOfMainFindings || '', {
       wordwrap: false,
     }),
@@ -75,13 +78,6 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
 }
 
 const publishToGoogleSpreadSheet = async manuscript => {
-  console.log('process.env.GOOGLE_SPREADSHEET_ID')
-  console.log(process.env.GOOGLE_SPREADSHEET_ID)
-  console.log('process.env.GOOGLE_SPREADSHEET_CLIENT_EMAIL')
-  console.log(process.env.GOOGLE_SPREADSHEET_CLIENT_EMAIL)
-  console.log('process.env.GOOGLE_SPREADSHEET_PRIVATE_KEY')
-  console.log(process.env.GOOGLE_SPREADSHEET_PRIVATE_KEY)
-
   try {
     const forPublishingData = mapFieldsToSpreadsheetColumns(manuscript)
     const { link } = forPublishingData

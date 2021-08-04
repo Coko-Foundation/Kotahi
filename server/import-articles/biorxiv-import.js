@@ -139,23 +139,7 @@ const getData = async ctx => {
 
         if (!manuscriptTopics.length) return null
 
-        const removeDuplicates = arr => {
-          return arr.filter((value, index) => arr.indexOf(value) === index)
-        }
-
-        const formatImportedTopics = topicsList => {
-          const formattedTopics = []
-
-          topicsList.forEach(topicElement => {
-            formattedTopics.push(topicElement)
-          })
-
-          return removeDuplicates(formattedTopics)
-        }
-
-        const topics = manuscriptTopics.length
-          ? [formatImportedTopics(manuscriptTopics)[0]]
-          : []
+        const topics = manuscriptTopics[0]
 
         return {
           status: 'new',
