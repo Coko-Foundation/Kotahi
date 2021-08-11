@@ -105,7 +105,7 @@ export const DELETE_MANUSCRIPTS = gql`
   }
 `
 
-export const GET_MANUSCRIPTS = gql`
+export const GET_MANUSCRIPTS_AND_FORM = gql`
   query Manuscripts(
     $sort: String
     $filter: ManuscriptsFilter
@@ -171,6 +171,21 @@ export const GET_MANUSCRIPTS = gql`
             name
           }
           profilePicture
+        }
+      }
+    }
+
+    formForPurpose(purpose: "submit") {
+      structure {
+        children {
+          id
+          component
+          name
+          options {
+            id
+            label
+            value
+          }
         }
       }
     }

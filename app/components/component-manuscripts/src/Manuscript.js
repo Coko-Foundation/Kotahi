@@ -42,18 +42,18 @@ import { composeValidate } from '../../component-submit/src/components/FormTempl
 import { DELETE_MANUSCRIPT } from '../../../queries'
 import manuscriptsTableConfig from './manuscriptsTableConfig'
 
-export const validateManuscript = (submission, form, client) =>
-  form.children
-    .map(element => {
-      return composeValidate(
+export const validateManuscript = (submission, fieldDefinitions, client) =>
+  Object.entries(fieldDefinitions)
+    .map(([key, element]) =>
+      composeValidate(
         element.validate,
         element.validateValue,
         element.name,
         JSON.parse(element.doiValidation ? element.doiValidation : false),
         client,
         element.component,
-      )(submission[element.name.split('.')[1]])
-    })
+      )(submission[element.name.split('.')[1]]),
+    )
     .filter(Boolean)
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
@@ -63,8 +63,41 @@ const updateUrlParameter = (url, param, value) => {
   return url.replace(regex, '$1' + value)
 }
 
-const renderManuscriptColumn = ({
+/** Find the data stored in the manuscript for this fieldName. If the fieldDefinition from the form has a key/value structure we should
+ * treat the manuscript data as the key and obtain the displayValue from the fieldDefinition. Otherwise use the manuscript data directly
+ * as the displayValue. If manuscript data is an array, we have to do this for each item in the array.
+ * There is special logic for some fieldNames, such as 'created' and 'updated'.
+ */
+const getValueAndDisplayValue = (fieldName, manuscript, fieldDefinitions) => {
+  if (fieldName === 'created')
+    return [manuscript.created, convertTimestampToDate(manuscript.created)]
+  if (fieldName === 'updated')
+    return [manuscript.updated, convertTimestampToDate(manuscript.updated)]
+
+  const valueInManuscript = get(manuscript, fieldName, null)
+
+  const fieldDefinition = fieldDefinitions?.[fieldName]
+
+  if (Array.isArray(valueInManuscript)) {
+    return [
+      valueInManuscript,
+      valueInManuscript.map(
+        val =>
+          fieldDefinition?.options?.find(o => o.value === val)?.label ?? val,
+      ),
+    ]
+  }
+
+  return [
+    valueInManuscript,
+    fieldDefinition?.options?.find(o => o.value === valueInManuscript)?.label ??
+      valueInManuscript,
+  ]
+}
+
+const renderManuscriptCell = ({
   manuscript,
+  fieldDefinitions,
   selectedNewManuscripts,
   toggleNewManuscriptCheck,
   formattedAbstract,
@@ -76,7 +109,7 @@ const renderManuscriptColumn = ({
   setReadyToEvaluateLabel,
 }) => {
   const renderManuscriptColumnsActions = {
-    'meta.title': () => {
+    'meta.title': displayValue => {
       return (
         <Cell key="title">
           {process.env.INSTANCE_NAME === 'colab' &&
@@ -87,7 +120,7 @@ const renderManuscriptColumn = ({
                 onChange={() => toggleNewManuscriptCheck(manuscript.id)}
               />
             )}
-          {manuscript.meta && manuscript.meta.title}
+          {displayValue}
           {process.env.INSTANCE_NAME === 'colab' && (
             <>
               <Tooltip
@@ -120,14 +153,7 @@ const renderManuscriptColumn = ({
         </Cell>
       )
     },
-    'submission.articleId': () => {
-      return (
-        <Cell key="id">
-          {manuscript.submission && manuscript.submission.articleId}
-        </Cell>
-      )
-    },
-    'submission.articleDescription': () => {
+    'submission.articleDescription': displayValue => {
       return (
         <Cell key="desc">
           <StyledDescriptionWrapper>
@@ -141,11 +167,10 @@ const renderManuscriptColumn = ({
             <span style={{ wordBreak: 'break-word' }}>
               {manuscript.submission.articleURL ? (
                 <a href={manuscript.submission.articleURL} target="_blank">
-                  {manuscript.submission &&
-                    manuscript.submission.articleDescription}
+                  {displayValue}
                 </a>
               ) : (
-                manuscript.submission.articleDescription
+                displayValue
               )}
             </span>
             <>
@@ -179,58 +204,41 @@ const renderManuscriptColumn = ({
         </Cell>
       )
     },
-    'submission.journal': () => {
-      return <Cell key="journal">{manuscript.submission.journal}</Cell>
+    'submission.topics': (displayValue, value) => {
+      const topicComponents = []
+      for (let i = 0; i < value.length; i += 1) {
+        topicComponents.push(
+          <StyledTopic
+            key={value[i]}
+            onClick={() => filterByTopic(value[i])}
+            title={displayValue[i]}
+          >
+            {displayValue[i]}
+          </StyledTopic>,
+        )
+      }
+
+      return <Cell key="topics">{topicComponents}</Cell>
     },
-    created: () => {
-      return (
-        <Cell key="created">{convertTimestampToDate(manuscript.created)}</Cell>
-      )
-    },
-    updated: () => {
-      return (
-        <Cell key="updated">{convertTimestampToDate(manuscript.updated)}</Cell>
-      )
-    },
-    'submission.topics': () => {
-      return (
-        <Cell key="topics">
-          {manuscript.submission?.topics?.map(topic => {
-            return (
-              <StyledTopic
-                key={topic}
-                onClick={() => filterByTopic(topic)}
-                title={convertCamelCaseToText(topic)}
-              >
-                {convertCamelCaseToText(topic)}
-              </StyledTopic>
-            )
-          })}
-        </Cell>
-      )
-    },
-    status: () => {
+    status: (displayValue, value) => {
       return (
         <Cell key="status">
-          <span onClick={() => filterByArticleStatus(manuscript.status)}>
+          <span onClick={() => filterByArticleStatus(value)}>
             <StatusBadge
               clickable
               published={manuscript.published}
-              status={manuscript.status}
+              status={value}
             />
           </span>
         </Cell>
       )
     },
-    'submission.labels': () => {
+    'submission.labels': (displayValue, value) => {
       return (
         <Cell key="labels">
-          {manuscript.submission && manuscript.submission.labels ? (
-            <StyledTableLabel
-              onClick={() => filterByArticleLabel(manuscript.submission.labels)}
-            >
-              {manuscript.submission &&
-                convertCamelCaseToText(manuscript.submission.labels)}
+          {value ? (
+            <StyledTableLabel onClick={() => filterByArticleLabel(value)}>
+              {displayValue}
             </StyledTableLabel>
           ) : (
             <StyledButton
@@ -279,11 +287,15 @@ const renderManuscriptColumn = ({
   }
 
   return fieldName => {
-    if (get(renderManuscriptColumnsActions, fieldName)) {
-      return get(renderManuscriptColumnsActions, fieldName)()
-    }
+    const [value, displayValue] = getValueAndDisplayValue(
+      fieldName,
+      manuscript,
+      fieldDefinitions,
+    )
+    const specialRenderer = get(renderManuscriptColumnsActions, fieldName)
+    if (specialRenderer) return specialRenderer(displayValue, value)
 
-    return <Cell key={fieldName}>{get(manuscript, fieldName, null)}</Cell>
+    return <Cell key={fieldName}>{displayValue}</Cell>
   }
 }
 
@@ -291,6 +303,7 @@ const renderManuscriptColumn = ({
 const User = ({
   manuscriptId,
   manuscript,
+  fieldDefinitions,
   submitter,
   history,
   toggleNewManuscriptCheck,
@@ -322,14 +335,7 @@ const User = ({
     },
   })
 
-  const { data } = useQuery(query, {
-    variables: { id: manuscriptId },
-    partialRefetch: true,
-  })
-
   const client = useApolloClient()
-
-  const form = data?.formForPurpose?.structure
 
   const publishManuscriptHandler = async () => {
     if (isPublishingBlocked) {
@@ -339,7 +345,7 @@ const User = ({
     setIsPublishingBlocked(true)
 
     const areThereInvalidFields = await Promise.all(
-      validateManuscript(manuscript.submission, form, client),
+      validateManuscript(manuscript.submission, fieldDefinitions, client),
     )
 
     if (areThereInvalidFields.filter(Boolean).length === 0) {
@@ -362,8 +368,9 @@ const User = ({
     }
   }
 
-  const renderColumn = renderManuscriptColumn({
+  const renderCell = renderManuscriptCell({
     manuscript,
+    fieldDefinitions,
     selectedNewManuscripts,
     toggleNewManuscriptCheck,
     formattedAbstract,
@@ -378,7 +385,7 @@ const User = ({
   return (
     <Row>
       {manuscriptsTableConfig.map(field => {
-        return renderColumn(field)
+        return renderCell(field)
       })}
       <LastCell>
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
@@ -441,6 +448,19 @@ User.propTypes = {
     email: PropTypes.string,
     username: PropTypes.string.isRequired,
   }),
+  fieldDefinitions: PropTypes.objectOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      component: PropTypes.string.isRequired,
+      name: PropTypes.string.isRequired,
+      options: PropTypes.arrayOf(
+        PropTypes.shape({
+          label: PropTypes.string.isRequired,
+          value: PropTypes.string.isRequired,
+        }).isRequired,
+      ),
+    }).isRequired,
+  ).isRequired,
   toggleNewManuscriptCheck: PropTypes.func.isRequired,
   selectedNewManuscripts: PropTypes.arrayOf(PropTypes.object).isRequired,
   setSelectedStatus: PropTypes.func.isRequired,
