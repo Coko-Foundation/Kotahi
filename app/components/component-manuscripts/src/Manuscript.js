@@ -206,16 +206,22 @@ const renderManuscriptCell = ({
     },
     'submission.topics': (displayValue, value) => {
       const topicComponents = []
-      for (let i = 0; i < value.length; i += 1) {
-        topicComponents.push(
-          <StyledTopic
-            key={value[i]}
-            onClick={() => filterByTopic(value[i])}
-            title={displayValue[i]}
-          >
-            {displayValue[i]}
-          </StyledTopic>,
-        )
+
+      if (Array.isArray(value)) {
+        for (let i = 0; i < value.length; i += 1) {
+          topicComponents.push(
+            <StyledTopic
+              key={value[i]}
+              onClick={() => filterByTopic(value[i])}
+              title={displayValue[i]}
+            >
+              {displayValue[i]}
+            </StyledTopic>,
+          )
+        }
+      } else {
+        console.error('Topics not coming in as array:', value, displayValue)
+        topicComponents.push(<span>Topics could not be loaded.</span>)
       }
 
       return <Cell key="topics">{topicComponents}</Cell>
