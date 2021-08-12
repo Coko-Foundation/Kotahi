@@ -464,6 +464,7 @@ const Manuscripts = ({ history, ...props }) => {
     })
   }
 
+  // eslint-disable-next-line no-unused-vars
   const bulkSetLabelReadyToEvaluate = (selectedNewManuscripts, manuscripts) => {
     manuscripts
       .filter(manuscript => !selectedNewManuscripts.includes(manuscript.id))
@@ -481,7 +482,7 @@ const Manuscripts = ({ history, ...props }) => {
   }
 
   const confirmBulkDelete = () => {
-    bulkSetLabelReadyToEvaluate(selectedNewManuscripts, manuscripts)
+    // bulkSetLabelReadyToEvaluate(selectedNewManuscripts, manuscripts) // Disable until requirements are clearer. See #602
     deleteManuscripts({
       variables: { ids: selectedNewManuscripts },
     })
