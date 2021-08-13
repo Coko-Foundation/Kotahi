@@ -57,8 +57,15 @@ const filterFileManuscript = files =>
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   )
 
-// Add AbstractEditor, AuthorsInput, Select and LinksInput to the list of available form elements
-const elements = { TextField, RadioGroup: SafeRadioGroup, CheckboxGroup }
+/** Definitions for available field types */
+const elements = {
+  TextField,
+  RadioGroup: SafeRadioGroup,
+  CheckboxGroup,
+  AuthorsInput,
+  Select,
+  LinksInput,
+}
 
 elements.AbstractEditor = ({
   validationStatus,
@@ -90,10 +97,6 @@ elements.AbstractEditor.propTypes = {
 elements.AbstractEditor.defaultProps = {
   validationStatus: undefined,
 }
-
-elements.AuthorsInput = AuthorsInput
-elements.Select = Select
-elements.LinksInput = LinksInput
 
 const rejectProps = (obj, keys) =>
   Object.keys(obj)

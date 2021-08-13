@@ -33,9 +33,9 @@ const ComponentProperties = ({
   return (
     <Page key={selectedComponent}>
       <form onSubmit={onSubmit}>
-        <Heading>Component Properties</Heading>
+        <Heading>Field Properties</Heading>
         <Section>
-          <Legend space>Component Type</Legend>
+          <Legend space>Field type</Legend>
           <ValidatedFieldFormik
             component={MenuComponents}
             name="component"
@@ -66,7 +66,7 @@ const ComponentProperties = ({
           </Section>
         ))}
         <Button primary type="submit">
-          Update Component
+          Update Field
         </Button>
       </form>
     </Page>

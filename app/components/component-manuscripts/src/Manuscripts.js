@@ -442,7 +442,7 @@ const Manuscripts = ({ history, ...props }) => {
   const fieldDefinitions = {}
   const fields = data.formForPurpose?.structure?.children ?? []
   fields.forEach(field => {
-    fieldDefinitions[field.name] = field
+    if (field.name) fieldDefinitions[field.name] = field // Incomplete fields in the formbuilder may not have a name specified. Ignore these
   })
 
   const { totalCount } = data.paginatedManuscripts

@@ -1,31 +1,42 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { withTheme } from 'styled-components'
 import { FieldArray } from 'formik'
-import { TextField, ValidatedFieldFormik, Button } from '@pubsweet/ui'
+import { TextField, ValidatedFieldFormik, Button, Icon } from '@pubsweet/ui'
+import lightenBy from '../../../../../shared/lightenBy'
 
 const Inline = styled.div`
   display: inline-block;
   margin-right: 10px;
+  position: relative;
+  vertical-align: top;
 `
 
-const UnbulletedList = styled.div`
+const UnbulletedList = styled.ul`
   list-style-type: none;
 `
 
-const Spacing = styled.div`
-  padding: 15px 0px;
+const DeleteControlContainer = styled(Inline)`
+  padding: 32px 0 0 1em;
 `
 
-const Option = styled.div`
-  padding-bottom: 10px;
+const DeleteButton = styled.button`
+  background: none;
+
+  &:hover {
+    background-color: ${lightenBy('colorPrimary', 0.8)};
+  }
 `
 
-const keyInput = input => (
-  <TextField label="Key Option" placeholder="Enter key…" {...input} />
+const ControlIcon = withTheme(({ children, theme }) => (
+  <Icon color={theme.colorPrimary}>{children}</Icon>
+))
+
+const labelInput = input => (
+  <TextField label="Label to display" placeholder="Enter label…" {...input} />
 )
 
 const valueInput = input => (
-  <TextField label="Value Option" placeholder="Enter value…" {...input} />
+  <TextField label="Internal name" placeholder="Enter name…" {...input} />
 )
 
 const renderOptions = ({ form: { values }, push, remove }) => {
@@ -34,54 +45,48 @@ const renderOptions = ({ form: { values }, push, remove }) => {
   )
 
   return (
-    <ul>
-      <UnbulletedList>
-        {(values.options || []).map((option, index) => (
-          // index as key is better than using label or value, which would cause rerender and lose focus during editing.
-          // TODO: store an internal ID for each option, and use that as key; OR provide a way of editing an option that doesn't update the option list until the user clicks away (or a modal editor)
-          // eslint-disable-next-line react/no-array-index-key
-          <li key={index}>
-            <Spacing>
-              <Option>
-                Option:&nbsp;
-                {values.options.length > 1 && (
-                  <Button onClick={() => remove(index)} type="button">
-                    Remove
-                  </Button>
-                )}
-              </Option>
-              <div>
-                <Inline>
-                  <ValidatedFieldFormik
-                    component={keyInput}
-                    name={`options.${index}.label`}
-                    required
-                  />
-                </Inline>
-
-                <Inline>
-                  <ValidatedFieldFormik
-                    component={valueInput}
-                    name={`options.${index}.value`}
-                    required
-                  />
-                </Inline>
-              </div>
-            </Spacing>
-          </li>
-        ))}
-        <li>
-          <Button
-            disabled={hasNewOption}
-            onClick={() => push()}
-            plain
-            type="button"
-          >
-            Add another option
-          </Button>
+    <UnbulletedList>
+      {(values.options || []).map((option, index) => (
+        // a newly-added option doesn't have an id yet, so we fall back on index
+        <li key={option?.id ?? index}>
+          <div>
+            <Inline>
+              <ValidatedFieldFormik
+                component={labelInput}
+                name={`options.${index}.label`}
+                required
+              />
+            </Inline>
+            <Inline>
+              <ValidatedFieldFormik
+                component={valueInput}
+                name={`options.${index}.value`}
+                required
+              />
+            </Inline>
+            <DeleteControlContainer>
+              <DeleteButton
+                onClick={() => remove(index)}
+                title="Delete this option"
+                type="button"
+              >
+                <ControlIcon>x</ControlIcon>
+              </DeleteButton>
+            </DeleteControlContainer>
+          </div>
         </li>
-      </UnbulletedList>
-    </ul>
+      ))}
+      <li>
+        <Button
+          disabled={hasNewOption}
+          onClick={() => push()}
+          plain
+          type="button"
+        >
+          Add another option
+        </Button>
+      </li>
+    </UnbulletedList>
   )
 }
 
