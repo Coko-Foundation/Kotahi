@@ -1,8 +1,3 @@
-import config from 'config'
-
-const extendComponents = (config['pubsweet-component-xpub-formbuilder'] || {})
-  .components
-
 const textfield = {
   component: 'TextField',
 }
@@ -23,11 +18,35 @@ const textarea = {
   },
 }
 
-const validate = {
+const validateText = {
   component: 'Menu',
   props: {
     isMulti: true,
     isClearable: true,
+    label: 'Validation options',
+    options: [
+      {
+        value: 'required',
+        label: 'Required',
+      },
+      {
+        value: 'minChars',
+        label: 'Minimum characters',
+      },
+      {
+        value: 'maxChars',
+        label: 'Maximum characters',
+      },
+    ],
+  },
+}
+
+const validateCollection = {
+  component: 'Menu',
+  props: {
+    isMulti: true,
+    isClearable: true,
+    label: 'Validation options',
     options: [
       {
         value: 'required',
@@ -35,15 +54,22 @@ const validate = {
       },
       {
         value: 'minSize',
-        label: 'minSize',
+        label: 'Minimum number of items',
       },
+    ],
+  },
+}
+
+const validateOther = {
+  component: 'Menu',
+  props: {
+    isMulti: true,
+    isClearable: true,
+    label: 'Validation options',
+    options: [
       {
-        value: 'minChars',
-        label: 'minimum Characters',
-      },
-      {
-        value: 'maxChars',
-        label: 'maximum Characters',
+        value: 'required',
+        label: 'Required',
       },
     ],
   },
@@ -91,7 +117,7 @@ const elements = {
     name: textfield,
     description: editorfield,
     shortDescription: textfield,
-    validate,
+    validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
   },
   VisualAbstract: {
@@ -100,7 +126,7 @@ const elements = {
     name: textfield,
     description: editorfield,
     shortDescription: textfield,
-    validate,
+    validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
   },
   AuthorsInput: {
@@ -108,7 +134,7 @@ const elements = {
     title: textfield,
     name: textfield,
     shortDescription: textfield,
-    validate,
+    validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
   },
   LinksInput: {
@@ -116,7 +142,7 @@ const elements = {
     title: textfield,
     name: textfield,
     shortDescription: textfield,
-    validate,
+    validate: validateCollection,
     includeInReviewerPreview: reviewerPreviewField,
   },
   AbstractEditor: {
@@ -125,7 +151,7 @@ const elements = {
     name: textfield,
     placeholder: textfield,
     description: editorfield,
-    validate,
+    validate: validateText,
     shortDescription: textfield,
     includeInReviewerPreview: reviewerPreviewField,
   },
@@ -136,7 +162,7 @@ const elements = {
     placeholder: textfield,
     description: editorfield,
     shortDescription: textfield,
-    validate,
+    validate: validateText,
     parse: {
       component: 'Menu',
       props: {
@@ -183,7 +209,7 @@ const elements = {
             label: 'No',
           },
         ],
-        label: 'DOI Validation',
+        label: 'Validate as a DOI?',
       },
     },
     includeInReviewerPreview: reviewerPreviewField,
@@ -195,7 +221,7 @@ const elements = {
     description: editorfield,
     options: optionfield,
     shortDescription: textfield,
-    validate,
+    validate: validateCollection,
     includeInReviewerPreview: reviewerPreviewField,
   },
   Select: {
@@ -206,7 +232,7 @@ const elements = {
     description: editorfield,
     options: optionfield,
     shortDescription: textfield,
-    validate,
+    validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
   },
   RadioGroup: {
@@ -218,9 +244,9 @@ const elements = {
     inline: radiofield,
     sectioncss: textarea,
     shortDescription: textfield,
-    validate,
+    validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
   },
 }
 
-export default Object.assign(elements, extendComponents)
+export default elements

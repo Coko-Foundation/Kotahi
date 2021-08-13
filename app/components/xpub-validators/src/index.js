@@ -46,15 +46,12 @@ export const maxChars = max => {
   }
 }
 
+// TODO: minSize and minChars could be merged into one function (strip tags if it's text, then check length of string or array)
 export const minSize = min => {
   const message = `Enter at least ${min} ${min === 1 ? 'item' : 'items'}`
 
   return value => {
-    if (!value) {
-      return message
-    }
-
-    if (value.length < min) {
+    if (!value || value.length < min) {
       return message
     }
 

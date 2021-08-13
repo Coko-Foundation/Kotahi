@@ -3,7 +3,6 @@ const logger = require('winston')
 const { deferConfig } = require('config/defer')
 
 const components = require('./components.json')
-const formComponents = require('./form-components.json')
 const journal = require('./journal')
 
 module.exports = {
@@ -53,7 +52,6 @@ module.exports = {
 
       return path.resolve(__dirname, pathToFormTemplateFolder)
     }),
-    components: formComponents,
   },
   'pubsweet-server': {
     db: {},

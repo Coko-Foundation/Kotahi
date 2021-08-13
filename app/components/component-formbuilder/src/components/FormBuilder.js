@@ -158,14 +158,14 @@ const AddElementButton = ({ addElement }) => (
       <Action
         onClick={() =>
           addElement({
-            title: 'New Component',
+            title: 'New Field',
             id: uuid(),
           })
         }
       >
         <Heading>
           <StatusIdle />
-          Add Element
+          Add Field
         </Heading>
       </Action>
     </Main>
