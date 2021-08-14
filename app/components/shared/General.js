@@ -20,11 +20,10 @@ export const ScrollableContent = styled(Content)`
 
 export const SectionContent = styled(Section)`
   background-color: ${th('colorBackground')};
-  border-radius: ${({ noGap }) =>
-    noGap
-      ? `0 ${th('borderRadius')} ${th('borderRadius')}`
-      : th('borderRadius')};
+  border-radius: ${th('borderRadius')};
+  border-top-left-radius: ${({ noGap }) => (noGap ? '0' : th('borderRadius'))};
   box-shadow: ${th('boxShadow')};
+  margin-bottom: ${grid(2)};
   margin-top: ${({ noGap }) => (noGap ? 0 : grid(2))};
   padding: 0;
 `

@@ -29,7 +29,7 @@ const getLatestVersion = manuscript => {
   )
     return manuscript
 
-  return manuscript.manuscriptVersions[manuscript.manuscriptVersions.length - 1]
+  return manuscript.manuscriptVersions[0]
 }
 
 /** Filter to return those manuscripts with the given user in one of the given roles.
