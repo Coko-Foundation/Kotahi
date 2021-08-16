@@ -192,7 +192,7 @@ const DecisionForm = ({
           <FormStatus>{status}</FormStatus>
           <SectionAction>
             <Button
-              disabled={!isValid || isSubmitting || !dirty}
+              disabled={!isValid || isSubmitting} // We don't check for dirty because the initialValue may not match the manuscript's status, and the user may want to submit it like that.
               primary
               type="submit"
             >
