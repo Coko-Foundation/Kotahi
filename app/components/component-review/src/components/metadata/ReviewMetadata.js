@@ -136,9 +136,9 @@ ReviewMetadata.propTypes = {
     children: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        component: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
+        name: PropTypes.string,
+        component: PropTypes.string,
+        title: PropTypes.string,
         shortDescription: PropTypes.string,
       }).isRequired,
     ).isRequired,

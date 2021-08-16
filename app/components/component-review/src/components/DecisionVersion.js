@@ -222,14 +222,15 @@ const DecisionVersion = ({ form, current, version, parent }) => {
     <Formik
       displayName="decision"
       initialValues={reviewOrInitial(version)}
-      onSubmit={values =>
-        makeDecision({
+      onSubmit={async (values, actions) => {
+        await makeDecision({
           variables: {
             id: version.id,
             decision: values.recommendation,
           },
         })
-      }
+        actions.setSubmitting(false)
+      }}
       validate={(values, props) => {
         const errors = {}
 
@@ -261,8 +262,8 @@ DecisionVersion.propTypes = {
     children: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
+        name: PropTypes.string,
+        title: PropTypes.string,
         shortDescription: PropTypes.string,
       }).isRequired,
     ).isRequired,
