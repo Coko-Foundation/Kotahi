@@ -16,8 +16,7 @@ import {
   CaretDown,
   Carets,
 } from './style'
-
-import { PaginationContainer } from '../../shared/Pagination'
+import { CommsErrorBanner, PaginationContainer } from '../../shared'
 
 const GET_USERS = gql`
   query Users(
@@ -100,7 +99,7 @@ const UsersManager = () => {
   })
 
   if (loading) return <Spinner />
-  if (error) return `Error! ${error.message}`
+  if (error) return <CommsErrorBanner error={error} />
 
   const { users, totalCount } = data.paginatedUsers
 

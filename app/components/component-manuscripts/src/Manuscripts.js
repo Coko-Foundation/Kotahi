@@ -23,7 +23,7 @@ import {
   StyledButton,
   TableHeader,
 } from './style'
-import { HeadingWithAction, Select } from '../../shared'
+import { HeadingWithAction, Select, CommsErrorBanner } from '../../shared'
 import {
   GET_MANUSCRIPTS_AND_FORM,
   DELETE_MANUSCRIPTS,
@@ -433,7 +433,7 @@ const Manuscripts = ({ history, ...props }) => {
   }, [history.location.search])
 
   if (loading) return <Spinner />
-  if (error) return `Error! ${error.message}`
+  if (error) return <CommsErrorBanner error={error} />
 
   const manuscripts = data.paginatedManuscripts.manuscripts.map(el => {
     return { ...el, submission: JSON.parse(el.submission) }

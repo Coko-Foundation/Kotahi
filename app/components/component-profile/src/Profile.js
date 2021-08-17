@@ -15,6 +15,7 @@ import {
   SectionRow,
   Heading,
   Title,
+  CommsErrorBanner,
 } from '../../shared'
 import ChangeUsername from './ChangeUsername'
 import { BigProfileImage } from './ProfileImage'
@@ -75,7 +76,7 @@ const ProfileDropzone = ({ profilePicture, updateProfilePicture }) => {
 const Profile = ({ refetchCurrentUser }) => {
   const { loading, error, data, client, refetch } = useQuery(GET_CURRENT_USER)
   if (loading) return <Spinner />
-  if (error) return JSON.stringify(error)
+  if (error) return <CommsErrorBanner error={error} />
 
   const localStorage = window.localStorage || undefined
 

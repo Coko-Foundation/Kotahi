@@ -8,6 +8,7 @@ import { sortAndGroupMessages } from '../../../../sortAndGroup'
 import NextPageButton from '../../../NextPageButton'
 import { convertTimestampToDate } from '../../../../shared/time-formatting'
 import MessageRenderer from './MessageRenderer'
+import { CommsErrorBanner } from '../../../shared'
 
 import {
   Timestamp,
@@ -140,7 +141,7 @@ const Messages = ({ channelId }) => {
   })
 
   if (loading) return <Spinner />
-  if (error) return JSON.stringify(error)
+  if (error) return <CommsErrorBanner error={error} />
 
   const firstMessage = data?.messages.edges[0]
 

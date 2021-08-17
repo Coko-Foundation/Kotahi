@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Formik } from 'formik'
 import { gql, useQuery, useMutation } from '@apollo/client'
 import Reviewers from './reviewers/Reviewers'
-import { Spinner } from '../../../shared'
+import { Spinner, CommsErrorBanner } from '../../../shared'
 
 const teamFields = `
   id
@@ -154,11 +154,8 @@ const ReviewersPage = ({ match, history }) => {
   const [removeReviewer] = useMutation(removeReviewerMutation)
   const [updateTeamMember] = useMutation(updateTeamMemberMutation)
 
-  if (loading) {
-    return <Spinner />
-  }
-
-  if (error) return error
+  if (loading) return <Spinner />
+  if (error) return <CommsErrorBanner error={error} />
 
   const { manuscript, users } = data
 
