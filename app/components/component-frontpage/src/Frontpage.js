@@ -26,6 +26,7 @@ import {
   Heading,
   HeadingWithAction,
   Pagination,
+  CommsErrorBanner,
 } from '../../shared'
 import { PaginationContainer } from '../../shared/Pagination'
 
@@ -66,7 +67,7 @@ const Frontpage = ({ history, ...props }) => {
   const journal = useContext(JournalContext)
 
   if (loading) return <Spinner />
-  if (error) return JSON.stringify(error)
+  if (error) return <CommsErrorBanner error={error} />
 
   const { totalCount } = data.publishedManuscripts
 

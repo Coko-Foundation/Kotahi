@@ -2,7 +2,7 @@ import React, { useState } from 'react'
 import { useQuery, gql } from '@apollo/client'
 import Report from './Report'
 import { getStartOfDayUtc, getEndOfDayUtc } from './dateUtils'
-import { Spinner } from '../../shared'
+import { Spinner, CommsErrorBanner } from '../../shared'
 
 const getReportData = gql`
   query reportData(
@@ -122,7 +122,7 @@ const ReportPage = () => {
   })
 
   if (loading) return <Spinner />
-  if (error) return <div>{error}</div>
+  if (error) return <CommsErrorBanner error={error} />
 
   return (
     <Report

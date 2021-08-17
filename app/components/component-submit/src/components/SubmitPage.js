@@ -10,6 +10,7 @@ import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 import { publishManuscriptMutation } from '../../../component-review/src/components/queries'
 import pruneEmpty from '../../../../shared/pruneEmpty'
 import { validateManuscript } from '../../../component-manuscripts/src/Manuscript'
+import CommsErrorBanner from '../../../shared/CommsErrorBanner'
 
 export const updateMutation = gql`
   mutation($id: ID!, $input: String) {
@@ -79,7 +80,7 @@ const SubmitPage = ({ match, history }) => {
   const client = useApolloClient()
 
   if (loading) return <Spinner />
-  if (error) return JSON.stringify(error)
+  if (error) return <CommsErrorBanner error={error} />
 
   const currentUser = data?.currentUser
   const manuscript = data?.manuscript

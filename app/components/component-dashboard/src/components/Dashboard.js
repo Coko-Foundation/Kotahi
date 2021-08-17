@@ -19,6 +19,7 @@ import {
   SectionContent,
   Heading,
   HeadingWithAction,
+  CommsErrorBanner,
 } from '../../../shared'
 
 const getLatestVersion = manuscript => {
@@ -70,7 +71,7 @@ const Dashboard = ({ history, ...props }) => {
   // })
 
   if (loading) return <Spinner />
-  if (error) return JSON.stringify(error)
+  if (error) return <CommsErrorBanner error={error} />
   const currentUser = data && data.currentUser
 
   const latestVersions = data.manuscriptsUserHasCurrentRoleIn.map(

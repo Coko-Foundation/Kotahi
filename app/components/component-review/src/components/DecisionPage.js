@@ -10,6 +10,7 @@ import {
   Columns,
   Manuscript,
   Chat,
+  CommsErrorBanner,
 } from '../../../shared'
 
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
@@ -27,7 +28,7 @@ const DecisionPage = ({ match }) => {
   })
 
   if (loading) return <Spinner />
-  if (error) return `Error! ${error.message}`
+  if (error) return <CommsErrorBanner error={error} />
 
   const { manuscript, formForPurpose } = data
 

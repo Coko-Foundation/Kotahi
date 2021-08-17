@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import { cloneDeep, omitBy } from 'lodash'
 import FormBuilderLayout from './FormBuilderLayout'
-import { Spinner } from '../../../shared'
+import { Spinner, CommsErrorBanner } from '../../../shared'
 import pruneEmpty from '../../../../shared/pruneEmpty'
 
 const createFormMutation = gql`
@@ -180,7 +180,7 @@ const FormBuilderPage = () => {
   }, [loading, data])
 
   if (loading || !activeFormId) return <Spinner />
-  if (error) return JSON.stringify(error)
+  if (error) return <CommsErrorBanner error={error} />
 
   const cleanedForms = pruneEmpty(data.forms)
 

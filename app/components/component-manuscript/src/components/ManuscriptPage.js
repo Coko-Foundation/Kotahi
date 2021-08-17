@@ -2,7 +2,7 @@ import React from 'react'
 import { useQuery, gql } from '@apollo/client'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import Manuscript from './Manuscript'
-import { Spinner } from '../../../shared'
+import { Spinner, CommsErrorBanner } from '../../../shared'
 
 const fragmentFields = `
   id
@@ -50,7 +50,7 @@ const ManuscriptPage = ({ match, ...props }) => {
   }
 
   if (loading) return <Spinner />
-  if (error) return JSON.stringify(error)
+  if (error) return <CommsErrorBanner error={error} />
   const { manuscript } = data
 
   return (

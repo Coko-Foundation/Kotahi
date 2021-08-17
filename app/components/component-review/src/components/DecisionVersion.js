@@ -20,6 +20,7 @@ import {
   SectionHeader,
   SectionRow,
   Title,
+  CommsErrorBanner,
 } from '../../../shared'
 import {
   query,
@@ -74,7 +75,7 @@ const DecisionVersion = ({ form, current, version, parent }) => {
   }, [data?.manuscript?.reviews])
 
   if (loading || loadingSharedReviews) return <Spinner />
-  if (error) return `Error! ${error.message}`
+  if (error) return <CommsErrorBanner error={error} />
 
   const { manuscript } = data
 
