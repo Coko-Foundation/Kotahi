@@ -311,6 +311,7 @@ const permissions = {
     manuscriptsUserHasCurrentRoleIn: isAuthenticated,
     manuscripts: allow,
     manuscript: allow,
+    manuscriptsPublishedSinceDate: allow,
     messages: allow,
     form: allow,
     forms: allow,
@@ -378,6 +379,7 @@ const permissions = {
   ManuscriptMeta: allow,
   Note: allow,
   Identity: allow,
+  PublishedManuscript: allow,
 }
 
 const fallbackRule = or(userIsAdmin, userIsEditor, isAuthenticated)
