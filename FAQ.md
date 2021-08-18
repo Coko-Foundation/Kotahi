@@ -59,7 +59,7 @@ x.save()
 
 Now if you visit `http://localhost:4000/kotahi/admin` it should show `(admin)` below your name at the top left.
 
-# What else can I do in the console?
+## What else can I do in the console?
 
 The console (`yarn console`) gives you a Node.js REPL with asyns/await support and models preloaded. You can access all of those as you can in the server-side code.
 
@@ -85,7 +85,7 @@ And so on. For more information about the capabilities of the underlying Objecti
 
 These environment variables are only needed for an instance where the client's public address is different to the address by which the server accesses it. For instance, when deploying behind a proxy, or when deploying a _development_ instance to a remote server (not to localhost). Otherwise, you can leave these unset.
 
-# What if I want to use my own PostgreSQL instance (i.e. not via `docker-compose`)?
+## What if I want to use my own PostgreSQL instance (i.e. not via `docker-compose`)?
 
 Create a local postgres database named `kotahidev` and a superuser `kotahidev` using `psql`, set a password for it too. We're using `kotahidev`, as the app is configured for that by default, but your database details can of course be different.
 
@@ -105,10 +105,14 @@ kotahidev=# create extension pgcrypto;
 
 Migrate the test database using `yarn dotenv yarn pubsweet migrate`.
 
-# Does Kotahi support collaborative real-time text editing?
+## Does Kotahi support collaborative real-time text editing?
 
 Kotahi uses the Wax editor which is not configured for real-time collaboration out of the box, but can be (and was) made to support it. It was previously configured to support it, but the feature was removed in https://gitlab.coko.foundation/kotahi/kotahi/-/merge_requests/230/diffs?commit_id=6fd9eec258ce21d4db8cf1e593bb8b891b3f3c50 due to its experimental nature and it not being required by the known workflows. Reverting that would be a good choice for a starting point, should you wish to reimplement it.
 
-# How do I se the logo and branding colours?
+## How do I set the logo and branding colours?
 
 `app/brandConfig.json` allows logo, colors and brand name to be specified. Colors must be specified in hex format, e.g. "#9e9e9e".
+
+## Can I run Kotahi without docker-compose?
+
+Certainly. In the absence of `docker-compose`, the server and client will still load the `.env` file, so that remains the preferred means of configuration. You should consult the `docker-compose.yml` and `docker-compose.production.yml` files as a kind of installation guide if for some reason you wish to not use docker.
