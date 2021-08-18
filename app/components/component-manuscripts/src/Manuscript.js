@@ -221,9 +221,11 @@ const renderManuscriptCell = ({
             </StyledTopic>,
           )
         }
-      } else {
+      } else if (value !== null) {
         console.error('Topics not coming in as array:', value, displayValue)
-        topicComponents.push(<span>Topics could not be loaded.</span>)
+        topicComponents.push(
+          <span key="TopicsLoadError">Topics could not be loaded.</span>,
+        )
       }
 
       return <Cell key="topics">{topicComponents}</Cell>
@@ -308,7 +310,7 @@ const renderManuscriptCell = ({
 }
 
 // manuscriptId is always the parent manuscript's id
-const User = ({
+const ManuscriptRow = ({
   manuscriptId,
   manuscript,
   fieldDefinitions,
@@ -366,7 +368,7 @@ const User = ({
 
   let formattedAbstract
 
-  if (manuscript.submission?.abstract) {
+  if (manuscript.submission.abstract) {
     if (Array.isArray(manuscript.submission.abstract)) {
       formattedAbstract = manuscript.submission.abstract
         .join(' ')
@@ -434,7 +436,7 @@ const User = ({
   )
 }
 
-User.propTypes = {
+ManuscriptRow.propTypes = {
   manuscriptId: PropTypes.string.isRequired,
   manuscript: PropTypes.shape({
     teams: PropTypes.arrayOf(PropTypes.object),
@@ -447,7 +449,7 @@ User.propTypes = {
     status: PropTypes.string.isRequired,
     // Disabled because submission can have different fields
     // eslint-disable-next-line
-    submission: PropTypes.object,
+    submission: PropTypes.object.isRequired,
   }).isRequired,
   submitter: PropTypes.shape({
     defaultIdentity: PropTypes.shape({
@@ -475,9 +477,9 @@ User.propTypes = {
   history: PropTypes.shape({}),
   setSelectedTopic: PropTypes.func.isRequired,
 }
-User.defaultProps = {
+ManuscriptRow.defaultProps = {
   history: undefined,
   submitter: {},
 }
 
-export default User
+export default ManuscriptRow
