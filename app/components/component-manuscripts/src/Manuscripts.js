@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useQuery, useMutation, useSubscription } from '@apollo/client'
 import { Button, Checkbox } from '@pubsweet/ui'
 import config from 'config'
-import Manuscript from './Manuscript'
+import ManuscriptRow from './ManuscriptRow'
 import {
   Container,
   ManuscriptsTable,
@@ -599,7 +599,7 @@ const Manuscripts = ({ history, ...props }) => {
                 manuscript.manuscriptVersions?.[0] || manuscript
 
               return (
-                <Manuscript
+                <ManuscriptRow
                   fieldDefinitions={fieldDefinitions}
                   filterArticle={filterArticle}
                   filterByArticleLabel={filterByArticleLabel}
