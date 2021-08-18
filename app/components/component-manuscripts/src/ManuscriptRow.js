@@ -37,50 +37,18 @@ import { convertTimestampToDate } from '../../../shared/time-formatting'
 import { convertCamelCaseToText } from '../../../shared/convertCamelCaseToText'
 import { articleStatuses } from '../../../globals'
 import { publishManuscriptMutation } from '../../component-review/src/components/queries'
-import query from '../../component-submit/src/userManuscriptFormQuery'
 import { DELETE_MANUSCRIPT } from '../../../queries'
 import manuscriptsTableConfig from './manuscriptsTableConfig'
-import { validateManuscript } from '../../../shared/manuscriptUtils'
+import {
+  validateManuscript,
+  getFieldValueAndDisplayValue,
+} from '../../../shared/manuscriptUtils'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const updateUrlParameter = (url, param, value) => {
   var regex = new RegExp('(' + param + '=)[^&]+')
   return url.replace(regex, '$1' + value)
-}
-
-/** Find the data stored in the manuscript for this fieldName. If the fieldDefinition from the form has a key/value structure we should
- * treat the manuscript data as the key and obtain the displayValue from the fieldDefinition. Otherwise use the manuscript data directly
- * as the displayValue. If manuscript data is an array, we have to do this for each item in the array.
- * There is special logic for some fieldNames, such as 'created' and 'updated'.
- */
-const getValueAndDisplayValue = (fieldName, manuscript, fieldDefinitions) => {
-  if (fieldName === 'created')
-    return [manuscript.created, convertTimestampToDate(manuscript.created)]
-  if (fieldName === 'updated')
-    return [manuscript.updated, convertTimestampToDate(manuscript.updated)]
-  if (fieldName === 'shortId')
-    return [manuscript.shortId, manuscript.shortId.toString()]
-
-  const valueInManuscript = get(manuscript, fieldName, null)
-
-  const fieldDefinition = fieldDefinitions?.[fieldName]
-
-  if (Array.isArray(valueInManuscript)) {
-    return [
-      valueInManuscript,
-      valueInManuscript.map(
-        val =>
-          fieldDefinition?.options?.find(o => o.value === val)?.label ?? val,
-      ),
-    ]
-  }
-
-  return [
-    valueInManuscript,
-    fieldDefinition?.options?.find(o => o.value === valueInManuscript)?.label ??
-      valueInManuscript,
-  ]
 }
 
 const renderManuscriptCell = ({
@@ -283,7 +251,7 @@ const renderManuscriptCell = ({
   }
 
   return fieldName => {
-    const [value, displayValue] = getValueAndDisplayValue(
+    const [value, displayValue] = getFieldValueAndDisplayValue(
       fieldName,
       manuscript,
       fieldDefinitions,
