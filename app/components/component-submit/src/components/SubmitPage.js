@@ -9,7 +9,7 @@ import { Spinner } from '../../../shared'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 import { publishManuscriptMutation } from '../../../component-review/src/components/queries'
 import pruneEmpty from '../../../../shared/pruneEmpty'
-import { validateManuscript } from '../../../component-manuscripts/src/ManuscriptRow'
+import { validateManuscript } from '../../../../shared/manuscriptUtils'
 import CommsErrorBanner from '../../../shared/CommsErrorBanner'
 
 export const updateMutation = gql`

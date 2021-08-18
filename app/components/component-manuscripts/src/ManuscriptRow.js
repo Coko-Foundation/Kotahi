@@ -38,23 +38,9 @@ import { convertCamelCaseToText } from '../../../shared/convertCamelCaseToText'
 import { articleStatuses } from '../../../globals'
 import { publishManuscriptMutation } from '../../component-review/src/components/queries'
 import query from '../../component-submit/src/userManuscriptFormQuery'
-import { composeValidate } from '../../component-submit/src/components/FormTemplate'
 import { DELETE_MANUSCRIPT } from '../../../queries'
 import manuscriptsTableConfig from './manuscriptsTableConfig'
-
-export const validateManuscript = (submission, fieldDefinitions, client) =>
-  Object.entries(fieldDefinitions)
-    .map(([key, element]) =>
-      composeValidate(
-        element.validate,
-        element.validateValue,
-        element.name,
-        JSON.parse(element.doiValidation ? element.doiValidation : false),
-        client,
-        element.component,
-      )(submission[element.name.split('.')[1]]),
-    )
-    .filter(Boolean)
+import { validateManuscript } from '../../../shared/manuscriptUtils'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 

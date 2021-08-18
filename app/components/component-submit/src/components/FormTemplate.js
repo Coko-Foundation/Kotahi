@@ -10,7 +10,6 @@ import {
   Attachment,
 } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
-import * as validators from 'xpub-validators'
 import config from 'config'
 import { useApolloClient } from '@apollo/client'
 import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
@@ -21,7 +20,7 @@ import LinksInput from './LinksInput'
 import ValidatedFieldFormik from './ValidatedField'
 import Confirm from './Confirm'
 import { articleStatuses } from '../../../../globals'
-import { VALIDATE_DOI } from '../../../../queries/index'
+import { validateFormField } from '../../../../shared/formValidation'
 
 const Intro = styled.div`
   font-style: italic;
@@ -124,61 +123,6 @@ const link = (journal, manuscript) =>
 const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),
 })
-
-export const composeValidate = (
-  vld = [],
-  valueField = {},
-  fieldName,
-  doiValidation = false,
-  client,
-  componentType,
-) => value => {
-  const validator = vld || []
-
-  if (validator.length === 0) return undefined
-  const errors = []
-  validator
-    .map(v => v.value)
-    .map(validatorFn => {
-      // if there is YSWYG component and it's empty - the value is a paragraph
-      const valueFormatted =
-        componentType === 'AbstractEditor' && value === '<p></p>' ? '' : value
-
-      const error =
-        validatorFn === 'required'
-          ? validators[validatorFn](valueFormatted)
-          : validators[validatorFn](valueField[validatorFn])(valueFormatted)
-
-      if (error) {
-        errors.push(error)
-      }
-
-      return validatorFn
-    })
-
-  if (
-    errors.length === 0 &&
-    fieldName === 'submission.articleURL' &&
-    doiValidation
-  ) {
-    return client
-      .query({
-        query: VALIDATE_DOI,
-        variables: {
-          articleURL: value,
-        },
-      })
-      .then(res => {
-        if (!res.data.validateDOI.isDOIValid) {
-          return 'DOI is invalid'
-        }
-
-        return undefined
-      })
-  }
-
-  return errors.length > 0 ? errors[0] : undefined
-}
 
 const FormTemplate = ({
   form,
@@ -329,7 +273,7 @@ const FormTemplate = ({
                     readonly={element.name === 'submission.editDate'}
                     setTouched={setTouched}
                     spellCheck
-                    validate={composeValidate(
+                    validate={validateFormField(
                       element.validate,
                       element.validateValue,
                       element.name,
