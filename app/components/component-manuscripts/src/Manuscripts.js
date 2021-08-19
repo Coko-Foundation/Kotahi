@@ -42,7 +42,7 @@ import manuscriptsTableConfig from './manuscriptsTableConfig'
 const getSelectOptionsFor = (fieldName, fieldDefinitions) => {
   const options = [{ label: 'Select...', value: '' }]
   // eslint-disable-next-line no-unused-expressions
-  fieldDefinitions[fieldName]?.options.forEach(o =>
+  fieldDefinitions[fieldName]?.options?.forEach(o =>
     options.push({ label: o.label, value: o.value }),
   )
   return options
