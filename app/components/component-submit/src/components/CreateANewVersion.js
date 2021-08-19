@@ -22,7 +22,7 @@ const CreateANewVersion = ({
   const [newVerButtonIsEnabled, setNewVerButtonIsEnabled] = useState(true)
 
   return (
-    <SectionContent noGap>
+    <SectionContent>
       <SectionHeader>
         <Title>Create a new version</Title>
       </SectionHeader>

@@ -1,17 +1,19 @@
 import moment from 'moment'
 
+const getDescendingOrderOfCreation = (mA, mB) =>
+  mA.created < mB.created ? 1 : -1
+
 // TODO: memoize
+/** Given a parent manuscript, get all versions (including the parent/base manuscript) in descending order of creation (most recent first) */
 const manuscriptVersions = manuscript => {
-  const versions = []
+  let versions = []
 
   if (manuscript.manuscriptVersions?.[0]) {
-    // TODO: The manuscript versions generally come ordered by
-    // created descending, but we could sort them again if need be
     versions.push(...manuscript.manuscriptVersions)
-    versions.push(manuscript)
-  } else {
-    versions.push(manuscript)
   }
+
+  versions.push(manuscript)
+  versions = versions.sort(getDescendingOrderOfCreation)
 
   /* eslint-disable-next-line no-shadow */
   return versions.map((manuscript, index) => ({

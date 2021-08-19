@@ -23,48 +23,6 @@ import EditorSection from '../../../component-review/src/components/decision/Edi
 import AssignEditorsReviewers from '../../../component-review/src/components/assignEditors/AssignEditorsReviewers'
 import AssignEditor from '../../../component-review/src/components/assignEditors/AssignEditor'
 
-const SubmittedVersion = ({
-  manuscript,
-  currentVersion,
-  createNewVersion,
-  form,
-}) => {
-  const reviseDecision = currentVersion && manuscript.status === 'revise'
-  return (
-    <>
-      {reviseDecision && (
-        <CreateANewVersion
-          createNewVersion={createNewVersion}
-          currentVersion={currentVersion}
-          manuscript={manuscript}
-        />
-      )}
-      <DecisionAndReviews manuscript={manuscript} noGap={!reviseDecision} />
-      <ReviewMetadata form={form} manuscript={manuscript} />
-    </>
-  )
-}
-
-SubmittedVersion.propTypes = {
-  manuscript: PropTypes.objectOf(PropTypes.any),
-  currentVersion: PropTypes.bool.isRequired,
-  createNewVersion: PropTypes.func.isRequired,
-  form: PropTypes.shape({
-    children: PropTypes.arrayOf(
-      PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        component: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        shortDescription: PropTypes.string,
-      }).isRequired,
-    ).isRequired,
-  }).isRequired,
-}
-SubmittedVersion.defaultProps = {
-  manuscript: undefined,
-}
-
 const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
   const fieldNames = form.children.map(field => field.name)
@@ -168,12 +126,10 @@ const Submit = ({
     } else {
       decisionSection = {
         content: (
-          <SubmittedVersion
-            createNewVersion={createNewVersion}
-            currentVersion={version === currentVersion}
-            form={form}
-            manuscript={manuscript}
-          />
+          <>
+            <DecisionAndReviews manuscript={manuscript} noGap />
+            <ReviewMetadata form={form} manuscript={manuscript} />
+          </>
         ),
         key: versionId,
         label: 'Submitted info',
@@ -186,6 +142,13 @@ const Submit = ({
           {['ncrc'].includes(process.env.INSTANCE_NAME) && (
             <AssignEditorsReviewers
               AssignEditor={AssignEditor}
+              manuscript={manuscript}
+            />
+          )}
+          {version === currentVersion && manuscript.status === 'revise' && (
+            <CreateANewVersion
+              createNewVersion={createNewVersion}
+              currentVersion={currentVersion}
               manuscript={manuscript}
             />
           )}
