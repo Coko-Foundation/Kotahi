@@ -38,11 +38,15 @@ import { updateMutation } from '../../component-submit/src/components/SubmitPage
 import Modal from '../../component-modal/src'
 import BulkDeleteModal from './BulkDeleteModal'
 import manuscriptsTableConfig from './manuscriptsTableConfig'
-import submissionForm from '../../../storage/forms-ncrc/submit.json'
 
-const topics = submissionForm.children.find(el => {
-  return el.title === 'Topics'
-}).options
+const getSelectOptionsFor = (fieldName, fieldDefinitions) => {
+  const options = [{ label: 'Select...', value: '' }]
+  // eslint-disable-next-line no-unused-expressions
+  fieldDefinitions[fieldName]?.options.forEach(o =>
+    options.push({ label: o.label, value: o.value }),
+  )
+  return options
+}
 
 const firstColumnWidth =
   process.env.INSTANCE_NAME === 'ncrc'
@@ -64,6 +68,7 @@ const renderManuscriptsTableHeaders = ({
   filterByArticleLabel,
   filterByArticleStatus,
   filterByTopic,
+  fieldDefinitions,
 }) => {
   const renderActions = {
     'meta.title': () => {
@@ -119,13 +124,7 @@ const renderManuscriptsTableHeaders = ({
             data-testid="topics"
             label="Topic"
             onChange={selected => filterByTopic(selected.value)}
-            options={[
-              {
-                label: 'Select...',
-                value: '',
-              },
-              ...topics,
-            ]}
+            options={getSelectOptionsFor('submission.topics', fieldDefinitions)}
             placeholder="Topic"
             value={selectedTopic}
           />
@@ -167,24 +166,7 @@ const renderManuscriptsTableHeaders = ({
             data-testid="labels"
             label="Label"
             onChange={selected => filterByArticleLabel(selected.value)}
-            options={[
-              {
-                label: 'Select...',
-                value: '',
-              },
-              {
-                label: 'Ready to evaluate',
-                value: 'readyToEvaluate',
-              },
-              {
-                label: 'Evaluated',
-                value: 'evaluated',
-              },
-              {
-                label: 'Ready to publish',
-                value: 'readyToPublish',
-              },
-            ]}
+            options={getSelectOptionsFor('submission.labels', fieldDefinitions)}
             placeholder="Labels"
             value={selectedLabel}
           />
@@ -499,6 +481,7 @@ const Manuscripts = ({ history, ...props }) => {
     filterByTopic,
     filterByArticleStatus,
     filterByArticleLabel,
+    fieldDefinitions,
   })
 
   return (
