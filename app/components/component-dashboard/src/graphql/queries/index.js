@@ -2,6 +2,7 @@ import { gql } from '@apollo/client'
 
 const manuscriptFragment = `
 id
+shortId
 teams {
   id
   role
