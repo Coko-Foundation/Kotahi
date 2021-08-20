@@ -9,7 +9,13 @@ module.exports = [
     loader: 'babel-loader',
     query: {
       presets: [['@babel/preset-env'], '@babel/preset-react'],
-      plugins: [require.resolve('react-hot-loader/babel')],
+      plugins: [
+        require.resolve('react-hot-loader/babel'),
+        ['@babel/plugin-proposal-decorators', { legacy: true }],
+        'babel-plugin-parameter-decorator',
+        'babel-plugin-styled-components',
+        ['@babel/plugin-proposal-class-properties', { loose: true }],
+      ],
       env: {
         production: {
           /* bug requires mangle:false https://github.com/babel/minify/issues/556#issuecomment-339751209 */
