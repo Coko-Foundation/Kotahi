@@ -51,6 +51,7 @@ module.exports = (opts = {}) => {
       'INSTANCE_NAME',
       'MANUSCRIPTS_TABLE_COLUMNS',
       'MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH',
+      'DISPLAY_SHORTID_AS_IDENTIFIER',
     ]),
   )
 

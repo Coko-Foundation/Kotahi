@@ -28,6 +28,9 @@ module.exports = {
       password: 'POSTGRES_PASSWORD',
     },
   },
+  'client-features': {
+    displayShortIdAsIdentifier: 'DISPLAY_SHORTID_AS_IDENTIFIER',
+  },
   s3: {
     accessKeyId: 'S3_ACCESS_KEY_ID',
     secretAccessKey: 'S3_ACCESS_KEY_SECRET',

@@ -73,6 +73,8 @@ const getValueAndDisplayValue = (fieldName, manuscript, fieldDefinitions) => {
     return [manuscript.created, convertTimestampToDate(manuscript.created)]
   if (fieldName === 'updated')
     return [manuscript.updated, convertTimestampToDate(manuscript.updated)]
+  if (fieldName === 'shortId')
+    return [manuscript.shortId, manuscript.shortId.toString()]
 
   const valueInManuscript = get(manuscript, fieldName, null)
 

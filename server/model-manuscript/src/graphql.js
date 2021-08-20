@@ -424,35 +424,24 @@ const resolvers = {
           })
           .every(isEmpty => isEmpty === true)
 
-        console.log('areEvaluationsEmpty')
-        console.log(areEvaluationsEmpty)
-
-        if (areEvaluationsEmpty && manuscript.status === 'evaluated') {
-          console.log('evaluations are empty and status is evaluated')
+        if (areEvaluationsEmpty && manuscript.status === 'evaluated')
           return manuscript
-        }
 
         const newArticleStatus =
           areEvaluationsEmpty && manuscript.status === 'published'
             ? 'evaluated'
             : 'published'
 
-        console.log('before publish to crossref')
-
         try {
           await publishToCrossref(manuscript)
         } catch (e) {
-          console.log('error publishing to crossref')
-          console.log(e)
+          console.error('error publishing to crossref')
+          console.error(e)
         }
-
-        console.log('before publish to hypothesis')
 
         const newEvaluationsHypothesisMap = await publishToHypothesis(
           manuscript,
         )
-
-        console.log('after publish to hypothesis')
 
         const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
           id,
@@ -548,9 +537,6 @@ const resolvers = {
       manuscript.decision = ''
 
       manuscript.manuscriptVersions = await manuscript.getManuscriptVersions()
-      // manuscript.channel = await ctx.connectors.Channel.model.find(
-      //   manuscript.channelId,
-      // )
 
       if (ctx.user && !ctx.user.admin) {
         const manuscriptObj = { ...manuscript }
@@ -711,8 +697,6 @@ const resolvers = {
         totalCount,
         manuscripts: detailedManuscripts,
       }
-
-      // return ctx.connectors.User.fetchAll(where, ctx, { eager })
     },
 
     async validateDOI(_, { articleURL }, ctx) {
@@ -798,6 +782,7 @@ const typeDefs = `
     created: DateTime!
     updated: DateTime
     manuscriptVersions: [ManuscriptVersion]
+    shortId: Int!
     files: [File]
     teams: [Team]
     reviews: [Review]
@@ -819,6 +804,7 @@ const typeDefs = `
     id: ID!
     created: DateTime!
     updated: DateTime
+    shortId: Int!
     files: [File]
     teams: [Team]
     reviews: [Review]

@@ -9,6 +9,7 @@ import {
   Button,
   Attachment,
 } from '@pubsweet/ui'
+import { th } from '@pubsweet/ui-toolkit'
 import * as validators from 'xpub-validators'
 import config from 'config'
 import { useApolloClient } from '@apollo/client'
@@ -42,6 +43,13 @@ const ModalWrapper = styled.div`
 
 const SafeRadioGroup = styled(RadioGroup)`
   position: relative;
+`
+
+const NoteRight = styled.div`
+  float: right;
+  font-size: ${th('fontSizeBaseSmall')};
+  line-height: ${th('lineHeightBaseSmall')};
+  text-align: right;
 `
 
 const filesToAttachment = file => ({
@@ -238,6 +246,15 @@ const FormTemplate = ({
   const hasPopup = form.haspopup ? JSON.parse(form.haspopup) : false
   return (
     <Container>
+      {config['client-features'].displayShortIdAsIdentifier &&
+        config['client-features'].displayShortIdAsIdentifier.toLowerCase() ===
+          'true' && (
+          <NoteRight>
+            Manuscript number
+            <br />
+            {manuscript.shortId}
+          </NoteRight>
+        )}
       <Heading1>{form.name}</Heading1>
       <Intro
         dangerouslySetInnerHTML={createMarkup(

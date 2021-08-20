@@ -13,7 +13,7 @@ spec:
   template:
     metadata:
       annotations:
-        rollme: {{ randAlphaNum 5 | quote }}
+        rollme: { { randAlphaNum 5 | quote } }
       labels:
         io.kompose.service: server
     spec:
@@ -55,27 +55,27 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: postgresql-database
-                  name: "{{ .Values.rdssecret }}"
+                  name: '{{ .Values.rdssecret }}'
             - name: POSTGRES_HOST
               valueFrom:
                 secretKeyRef:
                   key: postgresql-host
-                  name: "{{ .Values.rdssecret }}"
+                  name: '{{ .Values.rdssecret }}'
             - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   key: postgresql-password
-                  name: "{{ .Values.rdssecret }}"
+                  name: '{{ .Values.rdssecret }}'
             - name: POSTGRES_PORT
               valueFrom:
                 secretKeyRef:
                   key: postgresql-port
-                  name: "{{ .Values.rdssecret }}"
+                  name: '{{ .Values.rdssecret }}'
             - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   key: postgresql-username
-                  name: "{{ .Values.rdssecret }}"
+                  name: '{{ .Values.rdssecret }}'
             - name: PUBLIC_CLIENT_HOST
               valueFrom:
                 configMapKeyRef:
@@ -116,12 +116,12 @@ spec:
                 secretKeyRef:
                   key: GMAIL_NOTIFICATION_EMAIL_AUTH
                   name: orcid-secret
-            - name: GMAIL_NOTIFICATION_EMAIL_SENDER 
+            - name: GMAIL_NOTIFICATION_EMAIL_SENDER
               valueFrom:
                 secretKeyRef:
                   key: GMAIL_NOTIFICATION_EMAIL_SENDER
                   name: orcid-secret
-            - name: GMAIL_NOTIFICATION_PASSWORD 
+            - name: GMAIL_NOTIFICATION_PASSWORD
               valueFrom:
                 secretKeyRef:
                   key: GMAIL_NOTIFICATION_PASSWORD
@@ -130,22 +130,22 @@ spec:
               valueFrom:
                 secretKeyRef:
                   key: S3_ACCESS_KEY_ID
-                  name: "{{ .Values.s3secret }}"
+                  name: '{{ .Values.s3secret }}'
             - name: S3_ACCESS_KEY_SECRET
               valueFrom:
                 secretKeyRef:
                   key: S3_ACCESS_KEY_SECRET
-                  name: "{{ .Values.s3secret }}"
+                  name: '{{ .Values.s3secret }}'
             - name: S3_ENDPOINT
               valueFrom:
                 secretKeyRef:
                   key: S3_ENDPOINT
-                  name: "{{ .Values.s3secret }}"
+                  name: '{{ .Values.s3secret }}'
             - name: S3_REGION
               valueFrom:
                 secretKeyRef:
                   key: S3_REGION
-                  name: "{{ .Values.s3secret }}"
+                  name: '{{ .Values.s3secret }}'
             - name: S3_BUCKET
               valueFrom:
                 secretKeyRef:
@@ -161,13 +161,18 @@ spec:
                 configMapKeyRef:
                   key: USE_SANDBOXED_ORCID
                   name: env
-          image: "{{ .Values.images.backend.repository }}:{{ .Values.images.backend.tag }}"
+            - name: DISPLAY_SHORTID_AS_IDENTIFIER
+              valueFrom:
+                configMapKeyRef:
+                  key: DISPLAY_SHORTID_AS_IDENTIFIER
+                  name: env
+          image: '{{ .Values.images.backend.repository }}:{{ .Values.images.backend.tag }}'
           imagePullPolicy: Always
-          command: ["/bin/sh", "-c"]
+          command: ['/bin/sh', '-c']
           args:
             - bash scripts/setupProdServer.sh;node ./startServer.js;
           name: server
           ports:
-            - containerPort: {{ .Values.backend.deployment.containerPort }}
+            - containerPort: { { .Values.backend.deployment.containerPort } }
       restartPolicy: Always
 status: {}

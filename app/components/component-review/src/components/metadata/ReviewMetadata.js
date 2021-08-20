@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types'
 import React from 'react'
+import config from 'config'
 import styled from 'styled-components'
 import { get } from 'lodash'
 import { Attachment } from '@pubsweet/ui'
@@ -85,6 +86,15 @@ const ReviewMetadata = ({
           <Title>Metadata</Title>
         </SectionHeader>
       )}
+
+      {config['client-features'].displayShortIdAsIdentifier &&
+        config['client-features'].displayShortIdAsIdentifier.toLowerCase() ===
+          'true' && (
+          <SectionRowGrid>
+            <Heading>Manuscript Number</Heading>
+            <Cell>{rawManuscript.shortId}</Cell>
+          </SectionRowGrid>
+        )}
 
       {form.children.map(element =>
         !showPreviewMetadataOnly || shouldShowInPreview(element.name, form) ? (

@@ -60,6 +60,7 @@ class Manuscript extends BaseModel {
     return manuscriptReviews
   }
 
+  /** Returns an array of all versions created prior to this version */
   async getManuscriptVersions() {
     // const { File } = require('@pubsweet/models')
 

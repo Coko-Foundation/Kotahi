@@ -121,6 +121,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
       totalCount
       manuscripts {
         id
+        shortId
         meta {
           manuscriptId
           title
@@ -146,6 +147,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
         }
         manuscriptVersions {
           id
+          shortId
           meta {
             manuscriptId
             title

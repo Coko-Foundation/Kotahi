@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Button, Action } from '@pubsweet/ui'
 import ReactTooltip from 'rc-tooltip'
 
@@ -122,5 +122,9 @@ export const BulkDeleteModalButton = styled(Button)`
 `
 
 export const TableHeader = styled.th`
-  ${({ cursor }) => cursor && `cursor: ${cursor}`};
+  ${props =>
+    props.onClick &&
+    css`
+      cursor: pointer;
+    `}
 `
