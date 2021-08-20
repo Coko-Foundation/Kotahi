@@ -40,9 +40,39 @@ export default css`
   }
 
   h1 {
-    font-size: 1em;
+    font-size: 1.75em;
     font-weight: 500;
-    margin-bottom: 1em;
+    margin: 1em 0;
+  }
+
+  h2 {
+    font-size: 1.625em;
+    font-weight: 500;
+    margin: 1em 0;
+  }
+
+  h3 {
+    font-size: 1.5em;
+    font-weight: 500;
+    margin: 1em 0;
+  }
+
+  h4 {
+    font-size: 1.375em;
+    font-weight: 500;
+    margin: 1em 0;
+  }
+
+  h5 {
+    font-size: 1.25em;
+    font-weight: 500;
+    margin: 1em 0;
+  }
+
+  h6 {
+    font-size: 1.125em;
+    font-weight: 500;
+    margin: 1em 0;
   }
 
   p {
