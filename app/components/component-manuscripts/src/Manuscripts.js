@@ -78,10 +78,13 @@ const renderManuscriptsTableHeaders = ({
         </SortHeader>
       )
     },
+    shortId: () => {
+      return <SortHeader key="msNumber">Manuscript Number</SortHeader>
+    },
     'submission.articleId': () => {
       return (
         <SortHeader key="id" thisSortName="submission:articleId">
-          Article Id
+          Article ID
         </SortHeader>
       )
     },
@@ -94,11 +97,7 @@ const renderManuscriptsTableHeaders = ({
     },
     'submission.journal': () => {
       return (
-        <SortHeader
-          cursor="pointer"
-          key="journal"
-          thisSortName="submission:journal"
-        >
+        <SortHeader key="journal" thisSortName="submission:journal">
           Journal
         </SortHeader>
       )
@@ -221,9 +220,9 @@ const renderManuscriptsTableHeaders = ({
 }
 
 const Manuscripts = ({ history, ...props }) => {
-  const SortHeader = ({ thisSortName, children, cursor }) => {
+  const SortHeader = ({ thisSortName, children }) => {
     if (!thisSortName) {
-      return <TableHeader cursor={cursor}>{children}</TableHeader>
+      return <TableHeader>{children}</TableHeader>
     }
 
     const changeSort = () => {
@@ -253,7 +252,7 @@ const Manuscripts = ({ history, ...props }) => {
     }
 
     return (
-      <TableHeader cursor={cursor} onClick={changeSort}>
+      <TableHeader onClick={changeSort}>
         {children} {UpDown()}
       </TableHeader>
     )

@@ -37,6 +37,9 @@ module.exports = {
     from: 'dev@example.com',
     path: `${__dirname}/mailer`,
   },
+  'client-features': {
+    displayShortIdAsIdentifier: 'false',
+  },
   'pubsweet-component-xpub-formbuilder': {
     // path: path.resolve(__dirname, formTemplatePath[process.env.INSTANCE_NAME]),
     path: deferConfig(cfg => {
@@ -192,6 +195,7 @@ module.exports = {
       'application/zip',
     ],
   },
+  /** These named configuration sections will be available to the client */
   publicKeys: [
     'pubsweet-client',
     'validations',
@@ -201,6 +205,7 @@ module.exports = {
     'detectionMethodCorrelations',
     'journal',
     'teams',
+    'client-features',
   ],
   s3: {
     accessKeyId: 'test',

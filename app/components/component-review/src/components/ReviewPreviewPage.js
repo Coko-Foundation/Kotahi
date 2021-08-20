@@ -6,6 +6,7 @@ import { Heading, Page, Spinner } from '../../../shared'
 
 const fragmentFields = `
   id
+  shortId
   created
   status
   meta {

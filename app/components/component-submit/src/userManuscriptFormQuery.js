@@ -42,6 +42,7 @@ export const reviewFields = `
 
 export const fragmentFields = `
   id
+  shortId
   created
   files {
     id

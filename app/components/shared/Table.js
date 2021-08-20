@@ -24,6 +24,7 @@ export const Header = styled.thead`
   background-color: ${th('colorSecondaryBackground')};
   border-bottom: 1px solid ${th('colorFurniture')};
   font-variant: all-small-caps;
+  line-height: 1.25em;
   text-align: left;
 
   th {

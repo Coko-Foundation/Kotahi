@@ -48,6 +48,7 @@ const reviewFields = `
 
 const fragmentFields = `
   id
+  shortId
   created
   files {
     id
