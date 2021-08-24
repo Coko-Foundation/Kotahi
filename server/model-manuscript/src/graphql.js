@@ -698,6 +698,27 @@ const resolvers = {
         manuscripts: detailedManuscripts,
       }
     },
+    async manuscriptsPublishedSinceDate(_, { startDate, limit }, ctx) {
+      const query = ctx.models.Manuscript.query()
+        .whereNotNull('published')
+        .orderBy('published')
+        .withGraphFetched('[files]')
+
+      if (startDate) query.where('published', '>=', new Date(startDate))
+      if (limit) query.limit(limit)
+
+      const manuscripts = await query
+
+      return manuscripts.map(m => ({
+        id: m.id,
+        shortId: m.shortId,
+        files: m.files,
+        status: m.status,
+        meta: m.meta,
+        submission: JSON.stringify(m.submission),
+        publishedDate: m.published,
+      }))
+    },
 
     async validateDOI(_, { articleURL }, ctx) {
       const DOI = encodeURI(articleURL.split('.org/')[1])
@@ -733,6 +754,9 @@ const typeDefs = `
     publishedManuscripts(sort:String, offset: Int, limit: Int): PaginatedManuscripts
     validateDOI(articleURL: String): validateDOIResponse
     manuscriptsUserHasCurrentRoleIn: [Manuscript]
+
+    """ Get published manuscripts with irrelevant fields stripped out. Optionally, you can specify a startDate and/or limit. """
+    manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!
   }
 
   input ManuscriptsFilter {
@@ -897,6 +921,17 @@ const typeDefs = `
     updated: DateTime
     notesType: String
     content: String
+  }
+
+  """ A simplified Manuscript object containing only relevant fields for publishing """
+  type PublishedManuscript {
+    id: ID!
+    shortId: Int!
+    files: [File]
+    status: String
+    meta: ManuscriptMeta
+    submission: String
+    publishedDate: DateTime
   }
 `
 
