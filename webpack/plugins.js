@@ -52,6 +52,8 @@ module.exports = (opts = {}) => {
       'MANUSCRIPTS_TABLE_COLUMNS',
       'MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH',
       'DISPLAY_SHORTID_AS_IDENTIFIER',
+      'PUBLISHING_WEBHOOK_URL',
+      'PUBLISHING_WEBHOOK_SECRET',
     ]),
   )
 

@@ -166,6 +166,16 @@ spec:
                 configMapKeyRef:
                   key: DISPLAY_SHORTID_AS_IDENTIFIER
                   name: env
+            - name: PUBLISHING_WEBHOOK_URL
+              valueFrom:
+                configMapKeyRef:
+                  key: PUBLISHING_WEBHOOK_URL
+                  name: env
+            - name: PUBLISHING_WEBHOOK_SECRET
+              valueFrom:
+                configMapKeyRef:
+                  key: PUBLISHING_WEBHOOK_SECRET
+                  name: env
           image: '{{ .Values.images.backend.repository }}:{{ .Values.images.backend.tag }}'
           imagePullPolicy: Always
           command: ['/bin/sh', '-c']

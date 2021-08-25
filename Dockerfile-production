@@ -14,6 +14,9 @@ ARG public_client_protocol
 ARG public_client_port
 ARG manuscripts_table_columns
 ARG manuscripts_table_first_column_width
+ARG display_shortid_as_identifier
+ARG publishing_webhook_url
+ARG publishing_webhook_secret
 
 ENV INSTANCE_NAME $instance_name
 ENV NODE_ENV "production"
@@ -28,6 +31,9 @@ ENV PUBLIC_CLIENT_PORT $public_client_port
 ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
 ENV MANUSCRIPTS_TABLE_COLUMNS $manuscripts_table_columns
 ENV MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH $manuscripts_table_first_column_width
+ENV DISPLAY_SHORTID_AS_IDENTIFIER $display_shortid_as_identifier
+ENV PUBLISHING_WEBHOOK_URL $publishing_webhook_url
+ENV PUBLISHING_WEBHOOK_SECRET $publishing_webhook_secret
 
 RUN apk add --no-cache git python make g++ bash 
 

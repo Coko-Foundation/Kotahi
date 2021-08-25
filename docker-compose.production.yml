@@ -20,6 +20,9 @@ services:
         - instance_name=${INSTANCE_NAME:-elife}
         - manuscripts_table_columns=${MANUSCRIPTS_TABLE_COLUMNS}
         - manuscripts_table_first_column_width=${MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH}
+        - display_shortid_as_identifier=${DISPLAY_SHORTID_AS_IDENTIFIER}
+        - publishing_webhook_url=${PUBLISHING_WEBHOOK_URL}
+        - publishing_webhook_secret=${PUBLISHING_WEBHOOK_SECRET}
 
     ports:
       - ${SERVER_PORT:-3000}:${SERVER_PORT:-3000}
@@ -49,6 +52,8 @@ services:
       - MANUSCRIPTS_TABLE_COLUMNS=${MANUSCRIPTS_TABLE_COLUMNS}
       - MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH=${MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH}
       - DISPLAY_SHORTID_AS_IDENTIFIER=${DISPLAY_SHORTID_AS_IDENTIFIER:-false}
+      - PUBLISHING_WEBHOOK_URL=${PUBLISHING_WEBHOOK_URL:-}
+      - PUBLISHING_WEBHOOK_SECRET=${PUBLISHING_WEBHOOK_SECRET:-}
 
   job-xsweet:
     image: pubsweet/job-xsweet:1.5.1

@@ -40,6 +40,10 @@ module.exports = {
   'client-features': {
     displayShortIdAsIdentifier: 'false',
   },
+  'publishing-webhook': {
+    publishingWebhookUrl: null,
+    publishingWebhookSecret: null,
+  },
   'pubsweet-component-xpub-formbuilder': {
     // path: path.resolve(__dirname, formTemplatePath[process.env.INSTANCE_NAME]),
     path: deferConfig(cfg => {

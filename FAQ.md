@@ -105,6 +105,29 @@ kotahidev=# create extension pgcrypto;
 
 Migrate the test database using `yarn dotenv yarn pubsweet migrate`.
 
+## How do I publish from Kotahi?
+
+While Kotahi deals with importing, reviewing, editing and preproduction, the final step of publishing to the web (or to print) is relegated to other tools. A wide variety of tools exist for building a static website from structured data; you may wish to use Coko Flax which is built expressly for this task.
+
+Kotahi provides a GraphQL API for obtaining published article data:
+
+- `manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!` returns published manuscripts, with an optional startDate and/or limit.
+- `publishedManuscript(id: ID!): PublishedManuscript` returns a singled published manuscript by ID, or null if this manuscript is not published or not found.
+
+Consult [the code](https://gitlab.coko.foundation/kotahi/kotahi/blob/5b26b92d662e83061b1072afddb7fd319655a940/server/model-manuscript/src/graphql.js) for details, or the graphql playground (typically at http://localhost:3000/graphql, when your dev environment is running).
+
+Kotahi can also be configured to trigger a webhook whenever an article is published, using the following environment variables:
+
+- `PUBLISHING_WEBHOOK_URL` -- the location of the webhook
+- `PUBLISHING_WEBHOOK_SECRET` -- (optional) a secret to pass to the webhook for authentication
+
+If `PUBLISHING_WEBHOOK_URL` is set, then every time you publish an article a POST request will be sent to the webhook containing `articleId=<id of manuscript>, secret=<webhook secret>`.
+
+Using a tool like Flax, you can either:
+
+- respond to every webhook request by requesting the relevant article from Kotahi and building (or rebuilding) its page (plus index pages); or
+- periodically request all articles published after the date of the most recent article you've already received.
+
 ## Does Kotahi support collaborative real-time text editing?
 
 Kotahi uses the Wax editor which is not configured for real-time collaboration out of the box, but can be (and was) made to support it. It was previously configured to support it, but the feature was removed in https://gitlab.coko.foundation/kotahi/kotahi/-/merge_requests/230/diffs?commit_id=6fd9eec258ce21d4db8cf1e593bb8b891b3f3c50 due to its experimental nature and it not being required by the known workflows. Reverting that would be a good choice for a starting point, should you wish to reimplement it.
