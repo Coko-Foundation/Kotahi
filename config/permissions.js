@@ -312,6 +312,7 @@ const permissions = {
     manuscripts: allow,
     manuscript: allow,
     manuscriptsPublishedSinceDate: allow,
+    publishedManuscript: allow,
     messages: allow,
     form: allow,
     forms: allow,

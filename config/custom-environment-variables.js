@@ -31,6 +31,10 @@ module.exports = {
   'client-features': {
     displayShortIdAsIdentifier: 'DISPLAY_SHORTID_AS_IDENTIFIER',
   },
+  'publishing-webhook': {
+    publishingWebhookUrl: 'PUBLISHING_WEBHOOK_URL',
+    publishingWebhookSecret: 'PUBLISHING_WEBHOOK_SECRET',
+  },
   s3: {
     accessKeyId: 'S3_ACCESS_KEY_ID',
     secretAccessKey: 'S3_ACCESS_KEY_SECRET',

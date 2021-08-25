@@ -3,6 +3,7 @@ const { ref } = require('objection')
 const axios = require('axios')
 const { mergeWith, isArray } = require('lodash')
 const { pubsubManager } = require('pubsweet-server')
+const config = require('config')
 const logger = require('@pubsweet/logger')
 
 const { getPubsub } = pubsubManager
@@ -495,6 +496,25 @@ const resolvers = {
         })
       }
 
+      const publishingWebhookUrl =
+        config['publishing-webhook'].publishingWebhookUrl
+
+      if (publishingWebhookUrl) {
+        const secret = config['publishing-webhook'].publishingWebhookSecret
+        const payload = { articleId: manuscript.id }
+        if (secret) payload.secret = secret
+
+        axios
+          .post(publishingWebhookUrl, payload)
+          // .then(res => {})
+          .catch(error => {
+            console.error(
+              `Failed to call publishing webhook at ${publishingWebhookUrl} for article ${manuscript.id}`,
+            )
+            console.error(error)
+          })
+      }
+
       return manuscript
     },
   },
@@ -719,6 +739,24 @@ const resolvers = {
         publishedDate: m.published,
       }))
     },
+    async publishedManuscript(_, { id }, ctx) {
+      const m = await ctx.models.Manuscript.query()
+        .findById(id)
+        .whereNotNull('published')
+        .withGraphFetched('[files]')
+
+      if (!m) return null
+
+      return {
+        id: m.id,
+        shortId: m.shortId,
+        files: m.files,
+        status: m.status,
+        meta: m.meta,
+        submission: JSON.stringify(m.submission),
+        publishedDate: m.published,
+      }
+    },
 
     async validateDOI(_, { articleURL }, ctx) {
       const DOI = encodeURI(articleURL.split('.org/')[1])
@@ -757,6 +795,8 @@ const typeDefs = `
 
     """ Get published manuscripts with irrelevant fields stripped out. Optionally, you can specify a startDate and/or limit. """
     manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!
+    """ Get a published manuscript by ID, or null if this manuscript is not published or not found """
+    publishedManuscript(id: ID!): PublishedManuscript
   }
 
   input ManuscriptsFilter {
