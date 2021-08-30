@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useQuery, useMutation, useSubscription } from '@apollo/client'
 import { Button, Checkbox } from '@pubsweet/ui'
 import config from 'config'
-import Manuscript from './Manuscript'
+import ManuscriptRow from './ManuscriptRow'
 import {
   Container,
   ManuscriptsTable,
@@ -48,11 +48,6 @@ const firstColumnWidth =
   process.env.INSTANCE_NAME === 'ncrc'
     ? process.env.MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH
     : '150px'
-// eslint-disable-next-line
-console.log(
-  'firstColumnWidth',
-  process.env.MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH,
-)
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -434,8 +429,15 @@ const Manuscripts = ({ history, ...props }) => {
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
-  const manuscripts = data.paginatedManuscripts.manuscripts.map(el => {
-    return { ...el, submission: JSON.parse(el.submission) }
+  const manuscripts = data.paginatedManuscripts.manuscripts.map(m => {
+    return {
+      ...m,
+      submission: JSON.parse(m.submission),
+      manuscriptVersions: m.manuscriptVersions?.map(v => ({
+        ...v,
+        submission: JSON.parse(v.submission),
+      })),
+    }
   })
 
   const fieldDefinitions = {}
@@ -597,7 +599,7 @@ const Manuscripts = ({ history, ...props }) => {
                 manuscript.manuscriptVersions?.[0] || manuscript
 
               return (
-                <Manuscript
+                <ManuscriptRow
                   fieldDefinitions={fieldDefinitions}
                   filterArticle={filterArticle}
                   filterByArticleLabel={filterByArticleLabel}
