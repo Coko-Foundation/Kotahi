@@ -127,6 +127,8 @@ export default css`
 
   img {
     cursor: default;
+    max-width: 100%;
+    object-fit: scale-down;
   }
 
   sup,
