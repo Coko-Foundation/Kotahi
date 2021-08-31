@@ -61,12 +61,22 @@ module.exports = app => {
             // Do another request to the ORCID API for aff/name
             const userDetails = await fetchUserDetails(user)
 
-            user.defaultIdentity.name = `${userDetails.firstName} ${userDetails.lastName}`
-            user.defaultIdentity.aff = userDetails.institution
+            /***
+						 * This is coming back for me as:
+						 * {
+server_1      |   firstName: 'Dan',
+server_1      |   lastName: undefined,
+server_1      |   email: undefined,
+server_1      |   institution: null
+server_1      | }
+						 */
 
-            if (userDetails.email) {
-              user.email = userDetails.email
-            }
+            user.defaultIdentity.name = `${userDetails.firstName || ''} ${
+              userDetails.lastName || ''
+            }`
+            user.defaultIdentity.aff = userDetails.institution || ''
+
+            user.email = userDetails.email || ''
 
             if (['elife'].includes(process.env.INSTANCE_NAME)) {
               user.admin = true

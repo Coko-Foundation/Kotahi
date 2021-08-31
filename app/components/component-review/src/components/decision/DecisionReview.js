@@ -10,6 +10,14 @@ import useCurrentUser from '../../../../../hooks/useCurrentUser'
 import { updateReviewMutation } from '../queries'
 import ShareIcon from '../../../../../shared/icons/share'
 
+import {
+  UserCombo,
+  Primary,
+  Secondary,
+  UserInfo,
+} from '../../../../component-manuscripts/src/style'
+import { UserAvatar } from '../../../../component-avatar/src'
+
 const ToggleReview = ({ open, toggle }) => (
   <Button onClick={toggle} plain>
     {open ? 'Hide' : 'Show'}
@@ -32,7 +40,7 @@ const Bullet = styled.span`
 `
 
 const ReviewHeadingRoot = styled.div`
-  align-items: baseline;
+  align-items: center;
   display: flex;
 `
 
@@ -40,6 +48,7 @@ const Ordinal = styled.span``
 
 const Name = styled.span`
   display: flex;
+  margin-left: 1em;
 `
 
 const Controls = styled.span`
@@ -58,6 +67,7 @@ const ReviewHeading = ({
   open,
   ordinal,
   recommendation,
+  user,
   isHiddenFromAuthor,
   isHiddenReviewerName,
   toggleOpen,
@@ -125,7 +135,17 @@ const ReviewHeading = ({
       <Ordinal>Review {ordinal}</Ordinal>
       &nbsp;
       <Name>
-        {isHiddenReviewerName && isCurrentUserAuthor ? 'Anonymous' : name}
+        {isHiddenReviewerName && isCurrentUserAuthor
+          ? 'Anonymous'
+          : (
+              <UserCombo>
+                <UserAvatar user={user} />
+                <UserInfo>
+                  <Primary>{user.defaultIdentity.name}</Primary>
+                  <Secondary>{user.email || `(${user.username})`}</Secondary>
+                </UserInfo>
+              </UserCombo>
+            ) || name}
         {(isCurrentUserEditor || currentUser.admin) &&
           canBePublishedPublicly &&
           process.env.INSTANCE_NAME === 'colab' && (
@@ -170,7 +190,13 @@ const ReviewBody = styled.div`
   margin-left: 1em;
 `
 
-const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
+const DecisionReview = ({
+  review,
+  reviewer, // this can be taken out!
+  reviewerNew,
+  manuscriptId,
+  teams,
+}) => {
   const currentUser = useCurrentUser()
 
   const {
@@ -181,7 +207,9 @@ const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
     canBePublishedPublicly,
   } = review
 
-  const { name, ordinal } = reviewer
+  const { name } = reviewer // this can be taken out!
+
+  const { user, ordinal } = reviewerNew
   const journal = useContext(JournalContext)
 
   const [open, setOpen] = useState(false)
@@ -201,9 +229,11 @@ const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
         open={open}
         ordinal={ordinal}
         recommendation={recommendation}
+        reviewerNew={reviewerNew}
         reviewUserId={review.user.id}
         teams={teams}
         toggleOpen={toggleOpen}
+        user={user}
       />
 
       {open && (
@@ -219,6 +249,8 @@ DecisionReview.propTypes = {
   // eslint-disable-next-line
   review: PropTypes.object,
   // eslint-disable-next-line
+  reviewNew: PropTypes.object,
+  // eslint-disable-next-line
   reviewer: PropTypes.object,
 }
 
@@ -230,6 +262,8 @@ ReviewHeading.propTypes = {
   ordinal: PropTypes.number.isRequired,
   recommendation: PropTypes.string.isRequired,
   toggleOpen: PropTypes.func.isRequired,
+  // eslint-disable-next-line
+  user: PropTypes.object.isRequired,
 }
 ToggleReview.propTypes = {
   open: PropTypes.bool.isRequired,

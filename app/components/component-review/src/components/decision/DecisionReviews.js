@@ -49,9 +49,11 @@ const DecisionReviews = ({ manuscript, sharedReviews }) => {
                 open
                 review={review}
                 reviewer={{
-                  name: review.user.username,
+                  name:
+                    review.user.defaultIdentity.name || review.user.username,
                   ordinal: index + 1,
                 }}
+                reviewerNew={{ user: review.user, ordinal: index + 1 }}
                 teams={manuscript.teams}
               />
             </SectionRow>
