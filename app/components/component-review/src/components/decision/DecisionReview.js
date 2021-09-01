@@ -63,7 +63,6 @@ const StyledCheckbox = styled(Checkbox)`
 const ReviewHeading = ({
   id,
   journal,
-  name,
   open,
   ordinal,
   recommendation,
@@ -135,17 +134,17 @@ const ReviewHeading = ({
       <Ordinal>Review {ordinal}</Ordinal>
       &nbsp;
       <Name>
-        {isHiddenReviewerName && isCurrentUserAuthor
-          ? 'Anonymous'
-          : (
-              <UserCombo>
-                <UserAvatar user={user} />
-                <UserInfo>
-                  <Primary>{user.defaultIdentity.name}</Primary>
-                  <Secondary>{user.email || `(${user.username})`}</Secondary>
-                </UserInfo>
-              </UserCombo>
-            ) || name}
+        {isHiddenReviewerName && isCurrentUserAuthor ? (
+          'Anonymous'
+        ) : (
+          <UserCombo>
+            <UserAvatar user={user} />
+            <UserInfo>
+              <Primary>{user.defaultIdentity.name}</Primary>
+              <Secondary>{user.email || `(${user.username})`}</Secondary>
+            </UserInfo>
+          </UserCombo>
+        )}
         {(isCurrentUserEditor || currentUser.admin) &&
           canBePublishedPublicly &&
           process.env.INSTANCE_NAME === 'colab' && (
@@ -190,13 +189,7 @@ const ReviewBody = styled.div`
   margin-left: 1em;
 `
 
-const DecisionReview = ({
-  review,
-  reviewer, // this can be taken out!
-  reviewerNew,
-  manuscriptId,
-  teams,
-}) => {
+const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
   const currentUser = useCurrentUser()
 
   const {
@@ -207,9 +200,7 @@ const DecisionReview = ({
     canBePublishedPublicly,
   } = review
 
-  const { name } = reviewer // this can be taken out!
-
-  const { user, ordinal } = reviewerNew
+  const { user, ordinal } = reviewer
   const journal = useContext(JournalContext)
 
   const [open, setOpen] = useState(false)
@@ -225,11 +216,10 @@ const DecisionReview = ({
         isHiddenReviewerName={isHiddenReviewerName}
         journal={journal}
         manuscriptId={manuscriptId}
-        name={name}
         open={open}
         ordinal={ordinal}
         recommendation={recommendation}
-        reviewerNew={reviewerNew}
+        reviewer={reviewer}
         reviewUserId={review.user.id}
         teams={teams}
         toggleOpen={toggleOpen}
@@ -249,15 +239,12 @@ DecisionReview.propTypes = {
   // eslint-disable-next-line
   review: PropTypes.object,
   // eslint-disable-next-line
-  reviewNew: PropTypes.object,
-  // eslint-disable-next-line
   reviewer: PropTypes.object,
 }
 
 ReviewHeading.propTypes = {
   // eslint-disable-next-line
   journal: PropTypes.object,
-  name: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   ordinal: PropTypes.number.isRequired,
   recommendation: PropTypes.string.isRequired,

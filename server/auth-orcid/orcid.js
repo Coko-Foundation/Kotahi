@@ -61,16 +61,6 @@ module.exports = app => {
             // Do another request to the ORCID API for aff/name
             const userDetails = await fetchUserDetails(user)
 
-            /***
-						 * This is coming back for me as:
-						 * {
-server_1      |   firstName: 'Dan',
-server_1      |   lastName: undefined,
-server_1      |   email: undefined,
-server_1      |   institution: null
-server_1      | }
-						 */
-
             user.defaultIdentity.name = `${userDetails.firstName || ''} ${
               userDetails.lastName || ''
             }`
