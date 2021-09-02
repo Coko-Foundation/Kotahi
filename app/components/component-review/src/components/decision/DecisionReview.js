@@ -10,6 +10,14 @@ import useCurrentUser from '../../../../../hooks/useCurrentUser'
 import { updateReviewMutation } from '../queries'
 import ShareIcon from '../../../../../shared/icons/share'
 
+import {
+  UserCombo,
+  Primary,
+  Secondary,
+  UserInfo,
+} from '../../../../component-manuscripts/src/style'
+import { UserAvatar } from '../../../../component-avatar/src'
+
 const ToggleReview = ({ open, toggle }) => (
   <Button onClick={toggle} plain>
     {open ? 'Hide' : 'Show'}
@@ -32,7 +40,7 @@ const Bullet = styled.span`
 `
 
 const ReviewHeadingRoot = styled.div`
-  align-items: baseline;
+  align-items: center;
   display: flex;
 `
 
@@ -40,6 +48,7 @@ const Ordinal = styled.span``
 
 const Name = styled.span`
   display: flex;
+  margin-left: 1em;
 `
 
 const Controls = styled.span`
@@ -54,10 +63,10 @@ const StyledCheckbox = styled(Checkbox)`
 const ReviewHeading = ({
   id,
   journal,
-  name,
   open,
   ordinal,
   recommendation,
+  user,
   isHiddenFromAuthor,
   isHiddenReviewerName,
   toggleOpen,
@@ -125,7 +134,17 @@ const ReviewHeading = ({
       <Ordinal>Review {ordinal}</Ordinal>
       &nbsp;
       <Name>
-        {isHiddenReviewerName && isCurrentUserAuthor ? 'Anonymous' : name}
+        {isHiddenReviewerName && isCurrentUserAuthor ? (
+          'Anonymous'
+        ) : (
+          <UserCombo>
+            <UserAvatar user={user} />
+            <UserInfo>
+              <Primary>{user.defaultIdentity.name}</Primary>
+              <Secondary>{user.email || `(${user.username})`}</Secondary>
+            </UserInfo>
+          </UserCombo>
+        )}
         {(isCurrentUserEditor || currentUser.admin) &&
           canBePublishedPublicly &&
           process.env.INSTANCE_NAME === 'colab' && (
@@ -181,7 +200,7 @@ const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
     canBePublishedPublicly,
   } = review
 
-  const { name, ordinal } = reviewer
+  const { user, ordinal } = reviewer
   const journal = useContext(JournalContext)
 
   const [open, setOpen] = useState(false)
@@ -197,13 +216,14 @@ const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
         isHiddenReviewerName={isHiddenReviewerName}
         journal={journal}
         manuscriptId={manuscriptId}
-        name={name}
         open={open}
         ordinal={ordinal}
         recommendation={recommendation}
+        reviewer={reviewer}
         reviewUserId={review.user.id}
         teams={teams}
         toggleOpen={toggleOpen}
+        user={user}
       />
 
       {open && (
@@ -225,11 +245,12 @@ DecisionReview.propTypes = {
 ReviewHeading.propTypes = {
   // eslint-disable-next-line
   journal: PropTypes.object,
-  name: PropTypes.string.isRequired,
   open: PropTypes.bool.isRequired,
   ordinal: PropTypes.number.isRequired,
   recommendation: PropTypes.string.isRequired,
   toggleOpen: PropTypes.func.isRequired,
+  // eslint-disable-next-line
+  user: PropTypes.object.isRequired,
 }
 ToggleReview.propTypes = {
   open: PropTypes.bool.isRequired,
