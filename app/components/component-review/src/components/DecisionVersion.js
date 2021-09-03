@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Formik } from 'formik'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import config from 'config'
-import { get } from 'lodash'
+import { debounce, get } from 'lodash'
 import DecisionForm from './decision/DecisionForm'
 import DecisionReviews from './decision/DecisionReviews'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
@@ -30,16 +30,52 @@ import {
 } from './queries'
 import DecisionAndReviews from '../../../component-submit/src/components/DecisionAndReviews'
 
-const addEditor = (manuscript, label) => ({
-  content: <EditorSection manuscript={manuscript} readonly />,
-  key: `editor_${manuscript.id}`,
-  label,
-})
-
-const DecisionVersion = ({ form, current, version, parent }) => {
+const DecisionVersion = ({
+  form,
+  current,
+  version,
+  parent,
+  updateManuscript,
+}) => {
   // Hooks from the old world
   const [makeDecision] = useMutation(makeDecisionMutation)
   const [doUpdateReview] = useMutation(updateReviewMutation)
+
+  const addEditor = (manuscript, label, isCurrent) => {
+    const isThisReadOnly = !isCurrent
+
+    // on onChange, send it back, after debouncing
+    // onBlur, send it back.
+    // should there be a "Changes saved!" at the bottom?
+    // is there a race condition?
+
+    return {
+      content: (
+        <EditorSection
+          manuscript={manuscript}
+          onBlur={
+            isThisReadOnly
+              ? null
+              : source => {
+                  // console.log('onblur called!')
+                  updateManuscript(manuscript.id, { meta: { source } })
+                }
+          }
+          onChange={
+            isThisReadOnly
+              ? null
+              : debounce(source => {
+                  // console.log('onchange called!')
+                  updateManuscript(manuscript.id, { meta: { source } })
+                }, 3000)
+          }
+          readonly={isThisReadOnly}
+        />
+      ),
+      key: `editor_${manuscript.id}`,
+      label,
+    }
+  }
 
   const reviewOrInitial = manuscript =>
     (manuscript &&
@@ -126,7 +162,7 @@ const DecisionVersion = ({ form, current, version, parent }) => {
     })
   }
 
-  const editorSection = addEditor(manuscript, 'Manuscript text')
+  const editorSection = addEditor(manuscript, 'Manuscript text', current)
 
   const decisionSection = ({
     handleSubmit,
@@ -259,6 +295,7 @@ const DecisionVersion = ({ form, current, version, parent }) => {
 }
 
 DecisionVersion.propTypes = {
+  updateManuscript: PropTypes.func.isRequired,
   form: PropTypes.shape({
     children: PropTypes.arrayOf(
       PropTypes.shape({
