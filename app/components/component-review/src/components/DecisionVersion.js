@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Formik } from 'formik'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import config from 'config'
-import { debounce, get } from 'lodash'
+import { get } from 'lodash'
 import DecisionForm from './decision/DecisionForm'
 import DecisionReviews from './decision/DecisionReviews'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
@@ -44,10 +44,20 @@ const DecisionVersion = ({
   const addEditor = (manuscript, label, isCurrent) => {
     const isThisReadOnly = !isCurrent
 
-    // on onChange, send it back, after debouncing
-    // onBlur, send it back.
+    // We're only using onBlur now – when the user clicks outside of the component, it saves
+    // HOWEVER: I also modded the component to call onBlur when the component unmounts, so we
+    // know we're always getting it.
+    //
     // should there be a "Changes saved!" at the bottom?
-    // is there a race condition?
+
+    // onChange={
+    // 	isThisReadOnly
+    // 		? null
+    // 		: debounce(source => {
+    // 				// console.log('onchange called!')
+    // 				updateManuscript(manuscript.id, { meta: { source } })
+    // 			}, 3000)
+    // }
 
     return {
       content: (
@@ -60,14 +70,6 @@ const DecisionVersion = ({
                   // console.log('onblur called!')
                   updateManuscript(manuscript.id, { meta: { source } })
                 }
-          }
-          onChange={
-            isThisReadOnly
-              ? null
-              : debounce(source => {
-                  // console.log('onchange called!')
-                  updateManuscript(manuscript.id, { meta: { source } })
-                }, 3000)
           }
           readonly={isThisReadOnly}
         />
