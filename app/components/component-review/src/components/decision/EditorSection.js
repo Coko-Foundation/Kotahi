@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import FullWaxEditor from '../../../../wax-collab/src/FullWaxEditor'
 import { Info } from '../style'
 
-const EditorSection = ({ manuscript, onChange, readonly }) => {
+const EditorSection = ({ manuscript, onChange, onBlur, readonly }) => {
   const manuscriptFile = manuscript?.files?.find(
     file => file.fileType === 'manuscript',
   )
@@ -18,8 +18,14 @@ const EditorSection = ({ manuscript, onChange, readonly }) => {
   )
     return <Info>No supported view of the file</Info>
 
+  React.useEffect(() => {
+    // If we have an onBlur function specified, fire it when there's a dismount
+    return () => (onBlur ? onBlur() : null)
+  }, [])
+
   return (
     <FullWaxEditor
+      onBlur={readonly ? null : onBlur}
       onChange={readonly ? null : onChange}
       readonly={readonly}
       value={manuscript.meta.source}
@@ -39,12 +45,14 @@ EditorSection.propTypes = {
       source: PropTypes.string,
     }).isRequired,
   }).isRequired,
+  onBlur: PropTypes.func,
   onChange: PropTypes.func,
   readonly: PropTypes.bool,
 }
 
 EditorSection.defaultProps = {
   onChange: undefined,
+  onBlur: undefined,
   readonly: false,
 }
 

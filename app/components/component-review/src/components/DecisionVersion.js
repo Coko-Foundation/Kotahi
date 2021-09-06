@@ -30,16 +30,38 @@ import {
 } from './queries'
 import DecisionAndReviews from '../../../component-submit/src/components/DecisionAndReviews'
 
-const addEditor = (manuscript, label) => ({
-  content: <EditorSection manuscript={manuscript} readonly />,
-  key: `editor_${manuscript.id}`,
-  label,
-})
-
-const DecisionVersion = ({ form, current, version, parent }) => {
+const DecisionVersion = ({
+  form,
+  current,
+  version,
+  parent,
+  updateManuscript,
+}) => {
   // Hooks from the old world
   const [makeDecision] = useMutation(makeDecisionMutation)
   const [doUpdateReview] = useMutation(updateReviewMutation)
+
+  const addEditor = (manuscript, label, isCurrent) => {
+    const isThisReadOnly = !isCurrent
+
+    return {
+      content: (
+        <EditorSection
+          manuscript={manuscript}
+          onBlur={
+            isThisReadOnly
+              ? null
+              : source => {
+                  updateManuscript(manuscript.id, { meta: { source } })
+                }
+          }
+          readonly={isThisReadOnly}
+        />
+      ),
+      key: `editor_${manuscript.id}`,
+      label,
+    }
+  }
 
   const reviewOrInitial = manuscript =>
     (manuscript &&
@@ -126,7 +148,7 @@ const DecisionVersion = ({ form, current, version, parent }) => {
     })
   }
 
-  const editorSection = addEditor(manuscript, 'Manuscript text')
+  const editorSection = addEditor(manuscript, 'Manuscript text', current)
 
   const decisionSection = ({
     handleSubmit,
@@ -259,6 +281,7 @@ const DecisionVersion = ({ form, current, version, parent }) => {
 }
 
 DecisionVersion.propTypes = {
+  updateManuscript: PropTypes.func.isRequired,
   form: PropTypes.shape({
     children: PropTypes.arrayOf(
       PropTypes.shape({

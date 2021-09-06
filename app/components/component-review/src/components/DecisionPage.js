@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { useQuery } from '@apollo/client'
+import { useQuery, useMutation, gql } from '@apollo/client'
 import DecisionVersion from './DecisionVersion'
 
 import {
@@ -17,7 +17,18 @@ import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 
 import MessageContainer from '../../../component-chat/src'
 
+import { fragmentFields } from '../../../component-submit/src/userManuscriptFormQuery'
+
 import { query } from './queries'
+
+export const updateMutation = gql`
+  mutation($id: ID!, $input: String) {
+    updateManuscript(id: $id, input: $input) {
+      id
+      ${fragmentFields}
+    }
+  }
+`
 
 const DecisionPage = ({ match }) => {
   const { loading, error, data } = useQuery(query, {
@@ -26,6 +37,17 @@ const DecisionPage = ({ match }) => {
     },
     // fetchPolicy: 'cache-and-network',
   })
+
+  const [update] = useMutation(updateMutation)
+
+  const updateManuscript = (versionId, manuscriptDelta) => {
+    return update({
+      variables: {
+        id: versionId,
+        input: JSON.stringify(manuscriptDelta),
+      },
+    })
+  }
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
@@ -66,6 +88,7 @@ const DecisionPage = ({ match }) => {
                 form={form}
                 key={version.manuscript.id}
                 parent={manuscript}
+                updateManuscript={updateManuscript}
                 version={version.manuscript}
               />
             ))}
