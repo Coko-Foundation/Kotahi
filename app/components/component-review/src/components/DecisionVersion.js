@@ -44,21 +44,6 @@ const DecisionVersion = ({
   const addEditor = (manuscript, label, isCurrent) => {
     const isThisReadOnly = !isCurrent
 
-    // We're only using onBlur now – when the user clicks outside of the component, it saves
-    // HOWEVER: I also modded the component to call onBlur when the component unmounts, so we
-    // know we're always getting it.
-    //
-    // should there be a "Changes saved!" at the bottom?
-
-    // onChange={
-    // 	isThisReadOnly
-    // 		? null
-    // 		: debounce(source => {
-    // 				// console.log('onchange called!')
-    // 				updateManuscript(manuscript.id, { meta: { source } })
-    // 			}, 3000)
-    // }
-
     return {
       content: (
         <EditorSection
@@ -67,7 +52,6 @@ const DecisionVersion = ({
             isThisReadOnly
               ? null
               : source => {
-                  // console.log('onblur called!')
                   updateManuscript(manuscript.id, { meta: { source } })
                 }
           }

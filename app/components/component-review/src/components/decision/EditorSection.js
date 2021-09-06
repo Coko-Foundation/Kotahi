@@ -4,8 +4,6 @@ import FullWaxEditor from '../../../../wax-collab/src/FullWaxEditor'
 import { Info } from '../style'
 
 const EditorSection = ({ manuscript, onChange, onBlur, readonly }) => {
-  // console.log('read only: ', readonly)
-
   const manuscriptFile = manuscript?.files?.find(
     file => file.fileType === 'manuscript',
   )
