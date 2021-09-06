@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react'
-import { useMutation } from '@apollo/client'
+import { useMutation, useQuery, gql } from '@apollo/client'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Button, Checkbox } from '@pubsweet/ui'
@@ -17,6 +17,16 @@ import {
   UserInfo,
 } from '../../../../component-manuscripts/src/style'
 import { UserAvatar } from '../../../../component-avatar/src'
+
+const GET_USER = gql`
+  query user($id: ID, $username: String) {
+    user(id: $id, username: $username) {
+      id
+      username
+      profilePicture
+    }
+  }
+`
 
 const ToggleReview = ({ open, toggle }) => (
   <Button onClick={toggle} plain>
@@ -78,6 +88,10 @@ const ReviewHeading = ({
 }) => {
   if (!currentUser) return null
 
+  const { data } = useQuery(GET_USER, {
+    variables: { username: user.username },
+  })
+
   const [updateReview] = useMutation(updateReviewMutation)
 
   const editorTeam = teams.filter(team => {
@@ -138,7 +152,7 @@ const ReviewHeading = ({
           'Anonymous'
         ) : (
           <UserCombo>
-            <UserAvatar user={user} />
+            <UserAvatar user={(data && data.user) || user} />
             <UserInfo>
               <Primary>{user.defaultIdentity.name}</Primary>
               <Secondary>{user.email || `(${user.username})`}</Secondary>
@@ -201,6 +215,7 @@ const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
   } = review
 
   const { user, ordinal } = reviewer
+
   const journal = useContext(JournalContext)
 
   const [open, setOpen] = useState(false)
