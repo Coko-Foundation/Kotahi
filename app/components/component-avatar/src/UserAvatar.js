@@ -50,9 +50,14 @@ const Avatar = props => {
     onlineBorderColor = null,
   } = props
 
-  const src = user.profilePicture
+  const { data } = useQuery(GET_USER, {
+    variables: { username: user.username },
+  })
+
+  const src = user.profilePicture || data.user.profilePicture
 
   const userFallback = '/static/profiles/default_avatar.svg'
+
   const source = [src, userFallback]
 
   return (
