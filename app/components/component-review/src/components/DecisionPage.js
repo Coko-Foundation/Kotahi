@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery, useMutation, gql } from '@apollo/client'
+import { set, debounce } from 'lodash'
 import DecisionVersion from './DecisionVersion'
 
 import {
@@ -30,7 +31,26 @@ export const updateMutation = gql`
   }
 `
 
+let debouncers = {}
+
 const DecisionPage = ({ match }) => {
+  const [confirming, setConfirming] = useState(false)
+
+  // eslint-disable-next-line no-unused-vars
+  const [manuscriptChangedFields, setManuscriptChangedFields] = useState({
+    submission: {},
+  })
+
+  const toggleConfirming = () => {
+    setConfirming(confirm => !confirm)
+  }
+
+  useEffect(() => {
+    return () => {
+      debouncers = {}
+    }
+  }, [])
+
   const { loading, error, data } = useQuery(query, {
     variables: {
       id: match.params.version,
@@ -47,6 +67,21 @@ const DecisionPage = ({ match }) => {
         input: JSON.stringify(manuscriptDelta),
       },
     })
+  }
+
+  const handleChange = (value, path, versionId) => {
+    const manuscriptDelta = {} // Only the changed fields
+    set(manuscriptDelta, path, value)
+    setManuscriptChangedFields(s => {
+      return {
+        submission: {
+          ...s.submission,
+          ...manuscriptDelta.submission,
+        },
+      }
+    })
+    debouncers[path] = debouncers[path] || debounce(updateManuscript, 3000)
+    return debouncers[path](versionId, manuscriptDelta)
   }
 
   if (loading) return <Spinner />
@@ -84,10 +119,22 @@ const DecisionPage = ({ match }) => {
           <VersionSwitcher>
             {versions.map((version, index) => (
               <DecisionVersion
+                confirming={confirming}
                 current={index === 0}
                 form={form}
                 key={version.manuscript.id}
+                match={match}
+                onChange={handleChange}
+                onSubmit={(x, y) => {
+                  // I don't think we're actually using this.
+                  // console.log(`onSubmit called! `, x, y, z)
+                }}
                 parent={manuscript}
+                republish={(x, y) => {
+                  // are we actually using this?
+                  // console.log(`republish called! `, x, y, z)
+                }}
+                toggleConfirming={toggleConfirming}
                 updateManuscript={updateManuscript}
                 version={version.manuscript}
               />
