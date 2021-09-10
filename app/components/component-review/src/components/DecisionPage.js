@@ -34,12 +34,9 @@ export const updateMutation = gql`
 let debouncers = {}
 
 const DecisionPage = ({ match }) => {
-  const [confirming, setConfirming] = useState(false)
+  // start of code from submit page to handle possible form changes
 
-  // eslint-disable-next-line no-unused-vars
-  const [manuscriptChangedFields, setManuscriptChangedFields] = useState({
-    submission: {},
-  })
+  const [confirming, setConfirming] = useState(false)
 
   const toggleConfirming = () => {
     setConfirming(confirm => !confirm)
@@ -50,6 +47,15 @@ const DecisionPage = ({ match }) => {
       debouncers = {}
     }
   }, [])
+
+  const handleChange = (value, path, versionId) => {
+    const manuscriptDelta = {} // Only the changed fields
+    set(manuscriptDelta, path, value)
+    debouncers[path] = debouncers[path] || debounce(updateManuscript, 3000)
+    return debouncers[path](versionId, manuscriptDelta)
+  }
+
+  // end of code from submit page to handle possible form changes
 
   const { loading, error, data } = useQuery(query, {
     variables: {
@@ -67,21 +73,6 @@ const DecisionPage = ({ match }) => {
         input: JSON.stringify(manuscriptDelta),
       },
     })
-  }
-
-  const handleChange = (value, path, versionId) => {
-    const manuscriptDelta = {} // Only the changed fields
-    set(manuscriptDelta, path, value)
-    setManuscriptChangedFields(s => {
-      return {
-        submission: {
-          ...s.submission,
-          ...manuscriptDelta.submission,
-        },
-      }
-    })
-    debouncers[path] = debouncers[path] || debounce(updateManuscript, 3000)
-    return debouncers[path](versionId, manuscriptDelta)
   }
 
   if (loading) return <Spinner />
@@ -123,17 +114,8 @@ const DecisionPage = ({ match }) => {
                 current={index === 0}
                 form={form}
                 key={version.manuscript.id}
-                match={match}
                 onChange={handleChange}
-                onSubmit={(x, y) => {
-                  // I don't think we're actually using this.
-                  // console.log(`onSubmit called! `, x, y, z)
-                }}
                 parent={manuscript}
-                republish={(x, y) => {
-                  // are we actually using this?
-                  // console.log(`republish called! `, x, y, z)
-                }}
                 toggleConfirming={toggleConfirming}
                 updateManuscript={updateManuscript}
                 version={version.manuscript}

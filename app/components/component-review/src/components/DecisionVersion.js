@@ -46,10 +46,7 @@ const DecisionVersion = ({
   // below added to handle manuscript editing:
   updateManuscript,
   // below added to handle form editing:
-  match,
-  republish,
   onChange,
-  onSubmit,
   confirming,
   toggleConfirming,
 }) => {
@@ -248,18 +245,7 @@ const DecisionVersion = ({
                   displayName="submit"
                   // handleChange={props.handleChange}
                   initialValues={versionValues} // is this right?
-                  onSubmit={async (
-                    values,
-                    { validateForm, setSubmitting, ...other },
-                  ) => {
-                    // TODO: Change this to a more Formik idiomatic form
-                    const isValueValid =
-                      Object.keys(await validateForm()).length === 0
-
-                    return isValueValid
-                      ? onSubmit(versionId, values) // values are currently ignored!
-                      : setSubmitting(false)
-                  }}
+                  onSubmit={() => null}
                   validateOnBlur
                   validateOnChange={false}
                 >
@@ -274,8 +260,8 @@ const DecisionVersion = ({
                         {...formProps}
                         form={form}
                         manuscript={manuscript}
-                        match={match}
-                        republish={republish}
+                        match={{ url: 'decision' }}
+                        republish={() => null}
                       />
                     )
                   }}
@@ -366,12 +352,7 @@ DecisionVersion.propTypes = {
       }).isRequired,
     ).isRequired,
   }).isRequired,
-  match: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-  }).isRequired,
   onChange: PropTypes.func.isRequired,
-  onSubmit: PropTypes.func.isRequired,
-  republish: PropTypes.func.isRequired,
   toggleConfirming: PropTypes.func.isRequired,
   confirming: PropTypes.bool.isRequired,
   current: PropTypes.bool.isRequired,
