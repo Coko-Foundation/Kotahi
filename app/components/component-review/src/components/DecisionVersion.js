@@ -174,7 +174,7 @@ const DecisionVersion = ({
 
     const submissionValues = current
       ? createBlankSubmissionBasedOnForm(form)
-      : null
+      : {}
 
     Object.assign(submissionValues, JSON.parse(manuscript.submission))
 
@@ -243,8 +243,7 @@ const DecisionVersion = ({
               <SectionContent noGap>
                 <Formik
                   displayName="submit"
-                  // handleChange={props.handleChange}
-                  initialValues={versionValues} // is this right?
+                  initialValues={versionValues}
                   onSubmit={() => null}
                   validateOnBlur
                   validateOnChange={false}
