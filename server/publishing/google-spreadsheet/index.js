@@ -15,10 +15,6 @@ const mapping = {
 const formatTopicCrossPostMapping = topics =>
   topics.map(topic => mapping[topic])
 
-const getDistinct = arr => {
-  return arr.filter((member, i) => arr.indexOf(member) === i)
-}
-
 const mapFieldsToSpreadsheetColumns = manuscript => {
   const { submission } = manuscript
 
@@ -33,7 +29,7 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
 
   // eslint-disable-next-line camelcase
   const cross_post = (manuscript.isImported
-    ? getDistinct(submission.initialTopicsOnImport.concat(submission.topics))
+    ? [...new Set(submission.initialTopicsOnImport.concat(submission.topics))]
     : submission.topics
   ).filter(topic => !!mapping[topic])
 
