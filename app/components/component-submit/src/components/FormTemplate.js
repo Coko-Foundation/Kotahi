@@ -198,6 +198,7 @@ const FormTemplate = ({
   errors,
   validateForm,
   match,
+  isDecision,
 }) => {
   const client = useApolloClient()
 
@@ -362,13 +363,17 @@ const FormTemplate = ({
 
         {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) &&
           !['submitted', 'revise'].includes(values.status) &&
+          !isDecision &&
           submitButton(submitButtonText, hasPopup)}
 
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
+          !isDecision &&
           !['revise'].includes(values.status) &&
           submitButton(submitButtonText, hasPopup)}
 
-        {values.status === 'revise' && submitButton(submitButtonText)}
+        {values.status === 'revise' &&
+          !isDecision &&
+          submitButton(submitButtonText)}
 
         {confirming && (
           <ModalWrapper>
@@ -414,6 +419,7 @@ FormTemplate.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   journal: PropTypes.any, // currently unused
+  isDecision: PropTypes.bool,
   toggleConfirming: PropTypes.func.isRequired,
   confirming: PropTypes.bool.isRequired,
   manuscript: PropTypes.shape({
@@ -448,6 +454,7 @@ FormTemplate.defaultProps = {
   onSubmit: undefined,
   submitSubmission: undefined,
   createSupplementaryFile: undefined,
+  isDecision: false,
 }
 
 export default FormTemplate

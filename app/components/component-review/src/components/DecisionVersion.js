@@ -258,6 +258,7 @@ const DecisionVersion = ({
                         toggleConfirming={toggleConfirming}
                         {...formProps}
                         form={form}
+                        isDecision
                         manuscript={manuscript}
                         match={{ url: 'decision' }}
                         republish={() => null}
