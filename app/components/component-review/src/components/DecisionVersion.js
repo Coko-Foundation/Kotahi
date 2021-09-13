@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Formik } from 'formik'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import config from 'config'
-import { get } from 'lodash'
+import { get, set } from 'lodash'
 import DecisionForm from './decision/DecisionForm'
 import DecisionReviews from './decision/DecisionReviews'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
@@ -29,13 +29,26 @@ import {
   sharedReviews,
 } from './queries'
 import DecisionAndReviews from '../../../component-submit/src/components/DecisionAndReviews'
+import FormTemplate from '../../../component-submit/src/components/FormTemplate'
+
+const createBlankSubmissionBasedOnForm = form => {
+  const allBlankedFields = {}
+  const fieldNames = form.children.map(field => field.name)
+  fieldNames.forEach(fieldName => set(allBlankedFields, fieldName, ''))
+  return allBlankedFields.submission ?? {}
+}
 
 const DecisionVersion = ({
   form,
   current,
   version,
   parent,
+  // below added to handle manuscript editing:
   updateManuscript,
+  // below added to handle form editing:
+  onChange,
+  confirming,
+  toggleConfirming,
 }) => {
   // Hooks from the old world
   const [makeDecision] = useMutation(makeDecisionMutation)
@@ -156,90 +169,136 @@ const DecisionVersion = ({
     isValid,
     submitCount,
     isSubmitting,
-  }) => ({
-    content: (
-      <>
-        {!current && (
-          <SectionContent>
-            <SectionHeader>
-              <Title>Archived version</Title>
-            </SectionHeader>
-            <SectionRow>
-              This is not the current, but an archived read-only version of the
-              manuscript.
-            </SectionRow>
-          </SectionContent>
-        )}
-        {current && (
-          <AdminSection>
-            {process.env.INSTANCE_NAME === 'colab' && (
-              <EmailNotifications manuscript={manuscript} />
-            )}
-            <AssignEditorsReviewers
-              AssignEditor={AssignEditor}
-              manuscript={parent}
-            />
-          </AdminSection>
-        )}
-        {!current && (
-          <SectionContent>
-            <SectionHeader>
-              <Title>Assigned editors</Title>
-            </SectionHeader>
-            <SectionRow>
-              {parent.teams?.map(team => {
-                if (
-                  ['seniorEditor', 'handlingEditor', 'editor'].includes(
-                    team.role,
-                  )
-                ) {
-                  return (
-                    <p key={team.id}>
-                      {get(config, `teams.${team.role}.name`)}:{' '}
-                      {team.members?.[0]?.user?.defaultIdentity?.name}
-                    </p>
-                  )
-                }
+  }) => {
+    // this is only used if current version & hence editable
 
-                return null
-              })}
-            </SectionRow>
-          </SectionContent>
-        )}
-        {!current && <DecisionAndReviews manuscript={version} />}
-        <AdminSection key="review-metadata">
-          <ReviewMetadata form={form} manuscript={version} />
-        </AdminSection>
-        {current && (
-          <AdminSection key="decision-review">
-            <DecisionReviews
-              manuscript={version}
-              sharedReviews={sharedReviewsList.sharedReviews}
-            />
+    const submissionValues = current
+      ? createBlankSubmissionBasedOnForm(form)
+      : {}
+
+    Object.assign(submissionValues, JSON.parse(manuscript.submission))
+
+    const versionValues = {
+      ...manuscript,
+      submission: submissionValues,
+    }
+
+    const versionId = manuscript.id
+
+    return {
+      content: (
+        <>
+          {!current && (
+            <SectionContent>
+              <SectionHeader>
+                <Title>Archived version</Title>
+              </SectionHeader>
+              <SectionRow>
+                This is not the current, but an archived read-only version of
+                the manuscript.
+              </SectionRow>
+            </SectionContent>
+          )}
+          {current && (
+            <AdminSection>
+              {process.env.INSTANCE_NAME === 'colab' && (
+                <EmailNotifications manuscript={manuscript} />
+              )}
+              <AssignEditorsReviewers
+                AssignEditor={AssignEditor}
+                manuscript={parent}
+              />
+            </AdminSection>
+          )}
+          {!current && (
+            <SectionContent>
+              <SectionHeader>
+                <Title>Assigned editors</Title>
+              </SectionHeader>
+              <SectionRow>
+                {parent.teams?.map(team => {
+                  if (
+                    ['seniorEditor', 'handlingEditor', 'editor'].includes(
+                      team.role,
+                    )
+                  ) {
+                    return (
+                      <p key={team.id}>
+                        {get(config, `teams.${team.role}.name`)}:{' '}
+                        {team.members?.[0]?.user?.defaultIdentity?.name}
+                      </p>
+                    )
+                  }
+
+                  return null
+                })}
+              </SectionRow>
+            </SectionContent>
+          )}
+          {!current && <DecisionAndReviews manuscript={version} />}
+          <AdminSection key="review-metadata">
+            {!current ? (
+              <ReviewMetadata form={form} manuscript={version} />
+            ) : (
+              <SectionContent noGap>
+                <Formik
+                  displayName="submit"
+                  initialValues={versionValues}
+                  onSubmit={() => null}
+                  validateOnBlur
+                  validateOnChange={false}
+                >
+                  {formProps => {
+                    return (
+                      <FormTemplate
+                        confirming={confirming}
+                        onChange={(value, path) => {
+                          onChange(value, path, versionId)
+                        }}
+                        toggleConfirming={toggleConfirming}
+                        {...formProps}
+                        form={form}
+                        manuscript={manuscript}
+                        match={{ url: 'decision' }}
+                        republish={() => null}
+                      />
+                    )
+                  }}
+                </Formik>
+              </SectionContent>
+            )}
           </AdminSection>
-        )}
-        {current && (
-          <AdminSection key="decision-form">
-            <DecisionForm
-              dirty={dirty}
-              handleSubmit={handleSubmit}
-              isSubmitting={isSubmitting}
-              isValid={isValid}
-              submitCount={submitCount}
-              updateReview={updateReview(version.id)}
-            />
-          </AdminSection>
-        )}
-        {current && (
-          <AdminSection>
-            <Publish manuscript={version} />
-          </AdminSection>
-        )}
-      </>
-    ),
-    key: version.id,
-    label: 'Workflow & metadata',
-  })
+          {current && (
+            <AdminSection key="decision-review">
+              <DecisionReviews
+                manuscript={version}
+                sharedReviews={sharedReviewsList.sharedReviews}
+              />
+            </AdminSection>
+          )}
+          {current && (
+            <AdminSection key="decision-form">
+              <DecisionForm
+                dirty={dirty}
+                handleSubmit={handleSubmit}
+                isSubmitting={isSubmitting}
+                isValid={isValid}
+                submitCount={submitCount}
+                updateReview={updateReview(version.id)}
+              />
+            </AdminSection>
+          )}
+          {current && (
+            <AdminSection>
+              <Publish manuscript={version} />
+            </AdminSection>
+          )}
+        </>
+      ),
+      key: version.id,
+      label: 'Workflow & metadata',
+    }
+  }
 
   return (
     <Formik
@@ -292,6 +351,9 @@ DecisionVersion.propTypes = {
       }).isRequired,
     ).isRequired,
   }).isRequired,
+  onChange: PropTypes.func.isRequired,
+  toggleConfirming: PropTypes.func.isRequired,
+  confirming: PropTypes.bool.isRequired,
   current: PropTypes.bool.isRequired,
   version: PropTypes.shape({
     id: PropTypes.string.isRequired,
