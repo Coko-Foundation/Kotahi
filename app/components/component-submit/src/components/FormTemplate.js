@@ -145,6 +145,8 @@ const FormTemplate = ({
 }) => {
   const client = useApolloClient()
 
+  const isDecision = match && match.url && match.url.indexOf('decision') > -1
+
   const submitButton = (text, haspopup = false) => {
     return (
       <div>
@@ -306,13 +308,17 @@ const FormTemplate = ({
 
         {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) &&
           !['submitted', 'revise'].includes(values.status) &&
+          !isDecision &&
           submitButton(submitButtonText, hasPopup)}
 
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
+          !isDecision &&
           !['revise'].includes(values.status) &&
           submitButton(submitButtonText, hasPopup)}
 
-        {values.status === 'revise' && submitButton(submitButtonText)}
+        {values.status === 'revise' &&
+          !isDecision &&
+          submitButton(submitButtonText)}
 
         {confirming && (
           <ModalWrapper>
