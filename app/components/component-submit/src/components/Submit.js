@@ -112,8 +112,12 @@ const Submit = ({
                     {...formProps}
                     form={form}
                     manuscript={manuscript}
-                    match={match}
                     republish={republish}
+                    submissionButtonText={
+                      match.url.includes('/evaluation')
+                        ? 'Submit Evaluation'
+                        : 'Submit your research object'
+                    }
                   />
                 )
               }}

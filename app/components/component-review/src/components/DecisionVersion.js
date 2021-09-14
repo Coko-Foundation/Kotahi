@@ -259,7 +259,6 @@ const DecisionVersion = ({
                         {...formProps}
                         form={form}
                         manuscript={manuscript}
-                        match={{ url: 'decision' }}
                         republish={() => null}
                       />
                     )
