@@ -198,9 +198,10 @@ const FormTemplate = ({
   errors,
   validateForm,
   match,
-  isDecision,
 }) => {
   const client = useApolloClient()
+
+  const isDecision = match && match.url && match.url.indexOf('decision') > -1
 
   const submitButton = (text, haspopup = false) => {
     return (
@@ -419,7 +420,6 @@ FormTemplate.propTypes = {
   handleSubmit: PropTypes.func.isRequired,
   // eslint-disable-next-line react/forbid-prop-types
   journal: PropTypes.any, // currently unused
-  isDecision: PropTypes.bool,
   toggleConfirming: PropTypes.func.isRequired,
   confirming: PropTypes.bool.isRequired,
   manuscript: PropTypes.shape({
@@ -454,7 +454,6 @@ FormTemplate.defaultProps = {
   onSubmit: undefined,
   submitSubmission: undefined,
   createSupplementaryFile: undefined,
-  isDecision: false,
 }
 
 export default FormTemplate
