@@ -1,22 +1,19 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const { convert } = require('html-to-text')
 
-const formatTopicCrossPostMapping = topics => {
-  const mapping = {
-    Clinical_presentation: 'clinical-presentation-prognostic-risk-factors',
-    Ecology_and_spillover: 'ecology-spillover',
-    Epidemiology: 'epidemiology',
-    Nonpharmaceutical_interventions: 'non-pharmaceutical-interventions',
-    Vaccine_development: 'vaccines',
-    Diagnostics: 'diagnostics',
-    Disease_modeling: 'modeling',
-    Pharmaceutical_interventions: 'pharmaceutical-interventions',
-  }
-
-  return topics.map(topic => {
-    return mapping[topic]
-  })
+const mapping = {
+  Clinical_presentation: 'clinical-presentation-prognostic-risk-factors',
+  Ecology_and_spillover: 'ecology-spillover',
+  Epidemiology: 'epidemiology',
+  Nonpharmaceutical_interventions: 'non-pharmaceutical-interventions',
+  Vaccine_development: 'vaccines',
+  Diagnostics: 'diagnostics',
+  Disease_modeling: 'modeling',
+  Pharmaceutical_interventions: 'pharmaceutical-interventions',
 }
+
+const formatTopicCrossPostMapping = topics =>
+  topics.map(topic => mapping[topic])
 
 const getDistinct = arr => {
   return arr.filter((member, i) => arr.indexOf(member) === i)
@@ -29,14 +26,16 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
     ? `(${manuscript.importSourceServer})`
     : ''
 
-  const topics = manuscript.isImported
+  const topics = (manuscript.isImported
     ? submission.initialTopicsOnImport
     : submission.topics
+  ).filter(topic => !!mapping[topic])
 
   // eslint-disable-next-line camelcase
-  const cross_post = manuscript.isImported
+  const cross_post = (manuscript.isImported
     ? getDistinct(submission.initialTopicsOnImport.concat(submission.topics))
     : submission.topics
+  ).filter(topic => !!mapping[topic])
 
   return {
     uuid: manuscript.id,
