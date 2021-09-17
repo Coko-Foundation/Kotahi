@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import { injectable, inject } from 'inversify'
+import { decorate, injectable, inject } from 'inversify'
 import { isEmpty } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import styled from 'styled-components'
@@ -8,7 +8,6 @@ import { ToolGroup } from 'wax-prosemirror-services'
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 
-@injectable()
 class KotahiBlockDropDown extends ToolGroup {
   tools = []
 
@@ -31,6 +30,7 @@ class KotahiBlockDropDown extends ToolGroup {
     @inject('Heading6') heading6,
   ) {
     super()
+
     this.tools = [
       title,
       author,
@@ -120,5 +120,7 @@ class KotahiBlockDropDown extends ToolGroup {
     )
   }
 }
+
+decorate(injectable(), KotahiBlockDropDown)
 
 export default KotahiBlockDropDown

@@ -1,23 +1,23 @@
 import React from 'react'
-import { injectable } from 'inversify'
+import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton } from 'wax-prosemirror-components'
 import { Commands } from 'wax-prosemirror-utilities'
 import { Tools } from 'wax-prosemirror-services'
 
-export default
-@injectable()
 class Heading6 extends Tools {
   title = 'Change to heading level 6'
   label = 'Heading 6'
   name = 'Heading6'
 
+  // eslint-disable-next-line class-methods-use-this
   get run() {
     return (state, dispatch) => {
       Commands.setBlockType(state.config.schema.nodes.heading6)(state, dispatch)
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   get active() {
     return (state, activeViewId) => {
       let isActive = false
@@ -38,6 +38,7 @@ class Heading6 extends Tools {
     return true
   }
 
+  // eslint-disable-next-line class-methods-use-this
   get enable() {
     return state => {
       return Commands.setBlockType(state.config.schema.nodes.heading6)(state)
@@ -52,3 +53,7 @@ class Heading6 extends Tools {
     ) : null
   }
 }
+
+decorate(injectable(), Heading6)
+
+export default Heading6
