@@ -3,9 +3,9 @@ import PropTypes from 'prop-types'
 import { debounce } from 'lodash'
 import { Wax } from 'wax-prosemirror-core'
 import productionWaxEditorConfig from './config/ProductionWaxEditorConfig'
-import productionWaxEditorNoNotesConfig from './config/ProductionWaxEditorNoNotesConfig'
+import productionWaxEditorNoCommentsConfig from './config/ProductionWaxEditorNoCommentsConfig'
 import ProductionWaxEditorLayout from './layout/ProductionWaxEditorLayout'
-import ProductionWaxEditorNoNotesLayout from './layout/ProductionWaxEditorNoNotesLayout'
+import ProductionWaxEditorNoCommentsLayout from './layout/ProductionWaxEditorNoCommentsLayout'
 
 import './katex/katex.css'
 
@@ -56,13 +56,13 @@ const ProductionWaxEditor = ({
         config={
           useComments
             ? productionWaxEditorConfig()
-            : productionWaxEditorNoNotesConfig()
+            : productionWaxEditorNoCommentsConfig()
         }
         fileUpload={file => renderImage(file)}
         layout={
           useComments
             ? ProductionWaxEditorLayout(readonly)
-            : ProductionWaxEditorNoNotesLayout(readonly)
+            : ProductionWaxEditorNoCommentsLayout(readonly)
         }
         onBlur={val => {
           onChange && onChange(val)

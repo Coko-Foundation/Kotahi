@@ -1,10 +1,8 @@
-import React, { useContext } from 'react'
-import { WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import EditorElements from '../EditorElements'
 
-const Grid = styled.div`
+export const Grid = styled.div`
   display: grid;
   grid-template-areas: 'menu' 'editor';
   ${props =>
@@ -24,7 +22,7 @@ const Grid = styled.div`
   }
 `
 
-const EditorDiv = styled.div`
+export const EditorDiv = styled.div`
   background-color: ${th('colorBackground')};
   border: 1px solid ${th('colorBorder')};
   border-radius: 0 0 ${th('borderRadius')} ${th('borderRadius')};
@@ -46,7 +44,7 @@ const EditorDiv = styled.div`
   ${EditorElements}
 `
 
-const EditorContainer = styled.div`
+export const EditorContainer = styled.div`
   height: 100%;
   width: 100%;
 
@@ -62,7 +60,7 @@ const EditorContainer = styled.div`
   }
 `
 
-const ReadOnlyEditorDiv = styled.div`
+export const ReadOnlyEditorDiv = styled.div`
   background-color: ${th('colorBackground')};
   grid-area: editor;
   overflow: auto;
@@ -73,7 +71,7 @@ const ReadOnlyEditorDiv = styled.div`
   ${EditorElements}
 `
 
-const Menu = styled.div`
+export const Menu = styled.div`
   align-items: center;
   background: #fff;
   border: 1px solid ${th('colorBorder')};
@@ -94,70 +92,10 @@ const Menu = styled.div`
   }
 `
 
-const InfoContainer = styled.div`
+export const InfoContainer = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-end;
   width: 100%;
   z-index: 999;
 `
-
-const TopBar = ComponentPlugin('topBar')
-const WaxOverlays = ComponentPlugin('waxOverlays')
-// const NotesArea = ComponentPlugin('notesArea')
-// const RightArea = ComponentPlugin('rightArea')
-const CounterInfo = ComponentPlugin('BottomRightInfo')
-// const CommentTrackToolBar = ComponentPlugin('commentTrackToolBar')
-
-// eslint-disable-next-line react/prop-types
-const ProductionWaxEditorNoNotesLayout = readonly => ({ editor }) => {
-  const {
-    // view: { main },
-    options,
-  } = useContext(WaxContext)
-
-  // added to bring in full screen
-
-  let fullScreenStyles = {}
-
-  if (options.fullScreen) {
-    fullScreenStyles = {
-      backgroundColor: '#fff',
-      height: '100%',
-      left: '0',
-      margin: '0',
-      padding: '0',
-      position: 'fixed',
-      top: '0',
-      width: '100%',
-      zIndex: '99999',
-    }
-  }
-
-  return (
-    <div style={fullScreenStyles}>
-      <Grid readonly={readonly}>
-        {readonly ? (
-          <ReadOnlyEditorDiv className="wax-surface-scroll">
-            {editor}
-          </ReadOnlyEditorDiv>
-        ) : (
-          <>
-            <Menu>
-              <TopBar />
-            </Menu>
-            <EditorDiv className="wax-surface-scroll">
-              <EditorContainer>{editor}</EditorContainer>
-            </EditorDiv>
-          </>
-        )}
-      </Grid>
-      <WaxOverlays />
-      <InfoContainer>
-        <CounterInfo />
-      </InfoContainer>
-    </div>
-  )
-}
-
-export default ProductionWaxEditorNoNotesLayout

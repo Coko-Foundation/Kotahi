@@ -53,7 +53,7 @@ const updateTitle = title => {
   // console.log(`Title changed: ${title}`)
 }
 
-const productionWaxEditorNoNotesConfig = () => ({
+const productionWaxEditorNoCommentsConfig = () => ({
   EnableTrackChangeService: false, // This line is needed by NoteService
   SchemaService: DefaultSchema,
   MenuService: [
@@ -164,4 +164,4 @@ const productionWaxEditorNoNotesConfig = () => ({
   ],
 })
 
-export default productionWaxEditorNoNotesConfig
+export default productionWaxEditorNoCommentsConfig

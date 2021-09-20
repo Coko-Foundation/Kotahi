@@ -1,4 +1,4 @@
-import React, { useCallback, useContext, useState, useEffect } from 'react'
+import React, { useContext, useEffect, useCallback, useState } from 'react'
 import { WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
 import { DocumentHelpers } from 'wax-prosemirror-utilities'
 import { NotesAreaContainer, Heading, NotesContainer } from './NotesStyles'
@@ -10,47 +10,33 @@ import {
   InfoContainer,
   ReadOnlyEditorDiv,
 } from './EditorStyles'
-import {
-  CommentsContainer,
-  CommentsContainerNotes,
-  CommentTrackToolsContainer,
-  CommentTrackTools,
-  CommentTrackOptions,
-} from './CommentsStyles'
-
-const getNotes = main => {
-  const notes = DocumentHelpers.findChildrenByType(
-    main.state.doc,
-    main.state.schema.nodes.footnote,
-    true,
-  )
-
-  return notes
-}
+import { CommentsContainerNotes } from './CommentsStyles'
 
 const TopBar = ComponentPlugin('topBar')
 const WaxOverlays = ComponentPlugin('waxOverlays')
 const NotesArea = ComponentPlugin('notesArea')
 const RightArea = ComponentPlugin('rightArea')
 const CounterInfo = ComponentPlugin('BottomRightInfo')
-const CommentTrackToolBar = ComponentPlugin('commentTrackToolBar')
+// const CommentTrackToolBar = ComponentPlugin('commentTrackToolBar')
 
 // eslint-disable-next-line react/prop-types
-const ProductionWaxEditorLayout = readonly => ({ editor }) => {
+const ProductionWaxEditorNoCommentsLayout = readonly => ({ editor }) => {
+  const getNotes = main => {
+    const notes = DocumentHelpers.findChildrenByType(
+      main.state.doc,
+      main.state.schema.nodes.footnote,
+      true,
+    )
+
+    return notes
+  }
+
   const {
     view: { main },
     options,
   } = useContext(WaxContext)
 
-  // added to bring in notes/comments
-
   const notes = (main && getNotes(main)) ?? []
-
-  const commentsTracksCount =
-    main && DocumentHelpers.getCommentsTracksCount(main)
-
-  const trackBlockNodesCount =
-    main && DocumentHelpers.getTrackBlockNodesCount(main)
 
   const areNotes = notes && !!notes.length && notes.length > 0
 
@@ -99,31 +85,19 @@ const ProductionWaxEditorLayout = readonly => ({ editor }) => {
             </Menu>
             <EditorDiv className="wax-surface-scroll">
               <EditorContainer>{editor}</EditorContainer>
-              <CommentsContainer>
-                <CommentTrackToolsContainer>
-                  <CommentTrackTools>
-                    {commentsTracksCount + trackBlockNodesCount} COMMENTS AND
-                    SUGGESTIONS
-                    <CommentTrackOptions>
-                      <CommentTrackToolBar />
-                    </CommentTrackOptions>
-                  </CommentTrackTools>
-                </CommentTrackToolsContainer>
-                <RightArea area="main" />
-              </CommentsContainer>
             </EditorDiv>
-            {hasNotes && (
-              <NotesAreaContainer>
-                <Heading>Notes</Heading>
-                <NotesContainer id="notes-container">
-                  <NotesArea view={main} />
-                </NotesContainer>
-                <CommentsContainerNotes>
-                  <RightArea area="notes" />
-                </CommentsContainerNotes>
-              </NotesAreaContainer>
-            )}
           </>
+        )}
+        {hasNotes && (
+          <NotesAreaContainer>
+            <Heading>Notes</Heading>
+            <NotesContainer id="notes-container">
+              <NotesArea view={main} />
+            </NotesContainer>
+            <CommentsContainerNotes>
+              <RightArea area="notes" />
+            </CommentsContainerNotes>
+          </NotesAreaContainer>
         )}
       </Grid>
       <WaxOverlays />
@@ -134,4 +108,4 @@ const ProductionWaxEditorLayout = readonly => ({ editor }) => {
   )
 }
 
-export default ProductionWaxEditorLayout
+export default ProductionWaxEditorNoCommentsLayout
