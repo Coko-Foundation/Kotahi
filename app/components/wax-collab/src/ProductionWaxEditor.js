@@ -3,38 +3,53 @@ import PropTypes from 'prop-types'
 import { debounce } from 'lodash'
 import { Wax, WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
 import { DefaultSchema, DocumentHelpers } from 'wax-prosemirror-utilities'
+import { WaxSelectionPlugin } from 'wax-prosemirror-plugins'
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { columnResizing, tableEditing } from 'prosemirror-tables'
 import {
+  InlineAnnotationsService,
   AnnotationToolGroupService,
-  BaseService,
-  BaseToolGroupService,
-  BottomInfoService,
-  DisplayToolGroupService,
-  EditorInfoToolGroupServices,
-  FindAndReplaceService,
-  FullScreenService,
-  FullScreenToolGroupService,
   ImageService,
   ImageToolGroupService,
-  InlineAnnotationsService,
   LinkService,
   ListsService,
   ListToolGroupService,
-  MathService,
-  NoteService,
-  NoteToolGroupService,
-  SpecialCharactersService,
-  SpecialCharactersToolGroupService,
   TablesService,
   TableToolGroupService,
+  BaseService,
+  BaseToolGroupService,
+  DisplayBlockLevelService,
+  DisplayToolGroupService,
   TextBlockLevelService,
   TextToolGroupService,
-  DisplayBlockLevelService,
+  NoteService,
+  NoteToolGroupService,
+  TrackChangeService,
   CommentsService,
+  CodeBlockService,
+  CodeBlockToolGroupService,
+  DisplayTextToolGroupService,
+  MathService,
+  FindAndReplaceService,
+  EditingSuggestingService,
+  TrackingAndEditingToolGroupService,
+  FullScreenService,
+  FullScreenToolGroupService,
+  SpecialCharactersService,
+  SpecialCharactersToolGroupService,
+  HighlightService,
+  TextHighlightToolGroupServices,
+  EditorInfoToolGroupServices,
+  BottomInfoService,
+  TransformService,
+  TransformToolGroupService,
+  TrackOptionsToolGroupService,
   TrackCommentOptionsToolGroupService,
+  CustomTagInlineToolGroupService,
+  CustomTagBlockToolGroupService,
+  CustomTagService,
 } from 'wax-prosemirror-services'
 import EditorElements from './EditorElements'
 import { KotahiBlockDropDownToolGroupService } from './CustomWaxToolGroups'
@@ -82,9 +97,7 @@ const waxConfig = () => ({
     },
     {
       templateArea: 'commentTrackToolBar',
-      toolGroups: [
-        // 'TrackCommentOptions'
-      ],
+      toolGroups: ['TrackCommentOptions'],
     },
     {
       templateArea: 'BottomRightInfo',
@@ -92,7 +105,7 @@ const waxConfig = () => ({
     },
   ],
 
-  PmPlugins: [columnResizing(), tableEditing()],
+  PmPlugins: [columnResizing(), tableEditing(), WaxSelectionPlugin],
 
   RulesService: [emDash, ellipsis],
 
@@ -116,39 +129,60 @@ const waxConfig = () => ({
     },
   },
   services: [
-    new AnnotationToolGroupService(),
-    new BaseService(),
-    new BaseToolGroupService(),
-    new BottomInfoService(),
+    new CustomTagService(),
+    new DisplayBlockLevelService(),
     new DisplayToolGroupService(),
-    new EditorInfoToolGroupServices(),
-    new FindAndReplaceService(), // Needed by NoteService
-    new ImageService(),
-    new ImageToolGroupService(),
-    new InlineAnnotationsService(),
-    new LinkService(),
-    new CommentsService(),
-    new ListsService(),
-    new ListToolGroupService(),
-    new MathService(),
-    new NoteService(),
-    new NoteToolGroupService(),
-    new SpecialCharactersService(),
-    new SpecialCharactersToolGroupService(),
-    new TablesService(),
-    new TableToolGroupService(),
     new TextBlockLevelService(),
     new TextToolGroupService(),
-    // these are added for paragraph dropdown:
-    new ExtendedHeadingService(),
-    new KotahiBlockDropDownToolGroupService(),
-    new DisplayBlockLevelService(),
-    // added for jats version:
+    new ListsService(),
+    new LinkService(),
+    new InlineAnnotationsService(),
+    new TrackChangeService(),
+    new CommentsService(),
+    new ImageService(),
+    new TablesService(),
+    new BaseService(),
+    new BaseToolGroupService(),
+    new NoteService(),
+    new TableToolGroupService(),
+    new ImageToolGroupService(),
+    new AnnotationToolGroupService(),
+    new NoteToolGroupService(),
+    new ListToolGroupService(),
+    new CodeBlockService(),
+    new CodeBlockToolGroupService(),
+    new EditingSuggestingService(),
+    new DisplayTextToolGroupService(),
+    new MathService(),
+    new FindAndReplaceService(),
+    new TrackingAndEditingToolGroupService(),
     new FullScreenService(),
     new FullScreenToolGroupService(),
+    new SpecialCharactersService(),
+    new SpecialCharactersToolGroupService(),
+    new HighlightService(),
+    new TextHighlightToolGroupServices(),
+    new EditorInfoToolGroupServices(),
+    new BottomInfoService(),
+    new TransformService(),
+    new TransformToolGroupService(),
+    new TrackOptionsToolGroupService(),
     new TrackCommentOptionsToolGroupService(),
+    new CustomTagInlineToolGroupService(),
+    new CustomTagBlockToolGroupService(),
+    new ExtendedHeadingService(),
+    new KotahiBlockDropDownToolGroupService(),
   ],
 })
+
+const user = {
+  userId: 'b3cfc28e-0f2e-45b5-b505-e66783d4f946',
+  userColor: {
+    addition: 'royalblue',
+    deletion: 'indianred',
+  },
+  username: 'admin',
+}
 
 const Grid = styled.div`
   display: grid;
@@ -489,6 +523,7 @@ const ProductionWaxEditor = ({
         onChange={debounceChange}
         placeholder={placeholder}
         readonly={readonly}
+        user={user}
         value={value}
         {...rest}
       />
