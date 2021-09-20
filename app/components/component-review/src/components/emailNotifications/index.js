@@ -109,7 +109,7 @@ const EmailNotifications = ({ manuscript }) => {
   }
 
   return (
-    <SectionContent noGap>
+    <SectionContent>
       <SectionHeader>
         <Title>Notifications</Title>
       </SectionHeader>
