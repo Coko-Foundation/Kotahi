@@ -87,7 +87,7 @@ const Reviewers = ({
                 <Reviewer key={reviewer.id}>
                   <StatusBadge minimal status={reviewer.status} />
                   <UserAvatar key={reviewer.id} user={reviewer.user} />
-                  {reviewer.user.defaultIdentity.name}
+                  {reviewer.user.defaultIdentity.name || reviewer.user.username }
                   {process.env.INSTANCE_NAME === 'colab' && (
                     <Checkbox
                       checked={reviewer.isShared}
