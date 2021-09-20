@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import EditorElements from '../EditorElements'
+import EditorElements from './EditorElements'
 
 export const Grid = styled.div`
   display: grid;
@@ -22,7 +22,21 @@ export const Grid = styled.div`
   }
 `
 
-export const EditorDiv = styled.div`
+export const SimpleGrid = styled.div`
+  display: grid;
+  grid-template-areas: 'menu' 'editor';
+
+  ${props =>
+    props.readonly
+      ? css`
+          grid-template-rows: 0 1fr;
+        `
+      : css`
+          grid-template-rows: minmax(40px, auto) 1fr;
+        `}
+`
+
+export const ProductionEditorDiv = styled.div`
   background-color: ${th('colorBackground')};
   border: 1px solid ${th('colorBorder')};
   border-radius: 0 0 ${th('borderRadius')} ${th('borderRadius')};
@@ -35,6 +49,40 @@ export const EditorDiv = styled.div`
   padding: 16px;
   position: relative;
   width: 100%;
+
+  .error & {
+    border: 1px solid ${th('colorError')};
+  }
+
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
+  ${EditorElements}
+`
+
+export const EditorDiv = styled.div`
+  background-color: ${th('colorBackground')};
+  border: 1px solid ${th('colorBorder')};
+  border-radius: 0 0 ${th('borderRadius')} ${th('borderRadius')};
+  border-top: none;
+  grid-area: editor;
+  overflow: auto;
+  padding: 16px;
+  position: relative;
+
+  .error & {
+    border: 1px solid ${th('colorError')};
+  }
+
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
+  ${EditorElements}
+`
+
+export const SimpleEditorDiv = styled.div`
+  border: 1px solid ${th('colorBorder')};
+  border-radius: ${th('borderRadius')};
+  grid-area: editor;
+  overflow: auto;
+  padding: 16px;
+  position: relative;
 
   .error & {
     border: 1px solid ${th('colorError')};
@@ -71,6 +119,15 @@ export const ReadOnlyEditorDiv = styled.div`
   ${EditorElements}
 `
 
+export const ReadOnlySimpleEditorDiv = styled.div`
+  grid-area: editor;
+  overflow: auto;
+  position: relative;
+
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
+  ${EditorElements}
+`
+
 export const Menu = styled.div`
   align-items: center;
   background: #fff;
@@ -92,10 +149,46 @@ export const Menu = styled.div`
   }
 `
 
+export const SimpleMenu = styled.div`
+  align-items: center;
+  background: #fff;
+  border-bottom: 1px solid ${th('colorFurniture')};
+  display: flex;
+  flex-wrap: wrap;
+  grid-area: menu;
+  height: fit-content;
+  margin: 0 ${th('borderRadius')};
+  max-width: 100%; /* this is to avoid spillover */
+  /* overflow-x: scroll; this is not great! */
+  position: sticky;
+  top: -20px;
+  user-select: none;
+  z-index: 1;
+
+  & > div {
+    height: 36px;
+  }
+
+  :focus-within {
+    z-index: 1000;
+  }
+`
+
 export const InfoContainer = styled.div`
   display: flex;
   flex-flow: row wrap;
   justify-content: flex-end;
   width: 100%;
   z-index: 999;
+`
+
+export const SimpleInfoContainer = styled.div`
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: flex-end;
+  width: 100%;
+
+  div:focus-within > & {
+    z-index: 1000;
+  }
 `

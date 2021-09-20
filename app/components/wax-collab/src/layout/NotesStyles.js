@@ -1,6 +1,6 @@
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import EditorElements from '../EditorElements'
+import EditorElements from './EditorElements'
 
 export const NotesAreaContainer = styled.div`
   background: #fff;
@@ -40,7 +40,7 @@ export const NotesContainer = styled.div`
   width: 90%;
 `
 
-export const Heading = styled.div`
+export const NotesHeading = styled.div`
   color: ${th('colorPrimary')};
   margin: 3px 7px;
   text-transform: uppercase;
