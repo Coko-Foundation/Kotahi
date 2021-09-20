@@ -10,6 +10,9 @@ Base.args = {
 	<p>A second paragraph.</p>`,
   autoFocus: true,
   placeholder: 'Enter text here',
+  onBlur: source => {
+    // console.log('onBlur: ', source)
+  },
 }
 ReadOnly.args = { ...Base.args, readonly: true }
 Error.args = { ...Base.args, validationStatus: 'error' }
@@ -17,4 +20,9 @@ Error.args = { ...Base.args, validationStatus: 'error' }
 export default {
   title: 'Wax/ProductionWaxEditor',
   component: ProductionWaxEditor,
+  argTypes: {
+    onBlur: {
+      action: 'clicked',
+    },
+  },
 }

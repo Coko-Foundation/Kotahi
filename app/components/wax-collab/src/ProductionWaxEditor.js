@@ -1,4 +1,4 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useCallback, useContext, useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { debounce } from 'lodash'
 import { Wax, WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
@@ -350,14 +350,30 @@ const WaxLayout = readonly => ({ editor }) => {
     options,
   } = useContext(WaxContext)
 
+  // added to bring in notes/comments
+
   const notes = (main && getNotes(main)) ?? []
 
-  // added to bring in comments
   const commentsTracksCount =
     main && DocumentHelpers.getCommentsTracksCount(main)
 
   const trackBlockNodesCount =
     main && DocumentHelpers.getTrackBlockNodesCount(main)
+
+  const areNotes = notes && !!notes.length && notes.length > 0
+
+  const [hasNotes, setHasNotes] = useState(areNotes)
+
+  const showNotes = () => {
+    setHasNotes(areNotes)
+  }
+
+  const delayedShowedNotes = useCallback(
+    setTimeout(() => showNotes(), 100),
+    [],
+  )
+
+  useEffect(() => {}, [delayedShowedNotes])
 
   // added to bring in full screen
 
@@ -404,7 +420,7 @@ const WaxLayout = readonly => ({ editor }) => {
                 <RightArea area="main" />
               </CommentsContainer>
             </EditorDiv>
-            {notes.length > 0 && (
+            {hasNotes && (
               <NotesAreaContainer>
                 <Heading>Notes</Heading>
                 <NotesContainer id="notes-container">
@@ -418,7 +434,7 @@ const WaxLayout = readonly => ({ editor }) => {
           </>
         )}
       </Grid>
-      {readonly && notes.length > 0 && (
+      {hasNotes && (
         <ReadOnlyNotesAreaContainer>
           <Heading>Notes</Heading>
           <NotesContainer id="notes-container">

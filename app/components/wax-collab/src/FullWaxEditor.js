@@ -315,6 +315,8 @@ const renderImage = file => {
   })
 }
 
+// TODO: if useComments is true, use the config for notes
+
 const FullWaxEditor = ({
   value,
   validationStatus,
@@ -323,6 +325,7 @@ const FullWaxEditor = ({
   onBlur,
   onChange,
   placeholder,
+  useComments,
   fileUpload,
   ...rest
 }) => {
@@ -357,6 +360,7 @@ FullWaxEditor.propTypes = {
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
   fileUpload: PropTypes.func,
+  useComments: PropTypes.bool,
 }
 
 FullWaxEditor.defaultProps = {
@@ -368,6 +372,7 @@ FullWaxEditor.defaultProps = {
   onChange: () => {},
   placeholder: '',
   fileUpload: () => {},
+  useComments: false,
 }
 
 export default FullWaxEditor
