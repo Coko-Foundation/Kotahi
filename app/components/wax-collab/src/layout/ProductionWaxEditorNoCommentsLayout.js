@@ -1,7 +1,12 @@
 import React, { useContext, useEffect, useCallback, useState } from 'react'
 import { WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
 import { DocumentHelpers } from 'wax-prosemirror-utilities'
-import { NotesAreaContainer, NotesHeading, NotesContainer } from './NotesStyles'
+import {
+  NotesAreaContainer,
+  NotesHeading,
+  NotesContainer,
+  ReadOnlyNotesAreaContainer,
+} from './NotesStyles'
 import {
   Grid,
   Menu,
@@ -100,6 +105,14 @@ const ProductionWaxEditorNoCommentsLayout = readonly => ({ editor }) => {
           </NotesAreaContainer>
         )}
       </Grid>
+      {readonly && notes.length > 0 && (
+        <ReadOnlyNotesAreaContainer>
+          <NotesHeading>Notes</NotesHeading>
+          <NotesContainer id="notes-container">
+            <NotesArea view={main} />
+          </NotesContainer>
+        </ReadOnlyNotesAreaContainer>
+      )}
       <WaxOverlays />
       <InfoContainer>
         <CounterInfo />

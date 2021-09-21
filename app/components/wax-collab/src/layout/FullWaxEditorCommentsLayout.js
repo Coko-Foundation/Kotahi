@@ -3,10 +3,11 @@ import { WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
 import { DocumentHelpers } from 'wax-prosemirror-utilities'
 import {
   Grid,
-  EditorDiv,
+  ProductionEditorDiv,
   ReadOnlyEditorDiv,
   Menu,
   InfoContainer,
+  FullEditorContainer,
 } from './EditorStyles'
 import {
   NotesAreaContainer,
@@ -14,6 +15,13 @@ import {
   NotesContainer,
   NotesHeading,
 } from './NotesStyles'
+import {
+  FullCommentsContainer,
+  CommentsContainerNotes,
+  CommentTrackToolsContainer,
+  CommentTrackTools,
+  CommentTrackOptions,
+} from './CommentsStyles'
 
 const getNotes = main => {
   const notes = DocumentHelpers.findChildrenByType(
@@ -29,17 +37,46 @@ const getNotes = main => {
 const FullWaxEditorCommentsLayout = readonly => ({ editor }) => {
   const {
     view: { main },
+    options,
   } = useContext(WaxContext)
 
   const TopBar = ComponentPlugin('topBar')
   const WaxOverlays = ComponentPlugin('waxOverlays')
   const NotesArea = ComponentPlugin('notesArea')
+  const RightArea = ComponentPlugin('rightArea')
   const CounterInfo = ComponentPlugin('BottomRightInfo')
+  const CommentTrackToolBar = ComponentPlugin('commentTrackToolBar')
 
   const notes = (main && getNotes(main)) ?? []
 
+  // added to bring in comments
+
+  const commentsTracksCount =
+    main && DocumentHelpers.getCommentsTracksCount(main)
+
+  const trackBlockNodesCount =
+    main && DocumentHelpers.getTrackBlockNodesCount(main)
+
+  // added to bring in full screen
+
+  let fullScreenStyles = {}
+
+  if (options.fullScreen) {
+    fullScreenStyles = {
+      backgroundColor: '#fff',
+      height: '100%',
+      left: '0',
+      margin: '0',
+      padding: '0',
+      position: 'fixed',
+      top: '0',
+      width: '100%',
+      zIndex: '99999',
+    }
+  }
+
   return (
-    <div>
+    <div style={fullScreenStyles}>
       <Grid readonly={readonly}>
         {readonly ? (
           <ReadOnlyEditorDiv className="wax-surface-scroll">
@@ -50,13 +87,30 @@ const FullWaxEditorCommentsLayout = readonly => ({ editor }) => {
             <Menu>
               <TopBar />
             </Menu>
-            <EditorDiv className="wax-surface-scroll">{editor}</EditorDiv>
+            <ProductionEditorDiv className="wax-surface-scroll">
+              <FullEditorContainer>{editor}</FullEditorContainer>
+              <FullCommentsContainer>
+                <CommentTrackToolsContainer>
+                  <CommentTrackTools>
+                    {commentsTracksCount + trackBlockNodesCount} COMMENTS AND
+                    SUGGESTIONS
+                    <CommentTrackOptions>
+                      <CommentTrackToolBar />
+                    </CommentTrackOptions>
+                  </CommentTrackTools>
+                </CommentTrackToolsContainer>
+                <RightArea area="main" />
+              </FullCommentsContainer>
+            </ProductionEditorDiv>
             {notes.length > 0 && (
               <NotesAreaContainer>
                 <NotesHeading>Notes</NotesHeading>
                 <NotesContainer id="notes-container">
                   <NotesArea view={main} />
                 </NotesContainer>
+                <CommentsContainerNotes>
+                  <RightArea area="notes" />
+                </CommentsContainerNotes>
               </NotesAreaContainer>
             )}
           </>

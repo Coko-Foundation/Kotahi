@@ -1,7 +1,12 @@
 import React, { useCallback, useContext, useState, useEffect } from 'react'
 import { WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
 import { DocumentHelpers } from 'wax-prosemirror-utilities'
-import { NotesAreaContainer, NotesHeading, NotesContainer } from './NotesStyles'
+import {
+  NotesAreaContainer,
+  ReadOnlyNotesAreaContainer,
+  NotesHeading,
+  NotesContainer,
+} from './NotesStyles'
 import {
   Grid,
   Menu,
@@ -42,15 +47,9 @@ const ProductionWaxEditorLayout = readonly => ({ editor }) => {
     options,
   } = useContext(WaxContext)
 
-  // added to bring in notes/comments
+  // added to bring in notes
 
   const notes = (main && getNotes(main)) ?? []
-
-  const commentsTracksCount =
-    main && DocumentHelpers.getCommentsTracksCount(main)
-
-  const trackBlockNodesCount =
-    main && DocumentHelpers.getTrackBlockNodesCount(main)
 
   const areNotes = notes && !!notes.length && notes.length > 0
 
@@ -66,6 +65,14 @@ const ProductionWaxEditorLayout = readonly => ({ editor }) => {
   )
 
   useEffect(() => {}, [delayedShowedNotes])
+
+  // added to bring in comments
+
+  const commentsTracksCount =
+    main && DocumentHelpers.getCommentsTracksCount(main)
+
+  const trackBlockNodesCount =
+    main && DocumentHelpers.getTrackBlockNodesCount(main)
 
   // added to bring in full screen
 
@@ -126,6 +133,14 @@ const ProductionWaxEditorLayout = readonly => ({ editor }) => {
           </>
         )}
       </Grid>
+      {readonly && notes.length > 0 && (
+        <ReadOnlyNotesAreaContainer>
+          <NotesHeading>Notes</NotesHeading>
+          <NotesContainer id="notes-container">
+            <NotesArea view={main} />
+          </NotesContainer>
+        </ReadOnlyNotesAreaContainer>
+      )}
       <WaxOverlays />
       <InfoContainer>
         <CounterInfo />

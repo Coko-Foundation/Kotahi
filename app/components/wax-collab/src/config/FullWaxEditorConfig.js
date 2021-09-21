@@ -9,6 +9,8 @@ import {
   DisplayToolGroupService,
   EditorInfoToolGroupServices,
   FindAndReplaceService,
+  FullScreenService,
+  FullScreenToolGroupService,
   ImageService,
   ImageToolGroupService,
   InlineAnnotationsService,
@@ -62,6 +64,7 @@ const fullWaxEditorConfig = () => ({
         'Notes',
         'Tables',
         'Images',
+        'FullScreen',
       ],
     },
     {
@@ -105,6 +108,9 @@ const fullWaxEditorConfig = () => ({
     new ExtendedHeadingService(),
     new KotahiBlockDropDownToolGroupService(),
     new DisplayBlockLevelService(),
+    // these are added for full screen
+    new FullScreenService(),
+    new FullScreenToolGroupService(),
   ],
 })
 

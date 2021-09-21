@@ -110,12 +110,33 @@ export const EditorContainer = styled.div`
   }
 `
 
+export const FullEditorContainer = styled.div`
+  height: 100%;
+  min-width: 800px;
+  width: 100%;
+
+  .ProseMirror {
+    box-shadow: 0 0 8px #ecedf1;
+    min-height: 98%;
+    padding: ${grid(10)};
+    padding: 10px;
+
+    & .comment {
+      border-bottom-color: transparent;
+    }
+  }
+`
+
 export const ReadOnlyEditorDiv = styled.div`
   background-color: ${th('colorBackground')};
   grid-area: editor;
   overflow: auto;
   padding: 16px;
   position: relative;
+
+  & .ProseMirror .comment {
+    border-bottom-color: transparent;
+  }
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */
   ${EditorElements}

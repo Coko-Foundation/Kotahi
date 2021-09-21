@@ -6,6 +6,18 @@ export const CommentsContainer = styled.div`
   height: 100%;
   width: 35%;
 `
+export const FullCommentsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 250px;
+
+  & > div {
+    left: 30px;
+    position: relative;
+    right: initial;
+  }
+`
 
 export const CommentsContainerNotes = styled.div`
   display: flex;

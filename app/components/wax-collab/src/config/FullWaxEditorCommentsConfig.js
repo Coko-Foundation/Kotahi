@@ -2,29 +2,35 @@ import { DefaultSchema } from 'wax-prosemirror-utilities'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { columnResizing, tableEditing } from 'prosemirror-tables'
 import {
+  InlineAnnotationsService,
   AnnotationToolGroupService,
-  BaseService,
-  BaseToolGroupService,
-  BottomInfoService,
-  DisplayToolGroupService,
-  EditorInfoToolGroupServices,
-  FindAndReplaceService,
   ImageService,
   ImageToolGroupService,
-  InlineAnnotationsService,
   LinkService,
   ListsService,
   ListToolGroupService,
-  MathService,
-  NoteService,
-  NoteToolGroupService,
-  SpecialCharactersService,
-  SpecialCharactersToolGroupService,
   TablesService,
   TableToolGroupService,
+  BaseService,
+  BaseToolGroupService,
+  DisplayBlockLevelService,
+  DisplayToolGroupService,
   TextBlockLevelService,
   TextToolGroupService,
-  DisplayBlockLevelService,
+  NoteService,
+  NoteToolGroupService,
+  TrackChangeService,
+  CommentsService,
+  MathService,
+  FindAndReplaceService,
+  FullScreenService,
+  FullScreenToolGroupService,
+  SpecialCharactersService,
+  SpecialCharactersToolGroupService,
+  EditorInfoToolGroupServices,
+  BottomInfoService,
+  TrackOptionsToolGroupService,
+  TrackCommentOptionsToolGroupService,
 } from 'wax-prosemirror-services'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
 import ExtendedHeadingService from '../ExtendedHeaders'
@@ -62,7 +68,12 @@ const fullWaxEditorCommentsConfig = () => ({
         'Notes',
         'Tables',
         'Images',
+        'FullScreen',
       ],
+    },
+    {
+      templateArea: 'commentTrackToolBar',
+      toolGroups: ['TrackCommentOptions'],
     },
     {
       templateArea: 'BottomRightInfo',
@@ -85,7 +96,7 @@ const fullWaxEditorCommentsConfig = () => ({
     new BottomInfoService(),
     new DisplayToolGroupService(),
     new EditorInfoToolGroupServices(),
-    new FindAndReplaceService(), // Needed by NoteService
+    new FindAndReplaceService(),
     new ImageService(),
     new ImageToolGroupService(),
     new InlineAnnotationsService(),
@@ -105,6 +116,14 @@ const fullWaxEditorCommentsConfig = () => ({
     new ExtendedHeadingService(),
     new KotahiBlockDropDownToolGroupService(),
     new DisplayBlockLevelService(),
+    // these are added for full screen
+    new FullScreenService(),
+    new FullScreenToolGroupService(),
+    // needed for comments
+    new TrackChangeService(),
+    new CommentsService(),
+    new TrackCommentOptionsToolGroupService(),
+    new TrackOptionsToolGroupService(),
   ],
 })
 

@@ -29,6 +29,7 @@ const getNotes = main => {
 const FullWaxEditorLayout = readonly => ({ editor }) => {
   const {
     view: { main },
+    options,
   } = useContext(WaxContext)
 
   const TopBar = ComponentPlugin('topBar')
@@ -38,8 +39,26 @@ const FullWaxEditorLayout = readonly => ({ editor }) => {
 
   const notes = (main && getNotes(main)) ?? []
 
+  // added to bring in full screen
+
+  let fullScreenStyles = {}
+
+  if (options.fullScreen) {
+    fullScreenStyles = {
+      backgroundColor: '#fff',
+      height: '100%',
+      left: '0',
+      margin: '0',
+      padding: '0',
+      position: 'fixed',
+      top: '0',
+      width: '100%',
+      zIndex: '99999',
+    }
+  }
+
   return (
-    <div>
+    <div style={fullScreenStyles}>
       <Grid readonly={readonly}>
         {readonly ? (
           <ReadOnlyEditorDiv className="wax-surface-scroll">
