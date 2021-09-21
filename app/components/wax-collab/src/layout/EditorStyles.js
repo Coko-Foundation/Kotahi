@@ -60,6 +60,20 @@ export const ProductionEditorDiv = styled.div`
   ${EditorElements}
 `
 
+export const ReadOnlyEditorWithCommentsWrapper = styled.div`
+  display: flex;
+  grid-area: editor;
+  height: 100%;
+`
+
+export const ReadOnlyEditorWithCommentsEditor = styled.div`
+  height: 100%;
+  min-width: 800px;
+  width: 100%;
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
+  ${EditorElements}
+`
+
 export const EditorDiv = styled.div`
   background-color: ${th('colorBackground')};
   border: 1px solid ${th('colorBorder')};

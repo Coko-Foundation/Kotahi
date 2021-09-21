@@ -4,7 +4,8 @@ import { DocumentHelpers } from 'wax-prosemirror-utilities'
 import {
   Grid,
   ProductionEditorDiv,
-  ReadOnlyEditorDiv,
+  ReadOnlyEditorWithCommentsWrapper,
+  ReadOnlyEditorWithCommentsEditor,
   Menu,
   InfoContainer,
   FullEditorContainer,
@@ -79,9 +80,23 @@ const FullWaxEditorCommentsLayout = readonly => ({ editor }) => {
     <div style={fullScreenStyles}>
       <Grid readonly={readonly}>
         {readonly ? (
-          <ReadOnlyEditorDiv className="wax-surface-scroll">
-            {editor}
-          </ReadOnlyEditorDiv>
+          <ReadOnlyEditorWithCommentsWrapper className="wax-surface-scroll">
+            <ReadOnlyEditorWithCommentsEditor>
+              {editor}
+            </ReadOnlyEditorWithCommentsEditor>
+            <FullCommentsContainer>
+              <CommentTrackToolsContainer>
+                <CommentTrackTools>
+                  {commentsTracksCount + trackBlockNodesCount} COMMENTS AND
+                  SUGGESTIONS
+                  <CommentTrackOptions>
+                    <CommentTrackToolBar />
+                  </CommentTrackOptions>
+                </CommentTrackTools>
+              </CommentTrackToolsContainer>
+              <RightArea area="main" />
+            </FullCommentsContainer>
+          </ReadOnlyEditorWithCommentsWrapper>
         ) : (
           <>
             <Menu>
