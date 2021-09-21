@@ -393,4 +393,74 @@ export default css`
   .math-node.ProseMirror-selectednode .math-render {
     display: none;
   }
+
+  /* -- Selection Plugin ---------------------------------- */
+
+  p::selection,
+  p > *::selection {
+    background-color: #c0c0c0;
+  }
+
+  .katex-html *::selection {
+    /* stylelint-disable-next-line declaration-no-important */
+    background-color: none !important;
+  }
+
+  .math-inline.math-select .math-render {
+    padding-top: 2px;
+  }
+
+  .math-node.math-select .math-render {
+    background-color: #c0c0c0ff;
+  }
+
+  span[data-type='inline'] {
+    display: inline;
+    font-weight: 500;
+  }
+
+  span[data-type='inline']:before {
+    color: #006f19;
+    content: ' | ';
+    font-weight: 600;
+    margin-left: 0;
+  }
+
+  span[data-type='inline']:after {
+    color: #006f19;
+    content: ' | ';
+    display: inline;
+    font-weight: 600;
+  }
+
+  p[data-type='block'] {
+    display: block;
+    margin-top: 1em;
+  }
+
+  p[data-type='block']:before {
+    color: #006f19;
+    content: '⌜';
+    display: inline;
+    font-size: 22px;
+    font-weight: 600;
+    left: 6px;
+    position: relative;
+    top: 2px;
+  }
+
+  p[data-type='block']:after {
+    color: #006f19;
+    content: '⌟';
+    display: inline;
+    font-size: 22px;
+    font-weight: 600;
+    position: relative;
+    right: 6px;
+    top: 5px;
+  }
+
+  .transform-icon {
+    transform: rotate(40deg);
+  }
 `

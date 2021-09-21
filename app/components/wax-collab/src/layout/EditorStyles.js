@@ -17,9 +17,10 @@ export const Grid = styled.div`
   position: relative;
   z-index: 0;
 
-  :focus-within {
+  /* This was killing the comment visibility */
+  /* :focus-within {
     z-index: 10000;
-  }
+  } */
 `
 
 export const SimpleGrid = styled.div`
@@ -45,7 +46,8 @@ export const ProductionEditorDiv = styled.div`
   display: flex;
   grid-area: editor;
   height: 100%;
-  overflow-y: auto;
+  min-height: 500px;
+  overflow: auto;
   padding: 16px;
   position: relative;
   width: 100%;

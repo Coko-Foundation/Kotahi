@@ -10,6 +10,8 @@ import FullWaxEditorCommentsLayout from './layout/FullWaxEditorCommentsLayout'
 
 import './katex/katex.css'
 
+// Note that as this is currently set up, notes are not shown when it's readonly. I can't tell if this is intentional or oversight!
+
 // TODO Save this image via the server
 const renderImage = file => {
   const reader = new FileReader()
