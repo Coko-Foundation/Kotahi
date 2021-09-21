@@ -1,7 +1,9 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
+import { ThemeProvider } from 'styled-components'
 import { debounce } from 'lodash'
 import { Wax } from 'wax-prosemirror-core'
+import waxTheme from './layout/waxTheme'
 
 import fullWaxEditorConfig from './config/FullWaxEditorConfig'
 import fullWaxEditorCommentsConfig from './config/FullWaxEditorCommentsConfig'
@@ -50,30 +52,32 @@ const FullWaxEditor = ({
   const ourUser = { ...defaultUser, ...user } // this is just to make sure we have a user object
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
-    <div className={validationStatus}>
-      <Wax
-        autoFocus={autoFocus}
-        config={
-          useComments ? fullWaxEditorCommentsConfig() : fullWaxEditorConfig()
-        }
-        fileUpload={file => renderImage(file)}
-        layout={
-          useComments
-            ? FullWaxEditorCommentsLayout(readonly)
-            : FullWaxEditorLayout(readonly)
-        }
-        onBlur={val => {
-          onChange && onChange(val)
-          onBlur && onBlur(val)
-        }}
-        onChange={debounceChange}
-        placeholder={placeholder}
-        readonly={readonly}
-        user={ourUser}
-        value={value}
-        {...rest}
-      />
-    </div>
+    <ThemeProvider theme={waxTheme}>
+      <div className={validationStatus}>
+        <Wax
+          autoFocus={autoFocus}
+          config={
+            useComments ? fullWaxEditorCommentsConfig() : fullWaxEditorConfig()
+          }
+          fileUpload={file => renderImage(file)}
+          layout={
+            useComments
+              ? FullWaxEditorCommentsLayout(readonly)
+              : FullWaxEditorLayout(readonly)
+          }
+          onBlur={val => {
+            onChange && onChange(val)
+            onBlur && onBlur(val)
+          }}
+          onChange={debounceChange}
+          placeholder={placeholder}
+          readonly={readonly}
+          user={ourUser}
+          value={value}
+          {...rest}
+        />
+      </div>
+    </ThemeProvider>
   )
 }
 

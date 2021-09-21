@@ -2,6 +2,9 @@ import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { debounce } from 'lodash'
 import { Wax } from 'wax-prosemirror-core'
+import { ThemeProvider } from 'styled-components'
+import waxTheme from './layout/waxTheme'
+
 import productionWaxEditorConfig from './config/ProductionWaxEditorConfig'
 import productionWaxEditorNoCommentsConfig from './config/ProductionWaxEditorNoCommentsConfig'
 import ProductionWaxEditorLayout from './layout/ProductionWaxEditorLayout'
@@ -49,33 +52,36 @@ const ProductionWaxEditor = ({
   const ourUser = { ...defaultUser, ...user } // this is just to make sure we have a user object
 
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
+
   return (
-    <div className={validationStatus}>
-      <Wax
-        autoFocus={autoFocus}
-        config={
-          useComments
-            ? productionWaxEditorConfig()
-            : productionWaxEditorNoCommentsConfig()
-        }
-        fileUpload={file => renderImage(file)}
-        layout={
-          useComments
-            ? ProductionWaxEditorLayout(readonly)
-            : ProductionWaxEditorNoCommentsLayout(readonly)
-        }
-        onBlur={val => {
-          onChange && onChange(val)
-          onBlur && onBlur(val)
-        }}
-        onChange={debounceChange}
-        placeholder={placeholder}
-        readonly={readonly}
-        user={ourUser}
-        value={value}
-        {...rest}
-      />
-    </div>
+    <ThemeProvider theme={waxTheme}>
+      <div className={validationStatus}>
+        <Wax
+          autoFocus={autoFocus}
+          config={
+            useComments
+              ? productionWaxEditorConfig()
+              : productionWaxEditorNoCommentsConfig()
+          }
+          fileUpload={file => renderImage(file)}
+          layout={
+            useComments
+              ? ProductionWaxEditorLayout(readonly)
+              : ProductionWaxEditorNoCommentsLayout(readonly)
+          }
+          onBlur={val => {
+            onChange && onChange(val)
+            onBlur && onBlur(val)
+          }}
+          onChange={debounceChange}
+          placeholder={placeholder}
+          readonly={readonly}
+          user={ourUser}
+          value={value}
+          {...rest}
+        />
+      </div>
+    </ThemeProvider>
   )
 }
 
