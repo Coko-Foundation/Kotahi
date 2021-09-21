@@ -1,5 +1,6 @@
 import * as validators from 'xpub-validators'
 import { VALIDATE_DOI } from '../queries/index'
+import { validateAuthors } from './authorsFieldDefinitions'
 
 // eslint-disable-next-line import/prefer-default-export
 export const validateFormField = (
@@ -11,6 +12,15 @@ export const validateFormField = (
   componentType,
 ) => value => {
   const validator = vld || []
+
+  if (componentType === 'AuthorsInput') {
+    if (
+      validator.some(v => v.value === 'required') &&
+      (value || []).length <= 0
+    )
+      return 'Required'
+    return validateAuthors(value)
+  }
 
   if (validator.length === 0) return undefined
   const errors = []

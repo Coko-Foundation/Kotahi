@@ -73,11 +73,11 @@ const resolvers = {
   TeamMember: {
     async user(teamMember, vars, ctx) {
       const member = await ctx.models.TeamMember.query().findById(teamMember.id)
-      return member.$relatedQuery('user')
+      return member ? member.$relatedQuery('user') : null
     },
     async alias(teamMember, vars, ctx) {
       const member = await ctx.models.TeamMember.query().findById(teamMember.id)
-      return member.$relatedQuery('alias')
+      return member ? member.$relatedQuery('alias') : null
     },
   },
 }
