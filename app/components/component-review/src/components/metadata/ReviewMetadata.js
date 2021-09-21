@@ -4,6 +4,8 @@ import config from 'config'
 import styled from 'styled-components'
 import { get } from 'lodash'
 import { Attachment } from '@pubsweet/ui'
+import { th } from '@pubsweet/ui-toolkit'
+import lightenBy from '../../../../../shared/lightenBy'
 import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 import { Title, SectionHeader, SectionRowGrid } from '../style'
 import { SectionContent } from '../../../../shared'
@@ -21,20 +23,44 @@ const Cell = styled.span`
   padding: 0;
 `
 
+const Affiliation = styled.span`
+  color: ${lightenBy('colorText', 0.3)};
+  margin-left: 0.5em;
+`
+
+const Email = styled.span`
+  color: ${th('colorPrimary')};
+  margin-left: 1em;
+`
+
 const getNote = (notes, type) =>
   notes.find(note => note.notesType === type) || {}
-
-// const getDeclarations = (manuscript, field) =>
-//   ((manuscript.meta || {}).declarations || {})[field]
 
 const getSupplementaryFiles = supplementary =>
   (supplementary || []).filter(file => file.fileType === 'supplementary') || []
 
 const showFieldData = (manuscript, fieldName, form) => {
   const data = get(manuscript, fieldName)
+  const fieldDefinition = form.children?.find(field => field.name === fieldName)
 
-  // TODO: Make this generic somehow. Perhaps with an additional fieldType?
-  if (Array.isArray(data) && fieldName === 'submission.links') {
+  if (fieldDefinition?.component === 'AuthorsInput' && Array.isArray(data)) {
+    return (data || []).map((author, i) => {
+      const firstName = author.firstName || '?'
+      const lastName = author.lastName || '?'
+
+      const affiliation = author.affiliation ? ` (${author.affiliation})` : ''
+
+      return (
+        // eslint-disable-next-line react/no-array-index-key
+        <p key={i}>
+          {lastName}, {firstName}
+          <Affiliation>{affiliation}</Affiliation> <Email>{author.email}</Email>
+        </p>
+      )
+    })
+  }
+
+  if (fieldDefinition?.component === 'LinksInput' && Array.isArray(data)) {
     return data.map(link => (
       <p key={link.url}>
         <a href={link.url} rel="noopener noreferrer" target="_blank">
@@ -48,7 +74,6 @@ const showFieldData = (manuscript, fieldName, form) => {
     return data.join(', ')
   }
 
-  const fieldDefinition = form.children?.find(field => field.name === fieldName)
   if (data && fieldDefinition?.component === 'AbstractEditor')
     return <SimpleWaxEditor readonly value={data} />
 

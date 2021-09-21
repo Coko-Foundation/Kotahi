@@ -105,6 +105,7 @@ elements.AbstractEditor.defaultProps = {
   validationStatus: undefined,
 }
 
+/** Shallow clone props, leaving out all specified keys, and also stripping all keys with (string) value 'false'. */
 const rejectProps = (obj, keys) =>
   Object.keys(obj)
     .filter(k => !keys.includes(k))
@@ -234,11 +235,7 @@ const FormTemplate = ({
                   multiple={false}
                 />
               )}
-              {element.component === 'AuthorsInput' && (
-                <AuthorsInput data-testid={element.name} onChange={onChange} />
-              )}
-              {element.component !== 'AuthorsInput' &&
-                element.component !== 'SupplementaryFiles' &&
+              {element.component !== 'SupplementaryFiles' &&
                 element.component !== 'VisualAbstract' && (
                   <ValidatedFieldFormik
                     {...rejectProps(element, [
