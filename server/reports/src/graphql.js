@@ -479,6 +479,7 @@ const getEditorsActivity = async (startDate, endDate, ctx) => {
 
     editors.forEach(e => {
       let editorData = editorsData[e.id]
+
       if (!editorData) {
         editorData = {
           name: e.name || '',
