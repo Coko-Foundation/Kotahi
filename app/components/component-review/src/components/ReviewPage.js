@@ -202,7 +202,7 @@ const ReviewPage = ({ match, ...props }) => {
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
   const [completeReview] = useMutation(completeReviewMutation)
 
-  const { loading, error, data } = useQuery(query, {
+  const { loading, error, data, refetch } = useQuery(query, {
     variables: {
       id: match.params.version,
     },
@@ -237,6 +237,13 @@ const ReviewPage = ({ match, ...props }) => {
   }
 
   const { manuscript, formForPurpose } = data
+
+  if (
+    manuscript.reviews.length === 0 &&
+    existingReview.current.id !== 'undefined'
+  ) {
+    refetch()
+  }
 
   const submissionForm = formForPurpose?.structure ?? {
     name: '',
@@ -277,7 +284,7 @@ const ReviewPage = ({ match, ...props }) => {
       },
       update: (cache, { data: { updateReviewTemp } }) => {
         cache.modify({
-          id: cache.identify(manuscript),
+          id: cache.identify(manuscript.id),
           fields: {
             reviews(existingReviewRefs = [], { readField }) {
               const newReviewRef = cache.writeFragment({
