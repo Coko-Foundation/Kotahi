@@ -69,6 +69,7 @@ const DecisionAndReviews = ({ manuscript }) => {
                 reviewer={{
                   name: review.user.username,
                   ordinal: index + 1,
+                  user: review.user,
                 }}
                 teams={manuscript.teams}
               />
