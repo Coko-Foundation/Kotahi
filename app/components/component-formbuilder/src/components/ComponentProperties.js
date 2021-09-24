@@ -6,7 +6,7 @@ import { ValidatedFieldFormik, Menu, Button } from '@pubsweet/ui'
 import { v4 as uuid } from 'uuid'
 import components from './config/Elements'
 import * as elements from './builderComponents'
-import { Section, Legend, Page, Heading } from './style'
+import { Section, Legend, Page, Heading, DetailText } from './style'
 
 const MenuComponents = input => (
   <Menu
@@ -61,8 +61,11 @@ const ComponentProperties = ({
                 setFieldValue(key, val.target ? val.target.value : val)
               }}
               required={key === 'name' || key === 'title'}
-              {...value.props}
+              {...{ ...value.props, label: undefined, description: undefined }}
             />
+            {value.props?.description && (
+              <DetailText>{value.props.description}</DetailText>
+            )}
           </Section>
         ))}
         <Button primary type="submit">

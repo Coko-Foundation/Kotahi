@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
+import lightenBy from '../../../../shared/lightenBy'
 
 export const Section = styled.div`
   margin: calc(${th('gridUnit')} * 6) 0;
@@ -28,17 +29,7 @@ const Details = styled.div`
   margin-top: 48px;
 `
 
-export { Columns, Form, Details }
-
 const Page = styled.div``
-
-// const Section = styled.div`
-//   margin: ${th('gridUnit')} 0;
-
-//   &:not(:last-of-type) {
-//     margin-bottom: calc(${th('gridUnit')} * 2);
-//   }
-// `
 
 const Heading = styled.div`
   color: ${th('colorPrimary')};
@@ -53,4 +44,11 @@ const UploadContainer = styled.div`
   justify-content: center;
 `
 
-export { Page, Heading, UploadContainer }
+const DetailText = styled.div`
+  color: ${lightenBy('colorText', 0.3)};
+  font-family: ${th('fontReading')};
+  font-size: ${th('fontSizeBaseSmall')};
+  line-height: ${th('lineHeightBaseSmall')};
+`
+
+export { Columns, Form, Details, Page, Heading, UploadContainer, DetailText }
