@@ -203,11 +203,17 @@ const resolvers = {
     async sendEmail(_, { input }, ctx) {
       const inputParsed = JSON.parse(input)
       /* eslint-disable-next-line */
-      const { manuscript, selectedEmail, selectedTemplate, externalEmail,  externalName} = inputParsed
+      const {
+        manuscript,
+        selectedEmail,
+        selectedTemplate,
+        externalEmail,
+        externalName,
+      } = inputParsed
 
       const receiverEmail = externalEmail || selectedEmail
 
-      let authorFirstName = externalName
+      let receiverFirstName = externalName
 
       if (selectedEmail) {
         const [userReceiver] = await ctx.models.User.query()
@@ -215,21 +221,22 @@ const resolvers = {
           .withGraphFetched('[defaultIdentity]')
 
         /* eslint-disable-next-line */
-        authorFirstName = userReceiver.defaultIdentity.name.split(' ')[0]
+        receiverFirstName = userReceiver.defaultIdentity.name.split(' ')[0]
       }
 
       const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
       const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
-      if (!emailValidationResult || !authorFirstName) {
+      if (!emailValidationResult || !receiverFirstName) {
         return { success: false }
       }
 
       try {
         await sendEmailNotification(receiverEmail, selectedTemplate, {
-          authorFirstName,
           articleTitle: manuscript.meta.title,
           link: 'testlink.com',
+          receiverFirstName,
+          shortId: manuscript.shortId,
         })
         return { success: true }
       } catch (e) {

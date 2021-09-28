@@ -119,17 +119,15 @@ const Profile = ({ refetchCurrentUser }) => {
             <ChangeUsername user={data.currentUser} />
           </div>
         </SectionRow>
-        {process.env.INSTANCE_NAME === 'colab' && (
-          <SectionRow>
-            <label>Email</label>{' '}
-            <div>
-              <ChangeEmail
-                refetchCurrentUser={refetchCurrentUser}
-                user={data.currentUser}
-              />
-            </div>
-          </SectionRow>
-        )}
+        <SectionRow>
+          <label>Email</label>{' '}
+          <div>
+            <ChangeEmail
+              refetchCurrentUser={refetchCurrentUser}
+              user={data.currentUser}
+            />
+          </div>
+        </SectionRow>
       </SectionContent>
     </Container>
   )
