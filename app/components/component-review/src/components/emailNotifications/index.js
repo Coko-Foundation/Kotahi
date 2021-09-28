@@ -59,6 +59,18 @@ const EmailNotifications = ({ manuscript }) => {
         label: 'Evaluation Complete notification',
         value: 'evaluationCompleteEmailTemplate',
       },
+      {
+        label: 'Editor Assignment notification',
+        value: 'editorAssignmentEmailTemplate',
+      },
+      {
+        label: 'Review Invitation notification',
+        value: 'reviewInvitationEmailTemplate',
+      },
+      {
+        label: 'Submission Confirmation notification',
+        value: 'submissionConfirmationEmailTemplate',
+      },
     ]
 
     const selectedTempl = emailTemplateOptions.find(

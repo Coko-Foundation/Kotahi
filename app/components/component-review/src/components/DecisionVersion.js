@@ -164,58 +164,58 @@ const DecisionVersion = ({
   const editorSection = addEditor(manuscript, 'Manuscript text', current)
 
   const metadataSection = () => {
-      const submissionValues = current
-        ? createBlankSubmissionBasedOnForm(form)
-        : {}
+    const submissionValues = current
+      ? createBlankSubmissionBasedOnForm(form)
+      : {}
 
-      Object.assign(submissionValues, JSON.parse(manuscript.submission))
+    Object.assign(submissionValues, JSON.parse(manuscript.submission))
 
-      const versionValues = {
-        ...manuscript,
-        submission: submissionValues,
-      }
-
-      const versionId = manuscript.id
-      
-      return {
-        content: (
-          <>
-            {!current ? (
-              <ReviewMetadata form={form} manuscript={version} />
-            ) : (
-              <SectionContent>
-                <Formik
-                  displayName="submit"
-                  initialValues={versionValues}
-                  onSubmit={() => null}
-                  validateOnBlur
-                  validateOnChange={false}
-                >
-                  {formProps => {
-                    return (
-                      <FormTemplate
-                        confirming={confirming}
-                        onChange={(value, path) => {
-                          onChange(value, path, versionId)
-                        }}
-                        toggleConfirming={toggleConfirming}
-                        {...formProps}
-                        form={form}
-                        manuscript={manuscript}
-                        match={{ url: 'decision' }}
-                        republish={() => null}
-                      />
-                    )
-                  }}
-                </Formik>
-              </SectionContent>
-            )}
-          </>
-        ),
-        key: `metadata_${manuscript.id}`,
-        label: 'Metadata',
-      }
+    const versionValues = {
+      ...manuscript,
+      submission: submissionValues,
     }
+
+    const versionId = manuscript.id
+
+    return {
+      content: (
+        <>
+          {!current ? (
+            <ReviewMetadata form={form} manuscript={version} />
+          ) : (
+            <SectionContent>
+              <Formik
+                displayName="submit"
+                initialValues={versionValues}
+                onSubmit={() => null}
+                validateOnBlur
+                validateOnChange={false}
+              >
+                {formProps => {
+                  return (
+                    <FormTemplate
+                      confirming={confirming}
+                      onChange={(value, path) => {
+                        onChange(value, path, versionId)
+                      }}
+                      toggleConfirming={toggleConfirming}
+                      {...formProps}
+                      form={form}
+                      manuscript={manuscript}
+                      match={{ url: 'decision' }}
+                      republish={() => null}
+                    />
+                  )
+                }}
+              </Formik>
+            </SectionContent>
+          )}
+        </>
+      ),
+      key: `metadata_${manuscript.id}`,
+      label: 'Metadata',
+    }
+  }
 
   const decisionSection = ({
     handleSubmit,
@@ -242,7 +242,7 @@ const DecisionVersion = ({
           )}
           {current && (
             <>
-              {process.env.INSTANCE_NAME === 'colab' && (
+              {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
                 <EmailNotifications manuscript={manuscript} />
               )}
               <AssignEditorsReviewers
@@ -341,7 +341,11 @@ const DecisionVersion = ({
       {props => (
         <Tabs
           defaultActiveKey={version.id}
-          sections={[decisionSection({ ...props }), editorSection, metadataSection({ ...props })]}
+          sections={[
+            decisionSection({ ...props }),
+            editorSection,
+            metadataSection({ ...props }),
+          ]}
         />
       )}
     </Formik>
