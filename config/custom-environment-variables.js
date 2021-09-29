@@ -42,4 +42,23 @@ module.exports = {
     region: 'S3_REGION',
     bucket: 'S3_BUCKET',
   },
+  crossref: {
+    login: 'CROSSREF_LOGIN',
+    password: 'CROSSREF_PASSWORD',
+    registrant: 'CROSSREF_REGISTRANT',
+    depositorName: 'CROSSREF_DEPOSITOR_NAME',
+    depositorEmail: 'CROSSREF_DEPOSITOR_EMAIL',
+    publicationType: 'CROSSREF_PUBLICATION_TYPE',
+    doiPrefix: 'DOI_PREFIX',
+    publishedArticleLocationPrefix: 'PUBLISHED_ARTICLE_LOCATION_PREFIX',
+    licenseUrl: 'PUBLICATION_LICENSE_URL',
+    useSandbox: 'CROSSREF_USE_SANDBOX',
+    journalName: 'JOURNAL_NAME',
+    journalAbbreviatedName: 'JOURNAL_ABBREVIATED_NAME',
+    journalHomepage: 'JOURNAL_HOMEPAGE',
+  },
+  hypothesis: {
+    apiKey: 'HYPOTHESIS_API_KEY',
+    group: 'HYPOTHESIS_GROUP',
+  },
 }

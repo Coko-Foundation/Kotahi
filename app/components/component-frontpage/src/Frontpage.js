@@ -2,7 +2,6 @@ import Accordion from '@pubsweet/ui/src/molecules/Accordion'
 import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
-import ReactRouterPropTypes from 'react-router-prop-types'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
@@ -42,7 +41,7 @@ const Subheading = styled.h3`
   margin-top: ${grid(2.0)};
 `
 
-const Frontpage = ({ history, ...props }) => {
+const Frontpage = () => {
   const [sortName] = useState('created')
   const [sortDirection] = useState('DESC')
   const [page, setPage] = useState(1)
@@ -129,21 +128,25 @@ const Frontpage = ({ history, ...props }) => {
       />
 
       {publishedManuscripts.length > 0 ? (
-        publishedManuscripts.map((manuscript, index) => (
-          <SectionContent key={`manuscript-${manuscript.id}`}>
-            {!['elife'].includes(process.env.INSTANCE_NAME) && (
+        publishedManuscripts.map((manuscript, index) => {
+          const title =
+            process.env.INSTANCE_NAME === 'elife'
+              ? manuscript.submission.description
+              : manuscript.meta.title
+
+          return (
+            <SectionContent key={`manuscript-${manuscript.id}`}>
               <SectionHeader>
-                <Title>{manuscript.meta.title}</Title>
+                <Title>{title}</Title>
               </SectionHeader>
-            )}
-            {['elife'].includes(process.env.INSTANCE_NAME) && (
-              <>
-                <SectionHeader>
-                  <Title>{manuscript.submission.description}</Title>
-                </SectionHeader>
-                {publishedManuscripts
+              {manuscript.evaluationsHypothesisMap &&
+                // TODO Don't map for all publishedManuscripts; just compute for this manuscript!
+                publishedManuscripts
                   .map(({ submission, evaluationsHypothesisMap }) => {
-                    if (Object.keys(evaluationsHypothesisMap).length > 0) {
+                    if (
+                      evaluationsHypothesisMap &&
+                      Object.keys(evaluationsHypothesisMap).length > 0
+                    ) {
                       return Object.keys(evaluationsHypothesisMap).map(key => {
                         return { [key]: submission[key] }
                       })
@@ -172,92 +175,87 @@ const Frontpage = ({ history, ...props }) => {
                       )
                     )
                   })}
-              </>
-            )}
-            <SectionRow>
-              {manuscript.submission?.abstract && (
-                <>
-                  <Subheading>Abstract:</Subheading>
-                  <Abstract
-                    dangerouslySetInnerHTML={(() => {
-                      return { __html: manuscript.submission?.abstract }
-                    })()}
-                  />
-                </>
-              )}
-              {manuscript.visualAbstract && (
-                <>
-                  <Subheading>Visual abstract</Subheading>
-                  <VisualAbstract
-                    alt="Visual abstract"
-                    src={manuscript.visualAbstract}
-                  />
-                </>
-              )}
+              <SectionRow>
+                {manuscript.submission?.abstract && (
+                  <>
+                    <Subheading>Abstract:</Subheading>
+                    <Abstract
+                      dangerouslySetInnerHTML={(() => {
+                        return { __html: manuscript.submission?.abstract }
+                      })()}
+                    />
+                  </>
+                )}
+                {manuscript.visualAbstract && (
+                  <>
+                    <Subheading>Visual abstract</Subheading>
+                    <VisualAbstract
+                      alt="Visual abstract"
+                      src={manuscript.visualAbstract}
+                    />
+                  </>
+                )}
 
-              {manuscript.files.length > 0 && (
-                <>
-                  {manuscript.files.map(
-                    file =>
-                      skipXSweet(file) &&
-                      file.fileType !== 'visualAbstract' && (
+                {manuscript.files.length > 0 && (
+                  <>
+                    {manuscript.files.map(
+                      file =>
+                        skipXSweet(file) &&
+                        file.fileType !== 'visualAbstract' && (
+                          <a
+                            href={file.url}
+                            key={`file-${file.id}`}
+                            rel="noopener noreferrer"
+                            target="_blank"
+                          >
+                            {file.filename}
+                          </a>
+                        ),
+                    )}
+                    {manuscript.files.map(
+                      file =>
+                        !skipXSweet(file) && (
+                          <Accordion
+                            key={`file-${file.id}`}
+                            label="View Manuscript Text"
+                          >
+                            <ManuscriptBox>
+                              <FullWaxEditor
+                                readonly
+                                value={manuscript.meta.source}
+                              />
+                            </ManuscriptBox>
+                          </Accordion>
+                        ),
+                    )}
+                  </>
+                )}
+
+                {manuscript.submission?.links &&
+                  manuscript.submission.links.length > 0 && (
+                    <>
+                      <Subheading>Submitted research objects</Subheading>
+                      {manuscript.submission?.links?.map(link => (
                         <a
-                          href={file.url}
-                          key={`file-${file.id}`}
+                          href={link.url}
+                          key={`url-${link.url}`}
                           rel="noopener noreferrer"
                           target="_blank"
                         >
-                          {file.filename}
+                          {link.url}
                         </a>
-                      ),
+                      ))}
+                    </>
                   )}
-                  {manuscript.files.map(
-                    file =>
-                      !skipXSweet(file) && (
-                        <Accordion
-                          key={`file-${file.id}`}
-                          label="View Manuscript Text"
-                        >
-                          <ManuscriptBox>
-                            <FullWaxEditor
-                              readonly
-                              value={manuscript.meta.source}
-                            />
-                          </ManuscriptBox>
-                        </Accordion>
-                      ),
-                  )}
-                </>
-              )}
-
-              {manuscript.submission?.links &&
-                manuscript.submission.links.length > 0 && (
-                  <>
-                    <Subheading>Submitted research objects</Subheading>
-                    {manuscript.submission?.links?.map(link => (
-                      <a
-                        href={link.url}
-                        key={`url-${link.url}`}
-                        rel="noopener noreferrer"
-                        target="_blank"
-                      >
-                        {link.url}
-                      </a>
-                    ))}
-                  </>
-                )}
-            </SectionRow>
-          </SectionContent>
-        ))
+              </SectionRow>
+            </SectionContent>
+          )
+        })
       ) : (
         <Placeholder>No submissions have been published yet.</Placeholder>
       )}
     </Container>
   )
-}
-
-Frontpage.propTypes = {
-  history: ReactRouterPropTypes.history.isRequired,
 }
 
 export default Frontpage

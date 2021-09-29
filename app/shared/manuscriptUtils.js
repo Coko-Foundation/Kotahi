@@ -4,6 +4,7 @@ import { convertTimestampToDate } from './time-formatting'
 
 export const validateManuscript = (submission, fieldDefinitions, client) =>
   Object.entries(fieldDefinitions)
+    .filter(([key, element]) => element?.name)
     .map(([key, element]) =>
       validateFormField(
         element.validate,
