@@ -1,6 +1,7 @@
 /* eslint-disable no-restricted-syntax, no-await-in-loop */
 const TurndownService = require('turndown')
 const axios = require('axios')
+const config = require('config')
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 
 const headers = {
@@ -11,12 +12,13 @@ const headers = {
 
 const requestURL = `https://api.hypothes.is/api/annotations`
 
+/** DELETE a publication from Hypothesis via REST */
 const deletePublication = async publicationId => {
   try {
-    const response = await axios.delete(
-      `https://api.hypothes.is/api/annotations/${publicationId}`,
-      { ...headers, data: {} },
-    )
+    const response = await axios.delete(`${requestURL}/${publicationId}`, {
+      ...headers,
+      data: {},
+    })
 
     return response
   } catch (e) {
@@ -119,23 +121,15 @@ const publishToHypothesis = async manuscript => {
 
   const actions = {
     create: propName => {
+      if (!manuscript.submission.biorxivURL)
+        throw new Error('Missing field subscription.biorxivURL')
+
       const requestBody = {
+        group: config.hypothesis.group,
+        permissions: { read: [`group:${config.hypothesis.group}`] },
         uri: manuscript.submission.biorxivURL,
         text: turndownService.turndown(manuscript.submission[propName]),
         tags: [propName === 'summary' ? 'evaluationSummary' : 'peerReview'],
-      }
-
-      if (process.env.NODE_ENV !== 'production') {
-        requestBody.permissions = {
-          read: ['group:__world__'],
-        }
-      }
-
-      if (process.env.NODE_ENV === 'production') {
-        requestBody.permissions = {
-          read: ['group:q5X6RWJ6'],
-        }
-        requestBody.group = 'q5X6RWJ6'
       }
 
       return () => {
@@ -146,22 +140,11 @@ const publishToHypothesis = async manuscript => {
     },
     update: propName => {
       const requestBody = {
+        group: config.hypothesis.group,
+        permissions: { read: [`group:${config.hypothesis.group}`] },
         uri: manuscript.submission.biorxivURL,
         text: turndownService.turndown(manuscript.submission[propName]),
         tags: [propName === 'summary' ? 'evaluationSummary' : 'peerReview'],
-      }
-
-      if (process.env.NODE_ENV !== 'production') {
-        requestBody.permissions = {
-          read: ['group:__world__'],
-        }
-      }
-
-      if (process.env.NODE_ENV === 'production') {
-        requestBody.permissions = {
-          read: ['group:q5X6RWJ6'],
-        }
-        requestBody.group = 'q5X6RWJ6'
       }
 
       return () => {
@@ -200,9 +183,6 @@ const publishToHypothesis = async manuscript => {
       ...curr,
     }
   }, {})
-
-  console.log('newHypothesisEvaluationMap')
-  console.log(newHypothesisEvaluationMap)
 
   return newHypothesisEvaluationMap
 }

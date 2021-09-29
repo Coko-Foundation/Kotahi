@@ -1,7 +1,6 @@
 import styled from 'styled-components'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import { TabsContainer } from './Tabs'
-import { AdminSection } from '../component-review/src/components/style'
 
 export const Section = styled.section`
   padding: ${grid(2)} ${grid(3)};
@@ -29,10 +28,11 @@ export const SectionContent = styled(Section)`
   margin-top: ${grid(2)};
   padding: 0;
 
+  /* stylelint-disable-next-line */
   ${TabsContainer} + & {
-    margin-top: 0; 
     border-top-left-radius: 0;
     margin-bottom: calc(${th('gridUnit')} * 3);
+    margin-top: 0;
   }
 `
 
