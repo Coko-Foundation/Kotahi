@@ -30,6 +30,10 @@ const emailTemplateOptions =
           label: 'Submission Confirmation notification template',
           value: 'submissionConfirmationEmailTemplate',
         },
+        {
+          label: 'Message notification template',
+          value: 'messageNotificationEmailTemplate',
+        },
       ]
 
 const SelectEmailTemplate = ({

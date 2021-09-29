@@ -71,6 +71,10 @@ const EmailNotifications = ({ manuscript }) => {
         label: 'Submission Confirmation notification',
         value: 'submissionConfirmationEmailTemplate',
       },
+      {
+        label: 'Message notification',
+        value: 'messageNotificationEmailTemplate',
+      },
     ]
 
     const selectedTempl = emailTemplateOptions.find(

@@ -5,6 +5,7 @@ const editorAssignmentEmailTemplate = require('./email-templates/editorAssignmen
 const evaluationCompleteEmailTemplate = require('./email-templates/evaluationCompleteEmailTemplate')
 const reviewInvitationEmailTemplate = require('./email-templates/reviewInvitationEmailTemplate')
 const submissionConfirmationEmailTemplate = require('./email-templates/submissionConfirmationEmailTemplate')
+const messageNotificationEmailTemplate = require('./email-templates/messageNotificationEmailTemplate')
 
 const templates = {
   articleAcceptanceEmailTemplate,
@@ -12,6 +13,7 @@ const templates = {
   evaluationCompleteEmailTemplate,
   reviewInvitationEmailTemplate,
   submissionConfirmationEmailTemplate,
+  messageNotificationEmailTemplate,
 }
 
 const transporter = nodemailer.createTransport({
