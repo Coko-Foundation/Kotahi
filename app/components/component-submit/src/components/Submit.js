@@ -114,6 +114,7 @@ const Submit = ({
                     manuscript={manuscript}
                     match={match}
                     republish={republish}
+                    showEditorOnlyFields={false}
                   />
                 )
               }}

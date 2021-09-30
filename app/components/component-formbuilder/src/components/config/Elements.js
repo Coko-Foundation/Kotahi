@@ -4,10 +4,12 @@ const textfield = {
 
 const optionfield = {
   component: 'OptionsField',
+  defaultValue: [],
 }
 
 const editorfield = {
   component: 'AbstractField',
+  defaultValue: '',
 }
 
 const textarea = {
@@ -104,6 +106,7 @@ const radiofield = {
       },
     ],
   },
+  defaultValue: 'false',
 }
 
 const reviewerPreviewField = {
@@ -122,6 +125,26 @@ const reviewerPreviewField = {
     ],
     label: "Include in reviewers' preview?",
   },
+  defaultValue: 'false',
+}
+
+const hideFromAuthorsField = {
+  component: 'RadioBox',
+  props: {
+    inline: true,
+    options: [
+      {
+        value: 'true',
+        label: 'Yes',
+      },
+      {
+        value: 'false',
+        label: 'No',
+      },
+    ],
+    label: 'Hide from authors?',
+  },
+  defaultValue: 'false',
 }
 
 const elements = {
@@ -133,6 +156,7 @@ const elements = {
     shortDescription: shortDescriptionField,
     validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   VisualAbstract: {
     id: textfield,
@@ -142,6 +166,7 @@ const elements = {
     shortDescription: shortDescriptionField,
     validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   AuthorsInput: {
     id: textfield,
@@ -151,6 +176,7 @@ const elements = {
     shortDescription: shortDescriptionField,
     validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   LinksInput: {
     id: textfield,
@@ -160,6 +186,7 @@ const elements = {
     shortDescription: shortDescriptionField,
     validate: validateCollection,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   AbstractEditor: {
     id: textfield,
@@ -170,6 +197,7 @@ const elements = {
     shortDescription: shortDescriptionField,
     validate: validateText,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   TextField: {
     id: textfield,
@@ -227,8 +255,10 @@ const elements = {
         ],
         label: 'Validate as a DOI?',
       },
+      defaultValue: 'false',
     },
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   CheckboxGroup: {
     id: textfield,
@@ -239,6 +269,7 @@ const elements = {
     shortDescription: shortDescriptionField,
     validate: validateCollection,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   Select: {
     id: textfield,
@@ -250,6 +281,7 @@ const elements = {
     shortDescription: shortDescriptionField,
     validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   RadioGroup: {
     id: textfield,
@@ -262,6 +294,7 @@ const elements = {
     shortDescription: shortDescriptionField,
     validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
 }
 
