@@ -116,7 +116,7 @@ services:
       - ./minio.js:/home/node/app/minio.js
 
   job-xsweet:
-    image: pubsweet/job-xsweet:1.5.1
+    image: pubsweet/job-xsweet:1.5.2
     depends_on:
       - server
     command:

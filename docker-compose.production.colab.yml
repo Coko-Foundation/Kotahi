@@ -54,7 +54,7 @@ services:
       - ./db-data:/var/lib/postgresql/data/kotahi:z
 
   job-xsweet:
-    image: pubsweet/job-xsweet:1.5.1
+    image: pubsweet/job-xsweet:1.5.2
     environment:
       - POSTGRES_HOST
       - POSTGRES_USER
