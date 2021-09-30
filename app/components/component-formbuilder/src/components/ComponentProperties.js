@@ -111,12 +111,16 @@ const prepareForSubmit = values => {
 const ComponentForm = ({ field, formId, updateField }) => {
   const [componentType, setComponentType] = useState(field.component)
 
+  const defaults = {}
+  Object.entries(components[componentType]).forEach(([key, value]) => {
+    const defaultValue = value?.defaultValue
+    if (defaultValue !== undefined) defaults[key] = defaultValue
+  })
+
   return (
     <Formik
       initialValues={{
-        options: [],
-        description: '',
-        doiValidation: 'false',
+        ...defaults,
         ...field,
       }}
       key={field.id}

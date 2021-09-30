@@ -204,6 +204,7 @@ const DecisionVersion = ({
                       manuscript={manuscript}
                       match={{ url: 'decision' }}
                       republish={() => null}
+                      showEditorOnlyFields
                     />
                   )
                 }}
