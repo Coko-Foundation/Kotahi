@@ -32,6 +32,7 @@ const ReviewPreview = ({ manuscript, submissionForm }) => {
       <ReviewMetadata
         form={submissionForm}
         manuscript={manuscript}
+        showEditorOnlyFields={false}
         showPreviewMetadataOnly
       />
       <IconLink onClick={() => history.goBack()}>

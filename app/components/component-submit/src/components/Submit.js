@@ -129,7 +129,11 @@ const Submit = ({
         content: (
           <>
             <DecisionAndReviews manuscript={manuscript} />
-            <ReviewMetadata form={form} manuscript={manuscript} />
+            <ReviewMetadata
+              form={form}
+              manuscript={manuscript}
+              showEditorOnlyFields={false}
+            />
           </>
         ),
         key: versionId,
