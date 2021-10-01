@@ -5,6 +5,7 @@ import EditorElements from './EditorElements'
 export const Grid = styled.div`
   display: grid;
   grid-template-areas: 'menu' 'editor';
+  grid-template-columns: 100%;
   grid-template-rows: ${props => (props.readonly ? 0 : 'minmax(40px,auto)')} 1fr;
   position: relative;
 

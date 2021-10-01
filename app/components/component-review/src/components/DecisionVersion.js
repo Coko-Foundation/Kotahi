@@ -69,6 +69,7 @@ const DecisionVersion = ({
                 }
           }
           readonly={isThisReadOnly}
+          useComments
         />
       ),
       key: `editor_${manuscript.id}`,

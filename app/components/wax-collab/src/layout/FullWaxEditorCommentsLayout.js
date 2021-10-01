@@ -124,7 +124,7 @@ const FullWaxEditorCommentsLayout = (readOnly, readOnlyComments) => ({
                 <CommentTrackToolsContainer>
                   <CommentTrackTools>
                     {commentsTracksCount + trackBlockNodesCount} COMMENT
-                    {commentsTracksCount + trackBlockNodesCount > 1
+                    {commentsTracksCount + trackBlockNodesCount !== 1
                       ? 'S AND SUGGESTIONS'
                       : ' OR SUGGESTION'}
                     <CommentTrackOptions>

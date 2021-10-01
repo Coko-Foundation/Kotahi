@@ -65,6 +65,7 @@ const Submit = ({
           manuscript={manuscript}
           onChange={source => updateManuscript(versionId, { meta: { source } })}
           readonly={!userCanEditManuscriptAndFormData}
+          useComments
         />
       ),
       key: `editor_${manuscript.id}`,
