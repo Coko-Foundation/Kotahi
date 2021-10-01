@@ -97,6 +97,7 @@ const ReviewMetadata = ({
   form,
   manuscript: rawManuscript,
   showPreviewMetadataOnly,
+  showEditorOnlyFields,
 }) => {
   // Parse submission metadata JSON for display purposes
   const manuscript = {
@@ -121,14 +122,19 @@ const ReviewMetadata = ({
           </SectionRowGrid>
         )}
 
-      {form.children.map(element =>
-        !showPreviewMetadataOnly || shouldShowInPreview(element.name, form) ? (
-          <SectionRowGrid key={element.id}>
-            <Heading>{element.shortDescription || element.title}</Heading>
-            <Cell>{showFieldData(manuscript, element.name, form)}</Cell>
-          </SectionRowGrid>
-        ) : null,
-      )}
+      {form.children
+        .filter(
+          element => showEditorOnlyFields || element.hideFromAuthors !== 'true',
+        )
+        .map(element =>
+          !showPreviewMetadataOnly ||
+          shouldShowInPreview(element.name, form) ? (
+            <SectionRowGrid key={element.id}>
+              <Heading>{element.shortDescription || element.title}</Heading>
+              <Cell>{showFieldData(manuscript, element.name, form)}</Cell>
+            </SectionRowGrid>
+          ) : null,
+        )}
       {!showPreviewMetadataOnly && (
         <>
           <SectionRowGrid>
@@ -195,6 +201,7 @@ ReviewMetadata.propTypes = {
     ),
   }).isRequired,
   showPreviewMetadataOnly: PropTypes.bool,
+  showEditorOnlyFields: PropTypes.bool.isRequired,
 }
 
 ReviewMetadata.defaultProps = {

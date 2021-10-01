@@ -59,7 +59,11 @@ const ReviewLayout = ({
     reviewSections.push({
       content: (
         <div>
-          <ReviewMetadata form={submissionForm} manuscript={msVersion} />
+          <ReviewMetadata
+            form={submissionForm}
+            manuscript={msVersion}
+            showEditorOnlyFields={false}
+          />
           <Review
             review={
               msVersion.reviews &&
@@ -83,7 +87,11 @@ const ReviewLayout = ({
     reviewSections.push({
       content: (
         <div>
-          <ReviewMetadata form={submissionForm} manuscript={manuscript} />
+          <ReviewMetadata
+            form={submissionForm}
+            manuscript={manuscript}
+            showEditorOnlyFields={false}
+          />
           {status === 'completed' ? (
             <Review review={review} />
           ) : (

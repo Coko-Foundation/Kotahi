@@ -181,7 +181,11 @@ const DecisionVersion = ({
       content: (
         <>
           {!current ? (
-            <ReviewMetadata form={form} manuscript={version} />
+            <ReviewMetadata
+              form={form}
+              manuscript={version}
+              showEditorOnlyFields
+            />
           ) : (
             <SectionContent>
               <Formik
