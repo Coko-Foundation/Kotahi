@@ -87,7 +87,7 @@ const getCitations = manuscript => {
     citations = getCitationsFromList(rawCitationBlock)
   }
 
-  if (!citations.length) return null
+  if (!citations || !citations.length) return null
 
   return citations
     .map(
@@ -125,7 +125,8 @@ const getContributor = (author, isAdditional) => {
     },
   }
 
-  if (author.affiliation) contributor.affiliation = author.affiliation
+  if (author.affiliation)
+    contributor.person_name.affiliation = author.affiliation
   return contributor
 }
 
@@ -182,9 +183,12 @@ const publishArticleToCrossref = async manuscript => {
     },
     journal_article: {
       titles: { title: manuscript.meta.title },
-      contributors: manuscript.submission.authors.map((author, i) =>
-        getContributor(author, i),
-      ),
+      contributors: {
+        // This seems really counterintuitive but it's how xml2js requires it
+        person_name: manuscript.submission.authors.map(
+          (author, i) => getContributor(author, i).person_name,
+        ),
+      },
       abstract: {
         $: { xmlns: 'http://www.ncbi.nlm.nih.gov/JATS1' },
         _: ABSTRACT_PLACEHOLDER,
