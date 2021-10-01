@@ -1,6 +1,7 @@
 import React, { useContext, useState } from 'react'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import PropTypes from 'prop-types'
+import config from 'config'
 import styled from 'styled-components'
 import { Button, Checkbox } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
@@ -168,7 +169,7 @@ const ReviewHeading = ({
             </>
           )}
       </Name>
-      {process.env.INSTANCE_NAME === 'colab' &&
+      {config.review.hide === 'true' &&
         (isCurrentUserEditor || currentUser.admin) && (
           <>
             <StyledCheckbox

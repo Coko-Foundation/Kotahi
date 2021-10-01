@@ -31,6 +31,8 @@ ARG crossref_use_sandbox
 ARG doi_prefix
 ARG published_article_location_prefix
 ARG publication_license_url
+ARG review_shared
+ARG review_hide
 
 ENV INSTANCE_NAME $instance_name
 ENV NODE_ENV "production"
@@ -63,6 +65,8 @@ ENV CROSSREF_USE_SANDBOX $crossref_use_sandbox
 ENV DOI_PREFIX $doi_prefix
 ENV PUBLISHED_ARTICLE_LOCATION_PREFIX $published_article_location_prefix
 ENV PUBLICATION_LICENSE_URL $publication_license_url
+ENV REVIEW_SHARED $review_shared
+ENV REVIEW_HIDE $review_hide
 
 RUN apk add --no-cache git python make g++ bash tar
 

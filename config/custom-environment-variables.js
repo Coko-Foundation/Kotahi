@@ -61,4 +61,8 @@ module.exports = {
     apiKey: 'HYPOTHESIS_API_KEY',
     group: 'HYPOTHESIS_GROUP',
   },
+  review: {
+    shared: 'REVIEW_SHARED',
+    hide: 'REVIEW_HIDE',
+  },
 }

@@ -41,6 +41,8 @@ services:
       - CROSSREF_DEPOSITOR_EMAIL="${CROSSREF_DEPOSITOR_EMAIL:-elife-kotahi@kotahi.cloud}"
       - DOI_PREFIX=${DOI_PREFIX:-10.7554}
       - MANUSCRIPTS_TABLE_COLUMNS=${MANUSCRIPTS_TABLE_COLUMNS}
+      - REVIEW_SHARED=${REVIEW_SHARED:-false}
+      - REVIEW_HIDE=${REVIEW_HIDE:-false}
     entrypoint:
       [
         'bash',

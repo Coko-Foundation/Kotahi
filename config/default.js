@@ -212,6 +212,7 @@ module.exports = {
     'client-features',
     'crossref',
     'hypothesis',
+    'review',
   ],
   s3: {
     accessKeyId: 'test',
@@ -234,4 +235,8 @@ module.exports = {
   },
   schema: {},
   journal,
+  review: {
+    shared: '',
+    hide: '',
+  },
 }
