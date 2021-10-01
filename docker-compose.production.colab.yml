@@ -30,6 +30,8 @@ services:
       - S3_ENDPOINT=${S3_ENDPOINT}
       - S3_REGION=${S3_REGION}
       - MANUSCRIPTS_TABLE_COLUMNS=${MANUSCRIPTS_TABLE_COLUMNS}
+      - REVIEW_SHARED=${REVIEW_SHARED:-false}
+      - REVIEW_HIDE=${REVIEW_HIDE:-false}
     entrypoint:
       [
         'bash',
