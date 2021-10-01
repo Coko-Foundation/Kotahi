@@ -14,6 +14,7 @@ import {
   EditorContainer,
   InfoContainer,
   ReadOnlyEditorDiv,
+  SideMenu,
 } from './EditorStyles'
 import { CommentsContainerNotes } from './CommentsStyles'
 
@@ -22,10 +23,12 @@ const WaxOverlays = ComponentPlugin('waxOverlays')
 const NotesArea = ComponentPlugin('notesArea')
 const RightArea = ComponentPlugin('rightArea')
 const CounterInfo = ComponentPlugin('BottomRightInfo')
+const LeftSideBar = ComponentPlugin('leftSideBar')
 // const CommentTrackToolBar = ComponentPlugin('commentTrackToolBar')
 
-// eslint-disable-next-line react/prop-types
-const ProductionWaxEditorNoCommentsLayout = readonly => ({ editor }) => {
+const ProductionWaxEditorNoCommentsLayout = (readOnly, readOnlyComments) => ({
+  editor,
+}) => {
   const getNotes = main => {
     const notes = DocumentHelpers.findChildrenByType(
       main.state.doc,
@@ -78,8 +81,8 @@ const ProductionWaxEditorNoCommentsLayout = readonly => ({ editor }) => {
 
   return (
     <div style={fullScreenStyles}>
-      <Grid readonly={readonly}>
-        {readonly ? (
+      <Grid readonly={readOnly} readOnlyComments={readOnlyComments}>
+        {readOnly ? (
           <ReadOnlyEditorDiv className="wax-surface-scroll">
             {editor}
           </ReadOnlyEditorDiv>
@@ -89,6 +92,9 @@ const ProductionWaxEditorNoCommentsLayout = readonly => ({ editor }) => {
               <TopBar />
             </Menu>
             <ProductionEditorDiv className="wax-surface-scroll">
+              <SideMenu>
+                <LeftSideBar />
+              </SideMenu>
               <EditorContainer>{editor}</EditorContainer>
             </ProductionEditorDiv>
           </>
@@ -105,7 +111,7 @@ const ProductionWaxEditorNoCommentsLayout = readonly => ({ editor }) => {
           </NotesAreaContainer>
         )}
       </Grid>
-      {readonly && notes.length > 0 && (
+      {readOnly && notes.length > 0 && (
         <ReadOnlyNotesAreaContainer>
           <NotesHeading>Notes</NotesHeading>
           <NotesContainer id="notes-container">

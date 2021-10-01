@@ -10,12 +10,21 @@ export const FullCommentsContainer = styled.div`
   display: flex;
   flex-direction: column;
   height: 100%;
-  min-width: 250px;
+  min-width: 300px;
+  ${props => props.readOnlyComments && 'pointer-events: none;'}
+  ${props => props.readOnlyComments && 'user-select: none;'}
 
   & > div {
-    left: 30px;
+    left: 0; /* 30px; */
+    ${props => props.readOnlyComments && 'pointer-events: none;'}
+    ${props => props.readOnlyComments && 'user-select: none;'}
     position: relative;
     right: initial;
+
+    &:first-child {
+      left: 0;
+      right: 0;
+    }
   }
 `
 
@@ -28,19 +37,20 @@ export const CommentsContainerNotes = styled.div`
 
 export const CommentTrackToolsContainer = styled.div`
   /* background: white; */
+  align-self: flex-end;
   display: flex;
+  /* margin-right: 30px; */
   padding-top: 5px;
-  position: fixed;
-  right: 30px;
-  width: 25%;
+  /* position: fixed; */
+  user-select: none;
   /* z-index: 1; */
 `
 
 export const CommentTrackTools = styled.div`
   display: flex;
-  font-size: 14px;
-  margin-left: auto;
-  position: relative;
+  font-size: 12px;
+  /* margin-left: auto; */
+  /* position: relative; */
   white-space: nowrap;
   z-index: 1;
 `

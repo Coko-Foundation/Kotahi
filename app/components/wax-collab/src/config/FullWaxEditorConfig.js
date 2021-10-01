@@ -2,31 +2,35 @@ import { DefaultSchema } from 'wax-prosemirror-utilities'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { columnResizing, tableEditing } from 'prosemirror-tables'
 import {
+  InlineAnnotationsService,
   AnnotationToolGroupService,
-  BaseService,
-  BaseToolGroupService,
-  BottomInfoService,
-  DisplayToolGroupService,
-  EditorInfoToolGroupServices,
-  FindAndReplaceService,
-  FullScreenService,
-  FullScreenToolGroupService,
   ImageService,
   ImageToolGroupService,
-  InlineAnnotationsService,
   LinkService,
   ListsService,
   ListToolGroupService,
-  MathService,
-  NoteService,
-  NoteToolGroupService,
-  SpecialCharactersService,
-  SpecialCharactersToolGroupService,
   TablesService,
   TableToolGroupService,
+  BaseService,
+  BaseToolGroupService,
+  DisplayBlockLevelService,
+  DisplayToolGroupService,
   TextBlockLevelService,
   TextToolGroupService,
-  DisplayBlockLevelService,
+  NoteService,
+  NoteToolGroupService,
+  TrackChangeService,
+  CommentsService,
+  MathService,
+  FindAndReplaceService,
+  FullScreenService,
+  FullScreenToolGroupService,
+  SpecialCharactersService,
+  SpecialCharactersToolGroupService,
+  EditorInfoToolGroupServices,
+  BottomInfoService,
+  TrackOptionsToolGroupService,
+  TrackCommentOptionsToolGroupService,
 } from 'wax-prosemirror-services'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
 import ExtendedHeadingService from '../ExtendedHeaders'
@@ -36,9 +40,10 @@ const updateTitle = title => {
   // console.log(`Title changed: ${title}`)
 }
 
-const fullWaxEditorConfig = () => ({
+const fullWaxEditorConfig = readOnlyComments => ({
   EnableTrackChangeService: false, // This line is needed by NoteService
   SchemaService: DefaultSchema,
+  CommentsService: { readOnly: readOnlyComments || false }, // this should make it work though this is not yet in Wax
   MenuService: [
     {
       templateArea: 'topBar',
@@ -68,6 +73,10 @@ const fullWaxEditorConfig = () => ({
       ],
     },
     {
+      templateArea: 'commentTrackToolBar',
+      toolGroups: ['TrackCommentOptions'],
+    },
+    {
       templateArea: 'BottomRightInfo',
       toolGroups: [{ name: 'InfoToolGroup', exclude: ['ShortCutsInfo'] }],
     },
@@ -88,7 +97,7 @@ const fullWaxEditorConfig = () => ({
     new BottomInfoService(),
     new DisplayToolGroupService(),
     new EditorInfoToolGroupServices(),
-    new FindAndReplaceService(), // Needed by NoteService
+    new FindAndReplaceService(),
     new ImageService(),
     new ImageToolGroupService(),
     new InlineAnnotationsService(),
@@ -111,6 +120,11 @@ const fullWaxEditorConfig = () => ({
     // these are added for full screen
     new FullScreenService(),
     new FullScreenToolGroupService(),
+    // needed for comments
+    new TrackChangeService(),
+    new CommentsService(),
+    new TrackCommentOptionsToolGroupService(),
+    new TrackOptionsToolGroupService(),
   ],
 })
 

@@ -6,7 +6,6 @@ import { Wax } from 'wax-prosemirror-core'
 import waxTheme from './layout/waxTheme'
 
 import fullWaxEditorConfig from './config/FullWaxEditorConfig'
-import fullWaxEditorCommentsConfig from './config/FullWaxEditorCommentsConfig'
 import FullWaxEditorLayout from './layout/FullWaxEditorLayout'
 import FullWaxEditorCommentsLayout from './layout/FullWaxEditorCommentsLayout'
 
@@ -36,6 +35,7 @@ const FullWaxEditor = ({
   onChange,
   placeholder,
   useComments,
+  readOnlyComments,
   fileUpload,
   user,
   ...rest
@@ -56,13 +56,11 @@ const FullWaxEditor = ({
       <div className={validationStatus}>
         <Wax
           autoFocus={autoFocus}
-          config={
-            useComments ? fullWaxEditorCommentsConfig() : fullWaxEditorConfig()
-          }
+          config={fullWaxEditorConfig(readOnlyComments)}
           fileUpload={file => renderImage(file)}
           layout={
             useComments
-              ? FullWaxEditorCommentsLayout(readonly)
+              ? FullWaxEditorCommentsLayout(readonly, readOnlyComments)
               : FullWaxEditorLayout(readonly)
           }
           onBlur={val => {
@@ -90,6 +88,7 @@ FullWaxEditor.propTypes = {
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
   fileUpload: PropTypes.func,
+  readOnlyComments: PropTypes.bool,
   useComments: PropTypes.bool,
   user: PropTypes.shape({
     userId: PropTypes.string,
@@ -109,6 +108,7 @@ FullWaxEditor.defaultProps = {
   onBlur: () => {},
   onChange: () => {},
   placeholder: '',
+  readOnlyComments: false,
   fileUpload: () => {},
   useComments: false,
   user: {},

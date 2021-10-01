@@ -7,6 +7,7 @@ import {
   ReadOnlyEditorDiv,
   Menu,
   InfoContainer,
+  FullWaxEditorGrid,
 } from './EditorStyles'
 import {
   NotesAreaContainer,
@@ -25,8 +26,7 @@ const getNotes = main => {
   return notes
 }
 
-// eslint-disable-next-line react/prop-types
-const FullWaxEditorLayout = readonly => ({ editor }) => {
+const FullWaxEditorLayout = readOnly => ({ editor }) => {
   const {
     view: { main },
     options,
@@ -59,40 +59,49 @@ const FullWaxEditorLayout = readonly => ({ editor }) => {
 
   return (
     <div style={fullScreenStyles}>
-      <Grid readonly={readonly}>
-        {readonly ? (
-          <ReadOnlyEditorDiv className="wax-surface-scroll">
-            {editor}
-          </ReadOnlyEditorDiv>
+      <Grid readonly={readOnly} readOnlyComments>
+        {readOnly ? (
+          <FullWaxEditorGrid useComments={false}>
+            <ReadOnlyEditorDiv className="wax-surface-scroll">
+              {editor}
+            </ReadOnlyEditorDiv>
+            {notes.length > 0 && (
+              <ReadOnlyNotesAreaContainer>
+                <NotesHeading>Notes</NotesHeading>
+                <NotesContainer id="notes-container">
+                  <NotesArea view={main} />
+                </NotesContainer>
+              </ReadOnlyNotesAreaContainer>
+            )}
+            <InfoContainer>
+              <CounterInfo />
+            </InfoContainer>
+          </FullWaxEditorGrid>
         ) : (
           <>
             <Menu>
               <TopBar />
             </Menu>
-            <EditorDiv className="wax-surface-scroll">{editor}</EditorDiv>
-            {notes.length > 0 && (
-              <NotesAreaContainer>
-                <NotesHeading>Notes</NotesHeading>
-                <NotesContainer id="notes-container">
-                  <NotesArea view={main} />
-                </NotesContainer>
-              </NotesAreaContainer>
-            )}
+            <FullWaxEditorGrid useComments={false}>
+              <EditorDiv className="wax-surface-scroll" hideComments>
+                {editor}
+              </EditorDiv>
+              {notes.length > 0 && (
+                <NotesAreaContainer>
+                  <NotesHeading>Notes</NotesHeading>
+                  <NotesContainer id="notes-container">
+                    <NotesArea view={main} />
+                  </NotesContainer>
+                </NotesAreaContainer>
+              )}
+              <InfoContainer>
+                <CounterInfo />
+              </InfoContainer>
+            </FullWaxEditorGrid>
           </>
         )}
       </Grid>
-      {readonly && notes.length > 0 && (
-        <ReadOnlyNotesAreaContainer>
-          <NotesHeading>Notes</NotesHeading>
-          <NotesContainer id="notes-container">
-            <NotesArea view={main} />
-          </NotesContainer>
-        </ReadOnlyNotesAreaContainer>
-      )}
       <WaxOverlays />
-      <InfoContainer>
-        <CounterInfo />
-      </InfoContainer>
     </div>
   )
 }

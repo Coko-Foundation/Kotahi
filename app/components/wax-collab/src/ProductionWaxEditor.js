@@ -6,7 +6,6 @@ import { ThemeProvider } from 'styled-components'
 import waxTheme from './layout/waxTheme'
 
 import productionWaxEditorConfig from './config/ProductionWaxEditorConfig'
-import productionWaxEditorNoCommentsConfig from './config/ProductionWaxEditorNoCommentsConfig'
 import ProductionWaxEditorLayout from './layout/ProductionWaxEditorLayout'
 import ProductionWaxEditorNoCommentsLayout from './layout/ProductionWaxEditorNoCommentsLayout'
 
@@ -35,6 +34,7 @@ const ProductionWaxEditor = ({
   onBlur,
   onChange,
   placeholder,
+  readOnlyComments,
   fileUpload,
   useComments,
   user,
@@ -58,11 +58,7 @@ const ProductionWaxEditor = ({
       <div className={validationStatus}>
         <Wax
           autoFocus={autoFocus}
-          config={
-            useComments
-              ? productionWaxEditorConfig()
-              : productionWaxEditorNoCommentsConfig()
-          }
+          config={productionWaxEditorConfig(readOnlyComments)}
           fileUpload={file => renderImage(file)}
           layout={
             useComments
@@ -94,6 +90,7 @@ ProductionWaxEditor.propTypes = {
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
   fileUpload: PropTypes.func,
+  readOnlyComments: PropTypes.bool,
   useComments: PropTypes.bool,
   user: PropTypes.shape({
     userId: PropTypes.string,
@@ -113,6 +110,7 @@ ProductionWaxEditor.defaultProps = {
   onBlur: () => {},
   onChange: () => {},
   placeholder: '',
+  readOnlyComments: false,
   fileUpload: () => {},
   useComments: true,
   user: {},

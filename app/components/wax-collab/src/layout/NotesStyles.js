@@ -6,6 +6,8 @@ export const NotesAreaContainer = styled.div`
   background: #fff;
   bottom: ${grid(-2)};
   box-shadow: 0 ${grid(-0.3)} ${grid(0.5)} ${grid(-0.2)} gray;
+  grid-column-start: editorCol;
+  grid-row-start: notesRow;
   height: 20vh;
   overflow-y: scroll;
   position: sticky;
@@ -22,6 +24,8 @@ export const NotesAreaContainer = styled.div`
 export const ReadOnlyNotesAreaContainer = styled.div`
   background: #fff;
   border-top: 1px solid ${th('colorFurniture')};
+  grid-column-start: editorCol;
+  grid-row-start: notesRow;
   width: 100%;
 
   .ProseMirror {

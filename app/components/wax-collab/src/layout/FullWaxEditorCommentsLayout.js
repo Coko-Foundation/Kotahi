@@ -3,8 +3,8 @@ import { WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
 import { DocumentHelpers } from 'wax-prosemirror-utilities'
 import {
   Grid,
+  FullWaxEditorGrid,
   ProductionEditorDiv,
-  ReadOnlyEditorWithCommentsWrapper,
   ReadOnlyEditorWithCommentsEditor,
   Menu,
   InfoContainer,
@@ -35,7 +35,9 @@ const getNotes = main => {
 }
 
 // eslint-disable-next-line react/prop-types
-const FullWaxEditorCommentsLayout = readonly => ({ editor }) => {
+const FullWaxEditorCommentsLayout = (readOnly, readOnlyComments) => ({
+  editor,
+}) => {
   const {
     view: { main },
     options,
@@ -78,13 +80,15 @@ const FullWaxEditorCommentsLayout = readonly => ({ editor }) => {
 
   return (
     <div style={fullScreenStyles}>
-      <Grid readonly={readonly}>
-        {readonly ? (
-          <ReadOnlyEditorWithCommentsWrapper className="wax-surface-scroll">
-            <ReadOnlyEditorWithCommentsEditor>
+      <Grid readonly={readOnly} readOnlyComments={readOnlyComments}>
+        {readOnly ? (
+          <FullWaxEditorGrid useComments>
+            <ReadOnlyEditorWithCommentsEditor
+              readOnlyComments={readOnlyComments}
+            >
               {editor}
             </ReadOnlyEditorWithCommentsEditor>
-            <FullCommentsContainer>
+            <FullCommentsContainer readOnlyComments={readOnlyComments}>
               <CommentTrackToolsContainer>
                 <CommentTrackTools>
                   {commentsTracksCount + trackBlockNodesCount} COMMENTS AND
@@ -96,7 +100,19 @@ const FullWaxEditorCommentsLayout = readonly => ({ editor }) => {
               </CommentTrackToolsContainer>
               <RightArea area="main" />
             </FullCommentsContainer>
-          </ReadOnlyEditorWithCommentsWrapper>
+            {notes.length > 0 && (
+              <ReadOnlyNotesAreaContainer>
+                <NotesHeading>Notes</NotesHeading>
+                <NotesContainer id="notes-container">
+                  <NotesArea view={main} />
+                </NotesContainer>
+              </ReadOnlyNotesAreaContainer>
+            )}
+            <WaxOverlays />
+            <InfoContainer>
+              <CounterInfo />
+            </InfoContainer>
+          </FullWaxEditorGrid>
         ) : (
           <>
             <Menu>
@@ -104,11 +120,13 @@ const FullWaxEditorCommentsLayout = readonly => ({ editor }) => {
             </Menu>
             <ProductionEditorDiv className="wax-surface-scroll">
               <FullEditorContainer>{editor}</FullEditorContainer>
-              <FullCommentsContainer>
+              <FullCommentsContainer readOnlyComments={readOnlyComments}>
                 <CommentTrackToolsContainer>
                   <CommentTrackTools>
-                    {commentsTracksCount + trackBlockNodesCount} COMMENTS AND
-                    SUGGESTIONS
+                    {commentsTracksCount + trackBlockNodesCount} COMMENT
+                    {commentsTracksCount + trackBlockNodesCount > 1
+                      ? 'S AND SUGGESTIONS'
+                      : ' OR SUGGESTION'}
                     <CommentTrackOptions>
                       <CommentTrackToolBar />
                     </CommentTrackOptions>
@@ -123,26 +141,18 @@ const FullWaxEditorCommentsLayout = readonly => ({ editor }) => {
                 <NotesContainer id="notes-container">
                   <NotesArea view={main} />
                 </NotesContainer>
-                <CommentsContainerNotes>
+                <CommentsContainerNotes readOnlyComments={readOnlyComments}>
                   <RightArea area="notes" />
                 </CommentsContainerNotes>
               </NotesAreaContainer>
             )}
+            <WaxOverlays />
+            <InfoContainer>
+              <CounterInfo />
+            </InfoContainer>
           </>
         )}
       </Grid>
-      {readonly && notes.length > 0 && (
-        <ReadOnlyNotesAreaContainer>
-          <NotesHeading>Notes</NotesHeading>
-          <NotesContainer id="notes-container">
-            <NotesArea view={main} />
-          </NotesContainer>
-        </ReadOnlyNotesAreaContainer>
-      )}
-      <WaxOverlays />
-      <InfoContainer>
-        <CounterInfo />
-      </InfoContainer>
     </div>
   )
 }

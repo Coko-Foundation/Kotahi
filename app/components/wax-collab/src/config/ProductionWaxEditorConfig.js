@@ -41,9 +41,10 @@ const updateTitle = title => {
   // console.log(`Title changed: ${title}`)
 }
 
-const productionWaxEditorConfig = () => ({
+const productionWaxEditorConfig = readOnlyComments => ({
   EnableTrackChangeService: false, // This line is needed by NoteService
   SchemaService: DefaultSchema,
+  CommentsService: { readOnly: readOnlyComments || false }, // this should make it work though this is not yet in Wax
   MenuService: [
     {
       templateArea: 'topBar',
@@ -71,6 +72,10 @@ const productionWaxEditorConfig = () => ({
         'Images',
         'FullScreen',
       ],
+    },
+    {
+      templateArea: 'leftSideBar',
+      toolGroups: [],
     },
     {
       templateArea: 'commentTrackToolBar',
