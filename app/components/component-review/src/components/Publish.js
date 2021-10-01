@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { useMutation } from '@apollo/client'
 import { Button } from '@pubsweet/ui'
 import { publishManuscriptMutation } from './queries'
@@ -16,8 +16,9 @@ import { SectionContent } from '../../../shared'
 const Publish = ({ manuscript }) => {
   // Hooks from the old world
   const [publishManuscript] = useMutation(publishManuscriptMutation)
+  const [isPublishing, setIsPublishing] = useState(false)
 
-  const notAccepted = manuscript.status !== 'accepted'
+  const notAccepted = !['accepted', 'published'].includes(manuscript.status)
 
   return (
     <SectionContent>
@@ -38,13 +39,16 @@ const Publish = ({ manuscript }) => {
         </SectionActionInfo>
         <SectionAction>
           <Button
-            disabled={manuscript.published || notAccepted}
-            onClick={() =>
-              publishManuscript({ variables: { id: manuscript.id } })
-            }
+            disabled={notAccepted || isPublishing}
+            onClick={() => {
+              setIsPublishing(true)
+              publishManuscript({ variables: { id: manuscript.id } }).then(() =>
+                setIsPublishing(false),
+              )
+            }}
             primary
           >
-            Publish
+            {manuscript.published ? 'Republish' : 'Publish'}
           </Button>
         </SectionAction>
       </SectionRowGrid>
