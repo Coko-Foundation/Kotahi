@@ -9,6 +9,7 @@ const EditorSection = ({
   onBlur,
   readonly,
   useComments,
+  currentUser
 }) => {
   const manuscriptFile = manuscript?.files?.find(
     file => file.fileType === 'manuscript',
@@ -35,6 +36,7 @@ const EditorSection = ({
       onChange={readonly ? null : onChange}
       readonly={readonly}
       useComments={useComments}
+      user={currentUser}
       value={manuscript.meta.source}
     />
   )

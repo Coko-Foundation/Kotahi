@@ -30,6 +30,9 @@ const query = gql`
       id
       username
       admin
+      defaultIdentity {
+        name
+      }
     }
 
     manuscript(id: $id) {
@@ -51,12 +54,13 @@ const ManuscriptPage = ({ match, ...props }) => {
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
-  const { manuscript } = data
+  const { manuscript, currentUser } = data
 
   return (
     <Manuscript
       channel={manuscript.channels.find(c => c.type === 'all')}
       content={manuscript.meta?.source}
+      currentUser={currentUser}
       file={manuscript.files.find(file => file.fileType === 'manuscript') || {}}
     />
   )

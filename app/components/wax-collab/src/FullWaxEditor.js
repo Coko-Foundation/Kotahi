@@ -38,16 +38,15 @@ const FullWaxEditor = ({
   user,
   ...rest
 }) => {
-  const defaultUser = {
-    userId: 'b3cfc28e-0f2e-45b5-b505-e66783d4f946',
+  const ourUser = {
+    userId:  user.id || '-',
     userColor: {
       addition: 'royalblue',
       deletion: 'indianred',
     },
-    username: 'admin',
+    username: user.defaultIdentity?.name || user.username || 'demo',
   }
 
-  const ourUser = { ...defaultUser, ...user } // this is just to make sure we have a user object
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
     <ThemeProvider theme={waxTheme}>
