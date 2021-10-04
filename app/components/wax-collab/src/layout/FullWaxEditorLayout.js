@@ -35,7 +35,7 @@ const FullWaxEditorLayout = readOnly => ({ editor }) => {
   const TopBar = ComponentPlugin('topBar')
   const WaxOverlays = ComponentPlugin('waxOverlays')
   const NotesArea = ComponentPlugin('notesArea')
-  const CounterInfo = ComponentPlugin('BottomRightInfo')
+  const CounterInfo = ComponentPlugin('bottomRightInfo')
 
   const notes = (main && getNotes(main)) ?? []
 
