@@ -84,7 +84,7 @@ const Submit = ({
 
       decisionSection = {
         content: (
-          <SectionContent noGap>
+          <SectionContent>
             <Formik
               displayName="submit"
               // handleChange={props.handleChange}
@@ -114,6 +114,7 @@ const Submit = ({
                     form={form}
                     manuscript={manuscript}
                     republish={republish}
+                    showEditorOnlyFields={false}
                     submissionButtonText={
                       match.url.includes('/evaluation')
                         ? 'Submit Evaluation'
@@ -132,8 +133,12 @@ const Submit = ({
       decisionSection = {
         content: (
           <>
-            <DecisionAndReviews manuscript={manuscript} noGap />
-            <ReviewMetadata form={form} manuscript={manuscript} />
+            <DecisionAndReviews manuscript={manuscript} />
+            <ReviewMetadata
+              form={form}
+              manuscript={manuscript}
+              showEditorOnlyFields={false}
+            />
           </>
         ),
         key: versionId,
