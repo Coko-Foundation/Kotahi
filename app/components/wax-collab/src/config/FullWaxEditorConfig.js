@@ -77,7 +77,7 @@ const fullWaxEditorConfig = readOnlyComments => ({
       toolGroups: ['TrackCommentOptions'],
     },
     {
-      templateArea: 'BottomRightInfo',
+      templateArea: 'bottomRightInfo',
       toolGroups: [{ name: 'InfoToolGroup', exclude: ['ShortCutsInfo'] }],
     },
   ],

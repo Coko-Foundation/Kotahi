@@ -10,7 +10,7 @@ import {
 
 const TopBar = ComponentPlugin('topBar')
 const WaxOverlays = ComponentPlugin('waxOverlays')
-const CounterInfo = ComponentPlugin('BottomRightInfo')
+const CounterInfo = ComponentPlugin('bottomRightInfo')
 
 // eslint-disable-next-line react/prop-types
 const SimpleWaxEditorLayout = readonly => ({ editor }) => (

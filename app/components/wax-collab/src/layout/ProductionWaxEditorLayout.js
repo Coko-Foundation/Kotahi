@@ -38,7 +38,7 @@ const TopBar = ComponentPlugin('topBar')
 const WaxOverlays = ComponentPlugin('waxOverlays')
 const NotesArea = ComponentPlugin('notesArea')
 const RightArea = ComponentPlugin('rightArea')
-const CounterInfo = ComponentPlugin('BottomRightInfo')
+const CounterInfo = ComponentPlugin('bottomRightInfo')
 const CommentTrackToolBar = ComponentPlugin('commentTrackToolBar')
 const LeftSideBar = ComponentPlugin('leftSideBar')
 
