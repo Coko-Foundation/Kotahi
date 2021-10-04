@@ -19,7 +19,7 @@ const Tab = styled.div`
   ${override('ui.Tab')}
 `
 
-const TabsContainer = styled.div`
+export const TabsContainer = styled.div`
   display: flex;
 
   margin-top: ${() =>

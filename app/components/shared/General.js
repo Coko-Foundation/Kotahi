@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { grid, th } from '@pubsweet/ui-toolkit'
+import { TabsContainer } from './Tabs'
 
 export const Section = styled.section`
   padding: ${grid(2)} ${grid(3)};
@@ -21,11 +22,18 @@ export const ScrollableContent = styled(Content)`
 export const SectionContent = styled(Section)`
   background-color: ${th('colorBackground')};
   border-radius: ${th('borderRadius')};
-  border-top-left-radius: ${({ noGap }) => (noGap ? '0' : th('borderRadius'))};
+  border-top-left-radius: ${th('borderRadius')};
   box-shadow: ${th('boxShadow')};
   margin-bottom: ${grid(2)};
-  margin-top: ${({ noGap }) => (noGap ? 0 : grid(2))};
+  margin-top: ${grid(2)};
   padding: 0;
+
+  /* stylelint-disable-next-line */
+  ${TabsContainer} + & {
+    border-top-left-radius: 0;
+    margin-bottom: calc(${th('gridUnit')} * 3);
+    margin-top: 0;
+  }
 `
 
 export const PaddedContent = styled(Content)`

@@ -199,7 +199,7 @@ module.exports = {
       'application/zip',
     ],
   },
-  /** These named configuration sections will be available to the client */
+  /** These named configuration sections will be available to webpack */
   publicKeys: [
     'pubsweet-client',
     'validations',
@@ -210,6 +210,9 @@ module.exports = {
     'journal',
     'teams',
     'client-features',
+    'crossref',
+    'hypothesis',
+    'review',
   ],
   s3: {
     accessKeyId: 'test',
@@ -218,6 +221,22 @@ module.exports = {
     region: 'us-east-1',
     bucket: 'kotahi',
   },
+  crossref: {
+    login: '',
+    password: '',
+    registrant: '',
+    depositorName: '',
+    depositorEmail: '',
+    doiPrefix: '',
+  },
+  hypothesis: {
+    apiKey: '',
+    group: '__world__',
+  },
   schema: {},
   journal,
+  review: {
+    shared: '',
+    hide: '',
+  },
 }

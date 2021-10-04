@@ -62,7 +62,7 @@ const TableRow = ({ cells, isHeadingRow }) => {
           key={index}
           width={cell.width}
         >
-          {cell.content}
+          {cell.content || '-'}
         </Cell>
       ))}
     </Row>

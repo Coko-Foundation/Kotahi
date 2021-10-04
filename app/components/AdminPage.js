@@ -58,7 +58,7 @@ const Root = styled.div`
 // TODO: Redirect if token expires
 const PrivateRoute = ({ component: Component, redirectLink, ...rest }) => {
   if (
-    process.env.INSTANCE_NAME === 'colab' &&
+    ['aperture', 'colab'].includes(process.env.INSTANCE_NAME) &&
     rest.currentUser &&
     !rest.currentUser.email
   ) {

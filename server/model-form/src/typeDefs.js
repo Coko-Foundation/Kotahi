@@ -39,6 +39,7 @@ const typeDefs = `
     sectioncss: String
     validate: [FormElementOptionInput!]
     validateValue: FormElementValidationInput
+    hideFromAuthors: String
   }
 
   input FormElementOptionInput {
@@ -87,6 +88,7 @@ const typeDefs = `
     sectioncss: String
     validate: [FormElementOption!]
     validateValue: FormElementValidation
+    hideFromAuthors: String
   }
 
   type FormElementOption {

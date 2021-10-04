@@ -6,7 +6,7 @@ import 'react-toastify/dist/ReactToastify.css'
 import { useQuery, useMutation, useSubscription } from '@apollo/client'
 import { Button, Checkbox } from '@pubsweet/ui'
 import config from 'config'
-import Manuscript from './Manuscript'
+import ManuscriptRow from './ManuscriptRow'
 import {
   Container,
   ManuscriptsTable,
@@ -38,21 +38,20 @@ import { updateMutation } from '../../component-submit/src/components/SubmitPage
 import Modal from '../../component-modal/src'
 import BulkDeleteModal from './BulkDeleteModal'
 import manuscriptsTableConfig from './manuscriptsTableConfig'
-import submissionForm from '../../../storage/forms-ncrc/submit.json'
 
-const topics = submissionForm.children.find(el => {
-  return el.title === 'Topics'
-}).options
+const getSelectOptionsFor = (fieldName, fieldDefinitions) => {
+  const options = [{ label: 'Select...', value: '' }]
+  // eslint-disable-next-line no-unused-expressions
+  fieldDefinitions[fieldName]?.options?.forEach(o =>
+    options.push({ label: o.label, value: o.value }),
+  )
+  return options
+}
 
 const firstColumnWidth =
   process.env.INSTANCE_NAME === 'ncrc'
     ? process.env.MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH
     : '150px'
-// eslint-disable-next-line
-console.log(
-  'firstColumnWidth',
-  process.env.MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH,
-)
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -69,6 +68,7 @@ const renderManuscriptsTableHeaders = ({
   filterByArticleLabel,
   filterByArticleStatus,
   filterByTopic,
+  fieldDefinitions,
 }) => {
   const renderActions = {
     'meta.title': () => {
@@ -124,13 +124,7 @@ const renderManuscriptsTableHeaders = ({
             data-testid="topics"
             label="Topic"
             onChange={selected => filterByTopic(selected.value)}
-            options={[
-              {
-                label: 'Select...',
-                value: '',
-              },
-              ...topics,
-            ]}
+            options={getSelectOptionsFor('submission.topics', fieldDefinitions)}
             placeholder="Topic"
             value={selectedTopic}
           />
@@ -172,24 +166,7 @@ const renderManuscriptsTableHeaders = ({
             data-testid="labels"
             label="Label"
             onChange={selected => filterByArticleLabel(selected.value)}
-            options={[
-              {
-                label: 'Select...',
-                value: '',
-              },
-              {
-                label: 'Ready to evaluate',
-                value: 'readyToEvaluate',
-              },
-              {
-                label: 'Evaluated',
-                value: 'evaluated',
-              },
-              {
-                label: 'Ready to publish',
-                value: 'readyToPublish',
-              },
-            ]}
+            options={getSelectOptionsFor('submission.labels', fieldDefinitions)}
             placeholder="Labels"
             value={selectedLabel}
           />
@@ -434,8 +411,15 @@ const Manuscripts = ({ history, ...props }) => {
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
-  const manuscripts = data.paginatedManuscripts.manuscripts.map(el => {
-    return { ...el, submission: JSON.parse(el.submission) }
+  const manuscripts = data.paginatedManuscripts.manuscripts.map(m => {
+    return {
+      ...m,
+      submission: JSON.parse(m.submission),
+      manuscriptVersions: m.manuscriptVersions?.map(v => ({
+        ...v,
+        submission: JSON.parse(v.submission),
+      })),
+    }
   })
 
   const fieldDefinitions = {}
@@ -497,6 +481,7 @@ const Manuscripts = ({ history, ...props }) => {
     filterByTopic,
     filterByArticleStatus,
     filterByArticleLabel,
+    fieldDefinitions,
   })
 
   return (
@@ -597,7 +582,7 @@ const Manuscripts = ({ history, ...props }) => {
                 manuscript.manuscriptVersions?.[0] || manuscript
 
               return (
-                <Manuscript
+                <ManuscriptRow
                   fieldDefinitions={fieldDefinitions}
                   filterArticle={filterArticle}
                   filterByArticleLabel={filterByArticleLabel}

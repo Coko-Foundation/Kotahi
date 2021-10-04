@@ -100,6 +100,52 @@ const commonUpdateManuscript = async (id, input, ctx) => {
   return ctx.models.Manuscript.query().updateAndFetchById(id, updatedMs)
 }
 
+/** Get evaluations as [ [submission.review1, submission.review1date], [submission.review2, submission.review2date], ..., [submission.summary, submission.summarydate] ] */
+const getEvaluationsAndDates = manuscript => {
+  const evaluationValues = Object.entries(manuscript.submission)
+    .filter(
+      ([prop, value]) =>
+        !Number.isNaN(Number(prop.split('review')[1])) &&
+        prop.includes('review'),
+    )
+    .map(([propName, value]) => [
+      value,
+      manuscript.submission[`${propName}date`],
+    ])
+
+  evaluationValues.push([
+    manuscript.submission.summary,
+    manuscript.submission.summarydate,
+  ])
+
+  return evaluationValues
+}
+
+const hasEvaluations = manuscript => {
+  const evaluations = getEvaluationsAndDates(manuscript)
+  return evaluations.map(checkIsAbstractValueEmpty).some(isEmpty => !isEmpty)
+}
+
+const tryPublishingWebhook = manuscriptId => {
+  const publishingWebhookUrl = config['publishing-webhook'].publishingWebhookUrl
+
+  if (publishingWebhookUrl) {
+    const secret = config['publishing-webhook'].publishingWebhookSecret
+    const payload = { articleId: manuscriptId }
+    if (secret) payload.secret = secret
+
+    axios
+      .post(publishingWebhookUrl, payload)
+      // .then(res => {})
+      .catch(error => {
+        console.error(
+          `Failed to call publishing webhook at ${publishingWebhookUrl} for article ${manuscriptId}`,
+        )
+        console.error(error)
+      })
+  }
+}
+
 const resolvers = {
   Mutation: {
     async createManuscript(_, vars, ctx) {
@@ -245,7 +291,7 @@ const resolvers = {
       toDeleteList.push(manuscript.id)
 
       if (
-        process.env.INSTANCE_NAME === 'elife' &&
+        config.hypothesis.apiKey &&
         manuscript.evaluationsHypothesisMap !== null
       ) {
         const deletePromises = Object.values(
@@ -396,126 +442,67 @@ const resolvers = {
     },
 
     async publishManuscript(_, { id }, ctx) {
-      let manuscript = await ctx.models.Manuscript.query().findById(id)
+      const manuscript = await ctx.models.Manuscript.query().findById(id)
+      const update = {} // This will collect any properties we may want to update in the DB
+      update.published = new Date()
 
-      if (['elife'].includes(process.env.INSTANCE_NAME)) {
-        if (manuscript.evaluationsHypothesisMap === null) {
-          manuscript.evaluationsHypothesisMap = {}
+      if (config.crossref.login) {
+        const containsEvaluations = hasEvaluations(manuscript)
+
+        // A 'published' article without evaluations will become 'evaluated'.
+        // The intention is that an evaluated article should never revert to any state prior to "evaluated",
+        // but that only articles with evaluations can be 'published'.
+        update.status = containsEvaluations ? 'published' : 'evaluated'
+
+        if (containsEvaluations || manuscript.status !== 'evaluated') {
+          try {
+            await publishToCrossref(manuscript)
+          } catch (e) {
+            console.error('error publishing to crossref')
+            console.error(e)
+          }
         }
-
-        const evaluationValues = Object.entries(manuscript.submission)
-          .filter(
-            ([prop, value]) =>
-              !Number.isNaN(Number(prop.split('review')[1])) &&
-              prop.includes('review'),
-          )
-          .map(([propName, value]) => [
-            value,
-            manuscript.submission[`${propName}date`],
-          ])
-
-        evaluationValues.push([
-          manuscript.submission.summary,
-          manuscript.submission.summarydate,
-        ])
-
-        const areEvaluationsEmpty = evaluationValues
-          .map(evaluationValue => {
-            return checkIsAbstractValueEmpty(evaluationValue)
-          })
-          .every(isEmpty => isEmpty === true)
-
-        if (areEvaluationsEmpty && manuscript.status === 'evaluated')
-          return manuscript
-
-        const newArticleStatus =
-          areEvaluationsEmpty && manuscript.status === 'published'
-            ? 'evaluated'
-            : 'published'
-
-        try {
-          await publishToCrossref(manuscript)
-        } catch (e) {
-          console.error('error publishing to crossref')
-          console.error(e)
-        }
-
-        const newEvaluationsHypothesisMap = await publishToHypothesis(
-          manuscript,
-        )
-
-        const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
-          id,
-          {
-            published: new Date(),
-            status: newArticleStatus,
-            evaluationsHypothesisMap: newEvaluationsHypothesisMap,
-          },
-        )
-
-        return updatedManuscript
       }
 
       if (process.env.INSTANCE_NAME === 'ncrc') {
         try {
-          const manuscriptId = await publishToGoogleSpreadSheet(manuscript)
-
-          if (manuscriptId) {
-            const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
-              manuscriptId,
-              {
-                published: new Date(),
-                status: 'published',
-                submission: {
-                  ...manuscript.submission,
-                  editDate: new Date().toISOString().split('T')[0],
-                },
-              },
-            )
-
-            return updatedManuscript
-          }
-
-          return null
+          if (await publishToGoogleSpreadSheet(manuscript)) {
+            update.status = 'published'
+            update.submission = {
+              ...manuscript.submission,
+              editDate: new Date().toISOString().split('T')[0],
+            }
+          } else return null
         } catch (e) {
-          // eslint-disable-next-line
-          console.log('error while publishing in google spreadsheet')
-          // eslint-disable-next-line
-          console.log(e)
+          console.error('error while publishing in google spreadsheet')
+          console.error(e)
           return null
+        }
+      } else if (['colab'].includes(process.env.INSTANCE_NAME)) {
+        // TODO: A note in the code said that for Colab instance, submission.editDate should be updated. Is this true?
+      }
+
+      if (config.hypothesis.apiKey) {
+        if (!manuscript.evaluationsHypothesisMap)
+          manuscript.evaluationsHypothesisMap = {}
+
+        try {
+          update.evaluationsHypothesisMap = await publishToHypothesis(
+            manuscript,
+          )
+        } catch (err) {
+          let message = 'Publishing to hypothes.is failed!\n'
+          if (err.response) {
+            message += `${err.response.status} ${err.response.statusText}\n`
+            message += `${JSON.stringify(err.response.data)}`
+          } else message += err.toString()
+          throw new Error(message)
         }
       }
 
-      if (
-        !manuscript.published &&
-        ['aperture', 'colab'].includes(process.env.INSTANCE_NAME)
-      ) {
-        manuscript = ctx.models.Manuscript.query().updateAndFetchById(id, {
-          published: new Date(),
-          // for Colab instance submission.editDate should be updated
-        })
-      }
+      tryPublishingWebhook(manuscript.id)
 
-      const publishingWebhookUrl =
-        config['publishing-webhook'].publishingWebhookUrl
-
-      if (publishingWebhookUrl) {
-        const secret = config['publishing-webhook'].publishingWebhookSecret
-        const payload = { articleId: manuscript.id }
-        if (secret) payload.secret = secret
-
-        axios
-          .post(publishingWebhookUrl, payload)
-          // .then(res => {})
-          .catch(error => {
-            console.error(
-              `Failed to call publishing webhook at ${publishingWebhookUrl} for article ${manuscript.id}`,
-            )
-            console.error(error)
-          })
-      }
-
-      return manuscript
+      return ctx.models.Manuscript.query().updateAndFetchById(id, update)
     },
   },
   Subscription: {
@@ -978,4 +965,5 @@ const typeDefs = `
 module.exports = {
   typeDefs,
   resolvers,
+  mergeArrays,
 }

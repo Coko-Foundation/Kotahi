@@ -152,9 +152,25 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
             manuscriptId
             title
           }
+          submission
           created
           updated
           status
+          published
+          teams {
+            id
+            role
+            members {
+              id
+              user {
+                defaultIdentity {
+                  name
+                }
+                id
+                username
+              }
+            }
+          }
           submitter {
             username
             online

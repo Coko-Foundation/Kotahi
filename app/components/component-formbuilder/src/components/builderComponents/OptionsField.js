@@ -1,8 +1,8 @@
 import React from 'react'
-import styled, { withTheme } from 'styled-components'
+import styled from 'styled-components'
 import { FieldArray } from 'formik'
-import { TextField, ValidatedFieldFormik, Button, Icon } from '@pubsweet/ui'
-import lightenBy from '../../../../../shared/lightenBy'
+import { TextField, ValidatedFieldFormik, Button } from '@pubsweet/ui'
+import { DeleteControl } from '../../../../shared'
 
 const Inline = styled.div`
   display: inline-block;
@@ -14,22 +14,6 @@ const Inline = styled.div`
 const UnbulletedList = styled.ul`
   list-style-type: none;
 `
-
-const DeleteControlContainer = styled(Inline)`
-  padding: 32px 0 0 1em;
-`
-
-const DeleteButton = styled.button`
-  background: none;
-
-  &:hover {
-    background-color: ${lightenBy('colorPrimary', 0.8)};
-  }
-`
-
-const ControlIcon = withTheme(({ children, theme }) => (
-  <Icon color={theme.colorPrimary}>{children}</Icon>
-))
 
 const labelInput = input => (
   <TextField label="Label to display" placeholder="Enter label…" {...input} />
@@ -64,15 +48,10 @@ const renderOptions = ({ form: { values }, push, remove }) => {
                 required
               />
             </Inline>
-            <DeleteControlContainer>
-              <DeleteButton
-                onClick={() => remove(index)}
-                title="Delete this option"
-                type="button"
-              >
-                <ControlIcon>x</ControlIcon>
-              </DeleteButton>
-            </DeleteControlContainer>
+            <DeleteControl
+              onClick={() => remove(index)}
+              tooltip="Delete this option"
+            />
           </div>
         </li>
       ))}

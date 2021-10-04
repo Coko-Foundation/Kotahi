@@ -1,10 +1,13 @@
 const ArticleAcceptanceEmailTemplate = ({
-  authorFirstName,
   articleTitle,
   link,
+  receiverFirstName,
 }) => {
-  const result = `<p>
-        <b>Dear ${authorFirstName},</b>
+  const result = {
+    cc: '',
+    subject: 'Kotahi Notification Email',
+    content: `<p>
+        <b>Dear ${receiverFirstName},</b>
         <br>
         <br>
         <p>${articleTitle} has been selected for review by Biophysics CoLab. Click on the link below to accept and access your article submission on our peer review platform.</p>
@@ -20,9 +23,12 @@ const ArticleAcceptanceEmailTemplate = ({
         Thanks, <br>
         Biophysics CoLab team
         </p>
-    </p>`
+    </p>`,
+  }
 
-  return result.replace(/\n/g, '')
+  result.content = result.content.replace(/\n/g, '')
+
+  return result
 }
 
 module.exports = ArticleAcceptanceEmailTemplate
