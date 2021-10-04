@@ -43,7 +43,7 @@ const updateTitle = title => {
 const fullWaxEditorConfig = readOnlyComments => ({
   EnableTrackChangeService: false, // This line is needed by NoteService
   SchemaService: DefaultSchema,
-  CommentsService: { readOnly: readOnlyComments || false }, // this should make it work though this is not yet in Wax
+  CommentsService: { readOnly: readOnlyComments || false },
   MenuService: [
     {
       templateArea: 'topBar',
