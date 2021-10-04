@@ -164,15 +164,7 @@ const DecisionVersion = ({
 
   const editorSection = addEditor(manuscript, 'Manuscript text', current)
 
-  const decisionSection = ({
-    handleSubmit,
-    dirty,
-    isValid,
-    submitCount,
-    isSubmitting,
-  }) => {
-    // this is only used if current version & hence editable
-
+  const metadataSection = () => {
     const submissionValues = current
       ? createBlankSubmissionBasedOnForm(form)
       : {}
@@ -189,6 +181,60 @@ const DecisionVersion = ({
     return {
       content: (
         <>
+          {!current ? (
+            <ReviewMetadata
+              form={form}
+              manuscript={version}
+              showEditorOnlyFields
+            />
+          ) : (
+            <SectionContent>
+              <Formik
+                displayName="submit"
+                initialValues={versionValues}
+                onSubmit={() => null}
+                validateOnBlur
+                validateOnChange={false}
+              >
+                {formProps => {
+                  return (
+                    <FormTemplate
+                      confirming={confirming}
+                      onChange={(value, path) => {
+                        onChange(value, path, versionId)
+                      }}
+                      toggleConfirming={toggleConfirming}
+                      {...formProps}
+                      form={form}
+                      manuscript={manuscript}
+                      match={{ url: 'decision' }}
+                      republish={() => null}
+                      showEditorOnlyFields
+                    />
+                  )
+                }}
+              </Formik>
+            </SectionContent>
+          )}
+        </>
+      ),
+      key: `metadata_${manuscript.id}`,
+      label: 'Metadata',
+    }
+  }
+
+  const decisionSection = ({
+    handleSubmit,
+    dirty,
+    isValid,
+    submitCount,
+    isSubmitting,
+  }) => {
+    // this is only used if current version & hence editable
+
+    return {
+      content: (
+        <>
           {!current && (
             <SectionContent>
               <SectionHeader>
@@ -201,15 +247,15 @@ const DecisionVersion = ({
             </SectionContent>
           )}
           {current && (
-            <AdminSection>
-              {process.env.INSTANCE_NAME === 'colab' && (
+            <>
+              {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
                 <EmailNotifications manuscript={manuscript} />
               )}
               <AssignEditorsReviewers
                 AssignEditor={AssignEditor}
                 manuscript={parent}
               />
-            </AdminSection>
+            </>
           )}
           {!current && (
             <SectionContent>
@@ -296,7 +342,7 @@ const DecisionVersion = ({
         </>
       ),
       key: version.id,
-      label: 'Workflow & metadata',
+      label: 'Workflow',
     }
   }
 
@@ -332,7 +378,11 @@ const DecisionVersion = ({
       {props => (
         <Tabs
           defaultActiveKey={version.id}
-          sections={[decisionSection({ ...props }), editorSection]}
+          sections={[
+            decisionSection({ ...props }),
+            editorSection,
+            metadataSection({ ...props }),
+          ]}
         />
       )}
     </Formik>

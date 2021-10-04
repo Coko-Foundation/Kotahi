@@ -4,10 +4,12 @@ const textfield = {
 
 const optionfield = {
   component: 'OptionsField',
+  defaultValue: [],
 }
 
 const editorfield = {
   component: 'AbstractField',
+  defaultValue: '',
 }
 
 const textarea = {
@@ -15,6 +17,20 @@ const textarea = {
   props: {
     cols: 55,
     rows: 5,
+  },
+}
+
+const shortDescriptionField = {
+  component: 'TextField',
+  props: { label: 'Short title (optional — used in concise listings)' },
+}
+
+const nameField = {
+  component: 'TextField',
+  props: {
+    label: 'Name (internal field name)',
+    description:
+      'Use either "submission.yourFieldNameHere", or one of the following: "meta.title" for manuscript title, "meta.abstract" for abstract, "fileName" for SupplementaryFiles, or "visualAbstract" for a VisualAbstract.',
   },
 }
 
@@ -90,6 +106,7 @@ const radiofield = {
       },
     ],
   },
+  defaultValue: 'false',
 }
 
 const reviewerPreviewField = {
@@ -108,60 +125,87 @@ const reviewerPreviewField = {
     ],
     label: "Include in reviewers' preview?",
   },
+  defaultValue: 'false',
+}
+
+const hideFromAuthorsField = {
+  component: 'RadioBox',
+  props: {
+    inline: true,
+    options: [
+      {
+        value: 'true',
+        label: 'Yes',
+      },
+      {
+        value: 'false',
+        label: 'No',
+      },
+    ],
+    label: 'Hide from authors?',
+  },
+  defaultValue: 'false',
 }
 
 const elements = {
   SupplementaryFiles: {
     id: textfield,
     title: textfield,
-    name: textfield,
+    name: nameField,
     description: editorfield,
-    shortDescription: textfield,
+    shortDescription: shortDescriptionField,
     validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   VisualAbstract: {
     id: textfield,
     title: textfield,
-    name: textfield,
+    name: nameField,
     description: editorfield,
-    shortDescription: textfield,
+    shortDescription: shortDescriptionField,
     validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   AuthorsInput: {
     id: textfield,
     title: textfield,
-    name: textfield,
-    shortDescription: textfield,
+    name: nameField,
+    description: editorfield,
+    shortDescription: shortDescriptionField,
     validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   LinksInput: {
     id: textfield,
     title: textfield,
-    name: textfield,
-    shortDescription: textfield,
+    name: nameField,
+    description: editorfield,
+    shortDescription: shortDescriptionField,
     validate: validateCollection,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   AbstractEditor: {
     id: textfield,
     title: textfield,
-    name: textfield,
+    name: nameField,
     placeholder: textfield,
     description: editorfield,
+    shortDescription: shortDescriptionField,
     validate: validateText,
-    shortDescription: textfield,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   TextField: {
     id: textfield,
     title: textfield,
-    name: textfield,
+    name: nameField,
     placeholder: textfield,
     description: editorfield,
-    shortDescription: textfield,
+    shortDescription: shortDescriptionField,
     validate: validateText,
     parse: {
       component: 'Menu',
@@ -211,41 +255,46 @@ const elements = {
         ],
         label: 'Validate as a DOI?',
       },
+      defaultValue: 'false',
     },
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   CheckboxGroup: {
     id: textfield,
     title: textfield,
-    name: textfield,
+    name: nameField,
     description: editorfield,
     options: optionfield,
-    shortDescription: textfield,
+    shortDescription: shortDescriptionField,
     validate: validateCollection,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   Select: {
     id: textfield,
     title: textfield,
-    name: textfield,
+    name: nameField,
     placeholder: textfield,
     description: editorfield,
     options: optionfield,
-    shortDescription: textfield,
+    shortDescription: shortDescriptionField,
     validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
   RadioGroup: {
     id: textfield,
     title: textfield,
-    name: textfield,
+    name: nameField,
     description: editorfield,
     options: optionfield,
     inline: radiofield,
     sectioncss: textarea,
-    shortDescription: textfield,
+    shortDescription: shortDescriptionField,
     validate: validateOther,
     includeInReviewerPreview: reviewerPreviewField,
+    hideFromAuthors: hideFromAuthorsField,
   },
 }
 

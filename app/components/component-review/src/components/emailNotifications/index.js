@@ -59,6 +59,22 @@ const EmailNotifications = ({ manuscript }) => {
         label: 'Evaluation Complete notification',
         value: 'evaluationCompleteEmailTemplate',
       },
+      {
+        label: 'Editor Assignment notification',
+        value: 'editorAssignmentEmailTemplate',
+      },
+      {
+        label: 'Review Invitation notification',
+        value: 'reviewInvitationEmailTemplate',
+      },
+      {
+        label: 'Submission Confirmation notification',
+        value: 'submissionConfirmationEmailTemplate',
+      },
+      {
+        label: 'Message notification',
+        value: 'messageNotificationEmailTemplate',
+      },
     ]
 
     const selectedTempl = emailTemplateOptions.find(
@@ -109,7 +125,7 @@ const EmailNotifications = ({ manuscript }) => {
   }
 
   return (
-    <SectionContent noGap>
+    <SectionContent>
       <SectionHeader>
         <Title>Notifications</Title>
       </SectionHeader>

@@ -61,12 +61,12 @@ module.exports = app => {
             // Do another request to the ORCID API for aff/name
             const userDetails = await fetchUserDetails(user)
 
-            user.defaultIdentity.name = `${userDetails.firstName} ${userDetails.lastName}`
-            user.defaultIdentity.aff = userDetails.institution
+            user.defaultIdentity.name = `${userDetails.firstName || ''} ${
+              userDetails.lastName || ''
+            }`
+            user.defaultIdentity.aff = userDetails.institution || ''
 
-            if (userDetails.email) {
-              user.email = userDetails.email
-            }
+            user.email = userDetails.email || ''
 
             if (['elife'].includes(process.env.INSTANCE_NAME)) {
               user.admin = true

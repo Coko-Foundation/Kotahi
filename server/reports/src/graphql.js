@@ -373,7 +373,7 @@ const getTeamUserIdentities = (manuscript, teamName) => {
 const getReviewersAndLatestStatuses = ms => {
   const allReviewers = getTeamUserIdentities(ms, 'Reviewers').map(i => ({
     id: i.userId,
-    name: i.name,
+    name: i.name || '',
   }))
 
   const currentTeam = getLastVersion(ms).teams.find(t => t.name === 'Reviewers')
@@ -482,7 +482,7 @@ const getEditorsActivity = async (startDate, endDate, ctx) => {
 
       if (!editorData) {
         editorData = {
-          name: e.name,
+          name: e.name || '',
           assignedCount: 0,
           givenToReviewersCount: 0,
           revisedCount: 0,
@@ -551,7 +551,7 @@ const getReviewersActivity = async (startDate, endDate, ctx) => {
           )
 
           const name = reviewerUser
-            ? reviewerUser.defaultIdentity.name
+            ? reviewerUser.defaultIdentity.name || reviewerUser.username || ''
             : reviewer.id
 
           reviewerData = {
@@ -618,7 +618,7 @@ const getAuthorsActivity = async (startDate, endDate, ctx) => {
 
       if (!authorData) {
         authorData = {
-          name: a.name,
+          name: a.name || '',
           unsubmittedCount: 0,
           submittedCount: 0,
           rejectedCount: 0,

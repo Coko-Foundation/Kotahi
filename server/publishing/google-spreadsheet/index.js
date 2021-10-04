@@ -1,26 +1,19 @@
 const { GoogleSpreadsheet } = require('google-spreadsheet')
 const { convert } = require('html-to-text')
 
-const formatTopicCrossPostMapping = topics => {
-  const mapping = {
-    Clinical_presentation: 'clinical-presentation-prognostic-risk-factors',
-    Ecology_and_spillover: 'ecology-spillover',
-    Epidemiology: 'epidemiology',
-    Nonpharmaceutical_interventions: 'non-pharmaceutical-interventions',
-    Vaccine_development: 'vaccines',
-    Diagnostics: 'diagnostics',
-    Disease_modeling: 'modeling',
-    Pharmaceutical_interventions: 'pharmaceutical-interventions',
-  }
-
-  return topics.map(topic => {
-    return mapping[topic]
-  })
+const mapping = {
+  Clinical_presentation: 'clinical-presentation-prognostic-risk-factors',
+  Ecology_and_spillover: 'ecology-spillover',
+  Epidemiology: 'epidemiology',
+  Nonpharmaceutical_interventions: 'non-pharmaceutical-interventions',
+  Vaccine_development: 'vaccines',
+  Diagnostics: 'diagnostics',
+  Disease_modeling: 'modeling',
+  Pharmaceutical_interventions: 'pharmaceutical-interventions',
 }
 
-const getDistinct = arr => {
-  return arr.filter((member, i) => arr.indexOf(member) === i)
-}
+const formatTopicCrossPostMapping = topics =>
+  topics.map(topic => mapping[topic])
 
 const mapFieldsToSpreadsheetColumns = manuscript => {
   const { submission } = manuscript
@@ -29,14 +22,24 @@ const mapFieldsToSpreadsheetColumns = manuscript => {
     ? `(${manuscript.importSourceServer})`
     : ''
 
-  const topics = manuscript.isImported
+  const topicsAsArray = Array.isArray(submission.topics)
+    ? submission.topics
+    : [submission.topics]
+
+  const initialTopicsAsArray = Array.isArray(submission.initialTopicsOnImport)
     ? submission.initialTopicsOnImport
-    : submission.topics
+    : [submission.initialTopicsOnImport]
+
+  const topics = (manuscript.isImported
+    ? initialTopicsAsArray
+    : topicsAsArray
+  ).filter(topic => !!mapping[topic])
 
   // eslint-disable-next-line camelcase
-  const cross_post = manuscript.isImported
-    ? getDistinct(submission.initialTopicsOnImport.concat(submission.topics))
-    : submission.topics
+  const cross_post = (manuscript.isImported
+    ? [...new Set(initialTopicsAsArray.concat(topicsAsArray))]
+    : topicsAsArray
+  ).filter(topic => !!mapping[topic])
 
   return {
     uuid: manuscript.id,

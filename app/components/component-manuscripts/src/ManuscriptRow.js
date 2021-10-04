@@ -37,64 +37,18 @@ import { convertTimestampToDate } from '../../../shared/time-formatting'
 import { convertCamelCaseToText } from '../../../shared/convertCamelCaseToText'
 import { articleStatuses } from '../../../globals'
 import { publishManuscriptMutation } from '../../component-review/src/components/queries'
-import query from '../../component-submit/src/userManuscriptFormQuery'
-import { composeValidate } from '../../component-submit/src/components/FormTemplate'
 import { DELETE_MANUSCRIPT } from '../../../queries'
 import manuscriptsTableConfig from './manuscriptsTableConfig'
-
-export const validateManuscript = (submission, fieldDefinitions, client) =>
-  Object.entries(fieldDefinitions)
-    .map(([key, element]) =>
-      composeValidate(
-        element.validate,
-        element.validateValue,
-        element.name,
-        JSON.parse(element.doiValidation ? element.doiValidation : false),
-        client,
-        element.component,
-      )(submission[element.name.split('.')[1]]),
-    )
-    .filter(Boolean)
+import {
+  validateManuscript,
+  getFieldValueAndDisplayValue,
+} from '../../../shared/manuscriptUtils'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const updateUrlParameter = (url, param, value) => {
   var regex = new RegExp('(' + param + '=)[^&]+')
   return url.replace(regex, '$1' + value)
-}
-
-/** Find the data stored in the manuscript for this fieldName. If the fieldDefinition from the form has a key/value structure we should
- * treat the manuscript data as the key and obtain the displayValue from the fieldDefinition. Otherwise use the manuscript data directly
- * as the displayValue. If manuscript data is an array, we have to do this for each item in the array.
- * There is special logic for some fieldNames, such as 'created' and 'updated'.
- */
-const getValueAndDisplayValue = (fieldName, manuscript, fieldDefinitions) => {
-  if (fieldName === 'created')
-    return [manuscript.created, convertTimestampToDate(manuscript.created)]
-  if (fieldName === 'updated')
-    return [manuscript.updated, convertTimestampToDate(manuscript.updated)]
-  if (fieldName === 'shortId')
-    return [manuscript.shortId, manuscript.shortId.toString()]
-
-  const valueInManuscript = get(manuscript, fieldName, null)
-
-  const fieldDefinition = fieldDefinitions?.[fieldName]
-
-  if (Array.isArray(valueInManuscript)) {
-    return [
-      valueInManuscript,
-      valueInManuscript.map(
-        val =>
-          fieldDefinition?.options?.find(o => o.value === val)?.label ?? val,
-      ),
-    ]
-  }
-
-  return [
-    valueInManuscript,
-    fieldDefinition?.options?.find(o => o.value === valueInManuscript)?.label ??
-      valueInManuscript,
-  ]
 }
 
 const renderManuscriptCell = ({
@@ -221,9 +175,11 @@ const renderManuscriptCell = ({
             </StyledTopic>,
           )
         }
-      } else {
+      } else if (value !== null) {
         console.error('Topics not coming in as array:', value, displayValue)
-        topicComponents.push(<span>Topics could not be loaded.</span>)
+        topicComponents.push(
+          <span key="TopicsLoadError">Topics could not be loaded.</span>,
+        )
       }
 
       return <Cell key="topics">{topicComponents}</Cell>
@@ -295,7 +251,7 @@ const renderManuscriptCell = ({
   }
 
   return fieldName => {
-    const [value, displayValue] = getValueAndDisplayValue(
+    const [value, displayValue] = getFieldValueAndDisplayValue(
       fieldName,
       manuscript,
       fieldDefinitions,
@@ -308,7 +264,7 @@ const renderManuscriptCell = ({
 }
 
 // manuscriptId is always the parent manuscript's id
-const User = ({
+const ManuscriptRow = ({
   manuscriptId,
   manuscript,
   fieldDefinitions,
@@ -366,7 +322,7 @@ const User = ({
 
   let formattedAbstract
 
-  if (manuscript.submission?.abstract) {
+  if (manuscript.submission.abstract) {
     if (Array.isArray(manuscript.submission.abstract)) {
       formattedAbstract = manuscript.submission.abstract
         .join(' ')
@@ -434,7 +390,7 @@ const User = ({
   )
 }
 
-User.propTypes = {
+ManuscriptRow.propTypes = {
   manuscriptId: PropTypes.string.isRequired,
   manuscript: PropTypes.shape({
     teams: PropTypes.arrayOf(PropTypes.object),
@@ -447,7 +403,7 @@ User.propTypes = {
     status: PropTypes.string.isRequired,
     // Disabled because submission can have different fields
     // eslint-disable-next-line
-    submission: PropTypes.object,
+    submission: PropTypes.object.isRequired,
   }).isRequired,
   submitter: PropTypes.shape({
     defaultIdentity: PropTypes.shape({
@@ -475,9 +431,9 @@ User.propTypes = {
   history: PropTypes.shape({}),
   setSelectedTopic: PropTypes.func.isRequired,
 }
-User.defaultProps = {
+ManuscriptRow.defaultProps = {
   history: undefined,
   submitter: {},
 }
 
-export default User
+export default ManuscriptRow

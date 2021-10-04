@@ -53,6 +53,7 @@ const Avatar = props => {
   const src = user.profilePicture
 
   const userFallback = '/static/profiles/default_avatar.svg'
+
   const source = [src, userFallback]
 
   return (

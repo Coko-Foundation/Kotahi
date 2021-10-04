@@ -34,6 +34,8 @@ services:
       - S3_REGION=${S3_REGION}
       - MANUSCRIPTS_TABLE_COLUMNS=${MANUSCRIPTS_TABLE_COLUMNS}
       - MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH=${MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH}
+      - REVIEW_SHARED=${REVIEW_SHARED:-false}
+      - REVIEW_HIDE=${REVIEW_HIDE:-false}
 
     entrypoint:
       [
@@ -59,7 +61,7 @@ services:
       - ./db-data:/var/lib/postgresql/data/kotahi:z
 
   job-xsweet:
-    image: pubsweet/job-xsweet:1.5.1
+    image: pubsweet/job-xsweet:1.5.2
     environment:
       - POSTGRES_HOST
       - POSTGRES_USER

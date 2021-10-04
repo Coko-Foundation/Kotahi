@@ -84,7 +84,7 @@ const Submit = ({
 
       decisionSection = {
         content: (
-          <SectionContent noGap>
+          <SectionContent>
             <Formik
               displayName="submit"
               // handleChange={props.handleChange}
@@ -132,8 +132,12 @@ const Submit = ({
       decisionSection = {
         content: (
           <>
-            <DecisionAndReviews manuscript={manuscript} noGap />
-            <ReviewMetadata form={form} manuscript={manuscript} />
+            <DecisionAndReviews manuscript={manuscript} />
+            <ReviewMetadata
+              form={form}
+              manuscript={manuscript}
+              showEditorOnlyFields={false}
+            />
           </>
         ),
         key: versionId,

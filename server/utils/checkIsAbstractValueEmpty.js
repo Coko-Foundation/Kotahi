@@ -1,3 +1,4 @@
+/** Return true if value is falsey or empty HTML, OR if it is an array of values that are all falsey or empty HTML */
 const checkIsAbstractValueEmpty = value => {
   if (!value) {
     return true

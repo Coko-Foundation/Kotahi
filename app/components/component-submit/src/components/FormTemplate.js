@@ -10,7 +10,6 @@ import {
   Attachment,
 } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
-import * as validators from 'xpub-validators'
 import config from 'config'
 import { useApolloClient } from '@apollo/client'
 import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
@@ -21,7 +20,7 @@ import LinksInput from './LinksInput'
 import ValidatedFieldFormik from './ValidatedField'
 import Confirm from './Confirm'
 import { articleStatuses } from '../../../../globals'
-import { VALIDATE_DOI } from '../../../../queries/index'
+import { validateFormField } from '../../../../shared/formValidation'
 
 const Intro = styled.div`
   font-style: italic;
@@ -106,6 +105,7 @@ elements.AbstractEditor.defaultProps = {
   validationStatus: undefined,
 }
 
+/** Shallow clone props, leaving out all specified keys, and also stripping all keys with (string) value 'false'. */
 const rejectProps = (obj, keys) =>
   Object.keys(obj)
     .filter(k => !keys.includes(k))
@@ -124,61 +124,6 @@ const link = (journal, manuscript) =>
 const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),
 })
-
-export const composeValidate = (
-  vld = [],
-  valueField = {},
-  fieldName,
-  doiValidation = false,
-  client,
-  componentType,
-) => value => {
-  const validator = vld || []
-
-  if (validator.length === 0) return undefined
-  const errors = []
-  validator
-    .map(v => v.value)
-    .map(validatorFn => {
-      // if there is YSWYG component and it's empty - the value is a paragraph
-      const valueFormatted =
-        componentType === 'AbstractEditor' && value === '<p></p>' ? '' : value
-
-      const error =
-        validatorFn === 'required'
-          ? validators[validatorFn](valueFormatted)
-          : validators[validatorFn](valueField[validatorFn])(valueFormatted)
-
-      if (error) {
-        errors.push(error)
-      }
-
-      return validatorFn
-    })
-
-  if (
-    errors.length === 0 &&
-    fieldName === 'submission.articleURL' &&
-    doiValidation
-  ) {
-    return client
-      .query({
-        query: VALIDATE_DOI,
-        variables: {
-          articleURL: value,
-        },
-      })
-      .then(res => {
-        if (!res.data.validateDOI.isDOIValid) {
-          return 'DOI is invalid'
-        }
-
-        return undefined
-      })
-  }
-
-  return errors.length > 0 ? errors[0] : undefined
-}
 
 const FormTemplate = ({
   form,
@@ -281,89 +226,90 @@ const FormTemplate = ({
         )}
       />
       <form>
-        {(form.children || []).map((element, i) => {
-          return (
-            <Section
-              cssOverrides={JSON.parse(element.sectioncss || '{}')}
-              key={`${element.id}`}
-            >
-              <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
-              {element.component === 'SupplementaryFiles' && (
-                <FilesUpload
-                  containerId={manuscript.id}
-                  containerName="manuscript"
-                  fileType="supplementary"
-                />
-              )}
-              {element.component === 'VisualAbstract' && (
-                <FilesUpload
-                  accept="image/*"
-                  containerId={manuscript.id}
-                  containerName="manuscript"
-                  fileType="visualAbstract"
-                  multiple={false}
-                />
-              )}
-              {element.component === 'AuthorsInput' && (
-                <AuthorsInput data-testid={element.name} onChange={onChange} />
-              )}
-              {element.component !== 'AuthorsInput' &&
-                element.component !== 'SupplementaryFiles' &&
-                element.component !== 'VisualAbstract' && (
-                  <ValidatedFieldFormik
-                    {...rejectProps(element, [
-                      'component',
-                      'title',
-                      'sectioncss',
-                      'parse',
-                      'format',
-                      'validate',
-                      'validateValue',
-                      'description',
-                      'shortDescription',
-                    ])}
-                    aria-label={element.placeholder || element.title}
-                    component={elements[element.component]}
-                    data-testid={element.name} // TODO: Improve this
-                    key={`validate-${element.id}`}
-                    name={element.name}
-                    onChange={value => {
-                      // TODO: Perhaps split components remove conditions here
-                      let val
-
-                      if (value.target) {
-                        val = value.target.value
-                      } else if (value.value) {
-                        val = value.value
-                      } else {
-                        val = value
-                      }
-
-                      setFieldValue(element.name, val, false)
-                      onChange(val, element.name)
-                    }}
-                    readonly={element.name === 'submission.editDate'}
-                    setTouched={setTouched}
-                    spellCheck
-                    validate={composeValidate(
-                      element.validate,
-                      element.validateValue,
-                      element.name,
-                      JSON.parse(
-                        element.doiValidation ? element.doiValidation : false,
-                      ),
-                      client,
-                      element.component,
-                    )}
-                    values={values}
+        {(form.children || [])
+          .filter(
+            element =>
+              showEditorOnlyFields || element.hideFromAuthors !== 'true',
+          )
+          .map((element, i) => {
+            return (
+              <Section
+                cssOverrides={JSON.parse(element.sectioncss || '{}')}
+                key={`${element.id}`}
+              >
+                <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
+                {element.component === 'SupplementaryFiles' && (
+                  <FilesUpload
+                    containerId={manuscript.id}
+                    containerName="manuscript"
+                    fileType="supplementary"
                   />
                 )}
-              <SubNote
-                dangerouslySetInnerHTML={createMarkup(element.description)}
-              />
-            </Section>
-          )
-        })}
+                {element.component === 'VisualAbstract' && (
+                  <FilesUpload
+                    accept="image/*"
+                    containerId={manuscript.id}
+                    containerName="manuscript"
+                    fileType="visualAbstract"
+                    multiple={false}
+                  />
+                )}
+                {element.component !== 'SupplementaryFiles' &&
+                  element.component !== 'VisualAbstract' && (
+                    <ValidatedFieldFormik
+                      {...rejectProps(element, [
+                        'component',
+                        'title',
+                        'sectioncss',
+                        'parse',
+                        'format',
+                        'validate',
+                        'validateValue',
+                        'description',
+                        'shortDescription',
+                      ])}
+                      aria-label={element.placeholder || element.title}
+                      component={elements[element.component]}
+                      data-testid={element.name} // TODO: Improve this
+                      key={`validate-${element.id}`}
+                      name={element.name}
+                      onChange={value => {
+                        // TODO: Perhaps split components remove conditions here
+                        let val
+
+                        if (value.target) {
+                          val = value.target.value
+                        } else if (value.value) {
+                          val = value.value
+                        } else {
+                          val = value
+                        }
+
+                        setFieldValue(element.name, val, false)
+                        onChange(val, element.name)
+                      }}
+                      readonly={element.name === 'submission.editDate'}
+                      setTouched={setTouched}
+                      spellCheck
+                      validate={validateFormField(
+                        element.validate,
+                        element.validateValue,
+                        element.name,
+                        JSON.parse(
+                          element.doiValidation ? element.doiValidation : false,
+                        ),
+                        client,
+                        element.component,
+                      )}
+                      values={values}
+                    />
+                  )}
+                <SubNote
+                  dangerouslySetInnerHTML={createMarkup(element.description)}
+                />
+              </Section>
+            )
+          })}
 
         {filterFileManuscript(values.files || []).length > 0 ? (
           <Section id="files.manuscript">
@@ -413,6 +359,7 @@ FormTemplate.propTypes = {
             PropTypes.number.isRequired,
           ]).isRequired,
         ),
+        hideFromAuthors: PropTypes.string,
       }).isRequired,
     ).isRequired,
     popuptitle: PropTypes.string,
