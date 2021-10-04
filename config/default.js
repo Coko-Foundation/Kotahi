@@ -43,6 +43,7 @@ module.exports = {
   'publishing-webhook': {
     publishingWebhookUrl: null,
     publishingWebhookSecret: null,
+    publishingWebhookRef: null,
   },
   'pubsweet-component-xpub-formbuilder': {
     // path: path.resolve(__dirname, formTemplatePath[process.env.INSTANCE_NAME]),

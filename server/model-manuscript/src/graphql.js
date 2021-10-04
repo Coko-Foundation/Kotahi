@@ -126,13 +126,15 @@ const hasEvaluations = manuscript => {
   return evaluations.map(checkIsAbstractValueEmpty).some(isEmpty => !isEmpty)
 }
 
+/** Send the manuscriptId OR a configured ref; and send token if one is configured */
 const tryPublishingWebhook = manuscriptId => {
   const publishingWebhookUrl = config['publishing-webhook'].publishingWebhookUrl
 
   if (publishingWebhookUrl) {
-    const secret = config['publishing-webhook'].publishingWebhookSecret
-    const payload = { articleId: manuscriptId }
-    if (secret) payload.secret = secret
+    const token = config['publishing-webhook'].publishingWebhookToken
+    const reference = config['publishing-webhook'].publishingWebhookRef
+    const payload = { ref: reference || manuscriptId }
+    if (token) payload.token = token
 
     axios
       .post(publishingWebhookUrl, payload)

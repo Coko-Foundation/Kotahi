@@ -46,7 +46,7 @@ ENV JOURNAL_NAME $journal_name
 ENV JOURNAL_ABBREVIATED_NAME $journal_abbreviated_name
 ENV JOURNAL_HOMEPAGE $journal_homepage
 ENV PUBLISHING_WEBHOOK_URL $publishing_webhook_url
-ENV PUBLISHING_WEBHOOK_SECRET $publishing_webhook_secret
+ENV PUBLISHING_WEBHOOK_TOKEN $publishing_webhook_token
 ENV HYPOTHESIS_API_KEY $hypothesis_api_key
 ENV HYPOTHESIS_GROUP $hypothesis_group
 ENV CROSSREF_LOGIN $crossref_login
