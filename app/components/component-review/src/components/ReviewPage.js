@@ -239,8 +239,9 @@ const ReviewPage = ({ match, ...props }) => {
   const { manuscript, formForPurpose } = data
 
   if (
-    manuscript.reviews.length === 0 &&
-    existingReview.current.id !== 'undefined'
+    !manuscript.reviews.find(
+      review => review?.user?.id === currentUser.id && !review.isDecision,
+    )
   ) {
     refetch()
   }
