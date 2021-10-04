@@ -39,7 +39,7 @@ const FullWaxEditor = ({
   ...rest
 }) => {
   const ourUser = {
-    userId:  user.id || '-',
+    userId: user.id || '-',
     userColor: {
       addition: 'royalblue',
       deletion: 'indianred',

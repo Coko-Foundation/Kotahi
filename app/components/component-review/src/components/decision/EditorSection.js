@@ -9,7 +9,7 @@ const EditorSection = ({
   onBlur,
   readonly,
   useComments,
-  currentUser
+  currentUser,
 }) => {
   const manuscriptFile = manuscript?.files?.find(
     file => file.fileType === 'manuscript',
