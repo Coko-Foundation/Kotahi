@@ -30,6 +30,9 @@ export const reviewFields = `
     ${commentFields}
   }
   isDecision
+  isHiddenFromAuthor
+  isHiddenReviewerName
+  canBePublishedPublicly
   recommendation
   user {
     id
