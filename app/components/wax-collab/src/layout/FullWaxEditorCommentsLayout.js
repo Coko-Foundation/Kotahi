@@ -4,11 +4,10 @@ import { DocumentHelpers } from 'wax-prosemirror-utilities'
 import {
   Grid,
   FullWaxEditorGrid,
-  ProductionEditorDiv,
+  EditorDiv,
   ReadOnlyEditorWithCommentsEditor,
   Menu,
   InfoContainer,
-  FullEditorContainer,
 } from './EditorStyles'
 import {
   NotesAreaContainer,
@@ -35,7 +34,7 @@ const getNotes = main => {
 }
 
 // eslint-disable-next-line react/prop-types
-const FullWaxEditorCommentsLayout = (readOnly, readOnlyComments) => ({
+const FullWaxEditorCommentsLayout = (readOnly, authorComments) => ({
   editor,
 }) => {
   const {
@@ -44,11 +43,11 @@ const FullWaxEditorCommentsLayout = (readOnly, readOnlyComments) => ({
   } = useContext(WaxContext)
 
   const TopBar = ComponentPlugin('topBar')
-  const WaxOverlays = ComponentPlugin('waxOverlays')
   const NotesArea = ComponentPlugin('notesArea')
   const RightArea = ComponentPlugin('rightArea')
-  const CounterInfo = ComponentPlugin('bottomRightInfo')
   const CommentTrackToolBar = ComponentPlugin('commentTrackToolBar')
+  const WaxOverlays = ComponentPlugin('waxOverlays')
+  const CounterInfo = ComponentPlugin('bottomRightInfo')
 
   const notes = (main && getNotes(main)) ?? []
 
@@ -80,16 +79,14 @@ const FullWaxEditorCommentsLayout = (readOnly, readOnlyComments) => ({
 
   return (
     <div style={fullScreenStyles}>
-      <Grid readonly={readOnly} readOnlyComments={readOnlyComments}>
-        {readOnly ? (
-          <FullWaxEditorGrid useComments>
-            <ReadOnlyEditorWithCommentsEditor
-              readOnlyComments={readOnlyComments}
-            >
+      {readOnly ? (
+        <Grid readonly>
+          <FullWaxEditorGrid noScroll useComments>
+            <ReadOnlyEditorWithCommentsEditor>
               {editor}
             </ReadOnlyEditorWithCommentsEditor>
-            <FullCommentsContainer readOnlyComments={readOnlyComments}>
-              <CommentTrackToolsContainer>
+            <FullCommentsContainer>
+              <CommentTrackToolsContainer authorComments={authorComments}>
                 <CommentTrackTools>
                   {commentsTracksCount + trackBlockNodesCount} COMMENTS AND
                   SUGGESTIONS
@@ -113,35 +110,35 @@ const FullWaxEditorCommentsLayout = (readOnly, readOnlyComments) => ({
               <CounterInfo />
             </InfoContainer>
           </FullWaxEditorGrid>
-        ) : (
-          <>
-            <Menu>
-              <TopBar />
-            </Menu>
-            <ProductionEditorDiv className="wax-surface-scroll">
-              <FullEditorContainer>{editor}</FullEditorContainer>
-              <FullCommentsContainer readOnlyComments={readOnlyComments}>
-                <CommentTrackToolsContainer>
-                  <CommentTrackTools>
-                    {commentsTracksCount + trackBlockNodesCount} COMMENT
-                    {commentsTracksCount + trackBlockNodesCount !== 1
-                      ? 'S AND SUGGESTIONS'
-                      : ' OR SUGGESTION'}
-                    <CommentTrackOptions>
-                      <CommentTrackToolBar />
-                    </CommentTrackOptions>
-                  </CommentTrackTools>
-                </CommentTrackToolsContainer>
-                <RightArea area="main" />
-              </FullCommentsContainer>
-            </ProductionEditorDiv>
+        </Grid>
+      ) : (
+        <Grid>
+          <Menu>
+            <TopBar />
+          </Menu>
+          <FullWaxEditorGrid useComments>
+            <EditorDiv className="wax-surface-scroll">{editor}</EditorDiv>
+            <FullCommentsContainer>
+              <CommentTrackToolsContainer>
+                <CommentTrackTools>
+                  {commentsTracksCount + trackBlockNodesCount} COMMENT
+                  {commentsTracksCount + trackBlockNodesCount !== 1
+                    ? 'S AND SUGGESTIONS'
+                    : ' OR SUGGESTION'}
+                  <CommentTrackOptions>
+                    <CommentTrackToolBar />
+                  </CommentTrackOptions>
+                </CommentTrackTools>
+              </CommentTrackToolsContainer>
+              <RightArea area="main" />
+            </FullCommentsContainer>
             {notes.length > 0 && (
               <NotesAreaContainer>
                 <NotesHeading>Notes</NotesHeading>
                 <NotesContainer id="notes-container">
                   <NotesArea view={main} />
                 </NotesContainer>
-                <CommentsContainerNotes readOnlyComments={readOnlyComments}>
+                <CommentsContainerNotes>
                   <RightArea area="notes" />
                 </CommentsContainerNotes>
               </NotesAreaContainer>
@@ -150,9 +147,9 @@ const FullWaxEditorCommentsLayout = (readOnly, readOnlyComments) => ({
             <InfoContainer>
               <CounterInfo />
             </InfoContainer>
-          </>
-        )}
-      </Grid>
+          </FullWaxEditorGrid>
+        </Grid>
+      )}
     </div>
   )
 }

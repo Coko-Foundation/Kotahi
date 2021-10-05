@@ -40,10 +40,10 @@ const updateTitle = title => {
   // console.log(`Title changed: ${title}`)
 }
 
-const fullWaxEditorConfig = readOnlyComments => ({
+const fullWaxEditorConfig = () => ({
   EnableTrackChangeService: false, // This line is needed by NoteService
   SchemaService: DefaultSchema,
-  CommentsService: { readOnly: readOnlyComments || false },
+  CommentsService: { readOnly: false },
   MenuService: [
     {
       templateArea: 'topBar',
@@ -89,6 +89,28 @@ const fullWaxEditorConfig = readOnlyComments => ({
   ShortCutsService: {},
 
   TitleService: { updateTitle },
+
+  // this was added in to stop a memory leak in application--not clear to me why we need this
+  // for comments, but it dies without it.
+
+  AcceptTrackChangeService: {
+    own: {
+      accept: true,
+    },
+    others: {
+      accept: true,
+    },
+  },
+  RejectTrackChangeService: {
+    own: {
+      reject: true,
+    },
+    others: {
+      reject: true,
+    },
+  },
+
+  // end insertion
 
   services: [
     new AnnotationToolGroupService(),

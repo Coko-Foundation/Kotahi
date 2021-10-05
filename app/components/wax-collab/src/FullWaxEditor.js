@@ -33,7 +33,7 @@ const FullWaxEditor = ({
   onChange,
   placeholder,
   useComments,
-  readOnlyComments,
+  authorComments,
   fileUpload,
   user,
   ...rest
@@ -53,11 +53,11 @@ const FullWaxEditor = ({
       <div className={validationStatus}>
         <Wax
           autoFocus={autoFocus}
-          config={fullWaxEditorConfig(readOnlyComments)}
+          config={fullWaxEditorConfig()}
           fileUpload={file => renderImage(file)}
           layout={
             useComments
-              ? FullWaxEditorCommentsLayout(readonly, readOnlyComments)
+              ? FullWaxEditorCommentsLayout(readonly, authorComments)
               : FullWaxEditorLayout(readonly)
           }
           onBlur={val => {
@@ -85,7 +85,7 @@ FullWaxEditor.propTypes = {
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
   fileUpload: PropTypes.func,
-  readOnlyComments: PropTypes.bool,
+  authorComments: PropTypes.bool,
   useComments: PropTypes.bool,
   user: PropTypes.shape({
     userId: PropTypes.string,
@@ -105,7 +105,7 @@ FullWaxEditor.defaultProps = {
   onBlur: () => {},
   onChange: () => {},
   placeholder: '',
-  readOnlyComments: false,
+  authorComments: false,
   fileUpload: () => {},
   useComments: false,
   user: {},

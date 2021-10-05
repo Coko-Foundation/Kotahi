@@ -2,6 +2,7 @@ import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import EditorElements from './EditorElements'
 
+// this grid goes around the menu and the editor area beneath it.
 export const Grid = styled.div`
   display: grid;
   grid-template-areas: 'menu' 'editor';
@@ -64,6 +65,7 @@ export const FullWaxEditorGrid = styled.div`
   grid-template-columns: [editorCol] auto [commentsCol] ${props =>
       props.useComments ? 'auto' : 0};
   grid-template-rows: [editorRow] auto [notesRow] auto [infoRow] 40px;
+  ${props => props.useComments && !props.noScroll && 'overflow-x: scroll;'}
   position: relative;
   z-index: 0;
 `
@@ -75,6 +77,7 @@ export const EditorDiv = styled.div`
   border-top: none;
   grid-column-start: editorCol;
   grid-row-start: editorRow;
+  min-width: 800px;
   overflow: auto;
   padding: 16px;
   position: relative;
@@ -143,7 +146,7 @@ export const InfoContainer = styled.div`
   grid-row-start: infoRow;
   justify-content: flex-end;
   width: 100%;
-  z-index: 999;
+  z-index: 998;
 `
 
 // these are for the simple editor

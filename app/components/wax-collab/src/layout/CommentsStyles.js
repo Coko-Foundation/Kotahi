@@ -13,6 +13,7 @@ export const FullCommentsContainer = styled.div`
   min-width: 300px;
   ${props => props.readOnlyComments && 'pointer-events: none;'}
   ${props => props.readOnlyComments && 'user-select: none;'}
+  /* z-index: 999; */
 
   & > div {
     left: 0; /* 30px; */
@@ -43,7 +44,12 @@ export const CommentTrackToolsContainer = styled.div`
   padding-top: 5px;
   /* position: fixed; */
   user-select: none;
+  z-index: 0;
   /* z-index: 1; */
+
+  & ~ div > div > div > button {
+    ${props => props.authorComments && 'display: none;'}
+  }
 `
 
 export const CommentTrackTools = styled.div`
