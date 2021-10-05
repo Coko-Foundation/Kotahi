@@ -26,16 +26,16 @@ const getNotes = main => {
   return notes
 }
 
+const TopBar = ComponentPlugin('topBar')
+const WaxOverlays = ComponentPlugin('waxOverlays')
+const NotesArea = ComponentPlugin('notesArea')
+const CounterInfo = ComponentPlugin('bottomRightInfo')
+
 const FullWaxEditorLayout = readOnly => ({ editor }) => {
   const {
     view: { main },
     options,
   } = useContext(WaxContext)
-
-  const TopBar = ComponentPlugin('topBar')
-  const WaxOverlays = ComponentPlugin('waxOverlays')
-  const NotesArea = ComponentPlugin('notesArea')
-  const CounterInfo = ComponentPlugin('bottomRightInfo')
 
   const notes = (main && getNotes(main)) ?? []
 
