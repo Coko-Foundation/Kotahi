@@ -8,7 +8,6 @@ const EditorSection = ({
   onChange,
   onBlur,
   readonly,
-  useComments,
   currentUser,
 }) => {
   const manuscriptFile = manuscript?.files?.find(
@@ -30,12 +29,29 @@ const EditorSection = ({
     return () => (onBlur ? onBlur() : null)
   }, [])
 
+  const editorTeam = manuscript?.teams?.find(team => {
+    return team.role.toLowerCase().includes('editor')
+  })
+
+  const authorTeam = manuscript?.teams?.find(team => {
+    return team.role.toLowerCase().includes('author')
+  })
+
+  const isCurrentUserAuthor = authorTeam && currentUser
+    ? authorTeam.members.find(member => member.user.id === currentUser.id)
+    : false
+
+  const isCurrentUserEditor = editorTeam && currentUser
+    ? editorTeam.members.find(member => member.user.id === currentUser.id)
+    : false
+
   return (
     <FullWaxEditor
+      authorComments={(isCurrentUserAuthor && readonly) ? true : false}
       onBlur={readonly ? null : onBlur}
       onChange={readonly ? null : onChange}
       readonly={readonly}
-      useComments={useComments}
+      useComments={isCurrentUserEditor || currentUser?.admin || (isCurrentUserAuthor && readonly) ? true : false}
       user={currentUser}
       value={manuscript.meta.source}
     />
@@ -57,14 +73,12 @@ EditorSection.propTypes = {
   onBlur: PropTypes.func,
   onChange: PropTypes.func,
   readonly: PropTypes.bool,
-  useComments: PropTypes.bool,
 }
 
 EditorSection.defaultProps = {
   onChange: undefined,
   onBlur: undefined,
   readonly: false,
-  useComments: false,
 }
 
 export default EditorSection

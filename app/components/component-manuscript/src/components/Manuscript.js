@@ -64,7 +64,6 @@ const Manuscript = ({
         {content ? (
           <FullWaxEditor
             readonly
-            useComments={currentUser.admin}
             user={currentUser}
             value={content}
           />
