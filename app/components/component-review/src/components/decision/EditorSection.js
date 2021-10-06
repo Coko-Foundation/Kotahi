@@ -47,11 +47,13 @@ const EditorSection = ({
       ? editorTeam.members.find(member => member.user.id === currentUser.id)
       : false
 
+  const isAuthorMode = !!(isCurrentUserAuthor && readonly)
+
   return (
     <FullWaxEditor
-      authorComments={!!(isCurrentUserAuthor && readonly)}
-      onBlur={readonly ? null : onBlur}
-      onChange={readonly ? null : onChange}
+      authorComments={isAuthorMode}
+      onBlur={readonly && !isAuthorMode ? null : onBlur}
+      onChange={readonly && !isAuthorMode ? null : onChange}
       readonly={readonly}
       useComments={
         !!(
