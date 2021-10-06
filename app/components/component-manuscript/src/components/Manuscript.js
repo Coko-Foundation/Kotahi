@@ -62,11 +62,7 @@ const Manuscript = ({
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
       <ManuscriptContainer>
         {content ? (
-          <FullWaxEditor
-            readonly
-            user={currentUser}
-            value={content}
-          />
+          <FullWaxEditor readonly user={currentUser} value={content} />
         ) : (
           <Spinner />
         )}

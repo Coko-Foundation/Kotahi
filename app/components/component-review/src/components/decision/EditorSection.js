@@ -37,21 +37,29 @@ const EditorSection = ({
     return team.role.toLowerCase().includes('author')
   })
 
-  const isCurrentUserAuthor = authorTeam && currentUser
-    ? authorTeam.members.find(member => member.user.id === currentUser.id)
-    : false
+  const isCurrentUserAuthor =
+    authorTeam && currentUser
+      ? authorTeam.members.find(member => member.user.id === currentUser.id)
+      : false
 
-  const isCurrentUserEditor = editorTeam && currentUser
-    ? editorTeam.members.find(member => member.user.id === currentUser.id)
-    : false
+  const isCurrentUserEditor =
+    editorTeam && currentUser
+      ? editorTeam.members.find(member => member.user.id === currentUser.id)
+      : false
 
   return (
     <FullWaxEditor
-      authorComments={(isCurrentUserAuthor && readonly) ? true : false}
+      authorComments={!!(isCurrentUserAuthor && readonly)}
       onBlur={readonly ? null : onBlur}
       onChange={readonly ? null : onChange}
       readonly={readonly}
-      useComments={isCurrentUserEditor || currentUser?.admin || (isCurrentUserAuthor && readonly) ? true : false}
+      useComments={
+        !!(
+          isCurrentUserEditor ||
+          currentUser?.admin ||
+          (isCurrentUserAuthor && readonly)
+        )
+      }
       user={currentUser}
       value={manuscript.meta.source}
     />
