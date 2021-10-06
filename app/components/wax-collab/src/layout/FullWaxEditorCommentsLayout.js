@@ -22,6 +22,7 @@ import {
   CommentTrackTools,
   CommentTrackOptions,
 } from './CommentsStyles'
+import 'wax-prosemirror-services/dist/index.css'
 
 const getNotes = main => {
   const notes = DocumentHelpers.findChildrenByType(
@@ -88,8 +89,10 @@ const FullWaxEditorCommentsLayout = (readOnly, authorComments) => ({
             <FullCommentsContainer authorComments={authorComments}>
               <CommentTrackToolsContainer authorComments={authorComments}>
                 <CommentTrackTools>
-                  {commentsTracksCount + trackBlockNodesCount} COMMENTS AND
-                  SUGGESTIONS
+                  {commentsTracksCount + trackBlockNodesCount} COMMENT
+                  {commentsTracksCount + trackBlockNodesCount !== 1
+                    ? 'S AND SUGGESTIONS'
+                    : ' OR SUGGESTION'}
                   <CommentTrackOptions>
                     <CommentTrackToolBar />
                   </CommentTrackOptions>

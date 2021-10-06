@@ -17,6 +17,7 @@ import {
   SideMenu,
 } from './EditorStyles'
 import { CommentsContainerNotes } from './CommentsStyles'
+import 'wax-prosemirror-services/dist/index.css'
 
 const TopBar = ComponentPlugin('topBar')
 const WaxOverlays = ComponentPlugin('waxOverlays')
