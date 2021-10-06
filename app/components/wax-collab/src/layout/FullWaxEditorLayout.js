@@ -15,7 +15,6 @@ import {
   NotesContainer,
   NotesHeading,
 } from './NotesStyles'
-import 'wax-prosemirror-services/dist/index.css'
 
 const getNotes = main => {
   const notes = DocumentHelpers.findChildrenByType(

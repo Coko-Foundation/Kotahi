@@ -1,5 +1,6 @@
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import waxDefaultStyles from './waxDefaultStyles'
 import EditorElements from './EditorElements'
 
 // this grid goes around the menu and the editor area beneath it.
@@ -61,6 +62,7 @@ export const FullWaxEditorGrid = styled.div`
       props.useComments ? 'auto' : 0};
   grid-template-rows: [editorRow] auto [notesRow] auto [infoRow] 40px;
   ${props => props.useComments && !props.noScroll && 'overflow-x: scroll;'}
+  ${waxDefaultStyles}
   position: relative;
   z-index: 0;
 `
