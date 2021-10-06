@@ -85,7 +85,7 @@ const FullWaxEditorCommentsLayout = (readOnly, authorComments) => ({
             <ReadOnlyEditorWithCommentsEditor>
               {editor}
             </ReadOnlyEditorWithCommentsEditor>
-            <FullCommentsContainer>
+            <FullCommentsContainer authorComments={authorComments}>
               <CommentTrackToolsContainer authorComments={authorComments}>
                 <CommentTrackTools>
                   {commentsTracksCount + trackBlockNodesCount} COMMENTS AND

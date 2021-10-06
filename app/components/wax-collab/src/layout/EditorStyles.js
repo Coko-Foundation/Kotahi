@@ -10,11 +10,6 @@ export const Grid = styled.div`
   grid-template-rows: ${props => (props.readonly ? 0 : 'minmax(40px,auto)')} 1fr;
   position: relative;
 
-  & ~ div div svg {
-    /* THIS IS TO KILL INSERT COMMENT THING */
-    ${props => props.readOnlyComments && 'display: none;'}
-  }
-
   /* This was killing the comment visibility */
   /* :focus-within {
     z-index: 10000;
@@ -147,6 +142,10 @@ export const InfoContainer = styled.div`
   justify-content: flex-end;
   width: 100%;
   z-index: 998;
+  /* TODO: when clicked on, this displays a tooltip which is placed incorrectly! */
+  /* tooltip expects this to be in bottom right of viewport, which isn't where we always have it. */
+  /* position: fixed;
+  bottom: 0; */
 `
 
 // these are for the simple editor

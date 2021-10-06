@@ -27,6 +27,11 @@ export const FullCommentsContainer = styled.div`
       right: 0;
     }
   }
+
+  & ~ div div svg {
+    /* THIS IS TO KILL INSERT COMMENT THING */
+    ${props => props.authorComments && 'display: none;'}
+  }
 `
 
 export const CommentsContainerNotes = styled.div`
