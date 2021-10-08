@@ -66,6 +66,7 @@ const SubmitPage = ({ match, history }) => {
   const { data, loading, error } = useQuery(query, {
     variables: { id: match.params.version },
     partialRefetch: true,
+    fetchPolicy: 'cache-and-network',
   })
 
   const [update] = useMutation(updateMutation)
