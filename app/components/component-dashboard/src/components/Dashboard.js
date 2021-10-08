@@ -51,7 +51,9 @@ const getRoles = (m, userId) =>
     .map(t => t.role)
 
 const Dashboard = ({ history, ...props }) => {
-  const { loading, data, error } = useQuery(queries.dashboard)
+  const { loading, data, error } = useQuery(queries.dashboard, null, {
+    refetchOnMount: true,
+  })
 
   const [reviewerRespond] = useMutation(mutations.reviewerResponseMutation)
 
