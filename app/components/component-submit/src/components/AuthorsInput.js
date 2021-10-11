@@ -93,14 +93,18 @@ const AuthorsInput = ({ onChange, value }) => {
 
 AuthorsInput.propTypes = {
   onChange: PropTypes.func.isRequired,
-  value: PropTypes.arrayOf(
-    PropTypes.shape({
-      firstName: PropTypes.string.isRequired,
-      lastName: PropTypes.string.isRequired,
-      email: PropTypes.string.isRequired,
-      affiliation: PropTypes.string.isRequired,
-    }).isRequired,
-  ),
+  /** value should be an array of objects or null, but we also currently permit empty string */
+  value: PropTypes.oneOfType([
+    PropTypes.arrayOf(
+      PropTypes.shape({
+        firstName: PropTypes.string.isRequired,
+        lastName: PropTypes.string.isRequired,
+        email: PropTypes.string.isRequired,
+        affiliation: PropTypes.string.isRequired,
+      }).isRequired,
+    ),
+    PropTypes.oneOf(['']),
+  ]),
 }
 
 AuthorsInput.defaultProps = {
