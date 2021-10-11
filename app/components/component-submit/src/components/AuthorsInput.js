@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import PropTypes from 'prop-types'
 import { TextField, Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { v4 as uuid } from 'uuid'
@@ -31,9 +32,12 @@ const InvalidLabel = styled.div`
 
 // TODO This is not following Formik idioms. Improve?
 const AuthorsInput = ({ onChange, value }) => {
+  const cleanedVal = Array.isArray(value) ? value : [] // We're getting momentary mismatches between field and value, so this can momentarily receive e.g. a string from another field, before a rerender corrects it. Not sure why yet.
+  if (value && !Array.isArray(value))
+    console.error('Illegal AuthorsInput value:', value)
   return (
     <>
-      {(value || []).map((author, index) => (
+      {cleanedVal.map((author, index) => (
         <Author key={author.id}>
           {fields.map(f => {
             const invalidity = f.validate && f.validate(author[f.name])
@@ -43,7 +47,7 @@ const AuthorsInput = ({ onChange, value }) => {
                 <TextField
                   label={f.label}
                   onChange={v => {
-                    const newVal = [...(value || [])]
+                    const newVal = [...cleanedVal]
                     newVal[index][f.name] = v.target.value
                     onChange(newVal)
                   }}
@@ -56,17 +60,17 @@ const AuthorsInput = ({ onChange, value }) => {
           })}
           <DeleteControl
             onClick={() => {
-              onChange(value.filter((_, i) => i !== index))
+              onChange(cleanedVal.filter((_, i) => i !== index))
             }}
             tooltip="Delete this author"
           />
         </Author>
       ))}
       <Button
-        disabled={validateAuthors(value)}
+        disabled={validateAuthors(cleanedVal)}
         onClick={() => {
           const newVal = [
-            ...(value || []),
+            ...cleanedVal,
             {
               firstName: '',
               lastName: '',
@@ -85,6 +89,22 @@ const AuthorsInput = ({ onChange, value }) => {
       </Button>
     </>
   )
+}
+
+AuthorsInput.propTypes = {
+  onChange: PropTypes.func.isRequired,
+  value: PropTypes.arrayOf(
+    PropTypes.shape({
+      firstName: PropTypes.string.isRequired,
+      lastName: PropTypes.string.isRequired,
+      email: PropTypes.string.isRequired,
+      affiliation: PropTypes.string.isRequired,
+    }).isRequired,
+  ),
+}
+
+AuthorsInput.defaultProps = {
+  value: null,
 }
 
 export default AuthorsInput
