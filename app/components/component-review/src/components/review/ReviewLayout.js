@@ -68,7 +68,7 @@ const ReviewLayout = ({
             review={
               msVersion.reviews &&
               msVersion.reviews.find(
-                r => r.user.id === currentUser.id && !r.isDecision,
+                r => r.user?.id === currentUser.id && !r.isDecision,
               )
             }
           />
