@@ -253,7 +253,12 @@ const ReviewPage = ({ match, ...props }) => {
     haspopup: 'false',
   }
 
-  const channelId = manuscript.channels.find(c => c.type === 'editorial').id
+  const channelId = manuscript.channels.find(c => c.type === 'editorial')?.id
+  if (!channelId)
+    console.error(
+      `Malformed channels in manuscript ${manuscript.id}:`,
+      manuscript.channels,
+    )
 
   const { status } =
     (
