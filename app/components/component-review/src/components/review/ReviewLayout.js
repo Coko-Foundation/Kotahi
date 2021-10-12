@@ -55,6 +55,12 @@ const ReviewLayout = ({
   }
 
   manuscriptVersions.forEach(msVersion => {
+    if (msVersion.reviews?.some(r => !r.user))
+      console.error(
+        `Malformed review objects in manuscript ${msVersion.id}:`,
+        msVersion.reviews,
+      )
+
     const label = moment().format('YYYY-MM-DD')
     reviewSections.push({
       content: (
