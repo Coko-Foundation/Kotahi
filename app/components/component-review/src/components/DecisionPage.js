@@ -61,7 +61,7 @@ const DecisionPage = ({ match }) => {
     variables: {
       id: match.params.version,
     },
-    // fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only', // TODO This prevents reviews sometimes having a null user. The whole graphql/caching in DecisionPage and DecisionVersion needs clean-up.
   })
 
   const [update] = useMutation(updateMutation)
