@@ -463,4 +463,51 @@ export default css`
   .transform-icon {
     transform: rotate(40deg);
   }
+
+  /* JATS */
+
+  section.frontmatter {
+    background-color: rgba(255, 0, 0, 0.25);
+    border: 1px solid red;
+    padding: 8px 16px;
+    position: relative;
+    &:before {
+      color: white;
+      content: 'FRONT MATTER';
+      font-weight: bold;
+      left: 2px;
+      letter-spacing: 1px;
+      position: absolute;
+      top: -4px;
+    }
+  }
+
+  p.mixedcitation {
+    &:before {
+      content: '§ ';
+    }
+  }
+
+  section.appendix {
+    background-color: rgba(0, 128, 128, 0.25);
+    border: 1px solid teal;
+    padding: 8px 16px;
+    position: relative;
+    &:before {
+      color: white;
+      content: 'APPENDIX';
+      font-weight: bold;
+      left: 2px;
+      letter-spacing: 1px;
+      position: absolute;
+      top: -4px;
+    }
+  }
+
+  h1.appendixheader {
+    background-color: teal;
+    border-radius: 8px;
+    color: white;
+    padding: 4px 8px;
+  }
 `

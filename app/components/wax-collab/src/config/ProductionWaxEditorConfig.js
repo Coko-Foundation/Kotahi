@@ -33,8 +33,13 @@ import {
   TrackOptionsToolGroupService,
   TrackCommentOptionsToolGroupService,
 } from 'wax-prosemirror-services'
-import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
+import {
+  KotahiBlockDropDownToolGroupService,
+  JatsSideMenuToolGroupService,
+  JatsAnnotationListTooolGroupService,
+} from '../CustomWaxToolGroups'
 import ExtendedHeadingService from '../ExtendedHeaders'
+import JatsTagsService from '../JatsTags'
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
@@ -75,7 +80,7 @@ const productionWaxEditorConfig = readOnlyComments => ({
     },
     {
       templateArea: 'leftSideBar',
-      toolGroups: [],
+      toolGroups: ['JatsSideMenu'],
     },
     {
       templateArea: 'commentTrackToolBar',
@@ -145,6 +150,10 @@ const productionWaxEditorConfig = readOnlyComments => ({
     new CommentsService(),
     new TrackCommentOptionsToolGroupService(),
     new TrackOptionsToolGroupService(),
+    // for side menu
+    new JatsTagsService(),
+    new JatsSideMenuToolGroupService(),
+    new JatsAnnotationListTooolGroupService(),
   ],
 })
 
