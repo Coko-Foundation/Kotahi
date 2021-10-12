@@ -66,4 +66,7 @@ module.exports = {
     shared: 'REVIEW_SHARED',
     hide: 'REVIEW_HIDE',
   },
+  'notification-email': {
+    automated: 'NOTIFICATION_EMAIL_AUTOMATED',
+  },
 }

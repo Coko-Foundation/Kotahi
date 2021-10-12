@@ -214,6 +214,7 @@ module.exports = {
     'crossref',
     'hypothesis',
     'review',
+    'notification-email',
   ],
   s3: {
     accessKeyId: 'test',
@@ -239,5 +240,8 @@ module.exports = {
   review: {
     shared: '',
     hide: '',
+  },
+  'notification-email': {
+    automated: '',
   },
 }

@@ -78,6 +78,7 @@ services:
       - PUBLISHING_WEBHOOK_REF=${PUBLISHING_WEBHOOK_REF:-}
       - REVIEW_SHARED=${REVIEW_SHARED:-false}
       - REVIEW_HIDE=${REVIEW_HIDE:-false}
+      - NOTIFICATION_EMAIL_AUTOMATED=${NOTIFICATION_EMAIL_AUTOMATED:-false}
 
   job-xsweet:
     image: pubsweet/job-xsweet:1.5.2
