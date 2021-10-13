@@ -25,6 +25,7 @@ const ReviewInvitationEmailTemplate = ({
       </ol>  
       <p>If you have questions about Aperture, the review process, or the submission, please contact the journal manager at aperture@humanbrainmapping.org.</p>
       <p>Thank you,</p>
+      <p>Uzay Emir</p>
       <p>Handling Editor <br>
       Aperture Neuro
       </p>

@@ -1,4 +1,4 @@
-const SubmissionConfirmationEmailTemplate = ({
+const ReviewRejectEmailTemplate = ({
   articleTitle,
   authorName,
   reviewerName,
@@ -39,4 +39,4 @@ const SubmissionConfirmationEmailTemplate = ({
   return result
 }
 
-module.exports = SubmissionConfirmationEmailTemplate
+module.exports = ReviewRejectEmailTemplate
