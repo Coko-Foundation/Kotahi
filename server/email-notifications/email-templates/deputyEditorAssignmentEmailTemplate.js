@@ -1,4 +1,4 @@
-const EditorAssignmentEmailTemplate = ({
+const deputyEditorAssignmentEmailTemplate = ({
   articleTitle,
   authorName,
   receiverFirstName,
@@ -20,9 +20,9 @@ const EditorAssignmentEmailTemplate = ({
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>To access the submission please log onto the Aperture Submission Kotahi platform at <a href="https://apertureneuro.cloud68.co/login" target="_blank">https://apertureneuro.cloud68.co/login</a>.</p>
       <p>If you have any questions or trouble accessing the submission, please contact the Journal Manager at aperture@humanbrainmapping.org.</p>
-      <p>Sincerely,</p>
-      <p>Tonya White, MD, PhD</p>
-      <p>Editor-in-Chief <br>
+      <p>Thank you,</p>
+      <p>Mallar Chakravarty, PhD</p>
+      <p>Deputy Editor-in-Chief <br>
       Aperture Neuro
       </p>
     </p>`
@@ -35,8 +35,8 @@ const EditorAssignmentEmailTemplate = ({
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>To access the submission please log onto the Submission Kotahi platform at <a href="https://kotahidev.cloud68.co/login" target="_blank">https://kotahidev.cloud68.co/login</a>.</p>
       <p>If you have any questions or trouble accessing the submission, please contact the Journal Manager.</p>
-      <p>Sincerely,</p>
-      <p>Editor-in-Chief <br>
+      <p>Thank you,</p>
+      <p>Deputy Editor-in-Chief <br>
       Kotahi Dev
       </p>
     </p>`
@@ -47,4 +47,4 @@ const EditorAssignmentEmailTemplate = ({
   return result
 }
 
-module.exports = EditorAssignmentEmailTemplate
+module.exports = deputyEditorAssignmentEmailTemplate
