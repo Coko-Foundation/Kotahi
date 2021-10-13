@@ -60,7 +60,7 @@ class Manuscript extends BaseModel {
     return manuscriptReviews
   }
 
-  /** Returns an array of all versions created prior to this version */
+  /** Returns an array of all versions other than this version */
   async getManuscriptVersions() {
     // const { File } = require('@pubsweet/models')
 
@@ -68,18 +68,20 @@ class Manuscript extends BaseModel {
 
     const manuscripts = await Manuscript.query()
       .where('parent_id', id)
-      .eager('[teams, teams.members, reviews, files]')
+      .withGraphFetched(
+        '[teams, teams.members, reviews.[user, comments], files]',
+      )
 
     const firstManuscript = await Manuscript.query()
       .findById(id)
-      .eager('[teams, teams.members, reviews, files]')
+      .withGraphFetched(
+        '[teams, teams.members, reviews.[user, comments], files]',
+      )
 
     manuscripts.push(firstManuscript)
 
     const manuscriptVersionsArray = manuscripts.filter(
-      manuscript =>
-        new Date(manuscript.created).getTime() <
-          new Date(this.created).getTime() && this.id !== manuscript.id,
+      manuscript => this.id !== manuscript.id,
     )
 
     const manuscriptVersions = sortBy(
