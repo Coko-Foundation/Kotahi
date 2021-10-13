@@ -246,6 +246,11 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
       .for(parent.id)
       .first()
 
+    if (!manuscript) {
+      console.error('File without owner manuscript encountered:', parent)
+      return false
+    }
+
     const team = await ctx.models.Team.query()
       .where({
         manuscriptId: manuscript.id,
@@ -281,6 +286,11 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
     .for(parent.id)
     .first()
 
+  if (!manuscript) {
+    console.error('File without owner manuscript encountered:', parent)
+    return false
+  }
+
   const team = await ctx.models.Team.query()
     .where({
       manuscriptId: manuscript.id,
@@ -288,9 +298,7 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
     })
     .first()
 
-  if (!team) {
-    return false
-  }
+  if (!team) return false
 
   const members = await team
     .$relatedQuery('members')
