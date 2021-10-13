@@ -12,18 +12,12 @@ import { Columns, Manuscript, Chat } from '../../../../shared'
 import MessageContainer from '../../../../component-chat/src'
 import ArticleEvaluationSummaryPage from '../../../../component-decision-viewer'
 
-const addEditor = (manuscript, label) => ({
-  content: <EditorSection manuscript={manuscript} readonly />,
-  key: manuscript.id,
-  label,
-})
-
 const hasManuscriptFile = manuscript =>
   !!manuscript?.files?.find(file => file.fileType === 'manuscript')
 
 const ReviewLayout = ({
   currentUser,
-  manuscript,
+  versions,
   review,
   handleSubmit,
   isValid,
@@ -34,14 +28,16 @@ const ReviewLayout = ({
   submissionForm,
 }) => {
   const reviewSections = []
-  const editorSections = []
-  const manuscriptVersions = manuscript.manuscriptVersions || []
+  const latestVersion = versions[0]
+  const priorVersions = versions.slice(1)
+  priorVersions.reverse() // Convert to chronological order (was reverse-chron)
 
   const decisionComment =
-    manuscript.reviews.find(reviewIsDecision => reviewIsDecision.isDecision) ||
-    {}
+    latestVersion.reviews.find(
+      reviewIsDecision => reviewIsDecision.isDecision,
+    ) || {}
 
-  const decisionRadio = manuscript.status
+  const decisionRadio = latestVersion.status
 
   const formatDecisionComment = input => {
     const comment = input.decisionComment ? input.decisionComment.content : ''
@@ -54,7 +50,7 @@ const ReviewLayout = ({
     return comment
   }
 
-  manuscriptVersions.forEach(msVersion => {
+  priorVersions.forEach(msVersion => {
     if (msVersion.reviews?.some(r => !r.user))
       console.error(
         `Malformed review objects in manuscript ${msVersion.id}:`,
@@ -64,38 +60,38 @@ const ReviewLayout = ({
     const label = moment().format('YYYY-MM-DD')
     reviewSections.push({
       content: (
-        <div>
+        <div key={msVersion.id}>
+          {hasManuscriptFile(msVersion) && (
+            <EditorSection manuscript={msVersion} readonly />
+          )}
           <ReviewMetadata
             form={submissionForm}
             manuscript={msVersion}
             showEditorOnlyFields={false}
           />
           <Review
-            review={
-              msVersion.reviews &&
-              msVersion.reviews.find(
-                r => r.user?.id === currentUser.id && !r.isDecision,
-              )
-            }
+            review={msVersion.reviews?.find(
+              r => r.user?.id === currentUser.id && !r.isDecision,
+            )}
           />
         </div>
       ),
       key: msVersion.id,
       label,
     })
-
-    if (hasManuscriptFile(msVersion))
-      editorSections.push(addEditor(msVersion, label))
   }, [])
 
-  if (manuscript.status !== 'revising') {
+  if (latestVersion.status !== 'revising') {
     const label = moment().format('YYYY-MM-DD')
     reviewSections.push({
       content: (
-        <div>
+        <div key={latestVersion.id}>
+          {hasManuscriptFile(latestVersion) && (
+            <EditorSection manuscript={latestVersion} readonly />
+          )}
           <ReviewMetadata
             form={submissionForm}
-            manuscript={manuscript}
+            manuscript={latestVersion}
             showEditorOnlyFields={false}
           />
           {status === 'completed' ? (
@@ -117,25 +113,14 @@ const ReviewLayout = ({
           )}
         </div>
       ),
-      key: manuscript.id,
+      key: latestVersion.id,
       label,
     })
-
-    if (hasManuscriptFile(manuscript))
-      editorSections.push(addEditor(manuscript, label))
   }
 
   return (
     <Columns>
       <Manuscript>
-        {editorSections.length > 0 && (
-          <Tabs
-            activeKey={editorSections[editorSections.length - 1].key}
-            sections={editorSections}
-            title="Versions"
-          />
-        )}
-
         <Tabs
           activeKey={reviewSections[reviewSections.length - 1].key}
           sections={reviewSections}
@@ -153,44 +138,27 @@ ReviewLayout.propTypes = {
   currentUser: PropTypes.shape({
     id: PropTypes.string.isRequired,
   }).isRequired,
-  manuscript: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    status: PropTypes.string.isRequired,
-    meta: PropTypes.shape({
-      notes: PropTypes.arrayOf(
-        PropTypes.shape({
-          notesType: PropTypes.string.isRequired,
-          content: PropTypes.string.isRequired,
-        }).isRequired,
-      ).isRequired,
-    }).isRequired,
-    files: PropTypes.arrayOf(
-      PropTypes.shape({
-        url: PropTypes.string.isRequired,
-        filename: PropTypes.string.isRequired,
-      }).isRequired,
-    ).isRequired,
-    manuscriptVersions: PropTypes.arrayOf(
-      PropTypes.shape({
-        reviews: PropTypes.arrayOf(),
-        id: PropTypes.string.isRequired,
-        meta: PropTypes.shape({
-          notes: PropTypes.arrayOf(
-            PropTypes.shape({
-              notesType: PropTypes.string.isRequired,
-              content: PropTypes.string.isRequired,
-            }).isRequired,
-          ).isRequired,
-        }).isRequired,
-        files: PropTypes.arrayOf(
+  versions: PropTypes.arrayOf(
+    PropTypes.shape({
+      id: PropTypes.string.isRequired,
+      reviews: PropTypes.arrayOf(),
+      status: PropTypes.string.isRequired,
+      meta: PropTypes.shape({
+        notes: PropTypes.arrayOf(
           PropTypes.shape({
-            url: PropTypes.string.isRequired,
-            filename: PropTypes.string.isRequired,
+            notesType: PropTypes.string.isRequired,
+            content: PropTypes.string.isRequired,
           }).isRequired,
         ).isRequired,
       }).isRequired,
-    ),
-  }).isRequired,
+      files: PropTypes.arrayOf(
+        PropTypes.shape({
+          url: PropTypes.string.isRequired,
+          filename: PropTypes.string.isRequired,
+        }).isRequired,
+      ).isRequired,
+    }).isRequired,
+  ).isRequired,
   review: PropTypes.shape({
     reviewComment: PropTypes.string,
     confidentialComment: PropTypes.string,

@@ -9,6 +9,7 @@ const logger = require('@pubsweet/logger')
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
 const publishToCrossref = require('../../publishing/crossref')
+const { stripSensitiveItems } = require('./manuscriptUtils')
 
 const {
   publishToHypothesis,
@@ -656,9 +657,7 @@ const resolvers = {
 
       const manuscript = await ManuscriptModel.query()
         .findById(id)
-        .withGraphFetched(
-          '[teams, channels, files, reviews.[user, comments], manuscriptVersions(orderByCreated)]',
-        )
+        .withGraphFetched('[teams, channels, files, reviews.[user, comments]]')
 
       if (!manuscript) return null
 
@@ -681,13 +680,7 @@ const resolvers = {
       manuscript.manuscriptVersions = await manuscript.getManuscriptVersions()
 
       if (ctx.user && !ctx.user.admin) {
-        const manuscriptObj = { ...manuscript }
-
-        manuscriptObj.reviews.forEach((review, index) => {
-          delete manuscriptObj.reviews[index].confidentialComment
-        })
-
-        return manuscriptObj
+        return stripSensitiveItems(manuscript)
       }
 
       return manuscript
@@ -965,6 +958,7 @@ const typeDefs = `
 
   type Manuscript implements Object {
     id: ID!
+    parentId: ID
     created: DateTime!
     updated: DateTime
     manuscriptVersions: [ManuscriptVersion]
