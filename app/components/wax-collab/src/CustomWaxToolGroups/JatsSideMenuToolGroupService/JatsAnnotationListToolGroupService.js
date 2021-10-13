@@ -1,9 +1,15 @@
 import { Service } from 'wax-prosemirror-services'
-import JatsAnnotationList from './JatsAnnotationList'
+import {
+  AppendixList,
+  CitationList,
+  FrontMatterList,
+} from './JatsAnnotationList'
 
 class JatsAnnotationListToolGroupService extends Service {
   register() {
-    this.container.bind('JatsAnnotationList').to(JatsAnnotationList)
+    this.container.bind('AppendixList').to(AppendixList)
+    this.container.bind('CitationList').to(CitationList)
+    this.container.bind('FrontMatterList').to(FrontMatterList)
   }
 }
 

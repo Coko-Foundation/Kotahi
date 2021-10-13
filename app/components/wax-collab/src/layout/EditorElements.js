@@ -469,6 +469,7 @@ export default css`
   section.frontmatter {
     background-color: rgba(255, 0, 0, 0.25);
     border: 1px solid red;
+    margin-bottom: 8px;
     padding: 8px 16px;
     position: relative;
     &:before {
@@ -482,6 +483,31 @@ export default css`
     }
   }
 
+  section.reflist {
+    background-color: rgba(25, 25, 112, 0.25);
+    border: 1px solid midnightblue;
+    margin-bottom: 8px;
+    padding: 8px 16px;
+    position: relative;
+
+    &:before {
+      color: white;
+      content: 'REFERENCE LIST';
+      font-weight: bold;
+      left: 2px;
+      letter-spacing: 1px;
+      position: absolute;
+      top: -4px;
+    }
+  }
+
+  h1.referenceheader {
+    background-color: midnightblue;
+    border-radius: 8px;
+    color: white;
+    padding: 4px 8px;
+  }
+
   p.mixedcitation {
     &:before {
       content: '§ ';
@@ -491,6 +517,7 @@ export default css`
   section.appendix {
     background-color: rgba(0, 128, 128, 0.25);
     border: 1px solid teal;
+    margin-bottom: 8px;
     padding: 8px 16px;
     position: relative;
     &:before {

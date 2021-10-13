@@ -34,6 +34,7 @@ import {
 } from 'wax-prosemirror-services'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
 import ExtendedHeadingService from '../ExtendedHeaders'
+import JatsTagsService from '../JatsTags'
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
@@ -147,6 +148,7 @@ const fullWaxEditorConfig = () => ({
     new CommentsService(),
     new TrackCommentOptionsToolGroupService(),
     new TrackOptionsToolGroupService(),
+    new JatsTagsService(),
   ],
 })
 

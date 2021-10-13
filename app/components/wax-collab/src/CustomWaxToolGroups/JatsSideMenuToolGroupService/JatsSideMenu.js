@@ -21,16 +21,18 @@ class JatsSideMenu extends ToolGroup {
   toolGroups = []
 
   constructor(
-    @inject('Display') display,
-    @inject('JatsAnnotationList') jatsannotationlist,
+    @inject('FrontMatterList') frontmatterlist,
+    @inject('AppendixList') appendixlist,
+    @inject('CitationList') citationlist,
   ) {
     super()
 
     this.toolGroups = [
       {
         name: 'TabA',
-        groups: [jatsannotationlist, display],
+        groups: [appendixlist, citationlist],
       },
+      { name: 'TabB', groups: [frontmatterlist] },
     ]
   }
 
@@ -39,12 +41,12 @@ class JatsSideMenu extends ToolGroup {
 
     const first = {
       id: '1',
-      title: 'display tools',
+      title: 'Back matter tools',
       icon: 'title',
       disabled: false,
       component: (
         <BlockLevelTools
-          groups={this._toolGroups[0].groups.slice(0, 1).map(group => ({
+          groups={this._toolGroups[0].groups.map(group => ({
             groupName: group.title.props.title,
             items: group._tools,
           }))}
@@ -55,31 +57,23 @@ class JatsSideMenu extends ToolGroup {
 
     // if you wanted a second tab, enable this:
 
-    // const second = {
-    //   id: '2',
-    //   title: 'text tools',
-    //   icon: 'title', // what can this be?
-    //   disabled: false,
-    //   component: (
-    //     <BlockLevelTools
-    //       groups={this._toolGroups[0].groups.slice(1).map(group => ({
-    //         groupName: group.title.props.title,
-    //         items: group._tools,
-    //       }))}
-    //       view={view}
-    //     />
-    //   ),
-    // }
+    const second = {
+      id: '2',
+      title: 'Front matter tools',
+      icon: 'title', // what can this be?
+      disabled: false,
+      component: (
+        <BlockLevelTools
+          groups={this._toolGroups[1].groups.map(group => ({
+            groupName: group.title.props.title,
+            items: group._tools,
+          }))}
+          view={view}
+        />
+      ),
+    }
 
-    // const second = {
-    //   id: '2',
-    //   disabled: true,
-    //   title: 'chapter list',
-    //   icon: 'chapterList',
-    //   component: <Empty />,
-    // };
-
-    const tabList = [first /*, second*/]
+    const tabList = [second, first]
 
     const TabsComponent = useMemo(
       () => <Tabs key={uuidv4()} tabList={tabList} />,
