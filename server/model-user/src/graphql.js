@@ -221,7 +221,11 @@ const resolvers = {
           .withGraphFetched('[defaultIdentity]')
 
         /* eslint-disable-next-line */
-        receiverFirstName = userReceiver.defaultIdentity.name.split(' ')[0]
+        receiverFirstName = (
+          userReceiver.defaultIdentity.name ||
+          userReceiver.username ||
+          ''
+        ).split(' ')[0]
       }
 
       const manuscriptWithSubmitter = await ctx.models.Manuscript.query()
@@ -229,7 +233,10 @@ const resolvers = {
         .withGraphFetched('submitter.[defaultIdentity]')
 
       /* eslint-disable-next-line */
-      const authorName = manuscriptWithSubmitter.submitter.defaultIdentity.name
+      const authorName =
+        manuscriptWithSubmitter.submitter.defaultIdentity.name ||
+        manuscriptWithSubmitter.submitter.username ||
+        ''
 
       const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
       const emailValidationResult = emailValidationRegexp.test(receiverEmail)

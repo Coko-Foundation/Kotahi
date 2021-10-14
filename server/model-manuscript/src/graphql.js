@@ -374,7 +374,11 @@ const resolvers = {
           .findById(context.user.id)
           .withGraphFetched('[defaultIdentity]')
 
-        const reviewerName = reviewer.defaultIdentity.name.split(' ')[0]
+        const reviewerName = (
+          reviewer.defaultIdentity.name ||
+          reviewer.username ||
+          ''
+        ).split(' ')[0]
 
         const manuscript = await context.models.Manuscript.query()
           .findById(team.manuscriptId)
@@ -396,9 +400,11 @@ const resolvers = {
 
         const receiverEmail = handlingEditor.user.email
         /* eslint-disable-next-line */
-        const receiverFirstName = handlingEditor.user.defaultIdentity.name.split(
-          ' ',
-        )[0]
+        const receiverFirstName = (
+          handlingEditor.user.defaultIdentity.name ||
+          handlingEditor.user.username ||
+          ''
+        ).split(' ')[0]
 
         const selectedTemplate = 'reviewRejectEmailTemplate'
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
@@ -410,7 +416,10 @@ const resolvers = {
 
         const data = {
           articleTitle: manuscript.meta.title,
-          authorName: manuscript.submitter.defaultIdentity.name,
+          authorName:
+            manuscript.submitter.defaultIdentity.name ||
+            manuscript.submitter.username ||
+            '',
           receiverFirstName,
           reviewerName,
           shortId: manuscript.shortId,
@@ -443,9 +452,11 @@ const resolvers = {
 
         const receiverEmail = manuscript.submitter.email
         /* eslint-disable-next-line */
-        const receiverFirstName = manuscript.submitter.defaultIdentity.name.split(
-          ' ',
-        )[0]
+        const receiverFirstName = (
+          manuscript.submitter.defaultIdentity.name ||
+          manuscript.submitter.username ||
+          ''
+        ).split(' ')[0]
 
         const selectedTemplate = 'submissionConfirmationEmailTemplate'
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
@@ -457,7 +468,10 @@ const resolvers = {
 
         const data = {
           articleTitle: manuscript.meta.title,
-          authorName: manuscript.submitter.defaultIdentity.name,
+          authorName:
+            manuscript.submitter.defaultIdentity.name ||
+            manuscript.submitter.username ||
+            '',
           receiverFirstName,
           shortId: manuscript.shortId,
         }
@@ -489,9 +503,11 @@ const resolvers = {
         // Automated email evaluvationComplete on decision
         const receiverEmail = manuscript.submitter.email
         /* eslint-disable-next-line */
-        const receiverFirstName = manuscript.submitter.defaultIdentity.name.split(
-          ' ',
-        )[0]
+        const receiverFirstName = (
+          manuscript.submitter.defaultIdentity.name ||
+          manuscript.submitter.username ||
+          ''
+        ).split(' ')[0]
 
         const selectedTemplate = 'evaluationCompleteEmailTemplate'
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
@@ -503,7 +519,10 @@ const resolvers = {
 
         const data = {
           articleTitle: manuscript.meta.title,
-          authorName: manuscript.submitter.defaultIdentity.name,
+          authorName:
+            manuscript.submitter.defaultIdentity.name ||
+            manuscript.submitter.username ||
+            '',
           receiverFirstName,
           shortId: manuscript.shortId,
         }
