@@ -175,11 +175,6 @@ switch (
       },
       {
         label:
-          'Code Editors - Peer-Review Invitation Assignment notification template',
-        value: 'reviewInvitationEmailTemplate29',
-      },
-      {
-        label:
           'Kendrick Kay - Peer-Review Invitation Assignment notification template',
         value: 'reviewInvitationEmailTemplate30',
       },

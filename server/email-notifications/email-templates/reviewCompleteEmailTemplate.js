@@ -16,6 +16,7 @@ const ReviewCompleteEmailTemplate = ({
       result.content = `<p>
       <p>Dear ${receiverFirstName},</p>
       <p>I am pleased to report that Aperture Submission "${articleTitle}" has completed the Peer-Review phase. The next step is to make a recommendation to the Editor-in-Chief based on your personal assessment of the work and the feedback received from the Peer-Reviewers.</p>
+      <p>To access the submission please log onto the Aperture Submission Kotahi platform at <a href="https://apertureneuro.cloud68.co/login" target="_blank">https://apertureneuro.cloud68.co/login</a>. Please make your final recommendation using the Chat Feature.</p>
       <p>Thank you,</p>
       <p>Kay Vanda</p>
       <p>Journal Manager <br>
@@ -28,6 +29,7 @@ const ReviewCompleteEmailTemplate = ({
       result.content = `<p>
       <p>Dear ${receiverFirstName},</p>
       <p>I am pleased to report that Submission "${articleTitle}" has completed the Peer-Review phase. The next step is to make a recommendation to the Editor-in-Chief based on your personal assessment of the work and the feedback received from the Peer-Reviewers.</p>
+      <p>To access the submission please log onto the Kotahi platform at <a href="https://kotahidev.cloud68.co/login" target="_blank">https://kotahidev.cloud68.co/login</a>. Please make your final recommendation using the Chat Feature.</p>
       <p>Thank you,</p>
       <p>Kotahi Dev</p>
     </p>`
