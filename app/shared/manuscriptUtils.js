@@ -2,6 +2,7 @@ import { get } from 'lodash'
 import { validateFormField } from './formValidation'
 import { convertTimestampToDate } from './time-formatting'
 
+// TODO: rename validateManuscriptSubmission. This is only intended for validating the manuscript.submission object, nothing else.
 export const validateManuscript = (submission, fieldDefinitions, client) =>
   Object.entries(fieldDefinitions)
     .filter(([key, element]) => element?.name)
