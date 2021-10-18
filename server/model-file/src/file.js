@@ -38,13 +38,13 @@ class File extends BaseModel {
     return {
       properties: {
         label: { type: ['string', 'null'] },
-        url: { type: ['string', 'null'] },
+        url: { type: ['string'] },
         mimeType: { type: ['string', 'null'] },
-        fileType: { type: ['string', 'null'] },
-        filename: { type: ['string', 'null'] },
-        size: { type: ['integer', 'null'] },
+        fileType: { type: ['string'] },
+        filename: { type: ['string'] },
+        size: { type: ['integer'] },
         reviewCommentId: { type: ['string', 'null'], format: 'uuid' },
-        manuscriptId: { type: ['string', 'null'], format: 'uuid' },
+        manuscriptId: { type: ['string'], format: 'uuid' },
       },
     }
   }

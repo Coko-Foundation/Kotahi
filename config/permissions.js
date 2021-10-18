@@ -120,10 +120,11 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
   let manuscriptId
 
   if (args.id) {
-    ;({ manuscriptId } = await ctx.models.Review.query().findById(args.id))
-  } else {
-    ;({ manuscriptId } = args.input)
+    const review = await ctx.models.Review.query().findById(args.id)
+    if (review) manuscriptId = review.manuscriptId
   }
+
+  if (!manuscriptId) manuscriptId = args.input.manuscriptId
 
   const manuscript = await ctx.models.Manuscript.query().findById(manuscriptId)
 
@@ -153,10 +154,11 @@ const userIsEditorOfTheManuscriptOfTheReview = rule({
   let manuscriptId
 
   if (args.id) {
-    ;({ manuscriptId } = await ctx.models.Review.query().findById(args.id))
-  } else {
-    ;({ manuscriptId } = args.input)
+    const review = await ctx.models.Review.query().findById(args.id)
+    if (review) manuscriptId = review.manuscriptId
   }
+
+  if (!manuscriptId) manuscriptId = args.input.manuscriptId
 
   return userIsEditorQuery(ctx.user, manuscriptId)
 })

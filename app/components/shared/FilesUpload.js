@@ -68,8 +68,8 @@ const DropzoneAndList = ({
   deleteFile,
   fileType,
   fieldName,
-  multiple,
-  accept,
+  acceptMultiple,
+  mimeTypesToAccept,
 }) => {
   // Disable the input in case we want a single file upload
   // and a file has already been uploaded
@@ -88,14 +88,14 @@ const DropzoneAndList = ({
       return val
     })
 
-  const disabled = !multiple && !!files.length
+  const disabled = !acceptMultiple && !!files.length
 
   return (
     <>
       <Dropzone
-        accept={accept}
+        accept={mimeTypesToAccept}
         disabled={disabled}
-        multiple={multiple}
+        multiple={acceptMultiple}
         onDrop={async dropFiles => {
           Array.from(dropFiles).forEach(async file => {
             const data = await createFile(file)
@@ -147,26 +147,28 @@ DropzoneAndList.propTypes = {
   remove: PropTypes.func.isRequired,
   createFile: PropTypes.func.isRequired,
   deleteFile: PropTypes.func.isRequired,
-  fileType: PropTypes.string,
+  fileType: PropTypes.string.isRequired,
   fieldName: PropTypes.string.isRequired,
-  multiple: PropTypes.bool,
-  accept: PropTypes.string,
+  acceptMultiple: PropTypes.bool,
+  mimeTypesToAccept: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string.isRequired),
+  ]),
 }
 
 DropzoneAndList.defaultProps = {
-  fileType: null,
-  multiple: true,
-  accept: undefined,
+  acceptMultiple: true,
+  mimeTypesToAccept: undefined,
 }
 
 const FilesUpload = ({
   fileType,
   fieldName = 'files',
-  containerId,
-  containerName,
-  initializeContainer,
-  multiple = true,
-  accept,
+  manuscriptId,
+  reviewCommentId,
+  initializeReviewComment,
+  acceptMultiple = true,
+  mimeTypesToAccept,
 }) => {
   const [createF] = useMutation(createFileMutation)
 
@@ -184,15 +186,16 @@ const FilesUpload = ({
   const createFile = async file => {
     const meta = {
       filename: file.name,
+      manuscriptId,
+      reviewCommentId,
       mimeType: file.type,
       size: file.size,
       fileType,
+      label: file.label || undefined,
     }
 
-    // Create a container/parent for these files if one doesn't exist
-    const localContainerId = containerId || (await initializeContainer())
-
-    meta[`${containerName}Id`] = localContainerId
+    if (!meta.reviewCommentId && initializeReviewComment)
+      meta.reviewCommentId = (await initializeReviewComment()) || null
 
     const { data } = await createF({
       variables: {
@@ -215,12 +218,12 @@ const FilesUpload = ({
       name={fieldName}
       render={formikProps => (
         <DropzoneAndList
-          accept={accept}
+          acceptMultiple={acceptMultiple}
           createFile={createFile}
           deleteFile={deleteFile}
           fieldName={fieldName}
           fileType={fileType}
-          multiple={multiple}
+          mimeTypesToAccept={mimeTypesToAccept}
           {...formikProps}
         />
       )}
@@ -229,22 +232,32 @@ const FilesUpload = ({
 }
 
 FilesUpload.propTypes = {
-  fileType: PropTypes.string,
+  /** The type of attachment, e.g. 'manuscript' (for embedded images), or 'supplementary', 'visualAbstract', 'review', 'confidential', 'decision' */
+  fileType: PropTypes.string.isRequired,
   fieldName: PropTypes.string,
-  containerId: PropTypes.string,
-  containerName: PropTypes.string.isRequired,
-  initializeContainer: PropTypes.func,
-  multiple: PropTypes.bool,
-  accept: PropTypes.string,
+  /** All files belong to a manuscript */
+  manuscriptId: PropTypes.string.isRequired,
+  /** Some files may be attached to a review comment (or review decision).
+   * If the review comment hasn't been started yet there may not be an ID
+   * assigned for it yet, in which case initializeReviewComment will be
+   * called to create a new record in the DB. */
+  reviewCommentId: PropTypes.string,
+  /** Function to create a new record in DB in case there is no reviewCommentId yet */
+  initializeReviewComment: PropTypes.func,
+  /** Allow multiple drag/drop or multiple selection in file dialog */
+  acceptMultiple: PropTypes.bool,
+  mimeTypesToAccept: PropTypes.oneOfType([
+    PropTypes.string,
+    PropTypes.arrayOf(PropTypes.string.isRequired),
+  ]),
 }
 
 FilesUpload.defaultProps = {
-  fileType: null,
   fieldName: 'files',
-  containerId: null,
-  multiple: true,
-  accept: undefined,
-  initializeContainer: undefined,
+  reviewCommentId: null,
+  initializeReviewComment: undefined,
+  acceptMultiple: true,
+  mimeTypesToAccept: undefined,
 }
 
 // eslint-disable-next-line import/prefer-default-export

@@ -228,18 +228,16 @@ const FormTemplate = ({
                 <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
                 {element.component === 'SupplementaryFiles' && (
                   <FilesUpload
-                    containerId={manuscript.id}
-                    containerName="manuscript"
                     fileType="supplementary"
+                    manuscriptId={manuscript.id}
                   />
                 )}
                 {element.component === 'VisualAbstract' && (
                   <FilesUpload
-                    accept="image/*"
-                    containerId={manuscript.id}
-                    containerName="manuscript"
+                    acceptMultiple={false}
                     fileType="visualAbstract"
-                    multiple={false}
+                    manuscriptId={manuscript.id}
+                    mimeTypesToAccept="image/*"
                   />
                 )}
                 {element.component !== 'SupplementaryFiles' &&
