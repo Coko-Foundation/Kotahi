@@ -6,27 +6,27 @@ const typeDefs = `
   }
 
   input FileMetaInput {
-    fileType: String
-    filename: String
+    fileType: String!
+    filename: String!
     mimeType: String
-    manuscriptId: ID
+    manuscriptId: ID!
     reviewCommentId: ID
     label: String
-    size: Int
+    size: Int!
   }
 
   type File implements Object  {
     id: ID!
     created: DateTime!
     updated: DateTime
-    manuscriptId: ID
+    manuscriptId: ID!
     reviewCommentId: ID
     label: String
-    fileType: String
-    filename: String
-    url: String
+    fileType: String!
+    filename: String!
+    url: String!
     mimeType: String
-    size: Int
+    size: Int!
   }
 `
 

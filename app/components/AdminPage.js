@@ -259,42 +259,46 @@ const AdminPage = () => {
             redirectLink={redirectLink}
           />
         )}
-        {currentUser && currentUser.admin && (
-          <>
+        {currentUser &&
+          currentUser.admin && [
             <PrivateRoute
               component={FormBuilderPage}
               currentUser={currentUser}
               exact
+              key="form-builder"
               path={`${urlFrag}/admin/form-builder`}
               redirectLink={redirectLink}
-            />
+            />,
             <PrivateRoute
               component={ManuscriptPage}
               currentUser={currentUser}
               exact
+              key="manuscript"
               path={`${urlFrag}/versions/:version/manuscript`}
               redirectLink={redirectLink}
-            />
+            />,
             <PrivateRoute
               component={UsersManager}
               currentUser={currentUser}
+              key="users"
               path={`${urlFrag}/admin/users`}
               redirectLink={redirectLink}
-            />
+            />,
             <PrivateRoute
               component={Manuscripts}
               currentUser={currentUser}
+              key="manuscripts"
               path={`${urlFrag}/admin/manuscripts`}
               redirectLink={redirectLink}
-            />
+            />,
             <PrivateRoute
               component={ReportPage}
               currentUser={currentUser}
+              key="reports"
               path={reportsLink}
               redirectLink={redirectLink}
-            />
-          </>
-        )}
+            />,
+          ]}
       </Switch>
       <RolesUpdater />
     </Root>

@@ -228,15 +228,14 @@ CREATE TABLE public.files (
     created timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated timestamp with time zone,
     label text,
-    file_type text,
-    filename text,
-    url text,
+    file_type text NOT NULL,
+    filename text NOT NULL,
+    url text NOT NULL,
     mime_type text,
-    size integer,
+    size integer NOT NULL,
     type text NOT NULL,
-    manuscript_id uuid,
+    manuscript_id uuid NOT NULL,
     review_comment_id uuid,
-    CONSTRAINT exactly_one_file_owner CHECK (((((manuscript_id IS NOT NULL))::integer + ((review_comment_id IS NOT NULL))::integer) = 1))
 );
 
 

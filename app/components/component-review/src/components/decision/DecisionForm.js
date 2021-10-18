@@ -33,17 +33,16 @@ const RadioGroup = styled(UnstableRadioGroup)`
   position: relative;
 `
 
-const NoteDecision = ({ updateReview }) => (
+const NoteDecision = ({ manuscriptId, updateReview }) => (
   <>
     <Field name="decisionComment">
       {formikBag => (
         <>
           <NoteInput updateReview={updateReview} {...formikBag} />
           <FilesUpload
-            containerId={formikBag.field.value?.id}
-            containerName="reviewComment"
             fieldName="decisionComment.files"
-            initializeContainer={async () => {
+            fileType="decision"
+            initializeReviewComment={async () => {
               const review = reviewWithComment({
                 commentType: 'decision',
                 isDecision: true,
@@ -54,6 +53,8 @@ const NoteDecision = ({ updateReview }) => (
               const { data } = await updateReview(review)
               return data.updateReview.decisionComment.id
             }}
+            manuscriptId={manuscriptId}
+            reviewCommentId={formikBag.field.value?.id}
           />
         </>
       )}
@@ -62,6 +63,7 @@ const NoteDecision = ({ updateReview }) => (
 )
 
 NoteDecision.propTypes = {
+  manuscriptId: PropTypes.string.isRequired,
   updateReview: PropTypes.func.isRequired,
 }
 
@@ -86,18 +88,9 @@ const NoteInput = ({
 
   // console.log('Rendering', review.current)
   <ErrorWrap error={errors.decisionComment}>
-    {
-      // TODO: Use the best text editor there is!
-      /* <Wax
-      // fileUpload={fileUpload}
-      // onChange={source => updateManuscript({ source })}
-      content={field.value?.content}
-    /> */
-    }
-
     <SimpleWaxEditor
       onChange={value => {
-        setFieldValue('decisionComment', { content: value })
+        setFieldValue('decisionComment.content', value)
         updateReview({
           decisionComment: { content: value },
         })
@@ -158,6 +151,7 @@ RecommendationInput.propTypes = {
 }
 
 const DecisionForm = ({
+  manuscriptId,
   handleSubmit,
   updateReview,
   isValid,
@@ -180,7 +174,10 @@ const DecisionForm = ({
           <Title>Decision</Title>
         </SectionHeader>
         <SectionRow>
-          <NoteDecision updateReview={updateReview} />
+          <NoteDecision
+            manuscriptId={manuscriptId}
+            updateReview={updateReview}
+          />
         </SectionRow>
         <SectionRowGrid>
           <Field
@@ -206,6 +203,7 @@ const DecisionForm = ({
 }
 
 DecisionForm.propTypes = {
+  manuscriptId: PropTypes.string.isRequired,
   handleSubmit: PropTypes.func.isRequired,
   updateReview: PropTypes.func.isRequired,
   isValid: PropTypes.bool.isRequired,

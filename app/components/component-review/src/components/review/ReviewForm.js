@@ -101,7 +101,7 @@ RecommendationInput.propTypes = {
   updateReview: PropTypes.func.isRequired,
 }
 
-const ReviewComment = ({ updateReview }) => (
+const ReviewComment = ({ manuscriptId, updateReview }) => (
   <>
     <AdminSection>
       <div name="note">
@@ -110,10 +110,9 @@ const ReviewComment = ({ updateReview }) => (
             <>
               <NoteInput updateReview={updateReview} {...formikBag} />
               <FilesUpload
-                containerId={formikBag.field.value?.id}
-                containerName="reviewComment"
                 fieldName="reviewComment.files"
-                initializeContainer={async () => {
+                fileType="review"
+                initializeReviewComment={async () => {
                   // If the container for the uploaded files is not present,
                   // we have to create it. InitializeContainer will be called
                   // if containerId is undefined
@@ -129,6 +128,8 @@ const ReviewComment = ({ updateReview }) => (
                   // that we have somewhere to attach uploaded files
                   return data.updateReview.reviewComment.id
                 }}
+                manuscriptId={manuscriptId}
+                reviewCommentId={formikBag.field.value?.id}
               />
             </>
           )}
@@ -142,10 +143,9 @@ const ReviewComment = ({ updateReview }) => (
             <>
               <ConfidentialInput updateReview={updateReview} {...formikBag} />
               <FilesUpload
-                containerId={formikBag.field.value?.id}
-                containerName="reviewComment"
                 fieldName="confidentialComment.files"
-                initializeContainer={async () => {
+                fileType="confidential"
+                initializeReviewComment={async () => {
                   // If the container for the uploaded files is not present,
                   // we have to create it. InitializeContainer will be called
                   // if containerId is undefined
@@ -161,6 +161,8 @@ const ReviewComment = ({ updateReview }) => (
                   // that we have somewhere to attach uploaded files
                   return data.updateReview.confidentialComment.id
                 }}
+                manuscriptId={manuscriptId}
+                reviewCommentId={formikBag.field.value?.id}
               />
             </>
           )}
@@ -190,10 +192,17 @@ const ReviewComment = ({ updateReview }) => (
 )
 
 ReviewComment.propTypes = {
+  manuscriptId: PropTypes.string.isRequired,
   updateReview: PropTypes.func.isRequired,
 }
 
-const ReviewForm = ({ isValid, isSubmitting, handleSubmit, updateReview }) => (
+const ReviewForm = ({
+  isValid,
+  isSubmitting,
+  handleSubmit,
+  manuscriptId,
+  updateReview,
+}) => (
   <SectionContent>
     <form onSubmit={handleSubmit}>
       <AdminSection>
@@ -201,7 +210,10 @@ const ReviewForm = ({ isValid, isSubmitting, handleSubmit, updateReview }) => (
           <Title>Review</Title>
         </SectionHeader>
         <SectionRow key="note">
-          <ReviewComment updateReview={updateReview} />
+          <ReviewComment
+            manuscriptId={manuscriptId}
+            updateReview={updateReview}
+          />
         </SectionRow>
         <SectionHeader>
           <Title>Recommendation</Title>
@@ -227,6 +239,7 @@ ReviewForm.propTypes = {
   isValid: PropTypes.bool.isRequired,
   isSubmitting: PropTypes.bool,
   handleSubmit: PropTypes.func.isRequired,
+  manuscriptId: PropTypes.string.isRequired,
   updateReview: PropTypes.func.isRequired,
 }
 
