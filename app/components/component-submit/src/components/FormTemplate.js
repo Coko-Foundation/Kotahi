@@ -230,7 +230,8 @@ const FormTemplate = ({
         {(form.children || [])
           .filter(
             element =>
-              showEditorOnlyFields || element.hideFromAuthors !== 'true',
+              element.component &&
+              (showEditorOnlyFields || element.hideFromAuthors !== 'true'),
           )
           .map((element, i) => {
             return (

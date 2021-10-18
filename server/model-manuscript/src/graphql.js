@@ -9,11 +9,14 @@ const logger = require('@pubsweet/logger')
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
 const publishToCrossref = require('../../publishing/crossref')
+const { stripSensitiveItems } = require('./manuscriptUtils')
 
 const {
   publishToHypothesis,
   deletePublication,
 } = require('../../publishing/hypothesis')
+
+const sendEmailNotification = require('../../email-notifications')
 
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
@@ -126,13 +129,15 @@ const hasEvaluations = manuscript => {
   return evaluations.map(checkIsAbstractValueEmpty).some(isEmpty => !isEmpty)
 }
 
+/** Send the manuscriptId OR a configured ref; and send token if one is configured */
 const tryPublishingWebhook = manuscriptId => {
   const publishingWebhookUrl = config['publishing-webhook'].publishingWebhookUrl
 
   if (publishingWebhookUrl) {
-    const secret = config['publishing-webhook'].publishingWebhookSecret
-    const payload = { articleId: manuscriptId }
-    if (secret) payload.secret = secret
+    const token = config['publishing-webhook'].publishingWebhookToken
+    const reference = config['publishing-webhook'].publishingWebhookRef
+    const payload = { ref: reference || manuscriptId }
+    if (token) payload.token = token
 
     axios
       .post(publishingWebhookUrl, payload)
@@ -360,6 +365,74 @@ const resolvers = {
         await new ReviewModel(review).save()
       }
 
+      if (
+        action === 'rejected' &&
+        config['notification-email'].automated === 'true'
+      ) {
+        // Automated email reviewReject on rejection
+        const reviewer = await context.models.User.query()
+          .findById(context.user.id)
+          .withGraphFetched('[defaultIdentity]')
+
+        const reviewerName = (
+          reviewer.defaultIdentity.name ||
+          reviewer.username ||
+          ''
+        ).split(' ')[0]
+
+        const manuscript = await context.models.Manuscript.query()
+          .findById(team.manuscriptId)
+          .withGraphFetched(
+            '[teams.[members.[user.[defaultIdentity]]], submitter.[defaultIdentity]]',
+          )
+
+        const handlingEditorTeam =
+          manuscript.teams &&
+          !!manuscript.teams.length &&
+          manuscript.teams.find(manuscriptTeam => {
+            return manuscriptTeam.role.includes('handlingEditor')
+          })
+
+        const handlingEditor =
+          handlingEditorTeam && !!handlingEditorTeam.members.length
+            ? handlingEditorTeam.members[0]
+            : null
+
+        const receiverEmail = handlingEditor.user.email
+        /* eslint-disable-next-line */
+        const receiverFirstName = (
+          handlingEditor.user.defaultIdentity.name ||
+          handlingEditor.user.username ||
+          ''
+        ).split(' ')[0]
+
+        const selectedTemplate = 'reviewRejectEmailTemplate'
+        const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
+        const emailValidationResult = emailValidationRegexp.test(receiverEmail)
+
+        if (!emailValidationResult || !receiverFirstName) {
+          return team
+        }
+
+        const data = {
+          articleTitle: manuscript.meta.title,
+          authorName:
+            manuscript.submitter.defaultIdentity.name ||
+            manuscript.submitter.username ||
+            '',
+          receiverFirstName,
+          reviewerName,
+          shortId: manuscript.shortId,
+        }
+
+        try {
+          await sendEmailNotification(receiverEmail, selectedTemplate, data)
+        } catch (e) {
+          /* eslint-disable-next-line */
+          console.log('email was not sent', e)
+        }
+      }
+
       return team
     },
     async updateManuscript(_, { id, input }, ctx) {
@@ -371,14 +444,96 @@ const resolvers = {
       return manuscript.createNewVersion()
     },
     async submitManuscript(_, { id, input }, ctx) {
+      if (config['notification-email'].automated === 'true') {
+        // Automated email submissionConfirmation on submission
+        const manuscript = await ctx.models.Manuscript.query()
+          .findById(id)
+          .withGraphFetched('submitter.[defaultIdentity]')
+
+        const receiverEmail = manuscript.submitter.email
+        /* eslint-disable-next-line */
+        const receiverFirstName = (
+          manuscript.submitter.defaultIdentity.name ||
+          manuscript.submitter.username ||
+          ''
+        ).split(' ')[0]
+
+        const selectedTemplate = 'submissionConfirmationEmailTemplate'
+        const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
+        const emailValidationResult = emailValidationRegexp.test(receiverEmail)
+
+        if (!emailValidationResult || !receiverFirstName) {
+          return commonUpdateManuscript(id, input, ctx)
+        }
+
+        const data = {
+          articleTitle: manuscript.meta.title,
+          authorName:
+            manuscript.submitter.defaultIdentity.name ||
+            manuscript.submitter.username ||
+            '',
+          receiverFirstName,
+          shortId: manuscript.shortId,
+        }
+
+        try {
+          await sendEmailNotification(receiverEmail, selectedTemplate, data)
+        } catch (e) {
+          /* eslint-disable-next-line */
+          console.log('email was not sent', e)
+        }
+      }
+
       return commonUpdateManuscript(id, input, ctx) // Currently submitManuscript and updateManuscript have identical action
     },
 
     async makeDecision(_, { id, decision }, ctx) {
-      const manuscript = await ctx.models.Manuscript.query().findById(id)
+      const manuscript = await ctx.models.Manuscript.query()
+        .findById(id)
+        .withGraphFetched('submitter.[defaultIdentity]')
+
       manuscript.decision = decision
 
       manuscript.status = decision
+
+      if (
+        manuscript.decision &&
+        config['notification-email'].automated === 'true'
+      ) {
+        // Automated email evaluvationComplete on decision
+        const receiverEmail = manuscript.submitter.email
+        /* eslint-disable-next-line */
+        const receiverFirstName = (
+          manuscript.submitter.defaultIdentity.name ||
+          manuscript.submitter.username ||
+          ''
+        ).split(' ')[0]
+
+        const selectedTemplate = 'evaluationCompleteEmailTemplate'
+        const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
+        const emailValidationResult = emailValidationRegexp.test(receiverEmail)
+
+        if (!emailValidationResult || !receiverFirstName) {
+          return manuscript.save()
+        }
+
+        const data = {
+          articleTitle: manuscript.meta.title,
+          authorName:
+            manuscript.submitter.defaultIdentity.name ||
+            manuscript.submitter.username ||
+            '',
+          receiverFirstName,
+          shortId: manuscript.shortId,
+        }
+
+        try {
+          await sendEmailNotification(receiverEmail, selectedTemplate, data)
+        } catch (e) {
+          /* eslint-disable-next-line */
+          console.log('email was not sent', e)
+        }
+      }
 
       return manuscript.save()
     },
@@ -521,9 +676,7 @@ const resolvers = {
 
       const manuscript = await ManuscriptModel.query()
         .findById(id)
-        .withGraphFetched(
-          '[teams, channels, files, reviews.[user, comments], manuscriptVersions(orderByCreated)]',
-        )
+        .withGraphFetched('[teams, channels, files, reviews.[user, comments]]')
 
       if (!manuscript) return null
 
@@ -546,13 +699,7 @@ const resolvers = {
       manuscript.manuscriptVersions = await manuscript.getManuscriptVersions()
 
       if (ctx.user && !ctx.user.admin) {
-        const manuscriptObj = { ...manuscript }
-
-        manuscriptObj.reviews.forEach((review, index) => {
-          delete manuscriptObj.reviews[index].confidentialComment
-        })
-
-        return manuscriptObj
+        return stripSensitiveItems(manuscript)
       }
 
       return manuscript
@@ -830,6 +977,7 @@ const typeDefs = `
 
   type Manuscript implements Object {
     id: ID!
+    parentId: ID
     created: DateTime!
     updated: DateTime
     manuscriptVersions: [ManuscriptVersion]

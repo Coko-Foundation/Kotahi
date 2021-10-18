@@ -63,10 +63,14 @@ const SubmitPage = ({ match, history }) => {
     setConfirming(confirm => !confirm)
   }
 
-  const { data, loading, error } = useQuery(query, {
-    variables: { id: match.params.version },
-    partialRefetch: true,
-  })
+  const { data, loading, error } = useQuery(
+    query,
+    {
+      variables: { id: match.params.version },
+      partialRefetch: true,
+    },
+    { refetchOnMount: true },
+  )
 
   const [update] = useMutation(updateMutation)
   const [submit] = useMutation(submitMutation)

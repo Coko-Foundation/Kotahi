@@ -12,23 +12,6 @@ ARG client_port
 ARG manuscripts_table_columns
 ARG manuscripts_table_first_column_width
 ARG display_shortid_as_identifier
-ARG journal_name
-ARG journal_abbreviated_name
-ARG journal_homepage
-ARG publishing_webhook_url
-ARG publishing_webhook_secret
-ARG hypothesis_api_key
-ARG hypothesis_group
-ARG crossref_login
-ARG crossref_password
-ARG crossref_registrant
-ARG crossref_depositor_name
-ARG crossref_depositor_email
-ARG crossref_publication_type
-ARG crossref_use_sandbox
-ARG doi_prefix
-ARG published_article_location_prefix
-ARG publication_license_url
 ARG review_shared
 ARG review_hide
 
@@ -43,23 +26,6 @@ ENV INSTANCE_NAME $instance_name
 ENV MANUSCRIPTS_TABLE_COLUMNS $manuscripts_table_columns
 ENV MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH $manuscripts_table_first_column_width
 ENV DISPLAY_SHORTID_AS_IDENTIFIER $display_shortid_as_identifier
-ENV JOURNAL_NAME $journal_name
-ENV JOURNAL_ABBREVIATED_NAME $journal_abbreviated_name
-ENV JOURNAL_HOMEPAGE $journal_homepage
-ENV PUBLISHING_WEBHOOK_URL $publishing_webhook_url
-ENV PUBLISHING_WEBHOOK_SECRET $publishing_webhook_secret
-ENV HYPOTHESIS_API_KEY $hypothesis_api_key
-ENV HYPOTHESIS_GROUP $hypothesis_group
-ENV CROSSREF_LOGIN $crossref_login
-ENV CROSSREF_PASSWORD $crossref_password
-ENV CROSSREF_REGISTRANT $crossref_registrant
-ENV CROSSREF_DEPOSITOR_NAME $crossref_depositor_name
-ENV CROSSREF_DEPOSITOR_EMAIL $crossref_depositor_email
-ENV CROSSREF_PUBLICATION_TYPE $crossref_publication_type
-ENV CROSSREF_USE_SANDBOX $crossref_use_sandbox
-ENV DOI_PREFIX $doi_prefix
-ENV PUBLISHED_ARTICLE_LOCATION_PREFIX $published_article_location_prefix
-ENV PUBLICATION_LICENSE_URL $publication_license_url
 ENV REVIEW_SHARED $review_shared
 ENV REVIEW_HIDE $review_hide
 ENV HOME "/home/simplej"

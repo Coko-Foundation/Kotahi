@@ -59,6 +59,10 @@ const Submit = ({
       (['new', 'revising'].includes(manuscript.status) ||
         (currentUser.admin && manuscript.status !== 'rejected'))
 
+    const hasDecision = !['new', 'submitted', 'revising'].includes(
+      manuscript.status,
+    )
+
     const editorSection = {
       content: (
         <EditorSection
@@ -133,7 +137,7 @@ const Submit = ({
       decisionSection = {
         content: (
           <>
-            <DecisionAndReviews manuscript={manuscript} />
+            {hasDecision && <DecisionAndReviews manuscript={manuscript} />}
             <ReviewMetadata
               form={form}
               manuscript={manuscript}

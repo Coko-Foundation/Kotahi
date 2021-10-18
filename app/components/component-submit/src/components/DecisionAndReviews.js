@@ -4,6 +4,7 @@ import React from 'react'
 // TODO: Sort out the imports, perhaps make DecisionReview a shared component?
 import Review from '../../../component-review/src/components/decision/DecisionReview'
 import { UserAvatar } from '../../../component-avatar/src'
+import useCurrentUser from '../../../../hooks/useCurrentUser'
 
 import {
   SectionHeader,
@@ -37,6 +38,8 @@ const Decision = ({ decision, editor }) =>
   )
 
 const DecisionAndReviews = ({ manuscript }) => {
+  const currentUser = useCurrentUser()
+
   const decision =
     manuscript.reviews &&
     !!manuscript.reviews.length &&
@@ -46,6 +49,19 @@ const DecisionAndReviews = ({ manuscript }) => {
     manuscript.reviews &&
     !!manuscript.reviews.length &&
     manuscript.reviews.filter(review => !review.isDecision)
+
+  if (!currentUser) return null
+
+  const authorTeam =
+    manuscript.teams &&
+    !!manuscript.teams.length &&
+    manuscript.teams.find(team => {
+      return team.role.toLowerCase().includes('author')
+    })
+
+  const isCurrentUserAuthor = authorTeam
+    ? authorTeam.members.find(member => member.user.id === currentUser.id)
+    : false
 
   return (
     <>
@@ -61,20 +77,22 @@ const DecisionAndReviews = ({ manuscript }) => {
         </SectionHeader>
 
         {reviews && reviews.length ? (
-          reviews.map((review, index) => (
-            <SectionRow key={review.id}>
-              <Review
-                open
-                review={review}
-                reviewer={{
-                  name: review.user.username,
-                  ordinal: index + 1,
-                  user: review.user,
-                }}
-                teams={manuscript.teams}
-              />
-            </SectionRow>
-          ))
+          reviews
+            .filter(review => !review.isHiddenFromAuthor && isCurrentUserAuthor)
+            .map((review, index) => (
+              <SectionRow key={review.id}>
+                <Review
+                  open
+                  review={review}
+                  reviewer={{
+                    name: review.user.username,
+                    ordinal: index + 1,
+                    user: review.user,
+                  }}
+                  teams={manuscript.teams}
+                />
+              </SectionRow>
+            ))
         ) : (
           <SectionRow>No completed reviews.</SectionRow>
         )}

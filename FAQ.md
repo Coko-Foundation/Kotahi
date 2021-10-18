@@ -119,14 +119,79 @@ Consult [the code](https://gitlab.coko.foundation/kotahi/kotahi/blob/5b26b92d662
 Kotahi can also be configured to trigger a webhook whenever an article is published, using the following environment variables:
 
 - `PUBLISHING_WEBHOOK_URL` -- the location of the webhook
-- `PUBLISHING_WEBHOOK_SECRET` -- (optional) a secret to pass to the webhook for authentication
+- `PUBLISHING_WEBHOOK_TOKEN` -- (optional) a token to pass to the webhook for authentication
+- `PUBLISHING_WEBHOOK_REF` -- (optional) a reference to pass to the webhook instead of the manuscript ID
 
-If `PUBLISHING_WEBHOOK_URL` is set, then every time you publish an article a POST request will be sent to the webhook containing `articleId=<id of manuscript>, secret=<webhook secret>`.
+If `PUBLISHING_WEBHOOK_URL` is set, then every time you publish an article a POST request will be sent to the webhook, with variables `ref` and (if a token is configured) `token`. The ref will either be the published manuscript ID or the content of `PUBLISHING_WEBHOOK_REF` if that is set.
 
 Using a tool like Flax, you can either:
 
 - respond to every webhook request by requesting the relevant article from Kotahi and building (or rebuilding) its page (plus index pages); or
 - periodically request all articles published after the date of the most recent article you've already received.
+
+### Registering a DOI for an article with Crossref
+
+Crossref offers a paid service for indexing articles and registering DOIs. Kotahi can be configured to register articles with new DOIs upon publication. It can also be configured to register evaluations of articles. The following environment variables are needed:
+
+```
+JOURNAL_NAME="Your Journal Name"
+JOURNAL_ABBREVIATED_NAME="AbbrvJournName"
+JOURNAL_HOMEPAGE="http://yourjournal.com/"
+CROSSREF_LOGIN=crossrefLogin
+CROSSREF_PASSWORD=crossrefPassword
+CROSSREF_REGISTRANT="Crossref Registrant Name"
+CROSSREF_DEPOSITOR_NAME="Crossref Depositor Name"
+CROSSREF_DEPOSITOR_EMAIL="depositor-email@yourjournal.com"
+CROSSREF_PUBLICATION_TYPE=article
+CROSSREF_USE_SANDBOX=true
+DOI_PREFIX=12.34567
+PUBLISHED_ARTICLE_LOCATION_PREFIX=http://yourjournal.com/article/
+PUBLICATION_LICENSE_URL=https://creativecommons.org/licenses/by/4.0/
+```
+
+Crossref login, registrant and depositor information, as well as your organization-specific DOI prefix, should be organized with Crossref. In order to register an article's DOI, the article should be published to a public facing site (typically using Flax, above). The `PUBLISHED_ARTICLE_LOCATION_PREFIX` will be used to predict the published article's URL, by appending the article's `shortId` (manuscript number) to it. Flax (or your tool of choice) should be configured with this in mind.
+
+For development and testing, `CROSSREF_USE_SANDBOX` should be true. This will send all requests to Crossref's test API. Note that you must request Crossref to give you access to the test API, for which a separate password may be issued.
+
+#### Form fields for publishing an article to Crossref
+
+Publishing to Crossref requires that you have certain fields configured via the form-builder. These are:
+| Field name | Field type | Purpose |
+|-------------|--------------|------------|
+| `meta.title` | TextField | Article title |
+| `submission.authors` | AuthorsInput | Ordered list of authors |
+| `meta.abstract` | AbstractEditor | Article abstract |
+| `submission.citations` _or_ `submission.references` | AbstractEditor | Citations in separate paragraphs |
+| `submission.volumeNumber` | TextField | (Optional) Journal volume number |
+| `submission.issueNumber` | TextField | (Optional) Journal issue number |
+| `submission.issueYear` | TextField | The year of publication. If `submission.volumeNumber` is formatted as a year (e.g. 2021), then `submission.issueYear` is optional. |
+
+### Registering article evaluations via Crossref
+
+Alternatively, you may be using Kotahi to publish evaluations of pre-existing articles. If this is your workflow, Kotahi can register these evaluations with Crossref, generating a DOI for each. The following environment variables are required for this:
+
+```
+CROSSREF_LOGIN=crossrefLogin
+CROSSREF_PASSWORD=crossrefPassword
+CROSSREF_REGISTRANT="Crossref Registrant Name"
+CROSSREF_DEPOSITOR_NAME="Crossref Depositor Name"
+CROSSREF_DEPOSITOR_EMAIL="depositor-email@yourjournal.com"
+CROSSREF_PUBLICATION_TYPE=article
+CROSSREF_USE_SANDBOX=true
+DOI_PREFIX=12.34567
+```
+
+And the following form fields are required:
+
+| Field name                                                                                                                                               | Field type     | Purpose                                                  |
+| -------------------------------------------------------------------------------------------------------------------------------------------------------- | -------------- | -------------------------------------------------------- |
+| `submission.articleURL`                                                                                                                                  | TextField      | The DOI link to the article under review                 |
+| `submission.review1`                                                                                                                                     | AbstractEditor | Review number 1                                          |
+| `submission.review1date`                                                                                                                                 | TextField      | Review 1 date, formatted as yyyy-mm-dd or mm/dd/yyyy     |
+| `submission.review1creator`                                                                                                                              | TextField      | Review 1 author, formatted as Firstname Lastname         |
+| `submission.review2`, `submission.review2date`, `submission.review2creator`, `submission.review3`, `submission.review3date`, `submission.review3creator` | As above       | (Optional) Fields for second and third reviews.          |
+| `submission.summary`, `submission.summarydate`, `submission.summarycreator`                                                                              | As above       | (Optional) Fields for a summary of the reviews.          |
+| `submission.description`                                                                                                                                 | TextField      | Title of the article under review, possibly abbreviated. |
 
 ## Does Kotahi support collaborative real-time text editing?
 
