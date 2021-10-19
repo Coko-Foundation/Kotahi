@@ -117,8 +117,14 @@ const convertCharacterEntities = markup => {
   return result
 }
 
+// eslint-disable-next-line no-control-regex
+const illegalCharRegex = /[\p{Cs}\p{Cn}\x00-\x08\x0B\x0E-\x1F\x7F\x80-\x9F]/gu
+/** Remove surrogates, unassigned characters (including noncharacters) and control characters other than ASCII whitespace. */
+const removeIllegalCharacters = markup => markup.replace(illegalCharRegex, '')
+
 const htmlToJats = html => {
   let jats = html
+  jats = removeIllegalCharacters(jats)
   jats = insertSections(jats)
   jats = convertLinks(jats)
   jats = convertLists(jats)
