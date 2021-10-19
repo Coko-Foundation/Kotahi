@@ -30,7 +30,7 @@ const ReviewerItem = ({ version, currentUser, reviewerRespond }) => {
   const mainActionLink =
     status === 'invited' || status === 'rejected'
       ? `${urlFrag}/versions/${version.id}/reviewPreview`
-      : `${urlFrag}/versions/${version.id}/review`
+      : `${urlFrag}/versions/${version.parentId || version.id}/review`
 
   return (
     <div
@@ -47,7 +47,9 @@ const ReviewerItem = ({ version, currentUser, reviewerRespond }) => {
             <ActionGroup>
               <Action
                 onClick={e => e.stopPropagation()}
-                to={`${urlFrag}/versions/${version.id}/review`}
+                to={`${urlFrag}/versions/${
+                  version.parentId || version.id
+                }/review`}
               >
                 {status === 'completed' ? 'Completed' : 'Do Review'}
               </Action>

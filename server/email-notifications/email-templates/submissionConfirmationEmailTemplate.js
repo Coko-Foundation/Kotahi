@@ -1,7 +1,8 @@
 const SubmissionConfirmationEmailTemplate = ({
   articleTitle,
-  link,
+  authorName,
   receiverFirstName,
+  shortId,
 }) => {
   const result = {
     cc: '',
@@ -14,21 +15,14 @@ const SubmissionConfirmationEmailTemplate = ({
       result.cc = 'aperture@humanbrainmapping.org'
       result.subject = 'Aperture Neuro – Received Research Object Submission'
       result.content = `<p>
-      <b>Dear ${receiverFirstName},</b>
-      <br>
-      <br>
+      <p>Dear ${receiverFirstName},</p>
       <p>Thank you for your submission.</p>
-      <br>
-      <p>Research Object Title: ${articleTitle}</p>
-      <br>
+      <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>We have successfully received your Research Object, and it is currently under review. You can check the status of your submission at any time by logging into the publishing platform and navigating to your dashboard.</p>
-      <p>The Journal Manager will be in touch with you with any questions should they arise. If you have any questions, please contact Kay Vanda, the Aperture Neuro Journal Manager, at aperture@humanbrainmapping.org.</p>
-      <p>
-      Thank you, 
-      <br>
-      <br>
-      Kay Vanda <br>
-      Journal Manager <br>
+      <p>If you have any questions, please contact Kay Vanda, the Aperture Neuro Journal Manager, at aperture@humanbrainmapping.org.</p>
+      <p>Thank you,</p>
+      <p>Kay Vanda </p>
+      </p>Journal Manager <br>
       Aperture Neuro
       </p>
     </p>`
@@ -36,21 +30,12 @@ const SubmissionConfirmationEmailTemplate = ({
     default:
       result.subject = 'Received Research Object Submission'
       result.content = `<p>
-      <b>Dear ${receiverFirstName},</b>
-      <br>
-      <br>
+      <p>Dear ${receiverFirstName},</p>
       <p>Thank you for your submission.</p>
-      <br>
-      <p>Research Object Title: ${articleTitle}</p>
-      <br>
+      <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>We have successfully received your Research Object, and it is currently under review. You can check the status of your submission at any time by logging into the publishing platform and navigating to your dashboard.</p>
-      <p>The Journal Manager will be in touch with you with any questions should they arise.</p>
-      <p>
-      Thank you, 
-      <br>
-      <br>
-      Kotahi Dev
-      </p>
+      <p>Thank you,</p>
+      </p>Kotahi Dev</p>
     </p>`
   }
 

@@ -24,7 +24,7 @@ const valueInput = input => (
 )
 
 const renderOptions = ({ form: { values }, push, remove }) => {
-  const hasNewOption = values.options.some(
+  const hasNewOption = values.options?.some(
     opt => opt === undefined || !opt.label || !opt.value,
   )
 

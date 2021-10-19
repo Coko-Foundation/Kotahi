@@ -3,10 +3,12 @@ import { useMutation, useQuery, gql } from '@apollo/client'
 import { Formik } from 'formik'
 // import { cloneDeep } from 'lodash'
 import config from 'config'
+import { Redirect } from 'react-router-dom'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import ReviewLayout from './review/ReviewLayout'
 import { Heading, Page, Spinner } from '../../../shared'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
+import manuscriptVersions from '../../../../shared/manuscript_versions'
 
 const commentFields = `
 id
@@ -128,6 +130,7 @@ const query = gql`
     }
 
     manuscript(id: $id) {
+      parentId
       ${fragmentFields}
       manuscriptVersions {
         ${fragmentFields}
@@ -210,20 +213,23 @@ const ReviewPage = ({ match, ...props }) => {
   })
 
   const reviewOrInitial = manuscript =>
-    (manuscript &&
-      manuscript.reviews &&
-      manuscript.reviews.find(
-        review => review?.user?.id === currentUser.id && !review.isDecision,
-      )) ||
-    {}
+    manuscript?.reviews?.find(
+      review => review?.user?.id === currentUser.id && !review.isDecision,
+    ) || {}
+
+  const versions = data
+    ? manuscriptVersions(data.manuscript).map(v => v.manuscript)
+    : []
+
+  const latestVersion = versions.length ? versions[0] : null
 
   // Find an existing review or create a placeholder, and hold a ref to it
-  const existingReview = useRef(reviewOrInitial(data?.manuscript))
+  const existingReview = useRef(reviewOrInitial(latestVersion))
 
   // Update the value of that ref if the manuscript object changes
   useEffect(() => {
-    existingReview.current = reviewOrInitial(data?.manuscript)
-  }, [data?.manuscript?.reviews])
+    existingReview.current = reviewOrInitial(latestVersion)
+  }, [latestVersion?.reviews])
 
   if (loading) return <Spinner />
 
@@ -238,9 +244,14 @@ const ReviewPage = ({ match, ...props }) => {
 
   const { manuscript, formForPurpose } = data
 
+  // We shouldn't arrive at this page with a subsequent/child manuscript ID. If we do, redirect to the parent/original ID
+  if (manuscript.parentId)
+    return <Redirect to={`${urlFrag}/versions/${manuscript.parentId}/review`} />
+
   if (
-    manuscript.reviews.length === 0 &&
-    existingReview.current.id !== 'undefined'
+    !latestVersion.reviews?.find(
+      review => review?.user?.id === currentUser.id && !review.isDecision,
+    )
   ) {
     refetch()
   }
@@ -252,18 +263,23 @@ const ReviewPage = ({ match, ...props }) => {
     haspopup: 'false',
   }
 
-  const channelId = manuscript.channels.find(c => c.type === 'editorial').id
+  const channelId = manuscript.channels.find(c => c.type === 'editorial')?.id
+  if (!channelId)
+    console.error(
+      `Malformed channels in manuscript ${manuscript.id}:`,
+      manuscript.channels,
+    )
 
   const { status } =
     (
-      (manuscript.teams.find(team => team.role === 'reviewer') || {}).status ||
-      []
+      (latestVersion.teams.find(team => team.role === 'reviewer') || {})
+        .status || []
     ).find(statusTemp => statusTemp.user === currentUser.id) || {}
 
   const updateReview = review => {
     const reviewData = {
       recommendation: review.recommendation,
-      manuscriptId: manuscript.id,
+      manuscriptId: latestVersion.id,
       reviewComment: review.reviewComment && {
         id: existingReview.current.reviewComment?.id,
         commentType: 'review',
@@ -284,7 +300,7 @@ const ReviewPage = ({ match, ...props }) => {
       },
       update: (cache, { data: { updateReviewTemp } }) => {
         cache.modify({
-          id: cache.identify(manuscript.id),
+          id: cache.identify(latestVersion.id),
           fields: {
             reviews(existingReviewRefs = [], { readField }) {
               const newReviewRef = cache.writeFragment({
@@ -325,10 +341,9 @@ const ReviewPage = ({ match, ...props }) => {
   return (
     <Formik
       initialValues={
-        (manuscript.reviews &&
-          manuscript.reviews.find(
-            review => review?.user?.id === currentUser.id && !review.isDecision,
-          )) || {
+        latestVersion.reviews?.find(
+          review => review?.user?.id === currentUser.id && !review.isDecision,
+        ) || {
           id: null,
           comments: [],
           recommendation: null,
@@ -353,11 +368,11 @@ const ReviewPage = ({ match, ...props }) => {
         <ReviewLayout
           channelId={channelId}
           currentUser={currentUser}
-          manuscript={manuscript}
           review={existingReview}
           status={status}
           submissionForm={submissionForm}
           updateReview={updateReview}
+          versions={versions}
           {...formikProps}
         />
       )}

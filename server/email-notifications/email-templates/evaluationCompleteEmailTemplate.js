@@ -1,7 +1,8 @@
 const EvaluationCompleteEmailTemplate = ({
   articleTitle,
-  link,
+  authorName,
   receiverFirstName,
+  shortId,
 }) => {
   const result = {
     cc: '',
@@ -12,17 +13,14 @@ const EvaluationCompleteEmailTemplate = ({
   switch (process.env.INSTANCE_NAME) {
     case 'aperture':
       result.cc = 'aperture@humanbrainmapping.org'
-      result.subject = `The peer review of ${articleTitle} is complete.`
+      result.subject = `The review of “${articleTitle}” is complete.`
       result.content = `<p>
-      <b>Dear ${receiverFirstName},</b>
-      <br>
-      <br>
-      <p>Thank you for your submission to Aperture Neuro. The peer review of ${articleTitle} is complete. Click on the link below to access your feedback.</p>
-      <br>
-      <p>
-      Thank you, <br>
-      Kay Vanda <br>
-      Journal Manager <br>
+      <p>Dear ${receiverFirstName},</p>
+      <p>Thank you for your submission to Aperture Neuro. The review of “${shortId}; ${articleTitle}, ${authorName}” is complete. Click on the link below to access your feedback.</p>
+      <p><a href="https://apertureneuro.cloud68.co/login" target="_blank">https://apertureneuro.cloud68.co/login</a></p>
+      <p>Thank you,</p>
+      <p>Kay Vanda</p>
+      <p>Journal Manager <br>
       Aperture Neuro
       </p>
     </p>`
@@ -30,15 +28,9 @@ const EvaluationCompleteEmailTemplate = ({
     case 'colab':
       result.subject = `The peer review of ${articleTitle} is complete.`
       result.content = `<p>
-      <b>Dear ${receiverFirstName},</b>
-      <br>
-      <br>
-      <p>The peer review of ${articleTitle} is complete. Click on the link below to access your feedback.</p>
-      <br>
-      <br>
-      <a href=${link} target="_blank">Insert manuscript link</a>
-      <br>
-      <br>
+      <p>Dear ${receiverFirstName},</p>
+      <p>The peer review of "${articleTitle}" is complete. Click on the link below to access your feedback.</p>
+      <p><a href="#" target="_blank">Insert manuscript link</a></p>
       <p>
       Thanks, <br>
       Biophysics CoLab team
@@ -46,17 +38,11 @@ const EvaluationCompleteEmailTemplate = ({
     </p>`
       break
     default:
-      result.subject = `The peer review of ${articleTitle} is complete.`
+      result.subject = `The peer review of "${articleTitle}" is complete.`
       result.content = `<p>
-      <b>Dear ${receiverFirstName},</b>
-      <br>
-      <br>
-      <p>The peer review of ${articleTitle} is complete. Click on the link below to access your feedback.</p>
-      <br>
-      <br>
-      <a href=${link} target="_blank">Insert manuscript link</a>
-      <br>
-      <br>
+      <p>Dear ${receiverFirstName},</p>
+      <p>The peer review of "${articleTitle}" is complete. Click on the link below to access your feedback.</p>
+      <p><a href="https://kotahidev.cloud68.co/login" target="_blank">https://kotahidev.cloud68.co/login</a></p>
       <p>
       Thanks, <br>
       Kotahi Dev

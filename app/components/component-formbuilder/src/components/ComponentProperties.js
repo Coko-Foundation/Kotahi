@@ -111,8 +111,9 @@ const prepareForSubmit = values => {
 const ComponentForm = ({ field, formId, updateField }) => {
   const [componentType, setComponentType] = useState(field.component)
 
+  const component = components[componentType] || {}
   const defaults = {}
-  Object.entries(components[componentType]).forEach(([key, value]) => {
+  Object.entries(component).forEach(([key, value]) => {
     const defaultValue = value?.defaultValue
     if (defaultValue !== undefined) defaults[key] = defaultValue
   })

@@ -1,0 +1,50 @@
+const ReviewAssignmentEmailTemplate = ({
+  articleTitle,
+  authorName,
+  receiverFirstName,
+  shortId,
+}) => {
+  const result = {
+    cc: '',
+    subject: 'Kotahi Notificaion Email',
+    content: '',
+  }
+
+  switch (process.env.INSTANCE_NAME) {
+    case 'aperture':
+      result.cc = 'aperture@humanbrainmapping.org'
+      result.subject = 'Aperture Neuro – Submission Ready for Review '
+      result.content = `<p>
+      <p>Dear ${receiverFirstName},</p>
+      <p>Thank you for agreeing to review for Aperture Neuro. You have now been assigned to the following submission:</p>
+      <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
+      <p>You can access the full manuscript to review by logging into your dashboard at <a href="https://apertureneuro.cloud68.co/login" target="_blank">https://apertureneuro.cloud68.co/login</a>.</p>
+      <p>For any questions please contact the journal manager at aperture@humanbrainmapping.org.</p>
+      <p>Thank you,</p>
+      <p>Kay Vanda</p>
+      <p>Journal Manager <br>
+      Aperture Neuro
+      </p>
+    </p>`
+      break
+    default:
+      result.subject = 'Submission Ready for Handling Editor'
+      result.content = `<p>
+      <p>Dear ${receiverFirstName},</p>
+      <p>Thank you for agreeing to review for Aperture Neuro. You have now been assigned to the following submission:</p>
+      <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
+      <p>You can access the full manuscript to review by logging into your dashboard at <a href="https://kotahidev.cloud68.co/login" target="_blank">https://kotahidev.cloud68.co/login</a>.</p>
+      <p>For any questions please contact the journal manager.</p>
+      <p>Thank you,</p>
+      <p>
+      Kotahi Dev
+      </p>
+    </p>`
+  }
+
+  result.content = result.content.replace(/\n/g, '')
+
+  return result
+}
+
+module.exports = ReviewAssignmentEmailTemplate

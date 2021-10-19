@@ -33,7 +33,8 @@ module.exports = {
   },
   'publishing-webhook': {
     publishingWebhookUrl: 'PUBLISHING_WEBHOOK_URL',
-    publishingWebhookSecret: 'PUBLISHING_WEBHOOK_SECRET',
+    publishingWebhookToken: 'PUBLISHING_WEBHOOK_TOKEN',
+    publishingWebhookRef: 'PUBLISHING_WEBHOOK_REF',
   },
   s3: {
     accessKeyId: 'S3_ACCESS_KEY_ID',
@@ -64,5 +65,8 @@ module.exports = {
   review: {
     shared: 'REVIEW_SHARED',
     hide: 'REVIEW_HIDE',
+  },
+  'notification-email': {
+    automated: 'NOTIFICATION_EMAIL_AUTOMATED',
   },
 }

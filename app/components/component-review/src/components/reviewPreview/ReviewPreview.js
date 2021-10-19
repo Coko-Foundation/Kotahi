@@ -57,8 +57,8 @@ ReviewPreview.propTypes = {
     children: PropTypes.arrayOf(
       PropTypes.shape({
         id: PropTypes.string.isRequired,
-        name: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
+        name: PropTypes.string,
+        title: PropTypes.string,
         shortDescription: PropTypes.string,
         includeInReveiwPreview: PropTypes.string,
       }).isRequired,

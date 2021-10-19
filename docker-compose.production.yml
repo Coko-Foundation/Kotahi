@@ -21,23 +21,6 @@ services:
         - manuscripts_table_columns=${MANUSCRIPTS_TABLE_COLUMNS}
         - manuscripts_table_first_column_width=${MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH}
         - display_shortid_as_identifier=${DISPLAY_SHORTID_AS_IDENTIFIER}
-        - publishing_webhook_url=${PUBLISHING_WEBHOOK_URL}
-        - publishing_webhook_secret=${PUBLISHING_WEBHOOK_SECRET}
-        - journal_name=${JOURNAL_NAME}
-        - journal_abbreviated_name=${JOURNAL_ABBREVIATED_NAME}
-        - journal_homepage=${JOURNAL_HOMEPAGE}
-        - hypothesis_api_key=${HYPOTHESIS_API_KEY}
-        - hypothesis_group=${HYPOTHESIS_GROUP}
-        - crossref_login=${CROSSREF_LOGIN}
-        - crossref_password=${CROSSREF_PASSWORD}
-        - crossref_registrant=${CROSSREF_REGISTRANT}
-        - crossref_depositor_name=${CROSSREF_DEPOSITOR_NAME}
-        - crossref_depositor_email=${CROSSREF_DEPOSITOR_EMAIL}
-        - crossref_publication_type=${CROSSREF_PUBLICATION_TYPE}
-        - crossref_use_sandbox=${CROSSREF_USE_SANDBOX}
-        - doi_prefix=${DOI_PREFIX}
-        - published_article_location_prefix=${PUBLISHED_ARTICLE_LOCATION_PREFIX}
-        - publication_license_url=${PUBLICATION_LICENSE_URL}
         - review_shared=${REVIEW_SHARED}
         - review_hide=${REVIEW_HIDE}
 
@@ -91,9 +74,11 @@ services:
       - GMAIL_NOTIFICATION_EMAIL_SENDER=${GMAIL_NOTIFICATION_EMAIL_SENDER:-}
       - GMAIL_NOTIFICATION_PASSWORD=${GMAIL_NOTIFICATION_PASSWORD:-}
       - PUBLISHING_WEBHOOK_URL=${PUBLISHING_WEBHOOK_URL:-}
-      - PUBLISHING_WEBHOOK_SECRET=${PUBLISHING_WEBHOOK_SECRET:-}
+      - PUBLISHING_WEBHOOK_TOKEN=${PUBLISHING_WEBHOOK_TOKEN:-}
+      - PUBLISHING_WEBHOOK_REF=${PUBLISHING_WEBHOOK_REF:-}
       - REVIEW_SHARED=${REVIEW_SHARED:-false}
       - REVIEW_HIDE=${REVIEW_HIDE:-false}
+      - NOTIFICATION_EMAIL_AUTOMATED=${NOTIFICATION_EMAIL_AUTOMATED:-false}
 
   job-xsweet:
     image: pubsweet/job-xsweet:1.5.2
