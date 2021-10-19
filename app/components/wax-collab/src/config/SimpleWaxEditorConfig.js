@@ -19,7 +19,6 @@ import {
   DisplayBlockLevelService,
 } from 'wax-prosemirror-services'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
-import ExtendedHeadingService from '../ExtendedHeaders'
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
@@ -70,7 +69,6 @@ const simpleWaxEditorConfig = () => ({
     new TextBlockLevelService(),
     new TextToolGroupService(),
     // this is what I've added::
-    new ExtendedHeadingService(),
     new KotahiBlockDropDownToolGroupService(),
     new DisplayBlockLevelService(),
   ],

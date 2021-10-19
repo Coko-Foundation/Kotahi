@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { debounce } from 'lodash'
 import { Wax } from 'wax-prosemirror-core'
@@ -51,11 +51,18 @@ const ProductionWaxEditor = ({
 
   const ourUser = { ...defaultUser, ...user } // this is just to make sure we have a user object
 
+  const editorRef = useRef(null)
+
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
 
   return (
     <ThemeProvider theme={waxTheme}>
-      <div className={validationStatus}>
+      <div
+        className={validationStatus}
+        onBlur={() => {
+          onBlur(editorRef.current.getContent())
+        }}
+      >
         <Wax
           autoFocus={autoFocus}
           config={productionWaxEditorConfig(readOnlyComments)}
@@ -72,6 +79,7 @@ const ProductionWaxEditor = ({
           onChange={debounceChange}
           placeholder={placeholder}
           readonly={readonly}
+          ref={editorRef}
           user={ourUser}
           value={value}
           {...rest}

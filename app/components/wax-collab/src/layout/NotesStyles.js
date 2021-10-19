@@ -8,10 +8,15 @@ export const NotesAreaContainer = styled.div`
   box-shadow: 0 ${grid(-0.3)} ${grid(0.5)} ${grid(-0.2)} gray;
   grid-column-start: editorCol;
   grid-row-start: notesRow;
-  height: 20vh;
-  overflow-y: scroll;
+  /* height: 20vh;
+  overflow-y: scroll; */
   position: sticky;
   width: 100%;
+
+  &.productionnotes {
+    grid-column-start: initial;
+    grid-row-start: initial;
+  }
 
   .ProseMirror {
     display: inline;

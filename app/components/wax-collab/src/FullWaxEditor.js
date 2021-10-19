@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useRef } from 'react'
 import PropTypes from 'prop-types'
 import { ThemeProvider } from 'styled-components'
 import { debounce } from 'lodash'
@@ -47,10 +47,17 @@ const FullWaxEditor = ({
     username: user.defaultIdentity?.name || user.username || 'demo',
   }
 
+  const editorRef = useRef(null)
+
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
     <ThemeProvider theme={waxTheme}>
-      <div className={validationStatus}>
+      <div
+        className={validationStatus}
+        onBlur={() => {
+          onBlur(editorRef.current.getContent())
+        }}
+      >
         <Wax
           autoFocus={autoFocus}
           config={fullWaxEditorConfig()}
@@ -67,6 +74,7 @@ const FullWaxEditor = ({
           onChange={debounceChange}
           placeholder={placeholder}
           readonly={readonly}
+          ref={editorRef}
           user={ourUser}
           value={value}
           {...rest}

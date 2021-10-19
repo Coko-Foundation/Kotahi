@@ -129,7 +129,7 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
               </CommentsContainer>
             </ProductionEditorDiv>
             {hasNotes && (
-              <NotesAreaContainer>
+              <NotesAreaContainer className="productionnotes">
                 <NotesHeading>Notes</NotesHeading>
                 <NotesContainer id="notes-container">
                   <NotesArea view={main} />
