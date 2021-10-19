@@ -32,9 +32,10 @@ class JatsTagsService extends Service {
             tag: 'p.mixedcitation',
             getAttrs(hook, next) {
               Object.assign(hook, {
+                // this conked out in FullWaxEditor so I adjusted
                 class: hook?.dom?.getAttribute('class') || 'mixedcitation',
               })
-              // this conks out in FullWaxEditor
+              // this conked out in FullWaxEditor so I adjusted
               typeof next !== 'undefined' && next()
             },
           },
@@ -47,7 +48,7 @@ class JatsTagsService extends Service {
     })
     createNode({
       refList: {
-        content: 'block+',
+        content: 'referenceHeader? mixedCitation*',
         group: 'block',
         defining: true,
         attrs: {

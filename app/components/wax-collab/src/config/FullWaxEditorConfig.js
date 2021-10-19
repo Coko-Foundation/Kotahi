@@ -33,7 +33,6 @@ import {
   TrackCommentOptionsToolGroupService,
 } from 'wax-prosemirror-services'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
-import ExtendedHeadingService from '../ExtendedHeaders'
 import JatsTagsService from '../JatsTags'
 
 const updateTitle = title => {
@@ -137,7 +136,6 @@ const fullWaxEditorConfig = () => ({
     new TextBlockLevelService(),
     new TextToolGroupService(),
     // these are added for paragraph dropdown:
-    new ExtendedHeadingService(),
     new KotahiBlockDropDownToolGroupService(),
     new DisplayBlockLevelService(),
     // these are added for full screen
