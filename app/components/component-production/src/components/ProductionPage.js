@@ -47,7 +47,6 @@ export const updateMutation = gql`
 `
 
 const ProductionPage = ({ match, ...props }) => {
-
   const [update] = useMutation(updateMutation)
 
   const updateManuscript = (versionId, manuscriptDelta) => {
@@ -75,10 +74,10 @@ const ProductionPage = ({ match, ...props }) => {
 
   return (
     <Production
-      manuscript={manuscript}
       currentUser={currentUser}
-      updateManuscript={updateManuscript}
       file={manuscript.files.find(file => file.fileType === 'manuscript') || {}}
+      manuscript={manuscript}
+      updateManuscript={updateManuscript}
     />
   )
 }

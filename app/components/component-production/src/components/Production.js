@@ -47,19 +47,15 @@ const Production = ({
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
       <ManuscriptContainer>
         {manuscript ? (
-          <ProductionWaxEditor 
-            user={currentUser} 
+          <ProductionWaxEditor
+            onBlur={source => {
+              updateManuscript(manuscript.id, { meta: { source } })
+            }}
+            onChange={source => {
+              updateManuscript(manuscript.id, { meta: { source } })
+            }}
+            user={currentUser}
             value={manuscript.meta.source}
-            onBlur={
-              source => {
-                updateManuscript(manuscript.id, { meta: { source } })
-              }
-            }
-            onChange={
-              source => {
-                updateManuscript(manuscript.id, { meta: { source } })
-              }
-            }
           />
         ) : (
           <Spinner />
