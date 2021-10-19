@@ -634,7 +634,7 @@ const resolvers = {
           return null
         }
       } else if (['colab'].includes(process.env.INSTANCE_NAME)) {
-        // TODO: A note in the code said that for Colab instance, submission.editDate should be updated. Is this true?
+        // TODO: A note in the code said that for Colab instance, submission.editDate should be updated. Is this true? (See commonUpdateManuscript() for example code.)
       }
 
       if (config.hypothesis.apiKey) {
