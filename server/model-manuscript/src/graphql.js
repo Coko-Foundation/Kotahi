@@ -840,8 +840,8 @@ const resolvers = {
             'manuscripts.id',
             manuscripts.map(manuscript => manuscript.id),
           )
-          .withGraphJoined(
-            '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
+          .withGraphFetched(
+            '[submitter, teams.[members.[user.[defaultIdentity]]], manuscriptVersions(orderByCreated).[submitter, teams.[members.[user.[defaultIdentity]]]]]',
           )
       } catch (e) {
         logger.error('Failed to retrieve paginated manuscripts:', e)
