@@ -59,6 +59,8 @@ FROM node:12.21-alpine as server
 
 WORKDIR /home/node/app
 
+RUN mkdir ./uploads
+
 RUN chown -R node:node .
 RUN apk add bash coreutils postgresql-client
 USER node
@@ -73,6 +75,8 @@ COPY --chown=node:node ./profiles ./profiles
 
 COPY --from=build /home/node/app/_build/assets ./_build
 COPY --from=build /home/node/app/production_node_modules ./node_modules
+
+VOLUME /home/node/app/uploads
 
 ENTRYPOINT ["sh", "./scripts/setupProdServer.sh"]
 CMD ["node", "./startServer.js"]

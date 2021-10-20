@@ -38,6 +38,9 @@ services:
       - REVIEW_HIDE=${REVIEW_HIDE:-false}
       - NOTIFICATION_EMAIL_AUTOMATED=${NOTIFICATION_EMAIL_AUTOMATED:-false}
 
+    volumes:
+      - ./uploads:/home/node/app/uploads
+
     entrypoint:
       [
         'bash',
@@ -48,6 +51,7 @@ services:
         'scripts/setupProdServer.sh',
       ]
     command: ['node', './startServer.js']
+
   db:
     image: postgres:10-alpine
     ports:
