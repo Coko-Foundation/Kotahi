@@ -9,6 +9,7 @@ export default css`
   .ProseMirror {
     counter-reset: footnote;
     font-family: ${props => props.theme.fontReading};
+    white-space: pre-wrap;
 
     &:focus {
       outline: none;
@@ -472,6 +473,7 @@ export default css`
     margin-bottom: 8px;
     padding: 8px 16px;
     position: relative;
+
     &:before {
       color: white;
       content: 'FRONT MATTER';
@@ -520,6 +522,7 @@ export default css`
     margin-bottom: 8px;
     padding: 8px 16px;
     position: relative;
+
     &:before {
       color: white;
       content: 'APPENDIX';
