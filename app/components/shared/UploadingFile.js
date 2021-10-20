@@ -106,14 +106,24 @@ const UploadingFile = ({
   const extension = getFileExtension(file)
   const isImage = file?.mimeType.startsWith('image/')
 
+  const icon = (
+    <Icon>
+      {isImage && <img alt={file.name} src={file.url} />}
+      {/* {!!progress && <Progress>{progress * 100}%</Progress>} */}
+      <Extension>{extension}</Extension>
+    </Icon>
+  )
+
   return (
     <Root>
       {!!error && <ErrorWrapper>{error}</ErrorWrapper>}
-      <Icon>
-        {isImage && <img alt={file.name} src={file.url} />}
-        {/* {!!progress && <Progress>{progress * 100}%</Progress>} */}
-        <Extension>{extension}</Extension>
-      </Icon>
+      {uploaded ? (
+        <a download={file.name} href={file.url} title={file.name}>
+          {icon}
+        </a>
+      ) : (
+        icon
+      )}
       <Filename>
         {uploaded ? (
           <a download={file.name} href={file.url} title={file.name}>
