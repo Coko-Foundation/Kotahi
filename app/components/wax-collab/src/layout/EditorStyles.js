@@ -33,6 +33,10 @@ export const Menu = styled.div`
   user-select: none;
   z-index: 10;
 
+  &.production {
+    top: 0px;
+  }
+
   & > div {
     height: 36px;
   }

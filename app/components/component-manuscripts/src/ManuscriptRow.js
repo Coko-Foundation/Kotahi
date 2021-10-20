@@ -376,6 +376,9 @@ const ManuscriptRow = ({
         >
           Delete
         </Action>
+        <Action to={`${urlFrag}/versions/${manuscriptId}/production`}>
+          Production
+        </Action>
         {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
           manuscript.status === articleStatuses.evaluated && (
             <Action
