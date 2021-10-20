@@ -124,7 +124,9 @@ const UploadingFile = ({
         )}
       </Filename>
 
-      <Action onClick={() => deleteFile(file, index, remove)}>Remove</Action>
+      {!!deleteFile && !!remove && (
+        <Action onClick={() => deleteFile(file, index, remove)}>Remove</Action>
+      )}
     </Root>
   )
 }

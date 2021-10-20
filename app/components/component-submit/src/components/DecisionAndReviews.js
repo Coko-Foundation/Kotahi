@@ -1,5 +1,6 @@
 import React from 'react'
-// import styled from 'styled-components'
+import styled from 'styled-components'
+import { grid } from '@pubsweet/ui-toolkit'
 
 // TODO: Sort out the imports, perhaps make DecisionReview a shared component?
 import Review from '../../../component-review/src/components/decision/DecisionReview'
@@ -12,6 +13,14 @@ import {
   Title,
   SectionContent,
 } from '../../../shared'
+import UploadingFile from '../../../shared/UploadingFile'
+
+const Files = styled.div`
+  display: grid;
+  grid-gap: ${grid(2)};
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  margin-top: ${grid(2)};
+`
 
 const Decision = ({ decision, editor }) =>
   decision ? (
@@ -28,6 +37,20 @@ const Decision = ({ decision, editor }) =>
           }}
         />
       </SectionRow>
+      {decision?.decisionComment?.files?.length > 0 && (
+        <SectionRow>
+          <p>Attachments:</p>
+          <Files>
+            {decision.decisionComment.files.map(f => (
+              <UploadingFile
+                file={{ ...f, name: f.filename }}
+                key={f.url}
+                uploaded
+              />
+            ))}
+          </Files>
+        </SectionRow>
+      )}
       <SectionRow>
         <UserAvatar username={editor?.username} />
         Written by {editor?.defaultIdentity?.name}
