@@ -3,14 +3,13 @@ import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import ProductionWaxEditor from '../../../wax-collab/src/ProductionWaxEditor'
 import { DownloadDropdown } from './DownloadDropdown'
-import { 
+import {
   Container,
-  Heading, 
-  HeadingWithAction, 
+  Heading,
+  HeadingWithAction,
   SectionContent,
   Spinner,
 } from '../../../shared'
-   
 
 const Info = styled.span`
   align-items: center;
@@ -29,26 +28,26 @@ const Production = ({
   // fileUpload,
   updateManuscript,
 }) => (
-    <Container>
-      <HeadingWithAction>
-        <Heading>Production</Heading>
-        <DownloadDropdown source={manuscript.meta.source} />
-      </HeadingWithAction>
-      {file &&
-      file.mimeType ===
-        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
-        <SectionContent>
-          {manuscript ? (
-            <ProductionWaxEditor
-              onBlur={source => {
-                updateManuscript(manuscript.id, { meta: { source } })
-              }}
-              user={currentUser}
-              value={manuscript.meta.source}
-            />
-          ) : (
-            <Spinner />
-          )}
+  <Container>
+    <HeadingWithAction>
+      <Heading>Production</Heading>
+      <DownloadDropdown source={manuscript.meta.source} />
+    </HeadingWithAction>
+    {file &&
+    file.mimeType ===
+      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
+      <SectionContent>
+        {manuscript ? (
+          <ProductionWaxEditor
+            onBlur={source => {
+              updateManuscript(manuscript.id, { meta: { source } })
+            }}
+            user={currentUser}
+            value={manuscript.meta.source}
+          />
+        ) : (
+          <Spinner />
+        )}
       </SectionContent>
     ) : (
       <SectionContent>
