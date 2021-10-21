@@ -1,6 +1,6 @@
-import React, { useCallback, useContext } from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
-import { debounce } from 'lodash'
+// import { debounce } from 'lodash'
 import { Wax, WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
 import { DefaultSchema, DocumentHelpers } from 'wax-prosemirror-utilities'
 import styled, { css } from 'styled-components'
@@ -326,7 +326,7 @@ const FullWaxEditor = ({
   fileUpload,
   ...rest
 }) => {
-  const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
+  // const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
     <div className={validationStatus}>
       <Wax
@@ -338,7 +338,7 @@ const FullWaxEditor = ({
           onChange && onChange(val)
           onBlur && onBlur(val)
         }}
-        onChange={debounceChange}
+        /* onChange={debounceChange} */
         placeholder={placeholder}
         readonly={readonly}
         value={value}
