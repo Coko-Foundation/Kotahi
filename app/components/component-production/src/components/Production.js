@@ -2,8 +2,15 @@ import React from 'react'
 import { withRouter } from 'react-router-dom'
 import styled from 'styled-components'
 import ProductionWaxEditor from '../../../wax-collab/src/ProductionWaxEditor'
-
-import { Spinner } from '../../../shared'
+import { DownloadDropdown } from './DownloadDropdown'
+import { 
+  Container,
+  Heading, 
+  HeadingWithAction, 
+  SectionContent,
+  Spinner,
+} from '../../../shared'
+   
 
 const Info = styled.span`
   align-items: center;
@@ -15,25 +22,6 @@ const Info = styled.span`
   padding: 0;
 `
 
-const Columns = styled.div`
-  display: grid;
-  grid-template-areas: 'manuscript';
-  grid-template-columns: 100%;
-  height: 100vh;
-  justify-content: center;
-  overflow: hidden;
-`
-
-const ManuscriptContainer = styled.div`
-  grid-area: manuscript;
-  overflow-y: scroll;
-
-  /* .wax-container {
-    height: 100%;
-    top: 0%;
-  } */
-`
-
 const Production = ({
   file,
   manuscript,
@@ -41,30 +29,33 @@ const Production = ({
   // fileUpload,
   updateManuscript,
 }) => (
-  <Columns>
-    {file &&
-    file.mimeType ===
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
-      <ManuscriptContainer>
-        {manuscript ? (
-          <ProductionWaxEditor
-            onBlur={source => {
-              updateManuscript(manuscript.id, { meta: { source } })
-            }}
-            onChange={source => {
-              updateManuscript(manuscript.id, { meta: { source } })
-            }}
-            user={currentUser}
-            value={manuscript.meta.source}
-          />
-        ) : (
-          <Spinner />
-        )}
-      </ManuscriptContainer>
+    <Container>
+      <HeadingWithAction>
+        <Heading>Production</Heading>
+        <DownloadDropdown source={manuscript.meta.source} />
+      </HeadingWithAction>
+      {file &&
+      file.mimeType ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
+        <SectionContent>
+          {manuscript ? (
+            <ProductionWaxEditor
+              onBlur={source => {
+                updateManuscript(manuscript.id, { meta: { source } })
+              }}
+              user={currentUser}
+              value={manuscript.meta.source}
+            />
+          ) : (
+            <Spinner />
+          )}
+      </SectionContent>
     ) : (
-      <Info>No supported view of the file</Info>
+      <SectionContent>
+        <Info>No supported view of the file</Info>
+      </SectionContent>
     )}
-  </Columns>
+  </Container>
 )
 
 export default withRouter(Production)

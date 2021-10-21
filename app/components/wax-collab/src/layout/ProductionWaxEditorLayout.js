@@ -107,7 +107,7 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
           </ReadOnlyEditorDiv>
         ) : (
           <>
-            <Menu className="production">
+            <Menu>
               <TopBar />
             </Menu>
             <ProductionEditorDiv className="wax-surface-scroll">

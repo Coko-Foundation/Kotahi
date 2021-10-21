@@ -48,10 +48,6 @@ const ManuscriptPage = ({ match, ...props }) => {
     },
   })
 
-  ManuscriptPage.propTypes = {
-    match: ReactRouterPropTypes.match.isRequired,
-  }
-
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
   const { manuscript, currentUser } = data
@@ -64,6 +60,10 @@ const ManuscriptPage = ({ match, ...props }) => {
       file={manuscript.files.find(file => file.fileType === 'manuscript') || {}}
     />
   )
+}
+
+ManuscriptPage.propTypes = {
+  match: ReactRouterPropTypes.match.isRequired,
 }
 
 export default ManuscriptPage

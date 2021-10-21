@@ -31,11 +31,8 @@ export const Menu = styled.div`
   position: sticky;
   top: -20px;
   user-select: none;
-  z-index: 10;
+  z-index: 5;
 
-  &.production {
-    top: 0px;
-  }
 
   & > div {
     height: 36px;

@@ -64,10 +64,6 @@ const ProductionPage = ({ match, ...props }) => {
     },
   })
 
-  ProductionPage.propTypes = {
-    match: ReactRouterPropTypes.match.isRequired,
-  }
-
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
   const { manuscript, currentUser } = data
@@ -80,6 +76,10 @@ const ProductionPage = ({ match, ...props }) => {
       updateManuscript={updateManuscript}
     />
   )
+}
+
+ProductionPage.propTypes = {
+  match: ReactRouterPropTypes.match.isRequired,
 }
 
 export default ProductionPage
