@@ -67,7 +67,7 @@ const Submit = ({
       content: (
         <EditorSection
           manuscript={manuscript}
-          onChange={source => updateManuscript(versionId, { meta: { source } })}
+          onBlur={source => updateManuscript(versionId, { meta: { source } })}
           readonly={!userCanEditManuscriptAndFormData}
         />
       ),

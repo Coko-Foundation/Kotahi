@@ -393,4 +393,46 @@ export default css`
   .math-node.ProseMirror-selectednode .math-render {
     display: none;
   }
+
+  /* added for figure weirdness */
+
+  figure {
+    border: 1px solid ${darken('colorPrimary', 1)};
+    margin-bottom: 1rem;
+    padding: 1rem;
+    position: relative;
+  }
+
+  figure::before {
+    color: ${darken('colorPrimary', 1)};
+    content: 'Figure:';
+    font-size: 75%;
+    left: 0;
+    letter-spacing: 0.5px;
+    position: absolute;
+    text-transform: uppercase;
+    top: -1.25rem;
+  }
+
+  figure:hover:before {
+    content: 'Click to add a caption';
+  }
+
+  figcaption {
+    border: 1px solid ${darken('colorPrimary', 1)};
+    margin-top: 1rem;
+    padding: 1rem;
+    position: relative;
+  }
+
+  figcaption::before {
+    color: ${darken('colorPrimary', 1)};
+    content: 'Caption:';
+    font-size: 75%;
+    left: 0;
+    letter-spacing: 0.5px;
+    position: absolute;
+    text-transform: uppercase;
+    top: -1.25rem;
+  }
 `
