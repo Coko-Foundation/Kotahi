@@ -1,4 +1,5 @@
 const he = require('he')
+// const { lte } = require('semver')
 
 const tagsToConvert = {
   b: 'bold',
@@ -134,4 +135,211 @@ const getCitationsFromList = html => {
   return pContents
 }
 
-module.exports = { htmlToJats, getCitationsFromList }
+const splitFrontBodyBack = (html, submission, journalMeta) => {
+  // html is what's coming out of Wax
+  // submission is the submission form & what's needed for front matter
+  // journalMeta is the journal metadata object (see below for description)
+
+  /**
+   ** TODO:
+   ** deal with <notes></notes>
+   ** deal with <figure></figure>
+   ***/
+
+  let backlessHtml = html // html is assumed to be body; we take back things out
+
+  // 1. deal with appendices
+
+  let appCount = 0 // this is to give appendices IDs
+  const appendices = []
+
+  while (backlessHtml.indexOf('<section class="appendix">') > -1) {
+    let thisAppendix = backlessHtml
+      .split('<section class="appendix">')[1]
+      .split('</section>')[0]
+
+    backlessHtml = backlessHtml.replace(
+      `<section class="appendix">${thisAppendix}</section>`,
+      '',
+    )
+
+    // 1.1 deal with appendix title
+
+    let headerFound = false // If there is more than header, it's turned into a regular H1, which will get wrapped in sections.
+
+    while (thisAppendix.indexOf('<h1 class="appendixheader">') > -1) {
+      const thisHeader = thisAppendix
+        .split(`<h1 class="appendixheader">`)[1]
+        .split('</h1')[0]
+
+      thisAppendix = thisAppendix.replace(
+        `<h1 class="appendixheader">${thisHeader}</h1>`,
+        !headerFound // if this is the first header, don't add a secti
+          ? `<title>${thisHeader}</title>`
+          : `<h1>${thisHeader}</h1>`,
+      )
+      headerFound = true
+    }
+
+    // 1.2. jats the internal contents
+    appendices.push(
+      `<app id="app-${appCount}">${htmlToJats(thisAppendix)}</app>`,
+    )
+    appCount += 1
+
+    // 1.3 clean out any <h1 class="appendixheader" in backlessHtml—these just become regular H1s
+    while (backlessHtml.indexOf('<h1 class="appendixheader">') > -1) {
+      backlessHtml = backlessHtml.replace(`<h1 class="appendixheader">`, '<h1>')
+    }
+  }
+
+  // 2. deal with citations
+
+  let refList = '' // this is the ref-list that we're building
+  let refListHeader = '' // if there's a header, it goes in here
+  let refCount = 0 // this is for ID numbering
+
+  while (backlessHtml.indexOf('<section class="reflist">') > -1) {
+    let thisRefList = backlessHtml
+      .split('<section class="reflist">')[1]
+      .split('</section>')[0]
+
+    backlessHtml = backlessHtml.replace(
+      `<section class="reflist">${thisRefList}</section>`,
+      '',
+    )
+
+    // 2.1. Get header, if there is one. Only the first reflist header is taken.
+    if (!refListHeader) {
+      if (thisRefList.indexOf('<h1 class="referenceheader">') > -1) {
+        /* eslint-disable prefer-destructuring */
+        refListHeader = thisRefList
+          .split('<h1 class="referenceheader">')[1]
+          .split('</h1>')[0]
+        refList = `<title>${refListHeader}</title>${refList}`
+      }
+    }
+    // 2.2. Get all the mixed citations out, add to refList
+
+    while (thisRefList.indexOf('<p class="mixedcitation">') > -1) {
+      const thisCitation = thisRefList
+        .split('<p class="mixedcitation">')[1]
+        .split('</p>')[0]
+
+      thisRefList = thisRefList.replace(
+        `<p class="mixedcitation">${thisCitation}</p>`,
+        ``,
+      )
+      refList += `<ref id="ref-${refCount}"><mixed-citation>${htmlToJats(
+        thisCitation,
+      )}</mixed-citation></ref>`
+      refCount += 1
+    }
+  }
+
+  // 2.3 deal with any stray reference headers in the body—they become regular H1s.
+
+  while (backlessHtml.indexOf('<h1 class="referenceheader">') > -1) {
+    backlessHtml = backlessHtml.replace(`<h1 class="referenceheader">`, '<h1>')
+  }
+
+  // 2.4 deal with any loose mixed citations in the body:
+  // they're pulled out of the body and added to the ref-list
+
+  while (backlessHtml.indexOf('<p class="mixedcitation">') > -1) {
+    const thisCitation = backlessHtml
+      .split('<p class="mixedcitation">')[1]
+      .split('</p>')[0]
+
+    backlessHtml = backlessHtml.replace(
+      `<p class="mixedcitation">${thisCitation}</p>`,
+      ``,
+    )
+    refList += `<ref id="ref-${refCount}"><mixed-citation>${htmlToJats(
+      thisCitation,
+    )}</mixed-citation></ref>`
+    refCount += 1
+  }
+
+  // 3 deal with faux frontmatter – these just get thrown away
+
+  while (backlessHtml.indexOf('<section class="frontmatter">') > -1) {
+    const frontMatter = backlessHtml
+      .split('<section class="frontmatter">')[1]
+      .split('</section>')[0]
+
+    backlessHtml = backlessHtml.replace(
+      `<section class="frontmatter">${frontMatter}</section>`,
+      '',
+    )
+  }
+
+  // 4 deal with front matter
+
+  let thisFront = ''
+
+  if (journalMeta) {
+    // this is working with a journalMeta with this shape:
+
+    // journalId: [{type: "", value: ""}]
+    // journalTitle: ""
+    // abbrevJouralTitle: ""
+    // issn: [{type: "", value: ""}]
+    // journalPublisher: ""
+
+    let thisJournalMeta = ''
+
+    if (journalMeta.journalId && journalMeta.journalId.length) {
+      for (let i = 0; i < journalMeta.journalId.length; i += 1) {
+        if (journalMeta.journalId[i].type && journalMeta.journalId[i].value) {
+          thisJournalMeta += `<journal-id journal-id-type="${journalMeta.journalId[i].type}">${journalMeta.journalId[i].value}</journal-id>`
+        }
+      }
+    }
+
+    if (journalMeta.journalTitle) {
+      thisJournalMeta += `<journal-title-group><journal-title>${journalMeta.journalTitle}</journal-title>`
+
+      if (journalMeta.abbrevJournalTitle) {
+        thisJournalMeta += `<abbrev-journal-title>${journalMeta.abbrevJournalTitle}</abbrev-journal-title>`
+      }
+
+      thisJournalMeta += `</journal-title>`
+    }
+
+    if (journalMeta.issn && journalMeta.issn.length) {
+      for (let i = 0; i < journalMeta.issn.length; i += 1) {
+        if (journalMeta.issn[i].type && journalMeta.issn[i].value) {
+          thisJournalMeta += `<issn publication-format="${journalMeta.issn[i].type}">${journalMeta.issn[i].value}</issn>`
+        }
+      }
+    }
+
+    if (journalMeta.publisher) {
+      thisJournalMeta += `<publisher>${journalMeta.publisher}</publisher>`
+    }
+
+    thisFront += `<journal-meta>${thisJournalMeta}</journal-meta>`
+  }
+
+  if (submission) {
+    const thisArticleMeta = ''
+    thisFront += `<article-meta>${thisArticleMeta}</article-meta>`
+  }
+
+  const front = `<front>${thisFront}</front>`
+  const body = `<body>${htmlToJats(backlessHtml)}</body>`
+
+  const back = `<back>${
+    appendices.length > 0 ? `<app-group>${appendices.join('')}</app-group>` : ''
+  }${refList ? `<ref-list>${refList}</ref-list>` : ''}</back>`
+
+  // check if body or back are empty, don't pass if not there.
+  const jats = `<article dtd-version="1.3">${front}${
+    body.length > 13 ? body : ''
+  }${back.length > 13 ? back : ''}</article>`
+
+  return { front, body, back, jats }
+}
+
+module.exports = { htmlToJats, getCitationsFromList, splitFrontBodyBack }

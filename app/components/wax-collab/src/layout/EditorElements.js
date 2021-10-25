@@ -541,7 +541,7 @@ export default css`
     padding: 4px 8px;
   }
 
-	/* added for figure weirdness */
+  /* added for figure weirdness */
 
   figure {
     border: 1px solid ${darken('colorPrimary', 1)};
