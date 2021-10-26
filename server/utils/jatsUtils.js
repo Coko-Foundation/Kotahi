@@ -151,7 +151,7 @@ const splitFrontBodyBack = (html, submission, journalMeta) => {
 
   /**
    ** TODO:
-   ** deal with <figure></figure>
+   ** deal with <figure></figure> and <img> tags – those could just be passed through
    ** deal with front matter
    ***/
 
@@ -176,7 +176,7 @@ const splitFrontBodyBack = (html, submission, journalMeta) => {
       `<xref ref=type="fn" rid="${id}">${footnoteCount}</xref>`,
     )
     // add this to the list of footnotes
-    fnSection += `<fn id="${id}"><p>${text}</p></fn>`
+    fnSection += `<fn id="${id}"><p>${htmlToJats(text)}</p></fn>`
   }
 
   // 1. deal with appendices
