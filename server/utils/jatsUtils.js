@@ -10,6 +10,7 @@ const tagsToConvert = {
   li: 'list-item',
   p: 'p',
   u: 'underline',
+  figure: 'fig',
   // ?: 'disp-formula',
   // img: 'graphic',
   // ?: 'inline-formula',
@@ -28,6 +29,8 @@ const tagsToIgnore = [
   'sup',
   'title',
   'xref',
+  'graphic',
+  'caption',
 ]
 
 const convertRemainingTags = markup => {
@@ -127,9 +130,40 @@ const convertCharacterEntities = markup => {
   return result
 }
 
+const convertImages = markup => {
+  let output = markup
+
+  // first, <img src="#1"> => <graphic xlink:href=”#1” />
+
+  while (output.indexOf('<img src="') > -1) {
+    const [filename, ...theRest] = output.split('<img src="')[1].split('">')
+    const [caption] = theRest.join('">').split('</figure>')
+    let fixedCaption = ''
+
+    // <figcaption class="decoration">text</figcaption> => <caption><p>text</p></caption>
+
+    if (caption) {
+      fixedCaption = caption.replace(
+        /<figcaption class="decoration">((?:(?!<\/figcaption>)[\s\S])*)<\/figcaption>/g,
+        '<caption><p>$1</p></caption>',
+      )
+    }
+
+    // finally, if there's a caption, it needs to come BEFORE the image in JATS syntax
+
+    output = output.replace(
+      `<img src="${filename}">${caption}`,
+      `${fixedCaption}<graphic xlink:href="${filename}" />`,
+    )
+  }
+
+  return output
+}
+
 const htmlToJats = html => {
   let jats = html
   jats = insertSections(jats)
+  jats = convertImages(jats)
   jats = convertLinks(jats)
   jats = convertLists(jats)
   jats = convertSmallCaps(jats)
@@ -142,6 +176,51 @@ const getCitationsFromList = html => {
   const jats = htmlToJats(html)
   const pContents = jats.match(/(?<=<p>)((?:(?!<\/?p>)[\s\S])*)(?=<\/p>)/g)
   return pContents
+}
+
+const makeJournalMeta = journalMeta => {
+  // this is working with a journalMeta with this shape:
+
+  // journalId: [{type: "", value: ""}]
+  // journalTitle: ""
+  // abbrevJouralTitle: ""
+  // issn: [{type: "", value: ""}]
+  // journalPublisher: ""
+  let thisJournalMeta = ''
+
+  if (journalMeta) {
+    if (journalMeta.journalId && journalMeta.journalId.length) {
+      for (let i = 0; i < journalMeta.journalId.length; i += 1) {
+        if (journalMeta.journalId[i].type && journalMeta.journalId[i].value) {
+          thisJournalMeta += `<journal-id journal-id-type="${journalMeta.journalId[i].type}">${journalMeta.journalId[i].value}</journal-id>`
+        }
+      }
+    }
+
+    if (journalMeta.journalTitle) {
+      thisJournalMeta += `<journal-title-group><journal-title>${journalMeta.journalTitle}</journal-title>`
+
+      if (journalMeta.abbrevJournalTitle) {
+        thisJournalMeta += `<abbrev-journal-title>${journalMeta.abbrevJournalTitle}</abbrev-journal-title>`
+      }
+
+      thisJournalMeta += `</journal-title-group>`
+    }
+
+    if (journalMeta.issn && journalMeta.issn.length) {
+      for (let i = 0; i < journalMeta.issn.length; i += 1) {
+        if (journalMeta.issn[i].type && journalMeta.issn[i].value) {
+          thisJournalMeta += `<issn publication-format="${journalMeta.issn[i].type}">${journalMeta.issn[i].value}</issn>`
+        }
+      }
+    }
+
+    if (journalMeta.publisher) {
+      thisJournalMeta += `<publisher>${journalMeta.publisher}</publisher>`
+    }
+  }
+
+  return thisJournalMeta && `<journal-meta>${thisJournalMeta}</journal-meta>`
 }
 
 const splitFrontBodyBack = (html, submission, journalMeta) => {
@@ -310,47 +389,7 @@ const splitFrontBodyBack = (html, submission, journalMeta) => {
   let thisFront = ''
 
   if (journalMeta) {
-    // this is working with a journalMeta with this shape:
-
-    // journalId: [{type: "", value: ""}]
-    // journalTitle: ""
-    // abbrevJouralTitle: ""
-    // issn: [{type: "", value: ""}]
-    // journalPublisher: ""
-
-    let thisJournalMeta = ''
-
-    if (journalMeta.journalId && journalMeta.journalId.length) {
-      for (let i = 0; i < journalMeta.journalId.length; i += 1) {
-        if (journalMeta.journalId[i].type && journalMeta.journalId[i].value) {
-          thisJournalMeta += `<journal-id journal-id-type="${journalMeta.journalId[i].type}">${journalMeta.journalId[i].value}</journal-id>`
-        }
-      }
-    }
-
-    if (journalMeta.journalTitle) {
-      thisJournalMeta += `<journal-title-group><journal-title>${journalMeta.journalTitle}</journal-title>`
-
-      if (journalMeta.abbrevJournalTitle) {
-        thisJournalMeta += `<abbrev-journal-title>${journalMeta.abbrevJournalTitle}</abbrev-journal-title>`
-      }
-
-      thisJournalMeta += `</journal-title-group>`
-    }
-
-    if (journalMeta.issn && journalMeta.issn.length) {
-      for (let i = 0; i < journalMeta.issn.length; i += 1) {
-        if (journalMeta.issn[i].type && journalMeta.issn[i].value) {
-          thisJournalMeta += `<issn publication-format="${journalMeta.issn[i].type}">${journalMeta.issn[i].value}</issn>`
-        }
-      }
-    }
-
-    if (journalMeta.publisher) {
-      thisJournalMeta += `<publisher>${journalMeta.publisher}</publisher>`
-    }
-
-    thisFront += `<journal-meta>${thisJournalMeta}</journal-meta>`
+    thisFront += makeJournalMeta(journalMeta)
   }
 
   if (submission) {
