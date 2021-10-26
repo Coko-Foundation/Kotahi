@@ -173,7 +173,7 @@ const splitFrontBodyBack = (html, submission, journalMeta) => {
     // replace body text with JATS tag
     backlessHtml = backlessHtml.replace(
       `<footnote id="${id}">${text}</footnote>`,
-      `<xref ref=type="fn" rid="${id}">${footnoteCount}</xref>`,
+      `<xref ref-type="fn" rid="${id}">${footnoteCount}</xref>`,
     )
     // add this to the list of footnotes
     fnSection += `<fn id="${id}"><p>${htmlToJats(text)}</p></fn>`
@@ -335,7 +335,7 @@ const splitFrontBodyBack = (html, submission, journalMeta) => {
         thisJournalMeta += `<abbrev-journal-title>${journalMeta.abbrevJournalTitle}</abbrev-journal-title>`
       }
 
-      thisJournalMeta += `</journal-title>`
+      thisJournalMeta += `</journal-title-group>`
     }
 
     if (journalMeta.issn && journalMeta.issn.length) {
