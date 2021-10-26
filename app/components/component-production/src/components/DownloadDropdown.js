@@ -1,44 +1,91 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown } from '@pubsweet/ui'
-import { htmlToJats } from '../../../../../server/utils/jatsUtils'
+import { splitFrontBodyBack } from '../../../../../server/utils/jatsUtils'
 
 let html = ''
 
+const buildArticleMetadata = metadata => {
+  // TODO: get more metadata coming in and pass that to the JATS converter.
+  // console.log(metadata)
+  const articleMetadata = {}
+
+  if (metadata?.meta?.manuscriptId) {
+    articleMetadata.id = metadata.meta.manuscriptId
+  }
+
+  if (metadata?.meta?.title) {
+    articleMetadata.title = metadata.meta.title
+  }
+
+  if (metadata?.created) {
+    articleMetadata.pubDate = metadata.created
+  }
+
+  if (metadata?.submission) {
+    articleMetadata.submission = JSON.parse(metadata.submission)
+    // console.log(articleMetadata.submission)
+  }
+
+  return articleMetadata
+}
+
+// this should probably come from config/journal/metadata.js, though the data's not there yet.
+
+const journalMetadata = {
+  journalId: [
+    { type: 'pmc', value: 'BMJ' },
+    { type: 'publisher', value: 'BR MED J' },
+  ],
+  journalTitle: 'Journal Title',
+  abbrevJournalTitle: 'Jour.Ti.',
+  issn: [
+    { type: 'print', value: '1063-777X' },
+    { type: 'electronic', value: '1090-6517' },
+  ],
+  publisher: 'Journal Publisher Inc.',
+}
+
 // added console to test options - to be removed later
-const options = [
-  {
-    id: 1,
-    onClick: () => {
-      // eslint-disable-next-line
-      console.log('HTML Selected')
-    },
-    title: 'HTML',
-  },
-  {
-    id: 2,
-    onClick: () => {
-      // eslint-disable-next-line
-      console.log('PDF Selected')
-    },
-    title: 'PDF',
-  },
-  {
-    id: 3,
-    onClick: () => {
-      /* eslint-disable */
-      console.log('XML Selected')
-      console.log('HTML:', html)
-      console.log('JATS:', htmlToJats(html))
-      /* eslint-disable */
-    },
-    title: 'XML',
-  },
-]
 
 /* eslint-disable import/prefer-default-export */
-export const DownloadDropdown = ({ source }) => {
+export const DownloadDropdown = ({ source, metadata }) => {
   html = source
+  const articleMetadata = buildArticleMetadata(metadata)
+
+  const options = [
+    {
+      id: 1,
+      onClick: () => {
+        // eslint-disable-next-line
+        console.log('HTML Selected')
+      },
+      title: 'HTML',
+    },
+    {
+      id: 2,
+      onClick: () => {
+        // eslint-disable-next-line
+        console.log('PDF Selected')
+      },
+      title: 'PDF',
+    },
+    {
+      id: 3,
+      onClick: () => {
+        /* eslint-disable */
+        console.log('XML Selected')
+        console.log('HTML:\n\n', html)
+        console.log(
+          'JATS:\n\n',
+          splitFrontBodyBack(html, articleMetadata, journalMetadata).jats,
+        )
+        /* eslint-disable */
+      },
+      title: 'XML',
+    },
+  ]
+
   return (
     <Dropdown itemsList={options} primary>
       Download
@@ -48,4 +95,5 @@ export const DownloadDropdown = ({ source }) => {
 
 DownloadDropdown.propTypes = {
   source: PropTypes.string.isRequired,
+  metadata: PropTypes.object,
 }

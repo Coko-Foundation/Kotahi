@@ -13,9 +13,11 @@ const fragmentFields = `
     fileType
     mimeType
   }
+	submission
   meta {
     title
     source
+		abstract
     manuscriptId
   }
 `

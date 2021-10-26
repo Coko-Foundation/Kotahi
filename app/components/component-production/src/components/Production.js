@@ -31,7 +31,7 @@ const Production = ({
   <Container>
     <HeadingWithAction>
       <Heading>Production</Heading>
-      <DownloadDropdown source={manuscript.meta.source} />
+      <DownloadDropdown metadata={manuscript} source={manuscript.meta.source} />
     </HeadingWithAction>
     {file &&
     file.mimeType ===

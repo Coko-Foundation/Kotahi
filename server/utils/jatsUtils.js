@@ -137,8 +137,10 @@ const convertImages = markup => {
 
   while (output.indexOf('<img src="') > -1) {
     const [filename, ...theRest] = output.split('<img src="')[1].split('">')
-    const [caption] = theRest.join('">').split('</figure>')
     let fixedCaption = ''
+    // TODO: if we're passed an <img> that isn't inside a <figure>, this would fail.
+    // But I think at this point that doesn't happen?
+    const [caption] = theRest.join('">').split('</figure>')
 
     // <figcaption class="decoration">text</figcaption> => <caption><p>text</p></caption>
 
@@ -223,9 +225,43 @@ const makeJournalMeta = journalMeta => {
   return thisJournalMeta && `<journal-meta>${thisJournalMeta}</journal-meta>`
 }
 
-const splitFrontBodyBack = (html, submission, journalMeta) => {
+const makeArticleMeta = metadata => {
+  // metadata:
+  // --pubDate: date
+  // --id: id
+  // --title: title
+  // --abstract: html
+  let thisArticleMeta = ''
+
+  if (metadata.id) {
+    thisArticleMeta += `<article-id pub-id-type="publisher-id">${metadata.id}</article-id>`
+  }
+
+  if (metadata.title) {
+    thisArticleMeta += `<title-group><article-title>${metadata.title}</article-title></title-group>`
+  }
+
+  if (metadata.pubDate) {
+    const theDate = new Date(metadata.pubDate)
+    const date = theDate.getUTCDate()
+    const month = theDate.getUTCMonth() + 1
+    const year = theDate.getUTCFullYear()
+    thisArticleMeta += `<pub-date publication-format="print" date-type="pub" iso-8601-date="${year}-${month}-${date}"><day>${date}</day><month>${month}</month><year>${year}</year>`
+  }
+
+  if (metadata.submission.abstract) {
+    // TODO: note that the quotes in this can be escaped. Does this break our parser?
+    thisArticleMeta += `<abstract>${htmlToJats(
+      metadata.submission.abstract,
+    )}</abstract>`
+  }
+
+  return `<article-meta>${thisArticleMeta}</article-meta>`
+}
+
+const splitFrontBodyBack = (html, metadata, journalMeta) => {
   // html is what's coming out of Wax
-  // submission is the submission form & what's needed for front matter
+  // metadata is what's needed for front matter
   // journalMeta is the journal metadata object (see below for description)
 
   /**
@@ -392,9 +428,8 @@ const splitFrontBodyBack = (html, submission, journalMeta) => {
     thisFront += makeJournalMeta(journalMeta)
   }
 
-  if (submission) {
-    const thisArticleMeta = ''
-    thisFront += `<article-meta>${thisArticleMeta}</article-meta>`
+  if (metadata) {
+    thisFront += makeArticleMeta(metadata)
   }
 
   const front = `<front>${thisFront}</front>`
