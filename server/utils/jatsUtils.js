@@ -19,7 +19,16 @@ const tagsToConvert = {
   // ?: 'tex-math',
 }
 
-const tagsToIgnore = ['ext-link', 'list', 'sc', 'sec', 'sub', 'sup', 'title']
+const tagsToIgnore = [
+  'ext-link',
+  'list',
+  'sc',
+  'sec',
+  'sub',
+  'sup',
+  'title',
+  'xref',
+]
 
 const convertRemainingTags = markup => {
   const openTagRegex = /<([^/>\s]+)(?:(?!\/?>)[\s\S])*>/g
@@ -142,11 +151,33 @@ const splitFrontBodyBack = (html, submission, journalMeta) => {
 
   /**
    ** TODO:
-   ** deal with <notes></notes>
    ** deal with <figure></figure>
+   ** deal with front matter
    ***/
 
   let backlessHtml = html // html is assumed to be body; we take back things out
+
+  // 0. deal with footnotes
+
+  let footnoteCount = 0
+  let fnSection = ''
+
+  while (backlessHtml.indexOf(`<footnote id="`) > -1) {
+    // get id and text from Wax markup
+    const [id, text] = backlessHtml
+      .split('<footnote id="')[1]
+      .split('</footnote')[0]
+      .split('">')
+
+    footnoteCount += 1
+    // replace body text with JATS tag
+    backlessHtml = backlessHtml.replace(
+      `<footnote id="${id}">${text}</footnote>`,
+      `<xref ref=type="fn" rid="${id}">${footnoteCount}</xref>`,
+    )
+    // add this to the list of footnotes
+    fnSection += `<fn id="${id}"><p>${text}</p></fn>`
+  }
 
   // 1. deal with appendices
 
@@ -332,7 +363,9 @@ const splitFrontBodyBack = (html, submission, journalMeta) => {
 
   const back = `<back>${
     appendices.length > 0 ? `<app-group>${appendices.join('')}</app-group>` : ''
-  }${refList ? `<ref-list>${refList}</ref-list>` : ''}</back>`
+  }${refList ? `<ref-list>${refList}</ref-list>` : ''}${
+    footnoteCount > 0 ? `<fn-group>${fnSection}</fn-group>` : ''
+  }</back>`
 
   // check if body or back are empty, don't pass if not there.
   const jats = `<article dtd-version="1.3">${front}${
