@@ -6,8 +6,6 @@ import { splitFrontBodyBack } from '../../../../../server/utils/jatsUtils'
 let html = ''
 
 const buildArticleMetadata = metadata => {
-  // TODO: get more metadata coming in and pass that to the JATS converter.
-  // console.log(metadata)
   const articleMetadata = {}
 
   if (metadata?.meta?.manuscriptId) {
@@ -24,7 +22,6 @@ const buildArticleMetadata = metadata => {
 
   if (metadata?.submission) {
     articleMetadata.submission = JSON.parse(metadata.submission)
-    // console.log(articleMetadata.submission)
   }
 
   return articleMetadata

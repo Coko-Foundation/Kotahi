@@ -131,15 +131,15 @@ const convertCharacterEntities = markup => {
 }
 
 const convertImages = markup => {
+  // <img src="#1"> => <graphic xlink:href=”#1” />
+
   let output = markup
 
-  // first, <img src="#1"> => <graphic xlink:href=”#1” />
+  // first, deal with imgs inside of figures, with or without captions
 
-  while (output.indexOf('<img src="') > -1) {
+  while (output.indexOf('<figure><img src="') > -1) {
     const [filename, ...theRest] = output.split('<img src="')[1].split('">')
     let fixedCaption = ''
-    // TODO: if we're passed an <img> that isn't inside a <figure>, this would fail.
-    // But I think at this point that doesn't happen?
     const [caption] = theRest.join('">').split('</figure>')
 
     // <figcaption class="decoration">text</figcaption> => <caption><p>text</p></caption>
@@ -154,8 +154,18 @@ const convertImages = markup => {
     // finally, if there's a caption, it needs to come BEFORE the image in JATS syntax
 
     output = output.replace(
-      `<img src="${filename}">${caption}`,
-      `${fixedCaption}<graphic xlink:href="${filename}" />`,
+      `<figure><img src="${filename}">${caption}`,
+      `<figure>${fixedCaption}<graphic xlink:href="${filename}" />`,
+    )
+  }
+
+  // just in case (this doesn't seem like something that happens), deal with images that aren't wrapped in a figure
+
+  while (output.indexOf('<img src="') > -1) {
+    const [filename] = output.split('<img src="')[1].split('">')
+    output = output.replace(
+      `<img src="${filename}">`,
+      `<graphic xlink:href="${filename}" />`,
     )
   }
 
@@ -230,8 +240,21 @@ const makeArticleMeta = metadata => {
   // --pubDate: date
   // --id: id
   // --title: title
-  // --abstract: html
+  // --submission: submission form PARSED BEFORE IT GETS HERE
+  //   --abstract: html
+  //   --authors: array
+  //     --id: '3dcc3f77-647e-48b5-86d9-aa3540375f60',
+  //     --email: string
+  //     --lastName: string
+  //     --firstName: string
+  //     --affiliation: string
+  //   --content: array of string (this is keywords)
+  //   --issueNumber: string
+  //   --volumeNumber: string
+
   let thisArticleMeta = ''
+
+  const formData = metadata.submission || {}
 
   if (metadata.id) {
     thisArticleMeta += `<article-id pub-id-type="publisher-id">${metadata.id}</article-id>`
@@ -241,34 +264,68 @@ const makeArticleMeta = metadata => {
     thisArticleMeta += `<title-group><article-title>${metadata.title}</article-title></title-group>`
   }
 
+  if (formData.authors && formData.authors.length) {
+    let authorsList = ''
+    let affilList = ''
+
+    for (let i = 0; i < formData.authors.length; i += 1) {
+      if (formData.authors[i].lastName && formData.authors[i].firstName) {
+        authorsList += `<contrib contrib-type="author"><name><surname>${formData.authors[i].lastName}</surname><given-names>${formData.authors[i].firstName}</given-names></name>`
+      }
+
+      if (formData.authors[i].affiliation) {
+        const thisId = formData.authors[i].id || `author_${i}`
+        authorsList += `<xref ref-type="aff" rid="${thisId}" />`
+        affilList += `<aff id="${thisId}">${formData.authors[i].affiliation}</aff>`
+      }
+
+      authorsList += `</contrib>`
+    }
+
+    thisArticleMeta += `<contrib-group>${authorsList}</contrib-group>${affilList}`
+  }
+
   if (metadata.pubDate) {
     const theDate = new Date(metadata.pubDate)
     const date = theDate.getUTCDate()
     const month = theDate.getUTCMonth() + 1
     const year = theDate.getUTCFullYear()
     thisArticleMeta += `<pub-date publication-format="print" date-type="pub" iso-8601-date="${year}-${month}-${date}"><day>${date}</day><month>${month}</month><year>${year}</year>`
+  } else {
+    thisArticleMeta += `<pub-date-not-available/>`
   }
 
-  if (metadata.submission.abstract) {
+  if (formData.volumeNumber) {
+    thisArticleMeta += `<volume>${formData.volumeNumber}</volume>`
+  }
+
+  if (formData.issueNumber) {
+    thisArticleMeta += `<issue>${formData.issueNumber}</issue>`
+  }
+
+  if (formData.abstract) {
     // TODO: note that the quotes in this can be escaped. Does this break our parser?
-    thisArticleMeta += `<abstract>${htmlToJats(
-      metadata.submission.abstract,
-    )}</abstract>`
+    thisArticleMeta += `<abstract>${htmlToJats(formData.abstract)}</abstract>`
+  }
+
+  if (formData.content && formData.content.length) {
+    // this is for keywords
+    let contentList = ''
+
+    for (let i = 0; i < formData.content.length; i += 1) {
+      contentList += `<kwd>${formData.content[i]}</kwd>`
+    }
+
+    thisArticleMeta += `<kwd-group kwd-group-type="author">${contentList}</kwd-group>`
   }
 
   return `<article-meta>${thisArticleMeta}</article-meta>`
 }
 
-const splitFrontBodyBack = (html, metadata, journalMeta) => {
+const splitFrontBodyBack = (html, articleMeta, journalMeta) => {
   // html is what's coming out of Wax
-  // metadata is what's needed for front matter
+  // articleMeta is what's needed for front matter
   // journalMeta is the journal metadata object (see below for description)
-
-  /**
-   ** TODO:
-   ** deal with <figure></figure> and <img> tags – those could just be passed through
-   ** deal with front matter
-   ***/
 
   let backlessHtml = html // html is assumed to be body; we take back things out
 
@@ -428,8 +485,8 @@ const splitFrontBodyBack = (html, metadata, journalMeta) => {
     thisFront += makeJournalMeta(journalMeta)
   }
 
-  if (metadata) {
-    thisFront += makeArticleMeta(metadata)
+  if (articleMeta) {
+    thisFront += makeArticleMeta(articleMeta)
   }
 
   const front = `<front>${thisFront}</front>`
