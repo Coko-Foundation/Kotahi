@@ -27,7 +27,7 @@ const RadioGroup = styled(UnstableRadioGroup)`
   position: relative;
 `
 
-const NoteInput = ({ field, updateReview }) => (
+const NoteInput = ({ field, form, updateReview }) => (
   <>
     <div>Comments to the author:</div>
     <SimpleWaxEditor
@@ -37,6 +37,7 @@ const NoteInput = ({ field, updateReview }) => (
       {...field}
       onChange={val => {
         updateReview({ reviewComment: { content: val } })
+        form.setFieldValue('reviewComment.content', val)
       }}
       value={field.value?.content || ''}
     />
@@ -49,10 +50,13 @@ NoteInput.propTypes = {
       content: PropTypes.string,
     }),
   }).isRequired,
+  form: PropTypes.shape({
+    setFieldValue: PropTypes.func.isRequired,
+  }).isRequired,
   updateReview: PropTypes.func.isRequired,
 }
 
-const ConfidentialInput = ({ field, updateReview }) => (
+const ConfidentialInput = ({ field, form, updateReview }) => (
   <>
     <div>Confidential comments to editor (optional):</div>
     <SimpleWaxEditor
@@ -62,6 +66,7 @@ const ConfidentialInput = ({ field, updateReview }) => (
       {...field}
       onChange={val => {
         updateReview({ confidentialComment: { content: val } })
+        form.setFieldValue('confidentialComment.content', val)
       }}
       value={field.value?.content || ''}
     />
@@ -73,6 +78,9 @@ ConfidentialInput.propTypes = {
     value: PropTypes.shape({
       content: PropTypes.string,
     }),
+  }).isRequired,
+  form: PropTypes.shape({
+    setFieldValue: PropTypes.func.isRequired,
   }).isRequired,
   updateReview: PropTypes.func.isRequired,
 }

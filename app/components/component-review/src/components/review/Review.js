@@ -89,13 +89,14 @@ Review.propTypes = {
       ).isRequired,
     }),
     recommendation: PropTypes.string,
-  }).isRequired,
+  }),
   user: PropTypes.shape({
     admin: PropTypes.bool,
   }),
 }
 
 Review.defaultProps = {
+  review: null,
   user: {
     admin: false,
   },
