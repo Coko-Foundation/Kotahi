@@ -8,6 +8,32 @@ import { ToolGroup } from 'wax-prosemirror-services'
 import Dropdown from 'react-dropdown'
 import 'react-dropdown/style.css'
 
+const DropdownStyled = styled(Dropdown)`
+  display: inline-flex;
+  white-space: nowrap;
+  cursor: not-allowed;
+  opacity: ${props => (props.select ? 1 : 0.4)};
+  pointer-events: ${props => (props.select ? 'default' : 'none')};
+  .Dropdown-control {
+    border: none;
+    padding: 6px 52px 6px 6px;
+  }
+  .Dropdown-arrow {
+    right: 25px;
+    top: 16px;
+  }
+  .Dropdown-menu {
+    top: calc(100% + 2px);
+    width: 120%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    .Dropdown-option {
+      width: 100%;
+    }
+  }
+`
+
 class KotahiBlockDropDown extends ToolGroup {
   tools = []
 
@@ -55,32 +81,6 @@ class KotahiBlockDropDown extends ToolGroup {
     if (isEmpty(view) || window.innerWidth > 18800) return null
 
     const { activeViewId } = useContext(WaxContext)
-
-    const DropdownStyled = styled(Dropdown)`
-      display: inline-flex;
-      white-space: nowrap;
-      cursor: not-allowed;
-      opacity: ${props => (props.select ? 1 : 0.4)};
-      pointer-events: ${props => (props.select ? 'default' : 'none')};
-      .Dropdown-control {
-        border: none;
-        padding: 6px 52px 6px 6px;
-      }
-      .Dropdown-arrow {
-        right: 25px;
-        top: 16px;
-      }
-      .Dropdown-menu {
-        top: calc(100% + 2px);
-        width: 120%;
-        display: flex;
-        flex-direction: column;
-        align-items: flex-start;
-        .Dropdown-option {
-          width: 100%;
-        }
-      }
-    `
 
     const { dispatch, state } = view
 
