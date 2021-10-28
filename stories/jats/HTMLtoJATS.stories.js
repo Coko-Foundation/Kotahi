@@ -73,13 +73,14 @@ const WaxPlusJATS = () => {
 
   const parser = new DOMParser()
   let parseError = null
-  
-  if(jats.jats) {
+
+  if (jats.jats) {
     const xmlString = jats.jats
-    const xmlDoc = parser.parseFromString(xmlString, "application/xml")
+    const xmlDoc = parser.parseFromString(xmlString, 'application/xml')
     const errorNode = xmlDoc.querySelector('parsererror')
+
     if (errorNode) {
-      parseError = "Failed, check console for Errors"
+      parseError = 'Failed, check console for Errors'
     }
   }
 
@@ -152,8 +153,7 @@ const WaxPlusJATS = () => {
             overflowWrap: 'break-word',
           }}
         >
-          {parseError ||
-            'Passed'}
+          {parseError || 'Passed'}
         </p>
       </div>
       <div>
