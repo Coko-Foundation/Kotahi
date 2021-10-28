@@ -322,28 +322,21 @@ const makeArticleMeta = metadata => {
   return `<article-meta>${thisArticleMeta}</article-meta>`
 }
 
-const splitFrontBodyBack = (html, articleMeta, journalMeta) => {
-  // html is what's coming out of Wax
-  // articleMeta is what's needed for front matter
-  // journalMeta is the journal metadata object (see below for description)
-
-  let backlessHtml = html // html is assumed to be body; we take back things out
-
-  // 0. deal with footnotes
-
+const makeFootnotesSection = html => {
+  let deFootnotedHtml = html
   let footnoteCount = 0
   let fnSection = ''
 
-  while (backlessHtml.indexOf(`<footnote id="`) > -1) {
+  while (deFootnotedHtml.indexOf(`<footnote id="`) > -1) {
     // get id and text from Wax markup
-    const [id, text] = backlessHtml
+    const [id, text] = deFootnotedHtml
       .split('<footnote id="')[1]
       .split('</footnote')[0]
       .split('">')
 
     footnoteCount += 1
     // replace body text with JATS tag
-    backlessHtml = backlessHtml.replace(
+    deFootnotedHtml = deFootnotedHtml.replace(
       `<footnote id="${id}">${text}</footnote>`,
       `<xref ref-type="fn" rid="${id}">${footnoteCount}</xref>`,
     )
@@ -351,17 +344,24 @@ const splitFrontBodyBack = (html, articleMeta, journalMeta) => {
     fnSection += `<fn id="${id}"><p>${htmlToJats(text)}</p></fn>`
   }
 
-  // 1. deal with appendices
+  if (footnoteCount > 0) {
+    fnSection = `<fn-group>${fnSection}</fn-group>`
+  }
 
+  return { deFootnotedHtml, fnSection }
+}
+
+const makeAppendices = html => {
+  let deAppendixedHtml = html
   let appCount = 0 // this is to give appendices IDs
   const appendices = []
 
-  while (backlessHtml.indexOf('<section class="appendix">') > -1) {
-    let thisAppendix = backlessHtml
+  while (deAppendixedHtml.indexOf('<section class="appendix">') > -1) {
+    let thisAppendix = deAppendixedHtml
       .split('<section class="appendix">')[1]
       .split('</section>')[0]
 
-    backlessHtml = backlessHtml.replace(
+    deAppendixedHtml = deAppendixedHtml.replace(
       `<section class="appendix">${thisAppendix}</section>`,
       '',
     )
@@ -390,24 +390,35 @@ const splitFrontBodyBack = (html, articleMeta, journalMeta) => {
     )
     appCount += 1
 
-    // 1.3 clean out any <h1 class="appendixheader" in backlessHtml—these just become regular H1s
-    while (backlessHtml.indexOf('<h1 class="appendixheader">') > -1) {
-      backlessHtml = backlessHtml.replace(`<h1 class="appendixheader">`, '<h1>')
+    // 1.3 clean out any <h1 class="appendixheader" in deAppendixedHtml—these just become regular H1s
+    while (deAppendixedHtml.indexOf('<h1 class="appendixheader">') > -1) {
+      deAppendixedHtml = deAppendixedHtml.replace(
+        `<h1 class="appendixheader">`,
+        '<h1>',
+      )
     }
   }
 
-  // 2. deal with citations
+  return {
+    deAppendixedHtml,
+    appendices: appendices.length
+      ? `<app-group>${appendices.join('')}</app-group>`
+      : '',
+  }
+}
 
+const makeCitations = html => {
+  let deCitedHtml = html
   let refList = '' // this is the ref-list that we're building
   let refListHeader = '' // if there's a header, it goes in here
   let refCount = 0 // this is for ID numbering
 
-  while (backlessHtml.indexOf('<section class="reflist">') > -1) {
-    let thisRefList = backlessHtml
+  while (deCitedHtml.indexOf('<section class="reflist">') > -1) {
+    let thisRefList = deCitedHtml
       .split('<section class="reflist">')[1]
       .split('</section>')[0]
 
-    backlessHtml = backlessHtml.replace(
+    deCitedHtml = deCitedHtml.replace(
       `<section class="reflist">${thisRefList}</section>`,
       '',
     )
@@ -442,19 +453,19 @@ const splitFrontBodyBack = (html, articleMeta, journalMeta) => {
 
   // 2.3 deal with any stray reference headers in the body—they become regular H1s.
 
-  while (backlessHtml.indexOf('<h1 class="referenceheader">') > -1) {
-    backlessHtml = backlessHtml.replace(`<h1 class="referenceheader">`, '<h1>')
+  while (deCitedHtml.indexOf('<h1 class="referenceheader">') > -1) {
+    deCitedHtml = deCitedHtml.replace(`<h1 class="referenceheader">`, '<h1>')
   }
 
   // 2.4 deal with any loose mixed citations in the body:
   // they're pulled out of the body and added to the ref-list
 
-  while (backlessHtml.indexOf('<p class="mixedcitation">') > -1) {
-    const thisCitation = backlessHtml
+  while (deCitedHtml.indexOf('<p class="mixedcitation">') > -1) {
+    const thisCitation = deCitedHtml
       .split('<p class="mixedcitation">')[1]
       .split('</p>')[0]
 
-    backlessHtml = backlessHtml.replace(
+    deCitedHtml = deCitedHtml.replace(
       `<p class="mixedcitation">${thisCitation}</p>`,
       ``,
     )
@@ -464,39 +475,61 @@ const splitFrontBodyBack = (html, articleMeta, journalMeta) => {
     refCount += 1
   }
 
-  // 3 deal with faux frontmatter – these just get thrown away
+  if (refList) {
+    refList = `<ref-list>${refList}</ref-list>`
+  }
 
-  while (backlessHtml.indexOf('<section class="frontmatter">') > -1) {
-    const frontMatter = backlessHtml
+  return { deCitedHtml, refList }
+}
+
+const makeFrontMatter = html => {
+  let deFrontedHtml = html
+
+  while (deFrontedHtml.indexOf('<section class="frontmatter">') > -1) {
+    const frontMatter = deFrontedHtml
       .split('<section class="frontmatter">')[1]
       .split('</section>')[0]
 
-    backlessHtml = backlessHtml.replace(
+    deFrontedHtml = deFrontedHtml.replace(
       `<section class="frontmatter">${frontMatter}</section>`,
       '',
     )
   }
 
-  // 4 deal with front matter
+  return deFrontedHtml
+}
 
-  let thisFront = ''
+const makeJats = (html, articleMeta, journalMeta) => {
+  // html is what's coming out of Wax
+  // articleMeta is what's needed for front matter (see makeArticleMeta for description)
+  // journalMeta is the journal metadata object (see makeJournalMeta for description)
 
-  if (journalMeta) {
-    thisFront += makeJournalMeta(journalMeta)
-  }
+  // 0. deal with footnotes
 
-  if (articleMeta) {
-    thisFront += makeArticleMeta(articleMeta)
-  }
+  const { deFootnotedHtml, fnSection } = makeFootnotesSection(html)
 
-  const front = `<front>${thisFront}</front>`
-  const body = `<body>${htmlToJats(backlessHtml)}</body>`
+  // 1. deal with appendices
 
-  const back = `<back>${
-    appendices.length > 0 ? `<app-group>${appendices.join('')}</app-group>` : ''
-  }${refList ? `<ref-list>${refList}</ref-list>` : ''}${
-    footnoteCount > 0 ? `<fn-group>${fnSection}</fn-group>` : ''
-  }</back>`
+  const { deAppendixedHtml, appendices } = makeAppendices(deFootnotedHtml)
+
+  // 2. deal with citations
+
+  const { deCitedHtml, refList } = makeCitations(deAppendixedHtml)
+
+  // 3 deal with faux frontmatter – these just get thrown away
+
+  const deFrontedHtml = makeFrontMatter(deCitedHtml)
+
+  // 4 deal with article and journal metadata
+
+  const journalMetaSection = makeJournalMeta(journalMeta || {})
+  const articleMetaSection = makeArticleMeta(articleMeta || {})
+
+  const front = `<front>${journalMetaSection}${articleMetaSection}</front>`
+
+  const body = `<body>${htmlToJats(deFrontedHtml)}</body>`
+
+  const back = `<back>${appendices}${refList}${fnSection}</back>`
 
   // check if body or back are empty, don't pass if not there.
   const jats = `<article dtd-version="1.3">${front}${
@@ -506,4 +539,4 @@ const splitFrontBodyBack = (html, articleMeta, journalMeta) => {
   return { front, body, back, jats }
 }
 
-module.exports = { htmlToJats, getCitationsFromList, splitFrontBodyBack }
+module.exports = { htmlToJats, getCitationsFromList, makeJats }

@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown } from '@pubsweet/ui'
-import { splitFrontBodyBack } from '../../../../../server/utils/jatsUtils'
+import { makeJats } from '../../../../../server/utils/jatsUtils'
 
 let html = ''
 
@@ -75,7 +75,7 @@ export const DownloadDropdown = ({ source, metadata }) => {
         console.log('HTML:\n\n', html)
         console.log(
           'JATS:\n\n',
-          splitFrontBodyBack(html, articleMetadata, journalMetadata).jats,
+          makeJats(html, articleMetadata, journalMetadata).jats,
         )
         /* eslint-disable */
       },

@@ -1,6 +1,6 @@
 import React from 'react'
 import ProductionWaxEditor from '../../app/components/wax-collab/src/ProductionWaxEditor'
-import { splitFrontBodyBack } from '../../server/utils/jatsUtils'
+import { makeJats } from '../../server/utils/jatsUtils'
 
 const initialHtml = `<section class="frontmatter"><h1>The Title of This Paper</h1><h2>By Author 1, Author 2, Author 3, Author 4</h2><p class="paragraph">(author affliliations etc.)</p></section><p class="paragraph">Some <strong><em>styled</em></strong> text<footnote id="64da6743-5c79-4bbe-b27b-a700748d80ed">This is the note text.</footnote></p><p class="paragraph">A second <span class="comment" data-id="807c5dba-f8a4-4f64-b1cd-cf9e83a2f64c" data-conversation="[{&quot;content&quot;:&quot;This is a note.&quot;,&quot;displayName&quot;:&quot;dummy editor&quot;,&quot;timestamp&quot;:1632132399423}]" data-viewid="main" data-group="main">paragraph</span>.</p><section class="reflist"><h1 class="referenceheader">adfadf</h1><p class="mixedcitation">dfaljkdf</p><p class="mixedcitation">fasdfasdf</p><p class="mixedcitation">adfasdfasd</p><p class="mixedcitation">afasfd</p></section><section class="appendix"><h1 class="appendixheader">Appendix 1</h1><p>Appendix content . . .</p></section>`
 
@@ -66,7 +66,7 @@ const journalMetadata = {
 
 const WaxPlusJATS = () => {
   const [jats, setJats] = React.useState(
-    splitFrontBodyBack(initialHtml, articleMetadata, journalMetadata),
+    makeJats(initialHtml, articleMetadata, journalMetadata),
   )
 
   const [html, setHtml] = React.useState(initialHtml)
@@ -75,7 +75,7 @@ const WaxPlusJATS = () => {
       <ProductionWaxEditor
         onBlur={source => {
           setHtml(source)
-          setJats(splitFrontBodyBack(source, articleMetadata, journalMetadata))
+          setJats(makeJats(source, articleMetadata, journalMetadata))
         }}
         placeholder="Enter text here"
         value={initialHtml}
