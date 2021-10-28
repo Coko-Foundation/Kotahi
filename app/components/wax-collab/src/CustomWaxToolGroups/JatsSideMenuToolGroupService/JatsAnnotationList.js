@@ -20,9 +20,13 @@ class FrontMatterList extends ToolGroup {
   tools = []
   title = (<LeftMenuTitle title="Front Matter" />)
 
-  constructor(@inject('FrontMatter') frontMatter) {
+  constructor(
+    @inject('FrontMatter') frontMatter,
+    @inject('Title') title,
+    @inject('Abstract') abstractSection,
+  ) {
     super()
-    this.tools = [frontMatter]
+    this.tools = [frontMatter, title, abstractSection]
   }
 }
 

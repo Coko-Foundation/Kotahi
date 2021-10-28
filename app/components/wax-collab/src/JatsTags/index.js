@@ -5,6 +5,7 @@ import AppendixHeader from './AppendixHeader'
 import FrontMatter from './FrontMatter'
 import RefList from './RefList'
 import ReferenceHeader from './ReferenceHeader'
+import Abstract from './Abstract'
 
 // copied from here: https://gitlab.coko.foundation/wax/wax-prosemirror/-/blob/master/wax-prosemirror-services/src/DisplayBlockLevel/HeadingService/HeadingService.js
 
@@ -15,9 +16,10 @@ class JatsTagsService extends Service {
     this.container.bind('MixedCitation').to(MixedCitation)
     this.container.bind('Appendix').to(Appendix)
     this.container.bind('AppendixHeader').to(AppendixHeader)
-    this.container.bind('FrontMatter').to(FrontMatter)
     this.container.bind('RefList').to(RefList)
     this.container.bind('ReferenceHeader').to(ReferenceHeader)
+    this.container.bind('FrontMatter').to(FrontMatter)
+    this.container.bind('Abstract').to(Abstract)
     const createNode = this.container.get('CreateNode')
     createNode({
       mixedCitation: {
@@ -169,6 +171,31 @@ class JatsTagsService extends Service {
         ],
         toDOM(hook) {
           const attrs = { class: hook.node?.attrs?.class || 'frontmatter' }
+          return ['section', attrs, 0]
+        },
+      },
+    })
+    createNode({
+      abstractSection: {
+        content: 'block+',
+        group: 'block',
+        defining: true,
+        attrs: {
+          class: { default: 'abstractSection' },
+        },
+        parseDOM: [
+          {
+            tag: 'section.abstractSection',
+            getAttrs(hook, next) {
+              Object.assign(hook, {
+                class: hook?.dom?.getAttribute('class') || 'abstractSection',
+              })
+              typeof next !== 'undefined' && next()
+            },
+          },
+        ],
+        toDOM(hook) {
+          const attrs = { class: hook.node?.attrs?.class || 'abstractSection' }
           return ['section', attrs, 0]
         },
       },

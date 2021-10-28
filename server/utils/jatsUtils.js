@@ -235,7 +235,7 @@ const makeJournalMeta = journalMeta => {
   return thisJournalMeta && `<journal-meta>${thisJournalMeta}</journal-meta>`
 }
 
-const makeArticleMeta = metadata => {
+const makeArticleMeta = (metadata, abstract, title) => {
   // metadata:
   // --pubDate: date
   // --id: id
@@ -251,6 +251,8 @@ const makeArticleMeta = metadata => {
   //   --content: array of string (this is keywords)
   //   --issueNumber: string
   //   --volumeNumber: string
+  // title: html string, from the title, if it exists
+  // abstract: html string, from the abstract tag if it exists
 
   let thisArticleMeta = ''
 
@@ -261,7 +263,9 @@ const makeArticleMeta = metadata => {
   }
 
   if (metadata.title) {
-    thisArticleMeta += `<title-group><article-title>${metadata.title}</article-title></title-group>`
+    thisArticleMeta += `<title-group><article-title>${
+      title || metadata.title
+    }</article-title></title-group>`
   }
 
   if (formData.authors && formData.authors.length) {
@@ -304,8 +308,10 @@ const makeArticleMeta = metadata => {
   }
 
   if (formData.abstract) {
-    // TODO: note that the quotes in this can be escaped. Does this break our parser?
-    thisArticleMeta += `<abstract>${htmlToJats(formData.abstract)}</abstract>`
+    // TODO: note that the quotes in submission.abstract can be escaped. Does this break our parser?
+    thisArticleMeta += `<abstract>${htmlToJats(
+      abstract || formData.abstract,
+    )}</abstract>`
   }
 
   if (formData.content && formData.content.length) {
@@ -484,11 +490,32 @@ const makeCitations = html => {
 
 const makeFrontMatter = html => {
   let deFrontedHtml = html
+  let abstract = ''
+  let title = '' // this would be where we'd put a title if we find one
 
   while (deFrontedHtml.indexOf('<section class="frontmatter">') > -1) {
     const frontMatter = deFrontedHtml
       .split('<section class="frontmatter">')[1]
       .split('</section>')[0]
+
+    // look and see if there's a title
+
+    if (frontMatter.indexOf('<h1>') > -1) {
+      // if there's an H1 in the front matter, send it back as the title.
+      // note that we are only taking the first one
+      title = frontMatter.split('<h1>')[1].split('</h1>')[0]
+    }
+
+    // look and see if there's an abstract
+
+    if (frontMatter.indexOf('<section class="abstractSection">') > -1) {
+      // we are only taking the first one.
+      abstract = frontMatter
+        .split('<section class="abstractSection">')[1]
+        .split('</section>')[0]
+    }
+
+    // question: do we need to look for abstracts outside of the front matter section? Can it escape?
 
     deFrontedHtml = deFrontedHtml.replace(
       `<section class="frontmatter">${frontMatter}</section>`,
@@ -496,7 +523,7 @@ const makeFrontMatter = html => {
     )
   }
 
-  return deFrontedHtml
+  return { abstract, deFrontedHtml, title }
 }
 
 const makeJats = (html, articleMeta, journalMeta) => {
@@ -518,12 +545,12 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   // 3 deal with faux frontmatter – these just get thrown away
 
-  const deFrontedHtml = makeFrontMatter(deCitedHtml)
+  const { abstract, deFrontedHtml, title } = makeFrontMatter(deCitedHtml)
 
   // 4 deal with article and journal metadata
 
   const journalMetaSection = makeJournalMeta(journalMeta || {})
-  const articleMetaSection = makeArticleMeta(articleMeta || {})
+  const articleMetaSection = makeArticleMeta(articleMeta || {}, abstract, title)
 
   const front = `<front>${journalMetaSection}${articleMetaSection}</front>`
 

@@ -485,6 +485,24 @@ export default css`
     }
   }
 
+  section.abstractSection {
+    background-color: rgba(255, 0, 0, 0.25);
+    border: 1px solid red;
+    margin-bottom: 8px;
+    padding: 8px 16px;
+    position: relative;
+
+    &:before {
+      color: white;
+      content: 'ABSTRACT';
+      font-weight: bold;
+      left: 2px;
+      letter-spacing: 1px;
+      position: absolute;
+      top: -4px;
+    }
+  }
+
   section.reflist {
     background-color: rgba(25, 25, 112, 0.25);
     border: 1px solid midnightblue;
