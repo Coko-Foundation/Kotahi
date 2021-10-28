@@ -294,7 +294,7 @@ const makeArticleMeta = (metadata, abstract, title) => {
     const date = theDate.getUTCDate()
     const month = theDate.getUTCMonth() + 1
     const year = theDate.getUTCFullYear()
-    thisArticleMeta += `<pub-date publication-format="print" date-type="pub" iso-8601-date="${year}-${month}-${date}"><day>${date}</day><month>${month}</month><year>${year}</year>`
+    thisArticleMeta += `<pub-date publication-format="print" date-type="pub" iso-8601-date="${year}-${month}-${date}"><day>${date}</day><month>${month}</month><year>${year}</year></pub-date>`
   } else {
     thisArticleMeta += `<pub-date-not-available/>`
   }

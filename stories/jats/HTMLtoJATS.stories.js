@@ -70,6 +70,19 @@ const WaxPlusJATS = () => {
   )
 
   const [html, setHtml] = React.useState(initialHtml)
+
+  const parser = new DOMParser()
+  let parseError = null
+  
+  if(jats.jats) {
+    const xmlString = jats.jats
+    const xmlDoc = parser.parseFromString(xmlString, "application/xml")
+    const errorNode = xmlDoc.querySelector('parsererror')
+    if (errorNode) {
+      parseError = "Failed, check console for Errors"
+    }
+  }
+
   return (
     <div>
       <ProductionWaxEditor
@@ -130,6 +143,17 @@ const WaxPlusJATS = () => {
         >
           {jats.jats ||
             'Change text in the editor and click outside to see the result'}
+        </p>
+        <h3>XML Parsing</h3>
+        <p
+          style={{
+            border: '1px solid #ddd',
+            padding: '1em',
+            overflowWrap: 'break-word',
+          }}
+        >
+          {parseError ||
+            'Passed'}
         </p>
       </div>
       <div>
