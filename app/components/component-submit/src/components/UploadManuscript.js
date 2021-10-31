@@ -1,5 +1,5 @@
 import React, { useContext } from 'react'
-import styled, { keyframes, withTheme } from 'styled-components'
+import styled, { css, keyframes, withTheme } from 'styled-components'
 import { Icon, Action } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { XpubContext } from '../../../xpub-with-context/src'
@@ -132,6 +132,12 @@ const Info = styled.div`
   color: ${th('colorPrimary')};
   font-size: 2em;
   font-weight: 400;
+
+  ${props =>
+    !props.completed &&
+    css`
+      cursor: default;
+    `}
 `
 
 const SubInfo = styled.div`
@@ -199,7 +205,7 @@ const UploadManuscript = ({ acceptFiles, ...props }) => {
               {error ? (
                 <Error>{error.message}</Error>
               ) : (
-                <Info>
+                <Info completed={completed}>
                   {completed ? 'Submission created' : 'Upload Manuscript'}
                 </Info>
               )}

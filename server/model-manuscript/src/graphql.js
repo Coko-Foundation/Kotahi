@@ -217,7 +217,16 @@ const resolvers = {
           },
         ],
         files: files.map(file => {
-          return { ...file, fileType: 'manuscript' }
+          // In order to match the behaviour of the createFile mutation, we add a prefix to the URL.
+          // This gives the URL required for download from the client (see app.js).
+          // TODO We should really be storing the URL from the point of view of the server (prefix is 'uploads/'), not of the client.
+          // TODO We can then convert to the client-centric URL at the point of passing a file object to the client.
+          // TODO This should be changed both here and for the createFile query, and we'll need a migration to convert all existing URLs in the DB.
+          return {
+            ...file,
+            fileType: 'manuscript',
+            url: `/static/uploads${file.url}`,
+          }
         }),
         reviews: [],
         teams: [
