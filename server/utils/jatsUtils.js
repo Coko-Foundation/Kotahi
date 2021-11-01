@@ -186,6 +186,7 @@ const htmlToJats = html => {
 
 const getCitationsFromList = html => {
   const jats = htmlToJats(html)
+  // note that the next line breaks storybook on Safari
   const pContents = jats.match(/(?<=<p>)((?:(?!<\/?p>)[\s\S])*)(?=<\/p>)/g)
   return pContents
 }
@@ -294,9 +295,10 @@ const makeArticleMeta = (metadata, abstract, title) => {
     const date = theDate.getUTCDate()
     const month = theDate.getUTCMonth() + 1
     const year = theDate.getUTCFullYear()
-    thisArticleMeta += `<pub-date publication-format="print" date-type="pub" iso-8601-date="${year}-${month}-${date}"><day>${date}</day><month>${month}</month><year>${year}</year></pub-date>`
+    const pubDateString = `<pub-date publication-format="print" date-type="pub" iso-8601-date="${year}-${month}-${date}"><day>${date}</day><month>${month}</month><year>${year}</year></pub-date>`
+    thisArticleMeta += pubDateString
   } else {
-    thisArticleMeta += `<pub-date-not-available/>`
+    thisArticleMeta += `<pub-date-not-available />`
   }
 
   if (formData.volumeNumber) {
@@ -515,10 +517,21 @@ const makeFrontMatter = html => {
         .split('</section>')[0]
     }
 
-    // question: do we need to look for abstracts outside of the front matter section? Can it escape?
-
     deFrontedHtml = deFrontedHtml.replace(
       `<section class="frontmatter">${frontMatter}</section>`,
+      '',
+    )
+  }
+
+  // finally, get rid of any abstracts that are not in the front matter
+
+  while (deFrontedHtml.indexOf('<section class="abstractSection">') > -1) {
+    const abstractSection = deFrontedHtml
+      .split('<section class="abstractSection">')[1]
+      .split('</section>')[0]
+
+    deFrontedHtml = deFrontedHtml.replace(
+      `<section class="abstractSection">${abstractSection}</section>`,
       '',
     )
   }
@@ -559,7 +572,7 @@ const makeJats = (html, articleMeta, journalMeta) => {
   const back = `<back>${appendices}${refList}${fnSection}</back>`
 
   // check if body or back are empty, don't pass if not there.
-  const jats = `<article dtd-version="1.3">${front}${
+  const jats = `<article xml:lang="en" xmlns:mml="http://www.w3.org/1998/Math/MathML"	xmlns:xlink="http://www.w3.org/1999/xlink" dtd-version="1.3">${front}${
     body.length > 13 ? body : ''
   }${back.length > 13 ? back : ''}</article>`
 
