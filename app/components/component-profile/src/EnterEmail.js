@@ -4,6 +4,11 @@ import { TextField, Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
 
+const ModalContainer = styled.div`
+  background: ${th('colorBackground')};
+  padding: 20px 24px;
+`
+
 const InlineTextField = styled(TextField)`
   border-color: ${props => (props.error ? '#ff2d1a' : '#AAA')};
   display: inline;
@@ -15,16 +20,9 @@ const UpdateEmailError = styled.p`
   font-size: 14px;
 `
 
-const ChangeEmail = ({ user, updateUserEmail }) => {
-  const [email, setEmail] = useState(user.email)
-
-  const [updateEmailError, setUpdateEmailError] = useState(
-    user.email ? '' : 'Required',
-  )
-
-  React.useEffect(() => {
-    setEmail(user.email)
-  }, [user.email])
+const EnterEmail = ({ updateUserEmail }) => {
+  const [email, setEmail] = useState('')
+  const [updateEmailError, setUpdateEmailError] = useState('')
 
   // eslint-disable-next-line no-shadow
   const updateEmail = async email => {
@@ -38,21 +36,25 @@ const ChangeEmail = ({ user, updateUserEmail }) => {
   }
 
   return (
-    <>
+    <ModalContainer>
       <InlineTextField
         error={updateEmailError}
         onChange={e => setEmail(e.target.value)}
+        placeholder="Enter your email"
         value={email}
       />
-      <Button onClick={() => updateEmail(email)}>Change</Button>
+      <br />
       {updateEmailError && (
         <UpdateEmailError>{updateEmailError}</UpdateEmailError>
       )}
-    </>
+      <Button onClick={() => updateEmail(email)} primary>
+        Next
+      </Button>
+    </ModalContainer>
   )
 }
 
-ChangeEmail.propTypes = {
+EnterEmail.propTypes = {
   user: PropTypes.shape({ username: PropTypes.string.isRequired }).isRequired,
 }
-export default ChangeEmail
+export default EnterEmail

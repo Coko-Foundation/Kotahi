@@ -98,14 +98,11 @@ const AdminPage = () => {
   const journal = useContext(JournalContext)
   const [conversion] = useContext(XpubContext)
 
-  const { loading, error, data, refetch: refetchCurrentUser } = useQuery(
-    GET_CURRENT_USER,
-    {
-      fetchPolicy: 'network-only',
-      // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301
-      onCompleted: useCallback(dataTemp => updateStuff(dataTemp), []),
-    },
-  )
+  const { loading, error, data } = useQuery(GET_CURRENT_USER, {
+    fetchPolicy: 'network-only',
+    // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301
+    onCompleted: useCallback(dataTemp => updateStuff(dataTemp), []),
+  })
 
   const previousDataRef = useRef(null)
 
@@ -198,7 +195,6 @@ const AdminPage = () => {
           exact
           path={profileLink}
           redirectLink={redirectLink}
-          refetchCurrentUser={refetchCurrentUser}
         />
         <PrivateRoute
           component={Dashboard}
