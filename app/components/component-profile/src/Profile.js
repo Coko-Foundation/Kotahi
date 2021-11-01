@@ -3,8 +3,9 @@
 import React, { useCallback } from 'react'
 import { Button } from '@pubsweet/ui'
 import gql from 'graphql-tag'
-import { useQuery } from '@apollo/client'
+import { useQuery, useMutation } from '@apollo/client'
 import { useDropzone } from 'react-dropzone'
+import Modal from '../../component-modal/src/index'
 
 import {
   Spinner,
@@ -20,6 +21,7 @@ import {
 import ChangeUsername from './ChangeUsername'
 import { BigProfileImage } from './ProfileImage'
 import ChangeEmail from './ChangeEmail'
+import EnterEmail from './EnterEmail'
 
 const GET_CURRENT_USER = gql`
   query currentUser {
@@ -36,6 +38,28 @@ const GET_CURRENT_USER = gql`
         id
         name
       }
+    }
+  }
+`
+
+const UPDATE_CURRENT_EMAIL = gql`
+  mutation updateCurrentEmail($email: String) {
+    updateCurrentEmail(email: $email) {
+      success
+      error
+      user {
+        id
+        email
+      }
+    }
+  }
+`
+
+const UPDATE_CURRENT_USERNAME = gql`
+  mutation updateCurrentUsername($username: String) {
+    updateCurrentUsername(username: $username) {
+      id
+      username
     }
   }
 `
@@ -73,8 +97,9 @@ const ProfileDropzone = ({ profilePicture, updateProfilePicture }) => {
   )
 }
 
-const Profile = ({ refetchCurrentUser }) => {
+const Profile = () => {
   const { loading, error, data, client, refetch } = useQuery(GET_CURRENT_USER)
+
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
@@ -88,8 +113,15 @@ const Profile = ({ refetchCurrentUser }) => {
   // This is a bridge between the fetch results and the Apollo cache/state
   const updateProfilePicture = () => refetch()
 
+  // Mutations and Queries
+  const [updateUserEmail] = useMutation(UPDATE_CURRENT_EMAIL)
+  const [updateCurrentUsername] = useMutation(UPDATE_CURRENT_USERNAME)
+
   return (
     <Container>
+      <Modal isOpen={!data.currentUser.email}>
+        <EnterEmail updateUserEmail={updateUserEmail} user={data.currentUser} />
+      </Modal>
       <HeadingWithAction>
         <Heading>Your profile</Heading>
         <Button onClick={() => logoutUser()} primary>
@@ -116,14 +148,17 @@ const Profile = ({ refetchCurrentUser }) => {
         <SectionRow>
           <label htmlFor="2">Username</label>
           <div>
-            <ChangeUsername user={data.currentUser} />
+            <ChangeUsername
+              updateCurrentUsername={updateCurrentUsername}
+              user={data.currentUser}
+            />
           </div>
         </SectionRow>
         <SectionRow>
           <label>Email</label>{' '}
           <div>
             <ChangeEmail
-              refetchCurrentUser={refetchCurrentUser}
+              updateUserEmail={updateUserEmail}
               user={data.currentUser}
             />
           </div>

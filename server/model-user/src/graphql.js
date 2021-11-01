@@ -192,12 +192,14 @@ const resolvers = {
       }
 
       try {
-        await ctx.models.User.query()
-          .update({ email })
-          .where({ id: ctx.user.id })
-        return { success: true }
+        const user = await ctx.models.User.query().updateAndFetchById(
+          ctx.user.id,
+          { email },
+        )
+
+        return { success: true, user }
       } catch (e) {
-        return { success: false, error: 'Something went wrong' }
+        return { success: false, error: 'Something went wrong', user: null }
       }
     },
     async sendEmail(_, { input }, ctx) {
@@ -317,6 +319,7 @@ const typeDefs = `
   type UpdateEmailResponse {
     success: Boolean
     error: String
+    user: User
   }
 
   input UsersFilter {
