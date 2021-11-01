@@ -18,7 +18,7 @@ const MessageNotificationEmailTemplate = ({
       <p>Dear ${receiverFirstName},</p>
       <p>You have a message in Aperture Neuro regarding the Submission:</p>
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
-      <p>Please log into the Aperture Neuro Submission Platform to review and respond to the message.</p>
+      <p>Please log into the Aperture Neuro Submission Platform at <a href="https://apertureneuro.cloud68.co/login" target="_blank">https://apertureneuro.cloud68.co/login</a> to review and respond to the message.</p>
       <p>Thank you,</p>
       <p>Aperture Neuro Team</p>
     </p>`

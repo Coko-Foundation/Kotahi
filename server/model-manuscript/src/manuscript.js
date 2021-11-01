@@ -93,9 +93,9 @@ class Manuscript extends BaseModel {
   }
 
   async createNewVersion() {
-    // Copy authors to the new version
+    // Copy authors and editors to the new version
     const teams = await this.$relatedQuery('teams')
-      .where({ role: 'author' })
+      .whereIn('role', ['author', 'editor', 'seniorEditor', 'handlingEditor'])
       .withGraphFetched('members')
 
     teams.forEach(t => {

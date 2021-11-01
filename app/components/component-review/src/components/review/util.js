@@ -5,8 +5,6 @@ export const stripHtml = htmlString => {
 }
 
 export const reviewWithComment = ({
-  id,
-  value,
   values,
   commentType,
   name,
@@ -16,9 +14,9 @@ export const reviewWithComment = ({
 
   data.isDecision = isDecision
   data[name] = {
-    id,
+    id: values[name]?.id,
     commentType,
-    content: value ? stripHtml(value) : '',
+    content: values[name]?.content ? stripHtml(values[name].content) : '',
   }
   return data
 }

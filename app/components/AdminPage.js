@@ -99,14 +99,11 @@ const AdminPage = () => {
   const journal = useContext(JournalContext)
   const [conversion] = useContext(XpubContext)
 
-  const { loading, error, data, refetch: refetchCurrentUser } = useQuery(
-    GET_CURRENT_USER,
-    {
-      fetchPolicy: 'network-only',
-      // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301
-      onCompleted: useCallback(dataTemp => updateStuff(dataTemp), []),
-    },
-  )
+  const { loading, error, data } = useQuery(GET_CURRENT_USER, {
+    fetchPolicy: 'network-only',
+    // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301
+    onCompleted: useCallback(dataTemp => updateStuff(dataTemp), []),
+  })
 
   const previousDataRef = useRef(null)
 
@@ -199,7 +196,6 @@ const AdminPage = () => {
           exact
           path={profileLink}
           redirectLink={redirectLink}
-          refetchCurrentUser={refetchCurrentUser}
         />
         <PrivateRoute
           component={Dashboard}
@@ -260,49 +256,53 @@ const AdminPage = () => {
             redirectLink={redirectLink}
           />
         )}
-        {currentUser && currentUser.admin && (
-          <>
+        {currentUser &&
+          currentUser.admin && [
             <PrivateRoute
               component={FormBuilderPage}
               currentUser={currentUser}
               exact
+              key="form-builder"
               path={`${urlFrag}/admin/form-builder`}
               redirectLink={redirectLink}
-            />
+            />,
             <PrivateRoute
               component={ManuscriptPage}
               currentUser={currentUser}
               exact
+              key="manuscript"
               path={`${urlFrag}/versions/:version/manuscript`}
               redirectLink={redirectLink}
-            />
+            />,
             <PrivateRoute
               component={UsersManager}
               currentUser={currentUser}
+              key="users"
               path={`${urlFrag}/admin/users`}
               redirectLink={redirectLink}
-            />
+            />,
             <PrivateRoute
               component={Manuscripts}
               currentUser={currentUser}
+              key="manuscripts"
               path={`${urlFrag}/admin/manuscripts`}
               redirectLink={redirectLink}
-            />
+            />,
             <PrivateRoute
               component={ReportPage}
               currentUser={currentUser}
+              key="reports"
               path={reportsLink}
               redirectLink={redirectLink}
-            />
+            />,
             <PrivateRoute
               component={ProductionPage}
               currentUser={currentUser}
-              exact
+              key="production"
               path={`${urlFrag}/versions/:version/production`}
               redirectLink={redirectLink}
-            />
-          </>
-        )}
+            />,
+          ]}
       </Switch>
       <RolesUpdater />
     </Root>

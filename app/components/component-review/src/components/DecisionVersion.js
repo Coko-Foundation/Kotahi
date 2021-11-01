@@ -78,9 +78,7 @@ const DecisionVersion = ({
   }
 
   const reviewOrInitial = manuscript =>
-    (manuscript &&
-      manuscript.reviews &&
-      manuscript.reviews.find(review => review.isDecision)) || {
+    manuscript?.reviews?.find(review => review.isDecision) || {
       decisionComment: {},
       isDecision: true,
       recommendation: null,
@@ -303,6 +301,7 @@ const DecisionVersion = ({
                 handleSubmit={handleSubmit}
                 isSubmitting={isSubmitting}
                 isValid={isValid}
+                manuscriptId={version.id}
                 submitCount={submitCount}
                 updateReview={updateReview(version.id)}
               />

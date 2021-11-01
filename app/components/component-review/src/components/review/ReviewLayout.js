@@ -100,6 +100,7 @@ const ReviewLayout = ({
             <ReviewForm
               handleSubmit={handleSubmit}
               isValid={isValid}
+              manuscriptId={latestVersion.id}
               updateReview={updateReview}
               uploadFile={uploadFile}
             />
@@ -141,7 +142,29 @@ ReviewLayout.propTypes = {
   versions: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      reviews: PropTypes.arrayOf(),
+      reviews: PropTypes.arrayOf(
+        PropTypes.shape({
+          reviewComment: PropTypes.shape({
+            content: PropTypes.string.isRequired,
+            files: PropTypes.arrayOf(
+              PropTypes.shape({
+                filename: PropTypes.string.isRequired,
+                url: PropTypes.string.isRequired,
+              }).isRequired,
+            ).isRequired,
+          }),
+          confidentialComment: PropTypes.shape({
+            content: PropTypes.string.isRequired,
+            files: PropTypes.arrayOf(
+              PropTypes.shape({
+                filename: PropTypes.string.isRequired,
+                url: PropTypes.string.isRequired,
+              }).isRequired,
+            ).isRequired,
+          }),
+          recommendation: PropTypes.string,
+        }),
+      ),
       status: PropTypes.string.isRequired,
       meta: PropTypes.shape({
         notes: PropTypes.arrayOf(

@@ -214,7 +214,7 @@ const ReviewPage = ({ match, ...props }) => {
 
   const reviewOrInitial = manuscript =>
     manuscript?.reviews?.find(
-      review => review?.user?.id === currentUser.id && !review.isDecision,
+      review => review?.user?.id === currentUser?.id && !review.isDecision,
     ) || {}
 
   const versions = data
@@ -250,7 +250,7 @@ const ReviewPage = ({ match, ...props }) => {
 
   if (
     !latestVersion.reviews?.find(
-      review => review?.user?.id === currentUser.id && !review.isDecision,
+      review => review?.user?.id === currentUser?.id && !review.isDecision,
     )
   ) {
     refetch()
@@ -274,7 +274,7 @@ const ReviewPage = ({ match, ...props }) => {
     (
       (latestVersion.teams.find(team => team.role === 'reviewer') || {})
         .status || []
-    ).find(statusTemp => statusTemp.user === currentUser.id) || {}
+    ).find(statusTemp => statusTemp.user === currentUser?.id) || {}
 
   const updateReview = review => {
     const reviewData = {
@@ -342,7 +342,7 @@ const ReviewPage = ({ match, ...props }) => {
     <Formik
       initialValues={
         latestVersion.reviews?.find(
-          review => review?.user?.id === currentUser.id && !review.isDecision,
+          review => review?.user?.id === currentUser?.id && !review.isDecision,
         ) || {
           id: null,
           comments: [],

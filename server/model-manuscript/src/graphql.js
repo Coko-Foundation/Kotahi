@@ -217,7 +217,16 @@ const resolvers = {
           },
         ],
         files: files.map(file => {
-          return { ...file, fileType: 'manuscript' }
+          // In order to match the behaviour of the createFile mutation, we add a prefix to the URL.
+          // This gives the URL required for download from the client (see app.js).
+          // TODO We should really be storing the URL from the point of view of the server (prefix is 'uploads/'), not of the client.
+          // TODO We can then convert to the client-centric URL at the point of passing a file object to the client.
+          // TODO This should be changed both here and for the createFile query, and we'll need a migration to convert all existing URLs in the DB.
+          return {
+            ...file,
+            fileType: 'manuscript',
+            url: `/static/uploads${file.url}`,
+          }
         }),
         reviews: [],
         teams: [
@@ -634,7 +643,7 @@ const resolvers = {
           return null
         }
       } else if (['colab'].includes(process.env.INSTANCE_NAME)) {
-        // TODO: A note in the code said that for Colab instance, submission.editDate should be updated. Is this true?
+        // TODO: A note in the code said that for Colab instance, submission.editDate should be updated. Is this true? (See commonUpdateManuscript() for example code.)
       }
 
       if (config.hypothesis.apiKey) {
@@ -840,8 +849,8 @@ const resolvers = {
             'manuscripts.id',
             manuscripts.map(manuscript => manuscript.id),
           )
-          .withGraphJoined(
-            '[submitter, manuscriptVersions(orderByCreated), teams.[members.[user.[defaultIdentity]]]]',
+          .withGraphFetched(
+            '[submitter, teams.[members.[user.[defaultIdentity]]], manuscriptVersions(orderByCreated).[submitter, teams.[members.[user.[defaultIdentity]]]]]',
           )
       } catch (e) {
         logger.error('Failed to retrieve paginated manuscripts:', e)

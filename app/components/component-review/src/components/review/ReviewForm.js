@@ -27,7 +27,7 @@ const RadioGroup = styled(UnstableRadioGroup)`
   position: relative;
 `
 
-const NoteInput = ({ field, updateReview }) => (
+const NoteInput = ({ field, form, updateReview }) => (
   <>
     <div>Comments to the author:</div>
     <SimpleWaxEditor
@@ -37,6 +37,7 @@ const NoteInput = ({ field, updateReview }) => (
       {...field}
       onChange={val => {
         updateReview({ reviewComment: { content: val } })
+        form.setFieldValue('reviewComment.content', val)
       }}
       value={field.value?.content || ''}
     />
@@ -49,10 +50,13 @@ NoteInput.propTypes = {
       content: PropTypes.string,
     }),
   }).isRequired,
+  form: PropTypes.shape({
+    setFieldValue: PropTypes.func.isRequired,
+  }).isRequired,
   updateReview: PropTypes.func.isRequired,
 }
 
-const ConfidentialInput = ({ field, updateReview }) => (
+const ConfidentialInput = ({ field, form, updateReview }) => (
   <>
     <div>Confidential comments to editor (optional):</div>
     <SimpleWaxEditor
@@ -62,6 +66,7 @@ const ConfidentialInput = ({ field, updateReview }) => (
       {...field}
       onChange={val => {
         updateReview({ confidentialComment: { content: val } })
+        form.setFieldValue('confidentialComment.content', val)
       }}
       value={field.value?.content || ''}
     />
@@ -73,6 +78,9 @@ ConfidentialInput.propTypes = {
     value: PropTypes.shape({
       content: PropTypes.string,
     }),
+  }).isRequired,
+  form: PropTypes.shape({
+    setFieldValue: PropTypes.func.isRequired,
   }).isRequired,
   updateReview: PropTypes.func.isRequired,
 }
@@ -101,7 +109,7 @@ RecommendationInput.propTypes = {
   updateReview: PropTypes.func.isRequired,
 }
 
-const ReviewComment = ({ updateReview }) => (
+const ReviewComment = ({ manuscriptId, updateReview }) => (
   <>
     <AdminSection>
       <div name="note">
@@ -110,10 +118,9 @@ const ReviewComment = ({ updateReview }) => (
             <>
               <NoteInput updateReview={updateReview} {...formikBag} />
               <FilesUpload
-                containerId={formikBag.field.value?.id}
-                containerName="reviewComment"
                 fieldName="reviewComment.files"
-                initializeContainer={async () => {
+                fileType="review"
+                initializeReviewComment={async () => {
                   // If the container for the uploaded files is not present,
                   // we have to create it. InitializeContainer will be called
                   // if containerId is undefined
@@ -129,6 +136,8 @@ const ReviewComment = ({ updateReview }) => (
                   // that we have somewhere to attach uploaded files
                   return data.updateReview.reviewComment.id
                 }}
+                manuscriptId={manuscriptId}
+                reviewCommentId={formikBag.field.value?.id}
               />
             </>
           )}
@@ -142,10 +151,9 @@ const ReviewComment = ({ updateReview }) => (
             <>
               <ConfidentialInput updateReview={updateReview} {...formikBag} />
               <FilesUpload
-                containerId={formikBag.field.value?.id}
-                containerName="reviewComment"
                 fieldName="confidentialComment.files"
-                initializeContainer={async () => {
+                fileType="confidential"
+                initializeReviewComment={async () => {
                   // If the container for the uploaded files is not present,
                   // we have to create it. InitializeContainer will be called
                   // if containerId is undefined
@@ -161,6 +169,8 @@ const ReviewComment = ({ updateReview }) => (
                   // that we have somewhere to attach uploaded files
                   return data.updateReview.confidentialComment.id
                 }}
+                manuscriptId={manuscriptId}
+                reviewCommentId={formikBag.field.value?.id}
               />
             </>
           )}
@@ -190,10 +200,17 @@ const ReviewComment = ({ updateReview }) => (
 )
 
 ReviewComment.propTypes = {
+  manuscriptId: PropTypes.string.isRequired,
   updateReview: PropTypes.func.isRequired,
 }
 
-const ReviewForm = ({ isValid, isSubmitting, handleSubmit, updateReview }) => (
+const ReviewForm = ({
+  isValid,
+  isSubmitting,
+  handleSubmit,
+  manuscriptId,
+  updateReview,
+}) => (
   <SectionContent>
     <form onSubmit={handleSubmit}>
       <AdminSection>
@@ -201,7 +218,10 @@ const ReviewForm = ({ isValid, isSubmitting, handleSubmit, updateReview }) => (
           <Title>Review</Title>
         </SectionHeader>
         <SectionRow key="note">
-          <ReviewComment updateReview={updateReview} />
+          <ReviewComment
+            manuscriptId={manuscriptId}
+            updateReview={updateReview}
+          />
         </SectionRow>
         <SectionHeader>
           <Title>Recommendation</Title>
@@ -227,6 +247,7 @@ ReviewForm.propTypes = {
   isValid: PropTypes.bool.isRequired,
   isSubmitting: PropTypes.bool,
   handleSubmit: PropTypes.func.isRequired,
+  manuscriptId: PropTypes.string.isRequired,
   updateReview: PropTypes.func.isRequired,
 }
 

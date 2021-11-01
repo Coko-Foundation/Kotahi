@@ -1,5 +1,5 @@
 import React from 'react'
-// import styled from 'styled-components'
+import { Attachment } from '@pubsweet/ui'
 
 // TODO: Sort out the imports, perhaps make DecisionReview a shared component?
 import Review from '../../../component-review/src/components/decision/DecisionReview'
@@ -28,6 +28,17 @@ const Decision = ({ decision, editor }) =>
           }}
         />
       </SectionRow>
+      {decision?.decisionComment?.files?.length > 0 && (
+        <SectionRow>
+          {decision.decisionComment.files.map(f => (
+            <Attachment
+              file={{ ...f, name: f.filename }}
+              key={f.url}
+              uploaded
+            />
+          ))}
+        </SectionRow>
+      )}
       <SectionRow>
         <UserAvatar username={editor?.username} />
         Written by {editor?.defaultIdentity?.name}

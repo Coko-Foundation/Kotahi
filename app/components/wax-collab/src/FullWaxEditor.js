@@ -1,7 +1,7 @@
-import React, { useCallback, useRef } from 'react'
+import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
 import { ThemeProvider } from 'styled-components'
-import { debounce } from 'lodash'
+// import { debounce } from 'lodash'
 import { Wax } from 'wax-prosemirror-core'
 import waxTheme from './layout/waxTheme'
 
@@ -49,7 +49,7 @@ const FullWaxEditor = ({
 
   const editorRef = useRef(null)
 
-  const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
+  // const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
     <ThemeProvider theme={waxTheme}>
       <div
@@ -71,7 +71,7 @@ const FullWaxEditor = ({
             onChange && onChange(val)
             onBlur && onBlur(val)
           }}
-          onChange={debounceChange}
+          // onChange={debounceChange}
           placeholder={placeholder}
           readonly={readonly}
           ref={editorRef}
