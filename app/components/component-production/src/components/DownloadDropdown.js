@@ -70,13 +70,19 @@ export const DownloadDropdown = ({ source, metadata }) => {
     {
       id: 3,
       onClick: () => {
+        const jats = makeJats(html, articleMetadata, journalMetadata).jats
         /* eslint-disable */
         console.log('XML Selected')
         console.log('HTML:\n\n', html)
         console.log(
           'JATS:\n\n',
-          makeJats(html, articleMetadata, journalMetadata).jats,
+          jats,
         )
+        // JATS XML file opens in new tab
+        let blob = new Blob([jats], {type: 'text/xml'})
+        let url = URL.createObjectURL(blob)
+        window.open(url)
+        URL.revokeObjectURL(url)
         /* eslint-disable */
       },
       title: 'XML',
