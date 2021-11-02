@@ -100,6 +100,10 @@ const ProfileDropzone = ({ profilePicture, updateProfilePicture }) => {
 const Profile = () => {
   const { loading, error, data, client, refetch } = useQuery(GET_CURRENT_USER)
 
+  // Mutations and Queries
+  const [updateUserEmail] = useMutation(UPDATE_CURRENT_EMAIL)
+  const [updateCurrentUsername] = useMutation(UPDATE_CURRENT_USERNAME)
+
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
@@ -112,10 +116,6 @@ const Profile = () => {
 
   // This is a bridge between the fetch results and the Apollo cache/state
   const updateProfilePicture = () => refetch()
-
-  // Mutations and Queries
-  const [updateUserEmail] = useMutation(UPDATE_CURRENT_EMAIL)
-  const [updateCurrentUsername] = useMutation(UPDATE_CURRENT_USERNAME)
 
   return (
     <Container>
