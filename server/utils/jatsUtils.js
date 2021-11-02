@@ -31,6 +31,11 @@ const tagsToIgnore = [
   'xref',
   'graphic',
   'caption',
+  'table',
+  'thead',
+  'tbody',
+  'tr',
+  'td',
 ]
 
 const convertRemainingTags = markup => {
