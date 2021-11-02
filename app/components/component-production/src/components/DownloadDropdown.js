@@ -54,8 +54,15 @@ export const DownloadDropdown = ({ source, metadata }) => {
     {
       id: 1,
       onClick: () => {
-        // eslint-disable-next-line
+        /* eslint-disable */
         console.log('HTML Selected')
+        console.log('HTML:\n\n', html)
+        // Raw HTML file opens in new tab
+        let blob = new Blob([html], { type: 'text/html' })
+        let url = URL.createObjectURL(blob)
+        window.open(url)
+        URL.revokeObjectURL(url)
+        /* eslint-disable */
       },
       title: 'HTML',
     },
