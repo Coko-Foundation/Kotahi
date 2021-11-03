@@ -30,9 +30,15 @@ const useFocusOnError = ({ fieldRef, name }) => {
     firstErrorKey = `${firstErrorKey}.${Object.keys(nestedError)[0]}` // e.g. submission.name
   }
 
-  React.useEffect(() => {
+  React.React.useEffect(() => {
     if (prevSubmitCountRef.current !== formik.submitCount && !formik.isValid) {
-      if (fieldRef.current && firstErrorKey === name) fieldRef.current.focus()
+      if (fieldRef.current && firstErrorKey === name) {
+        fieldRef.current.scrollIntoView({
+          behavior: 'smooth',
+          block: 'center',
+        })
+        fieldRef.current.focus({ preventScroll: false })
+      }
     }
 
     prevSubmitCountRef.current = formik.submitCount
