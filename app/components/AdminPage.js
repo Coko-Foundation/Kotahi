@@ -25,6 +25,7 @@ import FormBuilderPage from './component-formbuilder/src/components/FormBuilderP
 import NewSubmissionPage from './component-submit/src/components/NewSubmissionPage'
 import ReportPage from './component-reporting/src/ReportPage'
 import { Profile } from './component-profile/src'
+import ProductionPage from './component-production/src/components/ProductionPage'
 
 import { GET_CURRENT_USER } from '../queries'
 
@@ -292,6 +293,13 @@ const AdminPage = () => {
               currentUser={currentUser}
               key="reports"
               path={reportsLink}
+              redirectLink={redirectLink}
+            />,
+            <PrivateRoute
+              component={ProductionPage}
+              currentUser={currentUser}
+              key="production"
+              path={`${urlFrag}/versions/:version/production`}
               redirectLink={redirectLink}
             />,
           ]}

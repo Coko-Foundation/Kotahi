@@ -1,4 +1,5 @@
 const he = require('he')
+// const { lte } = require('semver')
 
 const tagsToConvert = {
   b: 'bold',
@@ -9,6 +10,7 @@ const tagsToConvert = {
   li: 'list-item',
   p: 'p',
   u: 'underline',
+  figure: 'fig',
   // ?: 'disp-formula',
   // img: 'graphic',
   // ?: 'inline-formula',
@@ -18,7 +20,23 @@ const tagsToConvert = {
   // ?: 'tex-math',
 }
 
-const tagsToIgnore = ['ext-link', 'list', 'sc', 'sec', 'sub', 'sup', 'title']
+const tagsToIgnore = [
+  'ext-link',
+  'list',
+  'sc',
+  'sec',
+  'sub',
+  'sup',
+  'title',
+  'xref',
+  'graphic',
+  'caption',
+  'table',
+  'thead',
+  'tbody',
+  'tr',
+  'td',
+]
 
 const convertRemainingTags = markup => {
   const openTagRegex = /<([^/>\s]+)(?:(?!\/?>)[\s\S])*>/g
@@ -122,10 +140,53 @@ const illegalCharRegex = /[\p{Cs}\p{Cn}\x00-\x08\x0B\x0E-\x1F\x7F\x80-\x9F]/gu
 /** Remove surrogates, unassigned characters (including noncharacters) and control characters other than ASCII whitespace. */
 const removeIllegalCharacters = markup => markup.replace(illegalCharRegex, '')
 
+const convertImages = markup => {
+  // <img src="#1"> => <graphic xlink:href=”#1” />
+
+  let output = markup
+
+  // first, deal with imgs inside of figures, with or without captions
+
+  while (output.indexOf('<figure><img src="') > -1) {
+    const [filename, ...theRest] = output.split('<img src="')[1].split('">')
+    let fixedCaption = ''
+    const [caption] = theRest.join('">').split('</figure>')
+
+    // <figcaption class="decoration">text</figcaption> => <caption><p>text</p></caption>
+
+    if (caption) {
+      fixedCaption = caption.replace(
+        /<figcaption class="decoration">((?:(?!<\/figcaption>)[\s\S])*)<\/figcaption>/g,
+        '<caption><p>$1</p></caption>',
+      )
+    }
+
+    // finally, if there's a caption, it needs to come BEFORE the image in JATS syntax
+
+    output = output.replace(
+      `<figure><img src="${filename}">${caption}`,
+      `<figure>${fixedCaption}<graphic xlink:href="${filename}" />`,
+    )
+  }
+
+  // just in case (this doesn't seem like something that happens), deal with images that aren't wrapped in a figure
+
+  while (output.indexOf('<img src="') > -1) {
+    const [filename] = output.split('<img src="')[1].split('">')
+    output = output.replace(
+      `<img src="${filename}">`,
+      `<graphic xlink:href="${filename}" />`,
+    )
+  }
+
+  return output
+}
+
 const htmlToJats = html => {
   let jats = html
   jats = removeIllegalCharacters(jats)
   jats = insertSections(jats)
+  jats = convertImages(jats)
   jats = convertLinks(jats)
   jats = convertLists(jats)
   jats = convertSmallCaps(jats)
@@ -136,8 +197,397 @@ const htmlToJats = html => {
 
 const getCitationsFromList = html => {
   const jats = htmlToJats(html)
+  // note that the next line breaks storybook on Safari
   const pContents = jats.match(/(?<=<p>)((?:(?!<\/?p>)[\s\S])*)(?=<\/p>)/g)
   return pContents
 }
 
-module.exports = { htmlToJats, getCitationsFromList }
+const makeJournalMeta = journalMeta => {
+  // this is working with a journalMeta with this shape:
+
+  // journalId: [{type: "", value: ""}]
+  // journalTitle: ""
+  // abbrevJouralTitle: ""
+  // issn: [{type: "", value: ""}]
+  // journalPublisher: ""
+  let thisJournalMeta = ''
+
+  if (journalMeta) {
+    if (journalMeta.journalId && journalMeta.journalId.length) {
+      for (let i = 0; i < journalMeta.journalId.length; i += 1) {
+        if (journalMeta.journalId[i].type && journalMeta.journalId[i].value) {
+          thisJournalMeta += `<journal-id journal-id-type="${journalMeta.journalId[i].type}">${journalMeta.journalId[i].value}</journal-id>`
+        }
+      }
+    }
+
+    if (journalMeta.journalTitle) {
+      thisJournalMeta += `<journal-title-group><journal-title>${journalMeta.journalTitle}</journal-title>`
+
+      if (journalMeta.abbrevJournalTitle) {
+        thisJournalMeta += `<abbrev-journal-title>${journalMeta.abbrevJournalTitle}</abbrev-journal-title>`
+      }
+
+      thisJournalMeta += `</journal-title-group>`
+    }
+
+    if (journalMeta.issn && journalMeta.issn.length) {
+      for (let i = 0; i < journalMeta.issn.length; i += 1) {
+        if (journalMeta.issn[i].type && journalMeta.issn[i].value) {
+          thisJournalMeta += `<issn publication-format="${journalMeta.issn[i].type}">${journalMeta.issn[i].value}</issn>`
+        }
+      }
+    }
+
+    if (journalMeta.publisher) {
+      thisJournalMeta += `<publisher>${journalMeta.publisher}</publisher>`
+    }
+  }
+
+  return thisJournalMeta && `<journal-meta>${thisJournalMeta}</journal-meta>`
+}
+
+const makeArticleMeta = (metadata, abstract, title) => {
+  // metadata:
+  // --pubDate: date
+  // --id: id
+  // --title: title
+  // --submission: submission form PARSED BEFORE IT GETS HERE
+  //   --abstract: html
+  //   --authors: array
+  //     --id: '3dcc3f77-647e-48b5-86d9-aa3540375f60',
+  //     --email: string
+  //     --lastName: string
+  //     --firstName: string
+  //     --affiliation: string
+  //   --content: array of string (this is keywords)
+  //   --issueNumber: string
+  //   --volumeNumber: string
+  // title: html string, from the title, if it exists
+  // abstract: html string, from the abstract tag if it exists
+
+  let thisArticleMeta = ''
+
+  const formData = metadata.submission || {}
+
+  if (metadata.id) {
+    thisArticleMeta += `<article-id pub-id-type="publisher-id">${metadata.id}</article-id>`
+  }
+
+  if (metadata.title) {
+    thisArticleMeta += `<title-group><article-title>${
+      title || metadata.title
+    }</article-title></title-group>`
+  }
+
+  if (formData.authors && formData.authors.length) {
+    let authorsList = ''
+    let affilList = ''
+
+    for (let i = 0; i < formData.authors.length; i += 1) {
+      if (formData.authors[i].lastName && formData.authors[i].firstName) {
+        authorsList += `<contrib contrib-type="author"><name><surname>${formData.authors[i].lastName}</surname><given-names>${formData.authors[i].firstName}</given-names></name>`
+      }
+
+      if (formData.authors[i].affiliation) {
+        const thisId = formData.authors[i].id || `author_${i}`
+        authorsList += `<xref ref-type="aff" rid="${thisId}" />`
+        affilList += `<aff id="${thisId}">${formData.authors[i].affiliation}</aff>`
+      }
+
+      authorsList += `</contrib>`
+    }
+
+    thisArticleMeta += `<contrib-group>${authorsList}</contrib-group>${affilList}`
+  }
+
+  if (metadata.pubDate) {
+    const theDate = new Date(metadata.pubDate)
+    const date = theDate.getUTCDate()
+    const month = theDate.getUTCMonth() + 1
+    const year = theDate.getUTCFullYear()
+    const pubDateString = `<pub-date publication-format="print" date-type="pub" iso-8601-date="${year}-${month}-${date}"><day>${date}</day><month>${month}</month><year>${year}</year></pub-date>`
+    thisArticleMeta += pubDateString
+  } else {
+    thisArticleMeta += `<pub-date-not-available />`
+  }
+
+  if (formData.volumeNumber) {
+    thisArticleMeta += `<volume>${formData.volumeNumber}</volume>`
+  }
+
+  if (formData.issueNumber) {
+    thisArticleMeta += `<issue>${formData.issueNumber}</issue>`
+  }
+
+  if (formData.abstract) {
+    // TODO: note that the quotes in submission.abstract can be escaped. Does this break our parser?
+    thisArticleMeta += `<abstract>${htmlToJats(
+      abstract || formData.abstract,
+    )}</abstract>`
+  }
+
+  if (formData.content && formData.content.length) {
+    // this is for keywords
+    let contentList = ''
+
+    for (let i = 0; i < formData.content.length; i += 1) {
+      contentList += `<kwd>${formData.content[i]}</kwd>`
+    }
+
+    thisArticleMeta += `<kwd-group kwd-group-type="author">${contentList}</kwd-group>`
+  }
+
+  return `<article-meta>${thisArticleMeta}</article-meta>`
+}
+
+const makeFootnotesSection = html => {
+  let deFootnotedHtml = html
+  let footnoteCount = 0
+  let fnSection = ''
+
+  while (deFootnotedHtml.indexOf(`<footnote id="`) > -1) {
+    // get id and text from Wax markup
+    const [id, text] = deFootnotedHtml
+      .split('<footnote id="')[1]
+      .split('</footnote')[0]
+      .split('">')
+
+    footnoteCount += 1
+    // replace body text with JATS tag
+    deFootnotedHtml = deFootnotedHtml.replace(
+      `<footnote id="${id}">${text}</footnote>`,
+      `<xref ref-type="fn" rid="${id}">${footnoteCount}</xref>`,
+    )
+    // add this to the list of footnotes
+    fnSection += `<fn id="${id}"><p>${htmlToJats(text)}</p></fn>`
+  }
+
+  if (footnoteCount > 0) {
+    fnSection = `<fn-group>${fnSection}</fn-group>`
+  }
+
+  return { deFootnotedHtml, fnSection }
+}
+
+const makeAppendices = html => {
+  let deAppendixedHtml = html
+  let appCount = 0 // this is to give appendices IDs
+  const appendices = []
+
+  while (deAppendixedHtml.indexOf('<section class="appendix">') > -1) {
+    let thisAppendix = deAppendixedHtml
+      .split('<section class="appendix">')[1]
+      .split('</section>')[0]
+
+    deAppendixedHtml = deAppendixedHtml.replace(
+      `<section class="appendix">${thisAppendix}</section>`,
+      '',
+    )
+
+    // 1.1 deal with appendix title
+
+    let headerFound = false // If there is more than header, it's turned into a regular H1, which will get wrapped in sections.
+
+    while (thisAppendix.indexOf('<h1 class="appendixheader">') > -1) {
+      const thisHeader = thisAppendix
+        .split(`<h1 class="appendixheader">`)[1]
+        .split('</h1')[0]
+
+      thisAppendix = thisAppendix.replace(
+        `<h1 class="appendixheader">${thisHeader}</h1>`,
+        !headerFound // if this is the first header, don't add a secti
+          ? `<title>${thisHeader}</title>`
+          : `<h1>${thisHeader}</h1>`,
+      )
+      headerFound = true
+    }
+
+    // 1.2. jats the internal contents
+    appendices.push(
+      `<app id="app-${appCount}">${htmlToJats(thisAppendix)}</app>`,
+    )
+    appCount += 1
+
+    // 1.3 clean out any <h1 class="appendixheader" in deAppendixedHtml—these just become regular H1s
+    while (deAppendixedHtml.indexOf('<h1 class="appendixheader">') > -1) {
+      deAppendixedHtml = deAppendixedHtml.replace(
+        `<h1 class="appendixheader">`,
+        '<h1>',
+      )
+    }
+  }
+
+  return {
+    deAppendixedHtml,
+    appendices: appendices.length
+      ? `<app-group>${appendices.join('')}</app-group>`
+      : '',
+  }
+}
+
+const makeCitations = html => {
+  let deCitedHtml = html
+  let refList = '' // this is the ref-list that we're building
+  let refListHeader = '' // if there's a header, it goes in here
+  let refCount = 0 // this is for ID numbering
+
+  while (deCitedHtml.indexOf('<section class="reflist">') > -1) {
+    let thisRefList = deCitedHtml
+      .split('<section class="reflist">')[1]
+      .split('</section>')[0]
+
+    deCitedHtml = deCitedHtml.replace(
+      `<section class="reflist">${thisRefList}</section>`,
+      '',
+    )
+
+    // 2.1. Get header, if there is one. Only the first reflist header is taken.
+    if (!refListHeader) {
+      if (thisRefList.indexOf('<h1 class="referenceheader">') > -1) {
+        /* eslint-disable prefer-destructuring */
+        refListHeader = thisRefList
+          .split('<h1 class="referenceheader">')[1]
+          .split('</h1>')[0]
+        refList = `<title>${refListHeader}</title>${refList}`
+      }
+    }
+    // 2.2. Get all the mixed citations out, add to refList
+
+    while (thisRefList.indexOf('<p class="mixedcitation">') > -1) {
+      const thisCitation = thisRefList
+        .split('<p class="mixedcitation">')[1]
+        .split('</p>')[0]
+
+      thisRefList = thisRefList.replace(
+        `<p class="mixedcitation">${thisCitation}</p>`,
+        ``,
+      )
+      refList += `<ref id="ref-${refCount}"><mixed-citation>${htmlToJats(
+        thisCitation,
+      )}</mixed-citation></ref>`
+      refCount += 1
+    }
+  }
+
+  // 2.3 deal with any stray reference headers in the body—they become regular H1s.
+
+  while (deCitedHtml.indexOf('<h1 class="referenceheader">') > -1) {
+    deCitedHtml = deCitedHtml.replace(`<h1 class="referenceheader">`, '<h1>')
+  }
+
+  // 2.4 deal with any loose mixed citations in the body:
+  // they're pulled out of the body and added to the ref-list
+
+  while (deCitedHtml.indexOf('<p class="mixedcitation">') > -1) {
+    const thisCitation = deCitedHtml
+      .split('<p class="mixedcitation">')[1]
+      .split('</p>')[0]
+
+    deCitedHtml = deCitedHtml.replace(
+      `<p class="mixedcitation">${thisCitation}</p>`,
+      ``,
+    )
+    refList += `<ref id="ref-${refCount}"><mixed-citation>${htmlToJats(
+      thisCitation,
+    )}</mixed-citation></ref>`
+    refCount += 1
+  }
+
+  if (refList) {
+    refList = `<ref-list>${refList}</ref-list>`
+  }
+
+  return { deCitedHtml, refList }
+}
+
+const makeFrontMatter = html => {
+  let deFrontedHtml = html
+  let abstract = ''
+  let title = '' // this would be where we'd put a title if we find one
+
+  while (deFrontedHtml.indexOf('<section class="frontmatter">') > -1) {
+    const frontMatter = deFrontedHtml
+      .split('<section class="frontmatter">')[1]
+      .split('</section>')[0]
+
+    // look and see if there's a title
+
+    if (frontMatter.indexOf('<h1>') > -1) {
+      // if there's an H1 in the front matter, send it back as the title.
+      // note that we are only taking the first one
+      title = frontMatter.split('<h1>')[1].split('</h1>')[0]
+    }
+
+    // look and see if there's an abstract
+
+    if (frontMatter.indexOf('<section class="abstractSection">') > -1) {
+      // we are only taking the first one.
+      abstract = frontMatter
+        .split('<section class="abstractSection">')[1]
+        .split('</section>')[0]
+    }
+
+    deFrontedHtml = deFrontedHtml.replace(
+      `<section class="frontmatter">${frontMatter}</section>`,
+      '',
+    )
+  }
+
+  // finally, get rid of any abstracts that are not in the front matter
+
+  while (deFrontedHtml.indexOf('<section class="abstractSection">') > -1) {
+    const abstractSection = deFrontedHtml
+      .split('<section class="abstractSection">')[1]
+      .split('</section>')[0]
+
+    deFrontedHtml = deFrontedHtml.replace(
+      `<section class="abstractSection">${abstractSection}</section>`,
+      '',
+    )
+  }
+
+  return { abstract, deFrontedHtml, title }
+}
+
+const makeJats = (html, articleMeta, journalMeta) => {
+  // html is what's coming out of Wax
+  // articleMeta is what's needed for front matter (see makeArticleMeta for description)
+  // journalMeta is the journal metadata object (see makeJournalMeta for description)
+
+  // 0. deal with footnotes
+
+  const { deFootnotedHtml, fnSection } = makeFootnotesSection(html)
+
+  // 1. deal with appendices
+
+  const { deAppendixedHtml, appendices } = makeAppendices(deFootnotedHtml)
+
+  // 2. deal with citations
+
+  const { deCitedHtml, refList } = makeCitations(deAppendixedHtml)
+
+  // 3 deal with faux frontmatter – these just get thrown away
+
+  const { abstract, deFrontedHtml, title } = makeFrontMatter(deCitedHtml)
+
+  // 4 deal with article and journal metadata
+
+  const journalMetaSection = makeJournalMeta(journalMeta || {})
+  const articleMetaSection = makeArticleMeta(articleMeta || {}, abstract, title)
+
+  const front = `<front>${journalMetaSection}${articleMetaSection}</front>`
+
+  const body = `<body>${htmlToJats(deFrontedHtml)}</body>`
+
+  const back = `<back>${appendices}${refList}${fnSection}</back>`
+
+  // check if body or back are empty, don't pass if not there.
+  const jats = `<article xml:lang="en" xmlns:mml="http://www.w3.org/1998/Math/MathML"	xmlns:xlink="http://www.w3.org/1999/xlink" dtd-version="1.3">${front}${
+    body.length > 13 ? body : ''
+  }${back.length > 13 ? back : ''}</article>`
+
+  return { front, body, back, jats }
+}
+
+module.exports = { htmlToJats, getCitationsFromList, makeJats }

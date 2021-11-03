@@ -1,15 +1,17 @@
 import React, { useRef } from 'react'
 import PropTypes from 'prop-types'
-import { ThemeProvider } from 'styled-components'
 // import { debounce } from 'lodash'
 import { Wax } from 'wax-prosemirror-core'
+import { ThemeProvider } from 'styled-components'
 import waxTheme from './layout/waxTheme'
 
-import fullWaxEditorConfig from './config/FullWaxEditorConfig'
-import FullWaxEditorLayout from './layout/FullWaxEditorLayout'
-import FullWaxEditorCommentsLayout from './layout/FullWaxEditorCommentsLayout'
+import productionWaxEditorConfig from './config/ProductionWaxEditorConfig'
+import ProductionWaxEditorLayout from './layout/ProductionWaxEditorLayout'
+import ProductionWaxEditorNoCommentsLayout from './layout/ProductionWaxEditorNoCommentsLayout'
 
 import './katex/katex.css'
+
+// this was forked from FullWaxEditor.js
 
 // TODO Save this image via the server
 const renderImage = file => {
@@ -24,7 +26,7 @@ const renderImage = file => {
   })
 }
 
-const FullWaxEditor = ({
+const ProductionWaxEditor = ({
   value,
   validationStatus,
   readonly,
@@ -32,9 +34,9 @@ const FullWaxEditor = ({
   onBlur,
   onChange,
   placeholder,
-  useComments,
-  authorComments,
+  readOnlyComments,
   fileUpload,
+  useComments,
   user,
   ...rest
 }) => {
@@ -50,6 +52,7 @@ const FullWaxEditor = ({
   const editorRef = useRef(null)
 
   // const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
+
   return (
     <ThemeProvider theme={waxTheme}>
       <div
@@ -60,12 +63,12 @@ const FullWaxEditor = ({
       >
         <Wax
           autoFocus={autoFocus}
-          config={fullWaxEditorConfig()}
+          config={productionWaxEditorConfig(readOnlyComments)}
           fileUpload={file => renderImage(file)}
           layout={
             useComments
-              ? FullWaxEditorCommentsLayout(readonly, authorComments)
-              : FullWaxEditorLayout(readonly)
+              ? ProductionWaxEditorLayout(readonly)
+              : ProductionWaxEditorNoCommentsLayout(readonly)
           }
           onBlur={val => {
             onChange && onChange(val)
@@ -84,7 +87,7 @@ const FullWaxEditor = ({
   )
 }
 
-FullWaxEditor.propTypes = {
+ProductionWaxEditor.propTypes = {
   value: PropTypes.string,
   validationStatus: PropTypes.string,
   readonly: PropTypes.bool,
@@ -93,7 +96,7 @@ FullWaxEditor.propTypes = {
   onChange: PropTypes.func,
   placeholder: PropTypes.string,
   fileUpload: PropTypes.func,
-  authorComments: PropTypes.bool,
+  readOnlyComments: PropTypes.bool,
   useComments: PropTypes.bool,
   user: PropTypes.shape({
     userId: PropTypes.string,
@@ -105,7 +108,7 @@ FullWaxEditor.propTypes = {
   }),
 }
 
-FullWaxEditor.defaultProps = {
+ProductionWaxEditor.defaultProps = {
   value: '',
   validationStatus: undefined,
   readonly: false,
@@ -113,10 +116,10 @@ FullWaxEditor.defaultProps = {
   onBlur: () => {},
   onChange: () => {},
   placeholder: '',
-  authorComments: false,
+  readOnlyComments: false,
   fileUpload: () => {},
-  useComments: false,
+  useComments: true,
   user: {},
 }
 
-export default FullWaxEditor
+export default ProductionWaxEditor

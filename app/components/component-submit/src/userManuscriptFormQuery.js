@@ -123,6 +123,9 @@ const query = gql`
       id
       username
       admin
+      defaultIdentity {
+        name
+      }
     }
 
     manuscript(id: $id) {

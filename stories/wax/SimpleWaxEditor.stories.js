@@ -9,6 +9,9 @@ Base.args = {
   value: '<p>Some <strong><i>styled</i></strong> text</p>',
   autoFocus: true,
   placeholder: 'Enter text here',
+  onBlur: source => {
+    // console.log(source)
+  },
 }
 ReadOnly.args = { ...Base.args, readonly: true }
 Error.args = { ...Base.args, validationStatus: 'error' }

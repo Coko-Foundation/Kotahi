@@ -1,23 +1,26 @@
 import React from 'react'
-import { injectable } from 'inversify'
+import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton } from 'wax-prosemirror-components'
 import { Commands } from 'wax-prosemirror-utilities'
 import { Tools } from 'wax-prosemirror-services'
 
-export default
-@injectable()
-class Heading5 extends Tools {
-  title = 'Change to heading level 5'
-  label = 'Heading 5'
-  name = 'Heading5'
+class AppendixHeader extends Tools {
+  title = 'Change to appendix header'
+  label = 'Appendix head'
+  name = 'AppendixHeader'
 
+  // eslint-disable-next-line class-methods-use-this
   get run() {
     return (state, dispatch) => {
-      Commands.setBlockType(state.config.schema.nodes.heading5)(state, dispatch)
+      Commands.setBlockType(state.config.schema.nodes.appendixHeader)(
+        state,
+        dispatch,
+      )
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   get active() {
     return (state, activeViewId) => {
       let isActive = false
@@ -25,7 +28,7 @@ class Heading5 extends Tools {
 
       const { from, to } = state.selection
       state.doc.nodesBetween(from, to, (node, pos) => {
-        if (node.type.name === 'heading5') {
+        if (node.type.name === 'appendixHeader') {
           isActive = true
         }
       })
@@ -38,9 +41,12 @@ class Heading5 extends Tools {
     return true
   }
 
+  // eslint-disable-next-line class-methods-use-this
   get enable() {
     return state => {
-      return Commands.setBlockType(state.config.schema.nodes.heading5)(state)
+      return Commands.setBlockType(state.config.schema.nodes.appendixHeader)(
+        state,
+      )
     }
   }
 
@@ -48,7 +54,11 @@ class Heading5 extends Tools {
     if (isEmpty(view)) return null
     // eslint-disable-next-line no-underscore-dangle
     return this._isDisplayed ? (
-      <LeftSideButton item={this.toJSON()} key="Heading5" view={view} />
+      <LeftSideButton item={this.toJSON()} key="AppendixHeader" view={view} />
     ) : null
   }
 }
+
+decorate(injectable(), AppendixHeader)
+
+export default AppendixHeader

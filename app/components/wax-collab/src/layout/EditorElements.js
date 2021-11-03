@@ -1,7 +1,7 @@
 /* stylelint-disable selector-type-no-unknown */
 import { css } from 'styled-components'
 import { darken, grid } from '@pubsweet/ui-toolkit'
-import lightenBy from '../../../shared/lightenBy'
+import lightenBy from '../../../../shared/lightenBy'
 
 /* All styles regarding ProseMirror surface and elements */
 
@@ -9,6 +9,7 @@ export default css`
   .ProseMirror {
     counter-reset: footnote;
     font-family: ${props => props.theme.fontReading};
+    white-space: pre-wrap;
 
     &:focus {
       outline: none;
@@ -392,6 +393,170 @@ export default css`
 
   .math-node.ProseMirror-selectednode .math-render {
     display: none;
+  }
+
+  /* -- Selection Plugin ---------------------------------- */
+
+  p::selection,
+  p > *::selection {
+    background-color: #c0c0c0;
+  }
+
+  .katex-html *::selection {
+    /* stylelint-disable-next-line declaration-no-important */
+    background-color: none !important;
+  }
+
+  .math-inline.math-select .math-render {
+    padding-top: 2px;
+  }
+
+  .math-node.math-select .math-render {
+    background-color: #c0c0c0ff;
+  }
+
+  span[data-type='inline'] {
+    display: inline;
+    font-weight: 500;
+  }
+
+  span[data-type='inline']:before {
+    color: #006f19;
+    content: ' | ';
+    font-weight: 600;
+    margin-left: 0;
+  }
+
+  span[data-type='inline']:after {
+    color: #006f19;
+    content: ' | ';
+    display: inline;
+    font-weight: 600;
+  }
+
+  p[data-type='block'] {
+    display: block;
+    margin-top: 1em;
+  }
+
+  p[data-type='block']:before {
+    color: #006f19;
+    content: '⌜';
+    display: inline;
+    font-size: 22px;
+    font-weight: 600;
+    left: 6px;
+    position: relative;
+    top: 2px;
+  }
+
+  p[data-type='block']:after {
+    color: #006f19;
+    content: '⌟';
+    display: inline;
+    font-size: 22px;
+    font-weight: 600;
+    position: relative;
+    right: 6px;
+    top: 5px;
+  }
+
+  .transform-icon {
+    transform: rotate(40deg);
+  }
+
+  /* JATS */
+
+  section.frontmatter {
+    background-color: rgba(255, 0, 0, 0.25);
+    border: 1px solid red;
+    margin-bottom: 8px;
+    padding: 8px 16px;
+    position: relative;
+
+    &:before {
+      color: white;
+      content: 'FRONT MATTER';
+      font-weight: bold;
+      left: 2px;
+      letter-spacing: 1px;
+      position: absolute;
+      top: -4px;
+    }
+  }
+
+  section.abstractSection {
+    background-color: rgba(255, 0, 0, 0.25);
+    border: 1px solid red;
+    margin-bottom: 8px;
+    padding: 8px 16px;
+    position: relative;
+
+    &:before {
+      color: white;
+      content: 'ABSTRACT';
+      font-weight: bold;
+      left: 2px;
+      letter-spacing: 1px;
+      position: absolute;
+      top: -4px;
+    }
+  }
+
+  section.reflist {
+    background-color: rgba(25, 25, 112, 0.25);
+    border: 1px solid midnightblue;
+    margin-bottom: 8px;
+    padding: 8px 16px;
+    position: relative;
+
+    &:before {
+      color: white;
+      content: 'REFERENCE LIST';
+      font-weight: bold;
+      left: 2px;
+      letter-spacing: 1px;
+      position: absolute;
+      top: -4px;
+    }
+  }
+
+  h1.referenceheader {
+    background-color: midnightblue;
+    border-radius: 8px;
+    color: white;
+    padding: 4px 8px;
+  }
+
+  p.mixedcitation {
+    &:before {
+      content: '§ ';
+    }
+  }
+
+  section.appendix {
+    background-color: rgba(0, 128, 128, 0.25);
+    border: 1px solid teal;
+    margin-bottom: 8px;
+    padding: 8px 16px;
+    position: relative;
+
+    &:before {
+      color: white;
+      content: 'APPENDIX';
+      font-weight: bold;
+      left: 2px;
+      letter-spacing: 1px;
+      position: absolute;
+      top: -4px;
+    }
+  }
+
+  h1.appendixheader {
+    background-color: teal;
+    border-radius: 8px;
+    color: white;
+    padding: 4px 8px;
   }
 
   /* added for figure weirdness */

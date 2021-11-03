@@ -135,6 +135,7 @@ const FormTemplate = ({
   setTouched,
   values,
   setFieldValue,
+  submissionButtonText,
   createSupplementaryFile,
   onChange,
   republish,
@@ -142,12 +143,9 @@ const FormTemplate = ({
   submitSubmission,
   errors,
   validateForm,
-  match,
   showEditorOnlyFields,
 }) => {
   const client = useApolloClient()
-
-  const isDecision = match && match.url && match.url.indexOf('decision') > -1
 
   const submitButton = (text, haspopup = false) => {
     return (
@@ -184,14 +182,30 @@ const FormTemplate = ({
     )
   }
 
-  let submitButtonText = match.url.includes('/evaluation')
-    ? 'Submit Evaluation'
-    : 'Submit your research object'
+  // this is true if it's the decision page, not if it's the submit page
+  const isDecision = submissionButtonText === ''
 
-  if (manuscript.status === articleStatuses.published)
-    submitButtonText = 'Re-Publish'
+  // this is what the submit button will say
+  const submitButtonText =
+    manuscript.status === articleStatuses.published
+      ? 'Re-Publish'
+      : submissionButtonText
 
+  // this is whether the form includes a popup
   const hasPopup = form.haspopup ? JSON.parse(form.haspopup) : false
+
+  // this is whether to show a popup
+  const showPopup = hasPopup && values.status !== 'revise'
+
+  // this is whether or not to show a submit button
+  const showSubmitButton =
+    !isDecision &&
+    ((['aperture', 'colab'].includes(process.env.INSTANCE_NAME) &&
+      !['submitted', 'revise'].includes(values.status)) ||
+      (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
+        !['revise'].includes(values.status)) ||
+      values.status === 'revise')
+
   return (
     <Container>
       {config['client-features'].displayShortIdAsIdentifier &&
@@ -308,19 +322,7 @@ const FormTemplate = ({
           </Section>
         ) : null}
 
-        {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) &&
-          !['submitted', 'revise'].includes(values.status) &&
-          !isDecision &&
-          submitButton(submitButtonText, hasPopup)}
-
-        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
-          !isDecision &&
-          !['revise'].includes(values.status) &&
-          submitButton(submitButtonText, hasPopup)}
-
-        {values.status === 'revise' &&
-          !isDecision &&
-          submitButton(submitButtonText)}
+        {showSubmitButton ? submitButton(submitButtonText, showPopup) : null}
 
         {confirming && (
           <ModalWrapper>
@@ -390,11 +392,9 @@ FormTemplate.propTypes = {
   onSubmit: PropTypes.func,
   republish: PropTypes.func.isRequired,
   submitSubmission: PropTypes.func,
+  submissionButtonText: PropTypes.string,
   errors: PropTypes.objectOf(PropTypes.any).isRequired,
   validateForm: PropTypes.func.isRequired,
-  match: PropTypes.shape({
-    url: PropTypes.string.isRequired,
-  }).isRequired,
   showEditorOnlyFields: PropTypes.bool.isRequired,
 }
 FormTemplate.defaultProps = {
@@ -402,6 +402,7 @@ FormTemplate.defaultProps = {
   onSubmit: undefined,
   submitSubmission: undefined,
   createSupplementaryFile: undefined,
+  submissionButtonText: '',
 }
 
 export default FormTemplate

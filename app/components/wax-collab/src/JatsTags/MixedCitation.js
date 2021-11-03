@@ -1,23 +1,26 @@
 import React from 'react'
-import { injectable } from 'inversify'
+import { decorate, injectable } from 'inversify'
 import { isEmpty } from 'lodash'
 import { LeftSideButton } from 'wax-prosemirror-components'
 import { Commands } from 'wax-prosemirror-utilities'
 import { Tools } from 'wax-prosemirror-services'
 
-export default
-@injectable()
-class Heading6 extends Tools {
-  title = 'Change to heading level 6'
-  label = 'Heading 6'
-  name = 'Heading6'
+class MixedCitation extends Tools {
+  title = 'Change to mixed citation'
+  label = 'Mixed citation'
+  name = 'MixedCitation'
 
+  // eslint-disable-next-line class-methods-use-this
   get run() {
     return (state, dispatch) => {
-      Commands.setBlockType(state.config.schema.nodes.heading6)(state, dispatch)
+      Commands.setBlockType(state.config.schema.nodes.mixedCitation)(
+        state,
+        dispatch,
+      )
     }
   }
 
+  // eslint-disable-next-line class-methods-use-this
   get active() {
     return (state, activeViewId) => {
       let isActive = false
@@ -25,7 +28,7 @@ class Heading6 extends Tools {
 
       const { from, to } = state.selection
       state.doc.nodesBetween(from, to, (node, pos) => {
-        if (node.type.name === 'heading6') {
+        if (node.type.name === 'mixedCitation') {
           isActive = true
         }
       })
@@ -38,9 +41,12 @@ class Heading6 extends Tools {
     return true
   }
 
+  // eslint-disable-next-line class-methods-use-this
   get enable() {
     return state => {
-      return Commands.setBlockType(state.config.schema.nodes.heading6)(state)
+      return Commands.setBlockType(state.config.schema.nodes.mixedCitation)(
+        state,
+      )
     }
   }
 
@@ -48,7 +54,11 @@ class Heading6 extends Tools {
     if (isEmpty(view)) return null
     // eslint-disable-next-line no-underscore-dangle
     return this._isDisplayed ? (
-      <LeftSideButton item={this.toJSON()} key="Heading6" view={view} />
+      <LeftSideButton item={this.toJSON()} key="MixedCitation" view={view} />
     ) : null
   }
 }
+
+decorate(injectable(), MixedCitation)
+
+export default MixedCitation

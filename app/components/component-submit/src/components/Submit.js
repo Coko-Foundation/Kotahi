@@ -66,6 +66,7 @@ const Submit = ({
     const editorSection = {
       content: (
         <EditorSection
+          currentUser={currentUser}
           manuscript={manuscript}
           onBlur={source => updateManuscript(versionId, { meta: { source } })}
           readonly={!userCanEditManuscriptAndFormData}
@@ -87,46 +88,47 @@ const Submit = ({
 
       decisionSection = {
         content: (
-          <>
-            {hasDecision && <DecisionAndReviews manuscript={manuscript} />}
-            <SectionContent>
-              <Formik
-                displayName="submit"
-                // handleChange={props.handleChange}
-                initialValues={versionValues}
-                onSubmit={async (
-                  values,
-                  { validateForm, setSubmitting, ...other },
-                ) => {
-                  // TODO: Change this to a more Formik idiomatic form
-                  const isValid = Object.keys(await validateForm()).length === 0
-                  return isValid
-                    ? onSubmit(versionId, values) // values are currently ignored!
-                    : setSubmitting(false)
-                }}
-                validateOnBlur
-                validateOnChange={false}
-              >
-                {formProps => {
-                  return (
-                    <FormTemplate
-                      confirming={confirming}
-                      onChange={(value, path) => {
-                        onChange(value, path, versionId)
-                      }}
-                      toggleConfirming={toggleConfirming}
-                      {...formProps}
-                      form={form}
-                      manuscript={manuscript}
-                      match={match}
-                      republish={republish}
-                      showEditorOnlyFields={false}
-                    />
-                  )
-                }}
-              </Formik>
-            </SectionContent>
-          </>
+          <SectionContent>
+            <Formik
+              displayName="submit"
+              // handleChange={props.handleChange}
+              initialValues={versionValues}
+              onSubmit={async (
+                values,
+                { validateForm, setSubmitting, ...other },
+              ) => {
+                // TODO: Change this to a more Formik idiomatic form
+                const isValid = Object.keys(await validateForm()).length === 0
+                return isValid
+                  ? onSubmit(versionId, values) // values are currently ignored!
+                  : setSubmitting(false)
+              }}
+              validateOnBlur
+              validateOnChange={false}
+            >
+              {formProps => {
+                return (
+                  <FormTemplate
+                    confirming={confirming}
+                    onChange={(value, path) => {
+                      onChange(value, path, versionId)
+                    }}
+                    toggleConfirming={toggleConfirming}
+                    {...formProps}
+                    form={form}
+                    manuscript={manuscript}
+                    republish={republish}
+                    showEditorOnlyFields={false}
+                    submissionButtonText={
+                      match.url.includes('/evaluation')
+                        ? 'Submit Evaluation'
+                        : 'Submit your research object'
+                    }
+                  />
+                )
+              }}
+            </Formik>
+          </SectionContent>
         ),
         key: versionId,
         label: 'Edit submission info',

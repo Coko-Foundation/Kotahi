@@ -61,7 +61,11 @@ const Manuscript = ({
     file.mimeType ===
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
       <ManuscriptContainer>
-        {content ? <FullWaxEditor readonly value={content} /> : <Spinner />}
+        {content ? (
+          <FullWaxEditor readonly user={currentUser} value={content} />
+        ) : (
+          <Spinner />
+        )}
       </ManuscriptContainer>
     ) : (
       <Info>No supported view of the file</Info>

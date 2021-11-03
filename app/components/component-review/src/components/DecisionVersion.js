@@ -54,12 +54,13 @@ const DecisionVersion = ({
   const [makeDecision] = useMutation(makeDecisionMutation)
   const [doUpdateReview] = useMutation(updateReviewMutation)
 
-  const addEditor = (manuscript, label, isCurrent) => {
+  const addEditor = (manuscript, label, isCurrent, currentUser) => {
     const isThisReadOnly = !isCurrent
 
     return {
       content: (
         <EditorSection
+          currentUser={currentUser}
           manuscript={manuscript}
           onBlur={
             isThisReadOnly
@@ -110,7 +111,7 @@ const DecisionVersion = ({
   if (loading || loadingSharedReviews) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
-  const { manuscript } = data
+  const { manuscript, currentUser } = data
 
   const updateReview = manuscriptId => review => {
     const reviewData = {
@@ -159,7 +160,12 @@ const DecisionVersion = ({
     })
   }
 
-  const editorSection = addEditor(manuscript, 'Manuscript text', current)
+  const editorSection = addEditor(
+    manuscript,
+    'Manuscript text',
+    current,
+    currentUser,
+  )
 
   const metadataSection = () => {
     const submissionValues = current
