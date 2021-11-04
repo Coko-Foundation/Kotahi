@@ -4,6 +4,7 @@ import { ThemeProvider } from 'styled-components'
 // import { debounce } from 'lodash'
 import { Wax } from 'wax-prosemirror-core'
 import waxTheme from './layout/waxTheme'
+import fixAstralUnicode from './fixAstralUnicode'
 
 import fullWaxEditorConfig from './config/FullWaxEditorConfig'
 import FullWaxEditorLayout from './layout/FullWaxEditorLayout'
@@ -38,6 +39,10 @@ const FullWaxEditor = ({
   user,
   ...rest
 }) => {
+  // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
+  // eslint-disable-next-line no-param-reassign
+  value = fixAstralUnicode(value)
+
   const waxUser = {
     userId: user.id || '-',
     userColor: {
