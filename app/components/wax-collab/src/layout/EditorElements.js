@@ -19,14 +19,14 @@ export default css`
   .ProseMirror footnote {
     align-items: center;
     background: ${lightenBy('colorPrimary', 0.7)};
-    border-radius: ${grid(1)};
+    border-radius: ${grid(2)};
     color: ${darken('colorPrimary', 0.5)};
     cursor: pointer;
     display: inline-flex;
-    height: ${grid(2)};
+    height: ${grid(4)};
     justify-content: center;
     line-height: 0;
-    min-width: ${grid(2)};
+    min-width: ${grid(4)};
     vertical-align: top;
 
     &:hover {
@@ -36,7 +36,7 @@ export default css`
     ::after {
       content: counter(footnote);
       counter-increment: footnote;
-      font-size: ${grid(1.75)};
+      font-size: ${grid(3)};
     }
   }
 

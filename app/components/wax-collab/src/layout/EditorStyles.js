@@ -61,7 +61,6 @@ export const FullWaxEditorGrid = styled.div`
   grid-template-columns: [editorCol] auto [commentsCol] ${props =>
       props.useComments ? 'auto' : 0};
   grid-template-rows: [editorRow] auto [notesRow] auto [infoRow] 40px;
-  ${props => props.useComments && !props.noScroll && 'overflow-x: scroll;'}
   ${waxDefaultStyles}
   position: relative;
   z-index: 0;
@@ -74,7 +73,7 @@ export const EditorDiv = styled.div`
   border-top: none;
   grid-column-start: editorCol;
   grid-row-start: editorRow;
-  min-width: 800px;
+  ${props => !props.hideComments && 'min-width: 800px'};
   overflow: auto;
   padding: 16px;
   position: relative;
@@ -84,7 +83,7 @@ export const EditorDiv = styled.div`
   }
 
   & > div {
-    max-width: 800px;
+    ${props => !props.hideComments && 'max-width: 800px'};
   }
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */

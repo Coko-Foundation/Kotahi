@@ -36,6 +36,8 @@ const tagsToIgnore = [
   'tbody',
   'tr',
   'td',
+  'math-inline',
+  'math-display',
 ]
 
 const convertRemainingTags = markup => {
@@ -320,7 +322,7 @@ const makeArticleMeta = (metadata, abstract, title) => {
     thisArticleMeta += `<issue>${formData.issueNumber}</issue>`
   }
 
-  if (formData.abstract) {
+  if (abstract || formData.abstract) {
     // TODO: note that the quotes in submission.abstract can be escaped. Does this break our parser?
     thisArticleMeta += `<abstract>${htmlToJats(
       abstract || formData.abstract,
@@ -368,6 +370,25 @@ const makeFootnotesSection = html => {
   }
 
   return { deFootnotedHtml, fnSection }
+}
+
+const fixTableCells = html => {
+  // This runs the content of <td>s individually though htmlToJats
+  // This doesn't deal with <th>s though I don't think we're getting them.
+
+  let deTabledHtml = html
+
+  while (deTabledHtml.indexOf('<td>') > -1) {
+    const tableCellContent = deTabledHtml.split('<td>')[1].split('</td>')[0]
+    deTabledHtml = deTabledHtml.replace(
+      `<td>${tableCellContent}`,
+      `<!td!>${htmlToJats(tableCellContent)}`,
+    )
+  }
+
+  deTabledHtml = deTabledHtml.replaceAll('<!td!>', '<td>')
+
+  return { deTabledHtml }
 }
 
 const makeAppendices = html => {
@@ -453,6 +474,7 @@ const makeCitations = html => {
       }
     }
     // 2.2. Get all the mixed citations out, add to refList
+    // NOTE: we are deleting anything in the ref-list that isn't a mixed citation!
 
     while (thisRefList.indexOf('<p class="mixedcitation">') > -1) {
       const thisCitation = thisRefList
@@ -478,6 +500,10 @@ const makeCitations = html => {
 
   // 2.4 deal with any loose mixed citations in the body:
   // they're pulled out of the body and added to the ref-list
+  // QUESTION: Is this the right thing to do? It isn't necessarily what the user expects.
+  // Theoretically you could have a <ref-list> at the end of a <sec> though why you would want
+  // that is not clear to me. <mixed-citation> by itself isn't valid in a <sec> (even wrapped in <ref>).
+  // The alternative would just be to delete the loose <mixed-citations>?
 
   while (deCitedHtml.indexOf('<p class="mixedcitation">') > -1) {
     const thisCitation = deCitedHtml
@@ -523,6 +549,7 @@ const makeFrontMatter = html => {
 
     if (frontMatter.indexOf('<section class="abstractSection">') > -1) {
       // we are only taking the first one.
+      // if there is more than one abstract, subsequent ones will be ignored
       abstract = frontMatter
         .split('<section class="abstractSection">')[1]
         .split('</section>')[0]
@@ -540,6 +567,11 @@ const makeFrontMatter = html => {
     const abstractSection = deFrontedHtml
       .split('<section class="abstractSection">')[1]
       .split('</section>')[0]
+
+    if (!abstract) {
+      // if we have not found an abstract so far, take this abstract (not in a front matter) as the absact
+      abstract = abstractSection
+    }
 
     deFrontedHtml = deFrontedHtml.replace(
       `<section class="abstractSection">${abstractSection}</section>`,
@@ -559,9 +591,13 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const { deFootnotedHtml, fnSection } = makeFootnotesSection(html)
 
+  // TODO: 0.5 deal with table cells
+
+  const { deTabledHtml } = fixTableCells(deFootnotedHtml)
+
   // 1. deal with appendices
 
-  const { deAppendixedHtml, appendices } = makeAppendices(deFootnotedHtml)
+  const { deAppendixedHtml, appendices } = makeAppendices(deTabledHtml)
 
   // 2. deal with citations
 

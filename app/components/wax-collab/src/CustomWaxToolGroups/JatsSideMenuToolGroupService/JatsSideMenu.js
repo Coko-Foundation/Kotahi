@@ -42,7 +42,7 @@ class JatsSideMenu extends ToolGroup {
     const first = {
       id: '1',
       title: 'Back matter tools',
-      icon: 'title',
+      icon: 'chapterList',
       disabled: false,
       component: (
         <BlockLevelTools
@@ -60,7 +60,7 @@ class JatsSideMenu extends ToolGroup {
     const second = {
       id: '2',
       title: 'Front matter tools',
-      icon: 'title', // what can this be?
+      icon: 'codeBlock',
       disabled: false,
       component: (
         <BlockLevelTools

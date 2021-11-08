@@ -60,9 +60,9 @@ export const CommentTrackToolsContainer = styled.div`
 export const CommentTrackTools = styled.div`
   display: flex;
   font-size: 12px;
-  /* margin-left: auto; */
-  /* position: relative; */
-  white-space: nowrap;
+  margin-left: auto;
+  position: relative;
+  /* white-space: nowrap; */
   z-index: 1;
 `
 
@@ -71,6 +71,6 @@ export const CommentTrackOptions = styled.div`
   display: flex;
   margin-left: 10px;
   max-width: 100%;
-  overflow-x: auto;
+  /* overflow-x: auto; */
   position: relative;
 `
