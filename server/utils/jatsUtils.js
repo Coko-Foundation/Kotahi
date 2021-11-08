@@ -36,6 +36,8 @@ const tagsToIgnore = [
   'tbody',
   'tr',
   'td',
+  'math-inline',
+  'math-display',
 ]
 
 const convertRemainingTags = markup => {
@@ -453,6 +455,7 @@ const makeCitations = html => {
       }
     }
     // 2.2. Get all the mixed citations out, add to refList
+    // NOTE: we are deleting anything in the ref-list that isn't a mixed citation!
 
     while (thisRefList.indexOf('<p class="mixedcitation">') > -1) {
       const thisCitation = thisRefList
@@ -478,6 +481,10 @@ const makeCitations = html => {
 
   // 2.4 deal with any loose mixed citations in the body:
   // they're pulled out of the body and added to the ref-list
+  // QUESTION: Is this the right thing to do? It isn't necessarily what the user expects.
+  // Theoretically you could have a <ref-list> at the end of a <sec> though why you would want
+  // that is not clear to me. <mixed-citation> by itself isn't valid in a <sec> (even wrapped in <ref>).
+  // The alternative would just be to delete the loose <mixed-citations>?
 
   while (deCitedHtml.indexOf('<p class="mixedcitation">') > -1) {
     const thisCitation = deCitedHtml
@@ -523,6 +530,7 @@ const makeFrontMatter = html => {
 
     if (frontMatter.indexOf('<section class="abstractSection">') > -1) {
       // we are only taking the first one.
+      // if there is more than one abstract, subsequent ones will be ignored
       abstract = frontMatter
         .split('<section class="abstractSection">')[1]
         .split('</section>')[0]
@@ -540,6 +548,11 @@ const makeFrontMatter = html => {
     const abstractSection = deFrontedHtml
       .split('<section class="abstractSection">')[1]
       .split('</section>')[0]
+
+    if (!abstract) {
+      // if we have not found an abstract so far, take this abstract (not in a front matter) as the absact
+      abstract = abstractSection
+    }
 
     deFrontedHtml = deFrontedHtml.replace(
       `<section class="abstractSection">${abstractSection}</section>`,

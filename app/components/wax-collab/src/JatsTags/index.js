@@ -50,7 +50,8 @@ class JatsTagsService extends Service {
     })
     createNode({
       refList: {
-        content: 'referenceHeader? mixedCitation*',
+        content: 'block+',
+        // content: 'referenceHeader? mixedCitation*', // this was more specific
         group: 'block',
         defining: true,
         attrs: {
