@@ -372,6 +372,25 @@ const makeFootnotesSection = html => {
   return { deFootnotedHtml, fnSection }
 }
 
+const fixTableCells = html => {
+  // This runs the content of <td>s individually though htmlToJats
+  // This doesn't deal with <th>s though I don't think we're getting them.
+
+  let deTabledHtml = html
+
+  while (deTabledHtml.indexOf('<td>') > -1) {
+    const tableCellContent = deTabledHtml.split('<td>')[1].split('</td>')[0]
+    deTabledHtml = deTabledHtml.replace(
+      `<td>${tableCellContent}`,
+      `<!td!>${htmlToJats(tableCellContent)}`,
+    )
+  }
+
+  deTabledHtml = deTabledHtml.replaceAll('<!td!>', '<td>')
+
+  return { deTabledHtml }
+}
+
 const makeAppendices = html => {
   let deAppendixedHtml = html
   let appCount = 0 // this is to give appendices IDs
@@ -572,9 +591,13 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const { deFootnotedHtml, fnSection } = makeFootnotesSection(html)
 
+  // TODO: 0.5 deal with table cells
+
+  const { deTabledHtml } = fixTableCells(deFootnotedHtml)
+
   // 1. deal with appendices
 
-  const { deAppendixedHtml, appendices } = makeAppendices(deFootnotedHtml)
+  const { deAppendixedHtml, appendices } = makeAppendices(deTabledHtml)
 
   // 2. deal with citations
 
