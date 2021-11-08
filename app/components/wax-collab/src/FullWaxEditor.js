@@ -67,10 +67,10 @@ const FullWaxEditor = ({
               ? FullWaxEditorCommentsLayout(readonly, authorComments)
               : FullWaxEditorLayout(readonly)
           }
-          onBlur={val => {
-            onChange && onChange(val)
-            onBlur && onBlur(val)
-          }}
+          // onBlur={val => {
+          //   onChange && onChange(val)
+          //   onBlur && onBlur(val)
+          // }}
           // onChange={debounceChange}
           placeholder={placeholder}
           readonly={readonly}

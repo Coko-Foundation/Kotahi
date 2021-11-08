@@ -53,7 +53,7 @@ const EditorSection = ({
     <FullWaxEditor
       authorComments={isAuthorMode}
       onBlur={readonly && !isAuthorMode ? null : onBlur}
-      onChange={readonly && !isAuthorMode ? null : onChange}
+      // onChange={readonly && !isAuthorMode ? null : onChange}
       readonly={readonly}
       useComments={
         !!(

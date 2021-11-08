@@ -62,7 +62,7 @@ export const CommentTrackTools = styled.div`
   font-size: 12px;
   margin-left: auto;
   position: relative;
-  white-space: nowrap;
+  /* white-space: nowrap; */
   z-index: 1;
 `
 
