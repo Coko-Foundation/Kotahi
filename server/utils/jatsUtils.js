@@ -322,7 +322,7 @@ const makeArticleMeta = (metadata, abstract, title) => {
     thisArticleMeta += `<issue>${formData.issueNumber}</issue>`
   }
 
-  if (formData.abstract) {
+  if (abstract || formData.abstract) {
     // TODO: note that the quotes in submission.abstract can be escaped. Does this break our parser?
     thisArticleMeta += `<abstract>${htmlToJats(
       abstract || formData.abstract,
