@@ -67,6 +67,13 @@ const FullWaxEditor = ({
               ? FullWaxEditorCommentsLayout(readonly, authorComments)
               : FullWaxEditorLayout(readonly)
           }
+          onChange={() => {
+            // This only fires in read-only mode if an author comment has been added.
+            // We don't need to debounce because the comment has been added to the editor content.
+            if (readonly) {
+              onBlur(editorRef.current.getContent())
+            }
+          }}
           // onBlur={val => {
           //   onChange && onChange(val)
           //   onBlur && onBlur(val)
