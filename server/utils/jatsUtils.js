@@ -451,7 +451,8 @@ const makeCitations = html => {
   let deCitedHtml = html
   let refList = '' // this is the ref-list that we're building
   let refListHeader = '' // if there's a header, it goes in here
-  let refCount = 0 // this is for ID numbering
+  let refCount = 0 // this is to give refs IDs
+  const potentialRefs = []
 
   while (deCitedHtml.indexOf('<section class="reflist">') > -1) {
     let thisRefList = deCitedHtml
@@ -476,20 +477,69 @@ const makeCitations = html => {
     // 2.2. Get all the mixed citations out, add to refList
     // NOTE: we are deleting anything in the ref-list that isn't a mixed citation!
 
+    // <p class=\"paragraph\">
+    // <p class=\"mixedcitation\">
+    // <li>
+    // const regexp = /<li>.*<p class=\"paragraph\">.*<p class=\"mixedcitation\">/g
+    // const array = [...str.matchAll(regexp)];
+
+    // first, go through and identify all possible mixed citations
+
     while (thisRefList.indexOf('<p class="mixedcitation">') > -1) {
       const thisCitation = thisRefList
         .split('<p class="mixedcitation">')[1]
         .split('</p>')[0]
 
+      if (thisCitation.length) {
+        potentialRefs[
+          html.indexOf(`<p class="mixedcitation">${thisCitation}</p>`)
+        ] = thisCitation
+      }
+
       thisRefList = thisRefList.replace(
         `<p class="mixedcitation">${thisCitation}</p>`,
         ``,
       )
-      refList += `<ref id="ref-${refCount}"><mixed-citation>${htmlToJats(
-        thisCitation,
-      )}</mixed-citation></ref>`
-      refCount += 1
     }
+
+    while (thisRefList.indexOf('<p class="paragraph">') > -1) {
+      const thisCitation = thisRefList
+        .split('<p class="paragraph">')[1]
+        .split('</p>')[0]
+
+      if (thisCitation.length) {
+        potentialRefs[
+          html.indexOf(`<p class="paragraph">${thisCitation}</p>`)
+        ] = thisCitation
+      }
+
+      thisRefList = thisRefList.replace(
+        `<p class="paragraph">${thisCitation}</p>`,
+        ``,
+      )
+    }
+
+    while (thisRefList.indexOf('<li>') > -1) {
+      const thisCitation = thisRefList.split('<li>')[1].split('</li>')[0]
+
+      if (thisCitation.length) {
+        potentialRefs[html.indexOf(`<li>${thisCitation}</li>`)] = thisCitation
+      }
+
+      thisRefList = thisRefList.replace(`<li>${thisCitation}</li>`, ``)
+    }
+
+    const myRefs = potentialRefs.filter(x => x)
+
+    refList += myRefs
+      .map(
+        (thisCitation, index) =>
+          `<ref id="ref-${index}"><mixed-citation>${htmlToJats(
+            thisCitation,
+          )}</mixed-citation></ref>`,
+      )
+      .join('')
+    refCount = myRefs.length
   }
 
   // 2.3 deal with any stray reference headers in the body—they become regular H1s.
