@@ -519,6 +519,12 @@ export default css`
       position: absolute;
       top: -4px;
     }
+
+    & p {
+      &:before {
+        content: '§ ';
+      }
+    }
   }
 
   h1.referenceheader {
