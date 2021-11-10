@@ -474,14 +474,7 @@ const makeCitations = html => {
         refList = `<title>${refListHeader}</title>${refList}`
       }
     }
-    // 2.2. Get all the mixed citations out, add to refList
-    // NOTE: we are deleting anything in the ref-list that isn't a mixed citation!
-
-    // <p class=\"paragraph\">
-    // <p class=\"mixedcitation\">
-    // <li>
-    // const regexp = /<li>.*<p class=\"paragraph\">.*<p class=\"mixedcitation\">/g
-    // const array = [...str.matchAll(regexp)];
+    // 2.2. Get all the citations out, add to refList
 
     // first, go through and identify all possible mixed citations
 
@@ -502,6 +495,8 @@ const makeCitations = html => {
       )
     }
 
+    // next, take all regular paragraphs as citations
+
     while (thisRefList.indexOf('<p class="paragraph">') > -1) {
       const thisCitation = thisRefList
         .split('<p class="paragraph">')[1]
@@ -518,6 +513,8 @@ const makeCitations = html => {
         ``,
       )
     }
+
+    // finally, if there are <li>s with content, take them as citations.
 
     while (thisRefList.indexOf('<li>') > -1) {
       const thisCitation = thisRefList.split('<li>')[1].split('</li>')[0]
