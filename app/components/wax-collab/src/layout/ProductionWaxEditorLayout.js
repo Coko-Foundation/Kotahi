@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useState, useEffect } from 'react'
 import { WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
 import { DocumentHelpers } from 'wax-prosemirror-utilities'
+import PanelGroup from 'react-panelgroup'
 import {
   NotesAreaContainer,
   ReadOnlyNotesAreaContainer,
@@ -15,6 +16,8 @@ import {
   InfoContainer,
   ReadOnlyEditorDiv,
   SideMenu,
+  EditorArea,
+  WaxSurfaceScroll,
 } from './EditorStyles'
 import {
   CommentsContainer,
@@ -95,6 +98,14 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
     }
   }
 
+  let surfaceHeight = (window.innerHeight / 5) * 3
+  let notesHeight = (window.innerHeight / 5) * 2
+
+  const onResizeEnd = arr => {
+    surfaceHeight = arr[0].size
+    notesHeight = arr[1].size
+  }
+
   return (
     <div style={fullScreenStyles}>
       <Grid readonly={readOnly} readOnlyComments={readOnlyComments}>
@@ -110,35 +121,49 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
             <Menu>
               <TopBar />
             </Menu>
-            <ProductionEditorDiv className="wax-surface-scroll">
+            <ProductionEditorDiv>
               <SideMenu>
                 <LeftSideBar />
               </SideMenu>
-              <EditorContainer>{editor}</EditorContainer>
-              <CommentsContainer>
-                <CommentTrackToolsContainer>
-                  <CommentTrackTools>
-                    {commentsTracksCount + trackBlockNodesCount} COMMENTS AND
-                    SUGGESTIONS
-                    <CommentTrackOptions>
-                      <CommentTrackToolBar />
-                    </CommentTrackOptions>
-                  </CommentTrackTools>
-                </CommentTrackToolsContainer>
-                <RightArea area="main" />
-              </CommentsContainer>
+
+              <EditorArea>
+                <PanelGroup
+                  direction="column"
+                  onResizeEnd={onResizeEnd}
+                  panelWidths={[
+                    { size: surfaceHeight, resize: 'stretch' },
+                    { size: notesHeight, resize: 'resize' },
+                  ]}
+                >
+                  <WaxSurfaceScroll>
+                    <EditorContainer>{editor}</EditorContainer>
+                    <CommentsContainer>
+                      <CommentTrackToolsContainer>
+                        <CommentTrackTools>
+                          {commentsTracksCount + trackBlockNodesCount} COMMENTS
+                          AND SUGGESTIONS
+                          <CommentTrackOptions>
+                            <CommentTrackToolBar />
+                          </CommentTrackOptions>
+                        </CommentTrackTools>
+                      </CommentTrackToolsContainer>
+                      <RightArea area="main" />
+                    </CommentsContainer>
+                  </WaxSurfaceScroll>
+                  {hasNotes && (
+                    <NotesAreaContainer className="productionnotes">
+                      <NotesHeading>Notes</NotesHeading>
+                      <NotesContainer id="notes-container">
+                        <NotesArea view={main} />
+                      </NotesContainer>
+                      <CommentsContainerNotes>
+                        <RightArea area="notes" />
+                      </CommentsContainerNotes>
+                    </NotesAreaContainer>
+                  )}
+                </PanelGroup>
+              </EditorArea>
             </ProductionEditorDiv>
-            {hasNotes && (
-              <NotesAreaContainer className="productionnotes">
-                <NotesHeading>Notes</NotesHeading>
-                <NotesContainer id="notes-container">
-                  <NotesArea view={main} />
-                </NotesContainer>
-                <CommentsContainerNotes>
-                  <RightArea area="notes" />
-                </CommentsContainerNotes>
-              </NotesAreaContainer>
-            )}
           </>
         )}
       </Grid>
