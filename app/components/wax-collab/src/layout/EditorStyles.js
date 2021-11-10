@@ -229,19 +229,9 @@ export const SimpleInfoContainer = styled.div`
 // this is for ProductionWaxEditor //
 
 export const ProductionEditorDiv = styled.div`
-  background-color: ${th('colorBackground')};
-  border: 1px solid ${th('colorBorder')};
-  border-radius: 0 0 ${th('borderRadius')} ${th('borderRadius')};
-  border-top: none;
-  box-sizing: border-box;
   display: flex;
-  grid-area: editor;
+  flex-grow: 1;
   height: 100%;
-  min-height: 500px;
-  overflow: auto;
-  padding: 16px;
-  position: relative;
-  width: 100%;
 
   .error & {
     border: 1px solid ${th('colorError')};
@@ -250,10 +240,24 @@ export const ProductionEditorDiv = styled.div`
   /* stylelint-disable-next-line order/properties-alphabetical-order */
   ${EditorElements}
 `
+export const EditorArea = styled.div`
+  flex-grow: 1;
+`
 
 export const SideMenu = styled.div`
   background: ${th('colorBackgroundToolBar')};
   border-right: ${th('borderWidth')} ${th('borderStyle')} ${th('colorBorder')};
   height: calc(100% - 16px);
   min-width: 250px;
+`
+export const WaxSurfaceScroll = styled.div`
+  box-sizing: border-box;
+  display: flex;
+  height: 100%;
+  overflow-y: auto;
+  position: absolute;
+  width: 100%;
+
+  /* stylelint-disable-next-line order/properties-alphabetical-order */
+  ${EditorElements}
 `
