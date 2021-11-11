@@ -38,6 +38,11 @@ const tagsToIgnore = [
   'td',
   'math-inline',
   'math-display',
+  'bold',
+  'disp-quote',
+  'italic',
+  'underline',
+  'list-item',
 ]
 
 const convertRemainingTags = markup => {
@@ -591,7 +596,7 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const { deFootnotedHtml, fnSection } = makeFootnotesSection(html)
 
-  // TODO: 0.5 deal with table cells
+  // 0.5 deal with table cells
 
   const { deTabledHtml } = fixTableCells(deFootnotedHtml)
 
