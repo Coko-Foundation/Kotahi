@@ -231,7 +231,7 @@ export const SimpleInfoContainer = styled.div`
 export const ProductionEditorDiv = styled.div`
   display: flex;
   flex-grow: 1;
-  height: 100%;
+  min-height: 700px;
 
   .error & {
     border: 1px solid ${th('colorError')};
