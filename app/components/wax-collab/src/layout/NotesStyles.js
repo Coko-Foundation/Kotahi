@@ -9,8 +9,8 @@ export const NotesAreaContainer = styled.div`
   grid-column-start: editorCol;
   grid-row-start: notesRow;
   /* height: 20vh;
-  overflow-y: scroll; */
-  position: sticky;
+  overflow-y: scroll;
+  position: sticky; */
   width: 100%;
 
   &.productionnotes {
