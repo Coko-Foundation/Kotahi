@@ -148,6 +148,8 @@ const getIssueYear = manuscript => {
   return yearString
 }
 
+const emailRegex = /^[\p{L}\p{N}!/+\-_]+(\.[\p{L}\p{N}!/+\-_]+)*@[\p{L}\p{N}!/+\-_]+(\.[\p{L}_-]+)+$/u
+
 /** Send submission to register an article, with appropriate metadata */
 const publishArticleToCrossref = async manuscript => {
   if (!manuscript.submission)
@@ -158,6 +160,10 @@ const publishArticleToCrossref = async manuscript => {
     throw new Error('Manuscript has no submission.authors field')
   if (!Array.isArray(manuscript.submission.authors))
     throw new Error('Manuscript.submission.authors is not an array')
+  if (!emailRegex.test(config.crossref.depositorEmail))
+    throw new Error(
+      `Depositor email address "${config.crossref.depositorEmail}" is misconfigured`,
+    )
 
   const issueYear = getIssueYear(manuscript)
   const publishDate = new Date()
