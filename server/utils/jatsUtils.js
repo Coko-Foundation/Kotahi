@@ -102,11 +102,16 @@ const insertSections = markup => {
   return result
 }
 
+/** Replace <a href="..."> with <ext-link ...> ONLY IF the target starts with 'http://', 'https://' or 'ftp://'.
+ * For other targets such as '#ref1' or 'mailto:a@b.com', just strip the <a> tags off leaving the inner content.
+ */
 const convertLinks = markup => {
-  return markup.replace(
-    /<a href="([^"]+)"[^>]*>((?:(?!<\/a>)[\s\S])+)<\/a>/g,
-    '<ext-link ext-link-type="uri" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="$1">$2</ext-link>',
-  )
+  return markup
+    .replace(
+      /<a href="((?:https?|ftp):\/\/[^"\s]+)"[^>]*>((?:(?!<\/a>)[\s\S])+)<\/a>/g,
+      '<ext-link ext-link-type="uri" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="$1">$2</ext-link>',
+    )
+    .replace(/<a\b[^>]*>((?:(?!<\/a>)[\s\S])+)<\/a>/g, '$1')
 }
 
 const convertLists = markup => {
