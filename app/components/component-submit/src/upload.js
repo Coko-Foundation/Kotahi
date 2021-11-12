@@ -2,6 +2,7 @@ import config from 'config'
 import request from 'pubsweet-client/src/helpers/api'
 import { gql } from '@apollo/client'
 import currentRolesVar from '../../../shared/currentRolesVar'
+import cleanMathMarkup from './cleanMathMarkup'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -223,6 +224,8 @@ export default ({
       } else {
         uploadResponse = await DocxToHTMLPromise(file, data)
       }
+
+      uploadResponse.response = cleanMathMarkup(uploadResponse.response)
 
       manuscriptData = await createManuscriptPromise(
         file,

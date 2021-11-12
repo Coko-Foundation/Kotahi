@@ -84,7 +84,7 @@ services:
       - ./uploads:/home/node/app/uploads
 
   job-xsweet:
-    image: pubsweet/job-xsweet:1.5.2
+    image: pubsweet/job-xsweet:1.5.3
     depends_on:
       - server
     command:
