@@ -11,6 +11,7 @@ import EditorSection from '../decision/EditorSection'
 import { Columns, Manuscript, Chat } from '../../../../shared'
 import MessageContainer from '../../../../component-chat/src'
 import ArticleEvaluationSummaryPage from '../../../../component-decision-viewer'
+import SharedReviewerGroupReviews from './SharedReviewerGroupReviews'
 
 const hasManuscriptFile = manuscript =>
   !!manuscript?.files?.find(file => file.fileType === 'manuscript')
@@ -69,6 +70,10 @@ const ReviewLayout = ({
             manuscript={msVersion}
             showEditorOnlyFields={false}
           />
+          <SharedReviewerGroupReviews
+            manuscript={msVersion}
+            reviewerId={currentUser.id}
+          />
           <Review
             review={msVersion.reviews?.find(
               r => r.user?.id === currentUser.id && !r.isDecision,
@@ -93,6 +98,10 @@ const ReviewLayout = ({
             form={submissionForm}
             manuscript={latestVersion}
             showEditorOnlyFields={false}
+          />
+          <SharedReviewerGroupReviews
+            manuscript={latestVersion}
+            reviewerId={currentUser.id}
           />
           {status === 'completed' ? (
             <Review review={review} />

@@ -80,6 +80,7 @@ const fragmentFields = `
         username
       }
       status
+      isShared
     }
   }
   status
@@ -338,17 +339,22 @@ const ReviewPage = ({ match, ...props }) => {
     history.push(`${urlFrag}/dashboard`)
   }
 
+  const initialValues = {
+    ...(latestVersion.reviews?.find(
+      review => review?.user?.id === currentUser?.id && !review.isDecision,
+    ) || {
+      id: null,
+      comments: [],
+      recommendation: null,
+    }),
+  }
+
+  if (!initialValues.canBePublishedPublicly)
+    initialValues.canBePublishedPublicly = false
+
   return (
     <Formik
-      initialValues={
-        latestVersion.reviews?.find(
-          review => review?.user?.id === currentUser?.id && !review.isDecision,
-        ) || {
-          id: null,
-          comments: [],
-          recommendation: null,
-        }
-      }
+      initialValues={initialValues}
       onSubmit={values =>
         handleSubmit({
           reviewId: existingReview.current.id,

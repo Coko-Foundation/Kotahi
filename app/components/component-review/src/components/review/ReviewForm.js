@@ -144,6 +144,25 @@ const ReviewComment = ({ manuscriptId, updateReview }) => (
         </Field>
       </div>
     </AdminSection>
+    {process.env.INSTANCE_NAME === 'colab' && (
+      <Field key="canBePublishedPublicly" name="canBePublishedPublicly">
+        {formikBag => {
+          return (
+            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+              <Checkbox
+                {...formikBag.field}
+                checked={formikBag.field.value}
+                label="I consent to this review being published publicly."
+                onChange={e => {
+                  formikBag.field.onChange(e)
+                  updateReview({ canBePublishedPublicly: e.target.checked })
+                }}
+              />
+            </div>
+          )
+        }}
+      </Field>
+    )}
     <AdminSection>
       <div name="confidential">
         <Field key="confidentialField" name="confidentialComment">
@@ -177,25 +196,6 @@ const ReviewComment = ({ manuscriptId, updateReview }) => (
         </Field>
       </div>
     </AdminSection>
-    {process.env.INSTANCE_NAME === 'colab' && (
-      <Field key="canBePublishedPublicly" name="canBePublishedPublicly">
-        {formikBag => {
-          return (
-            <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
-              <Checkbox
-                {...formikBag.field}
-                checked={formikBag.field.value}
-                label="I accept review can be published publicly."
-                onChange={e => {
-                  formikBag.field.onChange(e)
-                  updateReview({ canBePublishedPublicly: e.target.checked })
-                }}
-              />
-            </div>
-          )
-        }}
-      </Field>
-    )}
   </>
 )
 
