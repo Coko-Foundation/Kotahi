@@ -45,6 +45,10 @@ const cokoTheme = {
   colorTextReverse: '#FFF',
   colorTextPlaceholder: '#595959',
   colorWarning: '#ffc107',
+  colorWarningLight: '#fff9ed',
+  colorWarningDark: '#503303',
+  colorSuccessLight: '#d2ffcc',
+  colorSuccessDark: '#17510F',
 
   /* Text variables */
 

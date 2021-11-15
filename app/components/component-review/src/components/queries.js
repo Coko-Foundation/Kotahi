@@ -203,9 +203,16 @@ export const makeDecisionMutation = gql`
 export const publishManuscriptMutation = gql`
   mutation($id: ID!) {
     publishManuscript(id: $id) {
-      id
-      published
-      status
+      manuscript {
+        id
+        published
+        status
+      }
+      steps {
+        stepLabel
+        succeeded
+        errorMessage
+      }
     }
   }
 `
