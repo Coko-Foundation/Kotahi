@@ -610,7 +610,10 @@ const resolvers = {
       const update = {} // This will collect any properties we may want to update in the DB
       update.published = new Date()
 
+      const steps = []
+
       if (config.crossref.login) {
+        const stepLabel = 'Crossref'
         const containsEvaluations = hasEvaluations(manuscript)
 
         // A 'published' article without evaluations will become 'evaluated'.
@@ -618,19 +621,36 @@ const resolvers = {
         // but that only articles with evaluations can be 'published'.
         update.status = containsEvaluations ? 'published' : 'evaluated'
 
+        let succeeded
+        let errorMessage
+
         if (containsEvaluations || manuscript.status !== 'evaluated') {
           try {
             await publishToCrossref(manuscript)
+            succeeded = true
           } catch (e) {
             console.error('error publishing to crossref')
             console.error(e)
+            succeeded = false
+            errorMessage = e
           }
         }
+
+        steps.push({
+          stepLabel,
+          succeeded,
+          errorMessage,
+        })
       }
 
       if (process.env.INSTANCE_NAME === 'ncrc') {
+        let succeeded
+        let errorMessage
+        let stepLabel
+
         try {
           if (await publishToGoogleSpreadSheet(manuscript)) {
+            stepLabel = 'Google Spreadsheet'
             update.status = 'published'
             update.submission = {
               ...manuscript.submission,
@@ -640,13 +660,20 @@ const resolvers = {
         } catch (e) {
           console.error('error while publishing in google spreadsheet')
           console.error(e)
+          succeeded = false
+          errorMessage = e
           return null
         }
+
+        steps.push(succeeded, errorMessage, stepLabel)
       } else if (['colab'].includes(process.env.INSTANCE_NAME)) {
         // TODO: A note in the code said that for Colab instance, submission.editDate should be updated. Is this true? (See commonUpdateManuscript() for example code.)
       }
 
       if (config.hypothesis.apiKey) {
+        const stepLabel = 'Hypothesis'
+        let succeeded
+        let errorMessage
         if (!manuscript.evaluationsHypothesisMap)
           manuscript.evaluationsHypothesisMap = {}
 
@@ -654,19 +681,29 @@ const resolvers = {
           update.evaluationsHypothesisMap = await publishToHypothesis(
             manuscript,
           )
+          succeeded = true
         } catch (err) {
           let message = 'Publishing to hypothes.is failed!\n'
           if (err.response) {
             message += `${err.response.status} ${err.response.statusText}\n`
             message += `${JSON.stringify(err.response.data)}`
           } else message += err.toString()
+          succeeded = false
+          errorMessage = message
           throw new Error(message)
         }
+
+        steps.push(stepLabel, succeeded, errorMessage)
       }
 
       tryPublishingWebhook(manuscript.id)
 
-      return ctx.models.Manuscript.query().updateAndFetchById(id, update)
+      const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
+        id,
+        update,
+      )
+
+      return { manuscript: updatedManuscript, steps }
     },
   },
   Subscription: {
@@ -979,7 +1016,7 @@ const typeDefs = `
     assignTeamEditor(id: ID!, input: String): [Team]
     addReviewer(manuscriptId: ID!, userId: ID!): Team
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
-    publishManuscript(id: ID!): Manuscript
+    publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript
     importManuscripts: PaginatedManuscripts
   }
@@ -1038,6 +1075,17 @@ const typeDefs = `
   input ManuscriptMetaInput {
     title: String
     source: String
+  }
+
+  type PublishingResult {
+    manuscript: Manuscript
+    steps: [PublishingStepResult]!
+  }
+
+  type PublishingStepResult {
+    stepLabel: String!
+    succeeded: Boolean!
+    errorMessage: String
   }
 
   input FileInput {
