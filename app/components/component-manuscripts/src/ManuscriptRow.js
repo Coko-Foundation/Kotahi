@@ -44,6 +44,15 @@ import {
   getFieldValueAndDisplayValue,
 } from '../../../shared/manuscriptUtils'
 
+import styled from 'styled-components';
+// import { Button, Checkbox } from '@pubsweet/ui'
+
+const StyledCheckboxTable = styled(Checkbox)`
+  height: 16px;
+  width: 18px;
+  margin-right: 15px;
+`
+
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const updateUrlParameter = (url, param, value) => {
@@ -71,7 +80,7 @@ const renderManuscriptCell = ({
           {process.env.INSTANCE_NAME === 'colab' &&
             manuscript.status === articleStatuses.new &&
             !manuscript.submission.labels && (
-              <Checkbox
+              <StyledCheckboxTable
                 checked={selectedNewManuscripts.includes(manuscript.id)}
                 onChange={() => toggleNewManuscriptCheck(manuscript.id)}
               />
@@ -115,7 +124,7 @@ const renderManuscriptCell = ({
           <StyledDescriptionWrapper>
             {manuscript.status === articleStatuses.new &&
               !manuscript.submission.labels && (
-                <Checkbox
+                <StyledCheckboxTable
                   checked={selectedNewManuscripts.includes(manuscript.id)}
                   onChange={() => toggleNewManuscriptCheck(manuscript.id)}
                 />
