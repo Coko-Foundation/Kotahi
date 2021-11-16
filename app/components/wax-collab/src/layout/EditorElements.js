@@ -353,6 +353,7 @@ export default css`
 
   math-display .math-render {
     display: block;
+    text-align: center;
   }
 
   math-display.ProseMirror-selectednode {

@@ -7336,6 +7336,11 @@ commander@2.17.x:
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.17.1.tgz#bd77ab7de6de94205ceacc72f1716d29f20a77bf"
   integrity sha512-wPMUt6FnH2yzG95SA6mzjQOEKUU3aLaDEmzs1ti+1E9h+CsrZghRlqEM/EJ4KscsQVG8uNN4uVreUeT8+drlgg==
 
+commander@>=7.0.0:
+  version "8.3.0"
+  resolved "https://registry.yarnpkg.com/commander/-/commander-8.3.0.tgz#4837ea1b2da67b9c616a67afbb0fafee567bca66"
+  integrity sha512-OkTL9umf+He2DZkUq8f8J9of7yL6RJKI24dVITBmNfZBmri9zYZQrKkuXiKhyfPSu8tUhnVBB1iKXevvnlR4Ww==
+
 commander@^2.18.0, commander@^2.19.0, commander@^2.20.0, commander@^2.20.3:
   version "2.20.3"
   resolved "https://registry.yarnpkg.com/commander/-/commander-2.20.3.tgz#fd485e84c03eb4881c20722ba48035e8531aeb33"
@@ -13804,13 +13809,6 @@ jws@^4.0.0:
     jwa "^2.0.0"
     safe-buffer "^5.0.1"
 
-katex@^0.12.0:
-  version "0.12.0"
-  resolved "https://registry.yarnpkg.com/katex/-/katex-0.12.0.tgz#2fb1c665dbd2b043edcf8a1f5c555f46beaa0cb9"
-  integrity sha512-y+8btoc/CK70XqcHqjxiGWBOeIL8upbS0peTPXTvgrh21n1RiWWcIpSWM+4uXq+IAgNh9YYQWdc7LVDPDAEEAg==
-  dependencies:
-    commander "^2.19.0"
-
 keyv@^3.0.0:
   version "3.1.0"
   resolved "https://registry.yarnpkg.com/keyv/-/keyv-3.1.0.tgz#ecc228486f69991e49e9476485a5be1e8fc5c4d9"
@@ -14515,6 +14513,15 @@ math-random@^1.0.1:
   resolved "https://registry.yarnpkg.com/math-random/-/math-random-1.0.4.tgz#5dd6943c938548267016d4e34f057583080c514c"
   integrity sha512-rUxjysqif/BZQH2yhd5Aaq7vXMSx9NdEsQcyA07uEzIvxgI7zIr33gGsh+RU0/XjmQpCW7RsVof1vlkvQVCK5A==
 
+mathjax-full@3.1.4:
+  version "3.1.4"
+  resolved "https://registry.yarnpkg.com/mathjax-full/-/mathjax-full-3.1.4.tgz#ec9c51abf55b427e0fd54760ca9478d439406e59"
+  integrity sha512-80lZZci7vqQQV2wdLcnFUtI7z5Aru0RL03wPw8JM6kFPmX4CA/SYfnlQQ1WIIBU+0p0YoxJ6Z3gAUcVzvDArhw==
+  dependencies:
+    esm "^3.2.25"
+    mj-context-menu "^0.6.1"
+    speech-rule-engine "^3.2.0"
+
 mathml-tag-names@^2.1.3:
   version "2.1.3"
   resolved "https://registry.yarnpkg.com/mathml-tag-names/-/mathml-tag-names-2.1.3.tgz#4ddadd67308e780cf16a47685878ee27b736a0a3"
@@ -15025,6 +15032,11 @@ mixin-object@^2.0.1:
   dependencies:
     for-in "^0.1.3"
     is-extendable "^0.1.1"
+
+mj-context-menu@^0.6.1:
+  version "0.6.1"
+  resolved "https://registry.yarnpkg.com/mj-context-menu/-/mj-context-menu-0.6.1.tgz#a043c5282bf7e1cf3821de07b13525ca6f85aa69"
+  integrity sha512-7NO5s6n10TIV96d4g2uDpG7ZDpIhMh0QNfGdJw/W47JswFcosz457wqz/b5sAKvl12sxINGFCn80NZHKwxQEXA==
 
 mkdirp@0.x.x, "mkdirp@>=0.5 0", mkdirp@^0.5.0, mkdirp@^0.5.1, mkdirp@^0.5.3, mkdirp@^0.5.4, mkdirp@^0.5.5, mkdirp@~0.5.1:
   version "0.5.5"
@@ -20007,6 +20019,15 @@ specificity@^0.4.1:
   resolved "https://registry.yarnpkg.com/specificity/-/specificity-0.4.1.tgz#aab5e645012db08ba182e151165738d00887b019"
   integrity sha512-1klA3Gi5PD1Wv9Q0wUoOQN1IWAuPu0D1U03ThXTr0cJ20+/iq2tHSDnK7Kk/0LXJ1ztUB2/1Os0wKmfyNgUQfg==
 
+speech-rule-engine@^3.2.0:
+  version "3.3.3"
+  resolved "https://registry.yarnpkg.com/speech-rule-engine/-/speech-rule-engine-3.3.3.tgz#781ed03cbcf3279f94d1d80241025ea954c6d571"
+  integrity sha512-0exWw+0XauLjat+f/aFeo5T8SiDsO1JtwpY3qgJE4cWt+yL/Stl0WP4VNDWdh7lzGkubUD9lWP4J1ASnORXfyQ==
+  dependencies:
+    commander ">=7.0.0"
+    wicked-good-xpath "^1.3.0"
+    xmldom-sre "^0.1.31"
+
 speed-measure-webpack-plugin@1.3.3:
   version "1.3.3"
   resolved "https://registry.yarnpkg.com/speed-measure-webpack-plugin/-/speed-measure-webpack-plugin-1.3.3.tgz#6ff894fc83e8a6310dde3af863a0329cd79da4f5"
@@ -22030,10 +22051,10 @@ watchpack@^1.7.4:
     chokidar "^3.4.1"
     watchpack-chokidar2 "^2.0.1"
 
-wax-prosemirror-components@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-components/-/wax-prosemirror-components-0.1.6.tgz#36e3fa52cc235cff4e17d9108cc5b80f719b645c"
-  integrity sha512-K8Rj4JdIlboUMCw7HU7VCLq3JYE8u4zQY2xzapxAx3zHKI1klC3ToBvcSd2ILDbBPJILlXD0WShVG3wniCcPGQ==
+wax-prosemirror-components@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-components/-/wax-prosemirror-components-0.2.0.tgz#441fa442f3449721e931b93bd2ec49d9a037e7fc"
+  integrity sha512-FHr0Umf1U3DwucPr7wnKuXzah6Hl64u6hXaOz74b22V8NuAkNyhDGyLuBedp7/+FMmxYCLGC8n9NFwwO8GEYLg==
   dependencies:
     "@pubsweet/ui-toolkit" "^2.3.1"
     antd "^4.15.4"
@@ -22049,13 +22070,13 @@ wax-prosemirror-components@^0.1.6:
     styled-components "^5.3.0"
     use-deep-compare-effect "^1.3.1"
     uuid "^7.0.3"
-    wax-prosemirror-core "^0.1.6"
-    wax-prosemirror-utilities "^0.1.6"
+    wax-prosemirror-core "^0.2.0"
+    wax-prosemirror-utilities "^0.2.0"
 
-wax-prosemirror-core@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-core/-/wax-prosemirror-core-0.1.6.tgz#60a959cabfedb5128a6cf80a07fd7152440cae05"
-  integrity sha512-vKmLRk/7Zv3jICg1BGZdjLPvTqotAUF2x58jW62OcyOWc8tfAUKEr/HJnIieAoHf0B6K8EDsC8sWfmVlYLfnmA==
+wax-prosemirror-core@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-core/-/wax-prosemirror-core-0.2.0.tgz#5a9e6bf1496f0d90d109e74f883be67681c21c9b"
+  integrity sha512-dHekL66IIc4fq1LInJl5Pnle3rdcnnfVM7J2d0WIokk+kgMltiWnPPGPC9SOcJNh7yYPG1ODCy6sWPWgeyE0XQ==
   dependencies:
     deepmerge "^4.2.2"
     inversify "^5.0.1"
@@ -22075,40 +22096,40 @@ wax-prosemirror-core@^0.1.6:
     reflect-metadata "^0.1.13"
     styled-components "^5.3.0"
     uuid "^7.0.3"
-    wax-prosemirror-services "^0.1.6"
-    wax-prosemirror-utilities "^0.1.6"
+    wax-prosemirror-services "^0.2.0"
+    wax-prosemirror-utilities "^0.2.0"
 
-wax-prosemirror-plugins@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-plugins/-/wax-prosemirror-plugins-0.1.6.tgz#f1aaaa8aa866e341f523eb0b6e4333c70ed9ce02"
-  integrity sha512-f3tPOaMHTrrTX0gBc2oDERm3c8mmDrIFfZtPeNdAI3FNVFWR1OehPfCiQe9p4upZ3YCLmv9Q2FRCjbRi/XK1AQ==
+wax-prosemirror-plugins@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-plugins/-/wax-prosemirror-plugins-0.2.0.tgz#9b75c64bc33d6f76f86174bc07e02975cb7cb5c5"
+  integrity sha512-MK9PInqTqrENd+YVFLt3R6Bz98a53nTH8+e74r9ngSanT0BXAAst8aH4Rg9RR4Wio9dkcThfdcaV0s9dCWbS8Q==
   dependencies:
     highlight.js "^10.1.1"
-    katex "^0.12.0"
     lodash "^4.17.4"
+    mathjax-full "3.1.4"
     prosemirror-commands "1.1.10"
     prosemirror-highlightjs "^0.2.0"
     prosemirror-keymap "1.1.4"
     prosemirror-state "1.3.3"
     prosemirror-transform "1.2.6"
     prosemirror-view "1.20.1"
-    wax-prosemirror-components "^0.1.6"
-    wax-prosemirror-core "^0.1.6"
-    wax-prosemirror-utilities "^0.1.6"
+    wax-prosemirror-components "^0.2.0"
+    wax-prosemirror-core "^0.2.0"
+    wax-prosemirror-utilities "^0.2.0"
 
-wax-prosemirror-schema@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-schema/-/wax-prosemirror-schema-0.1.6.tgz#5f1e6dcb774bc155b84dcf66cd84566d39201b7d"
-  integrity sha512-nnL7rru7lncUNNVewoNUbYeIeSUXSfv5GtrYcmxHM/vqHEj6chA+w6sNfCDdT97+q4M2firaLx9jjLhF3lPlPQ==
+wax-prosemirror-schema@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-schema/-/wax-prosemirror-schema-0.2.0.tgz#94ec9cadd6da99066ab0b1521ba19c933274e477"
+  integrity sha512-R3aFpKlyovnB7Jt0dL1QL/0ryEras+NiA/SRXTFovsg353UzBYktQ7hcArciMCeDh+WZ2WJHlSKBX3tjThELYA==
   dependencies:
     prosemirror-schema-list "^1.1.4"
     prosemirror-tables "^1.1.1"
-    wax-prosemirror-utilities "^0.1.6"
+    wax-prosemirror-utilities "^0.2.0"
 
-wax-prosemirror-services@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-services/-/wax-prosemirror-services-0.1.6.tgz#b69d944d42ee8ff20ca4dc7607fae6c58ea2bbd2"
-  integrity sha512-BE6AqnrMOUVpy1agwLWyk4GBpmeEC7xL5l2eDeiF5eIg8GETsra3OK4UWVMGGwkrsThvFbC5nKWeIvPy+qrT5Q==
+wax-prosemirror-services@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-services/-/wax-prosemirror-services-0.2.0.tgz#eed683d0efbae4c84be9dd0f9b6bae4e4988fcb6"
+  integrity sha512-zpb9NoKlU2QRMITLwoCkKU2YXJmwGUVVUfDGSCe0iy4fltkffQ+Z1AzBVz9IifLnw8CoUVr+iWEpkAiLfwP6Xg==
   dependencies:
     inversify "^5.0.1"
     inversify-inject-decorators "^3.1.0"
@@ -22125,16 +22146,16 @@ wax-prosemirror-services@^0.1.6:
     styled-components "^5.3.0"
     use-deep-compare-effect "^1.3.1"
     uuid "^7.0.3"
-    wax-prosemirror-components "^0.1.6"
-    wax-prosemirror-core "^0.1.6"
-    wax-prosemirror-plugins "^0.1.6"
-    wax-prosemirror-schema "^0.1.6"
-    wax-prosemirror-utilities "^0.1.6"
+    wax-prosemirror-components "^0.2.0"
+    wax-prosemirror-core "^0.2.0"
+    wax-prosemirror-plugins "^0.2.0"
+    wax-prosemirror-schema "^0.2.0"
+    wax-prosemirror-utilities "^0.2.0"
 
-wax-prosemirror-utilities@^0.1.6:
-  version "0.1.6"
-  resolved "https://registry.yarnpkg.com/wax-prosemirror-utilities/-/wax-prosemirror-utilities-0.1.6.tgz#ecb5a7c6c31cce1211c2fa225e74368718feac44"
-  integrity sha512-oq2ilPuf1oVsbnz4u0Uo4PFZQpznIdGzKAu2FaXTSP5QQLPFFlKAvEdFzw+4UhdhTbCiDMDHOWd/ShA20SFMmw==
+wax-prosemirror-utilities@^0.2.0:
+  version "0.2.0"
+  resolved "https://registry.yarnpkg.com/wax-prosemirror-utilities/-/wax-prosemirror-utilities-0.2.0.tgz#d66c8cab636bb7ca2fe9f0246da00ecd6b0efe84"
+  integrity sha512-zgcvYymiqJkVFmcIC2vimUuBlAEpGymgK0MiYUZfTi74rn/N7raBQpXeL09i1EEPcALVcvPYUs0Y7uJhnKIi+w==
   dependencies:
     prosemirror-commands "1.1.10"
     prosemirror-utils "^0.9.6"
@@ -22504,6 +22525,11 @@ which@^2.0.1:
   dependencies:
     isexe "^2.0.0"
 
+wicked-good-xpath@^1.3.0:
+  version "1.3.0"
+  resolved "https://registry.yarnpkg.com/wicked-good-xpath/-/wicked-good-xpath-1.3.0.tgz#81b0e95e8650e49c94b22298fff8686b5553cf6c"
+  integrity sha1-gbDpXoZQ5JyUsiKY//hoa1VTz2w=
+
 wide-align@^1.1.0:
   version "1.1.3"
   resolved "https://registry.yarnpkg.com/wide-align/-/wide-align-1.1.3.tgz#ae074e6bdc0c14a431e804e624549c633b000457"
@@ -22732,6 +22758,11 @@ xmlchars@^2.2.0:
   version "2.2.0"
   resolved "https://registry.yarnpkg.com/xmlchars/-/xmlchars-2.2.0.tgz#060fe1bcb7f9c76fe2a17db86a9bc3ab894210cb"
   integrity sha512-JZnDKK8B0RCDw84FNdDAIpZK+JuJw+s7Lz8nksI7SIuU3UXJJslUthsi+uWBUYOwPFwW7W7PRLRfUKpxjtjFCw==
+
+xmldom-sre@^0.1.31:
+  version "0.1.31"
+  resolved "https://registry.yarnpkg.com/xmldom-sre/-/xmldom-sre-0.1.31.tgz#10860d5bab2c603144597d04bf2c4980e98067f4"
+  integrity sha512-f9s+fUkX04BxQf+7mMWAp5zk61pciie+fFLC9hX9UVvCeJQfNHRHXpeo5MPcR0EUf57PYLdt+ZO4f3Ipk2oZUw==
 
 xpub-journal@0.1.0:
   version "0.1.0"
