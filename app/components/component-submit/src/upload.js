@@ -223,9 +223,8 @@ export default ({
         }
       } else {
         uploadResponse = await DocxToHTMLPromise(file, data)
+        uploadResponse.response = cleanMathMarkup(uploadResponse.response)
       }
-
-      uploadResponse.response = cleanMathMarkup(uploadResponse.response)
 
       manuscriptData = await createManuscriptPromise(
         file,
