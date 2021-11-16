@@ -21,26 +21,22 @@ const getNextUrl = () => {
   return `${url.searchParams.get('next') || redirectLink}`
 }
 
-// Registeration Link for new User Login
 const RegisterLinkButton = styled.button`
-  display: inline-block;
-  font-size: 1em;
-  margin: 1em;
-  padding: 0.25em 1em;
   border: 0px;
   border-radius: 0px;
   display: block;
+  font-size: 1em;
   font-weight: 500;
+  margin: 1em;
+  padding: 0.25em 1em;
 `
 
-// Registeration user info
-
 const RegisterInfoString = styled.p`
-  font-size: 1rem;
   color: #33444d;
-  text-align: center;
-  padding: 0.15em 1em;
+  font-size: 1rem;
   font-weight: 500;
+  padding: 0.15em 1em;
+  text-align: center;
 `
 
 const LoginButton = styled(Button)`
@@ -147,11 +143,7 @@ const Login = ({ logo = null, ...props }) => {
           >
             Login with ORCID
           </LoginButton>
-          <RegisterLinkButton
-            as="a"
-            href="https://sandbox.orcid.org/"
-            target="_blank"
-          >
+          <RegisterLinkButton as="a" href="/auth/orcid/">
             Register with ORCID
           </RegisterLinkButton>
         </Content>
