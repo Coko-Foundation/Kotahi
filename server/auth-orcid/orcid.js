@@ -45,6 +45,14 @@ module.exports = app => {
           }
         }
 
+        let usersCountString
+
+        try {
+          usersCountString = await User.query().count().pluck('count').first()
+        } catch (err) {
+          console.error(err)
+        }
+
         // TODO: Update the user details on every login, asynchronously
         try {
           if (!user) {
@@ -66,9 +74,12 @@ module.exports = app => {
             }`
             user.defaultIdentity.aff = userDetails.institution || ''
 
-            user.email = userDetails.email || ''
+            user.email = userDetails.email || null
 
-            if (['elife'].includes(process.env.INSTANCE_NAME)) {
+            if (
+              usersCountString === '0' || // The first ever user is automatically made an admin
+              ['elife'].includes(process.env.INSTANCE_NAME) // TODO temporary feature: all logins to elife are automatically made admin
+            ) {
               user.admin = true
             }
 
