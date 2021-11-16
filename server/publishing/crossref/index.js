@@ -9,7 +9,11 @@ const { v4: uuid } = require('uuid')
 
 const { parseDate } = require('../../utils/dateUtils')
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
-const { htmlToJats, getCitationsFromList } = require('../../utils/jatsUtils')
+
+const {
+  htmlToJats,
+  getCrossrefCitationsFromList,
+} = require('../../utils/jatsUtils')
 
 const DOI_PATH_PREFIX = 'https://doi.org/'
 const ABSTRACT_PLACEHOLDER = '‖ABSTRACT‖'
@@ -75,7 +79,7 @@ const getCurrentCrossrefTimestamp = date => {
   )}`
 }
 
-/** Get the list of citations as a fragment of JATS.
+/** Get the list of citations as a fragment of Crossref-flavoured XML.
  * Citations are read from HTML, from either submission.citations or submission.references, with one citation expected per paragraph. */
 const getCitations = manuscript => {
   const rawCitationBlock =
@@ -84,7 +88,7 @@ const getCitations = manuscript => {
   let citations = []
 
   if (typeof rawCitationBlock === 'string') {
-    citations = getCitationsFromList(rawCitationBlock)
+    citations = getCrossrefCitationsFromList(rawCitationBlock)
   }
 
   if (!citations || !citations.length) return null
