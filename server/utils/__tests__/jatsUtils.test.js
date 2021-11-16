@@ -44,4 +44,19 @@ E
 F
 `)
   })
+  test('generalConversion', () => {
+    expect(
+      htmlToJats(`
+<p class="paragraph">
+Abstract containing <strong>bold</strong>, <em>italic</em>, <u>underline</u>,
+<span class="small-caps">smallcaps</span>, <sup>superscript</sup><sub>subscript</sub>
+</p>
+    `),
+    ).toEqual(`
+<p>
+Abstract containing <bold>bold</bold>, <italic>italic</italic>, <underline>underline</underline>,
+<sc>smallcaps</sc>, <sup>superscript</sup><sub>subscript</sub>
+</p>
+    `)
+  })
 })

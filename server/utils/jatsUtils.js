@@ -1,7 +1,7 @@
 const he = require('he')
 // const { lte } = require('semver')
 
-const tagsToConvert = {
+const htmlToJatsTagMap = {
   b: 'bold',
   strong: 'bold',
   blockquote: 'disp-quote',
@@ -20,7 +20,7 @@ const tagsToConvert = {
   // ?: 'tex-math',
 }
 
-const tagsToIgnore = [
+const jatsTagsThatDontNeedConversion = [
   'ext-link',
   'list',
   'sc',
@@ -45,7 +45,12 @@ const tagsToIgnore = [
   'list-item',
 ]
 
-const convertRemainingTags = markup => {
+/** Finds all XML tags and:
+ * converts them to another tag if they are in tagsToConvert (discarding all attributes);
+ * deletes them if they are not in tagsToConvert or tagsToIgnore;
+ * otherwise leaves them untouched
+ * */
+const convertTagsAndRemoveTags = (markup, tagsToConvert, tagsToIgnore) => {
   const openTagRegex = /<([^/>\s]+)(?:(?!\/?>)[\s\S])*>/g
   const closeTagRegex = /<\/([^/>\s]+)>/g
   const selfClosingTagRegex = /<([^/>\s]+)(?:(?!\/?>)[\s\S])*\/>/g
@@ -84,6 +89,13 @@ const convertRemainingTags = markup => {
   result = convertSomeTags(result, selfClosingTagRegex, 'self-close')
   return result
 }
+
+const convertRemainingTags = markup =>
+  convertTagsAndRemoveTags(
+    markup,
+    htmlToJatsTagMap,
+    jatsTagsThatDontNeedConversion,
+  )
 
 const sectionRegexes = [
   /<h1>((?:(?!<\/h1>)[\s\S])*)<\/h1>((?:(?!<h1>)[\s\S])*)/g,
@@ -207,11 +219,41 @@ const htmlToJats = html => {
   return jats
 }
 
-const getCitationsFromList = html => {
-  const jats = htmlToJats(html)
-  // note that the next line breaks storybook on Safari
-  const pContents = jats.match(/(?<=<p>)((?:(?!<\/?p>)[\s\S])*)(?=<\/p>)/g)
-  return pContents
+// note this regex is intended for node, and doesn't work in some browsers (so it breaks Storybook on Safari)
+const paragraphOrListItemRegex = /(?<=<p\b[^>]*>)[\s\S]*?(?=<\/p>)|(?<=<li>)(?:(?!<p\b)[\s\S])*?(?=<\/li>)/g
+
+const getParagraphOrListItems = html => {
+  return html
+    .match(paragraphOrListItemRegex)
+    .map(s => s.trim())
+    .filter(s => !!s)
+}
+
+// TODO Move the following into a separate file crossrefUtils.js; shift some other functions here into htmlUtils.js.
+/** Get Crossref-style citation XML, treating each nonempty paragraph or list item as a separate citation */
+const getCrossrefCitationsFromList = html => {
+  let items = getParagraphOrListItems(removeIllegalCharacters(html))
+  items = items.map(item =>
+    item.replace(
+      /<span class="small-caps">((?:(?!<\/span>)[\s\S])*)<\/span>/g,
+      '<scp>$1</scp>',
+    ),
+  )
+
+  items = items.map(item =>
+    convertTagsAndRemoveTags(item, {}, [
+      'b',
+      'i',
+      'em',
+      'strong',
+      'u',
+      'sup',
+      'sub',
+      'scp',
+    ]),
+  )
+
+  return items
 }
 
 const makeJournalMeta = journalMeta => {
@@ -683,4 +725,4 @@ const makeJats = (html, articleMeta, journalMeta) => {
   return { front, body, back, jats }
 }
 
-module.exports = { htmlToJats, getCitationsFromList, makeJats }
+module.exports = { htmlToJats, getCrossrefCitationsFromList, makeJats }
