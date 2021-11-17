@@ -152,8 +152,8 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
                   </WaxSurfaceScroll>
                   {hasNotes && (
                     <NotesAreaContainer className="productionnotes">
-                      <NotesHeading>Notes</NotesHeading>
                       <NotesContainer id="notes-container">
+                        <NotesHeading>Notes</NotesHeading>
                         <NotesArea view={main} />
                       </NotesContainer>
                       <CommentsContainerNotes>
