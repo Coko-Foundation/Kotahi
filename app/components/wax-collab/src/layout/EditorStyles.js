@@ -9,9 +9,8 @@ export const Grid = styled.div`
   grid-template-areas: 'menu' 'editor';
   grid-template-columns: 100%;
   grid-template-rows: ${props => (props.readonly ? 0 : 'minmax(40px,auto)')} 1fr;
+  ${props => props.production && 'min-height: calc(100vh - 108px);'}
   position: relative;
-
-  /* This was killing the comment visibility */
   /* :focus-within {
     z-index: 10000;
   } */
@@ -58,6 +57,7 @@ export const ReadOnlyEditorWithCommentsEditor = styled.div`
 
 export const FullWaxEditorGrid = styled.div`
   display: grid;
+  grid-area: editor;
   grid-template-columns: [editorCol] auto [commentsCol] ${props =>
       props.useComments ? 'auto' : 0};
   grid-template-rows: [editorRow] auto [notesRow] auto [infoRow] 40px;
@@ -231,7 +231,6 @@ export const SimpleInfoContainer = styled.div`
 export const ProductionEditorDiv = styled.div`
   display: flex;
   flex-grow: 1;
-  min-height: 700px;
 
   .error & {
     border: 1px solid ${th('colorError')};

@@ -88,8 +88,8 @@ const FullWaxEditorLayout = readOnly => ({ editor }) => {
               </EditorDiv>
               {notes.length > 0 && (
                 <NotesAreaContainer>
-                  <NotesHeading>Notes</NotesHeading>
                   <NotesContainer id="notes-container">
+                    <NotesHeading>Notes</NotesHeading>
                     <NotesArea view={main} />
                   </NotesContainer>
                 </NotesAreaContainer>

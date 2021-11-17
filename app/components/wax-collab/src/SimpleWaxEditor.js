@@ -5,7 +5,7 @@ import { debounce } from 'lodash'
 import simpleWaxEditorConfig from './config/SimpleWaxEditorConfig'
 import SimpleWaxEditorLayout from './layout/SimpleWaxEditorLayout'
 
-import './katex/katex.css'
+// import './katex/katex.css'
 import fixAstralUnicode from './fixAstralUnicode'
 
 const SimpleWaxEditor = ({
