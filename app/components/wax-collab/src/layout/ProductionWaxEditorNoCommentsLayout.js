@@ -81,7 +81,7 @@ const ProductionWaxEditorNoCommentsLayout = (readOnly, readOnlyComments) => ({
 
   return (
     <div style={fullScreenStyles}>
-      <Grid readonly={readOnly} readOnlyComments={readOnlyComments}>
+      <Grid production readonly={readOnly} readOnlyComments={readOnlyComments}>
         {readOnly ? (
           <ReadOnlyEditorDiv className="wax-surface-scroll">
             {editor}

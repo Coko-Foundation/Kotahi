@@ -9,7 +9,7 @@ import productionWaxEditorConfig from './config/ProductionWaxEditorConfig'
 import ProductionWaxEditorLayout from './layout/ProductionWaxEditorLayout'
 import ProductionWaxEditorNoCommentsLayout from './layout/ProductionWaxEditorNoCommentsLayout'
 
-import './katex/katex.css'
+// import './katex/katex.css'
 
 // this was forked from FullWaxEditor.js
 

@@ -10,7 +10,7 @@ import fullWaxEditorConfig from './config/FullWaxEditorConfig'
 import FullWaxEditorLayout from './layout/FullWaxEditorLayout'
 import FullWaxEditorCommentsLayout from './layout/FullWaxEditorCommentsLayout'
 
-import './katex/katex.css'
+// import './katex/katex.css'
 
 // TODO Save this image via the server
 const renderImage = file => {
