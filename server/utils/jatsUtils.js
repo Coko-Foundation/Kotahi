@@ -232,16 +232,14 @@ const getParagraphOrListItems = html => {
 // TODO Move the following into a separate file crossrefUtils.js; shift some other functions here into htmlUtils.js.
 /** Get Crossref-style citation XML, treating each nonempty paragraph or list item as a separate citation */
 const getCrossrefCitationsFromList = html => {
-  let items = getParagraphOrListItems(removeIllegalCharacters(html))
-  items = items.map(item =>
-    item.replace(
+  const items = getParagraphOrListItems(removeIllegalCharacters(html))
+  return items.map(item => {
+    let result = item.replace(
       /<span class="small-caps">((?:(?!<\/span>)[\s\S])*)<\/span>/g,
       '<scp>$1</scp>',
-    ),
-  )
+    )
 
-  items = items.map(item =>
-    convertTagsAndRemoveTags(item, {}, [
+    result = convertTagsAndRemoveTags(result, {}, [
       'b',
       'i',
       'em',
@@ -250,10 +248,11 @@ const getCrossrefCitationsFromList = html => {
       'sup',
       'sub',
       'scp',
-    ]),
-  )
+    ])
 
-  return items
+    result = convertCharacterEntities(result)
+    return result
+  })
 }
 
 const makeJournalMeta = journalMeta => {
