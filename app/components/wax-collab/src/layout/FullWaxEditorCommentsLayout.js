@@ -135,15 +135,17 @@ const FullWaxEditorCommentsLayout = (readOnly, authorComments) => ({
               <RightArea area="main" />
             </FullCommentsContainer>
             {notes.length > 0 && (
-              <NotesAreaContainer>
-                <NotesHeading>Notes</NotesHeading>
-                <NotesContainer id="notes-container">
-                  <NotesArea view={main} />
-                </NotesContainer>
+              <>
+                <NotesAreaContainer>
+                  <NotesContainer id="notes-container">
+                    <NotesHeading>Notes</NotesHeading>
+                    <NotesArea view={main} />
+                  </NotesContainer>
+                </NotesAreaContainer>
                 <CommentsContainerNotes>
                   <RightArea area="notes" />
                 </CommentsContainerNotes>
-              </NotesAreaContainer>
+              </>
             )}
             <WaxOverlays />
             <InfoContainer>

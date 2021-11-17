@@ -46,8 +46,8 @@ export const NotesContainer = styled.div`
   counter-reset: footnote-view;
   display: flex;
   flex-direction: column;
-  padding-bottom: 0;
-  width: 90%;
+  padding-bottom: ${grid(4)};
+  width: calc(100% - ${grid(4)});
 `
 
 export const NotesHeading = styled.div`
