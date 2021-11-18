@@ -39,6 +39,9 @@ const getNote = (notes, type) =>
 const getSupplementaryFiles = supplementary =>
   (supplementary || []).filter(file => file.fileType === 'supplementary') || []
 
+const getManuscriptFiles = files =>
+  (files || []).filter(file => file.fileType === 'manuscript') || []
+
 const showFieldData = (manuscript, fieldName, form) => {
   const data = get(manuscript, fieldName)
   const fieldDefinition = form.children?.find(field => field.name === fieldName)
@@ -156,6 +159,28 @@ const ReviewMetadata = ({
               {!!getSupplementaryFiles(manuscript.files).length && (
                 <Cell>
                   {getSupplementaryFiles(manuscript.files).map(file => (
+                    <Attachment
+                      file={filesToAttachment(file)}
+                      key={file.url}
+                      uploaded
+                    />
+                  ))}
+                </Cell>
+              )}
+            </SectionRowGrid>
+          )}
+          {getManuscriptFiles(manuscript.files).length > 0 && (
+            <SectionRowGrid>
+              <Heading>
+                {getManuscriptFiles(manuscript.files).length} manuscript{' '}
+                {getManuscriptFiles(manuscript.files).length === 1
+                  ? 'file'
+                  : 'files'}
+                :
+              </Heading>
+              {!!getManuscriptFiles(manuscript.files).length && (
+                <Cell>
+                  {getManuscriptFiles(manuscript.files).map(file => (
                     <Attachment
                       file={filesToAttachment(file)}
                       key={file.url}
