@@ -11,10 +11,10 @@ Login requires [ORCID](https://orcid.org/) to be set up correctly. By default, i
 
 Here's how to set this up in less than 20 easy steps:
 
-1. Go to [mailinator.com](mailinator.com)
+1. Go to [mailinator.com](https://mailinator.com)
 2. In the search bar at the top of the page enter your desired username (we'll use `mycokotestemail` for this guide) and click "GO". (tip: choose a username that is unlikely to be used already by someone else)
 3. You'll be taken to a new page. This is your inbox for `mycokotestemail@mailinator.com`. Keep this page open. (also keep in mind that this is a fully **public** inbox)
-4. Go to [sandbox.orcid.org](sandbox.orcid.org)
+4. Go to [sandbox.orcid.org](https://sandbox.orcid.org)
 5. Click on "SIGN IN/REGISTER", then on "register now"
 6. Fill out the form. In the email field use your newly created mailinator email.
 7. Fill out the rest of the form until you register.
