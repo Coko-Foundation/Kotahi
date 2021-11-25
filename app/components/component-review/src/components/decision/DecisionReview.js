@@ -173,12 +173,12 @@ const ReviewHeading = ({
         (isCurrentUserEditor || currentUser.admin) && (
           <>
             <StyledCheckbox
-              checked={isHiddenFromAuthor}
+              checked={isHiddenFromAuthor || isHiddenFromAuthor == null}
               label="Hide review"
               onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
             />
             <StyledCheckbox
-              checked={isHiddenReviewerName}
+              checked={isHiddenReviewerName || isHiddenReviewerName == null}
               label="Hide reviewer name"
               onChange={() =>
                 toggleIsHiddenReviewerNameFromPublishedAndAuthor(
