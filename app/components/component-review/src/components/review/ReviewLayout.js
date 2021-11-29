@@ -72,6 +72,11 @@ const ReviewLayout = ({
     reviewSections.push({
       content: (
         <div key={msVersion.id}>
+          <Reviewerdisclaimer>
+            By completing this review, you agree that you do not have any
+            conflict of interests to declare. For any questions about what
+            constitutes a conflict of interest, contact the administrator.
+          </Reviewerdisclaimer>
           {hasManuscriptFile(msVersion) && (
             <EditorSection manuscript={msVersion} readonly />
           )}
@@ -101,14 +106,14 @@ const ReviewLayout = ({
     reviewSections.push({
       content: (
         <div key={latestVersion.id}>
-          {hasManuscriptFile(latestVersion) && (
-            <EditorSection manuscript={latestVersion} readonly />
-          )}
           <Reviewerdisclaimer>
             By completing this review, you agree that you do not have any
             conflict of interests to declare. For any questions about what
             constitutes a conflict of interest, contact the administrator.
           </Reviewerdisclaimer>
+          {hasManuscriptFile(latestVersion) && (
+            <EditorSection manuscript={latestVersion} readonly />
+          )}
           <ReviewMetadata
             form={submissionForm}
             manuscript={latestVersion}
