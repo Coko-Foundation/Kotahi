@@ -4,7 +4,8 @@
 import React, { useState } from 'react'
 import { useMutation, useQuery, useApolloClient } from '@apollo/client'
 import { get } from 'lodash'
-// import { Action } from '@pubsweet/ui'
+import { th, grid } from '@pubsweet/ui-toolkit'
+import { Button } from '@pubsweet/ui'
 import config from 'config'
 import PropTypes from 'prop-types'
 import { Checkbox } from '@pubsweet/ui'
@@ -43,14 +44,30 @@ import {
   validateManuscript,
   getFieldValueAndDisplayValue,
 } from '../../../shared/manuscriptUtils'
+import styled, { withTheme } from 'styled-components'
+import Modal from '../../component-modal/src/index'
 
-import styled from 'styled-components';
-// import { Button, Checkbox } from '@pubsweet/ui'
+const ModalContainer = styled.div`
+  background: ${th('colorBackground')};
+  padding: 20px 24px;
+  z-index: 100;
+`
 
-const StyledCheckboxTable = styled(Checkbox)`
-  height: 16px;
-  width: 18px;
-  margin-right: 15px;
+const CancelButton = styled(Button)`
+  background: #e9ebe8;
+  text-decoration: none;
+  padding: 8px;
+  &:hover {
+    background: #dbdbdb;
+  }
+`
+
+const ConfrimationString = styled.p`
+  margin-bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
@@ -80,7 +97,7 @@ const renderManuscriptCell = ({
           {process.env.INSTANCE_NAME === 'colab' &&
             manuscript.status === articleStatuses.new &&
             !manuscript.submission.labels && (
-              <StyledCheckboxTable
+              <Checkbox
                 checked={selectedNewManuscripts.includes(manuscript.id)}
                 onChange={() => toggleNewManuscriptCheck(manuscript.id)}
               />
@@ -124,7 +141,7 @@ const renderManuscriptCell = ({
           <StyledDescriptionWrapper>
             {manuscript.status === articleStatuses.new &&
               !manuscript.submission.labels && (
-                <StyledCheckboxTable
+                <Checkbox
                   checked={selectedNewManuscripts.includes(manuscript.id)}
                   onChange={() => toggleNewManuscriptCheck(manuscript.id)}
                 />
@@ -355,50 +372,87 @@ const ManuscriptRow = ({
     setReadyToEvaluateLabel,
   })
 
+  const [openModal, setOpenModal] = useState(false)
+  const [menuscriptIds, setMenuscriptId] = useState()
+
+  const openModalHandler = id => {
+    setOpenModal(true)
+    setMenuscriptId(id)
+  }
+
+  const closeModalHandler = () => {
+    setOpenModal(false)
+  }
+
   return (
-    <Row>
-      {manuscriptsTableConfig.map(field => {
-        return renderCell(field)
-      })}
-      <LastCell>
-        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
-          [
-            articleStatuses.submitted,
-            articleStatuses.evaluated,
-            articleStatuses.new,
-            articleStatuses.published,
-          ].includes(manuscript.status) && (
-            <Action to={`${urlFrag}/versions/${manuscriptId}/evaluation`}>
-              Evaluation
+    <div>
+      <Row>
+        {manuscriptsTableConfig.map(field => {
+          return renderCell(field)
+        })}
+        <LastCell>
+          {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
+            [
+              articleStatuses.submitted,
+              articleStatuses.evaluated,
+              articleStatuses.new,
+              articleStatuses.published,
+            ].includes(manuscript.status) && (
+              <Action to={`${urlFrag}/versions/${manuscriptId}/evaluation`}>
+                Evaluation
+              </Action>
+            )}
+          {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
+            <Action to={`${urlFrag}/versions/${manuscriptId}/decision`}>
+              Control
             </Action>
           )}
-        {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
-          <Action to={`${urlFrag}/versions/${manuscriptId}/decision`}>
-            Control
+          <Action to={`${urlFrag}/versions/${manuscriptId}/manuscript`}>
+            View
           </Action>
-        )}
-        <Action to={`${urlFrag}/versions/${manuscriptId}/manuscript`}>
-          View
-        </Action>
-        <Action
-          onClick={() => deleteManuscript({ variables: { id: manuscriptId } })}
-        >
-          Delete
-        </Action>
-        <Action to={`${urlFrag}/versions/${manuscriptId}/production`}>
-          Production
-        </Action>
-        {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
-          manuscript.status === articleStatuses.evaluated && (
-            <Action
-              isDisabled={isPublishingBlocked}
-              onClick={publishManuscriptHandler}
-            >
-              Publish
-            </Action>
-          )}
-      </LastCell>
-    </Row>
+          <Action
+            onClick={() =>
+              openModalHandler({ variables: { id: manuscriptId } })
+            }
+          >
+            Delete
+          </Action>
+          <Action to={`${urlFrag}/versions/${manuscriptId}/production`}>
+            Production
+          </Action>
+          {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
+            manuscript.status === articleStatuses.evaluated && (
+              <Action
+                isDisabled={isPublishingBlocked}
+                onClick={publishManuscriptHandler}
+              >
+                Publish
+              </Action>
+            )}
+        </LastCell>
+      </Row>
+
+      <Modal isOpen={openModal}>
+        <ModalContainer>
+          <ConfrimationString>
+            Permanently delete this manuscript?
+          </ConfrimationString>
+          <Button
+            onClick={event => {
+              deleteManuscript(menuscriptIds)
+              closeModalHandler()
+            }}
+            primary
+          >
+            Ok
+          </Button>
+          &nbsp;
+          <CancelButton onClick={() => closeModalHandler()}>
+            Cancel
+          </CancelButton>
+        </ModalContainer>
+      </Modal>
+    </div>
   )
 }
 

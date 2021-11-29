@@ -54,6 +54,8 @@ const Root = styled.div`
      }
   `};
   overflow: hidden;
+  z-index: 0;
+  position: relative;
 `
 
 // TODO: Redirect if token expires
