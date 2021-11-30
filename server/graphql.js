@@ -1,4 +1,6 @@
+/* eslint-disable */
 /* eslint-disable global-require */
+// To be removed before final merge
 const passport = require('passport')
 const { ApolloServer } = require('apollo-server-express')
 const isEmpty = require('lodash/isEmpty')
@@ -77,4 +79,4 @@ const api = app => {
   server.applyMiddleware({ app })
 }
 
-module.exports = api
+// module.exports = api

@@ -1,6 +1,8 @@
+/* eslint-disable */
 /**
  * subscription (websocket) server for GraphQL
  */
+// To be removed in final merge - User online logic to be refactored
 const { execute, subscribe } = require('graphql')
 // eslint-disable-next-line import/no-extraneous-dependencies
 const { SubscriptionServer } = require('subscriptions-transport-ws') // TODO: Should we rewrite subscriptions to use Apollo v2?

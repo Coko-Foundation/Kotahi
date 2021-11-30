@@ -1,7 +1,7 @@
 const passport = require('passport')
 const OrcidStrategy = require('passport-orcid')
 const config = require('config')
-const authentication = require('pubsweet-server/src/authentication')
+const { createJWT } = require('@coko/server')
 const fetchUserDetails = require('./fetchUserDetails')
 
 const CALLBACK_URL = '/auth/orcid/callback'
@@ -107,7 +107,7 @@ module.exports = app => {
       session: false,
     }),
     (req, res) => {
-      const jwt = authentication.token.create(req.user)
+      const jwt = createJWT(req.user)
 
       let redirectionURL
 

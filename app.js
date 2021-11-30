@@ -1,5 +1,4 @@
-const logger = require('@pubsweet/logger')
-const startServer = require('pubsweet-server')
+const { logger, startServer } = require('@coko/server')
 
 startServer().catch(err => {
   logger.error('FATAL ERROR, SHUTTING DOWN:', err)

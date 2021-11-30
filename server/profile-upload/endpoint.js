@@ -46,14 +46,14 @@ module.exports = app => {
 
       await image.writeAsync(profilePath)
 
-      user.profilePicture = `/static/${profilePath}`
+      user.profilePicture = `/${profilePath}`
       await user.save()
       return res.send(user.profilePicture)
     },
   )
 
   app.use(
-    '/static/profiles',
+    '/profiles',
     express.static(path.join(__dirname, '..', '..', 'profiles')),
   )
 }

@@ -1,4 +1,4 @@
-const BaseModel = require('@pubsweet/base-model')
+const { BaseModel } = require('@coko/server')
 
 class Channel extends BaseModel {
   static get tableName() {

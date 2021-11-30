@@ -1,4 +1,4 @@
-const BaseModel = require('@pubsweet/base-model')
+const { BaseModel } = require('@coko/server')
 const bcrypt = require('bcrypt')
 const pick = require('lodash/pick')
 const config = require('config')
