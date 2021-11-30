@@ -29,7 +29,10 @@ const Details = styled.div`
   margin-top: 48px;
 `
 
-const Page = styled.div``
+const Page = styled.div`
+  position: relative;
+  z-index: 0;
+`
 
 const Heading = styled.div`
   color: ${th('colorPrimary')};

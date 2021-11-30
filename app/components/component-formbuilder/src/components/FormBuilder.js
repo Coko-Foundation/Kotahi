@@ -1,12 +1,20 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled, { withTheme } from 'styled-components'
 import { unescape } from 'lodash'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import { Icon, Action } from '@pubsweet/ui'
+import { Icon, Action, Button } from '@pubsweet/ui'
 import { v4 as uuid } from 'uuid'
+
 import { Page, Heading } from './style'
 import lightenBy from '../../../../shared/lightenBy'
+import Modal from '../../../component-modal/src/index'
+
+const ModalContainer = styled.div`
+  background: ${th('colorBackground')};
+  padding: 20px 24px;
+  z-index: 100;
+`
 
 const Element = styled.div`
   background-color: ${th('colorSecondaryBackground')};
@@ -82,6 +90,23 @@ const Main = styled.div`
 
 const ElementTitle = styled.span``
 
+const CancelButton = styled(Button)`
+  background: #e9ebe8;
+  text-decoration: none;
+  padding: 8px;
+  &:hover {
+    background: #dbdbdb;
+  }
+`
+
+const ConfrimationString = styled.p`
+  margin-bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),
 })
@@ -95,45 +120,78 @@ const BuilderElement = ({
   deleteField,
   formId,
 }) => {
+  const [openModal, setOpenModal] = useState(false)
+  const [formFieldId, setFormFieldId] = useState()
+
+  const openModalHandler = id => {
+    setOpenModal(true)
+    setFormFieldId(id)
+  }
+
+  const closeModalHandler = () => {
+    setOpenModal(false)
+  }
+
   return (
-    <Element
-      className={isActive ? 'active' : undefined}
-      key={`element-${element.id}`}
-      onClick={() => setActiveFieldId(element.id)}
-    >
-      <MainAction>
-        <ElementTitle
-          dangerouslySetInnerHTML={createMarkup(
-            element.shortDescription ?? element.title,
-          )}
-        />{' '}
-        ({element.component})
-      </MainAction>
-      <IconAction
-        onClick={event => {
-          moveFieldUp(element.id)
-        }}
+    <div>
+      <Element
+        className={isActive ? 'active' : undefined}
+        key={`element-${element.id}`}
+        onClick={() => setActiveFieldId(element.id)}
       >
-        <SmallIcon>arrowUp</SmallIcon>
-      </IconAction>
-      <IconAction
-        onClick={event => {
-          moveFieldDown(element.id)
-        }}
-      >
-        <SmallIcon>arrowDown</SmallIcon>
-      </IconAction>
-      <IconAction
-        onClick={event => {
-          event.stopPropagation()
-          deleteField({
-            variables: { formId, elementId: element.id },
-          })
-        }}
-      >
-        <SmallIcon>x</SmallIcon>
-      </IconAction>
-    </Element>
+        <MainAction>
+          <ElementTitle
+            dangerouslySetInnerHTML={createMarkup(
+              element.shortDescription ?? element.title,
+            )}
+          />{' '}
+          ({element.component})
+        </MainAction>
+        <IconAction
+          onClick={event => {
+            moveFieldUp(element.id)
+          }}
+        >
+          <SmallIcon>arrowUp</SmallIcon>
+        </IconAction>
+        <IconAction
+          onClick={event => {
+            moveFieldDown(element.id)
+          }}
+        >
+          <SmallIcon>arrowDown</SmallIcon>
+        </IconAction>
+        <IconAction
+          onClick={() =>
+            openModalHandler({
+              variables: { formId, elementId: element.id },
+            })
+          }
+        >
+          <SmallIcon>x</SmallIcon>
+        </IconAction>
+      </Element>
+
+      <Modal isOpen={openModal}>
+        <ModalContainer>
+          <ConfrimationString>
+            Permanently delete this field?
+          </ConfrimationString>
+          <Button
+            onClick={event => {
+              deleteField(formFieldId)
+            }}
+            primary
+          >
+            Ok
+          </Button>
+          &nbsp;
+          <CancelButton onClick={() => closeModalHandler()}>
+            Cancel
+          </CancelButton>
+        </ModalContainer>
+      </Modal>
+    </div>
   )
 }
 
