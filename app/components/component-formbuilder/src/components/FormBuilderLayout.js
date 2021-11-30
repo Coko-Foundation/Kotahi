@@ -1,8 +1,9 @@
-import React from 'react'
+import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import { forEach } from 'lodash'
 import styled, { withTheme } from 'styled-components'
-import { Tabs, Action, Icon } from '@pubsweet/ui'
+import { Tabs, Action, Icon, Button } from '@pubsweet/ui'
+import { th } from '@pubsweet/ui-toolkit'
 import { Columns, Details, Form } from './style'
 import ComponentProperties from './ComponentProperties'
 import FormProperties from './FormProperties'
@@ -14,6 +15,13 @@ import {
   SectionContent,
   SectionRow,
 } from '../../../shared'
+import Modal from '../../../component-modal/src/index'
+
+const ModalContainer = styled.div`
+  background: ${th('colorBackground')};
+  padding: 20px 24px;
+  z-index: 100;
+`
 
 const IconAction = styled(Action)`
   line-height: 1.15;
@@ -34,6 +42,23 @@ const ControlIcon = withTheme(({ children, theme }) => (
   <UnpaddedIcon color={theme.colorPrimary}>{children}</UnpaddedIcon>
 ))
 
+const CancelButton = styled(Button)`
+  background: #e9ebe8;
+  text-decoration: none;
+  padding: 8px;
+  &:hover {
+    background: #dbdbdb;
+  }
+`
+
+const ConfrimationString = styled.p`
+  margin-bottom: 20px;
+  width: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`
+
 const FormBuilderLayout = ({
   forms,
   activeFormId,
@@ -48,6 +73,18 @@ const FormBuilderLayout = ({
   setActiveFieldId,
   setActiveFormId,
 }) => {
+  const [openModal, setOpenModal] = useState(false)
+  const [formId, setFormId] = useState()
+
+  const openModalHandler = id => {
+    setOpenModal(true)
+    setFormId(id)
+  }
+
+  const closeModalHandler = () => {
+    setOpenModal(false)
+  }
+
   const sections = []
   forEach(forms, form => {
     sections.push({
@@ -68,16 +105,16 @@ const FormBuilderLayout = ({
       ),
       key: `${form.id}`,
       label: [
-        form.structure.name,
+        form.structure.name || 'Unnamed form',
         <RightIconAction
           key="delete-form"
           onClick={e => {
             e.preventDefault()
             e.stopPropagation()
-            deleteForm({
+            openModalHandler({
               variables: { formId: form.id },
             })
-            setActiveFormId(forms.find(f => f.id !== form.id)?.id ?? null)
+            setActiveFormId(forms.find(f => f.id !== form.id)?.id ?? 'new')
           }}
         >
           <ControlIcon size={2.5}>x</ControlIcon>
@@ -112,45 +149,66 @@ const FormBuilderLayout = ({
   )
 
   return (
-    <Container>
-      <HeadingWithAction>
-        <Heading>Form Builder</Heading>
-      </HeadingWithAction>
-      <Columns>
-        <Form>
-          <Tabs
-            activeKey={activeFormId ?? 'new'}
-            key={activeFormId}
-            onChange={tab => {
-              setActiveFormId(tab)
-              setActiveFieldId(null)
+    <div style={{ overflowY: 'scroll' }}>
+      <Container>
+        <HeadingWithAction>
+          <Heading>Form Builder</Heading>
+        </HeadingWithAction>
+        <Columns>
+          <Form>
+            <Tabs
+              activeKey={activeFormId ?? 'new'}
+              key={activeFormId}
+              onChange={tab => {
+                setActiveFormId(tab)
+                setActiveFieldId(null)
+              }}
+              sections={sections}
+            />
+          </Form>
+          <Details>
+            <SectionContent>
+              <SectionRow>
+                {activeField ? (
+                  <ComponentProperties
+                    field={activeField}
+                    formId={activeForm.id}
+                    key={activeField.id}
+                    updateField={updateField}
+                  />
+                ) : (
+                  <FormProperties
+                    createForm={createForm}
+                    form={activeForm}
+                    key={activeForm.id}
+                    updateForm={updateForm}
+                  />
+                )}
+              </SectionRow>
+            </SectionContent>
+          </Details>
+        </Columns>
+      </Container>
+
+      <Modal isOpen={openModal}>
+        <ModalContainer>
+          <ConfrimationString>Permanently delete this form?</ConfrimationString>
+          <Button
+            onClick={event => {
+              deleteForm(formId)
+              closeModalHandler()
             }}
-            sections={sections}
-          />
-        </Form>
-        <Details>
-          <SectionContent>
-            <SectionRow>
-              {activeField ? (
-                <ComponentProperties
-                  field={activeField}
-                  formId={activeForm.id}
-                  key={activeField.id}
-                  updateField={updateField}
-                />
-              ) : (
-                <FormProperties
-                  createForm={createForm}
-                  form={activeForm}
-                  key={activeForm.id}
-                  updateForm={updateForm}
-                />
-              )}
-            </SectionRow>
-          </SectionContent>
-        </Details>
-      </Columns>
-    </Container>
+            primary
+          >
+            Ok
+          </Button>
+          &nbsp;
+          <CancelButton onClick={() => closeModalHandler()}>
+            Cancel
+          </CancelButton>
+        </ModalContainer>
+      </Modal>
+    </div>
   )
 }
 
