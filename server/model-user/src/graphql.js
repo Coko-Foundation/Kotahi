@@ -87,9 +87,7 @@ const resolvers = {
           .where('username', 'ilike', `${query}%`)
       }
 
-      return models.User.model
-        .query()
-        .where('username', 'ilike', `${query}%`)
+      return models.User.model.query().where('username', 'ilike', `${query}%`)
     },
   },
   Mutation: {
@@ -176,6 +174,7 @@ const resolvers = {
     },
     async updateCurrentEmail(_, { email }, ctx) {
       const ctxUser = await models.User.find(ctx.user)
+
       if (ctxUser.email === email) {
         return { success: true }
       }
@@ -194,10 +193,9 @@ const resolvers = {
       }
 
       try {
-        const user = await models.User.query().updateAndFetchById(
-          ctx.user,
-          { email },
-        )
+        const user = await models.User.query().updateAndFetchById(ctx.user, {
+          email,
+        })
 
         return { success: true, user }
       } catch (e) {

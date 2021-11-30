@@ -1,12 +1,19 @@
 /* eslint-disable no-unused-vars */
-const { rule, and, or, not, allow, deny } = require('@coko/server/authorization')
+const {
+  rule,
+  and,
+  or,
+  not,
+  allow,
+  deny,
+} = require('@coko/server/authorization')
+
 const { shield } = require('graphql-shield')
 const models = require('@pubsweet/models')
 
 const userIsEditorQuery = async (userId, manuscriptId) => {
-  const user = await models.User.query().findById(
-    userId,
-  )
+  const user = await models.User.query().findById(userId)
+
   if (!user) {
     return false
   }
@@ -34,10 +41,8 @@ const userIsEditor = rule({
 })(async (parent, args, ctx, info) => userIsEditorQuery(ctx.user))
 
 const userIsMemberOfTeamWithRoleQuery = async (userId, manuscriptId, role) => {
-  const user = await models.User.query().findById(
-    userId,
-  )
-  
+  const user = await models.User.query().findById(userId)
+
   if (!user) {
     return false
   }
@@ -53,9 +58,7 @@ const userIsMemberOfTeamWithRoleQuery = async (userId, manuscriptId, role) => {
 
 const userIsAdmin = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
-    const user = await models.User.query().findById(
-      ctx.user,
-    )
+    const user = await models.User.query().findById(ctx.user)
 
     if (ctx.user && user.admin) {
       return true
@@ -77,9 +80,7 @@ const parentManuscriptIsPublished = rule({ cache: 'contextual' })(
 
 const reviewIsByUser = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
-    const user = await models.User.query().findById(
-      ctx.user,
-    )
+    const user = await models.User.query().findById(ctx.user)
 
     const rows =
       ctx.user &&
@@ -101,9 +102,7 @@ const isAuthenticated = rule({ cache: 'contextual' })(
 // if the channel is for 'editorial', only editors and admins can chat there
 const userIsAllowedToChat = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    const user = await models.User.query().findById(
-      ctx.user,
-    )
+    const user = await models.User.query().findById(ctx.user)
 
     if (ctx.user && user.admin) {
       return true
@@ -164,9 +163,7 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
 
   if (!team) return false
 
-  const members = await team
-    .$relatedQuery('members')
-    .where('userId', ctx.user)
+  const members = await team.$relatedQuery('members').where('userId', ctx.user)
 
   if (members && members[0] && members[0].status !== 'completed') {
     return true
@@ -254,9 +251,7 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
     return false
   }
 
-  const members = await team
-    .$relatedQuery('members')
-    .where('userId', ctx.user)
+  const members = await team.$relatedQuery('members').where('userId', ctx.user)
 
   if (members && members[0]) {
     return true
@@ -329,9 +324,7 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
 
   if (!team) return false
 
-  const members = await team
-    .$relatedQuery('members')
-    .where('userId', ctx.user)
+  const members = await team.$relatedQuery('members').where('userId', ctx.user)
 
   if (members && members[0] && members[0].status !== 'completed') {
     return true

@@ -1,5 +1,5 @@
-const generateMovingAverages = require('./movingAverages')
 const models = require('@pubsweet/models')
+const generateMovingAverages = require('./movingAverages')
 
 /** Capitalize the first letter of the string */
 const capitalize = text => {

@@ -1,10 +1,10 @@
 /* eslint-disable camelcase, consistent-return */
 const axios = require('axios')
 
+const models = require('@pubsweet/models')
 const ArticleImportSources = require('../model-article-import-sources/src/articleImportSources')
 const ArticleImportHistory = require('../model-article-import-history/src/articleImportHistory')
 const Form = require('../model-form/src/form')
-const models = require('@pubsweet/models')
 
 const getData = async ctx => {
   const dateTwoWeeksAgo =
@@ -135,7 +135,7 @@ const getData = async ctx => {
         version,
         date: datePublished,
         server,
-       }) => {
+      }) => {
         return {
           status: 'new',
           isImported: true,

@@ -37,23 +37,23 @@ const ManuscriptResolvers = ({ isVersion }) => {
     async reviews(parent, _, ctx) {
       return parent.reviews
         ? parent.reviews
-        : (
-            await models.Manuscript.query().findById(parent.id)
-          ).$relatedQuery('reviews')
+        : (await models.Manuscript.query().findById(parent.id)).$relatedQuery(
+            'reviews',
+          )
     },
     async teams(parent, _, ctx) {
       return parent.teams
         ? parent.teams
-        : (
-            await models.Manuscript.query().findById(parent.id)
-          ).$relatedQuery('teams')
+        : (await models.Manuscript.query().findById(parent.id)).$relatedQuery(
+            'teams',
+          )
     },
     async files(parent, _, ctx) {
       return parent.files
         ? parent.files
-        : (
-            await models.Manuscript.query().findById(parent.id)
-          ).$relatedQuery('files')
+        : (await models.Manuscript.query().findById(parent.id)).$relatedQuery(
+            'files',
+          )
     },
 
     meta(parent) {
@@ -547,9 +547,7 @@ const resolvers = {
       return manuscript.save()
     },
     async addReviewer(_, { manuscriptId, userId }, ctx) {
-      const manuscript = await models.Manuscript.query().findById(
-        manuscriptId,
-      )
+      const manuscript = await models.Manuscript.query().findById(manuscriptId)
 
       const existingTeam = await manuscript
         .$relatedQuery('teams')
@@ -586,9 +584,7 @@ const resolvers = {
       return newTeam
     },
     async removeReviewer(_, { manuscriptId, userId }, ctx) {
-      const manuscript = await models.Manuscript.query().findById(
-        manuscriptId,
-      )
+      const manuscript = await models.Manuscript.query().findById(manuscriptId)
 
       const reviewerTeam = await manuscript
         .$relatedQuery('teams')

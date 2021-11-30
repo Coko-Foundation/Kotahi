@@ -4,11 +4,11 @@ const xml2json = require('xml-js')
 const FormData = require('form-data')
 const fetch = require('node-fetch')
 
+const models = require('@pubsweet/models')
 const ArticleImportSources = require('../model-article-import-sources/src/articleImportSources')
 const ArticleImportHistory = require('../model-article-import-history/src/articleImportHistory')
 const Form = require('../model-form/src/form')
 const flattenObj = require('../utils/flattenObj')
-const models = require('@pubsweet/models')
 
 const selectVersionRegexp = /(v)(?!.*\1)/g
 

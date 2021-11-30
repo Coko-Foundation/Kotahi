@@ -52,15 +52,11 @@ const resolvers = {
       )
     },
     updateTeamMember(_, { id, input }, ctx) {
-      return models.TeamMember.query().updateAndFetchById(
-        id,
-        JSON.parse(input),
-      )
+      return models.TeamMember.query().updateAndFetchById(id, JSON.parse(input))
     },
   },
   User: {
-    teams: (parent, _, ctx) =>
-      models.User.relatedQuery('teams').for(parent.id),
+    teams: (parent, _, ctx) => models.User.relatedQuery('teams').for(parent.id),
   },
   Team: {
     async members(team, { where }, ctx) {
