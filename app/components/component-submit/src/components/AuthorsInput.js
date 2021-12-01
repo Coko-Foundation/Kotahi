@@ -36,12 +36,12 @@ const InvalidLabel = styled.div`
 `
 
 // TODO This is not following Formik idioms. Improve?
-const AuthorsInput = ({ onChange, value }) => {
+const AuthorsInput = ({ onChange, value, innerRefProp }) => {
   const cleanedVal = Array.isArray(value) ? value : [] // We're getting momentary mismatches between field and value, so this can momentarily receive e.g. a string from another field, before a rerender corrects it. Not sure why yet.
   if (value && !Array.isArray(value))
     console.error('Illegal AuthorsInput value:', value)
   return (
-    <>
+    <div ref={innerRefProp}>
       {cleanedVal.map((author, index) => (
         <Author key={author.id}>
           {fields.map(f => {
@@ -92,7 +92,7 @@ const AuthorsInput = ({ onChange, value }) => {
       >
         Add another person
       </Button>
-    </>
+    </div>
   )
 }
 
