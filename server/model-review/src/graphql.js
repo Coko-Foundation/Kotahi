@@ -52,9 +52,10 @@ const resolvers = {
     async updateReview(_, { id, input }, ctx) {
       // We process comment fields into array
       const userId = input.userId ? input.userId : ctx.user
+
       const reviewUser = await models.User.query().where({
-            id: userId,
-          })
+        id: userId,
+      })
 
       const processedReview = { ...input, user: reviewUser }
 
