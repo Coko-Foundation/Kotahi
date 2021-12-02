@@ -163,7 +163,7 @@ const resolvers = {
 
       return {
         user,
-        token: createJWT,
+        token: createJWT(user),
       }
     },
     async updateCurrentUsername(_, { username }, ctx) {

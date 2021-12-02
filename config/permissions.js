@@ -40,9 +40,7 @@ const userIsEditor = rule({
   cache: 'contextual',
 })(async (parent, args, ctx, info) => userIsEditorQuery(ctx.user))
 
-const userIsMemberOfTeamWithRoleQuery = async (userId, manuscriptId, role) => {
-  const user = await models.User.query().findById(userId)
-
+const userIsMemberOfTeamWithRoleQuery = async (user, manuscriptId, role) => {
   if (!user) {
     return false
   }
@@ -60,7 +58,7 @@ const userIsAdmin = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
     const user = await models.User.query().findById(ctx.user)
 
-    if (ctx.user && user.admin) {
+    if (user && user.admin) {
       return true
     }
 
@@ -83,7 +81,7 @@ const reviewIsByUser = rule({ cache: 'contextual' })(
     const user = await models.User.query().findById(ctx.user)
 
     const rows =
-      ctx.user &&
+      user &&
       user.$relatedQuery('teams').where({ role: 'reviewer' }).resultSize()
 
     return !!rows
@@ -104,7 +102,7 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     const user = await models.User.query().findById(ctx.user)
 
-    if (ctx.user && user.admin) {
+    if (user && user.admin) {
       return true
     }
 
@@ -126,7 +124,7 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
       'reviewer',
     )
 
-    const isEditor = await userIsEditorQuery(user, manuscript.id)
+    const isEditor = await userIsEditorQuery(user.id, manuscript.id)
 
     if (channel.type === 'all') {
       return isAuthor || isReviewer || isEditor
@@ -452,5 +450,3 @@ module.exports = shieldWithPermissions
 // })(async (parent, args, ctx, info) =>
 //   _userIsMemberOfTeamWithRole(ctx.user, parent.manuscriptId, 'author'),
 // )
-
-/* eslint-disable no-unused-vars */

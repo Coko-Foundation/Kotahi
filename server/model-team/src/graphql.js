@@ -25,10 +25,10 @@ const resolvers = {
     },
   },
   Mutation: {
-    deleteTeam(_, { id }, ctx) {
+    async deleteTeam(_, { id }, ctx) {
       return models.Team.query().deleteById(id)
     },
-    createTeam(_, { input }, ctx) {
+    async createTeam(_, { input }, ctx) {
       const options = {
         relate: ['members.user'],
         unrelate: ['members.user'],
@@ -38,7 +38,7 @@ const resolvers = {
 
       return models.Team.query().insertGraphAndFetch(input, options)
     },
-    updateTeam(_, { id, input }, ctx) {
+    async updateTeam(_, { id, input }, ctx) {
       return models.Team.query().upsertGraphAndFetch(
         {
           id,
@@ -51,7 +51,7 @@ const resolvers = {
         },
       )
     },
-    updateTeamMember(_, { id, input }, ctx) {
+    async updateTeamMember(_, { id, input }, ctx) {
       return models.TeamMember.query().updateAndFetchById(id, JSON.parse(input))
     },
   },
