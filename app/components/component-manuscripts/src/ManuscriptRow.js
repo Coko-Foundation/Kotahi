@@ -55,19 +55,20 @@ const ModalContainer = styled.div`
 
 const CancelButton = styled(Button)`
   background: #e9ebe8;
-  text-decoration: none;
   padding: 8px;
+  text-decoration: none;
+
   &:hover {
     background: #dbdbdb;
   }
 `
 
 const ConfrimationString = styled.p`
-  margin-bottom: 20px;
-  width: 100%;
+  align-items: center;
   display: flex;
   justify-content: center;
-  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
 `
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
@@ -384,7 +385,7 @@ const ManuscriptRow = ({
   }
 
   return (
-    <div>
+    <>
       <Row>
         {manuscriptsTableConfig.map(field => {
           return renderCell(field)
@@ -451,7 +452,7 @@ const ManuscriptRow = ({
           </CancelButton>
         </ModalContainer>
       </Modal>
-    </div>
+    </>
   )
 }
 
