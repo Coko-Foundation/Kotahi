@@ -36,7 +36,6 @@ const LinksInput = ({
   name,
   onChange,
   innerRefProp,
-  ...props
 }) => {
   const valuesRef = useRef(form.values)
 
