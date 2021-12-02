@@ -35,7 +35,7 @@ const LinksInput = ({
   value,
   name,
   onChange,
-  ...props
+  innerRefProp,
 }) => {
   const valuesRef = useRef(form.values)
 
@@ -52,7 +52,7 @@ const LinksInput = ({
   }
 
   return (
-    <ul>
+    <ul ref={innerRefProp}>
       <UnbulletedList>
         <li>
           <Button
