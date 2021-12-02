@@ -248,10 +248,9 @@ const renderManuscriptCell = ({
             <UserCombo>
               <UserAvatar user={manuscript.submitter} />
               <UserInfo>
-                <Primary>{manuscript.submitter.defaultIdentity.name}</Primary>
+                <Primary>{manuscript.submitter.username}</Primary>
                 <Secondary>
-                  {manuscript.submitter.email ||
-                    `(${manuscript.submitter.username})`}
+                  {manuscript.submitter.defaultIdentity.identifier}
                 </Secondary>
               </UserInfo>
             </UserCombo>
@@ -268,7 +267,7 @@ const renderManuscriptCell = ({
                 team.role !== 'reviewer' &&
                 team.members &&
                 team.members[0] &&
-                team.members[0].user.defaultIdentity.name}
+                team.members[0].user.username}
             </StyledAuthor>
           ))}
         </Cell>

@@ -16,7 +16,7 @@ import useCurrentUser from '../../../../../hooks/useCurrentUser'
 import { convertTimestampToDate } from '../../../../../shared/time-formatting'
 
 const editorOption = user => ({
-  label: user.defaultIdentity?.name || user.email || user.username,
+  label: user.username || user.email,
   value: user.email,
 })
 
@@ -88,7 +88,7 @@ const EmailNotifications = ({ manuscript }) => {
     const date = Date.now()
 
     const body = `${convertTimestampToDate(date)} - ${selectedTempl} sent by ${
-      currentUser.defaultIdentity.name
+      currentUser.username
     } to ${receiverName}`
 
     const channelId = message.manuscript.channels.find(

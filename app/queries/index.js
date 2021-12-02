@@ -14,7 +14,6 @@ export const GET_CURRENT_USER = gql`
         type
         aff
         id
-        name
       }
       online
       _currentRoles {
@@ -137,9 +136,6 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           members {
             id
             user {
-              defaultIdentity {
-                name
-              }
               id
               username
             }
@@ -164,7 +160,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
               id
               user {
                 defaultIdentity {
-                  name
+                  identifier
                 }
                 id
                 username
@@ -176,6 +172,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
             online
             defaultIdentity {
               id
+              identifier
               name
             }
             profilePicture
@@ -186,6 +183,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           online
           defaultIdentity {
             id
+            identifier
             name
           }
           profilePicture

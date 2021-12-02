@@ -155,7 +155,7 @@ const ReviewHeading = ({
           <UserCombo>
             <UserAvatar user={(data && data.user) || user} />
             <UserInfo>
-              <Primary>{user.defaultIdentity.name}</Primary>
+              <Primary>{user.username}</Primary>
               <Secondary>{user.email || `(${user.username})`}</Secondary>
             </UserInfo>
           </UserCombo>

@@ -114,7 +114,7 @@ const UserComponent = ({ user, loginLink, profileLink }) => (
       <UserItem title="Go to your profile" to={profileLink}>
         <UserAvatar isClickable={false} size={48} user={user} />
         <UserInfo>
-          <p>{user.defaultIdentity.name || user.username}</p>
+          <p>{user.username}</p>
           <p>{user.online ? '' : 'Offline'}</p>
           {/* ({user.username}) */}
           {user.admin ? ' (admin)' : ''}

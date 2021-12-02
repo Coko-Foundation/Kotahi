@@ -38,8 +38,8 @@ const User = ({ user }) => {
         <UserCombo>
           <UserAvatar user={user} />
           <UserInfo>
-            <Primary>{user?.defaultIdentity?.name}</Primary>
-            <Secondary>{`ORCID: ${user?.username}`}</Secondary>
+            <Primary>{user?.username}</Primary>
+            <Secondary>{`ORCID: ${user?.defaultIdentity.identifier}`}</Secondary>
           </UserInfo>
         </UserCombo>
       </Cell>
