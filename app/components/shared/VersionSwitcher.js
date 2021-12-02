@@ -7,9 +7,39 @@ const Container = styled.div`
   margin-top: ${props => grid(props.top)};
 `
 
-const generateLabel = (created, versionNumber, count) => {
-  if (versionNumber >= count) return `Current version (${versionNumber})`
-  return `${new Date(created).toISOString().slice(0, 10)} (${versionNumber})`
+const VerisonLabelWrapper = styled.div`
+  display: flex;
+  flex-wrap: no-wrap;
+  width: 100%;
+`
+
+const Title = styled.p`
+  overflow: hidden;
+  flex-shrink: 1;
+  text-overflow: ellipsis;
+  margin: 0 5px;
+  white-space: nowrap;
+`
+
+const VersionIndicator = styled.p`
+  flex-shrink: 0;
+  margin: 0 5px;
+  flex-basis: fit-content;
+`
+
+const generateLabel = (created, versionNumber, count, manuscriptName) => {
+  return (
+    <VerisonLabelWrapper>
+      <Title>{manuscriptName}</Title>
+      <VersionIndicator>
+        {versionNumber >= count
+          ? `— Current version (${versionNumber})`
+          : `— ${new Date(created)
+              .toISOString()
+              .slice(0, 10)} (${versionNumber})`}
+      </VersionIndicator>
+    </VerisonLabelWrapper>
+  )
 }
 
 /* eslint-disable import/prefer-default-export */
@@ -57,6 +87,7 @@ export const VersionSwitcher = ({ versions = [], children, top = 2 }) => {
               d.props.version.created,
               normalizedVersions.length - i,
               normalizedVersions.length,
+              d.props.version.meta.title,
             ),
         }))}
         placeholder="Select version..."
