@@ -37,9 +37,6 @@ const reviewFields = `
   user {
     id
     username
-    defaultIdentity {
-      name
-    }
   }
 `
 
@@ -126,9 +123,6 @@ export const query = gql`
       id
       username
       admin
-      defaultIdentity {
-        name
-      }
     }
 
     manuscript(id: $id) {
@@ -234,7 +228,6 @@ export const getUsers = gql`
       admin
       defaultIdentity {
         id
-        name
       }
     }
   }

@@ -275,7 +275,7 @@ const DecisionVersion = ({
                     return (
                       <p key={team.id}>
                         {get(config, `teams.${team.role}.name`)}:{' '}
-                        {team.members?.[0]?.user?.defaultIdentity?.name}
+                        {team.members?.[0]?.user?.username}
                       </p>
                     )
                   }

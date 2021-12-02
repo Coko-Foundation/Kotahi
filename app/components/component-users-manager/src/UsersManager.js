@@ -40,7 +40,7 @@ const GET_USERS = gql`
         profilePicture
         defaultIdentity {
           id
-          name
+          identifier
         }
         online
         created

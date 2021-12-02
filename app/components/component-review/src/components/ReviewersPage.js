@@ -19,10 +19,6 @@ const teamFields = `
       username
       profilePicture
       online
-      defaultIdentity {
-        id
-        name
-      }
     }
     status
     isShared
@@ -82,10 +78,6 @@ const query = gql`
       profilePicture
       online
       admin
-      defaultIdentity {
-        id
-        name
-      }
     }
 
     manuscript(id: $id) {
@@ -103,10 +95,6 @@ const updateTeamMemberMutation = gql`
         username
         profilePicture
         online
-        defaultIdentity {
-          id
-          name
-        }
       }
       status
       isShared
