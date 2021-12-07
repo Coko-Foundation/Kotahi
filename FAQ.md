@@ -1,11 +1,8 @@
 # FAQ
 
-## All I see is a "Recent publications" page with no publications. How do I login?
+## Getting started
 
-Go to `/login` on your browser.
-eg. if your app is at `kotahi.myorg.com`, go to `kotahi.myorg.com/login`
-
-## How do I setup ORCID for development?
+### How do I setup ORCID for development?
 
 Login requires [ORCID](https://orcid.org/) to be set up correctly. By default, if `NODE_ENV` is set to `development`, the app will expect you to be using an account on ORCID's sandbox (this can be overridden via the `USE_SANDBOXED_ORCID` flag). ORCID's sandbox will only send emails to mailinator accounts, so you have to register on ORCID's sandbox with a mailinator one-time email address.
 
@@ -42,11 +39,11 @@ _Disclaimer: ORCID is a separate organisation from Coko and we are in no way aff
 
 [1] Even though this URL does not exist for the client (ie. it isn't handled by our `react-router` setup), it will be redirected to the server via `webpack-dev-server`'s proxy.
 
-## Why is ORCID's login page not loading?
+### Why is ORCID's login page not loading?
 
 ORCID seems to be reliant on Google Tag Manager, so ad-blocker or tracker-blocker extensions in your browser may interfere with authentication.
 
-## How can I create an admin user?
+### How can I create an admin user?
 
 Once you're logged in, go to the "My profile" page and copy the username (a string of digits). Open a terminal within your Docker **server** container, and perform the following, substituting your username:
 
@@ -59,33 +56,20 @@ x.save()
 
 Now if you visit `http://localhost:4000/kotahi/admin` it should show `(admin)` below your name at the top left.
 
-## What else can I do in the console?
-
-The console (`yarn console`) gives you a Node.js REPL with asyns/await support and models preloaded. You can access all of those as you can in the server-side code.
-
-A few examples:
-
-```js
-// returns all manuscripts
-const manuscripts = await Manuscript.query()
-```
-
-```js
-// get a channels messages
-const channel = await Channel.query().where({
-  manuscriptId: 'someUuid',
-  type: 'editorial',
-})
-const messages = await channel.$relatedQuery('messages')
-```
-
-And so on. For more information about the capabilities of the underlying Objection.js ORM, check out [its documentation](https://vincit.github.io/objection.js/).
-
-## What should PUBLIC_CLIENT_PROTOCOL, PUBLIC_CLIENT_HOST and PUBLIC_CLIENT_PORT be set to?
+### What should PUBLIC_CLIENT_PROTOCOL, PUBLIC_CLIENT_HOST and PUBLIC_CLIENT_PORT be set to?
 
 These environment variables are only needed for an instance where the client's public address is different to the address by which the server accesses it. For instance, when deploying behind a proxy, or when deploying a _development_ instance to a remote server (not to localhost). Otherwise, you can leave these unset.
 
-## What if I want to use my own PostgreSQL instance (i.e. not via `docker-compose`)?
+### All I see is a "Recent publications" page with no publications. How do I login?
+
+Go to `/login` on your browser.
+eg. if your app is at `kotahi.myorg.com`, go to `kotahi.myorg.com/login`
+
+### Can I run Kotahi without docker-compose?
+
+Certainly. In the absence of `docker-compose`, the server and client will still load the `.env` file, so that remains the preferred means of configuration. You should consult the `docker-compose.yml` and `docker-compose.production.yml` files as a kind of installation guide if for some reason you wish to not use docker.
+
+### What if I want to use my own PostgreSQL instance (i.e. not via `docker-compose`)?
 
 Create a local postgres database named `kotahidev` and a superuser `kotahidev` using `psql`, set a password for it too. We're using `kotahidev`, as the app is configured for that by default, but your database details can of course be different.
 
@@ -105,7 +89,9 @@ kotahidev=# create extension pgcrypto;
 
 Migrate the test database using `yarn dotenv yarn pubsweet migrate`.
 
-## How do I publish from Kotahi?
+## Publishing
+
+### How do I publish from Kotahi?
 
 While Kotahi deals with importing, reviewing, editing and preproduction, the final step of publishing to the web (or to print) is relegated to other tools. A wide variety of tools exist for building a static website from structured data; you may wish to use Coko Flax which is built expressly for this task.
 
@@ -128,6 +114,8 @@ Using a tool like Flax, you can either:
 
 - respond to every webhook request by requesting the relevant article from Kotahi and building (or rebuilding) its page (plus index pages); or
 - periodically request all articles published after the date of the most recent article you've already received.
+
+## Crossref
 
 ### Registering a DOI for an article with Crossref
 
@@ -153,7 +141,7 @@ Crossref login, registrant and depositor information, as well as your organizati
 
 For development and testing, `CROSSREF_USE_SANDBOX` should be true. This will send all requests to Crossref's test API. Note that you must request Crossref to give you access to the test API, for which a separate password may be issued.
 
-#### Form fields for publishing an article to Crossref
+### Form fields for publishing an article to Crossref
 
 Publishing to Crossref requires that you have certain fields configured via the form-builder. These are:
 | Field name                                          | Field type     | Purpose                                                                                                                            |
@@ -193,27 +181,47 @@ And the following form fields are required:
 | `submission.summary`, `submission.summarydate`, `submission.summarycreator`                                                                              | As above       | (Optional) Fields for a summary of the reviews.          |
 | `submission.description`                                                                                                                                 | TextField      | Title of the article under review, possibly abbreviated. |
 
-## Does Kotahi support collaborative real-time text editing?
+## Going further
+
+### What else can I do in the console?
+
+If you open a terminal within your Docker **server** container, the console (`yarn console`) gives you a Node.js REPL with asyns/await support and models preloaded. You can access all of those as you can in the server-side code.
+
+A few examples:
+
+```js
+// returns all manuscripts
+const manuscripts = await Manuscript.query()
+```
+
+```js
+// get a channels messages
+const channel = await Channel.query().where({
+  manuscriptId: 'someUuid',
+  type: 'editorial',
+})
+const messages = await channel.$relatedQuery('messages')
+```
+
+And so on. For more information about the capabilities of the underlying Objection.js ORM, check out [its documentation](https://vincit.github.io/objection.js/).
+
+### Does Kotahi support collaborative real-time text editing?
 
 Kotahi uses the Wax editor which is not configured for real-time collaboration out of the box, but can be (and was) made to support it. It was previously configured to support it, but the feature was removed in https://gitlab.coko.foundation/kotahi/kotahi/-/merge_requests/230/diffs?commit_id=6fd9eec258ce21d4db8cf1e593bb8b891b3f3c50 due to its experimental nature and it not being required by the known workflows. Reverting that would be a good choice for a starting point, should you wish to reimplement it.
 
-## How do I set the logo and branding colours?
+### How do I set the logo and branding colours?
 
 `app/brandConfig.json` allows logo, colors and brand name to be specified. Colors must be specified in hex format, e.g. "#9e9e9e".
 
-## Can I run Kotahi without docker-compose?
-
-Certainly. In the absence of `docker-compose`, the server and client will still load the `.env` file, so that remains the preferred means of configuration. You should consult the `docker-compose.yml` and `docker-compose.production.yml` files as a kind of installation guide if for some reason you wish to not use docker.
-
-## Why are uploads not working?
+### Why are uploads not working?
 
 We store uploads in a Docker volume. When this volume is first created (e.g. when setting up a new deployment or a new dev environment) the owner of the volume is not set correctly: the owner should be `node` but it comes out as `root`. This prevents uploading any files, including new manuscripts.
 
 The workaround is to manually go into the server container as `root`, and change the owner of the uploads folder to `node`. This only needs to be done once; the volume will retain the correct permissions forever after. Do the following (your server name may differ from `kotahi_server_1`; run `docker ps` to list servers):
 
-```
+```sh
 docker exec -u 0 -it kotahi_server_1 /bin/bash
 chown -R node:node uploads
 ```
 
-We’re looking at fixing this. 
+We’re looking at fixing this.
