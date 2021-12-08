@@ -31,7 +31,7 @@ ORCID_CLIENT_ID=APP-B6O346VLWWXBQ427
 ORCID_CLIENT_SECRET=b37055db-4405-4dfb-a547-d393cd63bb2a
 ```
 
-17. (Re-)Start the app via `docker compose up`.
+17. (Re-)Start the app via `docker-compose up`.
 
 You should now be able to use the login at `http://localhost:4000/login`.
 
