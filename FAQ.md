@@ -43,19 +43,6 @@ _Disclaimer: ORCID is a separate organisation from Coko and we are in no way aff
 
 ORCID seems to be reliant on Google Tag Manager, so ad-blocker or tracker-blocker extensions in your browser may interfere with authentication.
 
-### How can I create an admin user?
-
-Once you're logged in, go to the "My profile" page and copy the username (a string of digits). Open a terminal within your Docker **server** container, and perform the following, substituting your username:
-
-```sh
-yarn console
-x = await User.query().where({username:"0000000210481437"}).first()
-x.admin = true
-x.save()
-```
-
-Now if you visit `http://localhost:4000/kotahi/admin` it should show `(admin)` below your name at the top left.
-
 ### What should PUBLIC_CLIENT_PROTOCOL, PUBLIC_CLIENT_HOST and PUBLIC_CLIENT_PORT be set to?
 
 These environment variables are only needed for an instance where the client's public address is different to the address by which the server accesses it. For instance, when deploying behind a proxy, or when deploying a _development_ instance to a remote server (not to localhost). Otherwise, you can leave these unset.
@@ -182,6 +169,19 @@ And the following form fields are required:
 | `submission.description`                                                                                                                                 | TextField      | Title of the article under review, possibly abbreviated. |
 
 ## Going further
+
+### Can I manually create an admin user?
+
+Admin users can now set other users to be admins from within the dashboard. But this can also be done manually. Once you're logged in, go to the "My profile" page and copy the username (a string of digits). Open a terminal within your Docker **server** container, and perform the following, substituting your username:
+
+```sh
+yarn console
+x = await User.query().where({username:"0000000210481437"}).first()
+x.admin = true
+x.save()
+```
+
+Now if you visit `http://localhost:4000/kotahi/admin` it should show `(admin)` below your name at the top left.
 
 ### What else can I do in the console?
 
