@@ -49,7 +49,7 @@ const GET_USERS = gql`
   }
 `
 
-const UsersManager = () => {
+const UsersManager = ({ currentUser }) => {
   const SortHeader = ({ thisSortName, children }) => {
     const changeSort = () => {
       if (sortName !== thisSortName) {
@@ -118,8 +118,8 @@ const UsersManager = () => {
             </tr>
           </Header>
           <tbody>
-            {users.map((user, key) => (
-              <User key={user.id} number={key + 1} user={user} />
+            {users.map(user => (
+              <User currentUser={currentUser} key={user.id} user={user} />
             ))}
           </tbody>
         </Table>

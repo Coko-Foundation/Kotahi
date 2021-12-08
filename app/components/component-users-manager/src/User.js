@@ -26,7 +26,7 @@ const UPDATE_USER = gql`
   }
 `
 
-const User = ({ user }) => {
+const User = ({ user, currentUser }) => {
   const [deleteUser] = useMutation(DELETE_USER)
   const [updateUser] = useMutation(UPDATE_USER)
 
@@ -50,7 +50,7 @@ const User = ({ user }) => {
           Delete
         </Action>
         <br />
-        {process.env.INSTANCE_NAME === 'ncrc' && (
+        {user.id !== currentUser.id && (
           <Action
             onClick={() =>
               updateUser({
