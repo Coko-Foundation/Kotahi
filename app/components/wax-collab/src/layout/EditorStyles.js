@@ -198,6 +198,10 @@ export const SimpleEditorDiv = styled.div`
   padding: 16px;
   position: relative;
 
+  &:focus-within {
+    border: 1px solid ${th('colorSuccess')};
+  }
+
   .error & {
     border: 1px solid ${th('colorError')};
   }
