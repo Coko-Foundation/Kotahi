@@ -37,7 +37,7 @@ const ModalWrapper = styled.div`
   position: fixed;
   right: 0;
   top: 0;
-  z-index: 100;
+  z-index: 10000;
 `
 
 const SafeRadioGroup = styled(RadioGroup)`
