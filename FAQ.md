@@ -49,8 +49,7 @@ These environment variables are only needed for an instance where the client's p
 
 ### All I see is a "Recent publications" page with no publications. How do I login?
 
-Go to `/login` on your browser.
-eg. if your app is at `kotahi.myorg.com`, go to `kotahi.myorg.com/login`
+Click **Dashboard** in the upper right. You'll be taken to the login flow.
 
 ### Can I run Kotahi without docker-compose?
 
