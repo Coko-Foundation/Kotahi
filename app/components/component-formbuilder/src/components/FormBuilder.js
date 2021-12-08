@@ -92,19 +92,20 @@ const ElementTitle = styled.span``
 
 const CancelButton = styled(Button)`
   background: #e9ebe8;
-  text-decoration: none;
   padding: 8px;
+  text-decoration: none;
+
   &:hover {
     background: #dbdbdb;
   }
 `
 
-const ConfrimationString = styled.p`
-  margin-bottom: 20px;
-  width: 100%;
+const ConfirmationString = styled.p`
+  align-items: center;
   display: flex;
   justify-content: center;
-  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
 `
 
 const createMarkup = encodedHtml => ({
@@ -174,9 +175,9 @@ const BuilderElement = ({
 
       <Modal isOpen={openModal}>
         <ModalContainer>
-          <ConfrimationString>
+          <ConfirmationString>
             Permanently delete this field?
-          </ConfrimationString>
+          </ConfirmationString>
           <Button
             onClick={event => {
               deleteField(formFieldId)

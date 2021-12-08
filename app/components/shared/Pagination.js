@@ -65,8 +65,15 @@ export const Pagination = ({
   return (
     <PaginationContainer>
       <PaginationInfo>
-        Showing <strong>{firstResult}</strong> to <strong>{lastResult}</strong>{' '}
-        of <strong>{totalCount}</strong> results
+        {totalCount > 0 ? (
+          <>
+            Showing <strong>{firstResult}</strong> to{' '}
+            <strong>{lastResult}</strong> of <strong>{totalCount}</strong>{' '}
+            results
+          </>
+        ) : (
+          <>No results found</>
+        )}
       </PaginationInfo>
       <Styles>
         <ReactPagination

@@ -9,6 +9,7 @@ import {
   Redirect,
 } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import Modal from 'react-modal'
 import { JournalContext } from './xpub-journal/src'
 import { XpubContext } from './xpub-with-context/src'
 
@@ -54,8 +55,8 @@ const Root = styled.div`
      }
   `};
   overflow: hidden;
-  z-index: 0;
   position: relative;
+  z-index: 0;
 `
 
 // TODO: Redirect if token expires
@@ -97,6 +98,7 @@ const updateStuff = data => {
 }
 
 const AdminPage = () => {
+  Modal.setAppElement('#root')
   const history = useHistory()
   const journal = useContext(JournalContext)
   const [conversion] = useContext(XpubContext)

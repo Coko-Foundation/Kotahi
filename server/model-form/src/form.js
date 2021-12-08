@@ -40,6 +40,7 @@ class Form extends BaseModel {
                       properties: {
                         label: { type: 'string' },
                         value: { type: 'string' },
+                        labelColor: { type: 'color' },
                         id: { type: 'string', format: 'uuid' },
                       },
                     },

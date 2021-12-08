@@ -79,6 +79,7 @@ const query = gql`
           options {
             id
             label
+            labelColor
             value
           }
           validate {

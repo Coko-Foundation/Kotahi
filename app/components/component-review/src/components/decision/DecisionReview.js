@@ -11,12 +11,7 @@ import useCurrentUser from '../../../../../hooks/useCurrentUser'
 import { updateReviewMutation } from '../queries'
 import ShareIcon from '../../../../../shared/icons/share'
 
-import {
-  UserCombo,
-  Primary,
-  Secondary,
-  UserInfo,
-} from '../../../../component-manuscripts/src/style'
+import { UserCombo, Primary, Secondary, UserInfo } from '../../../../shared'
 import { UserAvatar } from '../../../../component-avatar/src'
 
 const GET_USER = gql`

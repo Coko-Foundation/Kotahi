@@ -16,11 +16,11 @@ import ArticleEvaluationSummaryPage from '../../../../component-decision-viewer'
 import SharedReviewerGroupReviews from './SharedReviewerGroupReviews'
 
 const Reviewerdisclaimer = styled.span`
-  font-size: 14px;
   color: ${th('colorTextPlaceholder')};
   display: grid;
-  place-items: center;
+  font-size: 14px;
   padding: 0 5px;
+  place-items: center;
 `
 
 const hasManuscriptFile = manuscript =>
