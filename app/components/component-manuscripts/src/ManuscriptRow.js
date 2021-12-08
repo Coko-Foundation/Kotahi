@@ -315,10 +315,10 @@ const ManuscriptRow = ({
   const [isPublishingBlocked, setIsPublishingBlocked] = useState(false)
 
   const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT, {
-    update(cache, { data: { deleteManuscriptId } }) {
+    update(cache, { data: { deleteManuscript } }) {
       const id = cache.identify({
         __typename: 'Manuscript',
-        id: deleteManuscriptId,
+        id: deleteManuscript,
       })
 
       cache.evict({ id })
@@ -373,11 +373,11 @@ const ManuscriptRow = ({
   })
 
   const [openModal, setOpenModal] = useState(false)
-  const [menuscriptIds, setMenuscriptId] = useState()
+  const [manuscriptIds, setManuscriptId] = useState()
 
   const openModalHandler = id => {
     setOpenModal(true)
-    setMenuscriptId(id)
+    setManuscriptId(id)
   }
 
   const closeModalHandler = () => {
@@ -410,13 +410,7 @@ const ManuscriptRow = ({
           <Action to={`${urlFrag}/versions/${manuscriptId}/manuscript`}>
             View
           </Action>
-          <Action
-            onClick={() =>
-              openModalHandler({ variables: { id: manuscriptId } })
-            }
-          >
-            Delete
-          </Action>
+          <Action onClick={() => openModalHandler(manuscriptId)}>Delete</Action>
           <Action to={`${urlFrag}/versions/${manuscriptId}/production`}>
             Production
           </Action>
@@ -438,8 +432,8 @@ const ManuscriptRow = ({
             Permanently delete this manuscript?
           </ConfrimationString>
           <Button
-            onClick={event => {
-              deleteManuscript(menuscriptIds)
+            onClick={() => {
+              deleteManuscript({ variables: { id: manuscriptIds } })
               closeModalHandler()
             }}
             primary
