@@ -46,7 +46,7 @@ import {
 } from '../../../shared/manuscriptUtils'
 import styled, { withTheme } from 'styled-components'
 import Modal from '../../component-modal/src/index'
-import { stripHtml } from '../../component-review/src/components/review'
+import { stripHtml } from '../../component-review/src/components/review/util'
 
 const ModalContainer = styled.div`
   background: ${th('colorBackground')};
