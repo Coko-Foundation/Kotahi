@@ -16,13 +16,12 @@ To install Kotahi locally, you'll need these things:
 Once you have those things, try doing this:
 
 - From the shell in the main directory: `yarn install` to install all the Node packages.
-- From the shell: `docker compose up`
-- Point your browser at [http://localhost:4000/login](http://localhost:4000/login).
+- From the shell: `docker compose up` _Do not do this if you do not have a .env file!_
+- Point your browser at [http://localhost:4000](http://localhost:4000) – you should see an empty "recent publications" page. 
+- Click *Dashboard* in the upper right.
 - You'll be prompted to login with ORCID. If you don't yet have an ORCID ID, you can login with account number `0000-0001-6819-2182` and password `KotahiDemoAccess2021`.
 - If you're asked, click "Authorize Access".
-- You should be returned to Kotahi; enter an email address to get started. (If you're using the default login, the email registered with ORCID is kotahidemoaccess@mailinator.com; but you'll probably want your own ORCID account to receive notifications.)
-
-If you get that far, you probably want to set up users and make sure at least one of them is an admin. Check the [FAQ](faq.md) for how to do that.
+- You should be returned to Kotahi; enter an email address to get started. The email you enter will be associated with the ORCID ID in your instance; and the first account created is automatically an admin, so if you're not just trying out Kotahi, there's a benefit to making your own ORCID ID.
 
 If something doesn't work, read though the next section; or check through the [FAQ](faq.md).
 
