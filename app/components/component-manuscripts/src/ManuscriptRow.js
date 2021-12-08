@@ -46,6 +46,7 @@ import {
 } from '../../../shared/manuscriptUtils'
 import styled, { withTheme } from 'styled-components'
 import Modal from '../../component-modal/src/index'
+import { stripHtml } from '../../component-review/src/components/review'
 
 const ModalContainer = styled.div`
   background: ${th('colorBackground')};
@@ -72,11 +73,6 @@ const ConfrimationString = styled.p`
 `
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
-
-const updateUrlParameter = (url, param, value) => {
-  var regex = new RegExp('(' + param + '=)[^&]+')
-  return url.replace(regex, '$1' + value)
-}
 
 const renderManuscriptCell = ({
   manuscript,
@@ -112,8 +108,8 @@ const renderManuscriptCell = ({
                 overlay={
                   <span>
                     {formattedAbstract?.length > 1000
-                      ? `${formattedAbstract.slice(0, 1000)}...`
-                      : formattedAbstract}
+                      ? `${stripHtml(formattedAbstract).slice(0, 1000)}...`
+                      : stripHtml(formattedAbstract)}
                   </span>
                 }
                 overlayInnerStyle={{
@@ -163,8 +159,8 @@ const renderManuscriptCell = ({
                 overlay={
                   <span>
                     {formattedAbstract?.length > 1000
-                      ? `${formattedAbstract.slice(0, 1000)}...`
-                      : formattedAbstract}
+                      ? `${stripHtml(formattedAbstract).slice(0, 1000)}...`
+                      : stripHtml(formattedAbstract)}
                   </span>
                 }
                 overlayInnerStyle={{
@@ -354,7 +350,10 @@ const ManuscriptRow = ({
         .join(' ')
         .replace(/<[^>]*>/g, '')
     } else {
-      formattedAbstract = manuscript.submission.abstract.replace(/<[^>]*>/g, '')
+      formattedAbstract = manuscript.submission.abstract.replace(
+        /<[^>]*>/g,
+        '',
+      )
     }
   }
 
