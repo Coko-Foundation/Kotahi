@@ -30,6 +30,7 @@ module.exports = {
   },
   'client-features': {
     displayShortIdAsIdentifier: 'DISPLAY_SHORTID_AS_IDENTIFIER',
+    manuscriptsTableColumns: 'MANUSCRIPTS_TABLE_COLUMNS',
   },
   'publishing-webhook': {
     publishingWebhookUrl: 'PUBLISHING_WEBHOOK_URL',

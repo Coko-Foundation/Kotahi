@@ -14,17 +14,17 @@ const VerisonLabelWrapper = styled.div`
 `
 
 const Title = styled.p`
-  overflow: hidden;
   flex-shrink: 1;
-  text-overflow: ellipsis;
   margin: 0 5px;
+  overflow: hidden;
+  text-overflow: ellipsis;
   white-space: nowrap;
 `
 
 const VersionIndicator = styled.p`
+  flex-basis: fit-content;
   flex-shrink: 0;
   margin: 0 5px;
-  flex-basis: fit-content;
 `
 
 const generateLabel = (created, versionNumber, count, manuscriptName) => {

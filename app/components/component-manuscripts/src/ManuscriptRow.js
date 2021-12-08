@@ -1,456 +1,34 @@
-/* eslint-disable jsx-a11y/no-static-element-interactions, import/no-unresolved, jsx-a11y/click-events-have-key-events */
-/* eslint-disable */
-
-import React, { useState } from 'react'
-import { useMutation, useQuery, useApolloClient } from '@apollo/client'
-import { get } from 'lodash'
-import { th, grid } from '@pubsweet/ui-toolkit'
-import { Button } from '@pubsweet/ui'
-import config from 'config'
+import React from 'react'
 import PropTypes from 'prop-types'
-import { Checkbox } from '@pubsweet/ui'
-import Tooltip from 'rc-tooltip'
 import 'rc-tooltip/assets/bootstrap_white.css'
-import './style.css'
-import { UserAvatar } from '../../component-avatar/src'
-import {
-  Row,
-  Cell,
-  LastCell,
-  UserCombo,
-  Primary,
-  Secondary,
-  UserInfo,
-  StyledTopic,
-  StyledAuthor,
-  StyledTableLabel,
-  InfoIcon,
-  // SuccessStatus,
-  // ErrorStatus,
-  // NormalStatus,
-  UserAction as Action,
-  StatusBadge,
-  StyledDescriptionWrapper,
-  StyledButton,
-} from './style'
+import { ManuscriptsRow, Cell } from './style'
+import { getFieldValueAndDisplayValue } from '../../../shared/manuscriptUtils'
 
-import { convertTimestampToDate } from '../../../shared/time-formatting'
-import { convertCamelCaseToText } from '../../../shared/convertCamelCaseToText'
-import { articleStatuses } from '../../../globals'
-import { publishManuscriptMutation } from '../../component-review/src/components/queries'
-import { DELETE_MANUSCRIPT } from '../../../queries'
-import manuscriptsTableConfig from './manuscriptsTableConfig'
-import {
-  validateManuscript,
-  getFieldValueAndDisplayValue,
-} from '../../../shared/manuscriptUtils'
-import styled, { withTheme } from 'styled-components'
-import Modal from '../../component-modal/src/index'
-import { stripHtml } from '../../component-review/src/components/review/util'
-
-const ModalContainer = styled.div`
-  background: ${th('colorBackground')};
-  padding: 20px 24px;
-  z-index: 100;
-`
-
-const CancelButton = styled(Button)`
-  background: #e9ebe8;
-  padding: 8px;
-  text-decoration: none;
-
-  &:hover {
-    background: #dbdbdb;
-  }
-`
-
-const ConfrimationString = styled.p`
-  align-items: center;
-  display: flex;
-  justify-content: center;
-  margin-bottom: 20px;
-  width: 100%;
-`
-
-const urlFrag = config.journal.metadata.toplevel_urlfragment
-
-const renderManuscriptCell = ({
-  manuscript,
-  fieldDefinitions,
-  selectedNewManuscripts,
-  toggleNewManuscriptCheck,
-  formattedAbstract,
-  convertTimestampToDate,
-  convertCamelCaseToText,
-  filterByTopic,
-  filterByArticleStatus,
-  filterByArticleLabel,
-  setReadyToEvaluateLabel,
-}) => {
-  const renderManuscriptColumnsActions = {
-    'meta.title': displayValue => {
-      return (
-        <Cell key="title">
-          {process.env.INSTANCE_NAME === 'colab' &&
-            manuscript.status === articleStatuses.new &&
-            !manuscript.submission.labels && (
-              <Checkbox
-                checked={selectedNewManuscripts.includes(manuscript.id)}
-                onChange={() => toggleNewManuscriptCheck(manuscript.id)}
-              />
-            )}
-          {displayValue}
-          {process.env.INSTANCE_NAME === 'colab' && (
-            <>
-              <Tooltip
-                destroyTooltipOnHide={{ keepParent: false }}
-                getTooltipContainer={el => el}
-                overlay={
-                  <span>
-                    {formattedAbstract?.length > 1000
-                      ? `${stripHtml(formattedAbstract).slice(0, 1000)}...`
-                      : stripHtml(formattedAbstract)}
-                  </span>
-                }
-                overlayInnerStyle={{
-                  backgroundColor: 'black',
-                  color: 'white',
-                  borderColor: 'black',
-                }}
-                overlayStyle={{
-                  maxWidth: '65vw',
-                  wordBreak: 'break-word',
-                  display: `${!formattedAbstract && 'none'}`,
-                }}
-                placement="bottomLeft"
-                trigger={['hover']}
-              >
-                <InfoIcon>i</InfoIcon>
-              </Tooltip>
-            </>
-          )}
-        </Cell>
-      )
-    },
-    'submission.articleDescription': displayValue => {
-      return (
-        <Cell key="desc">
-          <StyledDescriptionWrapper>
-            {manuscript.status === articleStatuses.new &&
-              !manuscript.submission.labels && (
-                <Checkbox
-                  checked={selectedNewManuscripts.includes(manuscript.id)}
-                  onChange={() => toggleNewManuscriptCheck(manuscript.id)}
-                />
-              )}
-            <span style={{ wordBreak: 'break-word' }}>
-              {manuscript.submission.articleURL ? (
-                <a href={manuscript.submission.articleURL} target="_blank">
-                  {displayValue}
-                </a>
-              ) : (
-                displayValue
-              )}
-            </span>
-            <>
-              <Tooltip
-                destroyTooltipOnHide={{ keepParent: false }}
-                getTooltipContainer={el => el}
-                overlay={
-                  <span>
-                    {formattedAbstract?.length > 1000
-                      ? `${stripHtml(formattedAbstract).slice(0, 1000)}...`
-                      : stripHtml(formattedAbstract)}
-                  </span>
-                }
-                overlayInnerStyle={{
-                  backgroundColor: 'black',
-                  color: 'white',
-                  borderColor: 'black',
-                }}
-                overlayStyle={{
-                  maxWidth: '65vw',
-                  wordBreak: 'break-word',
-                  display: `${!formattedAbstract && 'none'}`,
-                }}
-                placement="bottomLeft"
-                trigger={['hover']}
-              >
-                <InfoIcon>i</InfoIcon>
-              </Tooltip>
-            </>
-          </StyledDescriptionWrapper>
-        </Cell>
-      )
-    },
-    'submission.topics': (displayValue, value) => {
-      const topicComponents = []
-
-      if (Array.isArray(value)) {
-        for (let i = 0; i < value.length; i += 1) {
-          topicComponents.push(
-            <StyledTopic
-              key={value[i]}
-              onClick={() => filterByTopic(value[i])}
-              title={displayValue[i]}
-            >
-              {displayValue[i]}
-            </StyledTopic>,
-          )
-        }
-      } else if (value !== null) {
-        console.error('Topics not coming in as array:', value, displayValue)
-        topicComponents.push(
-          <span key="TopicsLoadError">Topics could not be loaded.</span>,
-        )
-      }
-
-      return <Cell key="topics">{topicComponents}</Cell>
-    },
-    status: (displayValue, value) => {
-      return (
-        <Cell key="status">
-          <span onClick={() => filterByArticleStatus(value)}>
-            <StatusBadge
-              clickable
-              published={manuscript.published}
-              status={value}
-            />
-          </span>
-        </Cell>
-      )
-    },
-    'submission.labels': (displayValue, value) => {
-      return (
-        <Cell key="labels">
-          {value ? (
-            <StyledTableLabel onClick={() => filterByArticleLabel(value)}>
-              {displayValue}
-            </StyledTableLabel>
-          ) : (
-            <StyledButton
-              onClick={() => setReadyToEvaluateLabel(manuscript.id)}
-              primary
-            >
-              Select
-            </StyledButton>
-          )}
-        </Cell>
-      )
-    },
-    author: () => {
-      return (
-        <Cell key="author">
-          {manuscript.submitter && (
-            <UserCombo>
-              <UserAvatar user={manuscript.submitter} />
-              <UserInfo>
-                <Primary>{manuscript.submitter.username}</Primary>
-                <Secondary>
-                  {manuscript.submitter.defaultIdentity.identifier}
-                </Secondary>
-              </UserInfo>
-            </UserCombo>
-          )}
-        </Cell>
-      )
-    },
-    editor: () => {
-      return (
-        <Cell key="editor">
-          {manuscript.teams.map(team => (
-            <StyledAuthor key={team.id}>
-              {team.role !== 'author' &&
-                team.role !== 'reviewer' &&
-                team.members &&
-                team.members[0] &&
-                team.members[0].user.username}
-            </StyledAuthor>
-          ))}
-        </Cell>
-      )
-    },
-  }
-
-  return fieldName => {
-    const [value, displayValue] = getFieldValueAndDisplayValue(
-      fieldName,
-      manuscript,
-      fieldDefinitions,
-    )
-    const specialRenderer = get(renderManuscriptColumnsActions, fieldName)
-    if (specialRenderer) return specialRenderer(displayValue, value)
-
-    return <Cell key={fieldName}>{displayValue}</Cell>
-  }
-}
-
-// manuscriptId is always the parent manuscript's id
-const ManuscriptRow = ({
-  manuscriptId,
-  manuscript,
-  fieldDefinitions,
-  submitter,
-  history,
-  toggleNewManuscriptCheck,
-  selectedNewManuscripts,
-  setSelectedStatus,
-  setSelectedTopic,
-  setSelectedLabel,
-  setReadyToEvaluateLabel,
-  selectedStatus,
-  selectedLabel,
-  selectedTopic,
-  filterArticle,
-  filterByTopic,
-  filterByArticleStatus,
-  filterByArticleLabel,
-  ...props
-}) => {
-  const [publishManuscript] = useMutation(publishManuscriptMutation)
-  const [isPublishingBlocked, setIsPublishingBlocked] = useState(false)
-
-  const [deleteManuscript] = useMutation(DELETE_MANUSCRIPT, {
-    update(cache, { data: { deleteManuscript } }) {
-      const id = cache.identify({
-        __typename: 'Manuscript',
-        id: deleteManuscript,
-      })
-
-      cache.evict({ id })
-    },
-  })
-
-  const client = useApolloClient()
-
-  const publishManuscriptHandler = async () => {
-    if (isPublishingBlocked) {
-      return
-    }
-
-    setIsPublishingBlocked(true)
-
-    const areThereInvalidFields = await Promise.all(
-      validateManuscript(manuscript.submission, fieldDefinitions, client),
-    )
-
-    if (areThereInvalidFields.filter(Boolean).length === 0) {
-      await publishManuscript({
-        variables: { id: manuscript.id },
-      })
-      setIsPublishingBlocked(false)
-    }
-  }
-
-  let formattedAbstract
-
-  if (manuscript.submission.abstract) {
-    if (Array.isArray(manuscript.submission.abstract)) {
-      formattedAbstract = manuscript.submission.abstract
-        .join(' ')
-        .replace(/<[^>]*>/g, '')
-    } else {
-      formattedAbstract = manuscript.submission.abstract.replace(
-        /<[^>]*>/g,
-        '',
-      )
-    }
-  }
-
-  const renderCell = renderManuscriptCell({
-    manuscript,
-    fieldDefinitions,
-    selectedNewManuscripts,
-    toggleNewManuscriptCheck,
-    formattedAbstract,
-    convertTimestampToDate,
-    filterByTopic,
-    convertCamelCaseToText,
-    filterByArticleStatus,
-    filterByArticleLabel,
-    setReadyToEvaluateLabel,
-  })
-
-  const [openModal, setOpenModal] = useState(false)
-  const [manuscriptIds, setManuscriptId] = useState()
-
-  const openModalHandler = id => {
-    setOpenModal(true)
-    setManuscriptId(id)
-  }
-
-  const closeModalHandler = () => {
-    setOpenModal(false)
-  }
-
+const ManuscriptRow = ({ manuscript, columnDefinitions, setFilter }) => {
   return (
-    <>
-      <Row>
-        {manuscriptsTableConfig.map(field => {
-          return renderCell(field)
-        })}
-        <LastCell>
-          {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
-            [
-              articleStatuses.submitted,
-              articleStatuses.evaluated,
-              articleStatuses.new,
-              articleStatuses.published,
-            ].includes(manuscript.status) && (
-              <Action to={`${urlFrag}/versions/${manuscriptId}/evaluation`}>
-                Evaluation
-              </Action>
-            )}
-          {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
-            <Action to={`${urlFrag}/versions/${manuscriptId}/decision`}>
-              Control
-            </Action>
-          )}
-          <Action to={`${urlFrag}/versions/${manuscriptId}/manuscript`}>
-            View
-          </Action>
-          <Action onClick={() => openModalHandler(manuscriptId)}>Delete</Action>
-          <Action to={`${urlFrag}/versions/${manuscriptId}/production`}>
-            Production
-          </Action>
-          {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
-            manuscript.status === articleStatuses.evaluated && (
-              <Action
-                isDisabled={isPublishingBlocked}
-                onClick={publishManuscriptHandler}
-              >
-                Publish
-              </Action>
-            )}
-        </LastCell>
-      </Row>
+    <ManuscriptsRow>
+      {columnDefinitions.map(column => {
+        const values = getFieldValueAndDisplayValue(column, manuscript)
+        const Renderer = column.component
 
-      <Modal isOpen={openModal}>
-        <ModalContainer>
-          <ConfrimationString>
-            Permanently delete this manuscript?
-          </ConfrimationString>
-          <Button
-            onClick={() => {
-              deleteManuscript({ variables: { id: manuscriptIds } })
-              closeModalHandler()
-            }}
-            primary
-          >
-            Ok
-          </Button>
-          &nbsp;
-          <CancelButton onClick={() => closeModalHandler()}>
-            Cancel
-          </CancelButton>
-        </ModalContainer>
-      </Modal>
-    </>
+        return (
+          <Cell key={column.name} {...column}>
+            <Renderer
+              applyFilter={
+                column.filterOptions && (val => setFilter(column.name, val))
+              }
+              manuscript={manuscript}
+              values={values}
+              {...column.extraProps}
+            />
+          </Cell>
+        )
+      })}
+    </ManuscriptsRow>
   )
 }
 
 ManuscriptRow.propTypes = {
-  manuscriptId: PropTypes.string.isRequired,
   manuscript: PropTypes.shape({
     teams: PropTypes.arrayOf(PropTypes.object),
     meta: PropTypes.shape({
@@ -464,35 +42,36 @@ ManuscriptRow.propTypes = {
     // eslint-disable-next-line
     submission: PropTypes.object.isRequired,
   }).isRequired,
-  submitter: PropTypes.shape({
-    defaultIdentity: PropTypes.shape({
-      name: PropTypes.string.isRequired,
-    }).isRequired,
-    email: PropTypes.string,
-    username: PropTypes.string.isRequired,
-  }),
-  fieldDefinitions: PropTypes.objectOf(
+  columnDefinitions: PropTypes.arrayOf(
     PropTypes.shape({
-      id: PropTypes.string.isRequired,
-      component: PropTypes.string.isRequired,
+      /** The column name, corresponding either to a field name e.g. 'meta.title' or to a special built-in column type */
       name: PropTypes.string.isRequired,
-      options: PropTypes.arrayOf(
+      /** Title to display in column heading */
+      title: PropTypes.string.isRequired,
+      /** Can this column be sorted? */
+      canSort: PropTypes.bool.isRequired,
+      /** 'ASC' or 'DESC' if this column is currently used to sort the table */
+      sortDirection: PropTypes.string,
+      /** The first sort direction to apply if the user opts to sort by this column */
+      defaultSortDirection: PropTypes.string,
+      /** The set of values that this column can be filtered by */
+      filterOptions: PropTypes.arrayOf(
         PropTypes.shape({
           label: PropTypes.string.isRequired,
           value: PropTypes.string.isRequired,
         }).isRequired,
       ),
+      /** If this column is currently used to filter the results, the filter value in use */
+      filterValue: PropTypes.string,
+      /** CSS flex attribute to use for sizing the column */
+      flex: PropTypes.string.isRequired,
+      /** The component to use for displaying a cell in this column */
+      component: PropTypes.elementType.isRequired,
+      /** Extra non-standard props to be supplied to the component */
+      extraProps: PropTypes.shape({}),
     }).isRequired,
   ).isRequired,
-  toggleNewManuscriptCheck: PropTypes.func.isRequired,
-  selectedNewManuscripts: PropTypes.arrayOf(PropTypes.object).isRequired,
-  setSelectedStatus: PropTypes.func.isRequired,
-  history: PropTypes.shape({}),
-  setSelectedTopic: PropTypes.func.isRequired,
-}
-ManuscriptRow.defaultProps = {
-  history: undefined,
-  submitter: {},
+  setFilter: PropTypes.func.isRequired,
 }
 
 export default ManuscriptRow

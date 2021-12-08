@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
+import styled from 'styled-components'
 import { isEmpty, omitBy } from 'lodash'
 import { Formik } from 'formik'
 import { ValidatedFieldFormik, Menu, Button } from '@pubsweet/ui'
+import { th } from '@pubsweet/ui-toolkit'
 import { v4 as uuid } from 'uuid'
 import components from './config/Elements'
 import * as elements from './builderComponents'
@@ -18,7 +20,12 @@ const MenuComponents = input => (
   />
 )
 
+const InvalidWarning = styled.div`
+  color: ${th('colorError')};
+`
+
 const ComponentProperties = ({
+  formErrors,
   onSubmit,
   selectedComponent,
   setComponentType,
@@ -29,6 +36,8 @@ const ComponentProperties = ({
   const editableProperties = Object.entries(componentProperties).filter(
     ([key, value]) => key !== 'id',
   )
+
+  const formIsValid = !Object.keys(formErrors).length
 
   return (
     <Page key={selectedComponent}>
@@ -68,9 +77,14 @@ const ComponentProperties = ({
             )}
           </Section>
         ))}
-        <Button primary type="submit">
+        <Button disabled={!formIsValid} primary type="submit">
           Update Field
         </Button>
+        {!formIsValid && (
+          <InvalidWarning>
+            Correct invalid values before updating
+          </InvalidWarning>
+        )}
       </form>
     </Page>
   )
@@ -136,6 +150,7 @@ const ComponentForm = ({ field, formId, updateField }) => {
     >
       {formikProps => (
         <ComponentProperties
+          formErrors={formikProps.errors}
           onSubmit={formikProps.handleSubmit}
           selectedComponent={componentType}
           setComponentType={setComponentType}

@@ -44,19 +44,20 @@ const ControlIcon = withTheme(({ children, theme }) => (
 
 const CancelButton = styled(Button)`
   background: #e9ebe8;
-  text-decoration: none;
   padding: 8px;
+  text-decoration: none;
+
   &:hover {
     background: #dbdbdb;
   }
 `
 
 const ConfrimationString = styled.p`
-  margin-bottom: 20px;
-  width: 100%;
+  align-items: center;
   display: flex;
   justify-content: center;
-  align-items: center;
+  margin-bottom: 20px;
+  width: 100%;
 `
 
 const FormBuilderLayout = ({

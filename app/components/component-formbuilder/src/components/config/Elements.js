@@ -1,3 +1,5 @@
+import { required } from '../../../../xpub-validators/src'
+
 const textfield = {
   component: 'TextField',
 }
@@ -20,10 +22,19 @@ const textarea = {
   },
 }
 
+const requiredTextField = {
+  component: 'TextField',
+  props: {
+    validate: required,
+  },
+}
+
 const shortDescriptionField = {
   component: 'TextField',
   props: { label: 'Short title (optional — used in concise listings)' },
 }
+
+const nameFieldRegex = /^(?:submission\.[a-zA-Z]\w*|meta.title|meta.abstract|fileName|visualAbstract)$/
 
 const nameField = {
   component: 'TextField',
@@ -31,6 +42,7 @@ const nameField = {
     label: 'Name (internal field name)',
     description:
       'Use either "submission.yourFieldNameHere", or one of the following: "meta.title" for manuscript title, "meta.abstract" for abstract, "fileName" for SupplementaryFiles, or "visualAbstract" for a VisualAbstract.',
+    validate: val => (nameFieldRegex.test(val) ? null : 'Invalid name'),
   },
 }
 
@@ -150,7 +162,7 @@ const hideFromAuthorsField = {
 const elements = {
   SupplementaryFiles: {
     id: textfield,
-    title: textfield,
+    title: requiredTextField,
     name: nameField,
     description: editorfield,
     shortDescription: shortDescriptionField,
@@ -160,7 +172,7 @@ const elements = {
   },
   VisualAbstract: {
     id: textfield,
-    title: textfield,
+    title: requiredTextField,
     name: nameField,
     description: editorfield,
     shortDescription: shortDescriptionField,
@@ -170,7 +182,7 @@ const elements = {
   },
   AuthorsInput: {
     id: textfield,
-    title: textfield,
+    title: requiredTextField,
     name: nameField,
     description: editorfield,
     shortDescription: shortDescriptionField,
@@ -180,7 +192,7 @@ const elements = {
   },
   LinksInput: {
     id: textfield,
-    title: textfield,
+    title: requiredTextField,
     name: nameField,
     description: editorfield,
     shortDescription: shortDescriptionField,
@@ -190,7 +202,7 @@ const elements = {
   },
   AbstractEditor: {
     id: textfield,
-    title: textfield,
+    title: requiredTextField,
     name: nameField,
     placeholder: textfield,
     description: editorfield,
@@ -201,7 +213,7 @@ const elements = {
   },
   TextField: {
     id: textfield,
-    title: textfield,
+    title: requiredTextField,
     name: nameField,
     placeholder: textfield,
     description: editorfield,
@@ -262,7 +274,7 @@ const elements = {
   },
   CheckboxGroup: {
     id: textfield,
-    title: textfield,
+    title: requiredTextField,
     name: nameField,
     description: editorfield,
     options: optionfield,
@@ -273,7 +285,7 @@ const elements = {
   },
   Select: {
     id: textfield,
-    title: textfield,
+    title: requiredTextField,
     name: nameField,
     placeholder: textfield,
     description: editorfield,
@@ -285,7 +297,7 @@ const elements = {
   },
   RadioGroup: {
     id: textfield,
-    title: textfield,
+    title: requiredTextField,
     name: nameField,
     description: editorfield,
     options: optionfield,

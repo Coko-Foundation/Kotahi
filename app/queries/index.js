@@ -106,14 +106,14 @@ export const DELETE_MANUSCRIPTS = gql`
 
 export const GET_MANUSCRIPTS_AND_FORM = gql`
   query Manuscripts(
-    $sort: String
-    $filter: ManuscriptsFilter
+    $sort: ManuscriptsSort
+    $filters: [ManuscriptsFilter!]!
     $offset: Int
     $limit: Int
   ) {
     paginatedManuscripts(
       sort: $sort
-      filter: $filter
+      filters: $filters
       offset: $offset
       limit: $limit
     ) {
@@ -197,9 +197,12 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           id
           component
           name
+          title
+          shortDescription
           options {
             id
             label
+            labelColor
             value
           }
         }

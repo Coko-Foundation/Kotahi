@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import config from 'config'
 import fnv from 'fnv-plus'
 import { Icon } from '@pubsweet/ui'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../shared/lightenBy'
 
 const FloatRightButton = styled.a`
@@ -13,7 +13,7 @@ const FloatRightButton = styled.a`
   color: ${th('colorTextReverse')};
   display: flex;
   float: right;
-  margin-left: 20px;
+  margin: 0 0 ${grid(1)} ${grid(2)};
   padding: 4px 12px;
 
   &:hover {

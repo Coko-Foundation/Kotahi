@@ -115,8 +115,9 @@ const getData = async ctx => {
 
         return { topic, ids: data.esearchresult.idlist }
       } catch (err) {
-        /* eslint-disable-next-line */
-        console.error(e.message)
+        console.error(
+          `Failed to retrieve pubmed data for topic ${topic}. Query:\n${query}\n${err.message}`,
+        )
       }
     },
   )
@@ -125,6 +126,8 @@ const getData = async ctx => {
 
   for (const topicIdPromise of topicsPromises) {
     const topicIdResponse = await topicIdPromise
+    // eslint-disable-next-line no-continue
+    if (!topicIdResponse) continue
 
     const filteredTopicIdResponse = topicIdResponse.ids
       .map(id => {
