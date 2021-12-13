@@ -6,6 +6,12 @@ import cleanMathMarkup from './cleanMathMarkup'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
+const stripTags = file => {
+  // eslint-disable-next-line no-useless-escape
+  const reg = /<container id="main">([\s\S]*?)<\/container>/
+  return file.match(reg)[1]
+}
+
 const generateTitle = name =>
   name
     .replace(/[_-]+/g, ' ') // convert hyphens/underscores to space
@@ -224,6 +230,7 @@ export default ({
       } else {
         uploadResponse = await DocxToHTMLPromise(file, data)
         uploadResponse.response = cleanMathMarkup(uploadResponse.response)
+        uploadResponse.response = stripTags(uploadResponse.response)
       }
 
       manuscriptData = await createManuscriptPromise(
