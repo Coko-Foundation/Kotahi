@@ -31,9 +31,16 @@ import {
   BottomInfoService,
   TrackOptionsToolGroupService,
   TrackCommentOptionsToolGroupService,
+  TrackingAndEditingToolGroupService,
+  EditingSuggestingService,
 } from 'wax-prosemirror-services'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
 import JatsTagsService from '../JatsTags'
+
+const updateTrackStatus = change => {
+  // this returns "true" when there's been a change.
+  // console.log(change)
+}
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
@@ -41,7 +48,24 @@ const updateTitle = title => {
 }
 
 const fullWaxEditorConfig = () => ({
-  EnableTrackChangeService: false, // This line is needed by NoteService
+  EnableTrackChangeService: { enabled: false, toggle: true, updateTrackStatus },
+  AcceptTrackChangeService: {
+    own: {
+      accept: true,
+    },
+    others: {
+      accept: true,
+    },
+  },
+  RejectTrackChangeService: {
+    own: {
+      reject: true,
+    },
+    others: {
+      reject: true,
+    },
+  },
+
   SchemaService: DefaultSchema,
   CommentsService: { readOnly: false },
   MenuService: [
@@ -69,6 +93,7 @@ const fullWaxEditorConfig = () => ({
         'Notes',
         'Tables',
         'Images',
+        'TrackingAndEditing',
         'FullScreen',
       ],
     },
@@ -89,26 +114,6 @@ const fullWaxEditorConfig = () => ({
   ShortCutsService: {},
 
   TitleService: { updateTitle },
-
-  // this was added in to stop a memory leak in application--not clear to me why we need this
-  // for comments, but it dies without it.
-
-  AcceptTrackChangeService: {
-    own: {
-      accept: true,
-    },
-    others: {
-      accept: true,
-    },
-  },
-  RejectTrackChangeService: {
-    own: {
-      reject: true,
-    },
-    others: {
-      reject: true,
-    },
-  },
 
   // end insertion
 
@@ -135,6 +140,9 @@ const fullWaxEditorConfig = () => ({
     new TableToolGroupService(),
     new TextBlockLevelService(),
     new TextToolGroupService(),
+    // needed for track changes
+    new EditingSuggestingService(),
+    new TrackingAndEditingToolGroupService(),
     // these are added for paragraph dropdown:
     new KotahiBlockDropDownToolGroupService(),
     new DisplayBlockLevelService(),

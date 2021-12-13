@@ -276,6 +276,14 @@ export default css`
     left: -5px;
   }
 
+  .insertion .show-insertion {
+    color: black;
+  }
+
+  .deletion .hide-deletion {
+    display: none;
+  }
+
   span.comment {
     border-bottom: 2px solid #ffab20;
     border-radius: 3px 3px 0 0;
