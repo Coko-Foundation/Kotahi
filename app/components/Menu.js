@@ -19,6 +19,10 @@ const Root = styled.nav`
   padding: ${grid(2)};
 `
 
+const UserName = styled.div`
+  word-break: break-word;
+`
+
 const Section = styled.div``
 
 const NavItem = ({ className, link, name, icon }) => (
@@ -114,7 +118,7 @@ const UserComponent = ({ user, loginLink, profileLink }) => (
       <UserItem title="Go to your profile" to={profileLink}>
         <UserAvatar isClickable={false} size={48} user={user} />
         <UserInfo>
-          <p>{user.username}</p>
+          <UserName>{user.username}</UserName>
           <p>{user.online ? '' : 'Offline'}</p>
           {/* ({user.username}) */}
           {user.admin ? ' (admin)' : ''}
