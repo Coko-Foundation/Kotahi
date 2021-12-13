@@ -150,7 +150,6 @@ services:
 
   db-pagedjs:
     image: postgres:12-alpine
-    hostname: db-pagedjs
     environment:
       - POSTGRES_USER=pagedjs_user_dev
       - POSTGRES_DB=pagedjs_dev
