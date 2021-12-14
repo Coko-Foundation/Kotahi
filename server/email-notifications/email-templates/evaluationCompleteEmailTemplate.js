@@ -19,7 +19,6 @@ const EvaluationCompleteEmailTemplate = ({
       <p>Thank you for your submission to Aperture Neuro. The review of “${shortId}; ${articleTitle}, ${authorName}” is complete. Click on the link below to access your feedback.</p>
       <p><a href="https://apertureneuro.cloud68.co/login" target="_blank">https://apertureneuro.cloud68.co/login</a></p>
       <p>Thank you,</p>
-      <p>Kay Vanda</p>
       <p>Journal Manager <br>
       Aperture Neuro
       </p>
