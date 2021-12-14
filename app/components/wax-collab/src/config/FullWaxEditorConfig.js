@@ -38,7 +38,7 @@ import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
 import JatsTagsService from '../JatsTags'
 
 const updateTrackStatus = change => {
-  // this returns "true" when there's been a change.
+  // this returns "true" when Suggesting Mode is turned on.
   // console.log(change)
 }
 
