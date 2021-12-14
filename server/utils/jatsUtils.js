@@ -258,6 +258,23 @@ const getCrossrefCitationsFromList = html => {
   })
 }
 
+const removeTrackChanges = html => {
+  let removedTrackChanges = html
+
+  while (removedTrackChanges.indexOf(`<span class="deletion"`) > -1) {
+    const trackChangesContent = html
+      .split('<span class="deletion"')[1]
+      .split('</span>')[0]
+
+    removedTrackChanges = removedTrackChanges.replace(
+      `<span class="deletion"${trackChangesContent}</span>`,
+      ``,
+    )
+  }
+
+  return removedTrackChanges
+}
+
 const makeJournalMeta = journalMeta => {
   // this is working with a journalMeta with this shape:
 
@@ -695,7 +712,11 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   // 0. deal with footnotes
 
-  const { deFootnotedHtml, fnSection } = makeFootnotesSection(html)
+  const unTrackChangedHtml = removeTrackChanges(html)
+
+  const { deFootnotedHtml, fnSection } = makeFootnotesSection(
+    unTrackChangedHtml,
+  )
 
   // 0.5 deal with table cells
 
