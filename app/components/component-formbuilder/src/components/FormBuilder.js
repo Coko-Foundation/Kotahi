@@ -120,6 +120,9 @@ const BuilderElement = ({
   setActiveFieldId,
   deleteField,
   formId,
+  formFeildId,
+  handleDrag,
+  handleDrop,
 }) => {
   const [openModal, setOpenModal] = useState(false)
   const [formFieldId, setFormFieldId] = useState()
@@ -134,7 +137,13 @@ const BuilderElement = ({
   }
 
   return (
-    <div>
+    <div
+      draggable
+      id={formFeildId}
+      onDragOver={ev => ev.preventDefault()}
+      onDragStart={handleDrag}
+      onDrop={e => handleDrop(e, element.id)}
+    >
       <Element
         className={isActive ? 'active' : undefined}
         key={`element-${element.id}`}
@@ -148,20 +157,6 @@ const BuilderElement = ({
           />{' '}
           ({element.component})
         </MainAction>
-        <IconAction
-          onClick={event => {
-            moveFieldUp(element.id)
-          }}
-        >
-          <SmallIcon>arrowUp</SmallIcon>
-        </IconAction>
-        <IconAction
-          onClick={event => {
-            moveFieldDown(element.id)
-          }}
-        >
-          <SmallIcon>arrowDown</SmallIcon>
-        </IconAction>
         <IconAction
           onClick={() =>
             openModalHandler({
@@ -243,14 +238,28 @@ const FormBuilder = ({
   deleteField,
   moveFieldUp,
   moveFieldDown,
+  dragField,
 }) => {
+  const [dragId, setDragId] = useState()
+
+  const handleDrag = ev => {
+    setDragId(ev.currentTarget.id)
+  }
+
+  const handleDrop = (ev, id) => {
+    dragField({ toDragid: id, fromDragid: dragId })
+  }
+
   return (
     <Page>
-      {form.structure.children.map(element => (
+      {form.structure.children?.map(element => (
         <BuilderElement
           deleteField={deleteField}
           element={element}
+          formFeildId={element.id}
           formId={form.id}
+          handleDrag={handleDrag}
+          handleDrop={handleDrop}
           isActive={activeFieldId === element.id}
           key={`element-${element.id}`}
           moveFieldDown={moveFieldDown}
