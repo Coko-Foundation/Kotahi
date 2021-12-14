@@ -73,6 +73,7 @@ const FormBuilderLayout = ({
   updateField,
   setActiveFieldId,
   setActiveFormId,
+  dragField,
 }) => {
   const [openModal, setOpenModal] = useState(false)
   const [formId, setFormId] = useState()
@@ -96,6 +97,7 @@ const FormBuilderLayout = ({
               activeFieldId={activeFieldId}
               addField={updateField}
               deleteField={deleteField}
+              dragField={fieldId => dragField(form, fieldId)}
               form={form}
               moveFieldDown={fieldId => moveFieldDown(form, fieldId)}
               moveFieldUp={fieldId => moveFieldUp(form, fieldId)}
