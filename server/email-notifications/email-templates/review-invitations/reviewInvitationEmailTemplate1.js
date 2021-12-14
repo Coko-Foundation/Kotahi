@@ -23,7 +23,7 @@ const ReviewInvitationEmailTemplate = ({
         <li>Complete this Survey at <a href="https://www.surveymonkey.com/r/ApertureInvite" target="_blank">https://www.surveymonkey.com/r/ApertureInvite</a> indicating whether you accept the review.</li>
         <li>Log into <a href="https://apertureneuro.cloud68.co/login" target="_blank">https://apertureneuro.cloud68.co/login</a> with your Orcid ID and set up your profile. Once your profile is set up, you will receive a notification that the submission is ready to review.</li>
       </ol>  
-      <p>If you have questions about Aperture, the review process, or the submission, please contact the journal manager at aperture@humanbrainmapping.org.</p>
+      <p>If you have questions about Aperture, the review process, or the submission, please contact the journal manager at <a href="mailto:aperture@humanbrainmapping.org">aperture@humanbrainmapping.org</a>.</p>
       <p>Thank you,</p>
       <p>Uzay Emir</p>
       <p>Handling Editor <br>

@@ -19,9 +19,8 @@ const SubmissionConfirmationEmailTemplate = ({
       <p>Thank you for your submission.</p>
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>We have successfully received your Research Object, and it is currently under review. You can check the status of your submission at any time by logging into the publishing platform and navigating to your dashboard.</p>
-      <p>If you have any questions, please contact Kay Vanda, the Aperture Neuro Journal Manager, at aperture@humanbrainmapping.org.</p>
+      <p>If you have any questions, please contact the Aperture Neuro Journal Manager, at <a href="mailto:aperture@humanbrainmapping.org">aperture@humanbrainmapping.org</a>.</p>
       <p>Thank you,</p>
-      <p>Kay Vanda </p>
       </p>Journal Manager <br>
       Aperture Neuro
       </p>
