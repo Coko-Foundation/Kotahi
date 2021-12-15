@@ -109,50 +109,55 @@ const createFileMutation = gql`
 `
 
 const base64toBlob = (base64Data, contentType) => {
-    const sliceSize = 1024;
-    const arr = base64Data.split(',');
-    const byteCharacters = atob(arr[1]);
-    const bytesLength = byteCharacters.length;
-    const slicesCount = Math.ceil(bytesLength / sliceSize);
-    const byteArrays = new Array(slicesCount);
+  const sliceSize = 1024
+  const arr = base64Data.split(',')
+  const byteCharacters = atob(arr[1])
+  const bytesLength = byteCharacters.length
+  const slicesCount = Math.ceil(bytesLength / sliceSize)
+  const byteArrays = new Array(slicesCount)
 
-    for (let sliceIndex = 0; sliceIndex < slicesCount; sliceIndex += 1) {
-        let begin = sliceIndex * sliceSize;
-        let end = Math.min(begin + sliceSize, bytesLength);
+  for (let sliceIndex = 0; sliceIndex < slicesCount; sliceIndex += 1) {
+    const begin = sliceIndex * sliceSize
+    const end = Math.min(begin + sliceSize, bytesLength)
 
-        let bytes = new Array(end - begin);
-        for (let offset = begin, i = 0; offset < end; i += 1, offset += 1) {
-            bytes[i] = byteCharacters[offset].charCodeAt(0);
-        }
-        byteArrays[sliceIndex] = new Uint8Array(bytes);
+    const bytes = new Array(end - begin)
+
+    for (let offset = begin, i = 0; offset < end; i += 1, offset += 1) {
+      bytes[i] = byteCharacters[offset].charCodeAt(0)
     }
-    return new Blob(byteArrays, { type: contentType || '' });
+
+    byteArrays[sliceIndex] = new Uint8Array(bytes)
+  }
+
+  return new Blob(byteArrays, { type: contentType || '' })
 }
 
 const base64Images = source => {
   const doc = new DOMParser().parseFromString(source, 'text/html')
-  const images =  [...doc.images].map(e => {
-    let mimeType = e.src.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0];
-    let blob = base64toBlob(e.src, mimeType)
-    let mimeTypeSplit = mimeType.split('/');
-    let extFileName = mimeTypeSplit[1]
-    let file = new File([blob], "Image001." + extFileName, { type: mimeType })
-    return { dataSrc: e.src, mimeType, file }
-  });
 
-  return images ? images : null
+  const images = [...doc.images].map(e => {
+    const mimeType = e.src.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0]
+    const blob = base64toBlob(e.src, mimeType)
+    const mimeTypeSplit = mimeType.split('/')
+    const extFileName = mimeTypeSplit[1]
+    const file = new File([blob], `Image001.${extFileName}`, { type: mimeType })
+    return { dataSrc: e.src, mimeType, file }
+  })
+
+  return images || null
 }
 
 const uploadImages = async (images, client, manuscriptId) => {
   // TODO: multiple files
-  let file = images[0].file
+  const { file } = images[0]
+
   const meta = {
     filename: file.name,
     manuscriptId,
     reviewCommentId: null,
     mimeType: file.type,
     size: file.size,
-    fileType: "manuscriptImage",
+    fileType: 'manuscriptImage',
     label: file.label || undefined,
   }
 
@@ -314,8 +319,12 @@ export default ({
         uploadResponse.fileURL,
         uploadResponse.response,
       )
-      // eslint-disable-next-line 
-      const uploadedImages = await uploadImages(images, client, manuscriptData.data.createManuscript.id)
+      // eslint-disable-next-line
+      const uploadedImages = await uploadImages(
+        images,
+        client,
+        manuscriptData.data.createManuscript.id,
+      )
     } else {
       // Create a manuscript without a file
       manuscriptData = await createManuscriptPromise(
