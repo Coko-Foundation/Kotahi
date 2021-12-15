@@ -79,6 +79,7 @@ const query = gql`
           options {
             id
             label
+            labelColor
             value
           }
           validate {
@@ -170,6 +171,28 @@ const FormBuilderPage = () => {
     })
   }
 
+  const dragField = (form, fieldId) => {
+    const fields = form.structure.children
+
+    const fromIndex = fields.findIndex(field => field.id === fieldId.fromDragid)
+
+    const toIndex = fields.findIndex(field => field.id === fieldId.toDragid)
+
+    const draggedField = fields[fromIndex]
+    const newFields = [...fields]
+    newFields.splice(fromIndex, 1)
+    newFields.splice(toIndex, 0, draggedField)
+
+    updateForm({
+      variables: {
+        form: prepareForSubmit({
+          ...form,
+          structure: { ...form.structure, children: newFields },
+        }),
+      },
+    })
+  }
+
   useEffect(() => {
     if (!loading && data) {
       if (data.forms.length) {
@@ -192,6 +215,7 @@ const FormBuilderPage = () => {
       createForm={createForm}
       deleteField={deleteFormElement}
       deleteForm={deleteForm}
+      dragField={dragField}
       forms={cleanedForms}
       moveFieldDown={moveFieldDown}
       moveFieldUp={moveFieldUp}

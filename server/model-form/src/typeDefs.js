@@ -45,6 +45,7 @@ const typeDefs = `
   input FormElementOptionInput {
     label: String!
     value: String!
+    labelColor: String
     id: ID!
   }
 
@@ -94,6 +95,7 @@ const typeDefs = `
   type FormElementOption {
     label: String!
     value: String!
+    labelColor: String
     id: ID!
   }
 

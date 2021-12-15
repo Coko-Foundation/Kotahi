@@ -49,7 +49,7 @@ const FullWaxEditor = ({
       addition: 'royalblue',
       deletion: 'indianred',
     },
-    username: user.defaultIdentity?.name || user.username || 'demo',
+    username: user.username || 'demo',
   }
 
   const editorRef = useRef(null)

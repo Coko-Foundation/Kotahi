@@ -57,7 +57,7 @@ module.exports = app => {
         try {
           if (!user) {
             user = await new User({
-              username: params.orcid.replace(/-/g, ''),
+              username: params.name,
               defaultIdentity: {
                 identifier: params.orcid,
                 oauth: { accessToken, refreshToken },

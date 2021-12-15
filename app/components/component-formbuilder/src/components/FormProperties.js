@@ -134,15 +134,18 @@ const FormForm = ({ form, updateForm, createForm }) => {
         ...form.structure,
         purpose: form.purpose,
       }}
-      onSubmit={values => {
-        if (form.id)
+      onSubmit={(values, actions) => {
+        if (form.id) {
           updateForm({ variables: { form: prepareForSubmit(form, values) } })
-        else createForm({ variables: { form: prepareForSubmit(form, values) } })
+        } else {
+          createForm({ variables: { form: prepareForSubmit(form, values) } })
+          actions.resetForm()
+        }
       }}
     >
       {formikProps => (
         <FormProperties
-          mode="update"
+          mode={form.id ? 'update' : 'create'}
           onSubmit={formikProps.handleSubmit}
           purpose={form.purpose}
           setFieldValue={formikProps.setFieldValue}

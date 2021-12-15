@@ -37,14 +37,6 @@ const GET_MESSAGES = gql`
           username
           profilePicture
           online
-          defaultIdentity {
-            identifier
-            email
-            type
-            aff
-            id
-            name
-          }
         }
       }
       pageInfo {
@@ -212,9 +204,7 @@ const Messages = ({ channelId }) => {
                   {index === 0 && <UserAvatar user={message.user} />}
                 </GutterContainer>
                 <InnerMessageContainer>
-                  {index === 0 && (
-                    <Byline>{message.user.defaultIdentity.name}</Byline>
-                  )}
+                  {index === 0 && <Byline>{message.user.username}</Byline>}
                   <Bubble>
                     <MessageRenderer message={message} />
                   </Bubble>

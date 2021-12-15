@@ -4,6 +4,8 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import { Tabs } from '@pubsweet/ui'
 
+import styled from 'styled-components'
+import { th } from '@pubsweet/ui-toolkit'
 import ReviewForm from './ReviewForm'
 import ReviewMetadata from '../metadata/ReviewMetadata'
 import Review from './Review'
@@ -12,6 +14,14 @@ import { Columns, Manuscript, Chat } from '../../../../shared'
 import MessageContainer from '../../../../component-chat/src'
 import ArticleEvaluationSummaryPage from '../../../../component-decision-viewer'
 import SharedReviewerGroupReviews from './SharedReviewerGroupReviews'
+
+const Reviewerdisclaimer = styled.span`
+  color: ${th('colorTextPlaceholder')};
+  display: grid;
+  font-size: 14px;
+  padding: 0 5px;
+  place-items: center;
+`
 
 const hasManuscriptFile = manuscript =>
   !!manuscript?.files?.find(file => file.fileType === 'manuscript')
@@ -62,6 +72,11 @@ const ReviewLayout = ({
     reviewSections.push({
       content: (
         <div key={msVersion.id}>
+          <Reviewerdisclaimer>
+            By completing this review, you agree that you do not have any
+            conflict of interests to declare. For any questions about what
+            constitutes a conflict of interest, contact the administrator.
+          </Reviewerdisclaimer>
           {hasManuscriptFile(msVersion) && (
             <EditorSection manuscript={msVersion} readonly />
           )}
@@ -91,6 +106,11 @@ const ReviewLayout = ({
     reviewSections.push({
       content: (
         <div key={latestVersion.id}>
+          <Reviewerdisclaimer>
+            By completing this review, you agree that you do not have any
+            conflict of interests to declare. For any questions about what
+            constitutes a conflict of interest, contact the administrator.
+          </Reviewerdisclaimer>
           {hasManuscriptFile(latestVersion) && (
             <EditorSection manuscript={latestVersion} readonly />
           )}

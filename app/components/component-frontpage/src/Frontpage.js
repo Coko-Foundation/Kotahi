@@ -3,6 +3,7 @@ import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import config from 'config'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
 import FullWaxEditor from '../../wax-collab/src/FullWaxEditor'
@@ -15,7 +16,6 @@ import {
   ReviewLink,
 } from './style'
 import { ArticleEvaluation } from '../../component-evaluation-result/style'
-
 import {
   Spinner,
   SectionHeader,
@@ -29,6 +29,8 @@ import {
 } from '../../shared'
 import { PaginationContainer } from '../../shared/Pagination'
 
+const urlFrag = config.journal.metadata.toplevel_urlfragment
+
 const ManuscriptBox = styled.div`
   border: 1px solid ${th('colorBorder')};
   border-radius: ${th('borderRadius')};
@@ -39,6 +41,16 @@ const Subheading = styled.h3`
   font-size: ${th('fontSizeHeading6')};
   font-weight: bold;
   margin-top: ${grid(2.0)};
+`
+
+const LoginLink = styled.a`
+  border: 0px;
+  border-radius: 0px;
+  display: block;
+  font-size: 1em;
+  font-weight: 500;
+  margin: 1em;
+  padding: 0.25em 1em;
 `
 
 const Frontpage = () => {
@@ -118,6 +130,15 @@ const Frontpage = () => {
     <Container>
       <HeadingWithAction>
         <Heading>Recent publications in {journal.metadata.name}</Heading>
+        <LoginLink
+          href={
+            window.localStorage.getItem('token')
+              ? `${urlFrag}/dashboard`
+              : '/login'
+          }
+        >
+          {window.localStorage.getItem('token') ? 'Dashboard' : 'Login'}
+        </LoginLink>
       </HeadingWithAction>
       <Pagination
         limit={limit}

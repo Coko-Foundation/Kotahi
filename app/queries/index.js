@@ -14,7 +14,6 @@ export const GET_CURRENT_USER = gql`
         type
         aff
         id
-        name
       }
       online
       _currentRoles {
@@ -107,14 +106,14 @@ export const DELETE_MANUSCRIPTS = gql`
 
 export const GET_MANUSCRIPTS_AND_FORM = gql`
   query Manuscripts(
-    $sort: String
-    $filter: ManuscriptsFilter
+    $sort: ManuscriptsSort
+    $filters: [ManuscriptsFilter!]!
     $offset: Int
     $limit: Int
   ) {
     paginatedManuscripts(
       sort: $sort
-      filter: $filter
+      filters: $filters
       offset: $offset
       limit: $limit
     ) {
@@ -137,9 +136,6 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           members {
             id
             user {
-              defaultIdentity {
-                name
-              }
               id
               username
             }
@@ -164,7 +160,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
               id
               user {
                 defaultIdentity {
-                  name
+                  identifier
                 }
                 id
                 username
@@ -176,6 +172,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
             online
             defaultIdentity {
               id
+              identifier
               name
             }
             profilePicture
@@ -186,6 +183,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           online
           defaultIdentity {
             id
+            identifier
             name
           }
           profilePicture
@@ -199,9 +197,12 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           id
           component
           name
+          title
+          shortDescription
           options {
             id
             label
+            labelColor
             value
           }
         }

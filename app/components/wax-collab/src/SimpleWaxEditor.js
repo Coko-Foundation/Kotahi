@@ -17,6 +17,7 @@ const SimpleWaxEditor = ({
   onChange,
   placeholder,
   spellCheck,
+  innerRefProp,
   ...rest
 }) => {
   // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
@@ -25,7 +26,7 @@ const SimpleWaxEditor = ({
 
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
-    <div className={validationStatus}>
+    <div className={validationStatus} ref={innerRefProp}>
       <Wax
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}

@@ -10,6 +10,7 @@ export const Content = styled.div`
   background-color: ${th('colorBackground')};
   border-radius: ${th('borderRadius')};
   box-shadow: ${th('boxShadow')};
+  clear: both;
 `
 
 export const ScrollableContent = styled(Content)`

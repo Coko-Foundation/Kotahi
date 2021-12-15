@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { Select } from '../../../../shared'
 
 const editorOption = user => ({
-  label: user.defaultIdentity?.name || user.email || user.username,
+  label: user.username || user.email,
   value: user.id,
 })
 
@@ -35,7 +35,6 @@ const query = gql`
       admin
       defaultIdentity {
         id
-        name
       }
     }
   }

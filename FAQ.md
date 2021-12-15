@@ -11,10 +11,10 @@ Login requires [ORCID](https://orcid.org/) to be set up correctly. By default, i
 
 Here's how to set this up in less than 20 easy steps:
 
-1. Go to [mailinator.com](mailinator.com)
+1. Go to [mailinator.com](https://mailinator.com)
 2. In the search bar at the top of the page enter your desired username (we'll use `mycokotestemail` for this guide) and click "GO". (tip: choose a username that is unlikely to be used already by someone else)
 3. You'll be taken to a new page. This is your inbox for `mycokotestemail@mailinator.com`. Keep this page open. (also keep in mind that this is a fully **public** inbox)
-4. Go to [sandbox.orcid.org](sandbox.orcid.org)
+4. Go to [sandbox.orcid.org](https://sandbox.orcid.org)
 5. Click on "SIGN IN/REGISTER", then on "register now"
 6. Fill out the form. In the email field use your newly created mailinator email.
 7. Fill out the rest of the form until you register.
@@ -156,15 +156,15 @@ For development and testing, `CROSSREF_USE_SANDBOX` should be true. This will se
 #### Form fields for publishing an article to Crossref
 
 Publishing to Crossref requires that you have certain fields configured via the form-builder. These are:
-| Field name | Field type | Purpose |
-|-------------|--------------|------------|
-| `meta.title` | TextField | Article title |
-| `submission.authors` | AuthorsInput | Ordered list of authors |
-| `meta.abstract` | AbstractEditor | Article abstract |
-| `submission.citations` _or_ `submission.references` | AbstractEditor | Citations in separate paragraphs |
-| `submission.volumeNumber` | TextField | (Optional) Journal volume number |
-| `submission.issueNumber` | TextField | (Optional) Journal issue number |
-| `submission.issueYear` | TextField | The year of publication. If `submission.volumeNumber` is formatted as a year (e.g. 2021), then `submission.issueYear` is optional. |
+| Field name                                          | Field type     | Purpose                                                                                                                            |
+| --------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
+| `meta.title`                                        | TextField      | Article title                                                                                                                      |
+| `submission.authors`                                | AuthorsInput   | Ordered list of authors                                                                                                            |
+| `meta.abstract`                                     | AbstractEditor | Article abstract                                                                                                                   |
+| `submission.citations` _or_ `submission.references` | AbstractEditor | Citations in separate paragraphs                                                                                                   |
+| `submission.volumeNumber`                           | TextField      | (Optional) Journal volume number                                                                                                   |
+| `submission.issueNumber`                            | TextField      | (Optional) Journal issue number                                                                                                    |
+| `submission.issueYear`                              | TextField      | The year of publication. If `submission.volumeNumber` is formatted as a year (e.g. 2021), then `submission.issueYear` is optional. |
 
 ### Registering article evaluations via Crossref
 
@@ -204,3 +204,16 @@ Kotahi uses the Wax editor which is not configured for real-time collaboration o
 ## Can I run Kotahi without docker-compose?
 
 Certainly. In the absence of `docker-compose`, the server and client will still load the `.env` file, so that remains the preferred means of configuration. You should consult the `docker-compose.yml` and `docker-compose.production.yml` files as a kind of installation guide if for some reason you wish to not use docker.
+
+## Why are uploads not working?
+
+We store uploads in a Docker volume. When this volume is first created (e.g. when setting up a new deployment or a new dev environment) the owner of the volume is not set correctly: the owner should be `node` but it comes out as `root`. This prevents uploading any files, including new manuscripts.
+
+The workaround is to manually go into the server container as `root`, and change the owner of the uploads folder to `node`. This only needs to be done once; the volume will retain the correct permissions forever after. Do the following (your server name may differ from `kotahi_server_1`; run `docker ps` to list servers):
+
+```
+docker exec -u 0 -it kotahi_server_1 /bin/bash
+chown -R node:node uploads
+```
+
+We’re looking at fixing this. 

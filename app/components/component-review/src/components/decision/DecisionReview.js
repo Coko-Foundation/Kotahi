@@ -11,12 +11,7 @@ import useCurrentUser from '../../../../../hooks/useCurrentUser'
 import { updateReviewMutation } from '../queries'
 import ShareIcon from '../../../../../shared/icons/share'
 
-import {
-  UserCombo,
-  Primary,
-  Secondary,
-  UserInfo,
-} from '../../../../component-manuscripts/src/style'
+import { UserCombo, Primary, Secondary, UserInfo } from '../../../../shared'
 import { UserAvatar } from '../../../../component-avatar/src'
 
 const GET_USER = gql`
@@ -155,7 +150,7 @@ const ReviewHeading = ({
           <UserCombo>
             <UserAvatar user={(data && data.user) || user} />
             <UserInfo>
-              <Primary>{user.defaultIdentity.name}</Primary>
+              <Primary>{user.username}</Primary>
               <Secondary>{user.email || `(${user.username})`}</Secondary>
             </UserInfo>
           </UserCombo>
@@ -173,12 +168,12 @@ const ReviewHeading = ({
         (isCurrentUserEditor || currentUser.admin) && (
           <>
             <StyledCheckbox
-              checked={isHiddenFromAuthor}
+              checked={isHiddenFromAuthor || isHiddenFromAuthor == null}
               label="Hide review"
               onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
             />
             <StyledCheckbox
-              checked={isHiddenReviewerName}
+              checked={isHiddenReviewerName || isHiddenReviewerName == null}
               label="Hide reviewer name"
               onChange={() =>
                 toggleIsHiddenReviewerNameFromPublishedAndAuthor(

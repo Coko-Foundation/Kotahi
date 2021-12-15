@@ -124,5 +124,5 @@ export const OnlineIndicator = styled.span`
   position: absolute;
   right: 0;
   width: 10px;
-  z-index: 1;
+  z-index: 0;
 `

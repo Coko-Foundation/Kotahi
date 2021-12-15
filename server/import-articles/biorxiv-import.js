@@ -140,7 +140,7 @@ const getData = async ctx => {
 
         if (!manuscriptTopics.length) return null
 
-        const topics = manuscriptTopics[0]
+        const topics = [manuscriptTopics[0]]
 
         return {
           status: 'new',

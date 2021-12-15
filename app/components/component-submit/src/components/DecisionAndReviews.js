@@ -41,7 +41,7 @@ const Decision = ({ decision, editor }) =>
       )}
       <SectionRow>
         <UserAvatar username={editor?.username} />
-        Written by {editor?.defaultIdentity?.name}
+        Written by {editor?.username}
       </SectionRow>
     </>
   ) : (

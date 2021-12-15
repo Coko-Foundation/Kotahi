@@ -36,7 +36,6 @@ const GET_CURRENT_USER = gql`
         type
         aff
         id
-        name
       }
     }
   }

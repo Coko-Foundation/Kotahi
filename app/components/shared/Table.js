@@ -14,12 +14,6 @@ export const Table = styled.table`
   }
 `
 
-export const ManuscriptsTable = styled(Table)`
-  @media (max-width: 1400px) {
-    margin-top: 0;
-  }
-`
-
 export const Header = styled.thead`
   background-color: ${th('colorSecondaryBackground')};
   border-bottom: 1px solid ${th('colorFurniture')};

@@ -1,4 +1,5 @@
 const he = require('he')
+
 // const { lte } = require('semver')
 
 const htmlToJatsTagMap = {
@@ -43,6 +44,8 @@ const jatsTagsThatDontNeedConversion = [
   'italic',
   'underline',
   'list-item',
+  '@sec',
+  '@title',
 ]
 
 /** Finds all XML tags and:
@@ -437,8 +440,13 @@ const fixTableCells = html => {
     )
   }
 
-  deTabledHtml = deTabledHtml.replaceAll('<!td!>', '<td>')
+  // So that these don't get screwed up by later sectioning
+  deTabledHtml = deTabledHtml.replaceAll('<title>', '<@title>')
+  deTabledHtml = deTabledHtml.replaceAll('</title>', '</@title>')
+  deTabledHtml = deTabledHtml.replaceAll('<sec>', '<@sec>')
+  deTabledHtml = deTabledHtml.replaceAll('</sec>', '</@sec>')
 
+  deTabledHtml = deTabledHtml.replaceAll('<!td!>', '<td>')
   return { deTabledHtml }
 }
 
@@ -712,7 +720,13 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const front = `<front>${journalMetaSection}${articleMetaSection}</front>`
 
-  const body = `<body>${htmlToJats(deFrontedHtml)}</body>`
+  let body = htmlToJats(deFrontedHtml)
+  // this is to clean out the bad table tags
+  body = body.replaceAll('<@title>', '<title>')
+  body = body.replaceAll('</@title>', '</title>')
+  body = body.replaceAll('<@sec>', '<sec>')
+  body = body.replaceAll('</@sec>', '</sec>')
+  body = `<body>${body}</body>`
 
   const back = `<back>${appendices}${refList}${fnSection}</back>`
 
@@ -724,4 +738,8 @@ const makeJats = (html, articleMeta, journalMeta) => {
   return { front, body, back, jats }
 }
 
-module.exports = { htmlToJats, getCrossrefCitationsFromList, makeJats }
+module.exports = {
+  htmlToJats,
+  getCrossrefCitationsFromList,
+  makeJats,
+}
