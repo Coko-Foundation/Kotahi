@@ -39,7 +39,6 @@ const reviewInvitationEmailTemplate25 = require('./email-templates/review-invita
 const reviewInvitationEmailTemplate26 = require('./email-templates/review-invitations/reviewInvitationEmailTemplate26')
 const reviewInvitationEmailTemplate27 = require('./email-templates/review-invitations/reviewInvitationEmailTemplate27')
 const reviewInvitationEmailTemplate28 = require('./email-templates/review-invitations/reviewInvitationEmailTemplate28')
-const reviewInvitationEmailTemplate29 = require('./email-templates/review-invitations/reviewInvitationEmailTemplate29')
 const reviewInvitationEmailTemplate30 = require('./email-templates/review-invitations/reviewInvitationEmailTemplate30')
 const reviewInvitationEmailTemplate31 = require('./email-templates/review-invitations/reviewInvitationEmailTemplate31')
 const reviewInvitationEmailTemplate32 = require('./email-templates/review-invitations/reviewInvitationEmailTemplate32')
@@ -88,7 +87,6 @@ const templates = {
   reviewInvitationEmailTemplate26,
   reviewInvitationEmailTemplate27,
   reviewInvitationEmailTemplate28,
-  reviewInvitationEmailTemplate29,
   reviewInvitationEmailTemplate30,
   reviewInvitationEmailTemplate31,
   reviewInvitationEmailTemplate32,
