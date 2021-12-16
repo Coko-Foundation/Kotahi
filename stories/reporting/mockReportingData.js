@@ -100,6 +100,9 @@ const lowishRandomInt = max => Math.floor(Math.random() ** 2 * max)
 const highishRandomInt = max => Math.floor(Math.random() ** 0.5 * max)
 const randomName = () => personNames[randomInt(personNames.length)]
 
+const randomReviewerStatus = () =>
+  ['invited', 'accepted', 'rejected', 'completed'][randomInt(4)]
+
 export const generateResearchObjectsData = () => {
   const result = []
 
@@ -108,12 +111,12 @@ export const generateResearchObjectsData = () => {
       id: (1234 + i).toString(),
       entryDate: '2021-05-10',
       title: `Manuscript ${1234 + i}`,
-      authors: [{ name: randomName() }],
-      editors: [{ name: randomName() }, { name: randomName() }],
+      authors: [{ username: randomName() }],
+      editors: [{ username: randomName() }, { username: randomName() }],
       reviewers: [
-        { name: randomName() },
-        { name: randomName() },
-        { name: randomName() },
+        { name: randomName(), status: randomReviewerStatus() },
+        { user: randomName(), status: randomReviewerStatus() },
+        { username: randomName(), status: randomReviewerStatus() },
       ],
       status: 'Reviewed',
       publishedDate: '2021-05-23',
