@@ -215,10 +215,9 @@ const getReport = (
 
     const rows = getTableDataWithSparkBars(data, (val, key) => {
       if (['editors', 'authors'].includes(key))
-        return val.reduce(
-          (accum, curr) => (accum ? `${accum}, ${curr.name}` : curr.name),
-          null,
-        )
+        return val
+          .map(u => u.username || u.email || u.defaultIdentity.identifier)
+          .join(', ')
       if (key === 'reviews') return renderReviewInfo(val)
 
       return val
