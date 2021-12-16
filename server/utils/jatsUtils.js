@@ -1,4 +1,6 @@
 const he = require('he')
+const htmlparser2 = require('htmlparser2')
+const cheerio = require('cheerio')
 
 // const { lte } = require('semver')
 
@@ -259,20 +261,14 @@ const getCrossrefCitationsFromList = html => {
 }
 
 const removeTrackChanges = html => {
-  let removedTrackChanges = html
+  const dom = htmlparser2.parseDocument(html)
 
-  while (removedTrackChanges.indexOf(`<span class="deletion"`) > -1) {
-    const trackChangesContent = html
-      .split('<span class="deletion"')[1]
-      .split('</span>')[0]
+  const $ = cheerio.load(dom, {
+    xmlMode: true,
+  })
 
-    removedTrackChanges = removedTrackChanges.replace(
-      `<span class="deletion"${trackChangesContent}</span>`,
-      ``,
-    )
-  }
-
-  return removedTrackChanges
+  $('span.deletion').remove()
+  return $.html()
 }
 
 const makeJournalMeta = journalMeta => {
