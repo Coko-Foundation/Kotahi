@@ -775,9 +775,8 @@ const resolvers = {
       const manuscript = await ManuscriptModel.query()
         .findById(id)
         .withGraphFetched('[teams, channels, files, reviews.[user, comments]]')
-      
-      const user = await models.User.query()
-        .findById(ctx.user)
+
+      const user = await models.User.query().findById(ctx.user)
 
       if (!manuscript) return null
 
