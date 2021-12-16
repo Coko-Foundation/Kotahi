@@ -435,7 +435,7 @@ const resolvers = {
         config['notification-email'].automated === 'true'
       ) {
         // Automated email reviewReject on rejection
-        const reviewer = await context.models.User.query()
+        const reviewer = await models.User.query()
           .findById(context.user)
           .withGraphFetched('[defaultIdentity]')
 
@@ -445,7 +445,7 @@ const resolvers = {
           ''
         ).split(' ')[0]
 
-        const manuscript = await context.models.Manuscript.query()
+        const manuscript = await models.Manuscript.query()
           .findById(team.manuscriptId)
           .withGraphFetched(
             '[teams.[members.[user.[defaultIdentity]]], submitter.[defaultIdentity]]',
@@ -775,6 +775,9 @@ const resolvers = {
       const manuscript = await ManuscriptModel.query()
         .findById(id)
         .withGraphFetched('[teams, channels, files, reviews.[user, comments]]')
+      
+      const user = await models.User.query()
+        .findById(ctx.user)
 
       if (!manuscript) return null
 
@@ -796,7 +799,7 @@ const resolvers = {
 
       manuscript.manuscriptVersions = await manuscript.getManuscriptVersions()
 
-      if (ctx.user && !ctx.user.admin) {
+      if (user && !user.admin) {
         return stripSensitiveItems(manuscript)
       }
 
