@@ -50,9 +50,9 @@ module.exports = webpackEnv => {
         '/auth': serverUrlWithProtocol,
         '/convertDocxToHTML': serverUrlWithProtocol,
         '/graphql': serverUrlWithProtocol,
-        '/public': serverUrlWithProtocol,
-        '/static/uploads': serverUrlWithProtocol,
-        '/static/profiles': serverUrlWithProtocol,
+        // '/public': serverUrlWithProtocol,
+        '/uploads': serverUrlWithProtocol,
+        '/profiles': serverUrlWithProtocol,
         '/subscriptions': {
           target: `ws://${serverUrl}`,
           ws: true,

@@ -2,8 +2,9 @@
 const { ref } = require('objection')
 const axios = require('axios')
 const { mergeWith, isArray } = require('lodash')
-const { pubsubManager } = require('pubsweet-server')
 const config = require('config')
+const { pubsubManager } = require('@coko/server')
+const models = require('@pubsweet/models')
 
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
@@ -39,23 +40,23 @@ const ManuscriptResolvers = ({ isVersion }) => {
     async reviews(parent, _, ctx) {
       return parent.reviews
         ? parent.reviews
-        : (
-            await ctx.models.Manuscript.query().findById(parent.id)
-          ).$relatedQuery('reviews')
+        : (await models.Manuscript.query().findById(parent.id)).$relatedQuery(
+            'reviews',
+          )
     },
     async teams(parent, _, ctx) {
       return parent.teams
         ? parent.teams
-        : (
-            await ctx.models.Manuscript.query().findById(parent.id)
-          ).$relatedQuery('teams')
+        : (await models.Manuscript.query().findById(parent.id)).$relatedQuery(
+            'teams',
+          )
     },
     async files(parent, _, ctx) {
       return parent.files
         ? parent.files
-        : (
-            await ctx.models.Manuscript.query().findById(parent.id)
-          ).$relatedQuery('files')
+        : (await models.Manuscript.query().findById(parent.id)).$relatedQuery(
+            'files',
+          )
     },
 
     meta(parent) {
@@ -69,7 +70,7 @@ const ManuscriptResolvers = ({ isVersion }) => {
         (parent.manuscriptVersions && !parent.manuscriptVersions.length) ||
         !parent.manuscriptVersions
       ) {
-        return ctx.models.Manuscript.relatedQuery('manuscriptVersions')
+        return models.Manuscript.relatedQuery('manuscriptVersions')
           .for(parent.id)
           .orderBy('created', 'desc')
       }
@@ -88,7 +89,7 @@ const mergeArrays = (destination, source) => {
 
 const commonUpdateManuscript = async (id, input, ctx) => {
   const msDelta = JSON.parse(input)
-  const ms = await ctx.models.Manuscript.query().findById(id)
+  const ms = await models.Manuscript.query().findById(id)
   const updatedMs = mergeWith(ms, msDelta, mergeArrays)
 
   if (
@@ -102,7 +103,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
     updatedMs.submission.editDate = new Date().toISOString().split('T')[0]
   }
 
-  return ctx.models.Manuscript.query().updateAndFetchById(id, updatedMs)
+  return models.Manuscript.query().updateAndFetchById(id, updatedMs)
 }
 
 /** Get evaluations as [ [submission.review1, submission.review1date], [submission.review2, submission.review2date], ..., [submission.summary, submission.summarydate] ] */
@@ -259,7 +260,7 @@ const resolvers = {
         }),
         status: 'new',
         submission,
-        submitterId: ctx.user.id,
+        submitterId: ctx.user,
         // Create two channels: 1. free for all involved, 2. editorial
         channels: [
           {
@@ -280,7 +281,7 @@ const resolvers = {
           return {
             ...file,
             fileType: 'manuscript',
-            url: `/static/uploads${file.url}`,
+            url: `/uploads${file.url}`,
           }
         }),
         reviews: [],
@@ -288,7 +289,7 @@ const resolvers = {
           {
             role: 'author',
             name: 'Author',
-            members: [{ user: { id: ctx.user.id } }],
+            members: [{ user: { id: ctx.user } }],
           },
         ],
       }
@@ -299,7 +300,7 @@ const resolvers = {
           .split('T')[0]
       }
 
-      const manuscript = await ctx.models.Manuscript.query().upsertGraphAndFetch(
+      const manuscript = await models.Manuscript.query().upsertGraphAndFetch(
         emptyManuscript,
         { relate: true },
       )
@@ -346,7 +347,7 @@ const resolvers = {
       if (ids.length > 0) {
         await Promise.all(
           ids.map(toDeleteItem =>
-            ctx.models.Manuscript.query().deleteById(toDeleteItem),
+            models.Manuscript.query().deleteById(toDeleteItem),
           ),
         )
       }
@@ -355,7 +356,7 @@ const resolvers = {
     },
     async deleteManuscript(_, { id }, ctx) {
       const toDeleteList = []
-      const manuscript = await ctx.models.Manuscript.find(id)
+      const manuscript = await models.Manuscript.find(id)
 
       toDeleteList.push(manuscript.id)
 
@@ -375,7 +376,7 @@ const resolvers = {
       }
 
       if (manuscript.parentId) {
-        const parentManuscripts = await ctx.models.Manuscript.findByField(
+        const parentManuscripts = await models.Manuscript.findByField(
           'parent_id',
           manuscript.parentId,
         )
@@ -389,7 +390,7 @@ const resolvers = {
       if (toDeleteList.length > 0) {
         await Promise.all(
           toDeleteList.map(toDeleteItem =>
-            ctx.models.Manuscript.query().deleteById(toDeleteItem),
+            models.Manuscript.query().deleteById(toDeleteItem),
           ),
         )
       }
@@ -412,7 +413,7 @@ const resolvers = {
       if (!team) throw new Error('No team was found')
 
       for (let i = 0; i < team.members.length; i += 1) {
-        if (team.members[i].userId === context.user.id)
+        if (team.members[i].userId === context.user)
           team.members[i].status = action
       }
 
@@ -422,7 +423,7 @@ const resolvers = {
         const review = {
           recommendation: '',
           isDecision: false,
-          userId: context.user.id,
+          userId: context.user,
           manuscriptId: team.manuscriptId,
         }
 
@@ -434,8 +435,8 @@ const resolvers = {
         config['notification-email'].automated === 'true'
       ) {
         // Automated email reviewReject on rejection
-        const reviewer = await context.models.User.query()
-          .findById(context.user.id)
+        const reviewer = await models.User.query()
+          .findById(context.user)
           .withGraphFetched('[defaultIdentity]')
 
         const reviewerName = (
@@ -444,7 +445,7 @@ const resolvers = {
           ''
         ).split(' ')[0]
 
-        const manuscript = await context.models.Manuscript.query()
+        const manuscript = await models.Manuscript.query()
           .findById(team.manuscriptId)
           .withGraphFetched(
             '[teams.[members.[user.[defaultIdentity]]], submitter.[defaultIdentity]]',
@@ -504,13 +505,13 @@ const resolvers = {
     },
 
     async createNewVersion(_, { id }, ctx) {
-      const manuscript = await ctx.models.Manuscript.query().findById(id)
+      const manuscript = await models.Manuscript.query().findById(id)
       return manuscript.createNewVersion()
     },
     async submitManuscript(_, { id, input }, ctx) {
       if (config['notification-email'].automated === 'true') {
         // Automated email submissionConfirmation on submission
-        const manuscript = await ctx.models.Manuscript.query()
+        const manuscript = await models.Manuscript.query()
           .findById(id)
           .withGraphFetched('submitter.[defaultIdentity]')
 
@@ -552,7 +553,7 @@ const resolvers = {
     },
 
     async makeDecision(_, { id, decision }, ctx) {
-      const manuscript = await ctx.models.Manuscript.query()
+      const manuscript = await models.Manuscript.query()
         .findById(id)
         .withGraphFetched('submitter.[defaultIdentity]')
 
@@ -602,9 +603,7 @@ const resolvers = {
       return manuscript.save()
     },
     async addReviewer(_, { manuscriptId, userId }, ctx) {
-      const manuscript = await ctx.models.Manuscript.query().findById(
-        manuscriptId,
-      )
+      const manuscript = await models.Manuscript.query().findById(manuscriptId)
 
       const existingTeam = await manuscript
         .$relatedQuery('teams')
@@ -620,7 +619,7 @@ const resolvers = {
             .resultSize()) > 0
 
         if (!reviewerExists) {
-          await new ctx.models.TeamMember({
+          await new models.TeamMember({
             teamId: existingTeam.id,
             status: 'invited',
             userId,
@@ -631,7 +630,7 @@ const resolvers = {
       }
 
       // Create a new team of reviewers if it doesn't exist
-      const newTeam = await new ctx.models.Team({
+      const newTeam = await new models.Team({
         manuscriptId,
         members: [{ status: 'invited', userId }],
         role: 'reviewer',
@@ -641,16 +640,14 @@ const resolvers = {
       return newTeam
     },
     async removeReviewer(_, { manuscriptId, userId }, ctx) {
-      const manuscript = await ctx.models.Manuscript.query().findById(
-        manuscriptId,
-      )
+      const manuscript = await models.Manuscript.query().findById(manuscriptId)
 
       const reviewerTeam = await manuscript
         .$relatedQuery('teams')
         .where('role', 'reviewer')
         .first()
 
-      await ctx.models.TeamMember.query()
+      await models.TeamMember.query()
         .where({
           userId,
           teamId: reviewerTeam.id,
@@ -661,7 +658,7 @@ const resolvers = {
     },
 
     async publishManuscript(_, { id }, ctx) {
-      const manuscript = await ctx.models.Manuscript.query().findById(id)
+      const manuscript = await models.Manuscript.query().findById(id)
       const update = {} // This will collect any properties we may want to update in the DB
       update.published = new Date()
 
@@ -753,7 +750,7 @@ const resolvers = {
 
       tryPublishingWebhook(manuscript.id)
 
-      const updatedManuscript = await ctx.models.Manuscript.query().updateAndFetchById(
+      const updatedManuscript = await models.Manuscript.query().updateAndFetchById(
         id,
         update,
       )
@@ -779,6 +776,8 @@ const resolvers = {
         .findById(id)
         .withGraphFetched('[teams, channels, files, reviews.[user, comments]]')
 
+      const user = await models.User.query().findById(ctx.user)
+
       if (!manuscript) return null
 
       if (!manuscript.meta) {
@@ -799,7 +798,7 @@ const resolvers = {
 
       manuscript.manuscriptVersions = await manuscript.getManuscriptVersions()
 
-      if (ctx.user && !ctx.user.admin) {
+      if (user && !user.admin) {
         return stripSensitiveItems(manuscript)
       }
 
@@ -807,8 +806,8 @@ const resolvers = {
     },
     async manuscriptsUserHasCurrentRoleIn(_, input, ctx) {
       // Get all manuscript versions that this user has a role in
-      const teamMemberManuscripts = await ctx.models.TeamMember.query()
-        .where({ userId: ctx.user.id })
+      const teamMemberManuscripts = await models.TeamMember.query()
+        .where({ userId: ctx.user })
         .withGraphFetched('[team.[manuscript]]')
 
       // Get IDs of the top-level manuscripts
@@ -823,7 +822,7 @@ const resolvers = {
       ]
 
       // Get those top-level manuscripts with all versions, all with teams and members
-      const manuscripts = await ctx.models.Manuscript.query()
+      const manuscripts = await models.Manuscript.query()
         .withGraphFetched(
           '[teams.[members], manuscriptVersions(orderByCreated).[teams.[members]]]',
         )
@@ -840,7 +839,7 @@ const resolvers = {
 
         if (
           latestVersion.teams.some(t =>
-            t.members.some(member => member.userId === ctx.user.id),
+            t.members.some(member => member.userId === ctx.user),
           )
         )
           filteredManuscripts.push(m)
@@ -849,7 +848,7 @@ const resolvers = {
       return filteredManuscripts
     },
     async manuscripts(_, { where }, ctx) {
-      return ctx.models.Manuscript.query()
+      return models.Manuscript.query()
         .withGraphFetched(
           '[teams, reviews, manuscriptVersions(orderByCreated)]',
         )
@@ -857,7 +856,7 @@ const resolvers = {
         .orderBy('created', 'desc')
     },
     async publishedManuscripts(_, { sort, offset, limit }, ctx) {
-      const query = ctx.models.Manuscript.query()
+      const query = models.Manuscript.query()
         .whereNotNull('published')
         .withGraphFetched('[reviews.[comments], files, submitter]')
 
@@ -889,7 +888,7 @@ const resolvers = {
     async paginatedManuscripts(_, { sort, offset, limit, filters }, ctx) {
       const submissionForm = await Form.findOneByField('purpose', 'submit')
 
-      const query = ctx.models.Manuscript.query().where({
+      const query = models.Manuscript.query().where({
         parentId: null,
         isHidden: null,
       })
@@ -963,7 +962,7 @@ const resolvers = {
       return { totalCount, manuscripts }
     },
     async manuscriptsPublishedSinceDate(_, { startDate, limit }, ctx) {
-      const query = ctx.models.Manuscript.query()
+      const query = models.Manuscript.query()
         .whereNotNull('published')
         .orderBy('published')
         .withGraphFetched('[files]')
@@ -984,7 +983,7 @@ const resolvers = {
       }))
     },
     async publishedManuscript(_, { id }, ctx) {
-      const m = await ctx.models.Manuscript.query()
+      const m = await models.Manuscript.query()
         .findById(id)
         .whereNotNull('published')
         .withGraphFetched('[files]')

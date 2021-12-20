@@ -19,8 +19,8 @@ export default function Image(props) {
 
   const fallbackSrc =
     type === 'user'
-      ? '/static/profiles/default_avatar.svg'
-      : '/static/profiles/default_community.svg'
+      ? '/profiles/default_avatar.svg'
+      : '/profiles/default_community.svg'
 
   return (
     <VisibilitySensor>

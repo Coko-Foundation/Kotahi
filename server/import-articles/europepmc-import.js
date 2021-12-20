@@ -1,6 +1,7 @@
 /* eslint-disable camelcase, consistent-return */
 const axios = require('axios')
 
+const models = require('@pubsweet/models')
 const ArticleImportSources = require('../model-article-import-sources/src/articleImportSources')
 const ArticleImportHistory = require('../model-article-import-history/src/articleImportHistory')
 const Form = require('../model-form/src/form')
@@ -114,7 +115,7 @@ const getData = async ctx => {
 
   const articlesDetailedInfo = await Promise.all(articlesDetailedInfoPromises)
 
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
 
   const currentDOIs = manuscripts.map(({ submission }) => {
     return submission.doi
@@ -134,7 +135,7 @@ const getData = async ctx => {
         version,
         date: datePublished,
         server,
-       }) => {
+      }) => {
         return {
           status: 'new',
           isImported: true,
@@ -163,7 +164,7 @@ const getData = async ctx => {
               },
             ],
           },
-          submitterId: ctx.user.id,
+          submitterId: ctx.user,
           channels: [
             {
               topic: 'Manuscript discussion',
@@ -187,7 +188,7 @@ const getData = async ctx => {
   }
 
   try {
-    const inserted = await ctx.models.Manuscript.query().upsertGraphAndFetch(
+    const inserted = await models.Manuscript.query().upsertGraphAndFetch(
       newManuscripts,
       { relate: true },
     )

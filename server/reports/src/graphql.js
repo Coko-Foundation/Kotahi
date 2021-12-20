@@ -1,3 +1,4 @@
+const models = require('@pubsweet/models')
 const generateMovingAverages = require('./movingAverages')
 
 const editorTeams = ['Senior Editor', 'Handling Editor', 'Editor']
@@ -179,7 +180,7 @@ const isRevising = m =>
   ['revise', 'revising'].includes(getLastVersion(m).status)
 
 const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched(
       '[teams, reviews, manuscriptVersions(orderByCreated).[teams, reviews]]',
     )
@@ -237,12 +238,12 @@ const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
 
 const getPublishedTodayCount = async (timeZoneOffset, ctx) => {
   const midnight = getLastMidnightInTimeZone(timeZoneOffset)
-  const query = ctx.models.Manuscript.query().where('published', '>=', midnight) // TODO this will double-count manuscripts republished twice today
+  const query = models.Manuscript.query().where('published', '>=', midnight) // TODO this will double-count manuscripts republished twice today
   return query.resultSize()
 }
 
 const getRevisingNowCount = async ctx => {
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched('[manuscriptVersions(orderByCreated)]')
     .where({ parentId: null })
 
@@ -257,7 +258,7 @@ const getDurationsTraces = async (startDate, endDate, ctx) => {
 
   const dataStart = startDate - windowSizeForAvg / 2
 
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched('[reviews, manuscriptVersions(orderByCreated).[reviews]]')
     .where('created', '>=', new Date(dataStart))
     .where('created', '<', new Date(endDate))
@@ -303,7 +304,7 @@ const getDurationsTraces = async (startDate, endDate, ctx) => {
 const getDailyAverageStats = async (startDate, endDate, ctx) => {
   const dataStart = startDate - 365 * day // TODO: any better way to ensure we get all manuscripts still in progress during this date range?
 
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched('[reviews, manuscriptVersions(orderByCreated).[reviews]]')
     .where('created', '>=', new Date(dataStart))
     .where('created', '<', new Date(endDate))
@@ -423,7 +424,7 @@ const getVersionReviewDurations = ms => {
 }
 
 const getManuscriptsActivity = async (startDate, endDate, ctx) => {
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity], members], manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity], members]]]',
     )
@@ -458,7 +459,7 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
 }
 
 const getEditorsActivity = async (startDate, endDate, ctx) => {
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity]]]]',
     )
@@ -508,7 +509,7 @@ const getEditorsActivity = async (startDate, endDate, ctx) => {
 }
 
 const getReviewersActivity = async (startDate, endDate, ctx) => {
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity], members], reviews, manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity], members], reviews]]',
     )
@@ -598,7 +599,7 @@ const getReviewersActivity = async (startDate, endDate, ctx) => {
 }
 
 const getAuthorsActivity = async (startDate, endDate, ctx) => {
-  const query = ctx.models.Manuscript.query()
+  const query = models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity]]]]',
     )

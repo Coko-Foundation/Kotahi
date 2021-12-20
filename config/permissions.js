@@ -1,7 +1,19 @@
-// eslint-disable-next-line no-unused-vars
-const { rule, shield, and, or, not, allow, deny } = require('graphql-shield')
+/* eslint-disable no-unused-vars */
+const {
+  rule,
+  and,
+  or,
+  not,
+  allow,
+  deny,
+} = require('@coko/server/authorization')
 
-const userIsEditorQuery = async (user, manuscriptId) => {
+const { shield } = require('graphql-shield')
+const models = require('@pubsweet/models')
+
+const userIsEditorQuery = async (userId, manuscriptId) => {
+  const user = await models.User.query().findById(userId)
+
   if (!user) {
     return false
   }
@@ -43,12 +55,20 @@ const userIsMemberOfTeamWithRoleQuery = async (user, manuscriptId, role) => {
 }
 
 const userIsAdmin = rule({ cache: 'contextual' })(
-  async (parent, args, ctx, info) => ctx.user && ctx.user.admin,
+  async (parent, args, ctx, info) => {
+    const user = await models.User.query().findById(ctx.user)
+
+    if (user && user.admin) {
+      return true
+    }
+
+    return false
+  },
 )
 
 const parentManuscriptIsPublished = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
-    const manuscript = await ctx.models.Manuscript.query().findById(
+    const manuscript = await models.Manuscript.query().findById(
       parent.manuscriptId,
     )
 
@@ -58,9 +78,11 @@ const parentManuscriptIsPublished = rule({ cache: 'contextual' })(
 
 const reviewIsByUser = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
+    const user = await models.User.query().findById(ctx.user)
+
     const rows =
-      ctx.user &&
-      ctx.user.$relatedQuery('teams').where({ role: 'reviewer' }).resultSize()
+      user &&
+      user.$relatedQuery('teams').where({ role: 'reviewer' }).resultSize()
 
     return !!rows
   },
@@ -78,29 +100,31 @@ const isAuthenticated = rule({ cache: 'contextual' })(
 // if the channel is for 'editorial', only editors and admins can chat there
 const userIsAllowedToChat = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    if (ctx.user && ctx.user.admin) {
+    const user = await models.User.query().findById(ctx.user)
+
+    if (user && user.admin) {
       return true
     }
 
-    const channel = await ctx.models.Channel.query().findById(args.channelId)
+    const channel = await models.Channel.query().findById(args.channelId)
 
-    const manuscript = await ctx.models.Manuscript.query().findById(
+    const manuscript = await models.Manuscript.query().findById(
       channel.manuscriptId,
     )
 
     const isAuthor = await userIsMemberOfTeamWithRoleQuery(
-      ctx.user,
+      user,
       manuscript.id,
       'author',
     )
 
     const isReviewer = await userIsMemberOfTeamWithRoleQuery(
-      ctx.user,
+      user,
       manuscript.id,
       'reviewer',
     )
 
-    const isEditor = await userIsEditorQuery(ctx.user, manuscript.id)
+    const isEditor = await userIsEditorQuery(user.id, manuscript.id)
 
     if (channel.type === 'all') {
       return isAuthor || isReviewer || isEditor
@@ -120,15 +144,15 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
   let manuscriptId
 
   if (args.id) {
-    const review = await ctx.models.Review.query().findById(args.id)
+    const review = await models.Review.query().findById(args.id)
     if (review) manuscriptId = review.manuscriptId
   }
 
   if (!manuscriptId) manuscriptId = args.input.manuscriptId
 
-  const manuscript = await ctx.models.Manuscript.query().findById(manuscriptId)
+  const manuscript = await models.Manuscript.query().findById(manuscriptId)
 
-  const team = await ctx.models.Team.query()
+  const team = await models.Team.query()
     .where({
       manuscriptId: manuscript.id,
       role: 'reviewer',
@@ -137,9 +161,7 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
 
   if (!team) return false
 
-  const members = await team
-    .$relatedQuery('members')
-    .where('userId', ctx.user.id)
+  const members = await team.$relatedQuery('members').where('userId', ctx.user)
 
   if (members && members[0] && members[0].status !== 'completed') {
     return true
@@ -154,7 +176,7 @@ const userIsEditorOfTheManuscriptOfTheReview = rule({
   let manuscriptId
 
   if (args.id) {
-    const review = await ctx.models.Review.query().findById(args.id)
+    const review = await models.Review.query().findById(args.id)
     if (review) manuscriptId = review.manuscriptId
   }
 
@@ -165,11 +187,11 @@ const userIsEditorOfTheManuscriptOfTheReview = rule({
 
 const userIsInvitedReviewer = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    const team = await ctx.models.Team.query().findById(args.teamId)
+    const team = await models.Team.query().findById(args.teamId)
 
     const member = await team
       .$relatedQuery('members')
-      .where({ userId: ctx.user.id, status: 'invited' })
+      .where({ userId: ctx.user, status: 'invited' })
       .first()
 
     return !!member
@@ -178,7 +200,7 @@ const userIsInvitedReviewer = rule({ cache: 'strict' })(
 
 const userIsAuthor = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    const team = await ctx.models.Team.query()
+    const team = await models.Team.query()
       .where({
         manuscriptId: args.id,
         role: 'author',
@@ -188,7 +210,7 @@ const userIsAuthor = rule({ cache: 'strict' })(
     if (team) {
       const author = team
         .$relatedQuery('members')
-        .where({ userId: ctx.user.id })
+        .where({ userId: ctx.user })
         .first()
 
       return !!author
@@ -209,14 +231,14 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
     manuscriptId = args.meta.manuscriptId
   } else if (args.id) {
     // id is supplied for deletion
-    const file = await ctx.models.File.query().findById(args.id)
+    const file = await models.File.query().findById(args.id)
     // eslint-disable-next-line prefer-destructuring
     manuscriptId = file.manuscriptId
   } else {
     return false
   }
 
-  const team = await ctx.models.Team.query()
+  const team = await models.Team.query()
     .where({
       manuscriptId,
       role: 'author',
@@ -227,9 +249,7 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
     return false
   }
 
-  const members = await team
-    .$relatedQuery('members')
-    .where('userId', ctx.user.id)
+  const members = await team.$relatedQuery('members').where('userId', ctx.user)
 
   if (members && members[0]) {
     return true
@@ -244,7 +264,7 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
       return false
     }
 
-    const manuscript = await ctx.models.File.relatedQuery('manuscript')
+    const manuscript = await models.File.relatedQuery('manuscript')
       .for(parent.id)
       .first()
 
@@ -253,7 +273,7 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
       return false
     }
 
-    const team = await ctx.models.Team.query()
+    const team = await models.Team.query()
       .where({
         manuscriptId: manuscript.id,
         role: 'author',
@@ -266,7 +286,7 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
 
     const members = await team
       .$relatedQuery('members')
-      .where('userId', ctx.user.id)
+      .where('userId', ctx.user)
 
     if (members && members[0]) {
       return true
@@ -284,7 +304,7 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
     return false
   }
 
-  const manuscript = await ctx.models.File.relatedQuery('manuscript')
+  const manuscript = await models.File.relatedQuery('manuscript')
     .for(parent.id)
     .first()
 
@@ -293,7 +313,7 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
     return false
   }
 
-  const team = await ctx.models.Team.query()
+  const team = await models.Team.query()
     .where({
       manuscriptId: manuscript.id,
       role: 'reviewer',
@@ -302,9 +322,7 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
 
   if (!team) return false
 
-  const members = await team
-    .$relatedQuery('members')
-    .where('userId', ctx.user.id)
+  const members = await team.$relatedQuery('members').where('userId', ctx.user)
 
   if (members && members[0] && members[0].status !== 'completed') {
     return true

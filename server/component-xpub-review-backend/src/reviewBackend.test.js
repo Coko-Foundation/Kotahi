@@ -56,7 +56,7 @@ jest.mock('@pubsweet/db-manager', () => ({
   },
 }))
 
-jest.mock('pubsweet-server/src/helpers/authsome', () => ({
+jest.mock('authsome', () => ({
   can: jest.fn(() => true),
 }))
 
@@ -66,8 +66,8 @@ jest.mock('passport', () => ({
   ),
 }))
 
-const authsome = require('pubsweet-server/src/helpers/authsome')
-const transport = require('@pubsweet/component-send-email')
+const authsome = require('authsome')
+const { sendEmail } = require('@coko/server')
 const component = require('./reviewBackend')
 
 function makeApp() {
@@ -93,7 +93,7 @@ describe('/api/make-decision route', () => {
     expect(response.body.version).toBeDefined()
     expect(response.body.project).toBeDefined()
     expect(response.body.nextVersion).not.toBeDefined()
-    expect(transport.send).toHaveBeenCalledWith(
+    expect(sendEmail).toHaveBeenCalledWith(
       expect.objectContaining({
         from: 'sender@example.com',
         to: ['author@example.org'],
@@ -113,7 +113,7 @@ describe('/api/make-decision route', () => {
     })
 
     expect(response.status).toBe(403)
-    expect(transport.send).not.toHaveBeenCalled()
+    expect(sendEmail).not.toHaveBeenCalled()
   })
 })
 
@@ -141,7 +141,7 @@ describe('/api/make-invitation route', () => {
     })
 
     expect(response.body.version.reviewers).toBeDefined()
-    expect(transport.send).toHaveBeenCalledWith(
+    expect(sendEmail).toHaveBeenCalledWith(
       expect.objectContaining({
         from: 'sender@example.com',
         to: 'author@example.org',
@@ -172,6 +172,6 @@ describe('/api/make-invitation route', () => {
     })
 
     expect(response.status).toBe(403)
-    expect(transport.send).not.toHaveBeenCalled()
+    expect(sendEmail).not.toHaveBeenCalled()
   })
 })

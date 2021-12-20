@@ -1,4 +1,4 @@
-const { startServer } = require('pubsweet-server')
+const { startServer } = require('@coko/server')
 
 const seedForms = require('./scripts/seedForms')
 
