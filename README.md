@@ -3,7 +3,29 @@
 Kotahi is a manuscript submission system, based on the discontinued [xpub-collabra](https://gitlab.coko.foundation/xpub/xpub) project.
 It is currently under development by the [Coko Foundation](https://coko.foundation/) and is being built with [PubSweet](https://gitlab.coko.foundation/pubsweet/pubsweet).
 
-## Installation
+## Getting started: the quick guide
+
+To install Kotahi locally, you'll need these things:
+
+- A copy of this repo.
+- Node & Yarn. Kotahi requires Node 12.
+- Docker. Kotahi uses [Docker](https://www.docker.com/) for images of the databases and servers that it uses. Make sure you have Docker installed and running.
+- An ORCID account. Kotahi uses [ORCID](https://orcid.org/) for account authentication. It's free and easy to sign up. The [FAQ](faq.md) tells you how.
+- A working _.env_ file. You can start by copying [.env.example](.env.example) (in the shell: `cp .env.example .env`). The .env file contains passwords and other sensitive information; it also contains a lot of configuration options at the moment.
+
+Once you have those things, try doing this:
+
+- From the shell in the main directory: `yarn install` to install all the Node packages.
+- From the shell: `docker-compose up` _Do not do this if you do not have a .env file!_
+- Point your browser at [http://localhost:4000](http://localhost:4000) – you should see an empty "recent publications" page. 
+- Click **Dashboard** in the upper right.
+- You'll be prompted to login with ORCID. If you don't yet have an ORCID ID, you can login with account number `0000-0001-6819-2182` and password `KotahiDemoAccess2021`. _Please do not use this account for anything other than testing!_
+- If you're asked, click "Authorize Access".
+- You should be returned to Kotahi; enter an email address to get started. The email you enter will be associated with the ORCID ID in your instance; and the first account created is automatically an admin, so if you're not just trying out Kotahi, there's a benefit to making your own ORCID ID.
+
+If something doesn't work, read though the details in the next section; or check through the [FAQ](faq.md).
+
+## Installation: details
 
 Developer beware! This project is currently under very heavy development, so things will most definitely be broken. We also don't have a fixed roadmap for it at this point.
 
@@ -35,7 +57,7 @@ This will:
 - Bring up a postgres container for use in development
 - Register the `job-xsweet` service (which converts .docx files to HTML)
 
-By default you can then access your app at [http://localhost:4000](http://localhost:4000). If you have configured to use HTTPS protocol instead (and are using self-signed certificates), browsers will complain about it being insecure. There are several options to disable these checks for `localhost`, to name a few:
+By default you can then access your app at [http://localhost:4000/login](http://localhost:4000/login). If you have configured to use HTTPS protocol instead (and are using self-signed certificates), browsers will complain about it being insecure. There are several options to disable these checks for `localhost`, to name a few:
 
 1. Go to `chrome://flags/#allow-insecure-localhost` and enable it (Chrome)
 2. Or click anywhere on the page and type `thisisunsafe` (yes, really) (Chrome)
