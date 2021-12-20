@@ -14,6 +14,8 @@ import {
   Heading,
   HeadingWithAction,
   StatusBadge,
+  Primary,
+  Secondary,
 } from '../../../../shared'
 
 // TODO: Make this a proper shared component?
@@ -22,7 +24,7 @@ import { UserAvatar } from '../../../../component-avatar/src'
 const ReviewersList = styled.div`
   display: grid;
   grid-gap: ${grid(2)};
-  grid-template-columns: repeat(auto-fill, minmax(${grid(15)}, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(${grid(20)}, 1fr));
 `
 
 const Reviewer = styled.div``
@@ -87,7 +89,10 @@ const Reviewers = ({
                 <Reviewer key={reviewer.id}>
                   <StatusBadge minimal status={reviewer.status} />
                   <UserAvatar key={reviewer.id} user={reviewer.user} />
-                  {reviewer.user.username}
+                  <Primary>{reviewer.user.username}</Primary>
+                  <Secondary>
+                    {reviewer.user.defaultIdentity.identifier}
+                  </Secondary>
                   {config.review.shared === 'true' && (
                     <Checkbox
                       checked={reviewer.isShared}

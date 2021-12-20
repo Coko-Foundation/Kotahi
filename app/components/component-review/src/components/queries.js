@@ -37,6 +37,10 @@ const reviewFields = `
   user {
     id
     username
+    defaultIdentity {
+      id
+      identifier
+    }
   }
 `
 
@@ -71,6 +75,7 @@ const fragmentFields = `
         id
         username
         defaultIdentity {
+          id
           name
         }
       }
