@@ -87,15 +87,17 @@ const FullWaxEditorCommentsLayout = (readOnly, authorComments) => ({
             </ReadOnlyEditorWithCommentsEditor>
             <FullCommentsContainer authorComments={authorComments}>
               <CommentTrackToolsContainer authorComments={authorComments}>
-                <CommentTrackTools>
-                  {commentsTracksCount + trackBlockNodesCount} COMMENT
-                  {commentsTracksCount + trackBlockNodesCount !== 1
-                    ? 'S AND SUGGESTIONS'
-                    : ' OR SUGGESTION'}
-                  <CommentTrackOptions>
-                    <CommentTrackToolBar />
-                  </CommentTrackOptions>
-                </CommentTrackTools>
+                {authorComments ? null : (
+                  <CommentTrackTools>
+                    {commentsTracksCount + trackBlockNodesCount} COMMENT
+                    {commentsTracksCount + trackBlockNodesCount !== 1
+                      ? 'S AND SUGGESTIONS'
+                      : ' OR SUGGESTION'}
+                    <CommentTrackOptions>
+                      <CommentTrackToolBar />
+                    </CommentTrackOptions>
+                  </CommentTrackTools>
+                )}
               </CommentTrackToolsContainer>
               <RightArea area="main" />
             </FullCommentsContainer>
