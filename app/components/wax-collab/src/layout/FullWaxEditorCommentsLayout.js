@@ -82,20 +82,22 @@ const FullWaxEditorCommentsLayout = (readOnly, authorComments) => ({
       {readOnly ? (
         <Grid readonly>
           <FullWaxEditorGrid noScroll useComments>
-            <ReadOnlyEditorWithCommentsEditor>
+            <ReadOnlyEditorWithCommentsEditor hideTrackChanges={authorComments}>
               {editor}
             </ReadOnlyEditorWithCommentsEditor>
             <FullCommentsContainer authorComments={authorComments}>
               <CommentTrackToolsContainer authorComments={authorComments}>
-                <CommentTrackTools>
-                  {commentsTracksCount + trackBlockNodesCount} COMMENT
-                  {commentsTracksCount + trackBlockNodesCount !== 1
-                    ? 'S AND SUGGESTIONS'
-                    : ' OR SUGGESTION'}
-                  <CommentTrackOptions>
-                    <CommentTrackToolBar />
-                  </CommentTrackOptions>
-                </CommentTrackTools>
+                {authorComments ? null : (
+                  <CommentTrackTools>
+                    {commentsTracksCount + trackBlockNodesCount} COMMENT
+                    {commentsTracksCount + trackBlockNodesCount !== 1
+                      ? 'S AND SUGGESTIONS'
+                      : ' OR SUGGESTION'}
+                    <CommentTrackOptions>
+                      <CommentTrackToolBar />
+                    </CommentTrackOptions>
+                  </CommentTrackTools>
+                )}
               </CommentTrackToolsContainer>
               <RightArea area="main" />
             </FullCommentsContainer>
