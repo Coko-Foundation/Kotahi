@@ -27,6 +27,7 @@ const makeZip = async htmlText => {
 }
 
 const makePdf = async (html, articleMetadata) => {
+  // console.log(articleMetadata)
   // 0 strip content out of the HTML that shouldn't be in there (annotations)
   // 1 make HTML from html + front matter + CSS
 
@@ -35,7 +36,14 @@ const makePdf = async (html, articleMetadata) => {
   // TODO: maybe put up a modal explaining that a PDF is being made?
 
   // this runs the HTML from Wax through a template, feeding it variables
-  const outHtml = makeTemplate(html, articleMetadata.title || '')
+  const outHtml = makeTemplate(html, {
+    title: articleMetadata.title || '',
+    author: articleMetadata?.submission?.name || '',
+    contact: articleMetadata?.submission?.contact || '',
+    affiliation: articleMetadata?.submission?.affiliation || '',
+    keywords: articleMetadata?.submission?.keywords || '',
+    pubDate: articleMetadata?.pubDate || new Date(),
+  })
 
   // 2 zip this.
 
