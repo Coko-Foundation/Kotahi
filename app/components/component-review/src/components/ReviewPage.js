@@ -45,6 +45,10 @@ const reviewFields = `
   user {
     id
     username
+    defaultIdentity {
+      id
+      identifier
+    }
   }
 `
 
@@ -183,7 +187,7 @@ const query = gql`
 `
 
 const completeReviewMutation = gql`
-  mutation($id: ID!) {
+  mutation ($id: ID!) {
     completeReview(id: $id) {
       id
       status

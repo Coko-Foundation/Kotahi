@@ -5,7 +5,7 @@ import { Attachment } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 
-const Heading = styled.div``
+const Heading = styled.h4``
 
 const Note = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
@@ -16,7 +16,9 @@ const Recommendation = styled(Note)``
 const Content = styled.div``
 
 const Container = styled.div`
-  margin-top: ${grid(3)};
+  & > div {
+    margin-bottom: 12px;
+  }
 `
 
 // Due to migration to new Data Model
@@ -44,24 +46,27 @@ const ReviewComments = (review, type) => (
 
 const Review = ({ review, user }) => (
   <Container>
+    <div>
+      <Heading>
+        <strong>{review.user.username}</strong>
+      </Heading>
+      {review.user.defaultIdentity.identifier}
+    </div>
     {review?.reviewComment && (
-      <div>
+      <>
         <Heading>Review</Heading>
-
         {ReviewComments(review, 'review')}
-      </div>
+      </>
     )}
     {review?.confidentialComment && user.admin ? (
       <div>
         <Heading>Confidential</Heading>
-
         {ReviewComments(review, 'confidential')}
       </div>
     ) : null}
     {review?.recommendation && (
       <div>
         <Heading>Recommendation</Heading>
-
         <Recommendation>{review.recommendation}</Recommendation>
       </div>
     )}
