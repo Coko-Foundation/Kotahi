@@ -82,7 +82,7 @@ const FullWaxEditorCommentsLayout = (readOnly, authorComments) => ({
       {readOnly ? (
         <Grid readonly>
           <FullWaxEditorGrid noScroll useComments>
-            <ReadOnlyEditorWithCommentsEditor hideTrackChanges={authorComments}>
+            <ReadOnlyEditorWithCommentsEditor>
               {editor}
             </ReadOnlyEditorWithCommentsEditor>
             <FullCommentsContainer authorComments={authorComments}>
