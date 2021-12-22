@@ -42,6 +42,21 @@ const DecisionReviews = ({ manuscript, sharedReviews }) => {
               getCompletedReviews(manuscript, review.user) === 'completed' &&
               review.isDecision === false,
           )
+          .sort((reviewOne, reviewTwo) => {
+            // Get the username of reviewer and convert to uppercase
+            const usernameOne = reviewOne.user.username.toUpperCase()
+            const usernameTwo = reviewTwo.user.username.toUpperCase()
+
+            // Sort by username
+            if (usernameOne < usernameTwo) return -1
+            if (usernameOne > usernameTwo) return 1
+
+            // If the username don't match then sort by reviewId
+            if (reviewOne.id < reviewTwo.id) return -1
+            if (reviewOne.id > reviewTwo.id) return 1
+
+            return 0
+          })
           .map((review, index) => (
             <SectionRow key={review.id}>
               <DecisionReview

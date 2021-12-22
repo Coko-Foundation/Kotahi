@@ -144,7 +144,7 @@ const ReviewHeading = ({
       <Ordinal>Review {ordinal}</Ordinal>
       &nbsp;
       <Name>
-        {isHiddenReviewerName && isCurrentUserAuthor ? (
+        {isHiddenReviewerName && !isCurrentUserAuthor ? (
           'Anonymous'
         ) : (
           <UserCombo>
@@ -239,7 +239,7 @@ const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
 
       {open && (
         <ReviewBody>
-          <Review review={review} user={currentUser} />
+          <Review review={review} showUserInfo={false} user={currentUser} />
         </ReviewBody>
       )}
     </Root>

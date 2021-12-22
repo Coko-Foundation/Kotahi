@@ -44,14 +44,25 @@ const ReviewComments = (review, type) => (
   </Note>
 )
 
-const Review = ({ review, user }) => (
+const Review = ({ review, user, showUserInfo = true }) => (
   <Container>
-    <div>
-      <Heading>
-        <strong>{review.user.username}</strong>
-      </Heading>
-      {review.user.defaultIdentity.identifier}
-    </div>
+    {!review.isHiddenReviewerName && showUserInfo && (
+      <div>
+        <Heading>
+          <strong>{review.user.username}</strong>
+        </Heading>
+        {review.user.defaultIdentity.identifier}
+      </div>
+    )}
+
+    {review.isHiddenReviewerName && showUserInfo && (
+      <div>
+        <Heading>
+          <strong style={{ color: '#545454' }}>Anonymous Reviewer</strong>
+        </Heading>
+      </div>
+    )}
+
     {review?.reviewComment && (
       <>
         <Heading>Review</Heading>
