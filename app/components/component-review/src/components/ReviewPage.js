@@ -40,6 +40,7 @@ const reviewFields = `
     ${commentFields}
   }
   isDecision
+  isHiddenReviewerName
   recommendation
   canBePublishedPublicly
   user {
