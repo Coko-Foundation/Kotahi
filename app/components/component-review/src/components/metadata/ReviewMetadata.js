@@ -39,7 +39,7 @@ const getNote = (notes, type) =>
 const getSupplementaryFiles = supplementary =>
   (supplementary || []).filter(file => file.fileType === 'supplementary') || []
 
-  const getManuscriptImageFiles = image =>
+const getManuscriptImageFiles = image =>
   (image || []).filter(file => file.fileType === 'manuscriptImage') || []
 
 const getManuscriptFiles = files =>
@@ -197,7 +197,8 @@ const ReviewMetadata = ({
           {getManuscriptImageFiles(manuscript.files).length > 0 && (
             <SectionRowGrid>
               <Heading>
-                {getManuscriptImageFiles(manuscript.files).length} manuscript image{' '}
+                {getManuscriptImageFiles(manuscript.files).length} manuscript
+                image{' '}
                 {getManuscriptImageFiles(manuscript.files).length === 1
                   ? 'file'
                   : 'files'}
