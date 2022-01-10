@@ -135,39 +135,42 @@ const base64toBlob = (base64Data, contentType) => {
 const base64Images = source => {
   const doc = new DOMParser().parseFromString(source, 'text/html')
 
-  const images = [...doc.images].map(e => {
+  const images = [...doc.images].map((e, index) => {
     const mimeType = e.src.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0]
     const blob = base64toBlob(e.src, mimeType)
     const mimeTypeSplit = mimeType.split('/')
     const extFileName = mimeTypeSplit[1]
-    const file = new File([blob], `Image001.${extFileName}`, { type: mimeType })
+    const file = new File([blob], `Image00${index + 1}.${extFileName}`, { type: mimeType })
     return { dataSrc: e.src, mimeType, file }
   })
 
   return images || null
 }
 
-const uploadImages = async (images, client, manuscriptId) => {
-  // TODO: multiple files
-  const { file } = images[0]
+const uploadImages = async (images, client, manuscriptId, source) => {
+  const uploadedImages = images.map(image => {
+    const { file } = image
 
-  const meta = {
-    filename: file.name,
-    manuscriptId,
-    reviewCommentId: null,
-    mimeType: file.type,
-    size: file.size,
-    fileType: 'manuscriptImage',
-    label: file.label || undefined,
-  }
-
-  return client.mutate({
-    mutation: createFileMutation,
-    variables: {
-      file,
-      meta,
-    },
+      const meta = {
+        filename: file.name,
+        manuscriptId,
+        reviewCommentId: null,
+        mimeType: file.type,
+        size: file.size,
+        fileType: 'manuscriptImage',
+        label: file.label || undefined,
+      }
+      
+      return client.mutate({
+        mutation: createFileMutation,
+        variables: {
+          file,
+          meta,
+        },
+      })
   })
+
+  return uploadedImages
 }
 
 const uploadPromise = (files, client) => {
@@ -309,8 +312,16 @@ export default ({
         uploadResponse = await DocxToHTMLPromise(file, data)
         uploadResponse.response = cleanMathMarkup(uploadResponse.response)
         uploadResponse.response = stripTags(uploadResponse.response)
-        images = base64Images(uploadResponse.response)
+        images = base64Images(uploadResponse.response)        
       }
+
+      // eslint-disable-next-line
+      const uploadedImages = await uploadImages(
+        images,
+        client,
+        manuscriptData.data.createManuscript.id,
+        uploadResponse.response
+      )
 
       manuscriptData = await createManuscriptPromise(
         file,
@@ -318,12 +329,6 @@ export default ({
         currentUser,
         uploadResponse.fileURL,
         uploadResponse.response,
-      )
-      // eslint-disable-next-line
-      const uploadedImages = await uploadImages(
-        images,
-        client,
-        manuscriptData.data.createManuscript.id,
       )
     } else {
       // Create a manuscript without a file

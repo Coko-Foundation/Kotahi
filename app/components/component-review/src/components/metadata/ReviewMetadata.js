@@ -39,6 +39,9 @@ const getNote = (notes, type) =>
 const getSupplementaryFiles = supplementary =>
   (supplementary || []).filter(file => file.fileType === 'supplementary') || []
 
+  const getManuscriptImageFiles = image =>
+  (image || []).filter(file => file.fileType === 'manuscriptImage') || []
+
 const getManuscriptFiles = files =>
   (files || []).filter(file => file.fileType === 'manuscript') || []
 
@@ -181,6 +184,28 @@ const ReviewMetadata = ({
               {!!getManuscriptFiles(manuscript.files).length && (
                 <Cell>
                   {getManuscriptFiles(manuscript.files).map(file => (
+                    <Attachment
+                      file={filesToAttachment(file)}
+                      key={file.url}
+                      uploaded
+                    />
+                  ))}
+                </Cell>
+              )}
+            </SectionRowGrid>
+          )}
+          {getManuscriptImageFiles(manuscript.files).length > 0 && (
+            <SectionRowGrid>
+              <Heading>
+                {getManuscriptImageFiles(manuscript.files).length} manuscript image{' '}
+                {getManuscriptImageFiles(manuscript.files).length === 1
+                  ? 'file'
+                  : 'files'}
+                :
+              </Heading>
+              {!!getManuscriptImageFiles(manuscript.files).length && (
+                <Cell>
+                  {getManuscriptImageFiles(manuscript.files).map(file => (
                     <Attachment
                       file={filesToAttachment(file)}
                       key={file.url}
