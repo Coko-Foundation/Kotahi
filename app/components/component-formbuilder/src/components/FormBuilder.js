@@ -16,13 +16,25 @@ const ModalContainer = styled.div`
   z-index: 100;
 `
 
+const FeildWrapper = styled.div`
+  display: flex;
+  align-items: center;
+  border-radius: ${th('borderRadius')};
+  margin:   margin: ${grid(2)};
+  padding: ${grid(0.5)};
+  margin: ${grid(3)} 0px;
+}
+  &.active {
+    background-color: ${lightenBy('colorPrimary', 0.7)};
+  }
+`
+
 const Element = styled.div`
   background-color: ${th('colorSecondaryBackground')};
   border-radius: ${th('borderRadius')};
   display: flex;
   justify-content: space-between;
-  margin: ${grid(2)};
-  padding: ${grid(1)};
+  width: 100%;
 
   &.active {
     background-color: ${lightenBy('colorPrimary', 0.7)};
@@ -40,6 +52,10 @@ const IconAction = styled(Action)`
 `
 
 const StatusIcon = withTheme(({ children, theme }) => (
+  <Icon color={theme.colorPrimary}>{children}</Icon>
+))
+
+const VeticalEllipsisIcon = withTheme(({ children, theme }) => (
   <Icon color={theme.colorPrimary}>{children}</Icon>
 ))
 
@@ -137,13 +153,19 @@ const BuilderElement = ({
   }
 
   return (
-    <div
+    <FeildWrapper
+      className={isActive ? 'active' : undefined}
       draggable
       id={formFeildId}
       onDragOver={ev => ev.preventDefault()}
       onDragStart={handleDrag}
       onDrop={e => handleDrop(e, element.id)}
+      style={{
+        display: 'flex',
+        alignItems: 'center',
+      }}
     >
+      <VeticalEllipsisIcon>more_vertical</VeticalEllipsisIcon>
       <Element
         className={isActive ? 'active' : undefined}
         key={`element-${element.id}`}
@@ -187,7 +209,7 @@ const BuilderElement = ({
           </CancelButton>
         </ModalContainer>
       </Modal>
-    </div>
+    </FeildWrapper>
   )
 }
 
