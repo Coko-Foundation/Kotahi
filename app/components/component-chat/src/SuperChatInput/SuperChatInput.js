@@ -6,7 +6,7 @@ import * as React from 'react'
 import { Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
-import { useMutation } from '@apollo/client'
+// import { useMutation } from '@apollo/client'
 
 // import compose from 'recompose/compose';
 // import { connect } from 'react-redux';
@@ -14,19 +14,20 @@ import { Icon } from '../../../shared'
 // import { addToastWithTimeout } from 'src/actions/toasts';
 // import { openModal } from 'src/actions/modals';
 // import { replyToMessage } from 'src/actions/message';
-import useCurrentUser from '../../../../hooks/useCurrentUser'
+// import useCurrentUser from '../../../../hooks/useCurrentUser'
 import {
   Form,
   ChatInputContainer,
   ChatInputWrapper,
-  Input,
+  // Input,
   InputWrapper,
   PhotoSizeError,
   PreviewWrapper,
   RemovePreviewButton,
 } from './style'
+import MentionsInput from '../MentionsInput/MentionsInput'
 
-import { CREATE_MESSAGE } from '../../../../queries'
+// import { CREATE_MESSAGE } from '../../../../queries'
 
 // import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage'
 // import { getMessageById } from 'shared/graphql/queries/message/getMessage'
@@ -102,8 +103,9 @@ export const cleanSuggestionUserObject = user => {
 }
 
 const SuperChatInput = props => {
-  const currentUser = useCurrentUser()
-  const [sendChannelMessage] = useMutation(CREATE_MESSAGE)
+  // const currentUser = useCurrentUser()
+  const { sendChannelMessages,searchUsers } = props
+  // const [sendChannelMessage] = useMutation(CREATE_MESSAGE)
   // const [sendDirectMessage] = useMutation(CREATE_MESSAGE)
 
   const cacheKey = `last-content-${props.channelId}`
@@ -184,9 +186,7 @@ const SuperChatInput = props => {
     //   })
     // }
 
-    sendChannelMessage({
-      variables: { content: body, channelId: props.channelId },
-    })
+    sendChannelMessages({ content: body, channelId: props.channelId })
   // const method =
   //   props.threadType === 'story' ? props.sendMessage : props.sendDirectMessage
   // return method({
@@ -367,7 +367,7 @@ const SuperChatInput = props => {
                   </RemovePreviewButton>
                 </PreviewWrapper>
               )}
-              <Input
+              <MentionsInput
                 autoFocus={false}
                 hasAttachment={!!props.quotedMessage || !!mediaPreview}
                 inputRef={node => {
@@ -382,6 +382,7 @@ const SuperChatInput = props => {
                 placeholder="Your message here..."
                 staticSuggestions={props.participants}
                 value={text}
+                searchUsersCallBack={searchUsers}
               />
             </InputWrapper>
             <Button

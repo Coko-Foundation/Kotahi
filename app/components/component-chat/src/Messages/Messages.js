@@ -1,7 +1,7 @@
 /* eslint-disable prefer-object-spread */
 
 import React, { useEffect } from 'react'
-import { gql, useQuery } from '@apollo/client'
+// import { gql, useQuery } from '@apollo/client'
 import PropTypes from 'prop-types'
 import { UserAvatar } from '../../../component-avatar/src'
 import { sortAndGroupMessages } from '../../../../sortAndGroup'
@@ -24,84 +24,85 @@ import {
   Spinner,
 } from './style'
 
-const GET_MESSAGES = gql`
-  query messages($channelId: ID, $before: String) {
-    messages(channelId: $channelId, before: $before) {
-      edges {
-        id
-        content
-        created
-        updated
-        user {
-          id
-          username
-          profilePicture
-          online
-        }
-      }
-      pageInfo {
-        startCursor
-        hasPreviousPage
-      }
-    }
-  }
-`
+// const GET_MESSAGES = gql`
+//   query messages($channelId: ID, $before: String) {
+//     messages(channelId: $channelId, before: $before) {
+//       edges {
+//         id
+//         content
+//         created
+//         updated
+//         user {
+//           id
+//           username
+//           profilePicture
+//           online
+//         }
+//       }
+//       pageInfo {
+//         startCursor
+//         hasPreviousPage
+//       }
+//     }
+//   }
+// `
 
-const MESSAGES_SUBSCRIPTION = gql`
-  subscription messageCreated($channelId: ID) {
-    messageCreated(channelId: $channelId) {
-      id
-      created
-      updated
-      content
-      user {
-        id
-        username
-        profilePicture
-        online
-        defaultIdentity {
-          identifier
-          email
-          type
-          aff
-          id
-          name
-        }
-      }
-    }
-  }
-`
+// const MESSAGES_SUBSCRIPTION = gql`
+//   subscription messageCreated($channelId: ID) {
+//     messageCreated(channelId: $channelId) {
+//       id
+//       created
+//       updated
+//       content
+//       user {
+//         id
+//         username
+//         profilePicture
+//         online
+//         defaultIdentity {
+//           identifier
+//           email
+//           type
+//           aff
+//           id
+//           name
+//         }
+//       }
+//     }
+//   }
+// `
 
-const subscribeToNewMessages = (subscribeToMore, channelId) =>
-  subscribeToMore({
-    document: MESSAGES_SUBSCRIPTION,
-    variables: { channelId },
-    updateQuery: (prev, { subscriptionData }) => {
-      if (!subscriptionData.data) return prev
-      const { messageCreated } = subscriptionData.data
+// const subscribeToNewMessages = (subscribeToMore, channelId) =>
+//   subscribeToMore({
+//     document: MESSAGES_SUBSCRIPTION,
+//     variables: { channelId },
+//     updateQuery: (prev, { subscriptionData }) => {
+//       if (!subscriptionData.data) return prev
+//       const { messageCreated } = subscriptionData.data
 
-      const exists = prev.messages.edges.find(
-        ({ id }) => id === messageCreated.id,
-      )
+//       const exists = prev.messages.edges.find(
+//         ({ id }) => id === messageCreated.id,
+//       )
 
-      if (exists) return prev
+//       if (exists) return prev
 
-      return Object.assign({}, prev, {
-        messages: {
-          ...prev.messages,
-          edges: [...prev.messages.edges, messageCreated],
-        },
-      })
-    },
-  })
+//       return Object.assign({}, prev, {
+//         messages: {
+//           ...prev.messages,
+//           edges: [...prev.messages.edges, messageCreated],
+//         },
+//       })
+//     },
+//   })
 
-const Messages = ({ channelId }) => {
-  const { loading, error, data, subscribeToMore, fetchMore } = useQuery(
-    GET_MESSAGES,
-    {
-      variables: { channelId },
-    },
-  )
+const Messages = ({ channelId, fetchMoreData, queryData }) => {
+  const { loading, error, data } = queryData
+  // const { loading, error, data, subscribeToMore, fetchMore } = useQuery(
+  //   GET_MESSAGES,
+  //   {
+  //     variables: { channelId },
+  //   },
+  // )
 
   const scrollToBottom = () => {
     const main = document.getElementById('messages')
@@ -117,17 +118,17 @@ const Messages = ({ channelId }) => {
   useEffect(() => {
     scrollToBottom()
 
-    const unsubscribeToNewMessages = subscribeToNewMessages(
-      subscribeToMore,
-      channelId,
-    )
+    // const unsubscribeToNewMessages = subscribeToNewMessages(
+    //   subscribeToMore,
+    //   channelId,
+    // )
     // const unsubscribeToEnhancedMessages = subscribeToEnhancedMessages(
     //   subscribeToMore,
     //   channelId,
     // )
 
     return () => {
-      unsubscribeToNewMessages()
+      // unsubscribeToNewMessages()
       // unsubscribeToEnhancedMessages()
     }
   })
@@ -135,21 +136,21 @@ const Messages = ({ channelId }) => {
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
-  const firstMessage = data?.messages.edges[0]
+  // const firstMessage = data?.messages.edges[0]
 
-  const fetchMoreOptions = {
-    variables: { channelId, before: firstMessage && firstMessage.id },
-    updateQuery: (prev, { fetchMoreResult }) => {
-      if (!fetchMoreResult) return prev
-      return Object.assign({}, prev, {
-        messages: {
-          ...prev.messages,
-          edges: [...fetchMoreResult.messages.edges, ...prev.messages.edges],
-          pageInfo: fetchMoreResult.messages.pageInfo,
-        },
-      })
-    },
-  }
+  // const fetchMoreOptions = {
+  //   variables: { channelId, before: firstMessage && firstMessage.id },
+  //   updateQuery: (prev, { fetchMoreResult }) => {
+  //     if (!fetchMoreResult) return prev
+  //     return Object.assign({}, prev, {
+  //       messages: {
+  //         ...prev.messages,
+  //         edges: [...fetchMoreResult.messages.edges, ...prev.messages.edges],
+  //         pageInfo: fetchMoreResult.messages.pageInfo,
+  //       },
+  //     })
+  //   },
+  // }
 
   const messages = sortAndGroupMessages(data.messages.edges)
   const { hasPreviousPage } = data.messages.pageInfo
@@ -157,7 +158,7 @@ const Messages = ({ channelId }) => {
     <MessagesGroup id="messages">
       {hasPreviousPage && (
         <NextPageButton
-          fetchMore={() => fetchMore(fetchMoreOptions)}
+          fetchMore={() => fetchMoreData()}
           // href={{
           //   pathname: this.props.location.pathname,
           //   search: queryString.stringify({

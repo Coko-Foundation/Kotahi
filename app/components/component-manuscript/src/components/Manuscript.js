@@ -4,7 +4,7 @@ import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 import FullWaxEditor from '../../../wax-collab/src/FullWaxEditor'
 
-import MessageContainer from '../../../component-chat/src'
+import MessageContainer from '../../../component-chat/src/MessageContainer'
 import { Spinner } from '../../../shared'
 
 // const options = {

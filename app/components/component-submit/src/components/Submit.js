@@ -6,7 +6,7 @@ import DecisionAndReviews from './DecisionAndReviews'
 import CreateANewVersion from './CreateANewVersion'
 import FormTemplate from './FormTemplate'
 import ReviewMetadata from '../../../component-review/src/components/metadata/ReviewMetadata'
-import MessageContainer from '../../../component-chat/src'
+import MessageContainer from '../../../component-chat/src/MessageContainer'
 
 import {
   SectionContent,
