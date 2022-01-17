@@ -60,6 +60,7 @@ const DecisionReviews = ({ manuscript, sharedReviews }) => {
           .map((review, index) => (
             <SectionRow key={review.id}>
               <DecisionReview
+                isControlPage
                 manuscriptId={manuscript.id}
                 open
                 review={review}

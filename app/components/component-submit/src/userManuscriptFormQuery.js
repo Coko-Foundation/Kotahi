@@ -37,7 +37,9 @@ export const reviewFields = `
   user {
     id
     defaultIdentity {
+      id
       name
+      identifier
     }
     username
   }
