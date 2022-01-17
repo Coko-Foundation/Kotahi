@@ -81,6 +81,8 @@ const ReviewHeading = ({
   currentUser,
   canBePublishedPublicly,
   reviewUserId,
+  review,
+  isControlPage = false,
 }) => {
   if (!currentUser) return null
 
@@ -93,14 +95,6 @@ const ReviewHeading = ({
   const editorTeam = teams.filter(team => {
     return team.role.toLowerCase().includes('editor')
   })
-
-  const authorTeam = teams.filter(team => {
-    return team.role.toLowerCase().includes('author')
-  })
-
-  const isCurrentUserAuthor = authorTeam.length
-    ? authorTeam[0].members[0].user.id === currentUser.id
-    : false
 
   const isCurrentUserEditor = editorTeam.length
     ? !!editorTeam
@@ -138,23 +132,28 @@ const ReviewHeading = ({
     })
   }
 
+  // TODO: Display user's ORCID
   return (
     <ReviewHeadingRoot>
       <Bullet journal={journal} recommendation={recommendation} />
       <Ordinal>Review {ordinal}</Ordinal>
       &nbsp;
       <Name>
-        {isHiddenReviewerName && !isCurrentUserAuthor ? (
-          'Anonymous'
-        ) : (
+        {
           <UserCombo>
             <UserAvatar user={(data && data.user) || user} />
             <UserInfo>
-              <Primary>{user.username}</Primary>
-              <Secondary>{user.defaultIdentity.identifier}</Secondary>
+              {review.isHiddenReviewerName && !isControlPage ? (
+                <Primary>Anonmyous Reviewer</Primary>
+              ) : (
+                <>
+                  <Primary>{user.username}</Primary>
+                  <Secondary>{user.defaultIdentity.identifier}</Secondary>
+                </>
+              )}
             </UserInfo>
           </UserCombo>
-        )}
+        }
         {(isCurrentUserEditor || currentUser.admin) &&
           canBePublishedPublicly &&
           process.env.INSTANCE_NAME === 'colab' && (
@@ -199,7 +198,13 @@ const ReviewBody = styled.div`
   margin-left: 1em;
 `
 
-const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
+const DecisionReview = ({
+  review,
+  reviewer,
+  manuscriptId,
+  teams,
+  isControlPage,
+}) => {
   const currentUser = useCurrentUser()
 
   const {
@@ -223,6 +228,7 @@ const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
         canBePublishedPublicly={canBePublishedPublicly}
         currentUser={currentUser}
         id={id}
+        isControlPage={isControlPage}
         isHiddenFromAuthor={isHiddenFromAuthor}
         isHiddenReviewerName={isHiddenReviewerName}
         journal={journal}
@@ -230,6 +236,7 @@ const DecisionReview = ({ review, reviewer, manuscriptId, teams }) => {
         open={open}
         ordinal={ordinal}
         recommendation={recommendation}
+        review={review}
         reviewer={reviewer}
         reviewUserId={review.user.id}
         teams={teams}
