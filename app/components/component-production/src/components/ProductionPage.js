@@ -39,6 +39,14 @@ const query = gql`
   }
 `
 
+const getPdfQuery = gql`
+  query pdfData($html: String) {
+    convertToPdf {
+      pdfUrl
+    }
+  }
+`
+
 export const updateMutation = gql`
   mutation($id: ID!, $input: String) {
     updateManuscript(id: $id, input: $input) {
@@ -60,6 +68,22 @@ const ProductionPage = ({ match, ...props }) => {
     })
   }
 
+  const makePdf = async (html, metadata) => {
+    console.log('in makePDF')
+    console.log(html, metadata)
+
+    const { data, loading, error } = useQuery(getPdfQuery, {
+      variables: {
+        html,
+      },
+    })
+
+    if (loading) return 'loading'
+    if (error) return 'error'
+    console.log(data)
+    return data
+  }
+
   const { data, loading, error } = useQuery(query, {
     variables: {
       id: match.params.version,
@@ -74,6 +98,7 @@ const ProductionPage = ({ match, ...props }) => {
     <Production
       currentUser={currentUser}
       file={manuscript.files.find(file => file.fileType === 'manuscript') || {}}
+      makePdf={makePdf}
       manuscript={manuscript}
       updateManuscript={updateManuscript}
     />

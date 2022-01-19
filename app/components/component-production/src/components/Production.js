@@ -25,13 +25,18 @@ const Production = ({
   file,
   manuscript,
   currentUser,
+  makePdf,
   // fileUpload,
   updateManuscript,
 }) => (
   <Container>
     <HeadingWithAction>
       <Heading>Production</Heading>
-      <DownloadDropdown metadata={manuscript} source={manuscript.meta.source} />
+      <DownloadDropdown
+        makePdf={makePdf}
+        metadata={manuscript}
+        source={manuscript.meta.source}
+      />
     </HeadingWithAction>
     {file &&
     file.mimeType ===

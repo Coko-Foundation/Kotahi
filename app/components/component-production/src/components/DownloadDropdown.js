@@ -2,7 +2,7 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown } from '@pubsweet/ui'
 import { makeJats } from '../../../../../server/utils/jatsUtils'
-import makePdf from './makePdf'
+// import makePdf from './makePdf'
 
 let html = ''
 
@@ -47,7 +47,7 @@ const journalMetadata = {
 // added console to test options - to be removed later
 
 /* eslint-disable import/prefer-default-export */
-export const DownloadDropdown = ({ source, metadata }) => {
+export const DownloadDropdown = ({ source, metadata, makePdf }) => {
   html = source
   const articleMetadata = buildArticleMetadata(metadata)
 
