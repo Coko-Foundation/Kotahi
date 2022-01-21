@@ -611,4 +611,4 @@ figcaption::before {
 	top: -1.25rem;
 }`
 
-export default css
+module.exports = css

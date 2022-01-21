@@ -1,12 +1,11 @@
-import { downloadZip } from 'client-zip'
+// REPLACE THIS!
 
-const makeTemplate = import('./pdfTemplates/template')
-const css = import('./pdfTemplates/styles')
-
-// const fs = require('fs-extra')
 const FormData = require('form-data')
 const axios = require('axios')
 const config = require('config')
+const css = require('./pdfTemplates/styles')
+const makeTemplate = require('./pdfTemplates/template')
+const makeZip = require('./ziputils.js')
 
 // THINGS TO KNOW ABOUT THIS:
 //
@@ -46,20 +45,6 @@ const serverUrl = useFakeServer
   : 'http://localhost:3003'
 
 let pagedJsAccessToken = '' // maybe this should be saved somewhere?
-
-const makeZip = async htmlText => {
-  const blob = await downloadZip([
-    {
-      name: 'index.html',
-      lastModified: new Date(),
-      input: htmlText,
-    },
-    { name: 'styles.css', lastModified: new Date(), input: css },
-    // could insert an override CSS here by appending to styles.css
-  ]).blob()
-
-  return blob
-}
 
 const serviceHandshake = async () => {
   const buff = Buffer.from(`${clientId}:${clientSecret}`, 'utf8')
@@ -105,21 +90,21 @@ const serviceHandshake = async () => {
 
 const pdfHandler = async (html, metadata) => {
   const articleMetadata = JSON.parse(metadata)
-  // TODO: need to zip the HTML + CSS before it gets here.
-  // TODO: check for access token, if not, get it from serviceHandshake
 
   const outHtml = makeTemplate(html, {
     title: articleMetadata.title || '',
-    author: articleMetadata?.submission?.name || '',
-    contact: articleMetadata?.submission?.contact || '',
-    affiliation: articleMetadata?.submission?.affiliation || '',
-    keywords: articleMetadata?.submission?.keywords || '',
-    pubDate: articleMetadata?.pubDate || new Date(),
+    author: articleMetadata.submission.name || '',
+    contact: articleMetadata.submission.contact || '',
+    affiliation: articleMetadata.submission.affiliation || '',
+    topics: articleMetadata.submission.keywords || '',
+    pubDate: articleMetadata.pubDate || new Date(),
   })
 
   // 2 zip this.
 
-  const zipBlob = await makeZip(outHtml)
+  // TODO: THIS ZIPPING CODE IS MESSED UP!
+
+  const zipBlob = await makeZip(outHtml, css)
 
   const form = new FormData()
   form.append('zip', zipBlob, 'index.html.zip')

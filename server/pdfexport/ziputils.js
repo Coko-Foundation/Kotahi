@@ -1,0 +1,73 @@
+const path = require('path')
+const archiver = require('archiver')
+const crypto = require('crypto')
+const list = require('list-contents')
+const fs = require('fs-extra')
+
+// this is mostly taken from https://gitlab.coko.foundation/editoria/editoria/-/blob/master/server/api/helpers/utils.js
+
+const dirContents = async path =>
+  new Promise((resolve, reject) => {
+    list(path, o => {
+      if (o.error) reject(o.error)
+      resolve(o.files)
+    })
+  })
+
+const zipper = async dirPath => {
+  try {
+    const tempPath = path.join(
+      `${process.cwd()}`,
+      'tmp',
+      `${crypto.randomBytes(32).toString('hex')}`,
+    )
+
+    await fs.ensureDir(tempPath)
+    const contents = await dirContents(dirPath)
+    return new Promise((resolve, reject) => {
+      const destination = path.join(
+        tempPath,
+        `${crypto.randomBytes(32).toString('hex')}.zip`,
+      )
+
+      const output = fs.createWriteStream(destination)
+      const archive = archiver('zip')
+      // pipe archive data to the file
+      archive.pipe(output)
+
+      contents.forEach(item => {
+        const absoluteFilePath = path.join(dirPath, item)
+        archive.append(fs.createReadStream(absoluteFilePath), { name: item })
+      })
+      archive.finalize()
+
+      output.on('close', () => {
+        resolve(destination)
+      })
+      archive.on('error', err => reject(err))
+    })
+  } catch (e) {
+    throw new Error(e)
+  }
+}
+
+const makeZip = async htmlText => {
+  // TODO: this expects index.html and the css file to be in uploadsDir
+  const zipPath = await zipper(
+    path.join(`${process.cwd()}`, uploadsDir, 'paged', dirPath),
+  )
+
+  // const blob = await downloadZip([
+  //   {
+  //     name: 'index.html',
+  //     lastModified: new Date(),
+  //     input: htmlText,
+  //   },
+  //   { name: 'styles.css', lastModified: new Date(), input: css },
+  //   // could insert an override CSS here by appending to styles.css
+  // ]).blob()
+
+  return zipPath
+}
+
+module.exports = makeZip
