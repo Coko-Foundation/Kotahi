@@ -33,10 +33,14 @@ metadata:
 
 */
 
+// This needs to come from an instance-level config:
+
+const timeZone = { locale: 'en-Us', timeZone: 'America/New_York' }
+
 const cleanDate = date =>
   date &&
-  new Date(date).toLocaleString('en-US', {
-    timeZone: 'America/New_York', // TODO: make time zone / method of spelling out date configurable
+  new Date(date).toLocaleString(timeZone.locale, {
+    timeZone: timeZone.timeZone,
   })
 
 const makeTemplate = (content, metadata) => {
