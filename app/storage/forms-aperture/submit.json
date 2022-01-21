@@ -2,10 +2,37 @@
   "name": "Research Object Submission Form",
   "children": [
     {
-      "title": "Research object links",
-      "id": "bf0c8b8f-7523-4c7d-a74c-7635838f1451",
-      "component": "LinksInput",
-      "name": "submission.links"
+      "title": "Type of Research Object",
+      "id": "fa0c39ca-0486-4e29-ba24-f86f7d375c3f",
+      "component": "Select",
+      "name": "submission.objectType",
+      "options": [
+        {
+          "id": "df5fc212-b055-4cba-9d0e-e85222e3d4f2",
+          "label": "Dataset",
+          "value": "dataset"
+        },
+        {
+          "id": "ef2ddada-105a-412e-8d7f-56b1df44c02f",
+          "label": "Software",
+          "value": "software"
+        },
+        {
+          "id": "0fafbfc3-6797-46e3-aff4-3fd4f16261b1",
+          "label": "Figure",
+          "value": "figure"
+        },
+        {
+          "id": "5117a7c6-2fcf-414b-ac60-47f8d93ccfef",
+          "label": "Notebook",
+          "value": "notebook"
+        },
+        {
+          "id": "32121b38-b855-465e-b039-b5100177698b",
+          "label": "Research article ",
+          "value": "Research article "
+        }
+      ]
     },
     {
       "title": "Title",
@@ -13,38 +40,63 @@
       "component": "TextField",
       "name": "meta.title",
       "placeholder": "Enter the manuscript's title",
-      "description": "<p></p>"
+      "includeInReviewerPreview": "true"
     },
     {
-      "title": "Name",
+      "title": "Author names",
+      "id": "d76e5b3c-eeaa-4168-9318-95d43a31e3e4",
+      "component": "AuthorsInput",
+      "name": "submission.authorNames",
+      "includeInReviewerPreview": "true"
+    },
+    {
+      "title": "Topics",
       "id": "62ca72ad-04b0-41fc-85d1-415469d7e895",
-      "component": "TextField",
-      "name": "submission.name",
-      "placeholder": "Enter your name",
-      "validate": [
+      "component": "CheckboxGroup",
+      "name": "submission.topics",
+      "includeInReviewerPreview": "true",
+      "options": [
         {
-          "value": "minChars",
-          "label": "minimum Characters",
-          "id": "0b053fde-8ebd-4fcb-aa98-8585e8571717"
+          "id": "2323b6d1-8223-45e8-a0fc-1044a1e39d37",
+          "label": "Neuropsychology ",
+          "value": "Neuropsychology "
+        },
+        {
+          "id": "ac7cafca-c5c8-4940-9f2f-014d18660e90",
+          "label": "Topic 2",
+          "value": "Topic 2"
+        },
+        {
+          "id": "93c88240-9c2b-4c23-9301-23ed94ef61d7",
+          "label": "Topic 3",
+          "value": "Topic 3"
         }
-      ],
-      "validateValue": {
-        "minChars": "4"
-      }
+      ]
     },
     {
-      "title": "Affiliation",
+      "title": "DOI",
       "id": "1c2e9325-3fa8-41f3-8607-180eb8a25aa3",
       "component": "TextField",
-      "name": "submission.affiliation",
-      "placeholder": "Enter your affiliation"
+      "name": "submission.DOI",
+      "doiValidation": "true",
+      "placeholder": "Enter the manuscript's DOI",
+      "includeInReviewerPreview": "true"
     },
     {
-      "title": "Email and contact information",
+      "title": "Abstract",
+      "shortDescription": "Abstract",
+      "id": "d80b2c88-6144-4003-b671-63990b9b2793",
+      "component": "AbstractEditor",
+      "name": "submission.abstract",
+      "description": "<p>Please provide a short summary of your submission</p>",
+      "placeholder": "Input your abstract...",
+      "includeInReviewerPreview": "true"
+    },
+    {
+      "title": "Author correspondence ",
       "id": "7f5aa395-3486-4067-b636-ae204d472c16",
       "component": "TextField",
-      "name": "submission.contact",
-      "placeholder": "Enter your contact information"
+      "name": "submission.AuthorCorrespondence"
     },
     {
       "title": "Cover letter",
@@ -55,6 +107,12 @@
       "placeholder": "Enter your cover letter"
     },
     {
+      "title": "Editors evaluation ",
+      "id": "14b8da7d-5924-4098-8d1f-e528c7c440b9",
+      "component": "TextField",
+      "name": "submission.EditorsEvaluation"
+    },
+    {
       "title": "Data and Code availability statements",
       "id": "bf2f9b4a-377b-4303-8f51-70d836eb1456",
       "component": "AbstractEditor",
@@ -62,360 +120,94 @@
       "placeholder": "Enter your data and code availability statement"
     },
     {
-      "title": "Ethics statement",
+      "title": "Competing interests",
       "id": "fa5e5b75-4b6f-4a2d-9113-c2b4db73ef8a",
       "component": "AbstractEditor",
-      "name": "submission.ethics",
-      "placeholder": "Enter your ethics statements"
+      "name": "submission.competingInterests",
+      "includeInReviewerPreview": "true"
     },
     {
-      "title": "Type of Research Object",
-      "id": "fa0c39ca-0486-4e29-ba24-f86f7d375c3f",
-      "component": "Select",
-      "name": "submission.objectType",
-      "options": [
-        {
-          "value": "dataset",
-          "label": "Dataset",
-          "id": "df5fc212-b055-4cba-9d0e-e85222e3d4f2"
-        },
-        {
-          "value": "software",
-          "label": "Software",
-          "id": "ef2ddada-105a-412e-8d7f-56b1df44c02f"
-        },
-        {
-          "value": "figure",
-          "label": "Figure",
-          "id": "0fafbfc3-6797-46e3-aff4-3fd4f16261b1"
-        },
-        {
-          "value": "notebook",
-          "label": "Notebook",
-          "id": "5117a7c6-2fcf-414b-ac60-47f8d93ccfef"
-        }
-      ]
-    },
-    {
-      "title": "Suggested reviewers",
-      "id": "14b8da7d-5924-4098-8d1f-e528c7c440b9",
+      "title": "Funding",
+      "id": "6bfdc237-814d-4af8-b0f0-064099d679ba",
       "component": "TextField",
-      "placeholder": "Add reviewer names...",
-      "name": "submission.suggested",
-      "parse": "split",
-      "format": "join"
+      "name": "submission.Funding"
     },
     {
       "title": "Upload supplementary materials",
       "id": "b769b4d5-f9b3-48d3-a6d5-77bb6a9e95b0",
       "component": "SupplementaryFiles",
-      "description": "<p>Upload your files.</p>",
       "name": "fileName"
     },
     {
-      "title": "Keywords",
-      "id": "6342cff7-c57a-4fd9-b91d-c4cf77b4c309",
-      "component": "TextField",
-      "name": "submission.keywords",
-      "placeholder": "Enter keywords...",
-      "parse": "split",
-      "format": "join",
-      "validateValue": {
-        "minChars": "2",
-        "maxChars": "6"
-      },
-      "validate": [
-        {
-          "value": "minChars",
-          "label": "minimum Characters",
-          "id": "1a19d1c8-8ca8-43de-8b20-5ee161a0e825"
-        },
-        {
-          "value": "required",
-          "label": "Required",
-          "id": "ee308c3e-cda9-4970-9afd-ec4243975a8f"
-        }
-      ]
-    },
-    {
-      "title": "Did your study involve healthy subjects only or patients (note that patient studies may also involve healthy subjects)",
-      "id": "ebe75cec-0ba8-4f00-9024-20e77ed94f1c",
-      "component": "Select",
-      "name": "submission.subjects",
-      "options": [
-        {
-          "label": "Healthy subjects",
-          "value": "healthy_subjects",
-          "id": "5fa97761-1b46-4a67-87f6-1dbe772381eb"
-        },
-        {
-          "label": "Patients",
-          "value": "patients",
-          "id": "40f48822-786c-46dd-9026-287f96c4929d"
-        }
-      ],
-      "description": "<p></p>",
-      "shortDescription": "Patients/healthy subjects"
-    },
-    {
-      "title": "If your research involved human subjects, was the research approved by the relevant Institutional Review Board or ethics panel?",
-      "id": "6871680a-2278-40b3-80c6-7de06f21aafb",
-      "component": "Select",
-      "name": "submission.irb",
-      "options": [
-        {
-          "label": "Yes",
-          "value": "yes",
-          "id": "bc2549db-8819-412d-9f36-816c2586ef12"
-        },
-        {
-          "label": "No",
-          "value": "no",
-          "id": "91bd7c42-a5e7-4290-a085-65566218df15"
-        },
-        {
-          "label": " Not applicable (My Research Object does not involve human subjects) ",
-          "value": "N/A",
-          "id": "3e7689c2-2a6a-408e-b57d-680d441cf2e5"
-        }
-      ],
-      "description": "<p><i>NOTE: Any human subjects studies without IRB approval will be automatically rejected.</i></p>",
-      "shortDescription": "Ethics panel"
-    },
-    {
-      "title": "Was any animal research approved by the relevant IACUC or other animal research panel?",
+      "title": "Author contributions ",
       "id": "b127ecb1-4862-4662-a958-3266eb284353",
-      "component": "Select",
-      "name": "submission.animal_research_approval",
-      "description": "<p><i>NOTE: Any animal studies without IACUC approval will be automatically rejected.</i></p>",
-      "options": [
-        {
-          "label": "Yes",
-          "value": "yes",
-          "id": "fd3c8237-d080-43b7-9353-28c16d9bfcfc"
-        },
-        {
-          "label": "No",
-          "value": "no",
-          "id": "de158fbc-a5b5-4c76-bd5a-2c546aa42fee"
-        },
-        {
-          "label": " Not applicable (My Research Object does not involve animal subjects)",
-          "value": "N/A",
-          "id": "56159591-4c84-434c-b66c-1969b5f7afae"
-        }
-      ],
-      "shortDescription": "Animal research panel"
-    },
-    {
-      "title": "Please indicate which methods were used in your research:",
-      "id": "6deaacc6-759a-4a68-b494-c38c664bb665",
-      "component": "CheckboxGroup",
-      "name": "submission.methods",
-      "options": [
-        {
-          "label": "Structural MRI",
-          "value": "Structural MRI",
-          "id": "50ccff9e-f3e5-410b-b0b4-390f5474ba09"
-        },
-        {
-          "label": "Functional MRI",
-          "value": "Functional MRI",
-          "id": "dccc2374-ccc8-4ce1-9907-107445ba261a"
-        },
-        {
-          "label": "Diffusion MRI",
-          "value": "Diffusion MRI",
-          "id": "0567acdf-5fb4-4fea-aae7-d2f0875792e9"
-        },
-        {
-          "label": "EEG/ERP",
-          "value": "EEG/ERP",
-          "id": "0f8bdc88-4e87-46e6-bb59-bc2c53221494"
-        },
-        {
-          "label": "Neurophysiology",
-          "value": "Neurophysiology",
-          "id": "8e10e2c7-b10e-4dd2-b0c5-74e6e87d3b1e"
-        },
-        {
-          "label": "PET",
-          "value": "PET",
-          "id": "5822b3f8-80e6-47ee-bcdd-e17d1db47f7b"
-        },
-        {
-          "label": "MEG",
-          "value": "MEG",
-          "id": "d21a5be5-8a51-42f3-9e47-c15f8a4fc141"
-        },
-        {
-          "label": "Optical Imaging",
-          "value": "Optical Imaging",
-          "id": "89a5e7de-df90-44bf-8971-5b49154331f6"
-        },
-        {
-          "label": "Postmortem anatomy",
-          "value": "Postmortem anatomy",
-          "id": "22a428a7-bf65-49cd-9104-0122ae43f956"
-        },
-        {
-          "label": "TMS",
-          "value": "TMS",
-          "id": "5b98a344-0438-4d79-85ab-9ae9f0e28d2d"
-        },
-        {
-          "label": "Behavior",
-          "value": "Behavior",
-          "id": "5fbc6edd-e2e9-4dc2-a1a4-a6c67f6eef43"
-        },
-        {
-          "label": "Neuropsychological testing",
-          "value": "Neuropsychological testing",
-          "id": "8cc52203-ca5b-4580-944f-748a62d449b5"
-        },
-        {
-          "label": "Computational modeling",
-          "value": "Computational modeling",
-          "id": "86d5b15b-5377-4d93-855b-b30627161a76"
-        }
-      ],
-      "shortDescription": "Methods"
-    },
-    {
-      "title": "If you used other research methods, please specify:",
-      "id": "6bfdc237-814d-4af8-b0f0-064099d679ba",
       "component": "TextField",
-      "name": "submission.otherMethods",
-      "placeholder": "Enter any additional methods used, if applicable",
-      "shortDescription": "Other methods"
+      "name": "submission.authorContributions"
     },
     {
-      "title": "For human MRI, what field strength scanner do you use?",
-      "id": "38736c42-53bb-488d-a171-f6a102d7fa02",
-      "component": "Select",
-      "name": "submission.humanMRI",
-      "options": [
-        {
-          "label": "1T",
-          "value": "1T",
-          "id": "04c3be3e-4f34-4ace-87bb-58730b1d8f75"
-        },
-        {
-          "label": "1.5T",
-          "value": "1.5T",
-          "id": "7cdb3256-aa80-48fa-a440-2bff62d5bbff"
-        },
-        {
-          "label": "2T",
-          "value": "2T",
-          "id": "24edb964-56df-45a4-b78d-b12ca484795d"
-        },
-        {
-          "label": "3T",
-          "value": "3T",
-          "id": "9b2c24fd-c778-4fb0-a100-d3c90ff21efb"
-        },
-        {
-          "label": "4T",
-          "value": "4T",
-          "id": "42444841-aac8-4369-af6f-2c982332f3a9"
-        },
-        {
-          "label": "7T",
-          "value": "7T",
-          "id": "ae217273-dbcf-4966-a434-ffd25f7f0948"
-        }
-      ],
-      "shortDescription": "MRI strength"
+      "title": "Decision letter and author response",
+      "id": "6342cff7-c57a-4fd9-b91d-c4cf77b4c309",
+      "component": "AbstractEditor",
+      "name": "submission.DecisionLetter"
     },
     {
-      "title": "If other, please specify:",
-      "id": "88304f10-fbed-4597-9c25-0a4cdde7d7cf",
-      "component": "TextField",
-      "name": "submission.humanMRIother",
-      "validate": [],
-      "validateValue": {
-        "minChars": "10"
-      },
-      "shortDescription": "Other MRI strength"
-    },
-    {
-      "title": "Which processing packages did you use for your study?",
-      "id": "a2fc5de1-b173-42e6-839c-5082f62ba65d",
-      "component": "CheckboxGroup",
-      "name": "submission.packages",
-      "options": [
-        {
-          "label": "AFNI",
-          "value": "AFNI",
-          "id": "4e7f721b-a4eb-4dd6-a162-8db8a041d466"
-        },
-        {
-          "label": "SPM",
-          "value": "SPM",
-          "id": "c970e5be-2c86-452a-ad1f-aadb45c6c761"
-        },
-        {
-          "label": "Brain Voyager",
-          "value": "Brain Voyager",
-          "id": "443bae43-64a2-478b-b48c-ba30463c1c43"
-        },
-        {
-          "label": "FSL",
-          "value": "FSL",
-          "id": "effedca5-4a53-4dca-a291-550ec222c915"
-        },
-        {
-          "label": "Analyze",
-          "value": "Analyze",
-          "id": "c9496435-230b-47ec-860f-446dcb718664"
-        },
-        {
-          "label": "Free Surfer",
-          "value": "Free Surfer",
-          "id": "61e6f3cb-a34c-4d2a-9077-1b03b433226b"
-        },
-        {
-          "label": "LONI Pipeline",
-          "value": "LONI Pipeline",
-          "id": "08ef7884-0255-4a5e-af84-9481712df018"
-        }
-      ],
-      "shortDescription": "Processing packages"
-    },
-    {
-      "title": "If you used any other processing packages, please list them here:",
-      "id": "92988a50-40f1-43a6-833c-31702c232728",
-      "component": "TextField",
-      "name": "submission.otherPackages",
-      "shortDescription": "Other processing packages"
-    },
-    {
-      "title": "Provide references using author date format:",
+      "title": "References ",
       "id": "e8af0c63-e46f-46a8-bc90-5023fe50a541",
       "component": "AbstractEditor",
       "name": "submission.references",
-      "shortDescription": "References"
+      "includeInReviewerPreview": "true"
     },
     {
-      "title": "Visual Abstract",
+      "title": "Reviewing editors name ",
+      "id": "ebe75cec-0ba8-4f00-9024-20e77ed94f1c",
+      "component": "AuthorsInput",
+      "name": "submission.reviewingEditor"
+    },
+    {
+      "title": "Copyright holder",
+      "id": "6871680a-2278-40b3-80c6-7de06f21aafb",
+      "component": "TextField",
+      "name": "submission.copyrightHolder",
+      "description": "<p class=\"paragraph\">e.g. British Medical Journal </p>"
+    },
+    {
+      "title": "Copyright statement ",
+      "id": "1e9ff636-f850-4d20-b079-36af49fa4ad1",
+      "component": "TextField",
+      "name": "submission.copyrightStatement",
+      "description": "<p class=\"paragraph\">e.g. This article is distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use and redistribution provided that the original author and source are credited.</p>"
+    },
+    {
+      "title": "Copyright year ",
+      "id": "7617c919-4413-4306-b709-ef78c3110c3f",
+      "component": "TextField",
+      "name": "submission.copyrightYear",
+      "description": "<p class=\"paragraph\">e.g. 2022</p>"
+    },
+    {
+      "title": "Date received ",
+      "id": "6deaacc6-759a-4a68-b494-c38c664bb665",
+      "component": "TextField",
+      "name": "submission.dateReceived",
+      "description": "<p class=\"paragraph\">preferred format: DD.MM.YYYY e.g. 07.01.2021</p>"
+    },
+    {
+      "title": "Date accepted",
       "id": "8b858adc-5f65-4385-9f79-5c5af1f67bd5",
-      "component": "VisualAbstract",
-      "name": "visualAbstract",
-      "description": "<p>Provide a visual abstract or figure to represent your manuscript.</p>"
+      "component": "TextField",
+      "name": "submission.dateAccepted",
+      "description": "<p class=\"paragraph\">preferred format: DD.MM.YYYY e.g. 07.01.2021</p>"
     },
     {
-      "title": "Abstract",
-      "id": "d80b2c88-6144-4003-b671-63990b9b2793",
-      "component": "AbstractEditor",
-      "name": "submission.abstract",
-      "placeholder": "Input your abstract...",
-      "description": "<p>Please provide a short summary of your submission</p>",
-      "shortDescription": "Abstract"
+      "title": "Date published ",
+      "id": "f6e46890-4b96-4c90-ab48-b4fc5abb9b40",
+      "component": "TextField",
+      "name": "submission.datePublished",
+      "description": "<p class=\"paragraph\">preferred format: DD.MM.YYYY e.g. 07.01.2021</p>"
     }
   ],
-  "description": "<p>Aperture is now accepting Research Object Submissions. Please fill out the form below to complete your submission.</p>",
+  "description": "<p>Please fill out the form below to complete your submission.</p>",
   "haspopup": "true",
   "popuptitle": "By submitting the manuscript, you agree to the following statements.",
-  "popupdescription": "<p>The corresponding author confirms that all co-authors are included, and that everyone listed as a co-author agrees to that role and all the following requirements and acknowledgements.</p><p></p><p>The submission represents original work and that sources are given proper attribution. The journal employs CrossCheck to compare submissions against a large and growing database of published scholarly content. If in the judgment of a senior editor a submission is genuinely suspected of plagiarism, it will be returned to the author(s) with a request for explanation.</p><p></p><p>The research was conducted in accordance with ethical principles.</p><p></p><p>There is a Data Accessibility Statement, containing information about the location of open data and materials, in the manuscript.</p><p></p><p>A conflict of interest statement is present in the manuscript, even if to state no conflicts of interest.</p>"
+  "popupdescription": "<p>The corresponding author confirms that all co-authors are included, and that everyone listed as a co-author agrees to that role and all the following requirements and acknowledgements:</p><p></p><p>The submission represents original work and sources are given proper attribution. The journal employs CrossCheck to compare submissions against a large and growing database of published scholarly content. If in the judgment of a senior editor a submission is genuinely suspected of plagiarism, it will be returned to the author(s) with a request for explanation.</p><p></p><p>The research was conducted in accordance with ethical principles.</p><p></p><p>There is a Data Accessibility Statement, containing information about the location of open data and materials, in the manuscript.</p><p></p><p>A conflict of interest statement is present in the manuscript, even if to state no conflicts of interest.</p>"
 }
