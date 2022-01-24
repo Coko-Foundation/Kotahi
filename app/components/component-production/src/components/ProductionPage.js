@@ -68,19 +68,19 @@ const ProductionPage = ({ match, ...props }) => {
     })
   }
 
-  const makePdf = async (html, metadata) => {
+  const makePdf = async () => {
     console.log('in makePDF')
-    console.log(html, metadata)
 
     const { data, loading, error } = useQuery(getPdfQuery, {
       variables: {
-        html,
+        article: manuscript,
       },
     })
 
     if (loading) return 'loading'
     if (error) return 'error'
     console.log(data)
+    // TODO: This needs to download the file!
     return data
   }
 

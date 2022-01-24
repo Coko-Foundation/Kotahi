@@ -3,9 +3,10 @@
 const FormData = require('form-data')
 const axios = require('axios')
 const config = require('config')
+const nunjucks = require('nunjucks')
 const css = require('./pdfTemplates/styles')
-const makeTemplate = require('./pdfTemplates/template')
 const makeZip = require('./ziputils.js')
+const template = require('./pdfTemplates/article.njk')
 
 // THINGS TO KNOW ABOUT THIS:
 //
@@ -88,17 +89,10 @@ const serviceHandshake = async () => {
   })
 }
 
-const pdfHandler = async (html, metadata) => {
-  const articleMetadata = JSON.parse(metadata)
+const pdfHandler = async article => {
+  // assuming that article is coming in as a string because we don't know what the shape will be
 
-  const outHtml = makeTemplate(html, {
-    title: articleMetadata.title || '',
-    author: articleMetadata.submission.name || '',
-    contact: articleMetadata.submission.contact || '',
-    affiliation: articleMetadata.submission.affiliation || '',
-    topics: articleMetadata.submission.keywords || '',
-    pubDate: articleMetadata.pubDate || new Date(),
-  })
+  const outHtml = nunjucks.render(template, { article: JSON.parse(article) })
 
   // 2 zip this.
 
@@ -173,8 +167,8 @@ const pdfHandler = async (html, metadata) => {
 
 const resolvers = {
   Query: {
-    async convertToPdf(_, { html, metadata }, ctx) {
-      const outUrl = await Promise.all([pdfHandler(html, metadata, ctx)])
+    async convertToPdf(_, { article }, ctx) {
+      const outUrl = await Promise.all([pdfHandler(article, ctx)])
       return {
         pdfUrl: outUrl || '',
       }
@@ -184,7 +178,7 @@ const resolvers = {
 
 const typeDefs = `
   extend type Query {
-    convertToPdf(html: String!, metadata: String! ) : ConvertToPdf
+    convertToPdf(article: String! ) : ConvertToPdf
   }
 
   type ConvertToPdf {
