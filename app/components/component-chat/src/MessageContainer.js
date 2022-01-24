@@ -150,7 +150,7 @@ const messageSection = channelId => {
     return () => {
       unsubscribeToNewMessages()
     }
-  })
+  }, [])
   const firstMessage = data?.messages.edges[0]
 
   const fetchMoreOptions = {
