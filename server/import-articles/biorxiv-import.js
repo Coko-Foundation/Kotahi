@@ -116,6 +116,7 @@ const getData = async ctx => {
     }
   }, {})
 
+  // TODO this is a very inefficient way of finding keyword matches
   const newManuscripts = withoutDuplicates
     .map(
       ({

@@ -20,9 +20,9 @@ const sendEmailNotification = require('../../email-notifications')
 
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
+const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
 const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
-const importArticlesFromEuropePMC = require('../../import-articles/europepmc-import')
 
 const SUBMISSION_FIELD_PREFIX = 'submission'
 const META_FIELD_PREFIX = 'meta'
@@ -331,7 +331,28 @@ const resolvers = {
       }
 
       if (process.env.INSTANCE_NAME === 'colab') {
-        const importedManuscripts = await importArticlesFromEuropePMC(ctx)
+        const importedManuscripts = await importArticlesFromBiorxivWithFullTextSearch(
+          ctx,
+          [
+            'membrane protein',
+            'ion channel',
+            'transporter',
+            'pump',
+            'gpcr',
+            'G protein-coupled receptor',
+            'exchanger',
+            'uniporter',
+            'symporter',
+            'antiporter',
+            'solute carrier',
+            'atpase',
+            'rhodopsin',
+            'patch-clamp',
+            'voltage-clamp',
+            'single-channel',
+          ],
+        )
+
         isImportInProgress = false
 
         pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
