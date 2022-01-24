@@ -9,6 +9,7 @@ import NextPageButton from '../../../NextPageButton'
 import { convertTimestampToDate } from '../../../../shared/time-formatting'
 import MessageRenderer from './MessageRenderer'
 import { CommsErrorBanner } from '../../../shared'
+import VideoChat from '../VideoChat'
 
 import {
   Timestamp,
@@ -95,7 +96,7 @@ const subscribeToNewMessages = (subscribeToMore, channelId) =>
     },
   })
 
-const Messages = ({ channelId }) => {
+const Messages = ({ channelId, manuscriptId = null }) => {
   const { loading, error, data, subscribeToMore, fetchMore } = useQuery(
     GET_MESSAGES,
     {
@@ -155,6 +156,7 @@ const Messages = ({ channelId }) => {
   const { hasPreviousPage } = data.messages.pageInfo
   return (
     <MessagesGroup id="messages">
+      {manuscriptId ? <VideoChat manuscriptId={manuscriptId} /> : ''}
       {hasPreviousPage && (
         <NextPageButton
           fetchMore={() => fetchMore(fetchMoreOptions)}

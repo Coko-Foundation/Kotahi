@@ -36,7 +36,7 @@ const MessageContainer = styled.section`
         `}
 `
 
-const Container = ({ channelId, channels }) => {
+const Container = ({ channelId, channels, manuscriptId = null }) => {
   if (!channelId && !channels) {
     return null
   }
@@ -48,7 +48,12 @@ const Container = ({ channelId, channels }) => {
       key: channel.id,
       content: (
         <>
-          <Messages channelId={channel.id} />
+          <Messages
+            channelId={channel.id}
+            manuscriptId={
+              channel.name !== 'Discussion with author' ? manuscriptId : null
+            }
+          />
           <ChatInput channelId={channel.id} />
         </>
       ),
