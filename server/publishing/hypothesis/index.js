@@ -122,7 +122,7 @@ const publishToHypothesis = async manuscript => {
   const actions = {
     create: propName => {
       if (!manuscript.submission.biorxivURL)
-        throw new Error('Missing field subscription.biorxivURL')
+        throw new Error('Missing field submission.biorxivURL')
 
       const requestBody = {
         group: config.hypothesis.group,
