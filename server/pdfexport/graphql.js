@@ -91,14 +91,19 @@ const serviceHandshake = async () => {
 
 const pdfHandler = async article => {
   // assuming that article is coming in as a string because we don't know what the shape will be
+  // may need to do to
+  const articleData = JSON.parse(article)
+  articleData.publicationMetadata = {} // TODO: decide what this is, pull this in from the instance
 
-  const outHtml = nunjucks.render(template, { article: JSON.parse(article) })
+  const outHtml = nunjucks.render(template, { article: articleData })
 
   // 2 zip this.
 
-  // TODO: THIS ZIPPING CODE IS MESSED UP!
+  // TODO: THIS ZIPPING CODE DOeS NOT WORK! What it needs to do:
+  // I want to pass it the HTML as a string and the CSS, and get a blob of a Zip back. That's not actually what I'm getting right now.
 
   const zipBlob = await makeZip(outHtml, css)
+  // I want to get back a Blob that I can pass to the FormData
 
   const form = new FormData()
   form.append('zip', zipBlob, 'index.html.zip')
@@ -131,7 +136,7 @@ const pdfHandler = async article => {
 
         const link = document.createElement('a')
         link.href = objUrl
-        link.download = `${articleMetadata.title || 'title'}.pdf`
+        link.download = `${articleData.title || 'title'}.pdf`
         link.click()
 
         // console.log(`Downloading ${link.download}`)
@@ -155,7 +160,7 @@ const pdfHandler = async article => {
 
         if (status === 401 && msg === 'expired token') {
           await serviceHandshake()
-          return pdfHandler(zipPath, outputPath, filename)
+          return pdfHandler(article)
         }
 
         return reject(
