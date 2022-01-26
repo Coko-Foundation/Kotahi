@@ -19,6 +19,10 @@ const teamFields = `
       username
       profilePicture
       online
+      defaultIdentity {
+        id
+        identifier
+      }
     }
     status
     isShared

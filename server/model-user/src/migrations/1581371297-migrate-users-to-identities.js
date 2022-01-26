@@ -1,6 +1,6 @@
 /* eslint-disable no-restricted-syntax */
 /* eslint-disable no-await-in-loop */
-const logger = require('@pubsweet/logger')
+const { logger } = require('@coko/server')
 
 exports.up = async knex => {
   // eslint-disable-next-line global-require

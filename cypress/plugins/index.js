@@ -49,13 +49,13 @@ module.exports = (on, config) => {
       // eslint-disable-next-line global-require
       const { User } = require('@pubsweet/models')
       // eslint-disable-next-line global-require
-      const authentication = require('pubsweet-server/src/authentication')
+      const { createJWT } = require('@coko/server')
 
       const user = await User.query()
         .where({ username: testUsers[name] })
         .first()
 
-      return authentication.token.create(user)
+      return createJWT(user)
     },
     seedForms: async () => {
       // eslint-disable-next-line no-console

@@ -1,4 +1,6 @@
 const he = require('he')
+const htmlparser2 = require('htmlparser2')
+const cheerio = require('cheerio')
 
 // const { lte } = require('semver')
 
@@ -256,6 +258,17 @@ const getCrossrefCitationsFromList = html => {
     result = convertCharacterEntities(result)
     return result
   })
+}
+
+const removeTrackChanges = html => {
+  const dom = htmlparser2.parseDocument(html)
+
+  const $ = cheerio.load(dom, {
+    xmlMode: true,
+  })
+
+  $('span.deletion').remove()
+  return $.html()
 }
 
 const makeJournalMeta = journalMeta => {
@@ -695,7 +708,11 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   // 0. deal with footnotes
 
-  const { deFootnotedHtml, fnSection } = makeFootnotesSection(html)
+  const unTrackChangedHtml = removeTrackChanges(html)
+
+  const { deFootnotedHtml, fnSection } = makeFootnotesSection(
+    unTrackChangedHtml,
+  )
 
   // 0.5 deal with table cells
 

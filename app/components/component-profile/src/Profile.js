@@ -89,7 +89,7 @@ const ProfileDropzone = ({ profilePicture, updateProfilePicture }) => {
       {profilePicture ? (
         <BigProfileImage src={profilePicture} />
       ) : (
-        <BigProfileImage src="/static/profiles/default_avatar.svg" />
+        <BigProfileImage src="/profiles/default_avatar.svg" />
       )}
       {isDragActive ? <Button>Drop it here</Button> : <Button>Change</Button>}
     </div>

@@ -1,6 +1,6 @@
 /* stylelint-disable selector-type-no-unknown */
 import { css } from 'styled-components'
-import { darken, grid } from '@pubsweet/ui-toolkit'
+import { darken, grid, th } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../../shared/lightenBy'
 
 /* All styles regarding ProseMirror surface and elements */
@@ -274,6 +274,14 @@ export default css`
   li[data-track]::before,
   li [data-track]::before {
     left: -5px;
+  }
+
+  .insertion .show-insertion {
+    color: ${th('colorText')};
+  }
+
+  .deletion .hide-deletion {
+    display: none;
   }
 
   span.comment {

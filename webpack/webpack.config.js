@@ -6,6 +6,7 @@ const config = require('config')
 
 const rules = require('./common-rules')
 
+const context = path.resolve(__dirname, '..', 'app')
 const contentBase = path.resolve(__dirname, '..', '_build', 'assets')
 
 // can't use node-config in webpack so save whitelisted client config into the build and alias it below
@@ -30,7 +31,6 @@ module.exports = webpackEnv => {
   const devServerPort = process.env.CLIENT_PORT || 4000
 
   return {
-    context: path.join(__dirname, '..', 'app'),
     devServer: {
       https: false,
       key: fs.readFileSync(path.join(__dirname, '../certs/private.key')),
@@ -51,8 +51,8 @@ module.exports = webpackEnv => {
         '/convertDocxToHTML': serverUrlWithProtocol,
         '/graphql': serverUrlWithProtocol,
         '/public': serverUrlWithProtocol,
-        '/static/uploads': serverUrlWithProtocol,
-        '/static/profiles': serverUrlWithProtocol,
+        '/uploads': serverUrlWithProtocol,
+        '/profiles': serverUrlWithProtocol,
         '/subscriptions': {
           target: `ws://${serverUrl}`,
           ws: true,
@@ -62,12 +62,13 @@ module.exports = webpackEnv => {
     name: 'client application',
     target: 'web',
     mode: webpackEnv,
+    context,
     entry: {
       app: isEnvDevelopment ? ['react-hot-loader/patch', './app'] : ['./app'],
     },
     output: {
       path: contentBase,
-      publicPath: '/',
+      publicPath: isEnvDevelopment ? '/' : '/assets/',
       filename: isEnvProduction
         ? 'js/[name].[contenthash:8].js'
         : isEnvDevelopment && 'js/bundle.js',

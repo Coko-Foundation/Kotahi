@@ -1,12 +1,12 @@
 // const { flatten } = require('lodash')
 // const Review = require('./review')
-
+const models = require('@pubsweet/models')
 const { get } = require('lodash')
 
 const resolvers = {
   Query: {
     async sharedReviews(_, { id }, ctx) {
-      const query = await ctx.models.Team.query()
+      const query = await models.Team.query()
         .where({
           manuscriptId: id,
         })
@@ -23,7 +23,7 @@ const resolvers = {
         })
         .flat()
         .filter(member => {
-          return member.user.id === ctx.user.id || member.isShared
+          return member.user.id === ctx.user || member.isShared
         })
 
       const reviews = members
@@ -37,10 +37,10 @@ const resolvers = {
           return review.manuscriptId === id
         })
         .filter(review => {
-          return !(review.isHiddenFromAuthor && ctx.user.id === authorUser.id)
+          return !(review.isHiddenFromAuthor && ctx.user === authorUser.id)
         })
         .map(review => {
-          return review.isHiddenReviewerName && ctx.user.id === authorUser.id
+          return review.isHiddenReviewerName && ctx.user === authorUser.id
             ? { ...review, user: { ...review.user, username: '' } }
             : review
         })
@@ -51,11 +51,11 @@ const resolvers = {
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
       // We process comment fields into array
-      const reviewUser = input.userId
-        ? await ctx.models.User.query().where({
-            id: input.userId,
-          })
-        : ctx.user
+      const userId = input.userId ? input.userId : ctx.user
+
+      const reviewUser = await models.User.query().where({
+        id: userId,
+      })
 
       const processedReview = { ...input, user: reviewUser }
 
@@ -69,7 +69,7 @@ const resolvers = {
       delete processedReview.confidentialComment
       delete processedReview.decisionComment
 
-      const review = await ctx.models.Review.query().upsertGraphAndFetch(
+      const review = await models.Review.query().upsertGraphAndFetch(
         {
           id,
           ...processedReview,
@@ -85,9 +85,9 @@ const resolvers = {
     },
 
     async completeReview(_, { id }, ctx) {
-      const review = await ctx.models.Review.query().findById(id)
+      const review = await models.Review.query().findById(id)
 
-      const manuscript = await ctx.models.Manuscript.query().findById(
+      const manuscript = await models.Manuscript.query().findById(
         review.manuscriptId,
       )
 
@@ -98,7 +98,7 @@ const resolvers = {
 
       const member = await team
         .$relatedQuery('members')
-        .where('userId', ctx.user.id)
+        .where('userId', ctx.user)
         .first()
 
       member.status = 'completed'
@@ -109,7 +109,7 @@ const resolvers = {
     async files(parent, _, ctx) {
       return parent.files
         ? parent.files
-        : ctx.models.File.query().where({ reviewCommentId: parent.id })
+        : models.File.query().where({ reviewCommentId: parent.id })
     },
   },
 }

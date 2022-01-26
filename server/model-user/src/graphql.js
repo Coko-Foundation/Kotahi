@@ -1,7 +1,8 @@
-const logger = require('@pubsweet/logger')
+const { logger } = require('@coko/server')
 const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
 const { existsSync } = require('fs')
 const path = require('path')
+const models = require('@pubsweet/models')
 
 const sendEmailNotification = require('../../email-notifications')
 
@@ -9,20 +10,20 @@ const resolvers = {
   Query: {
     user(_, { id, username }, ctx) {
       if (id) {
-        return ctx.models.User.query().findById(id)
+        return models.User.query().findById(id)
       }
 
       if (username) {
-        return ctx.models.User.query().where({ username }).first()
+        return models.User.query().where({ username }).first()
       }
 
       return null
     },
     async users(_, vars, ctx) {
-      return ctx.models.User.query()
+      return models.User.query()
     },
     async paginatedUsers(_, { sort, offset, limit, filter }, ctx) {
-      const query = ctx.models.User.query()
+      const query = models.User.query()
 
       if (filter && filter.admin) {
         query.where({ admin: true })
@@ -49,26 +50,26 @@ const resolvers = {
         users,
       }
 
-      // return ctx.models.User.fetchAll(where, ctx, { eager })
+      // return models.User.fetchAll(where, ctx, { eager })
     },
     // Authentication
     async currentUser(_, vars, ctx) {
       if (!ctx.user) return null
-      const avatarPlaceholder = '/static/profiles/default_avatar.svg'
-      const user = await ctx.models.User.find(ctx.user.id)
+      const avatarPlaceholder = '/profiles/default_avatar.svg'
+      const user = await models.User.find(ctx.user)
       const profilePicture = user.profilePicture ? user.profilePicture : ''
 
       const profilePicturePath = path.join(
         __dirname,
         '../../..',
-        profilePicture.replace('/static/', ''),
+        profilePicture,
       )
 
       if (
         profilePicture !== avatarPlaceholder &&
         !existsSync(profilePicturePath)
       ) {
-        await ctx.models.User.query()
+        await models.User.query()
           .update({ profilePicture: avatarPlaceholder })
           .where('id', user.id)
         user.profilePicture = avatarPlaceholder
@@ -80,15 +81,13 @@ const resolvers = {
     },
     searchUsers(_, { teamId, query }, ctx) {
       if (teamId) {
-        return ctx.models.User.model
+        return models.User.model
           .query()
           .where({ teamId })
           .where('username', 'ilike', `${query}%`)
       }
 
-      return ctx.models.User.model
-        .query()
-        .where('username', 'ilike', `${query}%`)
+      return models.User.model.query().where('username', 'ilike', `${query}%`)
     },
   },
   Mutation: {
@@ -96,7 +95,7 @@ const resolvers = {
       const user = {
         username: input.username,
         email: input.email,
-        passwordHash: await ctx.models.User.hashPassword(input.password),
+        passwordHash: await models.User.hashPassword(input.password),
       }
 
       const identity = {
@@ -109,7 +108,7 @@ const resolvers = {
       user.defaultIdentity = identity
 
       try {
-        const result = await ctx.models.User.create(user, ctx, {
+        const result = await models.User.create(user, ctx, {
           eager: 'defaultIdentity',
         })
 
@@ -125,34 +124,34 @@ const resolvers = {
       }
     },
     async deleteUser(_, { id }, ctx) {
-      const user = await ctx.models.User.query().findById(id)
-      await ctx.models.Manuscript.query()
+      const user = await models.User.query().findById(id)
+      await models.Manuscript.query()
         .update({ submitterId: null })
         .where({ submitterId: id })
 
-      await ctx.models.User.query().where({ id }).delete()
+      await models.User.query().where({ id }).delete()
       return user
     },
     async updateUser(_, { id, input }, ctx) {
       if (input.password) {
         // eslint-disable-next-line no-param-reassign
-        input.passwordHash = await ctx.models.User.hashPassword(input.password)
+        input.passwordHash = await models.User.hashPassword(input.password)
         // eslint-disable-next-line no-param-reassign
         delete input.password
       }
 
-      return ctx.models.User.query().updateAndFetchById(id, JSON.parse(input))
+      return models.User.query().updateAndFetchById(id, JSON.parse(input))
     },
     // Authentication
     async loginUser(_, { input }, ctx) {
       /* eslint-disable-next-line global-require */
-      const authentication = require('pubsweet-server/src/authentication')
+      const { createJWT } = require('@coko/server')
 
       let isValid = false
       let user
 
       try {
-        user = await ctx.models.User.findByUsername(input.username)
+        user = await models.User.findByUsername(input.username)
         isValid = await user.validPassword(input.password)
       } catch (err) {
         logger.debug(err)
@@ -164,17 +163,19 @@ const resolvers = {
 
       return {
         user,
-        token: authentication.token.create(user),
+        token: createJWT(user),
       }
     },
     async updateCurrentUsername(_, { username }, ctx) {
-      const user = await ctx.models.User.find(ctx.user.id)
+      const user = await models.User.find(ctx.user)
       user.username = username
       await user.save()
       return user
     },
     async updateCurrentEmail(_, { email }, ctx) {
-      if (ctx.user.email === email) {
+      const ctxUser = await models.User.find(ctx.user)
+
+      if (ctxUser.email === email) {
         return { success: true }
       }
 
@@ -185,17 +186,16 @@ const resolvers = {
         return { success: false, error: 'Email is invalid' }
       }
 
-      const userWithSuchEmail = await ctx.models.User.query().where({ email })
+      const userWithSuchEmail = await models.User.query().where({ email })
 
       if (userWithSuchEmail[0]) {
         return { success: false, error: 'Email is already taken' }
       }
 
       try {
-        const user = await ctx.models.User.query().updateAndFetchById(
-          ctx.user.id,
-          { email },
-        )
+        const user = await models.User.query().updateAndFetchById(ctx.user, {
+          email,
+        })
 
         return { success: true, user }
       } catch (e) {
@@ -218,7 +218,7 @@ const resolvers = {
       let receiverFirstName = externalName
 
       if (selectedEmail) {
-        const [userReceiver] = await ctx.models.User.query()
+        const [userReceiver] = await models.User.query()
           .where({ email: selectedEmail })
           .withGraphFetched('[defaultIdentity]')
 
@@ -230,7 +230,7 @@ const resolvers = {
         ).split(' ')[0]
       }
 
-      const manuscriptWithSubmitter = await ctx.models.Manuscript.query()
+      const manuscriptWithSubmitter = await models.Manuscript.query()
         .findById(manuscript.id)
         .withGraphFetched('submitter.[defaultIdentity]')
 
@@ -264,14 +264,14 @@ const resolvers = {
   },
   User: {
     async defaultIdentity(parent, args, ctx) {
-      const identity = await ctx.models.Identity.query()
+      const identity = await models.Identity.query()
         .where({ userId: parent.id, isDefault: true })
         .first()
 
       return identity
     },
     async identities(parent, args, ctx) {
-      const identities = await ctx.models.Identity.query().where({
+      const identities = await models.Identity.query().where({
         userId: parent.id,
       })
 

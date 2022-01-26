@@ -1,4 +1,4 @@
-const BaseModel = require('@pubsweet/base-model')
+const { BaseModel } = require('@coko/server')
 
 class File extends BaseModel {
   static get tableName() {

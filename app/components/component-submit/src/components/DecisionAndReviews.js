@@ -2,7 +2,7 @@ import React from 'react'
 import { Attachment } from '@pubsweet/ui'
 
 // TODO: Sort out the imports, perhaps make DecisionReview a shared component?
-import Review from '../../../component-review/src/components/decision/DecisionReview'
+import DecisionReview from '../../../component-review/src/components/decision/DecisionReview'
 import { UserAvatar } from '../../../component-avatar/src'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
 
@@ -92,7 +92,7 @@ const DecisionAndReviews = ({ manuscript }) => {
             .filter(review => !review.isHiddenFromAuthor && isCurrentUserAuthor)
             .map((review, index) => (
               <SectionRow key={review.id}>
-                <Review
+                <DecisionReview
                   open
                   review={review}
                   reviewer={{

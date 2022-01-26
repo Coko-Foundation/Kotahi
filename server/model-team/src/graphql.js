@@ -1,9 +1,10 @@
 const eager = '[members.[user, alias]]'
+const models = require('@pubsweet/models')
 
 const resolvers = {
   Query: {
     team(_, { id }, ctx) {
-      return ctx.models.Team.query().findById(id).eager(eager)
+      return models.Team.query().findById(id).eager(eager)
     },
     teams(_, { where }, ctx) {
       // eslint-disable-next-line no-param-reassign
@@ -20,14 +21,14 @@ const resolvers = {
       //   where._relations = [{ relation: 'aliases', object: alias }]
       // }
 
-      return ctx.models.Team.query().where(where).eager(eager)
+      return models.Team.query().where(where).eager(eager)
     },
   },
   Mutation: {
-    deleteTeam(_, { id }, ctx) {
-      return ctx.models.Team.query().deleteById(id)
+    async deleteTeam(_, { id }, ctx) {
+      return models.Team.query().deleteById(id)
     },
-    createTeam(_, { input }, ctx) {
+    async createTeam(_, { input }, ctx) {
       const options = {
         relate: ['members.user'],
         unrelate: ['members.user'],
@@ -35,10 +36,10 @@ const resolvers = {
         eager: '[members.[user.teams, alias]]',
       }
 
-      return ctx.models.Team.query().insertGraphAndFetch(input, options)
+      return models.Team.query().insertGraphAndFetch(input, options)
     },
-    updateTeam(_, { id, input }, ctx) {
-      return ctx.models.Team.query().upsertGraphAndFetch(
+    async updateTeam(_, { id, input }, ctx) {
+      return models.Team.query().upsertGraphAndFetch(
         {
           id,
           ...input,
@@ -50,33 +51,29 @@ const resolvers = {
         },
       )
     },
-    updateTeamMember(_, { id, input }, ctx) {
-      return ctx.models.TeamMember.query().updateAndFetchById(
-        id,
-        JSON.parse(input),
-      )
+    async updateTeamMember(_, { id, input }, ctx) {
+      return models.TeamMember.query().updateAndFetchById(id, JSON.parse(input))
     },
   },
   User: {
-    teams: (parent, _, ctx) =>
-      ctx.models.User.relatedQuery('teams').for(parent.id),
+    teams: (parent, _, ctx) => models.User.relatedQuery('teams').for(parent.id),
   },
   Team: {
     async members(team, { where }, ctx) {
-      const t = await ctx.models.Team.query().findById(team.id)
+      const t = await models.Team.query().findById(team.id)
       return t.$relatedQuery('members')
     },
     manuscript(parent, vars, ctx) {
-      return ctx.models.Manuscript.query().findById(parent.manuscriptId)
+      return models.Manuscript.query().findById(parent.manuscriptId)
     },
   },
   TeamMember: {
     async user(teamMember, vars, ctx) {
-      const member = await ctx.models.TeamMember.query().findById(teamMember.id)
+      const member = await models.TeamMember.query().findById(teamMember.id)
       return member ? member.$relatedQuery('user') : null
     },
     async alias(teamMember, vars, ctx) {
-      const member = await ctx.models.TeamMember.query().findById(teamMember.id)
+      const member = await models.TeamMember.query().findById(teamMember.id)
       return member ? member.$relatedQuery('alias') : null
     },
   },

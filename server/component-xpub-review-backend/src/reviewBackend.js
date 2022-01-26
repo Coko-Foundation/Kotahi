@@ -1,10 +1,9 @@
 const { pick } = require('lodash')
 const config = require('config')
 const passport = require('passport')
-const logger = require('@pubsweet/logger')
-const emailer = require('@pubsweet/component-send-email')
+const { logger, sendEmail } = require('@coko/server')
 
-const authsome = require('pubsweet-server/src/helpers/authsome')
+const authsome = require('authsome')
 const { AuthorizationError } = require('@pubsweet/errors')
 
 const authBearer = passport.authenticate('bearer', { session: false })
@@ -58,16 +57,14 @@ module.exports = app => {
         config.get('pubsweet-server').baseUrl
       }'>Click here to navigate to the Dashboard</a></p>`
 
-      emailer
-        .send({
-          from: config.get('mailer.from'),
-          to: reviewer[0].email,
-          subject: 'Review Invitation',
-          html: message,
-        })
-        .catch(err => {
-          logger.error(err.response)
-        })
+      sendEmail({
+        from: config.get('mailer.from'),
+        to: reviewer[0].email,
+        subject: 'Review Invitation',
+        html: message,
+      }).catch(err => {
+        logger.error(err.response)
+      })
 
       const currentAndUpdateProject = {
         current: project,
@@ -235,16 +232,14 @@ module.exports = app => {
 
       const authorEmails = authors.map(user => user.email)
       logger.info(`Sending decision email to ${authorEmails}`)
-      emailer
-        .send({
-          from: config.get('mailer.from'),
-          to: authorEmails,
-          subject: 'Decision made',
-          html: message,
-        })
-        .catch(err => {
-          logger.error(err.response)
-        })
+      sendEmail({
+        from: config.get('mailer.from'),
+        to: authorEmails,
+        subject: 'Decision made',
+        html: message,
+      }).catch(err => {
+        logger.error(err.response)
+      })
 
       res.send({
         version: canViewVersion.filter

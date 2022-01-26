@@ -4,6 +4,7 @@ const fs = require('fs-extra')
 const path = require('path')
 const config = require('config')
 const sharp = require('sharp')
+const models = require('@pubsweet/models')
 
 const File = require('./file')
 
@@ -97,12 +98,12 @@ const resolvers = {
 
       const filePath = await upload(file)
       // eslint-disable-next-line no-param-reassign
-      meta.url = `/static/${filePath}`
+      meta.url = `/${filePath}`
       const data = await new File(meta).save()
       return data
     },
     async deleteFile(_, { id }, ctx) {
-      await ctx.models.File.query().deleteById(id)
+      await models.File.query().deleteById(id)
       return id
     },
   },

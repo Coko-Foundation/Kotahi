@@ -1,4 +1,7 @@
+const models = require('@pubsweet/models')
 const generateMovingAverages = require('./movingAverages')
+
+const editorTeams = ['Senior Editor', 'Handling Editor', 'Editor']
 
 /** Capitalize the first letter of the string */
 const capitalize = text => {
@@ -177,7 +180,7 @@ const isRevising = m =>
   ['revise', 'revising'].includes(getLastVersion(m).status)
 
 const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched(
       '[teams, reviews, manuscriptVersions(orderByCreated).[teams, reviews]]',
     )
@@ -235,12 +238,12 @@ const getDateRangeSummaryStats = async (startDate, endDate, ctx) => {
 
 const getPublishedTodayCount = async (timeZoneOffset, ctx) => {
   const midnight = getLastMidnightInTimeZone(timeZoneOffset)
-  const query = ctx.models.Manuscript.query().where('published', '>=', midnight) // TODO this will double-count manuscripts republished twice today
+  const query = models.Manuscript.query().where('published', '>=', midnight) // TODO this will double-count manuscripts republished twice today
   return query.resultSize()
 }
 
 const getRevisingNowCount = async ctx => {
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched('[manuscriptVersions(orderByCreated)]')
     .where({ parentId: null })
 
@@ -255,7 +258,7 @@ const getDurationsTraces = async (startDate, endDate, ctx) => {
 
   const dataStart = startDate - windowSizeForAvg / 2
 
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched('[reviews, manuscriptVersions(orderByCreated).[reviews]]')
     .where('created', '>=', new Date(dataStart))
     .where('created', '<', new Date(endDate))
@@ -301,7 +304,7 @@ const getDurationsTraces = async (startDate, endDate, ctx) => {
 const getDailyAverageStats = async (startDate, endDate, ctx) => {
   const dataStart = startDate - 365 * day // TODO: any better way to ensure we get all manuscripts still in progress during this date range?
 
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched('[reviews, manuscriptVersions(orderByCreated).[reviews]]')
     .where('created', '>=', new Date(dataStart))
     .where('created', '<', new Date(endDate))
@@ -356,24 +359,31 @@ const getDailyAverageStats = async (startDate, endDate, ctx) => {
   }
 }
 
-const getTeamUserIdentities = (manuscript, teamName) => {
-  const idents = []
+/** Get all users that are members of the given team or teams. teamNameOrNames may be a string or array of strings. */
+const getTeamUsers = (manuscript, teamNameOrNames) => {
+  const teamNames = Array.isArray(teamNameOrNames)
+    ? teamNameOrNames
+    : [teamNameOrNames]
+
+  const users = []
   const manuscripts = getVersionsAsArray(manuscript)
   manuscripts.forEach(m => {
-    const team = m.teams.find(t => t.name === teamName)
-    if (!team) return // continue
-    team.users.forEach(u => {
-      if (!idents.some(i => i.userId === u.defaultIdentity.userId))
-        idents.push(u.defaultIdentity)
-    })
+    m.teams
+      .filter(t => teamNames.includes(t.name))
+      .forEach(team => {
+        team.users.forEach(user => {
+          if (!users.some(u => u.id === user.id)) users.push(user)
+        })
+      })
   })
-  return idents
+
+  return users
 }
 
 const getReviewersAndLatestStatuses = ms => {
-  const allReviewers = getTeamUserIdentities(ms, 'Reviewers').map(i => ({
-    id: i.userId,
-    name: i.name || '',
+  const allReviewers = getTeamUsers(ms, 'Reviewers').map(u => ({
+    id: u.id,
+    name: u.username || u.email || u.defaultIdentity.identifier,
   }))
 
   const currentTeam = getLastVersion(ms).teams.find(t => t.name === 'Reviewers')
@@ -414,7 +424,7 @@ const getVersionReviewDurations = ms => {
 }
 
 const getManuscriptsActivity = async (startDate, endDate, ctx) => {
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity], members], manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity], members]]]',
     )
@@ -424,11 +434,6 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
     .orderBy('created')
 
   return manuscripts.map(m => {
-    const editors = getTeamUserIdentities(m, 'Senior Editor')
-    getTeamUserIdentities(m, 'Handling Editor').forEach(ident => {
-      if (!editors.some(i => i.id === ident.id)) editors.push(ident)
-    })
-
     const lastVer = getLastVersion(m)
     let statusLabel
     if (lastVer.published) {
@@ -443,8 +448,8 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
       shortId: m.shortId.toString(),
       entryDate: getIsoDateString(m.created),
       title: lastVer.meta.title,
-      authors: getTeamUserIdentities(m, 'Author'),
-      editors,
+      authors: getTeamUsers(m, 'Author'),
+      editors: getTeamUsers(m, editorTeams),
       reviewers: getReviewersAndLatestStatuses(m),
       status: statusLabel,
       publishedDate: getIsoDateString(getLastPublishedDate(m)),
@@ -454,7 +459,7 @@ const getManuscriptsActivity = async (startDate, endDate, ctx) => {
 }
 
 const getEditorsActivity = async (startDate, endDate, ctx) => {
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity]]]]',
     )
@@ -466,23 +471,18 @@ const getEditorsActivity = async (startDate, endDate, ctx) => {
   const editorsData = {} // Map by user id
 
   manuscripts.forEach(m => {
-    const editors = getTeamUserIdentities(m, 'Handling Editor')
-    getTeamUserIdentities(m, 'Senior Editor').forEach(ed => {
-      if (!editors.some(e => e.id === ed.id)) editors.push(ed)
-    })
-
     const wasGivenToReviewers = !!seekFromEarliestVersion(m, manuscript =>
       manuscript.teams.find(t => t.name === 'Reviewers'),
     )
 
     const wasRevised = m.manuscriptVersions.length > 0
 
-    editors.forEach(e => {
+    getTeamUsers(m, editorTeams).forEach(e => {
       let editorData = editorsData[e.id]
 
       if (!editorData) {
         editorData = {
-          name: e.name || '',
+          name: e.username || e.email || e.defaultIdentity.identifier,
           assignedCount: 0,
           givenToReviewersCount: 0,
           revisedCount: 0,
@@ -509,7 +509,7 @@ const getEditorsActivity = async (startDate, endDate, ctx) => {
 }
 
 const getReviewersActivity = async (startDate, endDate, ctx) => {
-  const manuscripts = await ctx.models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity], members], reviews, manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity], members], reviews]]',
     )
@@ -551,7 +551,9 @@ const getReviewersActivity = async (startDate, endDate, ctx) => {
           )
 
           const name = reviewerUser
-            ? reviewerUser.defaultIdentity.name || reviewerUser.username || ''
+            ? reviewerUser.userName ||
+              reviewerUser.email ||
+              reviewerUser.defaultIdentity.identifier
             : reviewer.id
 
           reviewerData = {
@@ -597,7 +599,7 @@ const getReviewersActivity = async (startDate, endDate, ctx) => {
 }
 
 const getAuthorsActivity = async (startDate, endDate, ctx) => {
-  const query = ctx.models.Manuscript.query()
+  const query = models.Manuscript.query()
     .withGraphFetched(
       '[teams.[users.[defaultIdentity]], manuscriptVersions(orderByCreated).[teams.[users.[defaultIdentity]]]]',
     )
@@ -611,14 +613,12 @@ const getAuthorsActivity = async (startDate, endDate, ctx) => {
   const authorsData = {} // Map by user id
 
   manuscripts.forEach(m => {
-    const authors = getTeamUserIdentities(m, 'Author')
-
-    authors.forEach(a => {
+    getTeamUsers(m, 'Author').forEach(a => {
       let authorData = authorsData[a.id]
 
       if (!authorData) {
         authorData = {
-          name: a.name || '',
+          name: a.username || a.email || a.defaultIdentity.identifier,
           unsubmittedCount: 0,
           submittedCount: 0,
           rejectedCount: 0,
@@ -727,7 +727,7 @@ const typeDefs = `
     y: Float!
   }
 
-  type ReviewerIdentityWithStatus {
+  type ReviewerWithStatus {
     id: ID!
     name: String!
     status: String
@@ -737,9 +737,9 @@ const typeDefs = `
     shortId: String!
     entryDate: DateTime!
     title: String!
-    authors: [Identity!]!
-    editors: [Identity!]!
-    reviewers: [ReviewerIdentityWithStatus!]!
+    authors: [User!]!
+    editors: [User!]!
+    reviewers: [ReviewerWithStatus!]!
     status: String!
     publishedDate: DateTime
     versionReviewDurations: [Float]!

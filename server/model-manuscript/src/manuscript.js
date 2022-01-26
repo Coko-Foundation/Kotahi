@@ -1,4 +1,4 @@
-const BaseModel = require('@pubsweet/base-model')
+const { BaseModel } = require('@coko/server')
 const omit = require('lodash/omit')
 const cloneDeep = require('lodash/cloneDeep')
 const sortBy = require('lodash/sortBy')

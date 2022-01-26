@@ -53,6 +53,19 @@ export const ReadOnlyEditorWithCommentsEditor = styled.div`
   & .comment {
     ${props => props.readOnlyComments && 'pointer-events: none;'}
   }
+
+  & .deletion {
+    ${props => props.hideTrackChanges && 'display: none;'}
+  }
+
+  & .insertion {
+    ${props => props.hideTrackChanges && 'color: initial !important;'}
+
+    & .selected-insertion {
+      ${props =>
+        props.hideTrackChanges && 'background-color: initial !important;'}
+    }
+  }
 `
 
 export const FullWaxEditorGrid = styled.div`

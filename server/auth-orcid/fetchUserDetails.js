@@ -1,6 +1,6 @@
 const superagent = require('superagent')
 const _ = require('lodash')
-const logger = require('@pubsweet/logger')
+const { logger } = require('@coko/server')
 const { Identity } = require('@pubsweet/models')
 const config = require('config')
 

@@ -62,6 +62,9 @@ module.exports = {
     }),
   },
   'pubsweet-server': {
+    useGraphQLServer: true,
+    useJobQueue: false,
+    serveClient: true,
     db: {},
     port: 3000,
     pool: {

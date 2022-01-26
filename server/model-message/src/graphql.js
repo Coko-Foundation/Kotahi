@@ -1,4 +1,4 @@
-const { pubsubManager } = require('pubsweet-server')
+const { pubsubManager } = require('@coko/server')
 
 const { getPubsub } = pubsubManager
 
@@ -43,7 +43,7 @@ const resolvers = {
   Mutation: {
     createMessage: async (_, { content, channelId }, context) => {
       const pubsub = await getPubsub()
-      const userId = context.user.id
+      const userId = context.user
 
       const savedMessage = await new Message({
         content,

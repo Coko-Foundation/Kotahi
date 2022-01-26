@@ -2,10 +2,10 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Attachment } from '@pubsweet/ui'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { th } from '@pubsweet/ui-toolkit'
 import SimpleWaxEditor from '../../../../wax-collab/src/SimpleWaxEditor'
 
-const Heading = styled.div``
+const Heading = styled.h4``
 
 const Note = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
@@ -16,7 +16,9 @@ const Recommendation = styled(Note)``
 const Content = styled.div``
 
 const Container = styled.div`
-  margin-top: ${grid(3)};
+  & > div {
+    margin-bottom: 12px;
+  }
 `
 
 // Due to migration to new Data Model
@@ -42,26 +44,40 @@ const ReviewComments = (review, type) => (
   </Note>
 )
 
-const Review = ({ review, user }) => (
+const Review = ({ review, user, showUserInfo = true }) => (
   <Container>
-    {review?.reviewComment && (
+    {!review.isHiddenReviewerName && showUserInfo && (
       <div>
-        <Heading>Review</Heading>
-
-        {ReviewComments(review, 'review')}
+        <Heading>
+          <strong>{review.user.username}</strong>
+        </Heading>
+        {review.user.defaultIdentity.identifier}
       </div>
+    )}
+
+    {review.isHiddenReviewerName && showUserInfo && (
+      <div>
+        <Heading>
+          <strong style={{ color: '#545454' }}>Anonymous Reviewer</strong>
+        </Heading>
+      </div>
+    )}
+
+    {review?.reviewComment && (
+      <>
+        <Heading>Review</Heading>
+        {ReviewComments(review, 'review')}
+      </>
     )}
     {review?.confidentialComment && user.admin ? (
       <div>
         <Heading>Confidential</Heading>
-
         {ReviewComments(review, 'confidential')}
       </div>
     ) : null}
     {review?.recommendation && (
       <div>
         <Heading>Recommendation</Heading>
-
         <Recommendation>{review.recommendation}</Recommendation>
       </div>
     )}

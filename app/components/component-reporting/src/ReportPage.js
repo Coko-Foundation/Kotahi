@@ -50,12 +50,25 @@ const getReportData = gql`
       entryDate
       title
       authors {
-        name
+        id
+        username
+        email
+        defaultIdentity {
+          id
+          identifier
+        }
       }
       editors {
-        name
+        id
+        username
+        email
+        defaultIdentity {
+          id
+          identifier
+        }
       }
       reviewers {
+        id
         name
         status
       }
@@ -119,6 +132,7 @@ const ReportPage = () => {
       endDate,
       timeZoneOffset: new Date().getTimezoneOffset(),
     },
+    fetchPolicy: 'network-only',
   })
 
   if (loading) return <Spinner />
