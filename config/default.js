@@ -215,6 +215,7 @@ module.exports = {
     'hypothesis',
     'review',
     'notification-email',
+    'paged-js',
   ],
   s3: {
     accessKeyId: 'test',

@@ -26,31 +26,9 @@ const Production = ({
   manuscript,
   currentUser,
   makePdf,
-  downloadPdf,
   // fileUpload,
   updateManuscript,
 }) => {
-  if (downloadPdf) {
-    // TODO: question: does this need to be turned into a blob?
-    window.open(downloadPdf)
-
-    // use this code for downloading the PDF:
-
-    const link = document.createElement('a')
-    link.href = downloadPdf
-    link.download = `${title || 'title'}.pdf`
-    link.click()
-
-    // console.log(`Downloading ${link.download}`)
-
-    // For Firefox it is necessary to delay revoking the ObjectURL.
-
-    setTimeout(() => {
-      window.URL.revokeObjectURL(downloadPdf)
-      makePdf(false)
-    }, 1000)
-  }
-
   return (
     <Container>
       <HeadingWithAction>

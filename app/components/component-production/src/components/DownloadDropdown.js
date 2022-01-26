@@ -72,7 +72,7 @@ export const DownloadDropdown = ({ source, metadata, makePdf }) => {
       onClick: () => {
         // eslint-disable-next-line
         console.log('PDF Selected')
-        makePdf()
+        makePdf('title')
       },
       title: 'PDF',
     },

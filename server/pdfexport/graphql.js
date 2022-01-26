@@ -148,6 +148,7 @@ const pdfHandler = async article => {
 const resolvers = {
   Query: {
     async convertToPdf(_, { article }, ctx) {
+      console.log('in convertToPdf!')
       const outUrl = await Promise.all([pdfHandler(article, ctx)])
       return {
         pdfUrl: outUrl || '',
