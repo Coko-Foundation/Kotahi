@@ -12,40 +12,16 @@ const template = require('./pdfTemplates/article.njk')
 
 // THINGS TO KNOW ABOUT THIS:
 //
-// 0. I've made a fallback version that runs on a remote pagedjs server – that can be used by setting useFakeServer to true.
-//    This isn't something that should be kept around forever, it's just for testing purposes.
 // 1. It is expecting two .env variables: PAGED_JS_CLIENT_ID and PAGED_JS_CLIENT_SECRET
 //    The process for generating these is here: https://gitlab.coko.foundation/cokoapps/pagedjs#creating-clients-credentials
-
-// HOW SERVER-SIDE VERSION SHOULD WORK:
 //
-// 1) component should tell page to send query to server
-// 2) page should send query to server
-// 3) server should recognize this
-//		// need to register component?
-//    // use crossref model (that's called by model-manuscript/graphql.js)
-// 4) sever should assemble data and send to pagedjs
-// 5) check for credentials for pagedjs, get credentials if we don't have them
-// 6) server should get answer from pagedjs
-// 7) server should send back answer to page
-// 8) page should provide option to download PDF
-//		// is this a effect loop?
-
 // editoria version of this code is here: https://gitlab.coko.foundation/editoria/editoria/-/blob/master/server/api/useCases/services.js
 
-const useFakeServer = false
+const clientId = config['paged-js'].pagedJsClientId
 
-const clientId = useFakeServer
-  ? '5291563e-e43b-461b-8681-2cebaee7b550'
-  : config['paged-js'].pagedJsClientId
+const clientSecret = config['paged-js'].pagedJsClientSecret
 
-const clientSecret = useFakeServer
-  ? 'hHUDVHG9f6SIZJzN'
-  : config['paged-js'].pagedJsClientSecret
-
-const serverUrl = useFakeServer
-  ? 'https://pagedjstest.cloud68.co'
-  : 'http://localhost:3003'
+const serverUrl = 'http://localhost:3003'
 
 let pagedJsAccessToken = '' // maybe this should be saved somewhere?
 
@@ -126,32 +102,17 @@ const pdfHandler = async article => {
       data: form,
     })
       .then(async res => res.data)
-      .then(resObj => {
+      .then(async resObj => {
         // eslint-disable-next-line no-console
         console.log('Retrieved PDF!')
-        const newBlob = new Blob([resObj], { type: 'application/pdf' })
+        // Now, return this as a path.
+        const pdfPath = `${dirName}/${articleData.id}.pdf`
+        await fsPromised.mkdir(dirName)
+        await fsPromised.appendFile(pdfPath, resObj)
 
-        const objUrl = window.URL.createObjectURL(newBlob)
+        // return pdfPath
 
-        // use this code to open PDF in new window:
-
-        window.open(objUrl)
-
-        // use this code for downloading the PDF:
-
-        const link = document.createElement('a')
-        link.href = objUrl
-        link.download = `${articleData.title || 'title'}.pdf`
-        link.click()
-
-        // console.log(`Downloading ${link.download}`)
-
-        // For Firefox it is necessary to delay revoking the ObjectURL.
-
-        setTimeout(() => {
-          window.URL.revokeObjectURL(objUrl)
-        }, 1000)
-        resolve()
+        resolve(pdfPath)
       })
       .catch(async err => {
         const { response } = err
