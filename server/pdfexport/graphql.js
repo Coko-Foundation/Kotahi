@@ -8,7 +8,6 @@ const config = require('config')
 const nunjucks = require('nunjucks')
 const css = require('./pdfTemplates/styles')
 const makeZip = require('./ziputils.js')
-const template = require('./pdfTemplates/article.njk')
 
 // THINGS TO KNOW ABOUT THIS:
 //
@@ -24,6 +23,8 @@ const clientSecret = config['paged-js'].pagedJsClientSecret
 const serverUrl = 'http://localhost:3003'
 
 let pagedJsAccessToken = '' // maybe this should be saved somewhere?
+
+nunjucks.configure('pdfTemplates')
 
 const serviceHandshake = async () => {
   const buff = Buffer.from(`${clientId}:${clientSecret}`, 'utf8')
@@ -71,12 +72,20 @@ const pdfHandler = async article => {
   // assuming that article is coming in as a string because we don't know what the shape will be
   // may need to do to
   const articleData = JSON.parse(article)
-  articleData.publicationMetadata = {} // TODO: decide what this is (based on Julien's model), pull this in from the instance
-
-  const outHtml = nunjucks.render(template, { article: articleData })
+  articleData.publicationMetadata = {
+    copyright: { name: '', description: '', year: 'xxxx' },
+    publisher: 'elife',
+    publisherLogo: '', // this should be base64
+    copyrightLogo: '', // this should be base64
+    openAccessLogo: '', // this should be base64
+  } // TODO: decide what else goes into this (based on Julien's model), pull this in from the instance
 
   const dirName = `${+new Date()}-${articleData.id}`
+
   await fsPromised.mkdir(dirName)
+
+  const outHtml = nunjucks.render('article.njk', { article: articleData })
+
   await fsPromised.appendFile(`${dirName}/index.html`, outHtml)
   await fsPromised.appendFile(`${dirName}/styles.css`, css)
 
