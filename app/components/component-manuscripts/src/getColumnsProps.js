@@ -25,6 +25,7 @@ const getColumnsProps = (
   selectedNewManuscripts,
   toggleNewManuscriptCheck,
   setReadyToEvaluateLabel,
+  urlFrag,
 ) => {
   const specialColumnProperties = {
     shortId: {
@@ -76,6 +77,7 @@ const getColumnsProps = (
         deleteManuscript,
         isManuscriptBlockedFromPublishing,
         tryPublishManuscript,
+        urlFrag,
       },
     },
     newItemCheckbox: {

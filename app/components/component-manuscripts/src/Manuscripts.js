@@ -1,15 +1,9 @@
 /* eslint-disable no-shadow */
-import React, { useEffect, useState } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
+import React, { useState } from 'react'
+import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import {
-  useQuery,
-  useMutation,
-  useSubscription,
-  useApolloClient,
-} from '@apollo/client'
 import { Button, Checkbox } from '@pubsweet/ui'
-import config from 'config'
+// import config from 'config'
 import ManuscriptRow from './ManuscriptRow'
 import {
   ManuscriptsTable,
@@ -27,31 +21,39 @@ import {
   Pagination,
   PaginationContainerShadowed,
 } from '../../shared'
-import {
-  GET_MANUSCRIPTS_AND_FORM,
-  DELETE_MANUSCRIPT,
-  DELETE_MANUSCRIPTS,
-  IMPORT_MANUSCRIPTS,
-  IMPORTED_MANUSCRIPTS_SUBSCRIPTION,
-} from '../../../queries'
 import { articleStatuses } from '../../../globals'
 import VideoChatButton from './VideoChatButton'
-import { updateMutation } from '../../component-submit/src/components/SubmitPage'
-import { publishManuscriptMutation } from '../../component-review/src/components/queries'
 import Modal from '../../component-modal/src'
 import BulkDeleteModal from './BulkDeleteModal'
-import configuredColumnNames from './configuredColumnNames'
+// import configuredColumnNames from './configuredColumnNames'
 import getColumnsProps from './getColumnsProps'
 import getUriQueryParams from './getUriQueryParams'
 import FilterSortHeader from './FilterSortHeader'
 import { validateManuscript } from '../../../shared/manuscriptUtils'
 
-const urlFrag = config.journal.metadata.toplevel_urlfragment
+// const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const Manuscripts = ({ history, ...props }) => {
-  const [sortName, setSortName] = useState('created')
-  const [sortDirection, setSortDirection] = useState('DESC')
-  const [page, setPage] = useState(1)
+  const {
+    client = null,
+    setReadyToEvaluateLabels = null,
+    deleteManuscriptMutations = null,
+    importManuscripts = null,
+    publishManuscripts = null,
+    setSortName = null,
+    setSortDirection = null,
+    setPage = null,
+    queryObject = null,
+    sortDirection = null,
+    sortName = null,
+    confrimBulkDelete = null,
+    page,
+    unsubscribe,
+    urlFrag,
+    chatRoomId,
+    configuredColumnNames,
+  } = props
+
   const [isOpenBulkDeletionModal, setIsOpenBulkDeletionModal] = useState(false)
   const [selectedNewManuscripts, setSelectedNewManuscripts] = useState([])
 
@@ -128,60 +130,11 @@ const Manuscripts = ({ history, ...props }) => {
 
   const limit = process.env.INSTANCE_NAME === 'ncrc' ? 100 : 10
 
-  const { loading, error, data, refetch } = useQuery(GET_MANUSCRIPTS_AND_FORM, {
-    variables: {
-      sort: sortName
-        ? { field: sortName, isAscending: sortDirection === 'ASC' }
-        : null,
-      offset: (page - 1) * limit,
-      limit,
-      filters: uriQueryParams,
-    },
-    fetchPolicy: 'network-only',
-  })
+  const { loading, error, data } = queryObject
 
-  useSubscription(IMPORTED_MANUSCRIPTS_SUBSCRIPTION, {
-    onSubscriptionData: data => {
-      const {
-        subscriptionData: {
-          data: { manuscriptsImportStatus },
-        },
-      } = data
+  unsubscribe()
 
-      toast.success(
-        manuscriptsImportStatus && 'Manuscripts successfully imported',
-      )
-    },
-  })
-  const [importManuscripts] = useMutation(IMPORT_MANUSCRIPTS)
-
-  const [deleteManuscriptMutation] = useMutation(DELETE_MANUSCRIPT, {
-    update(cache, { data: { id } }) {
-      const cacheId = cache.identify({
-        __typename: 'Manuscript',
-        id,
-      })
-
-      cache.evict({ cacheId })
-    },
-  })
-
-  const [deleteManuscripts] = useMutation(DELETE_MANUSCRIPTS, {
-    // eslint-disable-next-line no-shadow
-    update(cache, { data: { ids } }) {
-      const cacheIds = cache.identify({
-        __typename: 'Manuscript',
-        id: ids,
-      })
-
-      cache.evict({ cacheIds })
-    },
-  })
-
-  const deleteManuscript = id => deleteManuscriptMutation({ variables: { id } })
-
-  const [update] = useMutation(updateMutation)
-  const [publishManuscript] = useMutation(publishManuscriptMutation)
+  const deleteManuscript = id => deleteManuscriptMutations(id)
 
   const [
     manuscriptsBlockedFromPublishing,
@@ -190,8 +143,6 @@ const Manuscripts = ({ history, ...props }) => {
 
   const isManuscriptBlockedFromPublishing = id =>
     manuscriptsBlockedFromPublishing.includes(id)
-
-  const client = useApolloClient()
 
   /** Put a block on the ID while validating and publishing; then unblock it. If the ID is already blocked, do nothing. */
   const tryPublishManuscript = async manuscript => {
@@ -207,19 +158,12 @@ const Manuscripts = ({ history, ...props }) => {
     )
 
     if (hasInvalidFields.filter(Boolean).length === 0) {
-      await publishManuscript({
-        variables: { id: manuscript.id },
-      })
+      await publishManuscripts(manuscript.id)
       setManuscriptsBlockedFromPublishing(
         manuscriptsBlockedFromPublishing.filter(id => id !== manuscript.id),
       )
     }
   }
-
-  useEffect(() => {
-    refetch()
-    setPage(1)
-  }, [history.location.search])
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
@@ -248,16 +192,7 @@ const Manuscripts = ({ history, ...props }) => {
       toggleNewManuscriptCheck(id)
     }
 
-    return update({
-      variables: {
-        id,
-        input: JSON.stringify({
-          submission: {
-            labels: 'readyToEvaluate',
-          },
-        }),
-      },
-    })
+    return setReadyToEvaluateLabels(id)
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -278,10 +213,8 @@ const Manuscripts = ({ history, ...props }) => {
   }
 
   const confirmBulkDelete = () => {
-    // bulkSetLabelReadyToEvaluate(selectedNewManuscripts, manuscripts) // Disable until requirements are clearer. See #602
-    deleteManuscripts({
-      variables: { ids: selectedNewManuscripts }, // TODO These may not be parent IDs. Will this cause issues?
-    })
+    confrimBulkDelete(selectedNewManuscripts)
+
     setSelectedNewManuscripts([])
     closeModalBulkDeleteConfirmation()
   }
@@ -298,6 +231,7 @@ const Manuscripts = ({ history, ...props }) => {
     selectedNewManuscripts,
     toggleNewManuscriptCheck,
     setReadyToEvaluateLabel,
+    urlFrag,
   )
 
   return (
@@ -313,7 +247,7 @@ const Manuscripts = ({ history, ...props }) => {
         position="top-center"
         rtl={false}
       />
-      <VideoChatButton />
+      <VideoChatButton chatRoomId={chatRoomId} />
       {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
         <FloatRightButton
           onClick={() => history.push(`${urlFrag}/newSubmission`)}
