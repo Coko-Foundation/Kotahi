@@ -51,11 +51,8 @@ const zipper = async dirPath => {
   }
 }
 
-const makeZip = async htmlText => {
-  // TODO: this expects index.html and the css file to be in uploadsDir
-  const zipPath = await zipper(
-    path.join(`${process.cwd()}`, uploadsDir, 'paged', dirPath),
-  )
+const makeZip = async uploadsDir => {
+  const zipPath = await zipper(path.join(`${process.cwd()}`, uploadsDir))
 
   // const blob = await downloadZip([
   //   {

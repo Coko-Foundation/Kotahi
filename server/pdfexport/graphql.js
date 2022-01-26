@@ -1,5 +1,7 @@
 // REPLACE THIS!
 
+const fs = require('fs-extra')
+const fsPromised = require('fs').promises
 const FormData = require('form-data')
 const axios = require('axios')
 const config = require('config')
@@ -93,21 +95,24 @@ const pdfHandler = async article => {
   // assuming that article is coming in as a string because we don't know what the shape will be
   // may need to do to
   const articleData = JSON.parse(article)
-  articleData.publicationMetadata = {} // TODO: decide what this is, pull this in from the instance
+  articleData.publicationMetadata = {} // TODO: decide what this is (based on Julien's model), pull this in from the instance
 
   const outHtml = nunjucks.render(template, { article: articleData })
 
+  const dirName = `${+new Date()}-${articleData.id}`
+  await fsPromised.mkdir(dirName)
+  await fsPromised.appendFile(`${dirName}/index.html`, outHtml)
+  await fsPromised.appendFile(`${dirName}/styles.css`, css)
+
   // 2 zip this.
 
-  // TODO: THIS ZIPPING CODE DOeS NOT WORK! What it needs to do:
-  // I want to pass it the HTML as a string and the CSS, and get a blob of a Zip back. That's not actually what I'm getting right now.
+  const zipPath = await makeZip(dirName)
 
-  const zipBlob = await makeZip(outHtml, css)
-  // I want to get back a Blob that I can pass to the FormData
+  // need to get the zip from zipPath and pass to the FormData
 
   const form = new FormData()
-  form.append('zip', zipBlob, 'index.html.zip')
-  // form.append('zip', fs.createReadStream(`${zipPath}`))
+  // form.append('zip', zipPath, 'index.html.zip')
+  form.append('zip', fs.createReadStream(`${zipPath}`))
 
   return new Promise((resolve, reject) => {
     axios({
