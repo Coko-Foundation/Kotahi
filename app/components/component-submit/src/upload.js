@@ -3,6 +3,15 @@ import request from 'pubsweet-client/src/helpers/api'
 import { gql } from '@apollo/client'
 import currentRolesVar from '../../../shared/currentRolesVar'
 import cleanMathMarkup from './cleanMathMarkup'
+import { map } from 'lodash'
+
+const fragmentFields = `
+  id
+  meta {
+    source
+    manuscriptId
+  }
+`
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -108,6 +117,15 @@ const createFileMutation = gql`
   }
 `
 
+export const updateMutation = gql`
+  mutation($id: ID!, $input: String) {
+    updateManuscript(id: $id, input: $input) {
+      id
+      ${fragmentFields}
+    }
+  }
+`
+
 const base64toBlob = (base64Data, contentType) => {
   const sliceSize = 1024
   const arr = base64Data.split(',')
@@ -151,30 +169,28 @@ const base64Images = source => {
   return images || null
 }
 
-const uploadImages = async (images, client, manuscriptId, source) => {
-  const uploadedImages = images.map(image => {
-    const { file } = image
+const uploadImages = (image, client, manuscriptId) => {
+  const { file } = image
 
-    const meta = {
-      filename: file.name,
-      manuscriptId,
-      reviewCommentId: null,
-      mimeType: file.type,
-      size: file.size,
-      fileType: 'manuscriptImage',
-      label: file.label || undefined,
-    }
+  const meta = {
+    filename: file.name,
+    manuscriptId,
+    reviewCommentId: null,
+    mimeType: file.type,
+    size: file.size,
+    fileType: 'manuscriptImage',
+    label: file.label || undefined,
+  }
 
-    return client.mutate({
-      mutation: createFileMutation,
-      variables: {
-        file,
-        meta,
-      },
-    })
+  const data = client.mutate({
+    mutation: createFileMutation,
+    variables: {
+      file,
+      meta,
+    },
   })
 
-  return uploadedImages
+  return data
 }
 
 const uploadPromise = (files, client) => {
@@ -319,14 +335,6 @@ export default ({
         images = base64Images(uploadResponse.response)
       }
 
-      // eslint-disable-next-line
-      const uploadedImages = await uploadImages(
-        images,
-        client,
-        manuscriptData.data.createManuscript.id,
-        uploadResponse.response,
-      )
-
       manuscriptData = await createManuscriptPromise(
         file,
         client,
@@ -334,6 +342,42 @@ export default ({
         uploadResponse.fileURL,
         uploadResponse.response,
       )
+      
+      let source = uploadResponse.response
+      // eslint-disable-next-line
+      let uploadedImages = Promise.all(
+          map(images, async image => {
+              const uploadedImage = await uploadImages(
+                image,
+                client,
+                manuscriptData.data.createManuscript.id,
+              )
+              
+              return uploadedImage
+          })
+      )
+      
+      uploadedImages.then((results) => {
+        results.forEach((result, index) => {
+          source = source.replace(images[index].dataSrc, result.data.createFile.url)
+        })
+        const manuscript = {
+          id: manuscriptData.data.createManuscript.id,
+          meta: {
+            source
+          }
+        }
+
+        // eslint-disable-next-line
+        const updatedManuscript = client.mutate({
+            mutation: updateMutation,
+            variables: {
+              id: manuscriptData.data.createManuscript.id,
+              input: JSON.stringify(manuscript),
+            },
+        })
+        manuscriptData.data.createManuscript.meta.source = source
+      })
     } else {
       // Create a manuscript without a file
       manuscriptData = await createManuscriptPromise(
