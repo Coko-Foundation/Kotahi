@@ -66,14 +66,14 @@
       <p class="date"><strong> Received:</strong> {{article.submission.dateReceived}}</p>
       <p class="date"><strong> Accepted:</strong> {{article.submission.DateAccepted}}</p>
       <p class="date"><strong> Published:</strong> {{article.submission.DatePublished}}</p>
-      <p><strong>Reviewing Editor:</strong> "this is missing from JSON - reviewing editor"</p>
+      <p><strong>Reviewing Editor:</strong> {{article.submission.reviewingEditor}}</p>
       <div class="copyright">
-        <h4 id="copyrightName">Copyright-Name</h4>
-        <p id="copyright-description">Copyright description</p>
-        <span id="CopyrightYear">CopyrightYear</span>
+        <h4 id="copyrightName">{{article.publicationMetadata.copyright.name}}</h4>
+        <p id="copyright-description">{{article.publicationMetadata.copyright.description}}</p>
+        <span id="CopyrightYear">{{article.publicationMetadata.copyright.year}}</span>
       </div>
-      <span id="publisher">publisher</span>
-      <span id="articleId">article-Id-on-website</span>
+      <span id="publisher">{{article.publicationMetadata.publisher}}</span>
+      <span id="articleId">{{article.publicationMetadata.articleIdOnWebsite}}</span>
       <span id="articleWebLink">article-website-link</span>
       <ul id="tagList">
         {% for tag in tagList %}
