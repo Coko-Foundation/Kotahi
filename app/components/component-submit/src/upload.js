@@ -1,9 +1,9 @@
 import config from 'config'
 import request from 'pubsweet-client/src/helpers/api'
 import { gql } from '@apollo/client'
+import { map } from 'lodash'
 import currentRolesVar from '../../../shared/currentRolesVar'
 import cleanMathMarkup from './cleanMathMarkup'
-import { map } from 'lodash'
 
 const fragmentFields = `
   id
@@ -342,40 +342,45 @@ export default ({
         uploadResponse.fileURL,
         uploadResponse.response,
       )
-      
+
       let source = uploadResponse.response
       // eslint-disable-next-line
       let uploadedImages = Promise.all(
-          map(images, async image => {
-              const uploadedImage = await uploadImages(
-                image,
-                client,
-                manuscriptData.data.createManuscript.id,
-              )
-              
-              return uploadedImage
-          })
+        map(images, async image => {
+          const uploadedImage = await uploadImages(
+            image,
+            client,
+            manuscriptData.data.createManuscript.id,
+          )
+
+          return uploadedImage
+        }),
       )
-      
-      uploadedImages.then((results) => {
+
+      uploadedImages.then(results => {
         results.forEach((result, index) => {
-          source = source.replace(images[index].dataSrc, result.data.createFile.url)
+          source = source.replace(
+            images[index].dataSrc,
+            result.data.createFile.url,
+          )
         })
+
         const manuscript = {
           id: manuscriptData.data.createManuscript.id,
           meta: {
-            source
-          }
+            source,
+          },
         }
 
         // eslint-disable-next-line
         const updatedManuscript = client.mutate({
-            mutation: updateMutation,
-            variables: {
-              id: manuscriptData.data.createManuscript.id,
-              input: JSON.stringify(manuscript),
-            },
+          mutation: updateMutation,
+          variables: {
+            id: manuscriptData.data.createManuscript.id,
+            input: JSON.stringify(manuscript),
+          },
         })
+
         manuscriptData.data.createManuscript.meta.source = source
       })
     } else {
