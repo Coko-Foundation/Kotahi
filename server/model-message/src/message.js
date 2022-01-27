@@ -5,6 +5,20 @@ class Message extends BaseModel {
     return 'messages'
   }
 
+  static async createMessage({ content, channelId, userId }) {
+    const savedMessage = await new Message({
+      content,
+      userId,
+      channelId,
+    }).save()
+
+    const message = await Message.query()
+      .findById(savedMessage.id)
+      .eager('user')
+
+    return message
+  }
+
   static get schema() {
     return {
       type: 'object',
