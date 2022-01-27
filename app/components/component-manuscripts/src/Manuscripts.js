@@ -35,20 +35,19 @@ import { validateManuscript } from '../../../shared/manuscriptUtils'
 
 const Manuscripts = ({ history, ...props }) => {
   const {
-    client = null,
-    setReadyToEvaluateLabels = null,
-    deleteManuscriptMutations = null,
-    importManuscripts = null,
-    publishManuscripts = null,
-    setSortName = null,
-    setSortDirection = null,
-    setPage = null,
-    queryObject = null,
-    sortDirection = null,
-    sortName = null,
-    confrimBulkDelete = null,
+    client,
+    setReadyToEvaluateLabels,
+    deleteManuscriptMutations,
+    importManuscripts,
+    publishManuscripts,
+    setSortName,
+    setSortDirection,
+    setPage,
+    queryObject,
+    sortDirection,
+    sortName,
+    confrimBulkDelete,
     page,
-    unsubscribe,
     urlFrag,
     chatRoomId,
     configuredColumnNames,
@@ -131,8 +130,6 @@ const Manuscripts = ({ history, ...props }) => {
   const limit = process.env.INSTANCE_NAME === 'ncrc' ? 100 : 10
 
   const { loading, error, data } = queryObject
-
-  unsubscribe()
 
   const deleteManuscript = id => deleteManuscriptMutations(id)
 

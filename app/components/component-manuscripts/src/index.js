@@ -19,18 +19,9 @@ import {
   IMPORTED_MANUSCRIPTS_SUBSCRIPTION,
 } from '../../../queries'
 import configuredColumnNames from './configuredColumnNames'
-// import { articleStatuses } from '../../../globals'
-// import VideoChatButton from './VideoChatButton'
 import { updateMutation } from '../../component-submit/src/components/SubmitPage'
 import { publishManuscriptMutation } from '../../component-review/src/components/queries'
-// import Modal from '../../component-modal/src'
-// import BulkDeleteModal from './BulkDeleteModal'
-// import configuredColumnNames from './configuredColumnNames'
-// import getColumnsProps from './getColumnsProps'
 import getUriQueryParams from './getUriQueryParams'
-// import FilterSortHeader from './FilterSortHeader'
-// import { validateManuscript } from '../../../shared/manuscriptUtils'
-// eslint-disable-next-line import/named
 import Manuscripts from './Manuscripts'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
@@ -61,21 +52,19 @@ const ManuscriptTable = ({ history }) => {
     setPage(1)
   }, [history.location.search])
 
-  const unsubscribe = manuscriptsImportStatus => {
-    useSubscription(IMPORTED_MANUSCRIPTS_SUBSCRIPTION, {
-      onSubscriptionData: data => {
-        const {
-          subscriptionData: {
-            data: { manuscriptsImportStatus },
-          },
-        } = data
+  useSubscription(IMPORTED_MANUSCRIPTS_SUBSCRIPTION, {
+    onSubscriptionData: data => {
+      const {
+        subscriptionData: {
+          data: { manuscriptsImportStatus },
+        },
+      } = data
 
-        toast.success(
-          manuscriptsImportStatus && 'Manuscripts successfully imported',
-        )
-      },
-    })
-  }
+      toast.success(
+        manuscriptsImportStatus && 'Manuscripts successfully imported',
+      )
+    },
+  })
 
   const [importManuscripts] = useMutation(IMPORT_MANUSCRIPTS)
 
@@ -143,6 +132,7 @@ const ManuscriptTable = ({ history }) => {
       configuredColumnNames={configuredColumnNames}
       confrimBulkDelete={confrimBulkDelete}
       deleteManuscriptMutations={deleteManuscriptMutations}
+      history={history}
       importManuscripts={importManuscripts}
       page={page}
       publishManuscripts={publishManuscripts}
@@ -153,7 +143,6 @@ const ManuscriptTable = ({ history }) => {
       setSortName={setSortName}
       sortDirection={sortDirection}
       sortName={sortName}
-      unsubscribe={unsubscribe}
       urlFrag={urlFrag}
     />
   )

@@ -1,7 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import Menu from '../../app/components/Menu'
-// import Manuscripts from '../../app/components/component-manuscripts/src/Manuscripts'
 
 const Root = styled.div`
   display: grid;
@@ -25,7 +24,6 @@ const Root = styled.div`
 export const Base = args => (
   <Root>
     <Menu {...args} />
-    {/* <Manuscripts /> */}
   </Root>
 )
 
