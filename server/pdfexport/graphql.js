@@ -21,7 +21,7 @@ const clientId = config['paged-js'].pagedJsClientId
 
 const clientSecret = config['paged-js'].pagedJsClientSecret
 
-const serverUrl = 'http://localhost:3003'
+const serverUrl = 'http://pagedjs:3003'
 
 let pagedJsAccessToken = '' // maybe this should be saved somewhere?
 
@@ -33,10 +33,6 @@ const serviceHandshake = async () => {
   const serviceHealthCheck = await axios({
     method: 'get',
     url: `${serverUrl}/healthcheck`,
-  }).catch(error => {
-    console.log('caught!')
-    // error.response is not defined as it should be! Why?
-    console.log(error.response)
   })
 
   const { data: healthCheckData } = serviceHealthCheck
