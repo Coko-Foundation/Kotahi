@@ -1,4 +1,7 @@
-<!DOCTYPE html>
+// NOTE: we should use this as njk, but to get this going now I'm just exporting this as a string.
+// NOTE: filterHtml was causing a crash, so I took it out.
+
+module.exports = `<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -62,7 +65,7 @@
       <p class="symbol"><strong><sup>†</sup></strong>These authors contributed equally to this work</p>
       <p class="symbol"><strong><sup>‡</sup></strong>These authors also contributed equally to this work</p>
       <p class="COI"><strong> Competing Interest:</strong> {{article.submission.conflictOfInterest}}</p>
-      <p class="funding"><strong> funding:</strong> {{article.submission.Funding | filterHTML}}</p>
+      <p class="funding"><strong> funding:</strong> {{article.submission.Funding}}</p>
       <p class="date"><strong> Received:</strong> {{article.submission.dateReceived}}</p>
       <p class="date"><strong> Accepted:</strong> {{article.submission.DateAccepted}}</p>
       <p class="date"><strong> Published:</strong> {{article.submission.DatePublished}}</p>
@@ -87,8 +90,8 @@
 </section>
 
 <section class="content">
-{{article.meta.source | safe}}
+{{article.meta.source | safe}}
 </section>
 
 </body>
-</html>  
+</html>`

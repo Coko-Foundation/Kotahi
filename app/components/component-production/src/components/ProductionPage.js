@@ -61,8 +61,6 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
     return null
   }
 
-  console.log(getPdfQuery)
-
   const { data, loading, error } = useQuery(getPdfQuery, {
     variables: {
       article: JSON.stringify(manuscript),
@@ -70,7 +68,7 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
   })
 
   if (loading) return <Spinner />
-  if (error) return <CommsErrorBanner error={error} />
+  if (error) return <CommsErrorBanner error={error} /> // TODO: improve this!
   // Now, download the file
   const { pdfUrl } = data.convertToPdf
   window.open(pdfUrl)

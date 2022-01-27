@@ -8,6 +8,7 @@ const config = require('config')
 const nunjucks = require('nunjucks')
 const css = require('./pdfTemplates/styles')
 const makeZip = require('./ziputils.js')
+const template = require('./pdfTemplates/article')
 
 // THINGS TO KNOW ABOUT THIS:
 //
@@ -24,7 +25,7 @@ const serverUrl = 'http://localhost:3003'
 
 let pagedJsAccessToken = '' // maybe this should be saved somewhere?
 
-nunjucks.configure('pdfTemplates')
+// nunjucks.configure('./pdfTemplates')
 
 const serviceHandshake = async () => {
   const buff = Buffer.from(`${clientId}:${clientSecret}`, 'utf8')
@@ -86,7 +87,7 @@ const pdfHandler = async article => {
 
   await fsPromised.mkdir(dirName)
 
-  const outHtml = nunjucks.render('article.njk', { article: articleData })
+  const outHtml = nunjucks.renderString(template, { article: articleData })
 
   await fsPromised.appendFile(`${dirName}/index.html`, outHtml)
   await fsPromised.appendFile(`${dirName}/styles.css`, css)
