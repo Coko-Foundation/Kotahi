@@ -3,7 +3,6 @@ import React, { useState } from 'react'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Button, Checkbox } from '@pubsweet/ui'
-// import config from 'config'
 import ManuscriptRow from './ManuscriptRow'
 import {
   ManuscriptsTable,
@@ -25,13 +24,10 @@ import { articleStatuses } from '../../../globals'
 import VideoChatButton from './VideoChatButton'
 import Modal from '../../component-modal/src'
 import BulkDeleteModal from './BulkDeleteModal'
-// import configuredColumnNames from './configuredColumnNames'
 import getColumnsProps from './getColumnsProps'
 import getUriQueryParams from './getUriQueryParams'
 import FilterSortHeader from './FilterSortHeader'
 import { validateManuscript } from '../../../shared/manuscriptUtils'
-
-// const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const Manuscripts = ({ history, ...props }) => {
   const {
