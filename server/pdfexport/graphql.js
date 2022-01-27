@@ -25,19 +25,21 @@ const serverUrl = 'http://localhost:3003'
 
 let pagedJsAccessToken = '' // maybe this should be saved somewhere?
 
-// nunjucks.configure('./pdfTemplates')
-
 const serviceHandshake = async () => {
   const buff = Buffer.from(`${clientId}:${clientSecret}`, 'utf8')
   const base64data = buff.toString('base64')
 
+  // TODO: This is breaking.
   const serviceHealthCheck = await axios({
     method: 'get',
-    url: `${serverUrl}/healthcheck`,
+    url: `${serverUrl}/healthcheck}`,
   })
 
   const { data: healthCheckData } = serviceHealthCheck
   const { message } = healthCheckData
+  // console.log(healthCheckData)
+  // pagedJsAccessToken = 'fake'
+  // return false
 
   if (message !== 'Coolio') {
     throw new Error(`PagedJS service is down`)
@@ -70,6 +72,12 @@ const serviceHandshake = async () => {
 }
 
 const pdfHandler = async article => {
+  if (!pagedJsAccessToken) {
+    console.log('No pagedJS access token')
+    await serviceHandshake()
+    return pdfHandler(article)
+  }
+
   // assuming that article is coming in as a string because we don't know what the shape will be
   // may need to do to
   const articleData = JSON.parse(article)
