@@ -32,7 +32,11 @@ const serviceHandshake = async () => {
   // TODO: This is breaking.
   const serviceHealthCheck = await axios({
     method: 'get',
-    url: `${serverUrl}/healthcheck}`,
+    url: `${serverUrl}/healthcheck`,
+  }).catch(error => {
+    console.log('caught!')
+    // error.response is not defined as it should be! Why?
+    console.log(error.response)
   })
 
   const { data: healthCheckData } = serviceHealthCheck

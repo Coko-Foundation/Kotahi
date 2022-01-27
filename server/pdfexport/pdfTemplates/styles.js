@@ -1,614 +1,456 @@
-const css = `/* default css */
+const css = `
+/* CSS for Paged.js interface – v0.2 */
+
+/* Change the look */
+:root {
+    --color-background: whitesmoke;
+    --color-pageSheet: #cfcfcf;
+    --color-pageBox: violet;
+    --color-paper: white;
+    --color-marginBox: transparent;
+    --pagedjs-crop-color: black;
+    --pagedjs-crop-shadow: white;
+    --pagedjs-crop-stroke: 1px;
+}
+
+/* To define how the book look on the screen: */
+@media screen {
+    body {
+        background-color: var(--color-background);
+    }
+
+    .pagedjs_pages {
+        display: flex;
+        width: calc(var(--pagedjs-width) * 2);
+        flex: 0;
+        flex-wrap: wrap;
+        margin: 0 auto;
+    }
+
+    .pagedjs_page {
+        background-color: var(--color-paper);
+        box-shadow: 0 0 0 1px var(--color-pageSheet);
+        margin: 0;
+        flex-shrink: 0;
+        flex-grow: 0;
+        margin-top: 10mm;
+    }
+
+    .pagedjs_first_page {
+        margin-left: var(--pagedjs-width);
+    }
+
+    .pagedjs_page:last-of-type {
+        margin-bottom: 10mm;
+    }
+
+    .pagedjs_pagebox{
+        box-shadow: 0 0 0 1px var(--color-pageBox);
+    }
+
+    .pagedjs_left_page{
+        z-index: 20;
+        width: calc(var(--pagedjs-bleed-left) + var(--pagedjs-pagebox-width))!important;
+    }
+
+    .pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-crop {
+        border-color: transparent;
+    }
+    
+    .pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-middle{
+        width: 0;
+    } 
+
+    .pagedjs_right_page{
+        z-index: 10;
+        position: relative;
+        left: calc(var(--pagedjs-bleed-left)*-1);
+    }
+
+    /* show the margin-box */
+
+    .pagedjs_margin-top-left-corner-holder,
+    .pagedjs_margin-top,
+    .pagedjs_margin-top-left,
+    .pagedjs_margin-top-center,
+    .pagedjs_margin-top-right,
+    .pagedjs_margin-top-right-corner-holder,
+    .pagedjs_margin-bottom-left-corner-holder,
+    .pagedjs_margin-bottom,
+    .pagedjs_margin-bottom-left,
+    .pagedjs_margin-bottom-center,
+    .pagedjs_margin-bottom-right,
+    .pagedjs_margin-bottom-right-corner-holder,
+    .pagedjs_margin-right,
+    .pagedjs_margin-right-top,
+    .pagedjs_margin-right-middle,
+    .pagedjs_margin-right-bottom,
+    .pagedjs_margin-left,
+    .pagedjs_margin-left-top,
+    .pagedjs_margin-left-middle,
+    .pagedjs_margin-left-bottom {
+        box-shadow: 0 0 0 1px inset var(--color-marginBox);
+    }
+
+    /* uncomment this part for recto/verso book : ------------------------------------ */
+
+    
+     .pagedjs_pages { 
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .pagedjs_first_page {
+        margin-left: 0;
+    }
+
+    .pagedjs_page {
+        margin: 0 auto;
+        margin-top: 10mm;
+    } 
+
+    .pagedjs_left_page{
+        width: calc(var(--pagedjs-bleed-left) + var(--pagedjs-pagebox-width) + var(--pagedjs-bleed-left))!important;
+    }
+
+    .pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-crop{
+        border-color: var(--pagedjs-crop-color);
+    }
+
+    .pagedjs_left_page .pagedjs_bleed-right .pagedjs_marks-middle{
+        width: var(--pagedjs-cross-size)!important;
+    } 
+
+    .pagedjs_right_page{
+        left: 0; 
+    }  
+    
+    
+    
+
+    /*--------------------------------------------------------------------------------------*/
+
+
+
+    /* uncomment this par to see the baseline : -------------------------------------------*/
+
+    
+    /* .pagedjs_pagebox {
+        --pagedjs-baseline: 22px;
+        --pagedjs-baseline-position: 5px;
+        --pagedjs-baseline-color: cyan;
+        background: linear-gradient(transparent 0%, transparent calc(var(--pagedjs-baseline) - 1px), var(--pagedjs-baseline-color) calc(var(--pagedjs-baseline) - 1px), var(--pagedjs-baseline-color) var(--pagedjs-baseline)), transparent;
+        background-size: 100% var(--pagedjs-baseline);
+        background-repeat: repeat-y;
+        background-position-y: var(--pagedjs-baseline-position);
+    }  */
+   
+
+    /*--------------------------------------------------------------------------------------*/
+}
+
+
+
+
+
+/* Marks (to delete when merge in paged.js) */
+
+.pagedjs_marks-crop{
+    z-index: 999999999999;
+  
+}
+
+.pagedjs_bleed-top .pagedjs_marks-crop, 
+.pagedjs_bleed-bottom .pagedjs_marks-crop{
+    box-shadow: 1px 0px 0px 0px var(--pagedjs-crop-shadow);
+}  
+
+.pagedjs_bleed-top .pagedjs_marks-crop:last-child,
+.pagedjs_bleed-bottom .pagedjs_marks-crop:last-child{
+    box-shadow: -1px 0px 0px 0px var(--pagedjs-crop-shadow);
+}  
+
+.pagedjs_bleed-left .pagedjs_marks-crop,
+.pagedjs_bleed-right .pagedjs_marks-crop{
+    box-shadow: 0px 1px 0px 0px var(--pagedjs-crop-shadow);
+}
+
+.pagedjs_bleed-left .pagedjs_marks-crop:last-child,
+.pagedjs_bleed-right .pagedjs_marks-crop:last-child{
+    box-shadow: 0px -1px 0px 0px var(--pagedjs-crop-shadow);
+}
+
+/* insert fonts */
+
+@font-face {
+  font-family: "Newsreader";
+  src: url(/fonts/Newsreader-VariableFont_opsz-wght.ttf) format("truetype");
+  font-style: normal;
+  font-weight: 300 700;
+}
+
+@font-face {
+  font-family: "Newsreader";
+  src: url(/fonts/Newsreader-Italic-VariableFont_opsz-wght.ttf)
+    format("truetype");
+  font-style: italic;
+  font-weight: 300 700;
+}
+
+* {
+  padding: 0;
+  margin: 0;
+  box-sizing: border-box;
+}
 
 :root {
-	--fontFamily: "Sofia", "Georgia", serif;
-	--colorPrimary: green;
-	--colorPrimary07: green;
-	--colorPrimary05: green;
-	--colorPrimary03: green;
-	--grid: 4px;
+  --color-primary: #087acc;
+  --color-secondary: #629f43;
+  --color-title: #2a3b86;
+  --color-heading2: #7c7a7a;
+  --color-other-headings: initial;
+  --content-font: "Newsreader";
+  --heading-font: "Newsreader";
 }
 
-.ProseMirror {
-	counter-reset: footnote;
-	font-family: var(--fontFamily);
-	/* white-space: pre-wrap; */ /* THIS NEEDS TO BE TURNED OFF! */
+/* main css */
+
+body {
+  font-family: var(--content-font);
+  font-weight: 300;
 }
-
-.ProseMirror:focus {
-	outline: none;
-}
-
-.ProseMirror footnote {
-	align-items: center;
-	background: var(--colorPrimary07);
-	border-radius: calc(2 * var(--grid));
-	color: var(--colorPrimary05);
-	cursor: pointer;
-	display: inline-flex;
-	height: calc(4 * var(--grid));
-	justify-content: center;
-	line-height: 0;
-	min-width: calc(4 * var(--grid));
-	vertical-align: top;
-}
-
-.ProseMirror footnote:hover {
-	background: var(--colorPrimary03);
-}
-
-.ProseMirror footnote:after {
-	content: counter(footnote);
-	counter-increment: footnote;
-	font-size: calc(3 * var(--grid));
-}
-
-h1 {
-	font-size: 1.75em;
-	font-weight: 500;
-	margin: 1em 0;
-}
-
-h2 {
-	font-size: 1.625em;
-	font-weight: 500;
-	margin: 1em 0;
-}
-
-h3 {
-	font-size: 1.5em;
-	font-weight: 500;
-	margin: 1em 0;
-}
-
-h4 {
-	font-size: 1.375em;
-	font-weight: 500;
-	margin: 1em 0;
-}
-
-h5 {
-	font-size: 1.25em;
-	font-weight: 500;
-	margin: 1em 0;
-}
-
-h6 {
-	font-size: 1.125em;
-	font-weight: 500;
-	margin: 1em 0;
-}
-
-p {
-	margin-bottom: 1em;
-}
-
-hr {
-	border: none;
-	margin: 1em 0;
-	padding: 2px 10px;
-}
-
-hr:after {
-	background-color: silver;
-	content: '';
-	display: block;
-	height: 1px;
-	line-height: 2px;
-}
-
-ul,
-ol {
-	padding-left: 30px;
-
-	& li p {
-		margin-bottom: 0.2em;
-	}
-
-	& li:last-child p {
-		margin-bottom: 1em;
-	}
-}
-
-u {
-	text-decoration: underline;
-}
-
 strong {
-	font-weight: bold;
+  font-weight: 500;
+}
+
+@page {
+  size: letter;
+  margin: 0.8in 0.5in 0.8in 3in;
+  border-bottom: 0.5px solid rgb(148, 147, 147);
+  @bottom-left {
+    content: string(copyright);
+    width: max-content;
+    font-size: 8px;
+    margin-bottom: auto;
+  }
+  @bottom-right {
+    content: counter(page) " of " counter(pages);
+    width: fit-content;
+    margin-left: auto;
+    font-size: 8px;
+  }
+}
+@page: first {
+  @top-right {
+    content: " ";
+  }
+}
+@media print {
+  body {
+    font-size: 12px;
+    line-height: 22px;
+  }
+  h1,
+  h2,
+  h3,
+  h4 {
+    font-family: var(--heading-font);
+    line-height: 1.1;
+    break-after: avoid;
+    margin-top: 2.2em;
+    margin-bottom: 0.8em;
+    font-weight: 500;
+  }
+  h1 + h2,
+  h2 + h3,
+  h3 + h4 {
+    break-before: avoid;
+    margin-top: 1.3rem;
+  }
+  p {
+    text-align: justify;
+    hyphens: auto;
+    widows: var(--widows);
+    orphans: var(--orphans);
+  }
+  p + p,
+  ol + p,
+  ul + p,
+  .marginData section + section {
+    margin-top: 22px;
+  }
+  header {
+    margin-top: 3em;
+  }
+  h1 {
+    color: var(--color-title);
+    font-size: 2.3em;
+    font-weight: 800;
+    margin-top: 0.8em;
+  }
+  h2 {
+    font-size: 1.77em;
+  }
+  h3 {
+    font-size: 1.33em;
+  }
+  h2,
+  h2 > a:link,
+  h2 > a:visited {
+    color: var(--color-heading2);
+  }
+  h3,
+  h4 {
+    color: var(--color-other-headings);
+  }
+  a:link,
+  a:visited {
+    color: var(--color-primary);
+    text-decoration: none;
+  }
+  .authors-list li,
+  .affiliations-list li {
+    display: inline;
+  }
+
+  .authors-list li {
+    font-weight: 700;
+    color: var(--color-title);
+  }
+
+  .authors-list li small {
+    font-weight: 400;
+    color: black;
+  }
+
+  /* li{
+    display: inline;
+  } */
+  aside.marginData.left {
+    position: absolute;
+    left: calc(var(--pagedjs-margin-left) * -1);
+    bottom: 0;
+    width: 2.5in;
+    text-align: left;
+    padding-left: 50px;
+    line-height: 18px;
+  }
+  .marginData h4 {
+    line-height: 15px;
+    margin: 0;
+  }
+  sup {
+    font-weight: 500;
+    line-height: 0;
+  }
+  /* blockquote{
+    border-left: 0.3ch;
+    font-weight: 500
+  } */
+  aside.marginData.bottom {
+    /* display: none; */
+  }
+  aside ul {
+    padding-left: 30px;
+  }
+
+  .titlepage aside.marginData.top {
+    string-set: researchLevel content();
+    /* display: none; */
+  }
+  .content aside.marginData.top {
+    string-set: topics content();
+    /* display: none; */
+  }
+  aside h4,
+  aside p {
+    display: inline;
+  }
+  aside h4,
+  sup {
+    font-weight: 500;
+  }
+
+  aside {
+    font-variation-settings: "opsz" 6;
+    font-size: 0.8em;
+  }
+
+  table {
+    border-collapse: collapse;
+    text-align: left;
+    break-inside: avoid;
+  }
+  td,
+  th {
+    padding: 2px;
+    font-weight: 500;
+  }
+  td p,
+  th p {
+    text-align: left;
+  }
+  tr {
+    border-bottom: 0.5px solid var(--color-heading2);
+  }
+  content > figure {
+    margin-left: calc(var(--pagedjs-margin-left) * -0.5);
+    margin-right: calc(var(--pagedjs-margin-right) * -0.5);
+  }
+  .figure img {
+    margin: 15px auto;
+    width: 100%;
+  }
+
+  ul,
+  ol {
+    list-style: none;
+  }
+}
+/*  to align the running heads*/
+.pagedjs_margin.hasContent {
+  height: 100%;
+}
+
+figure img {
+  width: 100%;
+  height: auto;
 }
-
-em {
-	font-style: italic;
-}
-
-blockquote {
-	border-left: 3px solid #eee;
-	margin-left: 0;
-	margin-right: 0;
-	padding-left: 1em;
-}
-
-img {
-	cursor: default;
-	max-width: 100%;
-	object-fit: scale-down;
-}
-
-sup,
-sub {
-	line-height: 0;
-}
-
-/* Tables */
-
-table {
-	border: 1px solid #eee;
-	border-collapse: initial;
-	border-spacing: 0;
-	border-width: 0 thin thin 0;
-	margin: 0;
-	overflow: hidden;
-	page-break-inside: avoid;
-	table-layout: fixed;
-	width: 100%;
-}
-
-th,
-td {
-	border: 1px solid #eee;
-	box-sizing: border-box;
-	/*width: 200px;*/
-	padding: 2px 5px;
-	position: relative;
-	vertical-align: top;
-}
-
-th {
-	background-color: var(--colorPrimary07);
-}
-
-.tableWrapper {
-	overflow-x: auto;
-}
-
-.column-resize-handle {
-	background-color: #adf;
-	bottom: 0;
-	pointer-events: none;
-	position: absolute;
-	right: -2px;
-	top: 0;
-	width: 4px;
-	z-index: 20;
-}
-
-.ProseMirror.resize-cursor {
-	cursor: ew-resize;
-	cursor: col-resize;
-}
-
-/* Give selected cells a blue overlay */
-.selectedCell:after {
-	background: rgba(200, 200, 255, 0.4);
-	bottom: 0;
-	content: '';
-	left: 0;
-	pointer-events: none;
-	position: absolute;
-	right: 0;
-	top: 0;
-	z-index: 2;
-}
-
-/* placeholder */
-.empty-node::before {
-	color: #aaa;
-	float: left;
-	font-style: italic;
-	height: 0;
-	pointer-events: none;
-}
-
-p.empty-node:first-child::before {
-	content: attr(data-content);
-}
-
-/* invisible characters */
-.invisible {
-	pointer-events: none;
-	user-select: none;
-}
-
-.invisible:before {
-	caret-color: inherit;
-	color: gray;
-	display: inline-block;
-	font-style: normal;
-	font-weight: 400;
-	line-height: 1em;
-	width: 0;
-}
-
-.invisible--space:before {
-	content: '·';
-}
-
-.invisible--break:before {
-	content: '¬';
-}
-
-.invisible--par:after {
-	content: '¶';
-}
-
-span.deletion {
-	color: red;
-	text-decoration: line-through;
-}
-
-span.insertion {
-	color: blue;
-}
-
-.selected-insertion,
-.selected-deletion,
-.selected-format-change,
-.selected-block-change {
-	background-color: #fffacf;
-}
-
-.format-change {
-	border-bottom: 2px solid blue;
-}
-
-[data-track] {
-	position: relative;
-}
-
-[data-track]::before {
-	border-left: 2px solid blue;
-	content: '';
-	height: 100%;
-	left: -10px;
-	position: absolute;
-}
-
-li[data-track]::before,
-li [data-track]::before {
-	left: -5px;
-}
-
-span.comment {
-	border-bottom: 2px solid #ffab20;
-	border-radius: 3px 3px 0 0;
-}
-
-code {
-	font-family: monospace;
-}
-
-.small-caps {
-	font-variant: small-caps;
-}
-
-a {
-	color: blue;
-}
-
-/* == Math Nodes ======================================== */
-
-.math-node {
-	cursor: auto;
-	font-family: 'Consolas', 'Ubuntu Mono', monospace;
-	font-size: 0.95em;
-	min-height: 1em;
-	min-width: 1em;
-
-	.ProseMirror {
-		background: #eee;
-		box-shadow: none;
-		color: rgb(132, 33, 162);
-		min-height: 100%;
-		padding: 0;
-	}
-}
-
-.math-node.empty-math .math-render::before {
-	color: red;
-	content: '(empty)';
-}
-
-.math-node .math-render.parse-error::before {
-	color: red;
-	content: '(math error)';
-	cursor: help;
-}
-
-/* -- Inline Math --------------------------------------- */
-
-math-inline {
-	display: inline;
-	white-space: nowrap;
-}
-
-math-inline .math-render {
-	cursor: pointer;
-	display: inline-block;
-	font-size: 0.85em;
-}
-
-math-inline .math-src .ProseMirror {
-	display: inline;
-}
-
-math-inline .math-src::after,
-math-inline .math-src::before {
-	color: #b0b0b0;
-	content: '$';
-}
-
-/* -- Block Math ---------------------------------------- */
-
-math-display {
-	display: block;
-}
-
-math-display .math-render {
-	display: block;
-	text-align: center;
-}
-
-math-display.ProseMirror-selectednode {
-	background-color: #eee;
-}
-
-math-display .math-src .ProseMirror {
-	display: block;
-	width: 100%;
-}
-
-math-display .math-src::after,
-math-display .math-src::before {
-	color: #b0b0b0;
-	content: '$$';
-	text-align: left;
-}
-
-math-display .katex-display {
-	margin: 0;
-}
-
-/* -- Other Math ---------------------------------------- */
-
-.math-node.ProseMirror-selectednode {
-	outline: none;
-}
-
-.math-node .math-src {
-	color: rgb(132, 33, 162);
-	display: none;
-	tab-size: 4;
-}
-
-.math-node.ProseMirror-selectednode .math-src {
-	display: flex;
-}
-
-.math-node.ProseMirror-selectednode .math-render {
-	display: none;
-}
-
-/* -- Selection Plugin ---------------------------------- */
-
-p::selection,
-p > *::selection {
-	background-color: #c0c0c0;
-}
-
-.katex-html *::selection {
-	/* stylelint-disable-next-line declaration-no-important */
-	background-color: none !important;
-}
-
-.math-inline.math-select .math-render {
-	padding-top: 2px;
-}
-
-.math-node.math-select .math-render {
-	background-color: #c0c0c0ff;
-}
-
-span[data-type='inline'] {
-	display: inline;
-	font-weight: 500;
-}
-
-span[data-type='inline']:before {
-	color: #006f19;
-	content: ' | ';
-	font-weight: 600;
-	margin-left: 0;
-}
-
-span[data-type='inline']:after {
-	color: #006f19;
-	content: ' | ';
-	display: inline;
-	font-weight: 600;
-}
-
-p[data-type='block'] {
-	display: block;
-	margin-top: 1em;
-}
-
-p[data-type='block']:before {
-	color: #006f19;
-	content: '⌜';
-	display: inline;
-	font-size: 22px;
-	font-weight: 600;
-	left: 6px;
-	position: relative;
-	top: 2px;
-}
-
-p[data-type='block']:after {
-	color: #006f19;
-	content: '⌟';
-	display: inline;
-	font-size: 22px;
-	font-weight: 600;
-	position: relative;
-	right: 6px;
-	top: 5px;
-}
-
-.transform-icon {
-	transform: rotate(40deg);
-}
-
-/* JATS */
-
-section.frontmatter {
-	background-color: rgba(255, 0, 0, 0.25);
-	border: 1px solid red;
-	margin-bottom: 8px;
-	padding: 8px 16px;
-	position: relative;
-
-	&:before {
-		color: white;
-		content: 'FRONT MATTER';
-		font-weight: bold;
-		left: 2px;
-		letter-spacing: 1px;
-		position: absolute;
-		top: -4px;
-	}
-}
-
-section.abstractSection {
-	background-color: rgba(255, 0, 0, 0.25);
-	border: 1px solid red;
-	margin-bottom: 8px;
-	padding: 8px 16px;
-	position: relative;
-
-	&:before {
-		color: white;
-		content: 'ABSTRACT';
-		font-weight: bold;
-		left: 2px;
-		letter-spacing: 1px;
-		position: absolute;
-		top: -4px;
-	}
-}
-
-section.reflist {
-	background-color: rgba(25, 25, 112, 0.25);
-	border: 1px solid midnightblue;
-	margin-bottom: 8px;
-	padding: 8px 16px;
-	position: relative;
-
-	&:before {
-		color: white;
-		content: 'REFERENCE LIST';
-		font-weight: bold;
-		left: 2px;
-		letter-spacing: 1px;
-		position: absolute;
-		top: -4px;
-	}
-
-	& p {
-		&:before {
-			content: '§ ';
-		}
-	}
-}
-
-h1.referenceheader {
-	background-color: midnightblue;
-	border-radius: 8px;
-	color: white;
-	padding: 4px 8px;
-}
-
-p.mixedcitation {
-	&:before {
-		content: '§ ';
-	}
-}
-
-section.appendix {
-	background-color: rgba(0, 128, 128, 0.25);
-	border: 1px solid teal;
-	margin-bottom: 8px;
-	padding: 8px 16px;
-	position: relative;
-
-	&:before {
-		color: white;
-		content: 'APPENDIX';
-		font-weight: bold;
-		left: 2px;
-		letter-spacing: 1px;
-		position: absolute;
-		top: -4px;
-	}
-}
-
-h1.appendixheader {
-	background-color: teal;
-	border-radius: 8px;
-	color: white;
-	padding: 4px 8px;
-}
-
-/* added for figure weirdness */
 
 figure {
-	border: 1px solid var(--colorPrimary);
-	margin-bottom: 1rem;
-	padding: 1rem;
-	position: relative;
+  break-inside: avoid;
+  padding: 1em;
+  border: 1px solid black;
 }
 
-figure::before {
-	color: var(--colorPrimary);
-	content: 'Figure:';
-	font-size: 75%;
-	left: 0;
-	letter-spacing: 0.5px;
-	position: absolute;
-	text-transform: uppercase;
-	top: -1.25rem;
+figure figcaption {
+  font-size: 0.8em;
+  line-height: 1.5;
+  column-count: 2;
+}
+figure[data-split-to] {
+  border-bottom: none;
+}
+figure[data-split-from] {
+  border-top: none;
 }
 
-figure:hover:before {
-	content: 'Click to add a caption';
+.topic-list {
+  list-style-type: none;
+}
+header {
+  color: var(--color-title);
+}
+.logo {
+  position: absolute;
+  left: calc((var(--pagedjs-margin-left) * -1) + 49px);
+  top: 0;
+}
+.copyright {
+  string-set: copyright content();
 }
 
-figcaption {
-	border: 1px solid var(--colorPrimary);
-	margin-top: 1rem;
-	padding: 1rem;
-	position: relative;
-}
 
-figcaption::before {
-	color: var(--colorPrimary);
-	content: 'Caption:';
-	font-size: 75%;
-	left: 0;
-	letter-spacing: 0.5px;
-	position: absolute;
-	text-transform: uppercase;
-	top: -1.25rem;
 }`
 
 module.exports = css

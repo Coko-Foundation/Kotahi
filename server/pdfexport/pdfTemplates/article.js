@@ -1,97 +1,100 @@
 // NOTE: we should use this as njk, but to get this going now I'm just exporting this as a string.
-// NOTE: filterHtml was causing a crash, so I took it out.
+//
+// from here: https://gitlab.coko.foundation/kotahi/kotahi-default-pub/-/blob/main/static/css/print.css
+//
+// NOTE: filterHtml was causing a crash (in line 62), so I took it out.
+// NOTE: CSS and JS were taken out of the template.
 
 module.exports = `<!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>{{article.meta.title}}</title>
-</head>
-<body>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Article</title>
+    <!--<link rel="stylesheet" href="/css/interface.css">
+    <link rel="stylesheet" href="/css/print.css">
+    <script src="/js/paged.polyfill.js"></script>
+    <script src="/js/csstree.js"></script>
+    <script src="/js/addID.js"></script>-->
+    <!-- <script src="/js/imageRatio.js"></script> -->
+  </head>
+  <body>
 
-{% set affiliationList = [] %}
-{% set emailList = [] %}
-{% set leftMarginList = [{
 
-}]%}
-{% for author in article.submission.authors  %}
-  {% for affiliation in author.affiliation %}
-    {% if affiliation  in affiliationList  %}
-    {% else %}
-        {% set  affiliationList = (affiliationList.push(affiliation), affiliationList)%}
-    {% endif %}
-  {% endfor %} 
-{% endfor %}
+    {% set emailList = [] %}
 
-<section class="titlepage"> 
-  <h1 class="tile">{{article.meta.title}}</h1>
-  <p class= "authors">
-    {% for author in article.submission.authors %}
-      {{author.lastName | safe}} {{author.firstName | safe}} 
-      {% for affiliation in affiliationList %}
-        {% if affiliation in author.affiliation %}          
-          <sup>{{loop.index}}</sup>             
+    <section class="titlepage"> 
+      <img class="logo" src="/images/{{site.configuration.logo}}" alt="logo" >
+      <header>
+        <p id="researchLevel">
+          {{article.parsedSubmission.objectType}}
+        </p>
+        <ul id="topicList">
+          {% for topic in article.parsedSubmission.topic %} 
+                                                                                                                                                                                                       <li>{{topic}}</li> 
+          {% endfor %}
+        </ul>
+        <h1 class="tile">{{article.meta.title}}</h1>
+        <p class= "authors">
+          <ul class="authors-list">
+            {% for author in article.parsedSubmission.authors %}
+                                                                                                                                                                                                       <li>
+              {% if author.email === parsedSubmission.AuthorCorrespondence%}
+                                                                                                                                                                                                       <sup>*</sup>
+              {% endif %}
+              {{author.lastName | safe}} {{author.firstName | safe}} 
+              <small>{{author.affiliation}}</small>
+            </li>
+            {% endfor %}
+          </ul>
+        </p>
+      </header>
+      <aside class="marginData left">
+        <section class="emailList">
+          {# if corresponding: true show email #}
+          <h4> <sup>*</sup> For Correspondence:</h4>
+          <p>{{parsedSubmission.AuthorCorrespondence}}</p>
+        </section>
+        <section>
+          <h4> Competing Interest:</h4>
+          <p>{{article.parsedSubmission.conflictOfInterest}}</p>
+        </section>
+        {% if article.parsedSubmission.Funding %}
+
+                                                                                                                                                                                                       <section> 
+          <h4>Funding:</h4> 
+          <p>{{article.parsedSubmission.Funding }}</p> 
+        </section>
+
         {% endif %}
-      {% endfor %}
-      {% if author.email %}
-        <sup>*</sup>
-        {% if author.email in emailList  %}
-        {% else %}
-            {% set  emailList = (emailList.push(author.email), emailList)%}
-        {% endif %}
-      {% endif %}
-    {% endfor %}
-  </p>
+        <section class="date">
+          <div>
+            <h4>Received:</h4> 
+            <p>{{article.parsedSubmission.dateReceived}}</p>
+          </div>
+          <div>
+            <h4> Accepted:</h4> 
+            <p>{{article.parsedSubmission.DateAccepted}}</p>
+          </div>
+          <div>
+            <h4> Published:</h4>
+            <p>{{article.parsedSubmission.DatePublished}}</p>
+          </div>
+        </section>
+        <section class="copyright">
+          {# add logo here #}
+          <!-- <p>Copyright Holder,</p> -->
+          <!-- <p> Copyright description</p> -->
+        </section>
+      </aside>
+    </section>
 
-  <p class= "affiliations">
-    {% for affiliation in affiliationList %}
-      <sup>{{loop.index}}</sup>{{ affiliation }}
-    {% endfor %}
-  </p>
-  {# hide this using CSS #}
-
-  <div class="to-hide">
-    <span id="researchLevel">
-      {{article.submission.objectType}}
-    </span>
-    <div class="leftMarginList">
-      <p class="emailList"><strong> <sup>*</sup> For Correspondence:</strong></p>
-      <ul class="emailList">
-        {% for email in emailList %}
-          <li>{{email}}</li>
-        {% endfor %}
-      </ul>
-      <p class="symbol"><strong><sup>†</sup></strong>These authors contributed equally to this work</p>
-      <p class="symbol"><strong><sup>‡</sup></strong>These authors also contributed equally to this work</p>
-      <p class="COI"><strong> Competing Interest:</strong> {{article.submission.conflictOfInterest}}</p>
-      <p class="funding"><strong> funding:</strong> {{article.submission.Funding}}</p>
-      <p class="date"><strong> Received:</strong> {{article.submission.dateReceived}}</p>
-      <p class="date"><strong> Accepted:</strong> {{article.submission.DateAccepted}}</p>
-      <p class="date"><strong> Published:</strong> {{article.submission.DatePublished}}</p>
-      <p><strong>Reviewing Editor:</strong> {{article.submission.reviewingEditor}}</p>
-      <div class="copyright">
-        <h4 id="copyrightName">{{article.publicationMetadata.copyright.name}}</h4>
-        <p id="copyright-description">{{article.publicationMetadata.copyright.description}}</p>
-        <span id="CopyrightYear">{{article.publicationMetadata.copyright.year}}</span>
-      </div>
-      <span id="publisher">{{article.publicationMetadata.publisher}}</span>
-      <span id="articleId">{{article.publicationMetadata.articleIdOnWebsite}}</span>
-      <span id="articleWebLink">article-website-link</span>
-      <ul id="tagList">
-        {% for tag in tagList %}
-          <li>{{tag}}</li>
-        {% endfor %}
-      </ul>
-    </div>
-  </div>
+    <section class="content">
+      {{article.parsedSubmission.abstract | safe}}
+      {{article.meta.source | safe}}
+    </section>
 
 
-</section>
-
-<section class="content">
-{{article.meta.source | safe}}
-</section>
-
-</body>
-</html>`
+  </body>
+</html>  
+`
