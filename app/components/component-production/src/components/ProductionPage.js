@@ -40,8 +40,8 @@ const query = gql`
 `
 
 const getPdfQuery = gql`
-  query pdfData($article: String) {
-    convertToPdf {
+  query($article: String!) {
+    convertToPdf(article: $article) {
       pdfUrl
     }
   }
@@ -61,23 +61,24 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
     return null
   }
 
+  console.log(getPdfQuery)
+
   const { data, loading, error } = useQuery(getPdfQuery, {
     variables: {
       article: JSON.stringify(manuscript),
     },
   })
 
-  // TODO: deal with error handling in a smarter way
-  if (loading) return 'loading'
-  if (error) return 'error'
+  if (loading) return <Spinner />
+  if (error) return <CommsErrorBanner error={error} />
   // Now, download the file
-  console.log('returned!', data)
-  window.open(data)
+  const { pdfUrl } = data.convertToPdf
+  window.open(pdfUrl)
 
   // use this code for downloading the PDF:
 
   const link = document.createElement('a')
-  link.href = data
+  link.href = pdfUrl
   link.download = `${manuscript.title || 'title'}.pdf`
   link.click()
 
@@ -86,7 +87,7 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
   // For Firefox it is necessary to delay revoking the ObjectURL.
 
   setTimeout(() => {
-    window.URL.revokeObjectURL(data)
+    window.URL.revokeObjectURL(pdfUrl)
     resetTitle()
   }, 1000)
   return null

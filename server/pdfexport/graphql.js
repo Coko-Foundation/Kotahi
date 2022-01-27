@@ -150,23 +150,21 @@ const pdfHandler = async article => {
 const resolvers = {
   Query: {
     convertToPdf: async (_, { article }, ctx) => {
-      // console.log('in convertToPdf!')
       const outUrl = await Promise.all([pdfHandler(article, ctx)])
-      return {
-        pdfUrl: outUrl || '',
-      }
+      return { pdfUrl: outUrl || 'busted!' }
     },
   },
 }
 
 const typeDefs = `
-	type ConvertToPdfType {
-		pdfUrl: String
+	extend type Query {
+		convertToPdf(article: String!): ConvertToPdfType
 	}
 
-	extend type Query {
-		convertToPdf(article: String! ): ConvertToPdfType
+	type ConvertToPdfType {
+		pdfUrl: String!
 	}
+
 `
 
 module.exports = { resolvers, typeDefs }
