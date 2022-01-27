@@ -20,8 +20,6 @@ const clientId = config['paged-js'].pagedJsClientId
 
 const clientSecret = config['paged-js'].pagedJsClientSecret
 
-// console.log('\n\n\n', JSON.stringify(config['paged-js']), '\n\n\n')
-
 const serverUrl = 'http://localhost:3003'
 
 let pagedJsAccessToken = '' // maybe this should be saved somewhere?
