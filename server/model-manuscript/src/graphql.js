@@ -8,6 +8,7 @@ const models = require('@pubsweet/models')
 
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
+const Message = require('../../model-message/src/message')
 const publishToCrossref = require('../../publishing/crossref')
 const { stripSensitiveItems } = require('./manuscriptUtils')
 
@@ -534,7 +535,7 @@ const resolvers = {
         // Automated email submissionConfirmation on submission
         const manuscript = await models.Manuscript.query()
           .findById(id)
-          .withGraphFetched('submitter.[defaultIdentity]')
+          .withGraphFetched('[submitter.[defaultIdentity], channels]')
 
         const receiverEmail = manuscript.submitter.email
         /* eslint-disable-next-line */
@@ -564,6 +565,17 @@ const resolvers = {
 
         try {
           await sendEmailNotification(receiverEmail, selectedTemplate, data)
+
+          // Get channel ID
+          const channelId = manuscript.channels.find(
+            channel => channel.topic === 'Editorial discussion',
+          ).id
+
+          Message.createMessage({
+            content: `Submission Confirmation Email sent by Kotahi to ${manuscript.submitter.username}`,
+            channelId,
+            userId: manuscript.submitterId,
+          })
         } catch (e) {
           /* eslint-disable-next-line */
           console.log('email was not sent', e)
@@ -576,7 +588,9 @@ const resolvers = {
     async makeDecision(_, { id, decision }, ctx) {
       const manuscript = await models.Manuscript.query()
         .findById(id)
-        .withGraphFetched('submitter.[defaultIdentity]')
+        .withGraphFetched(
+          '[submitter.[defaultIdentity], channels, teams.members.user]',
+        )
 
       manuscript.decision = decision
 
@@ -614,6 +628,27 @@ const resolvers = {
         }
 
         try {
+          // Add Email Notification Record in Editorial Discussion Panel
+          const author = manuscript.teams.find(team => {
+            if (team.role === 'author') {
+              return team
+            }
+
+            return null
+          }).members[0].user
+
+          const body = `Editor Decision sent by Kotahi to ${author.username}`
+
+          const channelId = manuscript.channels.find(
+            channel => channel.topic === 'Editorial discussion',
+          ).id
+
+          Message.createMessage({
+            content: body,
+            channelId,
+            userId: manuscript.submitterId,
+          })
+
           await sendEmailNotification(receiverEmail, selectedTemplate, data)
         } catch (e) {
           /* eslint-disable-next-line */
