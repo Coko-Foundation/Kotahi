@@ -29,7 +29,6 @@ const serviceHandshake = async () => {
   const buff = Buffer.from(`${clientId}:${clientSecret}`, 'utf8')
   const base64data = buff.toString('base64')
 
-  // TODO: This is breaking.
   const serviceHealthCheck = await axios({
     method: 'get',
     url: `${serverUrl}/healthcheck`,
@@ -37,9 +36,6 @@ const serviceHandshake = async () => {
 
   const { data: healthCheckData } = serviceHealthCheck
   const { message } = healthCheckData
-  // console.log(healthCheckData)
-  // pagedJsAccessToken = 'fake'
-  // return false
 
   if (message !== 'Coolio') {
     throw new Error(`PagedJS service is down`)
@@ -64,6 +60,7 @@ const serviceHandshake = async () => {
 
         const { status, data } = response
         const { msg } = data
+
         return reject(
           new Error(`Request failed with status ${status} and message: ${msg}`),
         )
@@ -73,7 +70,7 @@ const serviceHandshake = async () => {
 
 const pdfHandler = async article => {
   if (!pagedJsAccessToken) {
-    console.log('No pagedJS access token')
+    // console.log('No pagedJS access token')
     await serviceHandshake()
     return pdfHandler(article)
   }
@@ -127,10 +124,7 @@ const pdfHandler = async article => {
         console.log('Retrieved PDF!')
         // Now, return this as a path.
         const pdfPath = `${dirName}/${articleData.id}.pdf`
-        await fsPromised.mkdir(dirName)
         await fsPromised.appendFile(pdfPath, resObj)
-
-        // return pdfPath
 
         resolve(pdfPath)
       })
@@ -138,6 +132,7 @@ const pdfHandler = async article => {
         const { response } = err
 
         if (!response) {
+          // TODO: right now we're erroring here.
           return reject(new Error(`Request failed with message: ${err.code}`))
         }
 

@@ -53,17 +53,6 @@ const zipper = async dirPath => {
 
 const makeZip = async uploadsDir => {
   const zipPath = await zipper(path.join(`${process.cwd()}`, uploadsDir))
-
-  // const blob = await downloadZip([
-  //   {
-  //     name: 'index.html',
-  //     lastModified: new Date(),
-  //     input: htmlText,
-  //   },
-  //   { name: 'styles.css', lastModified: new Date(), input: css },
-  //   // could insert an override CSS here by appending to styles.css
-  // ]).blob()
-
   return zipPath
 }
 

@@ -68,7 +68,12 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
   })
 
   if (loading) return <Spinner />
-  if (error) return <CommsErrorBanner error={error} /> // TODO: improve this!
+  if (error)
+    return (
+      <div style={{ display: 'none' }}>
+        <CommsErrorBanner error={error} />
+      </div>
+    ) // TODO: improve this!
   // Now, download the file
   const { pdfUrl } = data.convertToPdf
   window.open(pdfUrl)
@@ -115,7 +120,14 @@ const ProductionPage = ({ match, ...props }) => {
   const { manuscript, currentUser } = data
 
   return (
-    <>
+    <div>
+      <DownloadPdfComponent
+        manuscript={manuscript}
+        resetTitle={() => {
+          setTitle(false)
+        }}
+        title={title}
+      />
       <Production
         currentUser={currentUser}
         file={
@@ -125,14 +137,7 @@ const ProductionPage = ({ match, ...props }) => {
         manuscript={manuscript}
         updateManuscript={updateManuscript}
       />
-      <DownloadPdfComponent
-        manuscript={manuscript}
-        resetTitle={() => {
-          setTitle(false)
-        }}
-        title={title}
-      />
-    </>
+    </div>
   )
 }
 
