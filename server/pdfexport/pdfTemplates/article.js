@@ -1,6 +1,6 @@
 // NOTE: we should use this as njk, but to get this going now I'm just exporting this as a string.
 //
-// from here: https://gitlab.coko.foundation/kotahi/kotahi-default-pub/-/blob/main/static/css/print.css
+// from here: https://gitlab.coko.foundation/kotahi/kotahi-default-pub/-/blob/main/src/layouts/print.njk
 //
 // NOTE: filterHtml was causing a crash (in line 62), so I took it out.
 // NOTE: CSS and JS were taken out of the template.
@@ -24,7 +24,7 @@ module.exports = `<!DOCTYPE html>
     {% set emailList = [] %}
 
     <section class="titlepage"> 
-      <img class="logo" src="/images/{{site.configuration.logo}}" alt="logo" >
+      <img class="logo" src="{{article.publicationMetadata.publisherLogo}}" alt="logo" >
       <header>
         <p id="researchLevel">
           {{article.parsedSubmission.objectType}}
