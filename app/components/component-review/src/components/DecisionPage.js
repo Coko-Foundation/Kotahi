@@ -125,7 +125,7 @@ const DecisionPage = ({ match }) => {
         </ErrorBoundary>
       </Manuscript>
       <Chat>
-        <MessageContainer channels={channels} />
+        <MessageContainer channels={channels} manuscriptId={manuscript?.id} />
       </Chat>
     </Columns>
   )

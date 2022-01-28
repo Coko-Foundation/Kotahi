@@ -133,7 +133,7 @@ const subscribeToNewMessages = (subscribeToMore, channelId) =>
     },
   })
 
-const chatComponent = channelId => {
+const chatComponent = (channelId, channelName, manuscriptId) => {
   const client = useApolloClient()
 
   const staticSuggestion = []
@@ -241,6 +241,9 @@ const chatComponent = channelId => {
       channelId={channelId}
       currentUser={currentUser}
       fetchMoreData={fetchMoreData}
+      manuscriptId={
+        channelName !== 'Discussion with author' ? manuscriptId : null
+      }
       queryData={queryResult}
       searchUsers={searchUsers}
       sendChannelMessages={sendChannelMessages}
@@ -248,7 +251,7 @@ const chatComponent = channelId => {
   )
 }
 
-const Container = ({ channelId, channels }) => {
+const Container = ({ channelId, channels, manuscriptId = null }) => {
   if (!channelId && !channels) {
     return null
   }
@@ -258,7 +261,7 @@ const Container = ({ channelId, channels }) => {
     channels.map(channel => ({
       label: channel.name,
       key: channel.id,
-      content: <>{chatComponent(channel.id)}</>,
+      content: <>{chatComponent(channel.id, channel.name, manuscriptId)}</>,
     }))
 
   const client = useApolloClient()
@@ -378,6 +381,7 @@ const Container = ({ channelId, channels }) => {
             channelId={channelId}
             currentUser={currentUser}
             fetchMoreData={fetchMoreData}
+            manuscriptId={manuscriptId}
             queryData={queryResult}
             searchUsers={searchUsers}
             sendChannelMessages={sendChannelMessages}

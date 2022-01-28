@@ -9,6 +9,7 @@ import NextPageButton from '../../../NextPageButton'
 import { convertTimestampToDate } from '../../../../shared/time-formatting'
 import MessageRenderer from './MessageRenderer'
 import { CommsErrorBanner } from '../../../shared'
+import VideoChat from '../VideoChat'
 
 import {
   Timestamp,
@@ -24,7 +25,12 @@ import {
   Spinner,
 } from './style'
 
-const Messages = ({ channelId, fetchMoreData, queryData }) => {
+const Messages = ({
+  channelId,
+  fetchMoreData,
+  queryData,
+  manuscriptId = null,
+}) => {
   const { loading, error, data } = queryData
 
   const scrollToBottom = () => {
@@ -51,6 +57,7 @@ const Messages = ({ channelId, fetchMoreData, queryData }) => {
   const { hasPreviousPage } = data.messages.pageInfo
   return (
     <MessagesGroup id="messages">
+      {manuscriptId ? <VideoChat manuscriptId={manuscriptId} /> : ''}
       {hasPreviousPage && (
         <NextPageButton
           fetchMore={() => fetchMoreData()}

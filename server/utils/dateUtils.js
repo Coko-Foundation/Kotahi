@@ -9,4 +9,15 @@ const parseDate = dateString => {
   return [date.getFullYear(), date.getMonth() + 1, date.getDate()]
 }
 
-module.exports = { parseDate }
+const pad = num => (num < 10 ? `0${num}` : num.toString())
+
+/** From a timestamp, Date or standardly-formatted date string, generate a date string in the form 'YYYY-MM-DD' */
+const formatAsIso8601Date = timestampOrDate => {
+  const date = new Date(timestampOrDate)
+  const day = date.getDate()
+  const month = date.getMonth() + 1
+  const year = date.getFullYear()
+  return `${year}-${pad(month)}-${pad(day)}`
+}
+
+module.exports = { parseDate, formatAsIso8601Date }

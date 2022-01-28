@@ -8,6 +8,7 @@ const models = require('@pubsweet/models')
 
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
+const Message = require('../../model-message/src/message')
 const publishToCrossref = require('../../publishing/crossref')
 const { stripSensitiveItems } = require('./manuscriptUtils')
 
@@ -20,9 +21,9 @@ const sendEmailNotification = require('../../email-notifications')
 
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
+const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
 const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
-const importArticlesFromEuropePMC = require('../../import-articles/europepmc-import')
 
 const SUBMISSION_FIELD_PREFIX = 'submission'
 const META_FIELD_PREFIX = 'meta'
@@ -331,7 +332,28 @@ const resolvers = {
       }
 
       if (process.env.INSTANCE_NAME === 'colab') {
-        const importedManuscripts = await importArticlesFromEuropePMC(ctx)
+        const importedManuscripts = await importArticlesFromBiorxivWithFullTextSearch(
+          ctx,
+          [
+            'membrane protein',
+            'ion channel',
+            'transporter',
+            'pump',
+            'gpcr',
+            'G protein-coupled receptor',
+            'exchanger',
+            'uniporter',
+            'symporter',
+            'antiporter',
+            'solute carrier',
+            'atpase',
+            'rhodopsin',
+            'patch-clamp',
+            'voltage-clamp',
+            'single-channel',
+          ],
+        )
+
         isImportInProgress = false
 
         pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
@@ -513,7 +535,7 @@ const resolvers = {
         // Automated email submissionConfirmation on submission
         const manuscript = await models.Manuscript.query()
           .findById(id)
-          .withGraphFetched('submitter.[defaultIdentity]')
+          .withGraphFetched('[submitter.[defaultIdentity], channels]')
 
         const receiverEmail = manuscript.submitter.email
         /* eslint-disable-next-line */
@@ -543,6 +565,17 @@ const resolvers = {
 
         try {
           await sendEmailNotification(receiverEmail, selectedTemplate, data)
+
+          // Get channel ID
+          const channelId = manuscript.channels.find(
+            channel => channel.topic === 'Editorial discussion',
+          ).id
+
+          Message.createMessage({
+            content: `Submission Confirmation Email sent by Kotahi to ${manuscript.submitter.username}`,
+            channelId,
+            userId: manuscript.submitterId,
+          })
         } catch (e) {
           /* eslint-disable-next-line */
           console.log('email was not sent', e)
@@ -555,7 +588,9 @@ const resolvers = {
     async makeDecision(_, { id, decision }, ctx) {
       const manuscript = await models.Manuscript.query()
         .findById(id)
-        .withGraphFetched('submitter.[defaultIdentity]')
+        .withGraphFetched(
+          '[submitter.[defaultIdentity], channels, teams.members.user]',
+        )
 
       manuscript.decision = decision
 
@@ -593,6 +628,27 @@ const resolvers = {
         }
 
         try {
+          // Add Email Notification Record in Editorial Discussion Panel
+          const author = manuscript.teams.find(team => {
+            if (team.role === 'author') {
+              return team
+            }
+
+            return null
+          }).members[0].user
+
+          const body = `Editor Decision sent by Kotahi to ${author.username}`
+
+          const channelId = manuscript.channels.find(
+            channel => channel.topic === 'Editorial discussion',
+          ).id
+
+          Message.createMessage({
+            content: body,
+            channelId,
+            userId: manuscript.submitterId,
+          })
+
           await sendEmailNotification(receiverEmail, selectedTemplate, data)
         } catch (e) {
           /* eslint-disable-next-line */

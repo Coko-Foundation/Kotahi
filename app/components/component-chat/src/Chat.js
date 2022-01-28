@@ -9,6 +9,7 @@ const Chat = ({
   sendChannelMessages,
   fetchMoreData,
   queryData,
+  manuscriptId = null,
 }) => {
   return (
     <>
@@ -21,6 +22,7 @@ const Chat = ({
       <Messages
         channelId={channelId}
         fetchMoreData={fetchMoreData}
+        manuscriptId={manuscriptId}
         queryData={queryData}
       />
     </>
