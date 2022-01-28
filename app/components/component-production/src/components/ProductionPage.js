@@ -76,7 +76,7 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
     ) // TODO: improve this!
   // Now, download the file
   const { pdfUrl } = data.convertToPdf // this is the relative url, like "uploads/filename.pdf"
-  window.open(`/static/${pdfUrl}`)
+  window.open(`/${pdfUrl}`)
 
   // use this code for downloading the PDF:
 
