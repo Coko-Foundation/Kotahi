@@ -122,9 +122,15 @@ const pdfHandler = async article => {
       .then(async resObj => {
         // eslint-disable-next-line no-console
         console.log('Retrieved PDF!')
-        // Now, return this as a path.
-        const pdfPath = `${dirName}/${articleData.id}.pdf`
-        await fsPromised.appendFile(pdfPath, resObj)
+
+        // Now, turn this into base64 and send it back to the browser
+
+        const pdfPath = await fsPromised.readFile(resObj, {
+          encoding: 'base64',
+        })
+
+        // const pdfPath = `${dirName}/${articleData.id}.pdf`
+        // await fsPromised.appendFile(pdfPath, resObj)
 
         resolve(pdfPath)
       })
