@@ -134,7 +134,7 @@ const pdfHandler = async article => {
           })
           writer.on('close', () => {
             if (!error) {
-              console.log('PDF is now at: ', tempPath)
+              // console.log('PDF is now at: ', tempPath)
               resolve(tempPath)
             }
           })
@@ -166,7 +166,7 @@ const resolvers = {
   Query: {
     convertToPdf: async (_, { article }, ctx) => {
       const outUrl = await pdfHandler(article, ctx)
-      // console.log('outUrl', outUrl)
+      // console.log('pdfUrl', outUrl)
       return { pdfUrl: outUrl || 'busted!' }
     },
   },
