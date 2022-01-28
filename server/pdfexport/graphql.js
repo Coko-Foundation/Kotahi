@@ -1,6 +1,7 @@
 // REPLACE THIS!
 
 const fs = require('fs-extra')
+const path = require('path')
 const crypto = require('crypto')
 const fsPromised = require('fs').promises
 const FormData = require('form-data')
@@ -21,6 +22,8 @@ const publicationMetadata = require('./pdfTemplates/publicationMetadata')
 // editoria version of this code is here: https://gitlab.coko.foundation/editoria/editoria/-/blob/master/server/api/useCases/services.js
 
 const randomBytes = promisify(crypto.randomBytes)
+
+const uploadsPath = config.get('pubsweet-server').uploads
 
 const clientId = config['paged-js'].pagedJsClientId
 
@@ -84,7 +87,9 @@ const pdfHandler = async article => {
   // may need to do to
   const articleData = JSON.parse(article)
   articleData.publicationMetadata = publicationMetadata
-  const dirName = `${+new Date()}-${articleData.id}`
+
+  const raw = await randomBytes(16)
+  const dirName = `${raw.toString('hex')}_${articleData.id}`
 
   await fsPromised.mkdir(dirName)
 
@@ -103,8 +108,8 @@ const pdfHandler = async article => {
   // form.append('zip', zipPath, 'index.html.zip')
   form.append('zip', fs.createReadStream(`${zipPath}`))
 
-  const raw = await randomBytes(16)
-  const tempPath = `${dirName}/${raw.toString('hex')}_${articleData.id}.pdf`
+  const filename = `${raw.toString('hex')}_${articleData.id}.pdf`
+  const tempPath = path.join(uploadsPath, filename)
 
   return new Promise((resolve, reject) => {
     axios({
@@ -129,26 +134,11 @@ const pdfHandler = async article => {
           })
           writer.on('close', () => {
             if (!error) {
-              console.log('here!')
-              resolve(true)
+              console.log('PDF is now at: ', tempPath)
+              resolve(tempPath)
             }
           })
         })
-      })
-      .then(async () => {
-        // now the file is where it should be
-        // TODO: move it to a public path
-        console.log(tempPath)
-
-        // TODO: This doesn't actually work!
-        // send it back as base64
-        // const pdfPath = await fsPromised.readFile(tempPath, {
-        //   encoding: 'base64',
-        // })
-
-        // console.log(pdfPath, typeof pdfPath)
-
-        resolve(tempPath)
       })
       .catch(async err => {
         const { response } = err
@@ -175,7 +165,8 @@ const pdfHandler = async article => {
 const resolvers = {
   Query: {
     convertToPdf: async (_, { article }, ctx) => {
-      const outUrl = await Promise.all([pdfHandler(article, ctx)])
+      const outUrl = await pdfHandler(article, ctx)
+      // console.log('outUrl', outUrl)
       return { pdfUrl: outUrl || 'busted!' }
     },
   },
