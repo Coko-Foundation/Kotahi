@@ -70,4 +70,8 @@ module.exports = {
   'notification-email': {
     automated: 'NOTIFICATION_EMAIL_AUTOMATED',
   },
+  'paged-js': {
+    pagedJsClientId: 'PAGED_JS_CLIENT_ID',
+    pagedJsClientSecret: 'PAGED_JS_CLIENT_SECRET',
+  },
 }

@@ -203,6 +203,10 @@ module.exports = {
       'application/zip',
     ],
   },
+  'paged-js': {
+    pagedJsClientId: '',
+    pagedJsClientSecret: '',
+  },
   /** These named configuration sections will be available to webpack */
   publicKeys: [
     'pubsweet-client',
@@ -218,6 +222,7 @@ module.exports = {
     'hypothesis',
     'review',
     'notification-email',
+    'paged-js',
   ],
   s3: {
     accessKeyId: 'test',

@@ -13,5 +13,6 @@
   "./server/model-message/src",
   "./server/reports/src",
   "./server/profile-upload",
-  "./server/auth-orcid"
+  "./server/auth-orcid",
+	"./server/pdfexport"
 ]
