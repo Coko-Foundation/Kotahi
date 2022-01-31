@@ -162,12 +162,6 @@ const SuperChatInput = props => {
       // )
     }
 
-    // if (!currentUser) {
-    //   // user is trying to send a message without being signed in
-    //   console.error('Not logged in')
-    //   // return props.dispatch(openModal('LOGIN_MODAL', {}))
-    // }
-
     scrollToBottom()
 
     if (mediaFile) {
