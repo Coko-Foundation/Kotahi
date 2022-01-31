@@ -1,6 +1,7 @@
 import React from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import Modal from 'react-modal'
 import Production from './Production'
 import { Spinner, CommsErrorBanner } from '../../../shared'
 
@@ -58,39 +59,84 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
     return null
   }
 
+  const [modalIsOpen, setModalIsOpen] = React.useState(true)
+
   const { data, loading, error } = useQuery(getPdfQuery, {
     variables: {
       article: JSON.stringify(manuscript),
     },
   })
 
-  if (loading) return <Spinner />
-  if (error)
-    return (
-      <div style={{ display: 'none' }}>
-        <CommsErrorBanner error={error} />
-      </div>
-    ) // TODO: improve this!
+  // if (loading) return <Spinner />
+  // if (error)
+  //   return (
+  //     <div style={{ display: 'none' }}>
+  //       <CommsErrorBanner error={error} />
+  //     </div>
+  //   ) // TODO: improve this!
   // Now, download the file
-  const { pdfUrl } = data.convertToPdf // this is the relative url, like "uploads/filename.pdf"
-  window.open(`/${pdfUrl}`)
+  if (data) {
+    console.log('in data')
+    const { pdfUrl } = data.convertToPdf // this is the relative url, like "uploads/filename.pdf"
+    window.open(`/${pdfUrl}`)
 
-  // use this code for downloading the PDF:
+    // use this code for downloading the PDF:
 
-  const link = document.createElement('a')
-  link.href = pdfUrl
-  link.download = `${manuscript.title || 'title'}.pdf`
-  link.click()
+    const link = document.createElement('a')
+    link.href = pdfUrl
+    link.download = `${manuscript.title || 'title'}.pdf`
+    link.click()
 
-  // console.log(`Downloading ${link.download}`)
+    // console.log(`Downloading ${link.download}`)
 
-  // For Firefox it is necessary to delay revoking the ObjectURL.
+    // For Firefox it is necessary to delay revoking the ObjectURL.
 
-  setTimeout(() => {
-    window.URL.revokeObjectURL(pdfUrl)
+    setTimeout(() => {
+      window.URL.revokeObjectURL(pdfUrl)
+      setModalIsOpen(false)
+      resetTitle()
+    }, 1000)
+  }
+
+  const onError = () => {
+    console.error(error)
     resetTitle()
-  }, 1000)
-  return null
+  }
+
+  return (
+    <Modal
+      isOpen={modalIsOpen}
+      style={{
+        content: {
+          top: '50%',
+          left: '50%',
+          right: 'auto',
+          bottom: 'auto',
+          marginRight: '-50%',
+          transform: 'translate(-50%, -50%)',
+        },
+      }}
+    >
+      <h2 style={{ marginBottom: '1em' }}>
+        {error ? 'Error generating PDF' : 'Preparing PDF...'}
+      </h2>
+      {loading && <Spinner />}
+      {error && (
+        <div
+          style={{
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+          }}
+        >
+          <p>Sorry, something went wrong.</p>
+          <button onClick={onError} style={{ marginTop: '1em' }} type="submit">
+            Close
+          </button>
+        </div>
+      )}
+    </Modal>
+  )
 }
 
 const ProductionPage = ({ match, ...props }) => {

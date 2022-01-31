@@ -2,7 +2,6 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown } from '@pubsweet/ui'
 import { makeJats } from '../../../../../server/utils/jatsUtils'
-// import makePdf from './makePdf'
 
 let html = ''
 
