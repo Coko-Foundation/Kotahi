@@ -450,7 +450,8 @@ header {
   string-set: copyright content();
 }
 
-
+section.frontmatter, section.abstractSection {
+  display: none;
 }`
 
 module.exports = css

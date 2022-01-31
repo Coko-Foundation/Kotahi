@@ -121,6 +121,7 @@ const pdfHandler = async article => {
       },
       responseType: 'stream',
       data: form,
+      timeout: 1000, // adding this because it's failing
     })
       .then(response => {
         const writer = fs.createWriteStream(tempPath)
