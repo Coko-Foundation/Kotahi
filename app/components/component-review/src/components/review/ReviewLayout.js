@@ -11,7 +11,7 @@ import ReviewMetadata from '../metadata/ReviewMetadata'
 import Review from './Review'
 import EditorSection from '../decision/EditorSection'
 import { Columns, Manuscript, Chat } from '../../../../shared'
-import MessageContainer from '../../../../component-chat/src'
+import MessageContainer from '../../../../component-chat/src/MessageContainer'
 import ArticleEvaluationSummaryPage from '../../../../component-decision-viewer'
 import SharedReviewerGroupReviews from './SharedReviewerGroupReviews'
 

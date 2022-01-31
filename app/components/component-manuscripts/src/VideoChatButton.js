@@ -1,7 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import config from 'config'
-import fnv from 'fnv-plus'
 import { Icon } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../shared/lightenBy'
@@ -27,10 +25,9 @@ const FloatRightButton = styled.a`
   }
 `
 
-const VideoChatButton = () => {
+const VideoChatButton = ({ chatRoomId }) => {
   // Generate the chat room name by hashing the baseUrl, so it is unique to the instance.
   // TODO: Obtain hash from server, with a secret incorporated in it (to prevent outsiders from figuring out the room ID)
-  const chatRoomId = fnv.hash(config['pubsweet-client'].baseUrl).hex()
 
   return (
     <FloatRightButton

@@ -6,36 +6,18 @@ import * as React from 'react'
 import { Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
-import { useMutation } from '@apollo/client'
-
-// import compose from 'recompose/compose';
-// import { connect } from 'react-redux';
 import { Icon } from '../../../shared'
-// import { addToastWithTimeout } from 'src/actions/toasts';
-// import { openModal } from 'src/actions/modals';
-// import { replyToMessage } from 'src/actions/message';
-import useCurrentUser from '../../../../hooks/useCurrentUser'
 import {
   Form,
   ChatInputContainer,
   ChatInputWrapper,
-  Input,
   InputWrapper,
   PhotoSizeError,
   PreviewWrapper,
   RemovePreviewButton,
 } from './style'
+import MentionsInput from '../MentionsInput/MentionsInput'
 
-import { CREATE_MESSAGE } from '../../../../queries'
-
-// import sendDirectMessage from 'shared/graphql/mutations/message/sendDirectMessage'
-// import { getMessageById } from 'shared/graphql/queries/message/getMessage'
-
-// import MediaUploader from './components/mediaUploader'
-// import { QuotedMessage as QuotedMessageComponent } from '../message/view'
-
-// import type { Dispatch } from 'redux';
-// import { MarkdownHint } from 'src/components/markdownHint'
 import { useAppScroller } from '../../../../hooks/useAppScroller'
 import { MEDIA_BREAK } from '../../../layout'
 
@@ -47,49 +29,7 @@ const MarkdownHint = styled.div`
   padding-left: 16px;
 `
 
-// const QuotedMessage = connect()(
-//   getMessageById(props => {
-//     if (props.data && props.data.message) {
-//       return <QuotedMessageComponent message={props.data.message} />
-//     }
-
-//     // if the query is done loading and no message was returned, clear the input
-//     if (props.data && props.data.networkStatus === 7 && !props.data.message) {
-//       props.dispatch(
-//         addToastWithTimeout(
-//           'error',
-//           'The message you are replying to was deleted or could not be fetched.',
-//         ),
-//       )
-//       props.dispatch(
-//         replyToMessage({ threadId: props.threadId, messageId: null }),
-//       )
-//     }
-
-//     return null
-//   }),
-// )
-
 const QuotedMessage = styled.div``
-
-// type Props = {
-//   onRef: Function,
-//   dispatch: Dispatch<Object>,
-//   createThread: Function,
-//   // sendMessage: Function,
-//   // sendDirectMessage: Function,
-//   threadType: string,
-//   threadId: string,
-//   clear: Function,
-//   websocketConnection: string,
-//   networkOnline: boolean,
-//   refetchThread: Function,
-//   quotedMessage: { messageId: string, threadId: string },
-//   // used to pre-populate the @mention suggestions with participants and the author of the thread
-//   participants: Array<?Object>,
-//   onFocus: ?Function,
-//   onBlur: ?Function,
-// }
 
 export const cleanSuggestionUserObject = user => {
   if (!user) return null
@@ -102,9 +42,7 @@ export const cleanSuggestionUserObject = user => {
 }
 
 const SuperChatInput = props => {
-  const currentUser = useCurrentUser()
-  const [sendChannelMessage] = useMutation(CREATE_MESSAGE)
-  // const [sendDirectMessage] = useMutation(CREATE_MESSAGE)
+  const { sendChannelMessages, searchUsers } = props
 
   const cacheKey = `last-content-${props.channelId}`
   const [text, changeText] = React.useState('')
@@ -184,9 +122,7 @@ const SuperChatInput = props => {
     //   })
     // }
 
-    sendChannelMessage({
-      variables: { content: body, channelId: props.channelId },
-    })
+    sendChannelMessages({ content: body, channelId: props.channelId })
   // const method =
   //   props.threadType === 'story' ? props.sendMessage : props.sendDirectMessage
   // return method({
@@ -224,12 +160,6 @@ const SuperChatInput = props => {
       //     'Error connecting to the server - hang tight while we try to reconnect',
       //   ),
       // )
-    }
-
-    if (!currentUser) {
-      // user is trying to send a message without being signed in
-      console.error('Not logged in')
-      // return props.dispatch(openModal('LOGIN_MODAL', {}))
     }
 
     scrollToBottom()
@@ -367,7 +297,7 @@ const SuperChatInput = props => {
                   </RemovePreviewButton>
                 </PreviewWrapper>
               )}
-              <Input
+              <MentionsInput
                 autoFocus={false}
                 hasAttachment={!!props.quotedMessage || !!mediaPreview}
                 inputRef={node => {
@@ -380,7 +310,8 @@ const SuperChatInput = props => {
                 // onFocus={props.onFocus}
                 onKeyDown={handleKeyPress}
                 placeholder="Your message here..."
-                staticSuggestions={props.participants}
+                searchUsersCallBack={searchUsers}
+                staticSuggestions={props.participants} // props.participants is currently undefined
                 value={text}
               />
             </InputWrapper>

@@ -1,16 +1,14 @@
 import React, { useState } from 'react'
-import config from 'config'
 import { UserAction as Action } from '../style'
 import { articleStatuses } from '../../../../globals'
 import { ConfirmationModal } from '../../../component-modal/src'
-
-const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const Actions = ({
   manuscript,
   deleteManuscript,
   isManuscriptBlockedFromPublishing,
   tryPublishManuscript,
+  urlFrag,
 }) => {
   const [confirmDeleteModalIsOpen, setConfirmDeleteModalIsOpen] = useState(
     false,

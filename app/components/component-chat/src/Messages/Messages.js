@@ -1,7 +1,7 @@
 /* eslint-disable prefer-object-spread */
 
 import React, { useEffect } from 'react'
-import { gql, useQuery } from '@apollo/client'
+// import { gql, useQuery } from '@apollo/client'
 import PropTypes from 'prop-types'
 import { UserAvatar } from '../../../component-avatar/src'
 import { sortAndGroupMessages } from '../../../../sortAndGroup'
@@ -25,84 +25,13 @@ import {
   Spinner,
 } from './style'
 
-const GET_MESSAGES = gql`
-  query messages($channelId: ID, $before: String) {
-    messages(channelId: $channelId, before: $before) {
-      edges {
-        id
-        content
-        created
-        updated
-        user {
-          id
-          username
-          profilePicture
-          online
-        }
-      }
-      pageInfo {
-        startCursor
-        hasPreviousPage
-      }
-    }
-  }
-`
-
-const MESSAGES_SUBSCRIPTION = gql`
-  subscription messageCreated($channelId: ID) {
-    messageCreated(channelId: $channelId) {
-      id
-      created
-      updated
-      content
-      user {
-        id
-        username
-        profilePicture
-        online
-        defaultIdentity {
-          identifier
-          email
-          type
-          aff
-          id
-          name
-        }
-      }
-    }
-  }
-`
-
-const subscribeToNewMessages = (subscribeToMore, channelId) =>
-  subscribeToMore({
-    document: MESSAGES_SUBSCRIPTION,
-    variables: { channelId },
-    updateQuery: (prev, { subscriptionData }) => {
-      if (!subscriptionData.data) return prev
-      const { messageCreated } = subscriptionData.data
-
-      const exists = prev.messages.edges.find(
-        ({ id }) => id === messageCreated.id,
-      )
-
-      if (exists) return prev
-
-      return Object.assign({}, prev, {
-        messages: {
-          ...prev.messages,
-          edges: [...prev.messages.edges, messageCreated],
-        },
-      })
-    },
-  })
-
-const Messages = ({ channelId, manuscriptId = null }) => {
-  const { loading, error, data, subscribeToMore, fetchMore } = useQuery(
-    GET_MESSAGES,
-    {
-      variables: { channelId },
-    },
-  )
+const Messages = ({
+  channelId,
+  fetchMoreData,
+  queryData,
+  manuscriptId = null,
+}) => {
+  const { loading, error, data } = queryData
 
   const scrollToBottom = () => {
     const main = document.getElementById('messages')
@@ -118,39 +47,11 @@ const Messages = ({ channelId, manuscriptId = null }) => {
   useEffect(() => {
     scrollToBottom()
 
-    const unsubscribeToNewMessages = subscribeToNewMessages(
-      subscribeToMore,
-      channelId,
-    )
-    // const unsubscribeToEnhancedMessages = subscribeToEnhancedMessages(
-    //   subscribeToMore,
-    //   channelId,
-    // )
-
-    return () => {
-      unsubscribeToNewMessages()
-      // unsubscribeToEnhancedMessages()
-    }
+    return () => {}
   })
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
-
-  const firstMessage = data?.messages.edges[0]
-
-  const fetchMoreOptions = {
-    variables: { channelId, before: firstMessage && firstMessage.id },
-    updateQuery: (prev, { fetchMoreResult }) => {
-      if (!fetchMoreResult) return prev
-      return Object.assign({}, prev, {
-        messages: {
-          ...prev.messages,
-          edges: [...fetchMoreResult.messages.edges, ...prev.messages.edges],
-          pageInfo: fetchMoreResult.messages.pageInfo,
-        },
-      })
-    },
-  }
 
   const messages = sortAndGroupMessages(data.messages.edges)
   const { hasPreviousPage } = data.messages.pageInfo
@@ -159,16 +60,7 @@ const Messages = ({ channelId, manuscriptId = null }) => {
       {manuscriptId ? <VideoChat manuscriptId={manuscriptId} /> : ''}
       {hasPreviousPage && (
         <NextPageButton
-          fetchMore={() => fetchMore(fetchMoreOptions)}
-          // href={{
-          //   pathname: this.props.location.pathname,
-          //   search: queryString.stringify({
-          //     ...queryString.parse(this.props.location.search),
-          //     msgsbefore: messageConnection.edges[0].cursor,
-          //     msgsafter: undefined,
-          //   }),
-          // }}
-          // automatic={!!thread.watercooler}
+          fetchMore={() => fetchMoreData()}
           isFetchingMore={false} // isFetchingMore}
         >
           Show previous messages
