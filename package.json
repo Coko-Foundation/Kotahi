@@ -179,6 +179,7 @@
     "pubsweet-client": "^10.2.5",
     "rc-tooltip": "5.1.1",
     "react": "^16.13.1",
+    "react-beautiful-dnd": "^13.1.0",
     "react-date-picker": "^8.2.0",
     "react-dom": "^16.13.1",
     "react-dropdown": "^1.9.2",

@@ -5,6 +5,7 @@ import { unescape } from 'lodash'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Icon, Action, Button } from '@pubsweet/ui'
 import { v4 as uuid } from 'uuid'
+import { Draggable } from 'react-beautiful-dnd'
 
 import { Page, Heading } from './style'
 import lightenBy from '../../../../shared/lightenBy'
@@ -20,9 +21,7 @@ const FeildWrapper = styled.div`
   display: flex;
   align-items: center;
   border-radius: ${th('borderRadius')};
-  margin:   margin: ${grid(2)};
   padding: ${grid(0.5)};
-  margin: ${grid(3)} 0px;
 }
   &.active {
     background-color: ${lightenBy('colorPrimary', 0.7)};
@@ -137,8 +136,7 @@ const BuilderElement = ({
   deleteField,
   formId,
   formFeildId,
-  handleDrag,
-  handleDrop,
+  index,
 }) => {
   const [openModal, setOpenModal] = useState(false)
   const [formFieldId, setFormFieldId] = useState()
@@ -152,64 +150,79 @@ const BuilderElement = ({
     setOpenModal(false)
   }
 
-  return (
-    <FeildWrapper
-      className={isActive ? 'active' : undefined}
-      draggable
-      id={formFeildId}
-      onDragOver={ev => ev.preventDefault()}
-      onDragStart={handleDrag}
-      onDrop={e => handleDrop(e, element.id)}
-      style={{
-        display: 'flex',
-        alignItems: 'center',
-      }}
-    >
-      <VeticalEllipsisIcon>more_vertical</VeticalEllipsisIcon>
-      <Element
-        className={isActive ? 'active' : undefined}
-        key={`element-${element.id}`}
-        onClick={() => setActiveFieldId(element.id)}
-      >
-        <MainAction>
-          <ElementTitle
-            dangerouslySetInnerHTML={createMarkup(
-              element.shortDescription ?? element.title,
-            )}
-          />{' '}
-          ({element.component})
-        </MainAction>
-        <IconAction
-          onClick={() =>
-            openModalHandler({
-              variables: { formId, elementId: element.id },
-            })
-          }
-        >
-          <SmallIcon>x</SmallIcon>
-        </IconAction>
-      </Element>
+  const getItemStyle = (isDragging, draggableStyle) => ({
+    ...draggableStyle,
+    margin: `0px 0px calc(8px * 3)`,
+  })
 
-      <Modal isOpen={openModal}>
-        <ModalContainer>
-          <ConfirmationString>
-            Permanently delete this field?
-          </ConfirmationString>
-          <Button
-            onClick={event => {
-              deleteField(formFieldId)
+  return (
+    <Draggable draggableId={formFeildId} index={index} key={formFeildId}>
+      {(provided, snapshot) => (
+        <div
+          ref={provided.innerRef}
+          {...provided.draggableProps}
+          {...provided.dragHandleProps}
+          style={getItemStyle(
+            snapshot.isDragging,
+            provided.draggableProps.style,
+          )}
+        >
+          <FeildWrapper
+            className={isActive || snapshot.isDragging ? 'active' : undefined}
+            id={formFeildId}
+            style={{
+              display: 'flex',
+              alignItems: 'center',
             }}
-            primary
           >
-            Ok
-          </Button>
-          &nbsp;
-          <CancelButton onClick={() => closeModalHandler()}>
-            Cancel
-          </CancelButton>
-        </ModalContainer>
-      </Modal>
-    </FeildWrapper>
+            <VeticalEllipsisIcon>more_vertical</VeticalEllipsisIcon>
+            <Element
+              className={isActive || snapshot.isDragging ? 'active' : undefined}
+              key={`element-${element.id}`}
+              onClick={() => setActiveFieldId(element.id)}
+            >
+              <MainAction>
+                <ElementTitle
+                  dangerouslySetInnerHTML={createMarkup(
+                    element.shortDescription ?? element.title,
+                  )}
+                />{' '}
+                ({element.component})
+              </MainAction>
+              <IconAction
+                onClick={() =>
+                  openModalHandler({
+                    variables: { formId, elementId: element.id },
+                  })
+                }
+              >
+                <SmallIcon>x</SmallIcon>
+              </IconAction>
+            </Element>
+
+            <Modal isOpen={openModal}>
+              <ModalContainer>
+                <ConfirmationString>
+                  Permanently delete this field?
+                </ConfirmationString>
+                <Button
+                  onClick={event => {
+                    deleteField(formFieldId)
+                  }}
+                  primary
+                >
+                  Ok
+                </Button>
+                &nbsp;
+                <CancelButton onClick={() => closeModalHandler()}>
+                  Cancel
+                </CancelButton>
+              </ModalContainer>
+            </Modal>
+          </FeildWrapper>
+        </div>
+      )}
+    </Draggable>
   )
 }
 
@@ -260,28 +273,16 @@ const FormBuilder = ({
   deleteField,
   moveFieldUp,
   moveFieldDown,
-  dragField,
 }) => {
-  const [dragId, setDragId] = useState()
-
-  const handleDrag = ev => {
-    setDragId(ev.currentTarget.id)
-  }
-
-  const handleDrop = (ev, id) => {
-    dragField({ toDragid: id, fromDragid: dragId })
-  }
-
   return (
     <Page>
-      {form.structure.children?.map(element => (
+      {form.structure.children?.map((element, index) => (
         <BuilderElement
           deleteField={deleteField}
           element={element}
           formFeildId={element.id}
           formId={form.id}
-          handleDrag={handleDrag}
-          handleDrop={handleDrop}
+          index={index}
           isActive={activeFieldId === element.id}
           key={`element-${element.id}`}
           moveFieldDown={moveFieldDown}
