@@ -101,9 +101,9 @@ Using a tool like Flax, you can either:
 - respond to every webhook request by requesting the relevant article from Kotahi and building (or rebuilding) its page (plus index pages); or
 - periodically request all articles published after the date of the most recent article you've already received.
 
-## Crossref
+### Crossref
 
-### Registering a DOI for an article with Crossref
+#### Registering a DOI for an article with Crossref
 
 Crossref offers a paid service for indexing articles and registering DOIs. Kotahi can be configured to register articles with new DOIs upon publication. It can also be configured to register evaluations of articles. The following environment variables are needed:
 
@@ -127,20 +127,22 @@ Crossref login, registrant and depositor information, as well as your organizati
 
 For development and testing, `CROSSREF_USE_SANDBOX` should be true. This will send all requests to Crossref's test API. Note that you must request Crossref to give you access to the test API, for which a separate password may be issued.
 
-### Form fields for publishing an article to Crossref
+If a submission to Crossref fails basic schema validation (e.g. if required fields are missing), Kotahi will report the failure beneath the "Publish" button. Success at this point does not guarantee that the submission will succeed once Crossref retrieves it from its queue for processing: it can still fail for reasons such as containing invalid DOI references, etc, _and this failure will not be reported by Kotahi_. You can view Crossref's queue and check whether a submission has succeeded via Crossref's submission administration dashboard at `https://doi.crossref.org/servlet/useragent` or `https://test.crossref.org/servlet/useragent`.
+
+#### Form fields for publishing an article to Crossref
 
 Publishing to Crossref requires that you have certain fields configured via the form-builder. These are:
-| Field name                                          | Field type     | Purpose                                                                                                                            |
+| Field name | Field type | Purpose |
 | --------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `meta.title`                                        | TextField      | Article title                                                                                                                      |
-| `submission.authors`                                | AuthorsInput   | Ordered list of authors                                                                                                            |
-| `meta.abstract`                                     | AbstractEditor | Article abstract                                                                                                                   |
-| `submission.citations` _or_ `submission.references` | AbstractEditor | Citations in separate paragraphs                                                                                                   |
-| `submission.volumeNumber`                           | TextField      | (Optional) Journal volume number                                                                                                   |
-| `submission.issueNumber`                            | TextField      | (Optional) Journal issue number                                                                                                    |
-| `submission.issueYear`                              | TextField      | The year of publication. If `submission.volumeNumber` is formatted as a year (e.g. 2021), then `submission.issueYear` is optional. |
+| `meta.title` | TextField | Article title |
+| `submission.authors` | AuthorsInput | Ordered list of authors |
+| `meta.abstract` | AbstractEditor | Article abstract |
+| `submission.citations` _or_ `submission.references` | AbstractEditor | Citations in separate paragraphs |
+| `submission.volumeNumber` | TextField | (Optional) Journal volume number |
+| `submission.issueNumber` | TextField | (Optional) Journal issue number |
+| `submission.issueYear` | TextField | The year of publication. If `submission.volumeNumber` is formatted as a year (e.g. 2021), then `submission.issueYear` is optional. |
 
-### Registering article evaluations via Crossref
+#### Registering article evaluations via Crossref
 
 Alternatively, you may be using Kotahi to publish evaluations of pre-existing articles. If this is your workflow, Kotahi can register these evaluations with Crossref, generating a DOI for each. The following environment variables are required for this:
 
@@ -166,6 +168,27 @@ And the following form fields are required:
 | `submission.review2`, `submission.review2date`, `submission.review2creator`, `submission.review3`, `submission.review3date`, `submission.review3creator` | As above       | (Optional) Fields for second and third reviews.          |
 | `submission.summary`, `submission.summarydate`, `submission.summarycreator`                                                                              | As above       | (Optional) Fields for a summary of the reviews.          |
 | `submission.description`                                                                                                                                 | TextField      | Title of the article under review, possibly abbreviated. |
+
+### Hypothes.is
+
+[Hypothesis](https://web.hypothes.is) is a tool for annotating webpages and sharing those annotations. It is powered by the hypothesis browser plugin, which displays annotations (retrieved from Hypothesis's servers) when you visit an annotated webpage. It allows evaluations of articles to be shared (publicly or with a select group) directly on the page where the article lives. Kotahi supports publishing reviews or evaluations as Hypothesis annotations.
+
+To enable this, you will need to first [generate a personal API token](https://h.readthedocs.io/en/latest/api/authorization/#access-tokens) for Hypothes.is, and a [group key](https://web.hypothes.is/blog/introducing-groups/) (e.g. `g4JPqbk5` if your group URL is `https://hypothes.is/groups/g4JPqbk5/my-journal-group`).
+
+Using these keys, set the following `.env` variables:
+
+```
+HYPOTHESIS_API_KEY=<your API key here>
+HYPOTHESIS_GROUP=<group key here>
+```
+
+Your submission form will require fields with the following internal names:
+
+- `review1`, `review2` .. `review9` (up to 9 of these, as many as you need): AbstractInput fields
+- `summary` (optional): AbstractInput field
+- `biorxivURL`: The URL of the page to be annotated
+
+When the "Publish" button is pressed in Kotahi, any reviews that contain text, and a summary, if it contains text, will be published to Hypothesis using the provided keys. Reviews and summary can be modified or deleted, and this will be updated upon pressing the Publish button again.
 
 ## Going further
 
