@@ -470,7 +470,7 @@ const resolvers = {
         const manuscript = await models.Manuscript.query()
           .findById(team.manuscriptId)
           .withGraphFetched(
-            '[teams.[members.[user.[defaultIdentity]]], submitter.[defaultIdentity]]',
+            '[teams.[members.[user.[defaultIdentity]]], submitter.[defaultIdentity], channels]',
           )
 
         const handlingEditorTeam =
@@ -497,6 +497,11 @@ const resolvers = {
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
+        // Get channel ID
+        const editorialChannel = manuscript.channels.find(
+          channel => channel.topic === 'Editorial discussion',
+        )
+
         if (!emailValidationResult || !receiverFirstName) {
           return team
         }
@@ -514,6 +519,13 @@ const resolvers = {
 
         try {
           await sendEmailNotification(receiverEmail, selectedTemplate, data)
+
+          // Send Notification in Editorial Discussion Panel
+          Message.createMessage({
+            content: `Review Rejection Email sent by Kotahi to ${receiverFirstName}`,
+            channelId: editorialChannel.id,
+            userId: manuscript.submitterId,
+          })
         } catch (e) {
           /* eslint-disable-next-line */
           console.log('email was not sent', e)

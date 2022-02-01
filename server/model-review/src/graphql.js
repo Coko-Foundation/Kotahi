@@ -2,7 +2,6 @@
 // const Review = require('./review')
 const models = require('@pubsweet/models')
 const { get } = require('lodash')
-const Message = require('../../model-message/src/message')
 
 const resolvers = {
   Query: {
@@ -91,20 +90,6 @@ const resolvers = {
       const manuscript = await models.Manuscript.query()
         .findById(review.manuscriptId)
         .withGraphFetched('[submitter.[defaultIdentity], channels.members]')
-
-      // Get channel ID
-      const editorialChannel = manuscript.channels.find(
-        channel => channel.topic === 'Editorial discussion',
-      )
-
-      if (review.recommendation === 'rejected') {
-        // Send Notification in Editorial Discussion Panel
-        Message.createMessage({
-          content: `Review Rejection Email sent by Kotahi to ${manuscript.submitter.username}`,
-          channelId: editorialChannel.id,
-          userId: manuscript.submitterId,
-        })
-      }
 
       const team = await manuscript
         .$relatedQuery('teams')
