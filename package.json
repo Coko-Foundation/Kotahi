@@ -113,7 +113,7 @@
     "@apollo/react-testing": "3.1.4",
     "@babel/core": "7.11.6",
     "@babel/helper-define-map": "^7.13.12",
-    "@coko/server": "^1.15.4",
+    "@coko/server": "^1.16.0",
     "@pubsweet/db-manager": "^3.1.24",
     "@pubsweet/errors": "^2.0.40",
     "@pubsweet/job-xsweet": "^2.2.1",

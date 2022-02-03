@@ -5,27 +5,22 @@ const path = require('path')
 const config = require('config')
 const sharp = require('sharp')
 const models = require('@pubsweet/models')
+const { fileStorage } = require('@coko/server')
 
 const File = require('./file')
 
 const randomBytes = promisify(crypto.randomBytes)
 const uploadsPath = config.get('pubsweet-server').uploads
 
-const upload = async file => {
-  const { createReadStream, filename, encoding } = await file
+const upload = async (file) => {
+  const { createReadStream, filename } = await file
   const stream = createReadStream()
-  const raw = await randomBytes(16)
-  const generatedFilename = raw.toString('hex') + path.extname(filename)
-  const outPath = path.join(uploadsPath, generatedFilename)
 
-  await fs.ensureDir(uploadsPath)
-  const outStream = fs.createWriteStream(outPath)
-  stream.pipe(outStream, { encoding })
+  const storedObjects = await fileStorage.upload(stream, filename)
 
-  return new Promise((resolve, reject) => {
-    outStream.on('finish', () => resolve(outPath))
-    outStream.on('error', reject)
-  })
+  const originalFileUrl = await fileStorage.getURL(storedObjects[0].key)
+
+  return originalFileUrl
 }
 
 const createImageVersions = async (buffer, filename) => {
@@ -87,18 +82,18 @@ const resolvers = {
         } = await uploadFileWithMultipleVersions(file)
 
         // eslint-disable-next-line no-param-reassign
-        meta.url = `/static/${originalFilePath}`
+        meta.url = `/${originalFilePath}`
         // eslint-disable-next-line
         let orginalFileData = await new File(meta).save()
         // eslint-disable-next-line no-param-reassign
-        meta.url = `/static/${webpFilePath}`
+        meta.url = `/${webpFilePath}`
         const webpFileData = await new File(meta).save()
         return webpFileData
       }
 
       const filePath = await upload(file)
       // eslint-disable-next-line no-param-reassign
-      meta.url = `/${filePath}`
+      meta.url = `${filePath}`
       const data = await new File(meta).save()
       return data
     },
