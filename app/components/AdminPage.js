@@ -202,6 +202,14 @@ const AdminPage = () => {
           redirectLink={redirectLink}
         />
         <PrivateRoute
+          component={Profile}
+          currentUser={currentUser}
+          exact
+          key="view-profile"
+          path={`${urlFrag}/profile/:id`}
+          redirectLink={redirectLink}
+        />
+        <PrivateRoute
           component={Dashboard}
           currentUser={currentUser}
           exact
