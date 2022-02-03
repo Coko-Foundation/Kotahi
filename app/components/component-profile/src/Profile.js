@@ -30,6 +30,41 @@ const GET_CURRENT_USER = gql`
       profilePicture
       username
       email
+      admin
+      defaultIdentity {
+        identifier
+        email
+        type
+        aff
+        id
+      }
+    }
+  }
+`
+
+const GET_OTHER_USER = gql`
+  query user($id: ID, $username: String) {
+    currentUser {
+      id
+      profilePicture
+      username
+      email
+      admin
+      defaultIdentity {
+        identifier
+        email
+        type
+        aff
+        id
+      }
+    }
+    user(id: $id, username: $username) {
+      id
+      username
+      profilePicture
+      online
+      email
+      admin
       defaultIdentity {
         identifier
         email
@@ -96,8 +131,13 @@ const ProfileDropzone = ({ profilePicture, updateProfilePicture }) => {
   )
 }
 
-const Profile = () => {
-  const { loading, error, data, client, refetch } = useQuery(GET_CURRENT_USER)
+const Profile = ({ match }) => {
+  const { id } = match.params
+
+  const { loading, error, data, client, refetch } = useQuery(
+    id ? GET_OTHER_USER : GET_CURRENT_USER,
+    id ? { variables: { id } } : {},
+  )
 
   // Mutations and Queries
   const [updateUserEmail] = useMutation(UPDATE_CURRENT_EMAIL)
@@ -116,11 +156,15 @@ const Profile = () => {
   // This is a bridge between the fetch results and the Apollo cache/state
   const updateProfilePicture = () => refetch()
 
+  const user = data.user ?? data.currentUser
+  const isCurrentUsersOwnProfile = user.id === data.currentUser.id
+  const canEditProfile = isCurrentUsersOwnProfile || data.currentUser.admin
   return (
     <Container>
-      <Modal isOpen={!data.currentUser.email}>
-        <EnterEmail updateUserEmail={updateUserEmail} user={data.currentUser} />
+      <Modal isOpen={canEditProfile && !user.email}>
+        <EnterEmail updateUserEmail={updateUserEmail} user={user.email} />
       </Modal>
+
       <HeadingWithAction>
         <Heading>Your profile</Heading>
         <Button onClick={() => logoutUser()} primary>
@@ -134,32 +178,46 @@ const Profile = () => {
         </SectionHeader>
         <SectionRow key="profilepicture">
           <div>
-            <ProfileDropzone
-              profilePicture={data.currentUser.profilePicture}
-              updateProfilePicture={updateProfilePicture}
-            />
+            {canEditProfile ? (
+              <ProfileDropzone
+                profilePicture={user.profilePicture}
+                updateProfilePicture={updateProfilePicture}
+              />
+            ) : (
+              <BigProfileImage
+                src={
+                  user.profilePicture === null
+                    ? '/profiles/default_avatar.svg'
+                    : user.profilePicture
+                }
+              />
+            )}
           </div>
         </SectionRow>
         <SectionRow>
-          <label>ORCID</label>{' '}
-          <div>{data.currentUser.defaultIdentity.identifier}</div>
+          <label>ORCID</label> <div>{user.defaultIdentity.identifier}</div>
         </SectionRow>
         <SectionRow>
           <label htmlFor="2">Username</label>
           <div>
-            <ChangeUsername
-              updateCurrentUsername={updateCurrentUsername}
-              user={data.currentUser}
-            />
+            {canEditProfile ? (
+              <ChangeUsername
+                updateCurrentUsername={updateCurrentUsername}
+                user={user}
+              />
+            ) : (
+              <div>{user.username}</div>
+            )}
           </div>
         </SectionRow>
         <SectionRow>
-          <label>Email</label>{' '}
+          <label>Email</label>
           <div>
-            <ChangeEmail
-              updateUserEmail={updateUserEmail}
-              user={data.currentUser}
-            />
+            {canEditProfile ? (
+              <ChangeEmail updateUserEmail={updateUserEmail} user={user} />
+            ) : (
+              <div>{user.email}</div>
+            )}
           </div>
         </SectionRow>
       </SectionContent>

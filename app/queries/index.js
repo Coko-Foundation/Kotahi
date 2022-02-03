@@ -175,6 +175,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
               identifier
               name
             }
+            id
             profilePicture
           }
         }
@@ -186,6 +187,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
             identifier
             name
           }
+          id
           profilePicture
         }
       }

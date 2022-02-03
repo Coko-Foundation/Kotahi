@@ -10,7 +10,6 @@ const ManuscriptRow = ({ manuscript, columnDefinitions, setFilter }) => {
       {columnDefinitions.map(column => {
         const values = getFieldValueAndDisplayValue(column, manuscript)
         const Renderer = column.component
-
         return (
           <Cell key={column.name} {...column}>
             <Renderer
