@@ -1,5 +1,3 @@
-// REPLACE THIS!
-
 const fs = require('fs-extra')
 const path = require('path')
 const crypto = require('crypto')
@@ -13,6 +11,12 @@ const css = require('./pdfTemplates/styles')
 const makeZip = require('./ziputils.js')
 const template = require('./pdfTemplates/article')
 const publicationMetadata = require('./pdfTemplates/publicationMetadata')
+
+// these two files can be used to test the service with simplest HTML/CSS:
+const fakeCss = require('./pdfTemplates/fakestyles')
+const fakeHtml = require('./pdfTemplates/fakehtml')
+
+const useFakeFiles = false // set to true to use fake files for testing
 
 // THINGS TO KNOW ABOUT THIS:
 //
@@ -76,6 +80,24 @@ const serviceHandshake = async () => {
   })
 }
 
+const writeLocallyFromReadStream = async (
+  path,
+  filename,
+  readerStream,
+  encoding,
+) =>
+  new Promise(async (resolve, reject) => {
+    await fs.ensureDir(path)
+    const writerStream = fs.createWriteStream(`${path}/${filename}`, encoding)
+    writerStream.on('close', () => {
+      resolve()
+    })
+    writerStream.on('error', err => {
+      reject(err)
+    })
+    readerStream.pipe(writerStream)
+  })
+
 const pdfHandler = async article => {
   if (!pagedJsAccessToken) {
     // console.log('No pagedJS access token')
@@ -90,13 +112,20 @@ const pdfHandler = async article => {
 
   const raw = await randomBytes(16)
   const dirName = `${raw.toString('hex')}_${articleData.id}`
+  // console.log("Directory name: ", dirName)
 
   await fsPromised.mkdir(dirName)
 
   const outHtml = nunjucks.renderString(template, { article: articleData })
 
-  await fsPromised.appendFile(`${dirName}/index.html`, outHtml)
-  await fsPromised.appendFile(`${dirName}/styles.css`, css)
+  await fsPromised.appendFile(
+    `${dirName}/index.html`,
+    useFakeFiles ? fakeHtml : outHtml,
+  )
+  await fsPromised.appendFile(
+    `${dirName}/styles.css`,
+    useFakeFiles ? fakeCss : css,
+  )
 
   // 2 zip this.
 
@@ -111,6 +140,8 @@ const pdfHandler = async article => {
   const filename = `${raw.toString('hex')}_${articleData.id}.pdf`
   const tempPath = path.join(uploadsPath, filename)
 
+  // console.log(tempPath)
+
   return new Promise((resolve, reject) => {
     axios({
       method: 'post',
@@ -121,26 +152,38 @@ const pdfHandler = async article => {
       },
       responseType: 'stream',
       data: form,
-      timeout: 1000, // adding this because it's failing
+      // timeout: 1000, // adding this because it's failing
     })
-      .then(response => {
-        const writer = fs.createWriteStream(tempPath)
-        return new Promise((resolve, reject) => {
-          response.data.pipe(writer)
-          let error = null
-          writer.on('error', err => {
-            error = err
-            writer.close()
-            reject(err)
-          })
-          writer.on('close', () => {
-            if (!error) {
-              // console.log('PDF is now at: ', tempPath)
-              resolve(tempPath)
-            }
-          })
-        })
+      .then(async res => {
+        console.log('got response')
+        await writeLocallyFromReadStream(
+          uploadsPath,
+          filename,
+          res.data,
+          'binary',
+        )
+        console.log('came back')
+        resolve(tempPath)
       })
+      // .then(response => {
+      //   console.log('in response')
+      //   const writer = fs.createWriteStream(tempPath, 'binary')
+      //   return new Promise((resolve, reject) => {
+      //     response.data.pipe(writer)
+      //     let error = null
+      //     writer.on('error', err => {
+      //       error = err
+      //       writer.close()
+      //       reject(err)
+      //     })
+      //     writer.on('close', () => {
+      //       if (!error) {
+      //         // console.log('PDF is now at: ', tempPath)
+      //         resolve(tempPath)
+      //       }
+      //     })
+      //   })
+      // })
       .catch(async err => {
         const { response } = err
 
@@ -172,6 +215,8 @@ const resolvers = {
     },
   },
 }
+
+// TODO: Need a mutation to delete generated PDF after it's been created.
 
 const typeDefs = `
 	extend type Query {

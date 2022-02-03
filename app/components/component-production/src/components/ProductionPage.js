@@ -76,15 +76,15 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
   //   ) // TODO: improve this!
   // Now, download the file
   if (data) {
-    console.log('in data')
-    const { pdfUrl } = data.convertToPdf // this is the relative url, like "uploads/filename.pdf"
-    window.open(`/${pdfUrl}`)
+    const pdfUrl = `/${data.convertToPdf.pdfUrl}` // this is the relative url, like "uploads/filename.pdf"
+    console.log('Returned: ', pdfUrl)
+    window.open(pdfUrl)
 
     // use this code for downloading the PDF:
 
     const link = document.createElement('a')
     link.href = pdfUrl
-    link.download = `${manuscript.title || 'title'}.pdf`
+    link.download = `${manuscript.meta.title || 'title'}.pdf`
     link.click()
 
     // console.log(`Downloading ${link.download}`)
@@ -100,6 +100,11 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
 
   const onError = () => {
     console.error(error)
+    resetTitle()
+  }
+
+  const cancelGen = () => {
+    console.log('PDF generation canceled')
     resetTitle()
   }
 
@@ -121,7 +126,7 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
         {error ? 'Error generating PDF' : 'Preparing PDF...'}
       </h2>
       {loading && <Spinner />}
-      {error && (
+      {error ? (
         <div
           style={{
             display: 'flex',
@@ -134,6 +139,10 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
             Close
           </button>
         </div>
+      ) : (
+        <button onClick={cancelGen} style={{ marginTop: '1em' }} type="submit">
+          Cancel
+        </button>
       )}
     </Modal>
   )

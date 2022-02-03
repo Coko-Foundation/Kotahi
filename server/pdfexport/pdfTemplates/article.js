@@ -24,7 +24,7 @@ module.exports = `<!DOCTYPE html>
     {% set emailList = [] %}
 
     <section class="titlepage"> 
-      <img class="logo" src="{{article.publicationMetadata.publisherLogo}}" alt="logo" >
+      <!--<img class="logo" src="{{article.publicationMetadata.publisherLogo}}" alt="logo" >-->
       <header>
         <p id="researchLevel">
           {{article.parsedSubmission.objectType}}
