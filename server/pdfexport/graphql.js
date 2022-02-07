@@ -5,18 +5,11 @@ const fsPromised = require('fs').promises
 const FormData = require('form-data')
 const axios = require('axios')
 const config = require('config')
-const nunjucks = require('nunjucks')
 const { promisify } = require('util')
+const models = require('@pubsweet/models')
+const applyTemplate = require('./applyTemplate')
 const css = require('./pdfTemplates/styles')
 const makeZip = require('./ziputils.js')
-const template = require('./pdfTemplates/article')
-const publicationMetadata = require('./pdfTemplates/publicationMetadata')
-
-// these two files can be used to test the service with simplest HTML/CSS:
-const fakeCss = require('./pdfTemplates/fakestyles')
-const fakeHtml = require('./pdfTemplates/fakehtml')
-
-const useFakeFiles = false // set to true to use fake files for testing
 
 // THINGS TO KNOW ABOUT THIS:
 //
@@ -60,8 +53,7 @@ const serviceHandshake = async () => {
       headers: { authorization: `Basic ${base64data}` },
     })
       .then(async ({ data }) => {
-        pagedJsAccessToken = data.accessToken
-        resolve()
+        resolve(data.accessToken)
       })
       .catch(err => {
         const { response } = err
@@ -81,14 +73,20 @@ const serviceHandshake = async () => {
 }
 
 const writeLocallyFromReadStream = async (
-  path,
+  thepath,
   filename,
   readerStream,
   encoding,
 ) =>
+  // eslint-disable-next-line no-async-promise-executor
   new Promise(async (resolve, reject) => {
-    await fs.ensureDir(path)
-    const writerStream = fs.createWriteStream(`${path}/${filename}`, encoding)
+    await fs.ensureDir(thepath)
+
+    const writerStream = fs.createWriteStream(
+      `${thepath}/${filename}`,
+      encoding,
+    )
+
     writerStream.on('close', () => {
       resolve()
     })
@@ -98,34 +96,30 @@ const writeLocallyFromReadStream = async (
     readerStream.pipe(writerStream)
   })
 
-const pdfHandler = async article => {
+const getManuscriptById = async id => {
+  return models.Manuscript.query().findById(id)
+}
+
+const pdfHandler = async articleId => {
   if (!pagedJsAccessToken) {
     // console.log('No pagedJS access token')
-    await serviceHandshake()
-    return pdfHandler(article)
+    pagedJsAccessToken = await serviceHandshake()
   }
 
-  // assuming that article is coming in as a string because we don't know what the shape will be
-  // may need to do to
-  const articleData = JSON.parse(article)
-  articleData.publicationMetadata = publicationMetadata
+  // get article from Id
+
+  const articleData = await getManuscriptById(articleId)
 
   const raw = await randomBytes(16)
-  const dirName = `${raw.toString('hex')}_${articleData.id}`
+  const dirName = `${raw.toString('hex')}_${articleId}`
   // console.log("Directory name: ", dirName)
 
   await fsPromised.mkdir(dirName)
 
-  const outHtml = nunjucks.renderString(template, { article: articleData })
+  const outHtml = applyTemplate(articleData)
 
-  await fsPromised.appendFile(
-    `${dirName}/index.html`,
-    useFakeFiles ? fakeHtml : outHtml,
-  )
-  await fsPromised.appendFile(
-    `${dirName}/styles.css`,
-    useFakeFiles ? fakeCss : css,
-  )
+  await fsPromised.appendFile(`${dirName}/index.html`, outHtml)
+  await fsPromised.appendFile(`${dirName}/styles.css`, css)
 
   // 2 zip this.
 
@@ -155,35 +149,16 @@ const pdfHandler = async article => {
       // timeout: 1000, // adding this because it's failing
     })
       .then(async res => {
-        console.log('got response')
+        // console.log('got response')
         await writeLocallyFromReadStream(
           uploadsPath,
           filename,
           res.data,
           'binary',
         )
-        console.log('came back')
+        // console.log('came back')
         resolve(tempPath)
       })
-      // .then(response => {
-      //   console.log('in response')
-      //   const writer = fs.createWriteStream(tempPath, 'binary')
-      //   return new Promise((resolve, reject) => {
-      //     response.data.pipe(writer)
-      //     let error = null
-      //     writer.on('error', err => {
-      //       error = err
-      //       writer.close()
-      //       reject(err)
-      //     })
-      //     writer.on('close', () => {
-      //       if (!error) {
-      //         // console.log('PDF is now at: ', tempPath)
-      //         resolve(tempPath)
-      //       }
-      //     })
-      //   })
-      // })
       .catch(async err => {
         const { response } = err
 
@@ -196,7 +171,7 @@ const pdfHandler = async article => {
 
         if (status === 401 && msg === 'expired token') {
           await serviceHandshake()
-          return pdfHandler(article)
+          return pdfHandler(articleId)
         }
 
         return reject(
@@ -208,8 +183,8 @@ const pdfHandler = async article => {
 
 const resolvers = {
   Query: {
-    convertToPdf: async (_, { article }, ctx) => {
-      const outUrl = await pdfHandler(article, ctx)
+    convertToPdf: async (_, { id }, ctx) => {
+      const outUrl = await pdfHandler(id, ctx)
       // console.log('pdfUrl', outUrl)
       return { pdfUrl: outUrl || 'busted!' }
     },
@@ -220,7 +195,7 @@ const resolvers = {
 
 const typeDefs = `
 	extend type Query {
-		convertToPdf(article: String!): ConvertToPdfType
+		convertToPdf(id: String!): ConvertToPdfType
 	}
 
 	type ConvertToPdfType {

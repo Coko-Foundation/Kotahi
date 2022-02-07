@@ -38,8 +38,8 @@ const query = gql`
 `
 
 const getPdfQuery = gql`
-  query($article: String!) {
-    convertToPdf(article: $article) {
+  query($id: String!) {
+    convertToPdf(id: $id) {
       pdfUrl
     }
   }
@@ -63,7 +63,7 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
 
   const { data, loading, error } = useQuery(getPdfQuery, {
     variables: {
-      article: JSON.stringify(manuscript),
+      id: manuscript.id,
     },
   })
 
@@ -77,7 +77,7 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
   // Now, download the file
   if (data) {
     const pdfUrl = `/${data.convertToPdf.pdfUrl}` // this is the relative url, like "uploads/filename.pdf"
-    console.log('Returned: ', pdfUrl)
+    // console.log('Returned: ', pdfUrl)
     window.open(pdfUrl)
 
     // use this code for downloading the PDF:
@@ -104,7 +104,7 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
   }
 
   const cancelGen = () => {
-    console.log('PDF generation canceled')
+    // console.log('PDF generation canceled')
     resetTitle()
   }
 
