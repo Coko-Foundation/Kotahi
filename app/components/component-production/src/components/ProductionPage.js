@@ -59,6 +59,7 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
     return null
   }
 
+  const [downloading, setDownloading] = React.useState(false)
   const [modalIsOpen, setModalIsOpen] = React.useState(true)
 
   const { data, loading, error } = useQuery(getPdfQuery, {
@@ -67,18 +68,14 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
     },
   })
 
-  // if (loading) return <Spinner />
-  // if (error)
-  //   return (
-  //     <div style={{ display: 'none' }}>
-  //       <CommsErrorBanner error={error} />
-  //     </div>
-  //   ) // TODO: improve this!
   // Now, download the file
-  if (data) {
+  if (data && !downloading) {
+    setDownloading(true)
     const pdfUrl = `/${data.convertToPdf.pdfUrl}` // this is the relative url, like "uploads/filename.pdf"
-    // console.log('Returned: ', pdfUrl)
-    window.open(pdfUrl)
+
+    // use this to open the PDF in a new tab:
+
+    // window.open(pdfUrl)
 
     // use this code for downloading the PDF:
 
@@ -87,14 +84,13 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
     link.download = `${manuscript.meta.title || 'title'}.pdf`
     link.click()
 
-    // console.log(`Downloading ${link.download}`)
-
     // For Firefox it is necessary to delay revoking the ObjectURL.
 
     setTimeout(() => {
       window.URL.revokeObjectURL(pdfUrl)
       setModalIsOpen(false)
       resetTitle()
+      setDownloading(false)
     }, 1000)
   }
 
