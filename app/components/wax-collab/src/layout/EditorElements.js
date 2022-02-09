@@ -549,6 +549,24 @@ export default css`
     }
   }
 
+  section.acknowledgementsSection {
+    background-color: rgba(255, 255, 0, 0.25);
+    border: 1px solid red;
+    margin-bottom: 8px;
+    padding: 8px 16px;
+    position: relative;
+
+    &:before {
+      color: black;
+      content: 'ACKNOWLEDGEMENTS';
+      font-weight: bold;
+      left: 2px;
+      letter-spacing: 1px;
+      position: absolute;
+      top: -4px;
+    }
+  }
+
   section.appendix {
     background-color: rgba(0, 128, 128, 0.25);
     border: 1px solid teal;

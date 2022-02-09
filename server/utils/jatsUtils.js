@@ -261,7 +261,7 @@ const getCrossrefCitationsFromList = html => {
 }
 
 const removeTrackChanges = html => {
-  const dom = htmlparser2.parseDocument(html)
+  const dom = htmlparser2.parseDOM(html)
 
   const $ = cheerio.load(dom, {
     xmlMode: true,
