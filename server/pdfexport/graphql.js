@@ -130,6 +130,8 @@ const pdfHandler = async articleId => {
   const form = new FormData()
   // form.append('zip', zipPath, 'index.html.zip')
   form.append('zip', fs.createReadStream(`${zipPath}`))
+  form.append('onlySourceStylesheet', true)
+  form.append('imagesForm', 'base64')
 
   const filename = `${raw.toString('hex')}_${articleData.id}.pdf`
   const tempPath = path.join(uploadsPath, filename)
