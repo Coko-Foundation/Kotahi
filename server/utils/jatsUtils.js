@@ -439,6 +439,31 @@ const makeFootnotesSection = html => {
   return { deFootnotedHtml, fnSection }
 }
 
+const makeAcknowledgements = html => {
+  const searchFor1 = '<section class="acknowledgementsSection">'
+  const searchFor2 = '</section>'
+  let ack = ''
+  let deackedHtml = html
+
+  // NOTE: JATS only allows a single acknowledgements section.
+  // If there are more than one acknowledgements sections in the text
+  // (which Wax currently allows), only the last one is taken.
+
+  while (deackedHtml.indexOf(searchFor1) > -1) {
+    const thisAcknowledgements = deackedHtml
+      .split(searchFor1)[1]
+      .split(searchFor2)[0]
+
+    deackedHtml = deackedHtml.replace(
+      `${searchFor1}${thisAcknowledgements}${searchFor2}`,
+      '',
+    )
+    ack = `<ack>${htmlToJats(thisAcknowledgements)}</ack>`
+  }
+
+  return { deackedHtml, ack: ack || '' }
+}
+
 const fixTableCells = html => {
   // This runs the content of <td>s individually though htmlToJats
   // This doesn't deal with <th>s though I don't think we're getting them.
@@ -714,9 +739,11 @@ const makeJats = (html, articleMeta, journalMeta) => {
     unTrackChangedHtml,
   )
 
+  const { deackedHtml, ack } = makeAcknowledgements(deFootnotedHtml)
+
   // 0.5 deal with table cells
 
-  const { deTabledHtml } = fixTableCells(deFootnotedHtml)
+  const { deTabledHtml } = fixTableCells(deackedHtml)
 
   // 1. deal with appendices
 
@@ -745,7 +772,7 @@ const makeJats = (html, articleMeta, journalMeta) => {
   body = body.replaceAll('</@sec>', '</sec>')
   body = `<body>${body}</body>`
 
-  const back = `<back>${appendices}${refList}${fnSection}</back>`
+  const back = `<back>${ack}${appendices}${refList}${fnSection}</back>`
 
   // check if body or back are empty, don't pass if not there.
   const jats = `<article xml:lang="en" xmlns:mml="http://www.w3.org/1998/Math/MathML"	xmlns:xlink="http://www.w3.org/1999/xlink" dtd-version="1.3">${front}${
