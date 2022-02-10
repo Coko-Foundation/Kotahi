@@ -1,9 +1,43 @@
-const jatsHandler = async manuscriptId => {
-  console.log(manuscriptId)
-  // 1. get manuscript from ID
-  // 2. pass it to JATS
+const models = require('@pubsweet/models')
+const { makeJats } = require('../utils/jatsUtils')
+const publicationMetadata = require('../pdfexport/pdfTemplates/publicationMetadata')
 
-  return "Here's some XML!"
+const buildArticleMetadata = metadata => {
+  const articleMetadata = {}
+
+  if (metadata?.meta?.manuscriptId) {
+    articleMetadata.id = metadata.meta.manuscriptId
+  }
+
+  if (metadata?.meta?.title) {
+    articleMetadata.title = metadata.meta.title
+  }
+
+  if (metadata?.created) {
+    articleMetadata.pubDate = metadata.created
+  }
+
+  if (metadata?.submission) {
+    articleMetadata.submission = JSON.parse(metadata.submission)
+  }
+
+  // TODO: deal with author names!
+
+  return articleMetadata
+}
+
+const getManuscriptById = async id => {
+  return models.Manuscript.query().findById(id)
+}
+
+const jatsHandler = async manuscriptId => {
+  const manuscript = await getManuscriptById(manuscriptId)
+
+  const html = manuscript.meta.source
+  const articleMetadata = buildArticleMetadata(manuscript)
+
+  const { jats } = makeJats(html, articleMetadata, publicationMetadata)
+  return jats
 }
 
 const resolvers = {
