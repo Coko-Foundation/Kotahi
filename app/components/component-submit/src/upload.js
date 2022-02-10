@@ -36,8 +36,8 @@ const extractTitle = source => {
 
 const uploadManuscriptMutation = gql`
   mutation($file: Upload!) {
-    upload(file: $file) {
-      url
+    uploadFile(file: $file) {
+      id
     }
   }
 `

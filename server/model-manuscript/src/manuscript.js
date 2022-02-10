@@ -163,7 +163,7 @@ class Manuscript extends BaseModel {
         modelClass: File,
         join: {
           from: 'manuscripts.id',
-          to: 'files.manuscriptId',
+          to: 'files.objectId',
         },
       },
       reviews: {

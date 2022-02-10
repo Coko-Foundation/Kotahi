@@ -279,9 +279,8 @@ const resolvers = {
           // TODO We can then convert to the client-centric URL at the point of passing a file object to the client.
           // TODO This should be changed both here and for the createFile query, and we'll need a migration to convert all existing URLs in the DB.
           return {
-            ...file,
-            fileType: 'manuscript',
-            url: `/uploads${file.url}`,
+            name: file.filename,
+            storedObjects: [],
           }
         }),
         reviews: [],

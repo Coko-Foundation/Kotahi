@@ -5,19 +5,17 @@ const path = require('path')
 const config = require('config')
 const sharp = require('sharp')
 const models = require('@pubsweet/models')
-const { fileStorage } = require('@coko/server')
-
-const File = require('./file')
+const { createFile, fileStorage } = require('@coko/server')
 
 const randomBytes = promisify(crypto.randomBytes)
 const uploadsPath = config.get('pubsweet-server').uploads
 
-const upload = async (file) => {
+/* eslint-disable no-unused-vars */
+const upload = async file => {
   const { createReadStream, filename } = await file
   const stream = createReadStream()
 
   const storedObjects = await fileStorage.upload(stream, filename)
-
   const originalFileUrl = await fileStorage.getURL(storedObjects[0].key)
 
   return originalFileUrl
@@ -70,31 +68,15 @@ const uploadFileWithMultipleVersions = async file => {
 
   return { originalFilePath: outPath, webpFilePath: outputWebpPath }
 }
+/* eslint-enable no-unused-vars */
 
 const resolvers = {
   Query: {},
   Mutation: {
-    async createFile(_, { file, meta }, ctx) {
-      if (meta.fileType === 'manuscriptImage') {
-        const {
-          originalFilePath,
-          webpFilePath,
-        } = await uploadFileWithMultipleVersions(file)
-
-        // eslint-disable-next-line no-param-reassign
-        meta.url = `/${originalFilePath}`
-        // eslint-disable-next-line
-        let orginalFileData = await new File(meta).save()
-        // eslint-disable-next-line no-param-reassign
-        meta.url = `/${webpFilePath}`
-        const webpFileData = await new File(meta).save()
-        return webpFileData
-      }
-
-      const filePath = await upload(file)
-      // eslint-disable-next-line no-param-reassign
-      meta.url = `${filePath}`
-      const data = await new File(meta).save()
+    async uploadFile(_, { file }, ctx) {
+      const { createReadStream, filename } = await file
+      const fileStream = createReadStream()
+      const data = await createFile(fileStream, filename)
       return data
     },
     async deleteFile(_, { id }, ctx) {
