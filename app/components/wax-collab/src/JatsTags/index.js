@@ -6,6 +6,7 @@ import FrontMatter from './FrontMatter'
 import RefList from './RefList'
 import ReferenceHeader from './ReferenceHeader'
 import Abstract from './Abstract'
+import AcknowledgementsSection from './AcknowledgementSection'
 
 // copied from here: https://gitlab.coko.foundation/wax/wax-prosemirror/-/blob/master/wax-prosemirror-services/src/DisplayBlockLevel/HeadingService/HeadingService.js
 
@@ -20,6 +21,7 @@ class JatsTagsService extends Service {
     this.container.bind('ReferenceHeader').to(ReferenceHeader)
     this.container.bind('FrontMatter').to(FrontMatter)
     this.container.bind('Abstract').to(Abstract)
+    this.container.bind('AcknowledgementsSection').to(AcknowledgementsSection)
     const createNode = this.container.get('CreateNode')
     createNode({
       mixedCitation: {
@@ -197,6 +199,35 @@ class JatsTagsService extends Service {
         ],
         toDOM(hook) {
           const attrs = { class: hook.node?.attrs?.class || 'abstractSection' }
+          return ['section', attrs, 0]
+        },
+      },
+    })
+    createNode({
+      acknowledgementsSection: {
+        content: 'block+',
+        group: 'block',
+        defining: true,
+        attrs: {
+          class: { default: 'acknowledgementsSection' },
+        },
+        parseDOM: [
+          {
+            tag: 'section.acknowledgementsSection',
+            getAttrs(hook, next) {
+              Object.assign(hook, {
+                class:
+                  hook?.dom?.getAttribute('class') || 'acknowledgementsSection',
+              })
+              typeof next !== 'undefined' && next()
+            },
+          },
+        ],
+        toDOM(hook) {
+          const attrs = {
+            class: hook.node?.attrs?.class || 'acknowledgementsSection',
+          }
+
           return ['section', attrs, 0]
         },
       },

@@ -24,13 +24,14 @@ class JatsSideMenu extends ToolGroup {
     @inject('FrontMatterList') frontmatterlist,
     @inject('AppendixList') appendixlist,
     @inject('CitationList') citationlist,
+    @inject('AcknowledgementsList') acknowledgementsList,
   ) {
     super()
 
     this.toolGroups = [
       {
         name: 'TabA',
-        groups: [appendixlist, citationlist],
+        groups: [appendixlist, citationlist, acknowledgementsList],
       },
       { name: 'TabB', groups: [frontmatterlist] },
     ]
