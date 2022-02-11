@@ -27,7 +27,6 @@ const Production = ({
   currentUser,
   makePdf,
   makeJats,
-  // fileUpload,
   updateManuscript,
 }) => {
   return (
@@ -37,8 +36,8 @@ const Production = ({
         <DownloadDropdown
           makeJats={makeJats}
           makePdf={makePdf}
-          metadata={manuscript}
-          source={manuscript.meta.source}
+          manuscriptId={manuscript.id}
+          manuscriptSource={manuscript.meta.source}
         />
       </HeadingWithAction>
       {file &&

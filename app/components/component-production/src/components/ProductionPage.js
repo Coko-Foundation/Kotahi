@@ -131,6 +131,7 @@ const DownloadJatsComponent = ({ makingJats, manuscript, resetMakingJats }) => {
     let url = URL.createObjectURL(blob)
     window.open(url)
     URL.revokeObjectURL(url)
+    resetMakingJats()
     /* eslint-disable */
   }
   return null
