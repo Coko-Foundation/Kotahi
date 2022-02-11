@@ -10,6 +10,9 @@ import {
   SelectAllField,
   SelectedManuscriptsNumber,
   FloatRightButton,
+  Loader,
+  RefreshSpinnerWrapper,
+  RefreshText,
 } from './style'
 import {
   Container,
@@ -35,6 +38,7 @@ const Manuscripts = ({ history, ...props }) => {
     setReadyToEvaluateLabels,
     deleteManuscriptMutations,
     importManuscripts,
+    isImporting,
     publishManuscripts,
     setSortName,
     setSortDirection,
@@ -250,8 +254,18 @@ const Manuscripts = ({ history, ...props }) => {
         </FloatRightButton>
       )}
       {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
-        <FloatRightButton onClick={importManuscripts} primary>
-          Refresh
+        <FloatRightButton
+          disabled={isImporting}
+          onClick={importManuscripts}
+          primary
+        >
+          {isImporting ? (
+            <RefreshSpinnerWrapper>
+              <RefreshText>Refreshing</RefreshText> <Loader />
+            </RefreshSpinnerWrapper>
+          ) : (
+            'Refresh'
+          )}
         </FloatRightButton>
       )}
       <Heading>Manuscripts</Heading>
