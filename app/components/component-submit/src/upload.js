@@ -37,7 +37,21 @@ const extractTitle = source => {
 const uploadManuscriptMutation = gql`
   mutation($file: Upload!) {
     uploadFile(file: $file) {
-      id
+      name
+      storedObjects {
+        type
+        key
+        size
+        mimetype
+        extension
+        imageMetadata {
+          width
+          height
+          space
+          density
+        }
+      }
+      url
     }
   }
 `
@@ -214,7 +228,7 @@ const DocxToHTMLPromise = (file, data) => {
 
   return request(url, { method: 'POST', body }).then(response =>
     Promise.resolve({
-      fileURL: data.upload.url,
+      fileURL: data.uploadFile.url,
       response,
     }),
   )
@@ -222,6 +236,7 @@ const DocxToHTMLPromise = (file, data) => {
 
 const createManuscriptPromise = (
   file,
+  data,
   client,
   currentUser,
   fileURL,
@@ -243,10 +258,8 @@ const createManuscriptPromise = (
     title = extractTitle(response) || generateTitle(file.name)
     files = [
       {
-        filename: file.name,
-        url: fileURL,
-        mimeType: file.type,
-        size: file.size,
+        name: file.name,
+        storedObjects: data.uploadFile.storedObjects
       },
     ]
   } else {
@@ -325,7 +338,7 @@ export default ({
 
       if (skipXSweet(file)) {
         uploadResponse = {
-          fileURL: data.upload.url,
+          fileURL: data.uploadFile.url,
           response: true,
         }
       } else {
@@ -337,6 +350,7 @@ export default ({
 
       manuscriptData = await createManuscriptPromise(
         file,
+        data,
         client,
         currentUser,
         uploadResponse.fileURL,
@@ -386,6 +400,7 @@ export default ({
     } else {
       // Create a manuscript without a file
       manuscriptData = await createManuscriptPromise(
+        undefined,
         undefined,
         client,
         currentUser,

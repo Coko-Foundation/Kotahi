@@ -279,8 +279,7 @@ const resolvers = {
           // TODO We can then convert to the client-centric URL at the point of passing a file object to the client.
           // TODO This should be changed both here and for the createFile query, and we'll need a migration to convert all existing URLs in the DB.
           return {
-            name: file.filename,
-            storedObjects: [],
+            ...file
           }
         }),
         reviews: [],
@@ -1169,10 +1168,30 @@ const typeDefs = `
   }
 
   input FileInput {
-    filename: String
-    url: String
-    mimeType: String
+    name: String
+    storedObjects: [StoredObjectsInput]!
+  }
+
+  input ImageMetadataInput {
+    width: Int!
+    height: Int!
+    space: String
+    density: Int
+  }
+
+  input StoredObjectsInput {
+    type: ImageSizeInput!
+    key: String!
     size: Int
+    mimetype: String!
+    extension: String!
+    imageMetadata: ImageMetadataInput
+  }
+
+  enum ImageSizeInput {
+    original
+    medium
+    small
   }
 
   type Author {

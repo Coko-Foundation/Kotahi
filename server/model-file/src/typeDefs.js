@@ -20,6 +20,7 @@ const typeDefs = `
    name: String!
    alt: String
    caption: String
+   url: String
    storedObjects: [StoredObjects!]!
    uploadStatus: String
    updated: DateTime!

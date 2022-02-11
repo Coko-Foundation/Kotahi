@@ -5,7 +5,7 @@ const path = require('path')
 const config = require('config')
 const sharp = require('sharp')
 const models = require('@pubsweet/models')
-const { createFile, fileStorage } = require('@coko/server')
+const { fileStorage } = require('@coko/server')
 
 const randomBytes = promisify(crypto.randomBytes)
 const uploadsPath = config.get('pubsweet-server').uploads
@@ -76,7 +76,13 @@ const resolvers = {
     async uploadFile(_, { file }, ctx) {
       const { createReadStream, filename } = await file
       const fileStream = createReadStream()
-      const data = await createFile(fileStream, filename)
+      const storedObjects = await fileStorage.upload(fileStream, filename)
+      const url = await fileStorage.getURL(storedObjects[0].key)
+      const data = {
+        name: filename,
+        storedObjects: storedObjects,
+        url: url,
+      }
       return data
     },
     async deleteFile(_, { id }, ctx) {
