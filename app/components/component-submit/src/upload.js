@@ -259,7 +259,7 @@ const createManuscriptPromise = (
     files = [
       {
         name: file.name,
-        storedObjects: data.uploadFile.storedObjects
+        storedObjects: data.uploadFile.storedObjects,
       },
     ]
   } else {

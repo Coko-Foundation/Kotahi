@@ -78,11 +78,13 @@ const resolvers = {
       const fileStream = createReadStream()
       const storedObjects = await fileStorage.upload(fileStream, filename)
       const url = await fileStorage.getURL(storedObjects[0].key)
+
       const data = {
         name: filename,
-        storedObjects: storedObjects,
-        url: url,
+        storedObjects,
+        url,
       }
+
       return data
     },
     async deleteFile(_, { id }, ctx) {
