@@ -2,23 +2,23 @@ const models = require('@pubsweet/models')
 const { makeJats } = require('../utils/jatsUtils')
 const publicationMetadata = require('../pdfexport/pdfTemplates/publicationMetadata')
 
-const buildArticleMetadata = metadata => {
+const buildArticleMetadata = article => {
   const articleMetadata = {}
 
-  if (metadata?.meta?.manuscriptId) {
-    articleMetadata.id = metadata.meta.manuscriptId
+  if (article && article.meta && article.meta.manuscriptId) {
+    articleMetadata.id = article.meta.manuscriptId
   }
 
-  if (metadata?.meta?.title) {
-    articleMetadata.title = metadata.meta.title
+  if (article && article.meta && article.meta.title) {
+    articleMetadata.title = article.meta.title
   }
 
-  if (metadata?.created) {
-    articleMetadata.pubDate = metadata.created
+  if (article && article.created) {
+    articleMetadata.pubDate = article.created
   }
 
-  if (metadata?.submission) {
-    articleMetadata.submission = JSON.parse(metadata.submission)
+  if (article && article.submission) {
+    articleMetadata.submission = article.submission
   }
 
   // TODO: deal with author names!
@@ -32,10 +32,8 @@ const getManuscriptById = async id => {
 
 const jatsHandler = async manuscriptId => {
   const manuscript = await getManuscriptById(manuscriptId)
-
   const html = manuscript.meta.source
   const articleMetadata = buildArticleMetadata(manuscript)
-
   const { jats } = makeJats(html, articleMetadata, publicationMetadata)
   return jats
 }

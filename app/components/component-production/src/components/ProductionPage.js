@@ -44,6 +44,14 @@ const getPdfQuery = gql`
   }
 `
 
+const getJatsQuery = gql`
+  query($manuscriptId: String!) {
+    convertToJats(manuscriptId: $manuscriptId) {
+      xml
+    }
+  }
+`
+
 export const updateMutation = gql`
   mutation($id: ID!, $input: String) {
     updateManuscript(id: $id, input: $input) {
@@ -53,8 +61,8 @@ export const updateMutation = gql`
   }
 `
 
-const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
-  if (!title) {
+const DownloadPdfComponent = ({ makingPdf, manuscript, resetMakingPdf }) => {
+  if (!makingPdf) {
     return null
   }
 
@@ -88,13 +96,49 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
 
   setTimeout(() => {
     window.URL.revokeObjectURL(pdfUrl)
-    resetTitle()
+    resetMakingPdf()
   }, 1000)
   return null
 }
 
+const DownloadJatsComponent = ({ makingJats, manuscript, resetMakingJats }) => {
+  if (!makingJats) {
+    return null
+  }
+
+  const { data, loading, error } = useQuery(getJatsQuery, {
+    variables: {
+      manuscriptId: manuscript.id,
+    },
+  })
+
+  if (loading) return <Spinner />
+  if (error)
+    return (
+      <div style={{ display: 'none' }}>
+        <CommsErrorBanner error={error} />
+      </div>
+    ) // TODO: improve this!
+
+  if (data) {
+    const jats = data.convertToJats.xml
+    /* eslint-disable */
+    console.log('XML Selected')
+    console.log('HTML:\n\n', manuscript.meta.source)
+    console.log('JATS:\n\n', jats)
+    // JATS XML file opens in new tab
+    let blob = new Blob([jats], { type: 'text/xml' })
+    let url = URL.createObjectURL(blob)
+    window.open(url)
+    URL.revokeObjectURL(url)
+    /* eslint-disable */
+  }
+  return null
+}
+
 const ProductionPage = ({ match, ...props }) => {
-  const [title, setTitle] = React.useState(false)
+  const [makingPdf, setMakingPdf] = React.useState(false)
+  const [makingJats, setMakingJats] = React.useState(false)
   const [update] = useMutation(updateMutation)
 
   const updateManuscript = (versionId, manuscriptDelta) => {
@@ -120,17 +164,25 @@ const ProductionPage = ({ match, ...props }) => {
     <div>
       <DownloadPdfComponent
         manuscript={manuscript}
-        resetTitle={() => {
-          setTitle(false)
+        resetMakingPdf={() => {
+          setMakingPdf(false)
         }}
-        title={title}
+        makingPdf={makingPdf}
+      />
+      <DownloadJatsComponent
+        manuscript={manuscript}
+        resetMakingJats={() => {
+          setMakingJats(false)
+        }}
+        makingJats={makingJats}
       />
       <Production
         currentUser={currentUser}
         file={
           manuscript.files.find(file => file.fileType === 'manuscript') || {}
         }
-        makePdf={setTitle}
+        makePdf={setMakingPdf}
+        makeJats={setMakingJats}
         manuscript={manuscript}
         updateManuscript={updateManuscript}
       />
