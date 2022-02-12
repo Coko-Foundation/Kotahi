@@ -309,32 +309,18 @@ const resolvers = {
       manuscript.manuscriptVersions = []
       return manuscript
     },
-    async importManuscripts(_, props, ctx) {
-      if (isImportInProgress) {
-        return null
-      }
-
+    importManuscripts(_, props, ctx) {
+      if (isImportInProgress) return false
       isImportInProgress = true
 
-      const pubsub = await getPubsub()
+      const promises = []
 
       if (process.env.INSTANCE_NAME === 'ncrc') {
-        const manuscriptsFromBiorxiv = await importArticlesFromBiorxiv(ctx)
-
-        const manuscriptsFromPubmed = await importArticlesFromPubmed(ctx)
-        isImportInProgress = false
-
-        pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
-          manuscriptsImportStatus: true,
-        })
-
-        return manuscriptsFromBiorxiv.concat(manuscriptsFromPubmed)
-      }
-
-      if (process.env.INSTANCE_NAME === 'colab') {
-        const importedManuscripts = await importArticlesFromBiorxivWithFullTextSearch(
-          ctx,
-          [
+        promises.push(importArticlesFromBiorxiv(ctx))
+        promises.push(importArticlesFromPubmed(ctx))
+      } else if (process.env.INSTANCE_NAME === 'colab') {
+        promises.push(
+          importArticlesFromBiorxivWithFullTextSearch(ctx, [
             'membrane protein',
             'ion channel',
             'transporter',
@@ -351,19 +337,23 @@ const resolvers = {
             'patch-clamp',
             'voltage-clamp',
             'single-channel',
-          ],
+          ]),
         )
-
-        isImportInProgress = false
-
-        pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
-          manuscriptsImportStatus: true,
-        })
-
-        return importedManuscripts
       }
 
-      return null
+      if (!promises.length) return false
+
+      Promise.all(promises)
+        .catch(error => console.error(error))
+        .finally(async () => {
+          isImportInProgress = false
+          const pubsub = await getPubsub()
+          pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
+            manuscriptsImportStatus: true,
+          })
+        })
+
+      return true
     },
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
@@ -1146,7 +1136,7 @@ const typeDefs = `
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript
-    importManuscripts: PaginatedManuscripts
+    importManuscripts: Boolean!
   }
 
   type Manuscript implements Object {

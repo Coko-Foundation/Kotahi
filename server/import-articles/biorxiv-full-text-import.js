@@ -100,10 +100,16 @@ const getData = async (ctx, searchStrings) => {
 
   // TODO retrieving all manuscripts to check URLs is inefficient!
   const manuscripts = await models.Manuscript.query()
-  const currentURLs = manuscripts.map(({ submission }) => submission.articleURL)
+
+  const currentURLs = new Set(
+    manuscripts.map(
+      ({ submission }) =>
+        submission.articleURL || submission.link || submission.biorxivURL,
+    ),
+  )
 
   const withoutDuplicates = modifiedItems.filter(
-    ({ url }) => !currentURLs.includes(url),
+    ({ url }) => !currentURLs.has(url),
   )
 
   const emptySubmission = getEmptySubmission()
