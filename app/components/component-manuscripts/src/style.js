@@ -138,6 +138,7 @@ export const SortArrow = styled.span`
 
 export const Loader = styled.div`
   display: inline-block;
+
   &:after {
     animation: ${rotate360} 1s linear infinite;
     border: 5px solid ${th('colorPrimary')};
