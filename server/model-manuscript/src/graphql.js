@@ -134,7 +134,7 @@ const hasEvaluations = manuscript => {
 }
 
 /** Send the manuscriptId OR a configured ref; and send token if one is configured */
-const tryPublishingWebhook = manuscriptId => {
+const tryPublishingWebhook = async manuscriptId => {
   const publishingWebhookUrl = config['publishing-webhook'].publishingWebhookUrl
 
   if (publishingWebhookUrl) {
@@ -143,14 +143,13 @@ const tryPublishingWebhook = manuscriptId => {
     const payload = { ref: reference || manuscriptId }
     if (token) payload.token = token
 
-    axios
+    await axios
       .post(publishingWebhookUrl, payload)
       // .then(res => {})
       .catch(error => {
-        console.error(
-          `Failed to call publishing webhook at ${publishingWebhookUrl} for article ${manuscriptId}`,
-        )
+        const message = `Failed to call publishing webhook at ${publishingWebhookUrl} for article ${manuscriptId}`
         console.error(error)
+        throw new Error(message)
       })
   }
 }
@@ -775,7 +774,7 @@ const resolvers = {
           return null
         }
 
-        steps.push(succeeded, errorMessage, stepLabel)
+        steps.push({ succeeded, errorMessage, stepLabel })
       } else if (['colab'].includes(process.env.INSTANCE_NAME)) {
         // TODO: A note in the code said that for Colab instance, submission.editDate should be updated. Is this true? (See commonUpdateManuscript() for example code.)
       }
@@ -800,13 +799,21 @@ const resolvers = {
           } else message += err.toString()
           succeeded = false
           errorMessage = message
-          throw new Error(message)
         }
 
-        steps.push(stepLabel, succeeded, errorMessage)
+        steps.push({ stepLabel, succeeded, errorMessage })
       }
 
-      tryPublishingWebhook(manuscript.id)
+      try {
+        await tryPublishingWebhook(manuscript.id)
+        steps.push({ stepLabel: 'Publishing webhook', succeeded: true })
+      } catch (err) {
+        steps.push({
+          stepLabel: 'Publishing webhook',
+          succeeded: false,
+          errorMessage: err.message,
+        })
+      }
 
       const updatedManuscript = await models.Manuscript.query().updateAndFetchById(
         id,

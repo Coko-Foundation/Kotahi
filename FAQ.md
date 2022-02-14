@@ -180,15 +180,18 @@ Using these keys, set the following `.env` variables:
 ```
 HYPOTHESIS_API_KEY=<your API key here>
 HYPOTHESIS_GROUP=<group key here>
+HYPOTHESIS_PUBLISH_FIELDS=<comma-separated list of field internal names>
 ```
 
-Your submission form will require fields with the following internal names:
+The `HYPOTHESIS_PUBLISH_FIELDS` variable should contain an ordered list of the AbstractEditor or TextField fields from your submission form that you wish to publish, e.g. `"submission.review1,submission.review2,submission.review3,submission.summary"`. This list can be surrounded by double-quotes. You can also specify a hypothesis tag for any field by suffixing the field internal name with `:<tag>`, e.g.:
 
-- `review1`, `review2` .. `review9` (up to 9 of these, as many as you need): AbstractInput fields
-- `summary` (optional): AbstractInput field
-- `biorxivURL`: The URL of the page to be annotated
+```
+"submission.review1:peerReview,submission.review2:peerReview,submission.review3:peerReview,submission.summary:evaluationSummary"
+```
 
-When the "Publish" button is pressed in Kotahi, any reviews that contain text, and a summary, if it contains text, will be published to Hypothesis using the provided keys. Reviews and summary can be modified or deleted, and this will be updated upon pressing the Publish button again.
+Your submission form must also contain a field with the internal name `submission.biorxivURL` or `submission.link`, which should contain the URL of the page to be annotated.
+
+When the "Publish" button is pressed in Kotahi, the named fields (if they contain text) will each be published as a Hypothesis annotation, using the provided keys. These annotations can be updated or deleted by modifying or removing the text in the fields and pressing the "Publish" button again.
 
 ## Going further
 

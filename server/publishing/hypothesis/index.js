@@ -2,7 +2,7 @@
 const TurndownService = require('turndown')
 const axios = require('axios')
 const config = require('config')
-const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
+const { get } = require('lodash')
 
 const headers = {
   headers: {
@@ -56,135 +56,78 @@ const publishToHypothesis = async manuscript => {
     },
   })
 
-  const fields = Object.entries(manuscript.submission)
-    .filter(
-      ([prop, value]) =>
-        !Number.isNaN(Number(prop.split('review')[1])) &&
-        prop.includes('review'),
-    )
-    .map(([prop]) => Number(prop.split('review')[1]))
-    .sort((a, b) => b - a)
-    .map(number => `review${number}`)
+  const uri = manuscript.submission.biorxivURL || manuscript.submission.link
 
-  fields.push('summary')
+  const fields = await Promise.all(
+    config.hypothesis.publishFields.split(',').map(async f => {
+      const parts = f.split(':')
+      const fieldName = parts[0].trim()
+      const tag = parts[1] ? parts[1].trim() : null
+      let value = get(manuscript, fieldName)
+      if (
+        value === '<p></p>' ||
+        value === '<p class="paragraph"></p>' ||
+        typeof value !== 'string'
+      )
+        value = null
 
-  const definedActions = fields.map(async propName => {
-    const value = manuscript.submission[propName]
-    let action = ''
+      const hasPreviousValue = !!manuscript.evaluationsHypothesisMap[fieldName]
+      let action
+      if (value) action = hasPreviousValue ? 'update' : 'create'
+      else action = hasPreviousValue ? 'delete' : null
+      let annotationId
 
-    if (
-      manuscript.evaluationsHypothesisMap[propName] &&
-      checkIsAbstractValueEmpty(value)
-    ) {
-      action = 'delete'
-    }
+      if (['update', 'delete'].includes(action)) {
+        annotationId = manuscript.evaluationsHypothesisMap[fieldName]
 
-    if (
-      !checkIsAbstractValueEmpty(value) &&
-      !manuscript.evaluationsHypothesisMap[propName]
-    ) {
-      action = 'create'
-    }
-
-    if (
-      manuscript.evaluationsHypothesisMap[propName] &&
-      !checkIsAbstractValueEmpty(value)
-    ) {
-      const annotationIdFromHypothesis =
-        manuscript.evaluationsHypothesisMap[propName]
-
-      action = 'update'
-
-      try {
-        await axios.get(`${requestURL}/${annotationIdFromHypothesis}`, {
-          headers,
-        })
-      } catch (e) {
-        action = 'create'
+        // Check with Hypothesis that there truly is an annotation to update or delete
+        try {
+          await axios.get(`${requestURL}/${annotationId}`, {
+            headers,
+          })
+        } catch (e) {
+          action = action === 'update' ? 'create' : null
+        }
       }
-    }
 
-    return new Promise(resolve => {
-      resolve({
-        propName,
-        value,
-        action,
-      })
-    })
-  })
+      if (['create', 'update'].includes(action) && !uri)
+        throw new Error(
+          'Missing field submission.biorxivURL or submission.link',
+        )
 
-  const fieldsWithActionsPrepared = await Promise.all(definedActions)
-
-  const fieldsWithAction = fieldsWithActionsPrepared.filter(
-    field => field.action,
+      return { action, fieldName, value, tag, annotationId }
+    }),
   )
 
-  const actions = {
-    create: propName => {
-      if (!manuscript.submission.biorxivURL)
-        throw new Error('Missing field submission.biorxivURL')
+  const newHypothesisMap = {}
 
+  for (const f of fields) {
+    if (['create', 'update'].includes(f.action)) {
       const requestBody = {
         group: config.hypothesis.group,
         permissions: { read: [`group:${config.hypothesis.group}`] },
-        uri: manuscript.submission.biorxivURL,
-        text: turndownService.turndown(manuscript.submission[propName]),
-        tags: [propName === 'summary' ? 'evaluationSummary' : 'peerReview'],
+        uri,
+        text: turndownService.turndown(f.value),
+        tags: f.tag ? [f.tag] : [],
       }
 
-      return () => {
-        return axios.post(requestURL, requestBody, headers).then(response => ({
-          [propName]: response.data.id,
-        }))
+      if (f.action === 'create') {
+        const response = await axios.post(requestURL, requestBody, headers)
+        newHypothesisMap[f.fieldName] = response.data.id
+      } else if (f.action === 'update') {
+        await axios.patch(
+          `${requestURL}/${f.annotationId}`,
+          requestBody,
+          headers,
+        )
+        newHypothesisMap[f.fieldName] = f.annotationId
       }
-    },
-    update: propName => {
-      const requestBody = {
-        group: config.hypothesis.group,
-        permissions: { read: [`group:${config.hypothesis.group}`] },
-        uri: manuscript.submission.biorxivURL,
-        text: turndownService.turndown(manuscript.submission[propName]),
-        tags: [propName === 'summary' ? 'evaluationSummary' : 'peerReview'],
-      }
-
-      return () => {
-        const publicationId = manuscript.evaluationsHypothesisMap[propName]
-
-        return axios
-          .patch(`${requestURL}/${publicationId}`, requestBody, headers)
-          .then(() => ({
-            [propName]: publicationId,
-          }))
-      }
-    },
-    delete: propName => {
-      const publicationId = manuscript.evaluationsHypothesisMap[propName]
-
-      return () => {
-        return deletePublication(publicationId).then(() => ({}))
-      }
-    },
-  }
-
-  const actionPromises = fieldsWithAction.map(field => {
-    return actions[field.action](field.propName)
-  })
-
-  const results = []
-
-  for (const request of actionPromises) {
-    const result = await request()
-    results.push(result)
-  }
-
-  const newHypothesisEvaluationMap = results.reduce((acc, curr) => {
-    return {
-      ...acc,
-      ...curr,
+    } else if (f.action === 'delete') {
+      await deletePublication(f.annotationId)
     }
-  }, {})
+  }
 
-  return newHypothesisEvaluationMap
+  return newHypothesisMap
 }
 
 module.exports = {

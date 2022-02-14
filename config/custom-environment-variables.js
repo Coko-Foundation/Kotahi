@@ -62,6 +62,7 @@ module.exports = {
   hypothesis: {
     apiKey: 'HYPOTHESIS_API_KEY',
     group: 'HYPOTHESIS_GROUP',
+    publishFields: 'HYPOTHESIS_PUBLISH_FIELDS',
   },
   review: {
     shared: 'REVIEW_SHARED',
