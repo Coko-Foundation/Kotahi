@@ -57,7 +57,7 @@ const publishToCrossref = async manuscript => {
     if (config.crossref.publicationType === 'article')
       await publishArticleToCrossref(manuscript)
     // else if (config.crossref.publicationType === 'reviews')
-    else publishReviewsToCrossref(manuscript)
+    else await publishReviewsToCrossref(manuscript)
   } catch (err) {
     throw new Error(`Publishing to Crossref failed: ${err.message}`)
   }
@@ -159,7 +159,8 @@ const publishArticleToCrossref = async manuscript => {
   if (!manuscript.submission)
     throw new Error('Manuscript has no submission object')
   if (!manuscript.meta.title) throw new Error('Manuscript has no title')
-  if (!manuscript.meta.abstract) throw new Error('Manuscript has no abstract')
+  if (!manuscript.meta.abstract && !manuscript.submission.abstract)
+    throw new Error('Manuscript has no abstract')
   if (!manuscript.submission.authors)
     throw new Error('Manuscript has no submission.authors field')
   if (!Array.isArray(manuscript.submission.authors))
@@ -268,7 +269,10 @@ const publishArticleToCrossref = async manuscript => {
 
   const xml = builder
     .buildObject(json)
-    .replace(ABSTRACT_PLACEHOLDER, htmlToJats(manuscript.meta.abstract))
+    .replace(
+      ABSTRACT_PLACEHOLDER,
+      htmlToJats(manuscript.meta.abstract || manuscript.submission.abstract),
+    )
     .replace(CITATIONS_PLACEHOLDER, citations)
 
   const dirName = `${+new Date()}-${manuscript.id}`
