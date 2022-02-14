@@ -1,5 +1,3 @@
-// REPLACE THIS!
-
 const fs = require('fs-extra')
 const path = require('path')
 const crypto = require('crypto')
@@ -7,12 +5,11 @@ const fsPromised = require('fs').promises
 const FormData = require('form-data')
 const axios = require('axios')
 const config = require('config')
-const nunjucks = require('nunjucks')
 const { promisify } = require('util')
+const models = require('@pubsweet/models')
+const applyTemplate = require('./applyTemplate')
 const css = require('./pdfTemplates/styles')
 const makeZip = require('./ziputils.js')
-const template = require('./pdfTemplates/article')
-const publicationMetadata = require('./pdfTemplates/publicationMetadata')
 
 // THINGS TO KNOW ABOUT THIS:
 //
@@ -56,8 +53,7 @@ const serviceHandshake = async () => {
       headers: { authorization: `Basic ${base64data}` },
     })
       .then(async ({ data }) => {
-        pagedJsAccessToken = data.accessToken
-        resolve()
+        resolve(data.accessToken)
       })
       .catch(err => {
         const { response } = err
@@ -76,24 +72,51 @@ const serviceHandshake = async () => {
   })
 }
 
-const pdfHandler = async article => {
+const writeLocallyFromReadStream = async (
+  thepath,
+  filename,
+  readerStream,
+  encoding,
+) =>
+  // eslint-disable-next-line no-async-promise-executor
+  new Promise(async (resolve, reject) => {
+    await fs.ensureDir(thepath)
+
+    const writerStream = fs.createWriteStream(
+      `${thepath}/${filename}`,
+      encoding,
+    )
+
+    writerStream.on('close', () => {
+      resolve()
+    })
+    writerStream.on('error', err => {
+      reject(err)
+    })
+    readerStream.pipe(writerStream)
+  })
+
+const getManuscriptById = async id => {
+  return models.Manuscript.query().findById(id)
+}
+
+const pdfHandler = async articleId => {
   if (!pagedJsAccessToken) {
     // console.log('No pagedJS access token')
-    await serviceHandshake()
-    return pdfHandler(article)
+    pagedJsAccessToken = await serviceHandshake()
   }
 
-  // assuming that article is coming in as a string because we don't know what the shape will be
-  // may need to do to
-  const articleData = JSON.parse(article)
-  articleData.publicationMetadata = publicationMetadata
+  // get article from Id
+
+  const articleData = await getManuscriptById(articleId)
 
   const raw = await randomBytes(16)
-  const dirName = `${raw.toString('hex')}_${articleData.id}`
+  const dirName = `${raw.toString('hex')}_${articleId}`
+  // console.log("Directory name: ", dirName)
 
   await fsPromised.mkdir(dirName)
 
-  const outHtml = nunjucks.renderString(template, { article: articleData })
+  const outHtml = applyTemplate(articleData)
 
   await fsPromised.appendFile(`${dirName}/index.html`, outHtml)
   await fsPromised.appendFile(`${dirName}/styles.css`, css)
@@ -107,9 +130,13 @@ const pdfHandler = async article => {
   const form = new FormData()
   // form.append('zip', zipPath, 'index.html.zip')
   form.append('zip', fs.createReadStream(`${zipPath}`))
+  form.append('onlySourceStylesheet', true)
+  form.append('imagesForm', 'base64')
 
   const filename = `${raw.toString('hex')}_${articleData.id}.pdf`
   const tempPath = path.join(uploadsPath, filename)
+
+  // console.log(tempPath)
 
   return new Promise((resolve, reject) => {
     axios({
@@ -121,24 +148,18 @@ const pdfHandler = async article => {
       },
       responseType: 'stream',
       data: form,
+      // timeout: 1000, // adding this because it's failing
     })
-      .then(response => {
-        const writer = fs.createWriteStream(tempPath)
-        return new Promise((resolve, reject) => {
-          response.data.pipe(writer)
-          let error = null
-          writer.on('error', err => {
-            error = err
-            writer.close()
-            reject(err)
-          })
-          writer.on('close', () => {
-            if (!error) {
-              // console.log('PDF is now at: ', tempPath)
-              resolve(tempPath)
-            }
-          })
-        })
+      .then(async res => {
+        // console.log('got response')
+        await writeLocallyFromReadStream(
+          uploadsPath,
+          filename,
+          res.data,
+          'binary',
+        )
+        // console.log('came back')
+        resolve(tempPath)
       })
       .catch(async err => {
         const { response } = err
@@ -152,7 +173,7 @@ const pdfHandler = async article => {
 
         if (status === 401 && msg === 'expired token') {
           await serviceHandshake()
-          return pdfHandler(article)
+          return pdfHandler(articleId)
         }
 
         return reject(
@@ -164,17 +185,19 @@ const pdfHandler = async article => {
 
 const resolvers = {
   Query: {
-    convertToPdf: async (_, { article }, ctx) => {
-      const outUrl = await pdfHandler(article, ctx)
+    convertToPdf: async (_, { id }, ctx) => {
+      const outUrl = await pdfHandler(id, ctx)
       // console.log('pdfUrl', outUrl)
       return { pdfUrl: outUrl || 'busted!' }
     },
   },
 }
 
+// TODO: Need a mutation to delete generated PDF after it's been created.
+
 const typeDefs = `
 	extend type Query {
-		convertToPdf(article: String!): ConvertToPdfType
+		convertToPdf(id: String!): ConvertToPdfType
 	}
 
 	type ConvertToPdfType {

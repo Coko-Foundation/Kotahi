@@ -182,7 +182,7 @@ const css = `
 
 /* insert fonts */
 
-@font-face {
+/*@font-face {
   font-family: "Newsreader";
   src: url(/fonts/Newsreader-VariableFont_opsz-wght.ttf) format("truetype");
   font-style: normal;
@@ -195,7 +195,7 @@ const css = `
     format("truetype");
   font-style: italic;
   font-weight: 300 700;
-}
+}*/
 
 * {
   padding: 0;
@@ -228,7 +228,7 @@ strong {
   margin: 0.8in 0.5in 0.8in 3in;
   border-bottom: 0.5px solid rgb(148, 147, 147);
   @bottom-left {
-    content: string(copyright);
+    content: string(urlLocation);
     width: max-content;
     font-size: 8px;
     margin-bottom: auto;
@@ -362,6 +362,10 @@ strong {
     string-set: topics content();
     /* display: none; */
   }
+
+  .url {
+    string-set: urlLocation content();
+  }
   aside h4,
   aside p {
     display: inline;
@@ -450,7 +454,19 @@ header {
   string-set: copyright content();
 }
 
+.licence svg {
+  max-width: 80px;
+}
 
+
+/* Remove duplicate title from print page */
+.content h1:first-of-type{
+  display: none;
+}
+
+
+section.frontmatter, section.abstractSection {
+  display: none;
 }`
 
 module.exports = css
