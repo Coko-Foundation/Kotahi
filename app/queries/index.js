@@ -222,3 +222,10 @@ export const IMPORTED_MANUSCRIPTS_SUBSCRIPTION = gql`
     manuscriptsImportStatus
   }
 `
+export const GET_SYSTEM_WIDE_DISCUSSION_CHANNEL = gql`
+  query {
+    systemWideDiscussionChannel {
+      id
+    }
+  }
+`

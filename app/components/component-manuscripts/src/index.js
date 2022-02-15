@@ -17,6 +17,7 @@ import {
   DELETE_MANUSCRIPTS,
   IMPORT_MANUSCRIPTS,
   IMPORTED_MANUSCRIPTS_SUBSCRIPTION,
+  GET_SYSTEM_WIDE_DISCUSSION_CHANNEL,
 } from '../../../queries'
 import configuredColumnNames from './configuredColumnNames'
 import { updateMutation } from '../../component-submit/src/components/SubmitPage'
@@ -47,6 +48,11 @@ const ManuscriptTable = ({ history }) => {
     },
     fetchPolicy: 'network-only',
   })
+
+  // GET_SYSTEM_WIDE_DISCUSSION_ID
+  const systemWideDiscussionChannel = useQuery(
+    GET_SYSTEM_WIDE_DISCUSSION_CHANNEL,
+  )
 
   useEffect(() => {
     queryObject.refetch()
@@ -155,6 +161,7 @@ const ManuscriptTable = ({ history }) => {
       setSortName={setSortName}
       sortDirection={sortDirection}
       sortName={sortName}
+      systemWideDiscussionChannel={systemWideDiscussionChannel}
       urlFrag={urlFrag}
     />
   )

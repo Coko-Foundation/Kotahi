@@ -30,6 +30,7 @@ const Messages = ({
   fetchMoreData,
   queryData,
   manuscriptId = null,
+  style,
 }) => {
   const { loading, error, data } = queryData
 
@@ -56,7 +57,7 @@ const Messages = ({
   const messages = sortAndGroupMessages(data.messages.edges)
   const { hasPreviousPage } = data.messages.pageInfo
   return (
-    <MessagesGroup id="messages">
+    <MessagesGroup id='messages'>
       {manuscriptId ? <VideoChat manuscriptId={manuscriptId} /> : ''}
       {hasPreviousPage && (
         <NextPageButton
@@ -91,7 +92,7 @@ const Messages = ({
         }
 
         return (
-          <MessageGroupContainer key={initialMessage.id}>
+          <MessageGroupContainer key={initialMessage.id} style={style}>
             {group.map((message, index) => (
               <Message key={message.id}>
                 <GutterContainer>
