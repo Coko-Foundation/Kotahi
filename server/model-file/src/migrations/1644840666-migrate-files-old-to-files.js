@@ -3,7 +3,6 @@ const { createFile } = require('@coko/server')
 const fs = require('fs-extra')
 const path = require('path')
 
-
 // Paths are relative to the generated migrations folder
 /* eslint-disable-next-line import/no-unresolved */
 const File = require('../server/model-file/src/file')
@@ -19,10 +18,17 @@ exports.up = async knex => {
 
       return Promise.all(
         filesOld.map(async file => {
-            const filePath = path.join(__dirname, '..' + file.url)
-            const fileStream = fs.createReadStream(filePath)
-            await createFile(fileStream, file.filename, null, null, [], file.manuscriptId || file.reviewCommentId)
-            migratedFiles = migratedFiles + 1
+          const filePath = path.join(__dirname, `..${file.url}`)
+          const fileStream = fs.createReadStream(filePath)
+          await createFile(
+            fileStream,
+            file.filename,
+            null,
+            null,
+            [],
+            file.manuscriptId || file.reviewCommentId,
+          )
+          migratedFiles += 1
         }),
       ).then(res => {
         logger.info(`Total Migrated Files: ${migratedFiles}`)
