@@ -1,4 +1,5 @@
 const models = require('@pubsweet/models')
+const { parseString } = require('xml2js')
 const { makeJats } = require('../utils/jatsUtils')
 const publicationMetadata = require('../pdfexport/pdfTemplates/publicationMetadata')
 
@@ -21,7 +22,18 @@ const buildArticleMetadata = article => {
     articleMetadata.submission = article.submission
   }
 
-  // TODO: deal with author names!
+  if (article && article.authors && article.authors.length) {
+    articleMetadata.authors = []
+
+    for (let i = 0; i < article.authors.length; i += 1) {
+      articleMetadata.authors[i] = {
+        email: article.authors[i].email,
+        firstName: article.authors[i].firstName,
+        lastName: article.authors[i].lastName,
+        affiliation: article.authors[i].affiliation,
+      }
+    }
+  }
 
   return articleMetadata
 }
@@ -35,14 +47,25 @@ const jatsHandler = async manuscriptId => {
   const html = manuscript.meta.source
   const articleMetadata = buildArticleMetadata(manuscript)
   const { jats } = makeJats(html, articleMetadata, publicationMetadata)
-  return jats
+  let parseError = null
+
+  // check if this is valid XML – this is NOT checking whether this is valid JATS
+  parseString(jats, err => {
+    if (err) {
+      console.error(err)
+      // send back the error if there is an error
+      parseError = JSON.stringify(err, Object.getOwnPropertyNames(err))
+    }
+  })
+
+  return { jats, error: parseError }
 }
 
 const resolvers = {
   Query: {
     convertToJats: async (_, { manuscriptId }, ctx) => {
-      const jats = await jatsHandler(manuscriptId, ctx)
-      return { xml: jats || '' }
+      const { jats, error } = await jatsHandler(manuscriptId, ctx)
+      return { xml: jats || '', error: error || null }
     },
   },
 }
@@ -54,6 +77,7 @@ const typeDefs = `
 
 	type ConvertToJatsType {
 		xml: String!
+		error: String
 	}
 
 `

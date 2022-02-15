@@ -22060,16 +22060,17 @@ typedarray@^0.0.6:
   resolved "https://registry.yarnpkg.com/typedarray/-/typedarray-0.0.6.tgz#867ac74e3864187b1d3d47d996a78ec5c8830777"
   integrity sha1-hnrHTjhkGHsdPUfZlqeOxciDB3c=
 
-tz-offset@0.0.1:
-  version "0.0.1"
-  resolved "https://registry.yarnpkg.com/tz-offset/-/tz-offset-0.0.1.tgz#fef920257024d3583ed9072a767721a18bdb8a76"
-  integrity sha512-kMBmblijHJXyOpKzgDhKx9INYU4u4E1RPMB0HqmKSgWG8vEcf3exEfLh4FFfzd3xdQOw9EuIy/cP0akY6rHopQ==
 typeof-arguments@^5.1.2:
   version "5.1.3"
   resolved "https://registry.yarnpkg.com/typeof-arguments/-/typeof-arguments-5.1.3.tgz#cf5c9e2ff95f70b2207dc7c9445ef1ddf315022d"
   integrity sha512-7whUbYkiTfdYYtx8v4e/9MhTTynsIkF3ICIG0rZlNrnt3Y8/716zABl3k/HifNjwUq8WljuDCWqGkrAwocNIKQ==
   dependencies:
     of-type "^3.0.3"
+
+tz-offset@0.0.1:
+  version "0.0.1"
+  resolved "https://registry.yarnpkg.com/tz-offset/-/tz-offset-0.0.1.tgz#fef920257024d3583ed9072a767721a18bdb8a76"
+  integrity sha512-kMBmblijHJXyOpKzgDhKx9INYU4u4E1RPMB0HqmKSgWG8vEcf3exEfLh4FFfzd3xdQOw9EuIy/cP0akY6rHopQ==
 
 ua-parser-js@^0.7.18:
   version "0.7.24"

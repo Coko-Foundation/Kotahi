@@ -13,15 +13,15 @@ export const DownloadDropdown = ({
     {
       id: 1,
       onClick: () => {
-        /* eslint-disable */
+        // eslint-disable-next-line
         console.log('HTML Selected')
+        // eslint-disable-next-line
         console.log('HTML:\n\n', manuscriptSource)
         // Raw HTML file opens in new tab
-        let blob = new Blob([manuscriptSource], { type: 'text/html' })
-        let url = URL.createObjectURL(blob)
+        const blob = new Blob([manuscriptSource], { type: 'text/html' })
+        const url = URL.createObjectURL(blob)
         window.open(url)
         URL.revokeObjectURL(url)
-        /* eslint-disable */
       },
       title: 'HTML',
     },
@@ -37,6 +37,7 @@ export const DownloadDropdown = ({
     {
       id: 3,
       onClick: () => {
+        // eslint-disable-next-line
         console.log('XML selected')
         makeJats(manuscriptId)
       },
