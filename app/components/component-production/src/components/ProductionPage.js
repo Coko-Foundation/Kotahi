@@ -63,11 +63,7 @@ export const updateMutation = gql`
   }
 `
 
-const DownloadPdfComponent = ({ makingPdf, manuscript, resetMakingPdf }) => {
-  if (!makingPdf) {
-    return null
-  }
-
+const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
   const [downloading, setDownloading] = React.useState(false)
   const [modalIsOpen, setModalIsOpen] = React.useState(true)
 
@@ -155,11 +151,7 @@ const DownloadPdfComponent = ({ makingPdf, manuscript, resetMakingPdf }) => {
   )
 }
 
-const DownloadJatsComponent = ({ makingJats, manuscript, resetMakingJats }) => {
-  if (!makingJats) {
-    return null
-  }
-
+const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
   const { data, loading, error } = useQuery(getJatsQuery, {
     variables: {
       manuscriptId: manuscript.id,
@@ -179,13 +171,9 @@ const DownloadJatsComponent = ({ makingJats, manuscript, resetMakingJats }) => {
 
     // TODO: this section should be replaced by server-side error handling
 
-    const parser = new DOMParser()
-
-    const xmlDoc = parser.parseFromString(jats, 'application/xml')
-    const errorNode = xmlDoc.querySelector('parsererror')
-
-    if (errorNode) {
-      console.error(errorNode)
+    if (data.convertToJats.error) {
+      console.error('Error making JATS: ', data.convertToJats.error)
+      resetMakingJats()
       return null
     }
 
@@ -230,20 +218,22 @@ const ProductionPage = ({ match, ...props }) => {
 
   return (
     <div>
-      <DownloadPdfComponent
-        manuscript={manuscript}
-        makingPdf={makingPdf}
-        resetMakingPdf={() => {
-          setMakingPdf(false)
-        }}
-      />
-      <DownloadJatsComponent
-        manuscript={manuscript}
-        makingJats={makingJats}
-        resetMakingJats={() => {
-          setMakingJats(false)
-        }}
-      />
+      {makingPdf ? (
+        <DownloadPdfComponent
+          manuscript={manuscript}
+          resetMakingPdf={() => {
+            setMakingPdf(false)
+          }}
+        />
+      ) : null}
+      {makingJats ? (
+        <DownloadJatsComponent
+          manuscript={manuscript}
+          resetMakingJats={() => {
+            setMakingJats(false)
+          }}
+        />
+      ) : null}
       <Production
         currentUser={currentUser}
         file={
