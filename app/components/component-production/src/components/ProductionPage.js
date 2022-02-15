@@ -24,32 +24,31 @@ const fragmentFields = `
 `
 
 const query = gql`
-  query($id: ID!) {
+  query($id: ID!, $manuscriptId: String!) {
     currentUser {
       id
       username
       admin
     }
 
+
+
     manuscript(id: $id) {
       ${fragmentFields}
     }
-  }
+
+		convertToJats(manuscriptId: $manuscriptId) {
+      xml
+      error
+    }
+
+	}
 `
 
 const getPdfQuery = gql`
-  query($id: String!) {
+  query($manuscriptId: String!) {
     convertToPdf(manuscriptId: $manuscriptId) {
       pdfUrl
-    }
-  }
-`
-
-const getJatsQuery = gql`
-  query($manuscriptId: String!) {
-    convertToJats(manuscriptId: $manuscriptId) {
-      xml
-      error
     }
   }
 `
@@ -151,47 +150,6 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
   )
 }
 
-const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
-  const { data, loading, error } = useQuery(getJatsQuery, {
-    variables: {
-      manuscriptId: manuscript.id,
-    },
-  })
-
-  if (loading) return <Spinner />
-  if (error)
-    return (
-      <div style={{ display: 'none' }}>
-        <CommsErrorBanner error={error} />
-      </div>
-    ) // TODO: improve this!
-
-  if (data) {
-    const jats = data.convertToJats.xml
-
-    // TODO: this section should be replaced by server-side error handling
-
-    if (data.convertToJats.error) {
-      console.error('Error making JATS: ', data.convertToJats.error)
-      resetMakingJats()
-      return null
-    }
-
-    /* eslint-disable */
-    console.log('XML Selected')
-    console.log('HTML:\n\n', manuscript.meta.source)
-    console.log('JATS:\n\n', jats)
-    // JATS XML file opens in new tab
-    let blob = new Blob([jats], { type: 'text/xml' })
-    let url = URL.createObjectURL(blob)
-    window.open(url)
-    URL.revokeObjectURL(url)
-    resetMakingJats()
-    /* eslint-disable */
-  }
-  return null
-}
-
 const ProductionPage = ({ match, ...props }) => {
   const [makingPdf, setMakingPdf] = React.useState(false)
   const [makingJats, setMakingJats] = React.useState(false)
@@ -206,15 +164,36 @@ const ProductionPage = ({ match, ...props }) => {
     })
   }
 
-  const { data, loading, error } = useQuery(query, {
+  const { data, loading, error, refetch } = useQuery(query, {
     variables: {
       id: match.params.version,
+      manuscriptId: match.params.version,
     },
   })
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
-  const { manuscript, currentUser } = data
+
+  const { manuscript, currentUser, convertToJats } = data
+
+  // console.log(manuscript.meta.source, convertToJats.xml)
+
+  if (makingJats) {
+    if (convertToJats.error) {
+      // eslint-disable-next-line
+      console.error('Error making JATS: ', convertToJats.error)
+    } else {
+      /* eslint-disable */
+      console.log('HTML:\n\n', manuscript.meta.source)
+      console.log('JATS:\n\n', convertToJats.xml)
+      // JATS XML file opens in new tab
+      let blob = new Blob([convertToJats.xml], { type: 'text/xml' })
+      let url = URL.createObjectURL(blob)
+      window.open(url)
+      URL.revokeObjectURL(convertToJats.xml)
+    }
+    setMakingJats(false)
+  }
 
   return (
     <div>
@@ -222,15 +201,8 @@ const ProductionPage = ({ match, ...props }) => {
         <DownloadPdfComponent
           manuscript={manuscript}
           resetMakingPdf={() => {
+            refetch({ id: match.params.version, manuscriptId: manuscript.id })
             setMakingPdf(false)
-          }}
-        />
-      ) : null}
-      {makingJats ? (
-        <DownloadJatsComponent
-          manuscript={manuscript}
-          resetMakingJats={() => {
-            setMakingJats(false)
           }}
         />
       ) : null}
@@ -240,9 +212,17 @@ const ProductionPage = ({ match, ...props }) => {
           manuscript.files.find(file => file.fileType === 'manuscript') || {}
         }
         makePdf={setMakingPdf}
-        makeJats={setMakingJats}
+        makeJats={() => {
+          // TODO: should we make sure that we've saved the manuscript first?
+          // refetch({ id: match.params.version, manuscriptId: manuscript.id })
+          setMakingJats(true)
+        }}
         manuscript={manuscript}
-        updateManuscript={updateManuscript}
+        updateManuscript={(a, b) => {
+          console.log('in update manuscript!')
+          updateManuscript(a, b)
+          refetch({ id: match.params.version, manuscriptId: manuscript.id })
+        }}
       />
     </div>
   )
