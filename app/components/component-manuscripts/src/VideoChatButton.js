@@ -7,12 +7,16 @@ import lightenBy from '../../../shared/lightenBy'
 const FloatRightButton = styled.a`
   align-items: center;
   background-color: ${th('colorPrimary')};
-  border-radius: ${th('borderRadius')};
+  border-radius: 27px;
   color: ${th('colorTextReverse')};
   display: flex;
   float: right;
-  margin: 0 0 ${grid(1)} ${grid(2)};
-  padding: 4px 12px;
+  left: 92%;
+  margin: ${grid(1)} ${grid(1)} ${grid(1)} ${grid(2)};
+  padding: 8px 12px;
+  position: absolute;
+  top: 10%;
+  z-index: 1000;
 
   &:hover {
     background-color: ${lightenBy('colorPrimary', 0.2)};
@@ -35,7 +39,6 @@ const VideoChatButton = ({ chatRoomId }) => {
       target={chatRoomId}
     >
       <Icon>video</Icon>
-      Video chat
     </FloatRightButton>
   )
 }

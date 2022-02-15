@@ -10,6 +10,7 @@ const Chat = ({
   fetchMoreData,
   queryData,
   manuscriptId = null,
+  style,
 }) => {
   return (
     <>
@@ -24,6 +25,7 @@ const Chat = ({
         fetchMoreData={fetchMoreData}
         manuscriptId={manuscriptId}
         queryData={queryData}
+        style={style}
       />
     </>
   )

@@ -138,3 +138,12 @@ export const Chat = styled.div`
   grid-area: chat;
   height: 100vh;
 `
+
+export const RightContainer = styled.div`
+  align-items: center;
+  background-color: #f9fafb;
+  border: 1px solid #e8e8e8;
+  display: flex;
+  justify-content: space-between;
+  padding: 8px 16px;
+`

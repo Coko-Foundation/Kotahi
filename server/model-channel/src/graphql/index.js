@@ -33,6 +33,11 @@ const resolvers = {
 
       return works
     },
+    systemWideDiscussionChannel: async () =>
+      Channel.query()
+        .whereNull('manuscriptId')
+        .where({ topic: 'System-wide discussion' })
+        .first(),
   },
   Mutation: {
     createChannel: async (_, { name, teamId }, context) => {
@@ -93,6 +98,7 @@ const typeDefs = `
     searchOnCrossref(searchTerm: String): [Work]
     channels: [Channel]
     manuscriptChannel: Channel
+    systemWideDiscussionChannel: Channel!
   }
 
   extend type Mutation {

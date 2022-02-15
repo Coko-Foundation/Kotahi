@@ -251,7 +251,7 @@ const chatComponent = (channelId, channelName, manuscriptId) => {
   )
 }
 
-const Container = ({ channelId, channels, manuscriptId = null }) => {
+const Container = ({ channelId, channels, manuscriptId = null, style }) => {
   if (!channelId && !channels) {
     return null
   }
@@ -371,7 +371,7 @@ const Container = ({ channelId, channels, manuscriptId = null }) => {
     <MessageContainer channels={channels}>
       {tabs ? (
         <Tabs
-          background="colorBackgroundHue"
+          background='colorBackgroundHue'
           defaultActiveKey={tabs[0].key}
           sections={tabs}
         />
@@ -385,6 +385,7 @@ const Container = ({ channelId, channels, manuscriptId = null }) => {
             queryData={queryResult}
             searchUsers={searchUsers}
             sendChannelMessages={sendChannelMessages}
+            style={style}
           />
         </>
       )}
