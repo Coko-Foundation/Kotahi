@@ -39,7 +39,7 @@ const query = gql`
 
 const getPdfQuery = gql`
   query($id: String!) {
-    convertToPdf(id: $id) {
+    convertToPdf(manuscriptId: $manuscriptId) {
       pdfUrl
     }
   }
@@ -69,7 +69,7 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
 
   const { data, loading, error } = useQuery(getPdfQuery, {
     variables: {
-      id: manuscript.id,
+      manuscriptId: manuscript.id,
     },
   })
 
