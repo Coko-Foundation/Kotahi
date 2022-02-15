@@ -27,10 +27,11 @@ const buildArticleMetadata = article => {
 
     for (let i = 0; i < article.authors.length; i += 1) {
       articleMetadata.authors[i] = {
-        email: article.authors[i].email,
-        firstName: article.authors[i].firstName,
-        lastName: article.authors[i].lastName,
-        affiliation: article.authors[i].affiliation,
+        email: article.authors[i].email || '',
+        firstName: article.authors[i].firstName || '',
+        lastName: article.authors[i].lastName || '',
+        affiliation: article.authors[i].affiliation || '',
+        id: article.authors[i].id || '',
       }
     }
   }
