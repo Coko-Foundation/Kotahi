@@ -193,10 +193,12 @@ const htmlHandler = async manuscriptId => {
 
   const templatedHtml = applyTemplate(articleData)
 
-  const outHtml = templatedHtml.replace(
-    '</body>',
-    `<style>${css}</style></body>`,
-  )
+  const outHtml = templatedHtml
+    .replace('</body>', `<style>${css}</style></body>`)
+    .replace(
+      '<body>',
+      `<body><div class="disclaimer">Please note: this HTML is formatted for the page, not for the screen! Print this to a PDF, where the styling will display correctly (and this message will not be visible).</div>`,
+    )
 
   const tempPath = path.join(uploadsPath, filename)
 
