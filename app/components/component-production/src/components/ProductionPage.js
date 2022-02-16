@@ -85,7 +85,8 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
 
     if (useHtml) {
       // use this to open the PDF in a new tab:
-      window.open(pdfUrl)
+      const pdfWindow = window.open(pdfUrl)
+      pdfWindow.print()
     } else {
       // use this code for downloading the PDF:
 
