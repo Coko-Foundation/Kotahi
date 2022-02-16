@@ -21,6 +21,8 @@ const typeDefs = `
    alt: String
    caption: String
    url: String
+   tags: [String]
+   objectId: ID
    storedObjects: [StoredObjects!]!
    uploadStatus: String
    updated: DateTime!

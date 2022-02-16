@@ -25,7 +25,7 @@ exports.up = async knex => {
             file.filename,
             null,
             null,
-            [],
+            [file.fileType],
             file.manuscriptId || file.reviewCommentId,
           )
           migratedFiles += 1
