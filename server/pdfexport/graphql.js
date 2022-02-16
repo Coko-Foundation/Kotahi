@@ -183,10 +183,36 @@ const pdfHandler = async manuscriptId => {
   })
 }
 
+const htmlHandler = async manuscriptId => {
+  // console.log(`Making HTML for ${manuscriptId}`)
+  const articleData = await getManuscriptById(manuscriptId)
+
+  const raw = await randomBytes(16)
+  const filename = `${raw.toString('hex')}_${manuscriptId}.html`
+  // console.log("Directory name: ", dirName)
+
+  const templatedHtml = applyTemplate(articleData)
+
+  const outHtml = templatedHtml.replace(
+    '</body>',
+    `<style>${css}</style></body>`,
+  )
+
+  const tempPath = path.join(uploadsPath, filename)
+
+  await fsPromised.appendFile(`${uploadsPath}/${filename}`, outHtml)
+
+  // console.log(`HTML written to ${tempPath}`)
+  return `/${tempPath}`
+}
+
 const resolvers = {
   Query: {
-    convertToPdf: async (_, { manuscriptId }, ctx) => {
-      const outUrl = await pdfHandler(manuscriptId, ctx)
+    convertToPdf: async (_, { manuscriptId, useHtml }, ctx) => {
+      const outUrl = await (useHtml
+        ? htmlHandler(manuscriptId, ctx)
+        : pdfHandler(manuscriptId, ctx))
+
       // console.log('pdfUrl', outUrl)
       return { pdfUrl: outUrl || 'busted!' }
     },
@@ -197,7 +223,7 @@ const resolvers = {
 
 const typeDefs = `
 	extend type Query {
-		convertToPdf(manuscriptId: String!): ConvertToPdfType
+		convertToPdf(manuscriptId: String!, useHtml: Boolean): ConvertToPdfType
 	}
 
 	type ConvertToPdfType {

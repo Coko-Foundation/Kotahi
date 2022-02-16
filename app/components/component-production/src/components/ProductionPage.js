@@ -5,6 +5,11 @@ import Modal from 'react-modal'
 import Production from './Production'
 import { Spinner, CommsErrorBanner } from '../../../shared'
 
+const useHtml = true
+
+// If this is set to TRUE, we generate HTML and send back the HTML address instead of the PDF address
+// This is a temporary measure!
+
 const fragmentFields = `
   id
   created
@@ -46,8 +51,8 @@ const query = gql`
 `
 
 const getPdfQuery = gql`
-  query($manuscriptId: String!) {
-    convertToPdf(manuscriptId: $manuscriptId) {
+  query($manuscriptId: String!, $useHtml: Boolean) {
+    convertToPdf(manuscriptId: $manuscriptId, useHtml: $useHtml) {
       pdfUrl
     }
   }
@@ -69,6 +74,7 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
   const { data, loading, error } = useQuery(getPdfQuery, {
     variables: {
       manuscriptId: manuscript.id,
+      useHtml,
     },
   })
 
@@ -77,18 +83,19 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
     setDownloading(true)
     const { pdfUrl } = data.convertToPdf // this is the relative url, like "uploads/filename.pdf"
 
-    // use this to open the PDF in a new tab:
+    if (useHtml) {
+      // use this to open the PDF in a new tab:
+      window.open(pdfUrl)
+    } else {
+      // use this code for downloading the PDF:
 
-    // window.open(pdfUrl)
+      const link = document.createElement('a')
+      link.href = pdfUrl
+      link.download = `${manuscript.meta.title || 'title'}.pdf`
+      link.click()
 
-    // use this code for downloading the PDF:
-
-    const link = document.createElement('a')
-    link.href = pdfUrl
-    link.download = `${manuscript.meta.title || 'title'}.pdf`
-    link.click()
-
-    // console.log(`Downloading ${link.download}`)
+      // console.log(`Downloading ${link.download}`)
+    }
 
     // For Firefox it is necessary to delay revoking the ObjectURL.
 
