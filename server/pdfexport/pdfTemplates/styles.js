@@ -27,6 +27,9 @@ const css = `
 		padding: 50px;
 		margin: 100px;
 	}
+	section {
+		display: none;
+	}
 
     body {
         background-color: var(--color-background);

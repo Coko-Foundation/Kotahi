@@ -5,7 +5,7 @@ import Modal from 'react-modal'
 import Production from './Production'
 import { Spinner, CommsErrorBanner } from '../../../shared'
 
-const useHtml = true
+const useHtml = false
 
 // If this is set to TRUE, we generate HTML and send back the HTML address instead of the PDF address
 // This is a temporary measure!
@@ -49,6 +49,8 @@ const query = gql`
 
 	}
 `
+
+// For now, doing this separately from the page query because this takes a long time and we don't want to wait for it.
 
 const getPdfQuery = gql`
   query($manuscriptId: String!, $useHtml: Boolean) {
@@ -161,15 +163,25 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
 const ProductionPage = ({ match, ...props }) => {
   const [makingPdf, setMakingPdf] = React.useState(false)
   const [makingJats, setMakingJats] = React.useState(false)
+  const [saving, setSaving] = React.useState(false)
+  const [downloading, setDownloading] = React.useState(false)
+
+  const [currentJats, setCurrentJats] = React.useState({
+    xml: '',
+    error: false,
+  })
+
   const [update] = useMutation(updateMutation)
 
-  const updateManuscript = (versionId, manuscriptDelta) => {
-    return update({
+  const updateManuscript = async (versionId, manuscriptDelta) => {
+    const newQuery = await update({
       variables: {
         id: versionId,
         input: JSON.stringify(manuscriptDelta),
       },
     })
+
+    return newQuery
   }
 
   const { data, loading, error, refetch } = useQuery(query, {
@@ -179,28 +191,59 @@ const ProductionPage = ({ match, ...props }) => {
     },
   })
 
+  const updateQuery = async () => {
+    setSaving(true)
+
+    let newQuery = await refetch({
+      id: match.params.version,
+      manuscriptId: manuscript.id,
+    })
+
+    // doing a second pass – first pass updates manuscript, second one gets updated XML.
+    newQuery = await refetch({
+      id: match.params.version,
+      manuscriptId: manuscript.id,
+    })
+
+    await setCurrentJats(newQuery.data.convertToJats)
+    await setSaving(false)
+    return newQuery
+  }
+
+  const downloadJats = async () => {
+    if (!downloading) {
+      setDownloading(true)
+
+      if (currentJats.error) {
+        // eslint-disable-next-line
+        console.error('Error making JATS: ', currentJats.error)
+      } else {
+        // eslint-disable-next-line
+        console.log('HTML:\n\n', manuscript.meta.source)
+        // eslint-disable-next-line
+        console.log('JATS:\n\n', currentJats.xml)
+        // JATS XML file opens in new tab
+        const blob = new Blob([currentJats.xml], { type: 'text/xml' })
+        const url = URL.createObjectURL(blob)
+        window.open(url)
+        URL.revokeObjectURL(currentJats.xml)
+      }
+
+      setMakingJats(false)
+      setDownloading(false)
+    }
+  }
+
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
-
   const { manuscript, currentUser, convertToJats } = data
 
-  // console.log(manuscript.meta.source, convertToJats.xml)
+  if (!currentJats.xml) {
+    setCurrentJats(convertToJats)
+  }
 
-  if (makingJats) {
-    if (convertToJats.error) {
-      // eslint-disable-next-line
-      console.error('Error making JATS: ', convertToJats.error)
-    } else {
-      /* eslint-disable */
-      console.log('HTML:\n\n', manuscript.meta.source)
-      console.log('JATS:\n\n', convertToJats.xml)
-      // JATS XML file opens in new tab
-      let blob = new Blob([convertToJats.xml], { type: 'text/xml' })
-      let url = URL.createObjectURL(blob)
-      window.open(url)
-      URL.revokeObjectURL(convertToJats.xml)
-    }
-    setMakingJats(false)
+  if (makingJats && !saving) {
+    downloadJats()
   }
 
   return (
@@ -209,7 +252,7 @@ const ProductionPage = ({ match, ...props }) => {
         <DownloadPdfComponent
           manuscript={manuscript}
           resetMakingPdf={() => {
-            refetch({ id: match.params.version, manuscriptId: manuscript.id })
+            // refetch({ id: match.params.version, manuscriptId: manuscript.id })
             setMakingPdf(false)
           }}
         />
@@ -219,17 +262,18 @@ const ProductionPage = ({ match, ...props }) => {
         file={
           manuscript.files.find(file => file.fileType === 'manuscript') || {}
         }
-        makePdf={setMakingPdf}
         makeJats={() => {
-          // TODO: should we make sure that we've saved the manuscript first?
-          // refetch({ id: match.params.version, manuscriptId: manuscript.id })
           setMakingJats(true)
+        }}
+        makePdf={() => {
+          setMakingPdf(true)
         }}
         manuscript={manuscript}
         updateManuscript={(a, b) => {
+          // eslint-disable-next-line
           console.log('in update manuscript!')
           updateManuscript(a, b)
-          refetch({ id: match.params.version, manuscriptId: manuscript.id })
+          updateQuery()
         }}
       />
     </div>
