@@ -37,7 +37,8 @@ const getNote = (notes, type) =>
   notes.find(note => note.notesType === type) || {}
 
 const getSupplementaryFiles = supplementary =>
-  (supplementary || []).filter(file => file.tags.includes('supplementary')) || []
+  (supplementary || []).filter(file => file.tags.includes('supplementary')) ||
+  []
 
 const getManuscriptImageFiles = image =>
   (image || []).filter(file => file.tags.includes('manuscriptImage')) || []

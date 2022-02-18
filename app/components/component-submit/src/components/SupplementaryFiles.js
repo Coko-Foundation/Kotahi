@@ -4,8 +4,9 @@ import { Section, Legend } from '../style'
 
 const SupplementaryFiles = ({ manuscript }) => (
   <Section id="files.supplementary">
-    {(manuscript.files || []).filter(file => file.tags.includes('supplementary'))
-      .length > 0
+    {(manuscript.files || []).filter(file =>
+      file.tags.includes('supplementary'),
+    ).length > 0
       ? [
           <Legend htmlFor="supplementary" key={1}>
             Supplementary materials uploaded
@@ -14,7 +15,11 @@ const SupplementaryFiles = ({ manuscript }) => (
             {manuscript.files
               .filter(file => file.tags.includes('supplementary'))
               .map(attachment => (
-                <Attachment file={attachment} key={attachment.storedObject[0].url} uploaded />
+                <Attachment
+                  file={attachment}
+                  key={attachment.storedObject[0].url}
+                  uploaded
+                />
               ))}
           </div>,
         ]

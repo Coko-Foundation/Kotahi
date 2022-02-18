@@ -10,8 +10,8 @@ const EditorSection = ({
   readonly,
   currentUser,
 }) => {
-  const manuscriptFile = manuscript?.files?.find(
-    file => file.tags.includes('manuscript'),
+  const manuscriptFile = manuscript?.files?.find(file =>
+    file.tags.includes('manuscript'),
   )
 
   if (!manuscriptFile) {

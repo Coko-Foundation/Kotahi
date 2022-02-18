@@ -118,7 +118,11 @@ const UploadingFile = ({
     <Root>
       {!!error && <ErrorWrapper>{error}</ErrorWrapper>}
       {uploaded ? (
-        <a download={file.name} href={file.storedObjects[0].url} title={file.name}>
+        <a
+          download={file.name}
+          href={file.storedObjects[0].url}
+          title={file.name}
+        >
           {icon}
         </a>
       ) : (
@@ -126,7 +130,11 @@ const UploadingFile = ({
       )}
       <Filename>
         {uploaded ? (
-          <a download={file.name} href={file.storedObjects[0].url} title={file.name}>
+          <a
+            download={file.name}
+            href={file.storedObjects[0].url}
+            title={file.name}
+          >
             {file.name}
           </a>
         ) : (

@@ -135,7 +135,6 @@ class Manuscript extends BaseModel {
     /* eslint-disable-next-line global-require */
     const File = require('@coko/server/src/models/file/file.model')
 
-
     return {
       submitter: {
         relation: BaseModel.BelongsToOneRelation,
