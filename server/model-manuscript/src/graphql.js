@@ -24,6 +24,7 @@ const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import'
 const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
 const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
+const validateApiToken = require('../../utils/validateApiToken')
 
 const SUBMISSION_FIELD_PREFIX = 'submission'
 const META_FIELD_PREFIX = 'meta'
@@ -1065,6 +1066,29 @@ const resolvers = {
         publishedDate: m.published,
       }
     },
+    async unreviewedPreprints(_, { token }, ctx) {
+      validateApiToken(token, config.api.tokens)
+
+      const manuscripts = await models.Manuscript.query()
+        .where({ status: 'new' })
+        .whereRaw(`submission->>'labels' = 'readyToEvaluate'`)
+
+      return manuscripts.map(m => ({
+        id: m.id,
+        shortId: m.shortId,
+        title: m.meta.title || m.submission.title || m.submission.description,
+        abstract: m.meta.abstract || m.submission.abstract,
+        authors: m.submission.authors || m.authors || [],
+        doi: m.submission.doi.startsWith('https://doi.org/') // TODO We should strip this at time of import
+          ? m.submission.doi.substr(16)
+          : m.submission.doi,
+        uri:
+          m.submission.link ||
+          m.submission.biorxivURL ||
+          m.submission.url ||
+          m.submission.uri,
+      }))
+    },
 
     async validateDOI(_, { articleURL }, ctx) {
       const DOI = encodeURI(articleURL.split('.org/')[1])
@@ -1105,6 +1129,7 @@ const typeDefs = `
     manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!
     """ Get a published manuscript by ID, or null if this manuscript is not published or not found """
     publishedManuscript(id: ID!): PublishedManuscript
+    unreviewedPreprints(token: String!): [Preprint]
   }
 
   input ManuscriptsFilter {
@@ -1251,6 +1276,16 @@ const typeDefs = `
     notes: [Note]
     keywords: String
     manuscriptId: ID
+  }
+
+  type Preprint {
+    id: ID!
+    shortId: Int!
+    title: String!
+    abstract: String
+    authors: [Author!]!
+    doi: String!
+    uri: String!
   }
 
   type ArticleId {
