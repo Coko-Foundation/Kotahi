@@ -59,8 +59,8 @@ const filesToAttachment = file => ({
 const filterFileManuscript = files =>
   files.filter(
     file =>
-      file.fileType === 'manuscript' &&
-      file.mimeType !==
+      file.tags.includes('manuscript') &&
+      file.storedObjects[0].mimetype !==
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   )
 
@@ -380,6 +380,8 @@ FormTemplate.propTypes = {
     files: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string,
+        tags: PropTypes.arrayOf(PropTypes.string.isRequired),
+        storedObjects: PropTypes.arrayOf(PropTypes.object),
         url: PropTypes.string.isRequired,
       }).isRequired,
     ).isRequired,

@@ -20,7 +20,6 @@ const typeDefs = `
    name: String!
    alt: String
    caption: String
-   url: String
    tags: [String]
    objectId: ID
    storedObjects: [StoredObjects!]!
@@ -43,6 +42,7 @@ const typeDefs = `
    mimetype: String!
    extension: String!
    imageMetadata: ImageMetadata
+   url: String
  }
 
  enum ImageSize {

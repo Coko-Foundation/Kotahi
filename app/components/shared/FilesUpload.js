@@ -81,12 +81,7 @@ const DropzoneAndList = ({
       file.originalIndex = index
       return file
     })
-    .filter(val => (fileType ? val.fileType === fileType : true))
-    .map(val => {
-      // eslint-disable-next-line no-param-reassign
-      val.name = val.filename
-      return val
-    })
+    .filter(val => (fileType ? val.tags.includes(fileType) : true))
 
   const disabled = !acceptMultiple && !!files.length
 

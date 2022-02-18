@@ -3,7 +3,7 @@ const { ref } = require('objection')
 const axios = require('axios')
 const { mergeWith, isArray } = require('lodash')
 const config = require('config')
-const { pubsubManager } = require('@coko/server')
+const { pubsubManager, fileStorage } = require('@coko/server')
 const models = require('@pubsweet/models')
 
 const { getPubsub } = pubsubManager
@@ -802,6 +802,15 @@ const resolvers = {
       if (!manuscript.meta) {
         manuscript.meta = {}
       }
+
+      manuscript.files = await Promise.all(manuscript.files.map(async file => {
+        /* eslint-disable-next-line no-param-reassign */
+        file.storedObjects = await Promise.all(file.storedObjects.map( async storedObject => {
+          const url = await fileStorage.getURL(storedObject.key)
+          return {...storedObject, url: url}
+        }))
+        return file
+      }))
 
       manuscript.meta.notes = (manuscript.meta || {}).notes || [
         {

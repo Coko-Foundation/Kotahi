@@ -35,12 +35,9 @@ const fragmentFields = `
   files {
     id
     created
-    label
-    filename
-    mimeType
-    fileType
-    size
-    url
+    tags
+    storedObjects
+    objectId
   }
   reviews {
     open

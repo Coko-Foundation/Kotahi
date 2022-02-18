@@ -11,7 +11,7 @@ const EditorSection = ({
   currentUser,
 }) => {
   const manuscriptFile = manuscript?.files?.find(
-    file => file.fileType === 'manuscript',
+    file => file.tags.includes('manuscript'),
   )
 
   if (!manuscriptFile) {
@@ -19,7 +19,7 @@ const EditorSection = ({
   }
 
   if (
-    manuscriptFile.mimeType !==
+    manuscriptFile.storedObjects[0].mimetype !==
     'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
   )
     return <Info>No supported view of the file</Info>
@@ -72,8 +72,8 @@ EditorSection.propTypes = {
   manuscript: PropTypes.shape({
     files: PropTypes.arrayOf(
       PropTypes.shape({
-        fileType: PropTypes.string.isRequired,
-        mimeType: PropTypes.string.isRequired,
+        storedObjects: PropTypes.arrayOf(PropTypes.object.isRequired),
+        tags: PropTypes.arrayOf(PropTypes.string.isRequired),
       }),
     ),
     meta: PropTypes.shape({
