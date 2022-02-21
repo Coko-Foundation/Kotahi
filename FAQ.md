@@ -81,12 +81,7 @@ Migrate the test database using `yarn dotenv yarn pubsweet migrate`.
 
 While Kotahi deals with importing, reviewing, editing and preproduction, the final step of publishing to the web (or to print) is relegated to other tools. A wide variety of tools exist for building a static website from structured data; you may wish to use Coko Flax which is built expressly for this task.
 
-Kotahi provides a GraphQL API for obtaining published article data:
-
-- `manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!` returns published manuscripts, with an optional startDate and/or limit.
-- `publishedManuscript(id: ID!): PublishedManuscript` returns a singled published manuscript by ID, or null if this manuscript is not published or not found.
-
-Consult [the code](https://gitlab.coko.foundation/kotahi/kotahi/blob/5b26b92d662e83061b1072afddb7fd319655a940/server/model-manuscript/src/graphql.js) for details, or the graphql playground (typically at http://localhost:3000/graphql, when your dev environment is running).
+Kotahi provides a GraphQL API for obtaining published article data; see [API](#api) below.
 
 Kotahi can also be configured to trigger a webhook whenever an article is published, using the following environment variables:
 
@@ -180,15 +175,44 @@ Using these keys, set the following `.env` variables:
 ```
 HYPOTHESIS_API_KEY=<your API key here>
 HYPOTHESIS_GROUP=<group key here>
+HYPOTHESIS_PUBLISH_FIELDS=<comma-separated list of field internal names>
 ```
 
-Your submission form will require fields with the following internal names:
+The `HYPOTHESIS_PUBLISH_FIELDS` variable should contain an ordered list of the AbstractEditor or TextField fields from your submission form that you wish to publish, e.g. `"submission.review1,submission.review2,submission.review3,submission.summary"`. This list can be surrounded by double-quotes. You can also specify a hypothesis tag for any field by suffixing the field internal name with `:<tag>`, e.g.:
 
-- `review1`, `review2` .. `review9` (up to 9 of these, as many as you need): AbstractInput fields
-- `summary` (optional): AbstractInput field
-- `biorxivURL`: The URL of the page to be annotated
+```
+"submission.review1:peerReview,submission.review2:peerReview,submission.review3:peerReview,submission.summary:evaluationSummary"
+```
 
-When the "Publish" button is pressed in Kotahi, any reviews that contain text, and a summary, if it contains text, will be published to Hypothesis using the provided keys. Reviews and summary can be modified or deleted, and this will be updated upon pressing the Publish button again.
+Your submission form must also contain a field with the internal name `submission.biorxivURL` or `submission.link`, which should contain the URL of the page to be annotated.
+
+When the "Publish" button is pressed in Kotahi, the named fields (if they contain text) will each be published as a Hypothesis annotation, using the provided keys. These annotations can be updated or deleted by modifying or removing the text in the fields and pressing the "Publish" button again.
+
+## API
+
+Kotahi exposes a graphql API for external access. The available queries are:
+
+- `manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!` returns published manuscripts, with an optional startDate and/or limit.
+- `publishedManuscript(id: ID!): PublishedManuscript` returns a single published manuscript by ID, or null if this manuscript is not published or not found.
+- `unreviewedPreprints(token: String!): [Preprint]` returns a list of manuscripts with the `readyToEvaluate` label.
+
+Consult [the code](https://gitlab.coko.foundation/kotahi/kotahi/blob/5b26b92d662e83061b1072afddb7fd319655a940/server/model-manuscript/src/graphql.js) for details, or the graphql playground (typically at http://localhost:4000/graphql, when your dev environment is running).
+
+While these queries are publicly exposed and don't need a JWT token, the `unreviewedPreprints` query expects a `token` parameter for authentication; this must match a secret token set in the `KOTAHI_API_TOKENS` environment variable in the `.env` file. Tokens may contain any characters other than commas, and may not start or end with whitespace. Multiple tokens may be stored, separated by commas. We recommend that each token contain a human-readable identifier and a strong random string, e.g.:
+
+```
+KOTAHI_API_TOKENS="Alice ZSR2YyyMFB1y55, Bob J0m7j4JfSxOtZ2, Catherine 3BV3K+1p4PRJ5A"
+```
+
+Bob's token would then be `"Bob J0m7j4JfSxOtZ2"`.
+
+The `unreviewedPreprints` query returns an `id` and `shortId`, and the following fields if they are present in your submission form:
+
+- `meta.title` or `submission.title` or `submission.description`
+- `meta.abstract` or `submission.abstract`
+- `submission.authors` (as an AuthorsInput field)
+- `submission.doi`
+- `submission.url` or `submission.uri` or `submission.link` or `submission.biorxivURL`
 
 ## Going further
 

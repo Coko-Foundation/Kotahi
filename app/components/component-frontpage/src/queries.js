@@ -2,7 +2,11 @@ import gql from 'graphql-tag'
 
 export default {
   frontpage: gql`
-    query publishedManuscripts($sort: String, $offset: Int, $limit: Int) {
+    query publishedManuscriptsAndForm(
+      $sort: String
+      $offset: Int
+      $limit: Int
+    ) {
       publishedManuscripts(sort: $sort, offset: $offset, limit: $limit) {
         totalCount
         manuscripts {
@@ -47,6 +51,16 @@ export default {
             defaultIdentity {
               name
             }
+          }
+        }
+      }
+      formForPurpose(purpose: "submit") {
+        structure {
+          children {
+            title
+            shortDescription
+            id
+            name
           }
         }
       }

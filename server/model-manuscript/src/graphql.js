@@ -24,6 +24,7 @@ const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import'
 const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
 const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
+const validateApiToken = require('../../utils/validateApiToken')
 
 const SUBMISSION_FIELD_PREFIX = 'submission'
 const META_FIELD_PREFIX = 'meta'
@@ -134,7 +135,7 @@ const hasEvaluations = manuscript => {
 }
 
 /** Send the manuscriptId OR a configured ref; and send token if one is configured */
-const tryPublishingWebhook = manuscriptId => {
+const tryPublishingWebhook = async manuscriptId => {
   const publishingWebhookUrl = config['publishing-webhook'].publishingWebhookUrl
 
   if (publishingWebhookUrl) {
@@ -143,14 +144,13 @@ const tryPublishingWebhook = manuscriptId => {
     const payload = { ref: reference || manuscriptId }
     if (token) payload.token = token
 
-    axios
+    await axios
       .post(publishingWebhookUrl, payload)
       // .then(res => {})
       .catch(error => {
-        console.error(
-          `Failed to call publishing webhook at ${publishingWebhookUrl} for article ${manuscriptId}`,
-        )
+        const message = `Failed to call publishing webhook at ${publishingWebhookUrl} for article ${manuscriptId}`
         console.error(error)
+        throw new Error(message)
       })
   }
 }
@@ -309,32 +309,18 @@ const resolvers = {
       manuscript.manuscriptVersions = []
       return manuscript
     },
-    async importManuscripts(_, props, ctx) {
-      if (isImportInProgress) {
-        return null
-      }
-
+    importManuscripts(_, props, ctx) {
+      if (isImportInProgress) return false
       isImportInProgress = true
 
-      const pubsub = await getPubsub()
+      const promises = []
 
       if (process.env.INSTANCE_NAME === 'ncrc') {
-        const manuscriptsFromBiorxiv = await importArticlesFromBiorxiv(ctx)
-
-        const manuscriptsFromPubmed = await importArticlesFromPubmed(ctx)
-        isImportInProgress = false
-
-        pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
-          manuscriptsImportStatus: true,
-        })
-
-        return manuscriptsFromBiorxiv.concat(manuscriptsFromPubmed)
-      }
-
-      if (process.env.INSTANCE_NAME === 'colab') {
-        const importedManuscripts = await importArticlesFromBiorxivWithFullTextSearch(
-          ctx,
-          [
+        promises.push(importArticlesFromBiorxiv(ctx))
+        promises.push(importArticlesFromPubmed(ctx))
+      } else if (process.env.INSTANCE_NAME === 'colab') {
+        promises.push(
+          importArticlesFromBiorxivWithFullTextSearch(ctx, [
             'membrane protein',
             'ion channel',
             'transporter',
@@ -351,19 +337,23 @@ const resolvers = {
             'patch-clamp',
             'voltage-clamp',
             'single-channel',
-          ],
+          ]),
         )
-
-        isImportInProgress = false
-
-        pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
-          manuscriptsImportStatus: true,
-        })
-
-        return importedManuscripts
       }
 
-      return null
+      if (!promises.length) return false
+
+      Promise.all(promises)
+        .catch(error => console.error(error))
+        .finally(async () => {
+          isImportInProgress = false
+          const pubsub = await getPubsub()
+          pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
+            manuscriptsImportStatus: true,
+          })
+        })
+
+      return true
     },
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
@@ -785,7 +775,7 @@ const resolvers = {
           return null
         }
 
-        steps.push(succeeded, errorMessage, stepLabel)
+        steps.push({ succeeded, errorMessage, stepLabel })
       } else if (['colab'].includes(process.env.INSTANCE_NAME)) {
         // TODO: A note in the code said that for Colab instance, submission.editDate should be updated. Is this true? (See commonUpdateManuscript() for example code.)
       }
@@ -810,13 +800,21 @@ const resolvers = {
           } else message += err.toString()
           succeeded = false
           errorMessage = message
-          throw new Error(message)
         }
 
-        steps.push(stepLabel, succeeded, errorMessage)
+        steps.push({ stepLabel, succeeded, errorMessage })
       }
 
-      tryPublishingWebhook(manuscript.id)
+      try {
+        await tryPublishingWebhook(manuscript.id)
+        steps.push({ stepLabel: 'Publishing webhook', succeeded: true })
+      } catch (err) {
+        steps.push({
+          stepLabel: 'Publishing webhook',
+          succeeded: false,
+          errorMessage: err.message,
+        })
+      }
 
       const updatedManuscript = await models.Manuscript.query().updateAndFetchById(
         id,
@@ -1068,6 +1066,29 @@ const resolvers = {
         publishedDate: m.published,
       }
     },
+    async unreviewedPreprints(_, { token }, ctx) {
+      validateApiToken(token, config.api.tokens)
+
+      const manuscripts = await models.Manuscript.query()
+        .where({ status: 'new' })
+        .whereRaw(`submission->>'labels' = 'readyToEvaluate'`)
+
+      return manuscripts.map(m => ({
+        id: m.id,
+        shortId: m.shortId,
+        title: m.meta.title || m.submission.title || m.submission.description,
+        abstract: m.meta.abstract || m.submission.abstract,
+        authors: m.submission.authors || m.authors || [],
+        doi: m.submission.doi.startsWith('https://doi.org/') // TODO We should strip this at time of import
+          ? m.submission.doi.substr(16)
+          : m.submission.doi,
+        uri:
+          m.submission.link ||
+          m.submission.biorxivURL ||
+          m.submission.url ||
+          m.submission.uri,
+      }))
+    },
 
     async validateDOI(_, { articleURL }, ctx) {
       const DOI = encodeURI(articleURL.split('.org/')[1])
@@ -1108,6 +1129,7 @@ const typeDefs = `
     manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!
     """ Get a published manuscript by ID, or null if this manuscript is not published or not found """
     publishedManuscript(id: ID!): PublishedManuscript
+    unreviewedPreprints(token: String!): [Preprint]
   }
 
   input ManuscriptsFilter {
@@ -1146,7 +1168,7 @@ const typeDefs = `
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript
-    importManuscripts: PaginatedManuscripts
+    importManuscripts: Boolean!
   }
 
   type Manuscript implements Object {
@@ -1254,6 +1276,16 @@ const typeDefs = `
     notes: [Note]
     keywords: String
     manuscriptId: ID
+  }
+
+  type Preprint {
+    id: ID!
+    shortId: Int!
+    title: String!
+    abstract: String
+    authors: [Author!]!
+    doi: String!
+    uri: String!
   }
 
   type ArticleId {

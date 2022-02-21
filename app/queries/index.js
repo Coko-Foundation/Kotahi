@@ -214,24 +214,18 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
 `
 export const IMPORT_MANUSCRIPTS = gql`
   mutation {
-    importManuscripts {
-      totalCount
-      manuscripts {
-        id
-        submission
-        created
-        updated
-        status
-        meta {
-          manuscriptId
-          title
-        }
-      }
-    }
+    importManuscripts
   }
 `
 export const IMPORTED_MANUSCRIPTS_SUBSCRIPTION = gql`
   subscription manuscriptsImportStatus {
     manuscriptsImportStatus
+  }
+`
+export const GET_SYSTEM_WIDE_DISCUSSION_CHANNEL = gql`
+  query {
+    systemWideDiscussionChannel {
+      id
+    }
   }
 `

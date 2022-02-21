@@ -59,9 +59,13 @@ module.exports = {
     journalAbbreviatedName: 'JOURNAL_ABBREVIATED_NAME',
     journalHomepage: 'JOURNAL_HOMEPAGE',
   },
+  api: {
+    tokens: 'KOTAHI_API_TOKENS',
+  },
   hypothesis: {
     apiKey: 'HYPOTHESIS_API_KEY',
     group: 'HYPOTHESIS_GROUP',
+    publishFields: 'HYPOTHESIS_PUBLISH_FIELDS',
   },
   review: {
     shared: 'REVIEW_SHARED',

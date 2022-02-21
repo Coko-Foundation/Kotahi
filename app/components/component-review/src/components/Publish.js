@@ -68,6 +68,7 @@ const Publish = ({ manuscript }) => {
                 })
                 .catch(error => {
                   console.error(error)
+                  setIsPublishing(false)
                   setPublishingError(error.message)
                 })
             }}

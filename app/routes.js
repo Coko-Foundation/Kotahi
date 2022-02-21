@@ -3,6 +3,7 @@ import { Route, Switch } from 'react-router-dom'
 
 import config from 'config'
 import Login from './components/component-login/src'
+import ArticleEvaluationPage from './components/component-evaluation'
 import ArticleEvaluationResultPage from './components/component-evaluation-result'
 import ArticleEvaluationSummaryPage from './components/component-evaluation-summary'
 
@@ -22,19 +23,25 @@ export default (
     <Route component={Login} path="/login" />
     <Route component={Frontpage} exact path="/" />
     <Route component={ManuscriptDetails} exact path="/:manuscriptId" />
-    {['elife'].includes(process.env.INSTANCE_NAME) && (
-      <Route
-        component={ArticleEvaluationResultPage}
-        exact
-        path="/versions/:version/article-evaluation-result/:evaluationNumber"
-      />
-    )}
-    {['elife'].includes(process.env.INSTANCE_NAME) && (
-      <Route
-        component={ArticleEvaluationSummaryPage}
-        exact
-        path="/versions/:version/article-evaluation-summary"
-      />
-    )}
+    <Route
+      component={ArticleEvaluationResultPage}
+      exact
+      path="/versions/:version/article-evaluation-result/:evaluationNumber"
+    />
+    <Route
+      component={ArticleEvaluationSummaryPage}
+      exact
+      path="/versions/:version/article-evaluation-summary"
+    />
+    <Route
+      component={ArticleEvaluationPage}
+      exact
+      path="/versions/:version/article-evaluation/:fieldNameA"
+    />
+    <Route
+      component={ArticleEvaluationPage}
+      exact
+      path="/versions/:version/article-evaluation/:fieldNameA/:fieldNameB"
+    />
   </Switch>
 )

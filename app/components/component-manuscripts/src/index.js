@@ -17,6 +17,7 @@ import {
   DELETE_MANUSCRIPTS,
   IMPORT_MANUSCRIPTS,
   IMPORTED_MANUSCRIPTS_SUBSCRIPTION,
+  GET_SYSTEM_WIDE_DISCUSSION_CHANNEL,
 } from '../../../queries'
 import configuredColumnNames from './configuredColumnNames'
 import { updateMutation } from '../../component-submit/src/components/SubmitPage'
@@ -31,6 +32,7 @@ const ManuscriptTable = ({ history }) => {
   const [sortName, setSortName] = useState('created')
   const [sortDirection, setSortDirection] = useState('DESC')
   const [page, setPage] = useState(1)
+  const [isImporting, setIsImporting] = useState(false)
 
   const uriQueryParams = getUriQueryParams(window.location)
   const limit = process.env.INSTANCE_NAME === 'ncrc' ? 100 : 10
@@ -47,6 +49,11 @@ const ManuscriptTable = ({ history }) => {
     fetchPolicy: 'network-only',
   })
 
+  // GET_SYSTEM_WIDE_DISCUSSION_ID
+  const systemWideDiscussionChannel = useQuery(
+    GET_SYSTEM_WIDE_DISCUSSION_CHANNEL,
+  )
+
   useEffect(() => {
     queryObject.refetch()
     setPage(1)
@@ -60,13 +67,23 @@ const ManuscriptTable = ({ history }) => {
         },
       } = data
 
+      queryObject.refetch()
+      setIsImporting(false)
+      setPage(1)
+
       toast.success(
         manuscriptsImportStatus && 'Manuscripts successfully imported',
+        { hideProgressBar: true },
       )
     },
   })
 
   const [importManuscripts] = useMutation(IMPORT_MANUSCRIPTS)
+
+  const importManuscriptsAndRefetch = () => {
+    setIsImporting(true)
+    importManuscripts()
+  }
 
   const [deleteManuscriptMutation] = useMutation(DELETE_MANUSCRIPT, {
     update(cache, { data: { id } }) {
@@ -133,7 +150,8 @@ const ManuscriptTable = ({ history }) => {
       confrimBulkDelete={confrimBulkDelete}
       deleteManuscriptMutations={deleteManuscriptMutations}
       history={history}
-      importManuscripts={importManuscripts}
+      importManuscripts={importManuscriptsAndRefetch}
+      isImporting={isImporting}
       page={page}
       publishManuscripts={publishManuscripts}
       queryObject={queryObject}
@@ -143,6 +161,7 @@ const ManuscriptTable = ({ history }) => {
       setSortName={setSortName}
       sortDirection={sortDirection}
       sortName={sortName}
+      systemWideDiscussionChannel={systemWideDiscussionChannel}
       urlFrag={urlFrag}
     />
   )
