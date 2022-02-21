@@ -102,7 +102,7 @@ const EditorItem = ({ version, currentRoles }) => (
       </Meta>
     </Item>
     <Item>
-      <VersionTitleLink id={version.id} page="decisions" version={version}>
+      <VersionTitleLink id={version.id} page="decision" version={version}>
         <VersionTitle version={version} />
       </VersionTitleLink>
       <EditorItemLinks version={version} />

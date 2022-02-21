@@ -5,6 +5,11 @@ import Color from 'color'
 
 export const StyledButton = styled(Button)`
   cursor: pointer;
+  max-width: 100px;
+  min-width: unset;
+  overflow-wrap: normal;
+  padding: 4px;
+  width: 100%;
 `
 
 export const FloatRightButton = styled(StyledButton)`
@@ -103,6 +108,9 @@ export const Cell = styled.div`
     css`
       cursor: pointer;
     `}
+
+  overflow: hidden;
+  overflow-wrap: anywhere;
 `
 
 /** Displays the label as a badge colored according to props.color */
@@ -123,7 +131,9 @@ export const LabelBadge = styled.div`
           `
         : ''};
     `}
+  overflow-wrap: normal;
   padding: ${grid(0.5)} ${grid(1)};
+  text-overflow: clip;
 `
 
 export const SortArrow = styled.span`

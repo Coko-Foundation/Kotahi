@@ -4,7 +4,6 @@
 // @flow
 import * as React from 'react'
 import { Button } from '@pubsweet/ui'
-import { th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
 import { Icon } from '../../../shared'
 import {
@@ -16,18 +15,10 @@ import {
   PreviewWrapper,
   RemovePreviewButton,
 } from './style'
-import MentionsInput from '../MentionsInput/MentionsInput'
+import ChatWaxEditor from '../ChatWaxEditor'
 
 import { useAppScroller } from '../../../../hooks/useAppScroller'
 import { MEDIA_BREAK } from '../../../layout'
-
-const MarkdownHint = styled.div`
-  color: ${th('colorTextPlaceholder')};
-  font-size: 12px;
-  line-height: 1;
-  min-height: 1em;
-  padding-left: 16px;
-`
 
 const QuotedMessage = styled.div``
 
@@ -46,6 +37,8 @@ const SuperChatInput = props => {
 
   const cacheKey = `last-content-${props.channelId}`
   const [text, changeText] = React.useState('')
+  // key to clear ChatWaxEditor input on submit
+  const [messageSentCount, setMessageSentCount] = React.useState(0)
   const [photoSizeError, setPhotoSizeError] = React.useState('')
   const [inputRef, setInputRef] = React.useState(null)
   const { scrollToBottom } = useAppScroller()
@@ -105,8 +98,7 @@ const SuperChatInput = props => {
     }
   }
 
-  const onChange = e => {
-    const textValue = e.target.value
+  const onChange = textValue => {
     changeText(textValue)
   }
 
@@ -202,7 +194,8 @@ const SuperChatInput = props => {
     // })
 
     // Clear the chat input now that we're sending a message for sure
-    onChange({ target: { value: '' } })
+    onChange('')
+    setMessageSentCount(messageSentCount + 1)
     removeQuotedMessage()
     inputRef && inputRef.focus()
   }
@@ -254,8 +247,8 @@ const SuperChatInput = props => {
           <PhotoSizeError>
             <p>{photoSizeError}</p>
             <Icon
-              color="warn.default"
-              glyph="view-close"
+              color='warn.default'
+              glyph='view-close'
               onClick={() => setPhotoSizeError('')}
               size={16}
             />
@@ -277,37 +270,36 @@ const SuperChatInput = props => {
             >
               {mediaPreview && (
                 <PreviewWrapper>
-                  <img alt="" src={mediaPreview} />
+                  <img alt='' src={mediaPreview} />
                   <RemovePreviewButton onClick={() => setMediaPreview(null)}>
-                    <Icon glyph="view-close-small" size="16" />
+                    <Icon glyph='view-close-small' size='16' />
                   </RemovePreviewButton>
                 </PreviewWrapper>
               )}
               {props.quotedMessage && (
-                <PreviewWrapper data-cy="staged-quoted-message">
+                <PreviewWrapper data-cy='staged-quoted-message'>
                   <QuotedMessage
                     id={props.quotedMessage}
                     threadId={props.threadId}
                   />
                   <RemovePreviewButton
-                    data-cy="remove-staged-quoted-message"
+                    data-cy='remove-staged-quoted-message'
                     onClick={removeQuotedMessage}
                   >
-                    <Icon glyph="view-close-small" size="16" />
+                    <Icon glyph='view-close-small' size='16' />
                   </RemovePreviewButton>
                 </PreviewWrapper>
               )}
-              <MentionsInput
+              <ChatWaxEditor
                 autoFocus={false}
                 hasAttachment={!!props.quotedMessage || !!mediaPreview}
                 inputRef={node => {
                   if (props.onRef) props.onRef(node)
                   setInputRef(node)
                 }}
+                key={messageSentCount}
                 networkDisabled={networkDisabled}
-                // onBlur={props.onBlur}
                 onChange={onChange}
-                // onFocus={props.onFocus}
                 onKeyDown={handleKeyPress}
                 placeholder="Your message here..."
                 searchUsersCallBack={searchUsers}
@@ -315,24 +307,12 @@ const SuperChatInput = props => {
                 value={text}
               />
             </InputWrapper>
-            <Button
-              data-cy="chat-input-send-button"
-              onClick={submit}
-              primary
-              style={{ flex: 'none', marginLeft: '8px' }}
-            >
+            <Button data-cy="chat-input-send-button" onClick={submit} primary>
               Send
             </Button>
           </Form>
         </ChatInputWrapper>
       </ChatInputContainer>
-      <MarkdownHint dataCy="markdownHint">
-        {text.length > 0 && (
-          <span>
-            **<strong>bold</strong>**, *<em>italic</em>*, `code`
-          </span>
-        )}
-      </MarkdownHint>
     </>
   )
 }

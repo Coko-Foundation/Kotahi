@@ -60,8 +60,14 @@ const MESSAGES_SUBSCRIPTION = gql`
 
 const MessageContainer = styled.section`
   background: rgb(255, 255, 255);
-  display: grid;
-  min-width: 100%;
+  display: flex;
+  flex-direction: column;
+
+  height: 100vh;
+  margin: 0 0 0 16px;
+  min-width: calc(100% - 16px);
+  padding-top: -12px;
+  position: relative;
 
   ${props =>
     props.channels
@@ -133,7 +139,7 @@ const subscribeToNewMessages = (subscribeToMore, channelId) =>
     },
   })
 
-const chatComponent = (channelId, channelName, manuscriptId) => {
+const chatComponent = (channelId, channelName, manuscriptId, chatRoomId) => {
   const client = useApolloClient()
 
   const staticSuggestion = []
@@ -239,6 +245,7 @@ const chatComponent = (channelId, channelName, manuscriptId) => {
   return (
     <Chat
       channelId={channelId}
+      chatRoomId={chatRoomId}
       currentUser={currentUser}
       fetchMoreData={fetchMoreData}
       manuscriptId={
@@ -251,7 +258,13 @@ const chatComponent = (channelId, channelName, manuscriptId) => {
   )
 }
 
-const Container = ({ channelId, channels, manuscriptId = null, style }) => {
+const Container = ({
+  channelId,
+  channels,
+  chatRoomId,
+  hideChat,
+  manuscriptId = null,
+}) => {
   if (!channelId && !channels) {
     return null
   }
@@ -261,7 +274,9 @@ const Container = ({ channelId, channels, manuscriptId = null, style }) => {
     channels.map(channel => ({
       label: channel.name,
       key: channel.id,
-      content: <>{chatComponent(channel.id, channel.name, manuscriptId)}</>,
+      content: (
+        <>{chatComponent(channel.id, channel.name, manuscriptId, chatRoomId)}</>
+      ),
     }))
 
   const client = useApolloClient()
@@ -373,19 +388,20 @@ const Container = ({ channelId, channels, manuscriptId = null, style }) => {
         <Tabs
           background='colorBackgroundHue'
           defaultActiveKey={tabs[0].key}
+          hideChat={hideChat}
           sections={tabs}
         />
       ) : (
         <>
           <Chat
             channelId={channelId}
+            chatRoomId={chatRoomId}
             currentUser={currentUser}
             fetchMoreData={fetchMoreData}
             manuscriptId={manuscriptId}
             queryData={queryResult}
             searchUsers={searchUsers}
             sendChannelMessages={sendChannelMessages}
-            style={style}
           />
         </>
       )}

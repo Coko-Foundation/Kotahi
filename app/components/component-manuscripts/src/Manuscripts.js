@@ -1,5 +1,6 @@
 /* eslint-disable no-shadow */
 import React, { useState } from 'react'
+import styled from 'styled-components'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Button, Checkbox } from '@pubsweet/ui'
@@ -22,13 +23,10 @@ import {
   CommsErrorBanner,
   Pagination,
   PaginationContainerShadowed,
-  Chat,
   Columns,
-  RightContainer,
 } from '../../shared'
 import { articleStatuses } from '../../../globals'
-import VideoChatButton from './VideoChatButton'
-import { HideChatButton, ShowChatButton } from './ChatButtons'
+import ShowChatButton from './ChatButtons'
 import MessageContainer from '../../component-chat/src/MessageContainer'
 import Modal from '../../component-modal/src'
 import BulkDeleteModal from './BulkDeleteModal'
@@ -36,6 +34,10 @@ import getColumnsProps from './getColumnsProps'
 import getUriQueryParams from './getUriQueryParams'
 import FilterSortHeader from './FilterSortHeader'
 import { validateManuscript } from '../../../shared/manuscriptUtils'
+
+const HeadingInFlexRow = styled(Heading)`
+  flex-grow: 10;
+`
 
 const Manuscripts = ({ history, ...props }) => {
   const {
@@ -238,8 +240,17 @@ const Manuscripts = ({ history, ...props }) => {
     urlFrag,
   )
 
+  const channels = [
+    {
+      id: systemWideDiscussionChannel.data.systemWideDiscussionChannel.id,
+      name: 'Admin discussion',
+    },
+  ]
+
+  const hideChat = () => setIsAdminChatOpen(false)
+
   return (
-    <Container>
+    <Container style={{ padding: '0px 16px' }}>
       <ToastContainer
         autoClose={5000}
         closeOnClick
@@ -251,35 +262,36 @@ const Manuscripts = ({ history, ...props }) => {
         position="top-center"
         rtl={false}
       />
-      {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
-        <FloatRightButton
-          onClick={() => history.push(`${urlFrag}/newSubmission`)}
-          primary
-        >
-          ＋ New submission
-        </FloatRightButton>
-      )}
-
-      {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
-        <FloatRightButton
-          disabled={isImporting}
-          onClick={importManuscripts}
-          primary
-        >
-          {isImporting ? (
-            <RefreshSpinnerWrapper>
-              <RefreshText>Refreshing</RefreshText> <Loader />
-            </RefreshSpinnerWrapper>
-          ) : (
-            'Refresh'
-          )}
-        </FloatRightButton>
-      )}
-
       <Columns style={{ display: !isAdminChatOpen ? 'block' : 'grid' }}>
-        <div style={{ width: '100%' }}>
+        <div style={{ width: '100%', overflowY: 'scroll', paddingTop: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Heading>Manuscripts</Heading>
+            <HeadingInFlexRow>Manuscripts</HeadingInFlexRow>
+
+            {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
+              <FloatRightButton
+                onClick={() => history.push(`${urlFrag}/newSubmission`)}
+                primary
+              >
+                ＋ New submission
+              </FloatRightButton>
+            )}
+
+            {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
+              <FloatRightButton
+                disabled={isImporting}
+                onClick={importManuscripts}
+                primary
+              >
+                {isImporting ? (
+                  <RefreshSpinnerWrapper>
+                    <RefreshText>Refreshing</RefreshText> <Loader />
+                  </RefreshSpinnerWrapper>
+                ) : (
+                  'Refresh'
+                )}
+              </FloatRightButton>
+            )}
+
             {!isAdminChatOpen && (
               <ShowChatButton onClick={() => setIsAdminChatOpen(true)} />
             )}
@@ -355,29 +367,14 @@ const Manuscripts = ({ history, ...props }) => {
 
         {/* Admin Discussion, Video Chat, Hide Chat, Chat component */}
         {isAdminChatOpen && (
-          <div>
-            <Chat
-              style={{
-                margin: '0 16px',
-                flexDirection: 'column',
-              }}
-            >
-              <RightContainer>
-                Admin Discussion
-                <div style={{ display: 'flex' }}>
-                  <VideoChatButton chatRoomId={chatRoomId} />
-                  <HideChatButton onClick={() => setIsAdminChatOpen(false)} />
-                </div>
-              </RightContainer>
-              <MessageContainer
-                channelId={
-                  systemWideDiscussionChannel.data.systemWideDiscussionChannel
-                    .id
-                }
-                style={{ height: '69vh' }}
-              />
-            </Chat>
-          </div>
+          <MessageContainer
+            channelId={
+              systemWideDiscussionChannel.data.systemWideDiscussionChannel.id
+            }
+            channels={channels}
+            chatRoomId={chatRoomId}
+            hideChat={hideChat}
+          />
         )}
       </Columns>
       {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
