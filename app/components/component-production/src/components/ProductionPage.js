@@ -73,9 +73,6 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
   const [downloading, setDownloading] = React.useState(false)
   const [modalIsOpen, setModalIsOpen] = React.useState(true)
 
-  const [downloading, setDownloading] = React.useState(false)
-  const [modalIsOpen, setModalIsOpen] = React.useState(true)
-
   const { data, loading, error } = useQuery(getPdfQuery, {
     variables: {
       manuscriptId: manuscript.id,
