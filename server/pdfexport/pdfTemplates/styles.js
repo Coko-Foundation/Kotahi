@@ -15,6 +15,22 @@ const css = `
 
 /* To define how the book look on the screen: */
 @media screen {
+	.disclaimer {
+		box-sizing: border-box;
+		display: flex;
+		height: 25%;
+		border: 5px solid blue;
+		justify-content: center;
+		align-items: center;
+		font-size: 24px;
+		line-height: 36px;
+		padding: 50px;
+		margin: 100px;
+	}
+	section {
+		display: none;
+	}
+
     body {
         background-color: var(--color-background);
     }
@@ -246,6 +262,9 @@ strong {
   }
 }
 @media print {
+	.disclaimer {
+		display: none;
+	}
   body {
     font-size: 12px;
     line-height: 22px;

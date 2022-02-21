@@ -5,6 +5,11 @@ import Modal from 'react-modal'
 import Production from './Production'
 import { Spinner, CommsErrorBanner } from '../../../shared'
 
+const useHtml = false
+
+// If this is set to TRUE, we generate HTML and send back the HTML address instead of the PDF address
+// This is a temporary measure!
+
 const fragmentFields = `
   id
   created
@@ -24,22 +29,32 @@ const fragmentFields = `
 `
 
 const query = gql`
-  query($id: ID!) {
+  query($id: ID!, $manuscriptId: String!) {
     currentUser {
       id
       username
       admin
     }
 
+
+
     manuscript(id: $id) {
       ${fragmentFields}
     }
-  }
+
+		convertToJats(manuscriptId: $manuscriptId) {
+      xml
+      error
+    }
+
+	}
 `
 
+// For now, doing this separately from the page query because this takes a long time and we don't want to wait for it.
+
 const getPdfQuery = gql`
-  query($id: String!) {
-    convertToPdf(id: $id) {
+  query($manuscriptId: String!, $useHtml: Boolean) {
+    convertToPdf(manuscriptId: $manuscriptId, useHtml: $useHtml) {
       pdfUrl
     }
   }
@@ -54,54 +69,58 @@ export const updateMutation = gql`
   }
 `
 
-const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
-  if (!title) {
-    return null
-  }
+const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
+  const [downloading, setDownloading] = React.useState(false)
+  const [modalIsOpen, setModalIsOpen] = React.useState(true)
 
   const [downloading, setDownloading] = React.useState(false)
   const [modalIsOpen, setModalIsOpen] = React.useState(true)
 
   const { data, loading, error } = useQuery(getPdfQuery, {
     variables: {
-      id: manuscript.id,
+      manuscriptId: manuscript.id,
+      useHtml,
     },
   })
 
   // Now, download the file
   if (data && !downloading) {
     setDownloading(true)
-    const pdfUrl = `/${data.convertToPdf.pdfUrl}` // this is the relative url, like "uploads/filename.pdf"
+    const { pdfUrl } = data.convertToPdf // this is the relative url, like "uploads/filename.pdf"
 
-    // use this to open the PDF in a new tab:
+    if (useHtml) {
+      // use this to open the PDF in a new tab:
+      const pdfWindow = window.open(pdfUrl)
+      pdfWindow.print()
+    } else {
+      // use this code for downloading the PDF:
 
-    // window.open(pdfUrl)
+      const link = document.createElement('a')
+      link.href = pdfUrl
+      link.download = `${manuscript.meta.title || 'title'}.pdf`
+      link.click()
 
-    // use this code for downloading the PDF:
-
-    const link = document.createElement('a')
-    link.href = pdfUrl
-    link.download = `${manuscript.meta.title || 'title'}.pdf`
-    link.click()
+      // console.log(`Downloading ${link.download}`)
+    }
 
     // For Firefox it is necessary to delay revoking the ObjectURL.
 
     setTimeout(() => {
       window.URL.revokeObjectURL(pdfUrl)
       setModalIsOpen(false)
-      resetTitle()
+      resetMakingPdf()
       setDownloading(false)
     }, 1000)
   }
 
   const onError = () => {
     console.error(error)
-    resetTitle()
+    resetMakingPdf()
   }
 
   const cancelGen = () => {
     // console.log('PDF generation canceled')
-    resetTitle()
+    resetMakingPdf()
   }
 
   return (
@@ -145,45 +164,120 @@ const DownloadPdfComponent = ({ title, manuscript, resetTitle }) => {
 }
 
 const ProductionPage = ({ match, ...props }) => {
-  const [title, setTitle] = React.useState(false)
+  const [makingPdf, setMakingPdf] = React.useState(false)
+  const [makingJats, setMakingJats] = React.useState(false)
+  const [saving, setSaving] = React.useState(false)
+  const [downloading, setDownloading] = React.useState(false)
+
+  const [currentJats, setCurrentJats] = React.useState({
+    xml: '',
+    error: false,
+  })
+
   const [update] = useMutation(updateMutation)
 
-  const updateManuscript = (versionId, manuscriptDelta) => {
-    return update({
+  const updateManuscript = async (versionId, manuscriptDelta) => {
+    const newQuery = await update({
       variables: {
         id: versionId,
         input: JSON.stringify(manuscriptDelta),
       },
     })
+
+    return newQuery
   }
 
-  const { data, loading, error } = useQuery(query, {
+  const { data, loading, error, refetch } = useQuery(query, {
     variables: {
       id: match.params.version,
+      manuscriptId: match.params.version,
     },
   })
 
+  const updateQuery = async () => {
+    setSaving(true)
+
+    let newQuery = await refetch({
+      id: match.params.version,
+      manuscriptId: manuscript.id,
+    })
+
+    // doing a second pass – first pass updates manuscript, second one gets updated XML.
+    newQuery = await refetch({
+      id: match.params.version,
+      manuscriptId: manuscript.id,
+    })
+
+    await setCurrentJats(newQuery.data.convertToJats)
+    await setSaving(false)
+    return newQuery
+  }
+
+  const downloadJats = async () => {
+    if (!downloading) {
+      setDownloading(true)
+
+      if (currentJats.error) {
+        // eslint-disable-next-line
+        console.error('Error making JATS: ', currentJats.error)
+      } else {
+        // eslint-disable-next-line
+        console.log('HTML:\n\n', manuscript.meta.source)
+        // eslint-disable-next-line
+        console.log('JATS:\n\n', currentJats.xml)
+        // JATS XML file opens in new tab
+        const blob = new Blob([currentJats.xml], { type: 'text/xml' })
+        const url = URL.createObjectURL(blob)
+        window.open(url)
+        URL.revokeObjectURL(currentJats.xml)
+      }
+
+      setMakingJats(false)
+      setDownloading(false)
+    }
+  }
+
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
-  const { manuscript, currentUser } = data
+  const { manuscript, currentUser, convertToJats } = data
+
+  if (!currentJats.xml) {
+    setCurrentJats(convertToJats)
+  }
+
+  if (makingJats && !saving) {
+    downloadJats()
+  }
 
   return (
     <div>
-      <DownloadPdfComponent
-        manuscript={manuscript}
-        resetTitle={() => {
-          setTitle(false)
-        }}
-        title={title}
-      />
+      {makingPdf ? (
+        <DownloadPdfComponent
+          manuscript={manuscript}
+          resetMakingPdf={() => {
+            // refetch({ id: match.params.version, manuscriptId: manuscript.id })
+            setMakingPdf(false)
+          }}
+        />
+      ) : null}
       <Production
         currentUser={currentUser}
         file={
           manuscript.files.find(file => file.fileType === 'manuscript') || {}
         }
-        makePdf={setTitle}
+        makeJats={() => {
+          setMakingJats(true)
+        }}
+        makePdf={() => {
+          setMakingPdf(true)
+        }}
         manuscript={manuscript}
-        updateManuscript={updateManuscript}
+        updateManuscript={(a, b) => {
+          // eslint-disable-next-line
+          console.log('in update manuscript!')
+          updateManuscript(a, b)
+          updateQuery()
+        }}
       />
     </div>
   )

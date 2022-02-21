@@ -1,4 +1,14 @@
 const publicationMetadata = {
+  journalId: [
+    { type: 'pmc', value: 'BMJ' },
+    { type: 'publisher', value: 'BR MED J' },
+  ],
+  journalTitle: 'Journal Title',
+  abbrevJournalTitle: 'Jour.Ti.',
+  issn: [
+    { type: 'print', value: '1063-777X' },
+    { type: 'electronic', value: '1090-6517' },
+  ],
   copyright: { name: 'name', description: 'description', year: 'year' },
   publisher: 'elife',
   articleIdOnWebsite: 'x456789',

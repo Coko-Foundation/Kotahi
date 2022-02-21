@@ -94,7 +94,7 @@ module.exports = `<!DOCTYPE html>
 
     <section class="content">
       {{article.parsedSubmission.abstract | safe}}
-      {{article.meta.source | safe}}
+      {{article.meta.source | safe}}
     </section>
 
 

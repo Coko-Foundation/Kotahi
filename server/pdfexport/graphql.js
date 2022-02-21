@@ -100,7 +100,7 @@ const getManuscriptById = async id => {
   return models.Manuscript.query().findById(id)
 }
 
-const pdfHandler = async articleId => {
+const pdfHandler = async manuscriptId => {
   if (!pagedJsAccessToken) {
     // console.log('No pagedJS access token')
     pagedJsAccessToken = await serviceHandshake()
@@ -108,10 +108,10 @@ const pdfHandler = async articleId => {
 
   // get article from Id
 
-  const articleData = await getManuscriptById(articleId)
+  const articleData = await getManuscriptById(manuscriptId)
 
   const raw = await randomBytes(16)
-  const dirName = `${raw.toString('hex')}_${articleId}`
+  const dirName = `${raw.toString('hex')}_${manuscriptId}`
   // console.log("Directory name: ", dirName)
 
   await fsPromised.mkdir(dirName)
@@ -132,7 +132,7 @@ const pdfHandler = async articleId => {
   form.append('onlySourceStylesheet', 'true')
   form.append('imagesForm', 'base64')
 
-  const filename = `${raw.toString('hex')}_${articleData.id}.pdf`
+  const filename = `${raw.toString('hex')}_${manuscriptId}.pdf`
   const tempPath = path.join(uploadsPath, filename)
 
   // console.log(tempPath)
@@ -172,7 +172,7 @@ const pdfHandler = async articleId => {
 
         if (status === 401 && msg === 'expired token') {
           await serviceHandshake()
-          return pdfHandler(articleId)
+          return pdfHandler(manuscriptId)
         }
 
         return reject(
@@ -182,10 +182,38 @@ const pdfHandler = async articleId => {
   })
 }
 
+const htmlHandler = async manuscriptId => {
+  // console.log(`Making HTML for ${manuscriptId}`)
+  const articleData = await getManuscriptById(manuscriptId)
+
+  const raw = await randomBytes(16)
+  const filename = `${raw.toString('hex')}_${manuscriptId}.html`
+  // console.log("Directory name: ", dirName)
+
+  const templatedHtml = applyTemplate(articleData)
+
+  const outHtml = templatedHtml
+    .replace('</body>', `<style>${css}</style></body>`)
+    .replace(
+      '<body>',
+      `<body><div class="disclaimer">Please note: this HTML is formatted for the page, not for the screen! Print this to a PDF, where the styling will display correctly (and this message will not be visible).</div>`,
+    )
+
+  const tempPath = path.join(uploadsPath, filename)
+
+  await fsPromised.appendFile(`${uploadsPath}/${filename}`, outHtml)
+
+  // console.log(`HTML written to ${tempPath}`)
+  return `/${tempPath}`
+}
+
 const resolvers = {
   Query: {
-    convertToPdf: async (_, { id }, ctx) => {
-      const outUrl = await pdfHandler(id, ctx)
+    convertToPdf: async (_, { manuscriptId, useHtml }, ctx) => {
+      const outUrl = await (useHtml
+        ? htmlHandler(manuscriptId, ctx)
+        : pdfHandler(manuscriptId, ctx))
+
       // console.log('pdfUrl', outUrl)
       return { pdfUrl: outUrl || 'busted!' }
     },
@@ -196,7 +224,7 @@ const resolvers = {
 
 const typeDefs = `
 	extend type Query {
-		convertToPdf(id: String!): ConvertToPdfType
+		convertToPdf(manuscriptId: String!, useHtml: Boolean): ConvertToPdfType
 	}
 
 	type ConvertToPdfType {

@@ -4,6 +4,10 @@ const cheerio = require('cheerio')
 
 // const { lte } = require('semver')
 
+function replaceAll(str, find, replace) {
+  return str.replace(new RegExp(find, 'g'), replace)
+}
+
 const htmlToJatsTagMap = {
   b: 'bold',
   strong: 'bold',
@@ -479,12 +483,12 @@ const fixTableCells = html => {
   }
 
   // So that these don't get screwed up by later sectioning
-  deTabledHtml = deTabledHtml.replaceAll('<title>', '<@title>')
-  deTabledHtml = deTabledHtml.replaceAll('</title>', '</@title>')
-  deTabledHtml = deTabledHtml.replaceAll('<sec>', '<@sec>')
-  deTabledHtml = deTabledHtml.replaceAll('</sec>', '</@sec>')
+  deTabledHtml = replaceAll(deTabledHtml, '<title>', '<@title>')
+  deTabledHtml = replaceAll(deTabledHtml, '</title>', '</@title>')
+  deTabledHtml = replaceAll(deTabledHtml, '<sec>', '<@sec>')
+  deTabledHtml = replaceAll(deTabledHtml, '</sec>', '</@sec>')
 
-  deTabledHtml = deTabledHtml.replaceAll('<!td!>', '<td>')
+  deTabledHtml = replaceAll(deTabledHtml, '<!td!>', '<td>')
   return { deTabledHtml }
 }
 
@@ -766,10 +770,10 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   let body = htmlToJats(deFrontedHtml)
   // this is to clean out the bad table tags
-  body = body.replaceAll('<@title>', '<title>')
-  body = body.replaceAll('</@title>', '</title>')
-  body = body.replaceAll('<@sec>', '<sec>')
-  body = body.replaceAll('</@sec>', '</sec>')
+  body = replaceAll(body, '<@title>', '<title>')
+  body = replaceAll(body, '</@title>', '</title>')
+  body = replaceAll(body, '<@sec>', '<sec>')
+  body = replaceAll(body, '</@sec>', '</sec>')
   body = `<body>${body}</body>`
 
   const back = `<back>${ack}${appendices}${refList}${fnSection}</back>`
