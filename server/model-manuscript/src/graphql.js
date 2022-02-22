@@ -976,6 +976,14 @@ const resolvers = {
         } else {
           console.warn(`Could not sort on field "${sort.field}`)
         }
+
+        query.orderBy('shortId', sortDirection) // Secondary ordering
+      } else {
+        // Give it some order to prevent it changing on refetch.
+        query.orderBy([
+          { column: 'created', order: 'desc' },
+          { column: 'shortId', order: 'desc' },
+        ])
       }
 
       filters.filter(discardDuplicateFields).forEach(filter => {
