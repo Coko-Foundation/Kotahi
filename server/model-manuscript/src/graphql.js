@@ -3,13 +3,14 @@ const { ref } = require('objection')
 const axios = require('axios')
 const { mergeWith, isArray } = require('lodash')
 const config = require('config')
-const { pubsubManager, fileStorage } = require('@coko/server')
+const { pubsubManager } = require('@coko/server')
 const models = require('@pubsweet/models')
 
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
 const publishToCrossref = require('../../publishing/crossref')
 const { stripSensitiveItems } = require('./manuscriptUtils')
+const { getFilesWithUrl } = require('../../utils/fileStorageUtils')
 
 const {
   publishToHypothesis,
@@ -803,18 +804,7 @@ const resolvers = {
         manuscript.meta = {}
       }
 
-      manuscript.files = await Promise.all(
-        manuscript.files.map(async file => {
-          /* eslint-disable-next-line no-param-reassign */
-          file.storedObjects = await Promise.all(
-            file.storedObjects.map(async storedObject => {
-              const url = await fileStorage.getURL(storedObject.key)
-              return { ...storedObject, url }
-            }),
-          )
-          return file
-        }),
-      )
+      manuscript.files = await getFilesWithUrl(manuscript.files)
 
       manuscript.meta.notes = (manuscript.meta || {}).notes || [
         {
@@ -1181,8 +1171,9 @@ const typeDefs = `
   }
 
   input FileInput {
-    name: String
+    name: String!
     storedObjects: [StoredObjectsInput]!
+    tags: [String]!
   }
 
   input ImageMetadataInput {

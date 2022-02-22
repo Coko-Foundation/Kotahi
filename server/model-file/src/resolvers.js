@@ -4,8 +4,8 @@ const fs = require('fs-extra')
 const path = require('path')
 const config = require('config')
 const sharp = require('sharp')
-const models = require('@pubsweet/models')
-const { fileStorage } = require('@coko/server')
+const { fileStorage, createFile, deleteFiles } = require('@coko/server')
+const { getFileWithUrl } = require('../../utils/fileStorageUtils')
 
 const randomBytes = promisify(crypto.randomBytes)
 const uploadsPath = config.get('pubsweet-server').uploads
@@ -77,18 +77,32 @@ const resolvers = {
       const { createReadStream, filename } = await file
       const fileStream = createReadStream()
       const storedObjects = await fileStorage.upload(fileStream, filename)
-      const url = await fileStorage.getURL(storedObjects[0].key)
+      storedObjects[0].url = await fileStorage.getURL(storedObjects[0].key)
 
       const data = {
         name: filename,
         storedObjects,
-        url,
       }
 
       return data
     },
+    async createFile(_, { file, meta }, ctx) {
+      const { createReadStream, filename } = await file
+      const fileStream = createReadStream()
+      const createdFile = await createFile(
+        fileStream,
+        filename,
+        null,
+        null,
+        [meta.fileType],
+        meta.manuscriptId || meta.reviewCommentId,
+      )
+      const data = await getFileWithUrl(createdFile)
+
+      return data
+    },
     async deleteFile(_, { id }, ctx) {
-      await models.File.query().deleteById(id)
+      await deleteFiles([id], true)
       return id
     },
   },

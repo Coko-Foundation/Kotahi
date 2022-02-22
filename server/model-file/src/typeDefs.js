@@ -1,18 +1,20 @@
 const typeDefs = `
+  extend type Query {
+    file(id: ID!): File!
+    files: [File]!
+  }
+
   extend type Mutation {
     # Using a separate variable because the Upload type hides other data
     uploadFile(file: Upload!): File!
+    createFile(file: Upload!, meta: FileMetaInput!): File!
     deleteFile(id: ID!): ID
   }
 
   input FileMetaInput {
     fileType: String!
-    filename: String!
-    mimeType: String
     manuscriptId: ID!
     reviewCommentId: ID
-    label: String
-    size: Int!
   }
 
  type File implements Object {

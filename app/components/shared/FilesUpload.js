@@ -39,16 +39,19 @@ const Message = styled.div`
 `
 
 const createFileMutation = gql`
-  mutation($file: Upload!, $meta: FileMetaInput) {
+  mutation($file: Upload!, $meta: FileMetaInput!) {
     createFile(file: $file, meta: $meta) {
       id
       created
-      label
-      filename
-      fileType
-      mimeType
-      size
-      url
+      name
+      updated
+      name
+      tags
+      storedObjects {
+        key
+        mimetype
+        url
+      }
     }
   }
 `
@@ -180,13 +183,9 @@ const FilesUpload = ({
 
   const createFile = async file => {
     const meta = {
-      filename: file.name,
+      fileType,
       manuscriptId,
       reviewCommentId,
-      mimeType: file.type,
-      size: file.size,
-      fileType,
-      label: file.label || undefined,
     }
 
     if (!meta.reviewCommentId && initializeReviewComment)

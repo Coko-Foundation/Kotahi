@@ -44,6 +44,7 @@ const uploadManuscriptMutation = gql`
         size
         mimetype
         extension
+        url
         imageMetadata {
           width
           height
@@ -51,7 +52,6 @@ const uploadManuscriptMutation = gql`
           density
         }
       }
-      url
     }
   }
 `
@@ -228,7 +228,7 @@ const DocxToHTMLPromise = (file, data) => {
 
   return request(url, { method: 'POST', body }).then(response =>
     Promise.resolve({
-      fileURL: data.uploadFile.url,
+      fileURL: data.uploadFile.storedObjects[0].url,
       response,
     }),
   )
@@ -256,10 +256,13 @@ const createManuscriptPromise = (
   if (file) {
     source = typeof response === 'string' ? response : undefined
     title = extractTitle(response) || generateTitle(file.name)
+    /* eslint-disable-next-line no-param-reassign */
+    delete data.uploadFile.storedObjects[0].url
     files = [
       {
         name: file.name,
         storedObjects: data.uploadFile.storedObjects,
+        tags: ["manuscript"],
       },
     ]
   } else {

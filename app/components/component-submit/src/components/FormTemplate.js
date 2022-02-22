@@ -53,7 +53,7 @@ const NoteRight = styled.div`
 
 const filesToAttachment = file => ({
   name: file.filename,
-  url: file.url,
+  url: file.storedObjects[0].url,
 })
 
 const filterFileManuscript = files =>
@@ -316,7 +316,7 @@ const FormTemplate = ({
             <Legend space>Submitted Manuscript</Legend>
             <Attachment
               file={filesToAttachment(filterFileManuscript(values.files)[0])}
-              key={filterFileManuscript(values.files)[0].url}
+              key={filterFileManuscript(values.files)[0].storedObjects[0].url}
               uploaded
             />
           </Section>
@@ -382,7 +382,6 @@ FormTemplate.propTypes = {
         name: PropTypes.string,
         tags: PropTypes.arrayOf(PropTypes.string.isRequired),
         storedObjects: PropTypes.arrayOf(PropTypes.object),
-        url: PropTypes.string.isRequired,
       }).isRequired,
     ).isRequired,
     status: PropTypes.string,
