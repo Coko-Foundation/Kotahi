@@ -58,7 +58,7 @@ const Manuscript = ({
 }) => (
   <Columns>
     {file &&
-    file.mimeType ===
+    file.storedObjects[0].mimetype ===
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
       <ManuscriptContainer>
         {content ? (

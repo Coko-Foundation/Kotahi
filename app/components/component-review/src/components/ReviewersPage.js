@@ -36,7 +36,11 @@ const fragmentFields = `
     id
     created
     tags
-    storedObjects
+    storedObjects {
+      key
+      mimetype
+      url
+    }
     objectId
   }
   reviews {

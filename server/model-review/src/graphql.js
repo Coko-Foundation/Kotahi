@@ -1,7 +1,9 @@
 // const { flatten } = require('lodash')
 // const Review = require('./review')
 const models = require('@pubsweet/models')
+const File = require('@coko/server/src/models/file/file.model')
 const { get } = require('lodash')
+const { getFilesWithUrl } = require('../../utils/fileStorageUtils')
 
 const resolvers = {
   Query: {
@@ -107,9 +109,8 @@ const resolvers = {
   },
   ReviewComment: {
     async files(parent, _, ctx) {
-      return parent.files
-        ? parent.files
-        : models.File.query().where({ reviewCommentId: parent.id })
+      const files = await File.query().where({ objectId: parent.id })
+      return getFilesWithUrl(files)
     },
   },
 }

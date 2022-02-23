@@ -62,7 +62,7 @@ const Frontpage = () => {
 
   const skipXSweet = file =>
     !(
-      file.mimeType ===
+      file.storedObjects[0].mimetype ===
       'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
     )
 
@@ -85,7 +85,7 @@ const Frontpage = () => {
   const publishedManuscripts = (
     data.publishedManuscripts?.manuscripts || []
   ).map(m => {
-    const visualAbstract = m.files?.find(f => f.fileType === 'visualAbstract')
+    const visualAbstract = m.files?.find(f => f.tags.includes('visualAbstract'))
     return {
       ...m,
       visualAbstract: visualAbstract?.url,
@@ -222,7 +222,7 @@ const Frontpage = () => {
                     {manuscript.files.map(
                       file =>
                         skipXSweet(file) &&
-                        file.fileType !== 'visualAbstract' && (
+                        !file.tags.includes('visualAbstract') && (
                           <a
                             href={file.url}
                             key={`file-${file.id}`}

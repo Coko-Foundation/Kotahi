@@ -89,14 +89,16 @@ const resolvers = {
     async createFile(_, { file, meta }, ctx) {
       const { createReadStream, filename } = await file
       const fileStream = createReadStream()
+
       const createdFile = await createFile(
         fileStream,
         filename,
         null,
         null,
         [meta.fileType],
-        meta.manuscriptId || meta.reviewCommentId,
+        meta.reviewCommentId || meta.manuscriptId,
       )
+
       const data = await getFileWithUrl(createdFile)
 
       return data

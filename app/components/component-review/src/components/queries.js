@@ -7,12 +7,14 @@ const commentFields = `
   files {
     id
     created
-    label
-    filename
-    fileType
-    mimeType
-    size
-    url
+    updated
+    name
+    tags
+    storedObjects {
+      key
+      mimetype
+      url
+    }
   }
 `
 
@@ -51,12 +53,14 @@ const fragmentFields = `
   files {
     id
     created
-    label
-    filename
-    fileType
-    mimeType
-    size
-    url
+    updated
+    name
+    tags
+    storedObjects {
+      key
+      mimetype
+      url
+    }
   }
   reviews {
     ${reviewFields}

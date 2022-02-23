@@ -177,8 +177,8 @@ ReviewLayout.propTypes = {
             content: PropTypes.string.isRequired,
             files: PropTypes.arrayOf(
               PropTypes.shape({
-                filename: PropTypes.string.isRequired,
-                url: PropTypes.string.isRequired,
+                name: PropTypes.string.isRequired,
+                storedObjects: PropTypes.arrayOf(PropTypes.object.isRequired),
               }).isRequired,
             ).isRequired,
           }),
@@ -186,8 +186,8 @@ ReviewLayout.propTypes = {
             content: PropTypes.string.isRequired,
             files: PropTypes.arrayOf(
               PropTypes.shape({
-                filename: PropTypes.string.isRequired,
-                url: PropTypes.string.isRequired,
+                name: PropTypes.string.isRequired,
+                storedObjects: PropTypes.arrayOf(PropTypes.object.isRequired),
               }).isRequired,
             ).isRequired,
           }),
@@ -205,8 +205,8 @@ ReviewLayout.propTypes = {
       }).isRequired,
       files: PropTypes.arrayOf(
         PropTypes.shape({
-          url: PropTypes.string.isRequired,
-          filename: PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired,
+          storedObjects: PropTypes.arrayOf(PropTypes.object.isRequired),
         }).isRequired,
       ).isRequired,
     }).isRequired,

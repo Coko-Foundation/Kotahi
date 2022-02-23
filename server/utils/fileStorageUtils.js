@@ -30,5 +30,5 @@ const getFileWithUrl = async file => {
 
 module.exports = {
   getFilesWithUrl,
-  getFileWithUrl
+  getFileWithUrl,
 }

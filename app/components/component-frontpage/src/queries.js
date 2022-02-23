@@ -24,10 +24,12 @@ export default {
           status
           files {
             id
-            url
-            filename
-            fileType
-            mimeType
+            name
+            tags
+            storedObjects {
+              mimetype
+              url
+            }
           }
           meta {
             manuscriptId

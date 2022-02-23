@@ -121,6 +121,8 @@ const UploadingFile = ({
         <a
           download={file.name}
           href={file.storedObjects[0].url}
+          rel="noreferrer"
+          target="_blank"
           title={file.name}
         >
           {icon}
@@ -133,6 +135,8 @@ const UploadingFile = ({
           <a
             download={file.name}
             href={file.storedObjects[0].url}
+            rel="noreferrer"
+            target="_blank"
             title={file.name}
           >
             {file.name}

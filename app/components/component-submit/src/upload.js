@@ -262,7 +262,7 @@ const createManuscriptPromise = (
       {
         name: file.name,
         storedObjects: data.uploadFile.storedObjects,
-        tags: ["manuscript"],
+        tags: ['manuscript'],
       },
     ]
   } else {

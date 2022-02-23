@@ -390,8 +390,8 @@ DecisionVersion.propTypes = {
     }).isRequired,
     files: PropTypes.arrayOf(
       PropTypes.shape({
-        url: PropTypes.string.isRequired,
-        filename: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        storedObjects: PropTypes.arrayOf(PropTypes.object.isRequired),
       }).isRequired,
     ).isRequired,
     reviews: PropTypes.arrayOf(

@@ -25,8 +25,8 @@ const Container = styled.div`
 // Attachement component needs different data structure to work
 // needs to change the pubsweet ui Attachement to support the new Data Model
 const filesToAttachment = file => ({
-  name: file.filename,
-  url: file.url,
+  name: file.name,
+  url: file.storedObjects[0].url,
 })
 
 const ReviewComments = (review, type) => (
@@ -37,7 +37,7 @@ const ReviewComments = (review, type) => (
     {review[`${type}Comment`].files.map(attachment => (
       <Attachment
         file={filesToAttachment(attachment)}
-        key={attachment.url}
+        key={attachment.storedObjects[0].url}
         uploaded
       />
     ))}
@@ -90,8 +90,8 @@ Review.propTypes = {
       content: PropTypes.string.isRequired,
       files: PropTypes.arrayOf(
         PropTypes.shape({
-          filename: PropTypes.string.isRequired,
-          url: PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired,
+          storedObjects: PropTypes.arrayOf(PropTypes.object.isRequired),
         }).isRequired,
       ).isRequired,
     }),
@@ -99,8 +99,8 @@ Review.propTypes = {
       content: PropTypes.string.isRequired,
       files: PropTypes.arrayOf(
         PropTypes.shape({
-          filename: PropTypes.string.isRequired,
-          url: PropTypes.string.isRequired,
+          name: PropTypes.string.isRequired,
+          storedObjects: PropTypes.arrayOf(PropTypes.object.isRequired),
         }).isRequired,
       ).isRequired,
     }),

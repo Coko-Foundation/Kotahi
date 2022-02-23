@@ -10,8 +10,10 @@ const fragmentFields = `
   status
   files {
     id
-    fileType
-    mimeType
+    tags
+    storedObjects {
+      mimetype
+    }
   }
 	submission
   meta {
