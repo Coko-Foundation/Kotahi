@@ -32,7 +32,7 @@ const Decision = ({ decision, editor }) =>
         <SectionRow>
           {decision.decisionComment.files.map(f => (
             <Attachment
-              file={{ ...f, url: f.storedObjects[0].url}}
+              file={{ ...f, url: f.storedObjects[0].url }}
               key={f.storedObjects[0].url}
               uploaded
             />
