@@ -1,10 +1,10 @@
 /* eslint-disable react/prop-types */
 
 import React from 'react'
-import ReactMarkdown from 'react-markdown'
+import ChatWaxEditor from '../ChatWaxEditor'
 
 const MessageRenderer = React.memo(({ message }) => (
-  <ReactMarkdown source={message.content} />
+  <ChatWaxEditor readonly value={message.content} />
 ))
 
 export default MessageRenderer

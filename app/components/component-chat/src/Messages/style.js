@@ -42,6 +42,8 @@ export const MessagesGroup = styled.div`
   overflow: hidden auto;
   padding-bottom: 8px;
   width: 100%;
+  height: 70%;
+  flex-shrink: 1;
 `
 
 export const MessageGroupContainer = styled.div`

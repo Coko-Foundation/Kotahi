@@ -4,31 +4,6 @@ import { th, grid } from '@pubsweet/ui-toolkit'
 import { Icon } from '@pubsweet/ui'
 import lightenBy from '../../../shared/lightenBy'
 
-const HideChatFloatRightButton = styled.button`
-  align-items: center;
-  /* TODO: add a global style for this */
-  background-color: ${th('colorFurniture')};
-  border-radius: ${th('borderRadius')};
-  color: ${th('colorText')};
-  display: flex;
-  float: right;
-  font-size: 16px;
-  margin: 0 0 ${grid(1)} ${grid(2)};
-  padding: 6px 12px;
-
-  &:hover {
-    background-color: ${lightenBy('colorFurniture', 0.2)};
-  }
-`
-
-const HideChatButton = ({ onClick }) => {
-  return (
-    <HideChatFloatRightButton onClick={onClick}>
-      Hide Chat
-    </HideChatFloatRightButton>
-  )
-}
-
 const ShowChatFloatRightButton = styled.button`
   align-items: center;
   /* add a global style for this */
@@ -61,4 +36,4 @@ const ShowChatButton = ({ onClick }) => {
   )
 }
 
-export { ShowChatButton, HideChatButton }
+export default ShowChatButton

@@ -119,7 +119,7 @@ export const HeadingWithAction = styled.div`
 export const Columns = styled.div`
   display: grid;
   grid-template-areas: 'manuscript chat';
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: 4fr 3fr;
   height: 100vh;
   justify-content: center;
   overflow: hidden;
@@ -137,13 +137,4 @@ export const Chat = styled.div`
   display: flex;
   grid-area: chat;
   height: 100vh;
-`
-
-export const RightContainer = styled.div`
-  align-items: center;
-  background-color: #f9fafb;
-  border: 1px solid #e8e8e8;
-  display: flex;
-  justify-content: space-between;
-  padding: 8px 16px;
 `
