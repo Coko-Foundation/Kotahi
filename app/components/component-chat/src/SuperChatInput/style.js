@@ -139,7 +139,7 @@ export const ChatInputWrapper = styled.div`
 `
 
 export const Form = styled.form`
-  align-items: center;
+  align-items: flex-end;
   background-color: transparent;
   border-radius: 24px;
   display: flex;
@@ -156,9 +156,7 @@ export const InputWrapper = styled.div`
     props.networkDisabled
       ? hexa(props.theme.special.default, 0.1)
       : th('colorBackground')};
-  border: 1px solid
-    ${props => (props.networkDisabled ? th('colorWarning') : th('colorBorder'))};
-  border-radius: 24px;
+  border-radius: 10px;
   color: ${props =>
     props.networkDisabled ? th('colorText') : th('colorSecondary')};
   display: flex;
@@ -166,7 +164,6 @@ export const InputWrapper = styled.div`
   flex-direction: column;
   max-width: calc(100% - 32px);
   min-height: 40px;
-  padding: ${props => (props.hasAttachment ? '16px' : '9px 16px 8px 16px')};
   transition: padding 0.2s ease-in-out;
   transition: border 0.3s ease-out;
 

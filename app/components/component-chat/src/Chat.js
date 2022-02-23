@@ -4,28 +4,28 @@ import Messages from './Messages/Messages'
 
 const Chat = ({
   channelId,
+  chatRoomId,
   currentUser,
   searchUsers,
   sendChannelMessages,
   fetchMoreData,
   queryData,
   manuscriptId = null,
-  style,
 }) => {
   return (
     <>
+      <Messages
+        channelId={channelId}
+        chatRoomId={chatRoomId}
+        fetchMoreData={fetchMoreData}
+        manuscriptId={manuscriptId}
+        queryData={queryData}
+      />
       <ChatInput
         channelId={channelId}
         currentUser={currentUser}
         searchUsers={searchUsers}
         sendChannelMessages={sendChannelMessages}
-      />
-      <Messages
-        channelId={channelId}
-        fetchMoreData={fetchMoreData}
-        manuscriptId={manuscriptId}
-        queryData={queryData}
-        style={style}
       />
     </>
   )

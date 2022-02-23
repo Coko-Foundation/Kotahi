@@ -26,11 +26,11 @@ import {
 } from './style'
 
 const Messages = ({
+  chatRoomId,
   channelId,
   fetchMoreData,
   queryData,
   manuscriptId = null,
-  style,
 }) => {
   const { loading, error, data } = queryData
 
@@ -59,6 +59,7 @@ const Messages = ({
   return (
     <MessagesGroup id='messages'>
       {manuscriptId ? <VideoChat manuscriptId={manuscriptId} /> : ''}
+      {chatRoomId ? <VideoChat manuscriptId={chatRoomId} /> : ''}
       {hasPreviousPage && (
         <NextPageButton
           fetchMore={() => fetchMoreData()}
@@ -92,7 +93,7 @@ const Messages = ({
         }
 
         return (
-          <MessageGroupContainer key={initialMessage.id} style={style}>
+          <MessageGroupContainer key={initialMessage.id}>
             {group.map((message, index) => (
               <Message key={message.id}>
                 <GutterContainer>

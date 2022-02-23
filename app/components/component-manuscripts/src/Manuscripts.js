@@ -22,13 +22,10 @@ import {
   CommsErrorBanner,
   Pagination,
   PaginationContainerShadowed,
-  Chat,
   Columns,
-  RightContainer,
 } from '../../shared'
 import { articleStatuses } from '../../../globals'
-import VideoChatButton from './VideoChatButton'
-import { HideChatButton, ShowChatButton } from './ChatButtons'
+import ShowChatButton from './ChatButtons'
 import MessageContainer from '../../component-chat/src/MessageContainer'
 import Modal from '../../component-modal/src'
 import BulkDeleteModal from './BulkDeleteModal'
@@ -238,8 +235,17 @@ const Manuscripts = ({ history, ...props }) => {
     urlFrag,
   )
 
+  const channels = [
+    {
+      id: systemWideDiscussionChannel.data.systemWideDiscussionChannel.id,
+      name: 'Admin discussion',
+    },
+  ]
+
+  const hideChat = () => setIsAdminChatOpen(false)
+
   return (
-    <Container>
+    <Container style={{ padding: '0px 16px' }}>
       <ToastContainer
         autoClose={5000}
         closeOnClick
@@ -248,7 +254,7 @@ const Manuscripts = ({ history, ...props }) => {
         newestOnTop={false}
         pauseOnFocusLoss
         pauseOnHover
-        position="top-center"
+        position='top-center'
         rtl={false}
       />
       {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
@@ -277,7 +283,7 @@ const Manuscripts = ({ history, ...props }) => {
       )}
 
       <Columns style={{ display: !isAdminChatOpen ? 'block' : 'grid' }}>
-        <div style={{ width: '100%' }}>
+        <div style={{ width: '100%', overflowY: 'scroll', paddingTop: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <Heading>Manuscripts</Heading>
             {!isAdminChatOpen && (
@@ -298,7 +304,7 @@ const Manuscripts = ({ history, ...props }) => {
                       selectedNewManuscripts.includes(manuscript.id),
                     ).length && selectedNewManuscripts.length !== 0
                 }
-                label="Select All"
+                label='Select All'
                 onChange={toggleAllNewManuscriptsCheck}
               />
               <SelectedManuscriptsNumber>{`${selectedNewManuscripts.length} articles selected`}</SelectedManuscriptsNumber>
@@ -355,29 +361,14 @@ const Manuscripts = ({ history, ...props }) => {
 
         {/* Admin Discussion, Video Chat, Hide Chat, Chat component */}
         {isAdminChatOpen && (
-          <div>
-            <Chat
-              style={{
-                margin: '0 16px',
-                flexDirection: 'column',
-              }}
-            >
-              <RightContainer>
-                Admin Discussion
-                <div style={{ display: 'flex' }}>
-                  <VideoChatButton chatRoomId={chatRoomId} />
-                  <HideChatButton onClick={() => setIsAdminChatOpen(false)} />
-                </div>
-              </RightContainer>
-              <MessageContainer
-                channelId={
-                  systemWideDiscussionChannel.data.systemWideDiscussionChannel
-                    .id
-                }
-                style={{ height: '69vh' }}
-              />
-            </Chat>
-          </div>
+          <MessageContainer
+            channelId={
+              systemWideDiscussionChannel.data.systemWideDiscussionChannel.id
+            }
+            channels={channels}
+            chatRoomId={chatRoomId}
+            hideChat={hideChat}
+          />
         )}
       </Columns>
       {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (

@@ -16,7 +16,7 @@ const FloatRightButton = styled.a`
   padding: 8px 12px;
   position: absolute;
   z-index: 1000;
-  left: 94%;
+  left: 80%;
 
   &:hover {
     background-color: ${lightenBy('colorPrimary', 0.2)};
