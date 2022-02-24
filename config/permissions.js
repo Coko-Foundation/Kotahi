@@ -393,9 +393,12 @@ const permissions = {
   PublishedManuscript: allow,
 }
 
-const fallbackRule = or(userIsAdmin, userIsEditor, isAuthenticated)
+const fallbackRule = or(userIsAdmin, userIsEditor)
 
-// We only ever need to go two levels down, so no need for recursion
+/** This is used to generate a new permissions structure in which EVERY rule is modified to: or(fallbackRule, originalRule)
+ * TODO: this makes permissions harder to follow. We should instead just set sensible rules from the outset and not perform this step!
+ * We only ever need to go two levels down, so no need for recursion
+ */
 const addOverrideRule = perms => {
   const adaptedPermissions = {}
   Object.keys(perms).forEach(key1 => {
