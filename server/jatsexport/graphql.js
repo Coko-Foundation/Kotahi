@@ -25,18 +25,18 @@ const buildArticleMetadata = article => {
   if (
     article &&
     article.submission &&
-    article.submissions.authorNames &&
-    article.submissions.authorNames.length
+    article.submission.authorNames &&
+    article.submission.authorNames.length
   ) {
     articleMetadata.authors = []
 
-    for (let i = 0; i < article.submissions.authorNames.length; i += 1) {
+    for (let i = 0; i < article.submission.authorNames.length; i += 1) {
       articleMetadata.authors[i] = {
-        email: article.submissions.authorNames[i].email || '',
-        firstName: article.submissions.authorNames[i].firstName || '',
-        lastName: article.submissions.authorNames[i].lastName || '',
-        affiliation: article.submissions.authorNames[i].affiliation || '',
-        id: article.submissions.authorNames[i].id || '',
+        email: article.submission.authorNames[i].email || '',
+        firstName: article.submission.authorNames[i].firstName || '',
+        lastName: article.submission.authorNames[i].lastName || '',
+        affiliation: article.submission.authorNames[i].affiliation || '',
+        id: article.submission.authorNames[i].id || '',
       }
     }
   }
