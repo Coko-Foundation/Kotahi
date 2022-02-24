@@ -1,5 +1,6 @@
 /* eslint-disable no-shadow */
 import React, { useState } from 'react'
+import styled from 'styled-components'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Button, Checkbox } from '@pubsweet/ui'
@@ -33,6 +34,10 @@ import getColumnsProps from './getColumnsProps'
 import getUriQueryParams from './getUriQueryParams'
 import FilterSortHeader from './FilterSortHeader'
 import { validateManuscript } from '../../../shared/manuscriptUtils'
+
+const HeadingInFlexRow = styled(Heading)`
+  flex-grow: 10;
+`
 
 const Manuscripts = ({ history, ...props }) => {
   const {
@@ -254,38 +259,39 @@ const Manuscripts = ({ history, ...props }) => {
         newestOnTop={false}
         pauseOnFocusLoss
         pauseOnHover
-        position='top-center'
+        position="top-center"
         rtl={false}
       />
-      {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
-        <FloatRightButton
-          onClick={() => history.push(`${urlFrag}/newSubmission`)}
-          primary
-        >
-          ＋ New submission
-        </FloatRightButton>
-      )}
-
-      {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
-        <FloatRightButton
-          disabled={isImporting}
-          onClick={importManuscripts}
-          primary
-        >
-          {isImporting ? (
-            <RefreshSpinnerWrapper>
-              <RefreshText>Refreshing</RefreshText> <Loader />
-            </RefreshSpinnerWrapper>
-          ) : (
-            'Refresh'
-          )}
-        </FloatRightButton>
-      )}
-
       <Columns style={{ display: !isAdminChatOpen ? 'block' : 'grid' }}>
         <div style={{ width: '100%', overflowY: 'scroll', paddingTop: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <Heading>Manuscripts</Heading>
+            <HeadingInFlexRow>Manuscripts</HeadingInFlexRow>
+
+            {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
+              <FloatRightButton
+                onClick={() => history.push(`${urlFrag}/newSubmission`)}
+                primary
+              >
+                ＋ New submission
+              </FloatRightButton>
+            )}
+
+            {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
+              <FloatRightButton
+                disabled={isImporting}
+                onClick={importManuscripts}
+                primary
+              >
+                {isImporting ? (
+                  <RefreshSpinnerWrapper>
+                    <RefreshText>Refreshing</RefreshText> <Loader />
+                  </RefreshSpinnerWrapper>
+                ) : (
+                  'Refresh'
+                )}
+              </FloatRightButton>
+            )}
+
             {!isAdminChatOpen && (
               <ShowChatButton onClick={() => setIsAdminChatOpen(true)} />
             )}
@@ -304,7 +310,7 @@ const Manuscripts = ({ history, ...props }) => {
                       selectedNewManuscripts.includes(manuscript.id),
                     ).length && selectedNewManuscripts.length !== 0
                 }
-                label='Select All'
+                label="Select All"
                 onChange={toggleAllNewManuscriptsCheck}
               />
               <SelectedManuscriptsNumber>{`${selectedNewManuscripts.length} articles selected`}</SelectedManuscriptsNumber>

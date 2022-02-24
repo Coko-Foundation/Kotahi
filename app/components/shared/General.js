@@ -45,7 +45,7 @@ export const PaddedContent = styled(Content)`
 
 export const Container = styled.div`
   background: ${th('colorBackgroundHue')};
-  overflow-y: scroll;
+  overflow-y: auto;
   padding: ${grid(2)};
 `
 

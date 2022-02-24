@@ -49,7 +49,13 @@ const styles = th => ({
 })
 
 // eslint-disable-next-line import/prefer-default-export
-export const Select = ({ value, isMulti, options, ...otherProps }) => {
+export const Select = ({
+  value,
+  isMulti,
+  options,
+  customStyles,
+  ...otherProps
+}) => {
   const theme = useContext(ThemeContext)
   let selectedOption = value
 
@@ -57,12 +63,14 @@ export const Select = ({ value, isMulti, options, ...otherProps }) => {
     selectedOption = options.find(option => option.value === value)
   }
 
+  const myStyles = { ...styles(theme), ...(customStyles || {}) }
+
   return (
     <ReactSelect
       isMulti={isMulti}
       options={options}
       {...otherProps}
-      styles={styles(theme)}
+      styles={myStyles}
       value={selectedOption}
     />
   )
