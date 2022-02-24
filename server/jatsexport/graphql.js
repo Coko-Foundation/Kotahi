@@ -22,16 +22,21 @@ const buildArticleMetadata = article => {
     articleMetadata.submission = article.submission
   }
 
-  if (article && article.authors && article.authors.length) {
+  if (
+    article &&
+    article.submission &&
+    article.submissions.authorNames &&
+    article.submissions.authorNames.length
+  ) {
     articleMetadata.authors = []
 
-    for (let i = 0; i < article.authors.length; i += 1) {
+    for (let i = 0; i < article.submissions.authorNames.length; i += 1) {
       articleMetadata.authors[i] = {
-        email: article.authors[i].email || '',
-        firstName: article.authors[i].firstName || '',
-        lastName: article.authors[i].lastName || '',
-        affiliation: article.authors[i].affiliation || '',
-        id: article.authors[i].id || '',
+        email: article.submissions.authorNames[i].email || '',
+        firstName: article.submissions.authorNames[i].firstName || '',
+        lastName: article.submissions.authorNames[i].lastName || '',
+        affiliation: article.submissions.authorNames[i].affiliation || '',
+        id: article.submissions.authorNames[i].id || '',
       }
     }
   }
