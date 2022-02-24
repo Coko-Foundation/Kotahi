@@ -183,14 +183,13 @@ export const SimpleMenu = styled.div`
   background: #fff;
   border-top: 1px solid ${th('colorFurniture')};
   display: flex;
+  flex-wrap: wrap;
   grid-area: menu;
   height: fit-content;
   left: -12px;
   margin: 0 ${th('borderRadius')};
-  max-width: 100%; /* this is to avoid spillover */
-  /* overflow-x: scroll; this is not great! */
-  position: absolute;
-  top: -20px;
+  max-width: calc(100% + 114px); /* this is to avoid spillover */
+  width: calc(100% + 114px); /* overflow-x: scroll; this is not great! */
   user-select: none;
   z-index: 1;
 
@@ -198,6 +197,11 @@ export const SimpleMenu = styled.div`
     bottom: 34px;
     left: -372px;
     top: initial;
+  }
+
+  .Dropdown-menu {
+    top: initial;
+    bottom: 38px;
   }
 
   & > div {

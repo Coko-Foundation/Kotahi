@@ -36,7 +36,6 @@ const ChatWaxEditorLayout = readonly => ({ editor }) => {
               style={{
                 display: 'flex',
                 alignItems: 'flex-end',
-                marginTop: '24px',
               }}
             >
               <ToolbarButton
