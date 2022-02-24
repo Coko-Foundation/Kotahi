@@ -20,13 +20,25 @@ const FilterSortHeader = ({
         <Select
           aria-label={columnInfo.title}
           customStyles={{
-            control: (provided, state) => ({
+            control: provided => ({
               ...provided,
               minHeight: 'unset',
             }),
-            dropdownIndicator: (provided, state) => ({
+            dropdownIndicator: provided => ({
               ...provided,
-              padding: 2,
+              padding: '0 2px 0 0',
+            }),
+            indicatorSeparator: provided => ({
+              ...provided,
+              display: 'none',
+            }),
+            placeholder: provided => ({
+              ...provided,
+              margin: 0,
+            }),
+            valueContainer: provided => ({
+              ...provided,
+              padding: '0 6px',
             }),
           }}
           data-testid={columnInfo.name}
