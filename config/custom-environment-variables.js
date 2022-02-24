@@ -61,9 +61,13 @@ module.exports = {
     journalAbbreviatedName: 'JOURNAL_ABBREVIATED_NAME',
     journalHomepage: 'JOURNAL_HOMEPAGE',
   },
+  api: {
+    tokens: 'KOTAHI_API_TOKENS',
+  },
   hypothesis: {
     apiKey: 'HYPOTHESIS_API_KEY',
     group: 'HYPOTHESIS_GROUP',
+    publishFields: 'HYPOTHESIS_PUBLISH_FIELDS',
   },
   review: {
     shared: 'REVIEW_SHARED',
@@ -84,5 +88,9 @@ module.exports = {
     minioConsolePort: 'MINIO_CONSOLE_PORT',
     maximumWidthForSmallImages: 'MAXIMUM_WIDTH_FOR_SMALL_IMAGES',
     maximumWidthForMediumImages: 'MAXIMUM_WIDTH_FOR_MEDIUM_IMAGES',
+  },
+  'paged-js': {
+    pagedJsClientId: 'PAGED_JS_CLIENT_ID',
+    pagedJsClientSecret: 'PAGED_JS_CLIENT_SECRET',
   },
 }

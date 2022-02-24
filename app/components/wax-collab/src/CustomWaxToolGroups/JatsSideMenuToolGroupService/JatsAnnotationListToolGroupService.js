@@ -3,6 +3,7 @@ import {
   AppendixList,
   CitationList,
   FrontMatterList,
+  AcknowledgementsList,
 } from './JatsAnnotationList'
 
 class JatsAnnotationListToolGroupService extends Service {
@@ -10,6 +11,7 @@ class JatsAnnotationListToolGroupService extends Service {
     this.container.bind('AppendixList').to(AppendixList)
     this.container.bind('CitationList').to(CitationList)
     this.container.bind('FrontMatterList').to(FrontMatterList)
+    this.container.bind('AcknowledgementsList').to(AcknowledgementsList)
   }
 }
 

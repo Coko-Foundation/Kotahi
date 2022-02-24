@@ -1,7 +1,5 @@
 import React from 'react'
 import styled from 'styled-components'
-import config from 'config'
-import fnv from 'fnv-plus'
 import { Icon } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../../shared/lightenBy'
@@ -9,12 +7,16 @@ import lightenBy from '../../../shared/lightenBy'
 const FloatRightButton = styled.a`
   align-items: center;
   background-color: ${th('colorPrimary')};
-  border-radius: ${th('borderRadius')};
+  border-radius: 27px;
   color: ${th('colorTextReverse')};
   display: flex;
   float: right;
-  margin: 0 0 ${grid(1)} ${grid(2)};
-  padding: 4px 12px;
+  left: 92%;
+  margin: ${grid(1)} ${grid(1)} ${grid(1)} ${grid(2)};
+  padding: 8px 12px;
+  position: absolute;
+  top: 10%;
+  z-index: 1000;
 
   &:hover {
     background-color: ${lightenBy('colorPrimary', 0.2)};
@@ -27,10 +29,9 @@ const FloatRightButton = styled.a`
   }
 `
 
-const VideoChatButton = () => {
+const VideoChatButton = ({ chatRoomId }) => {
   // Generate the chat room name by hashing the baseUrl, so it is unique to the instance.
   // TODO: Obtain hash from server, with a secret incorporated in it (to prevent outsiders from figuring out the room ID)
-  const chatRoomId = fnv.hash(config['pubsweet-client'].baseUrl).hex()
 
   return (
     <FloatRightButton
@@ -38,7 +39,6 @@ const VideoChatButton = () => {
       target={chatRoomId}
     >
       <Icon>video</Icon>
-      Video chat
     </FloatRightButton>
   )
 }

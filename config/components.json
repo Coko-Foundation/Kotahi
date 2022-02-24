@@ -14,5 +14,7 @@
   "./server/reports/src",
   "./server/profile-upload",
   "./server/auth-orcid",
-  "@coko/server/src/models/file"
+  "@coko/server/src/models/file",
+	"./server/pdfexport",
+	"./server/jatsexport"
 ]

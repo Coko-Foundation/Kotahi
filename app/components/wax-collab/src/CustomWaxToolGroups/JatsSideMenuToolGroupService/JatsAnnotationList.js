@@ -44,8 +44,19 @@ class CitationList extends ToolGroup {
   }
 }
 
+class AcknowledgementsList extends ToolGroup {
+  tools = []
+  title = (<LeftMenuTitle title="Acknowledgements" />)
+
+  constructor(@inject('AcknowledgementsSection') acknowledgementsSection) {
+    super()
+    this.tools = [acknowledgementsSection]
+  }
+}
+
 decorate(injectable(), AppendixList)
 decorate(injectable(), FrontMatterList)
 decorate(injectable(), CitationList)
+decorate(injectable(), AcknowledgementsList)
 
-export { AppendixList, CitationList, FrontMatterList }
+export { AppendixList, CitationList, FrontMatterList, AcknowledgementsList }

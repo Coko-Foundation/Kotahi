@@ -46,23 +46,25 @@ const journalMetadata = {
 // added console to test options - to be removed later
 
 /* eslint-disable import/prefer-default-export */
-export const DownloadDropdown = ({ source, metadata }) => {
-  html = source
-  const articleMetadata = buildArticleMetadata(metadata)
-
+export const DownloadDropdown = ({
+  manuscriptSource,
+  manuscriptId,
+  makePdf,
+  makeJats,
+}) => {
   const options = [
     {
       id: 1,
       onClick: () => {
-        /* eslint-disable */
+        // eslint-disable-next-line
         console.log('HTML Selected')
-        console.log('HTML:\n\n', html)
+        // eslint-disable-next-line
+        console.log('HTML:\n\n', manuscriptSource)
         // Raw HTML file opens in new tab
-        let blob = new Blob([html], { type: 'text/html' })
-        let url = URL.createObjectURL(blob)
+        const blob = new Blob([manuscriptSource], { type: 'text/html' })
+        const url = URL.createObjectURL(blob)
         window.open(url)
         URL.revokeObjectURL(url)
-        /* eslint-disable */
       },
       title: 'HTML',
     },
@@ -71,23 +73,16 @@ export const DownloadDropdown = ({ source, metadata }) => {
       onClick: () => {
         // eslint-disable-next-line
         console.log('PDF Selected')
+        makePdf('title')
       },
       title: 'PDF',
     },
     {
       id: 3,
       onClick: () => {
-        const { jats } = makeJats(html, articleMetadata, journalMetadata)
-        /* eslint-disable */
-        console.log('XML Selected')
-        console.log('HTML:\n\n', html)
-        console.log('JATS:\n\n', jats)
-        // JATS XML file opens in new tab
-        let blob = new Blob([jats], { type: 'text/xml' })
-        let url = URL.createObjectURL(blob)
-        window.open(url)
-        URL.revokeObjectURL(url)
-        /* eslint-disable */
+        // eslint-disable-next-line
+        console.log('XML selected')
+        makeJats(manuscriptId)
       },
       title: 'XML',
     },
@@ -101,6 +96,8 @@ export const DownloadDropdown = ({ source, metadata }) => {
 }
 
 DownloadDropdown.propTypes = {
-  source: PropTypes.string.isRequired,
-  metadata: PropTypes.object,
+  manuscriptSource: PropTypes.string.isRequired,
+  manuscriptId: PropTypes.string.isRequired,
+  makePdf: PropTypes.func.isRequired,
+  makeJats: PropTypes.func.isRequired,
 }

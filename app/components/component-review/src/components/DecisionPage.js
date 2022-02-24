@@ -16,7 +16,7 @@ import {
 
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 
-import MessageContainer from '../../../component-chat/src'
+import MessageContainer from '../../../component-chat/src/MessageContainer'
 
 import { fragmentFields } from '../../../component-submit/src/userManuscriptFormQuery'
 

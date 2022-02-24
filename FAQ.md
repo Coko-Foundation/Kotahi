@@ -81,12 +81,7 @@ Migrate the test database using `yarn dotenv yarn pubsweet migrate`.
 
 While Kotahi deals with importing, reviewing, editing and preproduction, the final step of publishing to the web (or to print) is relegated to other tools. A wide variety of tools exist for building a static website from structured data; you may wish to use Coko Flax which is built expressly for this task.
 
-Kotahi provides a GraphQL API for obtaining published article data:
-
-- `manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!` returns published manuscripts, with an optional startDate and/or limit.
-- `publishedManuscript(id: ID!): PublishedManuscript` returns a singled published manuscript by ID, or null if this manuscript is not published or not found.
-
-Consult [the code](https://gitlab.coko.foundation/kotahi/kotahi/blob/5b26b92d662e83061b1072afddb7fd319655a940/server/model-manuscript/src/graphql.js) for details, or the graphql playground (typically at http://localhost:3000/graphql, when your dev environment is running).
+Kotahi provides a GraphQL API for obtaining published article data; see [API](#api) below.
 
 Kotahi can also be configured to trigger a webhook whenever an article is published, using the following environment variables:
 
@@ -101,9 +96,9 @@ Using a tool like Flax, you can either:
 - respond to every webhook request by requesting the relevant article from Kotahi and building (or rebuilding) its page (plus index pages); or
 - periodically request all articles published after the date of the most recent article you've already received.
 
-## Crossref
+### Crossref
 
-### Registering a DOI for an article with Crossref
+#### Registering a DOI for an article with Crossref
 
 Crossref offers a paid service for indexing articles and registering DOIs. Kotahi can be configured to register articles with new DOIs upon publication. It can also be configured to register evaluations of articles. The following environment variables are needed:
 
@@ -127,20 +122,22 @@ Crossref login, registrant and depositor information, as well as your organizati
 
 For development and testing, `CROSSREF_USE_SANDBOX` should be true. This will send all requests to Crossref's test API. Note that you must request Crossref to give you access to the test API, for which a separate password may be issued.
 
-### Form fields for publishing an article to Crossref
+If a submission to Crossref fails basic schema validation (e.g. if required fields are missing), Kotahi will report the failure beneath the "Publish" button. Success at this point does not guarantee that the submission will succeed once Crossref retrieves it from its queue for processing: it can still fail for reasons such as containing invalid DOI references, etc, _and this failure will not be reported by Kotahi_. You can view Crossref's queue and check whether a submission has succeeded via Crossref's submission administration dashboard at `https://doi.crossref.org/servlet/useragent` or `https://test.crossref.org/servlet/useragent`.
+
+#### Form fields for publishing an article to Crossref
 
 Publishing to Crossref requires that you have certain fields configured via the form-builder. These are:
-| Field name                                          | Field type     | Purpose                                                                                                                            |
+| Field name | Field type | Purpose |
 | --------------------------------------------------- | -------------- | ---------------------------------------------------------------------------------------------------------------------------------- |
-| `meta.title`                                        | TextField      | Article title                                                                                                                      |
-| `submission.authors`                                | AuthorsInput   | Ordered list of authors                                                                                                            |
-| `meta.abstract`                                     | AbstractEditor | Article abstract                                                                                                                   |
-| `submission.citations` _or_ `submission.references` | AbstractEditor | Citations in separate paragraphs                                                                                                   |
-| `submission.volumeNumber`                           | TextField      | (Optional) Journal volume number                                                                                                   |
-| `submission.issueNumber`                            | TextField      | (Optional) Journal issue number                                                                                                    |
-| `submission.issueYear`                              | TextField      | The year of publication. If `submission.volumeNumber` is formatted as a year (e.g. 2021), then `submission.issueYear` is optional. |
+| `meta.title` | TextField | Article title |
+| `submission.authors` | AuthorsInput | Ordered list of authors |
+| `meta.abstract` | AbstractEditor | Article abstract |
+| `submission.citations` _or_ `submission.references` | AbstractEditor | Citations in separate paragraphs |
+| `submission.volumeNumber` | TextField | (Optional) Journal volume number |
+| `submission.issueNumber` | TextField | (Optional) Journal issue number |
+| `submission.issueYear` | TextField | The year of publication. If `submission.volumeNumber` is formatted as a year (e.g. 2021), then `submission.issueYear` is optional. |
 
-### Registering article evaluations via Crossref
+#### Registering article evaluations via Crossref
 
 Alternatively, you may be using Kotahi to publish evaluations of pre-existing articles. If this is your workflow, Kotahi can register these evaluations with Crossref, generating a DOI for each. The following environment variables are required for this:
 
@@ -166,6 +163,56 @@ And the following form fields are required:
 | `submission.review2`, `submission.review2date`, `submission.review2creator`, `submission.review3`, `submission.review3date`, `submission.review3creator` | As above       | (Optional) Fields for second and third reviews.          |
 | `submission.summary`, `submission.summarydate`, `submission.summarycreator`                                                                              | As above       | (Optional) Fields for a summary of the reviews.          |
 | `submission.description`                                                                                                                                 | TextField      | Title of the article under review, possibly abbreviated. |
+
+### Hypothes.is
+
+[Hypothesis](https://web.hypothes.is) is a tool for annotating webpages and sharing those annotations. It is powered by the hypothesis browser plugin, which displays annotations (retrieved from Hypothesis's servers) when you visit an annotated webpage. It allows evaluations of articles to be shared (publicly or with a select group) directly on the page where the article lives. Kotahi supports publishing reviews or evaluations as Hypothesis annotations.
+
+To enable this, you will need to first [generate a personal API token](https://h.readthedocs.io/en/latest/api/authorization/#access-tokens) for Hypothes.is, and a [group key](https://web.hypothes.is/blog/introducing-groups/) (e.g. `g4JPqbk5` if your group URL is `https://hypothes.is/groups/g4JPqbk5/my-journal-group`).
+
+Using these keys, set the following `.env` variables:
+
+```
+HYPOTHESIS_API_KEY=<your API key here>
+HYPOTHESIS_GROUP=<group key here>
+HYPOTHESIS_PUBLISH_FIELDS=<comma-separated list of field internal names>
+```
+
+The `HYPOTHESIS_PUBLISH_FIELDS` variable should contain an ordered list of the AbstractEditor or TextField fields from your submission form that you wish to publish, e.g. `"submission.review1,submission.review2,submission.review3,submission.summary"`. This list can be surrounded by double-quotes. You can also specify a hypothesis tag for any field by suffixing the field internal name with `:<tag>`, e.g.:
+
+```
+"submission.review1:peerReview,submission.review2:peerReview,submission.review3:peerReview,submission.summary:evaluationSummary"
+```
+
+Your submission form must also contain a field with the internal name `submission.biorxivURL` or `submission.link`, which should contain the URL of the page to be annotated.
+
+When the "Publish" button is pressed in Kotahi, the named fields (if they contain text) will each be published as a Hypothesis annotation, using the provided keys. These annotations can be updated or deleted by modifying or removing the text in the fields and pressing the "Publish" button again.
+
+## API
+
+Kotahi exposes a graphql API for external access. The available queries are:
+
+- `manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!` returns published manuscripts, with an optional startDate and/or limit.
+- `publishedManuscript(id: ID!): PublishedManuscript` returns a single published manuscript by ID, or null if this manuscript is not published or not found.
+- `unreviewedPreprints(token: String!): [Preprint]` returns a list of manuscripts with the `readyToEvaluate` label.
+
+Consult [the code](https://gitlab.coko.foundation/kotahi/kotahi/blob/5b26b92d662e83061b1072afddb7fd319655a940/server/model-manuscript/src/graphql.js) for details, or the graphql playground (typically at http://localhost:4000/graphql, when your dev environment is running).
+
+While these queries are publicly exposed and don't need a JWT token, the `unreviewedPreprints` query expects a `token` parameter for authentication; this must match a secret token set in the `KOTAHI_API_TOKENS` environment variable in the `.env` file. Tokens may contain any characters other than commas, and may not start or end with whitespace. Multiple tokens may be stored, separated by commas. We recommend that each token contain a human-readable identifier and a strong random string, e.g.:
+
+```
+KOTAHI_API_TOKENS="Alice ZSR2YyyMFB1y55, Bob J0m7j4JfSxOtZ2, Catherine 3BV3K+1p4PRJ5A"
+```
+
+Bob's token would then be `"Bob J0m7j4JfSxOtZ2"`.
+
+The `unreviewedPreprints` query returns an `id` and `shortId`, and the following fields if they are present in your submission form:
+
+- `meta.title` or `submission.title` or `submission.description`
+- `meta.abstract` or `submission.abstract`
+- `submission.authors` (as an AuthorsInput field)
+- `submission.doi`
+- `submission.url` or `submission.uri` or `submission.link` or `submission.biorxivURL`
 
 ## Going further
 

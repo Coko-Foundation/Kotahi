@@ -4,6 +4,7 @@ import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import config from 'config'
+import { get } from 'lodash'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
 import FullWaxEditor from '../../wax-collab/src/FullWaxEditor'
@@ -53,6 +54,20 @@ const LoginLink = styled.a`
   padding: 0.25em 1em;
 `
 
+const ReviewTitleAndLink = ({ title, manuscriptId, fieldName }) => {
+  const fieldNameWithSlashes = fieldName.replaceAll('.', '/')
+  return (
+    <>
+      {title}
+      <ReviewLink
+        href={`/versions/${manuscriptId}/article-evaluation/${fieldNameWithSlashes}`}
+      >
+        &#128279;
+      </ReviewLink>
+    </>
+  )
+}
+
 const Frontpage = () => {
   const [sortName] = useState('created')
   const [sortDirection] = useState('DESC')
@@ -81,6 +96,11 @@ const Frontpage = () => {
   if (error) return <CommsErrorBanner error={error} />
 
   const { totalCount } = data.publishedManuscripts
+  const fields = data.formForPurpose?.structure?.children ?? []
+  const fieldDefinitions = {}
+  fields.forEach(field => {
+    if (field.name) fieldDefinitions[field.name] = field // Incomplete fields in the formbuilder may not have a name specified. Ignore these
+  })
 
   const publishedManuscripts = (
     data.publishedManuscripts?.manuscripts || []
@@ -93,38 +113,6 @@ const Frontpage = () => {
       evaluationsHypothesisMap: JSON.parse(m.evaluationsHypothesisMap),
     }
   })
-
-  const reviewTitle = (reviewKey, manuscriptId) => {
-    if (reviewKey.includes('review')) {
-      return (
-        <>
-          <div>
-            Review #{reviewKey.split('review')[1]}
-            <ReviewLink
-              href={`/versions/${manuscriptId}/article-evaluation-result/${
-                reviewKey.split('review')[1]
-              }`}
-            >
-              &#128279;
-            </ReviewLink>
-          </div>
-        </>
-      )
-    }
-
-    return (
-      <>
-        <div>
-          Evaluation Summary
-          <ReviewLink
-            href={`/versions/${manuscriptId}/article-evaluation-summary`}
-          >
-            &#128279;
-          </ReviewLink>
-        </div>
-      </>
-    )
-  }
 
   return (
     <Container>
@@ -161,41 +149,41 @@ const Frontpage = () => {
                 <Title>{title}</Title>
               </SectionHeader>
               {manuscript.evaluationsHypothesisMap &&
-                // TODO Don't map for all publishedManuscripts; just compute for this manuscript!
-                publishedManuscripts
-                  .map(({ submission, evaluationsHypothesisMap }) => {
-                    if (
-                      evaluationsHypothesisMap &&
-                      Object.keys(evaluationsHypothesisMap).length > 0
-                    ) {
-                      return Object.keys(evaluationsHypothesisMap).map(key => {
-                        return { [key]: submission[key] }
-                      })
-                    }
+                Object.entries(manuscript.evaluationsHypothesisMap).map(e => {
+                  let fieldName = e[0]
+                  let value = get(manuscript, fieldName)
 
-                    return null
-                  })
-                  .filter(Boolean)
-                  [index].map(review => {
-                    const reviewKey = Object.keys(review)[0]
-                    const reviewValue = Object.values(review)[0]
-                    return (
-                      reviewValue && (
-                        <Accordion
-                          key={`${reviewKey}-${manuscript.id}`}
-                          label={reviewTitle(reviewKey, manuscript.id)}
-                        >
-                          <ReviewWrapper>
-                            <ArticleEvaluation
-                              dangerouslySetInnerHTML={(() => {
-                                return { __html: reviewValue }
-                              })()}
-                            />
-                          </ReviewWrapper>
-                        </Accordion>
-                      )
-                    )
-                  })}
+                  if (!value) {
+                    fieldName = `submission.${fieldName}` // Try the old style of naming
+                    value = get(manuscript, fieldName)
+                  }
+
+                  if (!value) return null
+
+                  const fieldTitle =
+                    fieldDefinitions[fieldName]?.title || fieldName
+
+                  return (
+                    <Accordion
+                      key={`${fieldName}-${manuscript.id}`}
+                      label={
+                        <ReviewTitleAndLink
+                          fieldName={fieldName}
+                          manuscriptId={manuscript.id}
+                          title={fieldTitle}
+                        />
+                      }
+                    >
+                      <ReviewWrapper>
+                        <ArticleEvaluation
+                          dangerouslySetInnerHTML={(() => {
+                            return { __html: value }
+                          })()}
+                        />
+                      </ReviewWrapper>
+                    </Accordion>
+                  )
+                })}
               <SectionRow>
                 {manuscript.submission?.abstract && (
                   <>

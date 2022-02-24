@@ -5,106 +5,88 @@
 // @flow
 import React from 'react'
 import { MentionsInput, Mention } from 'react-mentions'
-import { useApolloClient } from '@apollo/client'
+import { th } from '@pubsweet/ui-toolkit'
 import { MentionsInputStyle } from './style'
 import MentionSuggestion from './mentionSuggestion'
-import { SEARCH_USERS } from '../../../../queries'
-// import type { UserInfoType } from 'shared/graphql/fragments/user/userInfo';
-// import type { ApolloClient } from 'apollo-client';
-
-// type Props = {
-//   value: string,
-//   onChange: string => void,
-//   staticSuggestions?: Array<UserInfoType>,
-//   client: ApolloClient,
-//   placeholder?: string,
-//   hasAttachment?: boolean,
-//   onFocus?: Function,
-//   onBlur?: Function,
-//   onKeyDown?: Function,
-//   inputRef?: Function,
-//   dataCy?: string,
-//   networkDisabled?: boolean,
-// };
-
-const cleanSuggestionUserObject = user => {
-  if (!user) return null
-  return {
-    ...user,
-    id: user.username,
-    display: user.username,
-    filterName:
-      (user.name && user.name.toLowerCase()) || user.username.toLowerCase(),
-  }
-}
-
-const sortSuggestions = (a, b, queryString) => {
-  const aUsernameIndex = a.username.indexOf(queryString || '')
-  const bUsernameIndex = b.username.indexOf(queryString || '')
-  const aNameIndex = a.filterName.indexOf(queryString || '')
-  const bNameIndex = b.filterName.indexOf(queryString || '')
-  if (aNameIndex === 0) return -1
-  if (aUsernameIndex === 0) return -1
-  if (aNameIndex === 0) return -1
-  if (aUsernameIndex === 0) return -1
-  return aNameIndex - bNameIndex || aUsernameIndex - bUsernameIndex
-}
+import { theme, hexa } from '../SuperChatInput/style'
 
 const CustomMentionsInput = props => {
-  const client = useApolloClient()
+  const { searchUsersCallBack } = props
 
-  const searchUsers = async (queryString, callback) => {
-    const staticSuggestions = !props.staticSuggestions
-      ? []
-      : props.staticSuggestions
-          .map(cleanSuggestionUserObject)
-          .filter(Boolean)
-          .filter(
-            user =>
-              user.username &&
-              (user.username.indexOf(queryString || '') > -1 ||
-                user.filterName.indexOf(queryString || '') > -1),
-          )
-          .sort((a, b) => sortSuggestions(a, b, queryString))
-          .slice(0, 8)
+  const searchUsers = async () => {
+    searchUsersCallBack()
+  }
 
-    callback(staticSuggestions)
+  const extraStyle = {
+    dataCy: props.dataCy || 'chat-input',
+    spellCheck: true,
+    autoCapitalize: 'sentences',
+    autoComplete: 'on',
+    autoCorrect: 'on',
+    background: `${props.networkDisabled ? 'none' : th('colorBackground')}`,
+    fontSize: '16px' /* has to be 16px to avoid zoom on iOS */,
+    fontWeight: 400,
+    lineHeight: 1.4,
 
-    if (!queryString || queryString.length === 0)
-      return callback(staticSuggestions)
+    div: {
+      lineHeight: '1.4 !important',
+      wordBreak: 'break-word',
+    },
+    textarea: {
+      lineHeight: '1.4 !important',
+      wordBreak: 'break-word',
+    },
 
-    const {
-      data: { searchUsers: rawSearchUsers },
-    } = await client.query({
-      query: SEARCH_USERS,
-      variables: {
-        query: queryString,
-      },
-    })
+    '&::placeholder': {
+      color: `${
+        props.networkDisabled
+          ? hexa(th('colorWarning'), 0.8)
+          : th('colorSecondary')
+      }`,
+    },
 
-    if (!rawSearchUsers || rawSearchUsers.length === 0) {
-      if (staticSuggestions && staticSuggestions.length > 0)
-        return staticSuggestions
-      return
-    }
+    '&::-webkit-input-placeholder': {
+      color: `${
+        props.networkDisabled
+          ? hexa(th('colorWarning'), 0.8)
+          : th('colorSecondary')
+      }`,
+    },
 
-    const cleanSearchUsers = rawSearchUsers.map(user =>
-      cleanSuggestionUserObject(user),
-    )
+    '&:-moz-placeholder': {
+      color: `${
+        props.networkDisabled
+          ? hexa(th('colorWarning'), 0.8)
+          : th('colorSecondary')
+      }`,
+    },
 
-    // Prepend the filtered participants in case a user is tabbing down right now
-    const fullResults = [...staticSuggestions, ...cleanSearchUsers]
-    const uniqueResults = []
-    const done = []
+    '&:-ms-input-placeholder': {
+      color: `${
+        props.networkDisabled
+          ? hexa(th('colorWarning'), 0.8)
+          : th('colorSecondary')
+      }`,
+    },
 
-    fullResults.forEach(item => {
-      if (done.indexOf(item.username) === -1) {
-        uniqueResults.push(item)
-        done.push(item.username)
-      }
-    })
+    pre: {
+      // `${monoStack}`,
 
-    return callback(uniqueResults.slice(0, 8))
+      backgroundColor: `${theme.bg.wash}`,
+      border: `1px solid ${th('colorBorder')}`,
+      borderRadius: `2px`,
+      fontSize: `15px`,
+      fontWeight: 500,
+      marginRight: `16px`,
+      padding: `4px`,
+    },
+
+    blockquote: {
+      borderLeft: `4px solid ${th('colorBorder')}`,
+      color: `${theme.text.alt}`,
+      lineHeight: 1.5,
+      padding: `4px 12px 4px 16px`,
+    },
   }
 
   const {
@@ -119,7 +101,7 @@ const CustomMentionsInput = props => {
     <MentionsInput
       data-cy={props.dataCy}
       {...rest}
-      style={{ ...(props.style || {}), ...MentionsInputStyle }}
+      style={{ ...extraStyle, ...MentionsInputStyle }}
     >
       <Mention
         appendSpaceOnAdd

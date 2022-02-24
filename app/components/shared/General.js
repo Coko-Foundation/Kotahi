@@ -45,7 +45,7 @@ export const PaddedContent = styled(Content)`
 
 export const Container = styled.div`
   background: ${th('colorBackgroundHue')};
-  overflow-y: scroll;
+  overflow-y: auto;
   padding: ${grid(2)};
 `
 
@@ -119,7 +119,7 @@ export const HeadingWithAction = styled.div`
 export const Columns = styled.div`
   display: grid;
   grid-template-areas: 'manuscript chat';
-  grid-template-columns: 3fr 2fr;
+  grid-template-columns: 4fr 3fr;
   height: 100vh;
   justify-content: center;
   overflow: hidden;

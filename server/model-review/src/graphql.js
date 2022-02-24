@@ -89,9 +89,9 @@ const resolvers = {
     async completeReview(_, { id }, ctx) {
       const review = await models.Review.query().findById(id)
 
-      const manuscript = await models.Manuscript.query().findById(
-        review.manuscriptId,
-      )
+      const manuscript = await models.Manuscript.query()
+        .findById(review.manuscriptId)
+        .withGraphFetched('[submitter.[defaultIdentity], channels.members]')
 
       const team = await manuscript
         .$relatedQuery('teams')

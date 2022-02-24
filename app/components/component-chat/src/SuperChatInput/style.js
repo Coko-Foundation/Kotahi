@@ -3,12 +3,10 @@
 
 import styled, { css } from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
-
-import MentionsInput from '../MentionsInput/MentionsInput'
 import { MEDIA_BREAK } from '../../../layout'
 import { zIndex } from '../../../../globals'
 
-const theme = {
+export const theme = {
   text: {
     alt: '#000',
     placeholder: '#000',
@@ -141,7 +139,7 @@ export const ChatInputWrapper = styled.div`
 `
 
 export const Form = styled.form`
-  align-items: center;
+  align-items: flex-end;
   background-color: transparent;
   border-radius: 24px;
   display: flex;
@@ -158,9 +156,7 @@ export const InputWrapper = styled.div`
     props.networkDisabled
       ? hexa(props.theme.special.default, 0.1)
       : th('colorBackground')};
-  border: 1px solid
-    ${props => (props.networkDisabled ? th('colorWarning') : th('colorBorder'))};
-  border-radius: 24px;
+  border-radius: 10px;
   color: ${props =>
     props.networkDisabled ? th('colorText') : th('colorSecondary')};
   display: flex;
@@ -168,7 +164,6 @@ export const InputWrapper = styled.div`
   flex-direction: column;
   max-width: calc(100% - 32px);
   min-height: 40px;
-  padding: ${props => (props.hasAttachment ? '16px' : '9px 16px 8px 16px')};
   transition: padding 0.2s ease-in-out;
   transition: border 0.3s ease-out;
 
@@ -182,87 +177,6 @@ export const InputWrapper = styled.div`
   @media (max-width: ${MEDIA_BREAK}px) {
     padding-left: 16px;
   }
-`
-
-export const Input = styled(MentionsInput).attrs(props => ({
-  dataCy: props.dataCy || 'chat-input',
-  spellCheck: true,
-  autoCapitalize: 'sentences',
-  autoComplete: 'on',
-  autoCorrect: 'on',
-}))`
-  background: ${props =>
-    props.networkDisabled ? 'none' : th('colorBackground')};
-  font-size: 16px; /* has to be 16px to avoid zoom on iOS */
-  font-weight: 400;
-  line-height: 1.4;
-
-  @media (max-width: ${MEDIA_BREAK}px) {
-    font-size: 16px;
-  }
-
-  div,
-  textarea {
-    line-height: 1.4 !important;
-    word-break: break-word;
-  }
-
-  &::placeholder {
-    color: ${props =>
-      props.networkDisabled
-        ? hexa(th('colorWarning'), 0.8)
-        : th('colorSecondary')};
-  }
-
-  &::-webkit-input-placeholder {
-    color: ${props =>
-      props.networkDisabled
-        ? hexa(th('colorWarning'), 0.8)
-        : th('colorSecondary')};
-  }
-
-  &:-moz-placeholder {
-    color: ${props =>
-      props.networkDisabled
-        ? hexa(th('colorWarning'), 0.8)
-        : th('colorSecondary')};
-  }
-
-  &:-ms-input-placeholder {
-    color: ${props =>
-      props.networkDisabled
-        ? hexa(th('colorWarning'), 0.8)
-        : th('colorSecondary')};
-  }
-
-  pre {
-    ${monoStack};
-
-    /* stylelint-disable-next-line order/properties-alphabetical-order */
-    background-color: ${theme.bg.wash};
-    border: 1px solid ${th('colorBorder')};
-    border-radius: 2px;
-    font-size: 15px;
-    font-weight: 500;
-    margin-right: 16px;
-    padding: 4px;
-  }
-
-  blockquote {
-    border-left: 4px solid ${th('colorBorder')};
-    color: ${theme.text.alt};
-    line-height: 1.5;
-    padding: 4px 12px 4px 16px;
-  }
-
-  ${props =>
-    props.hasAttachment &&
-    css`
-      margin-top: 16px;
-      ${'' /* > div:last-of-type {
-        margin-right: 32px;
-      } */};
-    `};
 `
 
 export const MediaInput = styled.input`

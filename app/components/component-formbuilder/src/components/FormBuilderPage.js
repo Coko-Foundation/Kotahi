@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import { cloneDeep, omitBy } from 'lodash'
+import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import FormBuilderLayout from './FormBuilderLayout'
 import { Spinner, CommsErrorBanner } from '../../../shared'
 import pruneEmpty from '../../../../shared/pruneEmpty'
@@ -106,6 +107,7 @@ const prepareForSubmit = values => {
 
 const FormBuilderPage = () => {
   const { loading, data, error } = useQuery(query)
+  const cleanedForms = pruneEmpty(data?.forms)
 
   // TODO Structure forms for graphql and retrieve IDs from these mutations to allow Apollo Cache to do its magic, rather than forcing refetch.
   const [deleteForm] = useMutation(deleteFormMutation, {
@@ -130,6 +132,11 @@ const FormBuilderPage = () => {
 
   const [activeFormId, setActiveFormId] = useState()
   const [activeFieldId, setActiveFieldId] = useState()
+  const [formFeilds, setFormFeilds] = useState(cleanedForms)
+
+  useEffect(() => {
+    setFormFeilds(cleanedForms)
+  }, [data?.forms])
 
   const moveFieldUp = (form, fieldId) => {
     const fields = form.structure.children
@@ -171,24 +178,37 @@ const FormBuilderPage = () => {
     })
   }
 
-  const dragField = (form, fieldId) => {
-    const fields = form.structure.children
+  const dragField = form => {
+    const forms = pruneEmpty(data.forms)[0]
 
-    const fromIndex = fields.findIndex(field => field.id === fieldId.fromDragid)
+    const fields = forms.structure.children
 
-    const toIndex = fields.findIndex(field => field.id === fieldId.toDragid)
+    const fromIndex = form.source.index
+
+    const toIndex = form.destination.index
 
     const draggedField = fields[fromIndex]
     const newFields = [...fields]
     newFields.splice(fromIndex, 1)
     newFields.splice(toIndex, 0, draggedField)
+    setFormFeilds([
+      { ...forms, structure: { ...forms.structure, children: newFields } },
+    ])
 
     updateForm({
       variables: {
         form: prepareForSubmit({
-          ...form,
-          structure: { ...form.structure, children: newFields },
+          ...forms,
+          structure: { ...forms.structure, children: newFields },
         }),
+      },
+      optimisticResponse: {
+        __typename: 'Mutation',
+        updateForm: {
+          id: forms.id,
+          __typename: 'FormStructure',
+          structure: { ...forms.structure, children: newFields },
+        },
       },
     })
   }
@@ -206,24 +226,32 @@ const FormBuilderPage = () => {
   if (loading || !activeFormId) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
-  const cleanedForms = pruneEmpty(data.forms)
-
   return (
-    <FormBuilderLayout
-      activeFieldId={activeFieldId}
-      activeFormId={activeFormId}
-      createForm={createForm}
-      deleteField={deleteFormElement}
-      deleteForm={deleteForm}
-      dragField={dragField}
-      forms={cleanedForms}
-      moveFieldDown={moveFieldDown}
-      moveFieldUp={moveFieldUp}
-      setActiveFieldId={setActiveFieldId}
-      setActiveFormId={setActiveFormId}
-      updateField={updateFormElement}
-      updateForm={updateForm}
-    />
+    <div style={{ overflowY: 'scroll', height: '100vh' }}>
+      <DragDropContext onDragEnd={dragField}>
+        <Droppable droppableId="droppable">
+          {(provided, snapshot) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              <FormBuilderLayout
+                activeFieldId={activeFieldId}
+                activeFormId={activeFormId}
+                createForm={createForm}
+                deleteField={deleteFormElement}
+                deleteForm={deleteForm}
+                forms={formFeilds}
+                moveFieldDown={moveFieldDown}
+                moveFieldUp={moveFieldUp}
+                setActiveFieldId={setActiveFieldId}
+                setActiveFormId={setActiveFormId}
+                updateField={updateFormElement}
+                updateForm={updateForm}
+              />
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </div>
   )
 }
 

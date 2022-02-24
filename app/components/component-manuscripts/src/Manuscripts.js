@@ -1,15 +1,9 @@
 /* eslint-disable no-shadow */
-import React, { useEffect, useState } from 'react'
-import { ToastContainer, toast } from 'react-toastify'
+import React, { useState } from 'react'
+import styled from 'styled-components'
+import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import {
-  useQuery,
-  useMutation,
-  useSubscription,
-  useApolloClient,
-} from '@apollo/client'
 import { Button, Checkbox } from '@pubsweet/ui'
-import config from 'config'
 import ManuscriptRow from './ManuscriptRow'
 import {
   ManuscriptsTable,
@@ -17,6 +11,9 @@ import {
   SelectAllField,
   SelectedManuscriptsNumber,
   FloatRightButton,
+  Loader,
+  RefreshSpinnerWrapper,
+  RefreshText,
 } from './style'
 import {
   Container,
@@ -26,34 +23,47 @@ import {
   CommsErrorBanner,
   Pagination,
   PaginationContainerShadowed,
+  Columns,
 } from '../../shared'
-import {
-  GET_MANUSCRIPTS_AND_FORM,
-  DELETE_MANUSCRIPT,
-  DELETE_MANUSCRIPTS,
-  IMPORT_MANUSCRIPTS,
-  IMPORTED_MANUSCRIPTS_SUBSCRIPTION,
-} from '../../../queries'
 import { articleStatuses } from '../../../globals'
-import VideoChatButton from './VideoChatButton'
-import { updateMutation } from '../../component-submit/src/components/SubmitPage'
-import { publishManuscriptMutation } from '../../component-review/src/components/queries'
+import ShowChatButton from './ChatButtons'
+import MessageContainer from '../../component-chat/src/MessageContainer'
 import Modal from '../../component-modal/src'
 import BulkDeleteModal from './BulkDeleteModal'
-import configuredColumnNames from './configuredColumnNames'
 import getColumnsProps from './getColumnsProps'
 import getUriQueryParams from './getUriQueryParams'
 import FilterSortHeader from './FilterSortHeader'
 import { validateManuscript } from '../../../shared/manuscriptUtils'
 
-const urlFrag = config.journal.metadata.toplevel_urlfragment
+const HeadingInFlexRow = styled(Heading)`
+  flex-grow: 10;
+`
 
 const Manuscripts = ({ history, ...props }) => {
-  const [sortName, setSortName] = useState('created')
-  const [sortDirection, setSortDirection] = useState('DESC')
-  const [page, setPage] = useState(1)
+  const {
+    client,
+    setReadyToEvaluateLabels,
+    deleteManuscriptMutations,
+    importManuscripts,
+    isImporting,
+    publishManuscripts,
+    setSortName,
+    setSortDirection,
+    setPage,
+    queryObject,
+    sortDirection,
+    sortName,
+    systemWideDiscussionChannel,
+    confrimBulkDelete,
+    page,
+    urlFrag,
+    chatRoomId,
+    configuredColumnNames,
+  } = props
+
   const [isOpenBulkDeletionModal, setIsOpenBulkDeletionModal] = useState(false)
   const [selectedNewManuscripts, setSelectedNewManuscripts] = useState([])
+  const [isAdminChatOpen, setIsAdminChatOpen] = useState(true)
 
   const uriQueryParams = getUriQueryParams(window.location)
 
@@ -128,60 +138,9 @@ const Manuscripts = ({ history, ...props }) => {
 
   const limit = process.env.INSTANCE_NAME === 'ncrc' ? 100 : 10
 
-  const { loading, error, data, refetch } = useQuery(GET_MANUSCRIPTS_AND_FORM, {
-    variables: {
-      sort: sortName
-        ? { field: sortName, isAscending: sortDirection === 'ASC' }
-        : null,
-      offset: (page - 1) * limit,
-      limit,
-      filters: uriQueryParams,
-    },
-    fetchPolicy: 'network-only',
-  })
+  const { loading, error, data } = queryObject
 
-  useSubscription(IMPORTED_MANUSCRIPTS_SUBSCRIPTION, {
-    onSubscriptionData: data => {
-      const {
-        subscriptionData: {
-          data: { manuscriptsImportStatus },
-        },
-      } = data
-
-      toast.success(
-        manuscriptsImportStatus && 'Manuscripts successfully imported',
-      )
-    },
-  })
-  const [importManuscripts] = useMutation(IMPORT_MANUSCRIPTS)
-
-  const [deleteManuscriptMutation] = useMutation(DELETE_MANUSCRIPT, {
-    update(cache, { data: { id } }) {
-      const cacheId = cache.identify({
-        __typename: 'Manuscript',
-        id,
-      })
-
-      cache.evict({ cacheId })
-    },
-  })
-
-  const [deleteManuscripts] = useMutation(DELETE_MANUSCRIPTS, {
-    // eslint-disable-next-line no-shadow
-    update(cache, { data: { ids } }) {
-      const cacheIds = cache.identify({
-        __typename: 'Manuscript',
-        id: ids,
-      })
-
-      cache.evict({ cacheIds })
-    },
-  })
-
-  const deleteManuscript = id => deleteManuscriptMutation({ variables: { id } })
-
-  const [update] = useMutation(updateMutation)
-  const [publishManuscript] = useMutation(publishManuscriptMutation)
+  const deleteManuscript = id => deleteManuscriptMutations(id)
 
   const [
     manuscriptsBlockedFromPublishing,
@@ -190,8 +149,6 @@ const Manuscripts = ({ history, ...props }) => {
 
   const isManuscriptBlockedFromPublishing = id =>
     manuscriptsBlockedFromPublishing.includes(id)
-
-  const client = useApolloClient()
 
   /** Put a block on the ID while validating and publishing; then unblock it. If the ID is already blocked, do nothing. */
   const tryPublishManuscript = async manuscript => {
@@ -207,19 +164,12 @@ const Manuscripts = ({ history, ...props }) => {
     )
 
     if (hasInvalidFields.filter(Boolean).length === 0) {
-      await publishManuscript({
-        variables: { id: manuscript.id },
-      })
+      await publishManuscripts(manuscript.id)
       setManuscriptsBlockedFromPublishing(
         manuscriptsBlockedFromPublishing.filter(id => id !== manuscript.id),
       )
     }
   }
-
-  useEffect(() => {
-    refetch()
-    setPage(1)
-  }, [history.location.search])
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
@@ -248,16 +198,7 @@ const Manuscripts = ({ history, ...props }) => {
       toggleNewManuscriptCheck(id)
     }
 
-    return update({
-      variables: {
-        id,
-        input: JSON.stringify({
-          submission: {
-            labels: 'readyToEvaluate',
-          },
-        }),
-      },
-    })
+    return setReadyToEvaluateLabels(id)
   }
 
   // eslint-disable-next-line no-unused-vars
@@ -278,10 +219,8 @@ const Manuscripts = ({ history, ...props }) => {
   }
 
   const confirmBulkDelete = () => {
-    // bulkSetLabelReadyToEvaluate(selectedNewManuscripts, manuscripts) // Disable until requirements are clearer. See #602
-    deleteManuscripts({
-      variables: { ids: selectedNewManuscripts }, // TODO These may not be parent IDs. Will this cause issues?
-    })
+    confrimBulkDelete(selectedNewManuscripts)
+
     setSelectedNewManuscripts([])
     closeModalBulkDeleteConfirmation()
   }
@@ -298,10 +237,20 @@ const Manuscripts = ({ history, ...props }) => {
     selectedNewManuscripts,
     toggleNewManuscriptCheck,
     setReadyToEvaluateLabel,
+    urlFrag,
   )
 
+  const channels = [
+    {
+      id: systemWideDiscussionChannel.data.systemWideDiscussionChannel.id,
+      name: 'Admin discussion',
+    },
+  ]
+
+  const hideChat = () => setIsAdminChatOpen(false)
+
   return (
-    <Container>
+    <Container style={{ padding: '0px 16px' }}>
       <ToastContainer
         autoClose={5000}
         closeOnClick
@@ -313,86 +262,121 @@ const Manuscripts = ({ history, ...props }) => {
         position="top-center"
         rtl={false}
       />
-      <VideoChatButton />
-      {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
-        <FloatRightButton
-          onClick={() => history.push(`${urlFrag}/newSubmission`)}
-          primary
-        >
-          ＋ New submission
-        </FloatRightButton>
-      )}
-      {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
-        <FloatRightButton onClick={importManuscripts} primary>
-          Refresh
-        </FloatRightButton>
-      )}
-      <Heading>Manuscripts</Heading>
+      <Columns style={{ display: !isAdminChatOpen ? 'block' : 'grid' }}>
+        <div style={{ width: '100%', overflowY: 'scroll', paddingTop: '16px' }}>
+          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+            <HeadingInFlexRow>Manuscripts</HeadingInFlexRow>
 
-      {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
-        <SelectAllField>
-          <Checkbox
-            checked={
-              manuscripts.filter(
-                manuscript =>
-                  manuscript.status === articleStatuses.new &&
-                  !manuscript.submission.labels,
-              ).length ===
-                manuscripts.filter(manuscript =>
-                  selectedNewManuscripts.includes(manuscript.id),
-                ).length && selectedNewManuscripts.length !== 0
+            {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
+              <FloatRightButton
+                onClick={() => history.push(`${urlFrag}/newSubmission`)}
+                primary
+              >
+                ＋ New submission
+              </FloatRightButton>
+            )}
+
+            {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
+              <FloatRightButton
+                disabled={isImporting}
+                onClick={importManuscripts}
+                primary
+              >
+                {isImporting ? (
+                  <RefreshSpinnerWrapper>
+                    <RefreshText>Refreshing</RefreshText> <Loader />
+                  </RefreshSpinnerWrapper>
+                ) : (
+                  'Refresh'
+                )}
+              </FloatRightButton>
+            )}
+
+            {!isAdminChatOpen && (
+              <ShowChatButton onClick={() => setIsAdminChatOpen(true)} />
+            )}
+          </div>
+
+          {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
+            <SelectAllField>
+              <Checkbox
+                checked={
+                  manuscripts.filter(
+                    manuscript =>
+                      manuscript.status === articleStatuses.new &&
+                      !manuscript.submission.labels,
+                  ).length ===
+                    manuscripts.filter(manuscript =>
+                      selectedNewManuscripts.includes(manuscript.id),
+                    ).length && selectedNewManuscripts.length !== 0
+                }
+                label="Select All"
+                onChange={toggleAllNewManuscriptsCheck}
+              />
+              <SelectedManuscriptsNumber>{`${selectedNewManuscripts.length} articles selected`}</SelectedManuscriptsNumber>
+              <Button
+                disabled={selectedNewManuscripts.length === 0}
+                onClick={openModalBulkDeleteConfirmation}
+                primary
+              >
+                Delete
+              </Button>
+            </SelectAllField>
+          )}
+
+          <div>
+            <ScrollableContent>
+              <ManuscriptsTable>
+                <ManuscriptsHeaderRow>
+                  {columnsProps.map(info => (
+                    <FilterSortHeader
+                      columnInfo={info}
+                      key={info.name}
+                      setFilter={setFilter}
+                      setSortDirection={setSortDirection}
+                      setSortName={setSortName}
+                      sortDirection={sortDirection}
+                      sortName={sortName}
+                    />
+                  ))}
+                </ManuscriptsHeaderRow>
+                {manuscripts.map((manuscript, key) => {
+                  const latestVersion =
+                    manuscript.manuscriptVersions?.[0] || manuscript
+
+                  return (
+                    <ManuscriptRow
+                      columnDefinitions={columnsProps}
+                      key={latestVersion.id}
+                      manuscript={latestVersion}
+                      setFilter={setFilter}
+                    />
+                  )
+                })}
+              </ManuscriptsTable>
+            </ScrollableContent>
+            <Pagination
+              limit={limit}
+              page={page}
+              PaginationContainer={PaginationContainerShadowed}
+              setPage={setPage}
+              totalCount={totalCount}
+            />
+          </div>
+        </div>
+
+        {/* Admin Discussion, Video Chat, Hide Chat, Chat component */}
+        {isAdminChatOpen && (
+          <MessageContainer
+            channelId={
+              systemWideDiscussionChannel.data.systemWideDiscussionChannel.id
             }
-            label="Select All"
-            onChange={toggleAllNewManuscriptsCheck}
+            channels={channels}
+            chatRoomId={chatRoomId}
+            hideChat={hideChat}
           />
-          <SelectedManuscriptsNumber>{`${selectedNewManuscripts.length} articles selected`}</SelectedManuscriptsNumber>
-          <Button
-            disabled={selectedNewManuscripts.length === 0}
-            onClick={openModalBulkDeleteConfirmation}
-            primary
-          >
-            Delete
-          </Button>
-        </SelectAllField>
-      )}
-
-      <ScrollableContent>
-        <ManuscriptsTable>
-          <ManuscriptsHeaderRow>
-            {columnsProps.map(info => (
-              <FilterSortHeader
-                columnInfo={info}
-                key={info.name}
-                setFilter={setFilter}
-                setSortDirection={setSortDirection}
-                setSortName={setSortName}
-                sortDirection={sortDirection}
-                sortName={sortName}
-              />
-            ))}
-          </ManuscriptsHeaderRow>
-          {manuscripts.map((manuscript, key) => {
-            const latestVersion =
-              manuscript.manuscriptVersions?.[0] || manuscript
-
-            return (
-              <ManuscriptRow
-                columnDefinitions={columnsProps}
-                key={latestVersion.id}
-                manuscript={latestVersion}
-                setFilter={setFilter}
-              />
-            )
-          })}
-        </ManuscriptsTable>
-      </ScrollableContent>
-      <Pagination
-        limit={limit}
-        page={page}
-        PaginationContainer={PaginationContainerShadowed}
-        setPage={setPage}
-        totalCount={totalCount}
-      />
+        )}
+      </Columns>
       {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
         <Modal
           isOpen={isOpenBulkDeletionModal}

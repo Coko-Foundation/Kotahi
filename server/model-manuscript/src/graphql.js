@@ -8,6 +8,7 @@ const models = require('@pubsweet/models')
 
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
+const Message = require('../../model-message/src/message')
 const publishToCrossref = require('../../publishing/crossref')
 const { stripSensitiveItems } = require('./manuscriptUtils')
 const { getFilesWithUrl } = require('../../utils/fileStorageUtils')
@@ -24,6 +25,7 @@ const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import'
 const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
 const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
+const validateApiToken = require('../../utils/validateApiToken')
 
 const SUBMISSION_FIELD_PREFIX = 'submission'
 const META_FIELD_PREFIX = 'meta'
@@ -134,7 +136,7 @@ const hasEvaluations = manuscript => {
 }
 
 /** Send the manuscriptId OR a configured ref; and send token if one is configured */
-const tryPublishingWebhook = manuscriptId => {
+const tryPublishingWebhook = async manuscriptId => {
   const publishingWebhookUrl = config['publishing-webhook'].publishingWebhookUrl
 
   if (publishingWebhookUrl) {
@@ -143,14 +145,13 @@ const tryPublishingWebhook = manuscriptId => {
     const payload = { ref: reference || manuscriptId }
     if (token) payload.token = token
 
-    axios
+    await axios
       .post(publishingWebhookUrl, payload)
       // .then(res => {})
       .catch(error => {
-        console.error(
-          `Failed to call publishing webhook at ${publishingWebhookUrl} for article ${manuscriptId}`,
-        )
+        const message = `Failed to call publishing webhook at ${publishingWebhookUrl} for article ${manuscriptId}`
         console.error(error)
+        throw new Error(message)
       })
   }
 }
@@ -307,32 +308,18 @@ const resolvers = {
       manuscript.manuscriptVersions = []
       return manuscript
     },
-    async importManuscripts(_, props, ctx) {
-      if (isImportInProgress) {
-        return null
-      }
-
+    importManuscripts(_, props, ctx) {
+      if (isImportInProgress) return false
       isImportInProgress = true
 
-      const pubsub = await getPubsub()
+      const promises = []
 
       if (process.env.INSTANCE_NAME === 'ncrc') {
-        const manuscriptsFromBiorxiv = await importArticlesFromBiorxiv(ctx)
-
-        const manuscriptsFromPubmed = await importArticlesFromPubmed(ctx)
-        isImportInProgress = false
-
-        pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
-          manuscriptsImportStatus: true,
-        })
-
-        return manuscriptsFromBiorxiv.concat(manuscriptsFromPubmed)
-      }
-
-      if (process.env.INSTANCE_NAME === 'colab') {
-        const importedManuscripts = await importArticlesFromBiorxivWithFullTextSearch(
-          ctx,
-          [
+        promises.push(importArticlesFromBiorxiv(ctx))
+        promises.push(importArticlesFromPubmed(ctx))
+      } else if (process.env.INSTANCE_NAME === 'colab') {
+        promises.push(
+          importArticlesFromBiorxivWithFullTextSearch(ctx, [
             'membrane protein',
             'ion channel',
             'transporter',
@@ -349,19 +336,23 @@ const resolvers = {
             'patch-clamp',
             'voltage-clamp',
             'single-channel',
-          ],
+          ]),
         )
-
-        isImportInProgress = false
-
-        pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
-          manuscriptsImportStatus: true,
-        })
-
-        return importedManuscripts
       }
 
-      return null
+      if (!promises.length) return false
+
+      Promise.all(promises)
+        .catch(error => console.error(error))
+        .finally(async () => {
+          isImportInProgress = false
+          const pubsub = await getPubsub()
+          pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
+            manuscriptsImportStatus: true,
+          })
+        })
+
+      return true
     },
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
@@ -468,7 +459,7 @@ const resolvers = {
         const manuscript = await models.Manuscript.query()
           .findById(team.manuscriptId)
           .withGraphFetched(
-            '[teams.[members.[user.[defaultIdentity]]], submitter.[defaultIdentity]]',
+            '[teams.[members.[user.[defaultIdentity]]], submitter.[defaultIdentity], channels]',
           )
 
         const handlingEditorTeam =
@@ -495,6 +486,11 @@ const resolvers = {
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
+        // Get channel ID
+        const editorialChannel = manuscript.channels.find(
+          channel => channel.topic === 'Editorial discussion',
+        )
+
         if (!emailValidationResult || !receiverFirstName) {
           return team
         }
@@ -512,6 +508,13 @@ const resolvers = {
 
         try {
           await sendEmailNotification(receiverEmail, selectedTemplate, data)
+
+          // Send Notification in Editorial Discussion Panel
+          Message.createMessage({
+            content: `Review Rejection Email sent by Kotahi to ${receiverFirstName}`,
+            channelId: editorialChannel.id,
+            userId: manuscript.submitterId,
+          })
         } catch (e) {
           /* eslint-disable-next-line */
           console.log('email was not sent', e)
@@ -533,7 +536,7 @@ const resolvers = {
         // Automated email submissionConfirmation on submission
         const manuscript = await models.Manuscript.query()
           .findById(id)
-          .withGraphFetched('submitter.[defaultIdentity]')
+          .withGraphFetched('[submitter.[defaultIdentity], channels]')
 
         const receiverEmail = manuscript.submitter.email
         /* eslint-disable-next-line */
@@ -563,6 +566,17 @@ const resolvers = {
 
         try {
           await sendEmailNotification(receiverEmail, selectedTemplate, data)
+
+          // Get channel ID
+          const channelId = manuscript.channels.find(
+            channel => channel.topic === 'Editorial discussion',
+          ).id
+
+          Message.createMessage({
+            content: `Submission Confirmation Email sent by Kotahi to ${manuscript.submitter.username}`,
+            channelId,
+            userId: manuscript.submitterId,
+          })
         } catch (e) {
           /* eslint-disable-next-line */
           console.log('email was not sent', e)
@@ -575,7 +589,9 @@ const resolvers = {
     async makeDecision(_, { id, decision }, ctx) {
       const manuscript = await models.Manuscript.query()
         .findById(id)
-        .withGraphFetched('submitter.[defaultIdentity]')
+        .withGraphFetched(
+          '[submitter.[defaultIdentity], channels, teams.members.user]',
+        )
 
       manuscript.decision = decision
 
@@ -613,6 +629,27 @@ const resolvers = {
         }
 
         try {
+          // Add Email Notification Record in Editorial Discussion Panel
+          const author = manuscript.teams.find(team => {
+            if (team.role === 'author') {
+              return team
+            }
+
+            return null
+          }).members[0].user
+
+          const body = `Editor Decision sent by Kotahi to ${author.username}`
+
+          const channelId = manuscript.channels.find(
+            channel => channel.topic === 'Editorial discussion',
+          ).id
+
+          Message.createMessage({
+            content: body,
+            channelId,
+            userId: manuscript.submitterId,
+          })
+
           await sendEmailNotification(receiverEmail, selectedTemplate, data)
         } catch (e) {
           /* eslint-disable-next-line */
@@ -737,7 +774,7 @@ const resolvers = {
           return null
         }
 
-        steps.push(succeeded, errorMessage, stepLabel)
+        steps.push({ succeeded, errorMessage, stepLabel })
       } else if (['colab'].includes(process.env.INSTANCE_NAME)) {
         // TODO: A note in the code said that for Colab instance, submission.editDate should be updated. Is this true? (See commonUpdateManuscript() for example code.)
       }
@@ -762,13 +799,21 @@ const resolvers = {
           } else message += err.toString()
           succeeded = false
           errorMessage = message
-          throw new Error(message)
         }
 
-        steps.push(stepLabel, succeeded, errorMessage)
+        steps.push({ stepLabel, succeeded, errorMessage })
       }
 
-      tryPublishingWebhook(manuscript.id)
+      try {
+        await tryPublishingWebhook(manuscript.id)
+        steps.push({ stepLabel: 'Publishing webhook', succeeded: true })
+      } catch (err) {
+        steps.push({
+          stepLabel: 'Publishing webhook',
+          succeeded: false,
+          errorMessage: err.message,
+        })
+      }
 
       const updatedManuscript = await models.Manuscript.query().updateAndFetchById(
         id,
@@ -932,6 +977,14 @@ const resolvers = {
         } else {
           console.warn(`Could not sort on field "${sort.field}`)
         }
+
+        query.orderBy('shortId', sortDirection) // Secondary ordering
+      } else {
+        // Give it some order to prevent it changing on refetch.
+        query.orderBy([
+          { column: 'created', order: 'desc' },
+          { column: 'shortId', order: 'desc' },
+        ])
       }
 
       filters.filter(discardDuplicateFields).forEach(filter => {
@@ -1022,6 +1075,29 @@ const resolvers = {
         publishedDate: m.published,
       }
     },
+    async unreviewedPreprints(_, { token }, ctx) {
+      validateApiToken(token, config.api.tokens)
+
+      const manuscripts = await models.Manuscript.query()
+        .where({ status: 'new' })
+        .whereRaw(`submission->>'labels' = 'readyToEvaluate'`)
+
+      return manuscripts.map(m => ({
+        id: m.id,
+        shortId: m.shortId,
+        title: m.meta.title || m.submission.title || m.submission.description,
+        abstract: m.meta.abstract || m.submission.abstract,
+        authors: m.submission.authors || m.authors || [],
+        doi: m.submission.doi.startsWith('https://doi.org/') // TODO We should strip this at time of import
+          ? m.submission.doi.substr(16)
+          : m.submission.doi,
+        uri:
+          m.submission.link ||
+          m.submission.biorxivURL ||
+          m.submission.url ||
+          m.submission.uri,
+      }))
+    },
 
     async validateDOI(_, { articleURL }, ctx) {
       const DOI = encodeURI(articleURL.split('.org/')[1])
@@ -1062,6 +1138,7 @@ const typeDefs = `
     manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!
     """ Get a published manuscript by ID, or null if this manuscript is not published or not found """
     publishedManuscript(id: ID!): PublishedManuscript
+    unreviewedPreprints(token: String!): [Preprint]
   }
 
   input ManuscriptsFilter {
@@ -1100,7 +1177,7 @@ const typeDefs = `
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript
-    importManuscripts: PaginatedManuscripts
+    importManuscripts: Boolean!
   }
 
   type Manuscript implements Object {
@@ -1229,6 +1306,16 @@ const typeDefs = `
     notes: [Note]
     keywords: String
     manuscriptId: ID
+  }
+
+  type Preprint {
+    id: ID!
+    shortId: Int!
+    title: String!
+    abstract: String
+    authors: [Author!]!
+    doi: String!
+    uri: String!
   }
 
   type ArticleId {

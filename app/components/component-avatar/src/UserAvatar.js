@@ -6,6 +6,7 @@ import styled from 'styled-components'
 import AvatarImage from './image'
 import { Container, AvatarLink, OnlineIndicator } from './style'
 import ConditionalWrap from '../../ConditionalWrap'
+import { JournalContext } from '../../xpub-journal/src'
 
 export const GET_USER = gql`
   query user($id: ID, $username: String) {
@@ -39,6 +40,9 @@ const GetUserByUsername = props => {
 }
 
 const Avatar = props => {
+  const journal = React.useContext(JournalContext)
+  const urlFrag = journal.metadata.toplevel_urlfragment
+
   const {
     user,
     dataCy,
@@ -70,7 +74,7 @@ const Avatar = props => {
       <ConditionalWrap
         condition={!!user.username && isClickable}
         wrap={() => (
-          <AvatarLink to={`/users/${user.username}`}>
+          <AvatarLink to={`${urlFrag}/profile/${user.id}`}>
             <AvatarImage
               mobilesize={mobilesize}
               size={size}

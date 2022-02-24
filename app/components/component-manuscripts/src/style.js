@@ -1,10 +1,15 @@
 import styled, { css } from 'styled-components'
 import { Button, Action } from '@pubsweet/ui'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { rotate360, th, grid } from '@pubsweet/ui-toolkit'
 import Color from 'color'
 
 export const StyledButton = styled(Button)`
   cursor: pointer;
+  max-width: 100px;
+  min-width: unset;
+  overflow-wrap: normal;
+  padding: 4px;
+  width: 100%;
 `
 
 export const FloatRightButton = styled(StyledButton)`
@@ -103,6 +108,9 @@ export const Cell = styled.div`
     css`
       cursor: pointer;
     `}
+
+  overflow: hidden;
+  overflow-wrap: anywhere;
 `
 
 /** Displays the label as a badge colored according to props.color */
@@ -123,7 +131,9 @@ export const LabelBadge = styled.div`
           `
         : ''};
     `}
+  overflow-wrap: normal;
   padding: ${grid(0.5)} ${grid(1)};
+  text-overflow: clip;
 `
 
 export const SortArrow = styled.span`
@@ -134,4 +144,29 @@ export const SortArrow = styled.span`
   &::before {
     content: '${({ direction }) => (direction === 'ASC' ? '▼' : '▲')}';
   }
+`
+
+export const Loader = styled.div`
+  display: inline-block;
+
+  &:after {
+    animation: ${rotate360} 1s linear infinite;
+    border: 5px solid ${th('colorPrimary')};
+    border-color: #ffffff transparent #ffffff transparent;
+    border-radius: 50%;
+    content: ' ';
+    display: block;
+    height: 23px;
+    margin: 1px;
+    width: 23px;
+  }
+`
+
+export const RefreshSpinnerWrapper = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
+export const RefreshText = styled.div`
+  padding: 0px 5px;
 `

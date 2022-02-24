@@ -25,36 +25,44 @@ const Production = ({
   file,
   manuscript,
   currentUser,
-  // fileUpload,
+  makePdf,
+  makeJats,
   updateManuscript,
-}) => (
-  <Container>
-    <HeadingWithAction>
-      <Heading>Production</Heading>
-      <DownloadDropdown metadata={manuscript} source={manuscript.meta.source} />
-    </HeadingWithAction>
-    {file &&
-    file.mimeType ===
-      'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
-      <SectionContent>
-        {manuscript ? (
-          <ProductionWaxEditor
-            onBlur={source => {
-              updateManuscript(manuscript.id, { meta: { source } })
-            }}
-            user={currentUser}
-            value={manuscript.meta.source}
-          />
-        ) : (
-          <Spinner />
-        )}
-      </SectionContent>
-    ) : (
-      <SectionContent>
-        <Info>No supported view of the file</Info>
-      </SectionContent>
-    )}
-  </Container>
-)
+}) => {
+  return (
+    <Container>
+      <HeadingWithAction>
+        <Heading>Production</Heading>
+        <DownloadDropdown
+          makeJats={makeJats}
+          makePdf={makePdf}
+          manuscriptId={manuscript.id}
+          manuscriptSource={manuscript.meta.source}
+        />
+      </HeadingWithAction>
+      {file &&
+      file.mimeType ===
+        'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
+        <SectionContent>
+          {manuscript ? (
+            <ProductionWaxEditor
+              onBlur={source => {
+                updateManuscript(manuscript.id, { meta: { source } })
+              }}
+              user={currentUser}
+              value={manuscript.meta.source}
+            />
+          ) : (
+            <Spinner />
+          )}
+        </SectionContent>
+      ) : (
+        <SectionContent>
+          <Info>No supported view of the file</Info>
+        </SectionContent>
+      )}
+    </Container>
+  )
+}
 
 export default withRouter(Production)

@@ -14,7 +14,7 @@ import { JournalContext } from './xpub-journal/src'
 import { XpubContext } from './xpub-with-context/src'
 
 import UsersManager from './component-users-manager/src/UsersManager'
-import Manuscripts from './component-manuscripts/src/Manuscripts'
+import ManuscriptTable from './component-manuscripts/src'
 import Dashboard from './component-dashboard/src/components/Dashboard'
 import SubmitPage from './component-submit/src/components/SubmitPage'
 import ManuscriptPage from './component-manuscript/src/components/ManuscriptPage'
@@ -202,6 +202,14 @@ const AdminPage = () => {
           redirectLink={redirectLink}
         />
         <PrivateRoute
+          component={Profile}
+          currentUser={currentUser}
+          exact
+          key="view-profile"
+          path={`${urlFrag}/profile/:id`}
+          redirectLink={redirectLink}
+        />
+        <PrivateRoute
           component={Dashboard}
           currentUser={currentUser}
           exact
@@ -286,7 +294,7 @@ const AdminPage = () => {
               redirectLink={redirectLink}
             />,
             <PrivateRoute
-              component={Manuscripts}
+              component={ManuscriptTable}
               currentUser={currentUser}
               key="manuscripts"
               path={`${urlFrag}/admin/manuscripts`}
