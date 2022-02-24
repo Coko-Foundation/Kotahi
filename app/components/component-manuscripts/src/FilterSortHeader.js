@@ -16,9 +16,31 @@ const FilterSortHeader = ({
     )
 
     return (
-      <Cell {...columnInfo}>
+      <Cell {...columnInfo} style={{ overflow: 'visible' }}>
         <Select
           aria-label={columnInfo.title}
+          customStyles={{
+            control: provided => ({
+              ...provided,
+              minHeight: 'unset',
+            }),
+            dropdownIndicator: provided => ({
+              ...provided,
+              padding: '0 2px 0 0',
+            }),
+            indicatorSeparator: provided => ({
+              ...provided,
+              display: 'none',
+            }),
+            placeholder: provided => ({
+              ...provided,
+              margin: 0,
+            }),
+            valueContainer: provided => ({
+              ...provided,
+              padding: '0 6px',
+            }),
+          }}
           data-testid={columnInfo.name}
           label={columnInfo.title}
           onChange={selected => setFilter(columnInfo.name, selected.value)}
