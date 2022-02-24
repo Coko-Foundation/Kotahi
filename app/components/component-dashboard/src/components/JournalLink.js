@@ -14,9 +14,9 @@ const projectUrl = (version, page, id) => {
     parts.push(page)
   }
 
-  if (id) {
+  /* if (id) {
     parts.push(id)
-  }
+  } */
 
   return parts.join('/')
 }
