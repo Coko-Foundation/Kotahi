@@ -16,7 +16,7 @@ const CounterInfo = ComponentPlugin('bottomRightInfo')
 
 // eslint-disable-next-line react/prop-types
 const ChatWaxEditorLayout = readonly => ({ editor }) => {
-  const [isTopBarOpen, setIsTopBarOpen] = React.useState(true)
+  const [isTopBarOpen, setIsTopBarOpen] = React.useState(false)
 
   return (
     <div>
@@ -45,11 +45,11 @@ const ChatWaxEditorLayout = readonly => ({ editor }) => {
               <SimpleEditorDiv className='wax-surface-scroll'>
                 {editor}
               </SimpleEditorDiv>
+              <WaxOverlays />
             </div>
           </>
         )}
       </SimpleGrid>
-      <WaxOverlays />
       {!readonly && (
         <SimpleInfoContainer>
           <CounterInfo />
