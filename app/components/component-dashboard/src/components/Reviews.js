@@ -16,7 +16,7 @@ const Root = styled.div`
   margin-top: 0.3em;
 `
 
-const BadgeContainer = styled.span`
+const CountLabel = styled.span`
   &:not(:last-child) {
     margin-right: 10px;
   }
@@ -44,9 +44,9 @@ const Reviews = ({ version, journal }) => (
     <JournalContext.Consumer>
       {journal =>
         journal.reviewStatus.map(status => (
-          <BadgeContainer data-testid={status} key={status}>
-            <Badge count={countStatus(version, status)} label={status} />
-          </BadgeContainer>
+          <CountLabel data-testid={status} key={status}>
+            {countStatus(version, status) + " " + status}
+          </CountLabel>
         ))
       }
     </JournalContext.Consumer>
