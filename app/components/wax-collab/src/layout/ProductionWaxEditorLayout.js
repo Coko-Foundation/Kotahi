@@ -38,7 +38,6 @@ const getNotes = main => {
 }
 
 const TopBar = ComponentPlugin('topBar')
-const WaxOverlays = ComponentPlugin('waxOverlays')
 const NotesArea = ComponentPlugin('notesArea')
 const RightArea = ComponentPlugin('rightArea')
 const CounterInfo = ComponentPlugin('bottomRightInfo')
@@ -175,7 +174,6 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
           </NotesContainer>
         </ReadOnlyNotesAreaContainer>
       )}
-      <WaxOverlays />
       <InfoContainer>
         <CounterInfo />
       </InfoContainer>

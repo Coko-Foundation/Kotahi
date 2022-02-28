@@ -9,7 +9,6 @@ import {
 } from './EditorStyles'
 
 const TopBar = ComponentPlugin('topBar')
-const WaxOverlays = ComponentPlugin('waxOverlays')
 const CounterInfo = ComponentPlugin('bottomRightInfo')
 
 // eslint-disable-next-line react/prop-types
@@ -31,7 +30,6 @@ const SimpleWaxEditorLayout = readonly => ({ editor }) => (
         </>
       )}
     </SimpleGrid>
-    <WaxOverlays />
     {!readonly && (
       <SimpleInfoContainer>
         <CounterInfo />
