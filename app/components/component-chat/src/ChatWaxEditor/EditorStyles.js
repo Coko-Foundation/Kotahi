@@ -207,8 +207,8 @@ export const SimpleMenu = styled.div`
   }
 
   .Dropdown-menu {
-    bottom: 38px;
     top: initial;
+    bottom: 38px;
   }
 
   & > div {

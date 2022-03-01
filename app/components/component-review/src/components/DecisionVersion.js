@@ -404,7 +404,7 @@ DecisionVersion.propTypes = {
         user: PropTypes.shape({
           username: PropTypes.string.isRequired,
           defaultIdentity: PropTypes.shape({
-            name: PropTypes.string.isRequired,
+            identifier: PropTypes.string.isRequired,
           }),
         }).isRequired,
         recommendation: PropTypes.string,

@@ -11,20 +11,6 @@ export default {
         totalCount
         manuscripts {
           id
-          reviews {
-            id
-            open
-            recommendation
-            reviewComment {
-              content
-            }
-            created
-            isDecision
-            user {
-              id
-              username
-            }
-          }
           status
           files {
             id
@@ -36,29 +22,17 @@ export default {
           meta {
             manuscriptId
             title
-            articleSections
-            articleType
             source
-            history {
-              type
-              date
-            }
           }
           published
           submission
           evaluationsHypothesisMap
-          submitter {
-            defaultIdentity {
-              name
-            }
-          }
         }
       }
       formForPurpose(purpose: "submit") {
         structure {
           children {
             title
-            shortDescription
             id
             name
           }
