@@ -224,6 +224,7 @@ export const SimpleEditorDiv = styled.div`
   border: 1px solid ${th('colorBorder')};
   border-radius: ${th('borderRadius')};
   grid-area: editor;
+  margin-top: 8px;
   max-height: 60vh;
   overflow: auto;
   padding: 9px;
