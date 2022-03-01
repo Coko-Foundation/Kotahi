@@ -189,8 +189,8 @@ export const SimpleMenu = styled.div`
   left: -12px;
   margin: 0 ${th('borderRadius')};
   max-width: calc(100% + 114px); /* this is to avoid spillover */
-  width: calc(100% + 114px); /* overflow-x: scroll; this is not great! */
   user-select: none;
+  width: calc(100% + 114px); /* overflow-x: scroll; this is not great! */
   z-index: 1;
 
   div[data-name='SpecialCharacters'] > div > button + div {
@@ -200,8 +200,8 @@ export const SimpleMenu = styled.div`
   }
 
   .Dropdown-menu {
-    top: initial;
     bottom: 38px;
+    top: initial;
   }
 
   & > div {
@@ -220,8 +220,12 @@ export const SimpleEditorDiv = styled.div`
   max-height: 60vh;
   overflow: auto;
   padding: 9px;
-  position: relative;
   width: 100%;
+
+  & > div:nth-child(2) {
+    left: 0;
+    top: -60px;
+  }
 
   p {
     margin-bottom: 0 !important;

@@ -301,17 +301,22 @@ const SuperChatInput = props => {
                 networkDisabled={networkDisabled}
                 onChange={onChange}
                 onKeyDown={handleKeyPress}
-                placeholder='Your message here...'
+                placeholder="Your message here..."
                 searchUsersCallBack={searchUsers}
                 staticSuggestions={props.participants} // props.participants is currently undefined
                 value={text}
               />
             </InputWrapper>
             <Button
-              data-cy='chat-input-send-button'
+              data-cy="chat-input-send-button"
               onClick={submit}
               primary
-              style={{ flex: 'none', marginLeft: '8px', padding: '10px 8px' }}
+              style={{
+                flex: 'none',
+                marginLeft: '8px',
+                padding: '10px 4px',
+                minWidth: 'calc(8px * 12)',
+              }}
             >
               Send
             </Button>
