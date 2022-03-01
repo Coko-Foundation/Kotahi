@@ -307,17 +307,7 @@ const SuperChatInput = props => {
                 value={text}
               />
             </InputWrapper>
-            <Button
-              data-cy="chat-input-send-button"
-              onClick={submit}
-              primary
-              style={{
-                flex: 'none',
-                marginLeft: '8px',
-                padding: '10px 4px',
-                minWidth: 'calc(8px * 12)',
-              }}
-            >
+            <Button data-cy="chat-input-send-button" onClick={submit} primary>
               Send
             </Button>
           </Form>

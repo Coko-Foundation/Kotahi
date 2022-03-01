@@ -190,7 +190,14 @@ export const SimpleMenu = styled.div`
   margin: 0 ${th('borderRadius')};
   max-width: calc(100% + 114px); /* this is to avoid spillover */
   user-select: none;
-  width: calc(100% + 114px); /* overflow-x: scroll; this is not great! */
+  /* ________________________                                              */
+  /* |__100%_MENU__|________|                                              */
+  /* |             | SEND   | <- Send Button                               */
+  /* |             | 114px  |                                              */
+  /* |----------------------|                                              */
+  /* |______________________|                                              */
+  /*     ^-- Adding 114px to 100% Menu Makes it occupy the whole container */
+  width: calc(100% + 114px); /* overflow-x: scroll; this is not great!     */
   z-index: 1;
 
   div[data-name='SpecialCharacters'] > div > button + div {
@@ -222,6 +229,11 @@ export const SimpleEditorDiv = styled.div`
   padding: 9px;
   width: 100%;
 
+  /* SimpleEditorDiv contains - TWO <divs />   */
+  /* 1. Div for Input                          */
+  /* 2. Div for Wax Overlay                    */
+  /* We select the 2nd div                     */
+  /* Place the WaxOverlay above the link icon  */
   & > div:nth-child(2) {
     left: 0;
     top: -60px;
