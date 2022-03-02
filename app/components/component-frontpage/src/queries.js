@@ -11,6 +11,26 @@ export default {
         totalCount
         manuscripts {
           id
+          reviews {
+            id
+            open
+            recommendation
+            canBePublishedPublicly
+            decisionComment {
+              id
+              content
+            }
+            reviewComment {
+              id
+              content
+            }
+            created
+            isDecision
+            user {
+              id
+              username
+            }
+          }
           status
           files {
             id

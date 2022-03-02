@@ -10,6 +10,20 @@ const query = gql`
         source
         manuscriptId
       }
+      reviews {
+        id
+        updated
+        isDecision
+        canBePublishedPublicly
+        decisionComment {
+          id
+          content
+        }
+        reviewComment {
+          id
+          content
+        }
+      }
     }
     formForPurpose(purpose: "submit") {
       structure {

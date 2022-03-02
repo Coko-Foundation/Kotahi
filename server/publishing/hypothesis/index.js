@@ -3,6 +3,7 @@ const TurndownService = require('turndown')
 const axios = require('axios')
 const config = require('config')
 const { get } = require('lodash')
+const { getFieldNamesAndTags, hasText } = require('./hypothesisTools')
 
 const headers = {
   headers: {
@@ -10,12 +11,12 @@ const headers = {
   },
 }
 
-const requestURL = `https://api.hypothes.is/api/annotations`
+const REQUEST_URL = `https://api.hypothes.is/api/annotations`
 
 /** DELETE a publication from Hypothesis via REST */
 const deletePublication = async publicationId => {
   try {
-    const response = await axios.delete(`${requestURL}/${publicationId}`, {
+    const response = await axios.delete(`${REQUEST_URL}/${publicationId}`, {
       ...headers,
       data: {},
     })
@@ -59,30 +60,39 @@ const publishToHypothesis = async manuscript => {
   const uri = manuscript.submission.biorxivURL || manuscript.submission.link
 
   const fields = await Promise.all(
-    config.hypothesis.publishFields.split(',').map(async f => {
-      const parts = f.split(':')
-      const fieldName = parts[0].trim()
-      const tag = parts[1] ? parts[1].trim() : null
-      let value = get(manuscript, fieldName)
-      if (
-        value === '<p></p>' ||
-        value === '<p class="paragraph"></p>' ||
-        typeof value !== 'string'
-      )
-        value = null
+    getFieldNamesAndTags(config.hypothesis.publishFields).map(async x => {
+      let value
 
-      const hasPreviousValue = !!manuscript.evaluationsHypothesisMap[fieldName]
+      if (x.fieldName.startsWith('review#')) {
+        const index = parseInt(x.fieldName.split('#')[1], 10)
+
+        const reviews = manuscript.reviews.filter(
+          r => !r.isDecision && r.canBePublishedPublicly && r.reviewComment,
+        )
+
+        value =
+          reviews.length > index ? reviews[index].reviewComment.content : null
+      } else if (x.fieldName === 'decision') {
+        const decisions = manuscript.reviews.filter(
+          r => r.isDecision && r.decisionComment,
+        )
+
+        value =
+          decisions.length > 0 ? decisions[0].decisionComment.content : null
+      } else {
+        value = get(manuscript, x.fieldName)
+      }
+
+      const annotationId = manuscript.evaluationsHypothesisMap[x.fieldName]
+      const hasPreviousValue = !!annotationId
       let action
-      if (value) action = hasPreviousValue ? 'update' : 'create'
+      if (hasText(value)) action = hasPreviousValue ? 'update' : 'create'
       else action = hasPreviousValue ? 'delete' : null
-      let annotationId
 
       if (['update', 'delete'].includes(action)) {
-        annotationId = manuscript.evaluationsHypothesisMap[fieldName]
-
         // Check with Hypothesis that there truly is an annotation to update or delete
         try {
-          await axios.get(`${requestURL}/${annotationId}`, {
+          await axios.get(`${REQUEST_URL}/${annotationId}`, {
             headers,
           })
         } catch (e) {
@@ -95,7 +105,7 @@ const publishToHypothesis = async manuscript => {
           'Missing field submission.biorxivURL or submission.link',
         )
 
-      return { action, fieldName, value, tag, annotationId }
+      return { action, fieldName: x.fieldName, value, tag: x.tag, annotationId }
     }),
   )
 
@@ -112,11 +122,11 @@ const publishToHypothesis = async manuscript => {
       }
 
       if (f.action === 'create') {
-        const response = await axios.post(requestURL, requestBody, headers)
+        const response = await axios.post(REQUEST_URL, requestBody, headers)
         newHypothesisMap[f.fieldName] = response.data.id
       } else if (f.action === 'update') {
         await axios.patch(
-          `${requestURL}/${f.annotationId}`,
+          `${REQUEST_URL}/${f.annotationId}`,
           requestBody,
           headers,
         )
