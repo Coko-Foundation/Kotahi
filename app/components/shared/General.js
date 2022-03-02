@@ -122,7 +122,7 @@ export const Columns = styled.div`
   grid-template-columns: 4fr 3fr;
   height: 100vh;
   justify-content: center;
-  overflow: hidden;
+  overflow: auto;
 `
 
 export const Manuscript = styled.div`
