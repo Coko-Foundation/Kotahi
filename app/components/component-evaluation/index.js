@@ -8,6 +8,7 @@ import query from './reviewQuery'
 import CommsErrorBanner from '../shared/CommsErrorBanner'
 
 import { Heading, ArticleEvaluation } from './style'
+import getEvaluationFieldTitle from '../component-frontpage/src/getEvaluationFieldTitle'
 
 const ArticleEvaluationPage = ({ match }) => {
   const { data, loading, error } = useQuery(query, {
@@ -17,28 +18,51 @@ const ArticleEvaluationPage = ({ match }) => {
   if (loading) return null
   if (error) return <CommsErrorBanner error={error} />
 
-  const fieldName = match.params.fieldNameB
-    ? `${match.params.fieldNameA}.${match.params.fieldNameB}`
-    : match.params.fieldNameA
+  let fieldName
+
+  if (match.params.fieldNameB) {
+    if (match.params.fieldNameA === 'review')
+      fieldName = `${match.params.fieldNameA}#${match.params.fieldNameB}`
+    else fieldName = `${match.params.fieldNameA}.${match.params.fieldNameB}`
+  } else fieldName = match.params.fieldNameA
 
   const manuscript = {
     ...data.manuscript,
     submission: JSON.parse(data.manuscript.submission),
   }
 
-  const evaluationText = get(manuscript, fieldName)
+  let evaluationText
+  let date
+
+  if (fieldName === 'decision') {
+    const decisions = manuscript.reviews.filter(
+      r => r.isDecision && r.decisionComment,
+    )
+
+    evaluationText =
+      decisions.length > 0 ? decisions[0].decisionComment.content : ''
+    date = evaluationText ? decisions[0].updated : null
+  } else if (fieldName.startsWith('review#')) {
+    const reviews = manuscript.reviews.filter(
+      r => !r.isDecision && r.canBePublishedPublicly && r.reviewComment,
+    )
+
+    const index = parseInt(fieldName.split('#')[1], 10)
+    evaluationText =
+      reviews.length > index ? reviews[index].reviewComment.content : ''
+    date = evaluationText ? reviews[0].updated : null
+  } else {
+    evaluationText = get(manuscript, fieldName)
+    const dateFieldName = `${fieldName}date` // This field may or may not be present
+    date = get(manuscript, dateFieldName) || null
+  }
 
   const title =
     manuscript.meta.title ||
     manuscript.submission.title ||
     manuscript.submission.description
 
-  const fieldTitle =
-    data.formForPurpose.structure.children.find(f => f.name === fieldName)
-      ?.title || fieldName
-
-  const dateFieldName = `${fieldName}date` // This field may or may not be present
-  const date = get(manuscript, dateFieldName) || null
+  const fieldTitle = getEvaluationFieldTitle(fieldName, data.formForPurpose)
 
   const articleLink =
     manuscript.submission.articleURL || manuscript.submission.link

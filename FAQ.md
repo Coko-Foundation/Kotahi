@@ -178,10 +178,16 @@ HYPOTHESIS_GROUP=<group key here>
 HYPOTHESIS_PUBLISH_FIELDS=<comma-separated list of field internal names>
 ```
 
-The `HYPOTHESIS_PUBLISH_FIELDS` variable should contain an ordered list of the AbstractEditor or TextField fields from your submission form that you wish to publish, e.g. `"submission.review1,submission.review2,submission.review3,submission.summary"`. This list can be surrounded by double-quotes. You can also specify a hypothesis tag for any field by suffixing the field internal name with `:<tag>`, e.g.:
+The `HYPOTHESIS_PUBLISH_FIELDS` variable should contain an ordered list of the fields you wish to publish as Hypothesis annotations. These fields may be:
+
+- `decision`: the editorial decision text
+- `reviews`: this will publish each of the completed reviews that has been marked for public publication
+- Any AbstractEditor or TextField field from the submission form, identified by its internal name.
+
+Fields should be separated by commas and surrounded with double-quotes. Optionally, you may also specify a hypothesis tag for any field by appending a colon and the tag name. E.g.:
 
 ```
-"submission.review1:peerReview,submission.review2:peerReview,submission.review3:peerReview,submission.summary:evaluationSummary"
+"decision:evaluationSummary, reviews:evaluation, submission.strengths:strengths, submission.weaknesses:weaknesses"
 ```
 
 Your submission form must also contain a field with the internal name `submission.biorxivURL` or `submission.link`, which should contain the URL of the page to be annotated.
