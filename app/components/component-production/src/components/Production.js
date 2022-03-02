@@ -41,7 +41,7 @@ const Production = ({
         />
       </HeadingWithAction>
       {file &&
-      file.mimeType ===
+      file.storedObjects[0].mimetype ===
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document' ? (
         <SectionContent>
           {manuscript ? (

@@ -262,7 +262,7 @@ const ProductionPage = ({ match, ...props }) => {
       <Production
         currentUser={currentUser}
         file={
-          manuscript.files.find(file => file.fileType === 'manuscript') || {}
+          manuscript.files.find(file => file.tags.includes('manuscript')) || {}
         }
         makeJats={() => {
           setMakingJats(true)

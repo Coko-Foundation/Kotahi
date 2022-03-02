@@ -117,16 +117,18 @@ const createManuscriptMutation = gql`
 `
 
 const createFileMutation = gql`
-  mutation($file: Upload!, $meta: FileMetaInput) {
+  mutation($file: Upload!, $meta: FileMetaInput!) {
     createFile(file: $file, meta: $meta) {
       id
-      created
-      label
-      filename
-      fileType
-      mimeType
-      size
-      url
+      name
+      storedObjects {
+        type
+        key
+        size
+        mimetype
+        extension
+        url
+      }
     }
   }
 `
@@ -173,7 +175,7 @@ const base64Images = source => {
     const mimeTypeSplit = mimeType.split('/')
     const extFileName = mimeTypeSplit[1]
 
-    const file = new File([blob], `Image00${index + 1}.${extFileName}`, {
+    const file = new File([blob], `Image${index + 1}.${extFileName}`, {
       type: mimeType,
     })
 
@@ -187,13 +189,9 @@ const uploadImages = (image, client, manuscriptId) => {
   const { file } = image
 
   const meta = {
-    filename: file.name,
+    fileType: 'manuscriptImage',
     manuscriptId,
     reviewCommentId: null,
-    mimeType: file.type,
-    size: file.size,
-    fileType: 'manuscriptImage',
-    label: file.label || undefined,
   }
 
   const data = client.mutate({
@@ -378,7 +376,7 @@ export default ({
         results.forEach((result, index) => {
           source = source.replace(
             images[index].dataSrc,
-            result.data.createFile.url,
+            result.data.createFile.storedObjects.find(storedObject => storedObject.type === "medium").url,
           )
         })
 
