@@ -149,7 +149,7 @@ export const Form = styled.form`
   min-width: 1px;
   position: relative;
 
-  button {
+  & > button {
     /* Make height of button consistent with the Input Box */
     padding: 10px ${th('gridUnit')};
   }

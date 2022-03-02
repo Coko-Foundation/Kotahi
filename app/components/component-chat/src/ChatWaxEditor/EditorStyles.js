@@ -179,16 +179,10 @@ export const SimpleGrid = styled.div`
 `
 
 export const SimpleMenu = styled.div`
-  align-items: center;
-  background: #fff;
   border-top: 1px solid ${th('colorFurniture')};
   display: flex;
   flex-wrap: wrap;
-  grid-area: menu;
-  height: fit-content;
   left: -12px;
-  margin: 0 ${th('borderRadius')};
-  max-width: calc(100% + 114px); /* this is to avoid spillover */
   user-select: none;
   /* ________________________                                              */
   /* |__100%_MENU__|________|                                              */
@@ -197,7 +191,7 @@ export const SimpleMenu = styled.div`
   /* |----------------------|                                              */
   /* |______________________|                                              */
   /*     ^-- Adding 114px to 100% Menu Makes it occupy the whole container */
-  width: calc(100% + 114px); /* overflow-x: scroll; this is not great!     */
+  width: calc(100% + 114px);
   z-index: 1;
 
   div[data-name='SpecialCharacters'] > div > button + div {
