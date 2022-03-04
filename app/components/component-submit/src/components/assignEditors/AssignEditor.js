@@ -1,20 +1,64 @@
 import React, { useEffect, useState } from 'react'
+import config from 'config'
+import { get } from 'lodash'
+import { gql, useQuery, useMutation } from '@apollo/client'
 import PropTypes from 'prop-types'
 import { Select } from '../../../../shared'
 
 const editorOption = user => ({
-  label: user.username || user.email,
+  label: user.defaultIdentity?.name || user.email || user.username,
   value: user.id,
 })
 
-const AssignEditor = ({
-  teamRole,
-  manuscript,
-  allUsers,
-  updateTeam,
-  createTeam,
-  teamLabels,
-}) => {
+const teamFields = `
+  id
+  name
+  role
+  manuscript {
+    id
+  }
+  members {
+    id
+    user {
+      id
+      username
+    }
+  }
+`
+
+const query = gql`
+  {
+    users {
+      id
+      username
+      email
+      admin
+      defaultIdentity {
+        id
+        name
+      }
+    }
+  }
+`
+
+const updateTeamMutation = gql`
+  mutation($id: ID!, $input: TeamInput) {
+    updateTeam(id: $id, input: $input) {
+      ${teamFields}
+    }
+  }
+`
+
+const createTeamMutation = gql`
+  mutation($input: TeamInput!) {
+    createTeam(input: $input) {
+      ${teamFields}
+    }
+  }
+`
+
+// TODO Instead use ../../../../component-review/src/components/assignEditors/AssignEditor.js and delete this file
+const AssignEditor = ({ teamRole, manuscript }) => {
   const [team, setTeam] = useState([])
   const [teams, setTeams] = useState([])
   const [selectedEditor, setSelectedEditor] = useState(undefined)
@@ -77,8 +121,18 @@ const AssignEditor = ({
     }
   }, [selectedEditor])
 
-  const teamName = teamLabels[teamRole].name
-  const options = (allUsers || []).map(user => editorOption(user))
+  const teamName = get(config, `teams.${teamRole}.name`)
+
+  const { data, loading, error } = useQuery(query)
+
+  const [updateTeam] = useMutation(updateTeamMutation)
+  const [createTeam] = useMutation(createTeamMutation)
+
+  if (loading || error) {
+    return null
+  }
+
+  const options = (data.users || []).map(user => editorOption(user))
 
   return (
     <Select

@@ -181,6 +181,7 @@ const SubmitPage = ({ match, history }) => {
 
   return (
     <Submit
+      client={client}
       confirming={confirming}
       createNewVersion={createNewVersion}
       currentUser={currentUser}

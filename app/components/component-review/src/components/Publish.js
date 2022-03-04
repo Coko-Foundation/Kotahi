@@ -1,7 +1,5 @@
 import React, { useState } from 'react'
-import { useMutation } from '@apollo/client'
 import { Button } from '@pubsweet/ui'
-import { publishManuscriptMutation } from './queries'
 
 import {
   Title,
@@ -14,9 +12,8 @@ import {
 import { SectionContent } from '../../../shared'
 import Alert from './publishing/Alert'
 
-const Publish = ({ manuscript }) => {
+const Publish = ({ manuscript, publishManuscript }) => {
   // Hooks from the old world
-  const [publishManuscript] = useMutation(publishManuscriptMutation)
   const [isPublishing, setIsPublishing] = useState(false)
   const [publishResponse, setPublishResponse] = useState(null)
   const [publishingError, setPublishingError] = useState(null)

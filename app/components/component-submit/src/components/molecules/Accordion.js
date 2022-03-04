@@ -23,7 +23,7 @@ const ToggleReview = ({ open, toggle }) => (
 const Bullet = ({ journal, recommendation }) => {
   const recommendationColor = () =>
     recommendation
-      ? journal.recommendations.find(item => item.value === recommendation)
+      ? journal?.recommendations?.find(item => item.value === recommendation)
           .color
       : 'black'
 

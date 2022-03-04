@@ -61,7 +61,7 @@ export const VersionSwitcher = ({ versions = [], children, top = 2 }) => {
 
   useEffect(() => {
     normalizedVersions = versions.length ? versions : children
-    selectVersionKey(normalizedVersions[0] && normalizedVersions[0].key)
+    selectVersionKey(normalizedVersions[0]?.key)
   }, [])
 
   if (!normalizedVersions) {
@@ -75,9 +75,7 @@ export const VersionSwitcher = ({ versions = [], children, top = 2 }) => {
   return (
     <>
       <Select
-        onChange={option => {
-          selectVersionKey(option.value)
-        }}
+        onChange={option => selectVersionKey(option.value)}
         options={normalizedVersions.map((d, i) => ({
           value: d.key,
           label:

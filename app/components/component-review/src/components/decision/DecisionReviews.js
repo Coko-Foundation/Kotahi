@@ -1,7 +1,6 @@
 import React from 'react'
 import { Action } from '@pubsweet/ui'
 import PropTypes from 'prop-types'
-import config from 'config'
 import DecisionReview from './DecisionReview'
 import { SectionHeader, SectionRow, Title } from '../style'
 import { SectionContent } from '../../../../shared'
@@ -24,9 +23,14 @@ const getCompletedReviews = (manuscript, currentUser) => {
   return currentMember && currentMember.status
 }
 
-const urlFrag = config.journal.metadata.toplevel_urlfragment
-
-const DecisionReviews = ({ manuscript, sharedReviews }) => {
+const DecisionReviews = ({
+  reviewers,
+  manuscript,
+  sharedReviews,
+  updateReview,
+  canHideReviews,
+  urlFrag,
+}) => {
   const reviews =
     process.env.INSTANCE_NAME === 'colab' ? sharedReviews : manuscript.reviews
 
@@ -60,12 +64,14 @@ const DecisionReviews = ({ manuscript, sharedReviews }) => {
           .map((review, index) => (
             <SectionRow key={review.id}>
               <DecisionReview
+                canHideReviews={canHideReviews}
                 isControlPage
                 manuscriptId={manuscript.id}
                 open
                 review={review}
                 reviewer={{ user: review.user, ordinal: index + 1 }}
                 teams={manuscript.teams}
+                updateReview={updateReview}
               />
             </SectionRow>
           ))

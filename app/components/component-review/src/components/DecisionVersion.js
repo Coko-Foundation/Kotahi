@@ -1,9 +1,7 @@
 import React, { useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Formik } from 'formik'
-import { useMutation, useQuery, gql } from '@apollo/client'
-import config from 'config'
-import { get, set } from 'lodash'
+import { set } from 'lodash'
 import DecisionForm from './decision/DecisionForm'
 import DecisionReviews from './decision/DecisionReviews'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
@@ -14,53 +12,57 @@ import EditorSection from './decision/EditorSection'
 import Publish from './Publish'
 import { AdminSection } from './style'
 import {
-  Spinner,
   Tabs,
   SectionContent,
   SectionHeader,
   SectionRow,
   Title,
-  CommsErrorBanner,
 } from '../../../shared'
-import {
-  query,
-  updateReviewMutation,
-  makeDecisionMutation,
-  sharedReviews,
-} from './queries'
 import DecisionAndReviews from '../../../component-submit/src/components/DecisionAndReviews'
 import FormTemplate from '../../../component-submit/src/components/FormTemplate'
 
 const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
-  const fieldNames = form.children.map(field => field.name)
+  const fieldNames = form?.children?.map(field => field.name)
   fieldNames.forEach(fieldName => set(allBlankedFields, fieldName, ''))
   return allBlankedFields.submission ?? {}
 }
 
 const DecisionVersion = ({
+  allUsers,
   form,
   current,
+  currentUser,
   version,
   parent,
-  // below added to handle manuscript editing:
-  updateManuscript,
-  // below added to handle form editing:
-  onChange,
+  updateManuscript, // To handle manuscript editing
+  onChange, // To handle form editing
   confirming,
   toggleConfirming,
+  makeDecision = {},
+  sendNotifyEmail,
+  sendChannelMessageCb,
+  publishManuscript,
+  updateTeam,
+  createTeam,
+  updateReview,
+  reviewers,
+  teamLabels,
+  canHideReviews,
+  urlFrag,
+  displayShortIdAsIdentifier,
+  client,
+  createFile,
+  deleteFile,
 }) => {
   // Hooks from the old world
-  const [makeDecision] = useMutation(makeDecisionMutation)
-  const [doUpdateReview] = useMutation(updateReviewMutation)
-
-  const addEditor = (manuscript, label, isCurrent, currentUser) => {
+  const addEditor = (manuscript, label, isCurrent, user) => {
     const isThisReadOnly = !isCurrent
 
     return {
       content: (
         <EditorSection
-          currentUser={currentUser}
+          currentUser={user}
           manuscript={manuscript}
           onBlur={
             isThisReadOnly
@@ -84,36 +86,15 @@ const DecisionVersion = ({
       recommendation: null,
     }
 
-  const { loading, error, data } = useQuery(query, {
-    variables: {
-      id: version.id,
-    },
-    // fetchPolicy: 'cache-and-network',
-  })
-
-  const { data: sharedReviewsList, loading: loadingSharedReviews } = useQuery(
-    sharedReviews,
-    {
-      variables: {
-        id: version.id,
-      },
-    },
-  )
-
   // Find an existing review or create a placeholder, and hold a ref to it
-  const existingReview = useRef(reviewOrInitial(data?.manuscript))
+  const existingReview = useRef(reviewOrInitial(version))
 
   // Update the value of that ref if the manuscript object changes
   useEffect(() => {
-    existingReview.current = reviewOrInitial(data?.manuscript)
-  }, [data?.manuscript?.reviews])
+    existingReview.current = reviewOrInitial(version)
+  }, [version.reviews])
 
-  if (loading || loadingSharedReviews) return <Spinner />
-  if (error) return <CommsErrorBanner error={error} />
-
-  const { manuscript, currentUser } = data
-
-  const updateReview = manuscriptId => review => {
+  const updateReviewForVersion = manuscriptId => review => {
     const reviewData = {
       recommendation: review.recommendation,
       manuscriptId,
@@ -125,43 +106,11 @@ const DecisionVersion = ({
       },
     }
 
-    return doUpdateReview({
-      variables: {
-        id: existingReview.current.id || undefined,
-        input: reviewData,
-      },
-      update: (cache, { data: { updateReview: updatedReview } }) => {
-        cache.modify({
-          id: cache.identify(manuscript),
-          fields: {
-            reviews(existingReviewRefs = [], { readField }) {
-              const newReviewRef = cache.writeFragment({
-                data: updatedReview,
-                fragment: gql`
-                  fragment NewReview on Review {
-                    id
-                  }
-                `,
-              })
-
-              if (
-                existingReviewRefs.some(
-                  ref => readField('id', ref) === updatedReview.id,
-                )
-              ) {
-                return existingReviewRefs
-              }
-
-              return [...existingReviewRefs, newReviewRef]
-            },
-          },
-        })
-      },
-    })
+    return updateReview(existingReview.current.id, reviewData, manuscriptId)
   }
 
   const editorSection = addEditor(
-    manuscript,
+    version,
     'Manuscript text',
     current,
     currentUser,
@@ -172,20 +121,21 @@ const DecisionVersion = ({
       ? createBlankSubmissionBasedOnForm(form)
       : {}
 
-    Object.assign(submissionValues, JSON.parse(manuscript.submission))
+    Object.assign(submissionValues, JSON.parse(version.submission))
 
     const versionValues = {
-      ...manuscript,
+      ...version,
       submission: submissionValues,
     }
 
-    const versionId = manuscript.id
+    const versionId = version.id
 
     return {
       content: (
         <>
           {!current ? (
             <ReviewMetadata
+              displayShortIdAsIdentifier={displayShortIdAsIdentifier}
               form={form}
               manuscript={version}
               showEditorOnlyFields
@@ -203,16 +153,21 @@ const DecisionVersion = ({
                   return (
                     <FormTemplate
                       confirming={confirming}
+                      createFile={createFile}
+                      deleteFile={deleteFile}
                       onChange={(value, path) => {
                         onChange(value, path, versionId)
                       }}
                       toggleConfirming={toggleConfirming}
                       {...formProps}
+                      client={client}
+                      displayShortIdAsIdentifier={displayShortIdAsIdentifier}
                       form={form}
-                      manuscript={manuscript}
+                      manuscript={version}
                       match={{ url: 'decision' }}
                       republish={() => null}
                       showEditorOnlyFields
+                      urlFrag={urlFrag}
                     />
                   )
                 }}
@@ -221,7 +176,7 @@ const DecisionVersion = ({
           )}
         </>
       ),
-      key: `metadata_${manuscript.id}`,
+      key: `metadata_${version.id}`,
       label: 'Metadata',
     }
   }
@@ -252,11 +207,21 @@ const DecisionVersion = ({
           {current && (
             <>
               {['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
-                <EmailNotifications manuscript={manuscript} />
+                <EmailNotifications
+                  allUsers={allUsers}
+                  currentUser={currentUser}
+                  manuscript={version}
+                  sendChannelMessageCb={sendChannelMessageCb}
+                  sendNotifyEmail={sendNotifyEmail}
+                />
               )}
               <AssignEditorsReviewers
+                allUsers={allUsers}
                 AssignEditor={AssignEditor}
+                createTeam={createTeam}
                 manuscript={parent}
+                teamLabels={teamLabels}
+                updateTeam={updateTeam}
               />
             </>
           )}
@@ -266,7 +231,7 @@ const DecisionVersion = ({
                 <Title>Assigned editors</Title>
               </SectionHeader>
               <SectionRow>
-                {parent.teams?.map(team => {
+                {parent?.teams?.map(team => {
                   if (
                     ['seniorEditor', 'handlingEditor', 'editor'].includes(
                       team.role,
@@ -274,7 +239,7 @@ const DecisionVersion = ({
                   ) {
                     return (
                       <p key={team.id}>
-                        {get(config, `teams.${team.role}.name`)}:{' '}
+                        {teamLabels[team.role].name}:{' '}
                         {team.members?.[0]?.user?.username}
                       </p>
                     )
@@ -289,27 +254,36 @@ const DecisionVersion = ({
           {current && (
             <AdminSection key="decision-review">
               <DecisionReviews
+                canHideReviews={canHideReviews}
                 manuscript={version}
-                sharedReviews={sharedReviewsList.sharedReviews}
+                reviewers={reviewers}
+                sharedReviews={version.reviews}
+                updateReview={updateReview}
+                urlFrag={urlFrag}
               />
             </AdminSection>
           )}
           {current && (
             <AdminSection key="decision-form">
               <DecisionForm
+                createFile={createFile}
+                deleteFile={deleteFile}
                 dirty={dirty}
                 handleSubmit={handleSubmit}
                 isSubmitting={isSubmitting}
                 isValid={isValid}
                 manuscriptId={version.id}
                 submitCount={submitCount}
-                updateReview={updateReview(version.id)}
+                updateReview={updateReviewForVersion(version.id)}
               />
             </AdminSection>
           )}
           {current && (
             <AdminSection>
-              <Publish manuscript={version} />
+              <Publish
+                manuscript={version}
+                publishManuscript={publishManuscript}
+              />
             </AdminSection>
           )}
         </>

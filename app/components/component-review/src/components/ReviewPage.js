@@ -10,6 +10,27 @@ import { Heading, Page, Spinner } from '../../../shared'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
 import manuscriptVersions from '../../../../shared/manuscript_versions'
 
+const createFileMutation = gql`
+  mutation($file: Upload!, $meta: FileMetaInput) {
+    createFile(file: $file, meta: $meta) {
+      id
+      created
+      label
+      filename
+      fileType
+      mimeType
+      size
+      url
+    }
+  }
+`
+
+const deleteFileMutation = gql`
+  mutation($id: ID!) {
+    deleteFile(id: $id)
+  }
+`
+
 const commentFields = `
 id
 commentType
@@ -188,7 +209,7 @@ const query = gql`
 `
 
 const completeReviewMutation = gql`
-  mutation ($id: ID!) {
+  mutation($id: ID!) {
     completeReview(id: $id) {
       id
       status
@@ -210,6 +231,18 @@ const ReviewPage = ({ match, ...props }) => {
   const currentUser = useCurrentUser()
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
   const [completeReview] = useMutation(completeReviewMutation)
+  const [createFile] = useMutation(createFileMutation)
+
+  const [deleteFile] = useMutation(deleteFileMutation, {
+    update(cache, { data: { deleteFile: fileToDelete } }) {
+      const id = cache.identify({
+        __typename: 'File',
+        id: fileToDelete,
+      })
+
+      cache.evict({ id })
+    },
+  })
 
   const { loading, error, data, refetch } = useQuery(query, {
     variables: {
@@ -385,6 +418,8 @@ const ReviewPage = ({ match, ...props }) => {
           updateReview={updateReview}
           versions={versions}
           {...formikProps}
+          createFile={createFile}
+          deleteFile={deleteFile}
         />
       )}
     </Formik>

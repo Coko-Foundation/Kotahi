@@ -10,8 +10,6 @@ import {
   Attachment,
 } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
-import config from 'config'
-import { useApolloClient } from '@apollo/client'
 import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
 import { Section as Container, Select, FilesUpload } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
@@ -116,9 +114,7 @@ const rejectProps = (obj, keys) =>
       {},
     )
 
-const urlFrag = config.journal.metadata.toplevel_urlfragment
-
-const link = (journal, manuscript) =>
+const link = (urlFrag, manuscript) =>
   String.raw`<a href=${urlFrag}/versions/${manuscript.id}/manuscript>view here</a>`
 
 const createMarkup = encodedHtml => ({
@@ -144,9 +140,12 @@ const FormTemplate = ({
   errors,
   validateForm,
   showEditorOnlyFields,
+  urlFrag,
+  displayShortIdAsIdentifier,
+  client,
+  createFile,
+  deleteFile,
 }) => {
-  const client = useApolloClient()
-
   const submitButton = (text, haspopup = false) => {
     return (
       <div>
@@ -208,21 +207,19 @@ const FormTemplate = ({
 
   return (
     <Container>
-      {config['client-features'].displayShortIdAsIdentifier &&
-        config['client-features'].displayShortIdAsIdentifier.toLowerCase() ===
-          'true' && (
-          <NoteRight>
-            Manuscript number
-            <br />
-            {manuscript.shortId}
-          </NoteRight>
-        )}
+      {displayShortIdAsIdentifier && (
+        <NoteRight>
+          Manuscript number
+          <br />
+          {manuscript.shortId}
+        </NoteRight>
+      )}
       <Heading1>{form.name}</Heading1>
       <Intro
         dangerouslySetInnerHTML={createMarkup(
           (form.description || '').replace(
             '###link###',
-            link(journal, manuscript),
+            link(urlFrag, manuscript),
           ),
         )}
       />
@@ -242,6 +239,8 @@ const FormTemplate = ({
                 <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
                 {element.component === 'SupplementaryFiles' && (
                   <FilesUpload
+                    createFile={createFile}
+                    deleteFile={deleteFile}
                     fileType="supplementary"
                     manuscriptId={manuscript.id}
                   />
@@ -249,6 +248,8 @@ const FormTemplate = ({
                 {element.component === 'VisualAbstract' && (
                   <FilesUpload
                     acceptMultiple={false}
+                    createFile={createFile}
+                    deleteFile={deleteFile}
                     fileType="visualAbstract"
                     manuscriptId={manuscript.id}
                     mimeTypesToAccept="image/*"

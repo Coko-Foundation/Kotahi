@@ -33,13 +33,20 @@ const RadioGroup = styled(UnstableRadioGroup)`
   position: relative;
 `
 
-const NoteDecision = ({ manuscriptId, updateReview }) => (
+const NoteDecision = ({
+  manuscriptId,
+  updateReview,
+  deleteFile,
+  createFile,
+}) => (
   <>
     <Field name="decisionComment">
       {formikBag => (
         <>
           <NoteInput updateReview={updateReview} {...formikBag} />
           <FilesUpload
+            createFile={createFile}
+            deleteFile={deleteFile}
             fieldName="decisionComment.files"
             fileType="decision"
             initializeReviewComment={async () => {
@@ -135,7 +142,7 @@ const RecommendationInput = ({
           setFieldValue('recommendation', val)
           updateReview({ recommendation: val })
         }}
-        options={journal.recommendations}
+        options={journal?.recommendations}
         value={field.value === '' ? null : field.value}
       />
       <ErrorMessage name="recommendation" />
@@ -158,6 +165,8 @@ const DecisionForm = ({
   isSubmitting,
   submitCount,
   dirty,
+  deleteFile,
+  createFile,
 }) => {
   let status = null
 
@@ -175,6 +184,8 @@ const DecisionForm = ({
         </SectionHeader>
         <SectionRow>
           <NoteDecision
+            createFile={createFile}
+            deleteFile={deleteFile}
             manuscriptId={manuscriptId}
             updateReview={updateReview}
           />

@@ -20,8 +20,8 @@ import {
 
 // TODO: Improve the import, perhaps a shared component?
 import EditorSection from '../../../component-review/src/components/decision/EditorSection'
-import AssignEditorsReviewers from '../../../component-review/src/components/assignEditors/AssignEditorsReviewers'
-import AssignEditor from '../../../component-review/src/components/assignEditors/AssignEditor'
+import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
+import AssignEditor from './assignEditors/AssignEditor'
 
 const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
@@ -43,6 +43,7 @@ const Submit = ({
   onSubmit,
   match,
   updateManuscript,
+  client,
 }) => {
   const decisionSections = []
 
@@ -109,6 +110,7 @@ const Submit = ({
               {formProps => {
                 return (
                   <FormTemplate
+                    client={client}
                     confirming={confirming}
                     onChange={(value, path) => {
                       onChange(value, path, versionId)
