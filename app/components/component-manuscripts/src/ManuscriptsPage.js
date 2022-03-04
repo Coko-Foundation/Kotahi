@@ -28,7 +28,7 @@ import Manuscripts from './Manuscripts'
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 const chatRoomId = fnv.hash(config['pubsweet-client'].baseUrl).hex()
 
-const ManuscriptTable = ({ history }) => {
+const ManuscriptsPage = ({ history }) => {
   const [sortName, setSortName] = useState('created')
   const [sortDirection, setSortDirection] = useState('DESC')
   const [page, setPage] = useState(1)
@@ -167,4 +167,4 @@ const ManuscriptTable = ({ history }) => {
   )
 }
 
-export default ManuscriptTable
+export default ManuscriptsPage
