@@ -40,8 +40,6 @@ const DecisionVersions = props => {
 
   const versions = gatherManuscriptVersions(manuscript)
 
-  const handleChangeCbk = () => handleChange()
-
   // Protect if channels don't exist for whatever reason
   let editorialChannelId, allChannelId
 
@@ -76,7 +74,7 @@ const DecisionVersions = props => {
                 form={form}
                 key={version.manuscript.id}
                 makeDecision={makeDecision}
-                onChange={handleChangeCbk}
+                onChange={handleChange}
                 parent={manuscript}
                 publishManuscript={publishManuscript}
                 reviewers={reviewers}
