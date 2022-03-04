@@ -11,7 +11,10 @@ const Form = require('../../model-form/src/form')
 const Message = require('../../model-message/src/message')
 const publishToCrossref = require('../../publishing/crossref')
 const { stripSensitiveItems } = require('./manuscriptUtils')
-const { getFilesWithUrl } = require('../../utils/fileStorageUtils')
+const {
+  getFilesWithUrl,
+  replaceImageSrc,
+} = require('../../utils/fileStorageUtils')
 
 const {
   publishToHypothesis,
@@ -850,6 +853,12 @@ const resolvers = {
       }
 
       manuscript.files = await getFilesWithUrl(manuscript.files)
+
+      manuscript.meta.source = await replaceImageSrc(
+        manuscript.meta.source,
+        manuscript.files,
+        'medium',
+      )
 
       manuscript.meta.notes = (manuscript.meta || {}).notes || [
         {

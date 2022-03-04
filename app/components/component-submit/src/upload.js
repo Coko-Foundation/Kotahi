@@ -4,6 +4,7 @@ import { gql } from '@apollo/client'
 import { map } from 'lodash'
 import currentRolesVar from '../../../shared/currentRolesVar'
 import cleanMathMarkup from './cleanMathMarkup'
+import * as cheerio from 'cheerio';
 
 const fragmentFields = `
   id
@@ -373,13 +374,23 @@ export default ({
       )
 
       uploadedImages.then(results => {
-        results.forEach((result, index) => {
-          source = source.replace(
-            images[index].dataSrc,
-            result.data.createFile.storedObjects.find(storedObject => storedObject.type === "medium").url,
-          )
+        const $ = cheerio.load(source)
+
+        $('img').each((i, elem) => {
+          const $elem = $(elem)
+          if (images[i].dataSrc === $elem.attr('src')) {
+            $elem.attr('data-fileid', results[i].data.createFile.id)
+            $elem.attr('alt', results[i].data.createFile.name)
+            $elem.attr(
+              'src',
+              results[i].data.createFile.storedObjects.find(
+                storedObject => storedObject.type === 'medium',
+              ).url,
+            )
+          }
         })
 
+        source = $.html()
         const manuscript = {
           id: manuscriptData.data.createManuscript.id,
           meta: {
