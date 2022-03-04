@@ -37,6 +37,8 @@ const ReviewLayout = ({
   uploadFile,
   channelId,
   submissionForm,
+  createFile,
+  deleteFile,
 }) => {
   const reviewSections = []
   const latestVersion = versions[0]
@@ -127,6 +129,8 @@ const ReviewLayout = ({
             <Review review={review} />
           ) : (
             <ReviewForm
+              createFile={createFile}
+              deleteFile={deleteFile}
               handleSubmit={handleSubmit}
               isValid={isValid}
               manuscriptId={latestVersion.id}

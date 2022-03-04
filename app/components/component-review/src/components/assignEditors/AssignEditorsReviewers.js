@@ -2,15 +2,43 @@ import React from 'react'
 import { SectionHeader, SectionRowGrid, Title } from '../style'
 import { SectionContent } from '../../../../shared'
 
-const AssignEditorsReviewers = ({ manuscript, AssignEditor }) => (
+const AssignEditorsReviewers = ({
+  manuscript,
+  AssignEditor,
+  allUsers,
+  updateTeam,
+  createTeam,
+  teamLabels,
+}) => (
   <SectionContent>
     <SectionHeader>
       <Title>Assign Editors</Title>
     </SectionHeader>
     <SectionRowGrid>
-      <AssignEditor manuscript={manuscript} teamRole="seniorEditor" />
-      <AssignEditor manuscript={manuscript} teamRole="handlingEditor" />
-      <AssignEditor manuscript={manuscript} teamRole="editor" />
+      <AssignEditor
+        allUsers={allUsers}
+        createTeam={createTeam}
+        manuscript={manuscript}
+        teamLabels={teamLabels}
+        teamRole="seniorEditor"
+        updateTeam={updateTeam}
+      />
+      <AssignEditor
+        allUsers={allUsers}
+        createTeam={createTeam}
+        manuscript={manuscript}
+        teamLabels={teamLabels}
+        teamRole="handlingEditor"
+        updateTeam={updateTeam}
+      />
+      <AssignEditor
+        allUsers={allUsers}
+        createTeam={createTeam}
+        manuscript={manuscript}
+        teamLabels={teamLabels}
+        teamRole="editor"
+        updateTeam={updateTeam}
+      />
     </SectionRowGrid>
   </SectionContent>
 )

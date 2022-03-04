@@ -1,26 +1,23 @@
 import React, { useState, useEffect } from 'react'
 import PropTypes from 'prop-types'
-import { useQuery, useMutation, gql } from '@apollo/client'
+import { useQuery, useMutation, gql, useApolloClient } from '@apollo/client'
 import { set, debounce } from 'lodash'
-import DecisionVersion from './DecisionVersion'
-
-import {
-  Spinner,
-  VersionSwitcher,
-  ErrorBoundary,
-  Columns,
-  Manuscript,
-  Chat,
-  CommsErrorBanner,
-} from '../../../shared'
-
-import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
-
-import MessageContainer from '../../../component-chat/src/MessageContainer'
-
+import config from 'config'
+import DecisionVersions from './DecisionVersions'
+import { Spinner, CommsErrorBanner } from '../../../shared'
 import { fragmentFields } from '../../../component-submit/src/userManuscriptFormQuery'
 
-import { query } from './queries'
+import {
+  query,
+  sendEmail,
+  makeDecisionMutation,
+  updateReviewMutation,
+  publishManuscriptMutation,
+} from './queries'
+
+import { CREATE_MESSAGE } from '../../../../queries'
+
+const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 export const updateMutation = gql`
   mutation($id: ID!, $input: String) {
@@ -31,10 +28,64 @@ export const updateMutation = gql`
   }
 `
 
+const createFileMutation = gql`
+  mutation($file: Upload!, $meta: FileMetaInput) {
+    createFile(file: $file, meta: $meta) {
+      id
+      created
+      label
+      filename
+      fileType
+      mimeType
+      size
+      url
+    }
+  }
+`
+
+const deleteFileMutation = gql`
+  mutation($id: ID!) {
+    deleteFile(id: $id)
+  }
+`
+
+const teamFields = `
+  id
+  name
+  role
+  manuscript {
+    id
+  }
+  members {
+    id
+    user {
+      id
+      username
+    }
+  }
+`
+
+const updateTeamMutation = gql`
+  mutation($id: ID!, $input: TeamInput) {
+    updateTeam(id: $id, input: $input) {
+      ${teamFields}
+    }
+  }
+`
+
+const createTeamMutation = gql`
+  mutation($input: TeamInput!) {
+    createTeam(input: $input) {
+      ${teamFields}
+    }
+  }
+`
+
 let debouncers = {}
 
 const DecisionPage = ({ match }) => {
   // start of code from submit page to handle possible form changes
+  const client = useApolloClient()
 
   const [confirming, setConfirming] = useState(false)
 
@@ -65,6 +116,25 @@ const DecisionPage = ({ match }) => {
   })
 
   const [update] = useMutation(updateMutation)
+  const [sendEmailMutation] = useMutation(sendEmail)
+  const [sendChannelMessage] = useMutation(CREATE_MESSAGE)
+  const [makeDecision] = useMutation(makeDecisionMutation)
+  const [publishManuscript] = useMutation(publishManuscriptMutation)
+  const [updateTeam] = useMutation(updateTeamMutation)
+  const [createTeam] = useMutation(createTeamMutation)
+  const [doUpdateReview] = useMutation(updateReviewMutation)
+  const [createFile] = useMutation(createFileMutation)
+
+  const [deleteFile] = useMutation(deleteFileMutation, {
+    update(cache, { data: { deleteFile: fileToDelete } }) {
+      const id = cache.identify({
+        __typename: 'File',
+        id: fileToDelete,
+      })
+
+      cache.evict({ id })
+    },
+  })
 
   const updateManuscript = (versionId, manuscriptDelta) => {
     return update({
@@ -75,10 +145,46 @@ const DecisionPage = ({ match }) => {
     })
   }
 
+  const updateReview = async (reviewId, reviewData, manuscriptId) => {
+    return doUpdateReview({
+      variables: { id: reviewId || undefined, input: reviewData },
+      update: (cache, { data: { updateReview: updatedReview } }) => {
+        cache.modify({
+          id: cache.identify({
+            __typename: 'Manuscript',
+            id: manuscriptId,
+          }),
+          fields: {
+            reviews(existingReviewRefs = [], { readField }) {
+              const newReviewRef = cache.writeFragment({
+                data: updatedReview,
+                fragment: gql`
+                  fragment NewReview on Review {
+                    id
+                  }
+                `,
+              })
+
+              if (
+                existingReviewRefs.some(
+                  ref => readField('id', ref) === updatedReview.id,
+                )
+              ) {
+                return existingReviewRefs
+              }
+
+              return [...existingReviewRefs, newReviewRef]
+            },
+          },
+        })
+      },
+    })
+  }
+
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
-  const { manuscript, formForPurpose } = data
+  const { manuscript, formForPurpose, currentUser, users } = data
 
   const form = formForPurpose?.structure ?? {
     name: '',
@@ -87,47 +193,49 @@ const DecisionPage = ({ match }) => {
     haspopup: 'false',
   }
 
-  const versions = gatherManuscriptVersions(manuscript)
+  const sendNotifyEmail = async emailData => {
+    const response = await sendEmailMutation({
+      variables: {
+        input: JSON.stringify(emailData),
+      },
+    })
 
-  // Protect if channels don't exist for whatever reason
-  let editorialChannelId, allChannelId
-
-  if (Array.isArray(manuscript.channels) && manuscript.channels.length) {
-    editorialChannelId = manuscript.channels.find(c => c.type === 'editorial')
-      .id
-    allChannelId = manuscript.channels.find(c => c.type === 'all').id
+    return response
   }
 
-  const channels = [
-    { id: allChannelId, name: 'Discussion with author' },
-    { id: editorialChannelId, name: 'Editorial discussion' },
-  ]
+  const sendChannelMessageCb = async messageData =>
+    sendChannelMessage(messageData)
 
   return (
-    <Columns>
-      <Manuscript>
-        <ErrorBoundary>
-          <VersionSwitcher>
-            {versions.map((version, index) => (
-              <DecisionVersion
-                confirming={confirming}
-                current={index === 0}
-                form={form}
-                key={version.manuscript.id}
-                onChange={handleChange}
-                parent={manuscript}
-                toggleConfirming={toggleConfirming}
-                updateManuscript={updateManuscript}
-                version={version.manuscript}
-              />
-            ))}
-          </VersionSwitcher>
-        </ErrorBoundary>
-      </Manuscript>
-      <Chat>
-        <MessageContainer channels={channels} manuscriptId={manuscript?.id} />
-      </Chat>
-    </Columns>
+    <DecisionVersions
+      allUsers={users}
+      canHideReviews={config.review.hide === 'true'}
+      client={client}
+      confirming={confirming}
+      createFile={createFile}
+      createTeam={createTeam}
+      currentUser={currentUser}
+      deleteFile={deleteFile}
+      displayShortIdAsIdentifier={
+        config['client-features'].displayShortIdAsIdentifier &&
+        config['client-features'].displayShortIdAsIdentifier.toLowerCase() ===
+          'true'
+      }
+      form={form}
+      makeDecision={makeDecision}
+      manuscript={manuscript}
+      onChange={handleChange}
+      publishManuscript={publishManuscript}
+      reviewers={data?.manuscript?.reviews}
+      sendChannelMessageCb={sendChannelMessageCb}
+      sendNotifyEmail={sendNotifyEmail}
+      teamLabels={config.teams}
+      toggleConfirming={toggleConfirming}
+      updateManuscript={updateManuscript}
+      updateReview={updateReview}
+      updateTeam={updateTeam}
+      urlFrag={urlFrag}
+    />
   )
 }
 

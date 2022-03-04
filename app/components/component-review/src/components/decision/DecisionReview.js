@@ -1,28 +1,14 @@
 import React, { useContext, useState } from 'react'
-import { useMutation, useQuery, gql } from '@apollo/client'
 import PropTypes from 'prop-types'
-import config from 'config'
 import styled from 'styled-components'
 import { Button, Checkbox } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { JournalContext } from '../../../../xpub-journal/src'
 import Review from '../review/Review'
 import useCurrentUser from '../../../../../hooks/useCurrentUser'
-import { updateReviewMutation } from '../queries'
 import ShareIcon from '../../../../../shared/icons/share'
-
 import { UserCombo, Primary, Secondary, UserInfo } from '../../../../shared'
 import { UserAvatar } from '../../../../component-avatar/src'
-
-const GET_USER = gql`
-  query user($id: ID, $username: String) {
-    user(id: $id, username: $username) {
-      id
-      username
-      profilePicture
-    }
-  }
-`
 
 const ToggleReview = ({ open, toggle }) => (
   <Button onClick={toggle} plain>
@@ -34,7 +20,7 @@ const Bullet = styled.span`
   background-color: black;
   background-color: ${props =>
     props.recommendation
-      ? props.journal.recommendations.find(
+      ? props.journal?.recommendations?.find(
           item => item.value === props.recommendation,
         ).color
       : 'black'};
@@ -83,14 +69,10 @@ const ReviewHeading = ({
   reviewUserId,
   review,
   isControlPage = false,
+  updateReview,
+  canHideReviews,
 }) => {
   if (!currentUser) return null
-
-  const { data } = useQuery(GET_USER, {
-    variables: { username: user.username },
-  })
-
-  const [updateReview] = useMutation(updateReviewMutation)
 
   const editorTeam = teams.filter(team => {
     return team.role.toLowerCase().includes('editor')
@@ -104,32 +86,30 @@ const ReviewHeading = ({
     : false
 
   const toggleIsHiddenFromAuthor = (reviewId, reviewHiddenFromAuthor) => {
-    updateReview({
-      variables: {
-        id: reviewId,
-        input: {
-          isHiddenFromAuthor: reviewHiddenFromAuthor,
-          manuscriptId,
-          userId: reviewUserId,
-        },
+    updateReview(
+      reviewId,
+      {
+        isHiddenFromAuthor: reviewHiddenFromAuthor,
+        manuscriptId,
+        userId: reviewUserId,
       },
-    })
+      manuscriptId,
+    )
   }
 
   const toggleIsHiddenReviewerNameFromPublishedAndAuthor = (
     reviewId,
     reviewerNameHiddenFromPublishedAndAuthor,
   ) => {
-    updateReview({
-      variables: {
-        id: reviewId,
-        input: {
-          isHiddenReviewerName: reviewerNameHiddenFromPublishedAndAuthor,
-          manuscriptId,
-          userId: reviewUserId,
-        },
+    updateReview(
+      reviewId,
+      {
+        isHiddenReviewerName: reviewerNameHiddenFromPublishedAndAuthor,
+        manuscriptId,
+        userId: reviewUserId,
       },
-    })
+      manuscriptId,
+    )
   }
 
   // TODO: Display user's ORCID
@@ -141,7 +121,7 @@ const ReviewHeading = ({
       <Name>
         {
           <UserCombo>
-            <UserAvatar user={(data && data.user) || user} />
+            <UserAvatar user={(review && review.user) || user} />
             <UserInfo>
               {review.isHiddenReviewerName && !isControlPage ? (
                 <Primary>Anonmyous Reviewer</Primary>
@@ -163,26 +143,25 @@ const ReviewHeading = ({
             </>
           )}
       </Name>
-      {config.review.hide === 'true' &&
-        (isCurrentUserEditor || currentUser.admin) && (
-          <>
-            <StyledCheckbox
-              checked={isHiddenFromAuthor || isHiddenFromAuthor == null}
-              label="Hide review"
-              onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
-            />
-            <StyledCheckbox
-              checked={isHiddenReviewerName || isHiddenReviewerName == null}
-              label="Hide reviewer name"
-              onChange={() =>
-                toggleIsHiddenReviewerNameFromPublishedAndAuthor(
-                  id,
-                  !isHiddenReviewerName,
-                )
-              }
-            />
-          </>
-        )}
+      {canHideReviews && (isCurrentUserEditor || currentUser.admin) && (
+        <>
+          <StyledCheckbox
+            checked={isHiddenFromAuthor || isHiddenFromAuthor == null}
+            label="Hide review"
+            onChange={() => toggleIsHiddenFromAuthor(id, !isHiddenFromAuthor)}
+          />
+          <StyledCheckbox
+            checked={isHiddenReviewerName || isHiddenReviewerName == null}
+            label="Hide reviewer name"
+            onChange={() =>
+              toggleIsHiddenReviewerNameFromPublishedAndAuthor(
+                id,
+                !isHiddenReviewerName,
+              )
+            }
+          />
+        </>
+      )}
       <Controls>
         <ToggleReview open={open} toggle={toggleOpen} />
       </Controls>
@@ -204,6 +183,8 @@ const DecisionReview = ({
   manuscriptId,
   teams,
   isControlPage,
+  updateReview,
+  canHideReviews,
 }) => {
   const currentUser = useCurrentUser()
 
@@ -226,6 +207,7 @@ const DecisionReview = ({
     <Root>
       <ReviewHeading
         canBePublishedPublicly={canBePublishedPublicly}
+        canHideReviews={canHideReviews}
         currentUser={currentUser}
         id={id}
         isControlPage={isControlPage}
@@ -241,6 +223,7 @@ const DecisionReview = ({
         reviewUserId={review.user.id}
         teams={teams}
         toggleOpen={toggleOpen}
+        updateReview={updateReview}
         user={user}
       />
 
