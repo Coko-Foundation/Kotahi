@@ -37,6 +37,7 @@ const replaceImageSrc = async (source, files, size) => {
   $('img').each((i, elem) => {
     const $elem = $(elem)
     const fileId = $elem.attr('data-fileid')
+
     if (fileId && fileId !== 'null') {
       fileIds.push(fileId)
     }
@@ -49,11 +50,12 @@ const replaceImageSrc = async (source, files, size) => {
     const correspondingFile = find(files, { id: fileId })
 
     if (correspondingFile) {
-      const url = correspondingFile.storedObjects.find(
+      const { url } = correspondingFile.storedObjects.find(
         storedObject => storedObject.type === size,
-      ).url
+      )
 
       $elem.attr('src', url)
+
       if (correspondingFile.alt) {
         $elem.attr('alt', correspondingFile.alt)
       }

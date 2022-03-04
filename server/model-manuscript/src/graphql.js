@@ -11,6 +11,7 @@ const Form = require('../../model-form/src/form')
 const Message = require('../../model-message/src/message')
 const publishToCrossref = require('../../publishing/crossref')
 const { stripSensitiveItems } = require('./manuscriptUtils')
+
 const {
   getFilesWithUrl,
   replaceImageSrc,

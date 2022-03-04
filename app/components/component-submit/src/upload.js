@@ -2,9 +2,9 @@ import config from 'config'
 import request from 'pubsweet-client/src/helpers/api'
 import { gql } from '@apollo/client'
 import { map } from 'lodash'
+import * as cheerio from 'cheerio'
 import currentRolesVar from '../../../shared/currentRolesVar'
 import cleanMathMarkup from './cleanMathMarkup'
-import * as cheerio from 'cheerio';
 
 const fragmentFields = `
   id
@@ -378,6 +378,7 @@ export default ({
 
         $('img').each((i, elem) => {
           const $elem = $(elem)
+
           if (images[i].dataSrc === $elem.attr('src')) {
             $elem.attr('data-fileid', results[i].data.createFile.id)
             $elem.attr('alt', results[i].data.createFile.name)
@@ -391,6 +392,7 @@ export default ({
         })
 
         source = $.html()
+
         const manuscript = {
           id: manuscriptData.data.createManuscript.id,
           meta: {
