@@ -66,8 +66,6 @@ export const Message = styled.div`
 
 export const GutterContainer = styled.div`
   display: flex;
-  max-width: 45px;
-  min-width: 45px;
   padding-left: 8px;
   width: 45px;
 `
