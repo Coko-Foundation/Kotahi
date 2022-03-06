@@ -57,7 +57,7 @@ const Messages = ({
   const messages = sortAndGroupMessages(data.messages.edges)
   const { hasPreviousPage } = data.messages.pageInfo
   return (
-    <MessagesGroup id='messages'>
+    <MessagesGroup id="messages">
       {manuscriptId ? <VideoChat manuscriptId={manuscriptId} /> : ''}
       {chatRoomId ? <VideoChat manuscriptId={chatRoomId} /> : ''}
       {hasPreviousPage && (

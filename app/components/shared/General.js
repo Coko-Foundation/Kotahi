@@ -122,7 +122,7 @@ export const Columns = styled.div`
   flex-direction: row;
   height: 100vh;
   justify-content: center;
-  overflow: auto;
+  overflow: hidden;
 
   & > * {
     flex: 5 1 60em;

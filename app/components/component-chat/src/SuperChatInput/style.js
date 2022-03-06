@@ -127,7 +127,7 @@ export const ChatInputWrapper = styled.div`
   display: flex;
   flex-direction: row;
   margin-bottom: ${th('gridUnit')};
-  padding: 8px 12px 0 12px;
+  padding: 8px 4px 0 4px;
   width: 100%;
 
   @media (max-width: ${MEDIA_BREAK}px) {
