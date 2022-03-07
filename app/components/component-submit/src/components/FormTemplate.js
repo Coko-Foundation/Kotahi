@@ -121,6 +121,14 @@ const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),
 })
 
+/** Rename some props so the various formik components can understand them */
+const prepareFieldProps = rawField => ({
+  ...rawField,
+  options:
+    rawField.options &&
+    rawField.options.map(e => ({ ...e, color: e.labelColor })),
+})
+
 const FormTemplate = ({
   form,
   handleSubmit,
@@ -230,6 +238,7 @@ const FormTemplate = ({
               element.component &&
               (showEditorOnlyFields || element.hideFromAuthors !== 'true'),
           )
+          .map(prepareFieldProps)
           .map((element, i) => {
             return (
               <Section
@@ -268,6 +277,7 @@ const FormTemplate = ({
                         'validateValue',
                         'description',
                         'shortDescription',
+                        'labelColor',
                       ])}
                       aria-label={element.placeholder || element.title}
                       component={elements[element.component]}
