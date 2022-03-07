@@ -166,6 +166,7 @@ const query = gql`
             id
             label
             value
+            labelColor
           }
           validate {
             id

@@ -29,6 +29,7 @@ import {
   CommsErrorBanner,
 } from '../../shared'
 import { PaginationContainer } from '../../shared/Pagination'
+import getEvaluationFieldTitle from './getEvaluationFieldTitle'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -55,7 +56,10 @@ const LoginLink = styled.a`
 `
 
 const ReviewTitleAndLink = ({ title, manuscriptId, fieldName }) => {
-  const fieldNameWithSlashes = fieldName.replaceAll('.', '/')
+  const fieldNameWithSlashes = fieldName
+    .replaceAll('.', '/')
+    .replaceAll('#', '/')
+
   return (
     <>
       {title}
@@ -96,11 +100,6 @@ const Frontpage = () => {
   if (error) return <CommsErrorBanner error={error} />
 
   const { totalCount } = data.publishedManuscripts
-  const fields = data.formForPurpose?.structure?.children ?? []
-  const fieldDefinitions = {}
-  fields.forEach(field => {
-    if (field.name) fieldDefinitions[field.name] = field // Incomplete fields in the formbuilder may not have a name specified. Ignore these
-  })
 
   const publishedManuscripts = (
     data.publishedManuscripts?.manuscripts || []
@@ -137,7 +136,7 @@ const Frontpage = () => {
       />
 
       {publishedManuscripts.length > 0 ? (
-        publishedManuscripts.map((manuscript, index) => {
+        publishedManuscripts.map(manuscript => {
           const title =
             process.env.INSTANCE_NAME === 'elife'
               ? manuscript.submission.description
@@ -151,17 +150,46 @@ const Frontpage = () => {
               {manuscript.evaluationsHypothesisMap &&
                 Object.entries(manuscript.evaluationsHypothesisMap).map(e => {
                   let fieldName = e[0]
-                  let value = get(manuscript, fieldName)
+                  let value
 
-                  if (!value) {
-                    fieldName = `submission.${fieldName}` // Try the old style of naming
-                    value = get(manuscript, fieldName)
+                  if (fieldName.startsWith('review#')) {
+                    const reviews = manuscript.reviews.filter(
+                      r =>
+                        !r.isDecision &&
+                        r.canBePublishedPublicly &&
+                        r.reviewComment,
+                    )
+
+                    const index = parseInt(fieldName.split('#')[1], 10)
+
+                    value =
+                      reviews.length > index
+                        ? reviews[index].reviewComment.content
+                        : null
+                  } else if (fieldName === 'decision') {
+                    const decisions = manuscript.reviews.filter(
+                      r => r.isDecision && r.decisionComment,
+                    )
+
+                    value =
+                      decisions.length > 0
+                        ? decisions[0].decisionComment.content
+                        : null
+                  } else {
+                    get(manuscript, fieldName)
+
+                    if (!value) {
+                      fieldName = `submission.${fieldName}` // Try the old style of naming
+                      value = get(manuscript, fieldName)
+                    }
                   }
 
                   if (!value) return null
 
-                  const fieldTitle =
-                    fieldDefinitions[fieldName]?.title || fieldName
+                  const fieldTitle = getEvaluationFieldTitle(
+                    fieldName,
+                    data.formForPurpose,
+                  )
 
                   return (
                     <Accordion

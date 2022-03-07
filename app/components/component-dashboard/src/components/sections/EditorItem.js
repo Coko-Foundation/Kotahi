@@ -9,12 +9,12 @@ import Meta from '../metadata/Meta'
 import MetadataSubmittedDate from '../metadata/MetadataSubmittedDate'
 import MetadataAuthors from '../metadata/MetadataAuthors'
 import MetadataStreamLined from '../metadata/MetadataStreamLined'
-import JournalLink from '../JournalLink'
+import ControlPageLink from '../ControlPageLink'
 import Reviews from '../Reviews'
 import VersionTitle from './VersionTitle'
 import prettyRoleText from '../../../../../shared/prettyRoleText'
 
-const VersionTitleLink = styled(JournalLink)`
+const VersionTitleLink = styled(ControlPageLink)`
   color: #333;
   max-width: 60%;
   text-decoration: none;
@@ -102,7 +102,7 @@ const EditorItem = ({ version, currentRoles }) => (
       </Meta>
     </Item>
     <Item>
-      <VersionTitleLink id={version.id} page="decisions" version={version}>
+      <VersionTitleLink id={version.id} page="decision" version={version}>
         <VersionTitle version={version} />
       </VersionTitleLink>
       <EditorItemLinks version={version} />

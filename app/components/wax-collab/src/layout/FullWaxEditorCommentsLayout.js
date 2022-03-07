@@ -37,7 +37,6 @@ const TopBar = ComponentPlugin('topBar')
 const NotesArea = ComponentPlugin('notesArea')
 const RightArea = ComponentPlugin('rightArea')
 const CommentTrackToolBar = ComponentPlugin('commentTrackToolBar')
-const WaxOverlays = ComponentPlugin('waxOverlays')
 const CounterInfo = ComponentPlugin('bottomRightInfo')
 
 // eslint-disable-next-line react/prop-types
@@ -109,7 +108,6 @@ const FullWaxEditorCommentsLayout = (readOnly, authorComments) => ({
                 </NotesContainer>
               </ReadOnlyNotesAreaContainer>
             )}
-            <WaxOverlays />
             <InfoContainer>
               <CounterInfo />
             </InfoContainer>
@@ -149,7 +147,6 @@ const FullWaxEditorCommentsLayout = (readOnly, authorComments) => ({
                 </CommentsContainerNotes>
               </>
             )}
-            <WaxOverlays />
             <InfoContainer>
               <CounterInfo />
             </InfoContainer>

@@ -19,7 +19,6 @@ import {
 import { CommentsContainerNotes } from './CommentsStyles'
 
 const TopBar = ComponentPlugin('topBar')
-const WaxOverlays = ComponentPlugin('waxOverlays')
 const NotesArea = ComponentPlugin('notesArea')
 const RightArea = ComponentPlugin('rightArea')
 const CounterInfo = ComponentPlugin('bottomRightInfo')
@@ -119,7 +118,6 @@ const ProductionWaxEditorNoCommentsLayout = (readOnly, readOnlyComments) => ({
           </NotesContainer>
         </ReadOnlyNotesAreaContainer>
       )}
-      <WaxOverlays />
       <InfoContainer>
         <CounterInfo />
       </InfoContainer>

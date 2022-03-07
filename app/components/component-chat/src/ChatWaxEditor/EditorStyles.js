@@ -179,18 +179,19 @@ export const SimpleGrid = styled.div`
 `
 
 export const SimpleMenu = styled.div`
-  align-items: center;
-  background: #fff;
   border-top: 1px solid ${th('colorFurniture')};
   display: flex;
   flex-wrap: wrap;
-  grid-area: menu;
-  height: fit-content;
   left: -12px;
-  margin: 0 ${th('borderRadius')};
-  max-width: calc(100% + 114px); /* this is to avoid spillover */
-  width: calc(100% + 114px); /* overflow-x: scroll; this is not great! */
   user-select: none;
+  /* ________________________                                              */
+  /* |__100%_MENU__|________|                                              */
+  /* |             | SEND   | <- Send Button                               */
+  /* |             | 114px  |                                              */
+  /* |----------------------|                                              */
+  /* |______________________|                                              */
+  /*     ^-- Adding 114px to 100% Menu Makes it occupy the whole container */
+  width: calc(100% + 114px);
   z-index: 1;
 
   div[data-name='SpecialCharacters'] > div > button + div {
@@ -200,8 +201,8 @@ export const SimpleMenu = styled.div`
   }
 
   .Dropdown-menu {
-    top: initial;
     bottom: 38px;
+    top: initial;
   }
 
   & > div {
@@ -217,11 +218,21 @@ export const SimpleEditorDiv = styled.div`
   border: 1px solid ${th('colorBorder')};
   border-radius: ${th('borderRadius')};
   grid-area: editor;
+  margin-top: 8px;
   max-height: 60vh;
   overflow: auto;
   padding: 9px;
-  position: relative;
   width: 100%;
+
+  /* SimpleEditorDiv contains - TWO <divs />   */
+  /* 1. Div for Input                          */
+  /* 2. Div for Wax Overlay                    */
+  /* We select the 2nd div                     */
+  /* Place the WaxOverlay above the link icon  */
+  & > div:nth-child(2) {
+    left: 0;
+    top: -60px;
+  }
 
   p {
     margin-bottom: 0 !important;

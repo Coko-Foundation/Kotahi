@@ -148,6 +148,11 @@ export const Form = styled.form`
   max-width: 100%;
   min-width: 1px;
   position: relative;
+
+  & > button {
+    /* Make height of button consistent with the Input Box */
+    padding: 10px ${th('gridUnit')};
+  }
 `
 
 export const InputWrapper = styled.div`
@@ -162,6 +167,7 @@ export const InputWrapper = styled.div`
   display: flex;
   flex: auto;
   flex-direction: column;
+  margin-right: 8px;
   max-width: calc(100% - 32px);
   min-height: 40px;
   transition: padding 0.2s ease-in-out;

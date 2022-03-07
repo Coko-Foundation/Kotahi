@@ -66,7 +66,7 @@ const RecommendationInput = ({
           setFieldValue('recommendation', val)
           updateReview({ recommendation: val })
         }}
-        options={journal.recommendations}
+        options={journal?.recommendations}
         value={decision}
       />
       <ErrorMessage name="recommendation" />

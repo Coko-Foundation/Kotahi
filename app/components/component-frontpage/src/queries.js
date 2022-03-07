@@ -15,7 +15,13 @@ export default {
             id
             open
             recommendation
+            canBePublishedPublicly
+            decisionComment {
+              id
+              content
+            }
             reviewComment {
+              id
               content
             }
             created
@@ -38,29 +44,17 @@ export default {
           meta {
             manuscriptId
             title
-            articleSections
-            articleType
             source
-            history {
-              type
-              date
-            }
           }
           published
           submission
           evaluationsHypothesisMap
-          submitter {
-            defaultIdentity {
-              name
-            }
-          }
         }
       }
       formForPurpose(purpose: "submit") {
         structure {
           children {
             title
-            shortDescription
             id
             name
           }

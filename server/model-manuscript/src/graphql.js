@@ -719,7 +719,10 @@ const resolvers = {
     },
 
     async publishManuscript(_, { id }, ctx) {
-      const manuscript = await models.Manuscript.query().findById(id)
+      const manuscript = await models.Manuscript.query()
+        .findById(id)
+        .eager('reviews')
+
       const update = {} // This will collect any properties we may want to update in the DB
       update.published = new Date()
 
@@ -808,15 +811,17 @@ const resolvers = {
         steps.push({ stepLabel, succeeded, errorMessage })
       }
 
-      try {
-        await tryPublishingWebhook(manuscript.id)
-        steps.push({ stepLabel: 'Publishing webhook', succeeded: true })
-      } catch (err) {
-        steps.push({
-          stepLabel: 'Publishing webhook',
-          succeeded: false,
-          errorMessage: err.message,
-        })
+      if (config['publishing-webhook'].publishingWebhookUrl) {
+        try {
+          await tryPublishingWebhook(manuscript.id)
+          steps.push({ stepLabel: 'Publishing webhook', succeeded: true })
+        } catch (err) {
+          steps.push({
+            stepLabel: 'Publishing webhook',
+            succeeded: false,
+            errorMessage: err.message,
+          })
+        }
       }
 
       const updatedManuscript = await models.Manuscript.query().updateAndFetchById(

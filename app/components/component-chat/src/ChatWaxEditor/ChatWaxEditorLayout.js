@@ -11,18 +11,17 @@ import {
 import ToolbarButton from '../SuperChatInput/ToolbarButton'
 
 const TopBar = ComponentPlugin('topBar')
-const WaxOverlays = ComponentPlugin('waxOverlays')
 const CounterInfo = ComponentPlugin('bottomRightInfo')
 
 // eslint-disable-next-line react/prop-types
 const ChatWaxEditorLayout = readonly => ({ editor }) => {
-  const [isTopBarOpen, setIsTopBarOpen] = React.useState(true)
+  const [isTopBarOpen, setIsTopBarOpen] = React.useState(false)
 
   return (
     <div>
       <SimpleGrid readonly={readonly}>
         {readonly ? (
-          <ReadOnlySimpleEditorDiv className='wax-surface-scroll'>
+          <ReadOnlySimpleEditorDiv className="wax-surface-scroll">
             {editor}
           </ReadOnlySimpleEditorDiv>
         ) : (
@@ -42,14 +41,13 @@ const ChatWaxEditorLayout = readonly => ({ editor }) => {
                 isTopBarOpen={isTopBarOpen}
                 onClick={() => setIsTopBarOpen(!isTopBarOpen)}
               />
-              <SimpleEditorDiv className='wax-surface-scroll'>
+              <SimpleEditorDiv className="wax-surface-scroll">
                 {editor}
               </SimpleEditorDiv>
             </div>
           </>
         )}
       </SimpleGrid>
-      <WaxOverlays />
       {!readonly && (
         <SimpleInfoContainer>
           <CounterInfo />

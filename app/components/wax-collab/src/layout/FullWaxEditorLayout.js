@@ -27,7 +27,6 @@ const getNotes = main => {
 }
 
 const TopBar = ComponentPlugin('topBar')
-const WaxOverlays = ComponentPlugin('waxOverlays')
 const NotesArea = ComponentPlugin('notesArea')
 const CounterInfo = ComponentPlugin('bottomRightInfo')
 
@@ -101,7 +100,6 @@ const FullWaxEditorLayout = readOnly => ({ editor }) => {
           </>
         )}
       </Grid>
-      <WaxOverlays />
     </div>
   )
 }

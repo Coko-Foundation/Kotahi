@@ -2,6 +2,7 @@ const path = require('path')
 const logger = require('winston')
 const { deferConfig } = require('config/defer')
 
+const permissions = require('./permissions')
 const components = require('./components.json')
 const journal = require('./journal')
 
@@ -29,6 +30,7 @@ module.exports = {
   authsome: {
     mode: path.resolve(__dirname, 'authsome.js'),
   },
+  permissions,
   validations: path.resolve(__dirname, 'validations.js'),
   pubsweet: {
     components,

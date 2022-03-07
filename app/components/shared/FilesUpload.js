@@ -4,8 +4,6 @@ import { cloneDeep, get } from 'lodash'
 import { FieldArray } from 'formik'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import styled from 'styled-components'
-import { useMutation, gql } from '@apollo/client'
-
 import UploadingFile from './UploadingFile'
 import { Dropzone } from './Dropzone'
 import { Icon } from './Icon'
@@ -35,30 +33,6 @@ const Message = styled.div`
 
   svg {
     margin-left: ${grid(1)};
-  }
-`
-
-const createFileMutation = gql`
-  mutation($file: Upload!, $meta: FileMetaInput!) {
-    createFile(file: $file, meta: $meta) {
-      id
-      created
-      name
-      updated
-      name
-      tags
-      storedObjects {
-        key
-        mimetype
-        url
-      }
-    }
-  }
-`
-
-const deleteFileMutation = gql`
-  mutation($id: ID!) {
-    deleteFile(id: $id)
   }
 `
 
@@ -167,20 +141,9 @@ const FilesUpload = ({
   initializeReviewComment,
   acceptMultiple = true,
   mimeTypesToAccept,
+  createFile: createF,
+  deleteFile: deleteF,
 }) => {
-  const [createF] = useMutation(createFileMutation)
-
-  const [deleteF] = useMutation(deleteFileMutation, {
-    update(cache, { data: { deleteFile } }) {
-      const id = cache.identify({
-        __typename: 'File',
-        id: deleteFile,
-      })
-
-      cache.evict({ id })
-    },
-  })
-
   const createFile = async file => {
     const meta = {
       fileType,

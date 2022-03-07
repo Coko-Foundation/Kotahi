@@ -1,5 +1,4 @@
 import React, { useState } from 'react'
-import { useMutation, useQuery } from '@apollo/client'
 import styled from 'styled-components'
 import {
   SectionHeader,
@@ -10,9 +9,6 @@ import {
 import { SectionContent } from '../../../../shared'
 import SelectReceiver from './SelectReceiver'
 import SelectEmailTemplate from './SelectEmailTemaplate'
-import { getUsers, sendEmail } from '../queries'
-import { CREATE_MESSAGE } from '../../../../../queries'
-import useCurrentUser from '../../../../../hooks/useCurrentUser'
 import { convertTimestampToDate } from '../../../../../shared/time-formatting'
 
 const editorOption = user => ({
@@ -24,32 +20,28 @@ const RowGridStyled = styled(SectionRowGrid)`
   grid-template-columns: repeat(5, minmax(0, 1fr));
 `
 
-const EmailNotifications = ({ manuscript }) => {
+const EmailNotifications = ({
+  manuscript,
+  allUsers,
+  currentUser,
+  sendNotifyEmail,
+  sendChannelMessageCb,
+}) => {
   const [selectedEmail, setSelectedEmail] = useState('')
   const [externalEmail, setExternalEmail] = useState('')
   const [externalName, setExternalName] = useState('')
   const [selectedTemplate, setSelectedTemplate] = useState('')
   const [isNewUser, setIsNewUser] = useState(false)
 
-  const { data, loading, error } = useQuery(getUsers)
-
-  const [sendEmailMutation] = useMutation(sendEmail)
-  const [sendChannelMessage] = useMutation(CREATE_MESSAGE)
-  const currentUser = useCurrentUser()
-
-  if (loading || error) {
-    return null
-  }
-
   const handlerForNewUserToggle = () => {
     setIsNewUser(s => !s)
   }
 
-  const options = (data.users || [])
+  const options = (allUsers || [])
     .filter(user => user.email)
     .map(user => editorOption(user))
 
-  const logMessageAfterEmailSent = message => {
+  const logMessageAfterEmailSent = async message => {
     const emailTemplateOptions = [
       {
         label: 'Author Acceptance notification',
@@ -267,9 +259,7 @@ const EmailNotifications = ({ manuscript }) => {
       channel => channel.topic === 'Editorial discussion',
     ).id
 
-    sendChannelMessage({
-      variables: { content: body, channelId },
-    })
+    await sendChannelMessageCb({ content: body, channelId })
   }
 
   const sendEmailHandler = async () => {
@@ -280,20 +270,10 @@ const EmailNotifications = ({ manuscript }) => {
       : { selectedEmail, selectedTemplate, manuscript }
 
     if (isNewUser && (!externalName || !externalEmail)) return
-
     if (!isNewUser && !selectedEmail) return
-
-    const response = await sendEmailMutation({
-      variables: {
-        input: JSON.stringify(input),
-      },
-    })
-
+    const response = await sendNotifyEmail(input)
     const responseStatus = response.data.sendEmail.success
-
-    if (responseStatus) {
-      logMessageAfterEmailSent(input)
-    }
+    if (responseStatus) logMessageAfterEmailSent(input)
   }
 
   return (

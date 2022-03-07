@@ -96,7 +96,7 @@ const RecommendationInput = ({ field, updateReview }) => {
         onChange={val => {
           updateReview({ recommendation: val })
         }}
-        options={journal.recommendations}
+        options={journal?.recommendations}
       />
     </RecommendationInputContainer>
   )
@@ -109,7 +109,12 @@ RecommendationInput.propTypes = {
   updateReview: PropTypes.func.isRequired,
 }
 
-const ReviewComment = ({ manuscriptId, updateReview }) => (
+const ReviewComment = ({
+  manuscriptId,
+  updateReview,
+  createFile,
+  deleteFile,
+}) => (
   <>
     <AdminSection>
       <div name="note">
@@ -118,6 +123,8 @@ const ReviewComment = ({ manuscriptId, updateReview }) => (
             <>
               <NoteInput updateReview={updateReview} {...formikBag} />
               <FilesUpload
+                createFile={createFile}
+                deleteFile={deleteFile}
                 fieldName="reviewComment.files"
                 fileType="review"
                 initializeReviewComment={async () => {
@@ -170,6 +177,8 @@ const ReviewComment = ({ manuscriptId, updateReview }) => (
             <>
               <ConfidentialInput updateReview={updateReview} {...formikBag} />
               <FilesUpload
+                createFile={createFile}
+                deleteFile={deleteFile}
                 fieldName="confidentialComment.files"
                 fileType="confidential"
                 initializeReviewComment={async () => {
@@ -210,6 +219,8 @@ const ReviewForm = ({
   handleSubmit,
   manuscriptId,
   updateReview,
+  createFile,
+  deleteFile,
 }) => (
   <SectionContent>
     <form onSubmit={handleSubmit}>
@@ -219,6 +230,8 @@ const ReviewForm = ({
         </SectionHeader>
         <SectionRow key="note">
           <ReviewComment
+            createFile={createFile}
+            deleteFile={deleteFile}
             manuscriptId={manuscriptId}
             updateReview={updateReview}
           />

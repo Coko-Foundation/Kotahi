@@ -8,11 +8,9 @@ const {
   deny,
 } = require('@coko/server/authorization')
 
-const { shield } = require('graphql-shield')
-const models = require('@pubsweet/models')
-
-const userIsEditorQuery = async (userId, manuscriptId) => {
-  const user = await models.User.query().findById(userId)
+const userIsEditorQuery = async (ctx, manuscriptId) => {
+  if (!ctx.user) return false
+  const user = await ctx.connectors.User.model.query().findById(ctx.user)
 
   if (!user) {
     return false
@@ -38,12 +36,10 @@ const userIsEditorQuery = async (userId, manuscriptId) => {
 
 const userIsEditor = rule({
   cache: 'contextual',
-})(async (parent, args, ctx, info) => userIsEditorQuery(ctx.user))
+})(async (parent, args, ctx, info) => userIsEditorQuery(ctx))
 
 const userIsMemberOfTeamWithRoleQuery = async (user, manuscriptId, role) => {
-  if (!user) {
-    return false
-  }
+  if (!user) return false
 
   const query = user
     .$relatedQuery('teams')
@@ -56,21 +52,18 @@ const userIsMemberOfTeamWithRoleQuery = async (user, manuscriptId, role) => {
 
 const userIsAdmin = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
-    const user = await models.User.query().findById(ctx.user)
-
-    if (user && user.admin) {
-      return true
-    }
-
+    if (!ctx.user) return false
+    const user = await ctx.connectors.User.model.query().findById(ctx.user)
+    if (user && user.admin) return true
     return false
   },
 )
 
 const parentManuscriptIsPublished = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
-    const manuscript = await models.Manuscript.query().findById(
-      parent.manuscriptId,
-    )
+    const manuscript = await ctx.connectors.Manuscript.model
+      .query()
+      .findById(parent.manuscriptId)
 
     return !!manuscript.published
   },
@@ -78,7 +71,8 @@ const parentManuscriptIsPublished = rule({ cache: 'contextual' })(
 
 const reviewIsByUser = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
-    const user = await models.User.query().findById(ctx.user)
+    if (!ctx.user) return false
+    const user = await ctx.connectors.User.model.query().findById(ctx.user)
 
     const rows =
       user &&
@@ -100,17 +94,17 @@ const isAuthenticated = rule({ cache: 'contextual' })(
 // if the channel is for 'editorial', only editors and admins can chat there
 const userIsAllowedToChat = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    const user = await models.User.query().findById(ctx.user)
+    if (!ctx.user) return false
+    const user = await ctx.connectors.User.model.query().findById(ctx.user)
+    if (user && user.admin) return true
 
-    if (user && user.admin) {
-      return true
-    }
+    const channel = await ctx.connectors.Channel.model
+      .query()
+      .findById(args.channelId)
 
-    const channel = await models.Channel.query().findById(args.channelId)
-
-    const manuscript = await models.Manuscript.query().findById(
-      channel.manuscriptId,
-    )
+    const manuscript = await ctx.connectors.Manuscript.model
+      .query()
+      .findById(channel.manuscriptId)
 
     const isAuthor = await userIsMemberOfTeamWithRoleQuery(
       user,
@@ -124,7 +118,7 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
       'reviewer',
     )
 
-    const isEditor = await userIsEditorQuery(user.id, manuscript.id)
+    const isEditor = await userIsEditorQuery(ctx, manuscript.id)
 
     if (channel.type === 'all') {
       return isAuthor || isReviewer || isEditor
@@ -141,18 +135,22 @@ const userIsAllowedToChat = rule({ cache: 'strict' })(
 const userIsReviewAuthorAndReviewIsNotCompleted = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
+  if (!ctx.user) return false
   let manuscriptId
 
   if (args.id) {
-    const review = await models.Review.query().findById(args.id)
+    const review = await ctx.connectors.Review.model.query().findById(args.id)
     if (review) manuscriptId = review.manuscriptId
   }
 
   if (!manuscriptId) manuscriptId = args.input.manuscriptId
 
-  const manuscript = await models.Manuscript.query().findById(manuscriptId)
+  const manuscript = await ctx.connectors.Manuscript.model
+    .query()
+    .findById(manuscriptId)
 
-  const team = await models.Team.query()
+  const team = await ctx.connectors.Team.model
+    .query()
     .where({
       manuscriptId: manuscript.id,
       role: 'reviewer',
@@ -160,13 +158,8 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
     .first()
 
   if (!team) return false
-
   const members = await team.$relatedQuery('members').where('userId', ctx.user)
-
-  if (members && members[0] && members[0].status !== 'completed') {
-    return true
-  }
-
+  if (members && members[0] && members[0].status !== 'completed') return true
   return false
 })
 
@@ -176,18 +169,18 @@ const userIsEditorOfTheManuscriptOfTheReview = rule({
   let manuscriptId
 
   if (args.id) {
-    const review = await models.Review.query().findById(args.id)
+    const review = await ctx.connectors.Review.model.query().findById(args.id)
     if (review) manuscriptId = review.manuscriptId
   }
 
   if (!manuscriptId) manuscriptId = args.input.manuscriptId
-
-  return userIsEditorQuery(ctx.user, manuscriptId)
+  return userIsEditorQuery(ctx, manuscriptId)
 })
 
 const userIsInvitedReviewer = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    const team = await models.Team.query().findById(args.teamId)
+    if (!ctx.user) return false
+    const team = await ctx.connectors.Team.model.query().findById(args.teamId)
 
     const member = await team
       .$relatedQuery('members')
@@ -200,7 +193,10 @@ const userIsInvitedReviewer = rule({ cache: 'strict' })(
 
 const userIsAuthor = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    const team = await models.Team.query()
+    if (!ctx.user) return false
+
+    const team = await ctx.connectors.Team.model
+      .query()
       .where({
         manuscriptId: args.id,
         role: 'author',
@@ -223,6 +219,7 @@ const userIsAuthor = rule({ cache: 'strict' })(
 const userIsAuthorOfFilesAssociatedManuscript = rule({
   cache: 'no_cache',
 })(async (parent, args, ctx, info) => {
+  if (!ctx.user) return false
   let manuscriptId
 
   if (args.meta && args.meta.manuscriptId) {
@@ -231,40 +228,33 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
     manuscriptId = args.meta.manuscriptId
   } else if (args.id) {
     // id is supplied for deletion
-    const file = await models.File.query().findById(args.id)
+    const file = await ctx.connectors.File.model.query().findById(args.id)
     // eslint-disable-next-line prefer-destructuring
     manuscriptId = file.manuscriptId
   } else {
     return false
   }
 
-  const team = await models.Team.query()
+  const team = await ctx.connectors.Team.model
+    .query()
     .where({
       manuscriptId,
       role: 'author',
     })
     .first()
 
-  if (!team) {
-    return false
-  }
-
+  if (!team) return false
   const members = await team.$relatedQuery('members').where('userId', ctx.user)
-
-  if (members && members[0]) {
-    return true
-  }
-
+  if (members && members[0]) return true
   return false
 })
 
 const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
-    if (!ctx.user) {
-      return false
-    }
+    if (!ctx.user) return false
 
-    const manuscript = await models.File.relatedQuery('manuscript')
+    const manuscript = await ctx.connectors.File.model
+      .relatedQuery('manuscript')
       .for(parent.id)
       .first()
 
@@ -273,25 +263,21 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
       return false
     }
 
-    const team = await models.Team.query()
+    const team = await ctx.connectors.Team.model
+      .query()
       .where({
         manuscriptId: manuscript.id,
         role: 'author',
       })
       .first()
 
-    if (!team) {
-      return false
-    }
+    if (!team) return false
 
     const members = await team
       .$relatedQuery('members')
       .where('userId', ctx.user)
 
-    if (members && members[0]) {
-      return true
-    }
-
+    if (members && members[0]) return true
     return false
   },
 )
@@ -300,11 +286,10 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
 const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
   cache: 'strict',
 })(async (parent, args, ctx, info) => {
-  if (!ctx.user) {
-    return false
-  }
+  if (!ctx.user) return false
 
-  const manuscript = await models.File.relatedQuery('manuscript')
+  const manuscript = await ctx.connectors.File.model
+    .relatedQuery('manuscript')
     .for(parent.id)
     .first()
 
@@ -313,7 +298,8 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
     return false
   }
 
-  const team = await models.Team.query()
+  const team = await ctx.connectors.Team.model
+    .query()
     .where({
       manuscriptId: manuscript.id,
       role: 'reviewer',
@@ -321,13 +307,8 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
     .first()
 
   if (!team) return false
-
   const members = await team.$relatedQuery('members').where('userId', ctx.user)
-
-  if (members && members[0] && members[0].status !== 'completed') {
-    return true
-  }
-
+  if (members && members[0] && members[0].status !== 'completed') return true
   return false
 })
 
@@ -337,16 +318,17 @@ const permissions = {
     paginatedManuscripts: userIsAdmin,
     publishedManuscripts: allow,
     manuscriptsUserHasCurrentRoleIn: isAuthenticated,
-    manuscripts: allow,
-    manuscript: allow,
+    manuscripts: isAuthenticated,
+    manuscript: isAuthenticated,
     manuscriptsPublishedSinceDate: allow,
     publishedManuscript: allow,
-    messages: allow,
-    form: allow,
-    forms: allow,
+    messages: isAuthenticated,
+    form: isAuthenticated,
+    forms: userIsAdmin,
     formForPurpose: allow,
-    user: allow,
-    validateDOI: allow,
+    user: isAuthenticated,
+    users: isAuthenticated,
+    validateDOI: isAuthenticated,
   },
   Mutation: {
     upload: isAuthenticated,
@@ -363,7 +345,7 @@ const permissions = {
       userIsReviewAuthorAndReviewIsNotCompleted,
       userIsEditorOfTheManuscriptOfTheReview,
     ),
-    createNewVersion: allow,
+    createNewVersion: or(userIsAuthor, userIsEditor, userIsAdmin),
     createFile: userIsAuthorOfFilesAssociatedManuscript,
     deleteFile: userIsAuthorOfFilesAssociatedManuscript,
     deleteForm: userIsAdmin,
@@ -377,10 +359,10 @@ const permissions = {
   Subscription: {
     messageCreated: userIsAllowedToChat,
   },
-  CurrentRole: allow,
-  Team: allow,
-  TeamMember: allow,
-  User: allow,
+  CurrentRole: isAuthenticated,
+  Team: isAuthenticated,
+  TeamMember: isAuthenticated,
+  User: isAuthenticated,
   PaginatedManuscripts: allow,
   Manuscript: allow,
   ManuscriptVersion: allow,
@@ -398,22 +380,25 @@ const permissions = {
   FormElement: allow,
   FormElementOption: allow,
   FormElementValidation: allow,
-  UploadResult: allow,
+  UploadResult: isAuthenticated,
   Review: or(parentManuscriptIsPublished, reviewIsByUser),
-  ReviewComment: allow,
-  Channel: allow,
-  Message: allow,
-  MessagesRelay: allow,
-  PageInfo: allow,
+  ReviewComment: isAuthenticated,
+  Channel: isAuthenticated,
+  Message: isAuthenticated,
+  MessagesRelay: isAuthenticated,
+  PageInfo: isAuthenticated,
   ManuscriptMeta: allow,
-  Note: allow,
-  Identity: allow,
+  Note: isAuthenticated,
+  Identity: isAuthenticated,
   PublishedManuscript: allow,
 }
 
-const fallbackRule = or(userIsAdmin, userIsEditor, isAuthenticated)
+const fallbackRule = or(userIsAdmin, userIsEditor)
 
-// We only ever need to go two levels down, so no need for recursion
+/** This is used to generate a new permissions structure in which EVERY rule is modified to: or(fallbackRule, originalRule)
+ * TODO: this makes permissions harder to follow. We should instead just set sensible rules from the outset and not perform this step!
+ * We only ever need to go two levels down, so no need for recursion
+ */
 const addOverrideRule = perms => {
   const adaptedPermissions = {}
   Object.keys(perms).forEach(key1 => {
@@ -431,22 +416,6 @@ const addOverrideRule = perms => {
   return adaptedPermissions
 }
 
-const shieldWithPermissions = shield(addOverrideRule(permissions), {
-  allowExternalErrors: false,
-  debug: true,
-  fallbackRule,
-})
+const permissionsWithOverride = addOverrideRule(permissions)
 
-module.exports = shieldWithPermissions
-
-// const userIsEditorOfManuscript = rule({
-//   cache: 'strict',
-// })(async (parent, args, ctx, info) =>
-//   _userIsEditor(ctx.user, parent.manuscriptId),
-// )
-
-// const userIsAuthorOfManuscript = rule({
-//   cache: 'strict',
-// })(async (parent, args, ctx, info) =>
-//   _userIsMemberOfTeamWithRole(ctx.user, parent.manuscriptId, 'author'),
-// )
+module.exports = permissionsWithOverride

@@ -39,6 +39,7 @@ const reviewFields = `
   user {
     id
     username
+    profilePicture
     defaultIdentity {
       id
       identifier
@@ -181,6 +182,16 @@ export const query = gql`
             minSize
           }
         }
+      }
+    }
+    
+    users {
+      id
+      username
+      email
+      admin
+      defaultIdentity {
+        id
       }
     }
   }

@@ -158,7 +158,7 @@ Reviewers.propTypes = {
         id: PropTypes.string.isRequired,
         username: PropTypes.string.isRequired,
         defaultIdentity: PropTypes.shape({
-          name: PropTypes.string.isRequired,
+          identifier: PropTypes.string.isRequired,
         }),
       }).isRequired,
     }).isRequired,
