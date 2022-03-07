@@ -124,9 +124,13 @@ const ReviewMetadata = ({
       )}
 
       {form.children
-        .filter(
-          element => showEditorOnlyFields || element.hideFromAuthors !== 'true',
-        )
+        .filter(element => {
+          const includeInPreview = element.includeInReviewerPreview !== 'false'
+          return (
+            includeInPreview &&
+            (showEditorOnlyFields || element.hideFromAuthors !== 'true')
+          )
+        })
         .map(element =>
           !showPreviewMetadataOnly ||
           shouldShowInPreview(element.name, form) ? (
