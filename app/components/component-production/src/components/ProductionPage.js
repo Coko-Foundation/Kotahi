@@ -193,6 +193,7 @@ const ProductionPage = ({ match, ...props }) => {
     },
   })
 
+  /* eslint-disable no-unused-vars */
   const updateQuery = async () => {
     setSaving(true)
 
@@ -275,7 +276,7 @@ const ProductionPage = ({ match, ...props }) => {
           // eslint-disable-next-line
           console.log('in update manuscript!')
           updateManuscript(a, b)
-          updateQuery()
+          // updateQuery()  commenting this line as it makes the wax page to get stuck in loop
         }}
       />
     </div>

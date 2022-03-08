@@ -44,6 +44,8 @@ const Submit = ({
   match,
   updateManuscript,
   client,
+  createFile,
+  deleteFile,
 }) => {
   const decisionSections = []
 
@@ -111,6 +113,8 @@ const Submit = ({
                 return (
                   <FormTemplate
                     client={client}
+                    createFile={createFile}
+                    deleteFile={deleteFile}
                     confirming={confirming}
                     onChange={(value, path) => {
                       onChange(value, path, versionId)

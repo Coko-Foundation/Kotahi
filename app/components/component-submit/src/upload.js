@@ -373,7 +373,7 @@ export default ({
         }),
       )
 
-      uploadedImages.then(results => {
+      await uploadedImages.then(results => {
         const $ = cheerio.load(source)
 
         $('img').each((i, elem) => {

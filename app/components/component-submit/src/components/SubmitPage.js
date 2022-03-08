@@ -39,6 +39,30 @@ const createNewVersionMutation = gql`
   }
 `
 
+const createFileMutation = gql`
+  mutation($file: Upload!, $meta: FileMetaInput!) {
+    createFile(file: $file, meta: $meta) {
+      id
+      created
+      name
+      updated
+      name
+      tags
+      storedObjects {
+        key
+        mimetype
+        url
+      }
+    }
+  }
+`
+
+const deleteFileMutation = gql`
+  mutation($id: ID!) {
+    deleteFile(id: $id)
+  }
+`
+
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const cleanForm = form => {
@@ -76,6 +100,18 @@ const SubmitPage = ({ match, history }) => {
   const [submit] = useMutation(submitMutation)
   const [createNewVersion] = useMutation(createNewVersionMutation)
   const [publishManuscript] = useMutation(publishManuscriptMutation)
+  const [createFile] = useMutation(createFileMutation)
+
+  const [deleteFile] = useMutation(deleteFileMutation, {
+    update(cache, { data: { deleteFile: fileToDelete } }) {
+      const id = cache.identify({
+        __typename: 'File',
+        id: fileToDelete,
+      })
+
+      cache.evict({ id })
+    },
+  })
 
   const [manuscriptChangedFields, setManuscriptChangedFields] = useState({
     submission: {},
@@ -194,6 +230,8 @@ const SubmitPage = ({ match, history }) => {
       toggleConfirming={toggleConfirming}
       updateManuscript={updateManuscript}
       versions={versions}
+      createFile={createFile}
+      deleteFile={deleteFile}
     />
   )
 }
