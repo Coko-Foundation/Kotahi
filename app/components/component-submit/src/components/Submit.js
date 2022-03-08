@@ -113,9 +113,9 @@ const Submit = ({
                 return (
                   <FormTemplate
                     client={client}
+                    confirming={confirming}
                     createFile={createFile}
                     deleteFile={deleteFile}
-                    confirming={confirming}
                     onChange={(value, path) => {
                       onChange(value, path, versionId)
                     }}

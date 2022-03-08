@@ -219,8 +219,10 @@ const SubmitPage = ({ match, history }) => {
     <Submit
       client={client}
       confirming={confirming}
+      createFile={createFile}
       createNewVersion={createNewVersion}
       currentUser={currentUser}
+      deleteFile={deleteFile}
       form={pruneEmpty(form)}
       match={match}
       onChange={handleChange}
@@ -230,8 +232,6 @@ const SubmitPage = ({ match, history }) => {
       toggleConfirming={toggleConfirming}
       updateManuscript={updateManuscript}
       versions={versions}
-      createFile={createFile}
-      deleteFile={deleteFile}
     />
   )
 }
