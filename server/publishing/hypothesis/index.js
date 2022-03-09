@@ -64,6 +64,11 @@ const publishToHypothesis = async manuscript => {
 
   const uri = manuscript.submission.biorxivURL || manuscript.submission.link
 
+  const title =
+    manuscript.meta.title ||
+    manuscript.submission.title ||
+    manuscript.submission.description
+
   const fields = await Promise.all(
     getFieldNamesAndTags(config.hypothesis.publishFields).map(async x => {
       let value
@@ -122,6 +127,7 @@ const publishToHypothesis = async manuscript => {
         group: config.hypothesis.group,
         permissions: { read: [`group:${config.hypothesis.group}`] },
         uri: normalizeUri(uri),
+        document: { title: [title] },
         text: turndownService.turndown(f.value),
         tags: f.tag ? [f.tag] : [],
       }
