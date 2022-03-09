@@ -117,12 +117,20 @@ export const HeadingWithAction = styled.div`
 `
 
 export const Columns = styled.div`
-  display: grid;
-  grid-template-areas: 'manuscript chat';
-  grid-template-columns: 4fr 3fr;
+  align-content: stretch;
+  display: flex;
+  flex-direction: row;
   height: 100vh;
   justify-content: center;
   overflow: auto;
+
+  & > * {
+    flex: 5 1 60em;
+  }
+
+  & > *:last-child {
+    flex: 1 2 28em;
+  }
 `
 
 export const Manuscript = styled.div`
