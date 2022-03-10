@@ -103,7 +103,7 @@ const publishToHypothesis = async manuscript => {
         // Check with Hypothesis that there truly is an annotation to update or delete
         try {
           await axios.get(`${REQUEST_URL}/${annotationId}`, {
-            headers,
+            ...headers,
           })
         } catch (e) {
           action = action === 'update' ? 'create' : null
