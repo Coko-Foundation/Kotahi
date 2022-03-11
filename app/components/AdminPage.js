@@ -122,7 +122,10 @@ const AdminPage = () => {
     if (error.networkError) {
       notice = 'You are offline.'
     } else {
-      return <Redirect to="/login" />
+      const params = new URL(window.location.href).searchParams
+      const articleToApprove = params.get('articleToApprove')
+      const redirectlocation = `/login?articleToApprove=${articleToApprove}`
+      return <Redirect to={redirectlocation} />
     }
   }
 
