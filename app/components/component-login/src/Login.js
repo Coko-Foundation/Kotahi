@@ -140,7 +140,7 @@ const Login = ({ logo = null, ...props }) => {
           <RegisterInfoString>
             Kotahi uses ORCID <StyledORCIDIcon /> to identify authors and staff.
           </RegisterInfoString>
-          <LoginButton as="a" href={nextpage}>
+          <LoginButton as="a" href={nextpage} primary>
             Login with ORCID
           </LoginButton>
           <RegisterLinkButton as="a" href={nextpage}>
