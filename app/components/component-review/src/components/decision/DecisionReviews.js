@@ -26,21 +26,17 @@ const getCompletedReviews = (manuscript, currentUser) => {
 const DecisionReviews = ({
   reviewers,
   manuscript,
-  sharedReviews,
   updateReview,
   canHideReviews,
   urlFrag,
 }) => {
-  const reviews =
-    process.env.INSTANCE_NAME === 'colab' ? sharedReviews : manuscript.reviews
-
   return (
     <SectionContent>
       <SectionHeader>
         <Title>Reviews</Title>
       </SectionHeader>
-      {reviews && reviews.length ? (
-        reviews
+      {manuscript.reviews && manuscript.reviews.length ? (
+        manuscript.reviews
           .filter(
             review =>
               getCompletedReviews(manuscript, review.user) === 'completed' &&

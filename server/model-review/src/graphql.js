@@ -1,53 +1,8 @@
 // const { flatten } = require('lodash')
 // const Review = require('./review')
 const models = require('@pubsweet/models')
-const { get } = require('lodash')
 
 const resolvers = {
-  Query: {
-    async sharedReviews(_, { id }, ctx) {
-      const query = await models.Team.query()
-        .where({
-          manuscriptId: id,
-        })
-        .withGraphFetched('members.[user.reviews]')
-
-      const teams = await query
-      const authorTeam = teams.filter(team => team.role === 'author')
-      const authorUser = get(authorTeam, 'members[0].user', {})
-
-      const members = teams
-        .filter(team => team.role === 'reviewer')
-        .map(team => {
-          return team.members
-        })
-        .flat()
-        .filter(member => {
-          return member.user.id === ctx.user || member.isShared
-        })
-
-      const reviews = members
-        .map(teamMember => {
-          return teamMember.user.reviews.map(review => {
-            return { ...review, user: teamMember.user }
-          })
-        })
-        .flat()
-        .filter(review => {
-          return review.manuscriptId === id
-        })
-        .filter(review => {
-          return !(review.isHiddenFromAuthor && ctx.user === authorUser.id)
-        })
-        .map(review => {
-          return review.isHiddenReviewerName && ctx.user === authorUser.id
-            ? { ...review, user: { ...review.user, username: '' } }
-            : review
-        })
-
-      return reviews
-    },
-  },
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
       // We process comment fields into array
@@ -118,10 +73,6 @@ const typeDefs = `
   extend type Mutation {
     updateReview(id: ID, input: ReviewInput): Review!
     completeReview(id: ID!): TeamMember
-  }
-
-  extend type Query {
-    sharedReviews(id: ID): [Review]
   }
 
   type Review implements Object {
