@@ -71,6 +71,7 @@ export const Select = ({
       options={options}
       {...otherProps}
       styles={myStyles}
+      menuPlacement="auto"
       value={selectedOption}
     />
   )

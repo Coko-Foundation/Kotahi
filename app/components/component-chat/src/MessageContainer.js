@@ -65,9 +65,6 @@ const MessageContainer = styled.section`
 
   height: 100vh;
   margin: 0 0 0 16px;
-  min-width: calc(100% - 16px);
-  padding-top: -12px;
-  position: relative;
 
   ${props =>
     props.channels
@@ -91,6 +88,9 @@ const MessageContainer = styled.section`
             'read'
             'write';
         `}
+
+  padding-top: -12px;
+  position: relative;
 `
 
 const cleanSuggestionUserObject = user => {
@@ -386,7 +386,7 @@ const Container = ({
     <MessageContainer channels={channels}>
       {tabs ? (
         <Tabs
-          background='colorBackgroundHue'
+          background="colorBackgroundHue"
           defaultActiveKey={tabs[0].key}
           hideChat={hideChat}
           sections={tabs}

@@ -438,6 +438,8 @@ const resolvers = {
         const review = {
           recommendation: '',
           isDecision: false,
+          isHiddenReviewerName: true,
+          isHiddenFromAuthor: true,
           userId: context.user,
           manuscriptId: team.manuscriptId,
         }

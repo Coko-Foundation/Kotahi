@@ -74,6 +74,10 @@ const DecisionAndReviews = ({ manuscript }) => {
     ? authorTeam.members.find(member => member.user.id === currentUser.id)
     : false
 
+  const reviewsToShow = reviews.filter(
+    review => !review.isHiddenFromAuthor && isCurrentUserAuthor,
+  )
+
   return (
     <>
       <SectionContent>
@@ -87,25 +91,25 @@ const DecisionAndReviews = ({ manuscript }) => {
           <Title>Reviews</Title>
         </SectionHeader>
 
-        {reviews && reviews.length ? (
-          reviews
-            .filter(review => !review.isHiddenFromAuthor && isCurrentUserAuthor)
-            .map((review, index) => (
-              <SectionRow key={review.id}>
-                <DecisionReview
-                  open
-                  review={review}
-                  reviewer={{
-                    name: review.user.username,
-                    ordinal: index + 1,
-                    user: review.user,
-                  }}
-                  teams={manuscript.teams}
-                />
-              </SectionRow>
-            ))
+        {reviewsToShow.length ? (
+          reviewsToShow.map((review, index) => (
+            <SectionRow key={review.id}>
+              <DecisionReview
+                open
+                review={review}
+                reviewer={{
+                  name: review.user.username,
+                  ordinal: index + 1,
+                  user: review.user,
+                }}
+                teams={manuscript.teams}
+              />
+            </SectionRow>
+          ))
         ) : (
-          <SectionRow>No completed reviews.</SectionRow>
+          <SectionRow>
+            {reviews.length ? 'No reviews to show.' : 'No completed reviews.'}
+          </SectionRow>
         )}
       </SectionContent>
     </>
