@@ -59,9 +59,6 @@ const replaceImageSrc = async (source, files, size) => {
       if (correspondingFile.alt) {
         $elem.attr('alt', correspondingFile.alt)
       }
-    } else {
-      $elem.attr('src', '')
-      $elem.attr('alt', '')
     }
   })
 

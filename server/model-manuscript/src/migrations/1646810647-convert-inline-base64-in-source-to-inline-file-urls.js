@@ -1,13 +1,24 @@
 /* eslint-disable no-unused-vars */
 const { useTransaction, logger } = require('@coko/server')
 const { createFile } = require('@coko/server')
-const fs = require('fs-extra')
-const path = require('path')
 const cheerio = require('cheerio')
+const Blob = require('node-blob')
+const { map } = require('lodash')
+const atob = require('atob')
+const { Duplex } = require('stream')
 
 // Paths are relative to the generated migrations folder
 /* eslint-disable-next-line import/no-unresolved */
+const { getFilesWithUrl } = require('../server/utils/fileStorageUtils')
+/* eslint-disable-next-line import/no-unresolved */
 const Manuscript = require('../server/model-manuscript/src/manuscript')
+
+const bufferToStream = myBuuffer => {
+  let tmp = new Duplex()
+  tmp.push(myBuuffer)
+  tmp.push(null)
+  return tmp
+}
 
 const base64toBlob = (base64Data, contentType) => {
   const sliceSize = 1024
@@ -35,59 +46,46 @@ const base64toBlob = (base64Data, contentType) => {
 
 const base64Images = source => {
   const $ = cheerio.load(source)
-  // const doc = new DOMParser().parseFromString(source, 'text/html')
-  // TODO: fix errors in this logic
-  const images = $('img').map((i, elem) => {
+
+  let images = []
+
+  $('img').each((i, elem) => {
     const $elem = $(elem)
 
     const src = $elem.attr('src')
+    if (src.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)) {
+      const mimeType = src.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0]
+      const blob = base64toBlob(src, mimeType)
+      const mimeTypeSplit = mimeType.split('/')
+      const extFileName = mimeTypeSplit[1]
 
-    const mimeType = src.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0]
-    const blob = base64toBlob(src, mimeType)
-    const mimeTypeSplit = mimeType.split('/')
-    const extFileName = mimeTypeSplit[1]
-
-    const file = new File([blob], `Image${i + 1}.${extFileName}`, {
-      type: mimeType,
-    })
-
-    return { dataSrc: src, mimeType, file }
+      images.push({
+        blob,
+        dataSrc: src,
+        filename: `Image${i + 1}.${extFileName}`,
+        index: i,
+      })
+    }
   })
 
-  // const images = [...doc.images].map((e, index) => {
-  //   const mimeType = e.src.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0]
-  //   const blob = base64toBlob(e.src, mimeType)
-  //   const mimeTypeSplit = mimeType.split('/')
-  //   const extFileName = mimeTypeSplit[1]
-
-  //   const file = new File([blob], `Image${index + 1}.${extFileName}`, {
-  //     type: mimeType,
-  //   })
-
-  //   return { dataSrc: e.src, mimeType, file }
-  // })
-
-  return images || null
+  return images
 }
 
-const uploadImages = (image, client, manuscriptId) => {
-  const { file } = image
+const uploadImages = async (image, manuscriptId) => {
+  const { blob, filename } = image
 
-  const meta = {
-    fileType: 'manuscriptImage',
+  const fileStream = bufferToStream(Buffer.from(blob.buffer, 'binary'))
+
+  const createdFile = await createFile(
+    fileStream,
+    filename,
+    null,
+    null,
+    ['manuscriptImage'],
     manuscriptId,
-    reviewCommentId: null,
-  }
+  )
 
-  const data = client.mutate({
-    // mutation: createFileMutation,
-    variables: {
-      file,
-      meta,
-    },
-  })
-
-  return data
+  return createdFile
 }
 
 exports.up = async knex => {
@@ -101,71 +99,46 @@ exports.up = async knex => {
 
       return Promise.all(
         manuscripts.map(async manuscript => {
-          const source = manuscript.meta.source
+          const { source } = manuscript.meta
           const images = base64Images(source)
+          if (images.length > 0) {
+            let uploadedImages = []
 
-          logger.info(images.length)
-          // TDDO: refactor below logic for server
-          // let uploadedImages = Promise.all(
-          //   map(images, async image => {
-          //     const uploadedImage = await uploadImages(
-          //       image,
-          //       client,
-          //       manuscriptData.data.createManuscript.id,
-          //     )
+            await Promise.all(
+              map(images, async image => {
+                if (image.blob) {
+                  const uploadedImage = await uploadImages(image, manuscript.id)
 
-          //     return uploadedImage
-          //   }),
-          // )
+                  uploadedImages.push(uploadedImage)
+                }
+              }),
+            )
 
-          // await uploadedImages.then(results => {
-          //   const $ = cheerio.load(source)
+            const uploadedImagesWithUrl = await getFilesWithUrl(uploadedImages)
 
-          //   $('img').each((i, elem) => {
-          //     const $elem = $(elem)
+            const $ = cheerio.load(source)
 
-          //     if (images[i].dataSrc === $elem.attr('src')) {
-          //       $elem.attr('data-fileid', results[i].data.createFile.id)
-          //       $elem.attr('alt', results[i].data.createFile.name)
-          //       $elem.attr(
-          //         'src',
-          //         results[i].data.createFile.storedObjects.find(
-          //           storedObject => storedObject.type === 'medium',
-          //         ).url,
-          //       )
-          //     }
-          //   })
+            map(images, (image, index) => {
+              const elem = $('img').get(image.index)
+              const $elem = $(elem)
+              $elem.attr('data-fileid', uploadedImagesWithUrl[index].id)
+              $elem.attr('alt', uploadedImagesWithUrl[index].name)
+              $elem.attr(
+                'src',
+                uploadedImagesWithUrl[index].storedObjects.find(
+                  storedObject => storedObject.type === 'medium',
+                ).url,
+              )
+            })
 
-          //   source = $.html()
+            manuscript.meta.source = $.html()
 
-          //   const manuscript = {
-          //     id: manuscriptData.data.createManuscript.id,
-          //     meta: {
-          //       source,
-          //     },
-          //   }
-
-          //   // eslint-disable-next-line
-          //   const updatedManuscript = client.mutate({
-          //     mutation: updateMutation,
-          //     variables: {
-          //       id: manuscriptData.data.createManuscript.id,
-          //       input: JSON.stringify(manuscript),
-          //     },
-          //   })
-
-          //   manuscriptData.data.createManuscript.meta.source = source
-          // })
-          // const filePath = path.join(__dirname, `..${file.url}`)
-          // const fileStream = fs.createReadStream(filePath)
-          // await createFile(
-          //   fileStream,
-          //   file.filename,
-          //   null,
-          //   null,
-          //   [file.fileType],
-          //   file.reviewCommentId || file.manuscriptId,
-          // )
+            /*eslint no-param-reassign: "error"*/
+            await Manuscript.query().updateAndFetchById(
+              manuscript.id,
+              manuscript,
+            )
+          }
           convertedManuscripts += 1
         }),
       ).then(res => {
