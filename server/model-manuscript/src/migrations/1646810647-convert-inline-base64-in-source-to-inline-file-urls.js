@@ -14,7 +14,7 @@ const { getFilesWithUrl } = require('../server/utils/fileStorageUtils')
 const Manuscript = require('../server/model-manuscript/src/manuscript')
 
 const bufferToStream = myBuuffer => {
-  let tmp = new Duplex()
+  const tmp = new Duplex()
   tmp.push(myBuuffer)
   tmp.push(null)
   return tmp
@@ -47,12 +47,13 @@ const base64toBlob = (base64Data, contentType) => {
 const base64Images = source => {
   const $ = cheerio.load(source)
 
-  let images = []
+  const images = []
 
   $('img').each((i, elem) => {
     const $elem = $(elem)
 
     const src = $elem.attr('src')
+
     if (src.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)) {
       const mimeType = src.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0]
       const blob = base64toBlob(src, mimeType)
@@ -101,8 +102,9 @@ exports.up = async knex => {
         manuscripts.map(async manuscript => {
           const { source } = manuscript.meta
           const images = base64Images(source)
+
           if (images.length > 0) {
-            let uploadedImages = []
+            const uploadedImages = []
 
             await Promise.all(
               map(images, async image => {
@@ -133,12 +135,13 @@ exports.up = async knex => {
 
             manuscript.meta.source = $.html()
 
-            /*eslint no-param-reassign: "error"*/
+            /* eslint no-param-reassign: "error" */
             await Manuscript.query().updateAndFetchById(
               manuscript.id,
               manuscript,
             )
           }
+
           convertedManuscripts += 1
         }),
       ).then(res => {
