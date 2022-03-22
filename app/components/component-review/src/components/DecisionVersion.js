@@ -257,7 +257,6 @@ const DecisionVersion = ({
                 canHideReviews={canHideReviews}
                 manuscript={version}
                 reviewers={reviewers}
-                sharedReviews={version.reviews}
                 updateReview={updateReview}
                 urlFrag={urlFrag}
               />
