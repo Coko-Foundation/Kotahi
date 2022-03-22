@@ -115,6 +115,13 @@ class Manuscript extends BaseModel {
     // eslint-disable-next-line
     newVersion.files = files
 
+    // Copy channels as well
+    const channels = await this.$relatedQuery('channels')
+    // eslint-disable-next-line
+    channels.forEach(c => delete c.id)
+
+    newVersion.channels = channels
+
     if (this.decision === 'revise') {
       newVersion.status = 'revising'
     }
