@@ -43,4 +43,16 @@ const getFieldNamesAndTags = fieldsString => {
     )
 }
 
-module.exports = { hasText, getFieldNamesAndTags, MAX_REVIEW_COUNT }
+/** If the URI published to hypothes.is doesn't match the URI of the viewed page, annotations will not be visible in the context of that page.
+ * This especially impacts biorxiv items, which are imported without a subdomain, but are given the www subdomain when viewing the page.
+ * Here we fix that.
+ */
+const normalizeUri = uri =>
+  uri.replace('https://biorxiv.org/', 'https://www.biorxiv.org/')
+
+module.exports = {
+  hasText,
+  getFieldNamesAndTags,
+  normalizeUri,
+  MAX_REVIEW_COUNT,
+}

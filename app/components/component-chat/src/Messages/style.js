@@ -36,14 +36,14 @@ export const MessagesGroup = styled.div`
   -webkit-box-pack: end;
   flex: 1 0 auto;
   flex-direction: column;
+  flex-shrink: 1;
   grid-area: read;
+  height: 70%;
   justify-content: flex-end;
   max-width: 100%;
   overflow: hidden auto;
   padding-bottom: 8px;
   width: 100%;
-  height: 70%;
-  flex-shrink: 1;
 `
 
 export const MessageGroupContainer = styled.div`
@@ -59,17 +59,15 @@ export const Message = styled.div`
   align-self: stretch;
   background: transparent;
   display: grid;
-  grid-template-columns: 72px minmax(0px, 1fr);
-  padding-right: 16px;
+  grid-template-columns: 45px auto;
+  padding-right: 4px;
   position: relative;
 `
 
 export const GutterContainer = styled.div`
   display: flex;
-  max-width: 72px;
-  min-width: 72px;
-  padding-left: 16px;
-  width: 72px;
+  padding-left: 8px;
+  width: 45px;
 `
 
 export const InnerMessageContainer = styled.div`

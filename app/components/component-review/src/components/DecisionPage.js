@@ -222,9 +222,9 @@ const DecisionPage = ({ match }) => {
           'true'
       }
       form={form}
+      handleChange={handleChange}
       makeDecision={makeDecision}
       manuscript={manuscript}
-      onChange={handleChange}
       publishManuscript={publishManuscript}
       reviewers={data?.manuscript?.reviews}
       sendChannelMessageCb={sendChannelMessageCb}
