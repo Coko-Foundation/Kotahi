@@ -242,7 +242,7 @@ const Manuscripts = ({ history, ...props }) => {
 
   const channels = [
     {
-      id: systemWideDiscussionChannel.data.systemWideDiscussionChannel.id,
+      id: systemWideDiscussionChannel?.data?.systemWideDiscussionChannel?.id,
       name: 'Admin discussion',
     },
   ]
@@ -369,7 +369,7 @@ const Manuscripts = ({ history, ...props }) => {
         {isAdminChatOpen && (
           <MessageContainer
             channelId={
-              systemWideDiscussionChannel.data.systemWideDiscussionChannel.id
+              systemWideDiscussionChannel?.data?.systemWideDiscussionChannel?.id
             }
             channels={channels}
             chatRoomId={chatRoomId}
