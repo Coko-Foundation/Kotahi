@@ -12,6 +12,7 @@ const PaginationInfo = styled.div`
 export const PaginationContainer = styled.div`
   align-items: center;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   padding: ${grid(2)} ${grid(3)};
 `
@@ -29,7 +30,8 @@ const Styles = styled.div`
     border-radius: ${th('borderRadius')};
     box-shadow: ${th('boxShadow')};
     display: flex;
-    justify-content: space-between;
+    flex-wrap: wrap;
+    justify-content: start;
 
     li {
       border: 1px solid ${th('colorFurniture')};

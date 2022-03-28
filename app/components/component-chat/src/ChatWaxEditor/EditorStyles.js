@@ -184,15 +184,19 @@ export const SimpleMenu = styled.div`
   flex-wrap: wrap;
   left: -12px;
   user-select: none;
-  /* ________________________                                              */
-  /* |__100%_MENU__|________|                                              */
-  /* |             | SEND   | <- Send Button                               */
-  /* |             | 114px  |                                              */
-  /* |----------------------|                                              */
-  /* |______________________|                                              */
-  /*     ^-- Adding 114px to 100% Menu Makes it occupy the whole container */
-  width: calc(100% + 114px);
+  /* _______________________                                              */
+  /* |__100%_MENU__|_______|                                              */
+  /* |             | SEND  | <- Send Button                               */
+  /* |             | 50px  |                                              */
+  /* |---------------------|                                              */
+  /* |_____________________|                                              */
+  /*     ^-- Adding 50px to 100% Menu Makes it occupy the whole container */
+  width: calc(100% + 50px);
   z-index: 1;
+
+  & > div {
+    height: 36px;
+  }
 
   div[data-name='SpecialCharacters'] > div > button + div {
     bottom: 34px;
@@ -203,10 +207,6 @@ export const SimpleMenu = styled.div`
   .Dropdown-menu {
     bottom: 38px;
     top: initial;
-  }
-
-  & > div {
-    height: 36px;
   }
 
   :focus-within {
@@ -229,12 +229,14 @@ export const SimpleEditorDiv = styled.div`
   /* 2. Div for Wax Overlay                    */
   /* We select the 2nd div                     */
   /* Place the WaxOverlay above the link icon  */
+  /* stylelint-disable-next-line no-descending-specificity */
   & > div:nth-child(2) {
     left: 0;
     top: -60px;
   }
 
   p {
+    /* stylelint-disable-next-line declaration-no-important */
     margin-bottom: 0 !important;
   }
 
