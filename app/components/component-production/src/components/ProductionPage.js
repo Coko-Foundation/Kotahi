@@ -84,6 +84,7 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
   if (data && !downloading) {
     setDownloading(true)
     const { pdfUrl } = data.convertToPdf // this is the relative url, like "uploads/filename.pdf"
+    // console.log(pdfUrl)
 
     if (useHtml) {
       // use this to open the PDF in a new tab:
@@ -93,7 +94,7 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
       // use this code for downloading the PDF:
 
       const link = document.createElement('a')
-      link.href = pdfUrl
+      link.href = `/${pdfUrl}`
       link.download = `${manuscript.meta.title || 'title'}.pdf`
       link.click()
 
