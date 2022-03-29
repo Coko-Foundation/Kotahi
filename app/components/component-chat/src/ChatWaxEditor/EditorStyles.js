@@ -194,11 +194,8 @@ export const SimpleMenu = styled.div`
   width: calc(100% + 50px);
   z-index: 1;
 
-  & > div {
-    height: 36px;
-  }
-
-  div[data-name='SpecialCharacters'] > div > button + div {
+  // TODO: this no longer works!
+  button[title='Special Characters'] + div {
     bottom: 34px;
     left: -372px;
     top: initial;

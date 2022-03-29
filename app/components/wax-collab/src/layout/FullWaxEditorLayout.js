@@ -15,6 +15,8 @@ import {
   NotesContainer,
   NotesHeading,
 } from './NotesStyles'
+import 'wax-prosemirror-core/dist/index.css'
+import 'wax-prosemirror-services/dist/index.css'
 
 const getNotes = main => {
   const notes = DocumentHelpers.findChildrenByType(
@@ -32,7 +34,7 @@ const CounterInfo = ComponentPlugin('bottomRightInfo')
 
 const FullWaxEditorLayout = readOnly => ({ editor }) => {
   const {
-    view: { main },
+    pmViews: { main },
     options,
   } = useContext(WaxContext)
 

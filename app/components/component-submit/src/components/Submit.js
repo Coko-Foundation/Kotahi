@@ -1,7 +1,7 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Formik } from 'formik'
-import { set } from 'lodash'
+import { set, debounce } from 'lodash'
 import DecisionAndReviews from './DecisionAndReviews'
 import CreateANewVersion from './CreateANewVersion'
 import FormTemplate from './FormTemplate'
@@ -66,13 +66,20 @@ const Submit = ({
       manuscript.status,
     )
 
+    const handleSave = useCallback(
+      debounce(source => {
+        console.log('updateManuscript firing in Submit.js\n\n')
+        updateManuscript(versionId, { meta: { source } })
+      }, 2000),
+    )
+
     const editorSection = {
       content: (
         <EditorSection
           currentUser={currentUser}
           manuscript={manuscript}
-          onBlur={source => updateManuscript(versionId, { meta: { source } })}
           readonly={!userCanEditManuscriptAndFormData}
+          saveSource={handleSave}
         />
       ),
       key: `editor_${manuscript.id}`,
@@ -189,6 +196,8 @@ const Submit = ({
   if (Array.isArray(parent.channels) && parent.channels.length) {
     channelId = parent.channels.find(c => c.type === 'all').id
   }
+
+  console.log('rendering Submit.js')
 
   return (
     <Columns>

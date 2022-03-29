@@ -7,6 +7,8 @@ import {
   SimpleInfoContainer,
   SimpleMenu,
 } from './EditorStyles'
+import 'wax-prosemirror-core/dist/index.css'
+import 'wax-prosemirror-services/dist/index.css'
 
 import ToolbarButton from '../SuperChatInput/ToolbarButton'
 
