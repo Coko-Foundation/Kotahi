@@ -18,6 +18,7 @@ import {
   DisplayBlockLevelService,
 } from 'wax-prosemirror-services'
 import { KotahiBlockDropDownToolGroupService } from '../../../wax-collab/src/CustomWaxToolGroups'
+import CharactersList from '../../../wax-collab/src/config/CharactersList'
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
@@ -44,6 +45,8 @@ const chatWaxEditorConfig = () => ({
   RulesService: [emDash, ellipsis],
 
   ShortCutsService: {},
+
+  SpecialCharactersService: CharactersList,
 
   TitleService: { updateTitle },
 

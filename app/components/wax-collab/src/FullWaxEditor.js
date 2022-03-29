@@ -1,7 +1,6 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { ThemeProvider } from 'styled-components'
-// import { debounce } from 'lodash'
 import { Wax } from 'wax-prosemirror-core'
 import waxTheme from './layout/waxTheme'
 import fixAstralUnicode from './fixAstralUnicode'
@@ -30,8 +29,7 @@ const FullWaxEditor = ({
   validationStatus,
   readonly,
   autoFocus,
-  onBlur,
-  onChange,
+  saveSource,
   placeholder,
   useComments,
   authorComments,
@@ -54,14 +52,32 @@ const FullWaxEditor = ({
 
   const editorRef = useRef(null)
 
-  // const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
+  console.log('rendering FullWaxEditor') // Why is this rerendering after we save?
+
+  /* eslint-disable jsx-a11y/no-noninteractive-tabindex,  jsx-a11y/tabindex-no-positive */
+
+  useEffect(() => {
+    return () => {
+      if (editorRef.current) {
+        saveSource(editorRef.current.getContent())
+      }
+    }
+  }, [])
+
+  // return useMemo(
+  //   () =>
   return (
     <ThemeProvider theme={waxTheme}>
       <div
         className={validationStatus}
-        onBlur={() => {
-          onBlur(editorRef.current.getContent())
-        }}
+        // onBlur={e => {
+        //   e.stopPropagation()
+        //   e.preventDefault()
+        //   console.log('onBlur firing in FullWaxEditor.js')
+        //   saveSource(editorRef.current.getContent())
+        // }}
+        style={{ width: '100%' }}
+        // tabIndex={1}
       >
         <Wax
           autoFocus={autoFocus}
@@ -72,18 +88,10 @@ const FullWaxEditor = ({
               ? FullWaxEditorCommentsLayout(readonly, authorComments)
               : FullWaxEditorLayout(readonly)
           }
-          onChange={() => {
-            // This only fires in read-only mode if an author comment has been added.
-            // We don't need to debounce because the comment has been added to the editor content.
-            if (readonly) {
-              onBlur(editorRef.current.getContent())
-            }
+          onChange={source => {
+            console.log('onChange firign')
+            saveSource(source)
           }}
-          // onBlur={val => {
-          //   onChange && onChange(val)
-          //   onBlur && onBlur(val)
-          // }}
-          // onChange={debounceChange}
           placeholder={placeholder}
           readonly={readonly}
           ref={editorRef}
@@ -94,6 +102,8 @@ const FullWaxEditor = ({
       </div>
     </ThemeProvider>
   )
+  //   ,[],
+  // )
 }
 
 FullWaxEditor.propTypes = {
@@ -101,8 +111,7 @@ FullWaxEditor.propTypes = {
   validationStatus: PropTypes.string,
   readonly: PropTypes.bool,
   autoFocus: PropTypes.bool,
-  onBlur: PropTypes.func,
-  onChange: PropTypes.func,
+  saveSource: PropTypes.func,
   placeholder: PropTypes.string,
   fileUpload: PropTypes.func,
   authorComments: PropTypes.bool,
@@ -122,8 +131,7 @@ FullWaxEditor.defaultProps = {
   validationStatus: undefined,
   readonly: false,
   autoFocus: false,
-  onBlur: () => {},
-  onChange: () => {},
+  saveSource: () => {},
   placeholder: '',
   authorComments: false,
   fileUpload: () => {},

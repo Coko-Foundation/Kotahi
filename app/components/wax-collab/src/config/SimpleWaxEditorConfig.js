@@ -19,6 +19,7 @@ import {
   DisplayBlockLevelService,
 } from 'wax-prosemirror-services'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
+import CharactersList from './CharactersList'
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
@@ -45,6 +46,8 @@ const simpleWaxEditorConfig = () => ({
       toolGroups: [{ name: 'InfoToolGroup', exclude: ['ShortCutsInfo'] }],
     },
   ],
+
+  SpecialCharactersService: CharactersList,
 
   RulesService: [emDash, ellipsis],
 

@@ -36,6 +36,7 @@ import {
 } from 'wax-prosemirror-services'
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
 import JatsTagsService from '../JatsTags'
+import CharactersList from './CharactersList'
 
 const updateTrackStatus = change => {
   // this returns "true" when Suggesting Mode is turned on.
@@ -112,6 +113,8 @@ const fullWaxEditorConfig = () => ({
   RulesService: [emDash, ellipsis],
 
   ShortCutsService: {},
+
+  SpecialCharactersService: CharactersList,
 
   TitleService: { updateTitle },
 
