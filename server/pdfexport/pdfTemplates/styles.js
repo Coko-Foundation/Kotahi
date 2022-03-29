@@ -27,9 +27,9 @@ const css = `
 		padding: 50px;
 		margin: 100px;
 	}
-	section {
+	/* section {
 		display: none;
-	}
+	} */
 
     body {
         background-color: var(--color-background);
@@ -198,20 +198,21 @@ const css = `
 
 /* insert fonts */
 
-/*@font-face {
+@font-face {
   font-family: "Newsreader";
-  src: url(/fonts/Newsreader-VariableFont_opsz-wght.ttf) format("truetype");
+  src: url("./Newsreader-VariableFont-opsz-wght.ttf") format("truetype");
+  /* src: url("/profiles/Newsreader-VariableFont-opsz-wght.ttf") format("truetype");  works with useHTML true */
   font-style: normal;
   font-weight: 300 700;
 }
 
 @font-face {
   font-family: "Newsreader";
-  src: url(/fonts/Newsreader-Italic-VariableFont_opsz-wght.ttf)
-    format("truetype");
+  src: url("./Newsreader-Italic-VariableFont-opsz-wght.ttf") format("truetype");
+  /* src: url("/profiles/Newsreader-Italic-VariableFont-opsz-wght.ttf") format("truetype");  works with useHTML true */
   font-style: italic;
   font-weight: 300 700;
-}*/
+}
 
 * {
   padding: 0;
