@@ -35,6 +35,12 @@ export const SectionContent = styled(Section)`
     margin-bottom: calc(${th('gridUnit')} * 3);
     margin-top: 0;
   }
+
+  ${TabsContainer} ~ div > & {
+    border-top-left-radius: 0;
+    margin-bottom: calc(${th('gridUnit')} * 3);
+    margin-top: 0;
+  }
 `
 
 export const PaddedContent = styled(Content)`

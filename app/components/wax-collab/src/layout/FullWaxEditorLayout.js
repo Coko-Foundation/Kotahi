@@ -80,7 +80,7 @@ const FullWaxEditorLayout = readOnly => ({ editor }) => {
           </FullWaxEditorGrid>
         ) : (
           <>
-            <Menu>
+            <Menu className="waxmenu">
               <TopBar />
             </Menu>
             <FullWaxEditorGrid useComments={false}>
