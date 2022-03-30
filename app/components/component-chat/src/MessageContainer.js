@@ -5,7 +5,7 @@ import React, { useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { gql, useQuery, useMutation, useApolloClient } from '@apollo/client'
-import { Tabs } from '../../shared'
+import { HiddenTabs } from '../../shared'
 import { CREATE_MESSAGE, SEARCH_USERS } from '../../../queries'
 import useCurrentUser from '../../../hooks/useCurrentUser'
 import Chat from './Chat'
@@ -63,6 +63,7 @@ const MessageContainer = styled.section`
   display: flex;
   flex-direction: column;
   height: 100vh;
+  width: 100%;
 
   ${props =>
     props.channels
@@ -383,7 +384,7 @@ const Container = ({
   return (
     <MessageContainer channels={channels}>
       {tabs ? (
-        <Tabs
+        <HiddenTabs
           background="colorBackgroundHue"
           defaultActiveKey={tabs[0].key}
           hideChat={hideChat}

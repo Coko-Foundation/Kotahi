@@ -12,7 +12,7 @@ import EditorSection from './decision/EditorSection'
 import Publish from './Publish'
 import { AdminSection } from './style'
 import {
-  Tabs,
+  HiddenTabs,
   SectionContent,
   SectionHeader,
   SectionRow,
@@ -323,7 +323,7 @@ const DecisionVersion = ({
       }}
     >
       {props => (
-        <Tabs
+        <HiddenTabs
           defaultActiveKey={version.id}
           sections={[
             decisionSection({ ...props }),

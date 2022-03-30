@@ -11,7 +11,7 @@ import MessageContainer from '../../../component-chat/src/MessageContainer'
 import {
   SectionContent,
   VersionSwitcher,
-  Tabs,
+  HiddenTabs,
   Columns,
   Chat,
   Manuscript,
@@ -179,7 +179,7 @@ const Submit = ({
               manuscript={manuscript}
             />
           )}
-          <Tabs
+          <HiddenTabs
             defaultActiveKey={versionId}
             sections={[decisionSection, editorSection]}
           />
