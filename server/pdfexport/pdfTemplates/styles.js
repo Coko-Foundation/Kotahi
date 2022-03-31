@@ -487,6 +487,35 @@ header {
 
 section.frontmatter, section.abstractSection {
   display: none;
-}`
+}
+
+/* FIXES */
+@media print {
+
+	.content ul, .content ol {
+		padding-left: 30px;
+	}
+
+	.content ul {
+		list-style-type: disc;
+	}
+
+	.content ol {
+		list-style-type: decimal;
+	}
+
+	figure img {
+		max-width: 100%;
+	}
+
+	figure {
+		max-width: 100%;
+	}
+
+	td, th {
+		font-weight: 300;
+  }
+}
+`
 
 module.exports = css
