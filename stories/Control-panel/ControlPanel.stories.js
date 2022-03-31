@@ -3,6 +3,7 @@ import DecisionVersion from '../../app/components/component-review/src/component
 import { JournalProvider } from '../../app/components/xpub-journal/src'
 import { XpubProvider } from '../../app/components/xpub-with-context/src'
 import * as journal from '../../config/journal'
+import DesignEmbed from '../common/utils'
 
 export const Base = args => (
   <XpubProvider>
@@ -1950,5 +1951,12 @@ Base.args = props
 export default {
   title: 'ControlPanel/DecisionVersion',
   component: DecisionVersion,
+  parameters: {
+    docs: {
+      page: () => (
+        <DesignEmbed figmaEmbedLink="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D0%253A1" />
+      ),
+    },
+  },
   argTypes: {},
 }

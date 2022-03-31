@@ -1,7 +1,26 @@
 import React from 'react'
 import ProductionWaxEditor from '../../app/components/wax-collab/src/ProductionWaxEditor'
+import DesignEmbed from '../common/utils'
 
-export const Base = args => <ProductionWaxEditor {...args} />
+export const Base = args => (
+  <>
+    {args.figmaEmbedLink && (
+      <>
+        <h2 style={{ color: '#333333' }}>Design</h2>
+        <iframe
+          allowFullScreen
+          height={350}
+          src={args.figmaEmbedLink}
+          style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
+          title="figma embed"
+          width={800}
+        />
+        <h2 style={{ color: '#333333' }}>Component</h2>
+      </>
+    )}
+    <ProductionWaxEditor {...args} />
+  </>
+)
 export const ReadOnly = Base.bind()
 export const Error = Base.bind()
 export const NoComments = Base.bind()
@@ -14,13 +33,35 @@ Base.args = {
     // console.log('onBlur: ', source)
   },
 }
-ReadOnly.args = { ...Base.args, readonly: true }
-Error.args = { ...Base.args, validationStatus: 'error' }
-NoComments.args = { ...Base.args, useComments: false }
+ReadOnly.args = {
+  ...Base.args,
+  readonly: true,
+  figmaEmbedLink:
+    'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A109',
+}
+Error.args = {
+  ...Base.args,
+  validationStatus: 'error',
+  figmaEmbedLink:
+    'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D335%253A2',
+}
+NoComments.args = {
+  ...Base.args,
+  useComments: false,
+  figmaEmbedLink:
+    'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A112',
+}
 
 export default {
   title: 'Wax/ProductionWaxEditor',
   component: ProductionWaxEditor,
+  parameters: {
+    docs: {
+      page: () => (
+        <DesignEmbed figmaEmbedLink="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A106" />
+      ),
+    },
+  },
   argTypes: {
     onBlur: {
       action: 'clicked',
