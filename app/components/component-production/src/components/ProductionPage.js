@@ -29,24 +29,15 @@ const fragmentFields = `
 `
 
 const query = gql`
-  query($id: ID!, $manuscriptId: String!) {
+  query($id: ID!) {
     currentUser {
       id
       username
       admin
     }
-
-
-
     manuscript(id: $id) {
       ${fragmentFields}
     }
-
-		convertToJats(manuscriptId: $manuscriptId) {
-      xml
-      error
-    }
-
 	}
 `
 
@@ -56,6 +47,15 @@ const getPdfQuery = gql`
   query($manuscriptId: String!, $useHtml: Boolean) {
     convertToPdf(manuscriptId: $manuscriptId, useHtml: $useHtml) {
       pdfUrl
+    }
+  }
+`
+
+const getJatsQuery = gql`
+  query($manuscriptId: String!) {
+    convertToJats(manuscriptId: $manuscriptId) {
+      xml
+      error
     }
   }
 `
@@ -161,16 +161,57 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
   )
 }
 
+const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
+  const { data, loading, error } = useQuery(getJatsQuery, {
+    variables: {
+      manuscriptId: manuscript.id,
+    },
+  })
+
+  if (loading) return <Spinner />
+  if (error)
+    return (
+      <div style={{ display: 'none' }}>
+        <CommsErrorBanner error={error} />
+      </div>
+    ) // TODO: improve this!
+
+  if (data) {
+    const jats = data.convertToJats.xml
+
+    // TODO: this section should be replaced by server-side error handling
+
+    if (data.convertToJats.error) {
+      console.error('Error making JATS: ', data.convertToJats.error)
+      resetMakingJats()
+      return null
+    }
+
+    /* eslint-disable */
+    console.log('XML Selected')
+    console.log('HTML:\n\n', manuscript.meta.source)
+    console.log('JATS:\n\n', jats)
+    // JATS XML file opens in new tab
+    let blob = new Blob([jats], { type: 'text/xml' })
+    let url = URL.createObjectURL(blob)
+    window.open(url)
+    URL.revokeObjectURL(url)
+    resetMakingJats()
+    /* eslint-disable */
+  }
+  return null
+}
+
 const ProductionPage = ({ match, ...props }) => {
   const [makingPdf, setMakingPdf] = React.useState(false)
   const [makingJats, setMakingJats] = React.useState(false)
-  const [saving, setSaving] = React.useState(false)
-  const [downloading, setDownloading] = React.useState(false)
+  // const [saving, setSaving] = React.useState(false)
+  // const [downloading, setDownloading] = React.useState(false)
 
-  const [currentJats, setCurrentJats] = React.useState({
-    xml: '',
-    error: false,
-  })
+  // const [currentJats, setCurrentJats] = React.useState({
+  //   xml: '',
+  //   error: false,
+  // })
 
   const [update] = useMutation(updateMutation)
 
@@ -185,67 +226,16 @@ const ProductionPage = ({ match, ...props }) => {
     return newQuery
   }
 
-  const { data, loading, error, refetch } = useQuery(query, {
+  const { data, loading, error } = useQuery(query, {
     variables: {
       id: match.params.version,
-      manuscriptId: match.params.version,
     },
   })
 
-  const updateQuery = async () => {
-    setSaving(true)
-
-    let newQuery = await refetch({
-      id: match.params.version,
-      manuscriptId: manuscript.id,
-    })
-
-    // doing a second pass – first pass updates manuscript, second one gets updated XML.
-    newQuery = await refetch({
-      id: match.params.version,
-      manuscriptId: manuscript.id,
-    })
-
-    await setCurrentJats(newQuery.data.convertToJats)
-    await setSaving(false)
-    return newQuery
-  }
-
-  const downloadJats = async () => {
-    if (!downloading) {
-      setDownloading(true)
-
-      if (currentJats.error) {
-        // eslint-disable-next-line
-        console.error('Error making JATS: ', currentJats.error)
-      } else {
-        // eslint-disable-next-line
-        console.log('HTML:\n\n', manuscript.meta.source)
-        // eslint-disable-next-line
-        console.log('JATS:\n\n', currentJats.xml)
-        // JATS XML file opens in new tab
-        const blob = new Blob([currentJats.xml], { type: 'text/xml' })
-        const url = URL.createObjectURL(blob)
-        window.open(url)
-        URL.revokeObjectURL(currentJats.xml)
-      }
-
-      setMakingJats(false)
-      setDownloading(false)
-    }
-  }
-
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
-  const { manuscript, currentUser, convertToJats } = data
 
-  if (!currentJats.xml) {
-    setCurrentJats(convertToJats)
-  }
-
-  if (makingJats && !saving) {
-    downloadJats()
-  }
+  const { manuscript, currentUser } = data
 
   return (
     <div>
@@ -258,23 +248,26 @@ const ProductionPage = ({ match, ...props }) => {
           }}
         />
       ) : null}
+      {makingJats ? (
+        <DownloadJatsComponent
+          manuscript={manuscript}
+          resetMakingJats={() => {
+            setMakingJats(false)
+          }}
+        />
+      ) : null}
       <Production
         currentUser={currentUser}
         file={
           manuscript.files.find(file => file.fileType === 'manuscript') || {}
         }
-        makeJats={() => {
-          setMakingJats(true)
-        }}
-        makePdf={() => {
-          setMakingPdf(true)
-        }}
+        makePdf={setMakingPdf}
+        makeJats={setMakingJats}
         manuscript={manuscript}
         updateManuscript={(a, b) => {
           // eslint-disable-next-line
           console.log('in update manuscript!')
           updateManuscript(a, b)
-          updateQuery()
         }}
       />
     </div>
