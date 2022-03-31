@@ -170,6 +170,7 @@ const convertCharacterEntities = markup => {
 
 // eslint-disable-next-line no-control-regex
 const illegalCharRegex = /[\p{Cs}\p{Cn}\x00-\x08\x0B\x0E-\x1F\x7F\x80-\x9F]/gu
+
 /** Remove surrogates, unassigned characters (including noncharacters) and control characters other than ASCII whitespace. */
 const removeIllegalCharacters = markup => markup.replace(illegalCharRegex, '')
 
@@ -205,9 +206,21 @@ const convertImages = markup => {
   // just in case (this doesn't seem like something that happens), deal with images that aren't wrapped in a figure
 
   while (output.indexOf('<img src="') > -1) {
-    const [filename] = output.split('<img src="')[1].split('">')
+    const prefilename = output.split('<img src="')[1]
+
+    // okay, we are getting an error because it ends `"/>` and we're expecting `">`
+
+    const splitAt =
+      prefilename.indexOf(`"/>`) > -1 &&
+      prefilename.indexOf(`">`) > -1 &&
+      prefilename.indexOf(`"/>`) < prefilename.indexOf(`">`)
+        ? '"/>'
+        : '">'
+
+    const filename = prefilename.split(splitAt)[0]
+
     output = output.replace(
-      `<img src="${filename}">`,
+      `<img src="${filename}${splitAt}`,
       `<graphic xlink:href="${filename}" />`,
     )
   }
@@ -764,6 +777,7 @@ const makeJats = (html, articleMeta, journalMeta) => {
   // 4 deal with article and journal metadata
 
   const journalMetaSection = makeJournalMeta(journalMeta || {})
+
   const articleMetaSection = makeArticleMeta(articleMeta || {}, abstract, title)
 
   const front = `<front>${journalMetaSection}${articleMetaSection}</front>`
