@@ -2,6 +2,7 @@ import React from 'react'
 import { ManuscriptsTable } from '../../app/components/component-manuscripts/src/style'
 import ManuscriptRow from '../../app/components/component-manuscripts/src/ManuscriptRow'
 import DefaultField from '../../app/components/component-manuscripts/src/cell-components/DefaultField'
+import DesignEmbed from '../common/utils'
 
 const ColumnsProps = [
   {
@@ -194,4 +195,11 @@ Base.args = {
 export default {
   title: 'Manuscripts/ManuscriptRow',
   component: ManuscriptsTable,
+  parameters: {
+    docs: {
+      page: () => (
+        <DesignEmbed figmaEmbedLink="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A31" />
+      ),
+    },
+  },
 }

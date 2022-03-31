@@ -1,6 +1,7 @@
 import React from 'react'
 import styled from 'styled-components'
 import Menu from '../../app/components/Menu'
+import DesignEmbed from '../common/utils'
 
 const Root = styled.div`
   display: grid;
@@ -90,4 +91,11 @@ Base.args = {
 export default {
   title: 'Manuscripts/MenuBar',
   component: Menu,
+  parameters: {
+    docs: {
+      page: () => (
+        <DesignEmbed figmaEmbedLink="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A34" />
+      ),
+    },
+  },
 }

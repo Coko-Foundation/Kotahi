@@ -3,12 +3,13 @@ import { th, grid } from '@pubsweet/ui-toolkit'
 import styled, { css } from 'styled-components'
 import Messages from '../../app/components/component-chat/src/Messages/Messages'
 import ChatInput from '../../app/components/component-chat/src/SuperChatInput/SuperChatInput'
+import DesignEmbed from '../common/utils'
 
 const MessageContainer = styled.section`
   background: rgb(255, 255, 255);
   display: grid;
-  min-width: 100%;
   min-height: 650px;
+  min-width: 100%;
 
   ${props =>
     props.channels
@@ -213,5 +214,12 @@ Base.args = props
 export default {
   title: 'Manuscripts/Chat',
   component: MessageContainer,
+  parameters: {
+    docs: {
+      page: () => (
+        <DesignEmbed figmaEmbedLink="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A22" />
+      ),
+    },
+  },
   argTypes: {},
 }
