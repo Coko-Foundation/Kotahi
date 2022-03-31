@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { th, override, grid } from '@pubsweet/ui-toolkit'
+import { th, override } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../shared/lightenBy'
 import { TabsContainer } from './Tabs'
 
@@ -44,7 +44,6 @@ const HideChatButton = styled.button`
   display: flex;
   float: right;
   font-size: 16px;
-  margin: 5px 0 5px ${grid(2)};
   padding: 6px 12px;
 
   &:hover {
@@ -104,7 +103,11 @@ const HiddenTabs = ({
       {sections.map(section => (
         <div
           key={section.key}
-          style={{ display: section.key === activeKey ? 'block' : 'none' }}
+          style={{
+            display: section.key === activeKey ? 'flex' : 'none',
+            height: '100%',
+            flexDirection: 'column',
+          }}
         >
           {section.content}
         </div>

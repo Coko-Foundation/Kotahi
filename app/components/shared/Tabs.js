@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled, { css } from 'styled-components'
-import { th, override, grid } from '@pubsweet/ui-toolkit'
+import { th, override } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../shared/lightenBy'
 
 const Tab = styled.div`
@@ -52,7 +52,6 @@ const HideChatButton = styled.button`
   display: flex;
   float: right;
   font-size: 16px;
-  margin: 5px 0 5px ${grid(2)};
   padding: 6px 12px;
 
   &:hover {
