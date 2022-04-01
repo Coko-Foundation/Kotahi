@@ -403,8 +403,13 @@ strong {
   table {
     border-collapse: collapse;
     text-align: left;
-    break-inside: avoid;
+    /* break-inside: avoid; */
   }
+
+	tr {
+		break-inside: avoid;
+	}
+
   td,
   th {
     padding: 2px;
