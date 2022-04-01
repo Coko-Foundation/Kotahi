@@ -17,7 +17,7 @@ const htmlToJatsTagMap = {
   li: 'list-item',
   p: 'p',
   u: 'underline',
-  figure: 'fig',
+  // figure: 'fig',
   // ?: 'disp-formula',
   // img: 'graphic',
   // ?: 'inline-formula',
@@ -52,6 +52,7 @@ const jatsTagsThatDontNeedConversion = [
   'list-item',
   '@sec',
   '@title',
+  'fig',
 ]
 
 /** Finds all XML tags and:
@@ -174,56 +175,32 @@ const illegalCharRegex = /[\p{Cs}\p{Cn}\x00-\x08\x0B\x0E-\x1F\x7F\x80-\x9F]/gu
 /** Remove surrogates, unassigned characters (including noncharacters) and control characters other than ASCII whitespace. */
 const removeIllegalCharacters = markup => markup.replace(illegalCharRegex, '')
 
-const convertImages = markup => {
-  // <img src="#1"> => <graphic xlink:href=”#1” />
+const convertImages = html => {
+  const dom = htmlparser2.parseDOM(html)
 
-  let output = markup
+  const $ = cheerio.load(dom, {
+    xmlMode: true,
+  })
 
-  // first, deal with imgs inside of figures, with or without captions
+  $('figure').replaceWith((index, el) => {
+    const caption = $(el).find('figcaption').html() // this comes back null if not found
+    const graphicElement = $(el).find('img')
+    const graphicSrc = graphicElement.attr('src')
+    // 1 get caption if there is one
+    // 2 get image if there is one
+    // 3 change image tag
+    // 4 change images attribute
+    // 5 change figure tags
+    // 6. clear out all content
+    // 7. add caption if there is one
+    // 8. add image
+    const outCaption = caption ? `<caption><p>${caption}</p></caption>` : ''
+    const outGraphic = `<graphic xlink:href="${graphicSrc}" />`
+    const output = `<fig>${outCaption}${outGraphic}</fig>`
+    return output
+  })
 
-  while (output.indexOf('<figure><img src="') > -1) {
-    const [filename, ...theRest] = output.split('<img src="')[1].split('">')
-    let fixedCaption = ''
-    const [caption] = theRest.join('">').split('</figure>')
-
-    // <figcaption class="decoration">text</figcaption> => <caption><p>text</p></caption>
-
-    if (caption) {
-      fixedCaption = caption.replace(
-        /<figcaption class="decoration">((?:(?!<\/figcaption>)[\s\S])*)<\/figcaption>/g,
-        '<caption><p>$1</p></caption>',
-      )
-    }
-
-    // finally, if there's a caption, it needs to come BEFORE the image in JATS syntax
-
-    output = output.replace(
-      `<figure><img src="${filename}">${caption}`,
-      `<figure>${fixedCaption}<graphic xlink:href="${filename}" />`,
-    )
-  }
-
-  // just in case (this doesn't seem like something that happens), deal with images that aren't wrapped in a figure
-
-  while (output.indexOf('<img src="') > -1) {
-    const prefilename = output.split('<img src="')[1]
-
-    // okay, we are getting an error because it ends `"/>` and we're expecting `">`
-
-    const splitAt =
-      prefilename.indexOf(`"/>`) > -1 &&
-      prefilename.indexOf(`">`) > -1 &&
-      prefilename.indexOf(`"/>`) < prefilename.indexOf(`">`)
-        ? '"/>'
-        : '">'
-
-    const filename = prefilename.split(splitAt)[0]
-
-    output = output.replace(
-      `<img src="${filename}${splitAt}`,
-      `<graphic xlink:href="${filename}" />`,
-    )
-  }
+  const output = $.html()
 
   return output
 }
@@ -781,7 +758,6 @@ const makeJats = (html, articleMeta, journalMeta) => {
   const articleMetaSection = makeArticleMeta(articleMeta || {}, abstract, title)
 
   const front = `<front>${journalMetaSection}${articleMetaSection}</front>`
-
   let body = htmlToJats(deFrontedHtml)
   // this is to clean out the bad table tags
   body = replaceAll(body, '<@title>', '<title>')
