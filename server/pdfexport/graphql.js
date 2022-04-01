@@ -118,6 +118,19 @@ const pdfHandler = async manuscriptId => {
 
   await fsPromised.mkdir(dirName, { recursive: true })
 
+  articleData.parsedSubmission = {
+    objectType: articleData.submission.objectType,
+    topic: articleData.submission.topics,
+    authors: articleData.submission.authorNames,
+    AuthorCorrespondence: articleData.submission.AuthorCorrespondence,
+    conflictOfInterest: articleData.submission.competingInterests,
+    Funding: articleData.submission.funding,
+    dateReceived: articleData.submission.dateReceived,
+    DateAccepted: articleData.submission.dateAccepted,
+    DatePublished: articleData.submission.datePublished,
+    abstract: articleData.submission.abstract,
+  }
+
   const outHtml = applyTemplate(articleData)
 
   await fsPromised.appendFile(`${dirName}/index.html`, outHtml)
