@@ -1,10 +1,11 @@
 import React from 'react'
-import { useQuery, useMutation } from '@apollo/client'
+import { gql, useQuery, useMutation } from '@apollo/client'
 import { Button } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 
 import config from 'config'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import getQueryStringByName from '../../../../shared/getQueryStringByName'
 import queries from '../graphql/queries'
 import mutations from '../graphql/mutations'
 import { Container, Placeholder } from '../style'
@@ -21,6 +22,55 @@ import {
   HeadingWithAction,
   CommsErrorBanner,
 } from '../../../shared'
+
+console.warn('tell me a thing')
+
+const articleToApprove = getQueryStringByName('articleToApprove')
+
+const teamFields = `
+  id
+  name
+  role
+  manuscript {
+    ${articleToApprove}
+  }
+  members {
+    id
+    user {
+      id
+      username
+    }
+  }
+`
+
+// eslint-disable-next-line no-console
+console.log('about to create team mutation')
+// eslint-disable-next-line no-console
+console.log(`all about ${teamFields}`)
+
+const createTeamMutation = gql`
+    mutation($input: TeamInput!) {
+      createTeam(input: $input) {
+        ${teamFields}
+      }
+    }
+  `
+
+const updateTeamMemberByManuscriptIdMutation = gql`
+  mutation($id: ID!, $input: String) {
+    updateTeamMemberByManuscriptId(id: $id, input: $input) {
+      id
+      user {
+        id
+        username
+        profilePicture
+        online
+      }
+      status
+      isShared
+    }
+  }
+`
 
 const getLatestVersion = manuscript => {
   if (
@@ -54,6 +104,29 @@ const Dashboard = ({ history, ...props }) => {
   const { loading, data, error } = useQuery(queries.dashboard, {
     fetchPolicy: 'cache-and-network',
   })
+
+  // eslint-disable-next-line no-console
+  console.log('about to hook mutations')
+
+  const [createTeam] = useMutation(createTeamMutation)
+
+  const [updateTeamMemberByManuscriptId] = useMutation(
+    updateTeamMemberByManuscriptIdMutation,
+  )
+
+  if (articleToApprove) {
+    // eslint-disable-next-line no-console
+    console.log(`about to approve article ${articleToApprove}`)
+
+    createTeam()
+    updateTeamMemberByManuscriptId()
+
+    /* TODO
+    make sure there is a team of 'authors' in the teams table with the relevant manuscript_id
+    create team if it doesn't exist team('author', manuscript_id, )
+    add a row in the team_members table signifying that this user_id is in the team just mentioned
+    updates the invitations table to 'approved', and update the user_id to the logged in user */
+  }
 
   const [reviewerRespond] = useMutation(mutations.reviewerResponseMutation)
 
@@ -101,6 +174,8 @@ const Dashboard = ({ history, ...props }) => {
   // Editors are always linked to the parent/original manuscript, not to versions
 
   const urlFrag = config.journal.metadata.toplevel_urlfragment
+
+  console.warn('tell me all the things')
 
   return (
     <Container>

@@ -262,8 +262,8 @@ const Manuscripts = ({ history, ...props }) => {
         position="top-center"
         rtl={false}
       />
-      <Columns>
-        <div style={{ overflowY: 'scroll', paddingTop: '16px' }}>
+      <Columns style={{ display: !isAdminChatOpen ? 'block' : 'grid' }}>
+        <div style={{ width: '100%', overflowY: 'scroll', paddingTop: '16px' }}>
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
             <HeadingInFlexRow>Manuscripts</HeadingInFlexRow>
 
