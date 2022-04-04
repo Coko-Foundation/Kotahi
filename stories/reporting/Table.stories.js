@@ -1,7 +1,26 @@
 import React from 'react'
 import { Table } from '../../app/components/component-reporting/src'
+import DesignEmbed from '../common/utils'
 
-export const Base = args => <Table {...args} />
+export const Base = args => (
+  <>
+    {args.figmaEmbedLink && (
+      <>
+        <h2 style={{ color: '#333333' }}>Design</h2>
+        <iframe
+          allowFullScreen
+          height={350}
+          src={args.figmaEmbedLink}
+          style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
+          title="figma embed"
+          width="100%"
+        />
+        <h2 style={{ color: '#333333' }}>Component</h2>
+      </>
+    )}
+    <Table {...args} />
+  </>
+)
 export const WithHeadings = Base.bind()
 export const WithSomeHeadings = Base.bind()
 
@@ -46,6 +65,8 @@ WithHeadings.args = {
     { heading: 'Published date', width: '7em' },
   ],
   rows,
+  figmaEmbedLink:
+    'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A64',
 }
 
 WithSomeHeadings.args = {
@@ -61,10 +82,19 @@ WithSomeHeadings.args = {
     { width: '7em' },
   ],
   rows,
+  figmaEmbedLink:
+    'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A67',
 }
 
 export default {
   title: 'Reporting/Table',
   component: Table,
+  parameters: {
+    docs: {
+      page: () => (
+        <DesignEmbed figmaEmbedLink="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A61" />
+      ),
+    },
+  },
   argTypes: {},
 }

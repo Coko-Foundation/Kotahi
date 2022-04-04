@@ -9,11 +9,11 @@ const Button = styled.a`
   /* background-color: ${th('colorPrimary')}; */
   background-color: ${props =>
     props.isTopBarOpen ? th('colorPrimary') : th('colorTextReverse')};
-  border-radius: 10px;
-  margin: ${grid(1)} ${grid(1)} ${grid(0)} ${grid(0)};
-  padding: 4px 9px;
   border: 1px solid #8e8e8e;
+  border-radius: 10px;
   height: fit-content;
+  margin: ${grid(1)} ${grid(1)} 0 0;
+  padding: 4px 0;
 
   &:hover {
     background-color: ${props =>
@@ -23,16 +23,19 @@ const Button = styled.a`
   }
 
   svg {
-    margin-right: 0.1em;
     stroke: ${props =>
       props.isTopBarOpen ? th('colorTextReverse') : th('colorText')};
-    width: 1em;
+    width: 0.8em;
   }
 `
 
 const ToolbarButton = ({ onClick, isTopBarOpen }) => {
   return (
-    <Button isTopBarOpen={isTopBarOpen} onClick={onClick}>
+    <Button
+      isTopBarOpen={isTopBarOpen}
+      onClick={onClick}
+      title={isTopBarOpen ? 'Hide formatting' : 'Formatting'}
+    >
       {isTopBarOpen ? <Icon>chevron-down</Icon> : <Icon>chevron-up</Icon>}
     </Button>
   )

@@ -1,4 +1,5 @@
 const models = require('@pubsweet/models')
+// eslint-disable-next-line no-unused-vars
 const { parseString } = require('xml2js')
 const { makeJats } = require('../utils/jatsUtils')
 const publicationMetadata = require('../pdfexport/pdfTemplates/publicationMetadata')
@@ -56,13 +57,14 @@ const jatsHandler = async manuscriptId => {
   let parseError = null
 
   // check if this is valid XML – this is NOT checking whether this is valid JATS
-  parseString(jats, err => {
-    if (err) {
-      console.error(err)
-      // send back the error if there is an error
-      parseError = JSON.stringify(err, Object.getOwnPropertyNames(err))
-    }
-  })
+  // Below code throws syntax error in console and on XML Download
+  // parseString(jats, err => {
+  //   if (err) {
+  //     console.error(err)
+  //     // send back the error if there is an error
+  //     parseError = JSON.stringify(err, Object.getOwnPropertyNames(err))
+  //   }
+  // })
 
   return { jats, error: parseError }
 }

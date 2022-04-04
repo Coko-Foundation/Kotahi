@@ -5,6 +5,7 @@ import { Info } from '../style'
 
 const EditorSection = ({
   manuscript,
+  saveSource,
   onChange,
   onBlur,
   readonly,
@@ -24,10 +25,11 @@ const EditorSection = ({
   )
     return <Info>No supported view of the file</Info>
 
-  React.useEffect(() => {
-    // If we have an onBlur function specified, fire it when there's a dismount
-    return () => (onBlur ? onBlur() : null)
-  }, [])
+  // React.useEffect(() => {
+  //   // If we have an onBlur function specified, fire it when there's a dismount
+  //   console.log('useEffect in EditorSection running')
+  //   return () => (onBlur ? onBlur() : null)
+  // }, [])
 
   const editorTeam = manuscript?.teams?.find(team => {
     return team.role.toLowerCase().includes('editor')
@@ -49,12 +51,15 @@ const EditorSection = ({
 
   const isAuthorMode = !!(isCurrentUserAuthor && readonly)
 
+  console.log('rendering EditorSection again')
+
   return (
     <FullWaxEditor
       authorComments={isAuthorMode}
-      onBlur={readonly && !isAuthorMode ? null : onBlur}
+      // onChange={readonly && !isAuthorMode ? null : onBlur}
       // onChange={readonly && !isAuthorMode ? null : onChange}
       readonly={readonly}
+      saveSource={saveSource}
       useComments={
         !!(
           isCurrentUserEditor ||

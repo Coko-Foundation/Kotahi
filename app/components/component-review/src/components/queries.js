@@ -184,7 +184,7 @@ export const query = gql`
         }
       }
     }
-    
+
     users {
       id
       username
@@ -227,14 +227,6 @@ export const publishManuscriptMutation = gql`
         succeeded
         errorMessage
       }
-    }
-  }
-`
-
-export const sharedReviews = gql`
-  query($id: ID) {
-    sharedReviews(id: $id) {
-      ${reviewFields}
     }
   }
 `

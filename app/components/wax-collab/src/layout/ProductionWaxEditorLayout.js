@@ -26,6 +26,8 @@ import {
   CommentTrackTools,
   CommentTrackOptions,
 } from './CommentsStyles'
+import 'wax-prosemirror-core/dist/index.css'
+import 'wax-prosemirror-services/dist/index.css'
 
 const getNotes = main => {
   const notes = DocumentHelpers.findChildrenByType(
@@ -48,7 +50,7 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
   editor,
 }) => {
   const {
-    view: { main },
+    pmViews: { main },
     options,
   } = useContext(WaxContext)
 
@@ -117,7 +119,7 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
           </ReadOnlyEditorDiv>
         ) : (
           <>
-            <Menu>
+            <Menu className="waxmenu">
               <TopBar />
             </Menu>
             <ProductionEditorDiv>

@@ -1,5 +1,5 @@
 import { DefaultSchema } from 'wax-prosemirror-utilities'
-import { WaxSelectionPlugin } from 'wax-prosemirror-plugins'
+// import { WaxSelectionPlugin } from 'wax-prosemirror-plugins'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { columnResizing, tableEditing } from 'prosemirror-tables'
 import {
@@ -41,11 +41,7 @@ import {
   JatsAnnotationListTooolGroupService,
 } from '../CustomWaxToolGroups'
 import JatsTagsService from '../JatsTags'
-
-const updateTrackStatus = change => {
-  // this returns "true" when Suggesting Mode is turned on.
-  // console.log(change)
-}
+import CharactersList from './CharactersList'
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
@@ -53,7 +49,11 @@ const updateTitle = title => {
 }
 
 const productionWaxEditorConfig = readOnlyComments => ({
-  EnableTrackChangeService: { enabled: false, toggle: true, updateTrackStatus },
+  EnableTrackChangeService: {
+    enabled: false,
+    toggle: true,
+    updateTrackStatus: () => true,
+  },
   AcceptTrackChangeService: {
     own: {
       accept: true,
@@ -115,11 +115,12 @@ const productionWaxEditorConfig = readOnlyComments => ({
     },
   ],
 
-  PmPlugins: [columnResizing(), tableEditing(), WaxSelectionPlugin],
+  PmPlugins: [columnResizing(), tableEditing() /* WaxSelectionPlugin */],
 
   RulesService: [emDash, ellipsis],
 
   ShortCutsService: {},
+  SpecialCharactersService: CharactersList,
 
   TitleService: { updateTitle },
   services: [

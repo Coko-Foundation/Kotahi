@@ -39,6 +39,21 @@ const HeadingInFlexRow = styled(Heading)`
   flex-grow: 10;
 `
 
+const OuterContainer = styled(Container)`
+  overflow: hidden;
+  padding: 0;
+`
+
+const ManuscriptsPane = styled.div`
+  overflow-y: scroll;
+  padding: 16px 16px 0 16px;
+`
+
+const FlexRow = styled.div`
+  display: flex;
+  justify-content: space-between;
+`
+
 const Manuscripts = ({ history, ...props }) => {
   const {
     client,
@@ -242,7 +257,7 @@ const Manuscripts = ({ history, ...props }) => {
 
   const channels = [
     {
-      id: systemWideDiscussionChannel.data.systemWideDiscussionChannel.id,
+      id: systemWideDiscussionChannel?.data?.systemWideDiscussionChannel?.id,
       name: 'Admin discussion',
     },
   ]
@@ -250,7 +265,7 @@ const Manuscripts = ({ history, ...props }) => {
   const hideChat = () => setIsAdminChatOpen(false)
 
   return (
-    <Container style={{ padding: '0px 16px' }}>
+    <OuterContainer>
       <ToastContainer
         autoClose={5000}
         closeOnClick
@@ -263,8 +278,8 @@ const Manuscripts = ({ history, ...props }) => {
         rtl={false}
       />
       <Columns>
-        <div style={{ overflowY: 'scroll', paddingTop: '16px' }}>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+        <ManuscriptsPane>
+          <FlexRow>
             <HeadingInFlexRow>Manuscripts</HeadingInFlexRow>
 
             {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
@@ -295,7 +310,7 @@ const Manuscripts = ({ history, ...props }) => {
             {!isAdminChatOpen && (
               <ShowChatButton onClick={() => setIsAdminChatOpen(true)} />
             )}
-          </div>
+          </FlexRow>
 
           {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
             <SelectAllField>
@@ -363,13 +378,13 @@ const Manuscripts = ({ history, ...props }) => {
               totalCount={totalCount}
             />
           </div>
-        </div>
+        </ManuscriptsPane>
 
         {/* Admin Discussion, Video Chat, Hide Chat, Chat component */}
         {isAdminChatOpen && (
           <MessageContainer
             channelId={
-              systemWideDiscussionChannel.data.systemWideDiscussionChannel.id
+              systemWideDiscussionChannel?.data?.systemWideDiscussionChannel?.id
             }
             channels={channels}
             chatRoomId={chatRoomId}
@@ -388,7 +403,7 @@ const Manuscripts = ({ history, ...props }) => {
           />
         </Modal>
       )}
-    </Container>
+    </OuterContainer>
   )
 }
 

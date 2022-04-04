@@ -1,6 +1,7 @@
 import React from 'react'
 import ProductionWaxEditor from '../../app/components/wax-collab/src/ProductionWaxEditor'
 import { makeJats } from '../../server/utils/jatsUtils'
+import DesignEmbed from '../common/utils'
 
 const initialHtml = `<h1>The Title <span class="deletion" data-id="" data-user="-" data-username="demo" data-date="0" data-group="" data-viewid="" style="color: indianred;">of This Paper</span></h1><h2>By Author 1, Author 2, <span class="insertion" data-id="" data-user="-" data-username="demo" data-date="0" data-group="" data-viewid="" style="color: royalblue;">Additional Author, </span>Author 3, Author 4</h2><p class="paragraph">(author affliliations etc.)</p><section class="acknowledgementsSection"><p  class="paragraph">These are acknowledgements.</p></section><p class="paragraph">Some <strong><em>styled</em></strong> text<footnote id="64da6743-5c79-4bbe-b27b-a700748d80ed">This is the note text.</footnote></p><p class="paragraph">A second <span class="comment" data-id="807c5dba-f8a4-4f64-b1cd-cf9e83a2f64c" data-conversation="[{&quot;content&quot;:&quot;This is a note.&quot;,&quot;displayName&quot;:&quot;dummy editor&quot;,&quot;timestamp&quot;:1632132399423}]" data-viewid="main" data-group="main">paragraph</span>.</p><section class="reflist"><h1 class="referenceheader">adfadf</h1><p class="mixedcitation">dfaljkdf</p><p class="mixedcitation">fasdfasdf</p><p class="mixedcitation">adfasdfasd <span class="deletion"><span class="small-caps">fffasdf</span></span></p><p class="mixedcitation">afasfd</p></section><section class="appendix"><h1 class="appendixheader">Appendix 1</h1><p class="paragraph">Appendix content . . .</p></section>`
 
@@ -178,4 +179,11 @@ export const Base = args => <WaxPlusJATS {...args} />
 export default {
   title: 'JATS/HTML to JATS',
   component: WaxPlusJATS,
+  parameters: {
+    docs: {
+      page: () => (
+        <DesignEmbed figmaEmbedLink="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A38" />
+      ),
+    },
+  },
 }

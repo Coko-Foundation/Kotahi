@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Formik } from 'formik'
-import { set } from 'lodash'
+import { set, debounce } from 'lodash'
 import DecisionForm from './decision/DecisionForm'
 import DecisionReviews from './decision/DecisionReviews'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
@@ -12,7 +12,7 @@ import EditorSection from './decision/EditorSection'
 import Publish from './Publish'
 import { AdminSection } from './style'
 import {
-  Tabs,
+  HiddenTabs,
   SectionContent,
   SectionHeader,
   SectionRow,
@@ -59,19 +59,20 @@ const DecisionVersion = ({
   const addEditor = (manuscript, label, isCurrent, user) => {
     const isThisReadOnly = !isCurrent
 
+    const handleSave = useCallback(
+      debounce(source => {
+        console.log('updateManuscript firing in DecisionVersion.js')
+        updateManuscript(manuscript.id, { meta: { source } })
+      }, 2000),
+    )
+
     return {
       content: (
         <EditorSection
           currentUser={user}
           manuscript={manuscript}
-          onBlur={
-            isThisReadOnly
-              ? null
-              : source => {
-                  updateManuscript(manuscript.id, { meta: { source } })
-                }
-          }
           readonly={isThisReadOnly}
+          saveSource={isThisReadOnly ? null : handleSave}
         />
       ),
       key: `editor_${manuscript.id}`,
@@ -257,7 +258,6 @@ const DecisionVersion = ({
                 canHideReviews={canHideReviews}
                 manuscript={version}
                 reviewers={reviewers}
-                sharedReviews={version.reviews}
                 updateReview={updateReview}
                 urlFrag={urlFrag}
               />
@@ -323,7 +323,7 @@ const DecisionVersion = ({
       }}
     >
       {props => (
-        <Tabs
+        <HiddenTabs
           defaultActiveKey={version.id}
           sections={[
             decisionSection({ ...props }),

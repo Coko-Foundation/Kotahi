@@ -1,3 +1,4 @@
+// TODO: Rename file to ShowChatButton correct all imports
 import React from 'react'
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
@@ -13,7 +14,7 @@ const ShowChatFloatRightButton = styled.button`
   display: flex;
   float: right;
   font-size: 16px;
-  margin: 0 0 ${grid(1)} ${grid(2)};
+  margin: 0 0 0 ${grid(2)};
   padding: 4px 12px;
 
   &:hover {

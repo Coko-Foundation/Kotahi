@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import styled, { css } from 'styled-components'
+import styled from 'styled-components'
 import { th, override } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../shared/lightenBy'
+import { TabsContainer } from './Tabs'
 
 const Tab = styled.div`
   background-color: ${({ active }) =>
@@ -19,24 +20,15 @@ const Tab = styled.div`
   ${override('ui.Tab')}
 `
 
-export const TabsContainer = styled.div`
-  display: flex;
-  justify-content: space-between;
+const HiddenTabsContainer = styled(TabsContainer)`
+  ${props => props.sticky && `background-color: ${th('colorBackgroundHue')};`}
+  ${props => props.sticky && 'position: sticky;'}
+  ${props => props.sticky && 'top: -16px;'}
+  ${props => props.sticky && 'z-index: 999;'}
 
-  margin-top: ${() =>
-    ['ncrc'].includes(process.env.INSTANCE_NAME) ? '16px' : '0'};
-
-  ${props =>
-    props.background &&
-    css`
-      background-color: ${th(props.background)};
-    `}
-
-  ${props =>
-    props.gridArea &&
-    css`
-      grid-area: ${props.gridArea};
-    `};
+  & ~ div .waxmenu {
+    ${props => props.sticky && 'top: 23px;'};
+  }
 `
 
 const TabContainer = styled.div.attrs(props => ({
@@ -59,7 +51,7 @@ const HideChatButton = styled.button`
   }
 `
 
-const Tabs = ({
+const HiddenTabs = ({
   sections,
   onChange,
   defaultActiveKey = null,
@@ -81,13 +73,17 @@ const Tabs = ({
     }
   }
 
-  const currentContent = (
-    sections.find(section => section.key === activeKey) || {}
-  ).content
+  // const currentContent = (
+  //   sections.find(section => section.key === activeKey) || {}
+  // ).content
 
   return (
     <>
-      <TabsContainer background={background} gridArea={tabsContainerGridArea}>
+      <HiddenTabsContainer
+        background={background}
+        gridArea={tabsContainerGridArea}
+        sticky={false}
+      >
         <div style={{ display: 'flex' }}>
           {sections.map(({ key, label }) => (
             <TabContainer
@@ -102,12 +98,23 @@ const Tabs = ({
         {hideChat && (
           <HideChatButton onClick={hideChat}>Hide Chat</HideChatButton>
         )}
-      </TabsContainer>
+      </HiddenTabsContainer>
 
-      {activeKey && currentContent}
+      {sections.map(section => (
+        <div
+          key={section.key}
+          style={{
+            display: section.key === activeKey ? 'flex' : 'none',
+            height: '100%',
+            flexDirection: 'column',
+          }}
+        >
+          {section.content}
+        </div>
+      ))}
     </>
   )
 }
 
 /* eslint-disable import/prefer-default-export */
-export { Tabs }
+export { HiddenTabs }
