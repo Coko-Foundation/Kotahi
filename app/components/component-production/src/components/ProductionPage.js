@@ -74,6 +74,7 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
   const [modalIsOpen, setModalIsOpen] = React.useState(true)
 
   const { data, loading, error } = useQuery(getPdfQuery, {
+    fetchPolicy: 'cache-and-network',
     variables: {
       manuscriptId: manuscript.id,
       useHtml,
@@ -163,6 +164,7 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
 
 const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
   const { data, loading, error } = useQuery(getJatsQuery, {
+    fetchPolicy: 'cache-and-network',
     variables: {
       manuscriptId: manuscript.id,
     },
