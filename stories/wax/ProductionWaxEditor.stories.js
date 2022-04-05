@@ -13,7 +13,7 @@ export const Base = args => (
           src={args.figmaEmbedLink}
           style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
           title="figma embed"
-          width={800}
+          width="100%"
         />
         <h2 style={{ color: '#333333' }}>Component</h2>
       </>
