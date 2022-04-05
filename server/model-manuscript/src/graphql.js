@@ -1,10 +1,11 @@
 /* eslint-disable prefer-destructuring */
 const { ref } = require('objection')
 const axios = require('axios')
-const { mergeWith, isArray } = require('lodash')
+const { mergeWith, isArray, map } = require('lodash')
 const config = require('config')
 const { pubsubManager } = require('@coko/server')
 const models = require('@pubsweet/models')
+const cheerio = require('cheerio')
 
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
@@ -15,6 +16,8 @@ const { stripSensitiveItems } = require('./manuscriptUtils')
 const {
   getFilesWithUrl,
   replaceImageSrc,
+  base64Images,
+  uploadImages,
 } = require('../../utils/fileStorageUtils')
 
 const {
@@ -108,6 +111,41 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
   if (['ncrc', 'colab'].includes(process.env.INSTANCE_NAME)) {
     updatedMs.submission.editDate = new Date().toISOString().split('T')[0]
+  }
+
+  const { source } = updatedMs.meta
+  const images = base64Images(source)
+
+  if (images.length > 0) {
+    const uploadedImages = []
+
+    await Promise.all(
+      map(images, async image => {
+        if (image.blob) {
+          const uploadedImage = await uploadImages(image, updatedMs.id)
+          uploadedImages.push(uploadedImage)
+        }
+      }),
+    )
+
+    const uploadedImagesWithUrl = await getFilesWithUrl(uploadedImages)
+
+    const $ = cheerio.load(source)
+
+    map(images, (image, index) => {
+      const elem = $('img').get(image.index)
+      const $elem = $(elem)
+      $elem.attr('data-fileid', uploadedImagesWithUrl[index].id)
+      $elem.attr('alt', uploadedImagesWithUrl[index].name)
+      $elem.attr(
+        'src',
+        uploadedImagesWithUrl[index].storedObjects.find(
+          storedObject => storedObject.type === 'medium',
+        ).url,
+      )
+    })
+
+    updatedMs.meta.source = $.html()
   }
 
   return models.Manuscript.query().updateAndFetchById(id, updatedMs)

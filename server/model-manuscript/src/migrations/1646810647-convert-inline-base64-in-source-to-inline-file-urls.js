@@ -13,9 +13,9 @@ const { getFilesWithUrl } = require('../server/utils/fileStorageUtils')
 /* eslint-disable-next-line import/no-unresolved */
 const Manuscript = require('../server/model-manuscript/src/manuscript')
 
-const bufferToStream = myBuuffer => {
+const bufferToStream = myBuffer => {
   const tmp = new Duplex()
-  tmp.push(myBuuffer)
+  tmp.push(myBuffer)
   tmp.push(null)
   return tmp
 }
@@ -110,7 +110,6 @@ exports.up = async knex => {
               map(images, async image => {
                 if (image.blob) {
                   const uploadedImage = await uploadImages(image, manuscript.id)
-
                   uploadedImages.push(uploadedImage)
                 }
               }),
