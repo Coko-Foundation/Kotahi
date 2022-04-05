@@ -41,7 +41,7 @@ const GetUserByUsername = props => {
 
 const Avatar = props => {
   const journal = React.useContext(JournalContext)
-  const urlFrag = journal.metadata.toplevel_urlfragment
+  const urlFrag = journal ? journal.metadata.toplevel_urlfragment : ''
 
   const {
     user,
