@@ -61,9 +61,28 @@ const userIsAdmin = rule({ cache: 'contextual' })(
 
 const parentManuscriptIsPublished = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
+    console.log(parent, 0) // eslint-disable-line no-console
+
+    if (parent.storedObjects && !parent.objectId) return false
+
+    let review
+    if (parent.objectId) {
+      const reviewComment = await ctx.connectors.ReviewComment.model
+        .query()
+        .findById(parent.objectId)
+
+      if (reviewComment) {
+        review = await ctx.connectors.Review.model
+          .query()
+          .findById(reviewComment.reviewId)
+      }
+    }
+
     const manuscript = await ctx.connectors.Manuscript.model
       .query()
-      .findById(parent.manuscriptId)
+      .findById(
+        review ? review.manuscriptId : parent.manuscriptId || parent.objectId,
+      )
 
     return !!manuscript.published
   },
@@ -222,6 +241,8 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
   if (!ctx.user) return false
   let manuscriptId
 
+  console.log(args) // eslint-disable-line no-console
+
   if (args.meta && args.meta.manuscriptId) {
     // Meta is supplied for createFile
     // eslint-disable-next-line prefer-destructuring
@@ -230,7 +251,13 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
     // id is supplied for deletion
     const file = await ctx.connectors.File.model.query().findById(args.id)
     // eslint-disable-next-line prefer-destructuring
-    manuscriptId = file.manuscriptId
+    const manuscript = await ctx.connectors.Manuscript.model
+      .query()
+      .findById(file.objectId)
+    const review = await ctx.connectors.Review.model
+      .query()
+      .findById(file.objectId)
+    manuscriptId = manuscript.id || review.manuscriptId
   } else {
     return false
   }
@@ -253,10 +280,31 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     if (!ctx.user) return false
 
-    const manuscript = await ctx.connectors.File.model
-      .relatedQuery('manuscript')
-      .for(parent.id)
-      .first()
+    console.log(parent, 1) // eslint-disable-line no-console
+
+    if (parent.storedObjects && !parent.id) return true
+
+    const file = await ctx.connectors.File.model.query().findById(parent.id)
+
+    const reviewComment = await ctx.connectors.ReviewComment.model
+      .query()
+      .findById(file.objectId)
+    let review
+
+    console.log(reviewComment) // eslint-disable-line no-console
+
+    if (reviewComment) {
+      review = await ctx.connectors.Review.model
+        .query()
+        .findById(reviewComment.reviewId)
+
+      console.log(review) // eslint-disable-line no-console
+    }
+
+
+    const manuscript = await ctx.connectors.Manuscript.model
+      .query()
+      .findById(review ? review.manuscriptId : file.objectId)
 
     if (!manuscript) {
       console.error('File without owner manuscript encountered:', parent)
@@ -288,10 +336,32 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
 })(async (parent, args, ctx, info) => {
   if (!ctx.user) return false
 
-  const manuscript = await ctx.connectors.File.model
-    .relatedQuery('manuscript')
-    .for(parent.id)
-    .first()
+  console.log(parent, 2) // eslint-disable-line no-console
+
+  if (!parent.id) return false
+
+  const file = await ctx.connectors.File.model.query().findById(parent.id)
+
+  const reviewComment = await ctx.connectors.ReviewComment.model
+    .query()
+    .findById(file.objectId)
+
+  let review
+
+  console.log(reviewComment) // eslint-disable-line no-console
+
+  if(reviewComment) {
+    review = await ctx.connectors.Review.model
+      .query()
+      .findById(reviewComment.reviewId)
+
+    console.log(review) // eslint-disable-line no-console
+  }
+
+
+  const manuscript = await ctx.connectors.Manuscript.model
+    .query()
+    .findById(review ? review.manuscriptId : file.objectId)
 
   if (!manuscript) {
     console.error('File without owner manuscript encountered:', parent)
