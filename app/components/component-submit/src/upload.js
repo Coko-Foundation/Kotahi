@@ -122,6 +122,7 @@ const createFileMutation = gql`
     createFile(file: $file, meta: $meta) {
       id
       name
+      objectId
       storedObjects {
         type
         key

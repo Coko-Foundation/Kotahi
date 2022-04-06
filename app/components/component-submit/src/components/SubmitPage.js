@@ -48,6 +48,7 @@ const createFileMutation = gql`
       updated
       name
       tags
+      objectId
       storedObjects {
         key
         mimetype

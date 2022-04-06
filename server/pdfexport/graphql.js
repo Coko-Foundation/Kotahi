@@ -10,6 +10,7 @@ const models = require('@pubsweet/models')
 const applyTemplate = require('./applyTemplate')
 const css = require('./pdfTemplates/styles')
 const makeZip = require('./ziputils.js')
+
 const {
   getFilesWithUrl,
   replaceImageSrc,

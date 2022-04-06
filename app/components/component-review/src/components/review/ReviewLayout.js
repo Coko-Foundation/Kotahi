@@ -24,7 +24,7 @@ const Reviewerdisclaimer = styled.span`
 `
 
 const hasManuscriptFile = manuscript =>
-  !!manuscript?.files?.find(file => file.fileType === 'manuscript')
+  !!manuscript?.files?.find(file => file.tags.includes('manuscript'))
 
 const ReviewLayout = ({
   currentUser,
