@@ -1,5 +1,4 @@
 import React, { useContext } from 'react'
-import styled from 'styled-components'
 import { WaxContext, ComponentPlugin } from 'wax-prosemirror-core'
 import { DocumentHelpers } from 'wax-prosemirror-utilities'
 import {
@@ -36,30 +35,6 @@ const getNotes = main => {
   return notes
 }
 
-const EditorWrapper = styled.div`
-  &.fullscreen {
-    background-color: #fff;
-    height: 100%;
-    left: 0;
-    margin: 0;
-    padding: 0;
-    position: fixed;
-    top: 0;
-    width: 100%;
-    z-index: 99999;
-    & > div {
-      display: block;
-      & > div + div {
-        position: fixed;
-        top: 38px;
-        overflow-y: scroll;
-        max-height: calc(100vh - 38px);
-        width: 100%;
-      }
-    }
-  }
-`
-
 const TopBar = ComponentPlugin('topBar')
 const NotesArea = ComponentPlugin('notesArea')
 const RightArea = ComponentPlugin('rightArea')
@@ -85,8 +60,26 @@ const FullWaxEditorCommentsLayout = (readOnly, authorComments) => ({
   const trackBlockNodesCount =
     main && DocumentHelpers.getTrackBlockNodesCount(main)
 
+  // added to bring in full screen
+
+  let fullScreenStyles = {}
+
+  if (options.fullScreen) {
+    fullScreenStyles = {
+      backgroundColor: '#fff',
+      height: '100%',
+      left: '0',
+      margin: '0',
+      padding: '0',
+      position: 'fixed',
+      top: '0',
+      width: '100%',
+      zIndex: '99999',
+    }
+  }
+
   return (
-    <EditorWrapper className={options.fullScreen ? 'fullscreen' : ''}>
+    <div style={fullScreenStyles}>
       {readOnly ? (
         <Grid readonly>
           <FullWaxEditorGrid noScroll useComments>
@@ -162,7 +155,7 @@ const FullWaxEditorCommentsLayout = (readOnly, authorComments) => ({
           </FullWaxEditorGrid>
         </Grid>
       )}
-    </EditorWrapper>
+    </div>
   )
 }
 
