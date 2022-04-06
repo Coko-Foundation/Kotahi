@@ -66,6 +66,7 @@ const parentManuscriptIsPublished = rule({ cache: 'contextual' })(
     if (parent.storedObjects && !parent.objectId) return false
 
     let review
+
     if (parent.objectId) {
       const reviewComment = await ctx.connectors.ReviewComment.model
         .query()
@@ -250,13 +251,16 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
   } else if (args.id) {
     // id is supplied for deletion
     const file = await ctx.connectors.File.model.query().findById(args.id)
+
     // eslint-disable-next-line prefer-destructuring
     const manuscript = await ctx.connectors.Manuscript.model
       .query()
       .findById(file.objectId)
+
     const review = await ctx.connectors.Review.model
       .query()
       .findById(file.objectId)
+
     manuscriptId = manuscript.id || review.manuscriptId
   } else {
     return false
@@ -289,6 +293,7 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
     const reviewComment = await ctx.connectors.ReviewComment.model
       .query()
       .findById(file.objectId)
+
     let review
 
     console.log(reviewComment) // eslint-disable-line no-console
@@ -300,7 +305,6 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
 
       console.log(review) // eslint-disable-line no-console
     }
-
 
     const manuscript = await ctx.connectors.Manuscript.model
       .query()
@@ -350,14 +354,13 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
 
   console.log(reviewComment) // eslint-disable-line no-console
 
-  if(reviewComment) {
+  if (reviewComment) {
     review = await ctx.connectors.Review.model
       .query()
       .findById(reviewComment.reviewId)
 
     console.log(review) // eslint-disable-line no-console
   }
-
 
   const manuscript = await ctx.connectors.Manuscript.model
     .query()
