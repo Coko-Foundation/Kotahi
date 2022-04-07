@@ -172,7 +172,7 @@ const base64Images = source => {
   const doc = new DOMParser().parseFromString(source, 'text/html')
 
   const images = [...doc.images].map((e, index) => {
-    const mimeType = e.src.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0]
+    const mimeType = e.src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)[0]
     const blob = base64toBlob(e.src, mimeType)
     const mimeTypeSplit = mimeType.split('/')
     const extFileName = mimeTypeSplit[1]

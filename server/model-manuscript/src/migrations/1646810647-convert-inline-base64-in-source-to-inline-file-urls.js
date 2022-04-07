@@ -54,8 +54,8 @@ const base64Images = source => {
 
     const src = $elem.attr('src')
 
-    if (src.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)) {
-      const mimeType = src.match(/[^:]\w+\/[\w-+\d.]+(?=;|,)/)[0]
+    if (src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)) {
+      const mimeType = src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)[0]
       const blob = base64toBlob(src, mimeType)
       const mimeTypeSplit = mimeType.split('/')
       const extFileName = mimeTypeSplit[1]
