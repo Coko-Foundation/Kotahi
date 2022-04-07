@@ -11,6 +11,7 @@ const randomBytes = promisify(crypto.randomBytes)
 const uploadsPath = config.get('pubsweet-server').uploads
 
 /* eslint-disable no-unused-vars */
+// direct file upload using fileStorage does not create a entry in database experiment code
 const upload = async file => {
   const { createReadStream, filename } = await file
   const stream = createReadStream()
@@ -21,6 +22,7 @@ const upload = async file => {
   return originalFileUrl
 }
 
+// custom webp conversion experiment code
 const createImageVersions = async (buffer, filename) => {
   try {
     const outputWebpPath = path.join(
@@ -37,6 +39,7 @@ const createImageVersions = async (buffer, filename) => {
   }
 }
 
+// create custom multiple version experiment code
 const uploadFileWithMultipleVersions = async file => {
   const { createReadStream, filename, encoding } = await file
   const stream = createReadStream()
