@@ -262,8 +262,8 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
       review = await ctx.connectors.Review.model
         .query()
         .findById(reviewComment.reviewId)
-    
-    // if a review is not found it uses the file.objectId which is the manuscriptId 
+
+    // if a review is not found it uses the file.objectId which is the manuscriptId
     // eslint-disable-next-line prefer-destructuring
     const manuscript = await ctx.connectors.Manuscript.model
       .query()
