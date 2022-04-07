@@ -92,12 +92,14 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
       const pdfWindow = window.open(pdfUrl)
       pdfWindow.print()
     } else {
+      window.open(pdfUrl)
+
       // use this code for downloading the PDF:
 
-      const link = document.createElement('a')
-      link.href = `/${pdfUrl}`
-      link.download = `${manuscript.meta.title || 'title'}.pdf`
-      link.click()
+      // const link = document.createElement('a')
+      // link.href = `/${pdfUrl}`
+      // link.download = `${manuscript.meta.title || 'title'}.pdf`
+      // link.click()
 
       // console.log(`Downloading ${link.download}`)
     }
