@@ -184,9 +184,9 @@ const DecisionPage = ({ match }) => {
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
-  const { manuscript, formForPurpose, currentUser, users } = data
+  const { manuscript, formForPurposeAndCategory, currentUser, users } = data
 
-  const form = formForPurpose?.structure ?? {
+  const form = formForPurposeAndCategory?.structure ?? {
     name: '',
     children: [],
     description: '',

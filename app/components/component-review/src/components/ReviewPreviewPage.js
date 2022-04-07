@@ -37,7 +37,7 @@ const query = gql`
       }
     }
 
-    formForPurpose(purpose: "submit") {
+    formForPurposeAndCategory(purpose: "submit", category: "submission") {
       structure {
         children {
           title
@@ -72,9 +72,9 @@ const ReviewPreviewPage = ({ match }) => {
     )
   }
 
-  const { manuscript, formForPurpose } = data
+  const { manuscript, formForPurposeAndCategory } = data
 
-  const submissionForm = formForPurpose?.structure ?? {
+  const submissionForm = formForPurposeAndCategory?.structure ?? {
     name: '',
     children: [],
     description: '',

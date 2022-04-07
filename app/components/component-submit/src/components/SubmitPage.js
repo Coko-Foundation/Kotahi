@@ -121,7 +121,7 @@ const SubmitPage = ({ match, history }) => {
 
   const currentUser = data?.currentUser
   const manuscript = data?.manuscript
-  const form = cleanForm(data?.formForPurpose?.structure)
+  const form = cleanForm(data?.formForPurposeAndCategory?.structure)
 
   const updateManuscript = (versionId, manuscriptDelta) => {
     return update({

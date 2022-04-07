@@ -193,7 +193,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
       }
     }
 
-    formForPurpose(purpose: "submit") {
+    formForPurposeAndCategory(purpose: "submit", category: "submission") {
       structure {
         children {
           id

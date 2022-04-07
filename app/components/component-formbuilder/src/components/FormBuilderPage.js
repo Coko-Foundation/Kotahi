@@ -51,12 +51,13 @@ const deleteFormMutation = gql`
 `
 
 const query = gql`
-  query {
-    forms {
+  query GET_FORM($category: String!) {
+    formsByCategory(category: $category) {
       id
       created
       updated
       purpose
+      category
       structure {
         name
         description
@@ -105,29 +106,32 @@ const prepareForSubmit = values => {
   return cleanedValues
 }
 
-const FormBuilderPage = () => {
-  const { loading, data, error } = useQuery(query)
-  const cleanedForms = pruneEmpty(data?.forms)
+const FormBuilderPage = ({ category }) => {
+  const { loading, data, error } = useQuery(query, {
+    variables: { category },
+  })
+
+  const cleanedForms = pruneEmpty(data?.formsByCategory)
 
   // TODO Structure forms for graphql and retrieve IDs from these mutations to allow Apollo Cache to do its magic, rather than forcing refetch.
   const [deleteForm] = useMutation(deleteFormMutation, {
-    refetchQueries: [{ query }],
+    refetchQueries: [{ query, variables: { category } }],
   })
 
   const [deleteFormElement] = useMutation(deleteFormElementMutation, {
-    refetchQueries: [{ query }],
+    refetchQueries: [{ query, variables: { category } }],
   })
 
   const [updateForm] = useMutation(updateFormMutation, {
-    refetchQueries: [{ query }],
+    refetchQueries: [{ query, variables: { category } }],
   })
 
   const [updateFormElement] = useMutation(updateFormElementMutation, {
-    refetchQueries: [{ query }],
+    refetchQueries: [{ query, variables: { category } }],
   })
 
   const [createForm] = useMutation(createFormMutation, {
-    refetchQueries: [{ query }],
+    refetchQueries: [{ query, variables: { category } }],
   })
 
   const [activeFormId, setActiveFormId] = useState()
@@ -136,7 +140,7 @@ const FormBuilderPage = () => {
 
   useEffect(() => {
     setFormFeilds(cleanedForms)
-  }, [data?.forms])
+  }, [data?.formsByCategory])
 
   const moveFieldUp = (form, fieldId) => {
     const fields = form.structure.children
@@ -179,7 +183,7 @@ const FormBuilderPage = () => {
   }
 
   const dragField = form => {
-    const forms = pruneEmpty(data.forms)[0]
+    const forms = pruneEmpty(data.formsByCategory)[0]
 
     const fields = forms.structure.children
 
@@ -215,8 +219,8 @@ const FormBuilderPage = () => {
 
   useEffect(() => {
     if (!loading && data) {
-      if (data.forms.length) {
-        setActiveFormId(prevFormId => prevFormId ?? data.forms[0].id)
+      if (data.formsByCategory.length) {
+        setActiveFormId(prevFormId => prevFormId ?? data.formsByCategory[0].id)
       } else {
         setActiveFormId('new')
       }
@@ -235,6 +239,7 @@ const FormBuilderPage = () => {
               <FormBuilderLayout
                 activeFieldId={activeFieldId}
                 activeFormId={activeFormId}
+                category={category}
                 createForm={createForm}
                 deleteField={deleteFormElement}
                 deleteForm={deleteForm}

@@ -25,10 +25,15 @@ const UserName = styled.div`
 
 const Section = styled.div``
 
-const NavItem = ({ className, link, name, icon }) => (
-  <Link className={className} to={link}>
-    <Icon>{icon}</Icon>
-    {name}
+const NavItem = ({ className, link, name, icon, onClick, open, menu }) => (
+  <Link className={className} onClick={onClick} to={link}>
+    <span>
+      <Icon>{icon}</Icon>
+      {name}
+    </span>
+    {menu ? (
+      <> {open ? <Icon>chevron-up</Icon> : <Icon>chevron-down</Icon>} </>
+    ) : null}
   </Link>
 )
 
@@ -46,9 +51,18 @@ export const Item = styled(NavItem)`
   border-radius: 10px;
   color: ${props => (props.active ? th('colorText') : th('colorTextReverse'))};
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   height: ${grid(5)};
   line-height: ${grid(3)};
   padding-left: ${grid(1)};
+
+  & > span {
+    display: flex;
+    align-items: center;
+  }
+
+  margin-left: ${props => (props.subLink ? '16px' : 0)};
 
   svg {
     stroke: ${props =>
@@ -80,6 +94,31 @@ const UserInfo = styled.div`
   margin-left: ${grid(1)};
 `
 
+const SubMenu = ({ location, ...navInfo }) => {
+  const [open, setOpen] = React.useState(false)
+
+  return (
+    <>
+      <Item
+        {...navInfo}
+        active={location.pathname === navInfo.link}
+        key={navInfo.link}
+        onClick={() => setOpen(!open)}
+        open={open}
+      />
+      {open &&
+        navInfo.links.map(subNavInfo => (
+          <Item
+            {...subNavInfo}
+            active={location.pathname === subNavInfo.link}
+            key={subNavInfo.link}
+            subLink
+          />
+        ))}
+    </>
+  )
+}
+
 const Menu = ({
   className,
   loginLink = '/login',
@@ -100,13 +139,17 @@ const Menu = ({
           user={user}
         />
         {navLinkComponents &&
-          navLinkComponents.map((navInfo, idx) => (
-            <Item
-              {...navInfo}
-              active={location.pathname === navInfo.link}
-              key={navInfo.link}
-            />
-          ))}
+          navLinkComponents.map(navInfo =>
+            navInfo.menu ? (
+              <SubMenu location={location} {...navInfo} />
+            ) : (
+              <Item
+                {...navInfo}
+                active={location.pathname === navInfo.link}
+                key={navInfo.link}
+              />
+            ),
+          )}
       </Section>
     </Root>
   )

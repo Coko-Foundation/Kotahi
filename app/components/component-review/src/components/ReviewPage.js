@@ -169,7 +169,7 @@ const query = gql`
       }
     }
 
-    formForPurpose(purpose: "submit") {
+    formForPurposeAndCategory(purpose: "submit", category: "submission") {
       structure {
         name
         description
@@ -281,7 +281,7 @@ const ReviewPage = ({ match, ...props }) => {
     )
   }
 
-  const { manuscript, formForPurpose } = data
+  const { manuscript, formForPurposeAndCategory } = data
 
   // We shouldn't arrive at this page with a subsequent/child manuscript ID. If we do, redirect to the parent/original ID
   if (manuscript.parentId)
@@ -295,7 +295,7 @@ const ReviewPage = ({ match, ...props }) => {
     refetch()
   }
 
-  const submissionForm = formForPurpose?.structure ?? {
+  const submissionForm = formForPurposeAndCategory?.structure ?? {
     name: '',
     children: [],
     description: '',
