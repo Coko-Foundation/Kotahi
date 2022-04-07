@@ -61,22 +61,22 @@ const userIsAdmin = rule({ cache: 'contextual' })(
 
 const parentManuscriptIsPublished = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
-    console.log(parent, 0) // eslint-disable-line no-console
-
-    if (parent.storedObjects && !parent.objectId) return false
+    // parent can be a file object or review object
+    // On initial manuscript upload docx it doesn't have a manuscrtiptId/objectId it has file object with name and stored objects
+    if (parent.storedObjects && !parent.objectId) return false // only on uploading manuscript docx this will be validated
 
     let review
 
+    // if the file has objectId it can be a reviewCommentId or manuscriptId
     if (parent.objectId) {
       const reviewComment = await ctx.connectors.ReviewComment.model
         .query()
         .findById(parent.objectId)
 
-      if (reviewComment) {
+      if (reviewComment)
         review = await ctx.connectors.Review.model
           .query()
           .findById(reviewComment.reviewId)
-      }
     }
 
     const manuscript = await ctx.connectors.Manuscript.model
@@ -242,8 +242,6 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
   if (!ctx.user) return false
   let manuscriptId
 
-  console.log(args) // eslint-disable-line no-console
-
   if (args.meta && args.meta.manuscriptId) {
     // Meta is supplied for createFile
     // eslint-disable-next-line prefer-destructuring
@@ -252,16 +250,26 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
     // id is supplied for deletion
     const file = await ctx.connectors.File.model.query().findById(args.id)
 
+    // objectId can either be a reviewCommentId or manuscriptId
+    const reviewComment = await ctx.connectors.ReviewComment.model
+      .query()
+      .findById(file.objectId)
+
+    let review
+
+    // if the objectId is reviewCommentId get review details linked to the manuscript
+    if (reviewComment)
+      review = await ctx.connectors.Review.model
+        .query()
+        .findById(reviewComment.reviewId)
+    
+    // if a review is not found it uses the file.objectId which is the manuscriptId 
     // eslint-disable-next-line prefer-destructuring
     const manuscript = await ctx.connectors.Manuscript.model
       .query()
-      .findById(file.objectId)
+      .findById(review ? review.manuscriptId : file.objectId)
 
-    const review = await ctx.connectors.Review.model
-      .query()
-      .findById(file.objectId)
-
-    manuscriptId = manuscript.id || review.manuscriptId
+    manuscriptId = manuscript.id
   } else {
     return false
   }
@@ -284,9 +292,7 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     if (!ctx.user) return false
 
-    console.log(parent, 1) // eslint-disable-line no-console
-
-    if (parent.storedObjects && !parent.id) return true
+    if (parent.storedObjects && !parent.id) return true // only on uploading manuscript docx this will be validated
 
     const file = await ctx.connectors.File.model.query().findById(parent.id)
 
@@ -296,15 +302,10 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
 
     let review
 
-    console.log(reviewComment) // eslint-disable-line no-console
-
-    if (reviewComment) {
+    if (reviewComment)
       review = await ctx.connectors.Review.model
         .query()
         .findById(reviewComment.reviewId)
-
-      console.log(review) // eslint-disable-line no-console
-    }
 
     const manuscript = await ctx.connectors.Manuscript.model
       .query()
@@ -340,8 +341,6 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
 })(async (parent, args, ctx, info) => {
   if (!ctx.user) return false
 
-  console.log(parent, 2) // eslint-disable-line no-console
-
   if (!parent.id) return false
 
   const file = await ctx.connectors.File.model.query().findById(parent.id)
@@ -352,15 +351,10 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
 
   let review
 
-  console.log(reviewComment) // eslint-disable-line no-console
-
-  if (reviewComment) {
+  if (reviewComment)
     review = await ctx.connectors.Review.model
       .query()
       .findById(reviewComment.reviewId)
-
-    console.log(review) // eslint-disable-line no-console
-  }
 
   const manuscript = await ctx.connectors.Manuscript.model
     .query()
