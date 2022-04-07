@@ -22,6 +22,7 @@ class Form extends BaseModel {
     return {
       properties: {
         purpose: { type: 'string' },
+        category: { type: 'string' },
         structure: {
           type: 'object',
           properties: {

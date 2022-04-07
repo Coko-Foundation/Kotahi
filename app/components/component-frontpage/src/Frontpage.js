@@ -188,7 +188,7 @@ const Frontpage = () => {
 
                   const fieldTitle = getEvaluationFieldTitle(
                     fieldName,
-                    data.formForPurpose,
+                    data.formForPurposeAndCategory,
                   )
 
                   return (

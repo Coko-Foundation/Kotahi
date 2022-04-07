@@ -140,7 +140,7 @@ const query = gql`
       }
     }
 
-    formForPurpose(purpose: "submit") {
+    formForPurposeAndCategory(purpose: "submit", category: "submission") {
       structure {
         name
         description

@@ -201,7 +201,7 @@ const Manuscripts = ({ history, ...props }) => {
   })
 
   const fieldDefinitions = {}
-  const fields = data.formForPurpose?.structure?.children ?? []
+  const fields = data.formForPurposeAndCategory?.structure?.children ?? []
   fields.forEach(field => {
     if (field.name) fieldDefinitions[field.name] = field // Incomplete fields in the formbuilder may not have a name specified. Ignore these
   })

@@ -121,7 +121,14 @@ const prepareForSubmit = (form, values) => {
   const cleanedValues = omitBy(values, value => value === '')
 
   const { purpose, created, updated, ...rest } = cleanedValues
-  const newForm = { id: form.id, purpose, structure: rest }
+
+  const newForm = {
+    id: form.id,
+    purpose,
+    category: form.category,
+    structure: rest,
+  }
+
   return newForm
 }
 

@@ -9,6 +9,8 @@ const formPaths = {
   colab: '../app/storage/forms-colab/submit.json',
   elife: '../app/storage/forms/submit.json',
   ncrc: '../app/storage/forms-ncrc/submit.json',
+  review: '../app/storage/forms/review.json',
+  decision: '../app/storage/forms/decison.json',
 }
 
 const seed = async () => {
@@ -29,13 +31,30 @@ const seed = async () => {
   }
 
   const submissionFormStructure = require(formPath)
+  const reviewFormStructure = require(formPaths.review)
+  const decisionFormStructure = require(formPaths.decision)
 
   const submissionForm = {
     purpose: 'submit',
     structure: submissionFormStructure,
+    category: 'submission',
+  }
+
+  const reviewForm = {
+    purpose: 'review',
+    structure: reviewFormStructure,
+    category: 'review',
+  }
+
+  const decisionForm = {
+    purpose: 'decision',
+    structure: decisionFormStructure,
+    category: 'decision',
   }
 
   await Form.query().insert(submissionForm)
+  await Form.query().insert(reviewForm)
+  await Form.query().insert(decisionForm)
   console.log(`  Added submission form ${formPath} to database.`)
 }
 
