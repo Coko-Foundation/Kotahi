@@ -17,7 +17,7 @@ const {
   getFilesWithUrl,
   replaceImageSrc,
   base64Images,
-  uploadImages,
+  uploadImage,
 } = require('../../utils/fileStorageUtils')
 
 const {
@@ -122,7 +122,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
     await Promise.all(
       map(images, async image => {
         if (image.blob) {
-          const uploadedImage = await uploadImages(image, updatedMs.id)
+          const uploadedImage = await uploadImage(image, updatedMs.id)
           uploadedImages.push(uploadedImage)
         }
       }),
@@ -1304,7 +1304,7 @@ const typeDefs = `
 
   input FileInput {
     name: String!
-    storedObjects: [StoredObjectsInput]!
+    storedObjects: [StoredObjectInput!]!
     tags: [String]!
   }
 
@@ -1315,7 +1315,7 @@ const typeDefs = `
     density: Int
   }
 
-  input StoredObjectsInput {
+  input StoredObjectInput {
     type: ImageSizeInput!
     key: String!
     size: Int

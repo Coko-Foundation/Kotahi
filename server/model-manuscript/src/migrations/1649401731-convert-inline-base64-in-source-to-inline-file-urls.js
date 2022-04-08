@@ -53,9 +53,10 @@ const base64Images = source => {
     const $elem = $(elem)
 
     const src = $elem.attr('src')
+    const base64Match = src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)
 
-    if (src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)) {
-      const mimeType = src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)[0]
+    if (base64Match) {
+      const mimeType = base64Match[0]
       const blob = base64toBlob(src, mimeType)
       const mimeTypeSplit = mimeType.split('/')
       const extFileName = mimeTypeSplit[1]
@@ -72,7 +73,7 @@ const base64Images = source => {
   return images
 }
 
-const uploadImages = async (image, manuscriptId) => {
+const uploadImage = async (image, manuscriptId) => {
   const { blob, filename } = image
 
   const fileStream = bufferToStream(Buffer.from(blob.buffer, 'binary'))
@@ -109,7 +110,7 @@ exports.up = async knex => {
             await Promise.all(
               map(images, async image => {
                 if (image.blob) {
-                  const uploadedImage = await uploadImages(image, manuscript.id)
+                  const uploadedImage = await uploadImage(image, manuscript.id)
                   uploadedImages.push(uploadedImage)
                 }
               }),

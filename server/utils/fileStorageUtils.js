@@ -5,6 +5,7 @@ const Blob = require('node-blob')
 const atob = require('atob')
 const { Duplex } = require('stream')
 
+/* Get files with temporary, time-limited URLs generated */
 const getFilesWithUrl = async files => {
   const filesWithUrl = await Promise.all(
     files.map(async file => {
@@ -22,6 +23,7 @@ const getFilesWithUrl = async files => {
   return filesWithUrl
 }
 
+/* Get file with temporary, time-limited URL generated */
 const getFileWithUrl = async file => {
   /* eslint-disable-next-line no-param-reassign */
   file.storedObjects = await Promise.all(
@@ -33,6 +35,7 @@ const getFileWithUrl = async file => {
   return file
 }
 
+/* replace source html with regenerated file URLs of provided size */
 const replaceImageSrc = async (source, files, size) => {
   const $ = cheerio.load(source)
   const fileIds = []
@@ -68,6 +71,7 @@ const replaceImageSrc = async (source, files, size) => {
   return $.html()
 }
 
+/* convert base64 to blob data */
 const base64toBlob = (base64Data, contentType) => {
   const sliceSize = 1024
   const arr = base64Data.split(',')
@@ -101,9 +105,10 @@ const base64Images = source => {
     const $elem = $(elem)
 
     const src = $elem.attr('src')
+    const base64Match = src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)
 
-    if (src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)) {
-      const mimeType = src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)[0]
+    if (base64Match) {
+      const mimeType = base64Match[0]
       const blob = base64toBlob(src, mimeType)
       const mimeTypeSplit = mimeType.split('/')
       const extFileName = mimeTypeSplit[1]
@@ -120,7 +125,7 @@ const base64Images = source => {
   return images
 }
 
-const uploadImages = async (image, manuscriptId) => {
+const uploadImage = async (image, manuscriptId) => {
   const { blob, filename } = image
 
   const fileStream = bufferToStream(Buffer.from(blob.buffer, 'binary'))
@@ -149,5 +154,5 @@ module.exports = {
   getFilesWithUrl,
   getFileWithUrl,
   replaceImageSrc,
-  uploadImages,
+  uploadImage,
 }

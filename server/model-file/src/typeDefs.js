@@ -1,7 +1,7 @@
 const typeDefs = `
   extend type Query {
     file(id: ID!): File!
-    files: [File]!
+    files: [File!]!
   }
 
   extend type Mutation {
@@ -24,7 +24,7 @@ const typeDefs = `
    caption: String
    tags: [String]
    objectId: ID
-   storedObjects: [StoredObjects!]!
+   storedObjects: [StoredObject!]!
    uploadStatus: String
    updated: DateTime!
    created: DateTime!
@@ -37,7 +37,7 @@ const typeDefs = `
    density: Int
  }
 
- type StoredObjects {
+ type StoredObject {
    type: ImageSize!
    key: String!
    size: Int

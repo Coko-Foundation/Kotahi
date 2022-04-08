@@ -187,7 +187,7 @@ const base64Images = source => {
   return images || null
 }
 
-const uploadImages = (image, client, manuscriptId) => {
+const uploadImage = (image, client, manuscriptId) => {
   const { file } = image
 
   const meta = {
@@ -364,7 +364,7 @@ export default ({
       // eslint-disable-next-line
       let uploadedImages = Promise.all(
         map(images, async image => {
-          const uploadedImage = await uploadImages(
+          const uploadedImage = await uploadImage(
             image,
             client,
             manuscriptData.data.createManuscript.id,
