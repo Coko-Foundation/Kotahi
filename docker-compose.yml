@@ -224,7 +224,6 @@ services:
   #     - ./nginx/conf.d:/etc/nginx/conf.d
   #     - ./certs:/etc/nginx/certs
 
-
   # Create the file server and give it a root user
   file_hosting:
     image: minio/minio
