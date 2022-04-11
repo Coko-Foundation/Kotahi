@@ -92,7 +92,7 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
       const pdfWindow = window.open(pdfUrl)
       pdfWindow.print()
     } else {
-      window.open(pdfUrl)
+      window.open(`/${pdfUrl}`)
 
       // use this code for downloading the PDF:
 
