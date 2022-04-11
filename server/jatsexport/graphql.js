@@ -3,7 +3,7 @@ const { XMLValidator } = require('fast-xml-parser')
 const { makeJats } = require('../utils/jatsUtils')
 const publicationMetadata = require('../pdfexport/pdfTemplates/publicationMetadata')
 
-const failXML = true // if this is true, we pass errorJats to the parser, invalid XML
+const failXML = false // if this is true, we pass errorJats (which is invalid XML) to the parser
 
 const errorJats = `<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="en" dtd-version="1.3">
 <front>
@@ -90,7 +90,7 @@ const resolvers = {
   Query: {
     convertToJats: async (_, { manuscriptId }, ctx) => {
       const { jats, error } = await jatsHandler(manuscriptId, ctx)
-      return { xml: jats || '', error: error || null }
+      return { xml: jats || '', error: JSON.stringify(error) || null }
     },
   },
 }
