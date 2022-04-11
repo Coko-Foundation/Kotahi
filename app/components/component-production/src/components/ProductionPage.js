@@ -185,13 +185,11 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
   if (data) {
     const jats = data.convertToJats.xml
 
-    // TODO: this section should be replaced by server-side error handling
-
-    if (data.convertToJats.error) {
+    if (data.convertToJats.error.length) {
       /* eslint-disable */
       console.log(
         'Error making JATS. First error: ',
-        JSON.parse(data.convertToJats.error).err,
+        JSON.parse(data.convertToJats.error),
       )
       resetMakingJats() // this is bad!
       return null

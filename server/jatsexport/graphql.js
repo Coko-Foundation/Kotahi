@@ -90,7 +90,7 @@ const resolvers = {
   Query: {
     convertToJats: async (_, { manuscriptId }, ctx) => {
       const { jats, error } = await jatsHandler(manuscriptId, ctx)
-      return { xml: jats || '', error: JSON.stringify(error) || null }
+      return { xml: jats || '', error: error ? JSON.stringify(error) : '' }
     },
   },
 }
