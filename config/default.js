@@ -225,7 +225,6 @@ module.exports = {
     'hypothesis',
     'review',
     'notification-email',
-    'fileStorage',
     'paged-js',
   ],
   s3: {
