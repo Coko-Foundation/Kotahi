@@ -1,6 +1,10 @@
+const fs = require('fs')
+const path = require('path')
 const nunjucks = require('nunjucks')
 const template = require('./pdfTemplates/article')
 const publicationMetadata = require('./pdfTemplates/publicationMetadata')
+
+require.resolve('mathjax')
 
 // applyTemplate.js
 
@@ -11,8 +15,16 @@ const publicationMetadata = require('./pdfTemplates/publicationMetadata')
 // The CSS file is in /pdfTempalates/styles.js
 
 const applyTemplate = articleData => {
+  const mathjax = fs.readFileSync(
+    path.resolve(__dirname, '/node_modules/mathjax/es5/tex-mml-chtml.js'),
+    'utf8',
+  )
+
+  /* eslint-disable */
+  console.log(mathjax)
   const thisArticle = articleData
   thisArticle.publicationMetadata = publicationMetadata
+  thisArticle.mathjax = mathjax
   return nunjucks.renderString(template, { article: thisArticle })
 }
 
