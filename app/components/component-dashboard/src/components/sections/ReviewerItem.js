@@ -3,7 +3,6 @@ import { useHistory } from 'react-router-dom'
 import { Action, ActionGroup } from '@pubsweet/ui'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 import PropTypes from 'prop-types'
-import config from 'config'
 import { Item } from '../../style'
 import { ClickableSectionRow } from '../../../../shared'
 
@@ -13,7 +12,7 @@ import VersionTitle from './VersionTitle'
 // TODO: only return actions if not accepted or rejected
 // TODO: review id in link
 
-const ReviewerItem = ({ version, currentUser, reviewerRespond }) => {
+const ReviewerItem = ({ version, currentUser, reviewerRespond, urlFrag }) => {
   const team =
     (version.teams || []).find(team_ => team_.role === 'reviewer') || {}
 
@@ -22,8 +21,6 @@ const ReviewerItem = ({ version, currentUser, reviewerRespond }) => {
     team.members.find(member => member.user.id === currentUser.id)
 
   const status = currentMember && currentMember.status
-
-  const urlFrag = config.journal.metadata.toplevel_urlfragment
 
   const history = useHistory()
 
@@ -41,7 +38,7 @@ const ReviewerItem = ({ version, currentUser, reviewerRespond }) => {
     >
       <ClickableSectionRow>
         <Item>
-          <VersionTitle version={version} />
+          <VersionTitle urlFrag={urlFrag} version={version} />
 
           {(status === 'accepted' || status === 'completed') && (
             <ActionGroup>

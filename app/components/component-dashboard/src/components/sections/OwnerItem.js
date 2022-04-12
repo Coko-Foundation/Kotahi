@@ -1,15 +1,12 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
-import config from 'config'
 import PropTypes from 'prop-types'
 import { Item, StatusBadge } from '../../style'
 import VersionTitle from './VersionTitle'
 import { Icon, ClickableSectionRow } from '../../../../shared'
 import theme from '../../../../../theme'
 
-const urlFrag = config.journal.metadata.toplevel_urlfragment
-
-const OwnerItem = ({ version }) => {
+const OwnerItem = ({ version, urlFrag, instanceName, shouldShowShortId }) => {
   return (
     <Link
       key={`version-${version.id}`}
@@ -24,7 +21,11 @@ const OwnerItem = ({ version }) => {
               published={version.published}
               status={version.status}
             />
-            <VersionTitle version={version} />
+            <VersionTitle
+              instanceName={instanceName}
+              shouldShowShortId={shouldShowShortId}
+              version={version}
+            />
           </div>
           <Icon color={theme.colorSecondary} noPadding size={2.5}>
             chevron_right
