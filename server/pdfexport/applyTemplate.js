@@ -4,7 +4,10 @@ const nunjucks = require('nunjucks')
 const template = require('./pdfTemplates/article')
 const publicationMetadata = require('./pdfTemplates/publicationMetadata')
 
-require.resolve('mathjax')
+// This is the dist file inside of MathJax
+// We are counting on it to be in the same place – if MathJax is updated, it's possible this could break?
+
+const mathjaxfile = require.resolve('mathjax/es5/tex-mml-chtml.js')
 
 // applyTemplate.js
 
@@ -15,13 +18,8 @@ require.resolve('mathjax')
 // The CSS file is in /pdfTempalates/styles.js
 
 const applyTemplate = articleData => {
-  const mathjax = fs.readFileSync(
-    path.resolve(__dirname, '/node_modules/mathjax/es5/tex-mml-chtml.js'),
-    'utf8',
-  )
-
+  const mathjax = fs.readFileSync(path.resolve(__dirname, mathjaxfile), 'utf8')
   /* eslint-disable */
-  console.log(mathjax)
   const thisArticle = articleData
   thisArticle.publicationMetadata = publicationMetadata
   thisArticle.mathjax = mathjax
