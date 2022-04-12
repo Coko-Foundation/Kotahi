@@ -4,7 +4,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 import { get } from 'lodash'
-import config from 'config'
 import lightenBy from '../../../../../shared/lightenBy'
 
 const Root = styled.div`
@@ -19,14 +18,9 @@ const ShortId = styled.div`
   min-width: 3em;
 `
 
-export default ({ version, className }) => {
-  const shouldShowShortId =
-    config['client-features'].displayShortIdAsIdentifier &&
-    config['client-features'].displayShortIdAsIdentifier.toLowerCase() ===
-      'true'
-
+export default ({ version, shouldShowShortId, instanceName }) => {
   const title =
-    process.env.INSTANCE_NAME === 'ncrc'
+    instanceName === 'ncrc'
       ? JSON.parse(version.submission).articleDescription
       : get(version, 'meta.title') || 'Untitled'
 

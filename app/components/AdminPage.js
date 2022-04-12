@@ -15,7 +15,7 @@ import { XpubContext } from './xpub-with-context/src'
 
 import UsersManager from './component-users-manager/src/UsersManager'
 import ManuscriptsPage from './component-manuscripts/src/ManuscriptsPage'
-import Dashboard from './component-dashboard/src/components/Dashboard'
+import DashboardPage from './component-dashboard/src/components/DashboardPage'
 import SubmitPage from './component-submit/src/components/SubmitPage'
 import ManuscriptPage from './component-manuscript/src/components/ManuscriptPage'
 import ReviewersPage from './component-review/src/components/ReviewersPage'
@@ -221,7 +221,7 @@ const AdminPage = () => {
           redirectLink={redirectLink}
         />
         <PrivateRoute
-          component={Dashboard}
+          component={DashboardPage}
           currentUser={currentUser}
           exact
           path={homeLink}
