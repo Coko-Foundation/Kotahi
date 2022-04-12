@@ -89,11 +89,19 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
 
     if (useHtml) {
       // use this to open the PDF in a new tab:
-      const pdfWindow = window.open(pdfUrl)
+      const pdfWindow = window.open(`/${pdfUrl}`)
       pdfWindow.print()
     } else {
-      window.open(pdfUrl)
+      const newWin = window.open(pdfUrl)
 
+      if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+        // if popups are blocked, try downloading it instead.
+        const link = document.createElement('a')
+        link.href = `/${pdfUrl}`
+        link.download = `${manuscript.meta.title || 'title'}.pdf`
+        link.target = '_blank'
+        link.click()
+      }
       // use this code for downloading the PDF:
 
       // const link = document.createElement('a')
