@@ -10,8 +10,10 @@ const fragmentFields = `
   status
   files {
     id
-    fileType
-    mimeType
+    tags
+    storedObjects {
+      mimetype
+    }
   }
   meta {
     title
@@ -54,7 +56,9 @@ const ManuscriptPage = ({ match, ...props }) => {
       channel={manuscript.channels.find(c => c.type === 'all')}
       content={manuscript.meta?.source}
       currentUser={currentUser}
-      file={manuscript.files.find(file => file.fileType === 'manuscript') || {}}
+      file={
+        manuscript.files.find(file => file.tags.includes('manuscript')) || {}
+      }
     />
   )
 }

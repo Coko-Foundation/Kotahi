@@ -16,8 +16,10 @@ const fragmentFields = `
   status
   files {
     id
-    fileType
-    mimeType
+    tags
+    storedObjects {
+      mimetype
+    }
   }
 	submission
   meta {
@@ -181,21 +183,25 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
   })
 
   if (loading) return <Spinner />
-  if (error)
+
+  if (error) {
     return (
       <div style={{ display: 'none' }}>
         <CommsErrorBanner error={error} />
       </div>
     ) // TODO: improve this!
+  }
 
   if (data) {
     const jats = data.convertToJats.xml
 
-    // TODO: this section should be replaced by server-side error handling
-
-    if (data.convertToJats.error) {
-      console.error('Error making JATS: ', data.convertToJats.error)
-      resetMakingJats()
+    if (data.convertToJats.error.length) {
+      /* eslint-disable */
+      console.log(
+        'Error making JATS. First error: ',
+        JSON.parse(data.convertToJats.error),
+      )
+      resetMakingJats() // this is bad!
       return null
     }
 
@@ -271,7 +277,7 @@ const ProductionPage = ({ match, ...props }) => {
       <Production
         currentUser={currentUser}
         file={
-          manuscript.files.find(file => file.fileType === 'manuscript') || {}
+          manuscript.files.find(file => file.tags.includes('manuscript')) || {}
         }
         makePdf={setMakingPdf}
         makeJats={setMakingJats}

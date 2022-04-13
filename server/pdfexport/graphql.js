@@ -11,6 +11,11 @@ const applyTemplate = require('./applyTemplate')
 const css = require('./pdfTemplates/styles')
 const makeZip = require('./ziputils.js')
 
+const {
+  getFilesWithUrl,
+  replaceImageSrc,
+} = require('../utils/fileStorageUtils')
+
 const copyFile = promisify(fs.copyFile)
 
 // THINGS TO KNOW ABOUT THIS:
@@ -99,7 +104,7 @@ const writeLocallyFromReadStream = async (
   })
 
 const getManuscriptById = async id => {
-  return models.Manuscript.query().findById(id)
+  return models.Manuscript.query().findById(id).withGraphFetched('[files]')
 }
 
 const pdfHandler = async manuscriptId => {
@@ -131,6 +136,12 @@ const pdfHandler = async manuscriptId => {
     abstract: articleData.submission.abstract,
   }
 
+  articleData.files = await getFilesWithUrl(articleData.files)
+  articleData.meta.source = await replaceImageSrc(
+    articleData.meta.source,
+    articleData.files,
+    'original',
+  )
   const outHtml = applyTemplate(articleData)
 
   await fsPromised.appendFile(`${dirName}/index.html`, outHtml)

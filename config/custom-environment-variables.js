@@ -27,6 +27,8 @@ module.exports = {
       user: 'POSTGRES_USER',
       password: 'POSTGRES_PASSWORD',
     },
+    tempFolderPath: 'TEMP_FOLDER_PATH',
+    useFileStorage: 'USE_FILE_STORAGE',
   },
   'client-features': {
     displayShortIdAsIdentifier: 'DISPLAY_SHORTID_AS_IDENTIFIER',
@@ -73,6 +75,19 @@ module.exports = {
   },
   'notification-email': {
     automated: 'NOTIFICATION_EMAIL_AUTOMATED',
+  },
+  fileStorage: {
+    minioRootUser: 'MINIO_ROOT_USER',
+    minioRootPassword: 'MINIO_ROOT_PASSWORD',
+    accessKeyId: 'S3_ACCESS_KEY_ID',
+    secretAccessKey: 'S3_SECRET_ACCESS_KEY',
+    bucket: 'S3_BUCKET',
+    protocol: 'S3_PROTOCOL',
+    host: 'S3_HOST',
+    port: 'S3_PORT',
+    minioConsolePort: 'MINIO_CONSOLE_PORT',
+    maximumWidthForSmallImages: 'MAXIMUM_WIDTH_FOR_SMALL_IMAGES',
+    maximumWidthForMediumImages: 'MAXIMUM_WIDTH_FOR_MEDIUM_IMAGES',
   },
   'paged-js': {
     pagedJsClientId: 'PAGED_JS_CLIENT_ID',

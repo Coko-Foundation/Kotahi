@@ -1,0 +1,1 @@
+ALTER TABLE IF EXISTS files RENAME TO files_old;

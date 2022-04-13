@@ -51,14 +51,14 @@ const NoteRight = styled.div`
 
 const filesToAttachment = file => ({
   name: file.filename,
-  url: file.url,
+  url: file.storedObjects[0].url,
 })
 
 const filterFileManuscript = files =>
   files.filter(
     file =>
-      file.fileType === 'manuscript' &&
-      file.mimeType !==
+      file.tags.includes('manuscript') &&
+      file.storedObjects[0].mimetype !==
         'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
   )
 
@@ -327,7 +327,7 @@ const FormTemplate = ({
             <Legend space>Submitted Manuscript</Legend>
             <Attachment
               file={filesToAttachment(filterFileManuscript(values.files)[0])}
-              key={filterFileManuscript(values.files)[0].url}
+              key={filterFileManuscript(values.files)[0].storedObjects[0].url}
               uploaded
             />
           </Section>
@@ -391,7 +391,8 @@ FormTemplate.propTypes = {
     files: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string,
-        url: PropTypes.string.isRequired,
+        tags: PropTypes.arrayOf(PropTypes.string.isRequired),
+        storedObjects: PropTypes.arrayOf(PropTypes.object),
       }).isRequired,
     ).isRequired,
     status: PropTypes.string,

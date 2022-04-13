@@ -40,16 +40,20 @@ const createNewVersionMutation = gql`
 `
 
 const createFileMutation = gql`
-  mutation($file: Upload!, $meta: FileMetaInput) {
+  mutation($file: Upload!, $meta: FileMetaInput!) {
     createFile(file: $file, meta: $meta) {
       id
       created
-      label
-      filename
-      fileType
-      mimeType
-      size
-      url
+      name
+      updated
+      name
+      tags
+      objectId
+      storedObjects {
+        key
+        mimetype
+        url
+      }
     }
   }
 `
