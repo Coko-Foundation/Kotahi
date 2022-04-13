@@ -36,10 +36,14 @@ const getNote = (notes, type) =>
   notes.find(note => note.notesType === type) || {}
 
 const getSupplementaryFiles = supplementary =>
-  (supplementary || []).filter(file => file.fileType === 'supplementary') || []
+  (supplementary || []).filter(file => file.tags.includes('supplementary')) ||
+  []
+
+const getManuscriptImageFiles = image =>
+  (image || []).filter(file => file.tags.includes('manuscriptImage')) || []
 
 const getManuscriptFiles = files =>
-  (files || []).filter(file => file.fileType === 'manuscript') || []
+  (files || []).filter(file => file.tags.includes('manuscript')) || []
 
 const showFieldData = (manuscript, fieldName, form) => {
   const data = get(manuscript, fieldName)
@@ -91,8 +95,8 @@ const shouldShowInPreview = (fieldName, form) => {
 // Attachement component needs different data structure to work
 // needs to change the pubsweet ui Attachement to support the new Data Model
 const filesToAttachment = file => ({
-  name: file.filename,
-  url: file.url,
+  name: file.name,
+  url: file.storedObjects[0].url,
 })
 
 const ReviewMetadata = ({
@@ -163,7 +167,7 @@ const ReviewMetadata = ({
                   {getSupplementaryFiles(manuscript.files).map(file => (
                     <Attachment
                       file={filesToAttachment(file)}
-                      key={file.url}
+                      key={file.storedObjects[0].url}
                       uploaded
                     />
                   ))}
@@ -185,7 +189,30 @@ const ReviewMetadata = ({
                   {getManuscriptFiles(manuscript.files).map(file => (
                     <Attachment
                       file={filesToAttachment(file)}
-                      key={file.url}
+                      key={file.storedObjects[0].url}
+                      uploaded
+                    />
+                  ))}
+                </Cell>
+              )}
+            </SectionRowGrid>
+          )}
+          {getManuscriptImageFiles(manuscript.files).length > 0 && (
+            <SectionRowGrid>
+              <Heading>
+                {getManuscriptImageFiles(manuscript.files).length} manuscript
+                image{' '}
+                {getManuscriptImageFiles(manuscript.files).length === 1
+                  ? 'file'
+                  : 'files'}
+                :
+              </Heading>
+              {!!getManuscriptImageFiles(manuscript.files).length && (
+                <Cell>
+                  {getManuscriptImageFiles(manuscript.files).map(file => (
+                    <Attachment
+                      file={filesToAttachment(file)}
+                      key={file.storedObjects[0].url}
                       uploaded
                     />
                   ))}
@@ -222,8 +249,9 @@ ReviewMetadata.propTypes = {
     }).isRequired,
     files: PropTypes.arrayOf(
       PropTypes.shape({
-        url: PropTypes.string.isRequired,
-        filename: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        storedObjects: PropTypes.arrayOf(PropTypes.object),
+        tags: PropTypes.arrayOf(PropTypes.string.isRequired),
       }).isRequired,
     ),
   }).isRequired,

@@ -16,8 +16,10 @@ const fragmentFields = `
   status
   files {
     id
-    fileType
-    mimeType
+    tags
+    storedObjects {
+      mimetype
+    }
   }
 	submission
   meta {
@@ -263,7 +265,7 @@ const ProductionPage = ({ match, ...props }) => {
       <Production
         currentUser={currentUser}
         file={
-          manuscript.files.find(file => file.fileType === 'manuscript') || {}
+          manuscript.files.find(file => file.tags.includes('manuscript')) || {}
         }
         makePdf={setMakingPdf}
         makeJats={setMakingJats}

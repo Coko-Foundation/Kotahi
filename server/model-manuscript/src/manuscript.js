@@ -138,7 +138,9 @@ class Manuscript extends BaseModel {
 
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
-    const { Channel, User, Team, Review, File } = require('@pubsweet/models')
+    const { Channel, User, Team, Review } = require('@pubsweet/models')
+    /* eslint-disable-next-line global-require */
+    const File = require('@coko/server/src/models/file/file.model')
 
     return {
       submitter: {
@@ -170,7 +172,7 @@ class Manuscript extends BaseModel {
         modelClass: File,
         join: {
           from: 'manuscripts.id',
-          to: 'files.manuscriptId',
+          to: 'files.objectId',
         },
       },
       reviews: {
