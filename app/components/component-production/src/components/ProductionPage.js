@@ -94,7 +94,7 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
       const pdfWindow = window.open(`/${pdfUrl}`)
       pdfWindow.print()
     } else {
-      const newWin = window.open(pdfUrl)
+      const newWin = window.open(`/${pdfUrl}`)
 
       if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
         // if popups are blocked, try downloading it instead.
