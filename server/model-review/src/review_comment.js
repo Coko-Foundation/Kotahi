@@ -23,7 +23,9 @@ class ReviewComment extends BaseModel {
 
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
-    const { File, Review, User } = require('@pubsweet/models')
+    const { Review, User } = require('@pubsweet/models')
+    /* eslint-disable-next-line global-require */
+    const File = require('@coko/server/src/models/file/file.model')
 
     return {
       review: {
@@ -47,7 +49,7 @@ class ReviewComment extends BaseModel {
         modelClass: File,
         join: {
           from: 'review_comments.id',
-          to: 'files.review_comment_id',
+          to: 'files.objectId',
         },
       },
     }

@@ -67,6 +67,7 @@ module.exports = {
     useGraphQLServer: true,
     useJobQueue: false,
     serveClient: true,
+    useFileStorage: true,
     db: {},
     port: 3000,
     pool: {
@@ -253,5 +254,18 @@ module.exports = {
   },
   'notification-email': {
     automated: '',
+  },
+  fileStorage: {
+    minioRootUser: '',
+    minioRootPassword: '',
+    accessKeyId: '',
+    secretAccessKey: '',
+    bucket: '',
+    protocol: '',
+    host: '',
+    port: '',
+    minioConsolePort: '',
+    maximumWidthForSmallImages: '',
+    maximumWidthForMediumImages: '',
   },
 }

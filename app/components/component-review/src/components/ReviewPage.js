@@ -11,16 +11,20 @@ import useCurrentUser from '../../../../hooks/useCurrentUser'
 import manuscriptVersions from '../../../../shared/manuscript_versions'
 
 const createFileMutation = gql`
-  mutation($file: Upload!, $meta: FileMetaInput) {
+  mutation($file: Upload!, $meta: FileMetaInput!) {
     createFile(file: $file, meta: $meta) {
       id
       created
-      label
-      filename
-      fileType
-      mimeType
-      size
-      url
+      name
+      updated
+      name
+      tags
+      objectId
+      storedObjects {
+        key
+        mimetype
+        url
+      }
     }
   }
 `
@@ -38,12 +42,14 @@ content
 files {
   id
   created
-  label
-  filename
-  fileType
-  mimeType
-  size
-  url
+  updated
+  name
+  tags
+  storedObjects {
+    key
+    mimetype
+    url
+  }
 }
 `
 
@@ -81,12 +87,14 @@ const fragmentFields = `
   files {
     id
     created
-    label
-    filename
-    fileType
-    mimeType
-    size
-    url
+    updated
+    name
+    tags
+    storedObjects {
+      key
+      mimetype
+      url
+    }
   }
   reviews {
     ${reviewFields}

@@ -1,8 +1,9 @@
+/* Old file model to be removed once the object storage production deployment testing done! */ 
 const { BaseModel } = require('@coko/server')
 
 class File extends BaseModel {
   static get tableName() {
-    return 'files'
+    return 'files_old'
   }
 
   constructor(properties) {
