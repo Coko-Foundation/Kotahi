@@ -1,6 +1,6 @@
 const { BaseModel } = require('@coko/server')
 
-class Invitations extends BaseModel {
+class Invitation extends BaseModel {
   static get tableName() {
     return 'invitations'
   }
@@ -9,11 +9,14 @@ class Invitations extends BaseModel {
     return {
       properties: {
         date: { type: ['string', 'object', 'null'], format: 'date-time' },
-        sourceId: { type: ['string', 'null'], format: 'uuid' },
+        manuscriptId: { type: ['string', 'null'], format: 'uuid' },
+        purpose: { type: 'string' },
+        toEmail: { type: ['string'] },
+        status: { type: ['string'] },
       },
     }
   }
 }
 
-Invitations.type = 'Invitations'
-module.exports = Invitations
+Invitation.type = 'Invitation'
+module.exports = Invitation

@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer')
 // TODO: refactor below template logic
 const adhocEditorAssignmentEmailTemplate = require('./email-templates/adhocEditorAssignmentEmailTemplate')
 const articleAcceptanceEmailTemplate = require('./email-templates/articleAcceptanceEmailTemplate')
+const authorAcceptanceEmailTemplate = require('./email-templates/authorAcceptanceEmailTemplate')
 const deputyEditorAssignmentEmailTemplate = require('./email-templates/deputyEditorAssignmentEmailTemplate')
 const editorAssignmentEmailTemplate = require('./email-templates/editorAssignmentEmailTemplate')
 const evaluationCompleteEmailTemplate = require('./email-templates/evaluationCompleteEmailTemplate')
@@ -51,6 +52,7 @@ const reviewInvitationEmailTemplate37 = require('./email-templates/review-invita
 const templates = {
   adhocEditorAssignmentEmailTemplate,
   articleAcceptanceEmailTemplate,
+  authorAcceptanceEmailTemplate,
   deputyEditorAssignmentEmailTemplate,
   editorAssignmentEmailTemplate,
   evaluationCompleteEmailTemplate,
@@ -98,10 +100,15 @@ const templates = {
 }
 
 const transporter = nodemailer.createTransport({
-  service: 'gmail',
+/*  service: 'gmail',
   auth: {
     user: process.env.GMAIL_NOTIFICATION_EMAIL_AUTH,
     pass: process.env.GMAIL_NOTIFICATION_PASSWORD,
+  },
+ */  service: 'gmail',
+  auth: {
+    user: 'cokosean@gmail.com',
+    pass: '111Tigers',
   },
 })
 

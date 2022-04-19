@@ -3,6 +3,6 @@ const graphql = require('./graphql')
 
 module.exports = {
   model,
-  modelName: 'Invitations',
+  modelName: 'Invitation',
   ...graphql,
 }

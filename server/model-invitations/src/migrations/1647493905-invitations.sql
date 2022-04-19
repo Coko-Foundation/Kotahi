@@ -10,5 +10,7 @@ CREATE TABLE invitations (
         CONSTRAINT fk_man_id FOREIGN KEY (manuscript_id) REFERENCES manuscripts (id),
     purpose VARCHAR(255),
     to_email VARCHAR(255) not null,
-    status invitation_status not null 
+    status invitation_status not null,
+    sender_id UUID not null,
+        CONSTRAINT fk_sender_id FOREIGN KEY (sender_id) REFERENCES users (id)
 );

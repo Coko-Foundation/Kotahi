@@ -22,5 +22,5 @@ minio\data\*
 db-data\*
 db-data/*
 /.idea
-
+profiles
 

@@ -1,8 +1,13 @@
 const typeDefs = `
-type Invitations {
+type Invitation {
     id: ID!
-    date: DateTime
-    source_id: Invitations
+    created: DateTime!
+    updated: DateTime
+    manuscript_id: ID!
+    purpose: String!
+    to_email: String!
+    status: String!
+    sender_id: ID
   }
 `
 

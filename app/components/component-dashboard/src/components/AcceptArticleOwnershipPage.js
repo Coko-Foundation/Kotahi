@@ -1,9 +1,6 @@
 import React from 'react'
 import { Container } from '../../../shared'
 
-// eslint-disable-next-line no-console
-console.warn('tell me')
-
 const AcceptArticleOwnershipPage = ({ match }) => {
   const invid = match.params.invitationId
   // eslint-disable-next-line no-console

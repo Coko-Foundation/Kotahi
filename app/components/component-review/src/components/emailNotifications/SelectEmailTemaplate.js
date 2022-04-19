@@ -17,6 +17,10 @@ switch (
         value: 'reviewCompleteEmailTemplate',
       },
       {
+        label: 'Author Acceptance Email Template',
+        value: 'authorAcceptanceEmailTemplate',
+      },
+      {
         label: 'Message notification template',
         value: 'messageNotificationEmailTemplate',
       },

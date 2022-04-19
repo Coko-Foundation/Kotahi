@@ -3,6 +3,7 @@ const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
 const { existsSync } = require('fs')
 const path = require('path')
 const models = require('@pubsweet/models')
+const { Invitation } = require('../../model-invitations/src/invitations')
 
 const sendEmailNotification = require('../../email-notifications')
 
@@ -247,12 +248,42 @@ const resolvers = {
         return { success: false }
       }
 
+     // const invitationId = 'generate-the-invitation-uuid-and-put-it-here'
+      const manuscriptId = manuscript.id //'49cded20-4404-4805-b231-618d8ad26e60'
+      const toEmail = externalEmail // 'seanauthor@mailinator.com'
+      const purpose = 'inviting an author to accept a manuscript'
+      const status = 'UNANSWERED'
+
+      // Create a author accceptance email gql //model mutation
+      /*       const myInvitation = models.Invitation.query({
+        manuscriptId,
+        toEmail,
+        purpose,
+        status,
+      }).save() */
+      // Create a new team of reviewers if it doesn't exist
+      const newInvitation = await new models.Invitation({
+        manuscriptId,
+        toEmail,
+        purpose,
+        status,
+      }).saveGraph()
+
+      console.log(`new invitation created ${newInvitation.id}`)
+
+      // return myInvitation.id
+      //const invitationId = newInvitation.id
+
       try {
         await sendEmailNotification(receiverEmail, selectedTemplate, {
           articleTitle: manuscript.meta.title,
           authorName,
           receiverFirstName,
           shortId: manuscript.shortId,
+          toEmail,
+          invitationId: newInvitation.id,
+          purpose,
+          status,
         })
         return { success: true }
       } catch (e) {
@@ -314,6 +345,8 @@ const typeDefs = `
     updateCurrentUsername(username: String): User
     sendEmail(input: String): SendEmailResponse
     updateCurrentEmail(email: String): UpdateEmailResponse
+    createInvitation(manuscriptId: ID, toEmail: String, purpose: String,status: String): Invitation
+    updateInvitation(minvitationId: ID, status: String): Boolean
   }
 
   type UpdateEmailResponse {

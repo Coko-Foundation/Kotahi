@@ -1,8 +1,8 @@
 const typeDefs = `
-type Invitations {
+type Invitation {
     id: ID!
     date: DateTime
-    source_id: Invitations
+    source_id: Invitation
   }
 `
 
