@@ -11,6 +11,32 @@ module.exports = `<!DOCTYPE html>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{{article.meta.title}}</title>
+		<!-- set mathjax configuration -->
+		<script type="text/x-mathjax-config">
+				MathJax.Hub.Config({
+					tex2jax: {
+						inlineMath: [ ['$','$'], ["\\\\(","\\\\)"] ],
+						processEscapes: true
+					}
+				});
+			</script>
+		<!-- call Mathjax -->
+		<!--<mathjaxscript />-->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.5/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+
+		<!-- paged.js config to not start automatically -->
+			<script>
+				window.PagedConfig = {
+					auto: false
+				};
+			</script>
+		<!--<script src="https://unpkg.com/pagedjs/dist/paged.polyfill.js"></script>
+			<script>
+			MathJax.Hub.Queue(function() {
+				window.PagedPolyfill.preview();
+			});
+			</script>-->
+
 		<!--<link rel="preload" as="font" href="/profiles/Newsreader-Italic-VariableFont_opsz,wght.ttf" type="font/ttf" crossorigin="anonymous">
 		<link rel="preload" as="font" href="/profiles/Newsreader-VariableFont_opsz,wght.ttf" type="font/ttf" crossorigin="anonymous">-->
 		<!--<link rel="preconnect" href="https://fonts.googleapis.com">

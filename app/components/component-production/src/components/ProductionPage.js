@@ -8,7 +8,7 @@ import { Spinner, CommsErrorBanner } from '../../../shared'
 const useHtml = false
 
 // If this is set to TRUE, we generate HTML and send back the HTML address instead of the PDF address
-// This is a temporary measure!
+// This is a temporary measure, though it's useful to test what's coming out.
 
 const fragmentFields = `
   id
