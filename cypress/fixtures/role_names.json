@@ -3,7 +3,10 @@
     "tester": "Test Account",
     "author": "Emily Clay",
     "admin": "Sinead Sullivan",
-    "seniorEditor": "Joanne Pilger",
+    "seniorEditor": {
+      "name": "000000031838244",
+      "uuid": "Joane Pilger"    
+    },
     "reviewers": {
       "reviewer1": "Gale Davis",
       "reviewer2": "Sherry Crofoot",
