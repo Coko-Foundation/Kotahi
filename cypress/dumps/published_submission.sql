@@ -235,7 +235,7 @@ CREATE TABLE public.files (
     size integer NOT NULL,
     type text NOT NULL,
     manuscript_id uuid NOT NULL,
-    review_comment_id uuid,
+    review_comment_id uuid
 );
 
 

@@ -24,3 +24,5 @@ db-data/*
 /.idea
 
 
+cypress/videos
+cypress/screenshots
