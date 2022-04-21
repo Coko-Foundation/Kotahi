@@ -37,8 +37,8 @@ export const DashboardPage = {
   getSectionTitleWithText(title) {
     return cy.getByContainsClass(SECTION_TITLE).contains(title)
   },
-  getSubmissionTitle(nth) {
-    return cy.getByContainsClass(SUBMISSION_TITLE).eq(nth)
+  getSubmissionTitle() {
+    return cy.getByContainsClass(SUBMISSION_TITLE)
   },
   getSectionPlaceholder(nth) {
     return cy.getByContainsClass(SECTION_PLACEHOLDER).eq(nth)

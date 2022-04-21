@@ -7,16 +7,16 @@
  */
 const MANAGE_REVIEWERS_BUTTON = '[class*=General__SectionRow] > a'
 
-const DECISION_COMMENT_FIELD =
-  '[class*=SimpleWaxEditor__Editor] > [contenteditable]'
+const DECISION_FIELD ='[contenteditable="true"]'
 
 const PUBLISH_BUTTON = '[class*=General__SectionAction] > button[type=button]'
 const PUBLISH_INFO_MESSAGE = 'General__SectionActionInfo'
 const ASSIGN_SENIOR_EDITOR_DROPDOWN = 'Assign seniorEditor'
 const ASSIGN_HANDLING_EDITOR_DROPDOWN = 'Assign handlingEditor'
 const ASSIGN_EDITOR_DROPDOWN = 'Assign editor'
-const DROPDOWN_OPTION_LIST = '[class*=MenuList] > [id*=option]'
-const METADATA_CELL = 'ReviewMetadata__Cell'
+const DROPDOWN_OPTION_LIST = ' [class*=MenuList] > [id*=option]'
+const METADATA_TAB = 'HiddenTabs__TabContainer-sc-11z25w4-2'
+const METADATA_CELL = 'VersionSwitcher__Title'
 const ERROR_TEXT = 'style__ErrorText-'
 const ACCEPT_RADIO_BUTTON = 'span[color=green]'
 const REVISE_RADIO_BUTTON = 'span[color=orange]'
@@ -58,17 +58,11 @@ export const ControlPage = {
   clickManageReviewers() {
     this.getManageReviewersButton().click()
   },
-  getDecisionCommentField() {
-    return cy.get(DECISION_COMMENT_FIELD)
+  getDecisionField(nth) {
+    return cy.get(DECISION_FIELD).eq(nth)
   },
-  clickAndBlurDecisionComment() {
-    this.getDecisionCommentField().click().focused().blur()
-  },
-  clickDecisionComment() {
-    this.getDecisionCommentField().click()
-  },
-  fillInDecisionComment(decisionComment) {
-    this.getDecisionCommentField().fillInput(decisionComment)
+  fillInDecision(decision) {
+    this.getDecisionField(0).fillInput(decision)
   },
   getPublishButton() {
     return cy.get(PUBLISH_BUTTON)
@@ -100,11 +94,13 @@ export const ControlPage = {
   getDropdownOptionList() {
     return cy.get(DROPDOWN_OPTION_LIST)
   },
-  selectDropdownOptionByName(name) {
+  selectDropdownOptionByName(name){
+    console.log(this.getDropdownOptionList())
     this.getDropdownOptionList().contains(name).click()
-  },
-  getMetadataCell(nth) {
-    return cy.getByContainsClass(METADATA_CELL).eq(nth)
+ },
+
+  getMetadataCell() {
+    return cy.getByContainsClass(METADATA_CELL)
   },
 
   getErrorText() {
@@ -233,5 +229,11 @@ export const ControlPage = {
   },
   getLogMessage() {
     return cy.getByContainsClass(EMAIL_NOTIFICATION_LOG_MESSAGE)
+  },
+  getMetadataTab(nth) {
+    return cy.getByContainsClass(METADATA_TAB).eq(nth)
+  },
+  getWorkflowTab() {
+    return cy.get('[data-test-id=tab-container]').contains('Workflow')
   },
 }

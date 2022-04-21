@@ -51,5 +51,12 @@
   "authorAcceptanceNotification": "Author Acceptance required notification template",
   "evaluationCompleteNotification": "Evaluation Complete required notification template",
   "authorAcceptanceLog": "Author Acceptance notification sent by",
-  "evaluationCompleteLog": "Evaluation Complete notification sent by"
+  "evaluationCompleteLog": "Evaluation Complete notification sent by",
+  "reviewCreator": "admin",
+  "firstAuthor": "Author",
+  "datePublished": "12/04/2022",
+  "link": "https://doi.org/10.6084/m9.figshare.913521.v1",
+  "decision": "This can be published"
+
 }
+

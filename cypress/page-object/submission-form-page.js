@@ -10,34 +10,22 @@ import { evaluate, submit } from '../support/routes'
  */
 const PAGE_TITLE = '[class*=style__Heading]'
 const ADD_A_LINK_BUTTON = 'li > button'
-const ENTER_URL_FIELD = 'submission.links.'
+const ENTER_URL_FIELD = 'submission.'
 const TITLE_FIELD = 'meta.title'
 const NAME_FIELD = 'submission.name'
-const AFFILIATION_FIELD = 'submission.affiliation'
-const CONTACT_FIELD = 'submission.contact'
-// const COVER_FIELD = 'submission.cover'
-// const DATA_CODE_FIELD = 'submission.datacode'
-// const ETHICS_FIELD = 'submission.ethics'
-const TYPE_OF_RESEARCH_DROPDOWN = 'Type of Research Object'
+const ABSTRACT_FIELD = 'submission.abstract'
+const OUR_TAKE = 'submission.ourTake'
+const MAIN_FINDINGS = 'submission.mainFindings'
+const STUDY_STRENGTHS = 'submission.studyStrengths'
+const LIMITATIONS_FIELD = 'submission.limitations'
 const DROPDOWN_OPTION_LIST = '[class*=MenuList] > [id*=option]'
-const SUGGESTED_FIELD = 'submission.suggested'
-const FILE_DROPZONE = 'dropzone'
 const KEYWORDS_FIELD = 'submission.keywords'
-const HEALTHY_SUBJECTS_STUDY_DROPDOWN = 'healthy subjects only or patients'
-const INVOLVED_HUMAN_SUBJECTS_DROPDOWN = 'involved human subjects'
-const ANIMAL_RESEARCH_APPROVED_DROPDOWN = 'animal research approved'
-const METHODS_USED_CHECKBOX = 'submission.methods'
-const OTHER_METHODS_FIELD = 'submission.otherMethods'
-const FILED_STRENGTH_DROPDOWN = 'what field strength'
-const HUMAN_MRI_OTHER_FIELD = 'submission.humanMRIother'
-const PROCESSING_PACKAGES_CHECKBOX_LIST = 'submission.packages'
-const OTHER_PACKAGES_FIELD = 'submission.otherPackages'
-// const REFERENCES_FIELD = 'submission.references'
+const REFERENCES_FIELD = 'submission.references'
 const SUBMIT_RESEARCH_BUTTON = 'form > div > button'
-const SUBMIT_MANUSCRIPT_BUTTON = 'button[type=submit]'
+const SUBMIT_YOUR_MANUSCRIPT_BUTTON = 'button[type=submit]'
 const VALIDATION_ERROR_MESSAGE = 'ValidatedField__MessageWrapper'
 const CONTENT_EDITABLE_VALUE = '[contenteditable="true"]'
-const SUBMISSION_FORM_INPUT_BOX = 'SimpleWaxEditor__EditorDiv'
+const SUBMISSION_FORM_INPUT_BOX = 'SimpleEditorDiv'
 const WORD_COUNT_INFO = 'Counter Info'
 
 // specific to elife
@@ -58,10 +46,6 @@ const SUMMARY_CREATOR_FIELD = 'submission.summarycreator'
 
 // specific to ncrc
 const ARTICLE_DESCRIPTION_FIELD = 'submission.articleDescription'
-const STUDY_DESIGN_DROPDOWN = 'Study design'
-const LABELS_DROPDOWN = 'Labels'
-const EDIT_FINISHED_DROPDOWN = 'Edit finished'
-const COMPENDIUM_FEATURE_DROPDOWN = 'Compendium feature'
 const FIRST_AUTHOR_FIELD = 'submission.firstAuthor'
 const DATE_PUBLISHED_FIELD = 'submission.datePublished'
 const JOURNAL_FIELD = 'submission.journal'
@@ -105,165 +89,68 @@ export const SubmissionFormPage = {
   fillInName(name) {
     this.getNameField().fillInput(name)
   },
-  getAffiliationField() {
-    return cy.getByDataTestId(AFFILIATION_FIELD)
+  getAbstractField() {
+    return cy.getByContainsName(ABSTRACT_FIELD)
   },
-  fillInAffiliation(affiliation) {
-    this.getAffiliationField().fillInput(affiliation)
+
+  fillInAbstract(abstract) {
+    this.getWaxInputBox(0).find(CONTENT_EDITABLE_VALUE).fillInput(abstract)
   },
-  getContactField() {
-    return cy.getByDataTestId(CONTACT_FIELD)
+  getOurTakeField() {
+    return cy.getByContainsName(OUR_TAKE)
   },
-  fillInContact(contact) {
-    this.getContactField().fillInput(contact)
+  fillInOurTake(ourTake) {
+    this.getWaxInputBox(1).find(CONTENT_EDITABLE_VALUE).fillInput(ourTake)
   },
-  // getCoverField() {
-  //   return cy.getByContainsClass(COVER_FIELD)
-  // },
+  getMainFindingsField() {
+    return cy.getByContainsName(MAIN_FINDINGS)
+  },
+  fillInMainFindings(mainFindings) {
+    this.getWaxInputBox(2).find(CONTENT_EDITABLE_VALUE).fillInput(mainFindings)
+  },
+  getStudyStrengthsField() {
+    return cy.getByContainsName(STUDY_STRENGTHS)
+  },
+  fillInStudyStrengths(studyStrengths) {
+    this.getWaxInputBox(3)
+      .find(CONTENT_EDITABLE_VALUE)
+      .fillInput(studyStrengths)
+  },
+  getLimitationsField() {
+    return cy.getByContainsName(LIMITATIONS_FIELD)
+  },
+  fillInLimitations(limitations) {
+    this.getWaxInputBox(4).find(CONTENT_EDITABLE_VALUE).fillInput(limitations)
+  },
+
   getAllWaxInputBoxes() {
     return cy.getByContainsClass(SUBMISSION_FORM_INPUT_BOX)
   },
   getWaxInputBox(nth) {
     return this.getAllWaxInputBoxes().eq(nth)
   },
-  fillInCover(cover) {
-    this.getWaxInputBox(0).find(CONTENT_EDITABLE_VALUE).fillInput(cover)
+  fillInCover(abstract) {
+    this.getWaxInputBox(0).find(CONTENT_EDITABLE_VALUE).fillInput(abstract)
   },
-  // getDataCodeField() {
-  //   return cy.getByDataTestId(DATA_CODE_FIELD)
-  // },
+
   fillInDataCode(dataCode) {
     this.getWaxInputBox(1).find(CONTENT_EDITABLE_VALUE).fillInput(dataCode)
   },
-  // getEthicsField() {
-  //   return cy.getByDataTestId(ETHICS_FIELD)
-  // },
+
   fillInEthicsField(ethics) {
     this.getWaxInputBox(2).find(CONTENT_EDITABLE_VALUE).fillInput(ethics)
   },
-  getTypeOfResearchDropdown() {
-    return cy.getByContainsAriaLabel(TYPE_OF_RESEARCH_DROPDOWN)
-  },
-  clickTypeOfResearchDropdown() {
-    this.getTypeOfResearchDropdown().click({ force: true })
-  },
-  selectDropdownOption(nth) {
-    return cy.get(DROPDOWN_OPTION_LIST).eq(nth).click()
-  },
-  selectDropdownOptionWithText(text) {
-    return cy.get(DROPDOWN_OPTION_LIST).contains(text).click()
-  },
-  getSuggestedField() {
-    return cy.getByDataTestId(SUGGESTED_FIELD)
-  },
-  fillInSuggested(suggested) {
-    this.getSuggestedField().fillInput(suggested)
-  },
-  getFileDropzone() {
-    return cy.getByDataTestId(FILE_DROPZONE)
-  },
-  attachFile(file) {
-    this.getFileDropzone().attachFile(
-      file,
-      // {
-      //   fileContent,
-      //   fileName: 'test-pdf.pdf',
-      //   encoding: 'base64',
-      //   mimeType: 'application/pdf',
-      // },
-      { subjectType: 'drag-n-drop' },
-    )
-  },
+
   getKeywordsField() {
     return cy.getByDataTestId(KEYWORDS_FIELD)
   },
   fillInKeywords(keywords) {
     this.getKeywordsField().fillInput(keywords)
   },
-  getHealthySubjectsStudyDropdown() {
-    return cy.getByContainsAriaLabel(HEALTHY_SUBJECTS_STUDY_DROPDOWN)
+  getReferencesField() {
+    return cy.getByDataTestId(REFERENCES_FIELD)
   },
-  clickHealthySubjectsStudyDropdown() {
-    this.getHealthySubjectsStudyDropdown().click({ force: true })
-  },
-  getInvolvedHumanSubjectsDropdown() {
-    return cy.getByContainsAriaLabel(INVOLVED_HUMAN_SUBJECTS_DROPDOWN)
-  },
-  clickInvolvedHumanSubjectsDropdown() {
-    this.getInvolvedHumanSubjectsDropdown().click({ force: true })
-  },
-  getAnimalResearchApprovedDropdown() {
-    return cy.getByContainsAriaLabel(ANIMAL_RESEARCH_APPROVED_DROPDOWN)
-  },
-  clickAnimalResearchApprovedDropdown() {
-    this.getAnimalResearchApprovedDropdown().click({ force: true })
-  },
-  getStudyDesignDropdown() {
-    return cy.getByContainsAriaLabel(STUDY_DESIGN_DROPDOWN)
-  },
-  clickStudyDesignDropdown() {
-    this.getStudyDesignDropdown().click({ force: true })
-  },
-  getLabelsDropdown() {
-    return cy.getByContainsAriaLabel(LABELS_DROPDOWN)
-  },
-  clickLabelsDropdown() {
-    this.getLabelsDropdown().click({ force: true })
-  },
-  getEditFinishedDropdown() {
-    return cy.getByContainsAriaLabel(EDIT_FINISHED_DROPDOWN)
-  },
-  clickEditFinishedDropdown() {
-    this.getEditFinishedDropdown().click({ force: true })
-  },
-  getCompendiumFeatureDropdown() {
-    return cy.getByContainsAriaLabel(COMPENDIUM_FEATURE_DROPDOWN)
-  },
-  clickCompendiumFeatureDropdown() {
-    this.getCompendiumFeatureDropdown().click({ force: true })
-  },
-  getMethodsUsedCheckboxWithText(value) {
-    return cy.getByNameAndValue(METHODS_USED_CHECKBOX, value)
-  },
-  clickMethodsUsedCheckboxWithText(value) {
-    this.getMethodsUsedCheckboxWithText(value).click()
-  },
-  getOtherMethodsField() {
-    return cy.getByDataTestId(OTHER_METHODS_FIELD)
-  },
-  fillInOtherMethods(text) {
-    this.getOtherMethodsField().fillInput(text)
-  },
-  getFieldSthrenghtDropdown() {
-    return cy.getByContainsAriaLabel(FILED_STRENGTH_DROPDOWN)
-  },
-  clickFieldSthrenghtDropdown() {
-    this.getFieldSthrenghtDropdown().click({ force: true })
-  },
-  getHumanMriOtherField() {
-    return cy.getByDataTestId(HUMAN_MRI_OTHER_FIELD)
-  },
-  fillInHumanMriOther(other) {
-    this.getHumanMriOtherField().fillInput(other)
-  },
-  getProcessingPackagesCheckboxWithText(text) {
-    return cy.getByNameAndValue(PROCESSING_PACKAGES_CHECKBOX_LIST, text)
-  },
-  clickProcessingPackageWithText(text) {
-    this.getProcessingPackagesCheckboxWithText(text).click()
-  },
-  getOtherPackagesField() {
-    return cy.getByDataTestId(OTHER_PACKAGES_FIELD)
-  },
-  fillInOtherPackages(otherPackages) {
-    this.getOtherPackagesField().fillInput(otherPackages)
-  },
-  // getReferencesField() {
-  //   return cy.getByDataTestId(REFERENCES_FIELD)
-  // },
-  fillReferences(references) {
-    this.getWaxInputBox(3).find(CONTENT_EDITABLE_VALUE).fillInput(references)
-  },
+
   getSubmitResearchButton() {
     return cy.get(SUBMIT_RESEARCH_BUTTON)
   },
@@ -277,9 +164,9 @@ export const SubmissionFormPage = {
     ManuscriptsPage.getTableHeader().should('be.visible')
   },
   getSubmitManuscriptButton() {
-    return cy.get(SUBMIT_MANUSCRIPT_BUTTON)
+    return cy.get(SUBMIT_YOUR_MANUSCRIPT_BUTTON)
   },
-  clickSubmitManuscript() {
+  clickSubmitYourManuscript() {
     this.getSubmitManuscriptButton().click()
   },
   clickSubmitManuscriptAndWaitPageLoad() {
@@ -336,7 +223,6 @@ export const SubmissionFormPage = {
     this.getReview1Date().fillInput(review1Date)
   },
   getReview1() {
-    // return cy.get(EVALUATION_CONTENT_FIELD)
     return this.getWaxInputBox(0)
   },
   fillInReview1(review1) {
@@ -408,15 +294,6 @@ export const SubmissionFormPage = {
   fillInArticleDescription(description) {
     this.getArticleDescriptionField().fillInput(description)
   },
-  getOurTakeField() {
-    return this.getWaxInputBox(0)
-  },
-  fillInOurTake(ourTake) {
-    this.getOurTakeField().find(CONTENT_EDITABLE_VALUE).fillInput(ourTake)
-  },
-  getOurTakeContent() {
-    return this.getOurTakeField().find('p').invoke('text')
-  },
   getStudySettingField() {
     return this.getWaxInputBox(1)
   },
@@ -428,36 +305,15 @@ export const SubmissionFormPage = {
   getStudySettingContent() {
     return this.getStudySettingField().find('p')
   },
-  getMainFindingsField() {
-    return this.getWaxInputBox(1)
-  },
-  fillInMainFindings(mainFindings) {
-    this.getMainFindingsField()
-      .find(CONTENT_EDITABLE_VALUE)
-      .fillInput(mainFindings)
-  },
+
   getMainFindingsContent() {
     return this.getMainFindingsField().find('p')
   },
-  getStudyStrengthsField() {
-    return this.getWaxInputBox(2)
-  },
-  fillInStudyStrengths(studyStrengths) {
-    this.getStudyStrengthsField()
-      .find(CONTENT_EDITABLE_VALUE)
-      .fillInput(studyStrengths)
-  },
+
   getStudyStrengthsContent() {
     return this.getStudyStrengthsField().find('p')
   },
-  getLimitationsField() {
-    return this.getWaxInputBox(3)
-  },
-  fillInLimitations(limitations) {
-    this.getLimitationsField()
-      .find(CONTENT_EDITABLE_VALUE)
-      .fillInput(limitations)
-  },
+
   getLimitationsContent() {
     return this.getLimitationsField().find('p')
   },
@@ -550,12 +406,7 @@ export const SubmissionFormPage = {
   fillInReviewCreator(reviewCreator) {
     this.getReviewCreatorField().fillInput(reviewCreator)
   },
-  getAbstractField() {
-    return this.getWaxInputBox(5)
-  },
-  fillInAbstract(abstract) {
-    this.getAbstractField().fillInput(abstract)
-  },
+
   getAbstractContent() {
     return this.getAbstractField().find('p').invoke('text')
   },
@@ -565,6 +416,7 @@ export const SubmissionFormPage = {
   fillInAbstractColab(abstract) {
     this.getAbstractFieldColab().fillInput(abstract)
   },
+
   getWordCountInfo() {
     return cy.getByTitle(WORD_COUNT_INFO)
   },
