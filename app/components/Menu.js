@@ -23,25 +23,43 @@ const UserName = styled.div`
   word-break: break-word;
 `
 
+const NonLink = styled.div``
+
 const Section = styled.div``
 
-const NavItem = ({ className, link, name, icon, onClick, open, menu }) => (
-  <Link className={className} onClick={onClick} to={link}>
-    <span>
-      <Icon>{icon}</Icon>
-      {name}
-    </span>
-    {menu ? (
-      <> {open ? <Icon>chevron-up</Icon> : <Icon>chevron-down</Icon>} </>
-    ) : null}
-  </Link>
-)
+const NavItem = ({ className, link, name, icon, onClick, open, menu }) =>
+  link ? (
+    <Link className={className} onClick={onClick} to={link}>
+      <span>
+        {icon && <Icon>{icon}</Icon>}
+        {name}
+      </span>
+      {menu ? (
+        <> {open ? <Icon>chevron-up</Icon> : <Icon>chevron-down</Icon>} </>
+      ) : null}
+    </Link>
+  ) : (
+    <NonLink className={className} onClick={onClick}>
+      <span>
+        {icon && <Icon>{icon}</Icon>}
+        {name}
+      </span>
+      {menu ? (
+        <> {open ? <Icon>chevron-up</Icon> : <Icon>chevron-down</Icon>} </>
+      ) : null}
+    </NonLink>
+  )
 
 NavItem.propTypes = {
   className: PropTypes.string.isRequired,
-  link: PropTypes.string.isRequired,
+  link: PropTypes.string,
   name: PropTypes.string.isRequired,
-  icon: PropTypes.string.isRequired,
+  icon: PropTypes.string,
+}
+
+NavItem.defaultProps = {
+  icon: undefined,
+  link: undefined,
 }
 
 export const Item = styled(NavItem)`
@@ -51,18 +69,16 @@ export const Item = styled(NavItem)`
   border-radius: 10px;
   color: ${props => (props.active ? th('colorText') : th('colorTextReverse'))};
   display: flex;
-  justify-content: space-between;
-  align-items: center;
   height: ${grid(5)};
+  justify-content: space-between;
   line-height: ${grid(3)};
+  margin-left: ${props => (props.subLink ? '16px' : 0)};
   padding-left: ${grid(1)};
 
   & > span {
-    display: flex;
     align-items: center;
+    display: flex;
   }
-
-  margin-left: ${props => (props.subLink ? '16px' : 0)};
 
   svg {
     stroke: ${props =>
@@ -102,19 +118,20 @@ const SubMenu = ({ location, ...navInfo }) => {
       <Item
         {...navInfo}
         active={location.pathname === navInfo.link}
-        key={navInfo.link}
         onClick={() => setOpen(!open)}
         open={open}
       />
       {open &&
-        navInfo.links.map(subNavInfo => (
-          <Item
-            {...subNavInfo}
-            active={location.pathname === subNavInfo.link}
-            key={subNavInfo.link}
-            subLink
-          />
-        ))}
+        navInfo.links.map(subNavInfo => {
+          return (
+            <Item
+              {...subNavInfo}
+              active={location.pathname === subNavInfo.link}
+              key={subNavInfo.link}
+              subLink
+            />
+          )
+        })}
     </>
   )
 }
@@ -141,7 +158,7 @@ const Menu = ({
         {navLinkComponents &&
           navLinkComponents.map(navInfo =>
             navInfo.menu ? (
-              <SubMenu location={location} {...navInfo} />
+              <SubMenu key={navInfo.name} location={location} {...navInfo} />
             ) : (
               <Item
                 {...navInfo}
