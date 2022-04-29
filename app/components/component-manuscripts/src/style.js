@@ -5,7 +5,7 @@ import Color from 'color'
 
 export const StyledButton = styled(Button)`
   cursor: pointer;
-  max-width: 100px;
+  max-width: 130px;
   min-width: unset;
   overflow-wrap: normal;
   padding: 4px;
@@ -151,22 +151,22 @@ export const Loader = styled.div`
 
   &:after {
     animation: ${rotate360} 1s linear infinite;
-    border: 5px solid ${th('colorPrimary')};
+    border: 3px solid ${th('colorPrimary')};
     border-color: #ffffff transparent #ffffff transparent;
     border-radius: 50%;
     content: ' ';
     display: block;
-    height: 23px;
+    height: 20px;
     margin: 1px;
-    width: 23px;
+    width: 20px;
   }
 `
 
 export const RefreshSpinnerWrapper = styled.div`
   display: flex;
-  justify-content: space-between;
+  justify-content: center;
 `
 
 export const RefreshText = styled.div`
-  padding: 0px 5px;
+  padding: 0 5px;
 `
