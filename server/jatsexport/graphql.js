@@ -81,7 +81,10 @@ const jatsHandler = async manuscriptId => {
 
   if (typeof result === 'object') {
     parseError = result
+    return { jats, error: parseError }
   }
+
+  // check for valid jats
 
   return { jats, error: parseError }
 }
