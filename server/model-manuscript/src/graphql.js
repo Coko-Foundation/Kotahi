@@ -900,7 +900,7 @@ const resolvers = {
 
       manuscript.files = await getFilesWithUrl(manuscript.files)
 
-      if(typeof manuscript.meta.source === 'string') {
+      if (typeof manuscript.meta.source === 'string') {
         manuscript.meta.source = await replaceImageSrc(
           manuscript.meta.source,
           manuscript.files,

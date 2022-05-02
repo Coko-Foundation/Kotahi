@@ -359,8 +359,8 @@ export default ({
         uploadResponse.fileURL,
         uploadResponse.response,
       )
-      
-      if (typeof uploadResponse.response == 'string') {
+
+      if (typeof uploadResponse.response === 'string') {
         let source = uploadResponse.response
         // eslint-disable-next-line
         let uploadedImages = Promise.all(
