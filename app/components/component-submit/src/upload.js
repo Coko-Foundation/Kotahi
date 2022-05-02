@@ -359,59 +359,61 @@ export default ({
         uploadResponse.fileURL,
         uploadResponse.response,
       )
-
-      let source = uploadResponse.response
-      // eslint-disable-next-line
-      let uploadedImages = Promise.all(
-        map(images, async image => {
-          const uploadedImage = await uploadImage(
-            image,
-            client,
-            manuscriptData.data.createManuscript.id,
-          )
-
-          return uploadedImage
-        }),
-      )
-
-      await uploadedImages.then(results => {
-        const $ = cheerio.load(source)
-
-        $('img').each((i, elem) => {
-          const $elem = $(elem)
-
-          if (images[i].dataSrc === $elem.attr('src')) {
-            $elem.attr('data-fileid', results[i].data.createFile.id)
-            $elem.attr('alt', results[i].data.createFile.name)
-            $elem.attr(
-              'src',
-              results[i].data.createFile.storedObjects.find(
-                storedObject => storedObject.type === 'medium',
-              ).url,
-            )
-          }
-        })
-
-        source = $.html()
-
-        const manuscript = {
-          id: manuscriptData.data.createManuscript.id,
-          meta: {
-            source,
-          },
-        }
-
+      
+      if (typeof uploadResponse.response == 'string') {
+        let source = uploadResponse.response
         // eslint-disable-next-line
-        const updatedManuscript = client.mutate({
-          mutation: updateMutation,
-          variables: {
-            id: manuscriptData.data.createManuscript.id,
-            input: JSON.stringify(manuscript),
-          },
-        })
+        let uploadedImages = Promise.all(
+          map(images, async image => {
+            const uploadedImage = await uploadImage(
+              image,
+              client,
+              manuscriptData.data.createManuscript.id,
+            )
 
-        manuscriptData.data.createManuscript.meta.source = source
-      })
+            return uploadedImage
+          }),
+        )
+
+        await uploadedImages.then(results => {
+          const $ = cheerio.load(source)
+
+          $('img').each((i, elem) => {
+            const $elem = $(elem)
+
+            if (images[i].dataSrc === $elem.attr('src')) {
+              $elem.attr('data-fileid', results[i].data.createFile.id)
+              $elem.attr('alt', results[i].data.createFile.name)
+              $elem.attr(
+                'src',
+                results[i].data.createFile.storedObjects.find(
+                  storedObject => storedObject.type === 'medium',
+                ).url,
+              )
+            }
+          })
+
+          source = $.html()
+
+          const manuscript = {
+            id: manuscriptData.data.createManuscript.id,
+            meta: {
+              source,
+            },
+          }
+
+          // eslint-disable-next-line
+          const updatedManuscript = client.mutate({
+            mutation: updateMutation,
+            variables: {
+              id: manuscriptData.data.createManuscript.id,
+              input: JSON.stringify(manuscript),
+            },
+          })
+
+          manuscriptData.data.createManuscript.meta.source = source
+        })
+      }
     } else {
       // Create a manuscript without a file
       manuscriptData = await createManuscriptPromise(
