@@ -102,44 +102,44 @@ exports.up = async knex => {
       return Promise.all(
         manuscripts.map(async manuscript => {
           const { source } = manuscript.meta
-          const images = base64Images(source)
 
-          if (images.length > 0) {
-            const uploadedImages = []
+          if (typeof source === 'string') {
+            const images = base64Images(source)
 
-            await Promise.all(
-              map(images, async image => {
-                if (image.blob) {
-                  const uploadedImage = await uploadImage(image, manuscript.id)
-                  uploadedImages.push(uploadedImage)
-                }
-              }),
-            )
+            if (images.length > 0) {
+              const uploadedImages = []
 
-            const uploadedImagesWithUrl = await getFilesWithUrl(uploadedImages)
-
-            const $ = cheerio.load(source)
-
-            map(images, (image, index) => {
-              const elem = $('img').get(image.index)
-              const $elem = $(elem)
-              $elem.attr('data-fileid', uploadedImagesWithUrl[index].id)
-              $elem.attr('alt', uploadedImagesWithUrl[index].name)
-              $elem.attr(
-                'src',
-                uploadedImagesWithUrl[index].storedObjects.find(
-                  storedObject => storedObject.type === 'medium',
-                ).url,
+              await Promise.all(
+                map(images, async image => {
+                  if (image.blob) {
+                    const uploadedImage = await uploadImage(image, manuscript.id)
+                    uploadedImages.push(uploadedImage)
+                  }
+                }),
               )
-            })
 
-            manuscript.meta.source = $.html()
+              const uploadedImagesWithUrl = await getFilesWithUrl(uploadedImages)
 
-            /* eslint no-param-reassign: "error" */
-            await Manuscript.query().updateAndFetchById(
-              manuscript.id,
-              manuscript,
-            )
+              const $ = cheerio.load(source)
+
+              map(images, (image, index) => {
+                const elem = $('img').get(image.index)
+                const $elem = $(elem)
+                $elem.attr('data-fileid', uploadedImagesWithUrl[index].id)
+                $elem.attr('alt', uploadedImagesWithUrl[index].name)
+                $elem.attr(
+                  'src',
+                  uploadedImagesWithUrl[index].storedObjects.find(
+                    storedObject => storedObject.type === 'medium',
+                  ).url,
+                )
+              })
+
+              manuscript.meta.source = $.html()
+
+              /* eslint no-param-reassign: "error" */
+              await Manuscript.query().updateAndFetchById(manuscript.id, manuscript)
+            }
           }
 
           convertedManuscripts += 1
