@@ -51,8 +51,6 @@ const EditorSection = ({
 
   const isAuthorMode = !!(isCurrentUserAuthor && readonly)
 
-  console.log('rendering EditorSection again')
-
   return (
     <FullWaxEditor
       authorComments={isAuthorMode}
