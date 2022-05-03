@@ -151,6 +151,14 @@ const DecisionPage = ({ match }) => {
 
   const updateReview = async (reviewId, reviewData, manuscriptId) => {
     return doUpdateReview({
+      optimisticResponse: {
+        __typename: 'Mutation',
+        updateReview: {
+          id: reviewId,
+          __typename: 'Review',
+          input: reviewData,
+        },
+      },
       variables: { id: reviewId || undefined, input: reviewData },
       update: (cache, { data: { updateReview: updatedReview } }) => {
         cache.modify({
