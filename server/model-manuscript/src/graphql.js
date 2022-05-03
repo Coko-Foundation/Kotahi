@@ -900,11 +900,13 @@ const resolvers = {
 
       manuscript.files = await getFilesWithUrl(manuscript.files)
 
-      manuscript.meta.source = await replaceImageSrc(
-        manuscript.meta.source,
-        manuscript.files,
-        'medium',
-      )
+      if (typeof manuscript.meta.source === 'string') {
+        manuscript.meta.source = await replaceImageSrc(
+          manuscript.meta.source,
+          manuscript.files,
+          'medium',
+        )
+      }
 
       manuscript.meta.notes = (manuscript.meta || {}).notes || [
         {
