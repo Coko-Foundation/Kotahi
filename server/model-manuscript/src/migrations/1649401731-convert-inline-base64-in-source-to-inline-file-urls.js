@@ -112,13 +112,19 @@ exports.up = async knex => {
               await Promise.all(
                 map(images, async image => {
                   if (image.blob) {
-                    const uploadedImage = await uploadImage(image, manuscript.id)
+                    const uploadedImage = await uploadImage(
+                      image,
+                      manuscript.id,
+                    )
+
                     uploadedImages.push(uploadedImage)
                   }
                 }),
               )
 
-              const uploadedImagesWithUrl = await getFilesWithUrl(uploadedImages)
+              const uploadedImagesWithUrl = await getFilesWithUrl(
+                uploadedImages,
+              )
 
               const $ = cheerio.load(source)
 
@@ -138,7 +144,10 @@ exports.up = async knex => {
               manuscript.meta.source = $.html()
 
               /* eslint no-param-reassign: "error" */
-              await Manuscript.query().updateAndFetchById(manuscript.id, manuscript)
+              await Manuscript.query().updateAndFetchById(
+                manuscript.id,
+                manuscript,
+              )
             }
           }
 
