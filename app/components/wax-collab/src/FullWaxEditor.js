@@ -52,8 +52,6 @@ const FullWaxEditor = ({
 
   const editorRef = useRef(null)
 
-  console.log('rendering FullWaxEditor') // Why is this rerendering after we save?
-
   /* eslint-disable jsx-a11y/no-noninteractive-tabindex,  jsx-a11y/tabindex-no-positive */
 
   useEffect(() => {
@@ -89,7 +87,6 @@ const FullWaxEditor = ({
               : FullWaxEditorLayout(readonly)
           }
           onChange={source => {
-            console.log('onChange firign')
             saveSource(source)
           }}
           placeholder={placeholder}

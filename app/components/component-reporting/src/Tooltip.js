@@ -23,6 +23,7 @@ const Tip = styled.div`
   line-height: ${th('lineHeightBaseSmall')};
   position: absolute;
   width: max-content;
+  z-index: 999;
 `
 
 const TipInner = styled.div`
