@@ -3,6 +3,8 @@ import PropTypes from 'prop-types'
 import { useQuery, useMutation, gql, useApolloClient } from '@apollo/client'
 import { set, debounce } from 'lodash'
 import config from 'config'
+// eslint-disable-next-line no-unused-vars
+import { id } from 'inversify'
 import DecisionVersions from './DecisionVersions'
 import { Spinner, CommsErrorBanner } from '../../../shared'
 import { fragmentFields } from '../../../component-submit/src/userManuscriptFormQuery'
@@ -131,6 +133,7 @@ const DecisionPage = ({ match }) => {
 
   const [deleteFile] = useMutation(deleteFileMutation, {
     update(cache, { data: { deleteFile: fileToDelete } }) {
+      // eslint-disable-next-line no-shadow
       const id = cache.identify({
         __typename: 'File',
         id: fileToDelete,
@@ -151,15 +154,15 @@ const DecisionPage = ({ match }) => {
 
   const updateReview = async (reviewId, reviewData, manuscriptId) => {
     return doUpdateReview({
+      variables: { id: reviewId || undefined, input: reviewData },
       optimisticResponse: {
         __typename: 'Mutation',
         updateReview: {
-          id: reviewId,
-          __typename: 'Review',
+          id: 'reviewId',
+          __typename: 'review',
           input: reviewData,
         },
       },
-      variables: { id: reviewId || undefined, input: reviewData },
       update: (cache, { data: { updateReview: updatedReview } }) => {
         cache.modify({
           id: cache.identify({
