@@ -152,15 +152,40 @@ const DecisionPage = ({ match }) => {
     })
   }
 
-  const updateReview = async (reviewId, reviewData, manuscriptId) => {
+  const updateReview = (reviewId, reviewData, manuscriptId) => {
     return doUpdateReview({
       variables: { id: reviewId || undefined, input: reviewData },
       optimisticResponse: {
-        __typename: 'Mutation',
         updateReview: {
-          id: 'reviewId',
-          __typename: 'review',
-          input: reviewData,
+          id: 'e25321ac-4eb3-4445-b733-e5f56410537f',
+          created: '2022-05-04T10:34:42.337Z',
+          updated: '2022-05-04T14:54:46.087Z',
+          decisionComment: null,
+          reviewComment: {
+            id: '6e052b3a-63f2-4e7a-aa0c-7fa3313bcd82',
+            commentType: 'review',
+            content: '<p class="paragraph">ee to gadbad hai</p>',
+            files: [],
+            __typename: 'ReviewComment',
+          },
+          confidentialComment: null,
+          isDecision: false,
+          isHiddenFromAuthor: false,
+          isHiddenReviewerName: false,
+          canBePublishedPublicly: null,
+          recommendation: 'revise',
+          user: {
+            id: '33d46af2-9dc6-455b-9fbd-3d2e641d7232',
+            username: 'Snehil',
+            profilePicture: null,
+            defaultIdentity: {
+              id: 'b231e8e7-d076-4e8d-a3f1-1209a332addc',
+              identifier: '0000-0003-3483-9210',
+              __typename: 'Identity',
+            },
+            __typename: 'User',
+          },
+          __typename: 'Review',
         },
       },
       update: (cache, { data: { updateReview: updatedReview } }) => {
