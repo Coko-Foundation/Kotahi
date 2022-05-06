@@ -131,7 +131,6 @@ const DecisionPage = ({ match }) => {
 
   const [deleteFile] = useMutation(deleteFileMutation, {
     update(cache, { data: { deleteFile: fileToDelete } }) {
-      // eslint-disable-next-line no-shadow
       const id = cache.identify({
         __typename: 'File',
         id: fileToDelete,
