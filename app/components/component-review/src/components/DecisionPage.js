@@ -118,7 +118,7 @@ const DecisionPage = ({ match }) => {
     variables: {
       id: match.params.version,
     },
-    fetchPolicy: 'network-only', // TODO This prevents reviews sometimes having a null user. The whole graphql/caching in DecisionPage and DecisionVersion needs clean-up.
+    fetchPolicy: 'cache-and-network', // TODO This prevents reviews sometimes having a null user. The whole graphql/caching in DecisionPage and DecisionVersion needs clean-up.
   })
 
   const [update] = useMutation(updateMutation)
@@ -152,40 +152,17 @@ const DecisionPage = ({ match }) => {
     })
   }
 
-  const updateReview = (reviewId, reviewData, manuscriptId) => {
-    return doUpdateReview({
+  const updateReview = async (reviewId, reviewData, manuscriptId) => {
+    doUpdateReview({
       variables: { id: reviewId || undefined, input: reviewData },
+      // Check/uncheck delay fix
       optimisticResponse: {
+        __typename: 'Mutation',
         updateReview: {
-          id: 'e25321ac-4eb3-4445-b733-e5f56410537f',
-          created: '2022-05-04T10:34:42.337Z',
-          updated: '2022-05-04T14:54:46.087Z',
-          decisionComment: null,
-          reviewComment: {
-            id: '6e052b3a-63f2-4e7a-aa0c-7fa3313bcd82',
-            commentType: 'review',
-            content: '<p class="paragraph">ee to gadbad hai</p>',
-            files: [],
-            __typename: 'ReviewComment',
-          },
-          confidentialComment: null,
-          isDecision: false,
-          isHiddenFromAuthor: false,
-          isHiddenReviewerName: false,
-          canBePublishedPublicly: null,
-          recommendation: 'revise',
-          user: {
-            id: '33d46af2-9dc6-455b-9fbd-3d2e641d7232',
-            username: 'Snehil',
-            profilePicture: null,
-            defaultIdentity: {
-              id: 'b231e8e7-d076-4e8d-a3f1-1209a332addc',
-              identifier: '0000-0003-3483-9210',
-              __typename: 'Identity',
-            },
-            __typename: 'User',
-          },
+          id: reviewId,
           __typename: 'Review',
+          isHiddenFromAuthor: reviewData.isHiddenFromAuthor,
+          isHiddenReviewerName: reviewData.isHiddenReviewerName,
         },
       },
       update: (cache, { data: { updateReview: updatedReview } }) => {
@@ -221,7 +198,7 @@ const DecisionPage = ({ match }) => {
     })
   }
 
-  if (loading) return <Spinner />
+  if (loading && !data) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
   const { manuscript, formForPurposeAndCategory, currentUser, users } = data

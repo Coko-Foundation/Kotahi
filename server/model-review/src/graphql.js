@@ -5,18 +5,9 @@ const File = require('@coko/server/src/models/file/file.model')
 // const { get } = require('lodash')
 const { getFilesWithUrl } = require('../../utils/fileStorageUtils')
 
-const delay = milisec => {
-  return new Promise(resolve => {
-    setTimeout(() => {
-      resolve('')
-    }, milisec)
-  })
-}
-
 const resolvers = {
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
-      await delay(100)
       // We process comment fields into array
       const userId = input.userId ? input.userId : ctx.user
 
