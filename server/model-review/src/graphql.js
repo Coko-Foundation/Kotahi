@@ -2,7 +2,6 @@
 // const Review = require('./review')
 const models = require('@pubsweet/models')
 const File = require('@coko/server/src/models/file/file.model')
-// const { get } = require('lodash')
 const { getFilesWithUrl } = require('../../utils/fileStorageUtils')
 
 const resolvers = {
