@@ -1,3 +1,4 @@
+const he = require('he')
 const ArticleImportSources = require('../model-article-import-sources/src/articleImportSources')
 const ArticleImportHistory = require('../model-article-import-history/src/articleImportHistory')
 const Form = require('../model-form/src/form')
@@ -57,9 +58,18 @@ const getEmptySubmission = async () => {
 const getDate2WeeksAgo = () =>
   +new Date(new Date(Date.now()).toISOString().split('T')[0]) - 12096e5
 
+/** Converts an abstract retrieved from bioRxiv or medRxiv to safe HTML. */
+const rawAbstractToSafeHtml = raw => {
+  if (!raw) return null
+  // TODO replace substrings such as '{beta}', '{gamma}' with unicode characters. I don't know if they all use HTML entity names
+  const encoded = he.encode(raw)
+  return `<p>${encoded.replace(/\n\s*/g, '</p>\n<p>')}</p>`
+}
+
 module.exports = {
   getServerId,
   getLastImportDate,
   getEmptySubmission,
   getDate2WeeksAgo,
+  rawAbstractToSafeHtml,
 }

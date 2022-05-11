@@ -365,22 +365,14 @@ const resolvers = {
       } else if (process.env.INSTANCE_NAME === 'colab') {
         promises.push(
           importArticlesFromBiorxivWithFullTextSearch(ctx, [
-            'membrane protein',
-            'ion channel',
-            'transporter',
-            'pump',
+            'transporter*',
+            'pump*',
             'gpcr',
-            'G protein-coupled receptor',
-            'exchanger',
-            'uniporter',
-            'symporter',
-            'antiporter',
-            'solute carrier',
-            'atpase',
-            'rhodopsin',
-            'patch-clamp',
-            'voltage-clamp',
-            'single-channel',
+            'gating',
+            '*-gated',
+            '*-selective',
+            '*-pumping',
+            'protein translocation',
           ]),
         )
       }
