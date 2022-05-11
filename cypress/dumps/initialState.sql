@@ -227,6 +227,8 @@ CREATE TABLE public.files (
     id uuid NOT NULL,
     created timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated timestamp with time zone,
+    object_type TEXT,
+    object_id UUID,
     label text,
     file_type text NOT NULL,
     filename text NOT NULL,
