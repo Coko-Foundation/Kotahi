@@ -20,7 +20,7 @@ describe('URL submission test', () => {
 
     // enter email
     cy.contains('Enter Email').click()
-    cy.get('#enter-email').type('abc@gmail.com')
+    cy.get('#enter-email').type('emily@gmail.com')
 
     // submit the email
     cy.contains('Next').click()

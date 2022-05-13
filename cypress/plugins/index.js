@@ -44,8 +44,14 @@ module.exports = (on, config) => {
 
       return true
     },
-    restore: async name => seed(readFileSync(dumpFile(name), 'utf-8')),
+    restore: async name => {
+      // eslint-disable-next-line no-console
+      console.log(name, 'sahi wala')
+      return seed(readFileSync(dumpFile(name), 'utf-8'))
+    },
     createToken: async name => {
+      // eslint-disable-next-line no-console
+      console.log(name)
       // eslint-disable-next-line global-require
       const { User } = require('@pubsweet/models')
       // eslint-disable-next-line global-require
