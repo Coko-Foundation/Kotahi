@@ -1,3 +1,5 @@
+/* eslint-disable global-require */
+/* eslint-disable no-console */
 // ***********************************************************
 // This example plugins/index.js can be used to load plugins
 //
@@ -50,12 +52,11 @@ module.exports = (on, config) => {
       return seed(readFileSync(dumpFile(name), 'utf-8'))
     },
     createToken: async name => {
-      // eslint-disable-next-line no-console
-      console.log(name)
-      // eslint-disable-next-line global-require
       const { User } = require('@pubsweet/models')
-      // eslint-disable-next-line global-require
+
       const { createJWT } = require('@coko/server')
+
+      console.log(`find user with username = ${testUsers[name]}`)
 
       const user = await User.query()
         .where({ username: testUsers[name] })

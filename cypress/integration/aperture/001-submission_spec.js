@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
 import { DashboardPage } from '../../page-object/dashboard-page'
@@ -57,51 +58,51 @@ describe('URL submission test', () => {
     })
   })
 
-  it('senior editor can view the submission', () => {
-    // task to restore the database as per the  dumps/submission_complete.sql
-    cy.task('restore', 'submission_complete')
-    cy.task('seedForms')
+  // it('senior editor can view the submission', () => {
+  //   // task to restore the database as per the  dumps/submission_complete.sql
+  //   cy.task('restore', 'submission_complete')
+  //   cy.task('seedForms')
 
-    cy.fixture('submission_form_data').then(data => {
-      cy.fixture('role_names').then(name => {
-        // login as admin
-        cy.login(name.role.admin, dashboard)
+  //   cy.fixture('submission_form_data').then(data => {
+  //     cy.fixture('role_names').then(name => {
+  //       // login as admin
+  //       cy.login(name.role.admin, dashboard)
 
-        // enter email
-        cy.contains('Enter Email').click()
-        cy.get('#enter-email').type('admin@gmail.com')
+  //       // enter email
+  //       cy.contains('Enter Email').click()
+  //       cy.get('#enter-email').type('admin@gmail.com')
 
-        // submit the email
-        cy.contains('Next').click()
+  //       // submit the email
+  //       cy.contains('Next').click()
 
-        // select Control on the Manuscripts page
-        Menu.clickManuscripts()
+  //       // select Control on the Manuscripts page
+  //       Menu.clickManuscripts()
 
-        ManuscriptsPage.selectOptionWithText('Control')
+  //       ManuscriptsPage.selectOptionWithText('Control')
 
-        ControlPage.getMetadataTab(2).click()
-        ControlPage.getMetadataCell(3).should('contain', data.title)
+  //       ControlPage.getMetadataTab(2).click()
+  //       ControlPage.getMetadataCell(3).should('contain', data.title)
 
-        ControlPage.getWorkflowTab().click()
+  //       ControlPage.getWorkflowTab().click()
 
-        // assign seniorEditor
-        ControlPage.clickAssignSeniorEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
-        ControlPage.clickAssignHandlingEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
-        ControlPage.clickAssignEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
-        // assert the reviews
-        ControlPage.fillInDecision(data.decision)
-        ControlPage.clickAccept()
-        ControlPage.clickSubmit()
-        ControlPage.clickPublish()
-      })
-    })
+  //       // assign seniorEditor
+  //       ControlPage.clickAssignSeniorEditorDropdown()
+  //       ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
+  //       ControlPage.clickAssignHandlingEditorDropdown()
+  //       ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
+  //       ControlPage.clickAssignEditorDropdown()
+  //       ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
+  //       // assert the reviews
+  //       ControlPage.fillInDecision(data.decision)
+  //       ControlPage.clickAccept()
+  //       ControlPage.clickSubmit()
+  //       ControlPage.clickPublish()
+  //     })
+  //   })
 
-    // task to dump data in dumps/senior_editor_assigned.sql
-    cy.task('dump', 'senior_editor_assigned')
+  //   // task to dump data in dumps/senior_editor_assigned.sql
+  //   cy.task('dump', 'senior_editor_assigned')
 
-    cy.contains('Dashboard').click()
-  })
+  //   cy.contains('Dashboard').click()
+  // })
 })

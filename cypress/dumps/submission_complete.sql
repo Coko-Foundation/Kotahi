@@ -1,5 +1,5 @@
 --
--- PostgreSQL database dump
+-- PstgreSQL database dump
 --
 
 -- Dumped from database version 10.5
@@ -53,7 +53,7 @@ COMMENT ON EXTENSION pgcrypto IS 'cryptographic functions';
 
 
 --
--- Name: job_state; Type: TYPE; Schema: pgboss; Owner: kotahidev
+-- Name: _state; Type: TYPE; Schema: pgboss; Owner: kotahidev
 --
 
 CREATE TYPE pgboss.job_state AS ENUM (
