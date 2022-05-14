@@ -8,8 +8,8 @@ import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { ControlPage } from '../../page-object/control-page'
 import { dashboard } from '../../support/routes'
 
-describe('URL submission test', () => {
-  it('can submit a URL and some metadata', () => {
+describe('Upload manuscript test', () => {
+  it('can upload a manuscript and some metadata', () => {
     // task to restore the database as per the  dumps/initialState.sql
     cy.task('restore', 'initialState')
     cy.task('seedForms')
@@ -58,51 +58,46 @@ describe('URL submission test', () => {
     })
   })
 
-  // it('senior editor can view the submission', () => {
-  //   // task to restore the database as per the  dumps/submission_complete.sql
-  //   cy.task('restore', 'submission_complete')
-  //   cy.task('seedForms')
+  it('senior editor can view the submission', () => {
+    // task to restore the database as per the  dumps/submission_complete.sql
+    cy.task('restore', 'submission_complete')
+    cy.task('seedForms')
 
-  //   cy.fixture('submission_form_data').then(data => {
-  //     cy.fixture('role_names').then(name => {
-  //       // login as admin
-  //       cy.login(name.role.admin, dashboard)
+    cy.fixture('submission_form_data').then(data => {
+      cy.fixture('role_names').then(name => {
+        // login as admin
+        cy.login(name.role.admin, dashboard)
 
-  //       // enter email
-  //       cy.contains('Enter Email').click()
-  //       cy.get('#enter-email').type('admin@gmail.com')
+        // enter email
+        cy.contains('Enter Email').click()
+        cy.get('#enter-email').type('admin@gmail.com')
 
-  //       // submit the email
-  //       cy.contains('Next').click()
+        // submit the email
+        cy.contains('Next').click()
 
-  //       // select Control on the Manuscripts page
-  //       Menu.clickManuscripts()
+        // select Control on the Manuscripts page
+        Menu.clickManuscripts()
 
-  //       ManuscriptsPage.selectOptionWithText('Control')
+        ManuscriptsPage.selectOptionWithText('Control')
 
-  //       ControlPage.getMetadataTab(2).click()
-  //       ControlPage.getMetadataCell(3).should('contain', data.title)
+        // assign seniorEditor
+        ControlPage.clickAssignSeniorEditorDropdown()
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
+        ControlPage.clickAssignHandlingEditorDropdown()
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
+        ControlPage.clickAssignEditorDropdown()
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
+        // assert the reviews
+        ControlPage.fillInDecision(data.decision)
+        ControlPage.clickAccept()
+        ControlPage.clickSubmit()
+        ControlPage.clickPublish()
+      })
+    })
 
-  //       ControlPage.getWorkflowTab().click()
+    // task to dump data in dumps/senior_editor_assigned.sql
+    cy.task('dump', 'senior_editor_assigned')
 
-  //       // assign seniorEditor
-  //       ControlPage.clickAssignSeniorEditorDropdown()
-  //       ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
-  //       ControlPage.clickAssignHandlingEditorDropdown()
-  //       ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
-  //       ControlPage.clickAssignEditorDropdown()
-  //       ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
-  //       // assert the reviews
-  //       ControlPage.fillInDecision(data.decision)
-  //       ControlPage.clickAccept()
-  //       ControlPage.clickSubmit()
-  //       ControlPage.clickPublish()
-  //     })
-  //   })
-
-  //   // task to dump data in dumps/senior_editor_assigned.sql
-  //   cy.task('dump', 'senior_editor_assigned')
-
-  //   cy.contains('Dashboard').click()
-  // })
+    cy.contains('Dashboard').click()
+  })
 })

@@ -223,23 +223,51 @@ ALTER TABLE public.entities OWNER TO kotahidev;
 -- Name: files; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
+DROP TABLE IF EXISTS "public"."files";
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+
+-- Table Definition
 CREATE TABLE public.files (
-    id uuid NOT NULL,
-    created timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
-    updated timestamp with time zone,
-    label text,
-    file_type text NOT NULL,
-    filename text NOT NULL,
-    url text NOT NULL,
-    mime_type text,
-    size integer NOT NULL,
-    type text NOT NULL,
-    manuscript_id uuid NOT NULL,
-    review_comment_id uuid
+    id UUID NOT NULL,
+    created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    updated TIMESTAMP WITH TIME ZONE,
+    object_type TEXT,
+    object_id UUID,
+    label TEXT,
+    file_type TEXT,
+    filename TEXT,
+    url TEXT,
+    mime_type TEXT,
+    size INTEGER,
+    type TEXT NOT NULL,
+     manuscript_id UUID NOT NULL,
+     review_comment_id UUID 
 );
 
 
 ALTER TABLE public.files OWNER TO kotahidev;
+
+
+DROP TABLE IF EXISTS "public"."files_old";
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+
+-- Table Definition
+CREATE TABLE "public"."files_old" (
+    "id" uuid NOT NULL,
+    "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz,
+    "object_type" text,
+    "object_id" uuid,
+    "label" text,
+    "file_type" text NOT NULL,
+    "filename" text NOT NULL,
+    "url" text NOT NULL,
+    "mime_type" text,
+    "size" int4 NOT NULL,
+    "type" text NOT NULL,
+    "manuscript_id" uuid NOT NULL,
+    "review_comment_id" uuid
+);
 
 --
 -- Name: forms; Type: TABLE; Schema: public; Owner: kotahidev
@@ -955,6 +983,16 @@ where parent.id = child.parent_id;
 
 
 ALTER TABLE public.manuscripts ADD is_hidden BOOLEAN;
+
+
+
+INSERT INTO "public"."forms" ("id", "type", "created", "updated", "purpose", "structure", "category") VALUES
+('522b8066-e02e-4cd3-90e7-3b4985052381', 'Form', '2022-05-13 10:53:22.715+00', '2022-05-13 10:53:22.715+00', 'review', '{"name": "Review Form", "children": [{"id": "78a82745-2aa7-4725-b42d-d54809dd7926", "name": "meta.abstract", "title": "Comments to the Author", "component": "AbstractEditor", "description": "<p class=\"paragraph\">Text field for comments to the author.</p>", "placeholder": "Enter your review..."}, {"id": "19893e6e-aca6-40ec-9a0a-34c490ba22ac", "name": "authorFileName", "title": "authorFiles", "component": "SupplementaryFiles", "description": "<p class=\"paragraph\">Drag and drop your files here</p>"}, {"id": "e169b0fa-377a-43a4-9365-ce7e9b1f8f38", "name": "meta.abstract", "title": "Confidential comments to editor (optional)", "component": "AbstractEditor", "description": "<p class=\"paragraph\">Confidential note for the editor</p>", "placeholder": "Enter a confidential note to the editor (optional)…", "hideFromAuthors": "true"}, {"id": "78a94bf5-05c9-411d-bc97-5f84d2f686a2", "name": "fileName", "title": "Files", "component": "SupplementaryFiles", "description": "<p class=\"paragraph\">Drag and drop your files here</p>"}, {"id": "5705067e-3ee0-41ae-a953-87167b171c3f", "name": "submission.status", "title": "Decision Status", "inline": "false", "options": [{"id": "1ba634b0-82f9-481c-a135-77c6d3e28fec", "label": "Accept", "value": "accept", "labelColor": "#00ff7b"}, {"id": "459469e8-12ca-426c-9e05-581a14fe7c03", "label": "Revise", "value": "revise", "labelColor": "#daea61"}, {"id": "e38b9433-4e93-4e1d-b4a3-5a14f7ac3fc6", "label": "Reject", "value": "reject", "labelColor": "#e64e3d"}], "validate": [{"id": "76c87808-32cb-41cb-9f72-5254f610015f", "label": "Required", "value": "required"}], "component": "RadioGroup", "description": "<p class=\"paragraph\">Status of decesion </p>"}], "haspopup": "false", "description": "<p class=\"paragraph\">Form for Reviews</p>"}', 'review'),
+('7b528dff-793b-4c77-a250-8e4b1bbcbf0e', 'Form', '2022-05-13 10:53:22.717+00', '2022-05-13 10:53:22.717+00', 'decision', '{"name": "Decision Form", "children": [{"id": "74cf4404-3d04-46cb-a3da-e7d70d47db0a", "name": "meta.abstract", "title": "Decision", "component": "AbstractEditor", "description": "<p class=\"paragraph\">Text field for decisions.</p>", "placeholder": "Write/paste your decision letter here, or upload it using the upload button on the right."}, {"id": "78a94bf5-05c9-411d-bc97-5f84d2f686a2", "name": "fileName", "title": "Files", "component": "SupplementaryFiles", "description": "<p class=\"paragraph\">Drag and drop your files here</p>"}, {"id": "5705067e-3ee0-41ae-a953-87167b171c3f", "name": "submission.status", "title": "Decision Status", "inline": "false", "options": [{"id": "1ba634b0-82f9-481c-a135-77c6d3e28fec", "label": "Accept", "value": "accept", "labelColor": "#00ff7b"}, {"id": "459469e8-12ca-426c-9e05-581a14fe7c03", "label": "Revise", "value": "revise", "labelColor": "#daea61"}, {"id": "e38b9433-4e93-4e1d-b4a3-5a14f7ac3fc6", "label": "Reject", "value": "reject", "labelColor": "#e64e3d"}], "validate": [{"id": "76c87808-32cb-41cb-9f72-5254f610015f", "label": "Required", "value": "required"}], "component": "RadioGroup", "description": "<p class=\"paragraph\">Status of decesion </p>"}], "haspopup": "false"}', 'decision'),
+('eae525b1-5b07-4c67-9bca-daf88bcb9804', 'Form', '2022-05-13 10:53:22.71+00', '2022-05-13 10:53:22.71+00', 'submit', '{"name": "Research Object Submission Form", "children": [{"id": "fa0c39ca-0486-4e29-ba24-f86f7d375c3f", "name": "submission.objectType", "title": "Type of Research Object", "options": [{"id": "df5fc212-b055-4cba-9d0e-e85222e3d4f2", "label": "Dataset", "value": "dataset"}, {"id": "ef2ddada-105a-412e-8d7f-56b1df44c02f", "label": "Software", "value": "software"}, {"id": "0fafbfc3-6797-46e3-aff4-3fd4f16261b1", "label": "Figure", "value": "figure"}, {"id": "5117a7c6-2fcf-414b-ac60-47f8d93ccfef", "label": "Notebook", "value": "notebook"}, {"id": "32121b38-b855-465e-b039-b5100177698b", "label": "Research article ", "value": "Research article "}], "component": "Select"}, {"id": "47fd802f-ed30-460d-9617-c8a9b9025e95", "name": "meta.title", "title": "Title", "component": "TextField", "placeholder": "Enter the manuscript''s title", "includeInReviewerPreview": "true"}, {"id": "d76e5b3c-eeaa-4168-9318-95d43a31e3e4", "name": "submission.authorNames", "title": "Author names", "component": "AuthorsInput", "includeInReviewerPreview": "true"}, {"id": "62ca72ad-04b0-41fc-85d1-415469d7e895", "name": "submission.topics", "title": "Topics", "options": [{"id": "2323b6d1-8223-45e8-a0fc-1044a1e39d37", "label": "Neuropsychology ", "value": "Neuropsychology "}, {"id": "ac7cafca-c5c8-4940-9f2f-014d18660e90", "label": "Topic 2", "value": "Topic 2"}, {"id": "93c88240-9c2b-4c23-9301-23ed94ef61d7", "label": "Topic 3", "value": "Topic 3"}], "component": "CheckboxGroup", "includeInReviewerPreview": "true"}, {"id": "1c2e9325-3fa8-41f3-8607-180eb8a25aa3", "name": "submission.DOI", "title": "DOI", "component": "TextField", "placeholder": "Enter the manuscript''s DOI", "doiValidation": "true", "includeInReviewerPreview": "true"}, {"id": "d80b2c88-6144-4003-b671-63990b9b2793", "name": "submission.abstract", "title": "Abstract", "component": "AbstractEditor", "description": "<p>Please provide a short summary of your submission</p>", "placeholder": "Input your abstract...", "shortDescription": "Abstract", "includeInReviewerPreview": "true"}, {"id": "7f5aa395-3486-4067-b636-ae204d472c16", "name": "submission.AuthorCorrespondence", "title": "Author correspondence ", "component": "TextField"}, {"id": "347dc171-f008-45ac-8433-ca0711bf213c", "name": "submission.cover", "title": "Cover letter", "component": "AbstractEditor", "description": "<p>Cover letter describing submission, relevant implications, and timely information to consider</p>", "placeholder": "Enter your cover letter"}, {"id": "14b8da7d-5924-4098-8d1f-e528c7c440b9", "name": "submission.EditorsEvaluation", "title": "Editors evaluation ", "component": "TextField"}, {"id": "bf2f9b4a-377b-4303-8f51-70d836eb1456", "name": "submission.datacode", "title": "Data and Code availability statements", "component": "AbstractEditor", "placeholder": "Enter your data and code availability statement"}, {"id": "fa5e5b75-4b6f-4a2d-9113-c2b4db73ef8a", "name": "submission.competingInterests", "title": "Competing interests", "component": "AbstractEditor", "includeInReviewerPreview": "true"}, {"id": "6bfdc237-814d-4af8-b0f0-064099d679ba", "name": "submission.Funding", "title": "Funding", "component": "TextField"}, {"id": "b769b4d5-f9b3-48d3-a6d5-77bb6a9e95b0", "name": "fileName", "title": "Upload supplementary materials", "component": "SupplementaryFiles"}, {"id": "b127ecb1-4862-4662-a958-3266eb284353", "name": "submission.authorContributions", "title": "Author contributions ", "component": "TextField"}, {"id": "6342cff7-c57a-4fd9-b91d-c4cf77b4c309", "name": "submission.DecisionLetter", "title": "Decision letter and author response", "component": "AbstractEditor"}, {"id": "e8af0c63-e46f-46a8-bc90-5023fe50a541", "name": "submission.references", "title": "References ", "component": "AbstractEditor", "includeInReviewerPreview": "true"}, {"id": "ebe75cec-0ba8-4f00-9024-20e77ed94f1c", "name": "submission.reviewingEditor", "title": "Reviewing editors name ", "component": "AuthorsInput"}, {"id": "6871680a-2278-40b3-80c6-7de06f21aafb", "name": "submission.copyrightHolder", "title": "Copyright holder", "component": "TextField", "description": "<p class=\"paragraph\">e.g. British Medical Journal </p>"}, {"id": "1e9ff636-f850-4d20-b079-36af49fa4ad1", "name": "submission.copyrightStatement", "title": "Copyright statement ", "component": "TextField", "description": "<p class=\"paragraph\">e.g. This article is distributed under the terms of the Creative Commons Attribution License, which permits unrestricted use and redistribution provided that the original author and source are credited.</p>"}, {"id": "7617c919-4413-4306-b709-ef78c3110c3f", "name": "submission.copyrightYear", "title": "Copyright year ", "component": "TextField", "description": "<p class=\"paragraph\">e.g. 2022</p>"}, {"id": "6deaacc6-759a-4a68-b494-c38c664bb665", "name": "submission.dateReceived", "title": "Date received ", "component": "TextField", "description": "<p class=\"paragraph\">preferred format: DD.MM.YYYY e.g. 07.01.2021</p>"}, {"id": "8b858adc-5f65-4385-9f79-5c5af1f67bd5", "name": "submission.dateAccepted", "title": "Date accepted", "component": "TextField", "description": "<p class=\"paragraph\">preferred format: DD.MM.YYYY e.g. 07.01.2021</p>"}, {"id": "f6e46890-4b96-4c90-ab48-b4fc5abb9b40", "name": "submission.datePublished", "title": "Date published ", "component": "TextField", "description": "<p class=\"paragraph\">preferred format: DD.MM.YYYY e.g. 07.01.2021</p>"}], "haspopup": "true", "popuptitle": "By submitting the manuscript, you agree to the following statements.", "description": "<p>Please fill out the form below to complete your submission.</p>", "popupdescription": "<p>The corresponding author confirms that all co-authors are included, and that everyone listed as a co-author agrees to that role and all the following requirements and acknowledgements:</p><p></p><p>The submission represents original work and sources are given proper attribution. The journal employs CrossCheck to compare submissions against a large and growing database of published scholarly content. If in the judgment of a senior editor a submission is genuinely suspected of plagiarism, it will be returned to the author(s) with a request for explanation.</p><p></p><p>The research was conducted in accordance with ethical principles.</p><p></p><p>There is a Data Accessibility Statement, containing information about the location of open data and materials, in the manuscript.</p><p></p><p>A conflict of interest statement is present in the manuscript, even if to state no conflicts of interest.</p>"}', 'submission');
+
+
+
 --
 -- PostgreSQL database dump complete
 --

@@ -241,6 +241,28 @@ CREATE TABLE public.files (
 
 ALTER TABLE public.files OWNER TO kotahidev;
 
+
+DROP TABLE IF EXISTS "public"."files_old";
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+
+-- Table Definition
+CREATE TABLE "public"."files_old" (
+    "id" uuid NOT NULL,
+    "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz,
+    "object_type" text,
+    "object_id" uuid,
+    "label" text,
+    "file_type" text NOT NULL,
+    "filename" text NOT NULL,
+    "url" text NOT NULL,
+    "mime_type" text,
+    "size" int4 NOT NULL,
+    "type" text NOT NULL,
+    "manuscript_id" uuid NOT NULL,
+    "review_comment_id" uuid
+);
+
 --
 -- Name: forms; Type: TABLE; Schema: public; Owner: kotahidev
 --

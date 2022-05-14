@@ -32,7 +32,7 @@ describe('Publishing a submission', () => {
 
       cy.visit('/')
 
-      PublicationPage.getPublicationTitle().should('eq', 'My URL submission')
+      PublicationPage.getPublicationTitle().should('eq', 'test pdf')
     })
 
     // task to dump data in dumps/published_submission.sql

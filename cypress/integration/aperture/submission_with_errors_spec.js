@@ -1,5 +1,6 @@
 /* eslint-disable jest/expect-expect */
 import { DashboardPage } from '../../page-object/dashboard-page'
+// eslint-disable-next-line import/named
 import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { dashboard } from '../../support/routes'

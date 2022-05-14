@@ -7,7 +7,7 @@
  */
 const MANAGE_REVIEWERS_BUTTON = '[class*=General__SectionRow] > a'
 
-const DECISION_FIELD ='[contenteditable="true"]'
+const DECISION_FIELD = '[contenteditable="true"]'
 
 const PUBLISH_BUTTON = '[class*=General__SectionAction] > button[type=button]'
 const PUBLISH_INFO_MESSAGE = 'General__SectionActionInfo'
@@ -94,10 +94,9 @@ export const ControlPage = {
   getDropdownOptionList() {
     return cy.get(DROPDOWN_OPTION_LIST)
   },
-  selectDropdownOptionByName(name){
-    console.log(this.getDropdownOptionList())
+  selectDropdownOptionByName(name) {
     this.getDropdownOptionList().contains(name).click()
- },
+  },
 
   getMetadataCell() {
     return cy.getByContainsClass(METADATA_CELL)
