@@ -56,6 +56,7 @@ const DetailText = styled.div`
 `
 
 const DateWrapper = styled.div`
+  align-items: center;
   display: flex;
   justify-content: space-between;
   margin-left: 30px;
@@ -68,7 +69,6 @@ const DateWrapper = styled.div`
 const CommentMetaWrapper = styled.div`
   align-items: center;
   display: flex;
-  margin-bottom: 5px;
   @media (max-width: 768px) {
     align-items: flex-start;
     flex-direction: column;
@@ -84,10 +84,6 @@ const UserName = styled.span`
   margin-bottom: 0px;
 `
 
-const CommentStatus = styled.div`
-  margin-left: 20px;
-`
-
 const ButtonWrapper = styled.div`
   display: flex;
   justify-content: space-between;
@@ -99,10 +95,15 @@ const ModalContainer = styled.div`
   background: ${th('colorBackground')};
   padding: 20px 24px;
   z-index: 9999;
+
+  p {
+    font-family: ${th('fontWriting')};
+    font-size: ${th('fontSizeBase')};
+  }
 `
 
 const SimpleWaxEditorWrapper = styled.div`
-  margin-top: 20px;
+  margin-top: 10px;
   ${props =>
     props.collapse
       ? css`
@@ -118,13 +119,18 @@ const SimpleWaxEditorWrapper = styled.div`
     overflow: hidden;
   }
 
+  p {
+    font-family: ${th('fontWriting')};
+    font-size: ${th('fontSizeBase')};
+    margin: 0px;
+  }
   padding-bottom: 20px;
   position: relative;
 `
 
 const CollapseOverlay = styled.div`
-  bottom: -10px;
-  height: 55px;
+  bottom: 0px;
+  height: 50px;
   ${props =>
     props.collapse
       ? css`
@@ -154,7 +160,10 @@ const Collapse = styled.div`
 const ActionWrapper = styled.div`
   display: flex;
   justify-content: flex-end;
-  margin-bottom: 5px;
+
+  svg {
+    stroke: ${th('colorIconPrimary')};
+  }
 `
 
 const CancelButton = styled(Button)`
@@ -165,6 +174,11 @@ const CancelButton = styled(Button)`
   &:hover {
     background-color: ${darken('colorFurniture', 0.1)};
   }
+`
+
+const CommentContainer = styled.div`
+  border-bottom: 1px ${th('borderStyle')} ${th('colorContainerBorder')};
+  padding-bottom: 25px;
 `
 
 export {
@@ -180,7 +194,6 @@ export {
   UserMetaWrapper,
   UserName,
   ButtonWrapper,
-  CommentStatus,
   ModalContainer,
   SimpleWaxEditorWrapper,
   CollapseOverlay,
@@ -188,4 +201,5 @@ export {
   ActionWrapper,
   Collapse,
   CancelButton,
+  CommentContainer,
 }
