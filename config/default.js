@@ -206,9 +206,12 @@ module.exports = {
       'application/zip',
     ],
   },
-  'paged-js': {
-    pagedJsClientId: '',
-    pagedJsClientSecret: '',
+  pagedjs: {
+    clientId: '',
+    clientSecret: '',
+    protocol: '',
+    host: '',
+    port: '',
   },
   /** These named configuration sections will be available to webpack */
   publicKeys: [
@@ -225,7 +228,7 @@ module.exports = {
     'hypothesis',
     'review',
     'notification-email',
-    'paged-js',
+    'pagedjs',
   ],
   crossref: {
     login: '',

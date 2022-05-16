@@ -82,8 +82,11 @@ module.exports = {
     maximumWidthForSmallImages: 'MAXIMUM_WIDTH_FOR_SMALL_IMAGES',
     maximumWidthForMediumImages: 'MAXIMUM_WIDTH_FOR_MEDIUM_IMAGES',
   },
-  'paged-js': {
-    pagedJsClientId: 'PAGED_JS_CLIENT_ID',
-    pagedJsClientSecret: 'PAGED_JS_CLIENT_SECRET',
+  pagedjs: {
+    clientId: 'SERVICE_PAGEDJS_CLIENT_ID',
+    clientSecret: 'SERVICE_PAGEDJS_SECRET',
+    protocol: 'SERVICE_PAGEDJS_PROTOCOL',
+    host: 'SERVICE_PAGEDJS_HOST',
+    port: 'SERVICE_PAGEDJS_PORT',
   },
 }
