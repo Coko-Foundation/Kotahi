@@ -50,7 +50,7 @@ const NoteRight = styled.div`
 `
 
 const filesToAttachment = file => ({
-  name: file.filename,
+  name: file.name,
   url: file.storedObjects[0].url,
 })
 
