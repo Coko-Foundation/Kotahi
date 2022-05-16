@@ -39,13 +39,6 @@ module.exports = {
     publishingWebhookToken: 'PUBLISHING_WEBHOOK_TOKEN',
     publishingWebhookRef: 'PUBLISHING_WEBHOOK_REF',
   },
-  s3: {
-    accessKeyId: 'S3_ACCESS_KEY_ID',
-    secretAccessKey: 'S3_ACCESS_KEY_SECRET',
-    endpoint: 'S3_ENDPOINT',
-    region: 'S3_REGION',
-    bucket: 'S3_BUCKET',
-  },
   crossref: {
     login: 'CROSSREF_LOGIN',
     password: 'CROSSREF_PASSWORD',

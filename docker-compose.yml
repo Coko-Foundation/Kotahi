@@ -125,7 +125,6 @@ services:
     volumes:
       - ./config:/home/node/app/config
       - ./server:/home/node/app/server
-      - ./minio.js:/home/node/app/minio.js
       - ./uploads:/home/node/app/uploads
 
   pagedjs:

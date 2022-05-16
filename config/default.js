@@ -227,13 +227,6 @@ module.exports = {
     'notification-email',
     'paged-js',
   ],
-  s3: {
-    accessKeyId: 'test',
-    secretAccessKey: 'password',
-    endpoint: 'http://minio:9000',
-    region: 'us-east-1',
-    bucket: 'kotahi',
-  },
   crossref: {
     login: '',
     password: '',
