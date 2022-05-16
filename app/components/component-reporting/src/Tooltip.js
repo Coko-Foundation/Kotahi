@@ -22,6 +22,8 @@ const Tip = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
   position: absolute;
+  right: -50px;
+  top: 15px;
   width: max-content;
   z-index: 999;
 `
