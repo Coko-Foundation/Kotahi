@@ -26,8 +26,8 @@ export const ReviewersPage = {
   getInviteReviewerOptionList() {
     return cy.getByContainsId(INVITE_REVIEWER_OPTION_LIST)
   },
-  selectReviewerNamed(name) {
-    this.getInviteReviewerOptionList().contains(name).click()
+  selectReviewerNamed(uuid) {
+    this.getInviteReviewerOptionList().contains(uuid).click()
   },
   getSubmitButton() {
     return cy.get(SUBMIT_BUTTON)

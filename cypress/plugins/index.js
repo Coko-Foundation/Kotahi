@@ -29,8 +29,8 @@ const testUsers = {
   'Elaine Barnes': '0000000294294446',
   'Gale Davis': '0000000159567341',
   'Joanne Pilger': '0000000318382441',
-  'Emily Clay': '0000000205642016',
-  'Sinead Sullivan': '0000000256415729', // admin
+  'Emily Clay': '0000000205642016', // Author
+  'Sinead Sullivan': '0000000256415729', // Admin
   'Test Account': '000000032536230X',
 }
 
@@ -48,7 +48,7 @@ module.exports = (on, config) => {
     },
     restore: async name => {
       // eslint-disable-next-line no-console
-      console.log(name, 'sahi wala')
+      console.log(name, 'name')
       return seed(readFileSync(dumpFile(name), 'utf-8'))
     },
     createToken: async name => {

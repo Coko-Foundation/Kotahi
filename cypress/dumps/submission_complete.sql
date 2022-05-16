@@ -227,21 +227,27 @@ DROP TABLE IF EXISTS "public"."files";
 -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
 -- Table Definition
-CREATE TABLE public.files (
-    id UUID NOT NULL,
-    created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
-    updated TIMESTAMP WITH TIME ZONE,
-    object_type TEXT,
-    object_id UUID,
-    label TEXT,
-    file_type TEXT,
-    filename TEXT,
-    url TEXT,
-    mime_type TEXT,
-    size INTEGER,
-    type TEXT NOT NULL,
-     manuscript_id UUID NOT NULL,
-     review_comment_id UUID 
+CREATE TABLE "public"."files" (
+    "id" uuid NOT NULL,
+    "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz,
+    "type" text NOT NULL,
+    "name" text,
+    "label" text,
+    "file_type" text,
+    "filename" text,
+    "url" text,
+    "mime_type" text,
+    "size" int4,
+    "manuscript_id" uuid,
+    "review_comment_id" uuid,
+    "stored_objects" jsonb,
+    "tags" jsonb DEFAULT '[]'::jsonb,
+    "reference_id" uuid,
+    "object_id" uuid,
+    "alt" text,
+    "upload_status" text,
+    "caption" text
 );
 
 
@@ -268,6 +274,10 @@ CREATE TABLE "public"."files_old" (
     "manuscript_id" uuid NOT NULL,
     "review_comment_id" uuid
 );
+
+
+INSERT INTO "public"."files" ("id", "created", "updated", "type", "name", "stored_objects", "tags", "reference_id", "object_id", "alt", "upload_status", "caption") VALUES
+('4aded767-78f0-4bd1-857e-1569f2f7b265', '2022-05-13 10:56:32.657+00', '2022-05-13 10:56:32.657+00', 'file', 'sample pdf.pdf' , '[{"id": "42dbd180-a78b-4b14-9e7e-74ac6838dba1", "key": "52ce9cf9c7a8.pdf", "size": 3028, "type": "original", "mimetype": "application/pdf", "extension": "pdf", "imageMetadata": null}]', '["manuscript"]', NULL, '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', NULL, NULL, NULL);
 
 --
 -- Name: forms; Type: TABLE; Schema: public; Owner: kotahidev
