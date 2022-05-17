@@ -29,11 +29,9 @@ const randomBytes = promisify(crypto.randomBytes)
 
 const uploadsPath = config.get('pubsweet-server').uploads
 
-const clientId = config['paged-js'].pagedJsClientId
+const { clientId, clientSecret, port, protocol, host } = config.pagedjs
 
-const clientSecret = config['paged-js'].pagedJsClientSecret
-
-const serverUrl = 'http://pagedjs:3003'
+const serverUrl = `${protocol}://${host}${port ? `:${port}` : ''}`
 
 let pagedJsAccessToken = '' // maybe this should be saved somewhere?
 
