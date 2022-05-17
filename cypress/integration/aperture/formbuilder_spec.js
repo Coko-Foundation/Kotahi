@@ -14,12 +14,19 @@ describe('Form builder', () => {
     cy.fixture('role_names').then(name => {
       cy.login(name.role.admin, dashboard)
     })
+    // enter email
+    cy.contains('Enter Email').click()
+    cy.get('#enter-email').type('admin@gmail.com')
+
+    // submit the email
+    cy.contains('Next').click()
 
     // enter the from page and assert the fileds
     Menu.clickForms()
 
     FormsPage.getFormTitleTab(0).should(
       'contain',
+      'Submission',
       'Research Object Submission Form',
     )
     FormsPage.clickFormOption(2)

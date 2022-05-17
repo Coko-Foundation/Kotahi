@@ -41,10 +41,10 @@ describe('Editor assigning reviewers', () => {
       ReviewersPage.clickInviteReviewerDropdown()
       // Invite first reviewer'Emily Clay'
       ReviewersPage.inviteReviewer(name.role.reviewers.uuid1)
-      // ReviewersPage.getNumberOfInvitedReviewers().should('eq', 1)
+      ReviewersPage.getNumberOfInvitedReviewers().should('eq', 2)
       // 2nd 'Joane Pilger'
-      // ReviewersPage.clickInviteReviewerDropdown()
-      // ReviewersPage.inviteReviewer(name.role.reviewers.uuid2)
+      ReviewersPage.clickInviteReviewerDropdown()
+      ReviewersPage.inviteReviewer(name.role.reviewers.uuid3)
       // ReviewersPage.getInvitedReviewersList().should('have.length', 2)
 
       // go to dashboard and assert number of invited reviewer

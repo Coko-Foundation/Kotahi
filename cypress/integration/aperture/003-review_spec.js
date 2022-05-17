@@ -7,6 +7,15 @@ import { dashboard } from '../../support/routes'
 // login as reviewer, accept and do review, leave comments and submit
 const doReview = name => {
   cy.login(name, dashboard)
+  // enter email
+  cy.contains('Enter Email').click()
+  cy.get('#enter-email').type('admin@gmail.com')
+  // submit the email
+  cy.contains('Next').click()
+
+  cy.get('nav').contains('Dashboard').click()
+
+  cy.visit('http://localhost:4000/kotahi/dashboard')
 
   DashboardPage.clickAcceptReview()
   DashboardPage.clickDoReview()

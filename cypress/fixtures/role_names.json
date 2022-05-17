@@ -5,15 +5,15 @@
     "admin": "Sinead Sullivan",
     "seniorEditor": {
       "name": "Joane Pilger",
-      "uuid":   "0000000318382441" ,
+      "uuid": "0000000318382441",
       "name1": "Sinead Sullivan",
       "uuid1": "0000000256415729"
     },
     "reviewers": {
       "reviewer1": "Emily Clay",
-      "uuid1":"0000000205642016",
+      "uuid1": "0000000205642016",
       "reviewer2": "Joane Pilger",
-      "uuid2":"0000000318382441",
+      "uuid2": "0000000318382441",
       "reviewer3": "Sinead Sullivan",
       "uuid3": "0000000256415729"
     }
