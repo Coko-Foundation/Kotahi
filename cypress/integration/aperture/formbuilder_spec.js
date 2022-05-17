@@ -23,13 +23,21 @@ describe('Form builder', () => {
 
     // enter the from page and assert the fileds
     Menu.clickForms()
+    cy.contains('Submission').click()
 
     FormsPage.getFormTitleTab(0).should(
       'contain',
-      'Submission',
       'Research Object Submission Form',
     )
     FormsPage.clickFormOption(2)
-    FormsPage.getNameField().should('have.value', 'submission.name')
+    FormsPage.getNameField().should('have.value', 'submission.authorNames')
+    cy.contains('Update Field').click()
+    cy.contains('Review').click()
+
+    FormsPage.getFormTitleTab(0).should('contain', 'Review Form')
+    FormsPage.clickFormOption(1)
+    FormsPage.getNameField().should('have.value', 'authorFileName').clear()
+    cy.get('#45').type('submission.authorFileName')
+    cy.contains('Update Field').click()
   })
 })
