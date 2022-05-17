@@ -24,3 +24,5 @@ db-data/*
 /.idea
 profiles
 
+cypress/videos
+cypress/screenshots

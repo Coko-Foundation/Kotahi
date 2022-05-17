@@ -1,17 +1,14 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { Formik } from 'formik'
-import { set } from 'lodash'
+import { set, debounce } from 'lodash'
 import DecisionAndReviews from './DecisionAndReviews'
 import CreateANewVersion from './CreateANewVersion'
-import FormTemplate from './FormTemplate'
 import ReviewMetadata from '../../../component-review/src/components/metadata/ReviewMetadata'
 import MessageContainer from '../../../component-chat/src/MessageContainer'
 
 import {
-  SectionContent,
   VersionSwitcher,
-  Tabs,
+  HiddenTabs,
   Columns,
   Chat,
   Manuscript,
@@ -22,6 +19,7 @@ import {
 import EditorSection from '../../../component-review/src/components/decision/EditorSection'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
 import AssignEditor from './assignEditors/AssignEditor'
+import SubmissionForm from './SubmissionForm'
 
 const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
@@ -66,13 +64,19 @@ const Submit = ({
       manuscript.status,
     )
 
+    const handleSave = useCallback(
+      debounce(source => {
+        updateManuscript(versionId, { meta: { source } })
+      }, 2000),
+    )
+
     const editorSection = {
       content: (
         <EditorSection
           currentUser={currentUser}
           manuscript={manuscript}
-          onBlur={source => updateManuscript(versionId, { meta: { source } })}
           readonly={!userCanEditManuscriptAndFormData}
+          saveSource={handleSave}
         />
       ),
       key: `editor_${manuscript.id}`,
@@ -89,53 +93,24 @@ const Submit = ({
         submission: submissionValues,
       }
 
+      const submissionProps = {
+        versionValues,
+        form,
+        onSubmit,
+        versionId,
+        toggleConfirming,
+        confirming,
+        onChange,
+        republish,
+        match,
+        client,
+        manuscript,
+        createFile,
+        deleteFile,
+      }
+
       decisionSection = {
-        content: (
-          <SectionContent>
-            <Formik
-              displayName="submit"
-              // handleChange={props.handleChange}
-              initialValues={versionValues}
-              onSubmit={async (
-                values,
-                { validateForm, setSubmitting, ...other },
-              ) => {
-                // TODO: Change this to a more Formik idiomatic form
-                const isValid = Object.keys(await validateForm()).length === 0
-                return isValid
-                  ? onSubmit(versionId, values) // values are currently ignored!
-                  : setSubmitting(false)
-              }}
-              validateOnBlur
-              validateOnChange={false}
-            >
-              {formProps => {
-                return (
-                  <FormTemplate
-                    client={client}
-                    confirming={confirming}
-                    createFile={createFile}
-                    deleteFile={deleteFile}
-                    onChange={(value, path) => {
-                      onChange(value, path, versionId)
-                    }}
-                    toggleConfirming={toggleConfirming}
-                    {...formProps}
-                    form={form}
-                    manuscript={manuscript}
-                    republish={republish}
-                    showEditorOnlyFields={false}
-                    submissionButtonText={
-                      match.url.includes('/evaluation')
-                        ? 'Submit Evaluation'
-                        : 'Submit your research object'
-                    }
-                  />
-                )
-              }}
-            </Formik>
-          </SectionContent>
-        ),
+        content: <SubmissionForm {...submissionProps} />,
         key: versionId,
         label: 'Edit submission info',
       }
@@ -172,7 +147,7 @@ const Submit = ({
               manuscript={manuscript}
             />
           )}
-          <Tabs
+          <HiddenTabs
             defaultActiveKey={versionId}
             sections={[decisionSection, editorSection]}
           />

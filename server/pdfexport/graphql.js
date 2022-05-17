@@ -11,6 +11,13 @@ const applyTemplate = require('./applyTemplate')
 const css = require('./pdfTemplates/styles')
 const makeZip = require('./ziputils.js')
 
+const {
+  getFilesWithUrl,
+  replaceImageSrc,
+} = require('../utils/fileStorageUtils')
+
+const copyFile = promisify(fs.copyFile)
+
 // THINGS TO KNOW ABOUT THIS:
 //
 // 1. It is expecting two .env variables: PAGED_JS_CLIENT_ID and PAGED_JS_CLIENT_SECRET
@@ -22,11 +29,9 @@ const randomBytes = promisify(crypto.randomBytes)
 
 const uploadsPath = config.get('pubsweet-server').uploads
 
-const clientId = config['paged-js'].pagedJsClientId
+const { clientId, clientSecret, port, protocol, host } = config.pagedjs
 
-const clientSecret = config['paged-js'].pagedJsClientSecret
-
-const serverUrl = 'http://pagedjs:3003'
+const serverUrl = `${protocol}://${host}${port ? `:${port}` : ''}`
 
 let pagedJsAccessToken = '' // maybe this should be saved somewhere?
 
@@ -97,7 +102,7 @@ const writeLocallyFromReadStream = async (
   })
 
 const getManuscriptById = async id => {
-  return models.Manuscript.query().findById(id)
+  return models.Manuscript.query().findById(id).withGraphFetched('[files]')
 }
 
 const pdfHandler = async manuscriptId => {
@@ -111,15 +116,52 @@ const pdfHandler = async manuscriptId => {
   const articleData = await getManuscriptById(manuscriptId)
 
   const raw = await randomBytes(16)
-  const dirName = `${raw.toString('hex')}_${manuscriptId}`
+  const dirName = `tmp/${raw.toString('hex')}_${manuscriptId}`
   // console.log("Directory name: ", dirName)
 
-  await fsPromised.mkdir(dirName)
+  await fsPromised.mkdir(dirName, { recursive: true })
 
+  articleData.parsedSubmission = {
+    objectType: articleData.submission.objectType,
+    topic: articleData.submission.topics,
+    authors: articleData.submission.authorNames,
+    AuthorCorrespondence: articleData.submission.AuthorCorrespondence,
+    conflictOfInterest: articleData.submission.competingInterests,
+    Funding: articleData.submission.funding,
+    dateReceived: articleData.submission.dateReceived,
+    DateAccepted: articleData.submission.dateAccepted,
+    DatePublished: articleData.submission.datePublished,
+    abstract: articleData.submission.abstract,
+  }
+
+  articleData.files = await getFilesWithUrl(articleData.files)
+  articleData.meta.source = await replaceImageSrc(
+    articleData.meta.source,
+    articleData.files,
+    'original',
+  )
   const outHtml = applyTemplate(articleData)
 
   await fsPromised.appendFile(`${dirName}/index.html`, outHtml)
   await fsPromised.appendFile(`${dirName}/styles.css`, css)
+
+  // Manually copy the two fonts to the folder that will be zipped. This is a temporary fix!
+
+  const originalFont1 = path.join(
+    __dirname,
+    '../../profiles/Newsreader-Italic-VariableFont-opsz-wght.ttf',
+  )
+
+  const targetFont1 = `${dirName}/Newsreader-Italic-VariableFont-opsz-wght.ttf`
+  await copyFile(originalFont1, targetFont1)
+
+  const originalFont2 = path.join(
+    __dirname,
+    '../../profiles/Newsreader-VariableFont-opsz-wght.ttf',
+  )
+
+  const targetFont2 = `${dirName}/Newsreader-VariableFont-opsz-wght.ttf`
+  await copyFile(originalFont2, targetFont2)
 
   // 2 zip this.
 
@@ -158,6 +200,7 @@ const pdfHandler = async manuscriptId => {
           'binary',
         )
         // console.log('came back')
+        await fsPromised.rmdir(dirName, { recursive: true })
         resolve(tempPath)
       })
       .catch(async err => {

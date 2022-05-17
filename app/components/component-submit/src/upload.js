@@ -1,8 +1,18 @@
 import config from 'config'
 import request from 'pubsweet-client/src/helpers/api'
 import { gql } from '@apollo/client'
+import { map } from 'lodash'
+import * as cheerio from 'cheerio'
 import currentRolesVar from '../../../shared/currentRolesVar'
 import cleanMathMarkup from './cleanMathMarkup'
+
+const fragmentFields = `
+  id
+  meta {
+    source
+    manuscriptId
+  }
+`
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -27,8 +37,22 @@ const extractTitle = source => {
 
 const uploadManuscriptMutation = gql`
   mutation($file: Upload!) {
-    upload(file: $file) {
-      url
+    uploadFile(file: $file) {
+      name
+      storedObjects {
+        type
+        key
+        size
+        mimetype
+        extension
+        url
+        imageMetadata {
+          width
+          height
+          space
+          density
+        }
+      }
     }
   }
 `
@@ -93,6 +117,96 @@ const createManuscriptMutation = gql`
   }
 `
 
+const createFileMutation = gql`
+  mutation($file: Upload!, $meta: FileMetaInput!) {
+    createFile(file: $file, meta: $meta) {
+      id
+      name
+      objectId
+      storedObjects {
+        type
+        key
+        size
+        mimetype
+        extension
+        url
+      }
+    }
+  }
+`
+
+export const updateMutation = gql`
+  mutation($id: ID!, $input: String) {
+    updateManuscript(id: $id, input: $input) {
+      id
+      ${fragmentFields}
+    }
+  }
+`
+
+const base64toBlob = (base64Data, contentType) => {
+  const sliceSize = 1024
+  const arr = base64Data.split(',')
+  const byteCharacters = atob(arr[1])
+  const bytesLength = byteCharacters.length
+  const slicesCount = Math.ceil(bytesLength / sliceSize)
+  const byteArrays = new Array(slicesCount)
+
+  for (let sliceIndex = 0; sliceIndex < slicesCount; sliceIndex += 1) {
+    const begin = sliceIndex * sliceSize
+    const end = Math.min(begin + sliceSize, bytesLength)
+
+    const bytes = new Array(end - begin)
+
+    for (let offset = begin, i = 0; offset < end; i += 1, offset += 1) {
+      bytes[i] = byteCharacters[offset].charCodeAt(0)
+    }
+
+    byteArrays[sliceIndex] = new Uint8Array(bytes)
+  }
+
+  return new Blob(byteArrays, { type: contentType || '' })
+}
+
+const base64Images = source => {
+  const doc = new DOMParser().parseFromString(source, 'text/html')
+
+  const images = [...doc.images].map((e, index) => {
+    const mimeType = e.src.match(/[^:]\w+\/[\w\-+.]+(?=;base64,)/)[0]
+    const blob = base64toBlob(e.src, mimeType)
+    const mimeTypeSplit = mimeType.split('/')
+    const extFileName = mimeTypeSplit[1]
+
+    const file = new File([blob], `Image${index + 1}.${extFileName}`, {
+      type: mimeType,
+    })
+
+    return { dataSrc: e.src, mimeType, file }
+  })
+
+  return images || null
+}
+
+const uploadImage = (image, client, manuscriptId) => {
+  const { file } = image
+
+  const meta = {
+    fileType: 'manuscriptImage',
+    manuscriptId,
+    reviewCommentId: null,
+  }
+
+  const data = client.mutate({
+    mutation: createFileMutation,
+    variables: {
+      file,
+      meta,
+    },
+  })
+
+  return data
+}
+
 const uploadPromise = (files, client) => {
   const [file] = files
 
@@ -114,7 +228,7 @@ const DocxToHTMLPromise = (file, data) => {
 
   return request(url, { method: 'POST', body }).then(response =>
     Promise.resolve({
-      fileURL: data.upload.url,
+      fileURL: data.uploadFile.storedObjects[0].url,
       response,
     }),
   )
@@ -122,6 +236,7 @@ const DocxToHTMLPromise = (file, data) => {
 
 const createManuscriptPromise = (
   file,
+  data,
   client,
   currentUser,
   fileURL,
@@ -141,12 +256,13 @@ const createManuscriptPromise = (
   if (file) {
     source = typeof response === 'string' ? response : undefined
     title = extractTitle(response) || generateTitle(file.name)
+    /* eslint-disable-next-line no-param-reassign */
+    delete data.uploadFile.storedObjects[0].url
     files = [
       {
-        filename: file.name,
-        url: fileURL,
-        mimeType: file.type,
-        size: file.size,
+        name: file.name,
+        storedObjects: data.uploadFile.storedObjects,
+        tags: ['manuscript'],
       },
     ]
   } else {
@@ -216,6 +332,7 @@ export default ({
   setConversion({ converting: true })
   let manuscriptData
   let uploadResponse
+  let images
 
   try {
     if (files) {
@@ -224,25 +341,83 @@ export default ({
 
       if (skipXSweet(file)) {
         uploadResponse = {
-          fileURL: data.upload.url,
+          fileURL: data.uploadFile.url,
           response: true,
         }
       } else {
         uploadResponse = await DocxToHTMLPromise(file, data)
         uploadResponse.response = cleanMathMarkup(uploadResponse.response)
         uploadResponse.response = stripTags(uploadResponse.response)
+        images = base64Images(uploadResponse.response)
       }
 
       manuscriptData = await createManuscriptPromise(
         file,
+        data,
         client,
         currentUser,
         uploadResponse.fileURL,
         uploadResponse.response,
       )
+
+      if (typeof uploadResponse.response === 'string') {
+        let source = uploadResponse.response
+        // eslint-disable-next-line
+        let uploadedImages = Promise.all(
+          map(images, async image => {
+            const uploadedImage = await uploadImage(
+              image,
+              client,
+              manuscriptData.data.createManuscript.id,
+            )
+
+            return uploadedImage
+          }),
+        )
+
+        await uploadedImages.then(results => {
+          const $ = cheerio.load(source)
+
+          $('img').each((i, elem) => {
+            const $elem = $(elem)
+
+            if (images[i].dataSrc === $elem.attr('src')) {
+              $elem.attr('data-fileid', results[i].data.createFile.id)
+              $elem.attr('alt', results[i].data.createFile.name)
+              $elem.attr(
+                'src',
+                results[i].data.createFile.storedObjects.find(
+                  storedObject => storedObject.type === 'medium',
+                ).url,
+              )
+            }
+          })
+
+          source = $.html()
+
+          const manuscript = {
+            id: manuscriptData.data.createManuscript.id,
+            meta: {
+              source,
+            },
+          }
+
+          // eslint-disable-next-line
+          const updatedManuscript = client.mutate({
+            mutation: updateMutation,
+            variables: {
+              id: manuscriptData.data.createManuscript.id,
+              input: JSON.stringify(manuscript),
+            },
+          })
+
+          manuscriptData.data.createManuscript.meta.source = source
+        })
+      }
     } else {
       // Create a manuscript without a file
       manuscriptData = await createManuscriptPromise(
+        undefined,
         undefined,
         client,
         currentUser,

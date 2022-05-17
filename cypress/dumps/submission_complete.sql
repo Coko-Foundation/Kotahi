@@ -235,7 +235,7 @@ CREATE TABLE public.files (
     size integer NOT NULL,
     type text NOT NULL,
     manuscript_id uuid NOT NULL,
-    review_comment_id uuid,
+    review_comment_id uuid
 );
 
 
@@ -930,8 +930,31 @@ ALTER TABLE ONLY public.team_members
 ALTER TABLE ONLY public.teams
     ADD CONSTRAINT teams_manuscript_id_fkey FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts(id) ON DELETE CASCADE;
 
+ALTER TABLE public.forms 
+  ADD category TEXT NULL;
 
+UPDATE public.forms SET category = 'submission';
+
+-- 
+-- Name: Channels; schema:public; owner: kotahidev;
+-- 
+INSERT INTO public.channels ( 
+  id, topic, type 
+) VALUES (  
+  '9fd7774c-11e5-4802-804c-ab64aefd5080', 'System-wide discussion', 'editorial'
+) ON CONFLICT DO NOTHING;
+
+
+ALTER TABLE public.manuscripts ADD COLUMN short_id SERIAL;
+
+update public.manuscripts child
+set short_id=parent.short_id
+from public.manuscripts parent
+where parent.id = child.parent_id;
+
+
+
+ALTER TABLE public.manuscripts ADD is_hidden BOOLEAN;
 --
 -- PostgreSQL database dump complete
 --
-

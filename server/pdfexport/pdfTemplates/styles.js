@@ -27,9 +27,9 @@ const css = `
 		padding: 50px;
 		margin: 100px;
 	}
-	section {
+	/* section {
 		display: none;
-	}
+	} */
 
     body {
         background-color: var(--color-background);
@@ -198,20 +198,21 @@ const css = `
 
 /* insert fonts */
 
-/*@font-face {
+@font-face {
   font-family: "Newsreader";
-  src: url(/fonts/Newsreader-VariableFont_opsz-wght.ttf) format("truetype");
+  src: url("./Newsreader-VariableFont-opsz-wght.ttf") format("truetype");
+  /* src: url("/profiles/Newsreader-VariableFont-opsz-wght.ttf") format("truetype");  works with useHTML true */
   font-style: normal;
   font-weight: 300 700;
 }
 
 @font-face {
   font-family: "Newsreader";
-  src: url(/fonts/Newsreader-Italic-VariableFont_opsz-wght.ttf)
-    format("truetype");
+  src: url("./Newsreader-Italic-VariableFont-opsz-wght.ttf") format("truetype");
+  /* src: url("/profiles/Newsreader-Italic-VariableFont-opsz-wght.ttf") format("truetype");  works with useHTML true */
   font-style: italic;
   font-weight: 300 700;
-}*/
+}
 
 * {
   padding: 0;
@@ -402,8 +403,13 @@ strong {
   table {
     border-collapse: collapse;
     text-align: left;
-    break-inside: avoid;
+    /* break-inside: avoid; */
   }
+
+	tr {
+		break-inside: avoid;
+	}
+
   td,
   th {
     padding: 2px;
@@ -486,6 +492,35 @@ header {
 
 section.frontmatter, section.abstractSection {
   display: none;
-}`
+}
+
+/* FIXES */
+@media print {
+
+	.content ul, .content ol {
+		padding-left: 30px;
+	}
+
+	.content ul {
+		list-style-type: disc;
+	}
+
+	.content ol {
+		list-style-type: decimal;
+	}
+
+	figure img {
+		max-width: 100%;
+	}
+
+	figure {
+		max-width: 100%;
+	}
+
+	td, th {
+		font-weight: 300;
+  }
+}
+`
 
 module.exports = css

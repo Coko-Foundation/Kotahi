@@ -1,7 +1,26 @@
 import React from 'react'
 import { Item } from '../app/components/Menu'
+import DesignEmbed from './common/utils'
 
-export const Base = args => <Item {...args} />
+export const Base = args => (
+  <>
+    {args.figmaEmbedLink && (
+      <>
+        <h2 style={{ color: '#ffffff' }}>Design</h2>
+        <iframe
+          allowFullScreen
+          height={350}
+          src={args.figmaEmbedLink}
+          style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
+          title="figma embed"
+          width="100%"
+        />
+        <h2 style={{ color: '#ffffff' }}>Component</h2>
+      </>
+    )}
+    <Item {...args} />
+  </>
+)
 export const Active = Base.bind()
 export const User = Base.bind()
 export const Users = Base.bind()
@@ -13,10 +32,30 @@ Base.args = {
   name: 'Menu item',
   icon: 'home',
 }
-Active.args = { ...Base.args, active: true }
-User.args = { ...Base.args, icon: 'user' }
-Users.args = { ...Base.args, icon: 'users' }
-CheckSquare.args = { ...Base.args, icon: 'check-square' }
+Active.args = {
+  ...Base.args,
+  active: true,
+  figmaEmbedLink:
+    'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A10',
+}
+User.args = {
+  ...Base.args,
+  icon: 'user',
+  figmaEmbedLink:
+    'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A13',
+}
+Users.args = {
+  ...Base.args,
+  icon: 'users',
+  figmaEmbedLink:
+    'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A16',
+}
+CheckSquare.args = {
+  ...Base.args,
+  icon: 'check-square',
+  figmaEmbedLink:
+    'https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A19',
+}
 
 export default {
   title: 'Menu/Item',
@@ -28,6 +67,11 @@ export default {
     icon: { control: { type: 'text' } },
   },
   parameters: {
+    docs: {
+      page: () => (
+        <DesignEmbed figmaEmbedLink="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FuDxsjgDWxjiof0qSNFLelr%2FKotahi-storybook%3Fnode-id%3D1%253A3" />
+      ),
+    },
     backgrounds: {
       default: 'dark',
     },

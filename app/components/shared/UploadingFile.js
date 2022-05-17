@@ -104,11 +104,11 @@ const UploadingFile = ({
   const Root = uploaded ? Uploaded : Uploading
 
   const extension = getFileExtension(file)
-  const isImage = file?.mimeType.startsWith('image/')
+  const isImage = file?.storedObjects[0]?.mimetype.startsWith('image/')
 
   const icon = (
     <Icon>
-      {isImage && <img alt={file.name} src={file.url} />}
+      {isImage && <img alt={file.name} src={file.storedObjects[0].url} />}
       {/* {!!progress && <Progress>{progress * 100}%</Progress>} */}
       <Extension>{extension}</Extension>
     </Icon>
@@ -118,7 +118,13 @@ const UploadingFile = ({
     <Root>
       {!!error && <ErrorWrapper>{error}</ErrorWrapper>}
       {uploaded ? (
-        <a download={file.name} href={file.url} title={file.name}>
+        <a
+          download={file.name}
+          href={file.storedObjects[0].url}
+          rel="noreferrer"
+          target="_blank"
+          title={file.name}
+        >
           {icon}
         </a>
       ) : (
@@ -126,7 +132,13 @@ const UploadingFile = ({
       )}
       <Filename>
         {uploaded ? (
-          <a download={file.name} href={file.url} title={file.name}>
+          <a
+            download={file.name}
+            href={file.storedObjects[0].url}
+            rel="noreferrer"
+            target="_blank"
+            title={file.name}
+          >
             {file.name}
           </a>
         ) : (

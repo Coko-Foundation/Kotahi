@@ -1,7 +1,27 @@
 const models = require('@pubsweet/models')
-const { parseString } = require('xml2js')
+const { XMLValidator } = require('fast-xml-parser')
 const { makeJats } = require('../utils/jatsUtils')
 const publicationMetadata = require('../pdfexport/pdfTemplates/publicationMetadata')
+
+const failXML = false // if this is true, we pass errorJats (which is invalid XML) to the parser
+
+const errorJats = `<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="en" dtd-version="1.3">
+<front>
+<journal-meta>
+fe</publisher>
+</journal-meta>
+<article-meta>
+<pub-date-not-available/>
+</article-meta>
+</front>
+<body>
+<sec>
+<title>Honey bee (<em>Apis mellifera)</em> colonies benefit from grassland/ pasture while bumble bee (<em>Bombus impatiens)</em> colonies in the same landscapes benefit from non-corn/soybean cropland</title>
+<list list-type="bullet">
+<list-item>
+<p>Gabriela M. Quinlan,</p>
+</list-item>ng the need for further species-specific land use studies to inform tailored land management.</title>
+</sec>`
 
 const buildArticleMetadata = article => {
   const articleMetadata = {}
@@ -52,17 +72,16 @@ const jatsHandler = async manuscriptId => {
   const manuscript = await getManuscriptById(manuscriptId)
   const html = manuscript.meta.source
   const articleMetadata = buildArticleMetadata(manuscript)
-  const { jats } = makeJats(html, articleMetadata, publicationMetadata)
-  let parseError = null
 
-  // check if this is valid XML – this is NOT checking whether this is valid JATS
-  parseString(jats, err => {
-    if (err) {
-      console.error(err)
-      // send back the error if there is an error
-      parseError = JSON.stringify(err, Object.getOwnPropertyNames(err))
-    }
-  })
+  const { jats } = makeJats(html, articleMetadata, publicationMetadata)
+
+  // check if the output is valid XML – this is NOT checking whether this is valid JATS
+  let parseError = null
+  const result = XMLValidator.validate(failXML ? errorJats : jats) // this returns true if it's valid, error object if not
+
+  if (typeof result === 'object') {
+    parseError = result
+  }
 
   return { jats, error: parseError }
 }
@@ -71,7 +90,7 @@ const resolvers = {
   Query: {
     convertToJats: async (_, { manuscriptId }, ctx) => {
       const { jats, error } = await jatsHandler(manuscriptId, ctx)
-      return { xml: jats || '', error: error || null }
+      return { xml: jats || '', error: error ? JSON.stringify(error) : '' }
     },
   },
 }

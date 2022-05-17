@@ -62,7 +62,10 @@ const ArticleEvaluationPage = ({ match }) => {
     manuscript.submission.title ||
     manuscript.submission.description
 
-  const fieldTitle = getEvaluationFieldTitle(fieldName, data.formForPurpose)
+  const fieldTitle = getEvaluationFieldTitle(
+    fieldName,
+    data.formForPurposeAndCategory,
+  )
 
   const articleLink =
     manuscript.submission.articleURL || manuscript.submission.link

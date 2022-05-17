@@ -1,7 +1,6 @@
 /* eslint-disable jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
 import { DashboardPage } from '../../page-object/dashboard-page'
-import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
@@ -19,77 +18,56 @@ describe('URL submission test', () => {
       cy.login(name.role.author, dashboard)
     })
 
-    // submit new manuscript
-    DashboardPage.clickSubmit()
+    // enter email
+    cy.contains('Enter Email').click()
+    cy.get('#enter-email').type('abc@gmail.com')
 
-    NewSubmissionPage.clickSubmitURL()
-    NewSubmissionPage.getSubmissionMessage().should(
-      'contain',
-      'Submission created',
-    )
+    // submit the email
+    cy.contains('Next').click()
+
+    cy.get('nav').contains('Dashboard').click()
+
+    cy.visit('http://localhost:4000/kotahi/dashboard')
+
+    // Click on new submission
+    cy.get('button').contains('＋ New submission').click()
+
+    // Click on submit URL instead
+    cy.get('button').contains('Submit a URL instead').click()
 
     // complete the submission form
-    SubmissionFormPage.clickAddLink()
 
     cy.fixture('submission_form_data').then(data => {
       SubmissionFormPage.fillInUrl(0, data.doi)
       SubmissionFormPage.fillInUrl(0, data.git)
       SubmissionFormPage.fillInTitle(data.title)
-
-      cy.fixture('role_names').then(name => {
-        SubmissionFormPage.fillInName(name.role.author)
-      })
-
-      SubmissionFormPage.fillInAffiliation(data.affiliation)
-      SubmissionFormPage.fillInContact(data.contact)
-      SubmissionFormPage.fillInCover(data.cover)
-      SubmissionFormPage.fillInDataCode(data.dataCode)
-      SubmissionFormPage.fillInEthicsField(data.ethics)
-      SubmissionFormPage.clickTypeOfResearchDropdown()
-      SubmissionFormPage.selectDropdownOption(1)
-      SubmissionFormPage.fillInSuggested(data.suggested)
-
-      // Supplementary file upload
-      cy.fixture('test-pdf.pdf', 'base64').then(pdf => {
-        SubmissionFormPage.attachFile('test-pdf.pdf')
-      })
-
+      SubmissionFormPage.fillInAbstract(data.abstract)
+      SubmissionFormPage.fillInFirstAuthor(data.firstAuthor)
+      SubmissionFormPage.fillInOurTake(data.ourTake)
+      SubmissionFormPage.fillInMainFindings(data.mainFindings)
+      SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
+      SubmissionFormPage.fillInLimitations(data.limitations)
+      SubmissionFormPage.fillInDatePublished(data.datePublished)
+      SubmissionFormPage.fillInLink(data.link)
       SubmissionFormPage.fillInKeywords(data.keywords)
-      SubmissionFormPage.clickHealthySubjectsStudyDropdown()
-      SubmissionFormPage.selectDropdownOption(1)
-      SubmissionFormPage.clickInvolvedHumanSubjectsDropdown()
-      SubmissionFormPage.selectDropdownOption(0)
-      SubmissionFormPage.clickAnimalResearchApprovedDropdown()
-      SubmissionFormPage.selectDropdownOption(0)
-      SubmissionFormPage.clickMethodsUsedCheckboxWithText(
-        `"${data.methods.firstMethod}"`,
-      )
-      SubmissionFormPage.clickMethodsUsedCheckboxWithText(
-        `"${data.methods.secondMethod}"`,
-      )
-      SubmissionFormPage.fillInOtherMethods(data.suggested)
-      SubmissionFormPage.clickFieldSthrenghtDropdown()
-      SubmissionFormPage.selectDropdownOption(3)
-      SubmissionFormPage.fillInHumanMriOther(data.humanMRIother)
-      SubmissionFormPage.clickProcessingPackageWithText(
-        data.processinPackages.text1,
-      )
-      SubmissionFormPage.clickProcessingPackageWithText(
-        data.processinPackages.text2,
-      )
-      SubmissionFormPage.fillInOtherPackages(data.otherPackages)
-      SubmissionFormPage.fillReferences(data.references)
-      // submit form
+      SubmissionFormPage.fillInJournal(data.journal)
+      SubmissionFormPage.fillInReviewCreator(data.reviewCreator)
       SubmissionFormPage.clickSubmitResearch()
-      SubmissionFormPage.clickSubmitManuscript()
+
+      // Submit your form
+
+      SubmissionFormPage.clickSubmitYourManuscript()
+      cy.get('button').contains('Submit your manuscript').click()
 
       // assert form exists in dashboard
-      DashboardPage.getSectionTitleWithText('My Submissions')
-      DashboardPage.getSubmissionTitle(0).should('contain', data.title)
-    })
 
-    // task to dump data in dumps/submission_complete.sql
-    cy.task('dump', 'submission_complete')
+      DashboardPage.getSectionTitleWithText('My Submissions')
+      DashboardPage.getSubmissionTitle().should('contain', data.title)
+
+      // task to dump data in dumps/submission_complete.sql
+
+      cy.task('dump', 'submission_complete')
+    })
   })
 
   it('senior editor can view the submission', () => {
@@ -102,32 +80,41 @@ describe('URL submission test', () => {
         // login as admin
         cy.login(name.role.admin, dashboard)
 
+        // enter email
+        cy.contains('Enter Email').click()
+        cy.get('#enter-email').type('admin@gmail.com')
+
+        // submit the email
+        cy.contains('Next').click()
+
         // select Control on the Manuscripts page
         Menu.clickManuscripts()
 
         ManuscriptsPage.selectOptionWithText('Control')
 
-        ControlPage.getMetadataCell(1).should('contain', data.title)
+        ControlPage.getMetadataTab(2).click()
+        ControlPage.getMetadataCell(3).should('contain', data.title)
+
+        ControlPage.getWorkflowTab().click()
+
         // assign seniorEditor
         ControlPage.clickAssignSeniorEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
-
-        // login as seniorEditor
-        cy.login(name.role.seniorEditor, dashboard)
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
+        ControlPage.clickAssignHandlingEditorDropdown()
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
+        ControlPage.clickAssignEditorDropdown()
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
+        // assert the reviews
+        ControlPage.fillInDecision(data.decision)
+        ControlPage.clickAccept()
+        ControlPage.clickSubmit()
+        ControlPage.clickPublish()
       })
-
-      // assert Manuscript exist
-      DashboardPage.getVersionTitle().should('contain', data.title)
-      // click ControPanel and assert manuscript
-      DashboardPage.clickControlPanel()
-
-      ControlPage.getMetadataCell(6).should('contain', data.dataCode)
-      ControlPage.getMetadataCell(25).should('contain', data.pdf)
-      ControlPage.getMetadataCell(0).should('contain', data.doi)
-      ControlPage.getMetadataCell(0).should('contain', data.git)
     })
 
     // task to dump data in dumps/senior_editor_assigned.sql
     cy.task('dump', 'senior_editor_assigned')
+
+    cy.contains('Dashboard').click()
   })
 })

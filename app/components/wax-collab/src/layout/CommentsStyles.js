@@ -55,6 +55,9 @@ export const CommentTrackToolsContainer = styled.div`
   & ~ div > div > div > button {
     ${props => props.authorComments && 'display: none;'}
   }
+  & button {
+    font-size: 15px;
+  }
 `
 
 export const CommentTrackTools = styled.div`

@@ -38,7 +38,7 @@ export const MessagesGroup = styled.div`
   flex-direction: column;
   flex-shrink: 1;
   grid-area: read;
-  height: 70%;
+  height: 0px;
   justify-content: flex-end;
   max-width: 100%;
   overflow: hidden auto;

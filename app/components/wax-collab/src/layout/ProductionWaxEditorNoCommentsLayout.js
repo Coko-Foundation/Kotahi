@@ -17,6 +17,8 @@ import {
   SideMenu,
 } from './EditorStyles'
 import { CommentsContainerNotes } from './CommentsStyles'
+import 'wax-prosemirror-core/dist/index.css'
+import 'wax-prosemirror-services/dist/index.css'
 
 const TopBar = ComponentPlugin('topBar')
 const NotesArea = ComponentPlugin('notesArea')
@@ -39,7 +41,7 @@ const ProductionWaxEditorNoCommentsLayout = (readOnly, readOnlyComments) => ({
   }
 
   const {
-    view: { main },
+    pmViews: { main },
     options,
   } = useContext(WaxContext)
 
@@ -87,7 +89,7 @@ const ProductionWaxEditorNoCommentsLayout = (readOnly, readOnlyComments) => ({
           </ReadOnlyEditorDiv>
         ) : (
           <>
-            <Menu>
+            <Menu className="waxmenu">
               <TopBar />
             </Menu>
             <ProductionEditorDiv className="wax-surface-scroll">

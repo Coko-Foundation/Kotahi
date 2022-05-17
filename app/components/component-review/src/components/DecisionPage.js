@@ -29,16 +29,20 @@ export const updateMutation = gql`
 `
 
 const createFileMutation = gql`
-  mutation($file: Upload!, $meta: FileMetaInput) {
+  mutation($file: Upload!, $meta: FileMetaInput!) {
     createFile(file: $file, meta: $meta) {
       id
       created
-      label
-      filename
-      fileType
-      mimeType
-      size
-      url
+      name
+      updated
+      name
+      tags
+      objectId
+      storedObjects {
+        key
+        mimetype
+        url
+      }
     }
   }
 `
@@ -112,7 +116,7 @@ const DecisionPage = ({ match }) => {
     variables: {
       id: match.params.version,
     },
-    fetchPolicy: 'network-only', // TODO This prevents reviews sometimes having a null user. The whole graphql/caching in DecisionPage and DecisionVersion needs clean-up.
+    fetchPolicy: 'cache-and-network',
   })
 
   const [update] = useMutation(updateMutation)
@@ -146,8 +150,18 @@ const DecisionPage = ({ match }) => {
   }
 
   const updateReview = async (reviewId, reviewData, manuscriptId) => {
-    return doUpdateReview({
+    doUpdateReview({
       variables: { id: reviewId || undefined, input: reviewData },
+      // Check/uncheck delay fix
+      optimisticResponse: {
+        __typename: 'Mutation',
+        updateReview: {
+          id: reviewId,
+          __typename: 'Review',
+          isHiddenFromAuthor: reviewData.isHiddenFromAuthor,
+          isHiddenReviewerName: reviewData.isHiddenReviewerName,
+        },
+      },
       update: (cache, { data: { updateReview: updatedReview } }) => {
         cache.modify({
           id: cache.identify({
@@ -181,12 +195,12 @@ const DecisionPage = ({ match }) => {
     })
   }
 
-  if (loading) return <Spinner />
+  if (loading && !data) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
-  const { manuscript, formForPurpose, currentUser, users } = data
+  const { manuscript, formForPurposeAndCategory, currentUser, users } = data
 
-  const form = formForPurpose?.structure ?? {
+  const form = formForPurposeAndCategory?.structure ?? {
     name: '',
     children: [],
     description: '',

@@ -61,9 +61,29 @@ const userIsAdmin = rule({ cache: 'contextual' })(
 
 const parentManuscriptIsPublished = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
+    // parent can be a file object or review object
+    // On initial manuscript upload docx it doesn't have a manuscrtiptId/objectId it has file object with name and stored objects
+    if (parent.storedObjects && !parent.objectId) return false // only on uploading manuscript docx this will be validated
+
+    let review
+
+    // if the file has objectId it can be a reviewCommentId or manuscriptId
+    if (parent.objectId) {
+      const reviewComment = await ctx.connectors.ReviewComment.model
+        .query()
+        .findById(parent.objectId)
+
+      if (reviewComment)
+        review = await ctx.connectors.Review.model
+          .query()
+          .findById(reviewComment.reviewId)
+    }
+
     const manuscript = await ctx.connectors.Manuscript.model
       .query()
-      .findById(parent.manuscriptId)
+      .findById(
+        review ? review.manuscriptId : parent.manuscriptId || parent.objectId,
+      )
 
     return !!manuscript.published
   },
@@ -229,8 +249,27 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
   } else if (args.id) {
     // id is supplied for deletion
     const file = await ctx.connectors.File.model.query().findById(args.id)
+
+    // objectId can either be a reviewCommentId or manuscriptId
+    const reviewComment = await ctx.connectors.ReviewComment.model
+      .query()
+      .findById(file.objectId)
+
+    let review
+
+    // if the objectId is reviewCommentId get review details linked to the manuscript
+    if (reviewComment)
+      review = await ctx.connectors.Review.model
+        .query()
+        .findById(reviewComment.reviewId)
+
+    // if a review is not found it uses the file.objectId which is the manuscriptId
     // eslint-disable-next-line prefer-destructuring
-    manuscriptId = file.manuscriptId
+    const manuscript = await ctx.connectors.Manuscript.model
+      .query()
+      .findById(review ? review.manuscriptId : file.objectId)
+
+    manuscriptId = manuscript.id
   } else {
     return false
   }
@@ -253,10 +292,24 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     if (!ctx.user) return false
 
-    const manuscript = await ctx.connectors.File.model
-      .relatedQuery('manuscript')
-      .for(parent.id)
-      .first()
+    if (parent.storedObjects && !parent.id) return true // only on uploading manuscript docx this will be validated
+
+    const file = await ctx.connectors.File.model.query().findById(parent.id)
+
+    const reviewComment = await ctx.connectors.ReviewComment.model
+      .query()
+      .findById(file.objectId)
+
+    let review
+
+    if (reviewComment)
+      review = await ctx.connectors.Review.model
+        .query()
+        .findById(reviewComment.reviewId)
+
+    const manuscript = await ctx.connectors.Manuscript.model
+      .query()
+      .findById(review ? review.manuscriptId : file.objectId)
 
     if (!manuscript) {
       console.error('File without owner manuscript encountered:', parent)
@@ -288,10 +341,24 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
 })(async (parent, args, ctx, info) => {
   if (!ctx.user) return false
 
-  const manuscript = await ctx.connectors.File.model
-    .relatedQuery('manuscript')
-    .for(parent.id)
-    .first()
+  if (!parent.id) return false
+
+  const file = await ctx.connectors.File.model.query().findById(parent.id)
+
+  const reviewComment = await ctx.connectors.ReviewComment.model
+    .query()
+    .findById(file.objectId)
+
+  let review
+
+  if (reviewComment)
+    review = await ctx.connectors.Review.model
+      .query()
+      .findById(reviewComment.reviewId)
+
+  const manuscript = await ctx.connectors.Manuscript.model
+    .query()
+    .findById(review ? review.manuscriptId : file.objectId)
 
   if (!manuscript) {
     console.error('File without owner manuscript encountered:', parent)
@@ -325,7 +392,8 @@ const permissions = {
     messages: isAuthenticated,
     form: isAuthenticated,
     forms: userIsAdmin,
-    formForPurpose: allow,
+    formsByCategory: allow,
+    formForPurposeAndCategory: allow,
     user: isAuthenticated,
     users: isAuthenticated,
     validateDOI: isAuthenticated,
@@ -346,8 +414,8 @@ const permissions = {
       userIsEditorOfTheManuscriptOfTheReview,
     ),
     createNewVersion: or(userIsAuthor, userIsEditor, userIsAdmin),
-    createFile: userIsAuthorOfFilesAssociatedManuscript,
-    deleteFile: userIsAuthorOfFilesAssociatedManuscript,
+    createFile: isAuthenticated,
+    deleteFile: isAuthenticated,
     deleteForm: userIsAdmin,
     createForm: userIsAdmin,
     updateForm: userIsAdmin,

@@ -49,6 +49,8 @@ const cokoTheme = {
   colorWarningDark: '#503303',
   colorSuccessLight: '#d2ffcc',
   colorSuccessDark: '#17510F',
+  colorIconPrimary: '#6C6C6C',
+  colorContainerBorder: '#DEDEDE',
 
   /* Text variables */
 

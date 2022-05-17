@@ -34,10 +34,12 @@ export default {
           status
           files {
             id
-            url
-            filename
-            fileType
-            mimeType
+            name
+            tags
+            storedObjects {
+              mimetype
+              url
+            }
           }
           meta {
             manuscriptId
@@ -49,7 +51,7 @@ export default {
           evaluationsHypothesisMap
         }
       }
-      formForPurpose(purpose: "submit") {
+      formForPurposeAndCategory(purpose: "submit", category: "submission") {
         structure {
           children {
             title

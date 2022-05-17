@@ -10,7 +10,7 @@ const UPLOAD_MANUSCRIPT_BUTTON = 'UploadManuscript__Info'
 const SUBMIT_URL_BUTTON = 'button'
 const SUBMISSION_MESSAGE = 'body'
 
-export const NewSubmissionPage = {
+const NewSubmissionPage = {
   getUploadManuscriptButton() {
     return cy.getByContainsClass(UPLOAD_MANUSCRIPT_BUTTON)
   },
@@ -33,5 +33,3 @@ export const NewSubmissionPage = {
     return cy.get(SUBMISSION_MESSAGE).invoke('text')
   },
 }
-
-export default NewSubmissionPage

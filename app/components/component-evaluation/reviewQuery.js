@@ -25,7 +25,7 @@ const query = gql`
         }
       }
     }
-    formForPurpose(purpose: "submit") {
+    formForPurposeAndCategory(purpose: "submit", category: "submission") {
       structure {
         children {
           title

@@ -1,7 +1,7 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Formik } from 'formik'
-import { set } from 'lodash'
+import { set, debounce } from 'lodash'
 import DecisionForm from './decision/DecisionForm'
 import DecisionReviews from './decision/DecisionReviews'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
@@ -12,7 +12,7 @@ import EditorSection from './decision/EditorSection'
 import Publish from './Publish'
 import { AdminSection } from './style'
 import {
-  Tabs,
+  HiddenTabs,
   SectionContent,
   SectionHeader,
   SectionRow,
@@ -59,19 +59,19 @@ const DecisionVersion = ({
   const addEditor = (manuscript, label, isCurrent, user) => {
     const isThisReadOnly = !isCurrent
 
+    const handleSave = useCallback(
+      debounce(source => {
+        updateManuscript(manuscript.id, { meta: { source } })
+      }, 2000),
+    )
+
     return {
       content: (
         <EditorSection
           currentUser={user}
           manuscript={manuscript}
-          onBlur={
-            isThisReadOnly
-              ? null
-              : source => {
-                  updateManuscript(manuscript.id, { meta: { source } })
-                }
-          }
           readonly={isThisReadOnly}
+          saveSource={isThisReadOnly ? null : handleSave}
         />
       ),
       key: `editor_${manuscript.id}`,
@@ -106,7 +106,13 @@ const DecisionVersion = ({
       },
     }
 
-    return updateReview(existingReview.current.id, reviewData, manuscriptId)
+    const results = updateReview(
+      existingReview.current.id,
+      reviewData,
+      manuscriptId,
+    )
+
+    return results
   }
 
   const editorSection = addEditor(
@@ -322,7 +328,7 @@ const DecisionVersion = ({
       }}
     >
       {props => (
-        <Tabs
+        <HiddenTabs
           defaultActiveKey={version.id}
           sections={[
             decisionSection({ ...props }),
@@ -363,8 +369,8 @@ DecisionVersion.propTypes = {
     }).isRequired,
     files: PropTypes.arrayOf(
       PropTypes.shape({
-        url: PropTypes.string.isRequired,
-        filename: PropTypes.string.isRequired,
+        name: PropTypes.string.isRequired,
+        storedObjects: PropTypes.arrayOf(PropTypes.object.isRequired),
       }).isRequired,
     ).isRequired,
     reviews: PropTypes.arrayOf(

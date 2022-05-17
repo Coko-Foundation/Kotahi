@@ -8,7 +8,7 @@ import { Spinner, CommsErrorBanner } from '../../../shared'
 const useHtml = false
 
 // If this is set to TRUE, we generate HTML and send back the HTML address instead of the PDF address
-// This is a temporary measure!
+// This is a temporary measure, though it's useful to test what's coming out.
 
 const fragmentFields = `
   id
@@ -16,8 +16,10 @@ const fragmentFields = `
   status
   files {
     id
-    fileType
-    mimeType
+    tags
+    storedObjects {
+      mimetype
+    }
   }
 	submission
   meta {
@@ -29,24 +31,15 @@ const fragmentFields = `
 `
 
 const query = gql`
-  query($id: ID!, $manuscriptId: String!) {
+  query($id: ID!) {
     currentUser {
       id
       username
       admin
     }
-
-
-
     manuscript(id: $id) {
       ${fragmentFields}
     }
-
-		convertToJats(manuscriptId: $manuscriptId) {
-      xml
-      error
-    }
-
 	}
 `
 
@@ -56,6 +49,15 @@ const getPdfQuery = gql`
   query($manuscriptId: String!, $useHtml: Boolean) {
     convertToPdf(manuscriptId: $manuscriptId, useHtml: $useHtml) {
       pdfUrl
+    }
+  }
+`
+
+const getJatsQuery = gql`
+  query($manuscriptId: String!) {
+    convertToJats(manuscriptId: $manuscriptId) {
+      xml
+      error
     }
   }
 `
@@ -74,6 +76,7 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
   const [modalIsOpen, setModalIsOpen] = React.useState(true)
 
   const { data, loading, error } = useQuery(getPdfQuery, {
+    fetchPolicy: 'cache-and-network',
     variables: {
       manuscriptId: manuscript.id,
       useHtml,
@@ -84,18 +87,29 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
   if (data && !downloading) {
     setDownloading(true)
     const { pdfUrl } = data.convertToPdf // this is the relative url, like "uploads/filename.pdf"
+    // console.log(pdfUrl)
 
     if (useHtml) {
       // use this to open the PDF in a new tab:
-      const pdfWindow = window.open(pdfUrl)
+      const pdfWindow = window.open(`/${pdfUrl}`)
       pdfWindow.print()
     } else {
+      const newWin = window.open(`/${pdfUrl}`)
+
+      if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
+        // if popups are blocked, try downloading it instead.
+        const link = document.createElement('a')
+        link.href = `/${pdfUrl}`
+        link.download = `${manuscript.meta.title || 'title'}.pdf`
+        link.target = '_blank'
+        link.click()
+      }
       // use this code for downloading the PDF:
 
-      const link = document.createElement('a')
-      link.href = pdfUrl
-      link.download = `${manuscript.meta.title || 'title'}.pdf`
-      link.click()
+      // const link = document.createElement('a')
+      // link.href = `/${pdfUrl}`
+      // link.download = `${manuscript.meta.title || 'title'}.pdf`
+      // link.click()
 
       // console.log(`Downloading ${link.download}`)
     }
@@ -160,16 +174,62 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
   )
 }
 
+const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
+  const { data, loading, error } = useQuery(getJatsQuery, {
+    fetchPolicy: 'cache-and-network',
+    variables: {
+      manuscriptId: manuscript.id,
+    },
+  })
+
+  if (loading) return <Spinner />
+
+  if (error) {
+    return (
+      <div style={{ display: 'none' }}>
+        <CommsErrorBanner error={error} />
+      </div>
+    ) // TODO: improve this!
+  }
+
+  if (data) {
+    const jats = data.convertToJats.xml
+
+    if (data.convertToJats.error.length) {
+      /* eslint-disable */
+      console.log(
+        'Error making JATS. First error: ',
+        JSON.parse(data.convertToJats.error),
+      )
+      resetMakingJats() // this is bad!
+      return null
+    }
+
+    /* eslint-disable */
+    console.log('XML Selected')
+    console.log('HTML:\n\n', manuscript.meta.source)
+    console.log('JATS:\n\n', jats)
+    // JATS XML file opens in new tab
+    let blob = new Blob([jats], { type: 'text/xml' })
+    let url = URL.createObjectURL(blob)
+    window.open(url)
+    URL.revokeObjectURL(url)
+    resetMakingJats()
+    /* eslint-disable */
+  }
+  return null
+}
+
 const ProductionPage = ({ match, ...props }) => {
   const [makingPdf, setMakingPdf] = React.useState(false)
   const [makingJats, setMakingJats] = React.useState(false)
-  const [saving, setSaving] = React.useState(false)
-  const [downloading, setDownloading] = React.useState(false)
+  // const [saving, setSaving] = React.useState(false)
+  // const [downloading, setDownloading] = React.useState(false)
 
-  const [currentJats, setCurrentJats] = React.useState({
-    xml: '',
-    error: false,
-  })
+  // const [currentJats, setCurrentJats] = React.useState({
+  //   xml: '',
+  //   error: false,
+  // })
 
   const [update] = useMutation(updateMutation)
 
@@ -184,67 +244,16 @@ const ProductionPage = ({ match, ...props }) => {
     return newQuery
   }
 
-  const { data, loading, error, refetch } = useQuery(query, {
+  const { data, loading, error } = useQuery(query, {
     variables: {
       id: match.params.version,
-      manuscriptId: match.params.version,
     },
   })
 
-  const updateQuery = async () => {
-    setSaving(true)
-
-    let newQuery = await refetch({
-      id: match.params.version,
-      manuscriptId: manuscript.id,
-    })
-
-    // doing a second pass – first pass updates manuscript, second one gets updated XML.
-    newQuery = await refetch({
-      id: match.params.version,
-      manuscriptId: manuscript.id,
-    })
-
-    await setCurrentJats(newQuery.data.convertToJats)
-    await setSaving(false)
-    return newQuery
-  }
-
-  const downloadJats = async () => {
-    if (!downloading) {
-      setDownloading(true)
-
-      if (currentJats.error) {
-        // eslint-disable-next-line
-        console.error('Error making JATS: ', currentJats.error)
-      } else {
-        // eslint-disable-next-line
-        console.log('HTML:\n\n', manuscript.meta.source)
-        // eslint-disable-next-line
-        console.log('JATS:\n\n', currentJats.xml)
-        // JATS XML file opens in new tab
-        const blob = new Blob([currentJats.xml], { type: 'text/xml' })
-        const url = URL.createObjectURL(blob)
-        window.open(url)
-        URL.revokeObjectURL(currentJats.xml)
-      }
-
-      setMakingJats(false)
-      setDownloading(false)
-    }
-  }
-
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
-  const { manuscript, currentUser, convertToJats } = data
 
-  if (!currentJats.xml) {
-    setCurrentJats(convertToJats)
-  }
-
-  if (makingJats && !saving) {
-    downloadJats()
-  }
+  const { manuscript, currentUser } = data
 
   return (
     <div>
@@ -257,23 +266,26 @@ const ProductionPage = ({ match, ...props }) => {
           }}
         />
       ) : null}
+      {makingJats ? (
+        <DownloadJatsComponent
+          manuscript={manuscript}
+          resetMakingJats={() => {
+            setMakingJats(false)
+          }}
+        />
+      ) : null}
       <Production
         currentUser={currentUser}
         file={
-          manuscript.files.find(file => file.fileType === 'manuscript') || {}
+          manuscript.files.find(file => file.tags.includes('manuscript')) || {}
         }
-        makeJats={() => {
-          setMakingJats(true)
-        }}
-        makePdf={() => {
-          setMakingPdf(true)
-        }}
+        makePdf={setMakingPdf}
+        makeJats={setMakingJats}
         manuscript={manuscript}
         updateManuscript={(a, b) => {
           // eslint-disable-next-line
           console.log('in update manuscript!')
           updateManuscript(a, b)
-          updateQuery()
         }}
       />
     </div>

@@ -235,7 +235,7 @@ CREATE TABLE public.files (
     size integer NOT NULL,
     type text NOT NULL,
     manuscript_id uuid NOT NULL,
-    review_comment_id uuid,
+    review_comment_id uuid
 );
 
 
@@ -509,7 +509,6 @@ INSERT INTO public.identities (id, user_id, created, updated, type, identifier, 
 --
 -- Data for Name: manuscripts; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
-
 
 
 --
@@ -926,7 +925,26 @@ ALTER TABLE ONLY public.teams
     ADD CONSTRAINT teams_manuscript_id_fkey FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts(id) ON DELETE CASCADE;
 
 
+ALTER TABLE public.manuscripts ADD COLUMN short_id SERIAL;
+
+update public.manuscripts child
+set short_id=parent.short_id
+from public.manuscripts parent
+where parent.id = child.parent_id;
+
+-- 
+-- Name: manuscript; Schema: public; Owner: kotahidev;
+-- 
+
+ALTER TABLE public.manuscripts ADD submitted_date TIMESTAMP WITH TIME ZONE;
+UPDATE public.manuscripts SET submitted_date = created WHERE status != 'new';
+
+
+ALTER TABLE public.forms 
+  ADD category TEXT NULL;
+
+UPDATE public.forms SET category = 'submission';
+
 --
 -- PostgreSQL database dump complete
 --
-

@@ -1,16 +1,24 @@
 /* eslint-disable prefer-destructuring */
 const { ref } = require('objection')
 const axios = require('axios')
-const { mergeWith, isArray } = require('lodash')
+const { mergeWith, isArray, map } = require('lodash')
 const config = require('config')
 const { pubsubManager } = require('@coko/server')
 const models = require('@pubsweet/models')
+const cheerio = require('cheerio')
 
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
 const Message = require('../../model-message/src/message')
 const publishToCrossref = require('../../publishing/crossref')
 const { stripSensitiveItems } = require('./manuscriptUtils')
+
+const {
+  getFilesWithUrl,
+  replaceImageSrc,
+  base64Images,
+  uploadImage,
+} = require('../../utils/fileStorageUtils')
 
 const {
   publishToHypothesis,
@@ -103,6 +111,44 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
   if (['ncrc', 'colab'].includes(process.env.INSTANCE_NAME)) {
     updatedMs.submission.editDate = new Date().toISOString().split('T')[0]
+  }
+
+  const { source } = updatedMs.meta
+
+  if (typeof source === 'string') {
+    const images = base64Images(source)
+
+    if (images.length > 0) {
+      const uploadedImages = []
+
+      await Promise.all(
+        map(images, async image => {
+          if (image.blob) {
+            const uploadedImage = await uploadImage(image, updatedMs.id)
+            uploadedImages.push(uploadedImage)
+          }
+        }),
+      )
+
+      const uploadedImagesWithUrl = await getFilesWithUrl(uploadedImages)
+
+      const $ = cheerio.load(source)
+
+      map(images, (image, index) => {
+        const elem = $('img').get(image.index)
+        const $elem = $(elem)
+        $elem.attr('data-fileid', uploadedImagesWithUrl[index].id)
+        $elem.attr('alt', uploadedImagesWithUrl[index].name)
+        $elem.attr(
+          'src',
+          uploadedImagesWithUrl[index].storedObjects.find(
+            storedObject => storedObject.type === 'medium',
+          ).url,
+        )
+      })
+
+      updatedMs.meta.source = $.html()
+    }
   }
 
   return models.Manuscript.query().updateAndFetchById(id, updatedMs)
@@ -281,8 +327,6 @@ const resolvers = {
           // TODO This should be changed both here and for the createFile query, and we'll need a migration to convert all existing URLs in the DB.
           return {
             ...file,
-            fileType: 'manuscript',
-            url: `/uploads${file.url}`,
           }
         }),
         reviews: [],
@@ -321,22 +365,14 @@ const resolvers = {
       } else if (process.env.INSTANCE_NAME === 'colab') {
         promises.push(
           importArticlesFromBiorxivWithFullTextSearch(ctx, [
-            'membrane protein',
-            'ion channel',
-            'transporter',
-            'pump',
+            'transporter*',
+            'pump*',
             'gpcr',
-            'G protein-coupled receptor',
-            'exchanger',
-            'uniporter',
-            'symporter',
-            'antiporter',
-            'solute carrier',
-            'atpase',
-            'rhodopsin',
-            'patch-clamp',
-            'voltage-clamp',
-            'single-channel',
+            'gating',
+            '*-gated',
+            '*-selective',
+            '*-pumping',
+            'protein translocation',
           ]),
         )
       }
@@ -857,6 +893,16 @@ const resolvers = {
         manuscript.meta = {}
       }
 
+      manuscript.files = await getFilesWithUrl(manuscript.files)
+
+      if (typeof manuscript.meta.source === 'string') {
+        manuscript.meta.source = await replaceImageSrc(
+          manuscript.meta.source,
+          manuscript.files,
+          'medium',
+        )
+      }
+
       manuscript.meta.notes = (manuscript.meta || {}).notes || [
         {
           notesType: 'fundingAcknowledgement',
@@ -952,7 +998,24 @@ const resolvers = {
         query.offset(offset)
       }
 
-      const manuscripts = await query
+      let manuscripts = await query
+
+      manuscripts = manuscripts.map(async m => {
+        const manuscript = m
+
+        manuscript.files = await getFilesWithUrl(manuscript.files)
+
+        if (typeof manuscript.meta.source === 'string') {
+          manuscript.meta.source = await replaceImageSrc(
+            manuscript.meta.source,
+            manuscript.files,
+            'medium',
+          )
+        }
+
+        return manuscript
+      })
+
       return {
         totalCount,
         manuscripts,
@@ -1254,10 +1317,31 @@ const typeDefs = `
   }
 
   input FileInput {
-    filename: String
-    url: String
-    mimeType: String
+    name: String!
+    storedObjects: [StoredObjectInput!]!
+    tags: [String]!
+  }
+
+  input ImageMetadataInput {
+    width: Int!
+    height: Int!
+    space: String
+    density: Int
+  }
+
+  input StoredObjectInput {
+    type: ImageSizeInput!
+    key: String!
     size: Int
+    mimetype: String!
+    extension: String!
+    imageMetadata: ImageMetadataInput
+  }
+
+  enum ImageSizeInput {
+    original
+    medium
+    small
   }
 
   type Author {

@@ -1,6 +1,5 @@
-import React, { useRef } from 'react'
+import React, { useRef, useEffect } from 'react'
 import PropTypes from 'prop-types'
-// import { debounce } from 'lodash'
 import { Wax } from 'wax-prosemirror-core'
 import { ThemeProvider } from 'styled-components'
 import waxTheme from './layout/waxTheme'
@@ -8,8 +7,6 @@ import waxTheme from './layout/waxTheme'
 import productionWaxEditorConfig from './config/ProductionWaxEditorConfig'
 import ProductionWaxEditorLayout from './layout/ProductionWaxEditorLayout'
 import ProductionWaxEditorNoCommentsLayout from './layout/ProductionWaxEditorNoCommentsLayout'
-
-// import './katex/katex.css'
 
 // this was forked from FullWaxEditor.js
 
@@ -31,8 +28,7 @@ const ProductionWaxEditor = ({
   validationStatus,
   readonly,
   autoFocus,
-  onBlur,
-  onChange,
+  saveSource,
   placeholder,
   readOnlyComments,
   fileUpload,
@@ -51,15 +47,27 @@ const ProductionWaxEditor = ({
 
   const editorRef = useRef(null)
 
-  // const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
+  /* eslint-disable jsx-a11y/no-noninteractive-tabindex,  jsx-a11y/tabindex-no-positive */
 
+  useEffect(() => {
+    return () => {
+      if (editorRef.current) {
+        saveSource(editorRef.current.getContent())
+      }
+    }
+  }, [])
+
+  // return useMemo(
+  //   () => (
   return (
     <ThemeProvider theme={waxTheme}>
       <div
         className={validationStatus}
-        onBlur={() => {
-          onBlur(editorRef.current.getContent())
-        }}
+        // onBlur={e => {
+        //   e.preventDefault()
+        //   saveSource(editorRef.current.getContent())
+        // }}
+        // tabIndex={1}
       >
         <Wax
           autoFocus={autoFocus}
@@ -70,11 +78,9 @@ const ProductionWaxEditor = ({
               ? ProductionWaxEditorLayout(readonly)
               : ProductionWaxEditorNoCommentsLayout(readonly)
           }
-          // onBlur={val => {
-          //   onChange && onChange(val)
-          //   onBlur && onBlur(val)
-          // }}
-          // onChange={debounceChange}
+          onChange={source => {
+            saveSource(source)
+          }}
           placeholder={placeholder}
           readonly={readonly}
           ref={editorRef}
@@ -85,6 +91,9 @@ const ProductionWaxEditor = ({
       </div>
     </ThemeProvider>
   )
+  // 	,
+  //   [],
+  // )
 }
 
 ProductionWaxEditor.propTypes = {
@@ -92,8 +101,7 @@ ProductionWaxEditor.propTypes = {
   validationStatus: PropTypes.string,
   readonly: PropTypes.bool,
   autoFocus: PropTypes.bool,
-  onBlur: PropTypes.func,
-  onChange: PropTypes.func,
+  saveSource: PropTypes.func,
   placeholder: PropTypes.string,
   fileUpload: PropTypes.func,
   readOnlyComments: PropTypes.bool,
@@ -110,14 +118,13 @@ ProductionWaxEditor.propTypes = {
 
 ProductionWaxEditor.defaultProps = {
   value: '',
-  validationStatus: undefined,
+  validationStatus: '',
   readonly: false,
   autoFocus: false,
-  onBlur: () => {},
-  onChange: () => {},
   placeholder: '',
   readOnlyComments: false,
   fileUpload: () => {},
+  saveSource: () => {},
   useComments: true,
   user: {},
 }

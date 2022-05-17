@@ -15,7 +15,7 @@ import { XpubContext } from './xpub-with-context/src'
 
 import UsersManager from './component-users-manager/src/UsersManager'
 import ManuscriptsPage from './component-manuscripts/src/ManuscriptsPage'
-import Dashboard from './component-dashboard/src/components/Dashboard'
+import DashboardPage from './component-dashboard/src/components/DashboardPage'
 import SubmitPage from './component-submit/src/components/SubmitPage'
 import ManuscriptPage from './component-manuscript/src/components/ManuscriptPage'
 import ReviewersPage from './component-review/src/components/ReviewersPage'
@@ -137,7 +137,9 @@ const AdminPage = () => {
   const { pathname } = history.location
   const showLinks = pathname.match(/^\/(submit|manuscript)/g)
   let links = []
-  const formBuilderLink = `${urlFrag}/admin/form-builder`
+  const submissionFormBuilderLink = `${urlFrag}/admin/submission-form-builder`
+  const reviewFormBuilderLink = `${urlFrag}/admin/review-form-builder`
+  const decisionFormBuilderLink = `${urlFrag}/admin/decision-form-builder`
   const homeLink = `${urlFrag}/dashboard`
   const profileLink = `${urlFrag}/profile`
   const manuscriptsLink = `${urlFrag}/admin/manuscripts`
@@ -169,7 +171,16 @@ const AdminPage = () => {
   }
 
   if (currentUser && currentUser.admin) {
-    links.push({ link: formBuilderLink, name: 'Forms', icon: 'check-square' })
+    links.push({
+      menu: 'Forms',
+      name: 'Forms',
+      icon: 'check-square',
+      links: [
+        { link: submissionFormBuilderLink, name: 'Submission' },
+        { link: reviewFormBuilderLink, name: 'Review' },
+        { link: decisionFormBuilderLink, name: 'Decision' },
+      ],
+    })
     links.push({ link: userAdminLink, name: 'Users', icon: 'users' })
     links.push({
       link: manuscriptsLink,
@@ -213,7 +224,7 @@ const AdminPage = () => {
           redirectLink={redirectLink}
         />
         <PrivateRoute
-          component={Dashboard}
+          component={DashboardPage}
           currentUser={currentUser}
           exact
           path={homeLink}
@@ -279,6 +290,33 @@ const AdminPage = () => {
               exact
               key="form-builder"
               path={`${urlFrag}/admin/form-builder`}
+              redirectLink={redirectLink}
+            />,
+            <PrivateRoute
+              category="submission"
+              component={FormBuilderPage}
+              currentUser={currentUser}
+              exact
+              key="submission-form-builder"
+              path={`${urlFrag}/admin/submission-form-builder`}
+              redirectLink={redirectLink}
+            />,
+            <PrivateRoute
+              category="review"
+              component={FormBuilderPage}
+              currentUser={currentUser}
+              exact
+              key="review-form-builder"
+              path={`${urlFrag}/admin/review-form-builder`}
+              redirectLink={redirectLink}
+            />,
+            <PrivateRoute
+              category="decision"
+              component={FormBuilderPage}
+              currentUser={currentUser}
+              exact
+              key="decision-form-builder"
+              path={`${urlFrag}/admin/decision-form-builder`}
               redirectLink={redirectLink}
             />,
             <PrivateRoute

@@ -23,20 +23,43 @@ const UserName = styled.div`
   word-break: break-word;
 `
 
+const NonLink = styled.div``
+
 const Section = styled.div``
 
-const NavItem = ({ className, link, name, icon }) => (
-  <Link className={className} to={link}>
-    <Icon>{icon}</Icon>
-    {name}
-  </Link>
-)
+const NavItem = ({ className, link, name, icon, onClick, open, menu }) =>
+  link ? (
+    <Link className={className} onClick={onClick} to={link}>
+      <span>
+        {icon && <Icon>{icon}</Icon>}
+        {name}
+      </span>
+      {menu ? (
+        <> {open ? <Icon>chevron-up</Icon> : <Icon>chevron-down</Icon>} </>
+      ) : null}
+    </Link>
+  ) : (
+    <NonLink className={className} onClick={onClick}>
+      <span>
+        {icon && <Icon>{icon}</Icon>}
+        {name}
+      </span>
+      {menu ? (
+        <> {open ? <Icon>chevron-up</Icon> : <Icon>chevron-down</Icon>} </>
+      ) : null}
+    </NonLink>
+  )
 
 NavItem.propTypes = {
   className: PropTypes.string.isRequired,
-  link: PropTypes.string.isRequired,
+  link: PropTypes.string,
   name: PropTypes.string.isRequired,
-  icon: PropTypes.string.isRequired,
+  icon: PropTypes.string,
+}
+
+NavItem.defaultProps = {
+  icon: undefined,
+  link: undefined,
 }
 
 export const Item = styled(NavItem)`
@@ -47,8 +70,15 @@ export const Item = styled(NavItem)`
   color: ${props => (props.active ? th('colorText') : th('colorTextReverse'))};
   display: flex;
   height: ${grid(5)};
+  justify-content: space-between;
   line-height: ${grid(3)};
+  margin-left: ${props => (props.subLink ? '16px' : 0)};
   padding-left: ${grid(1)};
+
+  & > span {
+    align-items: center;
+    display: flex;
+  }
 
   svg {
     stroke: ${props =>
@@ -80,6 +110,32 @@ const UserInfo = styled.div`
   margin-left: ${grid(1)};
 `
 
+const SubMenu = ({ location, ...navInfo }) => {
+  const [open, setOpen] = React.useState(false)
+
+  return (
+    <>
+      <Item
+        {...navInfo}
+        active={location.pathname === navInfo.link}
+        onClick={() => setOpen(!open)}
+        open={open}
+      />
+      {open &&
+        navInfo.links.map(subNavInfo => {
+          return (
+            <Item
+              {...subNavInfo}
+              active={location.pathname === subNavInfo.link}
+              key={subNavInfo.link}
+              subLink
+            />
+          )
+        })}
+    </>
+  )
+}
+
 const Menu = ({
   className,
   loginLink = '/login',
@@ -100,13 +156,17 @@ const Menu = ({
           user={user}
         />
         {navLinkComponents &&
-          navLinkComponents.map((navInfo, idx) => (
-            <Item
-              {...navInfo}
-              active={location.pathname === navInfo.link}
-              key={navInfo.link}
-            />
-          ))}
+          navLinkComponents.map(navInfo =>
+            navInfo.menu ? (
+              <SubMenu key={navInfo.name} location={location} {...navInfo} />
+            ) : (
+              <Item
+                {...navInfo}
+                active={location.pathname === navInfo.link}
+                key={navInfo.link}
+              />
+            ),
+          )}
       </Section>
     </Root>
   )

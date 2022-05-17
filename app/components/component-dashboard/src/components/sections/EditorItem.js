@@ -2,7 +2,6 @@
 import React from 'react'
 import styled from 'styled-components'
 import { Action, ActionGroup } from '@pubsweet/ui'
-import config from 'config'
 import PropTypes from 'prop-types'
 import { Item, StatusBadge } from '../../style'
 import Meta from '../metadata/Meta'
@@ -13,7 +12,6 @@ import ControlPageLink from '../ControlPageLink'
 
 import Reviews from '../Reviews'
 import VersionTitle from './VersionTitle'
-import prettyRoleText from '../../../../../shared/prettyRoleText'
 
 const VersionTitleLink = styled(ControlPageLink)`
   color: #333;
@@ -32,9 +30,7 @@ const getMembersOfTeam = (version, role) => {
   return teams.length ? teams[0].members : []
 }
 
-const urlFrag = config.journal.metadata.toplevel_urlfragment
-
-const EditorItemLinks = ({ version }) => (
+const EditorItemLinks = ({ version, urlFrag }) => (
   <StyledActionGroup>
     <Action to={`${urlFrag}/versions/${version.parentId || version.id}/submit`}>
       Summary Info
@@ -79,7 +75,14 @@ const getSubmitedDate = version =>
     history => history.type === 'submitted',
   ) || []
 
-const EditorItem = ({ version, currentRoles }) => (
+const EditorItem = ({
+  version,
+  currentRoles,
+  urlFrag,
+  instanceName,
+  shouldShowShortId,
+  prettyRoleText,
+}) => (
   // <Authorize object={[version]} operation="can view my manuscripts section">
   <>
     <Item>
@@ -104,9 +107,13 @@ const EditorItem = ({ version, currentRoles }) => (
     </Item>
     <Item>
       <VersionTitleLink id={version.id} page="decision" version={version}>
-        <VersionTitle version={version} />
+        <VersionTitle
+          instanceName={instanceName}
+          shouldShowShortId={shouldShowShortId}
+          version={version}
+        />
       </VersionTitleLink>
-      <EditorItemLinks version={version} />
+      <EditorItemLinks urlFrag={urlFrag} version={version} />
     </Item>
     <Reviews version={version} />
   </>

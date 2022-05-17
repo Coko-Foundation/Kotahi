@@ -67,6 +67,7 @@ module.exports = {
     useGraphQLServer: true,
     useJobQueue: false,
     serveClient: true,
+    useFileStorage: true,
     db: {},
     port: 3000,
     pool: {
@@ -205,9 +206,12 @@ module.exports = {
       'application/zip',
     ],
   },
-  'paged-js': {
-    pagedJsClientId: '',
-    pagedJsClientSecret: '',
+  pagedjs: {
+    clientId: '',
+    clientSecret: '',
+    protocol: '',
+    host: '',
+    port: '',
   },
   /** These named configuration sections will be available to webpack */
   publicKeys: [
@@ -224,15 +228,8 @@ module.exports = {
     'hypothesis',
     'review',
     'notification-email',
-    'paged-js',
+    'pagedjs',
   ],
-  s3: {
-    accessKeyId: 'test',
-    secretAccessKey: 'password',
-    endpoint: 'http://minio:9000',
-    region: 'us-east-1',
-    bucket: 'kotahi',
-  },
   crossref: {
     login: '',
     password: '',
@@ -253,5 +250,18 @@ module.exports = {
   },
   'notification-email': {
     automated: '',
+  },
+  fileStorage: {
+    minioRootUser: '',
+    minioRootPassword: '',
+    accessKeyId: '',
+    secretAccessKey: '',
+    bucket: '',
+    protocol: '',
+    host: '',
+    port: '',
+    minioConsolePort: '',
+    maximumWidthForSmallImages: '',
+    maximumWidthForMediumImages: '',
   },
 }

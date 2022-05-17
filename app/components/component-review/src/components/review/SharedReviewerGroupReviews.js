@@ -68,8 +68,8 @@ SharedReviewerGroupReviews.propTypes = {
           content: PropTypes.string,
           files: PropTypes.arrayOf(
             PropTypes.shape({
-              filename: PropTypes.string.isRequired,
-              url: PropTypes.string.isRequired,
+              name: PropTypes.string.isRequired,
+              storedObjects: PropTypes.arrayOf(PropTypes.object.isRequired),
             }).isRequired,
           ),
         }),

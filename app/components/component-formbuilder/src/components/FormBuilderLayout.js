@@ -64,6 +64,7 @@ const FormBuilderLayout = ({
   forms,
   activeFormId,
   activeFieldId,
+  category,
   deleteForm,
   deleteField,
   moveFieldDown,
@@ -137,6 +138,7 @@ const FormBuilderLayout = ({
 
   const activeForm = forms.find(f => f.id === activeFormId) ?? {
     purpose: '',
+    category,
     structure: {
       children: [],
       name: '',
@@ -151,9 +153,11 @@ const FormBuilderLayout = ({
 
   return (
     <div>
-      <Container>
+      <Container style={{ height: '100vh' }}>
         <HeadingWithAction>
-          <Heading>Form Builder</Heading>
+          <Heading>
+            {category.charAt(0).toUpperCase() + category.slice(1)} Form Builder
+          </Heading>
         </HeadingWithAction>
         <Columns>
           <Form>

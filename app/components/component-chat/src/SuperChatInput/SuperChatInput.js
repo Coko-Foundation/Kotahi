@@ -22,6 +22,12 @@ import { MEDIA_BREAK } from '../../../layout'
 
 const QuotedMessage = styled.div``
 
+const SendButton = styled(Button)`
+  font-size: 90%;
+  min-width: unset;
+  width: 50px;
+`
+
 export const cleanSuggestionUserObject = user => {
   if (!user) return null
   return {
@@ -247,8 +253,8 @@ const SuperChatInput = props => {
           <PhotoSizeError>
             <p>{photoSizeError}</p>
             <Icon
-              color='warn.default'
-              glyph='view-close'
+              color="warn.default"
+              glyph="view-close"
               onClick={() => setPhotoSizeError('')}
               size={16}
             />
@@ -270,23 +276,23 @@ const SuperChatInput = props => {
             >
               {mediaPreview && (
                 <PreviewWrapper>
-                  <img alt='' src={mediaPreview} />
+                  <img alt="" src={mediaPreview} />
                   <RemovePreviewButton onClick={() => setMediaPreview(null)}>
-                    <Icon glyph='view-close-small' size='16' />
+                    <Icon glyph="view-close-small" size="16" />
                   </RemovePreviewButton>
                 </PreviewWrapper>
               )}
               {props.quotedMessage && (
-                <PreviewWrapper data-cy='staged-quoted-message'>
+                <PreviewWrapper data-cy="staged-quoted-message">
                   <QuotedMessage
                     id={props.quotedMessage}
                     threadId={props.threadId}
                   />
                   <RemovePreviewButton
-                    data-cy='remove-staged-quoted-message'
+                    data-cy="remove-staged-quoted-message"
                     onClick={removeQuotedMessage}
                   >
-                    <Icon glyph='view-close-small' size='16' />
+                    <Icon glyph="view-close-small" size="16" />
                   </RemovePreviewButton>
                 </PreviewWrapper>
               )}
@@ -307,9 +313,13 @@ const SuperChatInput = props => {
                 value={text}
               />
             </InputWrapper>
-            <Button data-cy="chat-input-send-button" onClick={submit} primary>
+            <SendButton
+              data-cy="chat-input-send-button"
+              onClick={submit}
+              primary
+            >
               Send
-            </Button>
+            </SendButton>
           </Form>
         </ChatInputWrapper>
       </ChatInputContainer>
