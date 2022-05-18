@@ -25,6 +25,7 @@ describe('Form builder', () => {
     Menu.clickForms()
     cy.contains('Submission').click()
 
+    // For Submission field
     FormsPage.getFormTitleTab(0).should(
       'contain',
       'Research Object Submission Form',
@@ -32,12 +33,47 @@ describe('Form builder', () => {
     FormsPage.clickFormOption(2)
     FormsPage.getNameField().should('have.value', 'submission.authorNames')
     cy.contains('Update Field').click()
-    cy.contains('Review').click()
+    // adding a field in submission form
+    cy.contains('Add Field').click()
+    cy.contains('Choose in the list').click()
+    cy.get('button')
+    cy.contains('VisualAbstract').click()
+    cy.contains('Name (internal field name)').click()
+    cy.get('[name=name]').type('submission.visualAbstract')
+    cy.contains('Update Field').click()
 
+    // for review field
+    cy.contains('Review').click()
     FormsPage.getFormTitleTab(0).should('contain', 'Review Form')
     FormsPage.clickFormOption(1)
     FormsPage.getNameField().should('have.value', 'authorFileName').clear()
-    cy.get('#45').type('submission.authorFileName')
+    cy.get('[name=name]').type('submission.authorFileName')
+    cy.contains('Update Field').click()
+
+    // adding a field in review form
+    cy.contains('Add Field').click()
+    cy.contains('Choose in the list').click()
+    cy.get('button')
+    cy.contains('VisualAbstract').click()
+    cy.contains('Name (internal field name)').click()
+    cy.get('[name=name]').type('submission.visualAbstract')
+    cy.contains('Update Field').click()
+
+    // for decision field
+    cy.contains('Decision').click()
+    FormsPage.getFormTitleTab(0).should('contain', 'Decision Form')
+    FormsPage.clickFormOption(1)
+    FormsPage.getNameField().should('have.value', 'fileName').clear()
+    cy.get('[name=name]').type('submission.fileName')
+    cy.contains('Update Field').click()
+
+    // adding a field in decision form
+    cy.contains('Add Field').click()
+    cy.contains('Choose in the list').click()
+    cy.get('button')
+    cy.contains('VisualAbstract').click()
+    cy.contains('Name (internal field name)').click()
+    cy.get('[name=name]').type('submission.visualAbstract')
     cy.contains('Update Field').click()
   })
 })
