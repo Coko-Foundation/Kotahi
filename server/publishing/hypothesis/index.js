@@ -39,7 +39,7 @@ const publishToHypothesis = async manuscript => {
     replacement(content, node) {
       const unorderedListResult = [...node.childNodes]
         .map((childNode, index) => {
-          return `• ${turndownService.turndown(childNode.innerHTML)}\n\n`
+          return ` - ${turndownService.turndown(childNode.innerHTML)}\n\n`
         })
         .join('')
 
@@ -52,7 +52,7 @@ const publishToHypothesis = async manuscript => {
     replacement(content, node) {
       const orderedListResult = [...node.childNodes]
         .map((childNode, index) => {
-          return `${index + 1}) ${turndownService.turndown(
+          return `${index + 1}. ${turndownService.turndown(
             childNode.innerHTML,
           )}\n\n`
         })
