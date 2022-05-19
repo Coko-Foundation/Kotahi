@@ -4,9 +4,9 @@ import { useQuery, useMutation } from '@apollo/client'
 
 import config from 'config'
 import ReactRouterPropTypes from 'react-router-prop-types'
-import Dashboard from './Dashboard'
 import queries from '../graphql/queries'
 import mutations from '../graphql/mutations'
+import Dashboard from './Dashboard'
 import { Spinner, CommsErrorBanner } from '../../../shared'
 import prettyRoleText from '../../../../shared/prettyRoleText'
 
