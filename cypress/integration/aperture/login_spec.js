@@ -9,7 +9,7 @@ describe('Login test', () => {
     cy.task('restore', 'initialState')
     cy.task('seedForms')
 
-    // login as admin and validate admin is logedin
+    // login as admin and validate admin is logged in
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
       // eslint-disable-next-line jest/valid-expect-in-promise
