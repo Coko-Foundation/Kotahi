@@ -25,11 +25,7 @@ describe('Upload manuscript test', () => {
 
     // submit the email
     cy.contains('Next').click()
-
-    cy.get('nav').contains('Dashboard').click()
-
-    cy.visit('http://localhost:4000/kotahi/dashboard')
-
+    Menu.clickDashboard()
     // Click on new submission
     cy.get('button').contains('＋ New submission').click()
 

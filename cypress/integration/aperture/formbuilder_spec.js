@@ -30,8 +30,13 @@ describe('Form builder', () => {
       'contain',
       'Research Object Submission Form',
     )
-    FormsPage.clickFormOption(2)
-    FormsPage.getNameField().should('have.value', 'submission.authorNames')
+    FormsPage.clickFormOption(1)
+    FormsPage.getFieldValidate()
+    cy.get(':nth-child(8) > .style__Legend-sc-1npdrat-1')
+    cy.get(
+      ':nth-child(8) > :nth-child(2) > .css-3x5r4n-container > .react-select__control > .react-select__value-container',
+    ).click()
+    cy.get('.react-select__option').eq(0).click()
     cy.contains('Update Field').click()
     // adding a field in submission form
     cy.contains('Add Field').click()
