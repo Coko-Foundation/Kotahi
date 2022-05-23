@@ -1,10 +1,10 @@
 /* eslint-disable jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
 import { DashboardPage } from '../../page-object/dashboard-page'
-import { ReviewPage } from '../../page-object/review-page'
+// import { ReviewPage } from '../../page-object/review-page'
 import { dashboard } from '../../support/routes'
 
-// login as reviewer, accept and do review, leave comments and submit
+// // login as reviewer, accept and do review, leave comments and submit
 const doReview = name => {
   cy.login(name, dashboard)
   // enter email
@@ -12,29 +12,22 @@ const doReview = name => {
   cy.get('#enter-email').type('admin@gmail.com')
   // submit the email
   cy.contains('Next').click()
-
   cy.get('nav').contains('Dashboard').click()
-
   cy.visit('http://localhost:4000/kotahi/dashboard')
-
-  DashboardPage.clickAcceptReview()
-  DashboardPage.clickDoReview()
-
-  cy.fixture('submission_form_data').then(data => {
-    ReviewPage.getReviewMetadataCell(1).should('contain', data.title)
-    ReviewPage.getReviewMetadataCell(6).should('contain', data.dataCode)
-  })
-
-  ReviewPage.fillInReviewComment(`Great paper, congratulations! ${name}`)
-  ReviewPage.fillInConfidentialComment(
-    `This is a very important paper. ${name}`,
-  )
-  ReviewPage.clickAccept()
-  ReviewPage.clickSubmit()
-
-  cy.visit(dashboard)
-
-  DashboardPage.getDoReviewButton().should('contain', 'Completed')
+  //   DashboardPage.clickAcceptReview()
+  //   DashboardPage.clickDoReview()
+  //   cy.fixture('submission_form_data').then(data => {
+  //     ReviewPage.getReviewMetadataCell(1).should('contain', data.title)
+  //     ReviewPage.getReviewMetadataCell(6).should('contain', data.dataCode)
+  //   })
+  //   ReviewPage.fillInReviewComment(`Great paper, congratulations! ${name}`)
+  //   ReviewPage.fillInConfidentialComment(
+  //     `This is a very important paper. ${name}`,
+  //   )
+  //   ReviewPage.clickAccept()
+  //   ReviewPage.clickSubmit()
+  //   cy.visit(dashboard)
+  //   DashboardPage.getDoReviewButton().should('contain', 'Completed')
 }
 
 describe('Completing a review', () => {

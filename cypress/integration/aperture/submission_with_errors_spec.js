@@ -1,7 +1,5 @@
 /* eslint-disable jest/expect-expect */
 import { DashboardPage } from '../../page-object/dashboard-page'
-// eslint-disable-next-line import/named
-// import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { dashboard } from '../../support/routes'
 import { Menu } from '../../page-object/page-component/menu'
@@ -75,7 +73,7 @@ describe('Submission with errors test', () => {
         // Submit the form
         SubmissionFormPage.clickSubmitYourManuscript()
         cy.get('button').contains('Submit your manuscript').click()
-
+        // Contains new title
         DashboardPage.getSubmissionTitle(0).should('contain', data.newTitle)
       })
     })
