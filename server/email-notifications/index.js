@@ -100,15 +100,10 @@ const templates = {
 }
 
 const transporter = nodemailer.createTransport({
-/*  service: 'gmail',
+  service: 'gmail',
   auth: {
     user: process.env.GMAIL_NOTIFICATION_EMAIL_AUTH,
     pass: process.env.GMAIL_NOTIFICATION_PASSWORD,
-  },
- */  service: 'gmail',
-  auth: {
-    user: 'cokosean@gmail.com',
-    pass: '111Tigers',
   },
 })
 
