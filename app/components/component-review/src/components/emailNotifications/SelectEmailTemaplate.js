@@ -229,6 +229,10 @@ switch (
         label: 'Evaluation Complete required notification template',
         value: 'evaluationCompleteEmailTemplate',
       },
+      {
+        label: 'Author Acceptance Email Template',
+        value: 'authorAcceptanceEmailTemplate',
+      },
     ]
     break
   default:
