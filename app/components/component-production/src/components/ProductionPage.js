@@ -4,6 +4,56 @@ import ReactRouterPropTypes from 'react-router-prop-types'
 import Modal from 'react-modal'
 import Production from './Production'
 import { Spinner, CommsErrorBanner } from '../../../shared'
+import { adopt } from 'react-adopt'
+import { getSpecificFilesQuery } from '../../../asset-manager/src/queries'
+import withModal from '../../../asset-manager/src/ui/Modal/withModal'
+
+const mapper = {
+  getSpecificFilesQuery,
+  withModal,
+}
+
+const mapProps = args => ({
+  onAssetManager: manuscriptId =>
+    new Promise((resolve, reject) => {
+      const { withModal } = args
+
+      const { showModal, hideModal } = withModal
+
+      const handleImport = async selectedFileIds => {
+        const {
+          getSpecificFilesQuery: { client, query },
+        } = args
+        const { data } = await client.query({
+          query,
+          variables: { ids: selectedFileIds },
+        })
+        const { getSpecificFiles } = data
+
+        const alteredFiles = getSpecificFiles.map(getSpecificFile => {
+          const mediumSizeFile = getSpecificFile.storedObjects.find(
+            storedObject => storedObject.type === 'medium',
+          )
+          return {
+            source: mediumSizeFile.url,
+            mimetype: mediumSizeFile.mimetype,
+            ...getSpecificFile,
+          }
+        })
+
+        hideModal()
+        resolve(alteredFiles)
+      }
+
+      showModal('assetManagerEditor', {
+        manuscriptId,
+        withImport: true,
+        handleImport,
+      })
+    }),
+})
+
+const Composed = adopt(mapper, mapProps)
 
 const useHtml = false
 
@@ -256,39 +306,51 @@ const ProductionPage = ({ match, ...props }) => {
   const { manuscript, currentUser } = data
 
   return (
-    <div>
-      {makingPdf ? (
-        <DownloadPdfComponent
-          manuscript={manuscript}
-          resetMakingPdf={() => {
-            // refetch({ id: match.params.version, manuscriptId: manuscript.id })
-            setMakingPdf(false)
-          }}
-        />
-      ) : null}
-      {makingJats ? (
-        <DownloadJatsComponent
-          manuscript={manuscript}
-          resetMakingJats={() => {
-            setMakingJats(false)
-          }}
-        />
-      ) : null}
-      <Production
-        currentUser={currentUser}
-        file={
-          manuscript.files.find(file => file.tags.includes('manuscript')) || {}
-        }
-        makePdf={setMakingPdf}
-        makeJats={setMakingJats}
-        manuscript={manuscript}
-        updateManuscript={(a, b) => {
-          // eslint-disable-next-line
-          console.log('in update manuscript!')
-          updateManuscript(a, b)
-        }}
-      />
-    </div>
+    <Composed
+      currentUser={currentUser}
+      manuscript={manuscript}
+      setMakingPdf={setMakingPdf}
+      setMakingJats={setMakingJats}
+      updateManuscript={updateManuscript}
+    >
+      {({ onAssetManager }) => (
+        <div>
+          {makingPdf ? (
+            <DownloadPdfComponent
+              manuscript={manuscript}
+              resetMakingPdf={() => {
+                // refetch({ id: match.params.version, manuscriptId: manuscript.id })
+                setMakingPdf(false)
+              }}
+            />
+          ) : null}
+          {makingJats ? (
+            <DownloadJatsComponent
+              manuscript={manuscript}
+              resetMakingJats={() => {
+                setMakingJats(false)
+              }}
+            />
+          ) : null}
+          <Production
+            currentUser={currentUser}
+            file={
+              manuscript.files.find(file => file.tags.includes('manuscript')) ||
+              {}
+            }
+            makePdf={setMakingPdf}
+            makeJats={setMakingJats}
+            manuscript={manuscript}
+            onAssetManager={onAssetManager}
+            updateManuscript={(a, b) => {
+              // eslint-disable-next-line
+              console.log('in update manuscript!')
+              updateManuscript(a, b)
+            }}
+          />
+        </div>
+      )}
+    </Composed>
   )
 }
 

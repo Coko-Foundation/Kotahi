@@ -40,15 +40,17 @@ import CharactersList from './CharactersList'
 
 const updateTrackStatus = change => {
   // this returns "true" when Suggesting Mode is turned on.
+  // eslint-disable-next-line no-console
   // console.log(change)
 }
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
+  // eslint-disable-next-line no-console
   // console.log(`Title changed: ${title}`)
 }
 
-const fullWaxEditorConfig = () => ({
+const fullWaxEditorConfig = handleAssetManager => ({
   EnableTrackChangeService: { enabled: false, toggle: true, updateTrackStatus },
   AcceptTrackChangeService: {
     own: {
@@ -117,6 +119,8 @@ const fullWaxEditorConfig = () => ({
   SpecialCharactersService: CharactersList,
 
   TitleService: { updateTitle },
+
+  ImageService: handleAssetManager ? { handleAssetManager } : {},
 
   // end insertion
 

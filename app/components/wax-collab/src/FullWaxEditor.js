@@ -25,6 +25,7 @@ const renderImage = file => {
 }
 
 const FullWaxEditor = ({
+  onAssetManager,
   value,
   validationStatus,
   readonly,
@@ -35,8 +36,11 @@ const FullWaxEditor = ({
   authorComments,
   fileUpload,
   user,
+  manuscriptId,
   ...rest
 }) => {
+  const handleAssetManager = () => onAssetManager(manuscriptId)
+
   // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
   // eslint-disable-next-line no-param-reassign
   value = fixAstralUnicode(value)
@@ -53,7 +57,6 @@ const FullWaxEditor = ({
   const editorRef = useRef(null)
 
   /* eslint-disable jsx-a11y/no-noninteractive-tabindex,  jsx-a11y/tabindex-no-positive */
-
   useEffect(() => {
     return () => {
       if (editorRef.current) {
@@ -71,6 +74,7 @@ const FullWaxEditor = ({
         // onBlur={e => {
         //   e.stopPropagation()
         //   e.preventDefault()
+        // eslint-disable-next-line no-console
         //   console.log('onBlur firing in FullWaxEditor.js')
         //   saveSource(editorRef.current.getContent())
         // }}
@@ -79,7 +83,7 @@ const FullWaxEditor = ({
       >
         <Wax
           autoFocus={autoFocus}
-          config={fullWaxEditorConfig()}
+          config={fullWaxEditorConfig(handleAssetManager)}
           fileUpload={file => renderImage(file)}
           layout={
             useComments
