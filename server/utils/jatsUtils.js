@@ -302,8 +302,8 @@ const makeJournalMeta = journalMeta => {
       }
     }
 
-    if (journalMeta.publisher) {
-      thisJournalMeta += `<publisher>${journalMeta.publisher}</publisher>`
+    if (journalMeta.publisher && journalMeta.publisher.publisherName) {
+      thisJournalMeta += `<publisher><publisher-name>${journalMeta.publisher.publisherName}</publisher-name></publisher>`
     }
   }
 

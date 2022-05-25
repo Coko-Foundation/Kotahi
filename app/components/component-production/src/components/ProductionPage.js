@@ -204,7 +204,7 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
     if (data.convertToJats.error.length) {
       /* eslint-disable */
       console.log(
-        'Error making JATS. First error: ',
+        'Error making JATS. Errors: ',
         JSON.parse(data.convertToJats.error),
       )
       resetMakingJats() // this is bad!
@@ -212,17 +212,19 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
     }
 
     /* eslint-disable */
-    console.log('XML Selected')
-    console.log('HTML:\n\n', manuscript.meta.source)
-    console.log('JATS:\n\n', jats)
-    // JATS XML file opens in new tab
-    let blob = new Blob([jats], { type: 'text/xml' })
-    let url = URL.createObjectURL(blob)
-    window.open(url)
-    URL.revokeObjectURL(url)
-    setModalIsOpen(false)
-    resetMakingJats()
-    setDownloading(false)
+
+    setTimeout(() => {
+      console.log('XML Selected')
+      console.log('HTML:\n\n', manuscript.meta.source)
+      console.log('JATS:\n\n', jats)
+      // JATS XML file opens in new tab
+      let blob = new Blob([jats], { type: 'text/xml' })
+      let url = URL.createObjectURL(blob)
+      window.open(url)
+      URL.revokeObjectURL(url)
+      setModalIsOpen(false)
+      resetMakingJats()
+    }, 1000)
 
     /* eslint-disable */
   }
@@ -268,7 +270,7 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
             Close
           </button>
         </div>
-      ) : jatsError ? (
+      ) : data.convertToJats.error ? (
         <p>Error: invalid JATS</p>
       ) : (
         <button onClick={cancelGen} style={{ marginTop: '1em' }} type="submit">
@@ -313,7 +315,6 @@ const ProductionPage = ({ match, ...props }) => {
   if (error) return <CommsErrorBanner error={error} />
 
   const { manuscript, currentUser } = data
-
   return (
     <div>
       {makingPdf ? (
@@ -343,7 +344,7 @@ const ProductionPage = ({ match, ...props }) => {
         manuscript={manuscript}
         updateManuscript={(a, b) => {
           // eslint-disable-next-line
-          console.log('in update manuscript!')
+          // console.log('in update manuscript!')
           updateManuscript(a, b)
         }}
       />
