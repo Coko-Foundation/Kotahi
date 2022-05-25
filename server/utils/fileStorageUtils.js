@@ -71,6 +71,54 @@ const replaceImageSrc = async (source, files, size) => {
   return $.html()
 }
 
+const replaceImageSrcResponsive = async (source, files) => {
+  const $ = cheerio.load(source)
+  const fileIds = []
+
+  $('img').each((i, elem) => {
+    const $elem = $(elem)
+    const fileId = $elem.attr('data-fileid')
+
+    if (fileId && fileId !== 'null') {
+      fileIds.push(fileId)
+    }
+  })
+
+  $('img').each((i, elem) => {
+    const $elem = $(elem)
+    const fileId = $elem.attr('data-fileid')
+
+    const correspondingFile = find(files, { id: fileId })
+
+    if (correspondingFile) {
+      const { url } = correspondingFile.storedObjects.find(
+        storedObject => storedObject.type === 'medium',
+      )
+
+      $elem.attr('src', url) // medium sized image url for frontend representation
+      $elem.attr(
+        'data-low-def',
+        correspondingFile.storedObjects.find(
+          storedObject => storedObject.type === 'small',
+        ).url,
+      ) // small sized image url as data-low-def
+      $elem.attr('data-standard-def', url) // medium sized image url as data-standard-def
+      $elem.attr(
+        'data-hi-def',
+        correspondingFile.storedObjects.find(
+          storedObject => storedObject.type === 'original',
+        ).url,
+      ) // original image url as data-hi-def
+
+      if (correspondingFile.alt) {
+        $elem.attr('alt', correspondingFile.alt)
+      }
+    }
+  })
+
+  return $.html()
+}
+
 /* convert base64 to blob data */
 const base64toBlob = (base64Data, contentType) => {
   const sliceSize = 1024
@@ -171,6 +219,7 @@ module.exports = {
   getFilesWithUrl,
   getFileWithUrl,
   replaceImageSrc,
+  replaceImageSrcResponsive,
   uploadImage,
   imageFinder,
 }
