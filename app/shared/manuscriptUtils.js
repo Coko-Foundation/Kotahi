@@ -5,20 +5,32 @@ import { convertTimestampToDate } from './time-formatting'
 import { StatusBadge } from '../components/shared'
 
 // TODO: rename validateManuscriptSubmission. This is only intended for validating the manuscript.submission object, nothing else.
-export const validateManuscript = (submission, fieldDefinitions, client) =>
-  Object.entries(fieldDefinitions)
+export const validateManuscript = async (
+  submission,
+  fieldDefinitions,
+  client,
+) => {
+  const promiseArr = Object.entries(fieldDefinitions)
     .filter(([key, element]) => element?.name)
-    .map(([key, element]) =>
-      validateFormField(
+    .map(([key, element]) => {
+      const validatorFn = validateFormField(
         element.validate,
         element.validateValue,
         element.name,
         JSON.parse(element.doiValidation ? element.doiValidation : false),
         client,
         element.component,
-      )(submission[element.name.split('.')[1]]),
-    )
-    .filter(Boolean)
+      )
+
+      const isValid = validatorFn(submission[element.name.split('.')[1]])
+
+      return isValid
+    })
+
+  const results = await Promise.all(promiseArr)
+
+  return results.filter(Boolean)
+}
 
 /** Find the data stored in the manuscript for this fieldName. If the fieldDefinition from the form has a key/value structure we should
  * treat the manuscript data as the key and obtain the displayValue from the fieldDefinition. Otherwise use the manuscript data directly
