@@ -201,6 +201,18 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           name
           title
           shortDescription
+          validate {
+            id
+            label
+            value
+            labelColor
+          }
+          validateValue {
+            minChars
+            maxChars
+            minSize
+          }
+          doiValidation
           options {
             id
             label
