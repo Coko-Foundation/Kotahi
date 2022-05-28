@@ -1,15 +1,22 @@
+import { useMutation } from '@apollo/client'
 import React from 'react'
 import { Container } from '../../../shared'
-const models = require('@pubsweet/models')
+
+// const models = require('@pubsweet/models')
 
 const DeclineArticleOwnershipPage = ({ match }) => {
   const invid = match.params.invitationId
-  // eslint-disable-next-line no-console
-  console.log(`about to decline your ${invid}`)
+  const [successful, setSuccessful] = useState(null) // default state will be false
+  useMutation(() => {
+    // make API request to decline the invitation with this particular invitation ID
+    /// make mutation ingraphql and pass invitation ID.
+  })
+  // const useState = models.Invitation.decline(invid)
 
-  const declinedInvitation = models.Invitation.decline(invid)
+  // mutation response will set the successful variable true, else false
+  // const successful = declinedInvitation ? 'successful' : 'unsuccesfful'
 
-  const successful = declinedInvitation ? 'successful' : 'unsuccesfful'
+  // until mutation is completed, show loader. (useState loading can be added)
   return (
     <Container>
       DECLINING ownership of article using invitation: ${invid} was

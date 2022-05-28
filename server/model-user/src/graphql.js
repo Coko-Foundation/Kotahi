@@ -3,6 +3,7 @@ const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
 const { existsSync } = require('fs')
 const path = require('path')
 const models = require('@pubsweet/models')
+
 const { Invitation } = require('../../model-invitations/src/invitations')
 
 const sendEmailNotification = require('../../email-notifications')
@@ -248,11 +249,13 @@ const resolvers = {
         return { success: false }
       }
 
-     // const invitationId = 'generate-the-invitation-uuid-and-put-it-here'
-      const manuscriptId = manuscript.id //'49cded20-4404-4805-b231-618d8ad26e60'
+      // const invitationId = 'generate-the-invitation-uuid-and-put-it-here'
+      const user = await models.User.find(ctx.user)
+      const manuscriptId = manuscript.id // '49cded20-4404-4805-b231-618d8ad26e60'
       const toEmail = externalEmail // 'seanauthor@mailinator.com'
       const purpose = 'inviting an author to accept a manuscript'
       const status = 'UNANSWERED'
+      const senderId = user.id
 
       // Create a author accceptance email gql //model mutation
       /*       const myInvitation = models.Invitation.query({
@@ -267,12 +270,13 @@ const resolvers = {
         toEmail,
         purpose,
         status,
+        senderId,
       }).saveGraph()
 
       console.log(`new invitation created ${newInvitation.id}`)
 
       // return myInvitation.id
-      //const invitationId = newInvitation.id
+      // const invitationId = newInvitation.id
 
       try {
         await sendEmailNotification(receiverEmail, selectedTemplate, {
@@ -284,6 +288,7 @@ const resolvers = {
           invitationId: newInvitation.id,
           purpose,
           status,
+          senderId,
         })
         return { success: true }
       } catch (e) {

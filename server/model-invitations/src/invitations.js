@@ -13,6 +13,7 @@ class Invitation extends BaseModel {
         purpose: { type: 'string' },
         toEmail: { type: ['string'] },
         status: { type: ['string'] },
+        senderId: { type: ['string', 'null'], format: 'uuid' },
       },
     }
   }

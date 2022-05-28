@@ -8,7 +8,7 @@ const AcceptArticleOwnershipPage = ({ match }) => {
 
   return (
     <Container>
-      ACCEPTING ownership of article using invitation: ${invid}
+      ACCEPTING ownership of article using invitation: {invid}
       <br />
       <br />I will autoredirect in a few moments...
     </Container>

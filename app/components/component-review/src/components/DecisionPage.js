@@ -208,6 +208,8 @@ const DecisionPage = ({ match }) => {
   }
 
   const sendNotifyEmail = async emailData => {
+    console.log(emailData)
+
     const response = await sendEmailMutation({
       variables: {
         input: JSON.stringify(emailData),

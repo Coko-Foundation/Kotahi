@@ -8,7 +8,7 @@ import {
 } from '../style'
 import { SectionContent } from '../../../../shared'
 import SelectReceiver from './SelectReceiver'
-import SelectEmailTemplate from './SelectEmailTemaplate'
+import SelectEmailTemplate from './SelectEmailTemplate'
 import { convertTimestampToDate } from '../../../../../shared/time-formatting'
 
 const editorOption = user => ({
