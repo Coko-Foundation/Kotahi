@@ -34,8 +34,12 @@ const ProductionWaxEditor = ({
   fileUpload,
   useComments,
   user,
+  manuscriptId,
+  onAssetManager,
   ...rest
 }) => {
+  const handleAssetManager = () => onAssetManager(manuscriptId)
+
   const waxUser = {
     userId: user.id || '-',
     userColor: {
@@ -71,7 +75,10 @@ const ProductionWaxEditor = ({
       >
         <Wax
           autoFocus={autoFocus}
-          config={productionWaxEditorConfig(readOnlyComments)}
+          config={productionWaxEditorConfig(
+            readOnlyComments,
+            handleAssetManager,
+          )}
           fileUpload={file => renderImage(file)}
           layout={
             useComments

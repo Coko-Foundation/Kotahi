@@ -29,6 +29,7 @@ const Production = ({
   makePdf,
   makeJats,
   updateManuscript,
+  onAssetManager,
 }) => {
   const handleSave = debounce(source => {
     updateManuscript(manuscript.id, { meta: { source } })
@@ -54,6 +55,8 @@ const Production = ({
               // onBlur={source => {
               //   updateManuscript(manuscript.id, { meta: { source } })
               // }}
+              manuscriptId={manuscript.id}
+              onAssetManager={onAssetManager}
               saveSource={handleSave}
               user={currentUser}
               value={manuscript.meta.source}

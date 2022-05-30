@@ -278,6 +278,8 @@ const resolvers = {
       // return myInvitation.id
       // const invitationId = newInvitation.id
 
+      // const invitationId = localStorage.getItem('invitationId')
+
       try {
         await sendEmailNotification(receiverEmail, selectedTemplate, {
           articleTitle: manuscript.meta.title,

@@ -16,6 +16,7 @@ const { stripSensitiveItems } = require('./manuscriptUtils')
 const {
   getFilesWithUrl,
   replaceImageSrc,
+  replaceImageSrcResponsive,
   base64Images,
   uploadImage,
 } = require('../../utils/fileStorageUtils')
@@ -1116,15 +1117,25 @@ const resolvers = {
 
       const manuscripts = await query
 
-      return manuscripts.map(m => ({
-        id: m.id,
-        shortId: m.shortId,
-        files: m.files,
-        status: m.status,
-        meta: m.meta,
-        submission: JSON.stringify(m.submission),
-        publishedDate: m.published,
-      }))
+      return manuscripts.map(async m => {
+        const manuscript = m
+        manuscript.files = await getFilesWithUrl(manuscript.files)
+
+        manuscript.meta.source = await replaceImageSrcResponsive(
+          manuscript.meta.source,
+          manuscript.files,
+        )
+
+        return {
+          id: manuscript.id,
+          shortId: manuscript.shortId,
+          files: manuscript.files,
+          status: manuscript.status,
+          meta: manuscript.meta,
+          submission: JSON.stringify(manuscript.submission),
+          publishedDate: manuscript.published,
+        }
+      })
     },
     async publishedManuscript(_, { id }, ctx) {
       const m = await models.Manuscript.query()
@@ -1133,6 +1144,10 @@ const resolvers = {
         .withGraphFetched('[files]')
 
       if (!m) return null
+
+      m.files = await getFilesWithUrl(m.files)
+
+      m.meta.source = await replaceImageSrc(m.meta.source, m.files, 'medium')
 
       return {
         id: m.id,

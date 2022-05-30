@@ -48,7 +48,7 @@ const updateTitle = title => {
   // console.log(`Title changed: ${title}`)
 }
 
-const productionWaxEditorConfig = readOnlyComments => ({
+const productionWaxEditorConfig = (readOnlyComments, handleAssetManager) => ({
   EnableTrackChangeService: {
     enabled: false,
     toggle: true,
@@ -123,6 +123,7 @@ const productionWaxEditorConfig = readOnlyComments => ({
   SpecialCharactersService: CharactersList,
 
   TitleService: { updateTitle },
+  ImageService: handleAssetManager ? { handleAssetManager } : {},
   services: [
     new AnnotationToolGroupService(),
     new BaseService(),
