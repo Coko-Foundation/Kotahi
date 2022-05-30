@@ -5,7 +5,6 @@ const path = require('path')
 const models = require('@pubsweet/models')
 
 const { Invitation } = require('../../model-invitations/src/invitations')
-
 const sendEmailNotification = require('../../email-notifications')
 
 const resolvers = {
@@ -206,7 +205,7 @@ const resolvers = {
     },
     async sendEmail(_, { input }, ctx) {
       const inputParsed = JSON.parse(input)
-      /* eslint-disable-next-line */
+
       const {
         manuscript,
         selectedEmail,
@@ -236,7 +235,6 @@ const resolvers = {
         .findById(manuscript.id)
         .withGraphFetched('submitter.[defaultIdentity]')
 
-      /* eslint-disable-next-line */
       const authorName =
         manuscriptWithSubmitter.submitter.defaultIdentity.name ||
         manuscriptWithSubmitter.submitter.username ||
@@ -249,22 +247,13 @@ const resolvers = {
         return { success: false }
       }
 
-      // const invitationId = 'generate-the-invitation-uuid-and-put-it-here'
       const user = await models.User.find(ctx.user)
-      const manuscriptId = manuscript.id // '49cded20-4404-4805-b231-618d8ad26e60'
-      const toEmail = externalEmail // 'seanauthor@mailinator.com'
+      const manuscriptId = manuscript.id
+      const toEmail = externalEmail
       const purpose = 'inviting an author to accept a manuscript'
       const status = 'UNANSWERED'
       const senderId = user.id
 
-      // Create a author accceptance email gql //model mutation
-      /*       const myInvitation = models.Invitation.query({
-        manuscriptId,
-        toEmail,
-        purpose,
-        status,
-      }).save() */
-      // Create a new team of reviewers if it doesn't exist
       const newInvitation = await new models.Invitation({
         manuscriptId,
         toEmail,
@@ -272,13 +261,6 @@ const resolvers = {
         status,
         senderId,
       }).saveGraph()
-
-      console.log(`new invitation created ${newInvitation.id}`)
-
-      // return myInvitation.id
-      // const invitationId = newInvitation.id
-
-      // const invitationId = localStorage.getItem('invitationId')
 
       try {
         await sendEmailNotification(receiverEmail, selectedTemplate, {
@@ -294,8 +276,6 @@ const resolvers = {
         })
         return { success: true }
       } catch (e) {
-        /* eslint-disable-next-line */
-        console.log('email was not sent', e)
         return { success: false }
       }
     },
@@ -316,16 +296,6 @@ const resolvers = {
       return identities
     },
   },
-  // LocalIdentity: {
-  //   __isTypeOf: (obj, context, info) => obj.type === 'local',
-  //   async email(obj, args, ctx, info) {
-  //     // Emails stored on user, but surfaced in local identity too
-  //     return (await ctx.loaders.User.load(obj.userId)).email
-  //   },
-  // },
-  // ExternalIdentity: {
-  //   __isTypeOf: (obj, context, info) => obj.type !== 'local',
-  // },
 }
 
 const typeDefs = `
