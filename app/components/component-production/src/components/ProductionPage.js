@@ -1,3 +1,4 @@
+/* eslint-disable no-shadow */
 import React from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import ReactRouterPropTypes from 'react-router-prop-types'
@@ -334,10 +335,9 @@ const ProductionPage = ({ match, ...props }) => {
           ) : null}
           <Production
             currentUser={currentUser}
-            file={
-              manuscript.files.find(file => file.tags.includes('manuscript')) ||
-              {}
-            }
+            file={manuscript.files.find(file =>
+              file.tags.includes('manuscript'),
+            )}
             makePdf={setMakingPdf}
             makeJats={setMakingJats}
             manuscript={manuscript}
