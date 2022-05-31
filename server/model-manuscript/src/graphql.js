@@ -1127,6 +1127,10 @@ const resolvers = {
           manuscript.files,
         )
 
+        const printReadyPdf = manuscript.files.find(file =>
+          file.tags.includes('printReadyPdf'),
+        )
+
         return {
           id: manuscript.id,
           shortId: manuscript.shortId,
@@ -1135,6 +1139,9 @@ const resolvers = {
           meta: manuscript.meta,
           submission: JSON.stringify(manuscript.submission),
           publishedDate: manuscript.published,
+          printReadyPdfUrl: printReadyPdf
+            ? printReadyPdf.storedObjects[0].url
+            : null,
         }
       })
     },
@@ -1439,6 +1446,7 @@ const typeDefs = `
     meta: ManuscriptMeta
     submission: String
     publishedDate: DateTime
+    printReadyPdfUrl: String
   }
 `
 

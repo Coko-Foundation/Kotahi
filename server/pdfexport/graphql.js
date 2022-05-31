@@ -7,12 +7,14 @@ const axios = require('axios')
 const config = require('config')
 const { promisify } = require('util')
 const models = require('@pubsweet/models')
+const { createFile, deleteFiles, File } = require('@coko/server')
 const applyTemplate = require('./applyTemplate')
 const css = require('./pdfTemplates/styles')
 const makeZip = require('./ziputils.js')
 
 const {
   getFilesWithUrl,
+  getFileWithUrl,
   replaceImageSrc,
 } = require('../utils/fileStorageUtils')
 
@@ -77,37 +79,12 @@ const serviceHandshake = async () => {
   })
 }
 
-const writeLocallyFromReadStream = async (
-  thepath,
-  filename,
-  readerStream,
-  encoding,
-) =>
-  // eslint-disable-next-line no-async-promise-executor
-  new Promise(async (resolve, reject) => {
-    await fs.ensureDir(thepath)
-
-    const writerStream = fs.createWriteStream(
-      `${thepath}/${filename}`,
-      encoding,
-    )
-
-    writerStream.on('close', () => {
-      resolve()
-    })
-    writerStream.on('error', err => {
-      reject(err)
-    })
-    readerStream.pipe(writerStream)
-  })
-
 const getManuscriptById = async id => {
   return models.Manuscript.query().findById(id).withGraphFetched('[files]')
 }
 
 const pdfHandler = async manuscriptId => {
   if (!pagedJsAccessToken) {
-    // console.log('No pagedJS access token')
     pagedJsAccessToken = await serviceHandshake()
   }
 
@@ -117,7 +94,6 @@ const pdfHandler = async manuscriptId => {
 
   const raw = await randomBytes(16)
   const dirName = `tmp/${raw.toString('hex')}_${manuscriptId}`
-  // console.log("Directory name: ", dirName)
 
   await fsPromised.mkdir(dirName, { recursive: true })
 
@@ -175,9 +151,6 @@ const pdfHandler = async manuscriptId => {
   form.append('imagesForm', 'base64')
 
   const filename = `${raw.toString('hex')}_${manuscriptId}.pdf`
-  const tempPath = path.join(uploadsPath, filename)
-
-  // console.log(tempPath)
 
   return new Promise((resolve, reject) => {
     axios({
@@ -192,16 +165,34 @@ const pdfHandler = async manuscriptId => {
       // timeout: 1000, // adding this because it's failing
     })
       .then(async res => {
-        // console.log('got response')
-        await writeLocallyFromReadStream(
-          uploadsPath,
+        const fileStream = res.data
+
+        const files = await File.query().where({
+          objectId: manuscriptId,
+        })
+
+        const pdfFileIds = files
+          .filter(file => file.tags.includes('printReadyPdf'))
+          .map(file => file.id)
+
+        if (pdfFileIds.length > 0) {
+          await deleteFiles([pdfFileIds], true)
+        }
+
+        const createdFile = await createFile(
+          fileStream,
           filename,
-          res.data,
-          'binary',
+          null,
+          null,
+          ['printReadyPdf'],
+          manuscriptId,
         )
-        // console.log('came back')
+
+        const printReadyPdfFile = await getFileWithUrl(createdFile)
+        const { url } = printReadyPdfFile.storedObjects[0]
+
         await fsPromised.rmdir(dirName, { recursive: true })
-        resolve(tempPath)
+        resolve(url)
       })
       .catch(async err => {
         const { response } = err
@@ -226,12 +217,10 @@ const pdfHandler = async manuscriptId => {
 }
 
 const htmlHandler = async manuscriptId => {
-  // console.log(`Making HTML for ${manuscriptId}`)
   const articleData = await getManuscriptById(manuscriptId)
 
   const raw = await randomBytes(16)
   const filename = `${raw.toString('hex')}_${manuscriptId}.html`
-  // console.log("Directory name: ", dirName)
 
   const templatedHtml = applyTemplate(articleData)
 
@@ -246,7 +235,6 @@ const htmlHandler = async manuscriptId => {
 
   await fsPromised.appendFile(`${uploadsPath}/${filename}`, outHtml)
 
-  // console.log(`HTML written to ${tempPath}`)
   return `/${tempPath}`
 }
 
@@ -257,13 +245,10 @@ const resolvers = {
         ? htmlHandler(manuscriptId, ctx)
         : pdfHandler(manuscriptId, ctx))
 
-      // console.log('pdfUrl', outUrl)
       return { pdfUrl: outUrl || 'busted!' }
     },
   },
 }
-
-// TODO: Need a mutation to delete generated PDF after it's been created.
 
 const typeDefs = `
 	extend type Query {
