@@ -334,10 +334,9 @@ const ProductionPage = ({ match, ...props }) => {
           ) : null}
           <Production
             currentUser={currentUser}
-            file={
-              manuscript.files.find(file => file.tags.includes('manuscript')) ||
-              {}
-            }
+            file={manuscript.files.find(file =>
+              file.tags.includes('manuscript'),
+            )}
             makePdf={setMakingPdf}
             makeJats={setMakingJats}
             manuscript={manuscript}

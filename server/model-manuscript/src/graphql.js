@@ -1122,10 +1122,12 @@ const resolvers = {
         const manuscript = m
         manuscript.files = await getFilesWithUrl(manuscript.files)
 
-        manuscript.meta.source = await replaceImageSrcResponsive(
-          manuscript.meta.source,
-          manuscript.files,
-        )
+        if (typeof manuscript.meta.source === 'string') {
+          manuscript.meta.source = await replaceImageSrcResponsive(
+            manuscript.meta.source,
+            manuscript.files,
+          )
+        }
 
         const printReadyPdf = manuscript.files.find(file =>
           file.tags.includes('printReadyPdf'),
@@ -1155,7 +1157,9 @@ const resolvers = {
 
       m.files = await getFilesWithUrl(m.files)
 
-      m.meta.source = await replaceImageSrc(m.meta.source, m.files, 'medium')
+      if (typeof m.meta.source === 'string') {
+        m.meta.source = await replaceImageSrc(m.meta.source, m.files, 'medium')
+      }
 
       return {
         id: m.id,
