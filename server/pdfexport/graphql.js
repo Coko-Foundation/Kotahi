@@ -7,8 +7,7 @@ const axios = require('axios')
 const config = require('config')
 const { promisify } = require('util')
 const models = require('@pubsweet/models')
-const applyTemplate = require('./applyTemplate')
-const css = require('./pdfTemplates/styles')
+const { applyTemplate, generateCss } = require('./applyTemplate')
 const makeZip = require('./ziputils.js')
 
 const {
@@ -143,6 +142,9 @@ const pdfHandler = async manuscriptId => {
   const outHtml = applyTemplate(articleData)
 
   await fsPromised.appendFile(`${dirName}/index.html`, outHtml)
+
+  const css = await generateCss()
+
   await fsPromised.appendFile(`${dirName}/styles.css`, css)
 
   // Manually copy the two fonts to the folder that will be zipped. This is a temporary fix!
@@ -234,6 +236,8 @@ const htmlHandler = async manuscriptId => {
   // console.log("Directory name: ", dirName)
 
   const templatedHtml = applyTemplate(articleData)
+
+  const css = await generateCss()
 
   const outHtml = templatedHtml
     .replace('</body>', `<style>${css}</style></body>`)
