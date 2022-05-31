@@ -1,10 +1,11 @@
+/* eslint-disable no-shadow */
 import React from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import Modal from 'react-modal'
+import { adopt } from 'react-adopt'
 import Production from './Production'
 import { Spinner, CommsErrorBanner } from '../../../shared'
-import { adopt } from 'react-adopt'
 import { getSpecificFilesQuery } from '../../../asset-manager/src/queries'
 import withModal from '../../../asset-manager/src/ui/Modal/withModal'
 
@@ -24,16 +25,19 @@ const mapProps = args => ({
         const {
           getSpecificFilesQuery: { client, query },
         } = args
+
         const { data } = await client.query({
           query,
           variables: { ids: selectedFileIds },
         })
+
         const { getSpecificFiles } = data
 
         const alteredFiles = getSpecificFiles.map(getSpecificFile => {
           const mediumSizeFile = getSpecificFile.storedObjects.find(
             storedObject => storedObject.type === 'medium',
           )
+
           return {
             source: mediumSizeFile.url,
             mimetype: mediumSizeFile.mimetype,
@@ -126,7 +130,7 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
   const [modalIsOpen, setModalIsOpen] = React.useState(true)
 
   const { data, loading, error } = useQuery(getPdfQuery, {
-    fetchPolicy: 'cache-and-network',
+    fetchPolicy: 'network-only',
     variables: {
       manuscriptId: manuscript.id,
       useHtml,
@@ -136,20 +140,19 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
   // Now, download the file
   if (data && !downloading) {
     setDownloading(true)
-    const { pdfUrl } = data.convertToPdf // this is the relative url, like "uploads/filename.pdf"
-    // console.log(pdfUrl)
+    const { pdfUrl } = data.convertToPdf
 
     if (useHtml) {
       // use this to open the PDF in a new tab:
       const pdfWindow = window.open(`/${pdfUrl}`)
       pdfWindow.print()
     } else {
-      const newWin = window.open(`/${pdfUrl}`)
+      const newWin = window.open(pdfUrl)
 
       if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
         // if popups are blocked, try downloading it instead.
         const link = document.createElement('a')
-        link.href = `/${pdfUrl}`
+        link.href = pdfUrl
         link.download = `${manuscript.meta.title || 'title'}.pdf`
         link.target = '_blank'
         link.click()
@@ -160,8 +163,6 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
       // link.href = `/${pdfUrl}`
       // link.download = `${manuscript.meta.title || 'title'}.pdf`
       // link.click()
-
-      // console.log(`Downloading ${link.download}`)
     }
 
     // For Firefox it is necessary to delay revoking the ObjectURL.
@@ -180,7 +181,6 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
   }
 
   const cancelGen = () => {
-    // console.log('PDF generation canceled')
     resetMakingPdf()
   }
 
