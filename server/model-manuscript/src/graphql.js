@@ -834,6 +834,7 @@ const resolvers = {
             manuscript,
           )
           succeeded = true
+          update.status = 'published'
         } catch (err) {
           let message = 'Publishing to hypothes.is failed!\n'
           if (err.response) {
