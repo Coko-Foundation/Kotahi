@@ -160,18 +160,16 @@ const SubmitPage = ({ match, history }) => {
 
     setIsPublishingBlocked(true)
 
-    const areThereInvalidFields = await Promise.all(
-      validateManuscript(
-        {
-          ...JSON.parse(manuscript.submission),
-          ...manuscriptChangedFields.submission,
-        },
-        form,
-        client,
-      ),
+    const fieldErrors = await validateManuscript(
+      {
+        ...JSON.parse(manuscript.submission),
+        ...manuscriptChangedFields.submission,
+      },
+      form,
+      client,
     )
 
-    if (areThereInvalidFields.filter(Boolean).length !== 0) {
+    if (fieldErrors.filter(Boolean).length !== 0) {
       return
     }
 
