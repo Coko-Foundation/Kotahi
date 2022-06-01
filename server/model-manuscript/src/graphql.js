@@ -1142,6 +1142,9 @@ const resolvers = {
           meta: manuscript.meta,
           submission: JSON.stringify(manuscript.submission),
           publishedDate: manuscript.published,
+          printReadyPdfUrl: printReadyPdf
+            ? printReadyPdf.storedObjects[0].url
+            : null,
           styledHtml: applyTemplate(m, true),
           css: getCss(),
           publicationMetadata,
@@ -1454,6 +1457,7 @@ const typeDefs = `
     meta: ManuscriptMeta
     submission: String
     publishedDate: DateTime
+		printReadyPdfUrl: String
 		styledHtml: String
 		css: String
   }

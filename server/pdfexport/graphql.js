@@ -7,6 +7,7 @@ const axios = require('axios')
 const config = require('config')
 const { promisify } = require('util')
 const models = require('@pubsweet/models')
+const { createFile, deleteFiles, File } = require('@coko/server')
 const { applyTemplate, generateCss } = require('./applyTemplate')
 const makeZip = require('./ziputils.js')
 
