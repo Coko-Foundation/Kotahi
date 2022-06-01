@@ -30,17 +30,17 @@ const mapProps = args => ({
           variables: { ids: selectedFileIds },
         })
 
-        const { getSpecificFiles } = data
+        const { getSpecificFiles: files } = data
 
-        const alteredFiles = getSpecificFiles.map(getSpecificFile => {
-          const mediumSizeFile = getSpecificFile.storedObjects.find(
+        const alteredFiles = files.map(file => {
+          const mediumSizeFile = files.storedObjects.find(
             storedObject => storedObject.type === 'medium',
           )
 
           return {
             source: mediumSizeFile.url,
             mimetype: mediumSizeFile.mimetype,
-            ...getSpecificFile,
+            ...file,
           }
         })
 
