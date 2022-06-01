@@ -5,6 +5,8 @@ import lightenBy from '../../../../shared/lightenBy'
 
 import textStyles from '../../../../../server/pdfexport/pdfTemplates/textStyles.css'
 
+// TODO: This needs to include user text styles if they exist.
+
 /* This should only include styles specific to the editor */
 /* Styles that are purely presentational for text should be in textStyles.css */
 

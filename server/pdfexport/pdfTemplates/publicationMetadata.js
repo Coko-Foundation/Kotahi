@@ -1,8 +1,14 @@
 // This should return an object with front matter for the publication that should be sent to the PDF or to JATS.
 //
-// this should pull (and be supplanted by) in a user version from config/exportsettings/publicationMetadata.js
+// this should pull (and be supplanted by) in a user version from config/journal/exportsettings/publicationMetadata.js
 
-const userPublicationMetadata = require('../../../config/export/journalMetadata.js')
+let userPublicationMetadata = {}
+
+try {
+  userPublicationMetadata = require('../../../config/journal/export/journalMetadata.json')
+} catch {
+  console.log("userPublicationMetadata doesn't exist.")
+}
 
 const publicationMetadata = {
   journalId: [

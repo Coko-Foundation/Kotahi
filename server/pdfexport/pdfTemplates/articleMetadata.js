@@ -1,10 +1,28 @@
+// const fs = require('fs')
+
 // This should return an object with front matter from the form that should be sent to the PDF or to JATS.
 // It takes the manuscript as an argument and returns a frontmatter object that can be sentt to the JATS or PDF processor.
 // Because every form is different, different users will need to make their own versions of this to suit their needs.
 
-// this should pull in (and be replaced by) a user version from config/exportsettings/articleMetadata.js
+// this should pull in (and be replaced by) a user version from config/journal/exportsettings/articleMetadata.js
 
-const userArticleMetadata = require('../../../config/export/articleMetadata.js')
+// if (!fs.existsSync('../../../config/journal/export/articleMetadata.json')) {
+//   // If the file doesn't exist, create one.
+//   console.log("User articleMetadata.js doesn't exist, creating one.")
+//   fs.writeFileSync(
+//     '../../../config/journal/export/articleMetadata.json',
+//     `const articleMetadata = {}
+
+// 		module.exports = articleMetadata`,
+//   )
+// }
+let userArticleMetadata = {}
+
+try {
+  userArticleMetadata = require('../../../config/journal/export/articleMetadata.json')
+} catch {
+  console.log("userArticleMetadata doesn't exist.")
+}
 
 const articleMetadata = manuscript => {
   const meta = {}

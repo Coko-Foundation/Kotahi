@@ -38,7 +38,7 @@ const fixMathTags = html => {
 
 const defaultTemplatePath = path.resolve(__dirname, 'pdfTemplates')
 
-const userTemplatePath = path.resolve(__dirname, '../../config/export')
+const userTemplatePath = path.resolve(__dirname, '../../config/journal/export')
 
 const generateCss = async () => {
   let outputCss = ''
@@ -61,8 +61,8 @@ const generateCss = async () => {
     )
 
     outputCss += userCssBuffer.toString()
-  } catch (e) {
-    console.error('No user text stylesheet found', e)
+  } catch {
+    console.error('No user text stylesheet found')
   }
 
   try {
@@ -71,8 +71,8 @@ const generateCss = async () => {
     )
 
     outputCss += userCssBuffer.toString()
-  } catch (e) {
-    console.error('No user PagedJS stylesheet found', e)
+  } catch {
+    console.error('No user PagedJS stylesheet found')
   }
 
   return outputCss
@@ -94,6 +94,7 @@ try {
   // If there is a user template, use that instead
   template = userTemplateEnv.getTemplate('article.njk')
 } catch (e) {
+  console.error('No user template found, using default')
   template = defaultTemplateEnv.getTemplate('article.njk')
 }
 
