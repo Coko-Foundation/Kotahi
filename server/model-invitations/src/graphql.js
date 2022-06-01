@@ -1,3 +1,13 @@
+// const models = require('@pubsweet/models')
+
+// const resolvers = {
+//   Query: {
+//     async getManuscriptId(_, vars, ctx) {
+//       return models.Invitation.query()
+//     },
+//   },
+// }
+
 const typeDefs = `
 type Invitation {
     id: ID!

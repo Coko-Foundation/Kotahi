@@ -127,8 +127,7 @@ const Login = ({ logo = null, ...props }) => {
 
   // const journalName = config.journal.metadata.name
 
-  const articleToApprove = getQueryStringByName('articleToApprove')
-  const nextpage = `/auth/orcid?articleToApprove=${articleToApprove}`
+  const nextpage = `/auth/orcid`
 
   return redirectLink ? (
     <Redirect to={redirectLink} />

@@ -1,6 +1,6 @@
 import React from 'react'
-import { useQuery, useMutation } from '@apollo/client'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
+import { gql, useQuery, useMutation } from '@apollo/client'
 
 import config from 'config'
 import ReactRouterPropTypes from 'react-router-prop-types'
@@ -24,6 +24,15 @@ const getLatestVersion = manuscript => {
 /** Filter to return those manuscripts with the given user in one of the given roles.
  * Roles is an array of role-name strings.
  */
+
+const GET_MANUSCRIPT_ID = gql`
+  query invitations {
+    invitations(id: $authorInvitationId) {
+      manuscript_id
+    }
+  }
+`
+
 const getManuscriptsUserHasRoleIn = (manuscripts, userId, roles) =>
   manuscripts.filter(m =>
     m.teams.some(
@@ -62,6 +71,20 @@ const DashboardPage = ({ history, ...props }) => {
   const latestVersions = data.manuscriptsUserHasCurrentRoleIn.map(
     getLatestVersion,
   )
+
+  const authorInvitationId = window.localStorage.getItem('authorInvitationId')
+    ? window.localStorage.getItem('authorInvitationId')
+    : ''
+
+  console.log(authorInvitationId)
+
+  if (authorInvitationId) {
+    const results = useQuery(GET_MANUSCRIPT_ID, {
+      variables: { authorInvitationId },
+    })
+
+    console.log('test mutation', results.data)
+  }
 
   const authorLatestVersions = getManuscriptsUserHasRoleIn(
     latestVersions,

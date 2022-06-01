@@ -5,7 +5,7 @@ import { Container } from '../../../shared'
 const AcceptArticleOwnershipPage = ({ match }) => {
   const invid = match.params.invitationId
 
-  localStorage.setItem('invitationId', invid)
+  window.localStorage.setItem('authorInvitationId', invid)
   return (
     <Container>
       ACCEPTING ownership of article using invitation: {invid}
