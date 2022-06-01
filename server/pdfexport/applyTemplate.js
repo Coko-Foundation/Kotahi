@@ -38,10 +38,7 @@ const fixMathTags = html => {
 
 const defaultTemplatePath = path.resolve(__dirname, 'pdfTemplates')
 
-const userTemplatePath = path.resolve(
-  __dirname,
-  '../../../../../../config/export',
-)
+const userTemplatePath = path.resolve(__dirname, '../../config/export')
 
 const generateCss = async () => {
   let outputCss = ''
@@ -101,18 +98,19 @@ try {
 }
 
 const applyTemplate = async (articleData, includeFontLinks) => {
-  const htmlWithFixedMath = fixMathTags(articleData.meta.source)
-
   if (!articleData) {
     // Error handling: if there's no manuscript.meta.source, what should we return?
     return ''
   }
 
   const thisArticle = articleData
+  const htmlWithFixedMath = fixMathTags(articleData.meta.source)
+  thisArticle.meta.source = htmlWithFixedMath
+
   thisArticle.publicationMetadata = publicationMetadata
   thisArticle.articleMetadata = articleMetadata(thisArticle)
-  let renderedHtml = nunjucks.renderString(template, {
-    article: htmlWithFixedMath,
+  let renderedHtml = nunjucks.renderString(template.tmplStr, {
+    article: thisArticle,
   })
 
   if (includeFontLinks) {
@@ -128,7 +126,6 @@ const applyTemplate = async (articleData, includeFontLinks) => {
   // TODO: why is this coming out over GraphQL with escaped newlines?
 
   renderedHtml = renderedHtml.replace(/\n|\r|\t/g, '')
-
   return renderedHtml
 }
 

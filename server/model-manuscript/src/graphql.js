@@ -44,7 +44,8 @@ const META_FIELD_PREFIX = 'meta'
 let isImportInProgress = false
 
 const getCss = async () => {
-  await generateCss()
+  const css = await generateCss()
+  return css
 }
 
 const ManuscriptResolvers = ({ isVersion }) => {
@@ -1454,6 +1455,7 @@ const typeDefs = `
     submission: String
     publishedDate: DateTime
 		styledHtml: String
+		css: String
   }
 `
 
