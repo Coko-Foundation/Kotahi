@@ -1,17 +1,46 @@
 /* stylelint-disable selector-type-no-unknown */
 import { css } from 'styled-components'
 import { darken, grid, th } from '@pubsweet/ui-toolkit'
+import { ApolloClient, InMemoryCache, gql } from '@apollo/client/core'
 import lightenBy from '../../../../shared/lightenBy'
 
-import textStyles from '../../../../../server/pdfexport/pdfTemplates/textStyles.css'
+// import textStyles from '../../../../../server/pdfexport/pdfTemplates/textStyles.css'
 
 // TODO: This needs to include user text styles if they exist.
+// This needs to come in through GraphQL from the server.
+// QUESTION: what happens if users are using their own fonts? How would that work?
 
-/* This should only include styles specific to the editor */
+const CSS_QUERY = gql`
+  query getCSSQuery {
+    builtCss {
+      css
+    }
+  }
+`
+
+const cache = new InMemoryCache()
+
+const client = new ApolloClient({
+  cache,
+  uri: 'http://localhost:4000/graphql',
+})
+
+const getTextStyles = async () => {
+  const textStyles = await client.query({ query: CSS_QUERY })
+
+  if (textStyles?.data?.builtCss?.css) {
+    console.log(textStyles.data.builtCss.css)
+    return textStyles.data.builtCss.css
+  }
+
+  return ''
+}
+
+// This should only include styles specific to the editor */
 /* Styles that are purely presentational for text should be in textStyles.css */
 
 export default css`
-  ${textStyles}
+  ${getTextStyles()}
 
   .ProseMirror {
     counter-reset: footnote;

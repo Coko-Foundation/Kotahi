@@ -251,18 +251,26 @@ const resolvers = {
 
       return { pdfUrl: outUrl || 'busted!' }
     },
+    builtCss: async () => {
+      const css = await generateCss(true)
+      return { css }
+    },
   },
 }
 
 const typeDefs = `
 	extend type Query {
 		convertToPdf(manuscriptId: String!, useHtml: Boolean): ConvertToPdfType
+		builtCss: BuiltCssType
 	}
 
 	type ConvertToPdfType {
 		pdfUrl: String!
 	}
 
+	type BuiltCssType {
+		css: String!
+	}
 `
 
 module.exports = { resolvers, typeDefs }

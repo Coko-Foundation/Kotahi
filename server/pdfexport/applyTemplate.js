@@ -40,7 +40,8 @@ const defaultTemplatePath = path.resolve(__dirname, 'pdfTemplates')
 
 const userTemplatePath = path.resolve(__dirname, '../../config/journal/export')
 
-const generateCss = async () => {
+const generateCss = async noPagedJs => {
+  // if noPagedJs is true, we don't add the pagedJS styles (this is for the text editor)
   let outputCss = ''
 
   const defaultCssBuffer = await fs.readFile(
@@ -48,12 +49,6 @@ const generateCss = async () => {
   )
 
   outputCss += defaultCssBuffer.toString()
-
-  const pagedCssBuffer = await fs.readFile(
-    `${defaultTemplatePath}/pagedJsStyles.css`,
-  )
-
-  outputCss += pagedCssBuffer.toString()
 
   try {
     const userCssBuffer = await fs.readFile(
@@ -65,14 +60,22 @@ const generateCss = async () => {
     console.error('No user text stylesheet found')
   }
 
-  try {
-    const userCssBuffer = await fs.readFile(
-      `${userTemplatePath}/pagedJsStyles.css`,
+  if (!noPagedJs) {
+    const pagedCssBuffer = await fs.readFile(
+      `${defaultTemplatePath}/pagedJsStyles.css`,
     )
 
-    outputCss += userCssBuffer.toString()
-  } catch {
-    console.error('No user PagedJS stylesheet found')
+    outputCss += pagedCssBuffer.toString()
+
+    try {
+      const userCssBuffer = await fs.readFile(
+        `${userTemplatePath}/pagedJsStyles.css`,
+      )
+
+      outputCss += userCssBuffer.toString()
+    } catch {
+      console.error('No user PagedJS stylesheet found')
+    }
   }
 
   return outputCss

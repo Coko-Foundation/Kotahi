@@ -7,7 +7,7 @@ let userPublicationMetadata = {}
 try {
   userPublicationMetadata = require('../../../config/journal/export/journalMetadata.json')
 } catch {
-  console.log("userPublicationMetadata doesn't exist.")
+  console.error("userPublicationMetadata doesn't exist.")
 }
 
 const publicationMetadata = {
