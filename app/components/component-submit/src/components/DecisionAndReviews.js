@@ -48,7 +48,7 @@ const Decision = ({ decision, editor }) =>
     <SectionRow>Pending.</SectionRow>
   )
 
-const DecisionAndReviews = ({ manuscript }) => {
+const DecisionAndReviews = ({ manuscript, isControlPage }) => {
   const currentUser = useCurrentUser()
 
   const decision =
@@ -74,9 +74,13 @@ const DecisionAndReviews = ({ manuscript }) => {
     ? authorTeam.members.find(member => member.user.id === currentUser.id)
     : false
 
-  const reviewsToShow = reviews.filter(
+  let reviewsToShow
+
+  reviewsToShow = reviews.filter(
     review => !review.isHiddenFromAuthor && isCurrentUserAuthor,
   )
+
+  if (isControlPage) reviewsToShow = reviews
 
   return (
     <>

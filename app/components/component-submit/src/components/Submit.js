@@ -65,9 +65,11 @@ const Submit = ({
     )
 
     const handleSave = useCallback(
-      debounce(source => {
-        updateManuscript(versionId, { meta: { source } })
-      }, 2000),
+      () =>
+        debounce(source => {
+          updateManuscript(versionId, { meta: { source } })
+        }, 2000),
+      [debounce, updateManuscript, versionId],
     )
 
     const editorSection = {
