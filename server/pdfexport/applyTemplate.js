@@ -31,7 +31,7 @@ const fixMathTags = html => {
 // 1. check that articleTemplate.njk mirrors what's in article.js
 // 1. Sort out all the different CSSes and make sure that they are being applied correctly
 //    ./pdfTemplates/styles.css: this is from Julien & Harshna, used for PDF export
-//    /app/componetns/wax-collab/src/layout/EditorElements.js: this exports styles used inside of Wax; some of this should be overwritten.
+//    /app/components/wax-collab/src/layout/EditorElements.js: this exports styles used inside of Wax; some of this should be overwritten.
 //			split this into base styles & editor styles
 //        for wax: import base styles, then editor styles
 //        for production: import base styles, then pagedjs styles
@@ -55,6 +55,7 @@ const generateCss = async noPagedJs => {
       `${userTemplatePath}/textStyles.css`,
     )
 
+    console.error('Using user-defined text styles.')
     outputCss += userCssBuffer.toString()
   } catch {
     console.error('No user text stylesheet found')
@@ -72,12 +73,14 @@ const generateCss = async noPagedJs => {
         `${userTemplatePath}/pagedJsStyles.css`,
       )
 
+      console.error('Using user-defined PagedJS styles.')
       outputCss += userCssBuffer.toString()
     } catch {
       console.error('No user PagedJS stylesheet found')
     }
   }
 
+  console.log('textStyles.css: ', outputCss)
   return outputCss
 }
 
