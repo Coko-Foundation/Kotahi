@@ -8,6 +8,7 @@ import ArticleEvaluationResultPage from './components/component-evaluation-resul
 import ArticleEvaluationSummaryPage from './components/component-evaluation-summary'
 import DeclineArticleOwnershipPage from './components/component-dashboard/src/components/DeclineArticleOwnershipPage'
 import AcceptArticleOwnershipPage from './components/component-dashboard/src/components/AcceptArticleOwnershipPage'
+import InvitationAcceptedPage from './components/component-dashboard/src/components/InvitationAcceptedPage'
 
 import AdminPage from './components/AdminPage'
 
@@ -54,6 +55,11 @@ export default (
       component={AcceptArticleOwnershipPage}
       exact
       path="/acceptarticle/:invitationId"
+    />
+    <Route
+      component={InvitationAcceptedPage}
+      exact
+      path="/invitation/accepted"
     />
   </Switch>
 )

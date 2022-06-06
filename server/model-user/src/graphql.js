@@ -4,7 +4,7 @@ const { existsSync } = require('fs')
 const path = require('path')
 const models = require('@pubsweet/models')
 
-const { Invitation } = require('../../model-invitations/src/invitations')
+const Invitation = require('../../model-invitations/src/invitations')
 const sendEmailNotification = require('../../email-notifications')
 
 const resolvers = {
@@ -249,12 +249,12 @@ const resolvers = {
 
       const user = await models.User.find(ctx.user)
       const manuscriptId = manuscript.id
-      const toEmail = externalEmail
+      const toEmail = receiverEmail
       const purpose = 'inviting an author to accept a manuscript'
       const status = 'UNANSWERED'
       const senderId = user.id
 
-      const newInvitation = await new models.Invitation({
+      const newInvitation = await new Invitation({
         manuscriptId,
         toEmail,
         purpose,
@@ -322,8 +322,6 @@ const typeDefs = `
     updateCurrentUsername(username: String): User
     sendEmail(input: String): SendEmailResponse
     updateCurrentEmail(email: String): UpdateEmailResponse
-    createInvitation(manuscriptId: ID, toEmail: String, purpose: String,status: String): Invitation
-    updateInvitation(minvitationId: ID, status: String): Boolean
   }
 
   type UpdateEmailResponse {

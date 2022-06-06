@@ -1,24 +1,40 @@
-// const models = require('@pubsweet/models')
+const models = require('@pubsweet/models')
 
-// const resolvers = {
-//   Query: {
-//     async getManuscriptId(_, vars, ctx) {
-//       return models.Invitation.query()
-//     },
-//   },
-// }
+const resolvers = {
+  Query: {
+    async invitationManuscriptId(_, { id }, ctx) {
+      const invitation = await models.Invitation.query().findById(id)
+      return invitation
+    },
+  },
+  // Mutation: {
+  //   async updateInvitationStatus(_, { id }, ctx) {
+  //     const results = await models.Invitation.
+  //   },
+  // },
+}
+
+// restructure the manuscript ID on the dashboard page
 
 const typeDefs = `
 type Invitation {
-    id: ID!
+    id: ID
     created: DateTime!
     updated: DateTime
-    manuscript_id: ID!
+    manuscriptId: ID!
     purpose: String!
-    to_email: String!
+    toEmail: String!
     status: String!
-    sender_id: ID
+    senderId: ID
   }
+
+extend type Query {
+  invitationManuscriptId(id: ID): Invitation
+}
+
+extend type Mutation {
+  updateInvitationStatus(id: ID, status: String): Boolean
+}
 `
 
-module.exports = { typeDefs }
+module.exports = { resolvers, typeDefs }

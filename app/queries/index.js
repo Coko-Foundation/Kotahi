@@ -60,6 +60,22 @@ export const CREATE_MESSAGE = gql`
   }
 `
 
+export const UPDATE_INVITATION_STATUS = gql`
+  mutation($id: ID!, $status: String) {
+    updateInvitationStatus(id: $id, status: $status) {
+      status
+    }
+  }
+`
+
+export const GET_INVITATION_MANUSCRIPT_ID = gql`
+  query invitationManuscriptId($id: ID) {
+    invitationManuscriptId(id: $id) {
+      manuscriptId
+    }
+  }
+`
+
 export const GET_MESSAGE_BY_ID = gql`
   query messageById($messageId: ID) {
     message(messageId: $messageId) {

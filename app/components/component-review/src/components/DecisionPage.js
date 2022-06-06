@@ -77,7 +77,7 @@ const updateTeamMutation = gql`
   }
 `
 
-const createTeamMutation = gql`
+export const createTeamMutation = gql`
   mutation($input: TeamInput!) {
     createTeam(input: $input) {
       ${teamFields}
@@ -208,8 +208,6 @@ const DecisionPage = ({ match }) => {
   }
 
   const sendNotifyEmail = async emailData => {
-    console.log(emailData)
-
     const response = await sendEmailMutation({
       variables: {
         input: JSON.stringify(emailData),
