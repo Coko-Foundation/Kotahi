@@ -76,6 +76,14 @@ export const GET_INVITATION_MANUSCRIPT_ID = gql`
   }
 `
 
+export const GET_INVITATION_STATUS = gql`
+  query invitationStatus($id: ID) {
+    invitationStatus(id: $id) {
+      status
+    }
+  }
+`
+
 export const GET_MESSAGE_BY_ID = gql`
   query messageById($messageId: ID) {
     message(messageId: $messageId) {

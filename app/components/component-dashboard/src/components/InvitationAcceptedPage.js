@@ -5,7 +5,7 @@ import { Spinner } from '@pubsweet/ui/dist/atoms'
 import { createTeamMutation } from '../../../component-review/src/components/DecisionPage'
 import {
   GET_INVITATION_MANUSCRIPT_ID,
-  //   UPDATE_INVITATION_STATUS,
+  UPDATE_INVITATION_STATUS,
 } from '../../../../queries/index'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
 
@@ -20,10 +20,18 @@ const InvitationAcceptedPage = () => {
 
   const invitedUser = useCurrentUser()
 
-  const [createTeam] = useMutation(createTeamMutation, {
+  const [updateInvitationStatus] = useMutation(UPDATE_INVITATION_STATUS, {
     onCompleted: () => {
       localStorage.setItem('authorInvitationId', '')
       window.location.href = '/kotahi/dashboard'
+    },
+  })
+
+  const [createTeam] = useMutation(createTeamMutation, {
+    onCompleted: () => {
+      updateInvitationStatus({
+        variables: { id: authorInvitationId, status: 'ACCEPTED' },
+      })
     },
   })
 
