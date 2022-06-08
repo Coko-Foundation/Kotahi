@@ -29,8 +29,10 @@ const Production = ({
   makePdf,
   makeJats,
   updateManuscript,
+  onAssetManager,
 }) => {
   const handleSave = debounce(source => {
+    // eslint-disable-next-line no-console
     console.log('firing update manuscript')
     updateManuscript(manuscript.id, { meta: { source } })
   }, 2000)
@@ -55,6 +57,8 @@ const Production = ({
               // onBlur={source => {
               //   updateManuscript(manuscript.id, { meta: { source } })
               // }}
+              manuscriptId={manuscript.id}
+              onAssetManager={onAssetManager}
               saveSource={handleSave}
               user={currentUser}
               value={manuscript.meta.source}

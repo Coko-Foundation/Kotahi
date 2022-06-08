@@ -43,7 +43,7 @@ const Actions = ({
         manuscript.status === articleStatuses.evaluated && (
           <Action
             isDisabled={isManuscriptBlockedFromPublishing(manuscript.id)}
-            onClick={tryPublishManuscript(manuscript.id)}
+            onClick={() => tryPublishManuscript(manuscript)}
           >
             Publish
           </Action>

@@ -1,6 +1,8 @@
+/* eslint-disable no-shadow */
 import React from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import Modal from 'react-modal'
 import { adopt } from 'react-adopt'
 import Production from './Production'
 import { Spinner, CommsErrorBanner } from '../../../shared'

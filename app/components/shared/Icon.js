@@ -31,6 +31,7 @@ export const Icon = ({
   noPadding,
   inline,
   top,
+  onClick,
   ...props
 }) => {
   const name = _.upperFirst(_.camelCase(children))
@@ -41,6 +42,7 @@ export const Icon = ({
       color={color}
       inline={inline}
       noPadding={noPadding}
+      onClick={onClick}
       role="img"
       size={size}
       top={top}

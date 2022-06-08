@@ -6,6 +6,10 @@ import { createBrowserHistory } from 'history'
 import Root from './Root'
 import theme from './theme'
 
+// Models
+import AssetManager from './components/asset-manager/src/AssetManagerPage'
+import ModalProvider from './components/asset-manager/src/ui/Modal/ModalProvider'
+
 import { JournalProvider } from './components/xpub-journal/src'
 import { XpubProvider } from './components/xpub-with-context/src'
 
@@ -16,10 +20,16 @@ const history = createBrowserHistory()
 
 const rootEl = document.getElementById('root')
 
+const modals = {
+  assetManagerEditor: AssetManager,
+}
+
 ReactDOM.render(
   <XpubProvider>
     <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
-      <Root history={history} routes={routes} theme={theme} />
+      <ModalProvider modals={modals}>
+        <Root history={history} routes={routes} theme={theme} />
+      </ModalProvider>
     </JournalProvider>
   </XpubProvider>,
   rootEl,

@@ -41,11 +41,14 @@ services:
       - REVIEW_SHARED=${REVIEW_SHARED:-false}
       - REVIEW_HIDE=${REVIEW_HIDE:-false}
       - NOTIFICATION_EMAIL_AUTOMATED=${NOTIFICATION_EMAIL_AUTOMATED:-false}
-      - PAGED_JS_CLIENT_ID=${PAGED_JS_CLIENT_ID}
-      - PAGED_JS_CLIENT_SECRET=${PAGED_JS_CLIENT_SECRET}
+      - SERVICE_PAGEDJS_CLIENT_ID=${SERVICE_PAGEDJS_CLIENT_ID}
+      - SERVICE_PAGEDJS_SECRET=${SERVICE_PAGEDJS_SECRET}
+      - SERVICE_PAGEDJS_PROTOCOL=${SERVICE_PAGEDJS_PROTOCOL}
+      - SERVICE_PAGEDJS_HOST=${SERVICE_PAGEDJS_HOST}
+      - SERVICE_PAGEDJS_PORT=${SERVICE_PAGEDJS_PORT}
       - S3_PROTOCOL=${S3_PROTOCOL:-http}
       - S3_HOST=${S3_HOST:-localhost}
-      - S3_PORT=${S3_PORT:-9000}
+      - S3_PORT=${S3_PORT:-}
       - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID:-nonRootUser}
       - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY:-nonRootPassword}
       - S3_BUCKET=${S3_BUCKET:-uploads}
@@ -97,55 +100,6 @@ services:
       ]
     volumes:
       - ./scripts/wait-for-it.sh:/home/node/scripts/wait-for-it.sh
-
-  minio:
-    image: minio/minio
-    command: ['server', '/data']
-    volumes:
-      - ./minio/data:/data
-    ports:
-      - 9000:9000
-    environment:
-      MINIO_ACCESS_KEY: ${MINIO_ACCESS_KEY:-test} #Access key length should be at least 3 characters
-      MINIO_SECRET_KEY: ${MINIO_SECRET_KEY:-password} #Secret key length should be at least 8 characters
-
-  pagedjs:
-    depends_on:
-      - db-pagedjs
-    image: cokoapps/pagedjs:1.4.0
-    ports:
-      - ${SERVICE_PAGEDJS_PORT:-3003}:${SERVICE_PAGEDJS_PORT:-3003}
-    environment:
-      - PUBSWEET_SECRET=pagedjs_dev_secret
-      - POSTGRES_USER=pagedjs_user_dev
-      - POSTGRES_PASSWORD=pagedjs_user_password
-      - POSTGRES_HOST=db-pagedjs
-      - POSTGRES_DB=pagedjs_dev
-      - POSTGRES_PORT=5432
-      - SERVER_PORT=${SERVICE_PAGEDJS_PORT:-3003}
-      - SERVER_PROTOCOL=http
-      - SERVER_HOST=localhost
-      - NODE_ENV=development
-    security_opt:
-      - seccomp:unconfined
-    entrypoint:
-      [
-        'node_modules/.bin/wait-for-it',
-        'db-pagedjs:5432',
-        '--',
-        'sh',
-        'scripts/setupDevServer.sh',
-      ]
-    command: ['node', './server/startServer.js']
-
-  db-pagedjs:
-    image: postgres:12-alpine
-    environment:
-      - POSTGRES_USER=pagedjs_user_dev
-      - POSTGRES_DB=pagedjs_dev
-      - POSTGRES_PASSWORD=pagedjs_user_password
-    volumes:
-      - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 volumes:
   db-data:
     driver: local

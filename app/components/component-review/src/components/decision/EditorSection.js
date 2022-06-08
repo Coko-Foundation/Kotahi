@@ -2,6 +2,56 @@ import React from 'react'
 import PropTypes from 'prop-types'
 import FullWaxEditor from '../../../../wax-collab/src/FullWaxEditor'
 import { Info } from '../style'
+import { adopt } from 'react-adopt'
+import { getSpecificFilesQuery } from '../../../../asset-manager/src/queries'
+import withModal from '../../../../asset-manager/src/ui/Modal/withModal'
+
+const mapper = {
+  getSpecificFilesQuery,
+  withModal,
+}
+
+const mapProps = args => ({
+  onAssetManager: manuscriptId =>
+    new Promise((resolve, reject) => {
+      const { withModal } = args
+
+      const { showModal, hideModal } = withModal
+
+      const handleImport = async selectedFileIds => {
+        const {
+          getSpecificFilesQuery: { client, query },
+        } = args
+        const { data } = await client.query({
+          query,
+          variables: { ids: selectedFileIds },
+        })
+        const { getSpecificFiles } = data
+
+        const alteredFiles = getSpecificFiles.map(getSpecificFile => {
+          const mediumSizeFile = getSpecificFile.storedObjects.find(
+            storedObject => storedObject.type === 'medium',
+          )
+          return {
+            source: mediumSizeFile.url,
+            mimetype: mediumSizeFile.mimetype,
+            ...getSpecificFile,
+          }
+        })
+
+        hideModal()
+        resolve(alteredFiles)
+      }
+
+      showModal('assetManagerEditor', {
+        manuscriptId,
+        withImport: true,
+        handleImport,
+      })
+    }),
+})
+
+const Composed = adopt(mapper, mapProps)
 
 const EditorSection = ({
   manuscript,
@@ -27,6 +77,7 @@ const EditorSection = ({
 
   // React.useEffect(() => {
   //   // If we have an onBlur function specified, fire it when there's a dismount
+  // eslint-disable-next-line no-console
   //   console.log('useEffect in EditorSection running')
   //   return () => (onBlur ? onBlur() : null)
   // }, [])
@@ -51,25 +102,39 @@ const EditorSection = ({
 
   const isAuthorMode = !!(isCurrentUserAuthor && readonly)
 
-  console.log('rendering EditorSection again')
-
   return (
-    <FullWaxEditor
-      authorComments={isAuthorMode}
-      // onChange={readonly && !isAuthorMode ? null : onBlur}
-      // onChange={readonly && !isAuthorMode ? null : onChange}
+    <Composed
+      isAuthorMode={isAuthorMode}
       readonly={readonly}
+      currentUser={currentUser}
       saveSource={saveSource}
-      useComments={
-        !!(
-          isCurrentUserEditor ||
-          currentUser?.admin ||
-          (isCurrentUserAuthor && readonly)
-        )
-      }
-      user={currentUser}
-      value={manuscript.meta.source}
-    />
+      isCurrentUserEditor={isCurrentUserEditor}
+      isCurrentUserAuthor={isCurrentUserAuthor}
+      manuscript={manuscript}
+    >
+      {({ onAssetManager }) => (
+        <div>
+          <FullWaxEditor
+            authorComments={isAuthorMode}
+            // onChange={readonly && !isAuthorMode ? null : onBlur}
+            // onChange={readonly && !isAuthorMode ? null : onChange}
+            onAssetManager={onAssetManager}
+            readonly={readonly}
+            saveSource={saveSource}
+            useComments={
+              !!(
+                isCurrentUserEditor ||
+                currentUser?.admin ||
+                (isCurrentUserAuthor && readonly)
+              )
+            }
+            user={currentUser}
+            value={manuscript.meta.source}
+            manuscriptId={manuscript.id}
+          />
+        </div>
+      )}
+    </Composed>
   )
 }
 

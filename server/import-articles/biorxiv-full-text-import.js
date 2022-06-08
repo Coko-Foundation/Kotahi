@@ -10,92 +10,54 @@ const {
   getLastImportDate,
   getDate2WeeksAgo,
   getEmptySubmission,
+  rawAbstractToSafeHtml,
 } = require('./importTools')
 
 const CURSOR_LIMIT = 200 // This permits up to 10,000 matches, but prevents infinite loop
 const SAVE_CHUNK_SIZE = 50
 
-/** Generate multiple queries to retrieve all manuscripts containing one of the searchStrings
+/** Generate a query to retrieve all manuscripts containing one of the searchStrings
  *  within the given date range.
- *  Multi-word phrases can't be mixed with other phrases in an OR search; to get around this
- *  we generate a separate query for each multi-word phrase.
- *  The queries generated do not include the cursor parameter, which should be added.
+ *  The generated query does not include the cursor parameter, which should be added.
  */
-const formatSearchQueriesWithoutCursor = (searchStrings, dateFrom, dateTo) => {
+const formatSearchQueryWithoutCursor = (searchStrings, dateFrom, dateTo) => {
   const server = 'all' // One of 'biorxiv', 'medrxiv', 'all'
-  const queries = []
-  const singleWordTerms = []
-  searchStrings.forEach(rawTerm => {
-    const term = rawTerm.replace(/[^\w \-.]/g, '')
-
-    if (term.includes(' ')) {
-      queries.push(
-        `https://api.biorxiv.org/fulltext?server=${server}&terms=${term.replace(
-          /\s+/g,
-          '+',
-        )}&flag=phrase&date_from=${dateFrom}&date_to=${dateTo}`,
-      )
-    } else {
-      singleWordTerms.push(term)
-    }
-  })
-
-  if (singleWordTerms.length)
-    queries.push(
-      `https://api.biorxiv.org/fulltext?server=${server}&terms=${singleWordTerms.join(
-        '+',
-      )}&flag=any&date_from=${dateFrom}&date_to=${dateTo}`,
-    )
-
-  return queries
+  const importUrl = `https://api.biorxiv.org/fulltext?server=${server}&terms=`
+  const queryParams = searchStrings.map(term => `"${term}"`).join(' ')
+  return `${importUrl}${queryParams}&flag=any&date_from=${dateFrom}&date_to=${dateTo}`
 }
 
 const getData = async (ctx, searchStrings) => {
   const sourceId = await getServerId('biorxiv')
   const lastImportDate = await getLastImportDate(sourceId)
   const minDate = Math.max(lastImportDate, await getDate2WeeksAgo())
-
-  const allImports = []
   const dateFrom = formatAsIso8601Date(minDate)
   const dateTo = formatAsIso8601Date(Date.now())
 
-  const queries = formatSearchQueriesWithoutCursor(
+  const queryWithoutCursor = formatSearchQueryWithoutCursor(
     searchStrings,
     dateFrom,
     dateTo,
   )
 
-  // eslint-disable-next-line no-restricted-syntax
-  for (const queryWithoutCursor of queries) {
-    const queryImports = []
+  const imports = []
 
-    for (let cursor = 0; cursor < CURSOR_LIMIT; cursor += 1) {
-      const queryString = `${queryWithoutCursor}&cursor=${cursor}`
-      // eslint-disable-next-line no-await-in-loop
-      const { data } = await axios.get(queryString)
-      if (!data || !data.collection || !data.collection.length) break
-      Array.prototype.push.apply(queryImports, data.collection)
-      if (queryImports.length >= data.total_results) break
-    }
-
-    // Avoid double-adding a manuscript found by a previous query
-    Array.prototype.push.apply(
-      allImports,
-      queryImports.filter(
-        x => !allImports.some(y => x.doi === y.doi && x.version === y.version),
-      ),
-    )
+  for (let cursor = 0; cursor < CURSOR_LIMIT; cursor += 1) {
+    const queryString = `${queryWithoutCursor}&cursor=${cursor}`
+    // eslint-disable-next-line no-await-in-loop
+    const { data } = await axios.get(queryString)
+    if (!data || !data.collection || !data.collection.length) break
+    Array.prototype.push.apply(imports, data.collection)
+    if (imports.length >= data.total_results) break
   }
 
   // Adjust imports by generating url field and improving abstract formatting
-  const modifiedItems = allImports.map(item => ({
+  const modifiedItems = imports.map(item => ({
     ...item,
     url: `https://${item.server.toLowerCase()}.org/content/${item.doi}v${
       item.version
     }`,
-    abstract: item.abstract
-      ? `<p>${item.abstract.replace(/\n\s*/g, '</p>\n<p>')}</p>`
-      : null,
+    abstract: rawAbstractToSafeHtml(item.abstract),
   }))
 
   // TODO retrieving all manuscripts to check URLs is inefficient!

@@ -16,6 +16,7 @@ const { stripSensitiveItems } = require('./manuscriptUtils')
 const {
   getFilesWithUrl,
   replaceImageSrc,
+  replaceImageSrcResponsive,
   base64Images,
   uploadImage,
 } = require('../../utils/fileStorageUtils')
@@ -114,38 +115,41 @@ const commonUpdateManuscript = async (id, input, ctx) => {
   }
 
   const { source } = updatedMs.meta
-  const images = base64Images(source)
 
-  if (images.length > 0) {
-    const uploadedImages = []
+  if (typeof source === 'string') {
+    const images = base64Images(source)
 
-    await Promise.all(
-      map(images, async image => {
-        if (image.blob) {
-          const uploadedImage = await uploadImage(image, updatedMs.id)
-          uploadedImages.push(uploadedImage)
-        }
-      }),
-    )
+    if (images.length > 0) {
+      const uploadedImages = []
 
-    const uploadedImagesWithUrl = await getFilesWithUrl(uploadedImages)
-
-    const $ = cheerio.load(source)
-
-    map(images, (image, index) => {
-      const elem = $('img').get(image.index)
-      const $elem = $(elem)
-      $elem.attr('data-fileid', uploadedImagesWithUrl[index].id)
-      $elem.attr('alt', uploadedImagesWithUrl[index].name)
-      $elem.attr(
-        'src',
-        uploadedImagesWithUrl[index].storedObjects.find(
-          storedObject => storedObject.type === 'medium',
-        ).url,
+      await Promise.all(
+        map(images, async image => {
+          if (image.blob) {
+            const uploadedImage = await uploadImage(image, updatedMs.id)
+            uploadedImages.push(uploadedImage)
+          }
+        }),
       )
-    })
 
-    updatedMs.meta.source = $.html()
+      const uploadedImagesWithUrl = await getFilesWithUrl(uploadedImages)
+
+      const $ = cheerio.load(source)
+
+      map(images, (image, index) => {
+        const elem = $('img').get(image.index)
+        const $elem = $(elem)
+        $elem.attr('data-fileid', uploadedImagesWithUrl[index].id)
+        $elem.attr('alt', uploadedImagesWithUrl[index].name)
+        $elem.attr(
+          'src',
+          uploadedImagesWithUrl[index].storedObjects.find(
+            storedObject => storedObject.type === 'medium',
+          ).url,
+        )
+      })
+
+      updatedMs.meta.source = $.html()
+    }
   }
 
   return models.Manuscript.query().updateAndFetchById(id, updatedMs)
@@ -362,22 +366,14 @@ const resolvers = {
       } else if (process.env.INSTANCE_NAME === 'colab') {
         promises.push(
           importArticlesFromBiorxivWithFullTextSearch(ctx, [
-            'membrane protein',
-            'ion channel',
-            'transporter',
-            'pump',
+            'transporter*',
+            'pump*',
             'gpcr',
-            'G protein-coupled receptor',
-            'exchanger',
-            'uniporter',
-            'symporter',
-            'antiporter',
-            'solute carrier',
-            'atpase',
-            'rhodopsin',
-            'patch-clamp',
-            'voltage-clamp',
-            'single-channel',
+            'gating',
+            '*-gated',
+            '*-selective',
+            '*-pumping',
+            'protein translocation',
           ]),
         )
       }
@@ -838,6 +834,7 @@ const resolvers = {
             manuscript,
           )
           succeeded = true
+          update.status = 'published'
         } catch (err) {
           let message = 'Publishing to hypothes.is failed!\n'
           if (err.response) {
@@ -900,11 +897,13 @@ const resolvers = {
 
       manuscript.files = await getFilesWithUrl(manuscript.files)
 
-      manuscript.meta.source = await replaceImageSrc(
-        manuscript.meta.source,
-        manuscript.files,
-        'medium',
-      )
+      if (typeof manuscript.meta.source === 'string') {
+        manuscript.meta.source = await replaceImageSrc(
+          manuscript.meta.source,
+          manuscript.files,
+          'medium',
+        )
+      }
 
       manuscript.meta.notes = (manuscript.meta || {}).notes || [
         {
@@ -1001,7 +1000,24 @@ const resolvers = {
         query.offset(offset)
       }
 
-      const manuscripts = await query
+      let manuscripts = await query
+
+      manuscripts = manuscripts.map(async m => {
+        const manuscript = m
+
+        manuscript.files = await getFilesWithUrl(manuscript.files)
+
+        if (typeof manuscript.meta.source === 'string') {
+          manuscript.meta.source = await replaceImageSrc(
+            manuscript.meta.source,
+            manuscript.files,
+            'medium',
+          )
+        }
+
+        return manuscript
+      })
+
       return {
         totalCount,
         manuscripts,
@@ -1102,15 +1118,34 @@ const resolvers = {
 
       const manuscripts = await query
 
-      return manuscripts.map(m => ({
-        id: m.id,
-        shortId: m.shortId,
-        files: m.files,
-        status: m.status,
-        meta: m.meta,
-        submission: JSON.stringify(m.submission),
-        publishedDate: m.published,
-      }))
+      return manuscripts.map(async m => {
+        const manuscript = m
+        manuscript.files = await getFilesWithUrl(manuscript.files)
+
+        if (typeof manuscript.meta.source === 'string') {
+          manuscript.meta.source = await replaceImageSrcResponsive(
+            manuscript.meta.source,
+            manuscript.files,
+          )
+        }
+
+        const printReadyPdf = manuscript.files.find(file =>
+          file.tags.includes('printReadyPdf'),
+        )
+
+        return {
+          id: manuscript.id,
+          shortId: manuscript.shortId,
+          files: manuscript.files,
+          status: manuscript.status,
+          meta: manuscript.meta,
+          submission: JSON.stringify(manuscript.submission),
+          publishedDate: manuscript.published,
+          printReadyPdfUrl: printReadyPdf
+            ? printReadyPdf.storedObjects[0].url
+            : null,
+        }
+      })
     },
     async publishedManuscript(_, { id }, ctx) {
       const m = await models.Manuscript.query()
@@ -1119,6 +1154,12 @@ const resolvers = {
         .withGraphFetched('[files]')
 
       if (!m) return null
+
+      m.files = await getFilesWithUrl(m.files)
+
+      if (typeof m.meta.source === 'string') {
+        m.meta.source = await replaceImageSrc(m.meta.source, m.files, 'medium')
+      }
 
       return {
         id: m.id,
@@ -1409,6 +1450,7 @@ const typeDefs = `
     meta: ManuscriptMeta
     submission: String
     publishedDate: DateTime
+    printReadyPdfUrl: String
   }
 `
 
