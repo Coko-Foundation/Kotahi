@@ -1,8 +1,9 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Wax } from 'wax-prosemirror-core'
 import { ThemeProvider } from 'styled-components'
 import waxTheme from './layout/waxTheme'
+import { JournalContext } from '../../xpub-journal/src'
 
 import productionWaxEditorConfig from './config/ProductionWaxEditorConfig'
 import ProductionWaxEditorLayout from './layout/ProductionWaxEditorLayout'
@@ -39,6 +40,8 @@ const ProductionWaxEditor = ({
   ...rest
 }) => {
   const handleAssetManager = () => onAssetManager(manuscriptId)
+  const journal = useContext(JournalContext)
+
   const waxUser = {
     userId: user.id || '-',
     userColor: {
@@ -63,7 +66,7 @@ const ProductionWaxEditor = ({
   // return useMemo(
   //   () => (
   return (
-    <ThemeProvider theme={waxTheme}>
+    <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
       <div
         className={validationStatus}
         // onBlur={e => {

@@ -80,7 +80,7 @@ const generateCss = async noPagedJs => {
     }
   }
 
-  console.log('textStyles.css: ', outputCss)
+  // console.log('textStyles.css: ', outputCss)
   return outputCss
 }
 
