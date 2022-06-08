@@ -2,8 +2,8 @@ import React, { useEffect } from 'react'
 import { useQuery, useMutation } from '@apollo/client'
 
 import { Spinner } from '@pubsweet/ui/dist/atoms'
-import { createTeamMutation } from '../../../component-review/src/components/DecisionPage'
 import {
+  CREATE_TEAM_MUTATION,
   GET_INVITATION_MANUSCRIPT_ID,
   UPDATE_INVITATION_STATUS,
 } from '../../../../queries/index'
@@ -22,12 +22,12 @@ const InvitationAcceptedPage = () => {
 
   const [updateInvitationStatus] = useMutation(UPDATE_INVITATION_STATUS, {
     onCompleted: () => {
-      localStorage.setItem('authorInvitationId', '')
+      localStorage.removeItem('authorInvitationId')
       window.location.href = '/kotahi/dashboard'
     },
   })
 
-  const [createTeam] = useMutation(createTeamMutation, {
+  const [createTeam] = useMutation(CREATE_TEAM_MUTATION, {
     onCompleted: () => {
       updateInvitationStatus({
         variables: { id: authorInvitationId, status: 'ACCEPTED' },

@@ -250,17 +250,23 @@ const resolvers = {
       const user = await models.User.find(ctx.user)
       const manuscriptId = manuscript.id
       const toEmail = receiverEmail
-      const purpose = 'inviting an author to accept a manuscript'
+      const purpose = 'Inviting an author to accept a manuscript'
       const status = 'UNANSWERED'
       const senderId = user.id
 
-      const newInvitation = await new Invitation({
-        manuscriptId,
-        toEmail,
-        purpose,
-        status,
-        senderId,
-      }).saveGraph()
+      let invitationId = ''
+
+      if (selectedTemplate === 'authorAcceptanceEmailTemplate') {
+        const newInvitation = await new Invitation({
+          manuscriptId,
+          toEmail,
+          purpose,
+          status,
+          senderId,
+        }).saveGraph()
+
+        invitationId = newInvitation.id
+      }
 
       try {
         await sendEmailNotification(receiverEmail, selectedTemplate, {
@@ -269,7 +275,7 @@ const resolvers = {
           receiverFirstName,
           shortId: manuscript.shortId,
           toEmail,
-          invitationId: newInvitation.id,
+          invitationId,
           purpose,
           status,
           senderId,

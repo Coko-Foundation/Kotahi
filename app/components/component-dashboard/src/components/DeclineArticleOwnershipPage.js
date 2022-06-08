@@ -15,7 +15,7 @@ const DeclineArticleOwnershipPage = ({ match }) => {
 
   const [updateInvitationStatus] = useMutation(UPDATE_INVITATION_STATUS, {
     onCompleted: () => {
-      localStorage.setItem('authorInvitationId', '')
+      localStorage.removeItem('authorInvitationId')
     },
   })
 
