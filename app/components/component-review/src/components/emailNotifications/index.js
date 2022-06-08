@@ -48,6 +48,10 @@ const EmailNotifications = ({
         value: 'articleAcceptanceEmailTemplate',
       },
       {
+        label: 'Author Acceptance Email Template',
+        value: 'authorAcceptanceEmailTemplate',
+      },
+      {
         label: 'Evaluation Complete notification',
         value: 'evaluationCompleteEmailTemplate',
       },
