@@ -217,8 +217,13 @@ const DecisionPage = ({ match }) => {
     return response
   }
 
-  const sendChannelMessageCb = async messageData =>
-    sendChannelMessage(messageData)
+  const sendChannelMessageCb = async messageData => {
+    const response = await sendChannelMessage({
+      variables: messageData,
+    })
+
+    return response
+  }
 
   return (
     <DecisionVersions
