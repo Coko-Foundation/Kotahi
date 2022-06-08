@@ -10,7 +10,7 @@ const publicationMetadata = {
     { type: 'electronic', value: '1090-6517' },
   ],
   copyright: { name: 'name', description: 'description', year: 'year' },
-  publisher: 'elife',
+  publisher: { publisherName: 'elife' },
   articleIdOnWebsite: 'x456789',
   publisherLogo:
     '' ||
