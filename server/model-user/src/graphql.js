@@ -3,6 +3,7 @@ const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
 const { existsSync } = require('fs')
 const path = require('path')
 const models = require('@pubsweet/models')
+const config = require('config')
 
 const Invitation = require('../../model-invitations/src/invitations')
 const sendEmailNotification = require('../../email-notifications')
@@ -279,6 +280,7 @@ const resolvers = {
           purpose,
           status,
           senderId,
+          appUrl: config['pubsweet-client'].baseUrl,
         })
         return { success: true }
       } catch (e) {

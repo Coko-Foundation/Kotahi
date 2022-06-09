@@ -1,6 +1,6 @@
 const AuthorAcceptanceEmailTemplate = ({
   articleTitle,
-  link,
+  appUrl,
   receiverFirstName,
   shortId,
   invitationId,
@@ -15,10 +15,10 @@ const AuthorAcceptanceEmailTemplate = ({
         <p><B><I>${articleTitle}</I></B> is said to have been written by you. Click on the link below to accept and access your article submission on our peer review platform. Alternatively, reject it if you wish.</p>
         <br>
         <br>
-        <a href=http://localhost:4000/acceptarticle/${invitationId} target="_blank">Acceptance magic link</a>
+        <a href=${appUrl}/acceptarticle/${invitationId} target="_blank">Acceptance magic link</a>
         <br>
         <br>
-        <a href=http://localhost:4000/decline/${invitationId} target="_blank">Rejection magic link</a>
+        <a href=${appUrl}/decline/${invitationId} target="_blank">Rejection magic link</a>
         <br>
         <br>here is invitation id ${invitationId}
         <br>
