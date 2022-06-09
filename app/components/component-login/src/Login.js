@@ -127,6 +127,8 @@ const Login = ({ logo = null, ...props }) => {
 
   // const journalName = config.journal.metadata.name
 
+  const nextpage = `/auth/orcid`
+
   return redirectLink ? (
     <Redirect to={redirectLink} />
   ) : (
@@ -137,13 +139,10 @@ const Login = ({ logo = null, ...props }) => {
           <RegisterInfoString>
             Kotahi uses ORCID <StyledORCIDIcon /> to identify authors and staff.
           </RegisterInfoString>
-          <LoginButton
-            onClick={() => (window.location = '/auth/orcid')}
-            primary
-          >
+          <LoginButton as="a" href={nextpage} primary>
             Login with ORCID
           </LoginButton>
-          <RegisterLinkButton as="a" href="/auth/orcid/">
+          <RegisterLinkButton as="a" href={nextpage}>
             Register with ORCID
           </RegisterLinkButton>
         </Content>

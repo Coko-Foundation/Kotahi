@@ -39,6 +39,7 @@ const ProductionWaxEditor = ({
   ...rest
 }) => {
   const handleAssetManager = () => onAssetManager(manuscriptId)
+
   const waxUser = {
     userId: user.id || '-',
     userColor: {
@@ -85,8 +86,6 @@ const ProductionWaxEditor = ({
               : ProductionWaxEditorNoCommentsLayout(readonly)
           }
           onChange={source => {
-            // eslint-disable-next-line no-console
-            console.log('onChange firign')
             saveSource(source)
           }}
           placeholder={placeholder}

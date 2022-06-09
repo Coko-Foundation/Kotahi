@@ -32,8 +32,6 @@ const Production = ({
   onAssetManager,
 }) => {
   const handleSave = debounce(source => {
-    // eslint-disable-next-line no-console
-    console.log('firing update manuscript')
     updateManuscript(manuscript.id, { meta: { source } })
   }, 2000)
 

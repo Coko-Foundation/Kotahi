@@ -4,27 +4,15 @@ import { get } from 'lodash'
 import { gql, useQuery, useMutation } from '@apollo/client'
 import PropTypes from 'prop-types'
 import { Select } from '../../../../shared'
+import {
+  CREATE_TEAM_MUTATION,
+  UPDATE_TEAM_MUTATION,
+} from '../../../../../queries'
 
 const editorOption = user => ({
   label: user.defaultIdentity?.name || user.email || user.username,
   value: user.id,
 })
-
-const teamFields = `
-  id
-  name
-  role
-  manuscript {
-    id
-  }
-  members {
-    id
-    user {
-      id
-      username
-    }
-  }
-`
 
 const query = gql`
   {
@@ -37,22 +25,6 @@ const query = gql`
         id
         name
       }
-    }
-  }
-`
-
-const updateTeamMutation = gql`
-  mutation($id: ID!, $input: TeamInput) {
-    updateTeam(id: $id, input: $input) {
-      ${teamFields}
-    }
-  }
-`
-
-const createTeamMutation = gql`
-  mutation($input: TeamInput!) {
-    createTeam(input: $input) {
-      ${teamFields}
     }
   }
 `
@@ -125,8 +97,8 @@ const AssignEditor = ({ teamRole, manuscript }) => {
 
   const { data, loading, error } = useQuery(query)
 
-  const [updateTeam] = useMutation(updateTeamMutation)
-  const [createTeam] = useMutation(createTeamMutation)
+  const [updateTeam] = useMutation(UPDATE_TEAM_MUTATION)
+  const [createTeam] = useMutation(CREATE_TEAM_MUTATION)
 
   if (loading || error) {
     return null
