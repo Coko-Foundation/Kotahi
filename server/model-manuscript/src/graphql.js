@@ -788,6 +788,9 @@ const resolvers = {
           }
         }
 
+        // Manuscript doesn't have evaluations
+        succeeded = false
+
         steps.push({
           stepLabel,
           succeeded,
