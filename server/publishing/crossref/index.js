@@ -53,14 +53,15 @@ const publishToCrossref = async manuscript => {
       'Could not publish to Crossref, as no DOI prefix is configured.',
     )
 
-  try {
-    if (config.crossref.publicationType === 'article')
-      await publishArticleToCrossref(manuscript)
-    // else if (config.crossref.publicationType === 'reviews')
-    else await publishReviewsToCrossref(manuscript)
-  } catch (err) {
-    throw new Error(`Publishing to Crossref failed: ${err.message}`)
-  }
+  if (config.crossref.publicationType === 'article')
+    await publishArticleToCrossref(manuscript).catch(err => {
+      throw new Error(err)
+    })
+  // else if (config.crossref.publicationType === 'reviews')
+  else
+    await publishReviewsToCrossref(manuscript).catch(err => {
+      throw new Error(err)
+    })
 }
 
 /** Get UTC timestamp in form yyyyMMddhhmmss */
