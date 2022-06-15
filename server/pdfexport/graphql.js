@@ -176,7 +176,8 @@ const pdfHandler = async manuscriptId => {
           .map(file => file.id)
 
         if (pdfFileIds.length > 0) {
-          await deleteFiles([pdfFileIds], true)
+          // console.log("I'm going to delete these: ", pdfFileIds)
+          // await deleteFiles([pdfFileIds], true)
         }
 
         const createdFile = await createFile(
@@ -198,7 +199,9 @@ const pdfHandler = async manuscriptId => {
         const { response } = err
 
         if (!response) {
-          return reject(new Error(`Request failed with message: ${err.code}`))
+          return reject(
+            new Error(`Request failed with message: ${err.code}, ${err}`),
+          )
         }
 
         const { status, data } = response
