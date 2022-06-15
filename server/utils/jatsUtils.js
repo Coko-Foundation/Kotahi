@@ -482,7 +482,6 @@ const fixTableCells = html => {
   while (deTabledHtml.indexOf('<td>') > -1) {
     const tableCellContent = deTabledHtml.split('<td>')[1].split('</td>')[0]
 
-    // TODO: remove all tables that are inside of table cells
     deTabledHtml = deTabledHtml.replace(
       `<td>${tableCellContent}`,
       `<!td!>${htmlToJats(tableCellContent)}`,
