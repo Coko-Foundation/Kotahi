@@ -39,7 +39,6 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
       const pdfWindow = window.open(`/${pdfUrl}`)
       pdfWindow.print()
     } else {
-      console.log(pdfUrl)
       const newWin = window.open(`${pdfUrl}`)
 
       if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
