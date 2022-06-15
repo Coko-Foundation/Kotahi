@@ -114,44 +114,6 @@ const commonUpdateManuscript = async (id, input, ctx) => {
     updatedMs.submission.editDate = new Date().toISOString().split('T')[0]
   }
 
-  const { source } = updatedMs.meta
-
-  if (typeof source === 'string') {
-    const images = base64Images(source)
-
-    if (images.length > 0) {
-      const uploadedImages = []
-
-      await Promise.all(
-        map(images, async image => {
-          if (image.blob) {
-            const uploadedImage = await uploadImage(image, updatedMs.id)
-            uploadedImages.push(uploadedImage)
-          }
-        }),
-      )
-
-      const uploadedImagesWithUrl = await getFilesWithUrl(uploadedImages)
-
-      const $ = cheerio.load(source)
-
-      map(images, (image, index) => {
-        const elem = $('img').get(image.index)
-        const $elem = $(elem)
-        $elem.attr('data-fileid', uploadedImagesWithUrl[index].id)
-        $elem.attr('alt', uploadedImagesWithUrl[index].name)
-        $elem.attr(
-          'src',
-          uploadedImagesWithUrl[index].storedObjects.find(
-            storedObject => storedObject.type === 'medium',
-          ).url,
-        )
-      })
-
-      updatedMs.meta.source = $.html()
-    }
-  }
-
   return models.Manuscript.query().updateAndFetchById(id, updatedMs)
 }
 
@@ -351,8 +313,49 @@ const resolvers = {
         { relate: true },
       )
 
-      manuscript.manuscriptVersions = []
-      return manuscript
+      // Base64 conversion moved to server-side as a performance imporvement
+      const { source } = manuscript.meta
+
+      if (typeof source === 'string') {
+        const images = await base64Images(source)
+
+        if (images.length > 0) {
+          const uploadedImages = await Promise.all(
+            map(images, async image => {
+              const uploadedImage = await uploadImage(image, manuscript.id)
+              return uploadedImage
+            }),
+          )
+
+          const uploadedImagesWithUrl = await getFilesWithUrl(uploadedImages)
+
+          const $ = cheerio.load(source)
+
+          map(images, (image, index) => {
+            const elem = $('img').get(index)
+            const $elem = $(elem)
+            $elem.attr('data-fileid', uploadedImagesWithUrl[index].id)
+            $elem.attr('alt', uploadedImagesWithUrl[index].name)
+            $elem.attr(
+              'src',
+              uploadedImagesWithUrl[index].storedObjects.find(
+                storedObject => storedObject.type === 'medium',
+              ).url,
+            )
+          })
+
+          manuscript.meta.source = $.html()
+        }
+      }
+
+      const updatedManuscript = models.Manuscript.query().updateAndFetchById(
+        manuscript.id,
+        manuscript,
+      )
+
+      updatedManuscript.manuscriptVersions = []
+
+      return updatedManuscript
     },
     importManuscripts(_, props, ctx) {
       if (isImportInProgress) return false
