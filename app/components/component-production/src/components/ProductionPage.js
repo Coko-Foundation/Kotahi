@@ -151,7 +151,7 @@ const ProductionPage = ({ match, ...props }) => {
               manuscript={manuscript}
               resetMakingPdf={() => {
                 // refetch({ id: match.params.version, manuscriptId: manuscript.id })
-                console.log('resetMakingPdf fired!')
+                // console.log('resetMakingPdf fired!')
                 setMakingPdf(false)
               }}
             />
