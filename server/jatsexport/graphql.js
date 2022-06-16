@@ -90,7 +90,7 @@ const jatsHandler = async manuscriptId => {
   const jatsResult = validateJats(jats) // this returns empty array if it's valid, array of errors if not
 
   if (jatsResult.length) {
-    parseError = xmlResult
+    parseError = jatsResult
   }
 
   return { jats, error: parseError }

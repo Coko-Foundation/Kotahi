@@ -39,12 +39,12 @@ const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
       const pdfWindow = window.open(`/${pdfUrl}`)
       pdfWindow.print()
     } else {
-      const newWin = window.open(`/${pdfUrl}`)
+      const newWin = window.open(`${pdfUrl}`)
 
       if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
         // if popups are blocked, try downloading it instead.
         const link = document.createElement('a')
-        link.href = `/${pdfUrl}`
+        link.href = `${pdfUrl}`
         link.download = `${manuscript.meta.title || 'title'}.pdf`
         link.target = '_blank'
         link.click()

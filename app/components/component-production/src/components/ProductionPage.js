@@ -151,6 +151,7 @@ const ProductionPage = ({ match, ...props }) => {
               manuscript={manuscript}
               resetMakingPdf={() => {
                 // refetch({ id: match.params.version, manuscriptId: manuscript.id })
+                // console.log('resetMakingPdf fired!')
                 setMakingPdf(false)
               }}
             />
@@ -159,7 +160,9 @@ const ProductionPage = ({ match, ...props }) => {
             <DownloadJatsComponent
               manuscript={manuscript}
               resetMakingJats={() => {
-                setMakingJats(false)
+                setTimeout(() => {
+                  setMakingJats(false)
+                }, 1000)
               }}
             />
           ) : null}

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import { Dropdown } from '@pubsweet/ui'
 import { makeJats } from '../../../../../server/utils/jatsUtils'
 
-let html = ''
+const html = ''
 
 const buildArticleMetadata = metadata => {
   const articleMetadata = {}
