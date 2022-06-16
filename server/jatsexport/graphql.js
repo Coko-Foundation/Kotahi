@@ -3,6 +3,7 @@ const { XMLValidator } = require('fast-xml-parser')
 const { makeJats } = require('../utils/jatsUtils')
 const articleMetadata = require('../pdfexport/pdfTemplates/articleMetadata')
 const publicationMetadata = require('../pdfexport/pdfTemplates/publicationMetadata')
+const validateJats = require('./validation')
 
 const failXML = false // if this is true, we pass errorJats (which is invalid XML) to the parser
 
@@ -40,10 +41,19 @@ const jatsHandler = async manuscriptId => {
 
   // check if the output is valid XML – this is NOT checking whether this is valid JATS
   let parseError = null
-  const result = XMLValidator.validate(failXML ? errorJats : jats) // this returns true if it's valid, error object if not
+  const xmlResult = XMLValidator.validate(failXML ? errorJats : jats) // this returns true if it's valid, error object if not
 
-  if (typeof result === 'object') {
-    parseError = result
+  if (typeof xmlResult === 'object') {
+    parseError = xmlResult
+    return { jats, error: parseError }
+  }
+
+  // if we have valid XML, then check for valid jats
+
+  const jatsResult = validateJats(jats) // this returns empty array if it's valid, array of errors if not
+
+  if (jatsResult.length) {
+    parseError = xmlResult
   }
 
   return { jats, error: parseError }

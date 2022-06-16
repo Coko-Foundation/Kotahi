@@ -88,8 +88,6 @@ const ProductionWaxEditor = ({
               : ProductionWaxEditorNoCommentsLayout(readonly)
           }
           onChange={source => {
-            // eslint-disable-next-line no-console
-            console.log('onChange firign')
             saveSource(source)
           }}
           placeholder={placeholder}

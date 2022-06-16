@@ -9,6 +9,7 @@ import MetadataSubmittedDate from '../metadata/MetadataSubmittedDate'
 import MetadataAuthors from '../metadata/MetadataAuthors'
 import MetadataStreamLined from '../metadata/MetadataStreamLined'
 import ControlPageLink from '../ControlPageLink'
+
 import Reviews from '../Reviews'
 import VersionTitle from './VersionTitle'
 

@@ -1,3 +1,3 @@
 /* eslint-disable import/prefer-default-export */
 
-export { default as FormBuilderPage } from './submission/FormBuilderPage'
+export { default as FormBuilderPage } from './FormBuilderPage'
