@@ -18,18 +18,7 @@ const fixMathTags = html => {
   return $.html()
 }
 
-// This is the dist file inside of MathJax
-// We are counting on it to be in the same place – if MathJax is updated, it's possible this could break?
-// NOTE: this is currently using the remote version of MathJax because that includes fonts. That doesn't break PagedJS
-// However: we might want to go back (and figure out how to include fonts) if it turns out that does break PagedJS somewhere.
-
-// const mathjaxfile = require.resolve('mathjax/es5/tex-mml-chtml.js')
-
-// applyTemplate.js
-
-// TODO:
-// 1. check that articleTemplate.njk mirrors what's in article.js
-// 1. Sort out all the different CSSes and make sure that they are being applied correctly
+//  Sort out all the different CSSes and make sure that they are being applied correctly
 //    ./pdfTemplates/styles.css: this is from Julien & Harshna, used for PDF export
 //    /app/components/wax-collab/src/layout/EditorElements.js: this exports styles used inside of Wax; some of this should be overwritten.
 //			split this into base styles & editor styles
@@ -129,8 +118,6 @@ const applyTemplate = async (articleData, includeFontLinks) => {
 	</head>`,
     )
   }
-
-  // TODO: why is this coming out over GraphQL with escaped newlines?
 
   renderedHtml = renderedHtml.replace(/\n|\r|\t/g, '')
   return renderedHtml

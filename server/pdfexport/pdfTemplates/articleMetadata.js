@@ -51,26 +51,20 @@ const articleMetadata = manuscript => {
   ) {
     meta.authors = []
 
-    for (let i = 0; i < manuscript.submission.authors.length; i += 1) {
-      meta.authors[i] = {
-        email: manuscript.submission.authors[i].email || '',
-        firstName: manuscript.submission.authors[i].firstName || '',
-        lastName: manuscript.submission.authors[i].lastName || '',
-        affiliation: manuscript.submission.authors[i].affiliation || '',
-        id: manuscript.submission.authors[i].id || '',
-      }
-    }
+    meta.authors = manuscript.submission.authors.map(author => ({
+      email: author.email || '',
+      firstName: author.firstName || '',
+      lastName: author.lastName || '',
+      affiliation: author.affiliation || '',
+      id: author.id || '',
+    }))
   }
 
   // replace things by what's in the user version if we need to.
 
-  const userKeys = Object.keys(userArticleMetadata)
-
-  for (let i = 0; i < userKeys.length; i += 1) {
-    if (userArticleMetadata[userKeys]) {
-      meta[userKeys] = userArticleMetadata[userKeys]
-    }
-  }
+  Object.entries(userArticleMetadata).forEach(([key, value]) => {
+    if (value) meta[key] = value
+  })
 
   return meta
 }
