@@ -68,10 +68,7 @@ const resolvers = {
       let returnedJats = { link: '', jats }
 
       if (jats) {
-        returnedJats = await makeZipFile(
-          manuscriptId,
-          jats /*, supplementaryFiles */,
-        )
+        returnedJats = await makeZipFile(manuscriptId, jats)
       }
 
       return {

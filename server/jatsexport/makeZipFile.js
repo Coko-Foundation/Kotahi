@@ -1,18 +1,22 @@
+const fs = require('fs-extra')
+const path = require('path')
 const htmlparser2 = require('htmlparser2')
 const cheerio = require('cheerio')
+const { promisify } = require('util')
 const { createFile, deleteFiles, File } = require('@coko/server')
 
-const makeZipFile = async (manuscriptId, jats, supplementaryFiles) => {
+const copyFile = promisify(fs.copyFile)
+
+const makeZipFile = async (manuscriptId, jats) => {
   // jats is a string with the processed JATS in it
-  // supplementary files is a list of file IDs for supplementary files, if there are any
 
   console.log('JATS: ', jats)
 
-  const files = await File.query().where({
+  const manuscriptFiles = await File.query().where({
     objectId: manuscriptId,
   })
 
-  // console.log('Files: ', files)
+  // console.log('Files: ', manuscriptFiles)
 
   const imageList = []
   const suppFileList = []
@@ -26,10 +30,10 @@ const makeZipFile = async (manuscriptId, jats, supplementaryFiles) => {
   $('graphic').each(async (index, el) => {
     const $elem = $(el)
     const fileId = $elem.attr('id').replace('graphic_', '')
-    const fileData = files.find(x => x.id === fileId)
+    const imageFileData = manuscriptFiles.find(x => x.id === fileId)
     // console.log(fileData)
 
-    imageList[imageList.length] = fileData
+    imageList[imageList.length] = imageFileData
 
     // should come back with something liek this inside of <figure>:
     // 	<alternatives>
@@ -39,8 +43,8 @@ const makeZipFile = async (manuscriptId, jats, supplementaryFiles) => {
 
     let outHtml = `<alternatives>`
 
-    for (let i = 0; i < fileData.storedObjects.length; i++) {
-      outHtml += `<graphic title="${fileData.name}_${fileData.storedObjects[i].type}" xlink:href="images/${fileData.storedObjects[i].key}" />`
+    for (let i = 0; i < imageFileData.storedObjects.length; i++) {
+      outHtml += `<graphic title="${imageFileData.name}_${imageFileData.storedObjects[i].type}" xlink:href="images/${imageFileData.storedObjects[i].key}" />`
     }
 
     outHtml += `</alternatives>`
@@ -49,13 +53,39 @@ const makeZipFile = async (manuscriptId, jats, supplementaryFiles) => {
     return $elem
   })
 
-  const outJats = $.html()
+  let outJats = $.html()
 
   // 3. check if there are supplementary files
   // 4. if so, get a list of all the files
 
+  const supplementaryFiles = manuscriptFiles.filter(x =>
+    x.tags.includes('supplementary'),
+  )
+
   if (supplementaryFiles && supplementaryFiles.length) {
     console.log('Going through supplementary files')
+    // console.log(supplementaryFiles)
+    // figure out how to mark up supplementary files in JATS
+
+    let supplementaryJats = ''
+
+    // loop through them, for each one, add this to  supplementaryJats:
+    for (let i = 0; i < supplementaryFiles.length; i++) {
+      const myOriginal = supplementaryFiles[i].storedObjects.find(
+        x => x.type === 'original',
+      )
+
+      suppFileList[suppFileList.length] = myOriginal
+      const mimeType = myOriginal.mimeType.split('/')
+
+      // console.log(myOriginal)
+      supplementaryJats += `<supplementary-material id="supplementary-material-${i}" xlink:href="supplementary/${supplementaryFiles[i].name}" mimetype="${mimeType[0]}" mime-subtype="${mimeType[1]}" />`
+    }
+
+    outJats = outJats.replace(
+      '</body>',
+      `<sec sec-type="supplementary-files"><title>Supplementary Files</title>${supplementaryJats}</sec></body>`,
+    )
   }
 
   // 5. make a directory with the JATS file as index.xml
@@ -68,6 +98,7 @@ const makeZipFile = async (manuscriptId, jats, supplementaryFiles) => {
   }
 
   if (suppFileList.lenght) {
+    console.log('Supplementary files: ', suppFileList)
     // 5.4. make a subdir "supplementary"
     // 5.5. get all the supplementary files
     // 5.6. put all of those files in the subdir
