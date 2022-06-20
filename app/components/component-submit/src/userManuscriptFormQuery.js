@@ -1,41 +1,14 @@
 import { gql } from '@apollo/client'
 
-export const commentFields = `
-  id
-  commentType
-  content
-  files {
-    id
-    created
-    updated
-    name
-    tags
-    storedObjects {
-      key
-      mimetype
-      url
-    }
-  }
-`
-
 export const reviewFields = `
   id
   created
   updated
-  decisionComment {
-    ${commentFields}
-  }
-  reviewComment {
-    ${commentFields}
-  }
-  confidentialComment {
-    ${commentFields}
-  }
+  jsonData
   isDecision
   isHiddenFromAuthor
   isHiddenReviewerName
   canBePublishedPublicly
-  recommendation
   user {
     id
     defaultIdentity {
@@ -44,6 +17,45 @@ export const reviewFields = `
       identifier
     }
     username
+  }
+`
+
+const formFields = `
+  structure {
+    name
+    description
+    haspopup
+    popuptitle
+    popupdescription
+    children {
+      title
+      shortDescription
+      id
+      component
+      name
+      description
+      doiValidation
+      placeholder
+      parse
+      format
+      options {
+        id
+        label
+        value
+        labelColor
+      }
+      validate {
+        id
+        label
+        value
+      }
+      validateValue {
+        minChars
+        maxChars
+        minSize
+      }
+      hideFromAuthors
+    }
   }
 `
 
@@ -58,8 +70,11 @@ export const fragmentFields = `
     name
     tags
     storedObjects {
+      extension
       key
       mimetype
+      size
+      type
       url
     }
   }
@@ -144,43 +159,16 @@ const query = gql`
       }
     }
 
-    formForPurposeAndCategory(purpose: "submit", category: "submission") {
-      structure {
-        name
-        description
-        haspopup
-        popuptitle
-        popupdescription
-        children {
-          title
-          shortDescription
-          id
-          component
-          name
-          description
-          doiValidation
-          placeholder
-          parse
-          format
-          options {
-            id
-            label
-            value
-            labelColor
-          }
-          validate {
-            id
-            label
-            value
-          }
-          validateValue {
-            minChars
-            maxChars
-            minSize
-          }
-          hideFromAuthors
-        }
-      }
+    submissionForm: formForPurposeAndCategory(purpose: "submit", category: "submission") {
+      ${formFields}
+    }
+
+    decisionForm: formForPurposeAndCategory(purpose: "decision", category: "decision") {
+      ${formFields}
+    }
+
+    reviewForm: formForPurposeAndCategory(purpose: "review", category: "review") {
+      ${formFields}
     }
   }
 `

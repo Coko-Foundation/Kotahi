@@ -42,7 +42,6 @@ class Review extends BaseModel {
   static get schema() {
     return {
       properties: {
-        recommendation: { type: ['string', 'null'] },
         manuscriptId: { type: 'string', format: 'uuid' },
         userId: { type: 'string', format: 'uuid' },
         user: { type: ['object', 'null'] },
@@ -50,13 +49,14 @@ class Review extends BaseModel {
         isHiddenFromAuthor: { type: ['boolean', 'true'] },
         isHiddenReviewerName: { type: ['boolean', 'true'] },
         canBePublishedPublicly: { type: ['boolean', 'false'] },
+        jsonData: {},
       },
     }
   }
 
   static get relationMappings() {
     /* eslint-disable global-require */
-    const { Manuscript, User, ReviewComment } = require('@pubsweet/models')
+    const { Manuscript, User } = require('@pubsweet/models')
 
     return {
       manuscript: {
@@ -75,44 +75,8 @@ class Review extends BaseModel {
           to: 'users.id',
         },
       },
-      comments: {
-        relation: BaseModel.HasManyRelation,
-        modelClass: ReviewComment,
-        join: {
-          from: 'reviews.id',
-          to: 'review_comments.reviewId',
-        },
-      },
     }
   }
-
-  async $afterGet() {
-    this.decisionComment = await this.$relatedQuery('comments')
-      .where('commentType', 'decision')
-      .first()
-    this.reviewComment = await this.$relatedQuery('comments')
-      .where('commentType', 'review')
-      .first()
-
-    this.confidentialComment = await this.$relatedQuery('comments')
-      .where('commentType', 'confidential')
-      .first()
-
-    return true
-  }
-
-  // async $beforeDelete() {
-  //   const File = require('../../model-file/src/file')
-  //   const files = await File.query().where({
-  //     objectId: this.id,
-  //     objectType: 'Review',
-  //   })
-  //   if (files.length > 0) {
-  //     files.forEach(async fl => {
-  //       await new File(fl).delete()
-  //     })
-  //   }
-  // }
 }
 
 Review.type = 'Review'

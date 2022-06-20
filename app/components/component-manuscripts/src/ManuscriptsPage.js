@@ -24,6 +24,7 @@ import { updateMutation } from '../../component-submit/src/components/SubmitPage
 import { publishManuscriptMutation } from '../../component-review/src/components/queries'
 import getUriQueryParams from './getUriQueryParams'
 import Manuscripts from './Manuscripts'
+import { validateDoi } from '../../../shared/commsUtils'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 const chatRoomId = fnv.hash(config['pubsweet-client'].baseUrl).hex()
@@ -133,6 +134,7 @@ const ManuscriptsPage = ({ history }) => {
 
   const [update] = useMutation(updateMutation)
   const [publishManuscript] = useMutation(publishManuscriptMutation)
+  const client = useApolloClient()
 
   const publishManuscripts = manuscriptId => {
     publishManuscript({
@@ -140,12 +142,9 @@ const ManuscriptsPage = ({ history }) => {
     })
   }
 
-  const client = useApolloClient()
-
   return (
     <Manuscripts
       chatRoomId={chatRoomId}
-      client={client}
       configuredColumnNames={configuredColumnNames}
       confrimBulkDelete={confrimBulkDelete}
       deleteManuscriptMutations={deleteManuscriptMutations}
@@ -163,6 +162,7 @@ const ManuscriptsPage = ({ history }) => {
       sortName={sortName}
       systemWideDiscussionChannel={systemWideDiscussionChannel}
       urlFrag={urlFrag}
+      validateDoi={validateDoi(client)}
     />
   )
 }

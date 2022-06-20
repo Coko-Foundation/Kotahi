@@ -18,9 +18,9 @@ const mapper = {
 const mapProps = args => ({
   onAssetManager: manuscriptId =>
     new Promise((resolve, reject) => {
-      const { withModal } = args
-
-      const { showModal, hideModal } = withModal
+      const {
+        withModal: { showModal, hideModal },
+      } = args
 
       const handleImport = async selectedFileIds => {
         const {

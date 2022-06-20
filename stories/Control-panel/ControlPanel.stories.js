@@ -984,8 +984,6 @@ const props = {
   },
   updateManuscript: {},
   onChange: {},
-  confirming: false,
-  toggleConfirming: {},
   allUsers: [
     {
       __typename: 'User',

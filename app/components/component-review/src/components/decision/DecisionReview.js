@@ -9,6 +9,7 @@ import useCurrentUser from '../../../../../hooks/useCurrentUser'
 import ShareIcon from '../../../../../shared/icons/share'
 import { UserCombo, Primary, Secondary, UserInfo } from '../../../../shared'
 import { UserAvatar } from '../../../../component-avatar/src'
+import { ensureJsonIsParsed } from '../../../../../shared/objectUtils'
 
 const ToggleReview = ({ open, toggle }) => (
   <Button onClick={toggle} plain>
@@ -22,7 +23,7 @@ const Bullet = styled.span`
     props.recommendation
       ? props.journal?.recommendations?.find(
           item => item.value === props.recommendation,
-        ).color
+        )?.color
       : 'black'};
   border-radius: 100%;
   display: inline-block;
@@ -179,6 +180,7 @@ const ReviewBody = styled.div`
 
 const DecisionReview = ({
   review,
+  reviewForm,
   reviewer,
   manuscriptId,
   teams,
@@ -189,12 +191,13 @@ const DecisionReview = ({
   const currentUser = useCurrentUser()
 
   const {
-    recommendation,
     isHiddenFromAuthor,
     isHiddenReviewerName,
     id,
     canBePublishedPublicly,
   } = review
+
+  const recommendation = ensureJsonIsParsed(review.jsonData)?.verdict
 
   const { user, ordinal } = reviewer
 
@@ -229,7 +232,12 @@ const DecisionReview = ({
 
       {open && (
         <ReviewBody>
-          <Review review={review} showUserInfo={false} user={currentUser} />
+          <Review
+            review={review}
+            reviewForm={reviewForm}
+            showUserInfo={false}
+            user={currentUser}
+          />
         </ReviewBody>
       )}
     </Root>
@@ -248,11 +256,13 @@ ReviewHeading.propTypes = {
   journal: PropTypes.object,
   open: PropTypes.bool.isRequired,
   ordinal: PropTypes.number.isRequired,
-  recommendation: PropTypes.string.isRequired,
+  recommendation: PropTypes.string,
   toggleOpen: PropTypes.func.isRequired,
   // eslint-disable-next-line
   user: PropTypes.object.isRequired,
 }
+ReviewHeading.defaultProps = { recommendation: null }
+
 ToggleReview.propTypes = {
   open: PropTypes.bool.isRequired,
   toggle: PropTypes.func.isRequired,

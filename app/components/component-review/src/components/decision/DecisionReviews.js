@@ -25,6 +25,7 @@ const getCompletedReviews = (manuscript, currentUser) => {
 
 const DecisionReviews = ({
   reviewers,
+  reviewForm,
   manuscript,
   updateReview,
   canHideReviews,
@@ -66,6 +67,7 @@ const DecisionReviews = ({
                 open
                 review={review}
                 reviewer={{ user: review.user, ordinal: index + 1 }}
+                reviewForm={reviewForm}
                 teams={manuscript.teams}
                 updateReview={updateReview}
               />

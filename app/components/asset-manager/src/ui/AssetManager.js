@@ -4,7 +4,9 @@ import { indexOf, forEach, find } from 'lodash'
 
 import DialogModal from './Modal/DialogModal'
 
-import { ActionSection, FilesTable, FileDetails } from '../ui'
+import ActionSection from './ActionSection'
+import FilesTable from './FilesTable'
+import FileDetails from './FileDetails'
 
 const OuterWrapper = styled.div`
   display: flex;
@@ -61,20 +63,20 @@ class AssetManager extends Component {
 
   findSelected(id) {
     const { files } = this.props
-    if (files && id) {
-      return find(files, { id })
-    }
+    if (files && id) return find(files, { id })
     return undefined
   }
 
   checkboxSelection(id, all = undefined) {
     const { checkboxSelected } = this.state
+
     if (all) {
       const { files } = this.props
 
       if (checkboxSelected.length === files.length) {
         return this.setState({ checkboxSelected: [] })
       }
+
       const temp = []
       forEach(files, file => temp.push(file.id))
       return this.setState({ checkboxSelected: temp })
@@ -84,6 +86,7 @@ class AssetManager extends Component {
       checkboxSelected.push(id)
     } else {
       const found = indexOf(checkboxSelected, id)
+
       if (found !== -1) {
         checkboxSelected.splice(found, 1)
       } else {
@@ -129,9 +132,8 @@ class AssetManager extends Component {
   importHandler() {
     const { handleImport } = this.props
     const { checkboxSelected } = this.state
-    if (checkboxSelected.length > 0) {
-      return handleImport(checkboxSelected)
-    }
+
+    if (checkboxSelected.length > 0) return handleImport(checkboxSelected)
     return false
   }
 
@@ -143,6 +145,7 @@ class AssetManager extends Component {
 
   renderBody() {
     const { files, withImport, loading, refetching } = this.props
+
     const {
       selectedItem,
       name,
@@ -160,7 +163,12 @@ class AssetManager extends Component {
       { label: 'name', columnName: 'Name', width: 37, sortable: true },
       { label: 'updated', columnName: 'Updated', width: 28, sortable: true },
       { label: 'size', columnName: 'Size', width: 15, sortable: false },
-      { label: 'mimetype', columnName: 'MIME Type', width: 17, sortable: false },
+      {
+        label: 'mimetype',
+        columnName: 'MIME Type',
+        width: 17,
+        sortable: false,
+      },
       { label: 'inUse', columnName: 'In Use', width: 1, sortable: false },
     ]
 
@@ -189,7 +197,12 @@ class AssetManager extends Component {
         </InnerWrapper>
 
         <ActionSection
-          deleteDisabled={checkboxSelected.length === 0 || files.filter(file => checkboxSelected.includes(file.id) && file.inUse).length > 0}
+          deleteDisabled={
+            checkboxSelected.length === 0 ||
+            files.filter(
+              file => checkboxSelected.includes(file.id) && file.inUse,
+            ).length > 0
+          }
           deleteHandler={this.deleteHandler}
           importDisabled={checkboxSelected.length === 0}
           importHandler={this.importHandler}

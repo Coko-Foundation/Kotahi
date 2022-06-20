@@ -199,13 +199,15 @@ const bufferToStream = myBuffer => {
 
 const imageFinder = (source, fileId) => {
   let found = false
+
   if (source && source.length > 0) {
     const $ = cheerio.load(source)
 
     $('img').each((i, elem) => {
       const $elem = $(elem)
-      const _fileId = $elem.attr('data-fileid')
-      if (_fileId === fileId) {
+      const fileIdAttribute = $elem.attr('data-fileid')
+
+      if (fileIdAttribute === fileId) {
         found = true
       }
     })

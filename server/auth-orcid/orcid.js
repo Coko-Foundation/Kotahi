@@ -32,7 +32,7 @@ module.exports = app => {
 
         try {
           user = await User.query()
-            .joinRelation('identities')
+            .joinRelated('identities')
             .where('identities.identifier', params.orcid)
             .where('identities.type', 'orcid')
             .throwIfNotFound()

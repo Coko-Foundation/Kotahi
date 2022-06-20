@@ -101,29 +101,31 @@ const resolvers = {
           const { key, order } = option
           return { column: key, order }
         })
-        
-        files = await File.query().where({ objectId: entityId }).orderBy(orderByParams)
+
+        files = await File.query()
+          .where({ objectId: entityId })
+          .orderBy(orderByParams)
       } else {
-        files = await File.query().where({ objectId: entityId})
+        files = await File.query().where({ objectId: entityId })
       }
-      
+
       const imageFiles = files.filter(file =>
         file.tags.includes('manuscriptImage'),
       )
 
       if (includeInUse) {
-        const manuscript = await models.Manuscript.query().findById(
-          entityId
-        )
+        const manuscript = await models.Manuscript.query().findById(entityId)
 
         imageFiles.forEach(file => {
           const foundIn = []
           const { source } = manuscript.meta
+
           if (source && typeof source === 'string') {
             if (imageFinder(source, file.id)) {
               foundIn.push(manuscript.id)
             }
           }
+
           file.inUse = foundIn.length > 0
         })
       }
@@ -162,7 +164,7 @@ const resolvers = {
         null,
         null,
         [meta.fileType],
-        meta.reviewCommentId || meta.manuscriptId,
+        meta.reviewId || meta.manuscriptId,
       )
 
       const data = await getFileWithUrl(createdFile)

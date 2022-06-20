@@ -64,7 +64,6 @@ export default {
         status
         reviews {
           open
-          recommendation
           created
           user {
             id

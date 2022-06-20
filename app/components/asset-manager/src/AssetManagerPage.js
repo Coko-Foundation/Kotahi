@@ -12,7 +12,7 @@ import {
   filesUploadedSubscription,
   filesDeletedSubscription,
   fileUpdatedSubscription,
-} from '../src/queries'
+} from './queries'
 
 const mapper = {
   getEntityFilesQuery,
@@ -28,8 +28,10 @@ const mapper = {
 const mapProps = args => ({
   files: get(args.getEntityFilesQuery, 'data.getEntityFiles'),
   uploadFiles: (manuscriptId, files) => {
-    const { uploadFilesMutation } = args
-    const { uploadFiles } = uploadFilesMutation
+    const {
+      uploadFilesMutation: { uploadFiles },
+    } = args
+
     return uploadFiles({
       variables: {
         files,
@@ -39,8 +41,10 @@ const mapProps = args => ({
     })
   },
   deleteFiles: ids => {
-    const { deleteFilesMutation } = args
-    const { deleteFiles } = deleteFilesMutation
+    const {
+      deleteFilesMutation: { deleteFiles },
+    } = args
+
     return deleteFiles({
       variables: {
         ids,
@@ -48,8 +52,10 @@ const mapProps = args => ({
     })
   },
   refetch: (manuscriptId, sortingParams) => {
-    const { getEntityFilesQuery } = args
-    const { refetch } = getEntityFilesQuery
+    const {
+      getEntityFilesQuery: { refetch },
+    } = args
+
     refetch({
       input: {
         entityId: manuscriptId,
@@ -59,8 +65,10 @@ const mapProps = args => ({
     })
   },
   updateFile: (fileId, data) => {
-    const { updateFileMutation } = args
-    const { updateFile } = updateFileMutation
+    const {
+      updateFileMutation: { updateFile },
+    } = args
+
     return updateFile({
       variables: {
         input: {
@@ -94,13 +102,13 @@ const Connected = props => {
         refetch,
       }) => (
         <AssetManager
-          manuscriptId={manuscriptId}
           deleteFiles={deleteFiles}
           files={files}
           handleImport={handleImport}
           hideModal={hideModal}
           isOpen={isOpen}
           loading={loading}
+          manuscriptId={manuscriptId}
           refetch={refetch}
           refetching={refetching}
           updateFile={updateFile}

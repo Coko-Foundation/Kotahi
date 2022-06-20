@@ -1,6 +1,7 @@
 import styled, { css } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
+import lightenBy from '../../../../shared/lightenBy'
 
 export const AdminSection = styled.div`
   margin-bottom: calc(${th('gridUnit')} * 3);
@@ -93,6 +94,29 @@ export const RecommendationInputContainer = styled.div`
 export const StyledNotifyButton = styled(Button)`
   cursor: pointer;
   height: 40px;
+`
+
+export const Heading = styled.span`
+  font-weight: inherit;
+  overflow: hidden;
+  padding: 0 1em 0 0;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+`
+
+export const Cell = styled.span`
+  grid-column: span 2 / span 2;
+  padding: 0;
+`
+
+export const Affiliation = styled.span`
+  color: ${lightenBy('colorText', 0.3)};
+  margin-left: 0.5em;
+`
+
+export const Email = styled.span`
+  color: ${th('colorPrimary')};
+  margin-left: 1em;
 `
 
 export {

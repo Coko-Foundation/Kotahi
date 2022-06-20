@@ -33,7 +33,7 @@ import BulkDeleteModal from './BulkDeleteModal'
 import getColumnsProps from './getColumnsProps'
 import getUriQueryParams from './getUriQueryParams'
 import FilterSortHeader from './FilterSortHeader'
-import { validateManuscript } from '../../../shared/manuscriptUtils'
+import { validateManuscriptSubmission } from '../../../shared/manuscriptUtils'
 
 const HeadingInFlexRow = styled(Heading)`
   flex-grow: 10;
@@ -56,7 +56,7 @@ const FlexRow = styled.div`
 
 const Manuscripts = ({ history, ...props }) => {
   const {
-    client,
+    validateDoi,
     setReadyToEvaluateLabels,
     deleteManuscriptMutations,
     importManuscripts,
@@ -172,10 +172,10 @@ const Manuscripts = ({ history, ...props }) => {
       manuscriptsBlockedFromPublishing.concat([manuscript.id]),
     )
 
-    const hasInvalidFields = await validateManuscript(
+    const hasInvalidFields = await validateManuscriptSubmission(
       manuscript.submission,
-      fieldDefinitions,
-      client,
+      data.formForPurposeAndCategory?.structure,
+      validateDoi,
     )
 
     if (hasInvalidFields.filter(Boolean).length === 0) {

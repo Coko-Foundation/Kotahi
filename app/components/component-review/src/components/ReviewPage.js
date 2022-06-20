@@ -1,10 +1,9 @@
 import React, { useRef, useEffect } from 'react'
 import { useMutation, useQuery, gql } from '@apollo/client'
-import { Formik } from 'formik'
-// import { cloneDeep } from 'lodash'
 import config from 'config'
 import { Redirect } from 'react-router-dom'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import { set } from 'lodash'
 import ReviewLayout from './review/ReviewLayout'
 import { Heading, Page, Spinner } from '../../../shared'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
@@ -35,40 +34,13 @@ const deleteFileMutation = gql`
   }
 `
 
-const commentFields = `
-id
-commentType
-content
-files {
-  id
-  created
-  updated
-  name
-  tags
-  storedObjects {
-    key
-    mimetype
-    url
-  }
-}
-`
-
 const reviewFields = `
   id
   created
   updated
-  reviewComment {
-    ${commentFields}
-  }
-  confidentialComment {
-    ${commentFields}
-  }
-  decisionComment {
-    ${commentFields}
-  }
+  jsonData
   isDecision
   isHiddenReviewerName
-  recommendation
   canBePublishedPublicly
   user {
     id
@@ -156,6 +128,44 @@ const fragmentFields = `
   }
 `
 
+const formStructure = `
+  structure {
+    name
+    description
+    haspopup
+    popuptitle
+    popupdescription
+    children {
+      title
+      shortDescription
+      id
+      component
+      name
+      description
+      doiValidation
+      placeholder
+      parse
+      format
+      options {
+        id
+        label
+        labelColor
+        value
+      }
+      validate {
+        id
+        label
+        value
+      }
+      validateValue {
+        minChars
+        maxChars
+        minSize
+      }
+    }
+  }
+`
+
 const query = gql`
   query($id: ID!) {
     currentUser {
@@ -177,41 +187,16 @@ const query = gql`
       }
     }
 
-    formForPurposeAndCategory(purpose: "submit", category: "submission") {
-      structure {
-        name
-        description
-        haspopup
-        popuptitle
-        popupdescription
-        children {
-          title
-          shortDescription
-          id
-          component
-          name
-          description
-          doiValidation
-          placeholder
-          parse
-          format
-          options {
-            id
-            label
-            value
-          }
-          validate {
-            id
-            label
-            value
-          }
-          validateValue {
-            minChars
-            maxChars
-            minSize
-          }
-        }
-      }
+    submissionForm: formForPurposeAndCategory(purpose: "submit", category: "submission") {
+      ${formStructure}
+    }
+
+    reviewForm: formForPurposeAndCategory(purpose: "review", category: "review") {
+      ${formStructure}
+    }
+
+    decisionForm: formForPurposeAndCategory(purpose: "decision", category: "decision") {
+      ${formStructure}
     }
   }
 `
@@ -265,7 +250,13 @@ const ReviewPage = ({ match, ...props }) => {
     ) || {}
 
   const versions = data
-    ? manuscriptVersions(data.manuscript).map(v => v.manuscript)
+    ? manuscriptVersions(data.manuscript).map(v => ({
+        ...v.manuscript,
+        reviews: v.manuscript.reviews.map(r => ({
+          ...r,
+          jsonData: JSON.parse(r.jsonData),
+        })),
+      }))
     : []
 
   const latestVersion = versions.length ? versions[0] : null
@@ -289,7 +280,7 @@ const ReviewPage = ({ match, ...props }) => {
     )
   }
 
-  const { manuscript, formForPurposeAndCategory } = data
+  const { manuscript } = data
 
   // We shouldn't arrive at this page with a subsequent/child manuscript ID. If we do, redirect to the parent/original ID
   if (manuscript.parentId)
@@ -303,7 +294,21 @@ const ReviewPage = ({ match, ...props }) => {
     refetch()
   }
 
-  const submissionForm = formForPurposeAndCategory?.structure ?? {
+  const submissionForm = data.submissionForm?.structure ?? {
+    name: '',
+    children: [],
+    description: '',
+    haspopup: 'false',
+  }
+
+  const reviewForm = data.reviewForm?.structure ?? {
+    name: '',
+    children: [],
+    description: '',
+    haspopup: 'false',
+  }
+
+  const decisionForm = data.decisionForm?.structure ?? {
     name: '',
     children: [],
     description: '',
@@ -323,21 +328,58 @@ const ReviewPage = ({ match, ...props }) => {
         .status || []
     ).find(statusTemp => statusTemp.user === currentUser?.id) || {}
 
+  const updateReviewJsonData = (value, path) => {
+    const reviewDelta = {} // Only the changed fields
+    // E.g. if path is 'foo.bar' and value is 'Baz' this gives { foo: { bar: 'Baz' } }
+    set(reviewDelta, path, value)
+
+    const reviewPayload = {
+      isDecision: false,
+      jsonData: JSON.stringify(reviewDelta),
+      manuscriptId: latestVersion.id,
+      userId: currentUser.id,
+    }
+
+    return updateReviewMutation({
+      variables: { id: existingReview.current.id, input: reviewPayload },
+      update: (cache, { data: { updateReview: updateReviewTemp } }) => {
+        cache.modify({
+          id: cache.identify({
+            __typename: 'Manuscript',
+            id: latestVersion.id,
+          }),
+          fields: {
+            reviews(existingReviewRefs = [], { readField }) {
+              const newReviewRef = cache.writeFragment({
+                data: updateReviewTemp,
+                fragment: gql`
+                  fragment NewReview on Review {
+                    id
+                  }
+                `,
+              })
+
+              if (
+                existingReviewRefs.some(
+                  ref => readField('id', ref) === updateReviewTemp.id,
+                )
+              ) {
+                return existingReviewRefs
+              }
+
+              return [...existingReviewRefs, newReviewRef]
+            },
+          },
+        })
+      },
+    })
+  }
+
   const updateReview = review => {
     const reviewData = {
-      recommendation: review.recommendation,
       manuscriptId: latestVersion.id,
-      reviewComment: review.reviewComment && {
-        id: existingReview.current.reviewComment?.id,
-        commentType: 'review',
-        content: review.reviewComment.content,
-      },
-      confidentialComment: review.confidentialComment && {
-        id: existingReview.current.confidentialComment?.id,
-        commentType: 'confidential',
-        content: review.confidentialComment.content,
-      },
       canBePublishedPublicly: review.canBePublishedPublicly,
+      jsonData: JSON.stringify(review.jsonData),
     }
 
     return updateReviewMutation({
@@ -385,52 +427,27 @@ const ReviewPage = ({ match, ...props }) => {
     history.push(`${urlFrag}/dashboard`)
   }
 
-  const initialValues = {
-    ...(latestVersion.reviews?.find(
-      review => review?.user?.id === currentUser?.id && !review.isDecision,
-    ) || {
-      id: null,
-      comments: [],
-      recommendation: null,
-    }),
-  }
-
-  if (!initialValues.canBePublishedPublicly)
-    initialValues.canBePublishedPublicly = false
-
   return (
-    <Formik
-      initialValues={initialValues}
+    <ReviewLayout
+      channelId={channelId}
+      createFile={createFile}
+      currentUser={currentUser}
+      decisionForm={decisionForm}
+      deleteFile={deleteFile}
       onSubmit={values =>
         handleSubmit({
           reviewId: existingReview.current.id,
           history: props.history,
         })
       }
-      validateOnMount={review => {
-        if (!review.id) return false
-        const hasRecommendation = review.recommendation !== null
-        const comment = review.decisionComment?.content
-        const isCommented = comment !== null && comment !== ''
-
-        return isCommented && hasRecommendation
-      }}
-    >
-      {formikProps => (
-        <ReviewLayout
-          channelId={channelId}
-          currentUser={currentUser}
-          review={existingReview}
-          status={status}
-          submissionForm={submissionForm}
-          updateReview={updateReview}
-          versions={versions}
-          {...formikProps}
-          createFile={createFile}
-          deleteFile={deleteFile}
-        />
-      )}
-    </Formik>
+      review={existingReview}
+      reviewForm={reviewForm}
+      status={status}
+      submissionForm={submissionForm}
+      updateReview={updateReview}
+      updateReviewJsonData={updateReviewJsonData}
+      versions={versions}
+    />
   )
 }
 

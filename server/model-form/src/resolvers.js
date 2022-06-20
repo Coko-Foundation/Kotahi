@@ -52,6 +52,7 @@ const resolvers = {
     formsByCategory: async (_, { category }) =>
       Form.findByField('category', category),
 
+    /** Returns the specific requested form, with any incomplete fields omitted */
     formForPurposeAndCategory: async (_, { purpose, category }) => {
       const results = await Form.query()
         .where('purpose', purpose)
@@ -65,6 +66,11 @@ const resolvers = {
           this.name,
         )
       }
+
+      // TODO Remove this once the form-builder no longer permits incomplete/malformed fields.
+      results[0].structure.children = results[0].structure.children.filter(
+        field => field.component && field.name,
+      )
 
       return results[0]
     },

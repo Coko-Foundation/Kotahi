@@ -1,44 +1,78 @@
-// const { flatten } = require('lodash')
-// const Review = require('./review')
 const models = require('@pubsweet/models')
 const File = require('@coko/server/src/models/file/file.model')
 const { getFilesWithUrl } = require('../../utils/fileStorageUtils')
+const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
+const { getReviewForm, getDecisionForm } = require('./reviewCommsUtils')
+
+const {
+  convertFilesToIdsOnly,
+  convertFilesToFullObjects,
+} = require('./reviewUtils')
 
 const resolvers = {
   Mutation: {
     async updateReview(_, { id, input }, ctx) {
-      // We process comment fields into array
-      const userId = input.userId ? input.userId : ctx.user
+      const reviewDelta = { jsonData: {}, ...input }
+      const existingReview = (await models.Review.query().findById(id)) || {}
 
-      const reviewUser = await models.User.query().where({
-        id: userId,
-      })
+      const form = existingReview.isDecision
+        ? await getDecisionForm()
+        : await getReviewForm()
 
-      const processedReview = { ...input, user: reviewUser }
+      await convertFilesToIdsOnly(reviewDelta, form)
 
-      processedReview.comments = [
-        input.reviewComment,
-        input.confidentialComment,
-        input.decisionComment,
-      ].filter(Boolean)
+      const mergedReview = {
+        canBePublishedPublicly: false,
+        isHiddenFromAuthor: false,
+        isHiddenReviewerName: false,
+        ...deepMergeObjectsReplacingArrays(existingReview, reviewDelta),
+        // Prevent reassignment of userId or manuscriptId:
+        userId: existingReview.userId || ctx.user,
+        manuscriptId: existingReview.manuscriptId || input.manuscriptId,
+      }
 
-      delete processedReview.reviewComment
-      delete processedReview.confidentialComment
-      delete processedReview.decisionComment
+      // Prevent reassignment of isDecision
+      if (typeof existingReview.isDecision === 'boolean')
+        mergedReview.isDecision = existingReview.isDecision
+
+      // Ensure the following aren't null or undefined
+      mergedReview.canBePublishedPublicly = !!mergedReview.canBePublishedPublicly
+      mergedReview.isHiddenFromAuthor = !!mergedReview.isHiddenFromAuthor
+      mergedReview.isHiddenReviewerName = !!mergedReview.isHiddenReviewerName
 
       const review = await models.Review.query().upsertGraphAndFetch(
         {
           id,
-          ...processedReview,
+          ...mergedReview,
+          jsonData: JSON.stringify(mergedReview.jsonData),
         },
-        {
-          relate: true,
-          noUnrelate: true,
-          noDelete: true,
-        },
+        { insertMissing: true },
       )
 
-      return review
+      // We want to modify file URIs before return, so we'll use the parsed jsonData
+      review.jsonData = mergedReview.jsonData
+      const reviewUser = await models.User.query().findById(review.userId)
+
+      await convertFilesToFullObjects(
+        review,
+        form,
+        async ids => File.query().findByIds(ids),
+        getFilesWithUrl,
+      )
+
+      return {
+        id: review.id,
+        created: review.created,
+        updated: review.updated,
+        isDecision: review.isDecision,
+        open: review.open,
+        user: reviewUser,
+        isHiddenFromAuthor: review.isHiddenFromAuthor,
+        isHiddenReviewerName: review.isHiddenReviewerName,
+        canBePublishedPublicly: review.canBePublishedPublicly,
+        jsonData: JSON.stringify(review.jsonData),
+        manuscriptId: review.manuscriptId,
+      }
     },
 
     async completeReview(_, { id }, ctx) {
@@ -62,12 +96,6 @@ const resolvers = {
       return member.save()
     },
   },
-  ReviewComment: {
-    async files(parent, _, ctx) {
-      const files = await File.query().where({ objectId: parent.id })
-      return getFilesWithUrl(files)
-    },
-  },
 }
 
 const typeDefs = `
@@ -80,45 +108,25 @@ const typeDefs = `
     id: ID!
     created: DateTime!
     updated: DateTime
-    recommendation: String
     isDecision: Boolean
     open: Boolean
     user: User
-    reviewComment: ReviewComment
-    confidentialComment: ReviewComment
-    decisionComment: ReviewComment
     isHiddenFromAuthor: Boolean
     isHiddenReviewerName: Boolean
     canBePublishedPublicly: Boolean
+    jsonData: String
     userId: String
+    files: [File]
   }
 
   input ReviewInput {
-    reviewComment: ReviewCommentInput
-    confidentialComment: ReviewCommentInput
-    decisionComment: ReviewCommentInput
-    recommendation: String
     isDecision: Boolean
     manuscriptId: ID!
     isHiddenFromAuthor: Boolean
     isHiddenReviewerName: Boolean
     canBePublishedPublicly: Boolean
+    jsonData: String
     userId: String
-  }
-
-  type ReviewComment implements Object {
-    id: ID!
-    created: DateTime!
-    updated: DateTime
-    commentType: String
-    content: String
-    files: [File]
-  }
-
-  input ReviewCommentInput {
-    id: ID
-    commentType: String
-    content: String
   }
 `
 

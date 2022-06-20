@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import { th } from '@pubsweet/ui-toolkit'
 
 import { dateTimeFormatter, fileSizeFormatter } from './helpers'
-import { InfoItem } from '../ui'
+import InfoItem from './InfoItem'
 import { Button, Icons } from './Modal'
 
 const { exitIcon } = Icons
@@ -41,6 +41,7 @@ const InfoSection = styled.div`
   overflow-y: auto;
   width: 100%;
 `
+
 const InfoHeaderWrapper = styled.div`
   background: white;
   border-bottom: 1px solid black;
@@ -50,6 +51,7 @@ const InfoHeaderWrapper = styled.div`
   top: 0;
   width: 100%;
 `
+
 const InfoHeader = styled.h2`
   font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeHeading4')};
@@ -65,6 +67,7 @@ const ItemWrapper = styled.div`
   margin-bottom: 4px;
   width: 100%;
 `
+
 const ItemHeader = styled.h5`
   font-family: ${th('fontHeading')};
   font-size: ${th('fontSizeHeading6')};
@@ -75,8 +78,15 @@ const ItemHeader = styled.h5`
 
 const FileDetails = ({ file, updateFile, closeHandler }) => {
   const { alt, id, name, updated, storedObjects } = file
-  const storedObjectOriginal = storedObjects.find(storedObject => storedObject.type === "original")
-  const storedObjectSmall = storedObjects.find(storedObject => storedObject.type === "small")
+
+  const storedObjectOriginal = storedObjects.find(
+    storedObject => storedObject.type === 'original',
+  )
+
+  const storedObjectSmall = storedObjects.find(
+    storedObject => storedObject.type === 'small',
+  )
+
   return (
     <PreviewWrapper>
       <ClosePreview>
@@ -91,7 +101,7 @@ const FileDetails = ({ file, updateFile, closeHandler }) => {
       </ClosePreview>
       <ImagePreviewer>
         <img
-          alt={alt || "-"}
+          alt={alt || '-'}
           src={
             storedObjectSmall ? storedObjectSmall.url : storedObjectOriginal.url
           }
