@@ -12,6 +12,9 @@ const Form = require('../../model-form/src/form')
 const Message = require('../../model-message/src/message')
 const publishToCrossref = require('../../publishing/crossref')
 const { stripSensitiveItems } = require('./manuscriptUtils')
+const { applyTemplate, generateCss } = require('../../pdfexport/applyTemplate')
+const publicationMetadata = require('../../pdfexport/pdfTemplates/publicationMetadata')
+const articleMetadata = require('../../pdfexport/pdfTemplates/articleMetadata')
 
 const {
   getFilesWithUrl,
@@ -39,6 +42,11 @@ const SUBMISSION_FIELD_PREFIX = 'submission'
 const META_FIELD_PREFIX = 'meta'
 
 let isImportInProgress = false
+
+const getCss = async () => {
+  const css = await generateCss()
+  return css
+}
 
 const ManuscriptResolvers = ({ isVersion }) => {
   const resolvers = {
@@ -1150,6 +1158,10 @@ const resolvers = {
           printReadyPdfUrl: printReadyPdf
             ? printReadyPdf.storedObjects[0].url
             : null,
+          styledHtml: applyTemplate(m, true),
+          css: getCss(),
+          publicationMetadata,
+          articleMetadata: articleMetadata(m),
         }
       })
     },
@@ -1175,6 +1187,10 @@ const resolvers = {
         meta: m.meta,
         submission: JSON.stringify(m.submission),
         publishedDate: m.published,
+        styledHtml: applyTemplate(m, true),
+        css: getCss(),
+        publicationMetadata,
+        articleMetadata: articleMetadata(m),
       }
     },
     async unreviewedPreprints(_, { token }, ctx) {
@@ -1456,7 +1472,9 @@ const typeDefs = `
     meta: ManuscriptMeta
     submission: String
     publishedDate: DateTime
-    printReadyPdfUrl: String
+		printReadyPdfUrl: String
+		styledHtml: String
+		css: String
   }
 `
 

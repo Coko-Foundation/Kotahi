@@ -1,7 +1,8 @@
-import React, { useRef, useEffect } from 'react'
+import React, { useRef, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { ThemeProvider } from 'styled-components'
 import { Wax } from 'wax-prosemirror-core'
+import { JournalContext } from '../../xpub-journal/src'
 import waxTheme from './layout/waxTheme'
 import fixAstralUnicode from './fixAstralUnicode'
 
@@ -40,7 +41,7 @@ const FullWaxEditor = ({
   ...rest
 }) => {
   const handleAssetManager = () => onAssetManager(manuscriptId)
-
+  const journal = useContext(JournalContext)
   // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
   // eslint-disable-next-line no-param-reassign
   value = fixAstralUnicode(value)
@@ -64,11 +65,10 @@ const FullWaxEditor = ({
       }
     }
   }, [])
-
   // return useMemo(
   //   () =>
   return (
-    <ThemeProvider theme={waxTheme}>
+    <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
       <div
         className={validationStatus}
         // onBlur={e => {
