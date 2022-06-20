@@ -1,26 +1,30 @@
+const http = require('http')
 const fs = require('fs-extra')
 const fsPromised = require('fs').promises
 const crypto = require('crypto')
 const htmlparser2 = require('htmlparser2')
 const cheerio = require('cheerio')
 const { promisify } = require('util')
-const { createFile, deleteFiles, File } = require('@coko/server')
-const config = require('config')
+const { createFile, fileStorage, File } = require('@coko/server')
 const makeZip = require('../pdfexport/ziputils.js')
-
-const copyFile = promisify(fs.copyFile)
 
 const randomBytes = promisify(crypto.randomBytes)
 
-const uploadsPath = config.get('pubsweet-server').uploads
+const downloadFile = (url, dest, cb) => {
+  const file = fs.createWriteStream(dest)
+  http.get(url, response => {
+    response.pipe(file)
+    file.on('finish', () => {
+      file.close(cb)
+    })
+  })
+}
 
 const { getFileWithUrl } = require('../utils/fileStorageUtils')
 
 const makeZipFile = async (manuscriptId, jats) => {
   // jats is a string with the semi-processed JATS in it
   // (images have not been dealt with)
-
-  // console.log('JATS: ', jats)
 
   const manuscriptFiles = await File.query().where({
     objectId: manuscriptId,
@@ -73,9 +77,7 @@ const makeZipFile = async (manuscriptId, jats) => {
   )
 
   if (supplementaryFiles && supplementaryFiles.length) {
-    console.log('Going through supplementary files')
-    // console.log(supplementaryFiles)
-    // figure out how to mark up supplementary files in JATS
+    console.error('Supplementary files found!')
 
     let supplementaryJats = ''
 
@@ -85,7 +87,7 @@ const makeZipFile = async (manuscriptId, jats) => {
         x => x.type === 'original',
       )
 
-      suppFileList[suppFileList.length] = myOriginal
+      suppFileList[suppFileList.length] = supplementaryFiles[i]
 
       const mimeType = myOriginal.mimeType
         ? `mimetype="${myOriginal.mimeType.split('-')[0]}" mime-subtype="${
@@ -93,7 +95,6 @@ const makeZipFile = async (manuscriptId, jats) => {
           }" `
         : ''
 
-      // console.log(myOriginal)
       supplementaryJats += `<supplementary-material id="supplementary-material-${i}" xlink:href="supplementary/${supplementaryFiles[i].name}" ${mimeType}/>`
     }
 
@@ -111,25 +112,39 @@ const makeZipFile = async (manuscriptId, jats) => {
   await fsPromised.appendFile(`${dirName}/index.xml`, outJats)
 
   if (imageList.length) {
-    console.log('Image files: ', imageList)
-    // 5.1. make a subdir "images"
     const imageDirName = `${dirName}/images`
     await fsPromised.mkdir(imageDirName, { recursive: true })
 
-    // TODO: 5.2. for each image ID, get all the versions of files with that ID
-    // TODO: 5.3. put all of those files in the subdir
+    const imageObjects = imageList.flatMap(x => x.storedObjects)
+
+    imageObjects.forEach(async imageObject => {
+      const url = await fileStorage.getURL(imageObject.key)
+
+      const targetPath = `${imageDirName}/${imageObject.key}`
+      downloadFile(url, targetPath, () => {
+        console.error(`Attached image ${imageObject.key}`)
+      })
+    })
   }
 
   if (suppFileList.length) {
-    // 5.4. make a subdir "supplementary"
-    console.log('Supplementary files: ', suppFileList)
+    // 5.4. make a asubdir "supplementary"
     const suppDirName = `${dirName}/supplementary`
     await fsPromised.mkdir(suppDirName, { recursive: true })
-    // TODO: // 5.5. get all the supplementary files
-    // TODO: // 5.6. put all of those files in the subdir
-  }
 
-  // 6. zip the directory
+    const suppObjects = suppFileList
+      .flatMap(x => x.storedObjects)
+      .filter(x => x.type === 'original')
+
+    suppObjects.forEach(async suppObject => {
+      const url = await fileStorage.getURL(suppObject.key)
+
+      const targetPath = `${suppDirName}/${suppObject.key}`
+      downloadFile(url, targetPath, () => {
+        console.error(`Attached supplementary file ${suppObject.key}.`)
+      })
+    })
+  }
 
   const zipPath = await makeZip(dirName)
 
@@ -146,11 +161,8 @@ const makeZipFile = async (manuscriptId, jats) => {
 
   const { url } = downloadReadyZipFile.storedObjects[0]
 
-  // 7. return the link to the zip file
+  // TODO: cleanup???
 
-  // 8. cleanup???
-
-  // console.log('outJats: ', outJats)
   return { link: url, jats: outJats } // returns link to where the ZIP file is.
 }
 
