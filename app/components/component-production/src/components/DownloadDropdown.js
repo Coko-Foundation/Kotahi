@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Dropdown } from '@pubsweet/ui'
-import { makeJats } from '../../../../../server/utils/jatsUtils'
 
 /* eslint-disable import/prefer-default-export */
 export const DownloadDropdown = ({
