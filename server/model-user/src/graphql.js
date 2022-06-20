@@ -3,7 +3,9 @@ const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
 const { existsSync } = require('fs')
 const path = require('path')
 const models = require('@pubsweet/models')
+const config = require('config')
 
+const Invitation = require('../../model-invitations/src/invitations')
 const sendEmailNotification = require('../../email-notifications')
 
 const resolvers = {
@@ -204,7 +206,7 @@ const resolvers = {
     },
     async sendEmail(_, { input }, ctx) {
       const inputParsed = JSON.parse(input)
-      /* eslint-disable-next-line */
+
       const {
         manuscript,
         selectedEmail,
@@ -234,7 +236,6 @@ const resolvers = {
         .findById(manuscript.id)
         .withGraphFetched('submitter.[defaultIdentity]')
 
-      /* eslint-disable-next-line */
       const authorName =
         manuscriptWithSubmitter.submitter.defaultIdentity.name ||
         manuscriptWithSubmitter.submitter.username ||
@@ -247,17 +248,42 @@ const resolvers = {
         return { success: false }
       }
 
+      const user = await models.User.find(ctx.user)
+      const manuscriptId = manuscript.id
+      const toEmail = receiverEmail
+      const purpose = 'Inviting an author to accept a manuscript'
+      const status = 'UNANSWERED'
+      const senderId = user.id
+
+      let invitationId = ''
+
+      if (selectedTemplate === 'authorAcceptanceEmailTemplate') {
+        const newInvitation = await new Invitation({
+          manuscriptId,
+          toEmail,
+          purpose,
+          status,
+          senderId,
+        }).saveGraph()
+
+        invitationId = newInvitation.id
+      }
+
       try {
         await sendEmailNotification(receiverEmail, selectedTemplate, {
           articleTitle: manuscript.meta.title,
           authorName,
           receiverFirstName,
           shortId: manuscript.shortId,
+          toEmail,
+          invitationId,
+          purpose,
+          status,
+          senderId,
+          appUrl: config['pubsweet-client'].baseUrl,
         })
         return { success: true }
       } catch (e) {
-        /* eslint-disable-next-line */
-        console.log('email was not sent', e)
         return { success: false }
       }
     },
@@ -278,16 +304,6 @@ const resolvers = {
       return identities
     },
   },
-  // LocalIdentity: {
-  //   __isTypeOf: (obj, context, info) => obj.type === 'local',
-  //   async email(obj, args, ctx, info) {
-  //     // Emails stored on user, but surfaced in local identity too
-  //     return (await ctx.loaders.User.load(obj.userId)).email
-  //   },
-  // },
-  // ExternalIdentity: {
-  //   __isTypeOf: (obj, context, info) => obj.type !== 'local',
-  // },
 }
 
 const typeDefs = `

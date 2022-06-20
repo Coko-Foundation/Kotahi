@@ -137,7 +137,8 @@ const AdminPage = () => {
     if (error.networkError) {
       notice = 'You are offline.'
     } else {
-      return <Redirect to="/login" />
+      const redirectlocation = `/login`
+      return <Redirect to={redirectlocation} />
     }
   }
 

@@ -3,6 +3,7 @@ const nodemailer = require('nodemailer')
 // TODO: refactor below template logic
 const adhocEditorAssignmentEmailTemplate = require('./email-templates/adhocEditorAssignmentEmailTemplate')
 const articleAcceptanceEmailTemplate = require('./email-templates/articleAcceptanceEmailTemplate')
+const authorAcceptanceEmailTemplate = require('./email-templates/authorAcceptanceEmailTemplate')
 const deputyEditorAssignmentEmailTemplate = require('./email-templates/deputyEditorAssignmentEmailTemplate')
 const editorAssignmentEmailTemplate = require('./email-templates/editorAssignmentEmailTemplate')
 const evaluationCompleteEmailTemplate = require('./email-templates/evaluationCompleteEmailTemplate')
@@ -51,6 +52,7 @@ const reviewInvitationEmailTemplate37 = require('./email-templates/review-invita
 const templates = {
   adhocEditorAssignmentEmailTemplate,
   articleAcceptanceEmailTemplate,
+  authorAcceptanceEmailTemplate,
   deputyEditorAssignmentEmailTemplate,
   editorAssignmentEmailTemplate,
   evaluationCompleteEmailTemplate,

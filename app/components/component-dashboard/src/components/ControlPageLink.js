@@ -3,9 +3,8 @@ import { Link } from '@pubsweet/ui'
 import PropTypes from 'prop-types'
 
 const ControlPageLink = ({ className, children, version, page, id }) => (
-
-  <Link className={className} to={'versions/' + id + '/decision'}> 
-    {children} 
+  <Link className={className} to={`versions/${id}/decision`}>
+    {children}
   </Link>
 )
 

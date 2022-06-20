@@ -17,6 +17,10 @@ switch (
         value: 'reviewCompleteEmailTemplate',
       },
       {
+        label: 'Author Acceptance Email Template',
+        value: 'authorAcceptanceEmailTemplate',
+      },
+      {
         label: 'Message notification template',
         value: 'messageNotificationEmailTemplate',
       },
@@ -224,6 +228,10 @@ switch (
       {
         label: 'Evaluation Complete required notification template',
         value: 'evaluationCompleteEmailTemplate',
+      },
+      {
+        label: 'Author Acceptance Email Template',
+        value: 'authorAcceptanceEmailTemplate',
       },
     ]
     break

@@ -60,6 +60,62 @@ export const CREATE_MESSAGE = gql`
   }
 `
 
+const teamFields = `
+  id
+  name
+  role
+  manuscript {
+    id
+  }
+  members {
+    id
+    user {
+      id
+      username
+    }
+  }
+`
+
+export const CREATE_TEAM_MUTATION = gql`
+  mutation($input: TeamInput!) {
+    createTeam(input: $input) {
+      ${teamFields}
+    }
+  }
+`
+
+export const UPDATE_TEAM_MUTATION = gql`
+  mutation($id: ID!, $input: TeamInput) {
+    updateTeam(id: $id, input: $input) {
+      ${teamFields}
+    }
+  }
+`
+
+export const UPDATE_INVITATION_STATUS = gql`
+  mutation($id: ID!, $status: String) {
+    updateInvitationStatus(id: $id, status: $status) {
+      status
+    }
+  }
+`
+
+export const GET_INVITATION_MANUSCRIPT_ID = gql`
+  query invitationManuscriptId($id: ID) {
+    invitationManuscriptId(id: $id) {
+      manuscriptId
+    }
+  }
+`
+
+export const GET_INVITATION_STATUS = gql`
+  query invitationStatus($id: ID) {
+    invitationStatus(id: $id) {
+      status
+    }
+  }
+`
+
 export const GET_MESSAGE_BY_ID = gql`
   query messageById($messageId: ID) {
     message(messageId: $messageId) {

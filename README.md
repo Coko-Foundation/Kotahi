@@ -12,6 +12,7 @@ To install Kotahi locally, you'll need these things:
 - Docker. Kotahi uses [Docker](https://www.docker.com/) for images of the databases and servers that it uses. Make sure you have Docker installed and running.
 - An ORCID account. Kotahi uses [ORCID](https://orcid.org/) for account authentication. It's free and easy to sign up. The [FAQ](FAQ.md) tells you how.
 - A working _.env_ file. You can start by copying [.env.example](.env.example) (in the shell: `cp .env.example .env`). The .env file contains passwords and other sensitive information; it also contains a lot of configuration options at the moment.
+- In order to work with file attachments you'll need to add the following to your hosts file: `127.0.0.1 filehosting`. (Only needed for a development build.)
 
 Once you have those things, try doing this:
 

@@ -2,12 +2,13 @@
 import React from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import ReactRouterPropTypes from 'react-router-prop-types'
-import Modal from 'react-modal'
 import { adopt } from 'react-adopt'
 import Production from './Production'
 import { Spinner, CommsErrorBanner } from '../../../shared'
 import { getSpecificFilesQuery } from '../../../asset-manager/src/queries'
 import withModal from '../../../asset-manager/src/ui/Modal/withModal'
+import DownloadPdfComponent from './DownloadPdf'
+import DownloadJatsComponent from './DownloadJats'
 
 const mapper = {
   getSpecificFilesQuery,
@@ -31,17 +32,17 @@ const mapProps = args => ({
           variables: { ids: selectedFileIds },
         })
 
-        const { getSpecificFiles } = data
+        const { getSpecificFiles: files } = data
 
-        const alteredFiles = getSpecificFiles.map(getSpecificFile => {
-          const mediumSizeFile = getSpecificFile.storedObjects.find(
+        const alteredFiles = files.map(file => {
+          const mediumSizeFile = files.storedObjects.find(
             storedObject => storedObject.type === 'medium',
           )
 
           return {
             source: mediumSizeFile.url,
             mimetype: mediumSizeFile.mimetype,
-            ...getSpecificFile,
+            ...file,
           }
         })
 
@@ -58,11 +59,6 @@ const mapProps = args => ({
 })
 
 const Composed = adopt(mapper, mapProps)
-
-const useHtml = false
-
-// If this is set to TRUE, we generate HTML and send back the HTML address instead of the PDF address
-// This is a temporary measure, though it's useful to test what's coming out.
 
 const fragmentFields = `
   id
@@ -97,25 +93,6 @@ const query = gql`
 	}
 `
 
-// For now, doing this separately from the page query because this takes a long time and we don't want to wait for it.
-
-const getPdfQuery = gql`
-  query($manuscriptId: String!, $useHtml: Boolean) {
-    convertToPdf(manuscriptId: $manuscriptId, useHtml: $useHtml) {
-      pdfUrl
-    }
-  }
-`
-
-const getJatsQuery = gql`
-  query($manuscriptId: String!) {
-    convertToJats(manuscriptId: $manuscriptId) {
-      xml
-      error
-    }
-  }
-`
-
 export const updateMutation = gql`
   mutation($id: ID!, $input: String) {
     updateManuscript(id: $id, input: $input) {
@@ -124,151 +101,6 @@ export const updateMutation = gql`
     }
   }
 `
-
-const DownloadPdfComponent = ({ manuscript, resetMakingPdf }) => {
-  const [downloading, setDownloading] = React.useState(false)
-  const [modalIsOpen, setModalIsOpen] = React.useState(true)
-
-  const { data, loading, error } = useQuery(getPdfQuery, {
-    fetchPolicy: 'network-only',
-    variables: {
-      manuscriptId: manuscript.id,
-      useHtml,
-    },
-  })
-
-  // Now, download the file
-  if (data && !downloading) {
-    setDownloading(true)
-    const { pdfUrl } = data.convertToPdf
-
-    if (useHtml) {
-      // use this to open the PDF in a new tab:
-      const pdfWindow = window.open(`/${pdfUrl}`)
-      pdfWindow.print()
-    } else {
-      const newWin = window.open(pdfUrl)
-
-      if (!newWin || newWin.closed || typeof newWin.closed === 'undefined') {
-        // if popups are blocked, try downloading it instead.
-        const link = document.createElement('a')
-        link.href = pdfUrl
-        link.download = `${manuscript.meta.title || 'title'}.pdf`
-        link.target = '_blank'
-        link.click()
-      }
-      // use this code for downloading the PDF:
-
-      // const link = document.createElement('a')
-      // link.href = `/${pdfUrl}`
-      // link.download = `${manuscript.meta.title || 'title'}.pdf`
-      // link.click()
-    }
-
-    // For Firefox it is necessary to delay revoking the ObjectURL.
-
-    setTimeout(() => {
-      window.URL.revokeObjectURL(pdfUrl)
-      setModalIsOpen(false)
-      resetMakingPdf()
-      setDownloading(false)
-    }, 1000)
-  }
-
-  const onError = () => {
-    console.error(error)
-    resetMakingPdf()
-  }
-
-  const cancelGen = () => {
-    resetMakingPdf()
-  }
-
-  return (
-    <Modal
-      isOpen={modalIsOpen}
-      style={{
-        content: {
-          top: '50%',
-          left: '50%',
-          right: 'auto',
-          bottom: 'auto',
-          marginRight: '-50%',
-          transform: 'translate(-50%, -50%)',
-        },
-      }}
-    >
-      <h2 style={{ marginBottom: '1em' }}>
-        {error ? 'Error generating PDF' : 'Preparing PDF...'}
-      </h2>
-      {loading && <Spinner />}
-      {error ? (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
-          <p>Sorry, something went wrong.</p>
-          <button onClick={onError} style={{ marginTop: '1em' }} type="submit">
-            Close
-          </button>
-        </div>
-      ) : (
-        <button onClick={cancelGen} style={{ marginTop: '1em' }} type="submit">
-          Cancel
-        </button>
-      )}
-    </Modal>
-  )
-}
-
-const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
-  const { data, loading, error } = useQuery(getJatsQuery, {
-    fetchPolicy: 'cache-and-network',
-    variables: {
-      manuscriptId: manuscript.id,
-    },
-  })
-
-  if (loading) return <Spinner />
-
-  if (error) {
-    return (
-      <div style={{ display: 'none' }}>
-        <CommsErrorBanner error={error} />
-      </div>
-    ) // TODO: improve this!
-  }
-
-  if (data) {
-    const jats = data.convertToJats.xml
-
-    if (data.convertToJats.error.length) {
-      /* eslint-disable */
-      console.log(
-        'Error making JATS. First error: ',
-        JSON.parse(data.convertToJats.error),
-      )
-      resetMakingJats() // this is bad!
-      return null
-    }
-
-    /* eslint-disable */
-    console.log('XML Selected')
-    console.log('HTML:\n\n', manuscript.meta.source)
-    console.log('JATS:\n\n', jats)
-    // JATS XML file opens in new tab
-    let blob = new Blob([jats], { type: 'text/xml' })
-    let url = URL.createObjectURL(blob)
-    window.open(url)
-    URL.revokeObjectURL(url)
-    resetMakingJats()
-    /* eslint-disable */
-  }
-  return null
-}
 
 const ProductionPage = ({ match, ...props }) => {
   const [makingPdf, setMakingPdf] = React.useState(false)
@@ -304,13 +136,12 @@ const ProductionPage = ({ match, ...props }) => {
   if (error) return <CommsErrorBanner error={error} />
 
   const { manuscript, currentUser } = data
-
   return (
     <Composed
       currentUser={currentUser}
       manuscript={manuscript}
-      setMakingPdf={setMakingPdf}
       setMakingJats={setMakingJats}
+      setMakingPdf={setMakingPdf}
       updateManuscript={updateManuscript}
     >
       {({ onAssetManager }) => (
@@ -337,13 +168,13 @@ const ProductionPage = ({ match, ...props }) => {
             file={manuscript.files.find(file =>
               file.tags.includes('manuscript'),
             )}
-            makePdf={setMakingPdf}
             makeJats={setMakingJats}
+            makePdf={setMakingPdf}
             manuscript={manuscript}
             onAssetManager={onAssetManager}
             updateManuscript={(a, b) => {
               // eslint-disable-next-line
-              console.log('in update manuscript!')
+              // console.log('in update manuscript!')
               updateManuscript(a, b)
             }}
           />

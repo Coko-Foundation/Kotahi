@@ -34,12 +34,12 @@
       </xsd:documentation>
    </xsd:annotation>
    <xsd:import namespace="http://www.w3.org/1999/xlink"
-               schemaLocation="standard-modules/xlink.xsd"/>
+               schemaLocation="server/jatsexport/schemas/xlink.xsd" />
    <xsd:import namespace="http://www.w3.org/1998/Math/MathML"
-               schemaLocation="standard-modules/mathml3/mathml3.xsd"/>
+               schemaLocation="server/jatsexport/schemas/mathml3.xsd"/>
    <xsd:import namespace="http://www.niso.org/schemas/ali/1.0/"
-               schemaLocation="standard-modules/module-ali.xsd"/>
+               schemaLocation="server/jatsexport/schemas/module-ali.xsd"/>
    <xsd:import namespace="http://www.w3.org/XML/1998/namespace"
-               schemaLocation="standard-modules/xml.xsd"/>
-   <xsd:include schemaLocation="JATS-journalpublishing1-3-mathml3-elements.xsd"/>
+               schemaLocation="server/jatsexport/schemas/xml.xsd" />
+   <xsd:include schemaLocation="server/jatsexport/schemas/JATS-journalpublishing1-3-mathml3-elements.xsd"/>
 </xsd:schema>
