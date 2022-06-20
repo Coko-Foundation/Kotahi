@@ -4,31 +4,32 @@ import { validateFormField } from './formValidation'
 import { convertTimestampToDate } from './time-formatting'
 import { StatusBadge } from '../components/shared'
 
-// TODO: rename validateManuscriptSubmission. This is only intended for validating the manuscript.submission object, nothing else.
-export const validateManuscript = async (
+/** Validate just manuscript.submission, based on the supplied array of field definitions */
+export const validateManuscriptSubmission = async (
   submission,
-  fieldDefinitions,
-  client,
+  submissionForm,
+  validateDoi,
 ) => {
-  const promiseArr = Object.entries(fieldDefinitions)
-    .filter(([key, element]) => element?.name)
-    .map(([key, element]) => {
+  const fieldDefinitions = submissionForm?.children ?? []
+
+  const promiseArr = fieldDefinitions
+    .filter(element => element?.name)
+    .map(element => {
       const validatorFn = validateFormField(
         element.validate,
         element.validateValue,
         element.name,
         JSON.parse(element.doiValidation ? element.doiValidation : false),
-        client,
+        validateDoi,
         element.component,
       )
 
-      const isValid = validatorFn(submission[element.name.split('.')[1]])
+      const errorMessage = validatorFn(submission[element.name.split('.')[1]])
 
-      return isValid
+      return errorMessage
     })
 
   const results = await Promise.all(promiseArr)
-
   return results.filter(Boolean)
 }
 

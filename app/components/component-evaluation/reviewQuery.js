@@ -15,14 +15,7 @@ const query = gql`
         updated
         isDecision
         canBePublishedPublicly
-        decisionComment {
-          id
-          content
-        }
-        reviewComment {
-          id
-          content
-        }
+        jsonData
       }
     }
     formForPurposeAndCategory(purpose: "submit", category: "submission") {

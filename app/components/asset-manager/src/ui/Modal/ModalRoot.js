@@ -42,6 +42,7 @@ const medium = css`
   width: calc(936px - 16px);
   margin: ${grid(7)} auto;
 `
+
 const mediumNarrow = css`
   height: calc(536px - 16px);
   width: calc(752px - 16px);
@@ -79,11 +80,11 @@ const StyledModal = styled(ReactModalAdapter).attrs({
     padding: ${grid(1)};
 
     /* stylelint-disable order/properties-alphabetical-order */
-    ${props => props.size === 'large' && large};
-    ${props => props.size === 'largeNarrow' && largeNarrow};
-    ${props => props.size === 'small' && small};
-    ${props => props.size === 'medium' && medium};
-    ${props => props.size === 'medium_narrow' && mediumNarrow};
+    ${props => (props.size === 'large' ? large : '')}
+    ${props => (props.size === 'largeNarrow' ? largeNarrow : '')}
+    ${props => (props.size === 'small' ? small : '')}
+    ${props => (props.size === 'medium' ? medium : '')}
+    ${props => (props.size === 'medium_narrow' ? mediumNarrow : '')}
     /* stylelint-enable order/properties-alphabetical-order */
   }
 
@@ -108,11 +109,12 @@ const ModalRoot = props => {
     className,
     footerComponent = null,
     headerComponent = null,
+    isOpen,
     onRequestClose,
     ...rest
   } = props
 
-  if (!props.isOpen) return null
+  if (!isOpen) return null
   return (
     <StyledModal
       className={className}

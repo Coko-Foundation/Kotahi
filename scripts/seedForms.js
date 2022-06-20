@@ -4,58 +4,40 @@
 
 const { Form } = require('@pubsweet/models')
 
-const formPaths = {
+const SUBMISSION_FORM_PATHS = {
   aperture: '../app/storage/forms-aperture/submit.json',
   colab: '../app/storage/forms-colab/submit.json',
   elife: '../app/storage/forms/submit.json',
   ncrc: '../app/storage/forms-ncrc/submit.json',
-  review: '../app/storage/forms/review.json',
-  decision: '../app/storage/forms/decison.json',
+}
+
+const REVIEW_FORM_PATH = '../app/storage/forms/review.json'
+const DECISION_FORM_PATH = '../app/storage/forms/decison.json'
+
+const tryAddForm = async (purpose, category, seedFilePath) => {
+  const hasForm = !!(await Form.query().where({ purpose, category })).length
+
+  if (hasForm) {
+    console.log(`  Form for ${category} already exists in database. Skipping.`)
+  } else {
+    const formStructure = require(seedFilePath)
+    const form = { purpose, structure: formStructure, category }
+    await Form.query().insert(form)
+    console.log(`  Added ${category} form from ${seedFilePath} to database.`)
+  }
 }
 
 const seed = async () => {
-  const [{ count }] = await Form.query().count()
-
-  if (count > 0) {
-    console.log('  Form(s) already exist in database. Skipping.')
-    return
-  }
-
-  const formPath = formPaths[process.env.INSTANCE_NAME]
-
-  if (!formPath) {
-    console.log(
-      `  No form file known for '${process.env.INSTANCE_NAME}' instance type. No forms were added to the database.`,
-    )
-    return
-  }
-
-  const submissionFormStructure = require(formPath)
-  const reviewFormStructure = require(formPaths.review)
-  const decisionFormStructure = require(formPaths.decision)
-
-  const submissionForm = {
-    purpose: 'submit',
-    structure: submissionFormStructure,
-    category: 'submission',
-  }
-
-  const reviewForm = {
-    purpose: 'review',
-    structure: reviewFormStructure,
-    category: 'review',
-  }
-
-  const decisionForm = {
-    purpose: 'decision',
-    structure: decisionFormStructure,
-    category: 'decision',
-  }
-
-  await Form.query().insert(submissionForm)
-  await Form.query().insert(reviewForm)
-  await Form.query().insert(decisionForm)
-  console.log(`  Added submission form ${formPath} to database.`)
+  await Promise.all([
+    tryAddForm(
+      'submit',
+      'submission',
+      SUBMISSION_FORM_PATHS[process.env.INSTANCE_NAME] ||
+        SUBMISSION_FORM_PATHS.aperture, // In case of unknown instance name
+    ),
+    tryAddForm('review', 'review', REVIEW_FORM_PATH),
+    tryAddForm('decision', 'decision', DECISION_FORM_PATH),
+  ])
 }
 
 module.exports = seed

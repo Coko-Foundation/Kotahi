@@ -4,7 +4,7 @@ import { th } from '@pubsweet/ui-toolkit'
 import { indexOf } from 'lodash'
 
 import { dateTimeFormatter, fileSizeFormatter } from './helpers'
-import { IconButton } from '../ui'
+import IconButton from './IconButton'
 import { Loading } from './Modal'
 
 const TableWrapper = styled.div`
@@ -16,6 +16,7 @@ const TableWrapper = styled.div`
   overflow-y: auto;
   width: ${({ selected }) => (selected ? `${65}%` : '100%')};
 `
+
 const TableHead = styled.div`
   display: flex;
   position: sticky;
@@ -43,6 +44,7 @@ const TableBody = styled.div`
   flex-direction: column;
   width: 100%;
 `
+
 const TableBodyEmpty = styled.div`
   align-items: center;
   display: flex;
@@ -54,6 +56,7 @@ const TableBodyEmpty = styled.div`
   margin-top: calc(2 * ${th('gridUnit')});
   width: 100%;
 `
+
 const TableRow = styled.div`
   align-items: center;
   background: ${({ selected }) => (selected ? th('colorPrimary') : 'inherit')};
@@ -70,6 +73,7 @@ const TableRow = styled.div`
     color: white;
   }
 `
+
 const RowRest = styled.div`
   align-items: center;
   cursor: pointer;
@@ -91,6 +95,7 @@ const ascIcon = (
     <path d="M19 17H22L18 21L14 17H17V3H19M2 17H12V19H2M6 5V7H2V5M2 11H9V13H2V11Z" />
   </svg>
 )
+
 const descIcon = (
   <svg fill="#111" viewBox="0 0 24 24">
     <path d="M19 7H22L18 3L14 7H17V21H19M2 17H12V19H2M6 5V7H2V5M2 11H9V13H2V11Z" />
@@ -138,6 +143,7 @@ const FilesTable = ({
               >
                 {columns.map(column => {
                   const { label, width } = column
+
                   if (label === 'created' || label === 'updated') {
                     return (
                       <TableCell key={label} width={width}>
@@ -145,6 +151,7 @@ const FilesTable = ({
                       </TableCell>
                     )
                   }
+
                   if (label === 'size') {
                     return (
                       <TableCell key={label} width={width}>
@@ -152,6 +159,7 @@ const FilesTable = ({
                       </TableCell>
                     )
                   }
+
                   if (label === 'mimetype') {
                     return (
                       <TableCell key={label} width={width}>
@@ -159,6 +167,7 @@ const FilesTable = ({
                       </TableCell>
                     )
                   }
+
                   if (label === 'inUse') {
                     return (
                       <TableCell key={label} width={width}>
@@ -166,6 +175,7 @@ const FilesTable = ({
                       </TableCell>
                     )
                   }
+
                   return (
                     <TableCell key={label} width={width}>
                       {item[label]}
@@ -183,6 +193,7 @@ const FilesTable = ({
       </TableBodyEmpty>
     )
   }
+
   return (
     <TableWrapper selected={selected}>
       <TableHead>

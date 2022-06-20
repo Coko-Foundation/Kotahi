@@ -1,17 +1,17 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { Formik } from 'formik'
 import { unescape, set } from 'lodash'
-import {
-  TextField,
-  RadioGroup,
-  CheckboxGroup,
-  Button,
-  Attachment,
-} from '@pubsweet/ui'
+import { TextField, RadioGroup, CheckboxGroup, Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
-import { Section as Container, Select, FilesUpload } from '../../../shared'
+import {
+  Section as Container,
+  Select,
+  FilesUpload,
+  Attachment,
+} from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
 import LinksInput from './LinksInput'
@@ -48,11 +48,6 @@ const NoteRight = styled.div`
   line-height: ${th('lineHeightBaseSmall')};
   text-align: right;
 `
-
-const filesToAttachment = file => ({
-  name: file.name,
-  url: file.storedObjects[0].url,
-})
 
 const filterFileManuscript = files =>
   files.filter(
@@ -114,8 +109,8 @@ const rejectProps = (obj, keys) =>
       {},
     )
 
-const link = (urlFrag, manuscript) =>
-  String.raw`<a href=${urlFrag}/versions/${manuscript.id}/manuscript>view here</a>`
+const link = (urlFrag, manuscriptId) =>
+  String.raw`<a href=${urlFrag}/versions/${manuscriptId}/manuscript>view here</a>`
 
 const createMarkup = encodedHtml => ({
   __html: unescape(encodedHtml),
@@ -129,39 +124,41 @@ const prepareFieldProps = rawField => ({
     rawField.options.map(e => ({ ...e, color: e.labelColor })),
 })
 
-const FormTemplate = ({
+const InnerFormTemplate = ({
   form,
-  handleSubmit,
-  journal,
+  handleSubmit, // formik
   toggleConfirming,
   confirming,
-  manuscript,
-  setTouched,
-  values,
-  setFieldValue,
+  manuscriptId,
+  manuscriptShortId,
+  manuscriptStatus,
+  setTouched, // formik
+  values, // formik
+  setFieldValue, // formik
   submissionButtonText,
-  createSupplementaryFile,
   onChange,
   republish,
-  onSubmit,
-  submitSubmission,
-  errors,
-  validateForm,
+  errors, // formik
+  validateForm, // formik
   showEditorOnlyFields,
   urlFrag,
   displayShortIdAsIdentifier,
-  client,
+  validateDoi,
   createFile,
   deleteFile,
+  isSubmission,
+  reviewId,
+  shouldStoreFilesInForm,
+  tagForFiles,
+  initializeReview,
 }) => {
   const submitButton = (text, haspopup = false) => {
     return (
       <div>
         <Button
           onClick={async () => {
-            if (manuscript.status === articleStatuses.published) {
-              republish(manuscript.id)
-
+            if (republish && manuscriptStatus === articleStatuses.published) {
+              republish(manuscriptId)
               return
             }
 
@@ -189,12 +186,9 @@ const FormTemplate = ({
     )
   }
 
-  // this is true if it's the decision page, not if it's the submit page
-  const isDecision = submissionButtonText === ''
-
   // this is what the submit button will say
   const submitButtonText =
-    manuscript.status === articleStatuses.published
+    manuscriptStatus === isSubmission && articleStatuses.published
       ? 'Re-Publish'
       : submissionButtonText
 
@@ -206,12 +200,17 @@ const FormTemplate = ({
 
   // this is whether or not to show a submit button
   const showSubmitButton =
-    !isDecision &&
-    ((['aperture', 'colab'].includes(process.env.INSTANCE_NAME) &&
-      !['submitted', 'revise'].includes(values.status)) ||
-      (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
-        !['revise'].includes(values.status)) ||
-      values.status === 'revise')
+    submissionButtonText &&
+    (isSubmission
+      ? !['submitted', 'revise'].includes(values.status) ||
+        (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
+          values.status === 'submitted')
+      : true)
+
+  const manuscriptFiles = filterFileManuscript(values.files || [])
+
+  const submittedManuscriptFile =
+    isSubmission && manuscriptFiles.length ? manuscriptFiles[0] : null
 
   return (
     <Container>
@@ -219,7 +218,7 @@ const FormTemplate = ({
         <NoteRight>
           Manuscript number
           <br />
-          {manuscript.shortId}
+          {manuscriptShortId}
         </NoteRight>
       )}
       <Heading1>{form.name}</Heading1>
@@ -227,7 +226,7 @@ const FormTemplate = ({
         dangerouslySetInnerHTML={createMarkup(
           (form.description || '').replace(
             '###link###',
-            link(urlFrag, manuscript),
+            link(urlFrag, manuscriptId),
           ),
         )}
       />
@@ -250,8 +249,13 @@ const FormTemplate = ({
                   <FilesUpload
                     createFile={createFile}
                     deleteFile={deleteFile}
-                    fileType="supplementary"
-                    manuscriptId={manuscript.id}
+                    fieldName={shouldStoreFilesInForm ? element.name : 'files'} // TODO Store files in form for submissions too: should simplify code both frontend and back.
+                    fileType={tagForFiles || 'supplementary'}
+                    initializeReview={initializeReview}
+                    manuscriptId={manuscriptId}
+                    onChange={shouldStoreFilesInForm ? onChange : null}
+                    reviewId={reviewId}
+                    values={values}
                   />
                 )}
                 {element.component === 'VisualAbstract' && (
@@ -259,9 +263,13 @@ const FormTemplate = ({
                     acceptMultiple={false}
                     createFile={createFile}
                     deleteFile={deleteFile}
-                    fileType="visualAbstract"
-                    manuscriptId={manuscript.id}
+                    fieldName={shouldStoreFilesInForm ? element.name : 'files'}
+                    fileType={tagForFiles || 'visualAbstract'}
+                    initializeReview={initializeReview}
+                    manuscriptId={manuscriptId}
                     mimeTypesToAccept="image/*"
+                    onChange={shouldStoreFilesInForm ? onChange : null}
+                    values={values}
                   />
                 )}
                 {element.component !== 'SupplementaryFiles' &&
@@ -309,7 +317,7 @@ const FormTemplate = ({
                         JSON.parse(
                           element.doiValidation ? element.doiValidation : false,
                         ),
-                        client,
+                        validateDoi,
                         element.component,
                       )}
                       values={values}
@@ -322,12 +330,12 @@ const FormTemplate = ({
             )
           })}
 
-        {filterFileManuscript(values.files || []).length > 0 ? (
+        {submittedManuscriptFile ? (
           <Section id="files.manuscript">
             <Legend space>Submitted Manuscript</Legend>
             <Attachment
-              file={filesToAttachment(filterFileManuscript(values.files)[0])}
-              key={filterFileManuscript(values.files)[0].storedObjects[0].url}
+              file={submittedManuscriptFile}
+              key={submittedManuscriptFile.storedObjects[0].url}
               uploaded
             />
           </Section>
@@ -347,6 +355,71 @@ const FormTemplate = ({
         )}
       </form>
     </Container>
+  )
+}
+
+const FormTemplate = ({
+  form,
+  initialValues,
+  manuscriptId,
+  manuscriptShortId,
+  manuscriptStatus,
+  submissionButtonText,
+  onChange,
+  republish,
+  onSubmit,
+  showEditorOnlyFields,
+  urlFrag,
+  displayShortIdAsIdentifier,
+  validateDoi,
+  createFile,
+  deleteFile,
+  isSubmission,
+  reviewId,
+  shouldStoreFilesInForm,
+  initializeReview,
+  tagForFiles,
+}) => {
+  const [confirming, setConfirming] = React.useState(false)
+
+  const toggleConfirming = () => {
+    setConfirming(confirm => !confirm)
+  }
+
+  return (
+    <Formik
+      displayName={form.name}
+      initialValues={initialValues}
+      onSubmit={onSubmit ?? (() => null)}
+      validateOnBlur
+      validateOnChange={false}
+    >
+      {formProps => (
+        <InnerFormTemplate
+          confirming={confirming}
+          createFile={createFile}
+          deleteFile={deleteFile}
+          isSubmission={isSubmission}
+          toggleConfirming={toggleConfirming}
+          {...formProps}
+          displayShortIdAsIdentifier={displayShortIdAsIdentifier}
+          form={form}
+          initializeReview={initializeReview}
+          manuscriptId={manuscriptId}
+          manuscriptShortId={manuscriptShortId}
+          manuscriptStatus={manuscriptStatus}
+          onChange={onChange}
+          republish={republish}
+          reviewId={reviewId}
+          shouldStoreFilesInForm={shouldStoreFilesInForm}
+          showEditorOnlyFields={showEditorOnlyFields}
+          submissionButtonText={submissionButtonText}
+          tagForFiles={tagForFiles}
+          urlFrag={urlFrag}
+          validateDoi={validateDoi}
+        />
+      )}
+    </Formik>
   )
 }
 
@@ -377,44 +450,38 @@ FormTemplate.propTypes = {
     popupdescription: PropTypes.string,
     haspopup: PropTypes.string.isRequired, // bool as string
   }).isRequired,
-  handleSubmit: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  journal: PropTypes.any, // currently unused
-  toggleConfirming: PropTypes.func.isRequired,
-  confirming: PropTypes.bool.isRequired,
-  manuscript: PropTypes.shape({
-    id: PropTypes.string.isRequired,
-    status: PropTypes.string,
-  }).isRequired,
-  setTouched: PropTypes.func.isRequired,
-  values: PropTypes.shape({
+  manuscriptId: PropTypes.string.isRequired,
+  manuscriptShortId: PropTypes.number.isRequired,
+  manuscriptStatus: PropTypes.string,
+  initialValues: PropTypes.shape({
     files: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string,
         tags: PropTypes.arrayOf(PropTypes.string.isRequired),
         storedObjects: PropTypes.arrayOf(PropTypes.object),
       }).isRequired,
-    ).isRequired,
+    ),
     status: PropTypes.string,
-  }).isRequired,
-  setFieldValue: PropTypes.func.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  createSupplementaryFile: PropTypes.any, // currently unused
+  }),
   onChange: PropTypes.func.isRequired,
   onSubmit: PropTypes.func,
-  republish: PropTypes.func.isRequired,
-  submitSubmission: PropTypes.func,
+  republish: PropTypes.func,
   submissionButtonText: PropTypes.string,
-  errors: PropTypes.objectOf(PropTypes.any).isRequired,
-  validateForm: PropTypes.func.isRequired,
   showEditorOnlyFields: PropTypes.bool.isRequired,
+  shouldStoreFilesInForm: PropTypes.bool,
+  /** If supplied, any uploaded files will be tagged with this rather than 'supplementary' or 'visualAbstract' */
+  tagForFiles: PropTypes.string,
+  initializeReview: PropTypes.func,
 }
 FormTemplate.defaultProps = {
-  journal: undefined,
   onSubmit: undefined,
-  submitSubmission: undefined,
-  createSupplementaryFile: undefined,
+  initialValues: null,
+  republish: null,
   submissionButtonText: '',
+  manuscriptStatus: null,
+  shouldStoreFilesInForm: false,
+  tagForFiles: null,
+  initializeReview: null,
 }
 
 export default FormTemplate

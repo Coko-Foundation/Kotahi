@@ -6,7 +6,10 @@ import { Formik } from 'formik'
 import { ValidatedFieldFormik, Menu, Button } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { v4 as uuid } from 'uuid'
-import components from './config/Elements'
+import {
+  elements as components,
+  submissionElements as submissionComponents,
+} from './config/Elements'
 import * as elements from './builderComponents'
 import { Section, Legend, Page, Heading, DetailText } from './style'
 
@@ -30,8 +33,15 @@ const ComponentProperties = ({
   selectedComponent,
   setComponentType,
   setFieldValue,
+  category,
 }) => {
-  const componentProperties = components[selectedComponent] ?? {}
+  let componentProperties
+
+  if (category === 'submission') {
+    componentProperties = submissionComponents[selectedComponent] ?? {}
+  } else {
+    componentProperties = components[selectedComponent] ?? {}
+  }
 
   const editableProperties = Object.entries(componentProperties).filter(
     ([key, value]) => key !== 'id',
@@ -122,7 +132,7 @@ const prepareForSubmit = values => {
   return cleanedValues
 }
 
-const ComponentForm = ({ field, formId, updateField }) => {
+const ComponentForm = ({ category, field, formId, updateField }) => {
   const [componentType, setComponentType] = useState(field.component)
 
   const component = components[componentType] || {}
@@ -150,6 +160,7 @@ const ComponentForm = ({ field, formId, updateField }) => {
     >
       {formikProps => (
         <ComponentProperties
+          category={category}
           formErrors={formikProps.errors}
           onSubmit={formikProps.handleSubmit}
           selectedComponent={componentType}

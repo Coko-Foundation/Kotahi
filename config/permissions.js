@@ -34,6 +34,27 @@ const userIsEditorQuery = async (ctx, manuscriptId) => {
   return !!rows
 }
 
+const getManuscriptOfFile = async (file, ctx) => {
+  if (!file || !file.objectId) {
+    console.error('File without objectId encountered:', file)
+    return null
+  }
+
+  // The file may belong to a review or directly to a manuscript
+  const review = await ctx.connectors.Review.model
+    .query()
+    .findById(file.objectId)
+
+  const manuscript = await ctx.connectors.Manuscript.model
+    .query()
+    .findById(review ? review.manuscriptId : file.objectId)
+
+  if (!manuscript)
+    console.error('File without owner manuscript encountered:', file)
+
+  return manuscript
+}
+
 const userIsEditor = rule({
   cache: 'contextual',
 })(async (parent, args, ctx, info) => userIsEditorQuery(ctx))
@@ -59,33 +80,25 @@ const userIsAdmin = rule({ cache: 'contextual' })(
   },
 )
 
-const parentManuscriptIsPublished = rule({ cache: 'contextual' })(
+const isPublicFileFromPublishedManuscript = rule({ cache: 'contextual' })(
   async (parent, args, ctx, info) => {
-    // parent can be a file object or review object
-    // On initial manuscript upload docx it doesn't have a manuscrtiptId/objectId it has file object with name and stored objects
-    if (parent.storedObjects && !parent.objectId) return false // only on uploading manuscript docx this will be validated
+    if (parent.tags && parent.tags.includes('confidential')) return false
+    const manuscript = await getManuscriptOfFile(parent, ctx)
+    return !!(manuscript && manuscript.published)
+  },
+)
 
-    let review
+const isPublicReviewFromPublishedManuscript = rule({ cache: 'contextual' })(
+  async (parent, args, ctx, info) => {
+    if (parent.isHiddenFromAuthor || !parent.manuscriptId) return false
 
-    // if the file has objectId it can be a reviewCommentId or manuscriptId
-    if (parent.objectId) {
-      const reviewComment = await ctx.connectors.ReviewComment.model
-        .query()
-        .findById(parent.objectId)
-
-      if (reviewComment)
-        review = await ctx.connectors.Review.model
-          .query()
-          .findById(reviewComment.reviewId)
-    }
+    // TODO Check that all confidential fields have been stripped out. Otherwise return false.
 
     const manuscript = await ctx.connectors.Manuscript.model
       .query()
-      .findById(
-        review ? review.manuscriptId : parent.manuscriptId || parent.objectId,
-      )
+      .findById(parent.manuscriptId)
 
-    return !!manuscript.published
+    return !!(manuscript && manuscript.published)
   },
 )
 
@@ -249,30 +262,11 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
   } else if (args.id) {
     // id is supplied for deletion
     const file = await ctx.connectors.File.model.query().findById(args.id)
-
-    // objectId can either be a reviewCommentId or manuscriptId
-    const reviewComment = await ctx.connectors.ReviewComment.model
-      .query()
-      .findById(file.objectId)
-
-    let review
-
-    // if the objectId is reviewCommentId get review details linked to the manuscript
-    if (reviewComment)
-      review = await ctx.connectors.Review.model
-        .query()
-        .findById(reviewComment.reviewId)
-
-    // if a review is not found it uses the file.objectId which is the manuscriptId
-    // eslint-disable-next-line prefer-destructuring
-    const manuscript = await ctx.connectors.Manuscript.model
-      .query()
-      .findById(review ? review.manuscriptId : file.objectId)
-
-    manuscriptId = manuscript.id
-  } else {
-    return false
+    const manuscript = await getManuscriptOfFile(file, ctx)
+    manuscriptId = manuscript && manuscript.id
   }
+
+  if (!manuscriptId) return false
 
   const team = await ctx.connectors.Team.model
     .query()
@@ -295,26 +289,8 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
     if (parent.storedObjects && !parent.id) return true // only on uploading manuscript docx this will be validated
 
     const file = await ctx.connectors.File.model.query().findById(parent.id)
-
-    const reviewComment = await ctx.connectors.ReviewComment.model
-      .query()
-      .findById(file.objectId)
-
-    let review
-
-    if (reviewComment)
-      review = await ctx.connectors.Review.model
-        .query()
-        .findById(reviewComment.reviewId)
-
-    const manuscript = await ctx.connectors.Manuscript.model
-      .query()
-      .findById(review ? review.manuscriptId : file.objectId)
-
-    if (!manuscript) {
-      console.error('File without owner manuscript encountered:', parent)
-      return false
-    }
+    const manuscript = await getManuscriptOfFile(file, ctx)
+    if (!manuscript) return false
 
     const team = await ctx.connectors.Team.model
       .query()
@@ -344,26 +320,8 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
   if (!parent.id) return false
 
   const file = await ctx.connectors.File.model.query().findById(parent.id)
-
-  const reviewComment = await ctx.connectors.ReviewComment.model
-    .query()
-    .findById(file.objectId)
-
-  let review
-
-  if (reviewComment)
-    review = await ctx.connectors.Review.model
-      .query()
-      .findById(reviewComment.reviewId)
-
-  const manuscript = await ctx.connectors.Manuscript.model
-    .query()
-    .findById(review ? review.manuscriptId : file.objectId)
-
-  if (!manuscript) {
-    console.error('File without owner manuscript encountered:', parent)
-    return false
-  }
+  const manuscript = await getManuscriptOfFile(file, ctx)
+  if (!manuscript) return false
 
   const team = await ctx.connectors.Team.model
     .query()
@@ -391,7 +349,7 @@ const permissions = {
     publishedManuscript: allow,
     messages: isAuthenticated,
     form: isAuthenticated,
-    forms: userIsAdmin,
+    forms: allow,
     formsByCategory: allow,
     formForPurposeAndCategory: allow,
     user: isAuthenticated,
@@ -401,7 +359,7 @@ const permissions = {
   Mutation: {
     upload: isAuthenticated,
     createManuscript: isAuthenticated,
-    updateManuscript: userIsAuthor,
+    updateManuscript: or(userIsAuthor, userIsEditor, userIsAdmin),
     submitManuscript: userIsAuthor,
     createMessage: userIsAllowedToChat,
     updateReview: or(
@@ -435,13 +393,11 @@ const permissions = {
   Manuscript: allow,
   ManuscriptVersion: allow,
   File: or(
-    parentManuscriptIsPublished,
-    or(
-      userIsAuthorOfTheManuscriptOfTheFile,
-      userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete,
-      userIsEditor,
-      userIsAdmin,
-    ),
+    isPublicFileFromPublishedManuscript,
+    userIsAuthorOfTheManuscriptOfTheFile,
+    userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete,
+    userIsEditor,
+    userIsAdmin,
   ),
   Form: allow,
   FormStructure: allow,
@@ -449,8 +405,7 @@ const permissions = {
   FormElementOption: allow,
   FormElementValidation: allow,
   UploadResult: isAuthenticated,
-  Review: or(parentManuscriptIsPublished, reviewIsByUser),
-  ReviewComment: isAuthenticated,
+  Review: or(isPublicReviewFromPublishedManuscript, reviewIsByUser),
   Channel: isAuthenticated,
   Message: isAuthenticated,
   MessagesRelay: isAuthenticated,

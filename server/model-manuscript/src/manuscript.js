@@ -49,13 +49,13 @@ class Manuscript extends BaseModel {
 
     const manuscriptReviews = await Review.findByField('manuscript_id', this.id)
 
-    await Promise.all(
-      manuscriptReviews.map(async review => {
-        // eslint-disable-next-line no-param-reassign
-        // eslint-disable-next-line
-        review.comments = await review.getComments()
-      }),
-    )
+    // await Promise.all(
+    //   manuscriptReviews.map(async review => {
+    //     // eslint-disable-next-line no-param-reassign
+    //     // eslint-disable-next-line
+    //     review.comments = await review.getComments()
+    //   }),
+    // )
 
     return manuscriptReviews
   }
@@ -68,15 +68,11 @@ class Manuscript extends BaseModel {
 
     const manuscripts = await Manuscript.query()
       .where('parent_id', id)
-      .withGraphFetched(
-        '[teams, teams.members, reviews.[user, comments], files]',
-      )
+      .withGraphFetched('[teams.members, reviews.user, files]')
 
     const firstManuscript = await Manuscript.query()
       .findById(id)
-      .withGraphFetched(
-        '[teams, teams.members, reviews.[user, comments], files]',
-      )
+      .withGraphFetched('[teams.members, reviews.user, files]')
 
     manuscripts.push(firstManuscript)
 

@@ -39,9 +39,7 @@ const EditorItemLinks = ({ version, urlFrag }) => (
       data-testid="control-panel"
       to={`${urlFrag}/versions/${version.parentId || version.id}/decision`}
     >
-      {version.decision && version.decision.status === 'submitted'
-        ? `Decision: ${version.decision.recommendation}`
-        : 'Control Panel'}
+      Control Panel
     </Action>
   </StyledActionGroup>
 )
@@ -50,10 +48,6 @@ EditorItemLinks.propTypes = {
   version: PropTypes.shape({
     id: PropTypes.string.isRequired,
     parentId: PropTypes.string,
-    decision: PropTypes.shape({
-      status: PropTypes.string.isRequired,
-      recommendation: PropTypes.string.isRequired,
-    }),
   }).isRequired,
 }
 
@@ -125,10 +119,6 @@ EditorItem.propTypes = {
   version: PropTypes.shape({
     id: PropTypes.string.isRequired,
     parentId: PropTypes.string,
-    decision: PropTypes.shape({
-      status: PropTypes.string.isRequired,
-      recommendation: PropTypes.string.isRequired,
-    }),
     meta: PropTypes.shape({
       title: PropTypes.string.isRequired,
     }).isRequired,

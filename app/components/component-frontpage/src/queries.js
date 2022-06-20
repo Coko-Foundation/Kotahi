@@ -14,22 +14,14 @@ export default {
           reviews {
             id
             open
-            recommendation
             canBePublishedPublicly
-            decisionComment {
-              id
-              content
-            }
-            reviewComment {
-              id
-              content
-            }
             created
             isDecision
             user {
               id
               username
             }
+            jsonData
           }
           status
           files {

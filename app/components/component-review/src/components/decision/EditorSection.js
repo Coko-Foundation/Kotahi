@@ -1,8 +1,8 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { adopt } from 'react-adopt'
 import FullWaxEditor from '../../../../wax-collab/src/FullWaxEditor'
 import { Info } from '../style'
-import { adopt } from 'react-adopt'
 import { getSpecificFilesQuery } from '../../../../asset-manager/src/queries'
 import withModal from '../../../../asset-manager/src/ui/Modal/withModal'
 
@@ -14,24 +14,27 @@ const mapper = {
 const mapProps = args => ({
   onAssetManager: manuscriptId =>
     new Promise((resolve, reject) => {
-      const { withModal } = args
-
-      const { showModal, hideModal } = withModal
+      const {
+        withModal: { showModal, hideModal },
+      } = args
 
       const handleImport = async selectedFileIds => {
         const {
           getSpecificFilesQuery: { client, query },
         } = args
+
         const { data } = await client.query({
           query,
           variables: { ids: selectedFileIds },
         })
+
         const { getSpecificFiles } = data
 
         const alteredFiles = getSpecificFiles.map(getSpecificFile => {
           const mediumSizeFile = getSpecificFile.storedObjects.find(
             storedObject => storedObject.type === 'medium',
           )
+
           return {
             source: mediumSizeFile.url,
             mimetype: mediumSizeFile.mimetype,
@@ -104,18 +107,19 @@ const EditorSection = ({
 
   return (
     <Composed
-      isAuthorMode={isAuthorMode}
-      readonly={readonly}
       currentUser={currentUser}
-      saveSource={saveSource}
-      isCurrentUserEditor={isCurrentUserEditor}
+      isAuthorMode={isAuthorMode}
       isCurrentUserAuthor={isCurrentUserAuthor}
+      isCurrentUserEditor={isCurrentUserEditor}
       manuscript={manuscript}
+      readonly={readonly}
+      saveSource={saveSource}
     >
       {({ onAssetManager }) => (
         <div>
           <FullWaxEditor
             authorComments={isAuthorMode}
+            manuscriptId={manuscript.id}
             // onChange={readonly && !isAuthorMode ? null : onBlur}
             // onChange={readonly && !isAuthorMode ? null : onChange}
             onAssetManager={onAssetManager}
@@ -130,7 +134,6 @@ const EditorSection = ({
             }
             user={currentUser}
             value={manuscript.meta.source}
-            manuscriptId={manuscript.id}
           />
         </div>
       )}

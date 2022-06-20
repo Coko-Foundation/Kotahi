@@ -13,7 +13,7 @@ const resolvers = {
       return Team.query().where({ name }).eager('[channels, members]').first()
     },
     channelsByTeamName: async (_, { teamName }, context) =>
-      Channel.query().joinRelation('team').where({ 'team.name': teamName }),
+      Channel.query().joinRelated('team').where({ 'team.name': teamName }),
     channels: async () => Channel.query().where({ teamId: null }),
     findByDOI: async (_, { doi }) => Channel.query().where({ doi }).first(),
     searchOnCrossref: async (_, { searchTerm }, context) => {

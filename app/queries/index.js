@@ -140,14 +140,6 @@ export const SEARCH_USERS = gql`
   }
 `
 
-export const VALIDATE_DOI = gql`
-  query Manuscripts($articleURL: String) {
-    validateDOI(articleURL: $articleURL) {
-      isDOIValid
-    }
-  }
-`
-
 export const DELETE_MANUSCRIPT = gql`
   mutation($id: ID!) {
     deleteManuscript(id: $id)
