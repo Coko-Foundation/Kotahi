@@ -35,7 +35,7 @@ const mapProps = args => ({
         const { getSpecificFiles: files } = data
 
         const alteredFiles = files.map(file => {
-          const mediumSizeFile = files.storedObjects.find(
+          const mediumSizeFile = file.storedObjects.find(
             storedObject => storedObject.type === 'medium',
           )
 

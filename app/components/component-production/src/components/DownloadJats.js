@@ -7,6 +7,7 @@ const getJatsQuery = gql`
   query($manuscriptId: String!) {
     convertToJats(manuscriptId: $manuscriptId) {
       xml
+      zipLink
       error
     }
   }
