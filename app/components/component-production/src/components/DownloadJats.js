@@ -39,6 +39,7 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
   if (data && !downloading) {
     setDownloading(true)
     const jats = data.convertToJats.xml
+    const { zipLink } = data.convertToJats
 
     if (data.convertToJats.error.length) {
       /* eslint-disable */
@@ -59,6 +60,7 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
     window.open(url)
     // URL.revokeObjectURL(url)
     console.log(url)
+    console.log('Download zip: ', zipLink)
     setModalIsOpen(false)
     resetMakingJats()
 

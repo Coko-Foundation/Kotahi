@@ -1,16 +1,26 @@
 const fs = require('fs-extra')
-const path = require('path')
+const fsPromised = require('fs').promises
+const crypto = require('crypto')
 const htmlparser2 = require('htmlparser2')
 const cheerio = require('cheerio')
 const { promisify } = require('util')
 const { createFile, deleteFiles, File } = require('@coko/server')
+const config = require('config')
+const makeZip = require('../pdfexport/ziputils.js')
 
 const copyFile = promisify(fs.copyFile)
 
-const makeZipFile = async (manuscriptId, jats) => {
-  // jats is a string with the processed JATS in it
+const randomBytes = promisify(crypto.randomBytes)
 
-  console.log('JATS: ', jats)
+const uploadsPath = config.get('pubsweet-server').uploads
+
+const { getFileWithUrl } = require('../utils/fileStorageUtils')
+
+const makeZipFile = async (manuscriptId, jats) => {
+  // jats is a string with the semi-processed JATS in it
+  // (images have not been dealt with)
+
+  // console.log('JATS: ', jats)
 
   const manuscriptFiles = await File.query().where({
     objectId: manuscriptId,
@@ -76,10 +86,15 @@ const makeZipFile = async (manuscriptId, jats) => {
       )
 
       suppFileList[suppFileList.length] = myOriginal
-      const mimeType = myOriginal.mimeType.split('/')
+
+      const mimeType = myOriginal.mimeType
+        ? `mimetype="${myOriginal.mimeType.split('-')[0]}" mime-subtype="${
+            myOriginal.mimeType.split('-')[1]
+          }" `
+        : ''
 
       // console.log(myOriginal)
-      supplementaryJats += `<supplementary-material id="supplementary-material-${i}" xlink:href="supplementary/${supplementaryFiles[i].name}" mimetype="${mimeType[0]}" mime-subtype="${mimeType[1]}" />`
+      supplementaryJats += `<supplementary-material id="supplementary-material-${i}" xlink:href="supplementary/${supplementaryFiles[i].name}" ${mimeType}/>`
     }
 
     outJats = outJats.replace(
@@ -90,32 +105,53 @@ const makeZipFile = async (manuscriptId, jats) => {
 
   // 5. make a directory with the JATS file as index.xml
 
+  const raw = await randomBytes(16)
+  const dirName = `tmp/${raw.toString('hex')}_${manuscriptId}`
+  await fsPromised.mkdir(dirName, { recursive: true })
+  await fsPromised.appendFile(`${dirName}/index.xml`, outJats)
+
   if (imageList.length) {
     console.log('Image files: ', imageList)
     // 5.1. make a subdir "images"
-    // 5.2. for each image ID, get all the versions of files with that ID
-    // 5.3. put all of those files in the subdir
+    const imageDirName = `${dirName}/images`
+    await fsPromised.mkdir(imageDirName, { recursive: true })
+
+    // TODO: 5.2. for each image ID, get all the versions of files with that ID
+    // TODO: 5.3. put all of those files in the subdir
   }
 
-  if (suppFileList.lenght) {
-    console.log('Supplementary files: ', suppFileList)
+  if (suppFileList.length) {
     // 5.4. make a subdir "supplementary"
-    // 5.5. get all the supplementary files
-    // 5.6. put all of those files in the subdir
-    // Should look something like this:
-    //
-    // <supplementary-material id="S1" xmlns:xlink="http://www.w3.org/1999/xlink"
-    // xlink:title="local_file" xlink:href="pbio-0020328-t002.xls"
-    // mimetype="application/vnd.ms-excel">
+    console.log('Supplementary files: ', suppFileList)
+    const suppDirName = `${dirName}/supplementary`
+    await fsPromised.mkdir(suppDirName, { recursive: true })
+    // TODO: // 5.5. get all the supplementary files
+    // TODO: // 5.6. put all of those files in the subdir
   }
 
   // 6. zip the directory
+
+  const zipPath = await makeZip(dirName)
+
+  const createdFile = await createFile(
+    fs.createReadStream(`${zipPath}`),
+    `${manuscriptId}.zip`,
+    null,
+    null,
+    ['zippedJats'],
+    manuscriptId,
+  )
+
+  const downloadReadyZipFile = await getFileWithUrl(createdFile)
+
+  const { url } = downloadReadyZipFile.storedObjects[0]
+
   // 7. return the link to the zip file
 
   // 8. cleanup???
 
-  console.log('outJats: ', outJats)
-  return { link: '', jats: outJats } // returns link to where the ZIP file is.
+  // console.log('outJats: ', outJats)
+  return { link: url, jats: outJats } // returns link to where the ZIP file is.
 }
 
 module.exports = makeZipFile

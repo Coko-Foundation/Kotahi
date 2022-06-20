@@ -4,7 +4,7 @@ const { makeJats } = require('../utils/jatsUtils')
 const articleMetadata = require('../pdfexport/pdfTemplates/articleMetadata')
 const publicationMetadata = require('../pdfexport/pdfTemplates/publicationMetadata')
 const validateJats = require('./validation')
-const makeZipFile = require('./makeZipFile')
+const makeZippedJats = require('./makeZippedJats')
 
 const failXML = false // if this is true, we pass errorJats (which is invalid XML) to the parser
 
@@ -68,7 +68,7 @@ const resolvers = {
       let returnedJats = { link: '', jats }
 
       if (jats) {
-        returnedJats = await makeZipFile(manuscriptId, jats)
+        returnedJats = await makeZippedJats(manuscriptId, jats)
       }
 
       return {
