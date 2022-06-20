@@ -41,29 +41,25 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
 
     if (data.convertToJats.error.length) {
       /* eslint-disable */
-      console.log(
-        'Error making JATS. Errors: ',
-        JSON.parse(data.convertToJats.error),
-      )
-      resetMakingJats() // this is bad!
+      console.log(data.convertToJats.xml)
+      console.log('Error making JATS. Errors: ', data.convertToJats.error)
+      // resetMakingJats() // this is bad!
       return null
     }
 
     /* eslint-disable */
 
-    setTimeout(() => {
-      console.log('XML Selected')
-      console.log('HTML:\n\n', manuscript.meta.source)
-      console.log('JATS:\n\n', jats)
-      // JATS XML file opens in new tab
-      let blob = new Blob([jats], { type: 'text/xml' })
-      let url = URL.createObjectURL(blob)
-      window.open(url)
-      URL.revokeObjectURL(url)
-      setModalIsOpen(false)
-      resetMakingJats()
-      // This delay was added to effectively debounce this – if it wasn't in there, it went into a loop. Value could decrease?
-    }, 1000)
+    console.log('XML Selected')
+    console.log('HTML:\n\n', manuscript.meta.source)
+    console.log('JATS:\n\n', jats)
+    // JATS XML file opens in new tab
+    let blob = new Blob([jats], { type: 'text/xml' })
+    let url = URL.createObjectURL(blob)
+    window.open(url)
+    // URL.revokeObjectURL(url)
+    console.log(url)
+    setModalIsOpen(false)
+    resetMakingJats()
 
     /* eslint-disable */
   }
@@ -110,7 +106,16 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
           </button>
         </div>
       ) : data.convertToJats.error ? (
-        <p>Error: invalid JATS</p>
+        <>
+          <p>Error: invalid JATS. See console for details.</p>
+          <button
+            onClick={cancelGen}
+            style={{ marginTop: '1em' }}
+            type="submit"
+          >
+            Close
+          </button>
+        </>
       ) : (
         <button onClick={cancelGen} style={{ marginTop: '1em' }} type="submit">
           Cancel
