@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { Fragment } from 'react'
 import Modal from 'react-modal'
 import { useQuery, gql } from '@apollo/client'
 import { Spinner, CommsErrorBanner } from '../../../shared'
@@ -16,6 +16,7 @@ const getJatsQuery = gql`
 const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
   const [downloading, setDownloading] = React.useState(false)
   const [modalIsOpen, setModalIsOpen] = React.useState(true)
+  const [zipLink, setZipLink] = React.useState('')
 
   const { data, loading, error } = useQuery(getJatsQuery, {
     fetchPolicy: 'cache-and-network',
@@ -39,42 +40,31 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
   if (data && !downloading) {
     setDownloading(true)
     const jats = data.convertToJats.xml
-    const { zipLink } = data.convertToJats
+    setZipLink(data.convertToJats.zipLink)
 
     if (data.convertToJats.error.length) {
       /* eslint-disable */
       console.log(data.convertToJats.xml)
       console.log('Error making JATS. Errors: ', data.convertToJats.error)
-      // resetMakingJats() // this is bad!
       return null
     }
 
     /* eslint-disable */
-
     console.log('XML Selected')
     console.log('HTML:\n\n', manuscript.meta.source)
     console.log('JATS:\n\n', jats)
-    // JATS XML file opens in new tab
-    let blob = new Blob([jats], { type: 'text/xml' })
-    let url = URL.createObjectURL(blob)
-    window.open(url)
-    // URL.revokeObjectURL(url)
-    console.log(url)
-    console.log('Download zip: ', zipLink)
-    setModalIsOpen(false)
-    resetMakingJats()
-
-    /* eslint-disable */
+    console.log('Download link: ', data.convertToJats.zipLink)
   }
 
   const onError = () => {
     console.error(error)
     resetMakingJats()
+    setModalIsOpen(false)
   }
 
   const cancelGen = () => {
-    // console.log('PDF generation canceled')
     resetMakingJats()
+    setModalIsOpen(false)
   }
 
   return (
@@ -92,7 +82,7 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
       }}
     >
       <h2 style={{ marginBottom: '1em' }}>
-        {error ? <p>Error generating JATS</p> : <p>Preparing JATS...</p>}
+        {error ? <p>Error generating JATS</p> : <p>Download JATS</p>}
       </h2>
       {loading && <Spinner />}
       {error ? (
@@ -109,7 +99,7 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
           </button>
         </div>
       ) : data.convertToJats.error ? (
-        <>
+        <Fragment>
           <p>Error: invalid JATS. See console for details.</p>
           <button
             onClick={cancelGen}
@@ -118,11 +108,30 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
           >
             Close
           </button>
-        </>
+        </Fragment>
       ) : (
-        <button onClick={cancelGen} style={{ marginTop: '1em' }} type="submit">
-          Cancel
-        </button>
+        <Fragment>
+          <p>
+            Use{' '}
+            <a href={zipLink} download>
+              this link
+            </a>{' '}
+            to download your XML.
+          </p>
+          <p style={{ textAlign: 'right', marginTop: '2em' }}>
+            <button
+              onClick={cancelGen}
+              style={{
+                padding: '6px 12px',
+                borderRadius: '3px',
+                userSelect: 'none',
+              }}
+              type="submit"
+            >
+              Close
+            </button>
+          </p>
+        </Fragment>
       )}
     </Modal>
   )
