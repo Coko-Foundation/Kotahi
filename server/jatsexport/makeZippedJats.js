@@ -57,7 +57,7 @@ const makeZipFile = async (manuscriptId, jats) => {
 
     let outHtml = `<alternatives>`
 
-    for (let i = 0; i < imageFileData.storedObjects.length; i++) {
+    for (let i = 0; i < imageFileData.storedObjects.length; i += 1) {
       outHtml += `<graphic title="${imageFileData.name}_${imageFileData.storedObjects[i].type}" xlink:href="images/${imageFileData.storedObjects[i].key}" />`
     }
 
@@ -82,7 +82,7 @@ const makeZipFile = async (manuscriptId, jats) => {
     let supplementaryJats = ''
 
     // loop through them, for each one, add this to  supplementaryJats:
-    for (let i = 0; i < supplementaryFiles.length; i++) {
+    for (let i = 0; i < supplementaryFiles.length; i += 1) {
       const myOriginal = supplementaryFiles[i].storedObjects.find(
         x => x.type === 'original',
       )

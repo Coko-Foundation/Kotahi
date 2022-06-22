@@ -1,7 +1,8 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import Modal from 'react-modal'
 import { useQuery, gql } from '@apollo/client'
 import { Spinner, CommsErrorBanner } from '../../../shared'
+import { CloseButton, PopUpTextContainer, PopUpH2 } from './styles'
 
 const getJatsQuery = gql`
   query($manuscriptId: String!) {
@@ -18,6 +19,10 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
   const [modalIsOpen, setModalIsOpen] = React.useState(true)
   const [zipLink, setZipLink] = React.useState('')
 
+  const [message, setMessage] = React.useState(
+    'This link is available for 24 hours',
+  )
+
   const { data, loading, error } = useQuery(getJatsQuery, {
     fetchPolicy: 'cache-and-network',
     variables: {
@@ -25,7 +30,27 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
     },
   })
 
-  if (loading) return <Spinner />
+  if (loading)
+    return (
+      <Modal
+        isOpen={modalIsOpen}
+        style={{
+          content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            width: '360px',
+          },
+        }}
+      >
+        <CloseButton />
+        <PopUpH2>Generating JATS...</PopUpH2>
+        <Spinner />
+      </Modal>
+    )
 
   if (error) {
     // if here, the error is not with the XML but with the query
@@ -78,60 +103,43 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
           bottom: 'auto',
           marginRight: '-50%',
           transform: 'translate(-50%, -50%)',
+          width: '360px',
         },
       }}
     >
-      <h2 style={{ marginBottom: '1em' }}>
-        {error ? <p>Error generating JATS</p> : <p>Download JATS</p>}
-      </h2>
-      {loading && <Spinner />}
+      <CloseButton onClick={cancelGen} />
+      <PopUpH2>{error ? 'Error generating JATS' : 'Your JATS link:'}</PopUpH2>
       {error ? (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+        <PopUpTextContainer>
           <p>Sorry, something went wrong.</p>
-          <button onClick={onError} style={{ marginTop: '1em' }} type="submit">
-            Close
-          </button>
-        </div>
+        </PopUpTextContainer>
       ) : data.convertToJats.error ? (
-        <Fragment>
+        <PopUpTextContainer>
           <p>Error: invalid JATS. See console for details.</p>
+        </PopUpTextContainer>
+      ) : (
+        <PopUpTextContainer>
+          <p className="linkurl">
+            <a href={zipLink} download>
+              {zipLink}
+            </a>
+          </p>
+          <p className="linknote">{message}</p>
           <button
-            onClick={cancelGen}
-            style={{ marginTop: '1em' }}
+            className="copybutton"
+            onClick={e => {
+              e.preventDefault()
+              navigator.clipboard.writeText(zipLink)
+              setMessage('Copied!')
+              setTimeout(() => {
+                setMessage('This link is available for 24 hours')
+              }, 1000)
+            }}
             type="submit"
           >
-            Close
+            Copy link
           </button>
-        </Fragment>
-      ) : (
-        <Fragment>
-          <p>
-            Use{' '}
-            <a href={zipLink} download>
-              this link
-            </a>{' '}
-            to download your XML.
-          </p>
-          <p style={{ textAlign: 'right', marginTop: '2em' }}>
-            <button
-              onClick={cancelGen}
-              style={{
-                padding: '6px 12px',
-                borderRadius: '3px',
-                userSelect: 'none',
-              }}
-              type="submit"
-            >
-              Close
-            </button>
-          </p>
-        </Fragment>
+        </PopUpTextContainer>
       )}
     </Modal>
   )
