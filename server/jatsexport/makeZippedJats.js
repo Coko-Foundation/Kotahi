@@ -47,7 +47,7 @@ const makeZipFile = async (manuscriptId, jats) => {
     const imageFileData = manuscriptFiles.find(x => x.id === fileId)
     // console.log(fileData)
 
-    imageList[imageList.length] = imageFileData
+    imageList.push(imageFileData)
 
     // should come back with something liek this inside of <figure>:
     // 	<alternatives>
@@ -87,7 +87,7 @@ const makeZipFile = async (manuscriptId, jats) => {
         x => x.type === 'original',
       )
 
-      suppFileList[suppFileList.length] = supplementaryFiles[i]
+      suppFileList.push(supplementaryFiles[i])
 
       const mimeType = myOriginal.mimeType
         ? `mimetype="${myOriginal.mimeType.split('-')[0]}" mime-subtype="${
