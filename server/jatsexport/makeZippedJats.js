@@ -72,8 +72,8 @@ const makeZipFile = async (manuscriptId, jats) => {
   // 3. check if there are supplementary files
   // 4. if so, get a list of all the files
 
-  const supplementaryFiles = manuscriptFiles.filter(x =>
-    x.tags.includes('supplementary'),
+  const supplementaryFiles = manuscriptFiles.filter(
+    x => x.tags.includes('supplementary') || x.tags.includes('visualAbstract'),
   )
 
   if (supplementaryFiles && supplementaryFiles.length) {
