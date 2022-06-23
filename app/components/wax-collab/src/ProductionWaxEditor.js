@@ -57,7 +57,7 @@ const ProductionWaxEditor = ({
 
   useEffect(() => {
     return () => {
-      if (editorRef.current) {
+      if (editorRef.current && saveSource !== null) {
         saveSource(editorRef.current.getContent())
       }
     }
