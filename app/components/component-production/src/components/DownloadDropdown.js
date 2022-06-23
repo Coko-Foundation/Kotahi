@@ -17,8 +17,12 @@ export const DownloadDropdown = ({
         console.log('HTML Selected')
         // eslint-disable-next-line
         console.log('HTML:\n\n', manuscriptSource)
+
         // Raw HTML file opens in new tab
-        const blob = new Blob([manuscriptSource], { type: 'text/html' })
+        const blob = new Blob([manuscriptSource], {
+          type: 'text/html;charset=utf8',
+        })
+
         const url = URL.createObjectURL(blob)
         window.open(url)
         URL.revokeObjectURL(url)
