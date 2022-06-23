@@ -115,7 +115,7 @@ const pdfHandler = async manuscriptId => {
     articleData.files,
     'original',
   )
-  const outHtml = applyTemplate(articleData)
+  const outHtml = await applyTemplate(articleData)
 
   await fsPromised.appendFile(`${dirName}/index.html`, outHtml)
 
@@ -153,7 +153,6 @@ const pdfHandler = async manuscriptId => {
   form.append('imagesForm', 'base64')
 
   const filename = `${raw.toString('hex')}_${manuscriptId}.pdf`
-
   return new Promise((resolve, reject) => {
     axios({
       method: 'post',
@@ -164,7 +163,7 @@ const pdfHandler = async manuscriptId => {
       },
       responseType: 'stream',
       data: form,
-      // timeout: 1000, // adding this because it's failing
+      timeout: 2000, // adding this because it's failing
     })
       .then(async res => {
         const fileStream = res.data
@@ -198,6 +197,7 @@ const pdfHandler = async manuscriptId => {
         resolve(url)
       })
       .catch(async err => {
+        console.log('in error handler!')
         const { response } = err
 
         if (!response) {
@@ -252,6 +252,7 @@ const resolvers = {
         ? htmlHandler(manuscriptId, ctx)
         : pdfHandler(manuscriptId, ctx))
 
+      console.log("I'm here!")
       return { pdfUrl: outUrl || 'busted!' }
     },
     builtCss: async () => {
