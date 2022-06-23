@@ -153,6 +153,7 @@ const pdfHandler = async manuscriptId => {
   form.append('imagesForm', 'base64')
 
   const filename = `${raw.toString('hex')}_${manuscriptId}.pdf`
+
   return new Promise((resolve, reject) => {
     axios({
       method: 'post',
@@ -163,7 +164,7 @@ const pdfHandler = async manuscriptId => {
       },
       responseType: 'stream',
       data: form,
-      // timeout: 2000, // adding this because it's failing
+      // timeout: 1000, // adding this because it's failing
     })
       .then(async res => {
         const fileStream = res.data
