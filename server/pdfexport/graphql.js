@@ -163,7 +163,7 @@ const pdfHandler = async manuscriptId => {
       },
       responseType: 'stream',
       data: form,
-      timeout: 2000, // adding this because it's failing
+      // timeout: 2000, // adding this because it's failing
     })
       .then(async res => {
         const fileStream = res.data
@@ -197,7 +197,6 @@ const pdfHandler = async manuscriptId => {
         resolve(url)
       })
       .catch(async err => {
-        console.log('in error handler!')
         const { response } = err
 
         if (!response) {
@@ -252,7 +251,6 @@ const resolvers = {
         ? htmlHandler(manuscriptId, ctx)
         : pdfHandler(manuscriptId, ctx))
 
-      console.log("I'm here!")
       return { pdfUrl: outUrl || 'busted!' }
     },
     builtCss: async () => {
