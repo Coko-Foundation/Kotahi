@@ -177,7 +177,7 @@ const Submit = ({
   }
 
   React.useEffect(() => {
-    handleSaveDebouncer.cancel()
+    handleSaveDebouncer.flush()
   }, [versions.length])
 
   return (
