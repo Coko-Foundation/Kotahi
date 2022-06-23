@@ -141,6 +141,22 @@ const regenerateAllFileUris = async manuscript => {
 }
 /* eslint-enable no-param-reassign, no-restricted-syntax, no-await-in-loop */
 
+const isEditorOfManuscript = async (userId, manuscriptWithTeams) => {
+  const { teams } = manuscriptWithTeams
+
+  const editorTeamIds = teams
+    .filter(t => ['editor', 'handlingEditor', 'seniorEditor'].includes(t.role))
+    .map(t => t.id)
+
+  const result = await models.TeamMember.query()
+    .select('id')
+    .where({ userId })
+    .whereIn('teamId', editorTeamIds)
+    .limit(1)
+
+  return !!result.length
+}
+
 const getCss = async () => {
   const css = await generateCss()
   return css
@@ -1040,7 +1056,7 @@ const resolvers = {
 
       const manuscript = await ManuscriptModel.query()
         .findById(id)
-        .withGraphFetched('[teams, channels, files, reviews.[user]]')
+        .withGraphFetched('[teams, channels, files, reviews.user]')
 
       const user = await models.User.query().findById(ctx.user)
 
@@ -1080,7 +1096,8 @@ const resolvers = {
         user &&
         !user.admin &&
         manuscript.reviews &&
-        manuscript.reviews.length
+        manuscript.reviews.length &&
+        !(await isEditorOfManuscript(ctx.user, manuscript))
       ) {
         const reviewForm = await getReviewForm()
         const decisionForm = await getDecisionForm()
@@ -1088,6 +1105,7 @@ const resolvers = {
           manuscript.reviews,
           reviewForm,
           decisionForm,
+          ctx.user,
         )
       }
 
