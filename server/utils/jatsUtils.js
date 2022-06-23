@@ -201,6 +201,7 @@ const convertImages = html => {
     const caption = $(el).find('figcaption').html() // this comes back null if not found
     const graphicElement = $(el).find('img')
     const graphicSrc = graphicElement.attr('src')
+    const graphicId = graphicElement.attr('data-fileid')
     // 1 get caption if there is one
     // 2 get image if there is one
     // 3 change image tag
@@ -210,7 +211,7 @@ const convertImages = html => {
     // 7. add caption if there is one
     // 8. add image
     const outCaption = caption ? `<caption><p>${caption}</p></caption>` : ''
-    const outGraphic = `<graphic xlink:href="${graphicSrc}" />`
+    const outGraphic = `<graphic xlink:href="${graphicSrc}" id="graphic_${graphicId}" />`
     const output = `<fig>${outCaption}${outGraphic}</fig>`
     return output
   })

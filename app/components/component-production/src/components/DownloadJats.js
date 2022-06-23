@@ -2,11 +2,13 @@ import React from 'react'
 import Modal from 'react-modal'
 import { useQuery, gql } from '@apollo/client'
 import { Spinner, CommsErrorBanner } from '../../../shared'
+import { CloseButton, PopUpTextContainer, PopUpH2 } from './styles'
 
 const getJatsQuery = gql`
   query($manuscriptId: String!) {
     convertToJats(manuscriptId: $manuscriptId) {
       xml
+      zipLink
       error
     }
   }
@@ -15,6 +17,11 @@ const getJatsQuery = gql`
 const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
   const [downloading, setDownloading] = React.useState(false)
   const [modalIsOpen, setModalIsOpen] = React.useState(true)
+  const [zipLink, setZipLink] = React.useState('')
+
+  const [message, setMessage] = React.useState(
+    'This link is available for 24 hours',
+  )
 
   const { data, loading, error } = useQuery(getJatsQuery, {
     fetchPolicy: 'cache-and-network',
@@ -23,7 +30,27 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
     },
   })
 
-  if (loading) return <Spinner />
+  if (loading)
+    return (
+      <Modal
+        isOpen={modalIsOpen}
+        style={{
+          content: {
+            top: '50%',
+            left: '50%',
+            right: 'auto',
+            bottom: 'auto',
+            marginRight: '-50%',
+            transform: 'translate(-50%, -50%)',
+            width: '360px',
+          },
+        }}
+      >
+        <CloseButton />
+        <PopUpH2>Generating JATS...</PopUpH2>
+        <Spinner />
+      </Modal>
+    )
 
   if (error) {
     // if here, the error is not with the XML but with the query
@@ -38,40 +65,31 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
   if (data && !downloading) {
     setDownloading(true)
     const jats = data.convertToJats.xml
+    setZipLink(data.convertToJats.zipLink)
 
     if (data.convertToJats.error.length) {
       /* eslint-disable */
       console.log(data.convertToJats.xml)
       console.log('Error making JATS. Errors: ', data.convertToJats.error)
-      // resetMakingJats() // this is bad!
       return null
     }
 
     /* eslint-disable */
-
     console.log('XML Selected')
     console.log('HTML:\n\n', manuscript.meta.source)
     console.log('JATS:\n\n', jats)
-    // JATS XML file opens in new tab
-    let blob = new Blob([jats], { type: 'text/xml' })
-    let url = URL.createObjectURL(blob)
-    window.open(url)
-    // URL.revokeObjectURL(url)
-    console.log(url)
-    setModalIsOpen(false)
-    resetMakingJats()
-
-    /* eslint-disable */
+    console.log('Download link: ', data.convertToJats.zipLink)
   }
 
   const onError = () => {
     console.error(error)
     resetMakingJats()
+    setModalIsOpen(false)
   }
 
   const cancelGen = () => {
-    // console.log('PDF generation canceled')
     resetMakingJats()
+    setModalIsOpen(false)
   }
 
   return (
@@ -85,41 +103,43 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
           bottom: 'auto',
           marginRight: '-50%',
           transform: 'translate(-50%, -50%)',
+          width: '360px',
         },
       }}
     >
-      <h2 style={{ marginBottom: '1em' }}>
-        {error ? <p>Error generating JATS</p> : <p>Preparing JATS...</p>}
-      </h2>
-      {loading && <Spinner />}
+      <CloseButton onClick={cancelGen} />
+      <PopUpH2>{error ? 'Error generating JATS' : 'Your JATS link:'}</PopUpH2>
       {error ? (
-        <div
-          style={{
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-          }}
-        >
+        <PopUpTextContainer>
           <p>Sorry, something went wrong.</p>
-          <button onClick={onError} style={{ marginTop: '1em' }} type="submit">
-            Close
-          </button>
-        </div>
+        </PopUpTextContainer>
       ) : data.convertToJats.error ? (
-        <>
+        <PopUpTextContainer>
           <p>Error: invalid JATS. See console for details.</p>
+        </PopUpTextContainer>
+      ) : (
+        <PopUpTextContainer>
+          <p className="linkurl">
+            <a href={zipLink} download>
+              {zipLink}
+            </a>
+          </p>
+          <p className="linknote">{message}</p>
           <button
-            onClick={cancelGen}
-            style={{ marginTop: '1em' }}
+            className="copybutton"
+            onClick={e => {
+              e.preventDefault()
+              navigator.clipboard.writeText(zipLink)
+              setMessage('Copied!')
+              setTimeout(() => {
+                setMessage('This link is available for 24 hours')
+              }, 1000)
+            }}
             type="submit"
           >
-            Close
+            Copy link
           </button>
-        </>
-      ) : (
-        <button onClick={cancelGen} style={{ marginTop: '1em' }} type="submit">
-          Cancel
-        </button>
+        </PopUpTextContainer>
       )}
     </Modal>
   )

@@ -38,13 +38,14 @@ export const DownloadDropdown = ({
       id: 3,
       onClick: () => {
         // eslint-disable-next-line
-        console.log('XML selected')
+        console.log('JATS selected')
         makeJats(manuscriptId)
       },
-      title: 'XML',
+      title: 'JATS',
     },
   ]
 
+  4
   return (
     <Dropdown itemsList={options} primary>
       Download

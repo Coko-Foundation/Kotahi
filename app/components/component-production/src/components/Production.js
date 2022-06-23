@@ -1,6 +1,5 @@
 import React from 'react'
 import { withRouter } from 'react-router-dom'
-import styled from 'styled-components'
 import { debounce } from 'lodash'
 import ProductionWaxEditor from '../../../wax-collab/src/ProductionWaxEditor'
 import { DownloadDropdown } from './DownloadDropdown'
@@ -11,16 +10,7 @@ import {
   SectionContent,
   Spinner,
 } from '../../../shared'
-
-const Info = styled.span`
-  align-items: center;
-  display: flex;
-  height: 500px;
-  justify-content: center;
-  list-style: none;
-  margin: 0;
-  padding: 0;
-`
+import { Info } from './styles'
 
 const Production = ({
   file,

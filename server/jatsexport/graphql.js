@@ -4,6 +4,7 @@ const { makeJats } = require('../utils/jatsUtils')
 const articleMetadata = require('../pdfexport/pdfTemplates/articleMetadata')
 const publicationMetadata = require('../pdfexport/pdfTemplates/publicationMetadata')
 const validateJats = require('./validation')
+const makeZippedJats = require('./makeZippedJats')
 
 const failXML = false // if this is true, we pass errorJats (which is invalid XML) to the parser
 
@@ -63,7 +64,18 @@ const resolvers = {
   Query: {
     convertToJats: async (_, { manuscriptId }, ctx) => {
       const { jats, error } = await jatsHandler(manuscriptId, ctx)
-      return { xml: jats || '', error: error ? JSON.stringify(error) : '' }
+      // eslint-disable-next-line prefer-const
+      let returnedJats = { link: '', jats }
+
+      if (jats) {
+        returnedJats = await makeZippedJats(manuscriptId, jats)
+      }
+
+      return {
+        xml: returnedJats.jats || '',
+        zipLink: returnedJats.link,
+        error: error ? JSON.stringify(error) : '',
+      }
     },
   },
 }
@@ -75,6 +87,7 @@ const typeDefs = `
 
 	type ConvertToJatsType {
 		xml: String!
+		zipLink: String
 		error: String
 	}
 
