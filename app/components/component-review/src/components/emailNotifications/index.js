@@ -44,10 +44,6 @@ const EmailNotifications = ({
   const logMessageAfterEmailSent = async message => {
     const emailTemplateOptions = [
       {
-        label: 'Author Acceptance notification',
-        value: 'articleAcceptanceEmailTemplate',
-      },
-      {
         label: 'Author Acceptance Email Template',
         value: 'authorAcceptanceEmailTemplate',
       },
@@ -270,8 +266,19 @@ const EmailNotifications = ({
     if (!selectedTemplate || !manuscript) return
 
     const input = isNewUser
-      ? { externalEmail, externalName, selectedTemplate, manuscript }
-      : { selectedEmail, selectedTemplate, manuscript }
+      ? {
+          externalEmail,
+          externalName,
+          selectedTemplate,
+          manuscript,
+          currentUser: currentUser.username,
+        }
+      : {
+          selectedEmail,
+          selectedTemplate,
+          manuscript,
+          currentUser: currentUser.username,
+        }
 
     if (isNewUser && (!externalName || !externalEmail)) return
     if (!isNewUser && !selectedEmail) return

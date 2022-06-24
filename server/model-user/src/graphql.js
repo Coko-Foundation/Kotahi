@@ -214,6 +214,7 @@ const resolvers = {
         selectedTemplate,
         externalEmail,
         externalName,
+        currentUser,
       } = inputParsed
 
       const receiverEmail = externalEmail || selectedEmail
@@ -293,6 +294,7 @@ const resolvers = {
         await sendEmailNotification(receiverEmail, selectedTemplate, {
           articleTitle: manuscript.meta.title,
           authorName,
+          currentUser,
           receiverFirstName,
           shortId: manuscript.shortId,
           toEmail,
