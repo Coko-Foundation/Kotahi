@@ -11,7 +11,7 @@ import { UserCombo, Primary, Secondary, UserInfo } from '../../../../shared'
 import { UserAvatar } from '../../../../component-avatar/src'
 import { ensureJsonIsParsed } from '../../../../../shared/objectUtils'
 
-const ToggleReview = ({ open, toggle }) => (
+export const ToggleReview = ({ open, toggle }) => (
   <Button onClick={toggle} plain>
     {open ? 'Hide' : 'Show'}
   </Button>
@@ -32,19 +32,19 @@ const Bullet = styled.span`
   width: 10px;
 `
 
-const ReviewHeadingRoot = styled.div`
+export const ReviewHeadingRoot = styled.div`
   align-items: center;
   display: flex;
 `
 
-const Ordinal = styled.span``
+export const Ordinal = styled.span``
 
-const Name = styled.span`
+export const Name = styled.span`
   display: flex;
   margin-left: 1em;
 `
 
-const Controls = styled.span`
+export const Controls = styled.span`
   flex-grow: 1;
   text-align: right;
 `

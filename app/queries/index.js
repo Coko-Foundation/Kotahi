@@ -93,13 +93,32 @@ export const UPDATE_TEAM_MUTATION = gql`
 `
 
 export const UPDATE_INVITATION_STATUS = gql`
-  mutation($id: ID!, $status: String) {
-    updateInvitationStatus(id: $id, status: $status) {
+  mutation($id: ID!, $status: String, $userId: ID) {
+    updateInvitationStatus(id: $id, status: $status, userId: $userId) {
       status
     }
   }
 `
-
+export const UPDATE_INVITATION_RESPONSE = gql`
+  mutation(
+    $id: ID!
+    $responseComment: String
+    $responseDate: DateTime!
+    $declinedReason: String!
+  ) {
+    updateInvitationResponse(
+      id: $id
+      responseComment: $responseComment
+      responseDate: $responseDate
+      declinedReason: $declinedReason
+    ) {
+      responseComment
+      responseDate
+      declinedReason
+      toEmail
+    }
+  }
+`
 export const GET_INVITATION_MANUSCRIPT_ID = gql`
   query invitationManuscriptId($id: ID) {
     invitationManuscriptId(id: $id) {
@@ -112,6 +131,34 @@ export const GET_INVITATION_STATUS = gql`
   query invitationStatus($id: ID) {
     invitationStatus(id: $id) {
       status
+    }
+  }
+`
+
+export const GET_INVITATIONS_FOR_MANUSCRIPT = gql`
+  query getInvitationsForManuscript($id: ID) {
+    getInvitationsForManuscript(id: $id) {
+      id
+      declinedReason
+      responseComment
+      responseDate
+      invitedPersonName
+      status
+      invitedPersonType
+      userId
+      user {
+        id
+        username
+        profilePicture
+        online
+      }
+    }
+  }
+`
+export const ADD_EMAIL_TO_BLACKLIST = gql`
+  mutation($email: String!) {
+    addEmailToBlacklist(email: $email) {
+      email
     }
   }
 `

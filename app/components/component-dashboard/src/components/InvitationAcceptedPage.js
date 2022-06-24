@@ -30,7 +30,11 @@ const InvitationAcceptedPage = () => {
   const [createTeam] = useMutation(CREATE_TEAM_MUTATION, {
     onCompleted: () => {
       updateInvitationStatus({
-        variables: { id: authorInvitationId, status: 'ACCEPTED' },
+        variables: {
+          id: authorInvitationId,
+          status: 'ACCEPTED',
+          userId: invitedUser ? invitedUser.id : '',
+        },
       })
     },
   })

@@ -14,6 +14,31 @@ class Invitation extends BaseModel {
         toEmail: { type: ['string'] },
         status: { type: ['string'] },
         senderId: { type: ['string', 'null'], format: 'uuid' },
+        invitedPersonType: { type: ['string'] },
+        invitedPersonName: { type: ['srting'] },
+        responseDate: {
+          type: ['string', 'object', 'null'],
+          format: 'date-time',
+        },
+        responseComment: { type: ['string', 'null'] },
+        declinedReason: { type: ['string', 'null'] },
+        userId: { type: ['string', 'null'], format: 'uuid' },
+      },
+    }
+  }
+
+  static get relationMappings() {
+    /* eslint-disable-next-line global-require */
+    const { User } = require('@pubsweet/models')
+
+    return {
+      user: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: User,
+        join: {
+          from: 'invitations.userId',
+          to: 'users.id',
+        },
       },
     }
   }

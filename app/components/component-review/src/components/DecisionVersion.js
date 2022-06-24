@@ -54,6 +54,7 @@ const DecisionVersion = ({
   validateDoi,
   createFile,
   deleteFile,
+  invitations,
 }) => {
   // Hooks from the old world
   const addEditor = (manuscript, label, isCurrent, user) => {
@@ -231,6 +232,7 @@ const DecisionVersion = ({
             <AdminSection key="decision-review">
               <DecisionReviews
                 canHideReviews={canHideReviews}
+                invitations={invitations}
                 manuscript={version}
                 reviewers={reviewers}
                 reviewForm={reviewForm}
