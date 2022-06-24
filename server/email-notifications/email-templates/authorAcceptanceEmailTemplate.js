@@ -42,8 +42,8 @@ const AuthorAcceptanceEmailTemplate = ({
           <p><a href="${appUrl}/decline/${invitationId}" target="_blank">Decline invitation</a></p>
           <br>
           <p>
-            Your invitation id is ‘${invitationId}’ <br>
-            Please note; that you will require an ORCID account in order to log in. If you don’t already have an account, it takes 2 mins to <a href="https://orcid.org/register" target="_blank">register a new ORCID account here</a>.
+            Please note; that you will require an ORCID account in order to log in. If you don’t already have an account, it takes 2 mins to <a href="https://orcid.org/register" target="_blank">register a new ORCID account here</a>. <br>
+            Your invitation id is ‘${invitationId}’
           </p>
           <br>
           <p>
