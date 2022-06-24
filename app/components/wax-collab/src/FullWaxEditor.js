@@ -60,7 +60,7 @@ const FullWaxEditor = ({
   /* eslint-disable jsx-a11y/no-noninteractive-tabindex,  jsx-a11y/tabindex-no-positive */
   useEffect(() => {
     return () => {
-      if (editorRef.current) {
+      if (editorRef.current && saveSource !== null) {
         saveSource(editorRef.current.getContent())
       }
     }
