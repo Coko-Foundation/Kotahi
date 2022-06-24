@@ -2,11 +2,9 @@ const htmlparser2 = require('htmlparser2')
 const cheerio = require('cheerio')
 
 const makeSvgsFromLatex = async source => {
-  const svgList = []
-  const dom = htmlparser2.parseDocument(jats)
+  // const svgList = []
+  const dom = htmlparser2.parseDocument(source)
   const $ = cheerio.load(dom, { xmlMode: true })
-
-  // console.log('source: ', source)
 
   // TODO: 1. go through the source and find all display equations
 
@@ -26,9 +24,11 @@ const makeSvgsFromLatex = async source => {
   })
 
   // TODO: 3. take the equations and convert them to svg
-  const svgedSource = source
+
   // 4. return the modified source and an array of SVG files as strings
-  return { svgedSource, svgList }
+
+  const output = { svgedSource: source, svgList: [] }
+  return output
 }
 
 module.exports = makeSvgsFromLatex
