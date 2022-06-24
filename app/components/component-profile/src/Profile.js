@@ -5,7 +5,9 @@ import { Button } from '@pubsweet/ui'
 import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/client'
 import { useDropzone } from 'react-dropzone'
+import styled from 'styled-components'
 import Modal from '../../component-modal/src/index'
+import { version as kotahiVersion } from '../../../../package.json'
 
 import {
   Spinner,
@@ -98,6 +100,18 @@ const UPDATE_CURRENT_USERNAME = gql`
   }
 `
 
+const VersionText = styled.div`
+  color: #757575;
+  display: flex;
+  justify-content: flex-end;
+`
+
+const ProfileContainer = styled(Container)`
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+`
+
 // eslint-disable-next-line react/prop-types
 const ProfileDropzone = ({ profilePicture, updateProfilePicture }) => {
   const onDrop = useCallback(async acceptedFiles => {
@@ -160,68 +174,73 @@ const Profile = ({ match }) => {
   const isCurrentUsersOwnProfile = user.id === data.currentUser.id
   const canEditProfile = isCurrentUsersOwnProfile || data.currentUser.admin
   return (
-    <Container>
+    <ProfileContainer>
       <Modal isOpen={canEditProfile && !user.email}>
         <EnterEmail updateUserEmail={updateUserEmail} user={user.email} />
       </Modal>
+      <div>
+        <HeadingWithAction>
+          <Heading>Your profile</Heading>
+          <Button onClick={() => logoutUser()} primary>
+            Logout
+          </Button>
+        </HeadingWithAction>
 
-      <HeadingWithAction>
-        <Heading>Your profile</Heading>
-        <Button onClick={() => logoutUser()} primary>
-          Logout
-        </Button>
-      </HeadingWithAction>
+        <SectionContent>
+          <SectionHeader>
+            <Title>Profile picture</Title>
+          </SectionHeader>
+          <SectionRow key="profilepicture">
+            <div>
+              {canEditProfile ? (
+                <ProfileDropzone
+                  profilePicture={user.profilePicture}
+                  updateProfilePicture={updateProfilePicture}
+                />
+              ) : (
+                <BigProfileImage
+                  src={
+                    user.profilePicture === null
+                      ? '/profiles/default_avatar.svg'
+                      : user.profilePicture
+                  }
+                />
+              )}
+            </div>
+          </SectionRow>
+          <SectionRow>
+            <label>ORCID</label> <div>{user.defaultIdentity.identifier}</div>
+          </SectionRow>
+          <SectionRow>
+            <label htmlFor="2">Username</label>
+            <div>
+              {canEditProfile ? (
+                <ChangeUsername
+                  updateCurrentUsername={updateCurrentUsername}
+                  user={user}
+                />
+              ) : (
+                <div>{user.username}</div>
+              )}
+            </div>
+          </SectionRow>
+          <SectionRow>
+            <label>Email</label>
+            <div>
+              {canEditProfile ? (
+                <ChangeEmail updateUserEmail={updateUserEmail} user={user} />
+              ) : (
+                <div>{user.email}</div>
+              )}
+            </div>
+          </SectionRow>
+        </SectionContent>
+      </div>
 
-      <SectionContent>
-        <SectionHeader>
-          <Title>Profile picture</Title>
-        </SectionHeader>
-        <SectionRow key="profilepicture">
-          <div>
-            {canEditProfile ? (
-              <ProfileDropzone
-                profilePicture={user.profilePicture}
-                updateProfilePicture={updateProfilePicture}
-              />
-            ) : (
-              <BigProfileImage
-                src={
-                  user.profilePicture === null
-                    ? '/profiles/default_avatar.svg'
-                    : user.profilePicture
-                }
-              />
-            )}
-          </div>
-        </SectionRow>
-        <SectionRow>
-          <label>ORCID</label> <div>{user.defaultIdentity.identifier}</div>
-        </SectionRow>
-        <SectionRow>
-          <label htmlFor="2">Username</label>
-          <div>
-            {canEditProfile ? (
-              <ChangeUsername
-                updateCurrentUsername={updateCurrentUsername}
-                user={user}
-              />
-            ) : (
-              <div>{user.username}</div>
-            )}
-          </div>
-        </SectionRow>
-        <SectionRow>
-          <label>Email</label>
-          <div>
-            {canEditProfile ? (
-              <ChangeEmail updateUserEmail={updateUserEmail} user={user} />
-            ) : (
-              <div>{user.email}</div>
-            )}
-          </div>
-        </SectionRow>
-      </SectionContent>
-    </Container>
+      <VersionText>
+        <span>{kotahiVersion}</span>
+      </VersionText>
+    </ProfileContainer>
   )
 }
 
