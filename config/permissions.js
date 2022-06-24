@@ -55,6 +55,20 @@ const getManuscriptOfFile = async (file, ctx) => {
   return manuscript
 }
 
+const getLatestVersionOfManuscriptOfFile = async (file, ctx) => {
+  const manuscript = await getManuscriptOfFile(file, ctx)
+  if (!manuscript) return null
+  const firstVersionId = manuscript.parentId || manuscript.id
+
+  const latestVersion = await ctx.connectors.Manuscript.model
+    .query()
+    .where({ parentId: firstVersionId })
+    .orderBy('created', 'desc')
+    .limit(1)
+
+  return latestVersion[0]
+}
+
 const userIsEditor = rule({
   cache: 'contextual',
 })(async (parent, args, ctx, info) => userIsEditorQuery(ctx))
@@ -320,7 +334,7 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
   if (!parent.id) return false
 
   const file = await ctx.connectors.File.model.query().findById(parent.id)
-  const manuscript = await getManuscriptOfFile(file, ctx)
+  const manuscript = await getLatestVersionOfManuscriptOfFile(file, ctx)
   if (!manuscript) return false
 
   const team = await ctx.connectors.Team.model
