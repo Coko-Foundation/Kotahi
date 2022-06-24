@@ -4,6 +4,7 @@ import PropTypes from 'prop-types'
 import DecisionReview from './DecisionReview'
 import { SectionHeader, SectionRow, Title } from '../style'
 import { SectionContent } from '../../../../shared'
+import InvitationResults from './InvitationResults'
 
 // TODO: read reviewer ordinal and name from project reviewer
 // const { status } =
@@ -29,6 +30,7 @@ const DecisionReviews = ({
   manuscript,
   updateReview,
   canHideReviews,
+  invitations,
   urlFrag,
 }) => {
   return (
@@ -36,6 +38,7 @@ const DecisionReviews = ({
       <SectionHeader>
         <Title>Reviews</Title>
       </SectionHeader>
+      <InvitationResults invitations={invitations} />
       {manuscript.reviews && manuscript.reviews.length ? (
         manuscript.reviews
           .filter(

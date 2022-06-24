@@ -19,6 +19,7 @@ import {
   CREATE_MESSAGE,
   CREATE_TEAM_MUTATION,
   UPDATE_TEAM_MUTATION,
+  GET_INVITATIONS_FOR_MANUSCRIPT,
 } from '../../../../queries'
 import { validateDoi } from '../../../../shared/commsUtils'
 
@@ -84,7 +85,7 @@ const DecisionPage = ({ match }) => {
 
   // end of code from submit page to handle possible form changes
 
-  const { loading, error, data } = useQuery(query, {
+  const { loading, data, error } = useQuery(query, {
     variables: {
       id: match.params.version,
     },
@@ -111,6 +112,13 @@ const DecisionPage = ({ match }) => {
       cache.evict({ id })
     },
   })
+
+  const { data: invitations } = useQuery(GET_INVITATIONS_FOR_MANUSCRIPT, {
+    variables: { id: data?.manuscript?.id },
+  })
+
+  if (loading && !data) return <Spinner />
+  if (error) return <CommsErrorBanner error={error} />
 
   const updateManuscript = (versionId, manuscriptDelta) =>
     update({
@@ -155,9 +163,6 @@ const DecisionPage = ({ match }) => {
       },
     })
   }
-
-  if (loading && !data) return <Spinner />
-  if (error) return <CommsErrorBanner error={error} />
 
   const {
     manuscript,
@@ -239,6 +244,7 @@ const DecisionPage = ({ match }) => {
       }
       form={form}
       handleChange={handleChange}
+      invitations={invitations?.getInvitationsForManuscript}
       makeDecision={makeDecision}
       manuscript={manuscript}
       publishManuscript={publishManuscript}

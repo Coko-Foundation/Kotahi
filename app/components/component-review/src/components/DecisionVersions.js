@@ -37,6 +37,7 @@ const DecisionVersions = ({
   deleteFile,
   createFile,
   validateDoi,
+  invitations,
 }) => {
   const [initialValue, setInitialValue] = useState(null)
 
@@ -83,6 +84,7 @@ const DecisionVersions = ({
                 deleteFile={deleteFile}
                 displayShortIdAsIdentifier={displayShortIdAsIdentifier}
                 form={form}
+                invitations={invitations}
                 key={version.manuscript.id}
                 makeDecision={makeDecision}
                 onChange={handleChange}
