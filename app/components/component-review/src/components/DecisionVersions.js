@@ -96,7 +96,7 @@ const DecisionVersions = ({
                 updateManuscript={updateManuscript}
                 updateReview={updateReview}
                 updateReviewJsonData={(value, path) =>
-                  updateReviewJsonData(version.manuscript.id, value, path)
+                  updateReviewJsonData(initialValue.id, value, path)
                 }
                 updateTeam={updateTeam}
                 urlFrag={urlFrag}
