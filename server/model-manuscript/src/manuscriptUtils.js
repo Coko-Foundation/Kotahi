@@ -1,10 +1,16 @@
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 const { ensureJsonIsParsed } = require('../../utils/objectUtils')
 
+/** This returns a modified array of reviews, omitting fields or entire reviews marked as
+ * hidden from author, UNLESS the current user is the reviewer the review belongs to.
+ * This does not consider whether the user is an admin or editor of the manuscript:
+ * that must be checked elsewhere.
+ */
 const stripConfidentialDataFromReviews = (
   reviews,
   reviewForm,
   decisionForm,
+  userId,
 ) => {
   if (!reviewForm || !decisionForm) return []
 
@@ -17,9 +23,10 @@ const stripConfidentialDataFromReviews = (
     .map(field => field.name)
 
   return reviews
-    .filter(r => !r.isHiddenFromAuthor)
+    .filter(r => !r.isHiddenFromAuthor || r.userId === userId)
     .map(review => {
       const r = { ...review, jsonData: ensureJsonIsParsed(review.jsonData) }
+      if (r.userId === userId) return r
       if (r.isHiddenReviewerName) r.userId = null
 
       const confidentialFields = r.isDecision
