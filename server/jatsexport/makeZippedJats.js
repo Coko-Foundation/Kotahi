@@ -7,6 +7,7 @@ const cheerio = require('cheerio')
 const { promisify } = require('util')
 const { createFile, fileStorage, File } = require('@coko/server')
 const makeZip = require('../pdfexport/ziputils.js')
+const makeSvgsFromLatex = require('./makeSvgsFromLatex')
 
 const randomBytes = promisify(crypto.randomBytes)
 
@@ -104,27 +105,38 @@ const makeZipFile = async (manuscriptId, jats) => {
     )
   }
 
+  // send that source to the makeSvgsFromLatex function. If there are equations in it, it will return with an svgList
+
+  const [svgedSource, svgList] = await makeSvgsFromLatex(outJats)
+
   // 5. make a directory with the JATS file as index.xml
 
   const raw = await randomBytes(16)
   const dirName = `tmp/${raw.toString('hex')}_${manuscriptId}`
   await fsPromised.mkdir(dirName, { recursive: true })
-  await fsPromised.appendFile(`${dirName}/index.xml`, outJats)
+  await fsPromised.appendFile(`${dirName}/index.xml`, svgedSource)
 
-  if (imageList.length) {
+  if (imageList.length || svgList.length) {
+    // if either of these are true, we need to make an images directory
     const imageDirName = `${dirName}/images`
     await fsPromised.mkdir(imageDirName, { recursive: true })
 
-    const imageObjects = imageList.flatMap(x => x.storedObjects)
+    if (imageList.length) {
+      const imageObjects = imageList.flatMap(x => x.storedObjects)
 
-    imageObjects.forEach(async imageObject => {
-      const url = await fileStorage.getURL(imageObject.key)
+      imageObjects.forEach(async imageObject => {
+        const url = await fileStorage.getURL(imageObject.key)
 
-      const targetPath = `${imageDirName}/${imageObject.key}`
-      downloadFile(url, targetPath, () => {
-        console.error(`Attached image ${imageObject.key}`)
+        const targetPath = `${imageDirName}/${imageObject.key}`
+        downloadFile(url, targetPath, () => {
+          console.error(`Attached image ${imageObject.key}`)
+        })
       })
-    })
+    }
+
+    if (svgList.length) {
+      // TODO: go through the list of SVGs, make files from them in the images directory
+    }
   }
 
   if (suppFileList.length) {
@@ -163,7 +175,7 @@ const makeZipFile = async (manuscriptId, jats) => {
 
   // TODO: cleanup???
 
-  return { link: url, jats: outJats } // returns link to where the ZIP file is.
+  return { link: url, jats: svgedSource } // returns link to where the ZIP file is.
 }
 
 module.exports = makeZipFile

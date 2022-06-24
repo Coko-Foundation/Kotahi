@@ -772,6 +772,9 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const { abstract, deFrontedHtml, title } = makeFrontMatter(deCitedHtml)
 
+  // TODO: convert math-display and math-inline to <display-formula> and <inline-formula>
+  // TODO: maybe need to convert LaTex to MathML here too?
+
   // 4 deal with article and journal metadata
 
   const journalMetaSection = makeJournalMeta(journalMeta || {})
