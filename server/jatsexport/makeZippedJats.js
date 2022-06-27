@@ -82,9 +82,9 @@ const makeZipFile = async (manuscriptId, jats) => {
   // 3. check if there are supplementary files
   // 4. if so, get a list of all the files
 
-  const supplementaryFiles = manuscriptFiles.filter(
-    x => x.tags.includes('supplementary') || x.tags.includes('visualAbstract'),
-  )
+  const supplementaryFiles = manuscriptFiles.filter(x =>
+    x.tags.includes('supplementary'),
+  ) // || x.tags.includes('visualAbstract')),
 
   if (supplementaryFiles && supplementaryFiles.length) {
     console.error('Supplementary files found!')
@@ -120,7 +120,6 @@ const makeZipFile = async (manuscriptId, jats) => {
 
   // console.log(outJats)
   const { svgedSource, svgList } = await makeSvgsFromLatex(outJats)
-  // console.log(svgedSource, svgList)
 
   // 5. make a directory with the JATS file as index.xml
 
@@ -148,7 +147,11 @@ const makeZipFile = async (manuscriptId, jats) => {
     }
 
     if (svgList.length) {
-      // TODO: go through the list of SVGs, make files from them in the images directory
+      // go through the list of SVGs, make files from them in the images directory
+      svgList.forEach(async svg => {
+        await fsPromised.appendFile(`${imageDirName}/${svg.name}`, svg.svg)
+        console.error(`Attached formual ${svg.name}`)
+      })
     }
   }
 
