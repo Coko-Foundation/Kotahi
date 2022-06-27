@@ -9,8 +9,7 @@ const makeSvgsFromLatex = async source => {
   // TODO: 1. go through the source and find all display equations
 
   $('display-formula').each(async (index, el) => {
-    console.log('display-formula: ', el)
-
+    // console.log('display-formula: ', el)
     // TODO: 1.5. mod the JATS to include alternatives with filename
   })
 
@@ -18,8 +17,7 @@ const makeSvgsFromLatex = async source => {
   // Inline math currently looks like this: <math-inline class="math-node"> x^2 + y^2 = z^2 </math-inline>
 
   $('inline-formula').each(async (index, el) => {
-    console.log('inline-formula: ', el)
-
+    // console.log('inline-formula: ', el)
     // TODO: 2.5. mod the JATS to include alternatives with filename
   })
 
