@@ -54,6 +54,8 @@ const jatsTagsThatDontNeedConversion = [
   '@title',
   'fig',
   'table-wrap',
+  'inline-formula',
+  'display-formula',
 ]
 
 /** Finds all XML tags and:
@@ -737,6 +739,32 @@ const makeFrontMatter = html => {
   return { abstract, deFrontedHtml, title }
 }
 
+const fixMath = html => {
+  // This converts math-display and math-inline to <display-formula> and <inline-formula>
+  // TODO: maybe should convert LaTex to MathML here using MathJax too?
+
+  const dom = htmlparser2.parseDocument(html)
+
+  const $ = cheerio.load(dom, {
+    xmlMode: true,
+  })
+
+  $('math-inline').replaceWith((index, el) => {
+    const mathAsLatex = $(el).text()
+    const replacement = `<inline-formula><alternatives><tex-math><![CDATA[${mathAsLatex}]]></tex-math></alternatives></inline-formula>`
+    return replacement
+  })
+
+  $('math-display').replaceWith((index, el) => {
+    const mathAsLatex = $(el).text()
+    const replacement = `<display-formula><alternatives><tex-math><![CDATA[${mathAsLatex}]]></tex-math></alternatives></display-formula>`
+    return replacement
+  })
+
+  const output = $.html()
+  return output
+}
+
 const makeJats = (html, articleMeta, journalMeta) => {
   // html is what's coming out of Wax
   // articleMeta is what's needed for front matter (see makeArticleMeta for description)
@@ -779,7 +807,13 @@ const makeJats = (html, articleMeta, journalMeta) => {
   const articleMetaSection = makeArticleMeta(articleMeta || {}, abstract, title)
 
   const front = `<front>${journalMetaSection}${articleMetaSection}</front>`
-  let body = htmlToJats(deFrontedHtml)
+
+  const unfixedMath = htmlToJats(deFrontedHtml)
+
+  // change math to JATS-suitable math
+
+  let body = fixMath(unfixedMath)
+
   // this is to clean out the bad table tags
   body = replaceAll(body, '<table>', '<table-wrap><table>')
   body = replaceAll(body, '</table>', '</table></table-wrap>')

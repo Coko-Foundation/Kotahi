@@ -7,6 +7,8 @@ const cheerio = require('cheerio')
 const { promisify } = require('util')
 const { createFile, fileStorage, File } = require('@coko/server')
 const makeZip = require('../pdfexport/ziputils.js')
+const makeSvgsFromLatex = require('./makeSvgsFromLatex')
+const { getFileWithUrl } = require('../utils/fileStorageUtils')
 
 const randomBytes = promisify(crypto.randomBytes)
 
@@ -19,8 +21,6 @@ const downloadFile = (url, dest, cb) => {
     })
   })
 }
-
-const { getFileWithUrl } = require('../utils/fileStorageUtils')
 
 const makeZipFile = async (manuscriptId, jats) => {
   // jats is a string with the semi-processed JATS in it
@@ -47,23 +47,33 @@ const makeZipFile = async (manuscriptId, jats) => {
     const imageFileData = manuscriptFiles.find(x => x.id === fileId)
     // console.log(fileData)
 
-    imageList.push(imageFileData)
-
     // should come back with something liek this inside of <figure>:
     // 	<alternatives>
     // 	<graphic specific-use="print" xlink:href="1.4821168.figures.highres.f3.zip"/>
     // 	<graphic specific-use="online" xlink:href="1.4821168.figures.online.f3.jpg"/>
     //  </alternatives>
 
-    let outHtml = `<alternatives>`
+    // NOTE: sometimes it's not finding the ID in the filelist!
 
-    for (let i = 0; i < imageFileData.storedObjects.length; i += 1) {
-      outHtml += `<graphic title="${imageFileData.name}_${imageFileData.storedObjects[i].type}" xlink:href="images/${imageFileData.storedObjects[i].key}" />`
+    // console.log(manuscriptFiles)
+
+    if (
+      imageFileData &&
+      imageFileData.storedObjects &&
+      imageFileData.storedObjects.length
+    ) {
+      imageList.push(imageFileData)
+      let outHtml = `<alternatives>`
+
+      for (let i = 0; i < imageFileData.storedObjects.length; i += 1) {
+        outHtml += `<graphic title="${imageFileData.name}_${imageFileData.storedObjects[i].type}" xlink:href="images/${imageFileData.storedObjects[i].key}" />`
+      }
+
+      outHtml += `</alternatives>`
+
+      $elem.replaceWith(outHtml)
     }
 
-    outHtml += `</alternatives>`
-
-    $elem.replaceWith(outHtml)
     return $elem
   })
 
@@ -87,15 +97,17 @@ const makeZipFile = async (manuscriptId, jats) => {
         x => x.type === 'original',
       )
 
-      suppFileList.push(supplementaryFiles[i])
+      if (myOriginal) {
+        suppFileList.push(supplementaryFiles[i])
 
-      const mimeType = myOriginal.mimeType
-        ? `mimetype="${myOriginal.mimeType.split('-')[0]}" mime-subtype="${
-            myOriginal.mimeType.split('-')[1]
-          }" `
-        : ''
+        const mimeType = myOriginal.mimetype
+          ? `mimetype="${myOriginal.mimetype.split('/')[0]}" mime-subtype="${
+              myOriginal.mimetype.split('/')[1]
+            }" `
+          : ''
 
-      supplementaryJats += `<supplementary-material id="supplementary-material-${i}" xlink:href="supplementary/${supplementaryFiles[i].name}" ${mimeType}/>`
+        supplementaryJats += `<supplementary-material id="supplementary-material-${i}" xlink:href="supplementary/${supplementaryFiles[i].name}" ${mimeType}/>`
+      }
     }
 
     outJats = outJats.replace(
@@ -104,27 +116,40 @@ const makeZipFile = async (manuscriptId, jats) => {
     )
   }
 
+  // send that source to the makeSvgsFromLatex function. If there are equations in it, it will return with an svgList
+
+  // console.log(outJats)
+  const { svgedSource, svgList } = await makeSvgsFromLatex(outJats)
+  // console.log(svgedSource, svgList)
+
   // 5. make a directory with the JATS file as index.xml
 
   const raw = await randomBytes(16)
   const dirName = `tmp/${raw.toString('hex')}_${manuscriptId}`
   await fsPromised.mkdir(dirName, { recursive: true })
-  await fsPromised.appendFile(`${dirName}/index.xml`, outJats)
+  await fsPromised.appendFile(`${dirName}/index.xml`, svgedSource)
 
-  if (imageList.length) {
+  if (imageList.length || svgList.length) {
+    // if either of these are true, we need to make an images directory
     const imageDirName = `${dirName}/images`
     await fsPromised.mkdir(imageDirName, { recursive: true })
 
-    const imageObjects = imageList.flatMap(x => x.storedObjects)
+    if (imageList.length) {
+      const imageObjects = imageList.flatMap(x => x.storedObjects)
 
-    imageObjects.forEach(async imageObject => {
-      const url = await fileStorage.getURL(imageObject.key)
+      imageObjects.forEach(async imageObject => {
+        const url = await fileStorage.getURL(imageObject.key)
 
-      const targetPath = `${imageDirName}/${imageObject.key}`
-      downloadFile(url, targetPath, () => {
-        console.error(`Attached image ${imageObject.key}`)
+        const targetPath = `${imageDirName}/${imageObject.key}`
+        downloadFile(url, targetPath, () => {
+          console.error(`Attached image ${imageObject.key}`)
+        })
       })
-    })
+    }
+
+    if (svgList.length) {
+      // TODO: go through the list of SVGs, make files from them in the images directory
+    }
   }
 
   if (suppFileList.length) {
@@ -132,16 +157,22 @@ const makeZipFile = async (manuscriptId, jats) => {
     const suppDirName = `${dirName}/supplementary`
     await fsPromised.mkdir(suppDirName, { recursive: true })
 
-    const suppObjects = suppFileList
-      .flatMap(x => x.storedObjects)
-      .filter(x => x.type === 'original')
+    const suppObjects = suppFileList.map(x => {
+      return {
+        name: x.name, // "name" isn't attached to storedObjects, so we're attaching it here
+        ...x.storedObjects.find(y => y.type === 'original'),
+      }
+    })
+
+    // const suppObjects = suppFileList
+    //   .flatMap(x => x.storedObjects)
+    //   .filter(x => x.type === 'original')
 
     suppObjects.forEach(async suppObject => {
       const url = await fileStorage.getURL(suppObject.key)
-
-      const targetPath = `${suppDirName}/${suppObject.key}`
+      const targetPath = `${suppDirName}/${suppObject.name}`
       downloadFile(url, targetPath, () => {
-        console.error(`Attached supplementary file ${suppObject.key}.`)
+        console.error(`Attached supplementary file ${suppObject.name}.`)
       })
     })
   }
@@ -163,7 +194,7 @@ const makeZipFile = async (manuscriptId, jats) => {
 
   // TODO: cleanup???
 
-  return { link: url, jats: outJats } // returns link to where the ZIP file is.
+  return { link: url, jats: svgedSource } // returns link to where the ZIP file is.
 }
 
 module.exports = makeZipFile
