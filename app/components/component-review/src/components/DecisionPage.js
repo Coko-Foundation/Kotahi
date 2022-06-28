@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery, useMutation, gql, useApolloClient } from '@apollo/client'
 import { set, debounce } from 'lodash'
@@ -20,6 +20,7 @@ import {
   CREATE_TEAM_MUTATION,
   UPDATE_TEAM_MUTATION,
   GET_INVITATIONS_FOR_MANUSCRIPT,
+  GET_BLACKLIST_INFORMATION,
 } from '../../../../queries'
 import { validateDoi } from '../../../../shared/commsUtils'
 
@@ -90,6 +91,17 @@ const DecisionPage = ({ match }) => {
       id: match.params.version,
     },
     fetchPolicy: 'cache-and-network',
+  })
+
+  const [selectedEmail, setSelectedEmail] = useState('')
+  const [externalEmail, setExternalEmail] = useState('')
+
+  const inputEmail = externalEmail || selectedEmail || ''
+
+  const isEmailAddressOptedOut = useQuery(GET_BLACKLIST_INFORMATION, {
+    variables: {
+      email: inputEmail,
+    },
   })
 
   const [update] = useMutation(updateManuscriptMutation)
@@ -242,16 +254,21 @@ const DecisionPage = ({ match }) => {
         config['client-features'].displayShortIdAsIdentifier.toLowerCase() ===
           'true'
       }
+      externalEmail={externalEmail}
       form={form}
       handleChange={handleChange}
       invitations={invitations?.getInvitationsForManuscript}
+      isEmailAddressOptedOut={isEmailAddressOptedOut}
       makeDecision={makeDecision}
       manuscript={manuscript}
       publishManuscript={publishManuscript}
       reviewers={data?.manuscript?.reviews}
       reviewForm={reviewForm}
+      selectedEmail={selectedEmail}
       sendChannelMessageCb={sendChannelMessageCb}
       sendNotifyEmail={sendNotifyEmail}
+      setExternalEmail={setExternalEmail}
+      setSelectedEmail={setSelectedEmail}
       teamLabels={config.teams}
       updateManuscript={updateManuscript}
       updateReview={updateReview}

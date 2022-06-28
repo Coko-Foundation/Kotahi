@@ -3,6 +3,7 @@ import { Redirect } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { Container } from '../../../shared'
 import { GET_INVITATION_STATUS } from '../../../../queries/index'
+import InvitationLinkExpired from './InvitationLinkExpired'
 
 const AcceptArticleOwnershipPage = ({ match }) => {
   const authorInvitationId = match.params.invitationId
@@ -28,11 +29,7 @@ const AcceptArticleOwnershipPage = ({ match }) => {
     )
   }
 
-  return (
-    <Container>
-      The Invitation link is EXPIRED, please contact admin to send a new link
-    </Container>
-  )
+  return <InvitationLinkExpired />
 }
 
 export default AcceptArticleOwnershipPage

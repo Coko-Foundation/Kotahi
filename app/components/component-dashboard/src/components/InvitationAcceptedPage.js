@@ -27,24 +27,26 @@ const InvitationAcceptedPage = () => {
     },
   })
 
+  const currentDate = new Date()
+
   const [createTeam] = useMutation(CREATE_TEAM_MUTATION, {
     onCompleted: () => {
       updateInvitationStatus({
         variables: {
           id: authorInvitationId,
           status: 'ACCEPTED',
-          userId: invitedUser ? invitedUser.id : '',
+          userId: invitedUser ? invitedUser.id : null,
+          responseDate: currentDate,
         },
       })
     },
   })
 
   let manuscriptId, input
-
   useEffect(() => {
     if (data && invitedUser) {
       manuscriptId = data.invitationManuscriptId.manuscriptId
-      const invitedUserId = invitedUser ? invitedUser.id : ''
+      const invitedUserId = invitedUser ? invitedUser.id : null
       input = {
         role: 'author',
         name: 'Author',
