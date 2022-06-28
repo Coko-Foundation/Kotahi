@@ -100,9 +100,9 @@ const makeZipFile = async (manuscriptId, jats) => {
       if (myOriginal) {
         suppFileList.push(supplementaryFiles[i])
 
-        const mimeType = myOriginal.mimeType
-          ? `mimetype="${myOriginal.mimeType.split('-')[0]}" mime-subtype="${
-              myOriginal.mimeType.split('-')[1]
+        const mimeType = myOriginal.mimetype
+          ? `mimetype="${myOriginal.mimetype.split('/')[0]}" mime-subtype="${
+              myOriginal.mimetype.split('/')[1]
             }" `
           : ''
 
