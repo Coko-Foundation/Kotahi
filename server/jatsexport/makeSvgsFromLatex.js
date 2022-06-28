@@ -9,6 +9,16 @@ mjAPI.config({
 })
 mjAPI.start()
 
+const generateOutputXml = (input, rawMml, index) => {
+  // JATS wants MathML with the mmml: namespace at the front of all of its tags
+  const mml = rawMml.replace(/</g, '<mml:').replace(/<mml:\//g, '</mml:')
+
+  return input.replace(
+    '<alternatives>',
+    `<alternatives>${mml}<inline-graphic xlink:href="images/displayformula_${index}.svg" />`,
+  )
+}
+
 const makeSvgsFromLatex = async source => {
   const inlineSvgList = []
   const displaySvgList = []
@@ -20,7 +30,7 @@ const makeSvgsFromLatex = async source => {
   await $('display-formula').each(async (index, el) => {
     const elem = $(el)
     const internal = elem.html()
-    let output = `<display-formula>${internal}</display-formula>`
+    const output = `<display-formula>${internal}</display-formula>`
     const latex = internal.split('[CDATA[')[1].split(']]')[0]
     console.error('Converting display-formula: ', latex)
     // 1.5. mod the JATS to include alternatives with filename
@@ -29,15 +39,13 @@ const makeSvgsFromLatex = async source => {
         math: latex,
         format: 'TeX', // or "inline-TeX", "MathML"
         svg: true, // or svg:true, or html:true
+        mml: true,
       },
       data => {
         if (!data.errors) {
           displaySvgList[index] = data.svg
-          output = output.replace(
-            '<alternatives>',
-            `<alternatives><inline-graphic xlink:href="images/displayformula_${index}.svg" />`,
-          )
-          $(el).replaceWith(output)
+
+          $(el).replaceWith(generateOutputXml(output, data.mml, index))
         }
       },
     )
@@ -48,7 +56,7 @@ const makeSvgsFromLatex = async source => {
   await $('inline-formula').each(async (index, el) => {
     const elem = $(el)
     const internal = elem.html()
-    let output = `<inline-formula>${internal}</inline-formula>`
+    const output = `<inline-formula>${internal}</inline-formula>`
     const latex = internal.split('[CDATA[')[1].split(']]')[0]
     console.error('Converting inline-formula: ', latex)
     //  3. take the equations and convert them to svg
@@ -57,15 +65,12 @@ const makeSvgsFromLatex = async source => {
         math: latex,
         format: 'TeX', // or "inline-TeX", "MathML"
         svg: true, // or svg:true, or html:true
+        mml: true,
       },
       data => {
         if (!data.errors) {
           inlineSvgList[index] = data.svg
-          output = output.replace(
-            '<alternatives>',
-            `<alternatives><inline-graphic xlink:href="images/inlineformula_${index}.svg" />`,
-          )
-          $(el).replaceWith(output)
+          $(el).replaceWith(generateOutputXml(output, data.mml, index))
         }
       },
     )
