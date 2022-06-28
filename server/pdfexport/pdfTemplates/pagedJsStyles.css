@@ -26,9 +26,9 @@
       padding: 50px;
       margin: 100px;
     }
-    section {
+    /* section {
       display: none;
-    }
+    } */
 
     body {
       background-color: var(--color-background);
