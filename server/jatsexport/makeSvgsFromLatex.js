@@ -11,7 +11,11 @@ mjAPI.start()
 
 const generateOutputXml = (input, rawMml, index) => {
   // JATS wants MathML with the mmml: namespace at the front of all of its tags
-  const mml = rawMml.replace(/</g, '<mml:').replace(/<mml:\//g, '</mml:')
+
+  const mml = rawMml
+    .replace(/</g, '<mml:')
+    .replace(/<mml:\//g, '</mml:')
+    .replace(/<mml:!--/g, '<!--')
 
   return input.replace(
     '<alternatives>',
@@ -23,16 +27,18 @@ const makeSvgsFromLatex = async source => {
   const inlineSvgList = []
   const displaySvgList = []
   const dom = htmlparser2.parseDocument(source)
+
   const $ = cheerio.load(dom, { xmlMode: true })
 
   // 1. go through the source and find all display equations
+  // TODO: need to make this actually async
 
-  await $('display-formula').each(async (index, el) => {
+  await $('disp-formula').each(async (index, el) => {
     const elem = $(el)
     const internal = elem.html()
-    const output = `<display-formula>${internal}</display-formula>`
+    const output = `<disp-formula>${internal}</disp-formula>`
     const latex = internal.split('[CDATA[')[1].split(']]')[0]
-    console.error('Converting display-formula: ', latex)
+    console.error('Converting disp-formula: ', latex)
     // 1.5. mod the JATS to include alternatives with filename
     await mjAPI.typeset(
       {
@@ -44,14 +50,16 @@ const makeSvgsFromLatex = async source => {
       data => {
         if (!data.errors) {
           displaySvgList[index] = data.svg
-
-          $(el).replaceWith(generateOutputXml(output, data.mml, index))
+          const replacement = generateOutputXml(output, data.mml, index)
+          $(el).replaceWith(replacement)
+          console.log('replaced!')
         }
       },
     )
   })
 
   // 2. go through the source and find all inline equations
+  // TODO: need to make this actually async
 
   await $('inline-formula').each(async (index, el) => {
     const elem = $(el)
@@ -71,6 +79,7 @@ const makeSvgsFromLatex = async source => {
         if (!data.errors) {
           inlineSvgList[index] = data.svg
           $(el).replaceWith(generateOutputXml(output, data.mml, index))
+          console.log('replaced!')
         }
       },
     )
@@ -90,6 +99,7 @@ const makeSvgsFromLatex = async source => {
 
   const finalXml = $.html()
   const output = { svgedSource: finalXml, svgList }
+  console.log('returning!')
   return output
 }
 

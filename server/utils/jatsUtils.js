@@ -55,7 +55,7 @@ const jatsTagsThatDontNeedConversion = [
   'fig',
   'table-wrap',
   'inline-formula',
-  'display-formula',
+  'disp-formula',
 ]
 
 /** Finds all XML tags and:
@@ -740,7 +740,7 @@ const makeFrontMatter = html => {
 }
 
 const fixMath = html => {
-  // This converts math-display and math-inline to <display-formula> and <inline-formula>
+  // This converts math-display and math-inline to <disp-formula> and <inline-formula>
   // TODO: maybe should convert LaTex to MathML here using MathJax too?
 
   const dom = htmlparser2.parseDocument(html)
@@ -757,7 +757,7 @@ const fixMath = html => {
 
   $('math-display').replaceWith((index, el) => {
     const mathAsLatex = $(el).text()
-    const replacement = `<display-formula><alternatives><tex-math><![CDATA[${mathAsLatex}]]></tex-math></alternatives></display-formula>`
+    const replacement = `<disp-formula><alternatives><tex-math><![CDATA[${mathAsLatex}]]></tex-math></alternatives></disp-formula>`
     return replacement
   })
 
