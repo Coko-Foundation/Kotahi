@@ -93,27 +93,33 @@ export const UPDATE_TEAM_MUTATION = gql`
 `
 
 export const UPDATE_INVITATION_STATUS = gql`
-  mutation($id: ID!, $status: String, $userId: ID) {
-    updateInvitationStatus(id: $id, status: $status, userId: $userId) {
+  mutation($id: ID!, $status: String, $userId: ID, $responseDate: DateTime) {
+    updateInvitationStatus(
+      id: $id
+      status: $status
+      userId: $userId
+      responseDate: $responseDate
+    ) {
       status
+      responseDate
+    }
+  }
+`
+export const GET_BLACKLIST_INFORMATION = gql`
+  query getBlacklistInformation($email: String) {
+    getBlacklistInformation(email: $email) {
+      id
     }
   }
 `
 export const UPDATE_INVITATION_RESPONSE = gql`
-  mutation(
-    $id: ID!
-    $responseComment: String
-    $responseDate: DateTime!
-    $declinedReason: String!
-  ) {
+  mutation($id: ID!, $responseComment: String, $declinedReason: String!) {
     updateInvitationResponse(
       id: $id
       responseComment: $responseComment
-      responseDate: $responseDate
       declinedReason: $declinedReason
     ) {
       responseComment
-      responseDate
       declinedReason
       toEmail
     }

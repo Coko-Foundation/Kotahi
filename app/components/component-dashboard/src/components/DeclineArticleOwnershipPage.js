@@ -1,10 +1,7 @@
 import React, { useEffect, useState } from 'react'
-import styled from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
 import { Checkbox, TextArea } from '@pubsweet/ui/dist/atoms'
 import { Button } from '@pubsweet/ui'
 import { useMutation, useQuery } from '@apollo/client'
-import lightenBy from '../../../../shared/lightenBy'
 import {
   UPDATE_INVITATION_RESPONSE,
   UPDATE_INVITATION_STATUS,
@@ -12,95 +9,18 @@ import {
   GET_INVITATION_STATUS,
 } from '../../../../queries/index'
 import brandConfig from '../../../../brandConfig.json'
-
-const Centered = styled.div`
-  text-align: center;
-`
-
-const Content = styled.div`
-  background: ${th('colorBackground')};
-  border-radius: ${th('borderRadius')};
-  box-shadow: ${th('boxShadow')};
-  margin-bottom: 1rem;
-  max-width: 50em;
-  padding: ${grid(4)};
-  text-align: center;
-  width: 800px;
-
-  h1 {
-    margin-bottom: ${grid(2)};
-  }
-
-  img {
-    height: auto;
-    max-height: 307px;
-    max-width: 475px;
-    width: auto;
-  }
-`
-
-const ButtonWrapper = styled.div`
-  button {
-    font-family: ${th('fontWriting')};
-    font-size: 16px;
-    font-weight: 500;
-    margin-bottom: 15px;
-    padding: 10px 20px;
-    text-align: left;
-  }
-`
-
-const FeedbackForm = styled.p`
-  padding: 20px 40px;
-`
-
-const DeclinedInfoString = styled.p`
-  color: ${th('colorText')};
-  font-family: ${th('fontWriting')};
-  font-size: 20px;
-  font-weight: 600;
-  margin-bottom: 6px;
-  text-align: left;
-`
-
-const SubmitFeedbackNote = styled.p`
-  color: ${th('colorIconPrimary')};
-  font-family: ${th('fontWriting')};
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 15px;
-  text-align: left;
-`
-
-const ThankYouString = styled.p`
-  color: ${th('colorIconPrimary')};
-  font-family: ${th('fontWriting')};
-  font-size: 16px;
-  font-weight: 500;
-  margin-bottom: 15px;
-  text-align: center;
-`
-
-const FormInput = styled.div`
-  margin-bottom: 20px;
-
-  textarea {
-    background: ${th('colorBackgroundHue')};
-    margin-bottom: 15px;
-    padding: 20px;
-  }
-`
-
-const Container = styled.div`
-  background: linear-gradient(
-    134deg,
-    ${th('colorPrimary')},
-    ${lightenBy('colorPrimary', 0.3)}
-  );
-  display: grid;
-  height: 100vh;
-  place-items: center;
-`
+import {
+  ButtonWrapper,
+  Centered,
+  DeclinedInfoString,
+  FeedbackForm,
+  FormInput,
+  InvitationContainer,
+  InvitationContent,
+  SubmitFeedbackNote,
+  ThankYouString,
+} from '../style'
+import InvitationLinkExpired from './InvitationLinkExpired'
 
 const DeclineArticleOwnershipPage = ({ match }) => {
   const authorInvitationId = match.params.invitationId
@@ -148,31 +68,35 @@ const DeclineArticleOwnershipPage = ({ match }) => {
   useEffect(() => {
     if (data && data.invitationStatus.status === 'UNANSWERED') {
       updateInvitationStatus({
-        variables: { id: authorInvitationId, status: 'REJECTED' },
+        variables: {
+          id: authorInvitationId,
+          status: 'REJECTED',
+          responseDate: new Date(),
+        },
       })
     }
   }, [data])
 
   if (isFormSubmitted) {
     return (
-      <Container>
+      <InvitationContainer>
         <Centered>
-          <Content>
+          <InvitationContent>
             <img alt={brandConfig.brandName} src={brandConfig.logoPath} />
             <ThankYouString>
               Thank you for submitting the feedback.
             </ThankYouString>
-          </Content>
+          </InvitationContent>
         </Centered>
-      </Container>
+      </InvitationContainer>
     )
   }
 
   if (data && data.invitationStatus.status === 'UNANSWERED') {
     return (
-      <Container>
+      <InvitationContainer>
         <Centered>
-          <Content>
+          <InvitationContent>
             <img alt={brandConfig.brandName} src={brandConfig.logoPath} />
             <FeedbackForm>
               <DeclinedInfoString>
@@ -202,7 +126,6 @@ const DeclineArticleOwnershipPage = ({ match }) => {
                     variables: {
                       id: authorInvitationId,
                       responseComment: feedbackComment,
-                      responseDate: new Date(),
                       declinedReason: checked ? 'DO_NOT_CONTACT' : 'OTHER',
                     },
                   })
@@ -213,27 +136,13 @@ const DeclineArticleOwnershipPage = ({ match }) => {
                 Submit Feedback
               </Button>
             </ButtonWrapper>
-          </Content>
+          </InvitationContent>
         </Centered>
-      </Container>
+      </InvitationContainer>
     )
   }
 
-  return (
-    <Container>
-      <Centered>
-        <Content>
-          <img alt={brandConfig.brandName} src={brandConfig.logoPath} />
-          <FeedbackForm>
-            <DeclinedInfoString>
-              The Invitation link is EXPIRED, please contact admin to send a new
-              link
-            </DeclinedInfoString>
-          </FeedbackForm>
-        </Content>
-      </Centered>
-    </Container>
-  )
+  return <InvitationLinkExpired />
 }
 
 export default DeclineArticleOwnershipPage

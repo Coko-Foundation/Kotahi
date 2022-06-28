@@ -20,24 +20,31 @@ const resolvers = {
 
       return invitations
     },
+    async getBlacklistInformation(_, { email }, ctx) {
+      const blacklistData = await BlacklistEmail.query().where({
+        email,
+      })
+
+      return blacklistData
+    },
   },
   Mutation: {
-    async updateInvitationStatus(_, { id, status, userId }, ctx) {
+    async updateInvitationStatus(_, { id, status, userId, responseDate }, ctx) {
       const result = await models.Invitation.query().updateAndFetchById(id, {
         status,
         userId,
+        responseDate,
       })
 
       return result
     },
     async updateInvitationResponse(
       _,
-      { id, responseComment, responseDate, declinedReason },
+      { id, responseComment, declinedReason },
       ctx,
     ) {
       const result = await models.Invitation.query().updateAndFetchById(id, {
         responseComment,
-        responseDate,
         declinedReason,
       })
 
@@ -73,17 +80,18 @@ type BlacklistEmail {
   id: ID
   created: DateTime
   updated: DateTime
-  email: String!
+  email: String
 }
 extend type Query {
   invitationManuscriptId(id: ID): Invitation
   invitationStatus(id: ID): Invitation
   getInvitationsForManuscript(id: ID): [Invitation!]
+  getBlacklistInformation(email: String): [BlacklistEmail]
 }
 
 extend type Mutation {
-  updateInvitationStatus(id: ID, status: String, userId: ID): Invitation
-  updateInvitationResponse(id: ID,  responseComment: String, responseDate: DateTime, declinedReason: String ): Invitation
+  updateInvitationStatus(id: ID, status: String, userId: ID,  responseDate: DateTime ): Invitation
+  updateInvitationResponse(id: ID,  responseComment: String,  declinedReason: String ): Invitation
   addEmailToBlacklist(email: String!): BlacklistEmail
 }
 `

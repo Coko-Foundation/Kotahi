@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import lightenBy from '../../../shared/lightenBy'
 
 export { Container, Section, Content } from '../../shared'
 const Actions = styled.div``
@@ -84,4 +85,92 @@ export const Placeholder = styled.div`
   height: 100%;
   padding: 4em;
   place-items: center;
+`
+export const Centered = styled.div`
+  text-align: center;
+`
+
+export const InvitationContent = styled.div`
+  background: ${th('colorBackground')};
+  border-radius: ${th('borderRadius')};
+  box-shadow: ${th('boxShadow')};
+  margin-bottom: 1rem;
+  max-width: 50em;
+  padding: ${grid(4)};
+  text-align: center;
+  width: 800px;
+
+  h1 {
+    margin-bottom: ${grid(2)};
+  }
+
+  img {
+    height: auto;
+    max-height: 307px;
+    max-width: 475px;
+    width: auto;
+  }
+`
+
+export const FeedbackForm = styled.p`
+  padding: 20px 40px;
+`
+
+export const DeclinedInfoString = styled.p`
+  color: ${th('colorText')};
+  font-family: ${th('fontWriting')};
+  font-size: 20px;
+  font-weight: 600;
+  margin-bottom: 6px;
+  text-align: left;
+`
+
+export const InvitationContainer = styled.div`
+  background: linear-gradient(
+    134deg,
+    ${th('colorPrimary')},
+    ${lightenBy('colorPrimary', 0.3)}
+  );
+  display: grid;
+  height: 100vh;
+  place-items: center;
+`
+
+export const ButtonWrapper = styled.div`
+  button {
+    font-family: ${th('fontWriting')};
+    font-size: 16px;
+    font-weight: 500;
+    margin-bottom: 15px;
+    padding: 10px 20px;
+    text-align: left;
+  }
+`
+
+export const SubmitFeedbackNote = styled.p`
+  color: ${th('colorIconPrimary')};
+  font-family: ${th('fontWriting')};
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  text-align: left;
+`
+
+export const ThankYouString = styled.p`
+  color: ${th('colorIconPrimary')};
+  font-family: ${th('fontWriting')};
+  font-size: 16px;
+  font-weight: 500;
+  margin-bottom: 15px;
+  text-align: center;
+`
+
+export const FormInput = styled.div`
+  margin-bottom: 20px;
+
+  textarea {
+    background: ${th('colorBackgroundHue')};
+    margin-bottom: 15px;
+    padding: 20px;
+  }
 `
