@@ -44,7 +44,6 @@ const makeSvgsFromLatex = async source => {
   const $ = cheerio.load(dom, { xmlMode: true })
 
   // 1. go through the source and find all display equations
-  // TODO: need to make this actually async
 
   const displayFormulas = $('disp-formula').toArray()
 
@@ -54,6 +53,7 @@ const makeSvgsFromLatex = async source => {
     const output = `<disp-formula>${internal}</disp-formula>`
     const latex = internal.split('[CDATA[')[1].split(']]')[0]
     console.error('Converting disp-formula: ', latex)
+    // eslint-disable-next-line no-await-in-loop
     const data = await convertMathJax(latex)
     displaySvgList[i] = data.svg
     const replacement = generateOutputXml(output, data.mml, i)
@@ -71,6 +71,7 @@ const makeSvgsFromLatex = async source => {
     const output = `<inline-formula>${internal}</inline-formula>`
     const latex = internal.split('[CDATA[')[1].split(']]')[0]
     console.error('Converting inline-formula: ', latex)
+    // eslint-disable-next-line no-await-in-loop
     const data = await convertMathJax(latex)
     inlineSvgList[i] = data.svg
     const replacement = generateOutputXml(output, data.mml, i)
