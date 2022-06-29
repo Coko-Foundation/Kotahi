@@ -250,6 +250,7 @@ module.exports = {
   },
   'notification-email': {
     automated: '',
+    cc_enabled: 'false',
   },
   fileStorage: {
     minioRootUser: '',

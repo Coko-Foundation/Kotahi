@@ -1,4 +1,5 @@
 const nodemailer = require('nodemailer')
+const config = require('config')
 
 // TODO: refactor below template logic
 const adhocEditorAssignmentEmailTemplate = require('./email-templates/adhocEditorAssignmentEmailTemplate')
@@ -109,10 +110,19 @@ const sendEmail = (receiver, template, data) => {
   return new Promise(resolve => {
     const messageToReceiver = templates[template](data)
 
+    // Check EMAIL_CC is enabled
+    let cc
+
+    if (config['notification-email'].cc_enabled === 'true') {
+      cc = messageToReceiver.cc
+    } else {
+      cc = ''
+    }
+
     const mailOptions = {
       from: process.env.GMAIL_NOTIFICATION_EMAIL_SENDER,
       to: receiver,
-      cc: messageToReceiver.cc,
+      cc,
       subject: messageToReceiver.subject,
       html: messageToReceiver.content,
     }

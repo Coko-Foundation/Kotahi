@@ -68,6 +68,7 @@ module.exports = {
   },
   'notification-email': {
     automated: 'NOTIFICATION_EMAIL_AUTOMATED',
+    cc_enabled: 'NOTIFICATION_EMAIL_CC_ENABLED',
   },
   fileStorage: {
     minioRootUser: 'MINIO_ROOT_USER',
