@@ -109,12 +109,11 @@ const ModalRoot = props => {
     className,
     footerComponent = null,
     headerComponent = null,
-    isOpen,
     onRequestClose,
     ...rest
   } = props
 
-  if (!isOpen) return null
+  if (!props.isOpen) return null
   return (
     <StyledModal
       className={className}
