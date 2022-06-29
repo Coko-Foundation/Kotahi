@@ -1,5 +1,3 @@
-const http = require('http')
-const https = require('https')
 const fs = require('fs-extra')
 const fsPromised = require('fs').promises
 const crypto = require('crypto')
@@ -12,26 +10,6 @@ const makeSvgsFromLatex = require('./makeSvgsFromLatex')
 const { getFileWithUrl } = require('../utils/fileStorageUtils')
 
 const randomBytes = promisify(crypto.randomBytes)
-
-const downloadFile = (url, dest, cb) => {
-  const file = fs.createWriteStream(dest)
-
-  if (url.indexOf('https://') > -1) {
-    https.get(url, response => {
-      response.pipe(file)
-      file.on('finish', () => {
-        file.close(cb)
-      })
-    })
-  } else {
-    http.get(url, response => {
-      response.pipe(file)
-      file.on('finish', () => {
-        file.close(cb)
-      })
-    })
-  }
-}
 
 const makeZipFile = async (manuscriptId, jats) => {
   // jats is a string with the semi-processed JATS in it
@@ -149,12 +127,9 @@ const makeZipFile = async (manuscriptId, jats) => {
       const imageObjects = imageList.flatMap(x => x.storedObjects)
 
       imageObjects.forEach(async imageObject => {
-        const url = await fileStorage.getURL(imageObject.key)
-
         const targetPath = `${imageDirName}/${imageObject.key}`
-        downloadFile(url, targetPath, () => {
-          console.error(`Attached image ${imageObject.key}`)
-        })
+        fileStorage.download(imageObject.key, targetPath)
+        console.error(`Attached image ${imageObject.key}`)
       })
     }
 
@@ -180,11 +155,9 @@ const makeZipFile = async (manuscriptId, jats) => {
     //   .filter(x => x.type === 'original')
 
     suppObjects.forEach(async suppObject => {
-      const url = await fileStorage.getURL(suppObject.key)
       const targetPath = `${suppDirName}/${suppObject.name}`
-      downloadFile(url, targetPath, () => {
-        console.error(`Attached supplementary file ${suppObject.name}.`)
-      })
+      fileStorage.download(suppObject.key, targetPath)
+      console.error(`Attached supplementary file ${suppObject.name}.`)
     })
   }
 
