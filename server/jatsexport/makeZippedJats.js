@@ -1,4 +1,5 @@
 const http = require('http')
+const https = require('https')
 const fs = require('fs-extra')
 const fsPromised = require('fs').promises
 const crypto = require('crypto')
@@ -14,12 +15,22 @@ const randomBytes = promisify(crypto.randomBytes)
 
 const downloadFile = (url, dest, cb) => {
   const file = fs.createWriteStream(dest)
-  http.get(url, response => {
-    response.pipe(file)
-    file.on('finish', () => {
-      file.close(cb)
+
+  if (url.indexOf('https://') > -1) {
+    https.get(url, response => {
+      response.pipe(file)
+      file.on('finish', () => {
+        file.close(cb)
+      })
     })
-  })
+  } else {
+    http.get(url, response => {
+      response.pipe(file)
+      file.on('finish', () => {
+        file.close(cb)
+      })
+    })
+  }
 }
 
 const makeZipFile = async (manuscriptId, jats) => {
