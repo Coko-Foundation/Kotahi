@@ -17,10 +17,13 @@ const generateOutputXml = (input, rawMml, index) => {
     .replace(/<mml:\//g, '</mml:')
     .replace(/<mml:!--/g, '<!--')
 
-  return input.replace(
-    '<alternatives>',
-    `<alternatives>${mml}<inline-graphic xlink:href="images/displayformula_${index}.svg" />`,
-  )
+  return input
+    .replace(
+      '<alternatives>',
+      `<alternatives>${mml}<inline-graphic xlink:href="images/displayformula_${index}.svg" />`,
+    )
+    .replace(/<!--\[CDATA\[/g, '<![CDATA[')
+    .replace(/\]\]-->/g, ']]>')
 }
 
 const mathJaxWrapper = latex =>
