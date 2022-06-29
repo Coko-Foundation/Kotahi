@@ -23,6 +23,19 @@ const generateOutputXml = (input, rawMml, index) => {
   )
 }
 
+const mathJaxWrapper = latex =>
+  mjAPI.typeset({
+    math: latex,
+    format: 'TeX', // or "inline-TeX", "MathML"
+    svg: true, // or svg:true, or html:true
+    mml: true,
+  })
+
+const convertMathJax = async latex => {
+  const data = await mathJaxWrapper(latex)
+  return data
+}
+
 const makeSvgsFromLatex = async source => {
   const inlineSvgList = []
   const displaySvgList = []
@@ -33,57 +46,37 @@ const makeSvgsFromLatex = async source => {
   // 1. go through the source and find all display equations
   // TODO: need to make this actually async
 
-  await $('disp-formula').each(async (index, el) => {
-    const elem = $(el)
-    const internal = elem.html()
+  const displayFormulas = $('disp-formula').toArray()
+
+  for (let i = 0; i < displayFormulas.length; i += 1) {
+    const elem = displayFormulas[i]
+    const internal = $(elem).html()
     const output = `<disp-formula>${internal}</disp-formula>`
     const latex = internal.split('[CDATA[')[1].split(']]')[0]
     console.error('Converting disp-formula: ', latex)
-    // 1.5. mod the JATS to include alternatives with filename
-    await mjAPI.typeset(
-      {
-        math: latex,
-        format: 'TeX', // or "inline-TeX", "MathML"
-        svg: true, // or svg:true, or html:true
-        mml: true,
-      },
-      data => {
-        if (!data.errors) {
-          displaySvgList[index] = data.svg
-          const replacement = generateOutputXml(output, data.mml, index)
-          $(el).replaceWith(replacement)
-          console.log('replaced!')
-        }
-      },
-    )
-  })
+    const data = await convertMathJax(latex)
+    displaySvgList[i] = data.svg
+    const replacement = generateOutputXml(output, data.mml, i)
+    $(elem).replaceWith(replacement)
+    // console.log('replaced display formula!')
+  }
 
   // 2. go through the source and find all inline equations
-  // TODO: need to make this actually async
 
-  await $('inline-formula').each(async (index, el) => {
-    const elem = $(el)
-    const internal = elem.html()
+  const inlineFormulas = $('inline-formula').toArray()
+
+  for (let i = 0; i < inlineFormulas.length; i += 1) {
+    const elem = inlineFormulas[i]
+    const internal = $(elem).html()
     const output = `<inline-formula>${internal}</inline-formula>`
     const latex = internal.split('[CDATA[')[1].split(']]')[0]
     console.error('Converting inline-formula: ', latex)
-    //  3. take the equations and convert them to svg
-    await mjAPI.typeset(
-      {
-        math: latex,
-        format: 'TeX', // or "inline-TeX", "MathML"
-        svg: true, // or svg:true, or html:true
-        mml: true,
-      },
-      data => {
-        if (!data.errors) {
-          inlineSvgList[index] = data.svg
-          $(el).replaceWith(generateOutputXml(output, data.mml, index))
-          console.log('replaced!')
-        }
-      },
-    )
-  })
+    const data = await convertMathJax(latex)
+    inlineSvgList[i] = data.svg
+    const replacement = generateOutputXml(output, data.mml, i)
+    $(elem).replaceWith(replacement)
+    // console.log('replaced inline formula!')
+  }
 
   // 4. return the modified source and an array of SVG files as strings
 
@@ -99,7 +92,7 @@ const makeSvgsFromLatex = async source => {
 
   const finalXml = $.html()
   const output = { svgedSource: finalXml, svgList }
-  console.log('returning!')
+  // console.log('returning!')
   return output
 }
 
