@@ -81,8 +81,8 @@ const EmailNotifications = ({
   const logMessageAfterEmailSent = async message => {
     const emailTemplateOptions = [
       {
-        label: 'Author Acceptance Email Template',
-        value: 'authorAcceptanceEmailTemplate',
+        label: 'Author Invitation Email Template',
+        value: 'authorInvitationEmailTemplate',
       },
       {
         label: 'Evaluation Complete notification',

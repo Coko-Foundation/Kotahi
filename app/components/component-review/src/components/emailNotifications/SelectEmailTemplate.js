@@ -48,8 +48,8 @@ switch (
         value: 'reviewInvitationEmailTemplate13',
       },
       {
-        label: 'Author Acceptance Email Template',
-        value: 'authorAcceptanceEmailTemplate',
+        label: 'Author Invitation Email Template',
+        value: 'authorInvitationEmailTemplate',
       },
       {
         label:
@@ -223,7 +223,7 @@ switch (
     emailTemplateOptions = [
       {
         label: 'Author Invitation Email Template',
-        value: 'authorAcceptanceEmailTemplate',
+        value: 'authorInvitationEmailTemplate',
       },
       {
         label: 'Evaluation Complete required notification template',
