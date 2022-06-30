@@ -17,8 +17,8 @@ const InvitationLinkExpired = () => {
           <img alt={brandConfig.brandName} src={brandConfig.logoPath} />
           <FeedbackForm>
             <DeclinedInfoString>
-              The Invitation link is EXPIRED, please contact admin to send a new
-              link
+              This invitation link has expired. Please contact the system
+              administrator to send a new invitation.
             </DeclinedInfoString>
           </FeedbackForm>
         </InvitationContent>
