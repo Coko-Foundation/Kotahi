@@ -55,6 +55,43 @@ const resolvers = {
 
       return result
     },
+    async assignUserAsAuthor(_, { manuscriptId, userId }, ctx) {
+      const manuscript = await models.Manuscript.query().findById(manuscriptId)
+
+      const existingTeam = await manuscript
+        .$relatedQuery('teams')
+        .where('role', 'author')
+        .first()
+
+      // Add the author to the existing team of authors
+      if (existingTeam) {
+        const authorExists =
+          (await existingTeam
+            .$relatedQuery('users')
+            .where('users.id', userId)
+            .resultSize()) > 0
+
+        if (!authorExists) {
+          await new models.TeamMember({
+            teamId: existingTeam.id,
+            status: 'accepted',
+            userId,
+          }).save()
+        }
+
+        return existingTeam.$query().withGraphFetched('members.[user]')
+      }
+
+      // Create a new team of authors if it doesn't exist
+      const newTeam = await new models.Team({
+        manuscriptId,
+        members: [{ status: 'accepted', userId }],
+        role: 'author',
+        name: 'Authors',
+      }).saveGraph()
+
+      return newTeam
+    },
   },
 }
 
@@ -93,6 +130,7 @@ extend type Mutation {
   updateInvitationStatus(id: ID, status: String, userId: ID,  responseDate: DateTime ): Invitation
   updateInvitationResponse(id: ID,  responseComment: String,  declinedReason: String ): Invitation
   addEmailToBlacklist(email: String!): BlacklistEmail
+  assignUserAsAuthor(manuscriptId: ID!, userId: ID!): Team
 }
 `
 

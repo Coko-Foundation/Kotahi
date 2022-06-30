@@ -3,7 +3,7 @@ import { useQuery, useMutation } from '@apollo/client'
 
 import { Spinner } from '@pubsweet/ui/dist/atoms'
 import {
-  CREATE_TEAM_MUTATION,
+  ASSIGN_USER_AS_AUTHOR,
   GET_INVITATION_MANUSCRIPT_ID,
   UPDATE_INVITATION_STATUS,
 } from '../../../../queries/index'
@@ -29,7 +29,7 @@ const InvitationAcceptedPage = () => {
 
   const currentDate = new Date()
 
-  const [createTeam] = useMutation(CREATE_TEAM_MUTATION, {
+  const [assignUserAsAuthor] = useMutation(ASSIGN_USER_AS_AUTHOR, {
     onCompleted: () => {
       updateInvitationStatus({
         variables: {
@@ -42,18 +42,14 @@ const InvitationAcceptedPage = () => {
     },
   })
 
-  let manuscriptId, input
+  let manuscriptId
   useEffect(() => {
     if (data && invitedUser) {
       manuscriptId = data.invitationManuscriptId.manuscriptId
       const invitedUserId = invitedUser ? invitedUser.id : null
-      input = {
-        role: 'author',
-        name: 'Author',
-        manuscriptId,
-        members: [{ user: { id: invitedUserId } }],
-      }
-      createTeam({ variables: { input } })
+      assignUserAsAuthor({
+        variables: { manuscriptId, userId: invitedUserId },
+      })
     }
   }, [data])
 
