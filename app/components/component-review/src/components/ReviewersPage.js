@@ -89,7 +89,7 @@ const query = gql`
     }
   }
 `
-  
+
 const updateTeamMemberMutation = gql`
   mutation($id: ID!, $input: String) {
     updateTeamMember(id: $id, input: $input) {

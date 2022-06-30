@@ -204,6 +204,14 @@ export const DELETE_MANUSCRIPTS = gql`
     deleteManuscripts(ids: $ids)
   }
 `
+export const ASSIGN_USER_AS_AUTHOR = gql`
+mutation($manuscriptId: ID!, $userId: ID!) {
+  assignUserAsAuthor(manuscriptId: $manuscriptId, userId: $userId ) {
+    ${teamFields}
+  }
+}
+
+`
 
 export const GET_MANUSCRIPTS_AND_FORM = gql`
   query Manuscripts(
