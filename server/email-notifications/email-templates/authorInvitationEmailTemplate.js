@@ -14,7 +14,7 @@ const AuthorAcceptanceEmailTemplate = ({
   switch (process.env.USE_COLAB_EMAIL) {
     case 'true':
       result.cc = 'lesley@sciencecolab.org'
-      result.subject = 'Letter template: Permission to review preprint'
+      result.subject = 'Interest in your preprint from Biophysics Colab (in partnership with eLife)'
       result.content = `<p>
           <p>Dear ${authorName}</p>
           <p>
@@ -52,7 +52,7 @@ const AuthorAcceptanceEmailTemplate = ({
       break
     default:
       result.cc = ''
-      result.subject = 'Letter template: Permission to review preprint'
+      result.subject = 'Kotahi | Permission to review'
       result.content = `<p>Dear ${authorName},</p>
         <p>
           The manuscript titled ‘${articleTitle}’ has been selected for peer review. Click on the link below to accept or decline the invitation;

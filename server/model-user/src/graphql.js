@@ -259,7 +259,7 @@ const resolvers = {
 
       let invitationId = ''
 
-      if (selectedTemplate === 'authorAcceptanceEmailTemplate') {
+      if (selectedTemplate === 'authorInvitationEmailTemplate') {
         let userId = null
         let invitedPersonName = ''
 
