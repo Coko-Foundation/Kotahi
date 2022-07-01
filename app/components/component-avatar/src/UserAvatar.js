@@ -54,7 +54,7 @@ const Avatar = props => {
     onlineBorderColor = null,
   } = props
 
-  const src = user.profilePicture
+  const src = user?.profilePicture
 
   const userFallback = '/profiles/default_avatar.svg'
 
@@ -68,13 +68,13 @@ const Avatar = props => {
       style={style}
       type="user"
     >
-      {showOnlineStatus && user.online && (
+      {showOnlineStatus && user?.online && (
         <OnlineIndicator onlineBorderColor={onlineBorderColor} />
       )}
       <ConditionalWrap
-        condition={!!user.username && isClickable}
+        condition={!!user?.username && isClickable}
         wrap={() => (
-          <AvatarLink to={`${urlFrag}/profile/${user.id}`}>
+          <AvatarLink to={`${urlFrag}/profile/${user?.id}`}>
             <AvatarImage
               mobilesize={mobilesize}
               size={size}
@@ -117,7 +117,7 @@ const AvatarHandler = props => {
     return <GetUserByUsername isClickable={isClickable} username={username} />
   }
 
-  return null
+  return <Avatar {...props} />
 }
 
 export default AvatarHandler
