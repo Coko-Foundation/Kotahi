@@ -98,7 +98,9 @@ const InvitationResult = ({ invitation }) => {
                   <UserAvatar user={user} />
                   <UserInfo>
                     <>
-                      <Primary>{invitedPersonName}</Primary>
+                      <Primary>
+                        {user ? user?.username : invitedPersonName}
+                      </Primary>
                       <Secondary>{dateToDisplay}</Secondary>
                     </>
                   </UserInfo>
