@@ -125,11 +125,11 @@ const makeZipFile = async (manuscriptId, jats) => {
     if (imageList.length) {
       const imageObjects = imageList.flatMap(x => x.storedObjects)
 
-      imageObjects.forEach(async imageObject => {
+      await Promise.all(imageObjects.map(async imageObject => {
         const targetPath = `${imageDirName}/${imageObject.key}`
-        fileStorage.download(imageObject.key, targetPath)
+        await fileStorage.download(imageObject.key, targetPath)
         console.error(`Attached image ${imageObject.key}`)
-      })
+      }))
     }
 
     if (svgList.length) {
@@ -157,11 +157,11 @@ const makeZipFile = async (manuscriptId, jats) => {
     //   .flatMap(x => x.storedObjects)
     //   .filter(x => x.type === 'original')
 
-    suppObjects.forEach(async suppObject => {
+    await Promise.all(suppObjects.map(async suppObject => {
       const targetPath = `${suppDirName}/${suppObject.name}`
-      fileStorage.download(suppObject.key, targetPath)
+      await fileStorage.download(suppObject.key, targetPath)
       console.error(`Attached supplementary file ${suppObject.name}.`)
-    })
+    }))
   }
 
   const zipPath = await makeZip(dirName)
