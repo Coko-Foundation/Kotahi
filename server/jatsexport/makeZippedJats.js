@@ -179,7 +179,7 @@ const makeZipFile = async (manuscriptId, jats) => {
 
   const { url } = downloadReadyZipFile.storedObjects[0]
 
-  // TODO: cleanup???
+  await fsPromised.rmdir('tmp', { recursive: true })
 
   return { link: url, jats: svgedSource } // returns link to where the ZIP file is.
 }
