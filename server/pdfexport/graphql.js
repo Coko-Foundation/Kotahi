@@ -227,7 +227,7 @@ const htmlHandler = async manuscriptId => {
   const raw = await randomBytes(16)
   const filename = `${raw.toString('hex')}_${manuscriptId}.html`
 
-  const templatedHtml = applyTemplate(articleData)
+  const templatedHtml = await applyTemplate(articleData)
 
   const css = await generateCss()
 
@@ -242,7 +242,7 @@ const htmlHandler = async manuscriptId => {
 
   await fsPromised.appendFile(`${uploadsPath}/${filename}`, outHtml)
 
-  return `/${tempPath}`
+  return `${tempPath}`
 }
 
 const resolvers = {
