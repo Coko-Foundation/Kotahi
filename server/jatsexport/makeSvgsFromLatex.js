@@ -18,9 +18,10 @@ const generateOutputXml = (input, rawMml, index) => {
     .replace(/<mml:!--/g, '<!--')
 
   return input
+    .replace('<alternatives>', `<alternatives>${mml}`)
     .replace(
-      '<alternatives>',
-      `<alternatives>${mml}<inline-graphic xlink:href="images/displayformula_${index}.svg" />`,
+      `</alternatives>`,
+      `<inline-graphic xlink:href="images/displayformula_${index}.svg" /></alternatives>`,
     )
     .replace(/<!--\[CDATA\[/g, '<![CDATA[')
     .replace(/\]\]-->/g, ']]>')
