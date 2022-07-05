@@ -5,7 +5,7 @@ import { Formik } from 'formik'
 import { unescape, set } from 'lodash'
 import { TextField, RadioGroup, CheckboxGroup } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
-import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
+// import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
 import {
   Section as Container,
   Select,
@@ -20,6 +20,7 @@ import Confirm from './Confirm'
 import { articleStatuses } from '../../../../globals'
 import { validateFormField } from '../../../../shared/formValidation'
 import ActionButton from '../../../shared/ActionButton'
+import FormWaxEditor from '../../../component-formbuilder/src/components/FormWaxEditor'
 
 const Intro = styled.div`
   font-style: italic;
@@ -75,7 +76,7 @@ elements.AbstractEditor = ({
   ...rest
 }) => {
   return (
-    <SimpleWaxEditor
+    <FormWaxEditor
       validationStatus={validationStatus}
       {...rest}
       onBlur={() => {
@@ -391,7 +392,7 @@ const FormTemplate = ({
   const toggleConfirming = () => {
     setConfirming(confirm => !confirm)
   }
-
+// console.log(validateOnBlur,'validateOnBlur', validateOnChange, 'validateOnChange')
   return (
     <Formik
       displayName={form.name}

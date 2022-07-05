@@ -48,13 +48,15 @@ const useFocusOnError = ({ fieldRef, name }) => {
 const ValidatedField = ({ component: Component, ...props }) => {
   // TODO: https://github.com/formium/formik/issues/146#issuecomment-474775723
   const fieldRef = React.useRef()
-  const { name } = props
+  const { name } = props 
   useFocusOnError({ fieldRef, name })
+  // console.log(useFocusOnError,'useFocusOnError')
 
   return (
     <FastField {...props}>
       {({ form: { errors, touched }, field, meta }) => {
         let validationStatus
+        // console.log(validationStatus,'validationStatus')
         if (get(touched, name)) validationStatus = 'success'
         if (get(touched, name) && get(errors, name)) validationStatus = 'error'
         return (

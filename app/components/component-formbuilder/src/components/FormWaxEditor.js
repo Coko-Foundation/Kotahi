@@ -1,14 +1,14 @@
 import React, { useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { Wax } from 'wax-prosemirror-core'
-import { debounce } from 'lodash'
-import simpleWaxEditorConfig from './config/SimpleWaxEditorConfig'
-import SimpleWaxEditorLayout from './layout/SimpleWaxEditorLayout'
 
 // import './katex/katex.css'
-import fixAstralUnicode from './fixAstralUnicode'
+// import fixAstralUnicode from './fixAstralUnicode'
+import simpleWaxEditorConfig from '../../../wax-collab/src/config/SimpleWaxEditorConfig'
+import SimpleWaxEditorLayout from '../../../wax-collab/src/layout/SimpleWaxEditorLayout'
+import { debounce } from 'lodash'
 
-const SimpleWaxEditor = ({
+const FormWaxEditor = ({
   value,
   validationStatus,
   readonly,
@@ -20,30 +20,30 @@ const SimpleWaxEditor = ({
   innerRefProp,
   ...rest
 }) => {
-  // console.log(onBlur,'onBlur')
   // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
   // eslint-disable-next-line no-param-reassign
-  value = fixAstralUnicode(value)
-// console.log(validationStatus,'validationStatus')
+//   value = fixAstralUnicode(value)
+  // console.log(validationStatus,'validationStatus')
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   // console.log(debounceChange,'debounceChange')
-  function handleChange(e) {
+// function handleChange(e) {
     // console.log(e.target.value)
-  }
-  // console.log(onChange,'onchange')
+//   }
+//   console.log(onChange, 'onchange')
+// const onchange = {}
   return (
     <div className={validationStatus} ref={innerRefProp}>
       <Wax
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
         config={simpleWaxEditorConfig()}
-        // fileUpload={file => renderImage(file)}
+        fileUpload={file => renderImage(file)}
         layout={SimpleWaxEditorLayout(readonly)}
         onBlur={val => {
           onChange && onChange(val)
           onBlur && onBlur(val)
         }}
-        onChange={handleChange}
+        onChange={debounceChange}
         placeholder={placeholder}
         readonly={readonly}
         value={value}
@@ -53,7 +53,7 @@ const SimpleWaxEditor = ({
   )
 }
 
-SimpleWaxEditor.propTypes = {
+FormWaxEditor.propTypes = {
   /** editor content HTML */
   value: PropTypes.string,
   /** either undefined or 'error' to highlight with error color */
@@ -68,7 +68,7 @@ SimpleWaxEditor.propTypes = {
   spellCheck: PropTypes.bool,
 }
 
-SimpleWaxEditor.defaultProps = {
+FormWaxEditor.defaultProps = {
   value: '',
   validationStatus: undefined,
   readonly: false,
@@ -79,4 +79,4 @@ SimpleWaxEditor.defaultProps = {
   spellCheck: false,
 }
 
-export default SimpleWaxEditor
+export default FormWaxEditor
