@@ -505,7 +505,7 @@ const resolvers = {
         }
       }
 
-      const updatedManuscript = models.Manuscript.query().updateAndFetchById(
+      const updatedManuscript = await models.Manuscript.query().updateAndFetchById(
         manuscript.id,
         manuscript,
       )
