@@ -1,6 +1,23 @@
 ## Changes
 
+### 2022-07-07
+
+- Instances affected: **Kotahi Dev**, **Aperture**, **Aperture Neuro**, and **CoLab** <br />
+  Following the conventions of configuration, <br />
+  `NOTIFICATION_EMAIL_CC_ENABLED` and `USE_COLAB_EMAIL` will now be using `true` and `false` as values removing the quotes "". <br />
+
+  ```
+  NOTIFICATION_EMAIL_CC_ENABLED=false
+  USE_COLAB_EMAIL=false
+  ```
+
+  ```
+  NOTIFICATION_EMAIL_CC_ENABLED=true
+  USE_COLAB_EMAIL=true
+  ```
+
 ### 2022-06-29
+
 - Instances affected: **Kotahi Dev**, **Aperture**, **Aperture Neuro**, and **CoLab** <br />
   `NOTIFICATION_EMAIL_CC_ENABLED`: A true value means Kotahi will use CC in automated email notifications. <br />
   ```
