@@ -249,8 +249,9 @@ module.exports = {
     hide: '',
   },
   'notification-email': {
-    automated: '',
+    automated: 'false',
     cc_enabled: 'false',
+    use_colab: 'false',
   },
   fileStorage: {
     minioRootUser: '',
