@@ -17,7 +17,6 @@ const MessageWrapper = styled.div`
   line-height: ${th('lineHeightBaseSmall')};
 `
 
-// const ValidatedFieldComponent = ({ component: Component }) =>
 const useFocusOnError = ({ fieldRef, name }) => {
   const formik = useFormikContext()
   const prevSubmitCountRef = React.useRef(formik.submitCount)
@@ -50,13 +49,11 @@ const ValidatedField = ({ component: Component, ...props }) => {
   const fieldRef = React.useRef()
   const { name } = props 
   useFocusOnError({ fieldRef, name })
-  // console.log(useFocusOnError,'useFocusOnError')
 
   return (
     <FastField {...props}>
       {({ form: { errors, touched }, field, meta }) => {
         let validationStatus
-        // console.log(validationStatus,'validationStatus')
         if (get(touched, name)) validationStatus = 'success'
         if (get(touched, name) && get(errors, name)) validationStatus = 'error'
         return (

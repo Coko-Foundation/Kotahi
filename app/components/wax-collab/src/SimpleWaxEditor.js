@@ -4,8 +4,6 @@ import { Wax } from 'wax-prosemirror-core'
 import { debounce } from 'lodash'
 import simpleWaxEditorConfig from './config/SimpleWaxEditorConfig'
 import SimpleWaxEditorLayout from './layout/SimpleWaxEditorLayout'
-
-// import './katex/katex.css'
 import fixAstralUnicode from './fixAstralUnicode'
 
 const SimpleWaxEditor = ({
@@ -20,17 +18,10 @@ const SimpleWaxEditor = ({
   innerRefProp,
   ...rest
 }) => {
-  // console.log(onBlur,'onBlur')
   // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
   // eslint-disable-next-line no-param-reassign
   value = fixAstralUnicode(value)
-// console.log(validationStatus,'validationStatus')
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
-  // console.log(debounceChange,'debounceChange')
-  function handleChange(e) {
-    // console.log(e.target.value)
-  }
-  // console.log(onChange,'onchange')
   return (
     <div className={validationStatus} ref={innerRefProp}>
       <Wax
@@ -43,7 +34,7 @@ const SimpleWaxEditor = ({
           onChange && onChange(val)
           onBlur && onBlur(val)
         }}
-        onChange={handleChange}
+        onChange={onChange}
         placeholder={placeholder}
         readonly={readonly}
         value={value}

@@ -1,12 +1,9 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Wax } from 'wax-prosemirror-core'
-
-// import './katex/katex.css'
-// import fixAstralUnicode from './fixAstralUnicode'
-import simpleWaxEditorConfig from '../../../wax-collab/src/config/SimpleWaxEditorConfig'
+import fixAstralUnicode from '../../../wax-collab/src/fixAstralUnicode'
 import SimpleWaxEditorLayout from '../../../wax-collab/src/layout/SimpleWaxEditorLayout'
-import { debounce } from 'lodash'
+import simpleWaxEditorConfig from '../../../wax-collab/src/config/SimpleWaxEditorConfig'
 
 const FormWaxEditor = ({
   value,
@@ -22,28 +19,20 @@ const FormWaxEditor = ({
 }) => {
   // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
   // eslint-disable-next-line no-param-reassign
-//   value = fixAstralUnicode(value)
-  // console.log(validationStatus,'validationStatus')
-  const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
-  // console.log(debounceChange,'debounceChange')
-// function handleChange(e) {
-    // console.log(e.target.value)
-//   }
-//   console.log(onChange, 'onchange')
-// const onchange = {}
+  value = fixAstralUnicode(value)
   return (
     <div className={validationStatus} ref={innerRefProp}>
       <Wax
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
         config={simpleWaxEditorConfig()}
-        fileUpload={file => renderImage(file)}
+        // fileUpload={file => renderImage(file)}
         layout={SimpleWaxEditorLayout(readonly)}
         onBlur={val => {
           onChange && onChange(val)
           onBlur && onBlur(val)
         }}
-        onChange={debounceChange}
+        onChange={onChange}
         placeholder={placeholder}
         readonly={readonly}
         value={value}
