@@ -26,7 +26,6 @@ const FormWaxEditor = ({
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
         config={simpleWaxEditorConfig()}
-        // fileUpload={file => renderImage(file)}
         layout={SimpleWaxEditorLayout(readonly)}
         onBlur={val => {
           onChange && onChange(val)

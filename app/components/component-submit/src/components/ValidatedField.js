@@ -47,7 +47,7 @@ const useFocusOnError = ({ fieldRef, name }) => {
 const ValidatedField = ({ component: Component, ...props }) => {
   // TODO: https://github.com/formium/formik/issues/146#issuecomment-474775723
   const fieldRef = React.useRef()
-  const { name } = props 
+  const { name } = props
   useFocusOnError({ fieldRef, name })
 
   return (

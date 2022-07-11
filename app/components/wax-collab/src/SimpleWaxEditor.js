@@ -34,7 +34,7 @@ const SimpleWaxEditor = ({
           onChange && onChange(val)
           onBlur && onBlur(val)
         }}
-        onChange={onChange}
+        onChange={debounceChange}
         placeholder={placeholder}
         readonly={readonly}
         value={value}

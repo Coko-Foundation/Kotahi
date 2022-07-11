@@ -1,11 +1,10 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Formik } from 'formik'
 import { unescape, set, debounce } from 'lodash'
 import { TextField, RadioGroup, CheckboxGroup } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
-// import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
 import {
   Section as Container,
   Select,
@@ -392,6 +391,7 @@ const FormTemplate = ({
   const toggleConfirming = () => {
     setConfirming(confirm => !confirm)
   }
+  const [lastChangedField, setLastChangedField] = useState(null)
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
     <Formik
@@ -415,7 +415,14 @@ const FormTemplate = ({
           manuscriptId={manuscriptId}
           manuscriptShortId={manuscriptShortId}
           manuscriptStatus={manuscriptStatus}
-          onChange={debounceChange}
+          onChange={(value, fieldName) => {
+            if (fieldName !== lastChangedField) {
+              debounceChange.flush()
+              setLastChangedField(fieldName)
+            }
+            debounceChange(value)
+          }
+        }
           republish={republish}
           reviewId={reviewId}
           shouldStoreFilesInForm={shouldStoreFilesInForm}
