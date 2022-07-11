@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import { useQuery, useMutation, gql, useApolloClient } from '@apollo/client'
 import { set, debounce } from 'lodash'
@@ -15,11 +15,18 @@ import {
   publishManuscriptMutation,
 } from './queries'
 
-import { CREATE_MESSAGE } from '../../../../queries'
+import {
+  CREATE_MESSAGE,
+  CREATE_TEAM_MUTATION,
+  UPDATE_TEAM_MUTATION,
+  GET_INVITATIONS_FOR_MANUSCRIPT,
+  GET_BLACKLIST_INFORMATION,
+} from '../../../../queries'
+import { validateDoi } from '../../../../shared/commsUtils'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
-export const updateMutation = gql`
+export const updateManuscriptMutation = gql`
   mutation($id: ID!, $input: String) {
     updateManuscript(id: $id, input: $input) {
       id
@@ -53,49 +60,11 @@ const deleteFileMutation = gql`
   }
 `
 
-const teamFields = `
-  id
-  name
-  role
-  manuscript {
-    id
-  }
-  members {
-    id
-    user {
-      id
-      username
-    }
-  }
-`
-
-const updateTeamMutation = gql`
-  mutation($id: ID!, $input: TeamInput) {
-    updateTeam(id: $id, input: $input) {
-      ${teamFields}
-    }
-  }
-`
-
-const createTeamMutation = gql`
-  mutation($input: TeamInput!) {
-    createTeam(input: $input) {
-      ${teamFields}
-    }
-  }
-`
-
 let debouncers = {}
 
 const DecisionPage = ({ match }) => {
   // start of code from submit page to handle possible form changes
   const client = useApolloClient()
-
-  const [confirming, setConfirming] = useState(false)
-
-  const toggleConfirming = () => {
-    setConfirming(confirm => !confirm)
-  }
 
   useEffect(() => {
     return () => {
@@ -105,27 +74,43 @@ const DecisionPage = ({ match }) => {
 
   const handleChange = (value, path, versionId) => {
     const manuscriptDelta = {} // Only the changed fields
+
+    // Takes the $PATH (meta.title) and $VALUE (meta.title) -> { meta: { title: '$VALUE' } }
+    // String to Object conversion happens here
     set(manuscriptDelta, path, value)
+
     debouncers[path] = debouncers[path] || debounce(updateManuscript, 3000)
+
     return debouncers[path](versionId, manuscriptDelta)
   }
 
   // end of code from submit page to handle possible form changes
 
-  const { loading, error, data } = useQuery(query, {
+  const { loading, data, error } = useQuery(query, {
     variables: {
       id: match.params.version,
     },
-    fetchPolicy: 'network-only', // TODO This prevents reviews sometimes having a null user. The whole graphql/caching in DecisionPage and DecisionVersion needs clean-up.
+    fetchPolicy: 'cache-and-network',
   })
 
-  const [update] = useMutation(updateMutation)
+  const [selectedEmail, setSelectedEmail] = useState('')
+  const [externalEmail, setExternalEmail] = useState('')
+
+  const inputEmail = externalEmail || selectedEmail || ''
+
+  const isEmailAddressOptedOut = useQuery(GET_BLACKLIST_INFORMATION, {
+    variables: {
+      email: inputEmail,
+    },
+  })
+
+  const [update] = useMutation(updateManuscriptMutation)
   const [sendEmailMutation] = useMutation(sendEmail)
   const [sendChannelMessage] = useMutation(CREATE_MESSAGE)
   const [makeDecision] = useMutation(makeDecisionMutation)
   const [publishManuscript] = useMutation(publishManuscriptMutation)
-  const [updateTeam] = useMutation(updateTeamMutation)
-  const [createTeam] = useMutation(createTeamMutation)
+  const [updateTeam] = useMutation(UPDATE_TEAM_MUTATION)
+  const [createTeam] = useMutation(CREATE_TEAM_MUTATION)
   const [doUpdateReview] = useMutation(updateReviewMutation)
   const [createFile] = useMutation(createFileMutation)
 
@@ -140,17 +125,23 @@ const DecisionPage = ({ match }) => {
     },
   })
 
-  const updateManuscript = (versionId, manuscriptDelta) => {
-    return update({
+  const { data: invitations } = useQuery(GET_INVITATIONS_FOR_MANUSCRIPT, {
+    variables: { id: data?.manuscript?.id },
+  })
+
+  if (loading && !data) return <Spinner />
+  if (error) return <CommsErrorBanner error={error} />
+
+  const updateManuscript = (versionId, manuscriptDelta) =>
+    update({
       variables: {
         id: versionId,
         input: JSON.stringify(manuscriptDelta),
       },
     })
-  }
 
   const updateReview = async (reviewId, reviewData, manuscriptId) => {
-    return doUpdateReview({
+    doUpdateReview({
       variables: { id: reviewId || undefined, input: reviewData },
       update: (cache, { data: { updateReview: updatedReview } }) => {
         cache.modify({
@@ -185,12 +176,30 @@ const DecisionPage = ({ match }) => {
     })
   }
 
-  if (loading) return <Spinner />
-  if (error) return <CommsErrorBanner error={error} />
+  const {
+    manuscript,
+    submissionForm,
+    decisionForm: decisionFormOuter,
+    reviewForm: reviewFormOuter,
+    currentUser,
+    users,
+  } = data
 
-  const { manuscript, formForPurposeAndCategory, currentUser, users } = data
+  const form = submissionForm?.structure ?? {
+    name: '',
+    children: [],
+    description: '',
+    haspopup: 'false',
+  }
 
-  const form = formForPurposeAndCategory?.structure ?? {
+  const decisionForm = decisionFormOuter?.structure ?? {
+    name: '',
+    children: [],
+    description: '',
+    haspopup: 'false',
+  }
+
+  const reviewForm = reviewFormOuter?.structure ?? {
     name: '',
     children: [],
     description: '',
@@ -207,38 +216,66 @@ const DecisionPage = ({ match }) => {
     return response
   }
 
-  const sendChannelMessageCb = async messageData =>
-    sendChannelMessage(messageData)
+  const sendChannelMessageCb = async messageData => {
+    const response = await sendChannelMessage({
+      variables: messageData,
+    })
+
+    return response
+  }
+
+  /** This will only send the modified field, not the entire review object */
+  const updateReviewJsonData = (reviewId, value, path) => {
+    const reviewDelta = {} // Only the changed fields
+    // E.g. if path is 'meta.title' and value is 'Foo' this gives { meta: { title: 'Foo' } }
+    set(reviewDelta, path, value)
+
+    const reviewPayload = {
+      isDecision: true,
+      jsonData: JSON.stringify(reviewDelta),
+      manuscriptId: manuscript.id,
+      userId: currentUser.id,
+    }
+
+    updateReview(reviewId, reviewPayload, manuscript.id)
+  }
 
   return (
     <DecisionVersions
       allUsers={users}
       canHideReviews={config.review.hide === 'true'}
-      client={client}
-      confirming={confirming}
       createFile={createFile}
       createTeam={createTeam}
       currentUser={currentUser}
+      decisionForm={decisionForm}
       deleteFile={deleteFile}
       displayShortIdAsIdentifier={
         config['client-features'].displayShortIdAsIdentifier &&
         config['client-features'].displayShortIdAsIdentifier.toLowerCase() ===
           'true'
       }
+      externalEmail={externalEmail}
       form={form}
       handleChange={handleChange}
+      invitations={invitations?.getInvitationsForManuscript}
+      isEmailAddressOptedOut={isEmailAddressOptedOut}
       makeDecision={makeDecision}
       manuscript={manuscript}
       publishManuscript={publishManuscript}
       reviewers={data?.manuscript?.reviews}
+      reviewForm={reviewForm}
+      selectedEmail={selectedEmail}
       sendChannelMessageCb={sendChannelMessageCb}
       sendNotifyEmail={sendNotifyEmail}
+      setExternalEmail={setExternalEmail}
+      setSelectedEmail={setSelectedEmail}
       teamLabels={config.teams}
-      toggleConfirming={toggleConfirming}
       updateManuscript={updateManuscript}
       updateReview={updateReview}
+      updateReviewJsonData={updateReviewJsonData}
       updateTeam={updateTeam}
       urlFrag={urlFrag}
+      validateDoi={validateDoi(client)}
     />
   )
 }

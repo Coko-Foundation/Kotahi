@@ -1,13 +1,11 @@
 import React, { useRef, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
-import { Formik } from 'formik'
 import { set, debounce } from 'lodash'
-import DecisionForm from './decision/DecisionForm'
 import DecisionReviews from './decision/DecisionReviews'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
 import AssignEditor from './assignEditors/AssignEditor'
 import EmailNotifications from './emailNotifications'
-import ReviewMetadata from './metadata/ReviewMetadata'
+import ReadonlyFormTemplate from './metadata/ReadonlyFormTemplate'
 import EditorSection from './decision/EditorSection'
 import Publish from './Publish'
 import { AdminSection } from './style'
@@ -30,30 +28,38 @@ const createBlankSubmissionBasedOnForm = form => {
 
 const DecisionVersion = ({
   allUsers,
+  decisionForm,
   form,
   current,
+  currentDecisionData,
   currentUser,
   version,
   parent,
   updateManuscript, // To handle manuscript editing
   onChange, // To handle form editing
-  confirming,
-  toggleConfirming,
-  makeDecision = {},
+  makeDecision,
   sendNotifyEmail,
   sendChannelMessageCb,
   publishManuscript,
   updateTeam,
   createTeam,
   updateReview,
+  reviewForm,
   reviewers,
   teamLabels,
   canHideReviews,
   urlFrag,
   displayShortIdAsIdentifier,
-  client,
+  updateReviewJsonData,
+  validateDoi,
   createFile,
   deleteFile,
+  invitations,
+  externalEmail,
+  setExternalEmail,
+  selectedEmail,
+  setSelectedEmail,
+  isEmailAddressOptedOut,
 }) => {
   // Hooks from the old world
   const addEditor = (manuscript, label, isCurrent, user) => {
@@ -61,7 +67,6 @@ const DecisionVersion = ({
 
     const handleSave = useCallback(
       debounce(source => {
-        console.log('updateManuscript firing in DecisionVersion.js')
         updateManuscript(manuscript.id, { meta: { source } })
       }, 2000),
     )
@@ -82,9 +87,7 @@ const DecisionVersion = ({
 
   const reviewOrInitial = manuscript =>
     manuscript?.reviews?.find(review => review.isDecision) || {
-      decisionComment: {},
       isDecision: true,
-      recommendation: null,
     }
 
   // Find an existing review or create a placeholder, and hold a ref to it
@@ -94,21 +97,6 @@ const DecisionVersion = ({
   useEffect(() => {
     existingReview.current = reviewOrInitial(version)
   }, [version.reviews])
-
-  const updateReviewForVersion = manuscriptId => review => {
-    const reviewData = {
-      recommendation: review.recommendation,
-      manuscriptId,
-      isDecision: true,
-      decisionComment: review.decisionComment && {
-        id: existingReview.current.decisionComment?.id,
-        commentType: 'decision',
-        content: review.decisionComment.content,
-      },
-    }
-
-    return updateReview(existingReview.current.id, reviewData, manuscriptId)
-  }
 
   const editorSection = addEditor(
     version,
@@ -135,44 +123,38 @@ const DecisionVersion = ({
       content: (
         <>
           {!current ? (
-            <ReviewMetadata
+            <ReadonlyFormTemplate
               displayShortIdAsIdentifier={displayShortIdAsIdentifier}
               form={form}
+              formData={{
+                ...version,
+                submission: JSON.parse(version.submission),
+              }}
+              listManuscriptFiles
               manuscript={version}
               showEditorOnlyFields
             />
           ) : (
             <SectionContent>
-              <Formik
-                displayName="submit"
+              <FormTemplate
+                createFile={createFile}
+                deleteFile={deleteFile}
+                displayShortIdAsIdentifier={displayShortIdAsIdentifier}
+                form={form}
                 initialValues={versionValues}
-                onSubmit={() => null}
-                validateOnBlur
-                validateOnChange={false}
-              >
-                {formProps => {
-                  return (
-                    <FormTemplate
-                      confirming={confirming}
-                      createFile={createFile}
-                      deleteFile={deleteFile}
-                      onChange={(value, path) => {
-                        onChange(value, path, versionId)
-                      }}
-                      toggleConfirming={toggleConfirming}
-                      {...formProps}
-                      client={client}
-                      displayShortIdAsIdentifier={displayShortIdAsIdentifier}
-                      form={form}
-                      manuscript={version}
-                      match={{ url: 'decision' }}
-                      republish={() => null}
-                      showEditorOnlyFields
-                      urlFrag={urlFrag}
-                    />
-                  )
+                isSubmission
+                manuscriptId={version.id}
+                manuscriptShortId={version.shortId}
+                manuscriptStatus={version.status}
+                match={{ url: 'decision' }}
+                onChange={(value, path) => {
+                  onChange(value, path, versionId)
                 }}
-              </Formik>
+                republish={() => null}
+                showEditorOnlyFields
+                urlFrag={urlFrag}
+                validateDoi={validateDoi}
+              />
             </SectionContent>
           )}
         </>
@@ -182,15 +164,7 @@ const DecisionVersion = ({
     }
   }
 
-  const decisionSection = ({
-    handleSubmit,
-    dirty,
-    isValid,
-    submitCount,
-    isSubmitting,
-  }) => {
-    // this is only used if current version & hence editable
-
+  const decisionSection = () => {
     return {
       content: (
         <>
@@ -211,9 +185,14 @@ const DecisionVersion = ({
                 <EmailNotifications
                   allUsers={allUsers}
                   currentUser={currentUser}
+                  externalEmail={externalEmail}
+                  isEmailAddressOptedOut={isEmailAddressOptedOut}
                   manuscript={version}
+                  selectedEmail={selectedEmail}
                   sendChannelMessageCb={sendChannelMessageCb}
                   sendNotifyEmail={sendNotifyEmail}
+                  setExternalEmail={setExternalEmail}
+                  setSelectedEmail={setSelectedEmail}
                 />
               )}
               <AssignEditorsReviewers
@@ -251,13 +230,22 @@ const DecisionVersion = ({
               </SectionRow>
             </SectionContent>
           )}
-          {!current && <DecisionAndReviews manuscript={version} />}
+          {!current && (
+            <DecisionAndReviews
+              decisionForm={decisionForm}
+              isControlPage
+              manuscript={version}
+              reviewForm={reviewForm}
+            />
+          )}
           {current && (
             <AdminSection key="decision-review">
               <DecisionReviews
                 canHideReviews={canHideReviews}
+                invitations={invitations}
                 manuscript={version}
                 reviewers={reviewers}
+                reviewForm={reviewForm}
                 updateReview={updateReview}
                 urlFrag={urlFrag}
               />
@@ -265,17 +253,39 @@ const DecisionVersion = ({
           )}
           {current && (
             <AdminSection key="decision-form">
-              <DecisionForm
-                createFile={createFile}
-                deleteFile={deleteFile}
-                dirty={dirty}
-                handleSubmit={handleSubmit}
-                isSubmitting={isSubmitting}
-                isValid={isValid}
-                manuscriptId={version.id}
-                submitCount={submitCount}
-                updateReview={updateReviewForVersion(version.id)}
-              />
+              <SectionContent>
+                <FormTemplate
+                  createFile={createFile}
+                  deleteFile={deleteFile}
+                  form={decisionForm}
+                  initialValues={
+                    currentDecisionData?.jsonData
+                      ? JSON.parse(currentDecisionData?.jsonData)
+                      : {}
+                  }
+                  isSubmission={false}
+                  manuscriptId={version.id}
+                  manuscriptShortId={version.shortId}
+                  manuscriptStatus={version.status}
+                  onChange={updateReviewJsonData}
+                  onSubmit={async (values, actions) => {
+                    await makeDecision({
+                      variables: {
+                        id: version.id,
+                        decision: values.verdict,
+                      },
+                    })
+                    actions.setSubmitting(false)
+                  }}
+                  reviewId={currentDecisionData.id}
+                  shouldStoreFilesInForm
+                  showEditorOnlyFields
+                  submissionButtonText="Submit"
+                  tagForFiles="decision"
+                  urlFrag={urlFrag}
+                  validateDoi={validateDoi}
+                />
+              </SectionContent>
             </AdminSection>
           )}
           {current && (
@@ -294,45 +304,10 @@ const DecisionVersion = ({
   }
 
   return (
-    <Formik
-      displayName="decision"
-      initialValues={reviewOrInitial(version)}
-      onSubmit={async (values, actions) => {
-        await makeDecision({
-          variables: {
-            id: version.id,
-            decision: values.recommendation,
-          },
-        })
-        actions.setSubmitting(false)
-      }}
-      validate={(values, props) => {
-        const errors = {}
-
-        if (
-          ['', '<p></p>', undefined].includes(values.decisionComment?.content)
-        ) {
-          errors.decisionComment = 'Decision letter is required'
-        }
-
-        if (values.recommendation === null) {
-          errors.recommendation = 'Decision is required'
-        }
-
-        return errors
-      }}
-    >
-      {props => (
-        <HiddenTabs
-          defaultActiveKey={version.id}
-          sections={[
-            decisionSection({ ...props }),
-            editorSection,
-            metadataSection({ ...props }),
-          ]}
-        />
-      )}
-    </Formik>
+    <HiddenTabs
+      defaultActiveKey={version.id}
+      sections={[decisionSection(), editorSection, metadataSection()]}
+    />
   )
 }
 
@@ -349,8 +324,6 @@ DecisionVersion.propTypes = {
     ).isRequired,
   }).isRequired,
   onChange: PropTypes.func.isRequired,
-  toggleConfirming: PropTypes.func.isRequired,
-  confirming: PropTypes.bool.isRequired,
   current: PropTypes.bool.isRequired,
   version: PropTypes.shape({
     id: PropTypes.string.isRequired,
@@ -381,7 +354,6 @@ DecisionVersion.propTypes = {
             identifier: PropTypes.string.isRequired,
           }),
         }).isRequired,
-        recommendation: PropTypes.string,
       }).isRequired,
     ).isRequired,
   }).isRequired,

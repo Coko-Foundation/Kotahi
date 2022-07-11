@@ -1,7 +1,10 @@
 const models = require('@pubsweet/models')
 const { XMLValidator } = require('fast-xml-parser')
 const { makeJats } = require('../utils/jatsUtils')
+const articleMetadata = require('../pdfexport/pdfTemplates/articleMetadata')
 const publicationMetadata = require('../pdfexport/pdfTemplates/publicationMetadata')
+const validateJats = require('./validation')
+const makeZippedJats = require('./makeZippedJats')
 
 const failXML = false // if this is true, we pass errorJats (which is invalid XML) to the parser
 
@@ -23,47 +26,6 @@ fe</publisher>
 </list-item>ng the need for further species-specific land use studies to inform tailored land management.</title>
 </sec>`
 
-const buildArticleMetadata = article => {
-  const articleMetadata = {}
-
-  if (article && article.meta && article.meta.manuscriptId) {
-    articleMetadata.id = article.meta.manuscriptId
-  }
-
-  if (article && article.meta && article.meta.title) {
-    articleMetadata.title = article.meta.title
-  }
-
-  if (article && article.created) {
-    articleMetadata.pubDate = article.created
-  }
-
-  if (article && article.submission) {
-    articleMetadata.submission = article.submission
-  }
-
-  if (
-    article &&
-    article.submission &&
-    article.submission.authorNames &&
-    article.submission.authorNames.length
-  ) {
-    articleMetadata.authors = []
-
-    for (let i = 0; i < article.submission.authorNames.length; i += 1) {
-      articleMetadata.authors[i] = {
-        email: article.submission.authorNames[i].email || '',
-        firstName: article.submission.authorNames[i].firstName || '',
-        lastName: article.submission.authorNames[i].lastName || '',
-        affiliation: article.submission.authorNames[i].affiliation || '',
-        id: article.submission.authorNames[i].id || '',
-      }
-    }
-  }
-
-  return articleMetadata
-}
-
 const getManuscriptById = async id => {
   return models.Manuscript.query().findById(id)
 }
@@ -71,16 +33,28 @@ const getManuscriptById = async id => {
 const jatsHandler = async manuscriptId => {
   const manuscript = await getManuscriptById(manuscriptId)
   const html = manuscript.meta.source
-  const articleMetadata = buildArticleMetadata(manuscript)
 
-  const { jats } = makeJats(html, articleMetadata, publicationMetadata)
+  const { jats } = makeJats(
+    html,
+    articleMetadata(manuscript),
+    publicationMetadata,
+  )
 
   // check if the output is valid XML – this is NOT checking whether this is valid JATS
   let parseError = null
-  const result = XMLValidator.validate(failXML ? errorJats : jats) // this returns true if it's valid, error object if not
+  const xmlResult = XMLValidator.validate(failXML ? errorJats : jats) // this returns true if it's valid, error object if not
 
-  if (typeof result === 'object') {
-    parseError = result
+  if (typeof xmlResult === 'object') {
+    parseError = xmlResult
+    return { jats, error: parseError }
+  }
+
+  // if we have valid XML, then check for valid jats
+
+  const jatsResult = validateJats(jats) // this returns empty array if it's valid, array of errors if not
+
+  if (jatsResult.length) {
+    parseError = jatsResult
   }
 
   return { jats, error: parseError }
@@ -90,7 +64,18 @@ const resolvers = {
   Query: {
     convertToJats: async (_, { manuscriptId }, ctx) => {
       const { jats, error } = await jatsHandler(manuscriptId, ctx)
-      return { xml: jats || '', error: error ? JSON.stringify(error) : '' }
+      // eslint-disable-next-line prefer-const
+      let returnedJats = { link: '', jats }
+
+      if (jats) {
+        returnedJats = await makeZippedJats(manuscriptId, jats)
+      }
+
+      return {
+        xml: returnedJats.jats || '',
+        zipLink: returnedJats.link,
+        error: error ? JSON.stringify(error) : '',
+      }
     },
   },
 }
@@ -102,6 +87,7 @@ const typeDefs = `
 
 	type ConvertToJatsType {
 		xml: String!
+		zipLink: String
 		error: String
 	}
 

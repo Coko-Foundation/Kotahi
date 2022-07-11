@@ -24,7 +24,7 @@ const Bullet = ({ journal, recommendation }) => {
   const recommendationColor = () =>
     recommendation
       ? journal?.recommendations?.find(item => item.value === recommendation)
-          .color
+          ?.color
       : 'black'
 
   const Dot = styled.span`

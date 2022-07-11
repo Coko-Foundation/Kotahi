@@ -2,7 +2,7 @@ module.exports = [
   {
     color: 'green',
     label: 'Accept',
-    value: 'accepted',
+    value: 'accept',
   },
   {
     color: 'orange',
@@ -12,6 +12,6 @@ module.exports = [
   {
     color: 'red',
     label: 'Reject',
-    value: 'rejected',
+    value: 'reject',
   },
 ]

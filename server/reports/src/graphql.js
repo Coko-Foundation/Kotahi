@@ -1,4 +1,5 @@
 const models = require('@pubsweet/models')
+const { ensureJsonIsParsed } = require('../../utils/objectUtils')
 const generateMovingAverages = require('./movingAverages')
 
 const editorTeams = ['Senior Editor', 'Handling Editor', 'Editor']
@@ -537,9 +538,10 @@ const getReviewersActivity = async (startDate, endDate, ctx) => {
         )
 
         if (!review) return // continue
+        const reviewJsonData = ensureJsonIsParsed(review.jsonData)
 
         // eslint-disable-next-line no-param-reassign
-        reviewer.recommendation = review.recommendation
+        reviewer.recommendation = reviewJsonData.verdict // TODO this expects the field to be named 'verdict'. Could be more robust.
         // eslint-disable-next-line no-param-reassign
         reviewer.duration = review.updated - reviewer.inviteDate
 

@@ -1,13 +1,12 @@
 import React, { useState } from 'react'
 import Moment from 'react-moment'
-import { Button, Action } from '@pubsweet/ui'
+import { Button } from '@pubsweet/ui'
 import Tooltip from '../../../component-reporting/src/Tooltip'
 import {
   DateWrapper,
   CommentMetaWrapper,
   UserMetaWrapper,
   UserName,
-  CommentStatus,
   SimpleWaxEditorWrapper,
   CollapseOverlay,
   CommentWrapper,
@@ -15,6 +14,7 @@ import {
   Collapse,
   ModalContainer,
   CancelButton,
+  CommentContainer,
 } from './style'
 import { Icon } from '../../../shared'
 import { UserAvatar } from '../../../component-avatar/src'
@@ -44,81 +44,80 @@ const ThreadedComment = props => {
 
   return (
     <>
-      <CommentWrapper key={comment.id}>
-        <CommentMetaWrapper>
-          <UserMetaWrapper>
-            <UserAvatar user={author} />
-            <UserName>{author.username}</UserName>
-          </UserMetaWrapper>
-          <DateWrapper>
-            <Moment format="YYYY-MM-DD">{createdAt}</Moment>
-            <Tooltip
-              content={
-                <>
-                  Created at &nbsp;
-                  <Moment format="YYYY-MM-DD HH:mm:ss">{createdAt}</Moment>
-                  <br />
-                  Updated at &nbsp;
-                  <Moment format="YYYY-MM-DD HH:mm:ss">{updatedAt}</Moment>
-                </>
-              }
-            />
-          </DateWrapper>
-          <CommentStatus>
-            <Action>{createdAt !== updatedAt ? '(Edited)' : ''}</Action>
-          </CommentStatus>
-        </CommentMetaWrapper>
-        <ActionWrapper>
-          {(userCanEditAnyComment ||
-            (userCanEditOwnComment && author.id === currentUserId)) && (
-            <Icon
+      <CommentContainer>
+        <CommentWrapper key={comment.id}>
+          <CommentMetaWrapper>
+            <UserMetaWrapper>
+              <UserAvatar user={author} />
+              <UserName>{author.username}</UserName>
+            </UserMetaWrapper>
+          </CommentMetaWrapper>
+          <ActionWrapper>
+            <DateWrapper>
+              <Moment format="YYYY-MM-DD">{createdAt}</Moment>
+              <Tooltip
+                content={
+                  <>
+                    Created at &nbsp;
+                    <Moment format="YYYY-MM-DD HH:mm:ss">{createdAt}</Moment>
+                    <br />
+                    Updated at &nbsp;
+                    <Moment format="YYYY-MM-DD HH:mm:ss">{updatedAt}</Moment>
+                  </>
+                }
+              />
+            </DateWrapper>
+            {(userCanEditAnyComment ||
+              (userCanEditOwnComment && author.id === currentUserId)) && (
+              <Icon
+                onClick={event => {
+                  setOpenModal(true)
+                }}
+              >
+                edit
+              </Icon>
+            )}
+            <Collapse
               onClick={event => {
-                setOpenModal(true)
+                setCollapse(!collapse)
               }}
+              value={collapse}
             >
-              edit
-            </Icon>
-          )}
-          <Collapse
-            onClick={event => {
-              setCollapse(!collapse)
-            }}
-            value={collapse}
-          >
-            {collapse ? <Icon>chevron-down</Icon> : <Icon>chevron-up</Icon>}
-          </Collapse>
-        </ActionWrapper>
-      </CommentWrapper>
-      <SimpleWaxEditorWrapper collapse={collapse}>
-        <SimpleWaxEditor
-          readonly
-          {...simpleWaxEditorProps}
-          key={counter}
-          value={modalFieldValue}
-        />
-        <CollapseOverlay collapse={collapse} />
-      </SimpleWaxEditorWrapper>
-      <Modal isOpen={openModal}>
-        <ModalContainer>
+              {collapse ? <Icon>chevron-down</Icon> : <Icon>chevron-up</Icon>}
+            </Collapse>
+          </ActionWrapper>
+        </CommentWrapper>
+        <SimpleWaxEditorWrapper collapse={collapse}>
           <SimpleWaxEditor
+            readonly
             {...simpleWaxEditorProps}
-            onChange={data => setModalFieldValue(data)}
+            key={counter}
             value={modalFieldValue}
           />
-          <Button
-            onClick={event => {
-              onButtonClick()
-            }}
-            primary
-          >
-            Edit
-          </Button>
-          &nbsp;
-          <CancelButton onClick={() => setOpenModal(false)}>
-            Cancel
-          </CancelButton>
-        </ModalContainer>
-      </Modal>
+          <CollapseOverlay collapse={collapse} />
+        </SimpleWaxEditorWrapper>
+        <Modal isOpen={openModal}>
+          <ModalContainer>
+            <SimpleWaxEditor
+              {...simpleWaxEditorProps}
+              onChange={data => setModalFieldValue(data)}
+              value={modalFieldValue}
+            />
+            <Button
+              onClick={event => {
+                onButtonClick()
+              }}
+              primary
+            >
+              Edit
+            </Button>
+            &nbsp;
+            <CancelButton onClick={() => setOpenModal(false)}>
+              Cancel
+            </CancelButton>
+          </ModalContainer>
+        </Modal>
+      </CommentContainer>
     </>
   )
 }

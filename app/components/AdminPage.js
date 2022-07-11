@@ -1,6 +1,6 @@
 import React, { useContext, useCallback, useRef } from 'react'
 import styled from 'styled-components'
-import { useQuery } from '@apollo/client'
+import { useQuery, gql } from '@apollo/client'
 import {
   useHistory,
   matchPath,
@@ -39,6 +39,14 @@ import RolesUpdater from './RolesUpdater'
 const getParams = ({ routerPath, path }) => {
   return matchPath(routerPath, path).params
 }
+
+const CSS_QUERY = gql`
+  query getCSSQuery {
+    builtCss {
+      css
+    }
+  }
+`
 
 const Root = styled.div`
   display: grid;
@@ -109,24 +117,34 @@ const AdminPage = () => {
     onCompleted: useCallback(dataTemp => updateStuff(dataTemp), []),
   })
 
+  const { loading: loading2, error: error2, data: data2 } = useQuery(
+    CSS_QUERY,
+    {
+      fetchPolicy: 'network-only',
+    },
+  )
+
   const previousDataRef = useRef(null)
 
   // Do this to prevent polling-related flicker
-  if (loading && !previousDataRef.current) {
+  if (loading && loading2 && !previousDataRef.current) {
     return <Spinner />
   }
 
   let notice = ''
 
-  if (error) {
+  if (error || error2) {
     if (error.networkError) {
       notice = 'You are offline.'
     } else {
-      return <Redirect to="/login" />
+      const redirectlocation = `/login`
+      return <Redirect to={redirectlocation} />
     }
   }
 
   const currentUser = data && data.currentUser
+
+  journal.textStyles = data2 && data2.builtCss.css
 
   previousDataRef.current = data
 

@@ -1,9 +1,10 @@
 import React from 'react'
-import { useQuery, useMutation } from '@apollo/client'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
+import { useQuery, useMutation } from '@apollo/client'
 
 import config from 'config'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import { Redirect } from 'react-router-dom'
 import queries from '../graphql/queries'
 import mutations from '../graphql/mutations'
 import Dashboard from './Dashboard'
@@ -24,6 +25,7 @@ const getLatestVersion = manuscript => {
 /** Filter to return those manuscripts with the given user in one of the given roles.
  * Roles is an array of role-name strings.
  */
+
 const getManuscriptsUserHasRoleIn = (manuscripts, userId, roles) =>
   manuscripts.filter(m =>
     m.teams.some(
@@ -37,6 +39,14 @@ const DashboardPage = ({ history, ...props }) => {
   const { loading, data, error } = useQuery(queries.dashboard, {
     fetchPolicy: 'cache-and-network',
   })
+
+  const authorInvitationId = window.localStorage.getItem('authorInvitationId')
+    ? window.localStorage.getItem('authorInvitationId')
+    : ''
+
+  if (authorInvitationId) {
+    return <Redirect to="/invitation/accepted" />
+  }
 
   const [reviewerRespond] = useMutation(mutations.reviewerResponseMutation)
 

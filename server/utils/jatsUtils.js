@@ -38,8 +38,8 @@ const jatsTagsThatDontNeedConversion = [
   'xref',
   'graphic',
   'caption',
-  'table',
   'thead',
+  'table',
   'tbody',
   'tr',
   'td',
@@ -53,6 +53,9 @@ const jatsTagsThatDontNeedConversion = [
   '@sec',
   '@title',
   'fig',
+  'table-wrap',
+  'inline-formula',
+  'disp-formula',
 ]
 
 /** Finds all XML tags and:
@@ -175,8 +178,22 @@ const illegalCharRegex = /[\p{Cs}\p{Cn}\x00-\x08\x0B\x0E-\x1F\x7F\x80-\x9F]/gu
 /** Remove surrogates, unassigned characters (including noncharacters) and control characters other than ASCII whitespace. */
 const removeIllegalCharacters = markup => markup.replace(illegalCharRegex, '')
 
+const fixNestedTables = html => {
+  // Wax (and HTML) allows a <table> to be inside of a <td>. JATS doesn't allow this.
+  // For now, we are deleting these nested tables so as to return valid JATS.
+
+  const dom = htmlparser2.parseDocument(html)
+  const $ = cheerio.load(dom, { xmlMode: true })
+  $('td').each((index, el) => {
+    const $elem = $(el)
+    $elem.find('table').remove()
+    return $elem
+  })
+  return $.html()
+}
+
 const convertImages = html => {
-  const dom = htmlparser2.parseDOM(html)
+  const dom = htmlparser2.parseDocument(html)
 
   const $ = cheerio.load(dom, {
     xmlMode: true,
@@ -186,6 +203,7 @@ const convertImages = html => {
     const caption = $(el).find('figcaption').html() // this comes back null if not found
     const graphicElement = $(el).find('img')
     const graphicSrc = graphicElement.attr('src')
+    const graphicId = graphicElement.attr('data-fileid')
     // 1 get caption if there is one
     // 2 get image if there is one
     // 3 change image tag
@@ -195,7 +213,7 @@ const convertImages = html => {
     // 7. add caption if there is one
     // 8. add image
     const outCaption = caption ? `<caption><p>${caption}</p></caption>` : ''
-    const outGraphic = `<graphic xlink:href="${graphicSrc}" />`
+    const outGraphic = `<graphic xlink:href="${graphicSrc}" id="graphic_${graphicId}" />`
     const output = `<fig>${outCaption}${outGraphic}</fig>`
     return output
   })
@@ -302,8 +320,8 @@ const makeJournalMeta = journalMeta => {
       }
     }
 
-    if (journalMeta.publisher) {
-      thisJournalMeta += `<publisher>${journalMeta.publisher}</publisher>`
+    if (journalMeta.publisher && journalMeta.publisher.publisherName) {
+      thisJournalMeta += `<publisher><publisher-name>${journalMeta.publisher.publisherName}</publisher-name></publisher>`
     }
   }
 
@@ -420,10 +438,10 @@ const makeFootnotesSection = html => {
     // replace body text with JATS tag
     deFootnotedHtml = deFootnotedHtml.replace(
       `<footnote id="${id}">${text}</footnote>`,
-      `<xref ref-type="fn" rid="${id}">${footnoteCount}</xref>`,
+      `<xref ref-type="fn" rid="fnid${id}">${footnoteCount}</xref>`,
     )
     // add this to the list of footnotes
-    fnSection += `<fn id="${id}"><p>${htmlToJats(text)}</p></fn>`
+    fnSection += `<fn id="fnid${id}"><p>${htmlToJats(text)}</p></fn>`
   }
 
   if (footnoteCount > 0) {
@@ -466,6 +484,7 @@ const fixTableCells = html => {
 
   while (deTabledHtml.indexOf('<td>') > -1) {
     const tableCellContent = deTabledHtml.split('<td>')[1].split('</td>')[0]
+
     deTabledHtml = deTabledHtml.replace(
       `<td>${tableCellContent}`,
       `<!td!>${htmlToJats(tableCellContent)}`,
@@ -720,6 +739,32 @@ const makeFrontMatter = html => {
   return { abstract, deFrontedHtml, title }
 }
 
+const fixMath = html => {
+  // This converts math-display and math-inline to <disp-formula> and <inline-formula>
+  // TODO: maybe should convert LaTex to MathML here using MathJax too?
+
+  const dom = htmlparser2.parseDocument(html)
+
+  const $ = cheerio.load(dom, {
+    xmlMode: true,
+  })
+
+  $('math-inline').replaceWith((index, el) => {
+    const mathAsLatex = $(el).text()
+    const replacement = `<inline-formula><alternatives><tex-math><![CDATA[${mathAsLatex}]]></tex-math></alternatives></inline-formula>`
+    return replacement
+  })
+
+  $('math-display').replaceWith((index, el) => {
+    const mathAsLatex = $(el).text()
+    const replacement = `<disp-formula><alternatives><tex-math><![CDATA[${mathAsLatex}]]></tex-math></alternatives></disp-formula>`
+    return replacement
+  })
+
+  const output = $.html()
+  return output
+}
+
 const makeJats = (html, articleMeta, journalMeta) => {
   // html is what's coming out of Wax
   // articleMeta is what's needed for front matter (see makeArticleMeta for description)
@@ -735,9 +780,13 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const { deackedHtml, ack } = makeAcknowledgements(deFootnotedHtml)
 
+  // 0.25 fix nested tables
+
+  const removeNestedTables = fixNestedTables(deackedHtml)
+
   // 0.5 deal with table cells
 
-  const { deTabledHtml } = fixTableCells(deackedHtml)
+  const { deTabledHtml } = fixTableCells(removeNestedTables)
 
   // 1. deal with appendices
 
@@ -758,8 +807,16 @@ const makeJats = (html, articleMeta, journalMeta) => {
   const articleMetaSection = makeArticleMeta(articleMeta || {}, abstract, title)
 
   const front = `<front>${journalMetaSection}${articleMetaSection}</front>`
-  let body = htmlToJats(deFrontedHtml)
+
+  const unfixedMath = htmlToJats(deFrontedHtml)
+
+  // change math to JATS-suitable math
+
+  let body = fixMath(unfixedMath)
+
   // this is to clean out the bad table tags
+  body = replaceAll(body, '<table>', '<table-wrap><table>')
+  body = replaceAll(body, '</table>', '</table></table-wrap>')
   body = replaceAll(body, '<@title>', '<title>')
   body = replaceAll(body, '</@title>', '</title>')
   body = replaceAll(body, '<@sec>', '<sec>')

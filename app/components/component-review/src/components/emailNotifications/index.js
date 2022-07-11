@@ -1,5 +1,6 @@
 import React, { useState } from 'react'
-import styled from 'styled-components'
+import { th } from '@pubsweet/ui-toolkit'
+import styled, { css } from 'styled-components'
 import {
   SectionHeader,
   SectionRowGrid,
@@ -8,13 +9,36 @@ import {
 } from '../style'
 import { SectionContent } from '../../../../shared'
 import SelectReceiver from './SelectReceiver'
-import SelectEmailTemplate from './SelectEmailTemaplate'
+import SelectEmailTemplate from './SelectEmailTemplate'
 import { convertTimestampToDate } from '../../../../../shared/time-formatting'
 
 const editorOption = user => ({
   label: user.username || user.email,
   value: user.email,
 })
+
+const MessageWrapper = styled.div`
+  color: ${th('colorError')};
+  padding: calc(8px * 2) calc(8px * 3);
+
+  ${props =>
+    props.isVisible === true
+      ? css`
+          display: flex;
+        `
+      : css`
+          display: none;
+        `}
+
+  font-family: ${th('fontInterface')};
+
+  &:not(:last-child) {
+    margin-bottom: ${th('gridUnit')};
+  }
+
+  font-size: ${th('fontSizeBaseSmall')};
+  line-height: ${th('lineHeightBaseSmall')};
+`
 
 const RowGridStyled = styled(SectionRowGrid)`
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -26,14 +50,27 @@ const EmailNotifications = ({
   currentUser,
   sendNotifyEmail,
   sendChannelMessageCb,
+  selectedEmail,
+  externalEmail,
+  setSelectedEmail,
+  setExternalEmail,
+  isEmailAddressOptedOut,
 }) => {
-  const [selectedEmail, setSelectedEmail] = useState('')
-  const [externalEmail, setExternalEmail] = useState('')
   const [externalName, setExternalName] = useState('')
   const [selectedTemplate, setSelectedTemplate] = useState('')
   const [isNewUser, setIsNewUser] = useState(false)
+  const [isVisible, setIsVisible] = useState(false)
+
+  const resetAll = () => {
+    setExternalEmail('')
+    setSelectedEmail('')
+    setExternalName('')
+    setSelectedTemplate('')
+    setIsVisible(false)
+  }
 
   const handlerForNewUserToggle = () => {
+    resetAll()
     setIsNewUser(s => !s)
   }
 
@@ -44,8 +81,8 @@ const EmailNotifications = ({
   const logMessageAfterEmailSent = async message => {
     const emailTemplateOptions = [
       {
-        label: 'Author Acceptance notification',
-        value: 'articleAcceptanceEmailTemplate',
+        label: 'Author Invitation Email Template',
+        value: 'authorInvitationEmailTemplate',
       },
       {
         label: 'Evaluation Complete notification',
@@ -263,14 +300,31 @@ const EmailNotifications = ({
   }
 
   const sendEmailHandler = async () => {
+    if (isEmailAddressOptedOut?.data?.getBlacklistInformation.length) {
+      setIsVisible(true)
+      return
+    }
+
     if (!selectedTemplate || !manuscript) return
 
     const input = isNewUser
-      ? { externalEmail, externalName, selectedTemplate, manuscript }
-      : { selectedEmail, selectedTemplate, manuscript }
+      ? {
+          externalEmail,
+          externalName,
+          selectedTemplate,
+          manuscript,
+          currentUser: currentUser.username,
+        }
+      : {
+          selectedEmail,
+          selectedTemplate,
+          manuscript,
+          currentUser: currentUser.username,
+        }
 
     if (isNewUser && (!externalName || !externalEmail)) return
     if (!isNewUser && !selectedEmail) return
+
     const response = await sendNotifyEmail(input)
     const responseStatus = response.data.sendEmail.success
     if (responseStatus) logMessageAfterEmailSent(input)
@@ -301,6 +355,9 @@ const EmailNotifications = ({
           Notify
         </StyledNotifyButton>
       </RowGridStyled>
+      <MessageWrapper isVisible={isVisible}>
+        User email address opted out
+      </MessageWrapper>
     </SectionContent>
   )
 }

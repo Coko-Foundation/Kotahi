@@ -63,7 +63,6 @@ const MessageContainer = styled.section`
   display: flex;
   flex-direction: column;
   height: 100vh;
-  width: 100%;
 
   ${props =>
     props.channels
@@ -90,6 +89,7 @@ const MessageContainer = styled.section`
 
   padding-top: -12px;
   position: relative;
+  width: 100%;
 `
 
 const cleanSuggestionUserObject = user => {
@@ -258,15 +258,14 @@ const chatComponent = (channelId, channelName, manuscriptId, chatRoomId) => {
 }
 
 const Container = ({
-  channelId,
+  channelId: optionalChannelId,
   channels,
   chatRoomId,
   hideChat,
   manuscriptId = null,
 }) => {
-  if (!channelId && !channels) {
-    return null
-  }
+  const channelId = optionalChannelId ?? channels?.[0]?.id
+  if (!channelId) return null
 
   const tabs =
     channels &&

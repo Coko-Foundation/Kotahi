@@ -3,6 +3,8 @@ const TurndownService = require('turndown')
 const axios = require('axios')
 const config = require('config')
 const { get } = require('lodash')
+const { getPublicFields } = require('../../model-form/src/formCommsUtils')
+const { ensureJsonIsParsed } = require('../../utils/objectUtils')
 
 const {
   getFieldNamesAndTags,
@@ -17,6 +19,59 @@ const headers = {
 }
 
 const REQUEST_URL = `https://api.hypothes.is/api/annotations`
+
+// We could support publishing other field types, but these were the easiest and only ones needed for now.
+const isPublishableFieldType = ({ component }) =>
+  ['TextField', 'AbstractEditor'].includes(component)
+
+/** For an identifier such as 'review#0', return the corresponding review (with parsed jsonData),
+ * or return { jsonData: {} } if not found or the review is hidden.
+ */
+const getReview = (manuscript, reviewIdentifier) => {
+  const index = parseInt(reviewIdentifier.split('#')[1], 10)
+  const reviews = manuscript.reviews.filter(r => !r.isDecision)
+
+  const review =
+    index < reviews.length ? { ...reviews[index] } : { jsonData: {} }
+
+  if (review.isHiddenFromAuthor) return { jsonData: {} }
+  review.jsonData = ensureJsonIsParsed(review.jsonData)
+  return review
+}
+
+/** Returns the decision or { jsonData: {} } if not found */
+const getDecision = manuscript => {
+  const decisions = manuscript.reviews.filter(r => r.isDecision)
+  const decision = decisions.length ? { ...decisions[0] } : { jsonData: {} }
+  if (typeof decision.jsonData === 'string')
+    decision.jsonData = JSON.parse(decision.jsonData)
+  return decision
+}
+
+/** Returns a single piece of html containing all nominated fields (that are not empty).
+ * If multiple fields are nominated, then a heading will precede the content of each field,
+ * but if only one is nominated, the heading is omitted. */
+const composeHtmlFromPublishableFields = (review, publishableFields) => {
+  const fieldsToPublish = publishableFields
+    .filter(f => review.jsonData[f.name])
+    .map(f => ({
+      title: f.title,
+      value: review.jsonData[f.name],
+      component: f.component,
+    }))
+
+  if (fieldsToPublish.length)
+    return fieldsToPublish
+      .map(
+        f =>
+          `${publishableFields.length > 1 ? `<h5>${f.title}</h5>` : ''}${
+            f.component === 'AbstractEditor' ? f.value : `<p>${f.value}</p>`
+          }`,
+      )
+      .join('\n')
+
+  return null
+}
 
 /** DELETE a publication from Hypothesis via REST */
 const deletePublication = async publicationId => {
@@ -39,7 +94,7 @@ const publishToHypothesis = async manuscript => {
     replacement(content, node) {
       const unorderedListResult = [...node.childNodes]
         .map((childNode, index) => {
-          return `• ${turndownService.turndown(childNode.innerHTML)}\n\n`
+          return ` - ${turndownService.turndown(childNode.innerHTML)}\n\n`
         })
         .join('')
 
@@ -52,7 +107,7 @@ const publishToHypothesis = async manuscript => {
     replacement(content, node) {
       const orderedListResult = [...node.childNodes]
         .map((childNode, index) => {
-          return `${index + 1}) ${turndownService.turndown(
+          return `${index + 1}. ${turndownService.turndown(
             childNode.innerHTML,
           )}\n\n`
         })
@@ -69,26 +124,30 @@ const publishToHypothesis = async manuscript => {
     manuscript.submission.title ||
     manuscript.submission.description
 
+  const publishableReviewFields = (
+    await getPublicFields('review', 'review')
+  ).filter(isPublishableFieldType)
+
+  const publishableDecisionFields = (
+    await getPublicFields('decision', 'decision')
+  ).filter(isPublishableFieldType)
+
   const fields = await Promise.all(
     getFieldNamesAndTags(config.hypothesis.publishFields).map(async x => {
-      let value
+      let value = null
 
       if (x.fieldName.startsWith('review#')) {
-        const index = parseInt(x.fieldName.split('#')[1], 10)
-
-        const reviews = manuscript.reviews.filter(
-          r => !r.isDecision && r.canBePublishedPublicly && r.reviewComment,
+        const review = getReview(manuscript, x.fieldName)
+        value = composeHtmlFromPublishableFields(
+          review,
+          publishableReviewFields,
         )
-
-        value =
-          reviews.length > index ? reviews[index].reviewComment.content : null
       } else if (x.fieldName === 'decision') {
-        const decisions = manuscript.reviews.filter(
-          r => r.isDecision && r.decisionComment,
+        const decision = getDecision(manuscript)
+        value = composeHtmlFromPublishableFields(
+          decision,
+          publishableDecisionFields,
         )
-
-        value =
-          decisions.length > 0 ? decisions[0].decisionComment.content : null
       } else {
         value = get(manuscript, x.fieldName)
       }

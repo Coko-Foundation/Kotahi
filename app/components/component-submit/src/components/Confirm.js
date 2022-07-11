@@ -48,7 +48,7 @@ const Confirm = ({ toggleConfirming, form, submit, errors }) => (
             dangerouslySetInnerHTML={createMarkup(form.popupdescription)}
           />
           <Button onClick={submit} primary type="submit">
-            Submit your manuscript
+            Submit
           </Button>
           <Divider> or </Divider>
         </>

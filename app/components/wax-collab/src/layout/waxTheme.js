@@ -13,6 +13,7 @@ const waxTheme = {
   colorBorder: '#EBEBF0',
   colorBackgroundHue: '#F1F5FF',
   colorBackgroundTabs: '#e1ebff',
+  fakeTextStyles: `p.paragraph {color: red;}`,
 }
 
 export default waxTheme

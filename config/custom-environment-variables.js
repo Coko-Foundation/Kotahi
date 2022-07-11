@@ -39,13 +39,6 @@ module.exports = {
     publishingWebhookToken: 'PUBLISHING_WEBHOOK_TOKEN',
     publishingWebhookRef: 'PUBLISHING_WEBHOOK_REF',
   },
-  s3: {
-    accessKeyId: 'S3_ACCESS_KEY_ID',
-    secretAccessKey: 'S3_ACCESS_KEY_SECRET',
-    endpoint: 'S3_ENDPOINT',
-    region: 'S3_REGION',
-    bucket: 'S3_BUCKET',
-  },
   crossref: {
     login: 'CROSSREF_LOGIN',
     password: 'CROSSREF_PASSWORD',
@@ -75,6 +68,8 @@ module.exports = {
   },
   'notification-email': {
     automated: 'NOTIFICATION_EMAIL_AUTOMATED',
+    cc_enabled: 'NOTIFICATION_EMAIL_CC_ENABLED',
+    use_colab: 'USE_COLAB_EMAIL',
   },
   fileStorage: {
     minioRootUser: 'MINIO_ROOT_USER',
@@ -89,8 +84,11 @@ module.exports = {
     maximumWidthForSmallImages: 'MAXIMUM_WIDTH_FOR_SMALL_IMAGES',
     maximumWidthForMediumImages: 'MAXIMUM_WIDTH_FOR_MEDIUM_IMAGES',
   },
-  'paged-js': {
-    pagedJsClientId: 'PAGED_JS_CLIENT_ID',
-    pagedJsClientSecret: 'PAGED_JS_CLIENT_SECRET',
+  pagedjs: {
+    clientId: 'SERVICE_PAGEDJS_CLIENT_ID',
+    clientSecret: 'SERVICE_PAGEDJS_SECRET',
+    protocol: 'SERVICE_PAGEDJS_PROTOCOL',
+    host: 'SERVICE_PAGEDJS_HOST',
+    port: 'SERVICE_PAGEDJS_PORT',
   },
 }

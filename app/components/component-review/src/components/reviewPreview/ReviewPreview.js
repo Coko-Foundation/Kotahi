@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { useHistory } from 'react-router-dom'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import ReviewMetadata from '../metadata/ReviewMetadata'
+import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import { Heading, Title, Icon } from '../../../../shared'
 
 const Page = styled.div`
@@ -29,8 +29,13 @@ const ReviewPreview = ({ manuscript, submissionForm }) => {
     <Page>
       <Heading>Summary</Heading>
       <Title>{manuscript.meta.title}</Title>
-      <ReviewMetadata
+      <ReadonlyFormTemplate
         form={submissionForm}
+        formData={{
+          ...manuscript,
+          submission: JSON.parse(manuscript.submission),
+        }}
+        listManuscriptFiles
         manuscript={manuscript}
         showEditorOnlyFields={false}
         showPreviewMetadataOnly

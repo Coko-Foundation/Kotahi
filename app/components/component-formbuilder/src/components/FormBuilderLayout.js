@@ -176,6 +176,7 @@ const FormBuilderLayout = ({
               <SectionRow>
                 {activeField ? (
                   <ComponentProperties
+                    category={category}
                     field={activeField}
                     formId={activeForm.id}
                     key={activeField.id}

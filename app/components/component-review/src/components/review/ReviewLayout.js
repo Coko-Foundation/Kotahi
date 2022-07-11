@@ -4,24 +4,13 @@ import PropTypes from 'prop-types'
 import moment from 'moment'
 import { Tabs } from '@pubsweet/ui'
 
-import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
-import ReviewForm from './ReviewForm'
-import ReviewMetadata from '../metadata/ReviewMetadata'
+import ReadonlyFormTemplate from '../metadata/ReadonlyFormTemplate'
 import Review from './Review'
 import EditorSection from '../decision/EditorSection'
-import { Columns, Manuscript, Chat } from '../../../../shared'
+import { Columns, Manuscript, Chat, SectionContent } from '../../../../shared'
 import MessageContainer from '../../../../component-chat/src/MessageContainer'
-import ArticleEvaluationSummaryPage from '../../../../component-decision-viewer'
 import SharedReviewerGroupReviews from './SharedReviewerGroupReviews'
-
-const Reviewerdisclaimer = styled.span`
-  color: ${th('colorTextPlaceholder')};
-  display: grid;
-  font-size: 14px;
-  padding: 0 5px;
-  place-items: center;
-`
+import FormTemplate from '../../../../component-submit/src/components/FormTemplate'
 
 const hasManuscriptFile = manuscript =>
   !!manuscript?.files?.find(file => file.tags.includes('manuscript'))
@@ -30,38 +19,26 @@ const ReviewLayout = ({
   currentUser,
   versions,
   review,
-  handleSubmit,
-  isValid,
+  reviewForm,
+  onSubmit,
+  // isValid,
   status,
   updateReview,
+  updateReviewJsonData,
   uploadFile,
   channelId,
   submissionForm,
   createFile,
   deleteFile,
+  validateDoi,
+  decisionForm,
 }) => {
   const reviewSections = []
   const latestVersion = versions[0]
   const priorVersions = versions.slice(1)
   priorVersions.reverse() // Convert to chronological order (was reverse-chron)
 
-  const decisionComment =
-    latestVersion.reviews.find(
-      reviewIsDecision => reviewIsDecision.isDecision,
-    ) || {}
-
-  const decisionRadio = latestVersion.status
-
-  const formatDecisionComment = input => {
-    const comment = input.decisionComment ? input.decisionComment.content : ''
-    const placeholder = '"<i>The evaluation summary will appear here.</i>"'
-
-    if (comment === '<p class="paragraph"></p>' || comment === '') {
-      return placeholder
-    }
-
-    return comment
-  }
+  const decision = latestVersion.reviews.find(r => r.isDecision) || {}
 
   priorVersions.forEach(msVersion => {
     if (msVersion.reviews?.some(r => !r.user))
@@ -70,32 +47,32 @@ const ReviewLayout = ({
         msVersion.reviews,
       )
 
+    const reviewForCurrentUser = msVersion.reviews?.find(
+      r => r.user?.id === currentUser.id && !r.isDecision,
+    )
+
+    const reviewData = reviewForCurrentUser?.jsonData || {}
+
     const label = moment().format('YYYY-MM-DD')
     reviewSections.push({
       content: (
         <div key={msVersion.id}>
-          <Reviewerdisclaimer>
-            By completing this review, you agree that you do not have any
-            conflict of interests to declare. For any questions about what
-            constitutes a conflict of interest, contact the administrator.
-          </Reviewerdisclaimer>
           {hasManuscriptFile(msVersion) && (
             <EditorSection manuscript={msVersion} readonly />
           )}
-          <ReviewMetadata
+          <ReadonlyFormTemplate
             form={submissionForm}
+            formData={reviewData}
+            listManuscriptFiles
             manuscript={msVersion}
             showEditorOnlyFields={false}
           />
           <SharedReviewerGroupReviews
             manuscript={msVersion}
             reviewerId={currentUser.id}
+            reviewForm={reviewForm}
           />
-          <Review
-            review={msVersion.reviews?.find(
-              r => r.user?.id === currentUser.id && !r.isDecision,
-            )}
-          />
+          <Review review={reviewForCurrentUser} reviewForm={reviewForm} />
         </div>
       ),
       key: msVersion.id,
@@ -104,45 +81,64 @@ const ReviewLayout = ({
   }, [])
 
   if (latestVersion.status !== 'revising') {
+    const reviewForCurrentUser = latestVersion.reviews?.find(
+      r => r.user?.id === currentUser.id && !r.isDecision,
+    )
+
+    const reviewData = reviewForCurrentUser?.jsonData || {}
+
     const label = moment().format('YYYY-MM-DD')
+
     reviewSections.push({
       content: (
         <div key={latestVersion.id}>
-          <Reviewerdisclaimer>
-            By completing this review, you agree that you do not have any
-            conflict of interests to declare. For any questions about what
-            constitutes a conflict of interest, contact the administrator.
-          </Reviewerdisclaimer>
           {hasManuscriptFile(latestVersion) && (
             <EditorSection manuscript={latestVersion} readonly />
           )}
-          <ReviewMetadata
+          <ReadonlyFormTemplate // Display manuscript metadata
             form={submissionForm}
+            formData={{
+              ...latestVersion,
+              submission: JSON.parse(latestVersion.submission),
+            }}
+            listManuscriptFiles
             manuscript={latestVersion}
             showEditorOnlyFields={false}
           />
           <SharedReviewerGroupReviews
             manuscript={latestVersion}
             reviewerId={currentUser.id}
+            reviewForm={reviewForm}
           />
           {status === 'completed' ? (
             <Review review={review} />
           ) : (
-            <ReviewForm
-              createFile={createFile}
-              deleteFile={deleteFile}
-              handleSubmit={handleSubmit}
-              isValid={isValid}
-              manuscriptId={latestVersion.id}
-              updateReview={updateReview}
-              uploadFile={uploadFile}
-            />
+            <SectionContent>
+              <FormTemplate
+                createFile={createFile}
+                deleteFile={deleteFile}
+                form={reviewForm}
+                initialValues={reviewData}
+                manuscriptId={latestVersion.id}
+                manuscriptShortId={latestVersion.shortId}
+                manuscriptStatus={latestVersion.status}
+                onChange={updateReviewJsonData}
+                onSubmit={onSubmit}
+                shouldStoreFilesInForm
+                showEditorOnlyFields={false}
+                submissionButtonText="Submit"
+                tagForFiles="review"
+                validateDoi={validateDoi}
+              />
+            </SectionContent>
           )}
           {['colab'].includes(process.env.INSTANCE_NAME) && (
-            <ArticleEvaluationSummaryPage
-              decisionComment={formatDecisionComment(decisionComment)}
-              decisionRadio={decisionRadio}
-              updateReview={updateReview}
+            <ReadonlyFormTemplate
+              form={decisionForm}
+              formData={decision.jsonData || {}}
+              hideSpecialInstructions
+              manuscript={latestVersion}
+              title="Evaluation summary"
             />
           )}
         </div>
@@ -175,29 +171,7 @@ ReviewLayout.propTypes = {
   versions: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,
-      reviews: PropTypes.arrayOf(
-        PropTypes.shape({
-          reviewComment: PropTypes.shape({
-            content: PropTypes.string.isRequired,
-            files: PropTypes.arrayOf(
-              PropTypes.shape({
-                name: PropTypes.string.isRequired,
-                storedObjects: PropTypes.arrayOf(PropTypes.object.isRequired),
-              }).isRequired,
-            ).isRequired,
-          }),
-          confidentialComment: PropTypes.shape({
-            content: PropTypes.string.isRequired,
-            files: PropTypes.arrayOf(
-              PropTypes.shape({
-                name: PropTypes.string.isRequired,
-                storedObjects: PropTypes.arrayOf(PropTypes.object.isRequired),
-              }).isRequired,
-            ).isRequired,
-          }),
-          recommendation: PropTypes.string,
-        }),
-      ),
+      reviews: PropTypes.arrayOf(PropTypes.shape({})),
       status: PropTypes.string.isRequired,
       meta: PropTypes.shape({
         notes: PropTypes.arrayOf(
@@ -215,13 +189,8 @@ ReviewLayout.propTypes = {
       ).isRequired,
     }).isRequired,
   ).isRequired,
-  review: PropTypes.shape({
-    reviewComment: PropTypes.string,
-    confidentialComment: PropTypes.string,
-    recommendation: PropTypes.string,
-  }),
-  handleSubmit: PropTypes.func.isRequired,
-  isValid: PropTypes.bool.isRequired,
+  review: PropTypes.shape({}),
+  onSubmit: PropTypes.func,
   status: PropTypes.string,
   updateReview: PropTypes.func.isRequired,
   uploadFile: PropTypes.func,
@@ -239,6 +208,7 @@ ReviewLayout.propTypes = {
 }
 
 ReviewLayout.defaultProps = {
+  onSubmit: () => {},
   review: undefined,
   status: undefined,
   uploadFile: undefined,

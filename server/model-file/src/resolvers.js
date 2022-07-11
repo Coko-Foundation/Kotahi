@@ -4,8 +4,24 @@ const fs = require('fs-extra')
 const path = require('path')
 const config = require('config')
 const sharp = require('sharp')
-const { fileStorage, createFile, deleteFiles } = require('@coko/server')
-const { getFileWithUrl } = require('../../utils/fileStorageUtils')
+const map = require('lodash/map')
+const models = require('@pubsweet/models')
+
+const {
+  pubsubManager,
+  fileStorage,
+  createFile,
+  deleteFiles,
+  File,
+} = require('@coko/server')
+
+const {
+  getFileWithUrl,
+  getFilesWithUrl,
+  imageFinder,
+} = require('../../utils/fileStorageUtils')
+
+const { FILES_UPLOADED, FILE_UPDATED, FILES_DELETED } = require('./consts')
 
 const randomBytes = promisify(crypto.randomBytes)
 const uploadsPath = config.get('pubsweet-server').uploads
@@ -74,7 +90,56 @@ const uploadFileWithMultipleVersions = async file => {
 /* eslint-enable no-unused-vars */
 
 const resolvers = {
-  Query: {},
+  Query: {
+    async getEntityFiles(_, { input }) {
+      const { entityId, sortingParams, includeInUse = false } = input
+
+      let files = []
+
+      if (sortingParams) {
+        const orderByParams = sortingParams.map(option => {
+          const { key, order } = option
+          return { column: key, order }
+        })
+
+        files = await File.query()
+          .where({ objectId: entityId })
+          .orderBy(orderByParams)
+      } else {
+        files = await File.query().where({ objectId: entityId })
+      }
+
+      const imageFiles = files.filter(file =>
+        file.tags.includes('manuscriptImage'),
+      )
+
+      if (includeInUse) {
+        const manuscript = await models.Manuscript.query().findById(entityId)
+
+        imageFiles.forEach(file => {
+          const foundIn = []
+          const { source } = manuscript.meta
+
+          if (source && typeof source === 'string') {
+            if (imageFinder(source, file.id)) {
+              foundIn.push(manuscript.id)
+            }
+          }
+
+          file.inUse = foundIn.length > 0
+        })
+      }
+
+      const data = await getFilesWithUrl(imageFiles)
+      return data
+    },
+    async getSpecificFiles(_, { ids }) {
+      const files = await File.query().whereIn('id', ids)
+
+      const data = await getFilesWithUrl(files)
+      return data
+    },
+  },
   Mutation: {
     async uploadFile(_, { file }, ctx) {
       const { createReadStream, filename } = await file
@@ -99,16 +164,87 @@ const resolvers = {
         null,
         null,
         [meta.fileType],
-        meta.reviewCommentId || meta.manuscriptId,
+        meta.reviewId || meta.manuscriptId,
       )
 
       const data = await getFileWithUrl(createdFile)
 
       return data
     },
+    async uploadFiles(_, { files, fileType, entityId }, ctx) {
+      const pubsub = await pubsubManager.getPubsub()
+
+      const uploadedFiles = await Promise.all(
+        map(files, async file => {
+          const { createReadStream, filename } = await file
+          const fileStream = createReadStream()
+
+          const createdFile = await createFile(
+            fileStream,
+            filename,
+            filename,
+            null,
+            [fileType],
+            entityId,
+          )
+
+          const data = await getFileWithUrl(createdFile)
+
+          return data
+        }),
+      )
+
+      pubsub.publish(FILES_UPLOADED, {
+        filesUploaded: true,
+      })
+
+      return uploadedFiles
+    },
     async deleteFile(_, { id }, ctx) {
       await deleteFiles([id], true)
       return id
+    },
+    async deleteFiles(_, { ids }, ctx) {
+      const pubsub = await pubsubManager.getPubsub()
+      await deleteFiles(ids, true)
+      pubsub.publish(FILES_DELETED, {
+        filesDeleted: true,
+      })
+      return ids
+    },
+    async updateFile(_, { input }, ctx) {
+      const { id, name, alt } = input
+      const pubsub = await pubsubManager.getPubsub()
+
+      const updatedFile = await File.query().patchAndFetchById(id, {
+        name,
+        alt,
+      })
+
+      pubsub.publish(FILE_UPDATED, {
+        fileUpdated: updatedFile,
+      })
+      return updatedFile
+    },
+  },
+  Subscription: {
+    filesUploaded: {
+      subscribe: async () => {
+        const pubsub = await pubsubManager.getPubsub()
+        return pubsub.asyncIterator(FILES_UPLOADED)
+      },
+    },
+    filesDeleted: {
+      subscribe: async () => {
+        const pubsub = await pubsubManager.getPubsub()
+        return pubsub.asyncIterator(FILES_DELETED)
+      },
+    },
+    fileUpdated: {
+      subscribe: async () => {
+        const pubsub = await pubsubManager.getPubsub()
+        return pubsub.asyncIterator(FILE_UPDATED)
+      },
     },
   },
 }

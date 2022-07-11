@@ -45,7 +45,6 @@ const fragmentFields = `
   }
   reviews {
     open
-    recommendation
     created
     user {
       id

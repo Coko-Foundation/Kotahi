@@ -13,7 +13,7 @@ class File extends BaseModel {
 
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
-    const { Manuscript, ReviewComment } = require('@pubsweet/models')
+    const { Manuscript, Review } = require('@pubsweet/models')
 
     return {
       manuscript: {
@@ -24,12 +24,12 @@ class File extends BaseModel {
           to: 'files.manuscript_id',
         },
       },
-      reviewComment: {
+      review: {
         relation: BaseModel.BelongsToOneRelation,
-        modelClass: ReviewComment,
+        modelClass: Review,
         join: {
-          from: 'review_comments.id',
-          to: 'files.review_comments_id',
+          from: 'reviews.id',
+          to: 'files.review_id',
         },
       },
     }

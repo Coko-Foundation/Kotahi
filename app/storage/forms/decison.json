@@ -1,55 +1,60 @@
 {
-  "name": "Decision Form",
+  "name": "Decision",
   "children": [
     {
-      "id": "74cf4404-3d04-46cb-a3da-e7d70d47db0a",
-      "name": "meta.abstract",
+      "id": "1600fcc9-ebf4-42f5-af97-c242ea04ae21",
+      "name": "comment",
       "title": "Decision",
       "component": "AbstractEditor",
-      "description": "<p class=\"paragraph\">Text field for decisions.</p>",
-      "placeholder": "Write/paste your decision letter here, or upload it using the upload button on the right."
+      "placeholder": "Write/paste your decision letter here, or upload it by dragging it onto the box below.",
+      "validate": [
+        {
+          "id": "39796769-23a9-4788-b1f3-78d08b59f97e",
+          "label": "Required",
+          "value": "required"
+        }
+      ]
     },
     {
-      "id": "78a94bf5-05c9-411d-bc97-5f84d2f686a2",
-      "name": "fileName",
-      "title": "Files",
+      "id": "695a5b2f-a0d7-4b1e-a750-107bff5628bc",
+      "name": "files",
+      "title": " ",
       "component": "SupplementaryFiles",
-      "description": "<p class=\"paragraph\">Drag and drop your files here</p>"
+      "shortDescription": "Files"
     },
     {
-      "id": "5705067e-3ee0-41ae-a953-87167b171c3f",
-      "name": "submission.status",
+      "id": "7423ad09-d01b-49bc-8c2e-807829b86653",
+      "name": "verdict",
       "title": "Decision Status",
-      "inline": "false",
+      "inline": "true",
       "options": [
         {
-          "id": "1ba634b0-82f9-481c-a135-77c6d3e28fec",
+          "id": "78653e7a-32b3-4283-9a9e-36e79876da28",
           "label": "Accept",
           "value": "accept",
-          "labelColor": "#00ff7b"
+          "labelColor": "#048802"
         },
         {
-          "id": "459469e8-12ca-426c-9e05-581a14fe7c03",
+          "id": "44c2dad6-8316-42ed-a2b7-3f2e98d49823",
           "label": "Revise",
           "value": "revise",
-          "labelColor": "#daea61"
+          "labelColor": "#ebc400"
         },
         {
-          "id": "e38b9433-4e93-4e1d-b4a3-5a14f7ac3fc6",
+          "id": "a8ae5a69-9f34-4e3c-b3d2-c6572ac2e225",
           "label": "Reject",
           "value": "reject",
-          "labelColor": "#e64e3d"
+          "labelColor": "#ea412e"
         }
       ],
       "validate": [
         {
-          "id": "76c87808-32cb-41cb-9f72-5254f610015f",
+          "id": "4eb14d13-4d17-40d0-95a1-3e68e9397269",
           "label": "Required",
           "value": "required"
         }
       ],
-      "component": "RadioGroup",
-      "description": "<p class=\"paragraph\">Status of decesion </p>"
+      "component": "RadioGroup"
     }
   ],
   "haspopup": "false"

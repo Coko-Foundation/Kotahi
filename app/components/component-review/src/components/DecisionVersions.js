@@ -1,4 +1,5 @@
-import React from 'react'
+import React, { useState } from 'react'
+import { v4 as uuid } from 'uuid'
 import DecisionVersion from './DecisionVersion'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
 
@@ -11,34 +12,50 @@ import {
 } from '../../../shared'
 import MessageContainer from '../../../component-chat/src/MessageContainer'
 
-const DecisionVersions = props => {
-  const {
-    allUsers,
-    confirming,
-    currentUser,
-    form,
-    handleChange,
-    toggleConfirming,
-    updateManuscript,
-    manuscript,
-    sendNotifyEmail,
-    sendChannelMessageCb,
-    makeDecision,
-    publishManuscript,
-    updateTeam,
-    createTeam,
-    updateReview,
-    reviewers,
-    teamLabels,
-    canHideReviews,
-    urlFrag,
-    displayShortIdAsIdentifier,
-    deleteFile,
-    createFile,
-    client,
-  } = props
+const DecisionVersions = ({
+  allUsers,
+  currentUser,
+  decisionForm,
+  form,
+  handleChange,
+  updateManuscript,
+  manuscript,
+  sendNotifyEmail,
+  sendChannelMessageCb,
+  makeDecision,
+  updateReviewJsonData,
+  publishManuscript,
+  updateTeam,
+  createTeam,
+  updateReview,
+  reviewForm,
+  reviewers,
+  teamLabels,
+  canHideReviews,
+  urlFrag,
+  displayShortIdAsIdentifier,
+  deleteFile,
+  createFile,
+  validateDoi,
+  invitations,
+  setExternalEmail,
+  externalEmail,
+  selectedEmail,
+  setSelectedEmail,
+  isEmailAddressOptedOut,
+}) => {
+  const [initialValue, setInitialValue] = useState(null)
 
   const versions = gatherManuscriptVersions(manuscript)
+
+  if (!initialValue)
+    setInitialValue(
+      versions[0].manuscript.reviews.find(r => r.isDecision) || {
+        id: uuid(),
+        isDecision: true,
+        userId: currentUser.id,
+      },
+    )
 
   // Protect if channels don't exist for whatever reason
   let editorialChannelId, allChannelId
@@ -63,29 +80,39 @@ const DecisionVersions = props => {
               <DecisionVersion
                 allUsers={allUsers}
                 canHideReviews={canHideReviews}
-                client={client}
-                confirming={confirming}
                 createFile={createFile}
                 createTeam={createTeam}
                 current={index === 0}
+                currentDecisionData={initialValue}
                 currentUser={currentUser}
+                decisionForm={decisionForm}
                 deleteFile={deleteFile}
                 displayShortIdAsIdentifier={displayShortIdAsIdentifier}
+                externalEmail={externalEmail}
                 form={form}
+                invitations={invitations}
+                isEmailAddressOptedOut={isEmailAddressOptedOut}
                 key={version.manuscript.id}
                 makeDecision={makeDecision}
                 onChange={handleChange}
                 parent={manuscript}
                 publishManuscript={publishManuscript}
                 reviewers={reviewers}
+                reviewForm={reviewForm}
+                selectedEmail={selectedEmail}
                 sendChannelMessageCb={sendChannelMessageCb}
                 sendNotifyEmail={sendNotifyEmail}
+                setExternalEmail={setExternalEmail}
+                setSelectedEmail={setSelectedEmail}
                 teamLabels={teamLabels}
-                toggleConfirming={toggleConfirming}
                 updateManuscript={updateManuscript}
                 updateReview={updateReview}
+                updateReviewJsonData={(value, path) =>
+                  updateReviewJsonData(initialValue.id, value, path)
+                }
                 updateTeam={updateTeam}
                 urlFrag={urlFrag}
+                validateDoi={validateDoi}
                 version={version.manuscript}
               />
             ))}

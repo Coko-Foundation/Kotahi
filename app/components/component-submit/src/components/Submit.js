@@ -1,9 +1,9 @@
-import React, { useCallback } from 'react'
+import React, { useMemo } from 'react'
 import PropTypes from 'prop-types'
 import { set, debounce } from 'lodash'
 import DecisionAndReviews from './DecisionAndReviews'
 import CreateANewVersion from './CreateANewVersion'
-import ReviewMetadata from '../../../component-review/src/components/metadata/ReviewMetadata'
+import ReadonlyFormTemplate from '../../../component-review/src/components/metadata/ReadonlyFormTemplate'
 import MessageContainer from '../../../component-chat/src/MessageContainer'
 
 import {
@@ -30,26 +30,31 @@ const createBlankSubmissionBasedOnForm = form => {
 
 const Submit = ({
   versions = [],
-  form,
+  decisionForm,
+  reviewForm,
+  submissionForm,
   createNewVersion,
   currentUser,
-  toggleConfirming,
-  confirming,
   parent,
   onChange,
   republish,
   onSubmit,
   match,
   updateManuscript,
-  client,
   createFile,
   deleteFile,
+  validateDoi,
 }) => {
   const decisionSections = []
 
   const currentVersion = versions[0]
 
-  const submissionValues = createBlankSubmissionBasedOnForm(form)
+  const submissionValues = createBlankSubmissionBasedOnForm(submissionForm)
+
+  const handleSave = (source, versionId) =>
+    updateManuscript(versionId, { meta: { source } })
+
+  const handleSaveDebouncer = useMemo(() => debounce(handleSave, 2000))
 
   versions.forEach((version, index) => {
     const { manuscript, label } = version
@@ -64,19 +69,15 @@ const Submit = ({
       manuscript.status,
     )
 
-    const handleSave = useCallback(
-      debounce(source => {
-        updateManuscript(versionId, { meta: { source } })
-      }, 2000),
-    )
-
     const editorSection = {
       content: (
         <EditorSection
           currentUser={currentUser}
           manuscript={manuscript}
           readonly={!userCanEditManuscriptAndFormData}
-          saveSource={handleSave}
+          saveSource={source => {
+            handleSaveDebouncer(source, versionId)
+          }}
         />
       ),
       key: `editor_${manuscript.id}`,
@@ -95,18 +96,16 @@ const Submit = ({
 
       const submissionProps = {
         versionValues,
-        form,
+        form: submissionForm,
         onSubmit,
         versionId,
-        toggleConfirming,
-        confirming,
         onChange,
         republish,
         match,
-        client,
         manuscript,
         createFile,
         deleteFile,
+        validateDoi,
       }
 
       decisionSection = {
@@ -118,11 +117,23 @@ const Submit = ({
       decisionSection = {
         content: (
           <>
-            {hasDecision && <DecisionAndReviews manuscript={manuscript} />}
-            <ReviewMetadata
-              form={form}
+            {hasDecision && (
+              <DecisionAndReviews
+                decisionForm={decisionForm}
+                manuscript={manuscript}
+                reviewForm={reviewForm}
+              />
+            )}
+            <ReadonlyFormTemplate
+              form={submissionForm}
+              formData={{
+                ...manuscript,
+                submission: JSON.parse(manuscript.submission),
+              }}
+              listManuscriptFiles
               manuscript={manuscript}
               showEditorOnlyFields={false}
+              title="Metadata"
             />
           </>
         ),
@@ -165,6 +176,10 @@ const Submit = ({
     channelId = parent.channels.find(c => c.type === 'all').id
   }
 
+  React.useEffect(() => {
+    handleSaveDebouncer.flush()
+  }, [versions.length])
+
   return (
     <Columns>
       <Manuscript>
@@ -182,6 +197,32 @@ const Submit = ({
   )
 }
 
+const formPropTypes = PropTypes.shape({
+  name: PropTypes.string.isRequired,
+  description: PropTypes.string,
+  children: PropTypes.arrayOf(
+    PropTypes.shape({
+      name: PropTypes.string.isRequired,
+      title: PropTypes.string.isRequired,
+      sectioncss: PropTypes.string,
+      id: PropTypes.string.isRequired,
+      component: PropTypes.string.isRequired,
+      group: PropTypes.string,
+      placeholder: PropTypes.string,
+      validate: PropTypes.arrayOf(PropTypes.object.isRequired),
+      validateValue: PropTypes.objectOf(
+        PropTypes.oneOfType([
+          PropTypes.string.isRequired,
+          PropTypes.number.isRequired,
+        ]).isRequired,
+      ),
+    }).isRequired,
+  ).isRequired,
+  popuptitle: PropTypes.string,
+  popupdescription: PropTypes.string,
+  haspopup: PropTypes.string.isRequired, // bool as string
+})
+
 Submit.propTypes = {
   versions: PropTypes.arrayOf(
     PropTypes.shape({
@@ -189,37 +230,13 @@ Submit.propTypes = {
       label: PropTypes.string,
     }),
   ).isRequired,
-  form: PropTypes.shape({
-    name: PropTypes.string.isRequired,
-    description: PropTypes.string,
-    children: PropTypes.arrayOf(
-      PropTypes.shape({
-        name: PropTypes.string.isRequired,
-        title: PropTypes.string.isRequired,
-        sectioncss: PropTypes.string,
-        id: PropTypes.string.isRequired,
-        component: PropTypes.string.isRequired,
-        group: PropTypes.string,
-        placeholder: PropTypes.string,
-        validate: PropTypes.arrayOf(PropTypes.object.isRequired),
-        validateValue: PropTypes.objectOf(
-          PropTypes.oneOfType([
-            PropTypes.string.isRequired,
-            PropTypes.number.isRequired,
-          ]).isRequired,
-        ),
-      }).isRequired,
-    ).isRequired,
-    popuptitle: PropTypes.string,
-    popupdescription: PropTypes.string,
-    haspopup: PropTypes.string.isRequired, // bool as string
-  }).isRequired,
+  submissionForm: formPropTypes.isRequired,
+  decisionForm: formPropTypes.isRequired,
+  reviewForm: formPropTypes.isRequired,
   createNewVersion: PropTypes.func.isRequired,
   currentUser: PropTypes.shape({
     admin: PropTypes.bool.isRequired,
   }),
-  toggleConfirming: PropTypes.func.isRequired,
-  confirming: PropTypes.bool.isRequired,
   parent: PropTypes.shape({
     channels: PropTypes.arrayOf(
       PropTypes.shape({

@@ -1,10 +1,9 @@
 import React from 'react'
-import { Attachment } from '@pubsweet/ui'
 
 // TODO: Sort out the imports, perhaps make DecisionReview a shared component?
 import DecisionReview from '../../../component-review/src/components/decision/DecisionReview'
-import { UserAvatar } from '../../../component-avatar/src'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
+import ReadonlyFormTemplate from '../../../component-review/src/components/metadata/ReadonlyFormTemplate'
 
 import {
   SectionHeader,
@@ -13,42 +12,32 @@ import {
   SectionContent,
 } from '../../../shared'
 
-const Decision = ({ decision, editor }) =>
-  decision ? (
-    <>
-      <SectionRow>
-        <p>Decision: {decision.recommendation}.</p>
-      </SectionRow>
-      <SectionRow>
-        <p>Comment:</p>
-        <p
-          // eslint-disable-next-line react/no-danger
-          dangerouslySetInnerHTML={{
-            __html: decision?.decisionComment?.content,
-          }}
-        />
-      </SectionRow>
-      {decision?.decisionComment?.files?.length > 0 && (
-        <SectionRow>
-          {decision.decisionComment.files.map(f => (
-            <Attachment
-              file={{ ...f, url: f.storedObjects[0].url }}
-              key={f.storedObjects[0].url}
-              uploaded
-            />
-          ))}
-        </SectionRow>
-      )}
-      <SectionRow>
-        <UserAvatar username={editor?.username} />
-        Written by {editor?.username}
-      </SectionRow>
-    </>
+const Decision = ({ decisionForm, manuscript }) => {
+  const decisionDataString = manuscript.reviews.find(r => r.isDecision)
+    ?.jsonData
+
+  const decisionData = decisionDataString
+    ? JSON.parse(decisionDataString)
+    : null
+
+  return decisionData ? (
+    <ReadonlyFormTemplate
+      form={decisionForm}
+      formData={decisionData}
+      hideSpecialInstructions
+      manuscript={manuscript}
+    />
   ) : (
     <SectionRow>Pending.</SectionRow>
   )
+}
 
-const DecisionAndReviews = ({ manuscript }) => {
+const DecisionAndReviews = ({
+  manuscript,
+  isControlPage,
+  reviewForm,
+  decisionForm,
+}) => {
   const currentUser = useCurrentUser()
 
   const decision =
@@ -74,9 +63,11 @@ const DecisionAndReviews = ({ manuscript }) => {
     ? authorTeam.members.find(member => member.user.id === currentUser.id)
     : false
 
-  const reviewsToShow = reviews.filter(
-    review => !review.isHiddenFromAuthor && isCurrentUserAuthor,
-  )
+  const reviewsToShow = isControlPage
+    ? reviews
+    : reviews.filter(
+        review => !review.isHiddenFromAuthor && isCurrentUserAuthor,
+      )
 
   return (
     <>
@@ -84,7 +75,11 @@ const DecisionAndReviews = ({ manuscript }) => {
         <SectionHeader>
           <Title>Decision</Title>
         </SectionHeader>
-        <Decision decision={decision} editor={decision?.user} />
+        <Decision
+          decisionForm={decisionForm}
+          editor={decision?.user}
+          manuscript={manuscript}
+        />
       </SectionContent>
       <SectionContent>
         <SectionHeader>
@@ -102,6 +97,7 @@ const DecisionAndReviews = ({ manuscript }) => {
                   ordinal: index + 1,
                   user: review.user,
                 }}
+                reviewForm={reviewForm}
                 teams={manuscript.teams}
               />
             </SectionRow>
