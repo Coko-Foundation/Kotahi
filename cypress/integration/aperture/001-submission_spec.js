@@ -41,7 +41,6 @@ describe('Upload manuscript test', () => {
       // Submit your form
 
       SubmissionFormPage.clickSubmitYourManuscript()
-      cy.get('button').contains('Submit your manuscript').click()
 
       // assert form exists in dashboard
 
