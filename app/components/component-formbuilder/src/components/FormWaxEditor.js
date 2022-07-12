@@ -1,12 +1,11 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import PropTypes from 'prop-types'
 import { Wax } from 'wax-prosemirror-core'
-import { debounce } from 'lodash'
-import simpleWaxEditorConfig from './config/SimpleWaxEditorConfig'
-import SimpleWaxEditorLayout from './layout/SimpleWaxEditorLayout'
-import fixAstralUnicode from './fixAstralUnicode'
+import fixAstralUnicode from '../../../wax-collab/src/fixAstralUnicode'
+import SimpleWaxEditorLayout from '../../../wax-collab/src/layout/SimpleWaxEditorLayout'
+import simpleWaxEditorConfig from '../../../wax-collab/src/config/SimpleWaxEditorConfig'
 
-const SimpleWaxEditor = ({
+const FormWaxEditor = ({
   value,
   validationStatus,
   readonly,
@@ -21,20 +20,18 @@ const SimpleWaxEditor = ({
   // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
   // eslint-disable-next-line no-param-reassign
   value = fixAstralUnicode(value)
-  const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
     <div className={validationStatus} ref={innerRefProp}>
       <Wax
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
         config={simpleWaxEditorConfig()}
-        // fileUpload={file => renderImage(file)}
         layout={SimpleWaxEditorLayout(readonly)}
         onBlur={val => {
           onChange && onChange(val)
           onBlur && onBlur(val)
         }}
-        onChange={debounceChange}
+        onChange={onChange}
         placeholder={placeholder}
         readonly={readonly}
         value={value}
@@ -44,7 +41,7 @@ const SimpleWaxEditor = ({
   )
 }
 
-SimpleWaxEditor.propTypes = {
+FormWaxEditor.propTypes = {
   /** editor content HTML */
   value: PropTypes.string,
   /** either undefined or 'error' to highlight with error color */
@@ -59,7 +56,7 @@ SimpleWaxEditor.propTypes = {
   spellCheck: PropTypes.bool,
 }
 
-SimpleWaxEditor.defaultProps = {
+FormWaxEditor.defaultProps = {
   value: '',
   validationStatus: undefined,
   readonly: false,
@@ -70,4 +67,4 @@ SimpleWaxEditor.defaultProps = {
   spellCheck: false,
 }
 
-export default SimpleWaxEditor
+export default FormWaxEditor

@@ -17,7 +17,6 @@ const MessageWrapper = styled.div`
   line-height: ${th('lineHeightBaseSmall')};
 `
 
-// const ValidatedFieldComponent = ({ component: Component }) =>
 const useFocusOnError = ({ fieldRef, name }) => {
   const formik = useFormikContext()
   const prevSubmitCountRef = React.useRef(formik.submitCount)
