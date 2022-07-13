@@ -74,7 +74,7 @@ INSERT INTO reviews (
   LEFT JOIN review_comments c ON (c.review_id = r.id AND c.comment_type = 'review')
   LEFT JOIN review_comments conf_c ON (conf_c.review_id = r.id AND conf_c.comment_type = 'confidential')
   LEFT JOIN review_comments d ON (d.review_id = r.id AND d.comment_type = 'decision')
-);
+) ON CONFLICT DO NOTHING;
 
 -- Remove old decision and review forms so the revised forms will be added
 delete from forms where category in ('review', 'decision');
