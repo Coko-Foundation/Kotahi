@@ -18,7 +18,7 @@ export const Section = styled.div`
   flex-wrap: ${({ cssOverrides }) =>
     cssOverrides && cssOverrides.wrap ? cssOverrides.wrap : 'nowrap'};
   justify-content: space-between;
-  margin: calc(${th('gridUnit')} * 6) 0;
+  margin: ${grid(3)} 0;
 `
 
 export const Legend = styled.div`

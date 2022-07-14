@@ -74,6 +74,7 @@ const FormBuilderLayout = ({
   updateField,
   setActiveFieldId,
   setActiveFormId,
+  shouldAllowHypothesisTagging,
 }) => {
   const [openModal, setOpenModal] = useState(false)
   const [formId, setFormId] = useState()
@@ -180,6 +181,7 @@ const FormBuilderLayout = ({
                     field={activeField}
                     formId={activeForm.id}
                     key={activeField.id}
+                    shouldAllowHypothesisTagging={shouldAllowHypothesisTagging}
                     updateField={updateField}
                   />
                 ) : (

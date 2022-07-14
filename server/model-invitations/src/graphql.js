@@ -12,6 +12,8 @@ const resolvers = {
       return invitation
     },
     async getInvitationsForManuscript(_, { id }, ctx) {
+      if (!id) return []
+
       const invitations = await models.Invitation.query()
         .where({
           manuscriptId: id,

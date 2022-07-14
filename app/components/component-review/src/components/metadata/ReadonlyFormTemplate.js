@@ -14,8 +14,14 @@ import {
 import { SectionContent, Attachment } from '../../../../shared'
 import ManuscriptFilesList from './ManuscriptFilesList'
 import SpecialInstructions from './SpecialInstructions'
+import ThreadedDiscussion from '../../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/ThreadedDiscussion'
 
-const showFieldData = (manuscript, fieldName, form) => {
+const showFieldData = (
+  manuscript,
+  fieldName,
+  form,
+  threadedDiscussionProps,
+) => {
   const data = get(manuscript, fieldName)
   const fieldDefinition = form.children?.find(field => field.name === fieldName)
 
@@ -44,6 +50,28 @@ const showFieldData = (manuscript, fieldName, form) => {
         </a>
       </p>
     ))
+  }
+
+  if (fieldDefinition?.component === 'ThreadedDiscussion' && data) {
+    // data should be the threadedDiscussion ID
+    const discussion = threadedDiscussionProps.threadedDiscussions.find(
+      d => d.id === data,
+    ) || {
+      threads: [],
+    }
+
+    const augmentedThreadedDiscussionProps = {
+      ...threadedDiscussionProps,
+      threadedDiscussion: discussion,
+      threadedDiscussions: undefined,
+      shouldRenderSubmitButton: true,
+    }
+
+    return (
+      <ThreadedDiscussion
+        threadedDiscussionProps={augmentedThreadedDiscussionProps}
+      />
+    )
   }
 
   if (
@@ -82,6 +110,7 @@ const ReadonlyFormTemplate = ({
   title,
   displayShortIdAsIdentifier,
   listManuscriptFiles,
+  threadedDiscussionProps,
 }) => {
   return (
     <SectionContent>
@@ -112,7 +141,14 @@ const ReadonlyFormTemplate = ({
           shouldShowInPreview(element.name, form) ? (
             <SectionRowGrid key={element.id}>
               <Heading>{element.shortDescription || element.title}</Heading>
-              <Cell>{showFieldData(formData, element.name, form)}</Cell>
+              <Cell>
+                {showFieldData(
+                  formData,
+                  element.name,
+                  form,
+                  threadedDiscussionProps,
+                )}
+              </Cell>
             </SectionRowGrid>
           ) : null,
         )}

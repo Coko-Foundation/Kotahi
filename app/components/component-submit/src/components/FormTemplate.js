@@ -2,14 +2,15 @@ import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Formik } from 'formik'
-import { unescape, set, debounce } from 'lodash'
+import { unescape, get, set, debounce } from 'lodash'
 import { TextField, RadioGroup, CheckboxGroup } from '@pubsweet/ui'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import {
   Section as Container,
   Select,
   FilesUpload,
   Attachment,
+  FieldPublishingSelector,
 } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
@@ -18,7 +19,9 @@ import ValidatedFieldFormik from './ValidatedField'
 import Confirm from './Confirm'
 import { articleStatuses } from '../../../../globals'
 import { validateFormField } from '../../../../shared/formValidation'
+import ThreadedDiscussion from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/ThreadedDiscussion'
 import ActionButton from '../../../shared/ActionButton'
+import { hasValue } from '../../../../shared/htmlUtils'
 import FormWaxEditor from '../../../component-formbuilder/src/components/FormWaxEditor'
 
 const Intro = styled.div`
@@ -39,15 +42,56 @@ const ModalWrapper = styled.div`
   z-index: 10000;
 `
 
+const LowerPadded = styled.div`
+  padding-bottom: ${grid(3)};
+`
+
 const SafeRadioGroup = styled(RadioGroup)`
   position: relative;
 `
+
+const PaddedRadioGroup = props => (
+  <LowerPadded>
+    <SafeRadioGroup {...props} />
+  </LowerPadded>
+)
+
+const PaddedCheckboxGroup = props => (
+  <LowerPadded>
+    <CheckboxGroup {...props} />
+  </LowerPadded>
+)
+
+const PaddedSelect = props => (
+  <LowerPadded>
+    <Select {...props} />
+  </LowerPadded>
+)
+
+const PaddedAuthorsInput = props => (
+  <LowerPadded>
+    <AuthorsInput {...props} />
+  </LowerPadded>
+)
+
+const PaddedLinksInput = props => (
+  <LowerPadded>
+    <LinksInput {...props} />
+  </LowerPadded>
+)
 
 const NoteRight = styled.div`
   float: right;
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
   text-align: right;
+`
+
+const FieldHead = styled.div`
+  align-items: baseline;
+  display: flex;
+  justify-content: space-between;
+  width: auto;
 `
 
 const filterFileManuscript = files =>
@@ -61,11 +105,12 @@ const filterFileManuscript = files =>
 /** Definitions for available field types */
 const elements = {
   TextField,
-  RadioGroup: SafeRadioGroup,
-  CheckboxGroup,
-  AuthorsInput,
-  Select,
-  LinksInput,
+  RadioGroup: PaddedRadioGroup,
+  CheckboxGroup: PaddedCheckboxGroup,
+  AuthorsInput: PaddedAuthorsInput,
+  Select: PaddedSelect,
+  LinksInput: PaddedLinksInput,
+  ThreadedDiscussion,
 }
 
 elements.AbstractEditor = ({
@@ -83,7 +128,7 @@ elements.AbstractEditor = ({
       }}
       onChange={val => {
         setTouched(set({}, rest.name, true))
-        const cleanedVal = val === '<p class="paragraph"></p>' ? '' : val
+        const cleanedVal = hasValue(val) ? val : ''
         onChange(cleanedVal)
       }}
     />
@@ -126,6 +171,7 @@ const prepareFieldProps = rawField => ({
 })
 
 const InnerFormTemplate = ({
+  // TODO We could just combine InnerFormTemplate with FormTemplate. No good reason to separate them.
   form,
   handleSubmit, // formik
   toggleConfirming,
@@ -151,15 +197,22 @@ const InnerFormTemplate = ({
   reviewId,
   shouldStoreFilesInForm,
   tagForFiles,
+  threadedDiscussionProps: tdProps,
   initializeReview,
   isSubmitting,
   submitCount,
+  shouldShowOptionToPublish,
+  fieldsToPublish = [],
+  setShouldPublishField,
 }) => {
+  const [submitSucceeded, setSubmitSucceeded] = useState(false)
+
   const submitButton = (text, haspopup = false) => {
     return (
       <div>
         <ActionButton
           onClick={async () => {
+            // TODO shouldn't this come after error checking and submission?
             if (republish && manuscriptStatus === articleStatuses.published) {
               republish(manuscriptId)
               return
@@ -176,14 +229,22 @@ const InnerFormTemplate = ({
               !haspopup
             ) {
               handleSubmit()
+              setSubmitSucceeded(!hasErrors)
             } else {
               toggleConfirming()
             }
           }}
           primary
           status={
-            // eslint-disable-next-line no-nested-ternary
-            isSubmitting ? 'pending' : submitCount ? 'success' : ''
+            /* eslint-disable no-nested-ternary */
+            isSubmitting
+              ? 'pending'
+              : Object.keys(errors).length && submitCount
+              ? '' // TODO Make this case 'failure', once we've fixed the validation delays in the form
+              : submitSucceeded
+              ? 'success'
+              : ''
+            /* eslint-enable no-nested-ternary */
           }
         >
           {text}
@@ -245,12 +306,49 @@ const InnerFormTemplate = ({
           )
           .map(prepareFieldProps)
           .map((element, i) => {
+            let threadedDiscussionProps
+
+            if (element.component === 'ThreadedDiscussion') {
+              const setShouldPublishComment =
+                shouldShowOptionToPublish &&
+                element.permitPublishing === 'true' &&
+                ((id, val) =>
+                  setShouldPublishField(`${element.name}:${id}`, val))
+
+              threadedDiscussionProps = {
+                ...tdProps,
+                threadedDiscussion: tdProps.threadedDiscussions.find(
+                  d => d.id === values[element.name],
+                ),
+                threadedDiscussions: undefined,
+                commentsToPublish: fieldsToPublish
+                  .filter(f => f.startsWith(`${element.name}:`))
+                  .map(f => f.split(':')[1]),
+                setShouldPublishComment,
+                userCanAddThread: true,
+              }
+            }
+
             return (
               <Section
                 cssOverrides={JSON.parse(element.sectioncss || '{}')}
                 key={`${element.id}`}
               >
-                <Legend dangerouslySetInnerHTML={createMarkup(element.title)} />
+                <FieldHead>
+                  <Legend
+                    dangerouslySetInnerHTML={createMarkup(element.title)}
+                  />
+                  {shouldShowOptionToPublish &&
+                    element.permitPublishing === 'true' &&
+                    element.component !== 'ThreadedDiscussion' && (
+                      <FieldPublishingSelector
+                        onChange={val =>
+                          setShouldPublishField(element.name, val)
+                        }
+                        value={fieldsToPublish.includes(element.name)}
+                      />
+                    )}
+                </FieldHead>
                 {element.component === 'SupplementaryFiles' && (
                   <FilesUpload
                     createFile={createFile}
@@ -275,63 +373,69 @@ const InnerFormTemplate = ({
                     manuscriptId={manuscriptId}
                     mimeTypesToAccept="image/*"
                     onChange={shouldStoreFilesInForm ? onChange : null}
+                    reviewId={reviewId}
                     values={values}
                   />
                 )}
-                {element.component !== 'SupplementaryFiles' &&
-                  element.component !== 'VisualAbstract' && (
-                    <ValidatedFieldFormik
-                      {...rejectProps(element, [
-                        'component',
-                        'title',
-                        'sectioncss',
-                        'parse',
-                        'format',
-                        'validate',
-                        'validateValue',
-                        'description',
-                        'shortDescription',
-                        'labelColor',
-                      ])}
-                      aria-label={element.placeholder || element.title}
-                      component={elements[element.component]}
-                      data-testid={element.name} // TODO: Improve this
-                      key={`validate-${element.id}`}
-                      name={element.name}
-                      onChange={value => {
-                        // TODO: Perhaps split components remove conditions here
-                        let val
+                {!['SupplementaryFiles', 'VisualAbstract'].includes(
+                  element.component,
+                ) && (
+                  <ValidatedFieldFormik
+                    {...rejectProps(element, [
+                      'component',
+                      'title',
+                      'sectioncss',
+                      'parse',
+                      'format',
+                      'validate',
+                      'validateValue',
+                      'description',
+                      'shortDescription',
+                      'labelColor',
+                    ])}
+                    aria-label={element.placeholder || element.title}
+                    component={elements[element.component]}
+                    data-testid={element.name} // TODO: Improve this
+                    key={`validate-${element.id}`}
+                    name={element.name}
+                    onChange={value => {
+                      // TODO: Perhaps split components remove conditions here
+                      let val
 
-                        if (value.target) {
-                          val = value.target.value
-                        } else if (value.value) {
-                          val = value.value
-                        } else {
-                          val = value
-                        }
+                      if (value.target) {
+                        val = value.target.value
+                      } else if (value.value) {
+                        val = value.value
+                      } else {
+                        val = value
+                      }
 
-                        setFieldValue(element.name, val, false)
-                        onChange(val, element.name)
-                      }}
-                      readonly={element.name === 'submission.editDate'}
-                      setTouched={setTouched}
-                      spellCheck
-                      validate={validateFormField(
-                        element.validate,
-                        element.validateValue,
-                        element.name,
-                        JSON.parse(
-                          element.doiValidation ? element.doiValidation : false,
-                        ),
-                        validateDoi,
-                        element.component,
-                      )}
-                      values={values}
-                    />
-                  )}
-                <SubNote
-                  dangerouslySetInnerHTML={createMarkup(element.description)}
-                />
+                      setFieldValue(element.name, val, false)
+                      onChange(val, element.name)
+                    }}
+                    readonly={element.name === 'submission.editDate'}
+                    setTouched={setTouched}
+                    spellCheck
+                    threadedDiscussionProps={threadedDiscussionProps}
+                    validate={validateFormField(
+                      element.validate,
+                      element.validateValue,
+                      element.name,
+                      JSON.parse(
+                        element.doiValidation ? element.doiValidation : false,
+                      ),
+                      validateDoi,
+                      element.component,
+                      threadedDiscussionProps,
+                    )}
+                    values={values}
+                  />
+                )}
+                {hasValue(element.description) && (
+                  <SubNote
+                    dangerouslySetInnerHTML={createMarkup(element.description)}
+                  />
+                )}
               </Section>
             )
           })}
@@ -385,19 +489,41 @@ const FormTemplate = ({
   shouldStoreFilesInForm,
   initializeReview,
   tagForFiles,
+  threadedDiscussionProps,
+  fieldsToPublish,
+  setShouldPublishField,
+  shouldShowOptionToPublish = false,
 }) => {
   const [confirming, setConfirming] = React.useState(false)
 
   const toggleConfirming = () => {
     setConfirming(confirm => !confirm)
   }
+
+  const sumbitPendingThreadedDiscussionComments = async values => {
+    await Promise.all(
+      form.children
+        .filter(field => field.component === 'ThreadedDiscussion')
+        .map(field => get(values, field.name))
+        .filter(Boolean)
+        .map(async threadedDiscussionId =>
+          threadedDiscussionProps.completeComments({
+            variables: { threadedDiscussionId },
+          }),
+        ),
+    )
+  }
+
   const [lastChangedField, setLastChangedField] = useState(null)
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
     <Formik
       displayName={form.name}
       initialValues={initialValues}
-      onSubmit={onSubmit ?? (() => null)}
+      onSubmit={async (values, actions) => {
+        await sumbitPendingThreadedDiscussionComments(values)
+        if (onSubmit) await onSubmit(values, actions)
+      }}
       validateOnBlur
       validateOnChange={false}
     >
@@ -410,6 +536,7 @@ const FormTemplate = ({
           toggleConfirming={toggleConfirming}
           {...formProps}
           displayShortIdAsIdentifier={displayShortIdAsIdentifier}
+          fieldsToPublish={fieldsToPublish}
           form={form}
           initializeReview={initializeReview}
           manuscriptId={manuscriptId}
@@ -420,15 +547,18 @@ const FormTemplate = ({
               debounceChange.flush()
               setLastChangedField(fieldName)
             }
-            debounceChange(value)
-          }
-        }
+
+            debounceChange(value, fieldName)
+          }}
           republish={republish}
           reviewId={reviewId}
+          setShouldPublishField={setShouldPublishField}
+          shouldShowOptionToPublish={shouldShowOptionToPublish}
           shouldStoreFilesInForm={shouldStoreFilesInForm}
           showEditorOnlyFields={showEditorOnlyFields}
           submissionButtonText={submissionButtonText}
           tagForFiles={tagForFiles}
+          threadedDiscussionProps={threadedDiscussionProps}
           urlFrag={urlFrag}
           validateDoi={validateDoi}
         />

@@ -20,7 +20,7 @@ const reviewFields = `
   }
 `
 
-const fragmentFields = `
+const manuscriptFields = `
   id
   shortId
   created
@@ -98,6 +98,10 @@ const fragmentFields = `
     }
   }
   published
+  formFieldsToPublish {
+    objectId
+    fieldsToPublish
+  }
 `
 
 const formFields = `
@@ -117,6 +121,7 @@ const formFields = `
       doiValidation
       placeholder
       includeInReviewerPreview
+      permitPublishing
       parse
       format
       options {
@@ -148,15 +153,49 @@ export const query = gql`
     }
 
     manuscript(id: $id) {
-      ${fragmentFields}
+      ${manuscriptFields}
       manuscriptVersions {
-        ${fragmentFields}
+        ${manuscriptFields}
       }
       channels {
         id
         type
         topic
       }
+    }
+
+    threadedDiscussions(manuscriptId: $id) {
+      id
+      created
+      updated
+      manuscriptId
+      threads {
+        id
+        comments {
+          id
+          commentVersions {
+            id
+            author {
+              id
+              username
+              profilePicture
+            }
+            comment
+            created
+          }
+          pendingVersion {
+            author {
+              id
+              username
+              profilePicture
+            }
+            comment
+          }
+        }
+      }
+      userCanAddComment
+      userCanEditOwnComment
+      userCanEditAnyComment
     }
 
     submissionForm: formForPurposeAndCategory(purpose: "submit", category: "submission") {
@@ -195,7 +234,14 @@ export const makeDecisionMutation = gql`
   mutation($id: ID!, $decision: String) {
     makeDecision(id: $id, decision: $decision) {
       id
-      ${fragmentFields}
+      ${manuscriptFields}
+    }
+  }
+`
+export const createThreadMutation = gql`
+  mutation($id: ID!, $decision: String) {
+    createThread(id: $id, decision: $decision) {
+      id
     }
   }
 `
@@ -235,6 +281,19 @@ export const sendEmail = gql`
   mutation($input: String) {
     sendEmail(input: $input) {
       success
+    }
+  }
+`
+
+export const setShouldPublishFieldMutation = gql`
+  mutation($manuscriptId: ID!, $objectId: ID!, $fieldName: String!, $shouldPublish: Boolean!) {
+    setShouldPublishField(
+      manuscriptId: $manuscriptId
+      objectId: $objectId
+      fieldName: $fieldName
+      shouldPublish: $shouldPublish
+    ) {
+      ${manuscriptFields}
     }
   }
 `

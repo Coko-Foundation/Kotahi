@@ -12,7 +12,7 @@ import {
   SectionContent,
 } from '../../../shared'
 
-const Decision = ({ decisionForm, manuscript }) => {
+const Decision = ({ decisionForm, manuscript, threadedDiscussionProps }) => {
   const decisionDataString = manuscript.reviews.find(r => r.isDecision)
     ?.jsonData
 
@@ -26,6 +26,7 @@ const Decision = ({ decisionForm, manuscript }) => {
       formData={decisionData}
       hideSpecialInstructions
       manuscript={manuscript}
+      threadedDiscussionProps={threadedDiscussionProps}
     />
   ) : (
     <SectionRow>Pending.</SectionRow>
@@ -37,6 +38,7 @@ const DecisionAndReviews = ({
   isControlPage,
   reviewForm,
   decisionForm,
+  threadedDiscussionProps,
 }) => {
   const currentUser = useCurrentUser()
 
@@ -46,9 +48,9 @@ const DecisionAndReviews = ({
     manuscript.reviews.find(review => review.isDecision)
 
   const reviews =
-    manuscript.reviews &&
-    !!manuscript.reviews.length &&
-    manuscript.reviews.filter(review => !review.isDecision)
+    (Array.isArray(manuscript.reviews) &&
+      manuscript.reviews.filter(review => !review.isDecision)) ||
+    []
 
   if (!currentUser) return null
 
@@ -79,6 +81,7 @@ const DecisionAndReviews = ({
           decisionForm={decisionForm}
           editor={decision?.user}
           manuscript={manuscript}
+          threadedDiscussionProps={threadedDiscussionProps}
         />
       </SectionContent>
       <SectionContent>
@@ -99,6 +102,7 @@ const DecisionAndReviews = ({
                 }}
                 reviewForm={reviewForm}
                 teams={manuscript.teams}
+                threadedDiscussionProps={threadedDiscussionProps}
               />
             </SectionRow>
           ))

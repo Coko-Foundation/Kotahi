@@ -2,21 +2,20 @@ import React from 'react'
 import { FastField, ErrorMessage, useFormikContext } from 'formik'
 import { get } from 'lodash'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 
 const MessageWrapper = styled.div`
+  margin-top: ${grid(-2.5)};
+  height: ${grid(2.5)};
   color: ${th('colorError')};
   display: flex;
   font-family: ${th('fontInterface')};
-
-  &:not(:last-child) {
-    margin-bottom: ${th('gridUnit')};
-  }
 
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
 `
 
+// Based on https://github.com/jaredpalmer/formik/issues/146#issuecomment-474775723
 const useFocusOnError = ({ fieldRef, name }) => {
   const formik = useFormikContext()
   const prevSubmitCountRef = React.useRef(formik.submitCount)
@@ -45,7 +44,6 @@ const useFocusOnError = ({ fieldRef, name }) => {
 }
 
 const ValidatedField = ({ component: Component, ...props }) => {
-  // TODO: https://github.com/formium/formik/issues/146#issuecomment-474775723
   const fieldRef = React.useRef()
   const { name } = props
   useFocusOnError({ fieldRef, name })

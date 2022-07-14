@@ -284,7 +284,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
   const ms = await models.Manuscript.query()
     .findById(id)
-    .withGraphFetched('[reviews, files]')
+    .withGraphFetched('[reviews.user, files]')
 
   const updatedMs = deepMergeObjectsReplacingArrays(ms, msDelta)
 
@@ -921,7 +921,53 @@ const resolvers = {
 
       return reviewerTeam.$query().withGraphFetched('members.[user]')
     },
+    /** To identify which data we're making publishable/unpublishable, we need:
+     * manuscriptId; the ID of the owning review/decision or manuscript object; and the fieldName.
+     * For threaded discussion comments, the fieldName should have the commentId concatenated onto it, like this:
+     * 'discussion:97b49766-8513-427e-9f4e-9c463fa9878c'
+     */
+    async setShouldPublishField(
+      _,
+      { manuscriptId, objectId, fieldName, shouldPublish },
+    ) {
+      const manuscript = await models.Manuscript.query()
+        .findById(manuscriptId)
+        .withGraphFetched('[teams, channels, files, reviews.user]')
 
+      if (shouldPublish) {
+        // Add
+        let formFields = manuscript.formFieldsToPublish.find(
+          ff => ff.objectId === objectId,
+        )
+
+        if (!formFields) {
+          formFields = { objectId, fieldsToPublish: [] }
+          manuscript.formFieldsToPublish.push(formFields)
+        }
+
+        if (!formFields.fieldsToPublish.includes(fieldName))
+          formFields.fieldsToPublish.push(fieldName)
+      } else {
+        // Remove
+        manuscript.formFieldsToPublish = manuscript.formFieldsToPublish
+          .map(ff => {
+            if (ff.objectId !== objectId) return ff
+
+            return {
+              objectId,
+              fieldsToPublish: ff.fieldsToPublish.filter(f => f !== fieldName),
+            }
+          })
+          .filter(ff => ff.fieldsToPublish.length)
+      }
+
+      const updated = await models.Manuscript.query().updateAndFetchById(
+        manuscriptId,
+        manuscript,
+      )
+
+      return repackageForGraphql(updated)
+    },
     async publishManuscript(_, { id }, ctx) {
       const manuscript = await models.Manuscript.query()
         .findById(id)
@@ -929,19 +975,13 @@ const resolvers = {
 
       const update = {} // This will collect any properties we may want to update in the DB
       update.published = new Date()
-
       const steps = []
+      const containsEvaluations = hasEvaluations(manuscript)
 
       if (config.crossref.login) {
         const stepLabel = 'Crossref'
-        const containsEvaluations = hasEvaluations(manuscript)
 
-        // A 'published' article without evaluations will become 'evaluated'.
-        // The intention is that an evaluated article should never revert to any state prior to "evaluated",
-        // but that only articles with evaluations can be 'published'.
-        update.status = containsEvaluations ? 'published' : 'evaluated'
-
-        let succeeded
+        let succeeded = false
         let errorMessage
 
         if (containsEvaluations || manuscript.status !== 'evaluated') {
@@ -951,13 +991,9 @@ const resolvers = {
           } catch (e) {
             console.error('error publishing to crossref')
             console.error(e)
-            succeeded = false
             errorMessage = e
           }
         }
-
-        // Manuscript doesn't have evaluations
-        succeeded = false
 
         steps.push({
           stepLabel,
@@ -974,7 +1010,6 @@ const resolvers = {
         try {
           if (await publishToGoogleSpreadSheet(manuscript)) {
             stepLabel = 'Google Spreadsheet'
-            update.status = 'published'
             update.submission = {
               ...manuscript.submission,
               editDate: new Date().toISOString().split('T')[0],
@@ -995,7 +1030,7 @@ const resolvers = {
 
       if (config.hypothesis.apiKey) {
         const stepLabel = 'Hypothesis'
-        let succeeded
+        let succeeded = false
         let errorMessage
         if (!manuscript.evaluationsHypothesisMap)
           manuscript.evaluationsHypothesisMap = {}
@@ -1005,14 +1040,13 @@ const resolvers = {
             manuscript,
           )
           succeeded = true
-          update.status = 'published'
         } catch (err) {
+          console.error(err)
           let message = 'Publishing to hypothes.is failed!\n'
           if (err.response) {
             message += `${err.response.status} ${err.response.statusText}\n`
             message += `${JSON.stringify(err.response.data)}`
           } else message += err.toString()
-          succeeded = false
           errorMessage = message
         }
 
@@ -1030,6 +1064,16 @@ const resolvers = {
             errorMessage: err.message,
           })
         }
+      }
+
+      if (!steps.length || steps.some(step => step.succeeded)) {
+        // A 'published' article without evaluations will become 'evaluated'.
+        // The intention is that an evaluated article should never revert to any state prior to "evaluated",
+        // but that only articles with evaluations can be 'published'.
+        update.status =
+          !config.crossref.login || containsEvaluations
+            ? 'published'
+            : 'evaluated'
       }
 
       const updatedManuscript = await models.Manuscript.query().updateAndFetchById(
@@ -1058,7 +1102,9 @@ const resolvers = {
         .findById(id)
         .withGraphFetched('[teams, channels, files, reviews.user]')
 
-      const user = await models.User.query().findById(ctx.user)
+      const user = ctx.user
+        ? await models.User.query().findById(ctx.user)
+        : null
 
       if (!manuscript) return null
 
@@ -1476,6 +1522,7 @@ const typeDefs = `
     publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript
     importManuscripts: Boolean!
+    setShouldPublishField(manuscriptId: ID!, objectId: ID!, fieldName: String!, shouldPublish: Boolean!): Manuscript!
   }
 
   type Manuscript implements Object {
@@ -1500,6 +1547,7 @@ const typeDefs = `
     published: DateTime
     evaluationsHypothesisMap: String
     currentRoles: [String]
+    formFieldsToPublish: [FormFieldsToPublish!]!
   }
 
   type ManuscriptVersion implements Object {
@@ -1521,6 +1569,7 @@ const typeDefs = `
     published: DateTime
     parentId: ID
     evaluationsHypothesisMap: String
+    formFieldsToPublish: [FormFieldsToPublish!]!
   }
 
   input ManuscriptInput {
@@ -1641,6 +1690,11 @@ const typeDefs = `
     updated: DateTime
     notesType: String
     content: String
+  }
+
+  type FormFieldsToPublish {
+    objectId: ID!
+    fieldsToPublish: [String!]!
   }
 
   """ A simplified Manuscript object containing only relevant fields for publishing """

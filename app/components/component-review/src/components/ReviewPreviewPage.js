@@ -53,7 +53,7 @@ const query = gql`
   }
 `
 
-const ReviewPreviewPage = ({ match }) => {
+const ReviewPreviewPage = ({ match, currentUser }) => {
   const { loading, error, data } = useQuery(query, {
     variables: {
       id: match.params.version,
@@ -81,8 +81,17 @@ const ReviewPreviewPage = ({ match }) => {
     haspopup: 'false',
   }
 
+  // Currently not expecting to preview threadedDiscussions from the ReviewPreviewPage
+  const threadedDiscussionDummyProps = {
+    threadedDiscussions: [],
+  }
+
   return (
-    <ReviewPreview manuscript={manuscript} submissionForm={submissionForm} />
+    <ReviewPreview
+      manuscript={manuscript}
+      submissionForm={submissionForm}
+      threadedDiscussionProps={threadedDiscussionDummyProps}
+    />
   )
 }
 

@@ -11,6 +11,12 @@ import { publishManuscriptMutation } from '../../../component-review/src/compone
 import { validateManuscriptSubmission } from '../../../../shared/manuscriptUtils'
 import CommsErrorBanner from '../../../shared/CommsErrorBanner'
 import { validateDoi } from '../../../../shared/commsUtils'
+import {
+  UPDATE_PENDING_COMMENT,
+  COMPLETE_COMMENTS,
+  COMPLETE_COMMENT,
+  DELETE_PENDING_COMMENT,
+} from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/queries'
 
 export const updateMutation = gql`
   mutation($id: ID!, $input: String) {
@@ -91,6 +97,10 @@ const SubmitPage = ({ match, history }) => {
   const [createNewVersion] = useMutation(createNewVersionMutation)
   const [publishManuscript] = useMutation(publishManuscriptMutation)
   const [createFile] = useMutation(createFileMutation)
+  const [updatePendingComment] = useMutation(UPDATE_PENDING_COMMENT)
+  const [completeComments] = useMutation(COMPLETE_COMMENTS)
+  const [completeComment] = useMutation(COMPLETE_COMMENT)
+  const [deletePendingComment] = useMutation(DELETE_PENDING_COMMENT)
 
   const [deleteFile] = useMutation(deleteFileMutation, {
     update(cache, { data: { deleteFile: fileToDelete } }) {
@@ -205,6 +215,16 @@ const SubmitPage = ({ match, history }) => {
 
   const versions = gatherManuscriptVersions(manuscript)
 
+  const threadedDiscussionProps = {
+    threadedDiscussions: data.threadedDiscussions,
+    updatePendingComment,
+    completeComment,
+    completeComments,
+    deletePendingComment,
+    currentUser,
+    firstVersionManuscriptId: manuscript.parentId || manuscript.id,
+  }
+
   return (
     <Submit
       createFile={createFile}
@@ -219,6 +239,7 @@ const SubmitPage = ({ match, history }) => {
       republish={republish}
       reviewForm={reviewForm}
       submissionForm={submissionForm}
+      threadedDiscussionProps={threadedDiscussionProps}
       updateManuscript={updateManuscript}
       validateDoi={validateDoi(client)}
       versions={versions}

@@ -1,5 +1,22 @@
 import gql from 'graphql-tag'
 
+const formFields = `
+  structure {
+    children {
+      id
+      name
+      title
+      shortDescription
+      component
+      options {
+        id
+        label
+        value
+      }
+    }
+  }
+`
+
 export default {
   frontpage: gql`
     query publishedManuscriptsAndForm(
@@ -43,14 +60,23 @@ export default {
           evaluationsHypothesisMap
         }
       }
-      formForPurposeAndCategory(purpose: "submit", category: "submission") {
-        structure {
-          children {
-            title
-            id
-            name
-          }
-        }
+      submissionForm: formForPurposeAndCategory(
+        purpose: "submit"
+        category: "submission"
+      ) {
+        ${formFields}
+      }
+      decisionForm: formForPurposeAndCategory(
+        purpose: "decision"
+        category: "decision"
+      ) {
+        ${formFields}
+      }
+      reviewForm: formForPurposeAndCategory(
+        purpose: "review"
+        category: "review"
+      ) {
+        ${formFields}
       }
     }
   `,

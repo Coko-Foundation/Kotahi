@@ -8,6 +8,12 @@ import ReviewLayout from './review/ReviewLayout'
 import { Heading, Page, Spinner } from '../../../shared'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
 import manuscriptVersions from '../../../../shared/manuscript_versions'
+import {
+  UPDATE_PENDING_COMMENT,
+  COMPLETE_COMMENTS,
+  COMPLETE_COMMENT,
+  DELETE_PENDING_COMMENT,
+} from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/queries'
 
 const createFileMutation = gql`
   mutation($file: Upload!, $meta: FileMetaInput!) {
@@ -187,6 +193,40 @@ const query = gql`
       }
     }
 
+    threadedDiscussions(manuscriptId: $id) {
+      id
+      created
+      updated
+      manuscriptId
+      threads {
+        id
+        comments {
+          id
+          commentVersions {
+            id
+            author {
+              id
+              username
+              profilePicture
+            }
+            comment
+            created
+          }
+          pendingVersion {
+            author {
+              id
+              username
+              profilePicture
+            }
+            comment
+          }
+        }
+      }
+      userCanAddComment
+      userCanEditOwnComment
+      userCanEditAnyComment
+    }
+
     submissionForm: formForPurposeAndCategory(purpose: "submit", category: "submission") {
       ${formStructure}
     }
@@ -225,6 +265,10 @@ const ReviewPage = ({ match, ...props }) => {
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
   const [completeReview] = useMutation(completeReviewMutation)
   const [createFile] = useMutation(createFileMutation)
+  const [updatePendingComment] = useMutation(UPDATE_PENDING_COMMENT)
+  const [completeComments] = useMutation(COMPLETE_COMMENTS)
+  const [completeComment] = useMutation(COMPLETE_COMMENT)
+  const [deletePendingComment] = useMutation(DELETE_PENDING_COMMENT)
 
   const [deleteFile] = useMutation(deleteFileMutation, {
     update(cache, { data: { deleteFile: fileToDelete } }) {
@@ -280,7 +324,7 @@ const ReviewPage = ({ match, ...props }) => {
     )
   }
 
-  const { manuscript } = data
+  const { manuscript, threadedDiscussions } = data
 
   // We shouldn't arrive at this page with a subsequent/child manuscript ID. If we do, redirect to the parent/original ID
   if (manuscript.parentId)
@@ -427,6 +471,16 @@ const ReviewPage = ({ match, ...props }) => {
     history.push(`${urlFrag}/dashboard`)
   }
 
+  const threadedDiscussionProps = {
+    threadedDiscussions,
+    updatePendingComment,
+    completeComment,
+    completeComments,
+    deletePendingComment,
+    currentUser,
+    firstVersionManuscriptId: manuscript.parentId || manuscript.id,
+  }
+
   return (
     <ReviewLayout
       channelId={channelId}
@@ -444,6 +498,7 @@ const ReviewPage = ({ match, ...props }) => {
       reviewForm={reviewForm}
       status={status}
       submissionForm={submissionForm}
+      threadedDiscussionProps={threadedDiscussionProps}
       updateReview={updateReview}
       updateReviewJsonData={updateReviewJsonData}
       versions={versions}

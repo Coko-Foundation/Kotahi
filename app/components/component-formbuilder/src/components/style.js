@@ -1,5 +1,5 @@
 import styled, { css } from 'styled-components'
-import { th, darken } from '@pubsweet/ui-toolkit'
+import { th, grid, darken } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
 import lightenBy from '../../../../shared/lightenBy'
 
@@ -55,17 +55,6 @@ const DetailText = styled.div`
   line-height: ${th('lineHeightBaseSmall')};
 `
 
-const DateWrapper = styled.div`
-  align-items: center;
-  display: flex;
-  justify-content: space-between;
-  margin-left: 30px;
-  width: 110px;
-  @media (max-width: 768px) {
-    flex-direction: column;
-  }
-`
-
 const CommentMetaWrapper = styled.div`
   align-items: center;
   display: flex;
@@ -78,6 +67,7 @@ const CommentMetaWrapper = styled.div`
 const UserMetaWrapper = styled.div`
   align-items: center;
   display: flex;
+  gap: ${grid(1)};
 `
 
 const UserName = styled.span`
@@ -93,6 +83,8 @@ const ButtonWrapper = styled.div`
 
 const ModalContainer = styled.div`
   background: ${th('colorBackground')};
+  max-height: calc(100vh - 60px);
+  overflow-y: auto;
   padding: 20px 24px;
   z-index: 9999;
 
@@ -107,7 +99,7 @@ const SimpleWaxEditorWrapper = styled.div`
   ${props =>
     props.collapse
       ? css`
-          height: 100px;
+          max-height: 100px;
           overflow: hidden;
         `
       : css`
@@ -158,7 +150,9 @@ const Collapse = styled.div`
 `
 
 const ActionWrapper = styled.div`
+  align-items: center;
   display: flex;
+  gap: ${grid(4)};
   justify-content: flex-end;
 
   svg {
@@ -189,7 +183,6 @@ export {
   Heading,
   UploadContainer,
   DetailText,
-  DateWrapper,
   CommentMetaWrapper,
   UserMetaWrapper,
   UserName,

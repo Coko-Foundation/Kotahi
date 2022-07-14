@@ -29,7 +29,6 @@ import {
   CommsErrorBanner,
 } from '../../shared'
 import { PaginationContainer } from '../../shared/Pagination'
-import getEvaluationFieldTitle from './getEvaluationFieldTitle'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -70,6 +69,231 @@ const ReviewTitleAndLink = ({ title, manuscriptId, fieldName }) => {
       </ReviewLink>
     </>
   )
+}
+
+const fieldLocationRegex = /([0-9a-f-]+)\.([\w.]+)(?::([0-9a-f-]+))?/
+
+/** Gets the parts from a hypothesis map entry like
+ * "dab0a39b-c16e-4d0e-8627-1d493c8a6d0d.meta.abstract"
+ * or "4edcea62-e1e4-4235-8dc9-2afa5f66334f.discussion:97b49766-8513-427e-9f4e-9c463fa9878c".
+ * Most fields take the first form, which starts with the ownerId (manuscript or decision/review)
+ * followed by the field name. ThreadedDiscussion comments take the second form, which adds the
+ * comment ID on the end. */
+const splitLocation = fieldLocation => {
+  const match = fieldLocationRegex.exec(fieldLocation)
+  if (!match) return { ownerId: null, fieldName: null, commentId: null }
+  return { ownerId: match[1], fieldName: match[2], commentId: match[3] || null }
+}
+
+/** Returns a map of maps. Outermost keys are the ID of either the manuscript or a decision/review.
+ * Each of these yields an inner map whose key is the fieldName, and whose value is either true,
+ *  or in the case of threaded discussion fields, an array of comment IDs.
+ */
+const getHypothesisFieldsByOwner = hypothesisMap => {
+  if (!hypothesisMap) return {}
+  const fieldsByOwner = {}
+
+  Object.keys(hypothesisMap).forEach(fieldLocation => {
+    const { ownerId, fieldName, commentId } = splitLocation(fieldLocation)
+    let ownerFields = fieldsByOwner[ownerId]
+
+    if (!ownerFields) {
+      ownerFields = {}
+      fieldsByOwner[ownerId] = ownerFields
+    }
+
+    if (commentId) {
+      if (ownerFields[fieldName]) ownerFields[fieldName].push(commentId)
+      else ownerFields[fieldName] = [commentId]
+    } else ownerFields[fieldName] = true
+  })
+
+  return fieldsByOwner
+}
+
+const getFieldInfo = (
+  manuscript,
+  submissionFields,
+  decisionFields,
+  reviewFields,
+) => {
+  const fieldInfo = [
+    {
+      ownerId: manuscript.id,
+      fields: submissionFields,
+      fieldData: manuscript,
+      label: '',
+    },
+  ]
+
+  const decision = manuscript.reviews.find(r => r.isDecision)
+  const decisionData = decision ? JSON.parse(decision.jsonData) : null
+  if (decision)
+    fieldInfo.push({
+      ownerId: decision.id,
+      fields: decisionFields,
+      fieldData: decisionData,
+      label: 'Evaluation — ',
+    })
+
+  const reviews = manuscript.reviews.filter(r => !r.isDecision)
+  reviews.forEach((r, index) => {
+    const reviewData = JSON.parse(r.jsonData)
+    fieldInfo.push({
+      ownerId: r.id,
+      fields: reviewFields,
+      fieldData: reviewData,
+      label: `Review ${index + 1} — `,
+    })
+  })
+
+  return fieldInfo
+}
+
+const generateAnnotation = (manuscriptId, fieldLocator, label, content) => {
+  return (
+    <Accordion
+      key={fieldLocator}
+      label={
+        <ReviewTitleAndLink
+          fieldName={fieldLocator}
+          manuscriptId={manuscriptId}
+          title={label}
+        />
+      }
+    >
+      <ReviewWrapper>{content}</ReviewWrapper>
+    </Accordion>
+  )
+}
+
+const format = (value, component, options) => {
+  if (['AbstractEditor', 'ThreadedDiscussion'].includes(component)) {
+    return (
+      <ArticleEvaluation
+        dangerouslySetInnerHTML={(() => {
+          return { __html: value }
+        })()}
+      />
+    )
+  }
+
+  if (options) {
+    const values = Array.isArray(value) ? value : [value]
+
+    return (
+      <ArticleEvaluation>
+        {values
+          .map(v => options.find(o => o.value === v)?.label || v)
+          .join(', ')}
+      </ArticleEvaluation>
+    )
+  }
+
+  if (component === 'AuthorsInput') {
+    return (
+      <ArticleEvaluation>
+        <ul>
+          {value.map(a => (
+            <li key={a.id}>
+              {a.firstName} {a.lastName}
+              {a.affiliation && ` (${a.affiliation})`}{' '}
+              {a.email && <a href={`mailto:${a.email}`}>{a.email}</a>}
+            </li>
+          ))}
+        </ul>
+      </ArticleEvaluation>
+    )
+  }
+
+  if (component === 'LinksInput') {
+    return (
+      <ArticleEvaluation>
+        <ul>
+          {value.map(link => (
+            <li key={link.url}>
+              <a href={link.url}>{link.url}</a>
+            </li>
+          ))}
+        </ul>
+      </ArticleEvaluation>
+    )
+  }
+
+  return <ArticleEvaluation>{value.toString()}</ArticleEvaluation>
+}
+
+const getAnnotations = (
+  manuscript,
+  submissionFields,
+  decisionFields,
+  reviewFields,
+  threadedDiscussions,
+) => {
+  const fieldInfo = getFieldInfo(
+    manuscript,
+    submissionFields,
+    decisionFields,
+    reviewFields,
+  )
+
+  const fieldsByOwner = getHypothesisFieldsByOwner(
+    manuscript.evaluationsHypothesisMap,
+  )
+
+  const annotations = []
+
+  fieldInfo.forEach(({ ownerId, fields, fieldData, label }) => {
+    fields.forEach(
+      ({ name, component, options, title: fieldTitle, shortDescription }) => {
+        const hypothesisValue = fieldsByOwner[ownerId]?.[name]
+
+        if (hypothesisValue) {
+          const value = get(fieldData, name)
+
+          if (hypothesisValue.length) {
+            const threadedDiscussion =
+              threadedDiscussions?.find(d => d.id === value) || []
+
+            // eslint-disable-next-line no-unused-expressions
+            threadedDiscussion?.threads?.forEach(thread => {
+              thread.comments
+                .filter(c => c.commentVersions?.length)
+                .forEach(c => {
+                  if (hypothesisValue.includes(c.id)) {
+                    const author = c.commentVersions[0].userId // TODO get username
+
+                    const { comment } = c.commentVersions[
+                      c.commentVersions.length - 1
+                    ]
+
+                    annotations.push(
+                      generateAnnotation(
+                        manuscript.id,
+                        `${ownerId}.${name}-${c.id}`,
+                        `${label}${shortDescription || fieldTitle} — ${author}`,
+                        format(comment, component, options),
+                      ),
+                    )
+                  }
+                })
+            })
+          } else {
+            annotations.push(
+              generateAnnotation(
+                manuscript.id,
+                name,
+                `${label}${shortDescription || fieldTitle}`,
+                format(value, component, options),
+              ),
+            )
+          }
+        }
+      },
+    )
+  })
+
+  return annotations
 }
 
 const Frontpage = () => {
@@ -113,6 +337,10 @@ const Frontpage = () => {
     }
   })
 
+  const submissionFields = data.submissionForm?.structure?.children
+  const decisionFields = data.decisionForm?.structure?.children
+  const reviewFields = data.reviewForm?.structure?.children
+
   return (
     <Container>
       <HeadingWithAction>
@@ -142,76 +370,21 @@ const Frontpage = () => {
               ? manuscript.submission.description
               : manuscript.meta.title
 
+          // eslint-disable-next-line no-unused-vars
+          const annotations = getAnnotations(
+            manuscript,
+            submissionFields,
+            decisionFields,
+            reviewFields,
+            // TODO pass in threadedDiscussions for this manuscript
+          )
+
           return (
             <SectionContent key={`manuscript-${manuscript.id}`}>
               <SectionHeader>
                 <Title>{title}</Title>
               </SectionHeader>
-              {manuscript.evaluationsHypothesisMap &&
-                Object.entries(manuscript.evaluationsHypothesisMap).map(e => {
-                  let fieldName = e[0]
-                  let value
-
-                  if (fieldName.startsWith('review#')) {
-                    const reviews = manuscript.reviews.filter(
-                      r =>
-                        !r.isDecision &&
-                        r.canBePublishedPublicly &&
-                        r.reviewComment,
-                    )
-
-                    const index = parseInt(fieldName.split('#')[1], 10)
-
-                    value =
-                      reviews.length > index
-                        ? reviews[index].reviewComment.content
-                        : null
-                  } else if (fieldName === 'decision') {
-                    const decisions = manuscript.reviews.filter(
-                      r => r.isDecision && r.decisionComment,
-                    )
-
-                    value =
-                      decisions.length > 0
-                        ? decisions[0].decisionComment.content
-                        : null
-                  } else {
-                    get(manuscript, fieldName)
-
-                    if (!value) {
-                      fieldName = `submission.${fieldName}` // Try the old style of naming
-                      value = get(manuscript, fieldName)
-                    }
-                  }
-
-                  if (!value) return null
-
-                  const fieldTitle = getEvaluationFieldTitle(
-                    fieldName,
-                    data.formForPurposeAndCategory,
-                  )
-
-                  return (
-                    <Accordion
-                      key={`${fieldName}-${manuscript.id}`}
-                      label={
-                        <ReviewTitleAndLink
-                          fieldName={fieldName}
-                          manuscriptId={manuscript.id}
-                          title={fieldTitle}
-                        />
-                      }
-                    >
-                      <ReviewWrapper>
-                        <ArticleEvaluation
-                          dangerouslySetInnerHTML={(() => {
-                            return { __html: value }
-                          })()}
-                        />
-                      </ReviewWrapper>
-                    </Accordion>
-                  )
-                })}
+              {/* annotations TODO reinstate when we have time to fix these annotations and links properly */}
               <SectionRow>
                 {manuscript.submission?.abstract && (
                   <>
