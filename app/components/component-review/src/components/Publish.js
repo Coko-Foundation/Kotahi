@@ -37,18 +37,20 @@ const Publish = ({ manuscript, publishManuscript }) => {
             !notAccepted &&
             `Publishing will add a new entry on the public website and can not be undone.`}
           {publishResponse &&
-            publishResponse.steps.map(doi => {
-              if (doi.succeeded === true) {
-                return <Alert type="success">Posted to {doi.stepLabel}</Alert>
-              }
-
-              if (doi.succeeded === false) {
+            publishResponse.steps.map(step => {
+              if (step.succeeded) {
                 return (
-                  <Alert type="error">Error posting to {doi.stepLabel}</Alert>
+                  <Alert key={step.stepLabel} type="success">
+                    Posted to {step.stepLabel}
+                  </Alert>
                 )
               }
 
-              return null
+              return (
+                <Alert key={step.stepLabel} type="error">
+                  Error posting to {step.stepLabel}
+                </Alert>
+              )
             })}
           {publishingError && <Alert type="error">{publishingError}</Alert>}
         </SectionActionInfo>

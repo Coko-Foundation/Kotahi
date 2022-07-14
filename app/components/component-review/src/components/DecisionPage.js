@@ -13,6 +13,7 @@ import {
   makeDecisionMutation,
   updateReviewMutation,
   publishManuscriptMutation,
+  setShouldPublishFieldMutation,
 } from './queries'
 
 import {
@@ -23,6 +24,12 @@ import {
   GET_BLACKLIST_INFORMATION,
 } from '../../../../queries'
 import { validateDoi } from '../../../../shared/commsUtils'
+import {
+  UPDATE_PENDING_COMMENT,
+  COMPLETE_COMMENTS,
+  COMPLETE_COMMENT,
+  DELETE_PENDING_COMMENT,
+} from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/queries'
 
 const urlFrag = config.journal.metadata.toplevel_urlfragment
 
@@ -113,6 +120,11 @@ const DecisionPage = ({ match }) => {
   const [createTeam] = useMutation(CREATE_TEAM_MUTATION)
   const [doUpdateReview] = useMutation(updateReviewMutation)
   const [createFile] = useMutation(createFileMutation)
+  const [updatePendingComment] = useMutation(UPDATE_PENDING_COMMENT)
+  const [completeComments] = useMutation(COMPLETE_COMMENTS)
+  const [completeComment] = useMutation(COMPLETE_COMMENT)
+  const [deletePendingComment] = useMutation(DELETE_PENDING_COMMENT)
+  const [setShouldPublishField] = useMutation(setShouldPublishFieldMutation)
 
   const [deleteFile] = useMutation(deleteFileMutation, {
     update(cache, { data: { deleteFile: fileToDelete } }) {
@@ -183,6 +195,7 @@ const DecisionPage = ({ match }) => {
     reviewForm: reviewFormOuter,
     currentUser,
     users,
+    threadedDiscussions,
   } = data
 
   const form = submissionForm?.structure ?? {
@@ -225,7 +238,7 @@ const DecisionPage = ({ match }) => {
   }
 
   /** This will only send the modified field, not the entire review object */
-  const updateReviewJsonData = (reviewId, value, path) => {
+  const updateReviewJsonData = (reviewId, value, path, manuscriptVersionId) => {
     const reviewDelta = {} // Only the changed fields
     // E.g. if path is 'meta.title' and value is 'Foo' this gives { meta: { title: 'Foo' } }
     set(reviewDelta, path, value)
@@ -233,11 +246,21 @@ const DecisionPage = ({ match }) => {
     const reviewPayload = {
       isDecision: true,
       jsonData: JSON.stringify(reviewDelta),
-      manuscriptId: manuscript.id,
+      manuscriptId: manuscriptVersionId,
       userId: currentUser.id,
     }
 
-    updateReview(reviewId, reviewPayload, manuscript.id)
+    updateReview(reviewId, reviewPayload, manuscriptVersionId)
+  }
+
+  const threadedDiscussionProps = {
+    threadedDiscussions,
+    updatePendingComment,
+    completeComment,
+    completeComments,
+    deletePendingComment,
+    currentUser,
+    firstVersionManuscriptId: manuscript.parentId || manuscript.id,
   }
 
   return (
@@ -269,7 +292,9 @@ const DecisionPage = ({ match }) => {
       sendNotifyEmail={sendNotifyEmail}
       setExternalEmail={setExternalEmail}
       setSelectedEmail={setSelectedEmail}
+      setShouldPublishField={setShouldPublishField}
       teamLabels={config.teams}
+      threadedDiscussionProps={threadedDiscussionProps}
       updateManuscript={updateManuscript}
       updateReview={updateReview}
       updateReviewJsonData={updateReviewJsonData}

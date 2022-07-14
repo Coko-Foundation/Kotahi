@@ -16,6 +16,7 @@
   "./server/profile-upload",
   "./server/auth-orcid",
   "@coko/server/src/models/file",
-	"./server/pdfexport",
-	"./server/jatsexport"
+  "./server/pdfexport",
+  "./server/jatsexport",
+  "./server/model-threaded-discussion/src/"
 ]

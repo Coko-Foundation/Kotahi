@@ -43,6 +43,7 @@ const Submit = ({
   updateManuscript,
   createFile,
   deleteFile,
+  threadedDiscussionProps,
   validateDoi,
 }) => {
   const decisionSections = []
@@ -105,6 +106,7 @@ const Submit = ({
         manuscript,
         createFile,
         deleteFile,
+        threadedDiscussionProps,
         validateDoi,
       }
 
@@ -122,6 +124,7 @@ const Submit = ({
                 decisionForm={decisionForm}
                 manuscript={manuscript}
                 reviewForm={reviewForm}
+                threadedDiscussionProps={threadedDiscussionProps}
               />
             )}
             <ReadonlyFormTemplate
@@ -133,6 +136,7 @@ const Submit = ({
               listManuscriptFiles
               manuscript={manuscript}
               showEditorOnlyFields={false}
+              threadedDiscussionProps={threadedDiscussionProps}
               title="Metadata"
             />
           </>
@@ -235,7 +239,7 @@ Submit.propTypes = {
   reviewForm: formPropTypes.isRequired,
   createNewVersion: PropTypes.func.isRequired,
   currentUser: PropTypes.shape({
-    admin: PropTypes.bool.isRequired,
+    admin: PropTypes.bool,
   }),
   parent: PropTypes.shape({
     channels: PropTypes.arrayOf(

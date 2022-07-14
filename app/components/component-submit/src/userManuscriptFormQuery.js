@@ -55,6 +55,7 @@ const formFields = `
         minSize
       }
       hideFromAuthors
+      permitPublishing
     }
   }
 `
@@ -169,6 +170,40 @@ const query = gql`
 
     reviewForm: formForPurposeAndCategory(purpose: "review", category: "review") {
       ${formFields}
+    }
+
+    threadedDiscussions(manuscriptId: $id) {
+      id
+      created
+      updated
+      manuscriptId
+      threads {
+        id
+        comments {
+          id
+          commentVersions {
+            id
+            author {
+              id
+              username
+              profilePicture
+            }
+            comment
+            created
+          }
+          pendingVersion {
+            author {
+              id
+              username
+              profilePicture
+            }
+            comment
+          }
+        }
+      }
+      userCanAddComment
+      userCanEditOwnComment
+      userCanEditAnyComment
     }
   }
 `

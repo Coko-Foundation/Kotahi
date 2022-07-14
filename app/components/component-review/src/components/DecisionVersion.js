@@ -54,11 +54,13 @@ const DecisionVersion = ({
   validateDoi,
   createFile,
   deleteFile,
+  threadedDiscussionProps,
   invitations,
   externalEmail,
   setExternalEmail,
   selectedEmail,
   setSelectedEmail,
+  setShouldPublishField,
   isEmailAddressOptedOut,
 }) => {
   // Hooks from the old world
@@ -133,6 +135,7 @@ const DecisionVersion = ({
               listManuscriptFiles
               manuscript={version}
               showEditorOnlyFields
+              threadedDiscussionProps={threadedDiscussionProps}
             />
           ) : (
             <SectionContent>
@@ -140,6 +143,11 @@ const DecisionVersion = ({
                 createFile={createFile}
                 deleteFile={deleteFile}
                 displayShortIdAsIdentifier={displayShortIdAsIdentifier}
+                fieldsToPublish={
+                  version.formFieldsToPublish.find(
+                    ff => ff.objectId === version.id,
+                  )?.fieldsToPublish ?? []
+                }
                 form={form}
                 initialValues={versionValues}
                 isSubmission
@@ -151,7 +159,19 @@ const DecisionVersion = ({
                   onChange(value, path, versionId)
                 }}
                 republish={() => null}
+                setShouldPublishField={async (fieldName, shouldPublish) =>
+                  setShouldPublishField({
+                    variables: {
+                      manuscriptId: version.id,
+                      objectId: version.id,
+                      fieldName,
+                      shouldPublish,
+                    },
+                  })
+                }
+                shouldShowOptionToPublish
                 showEditorOnlyFields
+                threadedDiscussionProps={threadedDiscussionProps}
                 urlFrag={urlFrag}
                 validateDoi={validateDoi}
               />
@@ -236,6 +256,7 @@ const DecisionVersion = ({
               isControlPage
               manuscript={version}
               reviewForm={reviewForm}
+              threadedDiscussionProps={threadedDiscussionProps}
             />
           )}
           {current && (
@@ -246,6 +267,7 @@ const DecisionVersion = ({
                 manuscript={version}
                 reviewers={reviewers}
                 reviewForm={reviewForm}
+                threadedDiscussionProps={threadedDiscussionProps}
                 updateReview={updateReview}
                 urlFrag={urlFrag}
               />
@@ -257,6 +279,11 @@ const DecisionVersion = ({
                 <FormTemplate
                   createFile={createFile}
                   deleteFile={deleteFile}
+                  fieldsToPublish={
+                    version.formFieldsToPublish.find(
+                      ff => ff.objectId === currentDecisionData.id,
+                    )?.fieldsToPublish ?? []
+                  }
                   form={decisionForm}
                   initialValues={
                     currentDecisionData?.jsonData
@@ -278,10 +305,22 @@ const DecisionVersion = ({
                     actions.setSubmitting(false)
                   }}
                   reviewId={currentDecisionData.id}
+                  setShouldPublishField={async (fieldName, shouldPublish) =>
+                    setShouldPublishField({
+                      variables: {
+                        manuscriptId: version.id,
+                        objectId: currentDecisionData.id,
+                        fieldName,
+                        shouldPublish,
+                      },
+                    })
+                  }
+                  shouldShowOptionToPublish
                   shouldStoreFilesInForm
                   showEditorOnlyFields
                   submissionButtonText="Submit"
                   tagForFiles="decision"
+                  threadedDiscussionProps={threadedDiscussionProps}
                   urlFrag={urlFrag}
                   validateDoi={validateDoi}
                 />

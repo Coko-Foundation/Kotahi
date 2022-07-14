@@ -1,12 +1,10 @@
 import React, { useState } from 'react'
 import Moment from 'react-moment'
 import { Button } from '@pubsweet/ui'
-import Tooltip from '../../../component-reporting/src/Tooltip'
+import Tooltip from '../../../../../component-reporting/src/Tooltip'
 import {
-  DateWrapper,
   CommentMetaWrapper,
   UserMetaWrapper,
-  UserName,
   SimpleWaxEditorWrapper,
   CollapseOverlay,
   CommentWrapper,
@@ -15,31 +13,48 @@ import {
   ModalContainer,
   CancelButton,
   CommentContainer,
-} from './style'
-import { Icon } from '../../../shared'
-import { UserAvatar } from '../../../component-avatar/src'
-import Modal from '../../../component-modal/src'
-import SimpleWaxEditor from '../../../wax-collab/src/SimpleWaxEditor'
+} from '../../style'
+import { FieldPublishingSelector, Icon } from '../../../../../shared'
+import { UserAvatar } from '../../../../../component-avatar/src'
+import Modal from '../../../../../component-modal/src'
+import SimpleWaxEditor from '../../../../../wax-collab/src/SimpleWaxEditor'
+import { hasValue } from '../../../../../../shared/htmlUtils'
 
-const ThreadedComment = props => {
-  const { comment, simpleWaxEditorProps, currentUserId } = props
-
+const ThreadedComment = ({
+  comment,
+  currentUser,
+  simpleWaxEditorProps,
+  userCanEditOwnComment,
+  userCanEditAnyComment,
+  onCancel,
+  onChange,
+  onSubmit,
+  shouldPublish,
+  setShouldPublish,
+}) => {
   const {
+    comment: value,
     author,
     createdAt,
     updatedAt,
-    userCanEditOwnComment,
-    userCanEditAnyComment,
+    existingComment, // If this comment is in the process of being edited, existingComment contains the value prior to editing
   } = comment
 
   const [openModal, setOpenModal] = useState(false)
-  const [modalFieldValue, setModalFieldValue] = useState(comment.value)
+
+  const [submittedValue, setSubmittedValue] = useState(
+    existingComment?.comment || '',
+  )
+
+  const [modalFieldValue, setModalFieldValue] = useState(value)
   const [counter, setCounter] = useState(1)
   const [collapse, setCollapse] = useState(true)
 
-  const onButtonClick = () => {
+  const onSubmitClick = () => {
+    setSubmittedValue(modalFieldValue)
     setCounter(counter + 1)
     setOpenModal(false)
+    onSubmit()
   }
 
   return (
@@ -49,11 +64,11 @@ const ThreadedComment = props => {
           <CommentMetaWrapper>
             <UserMetaWrapper>
               <UserAvatar user={author} />
-              <UserName>{author.username}</UserName>
+              {author.username}
             </UserMetaWrapper>
           </CommentMetaWrapper>
           <ActionWrapper>
-            <DateWrapper>
+            <div>
               <Moment format="YYYY-MM-DD">{createdAt}</Moment>
               <Tooltip
                 content={
@@ -66,10 +81,17 @@ const ThreadedComment = props => {
                   </>
                 }
               />
-            </DateWrapper>
+            </div>
+            {setShouldPublish && (
+              <FieldPublishingSelector
+                onChange={setShouldPublish}
+                value={shouldPublish}
+              />
+            )}
             {(userCanEditAnyComment ||
-              (userCanEditOwnComment && author.id === currentUserId)) && (
+              (userCanEditOwnComment && author.id === currentUser.id)) && (
               <Icon
+                noPadding
                 onClick={event => {
                   setOpenModal(true)
                 }}
@@ -83,36 +105,49 @@ const ThreadedComment = props => {
               }}
               value={collapse}
             >
-              {collapse ? <Icon>chevron-down</Icon> : <Icon>chevron-up</Icon>}
+              <Icon noPadding>{collapse ? 'chevron-down' : 'chevron-up'}</Icon>
             </Collapse>
           </ActionWrapper>
         </CommentWrapper>
-        <SimpleWaxEditorWrapper collapse={collapse}>
-          <SimpleWaxEditor
-            readonly
-            {...simpleWaxEditorProps}
-            key={counter}
-            value={modalFieldValue}
-          />
-          <CollapseOverlay collapse={collapse} />
-        </SimpleWaxEditorWrapper>
+        {hasValue(submittedValue) ? (
+          <SimpleWaxEditorWrapper collapse={collapse}>
+            <SimpleWaxEditor
+              {...simpleWaxEditorProps}
+              key={counter}
+              readonly
+              value={submittedValue}
+            />
+            <CollapseOverlay collapse={collapse} />
+          </SimpleWaxEditorWrapper>
+        ) : (
+          'Comment is deleted'
+        )}
         <Modal isOpen={openModal}>
           <ModalContainer>
             <SimpleWaxEditor
               {...simpleWaxEditorProps}
-              onChange={data => setModalFieldValue(data)}
+              onChange={data => {
+                setModalFieldValue(data)
+                onChange(data)
+              }}
               value={modalFieldValue}
             />
             <Button
               onClick={event => {
-                onButtonClick()
+                onSubmitClick()
               }}
               primary
             >
               Edit
             </Button>
             &nbsp;
-            <CancelButton onClick={() => setOpenModal(false)}>
+            <CancelButton
+              onClick={() => {
+                setOpenModal(false)
+                setModalFieldValue(existingComment?.comment || value)
+                onCancel()
+              }}
+            >
               Cancel
             </CancelButton>
           </ModalContainer>

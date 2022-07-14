@@ -1,5 +1,11 @@
 const models = require('@pubsweet/models')
 
+const getActiveForms = async () =>
+  models.Form.query()
+    .where({ category: 'submission', purpose: 'submit' })
+    .orWhere({ category: 'review', purpose: 'review' })
+    .orWhere({ category: 'decision', purpose: 'decision' })
+
 /** For form for given purpose and category, return a list of all fields that are not confidential, each in the form
  * { name, title, component }
  */
@@ -21,4 +27,4 @@ const getPublicFields = async (purpose, category) => {
     }))
 }
 
-module.exports = { getPublicFields }
+module.exports = { getPublicFields, getActiveForms }

@@ -32,6 +32,7 @@ const ReviewLayout = ({
   deleteFile,
   validateDoi,
   decisionForm,
+  threadedDiscussionProps,
 }) => {
   const reviewSections = []
   const latestVersion = versions[0]
@@ -66,13 +67,19 @@ const ReviewLayout = ({
             listManuscriptFiles
             manuscript={msVersion}
             showEditorOnlyFields={false}
+            threadedDiscussionProps={threadedDiscussionProps}
           />
           <SharedReviewerGroupReviews
             manuscript={msVersion}
             reviewerId={currentUser.id}
             reviewForm={reviewForm}
+            threadedDiscussionsProps={threadedDiscussionProps}
           />
-          <Review review={reviewForCurrentUser} reviewForm={reviewForm} />
+          <Review
+            review={reviewForCurrentUser}
+            reviewForm={reviewForm}
+            threadedDiscussionProps={threadedDiscussionProps}
+          />
         </div>
       ),
       key: msVersion.id,
@@ -104,14 +111,20 @@ const ReviewLayout = ({
             listManuscriptFiles
             manuscript={latestVersion}
             showEditorOnlyFields={false}
+            threadedDiscussionProps={threadedDiscussionProps}
           />
           <SharedReviewerGroupReviews
             manuscript={latestVersion}
             reviewerId={currentUser.id}
             reviewForm={reviewForm}
+            threadedDiscussionProps={threadedDiscussionProps}
           />
           {status === 'completed' ? (
-            <Review review={review} />
+            <Review
+              review={review}
+              reviewForm={reviewForm}
+              threadedDiscussionProps={threadedDiscussionProps}
+            />
           ) : (
             <SectionContent>
               <FormTemplate
@@ -128,6 +141,7 @@ const ReviewLayout = ({
                 showEditorOnlyFields={false}
                 submissionButtonText="Submit"
                 tagForFiles="review"
+                threadedDiscussionProps={threadedDiscussionProps}
                 validateDoi={validateDoi}
               />
             </SectionContent>
@@ -138,6 +152,7 @@ const ReviewLayout = ({
               formData={decision.jsonData || {}}
               hideSpecialInstructions
               manuscript={latestVersion}
+              threadedDiscussionProps={threadedDiscussionProps}
               title="Evaluation summary"
             />
           )}

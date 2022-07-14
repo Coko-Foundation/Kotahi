@@ -36,12 +36,14 @@ const DecisionVersions = ({
   displayShortIdAsIdentifier,
   deleteFile,
   createFile,
+  threadedDiscussionProps,
   validateDoi,
   invitations,
   setExternalEmail,
   externalEmail,
   selectedEmail,
   setSelectedEmail,
+  setShouldPublishField,
   isEmailAddressOptedOut,
 }) => {
   const [initialValue, setInitialValue] = useState(null)
@@ -104,11 +106,18 @@ const DecisionVersions = ({
                 sendNotifyEmail={sendNotifyEmail}
                 setExternalEmail={setExternalEmail}
                 setSelectedEmail={setSelectedEmail}
+                setShouldPublishField={setShouldPublishField}
                 teamLabels={teamLabels}
+                threadedDiscussionProps={threadedDiscussionProps}
                 updateManuscript={updateManuscript}
                 updateReview={updateReview}
                 updateReviewJsonData={(value, path) =>
-                  updateReviewJsonData(initialValue.id, value, path)
+                  updateReviewJsonData(
+                    initialValue.id,
+                    value,
+                    path,
+                    version.manuscript.id,
+                  )
                 }
                 updateTeam={updateTeam}
                 urlFrag={urlFrag}

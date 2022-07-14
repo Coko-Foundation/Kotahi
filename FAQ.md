@@ -166,7 +166,7 @@ And the following form fields are required:
 
 ### Hypothes.is
 
-[Hypothesis](https://web.hypothes.is) is a tool for annotating webpages and sharing those annotations. It is powered by the hypothesis browser plugin, which displays annotations (retrieved from Hypothesis's servers) when you visit an annotated webpage. It allows evaluations of articles to be shared (publicly or with a select group) directly on the page where the article lives. Kotahi supports publishing reviews or evaluations as Hypothesis annotations.
+[Hypothes.is](https://web.hypothes.is) is a tool for annotating webpages and sharing those annotations. It is powered by the hypothesis browser plugin, which displays annotations (retrieved from Hypothesis's servers) when you visit an annotated webpage. It allows evaluations of articles or other data to be shared (publicly or with a select group) directly on the page where the article lives. Kotahi supports publishing most form data as Hypothesis annotations.
 
 To enable this, you will need to first [generate a personal API token](https://h.readthedocs.io/en/latest/api/authorization/#access-tokens) for Hypothes.is, and a [group key](https://web.hypothes.is/blog/introducing-groups/) (e.g. `g4JPqbk5` if your group URL is `https://hypothes.is/groups/g4JPqbk5/my-journal-group`).
 
@@ -175,24 +175,18 @@ Using these keys, set the following `.env` variables:
 ```
 HYPOTHESIS_API_KEY=<your API key here>
 HYPOTHESIS_GROUP=<group key here>
-HYPOTHESIS_PUBLISH_FIELDS=<comma-separated list of field internal names>
-```
-
-The `HYPOTHESIS_PUBLISH_FIELDS` variable should contain an ordered list of the fields you wish to publish as Hypothesis annotations. These fields may be:
-
-- `decision`: the editorial decision text
-- `reviews`: this will publish each of the completed reviews that has been marked for public publication
-- Any AbstractEditor or TextField field from the submission form, identified by its internal name.
-
-Fields should be separated by commas and surrounded with double-quotes. Optionally, you may also specify a hypothesis tag for any field by appending a colon and the tag name. E.g.:
-
-```
-"decision:evaluationSummary, reviews:evaluation, submission.strengths:strengths, submission.weaknesses:weaknesses"
+HYPOTHESIS_ALLOW_TAGGING=true
 ```
 
 Your submission form must also contain a field with the internal name `submission.biorxivURL` or `submission.link`, which should contain the URL of the page to be annotated.
 
-When the "Publish" button is pressed in Kotahi, the named fields (if they contain text) will each be published as a Hypothesis annotation, using the provided keys. These annotations can be updated or deleted by modifying or removing the text in the fields and pressing the "Publish" button again.
+Now you need to select which fields from your decision or submission forms can be published: in the form-builder, enable the "Include when sharing or publishing" option for each of your chosen fields (currently unavailable for SupplementaryFiles and VisualAbstract field types). If you want Hypothes.is to apply a tag to the annotation, this can be specified in the "Hypothes.is tag" text box.
+
+Editors will still need to manually select which fields to publish for any given manuscript or research object. In the Control page, the editor will see a small "Publish" checkbox next to every field that was chosen in the form-builder (in ThreadedDiscussion fields, each comment has its own separate checkbox). They should select those they wish to publish, then hit the "Publish" button.
+
+Each selected field or comment (if it is not empty) will be published as a separate Hypothes.is annotation. An annotation can be updated or deleted by modifying the contents of the field or deselecting the "Publish" checkbox, and pressing the "Publish" button again.
+
+Note that publishing of review fields to hypothes.is is not yet supported, but is coming soon.
 
 ## API
 

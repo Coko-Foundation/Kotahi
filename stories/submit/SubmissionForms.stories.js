@@ -461,6 +461,8 @@ const baseProps = {
       },
     ],
   },
+  threadedDiscussions: [],
+  updatePendingComment: () => null,
 }
 
 Base.args = baseProps
@@ -886,6 +888,10 @@ const emptyFormProps = {
         topic: 'Editorial discussion',
       },
     ],
+  },
+  currentUser: {
+    id: '1228b2a9-e125-4e44-be44-d02c2d1ad2eb',
+    username: 'Some User',
   },
 }
 

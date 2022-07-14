@@ -13,19 +13,25 @@ import {
 import * as elements from './builderComponents'
 import { Section, Legend, Page, Heading, DetailText } from './style'
 
-const MenuComponents = input => (
-  <Menu
-    options={Object.keys(components).map(value => ({
-      value,
-      label: value,
-    }))}
-    {...input}
-  />
-)
-
 const InvalidWarning = styled.div`
   color: ${th('colorError')};
 `
+
+const getComponentProperties = (componentType, formCategory) =>
+  formCategory === 'submission'
+    ? submissionComponents[componentType] ?? {}
+    : components[componentType] ?? {}
+
+const getEditableComponentProperties = (
+  componentType,
+  formCategory,
+  shouldAllowHypothesisTagging,
+) =>
+  Object.entries(getComponentProperties(componentType, formCategory)).filter(
+    ([key]) =>
+      key !== 'id' &&
+      (key !== 'publishingTag' || shouldAllowHypothesisTagging === 'true'),
+  )
 
 const ComponentProperties = ({
   formErrors,
@@ -34,17 +40,32 @@ const ComponentProperties = ({
   setComponentType,
   setFieldValue,
   category,
+  shouldAllowHypothesisTagging,
 }) => {
-  let componentProperties
-
-  if (category === 'submission') {
-    componentProperties = submissionComponents[selectedComponent] ?? {}
-  } else {
-    componentProperties = components[selectedComponent] ?? {}
+  const populateDefaultValues = componentType => {
+    getEditableComponentProperties(
+      componentType,
+      category,
+      shouldAllowHypothesisTagging,
+    ).forEach(([key, value]) => {
+      if (value.defaultValue) setFieldValue(key, value.defaultValue)
+    })
   }
 
-  const editableProperties = Object.entries(componentProperties).filter(
-    ([key, value]) => key !== 'id',
+  let componentTypeOptions = Object.keys(components).map(value => ({
+    value,
+    label: value,
+  }))
+  // Disable ThreadedDiscussion in review forms
+  if (['submission', 'review'].includes(category))
+    componentTypeOptions = componentTypeOptions.filter(
+      o => o.label !== 'ThreadedDiscussion',
+    )
+
+  const editableProperties = getEditableComponentProperties(
+    selectedComponent,
+    category,
+    shouldAllowHypothesisTagging,
   )
 
   const formIsValid = !Object.keys(formErrors).length
@@ -56,12 +77,14 @@ const ComponentProperties = ({
         <Section>
           <Legend space>Field type</Legend>
           <ValidatedFieldFormik
-            component={MenuComponents}
+            component={Menu}
             name="component"
             onChange={value => {
               setComponentType(value)
               setFieldValue('component', value)
+              populateDefaultValues(value)
             }}
+            options={componentTypeOptions}
             required
           />
         </Section>
@@ -132,7 +155,13 @@ const prepareForSubmit = values => {
   return cleanedValues
 }
 
-const ComponentForm = ({ category, field, formId, updateField }) => {
+const ComponentForm = ({
+  category,
+  field,
+  formId,
+  updateField,
+  shouldAllowHypothesisTagging,
+}) => {
   const [componentType, setComponentType] = useState(field.component)
 
   const component = components[componentType] || {}
@@ -166,6 +195,7 @@ const ComponentForm = ({ category, field, formId, updateField }) => {
           selectedComponent={componentType}
           setComponentType={setComponentType}
           setFieldValue={formikProps.setFieldValue}
+          shouldAllowHypothesisTagging={shouldAllowHypothesisTagging}
         />
       )}
     </Formik>

@@ -97,6 +97,11 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
                 return (r && r.roles) || []
               },
             },
+            formFieldsToPublish: {
+              merge(existing, incoming) {
+                return incoming
+              },
+            },
           },
         },
         ManuscriptVersion: {
@@ -107,6 +112,56 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
                 const currentId = readField('id')
                 const r = currentRoles.find(ro => ro.id === currentId)
                 return (r && r.roles) || []
+              },
+            },
+            fieldsToPublish: {
+              merge(existing, incoming) {
+                return incoming
+              },
+            },
+          },
+        },
+        ThreadedDiscussion: {
+          fields: {
+            threads: {
+              merge(existing, incoming) {
+                return incoming
+              },
+            },
+          },
+        },
+        DiscussionThread: {
+          fields: {
+            comments: {
+              merge(existing, incoming) {
+                return incoming
+              },
+            },
+          },
+        },
+        ThreadComment: {
+          fields: {
+            commentVersions: {
+              merge(existing, incoming) {
+                return incoming
+              },
+            },
+          },
+        },
+        User: {
+          fields: {
+            teams: {
+              merge(existing, incoming) {
+                return incoming
+              },
+            },
+          },
+        },
+        CurrentRole: {
+          fields: {
+            roles: {
+              merge(existing, incoming) {
+                return incoming
               },
             },
           },
