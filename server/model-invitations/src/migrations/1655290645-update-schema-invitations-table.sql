@@ -1,8 +1,8 @@
 
-DROP table invitations;
-DROP type invitation_status;
-DROP type invitation_declined_reason_type;
-DROP type invitation_type;
+DROP table IF EXISTS invitations;
+DROP type IF EXISTS invitation_status;
+DROP type IF EXISTS invitation_declined_reason_type;
+DROP type IF EXISTS invitation_type;
 CREATE TYPE invitation_status as enum ('UNANSWERED','ACCEPTED','REJECTED');
 CREATE TYPE invitation_declined_reason_type AS enum ('UNAVAILABLE','TOPIC','CONFLICT_OF_INTEREST','OTHER','DO_NOT_CONTACT');
 CREATE TYPE invitation_type AS enum ('AUTHOR','REVIEWER');
