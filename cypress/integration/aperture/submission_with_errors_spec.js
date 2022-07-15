@@ -72,7 +72,6 @@ describe('Submission with errors test', () => {
         SubmissionFormPage.clickSubmitResearch()
         // Submit the form
         SubmissionFormPage.clickSubmitYourManuscript()
-        cy.get('button').contains('Submit your manuscript').click()
         // Contains new title
         DashboardPage.getSubmissionTitle(0).should('contain', data.newTitle)
       })
