@@ -187,6 +187,7 @@ const DecisionReview = ({
   isControlPage,
   updateReview,
   canHideReviews,
+  showEditorOnlyFields,
   threadedDiscussionProps,
 }) => {
   const currentUser = useCurrentUser()
@@ -236,6 +237,7 @@ const DecisionReview = ({
           <Review
             review={review}
             reviewForm={reviewForm}
+            showEditorOnlyFields={showEditorOnlyFields}
             showUserInfo={false}
             threadedDiscussionProps={threadedDiscussionProps}
             user={currentUser}
