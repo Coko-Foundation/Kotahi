@@ -9,8 +9,8 @@ const MANAGE_REVIEWERS_BUTTON = '[class*=General__SectionRow] > a'
 
 const DECISION_FIELD = '[contenteditable="true"]'
 
-const PUBLISH_BUTTON = '[class*=General__SectionAction] > button[type=button]'
-const PUBLISH_INFO_MESSAGE = 'General__SectionActionInfo'
+const PUBLISH_BUTTON = '[class*=General__SectionAction-sc-1chiust-11] > .sc-bkzZxe'
+const PUBLISH_INFO_MESSAGE = 'General__SectionActionInfo-sc-1chiust-12'
 const ASSIGN_SENIOR_EDITOR_DROPDOWN = 'Assign seniorEditor'
 const ASSIGN_HANDLING_EDITOR_DROPDOWN = 'Assign handlingEditor'
 const ASSIGN_EDITOR_DROPDOWN = 'Assign editor'

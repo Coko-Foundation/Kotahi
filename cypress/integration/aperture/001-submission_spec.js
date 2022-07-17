@@ -86,7 +86,6 @@ describe('Upload manuscript test', () => {
         ControlPage.fillInDecision(data.decision)
         ControlPage.clickAccept()
         ControlPage.clickSubmit()
-        ControlPage.clickPublish()
       })
     })
 
