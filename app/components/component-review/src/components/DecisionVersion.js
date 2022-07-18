@@ -256,6 +256,7 @@ const DecisionVersion = ({
               isControlPage
               manuscript={version}
               reviewForm={reviewForm}
+              showEditorOnlyFields
               threadedDiscussionProps={threadedDiscussionProps}
             />
           )}

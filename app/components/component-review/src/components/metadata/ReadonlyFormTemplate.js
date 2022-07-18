@@ -97,7 +97,7 @@ const showFieldData = (
 
 const shouldShowInPreview = (fieldName, form) => {
   const fieldDefinition = form.children?.find(field => field.name === fieldName)
-  return fieldDefinition.includeInReviewerPreview
+  return fieldDefinition.includeInReviewerPreview === 'true'
 }
 
 const ReadonlyFormTemplate = ({
@@ -130,28 +130,25 @@ const ReadonlyFormTemplate = ({
 
       {form.children
         .filter(element => {
-          const includeInPreview = element.includeInReviewerPreview !== 'false'
           return (
-            includeInPreview &&
-            (showEditorOnlyFields || element.hideFromAuthors !== 'true')
+            (showEditorOnlyFields || element.hideFromAuthors !== 'true') &&
+            (!showPreviewMetadataOnly ||
+              shouldShowInPreview(element.name, form))
           )
         })
-        .map(element =>
-          !showPreviewMetadataOnly ||
-          shouldShowInPreview(element.name, form) ? (
-            <SectionRowGrid key={element.id}>
-              <Heading>{element.shortDescription || element.title}</Heading>
-              <Cell>
-                {showFieldData(
-                  formData,
-                  element.name,
-                  form,
-                  threadedDiscussionProps,
-                )}
-              </Cell>
-            </SectionRowGrid>
-          ) : null,
-        )}
+        .map(element => (
+          <SectionRowGrid key={element.id}>
+            <Heading>{element.shortDescription || element.title}</Heading>
+            <Cell>
+              {showFieldData(
+                formData,
+                element.name,
+                form,
+                threadedDiscussionProps,
+              )}
+            </Cell>
+          </SectionRowGrid>
+        ))}
       {!showPreviewMetadataOnly && // TODO Special instructions and manuscript files should not be rendered in this component. Split out!
         (listManuscriptFiles || !hideSpecialInstructions) && (
           <>

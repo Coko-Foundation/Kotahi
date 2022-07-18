@@ -26,6 +26,7 @@ const Review = ({
   review,
   reviewForm,
   user,
+  showEditorOnlyFields,
   showUserInfo = true,
   threadedDiscussionProps,
 }) => (
@@ -51,7 +52,7 @@ const Review = ({
       form={reviewForm}
       formData={ensureJsonIsParsed(review.jsonData) ?? {}}
       hideSpecialInstructions
-      showEditorOnlyFields={user.admin}
+      showEditorOnlyFields={showEditorOnlyFields || user.admin}
       threadedDiscussionProps={threadedDiscussionProps}
     />
   </Container>
