@@ -9,6 +9,7 @@ const styles = th => ({
     ...provided,
     borderRadius: th.borderRadius,
     zIndex: 9999,
+    width: 250,
   }),
 
   control: (provided, state) => ({
@@ -70,8 +71,8 @@ export const Select = ({
       isMulti={isMulti}
       options={options}
       {...otherProps}
-      styles={myStyles}
       menuPlacement="auto"
+      styles={myStyles}
       value={selectedOption}
     />
   )

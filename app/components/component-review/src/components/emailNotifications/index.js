@@ -12,8 +12,18 @@ import SelectReceiver from './SelectReceiver'
 import SelectEmailTemplate from './SelectEmailTemplate'
 import { convertTimestampToDate } from '../../../../../shared/time-formatting'
 
+const UserEmailWrapper = styled.div`
+  font-size: ${th('fontSizeBaseSmall')};
+  line-height: ${th('lineHeightBaseSmall')};
+`
+
 const editorOption = user => ({
-  label: user.username || user.email,
+  label: (
+    <>
+      <div>{user.username}</div>{' '}
+      <UserEmailWrapper>{user.email}</UserEmailWrapper>{' '}
+    </>
+  ),
   value: user.email,
 })
 
