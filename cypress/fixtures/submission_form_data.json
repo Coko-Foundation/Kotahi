@@ -3,6 +3,7 @@
   "git": "https://github.com/jure/mathtype_to_mathml",
   "title": "test pdf",
   "title1": "My URL submission",
+  "title3": "test docx",
   "affiliation": "Example University, England",
   "contact": "emily@example.com",
   "cover": "This is my cover letter",
@@ -18,6 +19,7 @@
   "otherPackages": "Jupyter, Stencila",
   "references": "Hyde, 2020",
   "pdf": "test-pdf.pdf",
+  "docx": "test-docx.docx",
   "processinPackages": {
     "text1": "SPM",
     "text2": "FSL"
