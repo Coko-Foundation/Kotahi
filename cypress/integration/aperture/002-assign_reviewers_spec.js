@@ -4,6 +4,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { ReviewersPage } from '../../page-object/reviewers-page'
 import { dashboard } from '../../support/routes'
+import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 
 // const login = name => {
 //   cy.task('createToken', name).then(token => {
@@ -21,30 +22,35 @@ describe('Editor assigning reviewers', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
       // login as seniorEditor
-      cy.login(name.role.seniorEditor, dashboard)
+      // eslint-disable-next-line no-undef
+      cy.login(name.role.seniorEditor.name1, dashboard)
 
-      // go to control page and assign 3 reviewers
-      DashboardPage.clickControlPanel()
+      // enter email
+      cy.contains('Enter Email').click()
+      cy.get('#enter-email').type('admin@gmail.com')
+
+      // submit the email
+      cy.contains('Next').click()
+
+      // select Control on the Manuscripts page
+      Menu.clickManuscripts()
+      ManuscriptsPage.selectOptionWithText('Control')
 
       ControlPage.clickManageReviewers()
 
       ReviewersPage.clickInviteReviewerDropdown()
-      // Invite first reviewer'Gale Davis'
-      ReviewersPage.inviteReviewer(name.role.reviewers.reviewer1)
-      ReviewersPage.getNumberOfInvitedReviewers().should('eq', 1)
-      // 2nd 'Sherry Crofoot'
+      // Invite first reviewer'Emily Clay'
+      ReviewersPage.inviteReviewer(name.role.reviewers.uuid1)
+      ReviewersPage.getNumberOfInvitedReviewers().should('eq', 2)
+      // 2nd 'Joane Pilger'
       ReviewersPage.clickInviteReviewerDropdown()
-      ReviewersPage.inviteReviewer(name.role.reviewers.reviewer2)
-      ReviewersPage.getInvitedReviewersList().should('have.length', 2)
-      // 3rd 'Elaine Barnes'
-      ReviewersPage.clickInviteReviewerDropdown()
-      ReviewersPage.inviteReviewer(name.role.reviewers.reviewer3)
-      ReviewersPage.getInvitedReviewersList().should('have.length', 3)
+      ReviewersPage.inviteReviewer(name.role.reviewers.uuid3)
+      // ReviewersPage.getInvitedReviewersList().should('have.length', 2)
 
       // go to dashboard and assert number of invited reviewer
       Menu.clickDashboard()
 
-      DashboardPage.getInvitedReviewersButton().should('have.text', '3invited')
+      DashboardPage.getInvitedReviewersButton().should('have.text', '1 invited')
     })
 
     // task to dump data in dumps/reviewers_invited.sql

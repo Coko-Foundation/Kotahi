@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 /* eslint-disable jest/valid-expect-in-promise */
 /* eslint-disable jest/expect-expect */
 import { DashboardPage } from '../../page-object/dashboard-page'
@@ -7,8 +8,8 @@ import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { ControlPage } from '../../page-object/control-page'
 import { dashboard } from '../../support/routes'
 
-describe('URL submission test', () => {
-  it('can submit a URL and some metadata', () => {
+describe('Upload manuscript test', () => {
+  it('can upload a manuscript and some metadata', () => {
     // task to restore the database as per the  dumps/initialState.sql
     cy.task('restore', 'initialState')
     cy.task('seedForms')
@@ -20,49 +21,31 @@ describe('URL submission test', () => {
 
     // enter email
     cy.contains('Enter Email').click()
-    cy.get('#enter-email').type('abc@gmail.com')
+    cy.get('#enter-email').type('emily@gmail.com')
 
     // submit the email
     cy.contains('Next').click()
-
-    cy.get('nav').contains('Dashboard').click()
-
-    cy.visit('http://localhost:4000/kotahi/dashboard')
-
+    Menu.clickDashboard()
     // Click on new submission
     cy.get('button').contains('＋ New submission').click()
 
-    // Click on submit URL instead
-    cy.get('button').contains('Submit a URL instead').click()
+    // Upload manuscript
+    cy.get('input[type=file]').attachFile('test-docx.docx')
 
     // complete the submission form
 
     cy.fixture('submission_form_data').then(data => {
-      SubmissionFormPage.fillInUrl(0, data.doi)
-      SubmissionFormPage.fillInUrl(0, data.git)
-      SubmissionFormPage.fillInTitle(data.title)
-      SubmissionFormPage.fillInAbstract(data.abstract)
-      SubmissionFormPage.fillInFirstAuthor(data.firstAuthor)
-      SubmissionFormPage.fillInOurTake(data.ourTake)
-      SubmissionFormPage.fillInMainFindings(data.mainFindings)
-      SubmissionFormPage.fillInStudyStrengths(data.studyStrengths)
-      SubmissionFormPage.fillInLimitations(data.limitations)
-      SubmissionFormPage.fillInDatePublished(data.datePublished)
-      SubmissionFormPage.fillInLink(data.link)
-      SubmissionFormPage.fillInKeywords(data.keywords)
-      SubmissionFormPage.fillInJournal(data.journal)
-      SubmissionFormPage.fillInReviewCreator(data.reviewCreator)
+      SubmissionFormPage.fillInTitle(data.title3)
       SubmissionFormPage.clickSubmitResearch()
 
       // Submit your form
 
       SubmissionFormPage.clickSubmitYourManuscript()
-      cy.get('button').contains('Submit your manuscript').click()
 
       // assert form exists in dashboard
 
       DashboardPage.getSectionTitleWithText('My Submissions')
-      DashboardPage.getSubmissionTitle().should('contain', data.title)
+      DashboardPage.getSubmissionTitle().should('contain', data.title3)
 
       // task to dump data in dumps/submission_complete.sql
 
@@ -92,23 +75,17 @@ describe('URL submission test', () => {
 
         ManuscriptsPage.selectOptionWithText('Control')
 
-        ControlPage.getMetadataTab(2).click()
-        ControlPage.getMetadataCell(3).should('contain', data.title)
-
-        ControlPage.getWorkflowTab().click()
-
         // assign seniorEditor
         ControlPage.clickAssignSeniorEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.uuid)
         ControlPage.clickAssignHandlingEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.uuid)
         ControlPage.clickAssignEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.name)
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.uuid1)
         // assert the reviews
         ControlPage.fillInDecision(data.decision)
         ControlPage.clickAccept()
         ControlPage.clickSubmit()
-        ControlPage.clickPublish()
       })
     })
 
