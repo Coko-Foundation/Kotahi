@@ -38,6 +38,7 @@ const ThreadedComment = ({
     createdAt,
     updatedAt,
     existingComment, // If this comment is in the process of being edited, existingComment contains the value prior to editing
+    shouldExpandByDefault,
   } = comment
 
   const [openModal, setOpenModal] = useState(false)
@@ -48,7 +49,7 @@ const ThreadedComment = ({
 
   const [modalFieldValue, setModalFieldValue] = useState(value)
   const [counter, setCounter] = useState(1)
-  const [collapse, setCollapse] = useState(true)
+  const [collapse, setCollapse] = useState(!shouldExpandByDefault)
 
   const onSubmitClick = () => {
     setSubmittedValue(modalFieldValue)

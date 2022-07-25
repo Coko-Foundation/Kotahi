@@ -42,6 +42,14 @@ const getExistingOrInitialComments = (
   const lastComment = result.length ? result[result.length - 1] : null
   const lastCommentIsByUser = lastComment?.author?.id === currentUser.id
 
+  // By default the last completed comment in the thread is shown expanded; all others are collapsed
+  const lastCompletedComment = result
+    .filter(c => c.existingComment)
+    .slice(-1)
+    .pop()
+
+  if (lastCompletedComment) lastCompletedComment.shouldExpandByDefault = true
+
   // If the last comment in the thread is not by this user (and they are permitted to comment at all),
   // we create the preliminary data for a new comment, not yet in the DB.
   if (userCanAddComment && !lastCommentIsByUser)
