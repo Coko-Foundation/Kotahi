@@ -86,6 +86,7 @@ const ModalContainer = styled.div`
   max-height: calc(100vh - 60px);
   overflow-y: auto;
   padding: 20px 24px;
+  width: 45em;
   z-index: 9999;
 
   p {
