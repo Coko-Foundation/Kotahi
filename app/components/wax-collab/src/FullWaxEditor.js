@@ -4,13 +4,9 @@ import { ThemeProvider } from 'styled-components'
 import { Wax } from 'wax-prosemirror-core'
 import { JournalContext } from '../../xpub-journal/src'
 import waxTheme from './layout/waxTheme'
-import fixAstralUnicode from './fixAstralUnicode'
-
 import fullWaxEditorConfig from './config/FullWaxEditorConfig'
 import FullWaxEditorLayout from './layout/FullWaxEditorLayout'
 import FullWaxEditorCommentsLayout from './layout/FullWaxEditorCommentsLayout'
-
-// import './katex/katex.css'
 
 // TODO Save this image via the server
 const renderImage = file => {
@@ -42,10 +38,6 @@ const FullWaxEditor = ({
 }) => {
   const handleAssetManager = () => onAssetManager(manuscriptId)
   const journal = useContext(JournalContext)
-  // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
-  // eslint-disable-next-line no-param-reassign
-  value = fixAstralUnicode(value)
-
   const waxUser = {
     userId: user.id || '-',
     userColor: {
@@ -65,21 +57,11 @@ const FullWaxEditor = ({
       }
     }
   }, [])
-  // return useMemo(
-  //   () =>
   return (
     <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
       <div
         className={validationStatus}
-        // onBlur={e => {
-        //   e.stopPropagation()
-        //   e.preventDefault()
-        // eslint-disable-next-line no-console
-        //   console.log('onBlur firing in FullWaxEditor.js')
-        //   saveSource(editorRef.current.getContent())
-        // }}
         style={{ width: '100%' }}
-        // tabIndex={1}
       >
         <Wax
           autoFocus={autoFocus}
@@ -103,8 +85,6 @@ const FullWaxEditor = ({
       </div>
     </ThemeProvider>
   )
-  //   ,[],
-  // )
 }
 
 FullWaxEditor.propTypes = {

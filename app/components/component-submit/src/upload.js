@@ -5,7 +5,6 @@ import { gql } from '@apollo/client'
 import { map } from 'lodash'
 import * as cheerio from 'cheerio'
 import currentRolesVar from '../../../shared/currentRolesVar'
-import cleanMathMarkup from './cleanMathMarkup'
 
 const fragmentFields = `
   id
@@ -346,7 +345,6 @@ export default ({
         }
       } else {
         uploadResponse = await DocxToHTMLPromise(file, data)
-        uploadResponse.response = cleanMathMarkup(uploadResponse.response)
         uploadResponse.response = stripTags(uploadResponse.response)
         images = base64Images(uploadResponse.response)
       }

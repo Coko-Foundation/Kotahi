@@ -1,7 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import { Wax } from 'wax-prosemirror-core'
-import fixAstralUnicode from '../../../wax-collab/src/fixAstralUnicode'
 import SimpleWaxEditorLayout from '../../../wax-collab/src/layout/SimpleWaxEditorLayout'
 import simpleWaxEditorConfig from '../../../wax-collab/src/config/SimpleWaxEditorConfig'
 
@@ -17,9 +16,6 @@ const FormWaxEditor = ({
   innerRefProp,
   ...rest
 }) => {
-  // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
-  // eslint-disable-next-line no-param-reassign
-  value = fixAstralUnicode(value)
   return (
     <div className={validationStatus} ref={innerRefProp}>
       <Wax
