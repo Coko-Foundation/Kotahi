@@ -4,7 +4,6 @@ import { Wax } from 'wax-prosemirror-core'
 import { debounce } from 'lodash'
 import simpleWaxEditorConfig from './config/SimpleWaxEditorConfig'
 import SimpleWaxEditorLayout from './layout/SimpleWaxEditorLayout'
-import fixAstralUnicode from './fixAstralUnicode'
 
 const SimpleWaxEditor = ({
   value,
@@ -19,8 +18,7 @@ const SimpleWaxEditor = ({
   ...rest
 }) => {
   // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
-  // eslint-disable-next-line no-param-reassign
-  value = fixAstralUnicode(value)
+
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
     <div className={validationStatus} ref={innerRefProp}>

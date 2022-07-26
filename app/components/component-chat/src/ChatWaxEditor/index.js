@@ -5,9 +5,6 @@ import { debounce } from 'lodash'
 import chatWaxEditorConfig from './ChatWaxEditorConfig'
 import chatWaxEditorLayout from './ChatWaxEditorLayout'
 
-// import './katex/katex.css'
-import fixAstralUnicode from '../../../wax-collab/src/fixAstralUnicode'
-
 const ChatWaxEditor = ({
   value,
   validationStatus,
@@ -22,7 +19,6 @@ const ChatWaxEditor = ({
 }) => {
   // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
   // eslint-disable-next-line no-param-reassign
-  value = fixAstralUnicode(value)
 
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
