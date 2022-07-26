@@ -180,6 +180,17 @@ CREATE TABLE "public"."channels" (
     PRIMARY KEY ("id")
 );
 
+DROP TABLE IF EXISTS "public"."email_blacklist";
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+-- Table Definition
+CREATE TABLE "public"."email_blacklist" (
+    "id" uuid NOT NULL,
+    "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz,
+    "email" text NOT NULL,
+    PRIMARY KEY ("id")
+);
+
 DROP TABLE IF EXISTS "public"."entities";
 -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
@@ -231,6 +242,24 @@ CREATE TABLE "public"."files_old" (
     "review_comment_id" uuid
 );
 
+DROP TABLE IF EXISTS "public"."files_old_2";
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+-- Table Definition
+CREATE TABLE "public"."files_old_2" (
+    "id" uuid NOT NULL,
+    "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz,
+    "type" text NOT NULL,
+    "name" text NOT NULL,
+    "stored_objects" jsonb NOT NULL,
+    "tags" jsonb,
+    "reference_id" uuid,
+    "object_id" uuid,
+    "alt" text,
+    "upload_status" text,
+    "caption" text
+);
+
 DROP TABLE IF EXISTS "public"."forms";
 -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
@@ -261,6 +290,33 @@ CREATE TABLE "public"."identities" (
     "aff" text,
     "oauth" jsonb,
     "is_default" bool,
+    PRIMARY KEY ("id")
+);
+
+DROP TABLE IF EXISTS "public"."invitations";
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+DROP TYPE IF EXISTS "public"."invitation_status";
+CREATE TYPE "public"."invitation_status" AS ENUM ('UNANSWERED', 'ACCEPTED', 'REJECTED');
+DROP TYPE IF EXISTS "public"."invitation_type";
+CREATE TYPE "public"."invitation_type" AS ENUM ('AUTHOR', 'REVIEWER');
+DROP TYPE IF EXISTS "public"."invitation_declined_reason_type";
+CREATE TYPE "public"."invitation_declined_reason_type" AS ENUM ('UNAVAILABLE', 'TOPIC', 'CONFLICT_OF_INTEREST', 'OTHER', 'DO_NOT_CONTACT');
+-- Table Definition
+CREATE TABLE "public"."invitations" (
+    "id" uuid NOT NULL,
+    "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz,
+    "manuscript_id" uuid NOT NULL,
+    "purpose" text,
+    "to_email" text NOT NULL,
+    "status" "public"."invitation_status" NOT NULL,
+    "invited_person_type" "public"."invitation_type" NOT NULL,
+    "invited_person_name" text NOT NULL,
+    "response_date" timestamptz,
+    "response_comment" text,
+    "declined_reason" "public"."invitation_declined_reason_type",
+    "user_id" uuid,
+    "sender_id" uuid NOT NULL,
     PRIMARY KEY ("id")
 );
 
@@ -343,6 +399,24 @@ CREATE TABLE "public"."reviews" (
     "id" uuid NOT NULL,
     "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated" timestamptz,
+    "is_decision" bool DEFAULT false,
+    "user_id" uuid,
+    "manuscript_id" uuid,
+    "type" text NOT NULL,
+    "is_hidden_from_author" bool,
+    "is_hidden_reviewer_name" bool,
+    "can_be_published_publicly" bool,
+    "json_data" jsonb,
+    PRIMARY KEY ("id")
+);
+
+DROP TABLE IF EXISTS "public"."reviews_old";
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+-- Table Definition
+CREATE TABLE "public"."reviews_old" (
+    "id" uuid NOT NULL,
+    "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz,
     "recommendation" text,
     "is_decision" bool DEFAULT false,
     "user_id" uuid,
@@ -351,7 +425,7 @@ CREATE TABLE "public"."reviews" (
     "is_hidden_from_author" bool,
     "is_hidden_reviewer_name" bool,
     "can_be_published_publicly" bool,
-    PRIMARY KEY ("id")
+    "json_data" jsonb
 );
 
 DROP TABLE IF EXISTS "public"."team_members";
@@ -478,7 +552,7 @@ INSERT INTO "public"."migrations" ("id", "run_at") VALUES
 INSERT INTO "public"."review_comments" ("id", "created", "updated", "review_id", "user_id", "content", "comment_type", "type") VALUES
 ('d636e220-20bf-4ec1-96a0-c610f5612586', '2022-05-13 10:57:38.576+00', '2022-05-13 10:57:38.576+00', 'a9d0ddb5-0518-4bab-bb15-fdaeb9e60696', NULL, '<p class="paragraph">hbkj</p>', 'decision', 'ReviewComment');
 
-INSERT INTO "public"."reviews" ("id", "created", "updated", "recommendation", "is_decision", "user_id", "manuscript_id", "type", "is_hidden_from_author", "is_hidden_reviewer_name", "can_be_published_publicly") VALUES
+INSERT INTO "public"."reviews_old" ("id", "created", "updated", "recommendation", "is_decision", "user_id", "manuscript_id", "type", "is_hidden_from_author", "is_hidden_reviewer_name", "can_be_published_publicly") VALUES
 ('a9d0ddb5-0518-4bab-bb15-fdaeb9e60696', '2022-05-13 10:57:38.571+00', '2022-05-13 10:57:39.963+00', 'accepted', 't', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', 'Review', NULL, NULL, NULL),
 ('c7a95df9-32d8-4bc5-812c-468c18cf53ca', '2022-05-13 10:58:32.521+00', '2022-05-13 10:58:41.719+00', 'accepted', 'f', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', 'Review', 't', 't', NULL);
 
@@ -501,19 +575,21 @@ ALTER TABLE "public"."article_import_history" ADD FOREIGN KEY ("source_id") REFE
 ALTER TABLE "public"."channel_members" ADD FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id");
 ALTER TABLE "public"."channel_members" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."channels" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
-ALTER TABLE "public"."files_old" ADD FOREIGN KEY ("review_comment_id") REFERENCES "public"."review_comments"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."files_old" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
+ALTER TABLE "public"."files_old" ADD FOREIGN KEY ("review_comment_id") REFERENCES "public"."review_comments"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."identities" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
+ALTER TABLE "public"."invitations" ADD FOREIGN KEY ("sender_id") REFERENCES "public"."users"("id");
+ALTER TABLE "public"."invitations" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id");
+ALTER TABLE "public"."invitations" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id");
 ALTER TABLE "public"."manuscripts" ADD FOREIGN KEY ("import_source") REFERENCES "public"."article_import_sources"("id");
 ALTER TABLE "public"."manuscripts" ADD FOREIGN KEY ("submitter_id") REFERENCES "public"."users"("id");
 ALTER TABLE "public"."messages" ADD FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."messages" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."review_comments" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE SET NULL;
-ALTER TABLE "public"."review_comments" ADD FOREIGN KEY ("review_id") REFERENCES "public"."reviews"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."reviews" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
+ALTER TABLE "public"."team_members" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."team_members" ADD FOREIGN KEY ("alias_id") REFERENCES "public"."aliases"("id");
 ALTER TABLE "public"."team_members" ADD FOREIGN KEY ("team_id") REFERENCES "public"."teams"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "public"."team_members" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."teams" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
 
 
