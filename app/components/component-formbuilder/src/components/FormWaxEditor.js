@@ -16,8 +16,6 @@ const FormWaxEditor = ({
   innerRefProp,
   ...rest
 }) => {
-  // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
-
   return (
     <div className={validationStatus} ref={innerRefProp}>
       <Wax

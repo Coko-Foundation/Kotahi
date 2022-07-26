@@ -17,9 +17,6 @@ const ChatWaxEditor = ({
   innerRefProp,
   ...rest
 }) => {
-  // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
-  // eslint-disable-next-line no-param-reassign
-
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
     <div className={validationStatus} ref={innerRefProp}>
@@ -27,7 +24,6 @@ const ChatWaxEditor = ({
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
         config={chatWaxEditorConfig()}
-        // fileUpload={file => renderImage(file)}
         layout={chatWaxEditorLayout(readonly)}
         onBlur={val => {
           onChange && onChange(val)

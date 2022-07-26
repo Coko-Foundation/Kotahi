@@ -17,8 +17,6 @@ const SimpleWaxEditor = ({
   innerRefProp,
   ...rest
 }) => {
-  // TODO remove this step once we have a fix in Wax for https://gitlab.coko.foundation/kotahi/kotahi/-/issues/693
-
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
     <div className={validationStatus} ref={innerRefProp}>
@@ -26,7 +24,6 @@ const SimpleWaxEditor = ({
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
         config={simpleWaxEditorConfig()}
-        // fileUpload={file => renderImage(file)}
         layout={SimpleWaxEditorLayout(readonly)}
         onBlur={val => {
           onChange && onChange(val)
