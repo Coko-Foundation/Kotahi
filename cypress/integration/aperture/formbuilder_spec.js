@@ -52,7 +52,7 @@ describe('Form builder', () => {
     FormsPage.getFormTitleTab(0).should('contain', 'Review Form')
     FormsPage.clickFormOption(1)
     FormsPage.getNameField().should('have.value', 'authorFileName').clear()
-    cy.get('[name=name]').type('submission.authorFileName')
+    cy.get('[name=name]').type('files')
     cy.contains('Update Field').click()
 
     // adding a field in review form
@@ -61,7 +61,7 @@ describe('Form builder', () => {
     cy.get('button')
     cy.contains('VisualAbstract').click()
     cy.contains('Name (internal field name)').click()
-    cy.get('[name=name]').type('submission.visualAbstract')
+    cy.get('[name=name]').type('visualAbstract')
     cy.contains('Update Field').click()
 
     // for decision field
@@ -69,7 +69,7 @@ describe('Form builder', () => {
     FormsPage.getFormTitleTab(0).should('contain', 'Decision Form')
     FormsPage.clickFormOption(1)
     FormsPage.getNameField().should('have.value', 'fileName').clear()
-    cy.get('[name=name]').type('submission.fileName')
+    cy.get('[name=name]').type('fileName')
     cy.contains('Update Field').click()
 
     // adding a field in decision form
@@ -78,7 +78,7 @@ describe('Form builder', () => {
     cy.get('button')
     cy.contains('VisualAbstract').click()
     cy.contains('Name (internal field name)').click()
-    cy.get('[name=name]').type('submission.visualAbstract')
+    cy.get('[name=name]').type('visualAbstract')
     cy.contains('Update Field').click()
   })
 })
