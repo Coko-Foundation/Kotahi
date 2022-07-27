@@ -361,19 +361,22 @@ const makeArticleMeta = (metadata, abstract, title) => {
     }</article-title></title-group>`
   }
 
-  if (formData.authors && formData.authors.length) {
+  if (formData.authorNames && formData.authorNames.length) {
     let authorsList = ''
     let affilList = ''
 
-    for (let i = 0; i < formData.authors.length; i += 1) {
-      if (formData.authors[i].lastName && formData.authors[i].firstName) {
-        authorsList += `<contrib contrib-type="author"><name><surname>${formData.authors[i].lastName}</surname><given-names>${formData.authors[i].firstName}</given-names></name>`
+    for (let i = 0; i < formData.authorNames.length; i += 1) {
+      if (
+        formData.authorNames[i].lastName &&
+        formData.authorNames[i].firstName
+      ) {
+        authorsList += `<contrib contrib-type="author"><name><surname>${formData.authorNames[i].lastName}</surname><given-names>${formData.authorNames[i].firstName}</given-names></name>`
       }
 
-      if (formData.authors[i].affiliation) {
-        const thisId = formData.authors[i].id || `author_${i}`
-        authorsList += `<xref ref-type="aff" rid="${thisId}" />`
-        affilList += `<aff id="${thisId}">${formData.authors[i].affiliation}</aff>`
+      if (formData.authorNames[i].affiliation) {
+        const thisId = formData.authorNames[i].id || `author_${i}`
+        authorsList += `<xref ref-type="aff" rid="auth-${thisId}" />`
+        affilList += `<aff id="auth-${thisId}">${formData.authorNames[i].affiliation}</aff>`
       }
 
       authorsList += `</contrib>`
