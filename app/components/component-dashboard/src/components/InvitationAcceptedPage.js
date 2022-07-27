@@ -4,25 +4,26 @@ import { useQuery, useMutation } from '@apollo/client'
 import { Spinner } from '@pubsweet/ui/dist/atoms'
 import {
   ASSIGN_USER_AS_AUTHOR,
+  ASSIGN_USER_AS_REVIEWER,
   GET_INVITATION_MANUSCRIPT_ID,
   UPDATE_INVITATION_STATUS,
 } from '../../../../queries/index'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
 
 const InvitationAcceptedPage = () => {
-  const authorInvitationId = window.localStorage.getItem('authorInvitationId')
-    ? window.localStorage.getItem('authorInvitationId')
+  const invitationId = window.localStorage.getItem('invitationId')
+    ? window.localStorage.getItem('invitationId')
     : ''
 
   const { data } = useQuery(GET_INVITATION_MANUSCRIPT_ID, {
-    variables: { id: authorInvitationId },
+    variables: { id: invitationId },
   })
 
   const invitedUser = useCurrentUser()
 
   const [updateInvitationStatus] = useMutation(UPDATE_INVITATION_STATUS, {
     onCompleted: () => {
-      localStorage.removeItem('authorInvitationId')
+      localStorage.removeItem('invitationId')
       window.location.href = '/kotahi/dashboard'
     },
   })
@@ -33,7 +34,20 @@ const InvitationAcceptedPage = () => {
     onCompleted: () => {
       updateInvitationStatus({
         variables: {
-          id: authorInvitationId,
+          id: invitationId,
+          status: 'ACCEPTED',
+          userId: invitedUser ? invitedUser.id : null,
+          responseDate: currentDate,
+        },
+      })
+    },
+  })
+
+  const [assignUserAsReviewer] = useMutation(ASSIGN_USER_AS_REVIEWER, {
+    onCompleted: () => {
+      updateInvitationStatus({
+        variables: {
+          id: invitationId,
           status: 'ACCEPTED',
           userId: invitedUser ? invitedUser.id : null,
           responseDate: currentDate,
@@ -47,9 +61,22 @@ const InvitationAcceptedPage = () => {
     if (data && invitedUser) {
       manuscriptId = data.invitationManuscriptId.manuscriptId
       const invitedUserId = invitedUser ? invitedUser.id : null
-      assignUserAsAuthor({
-        variables: { manuscriptId, userId: invitedUserId },
-      })
+
+      if (data.invitationManuscriptId.invitedPersonType === 'AUTHOR') {
+        assignUserAsAuthor({
+          variables: { manuscriptId, userId: invitedUserId },
+        })
+      }
+
+      if (data.invitationManuscriptId.invitedPersonType === 'REVIEWER') {
+        assignUserAsReviewer({
+          variables: {
+            manuscriptId,
+            userId: invitedUserId,
+            invitationId,
+          },
+        })
+      }
     }
   }, [data])
 

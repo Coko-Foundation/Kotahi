@@ -52,6 +52,10 @@ switch (
         value: 'authorInvitationEmailTemplate',
       },
       {
+        label: 'Invite Reviewer',
+        value: 'reviewerInvitationEmailTemplate',
+      },
+      {
         label:
           'Bertrand Thirion - Peer-Review Invitation Assignment notification template',
         value: 'reviewInvitationEmailTemplate34',
@@ -224,6 +228,10 @@ switch (
       {
         label: 'Author Invitation Email Template',
         value: 'authorInvitationEmailTemplate',
+      },
+      {
+        label: 'Invite Reviewer',
+        value: 'reviewerInvitationEmailTemplate',
       },
       {
         label: 'Evaluation Complete required notification template',

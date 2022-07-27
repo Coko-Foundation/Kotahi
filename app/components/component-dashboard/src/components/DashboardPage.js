@@ -40,11 +40,11 @@ const DashboardPage = ({ history, ...props }) => {
     fetchPolicy: 'cache-and-network',
   })
 
-  const authorInvitationId = window.localStorage.getItem('authorInvitationId')
-    ? window.localStorage.getItem('authorInvitationId')
+  const invitationId = window.localStorage.getItem('invitationId')
+    ? window.localStorage.getItem('invitationId')
     : ''
 
-  if (authorInvitationId) {
+  if (invitationId) {
     return <Redirect to="/invitation/accepted" />
   }
 

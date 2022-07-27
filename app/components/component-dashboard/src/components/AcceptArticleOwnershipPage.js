@@ -6,12 +6,12 @@ import { GET_INVITATION_STATUS } from '../../../../queries/index'
 import InvitationLinkExpired from './InvitationLinkExpired'
 
 const AcceptArticleOwnershipPage = ({ match }) => {
-  const authorInvitationId = match.params.invitationId
+  const { invitationId } = match.params
 
-  window.localStorage.setItem('authorInvitationId', authorInvitationId)
+  window.localStorage.setItem('invitationId', invitationId)
 
   const { loading, data, error } = useQuery(GET_INVITATION_STATUS, {
-    variables: { id: authorInvitationId },
+    variables: { id: invitationId },
   })
 
   if (loading || error) {
@@ -21,7 +21,7 @@ const AcceptArticleOwnershipPage = ({ match }) => {
   if (data.invitationStatus.status === 'UNANSWERED') {
     return (
       <Container>
-        ACCEPTING ownership of article using invitation: {authorInvitationId}
+        ACCEPTING ownership of article using invitation: {invitationId}
         <br />
         <br />I will autoredirect in a few moments...
         <Redirect to="/login" />

@@ -95,6 +95,10 @@ const EmailNotifications = ({
         value: 'authorInvitationEmailTemplate',
       },
       {
+        label: 'Invite Reviewer',
+        value: 'reviewerInvitationEmailTemplate',
+      },
+      {
         label: 'Evaluation Complete notification',
         value: 'evaluationCompleteEmailTemplate',
       },
