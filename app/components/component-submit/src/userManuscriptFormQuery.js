@@ -137,6 +137,10 @@ export const fragmentFields = `
     affiliation
   }
   submission
+  formFieldsToPublish {
+    objectId
+    fieldsToPublish
+  }
 `
 
 const query = gql`

@@ -14,11 +14,7 @@ import {
   HeadingWithAction,
 } from '../../../shared'
 
-const CreateANewVersion = ({
-  manuscript,
-  currentVersion,
-  createNewVersion,
-}) => {
+const CreateANewVersion = ({ manuscript, createNewVersion }) => {
   const [newVerButtonIsEnabled, setNewVerButtonIsEnabled] = useState(true)
 
   return (

@@ -6,13 +6,13 @@ const SubmissionForm = ({
   versionValues,
   form,
   onSubmit,
-  versionId,
   onChange,
   republish,
   match,
   manuscript,
   createFile,
   deleteFile,
+  setShouldPublishField,
   threadedDiscussionProps,
   validateDoi,
 }) => {
@@ -21,22 +21,38 @@ const SubmissionForm = ({
       <FormTemplate
         createFile={createFile}
         deleteFile={deleteFile}
+        fieldsToPublish={
+          manuscript.formFieldsToPublish.find(
+            ff => ff.objectId === manuscript.id,
+          )?.fieldsToPublish ?? []
+        }
         form={form}
         initialValues={versionValues}
         manuscriptId={manuscript.id}
         manuscriptShortId={manuscript.shortId}
         manuscriptStatus={manuscript.status}
         onChange={(value, path) => {
-          onChange(value, path, versionId)
+          onChange(value, path, manuscript.id)
         }}
         onSubmit={async (values, { validateForm, setSubmitting, ...other }) => {
           // TODO: Change this to a more Formik idiomatic form
           const isValid = Object.keys(await validateForm()).length === 0
           return isValid
-            ? onSubmit(versionId, values) // values are currently ignored!
+            ? onSubmit(manuscript.id, values) // values are currently ignored!
             : setSubmitting(false)
         }}
         republish={republish}
+        setShouldPublishField={async (fieldName, shouldPublish) =>
+          setShouldPublishField({
+            variables: {
+              manuscriptId: manuscript.id,
+              objectId: manuscript.id,
+              fieldName,
+              shouldPublish,
+            },
+          })
+        }
+        shouldShowOptionToPublish={!!setShouldPublishField}
         showEditorOnlyFields={false}
         submissionButtonText={
           match.url.includes('/evaluation')

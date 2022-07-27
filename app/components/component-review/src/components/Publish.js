@@ -47,7 +47,11 @@ const Publish = ({ manuscript, publishManuscript }) => {
               }
 
               return (
-                <Alert key={step.stepLabel} type="error">
+                <Alert
+                  detail={step.errorMessage}
+                  key={step.stepLabel}
+                  type="error"
+                >
                   Error posting to {step.stepLabel}
                 </Alert>
               )

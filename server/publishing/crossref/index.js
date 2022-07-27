@@ -55,12 +55,12 @@ const publishToCrossref = async manuscript => {
 
   if (config.crossref.publicationType === 'article')
     await publishArticleToCrossref(manuscript).catch(err => {
-      throw new Error(err)
+      throw err
     })
   // else if (config.crossref.publicationType === 'reviews')
   else
     await publishReviewsToCrossref(manuscript).catch(err => {
-      throw new Error(err)
+      throw err
     })
 }
 

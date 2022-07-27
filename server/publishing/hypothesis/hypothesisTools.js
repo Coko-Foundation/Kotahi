@@ -12,13 +12,8 @@ const getPublishableTextFromComment = commentObject => {
   if (!commentObject.commentVersions || !commentObject.commentVersions.length)
     return null
 
-  const comment =
-    commentObject.commentVersions[commentObject.commentVersions.length - 1]
-
-  const authorName = commentObject.commentVersions[0].author.username
-
-  if (!hasText(comment.comment)) return null
-  return `<p><b>${escape(authorName)}:</b></p>${comment.comment}`
+  return commentObject.commentVersions[commentObject.commentVersions.length - 1]
+    .comment
 }
 
 const getPublishableTextFromValue = (value, field) => {
@@ -109,7 +104,11 @@ const getPublishableFieldsForObject = (
   } = form
 
   return fields
-    .filter(f => f.permitPublishing === 'true' && f.hideFromAuthors !== 'true')
+    .filter(
+      f =>
+        ['always', 'true'].includes(f.permitPublishing) &&
+        f.hideFromAuthors !== 'true',
+    )
     .map(field => {
       const { publishingTag } = field
       const value = get(data, field.name)
@@ -124,7 +123,9 @@ const getPublishableFieldsForObject = (
             const expandedFieldName = `${field.name}:${c.id}`
 
             const shouldPublish =
-              text && fieldsToPublish.includes(expandedFieldName)
+              text &&
+              (field.permitPublishing === 'always' ||
+                fieldsToPublish.includes(expandedFieldName))
 
             return {
               field,
@@ -139,7 +140,12 @@ const getPublishableFieldsForObject = (
       }
 
       const text = getPublishableTextFromValue(value, field)
-      const shouldPublish = text && fieldsToPublish.includes(field.name)
+
+      const shouldPublish =
+        text &&
+        (field.permitPublishing === 'always' ||
+          fieldsToPublish.includes(field.name))
+
       return {
         field,
         fieldName: field.name,

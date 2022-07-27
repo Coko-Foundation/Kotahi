@@ -991,7 +991,7 @@ const resolvers = {
           } catch (e) {
             console.error('error publishing to crossref')
             console.error(e)
-            errorMessage = e
+            errorMessage = e.message
           }
         }
 
@@ -1019,7 +1019,7 @@ const resolvers = {
           console.error('error while publishing in google spreadsheet')
           console.error(e)
           succeeded = false
-          errorMessage = e
+          errorMessage = e.message
           return null
         }
 
@@ -1046,7 +1046,7 @@ const resolvers = {
           if (err.response) {
             message += `${err.response.status} ${err.response.statusText}\n`
             message += `${JSON.stringify(err.response.data)}`
-          } else message += err.toString()
+          } else message += err.message
           errorMessage = message
         }
 
