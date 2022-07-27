@@ -7,7 +7,7 @@ const AuthorAcceptanceEmailTemplate = ({
 }) => {
   const result = {
     cc: '',
-    subject: 'Kotahi Notificaion Email',
+    subject: 'Kotahi Notification Email',
     content: '',
   }
 
