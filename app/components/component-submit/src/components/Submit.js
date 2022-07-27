@@ -43,12 +43,11 @@ const Submit = ({
   updateManuscript,
   createFile,
   deleteFile,
+  setShouldPublishField,
   threadedDiscussionProps,
   validateDoi,
 }) => {
   const decisionSections = []
-
-  const currentVersion = versions[0]
 
   const submissionValues = createBlankSubmissionBasedOnForm(submissionForm)
 
@@ -57,41 +56,38 @@ const Submit = ({
 
   const handleSaveDebouncer = useMemo(() => debounce(handleSave, 2000))
 
-  versions.forEach((version, index) => {
-    const { manuscript, label } = version
-    const versionId = manuscript.id
-
+  versions.forEach(({ manuscript: version, label }, index) => {
     const userCanEditManuscriptAndFormData =
-      version === currentVersion &&
-      (['new', 'revising'].includes(manuscript.status) ||
-        (currentUser.admin && manuscript.status !== 'rejected'))
+      index === 0 &&
+      (['new', 'revising'].includes(version.status) ||
+        (currentUser.admin && version.status !== 'rejected'))
 
     const hasDecision = !['new', 'submitted', 'revising'].includes(
-      manuscript.status,
+      version.status,
     )
 
     const editorSection = {
       content: (
         <EditorSection
           currentUser={currentUser}
-          manuscript={manuscript}
+          manuscript={version}
           readonly={!userCanEditManuscriptAndFormData}
           saveSource={source => {
-            handleSaveDebouncer(source, versionId)
+            handleSaveDebouncer(source, version.id)
           }}
         />
       ),
-      key: `editor_${manuscript.id}`,
+      key: `editor_${version.id}`,
       label: 'Manuscript text',
     }
 
     let decisionSection
 
     if (userCanEditManuscriptAndFormData) {
-      Object.assign(submissionValues, JSON.parse(manuscript.submission))
+      Object.assign(submissionValues, JSON.parse(version.submission))
 
       const versionValues = {
-        ...manuscript,
+        ...version,
         submission: submissionValues,
       }
 
@@ -99,20 +95,20 @@ const Submit = ({
         versionValues,
         form: submissionForm,
         onSubmit,
-        versionId,
         onChange,
         republish,
         match,
-        manuscript,
+        manuscript: version,
         createFile,
         deleteFile,
+        setShouldPublishField,
         threadedDiscussionProps,
         validateDoi,
       }
 
       decisionSection = {
         content: <SubmissionForm {...submissionProps} />,
-        key: versionId,
+        key: version.id,
         label: 'Edit submission info',
       }
     } else {
@@ -122,7 +118,7 @@ const Submit = ({
             {hasDecision && (
               <DecisionAndReviews
                 decisionForm={decisionForm}
-                manuscript={manuscript}
+                manuscript={version}
                 reviewForm={reviewForm}
                 threadedDiscussionProps={threadedDiscussionProps}
               />
@@ -130,18 +126,18 @@ const Submit = ({
             <ReadonlyFormTemplate
               form={submissionForm}
               formData={{
-                ...manuscript,
-                submission: JSON.parse(manuscript.submission),
+                ...version,
+                submission: JSON.parse(version.submission),
               }}
               listManuscriptFiles
-              manuscript={manuscript}
+              manuscript={version}
               showEditorOnlyFields={false}
               threadedDiscussionProps={threadedDiscussionProps}
               title="Metadata"
             />
           </>
         ),
-        key: versionId,
+        key: version.id,
         label: 'Submitted info',
       }
     }
@@ -152,23 +148,22 @@ const Submit = ({
           {['ncrc'].includes(process.env.INSTANCE_NAME) && (
             <AssignEditorsReviewers
               AssignEditor={AssignEditor}
-              manuscript={manuscript}
+              manuscript={version}
             />
           )}
-          {version === currentVersion && manuscript.status === 'revise' && (
+          {index === 0 && version.status === 'revise' && (
             <CreateANewVersion
               createNewVersion={createNewVersion}
-              currentVersion={currentVersion}
-              manuscript={manuscript}
+              manuscript={version}
             />
           )}
           <HiddenTabs
-            defaultActiveKey={versionId}
+            defaultActiveKey={version.id}
             sections={[decisionSection, editorSection]}
           />
         </>
       ),
-      key: manuscript.id,
+      key: version.id,
       label,
     })
   })

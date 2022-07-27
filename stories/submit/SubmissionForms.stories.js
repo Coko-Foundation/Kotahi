@@ -380,7 +380,6 @@ const baseProps = {
       },
     ],
   },
-  versionId: '8bdccd35-51fc-42a1-af84-951f3c21c91c',
   confirming: false,
   match: {
     path: '/kotahi/versions/:version/submit',

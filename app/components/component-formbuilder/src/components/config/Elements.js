@@ -175,15 +175,18 @@ const hideFromAuthorsField = {
 const permitPublishingField = {
   component: 'RadioBox',
   props: {
-    inline: true,
     options: [
       {
-        value: 'true',
-        label: 'Yes',
+        value: 'false',
+        label: 'Never',
       },
       {
-        value: 'false',
-        label: 'No',
+        value: 'true',
+        label: 'Ad hoc (Editor decides at time of sharing/publishing)',
+      },
+      {
+        value: 'always',
+        label: 'Always',
       },
     ],
     label: 'Include when sharing or publishing?',

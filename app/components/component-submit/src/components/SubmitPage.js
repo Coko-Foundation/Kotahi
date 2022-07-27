@@ -7,7 +7,10 @@ import Submit from './Submit'
 import query, { fragmentFields } from '../userManuscriptFormQuery'
 import { Spinner } from '../../../shared'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
-import { publishManuscriptMutation } from '../../../component-review/src/components/queries'
+import {
+  publishManuscriptMutation,
+  setShouldPublishFieldMutation,
+} from '../../../component-review/src/components/queries'
 import { validateManuscriptSubmission } from '../../../../shared/manuscriptUtils'
 import CommsErrorBanner from '../../../shared/CommsErrorBanner'
 import { validateDoi } from '../../../../shared/commsUtils'
@@ -101,6 +104,7 @@ const SubmitPage = ({ match, history }) => {
   const [completeComments] = useMutation(COMPLETE_COMMENTS)
   const [completeComment] = useMutation(COMPLETE_COMMENT)
   const [deletePendingComment] = useMutation(DELETE_PENDING_COMMENT)
+  const [setShouldPublishField] = useMutation(setShouldPublishFieldMutation)
 
   const [deleteFile] = useMutation(deleteFileMutation, {
     update(cache, { data: { deleteFile: fileToDelete } }) {
@@ -238,6 +242,7 @@ const SubmitPage = ({ match, history }) => {
       parent={manuscript}
       republish={republish}
       reviewForm={reviewForm}
+      setShouldPublishField={currentUser.admin ? setShouldPublishField : null}
       submissionForm={submissionForm}
       threadedDiscussionProps={threadedDiscussionProps}
       updateManuscript={updateManuscript}

@@ -18,13 +18,13 @@ const AlertError = styled.div`
   padding: 0.5em 1em 0.5em 0.5em;
 `
 
-const Alert = ({ children, type }) => {
+const Alert = ({ children, type, detail }) => {
   if (type === 'success') {
-    return <AlertSuccess>{children}</AlertSuccess>
+    return <AlertSuccess title={detail}>{children}</AlertSuccess>
   }
 
   if (type === 'error') {
-    return <AlertError>{children}</AlertError>
+    return <AlertError title={detail}>{children}</AlertError>
   }
 
   throw new Error('Unknown alert type')
