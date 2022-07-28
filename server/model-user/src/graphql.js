@@ -259,7 +259,10 @@ const resolvers = {
 
       let invitationId = ''
 
-      if (selectedTemplate === 'authorInvitationEmailTemplate') {
+      if (
+        selectedTemplate === 'authorInvitationEmailTemplate' ||
+        selectedTemplate === 'reviewerInvitationEmailTemplate'
+      ) {
         let userId = null
         let invitedPersonName = ''
 
@@ -274,7 +277,10 @@ const resolvers = {
           invitedPersonName = externalName
         }
 
-        const invitedPersonType = 'AUTHOR'
+        const invitedPersonType =
+          selectedTemplate === 'authorInvitationEmailTemplate'
+            ? 'AUTHOR'
+            : 'REVIEWER'
 
         const newInvitation = await new Invitation({
           manuscriptId,

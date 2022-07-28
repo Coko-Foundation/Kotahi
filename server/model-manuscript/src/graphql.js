@@ -867,8 +867,9 @@ const resolvers = {
 
       return updateAndRepackageForGraphql(manuscript)
     },
-    async addReviewer(_, { manuscriptId, userId }, ctx) {
+    async addReviewer(_, { manuscriptId, userId, invitationId }, ctx) {
       const manuscript = await models.Manuscript.query().findById(manuscriptId)
+      const status = invitationId ? 'accepted' : 'invited'
 
       const existingTeam = await manuscript
         .$relatedQuery('teams')
@@ -886,7 +887,7 @@ const resolvers = {
         if (!reviewerExists) {
           await new models.TeamMember({
             teamId: existingTeam.id,
-            status: 'invited',
+            status,
             userId,
           }).save()
         }
@@ -895,9 +896,10 @@ const resolvers = {
       }
 
       // Create a new team of reviewers if it doesn't exist
+
       const newTeam = await new models.Team({
         manuscriptId,
-        members: [{ status: 'invited', userId }],
+        members: [{ status, userId }],
         role: 'reviewer',
         name: 'Reviewers',
       }).saveGraph()
@@ -1517,7 +1519,7 @@ const typeDefs = `
     deleteManuscripts(ids: [ID]!): [ID]!
     reviewerResponse(currentUserId: ID, action: String, teamId: ID! ): Team
     assignTeamEditor(id: ID!, input: String): [Team]
-    addReviewer(manuscriptId: ID!, userId: ID!): Team
+    addReviewer(manuscriptId: ID!, userId: ID!, invitationId: ID): Team
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript

@@ -23,15 +23,15 @@ import {
 import InvitationLinkExpired from './InvitationLinkExpired'
 
 const DeclineArticleOwnershipPage = ({ match }) => {
-  const authorInvitationId = match.params.invitationId
+  const { invitationId } = match.params
 
   const { data } = useQuery(GET_INVITATION_STATUS, {
-    variables: { id: authorInvitationId },
+    variables: { id: invitationId },
   })
 
   const [updateInvitationStatus] = useMutation(UPDATE_INVITATION_STATUS, {
     onCompleted: () => {
-      localStorage.removeItem('authorInvitationId')
+      localStorage.removeItem('invitationId')
     },
   })
 
@@ -69,7 +69,7 @@ const DeclineArticleOwnershipPage = ({ match }) => {
     if (data && data.invitationStatus.status === 'UNANSWERED') {
       updateInvitationStatus({
         variables: {
-          id: authorInvitationId,
+          id: invitationId,
           status: 'REJECTED',
           responseDate: new Date(),
         },
@@ -124,7 +124,7 @@ const DeclineArticleOwnershipPage = ({ match }) => {
                 onClick={() =>
                   updateInvitationResponse({
                     variables: {
-                      id: authorInvitationId,
+                      id: invitationId,
                       responseComment: feedbackComment,
                       declinedReason: checked ? 'DO_NOT_CONTACT' : 'OTHER',
                     },
