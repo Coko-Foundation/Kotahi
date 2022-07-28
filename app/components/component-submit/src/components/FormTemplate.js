@@ -213,7 +213,7 @@ const InnerFormTemplate = ({
         <ActionButton
           onClick={async () => {
             // TODO shouldn't this come after error checking and submission?
-            if (republish && manuscriptStatus === articleStatuses.published) {
+            if (republish) {
               republish(manuscriptId)
               return
             }
@@ -252,12 +252,6 @@ const InnerFormTemplate = ({
       </div>
     )
   }
-
-  // this is what the submit button will say
-  const submitButtonText =
-    manuscriptStatus === isSubmission && articleStatuses.published
-      ? 'Re-Publish'
-      : submissionButtonText
 
   // this is whether the form includes a popup
   const hasPopup = form.haspopup ? JSON.parse(form.haspopup) : false
@@ -451,7 +445,9 @@ const InnerFormTemplate = ({
           </Section>
         ) : null}
 
-        {showSubmitButton ? submitButton(submitButtonText, showPopup) : null}
+        {showSubmitButton
+          ? submitButton(submissionButtonText, showPopup)
+          : null}
 
         {confirming && (
           <ModalWrapper>

@@ -1,6 +1,7 @@
 import React from 'react'
 import { SectionContent } from '../../../shared'
 import FormTemplate from './FormTemplate'
+import { articleStatuses } from '../../../../globals'
 
 const SubmissionForm = ({
   versionValues,
@@ -16,6 +17,16 @@ const SubmissionForm = ({
   threadedDiscussionProps,
   validateDoi,
 }) => {
+  let submissionButtonText = 'Submit your research object'
+  let submitButtonShouldRepublish = false
+
+  if (match.url.includes('/evaluation')) {
+    if (manuscript.status === articleStatuses.published) {
+      submitButtonShouldRepublish = true
+      submissionButtonText = 'Republish'
+    } else submissionButtonText = 'Submit Evaluation'
+  }
+
   return (
     <SectionContent>
       <FormTemplate
@@ -28,6 +39,7 @@ const SubmissionForm = ({
         }
         form={form}
         initialValues={versionValues}
+        isSubmission
         manuscriptId={manuscript.id}
         manuscriptShortId={manuscript.shortId}
         manuscriptStatus={manuscript.status}
@@ -41,7 +53,7 @@ const SubmissionForm = ({
             ? onSubmit(manuscript.id, values) // values are currently ignored!
             : setSubmitting(false)
         }}
-        republish={republish}
+        republish={submitButtonShouldRepublish && republish}
         setShouldPublishField={async (fieldName, shouldPublish) =>
           setShouldPublishField({
             variables: {
@@ -54,11 +66,7 @@ const SubmissionForm = ({
         }
         shouldShowOptionToPublish={!!setShouldPublishField}
         showEditorOnlyFields={false}
-        submissionButtonText={
-          match.url.includes('/evaluation')
-            ? 'Submit Evaluation'
-            : 'Submit your research object'
-        }
+        submissionButtonText={submissionButtonText}
         threadedDiscussionProps={threadedDiscussionProps}
         validateDoi={validateDoi}
       />
