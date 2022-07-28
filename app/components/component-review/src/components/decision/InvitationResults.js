@@ -90,7 +90,7 @@ const InvitationResult = ({ invitation }) => {
     declinedResponse === 'DO_NOT_CONTACT'
   ) {
     ordinalString = `Declined ${invitationType} invitation and opted out`
-  } else if (invitationStatus === 'REJECTED' && declinedResponse === 'OTHER') {
+  } else if (invitationStatus === 'REJECTED') {
     ordinalString = `Declined ${invitationType} invitation`
   } else if (invitationStatus === 'ACCEPTED') {
     ordinalString = `Accepted ${invitationType} invitation`
