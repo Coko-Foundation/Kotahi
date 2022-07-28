@@ -25,7 +25,7 @@ const editorOption = user => ({
     </>
   ),
   value: user.email,
-  id: user.username,
+  userName: user.username,
 })
 
 const MessageWrapper = styled.div`
@@ -299,7 +299,7 @@ const EmailNotifications = ({
 
     const receiverName = message.externalEmail
       ? message.externalName
-      : options.find(user => user.value === message.selectedEmail).id
+      : options.find(user => user.value === message.selectedEmail).userName
 
     const date = Date.now()
 
