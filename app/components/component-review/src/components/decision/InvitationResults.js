@@ -64,6 +64,11 @@ const InvitationResult = ({ invitation }) => {
   const toggleOpen = () => setOpen(!open)
 
   const invitationStatus = invitation.status
+
+  if (invitationStatus === 'UNANSWERED') {
+    return null
+  }
+
   const declinedResponse = invitation.declinedReason
   const { invitedPersonName } = invitation
   const { responseComment } = invitation
@@ -91,42 +96,38 @@ const InvitationResult = ({ invitation }) => {
     ordinalString = `Accepted ${invitationType} invitation`
   }
 
-  if (invitationStatus !== 'UNANSWERED') {
-    return (
-      <>
-        <SectionRow>
-          <Root>
-            <ReviewHeadingRoot>
-              <Bullet status={invitation.status} />
-              <Ordinal status={invitation.status}>{ordinalString}</Ordinal>
-              &nbsp;
-              <Name>
-                <UserCombo>
-                  <UserAvatar user={user} />
-                  <UserInfo>
-                    <>
-                      <Primary>
-                        {user ? user?.username : invitedPersonName}
-                      </Primary>
-                      <Secondary>{dateToDisplay}</Secondary>
-                    </>
-                  </UserInfo>
-                </UserCombo>
-              </Name>
-              {responseComment && (
-                <Controls>
-                  <ToggleReview open={open} toggle={toggleOpen} />
-                </Controls>
-              )}
-            </ReviewHeadingRoot>
-            {open && <ResponseComment>{responseComment}</ResponseComment>}
-          </Root>
-        </SectionRow>
-      </>
-    )
-  }
-
-  return null
+  return (
+    <>
+      <SectionRow>
+        <Root>
+          <ReviewHeadingRoot>
+            <Bullet status={invitation.status} />
+            <Ordinal status={invitation.status}>{ordinalString}</Ordinal>
+            &nbsp;
+            <Name>
+              <UserCombo>
+                <UserAvatar user={user} />
+                <UserInfo>
+                  <>
+                    <Primary>
+                      {user ? user?.username : invitedPersonName}
+                    </Primary>
+                    <Secondary>{dateToDisplay}</Secondary>
+                  </>
+                </UserInfo>
+              </UserCombo>
+            </Name>
+            {responseComment && (
+              <Controls>
+                <ToggleReview open={open} toggle={toggleOpen} />
+              </Controls>
+            )}
+          </ReviewHeadingRoot>
+          {open && <ResponseComment>{responseComment}</ResponseComment>}
+        </Root>
+      </SectionRow>
+    </>
+  )
 }
 
 const InvitationResults = ({ invitations }) => {

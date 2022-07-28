@@ -25,6 +25,7 @@ const editorOption = user => ({
     </>
   ),
   value: user.email,
+  id: user.username,
 })
 
 const MessageWrapper = styled.div`
@@ -93,10 +94,6 @@ const EmailNotifications = ({
       {
         label: 'Author Invitation Email Template',
         value: 'authorInvitationEmailTemplate',
-      },
-      {
-        label: 'Invite Reviewer',
-        value: 'reviewerInvitationEmailTemplate',
       },
       {
         label: 'Evaluation Complete notification',
@@ -290,6 +287,10 @@ const EmailNotifications = ({
         label: 'Bradley Buchsbaum - Peer-Review Invitation Assignment',
         value: 'reviewInvitationEmailTemplate37',
       },
+      {
+        label: 'Reviewer Invitation Email Template',
+        value: 'reviewerInvitationEmailTemplate',
+      },
     ]
 
     const selectedTempl = emailTemplateOptions.find(
@@ -298,7 +299,7 @@ const EmailNotifications = ({
 
     const receiverName = message.externalEmail
       ? message.externalName
-      : options.find(user => user.value === message.selectedEmail).label
+      : options.find(user => user.value === message.selectedEmail).id
 
     const date = Date.now()
 

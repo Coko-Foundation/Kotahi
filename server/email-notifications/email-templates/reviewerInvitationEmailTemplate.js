@@ -7,7 +7,7 @@ const AuthorAcceptanceEmailTemplate = ({
 }) => {
   const result = {
     cc: '',
-    subject: 'Kotahi Notification Email',
+    subject: 'Kotahi | Reviewer invitation ',
     content: '',
   }
 
@@ -34,7 +34,7 @@ const AuthorAcceptanceEmailTemplate = ({
 	</p>
 	`
 
-  result.content = result.content.replace(/\n/g, '')
+  result.content = result.content.replace(/\s+/g, ' ')
 
   return result
 }
