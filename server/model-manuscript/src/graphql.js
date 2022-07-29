@@ -1463,11 +1463,10 @@ const resolvers = {
       }
     },
   },
-  // We want submission into to come out as a stringified JSON, so that we don't have to
+  // We want submission info to come out as a stringified JSON, so that we don't have to
   // change our queries if the submission form changes. We still want to store it as JSONB
   // so that we can easily search through the information within.
   Manuscript: ManuscriptResolvers({ isVersion: false }),
-  ManuscriptVersion: ManuscriptResolvers({ isVersion: true }),
 }
 
 const typeDefs = `
@@ -1527,12 +1526,12 @@ const typeDefs = `
     setShouldPublishField(manuscriptId: ID!, objectId: ID!, fieldName: String!, shouldPublish: Boolean!): Manuscript!
   }
 
-  type Manuscript implements Object {
+  type Manuscript {
     id: ID!
     parentId: ID
     created: DateTime!
     updated: DateTime
-    manuscriptVersions: [ManuscriptVersion]
+    manuscriptVersions: [Manuscript]
     shortId: Int!
     files: [File]
     teams: [Team]
@@ -1549,28 +1548,6 @@ const typeDefs = `
     published: DateTime
     evaluationsHypothesisMap: String
     currentRoles: [String]
-    formFieldsToPublish: [FormFieldsToPublish!]!
-  }
-
-  type ManuscriptVersion implements Object {
-    id: ID!
-    created: DateTime!
-    updated: DateTime
-    shortId: Int!
-    files: [File]
-    teams: [Team]
-    reviews: [Review]
-    status: String
-    formState: String
-    decision: String
-    suggestions: Suggestions
-    authors: [Author]
-    meta: ManuscriptMeta
-    submission: String
-    submitter: User
-    published: DateTime
-    parentId: ID
-    evaluationsHypothesisMap: String
     formFieldsToPublish: [FormFieldsToPublish!]!
   }
 
@@ -1686,7 +1663,7 @@ const typeDefs = `
     streamlinedReview: String
   }
 
-  type Note implements Object {
+  type Note {
     id: ID!
     created: DateTime!
     updated: DateTime

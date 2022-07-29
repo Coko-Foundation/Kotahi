@@ -15,7 +15,7 @@ const resolvers = {
     messages: async (_, { channelId, first = 20, before }) => {
       let messagesQuery = Message.query()
         .where({ channelId })
-        .eager('user')
+        .withGraphJoined('user')
         .limit(first)
         .orderBy('created', 'desc')
 
@@ -53,7 +53,7 @@ const resolvers = {
 
       const message = await Message.query()
         .findById(savedMessage.id)
-        .eager('user')
+        .withGraphJoined('user')
 
       pubsub.publish(`${MESSAGE_CREATED}.${channelId}`, message.id)
 
@@ -63,7 +63,10 @@ const resolvers = {
   Subscription: {
     messageCreated: {
       resolve: async (messageId, _, context) => {
-        const message = await Message.query().findById(messageId).eager('user')
+        const message = await Message.query()
+          .findById(messageId)
+          .withGraphJoined('user')
+
         return message
       },
       subscribe: async (_, vars, context) => {

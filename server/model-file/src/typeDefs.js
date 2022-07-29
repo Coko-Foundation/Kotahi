@@ -44,7 +44,7 @@ const typeDefs = `
     alt: String
   }
 
-  type File implements Object {
+  type File {
     id: ID!
     name: String!
     alt: String

@@ -104,23 +104,6 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
             },
           },
         },
-        ManuscriptVersion: {
-          fields: {
-            _currentRoles: {
-              read(existing, { cache, args, readField }) {
-                const currentRoles = currentRolesVar()
-                const currentId = readField('id')
-                const r = currentRoles.find(ro => ro.id === currentId)
-                return (r && r.roles) || []
-              },
-            },
-            fieldsToPublish: {
-              merge(existing, incoming) {
-                return incoming
-              },
-            },
-          },
-        },
         ThreadedDiscussion: {
           fields: {
             threads: {
