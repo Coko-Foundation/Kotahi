@@ -466,7 +466,6 @@ const InnerFormTemplate = ({
 
 const FormTemplate = ({
   form,
-  // initialValues,
   manuscriptId,
   manuscriptShortId,
   manuscriptStatus,
