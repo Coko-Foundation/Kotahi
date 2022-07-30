@@ -23,6 +23,7 @@ import ThreadedDiscussion from '../../../component-formbuilder/src/components/bu
 import ActionButton from '../../../shared/ActionButton'
 import { hasValue } from '../../../../shared/htmlUtils'
 import FormWaxEditor from '../../../component-formbuilder/src/components/FormWaxEditor'
+import { WebIdentityCredentials } from 'aws-sdk'
 
 const Intro = styled.div`
   font-style: italic;
@@ -269,7 +270,6 @@ const InnerFormTemplate = ({
       : true)
 
   const manuscriptFiles = filterFileManuscript(values.files || [])
-
   const submittedManuscriptFile =
     isSubmission && manuscriptFiles.length ? manuscriptFiles[0] : null
 
@@ -466,7 +466,7 @@ const InnerFormTemplate = ({
 
 const FormTemplate = ({
   form,
-  initialValues,
+  // initialValues,
   manuscriptId,
   manuscriptShortId,
   manuscriptStatus,
@@ -491,11 +491,10 @@ const FormTemplate = ({
   shouldShowOptionToPublish = false,
 }) => {
   const [confirming, setConfirming] = React.useState(false)
-
+const initialValues = {comment: "", verdict: "", discussion: ""}
   const toggleConfirming = () => {
     setConfirming(confirm => !confirm)
   }
-
   const sumbitPendingThreadedDiscussionComments = async values => {
     await Promise.all(
       form.children

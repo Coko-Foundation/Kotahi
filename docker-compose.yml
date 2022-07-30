@@ -171,7 +171,7 @@ services:
       - ./scripts/init-pgboss.sql:/docker-entrypoint-initdb.d/init-pgboss.sql
 
   job-xsweet:
-    image: pubsweet/job-xsweet:1.5.4
+    image: d0ckerchamp/test-xsweet:latest
     depends_on:
       - server
     command:
