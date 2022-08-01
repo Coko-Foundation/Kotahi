@@ -51,26 +51,34 @@ const EnterEmail = ({ updateUserEmail }) => {
 
   return (
     <ModalContainer>
-      <label htmlFor="enter-email">Enter Email</label>
-      <InlineTextField
-        error={updateEmailError}
-        id="enter-email"
-        onChange={e => setEmail(e.target.value)}
-        placeholder="Enter your email"
-        value={email}
-      />
-      <br />
-      <UpdateEmailError>{updateEmailError}</UpdateEmailError>
-      <ButtonContainer>
-        <Button onClick={() => updateEmail(email)} primary>
-          Next
-        </Button>
-      </ButtonContainer>
+      <form
+        onSubmit={e => {
+          updateEmail(email)
+          e.preventDefault()
+        }}
+      >
+        <label htmlFor="enter-email">Enter Email</label>
+        <InlineTextField
+          autoFocus
+          error={updateEmailError}
+          id="enter-email"
+          onChange={e => setEmail(e.target.value)}
+          placeholder="Enter your email"
+          value={email}
+        />
+        <br />
+        <UpdateEmailError>{updateEmailError}</UpdateEmailError>
+        <ButtonContainer>
+          <Button onClick={() => updateEmail(email)} primary>
+            Next
+          </Button>
+        </ButtonContainer>
+      </form>
     </ModalContainer>
   )
 }
 
 EnterEmail.propTypes = {
-  user: PropTypes.shape({ username: PropTypes.string.isRequired }).isRequired,
+  updateUserEmail: PropTypes.func.isRequired,
 }
 export default EnterEmail

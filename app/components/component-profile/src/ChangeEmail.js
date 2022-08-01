@@ -16,14 +16,15 @@ const UpdateEmailError = styled.p`
 `
 
 const ChangeEmail = ({ user, updateUserEmail }) => {
-  const [email, setEmail] = useState(user.email)
+  const [email, setEmail] = useState('')
 
   const [updateEmailError, setUpdateEmailError] = useState(
     user.email ? '' : 'Required',
   )
 
   React.useEffect(() => {
-    setEmail(user.email)
+    setEmail(user.email || '')
+    setUpdateEmailError('')
   }, [user.email])
 
   // eslint-disable-next-line no-shadow
