@@ -176,7 +176,7 @@ const Profile = ({ match }) => {
   return (
     <ProfileContainer>
       <Modal isOpen={canEditProfile && !user.email}>
-        <EnterEmail updateUserEmail={updateUserEmail} user={user.email} />
+        <EnterEmail updateUserEmail={updateUserEmail} />
       </Modal>
       <div>
         <HeadingWithAction>

@@ -48,7 +48,7 @@ module.exports = app => {
         let usersCountString
 
         try {
-          usersCountString = await User.query().count().pluck('count').first()
+          usersCountString = (await User.query().count())[0].count
         } catch (err) {
           console.error(err)
         }

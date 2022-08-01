@@ -104,7 +104,7 @@ const typeDefs = `
     completeReview(id: ID!): TeamMember
   }
 
-  type Review implements Object {
+  type Review {
     id: ID!
     created: DateTime!
     updated: DateTime

@@ -36,7 +36,7 @@ class AuthsomeMode {
       (
         await this.context.models.User.query()
           .findById(this.user.id)
-          .eager('teams')
+          .withGraphJoined('teams')
       ).teams
 
     let membershipCondition

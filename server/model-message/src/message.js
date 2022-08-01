@@ -14,7 +14,7 @@ class Message extends BaseModel {
 
     const message = await Message.query()
       .findById(savedMessage.id)
-      .eager('user')
+      .withGraphJoined('user')
 
     return message
   }

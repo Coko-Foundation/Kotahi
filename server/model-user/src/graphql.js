@@ -51,8 +51,6 @@ const resolvers = {
         totalCount,
         users,
       }
-
-      // return models.User.fetchAll(where, ctx, { eager })
     },
     // Authentication
     async currentUser(_, vars, ctx) {
@@ -410,26 +408,6 @@ const typeDefs = `
     identifier: String
   }
 
-  # union Identity = Local | External
-
-  # local identity (not from ORCID, etc.)
-  #type LocalIdentity implements Identity {
-  #  id: ID
-  #  name: String
-  #  email: String
-  #  aff: String
-  #  type: String
-  #}
-  #
-  #type ExternalIdentity implements Identity {
-  #  id: ID
-  #  name: String
-  #  identifier: String
-  #  email: String
-  #  aff: String
-  #  type: String
-  #}
-
   input UserInput {
     username: String!
     email: String!
@@ -463,13 +441,6 @@ const typeDefs = `
 
   # Common types
   scalar DateTime
-
-  interface Object {
-    id: ID!
-    created: DateTime!
-    updated: DateTime
-  }
-
 `
 
 module.exports = { resolvers, typeDefs }
