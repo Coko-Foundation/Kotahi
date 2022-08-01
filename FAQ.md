@@ -186,6 +186,12 @@ Editors will still need to manually select which fields to publish for any given
 
 Each selected field or comment (if it is not empty) will be published as a separate Hypothes.is annotation. An annotation can be updated or deleted by modifying the contents of the field or deselecting the "Publish" checkbox, and pressing the "Publish" button again.
 
+#### Ordering of published annotations
+
+Threaded discussion comments are published first, in date order; then submission form fields (in the order they appear in the form); then decision form fields (in the order they appear in the form).
+
+This ordering can be overridden by adding `HYPOTHESIS_REVERSE_FIELD_ORDER=true` to the `.env` file. This will not change the ordering of threaded discussion comments, but will reverse the order of all other annotations. This is occasionally useful if you wish fields to appear with a top-to-bottom ordering within the context of a bottom-to-top chronological listing (e.g. if annotations will become TRiP listings).
+
 Note that publishing of review fields to hypothes.is is not yet supported, but is coming soon.
 
 ## API

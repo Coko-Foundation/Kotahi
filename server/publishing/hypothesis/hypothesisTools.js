@@ -95,6 +95,7 @@ const getPublishableFieldsForObject = (
   form,
   threadedDiscussions,
   objectId,
+  objectDate,
 ) => {
   if (!form) return []
   const { fieldsToPublish } = formFieldsToPublish || { fieldsToPublish: [] }
@@ -131,6 +132,7 @@ const getPublishableFieldsForObject = (
               field,
               fieldName: expandedFieldName,
               text,
+              date: c.created,
               shouldPublish,
               publishingTag,
               objectId,
@@ -150,6 +152,7 @@ const getPublishableFieldsForObject = (
         field,
         fieldName: field.name,
         text,
+        date: objectDate,
         shouldPublish,
         publishingTag,
         objectId,
@@ -173,6 +176,7 @@ const getPublishableFields = (manuscript, forms, threadedDiscussions) => {
       forms.find(f => f.category === 'submission'),
       threadedDiscussions,
       manuscript.id,
+      null,
     ),
   )
 
@@ -186,6 +190,7 @@ const getPublishableFields = (manuscript, forms, threadedDiscussions) => {
           forms.find(f => f.category === 'decision'),
           threadedDiscussions,
           r.id,
+          null,
         ),
       ),
     )
@@ -201,6 +206,7 @@ const getPublishableFields = (manuscript, forms, threadedDiscussions) => {
           forms.find(f => f.category === 'review'),
           threadedDiscussions,
           r.id,
+          r.updated,
         ),
       ),
     )

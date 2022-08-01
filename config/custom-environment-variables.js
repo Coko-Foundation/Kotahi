@@ -61,6 +61,7 @@ module.exports = {
     apiKey: 'HYPOTHESIS_API_KEY',
     group: 'HYPOTHESIS_GROUP',
     shouldAllowTagging: 'HYPOTHESIS_ALLOW_TAGGING',
+    reverseFieldOrder: 'HYPOTHESIS_REVERSE_FIELD_ORDER',
   },
   review: {
     shared: 'REVIEW_SHARED',

@@ -78,9 +78,14 @@ const publishToHypothesis = async manuscript => {
     }),
   )
 
+  if (config.hypothesis.reverseFieldOrder === 'true') fields.reverse()
+  const datedFields = fields.filter(f => f.date).sort((a, b) => a.date - b.date)
+  const fieldsWithoutDates = fields.filter(f => !f.date)
+  const orderedFields = datedFields.concat(fieldsWithoutDates)
+
   const newHypothesisMap = {}
 
-  for (const f of fields) {
+  for (const f of orderedFields) {
     if (['create', 'update'].includes(f.action)) {
       const requestBody = {
         group: config.hypothesis.group,
