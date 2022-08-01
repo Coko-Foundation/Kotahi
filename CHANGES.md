@@ -1,5 +1,9 @@
 ## Changes
 
+### 2022-08-01
+
+eLife only: To publish fields to Hypothesis in reverse order, so that they appear in top-to-bottom order in the TRiP listing, add `HYPOTHESIS_REVERSE_FIELD_ORDER=true` to the `.env` file. See FAQ.md for details.
+
 ### 2022-07-14
 
 Fields for publishing are now specified in the form-builder, rather than via `HYPOTHESIS_PUBLISH_FIELDS` in the `.env` file. If `HYPOTHESIS_PUBLISH_FIELDS` is not specified, no action is necessary. Otherwise, to retain your existing publishing options, you should:
