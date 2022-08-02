@@ -11,6 +11,7 @@ import { SectionContent } from '../../../../shared'
 import SelectReceiver from './SelectReceiver'
 import SelectEmailTemplate from './SelectEmailTemplate'
 import { convertTimestampToDate } from '../../../../../shared/time-formatting'
+import ActionButton from '../../../../shared/ActionButton'
 
 const UserEmailWrapper = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
@@ -71,6 +72,7 @@ const EmailNotifications = ({
   const [selectedTemplate, setSelectedTemplate] = useState('')
   const [isNewUser, setIsNewUser] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
+  const [notifyResponse, setNotifyResponse] = useState(false)
 
   const resetAll = () => {
     setExternalEmail('')
@@ -341,10 +343,10 @@ const EmailNotifications = ({
     if (!isNewUser && !selectedEmail) return
 
     const response = await sendNotifyEmail(input)
+    setNotifyResponse(!responseStatus)
     const responseStatus = response.data.sendEmail.success
     if (responseStatus) logMessageAfterEmailSent(input)
   }
-
   return (
     <SectionContent>
       <SectionHeader>
@@ -366,9 +368,9 @@ const EmailNotifications = ({
           onChangeEmailTemplate={setSelectedTemplate}
           selectedEmailTemplate={selectedTemplate}
         />
-        <StyledNotifyButton onClick={sendEmailHandler} primary>
-          Notify
-        </StyledNotifyButton>
+        <ActionButton status={notifyResponse ? 'success' : ''} onClick={sendEmailHandler} primary>
+          {!notifyResponse ? 'Notify':'Notified'}
+          </ActionButton>
       </RowGridStyled>
       <MessageWrapper isVisible={isVisible}>
         User email address opted out
