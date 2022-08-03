@@ -317,6 +317,7 @@ const EmailNotifications = ({
 
   const sendEmailHandler = async () => {
     setNotificationStatus('pending')
+
     if (isEmailAddressOptedOut?.data?.getBlacklistInformation.length) {
       setIsVisible(true)
       return
