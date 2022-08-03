@@ -73,7 +73,6 @@ const EmailNotifications = ({
   const [isVisible, setIsVisible] = useState(false)
   const [notificationStatus, setNotificationStatus] = useState(null)
 
-
   const resetAll = () => {
     setExternalEmail('')
     setSelectedEmail('')
@@ -349,7 +348,7 @@ const EmailNotifications = ({
 
     if (responseStatus) logMessageAfterEmailSent(input)
   }
-  
+
   return (
     <SectionContent>
       <SectionHeader>

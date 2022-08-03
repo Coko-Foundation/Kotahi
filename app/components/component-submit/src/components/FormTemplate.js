@@ -206,7 +206,7 @@ const InnerFormTemplate = ({
   setShouldPublishField,
 }) => {
   const [submitSucceeded, setSubmitSucceeded] = useState(false)
-  
+
   const submitButton = (text, haspopup = false) => {
     return (
       <div>
