@@ -129,6 +129,7 @@ export const GET_INVITATION_MANUSCRIPT_ID = gql`
   query invitationManuscriptId($id: ID) {
     invitationManuscriptId(id: $id) {
       manuscriptId
+      invitedPersonType
     }
   }
 `
@@ -207,6 +208,13 @@ export const DELETE_MANUSCRIPTS = gql`
 export const ASSIGN_USER_AS_AUTHOR = gql`
 mutation($manuscriptId: ID!, $userId: ID!) {
   assignUserAsAuthor(manuscriptId: $manuscriptId, userId: $userId ) {
+    ${teamFields}
+  }
+}`
+
+export const ASSIGN_USER_AS_REVIEWER = gql`
+mutation($manuscriptId: ID!, $userId: ID!, $invitationId: ID) {
+  addReviewer(manuscriptId: $manuscriptId, userId: $userId, invitationId: $invitationId ) {
     ${teamFields}
   }
 }

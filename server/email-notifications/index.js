@@ -4,6 +4,7 @@ const config = require('config')
 // TODO: refactor below template logic
 const adhocEditorAssignmentEmailTemplate = require('./email-templates/adhocEditorAssignmentEmailTemplate')
 const authorInvitationEmailTemplate = require('./email-templates/authorInvitationEmailTemplate')
+const reviewerInvitationEmailTemplate = require('./email-templates/reviewerInvitationEmailTemplate')
 const deputyEditorAssignmentEmailTemplate = require('./email-templates/deputyEditorAssignmentEmailTemplate')
 const editorAssignmentEmailTemplate = require('./email-templates/editorAssignmentEmailTemplate')
 const evaluationCompleteEmailTemplate = require('./email-templates/evaluationCompleteEmailTemplate')
@@ -52,6 +53,7 @@ const reviewInvitationEmailTemplate37 = require('./email-templates/review-invita
 const templates = {
   adhocEditorAssignmentEmailTemplate,
   authorInvitationEmailTemplate,
+  reviewerInvitationEmailTemplate,
   deputyEditorAssignmentEmailTemplate,
   editorAssignmentEmailTemplate,
   evaluationCompleteEmailTemplate,

@@ -179,6 +179,10 @@ switch (
         value: 'reviewCompleteEmailTemplate',
       },
       {
+        label: 'Reviewer Invitation Email Template',
+        value: 'reviewerInvitationEmailTemplate',
+      },
+      {
         label:
           'Satrajit Ghosh - Peer-Review Invitation Assignment notification template',
         value: 'reviewInvitationEmailTemplate3',
@@ -228,6 +232,10 @@ switch (
       {
         label: 'Evaluation Complete required notification template',
         value: 'evaluationCompleteEmailTemplate',
+      },
+      {
+        label: 'Reviewer Invitation Email Template',
+        value: 'reviewerInvitationEmailTemplate',
       },
     ]
     break

@@ -89,12 +89,21 @@ const getPublishableTextFromValue = (value, field) => {
   return value
 }
 
+const getFieldNamesLastPublished = (objectId, hypothesisMap) => {
+  const objectPrefix = `${objectId}.`
+  return Object.keys(hypothesisMap)
+    .filter(key => key.startsWith(objectPrefix))
+    .map(key => key.split(objectPrefix)[1].split(':')[0])
+}
+
 const getPublishableFieldsForObject = (
   formFieldsToPublish,
   data,
   form,
   threadedDiscussions,
   objectId,
+  hypothesisMap,
+  objectDate,
 ) => {
   if (!form) return []
   const { fieldsToPublish } = formFieldsToPublish || { fieldsToPublish: [] }
@@ -103,11 +112,17 @@ const getPublishableFieldsForObject = (
     structure: { children: fields },
   } = form
 
+  const lastPublishedFields = getFieldNamesLastPublished(
+    objectId,
+    hypothesisMap,
+  )
+
   return fields
     .filter(
       f =>
-        ['always', 'true'].includes(f.permitPublishing) &&
-        f.hideFromAuthors !== 'true',
+        (['always', 'true'].includes(f.permitPublishing) &&
+          f.hideFromAuthors !== 'true') ||
+        lastPublishedFields.includes(f.name),
     )
     .map(field => {
       const { publishingTag } = field
@@ -124,6 +139,7 @@ const getPublishableFieldsForObject = (
 
             const shouldPublish =
               text &&
+              field.hideFromAuthors !== 'true' &&
               (field.permitPublishing === 'always' ||
                 fieldsToPublish.includes(expandedFieldName))
 
@@ -131,6 +147,7 @@ const getPublishableFieldsForObject = (
               field,
               fieldName: expandedFieldName,
               text,
+              date: c.created,
               shouldPublish,
               publishingTag,
               objectId,
@@ -143,6 +160,7 @@ const getPublishableFieldsForObject = (
 
       const shouldPublish =
         text &&
+        field.hideFromAuthors !== 'true' &&
         (field.permitPublishing === 'always' ||
           fieldsToPublish.includes(field.name))
 
@@ -150,6 +168,7 @@ const getPublishableFieldsForObject = (
         field,
         fieldName: field.name,
         text,
+        date: objectDate,
         shouldPublish,
         publishingTag,
         objectId,
@@ -173,6 +192,8 @@ const getPublishableFields = (manuscript, forms, threadedDiscussions) => {
       forms.find(f => f.category === 'submission'),
       threadedDiscussions,
       manuscript.id,
+      manuscript.evaluationsHypothesisMap,
+      null,
     ),
   )
 
@@ -186,6 +207,8 @@ const getPublishableFields = (manuscript, forms, threadedDiscussions) => {
           forms.find(f => f.category === 'decision'),
           threadedDiscussions,
           r.id,
+          manuscript.evaluationsHypothesisMap,
+          null,
         ),
       ),
     )
@@ -201,6 +224,8 @@ const getPublishableFields = (manuscript, forms, threadedDiscussions) => {
           forms.find(f => f.category === 'review'),
           threadedDiscussions,
           r.id,
+          manuscript.evaluationsHypothesisMap,
+          r.updated,
         ),
       ),
     )

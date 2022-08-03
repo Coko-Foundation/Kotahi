@@ -161,7 +161,11 @@ const ReviewersPage = ({ match, history }) => {
       initialValues={{ user: undefined }}
       onSubmit={values =>
         addReviewer({
-          variables: { userId: values.user.id, manuscriptId: manuscript.id },
+          variables: {
+            userId: values.user.id,
+            manuscriptId: manuscript.id,
+            status: 'invited',
+          },
         })
       }
     >
