@@ -349,6 +349,7 @@ const EmailNotifications = ({
 
     if (responseStatus) logMessageAfterEmailSent(input)
   }
+  
   return (
     <SectionContent>
       <SectionHeader>
