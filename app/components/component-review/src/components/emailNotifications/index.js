@@ -5,7 +5,6 @@ import {
   SectionHeader,
   SectionRowGrid,
   Title,
-  StyledNotifyButton,
 } from '../style'
 import { SectionContent } from '../../../../shared'
 import SelectReceiver from './SelectReceiver'
@@ -72,7 +71,8 @@ const EmailNotifications = ({
   const [selectedTemplate, setSelectedTemplate] = useState('')
   const [isNewUser, setIsNewUser] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
-  const [notifyResponse, setNotifyResponse] = useState(false)
+  const [notificationStatus, setNotificationStatus] = useState(null)
+
 
   const resetAll = () => {
     setExternalEmail('')
@@ -317,6 +317,7 @@ const EmailNotifications = ({
   }
 
   const sendEmailHandler = async () => {
+    setNotificationStatus('pending')
     if (isEmailAddressOptedOut?.data?.getBlacklistInformation.length) {
       setIsVisible(true)
       return
@@ -343,8 +344,9 @@ const EmailNotifications = ({
     if (!isNewUser && !selectedEmail) return
 
     const response = await sendNotifyEmail(input)
-    setNotifyResponse(!responseStatus)
     const responseStatus = response.data.sendEmail.success
+    setNotificationStatus(responseStatus ? 'success' : 'failure')
+
     if (responseStatus) logMessageAfterEmailSent(input)
   }
   return (
@@ -368,9 +370,9 @@ const EmailNotifications = ({
           onChangeEmailTemplate={setSelectedTemplate}
           selectedEmailTemplate={selectedTemplate}
         />
-        <ActionButton status={notifyResponse ? 'success' : ''} onClick={sendEmailHandler} primary>
-          {!notifyResponse ? 'Notify':'Notified'}
-          </ActionButton>
+        <ActionButton status={notificationStatus} onClick={sendEmailHandler} primary>
+          Notify
+        </ActionButton>
       </RowGridStyled>
       <MessageWrapper isVisible={isVisible}>
         User email address opted out
