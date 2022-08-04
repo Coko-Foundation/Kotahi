@@ -289,7 +289,7 @@ const DecisionVersion = ({
                   initialValues={
                     currentDecisionData?.jsonData
                       ? JSON.parse(currentDecisionData?.jsonData)
-                      : {}
+                      : {comment: '', files: '', verdict: ''}
                   }
                   isSubmission={false}
                   manuscriptId={version.id}
