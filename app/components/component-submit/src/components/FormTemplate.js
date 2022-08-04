@@ -506,7 +506,6 @@ const FormTemplate = ({
         ),
     )
   }
-
   const [lastChangedField, setLastChangedField] = useState(null)
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
