@@ -5,12 +5,12 @@ import {
   SectionHeader,
   SectionRowGrid,
   Title,
-  StyledNotifyButton,
 } from '../style'
 import { SectionContent } from '../../../../shared'
 import SelectReceiver from './SelectReceiver'
 import SelectEmailTemplate from './SelectEmailTemplate'
 import { convertTimestampToDate } from '../../../../../shared/time-formatting'
+import ActionButton from '../../../../shared/ActionButton'
 
 const UserEmailWrapper = styled.div`
   font-size: ${th('fontSizeBaseSmall')};
@@ -71,6 +71,7 @@ const EmailNotifications = ({
   const [selectedTemplate, setSelectedTemplate] = useState('')
   const [isNewUser, setIsNewUser] = useState(false)
   const [isVisible, setIsVisible] = useState(false)
+  const [notificationStatus, setNotificationStatus] = useState(null)
 
   const resetAll = () => {
     setExternalEmail('')
@@ -315,6 +316,8 @@ const EmailNotifications = ({
   }
 
   const sendEmailHandler = async () => {
+    setNotificationStatus('pending')
+
     if (isEmailAddressOptedOut?.data?.getBlacklistInformation.length) {
       setIsVisible(true)
       return
@@ -342,6 +345,8 @@ const EmailNotifications = ({
 
     const response = await sendNotifyEmail(input)
     const responseStatus = response.data.sendEmail.success
+    setNotificationStatus(responseStatus ? 'success' : 'failure')
+
     if (responseStatus) logMessageAfterEmailSent(input)
   }
 
@@ -366,9 +371,9 @@ const EmailNotifications = ({
           onChangeEmailTemplate={setSelectedTemplate}
           selectedEmailTemplate={selectedTemplate}
         />
-        <StyledNotifyButton onClick={sendEmailHandler} primary>
+        <ActionButton status={notificationStatus} onClick={sendEmailHandler} primary>
           Notify
-        </StyledNotifyButton>
+        </ActionButton>
       </RowGridStyled>
       <MessageWrapper isVisible={isVisible}>
         User email address opted out

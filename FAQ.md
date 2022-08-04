@@ -35,6 +35,13 @@ ORCID_CLIENT_SECRET=b37055db-4405-4dfb-a547-d393cd63bb2a
 
 You should now be able to use the login at `http://localhost:4000/login`.
 
+18. If clicking on the Login with ORCHID or Register with ORCHID button the following error message occurs
+
+Error: The provided client id APP-QOSMNFDSJDSIJDSDS # please make your own! see https://gitlab.coko.foundation/kotahi/kotah-/blob/main/FAQ.md#how-do-i-setup-orcid-for-development is invalid.
+
+Then remove the comment available after client id, provided by you in the .env file available in the directory, where you have
+pulled Kotahi code from gitlab.
+
 _Disclaimer: ORCID is a separate organisation from Coko and we are in no way affiliated with them. This is meant as a guide to make a developer's life easier. If you encounter issues with ORCID services not working as expected, please contact their support._
 
 [1] Even though this URL does not exist for the client (ie. it isn't handled by our `react-router` setup), it will be redirected to the server via `webpack-dev-server`'s proxy.
