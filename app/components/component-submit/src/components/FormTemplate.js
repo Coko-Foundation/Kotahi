@@ -23,6 +23,7 @@ import ThreadedDiscussion from '../../../component-formbuilder/src/components/bu
 import ActionButton from '../../../shared/ActionButton'
 import { hasValue } from '../../../../shared/htmlUtils'
 import FormWaxEditor from '../../../component-formbuilder/src/components/FormWaxEditor'
+import { createBlankSubmissionBasedOnForm } from './Submit'
 
 const Intro = styled.div`
   font-style: italic;
@@ -269,7 +270,6 @@ const InnerFormTemplate = ({
       : true)
 
   const manuscriptFiles = filterFileManuscript(values.files || [])
-
   const submittedManuscriptFile =
     isSubmission && manuscriptFiles.length ? manuscriptFiles[0] : null
 
@@ -491,11 +491,9 @@ const FormTemplate = ({
   shouldShowOptionToPublish = false,
 }) => {
   const [confirming, setConfirming] = React.useState(false)
-
   const toggleConfirming = () => {
     setConfirming(confirm => !confirm)
   }
-
   const sumbitPendingThreadedDiscussionComments = async values => {
     await Promise.all(
       form.children
@@ -510,12 +508,13 @@ const FormTemplate = ({
     )
   }
 
+  const initialValuesWithDummyValues = { ...createBlankSubmissionBasedOnForm(form), ...initialValues }
   const [lastChangedField, setLastChangedField] = useState(null)
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
     <Formik
       displayName={form.name}
-      initialValues={initialValues}
+      initialValues={initialValuesWithDummyValues}
       onSubmit={async (values, actions) => {
         await sumbitPendingThreadedDiscussionComments(values)
         if (onSubmit) await onSubmit(values, actions)

@@ -21,7 +21,7 @@ import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
 import AssignEditor from './assignEditors/AssignEditor'
 import SubmissionForm from './SubmissionForm'
 
-const createBlankSubmissionBasedOnForm = form => {
+export const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
   const fieldNames = form.children.map(field => field.name)
   fieldNames.forEach(fieldName => set(allBlankedFields, fieldName, ''))
