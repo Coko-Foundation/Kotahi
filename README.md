@@ -19,9 +19,9 @@ Once you have those things, try doing this:
 - From the shell in the main directory: `yarn install` to install all the Node packages.
 - From the shell: `docker-compose up` _Do not do this if you do not have a .env file!_
 - In case following error message is dispayed during execution of `docker-compose up` 
-  db-pagedjs_1    | 2022-08-02 14:17:42.683 UTC [29] FATAL:  database "pagedjs_dev" does not 
-  exist pagedjs_1 | error: Error while running migrations: database "pagedjs_dev" does not exist 
-  Execute the `docker-compose up` once again, in case same error occurs then execute `docker system prune`
+  db-pagedjs_1 | 2022-08-02 14:17:42.683 UTC [29] FATAL:database "pagedjs_dev" does not exit 
+  pagedjs_1 | error: Error while running migrations: database "pagedjs_dev" does not exist 
+  Execute the `docker-compose up` once again, in case same error occurs then execute `docker system prune`, and execute `docker-compose up` once again.
   
 - Point your browser at [http://localhost:4000](http://localhost:4000) – you should see an empty "recent publications" page.
 - Click **Dashboard** in the upper right.
