@@ -207,15 +207,19 @@ const InnerFormTemplate = ({
   setShouldPublishField,
 }) => {
   const [submitSucceeded, setSubmitSucceeded] = useState(false)
+  const [disabled, setButtonDisabled] = useState(false)
 
   const submitButton = (text, haspopup = false) => {
     return (
       <div>
         <ActionButton
+          disabled={disabled}
           onClick={async () => {
             // TODO shouldn't this come after error checking and submission?
             if (republish) {
-              republish(manuscriptId)
+              setButtonDisabled(true)
+              await republish(manuscriptId)
+              setButtonDisabled(false)
               return
             }
 
@@ -270,6 +274,7 @@ const InnerFormTemplate = ({
       : true)
 
   const manuscriptFiles = filterFileManuscript(values.files || [])
+
   const submittedManuscriptFile =
     isSubmission && manuscriptFiles.length ? manuscriptFiles[0] : null
 
@@ -491,9 +496,11 @@ const FormTemplate = ({
   shouldShowOptionToPublish = false,
 }) => {
   const [confirming, setConfirming] = React.useState(false)
+
   const toggleConfirming = () => {
     setConfirming(confirm => !confirm)
   }
+
   const sumbitPendingThreadedDiscussionComments = async values => {
     await Promise.all(
       form.children
@@ -508,7 +515,11 @@ const FormTemplate = ({
     )
   }
 
-  const initialValuesWithDummyValues = { ...createBlankSubmissionBasedOnForm(form), ...initialValues }
+  const initialValuesWithDummyValues = {
+    ...createBlankSubmissionBasedOnForm(form),
+    ...initialValues,
+  }
+
   const [lastChangedField, setLastChangedField] = useState(null)
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
