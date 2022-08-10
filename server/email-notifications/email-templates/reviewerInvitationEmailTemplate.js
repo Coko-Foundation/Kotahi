@@ -1,9 +1,8 @@
-const AuthorAcceptanceEmailTemplate = ({
+const ReviewerInvitationEmailTemplate = ({
   articleTitle,
   appUrl,
-  authorName,
-  currentUser,
   invitationId,
+  receiverFirstName,
 }) => {
   const result = {
     cc: '',
@@ -13,7 +12,7 @@ const AuthorAcceptanceEmailTemplate = ({
 
   result.content = `
   	<p>
-		<p>Dear ${authorName}</p>
+		<p>Dear ${receiverFirstName}</p>
 		<p>
 			You have been selected to peer review the manuscript titled “${articleTitle}”. Click on the link below to accept or decline the invitation;
 		</p>
@@ -39,4 +38,4 @@ const AuthorAcceptanceEmailTemplate = ({
   return result
 }
 
-module.exports = AuthorAcceptanceEmailTemplate
+module.exports = ReviewerInvitationEmailTemplate
