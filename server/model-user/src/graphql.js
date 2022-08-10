@@ -206,12 +206,16 @@ const resolvers = {
     async sendEmail(_, { input }, ctx) {
       const inputParsed = JSON.parse(input)
 
+      // TODO:
+      // Maybe a better way to make this function less ambigious is by having a simpler object of the structure:
+      // { senderName, senderEmail, recieverName, recieverEmail }
+      // ANd send this as `input` from the Frontend
       const {
         manuscript,
-        selectedEmail,
+        selectedEmail, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing reciver being selected
         selectedTemplate,
-        externalEmail,
-        externalName,
+        externalEmail, // New User Email
+        externalName, // New User username
         currentUser,
       } = inputParsed
 
@@ -220,6 +224,8 @@ const resolvers = {
       let receiverFirstName = externalName
 
       if (selectedEmail) {
+        // If the email of a pre-existing user is selected
+        // Get that user
         const [userReceiver] = await models.User.query()
           .where({ email: selectedEmail })
           .withGraphFetched('[defaultIdentity]')
@@ -265,6 +271,8 @@ const resolvers = {
         let invitedPersonName = ''
 
         if (selectedEmail) {
+          // If the email of a pre-existing user is selected
+          // Get that user
           const [userReceiver] = await models.User.query()
             .where({ email: selectedEmail })
             .withGraphFetched('[defaultIdentity]')
@@ -272,6 +280,7 @@ const resolvers = {
           userId = userReceiver.id
           invitedPersonName = userReceiver.username
         } else {
+          // Use the username provided
           invitedPersonName = externalName
         }
 
