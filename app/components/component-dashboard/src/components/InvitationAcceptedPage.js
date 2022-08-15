@@ -57,6 +57,7 @@ const InvitationAcceptedPage = () => {
   })
 
   let manuscriptId
+
   useEffect(() => {
     if (data && invitedUser) {
       manuscriptId = data.invitationManuscriptId.manuscriptId
@@ -78,7 +79,7 @@ const InvitationAcceptedPage = () => {
         })
       }
     }
-  }, [data])
+  }, [data, invitedUser])
 
   return <Spinner />
 }
