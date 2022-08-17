@@ -217,9 +217,7 @@ mutation($manuscriptId: ID!, $userId: ID!, $invitationId: ID) {
   addReviewer(manuscriptId: $manuscriptId, userId: $userId, invitationId: $invitationId ) {
     ${teamFields}
   }
-}
-
-`
+}`
 
 export const GET_MANUSCRIPTS_AND_FORM = gql`
   query Manuscripts(

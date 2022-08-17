@@ -8,6 +8,7 @@ import {
   GET_INVITATION_MANUSCRIPT_ID,
   UPDATE_INVITATION_STATUS,
 } from '../../../../queries/index'
+import mutations from '../graphql/mutations'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
 
 const InvitationAcceptedPage = () => {
@@ -44,17 +45,32 @@ const InvitationAcceptedPage = () => {
   })
 
   const [assignUserAsReviewer] = useMutation(ASSIGN_USER_AS_REVIEWER, {
-    onCompleted: () => {
-      updateInvitationStatus({
+    onCompleted: teamFields => {
+      addReviewerResponse({
         variables: {
-          id: invitationId,
-          status: 'ACCEPTED',
-          userId: invitedUser ? invitedUser.id : null,
-          responseDate: currentDate,
+          currentUserId: invitedUser ? invitedUser.id : null,
+          action: 'accepted',
+          teamId: teamFields?.addReviewer?.id,
         },
       })
     },
   })
+
+  const [addReviewerResponse] = useMutation(
+    mutations.reviewerResponseMutation,
+    {
+      onCompleted: () => {
+        updateInvitationStatus({
+          variables: {
+            id: invitationId,
+            status: 'ACCEPTED',
+            userId: invitedUser ? invitedUser.id : null,
+            responseDate: currentDate,
+          },
+        })
+      },
+    },
+  )
 
   let manuscriptId
 
