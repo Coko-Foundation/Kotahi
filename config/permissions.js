@@ -239,6 +239,19 @@ const userIsInvitedReviewer = rule({ cache: 'strict' })(
   },
 )
 
+const userHasAcceptedInvitation = rule({ cache: 'strict' })(
+  async (parent, args, ctx, info) => {
+    if (!ctx.user) return false
+
+    const teamMember = await ctx.connectors.TeamMember.model
+      .query()
+      .where({ userId: ctx.user, teamId: args.teamId, status: 'accepted' })
+      .first()
+
+    return !!teamMember
+  },
+)
+
 const userIsAuthor = rule({ cache: 'strict' })(
   async (parent, args, ctx, info) => {
     if (!ctx.user) return false
@@ -392,7 +405,7 @@ const permissions = {
       userIsReviewAuthorAndReviewIsNotCompleted,
       userIsEditorOfTheManuscriptOfTheReview,
     ),
-    reviewerResponse: userIsInvitedReviewer,
+    reviewerResponse: or(userIsInvitedReviewer, userHasAcceptedInvitation),
     completeReview: or(
       userIsReviewAuthorAndReviewIsNotCompleted,
       userIsEditorOfTheManuscriptOfTheReview,
