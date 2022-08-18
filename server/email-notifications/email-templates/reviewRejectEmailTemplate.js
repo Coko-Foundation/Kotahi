@@ -2,7 +2,7 @@ const ReviewRejectEmailTemplate = ({
   articleTitle,
   authorName,
   reviewerName,
-  receiverFirstName,
+  receiverName,
   shortId,
 }) => {
   const result = {
@@ -16,7 +16,7 @@ const ReviewRejectEmailTemplate = ({
       result.cc = 'aperture@humanbrainmapping.org'
       result.subject = 'Reviewer has rejected review invitation'
       result.content = `<p>
-      <p>Dear ${receiverFirstName},</p>
+      <p>Dear ${receiverName},</p>
       <p>Reviewer ${reviewerName} has rejected your review invitation. Please log into the publishing platform and invite another reviewer to the submission:</p>
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>Thank you,</p>
@@ -26,7 +26,7 @@ const ReviewRejectEmailTemplate = ({
     default:
       result.subject = 'Reviewer has rejected review invitation'
       result.content = `<p>
-      <p>Dear ${receiverFirstName},</p>
+      <p>Dear ${receiverName},</p>
       <p>Reviewer ${reviewerName} has rejected your review invitation. Please log into the publishing platform and invite another reviewer to the submission:</p>
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>Thank you,</p>

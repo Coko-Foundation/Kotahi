@@ -1,7 +1,7 @@
 const deputyEditorAssignmentEmailTemplate = ({
   articleTitle,
   authorName,
-  receiverFirstName,
+  receiverName,
   shortId,
 }) => {
   const result = {
@@ -15,7 +15,7 @@ const deputyEditorAssignmentEmailTemplate = ({
       result.cc = 'aperture@humanbrainmapping.org'
       result.subject = 'Aperture Neuro Submission Ready for Handling Editor'
       result.content = `<p>
-      <p>Dear ${receiverFirstName},</p>
+      <p>Dear ${receiverName},</p>
       <p>You have been assigned the following Research Object to Handle:</p>
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>To access the submission please log onto the Aperture Submission Kotahi platform at <a href="https://apertureneuro.cloud68.co/login" target="_blank">https://apertureneuro.cloud68.co/login</a>.</p>
@@ -30,7 +30,7 @@ const deputyEditorAssignmentEmailTemplate = ({
     default:
       result.subject = 'Submission Ready for Handling Editor'
       result.content = `<p>
-      <p>Dear ${receiverFirstName},</p>
+      <p>Dear ${receiverName},</p>
       <p>You have been assigned the following Research Object to Handle:</p>
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>To access the submission please log onto the Submission Kotahi platform at <a href="https://kotahidev.cloud68.co/login" target="_blank">https://kotahidev.cloud68.co/login</a>.</p>

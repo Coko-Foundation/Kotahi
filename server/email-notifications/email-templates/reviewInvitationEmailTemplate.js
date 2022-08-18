@@ -1,7 +1,7 @@
 const ReviewInvitationEmailTemplate = ({
   articleTitle,
   authorName,
-  receiverFirstName,
+  receiverName,
   shortId,
 }) => {
   const result = {
@@ -15,7 +15,7 @@ const ReviewInvitationEmailTemplate = ({
       result.cc = 'aperture@humanbrainmapping.org'
       result.subject = 'Aperture Neuro Peer-Reviewer Invitation Email'
       result.content = `<p>
-      <p>Dear ${receiverFirstName},</p>
+      <p>Dear ${receiverName},</p>
       <p>I am writing to invite you to peer-review a new submission for Aperture Neuro, a new open access publishing platform powered by the Organization for Human Brain Mapping. I would like to invite you to review the following Research Object:</p>
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>If you are interested in reviewing this submission, please complete the following:</p>
@@ -33,7 +33,7 @@ const ReviewInvitationEmailTemplate = ({
     default:
       result.subject = 'Peer-Reviewer Invitation Email'
       result.content = `<p>
-      <p>Dear ${receiverFirstName},</p>
+      <p>Dear ${receiverName},</p>
       <p>I am writing to invite you to peer-review a new submission. I would like to invite you to review the following Research Object: </p>
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>If you are interested in reviewing this submission, please log onto the <a href="https://kotahidev.cloud68.co/login" target="_blank">Kotahi</a> with your Orcid ID and set up your profile.</p>

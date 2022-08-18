@@ -2,7 +2,7 @@ const ReviewerInvitationEmailTemplate = ({
   articleTitle,
   appUrl,
   invitationId,
-  receiverFirstName,
+  receiverName,
 }) => {
   const result = {
     cc: '',
@@ -12,7 +12,7 @@ const ReviewerInvitationEmailTemplate = ({
 
   result.content = `
   	<p>
-		<p>Dear ${receiverFirstName}</p>
+		<p>Dear ${receiverName}</p>
 		<p>
 			You have been selected to peer review the manuscript titled “${articleTitle}”. Click on the link below to accept or decline the invitation;
 		</p>
