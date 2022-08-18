@@ -28,7 +28,7 @@ const testUsers = {
   'Sherry Crofoot': '0000000276459921',
   'Elaine Barnes': '0000000294294446',
   'Gale Davis': '0000000159567341',
-  'Joanne Pilger': '0000000318382441',
+  'Joane Pilger': '0000000318382441',
   'Emily Clay': '0000000205642016', // Author
   'Sinead Sullivan': '0000000256415729', // Admin
   'Test Account': '000000032536230X',
