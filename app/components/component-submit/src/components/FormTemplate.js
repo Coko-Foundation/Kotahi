@@ -213,7 +213,10 @@ const InnerFormTemplate = ({
     return (
       <div>
         <ActionButton
-          disabled={disabled}
+          dataCy={`${form.name
+            .toLowerCase()
+            .replace(/ /g, '-')
+            .replace(/[^\w-]+/g, '')}-action-btn`}
           onClick={async () => {
             // TODO shouldn't this come after error checking and submission?
             if (republish) {

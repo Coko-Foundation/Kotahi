@@ -5,15 +5,14 @@
  */
 const REVIEW_METADATA_CELL = 'ReviewMetadata__Cell'
 
-const ABSTRACT_EDITOR_FIELD =
-  '[class*=SimpleWaxEditor__Editor] > [contenteditable]'
+const ABSTRACT_EDITOR_FIELD = '.ProseMirror > .paragraph'
 
 // const REVIEW_COMMENT_FIELD = 'reviewComment'
 // const CONFIDENTIAL_COMMENT_FIELD = 'confidentialComment'
-const ACCEPT_RADIO_BUTTON = 'span[color=green]'
+const ACCEPT_RADIO_BUTTON = 'span[color="#00ff7b"]'
 const REVISE_RADIO_BUTTON = 'span[color=orange]'
 const REJECT_RADIO_BUTTON = 'span[color=red]'
-const SUBMIT_BUTTON = '[class*=General__SectionAction] > button'
+const SUBMIT_BUTTON = '[data-cy="review-form-action-btn"]'
 // const DECISION_COMMENT_FIELD = 'decisionComment'
 const ERROR_TEXT = 'style__ErrorText-'
 const FORM_STATUS = 'style__FormStatus-'
@@ -33,7 +32,9 @@ export const ReviewPage = {
     return cy.getByContainsClass(REVIEW_METADATA_CELL).eq(nth)
   },
   getReviewCommentField() {
-    return cy.get(ABSTRACT_EDITOR_FIELD).eq(0)
+    return cy.get(
+      ':nth-child(1) > :nth-child(2) > :nth-child(1) > :nth-child(1) > .EditorStyles__SimpleGrid-k4rcxo-9 > .EditorStyles__SimpleEditorDiv-k4rcxo-11',
+    )
   },
   fillInReviewComment(reviewComment) {
     this.getReviewCommentField().fillInput(reviewComment)

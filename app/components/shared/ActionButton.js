@@ -89,6 +89,7 @@ const ActionButton = ({
   isCompact,
   children,
   className,
+  dataCy,
 }) => {
   if (disabled)
     return (
@@ -136,6 +137,7 @@ const ActionButton = ({
     <Button
       bgColor={bgColor}
       className={className}
+      data-cy={dataCy}
       fgColor={fgColor}
       isCompact={isCompact}
       onClick={onClick}
