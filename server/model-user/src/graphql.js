@@ -221,7 +221,7 @@ const resolvers = {
 
       const receiverEmail = externalEmail || selectedEmail
 
-      let receiverFirstName = externalName
+      let receiverName = externalName
 
       if (selectedEmail) {
         // If the email of a pre-existing user is selected
@@ -231,11 +231,8 @@ const resolvers = {
           .withGraphFetched('[defaultIdentity]')
 
         /* eslint-disable-next-line */
-        receiverFirstName = (
-          userReceiver.defaultIdentity.name ||
-          userReceiver.username ||
-          ''
-        ).split(' ')[0]
+        receiverName =
+          userReceiver.username || userReceiver.defaultIdentity.name || ''
       }
 
       const manuscriptWithSubmitter = await models.Manuscript.query()
@@ -243,14 +240,14 @@ const resolvers = {
         .withGraphFetched('submitter.[defaultIdentity]')
 
       const authorName =
-        manuscriptWithSubmitter.submitter.defaultIdentity.name ||
         manuscriptWithSubmitter.submitter.username ||
+        manuscriptWithSubmitter.submitter.defaultIdentity.name ||
         ''
 
       const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
       const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
-      if (!emailValidationResult || !receiverFirstName) {
+      if (!emailValidationResult || !receiverName) {
         return { success: false }
       }
 
@@ -308,7 +305,7 @@ const resolvers = {
           articleTitle: manuscript.meta.title,
           authorName,
           currentUser,
-          receiverFirstName,
+          receiverName,
           shortId: manuscript.shortId,
           toEmail,
           invitationId,

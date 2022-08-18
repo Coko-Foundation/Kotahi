@@ -1,7 +1,7 @@
 const ReviewAssignmentEmailTemplate = ({
   articleTitle,
   authorName,
-  receiverFirstName,
+  receiverName,
   shortId,
 }) => {
   const result = {
@@ -15,7 +15,7 @@ const ReviewAssignmentEmailTemplate = ({
       result.cc = 'aperture@humanbrainmapping.org'
       result.subject = 'Aperture Neuro – Submission Ready for Review'
       result.content = `<p>
-      <p>Dear ${receiverFirstName},</p>
+      <p>Dear ${receiverName},</p>
       <p>Thank you for agreeing to review for Aperture Neuro. You have now been assigned to the following submission:</p>
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>You can access the full manuscript to review by logging into your dashboard at <a href="https://apertureneuro.cloud68.co/login" target="_blank">https://apertureneuro.cloud68.co/login</a>.</p>
@@ -29,7 +29,7 @@ const ReviewAssignmentEmailTemplate = ({
     default:
       result.subject = 'Submission Ready for Handling Editor'
       result.content = `<p>
-      <p>Dear ${receiverFirstName},</p>
+      <p>Dear ${receiverName},</p>
       <p>Thank you for agreeing to review for Aperture Neuro. You have now been assigned to the following submission:</p>
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>You can access the full manuscript to review by logging into your dashboard at <a href="https://kotahidev.cloud68.co/login" target="_blank">https://kotahidev.cloud68.co/login</a>.</p>
