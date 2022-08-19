@@ -632,7 +632,13 @@ const resolvers = {
 
       await new TeamModel(team).saveGraph()
 
-      if (action === 'accepted') {
+      const existingReview = await ReviewModel.query().where({
+        manuscriptId: team.manuscriptId,
+        userId: context.user,
+      })
+
+      // modify it to check if there exists a review already
+      if (action === 'accepted' && existingReview.length === 0) {
         const review = {
           isDecision: false,
           isHiddenReviewerName: true,
