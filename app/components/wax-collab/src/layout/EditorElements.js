@@ -508,6 +508,14 @@ const EditorStyles = css`
     text-transform: uppercase;
     top: -1.25rem;
   }
+
+  /* CITATIONS */
+
+  span.article-title {
+    font-style: italic;
+    outline: red 1px dotted;
+    outline-offset: 2px;
+  }
 `
 
 export default EditorStyles

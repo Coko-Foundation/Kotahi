@@ -1,13 +1,16 @@
 import { Service } from 'wax-prosemirror-services'
-import MixedCitation from './MixedCitation'
+import MixedCitation from './citations/MixedCitation'
 import Appendix from './Appendix'
 import AppendixHeader from './AppendixHeader'
 import FrontMatter from './FrontMatter'
-import RefList from './RefList'
-import ReferenceHeader from './ReferenceHeader'
-import ArticleTitle from './ArticleTitle'
+import RefList from './citations/RefList'
+import ReferenceHeader from './citations/ReferenceHeader'
+import ArticleTitle from './citations/ArticleTitle'
 import Abstract from './Abstract'
 import AcknowledgementsSection from './AcknowledgementSection'
+import MixedCitationSpan from './citations/MixedCitationSpan'
+import AuthorName from './citations/AuthorName'
+import Doi from './citations/Doi'
 
 // copied from here: https://gitlab.coko.foundation/wax/wax-prosemirror/-/blob/master/wax-prosemirror-services/src/DisplayBlockLevel/HeadingService/HeadingService.js
 
@@ -20,10 +23,13 @@ class JatsTagsService extends Service {
     this.container.bind('AppendixHeader').to(AppendixHeader)
     this.container.bind('RefList').to(RefList)
     this.container.bind('ReferenceHeader').to(ReferenceHeader)
-    this.container.bind('ArticleTitle').to(ArticleTitle)
     this.container.bind('FrontMatter').to(FrontMatter)
     this.container.bind('Abstract').to(Abstract)
     this.container.bind('AcknowledgementsSection').to(AcknowledgementsSection)
+    this.container.bind('ArticleTitle').to(ArticleTitle)
+    this.container.bind('MixedCitationSpan').to(MixedCitationSpan)
+    this.container.bind('AuthorName').to(AuthorName)
+    this.container.bind('Doi').to(Doi)
     const createNode = this.container.get('CreateNode')
     createNode({
       mixedCitation: {
