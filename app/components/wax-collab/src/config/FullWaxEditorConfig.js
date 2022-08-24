@@ -1,4 +1,3 @@
-import { DefaultSchema } from 'wax-prosemirror-utilities'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { columnResizing, tableEditing } from 'prosemirror-tables'
 import {
@@ -37,6 +36,7 @@ import {
 import { KotahiBlockDropDownToolGroupService } from '../CustomWaxToolGroups'
 import JatsTagsService from '../JatsTags'
 import CharactersList from './CharactersList'
+import KotahiSchema from './KotahiSchema'
 
 const updateTrackStatus = change => {
   // this returns "true" when Suggesting Mode is turned on.
@@ -69,7 +69,7 @@ const fullWaxEditorConfig = handleAssetManager => ({
     },
   },
 
-  SchemaService: DefaultSchema,
+  SchemaService: KotahiSchema,
   CommentsService: { readOnly: false },
   MenuService: [
     {

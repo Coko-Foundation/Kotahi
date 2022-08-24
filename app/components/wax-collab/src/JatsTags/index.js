@@ -5,6 +5,7 @@ import AppendixHeader from './AppendixHeader'
 import FrontMatter from './FrontMatter'
 import RefList from './RefList'
 import ReferenceHeader from './ReferenceHeader'
+import ArticleTitle from './ArticleTitle'
 import Abstract from './Abstract'
 import AcknowledgementsSection from './AcknowledgementSection'
 
@@ -19,6 +20,7 @@ class JatsTagsService extends Service {
     this.container.bind('AppendixHeader').to(AppendixHeader)
     this.container.bind('RefList').to(RefList)
     this.container.bind('ReferenceHeader').to(ReferenceHeader)
+    this.container.bind('ArticleTitle').to(ArticleTitle)
     this.container.bind('FrontMatter').to(FrontMatter)
     this.container.bind('Abstract').to(Abstract)
     this.container.bind('AcknowledgementsSection').to(AcknowledgementsSection)

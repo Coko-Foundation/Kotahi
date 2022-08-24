@@ -6,7 +6,7 @@ import { Commands } from 'wax-prosemirror-utilities'
 import { Tools } from 'wax-prosemirror-services'
 
 class ReferenceHeader extends Tools {
-  title = 'Change to referece header'
+  title = 'Change to reference header'
   label = 'Reference head'
   name = 'ReferenceHeader'
 

@@ -38,9 +38,10 @@ class CitationList extends ToolGroup {
     @inject('MixedCitation') mixedCitation,
     @inject('RefList') refList,
     @inject('ReferenceHeader') referenceHeader,
+    @inject('ArticleTitle') articleTitle,
   ) {
     super()
-    this.tools = [refList, referenceHeader, mixedCitation]
+    this.tools = [refList, referenceHeader, mixedCitation, articleTitle]
   }
 }
 
