@@ -511,10 +511,276 @@ const EditorStyles = css`
 
   /* CITATIONS */
 
+  span.mixed-citation {
+    outline: yellow 1px dotted;
+    outline-offset: 6px;
+    position: relative;
+    border-radius: 2px;
+    &:hover {
+      &:before {
+        content: 'Mixed Citation';
+        white-space: nowrap;
+        position: absolute;
+        background-color: yellow;
+        color: black;
+        top: -16px;
+        left: 16px;
+        padding: 0 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+
   span.article-title {
-    font-style: italic;
     outline: red 1px dotted;
     outline-offset: 2px;
+    position: relative;
+    border-radius: 2px;
+    &:hover {
+      &:before {
+        content: 'Article Title';
+        white-space: nowrap;
+        position: absolute;
+        background-color: red;
+        color: white;
+        top: 16px;
+        left: 16px;
+        padding: 0 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-style: normal;
+        letter-spacing: 0.5px;
+        z-index: 999;
+      }
+    }
+  }
+
+  span.journal-title {
+    font-style: italic;
+    outline: purple 1px dotted;
+    outline-offset: 2px;
+    position: relative;
+    border-radius: 2px;
+    &:hover {
+      &:before {
+        content: 'Journal Title';
+        white-space: nowrap;
+        position: absolute;
+        background-color: purple;
+        color: white;
+        top: 16px;
+        left: 16px;
+        padding: 0 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-style: normal;
+        letter-spacing: 0.5px;
+        z-index: 999;
+      }
+    }
+  }
+
+  span.author-group {
+    outline: blue 1px dotted;
+    outline-offset: 4px;
+    position: relative;
+    border-radius: 2px;
+    &:hover {
+      &:before {
+        content: 'Author Group';
+        white-space: nowrap;
+        position: absolute;
+        background-color: blue;
+        color: white;
+        top: -16px;
+        left: 16px;
+        padding: 0 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+      }
+    }
+  }
+
+  span.author-name {
+    outline: blue 1px dotted;
+    outline-offset: 2px;
+    position: relative;
+    border-radius: 2px;
+    &:hover {
+      &:before {
+        content: 'Author Name';
+        white-space: nowrap;
+        position: absolute;
+        background-color: blue;
+        color: white;
+        top: 16px;
+        left: 16px;
+        padding: 0 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-style: normal;
+        letter-spacing: 0.5px;
+        z-index: 999;
+      }
+    }
+  }
+
+  a.doi {
+    outline: green 1px dotted;
+    outline-offset: 2px;
+    position: relative;
+    border-radius: 2px;
+    &:hover {
+      &:before {
+        content: 'DOI';
+        white-space: nowrap;
+        position: absolute;
+        background-color: green;
+        color: white;
+        top: 16px;
+        left: 16px;
+        padding: 0 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-style: normal;
+        letter-spacing: 0.5px;
+        z-index: 999;
+      }
+    }
+  }
+
+  span.volume {
+    outline: orange 1px dotted;
+    outline-offset: 2px;
+    position: relative;
+    border-radius: 2px;
+    &:hover {
+      &:before {
+        content: 'Volume';
+        white-space: nowrap;
+        position: absolute;
+        background-color: orange;
+        color: white;
+        top: 16px;
+        left: 16px;
+        padding: 0 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-style: normal;
+        letter-spacing: 0.5px;
+        z-index: 999;
+      }
+    }
+  }
+
+  span.issue {
+    outline: orange 1px dotted;
+    outline-offset: 2px;
+    position: relative;
+    border-radius: 2px;
+    &:hover {
+      &:before {
+        content: 'Issue';
+        white-space: nowrap;
+        position: absolute;
+        background-color: orange;
+        color: white;
+        top: 16px;
+        left: 16px;
+        padding: 0 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-style: normal;
+        letter-spacing: 0.5px;
+        z-index: 999;
+      }
+    }
+  }
+
+  span.first-page {
+    outline: cyan 1px dotted;
+    outline-offset: 2px;
+    position: relative;
+    border-radius: 2px;
+    &:hover {
+      &:before {
+        content: 'First Page';
+        white-space: nowrap;
+        position: absolute;
+        background-color: cyan;
+        color: white;
+        top: 16px;
+        left: 16px;
+        padding: 0 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-style: normal;
+        letter-spacing: 0.5px;
+        z-index: 999;
+      }
+    }
+  }
+
+  span.last-page {
+    outline: cyan 1px dotted;
+    outline-offset: 2px;
+    position: relative;
+    border-radius: 2px;
+    &:hover {
+      &:before {
+        content: 'Last Page';
+        white-space: nowrap;
+        position: absolute;
+        background-color: cyan;
+        color: white;
+        top: 16px;
+        left: 16px;
+        padding: 0 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-style: normal;
+        letter-spacing: 0.5px;
+        z-index: 999;
+      }
+    }
+  }
+
+  span.year {
+    outline: gray 1px dotted;
+    outline-offset: 2px;
+    position: relative;
+    border-radius: 2px;
+    &:hover {
+      &:before {
+        content: 'Year';
+        white-space: nowrap;
+        position: absolute;
+        background-color: gray;
+        color: white;
+        top: 16px;
+        left: 16px;
+        padding: 0 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-style: normal;
+        letter-spacing: 0.5px;
+        z-index: 999;
+      }
+    }
   }
 `
 

@@ -1,16 +1,23 @@
 import { Service } from 'wax-prosemirror-services'
-import MixedCitation from './citations/MixedCitation'
 import Appendix from './Appendix'
 import AppendixHeader from './AppendixHeader'
 import FrontMatter from './FrontMatter'
-import RefList from './citations/RefList'
-import ReferenceHeader from './citations/ReferenceHeader'
-import ArticleTitle from './citations/ArticleTitle'
 import Abstract from './Abstract'
 import AcknowledgementsSection from './AcknowledgementSection'
+import RefList from './citations/RefList'
+import ReferenceHeader from './citations/ReferenceHeader'
+import MixedCitation from './citations/MixedCitation'
+import ArticleTitle from './citations/ArticleTitle'
+import JournalTitle from './citations/JournalTitle'
 import MixedCitationSpan from './citations/MixedCitationSpan'
 import AuthorName from './citations/AuthorName'
+import AuthorGroup from './citations/AuthorGroup'
+import Volume from './citations/Volume'
+import Issue from './citations/Issue'
 import Doi from './citations/Doi'
+import Year from './citations/Year'
+import FirstPage from './citations/FirstPage'
+import LastPage from './citations/LastPage'
 
 // copied from here: https://gitlab.coko.foundation/wax/wax-prosemirror/-/blob/master/wax-prosemirror-services/src/DisplayBlockLevel/HeadingService/HeadingService.js
 
@@ -27,9 +34,16 @@ class JatsTagsService extends Service {
     this.container.bind('Abstract').to(Abstract)
     this.container.bind('AcknowledgementsSection').to(AcknowledgementsSection)
     this.container.bind('ArticleTitle').to(ArticleTitle)
+    this.container.bind('JournalTitle').to(JournalTitle)
     this.container.bind('MixedCitationSpan').to(MixedCitationSpan)
     this.container.bind('AuthorName').to(AuthorName)
+    this.container.bind('AuthorGroup').to(AuthorGroup)
     this.container.bind('Doi').to(Doi)
+    this.container.bind('Volume').to(Volume)
+    this.container.bind('Issue').to(Issue)
+    this.container.bind('Year').to(Year)
+    this.container.bind('FirstPage').to(FirstPage)
+    this.container.bind('LastPage').to(LastPage)
     const createNode = this.container.get('CreateNode')
     createNode({
       mixedCitation: {

@@ -43,6 +43,26 @@ const KotahiSchema = {
         return ['span', { class: 'article-title' }, 0]
       },
     },
+    journalTitle: {
+      attrs: {
+        class: { default: 'journal-title' },
+      },
+      excludes: 'articleTitle', // so we can't embed it inside itself
+      parseDOM: [{ tag: 'span.journal-title' }],
+      toDOM() {
+        return ['span', { class: 'journal-title' }, 0]
+      },
+    },
+    authorGroup: {
+      attrs: {
+        class: { default: 'author-group' },
+      },
+      excludes: 'authorGroup', // so we can't embed it inside itself
+      parseDOM: [{ tag: 'span.author-group' }],
+      toDOM() {
+        return ['span', { class: 'author-group' }, 0]
+      },
+    },
     authorName: {
       attrs: {
         class: { default: 'author-name' },
@@ -53,6 +73,57 @@ const KotahiSchema = {
         return ['span', { class: 'author-name' }, 0]
       },
     },
+    volume: {
+      attrs: {
+        class: { default: 'volume' },
+      },
+      excludes: 'volume', // so we can't embed it inside itself
+      parseDOM: [{ tag: 'span.volume' }],
+      toDOM() {
+        return ['span', { class: 'volume' }, 0]
+      },
+    },
+    issue: {
+      attrs: {
+        class: { default: 'issue' },
+      },
+      excludes: 'issue', // so we can't embed it inside itself
+      parseDOM: [{ tag: 'span.issue' }],
+      toDOM() {
+        return ['span', { class: 'issue' }, 0]
+      },
+    },
+    year: {
+      attrs: {
+        class: { default: 'year' },
+      },
+      excludes: 'year', // so we can't embed it inside itself
+      parseDOM: [{ tag: 'span.year' }],
+      toDOM() {
+        return ['span', { class: 'year' }, 0]
+      },
+    },
+    firstPage: {
+      attrs: {
+        class: { default: 'first-page' },
+      },
+      excludes: 'firstPage', // so we can't embed it inside itself
+      parseDOM: [{ tag: 'span.first-page' }],
+      toDOM() {
+        return ['span', { class: 'first-page' }, 0]
+      },
+    },
+    lastPage: {
+      attrs: {
+        class: { default: 'last-page' },
+      },
+      excludes: 'lastPage', // so we can't embed it inside itself
+      parseDOM: [{ tag: 'span.last-page' }],
+      toDOM() {
+        return ['span', { class: 'last-page' }, 0]
+      },
+    },
+
     doi: {
       // QUESTION: this should set the content as the href. Does it do that?
       attrs: {
@@ -74,7 +145,8 @@ const KotahiSchema = {
         },
       ],
       toDOM() {
-        return ['a', { class: 'doi' }, 0]
+        // TODO: figure out how to get the href to go to the content?
+        return ['a', { class: 'doi', href: 'hello!' }, 0]
       },
       // // this causes an error – why?
       // toDOM(hook, next) {

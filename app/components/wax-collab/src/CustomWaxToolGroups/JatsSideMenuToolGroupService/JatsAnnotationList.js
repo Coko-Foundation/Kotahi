@@ -40,8 +40,15 @@ class CitationList extends ToolGroup {
     @inject('ReferenceHeader') referenceHeader,
     @inject('ArticleTitle') articleTitle,
     @inject('MixedCitationSpan') mixedCitationSpan,
+    @inject('AuthorGroup') authorGroup,
     @inject('AuthorName') authorName,
+    @inject('JournalTitle') journalTitle,
     @inject('Doi') doi,
+    @inject('FirstPage') firstPage,
+    @inject('LastPage') lastPage,
+    @inject('Volume') volume,
+    @inject('Issue') issue,
+    @inject('Year') year,
   ) {
     super()
     this.tools = [
@@ -49,9 +56,16 @@ class CitationList extends ToolGroup {
       referenceHeader,
       mixedCitation,
       mixedCitationSpan,
+      authorGroup,
       authorName,
       articleTitle,
+      journalTitle,
       doi,
+      volume,
+      issue,
+      year,
+      firstPage,
+      lastPage,
     ]
   }
 }
