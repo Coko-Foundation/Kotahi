@@ -432,15 +432,17 @@ const makeFootnotesSection = html => {
 
   while (deFootnotedHtml.indexOf(`<footnote id="`) > -1) {
     // get id and text from Wax markup
-    const [id, text] = deFootnotedHtml
-      .split('<footnote id="')[1]
-      .split('</footnote')[0]
-      .split('">')
+    const id = deFootnotedHtml.split('<footnote id="')[1].split('">')[0]
 
+    const text = deFootnotedHtml
+      .split(`<footnote id="${id}">`)[1]
+      .split('</footnote>')[0]
+
+    const toReplace = `<footnote id="${id}">${text}</footnote>`
     footnoteCount += 1
     // replace body text with JATS tag
     deFootnotedHtml = deFootnotedHtml.replace(
-      `<footnote id="${id}">${text}</footnote>`,
+      toReplace,
       `<xref ref-type="fn" rid="fnid${id}">${footnoteCount}</xref>`,
     )
     // add this to the list of footnotes
