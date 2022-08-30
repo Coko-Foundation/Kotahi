@@ -23,7 +23,6 @@ import ThreadedDiscussion from '../../../component-formbuilder/src/components/bu
 import ActionButton from '../../../shared/ActionButton'
 import { hasValue } from '../../../../shared/htmlUtils'
 import FormWaxEditor from '../../../component-formbuilder/src/components/FormWaxEditor'
-import { createBlankSubmissionBasedOnForm } from './Submit'
 
 const Intro = styled.div`
   font-style: italic;
@@ -270,6 +269,7 @@ const InnerFormTemplate = ({
       : true)
 
   const manuscriptFiles = filterFileManuscript(values.files || [])
+
   const submittedManuscriptFile =
     isSubmission && manuscriptFiles.length ? manuscriptFiles[0] : null
 
@@ -491,9 +491,11 @@ const FormTemplate = ({
   shouldShowOptionToPublish = false,
 }) => {
   const [confirming, setConfirming] = React.useState(false)
+
   const toggleConfirming = () => {
     setConfirming(confirm => !confirm)
   }
+
   const sumbitPendingThreadedDiscussionComments = async values => {
     await Promise.all(
       form.children
@@ -508,7 +510,18 @@ const FormTemplate = ({
     )
   }
 
-  const initialValuesWithDummyValues = { ...createBlankSubmissionBasedOnForm(form), ...initialValues }
+  const createBlankSubmissionBasedOnForm = value => {
+    const allBlankedFields = {}
+    const fieldNames = value.children.map(field => field.name)
+    fieldNames.forEach(fieldName => set(allBlankedFields, fieldName, ''))
+    return allBlankedFields
+  }
+
+  const initialValuesWithDummyValues = {
+    ...createBlankSubmissionBasedOnForm(form),
+    ...initialValues,
+  }
+
   const [lastChangedField, setLastChangedField] = useState(null)
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   return (
@@ -597,6 +610,7 @@ FormTemplate.propTypes = {
       PropTypes.shape({
         name: PropTypes.string,
         tags: PropTypes.arrayOf(PropTypes.string.isRequired),
+        // eslint-disable-next-line react/forbid-prop-types
         storedObjects: PropTypes.arrayOf(PropTypes.object),
       }).isRequired,
     ),
