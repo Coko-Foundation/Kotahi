@@ -88,6 +88,7 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
   }
 
   const cancelGen = () => {
+    console.log('Cancelling!')
     resetMakingJats()
     setModalIsOpen(false)
   }
@@ -109,38 +110,38 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
     >
       <CloseButton onClick={cancelGen} />
       <PopUpH2>{error ? 'Error generating JATS' : 'Your JATS link:'}</PopUpH2>
-      {error ? (
+      {error && (
         <PopUpTextContainer>
           <p>Sorry, something went wrong.</p>
         </PopUpTextContainer>
-      ) : data.convertToJats.error ? (
+      )}
+      {data.convertToJats.error && (
         <PopUpTextContainer>
           <p>Error: invalid JATS. See console for details.</p>
         </PopUpTextContainer>
-      ) : (
-        <PopUpTextContainer>
-          <p className="linkurl">
-            <a href={zipLink} download>
-              {zipLink}
-            </a>
-          </p>
-          <p className="linknote">{message}</p>
-          <button
-            className="copybutton"
-            onClick={e => {
-              e.preventDefault()
-              navigator.clipboard.writeText(zipLink)
-              setMessage('Copied!')
-              setTimeout(() => {
-                setMessage('This link is available for 24 hours')
-              }, 1000)
-            }}
-            type="submit"
-          >
-            Copy link
-          </button>
-        </PopUpTextContainer>
       )}
+      <PopUpTextContainer>
+        <p className="linkurl">
+          <a href={zipLink} download>
+            {zipLink}
+          </a>
+        </p>
+        <p className="linknote">{message}</p>
+        <button
+          className="copybutton"
+          onClick={e => {
+            e.preventDefault()
+            navigator.clipboard.writeText(zipLink)
+            setMessage('Copied!')
+            setTimeout(() => {
+              setMessage('This link is available for 24 hours')
+            }, 1000)
+          }}
+          type="submit"
+        >
+          Copy link
+        </button>
+      </PopUpTextContainer>
     </Modal>
   )
 }

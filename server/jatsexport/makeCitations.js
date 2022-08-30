@@ -1,6 +1,36 @@
+const htmlparser2 = require('htmlparser2')
+const cheerio = require('cheerio')
 const { htmlToJats } = require('../utils/jatsUtils')
 
-const makeCitations = html => {
+const cleanCitation = (html, id) => {
+  const dom = htmlparser2.parseDocument(html)
+  const $ = cheerio.load(dom, { xmlMode: true })
+  $('span').each((index, el) => {
+    console.log(index, el.attribs.class)
+    // TODO: break this down!
+  })
+  return {
+    xref: `<xref ref=type="bibr" rid='ref-${id}'>${id}</xref>`,
+    ref: `<ref id='ref-${id}'><mixed-citation>hello!</mixed-citation></ref>`,
+  }
+}
+
+const findCitationSpans = html => {
+  const citations = []
+  const dom = htmlparser2.parseDocument(html)
+  const $ = cheerio.load(dom, { xmlMode: true })
+  $('span.mixed-citation').each((index, el) => {
+    const $elem = $(el)
+    const { xref, ref } = cleanCitation($elem.html(), index)
+    // what we want out of this: a JATS <fn> object with an ID and a crossref to the ID passed back
+    citations.push(ref)
+    return xref
+  })
+  console.log(citations)
+  return $.html()
+}
+
+const makeCitations = (html, fnSection) => {
   console.log('in makeCitations')
   let deCitedHtml = html
   let refList = '' // this is the ref-list that we're building
@@ -116,13 +146,20 @@ const makeCitations = html => {
       ``,
     )
 
-    // TODO: get all the <span class="mixed-citation"> out of deCitedHtml
-
     refList += `<ref id="ref-${refCount}"><mixed-citation>${htmlToJats(
       thisCitation,
     )}</mixed-citation></ref>`
     refCount += 1
   }
+
+  // TODO: get all the <span class="mixed-citation"> out of deCitedHtml
+
+  const cleanedHtml = findCitationSpans(deCitedHtml)
+  const cleanedHtml2 = findCitationSpans(fnSection)
+  console.log(cleanedHtml)
+  console.log(cleanedHtml2)
+
+  // console.log('returned: ', cleanedHtml)
 
   if (refList) {
     refList = `<ref-list>${refList}</ref-list>`

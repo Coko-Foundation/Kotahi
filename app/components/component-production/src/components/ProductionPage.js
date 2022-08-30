@@ -161,6 +161,7 @@ const ProductionPage = ({ match, ...props }) => {
               manuscript={manuscript}
               resetMakingJats={() => {
                 setTimeout(() => {
+                  console.log('resetMakingJats fired in production page!')
                   setMakingJats(false)
                 }, 1000)
               }}
