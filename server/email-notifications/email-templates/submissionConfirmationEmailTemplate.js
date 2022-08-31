@@ -1,7 +1,7 @@
 const SubmissionConfirmationEmailTemplate = ({
   articleTitle,
   authorName,
-  receiverFirstName,
+  receiverName,
   shortId,
 }) => {
   const result = {
@@ -15,7 +15,7 @@ const SubmissionConfirmationEmailTemplate = ({
       result.cc = 'aperture@humanbrainmapping.org'
       result.subject = 'Aperture Neuro – Received Research Object Submission'
       result.content = `<p>
-      <p>Dear ${receiverFirstName},</p>
+      <p>Dear ${receiverName},</p>
       <p>Thank you for your submission.</p>
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>We have successfully received your Research Object, and it is currently under review. You can check the status of your submission at any time by logging into the publishing platform and navigating to your dashboard.</p>
@@ -29,7 +29,7 @@ const SubmissionConfirmationEmailTemplate = ({
     default:
       result.subject = 'Received Research Object Submission'
       result.content = `<p>
-      <p>Dear ${receiverFirstName},</p>
+      <p>Dear ${receiverName},</p>
       <p>Thank you for your submission.</p>
       <p>“${shortId}; ${articleTitle}, ${authorName}”</p>
       <p>We have successfully received your Research Object, and it is currently under review. You can check the status of your submission at any time by logging into the publishing platform and navigating to your dashboard.</p>

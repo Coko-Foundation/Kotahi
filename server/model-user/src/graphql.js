@@ -206,30 +206,33 @@ const resolvers = {
     async sendEmail(_, { input }, ctx) {
       const inputParsed = JSON.parse(input)
 
+      // TODO:
+      // Maybe a better way to make this function less ambigious is by having a simpler object of the structure:
+      // { senderName, senderEmail, recieverName, recieverEmail }
+      // ANd send this as `input` from the Frontend
       const {
         manuscript,
-        selectedEmail,
+        selectedEmail, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing reciver being selected
         selectedTemplate,
-        externalEmail,
-        externalName,
+        externalEmail, // New User Email
+        externalName, // New User username
         currentUser,
       } = inputParsed
 
       const receiverEmail = externalEmail || selectedEmail
 
-      let receiverFirstName = externalName
+      let receiverName = externalName
 
       if (selectedEmail) {
+        // If the email of a pre-existing user is selected
+        // Get that user
         const [userReceiver] = await models.User.query()
           .where({ email: selectedEmail })
           .withGraphFetched('[defaultIdentity]')
 
         /* eslint-disable-next-line */
-        receiverFirstName = (
-          userReceiver.defaultIdentity.name ||
-          userReceiver.username ||
-          ''
-        ).split(' ')[0]
+        receiverName =
+          userReceiver.username || userReceiver.defaultIdentity.name || ''
       }
 
       const manuscriptWithSubmitter = await models.Manuscript.query()
@@ -237,14 +240,14 @@ const resolvers = {
         .withGraphFetched('submitter.[defaultIdentity]')
 
       const authorName =
-        manuscriptWithSubmitter.submitter.defaultIdentity.name ||
         manuscriptWithSubmitter.submitter.username ||
+        manuscriptWithSubmitter.submitter.defaultIdentity.name ||
         ''
 
       const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
       const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
-      if (!emailValidationResult || !receiverFirstName) {
+      if (!emailValidationResult || !receiverName) {
         return { success: false }
       }
 
@@ -265,6 +268,8 @@ const resolvers = {
         let invitedPersonName = ''
 
         if (selectedEmail) {
+          // If the email of a pre-existing user is selected
+          // Get that user
           const [userReceiver] = await models.User.query()
             .where({ email: selectedEmail })
             .withGraphFetched('[defaultIdentity]')
@@ -272,6 +277,7 @@ const resolvers = {
           userId = userReceiver.id
           invitedPersonName = userReceiver.username
         } else {
+          // Use the username provided
           invitedPersonName = externalName
         }
 
@@ -299,7 +305,7 @@ const resolvers = {
           articleTitle: manuscript.meta.title,
           authorName,
           currentUser,
-          receiverFirstName,
+          receiverName,
           shortId: manuscript.shortId,
           toEmail,
           invitationId,

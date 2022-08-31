@@ -1,4 +1,4 @@
-import React, { useRef, useEffect } from 'react'
+import React from 'react'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import config from 'config'
 import { Redirect } from 'react-router-dom'
@@ -288,6 +288,17 @@ const ReviewPage = ({ match, ...props }) => {
     partialRefetch: true,
   })
 
+  if (loading) return <Spinner />
+
+  if (error) {
+    console.warn(error.message)
+    return (
+      <Page>
+        <Heading>This review is no longer accessible.</Heading>
+      </Page>
+    )
+  }
+
   const reviewOrInitial = manuscript =>
     manuscript?.reviews?.find(
       review => review?.user?.id === currentUser?.id && !review.isDecision,
@@ -306,23 +317,7 @@ const ReviewPage = ({ match, ...props }) => {
   const latestVersion = versions.length ? versions[0] : null
 
   // Find an existing review or create a placeholder, and hold a ref to it
-  const existingReview = useRef(reviewOrInitial(latestVersion))
-
-  // Update the value of that ref if the manuscript object changes
-  useEffect(() => {
-    existingReview.current = reviewOrInitial(latestVersion)
-  }, [latestVersion?.reviews])
-
-  if (loading) return <Spinner />
-
-  if (error) {
-    console.warn(error.message)
-    return (
-      <Page>
-        <Heading>This review is no longer accessible.</Heading>
-      </Page>
-    )
-  }
+  const existingReview = reviewOrInitial(latestVersion)
 
   const { manuscript, threadedDiscussions } = data
 
@@ -366,11 +361,13 @@ const ReviewPage = ({ match, ...props }) => {
       manuscript.channels,
     )
 
-  const { status } =
-    (
-      (latestVersion.teams.find(team => team.role === 'reviewer') || {})
-        .status || []
-    ).find(statusTemp => statusTemp.user === currentUser?.id) || {}
+  const reviewersTeam = latestVersion.teams.find(
+    team => team.role === 'reviewer',
+  ) || { members: [] }
+
+  const reviewerStatus = reviewersTeam.members.find(
+    member => member.user.id === currentUser?.id,
+  )?.status
 
   const updateReviewJsonData = (value, path) => {
     const reviewDelta = {} // Only the changed fields
@@ -385,7 +382,7 @@ const ReviewPage = ({ match, ...props }) => {
     }
 
     return updateReviewMutation({
-      variables: { id: existingReview.current.id, input: reviewPayload },
+      variables: { id: existingReview.id, input: reviewPayload },
       update: (cache, { data: { updateReview: updateReviewTemp } }) => {
         cache.modify({
           id: cache.identify({
@@ -428,7 +425,7 @@ const ReviewPage = ({ match, ...props }) => {
 
     return updateReviewMutation({
       variables: {
-        id: existingReview.current.id || undefined,
+        id: existingReview.id || undefined,
         input: reviewData,
       },
       update: (cache, { data: { updateReviewTemp } }) => {
@@ -490,13 +487,13 @@ const ReviewPage = ({ match, ...props }) => {
       deleteFile={deleteFile}
       onSubmit={values =>
         handleSubmit({
-          reviewId: existingReview.current.id,
+          reviewId: existingReview.id,
           history: props.history,
         })
       }
       review={existingReview}
       reviewForm={reviewForm}
-      status={status}
+      status={reviewerStatus}
       submissionForm={submissionForm}
       threadedDiscussionProps={threadedDiscussionProps}
       updateReview={updateReview}

@@ -632,7 +632,13 @@ const resolvers = {
 
       await new TeamModel(team).saveGraph()
 
-      if (action === 'accepted') {
+      const existingReview = await ReviewModel.query().where({
+        manuscriptId: team.manuscriptId,
+        userId: context.user,
+      })
+
+      // modify it to check if there exists a review already
+      if (action === 'accepted' && existingReview.length === 0) {
         const review = {
           isDecision: false,
           isHiddenReviewerName: true,
@@ -654,11 +660,8 @@ const resolvers = {
           .findById(context.user)
           .withGraphFetched('[defaultIdentity]')
 
-        const reviewerName = (
-          reviewer.defaultIdentity.name ||
-          reviewer.username ||
-          ''
-        ).split(' ')[0]
+        const reviewerName =
+          reviewer.username || reviewer.defaultIdentity.name || ''
 
         const manuscript = await models.Manuscript.query()
           .findById(team.manuscriptId)
@@ -680,11 +683,10 @@ const resolvers = {
 
         const receiverEmail = handlingEditor.user.email
         /* eslint-disable-next-line */
-        const receiverFirstName = (
-          handlingEditor.user.defaultIdentity.name ||
+        const receiverName =
           handlingEditor.user.username ||
+          handlingEditor.user.defaultIdentity.name ||
           ''
-        ).split(' ')[0]
 
         const selectedTemplate = 'reviewRejectEmailTemplate'
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
@@ -695,17 +697,17 @@ const resolvers = {
           channel => channel.topic === 'Editorial discussion',
         )
 
-        if (!emailValidationResult || !receiverFirstName) {
+        if (!emailValidationResult || !receiverName) {
           return team
         }
 
         const data = {
           articleTitle: manuscript.meta.title,
           authorName:
-            manuscript.submitter.defaultIdentity.name ||
             manuscript.submitter.username ||
+            manuscript.submitter.defaultIdentity.name ||
             '',
-          receiverFirstName,
+          receiverName,
           reviewerName,
           shortId: manuscript.shortId,
         }
@@ -715,7 +717,7 @@ const resolvers = {
 
           // Send Notification in Editorial Discussion Panel
           Message.createMessage({
-            content: `Review Rejection Email sent by Kotahi to ${receiverFirstName}`,
+            content: `Review Rejection Email sent by Kotahi to ${receiverName}`,
             channelId: editorialChannel.id,
             userId: manuscript.submitterId,
           })
@@ -745,27 +747,26 @@ const resolvers = {
 
         const receiverEmail = manuscript.submitter.email
         /* eslint-disable-next-line */
-        const receiverFirstName = (
-          manuscript.submitter.defaultIdentity.name ||
+        const receiverName =
           manuscript.submitter.username ||
+          manuscript.submitter.defaultIdentity.name ||
           ''
-        ).split(' ')[0]
 
         const selectedTemplate = 'submissionConfirmationEmailTemplate'
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
-        if (!emailValidationResult || !receiverFirstName) {
+        if (!emailValidationResult || !receiverName) {
           return commonUpdateManuscript(id, input, ctx)
         }
 
         const data = {
           articleTitle: manuscript.meta.title,
           authorName:
-            manuscript.submitter.defaultIdentity.name ||
             manuscript.submitter.username ||
+            manuscript.submitter.defaultIdentity.name ||
             '',
-          receiverFirstName,
+          receiverName,
           shortId: manuscript.shortId,
         }
 
@@ -814,24 +815,23 @@ const resolvers = {
         // Automated email evaluationComplete on decision
         const receiverEmail = manuscript.submitter.email
 
-        const receiverFirstName = (
+        const receiverName =
           manuscript.submitter.username ||
           manuscript.submitter.defaultIdentity.name ||
           ''
-        ).split(' ')[0]
 
         const selectedTemplate = 'evaluationCompleteEmailTemplate'
         const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
         const emailValidationResult = emailValidationRegexp.test(receiverEmail)
 
-        if (emailValidationResult && receiverFirstName) {
+        if (emailValidationResult && receiverName) {
           const data = {
             articleTitle: manuscript.meta.title,
             authorName:
-              manuscript.submitter.defaultIdentity.name ||
               manuscript.submitter.username ||
+              manuscript.submitter.defaultIdentity.name ||
               '',
-            receiverFirstName,
+            receiverName,
             shortId: manuscript.shortId,
           }
 

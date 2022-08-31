@@ -206,15 +206,22 @@ const InnerFormTemplate = ({
   setShouldPublishField,
 }) => {
   const [submitSucceeded, setSubmitSucceeded] = useState(false)
+  const [disabled, setButtonDisabled] = useState(false)
 
   const submitButton = (text, haspopup = false) => {
     return (
       <div>
         <ActionButton
+          dataCy={`${form.name
+            .toLowerCase()
+            .replace(/ /g, '-')
+            .replace(/[^\w-]+/g, '')}-action-btn`}
           onClick={async () => {
             // TODO shouldn't this come after error checking and submission?
             if (republish) {
-              republish(manuscriptId)
+              setButtonDisabled(true)
+              await republish(manuscriptId)
+              setButtonDisabled(false)
               return
             }
 

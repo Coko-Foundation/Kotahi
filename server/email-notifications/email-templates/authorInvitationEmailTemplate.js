@@ -3,9 +3,9 @@ const config = require('config')
 const AuthorAcceptanceEmailTemplate = ({
   articleTitle,
   appUrl,
-  authorName,
   currentUser,
   invitationId,
+  receiverName,
 }) => {
   const result = {
     cc: '',
@@ -19,7 +19,7 @@ const AuthorAcceptanceEmailTemplate = ({
       result.subject =
         'Interest in your preprint from Biophysics Colab (in partnership with eLife)'
       result.content = `<p>
-          <p>Dear ${authorName}</p>
+          <p>Dear ${receiverName}</p>
           <p>
             I'm writing to tell you about a new project that I hope you’ll be interested in, and offer you an opportunity to get involved. 
           </p>
@@ -56,7 +56,7 @@ const AuthorAcceptanceEmailTemplate = ({
     default:
       result.cc = ''
       result.subject = 'Kotahi | Permission to review'
-      result.content = `<p>Dear ${authorName},</p>
+      result.content = `<p>Dear ${receiverName},</p>
         <p>
           The manuscript titled ‘${articleTitle}’ has been selected for peer review. Click on the link below to accept or decline the invitation;
         <p>

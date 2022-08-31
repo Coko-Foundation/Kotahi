@@ -180,6 +180,18 @@ CREATE TABLE "public"."channels" (
     PRIMARY KEY ("id")
 );
 
+DROP TABLE IF EXISTS "public"."email_blacklist";
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+
+-- Table Definition
+CREATE TABLE "public"."email_blacklist" (
+    "id" uuid NOT NULL,
+    "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz,
+    "email" text NOT NULL,
+    PRIMARY KEY ("id")
+);
+
 DROP TABLE IF EXISTS "public"."entities";
 -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
@@ -231,6 +243,25 @@ CREATE TABLE "public"."files_old" (
     "review_comment_id" uuid
 );
 
+DROP TABLE IF EXISTS "public"."files_old_2";
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+
+-- Table Definition
+CREATE TABLE "public"."files_old_2" (
+    "id" uuid NOT NULL,
+    "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz,
+    "type" text NOT NULL,
+    "name" text NOT NULL,
+    "stored_objects" jsonb NOT NULL,
+    "tags" jsonb,
+    "reference_id" uuid,
+    "object_id" uuid,
+    "alt" text,
+    "upload_status" text,
+    "caption" text
+);
+
 DROP TABLE IF EXISTS "public"."forms";
 -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
@@ -264,6 +295,35 @@ CREATE TABLE "public"."identities" (
     PRIMARY KEY ("id")
 );
 
+DROP TABLE IF EXISTS "public"."invitations";
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+
+DROP TYPE IF EXISTS "public"."invitation_status";
+CREATE TYPE "public"."invitation_status" AS ENUM ('UNANSWERED', 'ACCEPTED', 'REJECTED');
+DROP TYPE IF EXISTS "public"."invitation_type";
+CREATE TYPE "public"."invitation_type" AS ENUM ('AUTHOR', 'REVIEWER');
+DROP TYPE IF EXISTS "public"."invitation_declined_reason_type";
+CREATE TYPE "public"."invitation_declined_reason_type" AS ENUM ('UNAVAILABLE', 'TOPIC', 'CONFLICT_OF_INTEREST', 'OTHER', 'DO_NOT_CONTACT');
+
+-- Table Definition
+CREATE TABLE "public"."invitations" (
+    "id" uuid NOT NULL,
+    "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz,
+    "manuscript_id" uuid NOT NULL,
+    "purpose" text,
+    "to_email" text NOT NULL,
+    "status" "public"."invitation_status" NOT NULL,
+    "invited_person_type" "public"."invitation_type" NOT NULL,
+    "invited_person_name" text NOT NULL,
+    "response_date" timestamptz,
+    "response_comment" text,
+    "declined_reason" "public"."invitation_declined_reason_type",
+    "user_id" uuid,
+    "sender_id" uuid NOT NULL,
+    PRIMARY KEY ("id")
+);
+
 DROP TABLE IF EXISTS "public"."manuscripts";
 -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
@@ -292,6 +352,7 @@ CREATE TABLE "public"."manuscripts" (
     "short_id" int4 NOT NULL DEFAULT nextval('manuscripts_short_id_seq'::regclass),
     "submitted_date" timestamptz,
     "is_hidden" bool,
+    "form_fields_to_publish" jsonb NOT NULL DEFAULT '[]'::jsonb,
     PRIMARY KEY ("id")
 );
 
@@ -343,6 +404,25 @@ CREATE TABLE "public"."reviews" (
     "id" uuid NOT NULL,
     "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updated" timestamptz,
+    "is_decision" bool DEFAULT false,
+    "user_id" uuid,
+    "manuscript_id" uuid,
+    "type" text NOT NULL,
+    "is_hidden_from_author" bool,
+    "is_hidden_reviewer_name" bool,
+    "can_be_published_publicly" bool,
+    "json_data" jsonb,
+    PRIMARY KEY ("id")
+);
+
+DROP TABLE IF EXISTS "public"."reviews_old";
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+
+-- Table Definition
+CREATE TABLE "public"."reviews_old" (
+    "id" uuid NOT NULL,
+    "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz,
     "recommendation" text,
     "is_decision" bool DEFAULT false,
     "user_id" uuid,
@@ -351,7 +431,7 @@ CREATE TABLE "public"."reviews" (
     "is_hidden_from_author" bool,
     "is_hidden_reviewer_name" bool,
     "can_be_published_publicly" bool,
-    PRIMARY KEY ("id")
+    "json_data" jsonb
 );
 
 DROP TABLE IF EXISTS "public"."team_members";
@@ -386,6 +466,18 @@ CREATE TABLE "public"."teams" (
     "type" text NOT NULL,
     "manuscript_id" uuid,
     PRIMARY KEY ("id")
+);
+
+DROP TABLE IF EXISTS "public"."threaded_discussions";
+-- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
+
+-- Table Definition
+CREATE TABLE "public"."threaded_discussions" (
+    "id" uuid NOT NULL,
+    "created" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    "manuscript_id" uuid NOT NULL,
+    "threads" jsonb NOT NULL
 );
 
 DROP TABLE IF EXISTS "public"."users";
@@ -424,7 +516,9 @@ INSERT INTO "public"."forms" ("id", "type", "created", "updated", "purpose", "st
 
 INSERT INTO "public"."identities" ("id", "user_id", "created", "updated", "type", "identifier", "name", "aff", "oauth", "is_default") VALUES
 ('bdd063ba-1acc-4b92-80a5-f8711587aeea', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', '2022-05-13 10:55:50.525+00', '2022-05-13 10:55:50.525+00', 'orcid', '0000-0003-3483-9210', 'Emily Clay', '', '{"accessToken": "67cdb60a-7713-45df-8004-ca4ab38e9014", "refreshToken": "6c54414e-8b88-4814-84f9-f3067ad3078e"}', 't'),
-('e462e79a-9fb4-45cb-a5b8-a2735a7aeb69', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '2022-05-13 10:54:12.655+00', '2022-05-13 10:54:12.655+00', 'orcid', '0000-0002-1851-1103', 'Sinead Sullivan', '', '{"accessToken": "e85acf35-dcbf-45b1-9bc3-5efb80a95ca9", "refreshToken": "3bd13cb6-b0c5-42df-98da-c0037185d085"}', 't');
+('434461fc-18b5-43d8-bc46-bca88ea97c4c', '5b861dfb-02df-4be1-bc67-41a21611f5e7', '2022-07-29 05:15:21.654+00', '2022-07-29 05:15:21.624+00', 'orcid', '0000-0003-1838-2441', 'Joane Pilger', '', '{"accesstoken": "26fbc6b6-4421-40c5-ba07-d8c665f6704b", "refreshtoken": "4211bbf5-85ae-4980-833a-3f3deabcec6a"}', 't'),
+('e462e79a-9fb4-45cb-a5b8-a2735a7aeb69', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '2022-05-13 10:54:12.655+00', '2022-05-13 10:54:12.655+00', 'orcid', '0000-0002-1851-1103', 'Sinead Sullivan', '', '{"accessToken": "e85acf35-dcbf-45b1-9bc3-5efb80a95ca9", "refreshToken": "3bd13cb6-b0c5-42df-98da-c0037185d085"}', 't'),
+('acfa1777-0aec-4fe1-bc16-92bb9d19e884', '85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.384+02', '2020-07-21 16:35:39.358+02', 'orcid', '0000-0002-9429-4446', 'Elaine Barnes', '', '{"accessToken": "dcf07bc7-e59c-41b3-9ce0-924ac20aeeea", "refreshToken": "ae49d6a1-8e62-419d-8767-4a3ec22c1950"}', 't');
 
 INSERT INTO "public"."manuscripts" ("id", "created", "updated", "parent_id", "submitter_id", "status", "decision", "authors", "suggestions", "meta", "submission", "published", "type", "evaluations_hypothesis_map", "is_imported", "import_source", "import_source_server", "short_id", "submitted_date", "is_hidden") VALUES
 ('8f05064b-b00d-4aec-a98f-f7ba3656cc2f', '2022-05-13 10:56:32.642+00', '2022-05-13 10:57:43.627+00', NULL, 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', 'accepted', 'accepted', NULL, NULL, '{"notes": [{"content": "", "notesType": "fundingAcknowledgement"}, {"content": "", "notesType": "specialInstructions"}], "title": "sample pdf"}', '{"DOI": "", "cover": "", "title": "", "topics": [], "Funding": "", "abstract": "", "datacode": "", "objectType": "", "references": "", "authorNames": "", "dateAccepted": "", "dateReceived": "", "copyrightYear": "", "datePublished": "", "DecisionLetter": "", "copyrightHolder": "", "reviewingEditor": "", "EditorsEvaluation": "", "competingInterests": "", "copyrightStatement": "", "authorContributions": "", "AuthorCorrespondence": ""}', '2022-05-13 10:57:43.509+00', 'Manuscript', NULL, NULL, NULL, NULL, 1, '2022-05-13 10:57:09.868+00', NULL);
@@ -478,24 +572,31 @@ INSERT INTO "public"."migrations" ("id", "run_at") VALUES
 INSERT INTO "public"."review_comments" ("id", "created", "updated", "review_id", "user_id", "content", "comment_type", "type") VALUES
 ('d636e220-20bf-4ec1-96a0-c610f5612586', '2022-05-13 10:57:38.576+00', '2022-05-13 10:57:38.576+00', 'a9d0ddb5-0518-4bab-bb15-fdaeb9e60696', NULL, '<p class="paragraph">hbkj</p>', 'decision', 'ReviewComment');
 
-INSERT INTO "public"."reviews" ("id", "created", "updated", "recommendation", "is_decision", "user_id", "manuscript_id", "type", "is_hidden_from_author", "is_hidden_reviewer_name", "can_be_published_publicly") VALUES
-('a9d0ddb5-0518-4bab-bb15-fdaeb9e60696', '2022-05-13 10:57:38.571+00', '2022-05-13 10:57:39.963+00', 'accepted', 't', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', 'Review', NULL, NULL, NULL),
-('c7a95df9-32d8-4bc5-812c-468c18cf53ca', '2022-05-13 10:58:32.521+00', '2022-05-13 10:58:41.719+00', 'accepted', 'f', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', 'Review', 't', 't', NULL);
+-- INSERT INTO "public"."reviews" ("id", "created", "updated", "recommendation", "is_decision", "user_id", "manuscript_id", "type", "is_hidden_from_author", "is_hidden_reviewer_name", "can_be_published_publicly") VALUES
+-- ('a9d0ddb5-0518-4bab-bb15-fdaeb9e60696', '2022-05-13 10:57:38.571+00', '2022-05-13 10:57:39.963+00', 'accepted', 't', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', 'Review', NULL, NULL, NULL),
+-- ('c7a95df9-32d8-4bc5-812c-468c18cf53ca', '2022-05-13 10:58:32.521+00', '2022-05-13 10:58:41.719+00', 'accepted', 'f', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f', 'Review', 't', 't', NULL);
 
 INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "alias_id", "is_shared") VALUES
 ('19dd1446-a8fb-4a4a-8c3b-2babcd8108ab', '2022-05-13 10:58:26.685+00', '2022-05-13 10:58:26.685+00', NULL, '2eb4335a-0037-415c-abab-ec3aa8bf7e79', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
-('bc3eefda-143f-4208-b666-cb6f3790d4e2', '2022-05-13 10:58:23.404+00', '2022-05-13 10:58:42.896+00', 'completed', 'a4ee7976-e7f6-42ea-93fe-9798e531f532', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
-('c0707ae1-a927-4709-9b25-600d7b76404d', '2022-05-13 10:56:32.664+00', '2022-05-13 10:56:32.664+00', NULL, '9816ff49-1641-4ef0-a60d-4d85bd7a044b', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', NULL, NULL);
+-- ('bc3eefda-143f-4208-b666-cb6f3790d4e2', '2022-05-13 10:58:23.404+00', '2022-05-13 10:58:42.896+00', 'completed', 'a4ee7976-e7f6-42ea-93fe-9798e531f532', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
+('bdcd02c2-82ba-4c96-8758-925febb36628', '2022-07-29 05:37:03.564+00', '2022-07-29 05:37:03.564+00', 'invited', 'a4ee7976-e7f6-42ea-93fe-9798e531f532', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', NULL, NULL),
+('c8d4a6e8-0908-4814-b055-c2ea2cbd7a63', '2022-07-29 05:36:58.558+00', '2022-07-29 05:36:58.558+00', 'invited', 'a4ee7976-e7f6-42ea-93fe-9798e531f532', '5b861dfb-02df-4be1-bc67-41a21611f5e7', NULL, NULL),
+('d0f80fb8-4971-4336-a3d8-861e664cd5ce', '2022-07-29 05:37:00.989+00', '2022-07-29 05:37:00.989+00', 'invited', 'a4ee7976-e7f6-42ea-93fe-9798e531f532', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', NULL, NULL),
+('c0707ae1-a927-4709-9b25-600d7b76404d', '2022-05-13 10:56:32.664+00', '2022-05-13 10:56:32.664+00', NULL, '9816ff49-1641-4ef0-a60d-4d85bd7a044b', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', NULL, NULL),
+('5a495eac-2b5b-41cb-b619-d4f2732cd5a0', '2021-03-10 12:48:35.069+01', '2021-03-10 12:48:46.605+01', NULL, '2eb4335a-0037-415c-abab-ec3aa8bf7e79', '85e1300e-003c-4e96-987b-23812f902477', NULL, NULL);
 
 INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "members", "owners", "global", "type", "manuscript_id") VALUES
 ('2eb4335a-0037-415c-abab-ec3aa8bf7e79', '2022-05-13 10:57:28.837+00', '2022-05-13 10:57:28.837+00', 'Senior Editor', 'seniorEditor', NULL, NULL, NULL, 'team', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f'),
 ('9816ff49-1641-4ef0-a60d-4d85bd7a044b', '2022-05-13 10:56:32.656+00', '2022-05-13 10:56:32.656+00', 'Author', 'author', NULL, NULL, NULL, 'team', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f'),
 ('a4ee7976-e7f6-42ea-93fe-9798e531f532', '2022-05-13 10:58:23.403+00', '2022-05-13 10:58:23.403+00', 'Reviewers', 'reviewer', NULL, NULL, NULL, 'team', '8f05064b-b00d-4aec-a98f-f7ba3656cc2f');
 
+
 INSERT INTO "public"."users" ("id", "created", "updated", "admin", "email", "username", "password_hash", "teams", "password_reset_token", "password_reset_timestamp", "type", "profile_picture", "online") VALUES
 ('ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', '2022-05-13 10:55:50.523+00', '2022-05-13 10:56:32.666+00', NULL, NULL, '0000000205642016', NULL, NULL, NULL, NULL, 'user', NULL, NULL),
 ('5b861dfb-02df-4be1-bc67-41a21611f5e7', '2022-05-14 10:31:35.715+00', '2022-05-14 10:32:14.133+00', 't', NULL, '0000000318382441', NULL, NULL, NULL, NULL, 'user', NULL, NULL),
-('f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '2022-05-13 10:54:12.651+00', '2022-05-13 10:58:26.686+00', 't', NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', NULL, NULL);
+('f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '2022-05-13 10:54:12.651+00', '2022-05-13 10:58:26.686+00', 't', NULL, '0000000256415729', NULL, NULL, NULL, NULL, 'user', NULL, NULL),
+('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.381+02', '2020-07-24 16:43:03.114+02', 't', NULL, '0000000294294446', NULL, NULL, NULL, NULL, 'user', NULL, NULL);
+
 
 ALTER TABLE "public"."article_import_history" ADD FOREIGN KEY ("source_id") REFERENCES "public"."article_import_sources"("id");
 ALTER TABLE "public"."channel_members" ADD FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id");
@@ -504,16 +605,19 @@ ALTER TABLE "public"."channels" ADD FOREIGN KEY ("manuscript_id") REFERENCES "pu
 ALTER TABLE "public"."files_old" ADD FOREIGN KEY ("review_comment_id") REFERENCES "public"."review_comments"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."files_old" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."identities" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
+ALTER TABLE "public"."invitations" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id");
+ALTER TABLE "public"."invitations" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
+ALTER TABLE "public"."invitations" ADD FOREIGN KEY ("sender_id") REFERENCES "public"."users"("id");
 ALTER TABLE "public"."manuscripts" ADD FOREIGN KEY ("import_source") REFERENCES "public"."article_import_sources"("id");
 ALTER TABLE "public"."manuscripts" ADD FOREIGN KEY ("submitter_id") REFERENCES "public"."users"("id");
-ALTER TABLE "public"."messages" ADD FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."messages" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
+ALTER TABLE "public"."messages" ADD FOREIGN KEY ("channel_id") REFERENCES "public"."channels"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."review_comments" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE SET NULL;
-ALTER TABLE "public"."review_comments" ADD FOREIGN KEY ("review_id") REFERENCES "public"."reviews"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."reviews" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
+ALTER TABLE "public"."team_members" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."team_members" ADD FOREIGN KEY ("alias_id") REFERENCES "public"."aliases"("id");
 ALTER TABLE "public"."team_members" ADD FOREIGN KEY ("team_id") REFERENCES "public"."teams"("id") ON DELETE CASCADE ON UPDATE CASCADE;
-ALTER TABLE "public"."team_members" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."teams" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
+ALTER TABLE "public"."threaded_discussions" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
 
 
