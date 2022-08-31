@@ -225,6 +225,7 @@ const formPropTypes = PropTypes.shape({
 Submit.propTypes = {
   versions: PropTypes.arrayOf(
     PropTypes.shape({
+      // eslint-disable-next-line react/forbid-prop-types
       manuscript: PropTypes.objectOf(PropTypes.any),
       label: PropTypes.string,
     }),
