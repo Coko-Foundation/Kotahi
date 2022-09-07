@@ -57,7 +57,7 @@ const jatsTagsThatDontNeedConversion = [
   'table-wrap',
   'inline-formula',
   'disp-formula',
-  'span', // using this for footnote citations, may need to cleanup later?
+  // 'span', // using this for footnote citations, may need to cleanup later?
 ]
 
 /** Finds all XML tags and:
@@ -669,9 +669,11 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const unTrackChangedHtml = removeTrackChanges(html)
 
-  const { deFootnotedHtml, fnSection } = makeFootnotesSection(
-    unTrackChangedHtml,
-  )
+  // 2. deal with citations
+
+  const { processedHtml, refList } = makeCitations(unTrackChangedHtml)
+
+  const { deFootnotedHtml, fnSection } = makeFootnotesSection(processedHtml)
 
   const { deackedHtml, ack } = makeAcknowledgements(deFootnotedHtml)
 
@@ -687,13 +689,9 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const { deAppendixedHtml, appendices } = makeAppendices(deTabledHtml)
 
-  // 2. deal with citations
-
-  const { deCitedHtml, refList } = makeCitations(deAppendixedHtml, fnSection)
-
   // 3 deal with faux frontmatter – these just get thrown away
 
-  const { abstract, deFrontedHtml, title } = makeFrontMatter(deCitedHtml)
+  const { abstract, deFrontedHtml, title } = makeFrontMatter(deAppendixedHtml)
 
   // 4 deal with article and journal metadata
 
