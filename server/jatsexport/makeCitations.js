@@ -26,9 +26,9 @@ const cleanCitation = (html, id) => {
   const $ = cheerio.load(dom, { xmlMode: true })
   // console.log('In cleanCitation: ', id, $.text())
   $('span').each((index, el) => {
+    // For each span, replace with JATS tag if appropriate. Unrecognized spans aren't actually processed
     // console.log('cleanCitation span: ', index, el.attribs.class, $(el).text())
 
-    // TODO: break this down!
     if (el.attribs.class === 'year') {
       $(el).replaceWith(`<year>${$(el).text()}</year>`)
     }
@@ -39,10 +39,6 @@ const cleanCitation = (html, id) => {
 
     if (el.attribs.class === 'article-title') {
       $(el).replaceWith(`<article-title>${$(el).text()}</article-title>`)
-    }
-
-    if (el.attribs.class === 'author-name') {
-      $(el).replaceWith(`<string-name>${$(el).text()}</string-name>`)
     }
 
     if (el.attribs.class === 'author-name') {
@@ -66,6 +62,7 @@ const cleanCitation = (html, id) => {
     }
 
     if (el.attribs.class === 'author-group') {
+      // could turn this off and still have valid JATS!
       $(el).replaceWith(
         `<person-group person-group-type="author">${$(
           el,
@@ -78,19 +75,19 @@ const cleanCitation = (html, id) => {
     const url = $(el).text()
 
     if (el.attribs.class === 'doi') {
-      console.log('doi: ', url)
+      // console.log('doi: ', url)
       $(el).replaceWith(
         `<ext-link ext-link-type="doi" xlink:href="${url}">${url}</ext-link>`,
       )
     } else {
       // every other a becomes a standard ext-link – maybe this will need to be changed later?
-      console.log('url: ', url)
+      // console.log('url: ', url)
       $(el).replaceWith(
         `<ext-link ext-link-type="uri" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href=${url}>${url}</ext-link>`,
       )
     }
 
-    console.log($(el).html())
+    // console.log($(el).html())
   })
 
   $('br').each((index, el) => {
@@ -112,19 +109,31 @@ const findCitationSpans = (html, refCount, refList = '') => {
   $('span.mixed-citation').each((index, el) => {
     const $elem = $(el)
     const { xref, ref } = cleanCitation($elem.html(), currentIndex)
-    // console.log(xref, ref)
-    // what we want out of this: a JATS <fn> object with an ID and a crossref to the ID passed back
+    // xref is the crossrefence; ref is the citation to be added to the list
+    const parent = $(el).parent()[0]
+    $(el).replaceWith(xref)
+
+    if (parent.name === 'footnote') {
+      // check if citation is in a footnote. If the footnote only consists of a footnote, replace the footnote with the citation
+      const parentHtml = $(parent).html()
+
+      // testing on length becasue of some sort of encoding problem?
+      if (parentHtml.trim().length === xref.length) {
+        // if this the case, the citation is the only thing in the footnote, so we can replace the footnote with the citation
+        $(parent).replaceWith(xref)
+      } else {
+        // otherwise, we leave the reference in the footnote. Could change this?
+      }
+    }
+
     citations.push(ref)
     currentIndex += 1
-
-    $(el).replaceWith(xref)
   })
   // console.log(citations, currentIndex)
   return { cleanedHtml: $.html(), cleanedRefList: refList + citations.join('') }
 }
 
 const makeCitations = html => {
-  console.log('in makeCitations')
   let deCitedHtml = html
   let refList = '' // this is the ref-list that we're building
   let refListHeader = '' // if there's a header, it goes in here
@@ -245,17 +254,11 @@ const makeCitations = html => {
     refCount += 1
   }
 
-  // TODO: get all the <span class="mixed-citation"> out of deCitedHtml
-
   const { cleanedHtml, cleanedRefList } = findCitationSpans(
     deCitedHtml,
     refCount,
     refList,
   )
-
-  console.log('cleanedHtmL: ', cleanedHtml, '\nrefList: ', cleanedRefList)
-
-  // console.log('returned: ', cleanedHtml)
 
   if (cleanedRefList) {
     refList = `<ref-list>${cleanedRefList}</ref-list>`
