@@ -164,19 +164,19 @@ const makeCitations = html => {
 
     // first, go through and identify all possible mixed citations
 
-    while (thisRefList.indexOf('<p class="mixedcitation">') > -1) {
+    while (thisRefList.indexOf('<p class="reference">') > -1) {
       const thisCitation = thisRefList
-        .split('<p class="mixedcitation">')[1]
+        .split('<p class="reference">')[1]
         .split('</p>')[0]
 
       if (thisCitation.length) {
         potentialRefs[
-          html.indexOf(`<p class="mixedcitation">${thisCitation}</p>`)
+          html.indexOf(`<p class="reference">${thisCitation}</p>`)
         ] = thisCitation
       }
 
       thisRefList = thisRefList.replace(
-        `<p class="mixedcitation">${thisCitation}</p>`,
+        `<p class="reference">${thisCitation}</p>`,
         ``,
       )
     }
@@ -214,6 +214,7 @@ const makeCitations = html => {
 
     const myRefs = potentialRefs.filter(x => x)
 
+    // TODO: deal with loose citation spans in old references
     refList += myRefs
       .map(
         (thisCitation, index) =>
@@ -238,15 +239,17 @@ const makeCitations = html => {
   // that is not clear to me. <mixed-citation> by itself isn't valid in a <sec> (even wrapped in <ref>).
   // The alternative would just be to delete the loose <mixed-citations>?
 
-  while (deCitedHtml.indexOf('<p class="mixedcitation">') > -1) {
+  while (deCitedHtml.indexOf('<p class="reference">') > -1) {
     const thisCitation = deCitedHtml
-      .split('<p class="mixedcitation">')[1]
+      .split('<p class="reference">')[1]
       .split('</p>')[0]
 
     deCitedHtml = deCitedHtml.replace(
-      `<p class="mixedcitation">${thisCitation}</p>`,
+      `<p class="reference">${thisCitation}</p>`,
       ``,
     )
+
+    // TODO: deal with spans in the citation text if there are any!
 
     refList += `<ref id="ref-${refCount}"><mixed-citation>${htmlToJats(
       thisCitation,

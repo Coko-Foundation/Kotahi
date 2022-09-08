@@ -418,7 +418,7 @@ const EditorStyles = css`
     padding: 4px 8px;
   }
 
-  p.mixedcitation {
+  p.reference {
     &:before {
       content: '§ ';
     }

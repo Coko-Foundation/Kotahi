@@ -35,7 +35,7 @@ class CitationList extends ToolGroup {
   title = (<LeftMenuTitle title="Citations" />)
 
   constructor(
-    @inject('MixedCitation') mixedCitation,
+    @inject('Reference') reference,
     @inject('RefList') refList,
     @inject('ReferenceHeader') referenceHeader,
     @inject('ArticleTitle') articleTitle,
@@ -54,7 +54,7 @@ class CitationList extends ToolGroup {
     this.tools = [
       refList,
       referenceHeader,
-      mixedCitation,
+      reference,
       mixedCitationSpan,
       authorGroup,
       authorName,

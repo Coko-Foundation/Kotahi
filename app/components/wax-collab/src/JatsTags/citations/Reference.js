@@ -5,15 +5,15 @@ import { LeftSideButton } from 'wax-prosemirror-components'
 import { Commands } from 'wax-prosemirror-utilities'
 import { Tools } from 'wax-prosemirror-services'
 
-class MixedCitation extends Tools {
-  title = 'Change to mixed citation'
-  label = 'Mixed citation'
-  name = 'MixedCitation'
+class Reference extends Tools {
+  title = 'Change to reference'
+  label = 'Reference'
+  name = 'Reference'
 
   // eslint-disable-next-line class-methods-use-this
   get run() {
     return (state, dispatch) => {
-      Commands.setBlockType(state.config.schema.nodes.mixedCitation)(
+      Commands.setBlockType(state.config.schema.nodes.reference)(
         state,
         dispatch,
       )
@@ -28,7 +28,7 @@ class MixedCitation extends Tools {
 
       const { from, to } = state.selection
       state.doc.nodesBetween(from, to, (node, pos) => {
-        if (node.type.name === 'mixedCitation') {
+        if (node.type.name === 'reference') {
           isActive = true
         }
       })
@@ -44,9 +44,7 @@ class MixedCitation extends Tools {
   // eslint-disable-next-line class-methods-use-this
   get enable() {
     return state => {
-      return Commands.setBlockType(state.config.schema.nodes.mixedCitation)(
-        state,
-      )
+      return Commands.setBlockType(state.config.schema.nodes.reference)(state)
     }
   }
 
@@ -54,11 +52,11 @@ class MixedCitation extends Tools {
     if (isEmpty(view)) return null
     // eslint-disable-next-line no-underscore-dangle
     return this._isDisplayed ? (
-      <LeftSideButton item={this.toJSON()} key="MixedCitation" view={view} />
+      <LeftSideButton item={this.toJSON()} key="Reference" view={view} />
     ) : null
   }
 }
 
-decorate(injectable(), MixedCitation)
+decorate(injectable(), Reference)
 
-export default MixedCitation
+export default Reference

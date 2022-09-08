@@ -6,7 +6,7 @@ import Abstract from './Abstract'
 import AcknowledgementsSection from './AcknowledgementSection'
 import RefList from './citations/RefList'
 import ReferenceHeader from './citations/ReferenceHeader'
-import MixedCitation from './citations/MixedCitation'
+import Reference from './citations/Reference'
 import ArticleTitle from './citations/ArticleTitle'
 import JournalTitle from './citations/JournalTitle'
 import MixedCitationSpan from './citations/MixedCitationSpan'
@@ -44,7 +44,7 @@ class JatsTagsService extends Service {
   // boot() {}
 
   register() {
-    this.container.bind('MixedCitation').to(MixedCitation)
+    this.container.bind('Reference').to(Reference)
     this.container.bind('Appendix').to(Appendix)
     this.container.bind('AppendixHeader').to(AppendixHeader)
     this.container.bind('RefList').to(RefList)
@@ -66,20 +66,20 @@ class JatsTagsService extends Service {
     const createNode = this.container.get('CreateNode')
     const createMark = this.container.get('CreateMark')
     createNode({
-      mixedCitation: {
+      reference: {
         content: 'inline*',
         group: 'block',
         defining: true,
         attrs: {
-          class: { default: 'mixedcitation' },
+          class: { default: 'reference' },
         },
         parseDOM: [
           {
-            tag: 'p.mixedcitation',
+            tag: 'p.reference',
             getAttrs(hook, next) {
               Object.assign(hook, {
                 // this conked out in FullWaxEditor so I adjusted
-                class: hook?.dom?.getAttribute('class') || 'mixedcitation',
+                class: hook?.dom?.getAttribute('class') || 'reference',
               })
               // this conked out in FullWaxEditor so I adjusted
               typeof next !== 'undefined' && next()
@@ -87,7 +87,7 @@ class JatsTagsService extends Service {
           },
         ],
         toDOM(hook) {
-          const attrs = { class: hook.node?.attrs?.class || 'mixedcitation' }
+          const attrs = { class: hook.node?.attrs?.class || 'reference' }
           return ['p', attrs, 0]
         },
       },
@@ -95,7 +95,7 @@ class JatsTagsService extends Service {
     createNode({
       refList: {
         content: 'block+',
-        // content: 'referenceHeader? mixedCitation*', // this was more specific
+        // content: 'referenceHeader? reference*', // this was more specific
         group: 'block',
         defining: true,
         attrs: {
