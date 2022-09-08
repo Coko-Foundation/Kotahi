@@ -1,23 +1,17 @@
 const htmlparser2 = require('htmlparser2')
 const cheerio = require('cheerio')
-const { htmlToJats } = require('../utils/jatsUtils')
+const htmlToJats = require('./htmlToJats')
 
 /*
 
 # How citations are gathered into JATS.
 
-- this should fire before footnotes are processed.
-- parse the HTML and deal with all <reflist> sections as before
+- parse the HTML and deal with all <ref-list> sections as before
   - question: what about <span class="mixed-citation"> inside of that? Maybe deal with spans first?
 - parse HTML for <span class="mixed-citation"> elements and transform, adding to reflist and adding in an <xref> where it was deleted
 - if there is a footnote with a citation in it: 
   - change <span class="mixed-citation"> to citation, add that to the reflist
 	- if there is anything else in the footnote, leave it, replace the deleted <span> with an <xref>
-	- if there is nothing else in the footnote, replace it with an <xref> to the citation
-
-	QUESTIONS:
-
-	If there is a reference span in body text, what happens to it? It's just deleted, right? Do we get an XREF to it?
 
 */
 
@@ -214,14 +208,12 @@ const makeCitations = html => {
 
     const myRefs = potentialRefs.filter(x => x)
 
-    // TODO: deal with loose citation spans in old references
     refList += myRefs
-      .map(
-        (thisCitation, index) =>
-          `<ref id="ref-${index}"><mixed-citation>${htmlToJats(
-            thisCitation,
-          )}</mixed-citation></ref>`,
-      )
+      .map((thisCitation, index) => {
+        const { ref } = cleanCitation(thisCitation, index)
+        // TODO: note that we can still get invalid results if there's a bold/italic tag in one of these! Maybe take all of them out?
+        return htmlToJats(ref)
+      })
       .join('')
     refCount = myRefs.length
   }
@@ -249,11 +241,9 @@ const makeCitations = html => {
       ``,
     )
 
-    // TODO: deal with spans in the citation text if there are any!
-
-    refList += `<ref id="ref-${refCount}"><mixed-citation>${htmlToJats(
-      thisCitation,
-    )}</mixed-citation></ref>`
+    const { ref } = cleanCitation(thisCitation, refCount)
+    // TODO: note that we can still get invalid results if there's a bold/italic tag in one of these! Maybe take all of them out?
+    refList += htmlToJats(ref)
     refCount += 1
   }
 
