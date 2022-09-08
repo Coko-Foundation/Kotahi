@@ -6,7 +6,7 @@ const config = require('config')
 const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
-const schedule = require('../../../node_modules/node-schedule')
+
 
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
@@ -518,18 +518,6 @@ const resolvers = {
     importManuscripts(_, props, ctx) {
       if (isImportInProgress) return false
       isImportInProgress = true
-      // eslint-disable-next-line no-undef, no-console
-      // console.log(importManuscripts, 'importManuscripts')
-
-      const mJob = schedule.scheduleJob(
-        'm-job',
-        '* * * * *',
-        updatedManuscript => {
-          // eslint-disable-next-line no-console
-          console.log('Preprints are importing')
-          mJob.cancel()
-        },
-      )
 
       const promises = []
 

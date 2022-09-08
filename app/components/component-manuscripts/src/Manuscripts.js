@@ -35,8 +35,6 @@ import getUriQueryParams from './getUriQueryParams'
 import FilterSortHeader from './FilterSortHeader'
 import { validateManuscriptSubmission } from '../../../shared/manuscriptUtils'
 
-// const schedule = require('../../../../node_modules/node-schedule')
-
 const HeadingInFlexRow = styled(Heading)`
   flex-grow: 10;
 `
@@ -107,12 +105,6 @@ const Manuscripts = ({ history, ...props }) => {
     revisedQuery = revisedQuery.filter(x => !!x.value)
     loadPageWithQuery(revisedQuery)
   }
-
-  // const mJob = schedule.scheduleJob('m-job', '* * * * *', importManuscripts => {
-  //   // eslint-disable-next-line no-console
-  //   console.log('Preprints are importing')
-  //   mJob.cancel()
-  // })
 
   const toggleNewManuscriptCheck = id => {
     setSelectedNewManuscripts(s => {
