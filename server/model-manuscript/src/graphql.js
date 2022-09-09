@@ -6,6 +6,7 @@ const config = require('config')
 const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
+const { importManuscripts } = require('./manuscriptCommsUtils')
 
 
 const { getPubsub } = pubsubManager
@@ -515,43 +516,8 @@ const resolvers = {
 
       return updatedManuscript
     },
-    importManuscripts(_, props, ctx) {
-      if (isImportInProgress) return false
-      isImportInProgress = true
-
-      const promises = []
-
-      if (process.env.INSTANCE_NAME === 'ncrc') {
-        promises.push(importArticlesFromBiorxiv(ctx))
-        promises.push(importArticlesFromPubmed(ctx))
-      } else if (process.env.INSTANCE_NAME === 'colab') {
-        promises.push(
-          importArticlesFromBiorxivWithFullTextSearch(ctx, [
-            'transporter*',
-            'pump*',
-            'gpcr',
-            'gating',
-            '*-gated',
-            '*-selective',
-            '*-pumping',
-            'protein translocation',
-          ]),
-        )
-      }
-
-      if (!promises.length) return false
-
-      Promise.all(promises)
-        .catch(error => console.error(error))
-        .finally(async () => {
-          isImportInProgress = false
-          const pubsub = await getPubsub()
-          pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
-            manuscriptsImportStatus: true,
-          })
-        })
-
-      return true
+    importManuscripts(ctx) {
+      importManuscripts(ctx)
     },
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {

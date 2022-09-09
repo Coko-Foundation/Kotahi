@@ -4,11 +4,11 @@
 
 const { app } = require('@coko/server')
 const schedule = require('../node_modules/node-schedule')
+const { importManuscripts } = require('./model-manuscript/src/manuscriptCommsUtils')
 
 // You can modify the app or ensure other things are imported here
 
-schedule.scheduleJob('m-job', '* * * * *', () => {
-  // eslint-disable-next-line no-console
+schedule.scheduleJob('schedule', '* * * * *', () => {
   importManuscripts({user: null})
 })
 
