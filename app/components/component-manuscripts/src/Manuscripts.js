@@ -291,7 +291,7 @@ const Manuscripts = ({ history, ...props }) => {
               </FloatRightButton>
             )}
 
-            {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
+            {['ncrc'].includes(process.env.INSTANCE_NAME) && (
               <FloatRightButton
                 disabled={isImporting}
                 onClick={importManuscripts}
