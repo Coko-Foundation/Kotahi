@@ -8,9 +8,8 @@ const { importManuscripts } = require('./model-manuscript/src/manuscriptCommsUti
 
 // You can modify the app or ensure other things are imported here
 
-const mJob = schedule.scheduleJob('m-Job', '* * * * *', () => {
+schedule.scheduleJob('m-Job', '00 21 * * *', () => {
   importManuscripts({user: null})
-  mJob.cancel()
 })
 
 module.exports = app
