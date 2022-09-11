@@ -1450,16 +1450,20 @@ const resolvers = {
 
       try {
         await axios.get(`https://api.crossref.org/works/${DOI}/agency`)
-
-        return {
-          isDOIValid: true,
-        }
+        return { isDOIValid: true }
       } catch (err) {
-        // eslint-disable-next-line
-        console.log(err)
-        return {
-          isDOIValid: false,
+        if (err.response.status === 404) {
+          // HTTP 404 "Not found" response. The DOI is not known by Crossref
+          // eslint-disable-next-line no-console
+          console.log(`DOI '${DOI}' not found on Crossref.`)
+          return { isDOIValid: false }
         }
+
+        console.warn(err)
+        // This is an unexpected HTTP response, possibly a 504 gateway timeout or other 5xx.
+        // Crossref API is probably unavailable or failing for some reason,
+        // and we should assume in its absence that the DOI is correct.
+        return { isDOIValid: true }
       }
     },
   },
