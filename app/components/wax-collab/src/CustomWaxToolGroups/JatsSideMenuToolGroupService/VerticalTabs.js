@@ -2,7 +2,9 @@ import React, { useState } from 'react'
 import { th } from '@pubsweet/ui-toolkit'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
-import { Icon } from 'wax-prosemirror-components'
+import Icon from './Icon'
+
+// n.b. Henrik's current design is at https://www.figma.com/file/uDxsjgDWxjiof0qSNFLelr/Kotahi-storybook?node-id=6256%3A11486
 
 const Wrapper = styled.div`
   display: flex;
