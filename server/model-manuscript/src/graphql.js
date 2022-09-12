@@ -39,9 +39,6 @@ const {
 
 const sendEmailNotification = require('../../email-notifications')
 
-const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
-const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
-const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
 const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
 const validateApiToken = require('../../utils/validateApiToken')
 const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
