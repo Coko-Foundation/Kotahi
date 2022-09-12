@@ -1,9 +1,10 @@
 import React, { useMemo } from 'react'
 import { decorate, injectable, inject } from 'inversify'
-import { BlockLevelTools, Tabs } from 'wax-prosemirror-components'
+import { BlockLevelTools } from 'wax-prosemirror-components'
 import { isEmpty } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { ToolGroup } from 'wax-prosemirror-services'
+import VerticalTabs from './VerticalTabs'
 
 // nb this was forked from /wax-prosemirror-services/src/WaxToolGroups/DisplayTextToolGroupService/DisplayText.js
 
@@ -77,7 +78,7 @@ class JatsSideMenu extends ToolGroup {
     const tabList = [second, first]
 
     const TabsComponent = useMemo(
-      () => <Tabs key={uuidv4()} tabList={tabList} />,
+      () => <VerticalTabs key={uuidv4()} tabList={tabList} />,
       [],
     )
 
