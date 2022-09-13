@@ -3,6 +3,9 @@ const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import'
 const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
 const { pubsubManager } = require('@coko/server')
+const { getReviewForm, getDecisionForm } = require('../../model-review/src/reviewCommsUtils')
+const { stripConfidentialDataFromReviews } = require('./manuscriptUtils')
+const { replaceImageSrc } = require('../../utils/fileStorageUtils')
 const { getPubsub } = pubsubManager
 
 
@@ -66,9 +69,73 @@ const importManuscripts = (ctx) => {
 
   return true
 }
+const manuscript = (ctx) => {
+  // eslint-disable-next-line global-require
+  const ManuscriptModel = require('./manuscript') // Pubsweet models may initially be undefined, so we require only when resolver runs.
+
+  const manuscript = ManuscriptModel.query()
+    .findById(id)
+    .withGraphFetched('[teams, channels, files, reviews.user]')
+
+  const user = ctx.user
+    ? models.User.query().findById(ctx.user)
+    : null
+
+  if (!manuscript) return null
+
+  if (!manuscript.meta) {
+    manuscript.meta = {}
+  }
+
+  // manuscript.files = await getFilesWithUrl(manuscript.files)
+  // const forms = await models.Form.query()
+  // await regenerateFileUrisInReviews(manuscript, forms)
+
+  if (typeof manuscript.meta.source === 'string') {
+    manuscript.meta.source = replaceImageSrc(
+      manuscript.meta.source,
+      manuscript.files,
+      'medium',
+    )
+  }
+
+  manuscript.meta.notes = (manuscript.meta || {}).notes || [
+    {
+      notesType: 'fundingAcknowledgement',
+      content: '',
+    },
+    {
+      notesType: 'specialInstructions',
+      content: '',
+    },
+  ]
+  manuscript.decision = ''
+
+  manuscript.manuscriptVersions = manuscript.getManuscriptVersions()
+
+  if (
+    user &&
+    !user.admin &&
+    manuscript.reviews &&
+    manuscript.reviews.length &&
+    !(isEditorOfManuscript(ctx.user, manuscript))
+  ) {
+    const reviewForm = getReviewForm()
+    const decisionForm = getDecisionForm()
+    manuscript.reviews = stripConfidentialDataFromReviews(
+      manuscript.reviews,
+      reviewForm,
+      decisionForm,
+      ctx.user,
+    )
+  }
+
+  return repackageForGraphql(manuscript)
+}
 
 module.exports = {
   getIdOfFirstVersionOfManuscript,
   getIdOfLatestVersionOfManuscript,
   importManuscripts,
+  manuscript,
 }
