@@ -1,11 +1,7 @@
 import React, { useState } from 'react'
 import { th } from '@pubsweet/ui-toolkit'
 import styled, { css } from 'styled-components'
-import {
-  SectionHeader,
-  SectionRowGrid,
-  Title,
-} from '../style'
+import { SectionHeader, SectionRowGrid, Title } from '../style'
 import { SectionContent } from '../../../../shared'
 import SelectReceiver from './SelectReceiver'
 import SelectEmailTemplate from './SelectEmailTemplate'
@@ -30,7 +26,9 @@ const editorOption = user => ({
 
 const MessageWrapper = styled.div`
   color: ${th('colorError')};
-  padding: calc(8px * 2) calc(8px * 3);
+  font-family: ${th('fontInterface')};
+  font-size: ${th('fontSizeBaseSmall')};
+  line-height: ${th('lineHeightBaseSmall')};
 
   ${props =>
     props.isVisible === true
@@ -41,14 +39,11 @@ const MessageWrapper = styled.div`
           display: none;
         `}
 
-  font-family: ${th('fontInterface')};
+  padding: calc(8px * 2) calc(8px * 3);
 
   &:not(:last-child) {
     margin-bottom: ${th('gridUnit')};
   }
-
-  font-size: ${th('fontSizeBaseSmall')};
-  line-height: ${th('lineHeightBaseSmall')};
 `
 
 const RowGridStyled = styled(SectionRowGrid)`
@@ -371,7 +366,11 @@ const EmailNotifications = ({
           onChangeEmailTemplate={setSelectedTemplate}
           selectedEmailTemplate={selectedTemplate}
         />
-        <ActionButton status={notificationStatus} onClick={sendEmailHandler} primary>
+        <ActionButton
+          onClick={sendEmailHandler}
+          primary
+          status={notificationStatus}
+        >
           Notify
         </ActionButton>
       </RowGridStyled>

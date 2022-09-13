@@ -19,8 +19,8 @@ describe('Completing a review', () => {
       cy.login(name.role.admin, dashboard)
       DashboardPage.clickManuscriptNavButton()
       ManuscriptsPage.clickControlButton()
-      ControlPage.getAssignEditor(0)
-        .click()
+      ControlPage.getAssignSeniorEditorDropdown()
+        .click({ force: true })
         .type(`${name.role.seniorEditor.uuid2}{enter}`) // Assign Editor
 
       /* Ediot Submits a decision */
