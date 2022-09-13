@@ -613,7 +613,6 @@ const resolvers = {
     // TODO Rename to something like 'setReviewerResponse'
     async reviewerResponse(_, { action, teamId }, context) {
       const {
-        Team: TeamModel,
         Review: ReviewModel,
         // eslint-disable-next-line global-require
       } = require('@pubsweet/models') // Pubsweet models may initially be undefined, so we require only when resolver runs.
@@ -623,7 +622,7 @@ const resolvers = {
           `Invalid action (reviewerResponse): Must be either "accepted" or "rejected"`,
         )
 
-      const team = await TeamModel.query()
+      const team = await Team.query()
         .findById(teamId)
         .withGraphFetched('members')
 
@@ -634,10 +633,10 @@ const resolvers = {
           team.members[i].status = action
       }
 
-      await new TeamModel(team).saveGraph()
+      await new Team(team).saveGraph()
 
       const existingReview = await ReviewModel.query().where({
-        manuscriptId: team.manuscriptId,
+        manuscriptId: team.objectId,
         userId: context.user,
       })
 
