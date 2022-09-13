@@ -6,6 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class Issue extends Tools {
   title = 'Change to issue'
   label = 'Issue'
+  color = 'magenta'
   // icon = 'title'
   name = 'Issue'
 

@@ -6,6 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class JournalTitle extends Tools {
   title = 'Change to journal title'
   label = 'Journal title'
+  color = 'purple'
   // icon = 'title'
   name = 'JournalTitle'
 

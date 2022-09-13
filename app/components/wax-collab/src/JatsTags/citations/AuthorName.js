@@ -6,6 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class AuthorName extends Tools {
   title = 'Change to author name'
   label = 'Author name'
+  color = 'blue'
   // icon = 'title'
   name = 'AuthorName'
 

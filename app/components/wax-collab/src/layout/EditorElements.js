@@ -684,7 +684,7 @@ const EditorStyles = css`
   }
 
   span.issue {
-    outline: orange 1px dotted;
+    outline: magenta 1px dotted;
     outline-offset: 2px;
     position: relative;
     border-radius: 2px;
@@ -693,7 +693,7 @@ const EditorStyles = css`
         content: 'Issue';
         white-space: nowrap;
         position: absolute;
-        background-color: orange;
+        background-color: magenta;
         color: white;
         top: 16px;
         left: 16px;
@@ -709,7 +709,7 @@ const EditorStyles = css`
   }
 
   span.first-page {
-    outline: cyan 1px dotted;
+    outline: lime 1px dotted;
     outline-offset: 2px;
     position: relative;
     border-radius: 2px;
@@ -718,7 +718,7 @@ const EditorStyles = css`
         content: 'First Page';
         white-space: nowrap;
         position: absolute;
-        background-color: cyan;
+        background-color: lime;
         color: white;
         top: 16px;
         left: 16px;

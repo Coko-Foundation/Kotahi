@@ -6,6 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class LastPage extends Tools {
   title = 'Change to last page'
   label = 'Last page'
+  color = 'cyan'
   // icon = 'title'
   name = 'LastPage'
 

@@ -6,6 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class Volume extends Tools {
   title = 'Change to volume'
   label = 'Volume'
+  color = 'orange'
   // icon = 'title'
   name = 'Volume'
 

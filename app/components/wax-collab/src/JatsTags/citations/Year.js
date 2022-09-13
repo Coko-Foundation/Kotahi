@@ -6,6 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class Year extends Tools {
   title = 'Change to year'
   label = 'Year'
+  color = 'gray'
   // icon = 'title'
   name = 'Year'
 

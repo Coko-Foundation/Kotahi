@@ -6,6 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class MixedCitationSpan extends Tools {
   title = 'Change to mixed citation span'
   label = 'Parsed citation'
+  color = 'yellow'
   // icon = 'title'
   name = 'MixedCitationSpan'
 

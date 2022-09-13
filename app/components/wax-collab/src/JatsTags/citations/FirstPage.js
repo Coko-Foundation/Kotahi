@@ -6,6 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class FirstPage extends Tools {
   title = 'Change to first page'
   label = 'First page'
+  color = 'lime'
   // icon = 'title'
   name = 'FirstPage'
 

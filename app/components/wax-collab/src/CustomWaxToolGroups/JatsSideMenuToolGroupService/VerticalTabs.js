@@ -1,11 +1,13 @@
 import React, { useState, useContext } from 'react'
-import { th, override } from '@pubsweet/ui-toolkit'
+import { th } from '@pubsweet/ui-toolkit'
 import { WaxContext } from 'wax-prosemirror-core'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 import Icon from './Icon'
 
 // n.b. Henrik's current design is at https://www.figma.com/file/uDxsjgDWxjiof0qSNFLelr/Kotahi-storybook?node-id=6256%3A11486
+
+const useCircles = true // turn this on if you want colors next to annotations
 
 const TabWrapper = styled.div`
   display: flex;
@@ -122,7 +124,17 @@ const BlockElementWrapper = styled.div`
     align-items: center;
     background-color: ${props =>
       props.isActive ? th('colorBackgroundTabs') : 'transparent'};
-
+    &:after {
+      position: relative;
+      margin-left: -4px;
+      content: '';
+      width: ${props => (props.color ? '14px' : 0)};
+      margin-right: ${props => (props.color ? '8px' : 0)};
+      height: 14px;
+      border-radius: 100%;
+      border: 1px solid ${props => props.color || 'transparent'};
+      top: 1px;
+    }
     & span {
       font-size: 14px;
       color: ${th('colorPrimary')};
@@ -150,7 +162,11 @@ const BlockElement = ({ item, onClick, view }) => {
   )
 
   return (
-    <BlockElementWrapper isActive={isActive} onClick={onClick}>
+    <BlockElementWrapper
+      color={(useCircles && item.color) || null}
+      isActive={isActive}
+      onClick={onClick}
+    >
       {item.renderTool(view)}
     </BlockElementWrapper>
   )
