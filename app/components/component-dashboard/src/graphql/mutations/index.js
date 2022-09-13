@@ -16,9 +16,8 @@ export default {
         id
         role
         name
-        manuscript {
-          id
-        }
+        objectId
+        objectType
         members {
           id
           user {
@@ -49,9 +48,8 @@ export default {
           id
           role
           name
-          manuscript {
-            id
-          }
+          objectId
+          objectType
           members {
             id
             user {

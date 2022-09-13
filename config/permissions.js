@@ -27,7 +27,7 @@ const userIsEditorQuery = async (ctx, manuscriptId) => {
 
   // Manuscript is optional...
   if (manuscriptId) {
-    query = query.where({ manuscriptId })
+    query = query.where({ objectId: manuscriptId })
   }
 
   const rows = await query.resultSize()
@@ -80,7 +80,7 @@ const userIsMemberOfTeamWithRoleQuery = async (user, manuscriptId, role) => {
   const query = user
     .$relatedQuery('teams')
     .where({ role })
-    .andWhere({ manuscriptId })
+    .andWhere({ objectId: manuscriptId, objectType: 'manuscript' })
 
   const rows = await query.resultSize()
   return !!rows
@@ -200,7 +200,8 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
   const team = await ctx.connectors.Team.model
     .query()
     .where({
-      manuscriptId: manuscript.id,
+      objectId: manuscript.id,
+      objectType: 'manuscript',
       role: 'reviewer',
     })
     .first()
@@ -259,7 +260,7 @@ const userIsAuthor = rule({ cache: 'strict' })(
     const team = await ctx.connectors.Team.model
       .query()
       .where({
-        manuscriptId: args.id,
+        objectId: args.id,
         role: 'author',
       })
       .first()
@@ -299,7 +300,8 @@ const userIsAuthorOfFilesAssociatedManuscript = rule({
   const team = await ctx.connectors.Team.model
     .query()
     .where({
-      manuscriptId,
+      objectId: manuscriptId,
+      objectType: 'manuscript',
       role: 'author',
     })
     .first()
@@ -323,7 +325,8 @@ const userIsAuthorOfTheManuscriptOfTheFile = rule({ cache: 'strict' })(
     const team = await ctx.connectors.Team.model
       .query()
       .where({
-        manuscriptId: manuscript.id,
+        objectId: manuscript.id,
+        objectType: 'manuscript',
         role: 'author',
       })
       .first()
@@ -354,7 +357,8 @@ const userIsTheReviewerOfTheManuscriptOfTheFileAndReviewNotComplete = rule({
   const team = await ctx.connectors.Team.model
     .query()
     .where({
-      manuscriptId: manuscript.id,
+      objectId: manuscript.id,
+      objectType: 'manuscript',
       role: 'reviewer',
     })
     .first()

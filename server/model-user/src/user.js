@@ -23,7 +23,7 @@ class User extends BaseModel {
 
   static get relationMappings() {
     // eslint-disable-next-line global-require
-    const { Team, TeamMember, Identity, Review } = require('@pubsweet/models')
+    const { Identity, Review } = require('@pubsweet/models')
 
     return {
       identities: {
@@ -47,11 +47,11 @@ class User extends BaseModel {
       },
       teams: {
         relation: BaseModel.ManyToManyRelation,
-        modelClass: Team,
+        modelClass: require.resolve('../../model-team/src/team'),
         join: {
           from: 'users.id',
           through: {
-            modelClass: TeamMember,
+            modelClass: require.resolve('../../model-team/src/team_member'),
             from: 'team_members.userId',
             to: 'team_members.teamId',
             extra: ['status'],
@@ -92,14 +92,11 @@ class User extends BaseModel {
   // the current roles the user is performing. E.g. if they are a member
   // of a reviewer team and have the status of 'accepted', they will
   // have a 'accepted:reviewer' role present in the returned object
-  async currentRoles(manuscript) {
+  async currentRoles(object) {
     let teams
 
-    if (manuscript && manuscript.id) {
-      teams = await this.$relatedQuery('teams').where(
-        'manuscriptId',
-        manuscript.id,
-      )
+    if (object && object.objectId && object.objectType) {
+      teams = await this.$relatedQuery('teams').where(object)
     } else {
       teams = await this.$relatedQuery('teams')
     }
@@ -110,10 +107,10 @@ class User extends BaseModel {
       const role = `${t.status ? `${t.status}:` : ''}${t.role}`
 
       // If there's an existing role for this object, add to the list
-      if (t.manuscriptId && Array.isArray(roles[t.manuscriptId])) {
-        roles[t.manuscriptId].push(role)
-      } else if (t.manuscriptId) {
-        roles[t.manuscriptId] = [role]
+      if (t.objectId && Array.isArray(roles[t.objectId])) {
+        roles[t.objectId].push(role)
+      } else if (t.objectId) {
+        roles[t.objectId] = [role]
       }
     })
     return Object.keys(roles).map(id => ({ id, roles: roles[id] }))

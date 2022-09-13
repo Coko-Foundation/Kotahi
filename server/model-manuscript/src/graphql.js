@@ -6,6 +6,9 @@ const config = require('config')
 const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
+const { raw } = require('objection')
+const Team = require('../../model-team/src/team')
+const TeamMember = require('../../model-team/src/team_member')
 
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
@@ -148,7 +151,7 @@ const isEditorOfManuscript = async (userId, manuscriptWithTeams) => {
     .filter(t => ['editor', 'handlingEditor', 'seniorEditor'].includes(t.role))
     .map(t => t.id)
 
-  const result = await models.TeamMember.query()
+  const result = await TeamMember.query()
     .select('id')
     .where({ userId })
     .whereIn('teamId', editorTeamIds)
@@ -455,6 +458,7 @@ const resolvers = {
             role: 'author',
             name: 'Author',
             members: [{ user: { id: ctx.user } }],
+            objectType: 'manuscript',
           },
         ],
       }
@@ -644,7 +648,7 @@ const resolvers = {
           isHiddenReviewerName: true,
           isHiddenFromAuthor: true,
           userId: context.user,
-          manuscriptId: team.manuscriptId,
+          manuscriptId: team.objectId,
           jsonData: '{}',
         }
 
@@ -664,7 +668,7 @@ const resolvers = {
           reviewer.username || reviewer.defaultIdentity.name || ''
 
         const manuscript = await models.Manuscript.query()
-          .findById(team.manuscriptId)
+          .findById(team.objectId)
           .withGraphFetched(
             '[teams.[members.[user.[defaultIdentity]]], submitter.[defaultIdentity], channels]',
           )
@@ -885,7 +889,7 @@ const resolvers = {
             .resultSize()) > 0
 
         if (!reviewerExists) {
-          await new models.TeamMember({
+          await new TeamMember({
             teamId: existingTeam.id,
             status,
             userId,
@@ -897,8 +901,9 @@ const resolvers = {
 
       // Create a new team of reviewers if it doesn't exist
 
-      const newTeam = await new models.Team({
-        manuscriptId,
+      const newTeam = await new Team({
+        objectId: manuscriptId,
+        objectType: 'manuscript',
         members: [{ status, userId }],
         role: 'reviewer',
         name: 'Reviewers',
@@ -914,7 +919,7 @@ const resolvers = {
         .where('role', 'reviewer')
         .first()
 
-      await models.TeamMember.query()
+      await TeamMember.query()
         .where({
           userId,
           teamId: reviewerTeam.id,
@@ -1160,28 +1165,26 @@ const resolvers = {
       return repackageForGraphql(manuscript)
     },
     async manuscriptsUserHasCurrentRoleIn(_, input, ctx) {
-      // Get all manuscript versions that this user has a role in
-      const teamMemberManuscripts = await models.TeamMember.query()
-        .where({ userId: ctx.user })
-        .withGraphFetched('[team.[manuscript]]')
-
       // Get IDs of the top-level manuscripts
-      const topLevelManuscriptIds = [
-        ...new Set(
-          teamMemberManuscripts.map(
-            teamMember =>
-              teamMember.team.manuscript.parentId ||
-              teamMember.team.manuscript.id,
+      const topLevelManuscripts = await models.Manuscript.query()
+        .distinct(
+          raw(
+            'coalesce(manuscripts.parent_id, manuscripts.id) AS top_level_id',
           ),
-        ),
-      ]
+        )
+        .join('teams', 'manuscripts.id', '=', 'teams.object_id')
+        .join('team_members', 'teams.id', '=', 'team_members.team_id')
+        .where('team_members.user_id', ctx.user)
 
       // Get those top-level manuscripts with all versions, all with teams and members
       const manuscripts = await models.Manuscript.query()
         .withGraphFetched(
           '[teams.[members], manuscriptVersions(orderByCreated).[teams.[members]]]',
         )
-        .whereIn('id', topLevelManuscriptIds)
+        .whereIn(
+          'id',
+          topLevelManuscripts.map(m => m.topLevelId),
+        )
         .orderBy('created', 'desc')
 
       const filteredManuscripts = []
