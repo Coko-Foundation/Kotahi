@@ -701,6 +701,14 @@ const resolvers = {
           return team
         }
 
+        let instance
+
+        if (config['notification-email'].use_colab) {
+          instance = 'colab'
+        } else {
+          instance = 'generic'
+        }
+
         const data = {
           articleTitle: manuscript.meta.title,
           authorName:
@@ -709,6 +717,7 @@ const resolvers = {
             '',
           receiverName,
           reviewerName,
+          instance,
           shortId: manuscript.shortId,
         }
 
