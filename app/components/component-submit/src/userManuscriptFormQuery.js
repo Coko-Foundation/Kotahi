@@ -85,6 +85,8 @@ export const fragmentFields = `
   teams {
     id
     role
+    objectId
+    objectType
     members {
       id
       user {

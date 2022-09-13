@@ -1,5 +1,5 @@
 import React from 'react'
-import ThreadedDiscussion from '../../app/components/component-formbuilder/src/components/builderComponents/ThreadedDiscussion'
+import ThreadedDiscussion from '../../app/components/component-formbuilder/src/components/builderComponents/ThreadedDiscussion/ThreadedDiscussion'
 import DesignEmbed from '../common/utils'
 
 export const Base = args => (

@@ -1,20 +1,22 @@
 const fetchedObjects = '[members.[user, alias]]'
 const models = require('@pubsweet/models')
+const Team = require('./team')
+const TeamMember = require('./team_member')
 
 const resolvers = {
   Query: {
     team(_, { id }, ctx) {
-      return models.Team.query().findById(id).withGraphFetched(fetchedObjects)
+      return Team.query().findById(id).withGraphFetched(fetchedObjects)
     },
     teams(_, { where }, ctx) {
-      return models.Team.query()
+      return Team.query()
         .where(where || {})
         .withGraphFetched(fetchedObjects)
     },
   },
   Mutation: {
     async deleteTeam(_, { id }, ctx) {
-      return models.Team.query().deleteById(id)
+      return Team.query().deleteById(id)
     },
     async createTeam(_, { input }, ctx) {
       // TODO Only the relate option appears to be used by insertGraphAndFetch, according to Objection docs?
@@ -25,10 +27,10 @@ const resolvers = {
         eager: '[members.[user.teams, alias]]',
       }
 
-      return models.Team.query().insertGraphAndFetch(input, options)
+      return Team.query().insertGraphAndFetch(input, options)
     },
     async updateTeam(_, { id, input }, ctx) {
-      return models.Team.query().upsertGraphAndFetch(
+      return Team.query().upsertGraphAndFetch(
         { id, ...input },
         {
           relate: ['members.user'],
@@ -38,7 +40,7 @@ const resolvers = {
       )
     },
     async updateTeamMember(_, { id, input }, ctx) {
-      return models.TeamMember.query().updateAndFetchById(id, JSON.parse(input))
+      return TeamMember.query().updateAndFetchById(id, JSON.parse(input))
     },
   },
   User: {
@@ -46,20 +48,21 @@ const resolvers = {
   },
   Team: {
     async members(team, { where }, ctx) {
-      const t = await models.Team.query().findById(team.id)
+      const t = await Team.query().findById(team.id)
       return t.$relatedQuery('members')
     },
-    manuscript(parent, vars, ctx) {
-      return models.Manuscript.query().findById(parent.manuscriptId)
+    object(team, vars, ctx) {
+      const { objectId, objectType } = team
+      return objectId && objectType ? { objectId, objectType } : null
     },
   },
   TeamMember: {
     async user(teamMember, vars, ctx) {
-      const member = await models.TeamMember.query().findById(teamMember.id)
+      const member = await TeamMember.query().findById(teamMember.id)
       return member ? member.$relatedQuery('user') : null
     },
     async alias(teamMember, vars, ctx) {
-      const member = await models.TeamMember.query().findById(teamMember.id)
+      const member = await TeamMember.query().findById(teamMember.id)
       return member ? member.$relatedQuery('alias') : null
     },
   },
@@ -87,7 +90,9 @@ const typeDefs = `
     type: String!
     role: String!
     name: String
-    manuscript: Manuscript
+    object: TeamObject
+    objectId: ID
+    objectType: String
     members: [TeamMember!]
     owners: [User]
     global: Boolean
@@ -125,10 +130,16 @@ const typeDefs = `
     aff: String
   }
 
+  type TeamObject {
+    objectId: ID!
+    objectType: String!
+  }
+
   input TeamInput {
     role: String
     name: String
-    manuscriptId: ID
+    objectId: ID
+    objectType: String
     members: [TeamMemberInput]
     global: Boolean
   }
@@ -136,7 +147,8 @@ const typeDefs = `
   input TeamWhereInput {
     role: String
     name: String
-    manuscriptId: ID
+    objectId: ID
+    objectType: String
     members: [TeamMemberInput]
     global: Boolean
     users: [ID!]

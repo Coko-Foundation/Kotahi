@@ -22,10 +22,8 @@ export const GET_CURRENT_USER = gql`
       }
       teams {
         id
-        manuscript {
-          id
-          status
-        }
+        objectId
+        objectType
         members {
           status
           user {
@@ -64,9 +62,8 @@ const teamFields = `
   id
   name
   role
-  manuscript {
-    id
-  }
+  objectId
+  objectType
   members {
     id
     user {
