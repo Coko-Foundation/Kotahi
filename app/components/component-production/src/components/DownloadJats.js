@@ -110,16 +110,15 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
     >
       <CloseButton onClick={cancelGen} />
       <PopUpH2>{error ? 'Error generating JATS' : 'Your JATS link:'}</PopUpH2>
-      {error ? (
+      {error && (
         <PopUpTextContainer>
           <p>Sorry, something went wrong.</p>
         </PopUpTextContainer>
-      ) : (
-        data.convertToJats.error && (
-          <PopUpTextContainer>
-            <p>Error: invalid JATS. See console for details.</p>
-          </PopUpTextContainer>
-        )
+      )}
+      {data.convertToJats.error && (
+        <PopUpTextContainer>
+          <p>Error: invalid JATS. See console for details.</p>
+        </PopUpTextContainer>
       )}
       <PopUpTextContainer>
         <p className="linkurl">
