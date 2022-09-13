@@ -172,17 +172,53 @@ const BlockElement = ({ item, onClick, view }) => {
   )
 }
 
-const BlockElementGroup = ({ groupName, items, view }) => (
-  <ElementGroup open>
-    <summary>{groupName}</summary>
-    <div>
-      {items &&
-        items.map(item => (
-          <BlockElement item={item} key={item.name} view={view} />
-        ))}
-    </div>
-  </ElementGroup>
-)
+const BlockElementGroup = ({ groupName, items, view }) => {
+  const [showCitations, setShowCitations] = useState(false)
+
+  // maybe this should be generalized if we're going to use something similar elsewhere?
+  React.useEffect(() => {
+    if (groupName === 'Citations') {
+      if (showCitations) {
+        // NOTE: this is ugly, though necessary to get footnotes–-".panelGroup" is the closest parent that covers both
+        document
+          .querySelector('.editorArea')
+          .classList.remove('hide-citation-spans')
+      } else {
+        document
+          .querySelector('.editorArea')
+          .classList.add('hide-citation-spans')
+      }
+    }
+  }, [showCitations])
+
+  return (
+    <ElementGroup open>
+      <summary>
+        {groupName}
+        {groupName === 'Citations' ? (
+          <a
+            href="/#"
+            onClick={e => {
+              e.preventDefault()
+              setShowCitations(!showCitations)
+            }}
+            style={{ marginLeft: 20, color: 'gray', fontWeight: 'normal' }}
+          >
+            {showCitations ? 'Hide' : 'Show'}
+          </a>
+        ) : (
+          ''
+        )}
+      </summary>
+      <div>
+        {items &&
+          items.map(item => (
+            <BlockElement item={item} key={item.name} view={view} />
+          ))}
+      </div>
+    </ElementGroup>
+  )
+}
 
 export const BlockLevelTools = ({ groups, view }) => (
   <BlockLevelToolsWrapper>

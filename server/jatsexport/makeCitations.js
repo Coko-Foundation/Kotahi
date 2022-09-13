@@ -23,39 +23,39 @@ const cleanCitation = (html, id) => {
     // For each span, replace with JATS tag if appropriate. Unrecognized spans aren't actually processed
     // console.log('cleanCitation span: ', index, el.attribs.class, $(el).text())
 
-    if (el.attribs.class === 'year') {
+    if (el.attribs.class && el.attribs.class.indexOf('year') > -1) {
       $(el).replaceWith(`<year>${$(el).text()}</year>`)
     }
 
-    if (el.attribs.class === 'journal-title') {
+    if (el.attribs.class && el.attribs.class.indexOf('journal-title') > -1) {
       $(el).replaceWith(`<source>${$(el).text()}</source>`)
     }
 
-    if (el.attribs.class === 'article-title') {
+    if (el.attribs.class && el.attribs.class.indexOf('article-title') > -1) {
       $(el).replaceWith(`<article-title>${$(el).text()}</article-title>`)
     }
 
-    if (el.attribs.class === 'author-name') {
+    if (el.attribs.class && el.attribs.class.indexOf('author-name') > -1) {
       $(el).replaceWith(`<string-name>${$(el).text()}</string-name>`)
     }
 
-    if (el.attribs.class === 'volume') {
+    if (el.attribs.class && el.attribs.class.indexOf('volume') > -1) {
       $(el).replaceWith(`<volume>${$(el).text()}</volume>`)
     }
 
-    if (el.attribs.class === 'issue') {
+    if (el.attribs.class && el.attribs.class.indexOf('issue') > -1) {
       $(el).replaceWith(`<issue>${$(el).text()}</issue>`)
     }
 
-    if (el.attribs.class === 'first-page') {
+    if (el.attribs.class && el.attribs.class.indexOf('first-page') > -1) {
       $(el).replaceWith(`<fpage>${$(el).text()}</fpage>`)
     }
 
-    if (el.attribs.class === 'last-page') {
+    if (el.attribs.class && el.attribs.class.indexOf('last-page') > -1) {
       $(el).replaceWith(`<lpage>${$(el).text()}</lpage>`)
     }
 
-    if (el.attribs.class === 'author-group') {
+    if (el.attribs.class && el.attribs.class.indexOf('author-group') > -1) {
       // could turn this off and still have valid JATS!
       $(el).replaceWith(
         `<person-group person-group-type="author">${$(
@@ -68,7 +68,7 @@ const cleanCitation = (html, id) => {
     // console.log('cleanCitation a: ', index, el.attribs.class, $(el).text())
     const url = $(el).text()
 
-    if (el.attribs.class === 'doi') {
+    if (el.attribs.class && el.attribs.class.indexOf('doi') > -1) {
       // console.log('doi: ', url)
       $(el).replaceWith(
         `<ext-link ext-link-type="doi" xlink:href="${url}">${url}</ext-link>`,

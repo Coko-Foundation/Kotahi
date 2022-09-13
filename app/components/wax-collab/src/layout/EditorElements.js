@@ -782,6 +782,15 @@ const EditorStyles = css`
       }
     }
   }
+
+  .hide-citation-spans .citation-span {
+    outline: none;
+    &:hover {
+      &:before {
+        display: none;
+      }
+    }
+  }
 `
 
 export default EditorStyles

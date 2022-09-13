@@ -127,7 +127,7 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
                 <LeftSideBar />
               </SideMenu>
 
-              <EditorArea>
+              <EditorArea className="editorArea hide-citation-spans">
                 <PanelGroup
                   direction="column"
                   onResizeEnd={onResizeEnd}
