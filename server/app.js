@@ -8,7 +8,7 @@ const { importManuscripts } = require('./model-manuscript/src/manuscriptCommsUti
 
 // You can modify the app or ensure other things are imported here
 
-schedule.scheduleJob('schedule', '00 21 * * *', () => {
+schedule.scheduleJob({ tz: 'Etc/UTC', rule: '00 21 * * *' }, () => {
   importManuscripts({user: null})
 })
 

@@ -25,6 +25,7 @@ const getIdOfLatestVersionOfManuscript = async versionId => {
       .limit(1)
   )[0].id
 }
+
 let isImportInProgress = false
 
 const importManuscripts = (ctx) => {

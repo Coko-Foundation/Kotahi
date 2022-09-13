@@ -513,7 +513,7 @@ const resolvers = {
 
       return updatedManuscript
     },
-    importManuscripts(ctx) {
+    importManuscripts(_, props, ctx) {
       importManuscripts(ctx)
     },
     async deleteManuscripts(_, { ids }, ctx) {
