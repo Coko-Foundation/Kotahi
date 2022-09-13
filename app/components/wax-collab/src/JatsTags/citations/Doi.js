@@ -6,7 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class Doi extends Tools {
   title = 'Change to DOI'
   label = 'DOI'
-  icon = 'title'
+  // icon = 'title'
   name = 'Doi'
 
   // eslint-disable-next-line class-methods-use-this

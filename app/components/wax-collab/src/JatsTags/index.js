@@ -283,7 +283,11 @@ class JatsTagsService extends Service {
         parseDOM: [{ tag: 'span.mixed-citation' }],
         toDOM() {
           // TODO: This should send this to Crossref to get back content!
-          return ['span', { class: 'mixed-citation' }, 0]
+          return [
+            'span',
+            { class: 'mixed-citation', title: 'Mixed Citation' },
+            0,
+          ]
         },
       },
     })
@@ -295,7 +299,7 @@ class JatsTagsService extends Service {
         excludes: 'articleTitle', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.article-title' }],
         toDOM() {
-          return ['span', { class: 'article-title' }, 0]
+          return ['span', { class: 'article-title', title: 'Article Title' }, 0]
         },
       },
     })
@@ -307,7 +311,7 @@ class JatsTagsService extends Service {
         excludes: 'articleTitle', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.journal-title' }],
         toDOM() {
-          return ['span', { class: 'journal-title' }, 0]
+          return ['span', { class: 'journal-title', title: 'Journal Title' }, 0]
         },
       },
     })
@@ -319,7 +323,7 @@ class JatsTagsService extends Service {
         excludes: 'authorGroup', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.author-group' }],
         toDOM() {
-          return ['span', { class: 'author-group' }, 0]
+          return ['span', { class: 'author-group', title: 'Author Group' }, 0]
         },
       },
     })
@@ -331,7 +335,7 @@ class JatsTagsService extends Service {
         excludes: 'authorName', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.author-name' }],
         toDOM() {
-          return ['span', { class: 'author-name' }, 0]
+          return ['span', { class: 'author-name', title: 'Author Name' }, 0]
         },
       },
     })
@@ -343,7 +347,7 @@ class JatsTagsService extends Service {
         excludes: 'volume', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.volume' }],
         toDOM() {
-          return ['span', { class: 'volume' }, 0]
+          return ['span', { class: 'volume', title: 'Volume' }, 0]
         },
       },
     })
@@ -355,7 +359,7 @@ class JatsTagsService extends Service {
         excludes: 'issue', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.issue' }],
         toDOM() {
-          return ['span', { class: 'issue' }, 0]
+          return ['span', { class: 'issue', title: 'Issue' }, 0]
         },
       },
     })
@@ -367,7 +371,7 @@ class JatsTagsService extends Service {
         excludes: 'year', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.year' }],
         toDOM() {
-          return ['span', { class: 'year' }, 0]
+          return ['span', { class: 'year', title: 'Year' }, 0]
         },
       },
     })
@@ -379,7 +383,7 @@ class JatsTagsService extends Service {
         excludes: 'firstPage', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.first-page' }],
         toDOM() {
-          return ['span', { class: 'first-page' }, 0]
+          return ['span', { class: 'first-page', title: 'First Page' }, 0]
         },
       },
     })
@@ -391,7 +395,7 @@ class JatsTagsService extends Service {
         excludes: 'lastPage', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.last-page' }],
         toDOM() {
-          return ['span', { class: 'last-page' }, 0]
+          return ['span', { class: 'last-page', title: 'Last Page' }, 0]
         },
       },
     })
@@ -418,7 +422,7 @@ class JatsTagsService extends Service {
         ],
         toDOM() {
           // TODO: figure out how to get the href to go to the content?
-          return ['a', { class: 'doi', href: 'hello!' }, 0]
+          return ['a', { class: 'doi', href: 'hello!', title: 'DOI' }, 0]
         },
         // // this causes an error – why?
         // toDOM(hook, next) {

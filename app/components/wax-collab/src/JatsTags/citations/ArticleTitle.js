@@ -6,7 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class ArticleTitle extends Tools {
   title = 'Change to article title'
   label = 'Article title'
-  icon = 'title'
+  // icon = 'title'
   name = 'ArticleTitle'
 
   // eslint-disable-next-line class-methods-use-this

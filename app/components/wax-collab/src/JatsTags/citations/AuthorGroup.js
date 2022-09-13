@@ -6,7 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class AuthorGroup extends Tools {
   title = 'Change to author group'
   label = 'Author group'
-  icon = 'title'
+  // icon = 'title'
   name = 'AuthorGroup'
 
   // eslint-disable-next-line class-methods-use-this

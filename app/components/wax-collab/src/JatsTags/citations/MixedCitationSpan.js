@@ -6,7 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class MixedCitationSpan extends Tools {
   title = 'Change to mixed citation span'
   label = 'Parsed citation'
-  icon = 'title'
+  // icon = 'title'
   name = 'MixedCitationSpan'
 
   // eslint-disable-next-line class-methods-use-this

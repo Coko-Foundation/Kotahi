@@ -6,7 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class Issue extends Tools {
   title = 'Change to issue'
   label = 'Issue'
-  icon = 'title'
+  // icon = 'title'
   name = 'Issue'
 
   // eslint-disable-next-line class-methods-use-this

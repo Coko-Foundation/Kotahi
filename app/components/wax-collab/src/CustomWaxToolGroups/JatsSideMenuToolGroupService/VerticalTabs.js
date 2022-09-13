@@ -1,5 +1,6 @@
-import React, { useState } from 'react'
-import { th } from '@pubsweet/ui-toolkit'
+import React, { useState, useContext } from 'react'
+import { th, override } from '@pubsweet/ui-toolkit'
+import { WaxContext } from 'wax-prosemirror-core'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
 import Icon from './Icon'
@@ -92,46 +93,79 @@ const BlockLevelToolsWrapper = styled.div`
   }
 `
 
-const GroupName = styled.div`
-  font-size: 14px;
-  margin-bottom: 4px;
-  text-transform: uppercase;
-`
-
-const ListWrapper = styled.div`
-  > div:not(:last-child) {
-    margin-bottom: 4px;
+const ElementGroup = styled.details`
+  & summary {
+    font-size: 14px;
+    font-weight: bold;
+    user-select: none;
+    cursor: pointer;
+    margin: 0;
+    color: ${th('colorPrimary')};
+    &::marker {
+      color: ${th('colorBackgroundTabs')};*/
+    }
+  }
+  & + details {
+    margin-top: 4px;
   }
 `
 
 const BlockElementWrapper = styled.div`
   display: flex;
-
-  button {
+  & button {
+    transition: 0.25s;
     border-radius: 4px;
-    left: -33px;
     margin-left: 4px;
-    padding-left: 25px;
     position: relative;
+    padding: 0;
+    display: inline-flex;
+    align-items: center;
+    background-color: ${props =>
+      props.isActive ? th('colorBackgroundTabs') : 'transparent'};
+
+    & span {
+      font-size: 14px;
+      color: ${th('colorPrimary')};
+    }
+    &:hover {
+      & span {
+        color: ${props =>
+          props.isActive ? th('colorTextReverse') : th('colorPrimary')};
+      }
+    }
   }
 `
 
-const BlockElement = ({ item, onClick, view }) => (
-  <BlockElementWrapper onClick={onClick}>
-    {item.renderTool(view)}
-  </BlockElementWrapper>
-)
+const BlockElement = ({ item, onClick, view }) => {
+  const { active, select } = item
+  const context = useContext(WaxContext)
+
+  const { activeViewId, activeView } = context
+
+  const { state } = view
+
+  const isActive = !!(
+    active(activeView.state, activeViewId) &&
+    select(state, activeViewId, activeView)
+  )
+
+  return (
+    <BlockElementWrapper isActive={isActive} onClick={onClick}>
+      {item.renderTool(view)}
+    </BlockElementWrapper>
+  )
+}
 
 const BlockElementGroup = ({ groupName, items, view }) => (
-  <>
-    <GroupName>{groupName}</GroupName>
-    <ListWrapper>
+  <ElementGroup open>
+    <summary>{groupName}</summary>
+    <div>
       {items &&
         items.map(item => (
           <BlockElement item={item} key={item.name} view={view} />
         ))}
-    </ListWrapper>
-  </>
+    </div>
+  </ElementGroup>
 )
 
 export const BlockLevelTools = ({ groups, view }) => (

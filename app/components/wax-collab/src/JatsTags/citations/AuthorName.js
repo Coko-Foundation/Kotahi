@@ -6,7 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class AuthorName extends Tools {
   title = 'Change to author name'
   label = 'Author name'
-  icon = 'title'
+  // icon = 'title'
   name = 'AuthorName'
 
   // eslint-disable-next-line class-methods-use-this

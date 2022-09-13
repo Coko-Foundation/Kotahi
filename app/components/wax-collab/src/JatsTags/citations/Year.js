@@ -6,7 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class Year extends Tools {
   title = 'Change to year'
   label = 'Year'
-  icon = 'title'
+  // icon = 'title'
   name = 'Year'
 
   // eslint-disable-next-line class-methods-use-this

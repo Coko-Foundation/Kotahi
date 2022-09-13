@@ -6,7 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class Volume extends Tools {
   title = 'Change to volume'
   label = 'Volume'
-  icon = 'title'
+  // icon = 'title'
   name = 'Volume'
 
   // eslint-disable-next-line class-methods-use-this
