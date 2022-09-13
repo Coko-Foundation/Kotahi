@@ -28,6 +28,9 @@ const CONTENT_EDITABLE_VALUE = '[contenteditable="true"]'
 const SUBMISSION_FORM_INPUT_BOX = 'SimpleEditorDiv'
 const WORD_COUNT_INFO = 'Counter Info'
 
+// specific to aperture
+const TYPE_OF_RESEARCH_OBJECT = '.css-1di0wwc-control'
+
 // specific to elife
 const FORM_OPTION_LIST = '[class*=style__Section]'
 const FORM_OPTION_VALUE = 'singleValue'
@@ -179,6 +182,12 @@ export const SubmissionFormPage = {
   },
   getValidationErrorMessage2() {
     return cy.getByContainsClass(VALIDATION_ERROR_MESSAGE)
+  },
+  getTypeOfResearchObject() {
+    return cy.get(TYPE_OF_RESEARCH_OBJECT)
+  },
+  clickTypeOfResearchObject() {
+    this.getTypeOfResearchObject().click()
   },
   getFormOptionValue(nth) {
     return cy.getByContainsClass(FORM_OPTION_VALUE).eq(nth)

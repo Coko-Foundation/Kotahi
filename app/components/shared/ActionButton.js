@@ -123,7 +123,12 @@ const ActionButton = ({
   if (status === 'success')
     statusIndicator = (
       <IconContainer>
-        <Check color={fgColor} size={16} strokeWidth={3} />
+        <Check
+          color={fgColor}
+          data-testid="check-svg"
+          size={16}
+          strokeWidth={3}
+        />
       </IconContainer>
     )
   if (status === 'failure')

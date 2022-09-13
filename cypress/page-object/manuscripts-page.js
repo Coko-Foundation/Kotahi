@@ -12,7 +12,7 @@ const BUTTON = 'button'
 const LIVE_CHAT_BUTTON = '[class*=VideoChatButton]'
 const MANUSCRIPTS_PAGE_TITLE = '[class*=General__Heading-sc]'
 const EVALUATION_BUTTON = '[href*=evaluation]'
-const CONTROL_BUTTON = '[href*=control]'
+const CONTROL_BUTTON = '[href*="/kotahi/versions/"]'
 const CREATED_CARET = 'Carets__Caret'
 const AUTHOR_FIELD = 'UserCombo__Primary'
 const STATUS_FIELD = 'Badge__Status'
@@ -91,7 +91,10 @@ export const ManuscriptsPage = {
     cy.url({ timeout: 10000 }).should('contain', evaluate)
   },
   getControlButton() {
-    return cy.get(CONTROL_BUTTON)
+    return cy.get(CONTROL_BUTTON).first()
+  },
+  clickControlButton() {
+    this.getControlButton().click()
   },
   getControl() {
     return cy.get(CONTROL)

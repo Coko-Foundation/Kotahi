@@ -12,8 +12,6 @@
 
 // This function is called when a project is opened or re-opened (e.g. due to
 // the project's config changing)
-
-const { execSync } = require('child_process')
 const path = require('path')
 require('dotenv').config({ path: path.join(__dirname, '../../.env') })
 
@@ -24,6 +22,8 @@ const seedForms = require('../../scripts/seedForms')
 
 const dumpFile = name => path.join(__dirname, '..', 'dumps', `${name}.sql`)
 
+// The values of this object are the usernames of the users
+// TODO: Refactor DBs and Code dependent on testUsers object to use proper usernames than numbers
 const testUsers = {
   'Sherry Crofoot': '0000000276459921',
   'Elaine Barnes': '0000000294294446',
@@ -37,15 +37,6 @@ const testUsers = {
 module.exports = (on, config) => {
   on('task', {
     // 'db:seed': () => seed(),
-    dump: name => {
-      if (process.env.NEWDUMPS) {
-        return execSync(
-          `pg_dump --column-inserts -d simplej > ${dumpFile(name)}`,
-        )
-      }
-
-      return true
-    },
     restore: async name => {
       // eslint-disable-next-line no-console
       console.log(name, 'name')
