@@ -30,6 +30,7 @@ const CreateANewVersion = ({ manuscript, createNewVersion }) => {
             version of your manuscript.
           </p>
           <Button
+            data-testid="create-new-manuscript-version-button"
             disabled={!newVerButtonIsEnabled}
             onClick={() => {
               setNewVerButtonIsEnabled(false) // Prevents double-clicking

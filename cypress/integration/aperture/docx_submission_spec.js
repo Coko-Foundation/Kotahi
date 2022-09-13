@@ -46,10 +46,6 @@ describe('Upload manuscript test', () => {
 
       DashboardPage.getSectionTitleWithText('My Submissions')
       DashboardPage.getSubmissionTitle().should('contain', data.title3)
-
-      // task to dump data in dumps/submission_complete.sql
-
-      cy.task('dump', 'submission_complete')
     })
   })
 
@@ -88,9 +84,6 @@ describe('Upload manuscript test', () => {
         ControlPage.clickSubmit()
       })
     })
-
-    // task to dump data in dumps/senior_editor_assigned.sql
-    cy.task('dump', 'senior_editor_assigned')
 
     cy.contains('Dashboard').click()
   })

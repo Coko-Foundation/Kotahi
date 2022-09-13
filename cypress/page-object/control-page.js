@@ -1,3 +1,4 @@
+/* eslint-disable padding-line-between-statements */
 /// <reference types="Cypress" />
 /**
  * Page object representing the Control page,
@@ -9,7 +10,9 @@ const MANAGE_REVIEWERS_BUTTON = '[class*=General__SectionRow] > a'
 
 const DECISION_FIELD = '[contenteditable="true"]'
 
-const PUBLISH_BUTTON = '[class*=General__SectionAction-sc-1chiust-11] > .sc-bkzZxe'
+const PUBLISH_BUTTON =
+  '[class*=General__SectionAction-sc-1chiust-11] > .sc-bkzZxe'
+
 const PUBLISH_INFO_MESSAGE = 'General__SectionActionInfo-sc-1chiust-12'
 const ASSIGN_SENIOR_EDITOR_DROPDOWN = 'Assign seniorEditor'
 const ASSIGN_HANDLING_EDITOR_DROPDOWN = 'Assign handlingEditor'
@@ -18,12 +21,10 @@ const DROPDOWN_OPTION_LIST = ' [class*=MenuList] > [id*=option]'
 const METADATA_TAB = 'HiddenTabs__TabContainer-sc-11z25w4-2'
 const METADATA_CELL = 'VersionSwitcher__Title'
 const ERROR_TEXT = 'style__ErrorText-'
-const ACCEPT_RADIO_BUTTON = '.ALZiZ > .sc-dmlrTW'
-const REVISE_RADIO_BUTTON = 'span[color=orange]'
-const REJECT_RADIO_BUTTON = 'span[color=red]'
 const SUBMIT_BUTTON = '.ActionButton__BaseButton-sc-1ja3w98-0'
 const FORM_STATUS = 'style__FormStatus-'
-const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
+const ASSIGN_EDITORS_DROPDOWN =
+  ':nth-child(2) > .General__SectionRow-sc-1chiust-8 > [class]'
 const SHOW_BUTTON = '[class*=DecisionReview__Controls]>[type*=button]'
 
 const REVIEW_MESSAGE =
@@ -46,6 +47,18 @@ const EMAIL_NOTIFICATION_DROPDOWNS =
 const NOTIFY_BUTTON = '[class*=emailNotifications__RowGridStyled] > button'
 const CHAT_TAB = '[class*=General__Chat] [data-test-id=tab-container]'
 const EMAIL_NOTIFICATION_LOG_MESSAGE = 'style__InnerMessageContainer'
+
+// Decision Form
+const DECISION_TEXT_INPUT =
+  ':nth-child(1) > :nth-child(2) > :nth-child(1) > :nth-child(1) > .EditorStyles__SimpleGrid-k4rcxo-9 > .EditorStyles__SimpleEditorDiv-k4rcxo-11'
+
+const ACCEPT_RADIO_BUTTON = '.cLexBK > .sc-dmlrTW'
+const REVISE_RADIO_BUTTON = '.cABLOw > .sc-dmlrTW'
+const REJECT_RADIO_BUTTON = '.hgPkBe > .sc-dmlrTW'
+const DECISION_SUBMIT_BUTTON = '[data-cy=decision-action-btn]'
+const DECISION_FILE_INPUT = 'input[type=file]'
+
+const CHECK_SVG = 'check-svg'
 
 // eslint-disable-next-line import/prefer-default-export
 export const ControlPage = {
@@ -234,5 +247,28 @@ export const ControlPage = {
   },
   getWorkflowTab() {
     return cy.get('[data-test-id=tab-container]').contains('Workflow')
+  },
+
+  // Decision Form
+  getDecisionTextInput() {
+    return cy.get(DECISION_TEXT_INPUT)
+  },
+  clickDecisionTextInput() {
+    return this.getDecisionTextInput().click()
+  },
+  getDecisionFileInput() {
+    return cy.get(DECISION_FILE_INPUT)
+  },
+  getSubmitDecisionButton() {
+    return cy.get(DECISION_SUBMIT_BUTTON)
+  },
+  clickSubmitDecisionButton() {
+    this.getSubmitDecisionButton().click()
+  },
+  getCheckSvg() {
+    return cy.getByDataTestId(CHECK_SVG)
+  },
+  checkSvgExists() {
+    this.getCheckSvg().should('exist')
   },
 }
