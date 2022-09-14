@@ -509,11 +509,40 @@ const EditorStyles = css`
     top: -1.25rem;
   }
 
+  /* FUNDING SOURCE */
+
+  .fundingsource {
+    &:before {
+      content: 'Funding source: ';
+      font-weight: bold;
+      margin-left: 2em;
+    }
+  }
+
+  .fundingstatement {
+    &:before {
+      content: 'Funding statement: ';
+      font-weight: bold;
+      margin-left: 2em;
+    }
+  }
+
+  .awardid {
+    &:before {
+      content: 'Award ID: ';
+      font-weight: bold;
+      margin-left: 2em;
+    }
+  }
+
   /* CITATIONS */
 
   span.mixed-citation {
-    outline: yellow 1px dotted;
-    outline-offset: 6px;
+    --citationColor: yellow;
+    --citationTextColor: black;
+    --citationOffset: 6px;
+    outline: var(--citationColor) 1px dotted;
+    outline-offset: var(--citationOffset);
     position: relative;
     border-radius: 2px;
     &:hover {
@@ -521,8 +550,8 @@ const EditorStyles = css`
         content: 'Mixed Citation';
         white-space: nowrap;
         position: absolute;
-        background-color: yellow;
-        color: black;
+        background-color: var(--citationColor);
+        color: var(--citationTextColor);
         top: -16px;
         left: 16px;
         padding: 0 4px;
@@ -530,261 +559,154 @@ const EditorStyles = css`
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+      }
+    }
+  }
+
+  span.article-title,
+  span.journal-title,
+  span.author-group,
+  span.author-name,
+  span.volume,
+  span.issue,
+  span.year,
+  span.first-page,
+  span.last-page,
+  a.doi {
+    --citationColor: transparent;
+    --citationTextColor: black;
+    --citationOffset: 2px;
+    outline: var(--citationColor) 1px dotted;
+    outline-offset: var(--citationOffset);
+    position: relative;
+    border-radius: 2px;
+    &:hover {
+      &:before {
+        content: '';
+        white-space: nowrap;
+        position: absolute;
+        background-color: var(--citationColor);
+        color: var(--citationTextColor);
+        top: 16px;
+        left: 16px;
+        padding: 0 4px;
+        border-radius: 4px;
+        font-size: 12px;
+        text-transform: uppercase;
+        font-style: normal;
+        letter-spacing: 0.5px;
+        z-index: 999;
       }
     }
   }
 
   span.article-title {
-    outline: red 1px dotted;
-    outline-offset: 2px;
-    position: relative;
-    border-radius: 2px;
+    --citationColor: red;
+    --citationTextColor: white;
     &:hover {
       &:before {
         content: 'Article Title';
-        white-space: nowrap;
-        position: absolute;
-        background-color: red;
-        color: white;
-        top: 16px;
-        left: 16px;
-        padding: 0 4px;
-        border-radius: 4px;
-        font-size: 12px;
-        text-transform: uppercase;
-        font-style: normal;
-        letter-spacing: 0.5px;
-        z-index: 999;
       }
     }
   }
 
   span.journal-title {
-    font-style: italic;
-    outline: purple 1px dotted;
-    outline-offset: 2px;
-    position: relative;
-    border-radius: 2px;
+    --citationColor: purple;
+    --citationTextColor: white;
+    text-style: italic;
     &:hover {
       &:before {
         content: 'Journal Title';
-        white-space: nowrap;
-        position: absolute;
-        background-color: purple;
-        color: white;
-        top: 16px;
-        left: 16px;
-        padding: 0 4px;
-        border-radius: 4px;
-        font-size: 12px;
-        text-transform: uppercase;
-        font-style: normal;
-        letter-spacing: 0.5px;
-        z-index: 999;
       }
     }
   }
 
   span.author-group {
-    outline: blue 1px dotted;
-    outline-offset: 4px;
-    position: relative;
-    border-radius: 2px;
+    --citationColor: blue;
+    --citationOffset: 4px;
+    --citationTextColor: white;
     &:hover {
       &:before {
         content: 'Author Group';
-        white-space: nowrap;
-        position: absolute;
-        background-color: blue;
-        color: white;
         top: -16px;
-        left: 16px;
-        padding: 0 4px;
-        border-radius: 4px;
-        font-size: 12px;
-        text-transform: uppercase;
-        letter-spacing: 0.5px;
       }
     }
   }
 
   span.author-name {
-    outline: blue 1px dotted;
-    outline-offset: 2px;
-    position: relative;
-    border-radius: 2px;
+    --citationColor: blue;
+    --citationTextColor: white;
     &:hover {
       &:before {
         content: 'Author Name';
-        white-space: nowrap;
-        position: absolute;
-        background-color: blue;
-        color: white;
-        top: 16px;
-        left: 16px;
-        padding: 0 4px;
-        border-radius: 4px;
-        font-size: 12px;
-        text-transform: uppercase;
-        font-style: normal;
-        letter-spacing: 0.5px;
-        z-index: 999;
       }
     }
   }
 
   a.doi {
-    outline: green 1px dotted;
-    outline-offset: 2px;
-    position: relative;
-    border-radius: 2px;
+    --citationColor: green;
+    --citationTextColor: white;
     &:hover {
       &:before {
         content: 'DOI';
-        white-space: nowrap;
-        position: absolute;
-        background-color: green;
-        color: white;
-        top: 16px;
-        left: 16px;
-        padding: 0 4px;
-        border-radius: 4px;
-        font-size: 12px;
-        text-transform: uppercase;
-        font-style: normal;
-        letter-spacing: 0.5px;
-        z-index: 999;
       }
     }
   }
 
   span.volume {
-    outline: orange 1px dotted;
-    outline-offset: 2px;
-    position: relative;
-    border-radius: 2px;
+    --citationColor: orange;
+    --citationTextColor: white;
     &:hover {
       &:before {
         content: 'Volume';
-        white-space: nowrap;
-        position: absolute;
-        background-color: orange;
-        color: white;
-        top: 16px;
-        left: 16px;
-        padding: 0 4px;
-        border-radius: 4px;
-        font-size: 12px;
-        text-transform: uppercase;
-        font-style: normal;
-        letter-spacing: 0.5px;
-        z-index: 999;
       }
     }
   }
 
   span.issue {
-    outline: magenta 1px dotted;
-    outline-offset: 2px;
-    position: relative;
-    border-radius: 2px;
+    --citationColor: magenta;
+    --citationTextColor: white;
     &:hover {
       &:before {
         content: 'Issue';
-        white-space: nowrap;
-        position: absolute;
-        background-color: magenta;
-        color: white;
-        top: 16px;
-        left: 16px;
-        padding: 0 4px;
-        border-radius: 4px;
-        font-size: 12px;
-        text-transform: uppercase;
-        font-style: normal;
-        letter-spacing: 0.5px;
-        z-index: 999;
       }
     }
   }
 
   span.first-page {
-    outline: lime 1px dotted;
-    outline-offset: 2px;
-    position: relative;
-    border-radius: 2px;
+    --citationColor: lime;
+    --citationTextColor: white;
     &:hover {
       &:before {
         content: 'First Page';
-        white-space: nowrap;
-        position: absolute;
-        background-color: lime;
-        color: white;
-        top: 16px;
-        left: 16px;
-        padding: 0 4px;
-        border-radius: 4px;
-        font-size: 12px;
-        text-transform: uppercase;
-        font-style: normal;
-        letter-spacing: 0.5px;
-        z-index: 999;
       }
     }
   }
 
   span.last-page {
-    outline: cyan 1px dotted;
-    outline-offset: 2px;
-    position: relative;
-    border-radius: 2px;
+    --citationColor: cyan;
+    --citationTextColor: white;
     &:hover {
       &:before {
         content: 'Last Page';
-        white-space: nowrap;
-        position: absolute;
-        background-color: cyan;
-        color: white;
-        top: 16px;
-        left: 16px;
-        padding: 0 4px;
-        border-radius: 4px;
-        font-size: 12px;
-        text-transform: uppercase;
-        font-style: normal;
-        letter-spacing: 0.5px;
-        z-index: 999;
       }
     }
   }
 
   span.year {
-    outline: gray 1px dotted;
-    outline-offset: 2px;
-    position: relative;
-    border-radius: 2px;
+    --citationColor: gray;
+    --citationTextColor: white;
     &:hover {
       &:before {
         content: 'Year';
-        white-space: nowrap;
-        position: absolute;
-        background-color: gray;
-        color: white;
-        top: 16px;
-        left: 16px;
-        padding: 0 4px;
-        border-radius: 4px;
-        font-size: 12px;
-        text-transform: uppercase;
-        font-style: normal;
-        letter-spacing: 0.5px;
-        z-index: 999;
       }
     }
   }
 
-  .hide-citation-spans .citation-span {
-    outline: none;
+  .hide-citation-spans span,
+  .hide-citation-spans a {
+    --citationColor: transparent !important;
+    --citationTextColor: transparent !important;
     &:hover {
       &:before {
         display: none;

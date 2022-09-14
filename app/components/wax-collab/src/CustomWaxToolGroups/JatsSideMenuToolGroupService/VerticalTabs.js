@@ -148,7 +148,7 @@ const BlockElementWrapper = styled.div`
   }
 `
 
-const BlockElement = ({ item, onClick, view }) => {
+const BlockElement = ({ item, onClick, view, showCitations }) => {
   const { active, select } = item
   const context = useContext(WaxContext)
 
@@ -163,9 +163,20 @@ const BlockElement = ({ item, onClick, view }) => {
 
   return (
     <BlockElementWrapper
-      color={(useCircles && item.color) || null}
+      color={(useCircles && showCitations && item.color) || null}
       isActive={isActive}
       onClick={onClick}
+      onMouseOver={() => {
+        // If we are hovering over a citation title and citations are not shown, highlight them.
+        // TODO: don't do this if we don't have to.
+        // if (
+        //   document
+        //     .querySelector('.editorArea')
+        //     .classList.contains('hide-citation-spans')
+        // ) {
+        //   console.log(item.name, item)
+        // }
+      }}
     >
       {item.renderTool(view)}
     </BlockElementWrapper>
@@ -213,7 +224,12 @@ const BlockElementGroup = ({ groupName, items, view }) => {
       <div>
         {items &&
           items.map(item => (
-            <BlockElement item={item} key={item.name} view={view} />
+            <BlockElement
+              item={item}
+              key={item.name}
+              showCitations={showCitations}
+              view={view}
+            />
           ))}
       </div>
     </ElementGroup>

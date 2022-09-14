@@ -18,6 +18,9 @@ import Doi from './citations/Doi'
 import Year from './citations/Year'
 import FirstPage from './citations/FirstPage'
 import LastPage from './citations/LastPage'
+import AwardId from './funding/AwardId'
+import FundingSource from './funding/FundingSource'
+import FundingStatement from './funding/FundingStatement'
 
 // copied from here: https://gitlab.coko.foundation/wax/wax-prosemirror/-/blob/master/wax-prosemirror-services/src/DisplayBlockLevel/HeadingService/HeadingService.js
 
@@ -51,6 +54,9 @@ class JatsTagsService extends Service {
     this.container.bind('ReferenceHeader').to(ReferenceHeader)
     this.container.bind('FrontMatter').to(FrontMatter)
     this.container.bind('Abstract').to(Abstract)
+    this.container.bind('AwardId').to(AwardId)
+    this.container.bind('FundingStatement').to(FundingStatement)
+    this.container.bind('FundingSource').to(FundingSource)
     this.container.bind('AcknowledgementsSection').to(AcknowledgementsSection)
     this.container.bind('ArticleTitle').to(ArticleTitle)
     this.container.bind('JournalTitle').to(JournalTitle)
@@ -220,6 +226,88 @@ class JatsTagsService extends Service {
         },
       },
     })
+
+    createNode({
+      awardId: {
+        content: 'inline*',
+        group: 'block',
+        priority: 0,
+        defining: true,
+        attrs: {
+          class: { default: 'awardid' },
+        },
+        parseDOM: [
+          {
+            tag: 'p.awardid',
+            getAttrs(hook, next) {
+              Object.assign(hook, {
+                class: hook?.dom?.getAttribute('class') || 'awardid',
+              })
+              typeof next !== 'undefined' && next()
+            },
+          },
+        ],
+        toDOM(hook) {
+          const attrs = { class: hook.node?.attrs?.class || 'awardid' }
+          return ['p', attrs, 0]
+        },
+      },
+    })
+
+    createNode({
+      fundingSource: {
+        content: 'inline*',
+        group: 'block',
+        priority: 0,
+        defining: true,
+        attrs: {
+          class: { default: 'fundingsource' },
+        },
+        parseDOM: [
+          {
+            tag: 'p.fundingsource',
+            getAttrs(hook, next) {
+              Object.assign(hook, {
+                class: hook?.dom?.getAttribute('class') || 'fundingsource',
+              })
+              typeof next !== 'undefined' && next()
+            },
+          },
+        ],
+        toDOM(hook) {
+          const attrs = { class: hook.node?.attrs?.class || 'fundingsource' }
+          return ['p', attrs, 0]
+        },
+      },
+    })
+
+    createNode({
+      fundingStatement: {
+        content: 'inline*',
+        group: 'block',
+        priority: 0,
+        defining: true,
+        attrs: {
+          class: { default: 'fundingstatement' },
+        },
+        parseDOM: [
+          {
+            tag: 'p.fundingstatement',
+            getAttrs(hook, next) {
+              Object.assign(hook, {
+                class: hook?.dom?.getAttribute('class') || 'fundingstatement',
+              })
+              typeof next !== 'undefined' && next()
+            },
+          },
+        ],
+        toDOM(hook) {
+          const attrs = { class: hook.node?.attrs?.class || 'fundingstatement' }
+          return ['p', attrs, 0]
+        },
+      },
+    })
+
     createNode({
       abstractSection: {
         content: 'block+',
@@ -285,7 +373,7 @@ class JatsTagsService extends Service {
           // TODO: This should send this to Crossref to get back content!
           return [
             'span',
-            { class: 'citation-span mixed-citation', title: 'Mixed Citation' },
+            { class: 'mixed-citation', title: 'Mixed Citation' },
             0,
           ]
         },
@@ -299,11 +387,7 @@ class JatsTagsService extends Service {
         excludes: 'articleTitle', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.article-title' }],
         toDOM() {
-          return [
-            'span',
-            { class: 'citation-span article-title', title: 'Article Title' },
-            0,
-          ]
+          return ['span', { class: 'article-title', title: 'Article Title' }, 0]
         },
       },
     })
@@ -315,11 +399,7 @@ class JatsTagsService extends Service {
         excludes: 'articleTitle', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.journal-title' }],
         toDOM() {
-          return [
-            'span',
-            { class: 'citation-span journal-title', title: 'Journal Title' },
-            0,
-          ]
+          return ['span', { class: 'journal-title', title: 'Journal Title' }, 0]
         },
       },
     })
@@ -331,11 +411,7 @@ class JatsTagsService extends Service {
         excludes: 'authorGroup', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.author-group' }],
         toDOM() {
-          return [
-            'span',
-            { class: 'citation-span author-group', title: 'Author Group' },
-            0,
-          ]
+          return ['span', { class: 'author-group', title: 'Author Group' }, 0]
         },
       },
     })
@@ -347,11 +423,7 @@ class JatsTagsService extends Service {
         excludes: 'authorName', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.author-name' }],
         toDOM() {
-          return [
-            'span',
-            { class: 'citation-span author-name', title: 'Author Name' },
-            0,
-          ]
+          return ['span', { class: 'author-name', title: 'Author Name' }, 0]
         },
       },
     })
@@ -363,7 +435,7 @@ class JatsTagsService extends Service {
         excludes: 'volume', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.volume' }],
         toDOM() {
-          return ['span', { class: 'citation-span volume', title: 'Volume' }, 0]
+          return ['span', { class: 'volume', title: 'Volume' }, 0]
         },
       },
     })
@@ -375,7 +447,7 @@ class JatsTagsService extends Service {
         excludes: 'issue', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.issue' }],
         toDOM() {
-          return ['span', { class: 'citation-span issue', title: 'Issue' }, 0]
+          return ['span', { class: 'issue', title: 'Issue' }, 0]
         },
       },
     })
@@ -387,7 +459,7 @@ class JatsTagsService extends Service {
         excludes: 'year', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.year' }],
         toDOM() {
-          return ['span', { class: 'citation-span year', title: 'Year' }, 0]
+          return ['span', { class: 'year', title: 'Year' }, 0]
         },
       },
     })
@@ -399,11 +471,7 @@ class JatsTagsService extends Service {
         excludes: 'firstPage', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.first-page' }],
         toDOM() {
-          return [
-            'span',
-            { class: 'citation-span first-page', title: 'First Page' },
-            0,
-          ]
+          return ['span', { class: 'first-page', title: 'First Page' }, 0]
         },
       },
     })
@@ -415,11 +483,7 @@ class JatsTagsService extends Service {
         excludes: 'lastPage', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.last-page' }],
         toDOM() {
-          return [
-            'span',
-            { class: 'citation-span last-page', title: 'Last Page' },
-            0,
-          ]
+          return ['span', { class: 'last-page', title: 'Last Page' }, 0]
         },
       },
     })
@@ -446,11 +510,7 @@ class JatsTagsService extends Service {
         ],
         toDOM() {
           // TODO: figure out how to get the href to go to the content?
-          return [
-            'a',
-            { class: 'citation-span doi', href: 'hello!', title: 'DOI' },
-            0,
-          ]
+          return ['a', { class: 'doi', href: 'hello!', title: 'DOI' }, 0]
         },
         // // this causes an error – why?
         // toDOM(hook, next) {

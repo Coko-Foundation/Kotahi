@@ -22,6 +22,7 @@ class JatsSideMenu extends ToolGroup {
 
   constructor(
     @inject('FrontMatterList') frontmatterlist,
+    @inject('FundingList') fundinglist,
     @inject('AppendixList') appendixlist,
     @inject('CitationList') citationlist,
     @inject('AcknowledgementsList') acknowledgementsList,
@@ -33,7 +34,7 @@ class JatsSideMenu extends ToolGroup {
         name: 'TabA',
         groups: [appendixlist, citationlist, acknowledgementsList],
       },
-      { name: 'TabB', groups: [frontmatterlist] },
+      { name: 'TabB', groups: [frontmatterlist, fundinglist] },
     ]
   }
 
