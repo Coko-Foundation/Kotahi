@@ -7,6 +7,7 @@ class ArticleTitle extends Tools {
   title = 'Change to article title'
   label = 'Article title'
   color = 'red'
+  className = 'article-title'
   // icon = 'title'
   name = 'ArticleTitle'
 

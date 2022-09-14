@@ -7,6 +7,7 @@ class Doi extends Tools {
   title = 'Change to DOI'
   label = 'DOI'
   color = 'green'
+  className = 'doi'
   // icon = 'title'
   name = 'Doi'
 

@@ -7,6 +7,7 @@ class LastPage extends Tools {
   title = 'Change to last page'
   label = 'Last page'
   color = 'cyan'
+  className = 'last-page'
   // icon = 'title'
   name = 'LastPage'
 

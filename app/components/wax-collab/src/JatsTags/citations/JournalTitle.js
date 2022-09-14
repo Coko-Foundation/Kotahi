@@ -7,6 +7,7 @@ class JournalTitle extends Tools {
   title = 'Change to journal title'
   label = 'Journal title'
   color = 'purple'
+  className = 'journal-title'
   // icon = 'title'
   name = 'JournalTitle'
 

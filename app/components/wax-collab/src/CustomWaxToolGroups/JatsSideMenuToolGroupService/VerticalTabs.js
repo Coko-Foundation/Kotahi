@@ -8,6 +8,7 @@ import Icon from './Icon'
 // n.b. Henrik's current design is at https://www.figma.com/file/uDxsjgDWxjiof0qSNFLelr/Kotahi-storybook?node-id=6256%3A11486
 
 const useCircles = true // turn this on if you want colors next to annotations
+const showHideCitations = false // turn this on if you want show/hide functionality for citations
 
 const TabWrapper = styled.div`
   display: flex;
@@ -166,16 +167,23 @@ const BlockElement = ({ item, onClick, view, showCitations }) => {
       color={(useCircles && showCitations && item.color) || null}
       isActive={isActive}
       onClick={onClick}
-      onMouseOver={() => {
-        // If we are hovering over a citation title and citations are not shown, highlight them.
-        // TODO: don't do this if we don't have to.
-        // if (
-        //   document
-        //     .querySelector('.editorArea')
-        //     .classList.contains('hide-citation-spans')
-        // ) {
-        //   console.log(item.name, item)
-        // }
+      onMouseEnter={() => {
+        if (item.className) {
+          // If we are hovering over a citation title and citations are not shown, highlight them.
+          document
+            .querySelector('.editorArea')
+            .classList.add(`show-${item.className}`)
+          console.log('adding', item.className)
+        }
+      }}
+      onMouseLeave={() => {
+        if (item.className) {
+          // If we are hovering over a citation title and citations are not shown, highlight them.
+          document
+            .querySelector('.editorArea')
+            .classList.remove(`show-${item.className}`)
+          console.log('removing', item.className)
+        }
       }}
     >
       {item.renderTool(view)}
@@ -184,11 +192,11 @@ const BlockElement = ({ item, onClick, view, showCitations }) => {
 }
 
 const BlockElementGroup = ({ groupName, items, view }) => {
-  const [showCitations, setShowCitations] = useState(false)
+  const [showCitations, setShowCitations] = useState(true) // if you want this false by default, add "hide-citation-spans" to the classList of the editorArea
 
   // maybe this should be generalized if we're going to use something similar elsewhere?
   React.useEffect(() => {
-    if (groupName === 'Citations') {
+    if (showHideCitations && groupName === 'Citations') {
       if (showCitations) {
         // NOTE: this is ugly, though necessary to get footnotes–-".panelGroup" is the closest parent that covers both
         document
@@ -206,7 +214,7 @@ const BlockElementGroup = ({ groupName, items, view }) => {
     <ElementGroup open>
       <summary>
         {groupName}
-        {groupName === 'Citations' ? (
+        {showHideCitations && groupName === 'Citations' ? (
           <a
             href="/#"
             onClick={e => {

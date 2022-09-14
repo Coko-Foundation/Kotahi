@@ -7,6 +7,7 @@ class Year extends Tools {
   title = 'Change to year'
   label = 'Year'
   color = 'gray'
+  className = 'year'
   // icon = 'title'
   name = 'Year'
 

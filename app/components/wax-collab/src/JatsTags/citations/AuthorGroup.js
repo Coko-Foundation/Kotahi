@@ -6,6 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class AuthorGroup extends Tools {
   title = 'Change to author group'
   label = 'Author group'
+  className = 'author-group'
   // icon = 'title'
   name = 'AuthorGroup'
 

@@ -7,6 +7,7 @@ class FirstPage extends Tools {
   title = 'Change to first page'
   label = 'First page'
   color = 'lime'
+  className = 'first-page'
   // icon = 'title'
   name = 'FirstPage'
 

@@ -7,6 +7,7 @@ class Issue extends Tools {
   title = 'Change to issue'
   label = 'Issue'
   color = 'magenta'
+  className = 'issue'
   // icon = 'title'
   name = 'Issue'
 

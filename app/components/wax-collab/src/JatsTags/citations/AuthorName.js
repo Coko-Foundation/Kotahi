@@ -7,6 +7,7 @@ class AuthorName extends Tools {
   title = 'Change to author name'
   label = 'Author name'
   color = 'blue'
+  className = 'author-name'
   // icon = 'title'
   name = 'AuthorName'
 

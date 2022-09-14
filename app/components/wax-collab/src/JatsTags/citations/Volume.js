@@ -7,6 +7,7 @@ class Volume extends Tools {
   title = 'Change to volume'
   label = 'Volume'
   color = 'orange'
+  className = 'volume'
   // icon = 'title'
   name = 'Volume'
 
