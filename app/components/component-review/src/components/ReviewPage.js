@@ -82,9 +82,8 @@ const fragmentFields = `
     id
     name
     role
-    manuscript {
-      id
-    }
+    objectId
+    objectType
     members {
       id
       user {

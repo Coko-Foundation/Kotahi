@@ -39,11 +39,13 @@ const SelectReceiver = ({
       {isNewUser && (
         <>
           <InputField
+            data-cy="new-user-email"
             onChange={e => setExternalEmail(e.target.value)}
             placeholder="Email"
             value={externalEmail}
           />
           <InputField
+            data-cy="new-user-name"
             onChange={e => setExternalName(e.target.value)}
             placeholder="Name"
             value={externalName}

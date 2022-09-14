@@ -52,8 +52,5 @@ describe('Editor assigning reviewers', () => {
 
       DashboardPage.getInvitedReviewersButton().should('have.text', '1 invited')
     })
-
-    // task to dump data in dumps/reviewers_invited.sql
-    cy.task('dump', 'reviewers_invited')
   })
 })

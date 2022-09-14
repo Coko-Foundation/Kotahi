@@ -56,8 +56,5 @@ describe('Completing a review', () => {
         '3 completed',
       )
     })
-
-    // task to dump data in dumps/three_reviews_completed.sql
-    cy.task('dump', 'three_reviews_completed')
   })
 })

@@ -212,7 +212,7 @@ const resolvers = {
       // ANd send this as `input` from the Frontend
       const {
         manuscript,
-        selectedEmail, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing reciver being selected
+        selectedEmail, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing receiver being selected
         selectedTemplate,
         externalEmail, // New User Email
         externalName, // New User username
@@ -300,6 +300,14 @@ const resolvers = {
         invitationId = newInvitation.id
       }
 
+      let instance
+
+      if (config['notification-email'].use_colab) {
+        instance = 'colab'
+      } else {
+        instance = 'generic'
+      }
+
       try {
         await sendEmailNotification(receiverEmail, selectedTemplate, {
           articleTitle: manuscript.meta.title,
@@ -307,6 +315,7 @@ const resolvers = {
           currentUser,
           receiverName,
           shortId: manuscript.shortId,
+          instance,
           toEmail,
           invitationId,
           purpose,
@@ -316,6 +325,7 @@ const resolvers = {
         })
         return { success: true }
       } catch (e) {
+        console.error(e)
         return { success: false }
       }
     },

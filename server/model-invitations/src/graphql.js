@@ -1,5 +1,7 @@
 const models = require('@pubsweet/models')
 const BlacklistEmail = require('./blacklist_email')
+const Team = require('../../model-team/src/team')
+const TeamMember = require('../../model-team/src/team_member')
 
 const resolvers = {
   Query: {
@@ -74,7 +76,7 @@ const resolvers = {
             .resultSize()) > 0
 
         if (!authorExists) {
-          await new models.TeamMember({
+          await new TeamMember({
             teamId: existingTeam.id,
             status: 'accepted',
             userId,
@@ -85,8 +87,9 @@ const resolvers = {
       }
 
       // Create a new team of authors if it doesn't exist
-      const newTeam = await new models.Team({
-        manuscriptId,
+      const newTeam = await new Team({
+        objectId: manuscriptId,
+        objectType: 'manuscript',
         members: [{ status: 'accepted', userId }],
         role: 'author',
         name: 'Authors',

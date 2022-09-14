@@ -1,4 +1,5 @@
 const models = require('@pubsweet/models')
+const Team = require('../../model-team/src/team')
 
 const getUsersById = async userIds => models.User.query().findByIds(userIds)
 
@@ -18,9 +19,9 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
     managingEditor: false,
   }
 
-  const teams = await models.Team.query()
+  const teams = await Team.query()
     .select('role')
-    .where({ manuscriptId })
+    .where({ objectId: manuscriptId })
     .withGraphFetched('members')
 
   teams.forEach(t => {
