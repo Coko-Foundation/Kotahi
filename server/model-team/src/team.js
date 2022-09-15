@@ -13,12 +13,12 @@ class Team extends BaseModel {
 
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
-    const { Alias, TeamMember, User, Manuscript } = require('@pubsweet/models')
+    const { Alias, User } = require('@pubsweet/models')
 
     return {
       members: {
         relation: BaseModel.HasManyRelation,
-        modelClass: TeamMember,
+        modelClass: require.resolve('./team_member'),
         join: {
           from: 'teams.id',
           to: 'team_members.teamId',
@@ -43,19 +43,11 @@ class Team extends BaseModel {
         join: {
           from: 'teams.id',
           through: {
-            modelClass: TeamMember,
+            modelClass: require.resolve('./team_member'),
             from: 'team_members.teamId',
             to: 'team_members.aliasId',
           },
           to: 'aliases.id',
-        },
-      },
-      manuscript: {
-        relation: BaseModel.HasOneRelation,
-        modelClass: Manuscript,
-        join: {
-          from: 'teams.manuscriptId',
-          to: 'manuscripts.id',
         },
       },
     }
@@ -64,7 +56,8 @@ class Team extends BaseModel {
   static get schema() {
     return {
       properties: {
-        manuscriptId: { type: ['string', 'null'], format: 'uuid' },
+        objectId: { type: ['string', 'null'], format: 'uuid' },
+        objectType: { type: ['string', 'null'] },
         name: { type: 'string' },
         role: { type: ['string'] },
         owners: {

@@ -69,9 +69,8 @@ const createManuscriptMutation = gql`
         id
         role
         name
-        manuscript {
-          id
-        }
+        objectId
+        objectType
         members {
           id
           user {

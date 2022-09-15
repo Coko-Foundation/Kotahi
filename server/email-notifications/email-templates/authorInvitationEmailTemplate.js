@@ -1,11 +1,10 @@
-const config = require('config')
-
-const AuthorAcceptanceEmailTemplate = ({
+const AuthorInvitationEmailTemplate = ({
   articleTitle,
   appUrl,
   currentUser,
   invitationId,
   receiverName,
+  instance,
 }) => {
   const result = {
     cc: '',
@@ -13,8 +12,8 @@ const AuthorAcceptanceEmailTemplate = ({
     content: '',
   }
 
-  switch (config['notification-email'].use_colab) {
-    case 'true':
+  switch (instance) {
+    case 'colab':
       result.cc = 'lesley@sciencecolab.org'
       result.subject =
         'Interest in your preprint from Biophysics Colab (in partnership with eLife)'
@@ -77,4 +76,4 @@ const AuthorAcceptanceEmailTemplate = ({
   return result
 }
 
-module.exports = AuthorAcceptanceEmailTemplate
+module.exports = AuthorInvitationEmailTemplate

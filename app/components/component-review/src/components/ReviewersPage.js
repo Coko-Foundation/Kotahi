@@ -9,9 +9,8 @@ const teamFields = `
   id
   role
   name
-  manuscript {
-    id
-  }
+  objectId
+  objectType
   members {
     id
     user {
@@ -116,7 +115,7 @@ const ReviewersPage = ({ match, history }) => {
       cache.modify({
         id: cache.identify({
           __typename: 'Manuscript',
-          id: revisedReviewersObject.manuscript.id,
+          id: revisedReviewersObject.objectId,
         }),
         fields: {
           teams(existingTeamRefs = []) {

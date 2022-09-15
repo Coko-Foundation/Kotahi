@@ -10,11 +10,11 @@ class Channel extends BaseModel {
       ChannelMember,
       User,
       Message,
-      Team,
       Manuscript,
       /* eslint-disable-next-line global-require */
     } = require('@pubsweet/models')
-
+    /* eslint-disable-next-line global-require */
+    const Team = require('../../model-team/src/team')
     return {
       messages: {
         relation: BaseModel.HasManyRelation,
