@@ -6,7 +6,7 @@ const config = require('config')
 const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
-const { importManuscripts } = require('./manuscriptCommsUtils')
+const { importManuscripts, manuscript } = require('./manuscriptCommsUtils')
 const { raw } = require('objection')
 const Team = require('../../model-team/src/team')
 const TeamMember = require('../../model-team/src/team_member')
@@ -56,8 +56,6 @@ const {
 
 const SUBMISSION_FIELD_PREFIX = 'submission'
 const META_FIELD_PREFIX = 'meta'
-
-let isImportInProgress = false
 
 const repackageForGraphql = async ms => {
   const result = { ...fixMissingValuesInFiles(ms) }
@@ -1086,6 +1084,7 @@ const resolvers = {
         .join('teams', 'manuscripts.id', '=', 'teams.object_id')
         .join('team_members', 'teams.id', '=', 'team_members.team_id')
         .where('team_members.user_id', ctx.user)
+        .where({user: false})
 
       // Get those top-level manuscripts with all versions, all with teams and members
       const manuscripts = await models.Manuscript.query()
