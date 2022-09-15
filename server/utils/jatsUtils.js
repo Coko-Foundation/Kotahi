@@ -3,6 +3,7 @@ const cheerio = require('cheerio')
 const makeCitations = require('../jatsexport/makeCitations')
 const htmlToJats = require('../jatsexport/htmlToJats')
 const getCrossrefCitationsFromList = require('./crossrefUtils')
+const processFunding = require('../jatsexport/processFunding')
 
 // const { lte } = require('semver')
 
@@ -86,7 +87,7 @@ const makeJournalMeta = journalMeta => {
   return thisJournalMeta && `<journal-meta>${thisJournalMeta}</journal-meta>`
 }
 
-const makeArticleMeta = (metadata, abstract, title) => {
+const makeArticleMeta = (metadata, abstract, title, fundingList) => {
   // metadata:
   // --pubDate: date
   // --id: id
@@ -178,6 +179,10 @@ const makeArticleMeta = (metadata, abstract, title) => {
     }
 
     thisArticleMeta += `<kwd-group kwd-group-type="author">${contentList}</kwd-group>`
+  }
+
+  if (fundingList) {
+    thisArticleMeta += fundingList
   }
 
   return `<article-meta>${thisArticleMeta}</article-meta>`
@@ -418,9 +423,13 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const unTrackChangedHtml = removeTrackChanges(html)
 
+  // 1. deal with funding statements
+
+  const { defundedHtml, fundingList } = processFunding(unTrackChangedHtml)
+
   // 2. deal with citations
 
-  const { processedHtml, refList } = makeCitations(unTrackChangedHtml)
+  const { processedHtml, refList } = makeCitations(defundedHtml)
 
   const { deFootnotedHtml, fnSection } = makeFootnotesSection(processedHtml)
 
@@ -446,7 +455,12 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const journalMetaSection = makeJournalMeta(journalMeta || {})
 
-  const articleMetaSection = makeArticleMeta(articleMeta || {}, abstract, title)
+  const articleMetaSection = makeArticleMeta(
+    articleMeta || {},
+    abstract,
+    title,
+    fundingList || '',
+  )
 
   const front = `<front>${journalMetaSection}${articleMetaSection}</front>`
 

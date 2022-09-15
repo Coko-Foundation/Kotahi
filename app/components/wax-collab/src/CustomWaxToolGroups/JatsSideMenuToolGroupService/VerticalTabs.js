@@ -173,7 +173,6 @@ const BlockElement = ({ item, onClick, view, showCitations }) => {
           document
             .querySelector('.editorArea')
             .classList.add(`show-${item.className}`)
-          console.log('adding', item.className)
         }
       }}
       onMouseLeave={() => {
@@ -182,7 +181,6 @@ const BlockElement = ({ item, onClick, view, showCitations }) => {
           document
             .querySelector('.editorArea')
             .classList.remove(`show-${item.className}`)
-          console.log('removing', item.className)
         }
       }}
     >
