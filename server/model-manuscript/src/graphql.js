@@ -6,8 +6,10 @@ const config = require('config')
 const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
-const { importManuscripts, manuscript } = require('./manuscriptCommsUtils')
-
+const { importManuscripts } = require('./manuscriptCommsUtils')
+const { raw } = require('objection')
+const Team = require('../../model-team/src/team')
+const TeamMember = require('../../model-team/src/team_member')
 
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
