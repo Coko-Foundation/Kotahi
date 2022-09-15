@@ -560,6 +560,7 @@ const EditorStyles = css`
         font-size: 12px;
         text-transform: uppercase;
         letter-spacing: 0.5px;
+        display: none;
       }
     }
   }
@@ -598,6 +599,7 @@ const EditorStyles = css`
         font-style: normal;
         letter-spacing: 0.5px;
         z-index: 999;
+        display: none;
       }
     }
   }
