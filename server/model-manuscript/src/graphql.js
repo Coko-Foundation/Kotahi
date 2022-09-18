@@ -6,8 +6,8 @@ const config = require('config')
 const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
-const { importManuscripts, manuscript } = require('./manuscriptCommsUtils')
 const { raw } = require('objection')
+const { importManuscripts } = require('./manuscriptCommsUtils')
 const Team = require('../../model-team/src/team')
 const TeamMember = require('../../model-team/src/team_member')
 
@@ -1070,8 +1070,68 @@ const resolvers = {
     },
   },
   Query: {
-   manuscript(_, { id }, ctx) {
-     manuscript
+    async manuscript(_, { id }, ctx) {
+      // eslint-disable-next-line global-require
+      const ManuscriptModel = require('./manuscript') // Pubsweet models may initially be undefined, so we require only when resolver runs.
+
+      const manuscript = await ManuscriptModel.query()
+        .findById(id)
+        .withGraphFetched('[teams, channels, files, reviews.user]')
+
+      const user = ctx.user
+        ? await models.User.query().findById(ctx.user)
+        : null
+
+      if (!manuscript) return null
+
+      if (!manuscript.meta) {
+        manuscript.meta = {}
+      }
+
+      // manuscript.files = await getFilesWithUrl(manuscript.files)
+      // const forms = await models.Form.query()
+      // await regenerateFileUrisInReviews(manuscript, forms)
+
+      if (typeof manuscript.meta.source === 'string') {
+        manuscript.meta.source = await replaceImageSrc(
+          manuscript.meta.source,
+          manuscript.files,
+          'medium',
+        )
+      }
+
+      manuscript.meta.notes = (manuscript.meta || {}).notes || [
+        {
+          notesType: 'fundingAcknowledgement',
+          content: '',
+        },
+        {
+          notesType: 'specialInstructions',
+          content: '',
+        },
+      ]
+      manuscript.decision = ''
+
+      manuscript.manuscriptVersions = await manuscript.getManuscriptVersions()
+
+      if (
+        user &&
+        !user.admin &&
+        manuscript.reviews &&
+        manuscript.reviews.length &&
+        !(await isEditorOfManuscript(ctx.user, manuscript))
+      ) {
+        const reviewForm = await getReviewForm()
+        const decisionForm = await getDecisionForm()
+        manuscript.reviews = stripConfidentialDataFromReviews(
+          manuscript.reviews,
+          reviewForm,
+          decisionForm,
+          ctx.user,
+        )
+      }
+
+      return repackageForGraphql(manuscript)
     },
     async manuscriptsUserHasCurrentRoleIn(_, input, ctx) {
       // Get IDs of the top-level manuscripts
@@ -1084,7 +1144,7 @@ const resolvers = {
         .join('teams', 'manuscripts.id', '=', 'teams.object_id')
         .join('team_members', 'teams.id', '=', 'team_members.team_id')
         .where('team_members.user_id', ctx.user)
-        .where({user: false})
+        .where('manuscripts.is_hidden', '=', false)
 
       // Get those top-level manuscripts with all versions, all with teams and members
       const manuscripts = await models.Manuscript.query()
@@ -1338,7 +1398,7 @@ const resolvers = {
       validateApiToken(token, config.api.tokens)
 
       const manuscripts = await models.Manuscript.query()
-        .where({ status: 'new', isHidden: false })
+        .where({ status: 'new' })
         .whereRaw(`submission->>'labels' = 'readyToEvaluate'`)
 
       return manuscripts.map(m => ({
