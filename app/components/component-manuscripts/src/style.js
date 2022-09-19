@@ -1,6 +1,6 @@
 import styled, { css } from 'styled-components'
 import { Button, Action } from '@pubsweet/ui'
-import { rotate360, th, grid } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import Color from 'color'
 
 export const StyledButton = styled(Button)`
@@ -10,11 +10,6 @@ export const StyledButton = styled(Button)`
   overflow-wrap: normal;
   padding: 4px;
   width: 100%;
-`
-
-export const FloatRightButton = styled(StyledButton)`
-  float: right;
-  margin-left: ${grid(2)};
 `
 
 export const UserAction = styled(Action)`
@@ -48,7 +43,6 @@ export const InfoIcon = styled.div`
 export const SelectAllField = styled.div`
   align-items: center;
   display: flex;
-  margin-top: 10px;
 `
 export const SelectedManuscriptsNumber = styled.p`
   font-weight: bold;
@@ -82,13 +76,25 @@ export const ManuscriptsTable = styled.div`
 
 export const ManuscriptsRow = styled.div`
   align-items: center;
-  background-color: white;
-  border-bottom: 1px solid ${th('colorFurniture')};
+  background-color: ${th('colorBackground')};
+  border-top: 1px solid ${th('colorFurniture')};
   column-gap: ${grid(2)};
   display: flex;
   flex-direction: row;
   line-height: 1.4em;
   padding: ${grid(0.5)} ${grid(2)};
+  text-align: left;
+  width: 100%;
+
+  &:first-child {
+    border-top: none;
+  }
+`
+
+export const SnippetRow = styled.div`
+  background-color: ${th('colorSecondaryBackground')};
+  color: ${th('colorIconPrimary')};
+  padding: ${grid(0.5)} ${grid(4)};
   text-align: left;
   width: 100%;
 `
@@ -146,27 +152,9 @@ export const SortArrow = styled.span`
   }
 `
 
-export const Loader = styled.div`
-  display: inline-block;
-
-  &:after {
-    animation: ${rotate360} 1s linear infinite;
-    border: 3px solid ${th('colorPrimary')};
-    border-color: #ffffff transparent #ffffff transparent;
-    border-radius: 50%;
-    content: ' ';
-    display: block;
-    height: 20px;
-    margin: 1px;
-    width: 20px;
-  }
-`
-
-export const RefreshSpinnerWrapper = styled.div`
+export const ControlsContainer = styled.div`
   display: flex;
-  justify-content: center;
-`
-
-export const RefreshText = styled.div`
-  padding: 0 5px;
+  flex: 1 1;
+  gap: ${grid(2)};
+  justify-content: flex-end;
 `

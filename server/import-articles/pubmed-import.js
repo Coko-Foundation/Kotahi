@@ -378,9 +378,7 @@ const getData = async ctx => {
         })
         .filter(Boolean)
 
-      if (!newManuscripts.length) {
-        return []
-      }
+      if (!newManuscripts.length) return []
 
       try {
         const inserted = await models.Manuscript.query().upsertGraphAndFetch(

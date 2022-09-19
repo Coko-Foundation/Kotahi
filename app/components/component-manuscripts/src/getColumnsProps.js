@@ -26,6 +26,7 @@ const getColumnsProps = (
   toggleNewManuscriptCheck,
   setReadyToEvaluateLabel,
   urlFrag,
+  currentSearchQuery,
 ) => {
   const specialColumnProperties = {
     shortId: {
@@ -119,7 +120,11 @@ const getColumnsProps = (
     const field = fieldDefinitions[columnName]
     const presetProps = specialColumnProperties[columnName] || {}
 
-    const canSort = presetProps.canSort || fieldCanBeSorted(field)
+    // We disable sorting by column when showing search results, and just order by search ranking.
+    // This could be changed in future to allow ordering within search results.
+    const canSort =
+      !currentSearchQuery && (presetProps.canSort || fieldCanBeSorted(field))
+
     const filterOptions = presetProps.filterOptions || field?.options
 
     const defaultProps = {
