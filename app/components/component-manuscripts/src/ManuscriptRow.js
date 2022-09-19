@@ -1,29 +1,38 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import 'rc-tooltip/assets/bootstrap_white.css'
-import { ManuscriptsRow, Cell } from './style'
+import { ManuscriptsRow, SnippetRow, Cell } from './style'
 import { getFieldValueAndDisplayValue } from '../../../shared/manuscriptUtils'
 
 const ManuscriptRow = ({ manuscript, columnDefinitions, setFilter }) => {
   return (
-    <ManuscriptsRow>
-      {columnDefinitions.map(column => {
-        const values = getFieldValueAndDisplayValue(column, manuscript)
-        const Renderer = column.component
-        return (
-          <Cell key={column.name} {...column}>
-            <Renderer
-              applyFilter={
-                column.filterOptions && (val => setFilter(column.name, val))
-              }
-              manuscript={manuscript}
-              values={values}
-              {...column.extraProps}
-            />
-          </Cell>
-        )
-      })}
-    </ManuscriptsRow>
+    <>
+      <ManuscriptsRow>
+        {columnDefinitions.map(column => {
+          const values = getFieldValueAndDisplayValue(column, manuscript)
+          const Renderer = column.component
+          return (
+            <Cell key={column.name} {...column}>
+              <Renderer
+                applyFilter={
+                  column.filterOptions && (val => setFilter(column.name, val))
+                }
+                manuscript={manuscript}
+                values={values}
+                {...column.extraProps}
+              />
+            </Cell>
+          )
+        })}
+      </ManuscriptsRow>
+      {manuscript.searchSnippet && (
+        <SnippetRow
+          dangerouslySetInnerHTML={{
+            __html: `... ${manuscript.searchSnippet} ...`,
+          }}
+        />
+      )}
+    </>
   )
 }
 
