@@ -5,11 +5,13 @@ const schedule = require('../node_modules/node-schedule')
 
 const {
   importManuscripts,
+  manuscriptsUserHasCurrentRoleIn,
 } = require('./model-manuscript/src/manuscriptCommsUtils')
 
 schedule.scheduleJob({ tz: 'Etc/UTC', rule: '00 21 * * *' }, async () => {
   try {
-    await importManuscripts({ user: null })
+    importManuscripts({ user: null })
+    await manuscriptsUserHasCurrentRoleIn({ user: null })
   } catch (error) {
     console.error(error)
   }
