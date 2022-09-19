@@ -291,6 +291,7 @@ class Manuscript extends BaseModel {
         importSourceServer: { type: ['string', 'null'] },
         isHidden: { type: ['boolean', 'null'] },
         formFieldsToPublish: { type: 'array' },
+        searchableText: { type: 'string' },
       },
     }
   }

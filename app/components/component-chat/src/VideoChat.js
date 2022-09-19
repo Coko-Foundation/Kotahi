@@ -1,33 +1,21 @@
 import React from 'react'
 import styled from 'styled-components'
 import fnv from 'fnv-plus'
-import { Icon } from '@pubsweet/ui'
-import { th, grid } from '@pubsweet/ui-toolkit'
-import lightenBy from '../../../shared/lightenBy'
+import { grid } from '@pubsweet/ui-toolkit'
+import { RoundIconButton } from '../../shared'
 
-const FloatRightButton = styled.a`
-  align-items: center;
-  background-color: ${th('colorPrimary')};
-  border-radius: 27px;
-  color: ${th('colorTextReverse')};
-  display: flex;
+const FloatRightButton = styled(RoundIconButton)`
   float: right;
+  left: 80%;
   margin: ${grid(1)} ${grid(1)} ${grid(1)} ${grid(2)};
-  padding: 8px 12px;
   position: absolute;
   z-index: 1000;
-  left: 80%;
-
-  &:hover {
-    background-color: ${lightenBy('colorPrimary', 0.2)};
-  }
-
-  svg {
-    margin-right: 0.1em;
-    stroke: ${th('colorTextReverse')};
-    width: 1em;
-  }
 `
+
+const openInNewTab = (url, target = '_blank') => {
+  const newWindow = window.open(url, '_blank', 'noopener,noreferrer')
+  if (newWindow) newWindow.opener = null
+}
 
 const VideoChat = ({ manuscriptId }) => {
   // Generate the chat room name by hashing the baseUrl, so it is unique to the instance.
@@ -36,11 +24,13 @@ const VideoChat = ({ manuscriptId }) => {
 
   return (
     <FloatRightButton
-      href={`https://8x8.vc/coko/${chatRoomId}`}
-      target={chatRoomId}
-    >
-      <Icon>video</Icon>
-    </FloatRightButton>
+      iconName="Video"
+      onClick={() =>
+        openInNewTab(`https://8x8.vc/kotahi/${chatRoomId}`, chatRoomId)
+      }
+      primary
+      title="Open video chat"
+    />
   )
 }
 

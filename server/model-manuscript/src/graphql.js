@@ -6,8 +6,8 @@ const config = require('config')
 const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
-const { importManuscripts } = require('./manuscriptCommsUtils')
 const { raw } = require('objection')
+const { importManuscripts } = require('./manuscriptCommsUtils')
 const Team = require('../../model-team/src/team')
 const TeamMember = require('../../model-team/src/team_member')
 
@@ -20,6 +20,7 @@ const {
   fixMissingValuesInFiles,
   hasEvaluations,
   stripConfidentialDataFromReviews,
+  buildQueryForManuscriptSearchFilterAndOrder,
 } = require('./manuscriptUtils')
 
 const { applyTemplate, generateCss } = require('../../pdfexport/applyTemplate')
@@ -53,11 +54,6 @@ const {
   getReviewForm,
   getDecisionForm,
 } = require('../../model-review/src/reviewCommsUtils')
-
-const SUBMISSION_FIELD_PREFIX = 'submission'
-const META_FIELD_PREFIX = 'meta'
-
-let isImportInProgress = false
 
 const repackageForGraphql = async ms => {
   const result = { ...fixMissingValuesInFiles(ms) }
@@ -325,59 +321,6 @@ const tryPublishingWebhook = async manuscriptId => {
         throw new Error(message)
       })
   }
-}
-
-/** Filtering function to discard items with duplicate fields */
-const discardDuplicateFields = (item, index, self) =>
-  self.findIndex(x => x.field === item.field) === index
-
-/** Checks if the field exists in the form and is validly named (not causing risk of sql injection),
- * and if so returns the groupName ('meta' or 'submission') and the field name.
- * Also returns valuesAreKeyedObjects, which indicates whether values for this field
- * are key-value pairs as opposed to strings.
- */
-const getSafelyNamedJsonbFieldInfo = (fieldName, submissionForm) => {
-  const groupName = [SUBMISSION_FIELD_PREFIX, META_FIELD_PREFIX].find(x =>
-    fieldName.startsWith(`${x}.`),
-  )
-
-  if (!groupName) return null
-
-  const field =
-    submissionForm &&
-    submissionForm.structure.children.find(f => f.name === fieldName)
-
-  if (!field) {
-    console.warn(`Ignoring unknown field "${fieldName}"`)
-    return null
-  }
-
-  const name = fieldName.substring(groupName.length + 1)
-
-  if (!/^[a-zA-Z]\w*$/.test(name)) {
-    console.warn(`Ignoring unsupported field "${fieldName}"`)
-    return null
-  }
-
-  return { groupName, name, valuesAreKeyedObjects: !!field.options }
-}
-
-/** Check that the field exists and is not dangerously named (to avoid sql injection) */
-const isValidNonJsonbField = (fieldName, submissionForm) => {
-  if (!/^[a-zA-Z]\w*$/.test(fieldName)) {
-    console.warn(`Ignoring unsupported field "${fieldName}"`)
-    return false
-  }
-
-  if (
-    !submissionForm ||
-    submissionForm.structure.children.find(f => f.name === fieldName)
-  ) {
-    console.warn(`Ignoring unknown field "${fieldName}"`)
-    return false
-  }
-
-  return true
 }
 
 const resolvers = {
@@ -1242,86 +1185,35 @@ const resolvers = {
     async paginatedManuscripts(_, { sort, offset, limit, filters }, ctx) {
       const submissionForm = await Form.findOneByField('purpose', 'submit')
 
-      const query = models.Manuscript.query().where({
-        parentId: null,
-        isHidden: null,
-      })
-
-      if (sort) {
-        const sortDirection = sort.isAscending ? 'ASC' : 'DESC'
-
-        const jsonbField = getSafelyNamedJsonbFieldInfo(
-          sort.field,
-          submissionForm,
-        )
-
-        if (jsonbField) {
-          query.orderByRaw(
-            `LOWER(${jsonbField.groupName}->>'${jsonbField.name}') ${sortDirection}, id ${sortDirection}`,
-          )
-        } else if (isValidNonJsonbField(sort.field, submissionForm)) {
-          query.orderBy(sort.field, sort.isAscending ? null : 'DESC')
-        } else {
-          console.warn(`Could not sort on field "${sort.field}`)
-        }
-
-        query.orderBy('shortId', sortDirection) // Secondary ordering
-      } else {
-        // Give it some order to prevent it changing on refetch.
-        query.orderBy([
-          { column: 'created', order: 'desc' },
-          { column: 'shortId', order: 'desc' },
-        ])
-      }
-
-      filters.filter(discardDuplicateFields).forEach(filter => {
-        if (!/^[\w :./,()-<>=_]+$/.test(filter.value)) {
-          console.warn(
-            `Ignoring filter "${filter.field}" with illegal value "${filter.value}"`, // To prevent code injection!
-          )
-          return // i.e., continue.
-        }
-
-        const jsonbField = getSafelyNamedJsonbFieldInfo(
-          filter.field,
-          submissionForm,
-        )
-
-        if (jsonbField) {
-          if (jsonbField.valuesAreKeyedObjects) {
-            query.whereRaw(
-              `(${jsonbField.groupName}->'${jsonbField.name}')::jsonb \\? ?`,
-              filter.value,
-            )
-          } else {
-            query.whereRaw(
-              `${jsonbField.groupName}->>'${jsonbField.name}' = '%${filter.value}%'`,
-            )
-          }
-        } else if (filter.field === 'status') {
-          query.where({ status: filter.value })
-        } else {
-          console.warn(
-            `Could not filter on field "${filter.field}" by value "${filter.value}"`,
-          )
-        }
-      })
-
-      const totalCount = await query.resultSize()
-
-      if (limit) {
-        query.limit(limit)
-      }
-
-      if (offset) {
-        query.offset(offset)
-      }
-
-      const manuscripts = await query.withGraphFetched(
-        '[submitter, teams.[members.[user.[defaultIdentity]]], manuscriptVersions(orderByCreated).[submitter, teams.[members.[user.[defaultIdentity]]]]]',
+      const [rawQuery, rawParams] = buildQueryForManuscriptSearchFilterAndOrder(
+        sort,
+        offset,
+        limit,
+        filters,
+        submissionForm,
       )
 
-      return { totalCount, manuscripts }
+      const knex = models.Manuscript.knex()
+      const rawQResult = await knex.raw(rawQuery, rawParams)
+      let totalCount = 0
+      if (rawQResult.rowCount)
+        totalCount = parseInt(rawQResult.rows[0].full_count, 10)
+
+      const ids = rawQResult.rows.map(row => row.id)
+
+      const manuscripts = await models.Manuscript.query()
+        .findByIds(ids)
+        .withGraphFetched(
+          '[submitter, teams.members.user.defaultIdentity, manuscriptVersions(orderByCreated).[submitter, teams.members.user.defaultIdentity]]',
+        )
+
+      const result = rawQResult.rows.map(row => ({
+        ...manuscripts.find(m => m.id === row.id),
+        searchRank: row.rank,
+        searchSnippet: row.snippet,
+      }))
+
+      return { totalCount, manuscripts: result }
     },
     async manuscriptsPublishedSinceDate(_, { startDate, limit }, ctx) {
       const query = models.Manuscript.query()
@@ -1527,6 +1419,8 @@ const typeDefs = `
     evaluationsHypothesisMap: String
     currentRoles: [String]
     formFieldsToPublish: [FormFieldsToPublish!]!
+    searchRank: Float
+    searchSnippet: String
   }
 
   input ManuscriptInput {

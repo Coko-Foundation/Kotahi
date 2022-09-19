@@ -302,6 +302,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           id
           profilePicture
         }
+        searchSnippet
       }
     }
 
