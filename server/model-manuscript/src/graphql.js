@@ -1022,6 +1022,7 @@ const resolvers = {
       const manuscript = await ManuscriptModel.query()
         .findById(id)
         .withGraphFetched('[teams, channels, files, reviews.user]')
+        .where({ parentId: null, isHidden: null })
 
       const user = ctx.user
         ? await models.User.query().findById(ctx.user)
@@ -1089,7 +1090,7 @@ const resolvers = {
         .join('teams', 'manuscripts.id', '=', 'teams.object_id')
         .join('team_members', 'teams.id', '=', 'team_members.team_id')
         .where('team_members.user_id', ctx.user)
-        .where('manuscripts.is_hidden', '=', false)
+      // .where('manuscripts.is_hidden', '=', false)
 
       // Get those top-level manuscripts with all versions, all with teams and members
       const manuscripts = await models.Manuscript.query()
@@ -1125,7 +1126,7 @@ const resolvers = {
         .withGraphFetched(
           '[teams, reviews, manuscriptVersions(orderByCreated)]',
         )
-        .where({ parentId: null, isHidden: true })
+        .where({ parentId: null, isHidden: false })
         .orderBy('created', 'desc')
 
       return Promise.all(manuscripts.map(async m => repackageForGraphql(m)))
@@ -1393,7 +1394,7 @@ const typeDefs = `
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript
-    importManuscripts: Boolean!
+    importManuscripts: Boolean
     setShouldPublishField(manuscriptId: ID!, objectId: ID!, fieldName: String!, shouldPublish: Boolean!): Manuscript!
   }
 

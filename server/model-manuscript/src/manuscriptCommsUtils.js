@@ -27,7 +27,7 @@ const getIdOfLatestVersionOfManuscript = async versionId => {
 
 let isImportInProgress = false
 
-const importManuscripts = ctx => {
+const importManuscripts = (_, props, ctx) => {
   if (isImportInProgress) return false
   isImportInProgress = true
 
