@@ -1,6 +1,5 @@
 const models = require('@pubsweet/models')
 const { pubsubManager } = require('@coko/server')
-const { raw } = require('objection')
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
 const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
@@ -67,62 +66,25 @@ const importManuscripts = ctx => {
   return true
 }
 
-const manuscriptsUserHasCurrentRoleIn = async (_, input, ctx) => {
-  // Get IDs of the top-level manuscripts
-  const topLevelManuscripts = await models.Manuscript.query()
-    .distinct(
-      raw('coalesce(manuscripts.parent_id, manuscripts.id) AS top_level_id'),
-    )
-    .join('teams', 'manuscripts.id', '=', 'teams.object_id')
-    .join('team_members', 'teams.id', '=', 'team_members.team_id')
-    .where('team_members.user_id', ctx.user)
-    .where('manuscripts.is_hidden', '=', false)
+const someDate = new Date()
+const numberOfDaysToAdd = 60
+const cutoffDate = someDate.setDate(someDate.getDate() + numberOfDaysToAdd)
 
-  // Get those top-level manuscripts with all versions, all with teams and members
-  const manuscripts = await models.Manuscript.query()
-    .withGraphFetched(
-      '[teams.[members], manuscriptVersions(orderByCreated).[teams.[members]]]',
-    )
-    .whereIn(
-      'id',
-      topLevelManuscripts.map(m => m.topLevelId),
-    )
-    .orderBy('created', 'desc')
-
-  const filteredManuscripts = []
-
-  manuscripts.forEach(m => {
-    const latestVersion =
-      m.manuscriptVersions && m.manuscriptVersions.length > 0
-        ? m.manuscriptVersions[m.manuscriptVersions.length - 1]
-        : m
-
-    if (
-      latestVersion.teams.some(t =>
-        t.members.some(member => member.userId === ctx.user),
+const archiveOldManuscripts = async () => {
+  await models.Manuscript.query()
+    .update({ isHidden: true })
+    .where('created', '<', cutoffDate)
+    .where(function () {
+      this.whereNull(`submission->> 'labels'`).orWhere(
+        `submission->> 'labels', '=', ''`,
       )
-    )
-      filteredManuscripts.push(m)
-  })
-
-  // eslint-disable-next-line no-undef
-  return Promise.all(filteredManuscripts.map(m => repackageForGraphql(m)))
-}
-
-// Defining the condition for the archival of manuscript
-const archiveOldMnauscripts = async (_, props, ctx) => {
-  // eslint-disable-next-line no-constant-condition
-  if ('status' === 'submitted' || 'Ready to Evaluate') {
-    return manuscriptsUserHasCurrentRoleIn
-  }
-
-  return null
+    })
+    .whereNot({ status: 'new' })
 }
 
 module.exports = {
   getIdOfFirstVersionOfManuscript,
   getIdOfLatestVersionOfManuscript,
   importManuscripts,
-  manuscriptsUserHasCurrentRoleIn,
-  archiveOldMnauscripts,
+  archiveOldManuscripts,
 }

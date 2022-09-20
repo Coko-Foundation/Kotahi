@@ -6,11 +6,9 @@ const config = require('config')
 const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
+const { raw } = require('objection')
 
-const {
-  importManuscripts,
-  manuscriptsUserHasCurrentRoleIn,
-} = require('./manuscriptCommsUtils')
+const { importManuscripts } = require('./manuscriptCommsUtils')
 
 const Team = require('../../model-team/src/team')
 const TeamMember = require('../../model-team/src/team_member')
@@ -465,7 +463,7 @@ const resolvers = {
     },
     // To call from server as well as resolver
     importManuscripts(_, props, ctx) {
-      importManuscripts(ctx)
+      return importManuscripts(ctx)
     },
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
@@ -1084,8 +1082,48 @@ const resolvers = {
 
       return repackageForGraphql(manuscript)
     },
-    manuscriptsUserHasCurrentRoleIn(_, input, ctx) {
-      manuscriptsUserHasCurrentRoleIn(ctx)
+    async manuscriptsUserHasCurrentRoleIn(_, input, ctx) {
+      // Get IDs of the top-level manuscripts
+      const topLevelManuscripts = await models.Manuscript.query()
+        .distinct(
+          raw(
+            'coalesce(manuscripts.parent_id, manuscripts.id) AS top_level_id',
+          ),
+        )
+        .join('teams', 'manuscripts.id', '=', 'teams.object_id')
+        .join('team_members', 'teams.id', '=', 'team_members.team_id')
+        .where('team_members.user_id', ctx.user)
+        .where('manuscripts.is_hidden', '=', false)
+
+      // Get those top-level manuscripts with all versions, all with teams and members
+      const manuscripts = await models.Manuscript.query()
+        .withGraphFetched(
+          '[teams.[members], manuscriptVersions(orderByCreated).[teams.[members]]]',
+        )
+        .whereIn(
+          'id',
+          topLevelManuscripts.map(m => m.topLevelId),
+        )
+        .orderBy('created', 'desc')
+
+      const filteredManuscripts = []
+
+      manuscripts.forEach(m => {
+        const latestVersion =
+          m.manuscriptVersions && m.manuscriptVersions.length > 0
+            ? m.manuscriptVersions[m.manuscriptVersions.length - 1]
+            : m
+
+        if (
+          latestVersion.teams.some(t =>
+            t.members.some(member => member.userId === ctx.user),
+          )
+        )
+          filteredManuscripts.push(m)
+      })
+
+      // eslint-disable-next-line no-undef
+      return Promise.all(filteredManuscripts.map(m => repackageForGraphql(m)))
     },
     async manuscripts(_, { where }, ctx) {
       const manuscripts = models.Manuscript.query()
@@ -1360,7 +1398,7 @@ const typeDefs = `
     removeReviewer(manuscriptId: ID!, userId: ID!): Team
     publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript
-    importManuscripts: Boolean
+    importManuscripts: Boolean!
     setShouldPublishField(manuscriptId: ID!, objectId: ID!, fieldName: String!, shouldPublish: Boolean!): Manuscript!
   }
 
