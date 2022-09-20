@@ -592,141 +592,69 @@ const EditorStyles = css`
       height: 4px;
       background-color: var(--citationColorValues);
       border-radius: 100%;
+      display: none;
     }
     &:hover {
       outline-color: var(--citationColorValues);
-      &:before {
-        content: '';
-        white-space: nowrap;
-        position: absolute;
-        background-color: var(--citationColorValues);
-        color: var(--citationTextColor);
-        top: 16px;
-        left: 16px;
-        padding: 0 4px;
-        border-radius: 4px;
-        font-size: 12px;
-        text-transform: uppercase;
-        font-style: normal;
-        letter-spacing: 0.5px;
-        z-index: 999;
-        display: none;
-      }
     }
   }
 
   span.article-title {
     --citationColorValues: ${th('colorArticleTitle')};
     --citationTextColor: white;
-    &:hover {
-      &:before {
-        content: 'Article Title';
-      }
-    }
   }
 
   span.journal-title {
     --citationColorValues: ${th('colorJournalTitle')};
     --citationTextColor: white;
     font-style: italic;
-    &:hover {
-      &:before {
-        content: 'Journal Title';
-      }
-    }
   }
 
   span.author-group {
     --citationColorValues: ${th('colorAuthorGroup')};
     --citationOffset: 4px;
     --citationTextColor: white;
-    &:hover {
-      &:before {
-        content: 'Author Group';
-        top: -16px;
-      }
-    }
   }
 
   span.author-name {
     --citationColorValues: ${th('colorAuthorName')};
     --citationTextColor: white;
-    &:hover {
-      &:before {
-        content: 'Author Name';
-      }
-    }
   }
 
   a.doi {
     --citationColorValues: ${th('colorDoi')};
     --citationTextColor: white;
-    &:hover {
-      &:before {
-        content: 'DOI';
-      }
-    }
   }
 
   span.volume {
     --citationColorValues: ${th('colorVolume')};
     --citationTextColor: white;
-    &:hover {
-      &:before {
-        content: 'Volume';
-      }
-    }
   }
 
   span.issue {
     --citationColorValues: ${th('colorIssue')};
     --citationTextColor: white;
-    &:hover {
-      &:before {
-        content: 'Issue';
-      }
-    }
   }
 
   span.first-page {
     --citationColorValues: ${th('colorFirstPage')};
     --citationTextColor: white;
-    &:hover {
-      &:before {
-        content: 'First Page';
-      }
-    }
   }
 
   span.last-page {
     --citationColorValues: ${th('colorLastPage')};
     --citationTextColor: white;
-    &:hover {
-      &:before {
-        content: 'Last Page';
-      }
-    }
   }
 
   span.year {
     --citationColorValues: ${th('colorYear')};
     --citationTextColor: white;
-    &:hover {
-      &:before {
-        content: 'Year';
-      }
-    }
   }
 
   .hide-citation-spans span,
   .hide-citation-spans a {
     --citationColorValues: transparent !important;
     --citationTextColor: transparent !important;
-    &:hover {
-      &:before {
-        display: none;
-      }
-    }
   }
 
   .show-article-title .article-title {
