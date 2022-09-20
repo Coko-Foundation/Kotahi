@@ -112,7 +112,7 @@ const manuscriptsUserHasCurrentRoleIn = async (_, input, ctx) => {
 // Defining the condition for the archival of manuscript
 const archiveOldMnauscripts = async (_, props, ctx) => {
   // eslint-disable-next-line no-constant-condition
-  if ('label' === 'submitted' || 'Ready to Evaluate') {
+  if ('status' === 'submitted' || 'Ready to Evaluate') {
     return manuscriptsUserHasCurrentRoleIn
   }
 

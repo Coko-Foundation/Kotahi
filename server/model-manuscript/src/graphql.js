@@ -1084,7 +1084,7 @@ const resolvers = {
 
       return repackageForGraphql(manuscript)
     },
-    async manuscriptsUserHasCurrentRoleIn(_, input, ctx) {
+    manuscriptsUserHasCurrentRoleIn(_, input, ctx) {
       manuscriptsUserHasCurrentRoleIn(ctx)
     },
     async manuscripts(_, { where }, ctx) {
