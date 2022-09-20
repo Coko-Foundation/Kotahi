@@ -8,7 +8,7 @@ const {
   archiveOldManuscripts,
 } = require('./model-manuscript/src/manuscriptCommsUtils')
 
-schedule.scheduleJob({ tz: 'Etc/UTC', rule: '* * * * *' }, async () => {
+schedule.scheduleJob({ tz: 'Etc/UTC', rule: '00 21 * * *' }, async () => {
   try {
     importManuscripts({ user: null })
     await archiveOldManuscripts()
