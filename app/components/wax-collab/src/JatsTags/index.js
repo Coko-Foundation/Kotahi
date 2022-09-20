@@ -384,7 +384,8 @@ class JatsTagsService extends Service {
         attrs: {
           class: { default: 'article-title' },
         },
-        excludes: 'articleTitle', // so we can't embed it inside itself
+        group: 'citationMarks',
+        excludes: 'citationMarks',
         parseDOM: [{ tag: 'span.article-title' }],
         toDOM() {
           return ['span', { class: 'article-title', title: 'Article Title' }, 0]
@@ -396,7 +397,8 @@ class JatsTagsService extends Service {
         attrs: {
           class: { default: 'journal-title' },
         },
-        excludes: 'articleTitle', // so we can't embed it inside itself
+        group: 'citationMarks',
+        excludes: 'citationMarks',
         parseDOM: [{ tag: 'span.journal-title' }],
         toDOM() {
           return ['span', { class: 'journal-title', title: 'Journal Title' }, 0]
@@ -408,6 +410,7 @@ class JatsTagsService extends Service {
         attrs: {
           class: { default: 'author-group' },
         },
+        group: 'citationMarks',
         excludes: 'authorGroup', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.author-group' }],
         toDOM() {
@@ -420,7 +423,8 @@ class JatsTagsService extends Service {
         attrs: {
           class: { default: 'author-name' },
         },
-        excludes: 'authorName', // so we can't embed it inside itself
+        group: 'citationMarks',
+        excludes: 'citationMarks',
         parseDOM: [{ tag: 'span.author-name' }],
         toDOM() {
           return ['span', { class: 'author-name', title: 'Author Name' }, 0]
@@ -432,7 +436,8 @@ class JatsTagsService extends Service {
         attrs: {
           class: { default: 'volume' },
         },
-        excludes: 'volume', // so we can't embed it inside itself
+        group: 'citationMarks',
+        excludes: 'citationMarks',
         parseDOM: [{ tag: 'span.volume' }],
         toDOM() {
           return ['span', { class: 'volume', title: 'Volume' }, 0]
@@ -444,7 +449,8 @@ class JatsTagsService extends Service {
         attrs: {
           class: { default: 'issue' },
         },
-        excludes: 'issue', // so we can't embed it inside itself
+        group: 'citationMarks',
+        excludes: 'citationMarks',
         parseDOM: [{ tag: 'span.issue' }],
         toDOM() {
           return ['span', { class: 'issue', title: 'Issue' }, 0]
@@ -456,7 +462,8 @@ class JatsTagsService extends Service {
         attrs: {
           class: { default: 'year' },
         },
-        excludes: 'year', // so we can't embed it inside itself
+        group: 'citationMarks',
+        excludes: 'citationMarks',
         parseDOM: [{ tag: 'span.year' }],
         toDOM() {
           return ['span', { class: 'year', title: 'Year' }, 0]
@@ -468,7 +475,8 @@ class JatsTagsService extends Service {
         attrs: {
           class: { default: 'first-page' },
         },
-        excludes: 'firstPage', // so we can't embed it inside itself
+        group: 'citationMarks',
+        excludes: 'citationMarks',
         parseDOM: [{ tag: 'span.first-page' }],
         toDOM() {
           return ['span', { class: 'first-page', title: 'First Page' }, 0]
@@ -480,7 +488,8 @@ class JatsTagsService extends Service {
         attrs: {
           class: { default: 'last-page' },
         },
-        excludes: 'lastPage', // so we can't embed it inside itself
+        group: 'citationMarks',
+        excludes: 'citationMarks',
         parseDOM: [{ tag: 'span.last-page' }],
         toDOM() {
           return ['span', { class: 'last-page', title: 'Last Page' }, 0]
@@ -497,7 +506,8 @@ class JatsTagsService extends Service {
           title: { default: null },
           class: { default: 'doi' },
         },
-        excludes: 'doi', // so we can't embed it inside itself
+        group: 'citationMarks',
+        excludes: 'citationMarks',
         inclusive: false, // see: https://prosemirror.net/examples/schema/
         parseDOM: [
           // but see https://gitlab.coko.foundation/wax/wax-prosemirror/-/blob/master/wax-prosemirror-schema/src/marks/linkMark.js

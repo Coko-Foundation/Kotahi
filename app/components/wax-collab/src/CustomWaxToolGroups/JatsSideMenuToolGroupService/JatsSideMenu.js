@@ -30,21 +30,22 @@ class JatsSideMenu extends ToolGroup {
     super()
 
     this.toolGroups = [
+      { name: 'FrontMatterGroup', groups: [frontmatterlist, fundinglist] },
       {
-        name: 'TabA',
-        groups: [appendixlist, citationlist, acknowledgementsList],
+        name: 'BackMatterGroup',
+        groups: [appendixlist, acknowledgementsList],
       },
-      { name: 'TabB', groups: [frontmatterlist, fundinglist] },
+      { name: 'CitationGroup', groups: [citationlist] },
     ]
   }
 
   renderTools(view) {
     if (isEmpty(view)) return null
 
-    const first = {
-      id: '1',
-      title: 'Back matter tools',
-      icon: 'chapterList',
+    const frontMatterList = {
+      id: 'frontmatterlist',
+      title: 'Front matter tools',
+      icon: 'codeBlock',
       disabled: false,
       component: (
         <BlockLevelTools
@@ -57,12 +58,10 @@ class JatsSideMenu extends ToolGroup {
       ),
     }
 
-    // if you wanted a second tab, enable this:
-
-    const second = {
-      id: '2',
-      title: 'Front matter tools',
-      icon: 'codeBlock',
+    const backMatterList = {
+      id: 'backmatterlist',
+      title: 'Back matter tools',
+      icon: 'chapterList',
       disabled: false,
       component: (
         <BlockLevelTools
@@ -75,7 +74,23 @@ class JatsSideMenu extends ToolGroup {
       ),
     }
 
-    const tabList = [second, first]
+    const citationList = {
+      id: 'citationlist',
+      title: 'Citation tools',
+      icon: 'chapterList',
+      disabled: false,
+      component: (
+        <BlockLevelTools
+          groups={this._toolGroups[2].groups.map(group => ({
+            groupName: group.title.props.title,
+            items: group._tools,
+          }))}
+          view={view}
+        />
+      ),
+    }
+
+    const tabList = [frontMatterList, backMatterList, citationList]
 
     const TabsComponent = useMemo(
       () => <VerticalTabs key={uuidv4()} tabList={tabList} />,

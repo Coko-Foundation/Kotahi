@@ -41,6 +41,7 @@ const EditorStyles = css`
       content: counter(footnote);
       counter-increment: footnote;
       font-size: ${grid(3)};
+      bottom: 0;
     }
   }
 
@@ -538,10 +539,10 @@ const EditorStyles = css`
   /* CITATIONS */
 
   span.mixed-citation {
-    --citationColorValues: 255, 255, 0;
+    --citationColorValues: ${th('colorCitation')};
     --citationTextColor: black;
-    --citationOffset: 6px;
-    outline: rgb(var(--citationColorValues)) 1px dotted;
+    --citationOffset: 2px;
+    outline: var(--citationColorValues) 1px solid;
     outline-offset: var(--citationOffset);
     position: relative;
     border-radius: 2px;
@@ -551,7 +552,7 @@ const EditorStyles = css`
         content: 'Mixed Citation';
         white-space: nowrap;
         position: absolute;
-        background-color: rgb(var(--citationColorValues));
+        background-color: var(--citationColorValues);
         color: var(--citationTextColor);
         top: -16px;
         left: 16px;
@@ -578,17 +579,27 @@ const EditorStyles = css`
     --citationColorValues: transparent;
     --citationTextColor: black;
     --citationOffset: 2px;
-    outline: rgba(var(--citationColorValues), 0.25) 1px dotted;
+    outline: ${th('colorCitation')} 1px solid;
     outline-offset: var(--citationOffset);
     position: relative;
     border-radius: 2px;
+    &:before {
+      position: absolute;
+      left: -2px;
+      top: -2px;
+      content: '';
+      width: 4px;
+      height: 4px;
+      background-color: var(--citationColorValues);
+      border-radius: 100%;
+    }
     &:hover {
-      outline-color: rgba(var(--citationColorValues), 1);
+      outline-color: var(--citationColorValues);
       &:before {
         content: '';
         white-space: nowrap;
         position: absolute;
-        background-color: rgb(var(--citationColorValues));
+        background-color: var(--citationColorValues);
         color: var(--citationTextColor);
         top: 16px;
         left: 16px;
@@ -605,7 +616,7 @@ const EditorStyles = css`
   }
 
   span.article-title {
-    --citationColorValues: 255, 0, 0;
+    --citationColorValues: ${th('colorArticleTitle')};
     --citationTextColor: white;
     &:hover {
       &:before {
@@ -615,7 +626,7 @@ const EditorStyles = css`
   }
 
   span.journal-title {
-    --citationColorValues: 128, 0, 128;
+    --citationColorValues: ${th('colorJournalTitle')};
     --citationTextColor: white;
     font-style: italic;
     &:hover {
@@ -626,7 +637,7 @@ const EditorStyles = css`
   }
 
   span.author-group {
-    --citationColorValues: 0, 0, 255;
+    --citationColorValues: ${th('colorAuthorGroup')};
     --citationOffset: 4px;
     --citationTextColor: white;
     &:hover {
@@ -638,7 +649,7 @@ const EditorStyles = css`
   }
 
   span.author-name {
-    --citationColorValues: 0, 0, 255;
+    --citationColorValues: ${th('colorAuthorName')};
     --citationTextColor: white;
     &:hover {
       &:before {
@@ -648,7 +659,7 @@ const EditorStyles = css`
   }
 
   a.doi {
-    --citationColorValues: 0, 255, 0;
+    --citationColorValues: ${th('colorDoi')};
     --citationTextColor: white;
     &:hover {
       &:before {
@@ -658,7 +669,7 @@ const EditorStyles = css`
   }
 
   span.volume {
-    --citationColorValues: 255, 165, 0;
+    --citationColorValues: ${th('colorVolume')};
     --citationTextColor: white;
     &:hover {
       &:before {
@@ -668,7 +679,7 @@ const EditorStyles = css`
   }
 
   span.issue {
-    --citationColorValues: 255, 0, 255;
+    --citationColorValues: ${th('colorIssue')};
     --citationTextColor: white;
     &:hover {
       &:before {
@@ -678,7 +689,7 @@ const EditorStyles = css`
   }
 
   span.first-page {
-    --citationColorValues: 50, 205, 50;
+    --citationColorValues: ${th('colorFirstPage')};
     --citationTextColor: white;
     &:hover {
       &:before {
@@ -688,7 +699,7 @@ const EditorStyles = css`
   }
 
   span.last-page {
-    --citationColorValues: 0, 255, 255;
+    --citationColorValues: ${th('colorLastPage')};
     --citationTextColor: white;
     &:hover {
       &:before {
@@ -698,7 +709,7 @@ const EditorStyles = css`
   }
 
   span.year {
-    --citationColorValues: 80, 80, 80;
+    --citationColorValues: ${th('colorYear')};
     --citationTextColor: white;
     &:hover {
       &:before {
@@ -719,43 +730,43 @@ const EditorStyles = css`
   }
 
   .show-article-title .article-title {
-    outline: rgba(var(--citationColorValues), 0.75) solid 2px;
+    outline: var(--citationColorValues) 2px solid;
   }
 
   .show-journal-title .journal-title {
-    outline: rgba(var(--citationColorValues), 0.75) solid 2px;
+    outline: var(--citationColorValues) 2px solid;
   }
 
   .show-author-group .author-group {
-    outline: rgba(var(--citationColorValues), 0.75) solid 2px;
+    outline: var(--citationColorValues) 2px solid;
   }
 
   .show-author-name .author-name {
-    outline: rgba(var(--citationColorValues), 0.75) solid 2px;
+    outline: var(--citationColorValues) 2px solid;
   }
 
   .show-volume .volume {
-    outline: rgba(var(--citationColorValues), 0.75) solid 2px;
+    outline: var(--citationColorValues) 2px solid;
   }
 
   .show-issue .issue {
-    outline: rgba(var(--citationColorValues), 0.75) solid 2px;
+    outline: var(--citationColorValues) 2px solid;
   }
 
   .show-year .year {
-    outline: rgba(var(--citationColorValues), 0.75) solid 2px;
+    outline: var(--citationColorValues) 2px solid;
   }
 
   .show-first-page .first-page {
-    outline: rgba(var(--citationColorValues), 0.75) solid 2px;
+    outline: var(--citationColorValues) 2px solid;
   }
 
   .show-last-page .last-page {
-    outline: rgba(var(--citationColorValues), 0.75) solid 2px;
+    outline: var(--citationColorValues) 2px solid;
   }
 
   .show-doi a.doi {
-    outline: rgba(var(--citationColorValues), 0.75) solid 2px;
+    outline: var(--citationColorValues) 2px solid;
   }
 `
 

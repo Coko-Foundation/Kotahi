@@ -1,5 +1,5 @@
 import React, { useState, useContext } from 'react'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, override } from '@pubsweet/ui-toolkit'
 import { WaxContext } from 'wax-prosemirror-core'
 import PropTypes from 'prop-types'
 import styled, { css } from 'styled-components'
@@ -118,32 +118,47 @@ const BlockElementWrapper = styled.div`
   & button {
     transition: 0.25s;
     border-radius: 4px;
-    margin-left: 4px;
+    margin-left: 2px;
     position: relative;
     padding: 0;
     display: inline-flex;
     align-items: center;
     background-color: ${props =>
       props.isActive ? th('colorBackgroundTabs') : 'transparent'};
-    &:after {
+    &:before {
+      --circleWidth: 5px;
+      display: ${props => (props.color ? 'inline-block' : 'none')};
       position: relative;
-      margin-left: -4px;
       content: '';
-      width: ${props => (props.color ? '14px' : 0)};
-      margin-right: ${props => (props.color ? '8px' : 0)};
-      height: 14px;
+      width: ${props => (props.color ? 'var(--circleWidth)' : 0)};
+      /* margin-left: ${props => (props.color ? '-2px' : 0)}; */
+      margin-right: ${props => (props.color ? '-4px' : 0)};
+      height: var(--circleWidth);
       border-radius: 100%;
-      border: 1px solid ${props => props.color || 'transparent'};
+      background-color: ${props => th(props.color) || 'transparent'};
+      border: 1px solid ${props => th(props.color) || 'transparent'};
       top: 1px;
     }
+    /* This cleans up the left menu, but kills off focus mode */
+    ${override('MenuButton')};
+    background: none;
     & span {
+      border-top: 2px solid transparent;
+      border-bottom: 2px solid
+        ${props => (props.isActive ? th('colorPrimary') : 'transparent')};
+      padding: 1px 0;
       font-size: 14px;
       color: ${th('colorPrimary')};
+      font-weight: ${props => (props.isActive ? 'bold' : 'normal')};
     }
     &:hover {
+      background: none !important;
+
       & span {
-        color: ${props =>
-          props.isActive ? th('colorTextReverse') : th('colorPrimary')};
+        font-weight: bold;
+        border-bottom-color: ${th('colorPrimary')};
+        /* color: ${props =>
+          props.isActive ? th('colorTextReverse') : th('colorPrimary')}; */
       }
     }
   }
@@ -162,6 +177,7 @@ const BlockElement = ({ item, onClick, view, showCitations }) => {
     select(state, activeViewId, activeView)
   )
 
+  console.log(item.name, isActive)
   return (
     <BlockElementWrapper
       color={(useCircles && showCitations && item.color) || null}

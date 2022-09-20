@@ -6,7 +6,7 @@ import { Tools } from 'wax-prosemirror-services'
 class Doi extends Tools {
   title = 'Change to DOI'
   label = 'DOI'
-  color = 'green'
+  color = 'colorDoi'
   className = 'doi'
   // icon = 'title'
   name = 'Doi'
