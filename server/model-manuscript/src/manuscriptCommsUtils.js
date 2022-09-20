@@ -28,7 +28,7 @@ const getIdOfLatestVersionOfManuscript = async versionId => {
 
 let isImportInProgress = false
 
-const importManuscripts = (_, props, ctx) => {
+const importManuscripts = ctx => {
   if (isImportInProgress) return false
   isImportInProgress = true
 
@@ -110,7 +110,7 @@ const manuscriptsUserHasCurrentRoleIn = async (_, input, ctx) => {
 }
 
 // Defining the condition for the archival of manuscript
-const archiveOldMnauscripts = ctx => {
+const archiveOldMnauscripts = async (_, props, ctx) => {
   // eslint-disable-next-line no-constant-condition
   if ('label' === 'submitted' || 'Ready to Evaluate') {
     return manuscriptsUserHasCurrentRoleIn
