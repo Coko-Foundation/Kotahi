@@ -389,14 +389,14 @@ const EditorStyles = css`
   }
 
   section.reflist {
-    background-color: rgba(25, 25, 112, 0.25);
+    background-color: rgba(25, 25, 112, 0.125);
     border: 1px solid midnightblue;
     margin-bottom: 8px;
-    padding: 8px 16px;
+    padding: 24px 8px 8px 8px;
     position: relative;
 
     &:before {
-      color: white;
+      color: rgba(25, 25, 112, 1);
       content: 'REFERENCE LIST';
       font-weight: bold;
       left: 2px;
