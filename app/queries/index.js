@@ -15,7 +15,7 @@ export const GET_CURRENT_USER = gql`
         aff
         id
       }
-      online
+      isOnline
       _currentRoles {
         id
         roles
@@ -41,7 +41,7 @@ export const GET_USER = gql`
       id
       username
       profilePicture
-      online
+      isOnline
       email
     }
   }
@@ -154,7 +154,7 @@ export const GET_INVITATIONS_FOR_MANUSCRIPT = gql`
         id
         username
         profilePicture
-        online
+        isOnline
       }
     }
   }
@@ -186,7 +186,7 @@ export const SEARCH_USERS = gql`
       id
       username
       profilePicture
-      online
+      isOnline
     }
   }
 `
@@ -281,7 +281,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           }
           submitter {
             username
-            online
+            isOnline
             defaultIdentity {
               id
               identifier
@@ -293,7 +293,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
         }
         submitter {
           username
-          online
+          isOnline
           defaultIdentity {
             id
             identifier

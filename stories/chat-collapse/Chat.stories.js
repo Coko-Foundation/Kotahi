@@ -104,7 +104,7 @@ const authorProps = {
               id: '20ca2a8d-d78e-4260-baed-86369992353f',
               username: 'Kotahi Author',
               profilePicture: null,
-              online: null,
+              isOnline: null,
             },
           },
         ],
@@ -131,7 +131,7 @@ const authorProps = {
         aff: '',
         id: '661c6b4f-5b5b-4ef0-aa4e-7d7b5bb38628',
       },
-      online: null,
+      isOnline: null,
       _currentRoles: [
         {
           __typename: 'CurrentRole',
@@ -187,7 +187,7 @@ const adminEditorProps = {
               id: '20ca2a8d-d78e-4260-baed-86369992353f',
               username: 'Kotahi Admin/Editor',
               profilePicture: null,
-              online: null,
+              isOnline: null,
             },
           },
         ],
@@ -214,7 +214,7 @@ const adminEditorProps = {
         aff: '',
         id: '661c6b4f-5b5b-4ef0-aa4e-7d7b5bb38628',
       },
-      online: null,
+      isOnline: null,
       _currentRoles: [
         {
           __typename: 'CurrentRole',
@@ -282,7 +282,7 @@ const emptyAuthorProps = {
         aff: '',
         id: '661c6b4f-5b5b-4ef0-aa4e-7d7b5bb38628',
       },
-      online: null,
+      isOnline: null,
       _currentRoles: [
         {
           __typename: 'CurrentRole',
@@ -350,7 +350,7 @@ const emptyAdminEditorProps = {
         aff: '',
         id: '661c6b4f-5b5b-4ef0-aa4e-7d7b5bb38628',
       },
-      online: null,
+      isOnline: null,
       _currentRoles: [
         {
           __typename: 'CurrentRole',

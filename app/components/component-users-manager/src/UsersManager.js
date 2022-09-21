@@ -42,8 +42,9 @@ const GET_USERS = gql`
           id
           identifier
         }
-        online
         created
+        isOnline
+        lastOnline
       }
     }
   }
@@ -96,6 +97,7 @@ const UsersManager = ({ currentUser }) => {
       offset: (page - 1) * limit,
       limit,
     },
+    fetchPolicy: 'cache-and-network',
   })
 
   if (loading) return <Spinner />
@@ -112,6 +114,7 @@ const UsersManager = ({ currentUser }) => {
             <tr>
               <SortHeader thisSortName="username">Name</SortHeader>
               <SortHeader thisSortName="created">Created</SortHeader>
+              <SortHeader thisSortName="lastOnline">Last Online</SortHeader>
               <SortHeader thisSortName="admin">Admin</SortHeader>
               {/* eslint-disable-next-line jsx-a11y/control-has-associated-label */}
               <th />

@@ -17,7 +17,7 @@ const teamFields = `
       id
       username
       profilePicture
-      online
+      isOnline
       defaultIdentity {
         id
         identifier
@@ -79,7 +79,7 @@ const query = gql`
       id
       username
       profilePicture
-      online
+      isOnline
       admin
     }
 
@@ -97,7 +97,7 @@ const updateTeamMemberMutation = gql`
         id
         username
         profilePicture
-        online
+        isOnline
       }
       status
       isShared

@@ -180,7 +180,7 @@ Base.args = {
     submitter: {
       __typename: 'User',
       username: 'Shanthi',
-      online: null,
+      isOnline: null,
       defaultIdentity: {
         __typename: 'Identity',
         id: '661c6b4f-5b5b-4ef0-aa4e-7d7b5bb38628',

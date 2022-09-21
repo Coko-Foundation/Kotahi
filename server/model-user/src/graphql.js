@@ -56,7 +56,11 @@ const resolvers = {
     async currentUser(_, vars, ctx) {
       if (!ctx.user) return null
       const avatarPlaceholder = '/profiles/default_avatar.svg'
-      const user = await models.User.find(ctx.user)
+
+      const user = await models.User.query().patchAndFetchById(ctx.user, {
+        lastOnline: new Date(Date.now()),
+      })
+
       const profilePicture = user.profilePicture ? user.profilePicture : ''
 
       const profilePicturePath = path.join(
@@ -331,6 +335,7 @@ const resolvers = {
     },
   },
   User: {
+    isOnline: user => user.isOnline(),
     async defaultIdentity(parent, args, ctx) {
       const identity = await models.Identity.query()
         .where({ userId: parent.id, isDefault: true })
@@ -393,6 +398,8 @@ const typeDefs = `
     admin_DESC
     created_ASC
     created_DESC
+    lastOnline_ASC
+    lastOnline_DESC
   }
 
   type User {
@@ -406,6 +413,8 @@ const typeDefs = `
     defaultIdentity: Identity
     profilePicture: String
     online: Boolean
+    lastOnline: DateTime
+    isOnline: Boolean
     _currentRoles: [CurrentRole]
     _currentGlobalRoles: [String]
   }
