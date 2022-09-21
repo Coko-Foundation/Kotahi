@@ -75,8 +75,8 @@ const archiveOldManuscripts = async () => {
     .update({ isHidden: true })
     .where('created', '<', cutoffDate)
     .where(function () {
-      this.whereNull(`submission-->'labels'`).orWhere(
-        `submission--'labels', '=', ''`,
+      this.whereNull(`submission->>'labels'`).orWhere(
+        `submission->>'labels', '=', ''`,
       )
     })
     .whereNot({ status: 'new' })
