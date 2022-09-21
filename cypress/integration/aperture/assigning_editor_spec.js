@@ -8,21 +8,14 @@ import { dashboard } from '../../support/routes'
 
 describe('Assigning senior editor', () => {
   it('admin can give decision', () => {
-    // task to restore the database as per the  dumps/submission_complete.sql
-    cy.task('restore', 'submission_complete')
+    cy.task('restore', 'commons/bootstrap')
+    cy.task('seed', 'submission_complete') // task to restore the database as per the  dumps/submission_complete.sql
     cy.task('seedForms')
 
     cy.fixture('submission_form_data').then(data => {
       cy.fixture('role_names').then(name => {
         // login as admin
-        cy.login(name.role.admin, dashboard)
-
-        // enter email
-        cy.contains('Enter Email').click()
-        cy.get('#enter-email').type('admin@gmail.com')
-
-        // submit the email
-        cy.contains('Next').click()
+        cy.login(name.role.admin.name, dashboard)
 
         // select Control on the Manuscripts page
         Menu.clickManuscripts()
@@ -31,11 +24,14 @@ describe('Assigning senior editor', () => {
 
         // assign seniorEditor
         ControlPage.clickAssignSeniorEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.uuid)
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.username)
+
         ControlPage.clickAssignHandlingEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.uuid)
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.username)
+
         ControlPage.clickAssignEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.uuid1)
+        ControlPage.selectDropdownOptionByName(name.role.admin.username)
+
         // assert the reviews
         ControlPage.fillInDecision(data.decision)
         ControlPage.clickAccept()

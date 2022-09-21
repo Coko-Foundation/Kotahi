@@ -12,6 +12,8 @@ const HEADER = 'General__Heading'
 const SECTION_TITLE = 'General__Title'
 const SECTION_PLACEHOLDER = 'style__Placeholder'
 const SUBMISSION_TITLE = 'VersionTitle'
+const SUBMISSION_BUTTON = '＋ New submission'
+const SUBMISSION_FILE_UPLOAD_INPUT = 'input[type=file]'
 
 /* My Submissions */
 const SUBMITTED_MANUSCRIPTS = ':nth-child(2) > a'
@@ -23,13 +25,15 @@ const DECISION_FIELDS = ':nth-child(1) > .General__Section-sc-1chiust-0 > div'
 // 'To Review section'
 const DO_REVIEW_BUTTON = 'a[href*=review]'
 const ACCEPT_REVIEW_BUTTON = 'accept-review'
+const REJECT_REVIEW_BUTTON = 'reject-review'
 
 // 'Manuscripts I'm editor of' section
 const CONTROL_PANEL_BUTTON = 'control-panel'
 const MANUSCRIPT_NAV_BUTTON = '[href="/kotahi/admin/manuscripts"]'
-const INVITED_REVIEWERS_BUTTON = 'invited'
-const COMPLETED_REVIEWS_BUTTON = 'completed'
-const ACCEPTED_AND_PUBLISHED_TITLE = 'Badge__SuccessStatus'
+const INVITED_REVIEWS_STATUS = 'invited'
+const COMPLETED_REVIEWS_STATUS = 'completed'
+const REJECTED_REVIEWS_STATUS = 'rejected'
+const ACCEPTED_REVIEWS_STATUS = 'accepted'
 const VERSION_TITLE = 'VersionTitle__Root-sc'
 const ARTICLE_LINK = '[class*=General__SectionRow] a[href]'
 
@@ -45,7 +49,13 @@ export const DashboardPage = {
     this.getSubmittedManuscripts(nth).click()
   },
   getSubmitButton() {
-    return cy.get(BUTTON).contains('New submission')
+    return cy.get(BUTTON).contains(SUBMISSION_BUTTON)
+  },
+  getSubmissionFileUploadInput() {
+    return cy.get(SUBMISSION_FILE_UPLOAD_INPUT)
+  },
+  clickSubmitButton() {
+    this.getSubmitButton().click()
   },
   getHeader() {
     return cy.getByContainsClass(HEADER)
@@ -58,6 +68,12 @@ export const DashboardPage = {
   },
   getSubmissionTitle() {
     return cy.getByContainsClass(SUBMISSION_TITLE)
+  },
+  getSubmissionButton() {
+    return cy.get('button').contains('＋ New submission')
+  },
+  clickSubmissionButton() {
+    return this.getSubmitButton().click()
   },
   getSectionPlaceholder(nth) {
     return cy.getByContainsClass(SECTION_PLACEHOLDER).eq(nth)
@@ -84,7 +100,7 @@ export const DashboardPage = {
     this.getManuscriptNavButton().click()
   },
   getInvitedReviewersButton() {
-    return cy.getByDataTestId(INVITED_REVIEWERS_BUTTON)
+    return cy.getByDataTestId(INVITED_REVIEWS_STATUS)
   },
   clickInvitedReviewers() {
     this.getInvitedReviewersButton().click()
@@ -92,8 +108,14 @@ export const DashboardPage = {
   getAcceptReviewButton() {
     return cy.getByDataTestId(ACCEPT_REVIEW_BUTTON)
   },
-  clickAcceptReview() {
+  clickAcceptReviewButton() {
     this.getAcceptReviewButton().click()
+  },
+  getRejectReviewButton() {
+    return cy.getByDataTestId(REJECT_REVIEW_BUTTON)
+  },
+  clickRejectReviewButton() {
+    this.getRejectReviewButton().click()
   },
   getDoReviewButton() {
     return cy.get(DO_REVIEW_BUTTON)
@@ -106,11 +128,17 @@ export const DashboardPage = {
     cy.awaitDisappearSpinner()
     cy.url({ timeout: 10000 }).should('contain', 'review')
   },
-  getCompletedReviewsButton() {
-    return cy.getByDataTestId(COMPLETED_REVIEWS_BUTTON)
+  getInvitedReviewsStatus() {
+    return cy.getByDataTestId(INVITED_REVIEWS_STATUS)
   },
-  getAcceptedAndPublishedButton() {
-    return cy.getByContainsClass(ACCEPTED_AND_PUBLISHED_TITLE)
+  getAcceptedReviewStatus() {
+    return cy.getByDataTestId(ACCEPTED_REVIEWS_STATUS)
+  },
+  getRejectedReviewsStatus() {
+    return cy.getByDataTestId(REJECTED_REVIEWS_STATUS)
+  },
+  getCompletedReviewsStatus() {
+    return cy.getByDataTestId(COMPLETED_REVIEWS_STATUS)
   },
   getVersionTitle() {
     return cy.getByContainsClass(VERSION_TITLE)

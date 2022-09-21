@@ -146,7 +146,7 @@ const Menu = ({
 }) => {
   const location = useLocation()
   return (
-    <Root className={className}>
+    <Root className={className} data-testid="menu-container">
       <Section>
         {/* TODO: Place this notice (used for offline notification) better */}
         {notice}
