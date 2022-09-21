@@ -82,7 +82,7 @@ Base.args = {
       aff: '',
       id: '7b03f794-ed3c-4dac-933d-a6616b3d70c2',
     },
-    online: true,
+    isOnline: true,
     _currentRoles: [],
     teams: [],
   },

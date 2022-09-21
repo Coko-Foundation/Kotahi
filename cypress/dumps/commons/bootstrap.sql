@@ -502,6 +502,7 @@ CREATE TABLE "public"."users" (
     "type" text NOT NULL,
     "profile_picture" text,
     "online" bool,
+    "last_online" timestamptz,
     PRIMARY KEY ("id")
 );
 
@@ -594,14 +595,14 @@ ALTER TABLE "public"."threaded_discussions" ADD FOREIGN KEY ("manuscript_id") RE
 -- -------------------------------------------------------------
 
 -- Add users to the tests
-INSERT INTO "public"."users" ("id", "created", "updated", "admin", "email", "username", "password_hash", "teams", "password_reset_token", "password_reset_timestamp", "type", "profile_picture", "online") VALUES
-('5b861dfb-02df-4be1-bc67-41a21611f5e7', '2022-05-14 10:31:35.715+00', '2022-08-23 14:55:02.854+00', NULL, 'joanep@example.com' , 'joane441' , NULL, NULL, NULL, NULL, 'user', NULL, NULL),
-('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 14:35:38.381+00', '2022-08-23 14:55:16.435+00', NULL, 'elaineb@example.com', 'elaine446', NULL, NULL, NULL, NULL, 'user', NULL, NULL),
-('ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', '2022-05-13 10:55:50.523+00', '2022-08-23 14:54:54.91+00' , NULL, 'emilyc@example.com' , 'emily016' , NULL, NULL, NULL, NULL, 'user', NULL, NULL),
-('f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '2022-05-13 10:54:12.651+00', '2022-08-23 14:55:09.39+00' , 't' , 'sineads@example.com', 'sinead729', NULL, NULL, NULL, NULL, 'user', NULL, NULL),
-('41d52254-a2b8-4ea4-9ded-bfbfe9671578', '2022-09-14 02:51:58.817+00', '2022-09-14 02:53:20.544+00', NULL, 'sherry@example.com' , 'sherry921', NULL, NULL, NULL, NULL, 'user', NULL, NULL),
-('7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', '2022-09-14 02:50:09.737+00', '2022-09-14 02:50:25.118+00', NULL, 'gale@example.com'   , 'gale431'  , NULL, NULL, NULL, NULL, 'user', NULL, NULL),
-('dcabc94f-eb6e-49bb-97d3-fc1a38f9408c', '2022-09-14 02:51:21.741+00', '2022-09-14 02:51:29.283+00', NULL, 'david@example.com'  , 'david254' , NULL, NULL, NULL, NULL, 'user', NULL, NULL);
+INSERT INTO "public"."users" ("id", "created", "updated", "admin", "email", "username", "password_hash", "teams", "password_reset_token", "password_reset_timestamp", "type", "profile_picture", "online", "last_online") VALUES
+('5b861dfb-02df-4be1-bc67-41a21611f5e7', '2022-05-14 10:31:35.715+00', '2022-08-23 14:55:02.854+00', NULL, 'joanep@example.com' , 'joane441' , NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
+('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 14:35:38.381+00', '2022-08-23 14:55:16.435+00', NULL, 'elaineb@example.com', 'elaine446', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
+('ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', '2022-05-13 10:55:50.523+00', '2022-08-23 14:54:54.91+00' , NULL, 'emilyc@example.com' , 'emily016' , NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
+('f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '2022-05-13 10:54:12.651+00', '2022-08-23 14:55:09.39+00' , 't' , 'sineads@example.com', 'sinead729', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
+('41d52254-a2b8-4ea4-9ded-bfbfe9671578', '2022-09-14 02:51:58.817+00', '2022-09-14 02:53:20.544+00', NULL, 'sherry@example.com' , 'sherry921', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
+('7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', '2022-09-14 02:50:09.737+00', '2022-09-14 02:50:25.118+00', NULL, 'gale@example.com'   , 'gale431'  , NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
+('dcabc94f-eb6e-49bb-97d3-fc1a38f9408c', '2022-09-14 02:51:21.741+00', '2022-09-14 02:51:29.283+00', NULL, 'david@example.com'  , 'david254' , NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL);
 
 INSERT INTO "public"."identities" ("id", "user_id", "created", "updated", "type", "identifier", "name", "aff", "oauth", "is_default") VALUES
 ('434461fc-18b5-43d8-bc46-bca88ea97c4c', '5b861dfb-02df-4be1-bc67-41a21611f5e7', '2022-07-29 05:15:21.654+00', '2022-07-29 05:15:21.624+00', 'orcid', '0000-0003-1838-2441', 'Joane Pilger'   , '', '{"accesstoken": "26fbc6b6-4421-40c5-ba07-d8c665f6704b", "refreshtoken": "4211bbf5-85ae-4980-833a-3f3deabcec6a"}', 't'),

@@ -1,0 +1,1 @@
+ALTER TABLE users ADD last_online TIMESTAMP WITH TIME ZONE

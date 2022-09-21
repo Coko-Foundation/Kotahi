@@ -1124,7 +1124,7 @@ const props = {
       aff: '',
       id: '7b03f794-ed3c-4dac-933d-a6616b3d70c2',
     },
-    online: true,
+    isOnline: true,
     _currentRoles: [],
     teams: [],
   },
@@ -1149,7 +1149,7 @@ const props = {
               id: '20ca2a8d-d78e-4260-baed-86369992353f',
               username: 'Shanthi',
               profilePicture: null,
-              online: null,
+              isOnline: null,
             },
           },
           {
@@ -1163,7 +1163,7 @@ const props = {
               id: '20ca2a8d-d78e-4260-baed-86369992353f',
               username: 'Shanthi',
               profilePicture: null,
-              online: null,
+              isOnline: null,
             },
           },
           {
@@ -1177,7 +1177,7 @@ const props = {
               id: '20ca2a8d-d78e-4260-baed-86369992353f',
               username: 'Shanthi',
               profilePicture: null,
-              online: null,
+              isOnline: null,
             },
           },
           {
@@ -1191,7 +1191,7 @@ const props = {
               id: '20ca2a8d-d78e-4260-baed-86369992353f',
               username: 'Shanthi',
               profilePicture: null,
-              online: null,
+              isOnline: null,
             },
           },
           {
@@ -1205,7 +1205,7 @@ const props = {
               id: '20ca2a8d-d78e-4260-baed-86369992353f',
               username: 'Shanthi',
               profilePicture: null,
-              online: null,
+              isOnline: null,
             },
           },
           {
@@ -1220,7 +1220,7 @@ const props = {
               id: '20ca2a8d-d78e-4260-baed-86369992353f',
               username: 'Shanthi',
               profilePicture: null,
-              online: null,
+              isOnline: null,
             },
           },
           {
@@ -1234,7 +1234,7 @@ const props = {
               id: '20ca2a8d-d78e-4260-baed-86369992353f',
               username: 'Shanthi',
               profilePicture: null,
-              online: null,
+              isOnline: null,
             },
           },
         ],
@@ -1261,7 +1261,7 @@ const props = {
         aff: '',
         id: '661c6b4f-5b5b-4ef0-aa4e-7d7b5bb38628',
       },
-      online: null,
+      isOnline: null,
       _currentRoles: [
         {
           __typename: 'CurrentRole',
@@ -1359,7 +1359,7 @@ const props = {
     submitter: {
       __typename: 'User',
       username: 'Shanthi',
-      online: null,
+      isOnline: null,
       defaultIdentity: {
         __typename: 'Identity',
         id: '661c6b4f-5b5b-4ef0-aa4e-7d7b5bb38628',
@@ -1413,7 +1413,7 @@ const props = {
             submitter: {
               __typename: 'User',
               username: 'Shanthi',
-              online: null,
+              isOnline: null,
               defaultIdentity: {
                 __typename: 'Identity',
                 id: '415d69fa-4e74-4e6d-9286-f5257545127b',

@@ -3,7 +3,9 @@ import { useQuery } from '@apollo/client'
 import { GET_CURRENT_USER } from '../queries'
 
 export default function useCurrentUser() {
-  const { loading, error, data } = useQuery(GET_CURRENT_USER)
+  const { loading, error, data } = useQuery(GET_CURRENT_USER, {
+    fetchPolicy: 'network-only',
+  })
 
   if (loading || error) {
     return null

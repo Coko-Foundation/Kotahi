@@ -22,7 +22,7 @@ const GET_MESSAGES = gql`
           id
           username
           profilePicture
-          online
+          isOnline
         }
       }
       pageInfo {
@@ -44,7 +44,7 @@ const MESSAGES_SUBSCRIPTION = gql`
         id
         username
         profilePicture
-        online
+        isOnline
         defaultIdentity {
           identifier
           email
