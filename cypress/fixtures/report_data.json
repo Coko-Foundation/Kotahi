@@ -1,0 +1,44 @@
+{
+  "reviewersData": [
+    {
+      "reviewerName": "Sherry Crofoot",
+      "reviewInvites": "1",
+      "invitesDeclined": "0",
+      "reviewsCompleted": "0",
+      "averageReviewDuration": "0 days",
+      "recommendedToAccept": "0",
+      "recommendedToRevise": "0",
+      "recommendedToReject": "0"
+    },
+    {
+      "reviewerName": "Gale Davis",
+      "reviewInvites": "1",
+      "invitesDeclined": "0",
+      "reviewsCompleted": "1",
+      "averageReviewDuration": "0.4 days",
+      "recommendedToAccept": "0",
+      "recommendedToRevise": "1",
+      "recommendedToReject": "0"
+    },
+    {
+      "reviewerName": "Joane Pilger",
+      "reviewInvites": "1",
+      "invitesDeclined": "0",
+      "reviewsCompleted": "1",
+      "averageReviewDuration": "0.6 days",
+      "recommendedToAccept": "0",
+      "recommendedToRevise": "0",
+      "recommendedToReject": "1"
+    },
+    {
+      "reviewerName": "Emily Clay",
+      "reviewInvites": "1",
+      "invitesDeclined": "0",
+      "reviewsCompleted": "1",
+      "averageReviewDuration": "0.6 days",
+      "recommendedToAccept": "1",
+      "recommendedToRevise": "0",
+      "recommendedToReject": "0"
+    }
+  ]
+}

@@ -9,10 +9,11 @@ const ABSTRACT_EDITOR_FIELD = '.ProseMirror > .paragraph'
 
 // const REVIEW_COMMENT_FIELD = 'reviewComment'
 // const CONFIDENTIAL_COMMENT_FIELD = 'confidentialComment'
-const ACCEPT_RADIO_BUTTON = 'span[color="#00ff7b"]'
-const REVISE_RADIO_BUTTON = 'span[color=orange]'
-const REJECT_RADIO_BUTTON = 'span[color=red]'
-const SUBMIT_BUTTON = '[data-cy="review-form-action-btn"]'
+const ACCEPT_RADIO_BUTTON = '.cLexBK > .sc-dmlrTW'
+const REVISE_RADIO_BUTTON = '.cABLOw > .sc-dmlrTW'
+const REJECT_RADIO_BUTTON = '.hgPkBe > .sc-dmlrTW'
+const SUBMIT_BUTTON = 'review-action-btn'
+const CONFIRM_SUBMIT_BUTTON = 'article > button:eq(0)'
 // const DECISION_COMMENT_FIELD = 'decisionComment'
 const ERROR_TEXT = 'style__ErrorText-'
 const FORM_STATUS = 'style__FormStatus-'
@@ -48,25 +49,25 @@ export const ReviewPage = {
   getAcceptRadioButton() {
     return cy.get(ACCEPT_RADIO_BUTTON)
   },
-  clickAccept() {
+  clickAcceptRadioButton() {
     this.getAcceptRadioButton().eq(0).click()
   },
   getReviseRadioButton() {
     return cy.get(REVISE_RADIO_BUTTON)
   },
-  clickRevise() {
+  clickReviseRadioButton() {
     this.getReviseRadioButton().eq(0).click()
   },
   getRejectRadioButton() {
     return cy.get(REJECT_RADIO_BUTTON)
   },
-  clickReject() {
+  clickRejectRadioButton() {
     this.getRejectRadioButton().eq(0).click()
   },
   getSubmitButton() {
-    return cy.get(SUBMIT_BUTTON)
+    return cy.getByDataTestId(SUBMIT_BUTTON)
   },
-  clickSubmit() {
+  clickSubmitButton() {
     this.getSubmitButton().click()
   },
   getDecisionCommentField() {
@@ -116,5 +117,11 @@ export const ReviewPage = {
   },
   getDecisionSelectedButton() {
     return cy.get(DECISION_BUTTON_SELECTED)
+  },
+  getConfirmSubmitButton() {
+    return cy.get(CONFIRM_SUBMIT_BUTTON)
+  },
+  clickConfirmSubmitButton() {
+    this.getConfirmSubmitButton().click()
   },
 }

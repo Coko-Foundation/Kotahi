@@ -94,8 +94,8 @@ const ActionButton = ({
   isCompact,
   children,
   className,
+  dataTestid,
   title,
-  dataCy,
 }) => {
   if (disabled)
     return (
@@ -148,7 +148,7 @@ const ActionButton = ({
     <Button
       bgColor={bgColor}
       className={className}
-      data-cy={dataCy}
+      data-testid={dataTestid}
       fgColor={fgColor}
       isCompact={isCompact}
       onClick={status !== 'pending' ? onClick : null}

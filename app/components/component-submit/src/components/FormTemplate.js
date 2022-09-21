@@ -212,7 +212,7 @@ const InnerFormTemplate = ({
     return (
       <div>
         <ActionButton
-          dataCy={`${form.name
+          dataTestid={`${form.name
             .toLowerCase()
             .replace(/ /g, '-')
             .replace(/[^\w-]+/g, '')}-action-btn`}
