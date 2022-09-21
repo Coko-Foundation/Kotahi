@@ -14,6 +14,8 @@ const TabWrapper = styled.div`
   display: flex;
   height: 100%;
   flex-direction: column;
+  border-right: 1px solid white;
+  margin-right: -1px;
 `
 
 const Tabs = styled.div`
@@ -23,17 +25,24 @@ const Tabs = styled.div`
   & > div:first-child {
     margin-top: 0;
   }
+  & > div {
+    opacity: 0.5;
+    height: 40px;
+    border-radius: 100%;
+  }
 `
 
 const activeTab = css`
-  background: ${th('colorBackgroundTabs')};
-  box-shadow: 0 0 1px ${th('colorPrimary')};
+  background: ${th('colorBorder')};
+  /*box-shadow: 0 0 1px ${th('colorPrimary')};*/
+  margin-bottom: -1px;
+  opacity: 1 !important;
 `
 
 const disabledTab = css`
   display: none;
   cursor: not-allowed;
-  opacity: 0.4;
+  margin-bottom: -1px;
 `
 
 const Tab = styled.div`
@@ -49,7 +58,7 @@ const Tab = styled.div`
   }
 
   &:hover {
-    background: ${th('colorBackgroundTabs')};
+    background: ${th('colorBorder')};
   }
 `
 
@@ -57,6 +66,9 @@ const Content = styled.div`
   background: #fff;
   height: 100%;
   width: 100%;
+  border-top: 1px solid ${th('colorBorder')};
+  border-top-right-radius: 4px;
+  border-right: 1px solid ${th('colorBorder')};
 `
 
 export const VerticalTabs = ({ tabList }) => {
@@ -105,11 +117,11 @@ const ElementGroup = styled.details`
     margin: 0;
     color: ${th('colorPrimary')};
     &::marker {
-      color: ${th('colorBackgroundTabs')};*/
+      color: ${th('colorBackgroundTabs')};
     }
   }
   & + details {
-    margin-top: 4px;
+    margin-top: 16px;
   }
 `
 
@@ -177,7 +189,7 @@ const BlockElement = ({ item, onClick, view, showCitations }) => {
     select(state, activeViewId, activeView)
   )
 
-  console.log(item.name, isActive)
+  // console.log(item.name, isActive)
   return (
     <BlockElementWrapper
       color={(useCircles && showCitations && item.color) || null}
