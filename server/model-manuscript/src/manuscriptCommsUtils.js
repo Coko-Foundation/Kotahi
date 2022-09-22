@@ -27,7 +27,7 @@ const getIdOfLatestVersionOfManuscript = async versionId => {
 
 let isImportInProgress = false
 
-const importManuscripts = ctx => {
+const importManuscripts = async ctx => {
   if (isImportInProgress) return false
   isImportInProgress = true
 
@@ -66,9 +66,12 @@ const importManuscripts = ctx => {
   return true
 }
 
-const someDate = new Date()
+const currentDate = new Date()
 const numberOfDaysToAdd = 60
-const cutoffDate = someDate.setDate(someDate.getDate() + numberOfDaysToAdd)
+
+const cutoffDate = currentDate.setDate(
+  currentDate.getDate() - numberOfDaysToAdd,
+)
 
 const archiveOldManuscripts = async () => {
   await models.Manuscript.query()

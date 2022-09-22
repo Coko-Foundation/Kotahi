@@ -53,6 +53,7 @@ module.exports = {
     journalName: 'JOURNAL_NAME',
     journalAbbreviatedName: 'JOURNAL_ABBREVIATED_NAME',
     journalHomepage: 'JOURNAL_HOMEPAGE',
+    archivePeriod: 'ARCHIVE_PERIOD',
   },
   api: {
     tokens: 'KOTAHI_API_TOKENS',

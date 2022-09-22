@@ -461,7 +461,7 @@ const resolvers = {
 
       return updatedManuscript
     },
-    // To call from server as well as resolver
+
     importManuscripts(_, props, ctx) {
       return importManuscripts(ctx)
     },
@@ -1025,7 +1025,6 @@ const resolvers = {
       const manuscript = await ManuscriptModel.query()
         .findById(id)
         .withGraphFetched('[teams, channels, files, reviews.user]')
-        .where({ parentId: null, isHidden: null })
 
       const user = ctx.user
         ? await models.User.query().findById(ctx.user)
@@ -1122,7 +1121,6 @@ const resolvers = {
           filteredManuscripts.push(m)
       })
 
-      // eslint-disable-next-line no-undef
       return Promise.all(filteredManuscripts.map(m => repackageForGraphql(m)))
     },
     async manuscripts(_, { where }, ctx) {
