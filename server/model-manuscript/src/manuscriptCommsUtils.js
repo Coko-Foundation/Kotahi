@@ -67,11 +67,9 @@ const importManuscripts = async ctx => {
 }
 
 const currentDate = new Date()
-const numberOfDaysToAdd = 60
+const numberOfDays = 60
 
-const cutoffDate = currentDate.setDate(
-  currentDate.getDate() - numberOfDaysToAdd,
-)
+const cutoffDate = currentDate.setDate(currentDate.getDate() - numberOfDays)
 
 const archiveOldManuscripts = async () => {
   await models.Manuscript.query()
