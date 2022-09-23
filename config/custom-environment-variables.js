@@ -53,7 +53,6 @@ module.exports = {
     journalName: 'JOURNAL_NAME',
     journalAbbreviatedName: 'JOURNAL_ABBREVIATED_NAME',
     journalHomepage: 'JOURNAL_HOMEPAGE',
-    archivePeriod: 'ARCHIVE_PERIOD',
   },
   api: {
     tokens: 'KOTAHI_API_TOKENS',
@@ -92,5 +91,9 @@ module.exports = {
     protocol: 'SERVICE_PAGEDJS_PROTOCOL',
     host: 'SERVICE_PAGEDJS_HOST',
     port: 'SERVICE_PAGEDJS_PORT',
+  },
+  manuscripts: {
+    autoImportTimeUtc: 'AUTO_IMPORT_TIME_UTC',
+    archivePeriod: 'ARCHIVE_PERIOD',
   },
 }

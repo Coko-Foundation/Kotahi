@@ -67,7 +67,7 @@ const importManuscripts = async ctx => {
 }
 
 const currentDate = new Date()
-const numberOfDays = 60
+const numberOfDays = process.env.ARCHIVE_PERIOD
 
 const cutoffDate = currentDate.setDate(currentDate.getDate() - numberOfDays)
 
@@ -75,12 +75,7 @@ const archiveOldManuscripts = async () => {
   await models.Manuscript.query()
     .update({ isHidden: true })
     .where('created', '<', cutoffDate)
-    .where(function () {
-      this.whereNull(`submission->>'labels'`).orWhere(
-        `submission->>'labels', '=', ''`,
-      )
-    })
-    .whereNot({ status: 'new' })
+    .whereRaw(`submission->>'labels' = ''`)
 }
 
 module.exports = {
