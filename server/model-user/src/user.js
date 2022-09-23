@@ -24,6 +24,8 @@ class User extends BaseModel {
   static get relationMappings() {
     // eslint-disable-next-line global-require
     const { Identity, Review } = require('@pubsweet/models')
+    /* eslint-disable-next-line global-require */
+    const File = require('@coko/server/src/models/file/file.model')
 
     return {
       identities: {
@@ -65,6 +67,14 @@ class User extends BaseModel {
         join: {
           from: 'users.id',
           to: 'reviews.userId',
+        },
+      },
+      file: {
+        relation: BaseModel.HasOneRelation,
+        modelClass: File,
+        join: {
+          from: 'users.id',
+          to: 'files.objectId',
         },
       },
     }
