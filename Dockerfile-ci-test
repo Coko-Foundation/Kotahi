@@ -15,7 +15,6 @@ ARG display_shortid_as_identifier
 ARG review_shared
 ARG review_hide
 ARG hypothesis_allow_tagging
-ARG autoimporttimeutc
 
 ENV NODE_ENV "development"
 ENV SERVER_PROTOCOL "http"
@@ -32,7 +31,6 @@ ENV REVIEW_SHARED $review_shared
 ENV REVIEW_HIDE $review_hide
 ENV HYPOTHESIS_ALLOW_TAGGING $hypothesis_allow_tagging
 ENV HOME "/home/simplej"
-ENV AUTO_IMPORT_TIME_UTC $autoimporttimeutc
 
 RUN mkdir -p ${HOME}
 WORKDIR ${HOME}
