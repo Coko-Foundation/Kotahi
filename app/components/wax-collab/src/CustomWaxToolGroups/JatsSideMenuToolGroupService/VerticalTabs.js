@@ -89,7 +89,10 @@ export const VerticalTabs = ({ tabList }) => {
             }}
             title={tab.title}
           >
-            <Icon name={tab.icon} />
+            <Icon
+              className={tabDisplay === tab.id ? 'active' : ''}
+              name={tab.icon}
+            />
           </Tab>
         ))}
       </Tabs>
