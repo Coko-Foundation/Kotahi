@@ -10,7 +10,6 @@ const models = require('@pubsweet/models')
 const { createFile, File } = require('@coko/server')
 const { applyTemplate, generateCss } = require('./applyTemplate')
 const makeZip = require('./ziputils.js')
-const makeSvgsFromLatex = require('../jatsexport/makeSvgsFromLatex')
 
 const {
   getFilesWithUrl,
@@ -117,11 +116,11 @@ const pdfHandler = async manuscriptId => {
     'original',
   )
 
-  // TOODO: send articleData to makeSvgsFromLatex.js
+  // TODO: get rid of this if we're doing this in applyTemplate
 
-  const { svgedSource } = await makeSvgsFromLatex(articleData.meta.source, true)
+  // const { svgedSource } = await makeSvgsFromLatex(articleData.meta.source, true)
 
-  articleData.meta.source = svgedSource
+  // articleData.meta.source = svgedSource
 
   const outHtml = await applyTemplate(articleData)
 

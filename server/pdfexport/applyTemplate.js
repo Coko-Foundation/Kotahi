@@ -1,22 +1,23 @@
 const path = require('path')
 const fs = require('fs-extra').promises
 const nunjucks = require('nunjucks')
-const cheerio = require('cheerio')
+// const cheerio = require('cheerio')
 const publicationMetadata = require('./pdfTemplates/publicationMetadata')
 const articleMetadata = require('./pdfTemplates/articleMetadata')
+const makeSvgsFromLatex = require('../jatsexport/makeSvgsFromLatex')
 
-const fixMathTags = html => {
-  const $ = cheerio.load(html)
-  $('math-display').replaceWith((index, el) => {
-    const content = $(el).html()
-    return `<p><span class="math display">$$${content}$$</span></p>`
-  })
-  $('math-inline').replaceWith((index, el) => {
-    const content = $(el).html()
-    return `<span class="math inline">$${content}$</span>`
-  })
-  return $.html()
-}
+// const fixMathTags = html => {
+//   const $ = cheerio.load(html)
+//   $('math-display').replaceWith((index, el) => {
+//     const content = $(el).html()
+//     return `<p><span class="math display">$$${content}$$</span></p>`
+//   })
+//   $('math-inline').replaceWith((index, el) => {
+//     const content = $(el).html()
+//     return `<span class="math inline">$${content}$</span>`
+//   })
+//   return $.html()
+// }
 
 //  Sort out all the different CSSes and make sure that they are being applied correctly
 //    ./pdfTemplates/styles.css: this is from Julien & Harshna, used for PDF export
@@ -100,8 +101,11 @@ const applyTemplate = async (articleData, includeFontLinks) => {
   }
 
   const thisArticle = articleData
-  const htmlWithFixedMath = fixMathTags(articleData.meta.source)
-  thisArticle.meta.source = htmlWithFixedMath
+  // const htmlWithFixedMath = fixMathTags(articleData.meta.source)
+  // TODO: if we're using local MathJax, don't do fix math tags, do run the code through makeSvgsFromLatex is in pdfExport
+  const { svgedSource } = await makeSvgsFromLatex(articleData.meta.source, true)
+
+  thisArticle.meta.source = svgedSource
 
   thisArticle.publicationMetadata = publicationMetadata
   thisArticle.articleMetadata = articleMetadata(thisArticle)
