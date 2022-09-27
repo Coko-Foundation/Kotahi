@@ -1,5 +1,8 @@
+const config = require('config')
+
 const models = require('@pubsweet/models')
 const { pubsubManager } = require('@coko/server')
+
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
 const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
@@ -66,11 +69,11 @@ const importManuscripts = async ctx => {
   return true
 }
 
-const cutoffDate = new Date(
-  new Date().valueOf() - process.env.ARCHIVE_PERIOD_DAYS * 86400000, // subtracting milliseconds of ARCHIVE_PERIOD_DAYS
-)
-
 const archiveOldManuscripts = async () => {
+  const cutoffDate = new Date(
+    new Date().valueOf() - config.manuscripts.archivePeriodDays * 86400000, // subtracting milliseconds of ARCHIVE_PERIOD_DAYS
+  )
+
   await models.Manuscript.query()
     .update({ isHidden: true })
     .where('created', '<', cutoffDate)
