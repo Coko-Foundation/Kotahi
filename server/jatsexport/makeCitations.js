@@ -15,6 +15,10 @@ const htmlToJats = require('./htmlToJats')
 
 */
 
+const replaceAll = (str, find, replace) => {
+  return str.replace(new RegExp(find, 'g'), replace)
+}
+
 const cleanCitation = (html, id) => {
   const dom = htmlparser2.parseDocument(html)
   const $ = cheerio.load(dom, { xmlMode: true })
@@ -28,7 +32,9 @@ const cleanCitation = (html, id) => {
     }
 
     if (el.attribs.class && el.attribs.class.indexOf('journal-title') > -1) {
-      $(el).replaceWith(`<source>${$(el).text()}</source>`)
+      // Note: we're calling this <@source> because there's an HTML tag named
+      // <source> and we don't want them to be confused.
+      $(el).replaceWith(`<@source>${$(el).text()}</@source>`)
     }
 
     if (el.attribs.class && el.attribs.class.indexOf('article-title') > -1) {
@@ -254,7 +260,13 @@ const makeCitations = html => {
   )
 
   if (cleanedRefList) {
-    refList = `<ref-list>${cleanedRefList}</ref-list>`
+    // After parsing is done and this is just a string,<@ource> can go back
+    // to being <source>
+    refList = `<ref-list>${replaceAll(
+      replaceAll(cleanedRefList, '</@source>', '</source>'),
+      '<@source>',
+      '<source>',
+    )}</ref-list>`
   }
 
   const processedHtml = cleanedHtml
