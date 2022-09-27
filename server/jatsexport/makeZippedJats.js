@@ -125,12 +125,20 @@ const makeZipFile = async (manuscriptId, jats) => {
   // console.log(outJats)
   const { svgedSource, svgList } = await makeSvgsFromLatex(outJats)
 
+  // This replace all is to make sure that the JATS tag <source> isn't turned into the empty HTML tag <source>
+
+  const cleanedSource = replaceAll(
+    replaceAll(svgedSource, '<sssource>', `<source>`),
+    `</sssource>`,
+    '</source>',
+  )
+
   // 5. make a directory with the JATS file as index.xml
 
   const raw = await randomBytes(16)
   const dirName = `tmp/${raw.toString('hex')}_${manuscriptId}`
   await fsPromised.mkdir(dirName, { recursive: true })
-  await fsPromised.appendFile(`${dirName}/index.xml`, svgedSource)
+  await fsPromised.appendFile(`${dirName}/index.xml`, cleanedSource)
 
   if (imageList.length || svgList.length) {
     // if either of these are true, we need to make an images directory
@@ -199,14 +207,6 @@ const makeZipFile = async (manuscriptId, jats) => {
   const { url } = downloadReadyZipFile.storedObjects[0]
 
   await fsPromised.rmdir('tmp', { recursive: true })
-
-  // This replace all is to make sure that the JATS tag <source> isn't turned into the empty HTML tag <source>
-
-  const cleanedSource = replaceAll(
-    replaceAll(svgedSource, '<sssource>', `<source>`),
-    `</sssource>`,
-    '</source>',
-  )
 
   return { link: url, jats: cleanedSource } // returns link to where the ZIP file is.
 }

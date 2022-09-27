@@ -217,8 +217,21 @@ const makeCitations = html => {
     refList += myRefs
       .map((thisCitation, index) => {
         const { ref } = cleanCitation(thisCitation, index)
-        // TODO: note that we can still get invalid results if there's a bold/italic tag in one of these! Maybe take all of them out?
-        return htmlToJats(ref)
+
+        // Note: somehow this htmlToJats is killing off the <@source> tags. Replacing first, then unreplacing.
+        const output = htmlToJats(
+          replaceAll(
+            replaceAll(ref, '<@source>', '--@source--'),
+            '</@source>',
+            '--/@source--',
+          ),
+        )
+
+        return replaceAll(
+          replaceAll(output, '--@source--', '<@source>'),
+          '--/@source--',
+          '</@source>',
+        )
       })
       .join('')
     refCount = myRefs.length
