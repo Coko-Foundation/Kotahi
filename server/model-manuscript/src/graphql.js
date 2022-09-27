@@ -1092,7 +1092,6 @@ const resolvers = {
         .join('teams', 'manuscripts.id', '=', 'teams.object_id')
         .join('team_members', 'teams.id', '=', 'team_members.team_id')
         .where('team_members.user_id', ctx.user)
-        .where('manuscripts.is_hidden', '=', false)
 
       // Get those top-level manuscripts with all versions, all with teams and members
       const manuscripts = await models.Manuscript.query()
@@ -1128,7 +1127,7 @@ const resolvers = {
         .withGraphFetched(
           '[teams, reviews, manuscriptVersions(orderByCreated)]',
         )
-        .where({ parentId: null, isHidden: false })
+        .where({ parentId: null, isHidden: null })
         .orderBy('created', 'desc')
 
       return Promise.all(manuscripts.map(async m => repackageForGraphql(m)))
