@@ -5,6 +5,7 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Checkbox } from '@pubsweet/ui'
 import { grid } from '@pubsweet/ui-toolkit'
+import config from 'config'
 import ManuscriptRow from './ManuscriptRow'
 import {
   ManuscriptsTable,
@@ -288,7 +289,8 @@ const Manuscripts = ({ history, ...props }) => {
 
   const shouldAllowBulkImport =
     ['ncrc'].includes(process.env.INSTANCE_NAME) ||
-    (['colab'].includes(process.env.INSTANCE_NAME) && process.env.MANUAL_IMPORT)
+    (['colab'].includes(process.env.INSTANCE_NAME) &&
+      config.manuscripts.allowManualImport)
 
   const shouldAllowBulkDelete = ['ncrc', 'colab'].includes(
     process.env.INSTANCE_NAME,

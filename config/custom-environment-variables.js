@@ -95,6 +95,6 @@ module.exports = {
   manuscripts: {
     autoImportTimeUtc: 'AUTO_IMPORT_TIME_UTC',
     archivePeriod: 'ARCHIVE_PERIOD',
-    manualImport: 'MANUAL_IMPORT',
+    allowManualImport: 'ALLOW_MANUAL_IMPORT',
   },
 }

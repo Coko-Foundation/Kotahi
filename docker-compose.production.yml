@@ -26,7 +26,7 @@ services:
         - hypothesis_allow_tagging=${HYPOTHESIS_ALLOW_TAGGING}
         - autoimporttimeutc=${AUTO_IMPORT_TIME_UTC}
         - archivePeriod=${ARCHIVE_PERIOD}
-        - manualImport=${MANUAL_IMPORT:-}
+        - allowManualImport=${ALLOW_MANUAL_IMPORT:-}
 
     ports:
       - ${SERVER_PORT:-3000}:${SERVER_PORT:-3000}
@@ -97,7 +97,7 @@ services:
       - S3_BUCKET=${S3_BUCKET:-uploads}
       - AUTO_IMPORT_TIME_UTC=${AUTO_IMPORT_TIME_UTC:-true}
       - ARCHIVE_PERIOD=${ARCHIVE_PERIOD:-true}
-      - MANUAL_IMPORT=${MANUAL_IMPORT:-true}
+      - ALLOW_MANUAL_IMPORT=${ALLOW_MANUAL_IMPORT:-true}
 
     volumes:
       - ./uploads:/home/node/app/uploads
