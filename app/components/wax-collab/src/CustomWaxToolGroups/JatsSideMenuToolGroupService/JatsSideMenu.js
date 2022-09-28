@@ -77,7 +77,7 @@ class JatsSideMenu extends ToolGroup {
     const citationList = {
       id: 'citationlist',
       title: 'Citation tools',
-      icon: 'chapterList',
+      icon: 'citationList',
       disabled: false,
       component: (
         <BlockLevelTools
