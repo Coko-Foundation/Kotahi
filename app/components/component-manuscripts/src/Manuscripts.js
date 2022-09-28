@@ -290,7 +290,7 @@ const Manuscripts = ({ history, ...props }) => {
   const shouldAllowBulkImport =
     ['ncrc'].includes(process.env.INSTANCE_NAME) ||
     (['colab'].includes(process.env.INSTANCE_NAME) &&
-      config.manuscripts.allowManualImport)
+      config.manuscripts.allowManualImport === 'true')
 
   const shouldAllowBulkDelete = ['ncrc', 'colab'].includes(
     process.env.INSTANCE_NAME,
