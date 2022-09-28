@@ -363,7 +363,6 @@ const resolvers = {
         }
       } else {
         user.profilePicture = avatarPlaceholder
-        await user.save()
       }
 
       return user.profilePicture
