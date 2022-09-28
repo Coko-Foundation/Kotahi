@@ -248,7 +248,7 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
   addSelect('count(1) OVER() AS full_count') // Count of all results (not just this page)
   addFrom('manuscripts')
   addWhere('parent_id IS NULL')
-  addWhere('is_hidden IS NULL')
+  addWhere('is_hidden IS NOT TRUE')
 
   const searchFilter = filters.find(f => f.field === 'search')
 

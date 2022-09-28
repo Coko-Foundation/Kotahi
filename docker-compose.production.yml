@@ -92,6 +92,8 @@ services:
       - S3_ACCESS_KEY_ID=${S3_ACCESS_KEY_ID:-nonRootUser}
       - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY:-nonRootPassword}
       - S3_BUCKET=${S3_BUCKET:-uploads}
+      - AUTO_IMPORT_HOUR_UTC=${AUTO_IMPORT_HOUR_UTC:-true}
+      - ARCHIVE_PERIOD_DAYS=${ARCHIVE_PERIOD_DAYS:-true}
 
     volumes:
       - ./uploads:/home/node/app/uploads

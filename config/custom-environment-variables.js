@@ -92,4 +92,8 @@ module.exports = {
     host: 'SERVICE_PAGEDJS_HOST',
     port: 'SERVICE_PAGEDJS_PORT',
   },
+  manuscripts: {
+    autoImportHourUtc: 'AUTO_IMPORT_HOUR_UTC',
+    archivePeriodDays: 'ARCHIVE_PERIOD_DAYS',
+  },
 }

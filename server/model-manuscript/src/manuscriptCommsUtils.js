@@ -1,11 +1,13 @@
+const config = require('config')
+
 const models = require('@pubsweet/models')
+const { pubsubManager } = require('@coko/server')
+
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
 const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
-const { pubsubManager } = require('@coko/server')
+
 const { getPubsub } = pubsubManager
-
-
 
 /** For a given versionId, find the first/original version of that manuscript and return its ID */
 const getIdOfFirstVersionOfManuscript = async versionId =>
@@ -28,7 +30,7 @@ const getIdOfLatestVersionOfManuscript = async versionId => {
 
 let isImportInProgress = false
 
-const importManuscripts = (ctx) => {
+const importManuscripts = async ctx => {
   if (isImportInProgress) return false
   isImportInProgress = true
 
@@ -67,8 +69,25 @@ const importManuscripts = (ctx) => {
   return true
 }
 
+const archiveOldManuscripts = async () => {
+  const cutoffDate = new Date(
+    new Date().valueOf() - config.manuscripts.archivePeriodDays * 86400000, // subtracting milliseconds of ARCHIVE_PERIOD_DAYS
+  )
+
+  await models.Manuscript.query()
+    .update({ isHidden: true })
+    .where('created', '<', cutoffDate)
+    .where('status', 'new')
+    .where(function () {
+      this.whereRaw(`submission->>'labels' = ''`).orWhereRaw(
+        `submission->>'labels' IS NULL`,
+      )
+    })
+}
+
 module.exports = {
   getIdOfFirstVersionOfManuscript,
   getIdOfLatestVersionOfManuscript,
   importManuscripts,
+  archiveOldManuscripts,
 }
