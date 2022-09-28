@@ -36,8 +36,7 @@ ENV DISPLAY_SHORTID_AS_IDENTIFIER $display_shortid_as_identifier
 ENV REVIEW_SHARED $review_shared
 ENV REVIEW_HIDE $review_hide
 ENV HYPOTHESIS_ALLOW_TAGGING $hypothesis_allow_tagging
-ENV AUTO_IMPORT_HOUR_UTC=${AUTO_IMPORT_HOUR_UTC:-true}
-ENV ARCHIVE_PERIOD_DAYS=${ARCHIVE_PERIOD_DAYS:-}
+ENV ALLOW_MANUAL_IMPORT $allow_manual_import
 
 
 RUN apk add --no-cache git python make g++ bash tar
