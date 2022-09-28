@@ -1,4 +1,11 @@
 const models = require('@pubsweet/models')
+const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
+const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
+const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
+const { pubsubManager } = require('@coko/server')
+const { getPubsub } = pubsubManager
+
+
 
 /** For a given versionId, find the first/original version of that manuscript and return its ID */
 const getIdOfFirstVersionOfManuscript = async versionId =>
@@ -19,7 +26,49 @@ const getIdOfLatestVersionOfManuscript = async versionId => {
   )[0].id
 }
 
+let isImportInProgress = false
+
+const importManuscripts = (ctx) => {
+  if (isImportInProgress) return false
+  isImportInProgress = true
+
+  const promises = []
+
+  if (process.env.INSTANCE_NAME === 'ncrc') {
+    promises.push(importArticlesFromBiorxiv(ctx))
+    promises.push(importArticlesFromPubmed(ctx))
+  } else if (process.env.INSTANCE_NAME === 'colab') {
+    promises.push(
+      importArticlesFromBiorxivWithFullTextSearch(ctx, [
+        'transporter*',
+        'pump*',
+        'gpcr',
+        'gating',
+        '*-gated',
+        '*-selective',
+        '*-pumping',
+        'protein translocation',
+      ]),
+    )
+  }
+
+  if (!promises.length) return false
+
+  Promise.all(promises)
+    .catch(error => console.error(error))
+    .finally(async () => {
+      isImportInProgress = false
+      const pubsub = await getPubsub()
+      pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
+        manuscriptsImportStatus: true,
+      })
+    })
+
+  return true
+}
+
 module.exports = {
   getIdOfFirstVersionOfManuscript,
   getIdOfLatestVersionOfManuscript,
+  importManuscripts,
 }

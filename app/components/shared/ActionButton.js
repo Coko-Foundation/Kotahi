@@ -37,6 +37,9 @@ const Button = styled(BaseButton)`
     props.fgColor ||
     (props.primary ? th('colorText') : th('colorTextReverse'))};
 
+  ${props =>
+    props.onClick
+      ? `
   &:hover {
     box-shadow: 0 1px 2px rgba(0, 0, 0, 0.3),
       inset 0 0 1000px rgba(255, 255, 255, 0.15);
@@ -46,6 +49,8 @@ const Button = styled(BaseButton)`
     box-shadow: inset 0 1px 4px rgba(0, 0, 0, 0.2),
       inset 0 0 1000px rgba(255, 255, 255, 0.15);
   }
+  `
+      : ''}
 `
 
 const LabelOnlySpan = styled.span`
@@ -59,7 +64,7 @@ const Spinner = styled.div`
 
   &:after {
     animation: ${rotate360} 1s linear infinite;
-    border: 3px solid ${props => props.fgColor};
+    border: 2.5px solid ${props => props.fgColor};
     border-color: ${props => props.fgColor} transparent
       ${props => props.fgColor} transparent;
     border-radius: 50%;
@@ -89,7 +94,8 @@ const ActionButton = ({
   isCompact,
   children,
   className,
-  dataCy,
+  dataTestid,
+  title,
 }) => {
   if (disabled)
     return (
@@ -123,7 +129,12 @@ const ActionButton = ({
   if (status === 'success')
     statusIndicator = (
       <IconContainer>
-        <Check color={fgColor} size={16} strokeWidth={3} />
+        <Check
+          color={fgColor}
+          data-testid="check-svg"
+          size={16}
+          strokeWidth={3}
+        />
       </IconContainer>
     )
   if (status === 'failure')
@@ -137,11 +148,12 @@ const ActionButton = ({
     <Button
       bgColor={bgColor}
       className={className}
-      data-cy={dataCy}
+      data-testid={dataTestid}
       fgColor={fgColor}
       isCompact={isCompact}
-      onClick={onClick}
+      onClick={status !== 'pending' ? onClick : null}
       primary={primary}
+      title={title}
       type="button"
     >
       {statusIndicator ? (

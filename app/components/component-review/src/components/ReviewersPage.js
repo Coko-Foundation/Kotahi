@@ -9,16 +9,15 @@ const teamFields = `
   id
   role
   name
-  manuscript {
-    id
-  }
+  objectId
+  objectType
   members {
     id
     user {
       id
       username
       profilePicture
-      online
+      isOnline
       defaultIdentity {
         id
         identifier
@@ -80,7 +79,7 @@ const query = gql`
       id
       username
       profilePicture
-      online
+      isOnline
       admin
     }
 
@@ -98,7 +97,7 @@ const updateTeamMemberMutation = gql`
         id
         username
         profilePicture
-        online
+        isOnline
       }
       status
       isShared
@@ -116,7 +115,7 @@ const ReviewersPage = ({ match, history }) => {
       cache.modify({
         id: cache.identify({
           __typename: 'Manuscript',
-          id: revisedReviewersObject.manuscript.id,
+          id: revisedReviewersObject.objectId,
         }),
         fields: {
           teams(existingTeamRefs = []) {

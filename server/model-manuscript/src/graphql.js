@@ -6,6 +6,10 @@ const config = require('config')
 const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
+const { raw } = require('objection')
+const { importManuscripts } = require('./manuscriptCommsUtils')
+const Team = require('../../model-team/src/team')
+const TeamMember = require('../../model-team/src/team_member')
 
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
@@ -16,6 +20,7 @@ const {
   fixMissingValuesInFiles,
   hasEvaluations,
   stripConfidentialDataFromReviews,
+  buildQueryForManuscriptSearchFilterAndOrder,
 } = require('./manuscriptUtils')
 
 const { applyTemplate, generateCss } = require('../../pdfexport/applyTemplate')
@@ -37,9 +42,6 @@ const {
 
 const sendEmailNotification = require('../../email-notifications')
 
-const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
-const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
-const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
 const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
 const validateApiToken = require('../../utils/validateApiToken')
 const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
@@ -52,11 +54,6 @@ const {
   getReviewForm,
   getDecisionForm,
 } = require('../../model-review/src/reviewCommsUtils')
-
-const SUBMISSION_FIELD_PREFIX = 'submission'
-const META_FIELD_PREFIX = 'meta'
-
-let isImportInProgress = false
 
 const repackageForGraphql = async ms => {
   const result = { ...fixMissingValuesInFiles(ms) }
@@ -148,7 +145,7 @@ const isEditorOfManuscript = async (userId, manuscriptWithTeams) => {
     .filter(t => ['editor', 'handlingEditor', 'seniorEditor'].includes(t.role))
     .map(t => t.id)
 
-  const result = await models.TeamMember.query()
+  const result = await TeamMember.query()
     .select('id')
     .where({ userId })
     .whereIn('teamId', editorTeamIds)
@@ -326,59 +323,6 @@ const tryPublishingWebhook = async manuscriptId => {
   }
 }
 
-/** Filtering function to discard items with duplicate fields */
-const discardDuplicateFields = (item, index, self) =>
-  self.findIndex(x => x.field === item.field) === index
-
-/** Checks if the field exists in the form and is validly named (not causing risk of sql injection),
- * and if so returns the groupName ('meta' or 'submission') and the field name.
- * Also returns valuesAreKeyedObjects, which indicates whether values for this field
- * are key-value pairs as opposed to strings.
- */
-const getSafelyNamedJsonbFieldInfo = (fieldName, submissionForm) => {
-  const groupName = [SUBMISSION_FIELD_PREFIX, META_FIELD_PREFIX].find(x =>
-    fieldName.startsWith(`${x}.`),
-  )
-
-  if (!groupName) return null
-
-  const field =
-    submissionForm &&
-    submissionForm.structure.children.find(f => f.name === fieldName)
-
-  if (!field) {
-    console.warn(`Ignoring unknown field "${fieldName}"`)
-    return null
-  }
-
-  const name = fieldName.substring(groupName.length + 1)
-
-  if (!/^[a-zA-Z]\w*$/.test(name)) {
-    console.warn(`Ignoring unsupported field "${fieldName}"`)
-    return null
-  }
-
-  return { groupName, name, valuesAreKeyedObjects: !!field.options }
-}
-
-/** Check that the field exists and is not dangerously named (to avoid sql injection) */
-const isValidNonJsonbField = (fieldName, submissionForm) => {
-  if (!/^[a-zA-Z]\w*$/.test(fieldName)) {
-    console.warn(`Ignoring unsupported field "${fieldName}"`)
-    return false
-  }
-
-  if (
-    !submissionForm ||
-    submissionForm.structure.children.find(f => f.name === fieldName)
-  ) {
-    console.warn(`Ignoring unknown field "${fieldName}"`)
-    return false
-  }
-
-  return true
-}
-
 const resolvers = {
   Mutation: {
     async createManuscript(_, vars, ctx) {
@@ -455,6 +399,7 @@ const resolvers = {
             role: 'author',
             name: 'Author',
             members: [{ user: { id: ctx.user } }],
+            objectType: 'manuscript',
           },
         ],
       }
@@ -515,42 +460,7 @@ const resolvers = {
       return updatedManuscript
     },
     importManuscripts(_, props, ctx) {
-      if (isImportInProgress) return false
-      isImportInProgress = true
-
-      const promises = []
-
-      if (process.env.INSTANCE_NAME === 'ncrc') {
-        promises.push(importArticlesFromBiorxiv(ctx))
-        promises.push(importArticlesFromPubmed(ctx))
-      } else if (process.env.INSTANCE_NAME === 'colab') {
-        promises.push(
-          importArticlesFromBiorxivWithFullTextSearch(ctx, [
-            'transporter*',
-            'pump*',
-            'gpcr',
-            'gating',
-            '*-gated',
-            '*-selective',
-            '*-pumping',
-            'protein translocation',
-          ]),
-        )
-      }
-
-      if (!promises.length) return false
-
-      Promise.all(promises)
-        .catch(error => console.error(error))
-        .finally(async () => {
-          isImportInProgress = false
-          const pubsub = await getPubsub()
-          pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
-            manuscriptsImportStatus: true,
-          })
-        })
-
-      return true
+      importManuscripts(ctx)
     },
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
@@ -609,7 +519,6 @@ const resolvers = {
     // TODO Rename to something like 'setReviewerResponse'
     async reviewerResponse(_, { action, teamId }, context) {
       const {
-        Team: TeamModel,
         Review: ReviewModel,
         // eslint-disable-next-line global-require
       } = require('@pubsweet/models') // Pubsweet models may initially be undefined, so we require only when resolver runs.
@@ -619,7 +528,7 @@ const resolvers = {
           `Invalid action (reviewerResponse): Must be either "accepted" or "rejected"`,
         )
 
-      const team = await TeamModel.query()
+      const team = await Team.query()
         .findById(teamId)
         .withGraphFetched('members')
 
@@ -630,10 +539,10 @@ const resolvers = {
           team.members[i].status = action
       }
 
-      await new TeamModel(team).saveGraph()
+      await new Team(team).saveGraph()
 
       const existingReview = await ReviewModel.query().where({
-        manuscriptId: team.manuscriptId,
+        manuscriptId: team.objectId,
         userId: context.user,
       })
 
@@ -644,7 +553,7 @@ const resolvers = {
           isHiddenReviewerName: true,
           isHiddenFromAuthor: true,
           userId: context.user,
-          manuscriptId: team.manuscriptId,
+          manuscriptId: team.objectId,
           jsonData: '{}',
         }
 
@@ -664,7 +573,7 @@ const resolvers = {
           reviewer.username || reviewer.defaultIdentity.name || ''
 
         const manuscript = await models.Manuscript.query()
-          .findById(team.manuscriptId)
+          .findById(team.objectId)
           .withGraphFetched(
             '[teams.[members.[user.[defaultIdentity]]], submitter.[defaultIdentity], channels]',
           )
@@ -701,6 +610,14 @@ const resolvers = {
           return team
         }
 
+        let instance
+
+        if (config['notification-email'].use_colab) {
+          instance = 'colab'
+        } else {
+          instance = 'generic'
+        }
+
         const data = {
           articleTitle: manuscript.meta.title,
           authorName:
@@ -709,6 +626,7 @@ const resolvers = {
             '',
           receiverName,
           reviewerName,
+          instance,
           shortId: manuscript.shortId,
         }
 
@@ -885,7 +803,7 @@ const resolvers = {
             .resultSize()) > 0
 
         if (!reviewerExists) {
-          await new models.TeamMember({
+          await new TeamMember({
             teamId: existingTeam.id,
             status,
             userId,
@@ -897,8 +815,9 @@ const resolvers = {
 
       // Create a new team of reviewers if it doesn't exist
 
-      const newTeam = await new models.Team({
-        manuscriptId,
+      const newTeam = await new Team({
+        objectId: manuscriptId,
+        objectType: 'manuscript',
         members: [{ status, userId }],
         role: 'reviewer',
         name: 'Reviewers',
@@ -914,7 +833,7 @@ const resolvers = {
         .where('role', 'reviewer')
         .first()
 
-      await models.TeamMember.query()
+      await TeamMember.query()
         .where({
           userId,
           teamId: reviewerTeam.id,
@@ -1160,28 +1079,26 @@ const resolvers = {
       return repackageForGraphql(manuscript)
     },
     async manuscriptsUserHasCurrentRoleIn(_, input, ctx) {
-      // Get all manuscript versions that this user has a role in
-      const teamMemberManuscripts = await models.TeamMember.query()
-        .where({ userId: ctx.user })
-        .withGraphFetched('[team.[manuscript]]')
-
       // Get IDs of the top-level manuscripts
-      const topLevelManuscriptIds = [
-        ...new Set(
-          teamMemberManuscripts.map(
-            teamMember =>
-              teamMember.team.manuscript.parentId ||
-              teamMember.team.manuscript.id,
+      const topLevelManuscripts = await models.Manuscript.query()
+        .distinct(
+          raw(
+            'coalesce(manuscripts.parent_id, manuscripts.id) AS top_level_id',
           ),
-        ),
-      ]
+        )
+        .join('teams', 'manuscripts.id', '=', 'teams.object_id')
+        .join('team_members', 'teams.id', '=', 'team_members.team_id')
+        .where('team_members.user_id', ctx.user)
 
       // Get those top-level manuscripts with all versions, all with teams and members
       const manuscripts = await models.Manuscript.query()
         .withGraphFetched(
           '[teams.[members], manuscriptVersions(orderByCreated).[teams.[members]]]',
         )
-        .whereIn('id', topLevelManuscriptIds)
+        .whereIn(
+          'id',
+          topLevelManuscripts.map(m => m.topLevelId),
+        )
         .orderBy('created', 'desc')
 
       const filteredManuscripts = []
@@ -1268,86 +1185,35 @@ const resolvers = {
     async paginatedManuscripts(_, { sort, offset, limit, filters }, ctx) {
       const submissionForm = await Form.findOneByField('purpose', 'submit')
 
-      const query = models.Manuscript.query().where({
-        parentId: null,
-        isHidden: null,
-      })
-
-      if (sort) {
-        const sortDirection = sort.isAscending ? 'ASC' : 'DESC'
-
-        const jsonbField = getSafelyNamedJsonbFieldInfo(
-          sort.field,
-          submissionForm,
-        )
-
-        if (jsonbField) {
-          query.orderByRaw(
-            `LOWER(${jsonbField.groupName}->>'${jsonbField.name}') ${sortDirection}, id ${sortDirection}`,
-          )
-        } else if (isValidNonJsonbField(sort.field, submissionForm)) {
-          query.orderBy(sort.field, sort.isAscending ? null : 'DESC')
-        } else {
-          console.warn(`Could not sort on field "${sort.field}`)
-        }
-
-        query.orderBy('shortId', sortDirection) // Secondary ordering
-      } else {
-        // Give it some order to prevent it changing on refetch.
-        query.orderBy([
-          { column: 'created', order: 'desc' },
-          { column: 'shortId', order: 'desc' },
-        ])
-      }
-
-      filters.filter(discardDuplicateFields).forEach(filter => {
-        if (!/^[\w :./,()-<>=_]+$/.test(filter.value)) {
-          console.warn(
-            `Ignoring filter "${filter.field}" with illegal value "${filter.value}"`, // To prevent code injection!
-          )
-          return // i.e., continue.
-        }
-
-        const jsonbField = getSafelyNamedJsonbFieldInfo(
-          filter.field,
-          submissionForm,
-        )
-
-        if (jsonbField) {
-          if (jsonbField.valuesAreKeyedObjects) {
-            query.whereRaw(
-              `(${jsonbField.groupName}->'${jsonbField.name}')::jsonb \\? ?`,
-              filter.value,
-            )
-          } else {
-            query.whereRaw(
-              `${jsonbField.groupName}->>'${jsonbField.name}' = '%${filter.value}%'`,
-            )
-          }
-        } else if (filter.field === 'status') {
-          query.where({ status: filter.value })
-        } else {
-          console.warn(
-            `Could not filter on field "${filter.field}" by value "${filter.value}"`,
-          )
-        }
-      })
-
-      const totalCount = await query.resultSize()
-
-      if (limit) {
-        query.limit(limit)
-      }
-
-      if (offset) {
-        query.offset(offset)
-      }
-
-      const manuscripts = await query.withGraphFetched(
-        '[submitter, teams.[members.[user.[defaultIdentity]]], manuscriptVersions(orderByCreated).[submitter, teams.[members.[user.[defaultIdentity]]]]]',
+      const [rawQuery, rawParams] = buildQueryForManuscriptSearchFilterAndOrder(
+        sort,
+        offset,
+        limit,
+        filters,
+        submissionForm,
       )
 
-      return { totalCount, manuscripts }
+      const knex = models.Manuscript.knex()
+      const rawQResult = await knex.raw(rawQuery, rawParams)
+      let totalCount = 0
+      if (rawQResult.rowCount)
+        totalCount = parseInt(rawQResult.rows[0].full_count, 10)
+
+      const ids = rawQResult.rows.map(row => row.id)
+
+      const manuscripts = await models.Manuscript.query()
+        .findByIds(ids)
+        .withGraphFetched(
+          '[submitter, teams.members.user.defaultIdentity, manuscriptVersions(orderByCreated).[submitter, teams.members.user.defaultIdentity]]',
+        )
+
+      const result = rawQResult.rows.map(row => ({
+        ...manuscripts.find(m => m.id === row.id),
+        searchRank: row.rank,
+        searchSnippet: row.snippet,
+      }))
+
+      return { totalCount, manuscripts: result }
     },
     async manuscriptsPublishedSinceDate(_, { startDate, limit }, ctx) {
       const query = models.Manuscript.query()
@@ -1450,16 +1316,20 @@ const resolvers = {
 
       try {
         await axios.get(`https://api.crossref.org/works/${DOI}/agency`)
-
-        return {
-          isDOIValid: true,
-        }
+        return { isDOIValid: true }
       } catch (err) {
-        // eslint-disable-next-line
-        console.log(err)
-        return {
-          isDOIValid: false,
+        if (err.response.status === 404) {
+          // HTTP 404 "Not found" response. The DOI is not known by Crossref
+          // eslint-disable-next-line no-console
+          console.log(`DOI '${DOI}' not found on Crossref.`)
+          return { isDOIValid: false }
         }
+
+        console.warn(err)
+        // This is an unexpected HTTP response, possibly a 504 gateway timeout or other 5xx.
+        // Crossref API is probably unavailable or failing for some reason,
+        // and we should assume in its absence that the DOI is correct.
+        return { isDOIValid: true }
       }
     },
   },
@@ -1549,6 +1419,8 @@ const typeDefs = `
     evaluationsHypothesisMap: String
     currentRoles: [String]
     formFieldsToPublish: [FormFieldsToPublish!]!
+    searchRank: Float
+    searchSnippet: String
   }
 
   input ManuscriptInput {

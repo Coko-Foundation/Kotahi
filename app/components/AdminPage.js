@@ -1,4 +1,5 @@
 import React, { useContext, useCallback, useRef } from 'react'
+import { throttle } from 'lodash'
 import styled from 'styled-components'
 import { useQuery, gql } from '@apollo/client'
 import {
@@ -111,7 +112,7 @@ const AdminPage = () => {
   const journal = useContext(JournalContext)
   const [conversion] = useContext(XpubContext)
 
-  const { loading, error, data } = useQuery(GET_CURRENT_USER, {
+  const { loading, error, data, refetch } = useQuery(GET_CURRENT_USER, {
     fetchPolicy: 'network-only',
     // TODO: useCallback used because of bug: https://github.com/apollographql/apollo-client/issues/6301
     onCompleted: useCallback(dataTemp => updateStuff(dataTemp), []),
@@ -211,8 +212,20 @@ const AdminPage = () => {
     links.push({ link: profileLink, name: 'My profile', icon: 'user' })
   }
 
+  // Throttled refetch query `currentUser` once every 2mins
+  const throttledRefetch = throttle(refetch, 120000, { trailing: false })
+
+  // Triggered by captured events onClick and onKeyDown
+  const handleEvent = e => {
+    throttledRefetch()
+  }
+
   return (
-    <Root converting={conversion.converting}>
+    <Root
+      converting={conversion.converting}
+      onClickCapture={handleEvent}
+      onKeyDownCapture={handleEvent}
+    >
       <Menu
         brand={journal.metadata.name}
         brandLink={homeLink}

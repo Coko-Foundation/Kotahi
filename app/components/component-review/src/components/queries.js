@@ -44,9 +44,8 @@ const manuscriptFields = `
     id
     name
     role
-    manuscript {
-      id
-    }
+    objectId
+    objectType
     members {
       id
       user {

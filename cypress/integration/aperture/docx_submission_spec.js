@@ -11,21 +11,14 @@ import { dashboard } from '../../support/routes'
 describe('Upload manuscript test', () => {
   it('can upload a manuscript and some metadata', () => {
     // task to restore the database as per the  dumps/initialState.sql
-    cy.task('restore', 'initialState')
+    cy.task('restore', 'commons/bootstrap')
     cy.task('seedForms')
 
     // login as author
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.author, dashboard)
+      cy.login(name.role.author.name, dashboard)
     })
 
-    // enter email
-    cy.contains('Enter Email').click()
-    cy.get('#enter-email').type('emily@gmail.com')
-
-    // submit the email
-    cy.contains('Next').click()
-    Menu.clickDashboard()
     // Click on new submission
     cy.get('button').contains('＋ New submission').click()
 
@@ -46,10 +39,6 @@ describe('Upload manuscript test', () => {
 
       DashboardPage.getSectionTitleWithText('My Submissions')
       DashboardPage.getSubmissionTitle().should('contain', data.title3)
-
-      // task to dump data in dumps/submission_complete.sql
-
-      cy.task('dump', 'submission_complete')
     })
   })
 
@@ -61,7 +50,7 @@ describe('Upload manuscript test', () => {
     cy.fixture('submission_form_data').then(data => {
       cy.fixture('role_names').then(name => {
         // login as admin
-        cy.login(name.role.admin, dashboard)
+        cy.login(name.role.admin.name, dashboard)
 
         // enter email
         cy.contains('Enter Email').click()
@@ -88,9 +77,6 @@ describe('Upload manuscript test', () => {
         ControlPage.clickSubmit()
       })
     })
-
-    // task to dump data in dumps/senior_editor_assigned.sql
-    cy.task('dump', 'senior_editor_assigned')
 
     cy.contains('Dashboard').click()
   })

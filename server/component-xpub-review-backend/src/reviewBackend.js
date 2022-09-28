@@ -11,7 +11,9 @@ const authBearer = passport.authenticate('bearer', { session: false })
 module.exports = app => {
   app.patch('/api/make-invitation', authBearer, async (req, res, next) => {
     /* eslint-disable-next-line global-require */
-    const { User, Fragment, Team, Collection } = require('@pubsweet/models')
+    const { User, Fragment, Collection } = require('@pubsweet/models')
+    /* eslint-disable-next-line global-require */
+    const Team = require('../../model-team/src/team')
 
     try {
       const version = await Fragment.find(req.body.versionId)
@@ -85,7 +87,8 @@ module.exports = app => {
         {
           role: 'reviewer',
           name: 'Reviewer',
-          manuscriptId: version.id,
+          objectId: version.id,
+          objectType: 'manuscript',
           members: [{ user: { id: reviewer[0].id } }],
         },
         { relate: true },

@@ -59,7 +59,11 @@ const ReviewNote = styled.div`
 `
 
 const CompletedIcon = () => (
-  <div style={{ display: 'inline-block' }} title="Completed">
+  <div
+    data-testid="completed-svg"
+    style={{ display: 'inline-block' }}
+    title="Completed"
+  >
     <div
       style={{
         width: '0.3em',
@@ -78,21 +82,27 @@ const CompletedIcon = () => (
 )
 
 const InvitedIcon = () => (
-  <Icon color="cornflowerblue" key="inv" size={2} title="Invited">
-    send
-  </Icon>
+  <span data-testid="invited-svg">
+    <Icon color="cornflowerblue" key="inv" size={2} title="Invited">
+      send
+    </Icon>
+  </span>
 )
 
 const AcceptedIcon = () => (
-  <Icon color="lightgreen" key="inv" size={2} title="Accepted">
-    check
-  </Icon>
+  <span data-testid="accepted-svg">
+    <Icon color="lightgreen" key="inv" size={2} title="Accepted">
+      check
+    </Icon>
+  </span>
 )
 
 const RejectedIcon = () => (
-  <Icon color="darkred" key="inv" size={2} title="Declined">
-    slash
-  </Icon>
+  <span data-testid="rejected-svg">
+    <Icon color="darkred" key="inv" size={2} title="Declined">
+      slash
+    </Icon>
+  </span>
 )
 
 const reportTypes = ['Summary', 'Manuscript', 'Editor', 'Reviewer', 'Author']
@@ -134,7 +144,7 @@ const ReviewerNamesWithStatuses = ({ reviewers }) => {
   return (
     <div>
       {reviewers.map((r, i) => (
-        <span key={r.name}>
+        <span data-testid="reviewer-record" key={r.name}>
           {i > 0 ? `, ${r.name}` : r.name}
           {r.status === 'invited' && <InvitedIcon />}
           {r.status === 'accepted' && <AcceptedIcon />}
@@ -322,7 +332,7 @@ const Report = ({
   return (
     <Page>
       <Heading>Reports</Heading>
-      <SelectionLine>
+      <SelectionLine data-testid="report-options">
         Show{' '}
         <Select
           onChange={e => setReportType(e.target.value)}

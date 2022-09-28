@@ -15,17 +15,15 @@ export const GET_CURRENT_USER = gql`
         aff
         id
       }
-      online
+      isOnline
       _currentRoles {
         id
         roles
       }
       teams {
         id
-        manuscript {
-          id
-          status
-        }
+        objectId
+        objectType
         members {
           status
           user {
@@ -43,7 +41,7 @@ export const GET_USER = gql`
       id
       username
       profilePicture
-      online
+      isOnline
       email
     }
   }
@@ -64,9 +62,8 @@ const teamFields = `
   id
   name
   role
-  manuscript {
-    id
-  }
+  objectId
+  objectType
   members {
     id
     user {
@@ -157,7 +154,7 @@ export const GET_INVITATIONS_FOR_MANUSCRIPT = gql`
         id
         username
         profilePicture
-        online
+        isOnline
       }
     }
   }
@@ -189,7 +186,7 @@ export const SEARCH_USERS = gql`
       id
       username
       profilePicture
-      online
+      isOnline
     }
   }
 `
@@ -284,7 +281,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           }
           submitter {
             username
-            online
+            isOnline
             defaultIdentity {
               id
               identifier
@@ -296,7 +293,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
         }
         submitter {
           username
-          online
+          isOnline
           defaultIdentity {
             id
             identifier
@@ -305,6 +302,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           id
           profilePicture
         }
+        searchSnippet
       }
     }
 

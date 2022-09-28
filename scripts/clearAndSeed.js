@@ -28,13 +28,17 @@ const clearDb = async () => {
   }
 }
 
-const seed = async dumpSql => {
+const seed = async (dumpSql, opts) => {
+  const { clear = true } = opts
+
   let ready
 
   if (dumpSql) {
-    await clearDb()
+    if (clear) await clearDb()
     await db.raw(dumpSql)
-    logger.info('Cleared the database and restored from dump')
+
+    if (clear) logger.info('Cleared the database.')
+    logger.info('Restored from dump')
   } else {
     await createTables(true)
   }

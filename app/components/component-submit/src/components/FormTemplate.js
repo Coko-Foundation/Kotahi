@@ -23,7 +23,6 @@ import ThreadedDiscussion from '../../../component-formbuilder/src/components/bu
 import ActionButton from '../../../shared/ActionButton'
 import { hasValue } from '../../../../shared/htmlUtils'
 import FormWaxEditor from '../../../component-formbuilder/src/components/FormWaxEditor'
-import { createBlankSubmissionBasedOnForm } from './Submit'
 
 const Intro = styled.div`
   font-style: italic;
@@ -213,7 +212,7 @@ const InnerFormTemplate = ({
     return (
       <div>
         <ActionButton
-          dataCy={`${form.name
+          dataTestid={`${form.name
             .toLowerCase()
             .replace(/ /g, '-')
             .replace(/[^\w-]+/g, '')}-action-btn`}
@@ -518,6 +517,13 @@ const FormTemplate = ({
     )
   }
 
+  const createBlankSubmissionBasedOnForm = value => {
+    const allBlankedFields = {}
+    const fieldNames = value.children.map(field => field.name)
+    fieldNames.forEach(fieldName => set(allBlankedFields, fieldName, ''))
+    return allBlankedFields
+  }
+
   const initialValuesWithDummyValues = {
     ...createBlankSubmissionBasedOnForm(form),
     ...initialValues,
@@ -611,6 +617,7 @@ FormTemplate.propTypes = {
       PropTypes.shape({
         name: PropTypes.string,
         tags: PropTypes.arrayOf(PropTypes.string.isRequired),
+        // eslint-disable-next-line react/forbid-prop-types
         storedObjects: PropTypes.arrayOf(PropTypes.object),
       }).isRequired,
     ),

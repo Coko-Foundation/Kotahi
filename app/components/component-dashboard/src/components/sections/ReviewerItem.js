@@ -71,6 +71,7 @@ const ReviewerItem = ({ version, currentUser, reviewerRespond, urlFrag }) => {
                 Accept
               </Action>
               <Action
+                data-testid="reject-review"
                 onClick={e => {
                   e.stopPropagation()
                   reviewerRespond({

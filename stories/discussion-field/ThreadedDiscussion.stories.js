@@ -1,5 +1,5 @@
 import React from 'react'
-import ThreadedDiscussion from '../../app/components/component-formbuilder/src/components/builderComponents/ThreadedDiscussion'
+import ThreadedDiscussion from '../../app/components/component-formbuilder/src/components/builderComponents/ThreadedDiscussion/ThreadedDiscussion'
 import DesignEmbed from '../common/utils'
 
 export const Base = args => (
@@ -38,7 +38,7 @@ Base.args = {
         id: '20ca2a8d-d78e-4260-baed-86369992353f',
         username: 'Kotahi Author',
         profilePicture: null,
-        online: null,
+        isOnline: null,
       },
       createdAt: '2022-04-27 12:12:12',
       updatedAt: '2022-04-28 00:00:00',
@@ -54,7 +54,7 @@ Base.args = {
         id: '20ca2a8d-d78e-4260-baed-86369992353f',
         username: 'Kotahi Author',
         profilePicture: null,
-        online: null,
+        isOnline: null,
       },
       createdAt: '2022-04-27 00:00:00',
       updatedAt: '2022-04-28 00:00:00',
@@ -70,7 +70,7 @@ Base.args = {
         id: '20ca2a8d-d78e-4260-baed-86369992353f',
         username: 'Kotahi Author',
         profilePicture: null,
-        online: null,
+        isOnline: null,
       },
       createdAt: '2022-04-27 00:00:00',
       updatedAt: '2022-04-28 00:00:00',
@@ -85,7 +85,7 @@ Base.args = {
     id: '20ca2a8d-d78e-4260-baed-86369992353f',
     username: 'Kotahi Author',
     profilePicture: null,
-    online: null,
+    isOnline: null,
   },
 }
 

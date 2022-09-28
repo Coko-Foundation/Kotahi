@@ -3,17 +3,15 @@ import React, { useState } from 'react'
 import styled from 'styled-components'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
-import { Button, Checkbox } from '@pubsweet/ui'
+import { Checkbox } from '@pubsweet/ui'
+import { grid } from '@pubsweet/ui-toolkit'
 import ManuscriptRow from './ManuscriptRow'
 import {
   ManuscriptsTable,
   ManuscriptsHeaderRow,
   SelectAllField,
   SelectedManuscriptsNumber,
-  FloatRightButton,
-  Loader,
-  RefreshSpinnerWrapper,
-  RefreshText,
+  ControlsContainer,
 } from './style'
 import {
   Container,
@@ -24,20 +22,20 @@ import {
   Pagination,
   PaginationContainerShadowed,
   Columns,
+  RoundIconButton,
+  ActionButton,
 } from '../../shared'
 import { articleStatuses } from '../../../globals'
-import ShowChatButton from './ChatButtons'
 import MessageContainer from '../../component-chat/src/MessageContainer'
 import Modal from '../../component-modal/src'
 import BulkDeleteModal from './BulkDeleteModal'
 import getColumnsProps from './getColumnsProps'
 import getUriQueryParams from './getUriQueryParams'
 import FilterSortHeader from './FilterSortHeader'
+import SearchControl from './SearchControl'
 import { validateManuscriptSubmission } from '../../../shared/manuscriptUtils'
 
-const HeadingInFlexRow = styled(Heading)`
-  flex-grow: 10;
-`
+const URI_SEARCH_PARAM = 'search'
 
 const OuterContainer = styled(Container)`
   overflow: hidden;
@@ -51,7 +49,12 @@ const ManuscriptsPane = styled.div`
 
 const FlexRow = styled.div`
   display: flex;
+  gap: ${grid(1)};
   justify-content: space-between;
+`
+
+const FlexRowWithSmallGapAbove = styled(FlexRow)`
+  margin-top: 10px;
 `
 
 const Manuscripts = ({ history, ...props }) => {
@@ -87,6 +90,7 @@ const Manuscripts = ({ history, ...props }) => {
 
     if (query.length > 0) {
       newPath = `${newPath}?${query
+        .filter(x => x.value)
         .map(
           param =>
             `${encodeURIComponent(param.field)}=${encodeURIComponent(
@@ -100,9 +104,18 @@ const Manuscripts = ({ history, ...props }) => {
   }
 
   const setFilter = (fieldName, filterValue) => {
-    let revisedQuery = [...uriQueryParams].filter(x => x.field !== fieldName)
+    if (fieldName === URI_SEARCH_PARAM) return // In case a field happens to have the same name as the GET param we use for search
+    const revisedQuery = [...uriQueryParams].filter(x => x.field !== fieldName)
     revisedQuery.push({ field: fieldName, value: filterValue })
-    revisedQuery = revisedQuery.filter(x => !!x.value)
+    loadPageWithQuery(revisedQuery)
+  }
+
+  const applySearchQuery = query => {
+    const revisedQuery = [...uriQueryParams].filter(
+      x => x.field !== URI_SEARCH_PARAM,
+    )
+
+    revisedQuery.push({ field: URI_SEARCH_PARAM, value: query })
     loadPageWithQuery(revisedQuery)
   }
 
@@ -240,6 +253,10 @@ const Manuscripts = ({ history, ...props }) => {
     closeModalBulkDeleteConfirmation()
   }
 
+  const currentSearchQuery = uriQueryParams.find(
+    x => x.field === URI_SEARCH_PARAM,
+  )?.value
+
   const columnsProps = getColumnsProps(
     configuredColumnNames,
     fieldDefinitions,
@@ -253,6 +270,7 @@ const Manuscripts = ({ history, ...props }) => {
     toggleNewManuscriptCheck,
     setReadyToEvaluateLabel,
     urlFrag,
+    currentSearchQuery,
   )
 
   const channels = [
@@ -263,6 +281,53 @@ const Manuscripts = ({ history, ...props }) => {
   ]
 
   const hideChat = () => setIsAdminChatOpen(false)
+
+  const shouldAllowNewSubmission = ['elife', 'ncrc'].includes(
+    process.env.INSTANCE_NAME,
+  )
+
+  const shouldAllowBulkImport = ['ncrc', 'colab'].includes(
+    process.env.INSTANCE_NAME,
+  )
+
+  const shouldAllowBulkDelete = ['ncrc', 'colab'].includes(
+    process.env.INSTANCE_NAME,
+  )
+
+  const topRightControls = (
+    <ControlsContainer>
+      {shouldAllowNewSubmission && (
+        <ActionButton
+          onClick={() => history.push(`${urlFrag}/newSubmission`)}
+          primary
+        >
+          ＋ New submission
+        </ActionButton>
+      )}
+
+      {shouldAllowBulkImport && (
+        <ActionButton
+          onClick={importManuscripts}
+          status={isImporting ? 'pending' : ''}
+        >
+          {isImporting ? 'Refreshing' : 'Refresh'}
+        </ActionButton>
+      )}
+
+      <SearchControl
+        applySearchQuery={applySearchQuery}
+        currentSearchQuery={currentSearchQuery}
+      />
+
+      {!isAdminChatOpen && (
+        <RoundIconButton
+          iconName="MessageSquare"
+          onClick={() => setIsAdminChatOpen(true)}
+          title="Show admin discussion"
+        />
+      )}
+    </ControlsContainer>
+  )
 
   return (
     <OuterContainer>
@@ -280,63 +345,37 @@ const Manuscripts = ({ history, ...props }) => {
       <Columns>
         <ManuscriptsPane>
           <FlexRow>
-            <HeadingInFlexRow>Manuscripts</HeadingInFlexRow>
-
-            {['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) && (
-              <FloatRightButton
-                onClick={() => history.push(`${urlFrag}/newSubmission`)}
-                primary
-              >
-                ＋ New submission
-              </FloatRightButton>
-            )}
-
-            {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
-              <FloatRightButton
-                disabled={isImporting}
-                onClick={importManuscripts}
-                primary
-              >
-                {isImporting ? (
-                  <RefreshSpinnerWrapper>
-                    <RefreshText>Refreshing</RefreshText> <Loader />
-                  </RefreshSpinnerWrapper>
-                ) : (
-                  'Refresh'
-                )}
-              </FloatRightButton>
-            )}
-
-            {!isAdminChatOpen && (
-              <ShowChatButton onClick={() => setIsAdminChatOpen(true)} />
-            )}
+            <Heading>Manuscripts</Heading>
+            {topRightControls}
           </FlexRow>
-
-          {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
-            <SelectAllField>
-              <Checkbox
-                checked={
-                  manuscripts.filter(
-                    manuscript =>
-                      manuscript.status === articleStatuses.new &&
-                      !manuscript.submission.labels,
-                  ).length ===
-                    manuscripts.filter(manuscript =>
-                      selectedNewManuscripts.includes(manuscript.id),
-                    ).length && selectedNewManuscripts.length !== 0
-                }
-                label="Select All"
-                onChange={toggleAllNewManuscriptsCheck}
-              />
-              <SelectedManuscriptsNumber>{`${selectedNewManuscripts.length} articles selected`}</SelectedManuscriptsNumber>
-              <Button
-                disabled={selectedNewManuscripts.length === 0}
-                onClick={openModalBulkDeleteConfirmation}
-                primary
-              >
-                Delete
-              </Button>
-            </SelectAllField>
+          {shouldAllowBulkDelete && (
+            <FlexRowWithSmallGapAbove>
+              <SelectAllField>
+                <Checkbox
+                  checked={
+                    manuscripts.filter(
+                      manuscript =>
+                        manuscript.status === articleStatuses.new &&
+                        !manuscript.submission.labels,
+                    ).length ===
+                      manuscripts.filter(manuscript =>
+                        selectedNewManuscripts.includes(manuscript.id),
+                      ).length && selectedNewManuscripts.length !== 0
+                  }
+                  label="Select All"
+                  onChange={toggleAllNewManuscriptsCheck}
+                />
+                <SelectedManuscriptsNumber>{`${selectedNewManuscripts.length} articles selected`}</SelectedManuscriptsNumber>
+                <ActionButton
+                  disabled={selectedNewManuscripts.length === 0}
+                  isCompact
+                  onClick={openModalBulkDeleteConfirmation}
+                  primary={selectedNewManuscripts.length > 0}
+                >
+                  Delete
+                </ActionButton>
+              </SelectAllField>
+            </FlexRowWithSmallGapAbove>
           )}
 
           <div>

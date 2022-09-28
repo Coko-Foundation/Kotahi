@@ -1,3 +1,4 @@
+/* eslint-disable padding-line-between-statements */
 /// <reference types="Cypress" />
 /**
  * Page object representing the Control page,
@@ -5,55 +6,69 @@
  * ('Manuscripts I'm editor of' section)
  * or through the Manuscripts page.
  */
-const MANAGE_REVIEWERS_BUTTON = '[class*=General__SectionRow] > a'
 
-const DECISION_FIELD = '[contenteditable="true"]'
-
-const PUBLISH_BUTTON = '[class*=General__SectionAction-sc-1chiust-11] > .sc-bkzZxe'
-const PUBLISH_INFO_MESSAGE = 'General__SectionActionInfo-sc-1chiust-12'
-const ASSIGN_SENIOR_EDITOR_DROPDOWN = 'Assign seniorEditor'
-const ASSIGN_HANDLING_EDITOR_DROPDOWN = 'Assign handlingEditor'
-const ASSIGN_EDITOR_DROPDOWN = 'Assign editor'
-const DROPDOWN_OPTION_LIST = ' [class*=MenuList] > [id*=option]'
-const METADATA_TAB = 'HiddenTabs__TabContainer-sc-11z25w4-2'
-const METADATA_CELL = 'VersionSwitcher__Title'
-const ERROR_TEXT = 'style__ErrorText-'
-const ACCEPT_RADIO_BUTTON = '.ALZiZ > .sc-dmlrTW'
-const REVISE_RADIO_BUTTON = 'span[color=orange]'
-const REJECT_RADIO_BUTTON = 'span[color=red]'
-const SUBMIT_BUTTON = '.ActionButton__BaseButton-sc-1ja3w98-0'
-const FORM_STATUS = 'style__FormStatus-'
-const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
-const SHOW_BUTTON = '[class*=DecisionReview__Controls]>[type*=button]'
-
-const REVIEW_MESSAGE =
-  '[class*=DecisionReview__Root] [class*=SimpleWaxEditor__ReadOnly] > div > [class*=paragraph]'
-
-const REVIEW_OPTION_CHECKBOX =
-  '[class*=DecisionReview__StyledCheckbox] > [type=checkbox]'
-
-const REVIEWER_NAME = '[class*=DecisionReview__Name]'
-const NO_REVIEWS_MESSAGE = '[class*=General__SectionRow]'
-const ACCEPTED_TO_PUBLISH_REVIEW_ICON = '[class*=DecisionReview__Name] > svg'
+// Emai Notifications
+const NOTIFY_BUTTON = '[class*=emailNotifications__RowGridStyled] > button'
+const EMAIL_NOTIFICATION_LOG_MESSAGE = 'style__InnerMessageContainer'
 const EMAIL_NOTIFICATION_SECTION = 'emailNotifications__RowGridStyled'
 const NEW_USER_CHECKBOX = '[class*=emailNotifications__RowGridStyled] > label'
 const NEW_USER_EMAIL_FIELD = '[placeholder="Email"]'
 const NEW_USER_NAME_FIELD = '[placeholder="Name"]'
-
 const EMAIL_NOTIFICATION_DROPDOWNS =
   '[class*=emailNotifications__RowGridStyled] > div'
 
-const NOTIFY_BUTTON = '[class*=emailNotifications__RowGridStyled] > button'
+const ASSIGN_SENIOR_EDITOR_DROPDOWN = 'Assign seniorEditor'
+const ASSIGN_HANDLING_EDITOR_DROPDOWN = 'Assign handlingEditor'
+const ASSIGN_EDITOR_DROPDOWN = 'Assign editor'
+
+// Reviews
+const MANAGE_REVIEWERS_BUTTON = '[class*=General__SectionRow] > a'
+const DECISION_FIELD = '[contenteditable="true"]'
+
+// Publishing
+const PUBLISH_BUTTON =
+  '[class*=General__SectionAction-sc-1chiust-11] > .sc-bkzZxe'
+const PUBLISH_INFO_MESSAGE = 'General__SectionActionInfo-sc-1chiust-12'
+
+// Review
+const REVIEW_MESSAGE =
+  '[class*=DecisionReview__Root] [class*=SimpleWaxEditor__ReadOnly] > div > [class*=paragraph]'
+const REVIEW_OPTION_CHECKBOX =
+  '[class*=DecisionReview__StyledCheckbox] > [type=checkbox]'
+const REVIEWER_NAME = '[class*=DecisionReview__Name]'
+const NO_REVIEWS_MESSAGE = '[class*=General__SectionRow]'
+const ACCEPTED_TO_PUBLISH_REVIEW_ICON = '[class*=DecisionReview__Name] > svg'
+
+// Chat
+const MESSAGE_CONTAINER = '.General__Chat-sc-1chiust-18'
 const CHAT_TAB = '[class*=General__Chat] [data-test-id=tab-container]'
-const EMAIL_NOTIFICATION_LOG_MESSAGE = 'style__InnerMessageContainer'
+
+// Multiple Elements
+const SUBMIT_BUTTON = 'decision-action-btn' // Also Matches Notify Button
+
+const DROPDOWN_OPTION_LIST = ' [class*=MenuList] > [id*=option]'
+const METADATA_TAB = 'HiddenTabs__TabContainer-sc-11z25w4-2'
+const METADATA_CELL = 'VersionSwitcher__Title'
+const ERROR_TEXT = 'style__ErrorText-'
+const FORM_STATUS = 'style__FormStatus-'
+const SHOW_BUTTON = '[class*=DecisionReview__Controls]>[type*=button]'
+
+// Decision Form
+const DECISION_TEXT_INPUT =
+  ':nth-child(1) > :nth-child(2) > :nth-child(1) > :nth-child(1) > .EditorStyles__SimpleGrid-k4rcxo-9 > .EditorStyles__SimpleEditorDiv-k4rcxo-11'
+
+const ACCEPT_RADIO_BUTTON = '.cLexBK > .sc-dmlrTW'
+const REVISE_RADIO_BUTTON = '.cABLOw > .sc-dmlrTW'
+const REJECT_RADIO_BUTTON = '.hgPkBe > .sc-dmlrTW'
+const DECISION_SUBMIT_BUTTON = 'decision-action-btn'
+const DECISION_FILE_INPUT = 'input[type=file]'
+
+const CHECK_SVG = 'check-svg'
 
 // eslint-disable-next-line import/prefer-default-export
 export const ControlPage = {
   getManageReviewersButton() {
     return cy.get(MANAGE_REVIEWERS_BUTTON)
-  },
-  getAssignEditor(nth) {
-    return cy.get(ASSIGN_EDITORS_DROPDOWN).eq(nth)
   },
   clickManageReviewers() {
     this.getManageReviewersButton().click()
@@ -125,7 +140,7 @@ export const ControlPage = {
     this.getRejectRadioButton().click()
   },
   getSubmitButton() {
-    return cy.get(SUBMIT_BUTTON)
+    return cy.getByDataTestId(SUBMIT_BUTTON)
   },
   clickSubmit() {
     this.getSubmitButton().click()
@@ -220,6 +235,9 @@ export const ControlPage = {
   clickNotify() {
     this.getNotifyButton().click()
   },
+  getMessageContainer() {
+    return cy.get(MESSAGE_CONTAINER)
+  },
   getChatTab() {
     return cy.get(CHAT_TAB)
   },
@@ -234,5 +252,28 @@ export const ControlPage = {
   },
   getWorkflowTab() {
     return cy.get('[data-test-id=tab-container]').contains('Workflow')
+  },
+
+  // Decision Form
+  getDecisionTextInput() {
+    return cy.get(DECISION_TEXT_INPUT)
+  },
+  clickDecisionTextInput() {
+    return this.getDecisionTextInput().click()
+  },
+  getDecisionFileInput() {
+    return cy.get(DECISION_FILE_INPUT)
+  },
+  getSubmitDecisionButton() {
+    return cy.getByDataTestId(DECISION_SUBMIT_BUTTON)
+  },
+  clickSubmitDecisionButton() {
+    this.getSubmitDecisionButton().click()
+  },
+  getCheckSvg() {
+    return cy.getByDataTestId(CHECK_SVG)
+  },
+  checkSvgExists() {
+    this.getCheckSvg().should('exist')
   },
 }
