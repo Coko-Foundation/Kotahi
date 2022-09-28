@@ -77,6 +77,7 @@ const archiveOldManuscripts = async () => {
   await models.Manuscript.query()
     .update({ isHidden: true })
     .where('created', '<', cutoffDate)
+    .where('status', 'new')
     .where(function () {
       this.whereRaw(`submission->>'labels' = ''`).orWhereRaw(
         `submission->>'labels' IS NULL`,
