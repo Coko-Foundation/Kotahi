@@ -268,6 +268,8 @@ module.exports = {
     maximumWidthForMediumImages: '',
   },
   manuscripts: {
+    autoImportHourUtc: '',
+    archivePeriodDays: '',
     allowManualImport: '',
   },
 }

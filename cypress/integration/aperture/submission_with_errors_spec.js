@@ -8,21 +8,15 @@ import { FormsPage } from '../../page-object/forms-page'
 describe('Submission with errors test', () => {
   describe('Form builder', () => {
     it('views a form field', () => {
-      // task to restore the database as per the  dumps/initialState.sql
-      cy.task('restore', 'initialState')
+      // task to restore the database as per the  dumps/commons/bootstrap.sql
+      cy.task('restore', 'commons/bootstrap')
       cy.task('seedForms')
 
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
-        cy.login(name.role.admin, dashboard)
+        cy.login(name.role.admin.name, dashboard)
       })
-      // enter email
-      cy.contains('Enter Email').click()
-      cy.get('#enter-email').type('admin@gmail.com')
-
-      // submit the email
-      cy.contains('Next').click()
 
       // enter the from page and assert the fileds
       Menu.clickForms()
@@ -47,13 +41,8 @@ describe('Submission with errors test', () => {
       // login as author and attempt to submit an incomplete submission form
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
-        cy.login(name.role.author, dashboard)
-        // enter email
-        cy.contains('Enter Email').click()
-        cy.get('#enter-email').type('emily@gmail.com')
+        cy.login(name.role.author.name, dashboard)
 
-        // submit the email
-        cy.contains('Next').click()
         Menu.clickDashboard()
         // Click on new submission
         cy.get('button').contains('＋ New submission').click()

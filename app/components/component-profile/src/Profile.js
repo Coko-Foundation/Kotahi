@@ -40,6 +40,7 @@ const GET_CURRENT_USER = gql`
         aff
         id
       }
+      isOnline
     }
   }
 `
@@ -59,12 +60,13 @@ const GET_OTHER_USER = gql`
         aff
         id
       }
+      isOnline
     }
     user(id: $id, username: $username) {
       id
       username
       profilePicture
-      online
+      isOnline
       email
       admin
       defaultIdentity {
@@ -150,7 +152,9 @@ const Profile = ({ match }) => {
 
   const { loading, error, data, client, refetch } = useQuery(
     id ? GET_OTHER_USER : GET_CURRENT_USER,
-    id ? { variables: { id } } : {},
+    id
+      ? { variables: { id }, fetchPolicy: 'network-only' }
+      : { fetchPolicy: 'network-only' },
   )
 
   // Mutations and Queries

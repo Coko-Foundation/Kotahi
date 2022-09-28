@@ -14,7 +14,7 @@ export const GET_USER = gql`
       id
       username
       profilePicture
-      online
+      isOnline
     }
   }
 `
@@ -68,7 +68,7 @@ const Avatar = props => {
       style={style}
       type="user"
     >
-      {showOnlineStatus && user?.online && (
+      {showOnlineStatus && user?.isOnline && (
         <OnlineIndicator onlineBorderColor={onlineBorderColor} />
       )}
       <ConditionalWrap

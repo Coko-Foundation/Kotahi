@@ -496,6 +496,7 @@ CREATE TABLE "public"."users" (
     "type" text NOT NULL,
     "profile_picture" text,
     "online" bool,
+    "last_online" timestamptz,
     PRIMARY KEY ("id")
 );
 
@@ -579,9 +580,9 @@ INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team
 INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "members", "owners", "global", "type", "manuscript_id") VALUES
 ('0c00d183-ed7e-4273-b0a2-eb56c75de1f4', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Author', 'author', NULL, NULL, NULL, 'team', '10bc66ee-dc1a-4ac2-82d1-b37cd8e0fc15');
 
-INSERT INTO "public"."users" ("id", "created", "updated", "admin", "email", "username", "password_hash", "teams", "password_reset_token", "password_reset_timestamp", "type", "profile_picture", "online") VALUES
-('716a83b2-9749-4933-9418-fca2544f5282', '2022-08-10 02:19:19.125+00', '2022-08-10 02:22:49.437+00', NULL, 'emily@kotahiexample.com', 'Emily Clay', NULL, NULL, NULL, NULL, 'user', NULL, NULL),
-('9160da05-15ce-4836-8cb2-45c6c1855318', '2022-08-10 02:15:11.329+00', '2022-08-10 02:15:29.074+00', 't', 'sinead@example.com', '0000000256415729', NULL, NULL, NULL, NULL, 'user', NULL, NULL);
+INSERT INTO "public"."users" ("id", "created", "updated", "admin", "email", "username", "password_hash", "teams", "password_reset_token", "password_reset_timestamp", "type", "profile_picture", "online", "last_online") VALUES
+('716a83b2-9749-4933-9418-fca2544f5282', '2022-08-10 02:19:19.125+00', '2022-08-10 02:22:49.437+00', NULL, 'emily@kotahiexample.com', 'Emily Clay', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
+('9160da05-15ce-4836-8cb2-45c6c1855318', '2022-08-10 02:15:11.329+00', '2022-08-10 02:15:29.074+00', 't', 'sinead@example.com', '0000000256415729', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL);
 
 ALTER TABLE "public"."article_import_history" ADD FOREIGN KEY ("source_id") REFERENCES "public"."article_import_sources"("id");
 ALTER TABLE "public"."channel_members" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;

@@ -263,7 +263,7 @@ export const SideMenu = styled.div`
   background: ${th('colorBackgroundToolBar')};
   border-right: ${th('borderWidth')} ${th('borderStyle')} ${th('colorBorder')};
   height: calc(100% - 16px);
-  min-width: 250px;
+  min-width: 200px; /* We can shrink this now if we want! */
 `
 export const WaxSurfaceScroll = styled.div`
   box-sizing: border-box;

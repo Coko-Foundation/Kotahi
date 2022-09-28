@@ -24,9 +24,6 @@ services:
         - review_shared=${REVIEW_SHARED}
         - review_hide=${REVIEW_HIDE}
         - hypothesis_allow_tagging=${HYPOTHESIS_ALLOW_TAGGING}
-        - autoimporttimeutc=${AUTO_IMPORT_TIME_UTC}
-        - archivePeriod=${ARCHIVE_PERIOD}
-        - allowManualImport=${ALLOW_MANUAL_IMPORT:-}
 
     ports:
       - ${SERVER_PORT:-3000}:${SERVER_PORT:-3000}
@@ -96,8 +93,9 @@ services:
       - S3_SECRET_ACCESS_KEY=${S3_SECRET_ACCESS_KEY:-nonRootPassword}
       - S3_BUCKET=${S3_BUCKET:-uploads}
       - AUTO_IMPORT_TIME_UTC=${AUTO_IMPORT_TIME_UTC:-true}
-      - ARCHIVE_PERIOD=${ARCHIVE_PERIOD:-true}
+      - ARCHIVE_PERIOD_DAYS=${ARCHIVE_PERIOD_DAYS:-true}
       - ALLOW_MANUAL_IMPORT=${ALLOW_MANUAL_IMPORT:-}
+      
 
     volumes:
       - ./uploads:/home/node/app/uploads

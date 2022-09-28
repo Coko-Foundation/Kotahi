@@ -44,6 +44,9 @@ const User = ({ user, currentUser }) => {
         </UserCombo>
       </Cell>
       <Cell>{convertTimestampToDate(user.created)}</Cell>
+      <Cell>
+        {user.lastOnline ? convertTimestampToDate(user.lastOnline) : '-'}
+      </Cell>
       <Cell>{user.admin ? 'yes' : ''}</Cell>
       <LastCell>
         <Action onClick={() => deleteUser({ variables: { id: user.id } })}>

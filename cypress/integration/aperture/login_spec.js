@@ -5,14 +5,15 @@ import { dashboard } from '../../support/routes'
 
 describe('Login test', () => {
   it('Can log in as admin (and logout)', () => {
-    // task to restore the database as per the  dumps/initialState.sql
-    cy.task('restore', 'initialState')
+    // task to restore the database as per the  dumps/commons/bootstrap.sql
+    cy.task('restore', 'commons/bootstrap')
+    cy.task('seed', 'new_user')
     cy.task('seedForms')
 
     // login as admin and validate admin is logged in
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.admin, dashboard)
+      cy.login(name.role.admin.name, dashboard)
 
       // enter email
       cy.contains('Enter Email').click()
@@ -21,12 +22,12 @@ describe('Login test', () => {
       // submit the email
       cy.contains('Next').click()
       // eslint-disable-next-line jest/valid-expect-in-promise
-      cy.task('createToken', name.role.admin).then(token => {
+      cy.task('createToken', name.role.admin.name).then(token => {
         cy.setToken(token)
         cy.visit(dashboard)
       })
 
-      Menu.getLoggedUserButton().should('contain', name.role.uuid)
+      Menu.getLoggedUserButton().should('contain', name.role.admin.username)
       Menu.getDashboardButton().should('be.visible')
       Menu.getLoggedUserButton().should('contain', 'admin')
 

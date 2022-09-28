@@ -5,21 +5,15 @@ import { dashboard } from '../../support/routes'
 
 describe('Form builder', () => {
   it('views a form field', () => {
-    // task to restore the database as per the  dumps/initialState.sql
-    cy.task('restore', 'initialState')
+    // task to restore the database as per the  dumps/commons/bootstrap.sql
+    cy.task('restore', 'commons/bootstrap')
     cy.task('seedForms')
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.admin, dashboard)
+      cy.login(name.role.admin.name, dashboard)
     })
-    // enter email
-    cy.contains('Enter Email').click()
-    cy.get('#enter-email').type('admin@gmail.com')
-
-    // submit the email
-    cy.contains('Next').click()
 
     // enter the from page and assert the fileds
     Menu.clickForms()
@@ -49,9 +43,9 @@ describe('Form builder', () => {
 
     // for review field
     cy.contains('Review').click()
-    FormsPage.getFormTitleTab(0).should('contain', 'Review Form')
+    FormsPage.getFormTitleTab(0).should('contain', 'Review')
     FormsPage.clickFormOption(1)
-    FormsPage.getNameField().should('have.value', 'authorFileName').clear()
+    FormsPage.getNameField().should('have.value', 'files').clear()
     cy.get('[name=name]').type('files')
     cy.contains('Update Field').click()
 
@@ -66,15 +60,15 @@ describe('Form builder', () => {
 
     // for decision field
     cy.contains('Decision').click()
-    FormsPage.getFormTitleTab(0).should('contain', 'Decision Form')
+    FormsPage.getFormTitleTab(0).should('contain', 'Decision')
     FormsPage.clickFormOption(1)
-    FormsPage.getNameField().should('have.value', 'fileName').clear()
+    FormsPage.getNameField().should('have.value', 'files').clear()
     cy.get('[name=name]').type('fileName')
     cy.contains('Update Field').click()
 
     // adding a field in decision form
     cy.contains('Add Field').click()
-    cy.contains('Choose in the list').click()
+    cy.contains('Choose in the list').should('be.visible').click()
     cy.get('button')
     cy.contains('VisualAbstract').click()
     cy.contains('Name (internal field name)').click()

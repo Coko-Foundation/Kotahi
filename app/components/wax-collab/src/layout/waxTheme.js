@@ -1,5 +1,7 @@
 import theme from '../../../../theme'
 
+// NOTE: this overrides the Kotahi default theme!
+
 const waxTheme = {
   ...theme,
   gridUnit: '4px',
@@ -13,7 +15,17 @@ const waxTheme = {
   colorBorder: '#EBEBF0',
   colorBackgroundHue: '#F1F5FF',
   colorBackgroundTabs: '#e1ebff',
-  fakeTextStyles: `p.paragraph {color: red;}`,
+  colorCitation: '#ccc',
+  colorAuthorName: 'blue',
+  colorAuthorGroup: 'blue',
+  colorArticleTitle: '#FF0340',
+  colorJournalTitle: '#7B61FF',
+  colorDoi: '#6CBA4E',
+  colorVolume: 'orange',
+  colorIssue: 'magenta',
+  colorYear: '#D29435',
+  colorFirstPage: 'lime',
+  colorLastPage: '#7599F8',
 }
 
 export default waxTheme

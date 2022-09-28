@@ -10,14 +10,17 @@ import { UsersPage } from '../users-page'
  * as well as the Forms, Users, Manuscripts options for admin users.
  * These options are available on all other pages.
  */
-const MENU_BUTTON = 'Menu__Item'
+const MENU_CONTAINER = 'menu-container'
 const USER_BUTTON = 'Menu__UserItem'
 const BACKGROUND = 'Menu__Root'
 const MESSAGE_NOT_AUTHORISED = 'AdminPage__Root'
 
 export const Menu = {
+  getMenuContainer() {
+    return cy.getByDataTestId(MENU_CONTAINER)
+  },
   getDashboardButton() {
-    return cy.getByContainsClass(MENU_BUTTON).contains('Dashboard')
+    return this.getMenuContainer().contains('Dashboard')
   },
   clickDashboard() {
     this.getDashboardButton().click()
@@ -28,7 +31,7 @@ export const Menu = {
     DashboardPage.getHeader().should('contain', 'Dashboard')
   },
   getFormsButton() {
-    return cy.getByContainsClass(MENU_BUTTON).contains('Forms')
+    return this.getMenuContainer().contains('Forms')
   },
   clickForms() {
     this.getFormsButton().click()
@@ -39,7 +42,7 @@ export const Menu = {
     FormsPage.getNameField().should('be.visible')
   },
   getUsersButton() {
-    return cy.getByContainsClass(MENU_BUTTON).contains('Users')
+    return this.getMenuContainer().contains('Users')
   },
   clickUsers() {
     this.getUsersButton().click()
@@ -50,7 +53,7 @@ export const Menu = {
     UsersPage.getTitle().should('be.visible')
   },
   getManuscriptsButton() {
-    return cy.getByContainsClass(MENU_BUTTON).contains('Manuscripts')
+    return this.getMenuContainer().contains('Manuscripts')
   },
   clickManuscripts() {
     this.getManuscriptsButton().click()
@@ -61,13 +64,13 @@ export const Menu = {
     ManuscriptsPage.getTableHeader().should('be.visible')
   },
   getReportsButton() {
-    return cy.getByContainsClass(MENU_BUTTON).contains('Reports')
+    return this.getMenuContainer().contains('Reports')
   },
   clickReports() {
     this.getReportsButton().click()
   },
   getMyProfileButton() {
-    return cy.getByContainsClass(MENU_BUTTON).contains('My profile')
+    return this.getMenuContainer().contains('My profile')
   },
   clickMyProfile() {
     this.getMyProfileButton().click()

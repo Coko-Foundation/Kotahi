@@ -25,22 +25,27 @@ const dumpFile = name => path.join(__dirname, '..', 'dumps', `${name}.sql`)
 // The values of this object are the usernames of the users
 // TODO: Refactor DBs and Code dependent on testUsers object to use proper usernames than numbers
 const testUsers = {
-  'Sherry Crofoot': '0000000276459921',
-  'Elaine Barnes': '0000000294294446',
-  'Gale Davis': '0000000159567341',
-  'Joane Pilger': '0000000318382441',
-  'Emily Clay': '0000000205642016', // Author
-  'Sinead Sullivan': '0000000256415729', // Admin
+  'Sherry Crofoot': 'sherry921',
+  'Elaine Barnes': 'elaine446',
+  'Gale Davis': 'gale431',
+  'Joane Pilger': 'joane441',
+  'Emily Clay': 'emily016', // Author
+  'Sinead Sullivan': 'sinead729', // Admin
   'Test Account': '000000032536230X',
 }
 
 module.exports = (on, config) => {
   on('task', {
-    // 'db:seed': () => seed(),
     restore: async name => {
       // eslint-disable-next-line no-console
       console.log(name, 'name')
-      return seed(readFileSync(dumpFile(name), 'utf-8'))
+
+      return seed(readFileSync(dumpFile(name), 'utf-8'), { clear: true })
+    },
+    seed: async name => {
+      console.log(name, 'name')
+      // Restore without clear
+      return seed(readFileSync(dumpFile(name), 'utf-8'), { clear: false })
     },
     createToken: async name => {
       const { User } = require('@pubsweet/models')

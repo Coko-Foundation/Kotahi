@@ -19,8 +19,7 @@ const EMAIL_NOTIFICATION_DROPDOWNS =
 
 const ASSIGN_SENIOR_EDITOR_DROPDOWN = 'Assign seniorEditor'
 const ASSIGN_HANDLING_EDITOR_DROPDOWN = 'Assign handlingEditor'
-const ASSIGN_EDITOR_DROPDOWN =
-  ':nth-child(2) > .General__SectionRow-sc-1chiust-8 > [class]'
+const ASSIGN_EDITOR_DROPDOWN = 'Assign editor'
 
 // Reviews
 const MANAGE_REVIEWERS_BUTTON = '[class*=General__SectionRow] > a'
@@ -45,7 +44,7 @@ const MESSAGE_CONTAINER = '.General__Chat-sc-1chiust-18'
 const CHAT_TAB = '[class*=General__Chat] [data-test-id=tab-container]'
 
 // Multiple Elements
-const SUBMIT_BUTTON = '.ActionButton__BaseButton-sc-1ja3w98-0' // Also Matches Notify Button
+const SUBMIT_BUTTON = 'decision-action-btn' // Also Matches Notify Button
 
 const DROPDOWN_OPTION_LIST = ' [class*=MenuList] > [id*=option]'
 const METADATA_TAB = 'HiddenTabs__TabContainer-sc-11z25w4-2'
@@ -61,7 +60,7 @@ const DECISION_TEXT_INPUT =
 const ACCEPT_RADIO_BUTTON = '.cLexBK > .sc-dmlrTW'
 const REVISE_RADIO_BUTTON = '.cABLOw > .sc-dmlrTW'
 const REJECT_RADIO_BUTTON = '.hgPkBe > .sc-dmlrTW'
-const DECISION_SUBMIT_BUTTON = '[data-cy=decision-action-btn]'
+const DECISION_SUBMIT_BUTTON = 'decision-action-btn'
 const DECISION_FILE_INPUT = 'input[type=file]'
 
 const CHECK_SVG = 'check-svg'
@@ -141,7 +140,7 @@ export const ControlPage = {
     this.getRejectRadioButton().click()
   },
   getSubmitButton() {
-    return cy.get(SUBMIT_BUTTON)
+    return cy.getByDataTestId(SUBMIT_BUTTON)
   },
   clickSubmit() {
     this.getSubmitButton().click()
@@ -266,7 +265,7 @@ export const ControlPage = {
     return cy.get(DECISION_FILE_INPUT)
   },
   getSubmitDecisionButton() {
-    return cy.get(DECISION_SUBMIT_BUTTON)
+    return cy.getByDataTestId(DECISION_SUBMIT_BUTTON)
   },
   clickSubmitDecisionButton() {
     this.getSubmitDecisionButton().click()

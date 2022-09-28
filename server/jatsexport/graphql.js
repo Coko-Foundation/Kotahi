@@ -7,6 +7,7 @@ const validateJats = require('./validation')
 const makeZippedJats = require('./makeZippedJats')
 
 const failXML = false // if this is true, we pass errorJats (which is invalid XML) to the parser
+const skipValidation = false
 
 const errorJats = `<article xmlns:mml="http://www.w3.org/1998/Math/MathML" xmlns:xlink="http://www.w3.org/1999/xlink" xml:lang="en" dtd-version="1.3">
 <front>
@@ -42,19 +43,22 @@ const jatsHandler = async manuscriptId => {
 
   // check if the output is valid XML – this is NOT checking whether this is valid JATS
   let parseError = null
-  const xmlResult = XMLValidator.validate(failXML ? errorJats : jats) // this returns true if it's valid, error object if not
 
-  if (typeof xmlResult === 'object') {
-    parseError = xmlResult
-    return { jats, error: parseError }
-  }
+  if (!skipValidation) {
+    const xmlResult = XMLValidator.validate(failXML ? errorJats : jats) // this returns true if it's valid, error object if not
 
-  // if we have valid XML, then check for valid jats
+    if (typeof xmlResult === 'object') {
+      parseError = xmlResult
+      return { jats, error: parseError }
+    }
 
-  const jatsResult = validateJats(jats) // this returns empty array if it's valid, array of errors if not
+    // if we have valid XML, then check for valid jats
 
-  if (jatsResult.length) {
-    parseError = jatsResult
+    const jatsResult = validateJats(jats) // this returns empty array if it's valid, array of errors if not
+
+    if (jatsResult.length) {
+      parseError = jatsResult
+    }
   }
 
   return { jats, error: parseError }

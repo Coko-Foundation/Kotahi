@@ -1,7 +1,6 @@
-const { logger } = require('@coko/server')
+const { logger, fileStorage } = require('@coko/server')
 const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
-const { existsSync } = require('fs')
-const path = require('path')
+const { parseISO, addSeconds } = require('date-fns')
 const models = require('@pubsweet/models')
 const config = require('config')
 
@@ -55,25 +54,10 @@ const resolvers = {
     // Authentication
     async currentUser(_, vars, ctx) {
       if (!ctx.user) return null
-      const avatarPlaceholder = '/profiles/default_avatar.svg'
-      const user = await models.User.find(ctx.user)
-      const profilePicture = user.profilePicture ? user.profilePicture : ''
 
-      const profilePicturePath = path.join(
-        __dirname,
-        '../../..',
-        profilePicture,
-      )
-
-      if (
-        profilePicture !== avatarPlaceholder &&
-        !existsSync(profilePicturePath)
-      ) {
-        await models.User.query()
-          .update({ profilePicture: avatarPlaceholder })
-          .where('id', user.id)
-        user.profilePicture = avatarPlaceholder
-      }
+      const user = await models.User.query().patchAndFetchById(ctx.user, {
+        lastOnline: new Date(Date.now()),
+      })
 
       // eslint-disable-next-line no-underscore-dangle
       user._currentRoles = await user.currentRoles()
@@ -331,6 +315,7 @@ const resolvers = {
     },
   },
   User: {
+    isOnline: user => user.isOnline(),
     async defaultIdentity(parent, args, ctx) {
       const identity = await models.Identity.query()
         .where({ userId: parent.id, isDefault: true })
@@ -344,6 +329,44 @@ const resolvers = {
       })
 
       return identities
+    },
+    async profilePicture(parent, args, ctx) {
+      const user = await models.User.query()
+        .findById(parent.id)
+        .withGraphFetched('[file]')
+
+      const avatarPlaceholder = '/profiles/default_avatar.svg'
+
+      if (
+        user.file &&
+        user.profilePicture &&
+        user.profilePicture !== avatarPlaceholder
+      ) {
+        const params = new Proxy(new URLSearchParams(user.profilePicture), {
+          get: (searchParams, prop) => searchParams.get(prop),
+        })
+
+        const creationDate = parseISO(params['X-Amz-Date'])
+        const expiresInSecs = Number(params['X-Amz-Expires'])
+
+        const expiryDate = addSeconds(creationDate, expiresInSecs)
+        const isExpired = expiryDate < new Date()
+
+        // Re-generate URL only if the previous generated URL expired
+        if (isExpired) {
+          const objectKey = user.file.storedObjects.find(
+            storedObject => storedObject.type === 'small',
+          ).key
+
+          user.profilePicture = await fileStorage.getURL(objectKey)
+          await user.save()
+        }
+      } else {
+        user.profilePicture = avatarPlaceholder
+        await user.save()
+      }
+
+      return user.profilePicture
     },
   },
 }
@@ -393,6 +416,8 @@ const typeDefs = `
     admin_DESC
     created_ASC
     created_DESC
+    lastOnline_ASC
+    lastOnline_DESC
   }
 
   type User {
@@ -404,8 +429,11 @@ const typeDefs = `
     admin: Boolean
     identities: [Identity]
     defaultIdentity: Identity
+    file: File
     profilePicture: String
     online: Boolean
+    lastOnline: DateTime
+    isOnline: Boolean
     _currentRoles: [CurrentRole]
     _currentGlobalRoles: [String]
   }

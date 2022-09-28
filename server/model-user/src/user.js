@@ -24,6 +24,8 @@ class User extends BaseModel {
   static get relationMappings() {
     // eslint-disable-next-line global-require
     const { Identity, Review } = require('@pubsweet/models')
+    /* eslint-disable-next-line global-require */
+    const File = require('@coko/server/src/models/file/file.model')
 
     return {
       identities: {
@@ -67,6 +69,14 @@ class User extends BaseModel {
           to: 'reviews.userId',
         },
       },
+      file: {
+        relation: BaseModel.HasOneRelation,
+        modelClass: File,
+        join: {
+          from: 'users.id',
+          to: 'files.objectId',
+        },
+      },
     }
   }
 
@@ -84,6 +94,10 @@ class User extends BaseModel {
           format: 'date-time',
         },
         profilePicture: { type: ['string', 'null'] },
+        lastOnline: {
+          type: ['string', 'object', 'null'],
+          format: 'date-time',
+        },
       },
     }
   }
@@ -169,6 +183,11 @@ class User extends BaseModel {
         return pick(owner, ['id', 'username'])
       }),
     )
+  }
+
+  async isOnline() {
+    const currentDateTime = new Date()
+    return this.lastOnline && currentDateTime - this.lastOnline < 5 * 60 * 1000
   }
 }
 

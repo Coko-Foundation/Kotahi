@@ -1,3 +1,5 @@
+const config = require('config')
+
 const { app } = require('@coko/server')
 
 // You can modify the app or ensure other things are imported here.
@@ -8,13 +10,19 @@ const {
   archiveOldManuscripts,
 } = require('./model-manuscript/src/manuscriptCommsUtils')
 
-schedule.scheduleJob(process.env.AUTO_IMPORT_TIME_UTC, async () => {
-  try {
-    await importManuscripts({ user: null })
-    await archiveOldManuscripts()
-  } catch (error) {
-    console.error(error)
-  }
-})
+schedule.scheduleJob(
+  {
+    tz: 'Etc/UTC',
+    rule: `00 ${config.manuscripts.autoImportTimeUtc} * * *`,
+  },
+  async () => {
+    try {
+      await importManuscripts({ user: null })
+      await archiveOldManuscripts()
+    } catch (error) {
+      console.error(error)
+    }
+  },
+)
 
 module.exports = app
