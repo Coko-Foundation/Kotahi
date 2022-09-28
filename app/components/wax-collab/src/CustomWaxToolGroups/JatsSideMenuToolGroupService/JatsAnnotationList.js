@@ -30,17 +30,57 @@ class FrontMatterList extends ToolGroup {
   }
 }
 
+class FundingList extends ToolGroup {
+  tools = []
+  title = (<LeftMenuTitle title="Funding Group" />)
+
+  constructor(
+    @inject('FundingSource') fundingSource,
+    @inject('AwardId') awardId,
+    @inject('FundingStatement') fundingStatement,
+  ) {
+    super()
+    this.tools = [fundingSource, awardId, fundingStatement]
+  }
+}
+
 class CitationList extends ToolGroup {
   tools = []
   title = (<LeftMenuTitle title="Citations" />)
 
   constructor(
-    @inject('MixedCitation') mixedCitation,
+    @inject('Reference') reference,
     @inject('RefList') refList,
     @inject('ReferenceHeader') referenceHeader,
+    @inject('ArticleTitle') articleTitle,
+    @inject('MixedCitationSpan') mixedCitationSpan,
+    // @inject('AuthorGroup') authorGroup,
+    @inject('AuthorName') authorName,
+    @inject('JournalTitle') journalTitle,
+    @inject('Doi') doi,
+    @inject('FirstPage') firstPage,
+    @inject('LastPage') lastPage,
+    @inject('Volume') volume,
+    @inject('Issue') issue,
+    @inject('Year') year,
   ) {
     super()
-    this.tools = [refList, referenceHeader, mixedCitation]
+    this.tools = [
+      refList,
+      referenceHeader,
+      reference,
+      mixedCitationSpan,
+      // authorGroup,
+      authorName,
+      articleTitle,
+      journalTitle,
+      doi,
+      volume,
+      issue,
+      year,
+      firstPage,
+      lastPage,
+    ]
   }
 }
 
@@ -57,6 +97,13 @@ class AcknowledgementsList extends ToolGroup {
 decorate(injectable(), AppendixList)
 decorate(injectable(), FrontMatterList)
 decorate(injectable(), CitationList)
+decorate(injectable(), FundingList)
 decorate(injectable(), AcknowledgementsList)
 
-export { AppendixList, CitationList, FrontMatterList, AcknowledgementsList }
+export {
+  AppendixList,
+  CitationList,
+  FrontMatterList,
+  FundingList,
+  AcknowledgementsList,
+}

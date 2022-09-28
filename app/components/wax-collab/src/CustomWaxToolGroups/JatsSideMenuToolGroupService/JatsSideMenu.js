@@ -1,9 +1,9 @@
 import React, { useMemo } from 'react'
 import { decorate, injectable, inject } from 'inversify'
-import { BlockLevelTools, Tabs } from 'wax-prosemirror-components'
 import { isEmpty } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
 import { ToolGroup } from 'wax-prosemirror-services'
+import { VerticalTabs, BlockLevelTools } from './VerticalTabs'
 
 // nb this was forked from /wax-prosemirror-services/src/WaxToolGroups/DisplayTextToolGroupService/DisplayText.js
 
@@ -22,6 +22,7 @@ class JatsSideMenu extends ToolGroup {
 
   constructor(
     @inject('FrontMatterList') frontmatterlist,
+    @inject('FundingList') fundinglist,
     @inject('AppendixList') appendixlist,
     @inject('CitationList') citationlist,
     @inject('AcknowledgementsList') acknowledgementsList,
@@ -29,21 +30,22 @@ class JatsSideMenu extends ToolGroup {
     super()
 
     this.toolGroups = [
+      { name: 'FrontMatterGroup', groups: [frontmatterlist, fundinglist] },
       {
-        name: 'TabA',
-        groups: [appendixlist, citationlist, acknowledgementsList],
+        name: 'BackMatterGroup',
+        groups: [appendixlist, acknowledgementsList],
       },
-      { name: 'TabB', groups: [frontmatterlist] },
+      { name: 'CitationGroup', groups: [citationlist] },
     ]
   }
 
   renderTools(view) {
     if (isEmpty(view)) return null
 
-    const first = {
-      id: '1',
-      title: 'Back matter tools',
-      icon: 'chapterList',
+    const frontMatterList = {
+      id: 'frontmatterlist',
+      title: 'Front matter tools',
+      icon: 'frontMatter',
       disabled: false,
       component: (
         <BlockLevelTools
@@ -56,12 +58,10 @@ class JatsSideMenu extends ToolGroup {
       ),
     }
 
-    // if you wanted a second tab, enable this:
-
-    const second = {
-      id: '2',
-      title: 'Front matter tools',
-      icon: 'codeBlock',
+    const backMatterList = {
+      id: 'backmatterlist',
+      title: 'Back matter tools',
+      icon: 'backMatter',
       disabled: false,
       component: (
         <BlockLevelTools
@@ -74,10 +74,26 @@ class JatsSideMenu extends ToolGroup {
       ),
     }
 
-    const tabList = [second, first]
+    const citationList = {
+      id: 'citationlist',
+      title: 'Citation tools',
+      icon: 'citationList',
+      disabled: false,
+      component: (
+        <BlockLevelTools
+          groups={this._toolGroups[2].groups.map(group => ({
+            groupName: group.title.props.title,
+            items: group._tools,
+          }))}
+          view={view}
+        />
+      ),
+    }
+
+    const tabList = [frontMatterList, backMatterList, citationList]
 
     const TabsComponent = useMemo(
-      () => <Tabs key={uuidv4()} tabList={tabList} />,
+      () => <VerticalTabs key={uuidv4()} tabList={tabList} />,
       [],
     )
 

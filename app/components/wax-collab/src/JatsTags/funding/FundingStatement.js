@@ -5,15 +5,15 @@ import { LeftSideButton } from 'wax-prosemirror-components'
 import { Commands } from 'wax-prosemirror-utilities'
 import { Tools } from 'wax-prosemirror-services'
 
-class ReferenceHeader extends Tools {
-  title = 'Change to referece header'
-  label = 'Reference head'
-  name = 'ReferenceHeader'
+class FundingStatement extends Tools {
+  title = 'Change to funding statement'
+  label = 'Funding statement'
+  name = 'FundingStatement'
 
   // eslint-disable-next-line class-methods-use-this
   get run() {
     return (state, dispatch) => {
-      Commands.setBlockType(state.config.schema.nodes.referenceHeader)(
+      Commands.setBlockType(state.config.schema.nodes.fundingStatement)(
         state,
         dispatch,
       )
@@ -28,7 +28,7 @@ class ReferenceHeader extends Tools {
 
       const { from, to } = state.selection
       state.doc.nodesBetween(from, to, (node, pos) => {
-        if (node.type.name === 'referenceHeader') {
+        if (node.type.name === 'fundingStatement') {
           isActive = true
         }
       })
@@ -44,7 +44,7 @@ class ReferenceHeader extends Tools {
   // eslint-disable-next-line class-methods-use-this
   get enable() {
     return state => {
-      return Commands.setBlockType(state.config.schema.nodes.referenceHeader)(
+      return Commands.setBlockType(state.config.schema.nodes.fundingStatement)(
         state,
       )
     }
@@ -54,11 +54,11 @@ class ReferenceHeader extends Tools {
     if (isEmpty(view)) return null
     // eslint-disable-next-line no-underscore-dangle
     return this._isDisplayed ? (
-      <LeftSideButton item={this.toJSON()} key="ReferenceHeader" view={view} />
+      <LeftSideButton item={this.toJSON()} key="FundingStatement" view={view} />
     ) : null
   }
 }
 
-decorate(injectable(), ReferenceHeader)
+decorate(injectable(), FundingStatement)
 
-export default ReferenceHeader
+export default FundingStatement

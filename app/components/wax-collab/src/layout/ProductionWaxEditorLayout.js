@@ -127,7 +127,7 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
                 <LeftSideBar />
               </SideMenu>
 
-              <EditorArea>
+              <EditorArea className="editorArea">
                 <PanelGroup
                   direction="column"
                   onResizeEnd={onResizeEnd}
