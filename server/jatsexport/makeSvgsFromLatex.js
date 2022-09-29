@@ -1,6 +1,7 @@
 const htmlparser2 = require('htmlparser2')
 const cheerio = require('cheerio')
 const mjAPI = require('mathjax-node')
+const he = require('he')
 
 mjAPI.config({
   MathJax: {
@@ -33,12 +34,20 @@ const generateOutputXml = (input, rawMml, index) => {
 }
 
 const mathJaxWrapper = latex =>
-  mjAPI.typeset({
-    math: latex,
-    format: 'TeX', // or "inline-TeX", "MathML"
-    svg: true, // or svg:true, or html:true
-    mml: true,
-  })
+  mjAPI
+    .typeset({
+      math: latex,
+      format: 'TeX', // or "inline-TeX", "MathML"
+      svg: true, // or svg:true, or html:true
+      mml: true,
+    })
+    .then(data => {
+      return data
+    })
+    .catch(err => {
+      console.error('MathJax error:', err)
+      return { errors: err }
+    })
 
 const convertMathJax = async latex => {
   const data = await mathJaxWrapper(latex)
@@ -69,17 +78,22 @@ const makeSvgsFromLatex = async (source, replaceHtml = false) => {
       ? internal
       : internal.split('[CDATA[')[1].split(']]')[0]
 
-    console.error('Converting disp-formula: ', latex)
+    const decodedLatex = he.decode(latex)
+
+    console.error('Converting disp-formula: ', decodedLatex)
     // eslint-disable-next-line no-await-in-loop
-    const data = await convertMathJax(latex)
-    displaySvgList[i] = data.svg
+    const data = await convertMathJax(decodedLatex)
 
-    const replacement = replaceHtml
-      ? data.svg
-      : generateOutputXml(output, data.mml, i)
+    if (!data.errors) {
+      displaySvgList[i] = data.svg
 
-    $(elem).replaceWith(replacement)
-    // console.log('replaced display formula!')
+      const replacement = replaceHtml
+        ? data.svg
+        : generateOutputXml(output, data.mml, i)
+
+      $(elem).replaceWith(replacement)
+      // console.log('replaced display formula!')
+    }
   }
 
   // 2. go through the source and find all inline equations
@@ -100,14 +114,17 @@ const makeSvgsFromLatex = async (source, replaceHtml = false) => {
     console.error('Converting inline-formula: ', latex)
     // eslint-disable-next-line no-await-in-loop
     const data = await convertMathJax(latex)
-    inlineSvgList[i] = data.svg
 
-    const replacement = replaceHtml
-      ? data.svg
-      : generateOutputXml(output, data.mml, i)
+    if (!data.errors) {
+      inlineSvgList[i] = data.svg
 
-    $(elem).replaceWith(replacement)
-    // console.log('replaced inline formula!')
+      const replacement = replaceHtml
+        ? data.svg
+        : generateOutputXml(output, data.mml, i)
+
+      $(elem).replaceWith(replacement)
+      // console.log('replaced inline formula!')
+    }
   }
 
   // 4. return the modified source and an array of SVG files as strings
