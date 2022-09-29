@@ -65,7 +65,6 @@ function doReview(name, reviewData) {
 
   // Accpet Review Request Workflow
   if (reviewData.verdict === 'accept') {
-    DashboardPage.getAcceptReviewButton().should('be.visible') // Avoid detached element issue
     DashboardPage.clickAcceptReviewButton()
 
     // Only do the review if there'a  comment present
@@ -96,3 +95,4 @@ function doReview(name, reviewData) {
     cy.get('[role="button"]').should('contain', 'rejected')
   }
 }
+

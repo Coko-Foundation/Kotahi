@@ -58,7 +58,7 @@ describe('Completing a review', () => {
       DashboardPage.clickControlPanel()
       ControlPage.getPublishButton().should('be.disabled') // Verify publish button is disabled
       ControlPage.getDecisionTextInput().type('Great Paper!')
-      ControlPage.getDecisionFileInput().attachFile('test-pdf.pdf')
+      ControlPage.getDecisionFileInput().attachFile(decisionFileName)
       ControlPage.clickAccept()
       ControlPage.clickSubmitDecisionButton() // Submit the decision
       ControlPage.checkSvgExists()
@@ -66,3 +66,6 @@ describe('Completing a review', () => {
     })
   })
 })
+
+
+
