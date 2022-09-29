@@ -142,6 +142,8 @@ const ManuscriptsPage = ({ history }) => {
     })
   }
 
+  const shouldAllowBulkImport = config.manuscripts.allowManualImport
+
   return (
     <Manuscripts
       chatRoomId={chatRoomId}
@@ -158,6 +160,7 @@ const ManuscriptsPage = ({ history }) => {
       setReadyToEvaluateLabels={setReadyToEvaluateLabels}
       setSortDirection={setSortDirection}
       setSortName={setSortName}
+      shouldAllowBulkImport={shouldAllowBulkImport}
       sortDirection={sortDirection}
       sortName={sortName}
       systemWideDiscussionChannel={systemWideDiscussionChannel}

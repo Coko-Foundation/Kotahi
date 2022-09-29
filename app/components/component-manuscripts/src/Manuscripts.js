@@ -5,7 +5,6 @@ import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import { Checkbox } from '@pubsweet/ui'
 import { grid } from '@pubsweet/ui-toolkit'
-import config from 'config'
 import ManuscriptRow from './ManuscriptRow'
 import {
   ManuscriptsTable,
@@ -78,6 +77,7 @@ const Manuscripts = ({ history, ...props }) => {
     urlFrag,
     chatRoomId,
     configuredColumnNames,
+    shouldAllowBulkImport,
   } = props
 
   const [isOpenBulkDeletionModal, setIsOpenBulkDeletionModal] = useState(false)
@@ -286,11 +286,6 @@ const Manuscripts = ({ history, ...props }) => {
   const shouldAllowNewSubmission = ['elife', 'ncrc'].includes(
     process.env.INSTANCE_NAME,
   )
-
-  const shouldAllowBulkImport =
-    ['ncrc'].includes(process.env.INSTANCE_NAME) ||
-    (['colab'].includes(process.env.INSTANCE_NAME) &&
-      config.manuscripts.allowManualImport === 'true')
 
   const shouldAllowBulkDelete = ['ncrc', 'colab'].includes(
     process.env.INSTANCE_NAME,
