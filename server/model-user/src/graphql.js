@@ -337,11 +337,7 @@ const resolvers = {
 
       const avatarPlaceholder = '/profiles/default_avatar.svg'
 
-      if (
-        user.file &&
-        user.profilePicture &&
-        user.profilePicture !== avatarPlaceholder
-      ) {
+      if (user.file) {
         const params = new Proxy(new URLSearchParams(user.profilePicture), {
           get: (searchParams, prop) => searchParams.get(prop),
         })
@@ -361,8 +357,9 @@ const resolvers = {
           user.profilePicture = await fileStorage.getURL(objectKey)
           await user.save()
         }
-      } else {
+      } else if (user.profilePicture !== avatarPlaceholder) {
         user.profilePicture = avatarPlaceholder
+        await user.save()
       }
 
       return user.profilePicture
