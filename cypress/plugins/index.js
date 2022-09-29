@@ -61,17 +61,12 @@ module.exports = (on, config) => {
       const { User } = require('@pubsweet/models')
 
       const { createJWT } = require('@coko/server')
-      console.log(`find user with username = ${testUsers[name]}`)
 
       const user = await User.query()
         .where({ username: testUsers[name] })
         .first()
 
-      console.log('In create token function user found:', user)
-
       const jwt = createJWT(user)
-
-      console.log('Generated Token:', jwt)
 
       return jwt
     },

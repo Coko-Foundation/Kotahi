@@ -30,13 +30,10 @@ import 'cypress-file-upload'
 
 Cypress.Commands.add('setToken', token => {
   localStorage.setItem('token', token)
-  cy.task('log', `Token has been set - cmd`)
 })
 
 Cypress.Commands.add('login', (name, page) => {
-  cy.task('log', `Creating token.... for user name: ${name} page: ${page}`)
   cy.task('createToken', name).then(token => {
-    cy.task('log', `Received Token: ${token}`)
     cy.setToken(token)
     cy.visit(page)
   })

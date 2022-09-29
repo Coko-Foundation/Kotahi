@@ -29,5 +29,3 @@ describe('Upload manuscript test', () => {
     })
   })
 })
-
-

@@ -43,4 +43,3 @@ describe('Assigning senior editor', () => {
   })
 })
 
-
