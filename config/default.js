@@ -270,5 +270,6 @@ module.exports = {
   manuscripts: {
     autoImportHourUtc: '',
     archivePeriodDays: '',
+    allowManualImport: 'false',
   },
 }

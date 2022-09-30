@@ -17,6 +17,7 @@ ARG display_shortid_as_identifier
 ARG review_shared
 ARG review_hide
 ARG hypothesis_allow_tagging
+ARG allow_manual_import
 
 ENV INSTANCE_NAME $instance_name
 ENV NODE_ENV "production"
@@ -35,6 +36,7 @@ ENV DISPLAY_SHORTID_AS_IDENTIFIER $display_shortid_as_identifier
 ENV REVIEW_SHARED $review_shared
 ENV REVIEW_HIDE $review_hide
 ENV HYPOTHESIS_ALLOW_TAGGING $hypothesis_allow_tagging
+ENV ALLOW_MANUAL_IMPORT $allow_manual_import
 
 
 RUN apk add --no-cache git python make g++ bash tar

@@ -77,6 +77,7 @@ const Manuscripts = ({ history, ...props }) => {
     urlFrag,
     chatRoomId,
     configuredColumnNames,
+    shouldAllowBulkImport,
   } = props
 
   const [isOpenBulkDeletionModal, setIsOpenBulkDeletionModal] = useState(false)
@@ -286,10 +287,6 @@ const Manuscripts = ({ history, ...props }) => {
     process.env.INSTANCE_NAME,
   )
 
-  const shouldAllowBulkImport = ['ncrc', 'colab'].includes(
-    process.env.INSTANCE_NAME,
-  )
-
   const shouldAllowBulkDelete = ['ncrc', 'colab'].includes(
     process.env.INSTANCE_NAME,
   )
@@ -318,7 +315,6 @@ const Manuscripts = ({ history, ...props }) => {
         applySearchQuery={applySearchQuery}
         currentSearchQuery={currentSearchQuery}
       />
-
       {!isAdminChatOpen && (
         <RoundIconButton
           iconName="MessageSquare"
