@@ -244,10 +244,14 @@ const resolvers = {
 
       let invitationId = ''
 
-      if (
-        selectedTemplate === 'authorInvitationEmailTemplate' ||
-        selectedTemplate === 'reviewerInvitationEmailTemplate'
-      ) {
+      const invitationContainingEmailTemplate = [
+        'authorInvitationEmailTemplate',
+        'reviewerInvitationEmailTemplate',
+        'reminderAuthorInvitationTemplate',
+        'reminderReviewerInvitationTemplate',
+      ]
+
+      if (invitationContainingEmailTemplate.includes(selectedTemplate)) {
         let userId = null
         let invitedPersonName = ''
 
@@ -284,6 +288,12 @@ const resolvers = {
         invitationId = newInvitation.id
       }
 
+      if (invitationId === '') {
+        console.error(
+          'Invitation Id is not available to be used for this template.',
+        )
+      }
+
       let instance
 
       if (config['notification-email'].use_colab) {
@@ -302,6 +312,7 @@ const resolvers = {
           instance,
           toEmail,
           invitationId,
+          submissionLink: JSON.parse(manuscript.submission).link,
           purpose,
           status,
           senderId,

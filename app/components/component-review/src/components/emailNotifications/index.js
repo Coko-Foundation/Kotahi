@@ -92,6 +92,22 @@ const EmailNotifications = ({
         value: 'authorInvitationEmailTemplate',
       },
       {
+        label: 'Reminder: Author invitation',
+        value: 'reminderAuthorInvitationTemplate',
+      },
+      {
+        label: 'Reminder: Reviewer invitation',
+        value: 'reminderReviewerInvitationTemplate',
+      },
+      {
+        label: 'Thanks for agreeing to review',
+        value: 'thanksForAgreeingToReviewTemplate',
+      },
+      {
+        label: 'Reminder: Review overdue',
+        value: 'reminderReviewOverdueTemplate',
+      },
+      {
         label: 'Evaluation Complete notification',
         value: 'evaluationCompleteEmailTemplate',
       },
