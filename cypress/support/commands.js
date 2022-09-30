@@ -33,7 +33,6 @@ Cypress.Commands.add('setToken', token => {
 })
 
 Cypress.Commands.add('login', (name, page) => {
-  console.log(`Creating token.... for ${name}`)
   cy.task('createToken', name).then(token => {
     cy.setToken(token)
     cy.visit(page)

@@ -263,6 +263,7 @@ export const ControlPage = {
   },
   getDecisionFileInput() {
     return cy.get(DECISION_FILE_INPUT)
+    cy.wait(3000)
   },
   getSubmitDecisionButton() {
     return cy.getByDataTestId(DECISION_SUBMIT_BUTTON)
@@ -275,5 +276,6 @@ export const ControlPage = {
   },
   checkSvgExists() {
     this.getCheckSvg().should('exist')
+    cy.wait(2000)
   },
 }
