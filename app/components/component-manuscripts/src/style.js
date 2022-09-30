@@ -54,30 +54,17 @@ export const StyledAuthor = styled.p`
   white-space: nowrap;
 `
 
-export const BulkDeleteModalContainer = styled.div`
+export const BulkActionModalContainer = styled.div`
   background-color: white;
   padding: 10px;
 `
 
-export const BulkDeleteModalButtons = styled.div`
+export const BulkActionModalButtons = styled.div`
   display: flex;
   justify-content: space-between;
 `
 
-export const BulkDeleteModalButton = styled(Button)`
-  cursor: pointer;
-`
-export const BulkArchiveModalContainer = styled.div`
-  background-color: white;
-  padding: 10px;
-`
-
-export const BulkArchiveModalButtons = styled.div`
-  display: flex;
-  justify-content: space-between;
-`
-
-export const BulkArchiveModalButton = styled(Button)`
+export const BulkActionModalButton = styled(Button)`
   cursor: pointer;
 `
 

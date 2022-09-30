@@ -84,7 +84,7 @@ const Manuscripts = ({ history, ...props }) => {
 
   const [isOpenBulkDeletionModal, setIsOpenBulkDeletionModal] = useState(false)
 
-  const [isOpenBulkArchivalModal, setIsOpenBulkArchivalModal] = useState(false)
+  const [isOpenBulkArchiveModal, setIsOpenBulkArchiveModal] = useState(false)
 
   const [selectedNewManuscripts, setSelectedNewManuscripts] = useState([])
   const [isAdminChatOpen, setIsAdminChatOpen] = useState(true)
@@ -262,11 +262,11 @@ const Manuscripts = ({ history, ...props }) => {
   }
 
   const openModalBulkArchiveConfirmation = () => {
-    setIsOpenBulkArchivalModal(true)
+    setIsOpenBulkArchiveModal(true)
   }
 
   const closeModalBulkArchiveConfirmation = () => {
-    setIsOpenBulkArchivalModal(false)
+    setIsOpenBulkArchiveModal(false)
   }
 
   const confirmsBulkArchive = () => {
@@ -452,7 +452,7 @@ const Manuscripts = ({ history, ...props }) => {
       </Columns>
       {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
         <Modal
-          isOpen={isOpenBulkArchivalModal}
+          isOpen={isOpenBulkArchiveModal}
           onRequestClose={closeModalBulkArchiveConfirmation}
         >
           <BulkArchiveModal

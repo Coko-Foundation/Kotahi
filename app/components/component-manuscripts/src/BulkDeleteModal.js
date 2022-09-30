@@ -1,26 +1,26 @@
 import React from 'react'
 import {
-  BulkDeleteModalContainer,
-  BulkDeleteModalButtons,
-  BulkDeleteModalButton,
+  BulkActionModalContainer,
+  BulkActionModalButtons,
+  BulkActionModalButton,
 } from './style'
 
 const BulkDeleteModal = ({ confirmBulkDelete, closeModal }) => {
   return (
-    <BulkDeleteModalContainer>
+    <BulkActionModalContainer>
       <p>Please confirm you would like to delete selected articles</p>
       <br />
       <br />
       <br />
-      <BulkDeleteModalButtons>
-        <BulkDeleteModalButton onClick={confirmBulkDelete} primary>
+      <BulkActionModalButtons>
+        <BulkActionModalButton onClick={confirmBulkDelete} primary>
           Confirm
-        </BulkDeleteModalButton>
-        <BulkDeleteModalButton onClick={closeModal} secondary>
+        </BulkActionModalButton>
+        <BulkActionModalButton onClick={closeModal} secondary>
           Close
-        </BulkDeleteModalButton>
-      </BulkDeleteModalButtons>
-    </BulkDeleteModalContainer>
+        </BulkActionModalButton>
+      </BulkActionModalButtons>
+    </BulkActionModalContainer>
   )
 }
 
