@@ -142,7 +142,9 @@ const ManuscriptsPage = ({ history }) => {
     })
   }
 
-  const shouldAllowBulkImport = config.manuscripts.allowManualImport
+  const shouldAllowBulkImport =
+    config.manuscripts.allowManualImport === 'true' &&
+    ['colab', 'ncrc'].includes(process.env.INSTANCE_NAME)
 
   return (
     <Manuscripts
