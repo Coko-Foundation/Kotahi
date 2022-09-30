@@ -1,6 +1,10 @@
 // TODO: refactor below template logic
 const adhocEditorAssignmentEmailTemplate = require('./email-templates/adhocEditorAssignmentEmailTemplate')
 const authorInvitationEmailTemplate = require('./email-templates/authorInvitationEmailTemplate')
+const reminderAuthorInvitationTemplate = require('./email-templates/reminderAuthorInvitationTemplate')
+const reminderReviewerInvitationTemplate = require('./email-templates/reminderReviewerInvitationTemplate')
+const thanksForAgreeingToReviewTemplate = require('./email-templates/thanksForAgreeingToReviewTemplate.js')
+const reminderReviewOverdueTemplate = require('./email-templates/reminderReviewOverdueTemplate')
 const reviewerInvitationEmailTemplate = require('./email-templates/reviewerInvitationEmailTemplate')
 const deputyEditorAssignmentEmailTemplate = require('./email-templates/deputyEditorAssignmentEmailTemplate')
 const editorAssignmentEmailTemplate = require('./email-templates/editorAssignmentEmailTemplate')
@@ -50,6 +54,10 @@ const reviewInvitationEmailTemplate37 = require('./email-templates/review-invita
 const templates = {
   adhocEditorAssignmentEmailTemplate,
   authorInvitationEmailTemplate,
+  reminderAuthorInvitationTemplate,
+  reminderReviewerInvitationTemplate,
+  thanksForAgreeingToReviewTemplate,
+  reminderReviewOverdueTemplate,
   reviewerInvitationEmailTemplate,
   deputyEditorAssignmentEmailTemplate,
   editorAssignmentEmailTemplate,
