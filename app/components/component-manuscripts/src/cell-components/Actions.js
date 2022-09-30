@@ -35,7 +35,7 @@ const Actions = ({
       <Action to={`${urlFrag}/versions/${manuscript.id}/manuscript`}>
         View
       </Action>
-      <Action onClick={() => setConfirmDeleteModalIsOpen(true)}>Delete</Action>
+      <Action onClick={() => setConfirmDeleteModalIsOpen(true)}>Archive</Action>
       <Action to={`${urlFrag}/versions/${manuscript.id}/production`}>
         Production
       </Action>
@@ -52,7 +52,7 @@ const Actions = ({
         closeModal={() => setConfirmDeleteModalIsOpen(false)}
         confirmationAction={() => deleteManuscript(manuscript.id)}
         isOpen={confirmDeleteModalIsOpen}
-        message="Permanently delete this manuscript?"
+        message="Do you want to archive this manuscript?"
       />
     </>
   )
