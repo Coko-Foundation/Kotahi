@@ -465,6 +465,52 @@ const resolvers = {
     importManuscripts(_, props, ctx) {
       return importManuscripts(ctx)
     },
+
+    async archiveManuscripts(_, { ids }, ctx) {
+      if (ids.length > 0) {
+        await Promise.all(
+          ids.map(toArchiveItem =>
+            models.Manuscript.query()
+              .update({ isHidden: true })
+              .where('id', '=', toArchiveItem),
+          ),
+        )
+      }
+
+      return ids
+    },
+
+    async archiveManuscript(_, { id }, ctx) {
+      const toArchiveList = []
+      const manuscript = await models.Manuscript.find(id)
+
+      toArchiveList.push(manuscript.id)
+
+      if (manuscript.parentId) {
+        const parentManuscripts = await models.Manuscript.findByField(
+          'parent_id',
+          manuscript.parentId,
+        )
+
+        parentManuscripts.forEach(ms => {
+          toArchiveList.push(ms.id)
+        })
+      }
+
+      // Archive Manuscript
+      if (toArchiveList.length > 0) {
+        await Promise.all(
+          toArchiveList.map(toArchiveItem =>
+            models.Manuscript.query()
+              .update({ isHidden: true })
+              .where('id', '=', toArchiveItem),
+          ),
+        )
+      }
+
+      return id
+    },
+
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
         await Promise.all(
@@ -1397,6 +1443,8 @@ const typeDefs = `
     createNewVersion(id: ID!): Manuscript
     importManuscripts: Boolean!
     setShouldPublishField(manuscriptId: ID!, objectId: ID!, fieldName: String!, shouldPublish: Boolean!): Manuscript!
+    archiveManuscript(id: ID!): ID!
+    archiveManuscripts(ids: [ID]!): [ID]!
   }
 
   type Manuscript {

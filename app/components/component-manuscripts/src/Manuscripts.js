@@ -28,7 +28,7 @@ import {
 import { articleStatuses } from '../../../globals'
 import MessageContainer from '../../component-chat/src/MessageContainer'
 import Modal from '../../component-modal/src'
-import BulkDeleteModal from './BulkDeleteModal'
+import BulkArchiveModal from './BulkArchiveModal'
 import getColumnsProps from './getColumnsProps'
 import getUriQueryParams from './getUriQueryParams'
 import FilterSortHeader from './FilterSortHeader'
@@ -78,9 +78,14 @@ const Manuscripts = ({ history, ...props }) => {
     chatRoomId,
     configuredColumnNames,
     shouldAllowBulkImport,
+    archiveManuscriptMutations,
+    confirmBulkArchive,
   } = props
 
   const [isOpenBulkDeletionModal, setIsOpenBulkDeletionModal] = useState(false)
+
+  const [isOpenBulkArchivalModal, setIsOpenBulkArchivalModal] = useState(false)
+
   const [selectedNewManuscripts, setSelectedNewManuscripts] = useState([])
   const [isAdminChatOpen, setIsAdminChatOpen] = useState(true)
 
@@ -171,6 +176,8 @@ const Manuscripts = ({ history, ...props }) => {
 
   const deleteManuscript = id => deleteManuscriptMutations(id)
 
+  const archiveManuscript = id => archiveManuscriptMutations(id)
+
   const [
     manuscriptsBlockedFromPublishing,
     setManuscriptsBlockedFromPublishing,
@@ -254,6 +261,21 @@ const Manuscripts = ({ history, ...props }) => {
     closeModalBulkDeleteConfirmation()
   }
 
+  const openModalBulkArchiveConfirmation = () => {
+    setIsOpenBulkArchivalModal(true)
+  }
+
+  const closeModalBulkArchiveConfirmation = () => {
+    setIsOpenBulkArchivalModal(false)
+  }
+
+  const confirmsBulkArchive = () => {
+    confirmBulkArchive(selectedNewManuscripts)
+
+    setSelectedNewManuscripts([])
+    closeModalBulkArchiveConfirmation()
+  }
+
   const currentSearchQuery = uriQueryParams.find(
     x => x.field === URI_SEARCH_PARAM,
   )?.value
@@ -272,6 +294,7 @@ const Manuscripts = ({ history, ...props }) => {
     setReadyToEvaluateLabel,
     urlFrag,
     currentSearchQuery,
+    archiveManuscript,
   )
 
   const channels = [
@@ -365,7 +388,7 @@ const Manuscripts = ({ history, ...props }) => {
                 <ActionButton
                   disabled={selectedNewManuscripts.length === 0}
                   isCompact
-                  onClick={openModalBulkDeleteConfirmation}
+                  onClick={openModalBulkArchiveConfirmation}
                   primary={selectedNewManuscripts.length > 0}
                 >
                   Archive
@@ -429,12 +452,13 @@ const Manuscripts = ({ history, ...props }) => {
       </Columns>
       {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
         <Modal
-          isOpen={isOpenBulkDeletionModal}
-          onRequestClose={closeModalBulkDeleteConfirmation}
+          isOpen={isOpenBulkArchivalModal}
+          onRequestClose={closeModalBulkArchiveConfirmation}
         >
-          <BulkDeleteModal
-            closeModal={closeModalBulkDeleteConfirmation}
+          <BulkArchiveModal
+            closeModal={closeModalBulkArchiveConfirmation}
             confirmBulkDelete={confirmBulkDelete}
+            confirmsBulkArchive={confirmsBulkArchive}
           />
         </Modal>
       )}

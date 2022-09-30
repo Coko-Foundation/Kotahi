@@ -8,7 +8,7 @@ import {
 const BulkDeleteModal = ({ confirmBulkDelete, closeModal }) => {
   return (
     <BulkDeleteModalContainer>
-      <p>Please confirm if you want to archive these selected articles</p>
+      <p>Please confirm you would like to delete selected articles</p>
       <br />
       <br />
       <br />

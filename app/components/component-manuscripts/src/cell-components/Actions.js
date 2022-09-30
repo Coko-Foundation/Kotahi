@@ -5,12 +5,12 @@ import { ConfirmationModal } from '../../../component-modal/src'
 
 const Actions = ({
   manuscript,
-  deleteManuscript,
+  archiveManuscript,
   isManuscriptBlockedFromPublishing,
   tryPublishManuscript,
   urlFrag,
 }) => {
-  const [confirmDeleteModalIsOpen, setConfirmDeleteModalIsOpen] = useState(
+  const [confirmArchiveModalIsOpen, setConfirmArchiveModalIsOpen] = useState(
     false,
   )
 
@@ -35,7 +35,9 @@ const Actions = ({
       <Action to={`${urlFrag}/versions/${manuscript.id}/manuscript`}>
         View
       </Action>
-      <Action onClick={() => setConfirmDeleteModalIsOpen(true)}>Archive</Action>
+      <Action onClick={() => setConfirmArchiveModalIsOpen(true)}>
+        Archive
+      </Action>
       <Action to={`${urlFrag}/versions/${manuscript.id}/production`}>
         Production
       </Action>
@@ -49,9 +51,9 @@ const Actions = ({
           </Action>
         )}
       <ConfirmationModal
-        closeModal={() => setConfirmDeleteModalIsOpen(false)}
-        confirmationAction={() => deleteManuscript(manuscript.id)}
-        isOpen={confirmDeleteModalIsOpen}
+        closeModal={() => setConfirmArchiveModalIsOpen(false)}
+        confirmationAction={() => archiveManuscript(manuscript.id)}
+        isOpen={confirmArchiveModalIsOpen}
         message="Do you want to archive this manuscript?"
       />
     </>
