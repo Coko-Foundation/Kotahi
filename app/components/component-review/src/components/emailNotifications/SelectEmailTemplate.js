@@ -230,12 +230,28 @@ switch (
         value: 'authorInvitationEmailTemplate',
       },
       {
-        label: 'Evaluation Complete required notification template',
+        label: 'Evaluation Complete Required Notification Template',
         value: 'evaluationCompleteEmailTemplate',
       },
       {
         label: 'Reviewer Invitation Email Template',
         value: 'reviewerInvitationEmailTemplate',
+      },
+      {
+        label: 'Reminder: Author Invitation Template',
+        value: 'reminderAuthorInvitationTemplate',
+      },
+      {
+        label: 'Reminder: Reviewer Invitation Template',
+        value: 'reminderReviewerInvitationTemplate',
+      },
+      {
+        label: 'Thanks for Agreeing to Review Template',
+        value: 'thanksForAgreeingToReviewTemplate',
+      },
+      {
+        label: 'Reminder: Review Overdue Template',
+        value: 'reminderReviewOverdueTemplate',
       },
     ]
     break

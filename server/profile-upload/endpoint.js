@@ -1,10 +1,14 @@
 const express = require('express')
+const fs = require('fs-extra')
 const crypto = require('crypto')
 const multer = require('multer')
 const passport = require('passport')
 const path = require('path')
 const config = require('config')
-const jimp = require('jimp')
+const { createFile, deleteFiles, fileStorage } = require('@coko/server')
+const { promisify } = require('util')
+
+const randomBytes = promisify(crypto.randomBytes)
 
 const authBearer = passport.authenticate('bearer', { session: false })
 
@@ -29,24 +33,36 @@ const upload = multer({
 
 module.exports = app => {
   // eslint-disable-next-line global-require
-  const { User } = require('@pubsweet/models')
+  const User = require('../model-user/src/user')
   app.post(
     '/api/uploadProfile',
     authBearer,
     upload.single('file'),
     async (req, res, next) => {
-      const user = await User.find(req.user)
+      const user = await User.query()
+        .findById(req.user)
+        .withGraphFetched('[file]')
 
-      const image = await jimp.read(req.file.path)
-      await image.cover(200, 200)
+      if (user.file) {
+        await deleteFiles([user.file.id], true)
+      }
 
-      const profilePath = `profiles/${user.username}${path.extname(
-        req.file.path,
-      )}`
+      const raw = await randomBytes(16)
 
-      await image.writeAsync(profilePath)
+      const createdProfilePicture = await createFile(
+        fs.createReadStream(`${req.file.path}`),
+        `${raw.toString('hex')}${path.extname(req.file.path)}`,
+        null,
+        null,
+        ['profilePicture'],
+        user.id,
+      )
 
-      user.profilePicture = `/${profilePath}`
+      const objectKey = createdProfilePicture.storedObjects.find(
+        storedObject => storedObject.type === 'small',
+      ).key
+
+      user.profilePicture = await fileStorage.getURL(objectKey)
       await user.save()
       return res.send(user.profilePicture)
     },

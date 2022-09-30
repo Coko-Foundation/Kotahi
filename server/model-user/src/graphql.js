@@ -1,7 +1,6 @@
-const { logger } = require('@coko/server')
+const { logger, fileStorage } = require('@coko/server')
 const { AuthorizationError, ConflictError } = require('@pubsweet/errors')
-const { existsSync } = require('fs')
-const path = require('path')
+const { parseISO, addSeconds } = require('date-fns')
 const models = require('@pubsweet/models')
 const config = require('config')
 
@@ -55,29 +54,10 @@ const resolvers = {
     // Authentication
     async currentUser(_, vars, ctx) {
       if (!ctx.user) return null
-      const avatarPlaceholder = '/profiles/default_avatar.svg'
 
       const user = await models.User.query().patchAndFetchById(ctx.user, {
         lastOnline: new Date(Date.now()),
       })
-
-      const profilePicture = user.profilePicture ? user.profilePicture : ''
-
-      const profilePicturePath = path.join(
-        __dirname,
-        '../../..',
-        profilePicture,
-      )
-
-      if (
-        profilePicture !== avatarPlaceholder &&
-        !existsSync(profilePicturePath)
-      ) {
-        await models.User.query()
-          .update({ profilePicture: avatarPlaceholder })
-          .where('id', user.id)
-        user.profilePicture = avatarPlaceholder
-      }
 
       // eslint-disable-next-line no-underscore-dangle
       user._currentRoles = await user.currentRoles()
@@ -264,10 +244,14 @@ const resolvers = {
 
       let invitationId = ''
 
-      if (
-        selectedTemplate === 'authorInvitationEmailTemplate' ||
-        selectedTemplate === 'reviewerInvitationEmailTemplate'
-      ) {
+      const invitationContainingEmailTemplate = [
+        'authorInvitationEmailTemplate',
+        'reviewerInvitationEmailTemplate',
+        'reminderAuthorInvitationTemplate',
+        'reminderReviewerInvitationTemplate',
+      ]
+
+      if (invitationContainingEmailTemplate.includes(selectedTemplate)) {
         let userId = null
         let invitedPersonName = ''
 
@@ -304,6 +288,12 @@ const resolvers = {
         invitationId = newInvitation.id
       }
 
+      if (invitationId === '') {
+        console.error(
+          'Invitation Id is not available to be used for this template.',
+        )
+      }
+
       let instance
 
       if (config['notification-email'].use_colab) {
@@ -322,6 +312,7 @@ const resolvers = {
           instance,
           toEmail,
           invitationId,
+          submissionLink: JSON.parse(manuscript.submission).link,
           purpose,
           status,
           senderId,
@@ -349,6 +340,40 @@ const resolvers = {
       })
 
       return identities
+    },
+    async profilePicture(parent, args, ctx) {
+      const user = await models.User.query()
+        .findById(parent.id)
+        .withGraphFetched('[file]')
+
+      const avatarPlaceholder = '/profiles/default_avatar.svg'
+
+      if (user.file) {
+        const params = new Proxy(new URLSearchParams(user.profilePicture), {
+          get: (searchParams, prop) => searchParams.get(prop),
+        })
+
+        const creationDate = parseISO(params['X-Amz-Date'])
+        const expiresInSecs = Number(params['X-Amz-Expires'])
+
+        const expiryDate = addSeconds(creationDate, expiresInSecs)
+        const isExpired = expiryDate < new Date()
+
+        // Re-generate URL only if the previous generated URL expired
+        if (isExpired) {
+          const objectKey = user.file.storedObjects.find(
+            storedObject => storedObject.type === 'small',
+          ).key
+
+          user.profilePicture = await fileStorage.getURL(objectKey)
+          await user.save()
+        }
+      } else if (user.profilePicture !== avatarPlaceholder) {
+        user.profilePicture = avatarPlaceholder
+        await user.save()
+      }
+
+      return user.profilePicture
     },
   },
 }
@@ -411,6 +436,7 @@ const typeDefs = `
     admin: Boolean
     identities: [Identity]
     defaultIdentity: Identity
+    file: File
     profilePicture: String
     online: Boolean
     lastOnline: DateTime

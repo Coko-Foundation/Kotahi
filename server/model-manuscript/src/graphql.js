@@ -7,7 +7,9 @@ const { pubsubManager, File } = require('@coko/server')
 const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
 const { raw } = require('objection')
+
 const { importManuscripts } = require('./manuscriptCommsUtils')
+
 const Team = require('../../model-team/src/team')
 const TeamMember = require('../../model-team/src/team_member')
 
@@ -459,8 +461,9 @@ const resolvers = {
 
       return updatedManuscript
     },
+
     importManuscripts(_, props, ctx) {
-      importManuscripts(ctx)
+      return importManuscripts(ctx)
     },
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {

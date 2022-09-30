@@ -11,6 +11,10 @@ const { getFileWithUrl } = require('../utils/fileStorageUtils')
 
 const randomBytes = promisify(crypto.randomBytes)
 
+const replaceAll = (str, find, replace) => {
+  return str.replace(new RegExp(find, 'g'), replace)
+}
+
 const makeZipFile = async (manuscriptId, jats) => {
   // jats is a string with the semi-processed JATS in it
   // (images have not been dealt with)
@@ -23,7 +27,17 @@ const makeZipFile = async (manuscriptId, jats) => {
 
   const imageList = []
   const suppFileList = []
-  const dom = htmlparser2.parseDocument(jats)
+
+  // This replace all is to make sure that the JATS tag <source> isn't turned into the empty HTML tag <source>
+
+  const dom = htmlparser2.parseDocument(
+    replaceAll(
+      replaceAll(jats, '<source>', `<sssource>`),
+      '</source>',
+      `</sssource>`,
+    ),
+  )
+
   const $ = cheerio.load(dom, { xmlMode: true })
 
   // What needs to happen:
@@ -66,6 +80,7 @@ const makeZipFile = async (manuscriptId, jats) => {
     return $elem
   })
 
+  // TODO: this is screwing up my source tags!
   let outJats = $.html()
 
   // 3. check if there are supplementary files
@@ -110,12 +125,20 @@ const makeZipFile = async (manuscriptId, jats) => {
   // console.log(outJats)
   const { svgedSource, svgList } = await makeSvgsFromLatex(outJats)
 
+  // This replace all is to make sure that the JATS tag <source> isn't turned into the empty HTML tag <source>
+
+  const cleanedSource = replaceAll(
+    replaceAll(svgedSource, '<sssource>', `<source>`),
+    `</sssource>`,
+    '</source>',
+  )
+
   // 5. make a directory with the JATS file as index.xml
 
   const raw = await randomBytes(16)
   const dirName = `tmp/${raw.toString('hex')}_${manuscriptId}`
   await fsPromised.mkdir(dirName, { recursive: true })
-  await fsPromised.appendFile(`${dirName}/index.xml`, svgedSource)
+  await fsPromised.appendFile(`${dirName}/index.xml`, cleanedSource)
 
   if (imageList.length || svgList.length) {
     // if either of these are true, we need to make an images directory
@@ -125,11 +148,13 @@ const makeZipFile = async (manuscriptId, jats) => {
     if (imageList.length) {
       const imageObjects = imageList.flatMap(x => x.storedObjects)
 
-      await Promise.all(imageObjects.map(async imageObject => {
-        const targetPath = `${imageDirName}/${imageObject.key}`
-        await fileStorage.download(imageObject.key, targetPath)
-        console.error(`Attached image ${imageObject.key}`)
-      }))
+      await Promise.all(
+        imageObjects.map(async imageObject => {
+          const targetPath = `${imageDirName}/${imageObject.key}`
+          await fileStorage.download(imageObject.key, targetPath)
+          console.error(`Attached image ${imageObject.key}`)
+        }),
+      )
     }
 
     if (svgList.length) {
@@ -157,11 +182,13 @@ const makeZipFile = async (manuscriptId, jats) => {
     //   .flatMap(x => x.storedObjects)
     //   .filter(x => x.type === 'original')
 
-    await Promise.all(suppObjects.map(async suppObject => {
-      const targetPath = `${suppDirName}/${suppObject.name}`
-      await fileStorage.download(suppObject.key, targetPath)
-      console.error(`Attached supplementary file ${suppObject.name}.`)
-    }))
+    await Promise.all(
+      suppObjects.map(async suppObject => {
+        const targetPath = `${suppDirName}/${suppObject.name}`
+        await fileStorage.download(suppObject.key, targetPath)
+        console.error(`Attached supplementary file ${suppObject.name}.`)
+      }),
+    )
   }
 
   const zipPath = await makeZip(dirName)
@@ -181,7 +208,7 @@ const makeZipFile = async (manuscriptId, jats) => {
 
   await fsPromised.rmdir('tmp', { recursive: true })
 
-  return { link: url, jats: svgedSource } // returns link to where the ZIP file is.
+  return { link: url, jats: cleanedSource } // returns link to where the ZIP file is.
 }
 
 module.exports = makeZipFile

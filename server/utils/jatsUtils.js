@@ -1,6 +1,9 @@
-const he = require('he')
 const htmlparser2 = require('htmlparser2')
 const cheerio = require('cheerio')
+const makeCitations = require('../jatsexport/makeCitations')
+const htmlToJats = require('../jatsexport/htmlToJats')
+const getCrossrefCitationsFromList = require('./crossrefUtils')
+const processFunding = require('../jatsexport/processFunding')
 
 // const { lte } = require('semver')
 
@@ -8,175 +11,11 @@ function replaceAll(str, find, replace) {
   return str.replace(new RegExp(find, 'g'), replace)
 }
 
-const htmlToJatsTagMap = {
-  b: 'bold',
-  strong: 'bold',
-  blockquote: 'disp-quote',
-  i: 'italic',
-  em: 'italic',
-  li: 'list-item',
-  p: 'p',
-  u: 'underline',
-  // figure: 'fig',
-  // ?: 'disp-formula',
-  // img: 'graphic',
-  // ?: 'inline-formula',
-  // ?: 'mml:math',
-  // ?: 'monospace',
-  // ?: 'strike',
-  // ?: 'tex-math',
-}
-
-const jatsTagsThatDontNeedConversion = [
-  'ext-link',
-  'list',
-  'sc',
-  'sec',
-  'sub',
-  'sup',
-  'title',
-  'xref',
-  'graphic',
-  'caption',
-  'thead',
-  'table',
-  'tbody',
-  'tr',
-  'td',
-  'math-inline',
-  'math-display',
-  'bold',
-  'disp-quote',
-  'italic',
-  'underline',
-  'list-item',
-  '@sec',
-  '@title',
-  'fig',
-  'table-wrap',
-  'inline-formula',
-  'disp-formula',
-]
-
 /** Finds all XML tags and:
  * converts them to another tag if they are in tagsToConvert (discarding all attributes);
  * deletes them if they are not in tagsToConvert or tagsToIgnore;
  * otherwise leaves them untouched
  * */
-const convertTagsAndRemoveTags = (markup, tagsToConvert, tagsToIgnore) => {
-  const openTagRegex = /<([^/>\s]+)(?:(?!\/?>)[\s\S])*>/g
-  const closeTagRegex = /<\/([^/>\s]+)>/g
-  const selfClosingTagRegex = /<([^/>\s]+)(?:(?!\/?>)[\s\S])*\/>/g
-
-  const convertSomeTags = (mkup, tagRegex, tagType) => {
-    let result = ''
-    let lastIndex = 0
-
-    while (true) {
-      const match = tagRegex.exec(mkup)
-      if (!match) break
-      result += mkup.substring(lastIndex, match.index)
-      const tagName = match[1]
-
-      if (tagsToIgnore.includes(tagName)) result += match[0]
-      else {
-        const replacementTag = tagsToConvert[tagName]
-
-        if (replacementTag) {
-          if (tagType === 'open') result += `<${replacementTag}>`
-          else if (tagType === 'close') result += `</${replacementTag}>`
-          else if (tagType === 'self-close') result += `<${replacementTag}/>`
-        }
-      }
-
-      lastIndex = match.index + match[0].length
-    }
-
-    result += mkup.substring(lastIndex)
-    return result
-  }
-
-  let result = markup
-  result = convertSomeTags(result, openTagRegex, 'open')
-  result = convertSomeTags(result, closeTagRegex, 'close')
-  result = convertSomeTags(result, selfClosingTagRegex, 'self-close')
-  return result
-}
-
-const convertRemainingTags = markup =>
-  convertTagsAndRemoveTags(
-    markup,
-    htmlToJatsTagMap,
-    jatsTagsThatDontNeedConversion,
-  )
-
-const sectionRegexes = [
-  /<h1>((?:(?!<\/h1>)[\s\S])*)<\/h1>((?:(?!<h1>)[\s\S])*)/g,
-  /<h2>((?:(?!<\/h2>)[\s\S])*)<\/h2>((?:(?!<h[12]>|<sec>)[\s\S])*)/g,
-  /<h3>((?:(?!<\/h3>)[\s\S])*)<\/h3>((?:(?!<h[1-3]>|<sec>)[\s\S])*)/g,
-  /<h4>((?:(?!<\/h4>)[\s\S])*)<\/h4>((?:(?!<h[1-4]>|<sec>)[\s\S])*)/g,
-  /<h5>((?:(?!<\/h5>)[\s\S])*)<\/h5>((?:(?!<h[1-5]>|<sec>)[\s\S])*)/g,
-  /<h6>((?:(?!<\/h6>)[\s\S])*)<\/h6>((?:(?!<h[1-6]>|<sec>)[\s\S])*)/g,
-]
-
-const insertSections = markup => {
-  let result = markup
-  sectionRegexes.forEach(regex => {
-    result = result.replace(regex, '<sec><title>$1</title>$2</sec>')
-  })
-  return result
-}
-
-/** Replace <a href="..."> with <ext-link ...> ONLY IF the target starts with 'http://', 'https://' or 'ftp://'.
- * For other targets such as '#ref1' or 'mailto:a@b.com', just strip the <a> tags off leaving the inner content.
- */
-const convertLinks = markup => {
-  return markup
-    .replace(
-      /<a href="((?:https?|ftp):\/\/[^"\s]+)"[^>]*>((?:(?!<\/a>)[\s\S])+)<\/a>/g,
-      '<ext-link ext-link-type="uri" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="$1">$2</ext-link>',
-    )
-    .replace(/<a\b[^>]*>((?:(?!<\/a>)[\s\S])+)<\/a>/g, '$1')
-}
-
-const convertLists = markup => {
-  return markup
-    .replace(/<ol>/g, '<list list-type="order">')
-    .replace(/<ul>/g, '<list list-type="bullet">')
-    .replace(/<\/[ou]l>/g, '</list>')
-}
-
-const convertSmallCaps = markup => {
-  // TODO This regex approach is unsafe with nested spans.
-  // Currently this is the only type of span emitted by the SimpleWaxEditor, so should be OK for now.
-  return markup.replace(
-    /<span class="small-caps">((?:(?!<\/span>)[\s\S])*)<\/span>/g,
-    '<sc>$1</sc>',
-  )
-}
-
-const convertCharacterEntities = markup => {
-  const entityRegex = /&[a-zA-Z#0-9]+;/g
-  let result = ''
-  let lastIndex = 0
-
-  while (true) {
-    const match = entityRegex.exec(markup)
-    if (!match) break
-    result += markup.substring(lastIndex, match.index)
-    result += he.encode(he.decode(match[0]))
-    lastIndex = match.index + match[0].length
-  }
-
-  result += markup.substring(lastIndex)
-  return result
-}
-
-// eslint-disable-next-line no-control-regex
-const illegalCharRegex = /[\p{Cs}\p{Cn}\x00-\x08\x0B\x0E-\x1F\x7F\x80-\x9F]/gu
-
-/** Remove surrogates, unassigned characters (including noncharacters) and control characters other than ASCII whitespace. */
-const removeIllegalCharacters = markup => markup.replace(illegalCharRegex, '')
 
 const fixNestedTables = html => {
   // Wax (and HTML) allows a <table> to be inside of a <td>. JATS doesn't allow this.
@@ -190,86 +29,6 @@ const fixNestedTables = html => {
     return $elem
   })
   return $.html()
-}
-
-const convertImages = html => {
-  const dom = htmlparser2.parseDocument(html)
-
-  const $ = cheerio.load(dom, {
-    xmlMode: true,
-  })
-
-  $('figure').replaceWith((index, el) => {
-    const caption = $(el).find('figcaption').html() // this comes back null if not found
-    const graphicElement = $(el).find('img')
-    const graphicSrc = graphicElement.attr('src')
-    const graphicId = graphicElement.attr('data-fileid')
-    // 1 get caption if there is one
-    // 2 get image if there is one
-    // 3 change image tag
-    // 4 change images attribute
-    // 5 change figure tags
-    // 6. clear out all content
-    // 7. add caption if there is one
-    // 8. add image
-    const outCaption = caption ? `<caption><p>${caption}</p></caption>` : ''
-    const outGraphic = `<graphic xlink:href="${graphicSrc}" id="graphic_${graphicId}" />`
-    const output = `<fig>${outCaption}${outGraphic}</fig>`
-    return output
-  })
-
-  const output = $.html()
-
-  return output
-}
-
-const htmlToJats = html => {
-  let jats = html
-  jats = removeIllegalCharacters(jats)
-  jats = insertSections(jats)
-  jats = convertImages(jats)
-  jats = convertLinks(jats)
-  jats = convertLists(jats)
-  jats = convertSmallCaps(jats)
-  jats = convertRemainingTags(jats)
-  jats = convertCharacterEntities(jats)
-  return jats
-}
-
-// note this regex is intended for node, and doesn't work in some browsers (so it breaks Storybook on Safari)
-const paragraphOrListItemRegex = /(?<=<p\b[^>]*>)[\s\S]*?(?=<\/p>)|(?<=<li>)(?:(?!<p\b)[\s\S])*?(?=<\/li>)/g
-
-const getParagraphOrListItems = html => {
-  return html
-    .match(paragraphOrListItemRegex)
-    .map(s => s.trim())
-    .filter(s => !!s)
-}
-
-// TODO Move the following into a separate file crossrefUtils.js; shift some other functions here into htmlUtils.js.
-/** Get Crossref-style citation XML, treating each nonempty paragraph or list item as a separate citation */
-const getCrossrefCitationsFromList = html => {
-  const items = getParagraphOrListItems(removeIllegalCharacters(html))
-  return items.map(item => {
-    let result = item.replace(
-      /<span class="small-caps">((?:(?!<\/span>)[\s\S])*)<\/span>/g,
-      '<scp>$1</scp>',
-    )
-
-    result = convertTagsAndRemoveTags(result, {}, [
-      'b',
-      'i',
-      'em',
-      'strong',
-      'u',
-      'sup',
-      'sub',
-      'scp',
-    ])
-
-    result = convertCharacterEntities(result)
-    return result
-  })
 }
 
 const removeTrackChanges = html => {
@@ -328,7 +87,7 @@ const makeJournalMeta = journalMeta => {
   return thisJournalMeta && `<journal-meta>${thisJournalMeta}</journal-meta>`
 }
 
-const makeArticleMeta = (metadata, abstract, title) => {
+const makeArticleMeta = (metadata, abstract, title, fundingList) => {
   // metadata:
   // --pubDate: date
   // --id: id
@@ -422,6 +181,10 @@ const makeArticleMeta = (metadata, abstract, title) => {
     thisArticleMeta += `<kwd-group kwd-group-type="author">${contentList}</kwd-group>`
   }
 
+  if (fundingList) {
+    thisArticleMeta += fundingList
+  }
+
   return `<article-meta>${thisArticleMeta}</article-meta>`
 }
 
@@ -445,8 +208,14 @@ const makeFootnotesSection = html => {
       toReplace,
       `<xref ref-type="fn" rid="fnid${id}">${footnoteCount}</xref>`,
     )
+
     // add this to the list of footnotes
-    fnSection += `<fn id="fnid${id}"><p>${htmlToJats(text)}</p></fn>`
+    // pass through spans in footnotes as @span, that will have to be taken care of later.
+
+    // text = replaceAll(text, '<span', '<aside')
+    // text = replaceAll(text, '</span>', '</aside>')
+
+    fnSection += `<fn id="fnid${id}"><p>${htmlToJats(text, true)}</p></fn>`
   }
 
   if (footnoteCount > 0) {
@@ -562,133 +331,6 @@ const makeAppendices = html => {
   }
 }
 
-const makeCitations = html => {
-  let deCitedHtml = html
-  let refList = '' // this is the ref-list that we're building
-  let refListHeader = '' // if there's a header, it goes in here
-  let refCount = 0 // this is to give refs IDs
-  const potentialRefs = []
-
-  while (deCitedHtml.indexOf('<section class="reflist">') > -1) {
-    let thisRefList = deCitedHtml
-      .split('<section class="reflist">')[1]
-      .split('</section>')[0]
-
-    deCitedHtml = deCitedHtml.replace(
-      `<section class="reflist">${thisRefList}</section>`,
-      '',
-    )
-
-    // 2.1. Get header, if there is one. Only the first reflist header is taken.
-    if (!refListHeader) {
-      if (thisRefList.indexOf('<h1 class="referenceheader">') > -1) {
-        /* eslint-disable prefer-destructuring */
-        refListHeader = thisRefList
-          .split('<h1 class="referenceheader">')[1]
-          .split('</h1>')[0]
-        refList = `<title>${refListHeader}</title>${refList}`
-      }
-    }
-    // 2.2. Get all the citations out, add to refList
-
-    // first, go through and identify all possible mixed citations
-
-    while (thisRefList.indexOf('<p class="mixedcitation">') > -1) {
-      const thisCitation = thisRefList
-        .split('<p class="mixedcitation">')[1]
-        .split('</p>')[0]
-
-      if (thisCitation.length) {
-        potentialRefs[
-          html.indexOf(`<p class="mixedcitation">${thisCitation}</p>`)
-        ] = thisCitation
-      }
-
-      thisRefList = thisRefList.replace(
-        `<p class="mixedcitation">${thisCitation}</p>`,
-        ``,
-      )
-    }
-
-    // next, take all regular paragraphs as citations
-
-    while (thisRefList.indexOf('<p class="paragraph">') > -1) {
-      const thisCitation = thisRefList
-        .split('<p class="paragraph">')[1]
-        .split('</p>')[0]
-
-      if (thisCitation.length) {
-        potentialRefs[
-          html.indexOf(`<p class="paragraph">${thisCitation}</p>`)
-        ] = thisCitation
-      }
-
-      thisRefList = thisRefList.replace(
-        `<p class="paragraph">${thisCitation}</p>`,
-        ``,
-      )
-    }
-
-    // finally, if there are <li>s with content, take them as citations.
-
-    while (thisRefList.indexOf('<li>') > -1) {
-      const thisCitation = thisRefList.split('<li>')[1].split('</li>')[0]
-
-      if (thisCitation.length) {
-        potentialRefs[html.indexOf(`<li>${thisCitation}</li>`)] = thisCitation
-      }
-
-      thisRefList = thisRefList.replace(`<li>${thisCitation}</li>`, ``)
-    }
-
-    const myRefs = potentialRefs.filter(x => x)
-
-    refList += myRefs
-      .map(
-        (thisCitation, index) =>
-          `<ref id="ref-${index}"><mixed-citation>${htmlToJats(
-            thisCitation,
-          )}</mixed-citation></ref>`,
-      )
-      .join('')
-    refCount = myRefs.length
-  }
-
-  // 2.3 deal with any stray reference headers in the body—they become regular H1s.
-
-  while (deCitedHtml.indexOf('<h1 class="referenceheader">') > -1) {
-    deCitedHtml = deCitedHtml.replace(`<h1 class="referenceheader">`, '<h1>')
-  }
-
-  // 2.4 deal with any loose mixed citations in the body:
-  // they're pulled out of the body and added to the ref-list
-  // QUESTION: Is this the right thing to do? It isn't necessarily what the user expects.
-  // Theoretically you could have a <ref-list> at the end of a <sec> though why you would want
-  // that is not clear to me. <mixed-citation> by itself isn't valid in a <sec> (even wrapped in <ref>).
-  // The alternative would just be to delete the loose <mixed-citations>?
-
-  while (deCitedHtml.indexOf('<p class="mixedcitation">') > -1) {
-    const thisCitation = deCitedHtml
-      .split('<p class="mixedcitation">')[1]
-      .split('</p>')[0]
-
-    deCitedHtml = deCitedHtml.replace(
-      `<p class="mixedcitation">${thisCitation}</p>`,
-      ``,
-    )
-    refList += `<ref id="ref-${refCount}"><mixed-citation>${htmlToJats(
-      thisCitation,
-    )}</mixed-citation></ref>`
-    refCount += 1
-  }
-
-  if (refList) {
-    refList = `<ref-list>${refList}</ref-list>`
-  }
-
-  return { deCitedHtml, refList }
-}
-
 const makeFrontMatter = html => {
   let deFrontedHtml = html
   let abstract = ''
@@ -704,6 +346,7 @@ const makeFrontMatter = html => {
     if (frontMatter.indexOf('<h1>') > -1) {
       // if there's an H1 in the front matter, send it back as the title.
       // note that we are only taking the first one
+      // eslint-disable-next-line prefer-destructuring
       title = frontMatter.split('<h1>')[1].split('</h1>')[0]
     }
 
@@ -712,6 +355,7 @@ const makeFrontMatter = html => {
     if (frontMatter.indexOf('<section class="abstractSection">') > -1) {
       // we are only taking the first one.
       // if there is more than one abstract, subsequent ones will be ignored
+      // eslint-disable-next-line prefer-destructuring
       abstract = frontMatter
         .split('<section class="abstractSection">')[1]
         .split('</section>')[0]
@@ -779,9 +423,15 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const unTrackChangedHtml = removeTrackChanges(html)
 
-  const { deFootnotedHtml, fnSection } = makeFootnotesSection(
-    unTrackChangedHtml,
-  )
+  // 1. deal with funding statements
+
+  const { defundedHtml, fundingList } = processFunding(unTrackChangedHtml)
+
+  // 2. deal with citations
+
+  const { processedHtml, refList } = makeCitations(defundedHtml)
+
+  const { deFootnotedHtml, fnSection } = makeFootnotesSection(processedHtml)
 
   const { deackedHtml, ack } = makeAcknowledgements(deFootnotedHtml)
 
@@ -797,19 +447,20 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const { deAppendixedHtml, appendices } = makeAppendices(deTabledHtml)
 
-  // 2. deal with citations
-
-  const { deCitedHtml, refList } = makeCitations(deAppendixedHtml)
-
   // 3 deal with faux frontmatter – these just get thrown away
 
-  const { abstract, deFrontedHtml, title } = makeFrontMatter(deCitedHtml)
+  const { abstract, deFrontedHtml, title } = makeFrontMatter(deAppendixedHtml)
 
   // 4 deal with article and journal metadata
 
   const journalMetaSection = makeJournalMeta(journalMeta || {})
 
-  const articleMetaSection = makeArticleMeta(articleMeta || {}, abstract, title)
+  const articleMetaSection = makeArticleMeta(
+    articleMeta || {},
+    abstract,
+    title,
+    fundingList || '',
+  )
 
   const front = `<front>${journalMetaSection}${articleMetaSection}</front>`
 

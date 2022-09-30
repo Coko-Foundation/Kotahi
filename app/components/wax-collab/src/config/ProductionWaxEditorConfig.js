@@ -1,4 +1,3 @@
-import { DefaultSchema } from 'wax-prosemirror-utilities'
 // import { WaxSelectionPlugin } from 'wax-prosemirror-plugins'
 import { emDash, ellipsis } from 'prosemirror-inputrules'
 import { columnResizing, tableEditing } from 'prosemirror-tables'
@@ -42,6 +41,7 @@ import {
 } from '../CustomWaxToolGroups'
 import JatsTagsService from '../JatsTags'
 import CharactersList from './CharactersList'
+import KotahiSchema from './KotahiSchema'
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
@@ -70,7 +70,7 @@ const productionWaxEditorConfig = (readOnlyComments, handleAssetManager) => ({
       reject: true,
     },
   },
-  SchemaService: DefaultSchema,
+  SchemaService: KotahiSchema,
   CommentsService: { readOnly: readOnlyComments || false }, // this should make it work though this is not yet in Wax
   MenuService: [
     {

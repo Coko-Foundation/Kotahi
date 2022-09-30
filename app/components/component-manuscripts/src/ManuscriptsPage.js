@@ -142,6 +142,10 @@ const ManuscriptsPage = ({ history }) => {
     })
   }
 
+  const shouldAllowBulkImport =
+    config.manuscripts.allowManualImport === 'true' &&
+    ['colab', 'ncrc'].includes(process.env.INSTANCE_NAME)
+
   return (
     <Manuscripts
       chatRoomId={chatRoomId}
@@ -158,6 +162,7 @@ const ManuscriptsPage = ({ history }) => {
       setReadyToEvaluateLabels={setReadyToEvaluateLabels}
       setSortDirection={setSortDirection}
       setSortName={setSortName}
+      shouldAllowBulkImport={shouldAllowBulkImport}
       sortDirection={sortDirection}
       sortName={sortName}
       systemWideDiscussionChannel={systemWideDiscussionChannel}

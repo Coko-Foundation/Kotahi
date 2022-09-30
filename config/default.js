@@ -229,6 +229,7 @@ module.exports = {
     'review',
     'notification-email',
     'pagedjs',
+    'manuscripts',
   ],
   crossref: {
     login: '',
@@ -265,5 +266,10 @@ module.exports = {
     minioConsolePort: '',
     maximumWidthForSmallImages: '',
     maximumWidthForMediumImages: '',
+  },
+  manuscripts: {
+    autoImportHourUtc: '',
+    archivePeriodDays: '',
+    allowManualImport: 'false',
   },
 }
