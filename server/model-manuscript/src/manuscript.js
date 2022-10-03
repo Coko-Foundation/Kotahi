@@ -41,6 +41,21 @@ class Manuscript extends BaseModel {
     }
   }
 
+  async $afterUpdate(opt, queryContext) {
+    await super.$afterUpdate(opt, queryContext)
+    delete this.searchTsvector
+  }
+
+  async $afterInsert(opt, queryContext) {
+    await super.$afterInsert(opt, queryContext)
+    delete this.searchTsvector
+  }
+
+  async $afterFind(opt, queryContext) {
+    await super.$afterFind(opt, queryContext)
+    delete this.searchTsvector
+  }
+
   async getReviews() {
     // TODO: Use relationships
     /* eslint-disable-next-line global-require */
