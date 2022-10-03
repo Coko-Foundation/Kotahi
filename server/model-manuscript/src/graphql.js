@@ -491,13 +491,13 @@ const resolvers = {
       const firstVersionId = manuscript.parentId || manuscript.id
 
       // Archive Manuscript
-      const archivedManuscripts = await models.Manuscript.query()
+      const archivedManuscript = await models.Manuscript.query()
         .returning('id')
         .update({ isHidden: true })
         .where('id', firstVersionId)
         .orWhere('parentId', firstVersionId)
 
-      return archivedManuscripts.map(m => m.id)
+      return archivedManuscript[0].id
     },
 
     async deleteManuscripts(_, { ids }, ctx) {
