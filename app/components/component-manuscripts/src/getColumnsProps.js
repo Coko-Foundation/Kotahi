@@ -27,6 +27,7 @@ const getColumnsProps = (
   setReadyToEvaluateLabel,
   urlFrag,
   currentSearchQuery,
+  archiveManuscript,
 ) => {
   const specialColumnProperties = {
     shortId: {
@@ -79,6 +80,7 @@ const getColumnsProps = (
         isManuscriptBlockedFromPublishing,
         tryPublishManuscript,
         urlFrag,
+        archiveManuscript,
       },
     },
     newItemCheckbox: {

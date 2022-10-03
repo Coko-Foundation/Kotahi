@@ -469,9 +469,40 @@ const resolvers = {
       return importManuscripts(ctx)
     },
 
-    importManuscriptsFromSemanticScholar(_, props, ctx) {
-      return importManuscriptsFromSemanticScholar(ctx)
+    async archiveManuscripts(_, { ids }, ctx) {
+      // finding the ids of the first versions of all manuscripts:
+      const selectedManuscripts = await models.Manuscript.query()
+        .select('parentId', 'id')
+        .whereIn('id', ids)
+
+      const firstVersionIds = selectedManuscripts.map(m => m.parentId || m.id)
+
+      // archiving manuscripts with either firstVersionID or parentID
+      const archivedManuscripts = await models.Manuscript.query()
+        .returning('id')
+        .update({ isHidden: true })
+        .whereIn('id', firstVersionIds)
+        .orWhereIn('parentId', firstVersionIds)
+
+      return archivedManuscripts.map(m => m.id)
     },
+
+    async archiveManuscript(_, { id }, ctx) {
+      const manuscript = await models.Manuscript.find(id)
+
+      // getting the ID of the firstVersion for all manuscripts.
+      const firstVersionId = manuscript.parentId || manuscript.id
+
+      // Archive Manuscript
+      const archivedManuscript = await models.Manuscript.query()
+        .returning('id')
+        .update({ isHidden: true })
+        .where('id', firstVersionId)
+        .orWhere('parentId', firstVersionId)
+
+      return archivedManuscript[0].id
+    },
+
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
         await Promise.all(
@@ -1405,6 +1436,8 @@ const typeDefs = `
     importManuscripts: Boolean!
     importManuscriptsFromSemanticScholar: Boolean!
     setShouldPublishField(manuscriptId: ID!, objectId: ID!, fieldName: String!, shouldPublish: Boolean!): Manuscript!
+    archiveManuscript(id: ID!): ID!
+    archiveManuscripts(ids: [ID]!): [ID!]!
   }
 
   type Manuscript {

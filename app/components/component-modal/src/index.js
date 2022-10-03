@@ -69,7 +69,7 @@ export const ConfirmationModal = ({
           }}
           primary
         >
-          Ok
+          Archive
         </Button>
         <CancelButton onClick={closeModal}>Cancel</CancelButton>
       </ModalContainer>
