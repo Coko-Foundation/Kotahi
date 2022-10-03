@@ -301,7 +301,6 @@ const Manuscripts = ({ history, ...props }) => {
           ＋ New submission
         </ActionButton>
       )}
-
       {shouldAllowBulkImport && (
         <ActionButton
           onClick={importManuscripts}

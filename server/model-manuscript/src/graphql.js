@@ -8,7 +8,10 @@ const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
 const { raw } = require('objection')
 
-const { importManuscripts } = require('./manuscriptCommsUtils')
+const {
+  importManuscripts,
+  importManuscriptsFromSemanticScholar,
+} = require('./manuscriptCommsUtils')
 
 const Team = require('../../model-team/src/team')
 const TeamMember = require('../../model-team/src/team_member')
@@ -464,6 +467,10 @@ const resolvers = {
 
     importManuscripts(_, props, ctx) {
       return importManuscripts(ctx)
+    },
+
+    importManuscriptsFromSemanticScholar(_, props, ctx) {
+      return importManuscriptsFromSemanticScholar(ctx)
     },
     async deleteManuscripts(_, { ids }, ctx) {
       if (ids.length > 0) {
@@ -1396,6 +1403,7 @@ const typeDefs = `
     publishManuscript(id: ID!): PublishingResult!
     createNewVersion(id: ID!): Manuscript
     importManuscripts: Boolean!
+    importManuscriptsFromSemanticScholar: Boolean!
     setShouldPublishField(manuscriptId: ID!, objectId: ID!, fieldName: String!, shouldPublish: Boolean!): Manuscript!
   }
 
@@ -1424,6 +1432,7 @@ const typeDefs = `
     formFieldsToPublish: [FormFieldsToPublish!]!
     searchRank: Float
     searchSnippet: String
+    importSourceServer: String
   }
 
   input ManuscriptInput {

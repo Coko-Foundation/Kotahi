@@ -317,7 +317,6 @@ const ReviewPage = ({ match, ...props }) => {
 
   // Find an existing review or create a placeholder, and hold a ref to it
   const existingReview = reviewOrInitial(latestVersion)
-
   const { manuscript, threadedDiscussions } = data
 
   // We shouldn't arrive at this page with a subsequent/child manuscript ID. If we do, redirect to the parent/original ID
