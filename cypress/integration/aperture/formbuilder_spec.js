@@ -63,12 +63,12 @@ describe('Form builder', () => {
     FormsPage.getFormTitleTab(0).should('contain', 'Decision')
     FormsPage.clickFormOption(1)
     FormsPage.getNameField().should('have.value', 'files').clear()
-    cy.get('[name=name]').type('fileName')
+    cy.get('[name=name]').type('files')
     cy.contains('Update Field').click()
 
     // adding a field in decision form
     cy.contains('Add Field').click()
-    cy.contains('Choose in the list').should('be.visible').click()
+    cy.contains('Choose in the list').click()
     cy.get('button')
     cy.contains('VisualAbstract').click()
     cy.contains('Name (internal field name)').click()

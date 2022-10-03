@@ -1,6 +1,6 @@
 {
   "baseUrl": "http://localhost:4000",
   "nodeVersion": "system",
-  "defaultCommandTimeout": 8000,
+  "defaultCommandTimeout": 20000,
   "viewportWidth": 1200
 }

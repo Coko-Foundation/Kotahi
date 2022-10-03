@@ -265,6 +265,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
             }
           }
         }
+        importSourceServer
         manuscriptVersions {
           id
           shortId
@@ -302,6 +303,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
             id
             profilePicture
           }
+          importSourceServer
         }
         submitter {
           username
@@ -352,6 +354,11 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
 export const IMPORT_MANUSCRIPTS = gql`
   mutation {
     importManuscripts
+  }
+`
+export const IMPORT_SEMANTIC_SCHOLAR_MANUSCRIPTS = gql`
+  mutation {
+    importManuscriptsFromSemanticScholar
   }
 `
 export const IMPORTED_MANUSCRIPTS_SUBSCRIPTION = gql`

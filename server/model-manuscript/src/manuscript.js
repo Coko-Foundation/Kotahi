@@ -41,6 +41,21 @@ class Manuscript extends BaseModel {
     }
   }
 
+  async $afterUpdate(opt, queryContext) {
+    await super.$afterUpdate(opt, queryContext)
+    delete this.searchTsvector
+  }
+
+  async $afterInsert(opt, queryContext) {
+    await super.$afterInsert(opt, queryContext)
+    delete this.searchTsvector
+  }
+
+  async $afterFind(opt, queryContext) {
+    await super.$afterFind(opt, queryContext)
+    delete this.searchTsvector
+  }
+
   async getReviews() {
     // TODO: Use relationships
     /* eslint-disable-next-line global-require */
@@ -291,6 +306,7 @@ class Manuscript extends BaseModel {
         importSourceServer: { type: ['string', 'null'] },
         isHidden: { type: ['boolean', 'null'] },
         formFieldsToPublish: { type: 'array' },
+        doi: { type: 'string' },
         searchableText: { type: 'string' },
       },
     }
