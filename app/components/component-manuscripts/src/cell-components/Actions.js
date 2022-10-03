@@ -54,7 +54,7 @@ const Actions = ({
         closeModal={() => setConfirmArchiveModalIsOpen(false)}
         confirmationAction={() => archiveManuscript(manuscript.id)}
         isOpen={confirmArchiveModalIsOpen}
-        message="Do you want to archive this manuscript?"
+        message="Please confirm you would like to archive this manuscript"
       />
     </>
   )

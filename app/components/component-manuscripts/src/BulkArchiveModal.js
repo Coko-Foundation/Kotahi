@@ -8,16 +8,16 @@ import {
 const BulkArchiveModal = ({ confirmsBulkArchive, closeModal }) => {
   return (
     <BulkActionModalContainer>
-      <p>Please confirm if you want to archive these selected articles</p>
+      <p>Please confirm you would like to archive selected manuscripts</p>
       <br />
       <br />
       <br />
       <BulkActionModalButtons>
         <BulkActionModalButton onClick={confirmsBulkArchive} primary>
-          Confirm
+          Archive
         </BulkActionModalButton>
         <BulkActionModalButton onClick={closeModal} secondary>
-          Close
+          Cancel
         </BulkActionModalButton>
       </BulkActionModalButtons>
     </BulkActionModalContainer>

@@ -467,48 +467,37 @@ const resolvers = {
     },
 
     async archiveManuscripts(_, { ids }, ctx) {
-      if (ids.length > 0) {
-        await Promise.all(
-          ids.map(toArchiveItem =>
-            models.Manuscript.query()
-              .update({ isHidden: true })
-              .where('id', '=', toArchiveItem),
-          ),
-        )
-      }
+      // finding the ids of the first versions of all manuscripts:
+      const selectedManuscripts = await models.Manuscript.query()
+        .select('parentId', 'id')
+        .whereIn('id', ids)
 
-      return ids
+      const firstVersionIds = selectedManuscripts.map(m => m.parentId || m.id)
+
+      // archiving manuscripts with either firstVersionID or parentID
+      const archivedManuscripts = await models.Manuscript.query()
+        .returning('id')
+        .update({ isHidden: true })
+        .whereIn('id', firstVersionIds)
+        .orWhereIn('parentId', firstVersionIds)
+
+      return archivedManuscripts.map(m => m.id)
     },
 
     async archiveManuscript(_, { id }, ctx) {
-      const toArchiveList = []
       const manuscript = await models.Manuscript.find(id)
 
-      toArchiveList.push(manuscript.id)
-
-      if (manuscript.parentId) {
-        const parentManuscripts = await models.Manuscript.findByField(
-          'parent_id',
-          manuscript.parentId,
-        )
-
-        parentManuscripts.forEach(ms => {
-          toArchiveList.push(ms.id)
-        })
-      }
+      // getting the ID of the firstVersion for all manuscripts.
+      const firstVersionId = manuscript.parentId || manuscript.id
 
       // Archive Manuscript
-      if (toArchiveList.length > 0) {
-        await Promise.all(
-          toArchiveList.map(toArchiveItem =>
-            models.Manuscript.query()
-              .update({ isHidden: true })
-              .where('id', '=', toArchiveItem),
-          ),
-        )
-      }
+      const archivedManuscripts = await models.Manuscript.query()
+        .returning('id')
+        .update({ isHidden: true })
+        .where('id', firstVersionId)
+        .orWhere('parentId', firstVersionId)
 
-      return id
+      return archivedManuscripts.map(m => m.id)
     },
 
     async deleteManuscripts(_, { ids }, ctx) {
@@ -1444,7 +1433,7 @@ const typeDefs = `
     importManuscripts: Boolean!
     setShouldPublishField(manuscriptId: ID!, objectId: ID!, fieldName: String!, shouldPublish: Boolean!): Manuscript!
     archiveManuscript(id: ID!): ID!
-    archiveManuscripts(ids: [ID]!): [ID]!
+    archiveManuscripts(ids: [ID]!): [ID!]!
   }
 
   type Manuscript {

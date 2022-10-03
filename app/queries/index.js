@@ -198,7 +198,7 @@ export const ARCHIVE_MANUSCRIPT = gql`
 `
 
 export const ARCHIVE_MANUSCRIPTS = gql`
-  mutation($ids: [ID]!) {
+  mutation($ids: [ID!]!) {
     archiveManuscripts(ids: $ids)
   }
 `
