@@ -115,6 +115,13 @@ const pdfHandler = async manuscriptId => {
     articleData.files,
     'original',
   )
+
+  // TODO: get rid of this if we're doing this in applyTemplate
+
+  // const { svgedSource } = await makeSvgsFromLatex(articleData.meta.source, true)
+
+  // articleData.meta.source = svgedSource
+
   const outHtml = await applyTemplate(articleData)
 
   await fsPromised.appendFile(`${dirName}/index.html`, outHtml)
