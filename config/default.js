@@ -271,5 +271,6 @@ module.exports = {
     autoImportHourUtc: '',
     archivePeriodDays: '',
     allowManualImport: 'false',
+    semanticScholarImportsRecencyPeriodDays: 42,
   },
 }

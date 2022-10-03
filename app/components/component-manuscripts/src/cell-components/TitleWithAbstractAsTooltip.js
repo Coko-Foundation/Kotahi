@@ -3,9 +3,17 @@ import styled from 'styled-components'
 import Tooltip from 'rc-tooltip'
 import { InfoIcon } from '../style'
 import { stripHtml } from '../../../component-review/src/components/review/util'
+import { SemanticScholarIcon } from '../../../shared/Icons'
 
 const FloatingIcon = styled.div`
   float: right;
+`
+
+const IsImportSemanticScholar = styled(SemanticScholarIcon)`
+  height: 15px;
+  margin-bottom: -5px;
+  margin-right: 10px;
+  width: 20px;
 `
 
 const getAbstractAsPlainText = manuscript => {
@@ -20,6 +28,11 @@ const getAbstractAsPlainText = manuscript => {
 const TitleWithAbstractAsTooltip = ({ manuscript }) => {
   const title =
     manuscript.meta.title || manuscript.submission.articleDescription || ''
+
+  const isManuscriptFromSemanticScholar = !!(
+    manuscript.importSourceServer &&
+    manuscript.importSourceServer === 'semantic-scholar'
+  )
 
   let url = manuscript.submission.articleURL
   if (url === 'https://doi.org/') url = null // For some reason, some URLs come in as this generic address, which is useless to the user.
@@ -57,6 +70,9 @@ const TitleWithAbstractAsTooltip = ({ manuscript }) => {
             <InfoIcon />
           </Tooltip>
         </FloatingIcon>
+      )}
+      {isManuscriptFromSemanticScholar && (
+        <IsImportSemanticScholar height="60" width="80" />
       )}
       <span style={{ wordBreak: 'break-word' }}>
         {url ? (

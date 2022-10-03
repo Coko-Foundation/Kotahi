@@ -7,6 +7,7 @@ const schedule = require('../node_modules/node-schedule')
 
 const {
   importManuscripts,
+  importManuscriptsFromSemanticScholar,
   archiveOldManuscripts,
 } = require('./model-manuscript/src/manuscriptCommsUtils')
 
@@ -18,6 +19,7 @@ schedule.scheduleJob(
   async () => {
     try {
       await importManuscripts({ user: null })
+      await importManuscriptsFromSemanticScholar({ user: null })
       await archiveOldManuscripts()
     } catch (error) {
       console.error(error)

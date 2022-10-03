@@ -2,10 +2,10 @@ const config = require('config')
 
 const models = require('@pubsweet/models')
 const { pubsubManager } = require('@coko/server')
-
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
 const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
+const importArticlesFromSemanticScholar = require('../../import-articles/semantic-scholar-papers-import')
 
 const { getPubsub } = pubsubManager
 
@@ -29,6 +29,7 @@ const getIdOfLatestVersionOfManuscript = async versionId => {
 }
 
 let isImportInProgress = false
+let isImportingFromSemanticScholarInProgress = false
 
 const importManuscripts = async ctx => {
   if (isImportInProgress) return false
@@ -69,6 +70,31 @@ const importManuscripts = async ctx => {
   return true
 }
 
+const importManuscriptsFromSemanticScholar = ctx => {
+  if (isImportingFromSemanticScholarInProgress) return false
+  isImportingFromSemanticScholarInProgress = true
+
+  const promises = []
+
+  if (process.env.INSTANCE_NAME === 'colab') {
+    promises.push(importArticlesFromSemanticScholar(ctx))
+  }
+
+  if (!promises.length) return false
+
+  Promise.all(promises)
+    .catch(error => console.error(error))
+    .finally(async () => {
+      isImportingFromSemanticScholarInProgress = false
+      const pubsub = await getPubsub()
+      pubsub.publish('IMPORT_MANUSCRIPTS_STATUS', {
+        manuscriptsImportStatus: true,
+      })
+    })
+
+  return true
+}
+
 const archiveOldManuscripts = async () => {
   const cutoffDate = new Date(
     new Date().valueOf() - config.manuscripts.archivePeriodDays * 86400000, // subtracting milliseconds of ARCHIVE_PERIOD_DAYS
@@ -89,5 +115,6 @@ module.exports = {
   getIdOfFirstVersionOfManuscript,
   getIdOfLatestVersionOfManuscript,
   importManuscripts,
+  importManuscriptsFromSemanticScholar,
   archiveOldManuscripts,
 }
