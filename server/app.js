@@ -11,20 +11,27 @@ const {
   archiveOldManuscripts,
 } = require('./model-manuscript/src/manuscriptCommsUtils')
 
-schedule.scheduleJob(
-  {
-    tz: 'Etc/UTC',
-    rule: `00 ${config.manuscripts.autoImportTimeUtc} * * *`,
-  },
-  async () => {
-    try {
-      await importManuscripts({ user: null })
-      await importManuscriptsFromSemanticScholar({ user: null })
-      await archiveOldManuscripts()
-    } catch (error) {
-      console.error(error)
-    }
-  },
-)
+if (config.manuscripts.autoImportHourUtc) {
+  schedule.scheduleJob(
+    {
+      tz: 'Etc/UTC',
+      rule: `00 ${config.manuscripts.autoImportHourUtc} * * *`,
+    },
+    async () => {
+      // eslint-disable-next-line no-console
+      console.info(
+        `Running scheduled import and archive tasks at ${new Date().toISOString()}`,
+      )
+
+      try {
+        await importManuscripts({ user: null })
+        await importManuscriptsFromSemanticScholar({ user: null })
+        await archiveOldManuscripts()
+      } catch (error) {
+        console.error(error)
+      }
+    },
+  )
+}
 
 module.exports = app
