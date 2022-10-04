@@ -179,6 +179,10 @@ const AdminPage = () => {
       : null
   }
 
+  if (currentUser) {
+    links.push({ link: profileLink, name: 'My profile', icon: 'user' })
+  }
+
   if (
     currentUser &&
     ['aperture', 'colab', 'ncrc'].includes(process.env.INSTANCE_NAME)
@@ -188,28 +192,29 @@ const AdminPage = () => {
 
   if (currentUser && currentUser.admin) {
     links.push({
+      link: manuscriptsLink,
+      name: 'Manuscripts',
+      icon: 'file-text',
+    })
+    if (process.env.INSTANCE_NAME !== 'ncrc')
+      links.push({ link: reportsLink, name: 'Reports', icon: 'activity' })
+  }
+
+  if (currentUser) {
+    links.push({
       menu: 'Forms',
-      name: 'Forms',
-      icon: 'check-square',
+      name: 'Settings',
+      icon: 'settings',
       links: [
         { link: submissionFormBuilderLink, name: 'Submission' },
         { link: reviewFormBuilderLink, name: 'Review' },
         { link: decisionFormBuilderLink, name: 'Decision' },
       ],
     })
-    links.push({ link: userAdminLink, name: 'Users', icon: 'users' })
-    links.push({
-      link: manuscriptsLink,
-      name: 'Manuscripts',
-      icon: 'file-text',
-    })
-
-    if (process.env.INSTANCE_NAME !== 'ncrc')
-      links.push({ link: reportsLink, name: 'Reports', icon: 'activity' })
   }
 
-  if (currentUser) {
-    links.push({ link: profileLink, name: 'My profile', icon: 'user' })
+  if (currentUser && currentUser.admin) {
+    links.push({ link: userAdminLink, name: 'Users', icon: 'users' })
   }
 
   // Throttled refetch query `currentUser` once every 2mins
