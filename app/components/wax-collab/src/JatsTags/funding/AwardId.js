@@ -9,6 +9,8 @@ class AwardId extends Tools {
   title = 'Change to award ID'
   label = 'Award ID'
   name = 'AwardId'
+  color = 'colorAwardId'
+  className = 'awardid'
 
   // eslint-disable-next-line class-methods-use-this
   get run() {
