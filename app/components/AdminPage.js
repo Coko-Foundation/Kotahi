@@ -204,9 +204,20 @@ const AdminPage = () => {
         { link: decisionFormBuilderLink, name: 'Decision' },
         links.push({
           menu: 'setting',
-          name: '',
-          icon: 'settings',
-          links: [{ menu: 'forms', name: 'Forms', icon: 'check-square' }],
+          name: 'Forms',
+          icon: 'check-square',
+          links: [
+            {
+              menu: 'forms',
+              name: 'Settings',
+              icon: 'settings',
+              links: [
+                links.push({
+                  menu: '',
+                }),
+              ],
+            },
+          ],
         }),
       ],
     })
