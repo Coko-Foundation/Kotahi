@@ -179,10 +179,6 @@ const AdminPage = () => {
       : null
   }
 
-  if (currentUser) {
-    links.push({ link: profileLink, name: 'My profile', icon: 'user' })
-  }
-
   if (
     currentUser &&
     ['aperture', 'colab', 'ncrc'].includes(process.env.INSTANCE_NAME)
@@ -202,18 +198,22 @@ const AdminPage = () => {
 
   if (currentUser) {
     links.push({
-      menu: 'Forms',
-      name: 'Settings',
-      icon: 'settings',
       links: [
         { link: submissionFormBuilderLink, name: 'Submission' },
         { link: reviewFormBuilderLink, name: 'Review' },
         { link: decisionFormBuilderLink, name: 'Decision' },
+        links.push({
+          menu: 'setting',
+          name: '',
+          icon: 'settings',
+          links: [{ menu: 'forms', name: 'Forms', icon: 'check-square' }],
+        }),
       ],
     })
   }
 
   if (currentUser && currentUser.admin) {
+    links.push({ link: '', name: 'Tasks', icon: 'list' })
     links.push({ link: userAdminLink, name: 'Users', icon: 'users' })
   }
 
