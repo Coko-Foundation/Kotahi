@@ -4,6 +4,7 @@ const makeCitations = require('../jatsexport/makeCitations')
 const htmlToJats = require('../jatsexport/htmlToJats')
 const getCrossrefCitationsFromList = require('./crossrefUtils')
 const processFunding = require('../jatsexport/processFunding')
+const processKeywords = require('../jatsexport/processKeywords')
 
 // const { lte } = require('semver')
 
@@ -87,7 +88,13 @@ const makeJournalMeta = journalMeta => {
   return thisJournalMeta && `<journal-meta>${thisJournalMeta}</journal-meta>`
 }
 
-const makeArticleMeta = (metadata, abstract, title, fundingList) => {
+const makeArticleMeta = (
+  metadata,
+  abstract,
+  title,
+  fundingList,
+  keywordList,
+) => {
   // metadata:
   // --pubDate: date
   // --id: id
@@ -170,7 +177,12 @@ const makeArticleMeta = (metadata, abstract, title, fundingList) => {
     )}</abstract>`
   }
 
-  if (formData.content && formData.content.length) {
+  if (keywordList && keywordList.length) {
+    // If we have keywords in Wax, we use them. Otherwise, we might have them in the form, use them if they exist.
+    thisArticleMeta += `<kwd-group kwd-group-type="author">${keywordList
+      .map(x => `<kwd>${x}</kwd>`)
+      .join('')}</kwd-group>`
+  } else if (formData.content && formData.content.length) {
     // this is for keywords
     let contentList = ''
 
@@ -427,9 +439,13 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   const { defundedHtml, fundingList } = processFunding(unTrackChangedHtml)
 
+  // 1.5 deal with keywords
+
+  const { deKeywordedHtml, keywordList } = processKeywords(defundedHtml)
+
   // 2. deal with citations
 
-  const { processedHtml, refList } = makeCitations(defundedHtml)
+  const { processedHtml, refList } = makeCitations(deKeywordedHtml)
 
   const { deFootnotedHtml, fnSection } = makeFootnotesSection(processedHtml)
 
@@ -460,6 +476,7 @@ const makeJats = (html, articleMeta, journalMeta) => {
     abstract,
     title,
     fundingList || '',
+    keywordList || '',
   )
 
   const front = `<front>${journalMetaSection}${articleMetaSection}</front>`
