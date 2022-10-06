@@ -5,6 +5,7 @@ import FundingGroup from './menugroups/FundingGroup'
 import CitationGroup from './menugroups/CitationGroup'
 import AcknowledgementsGroup from './menugroups/AcknowledgementsGroup'
 import KeywordGroup from './menugroups/KeywordGroup'
+import GlossaryGroup from './menugroups/GlossaryGroup'
 
 class JatsAnnotationListToolGroupService extends Service {
   register() {
@@ -14,6 +15,7 @@ class JatsAnnotationListToolGroupService extends Service {
     this.container.bind('FundingGroup').to(FundingGroup)
     this.container.bind('AcknowledgementsGroup').to(AcknowledgementsGroup)
     this.container.bind('KeywordGroup').to(KeywordGroup)
+    this.container.bind('GlossaryGroup').to(GlossaryGroup)
   }
 }
 

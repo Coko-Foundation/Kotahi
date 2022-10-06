@@ -27,13 +27,14 @@ class JatsSideMenu extends ToolGroup {
     @inject('CitationGroup') citationgroup,
     @inject('AcknowledgementsGroup') acknowledgementsgroup,
     @inject('KeywordGroup') keywordgroup,
+    @inject('GlossaryGroup') glossarygroup,
   ) {
     super()
 
     this.toolGroups = [
       {
         name: 'FrontMatterTab',
-        groups: [frontmattergroup, fundinggroup, keywordgroup],
+        groups: [frontmattergroup, fundinggroup, keywordgroup, glossarygroup],
       },
       {
         name: 'BackMatterTab',

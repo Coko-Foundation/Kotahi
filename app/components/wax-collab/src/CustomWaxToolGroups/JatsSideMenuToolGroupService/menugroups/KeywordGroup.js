@@ -5,7 +5,7 @@ import { ToolGroup } from 'wax-prosemirror-services'
 
 class KeywordGroup extends ToolGroup {
   tools = []
-  title = (<LeftMenuTitle title="Keyword Group" />)
+  title = (<LeftMenuTitle title="Keywords" />)
 
   constructor(@inject('KeywordList') keywordList, @inject('Keyword') keyword) {
     super()

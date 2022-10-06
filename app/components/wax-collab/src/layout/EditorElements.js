@@ -732,6 +732,40 @@ const EditorStyles = css`
     //   outline-color: var(--keywordColorValues);
     // }
   }
+
+  /* glossary */
+
+  section.glossary {
+    background-color: rgba(0, 128, 128, 0.25);
+    border: 1px solid teal;
+    margin-bottom: 8px;
+    padding: 8px 16px;
+    position: relative;
+
+    &:before {
+      color: white;
+      content: 'GLOSSARY';
+      font-weight: bold;
+      left: 2px;
+      letter-spacing: 1px;
+      position: absolute;
+      top: -4px;
+    }
+  }
+
+  .glossary h1 {
+    background-color: teal;
+    border-radius: 8px;
+    color: white;
+    padding: 4px 8px;
+  }
+
+  .glossary-item {
+  }
+
+  .glossary-term {
+    font-weight: bold;
+  }
 `
 
 export default EditorStyles
