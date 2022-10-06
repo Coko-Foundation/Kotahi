@@ -5,6 +5,7 @@ const htmlToJats = require('../jatsexport/htmlToJats')
 const getCrossrefCitationsFromList = require('./crossrefUtils')
 const processFunding = require('../jatsexport/processFunding')
 const processKeywords = require('../jatsexport/processKeywords')
+const processGlossary = require('../jatsexport/processGlossary')
 
 // const { lte } = require('semver')
 
@@ -445,7 +446,9 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   // 2. deal with citations
 
-  const { processedHtml, refList } = makeCitations(deKeywordedHtml)
+  const { deglossariedHtml, glossary } = processGlossary(deKeywordedHtml)
+
+  const { processedHtml, refList } = makeCitations(deglossariedHtml)
 
   const { deFootnotedHtml, fnSection } = makeFootnotesSection(processedHtml)
 
@@ -496,7 +499,7 @@ const makeJats = (html, articleMeta, journalMeta) => {
   body = replaceAll(body, '</@sec>', '</sec>')
   body = `<body>${body}</body>`
 
-  const back = `<back>${ack}${appendices}${refList}${fnSection}</back>`
+  const back = `<back>${ack}${appendices}${refList}${fnSection}${glossary}</back>`
 
   // check if body or back are empty, don't pass if not there.
   const jats = `<article xml:lang="en" xmlns:mml="http://www.w3.org/1998/Math/MathML"	xmlns:xlink="http://www.w3.org/1999/xlink" dtd-version="1.3">${front}${
