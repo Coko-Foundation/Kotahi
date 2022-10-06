@@ -1,19 +1,19 @@
 import { Service } from 'wax-prosemirror-services'
-import {
-  AppendixList,
-  CitationList,
-  FrontMatterList,
-  FundingList,
-  AcknowledgementsList,
-} from './JatsAnnotationList'
+import AppendixGroup from './menugroups/AppendixGroup'
+import FrontMatterGroup from './menugroups/FrontMatterGroup'
+import FundingGroup from './menugroups/FundingGroup'
+import CitationGroup from './menugroups/CitationGroup'
+import AcknowledgementsGroup from './menugroups/AcknowledgementsGroup'
+import KeywordGroup from './menugroups/KeywordGroup'
 
 class JatsAnnotationListToolGroupService extends Service {
   register() {
-    this.container.bind('AppendixList').to(AppendixList)
-    this.container.bind('CitationList').to(CitationList)
-    this.container.bind('FrontMatterList').to(FrontMatterList)
-    this.container.bind('FundingList').to(FundingList)
-    this.container.bind('AcknowledgementsList').to(AcknowledgementsList)
+    this.container.bind('AppendixGroup').to(AppendixGroup)
+    this.container.bind('CitationGroup').to(CitationGroup)
+    this.container.bind('FrontMatterGroup').to(FrontMatterGroup)
+    this.container.bind('FundingGroup').to(FundingGroup)
+    this.container.bind('AcknowledgementsGroup').to(AcknowledgementsGroup)
+    this.container.bind('KeywordGroup').to(KeywordGroup)
   }
 }
 

@@ -21,21 +21,25 @@ class JatsSideMenu extends ToolGroup {
   toolGroups = []
 
   constructor(
-    @inject('FrontMatterList') frontmatterlist,
-    @inject('FundingList') fundinglist,
-    @inject('AppendixList') appendixlist,
-    @inject('CitationList') citationlist,
-    @inject('AcknowledgementsList') acknowledgementsList,
+    @inject('FrontMatterGroup') frontmattergroup,
+    @inject('FundingGroup') fundinggroup,
+    @inject('AppendixGroup') appendixgroup,
+    @inject('CitationGroup') citationgroup,
+    @inject('AcknowledgementsGroup') acknowledgementsgroup,
+    @inject('KeywordGroup') keywordgroup,
   ) {
     super()
 
     this.toolGroups = [
-      { name: 'FrontMatterGroup', groups: [frontmatterlist, fundinglist] },
       {
-        name: 'BackMatterGroup',
-        groups: [appendixlist, acknowledgementsList],
+        name: 'FrontMatterTab',
+        groups: [frontmattergroup, fundinggroup, keywordgroup],
       },
-      { name: 'CitationGroup', groups: [citationlist] },
+      {
+        name: 'BackMatterTab',
+        groups: [appendixgroup, acknowledgementsgroup],
+      },
+      { name: 'CitationTab', groups: [citationgroup] },
     ]
   }
 
