@@ -356,11 +356,6 @@ export const IMPORT_MANUSCRIPTS = gql`
     importManuscripts
   }
 `
-export const IMPORT_SEMANTIC_SCHOLAR_MANUSCRIPTS = gql`
-  mutation {
-    importManuscriptsFromSemanticScholar
-  }
-`
 export const IMPORTED_MANUSCRIPTS_SUBSCRIPTION = gql`
   subscription manuscriptsImportStatus {
     manuscriptsImportStatus
