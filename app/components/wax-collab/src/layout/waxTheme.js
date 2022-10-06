@@ -26,6 +26,7 @@ const waxTheme = {
   colorYear: '#D29435',
   colorFirstPage: 'lime',
   colorLastPage: '#7599F8',
+  colorKeyword: '#ccc',
 }
 
 export default waxTheme

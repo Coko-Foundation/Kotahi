@@ -696,6 +696,42 @@ const EditorStyles = css`
   .show-doi a.doi {
     outline: var(--citationColorValues) 2px solid;
   }
+
+  /* keywords */
+
+  .keyword-list {
+    --keywordColorValues: transparent;
+    --keywordOffset: 2px;
+    outline: ${th('colorKeyword')} 1px solid;
+    outline-offset: var(--fundingOffset);
+    border-radius: 2px;
+    transition: 0.25;
+  }
+
+  span.keyword {
+    --keywordColorValues: transparent;
+    --keywordTextColor: black;
+    --keywordOffset: 2px;
+    outline: ${th('colorKeyword')} 1px solid;
+    outline-offset: var(--keywordOffset);
+    position: relative;
+    border-radius: 2px;
+    font-weight: bold;
+    &:before {
+      position: absolute;
+      left: -2px;
+      top: -2px;
+      content: '';
+      width: 4px;
+      height: 4px;
+      background-color: var(--keywordColorValues);
+      border-radius: 100%;
+      display: none;
+    }
+    // &:hover {
+    //   outline-color: var(--keywordColorValues);
+    // }
+  }
 `
 
 export default EditorStyles
