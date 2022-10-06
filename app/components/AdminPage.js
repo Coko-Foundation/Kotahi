@@ -196,28 +196,39 @@ const AdminPage = () => {
       links.push({ link: reportsLink, name: 'Reports', icon: 'activity' })
   }
 
-  if (currentUser) {
+  if (currentUser && currentUser.admin) {
     links.push({
       links: [
-        { link: submissionFormBuilderLink, name: 'Submission' },
-        { link: reviewFormBuilderLink, name: 'Review' },
-        { link: decisionFormBuilderLink, name: 'Decision' },
         links.push({
           menu: 'setting',
-          name: 'Forms',
-          icon: 'check-square',
+          name: 'Setting',
+          icon: 'settings',
           links: [
             {
               menu: 'forms',
-              name: 'Settings',
-              icon: 'settings',
+              name: 'Forms',
+              icon: 'check-square',
               links: [
-                links.push({
-                  menu: '',
-                }),
+                { link: submissionFormBuilderLink, name: 'Submission' },
+                { link: decisionFormBuilderLink, name: 'Decision' },
+                { link: reviewFormBuilderLink, name: 'Review' },
               ],
             },
           ],
+          // links: [
+          //   links.push(
+          //     {
+          //       link: userAdminLink,
+          //       name: 'Users',
+          //       icon: 'users',
+          //     },
+          //     {
+          //       link: '',
+          //       name: 'Tasks',
+          //       icon: 'list',
+          //     },
+          //   ),
+          // ],
         }),
       ],
     })

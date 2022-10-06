@@ -109,6 +109,18 @@ const UserInfo = styled.div`
   justify-content: center;
   margin-left: ${grid(1)};
 `
+// `const RecursiveComponent = ({ name, items }) => {
+//   const hasChildren = items && items.length
+
+//   return (
+//     <>
+//       {name}
+//       {hasChildren && items.map((item) => (
+//         <RecursiveComponent key={item.name} {...item} />
+//       ))}
+//     </>
+//   )
+// }`
 
 const SubMenu = ({ location, ...navInfo }) => {
   const [open, setOpen] = React.useState(false)
@@ -145,6 +157,7 @@ const Menu = ({
   profileLink,
 }) => {
   const location = useLocation()
+  const hasChildren = navLinkComponents && navLinkComponents.length
   return (
     <Root className={className} data-testid="menu-container">
       <Section>
@@ -155,7 +168,7 @@ const Menu = ({
           profileLink={profileLink}
           user={user}
         />
-        {navLinkComponents &&
+        {hasChildren &&
           navLinkComponents.map(navInfo =>
             navInfo.menu ? (
               <SubMenu key={navInfo.name} location={location} {...navInfo} />
