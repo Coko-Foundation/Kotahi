@@ -76,35 +76,8 @@ const getData = async ctx => {
       preprints => preprints.externalIds.DOI,
     )
 
-    // This code block will fetch all the publication dates from EuropePMC database corresponding to the preprints
-    await Promise.all(
-      map(importsOnlyWithDOI, async preprint => {
-        const queryDoi = `DOI:${preprint.externalIds.DOI}`
+    await fetchPublicationDatesFromEuropePmc(importsOnlyWithDOI)
 
-        const params = {
-          query: queryDoi,
-          format: 'json',
-        }
-
-        let firstPublicationDate
-
-        const response = await axios.get(
-          `https://www.ebi.ac.uk/europepmc/webservices/rest/search`,
-          {
-            params,
-          },
-        )
-
-        if (response.data.resultList.result[0]) {
-          firstPublicationDate =
-            response.data.resultList.result[0].firstPublicationDate
-        }
-
-        return Object.assign(preprint, { firstPublicationDate })
-      }),
-    )
-
-    // Filter publication dates with past 6 weeks difference
     const importsForPastSixWeeks = importsOnlyWithDOI.filter(preprint => {
       if (preprint.firstPublicationDate) {
         const currentDate = new Date().toISOString().split('T')[0]
@@ -124,10 +97,21 @@ const getData = async ctx => {
       return false
     })
 
-    // To filter duplicate manuscripts using DOI
+    const allowedPreprintServers = [
+      'bioRxiv',
+      'medRxiv',
+      'Research Square',
+      'ChemRxiv',
+      'arXiv',
+    ]
+
+    const importsFromSpecificPreprintServers = importsForPastSixWeeks.filter(
+      preprint => allowedPreprintServers.includes(preprint.preprintServer),
+    )
+
     const currentDOIs = new Set(manuscripts.map(({ doi }) => doi))
 
-    const withoutDOIDuplicates = importsForPastSixWeeks.filter(
+    const withoutDOIDuplicates = importsFromSpecificPreprintServers.filter(
       preprints => !currentDOIs.has(preprints.externalIds.DOI),
     )
 
@@ -232,6 +216,40 @@ const getData = async ctx => {
       console.error(e.message)
     }
   }
+}
+
+async function fetchPublicationDatesFromEuropePmc(importsOnlyWithDOI) {
+  await Promise.all(
+    map(importsOnlyWithDOI, async preprint => {
+      const queryDoi = `DOI:${preprint.externalIds.DOI}`
+
+      const params = {
+        query: queryDoi,
+        format: 'json',
+      }
+
+      let firstPublicationDate, preprintServer
+
+      const response = await axios.get(
+        `https://www.ebi.ac.uk/europepmc/webservices/rest/search`,
+        {
+          params,
+        },
+      )
+
+      if (
+        response.data.resultList.result[0] &&
+        response.data.resultList.result[0].bookOrReportDetails
+      ) {
+        firstPublicationDate =
+          response.data.resultList.result[0].firstPublicationDate
+        preprintServer =
+          response.data.resultList.result[0].bookOrReportDetails.publisher
+      }
+
+      return Object.assign(preprint, { firstPublicationDate, preprintServer })
+    }),
+  )
 }
 
 module.exports = getData
