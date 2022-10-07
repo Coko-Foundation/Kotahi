@@ -146,7 +146,7 @@ const SubMenu = ({ location, ...navInfo }) => {
   )
 }
 
-const activeMenu = (location, ...subNavInfo) => {
+const activeMenu = (location, subNavInfo) => {
   return JSON.stringify(subNavInfo).includes(location.pathname)
 }
 
