@@ -512,28 +512,47 @@ const EditorStyles = css`
 
   /* FUNDING SOURCE */
 
+  .fundingsource,
+  .fundingstatement,
+  .awardid {
+    --fundingColorValues: ${th('colorFunding')};
+    --fundingOffset: 2px;
+    outline: ${th('colorFunding')} 1px solid;
+    outline-offset: var(--fundingOffset);
+    border-radius: 2px;
+    transition: 0.25;
+  }
+
   .fundingsource {
-    &:before {
-      content: 'Funding source: ';
-      font-weight: bold;
-      margin-left: 2em;
+    --fundingColorValues: ${th('colorFundingSource')};
+    &:hover {
+      outline-color: var(--fundingColorValues);
     }
   }
 
   .fundingstatement {
-    &:before {
-      content: 'Funding statement: ';
-      font-weight: bold;
-      margin-left: 2em;
+    --fundingColorValues: ${th('colorFundingStatement')};
+    &:hover {
+      outline-color: var(--fundingColorValues);
+    }
+  }
+  .awardid {
+    --fundingColorValues: ${th('colorAwardId')};
+    &:hover {
+      outline-color: var(--fundingColorValues);
     }
   }
 
-  .awardid {
-    &:before {
-      content: 'Award ID: ';
-      font-weight: bold;
-      margin-left: 2em;
-    }
+  .show-fundingsource .fundingsource {
+    outline: var(--fundingColorValues) 2px solid;
+  }
+
+  .show-fundingstatement .fundingstatement {
+    outline: var(--fundingColorValues) 2px solid;
+  }
+
+  .show-awardid .awardid {
+    outline: var(--fundingColorValues) 2px solid;
   }
 
   /* CITATIONS */
