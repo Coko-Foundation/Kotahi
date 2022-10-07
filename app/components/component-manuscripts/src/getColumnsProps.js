@@ -70,7 +70,7 @@ const getColumnsProps = (
       flex: '0 1 10em',
       component: FilterableStatusBadge,
     },
-    author: { title: 'Author', flex: '0 1 16em', component: Submitter },
+    author: { title: 'Submitter', flex: '0 1 16em', component: Submitter },
     editor: { title: 'Editor', flex: '0 1 12em', component: Editors },
     actions: {
       flex: '0 1 6em',
