@@ -109,18 +109,6 @@ const UserInfo = styled.div`
   justify-content: center;
   margin-left: ${grid(1)};
 `
-// `const RecursiveComponent = ({ name, items }) => {
-//   const hasChildren = items && items.length
-
-//   return (
-//     <>
-//       {name}
-//       {hasChildren && items.map((item) => (
-//         <RecursiveComponent key={item.name} {...item} />
-//       ))}
-//     </>
-//   )
-// }`
 
 const SubMenu = ({ location, ...navInfo }) => {
   const [open, setOpen] = React.useState(false)
