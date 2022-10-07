@@ -212,13 +212,10 @@ const AdminPage = () => {
             { link: decisionFormBuilderLink, name: 'Decision' },
           ],
         },
+        { link: '', name: 'Tasks', icon: 'list' },
+        { link: userAdminLink, name: 'Users', icon: 'users' },
       ],
     })
-  }
-
-  if (currentUser && currentUser.admin) {
-    links.push({ link: '', name: 'Tasks', icon: 'list' })
-    links.push({ link: userAdminLink, name: 'Users', icon: 'users' })
   }
 
   // Throttled refetch query `currentUser` once every 2mins
