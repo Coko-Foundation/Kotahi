@@ -116,7 +116,7 @@ const SubMenu = ({ location, ...navInfo }) => {
     <>
       <Item
         {...navInfo}
-        active={activeMenu(location, navInfo)}
+        active={menuItemIsActive(location, navInfo)}
         onClick={() => setOpen(!open)}
         open={open}
       />
@@ -146,9 +146,9 @@ const SubMenu = ({ location, ...navInfo }) => {
   )
 }
 
-const activeMenu = (location, subNavInfo) => {
-  return JSON.stringify(subNavInfo).includes(location.pathname)
-}
+const menuItemIsActive = (location, item) =>
+  item.link === location.pathname ||
+  item.links?.some(subItem => menuItemIsActive(location, subItem))
 
 const Menu = ({
   className,
