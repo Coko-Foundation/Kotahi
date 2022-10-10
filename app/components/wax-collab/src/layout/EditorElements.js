@@ -736,28 +736,39 @@ const EditorStyles = css`
   /* glossary */
 
   section.glossary {
-    background-color: rgba(0, 128, 128, 0.25);
-    border: 1px solid teal;
-    margin-bottom: 8px;
-    padding: 8px 16px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+    padding: 4px 8px;
     position: relative;
 
     &:before {
-      color: white;
-      content: 'GLOSSARY';
-      font-weight: bold;
-      left: 2px;
-      letter-spacing: 1px;
+      background-color: ${th('colorGlossary')};
+      border: 1px solid #ccc;
+      content: '';
+      left: -4px;
+      width: 8px;
       position: absolute;
-      top: -4px;
+      top: -1px;
+      height: calc(100% + 2px);
+      border-radius: 4px;
+    }
+
+    & > :last-child {
+      margin-bottom: 0;
     }
   }
 
-  .glossary h1 {
-    background-color: teal;
-    border-radius: 8px;
-    color: white;
-    padding: 4px 8px;
+  .glossary h1,
+  .glossary h2,
+  .glossary h3,
+  .glossary h4,
+  .glossary h5,
+  .glossary h6 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: bold;
   }
 
   .glossary-item {
