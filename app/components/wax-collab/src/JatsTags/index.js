@@ -258,7 +258,11 @@ class JatsTagsService extends Service {
           },
         ],
         toDOM(hook) {
-          const attrs = { class: hook.node?.attrs?.class || 'awardid' }
+          const attrs = {
+            class: hook.node?.attrs?.class || 'awardid',
+            title: 'Award ID',
+          }
+
           return ['p', attrs, 0]
         },
       },
@@ -285,7 +289,11 @@ class JatsTagsService extends Service {
           },
         ],
         toDOM(hook) {
-          const attrs = { class: hook.node?.attrs?.class || 'fundingsource' }
+          const attrs = {
+            class: hook.node?.attrs?.class || 'fundingsource',
+            title: 'Funding Source',
+          }
+
           return ['p', attrs, 0]
         },
       },
@@ -312,7 +320,11 @@ class JatsTagsService extends Service {
           },
         ],
         toDOM(hook) {
-          const attrs = { class: hook.node?.attrs?.class || 'fundingstatement' }
+          const attrs = {
+            class: hook.node?.attrs?.class || 'fundingstatement',
+            title: 'Funding Statement',
+          }
+
           return ['p', attrs, 0]
         },
       },

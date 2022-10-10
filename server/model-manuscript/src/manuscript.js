@@ -125,7 +125,6 @@ class Manuscript extends BaseModel {
     newVersion.teams = teams
     // eslint-disable-next-line
     newVersion.files = files
-
     // Copy channels as well
     const channels = await this.$relatedQuery('channels')
     // eslint-disable-next-line
@@ -306,7 +305,7 @@ class Manuscript extends BaseModel {
         importSourceServer: { type: ['string', 'null'] },
         isHidden: { type: ['boolean', 'null'] },
         formFieldsToPublish: { type: 'array' },
-        doi: { type: 'string' },
+        doi: { type: ['string', 'null'] },
         searchableText: { type: 'string' },
       },
     }

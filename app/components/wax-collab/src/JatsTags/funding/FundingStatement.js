@@ -9,6 +9,8 @@ class FundingStatement extends Tools {
   title = 'Change to funding statement'
   label = 'Funding statement'
   name = 'FundingStatement'
+  color = 'colorFundingStatement'
+  className = 'fundingstatement'
 
   // eslint-disable-next-line class-methods-use-this
   get run() {
