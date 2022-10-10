@@ -112,17 +112,27 @@ const UserInfo = styled.div`
 
 const SubMenu = ({ location, ...navInfo }) => {
   const [open, setOpen] = React.useState(false)
-
   return (
     <>
       <Item
         {...navInfo}
-        active={location.pathname === navInfo.link}
+        active={menuItemIsActive(location, navInfo)}
         onClick={() => setOpen(!open)}
         open={open}
       />
       {open &&
         navInfo.links.map(subNavInfo => {
+          if (subNavInfo.menu) {
+            return (
+              <SubMenu
+                key={subNavInfo.link}
+                location={location}
+                {...subNavInfo}
+                subLink
+              />
+            )
+          }
+
           return (
             <Item
               {...subNavInfo}
@@ -136,6 +146,10 @@ const SubMenu = ({ location, ...navInfo }) => {
   )
 }
 
+const menuItemIsActive = (location, item) =>
+  item.link === location.pathname ||
+  item.links?.some(subItem => menuItemIsActive(location, subItem))
+
 const Menu = ({
   className,
   loginLink = '/login',
@@ -145,6 +159,7 @@ const Menu = ({
   profileLink,
 }) => {
   const location = useLocation()
+
   return (
     <Root className={className} data-testid="menu-container">
       <Section>
