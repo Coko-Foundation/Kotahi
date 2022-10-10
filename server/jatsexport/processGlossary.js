@@ -36,7 +36,7 @@ const processGlossary = html => {
       const items = thisList.find('.glossary-item')
       items.each((index2, itemEl) => {
         // check to make sure that there's a glossary term inside of there
-        const glossaryTerm = $(el).find('.glossary-term')
+        const glossaryTerm = $(itemEl).find('.glossary-term')
 
         if (glossaryTerm['0'] && $(glossaryTerm['0']).text()) {
           // if we have a term, we can add it. Otherwise, it's ignored.
