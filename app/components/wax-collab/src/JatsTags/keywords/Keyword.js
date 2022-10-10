@@ -4,8 +4,8 @@ import { Commands } from 'wax-prosemirror-utilities'
 import { Tools } from 'wax-prosemirror-services'
 
 class Keyword extends Tools {
-  title = 'Change to key word'
-  label = 'Key word'
+  title = 'Change to keyword'
+  label = 'Keyword'
   // color = 'colorKeyword'
   // className = 'keyword'
   // icon = 'title'

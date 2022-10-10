@@ -49,8 +49,8 @@ const processGlossary = html => {
               '',
             )
 
-          const thisCitation = `<def-item><term id="term-${
-            glossaryList.length
+          const thisCitation = `<def-item><term id="G${
+            glossaryList.length + 1
           }">${thisTerm}</term><def><p>${htmlToJats(
             thisDefinition,
           )}</p></def></def-item>`

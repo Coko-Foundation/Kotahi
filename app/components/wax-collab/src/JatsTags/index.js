@@ -646,7 +646,7 @@ class JatsTagsService extends Service {
         excludes: 'keyword',
         parseDOM: [{ tag: 'span.keyword' }],
         toDOM() {
-          return ['span', { class: 'keyword', title: 'Key word' }, 0]
+          return ['span', { class: 'keyword', title: 'Keyword' }, 0]
         },
       },
     })
@@ -655,7 +655,7 @@ class JatsTagsService extends Service {
         attrs: {
           class: { default: 'glossary-term' },
         },
-        excludes: 'keyword',
+        excludes: 'glossaryTerm',
         parseDOM: [{ tag: 'span.glossary-term' }],
         toDOM() {
           return ['span', { class: 'glossary-term', title: 'Glossary term' }, 0]
