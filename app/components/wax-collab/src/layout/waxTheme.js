@@ -1,3 +1,4 @@
+import { rgb } from 'color'
 import theme from '../../../../theme'
 
 // NOTE: this overrides the Kotahi default theme!
@@ -30,6 +31,8 @@ const waxTheme = {
   colorFundingSource: '#b48ee8',
   colorFundingStatement: '#dc7be5',
   colorAwardId: '#e57dba',
+  colorKeyword: '#EFEFF9',
+  colorGlossary: '#B8B8D2',
 }
 
 export default waxTheme
