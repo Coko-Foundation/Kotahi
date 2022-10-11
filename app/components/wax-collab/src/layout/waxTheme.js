@@ -33,6 +33,10 @@ const waxTheme = {
   colorAwardId: '#e57dba',
   colorKeyword: '#EFEFF9',
   colorGlossary: '#B8B8D2',
+  colorFrontMatter: 'pink',
+  colorAppendix: 'teal',
+  colorAcknowledgements: 'palegreen',
+  colorAbstract: 'red',
 }
 
 export default waxTheme

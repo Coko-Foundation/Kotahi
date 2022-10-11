@@ -9,6 +9,7 @@ import { wrapIn } from 'prosemirror-commands'
 class FrontMatter extends Tools {
   title = 'Change to front matter'
   label = 'Front matter'
+  title = 'Front matter'
   name = 'FrontMatter'
 
   // eslint-disable-next-line class-methods-use-this

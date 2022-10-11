@@ -13,7 +13,7 @@ const processGlossary = html => {
   // This is a list of glossary entries
   const glossaryList = []
   let glossaryTitle = ''
-  let glossary
+  let glossary = ''
 
   // Go through each <section class="glossary">
   if (glossarySectionList.length) {

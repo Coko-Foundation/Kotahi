@@ -8,6 +8,7 @@ import { Tools } from 'wax-prosemirror-services'
 class AppendixHeader extends Tools {
   title = 'Change to appendix header'
   label = 'Appendix head'
+  title = 'Appendix head'
   name = 'AppendixHeader'
 
   // eslint-disable-next-line class-methods-use-this
