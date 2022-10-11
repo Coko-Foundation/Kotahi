@@ -5,7 +5,7 @@ import {
   BulkActionModalButton,
 } from './style'
 
-const BulkArchiveModal = ({ confirmsBulkArchive, closeModal }) => {
+const BulkArchiveModal = ({ confirmBulkArchive, closeModal }) => {
   return (
     <BulkActionModalContainer>
       <p>Please confirm you would like to archive selected manuscripts</p>
@@ -13,7 +13,7 @@ const BulkArchiveModal = ({ confirmsBulkArchive, closeModal }) => {
       <br />
       <br />
       <BulkActionModalButtons>
-        <BulkActionModalButton onClick={confirmsBulkArchive} primary>
+        <BulkActionModalButton onClick={confirmBulkArchive} primary>
           Archive
         </BulkActionModalButton>
         <BulkActionModalButton onClick={closeModal} secondary>

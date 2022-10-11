@@ -2,6 +2,12 @@ const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty
 const { ensureJsonIsParsed } = require('../../utils/objectUtils')
 const { formatSearchQueryForPostgres } = require('../../utils/searchUtils')
 
+const {
+  getStartOfDay,
+  getEndOfDay,
+  compactStringToDate,
+} = require('../../utils/dateUtils')
+
 const SUBMISSION_FIELD_PREFIX = 'submission'
 const META_FIELD_PREFIX = 'meta'
 
@@ -185,11 +191,44 @@ const applySortOrder = ({ field, isAscending }, submissionForm, addOrder) => {
 
 /** Apply all the specified filters to the query,
  * except for the special "search" filter which is dealt with separately. */
-const applyFilters = (filters, submissionForm, addWhere) => {
+const applyFilters = (
+  /** Array of {field, value} objects */
+  filters,
+  submissionForm,
+  /** Function to add a WHERE clause to SQL query. Arguments are: (rawCondition, ...params). Each '?' in the rawCondition needs a corresponding param. */
+  addWhere,
+  /** The local timezone offset */
+  timezoneOffsetMinutes,
+) => {
   filters
     .filter(discardDuplicateFields)
     .filter(f => f.field !== 'search')
     .forEach(filter => {
+      if (['created', 'updated'].includes(filter.field)) {
+        try {
+          const parts = filter.value.split('-')
+
+          const dateFrom = getStartOfDay(
+            compactStringToDate(parts[0], timezoneOffsetMinutes),
+            timezoneOffsetMinutes,
+          )
+
+          const dateTo = getEndOfDay(
+            compactStringToDate(parts[1], timezoneOffsetMinutes),
+            timezoneOffsetMinutes,
+          )
+
+          addWhere(`${filter.field} >= ?`, dateFrom.toISOString())
+          addWhere(`${filter.field} <= ?`, dateTo.toISOString())
+        } catch (error) {
+          console.warn(
+            `Could not filter ${filter.field} by value '${filter.value}': could not parse as a date range.`,
+          )
+        }
+
+        return
+      }
+
       if (!/^[\w :./,()-<>=_]+$/.test(filter.value)) {
         console.warn(
           `Ignoring filter "${filter.field}" with illegal value "${filter.value}"`, // To prevent code injection!
@@ -233,6 +272,7 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
   limit,
   filters,
   submissionForm,
+  timezoneOffsetMinutes,
 ) => {
   // These keep track of the various terms we're adding to SELECT, FROM, WHERE and ORDER BY, as well as params.
   const selectItems = { rawFragments: [], params: [] }
@@ -273,7 +313,7 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
     addOrder('short_id DESC')
   }
 
-  applyFilters(filters, submissionForm, addWhere)
+  applyFilters(filters, submissionForm, addWhere, timezoneOffsetMinutes)
 
   const query = `
       SELECT ${selectItems.rawFragments.join(', ')}

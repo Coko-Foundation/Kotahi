@@ -6,7 +6,7 @@ import { th } from '@pubsweet/ui-toolkit'
 import { SectionRow } from '../style'
 import { UserCombo, Primary, Secondary, UserInfo } from '../../../../shared'
 import { UserAvatar } from '../../../../component-avatar/src'
-import { convertTimestampToDate } from '../../../../../shared/time-formatting'
+import { convertTimestampToDateString } from '../../../../../shared/dateUtils'
 import {
   Controls,
   Name,
@@ -73,7 +73,7 @@ const InvitationResult = ({ invitation }) => {
   const { invitedPersonName } = invitation
   const { responseComment } = invitation
   const { responseDate } = invitation
-  const dateToDisplay = convertTimestampToDate(responseDate)
+  const dateToDisplay = convertTimestampToDateString(responseDate)
   const { user } = invitation
 
   let ordinalString = ''

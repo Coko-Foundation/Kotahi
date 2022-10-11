@@ -119,6 +119,11 @@ export const Cell = styled.div`
   overflow-wrap: anywhere;
 `
 
+export const HeadingCell = styled(Cell)`
+  align-items: center;
+  display: flex;
+`
+
 /** Displays the label as a badge colored according to props.color */
 export const LabelBadge = styled.div`
   border-radius: 8px;

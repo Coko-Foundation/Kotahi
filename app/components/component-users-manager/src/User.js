@@ -7,7 +7,7 @@ import { Row, Cell, LastCell } from './style'
 
 import { UserCombo, Primary, Secondary, UserInfo } from '../../shared'
 
-import { convertTimestampToDate } from '../../../shared/time-formatting'
+import { convertTimestampToDateString } from '../../../shared/dateUtils'
 
 const DELETE_USER = gql`
   mutation($id: ID) {
@@ -43,9 +43,9 @@ const User = ({ user, currentUser }) => {
           </UserInfo>
         </UserCombo>
       </Cell>
-      <Cell>{convertTimestampToDate(user.created)}</Cell>
+      <Cell>{convertTimestampToDateString(user.created)}</Cell>
       <Cell>
-        {user.lastOnline ? convertTimestampToDate(user.lastOnline) : '-'}
+        {user.lastOnline ? convertTimestampToDateString(user.lastOnline) : '-'}
       </Cell>
       <Cell>{user.admin ? 'yes' : ''}</Cell>
       <LastCell>

@@ -72,7 +72,6 @@ const Manuscripts = ({ history, ...props }) => {
     sortDirection,
     sortName,
     systemWideDiscussionChannel,
-    confrimBulkDelete,
     page,
     urlFrag,
     chatRoomId,
@@ -81,8 +80,6 @@ const Manuscripts = ({ history, ...props }) => {
     archiveManuscriptMutations,
     confirmBulkArchive,
   } = props
-
-  const [isOpenBulkDeletionModal, setIsOpenBulkDeletionModal] = useState(false)
 
   const [isOpenBulkArchiveModal, setIsOpenBulkArchiveModal] = useState(false)
 
@@ -246,21 +243,6 @@ const Manuscripts = ({ history, ...props }) => {
       })
   }
 
-  const openModalBulkDeleteConfirmation = () => {
-    setIsOpenBulkDeletionModal(true)
-  }
-
-  const closeModalBulkDeleteConfirmation = () => {
-    setIsOpenBulkDeletionModal(false)
-  }
-
-  const confirmBulkDelete = () => {
-    confrimBulkDelete(selectedNewManuscripts)
-
-    setSelectedNewManuscripts([])
-    closeModalBulkDeleteConfirmation()
-  }
-
   const openModalBulkArchiveConfirmation = () => {
     setIsOpenBulkArchiveModal(true)
   }
@@ -269,7 +251,7 @@ const Manuscripts = ({ history, ...props }) => {
     setIsOpenBulkArchiveModal(false)
   }
 
-  const confirmsBulkArchive = () => {
+  const doConfirmBulkArchive = () => {
     confirmBulkArchive(selectedNewManuscripts)
 
     setSelectedNewManuscripts([])
@@ -456,8 +438,7 @@ const Manuscripts = ({ history, ...props }) => {
         >
           <BulkArchiveModal
             closeModal={closeModalBulkArchiveConfirmation}
-            confirmBulkDelete={confirmBulkDelete}
-            confirmsBulkArchive={confirmsBulkArchive}
+            confirmBulkArchive={doConfirmBulkArchive}
           />
         </Modal>
       )}

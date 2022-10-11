@@ -1220,7 +1220,11 @@ const resolvers = {
         manuscripts,
       }
     },
-    async paginatedManuscripts(_, { sort, offset, limit, filters }, ctx) {
+    async paginatedManuscripts(
+      _,
+      { sort, offset, limit, filters, timezoneOffsetMinutes },
+      ctx,
+    ) {
       const submissionForm = await Form.findOneByField('purpose', 'submit')
 
       const [rawQuery, rawParams] = buildQueryForManuscriptSearchFilterAndOrder(
@@ -1229,6 +1233,7 @@ const resolvers = {
         limit,
         filters,
         submissionForm,
+        timezoneOffsetMinutes || 0,
       )
 
       const knex = models.Manuscript.knex()
@@ -1382,7 +1387,7 @@ const typeDefs = `
     globalTeams: [Team]
     manuscript(id: ID!): Manuscript!
     manuscripts: [Manuscript]!
-    paginatedManuscripts(offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!): PaginatedManuscripts
+    paginatedManuscripts(offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int): PaginatedManuscripts
     publishedManuscripts(sort:String, offset: Int, limit: Int): PaginatedManuscripts
     validateDOI(articleURL: String): validateDOIResponse
     manuscriptsUserHasCurrentRoleIn: [Manuscript]

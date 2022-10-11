@@ -48,6 +48,7 @@ const ManuscriptsPage = ({ history }) => {
       offset: (page - 1) * limit,
       limit,
       filters: uriQueryParams,
+      timezoneOffsetMinutes: new Date().getTimezoneOffset(),
     },
     fetchPolicy: 'network-only',
   })

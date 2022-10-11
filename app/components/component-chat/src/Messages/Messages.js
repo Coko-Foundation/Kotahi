@@ -6,7 +6,7 @@ import PropTypes from 'prop-types'
 import { UserAvatar } from '../../../component-avatar/src'
 import { sortAndGroupMessages } from '../../../../sortAndGroup'
 import NextPageButton from '../../../NextPageButton'
-import { convertTimestampToDate } from '../../../../shared/time-formatting'
+import { convertTimestampToDateString } from '../../../../shared/dateUtils'
 import MessageRenderer from './MessageRenderer'
 import { CommsErrorBanner } from '../../../shared'
 import VideoChat from '../VideoChat'
@@ -85,7 +85,7 @@ const Messages = ({
             <Timestamp key={initialMessage.created}>
               <hr />
               <Time>
-                {convertTimestampToDate(new Date(initialMessage.created))}
+                {convertTimestampToDateString(new Date(initialMessage.created))}
               </Time>
               <hr />
             </Timestamp>
