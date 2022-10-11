@@ -424,14 +424,8 @@ const EditorStyles = css`
 
     & > :last-child {
       margin-bottom: 0;
-    }
-
-    & p {
-      &:before {
-        content: '§ ';
       }
     }
-  }
 
   .reflist h1,
   .reflist h2,
