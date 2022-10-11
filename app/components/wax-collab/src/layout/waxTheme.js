@@ -36,6 +36,7 @@ const waxTheme = {
   colorFrontMatter: 'pink',
   colorAppendix: 'teal',
   colorAcknowledgements: 'palegreen',
+  colorAbstract: 'red',
 }
 
 export default waxTheme

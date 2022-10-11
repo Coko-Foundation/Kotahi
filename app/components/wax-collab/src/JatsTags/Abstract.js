@@ -9,6 +9,7 @@ import { wrapIn } from 'prosemirror-commands'
 class Abstract extends Tools {
   title = 'Change to abstract'
   label = 'Abstract'
+  title = 'Abstract'
   name = 'Abstract'
 
   // eslint-disable-next-line class-methods-use-this

@@ -378,20 +378,27 @@ const EditorStyles = css`
   }
 
   section.abstractSection {
-    background-color: rgba(255, 0, 0, 0.25);
-    border: 1px solid red;
-    margin-bottom: 8px;
-    padding: 8px 16px;
+    background-color: #eee;
+    border: 1px solid #ccc;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+    padding: 4px 8px;
     position: relative;
 
     &:before {
-      color: white;
-      content: 'ABSTRACT';
-      font-weight: bold;
-      left: 2px;
-      letter-spacing: 1px;
+      background-color: ${th('colorAbstract')};
+      border: 1px solid #ccc;
+      content: '';
+      left: -4px;
+      width: 8px;
       position: absolute;
-      top: -4px;
+      top: -1px;
+      height: calc(100% + 2px);
+      border-radius: 4px;
+    }
+
+    & > :last-child {
+      margin-bottom: 0;
     }
   }
 
