@@ -754,6 +754,87 @@ const EditorStyles = css`
   .show-doi a.doi {
     outline: var(--citationColorValues) 2px solid;
   }
+
+  /* keywords */
+
+  .keyword-list {
+    --keywordColorValues: transparent;
+    --keywordOffset: 2px;
+    outline: ${th('colorKeyword')} 1px solid;
+    outline-offset: var(--fundingOffset);
+    border-radius: 2px;
+    transition: 0.25;
+  }
+
+  span.keyword {
+    --keywordColorValues: transparent;
+    --keywordTextColor: black;
+    --keywordOffset: 2px;
+    outline: ${th('colorKeyword')} 1px solid;
+    outline-offset: var(--keywordOffset);
+    position: relative;
+    border-radius: 2px;
+    font-weight: bold;
+    &:before {
+      position: absolute;
+      left: -2px;
+      top: -2px;
+      content: '';
+      width: 4px;
+      height: 4px;
+      background-color: var(--keywordColorValues);
+      border-radius: 100%;
+      display: none;
+    }
+    // &:hover {
+    //   outline-color: var(--keywordColorValues);
+    // }
+  }
+
+  /* glossary */
+
+  section.glossary {
+    background-color: #eee;
+    border: 1px solid #ccc;
+    margin: 16px 0;
+    border-radius: 0 4px 4px 0;
+    padding: 4px 8px;
+    position: relative;
+
+    &:before {
+      background-color: ${th('colorGlossary')};
+      border: 1px solid #ccc;
+      content: '';
+      left: -4px;
+      width: 8px;
+      position: absolute;
+      top: -1px;
+      height: calc(100% + 2px);
+      border-radius: 4px;
+    }
+
+    & > :last-child {
+      margin-bottom: 0;
+    }
+  }
+
+  .glossary h1,
+  .glossary h2,
+  .glossary h3,
+  .glossary h4,
+  .glossary h5,
+  .glossary h6 {
+    margin: 0 0 8px 0;
+    font-size: 18px;
+    font-weight: bold;
+  }
+
+  .glossary-item {
+  }
+
+  .glossary-term {
+    font-weight: bold;
+  }
 `
 
 export default EditorStyles

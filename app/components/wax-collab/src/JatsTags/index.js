@@ -21,6 +21,11 @@ import LastPage from './citations/LastPage'
 import AwardId from './funding/AwardId'
 import FundingSource from './funding/FundingSource'
 import FundingStatement from './funding/FundingStatement'
+import KeywordList from './keywords/KeywordList'
+import Keyword from './keywords/Keyword'
+import GlossarySection from './glossary/GlossarySection'
+import GlossaryTerm from './glossary/GlossaryTerm'
+import GlossaryItem from './glossary/GlossaryItem'
 
 // copied from here: https://gitlab.coko.foundation/wax/wax-prosemirror/-/blob/master/wax-prosemirror-services/src/DisplayBlockLevel/HeadingService/HeadingService.js
 
@@ -69,6 +74,11 @@ class JatsTagsService extends Service {
     this.container.bind('Year').to(Year)
     this.container.bind('FirstPage').to(FirstPage)
     this.container.bind('LastPage').to(LastPage)
+    this.container.bind('KeywordList').to(KeywordList)
+    this.container.bind('Keyword').to(Keyword)
+    this.container.bind('GlossarySection').to(GlossarySection)
+    this.container.bind('GlossaryTerm').to(GlossaryTerm)
+    this.container.bind('GlossaryItem').to(GlossaryItem)
     const createNode = this.container.get('CreateNode')
     const createMark = this.container.get('CreateMark')
     createNode({
@@ -374,6 +384,92 @@ class JatsTagsService extends Service {
         },
       },
     })
+    createNode({
+      keywordList: {
+        content: 'inline*',
+        group: 'block',
+        priority: 0,
+        defining: true,
+        attrs: {
+          class: { default: 'keyword-list' },
+        },
+        parseDOM: [
+          {
+            tag: 'p.keyword-list',
+            getAttrs(hook, next) {
+              Object.assign(hook, {
+                class: hook?.dom?.getAttribute('class') || 'keyword-list',
+              })
+              typeof next !== 'undefined' && next()
+            },
+          },
+        ],
+        toDOM(hook) {
+          const attrs = {
+            class: hook.node?.attrs?.class || 'keyword-list',
+            title: 'Keyword list',
+          }
+
+          return ['p', attrs, 0]
+        },
+      },
+    })
+    createNode({
+      glossarySection: {
+        content: 'block+',
+        group: 'block',
+        defining: true,
+        attrs: {
+          class: { default: 'glossary' },
+        },
+        parseDOM: [
+          {
+            tag: 'section.glossary',
+            getAttrs(hook, next) {
+              Object.assign(hook, {
+                class: hook?.dom?.getAttribute('class') || 'glossary',
+              })
+              typeof next !== 'undefined' && next()
+            },
+          },
+        ],
+        toDOM(hook) {
+          const attrs = { class: hook.node?.attrs?.class || 'glossary' }
+          return ['section', attrs, 0]
+        },
+      },
+    })
+    createNode({
+      glossaryItem: {
+        content: 'inline*',
+        group: 'block',
+        priority: 0,
+        defining: true,
+        attrs: {
+          class: { default: 'glossary-item' },
+        },
+        parseDOM: [
+          {
+            tag: 'p.glossary-item',
+            getAttrs(hook, next) {
+              Object.assign(hook, {
+                class: hook?.dom?.getAttribute('class') || 'glossary-item',
+              })
+              typeof next !== 'undefined' && next()
+            },
+          },
+        ],
+        toDOM(hook) {
+          const attrs = {
+            class: hook.node?.attrs?.class || 'glossary-item',
+            title: 'Glossary item',
+          }
+
+          return ['p', attrs, 0]
+        },
+      },
+    })
+    // marks
     createMark({
       mixedCitationSpan: {
         attrs: {
@@ -540,6 +636,30 @@ class JatsTagsService extends Service {
         //   hook.value = ['a', hook?.node?.attrs, 0]
         //   next()
         // },
+      },
+    })
+    createMark({
+      keyword: {
+        attrs: {
+          class: { default: 'keyword' },
+        },
+        excludes: 'keyword',
+        parseDOM: [{ tag: 'span.keyword' }],
+        toDOM() {
+          return ['span', { class: 'keyword', title: 'Keyword' }, 0]
+        },
+      },
+    })
+    createMark({
+      glossaryTerm: {
+        attrs: {
+          class: { default: 'glossary-term' },
+        },
+        excludes: 'glossaryTerm',
+        parseDOM: [{ tag: 'span.glossary-term' }],
+        toDOM() {
+          return ['span', { class: 'glossary-term', title: 'Glossary term' }, 0]
+        },
       },
     })
   }
