@@ -3,11 +3,11 @@ import DatePicker from 'react-date-picker'
 import styled from 'styled-components'
 import PropTypes from 'prop-types'
 import {
-  getStartOfDayUtc,
-  getEndOfDayUtc,
+  getStartOfDay,
+  getEndOfDay,
   transposeUtcToLocal,
   transposeLocalToUtc,
-} from './dateUtils'
+} from '../../../shared/dateUtils'
 
 const InlineBlock = styled.div`
   display: inline-block;
@@ -18,9 +18,9 @@ const minDate = new Date('2020-01-01')
 // max specifies the latest date allowed, but as the date-range returned extends until
 // 23:59:59 UTC at the end of the endDate, it can overshoot max by some hours
 const DateRangePicker = ({ endDate, max, setDateRange, startDate }) => {
-  const trueMax = getEndOfDayUtc(max)
-  const trueStart = getStartOfDayUtc(startDate)
-  const trueEnd = getEndOfDayUtc(endDate)
+  const trueMax = getEndOfDay(max)
+  const trueStart = getStartOfDay(startDate)
+  const trueEnd = getEndOfDay(endDate)
   return (
     <InlineBlock>
       <DatePicker
@@ -30,7 +30,7 @@ const DateRangePicker = ({ endDate, max, setDateRange, startDate }) => {
         minDate={transposeUtcToLocal(minDate)}
         onChange={val =>
           setDateRange(
-            getStartOfDayUtc(transposeLocalToUtc(val)).getTime(),
+            getStartOfDay(transposeLocalToUtc(val)).getTime(),
             trueEnd.getTime(),
           )
         }
@@ -44,8 +44,8 @@ const DateRangePicker = ({ endDate, max, setDateRange, startDate }) => {
         minDate={transposeUtcToLocal(minDate)}
         onChange={val => {
           let newStart = trueStart.getTime()
-          const newEnd = getEndOfDayUtc(transposeLocalToUtc(val)).getTime()
-          if (newStart >= newEnd) newStart = getStartOfDayUtc(newEnd).getTime()
+          const newEnd = getEndOfDay(transposeLocalToUtc(val)).getTime()
+          if (newStart >= newEnd) newStart = getStartOfDay(newEnd).getTime()
           setDateRange(newStart, newEnd)
         }}
         value={transposeUtcToLocal(trueEnd)}

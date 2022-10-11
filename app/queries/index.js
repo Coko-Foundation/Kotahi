@@ -234,12 +234,14 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
     $filters: [ManuscriptsFilter!]!
     $offset: Int
     $limit: Int
+    $timezoneOffsetMinutes: Int
   ) {
     paginatedManuscripts(
       sort: $sort
       filters: $filters
       offset: $offset
       limit: $limit
+      timezoneOffsetMinutes: $timezoneOffsetMinutes
     ) {
       totalCount
       manuscripts {

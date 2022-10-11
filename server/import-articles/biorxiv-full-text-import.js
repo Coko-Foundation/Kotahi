@@ -3,7 +3,7 @@ const axios = require('axios')
 
 const models = require('@pubsweet/models')
 const ArticleImportHistory = require('../model-article-import-history/src/articleImportHistory')
-const { formatAsIso8601Date } = require('../utils/dateUtils')
+const { dateToIso8601 } = require('../utils/dateUtils')
 
 const {
   getServerId,
@@ -31,8 +31,8 @@ const getData = async (ctx, searchStrings) => {
   const sourceId = await getServerId('biorxiv')
   const lastImportDate = await getLastImportDate(sourceId)
   const minDate = Math.max(lastImportDate, await getDate2WeeksAgo())
-  const dateFrom = formatAsIso8601Date(minDate)
-  const dateTo = formatAsIso8601Date(Date.now())
+  const dateFrom = dateToIso8601(minDate)
+  const dateTo = dateToIso8601(Date.now())
 
   const queryWithoutCursor = formatSearchQueryWithoutCursor(
     searchStrings,

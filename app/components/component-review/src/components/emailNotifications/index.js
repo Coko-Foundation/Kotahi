@@ -5,7 +5,7 @@ import { SectionHeader, SectionRowGrid, Title } from '../style'
 import { SectionContent } from '../../../../shared'
 import SelectReceiver from './SelectReceiver'
 import SelectEmailTemplate from './SelectEmailTemplate'
-import { convertTimestampToDate } from '../../../../../shared/time-formatting'
+import { convertTimestampToDateString } from '../../../../../shared/dateUtils'
 import ActionButton from '../../../../shared/ActionButton'
 
 const UserEmailWrapper = styled.div`
@@ -315,9 +315,9 @@ const EmailNotifications = ({
 
     const date = Date.now()
 
-    const body = `${convertTimestampToDate(date)} - ${selectedTempl} sent by ${
-      currentUser.username
-    } to ${receiverName}`
+    const body = `${convertTimestampToDateString(
+      date,
+    )} - ${selectedTempl} sent by ${currentUser.username} to ${receiverName}`
 
     const channelId = message.manuscript.channels.find(
       channel => channel.topic === 'Editorial discussion',

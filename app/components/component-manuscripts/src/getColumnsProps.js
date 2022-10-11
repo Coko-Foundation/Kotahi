@@ -39,12 +39,14 @@ const getColumnsProps = (
     created: {
       title: 'Created',
       canSort: true,
+      canFilterByDateRange: true,
       defaultSortDirection: 'DESC',
       flex: '0 1 7em',
     },
     updated: {
       title: 'Updated',
       canSort: true,
+      canFilterByDateRange: true,
       defaultSortDirection: 'DESC',
       flex: '0 1 7em',
     },
@@ -143,7 +145,7 @@ const getColumnsProps = (
       canSort,
       filterOptions,
       filterValue:
-        (filterOptions &&
+        ((filterOptions || presetProps.canFilterByDateRange) &&
           uriQueryParams.find(p => p.field === columnName)?.value) ||
         null,
       sortDirection:
