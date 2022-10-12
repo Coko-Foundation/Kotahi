@@ -152,13 +152,6 @@ export default css`
     }
   }
 
-  h1.appendixheader {
-    background-color: teal;
-    border-radius: 8px;
-    color: white;
-    padding: 4px 8px;
-  }
-
   /* added for figure weirdness */
 
   figure {

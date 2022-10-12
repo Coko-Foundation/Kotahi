@@ -1,6 +1,5 @@
 import { Service } from 'wax-prosemirror-services'
 import Appendix from './Appendix'
-import AppendixHeader from './AppendixHeader'
 import FrontMatter from './FrontMatter'
 import Abstract from './Abstract'
 import AcknowledgementsSection from './AcknowledgementSection'
@@ -54,7 +53,6 @@ class JatsTagsService extends Service {
   register() {
     this.container.bind('Reference').to(Reference)
     this.container.bind('Appendix').to(Appendix)
-    this.container.bind('AppendixHeader').to(AppendixHeader)
     this.container.bind('RefList').to(RefList)
     this.container.bind('ReferenceHeader').to(ReferenceHeader)
     this.container.bind('FrontMatter').to(FrontMatter)
@@ -182,32 +180,6 @@ class JatsTagsService extends Service {
         toDOM(hook) {
           const attrs = { class: hook.node?.attrs?.class || 'appendix' }
           return ['section', attrs, 0]
-        },
-      },
-    })
-    createNode({
-      appendixHeader: {
-        content: 'inline*',
-        group: 'block',
-        priority: 0,
-        defining: true,
-        attrs: {
-          class: { default: 'appendixheader' },
-        },
-        parseDOM: [
-          {
-            tag: 'h1.appendixheader',
-            getAttrs(hook, next) {
-              Object.assign(hook, {
-                class: hook?.dom?.getAttribute('class') || 'appendixheader',
-              })
-              typeof next !== 'undefined' && next()
-            },
-          },
-        ],
-        toDOM(hook) {
-          const attrs = { class: hook.node?.attrs?.class || 'appendixheader' }
-          return ['h1', attrs, 0]
         },
       },
     })

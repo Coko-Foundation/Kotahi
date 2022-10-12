@@ -424,8 +424,8 @@ const EditorStyles = css`
 
     & > :last-child {
       margin-bottom: 0;
-      }
     }
+  }
 
   .reflist h1,
   .reflist h2,
@@ -500,8 +500,7 @@ const EditorStyles = css`
   .appendix h3,
   .appendix h4,
   .appendix h5,
-  .appendix h6,
-  h1.appendixheader {
+  .appendix h6 {
     margin: 0 0 8px 0;
     font-size: 18px;
     font-weight: bold;
