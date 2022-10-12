@@ -96,23 +96,11 @@ export default css`
       top: -4px;
     }
 
-    & p {
+    & p,
+    & li {
       &:before {
         content: '§ ';
       }
-    }
-  }
-
-  h1.referenceheader {
-    background-color: midnightblue;
-    border-radius: 8px;
-    color: white;
-    padding: 4px 8px;
-  }
-
-  p.reference {
-    &:before {
-      content: '§ ';
     }
   }
 
@@ -150,13 +138,6 @@ export default css`
       position: absolute;
       top: -4px;
     }
-  }
-
-  h1.appendixheader {
-    background-color: teal;
-    border-radius: 8px;
-    color: white;
-    padding: 4px 8px;
   }
 
   /* added for figure weirdness */

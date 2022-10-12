@@ -6,6 +6,7 @@ const getCrossrefCitationsFromList = require('./crossrefUtils')
 const processFunding = require('../jatsexport/processFunding')
 const processKeywords = require('../jatsexport/processKeywords')
 const processGlossary = require('../jatsexport/processGlossary')
+const processAppendices = require('../jatsexport/processAppendices')
 
 // const { lte } = require('semver')
 
@@ -288,62 +289,6 @@ const fixTableCells = html => {
   return { deTabledHtml }
 }
 
-const makeAppendices = html => {
-  let deAppendixedHtml = html
-  let appCount = 0 // this is to give appendices IDs
-  const appendices = []
-
-  while (deAppendixedHtml.indexOf('<section class="appendix">') > -1) {
-    let thisAppendix = deAppendixedHtml
-      .split('<section class="appendix">')[1]
-      .split('</section>')[0]
-
-    deAppendixedHtml = deAppendixedHtml.replace(
-      `<section class="appendix">${thisAppendix}</section>`,
-      '',
-    )
-
-    // 1.1 deal with appendix title
-
-    let headerFound = false // If there is more than header, it's turned into a regular H1, which will get wrapped in sections.
-
-    while (thisAppendix.indexOf('<h1 class="appendixheader">') > -1) {
-      const thisHeader = thisAppendix
-        .split(`<h1 class="appendixheader">`)[1]
-        .split('</h1')[0]
-
-      thisAppendix = thisAppendix.replace(
-        `<h1 class="appendixheader">${thisHeader}</h1>`,
-        !headerFound // if this is the first header, don't add a secti
-          ? `<title>${thisHeader}</title>`
-          : `<h1>${thisHeader}</h1>`,
-      )
-      headerFound = true
-    }
-
-    // 1.2. jats the internal contents
-    appendices.push(
-      `<app id="app-${appCount}">${htmlToJats(thisAppendix)}</app>`,
-    )
-    appCount += 1
-
-    // 1.3 clean out any <h1 class="appendixheader" in deAppendixedHtml—these just become regular H1s
-    while (deAppendixedHtml.indexOf('<h1 class="appendixheader">') > -1) {
-      deAppendixedHtml = deAppendixedHtml.replace(
-        `<h1 class="appendixheader">`,
-        '<h1>',
-      )
-    }
-  }
-
-  return {
-    deAppendixedHtml,
-    appendices: appendices.length
-      ? `<app-group>${appendices.join('')}</app-group>`
-      : '',
-  }
-}
-
 const makeFrontMatter = html => {
   let deFrontedHtml = html
   let abstract = ''
@@ -464,7 +409,7 @@ const makeJats = (html, articleMeta, journalMeta) => {
 
   // 1. deal with appendices
 
-  const { deAppendixedHtml, appendices } = makeAppendices(deTabledHtml)
+  const { deAppendixedHtml, appendices } = processAppendices(deTabledHtml)
 
   // 3 deal with faux frontmatter – these just get thrown away
 

@@ -424,25 +424,24 @@ const EditorStyles = css`
 
     & > :last-child {
       margin-bottom: 0;
+    }
+
+    & p {
+      &:before {
+        content: '§ ';
       }
     }
+  }
 
   .reflist h1,
   .reflist h2,
   .reflist h3,
   .reflist h4,
   .reflist h5,
-  .reflist h6,
-  h1.referenceheader {
+  .reflist h6 {
     margin: 0 0 8px 0;
     font-size: 18px;
     font-weight: bold;
-  }
-
-  p.reference {
-    &:before {
-      content: '§ ';
-    }
   }
 
   section.acknowledgementsSection {
@@ -500,8 +499,7 @@ const EditorStyles = css`
   .appendix h3,
   .appendix h4,
   .appendix h5,
-  .appendix h6,
-  h1.appendixheader {
+  .appendix h6 {
     margin: 0 0 8px 0;
     font-size: 18px;
     font-weight: bold;

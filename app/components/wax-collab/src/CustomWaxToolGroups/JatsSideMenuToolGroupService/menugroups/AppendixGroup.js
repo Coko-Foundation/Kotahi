@@ -7,12 +7,9 @@ class AppendixGroup extends ToolGroup {
   tools = []
   title = (<LeftMenuTitle title="Appendices" />)
 
-  constructor(
-    @inject('Appendix') appendix,
-    @inject('AppendixHeader') appendixHeader,
-  ) {
+  constructor(@inject('Appendix') appendix) {
     super()
-    this.tools = [appendix, appendixHeader]
+    this.tools = [appendix]
   }
 }
 
