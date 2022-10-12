@@ -4,6 +4,10 @@ const htmlToJats = require('./htmlToJats')
 
 // NOTE: right now this only works for flat glossaries!
 
+const replaceAll = (str, find, replace) => {
+  return str.replace(new RegExp(find, 'g'), replace)
+}
+
 const processGlossary = html => {
   const dom = htmlparser2.parseDocument(html)
   const $ = cheerio.load(dom, { xmlMode: true })
@@ -33,7 +37,7 @@ const processGlossary = html => {
       }
 
       // Find every <p class="glossary-item"> inside of that.
-      const items = thisList.find('.glossary-item')
+      const items = thisList.find('.glossary-item, p')
       items.each((index2, itemEl) => {
         // check to make sure that there's a glossary term inside of there
         const glossaryTerm = $(itemEl).find('.glossary-term')
