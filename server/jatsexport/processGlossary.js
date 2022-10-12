@@ -4,10 +4,6 @@ const htmlToJats = require('./htmlToJats')
 
 // NOTE: right now this only works for flat glossaries!
 
-const replaceAll = (str, find, replace) => {
-  return str.replace(new RegExp(find, 'g'), replace)
-}
-
 const processGlossary = html => {
   const dom = htmlparser2.parseDocument(html)
   const $ = cheerio.load(dom, { xmlMode: true })
