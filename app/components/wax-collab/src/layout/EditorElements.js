@@ -424,8 +424,8 @@ const EditorStyles = css`
 
     & > :last-child {
       margin-bottom: 0;
-      }
     }
+  }
 
   .reflist h1,
   .reflist h2,
@@ -827,9 +827,6 @@ const EditorStyles = css`
     margin: 0 0 8px 0;
     font-size: 18px;
     font-weight: bold;
-  }
-
-  .glossary-item {
   }
 
   .glossary-term {

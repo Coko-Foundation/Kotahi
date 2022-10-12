@@ -9,11 +9,10 @@ class GlossaryGroup extends ToolGroup {
 
   constructor(
     @inject('GlossarySection') glossarySection,
-    @inject('GlossaryItem') glossaryItem,
     @inject('GlossaryTerm') glossaryTerm,
   ) {
     super()
-    this.tools = [glossarySection, glossaryItem, glossaryTerm]
+    this.tools = [glossarySection, glossaryTerm]
   }
 }
 
