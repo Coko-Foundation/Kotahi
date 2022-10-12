@@ -72,7 +72,7 @@ export const Item = styled(NavItem)`
   height: ${grid(5)};
   justify-content: space-between;
   line-height: ${grid(3)};
-  margin-left: ${props => (props.subLink ? '16px' : 0)};
+  margin-left: ${props => grid((props.depth || 0) * 2)};
   padding-left: ${grid(1)};
 
   & > span {
@@ -110,13 +110,17 @@ const UserInfo = styled.div`
   margin-left: ${grid(1)};
 `
 
-const SubMenu = ({ location, ...navInfo }) => {
-  const [open, setOpen] = React.useState(false)
+const SubMenu = ({ location, depth = 0, ...navInfo }) => {
+  const [open, setOpen] = React.useState(
+    menuItemContainsCurrentPage(navInfo, location),
+  )
+
   return (
     <>
       <Item
         {...navInfo}
-        active={menuItemIsActive(location, navInfo)}
+        active={location.pathname === navInfo.link}
+        depth={depth}
         onClick={() => setOpen(!open)}
         open={open}
       />
@@ -125,10 +129,10 @@ const SubMenu = ({ location, ...navInfo }) => {
           if (subNavInfo.menu) {
             return (
               <SubMenu
+                depth={depth + 1}
                 key={subNavInfo.link}
                 location={location}
                 {...subNavInfo}
-                subLink
               />
             )
           }
@@ -137,8 +141,8 @@ const SubMenu = ({ location, ...navInfo }) => {
             <Item
               {...subNavInfo}
               active={location.pathname === subNavInfo.link}
+              depth={depth + 1}
               key={subNavInfo.link}
-              subLink
             />
           )
         })}
@@ -146,9 +150,9 @@ const SubMenu = ({ location, ...navInfo }) => {
   )
 }
 
-const menuItemIsActive = (location, item) =>
+const menuItemContainsCurrentPage = (item, location) =>
   item.link === location.pathname ||
-  item.links?.some(subItem => menuItemIsActive(location, subItem))
+  item.links?.some(subItem => menuItemContainsCurrentPage(subItem, location))
 
 const Menu = ({
   className,
