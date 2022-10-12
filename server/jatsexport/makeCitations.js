@@ -163,25 +163,6 @@ const makeCitations = html => {
 
     // 2.2. Get all the citations out, add to refList
 
-    // first, go through and identify all possible mixed citations
-
-    while (thisRefList.indexOf('<p class="reference">') > -1) {
-      const thisCitation = thisRefList
-        .split('<p class="reference">')[1]
-        .split('</p>')[0]
-
-      if (thisCitation.length) {
-        potentialRefs[
-          html.indexOf(`<p class="reference">${thisCitation}</p>`)
-        ] = thisCitation
-      }
-
-      thisRefList = thisRefList.replace(
-        `<p class="reference">${thisCitation}</p>`,
-        ``,
-      )
-    }
-
     // next, take all regular paragraphs as citations
 
     while (thisRefList.indexOf('<p class="paragraph">') > -1) {

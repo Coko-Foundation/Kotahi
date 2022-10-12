@@ -96,16 +96,11 @@ export default css`
       top: -4px;
     }
 
-    & p {
+    & p,
+    & li {
       &:before {
         content: '§ ';
       }
-    }
-  }
-
-  p.reference {
-    &:before {
-      content: '§ ';
     }
   }
 

@@ -8,7 +8,6 @@ class CitationGroup extends ToolGroup {
   title = (<LeftMenuTitle title="Citations" />)
 
   constructor(
-    @inject('Reference') reference,
     @inject('RefList') refList,
     @inject('ArticleTitle') articleTitle,
     @inject('MixedCitationSpan') mixedCitationSpan,
@@ -25,7 +24,6 @@ class CitationGroup extends ToolGroup {
     super()
     this.tools = [
       refList,
-      reference,
       mixedCitationSpan,
       // authorGroup,
       authorName,

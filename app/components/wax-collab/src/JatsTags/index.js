@@ -4,7 +4,6 @@ import FrontMatter from './FrontMatter'
 import Abstract from './Abstract'
 import AcknowledgementsSection from './AcknowledgementSection'
 import RefList from './citations/RefList'
-import Reference from './citations/Reference'
 import ArticleTitle from './citations/ArticleTitle'
 import JournalTitle from './citations/JournalTitle'
 import MixedCitationSpan from './citations/MixedCitationSpan'
@@ -50,7 +49,6 @@ class JatsTagsService extends Service {
   // boot() {}
 
   register() {
-    this.container.bind('Reference').to(Reference)
     this.container.bind('Appendix').to(Appendix)
     this.container.bind('RefList').to(RefList)
     this.container.bind('FrontMatter').to(FrontMatter)
@@ -77,33 +75,7 @@ class JatsTagsService extends Service {
     this.container.bind('GlossaryItem').to(GlossaryItem)
     const createNode = this.container.get('CreateNode')
     const createMark = this.container.get('CreateMark')
-    createNode({
-      reference: {
-        content: 'inline*',
-        group: 'block',
-        defining: true,
-        attrs: {
-          class: { default: 'reference' },
-        },
-        parseDOM: [
-          {
-            tag: 'p.reference',
-            getAttrs(hook, next) {
-              Object.assign(hook, {
-                // this conked out in FullWaxEditor so I adjusted
-                class: hook?.dom?.getAttribute('class') || 'reference',
-              })
-              // this conked out in FullWaxEditor so I adjusted
-              typeof next !== 'undefined' && next()
-            },
-          },
-        ],
-        toDOM(hook) {
-          const attrs = { class: hook.node?.attrs?.class || 'reference' }
-          return ['p', attrs, 0]
-        },
-      },
-    })
+
     createNode({
       refList: {
         content: 'block+',

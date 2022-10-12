@@ -425,6 +425,12 @@ const EditorStyles = css`
     & > :last-child {
       margin-bottom: 0;
     }
+
+    & p {
+      &:before {
+        content: '§ ';
+      }
+    }
   }
 
   .reflist h1,
@@ -436,12 +442,6 @@ const EditorStyles = css`
     margin: 0 0 8px 0;
     font-size: 18px;
     font-weight: bold;
-  }
-
-  p.reference {
-    &:before {
-      content: '§ ';
-    }
   }
 
   section.acknowledgementsSection {
