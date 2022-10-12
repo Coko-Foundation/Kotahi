@@ -136,7 +136,6 @@ const findCitationSpans = (html, refCount, refList = '') => {
 const makeCitations = html => {
   let deCitedHtml = html
   let refList = '' // this is the ref-list that we're building
-  let refListHeader = '' // if there's a header, it goes in here
   let refCount = 0 // this is to give refs IDs
   const potentialRefs = []
 
@@ -150,16 +149,18 @@ const makeCitations = html => {
       '',
     )
 
-    // 2.1. Get header, if there is one. Only the first reflist header is taken.
-    if (!refListHeader) {
-      if (thisRefList.indexOf('<h1 class="referenceheader">') > -1) {
-        /* eslint-disable prefer-destructuring */
-        refListHeader = thisRefList
-          .split('<h1 class="referenceheader">')[1]
-          .split('</h1>')[0]
-        refList = `<title>${refListHeader}</title>${refList}`
-      }
+    const dom = htmlparser2.parseDocument(thisRefList)
+    const $ = cheerio.load(dom, { xmlMode: true })
+    const headers = $('h1,h2,h3,h4,h5,h6')
+
+    if (headers['0']) {
+      const header = $(headers['0']).text()
+      // console.log('header found: ', header, $(headers['0']).html())
+      $(headers['0']).replaceWith('')
+      thisRefList = $.html()
+      refList = `<title>${header}</title>`
     }
+
     // 2.2. Get all the citations out, add to refList
 
     // first, go through and identify all possible mixed citations
@@ -235,12 +236,6 @@ const makeCitations = html => {
       })
       .join('')
     refCount = myRefs.length
-  }
-
-  // 2.3 deal with any stray reference headers in the body—they become regular H1s.
-
-  while (deCitedHtml.indexOf('<h1 class="referenceheader">') > -1) {
-    deCitedHtml = deCitedHtml.replace(`<h1 class="referenceheader">`, '<h1>')
   }
 
   // 2.4 deal with any loose mixed citations in the body:

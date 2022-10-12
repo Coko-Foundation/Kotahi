@@ -432,8 +432,7 @@ const EditorStyles = css`
   .reflist h3,
   .reflist h4,
   .reflist h5,
-  .reflist h6,
-  h1.referenceheader {
+  .reflist h6 {
     margin: 0 0 8px 0;
     font-size: 18px;
     font-weight: bold;

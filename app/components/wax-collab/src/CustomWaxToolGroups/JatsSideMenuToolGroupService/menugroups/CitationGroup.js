@@ -10,10 +10,9 @@ class CitationGroup extends ToolGroup {
   constructor(
     @inject('Reference') reference,
     @inject('RefList') refList,
-    @inject('ReferenceHeader') referenceHeader,
     @inject('ArticleTitle') articleTitle,
     @inject('MixedCitationSpan') mixedCitationSpan,
-    // @inject('AuthorGroup') authorGroup,
+    // @inject('AuthorGroup') authorGroup, // this isn't being shown currently
     @inject('AuthorName') authorName,
     @inject('JournalTitle') journalTitle,
     @inject('Doi') doi,
@@ -26,7 +25,6 @@ class CitationGroup extends ToolGroup {
     super()
     this.tools = [
       refList,
-      referenceHeader,
       reference,
       mixedCitationSpan,
       // authorGroup,

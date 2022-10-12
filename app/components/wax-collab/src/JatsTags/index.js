@@ -4,7 +4,6 @@ import FrontMatter from './FrontMatter'
 import Abstract from './Abstract'
 import AcknowledgementsSection from './AcknowledgementSection'
 import RefList from './citations/RefList'
-import ReferenceHeader from './citations/ReferenceHeader'
 import Reference from './citations/Reference'
 import ArticleTitle from './citations/ArticleTitle'
 import JournalTitle from './citations/JournalTitle'
@@ -54,7 +53,6 @@ class JatsTagsService extends Service {
     this.container.bind('Reference').to(Reference)
     this.container.bind('Appendix').to(Appendix)
     this.container.bind('RefList').to(RefList)
-    this.container.bind('ReferenceHeader').to(ReferenceHeader)
     this.container.bind('FrontMatter').to(FrontMatter)
     this.container.bind('Abstract').to(Abstract)
     this.container.bind('AwardId').to(AwardId)
@@ -129,32 +127,6 @@ class JatsTagsService extends Service {
         toDOM(hook) {
           const attrs = { class: hook.node?.attrs?.class || 'reflist' }
           return ['section', attrs, 0]
-        },
-      },
-    })
-    createNode({
-      referenceHeader: {
-        content: 'inline*',
-        group: 'block',
-        priority: 0,
-        defining: true,
-        attrs: {
-          class: { default: 'referenceheader' },
-        },
-        parseDOM: [
-          {
-            tag: 'h1.referenceheader',
-            getAttrs(hook, next) {
-              Object.assign(hook, {
-                class: hook?.dom?.getAttribute('class') || 'referenceheader',
-              })
-              typeof next !== 'undefined' && next()
-            },
-          },
-        ],
-        toDOM(hook) {
-          const attrs = { class: hook.node?.attrs?.class || 'referenceheader' }
-          return ['h1', attrs, 0]
         },
       },
     })

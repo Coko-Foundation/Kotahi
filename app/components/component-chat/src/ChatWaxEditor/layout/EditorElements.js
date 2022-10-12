@@ -103,13 +103,6 @@ export default css`
     }
   }
 
-  h1.referenceheader {
-    background-color: midnightblue;
-    border-radius: 8px;
-    color: white;
-    padding: 4px 8px;
-  }
-
   p.reference {
     &:before {
       content: '§ ';
