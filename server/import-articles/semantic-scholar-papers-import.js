@@ -111,13 +111,25 @@ const getData = async ctx => {
 
     const currentDOIs = new Set(manuscripts.map(({ doi }) => doi))
 
+    const currentURLs = new Set(
+      manuscripts.map(
+        ({ submission }) =>
+          submission.articleURL || submission.link || submission.biorxivURL,
+      ),
+    )
+
     const withoutDOIDuplicates = importsFromSpecificPreprintServers.filter(
       preprints => !currentDOIs.has(preprints.externalIds.DOI),
     )
 
+    const withoutUrlDuplicates = withoutDOIDuplicates.filter(
+      preprints =>
+        !currentURLs.has(`https://doi.org/${preprints.externalIds.DOI}`),
+    )
+
     const emptySubmission = getEmptySubmission()
 
-    const newManuscripts = withoutDOIDuplicates.map(
+    const newManuscripts = withoutUrlDuplicates.map(
       ({
         doi,
         title,
