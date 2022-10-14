@@ -1,11 +1,11 @@
 ## Changes
 
-
 ### 2022-10-14
 
-For coLab instance: 
+For coLab instance:
+
 1. To import preprints from BioRxiv automatically, add the `ALLOW_MANUAL_IMPORT` in the `.env` file and set the value to `false`.
-2. Add the `AUTO_IMPORT_HOUR_UTC` in the `.env` file and set the time from  `0 to 23`. The value will be the time used to import preprints everyday automatically.
+2. Add the `AUTO_IMPORT_HOUR_UTC` in the `.env` file and set the time from `0 to 23`. The value will be the time used to import preprints everyday automatically.
 3. Add `ARCHIVE_PERIOD_DAYS` to the `.env` file. The value can be number of days. This value will be used to archive older manuscripts depending on the number of days.
 
 ### 2022-08-01
