@@ -181,6 +181,9 @@ const applySortOrder = ({ field, isAscending }, submissionForm, addOrder) => {
     const { groupName: jsonGroup, name: jsonName } = jsonbField
     addOrder(`LOWER(${jsonGroup}->>?)${sortDirection}`, jsonName)
   } else if (isValidNonJsonbField(field, submissionForm)) {
+    // eslint-disable-next-line no-param-reassign
+    field = field === 'shortId' ? 'short_id' : field
+
     addOrder(`${field}${sortDirection}`)
   } else {
     console.warn(`Could not sort on field "${field}`)
