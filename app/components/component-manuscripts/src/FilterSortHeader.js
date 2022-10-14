@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Popup from 'reactjs-popup'
 import { ArrowUp, ArrowDown, Calendar as FeatherCalendar } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import { Cell, HeadingCell, SortArrow } from './style'
+import { Cell, HeadingCell } from './style'
 import { Select, DateRangeCalendar } from '../../shared'
 import {
   dateToCompactStringLocal,
@@ -191,9 +191,8 @@ const FilterSortHeader = ({
     return (
       <Cell onClick={changeSort} {...columnInfo}>
         {columnInfo.title}
-        {columnInfo.sortDirection && (
-          <SortArrow direction={columnInfo.sortDirection} />
-        )}
+        {columnInfo.sortDirection === 'ASC' && <SortDown />}
+        {columnInfo.sortDirection === 'DESC' && <SortUp />}
       </Cell>
     )
   }
