@@ -181,6 +181,9 @@ const applySortOrder = ({ field, isAscending }, submissionForm, addOrder) => {
     const { groupName: jsonGroup, name: jsonName } = jsonbField
     addOrder(`LOWER(${jsonGroup}->>?)${sortDirection}`, jsonName)
   } else if (isValidNonJsonbField(field, submissionForm)) {
+    // eslint-disable-next-line no-param-reassign
+    field = field === 'shortId' ? 'short_id' : field
+
     addOrder(`${field}${sortDirection}`)
   } else {
     console.warn(`Could not sort on field "${field}`)
@@ -274,7 +277,7 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
   submissionForm,
   timezoneOffsetMinutes,
 ) => {
-  // These keep track of the various terms we're adding to SELECT, FROM, WHERE and ORDER BY, as well as params.
+  // These keep track of the various terms we're adding to SELECT, FROM, WHERE and ORDER BY, as well as params.)
   const selectItems = { rawFragments: [], params: [] }
   const fromItems = { rawFragments: [], params: [] }
   const whereItems = { rawFragments: [], params: [] }
