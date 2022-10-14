@@ -277,7 +277,7 @@ const buildQueryForManuscriptSearchFilterAndOrder = (
   submissionForm,
   timezoneOffsetMinutes,
 ) => {
-  // These keep track of the various terms we're adding to SELECT, FROM, WHERE and ORDER BY, as well as params.)
+  // These keep track of the various terms we're adding to SELECT, FROM, WHERE and ORDER BY, as well as params.
   const selectItems = { rawFragments: [], params: [] }
   const fromItems = { rawFragments: [], params: [] }
   const whereItems = { rawFragments: [], params: [] }
