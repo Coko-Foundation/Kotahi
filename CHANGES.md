@@ -2,11 +2,11 @@
 
 ### 2022-10-14
 
-For coLab instance:
+For colab instance archetype:
 
-1. To import preprints from BioRxiv automatically, add the `ALLOW_MANUAL_IMPORT` in the `.env` file and set the value to `false`.
-2. Add the `AUTO_IMPORT_HOUR_UTC` in the `.env` file and set the time from `0 to 23`. The value will be the time used to import preprints everyday automatically.
-3. Add `ARCHIVE_PERIOD_DAYS` to the `.env` file. The value can be number of days. This value will be used to archive older manuscripts depending on the number of days.
+1. Set the `ALLOW_MANUAL_IMPORT` value to `true` to import preprints manually ('Refresh' action on the Manuscripts page) or `false` to automate imports from bioRxiv.
+2. Set the `AUTO_IMPORT_HOUR_UTC` value (UTC time) from `0 to 23` to trigger importing of preprints.
+3. Set the `ARCHIVE_PERIOD_DAYS` value (number of days) will be used to archive 'unselected' manuscripts.
 
 ### 2022-08-01
 
