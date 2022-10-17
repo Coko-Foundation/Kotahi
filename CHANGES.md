@@ -1,12 +1,12 @@
 ## Changes
 
-
 ### 2022-10-14
 
-For coLab instance: 
-1. To import preprints from BioRxiv automatically, add the `ALLOW_MANUAL_IMPORT` in the `.env` file and set the value to `false`.
-2. Add the `AUTO_IMPORT_HOUR_UTC` in the `.env` file and set the time from  `0 to 23`. The value will be the time used to import preprints everyday automatically.
-3. Add `ARCHIVE_PERIOD_DAYS` to the `.env` file. The value can be number of days. This value will be used to archive older manuscripts depending on the number of days.
+For colab instance archetype:
+
+1. Set `ALLOW_MANUAL_IMPORT=true` to make the 'Refresh' button appear on the manuscripts page, allowing editors and admins to manually start an import of preprints from bioRxiv.
+2. Set `AUTO_IMPORT_HOUR_UTC` to an integer from `0 to 23` to cause a daily automatic import of preprints at that hour UTC.
+3. Set `ARCHIVE_PERIOD_DAYS` to an integer value to cause unselected manuscripts to be automatically archived after that number of days to which they were imported into Kotahi. This feature is dependent on `AUTO_IMPORT_HOUR_UTC` also being set (see above), and archiving will occur at the same hour of the day as imports.
 
 ### 2022-08-01
 
