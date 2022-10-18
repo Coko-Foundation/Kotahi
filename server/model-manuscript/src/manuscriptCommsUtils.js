@@ -41,18 +41,7 @@ const importManuscripts = async ctx => {
     promises.push(importArticlesFromBiorxiv(ctx))
     promises.push(importArticlesFromPubmed(ctx))
   } else if (process.env.INSTANCE_NAME === 'colab') {
-    promises.push(
-      importArticlesFromBiorxivWithFullTextSearch(ctx, [
-        'transporter*',
-        'pump*',
-        'gpcr',
-        'gating',
-        '*-gated',
-        '*-selective',
-        '*-pumping',
-        'protein translocation',
-      ]),
-    )
+    promises.push(importArticlesFromBiorxivWithFullTextSearch(ctx))
   }
 
   if (!promises.length) return false
