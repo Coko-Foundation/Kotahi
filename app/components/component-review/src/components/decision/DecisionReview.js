@@ -122,7 +122,7 @@ const ReviewHeading = ({
       <Name>
         {
           <UserCombo>
-            <UserAvatar user={(review && review.user) || user} />
+            <UserAvatar user={review || user} />
             <UserInfo>
               {review.isHiddenReviewerName && !isControlPage ? (
                 <Primary>Anonmyous Reviewer</Primary>
