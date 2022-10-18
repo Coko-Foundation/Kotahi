@@ -16,29 +16,23 @@ const {
 const CURSOR_LIMIT = 200 // This permits up to 10,000 matches, but prevents infinite loop
 const SAVE_CHUNK_SIZE = 50
 
-/** Generate a query to retrieve all manuscripts containing one of the searchStrings
- *  within the given date range.
+/** Generate a query to retrieve all manuscripts from biorxiv within the given date range.
  *  The generated query does not include the cursor parameter, which should be added.
  */
-const formatSearchQueryWithoutCursor = (searchStrings, dateFrom, dateTo) => {
-  const server = 'all' // One of 'biorxiv', 'medrxiv', 'all'
-  const importUrl = `https://api.biorxiv.org/fulltext?server=${server}&terms=`
-  const queryParams = searchStrings.map(term => `"${term}"`).join(' ')
-  return `${importUrl}${queryParams}&flag=any&date_from=${dateFrom}&date_to=${dateTo}`
+const formatSearchQueryWithoutCursor = (dateFrom, dateTo) => {
+  const server = 'biorxiv'
+  const importUrl = `https://api.biorxiv.org/fulltext?server=${server}&terms=""`
+  return `${importUrl}&flag=any&date_from=${dateFrom}&date_to=${dateTo}`
 }
 
-const getData = async (ctx, searchStrings) => {
+const getData = async ctx => {
   const sourceId = await getServerId('biorxiv')
   const lastImportDate = await getLastImportDate(sourceId)
   const minDate = Math.max(lastImportDate, await getDate2WeeksAgo())
   const dateFrom = dateToIso8601(minDate)
   const dateTo = dateToIso8601(Date.now())
 
-  const queryWithoutCursor = formatSearchQueryWithoutCursor(
-    searchStrings,
-    dateFrom,
-    dateTo,
-  )
+  const queryWithoutCursor = formatSearchQueryWithoutCursor(dateFrom, dateTo)
 
   const imports = []
 
@@ -74,9 +68,15 @@ const getData = async (ctx, searchStrings) => {
     ({ url }) => !currentURLs.has(url),
   )
 
+  const allowedSubjectMatterAreas = ['biophysics', 'biochemistry']
+
+  const importsWithDesiredCategoryOnly = withoutDuplicates.filter(preprint =>
+    allowedSubjectMatterAreas.includes(preprint.category),
+  )
+
   const emptySubmission = getEmptySubmission()
 
-  const newManuscripts = withoutDuplicates.map(
+  const newManuscripts = importsWithDesiredCategoryOnly.map(
     ({
       doi,
       title,
