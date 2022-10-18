@@ -11,6 +11,7 @@ export const reviewFields = `
   canBePublishedPublicly
   user {
     id
+    profilePicture
     defaultIdentity {
       id
       name
