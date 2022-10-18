@@ -85,7 +85,7 @@ class User extends BaseModel {
       properties: {
         admin: { type: ['boolean', 'null'] },
         email: { type: ['string', 'null'], format: 'email' },
-        username: { type: 'string', pattern: '^[^0-9\\s]' },
+        username: { type: 'string' },
         passwordHash: { type: ['string', 'null'] },
         online: { type: ['boolean', 'null'] },
         passwordResetToken: { type: ['string', 'null'] },
