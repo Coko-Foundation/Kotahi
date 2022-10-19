@@ -5,7 +5,7 @@
  * to the ORCID login page & after the user successfully logs in, the page redirects
  * to the app.
  */
-const LOGIN_BUTTON = 'button'
+const LOGIN_BUTTON = '.sc-bkzZxe'
 const LOGO = 'img'
 const LOGIN_BACKGROUND = 'Login__Container'
 
