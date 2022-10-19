@@ -1,12 +1,24 @@
 variables:
   IMAGE_ORG: kotahi
   IMAGE_NAME: kotahi-elife
-  REGION: us-east-1
   POSTGRES_HOST_AUTH_METHOD: trust
+  POSTGRES_HOST: postgres
+  POSTGRES_PORT: 5432
+  POSTGRES_DB: kotahidev
   POSTGRES_USER: kotahidev
   POSTGRES_PASSWORD: kotahidev
   PGUSER: kotahidev
   PGPASSWORD: kotahidev
+  S3_PROTOCOL: http
+  S3_HOST: localhost
+  S3_PORT: 9000
+  S3_ACCESS_KEY_ID: nonRootUser
+  S3_SECRET_ACCESS_KEY: nonRootPassword
+  S3_BUCKET: uploads
+  MINIO_ROOT_USER: admin
+  MINIO_ROOT_PASSWORD: superSecretAdminPassword
+  MINIO_CONSOLE_PORT: 9001
+  FF_NETWORK_PER_BUILD: 'true'
 
 stages:
   #- cache
@@ -35,9 +47,8 @@ build:
     - cp app/brand-instances-configs/elife.json app/brandConfig.json
   script:
     - |
-      if [ -z "$DOCKERHUB_USERNAME_ELIFE" ] || [ -z "$DOCKERHUB_PASSWORD_ELIFE" ]; then echo "Not pushing" && exit 0; fi
+      if [ -z "$DOCKERHUB_USERNAME_ELIFE"] || [ -z "$DOCKERHUB_PASSWORD_ELIFE" ]; then echo "Not pushing" && exit 0; fi
       docker login -u $DOCKERHUB_USERNAME_ELIFE -p $DOCKERHUB_PASSWORD_ELIFE
-      docker pull $IMAGE_ORG/$IMAGE_NAME-dev:latest || true
       docker build --build-arg instance_name=elife --build-arg manuscripts_table_columns=submission.articleId,created,updated,status,author --file ./Dockerfile-ci --cache-from $IMAGE_ORG/$IMAGE_NAME-dev:latest --tag $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA --tag $IMAGE_ORG/$IMAGE_NAME-dev:latest .
       docker push $IMAGE_ORG/$IMAGE_NAME-dev:$CI_COMMIT_SHA
       docker push $IMAGE_ORG/$IMAGE_NAME-dev:latest
@@ -86,15 +97,33 @@ build:
 #       helm ls
 #       kubectl get pods | grep server && kubectl get pods | grep job-xsweet
 
-lint:
-  allow_failure: true
+# lint:
+#   allow_failure: true
+#   image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
+#   stage: test
+#   variables:
+#     GIT_STRATEGY: none
+#   script:
+#     - cd ${HOME}
+#     - npm run lint
+
+lint js:
   image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
   stage: test
   variables:
     GIT_STRATEGY: none
   script:
     - cd ${HOME}
-    - npm run lint
+    - yarn lint:js
+
+lint style:
+  image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
+  stage: test
+  variables:
+    GIT_STRATEGY: none
+  script:
+    - cd ${HOME}
+    - yarn lint:style
 
 .test_template: &run_test_template
   image: $IMAGE_ORG/$IMAGE_NAME-dev:latest
@@ -103,11 +132,26 @@ lint:
     GIT_STRATEGY: none
   services:
     - postgres
+    - pubsweet/job-xsweet
+  script:
+    - cd components/server/job-xsweet
+    - $POSTGRES_HOST yarn test --testRegex test/standaloneXsweetTest.js
 
 .test_before_script: &run_test_before_script
-  - apt-get update
+  - wget -q -O - https://dl.google.com/linux/linux_signing_key.pub | apt-key add -
+  - apt-get update --allow-releaseinfo-change
   - apt-get -y install postgresql-client
   - psql -h postgres -U kotahidev -d kotahidev -c "create extension pgcrypto;"
+  - wget -q https://dl.min.io/server/minio/release/linux-amd64/minio
+  - chmod +x minio
+  - ./minio server --console-address :${MINIO_CONSOLE_PORT} /data &
+  - wget -q https://dl.min.io/client/mc/release/linux-amd64/mc
+  - chmod +x mc
+  - ./mc config host add cokoServer http://localhost:$S3_PORT $MINIO_ROOT_USER $MINIO_ROOT_PASSWORD
+  - ./mc admin user add cokoServer/  $S3_ACCESS_KEY_ID $S3_SECRET_ACCESS_KEY
+  - ./mc admin user enable cokoServer/ $S3_ACCESS_KEY_ID
+  - ./mc mb cokoServer/$S3_BUCKET
+  - ./mc admin policy set cokoServer/ readwrite user=$S3_ACCESS_KEY_ID
 
 .test_script: &run_test_script
   - cd ${HOME}
@@ -120,6 +164,15 @@ test-chrome:
   <<: *run_test_template
   variables:
     TEST_ITEM: 'chrome:elife'
+  script:
+    - *run_test_script
+
+test-firefox:
+  before_script:
+    - *run_test_before_script
+  <<: *run_test_template
+  variables:
+    TEST_ITEM: 'firefox:elife'
   script:
     - *run_test_script
 ## commented Wed May 12 15:55:40 EEST 2021 by beatrice.suarasan@endava.com request

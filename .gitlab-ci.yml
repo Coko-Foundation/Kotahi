@@ -4,9 +4,6 @@ stages:
 elife-pipeline:
   except:
     - schedules
-  only:
-    refs:
-      - main
   stage: run-pipeline
   trigger:
     include:
