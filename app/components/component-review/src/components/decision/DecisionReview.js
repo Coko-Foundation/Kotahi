@@ -123,8 +123,11 @@ const ReviewHeading = ({
         {
           <UserCombo>
             <UserAvatar
-              isClickable={!review.isHiddenReviewerName || isControlPage}
-              user={(review && review.user) || user}
+              user={
+                review.isHiddenReviewerName && !isControlPage
+                  ? null
+                  : review.user || user
+              }
             />
             <UserInfo>
               {review.isHiddenReviewerName && !isControlPage ? (

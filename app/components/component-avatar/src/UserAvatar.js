@@ -54,9 +54,9 @@ const Avatar = props => {
     onlineBorderColor = null,
   } = props
 
-  const userFallback = '/profiles/default_avatar.svg'
+  const src = user?.profilePicture
 
-  const src = isClickable ? user?.profilePicture : userFallback
+  const userFallback = '/profiles/default_avatar.svg'
 
   const source = [src, userFallback]
 
