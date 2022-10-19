@@ -1,17 +1,21 @@
 {
   "elife": {
-    "primaryColor": "rgb(10, 157, 217)",
-    "logoPath": "/public/logo-elife.svg",
+    "primaryColor": "linear-gradient(134deg, rgb(10, 157, 217), rgb(66, 194, 246))",
+    "secondaryColor": "rgb(10, 157, 217)",
+    "tertiaryColor": "rgba(0, 0, 0, 0)",
+    "logoPath": "/assets/logo-elife.svg",
     "brandName": "eLife"
   },
   "ncrc": {
-    "primaryColor": "rgb(10, 157, 217)",
-    "logoPath": "/public/logo-ncrc.jpg",
+    "primaryColor": "#0A9DD9",
+    "secondaryColor": "#0A9DD9",
+    "logoPath": "/assets/logo-ncrc.jpg",
     "brandName": "Novel Coronavirus Research Compendium"
   },
   "colab": {
-    "primaryColor": "rgb(188, 35, 37)",
-    "logoPath": "/public/biophysics-colab.png",
+    "primaryColor": "#bc2325",
+    "secondaryColor": "#bc2325",
+    "logoPath": "/assets/biophysics-colab.png",
     "brandName": "Colab"
   }
 }
