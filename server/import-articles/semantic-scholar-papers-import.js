@@ -89,7 +89,7 @@ const getData = async ctx => {
         )
 
         return (
-          diffDays >
+          diffDays <
           Number(config.manuscripts.semanticScholarImportsRecencyPeriodDays)
         )
       }
