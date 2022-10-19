@@ -4,7 +4,7 @@ import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { dashboard } from '../../support/routes'
 
-const invalidDoiLnk="https://hours.com"
+const invalidDoiLnk = 'https://hours.com'
 describe('validating doi field in submission form', () => {
   it('check doi link is available in submission form', () => {
     cy.task('restore', 'commons/elife_bootstrap')
@@ -27,10 +27,10 @@ describe('validating doi field in submission form', () => {
         SubmissionFormPage.fillInDescription(data.description)
         SubmissionFormPage.clickSubmitResearch()
 
-        //check for the submission form contains doi
+        // check for the submission form contains doi
         ManuscriptsPage.selectOptionWithText('Evaluation')
         SubmissionFormPage.getDoiFiled().should('have.value', data.doi)
-       })
+      })
     })
   })
 
@@ -41,15 +41,15 @@ describe('validating doi field in submission form', () => {
     cy.task('seedForms')
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
-        // login as admin
-        cy.login(name.role.admin.name, dashboard)
+      // login as admin
+      cy.login(name.role.admin.name, dashboard)
 
-        // select Control on the Manuscripts page
-        Menu.clickManuscripts()
-        ManuscriptsPage.selectOptionWithText('Evaluation')
-        SubmissionFormPage.fillInDoi(invalidDoiLnk)
-        SubmissionFormPage.clickSubmitResearch()
-        SubmissionFormPage.getValidationErrorMessage('DOI is invalid')
+      // select Control on the Manuscripts page
+      Menu.clickManuscripts()
+      ManuscriptsPage.selectOptionWithText('Evaluation')
+      SubmissionFormPage.fillInDoi(invalidDoiLnk)
+      SubmissionFormPage.clickSubmitResearch()
+      SubmissionFormPage.getValidationErrorMessage('DOI is invalid')
     })
   })
 })
