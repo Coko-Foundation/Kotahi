@@ -54,6 +54,16 @@ const getData = async ctx => {
     abstract: rawAbstractToSafeHtml(item.abstract),
   }))
 
+  const filteredDataset = new Set()
+
+  const withoutBiorxivDuplicates = modifiedItems.filter(preprint => {
+    const isDuplicate = filteredDataset.has(preprint.url)
+    if (isDuplicate) return false
+
+    filteredDataset.add(preprint.url)
+    return true
+  })
+
   // TODO retrieving all manuscripts to check URLs is inefficient!
   const manuscripts = await models.Manuscript.query()
 
@@ -64,7 +74,7 @@ const getData = async ctx => {
     ),
   )
 
-  const withoutDuplicates = modifiedItems.filter(
+  const withoutDuplicates = withoutBiorxivDuplicates.filter(
     ({ url }) => !currentURLs.has(url),
   )
 
