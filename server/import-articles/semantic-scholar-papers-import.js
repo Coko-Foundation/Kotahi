@@ -109,7 +109,9 @@ const getData = async ctx => {
       preprint => allowedPreprintServers.includes(preprint.preprintServer),
     )
 
-    const currentDOIs = new Set(manuscripts.map(({ doi }) => doi))
+    const currentDOIs = new Set(
+      manuscripts.map(({ submission }) => submission.doi),
+    )
 
     const currentURLs = new Set(
       manuscripts.map(
@@ -119,12 +121,12 @@ const getData = async ctx => {
     )
 
     const withoutDOIDuplicates = importsFromSpecificPreprintServers.filter(
-      preprints => !currentDOIs.has(preprints.externalIds.DOI),
+      preprints =>
+        !currentDOIs.has(`https://doi.org/${preprints.externalIds.DOI}`),
     )
 
     const withoutUrlDuplicates = withoutDOIDuplicates.filter(
-      preprints =>
-        !currentURLs.has(`https://doi.org/${preprints.externalIds.DOI}`),
+      preprints => !currentURLs.has(preprints.url),
     )
 
     const emptySubmission = getEmptySubmission()
