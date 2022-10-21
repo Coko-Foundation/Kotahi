@@ -25,62 +25,55 @@ describe('Login page tests', () => {
         .and('eq', settings.elife.logoPath)
       LoginPage.getLoginButton()
         .should('have.css', 'background-color')
-        .and('contains', settings.elife.primaryColor)
+        .and('contains', settings.elife.secondaryColor)
     })
   })
 
   it('branding settings should be visible after login', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('branding_settings').then(settings => {
-      // task to restore the database as per the  dumps/initialState.sql
-      cy.task('restore', 'initialState')
+      // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
+      cy.task('restore', 'commons/elife_bootstrap')
       cy.task('seedForms')
 
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
-        cy.login(name.role.admin, manuscripts)
+        cy.login(name.role.admin.name, manuscripts)
       })
       cy.awaitDisappearSpinner()
       Menu.getBackground()
         .should('have.css', 'background-image')
         .and('contains', settings.elife.primaryColor)
-
-      ManuscriptsPage.getCreatedCaret(0)
-        .should('have.css', 'color')
-        .and('eq', settings.elife.primaryColor)
-      ManuscriptsPage.getCreatedCaret(1)
-        .should('have.css', 'color')
-        .and('eq', settings.elife.primaryColor)
       ManuscriptsPage.getSubmitButton()
         .should('have.css', 'background-color')
-        .should('contain', settings.elife.primaryColor)
+        .should('contain', settings.elife.tertiaryColor)
     })
   })
 
   it('dashboard page should not be visible to the logged in user', () => {
-    // task to restore the database as per the  dumps/initialState.sql
-    cy.task('restore', 'initialState')
+    // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
+    cy.task('restore', 'commons/elife_bootstrap')
     cy.task('seedForms')
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.admin, manuscripts)
+      cy.login(name.role.admin.name, manuscripts)
     })
     cy.awaitDisappearSpinner()
     Menu.getDashboardButton().should('not.exist')
   })
 
   it('reports option should be visible to the admin user', () => {
-    // task to restore the database as per the  dumps/initialState.sql
-    cy.task('restore', 'initial_state_other')
+    // task to restore the database as per the  dumps/commons/elife_bootstrap.sql
+    cy.task('restore', 'commons/elife_bootstrap')
     cy.task('seedForms')
 
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.admin, dashboard)
+      cy.login(name.role.admin.name, dashboard)
     })
     cy.awaitDisappearSpinner()
     Menu.getReportsButton().should('be.visible')
