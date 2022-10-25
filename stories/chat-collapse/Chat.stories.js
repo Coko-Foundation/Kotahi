@@ -404,7 +404,7 @@ AdminEditorChat.args = {
 }
 
 export default {
-  title: 'Manuscripts/Chat',
+  title: 'Chat/Chat',
   component: MessageContainer,
   parameters: {
     docs: {

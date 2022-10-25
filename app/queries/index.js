@@ -370,3 +370,47 @@ export const GET_SYSTEM_WIDE_DISCUSSION_CHANNEL = gql`
     }
   }
 `
+
+const taskFields = `
+id
+created
+updated
+manuscriptId
+title
+assigneeUserId
+assignee {
+  id
+  username
+  email
+  profilePicture
+}
+defaultDurationDays
+dueDate
+reminderPeriodDays
+status
+isComplete
+`
+
+export const UPDATE_TASKS = gql`
+  mutation($manuscriptId: ID, $tasks: [TaskInput!]!) {
+    updateTasks(manuscriptId: $manuscriptId, tasks: $tasks) {
+      ${taskFields}
+    }
+  }
+`
+
+export const UPDATE_TASK = gql`
+  mutation($task: TaskInput!) {
+    updateTask(task: $task) {
+      ${taskFields}
+    }
+  }
+`
+
+export const POPULATE_TASKS = gql`
+  mutation($manuscriptId: ID!) {
+    populateTasksForManuscript(manuscriptId: $manuscriptId) {
+      ${taskFields}
+    }
+  }
+`

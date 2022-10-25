@@ -49,6 +49,10 @@ const validateApiToken = require('../../utils/validateApiToken')
 const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
 
 const {
+  populateTemplatedTasksForManuscript,
+} = require('../../model-task/src/taskCommsUtils')
+
+const {
   convertFilesToFullObjects,
 } = require('../../model-review/src/reviewUtils')
 
@@ -456,6 +460,9 @@ const resolvers = {
         manuscript.id,
         manuscript,
       )
+
+      // newly uploaded files get tasks populated
+      await populateTemplatedTasksForManuscript(manuscript.id)
 
       updatedManuscript.manuscriptVersions = []
 
@@ -1059,7 +1066,9 @@ const resolvers = {
 
       const manuscript = await ManuscriptModel.query()
         .findById(id)
-        .withGraphFetched('[teams, channels, files, reviews.user]')
+        .withGraphFetched(
+          '[teams, channels, files, reviews.user, tasks(orderBySequence).assignee]',
+        )
 
       const user = ctx.user
         ? await models.User.query().findById(ctx.user)
@@ -1467,6 +1476,7 @@ const typeDefs = `
     searchRank: Float
     searchSnippet: String
     importSourceServer: String
+    tasks: [Task!]
   }
 
   input ManuscriptInput {

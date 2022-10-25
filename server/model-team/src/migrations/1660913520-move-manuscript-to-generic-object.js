@@ -19,10 +19,11 @@ exports.up = async knex => {
 
     teams.forEach(async team => {
       if (team.manuscriptId) {
-        let saved = await Team.query().patchAndFetchById(team.id, {
+        const saved = await Team.query().patchAndFetchById(team.id, {
           objectId: team.manuscriptId,
           objectType: 'manuscript',
         })
+
         updatedTeams.push(saved)
       }
     })

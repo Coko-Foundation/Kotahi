@@ -7,7 +7,12 @@ const BareButton = styled.button`
   background: none;
   border: none;
   color: ${th('colorTextPlaceholder')};
+  display: flex;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
   justify-content: center;
+  line-height: inherit;
   min-height: ${grid(3)};
   min-width: ${grid(3)};
   padding: 0 ${grid(0.5)};
@@ -25,8 +30,8 @@ const BareButton = styled.button`
   }
 `
 
-const MinimalButton = ({ children, className, ...rest }) => (
-  <BareButton type="button" {...rest}>
+const MinimalButton = ({ children, type, ...rest }) => (
+  <BareButton type={type || 'button'} {...rest}>
     {children}
   </BareButton>
 )

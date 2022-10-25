@@ -8,6 +8,7 @@ import { v4 as uuid } from 'uuid'
 import { Draggable } from 'react-beautiful-dnd'
 
 import { Page, Heading } from './style'
+import { DragVerticalIcon } from '../../../shared/Icons'
 import lightenBy from '../../../../shared/lightenBy'
 import Modal from '../../../component-modal/src/index'
 
@@ -18,13 +19,17 @@ const ModalContainer = styled.div`
 `
 
 const FeildWrapper = styled.div`
-  display: flex;
   align-items: center;
   border-radius: ${th('borderRadius')};
+  display: flex;
   padding: ${grid(0.5)};
-}
+
   &.active {
     background-color: ${lightenBy('colorPrimary', 0.7)};
+  }
+
+  &:hover svg:first-child {
+    stroke: ${th('colorPrimary')};
   }
 `
 
@@ -54,9 +59,12 @@ const StatusIcon = withTheme(({ children, theme }) => (
   <Icon color={theme.colorPrimary}>{children}</Icon>
 ))
 
-const VeticalEllipsisIcon = withTheme(({ children, theme }) => (
-  <Icon color={theme.colorPrimary}>{children}</Icon>
-))
+const DragIcon = styled(DragVerticalIcon)`
+  height: 20px;
+  margin-right: ${grid(1)};
+  stroke: transparent;
+  width: 20px;
+`
 
 const UnpaddedIcon = styled(Icon)`
   padding: 0;
@@ -175,7 +183,7 @@ const BuilderElement = ({
               alignItems: 'center',
             }}
           >
-            <VeticalEllipsisIcon>more_vertical</VeticalEllipsisIcon>
+            <DragIcon />
             <Element
               className={isActive || snapshot.isDragging ? 'active' : undefined}
               key={`element-${element.id}`}
