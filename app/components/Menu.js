@@ -130,7 +130,7 @@ const SubMenu = ({ location, depth = 0, ...navInfo }) => {
             return (
               <SubMenu
                 depth={depth + 1}
-                key={subNavInfo.link}
+                key={subNavInfo.name}
                 location={location}
                 {...subNavInfo}
               />

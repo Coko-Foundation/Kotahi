@@ -101,6 +101,25 @@ const manuscriptFields = `
     objectId
     fieldsToPublish
   }
+  tasks {
+    id
+    created
+    updated
+    manuscriptId
+    title
+    assigneeUserId
+    assignee {
+      id
+      username
+      email
+      profilePicture
+    }
+    defaultDurationDays
+    dueDate
+    reminderPeriodDays
+    status
+    isComplete
+  }
 `
 
 const formFields = `

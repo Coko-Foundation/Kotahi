@@ -84,6 +84,15 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
     link,
     cache: new InMemoryCache({
       typePolicies: {
+        Query: {
+          fields: {
+            tasks: {
+              merge(existing, incoming) {
+                return incoming
+              },
+            },
+          },
+        },
         ManuscriptMeta: {
           keyFields: ['manuscriptId'],
         },
@@ -98,6 +107,11 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
               },
             },
             formFieldsToPublish: {
+              merge(existing, incoming) {
+                return incoming
+              },
+            },
+            tasks: {
               merge(existing, incoming) {
                 return incoming
               },

@@ -1,5 +1,10 @@
 ## Changes
 
+### 2022-10-18
+
+Instances affected: **all**.<br/>
+`TEAM_TIMEZONE` should be set to the [tz database name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) of your team's main timezone (e.g. `Europe/London` if your head office is in UK). This allows correct calculation of days remaining on tasks in your task list, and will have other uses in future.
+
 ### 2022-10-14
 
 For colab instance archetype:

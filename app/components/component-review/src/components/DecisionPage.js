@@ -22,6 +22,8 @@ import {
   UPDATE_TEAM_MUTATION,
   GET_INVITATIONS_FOR_MANUSCRIPT,
   GET_BLACKLIST_INFORMATION,
+  UPDATE_TASK,
+  UPDATE_TASKS,
 } from '../../../../queries'
 import { validateDoi } from '../../../../shared/commsUtils'
 import {
@@ -125,6 +127,40 @@ const DecisionPage = ({ match }) => {
   const [completeComment] = useMutation(COMPLETE_COMMENT)
   const [deletePendingComment] = useMutation(DELETE_PENDING_COMMENT)
   const [setShouldPublishField] = useMutation(setShouldPublishFieldMutation)
+
+  const [updateTask] = useMutation(UPDATE_TASK, {
+    update(cache, { data: { updateTask: updatedTask } }) {
+      cache.modify({
+        id: cache.identify({
+          __typename: 'Manuscript',
+          id: updatedTask.manuscriptId,
+        }),
+        fields: {
+          tasks(existingTaskRefs) {
+            return existingTaskRefs.includes(updatedTask.id)
+              ? existingTaskRefs
+              : [...existingTaskRefs, updatedTask.id]
+          },
+        },
+      })
+    },
+  })
+
+  const [updateTasks] = useMutation(UPDATE_TASKS, {
+    update(cache, { data: { updateTasks: updatedTasks } }) {
+      cache.modify({
+        id: cache.identify({
+          __typename: 'Manuscript',
+          id: updatedTasks.manuscriptId,
+        }),
+        fields: {
+          tasks() {
+            return updatedTasks.tasks.map(t => t.id)
+          },
+        },
+      })
+    },
+  })
 
   const [deleteFile] = useMutation(deleteFileMutation, {
     update(cache, { data: { deleteFile: fileToDelete } }) {
@@ -298,6 +334,8 @@ const DecisionPage = ({ match }) => {
       updateManuscript={updateManuscript}
       updateReview={updateReview}
       updateReviewJsonData={updateReviewJsonData}
+      updateTask={updateTask}
+      updateTasks={updateTasks}
       updateTeam={updateTeam}
       urlFrag={urlFrag}
       validateDoi={validateDoi(client)}

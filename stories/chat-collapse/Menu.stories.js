@@ -89,7 +89,7 @@ Base.args = {
 }
 
 export default {
-  title: 'Manuscripts/MenuBar',
+  title: 'Menu/MenuBar',
   component: Menu,
   parameters: {
     docs: {

@@ -28,6 +28,7 @@ import NewSubmissionPage from './component-submit/src/components/NewSubmissionPa
 import ReportPage from './component-reporting/src/ReportPage'
 import { Profile } from './component-profile/src'
 import ProductionPage from './component-production/src/components/ProductionPage'
+import TasksTemplatePage from './component-task-manager/src/TasksTemplatePage'
 
 import { GET_CURRENT_USER } from '../queries'
 
@@ -161,6 +162,7 @@ const AdminPage = () => {
   const manuscriptsLink = `${urlFrag}/admin/manuscripts`
   const reportsLink = `${urlFrag}/admin/reports`
   const userAdminLink = `${urlFrag}/admin/users`
+  const tasksTemplateLink = `${urlFrag}/admin/tasks`
   const loginLink = `/login?next=${homeLink}`
   const path = `${urlFrag}/versions/:version`
   const redirectLink = `/login?next=${homeLink}`
@@ -212,7 +214,7 @@ const AdminPage = () => {
             { link: decisionFormBuilderLink, name: 'Decision' },
           ],
         },
-        { link: '', name: 'Tasks', icon: 'list' },
+        { link: tasksTemplateLink, name: 'Tasks', icon: 'list' },
         { link: userAdminLink, name: 'Users', icon: 'users' },
       ],
     })
@@ -387,6 +389,12 @@ const AdminPage = () => {
               currentUser={currentUser}
               key="production"
               path={`${urlFrag}/versions/:version/production`}
+              redirectLink={redirectLink}
+            />,
+            <PrivateRoute
+              component={TasksTemplatePage}
+              key="tasks"
+              path={`${urlFrag}/admin/tasks`}
               redirectLink={redirectLink}
             />,
           ]}

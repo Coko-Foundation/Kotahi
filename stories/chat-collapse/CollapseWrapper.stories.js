@@ -11,7 +11,7 @@ export const Base = args => (
 )
 
 export default {
-  title: 'Manuscripts/CollapseWrapper',
+  title: 'Shared/CollapseWrapper',
   component: Collapse,
   parameters: {
     docs: {

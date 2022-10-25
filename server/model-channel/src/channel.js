@@ -13,6 +13,7 @@ class Channel extends BaseModel {
       Manuscript,
       /* eslint-disable-next-line global-require */
     } = require('@pubsweet/models')
+
     /* eslint-disable-next-line global-require */
     const Team = require('../../model-team/src/team')
     return {

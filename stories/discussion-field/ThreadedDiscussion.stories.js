@@ -23,70 +23,98 @@ export const Base = args => (
 )
 
 Base.args = {
-  isValid: true,
-  isSubmitting: true,
-  createdAt: '2022-04-27',
-  updatedAt: '2022-04-28',
-  channelId: '8542101c-fc13-4d3f-881f-67243beaf83a',
-  comments: [
-    {
-      id: 123,
-      value:
-        '<p>lLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur',
-      author: {
-        __typename: 'User',
-        id: '20ca2a8d-d78e-4260-baed-86369992353f',
-        username: 'Kotahi Author',
-        profilePicture: null,
-        isOnline: null,
-      },
-      createdAt: '2022-04-27 12:12:12',
-      updatedAt: '2022-04-28 00:00:00',
+  threadedDiscussionProps: {
+    threadedDiscussion: {
+      updated: 1662548479000,
+      userCanAddComment: true,
       userCanEditOwnComment: false,
       userCanEditAnyComment: false,
+      threads: [
+        {
+          id: 'bf270109-924a-4ab3-94c0-dc7243fe2812',
+          created: 1662548479000,
+          updated: 1662548479000,
+          comments: [
+            {
+              id: '9475b97e-8da1-4d80-93a1-52a92fe406bf',
+              created: 1662548479000,
+              updated: 1662548479000,
+              commentVersions: [
+                {
+                  comment:
+                    '<p>lLorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur',
+                  author: {
+                    __typename: 'User',
+                    id: '20ca2a8d-d78e-4260-baed-86369992353f',
+                    username: 'Kotahi Author',
+                    profilePicture: null,
+                    isOnline: null,
+                  },
+                },
+              ],
+              pendingComment: null,
+            },
+            {
+              id: '6b92ca7a-c729-4952-8c3e-db9a4351492e',
+              created: 1662548479000,
+              updated: 1662548479000,
+              commentVersions: [
+                {
+                  comment:
+                    '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>',
+                  author: {
+                    __typename: 'User',
+                    id: '20ca2a8d-d78e-4260-baed-86369992353f',
+                    username: 'Kotahi Author',
+                    profilePicture: null,
+                    isOnline: null,
+                  },
+                },
+              ],
+              pendingComment: null,
+            },
+            {
+              id: 'c43b9ef5-e7f7-49da-91f0-a6de208c7dc5',
+              created: 1662548479000,
+              updated: 1662548479000,
+              commentVersions: [
+                {
+                  comment:
+                    '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>',
+                  author: {
+                    __typename: 'User',
+                    id: '20ca2a8d-d78e-4260-baed-86369992353f',
+                    username: 'Kotahi Author',
+                    profilePicture: null,
+                    isOnline: null,
+                  },
+                },
+              ],
+              pendingComment: null,
+            },
+          ],
+        },
+      ],
     },
-    {
-      id: 124,
-      value:
-        '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>',
-      author: {
-        __typename: 'User',
-        id: '20ca2a8d-d78e-4260-baed-86369992353f',
-        username: 'Kotahi Author',
-        profilePicture: null,
-        isOnline: null,
-      },
-      createdAt: '2022-04-27 00:00:00',
-      updatedAt: '2022-04-28 00:00:00',
-      userCanEditOwnComment: false,
-      userCanEditAnyComment: false,
+    currentUser: {
+      __typename: 'User',
+      id: '92f99a84-fc8b-4f94-bc9e-10bb3f7c3902',
+      username: 'Harriet Handling-Editor',
+      admin: true,
+      isOnline: null,
     },
-    {
-      id: 125,
-      value:
-        '<p>Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur</p>',
-      author: {
-        __typename: 'User',
-        id: '20ca2a8d-d78e-4260-baed-86369992353f',
-        username: 'Kotahi Author',
-        profilePicture: null,
-        isOnline: null,
-      },
-      createdAt: '2022-04-27 00:00:00',
-      updatedAt: '2022-04-28 00:00:00',
-      userCanEditOwnComment: false,
-      userCanEditAnyComment: false,
-    },
-  ],
+    firstVersionManuscriptId: '8f3ae437-58e9-4946-869f-737da08bc3a2',
+    updatePendingComment: () => {},
+    completeComment: () => {},
+    deletePendingComment: () => {},
+    userCanAddThread: true,
+    commentsToPublish: [],
+    setShouldPublishComment: () => {},
+    shouldRenderSubmitButton: true,
+  },
   autoFocus: true,
   placeholder: 'Add your feedback here',
-  user: {
-    __typename: 'User',
-    id: '20ca2a8d-d78e-4260-baed-86369992353f',
-    username: 'Kotahi Author',
-    profilePicture: null,
-    isOnline: null,
-  },
+  onChange: () => {},
 }
 
 export default {

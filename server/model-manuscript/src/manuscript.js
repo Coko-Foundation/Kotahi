@@ -3,6 +3,10 @@ const omit = require('lodash/omit')
 const cloneDeep = require('lodash/cloneDeep')
 const sortBy = require('lodash/sortBy')
 
+const {
+  populateTemplatedTasksForManuscript,
+} = require('../../model-task/src/taskCommsUtils')
+
 class Manuscript extends BaseModel {
   static get tableName() {
     return 'manuscripts'
@@ -83,11 +87,15 @@ class Manuscript extends BaseModel {
 
     const manuscripts = await Manuscript.query()
       .where('parent_id', id)
-      .withGraphFetched('[teams.members, reviews.user, files]')
+      .withGraphFetched(
+        '[teams.members, reviews.user, files, tasks(orderBySequence).assignee]',
+      )
 
     const firstManuscript = await Manuscript.query()
       .findById(id)
-      .withGraphFetched('[teams.members, reviews.user, files]')
+      .withGraphFetched(
+        '[teams.members, reviews.user, files, tasks(orderBySequence).assignee]',
+      )
 
     manuscripts.push(firstManuscript)
 
@@ -143,6 +151,8 @@ class Manuscript extends BaseModel {
       omit(cloneDeep(newVersion), ['id', 'created', 'updated', 'decision']),
     )
 
+    await populateTemplatedTasksForManuscript(manuscript.id)
+
     return manuscript
   }
 
@@ -153,6 +163,8 @@ class Manuscript extends BaseModel {
     const File = require('@coko/server/src/models/file/file.model')
     /* eslint-disable-next-line global-require */
     const Team = require('../../model-team/src/team')
+    /* eslint-disable-next-line global-require */
+    const Task = require('../../model-task/src/task')
 
     return {
       submitter: {
@@ -169,6 +181,14 @@ class Manuscript extends BaseModel {
         join: {
           from: 'manuscripts.id',
           to: 'channels.manuscriptId',
+        },
+      },
+      tasks: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: Task,
+        join: {
+          from: 'manuscripts.id',
+          to: 'tasks.manuscriptId',
         },
       },
       teams: {
