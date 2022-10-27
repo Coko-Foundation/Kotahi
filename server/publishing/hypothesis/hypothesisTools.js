@@ -140,7 +140,7 @@ const getPublishableFieldsForObject = (
             const shouldPublish =
               text &&
               field.hideFromAuthors !== 'true' &&
-              (field.permitPublishing !== 'always' ||
+              (field.permitPublishing === 'always' ||
                 fieldsToPublish.includes(expandedFieldName))
 
             return {
@@ -161,7 +161,7 @@ const getPublishableFieldsForObject = (
       const shouldPublish =
         text &&
         field.hideFromAuthors !== 'true' &&
-        (field.permitPublishing !== 'always' ||
+        (field.permitPublishing === 'always' ||
           fieldsToPublish.includes(field.name))
 
       return {
