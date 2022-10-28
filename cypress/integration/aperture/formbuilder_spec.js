@@ -16,6 +16,8 @@ describe('Form builder', () => {
     })
 
     // enter the from page and assert the fileds
+    // Menu.clickForms()
+    cy.contains('Settings').click()
     Menu.clickForms()
     cy.contains('Submission').click()
 
@@ -33,7 +35,7 @@ describe('Form builder', () => {
     cy.get('.react-select__option').eq(0).click()
     cy.contains('Update Field').click()
     // adding a field in submission form
-    cy.contains('Add Field').click()
+    cy.contains('Add Field').click({ force: true })
     cy.contains('Choose in the list').click()
     cy.get('button')
     cy.contains('VisualAbstract').click()
@@ -50,7 +52,7 @@ describe('Form builder', () => {
     cy.contains('Update Field').click()
 
     // adding a field in review form
-    cy.contains('Add Field').click()
+    cy.contains('Add Field').click({ force: true })
     cy.contains('Choose in the list').click()
     cy.get('button')
     cy.contains('VisualAbstract').click()
@@ -67,7 +69,7 @@ describe('Form builder', () => {
     cy.contains('Update Field').click()
 
     // adding a field in decision form
-    cy.contains('Add Field').click()
+    cy.contains('Add Field').click({ force: true })
     cy.contains('Choose in the list').click()
     cy.get('button')
     cy.contains('VisualAbstract').click()
