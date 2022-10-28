@@ -74,6 +74,11 @@ const publishToHypothesis = async manuscript => {
       if (d.action === 'delete' && !(await annotationActuallyExists(d)))
         return { ...d, action: null }
 
+      if (d.action === null && !uri)
+        throw new Error(
+          'Missing field submission.biorxivURL or submission.link',
+        )
+
       return d
     }),
   )
