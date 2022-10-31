@@ -1,4 +1,4 @@
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import UnstyledCalendar from 'react-calendar'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../shared/lightenBy'
@@ -56,7 +56,16 @@ const Calendar = styled(UnstyledCalendar)`
 
   & .react-calendar__tile--now {
     background: none;
-    border: 1px solid ${lightenBy('colorPrimary', 0.2)};
+    ${props =>
+      props.suppressTodayHighlight
+        ? ''
+        : css`
+            border: 1px solid ${lightenBy('colorPrimary', 0.2)};
+          `}
+  }
+
+  & .react-calendar__tile--now:hover {
+    background: #e6e6e6;
   }
 
   & .react-calendar__tile--active {

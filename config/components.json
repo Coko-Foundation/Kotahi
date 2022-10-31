@@ -19,5 +19,6 @@
   "./server/pdfexport",
   "./server/jatsexport",
   "./server/model-threaded-discussion/src/",
-  "./server/model-task/src"
+  "./server/model-task/src",
+  "./server/config/src"
 ]

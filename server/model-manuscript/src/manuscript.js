@@ -5,6 +5,7 @@ const sortBy = require('lodash/sortBy')
 
 const {
   populateTemplatedTasksForManuscript,
+  deleteAlertsForManuscript,
 } = require('../../model-task/src/taskCommsUtils')
 
 class Manuscript extends BaseModel {
@@ -152,6 +153,7 @@ class Manuscript extends BaseModel {
     )
 
     await populateTemplatedTasksForManuscript(manuscript.id)
+    await deleteAlertsForManuscript(this.id)
 
     return manuscript
   }

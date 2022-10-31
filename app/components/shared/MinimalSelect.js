@@ -15,10 +15,12 @@ const styles = th => ({
   }),
   dropdownIndicator: (provided, state) => ({
     ...provided,
+    margin: '0 -3px',
     padding: '0',
   }),
   clearIndicator: (provided, state) => ({
     ...provided,
+    margin: '0 -2px',
     padding: '0',
   }),
   menu: (provided, state) => ({
@@ -40,7 +42,7 @@ const styles = th => ({
     const opacity = state.isDisabled ? 0.5 : 1
     const transition = 'opacity 300ms'
 
-    return { ...provided, opacity, transition }
+    return { ...provided, opacity, transition, height: '18px' }
   },
 
   option: (provided, state) => ({

@@ -3,12 +3,47 @@ import {
   dateToIso8601,
   dateToCompactString,
   compactStringToDate,
+  transposeFromLocalToTimezone,
+  transposeFromTimezoneToLocal,
   transposeUtcToTimezone,
   transposeTimezoneToUtc,
   convertTimestampToDateString,
   getStartOfDay,
   getEndOfDay,
 } from '../dateUtils'
+
+describe('transposeLocalAndTimezone', () => {
+  test('UTC', () => {
+    const localDate = new Date('2022-01-01 12:00:00.000')
+    const tzDate = new Date('2022-01-01T12:00:00.000Z')
+    expect(
+      transposeFromLocalToTimezone(localDate, 'Etc/UTC').toISOString(),
+    ).toEqual(tzDate.toISOString())
+    expect(
+      transposeFromTimezoneToLocal(tzDate, 'Etc/UTC').toISOString(),
+    ).toEqual(localDate.toISOString())
+  })
+  test('NZ', () => {
+    const localDate = new Date('2022-01-01 12:00:00.000')
+    const tzDate = new Date('2022-01-01 12:00:00.000 GMT+1300')
+    expect(
+      transposeFromLocalToTimezone(localDate, 'Pacific/Auckland').toISOString(),
+    ).toEqual(tzDate.toISOString())
+    expect(
+      transposeFromTimezoneToLocal(tzDate, 'Pacific/Auckland').toISOString(),
+    ).toEqual(localDate.toISOString())
+  })
+  test('Niue', () => {
+    const localDate = new Date('2022-01-01 12:00:00.000')
+    const tzDate = new Date('2022-01-01 12:00:00.000 GMT-1100')
+    expect(
+      transposeFromLocalToTimezone(localDate, 'Pacific/Niue').toISOString(),
+    ).toEqual(tzDate.toISOString())
+    expect(
+      transposeFromTimezoneToLocal(tzDate, 'Pacific/Niue').toISOString(),
+    ).toEqual(localDate.toISOString())
+  })
+})
 
 describe('dateToIso8601', () => {
   test('utc', () => {

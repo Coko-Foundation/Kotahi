@@ -39,7 +39,6 @@ class Task extends BaseModel {
         dueDate: { type: ['string', 'object', 'null'], format: 'date-time' },
         reminderPeriodDays: { type: ['integer', 'null'] },
         status: { type: 'string' },
-        isComplete: { type: 'boolean' },
         sequenceIndex: { type: 'integer' },
       },
     }

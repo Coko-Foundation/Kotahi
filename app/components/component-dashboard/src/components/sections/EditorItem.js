@@ -12,6 +12,8 @@ import ControlPageLink from '../ControlPageLink'
 
 import Reviews from '../Reviews'
 import VersionTitle from './VersionTitle'
+import { MediumRow } from '../../../../shared'
+import { LabelBadge } from '../../../../component-manuscripts/src/style'
 
 const VersionTitleLink = styled(ControlPageLink)`
   color: #333;
@@ -80,11 +82,16 @@ const EditorItem = ({
   // <Authorize object={[version]} operation="can view my manuscripts section">
   <>
     <Item>
-      <StatusBadge
-        minimal
-        published={version.published}
-        status={version.status}
-      />
+      <MediumRow>
+        <StatusBadge
+          minimal
+          published={version.published}
+          status={version.status}
+        />
+        {version.hasOverdueTasksForUser && (
+          <LabelBadge color="red">Overdue task</LabelBadge>
+        )}
+      </MediumRow>
       <Meta>
         <MetadataStreamLined
           streamlinedReview={getDeclarationsObject(

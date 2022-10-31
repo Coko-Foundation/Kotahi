@@ -1,5 +1,11 @@
 const Task = require('./task')
-const { populateTemplatedTasksForManuscript } = require('./taskCommsUtils')
+const TaskAlert = require('./taskAlert')
+
+const {
+  populateTemplatedTasksForManuscript,
+  createNewTaskAlerts,
+  updateAlertsForTask,
+} = require('./taskCommsUtils')
 
 const resolvers = {
   Mutation: {
@@ -38,9 +44,12 @@ const resolvers = {
           )
         }
 
-        return (await Promise.all(promises)).sort(
+        const result = (await Promise.all(promises)).sort(
           (a, b) => a.sequenceIndex - b.sequenceIndex,
         )
+
+        await Promise.all(result.map(task => updateAlertsForTask(task)))
+        return result
       })
     },
     updateTask: async (_, { task }) => {
@@ -53,9 +62,12 @@ const resolvers = {
       // Ensure that we can't switch a task from one manuscript to another
       const manuscriptId = existing ? existing.manuscriptId : task.manuscriptId
       const sequenceIndex = existing ? existing.sequenceIndex : currentCount
+      const taskRecord = { ...task, manuscriptId, sequenceIndex }
+
+      await updateAlertsForTask(taskRecord)
 
       return Task.query()
-        .insert({ ...task, manuscriptId, sequenceIndex })
+        .insert(taskRecord)
         .onConflict('id')
         .merge()
         .returning('*')
@@ -63,6 +75,11 @@ const resolvers = {
     },
     populateTasksForManuscript: async (_, { manuscriptId }) =>
       populateTemplatedTasksForManuscript(manuscriptId),
+
+    createNewTaskAlerts: async () => createNewTaskAlerts(), // For testing purposes. Normally initiated by a scheduler on the server.
+
+    removeTaskAlertsForCurrentUser: async (_, __, ctx) =>
+      TaskAlert.query().delete().where({ userId: ctx.user }),
   },
   Query: {
     tasks: async (_, { manuscriptId }) => {
@@ -70,6 +87,12 @@ const resolvers = {
         .where({ manuscriptId })
         .orderBy('sequenceIndex')
         .withGraphJoined('assignee')
+    },
+    userHasTaskAlerts: async (_, __, ctx) => {
+      return (
+        (await TaskAlert.query().where({ userId: ctx.user }).limit(1)).length >
+        0
+      )
     },
   },
 }
@@ -84,7 +107,6 @@ const typeDefs = `
     dueDate: DateTime
     reminderPeriodDays: Int
     status: String!
-    isComplete: Boolean!
   }
 
   type Task {
@@ -99,17 +121,24 @@ const typeDefs = `
     dueDate: DateTime
     reminderPeriodDays: Int
     status: String!
-    isComplete: Boolean!
+  }
+
+  type TaskAlert {
+    taskId: ID
+    assigneeUserId: ID
   }
 
   extend type Query {
     tasks(manuscriptId: ID): [Task!]!
+    userHasTaskAlerts: Boolean!
   }
 
   extend type Mutation {
     updateTasks(manuscriptId: ID, tasks: [TaskInput!]!): [Task!]!
     updateTask(task: TaskInput!): Task!
     populateTasksForManuscript(manuscriptId: ID!): [Task!]!
+    createNewTaskAlerts: Boolean
+    removeTaskAlertsForCurrentUser: Boolean
   }
 `
 

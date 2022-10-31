@@ -44,12 +44,14 @@ const ReadOnly = styled.div`
 
 const MinimalTextInput = ({
   autoFocus,
+  className,
   isReadOnly,
   value,
   onCancel,
   onChange,
   placeholder,
   fieldId,
+  title,
 }) => {
   const themeContext = useContext(ThemeContext)
   const [currentVal, setCurrentVal] = useState(value)
@@ -70,7 +72,7 @@ const MinimalTextInput = ({
   const cancelButtonId = `${fieldId}_cancel`
 
   return (
-    <InputRow>
+    <InputRow className={className} title={title}>
       <Input
         autoFocus={autoFocus}
         onBlur={e => {

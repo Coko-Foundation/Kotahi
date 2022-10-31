@@ -1,4 +1,24 @@
+import moment from 'moment-timezone'
+
 const tzOffset = new Date().getTimezoneOffset()
+
+/** Turn e.g. midday in the supplied timezone into midday in local timezone */
+export const transposeFromTimezoneToLocal = (date, timezone) => {
+  const timestamp = new Date(date).getTime()
+  const localOffsetMinutes = new Date().getTimezoneOffset()
+  const tzOffsetMinutes = moment.tz.zone(timezone).utcOffset(timestamp)
+  const totalOffsetMilliseconds = (localOffsetMinutes - tzOffsetMinutes) * 60000
+  return new Date(timestamp + totalOffsetMilliseconds)
+}
+
+/** Turn e.g. midday in local timezone into midday in the supplied timezone */
+export const transposeFromLocalToTimezone = (date, timezone) => {
+  const timestamp = new Date(date).getTime()
+  const localOffsetMinutes = new Date().getTimezoneOffset()
+  const tzOffsetMinutes = moment.tz.zone(timezone).utcOffset(timestamp)
+  const totalOffsetMilliseconds = (localOffsetMinutes - tzOffsetMinutes) * 60000
+  return new Date(timestamp - totalOffsetMilliseconds)
+}
 
 /** Format date as yyyy-MM-dd (using timezone if supplied, otherwise UTC) */
 export const dateToIso8601 = (date, timezoneOffsetMinutes) => {

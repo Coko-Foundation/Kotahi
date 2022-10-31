@@ -4,7 +4,6 @@ import { grid } from '@pubsweet/ui-toolkit'
 export const LooseRowAlignTop = styled.div`
   display: flex;
   gap: ${grid(3)};
-  margin: ${grid(2)} 0;
   width: 100%;
 `
 

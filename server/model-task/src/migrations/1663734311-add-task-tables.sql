@@ -10,7 +10,6 @@ CREATE TABLE tasks (
   due_date TIMESTAMP WITH TIME ZONE,
   reminder_period_days INTEGER,
   status TEXT,
-  is_complete BOOLEAN NOT NULL,
   sequence_index INTEGER NOT NULL
 );
 

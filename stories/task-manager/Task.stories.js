@@ -36,7 +36,6 @@ export const Base = args => (
 Base.args = {
   task: {
     id: 'f30d5ec0-941b-4862-94a4-5b2b79a786b6',
-    isComplete: false,
     title: 'This is the title',
     assignee: {
       username: 'Joe Bloggs',

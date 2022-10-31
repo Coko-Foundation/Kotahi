@@ -8,7 +8,10 @@ const models = require('@pubsweet/models')
 const cheerio = require('cheerio')
 const { raw } = require('objection')
 
-const { importManuscripts } = require('./manuscriptCommsUtils')
+const {
+  importManuscripts,
+  manuscriptHasOverdueTasksForUser,
+} = require('./manuscriptCommsUtils')
 
 const Team = require('../../model-team/src/team')
 const TeamMember = require('../../model-team/src/team_member')
@@ -50,6 +53,7 @@ const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
 
 const {
   populateTemplatedTasksForManuscript,
+  deleteAlertsForManuscript,
 } = require('../../model-task/src/taskCommsUtils')
 
 const {
@@ -474,6 +478,8 @@ const resolvers = {
     },
 
     async archiveManuscripts(_, { ids }, ctx) {
+      await Promise.all(ids.map(id => deleteAlertsForManuscript(id)))
+
       // finding the ids of the first versions of all manuscripts:
       const selectedManuscripts = await models.Manuscript.query()
         .select('parentId', 'id')
@@ -492,6 +498,7 @@ const resolvers = {
     },
 
     async archiveManuscript(_, { id }, ctx) {
+      await deleteAlertsForManuscript(id)
       const manuscript = await models.Manuscript.find(id)
 
       // getting the ID of the firstVersion for all manuscripts.
@@ -1140,7 +1147,7 @@ const resolvers = {
       // Get those top-level manuscripts with all versions, all with teams and members
       const manuscripts = await models.Manuscript.query()
         .withGraphFetched(
-          '[teams.[members], manuscriptVersions(orderByCreated).[teams.[members]]]',
+          '[teams.[members], tasks, manuscriptVersions(orderByCreated).[teams.[members], tasks]]',
         )
         .whereIn(
           'id',
@@ -1160,8 +1167,15 @@ const resolvers = {
           latestVersion.teams.some(t =>
             t.members.some(member => member.userId === ctx.user),
           )
-        )
+        ) {
+          // eslint-disable-next-line no-param-reassign
+          latestVersion.hasOverdueTasksForUser = manuscriptHasOverdueTasksForUser(
+            latestVersion,
+            ctx.user,
+          )
+
           filteredManuscripts.push(m)
+        }
       })
 
       return Promise.all(filteredManuscripts.map(m => repackageForGraphql(m)))
@@ -1477,6 +1491,7 @@ const typeDefs = `
     searchSnippet: String
     importSourceServer: String
     tasks: [Task!]
+    hasOverdueTasksForUser: Boolean
   }
 
   input ManuscriptInput {
