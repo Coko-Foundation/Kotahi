@@ -25,7 +25,6 @@ const TaskList = ({
   const repackageTask = task => ({
     id: task.id,
     manuscriptId,
-    isComplete: editAsTemplate ? false : task.isComplete,
     title: task.title,
     assigneeUserId: task.assignee?.id || null,
     defaultDurationDays: task.defaultDurationDays || 0,
@@ -54,7 +53,6 @@ const TaskList = ({
       ...tasks,
       {
         id: uuid(),
-        isComplete: false,
         title: '',
         assignee: null,
         dueDate: today,

@@ -388,7 +388,6 @@ defaultDurationDays
 dueDate
 reminderPeriodDays
 status
-isComplete
 `
 
 export const UPDATE_TASKS = gql`

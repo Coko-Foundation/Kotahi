@@ -3,6 +3,10 @@ const models = require('@pubsweet/models')
 const Team = require('./team')
 const TeamMember = require('./team_member')
 
+const {
+  updateAlertsUponTeamUpdate,
+} = require('../../model-task/src/taskCommsUtils')
+
 const resolvers = {
   Query: {
     team(_, { id }, ctx) {
@@ -30,6 +34,30 @@ const resolvers = {
       return Team.query().insertGraphAndFetch(input, options)
     },
     async updateTeam(_, { id, input }, ctx) {
+      const existing = await Team.query().select('role').findById(id)
+
+      if (
+        existing &&
+        ['editor', 'handlingEditor', 'seniorEditor'].includes(existing.role)
+      ) {
+        const existingMemberIds = (
+          await TeamMember.query().select('userId').where({ teamId: id })
+        ).map(m => m.userId)
+
+        const newMemberIds = input.members.map(m => m.user.id)
+
+        const membersAdded = newMemberIds.filter(
+          userId => !existingMemberIds.includes(userId),
+        )
+
+        const membersRemoved = existingMemberIds.filter(
+          userId => !newMemberIds.includes(userId),
+        )
+
+        const { objectId } = await Team.query().select('objectId').findById(id)
+        await updateAlertsUponTeamUpdate(objectId, membersAdded, membersRemoved)
+      }
+
       return Team.query().upsertGraphAndFetch(
         { id, ...input },
         {

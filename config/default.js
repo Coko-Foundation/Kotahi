@@ -268,6 +268,7 @@ module.exports = {
     maximumWidthForMediumImages: '',
   },
   manuscripts: {
+    teamTimezone: 'Etc/UTC',
     autoImportHourUtc: '',
     archivePeriodDays: '',
     allowManualImport: 'false',

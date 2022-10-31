@@ -100,10 +100,61 @@ const archiveOldManuscripts = async () => {
     })
 }
 
+/** Populates hasOverdueTasksForUser field of each manuscript IN PLACE.
+ * A task is overdue for the current user if the user is an editor of the manuscript, or the task's assignee. */
+const manuscriptHasOverdueTasksForUser = (manuscript, userId) => {
+  const now = Date.now()
+
+  const isEditor = manuscript.teams
+    .filter(t => ['editor', 'handlingEditor', 'seniorEditor'].includes(t.role))
+    .some(t => t.members.some(m => m.userId === userId))
+
+  for (let i = 0; i < manuscript.tasks.length; i += 1) {
+    const task = manuscript.tasks[i]
+
+    if (
+      (isEditor || task.assigneeUserId === userId) &&
+      task.status !== 'Done' &&
+      new Date(task.dueDate) < now
+    ) {
+      return true
+    }
+  }
+
+  return false
+}
+
+/** Returns true if manuscript exists, is not archived, and is the most recent version */
+const manuscriptIsActive = async manuscriptId => {
+  const manuscript = await models.Manuscript.query()
+    .select('isHidden')
+    .findById(manuscriptId)
+
+  if (!manuscript) return false
+  const { isHidden } = manuscript
+
+  if (isHidden) return false
+  const latestVersionId = await getIdOfLatestVersionOfManuscript(manuscriptId)
+  return manuscriptId === latestVersionId
+}
+
+/** Returns a list of user IDs for editors, handlingEditors and seniorEditors. */
+const getEditorIdsForManuscript = async manuscriptId => {
+  const teams = await models.Team.query()
+    .where({ objectId: manuscriptId })
+    .whereIn('role', ['editor', 'handlingEditor', 'seniorEditor'])
+    .withGraphFetched('members')
+
+  return [...new Set(teams.map(t => t.members.map(m => m.userId)).flat())]
+}
+
 module.exports = {
   getIdOfFirstVersionOfManuscript,
   getIdOfLatestVersionOfManuscript,
   importManuscripts,
   importManuscriptsFromSemanticScholar,
   archiveOldManuscripts,
+  manuscriptHasOverdueTasksForUser,
+  manuscriptIsActive,
+  getEditorIdsForManuscript,
 }

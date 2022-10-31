@@ -29,6 +29,7 @@ const Dashboard = ({
   urlFrag,
   shouldShowShortId,
   prettyRoleText,
+  createNewTaskAlerts, // For testing only. Pass in null to disable.
 }) => {
   return (
     <Container>
@@ -37,6 +38,9 @@ const Dashboard = ({
         <Button onClick={newSubmission} primary>
           ＋ New submission
         </Button>
+        {createNewTaskAlerts && (
+          <Button onClick={createNewTaskAlerts}>New Alerts</Button>
+        )}
       </HeadingWithAction>
       {!['ncrc'].includes(instanceName) && (
         <SectionContent>

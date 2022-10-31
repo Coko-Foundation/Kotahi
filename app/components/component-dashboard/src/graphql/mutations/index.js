@@ -98,4 +98,14 @@ export default {
       }
     }
   `,
+  createNewTaskAlertsMutation: gql`
+    mutation {
+      createNewTaskAlerts
+    }
+  `,
+  removeTaskAlertsForCurrentUserMutation: gql`
+    mutation {
+      removeTaskAlertsForCurrentUser
+    }
+  `,
 }

@@ -23,7 +23,6 @@ const query = gql`
       dueDate
       reminderPeriodDays
       status
-      isComplete
     }
 
     users {

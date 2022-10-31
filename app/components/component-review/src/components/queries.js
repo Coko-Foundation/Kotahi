@@ -118,7 +118,6 @@ const manuscriptFields = `
     dueDate
     reminderPeriodDays
     status
-    isComplete
   }
 `
 

@@ -27,12 +27,30 @@ const NonLink = styled.div``
 
 const Section = styled.div``
 
-const NavItem = ({ className, link, name, icon, onClick, open, menu }) =>
+const AlertIndicator = styled.div`
+  background: ${th('colorError')};
+  border-radius: 50%;
+  height: 10px;
+  margin: 0 0.5em;
+  width: 10px;
+`
+
+const NavItem = ({
+  className,
+  link,
+  name,
+  icon,
+  onClick,
+  open,
+  menu,
+  hasAlert,
+}) =>
   link ? (
     <Link className={className} onClick={onClick} to={link}>
       <span>
         {icon && <Icon>{icon}</Icon>}
         {name}
+        {hasAlert && <AlertIndicator />}
       </span>
       {menu ? (
         <> {open ? <Icon>chevron-up</Icon> : <Icon>chevron-down</Icon>} </>

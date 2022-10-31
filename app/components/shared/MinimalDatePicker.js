@@ -4,7 +4,6 @@ import Popup from 'reactjs-popup'
 import { Calendar as CalendarIcon } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import Calendar from './Calendar'
-import { dateToIso8601 } from '../../shared/dateUtils'
 import MinimalButton from './MinimalButton'
 
 const MainContainer = styled.div`
@@ -17,25 +16,36 @@ const MainContainer = styled.div`
   padding: ${grid(2)};
 `
 
-const DatePickerCalendar = ({ value: initialValue, minDate, onChange }) => {
-  const [value, setValue] = useState(initialValue)
-
+const DatePickerCalendar = ({
+  value,
+  minDate,
+  onChange,
+  suppressTodayHighlight,
+}) => {
   return (
     <MainContainer>
       <Calendar
         minDate={minDate}
         minDetail="year"
         onClickDay={val => {
-          setValue(val)
           onChange(val)
         }}
+        suppressTodayHighlight={suppressTodayHighlight}
         value={value}
       />
     </MainContainer>
   )
 }
 
-const MinimalDatePicker = ({ value, minDate, onChange, position }) => {
+const MinimalDatePicker = ({
+  value: initialValue,
+  minDate,
+  onChange,
+  position,
+  suppressTodayHighlight,
+}) => {
+  const [value, setValue] = useState(initialValue)
+
   return (
     <Popup
       arrow={false}
@@ -46,7 +56,7 @@ const MinimalDatePicker = ({ value, minDate, onChange, position }) => {
       trigger={open => (
         <div>
           <MinimalButton type="button">
-            {dateToIso8601(value)}
+            {value.toLocaleDateString('en-CA')}
             &nbsp;
             <CalendarIcon size={18} />
           </MinimalButton>
@@ -57,9 +67,11 @@ const MinimalDatePicker = ({ value, minDate, onChange, position }) => {
         <DatePickerCalendar
           minDate={new Date(minDate)}
           onChange={val => {
+            setValue(val)
             onChange(val)
             close()
           }}
+          suppressTodayHighlight={suppressTodayHighlight}
           value={new Date(value)}
         />
       )}

@@ -27,7 +27,6 @@ Base.args = {
   tasks: [
     {
       id: 'f30d5ec0-941b-4862-94a4-5b2b79a786b6',
-      isComplete: false,
       title: 'Task 1',
       assignee: {
         username: 'Joe Bloggs',
@@ -39,7 +38,6 @@ Base.args = {
     },
     {
       id: '008e1d72-370b-455c-a4c3-6c0c3e36ac4b',
-      isComplete: false,
       title: 'Task 2',
       assignee: {
         username: 'Jane Doe',

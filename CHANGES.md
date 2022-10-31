@@ -5,6 +5,10 @@
 Instances affected: **all**.<br/>
 `TEAM_TIMEZONE` should be set to the [tz database name](https://en.wikipedia.org/wiki/List_of_tz_database_time_zones) of your team's main timezone (e.g. `Europe/London` if your head office is in UK). This allows correct calculation of days remaining on tasks in your task list, and will have other uses in future.
 
+For colab instance archetype:
+
+1. Set `SEMANTIC_SCHOLAR_IMPORTS_RECENCY_PERIOD_DAYS=42` in ENV to configure the recency period of Semantic Scholar recommended preprints
+
 ### 2022-10-14
 
 For colab instance archetype:

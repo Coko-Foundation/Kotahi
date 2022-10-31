@@ -29,6 +29,7 @@ meta {
 }
 submission
 published
+hasOverdueTasksForUser
 `
 
 export default {
