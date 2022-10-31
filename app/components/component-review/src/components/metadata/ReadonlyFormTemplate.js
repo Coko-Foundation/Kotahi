@@ -95,17 +95,11 @@ const showFieldData = (
   return data
 }
 
-const shouldShowInPreview = (fieldName, form) => {
-  const fieldDefinition = form.children?.find(field => field.name === fieldName)
-  return fieldDefinition.includeInReviewerPreview === 'true'
-}
-
 const ReadonlyFormTemplate = ({
   form,
   formData,
   hideSpecialInstructions,
   manuscript,
-  showPreviewMetadataOnly,
   showEditorOnlyFields,
   title,
   displayShortIdAsIdentifier,
@@ -132,8 +126,7 @@ const ReadonlyFormTemplate = ({
         .filter(element => {
           return (
             (showEditorOnlyFields || element.hideFromAuthors !== 'true') &&
-            (!showPreviewMetadataOnly ||
-              shouldShowInPreview(element.name, form))
+            element.hideFromReviewers !== 'true'
           )
         })
         .map(element => (
@@ -149,7 +142,8 @@ const ReadonlyFormTemplate = ({
             </Cell>
           </SectionRowGrid>
         ))}
-      {!showPreviewMetadataOnly && // TODO Special instructions and manuscript files should not be rendered in this component. Split out!
+      {
+        // TODO discuss the clear purpose for special instructions and manuscript files list then refactor accordingly!
         (listManuscriptFiles || !hideSpecialInstructions) && (
           <>
             {!hideSpecialInstructions && (
@@ -159,7 +153,8 @@ const ReadonlyFormTemplate = ({
               <ManuscriptFilesList files={manuscript.files} />
             )}
           </>
-        )}
+        )
+      }
     </SectionContent>
   )
 }
@@ -193,13 +188,11 @@ ReadonlyFormTemplate.propTypes = {
       }).isRequired,
     ),
   }),
-  showPreviewMetadataOnly: PropTypes.bool,
   showEditorOnlyFields: PropTypes.bool,
 }
 
 ReadonlyFormTemplate.defaultProps = {
   manuscript: null,
-  showPreviewMetadataOnly: false,
   showEditorOnlyFields: false,
 }
 

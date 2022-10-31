@@ -666,7 +666,6 @@ const baseProps = {
       },
     ],
   },
-  showPreviewMetadataOnly: false,
   showEditorOnlyFields: false,
   threadedDiscussions: [],
 }
@@ -1258,7 +1257,6 @@ const emptyFormProps = {
       },
     ],
   },
-  showPreviewMetadataOnly: false,
   showEditorOnlyFields: false,
   listManuscriptFiles: true,
   currentUser: {

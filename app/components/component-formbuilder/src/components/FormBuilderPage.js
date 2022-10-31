@@ -74,7 +74,6 @@ const query = gql`
           description
           doiValidation
           placeholder
-          includeInReviewerPreview
           inline
           sectioncss
           parse
@@ -95,6 +94,7 @@ const query = gql`
             maxChars
             minSize
           }
+          hideFromReviewers
           hideFromAuthors
           permitPublishing
           publishingTag

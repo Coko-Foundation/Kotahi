@@ -45,7 +45,7 @@ const query = gql`
           id
           component
           name
-          includeInReviewerPreview
+          hideFromReviewers
           format
         }
       }
