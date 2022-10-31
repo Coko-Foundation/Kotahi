@@ -195,6 +195,7 @@
     "react-adopt": "^0.6.0",
     "react-beautiful-dnd": "^13.1.0",
     "react-calendar": "^3.9.0",
+    "react-contenteditable": "^3.3.6",
     "react-date-picker": "^8.2.0",
     "react-dom": "^16.13.1",
     "react-dropdown": "^1.9.2",
