@@ -55,7 +55,7 @@ class Form extends BaseModel {
                   description: { type: ['string', 'null'] },
                   doiValidation: { type: ['string', 'null'] },
                   placeholder: { type: ['string', 'null'] },
-                  includeInReviewerPreview: { type: ['string', 'null'] },
+                  hideFromReviewers: { type: ['string', 'null'] },
                   inline: { type: ['string', 'null'] },
                   sectioncss: { type: ['string', 'null'] },
                   parse: { type: ['string', 'null'] },

@@ -34,13 +34,13 @@ const typeDefs = `
     description: String
     doiValidation: String
     placeholder: String
-    includeInReviewerPreview: String
     parse: String
     format: String
     inline: String
     sectioncss: String
     validate: [FormElementOptionInput!]
     validateValue: FormElementValidationInput
+    hideFromReviewers: String
     hideFromAuthors: String
     permitPublishing: String
     publishingTag: String
@@ -87,13 +87,13 @@ const typeDefs = `
     description: String
     doiValidation: String
     placeholder: String
-    includeInReviewerPreview: String
     parse: String
     format: String
     inline: String
     sectioncss: String
     validate: [FormElementOption!]
     validateValue: FormElementValidation
+    hideFromReviewers: String
     hideFromAuthors: String
     permitPublishing: String
     publishingTag: String

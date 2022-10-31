@@ -167,6 +167,7 @@ const formStructure = `
         maxChars
         minSize
       }
+      hideFromReviewers
     }
   }
 `

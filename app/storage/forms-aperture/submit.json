@@ -40,21 +40,21 @@
       "component": "TextField",
       "name": "meta.title",
       "placeholder": "Enter the manuscript's title",
-      "includeInReviewerPreview": "true"
+      "hideFromReviewers": "false"
     },
     {
       "title": "Author names",
       "id": "d76e5b3c-eeaa-4168-9318-95d43a31e3e4",
       "component": "AuthorsInput",
       "name": "submission.authorNames",
-      "includeInReviewerPreview": "true"
+      "hideFromReviewers": "false"
     },
     {
       "title": "Topics",
       "id": "62ca72ad-04b0-41fc-85d1-415469d7e895",
       "component": "CheckboxGroup",
       "name": "submission.topics",
-      "includeInReviewerPreview": "true",
+      "hideFromReviewers": "false",
       "options": [
         {
           "id": "2323b6d1-8223-45e8-a0fc-1044a1e39d37",
@@ -80,7 +80,7 @@
       "name": "submission.DOI",
       "doiValidation": "true",
       "placeholder": "Enter the manuscript's DOI",
-      "includeInReviewerPreview": "true"
+      "hideFromReviewers": "false"
     },
     {
       "title": "Abstract",
@@ -90,7 +90,7 @@
       "name": "submission.abstract",
       "description": "<p>Please provide a short summary of your submission</p>",
       "placeholder": "Input your abstract...",
-      "includeInReviewerPreview": "true"
+      "hideFromReviewers": "false"
     },
     {
       "title": "Author correspondence ",
@@ -124,7 +124,7 @@
       "id": "fa5e5b75-4b6f-4a2d-9113-c2b4db73ef8a",
       "component": "AbstractEditor",
       "name": "submission.competingInterests",
-      "includeInReviewerPreview": "true"
+      "hideFromReviewers": "false"
     },
     {
       "title": "Funding",
@@ -155,7 +155,7 @@
       "id": "e8af0c63-e46f-46a8-bc90-5023fe50a541",
       "component": "AbstractEditor",
       "name": "submission.references",
-      "includeInReviewerPreview": "true"
+      "hideFromReviewers": "false"
     },
     {
       "title": "Reviewing editors name ",

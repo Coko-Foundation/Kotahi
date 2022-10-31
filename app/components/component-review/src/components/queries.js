@@ -138,7 +138,6 @@ const formFields = `
       description
       doiValidation
       placeholder
-      includeInReviewerPreview
       permitPublishing
       parse
       format
