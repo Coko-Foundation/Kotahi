@@ -39,11 +39,7 @@ const TaskRow = styled.div`
     display: flex;
     line-height: 1em;
     min-height: ${grid(6)};
-    padding: 0 ${grid(0.5)};
-  }
-
-  & > div:last-child {
-    border-right: ${grid(1)} solid transparent;
+    padding: ${grid(1)} ${grid(0.5)};
   }
 
   ${props =>
@@ -73,8 +69,8 @@ const TaskHeaderRow = styled(TaskRow)`
     color: ${th('colorBorder')};
     font-size: ${th('fontSizeBaseSmall')};
     font-variant: all-small-caps;
-    height: ${grid(3)};
     line-height: ${th('lineHeightBaseSmall')};
+    min-height: ${grid(3)};
   }
 `
 /* stylelint-enable no-descending-specificity */

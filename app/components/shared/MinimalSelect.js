@@ -51,7 +51,11 @@ const styles = th => ({
       state.isFocused || state.isSelected ? th.colorFurniture : 'white',
     color: th.colorText,
   }),
-  valueContainer: (provided, state) => ({ ...provided, padding: '0' }),
+  valueContainer: (provided, state) => ({
+    ...provided,
+    height: '34px',
+    padding: '0',
+  }),
 })
 
 // eslint-disable-next-line import/prefer-default-export
