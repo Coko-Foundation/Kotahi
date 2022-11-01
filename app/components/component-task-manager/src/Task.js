@@ -174,6 +174,23 @@ export const TaskHeader = ({ editAsTemplate }) => {
   )
 }
 
+const getLocalTimeString = val => {
+  const date = new Date(val)
+  const tzOffset = -date.getTimezoneOffset() // getTimezoneOffset gives an inverted value (a POSIX compliance thing)
+  const sign = tzOffset >= 0 ? '+' : '-'
+  const tzOffsetWholeHours = Math.abs(Math.trunc(tzOffset / 60))
+  const tzOffsetMinutes = Math.abs(tzOffset % 60)
+
+  const tzString =
+    tzOffset === 0
+      ? 'GMT'
+      : `GMT${sign}${tzOffsetWholeHours}${
+          tzOffsetMinutes ? `:${tzOffsetMinutes}` : ''
+        }`
+
+  return `${moment(date).format('YYYY-MM-DD HH:mm')} local time (${tzString})`
+}
+
 const Task = ({
   task,
   index,
@@ -187,6 +204,8 @@ const Task = ({
   const config = useContext(ConfigContext)
   const themeContext = useContext(ThemeContext)
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
+
+  const dueDateLocalString = getLocalTimeString(moment(task.dueDate))
 
   const transposedDueDate = transposeFromTimezoneToLocal(
     task.dueDate,
@@ -241,7 +260,7 @@ const Task = ({
           </>
         ) : (
           <>
-            <DueDateCell>
+            <DueDateCell title={dueDateLocalString}>
               <DaysNoteContainer>
                 <CompactDetailLabel isWarning={isOverdue}>
                   {daysDifferenceLabel}
@@ -350,7 +369,7 @@ const Task = ({
               </>
             ) : (
               <>
-                <DueDateCell>
+                <DueDateCell title={dueDateLocalString}>
                   <DaysNoteContainer>
                     <CompactDetailLabel isWarning={isOverdue}>
                       {daysDifferenceLabel}
