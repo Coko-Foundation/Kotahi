@@ -1,4 +1,4 @@
-const { getCrossrefCitationsFromList } = require('../jatsUtils')
+const { getCrossrefCitationsFromList } = require('../crossrefUtils.js')
 
 describe('getCrossrefCitationsFromList', () => {
   test('example1', () => {
