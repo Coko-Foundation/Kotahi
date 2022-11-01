@@ -17,6 +17,7 @@ const waxTheme = {
   colorBackgroundHue: '#F1F5FF',
   colorBackgroundTabs: '#e1ebff',
   colorCitation: '#ccc',
+  colorCitationLabel: '#ccc',
   colorAuthorName: 'blue',
   colorAuthorGroup: 'blue',
   colorArticleTitle: '#FF0340',

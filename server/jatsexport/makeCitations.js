@@ -22,7 +22,17 @@ const replaceAll = (str, find, replace) => {
 const cleanCitation = (html, id) => {
   const dom = htmlparser2.parseDocument(html)
   const $ = cheerio.load(dom, { xmlMode: true })
+  let citationNumber = ''
   // console.log('In cleanCitation: ', id, $.text())
+
+  // first, check if there's a citation label in there. Add the <label> tag around it.
+  // NOTE that this <label> is not the HTML label, and it's possible we'll hit weird parsing issues in the future with this.
+  // This adds the <label> tag, but it does not remove the number from the <mixed-citation>
+
+  if ($('span.citation-label').text().length) {
+    citationNumber = `<label>${$('span.citation-label').text()}</label>`
+  }
+
   $('span').each((index, el) => {
     // For each span, replace with JATS tag if appropriate. Unrecognized spans aren't actually processed
     // console.log('cleanCitation span: ', index, el.attribs.class, $(el).text())
@@ -97,7 +107,9 @@ const cleanCitation = (html, id) => {
   // console.log('returning!', $.html())
   return {
     xref: `<xref ref-type="bibr" rid='ref-${id}'>${id}</xref>`,
-    ref: `<ref id='ref-${id}'><mixed-citation>${$.html()}</mixed-citation></ref>`,
+    ref: `<ref id='ref-${id}'>${
+      citationNumber || ''
+    }<mixed-citation>${$.html()}</mixed-citation></ref>`,
   }
 }
 

@@ -624,6 +624,7 @@ const EditorStyles = css`
 
   span.article-title,
   span.journal-title,
+  span.citation-label,
   span.author-group,
   span.author-name,
   span.volume,
@@ -653,6 +654,11 @@ const EditorStyles = css`
     &:hover {
       outline-color: var(--citationColorValues);
     }
+  }
+
+  span.citation-label {
+    --citationColorValues: ${th('colorCitationLabel')};
+    --citationTextColor: white;
   }
 
   span.article-title {
@@ -718,6 +724,10 @@ const EditorStyles = css`
   }
 
   .show-journal-title .journal-title {
+    outline: var(--citationColorValues) 2px solid;
+  }
+
+  .show-citation-label .citation-label {
     outline: var(--citationColorValues) 2px solid;
   }
 

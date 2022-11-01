@@ -142,6 +142,7 @@ const jatsTagsThatDontNeedConversion = [
   'fpage',
   'lpage',
   'person-group',
+  'label',
   // 'span', // using this for footnote citations, may need to cleanup later?
 ]
 
