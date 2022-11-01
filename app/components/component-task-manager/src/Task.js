@@ -177,13 +177,14 @@ export const TaskHeader = ({ editAsTemplate }) => {
 const getLocalTimeString = val => {
   const date = new Date(val)
   const tzOffset = -date.getTimezoneOffset() // getTimezoneOffset gives an inverted value (a POSIX compliance thing)
-  const tzOffsetWholeHours = Math.trunc(tzOffset / 60)
+  const sign = tzOffset >= 0 ? '+' : '-'
+  const tzOffsetWholeHours = Math.abs(Math.trunc(tzOffset / 60))
   const tzOffsetMinutes = Math.abs(tzOffset % 60)
 
   const tzString =
     tzOffset === 0
       ? 'GMT'
-      : `GMT${tzOffset > 0 ? '+' : ''}${tzOffsetWholeHours}${
+      : `GMT${sign}${tzOffsetWholeHours}${
           tzOffsetMinutes ? `:${tzOffsetMinutes}` : ''
         }`
 
