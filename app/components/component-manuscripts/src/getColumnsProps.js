@@ -52,23 +52,22 @@ const getColumnsProps = (
     },
     status: {
       title: 'Status',
-      filterOptions:
-        process.env.INSTANCE_NAME === 'aperture'
-          ? [
-              { label: 'Unsubmitted', value: 'new' },
-              { label: 'Submitted', value: 'submitted' },
-              { label: 'Accepted', value: 'accepted' },
-              { label: 'Rejected', value: 'rejected' },
-              { label: 'Revise', value: 'revise' },
-              { label: 'Revising', value: 'revising' },
-              { label: 'Published', value: 'published' },
-            ]
-          : [
-              { label: 'Unsubmitted', value: 'new' },
-              { label: 'Submitted', value: 'submitted' },
-              { label: 'Evaluated', value: 'evaluated' },
-              { label: 'Published', value: 'published' },
-            ],
+      filterOptions: ['elife', 'ncrc'].includes(process.env.INSTANCE_NAME)
+        ? [
+            { label: 'Unsubmitted', value: 'new' },
+            { label: 'Submitted', value: 'submitted' },
+            { label: 'Evaluated', value: 'evaluated' },
+            { label: 'Published', value: 'published' },
+          ]
+        : [
+            { label: 'Unsubmitted', value: 'new' },
+            { label: 'Submitted', value: 'submitted' },
+            { label: 'Revise', value: 'revise' },
+            { label: 'Revising', value: 'revising' },
+            { label: 'Accepted', value: 'accepted' },
+            { label: 'Rejected', value: 'rejected' },
+            { label: 'Published', value: 'published' },
+          ],
       flex: '0 1 10em',
       component: FilterableStatusBadge,
     },
