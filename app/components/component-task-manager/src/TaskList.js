@@ -39,12 +39,6 @@ const TaskList = ({
         variables: {
           task: repackageTask({ ...updatedTask, id }),
         },
-        optimisticResponse: {
-          updateTask: {
-            ...repackageTask({ ...updatedTask, id }),
-            __typename: 'Task',
-          },
-        },
       })
     setTasks(tasks.map(t => (t.id === id ? updatedTask : t)))
   }
