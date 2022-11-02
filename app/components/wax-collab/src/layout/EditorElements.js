@@ -827,9 +827,6 @@ const EditorStyles = css`
     font-weight: bold;
   }
 
-  .glossary-item {
-  }
-
   .glossary-term {
     font-weight: bold;
   }

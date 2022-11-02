@@ -32,8 +32,8 @@ const processGlossary = html => {
         }
       }
 
-      // Find every <p class="glossary-item"> inside of that.
-      const items = thisList.find('.glossary-item')
+      // Find every <p > inside of that.
+      const items = thisList.find('p')
       items.each((index2, itemEl) => {
         // check to make sure that there's a glossary term inside of there
         const glossaryTerm = $(itemEl).find('.glossary-term')
