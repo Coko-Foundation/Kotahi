@@ -212,11 +212,9 @@ const Task = ({
     config.teamTimezone,
   )
 
-  const transposedEndOfToday = moment
-    .tz(
-      transposeFromTimezoneToLocal(new Date(), config.teamTimezone),
-      config.teamTimezone,
-    )
+  const transposedEndOfToday = moment(
+    transposeFromTimezoneToLocal(new Date(), config.teamTimezone),
+  )
     .endOf('day')
     .toDate()
 
@@ -237,7 +235,9 @@ const Task = ({
     .format('YYYY-MM-DD')
 
   const isDone = task.status === 'Done'
-  const isOverdue = daysDifference < 0 && !isDone && !editAsTemplate
+
+  const isOverdue =
+    Date.now() > new Date(task.dueDate).getTime() && !isDone && !editAsTemplate
 
   if (isReadOnly)
     return (

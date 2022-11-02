@@ -1,8 +1,10 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { v4 as uuid } from 'uuid'
+import moment from 'moment-timezone'
 import Task, { TaskHeader } from './Task'
 import { RoundIconButton, TightColumn, MediumColumn } from '../../shared'
+import { ConfigContext } from '../../config/src'
 
 const TaskList = ({
   editAsTemplate,
@@ -13,6 +15,8 @@ const TaskList = ({
   updateTasks: persistTasks,
   isReadOnly,
 }) => {
+  const config = useContext(ConfigContext)
+
   // The tasks we keep in state may contain an extra task that hasn't yet received a title.
   // This is treated as temporary and not persisted until it has a title.
   const [tasks, setTasks] = useState(persistedTasks)
@@ -44,10 +48,7 @@ const TaskList = ({
   }
 
   const addNewTask = () => {
-    const today = new Date()
-    today.setHours(17) // Use 5pm local time for deadlines.
-    today.setMinutes(0)
-    today.setSeconds(0)
+    const today = moment.tz(config.teamTimezone).endOf('day').toDate()
 
     setTasks([
       ...tasks,
