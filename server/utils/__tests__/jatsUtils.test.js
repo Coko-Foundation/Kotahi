@@ -2,7 +2,9 @@ const { htmlToJats } = require('../jatsUtils')
 
 describe('htmlToJats', () => {
   test('illegalChars', () => {
-    expect(htmlToJats('ABC😉\x00\r\n\x0B\x9FXYZ')).toEqual('ABC😉\r\nXYZ')
+    expect(htmlToJats('ABC😉\x00\r\n\x0B\x9FXYZ')).toEqual(
+      'ABC&#x1F609;\r\nXYZ',
+    )
   })
   test('insertSections', () => {
     expect(
@@ -38,7 +40,7 @@ describe('htmlToJats', () => {
     ).toEqual(`
 <ext-link ext-link-type="uri" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="https://a.com">A</ext-link>
 <ext-link ext-link-type="uri" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="http://b.com">B</ext-link>
-<ext-link ext-link-type="uri" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="ftp://c.com:8080/123?x=y&z=w#ref1">C</ext-link>
+<ext-link ext-link-type="uri" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="ftp://c.com:8080/123?x=y&#x26;z=w#ref1">C</ext-link>
 D
 E
 F
