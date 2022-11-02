@@ -86,7 +86,7 @@ const AssigneeCell = styled.div`
 `
 
 const DueDateCell = styled.div`
-  flex: 0 0 7.6em;
+  flex: 0 0 7.8em;
   justify-content: flex-start;
   position: relative;
 `
