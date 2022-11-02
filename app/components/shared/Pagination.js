@@ -38,8 +38,12 @@ const Styles = styled.div`
       cursor: pointer;
       list-style-type: none;
       margin-left: -1px;
-      padding: ${grid(1)} ${grid(2)};
       text-align: center;
+    }
+
+    a {
+      display: block;
+      padding: ${grid(1)} ${grid(2)};
     }
   }
 
