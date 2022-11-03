@@ -40,7 +40,6 @@ const ReviewPreview = ({
           submission: JSON.parse(manuscript.submission),
         }}
         hideSpecialInstructions
-        listManuscriptFiles
         manuscript={manuscript}
         showEditorOnlyFields={false}
         threadedDiscussionProps={threadedDiscussionProps}

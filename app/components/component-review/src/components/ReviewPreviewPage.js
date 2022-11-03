@@ -26,6 +26,15 @@ const fragmentFields = `
     keywords
   }
   submission
+  files {
+    id
+    name
+    tags
+    storedObjects {
+      mimetype
+      url
+    }
+  }
 `
 
 const query = gql`

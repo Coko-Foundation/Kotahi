@@ -64,7 +64,6 @@ const ReviewLayout = ({
           <ReadonlyFormTemplate
             form={submissionForm}
             formData={reviewData}
-            listManuscriptFiles
             manuscript={msVersion}
             showEditorOnlyFields={false}
             threadedDiscussionProps={threadedDiscussionProps}
@@ -108,7 +107,6 @@ const ReviewLayout = ({
               ...latestVersion,
               submission: JSON.parse(latestVersion.submission),
             }}
-            listManuscriptFiles
             manuscript={latestVersion}
             showEditorOnlyFields={false}
             threadedDiscussionProps={threadedDiscussionProps}

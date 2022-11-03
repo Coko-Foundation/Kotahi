@@ -111,8 +111,8 @@ const FullWaxEditorCommentsLayout = (readOnly, authorComments) => ({
             </FullCommentsContainer>
             {notes.length > 0 && (
               <ReadOnlyNotesAreaContainer>
-                <NotesHeading>Notes</NotesHeading>
                 <NotesContainer id="notes-container">
+                  <NotesHeading>Notes</NotesHeading>
                   <NotesArea view={main} />
                 </NotesContainer>
               </ReadOnlyNotesAreaContainer>
