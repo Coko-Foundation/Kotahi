@@ -12,7 +12,6 @@ import {
   Email,
 } from '../style'
 import { SectionContent, Attachment } from '../../../../shared'
-import ManuscriptFilesList from './ManuscriptFilesList'
 import SpecialInstructions from './SpecialInstructions'
 import ThreadedDiscussion from '../../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/ThreadedDiscussion'
 
@@ -85,6 +84,50 @@ const showFieldData = (
     ))
   }
 
+  if (
+    // Shows supplementary, visualAbstract, manuscript tagged files in Metadata submission form
+    ['SupplementaryFiles', 'VisualAbstract', 'ManuscriptFile'].includes(
+      fieldDefinition?.component,
+    ) &&
+    Array.isArray(manuscript.files)
+  ) {
+    const supplementaryFiles = manuscript.files.filter(file =>
+      file.tags.includes('supplementary'),
+    )
+
+    const visualAbstractFiles = manuscript.files.filter(file =>
+      file.tags.includes('visualAbstract'),
+    )
+
+    const manuscriptFiles = manuscript.files.filter(file =>
+      file.tags.includes('manuscript'),
+    )
+
+    if (
+      fieldDefinition?.component === 'SupplementaryFiles' &&
+      supplementaryFiles.length > 0
+    )
+      return supplementaryFiles.map(file => (
+        <Attachment file={file} key={file.storedObjects[0].url} uploaded />
+      ))
+
+    if (
+      fieldDefinition?.component === 'VisualAbstract' &&
+      visualAbstractFiles.length > 0
+    )
+      return visualAbstractFiles.map(file => (
+        <Attachment file={file} key={file.storedObjects[0].url} uploaded />
+      ))
+
+    if (
+      fieldDefinition?.component === 'ManuscriptFile' &&
+      manuscriptFiles.length > 0
+    )
+      return manuscriptFiles.map(file => (
+        <Attachment file={file} key={file.storedObjects[0].url} uploaded />
+      ))
+  }
+
   if (Array.isArray(data)) {
     return data.join(', ')
   }
@@ -103,7 +146,6 @@ const ReadonlyFormTemplate = ({
   showEditorOnlyFields,
   title,
   displayShortIdAsIdentifier,
-  listManuscriptFiles,
   threadedDiscussionProps,
 }) => {
   return (
@@ -143,14 +185,11 @@ const ReadonlyFormTemplate = ({
           </SectionRowGrid>
         ))}
       {
-        // TODO discuss the clear purpose for special instructions and manuscript files list then refactor accordingly!
-        (listManuscriptFiles || !hideSpecialInstructions) && (
+        // TODO discuss the clear purpose for special instructions then refactor accordingly!
+        !hideSpecialInstructions && (
           <>
             {!hideSpecialInstructions && (
               <SpecialInstructions manuscript={manuscript} />
-            )}
-            {listManuscriptFiles && (
-              <ManuscriptFilesList files={manuscript.files} />
             )}
           </>
         )

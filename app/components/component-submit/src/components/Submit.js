@@ -129,7 +129,6 @@ const Submit = ({
                 ...version,
                 submission: JSON.parse(version.submission),
               }}
-              listManuscriptFiles
               manuscript={version}
               showEditorOnlyFields={false}
               threadedDiscussionProps={threadedDiscussionProps}

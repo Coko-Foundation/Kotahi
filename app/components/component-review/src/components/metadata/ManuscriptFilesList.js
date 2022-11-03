@@ -25,7 +25,7 @@ const FilesList = ({ files, tag, name }) => {
 const ManuscriptFilesList = ({ files }) => (
   <>
     <FilesList files={files} name="supplementary" tag="supplementary" />
-    <FilesList files={files} name="visual abstract" tag="visual abstract" />
+    <FilesList files={files} name="visual abstract" tag="visualAbstract" />
     <FilesList files={files} name="manuscript" tag="manuscript" />
     <FilesList files={files} name="manuscript image" tag="manuscriptImage" />
   </>

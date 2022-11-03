@@ -204,6 +204,12 @@
       "component": "TextField",
       "name": "submission.datePublished",
       "description": "<p class=\"paragraph\">preferred format: DD.MM.YYYY e.g. 07.01.2021</p>"
+    },
+    {
+      "title": "Manuscript File",
+      "id": "66469976-314f-4949-b2ff-702039b262c0",
+      "component": "ManuscriptFile",
+      "name": "manuscriptFile"
     }
   ],
   "description": "<p>Please fill out the form below to complete your submission.</p>",

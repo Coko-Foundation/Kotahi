@@ -61,6 +61,11 @@ const ComponentProperties = ({
     componentTypeOptions = componentTypeOptions.filter(
       o => o.label !== 'ThreadedDiscussion',
     )
+  // Disable ManuscriptFile in review and decision forms
+  if (['review', 'decision'].includes(category))
+    componentTypeOptions = componentTypeOptions.filter(
+      o => o.label !== 'ManuscriptFile',
+    )
 
   const editableProperties = getEditableComponentProperties(
     selectedComponent,

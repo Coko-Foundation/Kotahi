@@ -46,14 +46,14 @@ const nameField = {
   },
 }
 
-const submissionNameFieldRegex = /^(?:submission\.[a-zA-Z]\w*|meta.title|meta.abstract|fileName|visualAbstract)$/
+const submissionNameFieldRegex = /^(?:submission\.[a-zA-Z]\w*|meta.title|meta.abstract|fileName|visualAbstract|manuscriptFile)$/
 
 const submissionNameField = {
   component: 'TextField',
   props: {
     label: 'Name (internal field name)',
     description:
-      'Use either "submission.yourFieldNameHere", or one of the following: "meta.title" for manuscript title, "meta.abstract" for abstract, "fileName" for SupplementaryFiles, or "visualAbstract" for a VisualAbstract.',
+      'Use either "submission.yourFieldNameHere", or one of the following: "meta.title" for manuscript title, "meta.abstract" for abstract, "fileName" for SupplementaryFiles, or "visualAbstract" for a VisualAbstract, or "manuscriptFile" for a ManuscriptFile.',
     validate: val =>
       submissionNameFieldRegex.test(val) ? null : 'Invalid name',
   },
@@ -204,6 +204,15 @@ const publishingTagField = {
 }
 
 const submissionElements = {
+  ManuscriptFile: {
+    id: textfield,
+    title: requiredTextField,
+    name: submissionNameField,
+    description: editorfield,
+    shortDescription: shortDescriptionField,
+    hideFromReviewers: hideFromReviewersField,
+    hideFromAuthors: hideFromAuthorsField,
+  },
   SupplementaryFiles: {
     id: textfield,
     title: requiredTextField,
@@ -381,6 +390,15 @@ const submissionElements = {
 }
 
 const elements = {
+  ManuscriptFile: {
+    id: textfield,
+    title: requiredTextField,
+    name: submissionNameField,
+    description: editorfield,
+    shortDescription: shortDescriptionField,
+    hideFromReviewers: hideFromReviewersField,
+    hideFromAuthors: hideFromAuthorsField,
+  },
   SupplementaryFiles: {
     id: textfield,
     title: requiredTextField,
