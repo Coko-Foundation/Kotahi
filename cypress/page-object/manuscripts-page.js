@@ -19,13 +19,14 @@ const STATUS_FIELD = 'Badge__Status'
 const TABLE_HEADER = '[class*=Table__Header]'
 const MANUSCRIPTS_TABLE_HEAD = '[class*=Table__Header] > tr >th'
 const ARTICLE_TITLE = '[class*=Table__Row]>td:nth-child(1)'
-const ARTICLE_LABEL = 'style__StyledTableLabel'
+const ARTICLE_LABEL = 'style__Cell-cydfzx-13 JXlDr'
 const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
-const TABLE_ROW = 'Table__Row'
+const TABLE_ROW = 'style__ManuscriptsRow-cydfzx-10 NtEio'
 const TABLE_CELL = 'Table__Cell'
 const LABEL = 'style__StyledTableLabel'
 
-const ARTICLE_CHECKBOX = '[class*=Table__Cell] label > [type*=checkbox]'
+const ARTICLE_CHECKBOX =
+  '[class*=NewItemCheckbox__StyledCheckboxTable]label > [type*=checkbox]'
 
 const SELECT_ALL_CHECKBOX = '[type=checkbox]'
 const NUMBER_OF_ARTICLES_SELECTED = 'style__SelectedManuscriptsNumber'

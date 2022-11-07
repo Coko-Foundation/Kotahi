@@ -9,9 +9,9 @@
  
  // const REVIEW_COMMENT_FIELD = 'reviewComment'
  // const CONFIDENTIAL_COMMENT_FIELD = 'confidentialComment'
- const ACCEPT_RADIO_BUTTON = '.cLexBK > .sc-dmlrTW'
- const REVISE_RADIO_BUTTON = '.cABLOw > .sc-dmlrTW'
- const REJECT_RADIO_BUTTON = '.hgPkBe > .sc-dmlrTW'
+ const ACCEPT_RADIO_BUTTON = '.fgnKvm > .sc-dmlrTW'
+ const REVISE_RADIO_BUTTON = '.izJvPI > .sc-dmlrTW'
+ const REJECT_RADIO_BUTTON = '.dPWuRK > .sc-dmlrTW'
  const SUBMIT_BUTTON = 'review-action-btn'
  const CONFIRM_SUBMIT_BUTTON = 'article > button:eq(0)'
  // const DECISION_COMMENT_FIELD = 'decisionComment'
@@ -21,8 +21,8 @@
  const CAN_BE_PUBLISHED_PUBLICLY_CHECKBOX = '[name=canBePublishedPublicly]'
  const PAGE_SECTIONS = 'General__SectionContent'
  const SECTION_HEADER = 'h2[class]'
- const DECISION_TEXT = 'SimpleWaxEditor__ReadOnlyEditorDiv'
- const DECISION_RECOMMENDATION = 'style__RecommendationInputContainer'
+ const DECISION_TEXT = 'sc-kNMOeM gDlahr'
+ const DECISION_RECOMMENDATION = 'style__Legend-sc-1jvxmxn-2 KPAWX'
  
  const DECISION_BUTTON_SELECTED =
    '[class*=component-decision-viewer__RadioGroup] [checked]'
@@ -41,7 +41,9 @@
      this.getReviewCommentField().fillInput(reviewComment)
    },
    getConfidentialCommentField() {
-     return cy.get(ABSTRACT_EDITOR_FIELD).eq(1)
+     return cy.get(
+       ':nth-child(3) > :nth-child(2) > :nth-child(1) > :nth-child(1) > .EditorStyles__SimpleGrid-k4rcxo-9 > .EditorStyles__SimpleEditorDiv-k4rcxo-11',
+     )
    },
    fillInConfidentialComment(confidentialComment) {
      this.getConfidentialCommentField().fillInput(confidentialComment)
@@ -124,5 +126,4 @@
    clickConfirmSubmitButton() {
      this.getConfirmSubmitButton().click()
    },
- }
-
+ } 

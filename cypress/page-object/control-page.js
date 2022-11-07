@@ -57,9 +57,9 @@ const SHOW_BUTTON = '[class*=DecisionReview__Controls]>[type*=button]'
 const DECISION_TEXT_INPUT =
   ':nth-child(1) > :nth-child(2) > :nth-child(1) > :nth-child(1) > .EditorStyles__SimpleGrid-k4rcxo-9 > .EditorStyles__SimpleEditorDiv-k4rcxo-11'
 
-const ACCEPT_RADIO_BUTTON = '.cLexBK > .sc-dmlrTW'
-const REVISE_RADIO_BUTTON = '.cABLOw > .sc-dmlrTW'
-const REJECT_RADIO_BUTTON = '.hgPkBe > .sc-dmlrTW'
+const ACCEPT_RADIO_BUTTON = '.fgnKvm > .sc-dmlrTW'
+const REVISE_RADIO_BUTTON = '.izJvPI > .sc-dmlrTW'
+const REJECT_RADIO_BUTTON = '.dPWuRK > .sc-dmlrTW'
 const DECISION_SUBMIT_BUTTON = 'decision-action-btn'
 const DECISION_FILE_INPUT = 'input[type=file]'
 
@@ -263,6 +263,7 @@ export const ControlPage = {
   },
   getDecisionFileInput() {
     return cy.get(DECISION_FILE_INPUT)
+    // eslint-disable-next-line cypress/no-unnecessary-waiting, no-unreachable
     cy.wait(3000)
   },
   getSubmitDecisionButton() {
@@ -276,6 +277,7 @@ export const ControlPage = {
   },
   checkSvgExists() {
     this.getCheckSvg().should('exist')
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
     cy.wait(2000)
   },
 }
