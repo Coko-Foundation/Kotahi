@@ -19,6 +19,7 @@ class CitationGroup extends ToolGroup {
     @inject('FirstPage') firstPage,
     @inject('LastPage') lastPage,
     @inject('Volume') volume,
+    @inject('CitationLabel') citationLabel,
     @inject('Issue') issue,
     @inject('Year') year,
   ) {
@@ -26,6 +27,7 @@ class CitationGroup extends ToolGroup {
     this.tools = [
       refList,
       mixedCitationSpan,
+      citationLabel,
       // authorGroup,
       authorName,
       articleTitle,

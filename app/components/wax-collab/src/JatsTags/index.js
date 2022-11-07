@@ -6,6 +6,7 @@ import AcknowledgementsSection from './AcknowledgementSection'
 import RefList from './citations/RefList'
 import ArticleTitle from './citations/ArticleTitle'
 import JournalTitle from './citations/JournalTitle'
+import CitationLabel from './citations/CitationLabel'
 import MixedCitationSpan from './citations/MixedCitationSpan'
 import AuthorName from './citations/AuthorName'
 import AuthorGroup from './citations/AuthorGroup'
@@ -61,6 +62,7 @@ class JatsTagsService extends Service {
     this.container.bind('MixedCitationSpan').to(MixedCitationSpan)
     this.container.bind('AuthorName').to(AuthorName)
     this.container.bind('AuthorGroup').to(AuthorGroup)
+    this.container.bind('CitationLabel').to(CitationLabel)
     this.container.bind('Doi').to(Doi)
     this.container.bind('Volume').to(Volume)
     this.container.bind('Issue').to(Issue)
@@ -420,6 +422,23 @@ class JatsTagsService extends Service {
         parseDOM: [{ tag: 'span.author-name' }],
         toDOM() {
           return ['span', { class: 'author-name', title: 'Author Name' }, 0]
+        },
+      },
+    })
+    createMark({
+      citationLabel: {
+        attrs: {
+          class: { default: 'citation-label' },
+        },
+        group: 'citationMarks',
+        excludes: 'citationMarks',
+        parseDOM: [{ tag: 'span.citation-label' }],
+        toDOM() {
+          return [
+            'span',
+            { class: 'citation-label', title: 'Citation Label' },
+            0,
+          ]
         },
       },
     })
