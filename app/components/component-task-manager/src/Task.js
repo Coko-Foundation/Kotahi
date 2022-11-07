@@ -72,6 +72,10 @@ const TaskHeaderRow = styled(TaskRow)`
     line-height: ${th('lineHeightBaseSmall')};
     min-height: ${grid(3)};
   }
+
+  & > div > div {
+    height: unset;
+  }
 `
 /* stylelint-enable no-descending-specificity */
 
