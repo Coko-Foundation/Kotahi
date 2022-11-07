@@ -38,6 +38,7 @@ const FullWaxEditor = ({
 }) => {
   const handleAssetManager = () => onAssetManager(manuscriptId)
   const journal = useContext(JournalContext)
+
   const waxUser = {
     userId: user.id || '-',
     userColor: {
@@ -59,10 +60,7 @@ const FullWaxEditor = ({
   }, [])
   return (
     <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
-      <div
-        className={validationStatus}
-        style={{ width: '100%' }}
-      >
+      <div className={validationStatus} style={{ width: '100%' }}>
         <Wax
           autoFocus={autoFocus}
           config={fullWaxEditorConfig(handleAssetManager)}

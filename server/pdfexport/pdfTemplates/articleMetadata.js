@@ -19,8 +19,10 @@
 let userArticleMetadata = {}
 
 try {
+  // eslint-disable-next-line global-require, import/no-unresolved
   userArticleMetadata = require('../../../config/journal/export/articleMetadata.json')
 } catch {
+  // eslint-disable-next-line no-console
   console.log("userArticleMetadata doesn't exist.")
 }
 

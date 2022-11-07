@@ -120,4 +120,3 @@ module.exports = (on, config) => {
 
   return configOverride
 }
-

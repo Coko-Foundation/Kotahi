@@ -3,12 +3,12 @@ import { State } from 'react-powerplug'
 
 import ModalContext from './ModalContext'
 
-function ModalProvider({ children, modals }) {
+function ModalProvider({ children, modals: modalsVal }) {
   return (
     <State
       initial={{
         modalState: { data: undefined, modalKey: undefined },
-        modals,
+        modals: modalsVal,
       }}
     >
       {({ state, setState }) => {

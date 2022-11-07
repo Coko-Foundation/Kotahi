@@ -38,6 +38,7 @@ const filesUploadedSubscription = props => {
     </Subscription>
   )
 }
+
 const filesDeletedSubscription = props => {
   const { render, getEntityFilesQuery } = props
 

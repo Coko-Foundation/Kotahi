@@ -4,10 +4,11 @@ import styled from 'styled-components'
 import RootButton from './RootButton'
 
 const StyledIcon = styled.i`
+  display: block;
   height: 24px;
   width: 24px;
-  display: block;
 `
+
 const Label = styled.span`
   ${props => props.hasIcon && `margin-left: 4px;`}
 `

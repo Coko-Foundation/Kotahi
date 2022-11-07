@@ -1,6 +1,6 @@
 import React from 'react'
 
-import { Button } from '../Modal'
+import { Button } from '.'
 import ModalFooter from './ModalFooter'
 
 const ModalFooterDialog = props => {

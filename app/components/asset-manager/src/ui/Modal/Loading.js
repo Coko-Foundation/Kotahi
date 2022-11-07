@@ -3,13 +3,14 @@ import styled from 'styled-components'
 import { rotate360, th } from '@pubsweet/ui-toolkit'
 
 const Wrapper = styled.div`
+  align-items: center;
   display: flex;
   flex-direction: column;
-  width: 100%;
   height: 100%;
   justify-content: center;
-  align-items: center;
+  width: 100%;
 `
+
 const SpinnerAnimation = styled.div`
   display: inline-block;
   height: 64px;

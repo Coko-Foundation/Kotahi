@@ -1,4 +1,5 @@
 import React, { useMemo } from 'react'
+// eslint-disable-next-line no-unused-vars
 import { decorate, injectable, inject } from 'inversify'
 import { isEmpty } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
@@ -14,7 +15,7 @@ import { VerticalTabs, BlockLevelTools } from './VerticalTabs'
 // -- Display is coming from /wax-prosemirror-services/src/WaxToolGroups/DisplayToolGroupService/Display.js
 // ---- though it's also taking in other things
 // 2) where are those paragraph formats defined?
-// ----- from, e.g. /wax-prosemirror-schema/src/nodes/epigraphProseNode.js – this is similar to what I did to make H5/H6
+// ----- from, e.g. /wax-prosemirror-schema/src/nodes/epigraphProseNode.js – this is similar to what I did to make H5/H6
 
 class JatsSideMenu extends ToolGroup {
   tools = []
@@ -44,6 +45,7 @@ class JatsSideMenu extends ToolGroup {
     ]
   }
 
+  /* eslint-disable no-underscore-dangle */
   renderTools(view) {
     if (isEmpty(view)) return null
 
@@ -104,6 +106,7 @@ class JatsSideMenu extends ToolGroup {
 
     return TabsComponent
   }
+  /* eslint-enable no-underscore-dangle */
 }
 
 decorate(injectable(), JatsSideMenu)

@@ -66,6 +66,3 @@ describe('Completing a review', () => {
     })
   })
 })
-
-
-

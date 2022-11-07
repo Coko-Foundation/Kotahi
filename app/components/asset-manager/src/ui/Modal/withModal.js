@@ -1,4 +1,4 @@
-import React, { Fragment } from 'react'
+import React from 'react'
 import ModalContext from './ModalContext'
 
 const withModal = props => {
@@ -9,16 +9,16 @@ const withModal = props => {
       {({ hideModal, showModal, data = {}, modals, modalKey }) => {
         const ModalComponent = modals[modalKey]
         return (
-          <Fragment>
+          <>
             {modalKey && (
               <ModalComponent
-                isOpen={modalKey !== undefined}
                 data={data}
                 hideModal={hideModal}
+                isOpen={modalKey !== undefined}
               />
             )}
             {render({ hideModal, showModal })}
-          </Fragment>
+          </>
         )
       }}
     </ModalContext.Consumer>
