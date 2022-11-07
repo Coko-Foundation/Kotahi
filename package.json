@@ -177,6 +177,7 @@
     "react-contenteditable": "^3.3.6",
     "react-date-picker": "^8.2.0",
     "react-dom": "^16.13.1",
+    "react-dropdown": "^1.11.0",
     "react-dropzone": "10.2.2",
     "react-feather": "^1.1.6",
     "react-hot-loader": "^4.13.0",

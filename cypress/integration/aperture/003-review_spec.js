@@ -95,4 +95,3 @@ function doReview(name, reviewData) {
     cy.get('[role="button"]').should('contain', 'rejected')
   }
 }
-

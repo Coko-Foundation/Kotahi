@@ -22,7 +22,6 @@ describe('Upload manuscript test', () => {
     DashboardPage.clickSubmissionButton() // Click on new submission
     DashboardPage.getSubmissionFileUploadInput().attachFile('test-docx.docx') // Upload manuscript
 
-
     // complete the submission form
     cy.fixture('submission_form_data').then(data => {
       SubmissionFormPage.fillInTitle(data.title3)

@@ -55,4 +55,5 @@ const RootButton = styled.button.attrs(({ title, type }) => ({
   ${props => props.active && activeStyles}
   ${props => props.disabled && disabledStyles}
 `
+
 export default RootButton

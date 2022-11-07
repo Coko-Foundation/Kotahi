@@ -42,4 +42,3 @@ describe('Assigning senior editor', () => {
     cy.contains('Dashboard').click()
   })
 })
-

@@ -27,6 +27,7 @@ const DialogModal = props => {
   } = props
 
   const Header = <ModalHeader text={headerText} />
+
   const Footer = (
     <ModalFooterDialog
       buttonLabel={buttonLabel}

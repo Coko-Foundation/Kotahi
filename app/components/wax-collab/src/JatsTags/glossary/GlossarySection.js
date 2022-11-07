@@ -11,6 +11,7 @@ class GlossarySection extends Tools {
   label = 'Glossary section'
   name = 'GlossarySection'
 
+  // eslint-disable-next-line class-methods-use-this
   get run() {
     return (state, dispatch) => {
       wrapIn(state.config.schema.nodes.glossarySection)(state, dispatch)

@@ -5,8 +5,10 @@ import styled from 'styled-components'
 import { Button } from './Modal'
 
 const Input = styled.input`
+  /* stylelint-disable-next-line declaration-no-important */
   display: none !important;
 `
+
 const Wrapper = styled.div`
   align-items: center;
   display: flex;
@@ -45,4 +47,5 @@ const UploadButton = ({
     </Wrapper>
   )
 }
+
 export default UploadButton

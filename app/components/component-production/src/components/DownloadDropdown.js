@@ -49,7 +49,6 @@ export const DownloadDropdown = ({
     },
   ]
 
-  4
   return (
     <Dropdown itemsList={options} primary>
       Download

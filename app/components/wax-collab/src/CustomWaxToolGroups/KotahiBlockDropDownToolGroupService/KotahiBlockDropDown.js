@@ -1,4 +1,5 @@
 import React, { useContext } from 'react'
+// eslint-disable-next-line no-unused-vars
 import { decorate, injectable, inject } from 'inversify'
 import { isEmpty } from 'lodash'
 import { v4 as uuidv4 } from 'uuid'
@@ -84,6 +85,7 @@ class KotahiBlockDropDown extends ToolGroup {
 
     const { dispatch, state } = view
 
+    /* eslint-disable no-underscore-dangle */
     const dropDownOptions = [
       { label: 'Title', value: '0', item: this._tools[0] },
       { label: 'Heading 2', value: '5', item: this._tools[5] },
@@ -94,6 +96,7 @@ class KotahiBlockDropDown extends ToolGroup {
       { label: 'Paragraph', value: '8', item: this._tools[8] },
       { label: 'Block quote', value: '13', item: this._tools[13] },
     ]
+    /* eslint-enable no-underscore-dangle */
 
     const isDisabled = true // this was doing the weird thing with the title, disconnected for now.
     // if we want to re-enable it, go look in the Wax code

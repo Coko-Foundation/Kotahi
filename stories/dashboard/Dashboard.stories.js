@@ -557,7 +557,9 @@ const props = {
   editorLatestVersions,
   shouldShowShortId: true,
   prettyRoleText: value => value.join(' '),
+  // eslint-disable-next-line no-alert
   newSubmission: () => alert('Add new submission...'),
+  // eslint-disable-next-line no-alert
   reviewerRespond: () => alert('Responding as reviewer...'),
 }
 

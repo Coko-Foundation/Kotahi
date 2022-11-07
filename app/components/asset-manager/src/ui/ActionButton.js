@@ -8,9 +8,11 @@ const Button = styled.button`
     if (type === 'primary') {
       return th('colorPrimary')
     }
+
     if (type === 'delete') {
       return darken('colorError', 30)
     }
+
     return 'none'
   }};
   border: none;
@@ -35,9 +37,11 @@ const Button = styled.button`
       if (type === 'primary') {
         return lighten('colorPrimary', 30)
       }
+
       if (type === 'delete') {
         return th('colorError')
       }
+
       return 'none'
     }};
   }

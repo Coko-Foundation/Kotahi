@@ -26,33 +26,33 @@ function ReactModalAdapter({ className, modalClassName, ...props }) {
 }
 
 const large = css`
-  width: calc(1144px - 16px);
   height: calc(640px - 16px);
   margin: ${grid(5)} auto;
+  width: calc(1144px - 16px);
 `
 
 const largeNarrow = css`
-  width: calc(1000px - 16px);
   height: calc(640px - 16px);
   margin: ${grid(5)} auto;
+  width: calc(1000px - 16px);
 `
 
 const medium = css`
   height: calc(536px - 16px);
-  width: calc(936px - 16px);
   margin: ${grid(7)} auto;
+  width: calc(936px - 16px);
 `
 
 const mediumNarrow = css`
   height: calc(536px - 16px);
-  width: calc(752px - 16px);
   margin: ${grid(7)} auto;
+  width: calc(752px - 16px);
 `
 
 const small = css`
   height: calc(248px - 16px);
-  width: calc(496px - 16px);
   margin: ${grid(8)} auto;
+  width: calc(496px - 16px);
 `
 
 const StyledModal = styled(ReactModalAdapter).attrs({
@@ -71,7 +71,6 @@ const StyledModal = styled(ReactModalAdapter).attrs({
   .Modal {
     background: ${th('colorBackground')};
     border: ${th('borderWidth')} ${th('borderStyle')} ${th('colorBorder')};
-    padding: ${grid(1)};
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.5);
     display: flex;
     flex-direction: column;
@@ -113,6 +112,7 @@ const ModalRoot = props => {
     ...rest
   } = props
 
+  // eslint-disable-next-line react/destructuring-assignment
   if (!props.isOpen) return null
   return (
     <StyledModal

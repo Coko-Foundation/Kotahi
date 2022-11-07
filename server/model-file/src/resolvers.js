@@ -126,6 +126,7 @@ const resolvers = {
             }
           }
 
+          // eslint-disable-next-line no-param-reassign
           file.inUse = foundIn.length > 0
         })
       }
