@@ -125,6 +125,7 @@ const MinimalTextInput = ({
           } else if (e.key === 'Tab') tryCommitValue()
         }}
         placeholder={placeholder}
+        spellCheck={false}
         value={currentVal}
       />
       <MinimalButton id={cancelButtonId} onClick={revertValue}>
