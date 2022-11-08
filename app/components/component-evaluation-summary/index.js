@@ -1,6 +1,7 @@
 import React from 'react'
 import { useQuery } from '@apollo/client'
 import PropTypes from 'prop-types'
+import { sanitize } from 'dompurify'
 
 import { Container } from '../shared'
 import query from '../component-evaluation-result/reviewQuery'
@@ -27,7 +28,7 @@ const ArticleEvaluationSummaryPage = ({ match }) => {
       <p>Evaluation summary</p>
       <ArticleEvaluation
         dangerouslySetInnerHTML={(() => {
-          return { __html: evaluationText }
+          return { __html: sanitize(evaluationText) }
         })()}
       />
       <a href={submission.articleURL}>link to original article</a>

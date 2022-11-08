@@ -1,7 +1,6 @@
 import React, { useState } from 'react'
 import PropTypes from 'prop-types'
 import styled, { withTheme } from 'styled-components'
-import { unescape } from 'lodash'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Icon, Action, Button } from '@pubsweet/ui'
 import { v4 as uuid } from 'uuid'
@@ -111,8 +110,6 @@ const Main = styled.div`
   justify-content: center;
 `
 
-const ElementTitle = styled.span``
-
 const CancelButton = styled(Button)`
   background: #e9ebe8;
   padding: 8px;
@@ -130,10 +127,6 @@ const ConfirmationString = styled.p`
   margin-bottom: 20px;
   width: 100%;
 `
-
-const createMarkup = encodedHtml => ({
-  __html: unescape(encodedHtml),
-})
 
 const BuilderElement = ({
   element,
@@ -190,12 +183,8 @@ const BuilderElement = ({
               onClick={() => setActiveFieldId(element.id)}
             >
               <MainAction>
-                <ElementTitle
-                  dangerouslySetInnerHTML={createMarkup(
-                    element.shortDescription ?? element.title,
-                  )}
-                />{' '}
-                ({element.component})
+                {element.shortDescription ?? element.title} ({element.component}
+                )
               </MainAction>
               <IconAction
                 onClick={() =>

@@ -2,6 +2,7 @@ import React from 'react'
 import { useQuery } from '@apollo/client'
 import PropTypes from 'prop-types'
 import { get } from 'lodash'
+import { sanitize } from 'dompurify'
 
 import { Container } from '../shared'
 import query from './reviewQuery'
@@ -79,7 +80,7 @@ const ArticleEvaluationPage = ({ match }) => {
       <p>{fieldTitle}</p>
       <ArticleEvaluation
         dangerouslySetInnerHTML={(() => {
-          return { __html: evaluationText }
+          return { __html: sanitize(evaluationText) }
         })()}
       />
       {articleLink && <a href={articleLink}>link to original article</a>}

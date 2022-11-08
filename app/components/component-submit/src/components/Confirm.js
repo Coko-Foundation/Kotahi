@@ -1,6 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
+import { sanitize } from 'dompurify'
 import { Button, PlainButton } from '@pubsweet/ui'
 import { unescape } from 'lodash'
 import { th } from '@pubsweet/ui-toolkit'
@@ -27,7 +28,7 @@ const Divider = styled.span`
 `
 
 const createMarkup = encodedHtml => ({
-  __html: unescape(encodedHtml),
+  __html: sanitize(unescape(encodedHtml)),
 })
 
 const Confirm = ({ toggleConfirming, form, submit, errors }) => (

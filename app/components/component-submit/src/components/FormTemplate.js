@@ -3,6 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Formik } from 'formik'
 import { unescape, get, set, debounce } from 'lodash'
+import { sanitize } from 'dompurify'
 import { TextField, RadioGroup, CheckboxGroup } from '@pubsweet/ui'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import {
@@ -154,7 +155,7 @@ const link = (urlFrag, manuscriptId) =>
   String.raw`<a href=${urlFrag}/versions/${manuscriptId}/manuscript>view here</a>`
 
 const createMarkup = encodedHtml => ({
-  __html: unescape(encodedHtml),
+  __html: sanitize(unescape(encodedHtml)),
 })
 
 /** Rename some props so the various formik components can understand them */
