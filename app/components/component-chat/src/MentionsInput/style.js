@@ -7,17 +7,6 @@ import { Truncate } from '../../../../globals'
 
 export const MentionsInputStyle = {
   overflow: 'visible',
-  suggestions: {
-    zIndex: 99999,
-    list: {
-      backgroundColor: '#fff', // theme.bg.default,
-      boxShadow: '1px 0 12px rgba(0,0,0,0.12)',
-      borderRadius: '4px',
-      overflow: 'hidden',
-      bottom: '28px',
-      position: 'absolute',
-    },
-  },
 }
 
 export const StyledMentionSuggestion = styled.div`
@@ -44,7 +33,7 @@ export const MentionName = styled.span`
   width: calc(184px - 62px);
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */
-  ${Truncate};
+  ${Truncate}
 `
 
 export const MentionUsername = styled.span`
@@ -55,5 +44,5 @@ export const MentionUsername = styled.span`
   width: calc(184px - 62px);
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */
-  ${Truncate};
+  ${Truncate}
 `

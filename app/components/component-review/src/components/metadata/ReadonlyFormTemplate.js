@@ -12,7 +12,6 @@ import {
   Email,
 } from '../style'
 import { SectionContent, Attachment } from '../../../../shared'
-import SpecialInstructions from './SpecialInstructions'
 import ThreadedDiscussion from '../../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/ThreadedDiscussion'
 
 const showFieldData = (
@@ -184,16 +183,6 @@ const ReadonlyFormTemplate = ({
             </Cell>
           </SectionRowGrid>
         ))}
-      {
-        // TODO discuss the clear purpose for special instructions then refactor accordingly!
-        !hideSpecialInstructions && (
-          <>
-            {!hideSpecialInstructions && (
-              <SpecialInstructions manuscript={manuscript} />
-            )}
-          </>
-        )
-      }
     </SectionContent>
   )
 }
@@ -211,14 +200,7 @@ ReadonlyFormTemplate.propTypes = {
     ).isRequired,
   }).isRequired,
   manuscript: PropTypes.shape({
-    meta: PropTypes.shape({
-      notes: PropTypes.arrayOf(
-        PropTypes.shape({
-          notesType: PropTypes.string.isRequired,
-          content: PropTypes.string.isRequired,
-        }).isRequired,
-      ),
-    }).isRequired,
+    meta: PropTypes.shape({}).isRequired,
     files: PropTypes.arrayOf(
       PropTypes.shape({
         name: PropTypes.string.isRequired,

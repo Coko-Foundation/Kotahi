@@ -167,16 +167,6 @@ const getData = async ctx => {
         doi: externalIds && externalIds.DOI ? externalIds.DOI : '',
         meta: {
           title,
-          notes: [
-            {
-              notesType: 'fundingAcknowledgement',
-              content: '',
-            },
-            {
-              notesType: 'specialInstructions',
-              content: '',
-            },
-          ],
         },
         submitterId: ctx.user,
         channels: [

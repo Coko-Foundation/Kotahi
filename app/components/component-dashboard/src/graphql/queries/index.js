@@ -20,8 +20,6 @@ status
 meta {
   manuscriptId
   title
-  articleSections
-  articleType
   history {
     type
     date

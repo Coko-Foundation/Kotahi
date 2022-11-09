@@ -47,13 +47,15 @@ const EditorWrapper = styled.div`
     top: 0;
     width: 100%;
     z-index: 99999;
+
     & > div {
-      display: block; // this turns off grid for full screen and allows for scrolling
+      display: block; /* this turns off grid for full screen and allows for scrolling */
+
       & > div + div {
+        max-height: calc(100vh - 38px);
+        overflow-y: scroll;
         position: fixed;
         top: 38px;
-        overflow-y: scroll;
-        max-height: calc(100vh - 38px);
         width: 100%;
       }
     }

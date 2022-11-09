@@ -92,23 +92,9 @@ const createManuscriptMutation = gql`
       meta {
         manuscriptId
         title
-        declarations {
-          openData
-          openPeerReview
-          preregistered
-          previouslySubmitted
-          researchNexus
-          streamlinedReview
-        }
-        articleSections
-        articleType
         history {
           type
           date
-        }
-        notes {
-          notesType
-          content
         }
       }
     }

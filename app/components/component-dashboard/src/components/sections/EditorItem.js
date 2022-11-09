@@ -7,7 +7,6 @@ import { Item, StatusBadge } from '../../style'
 import Meta from '../metadata/Meta'
 import MetadataSubmittedDate from '../metadata/MetadataSubmittedDate'
 import MetadataAuthors from '../metadata/MetadataAuthors'
-import MetadataStreamLined from '../metadata/MetadataStreamLined'
 import ControlPageLink from '../ControlPageLink'
 
 import Reviews from '../Reviews'
@@ -53,14 +52,6 @@ EditorItemLinks.propTypes = {
   }).isRequired,
 }
 
-const getDeclarationsObject = (version, value) => {
-  // eslint-disable-next-line no-param-reassign
-  if (!version.meta) version.meta = {}
-  const declarations = version.meta.declarations || {}
-
-  return declarations[value] || 'no'
-}
-
 const getMetadataObject = (version, value) => {
   const metadata = version.meta || {}
   return metadata[value] || []
@@ -93,12 +84,6 @@ const EditorItem = ({
         )}
       </MediumRow>
       <Meta>
-        <MetadataStreamLined
-          streamlinedReview={getDeclarationsObject(
-            version,
-            'streamlinedReview',
-          )}
-        />
         <MetadataAuthors authors={getMembersOfTeam(version, 'author')} />
         {getSubmitedDate(version) ? (
           <MetadataSubmittedDate submitted={getSubmitedDate(version).date} />

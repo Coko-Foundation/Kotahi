@@ -256,19 +256,6 @@ class Manuscript extends BaseModel {
         },
         status: { type: ['string', 'null'] },
         decision: { type: ['string', 'null'] },
-        suggestions: {
-          type: ['object', 'null'],
-          properties: {
-            reviewers: {
-              suggested: { type: ['string', 'null'] },
-              opposed: { type: ['string', 'null'] },
-            },
-            editors: {
-              suggested: { type: ['string', 'null'] },
-              opposed: { type: ['string', 'null'] },
-            },
-          },
-        },
         authors: {
           items: { type: 'object' },
           type: ['array', 'null'],
@@ -279,39 +266,10 @@ class Manuscript extends BaseModel {
             title: { type: 'string' },
             abstract: { type: ['string', 'null'] },
             source: { type: 'string' },
-            articleType: { type: 'string' },
-            declarations: {
-              type: 'object',
-              properties: {
-                openData: { type: ['string', 'null'] },
-                openPeerReview: { type: ['string', 'null'] },
-                preregistered: { type: ['string', 'null'] },
-                previouslySubmitted: { type: ['string', 'null'] },
-                researchNexus: { type: ['string', 'null'] },
-                streamlinedReview: { type: ['string', 'null'] },
-              },
-            },
-            articleSections: {
-              items: { type: 'string' },
-              type: ['array', 'null'],
-            },
-            articleIds: {
-              items: { type: 'object' },
-              type: ['array', 'null'],
-            },
             history: {
               items: { type: 'object' },
               type: ['array', 'null'],
             },
-            publicationDates: {
-              items: { type: 'object' },
-              type: ['array', 'null'],
-            },
-            notes: {
-              items: { type: 'object' },
-              type: ['array', 'null'],
-            },
-            keywords: { type: ['string', 'null'] },
           },
         },
         submission: {},
