@@ -382,53 +382,133 @@ const manuscriptIsPublished = rule({
 
 const permissions = {
   Query: {
+    authorsActivity: or(userIsEditor, userIsAdmin),
+    builtCss: isAuthenticated,
+    channels: deny, // Never used
+    channelsByTeamName: deny, // Never used
+    config: allow,
+    convertToJats: or(userIsEditor, userIsAdmin),
+    convertToPdf: or(userIsEditor, userIsAdmin),
     currentUser: isAuthenticated,
-    paginatedManuscripts: userIsAdmin,
-    publishedManuscripts: allow,
-    manuscriptsUserHasCurrentRoleIn: isAuthenticated,
-    manuscripts: isAuthenticated,
-    manuscript: or(isAuthenticated, manuscriptIsPublished),
-    manuscriptsPublishedSinceDate: allow,
-    publishedManuscript: allow,
-    messages: isAuthenticated,
+    editorsActivity: or(userIsEditor, userIsAdmin),
+    file: deny, // Never used
+    files: deny, // Never used
+    findByDOI: deny, // Never used
     form: isAuthenticated,
-    forms: allow,
-    formsByCategory: allow,
     formForPurposeAndCategory: allow,
+    forms: allow,
+    formsByCategory: userIsAdmin,
+    getBlacklistInformation: or(userIsEditor, userIsAdmin),
+    getEntityFiles: isAuthenticated,
+    getInvitationsForManuscript: or(userIsEditor, userIsAdmin),
+    getSpecificFiles: isAuthenticated,
+    globalTeams: deny, // Never used
+    invitationManuscriptId: isAuthenticated,
+    invitationStatus: isAuthenticated,
+    manuscript: or(isAuthenticated, manuscriptIsPublished),
+    manuscriptChannel: deny, // Never used
+    manuscripts: isAuthenticated,
+    manuscriptsActivity: or(userIsEditor, userIsAdmin),
+    manuscriptsPublishedSinceDate: allow,
+    manuscriptsUserHasCurrentRoleIn: isAuthenticated,
+    message: deny, // Never used
+    messages: isAuthenticated,
+    paginatedManuscripts: or(userIsEditor, userIsAdmin),
+    paginatedUsers: userIsAdmin,
+    publishedManuscript: allow,
+    publishedManuscripts: allow,
+    reviewersActivity: or(userIsEditor, userIsAdmin),
+    searchOnCrossref: deny, // Never used
+    searchUsers: isAuthenticated,
+    summaryActivity: or(userIsEditor, userIsAdmin),
+    systemWideDiscussionChannel: or(userIsEditor, userIsAdmin),
+    tasks: userIsAdmin,
+    team: deny, // Never used
+    teamByName: deny, // Never used
+    teams: deny, // Never used
+    threadedDiscussions: isAuthenticated,
+    unreviewedPreprints: allow, // This has its own token-based authentication.
     user: isAuthenticated,
-    users: isAuthenticated,
-    validateDOI: isAuthenticated,
     userHasTaskAlerts: isAuthenticated,
+    users: or(userIsEditor, userIsAdmin),
+    validateDOI: isAuthenticated,
   },
   Mutation: {
-    upload: isAuthenticated,
-    createManuscript: isAuthenticated,
-    updateManuscript: or(userIsAuthor, userIsEditor, userIsAdmin),
-    submitManuscript: userIsAuthor,
-    createMessage: userIsAllowedToChat,
-    updateReview: or(
-      userIsReviewAuthorAndReviewIsNotCompleted,
-      userIsEditorOfTheManuscriptOfTheReview,
-    ),
-    reviewerResponse: or(userIsInvitedReviewer, userHasAcceptedInvitation),
+    addEmailToBlacklist: allow, // TODO scrap this mutation and trigger its action inside updateInvitationResponse
+    addReviewer: or(userIsEditor, userIsAdmin),
+    archiveManuscript: or(userIsEditor, userIsAdmin),
+    archiveManuscripts: or(userIsEditor, userIsAdmin),
+    assignTeamEditor: deny, // Never used
+    assignUserAsAuthor: isAuthenticated, // TODO require the invitation ID to be sent in this mutation
+    changeTopic: deny, // Never used
+    completeComment: isAuthenticated,
+    completeComments: isAuthenticated,
     completeReview: or(
       userIsReviewAuthorAndReviewIsNotCompleted,
       userIsEditorOfTheManuscriptOfTheReview,
     ),
-    createNewVersion: or(userIsAuthor, userIsEditor, userIsAdmin),
+    createChannel: deny, // Never used
+    createChannelFromDOI: deny, // Never used
+    // createDocxToHTMLJob seems to be exposed from xsweet???
     createFile: isAuthenticated,
-    deleteFile: isAuthenticated,
-    deleteForm: userIsAdmin,
     createForm: userIsAdmin,
-    updateForm: userIsAdmin,
-    updateFormElement: userIsAdmin,
+    createManuscript: isAuthenticated,
+    createMessage: userIsAllowedToChat,
+    createNewTaskAlerts: userIsAdmin, // Only used when test code is enabled
+    createNewVersion: or(userIsAuthor, userIsEditor, userIsAdmin),
+    createTeam: or(userIsEditor, userIsAdmin), // TODO scrap this mutation in favour of an 'assignEditor' mutation
+    createUser: deny, // Never used
+    deleteFile: isAuthenticated,
+    deleteFiles: isAuthenticated,
+    deleteForm: userIsAdmin,
     deleteFormElement: userIsAdmin,
+    deleteManuscript: deny, // Never used
+    deleteManuscripts: deny, // Never used
+    deletePendingComment: isAuthenticated,
+    deleteTeam: deny, // Never used
+    deleteUser: userIsAdmin,
+    importManuscripts: or(userIsEditor, userIsAdmin),
+    loginUser: deny, // Never used
+    makeDecision: or(userIsEditor, userIsAdmin),
+    populateTasksForManuscript: or(userIsEditor, userIsAdmin),
+    publishManuscript: or(userIsEditor, userIsAdmin),
+    removeReviewer: or(userIsEditor, userIsAdmin),
+    removeTaskAlertsForCurrentUser: isAuthenticated,
+    reviewerResponse: or(userIsInvitedReviewer, userHasAcceptedInvitation),
+    sendEmail: or(userIsEditor, userIsAdmin),
+    setShouldPublishField: or(userIsEditor, userIsAdmin),
+    submitManuscript: or(userIsAuthor, userIsEditor, userIsAdmin),
     updateCurrentEmail: isAuthenticated,
     updateCurrentUsername: isAuthenticated,
-    removeTaskAlertsForCurrentUser: isAuthenticated,
+    updateFile: isAuthenticated,
+    updateForm: userIsAdmin,
+    updateFormElement: userIsAdmin,
+    updateInvitationResponse: allow,
+    updateInvitationStatus: allow,
+    updateManuscript: or(userIsAuthor, userIsEditor, userIsAdmin),
+    updatePendingComment: isAuthenticated,
+    updateReview: or(
+      userIsReviewAuthorAndReviewIsNotCompleted,
+      userIsEditorOfTheManuscriptOfTheReview,
+      userIsEditor, // Probably not needed, but just in case
+      userIsAdmin,
+    ),
+    updateTask: or(userIsEditor, userIsAdmin),
+    updateTasks: or(userIsEditor, userIsAuthor),
+    updateTeam: or(userIsEditor, userIsAdmin),
+    updateTeamMember: or(userIsEditor, userIsAdmin),
+    updateUser: userIsAdmin,
+    upload: isAuthenticated,
+    uploadFile: isAuthenticated,
+    uploadFiles: isAuthenticated,
   },
   Subscription: {
+    fileUpdated: isAuthenticated,
+    filesDeleted: isAuthenticated,
+    filesUploaded: isAuthenticated,
+    manuscriptsImportStatus: isAuthenticated,
     messageCreated: userIsAllowedToChat,
+    uploadProgress: isAuthenticated,
   },
   CurrentRole: isAuthenticated,
   Team: isAuthenticated,
@@ -449,7 +529,12 @@ const permissions = {
   FormElementOption: allow,
   FormElementValidation: allow,
   UploadResult: isAuthenticated,
-  Review: or(isPublicReviewFromPublishedManuscript, reviewIsByUser),
+  Review: or(
+    isPublicReviewFromPublishedManuscript,
+    reviewIsByUser,
+    userIsEditor,
+    userIsAdmin,
+  ),
   Channel: isAuthenticated,
   Message: isAuthenticated,
   MessagesRelay: isAuthenticated,
@@ -460,29 +545,4 @@ const permissions = {
   PublishedManuscript: allow,
 }
 
-const fallbackRule = or(userIsAdmin, userIsEditor)
-
-/** This is used to generate a new permissions structure in which EVERY rule is modified to: or(fallbackRule, originalRule)
- * TODO: this makes permissions harder to follow. We should instead just set sensible rules from the outset and not perform this step!
- * We only ever need to go two levels down, so no need for recursion
- */
-const addOverrideRule = perms => {
-  const adaptedPermissions = {}
-  Object.keys(perms).forEach(key1 => {
-    const value = perms[key1]
-
-    if (value.constructor.name !== 'Object') {
-      adaptedPermissions[key1] = or(fallbackRule, value)
-    } else {
-      adaptedPermissions[key1] = value
-      Object.keys(value).forEach(key2 => {
-        adaptedPermissions[key1][key2] = or(fallbackRule, value[key2])
-      })
-    }
-  })
-  return adaptedPermissions
-}
-
-const permissionsWithOverride = addOverrideRule(permissions)
-
-module.exports = permissionsWithOverride
+module.exports = permissions
