@@ -66,25 +66,8 @@ const baseProps = {
       title: 'New submission 08/04/2022, 15:41:02',
       source: null,
       abstract: null,
-      declarations: null,
-      articleSections: null,
-      articleType: null,
       history: null,
-      notes: [
-        {
-          __typename: 'Note',
-          notesType: 'fundingAcknowledgement',
-          content: '',
-        },
-        {
-          __typename: 'Note',
-          notesType: 'specialInstructions',
-          content: '',
-        },
-      ],
-      keywords: null,
     },
-    suggestions: null,
     authors: null,
     submission: {
       objectType: 'software',
@@ -422,25 +405,8 @@ const baseProps = {
       title: 'New submission 08/04/2022, 15:41:02',
       source: null,
       abstract: null,
-      declarations: null,
-      articleSections: null,
-      articleType: null,
       history: null,
-      notes: [
-        {
-          __typename: 'Note',
-          notesType: 'fundingAcknowledgement',
-          content: '',
-        },
-        {
-          __typename: 'Note',
-          notesType: 'specialInstructions',
-          content: '',
-        },
-      ],
-      keywords: null,
     },
-    suggestions: null,
     authors: null,
     submission:
       '{"DOI":"TESTDOI","cover":"<p class=\\"paragraph\\">Test content</p>","title":"","topics":["Topic 2"],"Funding":"50K USD","abstract":"<p class=\\"paragraph\\">This is a test abstract</p>","datacode":"<p class=\\"paragraph\\">This is a test statement</p>","objectType":"software","references":"<p class=\\"paragraph\\">Test reference</p>","authorNames":"","dateAccepted":"07.01.2021","dateReceived":"07.01.2021","copyrightYear":"Test copyright","datePublished":"07.01.2021","DecisionLetter":"<p class=\\"paragraph\\">Test response</p>","copyrightHolder":"Test copyright holder","reviewingEditor":[{"id":"93a72720-2968-4a63-b098-b33944ee1ec0","email":"test@kotahidev.com","lastName":"kandpal","firstName":"Pankaj","affiliation":"Test affiliation"}],"EditorsEvaluation":"This is a test evaluation","competingInterests":"<p class=\\"paragraph\\">test interest</p>","copyrightStatement":"Copyright statement","authorContributions":"Test contribution","AuthorCorrespondence":"Test entry"}',
@@ -501,25 +467,8 @@ const emptyFormProps = {
       title: '',
       source: null,
       abstract: null,
-      declarations: null,
-      articleSections: null,
-      articleType: null,
       history: null,
-      notes: [
-        {
-          __typename: 'Note',
-          notesType: 'fundingAcknowledgement',
-          content: '',
-        },
-        {
-          __typename: 'Note',
-          notesType: 'specialInstructions',
-          content: '',
-        },
-      ],
-      keywords: null,
     },
-    suggestions: null,
     authors: null,
     submission: {
       objectType: '',
@@ -850,25 +799,8 @@ const emptyFormProps = {
       title: 'New submission 11/04/2022, 17:45:11',
       source: null,
       abstract: null,
-      declarations: null,
-      articleSections: null,
-      articleType: null,
       history: null,
-      notes: [
-        {
-          __typename: 'Note',
-          notesType: 'fundingAcknowledgement',
-          content: '',
-        },
-        {
-          __typename: 'Note',
-          notesType: 'specialInstructions',
-          content: '',
-        },
-      ],
-      keywords: null,
     },
-    suggestions: null,
     authors: null,
     submission:
       '{"DOI":"","cover":"","title":"","topics":[],"Funding":"","abstract":"","datacode":"","objectType":"","references":"","authorNames":"","dateAccepted":"","dateReceived":"","copyrightYear":"","datePublished":"","DecisionLetter":"","copyrightHolder":"","reviewingEditor":"","EditorsEvaluation":"","competingInterests":"","copyrightStatement":"","authorContributions":"","AuthorCorrespondence":""}',

@@ -90,7 +90,6 @@ module.exports = webpackEnv => {
           __dirname,
           '../app/components/xpub-journal',
         ),
-        joi: 'joi-browser',
         config: clientConfigPath,
       },
       extensions: ['.js', '.jsx', '.json', '.scss'],

@@ -794,9 +794,9 @@ const EditorStyles = css`
       border-radius: 100%;
       display: none;
     }
-    // &:hover {
-    //   outline-color: var(--keywordColorValues);
-    // }
+    /* &:hover {
+       outline-color: var(--keywordColorValues);
+     } */
   }
 
   /* glossary */

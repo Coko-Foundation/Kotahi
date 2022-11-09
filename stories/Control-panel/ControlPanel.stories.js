@@ -689,19 +689,6 @@ const props = {
       __typename: 'ManuscriptMeta',
       manuscriptId: '2f920e7f-066a-496b-a9b8-e207ff7326d3',
       title: 'New submission 2/11/2022, 8:47:05 AM',
-      notes: [
-        {
-          __typename: 'Note',
-          notesType: 'fundingAcknowledgement',
-          content: '',
-        },
-        {
-          __typename: 'Note',
-          notesType: 'specialInstructions',
-          content: '',
-        },
-      ],
-      keywords: null,
     },
     submission:
       '{"irb":"","name":"","test":"","cover":"","links":[],"title":"","ethics":"","contact":"","methods":[],"abstract":"","datacode":"","editDate":"2022-02-11","humanMRI":"","keywords":"","packages":[],"subjects":"","suggested":"","objectType":"","references":"","affiliation":"","otherMethods":"","humanMRIother":"","otherPackages":"","animal_research_approval":""}',
@@ -792,19 +779,6 @@ const props = {
       __typename: 'ManuscriptMeta',
       manuscriptId: '2f920e7f-066a-496b-a9b8-e207ff7326d3',
       title: 'New submission 2/11/2022, 8:47:05 AM',
-      notes: [
-        {
-          __typename: 'Note',
-          notesType: 'fundingAcknowledgement',
-          content: '',
-        },
-        {
-          __typename: 'Note',
-          notesType: 'specialInstructions',
-          content: '',
-        },
-      ],
-      keywords: null,
     },
     submission:
       '{"irb":"","name":"","test":"","cover":"","links":[],"title":"","ethics":"","contact":"","methods":[],"abstract":"","datacode":"","editDate":"2022-02-11","humanMRI":"","keywords":"","packages":[],"subjects":"","suggested":"","objectType":"","references":"","affiliation":"","otherMethods":"","humanMRIother":"","otherPackages":"","animal_research_approval":""}',

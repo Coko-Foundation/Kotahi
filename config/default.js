@@ -31,7 +31,6 @@ module.exports = {
     mode: path.resolve(__dirname, 'authsome.js'),
   },
   permissions,
-  validations: path.resolve(__dirname, 'validations.js'),
   pubsweet: {
     components,
   },
@@ -86,91 +85,6 @@ module.exports = {
       const { protocol, host, port } = cfg['pubsweet-server']
       return `${protocol}://${host}${port ? `:${port}` : ''}`
     }),
-    typeDefs: `
-      extend type User {
-        name: String
-      }
-
-      extend type Team {
-        group: String
-      }
-
-      # extend type Collection {
-      #   collectionType: String
-      #   created: String
-      #   title: String
-      #   status: String
-      #   reviewers: [CollectionReviewer]
-      # }
-
-      type CollectionReviewer {
-        id: String!
-        user: String!
-      }
-
-      # extend type Fragment {
-      #   created: String
-      #   version: Int
-      #   submitted: String
-      #   source: String
-      #   metadata: VersionMetadata
-      #   declarations: VersionDeclaration
-      #   suggestions: VersionSuggestionGroup
-      #   files: VersionFileGroup
-      #   notes: VersionNotes
-      #   reviewers: [ReviewerMeta]
-      #   # TODO
-      #   #lock: VersionLock
-      #   #decision: VersionDecision
-      # }
-
-      type VersionMetadata {
-        title: String
-        abstract: String
-        articleType: String
-        articleSection: [String]
-        authors: [String]
-        keywords: [String]
-      }
-      type VersionDeclaration {
-        #TODO make these boolean?
-        openData: String
-        previouslySubmitted: String
-        openPeerReview: String
-        streamlinedReview: String
-        researchNexus: String
-        preregistered: String
-      }
-      type VersionSuggestionGroup {
-        reviewers: VersionSuggestions
-        editors: VersionSuggestions
-      }
-      type VersionSuggestions {
-        suggested: [String]
-        opposed: [String]
-      }
-      type VersionFileGroup {
-        manuscript: VersionFile
-        supplementary: [VersionFile]
-      }
-      type VersionFile {
-        name: String!
-        type: String
-        size: Int
-        url: String
-      }
-      type VersionNotes {
-        fundingAcknowledgement: String
-        specialInstructions: String
-      }
-      type ReviewerMeta {
-        id: String
-        reviewer: String
-        status: String
-        _reviewer: CollectionReviewer
-        _user: User
-      }
-    `,
   },
   'pubsweet-client': {
     API_ENDPOINT: '/api',
@@ -216,7 +130,6 @@ module.exports = {
   /** These named configuration sections will be available to webpack */
   publicKeys: [
     'pubsweet-client',
-    'validations',
     'pubsweet-component-xpub-dashboard',
     'pubsweet-component-xpub-formbuilder',
     'pubsweet',

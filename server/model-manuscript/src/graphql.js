@@ -372,18 +372,7 @@ const resolvers = {
         : emptySubmission
 
       const emptyManuscript = {
-        meta: Object.assign(meta, {
-          notes: [
-            {
-              notesType: 'fundingAcknowledgement',
-              content: '',
-            },
-            {
-              notesType: 'specialInstructions',
-              content: '',
-            },
-          ],
-        }),
+        meta,
         status: 'new',
         submission,
         submitterId: ctx.user,
@@ -1099,16 +1088,6 @@ const resolvers = {
         )
       }
 
-      manuscript.meta.notes = (manuscript.meta || {}).notes || [
-        {
-          notesType: 'fundingAcknowledgement',
-          content: '',
-        },
-        {
-          notesType: 'specialInstructions',
-          content: '',
-        },
-      ]
       manuscript.decision = ''
 
       manuscript.manuscriptVersions = await manuscript.getManuscriptVersions()
@@ -1476,7 +1455,6 @@ const typeDefs = `
     reviews: [Review]
     status: String
     decision: String
-    suggestions: Suggestions
     authors: [Author]
     meta: ManuscriptMeta
     submission: String
@@ -1551,29 +1529,12 @@ const typeDefs = `
     affiliation: String
   }
 
-  type Suggestion {
-    suggested: String
-    opposed: String
-  }
-
-  type Suggestions {
-    reviewers: Suggestion
-    editors: Suggestion
-  }
-
   type ManuscriptMeta {
     title: String!
     source: String
-    articleType: String
-    declarations: Declarations
-    articleSections: [String]
-    articleIds: [ArticleId]
     abstract: String
     subjects: [String]
     history: [MetaDate]
-    publicationDates: [MetaDate]
-    notes: [Note]
-    keywords: String
     manuscriptId: ID
   }
 
@@ -1595,15 +1556,6 @@ const typeDefs = `
   type MetaDate {
     type: String
     date: DateTime
-  }
-
-  type Declarations {
-    openData: String
-    openPeerReview: String
-    preregistered: String
-    previouslySubmitted: String
-    researchNexus: String
-    streamlinedReview: String
   }
 
   type Note {

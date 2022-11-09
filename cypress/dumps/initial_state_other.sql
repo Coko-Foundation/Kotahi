@@ -312,7 +312,6 @@ CREATE TABLE public.manuscripts (
     status text,
     decision text,
     authors jsonb,
-    suggestions jsonb,
     meta jsonb,
     submission jsonb,
     published timestamp with time zone,

@@ -60,19 +60,12 @@ module.exports = (opts = {}) => {
   )
 
   // put dynamically required modules into the build
-  if (config.validations) {
-    plugins.push(
-      new webpack.ContextReplacementPlugin(/./, __dirname, {
-        [config.authsome.mode]: config.authsome.mode,
-      }),
-    )
-  } else {
-    plugins.push(
-      new webpack.ContextReplacementPlugin(/./, __dirname, {
-        [config.authsome.mode]: config.authsome.mode,
-      }),
-    )
-  }
+  // TODO Is authsome still needed? Or dead code?
+  plugins.push(
+    new webpack.ContextReplacementPlugin(/./, __dirname, {
+      [config.authsome.mode]: config.authsome.mode,
+    }),
+  )
 
   if (isDevelopment) {
     plugins.push(new CopyWebpackPlugin([{ from: '../public', to: 'assets/' }]))

@@ -5,7 +5,6 @@ import React from 'react'
 import styled from 'styled-components'
 import { sumBy } from 'lodash'
 import { th } from '@pubsweet/ui-toolkit'
-import { JournalContext } from '../../../xpub-journal/src'
 
 const Root = styled.div`
   display: inline-flex;
@@ -40,15 +39,11 @@ const countStatus = (version, status) => {
 
 const Reviews = ({ version, journal }) => (
   <Root>
-    <JournalContext.Consumer>
-      {journal =>
-        journal.reviewStatus.map(status => (
-          <CountLabel data-testid={status} key={status}>
-            {countStatus(version, status)} {status}
-          </CountLabel>
-        ))
-      }
-    </JournalContext.Consumer>
+    {['invited', 'accepted', 'rejected', 'completed'].map(status => (
+      <CountLabel data-testid={status} key={status}>
+        {countStatus(version, status)} {status}
+      </CountLabel>
+    ))}
   </Root>
 )
 

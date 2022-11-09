@@ -165,10 +165,7 @@ module.exports = app => {
             'owners',
             'source',
             'metadata',
-            'declarations',
-            'suggestions',
             'files',
-            'notes',
           ])
 
           nextVersionData = {

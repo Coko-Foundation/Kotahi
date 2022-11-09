@@ -65,26 +65,9 @@ const authorLatestVersions = [
       title: 'New submission 26/03/2022, 14:48:39',
       source: null,
       abstract: null,
-      declarations: null,
-      articleSections: null,
-      articleType: null,
       history: null,
-      notes: [
-        {
-          notesType: 'fundingAcknowledgement',
-          content: '',
-          __typename: 'Note',
-        },
-        {
-          notesType: 'specialInstructions',
-          content: '',
-          __typename: 'Note',
-        },
-      ],
-      keywords: null,
       __typename: 'ManuscriptMeta',
     },
-    suggestions: null,
     authors: null,
     submission:
       '{"DOI":"","cover":"","title":"","topics":[],"Funding":"","abstract":"","datacode":"","objectType":"","references":"","authorNames":"","dateAccepted":"","dateReceived":"","copyrightYear":"","datePublished":"","DecisionLetter":"","copyrightHolder":"","reviewingEditor":"","EditorsEvaluation":"","competingInterests":"","copyrightStatement":"","authorContributions":"","AuthorCorrespondence":""}',
@@ -272,28 +255,11 @@ const authorLatestVersions = [
       title: 'New submission 06/04/2022, 18:01:21',
       source: null,
       abstract: null,
-      declarations: null,
-      articleSections: null,
-      articleType: null,
       history: null,
-      notes: [
-        {
-          notesType: 'fundingAcknowledgement',
-          content: '',
-          __typename: 'Note',
-        },
-        {
-          notesType: 'specialInstructions',
-          content: '',
-          __typename: 'Note',
-        },
-      ],
-      keywords: null,
       __typename: 'ManuscriptMeta',
     },
     submission:
       '{"DOI":"","cover":"","title":"","topics":[],"Funding":"","abstract":"","datacode":"","objectType":"software","references":"","authorNames":"","dateAccepted":"","dateReceived":"","copyrightYear":"","datePublished":"","DecisionLetter":"","copyrightHolder":"","reviewingEditor":"","EditorsEvaluation":"","competingInterests":"","copyrightStatement":"","authorContributions":"","AuthorCorrespondence":""}',
-    suggestions: null,
     published: '2022-04-08T07:58:54.517Z',
     manuscriptVersions: [],
     channels: [
@@ -435,8 +401,6 @@ const reviewerLatestVersions = [
     meta: {
       manuscriptId: 'd75dd479-8658-418a-91b6-4bee523d25b1',
       title: 'New submission 06/04/2022, 18:01:21',
-      articleSections: null,
-      articleType: null,
       history: null,
       __typename: 'ManuscriptMeta',
     },
@@ -530,8 +494,6 @@ const editorLatestVersions = [
     meta: {
       manuscriptId: 'd75dd479-8658-418a-91b6-4bee523d25b1',
       title: 'New submission 06/04/2022, 18:01:21',
-      articleSections: null,
-      articleType: null,
       history: null,
       __typename: 'ManuscriptMeta',
     },

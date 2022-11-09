@@ -629,27 +629,10 @@ const baseProps = {
       title: 'New submission 15/04/2022, 16:58:24',
       source: null,
       abstract: null,
-      declarations: null,
-      articleSections: null,
-      articleType: null,
       history: null,
-      notes: [
-        {
-          __typename: 'Note',
-          notesType: 'fundingAcknowledgement',
-          content: '',
-        },
-        {
-          __typename: 'Note',
-          notesType: 'specialInstructions',
-          content: '',
-        },
-      ],
-      keywords: null,
     },
     submission:
       '{"DOI":"TESTDOI","cover":"<p class=\\"paragraph\\">Test letter</p>","title":"","topics":["Neuropsychology "],"Funding":"Test entry","abstract":"<p class=\\"paragraph\\">This is test abstract</p>","datacode":"<p class=\\"paragraph\\">Test statement</p>","objectType":"figure","references":"<p class=\\"paragraph\\">Test entry</p>","authorNames":[{"id":"80000945-232b-4662-991a-b92d695113c7","email":"","lastName":"User","firstName":"PK","affiliation":""}],"dateAccepted":"07.01.2021","dateReceived":"07.01.2021","copyrightYear":"Test copyright","datePublished":"07.01.2021","DecisionLetter":"<p class=\\"paragraph\\">Test entry</p>","copyrightHolder":"Test entry","reviewingEditor":"","EditorsEvaluation":"Test evaluation","competingInterests":"<p class=\\"paragraph\\">Test entry</p>","copyrightStatement":"Test entry","authorContributions":"Test contribution","AuthorCorrespondence":"Test entry"}',
-    suggestions: null,
     manuscriptVersions: [],
     channels: [
       {
@@ -1220,27 +1203,10 @@ const emptyFormProps = {
       title: 'New submission 18/04/2022, 23:37:22',
       source: null,
       abstract: null,
-      declarations: null,
-      articleSections: null,
-      articleType: null,
       history: null,
-      notes: [
-        {
-          __typename: 'Note',
-          notesType: 'fundingAcknowledgement',
-          content: '',
-        },
-        {
-          __typename: 'Note',
-          notesType: 'specialInstructions',
-          content: '',
-        },
-      ],
-      keywords: null,
     },
     submission:
       '{"DOI":"","cover":"","title":"","topics":[],"Funding":"","abstract":"","datacode":"","objectType":"","references":"","authorNames":"","dateAccepted":"","dateReceived":"","copyrightYear":"","datePublished":"","DecisionLetter":"","copyrightHolder":"","reviewingEditor":"","EditorsEvaluation":"","competingInterests":"","copyrightStatement":"","authorContributions":"","AuthorCorrespondence":""}',
-    suggestions: null,
     manuscriptVersions: [],
     channels: [
       {

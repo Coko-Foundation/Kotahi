@@ -268,7 +268,6 @@ CREATE TABLE public.manuscripts (
     status text,
     decision text,
     authors jsonb,
-    suggestions jsonb,
     meta jsonb,
     submission jsonb,
     type text NOT NULL
@@ -459,7 +458,7 @@ INSERT INTO public.identities (id, user_id, created, updated, type, identifier, 
 -- Data for Name: manuscripts; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
-INSERT INTO public.manuscripts (id, created, updated, parent_id, submitter_id, status, decision, authors, suggestions, meta, submission, type) VALUES ('2357fc20-b99d-4b6f-a715-7d26a05becc3', '2020-07-27 00:53:31.558+02', '2020-07-27 00:53:56.661+02', NULL, '027afa6a-edbc-486e-bb31-71e12f8ea1c5', 'submitted', NULL, NULL, NULL, '{"notes": [{"content": "", "notesType": "fundingAcknowledgement"}, {"content": "", "notesType": "specialInstructions"}], "title": "My URL submission"}', '{"irb": "yes", "name": "Emily Clay", "cover": "This is my cover letter", "links": "https://doi.org/10.6084/m9.figshare.913521.v1, https://github.com/jure/mathtype_to_mathml", "ethics": "This is my ethics statement", "contact": "emily@example.com", "methods": ["Functional MRI", "Optical Imaging"], "datacode": "This is my data and code availability statement", "humanMRI": "3T", "keywords": "some, keywords", "packages": ["SPM", "FSL"], "subjects": "patients", "suggested": "Erica James, Matthew Matretzky", "objectType": "software", "affiliation": "Example University, Egland", "otherMethods": "Erica James, Matthew Matretzky", "humanMRIother": "7T", "otherPackages": "Jupyter, Stencila", "animal_research_approval": "yes"}', 'Manuscript');
+INSERT INTO public.manuscripts (id, created, updated, parent_id, submitter_id, status, decision, authors, meta, submission, type) VALUES ('2357fc20-b99d-4b6f-a715-7d26a05becc3', '2020-07-27 00:53:31.558+02', '2020-07-27 00:53:56.661+02', NULL, '027afa6a-edbc-486e-bb31-71e12f8ea1c5', 'submitted', NULL, NULL, '{"title": "My URL submission"}', '{"irb": "yes", "name": "Emily Clay", "cover": "This is my cover letter", "links": "https://doi.org/10.6084/m9.figshare.913521.v1, https://github.com/jure/mathtype_to_mathml", "ethics": "This is my ethics statement", "contact": "emily@example.com", "methods": ["Functional MRI", "Optical Imaging"], "datacode": "This is my data and code availability statement", "humanMRI": "3T", "keywords": "some, keywords", "packages": ["SPM", "FSL"], "subjects": "patients", "suggested": "Erica James, Matthew Matretzky", "objectType": "software", "affiliation": "Example University, Egland", "otherMethods": "Erica James, Matthew Matretzky", "humanMRIother": "7T", "otherPackages": "Jupyter, Stencila", "animal_research_approval": "yes"}', 'Manuscript');
 
 
 --

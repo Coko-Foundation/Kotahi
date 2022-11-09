@@ -348,16 +348,6 @@ const getData = async ctx => {
                 },
                 meta: {
                   title: '',
-                  notes: [
-                    {
-                      notesType: 'fundingAcknowledgement',
-                      content: '',
-                    },
-                    {
-                      notesType: 'specialInstructions',
-                      content: '',
-                    },
-                  ],
                 },
                 submitterId: ctx.user,
                 channels: [
