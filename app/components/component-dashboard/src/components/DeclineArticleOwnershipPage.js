@@ -45,6 +45,7 @@ const DeclineArticleOwnershipPage = ({ match }) => {
 
   const [updateInvitationResponse] = useMutation(UPDATE_INVITATION_RESPONSE, {
     onCompleted: blacklistData => {
+      // TODO It would be cleaner and safer to have this logic in the server, rather than allowing the client to initiate these actions.
       if (
         blacklistData.updateInvitationResponse.declinedReason ===
         'DO_NOT_CONTACT'

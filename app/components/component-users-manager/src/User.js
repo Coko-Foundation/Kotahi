@@ -49,6 +49,7 @@ const User = ({ user, currentUser }) => {
       </Cell>
       <Cell>{user.admin ? 'yes' : ''}</Cell>
       <LastCell>
+        {/* TODO confirmation on delete */}
         <Action onClick={() => deleteUser({ variables: { id: user.id } })}>
           Delete
         </Action>

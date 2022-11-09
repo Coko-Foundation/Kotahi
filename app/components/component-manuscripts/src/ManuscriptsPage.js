@@ -14,7 +14,6 @@ import fnv from 'fnv-plus'
 import {
   GET_MANUSCRIPTS_AND_FORM,
   DELETE_MANUSCRIPT,
-  DELETE_MANUSCRIPTS,
   IMPORT_MANUSCRIPTS,
   IMPORTED_MANUSCRIPTS_SUBSCRIPTION,
   GET_SYSTEM_WIDE_DISCUSSION_CHANNEL,
@@ -132,18 +131,6 @@ const ManuscriptsPage = ({ history }) => {
     deleteManuscriptMutation({ variables: { id } })
   }
 
-  const [deleteManuscripts] = useMutation(DELETE_MANUSCRIPTS, {
-    // eslint-disable-next-line no-shadow
-    update(cache, { data: { ids } }) {
-      const cacheIds = cache.identify({
-        __typename: 'Manuscript',
-        id: ids,
-      })
-
-      cache.evict({ cacheIds })
-    },
-  })
-
   const setReadyToEvaluateLabels = id => {
     update({
       variables: {
@@ -157,12 +144,6 @@ const ManuscriptsPage = ({ history }) => {
     })
     // Tasks are populated when the manuscript is selected.
     populateTemplatedTasksForManuscript({ variables: { manuscriptId: id } })
-  }
-
-  const confrimBulkDelete = selectedNewManuscript => {
-    deleteManuscripts({
-      variables: { ids: selectedNewManuscript }, // TODO These may not be parent IDs. Will this cause issues?
-    })
   }
 
   const confirmBulkArchive = selectedNewManuscript => {
@@ -191,7 +172,6 @@ const ManuscriptsPage = ({ history }) => {
       chatRoomId={chatRoomId}
       configuredColumnNames={configuredColumnNames}
       confirmBulkArchive={confirmBulkArchive}
-      confrimBulkDelete={confrimBulkDelete}
       deleteManuscriptMutations={deleteManuscriptMutations}
       history={history}
       importManuscripts={importManuscriptsAndRefetch}
