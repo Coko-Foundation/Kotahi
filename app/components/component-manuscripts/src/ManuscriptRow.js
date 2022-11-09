@@ -1,5 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
+import { sanitize } from 'dompurify'
 import 'rc-tooltip/assets/bootstrap_white.css'
 import { ManuscriptsRow, SnippetRow, Cell } from './style'
 import { getFieldValueAndDisplayValue } from '../../../shared/manuscriptUtils'
@@ -28,7 +29,7 @@ const ManuscriptRow = ({ manuscript, columnDefinitions, setFilter }) => {
       {manuscript.searchSnippet && (
         <SnippetRow
           dangerouslySetInnerHTML={{
-            __html: `... ${manuscript.searchSnippet} ...`,
+            __html: `... ${sanitize(manuscript.searchSnippet)} ...`,
           }}
         />
       )}

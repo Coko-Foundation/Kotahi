@@ -5,6 +5,7 @@ import { useQuery } from '@apollo/client'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import config from 'config'
 import { get } from 'lodash'
+import { sanitize } from 'dompurify'
 import { JournalContext } from '../../xpub-journal/src'
 import queries from './queries'
 import FullWaxEditor from '../../wax-collab/src/FullWaxEditor'
@@ -172,7 +173,7 @@ const format = (value, component, options) => {
     return (
       <ArticleEvaluation
         dangerouslySetInnerHTML={(() => {
-          return { __html: value }
+          return { __html: sanitize(value) }
         })()}
       />
     )
@@ -391,7 +392,9 @@ const Frontpage = () => {
                     <Subheading>Abstract:</Subheading>
                     <Abstract
                       dangerouslySetInnerHTML={(() => {
-                        return { __html: manuscript.submission?.abstract }
+                        return {
+                          __html: sanitize(manuscript.submission?.abstract),
+                        }
                       })()}
                     />
                   </>
