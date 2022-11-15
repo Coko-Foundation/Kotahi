@@ -830,6 +830,12 @@ const resolvers = {
       const manuscript = await models.Manuscript.query().findById(manuscriptId)
       const status = invitationId ? 'accepted' : 'invited'
 
+      let invitationData
+
+      if (invitationId) {
+        invitationData = await models.Invitation.query().findById(invitationId)
+      }
+
       const existingTeam = await manuscript
         .$relatedQuery('teams')
         .where('role', 'reviewer')
@@ -848,6 +854,7 @@ const resolvers = {
             teamId: existingTeam.id,
             status,
             userId,
+            isShared: invitationData ? invitationData.isShared : null,
           }).save()
         }
 

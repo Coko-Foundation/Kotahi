@@ -23,6 +23,7 @@ class Invitation extends BaseModel {
         responseComment: { type: ['string', 'null'] },
         declinedReason: { type: ['string', 'null'] },
         userId: { type: ['string', 'null'], format: 'uuid' },
+        isShared: { type: ['boolean'] },
       },
     }
   }
