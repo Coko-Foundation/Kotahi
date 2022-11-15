@@ -92,6 +92,7 @@ const InvitationAcceptedPage = () => {
             manuscriptId,
             userId: invitedUserId,
             invitationId,
+            isShared: !!data.invitationManuscriptId.isShared,
           },
         })
       }

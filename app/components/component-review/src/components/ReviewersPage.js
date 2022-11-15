@@ -4,6 +4,10 @@ import { Formik } from 'formik'
 import { gql, useQuery, useMutation } from '@apollo/client'
 import Reviewers from './reviewers/Reviewers'
 import { Spinner, CommsErrorBanner } from '../../../shared'
+import {
+  GET_EMAIL_INVITED_REVIEWERS,
+  UPDATE_SHARED_STATUS_FOR_INVITED_REVIEWER_MUTATION,
+} from '../../../../queries'
 
 const teamFields = `
   id
@@ -145,6 +149,17 @@ const ReviewersPage = ({ match, history }) => {
   const [removeReviewer] = useMutation(removeReviewerMutation)
   const [updateTeamMember] = useMutation(updateTeamMemberMutation)
 
+  const [updateSharedStatusForInvitedReviewer] = useMutation(
+    UPDATE_SHARED_STATUS_FOR_INVITED_REVIEWER_MUTATION,
+  )
+
+  const { data: emailInvitedReviewers } = useQuery(
+    GET_EMAIL_INVITED_REVIEWERS,
+    {
+      variables: { manuscriptId: match.params.version },
+    },
+  )
+
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
@@ -171,12 +186,18 @@ const ReviewersPage = ({ match, history }) => {
       {props => (
         <Reviewers
           {...props}
+          emailInvitedReviewers={
+            emailInvitedReviewers?.getEmailInvitedReviewers
+          }
           history={history}
           manuscript={manuscript}
           refetchManuscriptData={refetch}
           removeReviewer={removeReviewer}
           reviewers={reviewers}
           reviewerUsers={users}
+          updateSharedStatusForInvitedReviewer={
+            updateSharedStatusForInvitedReviewer
+          }
           updateTeamMember={updateTeamMember}
         />
       )}

@@ -127,6 +127,17 @@ export const GET_INVITATION_MANUSCRIPT_ID = gql`
     invitationManuscriptId(id: $id) {
       manuscriptId
       invitedPersonType
+      isShared
+    }
+  }
+`
+export const GET_EMAIL_INVITED_REVIEWERS = gql`
+  query getEmailInvitedReviewers($manuscriptId: ID!) {
+    getEmailInvitedReviewers(manuscriptId: $manuscriptId) {
+      id
+      invitedPersonName
+      isShared
+      status
     }
   }
 `
@@ -156,6 +167,18 @@ export const GET_INVITATIONS_FOR_MANUSCRIPT = gql`
         profilePicture
         isOnline
       }
+    }
+  }
+`
+
+export const UPDATE_SHARED_STATUS_FOR_INVITED_REVIEWER_MUTATION = gql`
+  mutation($invitationId: ID!, $isShared: Boolean!) {
+    updateSharedStatusForInvitedReviewer(
+      invitationId: $invitationId
+      isShared: $isShared
+    ) {
+      id
+      isShared
     }
   }
 `
@@ -218,7 +241,7 @@ mutation($manuscriptId: ID!, $userId: ID!) {
 
 export const ASSIGN_USER_AS_REVIEWER = gql`
 mutation($manuscriptId: ID!, $userId: ID!, $invitationId: ID) {
-  addReviewer(manuscriptId: $manuscriptId, userId: $userId, invitationId: $invitationId ) {
+  addReviewer(manuscriptId: $manuscriptId, userId: $userId, invitationId: $invitationId) {
     ${teamFields}
   }
 }`
