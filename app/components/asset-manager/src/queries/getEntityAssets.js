@@ -33,8 +33,7 @@ const getEntityFilesQuery = props => {
 
   return (
     <Query
-      fetchPolicy="network-only"
-      notifyOnNetworkStatusChange
+      fetchPolicy="cache-and-network"
       query={GET_ENTITY_FILES}
       variables={{
         input: {
