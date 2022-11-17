@@ -37,15 +37,17 @@ const getData = async ctx => {
 
   const lastImportDate = await getLastImportDate(sourceId)
 
-  const manuscripts = await models.Manuscript.query()
+  const manuscripts = await models.Manuscript.query().orderBy('created', 'desc')
 
   const selectedManuscripts = manuscripts.filter(
     manuscript => manuscript.submission.labels,
   )
 
-  if (selectedManuscripts.length > 0) {
+  const latestLimitedSelectedManuscripts = selectedManuscripts.slice(0, 100)
+
+  if (latestLimitedSelectedManuscripts.length > 0) {
     const importDOIParams = []
-    selectedManuscripts.map(manuscript => {
+    latestLimitedSelectedManuscripts.map(manuscript => {
       const DOI = encodeURI(manuscript.submission.doi.split('.org/')[1])
       return importDOIParams.push(`DOI:${DOI}`)
     })
