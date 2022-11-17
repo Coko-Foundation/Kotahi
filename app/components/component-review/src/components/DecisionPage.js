@@ -99,7 +99,6 @@ const DecisionPage = ({ match }) => {
     variables: {
       id: match.params.version,
     },
-    fetchPolicy: 'cache-and-network',
   })
 
   const [selectedEmail, setSelectedEmail] = useState('')
