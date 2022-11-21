@@ -236,24 +236,29 @@ async function fetchPublicationDatesFromEuropePmc(importsOnlyWithDOI) {
 
       let firstPublicationDate, preprintServer
 
-      const response = await axios.get(
-        `https://www.ebi.ac.uk/europepmc/webservices/rest/search`,
-        {
-          params,
-        },
-      )
+      try {
+        const response = await axios.get(
+          `https://www.ebi.ac.uk/europepmc/webservices/rest/search`,
+          {
+            params,
+          },
+        )
 
-      if (
-        response.data.resultList.result[0] &&
-        response.data.resultList.result[0].bookOrReportDetails
-      ) {
-        firstPublicationDate =
-          response.data.resultList.result[0].firstPublicationDate
-        preprintServer =
-          response.data.resultList.result[0].bookOrReportDetails.publisher
+        if (
+          response.data.resultList &&
+          response.data.resultList.result[0] &&
+          response.data.resultList.result[0].bookOrReportDetails
+        ) {
+          firstPublicationDate =
+            response.data.resultList.result[0].firstPublicationDate
+          preprintServer =
+            response.data.resultList.result[0].bookOrReportDetails.publisher
+        }
+
+        return Object.assign(preprint, { firstPublicationDate, preprintServer })
+      } catch (e) {
+        console.error(e.message)
       }
-
-      return Object.assign(preprint, { firstPublicationDate, preprintServer })
     }),
   )
 }
