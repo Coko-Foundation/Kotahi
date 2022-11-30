@@ -3,35 +3,43 @@ import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 import ReactSelect from 'react-select'
 import { ThemeContext } from 'styled-components'
+import theme from '../../theme'
 
 const styles = th => ({
   menu: (provided, state) => ({
     ...provided,
     borderRadius: th.borderRadius,
     zIndex: 9999,
-    width: 250,
+    width: '100%',
+    fontSize: th.fontSizeBaseSmall,
+    marginTop: '4px',
   }),
 
   control: (provided, state) => ({
     ...provided,
+    background: th.colors.neutral.gray97,
     border: !state.selectProps.standalone
       ? state.isFocused
-        ? `1px solid ${th.colorPrimary}`
-        : `1px solid ${th.colorBorder}`
+        ? `1px solid ${th.colors.neutral.gray70}`
+        : `1px solid ${th.colors.neutral.gray80}`
       : 'none',
     boxShadow: !state.selectProps.standalone
       ? state.isFocused
         ? `0 0 0 1px ${th.colorPrimary}`
-        : 'none'
+        : 'inset 0px 0px 4px rgba(0, 0, 0, 0.07)'
       : state.isFocused
       ? `0 0 0 1px ${th.colorPrimary}`
       : th.boxShadow,
 
     borderRadius: th.borderRadius,
     '&:hover': {
-      boxShadow: `0 0 0 1px ${th.colorPrimary}`,
+      boxShadow: `1px solid ${th.colors.neutral.gray70}`,
     },
+    fontSize: th.fontSizeBaseSmall,
     minHeight: `calc(${th.gridUnit} * 5)`,
+    div: {
+      color: theme.colors.neutral.gray20,
+    },
   }),
 
   singleValue: (provided, state) => {
@@ -44,7 +52,7 @@ const styles = th => ({
   option: (provided, state) => ({
     ...provided,
     backgroundColor:
-      state.isFocused || state.isSelected ? th.colorFurniture : 'white',
+      state.isFocused || state.isSelected ? th.colors.neutral.gray90 : 'white',
     color: th.colorText,
   }),
 })
@@ -57,14 +65,14 @@ export const Select = ({
   customStyles,
   ...otherProps
 }) => {
-  const theme = useContext(ThemeContext)
+  const th = useContext(ThemeContext)
   let selectedOption = value
 
   if (!isMulti && value) {
     selectedOption = options.find(option => option.value === value)
   }
 
-  const myStyles = { ...styles(theme), ...(customStyles || {}) }
+  const myStyles = { ...styles(th), ...(customStyles || {}) }
 
   return (
     <ReactSelect

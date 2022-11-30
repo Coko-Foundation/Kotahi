@@ -24,7 +24,7 @@ export const SectionContent = styled(Section)`
   background-color: ${th('colorBackground')};
   border-radius: ${th('borderRadius')};
   border-top-left-radius: ${th('borderRadius')};
-  box-shadow: ${th('boxShadow')};
+  box-shadow: ${({ theme }) => theme.boxShadow.shades[200]};
   margin-bottom: ${grid(2)};
   margin-top: ${grid(2)};
   padding: 0;
@@ -36,6 +36,7 @@ export const SectionContent = styled(Section)`
     margin-top: 0;
   }
 
+  /* stylelint-disable-next-line */
   ${TabsContainer} ~ div > & {
     border-top-left-radius: 0;
     margin-bottom: calc(${th('gridUnit')} * 3);
@@ -140,7 +141,7 @@ export const Columns = styled.div`
 `
 
 export const Manuscript = styled.div`
-  background: ${th('colorBackgroundHue')};
+  background: ${props => props.theme.colors.neutral.gray97};
   grid-area: manuscript;
   overflow-y: scroll;
   padding: ${grid(2)};

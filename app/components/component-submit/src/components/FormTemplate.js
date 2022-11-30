@@ -1,17 +1,19 @@
 import React, { useCallback, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { Formik } from 'formik'
+import { Formik, ErrorMessage } from 'formik'
 import { unescape, get, set, debounce } from 'lodash'
 import { sanitize } from 'dompurify'
-import { TextField, RadioGroup, CheckboxGroup } from '@pubsweet/ui'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import { RadioGroup } from '@pubsweet/ui'
+import { th } from '@pubsweet/ui-toolkit'
 import {
   Section as Container,
   Select,
   FilesUpload,
   Attachment,
   FieldPublishingSelector,
+  TextInput,
+  CheckboxGroup,
 } from '../../../shared'
 import { Heading1, Section, Legend, SubNote } from '../style'
 import AuthorsInput from './AuthorsInput'
@@ -25,9 +27,40 @@ import ActionButton from '../../../shared/ActionButton'
 import { hasValue } from '../../../../shared/htmlUtils'
 import FormWaxEditor from '../../../component-formbuilder/src/components/FormWaxEditor'
 
+const FormContainer = styled(Container)`
+  background: white;
+  padding: 0;
+
+  header {
+    border-bottom: 1px solid #e8e8e8;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    /* account for <NoteRight> */
+    padding: 28px 28px 44px 28px;
+
+    h1 {
+      font-weight: 700;
+      margin: 0;
+      padding: 0;
+    }
+  }
+
+  form {
+    padding: 30px;
+
+    section {
+      margin: 0 0 44px 0;
+    }
+  }
+`
+
 const Intro = styled.div`
-  font-style: italic;
   line-height: 1.4;
+
+  p {
+    margin: 0;
+  }
 `
 
 const ModalWrapper = styled.div`
@@ -43,55 +76,30 @@ const ModalWrapper = styled.div`
   z-index: 10000;
 `
 
-const LowerPadded = styled.div`
-  padding-bottom: ${grid(3)};
+const MessageWrapper = styled.div`
+  color: ${th('colorError')};
+  display: flex;
+  font-family: ${th('fontInterface')};
+  font-size: ${th('fontSizeBaseSmall')};
+  line-height: ${th('lineHeightBaseSmall')};
+  margin-left: 12px;
+  margin-top: -${({ theme }) => theme.spacing[1]}px;
 `
 
 const SafeRadioGroup = styled(RadioGroup)`
   position: relative;
 `
 
-const PaddedRadioGroup = props => (
-  <LowerPadded>
-    <SafeRadioGroup {...props} />
-  </LowerPadded>
-)
-
-const PaddedCheckboxGroup = props => (
-  <LowerPadded>
-    <CheckboxGroup {...props} />
-  </LowerPadded>
-)
-
-const PaddedSelect = props => (
-  <LowerPadded>
-    <Select {...props} />
-  </LowerPadded>
-)
-
-const PaddedAuthorsInput = props => (
-  <LowerPadded>
-    <AuthorsInput {...props} />
-  </LowerPadded>
-)
-
-const PaddedLinksInput = props => (
-  <LowerPadded>
-    <LinksInput {...props} />
-  </LowerPadded>
-)
-
 const NoteRight = styled.div`
-  float: right;
   font-size: ${th('fontSizeBaseSmall')};
   line-height: ${th('lineHeightBaseSmall')};
+  padding: ${({ theme }) => `${theme.spacing.e} ${theme.spacing.f}`};
   text-align: right;
 `
 
 const FieldHead = styled.div`
   align-items: baseline;
   display: flex;
-  justify-content: space-between;
   width: auto;
 `
 
@@ -100,12 +108,12 @@ const filterFileManuscript = files =>
 
 /** Definitions for available field types */
 const elements = {
-  TextField,
-  RadioGroup: PaddedRadioGroup,
-  CheckboxGroup: PaddedCheckboxGroup,
-  AuthorsInput: PaddedAuthorsInput,
-  Select: PaddedSelect,
-  LinksInput: PaddedLinksInput,
+  TextField: TextInput,
+  RadioGroup: SafeRadioGroup,
+  CheckboxGroup,
+  AuthorsInput,
+  Select,
+  LinksInput,
   ThreadedDiscussion,
 }
 
@@ -166,307 +174,6 @@ const prepareFieldProps = rawField => ({
     rawField.options.map(e => ({ ...e, color: e.labelColor })),
 })
 
-const InnerFormTemplate = ({
-  // TODO We could just combine InnerFormTemplate with FormTemplate. No good reason to separate them.
-  form,
-  handleSubmit, // formik
-  toggleConfirming,
-  confirming,
-  manuscriptId,
-  manuscriptShortId,
-  manuscriptStatus,
-  setTouched, // formik
-  values, // formik
-  setFieldValue, // formik
-  submissionButtonText,
-  onChange,
-  republish,
-  errors, // formik
-  validateForm, // formik
-  showEditorOnlyFields,
-  urlFrag,
-  displayShortIdAsIdentifier,
-  validateDoi,
-  createFile,
-  deleteFile,
-  isSubmission,
-  reviewId,
-  shouldStoreFilesInForm,
-  tagForFiles,
-  threadedDiscussionProps: tdProps,
-  initializeReview,
-  isSubmitting,
-  submitCount,
-  shouldShowOptionToPublish,
-  fieldsToPublish = [],
-  setShouldPublishField,
-}) => {
-  const [submitSucceeded, setSubmitSucceeded] = useState(false)
-  const [disabled, setButtonDisabled] = useState(false)
-
-  const submitButton = (text, haspopup = false) => {
-    return (
-      <div>
-        <ActionButton
-          dataTestid={`${form.name
-            .toLowerCase()
-            .replace(/ /g, '-')
-            .replace(/[^\w-]+/g, '')}-action-btn`}
-          disabled={disabled}
-          onClick={async () => {
-            // TODO shouldn't this come after error checking and submission?
-            if (republish) {
-              setButtonDisabled(true)
-              await republish(manuscriptId)
-              setButtonDisabled(false)
-              return
-            }
-
-            const hasErrors = Object.keys(await validateForm()).length !== 0
-
-            // If there are errors, do a fake submit
-            // to focus on the error
-            if (
-              hasErrors ||
-              values.status === articleStatuses.evaluated ||
-              values.status === articleStatuses.submitted ||
-              !haspopup
-            ) {
-              handleSubmit()
-              setSubmitSucceeded(!hasErrors)
-            } else {
-              toggleConfirming()
-            }
-          }}
-          primary
-          status={
-            /* eslint-disable no-nested-ternary */
-            isSubmitting
-              ? 'pending'
-              : Object.keys(errors).length && submitCount
-              ? '' // TODO Make this case 'failure', once we've fixed the validation delays in the form
-              : submitSucceeded
-              ? 'success'
-              : ''
-            /* eslint-enable no-nested-ternary */
-          }
-        >
-          {text}
-        </ActionButton>
-      </div>
-    )
-  }
-
-  // this is whether the form includes a popup
-  const hasPopup = form.haspopup ? JSON.parse(form.haspopup) : false
-
-  // this is whether to show a popup
-  const showPopup = hasPopup && values.status !== 'revise'
-
-  // this is whether or not to show a submit button
-  const showSubmitButton =
-    submissionButtonText &&
-    (isSubmission
-      ? !['submitted', 'revise'].includes(values.status) ||
-        (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
-          values.status === 'submitted')
-      : true)
-
-  const manuscriptFiles = filterFileManuscript(values.files || [])
-
-  const submittedManuscriptFile =
-    isSubmission && manuscriptFiles.length ? manuscriptFiles[0] : null
-
-  return (
-    <Container>
-      {displayShortIdAsIdentifier && (
-        <NoteRight>
-          Manuscript number
-          <br />
-          {manuscriptShortId}
-        </NoteRight>
-      )}
-      <Heading1>{form.name}</Heading1>
-      <Intro
-        dangerouslySetInnerHTML={createMarkup(
-          (form.description || '').replace(
-            '###link###',
-            link(urlFrag, manuscriptId),
-          ),
-        )}
-      />
-      <form>
-        {(form.children || [])
-          .filter(
-            element =>
-              element.component &&
-              (showEditorOnlyFields || element.hideFromAuthors !== 'true'),
-          )
-          .map(prepareFieldProps)
-          .map((element, i) => {
-            let threadedDiscussionProps
-
-            if (element.component === 'ThreadedDiscussion') {
-              const setShouldPublishComment =
-                shouldShowOptionToPublish &&
-                element.permitPublishing === 'true' &&
-                ((id, val) =>
-                  setShouldPublishField(`${element.name}:${id}`, val))
-
-              threadedDiscussionProps = {
-                ...tdProps,
-                threadedDiscussion: tdProps.threadedDiscussions.find(
-                  d => d.id === values[element.name],
-                ),
-                threadedDiscussions: undefined,
-                commentsToPublish: fieldsToPublish
-                  .filter(f => f.startsWith(`${element.name}:`))
-                  .map(f => f.split(':')[1]),
-                setShouldPublishComment,
-                userCanAddThread: true,
-              }
-            }
-
-            return (
-              <Section
-                cssOverrides={JSON.parse(element.sectioncss || '{}')}
-                key={`${element.id}`}
-              >
-                <FieldHead>
-                  <Legend
-                    dangerouslySetInnerHTML={createMarkup(element.title)}
-                  />
-                  {shouldShowOptionToPublish &&
-                    element.permitPublishing === 'true' &&
-                    element.component !== 'ThreadedDiscussion' && (
-                      <FieldPublishingSelector
-                        onChange={val =>
-                          setShouldPublishField(element.name, val)
-                        }
-                        value={fieldsToPublish.includes(element.name)}
-                      />
-                    )}
-                </FieldHead>
-                {element.component === 'SupplementaryFiles' && (
-                  <FilesUpload
-                    createFile={createFile}
-                    deleteFile={deleteFile}
-                    fieldName={shouldStoreFilesInForm ? element.name : 'files'} // TODO Store files in form for submissions too: should simplify code both frontend and back.
-                    fileType={tagForFiles || 'supplementary'}
-                    initializeReview={initializeReview}
-                    manuscriptId={manuscriptId}
-                    onChange={shouldStoreFilesInForm ? onChange : null}
-                    reviewId={reviewId}
-                    values={values}
-                  />
-                )}
-                {element.component === 'VisualAbstract' && (
-                  <FilesUpload
-                    acceptMultiple={false}
-                    createFile={createFile}
-                    deleteFile={deleteFile}
-                    fieldName={shouldStoreFilesInForm ? element.name : 'files'}
-                    fileType={tagForFiles || 'visualAbstract'}
-                    initializeReview={initializeReview}
-                    manuscriptId={manuscriptId}
-                    mimeTypesToAccept="image/*"
-                    onChange={shouldStoreFilesInForm ? onChange : null}
-                    reviewId={reviewId}
-                    values={values}
-                  />
-                )}
-                {element.component === 'ManuscriptFile' &&
-                submittedManuscriptFile ? (
-                  <Attachment
-                    file={submittedManuscriptFile}
-                    key={submittedManuscriptFile.storedObjects[0].url}
-                    uploaded
-                  />
-                ) : null}
-                {![
-                  'SupplementaryFiles',
-                  'VisualAbstract',
-                  'ManuscriptFile',
-                ].includes(element.component) && (
-                  <ValidatedFieldFormik
-                    {...rejectProps(element, [
-                      'component',
-                      'title',
-                      'sectioncss',
-                      'parse',
-                      'format',
-                      'validate',
-                      'validateValue',
-                      'description',
-                      'shortDescription',
-                      'labelColor',
-                    ])}
-                    aria-label={element.placeholder || element.title}
-                    component={elements[element.component]}
-                    data-testid={element.name} // TODO: Improve this
-                    key={`validate-${element.id}`}
-                    name={element.name}
-                    onChange={value => {
-                      // TODO: Perhaps split components remove conditions here
-                      let val
-
-                      if (value.target) {
-                        val = value.target.value
-                      } else if (value.value) {
-                        val = value.value
-                      } else {
-                        val = value
-                      }
-
-                      setFieldValue(element.name, val, false)
-                      onChange(val, element.name)
-                    }}
-                    readonly={element.name === 'submission.editDate'}
-                    setTouched={setTouched}
-                    spellCheck
-                    threadedDiscussionProps={threadedDiscussionProps}
-                    validate={validateFormField(
-                      element.validate,
-                      element.validateValue,
-                      element.name,
-                      JSON.parse(
-                        element.doiValidation ? element.doiValidation : false,
-                      ),
-                      validateDoi,
-                      element.component,
-                      threadedDiscussionProps,
-                    )}
-                    values={values}
-                  />
-                )}
-                {hasValue(element.description) && (
-                  <SubNote
-                    dangerouslySetInnerHTML={createMarkup(element.description)}
-                  />
-                )}
-              </Section>
-            )
-          })}
-
-        {showSubmitButton
-          ? submitButton(submissionButtonText, showPopup)
-          : null}
-
-        {confirming && (
-          <ModalWrapper>
-            <Confirm
-              errors={errors}
-              form={form}
-              submit={handleSubmit}
-              toggleConfirming={toggleConfirming}
-            />
-          </ModalWrapper>
-        )}
-      </form>
-    </Container>
-  )
-}
-
 const FormTemplate = ({
   form,
   initialValues,
@@ -488,7 +195,7 @@ const FormTemplate = ({
   shouldStoreFilesInForm,
   initializeReview,
   tagForFiles,
-  threadedDiscussionProps,
+  threadedDiscussionProps: tdProps,
   fieldsToPublish,
   setShouldPublishField,
   shouldShowOptionToPublish = false,
@@ -506,7 +213,7 @@ const FormTemplate = ({
         .map(field => get(values, field.name))
         .filter(Boolean)
         .map(async threadedDiscussionId =>
-          threadedDiscussionProps.completeComments({
+          tdProps.completeComments({
             variables: { threadedDiscussionId },
           }),
         ),
@@ -538,42 +245,313 @@ const FormTemplate = ({
       validateOnBlur
       validateOnChange={false}
     >
-      {formProps => (
-        <InnerFormTemplate
-          confirming={confirming}
-          createFile={createFile}
-          deleteFile={deleteFile}
-          isSubmission={isSubmission}
-          toggleConfirming={toggleConfirming}
-          {...formProps}
-          displayShortIdAsIdentifier={displayShortIdAsIdentifier}
-          fieldsToPublish={fieldsToPublish}
-          form={form}
-          initializeReview={initializeReview}
-          manuscriptId={manuscriptId}
-          manuscriptShortId={manuscriptShortId}
-          manuscriptStatus={manuscriptStatus}
-          onChange={(value, fieldName) => {
-            if (fieldName !== lastChangedField) {
-              debounceChange.flush()
-              setLastChangedField(fieldName)
-            }
+      {({
+        handleSubmit,
+        setTouched,
+        values,
+        setFieldValue,
+        errors,
+        validateForm,
+        isSubmitting,
+        submitCount,
+      }) => {
+        const innerOnChange = (value, fieldName) => {
+          if (fieldName !== lastChangedField) {
+            debounceChange.flush()
+            setLastChangedField(fieldName)
+          }
 
-            debounceChange(value, fieldName)
-          }}
-          republish={republish}
-          reviewId={reviewId}
-          setShouldPublishField={setShouldPublishField}
-          shouldShowOptionToPublish={shouldShowOptionToPublish}
-          shouldStoreFilesInForm={shouldStoreFilesInForm}
-          showEditorOnlyFields={showEditorOnlyFields}
-          submissionButtonText={submissionButtonText}
-          tagForFiles={tagForFiles}
-          threadedDiscussionProps={threadedDiscussionProps}
-          urlFrag={urlFrag}
-          validateDoi={validateDoi}
-        />
-      )}
+          debounceChange(value, fieldName)
+        }
+
+        const [submitSucceeded, setSubmitSucceeded] = useState(false)
+        const [disabled, setButtonDisabled] = useState(false)
+
+        const submitButton = (text, haspopup = false) => {
+          return (
+            <div>
+              <ActionButton
+                dataTestid={`${form.name
+                  .toLowerCase()
+                  .replace(/ /g, '-')
+                  .replace(/[^\w-]+/g, '')}-action-btn`}
+                disabled={disabled}
+                onClick={async () => {
+                  // TODO shouldn't this come after error checking and submission?
+                  if (republish) {
+                    setButtonDisabled(true)
+                    await republish(manuscriptId)
+                    setButtonDisabled(false)
+                    return
+                  }
+
+                  const hasErrors =
+                    Object.keys(await validateForm()).length !== 0
+
+                  // If there are errors, do a fake submit
+                  // to focus on the error
+                  if (
+                    hasErrors ||
+                    values.status === articleStatuses.evaluated ||
+                    values.status === articleStatuses.submitted ||
+                    !haspopup
+                  ) {
+                    handleSubmit()
+                    setSubmitSucceeded(!hasErrors)
+                  } else {
+                    toggleConfirming()
+                  }
+                }}
+                primary
+                status={
+                  /* eslint-disable no-nested-ternary */
+                  isSubmitting
+                    ? 'pending'
+                    : Object.keys(errors).length && submitCount
+                    ? '' // TODO Make this case 'failure', once we've fixed the validation delays in the form
+                    : submitSucceeded
+                    ? 'success'
+                    : ''
+                  /* eslint-enable no-nested-ternary */
+                }
+              >
+                {text}
+              </ActionButton>
+            </div>
+          )
+        }
+
+        // this is whether the form includes a popup
+        const hasPopup = form.haspopup ? JSON.parse(form.haspopup) : false
+
+        // this is whether to show a popup
+        const showPopup = hasPopup && values.status !== 'revise'
+
+        // this is whether or not to show a submit button
+        const showSubmitButton =
+          submissionButtonText &&
+          (isSubmission
+            ? !['submitted', 'revise'].includes(values.status) ||
+              (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
+                values.status === 'submitted')
+            : true)
+
+        const manuscriptFiles = filterFileManuscript(values.files || [])
+
+        const submittedManuscriptFile =
+          isSubmission && manuscriptFiles.length ? manuscriptFiles[0] : null
+
+        return (
+          <FormContainer>
+            {displayShortIdAsIdentifier && (
+              <NoteRight>Manuscript Number: {manuscriptShortId}</NoteRight>
+            )}
+            <header>
+              <Heading1>{form.name}</Heading1>
+              <Intro
+                dangerouslySetInnerHTML={createMarkup(
+                  (form.description || '').replace(
+                    '###link###',
+                    link(urlFrag, manuscriptId),
+                  ),
+                )}
+              />
+            </header>
+            <form>
+              {(form.children || [])
+                .filter(
+                  element =>
+                    element.component &&
+                    (showEditorOnlyFields ||
+                      element.hideFromAuthors !== 'true'),
+                )
+                .map(prepareFieldProps)
+                .map((element, i) => {
+                  let threadedDiscussionProps
+
+                  if (element.component === 'ThreadedDiscussion') {
+                    const setShouldPublishComment =
+                      shouldShowOptionToPublish &&
+                      element.permitPublishing === 'true' &&
+                      ((id, val) =>
+                        setShouldPublishField(`${element.name}:${id}`, val))
+
+                    threadedDiscussionProps = {
+                      ...tdProps,
+                      threadedDiscussion: tdProps.threadedDiscussions.find(
+                        d => d.id === values[element.name],
+                      ),
+                      threadedDiscussions: undefined,
+                      commentsToPublish: fieldsToPublish
+                        .filter(f => f.startsWith(`${element.name}:`))
+                        .map(f => f.split(':')[1]),
+                      setShouldPublishComment,
+                      userCanAddThread: true,
+                    }
+                  }
+
+                  let markup = createMarkup(element.title)
+
+                  // add an '*' to the markup if it is marked required
+                  if (Array.isArray(element.validate)) {
+                    // TODO: why is validate an array? handle the cases where there are multiple validate values
+                    if (element.validate[0]?.value === 'required')
+                      markup = createMarkup(`${element.title} *`)
+                  }
+
+                  return (
+                    <Section
+                      cssOverrides={JSON.parse(element.sectioncss || '{}')}
+                      key={`${element.id}`}
+                    >
+                      <FieldHead>
+                        <Legend dangerouslySetInnerHTML={markup} />
+                        {shouldShowOptionToPublish &&
+                          element.permitPublishing === 'true' &&
+                          element.component !== 'ThreadedDiscussion' && (
+                            <FieldPublishingSelector
+                              onChange={val =>
+                                setShouldPublishField(element.name, val)
+                              }
+                              value={fieldsToPublish.includes(element.name)}
+                            />
+                          )}
+                        <MessageWrapper>
+                          <ErrorMessage name={element.name} />
+                        </MessageWrapper>
+                      </FieldHead>
+                      {element.component === 'SupplementaryFiles' && (
+                        <FilesUpload
+                          createFile={createFile}
+                          deleteFile={deleteFile}
+                          fieldName={
+                            shouldStoreFilesInForm ? element.name : 'files'
+                          } // TODO Store files in form for submissions too: should simplify code both frontend and back.
+                          fileType={tagForFiles || 'supplementary'}
+                          initializeReview={initializeReview}
+                          manuscriptId={manuscriptId}
+                          onChange={
+                            shouldStoreFilesInForm ? innerOnChange : null
+                          }
+                          reviewId={reviewId}
+                          values={values}
+                        />
+                      )}
+                      {element.component === 'VisualAbstract' && (
+                        <FilesUpload
+                          acceptMultiple={false}
+                          createFile={createFile}
+                          deleteFile={deleteFile}
+                          fieldName={
+                            shouldStoreFilesInForm ? element.name : 'files'
+                          }
+                          fileType={tagForFiles || 'visualAbstract'}
+                          initializeReview={initializeReview}
+                          manuscriptId={manuscriptId}
+                          mimeTypesToAccept="image/*"
+                          onChange={
+                            shouldStoreFilesInForm ? innerOnChange : null
+                          }
+                          reviewId={reviewId}
+                          values={values}
+                        />
+                      )}
+                      {!['SupplementaryFiles', 'VisualAbstract'].includes(
+                        element.component,
+                      ) && (
+                        <ValidatedFieldFormik
+                          {...rejectProps(element, [
+                            'component',
+                            'title',
+                            'sectioncss',
+                            'parse',
+                            'format',
+                            'validate',
+                            'validateValue',
+                            'description',
+                            'shortDescription',
+                            'labelColor',
+                          ])}
+                          aria-label={element.placeholder || element.title}
+                          component={elements[element.component]}
+                          data-testid={element.name} // TODO: Improve this
+                          key={`validate-${element.id}`}
+                          name={element.name}
+                          onChange={value => {
+                            // TODO: Perhaps split components remove conditions here
+                            let val
+
+                            if (value.target) {
+                              val = value.target.value
+                            } else if (value.value) {
+                              val = value.value
+                            } else {
+                              val = value
+                            }
+
+                            setFieldValue(element.name, val, false)
+                            innerOnChange(val, element.name)
+                          }}
+                          readonly={element.name === 'submission.editDate'}
+                          setTouched={setTouched}
+                          spellCheck
+                          threadedDiscussionProps={threadedDiscussionProps}
+                          validate={validateFormField(
+                            element.validate,
+                            element.validateValue,
+                            element.name,
+                            JSON.parse(
+                              element.doiValidation
+                                ? element.doiValidation
+                                : false,
+                            ),
+                            validateDoi,
+                            element.component,
+                            threadedDiscussionProps,
+                          )}
+                          values={values}
+                        />
+                      )}
+                      {hasValue(element.description) && (
+                        <SubNote
+                          dangerouslySetInnerHTML={createMarkup(
+                            element.description,
+                          )}
+                        />
+                      )}
+                    </Section>
+                  )
+                })}
+
+              {submittedManuscriptFile ? (
+                <Section id="files.manuscript">
+                  <Legend space>Submitted Manuscript</Legend>
+                  <Attachment
+                    file={submittedManuscriptFile}
+                    key={submittedManuscriptFile.storedObjects[0].url}
+                    uploaded
+                  />
+                </Section>
+              ) : null}
+
+              {showSubmitButton
+                ? submitButton(submissionButtonText, showPopup)
+                : null}
+
+              {confirming && (
+                <ModalWrapper>
+                  <Confirm
+                    errors={errors}
+                    form={form}
+                    submit={handleSubmit}
+                    toggleConfirming={toggleConfirming}
+                  />
+                </ModalWrapper>
+              )}
+            </form>
+          </FormContainer>
+        )
+      }}
     </Formik>
   )
 }
