@@ -27,6 +27,15 @@ const VersionIndicator = styled.p`
   margin: 0 5px;
 `
 
+const StyledSelect = styled(Select)`
+  & > div {
+    background: white;
+  }
+
+  border: 1px solid ${({ theme }) => theme.colors.neutral.gray95};
+  box-shadow: ${props => props.theme.boxShadow.shades[100]};
+`
+
 const generateLabel = (created, versionNumber, count, manuscriptName) => {
   return (
     <VerisonLabelWrapper>
@@ -74,7 +83,7 @@ export const VersionSwitcher = ({ versions = [], children, top = 2 }) => {
 
   return (
     <>
-      <Select
+      <StyledSelect
         onChange={option => selectVersionKey(option.value)}
         options={normalizedVersions.map((d, i) => ({
           value: d.key,

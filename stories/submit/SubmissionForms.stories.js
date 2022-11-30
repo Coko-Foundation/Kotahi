@@ -425,6 +425,7 @@ const baseProps = {
         topic: 'Editorial discussion',
       },
     ],
+    formFieldsToPublish: [],
   },
   threadedDiscussions: [],
   updatePendingComment: () => null,
@@ -819,6 +820,7 @@ const emptyFormProps = {
         topic: 'Editorial discussion',
       },
     ],
+    formFieldsToPublish: [],
   },
   currentUser: {
     id: '1228b2a9-e125-4e44-be44-d02c2d1ad2eb',

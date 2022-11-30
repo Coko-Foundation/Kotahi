@@ -5,16 +5,30 @@ import lightenBy from '../../shared/lightenBy'
 import { TabsContainer } from './Tabs'
 
 const Tab = styled.div`
-  background-color: ${({ active }) =>
-    active ? lightenBy('colorPrimary', 0.6) : th('colorFurniture')};
-  border-bottom: 2px solid
-    ${({ active }) => (active ? th('colorPrimary') : th('colorFurniture'))};
+  background: ${({ active, theme }) =>
+    active
+      ? theme.colors.neutral.white
+      : 'linear-gradient(180deg, #ECECEC 0%, #ECECEC 40.1%, #D6D6D6 100%)'};
   border-radius: ${th('borderRadius')} ${th('borderRadius')} 0 0;
+  box-shadow: ${({ active }) =>
+    active
+      ? '-4px 0 7px -4px rgba(0, 0, 0, 0.1), 4px 0 7px -4px rgba(0, 0, 0, 0.1), 0 -4px 7px -4px rgba(0, 0, 0, 0.1)'
+      : 'none'};
   color: ${th('colorText')};
   cursor: pointer;
   font-size: ${th('fontSizeBaseSmall')};
   font-weight: 500;
+  margin-right: ${props => props.theme.spacing.e};
   padding: calc(${th('gridUnit')} - 1px) 1em;
+  padding-bottom: 0;
+  position: relative;
+  top: 2px;
+
+  div {
+    border-bottom: 3px solid
+      ${({ active }) => (active ? th('colorPrimary') : 'none')};
+    padding-bottom: 4px;
+  }
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */
   ${override('ui.Tab')}
@@ -90,11 +104,14 @@ const HiddenTabs = ({
               key={key}
               onClick={() => setActiveKeyAndCallOnChange(key)}
             >
-              <Tab active={activeKey === key}>{label || key}</Tab>
+              <Tab active={activeKey === key}>
+                <div>{label || key}</div>
+              </Tab>
             </TabContainer>
           ))}
         </div>
 
+        {/* TODO: Hide Chat could be a seperate component */}
         {hideChat && (
           <HideChatButton onClick={hideChat}>Hide Chat</HideChatButton>
         )}

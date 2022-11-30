@@ -1,6 +1,5 @@
 /* eslint-disable import/extensions */
 import { css } from 'styled-components'
-import Color from 'color'
 import {
   Action,
   ActionGroup,
@@ -13,29 +12,29 @@ import {
   Menu,
   Logo,
 } from './elements'
-import brandConfig from '../brandConfig.json'
 import lightenBy from '../shared/lightenBy'
+import colors from './colors'
+import spacing from './spacing'
+import typography from './typography'
 
-const defaultInstanceColor = '#2fac66'
-
-const validateInstanceConfigColors = colorCode => {
-  try {
-    Color(colorCode)
-    return colorCode
-  } catch (err) {
-    return defaultInstanceColor
-  }
-}
-
-const colorPrimary = validateInstanceConfigColors(brandConfig.primaryColor)
-const colorSecondary = validateInstanceConfigColors(brandConfig.secondaryColor)
+// Fonts
+import '@fontsource/roboto/400.css'
+import '@fontsource/roboto/500.css'
+import '@fontsource/roboto/700.css'
+import '@fontsource/roboto/900.css'
+import '@fontsource/roboto/400-italic.css'
 
 const cokoTheme = {
+  colors,
+  spacing,
+  typography,
+
   /* Colors */
+  // TODO Deprecate these in favour of definitions in colors.js
   colorBackground: 'white',
   colorSecondaryBackground: '#f9fafb', // custom
-  colorPrimary,
-  colorSecondary,
+  colorPrimary: colors.brand1.base,
+  colorSecondary: colors.brand2.base,
   colorFurniture: '#E8E8E8',
   colorBorder: '#AAA',
   colorBackgroundHue: '#f4f5f7',
@@ -56,13 +55,13 @@ const cokoTheme = {
 
   // fonts
   fontInterface:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+    "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
   fontHeading:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+    "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
   fontReading:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+    "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
   fontWriting:
-    "-apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
+    "Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol'",
 
   // font sizes
   fontSizeBase: '16px',
@@ -88,7 +87,7 @@ const cokoTheme = {
   gridUnit: '8px',
 
   /* Border */
-  borderRadius: '8px',
+  borderRadius: '6px',
   borderWidth: '1px', // julien: not 0
   borderStyle: 'solid',
 
@@ -96,8 +95,15 @@ const cokoTheme = {
   // $borderColor: var($colorFurniture);
 
   /* Shadow (for tooltip) */
-  boxShadow: '0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 4px 0 rgba(0, 0, 0, 0.06)',
-  // boxShadow: '4px 4px 16px #cdcdcd',
+  boxShadow: {
+    inset: 'inset 0px 0px 4px rgba(0, 0, 0, 0.07)',
+    shades: {
+      100: '0 2px 6px 0 rgba(0, 0, 0, 0.05)',
+      200: '0 2px 6px 0 rgba(0, 0, 0, 0.1)',
+      300: '0 2px 6px 0 rgba(0, 0, 0, 0.2)',
+    },
+  },
+
   /* Transition */
   transitionDuration: '0.2s', // TODO -- julien: not 0.05s
   transitionTimingFunction: 'ease',

@@ -1,19 +1,6 @@
 import React from 'react'
-import { FastField, ErrorMessage, useFormikContext } from 'formik'
+import { FastField, useFormikContext } from 'formik'
 import { get } from 'lodash'
-import styled from 'styled-components'
-import { th, grid } from '@pubsweet/ui-toolkit'
-
-const MessageWrapper = styled.div`
-  margin-top: ${grid(-2.5)};
-  height: ${grid(2.5)};
-  color: ${th('colorError')};
-  display: flex;
-  font-family: ${th('fontInterface')};
-
-  font-size: ${th('fontSizeBaseSmall')};
-  line-height: ${th('lineHeightBaseSmall')};
-`
 
 // Based on https://github.com/jaredpalmer/formik/issues/146#issuecomment-474775723
 const useFocusOnError = ({ fieldRef, name }) => {
@@ -62,11 +49,6 @@ const ValidatedField = ({ component: Component, ...props }) => {
               innerRefProp={fieldRef}
               validationStatus={validationStatus}
             />
-
-            {/* live region DOM node must be initially present for changes to be announced */}
-            <MessageWrapper role="alert">
-              <ErrorMessage name={name} />
-            </MessageWrapper>
           </div>
         )
       }}

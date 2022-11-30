@@ -1,5 +1,6 @@
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import theme from '../../../theme'
 
 export { Container, Content, Heading } from '../../shared'
 
@@ -9,7 +10,7 @@ export const Heading1 = styled.h1`
   margin: 0 0 calc(${th('gridUnit')} * 3);
 `
 
-export const Section = styled.div`
+export const Section = styled.section`
   display: flex;
   flex-direction: ${({ cssOverrides }) =>
     cssOverrides && cssOverrides['flex-direction']
@@ -23,13 +24,14 @@ export const Section = styled.div`
 
 export const Legend = styled.div`
   font-size: ${th('fontSizeBase')};
-  font-weight: 600;
-  margin-bottom: ${({ space, theme }) => space && theme.gridUnit};
+  font-weight: 500;
+  margin-bottom: ${theme.spacing.e};
 `
 
 export const SubNote = styled.span`
   color: ${th('colorTextPlaceholder')};
   font-size: ${th('fontSizeBaseSmall')};
+  font-style: italic;
   line-height: ${th('lineHeightBaseSmall')};
   width: 100%;
 
@@ -71,6 +73,7 @@ export const SubNote = styled.span`
 
   & p {
     margin-bottom: 1em;
+    margin-top: 6px;
   }
 
   & ul,
