@@ -25,3 +25,6 @@ db-data/*
 
 cypress/videos
 cypress/screenshots
+
+# macOS
+.dccache
