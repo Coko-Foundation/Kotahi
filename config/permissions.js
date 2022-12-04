@@ -435,7 +435,7 @@ const permissions = {
   },
   Mutation: {
     addEmailToBlacklist: allow, // TODO scrap this mutation and trigger its action inside updateInvitationResponse
-    addReviewer: or(userIsEditor, userIsAdmin),
+    addReviewer: allow,
     archiveManuscript: or(userIsEditor, userIsAdmin),
     archiveManuscripts: or(userIsEditor, userIsAdmin),
     assignTeamEditor: deny, // Never used
