@@ -1144,9 +1144,10 @@ const resolvers = {
       const filteredManuscripts = []
 
       manuscripts.forEach(m => {
+        // picking the first version if present, as the list is sorted by created desc
         const latestVersion =
           m.manuscriptVersions && m.manuscriptVersions.length > 0
-            ? m.manuscriptVersions[m.manuscriptVersions.length - 1]
+            ? m.manuscriptVersions[0]
             : m
 
         if (
