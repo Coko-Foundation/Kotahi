@@ -404,7 +404,7 @@ const permissions = {
     getSpecificFiles: isAuthenticated,
     globalTeams: deny, // Never used
     invitationManuscriptId: isAuthenticated,
-    invitationStatus: isAuthenticated,
+    invitationStatus: allow,
     manuscript: or(isAuthenticated, manuscriptIsPublished),
     manuscriptChannel: deny, // Never used
     manuscripts: isAuthenticated,
