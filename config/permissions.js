@@ -404,7 +404,7 @@ const permissions = {
     getSpecificFiles: isAuthenticated,
     globalTeams: deny, // Never used
     invitationManuscriptId: isAuthenticated,
-    invitationStatus: isAuthenticated,
+    invitationStatus: allow,
     manuscript: or(isAuthenticated, manuscriptIsPublished),
     manuscriptChannel: deny, // Never used
     manuscripts: isAuthenticated,
@@ -435,7 +435,7 @@ const permissions = {
   },
   Mutation: {
     addEmailToBlacklist: allow, // TODO scrap this mutation and trigger its action inside updateInvitationResponse
-    addReviewer: or(userIsEditor, userIsAdmin),
+    addReviewer: isAuthenticated,
     archiveManuscript: or(userIsEditor, userIsAdmin),
     archiveManuscripts: or(userIsEditor, userIsAdmin),
     assignTeamEditor: deny, // Never used
