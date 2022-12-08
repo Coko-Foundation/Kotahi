@@ -21,9 +21,12 @@ const TaskList = ({
   // This is treated as temporary and not persisted until it has a title.
   const [tasks, setTasks] = useState(persistedTasks)
 
-  // Disabling overwriting state when new values come in, as optimisticResponse doesn't seem to respect array order, causing jitter with drag-n-drop
+  // Disabled until I figure out correct cache modification -- BW
   /* useEffect(() => {
-    setTasks(persistedTasks)
+    setTasks(
+      // Reorder required, as optimisticResponse doesn't honour array order, causing jitter with drag-n-drop
+      [...persistedTasks].sort((a, b) => a.sequenceIndex - b.sequenceIndex),
+    )
   }, [persistedTasks]) */
 
   const repackageTask = task => ({
