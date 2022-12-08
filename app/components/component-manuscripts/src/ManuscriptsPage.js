@@ -19,7 +19,6 @@ import {
   GET_SYSTEM_WIDE_DISCUSSION_CHANNEL,
   ARCHIVE_MANUSCRIPT,
   ARCHIVE_MANUSCRIPTS,
-  POPULATE_TASKS,
 } from '../../../queries'
 import configuredColumnNames from './configuredColumnNames'
 import { updateMutation } from '../../component-submit/src/components/SubmitPage'
@@ -83,7 +82,6 @@ const ManuscriptsPage = ({ history }) => {
   })
 
   const [importManuscripts] = useMutation(IMPORT_MANUSCRIPTS)
-  const [populateTemplatedTasksForManuscript] = useMutation(POPULATE_TASKS)
 
   const importManuscriptsAndRefetch = () => {
     setIsImporting(true)
@@ -142,8 +140,6 @@ const ManuscriptsPage = ({ history }) => {
         }),
       },
     })
-    // Tasks are populated when the manuscript is selected.
-    populateTemplatedTasksForManuscript({ variables: { manuscriptId: id } })
   }
 
   const confirmBulkArchive = selectedNewManuscript => {

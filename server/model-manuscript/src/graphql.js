@@ -291,7 +291,12 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
   const ms = await models.Manuscript.query()
     .findById(id)
-    .withGraphFetched('[reviews.user, files]')
+    .withGraphFetched('[reviews.user, files, tasks]')
+
+  // If this manuscript is getting its label set for the first time,
+  // we will populate its task list from the template tasks
+  const isSettingFirstLabels =
+    !ms.submission.labels && !!msDelta.submission.labels
 
   const updatedMs = deepMergeObjectsReplacingArrays(ms, msDelta)
 
@@ -307,6 +312,9 @@ const commonUpdateManuscript = async (id, input, ctx) => {
   if (['ncrc', 'colab'].includes(process.env.INSTANCE_NAME)) {
     updatedMs.submission.editDate = new Date().toISOString().split('T')[0]
   }
+
+  if (isSettingFirstLabels && !updatedMs.tasks.length)
+    updatedMs.tasks = await populateTemplatedTasksForManuscript(id)
 
   await uploadAndConvertBase64ImagesInManuscript(updatedMs)
   return updateAndRepackageForGraphql(updatedMs)
