@@ -101,6 +101,10 @@ const FieldHead = styled.div`
   align-items: baseline;
   display: flex;
   width: auto;
+  & > label {
+    /* this is to make "publish" on decision page go flush right */
+    margin-left: auto;
+  }
 `
 
 const filterFileManuscript = files =>
