@@ -295,8 +295,9 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
   // If this manuscript is getting its label set for the first time,
   // we will populate its task list from the template tasks
-  const isSettingFirstLabels =
-    !ms.submission.labels && !!msDelta.submission.labels
+  const isSettingFirstLabels = ['colab'].includes(process.env.INSTANCE_NAME)
+    ? !ms.submission.labels && !!msDelta.submission.labels
+    : false
 
   const updatedMs = deepMergeObjectsReplacingArrays(ms, msDelta)
 
