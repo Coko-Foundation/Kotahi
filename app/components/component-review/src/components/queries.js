@@ -92,6 +92,7 @@ const manuscriptFields = `
     defaultDurationDays
     dueDate
     reminderPeriodDays
+    sequenceIndex
     status
   }
 `

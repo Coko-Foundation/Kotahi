@@ -1,12 +1,11 @@
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
+const TaskEmailNotification = require('./taskEmailNotification')
 
 const {
-  populateTemplatedTasksForManuscript,
   createNewTaskAlerts,
   updateAlertsForTask,
 } = require('./taskCommsUtils')
-const TaskEmailNotification = require('./taskEmailNotification')
 
 const resolvers = {
   Mutation: {
@@ -74,8 +73,6 @@ const resolvers = {
         .returning('*')
         .withGraphFetched('assignee')
     },
-    populateTasksForManuscript: async (_, { manuscriptId }) =>
-      populateTemplatedTasksForManuscript(manuscriptId),
 
     createNewTaskAlerts: async () => createNewTaskAlerts(), // For testing purposes. Normally initiated by a scheduler on the server.
 
@@ -129,6 +126,7 @@ const typeDefs = `
     defaultDurationDays: Int
     dueDate: DateTime
     reminderPeriodDays: Int
+    sequenceIndex: Int!
     status: String!
   }
 
@@ -166,7 +164,6 @@ const typeDefs = `
   extend type Mutation {
     updateTasks(manuscriptId: ID, tasks: [TaskInput!]!): [Task!]!
     updateTask(task: TaskInput!): Task!
-    populateTasksForManuscript(manuscriptId: ID!): [Task!]!
     createNewTaskAlerts: Boolean
     removeTaskAlertsForCurrentUser: Boolean
     createTaskEmailNotification(taskEmailNotification: TaskEmailNotificationCreateInput!): TaskEmailNotification!

@@ -291,7 +291,13 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
   const ms = await models.Manuscript.query()
     .findById(id)
-    .withGraphFetched('[reviews.user, files]')
+    .withGraphFetched('[reviews.user, files, tasks]')
+
+  // If this manuscript is getting its label set for the first time,
+  // we will populate its task list from the template tasks
+  const isSettingFirstLabels = ['colab'].includes(process.env.INSTANCE_NAME)
+    ? !ms.submission.labels && !!msDelta.submission.labels
+    : false
 
   const updatedMs = deepMergeObjectsReplacingArrays(ms, msDelta)
 
@@ -307,6 +313,9 @@ const commonUpdateManuscript = async (id, input, ctx) => {
   if (['ncrc', 'colab'].includes(process.env.INSTANCE_NAME)) {
     updatedMs.submission.editDate = new Date().toISOString().split('T')[0]
   }
+
+  if (isSettingFirstLabels && !updatedMs.tasks.length)
+    updatedMs.tasks = await populateTemplatedTasksForManuscript(id)
 
   await uploadAndConvertBase64ImagesInManuscript(updatedMs)
   return updateAndRepackageForGraphql(updatedMs)
@@ -1129,6 +1138,7 @@ const resolvers = {
         .join('teams', 'manuscripts.id', '=', 'teams.object_id')
         .join('team_members', 'teams.id', '=', 'team_members.team_id')
         .where('team_members.user_id', ctx.user)
+        .where('is_hidden', false)
 
       // Get those top-level manuscripts with all versions, all with teams and members
       const manuscripts = await models.Manuscript.query()
@@ -1144,9 +1154,10 @@ const resolvers = {
       const filteredManuscripts = []
 
       manuscripts.forEach(m => {
+        // picking the first version if present, as the list is sorted by created desc
         const latestVersion =
           m.manuscriptVersions && m.manuscriptVersions.length > 0
-            ? m.manuscriptVersions[m.manuscriptVersions.length - 1]
+            ? m.manuscriptVersions[0]
             : m
 
         if (
