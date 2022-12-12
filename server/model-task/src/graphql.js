@@ -6,6 +6,7 @@ const {
   createNewTaskAlerts,
   updateAlertsForTask,
 } = require('./taskCommsUtils')
+const TaskEmailNotification = require('./taskEmailNotification')
 
 const resolvers = {
   Mutation: {
@@ -80,6 +81,14 @@ const resolvers = {
 
     removeTaskAlertsForCurrentUser: async (_, __, ctx) =>
       TaskAlert.query().delete().where({ userId: ctx.user }),
+
+    createTaskEmailNotification: async (_, { taskEmailNotification }) => {
+      return await TaskEmailNotification.query()
+        .insert(taskEmailNotification)
+        .onConflict('id')
+        .merge()
+        .returning('*')
+    }
   },
   Query: {
     tasks: async (_, { manuscriptId }) => {
@@ -133,12 +142,34 @@ const typeDefs = `
     userHasTaskAlerts: Boolean!
   }
 
+  input TaskEmailNotificationCreateInput {
+    taskId: ID!
+    recipientUserId: ID
+    isRecipientAssignee: Boolean
+    recipientRole: String
+    notificationElapsedDays: Int
+    emailTemplateKey: String
+  }
+
+  type TaskEmailNotification {
+    id: ID!
+    created: DateTime!
+    updated: DateTime
+    taskId: ID!
+    recipientUserId: ID
+    isRecipientAssignee: Boolean
+    recipientRole: String
+    notificationElapsedDays: Int
+    emailTemplateKey: String
+  }
+
   extend type Mutation {
     updateTasks(manuscriptId: ID, tasks: [TaskInput!]!): [Task!]!
     updateTask(task: TaskInput!): Task!
     populateTasksForManuscript(manuscriptId: ID!): [Task!]!
     createNewTaskAlerts: Boolean
     removeTaskAlertsForCurrentUser: Boolean
+    createTaskEmailNotification(taskEmailNotification: TaskEmailNotificationCreateInput!): TaskEmailNotification!
   }
 `
 

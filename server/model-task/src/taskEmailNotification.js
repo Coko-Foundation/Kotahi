@@ -10,7 +10,7 @@ class TaskEmailNotification extends BaseModel {
       properties: {
         taskId: { type: 'string', format: 'uuid' },
         recipientUserId: { type: ['string', 'null'], format: 'uuid' },
-        isRecipientAssignee: { type: ['bool', 'null'] },
+        isRecipientAssignee: { type: ['boolean', 'null'] },
         recipientRole: { type: ['string', 'null'] },
         notificationElapsedDays: { type: ['integer', 'null'] },
         emailTemplateKey: { type: ['string', 'null'] },
