@@ -100,6 +100,9 @@ const resolvers = {
         0
       )
     },
+    taskEmailNotifications: async () => {
+      return await TaskEmailNotification.query()
+    }
   },
 }
 
@@ -138,6 +141,7 @@ const typeDefs = `
   extend type Query {
     tasks(manuscriptId: ID): [Task!]!
     userHasTaskAlerts: Boolean!
+    taskEmailNotifications: [TaskEmailNotification]!
   }
 
   input TaskEmailNotificationCreateInput {
