@@ -53,6 +53,7 @@ const DecisionVersion = ({
   displayShortIdAsIdentifier,
   updateReviewJsonData,
   validateDoi,
+  validateSuffix,
   createFile,
   deleteFile,
   threadedDiscussionProps,
@@ -63,6 +64,8 @@ const DecisionVersion = ({
   setSelectedEmail,
   setShouldPublishField,
   isEmailAddressOptedOut,
+  dois,
+  refetch,
   updateTask,
   updateTasks,
 }) => {
@@ -176,6 +179,7 @@ const DecisionVersion = ({
                 threadedDiscussionProps={threadedDiscussionProps}
                 urlFrag={urlFrag}
                 validateDoi={validateDoi}
+                validateSuffix={validateSuffix}
               />
             </SectionContent>
           )}
@@ -351,6 +355,7 @@ const DecisionVersion = ({
                   threadedDiscussionProps={threadedDiscussionProps}
                   urlFrag={urlFrag}
                   validateDoi={validateDoi}
+                  validateSuffix={validateSuffix}
                 />
               </SectionContent>
             </AdminSection>
@@ -358,6 +363,7 @@ const DecisionVersion = ({
           {isCurrentVersion && (
             <AdminSection>
               <Publish
+                dois={dois}
                 manuscript={version}
                 publishManuscript={publishManuscript}
               />
@@ -373,6 +379,7 @@ const DecisionVersion = ({
   return (
     <HiddenTabs
       defaultActiveKey={version.id}
+      onChange={refetch}
       sections={[
         decisionSection(),
         editorSection,

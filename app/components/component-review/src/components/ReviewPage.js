@@ -123,6 +123,7 @@ const formStructure = `
       name
       description
       doiValidation
+      doiUniqueSuffixValidation
       placeholder
       parse
       format

@@ -73,6 +73,7 @@ const query = gql`
           name
           description
           doiValidation
+          doiUniqueSuffixValidation
           placeholder
           inline
           sectioncss

@@ -188,6 +188,7 @@ const FormTemplate = ({
   urlFrag,
   displayShortIdAsIdentifier,
   validateDoi,
+  validateSuffix,
   createFile,
   deleteFile,
   isSubmission,
@@ -500,12 +501,12 @@ const FormTemplate = ({
                             element.validate,
                             element.validateValue,
                             element.name,
+                            JSON.parse(element.doiValidation || false),
                             JSON.parse(
-                              element.doiValidation
-                                ? element.doiValidation
-                                : false,
+                              element.doiUniqueSuffixValidation || false,
                             ),
                             validateDoi,
+                            validateSuffix,
                             element.component,
                             threadedDiscussionProps,
                           )}

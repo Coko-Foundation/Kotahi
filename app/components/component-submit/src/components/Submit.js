@@ -46,6 +46,7 @@ const Submit = ({
   setShouldPublishField,
   threadedDiscussionProps,
   validateDoi,
+  validateSuffix,
 }) => {
   const decisionSections = []
 
@@ -104,6 +105,7 @@ const Submit = ({
         setShouldPublishField,
         threadedDiscussionProps,
         validateDoi,
+        validateSuffix,
       }
 
       decisionSection = {
