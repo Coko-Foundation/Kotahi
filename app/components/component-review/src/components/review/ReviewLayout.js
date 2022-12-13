@@ -31,6 +31,7 @@ const ReviewLayout = ({
   createFile,
   deleteFile,
   validateDoi,
+  validateSuffix,
   decisionForm,
   threadedDiscussionProps,
 }) => {
@@ -141,6 +142,7 @@ const ReviewLayout = ({
                 tagForFiles="review"
                 threadedDiscussionProps={threadedDiscussionProps}
                 validateDoi={validateDoi}
+                validateSuffix={validateSuffix}
               />
             </SectionContent>
           )}

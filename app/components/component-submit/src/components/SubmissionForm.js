@@ -16,6 +16,7 @@ const SubmissionForm = ({
   setShouldPublishField,
   threadedDiscussionProps,
   validateDoi,
+  validateSuffix,
 }) => {
   let submissionButtonText = 'Submit your research object'
   let submitButtonShouldRepublish = false
@@ -69,6 +70,7 @@ const SubmissionForm = ({
         submissionButtonText={submissionButtonText}
         threadedDiscussionProps={threadedDiscussionProps}
         validateDoi={validateDoi}
+        validateSuffix={validateSuffix}
       />
     </SectionContent>
   )

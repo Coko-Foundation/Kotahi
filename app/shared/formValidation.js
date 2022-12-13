@@ -7,7 +7,9 @@ export const validateFormField = (
   valueField = {},
   fieldName,
   doiValidation = false,
+  doiUniqueSuffixValidation = false,
   validateDoi,
+  validateSuffix,
   componentType,
   threadedDiscussionProps,
 ) => async value => {
@@ -73,6 +75,14 @@ export const validateFormField = (
     .filter(Boolean)
 
   if (errors.length) return errors[0]
-  if (value && doiValidation) return validateDoi(value)
+
+  if (value && doiValidation) {
+    return validateDoi(value)
+  }
+
+  if (value && doiUniqueSuffixValidation) {
+    return validateSuffix(value)
+  }
+
   return undefined
 }

@@ -60,6 +60,7 @@ const FlexRowWithSmallGapAbove = styled(FlexRow)`
 const Manuscripts = ({ history, ...props }) => {
   const {
     validateDoi,
+    validateSuffix,
     setReadyToEvaluateLabels,
     deleteManuscriptMutations,
     importManuscripts,
@@ -194,6 +195,7 @@ const Manuscripts = ({ history, ...props }) => {
       manuscript.submission,
       data.formForPurposeAndCategory?.structure,
       validateDoi,
+      validateSuffix,
     )
 
     if (hasInvalidFields.filter(Boolean).length === 0) {

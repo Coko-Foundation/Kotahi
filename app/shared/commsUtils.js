@@ -28,3 +28,26 @@ export const validateDoi = client => async value => {
       return undefined
     })
 }
+
+const VALIDATE_SUFFIX = gql`
+  query validateSuffix($suffix: String) {
+    validateSuffix(suffix: $suffix) {
+      isDOIValid
+    }
+  }
+`
+
+export const validateSuffix = client => async value => {
+  const res = await client.query({
+    query: VALIDATE_SUFFIX,
+    variables: {
+      suffix: value,
+    },
+  })
+
+  if (res.data.validateSuffix.isDOIValid) {
+    return null
+  }
+
+  return 'Suffix is invalid or not available'
+}

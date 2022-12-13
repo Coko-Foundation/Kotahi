@@ -6,7 +6,6 @@ const axios = require('axios')
 const path = require('path')
 const config = require('config')
 const { v4: uuid } = require('uuid')
-
 const { parseDate } = require('../../utils/dateUtils')
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 
@@ -102,6 +101,23 @@ const getCitations = manuscript => {
     .join('')
 }
 
+/** Used to get a review or submission field
+ * checking submission.decisionForm[fieldName] or submission[fieldName] */
+const getReviewOrSubmissionField = (manuscript, fieldName) => {
+  const decision = manuscript.reviews.find(r => r.isDecision)
+  const decisionField = decision ? decision.jsonData[fieldName] : null
+
+  if (decision && decisionField) {
+    return decisionField
+  }
+
+  if (manuscript.submission[fieldName]) {
+    return manuscript.submission[fieldName]
+  }
+
+  return null
+}
+
 /** Get DOI in form 10.12345/<suffix>
  * If the configured prefix includes 'https://doi.org/' and/or a trailing slash, these are dealt with gracefully. */
 const getDoi = suffix => {
@@ -153,6 +169,30 @@ const getIssueYear = manuscript => {
   return yearString
 }
 
+// input: a DOI in the form prefix/suffix
+// output: isDOIValid is true if DOI is not available, false otherwise
+const isDOIInUse = async checkDOI => {
+  try {
+    // Try to find object listed at DOI
+    await axios.get(`https://api.crossref.org/works/${checkDOI}/agency`)
+    // eslint-disable-next-line no-console
+    console.log(
+      `DOI '${checkDOI}' is already taken. Custom suffix is unavailable.`,
+    )
+    return { isDOIValid: true } // DOI is already in use
+  } catch (err) {
+    if (err.response.status === 404) {
+      // HTTP 404 "Not found" response. The DOI is not known by Crossref
+      // console.log(`DOI '${checkDOI}' is available.`)
+      return { isDOIValid: false }
+    }
+    // Unexpected HTTP response (5xx)
+    // Assume that the custom suffix is unavailable.
+
+    return { isDOIValid: true }
+  }
+}
+
 const emailRegex = /^[\p{L}\p{N}!/+\-_]+(\.[\p{L}\p{N}!/+\-_]+)*@[\p{L}\p{N}!/+\-_]+(\.[\p{L}_-]+)+$/u
 
 /** Send submission to register an article, with appropriate metadata */
@@ -174,7 +214,17 @@ const publishArticleToCrossref = async manuscript => {
   const issueYear = getIssueYear(manuscript)
   const publishDate = new Date()
   const journalDoi = getDoi(0)
-  const doi = getDoi(manuscript.id)
+
+  const doiSuffix =
+    getReviewOrSubmissionField(manuscript, 'doiSuffix') || manuscript.id
+
+  const doi = getDoi(doiSuffix)
+  const { isDOIValid } = await isDOIInUse(doi)
+
+  if (isDOIValid) {
+    throw Error('Custom DOI is not available.')
+  }
+
   const publishedLocation = `${config.crossref.publishedArticleLocationPrefix}${manuscript.shortId}`
   const batchId = uuid()
   const citations = getCitations(manuscript)
@@ -310,88 +360,123 @@ const publishReviewsToCrossref = async manuscript => {
 
   const jsonResult = await parser.parseStringPromise(template)
 
-  const xmls = notEmptyReviews
-    .map(reviewNumber => {
-      if (!manuscript.submission[`review${reviewNumber}date`]) {
-        return null
-      }
+  const doiSummarySuffix = manuscript.submission.summarycreator
+    ? getReviewOrSubmissionField(manuscript, 'summarysuffix') ||
+      `${manuscript.id}/`
+    : null
 
-      const [year, month, day] = parseDate(
-        manuscript.submission[`review${reviewNumber}date`],
-      )
+  // only validate if a summary exists, ie there is a summary author/creator
+  if (manuscript.submission.summarycreator) {
+    const { isDOIValid } = await isDOIInUse(getDoi(doiSummarySuffix))
 
-      const templateCopy = JSON.parse(JSON.stringify(jsonResult))
-      templateCopy.doi_batch.body[0].peer_review[0].review_date[0].day[0] = day
-      templateCopy.doi_batch.body[0].peer_review[0].review_date[0].month[0] = month
-      templateCopy.doi_batch.body[0].peer_review[0].review_date[0].year[0] = year
-      templateCopy.doi_batch.head[0].depositor[0].depositor_name[0] =
-        config.crossref.depositorName
-      templateCopy.doi_batch.head[0].depositor[0].email_address[0] =
-        config.crossref.depositorEmail
-      templateCopy.doi_batch.head[0].registrant[0] = config.crossref.registrant
-      templateCopy.doi_batch.head[0].timestamp[0] = +new Date()
-      templateCopy.doi_batch.head[0].doi_batch_id[0] = String(
-        +new Date(),
-      ).slice(0, 8)
+    if (isDOIValid) {
+      throw Error(`Summary suffix is not available: ${doiSummarySuffix}`)
+    }
+  }
 
-      if (manuscript.submission[`review${reviewNumber}creator`]) {
-        const surname = manuscript.submission[
-          `review${reviewNumber}creator`
-        ].split(' ')[1]
-
-        templateCopy.doi_batch.body[0].peer_review[0].contributors[0].person_name[0] = {
-          $: {
-            contributor_role: 'reviewer',
-            sequence: 'first',
-          },
-          given_name: [
-            manuscript.submission[`review${reviewNumber}creator`].split(' ')[0],
-          ],
-          surname: [surname || ''],
+  const xmls = (
+    await Promise.all(
+      notEmptyReviews.map(async reviewNumber => {
+        if (!manuscript.submission[`review${reviewNumber}date`]) {
+          return null
         }
-      }
 
-      templateCopy.doi_batch.body[0].peer_review[0] = {
-        ...templateCopy.doi_batch.body[0].peer_review[0],
-        $: {
-          type: 'referee-report',
-          stage: 'pre-publication',
-          'revision-round': '0',
-        },
-      }
+        const [year, month, day] = parseDate(
+          manuscript.submission[`review${reviewNumber}date`],
+        )
 
-      templateCopy.doi_batch.body[0].peer_review[0].titles[0].title[0] = `Review: ${manuscript.submission.description}`
-      templateCopy.doi_batch.body[0].peer_review[0].doi_data[0].doi[0] = getDoi(
-        `${manuscript.id}/${reviewNumber}`,
-      )
-      templateCopy.doi_batch.body[0].peer_review[0].doi_data[0].resource[0] = `${config['pubsweet-client'].baseUrl}/versions/${manuscript.id}/article-evaluation-result/${reviewNumber}`
-      templateCopy.doi_batch.body[0].peer_review[0].program[0].related_item[0] = {
-        // description: [`${manuscript.submission.description}`],
-        inter_work_relation: [
-          {
-            _: manuscript.submission.articleURL.split('.org/')[1],
+        const templateCopy = JSON.parse(JSON.stringify(jsonResult))
+        templateCopy.doi_batch.body[0].peer_review[0].review_date[0].day[0] = day
+        templateCopy.doi_batch.body[0].peer_review[0].review_date[0].month[0] = month
+        templateCopy.doi_batch.body[0].peer_review[0].review_date[0].year[0] = year
+        templateCopy.doi_batch.head[0].depositor[0].depositor_name[0] =
+          config.crossref.depositorName
+        templateCopy.doi_batch.head[0].depositor[0].email_address[0] =
+          config.crossref.depositorEmail
+        templateCopy.doi_batch.head[0].registrant[0] =
+          config.crossref.registrant
+        templateCopy.doi_batch.head[0].timestamp[0] = +new Date()
+        templateCopy.doi_batch.head[0].doi_batch_id[0] = String(
+          +new Date(),
+        ).slice(0, 8)
+
+        if (manuscript.submission[`review${reviewNumber}creator`]) {
+          const surname = manuscript.submission[
+            `review${reviewNumber}creator`
+          ].split(' ')[1]
+
+          templateCopy.doi_batch.body[0].peer_review[0].contributors[0].person_name[0] = {
             $: {
-              'relationship-type': 'isReviewOf',
-              'identifier-type': 'doi',
+              contributor_role: 'reviewer',
+              sequence: 'first',
             },
-          },
-        ],
-      }
+            given_name: [
+              manuscript.submission[`review${reviewNumber}creator`].split(
+                ' ',
+              )[0],
+            ],
+            surname: [surname || ''],
+          }
+        }
 
-      templateCopy.doi_batch.body[0].peer_review[0].program[0].related_item[1] = {
-        inter_work_relation: [
-          {
-            _: getDoi(`${manuscript.id}/`),
-            $: {
-              'relationship-type': 'isSupplementTo',
-              'identifier-type': 'doi',
-            },
+        templateCopy.doi_batch.body[0].peer_review[0] = {
+          ...templateCopy.doi_batch.body[0].peer_review[0],
+          $: {
+            type: 'referee-report',
+            stage: 'pre-publication',
+            'revision-round': '0',
           },
-        ],
-      }
-      return { reviewNumber, xml: builder.buildObject(templateCopy) }
-    })
-    .filter(Boolean)
+        }
+
+        templateCopy.doi_batch.body[0].peer_review[0].titles[0].title[0] = `Review: ${manuscript.submission.description}`
+
+        const doiSuffix =
+          getReviewOrSubmissionField(
+            manuscript,
+            `review${reviewNumber}suffix`,
+          ) || `${manuscript.id}/${reviewNumber}`
+
+        // revalidate review DOI
+        const { isDOIValid } = await isDOIInUse(getDoi(doiSuffix))
+
+        if (isDOIValid) {
+          throw Error(`Review suffix is not available: ${doiSuffix}`)
+        }
+
+        templateCopy.doi_batch.body[0].peer_review[0].doi_data[0].doi[0] = getDoi(
+          doiSuffix,
+        )
+        templateCopy.doi_batch.body[0].peer_review[0].doi_data[0].resource[0] = `${config['pubsweet-client'].baseUrl}/versions/${manuscript.id}/article-evaluation-result/${reviewNumber}`
+        templateCopy.doi_batch.body[0].peer_review[0].program[0].related_item[0] = {
+          inter_work_relation: [
+            {
+              _: manuscript.submission.articleURL.split('.org/')[1],
+              $: {
+                'relationship-type': 'isReviewOf',
+                'identifier-type': 'doi',
+              },
+            },
+          ],
+        }
+
+        if (doiSummarySuffix) {
+          templateCopy.doi_batch.body[0].peer_review[0].program[0].related_item[1] = {
+            inter_work_relation: [
+              {
+                _: getDoi(doiSummarySuffix),
+                $: {
+                  'relationship-type': 'isSupplementTo',
+                  'identifier-type': 'doi',
+                },
+              },
+            ],
+          }
+        }
+
+        return { reviewNumber, xml: builder.buildObject(templateCopy) }
+      }),
+    )
+  ).filter(Boolean)
 
   if (manuscript.submission.summary && manuscript.submission.summarydate) {
     const templateCopy = JSON.parse(JSON.stringify(jsonResult))
@@ -433,12 +518,11 @@ const publishReviewsToCrossref = async manuscript => {
     templateCopy.doi_batch.body[0].peer_review[0].titles[0].title[0] = `Summary of: ${manuscript.submission.description}`
 
     templateCopy.doi_batch.body[0].peer_review[0].doi_data[0].doi[0] = getDoi(
-      `${manuscript.id}/`,
+      doiSummarySuffix,
     )
 
     templateCopy.doi_batch.body[0].peer_review[0].doi_data[0].resource[0] = `${config['pubsweet-client'].baseUrl}/versions/${manuscript.id}/article-evaluation-summary`
     templateCopy.doi_batch.body[0].peer_review[0].program[0].related_item[0] = {
-      // description: [`${manuscript.submission.description}`],
       inter_work_relation: [
         {
           _: manuscript.submission.articleURL.split('.org/')[1],
@@ -488,4 +572,9 @@ const publishReviewsToCrossref = async manuscript => {
   })
 }
 
-module.exports = publishToCrossref
+module.exports = {
+  publishToCrossref,
+  getReviewOrSubmissionField,
+  getDoi,
+  isDOIInUse,
+}

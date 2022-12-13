@@ -22,6 +22,7 @@ minio\data\*
 db-data\*
 db-data/*
 /.idea
+.vscode
 
 cypress/videos
 cypress/screenshots
