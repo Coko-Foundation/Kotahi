@@ -432,7 +432,6 @@ const permissions = {
     userHasTaskAlerts: isAuthenticated,
     users: or(userIsEditor, userIsAdmin),
     validateDOI: isAuthenticated,
-    taskEmailNotifications: isAuthenticated,
   },
   Mutation: {
     addEmailToBlacklist: allow, // TODO scrap this mutation and trigger its action inside updateInvitationResponse
@@ -501,7 +500,6 @@ const permissions = {
     upload: isAuthenticated,
     uploadFile: isAuthenticated,
     uploadFiles: isAuthenticated,
-    createTaskEmailNotification: isAuthenticated,
   },
   Subscription: {
     fileUpdated: isAuthenticated,
