@@ -99,6 +99,7 @@ const resolvers = {
         .where({ manuscriptId })
         .orderBy('sequenceIndex')
         .withGraphJoined('assignee')
+        .withGraphJoined('emailNotifications')
     },
     userHasTaskAlerts: async (_, __, ctx) => {
       return (
@@ -136,6 +137,7 @@ const typeDefs = `
     reminderPeriodDays: Int
     sequenceIndex: Int!
     status: String!
+    emailNotifications: [TaskEmailNotification]
   }
 
   type TaskAlert {
