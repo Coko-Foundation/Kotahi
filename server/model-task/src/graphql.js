@@ -79,13 +79,19 @@ const resolvers = {
     removeTaskAlertsForCurrentUser: async (_, __, ctx) =>
       TaskAlert.query().delete().where({ userId: ctx.user }),
 
-    createTaskEmailNotification: async (_, { taskEmailNotification }) => {
-      return await TaskEmailNotification.query()
+    createTaskEmailNotification: async (_, { taskEmailNotification }) => (
+      TaskEmailNotification.query()
         .insert(taskEmailNotification)
         .onConflict('id')
         .merge()
         .returning('*')
-    }
+    ),
+    updateTaskEmailNotification: async (_, { id, taskEmailNotification }) => (
+      TaskEmailNotification.query()
+        .update(taskEmailNotification)
+        .where({ id })
+    ),
+    deleteTaskEmailNotification: async (_, { id }) => TaskEmailNotification.query().delete().where({ id }),
   },
   Query: {
     tasks: async (_, { manuscriptId }) => {
@@ -100,9 +106,8 @@ const resolvers = {
         0
       )
     },
-    taskEmailNotifications: async () => {
-      return await TaskEmailNotification.query()
-    }
+    taskEmailNotifications: () => TaskEmailNotification.query(),
+    taskEmailNotification: (_, { id }) => TaskEmailNotification.query().where({ id }),
   },
 }
 
@@ -142,10 +147,20 @@ const typeDefs = `
     tasks(manuscriptId: ID): [Task!]!
     userHasTaskAlerts: Boolean!
     taskEmailNotifications: [TaskEmailNotification]!
+    taskEmailNotification(id: ID!): TaskEmailNotification!
   }
 
   input TaskEmailNotificationCreateInput {
     taskId: ID!
+    recipientUserId: ID
+    isRecipientAssignee: Boolean
+    recipientRole: String
+    notificationElapsedDays: Int
+    emailTemplateKey: String
+  }
+
+  input TaskEmailNotificationUpdateInput {
+    taskId: ID
     recipientUserId: ID
     isRecipientAssignee: Boolean
     recipientRole: String
@@ -171,6 +186,8 @@ const typeDefs = `
     createNewTaskAlerts: Boolean
     removeTaskAlertsForCurrentUser: Boolean
     createTaskEmailNotification(taskEmailNotification: TaskEmailNotificationCreateInput!): TaskEmailNotification!
+    updateTaskEmailNotification(taskEmailNotification: TaskEmailNotificationUpdateInput!): TaskEmailNotification!
+    deleteTaskEmailNotification(id: ID!): Boolean!
   }
 `
 
