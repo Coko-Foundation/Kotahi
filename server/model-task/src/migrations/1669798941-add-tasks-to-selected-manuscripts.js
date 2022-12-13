@@ -23,11 +23,12 @@ exports.up = async knex => {
     `Found ${selectedManuscriptsWithoutTasks.length} such manuscripts...`,
   )
 
-  await Promise.all(
-    selectedManuscriptsWithoutTasks.map(async m =>
-      populateTemplatedTasksForManuscript(m.id),
-    ),
-  )
+  for (let i = 0; i < selectedManuscriptsWithoutTasks.length; i += 1) {
+    const m = selectedManuscriptsWithoutTasks[i]
+    // Do this in loop rather than Promise.all to avoid exhausting available connections
+    // eslint-disable-next-line no-await-in-loop
+    await populateTemplatedTasksForManuscript(m.id)
+  }
 
   logger.info(
     `Populated tasks for ${selectedManuscriptsWithoutTasks.length} manuscripts.`,

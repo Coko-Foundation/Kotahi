@@ -23,15 +23,15 @@ const resolvers = {
         .filter(record => !distinctTasks.some(t => t.id === record.id))
         .map(record => record.id)
 
-      return Task.transaction(async () => {
-        await Task.query().delete().whereIn('id', idsToDelete)
+      return Task.transaction(async trx => {
+        await Task.query(trx).delete().whereIn('id', idsToDelete)
 
         const promises = []
 
         for (let i = 0; i < distinctTasks.length; i += 1) {
           const task = { ...distinctTasks[i], manuscriptId, sequenceIndex: i }
           promises.push(
-            Task.query()
+            Task.query(trx)
               .insert(task)
               .onConflict('id')
               .merge()
