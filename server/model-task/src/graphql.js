@@ -71,14 +71,31 @@ const resolvers = {
         .onConflict('id')
         .merge()
 
-      task.emailNotifications = task.emailNotifications || []
-      task.emailNotifications.forEach(async taskEmailNotification => {
+      const taskEmailNotifications = task.emailNotifications || []
+
+      // find existing task email notifications for the task
+      const existingTaskEmailNotifications = await TaskEmailNotification.query().where({ taskId: task.id })
+      const existingTaskEmailNotificationsIds = existingTaskEmailNotifications.map(el => el.id)
+
+      // filter task email notifications from request payload that have an id present
+      const requestTaskEmailNotificationIds = taskEmailNotifications.filter(el => el.id).map(el => el.id)
+
+      // find which ids are missing the request payload but present in the existing task email notifications ids
+      // since these ids are not present in request payload, these task email notifications must be deleted
+      const deleteTaskEmailNotificationsIds = existingTaskEmailNotificationsIds.filter(el => !requestTaskEmailNotificationIds.includes(el))
+      await TaskEmailNotification.query()
+        .whereIn('id', deleteTaskEmailNotificationsIds)
+        .delete()
+
+      taskEmailNotifications.forEach(async taskEmailNotification => {
         taskEmailNotification.taskId = taskEmailNotification.taskId || task.id;
         await TaskEmailNotification.query()
           .insert(taskEmailNotification)
           .onConflict('id')
           .merge()
       })
+
+      await new Promise(r => setTimeout(r, 1000))
 
       return Task.query()
         .findById(task.id)
