@@ -121,14 +121,12 @@ const Publish = ({
             </Trans>
           )}
 
-          {!manuscript.published &&
-            notAccepted &&
-            areVerdictOptionsComplete && (
-              <div>
-                <p>{t('decisionPage.decisionTab.publishOnlyAccepted')}</p>
-                {doiMessage}
-              </div>
-            )}
+          {!manuscript.published && notAccepted && areVerdictOptionsComplete && (
+            <div>
+              <p>{t('decisionPage.decisionTab.publishOnlyAccepted')}</p>
+              {doiMessage}
+            </div>
+          )}
           {!manuscript.published &&
             !(notAccepted && areVerdictOptionsComplete) && (
               <div>

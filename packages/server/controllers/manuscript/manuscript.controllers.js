@@ -430,7 +430,10 @@ const doisToRegister = async id => {
 
   const activeConfig = await Config.getCached(manuscript.groupId)
 
-  if (!activeConfig.formData.publishing.crossref.login) {
+  if (
+    !activeConfig.formData.publishing.crossref.login ||
+    !activeConfig.formData.publishing.crossref.doiPrefix
+  ) {
     return null
   }
 
