@@ -87,6 +87,7 @@ const resolvers = {
         .whereIn('id', deleteTaskEmailNotificationsIds)
         .delete()
 
+      // upsert all task email notifications sent in the request payload
       taskEmailNotifications.forEach(async taskEmailNotification => {
         taskEmailNotification.taskId = taskEmailNotification.taskId || task.id;
         await TaskEmailNotification.query()
