@@ -44,7 +44,7 @@ const resolvers = {
           (a, b) => a.sequenceIndex - b.sequenceIndex,
         )
 
-        await Promise.all(result.map(task => updateAlertsForTask(task)))
+        await Promise.all(result.map(task => updateAlertsForTask(task, trx)))
         return result
       })
     },
