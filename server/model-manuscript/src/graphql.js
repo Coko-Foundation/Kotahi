@@ -1380,7 +1380,7 @@ const resolvers = {
       }))
     },
     async doisToRegister(_, { id }, ctx) {
-      if (!config.crossref.login) {
+      if (!config.crossref.login || !config.crossref.doiPrefix) {
         return null
       }
 
@@ -1448,7 +1448,19 @@ const resolvers = {
     // To be called in submit manuscript as
     // first validation step for custom suffix
     async validateSuffix(_, { suffix }, ctx) {
-      const doi = getDoi(suffix)
+      let doi
+
+      try {
+        doi = getDoi(suffix)
+      } catch {
+        // Counterintuitive: if no DOI prefix is configured then
+        // there is never a collision with a pre-existing suffix.
+        // We don't expect suffix validation to be used without a
+        // DOI prefix configured, but if it is then all suffixes
+        // should always be valid. Invalid means there's a collision.
+        return { isDOIValid: true }
+      }
+
       const { isDOIValid } = await isDOIInUse(doi)
       return { isDOIValid: !isDOIValid }
     },

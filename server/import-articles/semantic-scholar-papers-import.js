@@ -40,7 +40,7 @@ const getData = async ctx => {
   const manuscripts = await models.Manuscript.query().orderBy('created', 'desc')
 
   const selectedManuscripts = manuscripts.filter(
-    manuscript => manuscript.submission.labels,
+    manuscript => manuscript.submission.labels && manuscript.submission.doi,
   )
 
   const latestLimitedSelectedManuscripts = selectedManuscripts.slice(0, 100)
