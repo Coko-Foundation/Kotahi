@@ -66,12 +66,24 @@ const resolvers = {
 
       await updateAlertsForTask(taskRecord)
 
-      return Task.query()
+      await Task.query()
         .insert(taskRecord)
         .onConflict('id')
         .merge()
-        .returning('*')
+
+      task.emailNotifications = task.emailNotifications || []
+      task.emailNotifications.forEach(async taskEmailNotification => {
+        taskEmailNotification.taskId = taskEmailNotification.taskId || task.id;
+        await TaskEmailNotification.query()
+          .insert(taskEmailNotification)
+          .onConflict('id')
+          .merge()
+      })
+
+      return Task.query()
+        .findById(task.id)
         .withGraphFetched('assignee')
+        .withGraphFetched('emailNotifications')
     },
 
     createNewTaskAlerts: async () => createNewTaskAlerts(), // For testing purposes. Normally initiated by a scheduler on the server.
@@ -84,8 +96,8 @@ const resolvers = {
       return Task.query()
         .where({ manuscriptId })
         .orderBy('sequenceIndex')
-        .withGraphJoined('assignee')
-        .withGraphJoined('emailNotifications')
+        .withGraphFetched('assignee')
+        .withGraphFetched('emailNotifications')
     },
     userHasTaskAlerts: async (_, __, ctx) => {
       return (
@@ -106,6 +118,7 @@ const typeDefs = `
     dueDate: DateTime
     reminderPeriodDays: Int
     status: String!
+    emailNotifications: [TaskEmailNotificationInput]
   }
 
   type Task {
@@ -134,16 +147,8 @@ const typeDefs = `
     userHasTaskAlerts: Boolean!
   }
 
-  input TaskEmailNotificationCreateInput {
-    taskId: ID!
-    recipientUserId: ID
-    isRecipientAssignee: Boolean
-    recipientRole: String
-    notificationElapsedDays: Int
-    emailTemplateKey: String
-  }
-
-  input TaskEmailNotificationUpdateInput {
+  input TaskEmailNotificationInput {
+    id: ID
     taskId: ID
     recipientUserId: ID
     isRecipientAssignee: Boolean
