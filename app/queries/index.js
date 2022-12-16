@@ -360,6 +360,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
             minSize
           }
           doiValidation
+          doiUniqueSuffixValidation
           options {
             id
             label

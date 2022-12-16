@@ -13,7 +13,7 @@ import {
 } from '../../../component-review/src/components/queries'
 import { validateManuscriptSubmission } from '../../../../shared/manuscriptUtils'
 import CommsErrorBanner from '../../../shared/CommsErrorBanner'
-import { validateDoi } from '../../../../shared/commsUtils'
+import { validateDoi, validateSuffix } from '../../../../shared/commsUtils'
 import {
   UPDATE_PENDING_COMMENT,
   COMPLETE_COMMENTS,
@@ -172,6 +172,7 @@ const SubmitPage = ({ match, history }) => {
       },
       submissionForm,
       validateDoi(client),
+      validateSuffix(client),
     )
 
     if (fieldErrors.filter(Boolean).length !== 0) {
@@ -247,6 +248,7 @@ const SubmitPage = ({ match, history }) => {
       threadedDiscussionProps={threadedDiscussionProps}
       updateManuscript={updateManuscript}
       validateDoi={validateDoi(client)}
+      validateSuffix={validateSuffix(client)}
       versions={versions}
     />
   )

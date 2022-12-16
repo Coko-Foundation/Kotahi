@@ -9,6 +9,7 @@ export const validateManuscriptSubmission = async (
   submission,
   submissionForm,
   validateDoi,
+  validateSuffix,
 ) => {
   const fieldDefinitions = submissionForm?.children ?? []
 
@@ -19,8 +20,10 @@ export const validateManuscriptSubmission = async (
         element.validate,
         element.validateValue,
         element.name,
-        JSON.parse(element.doiValidation ? element.doiValidation : false),
+        JSON.parse(element.doiValidation || false),
+        JSON.parse(element.doiUniqueSuffixValidation || false),
         validateDoi,
+        validateSuffix,
         element.component,
       )
 

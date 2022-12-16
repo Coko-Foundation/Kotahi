@@ -203,6 +203,25 @@ const publishingTagField = {
   },
 }
 
+const doiUniqueSuffixValidationField = {
+  component: 'RadioBox',
+  props: {
+    inline: true,
+    options: [
+      {
+        value: 'true',
+        label: 'Yes',
+      },
+      {
+        value: 'false',
+        label: 'No',
+      },
+    ],
+    label: 'Validate as a DOI suffix and ensure it is unique?',
+  },
+  defaultValue: 'false',
+}
+
 const submissionElements = {
   ManuscriptFile: {
     id: textfield,
@@ -340,6 +359,7 @@ const submissionElements = {
       },
       defaultValue: 'false',
     },
+    doiUniqueSuffixValidation: doiUniqueSuffixValidationField,
     hideFromReviewers: hideFromReviewersField,
     hideFromAuthors: hideFromAuthorsField,
     permitPublishing: permitPublishingField,
@@ -521,6 +541,7 @@ const elements = {
       },
       defaultValue: 'false',
     },
+    doiUniqueSuffixValidation: doiUniqueSuffixValidationField,
     hideFromAuthors: hideFromAuthorsField,
     permitPublishing: permitPublishingField,
     publishingTag: publishingTagField,

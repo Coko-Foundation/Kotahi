@@ -21,7 +21,7 @@ const populateTemplatedTasksForManuscript = async manuscriptId => {
     .tz(config.manuscripts.teamTimezone || 'Etc/UTC')
     .endOf('day')
 
-  return Task.transaction(async () => {
+  return Task.transaction(async trx => {
     const promises = []
 
     for (let i = 0; i < newTasks.length; i += 1) {
@@ -36,7 +36,7 @@ const populateTemplatedTasksForManuscript = async manuscriptId => {
 
       delete task.id // So a new id will be assigned
       promises.push(
-        Task.query().insertAndFetch(task).withGraphFetched('assignee'),
+        Task.query(trx).insertAndFetch(task).withGraphFetched('assignee'),
       )
     }
 
@@ -85,7 +85,7 @@ const updateAlertsUponTeamUpdate = async (
 
 /** Call this if a task is modified, to regenerate alerts where needed,
  * or remove existing alerts that have become redundant. */
-const updateAlertsForTask = async task => {
+const updateAlertsForTask = async (task, trx) => {
   if (!task.manuscriptId) return
   const isActive = await manuscriptIsActive(task.manuscriptId)
 
@@ -99,12 +99,12 @@ const updateAlertsForTask = async task => {
   if (needsAlert) {
     const editorIds = await getEditorIdsForManuscript(task.manuscriptId)
 
-    await TaskAlert.query()
+    await TaskAlert.query(trx)
       .insert(editorIds.map(userId => ({ taskId: task.id, userId })))
       .onConflict(['taskId', 'userId'])
       .ignore()
   } else {
-    await TaskAlert.query().delete().where({ taskId: task.id })
+    await TaskAlert.query(trx).delete().where({ taskId: task.id })
   }
 }
 
