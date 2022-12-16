@@ -1,11 +1,7 @@
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
 
-const {
-  populateTemplatedTasksForManuscript,
-  createNewTaskAlerts,
-  updateAlertsForTask,
-} = require('./taskCommsUtils')
+const { createNewTaskAlerts, updateAlertsForTask } = require('./taskCommsUtils')
 
 const resolvers = {
   Mutation: {
@@ -27,15 +23,15 @@ const resolvers = {
         .filter(record => !distinctTasks.some(t => t.id === record.id))
         .map(record => record.id)
 
-      return Task.transaction(async () => {
-        await Task.query().delete().whereIn('id', idsToDelete)
+      return Task.transaction(async trx => {
+        await Task.query(trx).delete().whereIn('id', idsToDelete)
 
         const promises = []
 
         for (let i = 0; i < distinctTasks.length; i += 1) {
           const task = { ...distinctTasks[i], manuscriptId, sequenceIndex: i }
           promises.push(
-            Task.query()
+            Task.query(trx)
               .insert(task)
               .onConflict('id')
               .merge()
@@ -48,7 +44,7 @@ const resolvers = {
           (a, b) => a.sequenceIndex - b.sequenceIndex,
         )
 
-        await Promise.all(result.map(task => updateAlertsForTask(task)))
+        await Promise.all(result.map(task => updateAlertsForTask(task, trx)))
         return result
       })
     },
@@ -73,8 +69,6 @@ const resolvers = {
         .returning('*')
         .withGraphFetched('assignee')
     },
-    populateTasksForManuscript: async (_, { manuscriptId }) =>
-      populateTemplatedTasksForManuscript(manuscriptId),
 
     createNewTaskAlerts: async () => createNewTaskAlerts(), // For testing purposes. Normally initiated by a scheduler on the server.
 
@@ -120,6 +114,7 @@ const typeDefs = `
     defaultDurationDays: Int
     dueDate: DateTime
     reminderPeriodDays: Int
+    sequenceIndex: Int!
     status: String!
   }
 
@@ -136,7 +131,6 @@ const typeDefs = `
   extend type Mutation {
     updateTasks(manuscriptId: ID, tasks: [TaskInput!]!): [Task!]!
     updateTask(task: TaskInput!): Task!
-    populateTasksForManuscript(manuscriptId: ID!): [Task!]!
     createNewTaskAlerts: Boolean
     removeTaskAlertsForCurrentUser: Boolean
   }

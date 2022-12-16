@@ -101,6 +101,10 @@ const FieldHead = styled.div`
   align-items: baseline;
   display: flex;
   width: auto;
+  & > label {
+    /* this is to make "publish" on decision page go flush right */
+    margin-left: auto;
+  }
 `
 
 const filterFileManuscript = files =>
@@ -188,6 +192,7 @@ const FormTemplate = ({
   urlFrag,
   displayShortIdAsIdentifier,
   validateDoi,
+  validateSuffix,
   createFile,
   deleteFile,
   isSubmission,
@@ -456,9 +461,19 @@ const FormTemplate = ({
                           values={values}
                         />
                       )}
-                      {!['SupplementaryFiles', 'VisualAbstract'].includes(
-                        element.component,
-                      ) && (
+                      {element.component === 'ManuscriptFile' &&
+                      submittedManuscriptFile ? (
+                        <Attachment
+                          file={submittedManuscriptFile}
+                          key={submittedManuscriptFile.storedObjects[0].url}
+                          uploaded
+                        />
+                      ) : null}
+                      {![
+                        'SupplementaryFiles',
+                        'VisualAbstract',
+                        'ManuscriptFile',
+                      ].includes(element.component) && (
                         <ValidatedFieldFormik
                           {...rejectProps(element, [
                             'component',
@@ -500,12 +515,12 @@ const FormTemplate = ({
                             element.validate,
                             element.validateValue,
                             element.name,
+                            JSON.parse(element.doiValidation || false),
                             JSON.parse(
-                              element.doiValidation
-                                ? element.doiValidation
-                                : false,
+                              element.doiUniqueSuffixValidation || false,
                             ),
                             validateDoi,
+                            validateSuffix,
                             element.component,
                             threadedDiscussionProps,
                           )}
@@ -522,17 +537,6 @@ const FormTemplate = ({
                     </Section>
                   )
                 })}
-
-              {submittedManuscriptFile ? (
-                <Section id="files.manuscript">
-                  <Legend space>Submitted Manuscript</Legend>
-                  <Attachment
-                    file={submittedManuscriptFile}
-                    key={submittedManuscriptFile.storedObjects[0].url}
-                    uploaded
-                  />
-                </Section>
-              ) : null}
 
               {showSubmitButton
                 ? submitButton(submissionButtonText, showPopup)

@@ -79,6 +79,11 @@ const cleanCitation = (html, id) => {
         ).text()}</person-group>`,
       )
     }
+
+    if (el.attribs.class && el.attribs.class.indexOf('citation-label') > -1) {
+      // we have already dealt with this, so delete it in the interior
+      $(el).replaceWith(``)
+    }
   })
   $('a').each((index, el) => {
     // console.log('cleanCitation a: ', index, el.attribs.class, $(el).text())
@@ -93,7 +98,7 @@ const cleanCitation = (html, id) => {
       // every other a becomes a standard ext-link – maybe this will need to be changed later?
       // console.log('url: ', url)
       $(el).replaceWith(
-        `<ext-link ext-link-type="uri" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href=${url}>${url}</ext-link>`,
+        `<ext-link ext-link-type="uri" xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="${url}">${url}</ext-link>`,
       )
     }
 

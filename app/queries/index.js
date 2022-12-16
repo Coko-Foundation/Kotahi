@@ -360,6 +360,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
             minSize
           }
           doiValidation
+          doiUniqueSuffixValidation
           options {
             id
             label
@@ -405,6 +406,7 @@ assignee {
 defaultDurationDays
 dueDate
 reminderPeriodDays
+sequenceIndex
 status
 `
 
@@ -419,14 +421,6 @@ export const UPDATE_TASKS = gql`
 export const UPDATE_TASK = gql`
   mutation($task: TaskInput!) {
     updateTask(task: $task) {
-      ${taskFields}
-    }
-  }
-`
-
-export const POPULATE_TASKS = gql`
-  mutation($manuscriptId: ID!) {
-    populateTasksForManuscript(manuscriptId: $manuscriptId) {
       ${taskFields}
     }
   }

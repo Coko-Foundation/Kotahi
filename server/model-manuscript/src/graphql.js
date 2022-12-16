@@ -19,7 +19,15 @@ const TeamMember = require('../../model-team/src/team_member')
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
 const Message = require('../../model-message/src/message')
-const publishToCrossref = require('../../publishing/crossref')
+
+const {
+  publishToCrossref,
+  getReviewOrSubmissionField,
+  getDoi,
+  isDOIInUse,
+} = require('../../publishing/crossref')
+
+const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
 
 const {
   fixMissingValuesInFiles,
@@ -74,7 +82,6 @@ const repackageForGraphql = async ms => {
       ...review,
       jsonData: JSON.stringify(review.jsonData),
     }))
-
   return result
 }
 
@@ -291,7 +298,13 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
   const ms = await models.Manuscript.query()
     .findById(id)
-    .withGraphFetched('[reviews.user, files]')
+    .withGraphFetched('[reviews.user, files, tasks]')
+
+  // If this manuscript is getting its label set for the first time,
+  // we will populate its task list from the template tasks
+  const isSettingFirstLabels = ['colab'].includes(process.env.INSTANCE_NAME)
+    ? !ms.submission.labels && !!msDelta.submission.labels
+    : false
 
   const updatedMs = deepMergeObjectsReplacingArrays(ms, msDelta)
 
@@ -307,6 +320,9 @@ const commonUpdateManuscript = async (id, input, ctx) => {
   if (['ncrc', 'colab'].includes(process.env.INSTANCE_NAME)) {
     updatedMs.submission.editDate = new Date().toISOString().split('T')[0]
   }
+
+  if (isSettingFirstLabels && !updatedMs.tasks.length)
+    updatedMs.tasks = await populateTemplatedTasksForManuscript(id)
 
   await uploadAndConvertBase64ImagesInManuscript(updatedMs)
   return updateAndRepackageForGraphql(updatedMs)
@@ -949,7 +965,6 @@ const resolvers = {
 
       if (config.crossref.login) {
         const stepLabel = 'Crossref'
-
         let succeeded = false
         let errorMessage
 
@@ -1129,6 +1144,7 @@ const resolvers = {
         .join('teams', 'manuscripts.id', '=', 'teams.object_id')
         .join('team_members', 'teams.id', '=', 'team_members.team_id')
         .where('team_members.user_id', ctx.user)
+        .where('is_hidden', false)
 
       // Get those top-level manuscripts with all versions, all with teams and members
       const manuscripts = await models.Manuscript.query()
@@ -1144,9 +1160,10 @@ const resolvers = {
       const filteredManuscripts = []
 
       manuscripts.forEach(m => {
+        // picking the first version if present, as the list is sorted by created desc
         const latestVersion =
           m.manuscriptVersions && m.manuscriptVersions.length > 0
-            ? m.manuscriptVersions[m.manuscriptVersions.length - 1]
+            ? m.manuscriptVersions[0]
             : m
 
         if (
@@ -1362,27 +1379,78 @@ const resolvers = {
           m.submission.uri,
       }))
     },
+    async doisToRegister(_, { id }, ctx) {
+      if (!config.crossref.login) {
+        return null
+      }
+
+      const manuscript = await models.Manuscript.query()
+        .findById(id)
+        .withGraphFetched('reviews')
+
+      const DOIs = []
+
+      if (config.crossref.publicationType === 'article') {
+        const manuscriptDOI = getDoi(
+          getReviewOrSubmissionField(manuscript, 'doiSuffix') || manuscript.id,
+        )
+
+        if (manuscriptDOI) {
+          DOIs.push(manuscriptDOI)
+        }
+      } else {
+        const notEmptyReviews = Object.entries(manuscript.submission)
+          .filter(
+            ([key, value]) =>
+              key.length === 7 &&
+              key.includes('review') &&
+              !checkIsAbstractValueEmpty(value),
+          )
+          .map(([key]) => key.replace('review', ''))
+
+        DOIs.push(
+          ...notEmptyReviews.map(reviewNumber =>
+            getDoi(
+              getReviewOrSubmissionField(
+                manuscript,
+                `review${reviewNumber}suffix`,
+              ) || `${manuscript.id}/${reviewNumber}`,
+            ),
+          ),
+        )
+
+        if (
+          Object.entries(manuscript.submission).some(
+            ([key, value]) =>
+              key === 'summary' && !checkIsAbstractValueEmpty(value),
+          )
+        ) {
+          const summaryDOI = getDoi(
+            getReviewOrSubmissionField(manuscript, 'summarysuffix') ||
+              `${manuscript.id}/`,
+          )
+
+          if (summaryDOI) {
+            DOIs.push(summaryDOI)
+          }
+        }
+      }
+
+      return DOIs
+    },
 
     async validateDOI(_, { articleURL }, ctx) {
       const DOI = encodeURI(articleURL.split('.org/')[1])
+      const { isDOIValid } = await isDOIInUse(DOI)
+      return { isDOIValid }
+    },
 
-      try {
-        await axios.get(`https://api.crossref.org/works/${DOI}/agency`)
-        return { isDOIValid: true }
-      } catch (err) {
-        if (err.response.status === 404) {
-          // HTTP 404 "Not found" response. The DOI is not known by Crossref
-          // eslint-disable-next-line no-console
-          console.log(`DOI '${DOI}' not found on Crossref.`)
-          return { isDOIValid: false }
-        }
-
-        console.warn(err)
-        // This is an unexpected HTTP response, possibly a 504 gateway timeout or other 5xx.
-        // Crossref API is probably unavailable or failing for some reason,
-        // and we should assume in its absence that the DOI is correct.
-        return { isDOIValid: true }
-      }
+    // To be called in submit manuscript as
+    // first validation step for custom suffix
+    async validateSuffix(_, { suffix }, ctx) {
+      const doi = getDoi(suffix)
+      const { isDOIValid } = await isDOIInUse(doi)
+      return { isDOIValid: !isDOIValid }
     },
   },
   // We want submission info to come out as a stringified JSON, so that we don't have to
@@ -1399,6 +1467,7 @@ const typeDefs = `
     paginatedManuscripts(offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int): PaginatedManuscripts
     publishedManuscripts(sort:String, offset: Int, limit: Int): PaginatedManuscripts
     validateDOI(articleURL: String): validateDOIResponse
+    validateSuffix(suffix: String): validateDOIResponse
     manuscriptsUserHasCurrentRoleIn: [Manuscript]
 
     """ Get published manuscripts with irrelevant fields stripped out. Optionally, you can specify a startDate and/or limit. """
@@ -1406,6 +1475,7 @@ const typeDefs = `
     """ Get a published manuscript by ID, or null if this manuscript is not published or not found """
     publishedManuscript(id: ID!): PublishedManuscript
     unreviewedPreprints(token: String!): [Preprint]
+    doisToRegister(id: ID!): [String]
   }
 
   input ManuscriptsFilter {

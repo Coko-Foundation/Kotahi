@@ -92,6 +92,7 @@ const manuscriptFields = `
     defaultDurationDays
     dueDate
     reminderPeriodDays
+    sequenceIndex
     status
   }
 `
@@ -111,6 +112,7 @@ const formFields = `
       name
       description
       doiValidation
+      doiUniqueSuffixValidation
       placeholder
       permitPublishing
       parse
@@ -210,6 +212,8 @@ export const query = gql`
         id
       }
     }
+
+    doisToRegister(id: $id)
   }
 `
 
