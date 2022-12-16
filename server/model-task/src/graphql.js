@@ -88,15 +88,13 @@ const resolvers = {
         .delete()
 
       // upsert all task email notifications sent in the request payload
-      taskEmailNotifications.forEach(async taskEmailNotification => {
+      for (const taskEmailNotification of taskEmailNotifications) {
         taskEmailNotification.taskId = taskEmailNotification.taskId || task.id;
         await TaskEmailNotification.query()
           .insert(taskEmailNotification)
           .onConflict('id')
           .merge()
-      })
-
-      await new Promise(r => setTimeout(r, 1000))
+      }
 
       return Task.query()
         .findById(task.id)
