@@ -1,7 +1,11 @@
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
+const TaskEmailNotification = require('./taskEmailNotification')
 
-const { createNewTaskAlerts, updateAlertsForTask } = require('./taskCommsUtils')
+const {
+  createNewTaskAlerts,
+  updateAlertsForTask,
+} = require('./taskCommsUtils')
 
 const resolvers = {
   Mutation: {
@@ -62,12 +66,40 @@ const resolvers = {
 
       await updateAlertsForTask(taskRecord)
 
-      return Task.query()
+      await Task.query()
         .insert(taskRecord)
         .onConflict('id')
         .merge()
-        .returning('*')
+
+      const taskEmailNotifications = task.emailNotifications || []
+
+      // find existing task email notifications for the task
+      const existingTaskEmailNotifications = await TaskEmailNotification.query().where({ taskId: task.id })
+      const existingTaskEmailNotificationsIds = existingTaskEmailNotifications.map(el => el.id)
+
+      // filter task email notifications from request payload that have an id present
+      const requestTaskEmailNotificationIds = taskEmailNotifications.filter(el => el.id).map(el => el.id)
+
+      // find which ids are missing the request payload but present in the existing task email notifications ids
+      // since these ids are not present in request payload, these task email notifications must be deleted
+      const deleteTaskEmailNotificationsIds = existingTaskEmailNotificationsIds.filter(el => !requestTaskEmailNotificationIds.includes(el))
+      await TaskEmailNotification.query()
+        .whereIn('id', deleteTaskEmailNotificationsIds)
+        .delete()
+
+      // upsert all task email notifications sent in the request payload
+      for (const taskEmailNotification of taskEmailNotifications) {
+        taskEmailNotification.taskId = taskEmailNotification.taskId || task.id;
+        await TaskEmailNotification.query()
+          .insert(taskEmailNotification)
+          .onConflict('id')
+          .merge()
+      }
+
+      return Task.query()
+        .findById(task.id)
         .withGraphFetched('assignee')
+        .withGraphFetched('emailNotifications')
     },
 
     createNewTaskAlerts: async () => createNewTaskAlerts(), // For testing purposes. Normally initiated by a scheduler on the server.
@@ -80,7 +112,8 @@ const resolvers = {
       return Task.query()
         .where({ manuscriptId })
         .orderBy('sequenceIndex')
-        .withGraphJoined('assignee')
+        .withGraphFetched('assignee')
+        .withGraphFetched('emailNotifications')
     },
     userHasTaskAlerts: async (_, __, ctx) => {
       return (
@@ -101,6 +134,7 @@ const typeDefs = `
     dueDate: DateTime
     reminderPeriodDays: Int
     status: String!
+    emailNotifications: [TaskEmailNotificationInput]
   }
 
   type Task {
@@ -116,6 +150,7 @@ const typeDefs = `
     reminderPeriodDays: Int
     sequenceIndex: Int!
     status: String!
+    emailNotifications: [TaskEmailNotification]
   }
 
   type TaskAlert {
@@ -126,6 +161,28 @@ const typeDefs = `
   extend type Query {
     tasks(manuscriptId: ID): [Task!]!
     userHasTaskAlerts: Boolean!
+  }
+
+  input TaskEmailNotificationInput {
+    id: ID
+    taskId: ID
+    recipientUserId: ID
+    isRecipientAssignee: Boolean
+    recipientRole: String
+    notificationElapsedDays: Int
+    emailTemplateKey: String
+  }
+
+  type TaskEmailNotification {
+    id: ID!
+    created: DateTime!
+    updated: DateTime
+    taskId: ID!
+    recipientUserId: ID
+    isRecipientAssignee: Boolean
+    recipientRole: String
+    notificationElapsedDays: Int
+    emailTemplateKey: String
   }
 
   extend type Mutation {

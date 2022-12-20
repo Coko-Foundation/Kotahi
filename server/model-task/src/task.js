@@ -16,6 +16,7 @@ class Task extends BaseModel {
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
     const { User } = require('@pubsweet/models')
+    const TaskEmailNotification = require('./taskEmailNotification')
 
     return {
       assignee: {
@@ -24,6 +25,14 @@ class Task extends BaseModel {
         join: {
           from: 'tasks.assigneeUserId',
           to: 'users.id',
+        },
+      },
+      emailNotifications: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: TaskEmailNotification,
+        join: {
+          from: 'tasks.id',
+          to: 'task_email_notifications.taskId',
         },
       },
     }
