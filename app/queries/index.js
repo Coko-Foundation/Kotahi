@@ -425,3 +425,11 @@ export const UPDATE_TASK = gql`
     }
   }
 `
+
+export const UPDATE_TASK_STATUS = gql`
+  mutation($task: UpdateTaskStatusInput!) {
+    updateTaskStatus(task: $task) {
+      ${taskFields}
+    }
+  }
+`

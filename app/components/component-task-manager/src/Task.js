@@ -1,10 +1,12 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 import styled, { ThemeContext, css } from 'styled-components'
 import { Draggable } from 'react-beautiful-dnd'
 import { Circle, CheckCircle, Trash2 } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
+import { useMutation } from '@apollo/client'
+import Dropdown from 'react-dropdown'
 import {
   transposeFromLocalToTimezone,
   transposeFromTimezoneToLocal,
@@ -23,6 +25,7 @@ import {
 import { DragVerticalIcon } from '../../shared/Icons'
 import Modal from '../../component-modal/src'
 import { ConfigContext } from '../../config/src'
+import { UPDATE_TASK_STATUS } from '../../../queries'
 
 const TextInput = styled(MinimalTextInput)`
   margin-left: ${grid(0.5)};
@@ -100,6 +103,12 @@ const StatusCell = styled.div`
   justify-content: flex-start;
 `
 
+const StatusActionCell = styled.div`
+  flex: 0 1 15em;
+  justify-content: flex-start;
+  background: none !important;
+`
+
 const DurationDaysCell = styled.div`
   flex: 0 1 10em;
   justify-content: flex-start;
@@ -149,12 +158,6 @@ const calculateDaysDifference = (a, b) => {
   return Math.round((bMidnight - aMidnight) / (24 * 60 * 60 * 1000))
 }
 
-const statusOptions = [
-  { label: 'Not started', value: 'Not started' },
-  { label: 'In progress', value: 'In progress' },
-  { label: 'Done', value: 'Done' },
-]
-
 export const TaskHeader = ({ editAsTemplate }) => {
   return (
     <TaskHeaderRow>
@@ -196,7 +199,7 @@ const getLocalTimeString = val => {
 }
 
 const Task = ({
-  task,
+  task: propTask,
   index,
   updateTask,
   userOptions,
@@ -208,13 +211,13 @@ const Task = ({
   const config = useContext(ConfigContext)
   const themeContext = useContext(ThemeContext)
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
+  const [task, setTask] = useState(propTask)
+  const [transposedDueDate, setTransposedDueDate] = useState(transposeFromTimezoneToLocal(
+    task.dueDate || new Date(),
+    config.teamTimezone,
+  ))
 
   const dueDateLocalString = getLocalTimeString(moment(task.dueDate))
-
-  const transposedDueDate = transposeFromTimezoneToLocal(
-    task.dueDate,
-    config.teamTimezone,
-  )
 
   const transposedEndOfToday = moment(
     transposeFromTimezoneToLocal(new Date(), config.teamTimezone),
@@ -234,6 +237,9 @@ const Task = ({
       (Math.abs(daysDifference) === 1 ? ' day' : ' days') +
       (daysDifference < 0 ? ' ago' : '')
 
+  const displayDefaultDurationDaysUnit = task.defaultDurationDays && task.defaultDurationDays == 1 ? ' day' : ' days';
+  const displayDefaultDurationDays = task.defaultDurationDays ? `${task.defaultDurationDays}${displayDefaultDurationDaysUnit}` : '';
+
   const dueDateLabel = moment
     .tz(task.dueDate, config.teamTimezone)
     .format('YYYY-MM-DD')
@@ -241,7 +247,75 @@ const Task = ({
   const isDone = task.status === 'Done'
 
   const isOverdue =
-    Date.now() > new Date(task.dueDate).getTime() && !isDone && !editAsTemplate
+    task.dueDate
+      ? Date.now() > new Date(task.dueDate).getTime() && !isDone && !editAsTemplate
+      : false
+
+  const [updateTaskStatus] = useMutation(UPDATE_TASK_STATUS, {
+    refetchQueries: ['getTasksQuery'],
+  })
+
+  const status = {
+    NOT_STARTED: 'Not started',
+    START: 'Start',
+    IN_PROGRESS: 'In progress',
+    PAUSED: 'Paused',
+    DONE: 'Done',
+  }
+
+  let activeTaskStatusOptions = [
+    { label: 'Done', value: status.DONE },
+  ]
+  let statusActionComponent = <></>
+  switch (task.status) {
+    case status.NOT_STARTED:
+      statusActionComponent = <ActionButton onClick={() => handleStatusUpdate(status.IN_PROGRESS)} primary>Start</ActionButton>
+      break;
+
+    case status.IN_PROGRESS:
+      activeTaskStatusOptions = [
+        { label: 'Pause', value: status.PAUSED },
+        { label: 'Done', value: status.DONE },
+      ]
+      statusActionComponent = <Dropdown options={activeTaskStatusOptions} onChange={(selected) => handleStatusUpdate(selected.value)} value={task.status} placeholder="Select status" />
+      break;
+
+    case status.PAUSED:
+      activeTaskStatusOptions = [
+        { label: 'Continue', value: status.IN_PROGRESS },
+        { label: 'Done', value: status.DONE },
+      ]
+      statusActionComponent = <Dropdown options={activeTaskStatusOptions} onChange={(selected) => handleStatusUpdate(selected.value)} value={task.status} placeholder="Select status" />
+      break;
+
+    case status.DONE:
+      activeTaskStatusOptions = [
+        { label: 'Continue', value: status.IN_PROGRESS },
+      ]
+      statusActionComponent = <Dropdown options={activeTaskStatusOptions} onChange={(selected) => handleStatusUpdate(selected.value)} value={task.status} placeholder="Select status" />
+      break;
+  }
+
+  const handleStatusUpdate = async (status) => {
+    const { data } = await updateTaskStatus({
+      variables: {
+        task: {
+          id: task.id,
+  	      status
+        }
+      }
+    });
+    setTask(data.updateTaskStatus);
+  }
+
+  useEffect(() => {
+    if (task.dueDate) {
+      setTransposedDueDate(transposeFromTimezoneToLocal(
+        task.dueDate || new Date(),
+        config.teamTimezone,
+      ))
+    }
+  }, [task])
 
   if (isReadOnly)
     return (
@@ -374,51 +448,41 @@ const Task = ({
             ) : (
               <>
                 <DueDateCell title={dueDateLocalString}>
-                  <DaysNoteContainer>
-                    <CompactDetailLabel isWarning={isOverdue}>
-                      {daysDifferenceLabel}
+                  {task.status === status.NOT_STARTED ? (
+                    <CompactDetailLabel>
+                      {displayDefaultDurationDays}
                     </CompactDetailLabel>
-                  </DaysNoteContainer>
-                  <MinimalDatePicker
-                    clearIcon={null}
-                    format="yyyy-MM-dd"
-                    minDate={transposedEndOfToday}
-                    onChange={val =>
-                      updateTask(task.id, {
-                        ...task,
-                        dueDate: moment
-                          .tz(
-                            transposeFromLocalToTimezone(
-                              val,
-                              config.teamTimezone,
-                            ),
-                            config.teamTimezone,
-                          )
-                          .endOf('day')
-                          .toDate(),
-                      })
-                    }
-                    position="top center"
-                    suppressTodayHighlight
-                    value={transposedDueDate}
-                  />
+                  ) : (
+                    <>
+                      <MinimalDatePicker
+                        clearIcon={null}
+                        format="yyyy-MM-dd"
+                        minDate={transposedEndOfToday}
+                        onChange={val =>
+                          updateTask(task.id, {
+                            ...task,
+                            dueDate: moment
+                              .tz(
+                                transposeFromLocalToTimezone(
+                                  val,
+                                  config.teamTimezone,
+                                ),
+                                config.teamTimezone,
+                              )
+                              .endOf('day')
+                              .toDate(),
+                          })
+                        }
+                        position="top center"
+                        suppressTodayHighlight
+                        value={transposedDueDate}
+                      />
+                    </>
+                  )}
                 </DueDateCell>
-                <StatusCell isOverdue={isOverdue} title={task.status}>
-                  <MinimalSelect
-                    aria-label="Assignee"
-                    data-testid="Assignee_select"
-                    label="Assignee"
-                    onChange={selected =>
-                      updateTask(task.id, {
-                        ...task,
-                        status: selected.value,
-                      })
-                    }
-                    options={statusOptions}
-                    placeholder="Assign a user"
-                    value={task.status}
-                  />
-                </StatusCell>
+                <StatusActionCell>
+                  {statusActionComponent}
+                </StatusActionCell>
               </>
             )}
           </TaskRow>

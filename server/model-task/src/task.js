@@ -49,6 +49,9 @@ class Task extends BaseModel {
         reminderPeriodDays: { type: ['integer', 'null'] },
         status: { type: 'string' },
         sequenceIndex: { type: 'integer' },
+        assigneeType: { type: ['string', 'null'] },
+        assigneeName: { type: ['string', 'null'] },
+        assigneeEmail: { type: ['string', 'null'] },
       },
     }
   }
