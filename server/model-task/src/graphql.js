@@ -1,3 +1,5 @@
+const dateFns = require('date-fns')
+
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
 const TaskEmailNotification = require('./taskEmailNotification')
@@ -106,6 +108,28 @@ const resolvers = {
 
     removeTaskAlertsForCurrentUser: async (_, __, ctx) =>
       TaskAlert.query().delete().where({ userId: ctx.user }),
+
+    updateTaskStatus: async (_, { task }) => {
+      const status = {
+        NOT_STARTED: 'Not started',
+        START: 'Start',
+        IN_PROGRESS: 'In progress',
+        PAUSED: 'Paused',
+        DONE: 'Done',
+      }
+      const data = {
+        status: task.status
+      }
+
+      // get task
+      const dbTask = await Task.query().findById(task.id)
+      if (task.status === status.IN_PROGRESS && !dbTask.dueDate) {
+        const taskDurationDays = dbTask.defaultDurationDays || 0
+        data.dueDate = dateFns.addDays(new Date(), taskDurationDays)
+      }
+      await Task.query().update(data).where({ id: task.id })
+      return Task.query().findById(task.id)
+    }
   },
   Query: {
     tasks: async (_, { manuscriptId }) => {
@@ -135,6 +159,11 @@ const typeDefs = `
     reminderPeriodDays: Int
     status: String!
     emailNotifications: [TaskEmailNotificationInput]
+  }
+
+  input UpdateTaskStatusInput {
+    id: ID!
+    status: String!
   }
 
   type Task {
@@ -190,6 +219,7 @@ const typeDefs = `
     updateTask(task: TaskInput!): Task!
     createNewTaskAlerts: Boolean
     removeTaskAlertsForCurrentUser: Boolean
+    updateTaskStatus(task: UpdateTaskStatusInput!): Task!
   }
 `
 

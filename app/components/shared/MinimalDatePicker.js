@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import Popup from 'reactjs-popup'
 import { Calendar as CalendarIcon } from 'react-feather'
@@ -45,6 +45,10 @@ const MinimalDatePicker = ({
   suppressTodayHighlight,
 }) => {
   const [value, setValue] = useState(initialValue)
+
+  useEffect(() => {
+    setValue(initialValue)
+  }, [initialValue])
 
   return (
     <Popup

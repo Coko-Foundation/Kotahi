@@ -501,6 +501,7 @@ const permissions = {
     upload: isAuthenticated,
     uploadFile: isAuthenticated,
     uploadFiles: isAuthenticated,
+    updateTaskStatus: isAuthenticated,
   },
   Subscription: {
     fileUpdated: isAuthenticated,
