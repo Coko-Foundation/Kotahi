@@ -108,9 +108,10 @@ table {
 	border-width: 0 thin thin 0;
 	margin: 0;
 	overflow: hidden;
-	page-break-inside: avoid;
-	table-layout: fixed;
+	/* page-break-inside: avoid; */
+	/* table-layout: fixed; */
 	width: 100%;
+	margin: 1em 0;
 }
 
 th,
