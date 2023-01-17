@@ -22,6 +22,24 @@ const stripTags = file => {
   return file.match(reg)[1]
 }
 
+const cleanMath = file => {
+  // Note: both inline and display equations were coming in from xSweet with
+  // $$ around them. This code removes them.
+
+  const displayStart = /<math-display class="math-node">\s*\$\$/g
+  const displayEnd = /\$\$\s*<\/math-display>/g
+  const inlineStart = /<math-inline class="math-node">\s*\$\$/g
+  const inlineEnd = /\$\$\s*<\/math-inline>/g
+
+  const cleanedFile = file
+    .replaceAll(displayStart, `<math-display class="math-node">`)
+    .replaceAll(inlineStart, `<math-inline class="math-node">`)
+    .replaceAll(displayEnd, `</math-display>`)
+    .replaceAll(inlineEnd, `</math-inline>`)
+
+  return cleanedFile
+}
+
 const generateTitle = name =>
   name
     .replace(/[_-]+/g, ' ') // convert hyphens/underscores to space
@@ -330,7 +348,8 @@ export default ({
         }
       } else {
         uploadResponse = await DocxToHTMLPromise(file, data)
-        uploadResponse.response = stripTags(uploadResponse.response)
+        uploadResponse.response = cleanMath(stripTags(uploadResponse.response))
+
         images = base64Images(uploadResponse.response)
       }
 
