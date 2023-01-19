@@ -3,6 +3,7 @@ const dateFns = require('date-fns')
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
 const TaskEmailNotification = require('./taskEmailNotification')
+const config = require('config')
 
 const {
   createNewTaskAlerts,
@@ -110,13 +111,7 @@ const resolvers = {
       TaskAlert.query().delete().where({ userId: ctx.user }),
 
     updateTaskStatus: async (_, { task }) => {
-      const status = {
-        NOT_STARTED: 'Not started',
-        START: 'Start',
-        IN_PROGRESS: 'In progress',
-        PAUSED: 'Paused',
-        DONE: 'Done',
-      }
+      const status = config.tasks.status;
       const data = {
         status: task.status
       }
@@ -196,8 +191,9 @@ const typeDefs = `
     id: ID
     taskId: ID
     recipientUserId: ID
-    isRecipientAssignee: Boolean
-    recipientRole: String
+    recipientType: String
+    recipientName: String
+    recipientEmail: String
     notificationElapsedDays: Int
     emailTemplateKey: String
   }
@@ -208,8 +204,9 @@ const typeDefs = `
     updated: DateTime
     taskId: ID!
     recipientUserId: ID
-    isRecipientAssignee: Boolean
-    recipientRole: String
+    recipientType: String
+    recipientName: String
+    recipientEmail: String
     notificationElapsedDays: Int
     emailTemplateKey: String
   }

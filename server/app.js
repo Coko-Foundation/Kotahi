@@ -1,6 +1,10 @@
 const config = require('config')
 const { app } = require('@coko/server')
 const { setConfig } = require('./config/src/configObject')
+const moment = require('moment')
+const Task = require('./model-task/src/task')
+const Team = require('./model-team/src/team')
+const sendEmailNotification = require('./email-notifications')
 
 // You can modify the app or ensure other things are imported here.
 const schedule = require('../node_modules/node-schedule')
@@ -13,7 +17,7 @@ const {
   archiveOldManuscripts,
 } = require('./model-manuscript/src/manuscriptCommsUtils')
 
-const { createNewTaskAlerts } = require('./model-task/src/taskCommsUtils')
+const { createNewTaskAlerts, getTaskEmailNotifications } = require('./model-task/src/taskCommsUtils')
 
 if (config.manuscripts.autoImportHourUtc) {
   schedule.scheduleJob(
@@ -56,5 +60,113 @@ schedule.scheduleJob(
     }
   },
 )
+
+schedule.scheduleJob(
+  {
+    tz: `${config.manuscripts.teamTimezone || 'Etc/UTC'}`,
+    rule: `00 00 * * *`,
+  },
+  async () => {
+    const taskEmailNotifications = await getTaskEmailNotifications({status: config.tasks.status.IN_PROGRESS})
+
+    for (const emailNotification of taskEmailNotifications) {
+      const dateOfNotification = moment(emailNotification.task.dueDate).add(emailNotification.notificationElapsedDays, 'days')
+      const today = moment()
+      if (dateOfNotification.diff(today, 'days') != 0) {
+        continue
+      }
+      const recipientTypes = config.tasks.emailNotifications.recipientTypes
+      let notificationRecipients = []
+      switch (emailNotification.recipientType) {
+        case recipientTypes.UNREGISTERED_USER:
+          if (emailNotification.recipientEmail) {
+            notificationRecipients = [{
+              email: emailNotification.recipientEmail,
+              name: emailNotification.recipientName,
+            }]
+          }
+          break;
+
+        case recipientTypes.REGISTERED_USER:
+          if (emailNotification.recipientUser) {
+            notificationRecipients = [{
+              email: emailNotification.recipientUser.email,
+              name: emailNotification.recipientUser.username,
+            }]
+          }
+          break;
+
+        case recipientTypes.EDITOR:
+          notificationRecipients = await getTeamRecipients(emailNotification, [
+            recipientTypes.EDITOR,
+            recipientTypes.SENIOR_EDITOR,
+            recipientTypes.HANDLING_EDITOR
+          ]);
+          break;
+
+        case recipientTypes.REVIEWER:
+        case recipientTypes.AUTHOR:
+          notificationRecipients = await getTeamRecipients(emailNotification, [emailNotification.recipientType]);
+          break;
+
+        case recipientTypes.ASSIGNEE:
+          const assigneeTypes = config.tasks.assigneeTypes
+          switch (emailNotification.task.assigneeType) {
+            case assigneeTypes.UNREGISTERED_USER:
+              if (emailNotification.task.assigneeEmail) {
+                notificationRecipients = [{
+                  email: emailNotification.task.assigneeEmail,
+                  name: emailNotification.task.assigneeName,
+                }]
+              }
+              break;
+
+            case assigneeTypes.REGISTERED_USER:
+              if (emailNotification.task.assignee) {
+                notificationRecipients = [{
+                  email: emailNotification.task.assignee.email,
+                  name: emailNotification.task.assignee.username,
+                }]
+              }
+              break;
+
+            case assigneeTypes.EDITOR:
+              notificationRecipients = await getTeamRecipients(emailNotification, [
+                assigneeTypes.EDITOR,
+                assigneeTypes.SENIOR_EDITOR,
+                assigneeTypes.HANDLING_EDITOR,
+              ]);
+              break;
+
+            case assigneeTypes.REVIEWER:
+            case assigneeTypes.AUTHOR:
+              notificationRecipients = await getTeamRecipients(emailNotification, [emailNotification.task.assigneeType]);
+              break;
+          }
+          break;
+      }
+
+      for (const recipient of notificationRecipients) {
+        try {
+          await sendEmailNotification(recipient.email, emailNotification.emailTemplateKey, {})
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    }
+  },
+)
+
+const getTeamRecipients = async (emailNotification, roles) => {
+  const teamQuery = Team.query().where({
+    object_type: 'manuscript',
+    object_id: emailNotification.task.manuscriptId
+  }).whereIn('role', roles) // no await here because it's a sub-query
+  const teamMemberUsers = await Team.relatedQuery('users').for(teamQuery)
+  return teamMemberUsers.map(user => ({
+    email: user.email,
+    name: user.username,
+  }))
+}
 
 module.exports = app
