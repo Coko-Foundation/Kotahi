@@ -49,7 +49,7 @@ export const DownloadDropdown = ({
     },
   ]
 
-  return manuscriptId.source ? (
+  return manuscriptSource ? (
     <Dropdown itemsList={options} primary>
       Download
     </Dropdown>
