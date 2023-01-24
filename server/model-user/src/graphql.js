@@ -223,10 +223,14 @@ const resolvers = {
         .findById(manuscript.id)
         .withGraphFetched('submitter.[defaultIdentity]')
 
-      const authorName =
-        manuscriptWithSubmitter.submitter.username ||
-        manuscriptWithSubmitter.submitter.defaultIdentity.name ||
-        ''
+      let authorName = ''
+      if (manuscriptWithSubmitter && manuscriptWithSubmitter.submitter) {
+        if (manuscriptWithSubmitter.submitter.username) {
+          authorName = manuscriptWithSubmitter.submitter.username
+        } else if (manuscriptWithSubmitter.submitter.defaultIdentity) {
+          authorName = manuscriptWithSubmitter.submitter.defaultIdentity.name
+        }
+      }
 
       const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
       const emailValidationResult = emailValidationRegexp.test(receiverEmail)
