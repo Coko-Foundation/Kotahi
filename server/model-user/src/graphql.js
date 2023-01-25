@@ -219,16 +219,15 @@ const resolvers = {
           userReceiver.username || userReceiver.defaultIdentity.name || ''
       }
 
-      const manuscriptWithSubmitter = await models.Manuscript.query()
-        .findById(manuscript.id)
-        .withGraphFetched('submitter.[defaultIdentity]')
-
       let authorName = ''
-      if (manuscriptWithSubmitter && manuscriptWithSubmitter.submitter) {
-        if (manuscriptWithSubmitter.submitter.username) {
-          authorName = manuscriptWithSubmitter.submitter.username
-        } else if (manuscriptWithSubmitter.submitter.defaultIdentity) {
-          authorName = manuscriptWithSubmitter.submitter.defaultIdentity.name
+      const manuscriptWithAuthors = await models.Manuscript.query()
+        .findById(manuscript.id)
+        .withGraphFetched('[teams(onlyAuthors).[members(onlyAccepted, orderByCreatedDesc).[user]]]');
+      if (manuscriptWithAuthors.teams.length) {
+        const authorTeam = manuscriptWithAuthors.teams[0]
+        if (authorTeam.members.length) {
+          const author = authorTeam.members[0] // picking the author that has latest created date
+          authorName = author.user.username
         }
       }
 
