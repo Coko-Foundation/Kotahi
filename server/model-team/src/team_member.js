@@ -5,6 +5,17 @@ class TeamMember extends BaseModel {
     return 'team_members'
   }
 
+  static get modifiers() {
+    return {
+      onlyAccepted(builder) {
+        builder.where('status', 'accepted');
+      },
+      orderByCreatedDesc(builder) {
+        builder.orderBy('created', 'desc')
+      }
+    }
+  }
+
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
     const { Alias, User } = require('@pubsweet/models')
