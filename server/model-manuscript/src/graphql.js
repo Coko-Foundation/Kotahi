@@ -241,7 +241,7 @@ const getRelatedPublishedArtifacts = async manuscript => {
 
   if (!templatedArtifacts.length) return []
 
-  const { submissionForm, reviewForm, decisionForm } = getActiveForms()
+  const { submissionForm, reviewForm, decisionForm } = await getActiveForms()
 
   return applyTemplatesToArtifacts(
     templatedArtifacts,
