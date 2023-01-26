@@ -390,6 +390,7 @@ const permissions = {
     convertToJats: or(userIsEditor, userIsAdmin),
     convertToPdf: or(userIsEditor, userIsAdmin),
     currentUser: isAuthenticated,
+    docmap: allow,
     editorsActivity: or(userIsEditor, userIsAdmin),
     file: deny, // Never used
     files: deny, // Never used
@@ -415,6 +416,7 @@ const permissions = {
     messages: isAuthenticated,
     paginatedManuscripts: or(userIsEditor, userIsAdmin),
     paginatedUsers: userIsAdmin,
+    publishedArtifacts: allow,
     publishedManuscript: allow,
     publishedManuscripts: allow,
     reviewersActivity: or(userIsEditor, userIsAdmin),

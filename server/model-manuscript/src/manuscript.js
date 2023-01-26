@@ -167,6 +167,8 @@ class Manuscript extends BaseModel {
     const Team = require('../../model-team/src/team')
     /* eslint-disable-next-line global-require */
     const Task = require('../../model-task/src/task')
+    /* eslint-disable-next-line global-require */
+    const PublishedArtifact = require('../../model-published-artifact/src/publishedArtifact')
 
     return {
       submitter: {
@@ -215,6 +217,14 @@ class Manuscript extends BaseModel {
         join: {
           from: 'manuscripts.id',
           to: 'reviews.manuscriptId',
+        },
+      },
+      publishedArtifacts: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: PublishedArtifact,
+        join: {
+          from: 'manuscripts.id',
+          to: 'published_artifacts.manuscriptId',
         },
       },
       parent: {

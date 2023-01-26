@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React from 'react'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import config from 'config'
 import { Redirect } from 'react-router-dom'
@@ -347,7 +347,7 @@ const ReviewPage = ({ match, ...props }) => {
   const updateReviewJsonData = (value, path) => {
     if (!latestVersion.id) {
       // we shouldn't need this because of debouncing! But this protects against trying to save while loading is still happening
-      console.log('no version id!')
+      console.error('no version id!')
       return false
     }
 

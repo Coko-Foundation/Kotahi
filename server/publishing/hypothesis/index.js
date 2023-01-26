@@ -2,9 +2,11 @@
 const TurndownService = require('turndown')
 const axios = require('axios')
 const config = require('config')
+const models = require('@pubsweet/models')
 const { getUsersById } = require('../../model-user/src/userCommsUtils')
 const { getActiveForms } = require('../../model-form/src/formCommsUtils')
 const { getPublishableFields, normalizeUri } = require('./hypothesisTools')
+const { upsertArtifact, deleteArtifact } = require('../publishingCommsUtils')
 
 const {
   getThreadedDiscussionsForManuscript,
@@ -49,7 +51,12 @@ const prepareTurndownService = () =>
 
 const publishToHypothesis = async manuscript => {
   const turndownService = prepareTurndownService()
-  const uri = manuscript.submission.biorxivURL || manuscript.submission.link
+
+  const uri =
+    manuscript.submission.biorxivURL ||
+    manuscript.submission.link ||
+    manuscript.submission.url ||
+    manuscript.submission.uri
 
   const title =
     manuscript.meta.title ||
@@ -84,13 +91,26 @@ const publishToHypothesis = async manuscript => {
   )
 
   if (config.hypothesis.reverseFieldOrder === 'true') fields.reverse()
+  // Some fields have dates (e.g. review fields; ThreadedDiscussion comments) and should be published in date order.
   const datedFields = fields.filter(f => f.date).sort((a, b) => a.date - b.date)
   const fieldsWithoutDates = fields.filter(f => !f.date)
   const orderedFields = datedFields.concat(fieldsWithoutDates)
 
-  const newHypothesisMap = {}
-
   for (const f of orderedFields) {
+    const artifact = {
+      title: `${f.publishingTag || f.fieldTitle}: ${title}`,
+      // Using a template for content means it's an invariant identifier.
+      // We can use this field to find if this has previously been
+      // published to Hypothesis, and what the Hypothesis ID is.
+      content: `{{${f.objectId}.${f.fieldName}}}`,
+      manuscriptId: manuscript.id,
+      platform: 'Hypothesis',
+      externalId: f.annotationId,
+      hostedInKotahi: true,
+      relatedDocumentUri: normalizeUri(uri),
+      relatedDocumentType: 'preprint',
+    }
+
     if (['create', 'update'].includes(f.action)) {
       const requestBody = {
         group: config.hypothesis.group,
@@ -103,24 +123,78 @@ const publishToHypothesis = async manuscript => {
 
       if (f.action === 'create') {
         const response = await axios.post(REQUEST_URL, requestBody, headers)
-        newHypothesisMap[f.annotationName] = response.data.id
+        await upsertArtifact({ ...artifact, externalId: response.data.id })
       } else if (f.action === 'update') {
         await axios.patch(
           `${REQUEST_URL}/${f.annotationId}`,
           requestBody,
           headers,
         )
-        newHypothesisMap[f.annotationName] = f.annotationId
+        await upsertArtifact(artifact)
       }
     } else if (f.action === 'delete') {
       await deletePublication(f.annotationId)
+      await deleteArtifact(manuscript.id, f.annotationId)
     }
   }
+}
 
-  return newHypothesisMap
+const publishSpecificAnnotationToHypothesis = async (
+  content,
+  contentTemplate,
+  tag,
+  uri,
+  manuscriptTitle,
+  manuscriptId,
+) => {
+  const turndownService = prepareTurndownService()
+
+  const existingArtifact = await models.PublishedArtifact.query().findOne({
+    manuscriptId,
+    content: contentTemplate,
+  })
+
+  let externalId = existingArtifact ? existingArtifact.externalId : null
+
+  const artifact = {
+    title: `${tag}: ${manuscriptTitle}`,
+    // Using a template for content means it's an invariant identifier.
+    // We can use this field to find if this has previously been
+    // published to Hypothesis, and what the Hypothesis ID is.
+    content: contentTemplate,
+    manuscriptId,
+    platform: 'Hypothesis',
+    externalId,
+    hostedInKotahi: true,
+    relatedDocumentUri: normalizeUri(uri),
+    relatedDocumentType: 'preprint',
+  }
+
+  const requestBody = {
+    group: config.hypothesis.group,
+    permissions: { read: [`group:${config.hypothesis.group}`] },
+    uri: normalizeUri(uri),
+    document: { title: [manuscriptTitle] },
+    text: turndownService.turndown(content),
+    tags: tag ? [tag] : [],
+  }
+
+  let artifactId
+
+  if (existingArtifact) {
+    await axios.patch(`${REQUEST_URL}/${externalId}`, requestBody, headers)
+    artifactId = await upsertArtifact(artifact)
+  } else {
+    const response = await axios.post(REQUEST_URL, requestBody, headers)
+    externalId = response.data.id
+    artifactId = await upsertArtifact({ ...artifact, externalId })
+  }
+
+  return { artifactId, externalId }
 }
 
 module.exports = {
   publishToHypothesis,
+  publishSpecificAnnotationToHypothesis,
   deletePublication,
 }

@@ -24,7 +24,8 @@ const {
   publishToCrossref,
   getReviewOrSubmissionField,
   getDoi,
-  isDOIInUse,
+  doiIsAvailable,
+  doiExists,
 } = require('../../publishing/crossref')
 
 const checkIsAbstractValueEmpty = require('../../utils/checkIsAbstractValueEmpty')
@@ -34,6 +35,7 @@ const {
   hasEvaluations,
   stripConfidentialDataFromReviews,
   buildQueryForManuscriptSearchFilterAndOrder,
+  applyTemplatesToArtifacts,
 } = require('./manuscriptUtils')
 
 const { applyTemplate, generateCss } = require('../../pdfexport/applyTemplate')
@@ -58,6 +60,7 @@ const sendEmailNotification = require('../../email-notifications')
 const publishToGoogleSpreadSheet = require('../../publishing/google-spreadsheet')
 const validateApiToken = require('../../utils/validateApiToken')
 const { deepMergeObjectsReplacingArrays } = require('../../utils/objectUtils')
+const { tryPublishDocMaps } = require('../../publishing/docmaps')
 
 const {
   populateTemplatedTasksForManuscript,
@@ -72,6 +75,13 @@ const {
   getReviewForm,
   getDecisionForm,
 } = require('../../model-review/src/reviewCommsUtils')
+
+const {
+  getThreadedDiscussionsForManuscript,
+} = require('../../model-threaded-discussion/src/threadedDiscussionCommsUtils')
+
+const { getUsersById } = require('../../model-user/src/userCommsUtils')
+const { getActiveForms } = require('../../model-form/src/formCommsUtils')
 
 const repackageForGraphql = async ms => {
   const result = { ...fixMissingValuesInFiles(ms) }
@@ -176,40 +186,79 @@ const getCss = async () => {
   return css
 }
 
+/** Get reviews from the manuscript if present, or from DB. Generate full file info for
+ * all files attached to reviews, and stringify JSON data in preparation for serving to client.
+ * Note: 'reviews' include the decision object.
+ */
+const getRelatedReviews = async manuscript => {
+  const reviewForm = await getReviewForm()
+  const decisionForm = await getDecisionForm()
+
+  const reviews =
+    manuscript.reviews ||
+    (await (
+      await models.Manuscript.query().findById(manuscript.id)
+    ).$relatedQuery('reviews')) ||
+    []
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const review of reviews) {
+    // eslint-disable-next-line no-await-in-loop
+    await convertFilesToFullObjects(
+      review,
+      review.isDecision ? decisionForm : reviewForm,
+      async ids => File.query().findByIds(ids),
+      getFilesWithUrl,
+    )
+  }
+
+  return reviews.map(review => ({
+    ...review,
+    jsonData: JSON.stringify(review.jsonData),
+  }))
+}
+
+/** Get published artifacts from the manuscript if present, or from DB.
+ * Expand the templated contents of artifacts in preparation for serving to client.
+ */
+const getRelatedPublishedArtifacts = async manuscript => {
+  const templatedArtifacts =
+    manuscript.publishedArtifacts ||
+    (await (
+      await models.Manuscript.query().findById(manuscript.id)
+    ).$relatedQuery('publishedArtifacts'))
+
+  const reviews = manuscript.reviews || (await getRelatedReviews(manuscript))
+
+  const threadedDiscussions =
+    manuscript.threadedDiscussions ||
+    (await getThreadedDiscussionsForManuscript(manuscript, getUsersById))
+
+  const submission =
+    typeof manuscript.submission === 'string'
+      ? JSON.parse(manuscript.submission)
+      : manuscript.submission
+
+  if (!templatedArtifacts.length) return []
+
+  const { submissionForm, reviewForm, decisionForm } = getActiveForms()
+
+  return applyTemplatesToArtifacts(
+    templatedArtifacts,
+    { ...manuscript, reviews, submission, threadedDiscussions },
+    submissionForm,
+    reviewForm,
+    decisionForm,
+  )
+}
+
 const ManuscriptResolvers = ({ isVersion }) => {
   const resolvers = {
     submission(parent) {
       return JSON.stringify(parent.submission)
     },
-    evaluationsHypothesisMap(parent) {
-      return JSON.stringify(parent.evaluationsHypothesisMap)
-    },
     async reviews(parent, _, ctx) {
-      const reviewForm = await getReviewForm()
-      const decisionForm = await getDecisionForm()
-
-      const reviews =
-        parent.reviews ||
-        (await (
-          await models.Manuscript.query().findById(parent.id)
-        ).$relatedQuery('reviews')) ||
-        []
-
-      // eslint-disable-next-line no-restricted-syntax
-      for (const review of reviews) {
-        // eslint-disable-next-line no-await-in-loop
-        await convertFilesToFullObjects(
-          review,
-          review.isDecision ? decisionForm : reviewForm,
-          async ids => File.query().findByIds(ids),
-          getFilesWithUrl,
-        )
-      }
-
-      return reviews.map(review => ({
-        ...review,
-        jsonData: JSON.stringify(review.jsonData),
-      }))
+      return getRelatedReviews(parent)
     },
     async teams(parent, _, ctx) {
       return parent.teams
@@ -224,6 +273,9 @@ const ManuscriptResolvers = ({ isVersion }) => {
         : (await models.Manuscript.query().findById(parent.id)).$relatedQuery(
             'files',
           )
+    },
+    async publishedArtifacts(parent, _, ctx) {
+      return getRelatedPublishedArtifacts(parent)
     },
 
     meta(parent) {
@@ -538,21 +590,6 @@ const resolvers = {
 
       toDeleteList.push(manuscript.id)
 
-      if (
-        config.hypothesis.apiKey &&
-        manuscript.evaluationsHypothesisMap !== null
-      ) {
-        const deletePromises = Object.values(
-          manuscript.evaluationsHypothesisMap,
-        )
-          .filter(Boolean)
-          .map(publicationId => {
-            return deletePublication(publicationId)
-          })
-
-        await Promise.all(deletePromises)
-      }
-
       if (manuscript.parentId) {
         const parentManuscripts = await models.Manuscript.findByField(
           'parent_id',
@@ -564,14 +601,25 @@ const resolvers = {
         })
       }
 
-      // Delete Manuscript
-      if (toDeleteList.length > 0) {
-        await Promise.all(
-          toDeleteList.map(toDeleteItem =>
-            models.Manuscript.query().deleteById(toDeleteItem),
-          ),
-        )
-      }
+      // Delete all versions of manuscript
+      await Promise.all(
+        toDeleteList.map(async toDeleteItem => {
+          if (config.hypothesis.apiKey) {
+            const hypothesisArtifacts = models.PublishedArtifact.query().where({
+              manuscriptId: toDeleteItem,
+              platform: 'Hypothesis',
+            })
+
+            await Promise.all(
+              hypothesisArtifacts.map(async artifact =>
+                deletePublication(artifact.externalId),
+              ),
+            )
+          }
+
+          models.Manuscript.query().deleteById(toDeleteItem)
+        }),
+      )
 
       return id
     },
@@ -958,7 +1006,7 @@ const resolvers = {
     async publishManuscript(_, { id }, ctx) {
       const manuscript = await models.Manuscript.query()
         .findById(id)
-        .withGraphFetched('reviews')
+        .withGraphFetched('[reviews, publishedArtifacts]')
 
       const update = {} // This will collect any properties we may want to update in the DB
       update.published = new Date()
@@ -1018,13 +1066,9 @@ const resolvers = {
         const stepLabel = 'Hypothesis'
         let succeeded = false
         let errorMessage
-        if (!manuscript.evaluationsHypothesisMap)
-          manuscript.evaluationsHypothesisMap = {}
 
         try {
-          update.evaluationsHypothesisMap = await publishToHypothesis(
-            manuscript,
-          )
+          await publishToHypothesis(manuscript)
           succeeded = true
         } catch (err) {
           console.error(err)
@@ -1050,6 +1094,18 @@ const resolvers = {
             errorMessage: err.message,
           })
         }
+      }
+
+      try {
+        if (await tryPublishDocMaps(manuscript))
+          steps.push({ stepLabel: 'DOCMAPS', succeeded: true })
+      } catch (err) {
+        console.error(err)
+        steps.push({
+          stepLabel: 'DOCMAPS',
+          succeeded: false,
+          errorMessage: err.message,
+        })
       }
 
       if (!steps.length || steps.some(step => step.succeeded)) {
@@ -1440,25 +1496,28 @@ const resolvers = {
 
       return DOIs
     },
-
+    /** Return true if the DOI exists (is found in Crossref) */
     async validateDOI(_, { articleURL }, ctx) {
-      const DOI = encodeURI(articleURL.split('.org/')[1])
-      const { isDOIValid } = await isDOIInUse(DOI)
-      return { isDOIValid }
+      const doi = encodeURI(articleURL.split('.org/')[1])
+      return { isDOIValid: await doiExists(doi) }
     },
-
+    /** Return true if a DOI formed from this suffix has not already been assigned (i.e. not found in Crossref) */
     // To be called in submit manuscript as
     // first validation step for custom suffix
     async validateSuffix(_, { suffix }, ctx) {
       const doi = getDoi(suffix)
-      const { isDOIValid } = await isDOIInUse(doi)
-      return { isDOIValid: !isDOIValid }
+      return { isDOIValid: await doiIsAvailable(doi) }
     },
   },
   // We want submission info to come out as a stringified JSON, so that we don't have to
   // change our queries if the submission form changes. We still want to store it as JSONB
   // so that we can easily search through the information within.
   Manuscript: ManuscriptResolvers({ isVersion: false }),
+  PublishedManuscript: {
+    async publishedArtifacts(parent, _, ctx) {
+      return getRelatedPublishedArtifacts(parent)
+    },
+  },
 }
 
 const typeDefs = `
@@ -1541,7 +1600,7 @@ const typeDefs = `
     submitter: User
     submittedDate: DateTime
     published: DateTime
-    evaluationsHypothesisMap: String
+    publishedArtifacts: [PublishedArtifact!]!
     currentRoles: [String]
     formFieldsToPublish: [FormFieldsToPublish!]!
     searchRank: Float
@@ -1658,6 +1717,7 @@ const typeDefs = `
     status: String
     meta: ManuscriptMeta
     submission: String
+    publishedArtifacts: [PublishedArtifact!]!
     publishedDate: DateTime
 		printReadyPdfUrl: String
 		styledHtml: String

@@ -3,7 +3,7 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Formik, ErrorMessage } from 'formik'
 import { unescape, get, set, debounce } from 'lodash'
-import { sanitize } from 'dompurify'
+import { sanitize } from 'isomorphic-dompurify'
 import { RadioGroup } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import {
@@ -101,6 +101,7 @@ const FieldHead = styled.div`
   align-items: baseline;
   display: flex;
   width: auto;
+
   & > label {
     /* this is to make "publish" on decision page go flush right */
     margin-left: auto;
