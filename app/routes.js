@@ -3,19 +3,14 @@ import { Route, Switch } from 'react-router-dom'
 
 import config from 'config'
 import Login from './components/component-login/src'
-import ArticleEvaluationPage from './components/component-evaluation'
-import ArticleEvaluationResultPage from './components/component-evaluation-result'
-import ArticleEvaluationSummaryPage from './components/component-evaluation-summary'
+import ArticleArtifactPage from './components/component-published-artifact/components/ArticleArtifactPage'
 import DeclineArticleOwnershipPage from './components/component-dashboard/src/components/DeclineArticleOwnershipPage'
 import AcceptArticleOwnershipPage from './components/component-dashboard/src/components/AcceptArticleOwnershipPage'
 import InvitationAcceptedPage from './components/component-dashboard/src/components/InvitationAcceptedPage'
 
 import AdminPage from './components/AdminPage'
 
-import {
-  Frontpage,
-  ManuscriptDetails,
-} from './components/component-frontpage/src'
+import Frontpage from './components/component-frontpage/src/Frontpage'
 
 export default (
   <Switch>
@@ -25,26 +20,10 @@ export default (
     </Route>
     <Route component={Login} path="/login" />
     <Route component={Frontpage} exact path="/" />
-    <Route component={ManuscriptDetails} exact path="/:manuscriptId" />
     <Route
-      component={ArticleEvaluationResultPage}
+      component={ArticleArtifactPage}
       exact
-      path="/versions/:version/article-evaluation-result/:evaluationNumber"
-    />
-    <Route
-      component={ArticleEvaluationSummaryPage}
-      exact
-      path="/versions/:version/article-evaluation-summary"
-    />
-    <Route
-      component={ArticleEvaluationPage}
-      exact
-      path="/versions/:version/article-evaluation/:fieldNameA"
-    />
-    <Route
-      component={ArticleEvaluationPage}
-      exact
-      path="/versions/:version/article-evaluation/:fieldNameA/:fieldNameB"
+      path="/versions/:version/artifacts/:artifactId"
     />
     <Route
       component={DeclineArticleOwnershipPage}

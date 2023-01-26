@@ -101,6 +101,7 @@ services:
 
     volumes:
       - ./uploads:/home/node/app/uploads
+      - ./config:/home/node/app/config
 
   job-xsweet:
     image: pubsweet/job-xsweet:1.5.4

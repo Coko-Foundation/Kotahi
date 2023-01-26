@@ -1,4 +1,5 @@
-const { get, escape } = require('lodash')
+const { get } = require('lodash')
+const { getPublishableTextFromValue } = require('../../utils/fieldFormatUtils')
 
 const MAX_REVIEW_COUNT = 10
 
@@ -16,84 +17,17 @@ const getPublishableTextFromComment = commentObject => {
     .comment
 }
 
-const getPublishableTextFromValue = (value, field) => {
-  if (field.component === 'TextField') {
-    if (!value) return null
-    return `<p>${escape(value)}</p>`
-  }
+const getFieldNamesLastPublished = (objectId, publishedArtifacts) => {
+  const prefix = `{{${objectId}.`
 
-  if (field.component === 'AbstractEditor') {
-    if (!hasText(value)) return null
-    return value
-  }
-
-  if (field.component === 'CheckboxGroup') {
-    if (!value) return null
-
-    const optionLabels = value.map(
-      val => (field.options.find(o => o.value === val) || { label: val }).label,
-    )
-
-    if (!optionLabels.length) return null
-    return `<p>${escape(
-      field.shortDescription || field.title,
-    )}:</p><ul>${optionLabels
-      .map(label => `<li>${escape(label)}</li>`)
-      .join('')}</ul>`
-  }
-
-  if (['Select', 'RadioGroup'].includes(field.component)) {
-    const { label } = field.options.find(o => o.value === value) || {
-      label: value,
-    }
-
-    return `<p>${escape(field.shortDescription || field.title)}: ${escape(
-      label,
-    )}</p>`
-  }
-
-  if (field.component === 'LinksInput') {
-    if (!value || !value.length) return null
-
-    return `<p>${escape(
-      field.shortDescription || field.title,
-    )}:</p><ul>${value
-      .map(
-        link =>
-          `<li><a href="${escape(link.url)}">${escape(link.url)}</a></li>`,
-      )
-      .join('')}</ul>`
-  }
-
-  if (field.component === 'AuthorsInput') {
-    if (!value || !value.length) return null
-    return `<p>${escape(field.shortDescription || field.title)}:</p><ul>${value
-      .map(author => {
-        const escapedName = escape(`${author.firstName} ${author.lastName}`)
-
-        const affiliationMarkup = author.affiliation
-          ? ` (${escape(author.affiliation)})`
-          : ''
-
-        const emailMarkup = author.email
-          ? ` <a href="mailto:${escape(author.email)}">${escape(
-              author.email,
-            )}</a>`
-          : ''
-
-        return `<li>${escapedName}${affiliationMarkup}${emailMarkup}</li>`
-      })
-      .join('')}</ul>`
-  }
-
-  return value
-}
-
-const getFieldNamesLastPublished = (objectId, hypothesisMap) => {
-  const objectPrefix = `${objectId}.`
-  return Object.keys(hypothesisMap)
-    .filter(key => key.startsWith(objectPrefix))
-    .map(key => key.split(objectPrefix)[1].split(':')[0])
+  return [
+    ...new Set(
+      publishedArtifacts
+        .map(a => a.content)
+        .filter(content => content.startsWith(prefix))
+        .map(x => x.split(prefix)[1].split(/[:}]/)[0]),
+    ),
+  ]
 }
 
 const getPublishableFieldsForObject = (
@@ -102,7 +36,7 @@ const getPublishableFieldsForObject = (
   form,
   threadedDiscussions,
   objectId,
-  hypothesisMap,
+  publishedArtifacts,
   objectDate,
 ) => {
   if (!form) return []
@@ -114,7 +48,7 @@ const getPublishableFieldsForObject = (
 
   const lastPublishedFields = getFieldNamesLastPublished(
     objectId,
-    hypothesisMap,
+    publishedArtifacts,
   )
 
   return fields
@@ -146,6 +80,7 @@ const getPublishableFieldsForObject = (
             return {
               field,
               fieldName: expandedFieldName,
+              fieldTitle: field.shortDescription || field.title,
               text,
               date: c.created,
               shouldPublish,
@@ -167,6 +102,7 @@ const getPublishableFieldsForObject = (
       return {
         field,
         fieldName: field.name,
+        fieldTitle: field.shortDescription || field.title,
         text,
         date: objectDate,
         shouldPublish,
@@ -189,10 +125,10 @@ const getPublishableFields = (manuscript, forms, threadedDiscussions) => {
     ...getPublishableFieldsForObject(
       manuscript.formFieldsToPublish.find(ff => ff.objectId === manuscript.id),
       manuscript,
-      forms.find(f => f.category === 'submission'),
+      forms.submissionForm,
       threadedDiscussions,
       manuscript.id,
-      manuscript.evaluationsHypothesisMap,
+      manuscript.publishedArtifacts,
       null,
     ),
   )
@@ -204,10 +140,10 @@ const getPublishableFields = (manuscript, forms, threadedDiscussions) => {
         ...getPublishableFieldsForObject(
           manuscript.formFieldsToPublish.find(ff => ff.objectId === r.id),
           r.jsonData,
-          forms.find(f => f.category === 'decision'),
+          forms.decisionForm,
           threadedDiscussions,
           r.id,
-          manuscript.evaluationsHypothesisMap,
+          manuscript.publishedArtifacts,
           null,
         ),
       ),
@@ -221,10 +157,10 @@ const getPublishableFields = (manuscript, forms, threadedDiscussions) => {
         ...getPublishableFieldsForObject(
           manuscript.formFieldsToPublish.find(ff => ff.objectId === r.id),
           r.jsonData,
-          forms.find(f => f.category === 'review'),
+          forms.reviewForm,
           threadedDiscussions,
           r.id,
-          manuscript.evaluationsHypothesisMap,
+          manuscript.publishedArtifacts,
           r.updated,
         ),
       ),
@@ -232,12 +168,18 @@ const getPublishableFields = (manuscript, forms, threadedDiscussions) => {
 
   return result.map(d => {
     const annotationName = `${d.objectId}.${d.fieldName}`
-    const annotationId = manuscript.evaluationsHypothesisMap[annotationName]
+    const content = `{{${annotationName}}}`
+
+    const priorArtifact = manuscript.publishedArtifacts.find(
+      a => a.content === content,
+    )
+
+    const annotationId = priorArtifact ? priorArtifact.externalId : null
     const hasPreviousValue = !!annotationId
     let action
     if (d.shouldPublish) action = hasPreviousValue ? 'update' : 'create'
     else action = hasPreviousValue ? 'delete' : null
-    return { ...d, annotationName, annotationId, action }
+    return { ...d, annotationName, annotationId, action, content }
   })
 }
 

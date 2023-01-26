@@ -20,5 +20,7 @@
   "./server/jatsexport",
   "./server/model-threaded-discussion/src/",
   "./server/model-task/src",
+  "./server/model-published-artifact/src",
+  "./server/model-docmap/src",
   "./server/config/src"
 ]

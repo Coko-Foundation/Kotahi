@@ -1,6 +1,6 @@
 import React from 'react'
 import PropTypes from 'prop-types'
-import { sanitize } from 'dompurify'
+import { sanitize } from 'isomorphic-dompurify'
 import 'rc-tooltip/assets/bootstrap_white.css'
 import { ManuscriptsRow, SnippetRow, Cell } from './style'
 import { getFieldValueAndDisplayValue } from '../../../shared/manuscriptUtils'
