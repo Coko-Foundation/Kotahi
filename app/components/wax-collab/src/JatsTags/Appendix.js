@@ -9,7 +9,6 @@ import { wrapIn } from 'prosemirror-commands'
 class Appendix extends Tools {
   title = 'Change to appendix'
   label = 'Appendix'
-  title = 'Appendix'
   name = 'Appendix'
 
   // eslint-disable-next-line class-methods-use-this

@@ -22,6 +22,7 @@ class CitationGroup extends ToolGroup {
     @inject('CitationLabel') citationLabel,
     @inject('Issue') issue,
     @inject('Year') year,
+    @inject('AnyStyleTool') anystyle,
   ) {
     super()
     this.tools = [
@@ -38,6 +39,7 @@ class CitationGroup extends ToolGroup {
       year,
       firstPage,
       lastPage,
+      anystyle,
     ]
   }
 }
