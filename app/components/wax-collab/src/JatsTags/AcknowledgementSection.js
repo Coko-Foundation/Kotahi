@@ -9,7 +9,6 @@ import { wrapIn } from 'prosemirror-commands'
 class AcknowledgementsSection extends Tools {
   title = 'Change to acknowledgements'
   label = 'Acknowledgements'
-  title = 'Acknowledgements'
   name = 'AcknowledgementsSection'
 
   // eslint-disable-next-line class-methods-use-this

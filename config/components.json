@@ -22,5 +22,6 @@
   "./server/model-task/src",
   "./server/model-published-artifact/src",
   "./server/model-docmap/src",
-  "./server/config/src"
+  "./server/config/src",
+	"./server/anystyle"
 ]

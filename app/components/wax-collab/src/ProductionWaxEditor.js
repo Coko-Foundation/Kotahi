@@ -2,6 +2,7 @@ import React, { useRef, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Wax } from 'wax-prosemirror-core'
 import { ThemeProvider } from 'styled-components'
+import { gql, useApolloClient } from '@apollo/client'
 import waxTheme from './layout/waxTheme'
 import { JournalContext } from '../../xpub-journal/src'
 
@@ -9,7 +10,14 @@ import productionWaxEditorConfig from './config/ProductionWaxEditorConfig'
 import ProductionWaxEditorLayout from './layout/ProductionWaxEditorLayout'
 import ProductionWaxEditorNoCommentsLayout from './layout/ProductionWaxEditorNoCommentsLayout'
 
-// this was forked from FullWaxEditor.js
+const getAnystyleQuery = gql`
+  query($textReferences: String!) {
+    buildCitations(textReferences: $textReferences) {
+      htmlReferences
+      error
+    }
+  }
+`
 
 // TODO Save this image via the server
 const renderImage = file => {
@@ -51,9 +59,9 @@ const ProductionWaxEditor = ({
     username: user.username || 'demo',
   }
 
-  const editorRef = useRef(null)
+  const client = useApolloClient()
 
-  /* eslint-disable jsx-a11y/no-noninteractive-tabindex,  jsx-a11y/tabindex-no-positive */
+  const editorRef = useRef(null)
 
   useEffect(() => {
     return () => {
@@ -63,23 +71,41 @@ const ProductionWaxEditor = ({
     }
   }, [])
 
-  // return useMemo(
-  //   () => (
+  const updateAnystyle = async text => {
+    const { content } = text
+    console.log('Coming in: ', content)
+    return client
+      .query({
+        query: getAnystyleQuery,
+        variables: {
+          textReferences: content,
+        },
+        fetchPolicy: 'network-only',
+      })
+      .then(result => {
+        console.log('Result:', result?.data?.buildCitations?.htmlReferences)
+
+        if (
+          result?.data?.buildCitations?.htmlReferences &&
+          !result?.data?.buildCitations?.error
+        ) {
+          return result.data.buildCitations.htmlReferences
+        }
+
+        console.error('Server-side error: ', result.data.buildCitations.error)
+        return text
+      })
+  }
+
   return (
     <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
-      <div
-        className={validationStatus}
-        // onBlur={e => {
-        //   e.preventDefault()
-        //   saveSource(editorRef.current.getContent())
-        // }}
-        // tabIndex={1}
-      >
+      <div className={validationStatus}>
         <Wax
           autoFocus={autoFocus}
           config={productionWaxEditorConfig(
             readOnlyComments,
             handleAssetManager,
+            updateAnystyle,
           )}
           fileUpload={file => renderImage(file)}
           layout={
@@ -100,9 +126,6 @@ const ProductionWaxEditor = ({
       </div>
     </ThemeProvider>
   )
-  // 	,
-  //   [],
-  // )
 }
 
 ProductionWaxEditor.propTypes = {

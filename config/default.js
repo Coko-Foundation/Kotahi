@@ -127,6 +127,11 @@ module.exports = {
     host: '',
     port: '',
   },
+  anystyle: {
+    protocol: '',
+    host: '',
+    port: '',
+  },
   /** These named configuration sections will be available to webpack */
   publicKeys: [
     'pubsweet-client',
