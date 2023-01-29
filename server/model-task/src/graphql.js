@@ -1,13 +1,11 @@
 const dateFns = require('date-fns')
 
+const config = require('config')
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
 const TaskEmailNotification = require('./taskEmailNotification')
 
-const {
-  createNewTaskAlerts,
-  updateAlertsForTask,
-} = require('./taskCommsUtils')
+const { createNewTaskAlerts, updateAlertsForTask } = require('./taskCommsUtils')
 
 const resolvers = {
   Mutation: {
@@ -36,6 +34,7 @@ const resolvers = {
 
         for (let i = 0; i < distinctTasks.length; i += 1) {
           const task = { ...distinctTasks[i], manuscriptId, sequenceIndex: i }
+
           promises.push(
             Task.query(trx)
               .insert(task)
@@ -68,35 +67,7 @@ const resolvers = {
 
       await updateAlertsForTask(taskRecord)
 
-      await Task.query()
-        .insert(taskRecord)
-        .onConflict('id')
-        .merge()
-
-      const taskEmailNotifications = task.emailNotifications || []
-
-      // find existing task email notifications for the task
-      const existingTaskEmailNotifications = await TaskEmailNotification.query().where({ taskId: task.id })
-      const existingTaskEmailNotificationsIds = existingTaskEmailNotifications.map(el => el.id)
-
-      // filter task email notifications from request payload that have an id present
-      const requestTaskEmailNotificationIds = taskEmailNotifications.filter(el => el.id).map(el => el.id)
-
-      // find which ids are missing the request payload but present in the existing task email notifications ids
-      // since these ids are not present in request payload, these task email notifications must be deleted
-      const deleteTaskEmailNotificationsIds = existingTaskEmailNotificationsIds.filter(el => !requestTaskEmailNotificationIds.includes(el))
-      await TaskEmailNotification.query()
-        .whereIn('id', deleteTaskEmailNotificationsIds)
-        .delete()
-
-      // upsert all task email notifications sent in the request payload
-      for (const taskEmailNotification of taskEmailNotifications) {
-        taskEmailNotification.taskId = taskEmailNotification.taskId || task.id;
-        await TaskEmailNotification.query()
-          .insert(taskEmailNotification)
-          .onConflict('id')
-          .merge()
-      }
+      await Task.query().insert(taskRecord).onConflict('id').merge()
 
       return Task.query()
         .findById(task.id)
@@ -104,32 +75,66 @@ const resolvers = {
         .withGraphFetched('emailNotifications')
     },
 
+    updateTaskNotification: async (_, { taskNotification }) => {
+      const existingTaskEmailNotification = await TaskEmailNotification.query().where(
+        { id: taskNotification.id },
+      )
+
+      if (existingTaskEmailNotification.length > 0) {
+        await TaskEmailNotification.query()
+          .update(taskNotification)
+          .where({ id: taskNotification.id })
+      } else {
+        await TaskEmailNotification.query()
+          .insert(taskNotification)
+          .onConflict('id')
+          .merge()
+      }
+
+      const associatedTask = await Task.query()
+        .findById(taskNotification.taskId)
+        .withGraphFetched('emailNotifications')
+
+      return associatedTask
+    },
+
+    deleteTaskNotification: async (_, { id }, ctx) => {
+      const taskEmailNotification = await TaskEmailNotification.query().findById(
+        id,
+      )
+
+      const associatedTask = await Task.query()
+        .findById(taskEmailNotification.taskId)
+        .withGraphFetched('emailNotifications')
+
+      await TaskEmailNotification.query().deleteById(id)
+
+      return associatedTask
+    },
     createNewTaskAlerts: async () => createNewTaskAlerts(), // For testing purposes. Normally initiated by a scheduler on the server.
 
     removeTaskAlertsForCurrentUser: async (_, __, ctx) =>
       TaskAlert.query().delete().where({ userId: ctx.user }),
 
     updateTaskStatus: async (_, { task }) => {
-      const status = {
-        NOT_STARTED: 'Not started',
-        START: 'Start',
-        IN_PROGRESS: 'In progress',
-        PAUSED: 'Paused',
-        DONE: 'Done',
-      }
+      // eslint-disable-next-line prefer-destructuring
+      const status = config.tasks.status
+
       const data = {
-        status: task.status
+        status: task.status,
       }
 
       // get task
       const dbTask = await Task.query().findById(task.id)
+
       if (task.status === status.IN_PROGRESS && !dbTask.dueDate) {
         const taskDurationDays = dbTask.defaultDurationDays || 0
         data.dueDate = dateFns.addDays(new Date(), taskDurationDays)
       }
+
       await Task.query().update(data).where({ id: task.id })
       return Task.query().findById(task.id)
-    }
+    },
   },
   Query: {
     tasks: async (_, { manuscriptId }) => {
@@ -159,6 +164,9 @@ const typeDefs = `
     reminderPeriodDays: Int
     status: String!
     emailNotifications: [TaskEmailNotificationInput]
+    assigneeType: String
+    assigneeName: String
+    assigneeEmail: String
   }
 
   input UpdateTaskStatusInput {
@@ -180,6 +188,9 @@ const typeDefs = `
     sequenceIndex: Int!
     status: String!
     emailNotifications: [TaskEmailNotification]
+    assigneeType: String
+    assigneeName: String
+    assigneeEmail: String
   }
 
   type TaskAlert {
@@ -193,25 +204,27 @@ const typeDefs = `
   }
 
   input TaskEmailNotificationInput {
-    id: ID
-    taskId: ID
+    id: ID!
+    taskId: ID!
     recipientUserId: ID
-    isRecipientAssignee: Boolean
-    recipientRole: String
+    recipientType: String
     notificationElapsedDays: Int
     emailTemplateKey: String
+    recipientName: String
+    recipientEmail: String
   }
 
   type TaskEmailNotification {
     id: ID!
-    created: DateTime!
-    updated: DateTime
     taskId: ID!
     recipientUserId: ID
-    isRecipientAssignee: Boolean
-    recipientRole: String
+    recipientType: String
     notificationElapsedDays: Int
     emailTemplateKey: String
+    recipientName: String
+    recipientEmail: String
+    created: DateTime!
+    updated: DateTime
   }
 
   extend type Mutation {
@@ -220,6 +233,8 @@ const typeDefs = `
     createNewTaskAlerts: Boolean
     removeTaskAlertsForCurrentUser: Boolean
     updateTaskStatus(task: UpdateTaskStatusInput!): Task!
+    updateTaskNotification(taskNotification: TaskEmailNotificationInput!): Task!
+    deleteTaskNotification(id: ID!): Task!
   }
 `
 

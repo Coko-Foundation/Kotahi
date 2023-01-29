@@ -6,6 +6,7 @@ import config from 'config'
 import DecisionVersions from './DecisionVersions'
 import { Spinner, CommsErrorBanner } from '../../../shared'
 import { fragmentFields } from '../../../component-submit/src/userManuscriptFormQuery'
+import { roles } from '../../../../globals'
 
 import {
   query,
@@ -24,6 +25,8 @@ import {
   GET_BLACKLIST_INFORMATION,
   UPDATE_TASK,
   UPDATE_TASKS,
+  UPDATE_TASK_NOTIFICATION,
+  DELETE_TASK_NOTIFICATION,
 } from '../../../../queries'
 import { validateDoi, validateSuffix } from '../../../../shared/commsUtils'
 import {
@@ -142,6 +145,19 @@ const DecisionPage = ({ match }) => {
           },
         },
       })
+    },
+  })
+
+  const [updateTaskNotification] = useMutation(UPDATE_TASK_NOTIFICATION)
+
+  const [deleteTaskNotification] = useMutation(DELETE_TASK_NOTIFICATION, {
+    update(cache, { data: { id } }) {
+      const notificationId = cache.identify({
+        __typename: 'TaskEmailNotification',
+        id,
+      })
+
+      cache.evict({ notificationId })
     },
   })
 
@@ -308,6 +324,7 @@ const DecisionPage = ({ match }) => {
       currentUser={currentUser}
       decisionForm={decisionForm}
       deleteFile={deleteFile}
+      deleteTaskNotification={deleteTaskNotification}
       displayShortIdAsIdentifier={
         config['client-features'].displayShortIdAsIdentifier &&
         config['client-features'].displayShortIdAsIdentifier.toLowerCase() ===
@@ -325,6 +342,7 @@ const DecisionPage = ({ match }) => {
       refetch={refetch}
       reviewers={data?.manuscript?.reviews}
       reviewForm={reviewForm}
+      roles={roles}
       selectedEmail={selectedEmail}
       sendChannelMessageCb={sendChannelMessageCb}
       sendNotifyEmail={sendNotifyEmail}
@@ -337,6 +355,7 @@ const DecisionPage = ({ match }) => {
       updateReview={updateReview}
       updateReviewJsonData={updateReviewJsonData}
       updateTask={updateTask}
+      updateTaskNotification={updateTaskNotification}
       updateTasks={updateTasks}
       updateTeam={updateTeam}
       urlFrag={urlFrag}

@@ -8,10 +8,13 @@ const {
   getEditorIdsForManuscript,
 } = require('../../model-manuscript/src/manuscriptCommsUtils')
 
+const TaskEmailNotification = require('./taskEmailNotification')
+
 const populateTemplatedTasksForManuscript = async manuscriptId => {
   const newTasks = await Task.query()
     .whereNull('manuscriptId')
     .orderBy('sequenceIndex')
+    .withGraphFetched('emailNotifications')
 
   const existingTasks = await Task.query()
     .where({ manuscriptId })
@@ -34,9 +37,30 @@ const populateTemplatedTasksForManuscript = async manuscriptId => {
         sequenceIndex: i + existingTasks.length,
       }
 
-      delete task.id // So a new id will be assigned
+      delete task.id
       promises.push(
-        Task.query(trx).insertAndFetch(task).withGraphFetched('assignee'),
+        new Promise((resolve, reject) => {
+          Task.query(trx)
+            .insertAndFetch(task)
+            .withGraphFetched('assignee')
+            .then(taskObject => {
+              Promise.all(
+                taskObject.emailNotifications.map(emailNotification => {
+                  const taskEmailNotification = {
+                    ...emailNotification,
+                    taskId: taskObject.id,
+                  }
+
+                  delete taskEmailNotification.id
+                  return TaskEmailNotification.query(trx).insertAndFetch(
+                    taskEmailNotification,
+                  )
+                }),
+              )
+                .then(result => resolve(result))
+                .catch(error => reject(error))
+            })
+        }),
       )
     }
 
@@ -162,6 +186,7 @@ const deleteAlertsForManuscript = async manuscriptId => {
     .whereIn('taskId', Task.query().select('id').where({ manuscriptId }))
 }
 
+<<<<<<< HEAD
 const getTaskEmailNotifications = async ({ status = null }) => {
   let taskQuery = Task.query() // no await here because it's a sub-query
 
@@ -169,6 +194,13 @@ const getTaskEmailNotifications = async ({ status = null }) => {
     taskQuery = taskQuery.where({ status })
   }
 
+=======
+const getTaskEmailNotifications = async ({ status = null}) => {
+  let taskQuery = Task.query() // no await here because it's a sub-query
+  if (status) {
+    taskQuery = taskQuery.where({status})
+  }
+>>>>>>> 935e87a19befe6127d3f045898dc1136bb0e0e0d
   return Task.relatedQuery('emailNotifications')
     .for(taskQuery)
     .withGraphFetched('task')
@@ -182,4 +214,5 @@ module.exports = {
   updateAlertsUponTeamUpdate,
   createNewTaskAlerts,
   deleteAlertsForManuscript,
+  getTaskEmailNotifications,
 }

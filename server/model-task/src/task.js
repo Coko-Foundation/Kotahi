@@ -16,6 +16,7 @@ class Task extends BaseModel {
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
     const { User } = require('@pubsweet/models')
+    /* eslint-disable-next-line global-require */
     const TaskEmailNotification = require('./taskEmailNotification')
 
     return {

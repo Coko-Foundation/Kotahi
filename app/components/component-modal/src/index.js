@@ -7,7 +7,9 @@ import { Button } from '@pubsweet/ui'
 const styles = {
   overlay: {
     backgroundColor: 'rgba(0,0,0,0.8)',
+    overflow: 'scroll',
   },
+
   content: {
     backgroundColor: '#303030',
     border: 'none',
@@ -15,6 +17,7 @@ const styles = {
     height: 'fit-content',
     margin: '0 auto',
     padding: '0',
+    overflow: 'none',
   },
 }
 

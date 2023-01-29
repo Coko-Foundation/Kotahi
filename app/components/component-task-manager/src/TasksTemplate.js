@@ -8,7 +8,15 @@ import {
   WidthLimiter,
 } from '../../shared'
 
-const TasksTemplate = ({ tasks, users, updateTask, updateTasks }) => {
+const TasksTemplate = ({
+  tasks,
+  users,
+  updateTask,
+  updateTasks,
+  roles,
+  updateTaskNotification,
+  deleteTaskNotification,
+}) => {
   return (
     <Container>
       <Heading>Task Template Builder</Heading>
@@ -16,10 +24,13 @@ const TasksTemplate = ({ tasks, users, updateTask, updateTasks }) => {
         <SectionContent>
           <PaddedContent>
             <TaskList
+              deleteTaskNotification={deleteTaskNotification}
               editAsTemplate
               manuscriptId={null}
+              roles={roles}
               tasks={tasks}
               updateTask={updateTask}
+              updateTaskNotification={updateTaskNotification}
               updateTasks={updateTasks}
               users={users}
             />

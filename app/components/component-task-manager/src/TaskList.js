@@ -1,4 +1,4 @@
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { v4 as uuid } from 'uuid'
 import moment from 'moment-timezone'
@@ -11,9 +11,12 @@ const TaskList = ({
   tasks: persistedTasks,
   manuscriptId,
   users,
+  roles,
   updateTask: persistTask,
   updateTasks: persistTasks,
   isReadOnly,
+  updateTaskNotification,
+  deleteTaskNotification,
 }) => {
   const config = useContext(ConfigContext)
 
@@ -21,13 +24,12 @@ const TaskList = ({
   // This is treated as temporary and not persisted until it has a title.
   const [tasks, setTasks] = useState(persistedTasks)
 
-  // Disabled until I figure out correct cache modification -- BW
-  /* useEffect(() => {
+  useEffect(() => {
     setTasks(
       // Reorder required, as optimisticResponse doesn't honour array order, causing jitter with drag-n-drop
       [...persistedTasks].sort((a, b) => a.sequenceIndex - b.sequenceIndex),
     )
-  }, [persistedTasks]) */
+  }, [persistedTasks])
 
   const repackageTask = task => ({
     id: task.id,
@@ -38,15 +40,20 @@ const TaskList = ({
     reminderPeriodDays: task.reminderPeriodDays || 0,
     dueDate: editAsTemplate ? null : new Date(task.dueDate),
     status: editAsTemplate ? 'Not started' : task.status,
+    assigneeType: task.assigneeType || null,
+    assigneeName: task.assigneeName || null,
+    assigneeEmail: task.assigneeEmail || null,
   })
 
   const updateTask = (id, updatedTask) => {
-    if (updatedTask.title)
+    if (updatedTask.title) {
       persistTask({
         variables: {
           task: repackageTask({ ...updatedTask, id }),
         },
       })
+    }
+
     setTasks(tasks.map(t => (t.id === id ? updatedTask : t)))
   }
 
@@ -90,7 +97,63 @@ const TaskList = ({
     label: u.username,
     value: u.id,
     user: u,
+    key: 'registeredUser',
   }))
+
+  const userRoles = roles.map(role => ({
+    label: role.name,
+    value: role.slug,
+    key: 'userRole',
+  }))
+
+  const assigneeGroupedOptions = [
+    {
+      options: [
+        {
+          label: 'Unregistered User',
+          value: 'unregisteredUser',
+          key: 'unregisteredUser',
+        },
+      ],
+    },
+    {
+      label: 'User Roles',
+      options: userRoles,
+    },
+
+    {
+      label: 'Registered Users',
+      options: userOptions,
+    },
+  ]
+
+  const recipientGroupedOptions = [
+    {
+      options: [
+        {
+          label: 'Unregistered User',
+          value: 'unregisteredUser',
+          key: 'unregisteredUser',
+        },
+      ],
+    },
+    {
+      options: [{ label: 'Assignee', value: 'assignee', key: 'assignee' }],
+    },
+    {
+      label: 'User Roles',
+      options: userRoles,
+    },
+    {
+      label: 'Registered Users',
+      options: userOptions,
+    },
+  ]
+
+  if (editAsTemplate) {
+    assigneeGroupedOptions.shift()
+    recipientGroupedOptions.shift()
+  }
 
   return (
     <MediumColumn>
@@ -104,6 +167,8 @@ const TaskList = ({
                   <TaskHeader editAsTemplate={editAsTemplate} />
                   {tasks.map((task, index) => (
                     <Task
+                      assigneeGroupedOptions={assigneeGroupedOptions}
+                      deleteTaskNotification={deleteTaskNotification}
                       editAsTemplate={editAsTemplate}
                       index={index}
                       isReadOnly={isReadOnly}
@@ -112,9 +177,10 @@ const TaskList = ({
                       onDelete={id =>
                         updateTasks(tasks.filter(t => t.id !== id))
                       }
+                      recipientGroupedOptions={recipientGroupedOptions}
                       task={task}
                       updateTask={updateTask}
-                      userOptions={userOptions}
+                      updateTaskNotification={updateTaskNotification}
                     />
                   ))}
                 </>

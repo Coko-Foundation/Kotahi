@@ -214,7 +214,13 @@ module.exports = {
         SENIOR_EDITOR: 'seniorEditor',
         HANDLING_EDITOR: 'handlingEditor',
         AUTHOR: 'author',
+<<<<<<< HEAD
       },
     },
   },
+=======
+      }
+    }
+  }
+>>>>>>> 935e87a19befe6127d3f045898dc1136bb0e0e0d
 }
