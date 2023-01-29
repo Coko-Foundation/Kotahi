@@ -1,19 +1,19 @@
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useEffect, useContext, useRef } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 import styled, { ThemeContext, css } from 'styled-components'
 import { Draggable } from 'react-beautiful-dnd'
-import { Circle, CheckCircle, Trash2 } from 'react-feather'
+import { Circle, CheckCircle } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { useMutation } from '@apollo/client'
 import Dropdown from 'react-dropdown'
+import { TextField } from '@pubsweet/ui/dist/atoms'
 import {
   transposeFromLocalToTimezone,
   transposeFromTimezoneToLocal,
 } from '../../../shared/dateUtils'
 import {
   MinimalTextInput,
-  MinimalSelect,
   MinimalDatePicker,
   MinimalButton,
   MinimalNumericUpDown,
@@ -21,10 +21,13 @@ import {
   ActionButton,
   LooseColumn,
   MediumRow,
+  GroupedOptionsSelect,
 } from '../../shared'
-import { DragVerticalIcon } from '../../shared/Icons'
+
+import { DragVerticalIcon, EllipsisIcon } from '../../shared/Icons'
 import Modal from '../../component-modal/src'
 import { ConfigContext } from '../../config/src'
+import TaskMeta from './TaskMeta'
 import { UPDATE_TASK_STATUS } from '../../../queries'
 
 const TextInput = styled(MinimalTextInput)`
@@ -53,11 +56,6 @@ const TaskRow = styled.div`
           }
         `
       : ''}
-
-  & > div:first-child > div:first-child > svg,
-  & > div:first-child > button:last-child > svg {
-    display: none;
-  }
 
   &:hover > div:first-child > div:first-child > svg,
   &:hover > div:first-child > button:last-child > svg {
@@ -90,6 +88,8 @@ const TitleCell = styled.div`
 const AssigneeCell = styled.div`
   flex: 1 1 15em;
   justify-content: flex-start;
+  flex-direction: column;
+  align-items: start;
 `
 
 const DueDateCell = styled.div`
@@ -135,6 +135,16 @@ const DragIcon = styled(DragVerticalIcon)`
   }
 `
 
+const Ellipsis = styled(EllipsisIcon)`
+  cursor: pointer;
+  height: 20px;
+  width: 20px;
+
+  &:hover path {
+    fill: ${th('colorPrimary')};
+  }
+`
+
 const DaysNoteContainer = styled.div`
   position: absolute;
   transform: translate(4px, 16px);
@@ -144,6 +154,56 @@ const ModalContainer = styled(LooseColumn)`
   background-color: ${th('colorBackground')};
   padding: ${grid(2.5)} ${grid(3)};
   z-index: 10000;
+`
+
+const TaskMetaModalContainer = styled(LooseColumn)`
+  background-color: ${th('colorBackground')};
+  padding: ${grid(2.5)} ${grid(3)};
+  width: 1200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 480px;
+  z-index: 10000;
+`
+
+const ActionDialog = styled.div`
+  background: #ffffff;
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+  left: -80px;
+  padding: 15px;
+  position: absolute;
+  top: 15px;
+  z-index: 9999;
+`
+
+const EditLabel = styled.p`
+  cursor: pointer;
+  margin-bottom: 15px;
+  padding-left: 10px;
+`
+
+const DeleteLabel = styled.p`
+  cursor: pointer;
+  padding-left: 10px;
+`
+
+const TaskAction = styled.div`
+  cursor: pointer;
+  position: relative;
+`
+
+const UnregisteredUserCell = styled.div`
+  display: flex;
+  flex-direction: column;
+  & > div {
+    margin: 10px 10px 0px 0px;
+  }
+`
+
+const InputField = styled(TextField)`
+  height: 30px;
+  margin-bottom: 0;
 `
 
 const calculateDaysDifference = (a, b) => {
@@ -202,20 +262,35 @@ const Task = ({
   task: propTask,
   index,
   updateTask,
-  userOptions,
+  assigneeGroupedOptions,
   onCancel,
   onDelete,
   isReadOnly,
   editAsTemplate,
+  recipientGroupedOptions,
+  updateTaskNotification,
+  deleteTaskNotification,
 }) => {
   const config = useContext(ConfigContext)
   const themeContext = useContext(ThemeContext)
   const [isConfirmingDelete, setIsConfirmingDelete] = useState(false)
+  const [isEditTaskMetaModal, setIsEditTaskMetaModal] = useState(false)
+  const [isActionDialog, setIsActionDialog] = useState(false)
+
+  const taskRef = useRef()
+
   const [task, setTask] = useState(propTask)
-  const [transposedDueDate, setTransposedDueDate] = useState(transposeFromTimezoneToLocal(
-    task.dueDate || new Date(),
-    config.teamTimezone,
-  ))
+
+  useEffect(() => {
+    setTask(propTask)
+  }, [propTask])
+
+  const [transposedDueDate, setTransposedDueDate] = useState(
+    transposeFromTimezoneToLocal(
+      task.dueDate || new Date(),
+      config.teamTimezone,
+    ),
+  )
 
   const dueDateLocalString = getLocalTimeString(moment(task.dueDate))
 
@@ -224,6 +299,24 @@ const Task = ({
   )
     .endOf('day')
     .toDate()
+
+  useEffect(() => {
+    const checkIfClickedOutside = e => {
+      if (
+        isActionDialog &&
+        taskRef.current &&
+        !taskRef.current.contains(e.target)
+      ) {
+        setIsActionDialog(false)
+      }
+    }
+
+    document.addEventListener('click', checkIfClickedOutside)
+
+    return () => {
+      document.removeEventListener('click', checkIfClickedOutside)
+    }
+  }, [isActionDialog])
 
   const daysDifference = calculateDaysDifference(
     transposedEndOfToday,
@@ -237,8 +330,14 @@ const Task = ({
       (Math.abs(daysDifference) === 1 ? ' day' : ' days') +
       (daysDifference < 0 ? ' ago' : '')
 
-  const displayDefaultDurationDaysUnit = task.defaultDurationDays && task.defaultDurationDays == 1 ? ' day' : ' days';
-  const displayDefaultDurationDays = task.defaultDurationDays ? `${task.defaultDurationDays}${displayDefaultDurationDaysUnit}` : '';
+  const displayDefaultDurationDaysUnit =
+    task.defaultDurationDays && task.defaultDurationDays === 1
+      ? ' day'
+      : ' days'
+
+  const displayDefaultDurationDays = task.defaultDurationDays
+    ? `${task.defaultDurationDays}${displayDefaultDurationDaysUnit}`
+    : ''
 
   const dueDateLabel = moment
     .tz(task.dueDate, config.teamTimezone)
@@ -246,14 +345,28 @@ const Task = ({
 
   const isDone = task.status === 'Done'
 
-  const isOverdue =
-    task.dueDate
-      ? Date.now() > new Date(task.dueDate).getTime() && !isDone && !editAsTemplate
-      : false
+  const isOverdue = task.dueDate
+    ? Date.now() > new Date(task.dueDate).getTime() &&
+      !isDone &&
+      !editAsTemplate
+    : false
 
   const [updateTaskStatus] = useMutation(UPDATE_TASK_STATUS, {
     refetchQueries: ['getTasksQuery'],
   })
+
+  const handleStatusUpdate = async taskStatus => {
+    const { data } = await updateTaskStatus({
+      variables: {
+        task: {
+          id: task.id,
+          status: taskStatus,
+        },
+      },
+    })
+
+    setTask(data.updateTaskStatus)
+  }
 
   const status = {
     NOT_STARTED: 'Not started',
@@ -263,59 +376,138 @@ const Task = ({
     DONE: 'Done',
   }
 
-  let activeTaskStatusOptions = [
-    { label: 'Done', value: status.DONE },
-  ]
+  let activeTaskStatusOptions = [{ label: 'Done', value: status.DONE }]
   let statusActionComponent = <></>
+
   switch (task.status) {
     case status.NOT_STARTED:
-      statusActionComponent = <ActionButton onClick={() => handleStatusUpdate(status.IN_PROGRESS)} primary>Start</ActionButton>
-      break;
+      statusActionComponent = (
+        <ActionButton
+          onClick={() => handleStatusUpdate(status.IN_PROGRESS)}
+          primary
+        >
+          Start
+        </ActionButton>
+      )
+      break
 
     case status.IN_PROGRESS:
       activeTaskStatusOptions = [
         { label: 'Pause', value: status.PAUSED },
         { label: 'Done', value: status.DONE },
       ]
-      statusActionComponent = <Dropdown options={activeTaskStatusOptions} onChange={(selected) => handleStatusUpdate(selected.value)} value={task.status} placeholder="Select status" />
-      break;
+      statusActionComponent = (
+        <Dropdown
+          onChange={selected => handleStatusUpdate(selected.value)}
+          options={activeTaskStatusOptions}
+          placeholder="Select status"
+          value={task.status}
+        />
+      )
+      break
 
     case status.PAUSED:
       activeTaskStatusOptions = [
         { label: 'Continue', value: status.IN_PROGRESS },
         { label: 'Done', value: status.DONE },
       ]
-      statusActionComponent = <Dropdown options={activeTaskStatusOptions} onChange={(selected) => handleStatusUpdate(selected.value)} value={task.status} placeholder="Select status" />
-      break;
+      statusActionComponent = (
+        <Dropdown
+          onChange={selected => handleStatusUpdate(selected.value)}
+          options={activeTaskStatusOptions}
+          placeholder="Select status"
+          value={task.status}
+        />
+      )
+      break
 
     case status.DONE:
       activeTaskStatusOptions = [
         { label: 'Continue', value: status.IN_PROGRESS },
       ]
-      statusActionComponent = <Dropdown options={activeTaskStatusOptions} onChange={(selected) => handleStatusUpdate(selected.value)} value={task.status} placeholder="Select status" />
-      break;
-  }
+      statusActionComponent = (
+        <Dropdown
+          onChange={selected => handleStatusUpdate(selected.value)}
+          options={activeTaskStatusOptions}
+          placeholder="Select status"
+          value={task.status}
+        />
+      )
+      break
 
-  const handleStatusUpdate = async (status) => {
-    const { data } = await updateTaskStatus({
-      variables: {
-        task: {
-          id: task.id,
-  	      status
-        }
-      }
-    });
-    setTask(data.updateTaskStatus);
+    default:
   }
 
   useEffect(() => {
     if (task.dueDate) {
-      setTransposedDueDate(transposeFromTimezoneToLocal(
-        task.dueDate || new Date(),
-        config.teamTimezone,
-      ))
+      setTransposedDueDate(
+        transposeFromTimezoneToLocal(
+          task.dueDate || new Date(),
+          config.teamTimezone,
+        ),
+      )
     }
   }, [task])
+
+  const [isNewUser, setIsNewUser] = useState(
+    task.assigneeType === 'unregisteredUser',
+  )
+
+  const [assigneeEmail, setAssigneeEmail] = useState(task.assigneeEmail)
+  const [assigneeName, setAssigneeName] = useState(task.assigneeName)
+
+  useEffect(() => {
+    setAssigneeEmail(task.assigneeEmail)
+    setIsNewUser(task.assigneeType === 'unregisteredUser')
+    setAssigneeName(task.assigneeName)
+  }, [
+    task.assigneeEmail,
+    task.assigneeName,
+    task.assigneeType === 'unregisteredUser',
+  ])
+
+  const [dropdownState, setDropdownState] = useState(false)
+
+  function handleAssigneeInput(selectedOption, selectedTask) {
+    setDropdownState(selectedOption)
+
+    switch (selectedOption.key) {
+      case 'userRole':
+        setIsNewUser(false)
+        updateTask(selectedTask.id, {
+          ...selectedTask,
+          assigneeType: selectedOption.value,
+          assigneeUserId: null,
+          assignee: null,
+          assigneeName: null,
+          assigneeEmail: null,
+        })
+        break
+      case 'registeredUser':
+        setIsNewUser(false)
+        updateTask(selectedTask.id, {
+          ...selectedTask,
+          assigneeUserId: selectedOption?.value,
+          assignee: selectedOption?.user,
+          assigneeType: selectedOption.key,
+          assigneeName: null,
+          assigneeEmail: null,
+        })
+        break
+      case 'unregisteredUser':
+        setIsNewUser(true)
+        updateTask(selectedTask.id, {
+          ...selectedTask,
+          assigneeUserId: null,
+          assignee: null,
+          assigneeType: selectedOption.key,
+          assigneeName: null,
+          assigneeEmail: null,
+        })
+        break
+      default:
+    }
+  }
 
   if (isReadOnly)
     return (
@@ -370,6 +562,42 @@ const Task = ({
               </MediumRow>
             </ModalContainer>
           </Modal>
+          <Modal isOpen={isEditTaskMetaModal}>
+            <TaskMetaModalContainer>
+              <TaskMeta
+                assigneeGroupedOptions={assigneeGroupedOptions}
+                config={config}
+                daysDifferenceLabel={daysDifferenceLabel}
+                deleteTaskNotification={deleteTaskNotification}
+                dueDateLocalString={dueDateLocalString}
+                editAsTemplate={editAsTemplate}
+                index
+                isOverdue={isOverdue}
+                isReadOnly={isReadOnly}
+                onCancel
+                onDelete
+                recipientGroupedOptions={recipientGroupedOptions}
+                ref={provided.innerRef}
+                task={task}
+                transposedDueDate={transposedDueDate}
+                transposedEndOfToday={transposedEndOfToday}
+                updateTask={updateTask}
+                updateTaskNotification={updateTaskNotification}
+              />
+              <MediumRow>
+                <ActionButton
+                  onClick={() => setIsEditTaskMetaModal(false)}
+                  primary
+                >
+                  Save
+                </ActionButton>
+                &nbsp;
+                <ActionButton onClick={() => setIsEditTaskMetaModal(false)}>
+                  Cancel
+                </ActionButton>
+              </MediumRow>
+            </TaskMetaModalContainer>
+          </Modal>
           <TaskRow
             isOverdue={isOverdue}
             ref={provided.innerRef}
@@ -405,32 +633,76 @@ const Task = ({
                 }}
                 onChange={val => updateTask(task.id, { ...task, title: val })}
                 placeholder="Give your task a name..."
-                taskId={task.id}
-                title={task.title}
                 value={task.title}
               />
-              <MinimalButton onClick={() => setIsConfirmingDelete(true)}>
-                <Trash2 size={18} />
-              </MinimalButton>
+              <TaskAction ref={taskRef}>
+                <MinimalButton
+                  onClick={() => {
+                    setIsActionDialog(!isActionDialog)
+                  }}
+                >
+                  <Ellipsis height="24" width="24" />
+                </MinimalButton>
+                {isActionDialog && (
+                  <ActionDialog>
+                    <EditLabel onClick={() => setIsEditTaskMetaModal(true)}>
+                      Edit
+                    </EditLabel>
+                    <DeleteLabel onClick={() => setIsConfirmingDelete(true)}>
+                      Delete
+                    </DeleteLabel>
+                  </ActionDialog>
+                )}
+              </TaskAction>
             </TitleCell>
             <AssigneeCell title={task.assignee?.username}>
-              <MinimalSelect
+              <GroupedOptionsSelect
                 aria-label="Assignee"
                 data-testid="Assignee_select"
+                dropdownState={dropdownState}
                 isClearable
                 label="Assignee"
-                onChange={selected =>
-                  updateTask(task.id, {
-                    ...task,
-                    assigneeUserId: selected?.value,
-                    assignee: selected?.user,
-                  })
-                }
-                options={userOptions}
-                placeholder="Assign a user"
-                value={task.assignee?.id}
+                onChange={selected => handleAssigneeInput(selected, task)}
+                options={assigneeGroupedOptions}
+                placeholder="Select..."
+                value={task.assignee?.id || task.assigneeType}
               />
+              {isNewUser && (
+                <UnregisteredUserCell>
+                  <InputField
+                    data-cy="new-user-email"
+                    onChange={e => {
+                      setAssigneeEmail(e.target.value)
+                      updateTask(task.id, {
+                        ...task,
+                        assigneeUserId: null,
+                        assignee: null,
+                        assigneeType: 'unregisteredUser',
+                        assigneeEmail: e.target.value,
+                      })
+                    }}
+                    placeholder="Email"
+                    value={assigneeEmail}
+                  />
+                  <InputField
+                    data-cy="new-user-name"
+                    onChange={e => {
+                      setAssigneeName(e.target.value)
+                      updateTask(task.id, {
+                        ...task,
+                        assigneeUserId: null,
+                        assignee: null,
+                        assigneeType: 'unregisteredUser',
+                        assigneeName: e.target.value,
+                      })
+                    }}
+                    placeholder="Name"
+                    value={assigneeName}
+                  />
+                </UnregisteredUserCell>
+              )}
             </AssigneeCell>
+
             {editAsTemplate ? (
               <>
                 <DurationDaysCell>
@@ -480,9 +752,7 @@ const Task = ({
                     </>
                   )}
                 </DueDateCell>
-                <StatusActionCell>
-                  {statusActionComponent}
-                </StatusActionCell>
+                <StatusActionCell>{statusActionComponent}</StatusActionCell>
               </>
             )}
           </TaskRow>
@@ -512,16 +782,6 @@ Task.propTypes = {
   onCancel: PropTypes.func,
   onDelete: PropTypes.func.isRequired,
   updateTask: PropTypes.func.isRequired,
-  userOptions: PropTypes.arrayOf(
-    PropTypes.shape({
-      label: PropTypes.node.isRequired,
-      value: PropTypes.string,
-      user: PropTypes.shape({
-        id: PropTypes.string.isRequired,
-        username: PropTypes.string.isRequired,
-      }).isRequired,
-    }),
-  ).isRequired,
 }
 
 Task.defaultProps = {

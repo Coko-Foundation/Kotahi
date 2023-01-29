@@ -495,6 +495,7 @@ const permissions = {
     ),
     updateTask: or(userIsEditor, userIsAdmin),
     updateTasks: or(userIsEditor, userIsAdmin),
+    updateTaskNotification: or(userIsEditor, userIsAdmin),
     updateTeam: or(userIsEditor, userIsAdmin),
     updateTeamMember: or(userIsEditor, userIsAdmin),
     updateUser: userIsAdmin,

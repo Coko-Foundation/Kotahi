@@ -1,8 +1,14 @@
 import React from 'react'
 import { useMutation, useQuery, gql } from '@apollo/client'
-import { UPDATE_TASK, UPDATE_TASKS } from '../../../queries'
+import {
+  DELETE_TASK_NOTIFICATION,
+  UPDATE_TASK,
+  UPDATE_TASKS,
+  UPDATE_TASK_NOTIFICATION,
+} from '../../../queries'
 import { CommsErrorBanner, Spinner } from '../../shared'
 import TasksTemplate from './TasksTemplate'
+import { roles } from '../../../globals'
 
 const query = gql`
   query getTasksQuery {
@@ -19,6 +25,19 @@ const query = gql`
         email
         profilePicture
       }
+      emailNotifications {
+        id
+        taskId
+        recipientUserId
+        recipientType
+        notificationElapsedDays
+        emailTemplateKey
+        recipientName
+        recipientEmail
+      }
+      assigneeType
+      assigneeEmail
+      assigneeName
       defaultDurationDays
       dueDate
       reminderPeriodDays
@@ -39,6 +58,14 @@ const TasksTemplatePage = ({ match, ...props }) => {
     refetchQueries: ['getTasksQuery'],
   })
 
+  const [updateTaskNotification] = useMutation(UPDATE_TASK_NOTIFICATION, {
+    refetchQueries: ['getTasksQuery'],
+  })
+
+  const [deleteTaskNotification] = useMutation(DELETE_TASK_NOTIFICATION, {
+    refetchQueries: ['getTasksQuery'],
+  })
+
   const [updateTasks] = useMutation(UPDATE_TASKS, {
     refetchQueries: ['getTasksQuery'],
   })
@@ -49,8 +76,11 @@ const TasksTemplatePage = ({ match, ...props }) => {
 
   return (
     <TasksTemplate
+      deleteTaskNotification={deleteTaskNotification}
+      roles={roles}
       tasks={data.tasks}
       updateTask={updateTask}
+      updateTaskNotification={updateTaskNotification}
       updateTasks={updateTasks}
       users={data.users}
     />

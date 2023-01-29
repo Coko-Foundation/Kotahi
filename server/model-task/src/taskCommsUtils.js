@@ -8,10 +8,13 @@ const {
   getEditorIdsForManuscript,
 } = require('../../model-manuscript/src/manuscriptCommsUtils')
 
+const TaskEmailNotification = require('./taskEmailNotification')
+
 const populateTemplatedTasksForManuscript = async manuscriptId => {
   const newTasks = await Task.query()
     .whereNull('manuscriptId')
     .orderBy('sequenceIndex')
+    .withGraphFetched('emailNotifications')
 
   const existingTasks = await Task.query()
     .where({ manuscriptId })
@@ -34,9 +37,30 @@ const populateTemplatedTasksForManuscript = async manuscriptId => {
         sequenceIndex: i + existingTasks.length,
       }
 
-      delete task.id // So a new id will be assigned
+      delete task.id
       promises.push(
-        Task.query(trx).insertAndFetch(task).withGraphFetched('assignee'),
+        new Promise((resolve, reject) => {
+          Task.query(trx)
+            .insertAndFetch(task)
+            .withGraphFetched('assignee')
+            .then(taskObject => {
+              Promise.all(
+                taskObject.emailNotifications.map(emailNotification => {
+                  const taskEmailNotification = {
+                    ...emailNotification,
+                    taskId: taskObject.id,
+                  }
+
+                  delete taskEmailNotification.id
+                  return TaskEmailNotification.query(trx).insertAndFetch(
+                    taskEmailNotification,
+                  )
+                }),
+              )
+                .then(result => resolve(result))
+                .catch(error => reject(error))
+            })
+        }),
       )
     }
 
