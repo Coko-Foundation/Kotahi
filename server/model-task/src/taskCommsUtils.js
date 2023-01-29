@@ -162,6 +162,20 @@ const deleteAlertsForManuscript = async manuscriptId => {
     .whereIn('taskId', Task.query().select('id').where({ manuscriptId }))
 }
 
+const getTaskEmailNotifications = async ({ status = null }) => {
+  let taskQuery = Task.query() // no await here because it's a sub-query
+
+  if (status) {
+    taskQuery = taskQuery.where({ status })
+  }
+
+  return Task.relatedQuery('emailNotifications')
+    .for(taskQuery)
+    .withGraphFetched('task')
+    .withGraphFetched('recipientUser')
+    .withGraphFetched('task.assignee')
+}
+
 module.exports = {
   populateTemplatedTasksForManuscript,
   updateAlertsForTask,
