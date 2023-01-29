@@ -186,7 +186,6 @@ const deleteAlertsForManuscript = async manuscriptId => {
     .whereIn('taskId', Task.query().select('id').where({ manuscriptId }))
 }
 
-<<<<<<< HEAD
 const getTaskEmailNotifications = async ({ status = null }) => {
   let taskQuery = Task.query() // no await here because it's a sub-query
 
@@ -194,13 +193,6 @@ const getTaskEmailNotifications = async ({ status = null }) => {
     taskQuery = taskQuery.where({ status })
   }
 
-=======
-const getTaskEmailNotifications = async ({ status = null}) => {
-  let taskQuery = Task.query() // no await here because it's a sub-query
-  if (status) {
-    taskQuery = taskQuery.where({status})
-  }
->>>>>>> 935e87a19befe6127d3f045898dc1136bb0e0e0d
   return Task.relatedQuery('emailNotifications')
     .for(taskQuery)
     .withGraphFetched('task')
