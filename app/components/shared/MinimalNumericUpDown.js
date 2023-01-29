@@ -65,6 +65,10 @@ const MinimalNumericUpDown = ({ autoFocus, isReadOnly, value, onChange }) => {
   )
 
   useEffect(() => {
+    setCurrentVal(value)
+  }, [typeof value === 'number' ? Math.floor(value) : 0])
+
+  useEffect(() => {
     if (timeout.current) {
       clearTimeout(timeout.current)
     }

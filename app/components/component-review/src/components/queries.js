@@ -82,18 +82,31 @@ const manuscriptFields = `
     updated
     manuscriptId
     title
-    assigneeUserId
     assignee {
       id
       username
       email
       profilePicture
     }
+    assigneeUserId
     defaultDurationDays
     dueDate
     reminderPeriodDays
     sequenceIndex
     status
+    assigneeType
+    assigneeEmail
+    assigneeName
+    emailNotifications {
+      id
+      taskId
+      recipientUserId
+      recipientType
+      notificationElapsedDays
+      emailTemplateKey
+      recipientName
+      recipientEmail
+    }
   }
 `
 

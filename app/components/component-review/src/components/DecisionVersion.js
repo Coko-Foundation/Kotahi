@@ -29,6 +29,7 @@ const createBlankSubmissionBasedOnForm = form => {
 
 const DecisionVersion = ({
   allUsers,
+  roles,
   decisionForm,
   form,
   currentDecisionData,
@@ -68,6 +69,8 @@ const DecisionVersion = ({
   refetch,
   updateTask,
   updateTasks,
+  updateTaskNotification,
+  deleteTaskNotification,
 }) => {
   // Hooks from the old world
   const addEditor = (manuscript, label, isCurrent, user) => {
@@ -215,10 +218,13 @@ const DecisionVersion = ({
             </SectionHeader>
             <SectionRow>
               <TaskList
+                deleteTaskNotification={deleteTaskNotification}
                 isReadOnly={!isCurrentVersion}
                 manuscriptId={version.id}
+                roles={roles}
                 tasks={version.tasks}
                 updateTask={updateTask}
+                updateTaskNotification={updateTaskNotification}
                 updateTasks={updateTasks}
                 users={allUsers}
               />

@@ -408,6 +408,20 @@ dueDate
 reminderPeriodDays
 sequenceIndex
 status
+emailNotifications {
+  id
+  taskId
+  recipientUserId
+  recipientType
+  notificationElapsedDays
+  emailTemplateKey
+  recipientName
+  recipientEmail
+}
+assigneeType
+assigneeName
+assigneeEmail
+
 `
 
 export const UPDATE_TASKS = gql`
@@ -426,6 +440,21 @@ export const UPDATE_TASK = gql`
   }
 `
 
+export const UPDATE_TASK_NOTIFICATION = gql`
+  mutation ($taskNotification: TaskEmailNotificationInput!) {
+    updateTaskNotification(taskNotification: $taskNotification) {
+      ${taskFields}
+    }
+  }
+`
+export const DELETE_TASK_NOTIFICATION = gql`
+  mutation($id: ID!) {
+    deleteTaskNotification(id: $id)
+    {
+      ${taskFields}
+    }
+  }
+`
 export const UPDATE_TASK_STATUS = gql`
   mutation($task: UpdateTaskStatusInput!) {
     updateTaskStatus(task: $task) {

@@ -89,13 +89,13 @@ class Manuscript extends BaseModel {
     const manuscripts = await Manuscript.query()
       .where('parent_id', id)
       .withGraphFetched(
-        '[teams.members, reviews.user, files, tasks(orderBySequence).assignee]',
+        '[teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications]]',
       )
 
     const firstManuscript = await Manuscript.query()
       .findById(id)
       .withGraphFetched(
-        '[teams.members, reviews.user, files, tasks(orderBySequence).assignee]',
+        '[teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications]]',
       )
 
     manuscripts.push(firstManuscript)
@@ -247,6 +247,10 @@ class Manuscript extends BaseModel {
           type: ['array', 'null'],
         },
         teams: {
+          items: { type: 'object' },
+          type: ['array', 'null'],
+        },
+        tasks: {
           items: { type: 'object' },
           type: ['array', 'null'],
         },

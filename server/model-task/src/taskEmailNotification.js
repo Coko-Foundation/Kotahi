@@ -6,7 +6,9 @@ class TaskEmailNotification extends BaseModel {
   }
 
   static get relationMappings() {
+    /* eslint-disable-next-line global-require */
     const { User } = require('@pubsweet/models')
+    /* eslint-disable-next-line global-require */
     const Task = require('./task')
 
     return {
@@ -35,10 +37,10 @@ class TaskEmailNotification extends BaseModel {
         taskId: { type: 'string', format: 'uuid' },
         recipientUserId: { type: ['string', 'null'], format: 'uuid' },
         recipientType: { type: ['string', 'null'] },
-        recipientName: { type: ['string', 'null'] },
-        recipientEmail: { type: ['string', 'null'] },
         notificationElapsedDays: { type: ['integer', 'null'] },
         emailTemplateKey: { type: ['string', 'null'] },
+        recipientName: { type: ['string', 'null'] },
+        recipientEmail: { type: ['string', 'null'] },
       },
     }
   }
