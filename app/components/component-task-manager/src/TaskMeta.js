@@ -78,11 +78,6 @@ const TaskFieldsContainer = styled.div`
   margin-right: 20px;
 `
 
-const DaysNoteContainer = styled.div`
-  position: absolute;
-  transform: translate(4px, 16px);
-`
-
 const InputField = styled(TextField)`
   height: 40px;
   margin-bottom: 0;
@@ -113,6 +108,8 @@ const TaskMeta = ({
   config,
   recipientGroupedOptions,
   deleteTaskNotification,
+  status,
+  displayDefaultDurationDays,
   ref,
 }) => {
   const [isNewUser, setIsNewUser] = useState(
@@ -299,34 +296,37 @@ const TaskMeta = ({
                   <DurationTitle>Due Date</DurationTitle>
 
                   <DueDateCell title={dueDateLocalString}>
-                    <DaysNoteContainer>
-                      <CompactDetailLabel isWarning={isOverdue}>
-                        {daysDifferenceLabel}
+                    {task.status === status.NOT_STARTED ? (
+                      <CompactDetailLabel>
+                        {displayDefaultDurationDays}
                       </CompactDetailLabel>
-                    </DaysNoteContainer>
-                    <MinimalDatePicker
-                      clearIcon={null}
-                      format="yyyy-MM-dd"
-                      minDate={transposedEndOfToday}
-                      onChange={val =>
-                        updateTask(task.id, {
-                          ...task,
-                          dueDate: moment
-                            .tz(
-                              transposeFromLocalToTimezone(
-                                val,
-                                config.teamTimezone,
-                              ),
-                              config.teamTimezone,
-                            )
-                            .endOf('day')
-                            .toDate(),
-                        })
-                      }
-                      position="bottom center"
-                      suppressTodayHighlight
-                      value={transposedDueDate}
-                    />
+                    ) : (
+                      <>
+                        <MinimalDatePicker
+                          clearIcon={null}
+                          format="yyyy-MM-dd"
+                          minDate={transposedEndOfToday}
+                          onChange={val =>
+                            updateTask(task.id, {
+                              ...task,
+                              dueDate: moment
+                                .tz(
+                                  transposeFromLocalToTimezone(
+                                    val,
+                                    config.teamTimezone,
+                                  ),
+                                  config.teamTimezone,
+                                )
+                                .endOf('day')
+                                .toDate(),
+                            })
+                          }
+                          position="top center"
+                          suppressTodayHighlight
+                          value={transposedDueDate}
+                        />
+                      </>
+                    )}
                   </DueDateCell>
                 </TaskFieldsContainer>
               </>
@@ -348,9 +348,9 @@ const TaskMeta = ({
             </TaskFieldsContainer>
           </TaskPrimaryDetails>
           {(taskEmailNotifications === null ||
-            !taskEmailNotifications.length) &&
+            !taskEmailNotifications?.length) &&
             'Add Notification Recipient'}
-          {taskEmailNotifications.length ? (
+          {taskEmailNotifications?.length ? (
             <>
               {taskEmailNotifications.map((notification, key) => (
                 <TaskNotificationDetails
@@ -368,7 +368,7 @@ const TaskMeta = ({
           {!isReadOnly && (
             <RoundIconButton
               disabled={
-                taskEmailNotifications.length
+                taskEmailNotifications?.length
                   ? taskEmailNotifications.some(t => !t.recipientType)
                   : false
               }

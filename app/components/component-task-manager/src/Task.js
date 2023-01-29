@@ -569,6 +569,7 @@ const Task = ({
                 config={config}
                 daysDifferenceLabel={daysDifferenceLabel}
                 deleteTaskNotification={deleteTaskNotification}
+                displayDefaultDurationDays={displayDefaultDurationDays}
                 dueDateLocalString={dueDateLocalString}
                 editAsTemplate={editAsTemplate}
                 index
@@ -578,6 +579,7 @@ const Task = ({
                 onDelete
                 recipientGroupedOptions={recipientGroupedOptions}
                 ref={provided.innerRef}
+                status={status}
                 task={task}
                 transposedDueDate={transposedDueDate}
                 transposedEndOfToday={transposedEndOfToday}

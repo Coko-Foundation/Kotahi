@@ -277,6 +277,19 @@ const SelectEmailTemplate = ({
   taskEmailNotification,
   task,
 }) => {
+  if (process.env.INSTANCE_NAME === 'colab' && isTaskEmailNotification) {
+    emailTemplateOptions = [
+      {
+        label: 'Thanks for Agreeing to Review Template',
+        value: 'thanksForAgreeingToReviewTemplate',
+      },
+      {
+        label: 'Reminder: Review Overdue Template',
+        value: 'reminderReviewOverdueTemplate',
+      },
+    ]
+  }
+
   return (
     <Select
       aria-label="Notification_email_select"
