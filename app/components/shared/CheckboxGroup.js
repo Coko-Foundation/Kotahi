@@ -4,25 +4,23 @@ import { Checkbox } from './Checkbox'
 /* import theme from '../../theme' */
 
 // eslint-disable-next-line import/prefer-default-export
-export const CheckboxGroup = ({ options, ...props }) => {
+export const CheckboxGroup = ({ options, value: values, ...props }) => {
   const handleChange = event => {
-    const values = props.value ? Array.from(props.value) : []
-
-    const { value } = event.target
-
-    if (event.target.checked) {
-      values.push(value)
-    } else {
-      values.splice(values.indexOf(value), 1)
-    }
-
-    props.onChange(values)
+    const { name } = event.target
+    const newValues = values.filter(v => v !== name)
+    if (event.target.checked) newValues.push(name)
+    props.onChange(newValues)
   }
 
   return (
     <>
       {options.map(option => (
-        <Checkbox {...option} handleChange={handleChange} key={option.id} />
+        <Checkbox
+          {...option}
+          checked={values.includes(option.value)}
+          handleChange={handleChange}
+          key={option.id}
+        />
       ))}
     </>
   )
