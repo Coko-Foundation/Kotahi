@@ -1,7 +1,7 @@
 import { Service } from 'wax-prosemirror-services'
 import AnyStyleTool from './AnyStyleTool'
 import AnyStyleToolGroupService from './AnyStyleToolGroupService/AnyStyleToolGroupService'
-import AnyStylePlaceHolderPlugin from './plugins/anyStylePlaceHolderPlugin'
+import AnyStylePlaceHolderPlugin from './plugins/anystylePlaceHolderPlugin'
 import './anyStyle.css'
 
 class AnyStyleService extends Service {
