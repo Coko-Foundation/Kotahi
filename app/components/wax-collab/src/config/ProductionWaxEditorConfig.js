@@ -42,7 +42,7 @@ import {
 import JatsTagsService from '../JatsTags'
 import CharactersList from './CharactersList'
 import KotahiSchema from './KotahiSchema'
-import AnyStyleService from '../CustomWaxToolGroups/AnyStyleService/AnyStyleService'
+import AnyStyleService from '../CustomWaxToolGroups/AnystyleService/AnyStyleService'
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
