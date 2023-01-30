@@ -28,12 +28,9 @@ const cleanMath = file => {
   // Sometimes math comes in in the form <h4><h4><math-display>...math...</math-display></h4></h4>
   // It should not be coming in like this! If the duplicated <h4>s are replaced by <p>, math processing works correctly
 
-  const dupedH4 = /<h4>\s*<h4>/g
-  const dupedEndH4 = /<\/h4>\s*<\/h4>/g
+  const dupedH4s = /<h4>\s*<h4>([\s\S]*?)<\/h4>\s*<\/h4>/g
 
-  const dedupedFile = file
-    .replaceAll(dupedH4, `<p>`)
-    .replaceAll(dupedEndH4, `</p>`)
+  const dedupedFile = file.replaceAll(dupedH4s, `<p>$1</p>`)
 
   // Note: both inline and display equations were coming in from xSweet with
   // $$ around them. This code removes them.
