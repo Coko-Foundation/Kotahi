@@ -283,10 +283,6 @@ const SelectEmailTemplate = ({
         label: 'Thanks for Agreeing to Review Template',
         value: 'thanksForAgreeingToReviewTemplate',
       },
-      {
-        label: 'Reminder: Review Overdue Template',
-        value: 'reminderReviewOverdueTemplate',
-      },
     ]
   }
 
