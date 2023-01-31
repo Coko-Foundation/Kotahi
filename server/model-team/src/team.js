@@ -15,6 +15,9 @@ class Team extends BaseModel {
     return {
       onlyAuthors(builder) {
         builder.where('role', 'author');
+      },
+      onlyEditors(builder) {
+        builder.where('role', 'editor');
       }
     }
   }

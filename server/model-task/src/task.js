@@ -18,6 +18,7 @@ class Task extends BaseModel {
     const { User } = require('@pubsweet/models')
     /* eslint-disable-next-line global-require */
     const TaskEmailNotification = require('./taskEmailNotification')
+    const Manuscript = require('../../model-manuscript/src/manuscript')
 
     return {
       assignee: {
@@ -36,6 +37,14 @@ class Task extends BaseModel {
           to: 'task_email_notifications.taskId',
         },
       },
+      manuscript: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: Manuscript,
+        join: {
+          from: 'tasks.manuscriptId',
+          to: 'manuscripts.id',
+        },
+      }
     }
   }
 

@@ -66,7 +66,8 @@ schedule.scheduleJob(
 schedule.scheduleJob(
   {
     tz: `${config.manuscripts.teamTimezone || 'Etc/UTC'}`,
-    rule: `00 00 * * *`,
+    // rule: `00 00 * * *`,
+    rule: `* * * * *`,
   },
   async () => {
     const taskEmailNotifications = await getTaskEmailNotifications({
@@ -188,15 +189,28 @@ schedule.scheduleJob(
         default:
       }
 
+      console.log('before manuscript.....')
+      console.log('emailNotification.task......', emailNotification.task)
+      const manuscript = emailNotification.task.manuscript
+      console.log('manuscript.....', manuscript)
+      const author = manuscript.getManuscriptAuthor()
+      const authorName = author.username
+      console.log('authorName.....', authorName)
+      const currentUser = manuscript.getManuscriptEditor()
+      console.log('currentUser.....', currentUser)
+
       // eslint-disable-next-line no-restricted-syntax
       for (const recipient of notificationRecipients) {
         try {
-          // eslint-disable-next-line no-await-in-loop
-          await sendEmailNotification(
-            recipient.email,
-            emailNotification.emailTemplateKey,
-            {},
-          )
+          // // eslint-disable-next-line no-await-in-loop
+          // await sendEmailNotification(
+          //   recipient.email,
+          //   emailNotification.emailTemplateKey,
+          //   {
+          //     authorName,
+          //     currentUser,
+          //   },
+          // )
         } catch (error) {
           console.error(error)
         }
