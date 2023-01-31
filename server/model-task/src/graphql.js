@@ -127,7 +127,7 @@ const resolvers = {
       // get task
       const dbTask = await Task.query().findById(task.id)
 
-      if (task.status === status.IN_PROGRESS && !dbTask.dueDate) {
+      if (dbTask.status === status.NOT_STARTED && task.status === status.IN_PROGRESS) {
         const taskDurationDays = dbTask.defaultDurationDays || 0
         data.dueDate = dateFns.addDays(new Date(), taskDurationDays)
       }
