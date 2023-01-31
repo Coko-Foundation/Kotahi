@@ -420,6 +420,11 @@
       list-style: none;
     }
   }
+
+	.content ol {
+		list-style-type: decimal;
+	}
+	
   /*  to align the running heads*/
   .pagedjs_margin.hasContent {
     height: 100%;

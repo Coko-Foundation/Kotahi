@@ -49,11 +49,11 @@ export const DownloadDropdown = ({
     },
   ]
 
-  return (
+  return manuscriptSource ? (
     <Dropdown itemsList={options} primary>
       Download
     </Dropdown>
-  )
+  ) : null
 }
 
 DownloadDropdown.propTypes = {

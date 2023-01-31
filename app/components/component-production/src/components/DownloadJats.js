@@ -46,7 +46,13 @@ const DownloadJatsComponent = ({ manuscript, resetMakingJats }) => {
           },
         }}
       >
-        <CloseButton />
+        <CloseButton
+          onClick={e => {
+            e.preventDefault()
+            resetMakingJats()
+            setModalIsOpen(false)
+          }}
+        />
         <PopUpH2>Generating JATS...</PopUpH2>
         <Spinner />
       </Modal>
