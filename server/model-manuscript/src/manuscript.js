@@ -112,14 +112,21 @@ class Manuscript extends BaseModel {
     return manuscriptVersions
   }
 
-  async getManuscriptAuthor() {
+  async getManuscriptAuthor(params = {}) {
     if (!this.id) {
       return null
     }
-    const manuscriptWithAuthors = await models.Manuscript.query()
+
+    const { onlyAccepted = false } = params
+
+    let relations = '[teams(onlyAuthors).[members(orderByCreatedDesc).[user]]]'
+    if (onlyAccepted) {
+      relations = '[teams(onlyAuthors).[members(onlyAccepted, orderByCreatedDesc).[user]]]'
+    }
+    const manuscriptWithAuthors = await Manuscript.query()
       .findById(this.id)
-      .withGraphFetched('[teams(onlyAuthors).[members(onlyAccepted, orderByCreatedDesc).[user]]]')
-    if (!manuscriptWithAuthors.teams.length || !manuscriptWithAuthors.teams[0].length) {
+      .withGraphFetched(relations)
+    if (!manuscriptWithAuthors.teams.length || !manuscriptWithAuthors.teams[0].members.length) {
       return null
     }
     const authorTeam = manuscriptWithAuthors.teams[0]
@@ -131,10 +138,10 @@ class Manuscript extends BaseModel {
     if (!this.id) {
       return null
     }
-    const manuscriptWithEditors = await models.Manuscript.query()
+    const manuscriptWithEditors = await Manuscript.query()
       .findById(this.id)
       .withGraphFetched('[teams(onlyEditors).[members(orderByCreatedDesc).[user]]]')
-    if (!manuscriptWithEditors.teams.length || !manuscriptWithEditors.teams[0].length) {
+    if (!manuscriptWithEditors.teams.length || !manuscriptWithEditors.teams[0].members.length) {
       return null
     }
     const editorTeam = manuscriptWithEditors.teams[0]
