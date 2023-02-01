@@ -113,13 +113,13 @@ const parseCitations = async (references, startNumber = 0) => {
   const raw = await randomBytes(16)
   const dirName = `tmp/${raw.toString('hex')}`
 
+  await fsPromised.mkdir(dirName, { recursive: true })
+
   const txt = await convertHtmlToText(references)
 
   const txtPath = `${dirName}/references.txt`
 
   await fsPromised.appendFile(txtPath, txt)
-
-  await fsPromised.mkdir(dirName, { recursive: true })
 
   // 1 pass references to anystyle
   const form = new FormData()
@@ -135,7 +135,7 @@ const parseCitations = async (references, startNumber = 0) => {
         authorization: `Bearer ${anystyleAccessToken}`,
         ...form.getHeaders(),
       },
-      responseType: 'stream',
+      // responseType: 'stream',
       data: form,
       // timeout: 1000, // adding this because it's failing
     })
