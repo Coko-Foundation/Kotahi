@@ -93,7 +93,7 @@ const ProductionWaxEditor = ({
         }
 
         console.error('Server-side error: ', result.data.buildCitations.error)
-        return text
+        return content
       })
   }
 
