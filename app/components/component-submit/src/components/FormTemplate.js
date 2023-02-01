@@ -576,10 +576,7 @@ FormTemplate.propTypes = {
         placeholder: PropTypes.string,
         validate: PropTypes.arrayOf(PropTypes.object.isRequired),
         validateValue: PropTypes.objectOf(
-          PropTypes.oneOfType([
-            PropTypes.string.isRequired,
-            PropTypes.number.isRequired,
-          ]).isRequired,
+          PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         ),
         hideFromAuthors: PropTypes.string,
       }).isRequired,
