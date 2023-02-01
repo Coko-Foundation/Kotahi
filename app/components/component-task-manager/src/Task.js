@@ -21,7 +21,6 @@ import {
   ActionButton,
   LooseColumn,
   MediumRow,
-  GroupedOptionsSelect,
 } from '../../shared'
 
 import { DragVerticalIcon, EllipsisIcon } from '../../shared/Icons'
@@ -192,19 +191,6 @@ const DeleteLabel = styled.p`
 const TaskAction = styled.div`
   cursor: pointer;
   position: relative;
-`
-
-const UnregisteredUserCell = styled.div`
-  display: flex;
-  flex-direction: column;
-  & > div {
-    margin: 10px 10px 0px 0px;
-  }
-`
-
-const InputField = styled(TextField)`
-  height: 30px;
-  margin-bottom: 0;
 `
 
 const calculateDaysDifference = (a, b) => {

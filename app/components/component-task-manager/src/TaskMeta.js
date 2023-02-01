@@ -9,7 +9,6 @@ import {
   RoundIconButton,
   MediumColumn,
   MinimalNumericUpDown,
-  GroupedOptionsSelect,
   MinimalTextInput,
   CompactDetailLabel,
   MinimalDatePicker,
@@ -26,10 +25,6 @@ const TaskMetaContainer = styled.div`
 
 const TitleCell = styled.div`
   display: flex;
-`
-
-const AssigneeCell = styled.div`
-  justify-content: flex-start;
 `
 
 const DurationDaysCell = styled.div`
@@ -77,18 +72,6 @@ const TaskFieldsContainer = styled.div`
   flex-direction: column;
   width: 25%;
   margin-right: 20px;
-`
-
-const InputField = styled(TextField)`
-  height: 40px;
-  margin-bottom: 0;
-`
-
-const UnregisteredUserCell = styled.div`
-  display: flex;
-  & > div {
-    margin: 20px 20px 0px 0px;
-  }
 `
 
 const TaskMeta = ({

@@ -1,14 +1,6 @@
-import React, { useState, useContext, useEffect } from 'react'
-import styled, { ThemeContext, css } from 'styled-components'
+import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
 import {
-  // MinimalTextInput,
-  // MinimalDatePicker,
-  // MinimalButton,
-  // MinimalNumericUpDown,
-  // CompactDetailLabel,
-  // ActionButton,
-  // LooseColumn,
-  // MediumRow,
   GroupedOptionsSelect,
 } from '../../shared'
 import { TextField } from '@pubsweet/ui/dist/atoms'
