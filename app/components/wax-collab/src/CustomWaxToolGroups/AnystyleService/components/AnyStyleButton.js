@@ -1,5 +1,5 @@
 /* eslint react/prop-types: 0 */
-import React, { useContext, useMemo, useEffect } from 'react'
+import React, { useContext, useMemo } from 'react'
 import styled from 'styled-components'
 import { WaxContext /*, DocumentHelpers */ } from 'wax-prosemirror-core'
 import { MenuButton } from 'wax-prosemirror-components'
@@ -8,16 +8,18 @@ import { TextSelection } from 'prosemirror-state'
 const AnyStyleDiv = styled(MenuButton)`
   margin-top: 8px;
   outline: 1px solid #ccc;
+
   &:after {
-    z-index: 1;
-    content: '';
-    position: absolute;
-    width: 100%;
-    height: 100%;
     background: #fff;
-    transition: 0.25s;
     border-radius: 4px;
+    content: '';
+    height: 100%;
+    position: absolute;
+    transition: 0.25s;
+    width: 100%;
+    z-index: 1;
   }
+
   & span {
     z-index: 2;
   }
@@ -26,23 +28,25 @@ const AnyStyleDiv = styled(MenuButton)`
     &:after {
       background: #f1f5ff;
     }
+
     & span {
+      /* stylelint-disable-next-line declaration-no-important */
       border-bottom-color: transparent !important;
     }
   }
 `
 
 const AnyStyleButton = ({ view = {}, item, anyStyle }) => {
-  const { active, icon, label, run, select, title } = item
+  const { active, icon, label, /* run, */ select, title } = item
 
   const {
-    app,
+    // app,
     pmViews: { main },
     activeViewId,
     activeView,
   } = useContext(WaxContext)
 
-  const { dispatch, state } = view
+  const { /* dispatch, */ state } = view
   // const serviceConfig = app.config.get('config.AnyStyleService')
 
   const handleMouseDown = (e, editorState) => {

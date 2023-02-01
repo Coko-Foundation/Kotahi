@@ -49,7 +49,7 @@ export default (
 
       const parsedContent = parser.parse(elementFromString(text))
       // This is coming back as a node. We want it to be a mark
-      const myFragment = new Fragment.from(parsedContent)
+      const myFragment = Fragment.from(parsedContent)
 
       // Otherwise, insert it at the placeholder's position, and remove
       // the placeholder
