@@ -29,6 +29,7 @@ import Modal from '../../component-modal/src'
 import { ConfigContext } from '../../config/src'
 import TaskMeta from './TaskMeta'
 import { UPDATE_TASK_STATUS } from '../../../queries'
+import AssigneeDropdown from './AssigneeDropdown'
 
 const TextInput = styled(MinimalTextInput)`
   margin-left: ${grid(0.5)};
@@ -658,51 +659,7 @@ const Task = ({
               </TaskAction>
             </TitleCell>
             <AssigneeCell title={task.assignee?.username}>
-              <GroupedOptionsSelect
-                aria-label="Assignee"
-                data-testid="Assignee_select"
-                dropdownState={dropdownState}
-                isClearable
-                label="Assignee"
-                onChange={selected => handleAssigneeInput(selected, task)}
-                options={assigneeGroupedOptions}
-                placeholder="Select..."
-                value={task.assignee?.id || task.assigneeType}
-              />
-              {isNewUser && (
-                <UnregisteredUserCell>
-                  <InputField
-                    data-cy="new-user-email"
-                    onChange={e => {
-                      setAssigneeEmail(e.target.value)
-                      updateTask(task.id, {
-                        ...task,
-                        assigneeUserId: null,
-                        assignee: null,
-                        assigneeType: 'unregisteredUser',
-                        assigneeEmail: e.target.value,
-                      })
-                    }}
-                    placeholder="Email"
-                    value={assigneeEmail}
-                  />
-                  <InputField
-                    data-cy="new-user-name"
-                    onChange={e => {
-                      setAssigneeName(e.target.value)
-                      updateTask(task.id, {
-                        ...task,
-                        assigneeUserId: null,
-                        assignee: null,
-                        assigneeType: 'unregisteredUser',
-                        assigneeName: e.target.value,
-                      })
-                    }}
-                    placeholder="Name"
-                    value={assigneeName}
-                  />
-                </UnregisteredUserCell>
-              )}
+              <AssigneeDropdown assigneeGroupedOptions={assigneeGroupedOptions} task={task} updateTask={updateTask} />
             </AssigneeCell>
 
             {editAsTemplate ? (
