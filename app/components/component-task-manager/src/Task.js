@@ -658,9 +658,7 @@ const Task = ({
                 )}
               </TaskAction>
             </TitleCell>
-            <AssigneeCell title={task.assignee?.username}>
-              <AssigneeDropdown assigneeGroupedOptions={assigneeGroupedOptions} task={task} updateTask={updateTask} />
-            </AssigneeCell>
+            <AssigneeDropdown assigneeGroupedOptions={assigneeGroupedOptions} task={task} updateTask={updateTask} isList={true} />
 
             {editAsTemplate ? (
               <>

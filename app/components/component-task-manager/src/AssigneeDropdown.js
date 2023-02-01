@@ -13,7 +13,18 @@ import {
 } from '../../shared'
 import { TextField } from '@pubsweet/ui/dist/atoms'
 
-const UnregisteredUserCell = styled.div`
+const TaskListAssigneeCell = styled.div`
+  flex: 1 1 15em;
+  justify-content: flex-start;
+  flex-direction: column;
+  align-items: start;
+`
+
+const TaskMetaAssigneeCell = styled.div`
+  justify-content: flex-start;
+`
+
+const TaskListUnregisteredUserCell = styled.div`
   display: flex;
   flex-direction: column;
   & > div {
@@ -21,12 +32,25 @@ const UnregisteredUserCell = styled.div`
   }
 `
 
-const InputField = styled(TextField)`
+const TaskMetaUnregisteredUserCell = styled.div`
+  display: flex;
+  & > div {
+    margin: 20px 20px 0px 0px;
+  }
+`
+
+const TaskListInputField = styled(TextField)`
   height: 30px;
   margin-bottom: 0;
 `
 
-const AssigneeDropdown = ({ assigneeGroupedOptions, task, updateTask }) => {
+const TaskMetaInputField = styled(TextField)`
+  height: 40px;
+  margin-bottom: 0;
+`
+
+const AssigneeDropdown = ({ assigneeGroupedOptions, task, updateTask, isList = false }) => {
+
   const [dropdownState, setDropdownState] = useState(false)
   const [isNewUser, setIsNewUser] = useState(
     task.assigneeType === 'unregisteredUser',
@@ -98,53 +122,70 @@ const AssigneeDropdown = ({ assigneeGroupedOptions, task, updateTask }) => {
     }
   }
 
+  const AssigneeCell = isList ? TaskListAssigneeCell : TaskMetaAssigneeCell
+  const UnregisteredUserCell = isList ? TaskListUnregisteredUserCell : TaskMetaUnregisteredUserCell
+  const InputField = isList ? TaskListInputField : TaskMetaInputField
+
+  const groupedOptionsComponent = <GroupedOptionsSelect
+    aria-label="Assignee"
+    data-testid="Assignee_select"
+    dropdownState={dropdownState}
+    isClearable
+    label="Assignee"
+    onChange={selected => handleAssigneeInput(selected, task)}
+    options={assigneeGroupedOptions}
+    placeholder="Select..."
+    value={task.assignee?.id || task.assigneeType}
+  />
+
+  const newUserComponent = isNewUser && (
+    <UnregisteredUserCell>
+      <InputField
+        data-cy="new-user-email"
+        onChange={e => {
+          setAssigneeEmail(e.target.value)
+          updateTask(task.id, {
+            ...task,
+            assigneeUserId: null,
+            assignee: null,
+            assigneeType: 'unregisteredUser',
+            assigneeEmail: e.target.value,
+          })
+        }}
+        placeholder="Email"
+        value={assigneeEmail}
+      />
+      <InputField
+        data-cy="new-user-name"
+        onChange={e => {
+          setAssigneeName(e.target.value)
+          updateTask(task.id, {
+            ...task,
+            assigneeUserId: null,
+            assignee: null,
+            assigneeType: 'unregisteredUser',
+            assigneeName: e.target.value,
+          })
+        }}
+        placeholder="Name"
+        value={assigneeName}
+      />
+    </UnregisteredUserCell>
+  )
+
+  if (isList) {
+    return <AssigneeCell title={task.assignee?.username}>
+      {groupedOptionsComponent}
+      {newUserComponent}
+    </AssigneeCell>
+  }
+
   return (
     <>
-      <GroupedOptionsSelect
-        aria-label="Assignee"
-        data-testid="Assignee_select"
-        dropdownState={dropdownState}
-        isClearable
-        label="Assignee"
-        onChange={selected => handleAssigneeInput(selected, task)}
-        options={assigneeGroupedOptions}
-        placeholder="Select..."
-        value={task.assignee?.id || task.assigneeType}
-      />
-      {isNewUser && (
-        <UnregisteredUserCell>
-          <InputField
-            data-cy="new-user-email"
-            onChange={e => {
-              setAssigneeEmail(e.target.value)
-              updateTask(task.id, {
-                ...task,
-                assigneeUserId: null,
-                assignee: null,
-                assigneeType: 'unregisteredUser',
-                assigneeEmail: e.target.value,
-              })
-            }}
-            placeholder="Email"
-            value={assigneeEmail}
-          />
-          <InputField
-            data-cy="new-user-name"
-            onChange={e => {
-              setAssigneeName(e.target.value)
-              updateTask(task.id, {
-                ...task,
-                assigneeUserId: null,
-                assignee: null,
-                assigneeType: 'unregisteredUser',
-                assigneeName: e.target.value,
-              })
-            }}
-            placeholder="Name"
-            value={assigneeName}
-          />
-        </UnregisteredUserCell>
-      )}
+      <AssigneeCell title={task.assignee?.username}>
+        {groupedOptionsComponent}
+      </AssigneeCell>
+      {newUserComponent}
     </>
   )
 }
