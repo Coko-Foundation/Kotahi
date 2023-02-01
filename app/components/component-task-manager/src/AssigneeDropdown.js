@@ -181,4 +181,5 @@ const AssigneeDropdown = ({ assigneeGroupedOptions, task, updateTask, isList = f
     </>
   )
 }
+
 export default AssigneeDropdown

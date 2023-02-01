@@ -17,6 +17,7 @@ import {
 import { transposeFromLocalToTimezone } from '../../../shared/dateUtils'
 import TaskNotificationDetails from './TaskNotificationDetails'
 import AssigneeDropdown from './AssigneeDropdown'
+import DueDateField from './DueDateField'
 
 const TaskMetaContainer = styled.div`
   width: 100%;
@@ -232,40 +233,14 @@ const TaskMeta = ({
               <>
                 <TaskFieldsContainer>
                   <DurationTitle>Due Date</DurationTitle>
-
-                  <DueDateCell title={dueDateLocalString}>
-                    {task.status === status.NOT_STARTED ? (
-                      <CompactDetailLabel>
-                        {displayDefaultDurationDays}
-                      </CompactDetailLabel>
-                    ) : (
-                      <>
-                        <MinimalDatePicker
-                          clearIcon={null}
-                          format="yyyy-MM-dd"
-                          minDate={transposedEndOfToday}
-                          onChange={val =>
-                            updateTask(task.id, {
-                              ...task,
-                              dueDate: moment
-                                .tz(
-                                  transposeFromLocalToTimezone(
-                                    val,
-                                    config.teamTimezone,
-                                  ),
-                                  config.teamTimezone,
-                                )
-                                .endOf('day')
-                                .toDate(),
-                            })
-                          }
-                          position="top center"
-                          suppressTodayHighlight
-                          value={transposedDueDate}
-                        />
-                      </>
-                    )}
-                  </DueDateCell>
+                  <DueDateField
+                    task={task}
+                    updateTask={updateTask}
+                    dueDateLocalString={dueDateLocalString}
+                    displayDefaultDurationDays={displayDefaultDurationDays}
+                    transposedEndOfToday={transposedEndOfToday}
+                    transposedDueDate={transposedDueDate}
+                  />
                 </TaskFieldsContainer>
               </>
             )}

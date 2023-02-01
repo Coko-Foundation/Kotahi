@@ -29,6 +29,7 @@ import { ConfigContext } from '../../config/src'
 import TaskMeta from './TaskMeta'
 import { UPDATE_TASK_STATUS } from '../../../queries'
 import AssigneeDropdown from './AssigneeDropdown'
+import DueDateField from './DueDateField'
 
 const TextInput = styled(MinimalTextInput)`
   margin-left: ${grid(0.5)};
@@ -662,39 +663,15 @@ const Task = ({
               </>
             ) : (
               <>
-                <DueDateCell title={dueDateLocalString}>
-                  {task.status === status.NOT_STARTED ? (
-                    <CompactDetailLabel>
-                      {displayDefaultDurationDays}
-                    </CompactDetailLabel>
-                  ) : (
-                    <>
-                      <MinimalDatePicker
-                        clearIcon={null}
-                        format="yyyy-MM-dd"
-                        minDate={transposedEndOfToday}
-                        onChange={val =>
-                          updateTask(task.id, {
-                            ...task,
-                            dueDate: moment
-                              .tz(
-                                transposeFromLocalToTimezone(
-                                  val,
-                                  config.teamTimezone,
-                                ),
-                                config.teamTimezone,
-                              )
-                              .endOf('day')
-                              .toDate(),
-                          })
-                        }
-                        position="top center"
-                        suppressTodayHighlight
-                        value={transposedDueDate}
-                      />
-                    </>
-                  )}
-                </DueDateCell>
+                <DueDateField
+                  task={task}
+                  updateTask={updateTask}
+                  dueDateLocalString={dueDateLocalString}
+                  displayDefaultDurationDays={displayDefaultDurationDays}
+                  transposedEndOfToday={transposedEndOfToday}
+                  transposedDueDate={transposedDueDate}
+                  isList={true}
+                />
                 <StatusActionCell>{statusActionComponent}</StatusActionCell>
               </>
             )}
