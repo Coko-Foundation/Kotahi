@@ -135,7 +135,7 @@ const parseCitations = async (references, startNumber = 0) => {
         authorization: `Bearer ${anystyleAccessToken}`,
         ...form.getHeaders(),
       },
-      responseType: 'stream',
+      // responseType: 'stream',
       data: form,
       // timeout: 1000, // adding this because it's failing
     })
