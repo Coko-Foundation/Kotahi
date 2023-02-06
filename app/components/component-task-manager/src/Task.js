@@ -25,6 +25,7 @@ import TaskMeta from './TaskMeta'
 import { UPDATE_TASK_STATUS } from '../../../queries'
 import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
+import StatusDropdown from './StatusDropdown'
 
 const TextInput = styled(MinimalTextInput)`
   margin-left: ${grid(0.5)};
@@ -359,68 +360,6 @@ const Task = ({
     DONE: 'Done',
   }
 
-  let activeTaskStatusOptions = [{ label: 'Done', value: status.DONE }]
-  let statusActionComponent = <></>
-
-  switch (task.status) {
-    case status.NOT_STARTED:
-      statusActionComponent = (
-        <ActionButton
-          onClick={() => handleStatusUpdate(status.IN_PROGRESS)}
-          primary
-        >
-          Start
-        </ActionButton>
-      )
-      break
-
-    case status.IN_PROGRESS:
-      activeTaskStatusOptions = [
-        { label: 'Pause', value: status.PAUSED },
-        { label: 'Done', value: status.DONE },
-      ]
-      statusActionComponent = (
-        <Dropdown
-          onChange={selected => handleStatusUpdate(selected.value)}
-          options={activeTaskStatusOptions}
-          placeholder="Select status"
-          value={task.status}
-        />
-      )
-      break
-
-    case status.PAUSED:
-      activeTaskStatusOptions = [
-        { label: 'Continue', value: status.IN_PROGRESS },
-        { label: 'Done', value: status.DONE },
-      ]
-      statusActionComponent = (
-        <Dropdown
-          onChange={selected => handleStatusUpdate(selected.value)}
-          options={activeTaskStatusOptions}
-          placeholder="Select status"
-          value={task.status}
-        />
-      )
-      break
-
-    case status.DONE:
-      activeTaskStatusOptions = [
-        { label: 'Continue', value: status.IN_PROGRESS },
-      ]
-      statusActionComponent = (
-        <Dropdown
-          onChange={selected => handleStatusUpdate(selected.value)}
-          options={activeTaskStatusOptions}
-          placeholder="Select status"
-          value={task.status}
-        />
-      )
-      break
-
-    default:
-  }
-
   useEffect(() => {
     if (task.dueDate) {
       setTransposedDueDate(
@@ -612,7 +551,9 @@ const Task = ({
                   transposedEndOfToday={transposedEndOfToday}
                   updateTask={updateTask}
                 />
-                <StatusActionCell>{statusActionComponent}</StatusActionCell>
+                <StatusActionCell>
+                  <StatusDropdown task={task} onStatusUpdate={setTask} />
+                </StatusActionCell>
               </>
             )}
           </TaskRow>

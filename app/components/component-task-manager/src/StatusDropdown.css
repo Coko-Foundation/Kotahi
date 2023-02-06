@@ -1,0 +1,59 @@
+.base-Dropdown-root {
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 4px;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14.5px;
+  line-height: 17px;
+  width: 111px;
+  height: 45px;
+  letter-spacing: 0.01em;
+}
+
+.base-Dropdown-control {
+  border: 0;
+  padding: 0;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  text-align: center;
+  height: 100%;
+  padding: 10px;
+}
+
+.base-Dropdown-arrow {
+  top: 43%;
+}
+
+.Dropdown-root-inprogress {
+  border: 2px solid #6C6C6C;
+}
+
+.Placeholder-inprogress {
+  color: #6C6C6C;
+}
+
+.Dropdown-root-paused {
+  border: 2px solid #D29435;
+}
+
+.Placeholder-paused {
+  color: #D29435;
+}
+
+.Dropdown-root-done {
+  border: 2px solid #5DAB41;
+}
+
+.Placeholder-done {
+  color: #5DAB41;
+}
+
+.base-Dropdown-menu {
+  border: 2px solid #ccc;
+  width: 111px;
+  margin-left: -2px;
+  margin-top: 2px;
+  border-radius: 2px;
+}
