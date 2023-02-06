@@ -1,9 +1,8 @@
 import React from 'react'
 import styled from 'styled-components'
 import Dropdown from 'react-dropdown'
-import { UPDATE_TASK_STATUS } from '../../../../queries'
+import { UPDATE_TASK_STATUS } from '../../../queries'
 import { useMutation } from '@apollo/client'
-import './index.css'
 
 const StartButton = styled.button`
   background: #5DAB41;
@@ -24,20 +23,64 @@ const StartButton = styled.button`
   color: #FFFFFF;
 `
 
-const BaseDropdown = styled.div`
-  border: 2px solid #6C6C6C;
-  filter: drop-shadow(0px 2px 2px rgba(0, 0, 0, 0.25));
+const BaseDropdown = styled(Dropdown)`
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 500;
   font-size: 14.5px;
   line-height: 17px;
-  display: flex;
-  align-items: center;
-  text-align: center;
+  width: 111px;
+  height: 45px;
   letter-spacing: 0.01em;
-  color: #6C6C6C;
+
+  .Dropdown-control {
+    border: 0;
+    padding: 0;
+    background-color: #FFFFFF;
+    display: flex;
+    align-items: center;
+    text-align: center;
+    height: 100%;
+    padding: 10px;
+  }
+
+  .Dropdown-arrow {
+    top: 43%;
+  }
+
+  .Dropdown-menu {
+    border: 2px solid #ccc;
+    width: 111px;
+    margin-left: -2px;
+    margin-top: 2px;
+    border-radius: 2px;
+  }
+`
+
+const InProgressDropdown = styled(BaseDropdown)`
+  border: 2px solid #6C6C6C;
+
+  .Dropdown-placeholder {
+    color: #6C6C6C;
+  }
+`
+
+const PausedDropdown = styled(BaseDropdown)`
+  border: 2px solid #D29435;
+
+  .Dropdown-placeholder {
+    color: #D29435;
+  }
+`
+
+const DoneDropdown = styled(BaseDropdown)`
+  border: 2px solid #5DAB41;
+
+  .Dropdown-placeholder {
+    color: #5DAB41;
+  }
 `
 
 const StatusDropdown = ({ task, onStatusUpdate }) => {
@@ -77,40 +120,30 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
   }
 
   let dropdownOptions = []
-  let placeholderClassName = ""
-  let dropdownRootClassName = ""
+  let DropdownComponent = <></>
   switch (task.status) {
     case status.IN_PROGRESS:
-      dropdownRootClassName = "Dropdown-root-inprogress"
-      placeholderClassName = "Placeholder-inprogress"
       dropdownOptions = [
         { label: 'Pause', value: status.PAUSED },
         { label: 'Done', value: status.DONE },
       ]
+      DropdownComponent = InProgressDropdown
       break;
     case status.PAUSED:
-      dropdownRootClassName = "Dropdown-root-paused"
-      placeholderClassName = "Placeholder-paused"
       dropdownOptions = [
         { label: 'Continue', value: status.IN_PROGRESS },
         { label: 'Done', value: status.DONE },
       ]
+      DropdownComponent = PausedDropdown
       break;
     case status.DONE:
-      dropdownRootClassName = "Dropdown-root-done"
-      placeholderClassName = "Placeholder-done"
       dropdownOptions = [
         { label: 'Continue', value: status.IN_PROGRESS },
       ]
+      DropdownComponent = DoneDropdown
       break;
   }
-  return <Dropdown
-    className={`base-Dropdown-root ${dropdownRootClassName}`}
-    controlClassName="base-Dropdown-control"
-    arrowClassName="base-Dropdown-arrow"
-    placeholderClassName={placeholderClassName}
-    menuClassName="base-Dropdown-menu"
-    optionClassName=""
+  return <DropdownComponent
     onChange={selected => handleStatusUpdate(selected.value)}
     options={dropdownOptions}
     placeholder="Select status"
