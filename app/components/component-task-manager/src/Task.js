@@ -338,19 +338,6 @@ const Task = ({
     refetchQueries: ['getTasksQuery'],
   })
 
-  const handleStatusUpdate = async taskStatus => {
-    const { data } = await updateTaskStatus({
-      variables: {
-        task: {
-          id: task.id,
-          status: taskStatus,
-        },
-      },
-    })
-
-    setTask(data.updateTaskStatus)
-  }
-
   const status = {
     NOT_STARTED: 'Not started',
     START: 'Start',
