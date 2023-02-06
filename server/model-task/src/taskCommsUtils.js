@@ -198,6 +198,7 @@ const getTaskEmailNotifications = async ({ status = null }) => {
     .withGraphFetched('task')
     .withGraphFetched('recipientUser')
     .withGraphFetched('task.assignee')
+    .withGraphFetched('task.manuscript')
 }
 
 module.exports = {

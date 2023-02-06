@@ -188,6 +188,12 @@ schedule.scheduleJob(
         default:
       }
 
+      const manuscript = emailNotification.task.manuscript
+      const author = await manuscript.getManuscriptAuthor()
+      const authorName = author ? author.username : ''
+      const editor = await manuscript.getManuscriptEditor()
+      const currentUser = editor ? editor.username : ''
+
       // eslint-disable-next-line no-restricted-syntax
       for (const recipient of notificationRecipients) {
         try {
@@ -195,7 +201,10 @@ schedule.scheduleJob(
           await sendEmailNotification(
             recipient.email,
             emailNotification.emailTemplateKey,
-            {},
+            {
+              authorName,
+              currentUser,
+            },
           )
         } catch (error) {
           console.error(error)

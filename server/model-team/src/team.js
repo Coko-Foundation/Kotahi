@@ -11,6 +11,17 @@ class Team extends BaseModel {
     return 'teams'
   }
 
+  static get modifiers() {
+    return {
+      onlyAuthors(builder) {
+        builder.where('role', 'author');
+      },
+      onlyEditors(builder) {
+        builder.where('role', 'editor');
+      }
+    }
+  }
+
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
     const { Alias, User } = require('@pubsweet/models')

@@ -1,9 +1,9 @@
-import React from 'react'
+import React, { useCallback } from 'react'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import config from 'config'
 import { Redirect } from 'react-router-dom'
 import ReactRouterPropTypes from 'react-router-prop-types'
-import { set } from 'lodash'
+import { set, debounce } from 'lodash'
 import ReviewLayout from './review/ReviewLayout'
 import { Heading, Page, Spinner } from '../../../shared'
 import useCurrentUser from '../../../../hooks/useCurrentUser'
@@ -345,6 +345,12 @@ const ReviewPage = ({ match, ...props }) => {
   )?.status
 
   const updateReviewJsonData = (value, path) => {
+    if (!latestVersion.id) {
+      // we shouldn't need this because of debouncing! But this protects against trying to save while loading is still happening
+      console.log('no version id!')
+      return false
+    }
+
     const reviewDelta = {} // Only the changed fields
     // E.g. if path is 'foo.bar' and value is 'Baz' this gives { foo: { bar: 'Baz' } }
     set(reviewDelta, path, value)
@@ -390,6 +396,11 @@ const ReviewPage = ({ match, ...props }) => {
       },
     })
   }
+
+  const debouncedUpdateReviewJsonData = debounce(
+    updateReviewJsonData ?? (() => {}),
+    1000,
+  )
 
   const updateReview = review => {
     const reviewData = {
@@ -472,7 +483,7 @@ const ReviewPage = ({ match, ...props }) => {
       submissionForm={submissionForm}
       threadedDiscussionProps={threadedDiscussionProps}
       updateReview={updateReview}
-      updateReviewJsonData={updateReviewJsonData}
+      updateReviewJsonData={debouncedUpdateReviewJsonData}
       versions={versions}
     />
   )

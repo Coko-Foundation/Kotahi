@@ -21,7 +21,6 @@ import {
   ActionButton,
   LooseColumn,
   MediumRow,
-  GroupedOptionsSelect,
 } from '../../shared'
 
 import { DragVerticalIcon, EllipsisIcon } from '../../shared/Icons'
@@ -29,6 +28,8 @@ import Modal from '../../component-modal/src'
 import { ConfigContext } from '../../config/src'
 import TaskMeta from './TaskMeta'
 import { UPDATE_TASK_STATUS } from '../../../queries'
+import AssigneeDropdown from './AssigneeDropdown'
+import DueDateField from './DueDateField'
 
 const TextInput = styled(MinimalTextInput)`
   margin-left: ${grid(0.5)};
@@ -191,19 +192,6 @@ const DeleteLabel = styled.p`
 const TaskAction = styled.div`
   cursor: pointer;
   position: relative;
-`
-
-const UnregisteredUserCell = styled.div`
-  display: flex;
-  flex-direction: column;
-  & > div {
-    margin: 10px 10px 0px 0px;
-  }
-`
-
-const InputField = styled(TextField)`
-  height: 30px;
-  margin-bottom: 0;
 `
 
 const calculateDaysDifference = (a, b) => {
@@ -657,53 +645,7 @@ const Task = ({
                 )}
               </TaskAction>
             </TitleCell>
-            <AssigneeCell title={task.assignee?.username}>
-              <GroupedOptionsSelect
-                aria-label="Assignee"
-                data-testid="Assignee_select"
-                dropdownState={dropdownState}
-                isClearable
-                label="Assignee"
-                onChange={selected => handleAssigneeInput(selected, task)}
-                options={assigneeGroupedOptions}
-                placeholder="Select..."
-                value={task.assignee?.id || task.assigneeType}
-              />
-              {isNewUser && (
-                <UnregisteredUserCell>
-                  <InputField
-                    data-cy="new-user-email"
-                    onChange={e => {
-                      setAssigneeEmail(e.target.value)
-                      updateTask(task.id, {
-                        ...task,
-                        assigneeUserId: null,
-                        assignee: null,
-                        assigneeType: 'unregisteredUser',
-                        assigneeEmail: e.target.value,
-                      })
-                    }}
-                    placeholder="Email"
-                    value={assigneeEmail}
-                  />
-                  <InputField
-                    data-cy="new-user-name"
-                    onChange={e => {
-                      setAssigneeName(e.target.value)
-                      updateTask(task.id, {
-                        ...task,
-                        assigneeUserId: null,
-                        assignee: null,
-                        assigneeType: 'unregisteredUser',
-                        assigneeName: e.target.value,
-                      })
-                    }}
-                    placeholder="Name"
-                    value={assigneeName}
-                  />
-                </UnregisteredUserCell>
-              )}
-            </AssigneeCell>
+            <AssigneeDropdown assigneeGroupedOptions={assigneeGroupedOptions} task={task} updateTask={updateTask} isList={true} />
 
             {editAsTemplate ? (
               <>
@@ -721,39 +663,15 @@ const Task = ({
               </>
             ) : (
               <>
-                <DueDateCell title={dueDateLocalString}>
-                  {task.status === status.NOT_STARTED ? (
-                    <CompactDetailLabel>
-                      {displayDefaultDurationDays}
-                    </CompactDetailLabel>
-                  ) : (
-                    <>
-                      <MinimalDatePicker
-                        clearIcon={null}
-                        format="yyyy-MM-dd"
-                        minDate={transposedEndOfToday}
-                        onChange={val =>
-                          updateTask(task.id, {
-                            ...task,
-                            dueDate: moment
-                              .tz(
-                                transposeFromLocalToTimezone(
-                                  val,
-                                  config.teamTimezone,
-                                ),
-                                config.teamTimezone,
-                              )
-                              .endOf('day')
-                              .toDate(),
-                          })
-                        }
-                        position="top center"
-                        suppressTodayHighlight
-                        value={transposedDueDate}
-                      />
-                    </>
-                  )}
-                </DueDateCell>
+                <DueDateField
+                  task={task}
+                  updateTask={updateTask}
+                  dueDateLocalString={dueDateLocalString}
+                  displayDefaultDurationDays={displayDefaultDurationDays}
+                  transposedEndOfToday={transposedEndOfToday}
+                  transposedDueDate={transposedDueDate}
+                  isList={true}
+                />
                 <StatusActionCell>{statusActionComponent}</StatusActionCell>
               </>
             )}

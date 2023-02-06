@@ -219,14 +219,10 @@ const resolvers = {
           userReceiver.username || userReceiver.defaultIdentity.name || ''
       }
 
-      const manuscriptWithSubmitter = await models.Manuscript.query()
-        .findById(manuscript.id)
-        .withGraphFetched('submitter.[defaultIdentity]')
-
-      const authorName =
-        manuscriptWithSubmitter.submitter.username ||
-        manuscriptWithSubmitter.submitter.defaultIdentity.name ||
-        ''
+      const manuscriptId = manuscript.id
+      const manuscriptObject = await models.Manuscript.query().findById(manuscriptId)
+      const author = await manuscriptObject.getManuscriptAuthor({onlyAccepted: true})
+      const authorName = author ? author.username : ''
 
       const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
       const emailValidationResult = emailValidationRegexp.test(receiverEmail)
@@ -236,7 +232,6 @@ const resolvers = {
       }
 
       const invitationSender = await models.User.find(ctx.user)
-      const manuscriptId = manuscript.id
       const toEmail = receiverEmail
       const purpose = 'Inviting an author to accept a manuscript'
       const status = 'UNANSWERED'
