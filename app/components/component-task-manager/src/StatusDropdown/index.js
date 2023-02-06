@@ -1,9 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React from 'react'
 import styled from 'styled-components'
 import Dropdown from 'react-dropdown'
-import { UPDATE_TASK_STATUS } from '../../../queries'
+import { UPDATE_TASK_STATUS } from '../../../../queries'
 import { useMutation } from '@apollo/client'
-import './StatusDropdown.css'
+import './index.css'
 
 const StartButton = styled.button`
   background: #5DAB41;
@@ -22,7 +22,6 @@ const StartButton = styled.button`
   text-align: center;
   letter-spacing: 0.01em;
   color: #FFFFFF;
-  cursor: pointer;
 `
 
 const BaseDropdown = styled.div`

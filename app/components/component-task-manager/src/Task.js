@@ -6,7 +6,6 @@ import { Draggable } from 'react-beautiful-dnd'
 import { Circle, CheckCircle } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { useMutation } from '@apollo/client'
-import Dropdown from 'react-dropdown'
 import { transposeFromTimezoneToLocal } from '../../../shared/dateUtils'
 import {
   MinimalTextInput,
