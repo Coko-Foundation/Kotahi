@@ -8,7 +8,6 @@ import { th, grid } from '@pubsweet/ui-toolkit'
 import { useMutation } from '@apollo/client'
 import { transposeFromTimezoneToLocal } from '../../../shared/dateUtils'
 import {
-  MinimalTextInput,
   MinimalButton,
   MinimalNumericUpDown,
   CompactDetailLabel,
@@ -26,8 +25,20 @@ import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
 import StatusDropdown from './StatusDropdown'
 
-const TextInput = styled(MinimalTextInput)`
+const TextInput = styled.input`
   margin-left: ${grid(0.5)};
+  background: #F8F8F9;
+  border: 1px solid #DEDEDE;
+  box-shadow: inset 0px 0px 2px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+  min-height: 45px;
+  padding: 15px 10px;
+  width: 100%;
+
+  &:focus {
+    border-color: #5DAB41;
+    box-shadow: inset 0px 0px 2px #5DAB41;
+  }
 `
 
 const TaskRow = styled.div`
@@ -37,7 +48,7 @@ const TaskRow = styled.div`
 
   & > div {
     align-items: center;
-    background: linear-gradient(0deg, transparent, ${th('colorBackgroundHue')});
+    background: transparent;
     display: flex;
     line-height: 1em;
     min-height: ${grid(6)};
@@ -477,11 +488,7 @@ const Task = ({
                 </Handle>
               )}
               <TextInput
-                autoFocus={!task.title}
-                onCancel={() => {
-                  if (!task.title) onCancel()
-                }}
-                onChange={val => updateTask(task.id, { ...task, title: val })}
+                onChange={event => updateTask(task.id, { ...task, title: event.target.value })}
                 placeholder="Give your task a name..."
                 value={task.title}
               />
