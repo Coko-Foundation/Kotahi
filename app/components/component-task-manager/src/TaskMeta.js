@@ -1,20 +1,15 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import moment from 'moment-timezone'
 import { th } from '@pubsweet/ui-toolkit'
-import { TextField } from '@pubsweet/ui'
 import { v4 as uuid } from 'uuid'
 import {
   RoundIconButton,
   MediumColumn,
   MinimalNumericUpDown,
   MinimalTextInput,
-  CompactDetailLabel,
-  MinimalDatePicker,
 } from '../../shared'
 
-import { transposeFromLocalToTimezone } from '../../../shared/dateUtils'
 import TaskNotificationDetails from './TaskNotificationDetails'
 import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
@@ -29,11 +24,6 @@ const TitleCell = styled.div`
 `
 
 const DurationDaysCell = styled.div`
-  justify-content: flex-start;
-  position: relative;
-`
-
-const DueDateCell = styled.div`
   justify-content: flex-start;
   position: relative;
 `
@@ -85,25 +75,13 @@ const TaskMeta = ({
   onDelete,
   isReadOnly,
   editAsTemplate,
-  daysDifferenceLabel,
   dueDateLocalString,
-  isOverdue,
   transposedEndOfToday,
   transposedDueDate,
-  config,
   recipientGroupedOptions,
   deleteTaskNotification,
-  status,
   displayDefaultDurationDays,
-  ref,
 }) => {
-  const [isNewUser, setIsNewUser] = useState(
-    task.assigneeType === 'unregisteredUser',
-  )
-
-  const [assigneeEmail, setAssigneeEmail] = useState(task.assigneeEmail)
-  const [assigneeName, setAssigneeName] = useState(task.assigneeName)
-
   const notificationOptions = [
     {
       label: 'Before',
@@ -114,8 +92,6 @@ const TaskMeta = ({
       value: 'after',
     },
   ]
-
-  const [assigneedropdownState, setAssigneeDropdownState] = useState(false)
 
   const [taskEmailNotifications, setTaskNotifications] = useState(
     task.emailNotifications ?? [],
@@ -156,54 +132,13 @@ const TaskMeta = ({
 
   const addNewTaskNotification = () => {
     setTaskNotifications([
-      ...taskEmailNotifications,
+      ...(taskEmailNotifications ?? []),
       {
         id: uuid(),
         taskId: task.id,
         recipientType: null,
       },
     ])
-  }
-
-  function handleAssigneeInput(selectedOption, selectedTask) {
-    setAssigneeDropdownState(selectedOption)
-
-    switch (selectedOption.key) {
-      case 'userRole':
-        setIsNewUser(false)
-        updateTask(selectedTask.id, {
-          ...selectedTask,
-          assigneeType: selectedOption.value,
-          assigneeUserId: null,
-          assignee: null,
-          assigneeName: null,
-          assigneeEmail: null,
-        })
-        break
-      case 'registeredUser':
-        setIsNewUser(false)
-        updateTask(selectedTask.id, {
-          ...selectedTask,
-          assigneeUserId: selectedOption?.value,
-          assignee: selectedOption?.user,
-          assigneeType: selectedOption.key,
-          assigneeName: null,
-          assigneeEmail: null,
-        })
-        break
-      case 'unregisteredUser':
-        setIsNewUser(true)
-        updateTask(selectedTask.id, {
-          ...selectedTask,
-          assigneeUserId: null,
-          assignee: null,
-          assigneeType: selectedOption.key,
-          assigneeName: null,
-          assigneeEmail: null,
-        })
-        break
-      default:
-    }
   }
 
   return (
@@ -226,7 +161,11 @@ const TaskMeta = ({
           <TaskPrimaryDetails>
             <TaskFieldsContainer>
               <TaskTitle>Assignee</TaskTitle>
-              <AssigneeDropdown assigneeGroupedOptions={assigneeGroupedOptions} task={task} updateTask={updateTask} />
+              <AssigneeDropdown
+                assigneeGroupedOptions={assigneeGroupedOptions}
+                task={task}
+                updateTask={updateTask}
+              />
             </TaskFieldsContainer>
 
             {!editAsTemplate && (
@@ -234,12 +173,12 @@ const TaskMeta = ({
                 <TaskFieldsContainer>
                   <DurationTitle>Due Date</DurationTitle>
                   <DueDateField
-                    task={task}
-                    updateTask={updateTask}
-                    dueDateLocalString={dueDateLocalString}
                     displayDefaultDurationDays={displayDefaultDurationDays}
-                    transposedEndOfToday={transposedEndOfToday}
+                    dueDateLocalString={dueDateLocalString}
+                    task={task}
                     transposedDueDate={transposedDueDate}
+                    transposedEndOfToday={transposedEndOfToday}
+                    updateTask={updateTask}
                   />
                 </TaskFieldsContainer>
               </>

@@ -7,14 +7,9 @@ import { Circle, CheckCircle } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { useMutation } from '@apollo/client'
 import Dropdown from 'react-dropdown'
-import { TextField } from '@pubsweet/ui/dist/atoms'
-import {
-  transposeFromLocalToTimezone,
-  transposeFromTimezoneToLocal,
-} from '../../../shared/dateUtils'
+import { transposeFromTimezoneToLocal } from '../../../shared/dateUtils'
 import {
   MinimalTextInput,
-  MinimalDatePicker,
   MinimalButton,
   MinimalNumericUpDown,
   CompactDetailLabel,
@@ -437,66 +432,6 @@ const Task = ({
     }
   }, [task])
 
-  const [isNewUser, setIsNewUser] = useState(
-    task.assigneeType === 'unregisteredUser',
-  )
-
-  const [assigneeEmail, setAssigneeEmail] = useState(task.assigneeEmail)
-  const [assigneeName, setAssigneeName] = useState(task.assigneeName)
-
-  useEffect(() => {
-    setAssigneeEmail(task.assigneeEmail)
-    setIsNewUser(task.assigneeType === 'unregisteredUser')
-    setAssigneeName(task.assigneeName)
-  }, [
-    task.assigneeEmail,
-    task.assigneeName,
-    task.assigneeType === 'unregisteredUser',
-  ])
-
-  const [dropdownState, setDropdownState] = useState(false)
-
-  function handleAssigneeInput(selectedOption, selectedTask) {
-    setDropdownState(selectedOption)
-
-    switch (selectedOption.key) {
-      case 'userRole':
-        setIsNewUser(false)
-        updateTask(selectedTask.id, {
-          ...selectedTask,
-          assigneeType: selectedOption.value,
-          assigneeUserId: null,
-          assignee: null,
-          assigneeName: null,
-          assigneeEmail: null,
-        })
-        break
-      case 'registeredUser':
-        setIsNewUser(false)
-        updateTask(selectedTask.id, {
-          ...selectedTask,
-          assigneeUserId: selectedOption?.value,
-          assignee: selectedOption?.user,
-          assigneeType: selectedOption.key,
-          assigneeName: null,
-          assigneeEmail: null,
-        })
-        break
-      case 'unregisteredUser':
-        setIsNewUser(true)
-        updateTask(selectedTask.id, {
-          ...selectedTask,
-          assigneeUserId: null,
-          assignee: null,
-          assigneeType: selectedOption.key,
-          assigneeName: null,
-          assigneeEmail: null,
-        })
-        break
-      default:
-    }
-  }
-
   if (isReadOnly)
     return (
       <TaskRow isOverdue={isOverdue}>
@@ -645,7 +580,12 @@ const Task = ({
                 )}
               </TaskAction>
             </TitleCell>
-            <AssigneeDropdown assigneeGroupedOptions={assigneeGroupedOptions} task={task} updateTask={updateTask} isList={true} />
+            <AssigneeDropdown
+              assigneeGroupedOptions={assigneeGroupedOptions}
+              isList
+              task={task}
+              updateTask={updateTask}
+            />
 
             {editAsTemplate ? (
               <>
@@ -664,13 +604,13 @@ const Task = ({
             ) : (
               <>
                 <DueDateField
-                  task={task}
-                  updateTask={updateTask}
-                  dueDateLocalString={dueDateLocalString}
                   displayDefaultDurationDays={displayDefaultDurationDays}
-                  transposedEndOfToday={transposedEndOfToday}
+                  dueDateLocalString={dueDateLocalString}
+                  isList
+                  task={task}
                   transposedDueDate={transposedDueDate}
-                  isList={true}
+                  transposedEndOfToday={transposedEndOfToday}
+                  updateTask={updateTask}
                 />
                 <StatusActionCell>{statusActionComponent}</StatusActionCell>
               </>

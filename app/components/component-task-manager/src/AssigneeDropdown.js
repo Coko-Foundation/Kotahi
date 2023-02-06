@@ -1,9 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import {
-  GroupedOptionsSelect,
-} from '../../shared'
 import { TextField } from '@pubsweet/ui/dist/atoms'
+import { GroupedOptionsSelect } from '../../shared'
 
 const TaskListAssigneeCell = styled.div`
   flex: 1 1 15em;
@@ -41,9 +39,14 @@ const TaskMetaInputField = styled(TextField)`
   margin-bottom: 0;
 `
 
-const AssigneeDropdown = ({ assigneeGroupedOptions, task, updateTask, isList = false }) => {
-
+const AssigneeDropdown = ({
+  assigneeGroupedOptions,
+  task,
+  updateTask,
+  isList = false,
+}) => {
   const [dropdownState, setDropdownState] = useState(false)
+
   const [isNewUser, setIsNewUser] = useState(
     task.assigneeType === 'unregisteredUser',
   )
@@ -111,24 +114,31 @@ const AssigneeDropdown = ({ assigneeGroupedOptions, task, updateTask, isList = f
           assigneeEmail: null,
         })
         break
+      default:
     }
   }
 
   const AssigneeCell = isList ? TaskListAssigneeCell : TaskMetaAssigneeCell
-  const UnregisteredUserCell = isList ? TaskListUnregisteredUserCell : TaskMetaUnregisteredUserCell
+
+  const UnregisteredUserCell = isList
+    ? TaskListUnregisteredUserCell
+    : TaskMetaUnregisteredUserCell
+
   const InputField = isList ? TaskListInputField : TaskMetaInputField
 
-  const groupedOptionsComponent = <GroupedOptionsSelect
-    aria-label="Assignee"
-    data-testid="Assignee_select"
-    dropdownState={dropdownState}
-    isClearable
-    label="Assignee"
-    onChange={selected => handleAssigneeInput(selected, task)}
-    options={assigneeGroupedOptions}
-    placeholder="Select..."
-    value={task.assignee?.id || task.assigneeType}
-  />
+  const groupedOptionsComponent = (
+    <GroupedOptionsSelect
+      aria-label="Assignee"
+      data-testid="Assignee_select"
+      dropdownState={dropdownState}
+      isClearable
+      label="Assignee"
+      onChange={selected => handleAssigneeInput(selected, task)}
+      options={assigneeGroupedOptions}
+      placeholder="Select..."
+      value={task.assignee?.id || task.assigneeType}
+    />
+  )
 
   const newUserComponent = isNewUser && (
     <UnregisteredUserCell>
@@ -166,10 +176,12 @@ const AssigneeDropdown = ({ assigneeGroupedOptions, task, updateTask, isList = f
   )
 
   if (isList) {
-    return <AssigneeCell title={task.assignee?.username}>
-      {groupedOptionsComponent}
-      {newUserComponent}
-    </AssigneeCell>
+    return (
+      <AssigneeCell title={task.assignee?.username}>
+        {groupedOptionsComponent}
+        {newUserComponent}
+      </AssigneeCell>
+    )
   }
 
   return (

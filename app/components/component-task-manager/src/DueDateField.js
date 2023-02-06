@@ -1,14 +1,9 @@
 import React, { useContext } from 'react'
 import styled from 'styled-components'
-import {
-  CompactDetailLabel,
-  MinimalDatePicker,
-} from '../../shared'
-import { ConfigContext } from '../../config/src'
-import {
-  transposeFromLocalToTimezone,
-} from '../../../shared/dateUtils'
 import moment from 'moment-timezone'
+import { CompactDetailLabel, MinimalDatePicker } from '../../shared'
+import { ConfigContext } from '../../config/src'
+import { transposeFromLocalToTimezone } from '../../../shared/dateUtils'
 
 const TaskListDueDateCell = styled.div`
   flex: 0 0 7.8em;
@@ -21,9 +16,17 @@ const TaskMetaDueDateCell = styled.div`
   position: relative;
 `
 
-const DueDateField = ({ task, updateTask, dueDateLocalString, displayDefaultDurationDays, transposedEndOfToday, transposedDueDate, isList = false }) => {
-
+const DueDateField = ({
+  task,
+  updateTask,
+  dueDateLocalString,
+  displayDefaultDurationDays,
+  transposedEndOfToday,
+  transposedDueDate,
+  isList = false,
+}) => {
   const config = useContext(ConfigContext)
+
   const status = {
     NOT_STARTED: 'Not started',
     START: 'Start',
@@ -37,9 +40,7 @@ const DueDateField = ({ task, updateTask, dueDateLocalString, displayDefaultDura
   return (
     <DueDateCell title={dueDateLocalString}>
       {task.status === status.NOT_STARTED ? (
-        <CompactDetailLabel>
-          {displayDefaultDurationDays}
-        </CompactDetailLabel>
+        <CompactDetailLabel>{displayDefaultDurationDays}</CompactDetailLabel>
       ) : (
         <>
           <MinimalDatePicker
@@ -51,10 +52,7 @@ const DueDateField = ({ task, updateTask, dueDateLocalString, displayDefaultDura
                 ...task,
                 dueDate: moment
                   .tz(
-                    transposeFromLocalToTimezone(
-                      val,
-                      config.teamTimezone,
-                    ),
+                    transposeFromLocalToTimezone(val, config.teamTimezone),
                     config.teamTimezone,
                   )
                   .endOf('day')
