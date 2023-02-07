@@ -24,25 +24,10 @@ import { UPDATE_TASK_STATUS } from '../../../queries'
 import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
 import StatusDropdown from './StatusDropdown'
-
-const TextInput = styled.input`
-  margin-left: ${grid(0.5)};
-  background: #F8F8F9;
-  border: 1px solid #DEDEDE;
-  box-shadow: inset 0px 0px 2px rgba(0, 0, 0, 0.25);
-  border-radius: 5px;
-  min-height: 45px;
-  padding: 15px 10px;
-  width: 100%;
-
-  &:focus {
-    border-color: #5DAB41;
-    box-shadow: inset 0px 0px 2px #5DAB41;
-  }
-`
+import TextInput from './TextInput'
 
 const TaskRow = styled.div`
-  align-items: stretch;
+  align-items: flex-start;
   display: flex;
   gap: ${grid('1')};
 
@@ -52,7 +37,6 @@ const TaskRow = styled.div`
     display: flex;
     line-height: 1em;
     min-height: ${grid(6)};
-    padding: ${grid(1)} ${grid(0.5)};
   }
 
   ${props =>
@@ -90,6 +74,10 @@ const TaskHeaderRow = styled(TaskRow)`
 const TitleCell = styled.div`
   display: flex;
   flex: 2 1 40em;
+
+  input {
+    margin-left: 7px;
+  }
 `
 
 const AssigneeCell = styled.div`

@@ -2,12 +2,17 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { TextField } from '@pubsweet/ui/dist/atoms'
 import { GroupedOptionsSelect } from '../../shared'
+import TextInput from './TextInput'
 
-const TaskListAssigneeCell = styled.div`
+const AssigneeCellContainer = styled.div`
   flex: 1 1 15em;
   justify-content: flex-start;
   flex-direction: column;
   align-items: start;
+`
+
+const TaskListAssigneeCell = styled.div`
+  width: 100%;
 `
 
 const TaskMetaAssigneeCell = styled.div`
@@ -17,7 +22,7 @@ const TaskMetaAssigneeCell = styled.div`
 const TaskListUnregisteredUserCell = styled.div`
   display: flex;
   flex-direction: column;
-  & > div {
+  & > input {
     margin: 10px 10px 0px 0px;
   }
 `
@@ -118,8 +123,6 @@ const AssigneeDropdown = ({
     }
   }
 
-  const AssigneeCell = isList ? TaskListAssigneeCell : TaskMetaAssigneeCell
-
   const UnregisteredUserCell = isList
     ? TaskListUnregisteredUserCell
     : TaskMetaUnregisteredUserCell
@@ -142,7 +145,7 @@ const AssigneeDropdown = ({
 
   const newUserComponent = isNewUser && (
     <UnregisteredUserCell>
-      <InputField
+      <TextInput
         data-cy="new-user-email"
         onChange={e => {
           setAssigneeEmail(e.target.value)
@@ -157,7 +160,7 @@ const AssigneeDropdown = ({
         placeholder="Email"
         value={assigneeEmail}
       />
-      <InputField
+      <TextInput
         data-cy="new-user-name"
         onChange={e => {
           setAssigneeName(e.target.value)
@@ -177,18 +180,20 @@ const AssigneeDropdown = ({
 
   if (isList) {
     return (
-      <AssigneeCell title={task.assignee?.username}>
-        {groupedOptionsComponent}
-        {newUserComponent}
-      </AssigneeCell>
+      <AssigneeCellContainer>
+        <TaskListAssigneeCell title={task.assignee?.username}>
+          {groupedOptionsComponent}
+          {newUserComponent}
+        </TaskListAssigneeCell>
+      </AssigneeCellContainer>
     )
   }
 
   return (
     <>
-      <AssigneeCell title={task.assignee?.username}>
+      <TaskMetaAssigneeCell title={task.assignee?.username}>
         {groupedOptionsComponent}
-      </AssigneeCell>
+      </TaskMetaAssigneeCell>
       {newUserComponent}
     </>
   )

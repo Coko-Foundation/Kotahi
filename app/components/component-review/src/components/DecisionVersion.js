@@ -19,6 +19,11 @@ import {
 import DecisionAndReviews from '../../../component-submit/src/components/DecisionAndReviews'
 import FormTemplate from '../../../component-submit/src/components/FormTemplate'
 import TaskList from '../../../component-task-manager/src/TaskList'
+import styled from 'styled-components'
+
+const TaskSectionRow = styled(SectionRow)`
+  padding: 18px 8px;
+`
 
 const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
@@ -216,7 +221,7 @@ const DecisionVersion = ({
             <SectionHeader>
               <Title>Tasks</Title>
             </SectionHeader>
-            <SectionRow>
+            <TaskSectionRow>
               <TaskList
                 deleteTaskNotification={deleteTaskNotification}
                 isReadOnly={!isCurrentVersion}
@@ -228,7 +233,7 @@ const DecisionVersion = ({
                 updateTasks={updateTasks}
                 users={allUsers}
               />
-            </SectionRow>
+            </TaskSectionRow>
           </SectionContent>
         </>
       ),

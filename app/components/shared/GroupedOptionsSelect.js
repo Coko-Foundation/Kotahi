@@ -6,6 +6,12 @@ const styles = th => ({
   container: (provided, state) => ({
     ...provided,
     width: '100%',
+    height: '45px',
+    backgroundColor: '#F8F8F9',
+    border: '1px solid #DEDEDE',
+    borderRadius: '6px',
+    boxShadow: 'inset 0px 0px 4px rgba(0, 0, 0, 0.25)',
+
   }),
   indicatorSeparator: (provided, state) => ({ ...provided, display: 'none' }),
   indicatorsContainer: (provided, state) => ({
@@ -36,6 +42,10 @@ const styles = th => ({
     borderRadius: th.borderRadius,
     boxShadow: state.isFocused ? `0 0 0 1px ${th.colorPrimary}` : 'none',
     minHeight: '0',
+    height: '100%',
+    width: '100%',
+    paddingLeft: '9px',
+    paddingRight: '9px',
   }),
 
   singleValue: (provided, state) => {
@@ -53,7 +63,7 @@ const styles = th => ({
   }),
   valueContainer: (provided, state) => ({
     ...provided,
-    height: '34px',
+    height: '45px',
     padding: '0',
   }),
 })
