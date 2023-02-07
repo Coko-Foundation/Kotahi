@@ -77,12 +77,12 @@ const stripTrackChanges = file => {
     })
   }
 
-  if ($('span.format-chage,span.insertion,span.deletion').length) {
+  if ($('span.format-change,span.insertion,span.deletion').length) {
     // don't run this if we don't have to.
     stripSpans()
   }
 
-  if ($('span.format-chage,span.insertion,span.deletion').length) {
+  if ($('span.format-change,span.insertion,span.deletion').length) {
     // Because there may be nested spans, we need to run this function again to make sure we get everything.
     stripSpans()
   }
