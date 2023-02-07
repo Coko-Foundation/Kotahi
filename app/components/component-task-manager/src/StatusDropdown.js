@@ -3,7 +3,7 @@ import styled from 'styled-components'
 import Dropdown from 'react-dropdown'
 import { UPDATE_TASK_STATUS } from '../../../queries'
 import { useMutation } from '@apollo/client'
-import { Pause as PauseIcon, ChevronUp, ChevronDown } from 'react-feather'
+import { Pause as PauseIcon, Check as CheckIcon, ChevronUp, ChevronDown } from 'react-feather'
 
 const StartButton = styled.button`
   background: #5DAB41;
@@ -45,7 +45,7 @@ const BaseDropdown = styled(Dropdown)`
     justify-content: space-between;
     text-align: center;
     height: 100%;
-    padding: 4px;
+    padding: 6px;
   }
 
   .Dropdown-arrow-wrapper {
@@ -97,6 +97,14 @@ const DoneDropdown = styled(BaseDropdown)`
   }
 `
 
+const DropdownLabel = styled.div`
+  display: flex;
+  align-items: center;
+  svg {
+    margin-right: 4px;
+  }
+`
+
 const StatusDropdown = ({ task, onStatusUpdate }) => {
   const status = {
     NOT_STARTED: 'Not started',
@@ -133,29 +141,34 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
     )
   }
 
-  let dropdownOptions = []
   let DropdownComponent = <></>
   let IconComponent = <></>
+  const PauseLabel = <DropdownLabel>
+    <PauseIcon size={15} />
+    <span>Pause</span>
+  </DropdownLabel>
+  const ContinueLabel = <DropdownLabel>
+    {/* <PlayIcon size={15} /> */}
+    <span>Continue</span>
+  </DropdownLabel>
+  const DoneLabel = <DropdownLabel>
+    <CheckIcon size={15} />
+    <span>Done</span>
+  </DropdownLabel>
+  const dropdownOptions = [
+    { label: ContinueLabel, value: status.IN_PROGRESS },
+    { label: PauseLabel, value: status.PAUSED },
+    { label: DoneLabel, value: status.DONE },
+  ]
   switch (task.status) {
     case status.IN_PROGRESS:
-      dropdownOptions = [
-        { label: 'Pause', value: status.PAUSED },
-        { label: 'Done', value: status.DONE },
-      ]
       DropdownComponent = InProgressDropdown
       break;
     case status.PAUSED:
-      dropdownOptions = [
-        { label: 'Continue', value: status.IN_PROGRESS },
-        { label: 'Done', value: status.DONE },
-      ]
       IconComponent = PauseIcon
       DropdownComponent = PausedDropdown
       break;
     case status.DONE:
-      dropdownOptions = [
-        { label: 'Continue', value: status.IN_PROGRESS },
-      ]
       DropdownComponent = DoneDropdown
       break;
   }
