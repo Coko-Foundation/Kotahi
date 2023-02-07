@@ -3,6 +3,7 @@ import styled from 'styled-components'
 import Dropdown from 'react-dropdown'
 import { UPDATE_TASK_STATUS } from '../../../queries'
 import { useMutation } from '@apollo/client'
+import { Pause as PauseIcon, ChevronUp, ChevronDown } from 'react-feather'
 
 const StartButton = styled.button`
   background: #5DAB41;
@@ -41,13 +42,14 @@ const BaseDropdown = styled(Dropdown)`
     background-color: #FFFFFF;
     display: flex;
     align-items: center;
+    justify-content: space-between;
     text-align: center;
     height: 100%;
-    padding: 10px;
+    padding: 4px;
   }
 
-  .Dropdown-arrow {
-    top: 43%;
+  .Dropdown-arrow-wrapper {
+    display: flex;
   }
 
   .Dropdown-menu {
@@ -65,6 +67,10 @@ const InProgressDropdown = styled(BaseDropdown)`
   .Dropdown-placeholder {
     color: #6C6C6C;
   }
+
+  .Dropdown-arrow-wrapper > svg {
+    stroke: #6C6C6C;
+  }
 `
 
 const PausedDropdown = styled(BaseDropdown)`
@@ -73,6 +79,10 @@ const PausedDropdown = styled(BaseDropdown)`
   .Dropdown-placeholder {
     color: #D29435;
   }
+
+  .Dropdown-arrow-wrapper > svg {
+    stroke: #D29435;
+  }
 `
 
 const DoneDropdown = styled(BaseDropdown)`
@@ -80,6 +90,10 @@ const DoneDropdown = styled(BaseDropdown)`
 
   .Dropdown-placeholder {
     color: #5DAB41;
+  }
+
+  .Dropdown-arrow-wrapper > svg {
+    stroke: #5DAB41;
   }
 `
 
@@ -121,6 +135,7 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
 
   let dropdownOptions = []
   let DropdownComponent = <></>
+  let IconComponent = <></>
   switch (task.status) {
     case status.IN_PROGRESS:
       dropdownOptions = [
@@ -134,6 +149,7 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
         { label: 'Continue', value: status.IN_PROGRESS },
         { label: 'Done', value: status.DONE },
       ]
+      IconComponent = PauseIcon
       DropdownComponent = PausedDropdown
       break;
     case status.DONE:
@@ -148,6 +164,8 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
     options={dropdownOptions}
     placeholder="Select status"
     value={task.status}
+    arrowOpen={<ChevronUp size={20} />}
+    arrowClosed={<ChevronDown size={20} />}
   />
 }
 

@@ -5,13 +5,31 @@ import { CompactDetailLabel, MinimalDatePicker } from '../../shared'
 import { ConfigContext } from '../../config/src'
 import { transposeFromLocalToTimezone } from '../../../shared/dateUtils'
 
-const TaskListDueDateCell = styled.div`
+const BaseDueDateCell = styled.div`
+  background: #F8F8F9;
+  border: 1px solid #DEDEDE;
+  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 5px;
+
+  > div {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-around;
+  }
+`
+
+const TaskListDueDateCell = styled(BaseDueDateCell)`
   flex: 0 0 7.8em;
   justify-content: flex-start;
   position: relative;
 `
 
-const TaskMetaDueDateCell = styled.div`
+const TaskMetaDueDateCell = styled(BaseDueDateCell)`
   justify-content: flex-start;
   position: relative;
 `

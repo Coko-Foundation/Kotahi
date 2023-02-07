@@ -39,11 +39,15 @@ const TaskRow = styled.div`
     min-height: ${grid(6)};
   }
 
+  & > div:last-child {
+    border-right: ${grid(1)} solid transparent;
+  }
+
   ${props =>
     props.isOverdue
       ? css`
           & > div:last-child {
-            border-right: ${grid(1)} solid ${th('colorError')};
+            border-right-color: ${th('colorError')};
           }
         `
       : ''}
