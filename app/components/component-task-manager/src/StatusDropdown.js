@@ -145,17 +145,16 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
   let IconComponent = <></>
   const PauseLabel = <DropdownLabel>
     <PauseIcon size={15} />
-    <span>Pause</span>
+    <span>{task.status === status.PAUSED ? 'Paused' : 'Pause'}</span>
   </DropdownLabel>
   const ContinueLabel = <DropdownLabel>
-    {/* <PlayIcon size={15} /> */}
-    <span>Continue</span>
+    <span>{task.status === status.IN_PROGRESS ? 'In progress' : 'Continue'}</span>
   </DropdownLabel>
   const DoneLabel = <DropdownLabel>
     <CheckIcon size={15} />
     <span>Done</span>
   </DropdownLabel>
-  const dropdownOptions = [
+  let dropdownOptions = [
     { label: ContinueLabel, value: status.IN_PROGRESS },
     { label: PauseLabel, value: status.PAUSED },
     { label: DoneLabel, value: status.DONE },
