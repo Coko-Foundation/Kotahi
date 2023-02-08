@@ -60,13 +60,17 @@ const TaskRow = styled.div`
 
 /* stylelint-disable no-descending-specificity */
 const TaskHeaderRow = styled(TaskRow)`
+  gap: ${grid('1')};
+
   & > div {
+    font-family: 'Roboto';
+    font-style: normal;
+    font-weight: 500;
+    font-size: ${th('fontSizeHeading6')};
+    line-height: 19px;
+    letter-spacing: 0.01em;
+    color: #323232;
     background: none;
-    color: ${th('colorBorder')};
-    font-size: ${th('fontSizeBaseSmall')};
-    font-variant: all-small-caps;
-    line-height: ${th('lineHeightBaseSmall')};
-    min-height: ${grid(3)};
   }
 
   & > div > div {
@@ -74,6 +78,31 @@ const TaskHeaderRow = styled(TaskRow)`
   }
 `
 /* stylelint-enable no-descending-specificity */
+
+const TaskRowContainer = styled.div`
+  padding-bottom: 15px;
+
+  & + div {
+    border-top: 2px solid rgba(191, 191, 191, 0.5);
+  }
+`
+
+const TitleHeader = styled.div`
+  flex: 1 1 38em;
+  padding-left: 3.5em;
+`
+
+const AssigneeHeader = styled.div`
+  flex: 1 1 15em;
+`
+
+const DurationDaysHeader = styled.div`
+  flex: 0 0 7.8em;
+`
+
+const DueDateHeader = styled.div`
+  flex: 0 0 17.5em;
+`
 
 const TitleCell = styled.div`
   display: flex;
@@ -207,20 +236,15 @@ const calculateDaysDifference = (a, b) => {
 export const TaskHeader = ({ editAsTemplate }) => {
   return (
     <TaskHeaderRow>
-      <TitleCell>
-        <Handle />
-        <Handle />
-        Title
-      </TitleCell>
-      <AssigneeCell>Assignee</AssigneeCell>
+      <TitleHeader>Task title</TitleHeader>
+      <AssigneeHeader>Assignee</AssigneeHeader>
       {editAsTemplate ? (
         <>
-          <DurationDaysCell>Duration (days)</DurationDaysCell>
+          <DurationDaysHeader>Duration (days)</DurationDaysHeader>
         </>
       ) : (
         <>
-          <DueDateCell>Due date</DueDateCell>
-          <StatusCell>Status</StatusCell>
+          <DueDateHeader>Due date</DueDateHeader>
         </>
       )}
     </TaskHeaderRow>
@@ -451,97 +475,100 @@ const Task = ({
               </MediumRow>
             </TaskMetaModalContainer>
           </Modal>
-          <TaskRow
-            isOverdue={isOverdue}
-            ref={provided.innerRef}
-            {...provided.draggableProps}
-          >
-            <TitleCell>
-              <Handle {...provided.dragHandleProps}>
-                <DragIcon />
-              </Handle>
-              {editAsTemplate ? (
-                <Handle />
-              ) : (
-                <Handle
-                  onClick={() =>
-                    updateTask(task.id, {
-                      ...task,
-                      status: isDone ? 'In progress' : 'Done',
-                    })
-                  }
-                  title={isDone ? '' : 'Click to mark as done'}
-                >
-                  {isDone ? (
-                    <CheckCircle color={themeContext.colorPrimary} />
-                  ) : (
-                    <Circle color={themeContext.colorBorder} />
-                  )}
+          <TaskRowContainer>
+            <TaskHeader editAsTemplate={editAsTemplate} />
+            <TaskRow
+              isOverdue={isOverdue}
+              ref={provided.innerRef}
+              {...provided.draggableProps}
+            >
+              <TitleCell>
+                <Handle {...provided.dragHandleProps}>
+                  <DragIcon />
                 </Handle>
-              )}
-              <TextInput
-                onChange={event => updateTask(task.id, { ...task, title: event.target.value })}
-                placeholder="Give your task a name..."
-                value={task.title}
-              />
-              <TaskAction ref={taskRef}>
-                <MinimalButton
-                  onClick={() => {
-                    setIsActionDialog(!isActionDialog)
-                  }}
-                >
-                  <Ellipsis height="24" width="24" />
-                </MinimalButton>
-                {isActionDialog && (
-                  <ActionDialog>
-                    <EditLabel onClick={() => setIsEditTaskMetaModal(true)}>
-                      Edit
-                    </EditLabel>
-                    <DeleteLabel onClick={() => setIsConfirmingDelete(true)}>
-                      Delete
-                    </DeleteLabel>
-                  </ActionDialog>
-                )}
-              </TaskAction>
-            </TitleCell>
-            <AssigneeDropdown
-              assigneeGroupedOptions={assigneeGroupedOptions}
-              isList
-              task={task}
-              updateTask={updateTask}
-            />
-
-            {editAsTemplate ? (
-              <>
-                <DurationDaysCell>
-                  <MinimalNumericUpDown
-                    onChange={val =>
+                {editAsTemplate ? (
+                  <Handle />
+                ) : (
+                  <Handle
+                    onClick={() =>
                       updateTask(task.id, {
                         ...task,
-                        defaultDurationDays: val,
+                        status: isDone ? 'In progress' : 'Done',
                       })
                     }
-                    value={task.defaultDurationDays || 0}
-                  />
-                </DurationDaysCell>
-              </>
-            ) : (
-              <>
-                <DueDateField
-                  displayDefaultDurationDays={displayDefaultDurationDays}
-                  dueDateLocalString={dueDateLocalString}
-                  isList
-                  task={task}
-                  transposedDueDate={transposedDueDate}
-                  transposedEndOfToday={transposedEndOfToday}
-                  updateTask={updateTask}
+                    title={isDone ? '' : 'Click to mark as done'}
+                  >
+                    {isDone ? (
+                      <CheckCircle color={themeContext.colorPrimary} />
+                    ) : (
+                      <Circle color={themeContext.colorBorder} />
+                    )}
+                  </Handle>
+                )}
+                <TextInput
+                  onChange={event => updateTask(task.id, { ...task, title: event.target.value })}
+                  placeholder="Give your task a name..."
+                  value={task.title}
                 />
-                <StatusActionCell>
-                  <StatusDropdown task={task} onStatusUpdate={setTask} />
-                </StatusActionCell>
-              </>
-            )}
-          </TaskRow>
+                <TaskAction ref={taskRef}>
+                  <MinimalButton
+                    onClick={() => {
+                      setIsActionDialog(!isActionDialog)
+                    }}
+                  >
+                    <Ellipsis height="24" width="24" />
+                  </MinimalButton>
+                  {isActionDialog && (
+                    <ActionDialog>
+                      <EditLabel onClick={() => setIsEditTaskMetaModal(true)}>
+                        Edit
+                      </EditLabel>
+                      <DeleteLabel onClick={() => setIsConfirmingDelete(true)}>
+                        Delete
+                      </DeleteLabel>
+                    </ActionDialog>
+                  )}
+                </TaskAction>
+              </TitleCell>
+              <AssigneeDropdown
+                assigneeGroupedOptions={assigneeGroupedOptions}
+                isList
+                task={task}
+                updateTask={updateTask}
+              />
+
+              {editAsTemplate ? (
+                <>
+                  <DurationDaysCell>
+                    <MinimalNumericUpDown
+                      onChange={val =>
+                        updateTask(task.id, {
+                          ...task,
+                          defaultDurationDays: val,
+                        })
+                      }
+                      value={task.defaultDurationDays || 0}
+                    />
+                  </DurationDaysCell>
+                </>
+              ) : (
+                <>
+                  <DueDateField
+                    displayDefaultDurationDays={displayDefaultDurationDays}
+                    dueDateLocalString={dueDateLocalString}
+                    isList
+                    task={task}
+                    transposedDueDate={transposedDueDate}
+                    transposedEndOfToday={transposedEndOfToday}
+                    updateTask={updateTask}
+                  />
+                  <StatusActionCell>
+                    <StatusDropdown task={task} onStatusUpdate={setTask} />
+                  </StatusActionCell>
+                </>
+              )}
+            </TaskRow>
+          </TaskRowContainer>
         </>
       )}
     </Draggable>

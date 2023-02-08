@@ -164,7 +164,6 @@ const TaskList = ({
               {!tasks.length && 'Add your first task...'}
               {tasks.length ? (
                 <>
-                  <TaskHeader editAsTemplate={editAsTemplate} />
                   {tasks.map((task, index) => (
                     <Task
                       assigneeGroupedOptions={assigneeGroupedOptions}
