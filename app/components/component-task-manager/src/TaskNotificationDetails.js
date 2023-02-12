@@ -10,7 +10,6 @@ import {
   RoundIconButton,
   ActionButton,
 } from '../../shared'
-import { convertTimestampToDateString } from '../../../shared/dateUtils'
 
 const TaskTitle = styled.div`
   text-transform: uppercase;
