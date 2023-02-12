@@ -1,4 +1,5 @@
 const { BaseModel } = require('@coko/server')
+const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
 
 class Task extends BaseModel {
   static get tableName() {
@@ -36,6 +37,14 @@ class Task extends BaseModel {
         join: {
           from: 'tasks.id',
           to: 'task_email_notifications.taskId',
+        },
+      },
+      notificationLogs: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: TaskEmailNotificationLog,
+        join: {
+          from: 'tasks.id',
+          to: 'task_email_notifications_logs.taskId',
         },
       },
       manuscript: {

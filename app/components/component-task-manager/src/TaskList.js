@@ -20,6 +20,7 @@ const TaskList = ({
   currentUser,
   manuscript,
   sendNotifyEmail,
+  createTaskEmailNotificationLog,
 }) => {
   const config = useContext(ConfigContext)
 
@@ -171,6 +172,9 @@ const TaskList = ({
                   {tasks.map((task, index) => (
                     <Task
                       assigneeGroupedOptions={assigneeGroupedOptions}
+                      createTaskEmailNotificationLog={
+                        createTaskEmailNotificationLog
+                      }
                       currentUser={currentUser}
                       deleteTaskNotification={deleteTaskNotification}
                       editAsTemplate={editAsTemplate}

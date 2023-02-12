@@ -423,6 +423,16 @@ emailNotifications {
     email
   }
 }
+notificationLogs {
+  id
+  taskId
+  senderEmail
+  recipientEmail
+  emailTemplateKey
+  content
+  updated
+  created
+}
 assigneeType
 assigneeName
 assigneeEmail
@@ -466,4 +476,12 @@ export const UPDATE_TASK_STATUS = gql`
       ${taskFields}
     }
   }
+`
+
+export const CREATE_TASK_EMAIL_NOTIFICATION_LOGS = gql`
+mutation($taskEmailNotificationLog: TaskEmailNotificationLogInput!) {
+  createTaskEmailNotificationLog(taskEmailNotificationLog: $taskEmailNotificationLog) {
+    ${taskFields}
+  }
+}
 `

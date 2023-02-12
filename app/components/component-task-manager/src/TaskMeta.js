@@ -13,6 +13,7 @@ import {
 import TaskNotificationDetails from './TaskNotificationDetails'
 import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
+import { convertTimestampToDateString } from '../../../shared/dateUtils'
 
 const TaskMetaContainer = styled.div`
   width: 100%;
@@ -65,6 +66,43 @@ const TaskFieldsContainer = styled.div`
   margin-right: 20px;
 `
 
+// ToDo: Style of Container, Button, Paragraph yet to be updated as per convention
+const Container = styled.div`
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+`
+
+const Button = styled.button`
+  padding: 20px 10px;
+  background-color: transparent;
+  border: none;
+  font-size: 12px;
+  color: green;
+  position: relative;
+  text-decoration: underline;
+  top: 4px;
+  right: -340px;
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    sans-serif;
+`
+
+const Paragraph = styled.div`
+  margin: 10px 0;
+  text-align: left;
+  font-size: 11px;
+  color: green;
+  position: relative;
+  top: 2px;
+  right: -200px;
+  line-height: 20px;
+  font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica,
+    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
+    sans-serif;
+`
+
 const TaskMeta = ({
   task,
   index,
@@ -84,6 +122,8 @@ const TaskMeta = ({
   manuscript,
   currentUser,
   sendNotifyEmail,
+  taskNotificationLogs,
+  createTaskEmailNotificationLog,
 }) => {
   const notificationOptions = [
     {
@@ -132,6 +172,8 @@ const TaskMeta = ({
       ),
     )
   }
+
+  const [isToggled, setToggled] = useState(false)
 
   const addNewTaskNotification = () => {
     setTaskNotifications([
@@ -209,6 +251,9 @@ const TaskMeta = ({
             <>
               {taskEmailNotifications.map((notification, key) => (
                 <TaskNotificationDetails
+                  createTaskEmailNotificationLog={
+                    createTaskEmailNotificationLog
+                  }
                   currentUser={currentUser}
                   deleteTaskNotification={deleteTaskNotification}
                   editAsTemplate={editAsTemplate}
@@ -237,6 +282,24 @@ const TaskMeta = ({
               title="Add a new task"
             />
           )}
+          <Container>
+            <Button onClick={() => setToggled(!isToggled)}>
+              {isToggled
+                ? 'Hide all notifications sent'
+                : 'Show all notifications sent'}
+            </Button>
+            {isToggled && (
+              <Paragraph>
+                {task.notificationLogs.map(log => (
+                  <>
+                    <div>{convertTimestampToDateString(log.created)}</div>
+                    <div>{log.content}</div>
+                    <br />
+                  </>
+                ))}
+              </Paragraph>
+            )}
+          </Container>
         </TaskDetailsContainer>
       </TaskMetaContainer>
     </MediumColumn>

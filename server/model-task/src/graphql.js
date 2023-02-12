@@ -6,6 +6,7 @@ const TaskAlert = require('./taskAlert')
 const TaskEmailNotification = require('./taskEmailNotification')
 
 const { createNewTaskAlerts, updateAlertsForTask } = require('./taskCommsUtils')
+const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
 
 const resolvers = {
   Mutation: {
@@ -73,6 +74,7 @@ const resolvers = {
         .findById(task.id)
         .withGraphFetched('assignee')
         .withGraphFetched('emailNotifications.recipientUser')
+        .withGraphFetched('notificationLogs')
     },
 
     updateTaskNotification: async (_, { taskNotification }) => {
@@ -94,6 +96,7 @@ const resolvers = {
       const associatedTask = await Task.query()
         .findById(taskNotification.taskId)
         .withGraphFetched('emailNotifications.recipientUser')
+        .withGraphFetched('notificationLogs')
 
       return associatedTask
     },
@@ -106,6 +109,7 @@ const resolvers = {
       const associatedTask = await Task.query()
         .findById(taskEmailNotification.taskId)
         .withGraphFetched('emailNotifications.recipientUser')
+        .withGraphFetched('notificationLogs')
 
       await TaskEmailNotification.query().deleteById(id)
 
@@ -138,6 +142,24 @@ const resolvers = {
       await Task.query().update(data).where({ id: task.id })
       return Task.query().findById(task.id)
     },
+
+    createTaskEmailNotificationLog: async (
+      _,
+      { taskEmailNotificationLog },
+      ctx,
+    ) => {
+      await TaskEmailNotificationLog.query()
+        .insert(taskEmailNotificationLog)
+        .onConflict('id')
+        .merge()
+
+      const associatedTask = await Task.query()
+        .findById(taskEmailNotificationLog.taskId)
+        .withGraphFetched('emailNotifications.recipientUser')
+        .withGraphFetched('notificationLogs')
+
+      return associatedTask
+    },
   },
   Query: {
     tasks: async (_, { manuscriptId }) => {
@@ -146,6 +168,7 @@ const resolvers = {
         .orderBy('sequenceIndex')
         .withGraphFetched('assignee')
         .withGraphFetched('emailNotifications.recipientUser')
+        .withGraphFetched('notificationLogs')
     },
     userHasTaskAlerts: async (_, __, ctx) => {
       return (
@@ -191,6 +214,7 @@ const typeDefs = `
     sequenceIndex: Int!
     status: String!
     emailNotifications: [TaskEmailNotification]
+    notificationLogs: [TaskEmailNotificationLog]
     assigneeType: String
     assigneeName: String
     assigneeEmail: String
@@ -217,6 +241,25 @@ const typeDefs = `
     recipientEmail: String
   }
 
+  input TaskEmailNotificationLogInput {
+    taskId: ID!
+    senderEmail: String!
+    recipientEmail: String!
+    emailTemplateKey: String!
+    content: String!
+  }
+
+  type TaskEmailNotificationLog {
+    id: ID!
+    taskId: ID!
+    senderEmail: String!
+    recipientEmail: String!
+    emailTemplateKey: String!
+    content: String!
+    created: DateTime!
+    updated: DateTime
+  }
+
   type TaskEmailNotification {
     id: ID!
     taskId: ID!
@@ -239,6 +282,7 @@ const typeDefs = `
     updateTaskStatus(task: UpdateTaskStatusInput!): Task!
     updateTaskNotification(taskNotification: TaskEmailNotificationInput!): Task!
     deleteTaskNotification(id: ID!): Task!
+    createTaskEmailNotificationLog(taskEmailNotificationLog: TaskEmailNotificationLogInput!): Task!
   }
 `
 

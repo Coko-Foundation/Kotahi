@@ -51,6 +51,7 @@ const manuscriptFields = `
       user {
         id
         username
+        email
         defaultIdentity {
           id
           name
@@ -112,6 +113,16 @@ const manuscriptFields = `
         email
       }
     }
+    notificationLogs {
+      id
+      taskId
+      senderEmail
+      recipientEmail
+      emailTemplateKey
+      content
+      updated
+      created
+    }
   }
 `
 
@@ -161,6 +172,7 @@ export const query = gql`
       id
       username
       admin
+      email
     }
 
     manuscript(id: $id) {

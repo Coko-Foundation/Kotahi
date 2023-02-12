@@ -71,6 +71,7 @@ const DecisionVersion = ({
   updateTasks,
   updateTaskNotification,
   deleteTaskNotification,
+  createTaskEmailNotificationLog,
 }) => {
   // Hooks from the old world
   const addEditor = (manuscript, label, isCurrent, user) => {
@@ -218,6 +219,7 @@ const DecisionVersion = ({
             </SectionHeader>
             <SectionRow>
               <TaskList
+                createTaskEmailNotificationLog={createTaskEmailNotificationLog}
                 currentUser={currentUser}
                 deleteTaskNotification={deleteTaskNotification}
                 isReadOnly={!isCurrentVersion}

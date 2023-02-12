@@ -256,6 +256,7 @@ const Task = ({
   currentUser,
   manuscript,
   sendNotifyEmail,
+  createTaskEmailNotificationLog,
 }) => {
   const config = useContext(ConfigContext)
   const themeContext = useContext(ThemeContext)
@@ -493,6 +494,7 @@ const Task = ({
               <TaskMeta
                 assigneeGroupedOptions={assigneeGroupedOptions}
                 config={config}
+                createTaskEmailNotificationLog={createTaskEmailNotificationLog}
                 currentUser={currentUser}
                 daysDifferenceLabel={daysDifferenceLabel}
                 deleteTaskNotification={deleteTaskNotification}

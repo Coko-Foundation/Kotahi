@@ -40,6 +40,16 @@ const query = gql`
           email
         }
       }
+      notificationLogs {
+        id
+        taskId
+        senderEmail
+        recipientEmail
+        emailTemplateKey
+        content
+        updated
+        created
+      }
       assigneeType
       assigneeEmail
       assigneeName
