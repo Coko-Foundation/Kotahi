@@ -285,8 +285,8 @@ const TaskMeta = ({
           <Container>
             <Button onClick={() => setToggled(!isToggled)}>
               {isToggled
-                ? 'Hide all notifications sent'
-                : 'Show all notifications sent'}
+                ? `Hide all notifications sent (${task.notificationLogs.length})`
+                : `Show all notifications sent (${task.notificationLogs.length})`}
             </Button>
             {isToggled && (
               <Paragraph>
