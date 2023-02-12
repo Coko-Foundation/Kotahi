@@ -417,6 +417,11 @@ emailNotifications {
   emailTemplateKey
   recipientName
   recipientEmail
+  recipientUser {
+    id
+    username
+    email
+  }
 }
 assigneeType
 assigneeName

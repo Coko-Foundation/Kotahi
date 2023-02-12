@@ -34,6 +34,11 @@ const query = gql`
         emailTemplateKey
         recipientName
         recipientEmail
+        recipientUser {
+          id
+          username
+          email
+        }
       }
       assigneeType
       assigneeEmail

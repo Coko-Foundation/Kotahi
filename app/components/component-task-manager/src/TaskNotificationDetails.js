@@ -8,7 +8,10 @@ import {
   GroupedOptionsSelect,
   MinimalSelect,
   RoundIconButton,
+  ActionButton,
 } from '../../shared'
+import { convertTimestampToDateString } from '../../../shared/dateUtils'
+import { seniorEditor } from '../../../../config/journal/roles'
 
 const TaskTitle = styled.div`
   text-transform: uppercase;
@@ -85,6 +88,10 @@ const TaskNotificationDetails = ({
   taskEmailNotification: propTaskEmailNotification,
   deleteTaskNotification,
   task,
+  manuscript,
+  currentUser,
+  sendNotifyEmail,
+  editAsTemplate,
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState('')
 
@@ -107,6 +114,8 @@ const TaskNotificationDetails = ({
   const [isNewRecipient, setIsNewRecipient] = useState(
     taskEmailNotification.recipientType === 'unregisteredUser',
   )
+
+  const [taskNotificationStatus, setTaskNotificationStatus] = useState(null)
 
   const [recipientDropdownState, setRecipientDropdownState] = useState(false)
 
@@ -210,6 +219,137 @@ const TaskNotificationDetails = ({
       taskId: taskNotification.taskId,
       notificationElapsedDays: elapsedDaysValue,
     })
+  }
+
+  function handleManuscriptTeamInput(
+    notificationRecipientType,
+    manuscriptTeams,
+  ) {
+    const teamOfRecipientType = manuscriptTeams.filter(team => {
+      if (notificationRecipientType === 'editor') {
+        return team.role.includes(['editor', 'handlingEditor', 'seniorEditor'])
+      }
+
+      return team.role === notificationRecipientType
+    })
+
+    console.log(teamOfRecipientType)
+  }
+
+  const sendTaskNotificationEmailHandler = async () => {
+    setTaskNotificationStatus('pending')
+
+    if (taskEmailNotification.recipientType) {
+      let input = []
+      let logsData
+
+      switch (taskEmailNotification.recipientType) {
+        case 'unregisteredUser':
+          input = {
+            externalEmail: taskEmailNotification.recipientEmail,
+            externalName: taskEmailNotification.recipientName,
+            selectedTemplate: taskEmailNotification.emailTemplateKey,
+            currentUser: currentUser.username,
+            manuscript,
+          }
+          logsData = {
+            selectedTemplate: taskEmailNotification.emailTemplateKey,
+            recipientName: taskEmailNotification.recipientName,
+            recipientEmail: taskEmailNotification.recipientEmail,
+            senderEmail: currentUser.email,
+          }
+          break
+        case 'registeredUser':
+          input = {
+            selectedEmail: taskEmailNotification.recipientUser.email,
+            selectedTemplate: taskEmailNotification.emailTemplateKey,
+            manuscript,
+            currentUser: currentUser.username,
+          }
+          logsData = {
+            selectedTemplate: taskEmailNotification.emailTemplateKey,
+            recipientName: taskEmailNotification.recipientUser.username,
+            recipientEmail: taskEmailNotification.recipientUser.email,
+            senderEmail: currentUser.email,
+          }
+          break
+        case 'assignee':
+          switch (task.assigneeType) {
+            case 'unregisteredUser':
+              input = {
+                externalEmail: task.assigneeEmail,
+                externalName: task.assigneeName,
+                selectedTemplate: taskEmailNotification.emailTemplateKey,
+                currentUser: currentUser.username,
+                manuscript,
+              }
+              logsData = {
+                selectedTemplate: taskEmailNotification.emailTemplateKey,
+                recipientName: task.assigneeName,
+                recipientEmail: task.assigneeEmail,
+                senderEmail: currentUser.email,
+              }
+              break
+            case 'registeredUser':
+              input = {
+                selectedEmail: task.assginee.email,
+                selectedTemplate: taskEmailNotification.emailTemplateKey,
+                manuscript,
+                currentUser: currentUser.username,
+              }
+              logsData = {
+                selectedTemplate: taskEmailNotification.emailTemplateKey,
+                recipientName: task.assginee.username,
+                recipientEmail: task.assginee.email,
+                senderEmail: currentUser.email,
+              }
+              break
+            case 'editor':
+            case 'reviewer':
+            case 'author':
+              handleManuscriptTeamInput(task.assigneeType, manuscript.teams)
+              break
+            default:
+          }
+
+          break
+        case 'editor':
+        case 'reviewer':
+        case 'author':
+          handleManuscriptTeamInput(
+            taskEmailNotification.recipientType,
+            manuscript.teams,
+          )
+          break
+        default:
+      }
+
+      const response = await sendNotifyEmail(input)
+      const responseStatus = response.data.sendEmail.success
+      if (responseStatus) logTaskNotificationEmails(logsData)
+      setTaskNotificationStatus(responseStatus ? 'success' : 'failure')
+    }
+  }
+
+  const logTaskNotificationEmails = async logsData => {
+    const emailTemplateOption = logsData.replace(/([A-Z])/g, ' $1')
+
+    const selectedTemplateValue =
+      emailTemplateOption.charAt(0).toUpperCase() + emailTemplateOption.slice(1)
+
+    const date = Date.now()
+
+    const messageBody = `${convertTimestampToDateString(
+      date,
+    )} - ${selectedTemplateValue} sent by Kotahi to ${logsData.recipientName}`
+
+    // await sendChannelMessageCb({
+    //   content: messageBody,
+    //   taskId: task.id,
+    //   emailTemplateKey: emailTemplateOption,
+    //   senderEmail: logsData.senderEmail,
+    //   recipientEmail: logsData.receiverEmail,
+    // })
   }
 
   return (
@@ -318,6 +458,17 @@ const TaskNotificationDetails = ({
           </NotificationDeadlineCell>
         </NotificationDeadlineContainer>
       </TaskFieldsContainer>
+      {!editAsTemplate && (
+        <ActionButton
+          onClick={sendTaskNotificationEmailHandler}
+          primary
+          status={taskNotificationStatus}
+          style
+        >
+          Send Email
+        </ActionButton>
+      )}
+
       <RoundIconButtonContainer>
         <RoundIconButton
           iconName="Minus"

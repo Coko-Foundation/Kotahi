@@ -283,6 +283,14 @@ const SelectEmailTemplate = ({
         label: 'Thanks for Agreeing to Review Template',
         value: 'thanksForAgreeingToReviewTemplate',
       },
+      {
+        label: 'Author Invitation Email Template',
+        value: 'authorInvitationEmailTemplate',
+      },
+      {
+        label: 'Reviewer Invitation Email Template',
+        value: 'reviewerInvitationEmailTemplate',
+      },
     ]
   }
 

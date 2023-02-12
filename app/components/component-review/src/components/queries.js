@@ -106,6 +106,11 @@ const manuscriptFields = `
       emailTemplateKey
       recipientName
       recipientEmail
+      recipientUser {
+        id
+        username
+        email
+      }
     }
   }
 `

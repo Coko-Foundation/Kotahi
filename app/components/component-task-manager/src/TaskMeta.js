@@ -81,6 +81,9 @@ const TaskMeta = ({
   recipientGroupedOptions,
   deleteTaskNotification,
   displayDefaultDurationDays,
+  manuscript,
+  currentUser,
+  sendNotifyEmail,
 }) => {
   const notificationOptions = [
     {
@@ -206,10 +209,14 @@ const TaskMeta = ({
             <>
               {taskEmailNotifications.map((notification, key) => (
                 <TaskNotificationDetails
+                  currentUser={currentUser}
                   deleteTaskNotification={deleteTaskNotification}
+                  editAsTemplate={editAsTemplate}
                   key={notification.id}
+                  manuscript={manuscript}
                   notificationOptions={notificationOptions}
                   recipientGroupedOptions={recipientGroupedOptions}
+                  sendNotifyEmail={sendNotifyEmail}
                   task={task}
                   taskEmailNotification={notification}
                   updateTaskNotification={updateTaskNotification}

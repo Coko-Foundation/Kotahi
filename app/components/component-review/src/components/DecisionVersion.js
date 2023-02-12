@@ -218,10 +218,13 @@ const DecisionVersion = ({
             </SectionHeader>
             <SectionRow>
               <TaskList
+                currentUser={currentUser}
                 deleteTaskNotification={deleteTaskNotification}
                 isReadOnly={!isCurrentVersion}
+                manuscript={version}
                 manuscriptId={version.id}
                 roles={roles}
+                sendNotifyEmail={sendNotifyEmail}
                 tasks={version.tasks}
                 updateTask={updateTask}
                 updateTaskNotification={updateTaskNotification}

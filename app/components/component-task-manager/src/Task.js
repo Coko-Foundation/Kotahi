@@ -253,6 +253,9 @@ const Task = ({
   recipientGroupedOptions,
   updateTaskNotification,
   deleteTaskNotification,
+  currentUser,
+  manuscript,
+  sendNotifyEmail,
 }) => {
   const config = useContext(ConfigContext)
   const themeContext = useContext(ThemeContext)
@@ -490,6 +493,7 @@ const Task = ({
               <TaskMeta
                 assigneeGroupedOptions={assigneeGroupedOptions}
                 config={config}
+                currentUser={currentUser}
                 daysDifferenceLabel={daysDifferenceLabel}
                 deleteTaskNotification={deleteTaskNotification}
                 displayDefaultDurationDays={displayDefaultDurationDays}
@@ -498,10 +502,12 @@ const Task = ({
                 index
                 isOverdue={isOverdue}
                 isReadOnly={isReadOnly}
+                manuscript={manuscript}
                 onCancel
                 onDelete
                 recipientGroupedOptions={recipientGroupedOptions}
                 ref={provided.innerRef}
+                sendNotifyEmail={sendNotifyEmail}
                 status={status}
                 task={task}
                 transposedDueDate={transposedDueDate}

@@ -72,7 +72,7 @@ const resolvers = {
       return Task.query()
         .findById(task.id)
         .withGraphFetched('assignee')
-        .withGraphFetched('emailNotifications')
+        .withGraphFetched('emailNotifications.recipientUser')
     },
 
     updateTaskNotification: async (_, { taskNotification }) => {
@@ -93,7 +93,7 @@ const resolvers = {
 
       const associatedTask = await Task.query()
         .findById(taskNotification.taskId)
-        .withGraphFetched('emailNotifications')
+        .withGraphFetched('emailNotifications.recipientUser')
 
       return associatedTask
     },
@@ -105,7 +105,7 @@ const resolvers = {
 
       const associatedTask = await Task.query()
         .findById(taskEmailNotification.taskId)
-        .withGraphFetched('emailNotifications')
+        .withGraphFetched('emailNotifications.recipientUser')
 
       await TaskEmailNotification.query().deleteById(id)
 
@@ -127,7 +127,10 @@ const resolvers = {
       // get task
       const dbTask = await Task.query().findById(task.id)
 
-      if (dbTask.status === status.NOT_STARTED && task.status === status.IN_PROGRESS) {
+      if (
+        dbTask.status === status.NOT_STARTED &&
+        task.status === status.IN_PROGRESS
+      ) {
         const taskDurationDays = dbTask.defaultDurationDays || 0
         data.dueDate = dateFns.addDays(new Date(), taskDurationDays)
       }
@@ -142,7 +145,7 @@ const resolvers = {
         .where({ manuscriptId })
         .orderBy('sequenceIndex')
         .withGraphFetched('assignee')
-        .withGraphFetched('emailNotifications')
+        .withGraphFetched('emailNotifications.recipientUser')
     },
     userHasTaskAlerts: async (_, __, ctx) => {
       return (
@@ -225,6 +228,7 @@ const typeDefs = `
     recipientEmail: String
     created: DateTime!
     updated: DateTime
+    recipientUser: User
   }
 
   extend type Mutation {
