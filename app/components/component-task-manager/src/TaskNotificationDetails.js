@@ -24,8 +24,21 @@ const TaskTitle = styled.div`
 const TaskFieldsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 25%;
-  margin-right: 20px;
+  + div {
+    margin-left: 20px;
+  }
+`
+
+const RecipientFieldContainer = styled(TaskFieldsContainer)`
+  flex: 0 0 20em;
+`
+
+const EmailTemplateFieldContainer = styled(TaskFieldsContainer)`
+  flex: 0 0 15em;
+`
+
+const ScheduleNotificationFieldContainer = styled(TaskFieldsContainer)`
+  flex: 0 0 22em;
 `
 
 const RoundIconButtonContainer = styled.div`
@@ -69,7 +82,6 @@ const UnregisteredUserCell = styled.div`
 const NotificationDeadlineContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 300px;
 `
 
 const NotificationDetailsContainer = styled.div`
@@ -219,7 +231,7 @@ const TaskNotificationDetails = ({
 
   return (
     <NotificationDetailsContainer>
-      <TaskFieldsContainer>
+      <RecipientFieldContainer>
         <TaskTitle>Recipient</TaskTitle>
         <AssigneeCell title={taskEmailNotification.recipientType}>
           <GroupedOptionsSelect
@@ -271,8 +283,8 @@ const TaskNotificationDetails = ({
             />
           </UnregisteredUserCell>
         )}
-      </TaskFieldsContainer>
-      <TaskFieldsContainer>
+      </RecipientFieldContainer>
+      <EmailTemplateFieldContainer>
         <TaskTitle>Select email template</TaskTitle>
         <SelectEmailTemplate
           isTaskEmailNotification
@@ -284,8 +296,8 @@ const TaskNotificationDetails = ({
           taskEmailNotification={taskEmailNotification}
           updateTaskNotification={updateTaskNotification}
         />
-      </TaskFieldsContainer>
-      <TaskFieldsContainer>
+      </EmailTemplateFieldContainer>
+      <ScheduleNotificationFieldContainer>
         <NotificationDeadlineContainer>
           <TaskTitle>Send notification</TaskTitle>
 
@@ -302,7 +314,7 @@ const TaskNotificationDetails = ({
               }}
               value={taskEmailNotificationElapsedDays || 0}
             />
-            Days
+            <span>Days</span>
             <MinimalSelect
               aria-label="Deadline"
               data-testid="Deadline_select"
@@ -320,9 +332,10 @@ const TaskNotificationDetails = ({
               placeholder="Select.."
               value={taskEmailNotificationDeadline}
             />
+            <span>due date</span>
           </NotificationDeadlineCell>
         </NotificationDeadlineContainer>
-      </TaskFieldsContainer>
+      </ScheduleNotificationFieldContainer>
       <RoundIconButtonContainer>
         <RoundIconButton
           iconName="Minus"
