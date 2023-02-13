@@ -4,11 +4,6 @@ import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { v4 as uuid } from 'uuid'
 import {
-  RoundIconButton,
-  MediumColumn,
-  MinimalNumericUpDown,
-  LooseColumn,
-  MediumRow,
   ActionButton,
 } from '../../shared'
 
@@ -18,13 +13,13 @@ import DueDateField from './DueDateField'
 import TextInput from './TextInput'
 import Modal from '../../component-modal/src'
 import CounterField from './CounterField'
+import { X as CloseIcon } from 'react-feather'
 
-const TaskMetaModalContainer = styled(LooseColumn)`
+const TaskMetaModalContainer = styled.div`
   background-color: ${th('colorBackground')};
   width: 1200px;
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   min-height: 480px;
   z-index: 10000;
 `
@@ -46,15 +41,51 @@ const DurationDaysCell = styled.div`
 `
 
 const BaseFieldsContainer = styled.div`
-  padding: ${grid(2.5)} ${grid(3)};
+  padding: ${grid(3.5)} ${grid(3)};
 `
 const TaskPrimaryFieldsContainer = styled(BaseFieldsContainer)`
   display: flex;
+  padding-top: 0;
+`
+
+const TaskRecipientsDetailsContainer = styled(BaseFieldsContainer)`
+  border-bottom: 2px solid rgba(191,191,191, 0.5);
+  box-shadow: 0 10px 10px -10px #d9d9d9;
+  min-height: 260px;
+  padding-left: ${grid(7)}
+`
+
+const TaskRecipientsContainer = styled.div`
+  margin-bottom: 20px;
+`
+
+const TaskActionsContainer = styled(BaseFieldsContainer)`
+  padding-top: ${grid(2)};
+  padding-bottom: ${grid(2)};
+  display: flex;
+  justify-content: flex-end;
 `
 
 const TaskDetailsContainer = styled.div`
-  padding-bottom: 25px;
+  padding-bottom: 5px;
   border-bottom: 2px solid rgba(191,191,191, 0.5);
+`
+
+const TaskCloseActionContainer = styled.div`
+  display: flex;
+  justify-content: flex-end;
+  padding: 14px 14px 24px 14px;
+
+  button {
+    cursor: pointer;
+    background: transparent;
+    border: none;
+
+    svg {
+      stroke: #323232
+    }
+  }
+
 `
 
 const TaskTitle = styled.div`
@@ -154,66 +185,68 @@ const TaskEditModal = ({
   return (
     <Modal isOpen={isOpen}>
       <TaskMetaModalContainer>
-        <MediumColumn>
-          <TaskDetailsContainer>
-            <TaskPrimaryFieldsContainer>
-              <TitleFieldContainer>
-                <TaskTitle>Task title</TaskTitle>
-                <TitleCell>
-                  <TextInput
-                    onChange={event => updateTask(task.id, { ...task, title: event.target.value })}
-                    placeholder="Give your task a name..."
-                    value={task.title}
-                    autoFocus={!task.title}
-                    // onCancel={() => {
-                    //   if (!task.title) onCancel()
-                    // }}
-                  />
-                </TitleCell>
-              </TitleFieldContainer>
-              <AssigneeFieldContainer>
-                <TaskTitle>Assignee</TaskTitle>
-                <AssigneeDropdown
-                  assigneeGroupedOptions={assigneeGroupedOptions}
+        <TaskCloseActionContainer>
+          <button type="button" onClick={() => onCancel(false)}>
+            <CloseIcon size={20} />
+          </button>
+        </TaskCloseActionContainer>
+        <TaskDetailsContainer>
+          <TaskPrimaryFieldsContainer>
+            <TitleFieldContainer>
+              <TaskTitle>Task title</TaskTitle>
+              <TitleCell>
+                <TextInput
+                  onChange={event => updateTask(task.id, { ...task, title: event.target.value })}
+                  placeholder="Give your task a name..."
+                  value={task.title}
+                  autoFocus={!task.title}
+                  // onCancel={() => {
+                  //   if (!task.title) onCancel()
+                  // }}
+                />
+              </TitleCell>
+            </TitleFieldContainer>
+            <AssigneeFieldContainer>
+              <TaskTitle>Assignee</TaskTitle>
+              <AssigneeDropdown
+                assigneeGroupedOptions={assigneeGroupedOptions}
+                task={task}
+                updateTask={updateTask}
+              />
+            </AssigneeFieldContainer>
+            {!editAsTemplate && (
+              <DueDateFieldContainer>
+                <TaskTitle>Assign due date</TaskTitle>
+                <DueDateField
+                  displayDefaultDurationDays={displayDefaultDurationDays}
+                  dueDateLocalString={dueDateLocalString}
                   task={task}
+                  transposedDueDate={transposedDueDate}
+                  transposedEndOfToday={transposedEndOfToday}
                   updateTask={updateTask}
                 />
-              </AssigneeFieldContainer>
-              {!editAsTemplate && (
-                <DueDateFieldContainer>
-                  <TaskTitle>Assign due date</TaskTitle>
-                  <DueDateField
-                    displayDefaultDurationDays={displayDefaultDurationDays}
-                    dueDateLocalString={dueDateLocalString}
-                    task={task}
-                    transposedDueDate={transposedDueDate}
-                    transposedEndOfToday={transposedEndOfToday}
-                    updateTask={updateTask}
-                  />
-                </DueDateFieldContainer>
-              )}
-              <div>
-                <TaskTitle>Duration in days</TaskTitle>
-                <DurationDaysCell>
-                  <CounterField
-                    minValue={0}
-                    value={task.defaultDurationDays || 0}
-                    showNone={true}
-                    onChange={val => {
-                      // updateTask(task.id, {
-                      //   ...task,
-                      //   defaultDurationDays: val,
-                      // })
-                    }}
-                  />
-                </DurationDaysCell>
-              </div>
-            </TaskPrimaryFieldsContainer>
-          </TaskDetailsContainer>
-          <BaseFieldsContainer>
-            {(taskEmailNotifications === null ||
-              !taskEmailNotifications?.length) &&
-              'Add Notification Recipient'}
+              </DueDateFieldContainer>
+            )}
+            <div>
+              <TaskTitle>Duration in days</TaskTitle>
+              <DurationDaysCell>
+                <CounterField
+                  minValue={0}
+                  value={task.defaultDurationDays || 0}
+                  showNone={true}
+                  onChange={val => {
+                    // updateTask(task.id, {
+                    //   ...task,
+                    //   defaultDurationDays: val,
+                    // })
+                  }}
+                />
+              </DurationDaysCell>
+            </div>
+          </TaskPrimaryFieldsContainer>
+        </TaskDetailsContainer>
+        <TaskRecipientsDetailsContainer>
+          <TaskRecipientsContainer>
             {taskEmailNotifications?.length ? (
               <>
                 {taskEmailNotifications.map((notification, key) => (
@@ -228,33 +261,29 @@ const TaskEditModal = ({
                 ))}
               </>
             ) : null}
-            {!isReadOnly && (
-              <RoundIconButton
-                disabled={
-                  taskEmailNotifications?.length
-                    ? taskEmailNotifications.some(t => !t.recipientType)
-                    : false
-                }
-                iconName="Plus"
-                onClick={addNewTaskNotification}
-                primary
-                title="Add a new task"
-              />
-            )}
-          </BaseFieldsContainer>
-        </MediumColumn>
-        <BaseFieldsContainer>
+          </TaskRecipientsContainer>
+          {!isReadOnly && (
+            <ActionButton
+              disabled={
+                taskEmailNotifications?.length
+                  ? taskEmailNotifications.some(t => !t.recipientType)
+                  : false
+              }
+              onClick={addNewTaskNotification}
+              primary
+            >
+              Add Notification Recipient
+            </ActionButton>
+          )}
+        </TaskRecipientsDetailsContainer>
+        <TaskActionsContainer>
           <ActionButton
             onClick={() => onSave(false)}
             primary
           >
             Save
           </ActionButton>
-          &nbsp;&nbsp;
-          <ActionButton onClick={() => onCancel(false)}>
-            Cancel
-          </ActionButton>
-        </BaseFieldsContainer>
+        </TaskActionsContainer>
       </TaskMetaModalContainer>
     </Modal>
   )

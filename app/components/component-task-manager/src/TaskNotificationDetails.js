@@ -90,9 +90,10 @@ const NotificationDeadlineContainer = styled.div`
 
 const NotificationDetailsContainer = styled.div`
   display: flex;
-  margin-top: 40px;
-  margin-bottom: 20px;
   width: 100%;
+  & + div {
+    margin-top: 16px;
+  }
 `
 
 const AssigneeCell = styled.div`
