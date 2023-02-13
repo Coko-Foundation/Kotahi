@@ -52,11 +52,7 @@ const CounterValueDown = styled(CounterActionContainer)`
   margin-top: -10px;
 `
 
-const CounterField = ({value}) => {
-  const options = [
-    {label: 'Before', value: 'before'},
-    {label: 'After', value: 'after'},
-  ]
+const CounterFieldWithOptions = ({value, options}) => {
   const [selectedOption, setSelectedOption] = useState(null)
   const [selectedIndex, setSelectedIndex] = useState(null)
 
@@ -110,4 +106,4 @@ const CounterField = ({value}) => {
   )
 }
 
-export default CounterField
+export default CounterFieldWithOptions

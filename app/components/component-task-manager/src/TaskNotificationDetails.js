@@ -9,7 +9,7 @@ import {
   MinimalSelect,
   RoundIconButton,
 } from '../../shared'
-import CounterField from './CounterField'
+import CounterFieldWithOptions from './CounterFieldWithOptions'
 
 const TaskTitle = styled.div`
   font-family: 'Roboto';
@@ -333,7 +333,13 @@ const TaskNotificationDetails = ({
               placeholder="Select.."
               value={taskEmailNotificationDeadline}
             /> */}
-            <CounterField />
+            <CounterFieldWithOptions
+              value="before"
+              options={[
+                {label: 'Before', value: 'before'},
+                {label: 'After', value: 'after'},
+              ]}
+            />
             <span>due date</span>
           </NotificationDeadlineCell>
         </NotificationDeadlineContainer>
