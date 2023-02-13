@@ -19,7 +19,6 @@ import {
 import { DragVerticalIcon, EllipsisIcon } from '../../shared/Icons'
 import Modal from '../../component-modal/src'
 import { ConfigContext } from '../../config/src'
-import TaskMeta from './TaskMeta'
 import { UPDATE_TASK_STATUS } from '../../../queries'
 import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
