@@ -36,7 +36,6 @@ const TaskRow = styled.div`
     background: transparent;
     display: flex;
     line-height: 1em;
-    min-height: ${grid(6)};
   }
 
   & > div:last-child {
@@ -80,6 +79,7 @@ const TaskHeaderRow = styled(TaskRow)`
 /* stylelint-enable no-descending-specificity */
 
 const TaskRowContainer = styled.div`
+  padding-top: 15px;
   padding-bottom: 15px;
 
   & + div {
@@ -87,20 +87,24 @@ const TaskRowContainer = styled.div`
   }
 `
 
-const TitleHeader = styled.div`
+const BaseHeader = styled.div`
+  margin-bottom: 4px;
+`
+
+const TitleHeader = styled(BaseHeader)`
   flex: 1 1 38em;
   padding-left: 3.5em;
 `
 
-const AssigneeHeader = styled.div`
+const AssigneeHeader = styled(BaseHeader)`
   flex: 1 1 15em;
 `
 
-const DurationDaysHeader = styled.div`
+const DurationDaysHeader = styled(BaseHeader)`
   flex: 0 0 7.8em;
 `
 
-const DueDateHeader = styled.div`
+const DueDateHeader = styled(BaseHeader)`
   flex: 0 0 17.5em;
 `
 

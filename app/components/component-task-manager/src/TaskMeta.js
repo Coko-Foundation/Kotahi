@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
+import { th, grid } from '@pubsweet/ui-toolkit'
 import { v4 as uuid } from 'uuid'
 import {
   RoundIconButton,
   MediumColumn,
   MinimalNumericUpDown,
-  MinimalTextInput,
 } from '../../shared'
 
 import TaskNotificationDetails from './TaskNotificationDetails'
 import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
+import TextInput from './TextInput'
 
 const TaskMetaContainer = styled.div`
   width: 100%;
@@ -21,6 +21,10 @@ const TaskMetaContainer = styled.div`
 
 const TitleCell = styled.div`
   display: flex;
+  align-items: center;
+  background: transparent;
+  line-height: 1em;
+  min-height: ${grid(6)};
 `
 
 const DurationDaysCell = styled.div`
@@ -47,22 +51,29 @@ const TaskPrimaryDetails = styled.div`
 `
 
 const TaskTitle = styled.div`
-  text-transform: uppercase;
-  font-size: ${th('fontSizeBaseSmall')};
-  font-variant: all-small-caps;
-`
-
-const DurationTitle = styled.div`
-  text-transform: uppercase;
-  font-size: ${th('fontSizeBaseSmall')};
-  font-variant: all-small-caps;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.01em;
+  color: #323232;
+  margin-bottom: 4px;
 `
 
 const TaskFieldsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 25%;
-  margin-right: 20px;
+  margin-left: 10px;
+  margin-right: 10px;
+`
+
+const AssigneeFieldContainer = styled(TaskFieldsContainer)`
+  flex: 0 0 7.8em;
+`
+
+const DueDateFieldContainer = styled(TaskFieldsContainer)`
+  flex: 0 0 7.8em;
 `
 
 const TaskMeta = ({
@@ -147,31 +158,32 @@ const TaskMeta = ({
         <TaskTitleContainer>
           <TaskTitle>Title</TaskTitle>
           <TitleCell>
-            <MinimalTextInput
-              autoFocus={!task.title}
-              onCancel={() => {
-                if (!task.title) onCancel()
-              }}
-              onChange={val => updateTask(task.id, { ...task, title: val })}
+            <TextInput
+              onChange={event => updateTask(task.id, { ...task, title: event.target.value })}
+              placeholder="Give your task a name..."
               value={task.title}
+              autoFocus={!task.title}
+              // onCancel={() => {
+              //   if (!task.title) onCancel()
+              // }}
             />
           </TitleCell>
         </TaskTitleContainer>
         <TaskDetailsContainer>
           <TaskPrimaryDetails>
-            <TaskFieldsContainer>
+            <AssigneeFieldContainer>
               <TaskTitle>Assignee</TaskTitle>
               <AssigneeDropdown
                 assigneeGroupedOptions={assigneeGroupedOptions}
                 task={task}
                 updateTask={updateTask}
               />
-            </TaskFieldsContainer>
+            </AssigneeFieldContainer>
 
             {!editAsTemplate && (
               <>
-                <TaskFieldsContainer>
-                  <DurationTitle>Due Date</DurationTitle>
+                <DueDateFieldContainer>
+                  <TaskTitle>Due Date</TaskTitle>
                   <DueDateField
                     displayDefaultDurationDays={displayDefaultDurationDays}
                     dueDateLocalString={dueDateLocalString}
@@ -180,11 +192,11 @@ const TaskMeta = ({
                     transposedEndOfToday={transposedEndOfToday}
                     updateTask={updateTask}
                   />
-                </TaskFieldsContainer>
+                </DueDateFieldContainer>
               </>
             )}
             <TaskFieldsContainer>
-              <DurationTitle>Duration</DurationTitle>
+              <TaskTitle>Duration</TaskTitle>
 
               <DurationDaysCell>
                 <MinimalNumericUpDown

@@ -17,6 +17,7 @@ const TaskListAssigneeCell = styled.div`
 
 const TaskMetaAssigneeCell = styled.div`
   justify-content: flex-start;
+  width: 290px;
 `
 
 const TaskListUnregisteredUserCell = styled.div`
@@ -29,8 +30,11 @@ const TaskListUnregisteredUserCell = styled.div`
 
 const TaskMetaUnregisteredUserCell = styled.div`
   display: flex;
-  & > div {
-    margin: 20px 20px 0px 0px;
+  margin-top: 10px;
+  justify-content: space-between;
+
+  > input:first-child {
+    margin-right: 10px;
   }
 `
 
@@ -126,8 +130,6 @@ const AssigneeDropdown = ({
   const UnregisteredUserCell = isList
     ? TaskListUnregisteredUserCell
     : TaskMetaUnregisteredUserCell
-
-  const InputField = isList ? TaskListInputField : TaskMetaInputField
 
   const groupedOptionsComponent = (
     <GroupedOptionsSelect

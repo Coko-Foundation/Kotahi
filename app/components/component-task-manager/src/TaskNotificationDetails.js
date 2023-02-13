@@ -11,9 +11,14 @@ import {
 } from '../../shared'
 
 const TaskTitle = styled.div`
-  text-transform: uppercase;
-  font-size: ${th('fontSizeBaseSmall')};
-  font-variant: all-small-caps;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 19px;
+  letter-spacing: 0.01em;
+  color: #323232;
+  margin-bottom: 4px;
 `
 
 const TaskFieldsContainer = styled.div`
@@ -268,7 +273,7 @@ const TaskNotificationDetails = ({
         )}
       </TaskFieldsContainer>
       <TaskFieldsContainer>
-        <TaskTitle>Email Template</TaskTitle>
+        <TaskTitle>Select email template</TaskTitle>
         <SelectEmailTemplate
           isTaskEmailNotification
           onChangeEmailTemplate={setSelectedTemplate}
@@ -282,7 +287,7 @@ const TaskNotificationDetails = ({
       </TaskFieldsContainer>
       <TaskFieldsContainer>
         <NotificationDeadlineContainer>
-          <TaskTitle>Set Email Deadline</TaskTitle>
+          <TaskTitle>Send notification</TaskTitle>
 
           <NotificationDeadlineCell>
             Send
