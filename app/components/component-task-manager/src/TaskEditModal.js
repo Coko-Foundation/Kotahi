@@ -22,6 +22,7 @@ const TaskMetaModalContainer = styled.div`
   flex-direction: column;
   min-height: 480px;
   z-index: 10000;
+  -webkit-font-smoothing: antialiased;
 `
 
 const TitleCell = styled.div`
@@ -29,7 +30,7 @@ const TitleCell = styled.div`
   align-items: center;
   background: transparent;
   line-height: 1em;
-  min-height: ${grid(6)};
+  height: 45px;
 `
 
 const DurationDaysCell = styled.div`

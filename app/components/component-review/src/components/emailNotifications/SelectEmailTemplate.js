@@ -275,6 +275,7 @@ const SelectEmailTemplate = ({
   isTaskEmailNotification,
   updateTaskNotification,
   taskEmailNotification,
+  placeholder,
   task,
 }) => {
   if (process.env.INSTANCE_NAME === 'colab' && isTaskEmailNotification) {
@@ -304,7 +305,7 @@ const SelectEmailTemplate = ({
         onChangeEmailTemplate(selected.value)
       }}
       options={emailTemplateOptions}
-      placeholder="Choose notification template"
+      placeholder={placeholder || "Choose notification template"}
       value={selectedEmailTemplate}
     />
   )

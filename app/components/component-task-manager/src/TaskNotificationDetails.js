@@ -1,12 +1,9 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
 import { TextField } from '@pubsweet/ui'
 import SelectEmailTemplate from '../../component-review/src/components/emailNotifications/SelectEmailTemplate'
 import {
-  MinimalNumericUpDown,
   GroupedOptionsSelect,
-  MinimalSelect,
   RoundIconButton,
 } from '../../shared'
 import CounterFieldWithOptions from './CounterFieldWithOptions'
@@ -26,6 +23,7 @@ const TaskTitle = styled.div`
 const TaskFieldsContainer = styled.div`
   display: flex;
   flex-direction: column;
+
   + div {
     margin-left: 20px;
   }
@@ -37,6 +35,10 @@ const RecipientFieldContainer = styled(TaskFieldsContainer)`
 
 const EmailTemplateFieldContainer = styled(TaskFieldsContainer)`
   flex: 0 0 15em;
+
+  div {
+    font-size: 16px;
+  }
 `
 
 const ScheduleNotificationFieldContainer = styled(TaskFieldsContainer)`
@@ -98,6 +100,7 @@ const NotificationDetailsContainer = styled.div`
 
 const AssigneeCell = styled.div`
   justify-content: flex-start;
+  line-height: 1em;
 `
 
 const TaskNotificationDetails = ({
@@ -299,6 +302,7 @@ const TaskNotificationDetails = ({
           task={task}
           taskEmailNotification={taskEmailNotification}
           updateTaskNotification={updateTaskNotification}
+          placeholder="Select email template"
         />
       </EmailTemplateFieldContainer>
       <ScheduleNotificationFieldContainer>

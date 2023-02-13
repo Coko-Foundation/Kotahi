@@ -14,7 +14,7 @@ const BaseDueDateCell = styled.div`
   align-items: center;
   display: flex;
   line-height: 1em;
-  min-height: calc(8px * 6);
+  min-height: 45px;
 
   > div {
     width: 100%;
@@ -25,6 +25,10 @@ const BaseDueDateCell = styled.div`
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-around;
+    font-size: 16px;
+    line-height: 20px;
+    letter-spacing: 0.01em;
+    color: #323232;
   }
 `
 

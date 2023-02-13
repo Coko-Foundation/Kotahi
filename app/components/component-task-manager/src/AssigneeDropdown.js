@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { TextField } from '@pubsweet/ui/dist/atoms'
 import { GroupedOptionsSelect } from '../../shared'
 import TextInput from './TextInput'
 
@@ -11,11 +10,15 @@ const AssigneeCellContainer = styled.div`
   align-items: start;
 `
 
-const TaskListAssigneeCell = styled.div`
+const BaseAssigneeCell = styled.div`
+  line-height: 1em;
+`
+
+const TaskListAssigneeCell = styled(BaseAssigneeCell)`
   width: 100%;
 `
 
-const TaskMetaAssigneeCell = styled.div`
+const TaskMetaAssigneeCell = styled(BaseAssigneeCell)`
   justify-content: flex-start;
   width: 290px;
 `
@@ -36,16 +39,6 @@ const TaskMetaUnregisteredUserCell = styled.div`
   > input:first-child {
     margin-right: 10px;
   }
-`
-
-const TaskListInputField = styled(TextField)`
-  height: 30px;
-  margin-bottom: 0;
-`
-
-const TaskMetaInputField = styled(TextField)`
-  height: 40px;
-  margin-bottom: 0;
 `
 
 const AssigneeDropdown = ({

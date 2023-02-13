@@ -8,8 +8,12 @@ const TextInputField = styled.input`
   box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.25);
   border-radius: 5px;
   min-height: 45px;
-  padding: 15px 10px;
+  padding: 13px 10px;
   width: 100%;
+  font-size: 16px;
+  line-height: 20px;
+  letter-spacing: 0.01em;
+  color: #323232;
 
   &:focus {
     border-color: #5DAB41;
