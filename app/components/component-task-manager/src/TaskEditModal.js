@@ -100,17 +100,6 @@ const TaskEditModal = ({
   onSave,
   onCancel,
 }) => {
-  const notificationOptions = [
-    {
-      label: 'Before',
-      value: 'before',
-    },
-    {
-      label: 'After',
-      value: 'after',
-    },
-  ]
-
   const [taskEmailNotifications, setTaskNotifications] = useState(
     task.emailNotifications ?? [],
   )
@@ -229,7 +218,6 @@ const TaskEditModal = ({
                   <TaskNotificationDetails
                     deleteTaskNotification={deleteTaskNotification}
                     key={notification.id}
-                    notificationOptions={notificationOptions}
                     recipientGroupedOptions={recipientGroupedOptions}
                     task={task}
                     taskEmailNotification={notification}
@@ -285,7 +273,6 @@ TaskEditModal.propTypes = {
     ]),
     status: PropTypes.string.isRequired,
   }).isRequired,
-  index: PropTypes.number.isRequired,
   /** Callback for when a new task is abandoned before receiving a title (e.g. escape was pressed) */
   onCancel: PropTypes.func,
   updateTask: PropTypes.func.isRequired,

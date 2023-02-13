@@ -52,20 +52,21 @@ const CounterValueDown = styled(CounterActionContainer)`
   margin-top: -10px;
 `
 
-const CounterFieldWithOptions = ({value, options}) => {
+const CounterFieldWithOptions = ({
+  value,
+  options,
+  onChange = () => {},
+}) => {
   const [selectedOption, setSelectedOption] = useState(null)
-  const [selectedIndex, setSelectedIndex] = useState(null)
+  const [selectedIndex, setSelectedIndex] = useState(options.findIndex(opt => opt.value === value))
+
+  useEffect(() => {
+    onChange(selectedOption)
+  }, [selectedOption])
 
   useEffect(() => {
     setSelectedOption(options[selectedIndex])
   }, [selectedIndex])
-
-  useEffect(() => {
-    const option = options.find(opt => opt.value === value)
-    if (option) {
-      setSelectedOption(option)
-    }
-  }, [value])
 
   const increaseCounter = () => {
     let index = selectedIndex || 0

@@ -10,6 +10,7 @@ import {
   RoundIconButton,
 } from '../../shared'
 import CounterFieldWithOptions from './CounterFieldWithOptions'
+import CounterField from './CounterField'
 
 const TaskTitle = styled.div`
   font-family: 'Roboto';
@@ -99,7 +100,6 @@ const AssigneeCell = styled.div`
 const TaskNotificationDetails = ({
   updateTaskNotification,
   recipientGroupedOptions,
-  notificationOptions,
   taskEmailNotification: propTaskEmailNotification,
   deleteTaskNotification,
   task,
@@ -304,7 +304,7 @@ const TaskNotificationDetails = ({
 
           <NotificationDeadlineCell>
             Send
-            <MinimalNumericUpDown
+            {/* <MinimalNumericUpDown
               onChange={val => {
                 setTaskEmailNotificationElapsedDays(val)
                 handleTaskNotificationDeadline(
@@ -314,31 +314,27 @@ const TaskNotificationDetails = ({
                 )
               }}
               value={taskEmailNotificationElapsedDays || 0}
-            />
-            <span>Days</span>
-            {/* <MinimalSelect
-              aria-label="Deadline"
-              data-testid="Deadline_select"
-              isClearable
-              label="Deadline"
-              onChange={selected => {
-                setTaskEmailNotificationDeadline(selected.value)
-                handleTaskNotificationDeadline(
-                  selected.value,
-                  taskEmailNotificationElapsedDays,
-                  taskEmailNotification,
-                )
-              }}
-              options={notificationOptions}
-              placeholder="Select.."
-              value={taskEmailNotificationDeadline}
             /> */}
+            <CounterField
+              minValue={0}
+            />
+            <span>days</span>
             <CounterFieldWithOptions
-              value="before"
+              value={taskEmailNotificationDeadline}
               options={[
                 {label: 'Before', value: 'before'},
                 {label: 'After', value: 'after'},
               ]}
+              onChange={selected => {
+                if (selected && selected.value) {
+                  setTaskEmailNotificationDeadline(selected.value)
+                  handleTaskNotificationDeadline(
+                    selected.value,
+                    taskEmailNotificationElapsedDays,
+                    taskEmailNotification,
+                  )
+                }
+              }}
             />
             <span>due date</span>
           </NotificationDeadlineCell>
