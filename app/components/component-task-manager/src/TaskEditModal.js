@@ -197,6 +197,7 @@ const TaskEditModal = ({
                 <DurationDaysCell>
                   <CounterField
                     minValue={0}
+                    showNone={true}
                   />
                   {/* <MinimalNumericUpDown
                     onChange={val =>

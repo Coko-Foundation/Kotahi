@@ -57,28 +57,49 @@ const CounterField = ({
   minValue,
   maxValue,
   onChange = () => {},
+  showNone = false,
 }) => {
-  const [value, setValue] = useState(defaultValue)
+  const [value, setValue] = useState(defaultValue || null)
 
   useEffect(() => {
     onChange(value)
   }, [value])
 
   const increaseCounter = () => {
-    let updatedValue = value || 0
-    updatedValue = updatedValue + 1
-    if (maxValue !== null && updatedValue > maxValue) {
-      updatedValue = maxValue
+    console.log('increase counter value...', value)
+    let updatedValue = null
+    if (value === null) {
+      if (showNone) {
+        updatedValue = 'none'
+      } else {
+        updatedValue = 0
+      }
+    } else if (value === 'none') {
+      updatedValue = 0
+    } else {
+      updatedValue = value + 1
     }
+    console.log('increase counter final...', updatedValue)
     setValue(updatedValue)
   }
 
   const decreaseCounter = () => {
-    let updatedValue = value || 0
-    updatedValue = updatedValue - 1
-    if (minValue !== null && updatedValue < minValue) {
-      updatedValue = minValue
+    let updatedValue = null
+    if (value === null) {
+      if (showNone) {
+        updatedValue = 'none'
+      } else {
+        updatedValue = 0
+      }
+    } else if (value === 'none') {
+      updatedValue = 'none'
+    } else {
+      updatedValue = value - 1
+      if (minValue !== null && updatedValue < minValue) {
+        updatedValue = showNone ? 'none' : minValue
+      }
     }
+    console.log('decrease counter final...', updatedValue)
     setValue(updatedValue)
   }
 
