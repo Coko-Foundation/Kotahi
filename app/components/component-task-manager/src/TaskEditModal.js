@@ -7,12 +7,26 @@ import {
   RoundIconButton,
   MediumColumn,
   MinimalNumericUpDown,
+  LooseColumn,
+  MediumRow,
+  ActionButton,
 } from '../../shared'
 
 import TaskNotificationDetails from './TaskNotificationDetails'
 import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
 import TextInput from './TextInput'
+import Modal from '../../component-modal/src'
+
+const TaskMetaModalContainer = styled(LooseColumn)`
+  background-color: ${th('colorBackground')};
+  width: 1200px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: 480px;
+  z-index: 10000;
+`
 
 const TitleCell = styled.div`
   display: flex;
@@ -68,14 +82,11 @@ const DueDateFieldContainer = styled(BaseFieldContainer)`
   flex: 0 0 7.8em;
 `
 
-const TaskMeta = ({
+const TaskEditModal = ({
   task,
-  index,
   updateTask,
   updateTaskNotification: persistTaskNotification,
   assigneeGroupedOptions,
-  onCancel,
-  onDelete,
   isReadOnly,
   editAsTemplate,
   dueDateLocalString,
@@ -84,6 +95,9 @@ const TaskMeta = ({
   recipientGroupedOptions,
   deleteTaskNotification,
   displayDefaultDurationDays,
+  isOpen,
+  onSave,
+  onCancel,
 }) => {
   const notificationOptions = [
     {
@@ -145,100 +159,114 @@ const TaskMeta = ({
   }
 
   return (
-    <MediumColumn>
-      <div>
-        <TaskDetailsContainer>
-          <TaskPrimaryFieldsContainer>
-            <TitleFieldContainer>
-              <TaskTitle>Title</TaskTitle>
-              <TitleCell>
-                <TextInput
-                  onChange={event => updateTask(task.id, { ...task, title: event.target.value })}
-                  placeholder="Give your task a name..."
-                  value={task.title}
-                  autoFocus={!task.title}
-                  // onCancel={() => {
-                  //   if (!task.title) onCancel()
-                  // }}
-                />
-              </TitleCell>
-            </TitleFieldContainer>
-            <AssigneeFieldContainer>
-              <TaskTitle>Assignee</TaskTitle>
-              <AssigneeDropdown
-                assigneeGroupedOptions={assigneeGroupedOptions}
-                task={task}
-                updateTask={updateTask}
-              />
-            </AssigneeFieldContainer>
-            {!editAsTemplate && (
-              <DueDateFieldContainer>
-                <TaskTitle>Due Date</TaskTitle>
-                <DueDateField
-                  displayDefaultDurationDays={displayDefaultDurationDays}
-                  dueDateLocalString={dueDateLocalString}
+    <Modal isOpen={isOpen}>
+      <TaskMetaModalContainer>
+        <MediumColumn>
+          <TaskDetailsContainer>
+            <TaskPrimaryFieldsContainer>
+              <TitleFieldContainer>
+                <TaskTitle>Title</TaskTitle>
+                <TitleCell>
+                  <TextInput
+                    onChange={event => updateTask(task.id, { ...task, title: event.target.value })}
+                    placeholder="Give your task a name..."
+                    value={task.title}
+                    autoFocus={!task.title}
+                    // onCancel={() => {
+                    //   if (!task.title) onCancel()
+                    // }}
+                  />
+                </TitleCell>
+              </TitleFieldContainer>
+              <AssigneeFieldContainer>
+                <TaskTitle>Assignee</TaskTitle>
+                <AssigneeDropdown
+                  assigneeGroupedOptions={assigneeGroupedOptions}
                   task={task}
-                  transposedDueDate={transposedDueDate}
-                  transposedEndOfToday={transposedEndOfToday}
                   updateTask={updateTask}
                 />
-              </DueDateFieldContainer>
+              </AssigneeFieldContainer>
+              {!editAsTemplate && (
+                <DueDateFieldContainer>
+                  <TaskTitle>Due Date</TaskTitle>
+                  <DueDateField
+                    displayDefaultDurationDays={displayDefaultDurationDays}
+                    dueDateLocalString={dueDateLocalString}
+                    task={task}
+                    transposedDueDate={transposedDueDate}
+                    transposedEndOfToday={transposedEndOfToday}
+                    updateTask={updateTask}
+                  />
+                </DueDateFieldContainer>
+              )}
+              <div>
+                <TaskTitle>Duration</TaskTitle>
+                <DurationDaysCell>
+                  <MinimalNumericUpDown
+                    onChange={val =>
+                      updateTask(task.id, {
+                        ...task,
+                        defaultDurationDays: val,
+                      })
+                    }
+                    value={task.defaultDurationDays || 0}
+                  />
+                </DurationDaysCell>
+              </div>
+            </TaskPrimaryFieldsContainer>
+          </TaskDetailsContainer>
+          <BaseFieldsContainer>
+            {(taskEmailNotifications === null ||
+              !taskEmailNotifications?.length) &&
+              'Add Notification Recipient'}
+            {taskEmailNotifications?.length ? (
+              <>
+                {taskEmailNotifications.map((notification, key) => (
+                  <TaskNotificationDetails
+                    deleteTaskNotification={deleteTaskNotification}
+                    key={notification.id}
+                    notificationOptions={notificationOptions}
+                    recipientGroupedOptions={recipientGroupedOptions}
+                    task={task}
+                    taskEmailNotification={notification}
+                    updateTaskNotification={updateTaskNotification}
+                  />
+                ))}
+              </>
+            ) : null}
+            {!isReadOnly && (
+              <RoundIconButton
+                disabled={
+                  taskEmailNotifications?.length
+                    ? taskEmailNotifications.some(t => !t.recipientType)
+                    : false
+                }
+                iconName="Plus"
+                onClick={addNewTaskNotification}
+                primary
+                title="Add a new task"
+              />
             )}
-            <div>
-              <TaskTitle>Duration</TaskTitle>
-              <DurationDaysCell>
-                <MinimalNumericUpDown
-                  onChange={val =>
-                    updateTask(task.id, {
-                      ...task,
-                      defaultDurationDays: val,
-                    })
-                  }
-                  value={task.defaultDurationDays || 0}
-                />
-              </DurationDaysCell>
-            </div>
-          </TaskPrimaryFieldsContainer>
-        </TaskDetailsContainer>
+          </BaseFieldsContainer>
+        </MediumColumn>
         <BaseFieldsContainer>
-          {(taskEmailNotifications === null ||
-            !taskEmailNotifications?.length) &&
-            'Add Notification Recipient'}
-          {taskEmailNotifications?.length ? (
-            <>
-              {taskEmailNotifications.map((notification, key) => (
-                <TaskNotificationDetails
-                  deleteTaskNotification={deleteTaskNotification}
-                  key={notification.id}
-                  notificationOptions={notificationOptions}
-                  recipientGroupedOptions={recipientGroupedOptions}
-                  task={task}
-                  taskEmailNotification={notification}
-                  updateTaskNotification={updateTaskNotification}
-                />
-              ))}
-            </>
-          ) : null}
-          {!isReadOnly && (
-            <RoundIconButton
-              disabled={
-                taskEmailNotifications?.length
-                  ? taskEmailNotifications.some(t => !t.recipientType)
-                  : false
-              }
-              iconName="Plus"
-              onClick={addNewTaskNotification}
-              primary
-              title="Add a new task"
-            />
-          )}
+          <ActionButton
+            onClick={() => onSave(false)}
+            primary
+          >
+            Save
+          </ActionButton>
+          &nbsp;&nbsp;
+          <ActionButton onClick={() => onCancel(false)}>
+            Cancel
+          </ActionButton>
         </BaseFieldsContainer>
-      </div>
-    </MediumColumn>
+      </TaskMetaModalContainer>
+    </Modal>
   )
 }
 
-TaskMeta.propTypes = {
+TaskEditModal.propTypes = {
   task: PropTypes.shape({
     id: PropTypes.string.isRequired,
     title: PropTypes.string.isRequired,
@@ -256,11 +284,10 @@ TaskMeta.propTypes = {
   index: PropTypes.number.isRequired,
   /** Callback for when a new task is abandoned before receiving a title (e.g. escape was pressed) */
   onCancel: PropTypes.func,
-  onDelete: PropTypes.func.isRequired,
   updateTask: PropTypes.func.isRequired,
 }
-TaskMeta.defaultProps = {
+TaskEditModal.defaultProps = {
   onCancel: () => {},
 }
 
-export default TaskMeta
+export default TaskEditModal

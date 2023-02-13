@@ -25,6 +25,7 @@ import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
 import StatusDropdown from './StatusDropdown'
 import TextInput from './TextInput'
+import TaskEditModal from './TaskEditModal'
 
 const TaskRow = styled.div`
   align-items: flex-start;
@@ -185,17 +186,6 @@ const DaysNoteContainer = styled.div`
 const ModalContainer = styled(LooseColumn)`
   background-color: ${th('colorBackground')};
   padding: ${grid(2.5)} ${grid(3)};
-  z-index: 10000;
-`
-
-const TaskMetaModalContainer = styled(LooseColumn)`
-  background-color: ${th('colorBackground')};
-  padding: ${grid(2.5)} ${grid(3)};
-  width: 1200px;
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  min-height: 480px;
   z-index: 10000;
 `
 
@@ -441,44 +431,27 @@ const Task = ({
               </MediumRow>
             </ModalContainer>
           </Modal>
-          <Modal isOpen={isEditTaskMetaModal}>
-            <TaskMetaModalContainer>
-              <TaskMeta
-                assigneeGroupedOptions={assigneeGroupedOptions}
-                config={config}
-                daysDifferenceLabel={daysDifferenceLabel}
-                deleteTaskNotification={deleteTaskNotification}
-                displayDefaultDurationDays={displayDefaultDurationDays}
-                dueDateLocalString={dueDateLocalString}
-                editAsTemplate={editAsTemplate}
-                index
-                isOverdue={isOverdue}
-                isReadOnly={isReadOnly}
-                onCancel
-                onDelete
-                recipientGroupedOptions={recipientGroupedOptions}
-                ref={provided.innerRef}
-                status={status}
-                task={task}
-                transposedDueDate={transposedDueDate}
-                transposedEndOfToday={transposedEndOfToday}
-                updateTask={updateTask}
-                updateTaskNotification={updateTaskNotification}
-              />
-              <MediumRow>
-                <ActionButton
-                  onClick={() => setIsEditTaskMetaModal(false)}
-                  primary
-                >
-                  Save
-                </ActionButton>
-                &nbsp;
-                <ActionButton onClick={() => setIsEditTaskMetaModal(false)}>
-                  Cancel
-                </ActionButton>
-              </MediumRow>
-            </TaskMetaModalContainer>
-          </Modal>
+          <TaskEditModal
+            isOpen={isEditTaskMetaModal}
+            assigneeGroupedOptions={assigneeGroupedOptions}
+            config={config}
+            daysDifferenceLabel={daysDifferenceLabel}
+            deleteTaskNotification={deleteTaskNotification}
+            displayDefaultDurationDays={displayDefaultDurationDays}
+            dueDateLocalString={dueDateLocalString}
+            editAsTemplate={editAsTemplate}
+            isOverdue={isOverdue}
+            isReadOnly={isReadOnly}
+            recipientGroupedOptions={recipientGroupedOptions}
+            status={status}
+            task={task}
+            transposedDueDate={transposedDueDate}
+            transposedEndOfToday={transposedEndOfToday}
+            updateTask={updateTask}
+            updateTaskNotification={updateTaskNotification}
+            onSave={setIsEditTaskMetaModal}
+            onCancel={setIsEditTaskMetaModal}
+          />
           <TaskRowContainer>
             <TaskHeader editAsTemplate={editAsTemplate} />
             <TaskRow
