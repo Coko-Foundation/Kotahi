@@ -64,6 +64,8 @@ const RoundIconButtonContainer = styled.div`
 const NotificationDeadlineCell = styled.div`
   display: flex;
   align-items: center;
+  height: 45px;
+
   & > div {
     margin: 0px 10px;
   }
@@ -303,20 +305,20 @@ const TaskNotificationDetails = ({
           <TaskTitle>Send notification</TaskTitle>
 
           <NotificationDeadlineCell>
-            Send
-            {/* <MinimalNumericUpDown
-              onChange={val => {
-                setTaskEmailNotificationElapsedDays(val)
-                handleTaskNotificationDeadline(
-                  taskEmailNotificationDeadline,
-                  val,
-                  taskEmailNotification,
-                )
-              }}
-              value={taskEmailNotificationElapsedDays || 0}
-            /> */}
+            <span>Send</span>
             <CounterField
               minValue={0}
+              value={taskEmailNotificationElapsedDays || 0}
+              onChange={val => {
+                // if (val) {
+                //   setTaskEmailNotificationElapsedDays(val)
+                //   handleTaskNotificationDeadline(
+                //     taskEmailNotificationDeadline,
+                //     val,
+                //     taskEmailNotification,
+                //   )
+                // }
+              }}
             />
             <span>days</span>
             <CounterFieldWithOptions
@@ -326,14 +328,14 @@ const TaskNotificationDetails = ({
                 {label: 'After', value: 'after'},
               ]}
               onChange={selected => {
-                if (selected && selected.value) {
-                  setTaskEmailNotificationDeadline(selected.value)
-                  handleTaskNotificationDeadline(
-                    selected.value,
-                    taskEmailNotificationElapsedDays,
-                    taskEmailNotification,
-                  )
-                }
+                // if (selected && selected.value) {
+                //   setTaskEmailNotificationDeadline(selected.value)
+                //   handleTaskNotificationDeadline(
+                //     selected.value,
+                //     taskEmailNotificationElapsedDays,
+                //     taskEmailNotification,
+                //   )
+                // }
               }}
             />
             <span>due date</span>

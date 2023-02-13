@@ -52,8 +52,17 @@ const CounterValueDown = styled(CounterActionContainer)`
   margin-top: -10px;
 `
 
-const CounterField = ({value: defaultValue, minValue, maxValue}) => {
+const CounterField = ({
+  value: defaultValue,
+  minValue,
+  maxValue,
+  onChange = () => {},
+}) => {
   const [value, setValue] = useState(defaultValue)
+
+  useEffect(() => {
+    onChange(value)
+  }, [value])
 
   const increaseCounter = () => {
     let updatedValue = value || 0

@@ -40,6 +40,9 @@ const TitleCell = styled.div`
 const DurationDaysCell = styled.div`
   justify-content: flex-start;
   position: relative;
+  height: 45px;
+  display: flex;
+  align-items: center;
 `
 
 const BaseFieldsContainer = styled.div`
