@@ -17,6 +17,7 @@ import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
 import TextInput from './TextInput'
 import Modal from '../../component-modal/src'
+import CounterField from './CounterField'
 
 const TaskMetaModalContainer = styled(LooseColumn)`
   background-color: ${th('colorBackground')};
@@ -73,7 +74,7 @@ const BaseFieldContainer = styled.div`
   }
 `
 const TitleFieldContainer = styled(BaseFieldContainer)`
-  flex: 0 0 35em;
+  flex: 0 0 34em;
 `
 const AssigneeFieldContainer = styled(BaseFieldContainer)`
   flex: 0 0 7.8em;
@@ -165,7 +166,7 @@ const TaskEditModal = ({
           <TaskDetailsContainer>
             <TaskPrimaryFieldsContainer>
               <TitleFieldContainer>
-                <TaskTitle>Title</TaskTitle>
+                <TaskTitle>Task title</TaskTitle>
                 <TitleCell>
                   <TextInput
                     onChange={event => updateTask(task.id, { ...task, title: event.target.value })}
@@ -188,7 +189,7 @@ const TaskEditModal = ({
               </AssigneeFieldContainer>
               {!editAsTemplate && (
                 <DueDateFieldContainer>
-                  <TaskTitle>Due Date</TaskTitle>
+                  <TaskTitle>Assign due date</TaskTitle>
                   <DueDateField
                     displayDefaultDurationDays={displayDefaultDurationDays}
                     dueDateLocalString={dueDateLocalString}
@@ -200,9 +201,12 @@ const TaskEditModal = ({
                 </DueDateFieldContainer>
               )}
               <div>
-                <TaskTitle>Duration</TaskTitle>
+                <TaskTitle>Duration in days</TaskTitle>
                 <DurationDaysCell>
-                  <MinimalNumericUpDown
+                  <CounterField
+                    minValue={0}
+                  />
+                  {/* <MinimalNumericUpDown
                     onChange={val =>
                       updateTask(task.id, {
                         ...task,
@@ -210,7 +214,7 @@ const TaskEditModal = ({
                       })
                     }
                     value={task.defaultDurationDays || 0}
-                  />
+                  /> */}
                 </DurationDaysCell>
               </div>
             </TaskPrimaryFieldsContainer>
