@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { ChevronUp, ChevronDown } from 'react-feather'
-import { TextField } from '@pubsweet/ui/dist/atoms'
-import { GroupedOptionsSelect } from '../../shared'
-import TextInput from './TextInput'
 
 const Container = styled.div`
   display: flex;
@@ -60,26 +57,25 @@ const CounterField = ({
   showNone = false,
 }) => {
   const [value, setValue] = useState(defaultValue || null)
+  const noneValue = 'None'
 
   useEffect(() => {
     onChange(value)
   }, [value])
 
   const increaseCounter = () => {
-    console.log('increase counter value...', value)
     let updatedValue = null
     if (value === null) {
       if (showNone) {
-        updatedValue = 'none'
+        updatedValue = noneValue
       } else {
         updatedValue = 0
       }
-    } else if (value === 'none') {
+    } else if (value === noneValue) {
       updatedValue = 0
     } else {
       updatedValue = value + 1
     }
-    console.log('increase counter final...', updatedValue)
     setValue(updatedValue)
   }
 
@@ -87,19 +83,18 @@ const CounterField = ({
     let updatedValue = null
     if (value === null) {
       if (showNone) {
-        updatedValue = 'none'
+        updatedValue = noneValue
       } else {
         updatedValue = 0
       }
-    } else if (value === 'none') {
-      updatedValue = 'none'
+    } else if (value === noneValue) {
+      updatedValue = noneValue
     } else {
       updatedValue = value - 1
       if (minValue !== null && updatedValue < minValue) {
-        updatedValue = showNone ? 'none' : minValue
+        updatedValue = showNone ? noneValue : minValue
       }
     }
-    console.log('decrease counter final...', updatedValue)
     setValue(updatedValue)
   }
 
