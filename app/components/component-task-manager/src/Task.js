@@ -108,6 +108,7 @@ const DurationDaysCell = styled.div`
   align-items: center;
   position: relative;
   height: 45px;
+  line-height: 1.5;
 `
 
 const Handle = styled.div`
@@ -155,22 +156,33 @@ const ActionDialog = styled.div`
   background: #ffffff;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
   left: -80px;
-  padding: 15px;
   position: absolute;
   top: 15px;
   z-index: 9999;
+  border-radius: 6px;
 `
 
-const EditLabel = styled.p`
+const BaseLabel = styled.div`
   cursor: pointer;
-  margin-bottom: 15px;
-  padding-left: 10px;
+  padding: 12px 20px;
+
+  &:first-child {
+    border-top-left-radius: 6px;
+    border-top-right-radius: 6px;
+  }
+  &:last-child {
+    border-bottom-left-radius: 6px;
+    border-bottom-right-radius: 6px;
+  }
+
+  &:hover,
+  &:focus {
+    background-color: #efefef;
+  }
 `
 
-const DeleteLabel = styled.p`
-  cursor: pointer;
-  padding-left: 10px;
-`
+const EditLabel = styled(BaseLabel)``
+const DeleteLabel = styled(BaseLabel)``
 
 const TaskAction = styled.div`
   cursor: pointer;
