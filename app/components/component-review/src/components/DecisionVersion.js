@@ -22,7 +22,7 @@ import TaskList from '../../../component-task-manager/src/TaskList'
 import styled from 'styled-components'
 
 const TaskSectionRow = styled(SectionRow)`
-  padding: 18px 8px;
+  padding: 12px 8px 18px;
 `
 
 const createBlankSubmissionBasedOnForm = form => {

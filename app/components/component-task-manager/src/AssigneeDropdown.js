@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { GroupedOptionsSelect } from '../../shared'
+import { Select } from '../../shared'
 import TextInput from './TextInput'
 
 const AssigneeCellContainer = styled.div`
@@ -11,7 +11,17 @@ const AssigneeCellContainer = styled.div`
 `
 
 const BaseAssigneeCell = styled.div`
-  line-height: 1em;
+  > div {
+
+    > div {
+      font-size: 16px;
+      line-height: 1.25;
+
+      &:nth-child(2) {
+        height: 45px;
+      }
+    }
+  }
 `
 
 const TaskListAssigneeCell = styled(BaseAssigneeCell)`
@@ -125,16 +135,16 @@ const AssigneeDropdown = ({
     : TaskMetaUnregisteredUserCell
 
   const groupedOptionsComponent = (
-    <GroupedOptionsSelect
+    <Select
       aria-label="Assignee"
       data-testid="Assignee_select"
       dropdownState={dropdownState}
-      isClearable
       label="Assignee"
       onChange={selected => handleAssigneeInput(selected, task)}
       options={assigneeGroupedOptions}
       placeholder="Select..."
       value={task.assignee?.id || task.assigneeType}
+      isClearable
     />
   )
 

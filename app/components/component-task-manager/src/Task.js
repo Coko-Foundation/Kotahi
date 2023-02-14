@@ -79,7 +79,7 @@ const TaskHeaderRow = styled(TaskRow)`
 /* stylelint-enable no-descending-specificity */
 
 const TaskRowContainer = styled.div`
-  padding-top: 15px;
+  padding-top: 10px;
   padding-bottom: 15px;
 
   & + div {
@@ -92,12 +92,12 @@ const BaseHeader = styled.div`
 `
 
 const TitleHeader = styled(BaseHeader)`
-  flex: 1 1 38em;
+  flex: 1 1 40em;
   padding-left: 3.5em;
 `
 
 const AssigneeHeader = styled(BaseHeader)`
-  flex: 1 1 15em;
+  flex: 1 1 16em;
 `
 
 const DurationDaysHeader = styled(BaseHeader)`
@@ -105,12 +105,12 @@ const DurationDaysHeader = styled(BaseHeader)`
 `
 
 const DueDateHeader = styled(BaseHeader)`
-  flex: 0 0 17.5em;
+  flex: 0 0 16em;
 `
 
 const TitleCell = styled.div`
   display: flex;
-  flex: 2 1 40em;
+  flex: 1 1 40em;
 
   input {
     margin-left: 7px;
@@ -136,7 +136,7 @@ const StatusCell = styled.div`
 `
 
 const StatusActionCell = styled.div`
-  flex: 0 1 15em;
+  flex: 0 1 12em;
   justify-content: flex-start;
   background: none !important;
 `
