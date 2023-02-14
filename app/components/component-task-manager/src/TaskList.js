@@ -10,6 +10,9 @@ import styled from 'styled-components'
 const TaskListContainer = styled.div`
   -webkit-font-smoothing: antialiased;
 `
+const AddTaskContainer = styled.div`
+  padding: 0 8px;
+`
 
 const TaskList = ({
   editAsTemplate,
@@ -196,13 +199,15 @@ const TaskList = ({
           </Droppable>
         </DragDropContext>
         {!isReadOnly && (
-          <RoundIconButton
-            disabled={tasks.some(t => !t.title)}
-            iconName="Plus"
-            onClick={addNewTask}
-            primary
-            title="Add a new task"
-          />
+          <AddTaskContainer>
+            <RoundIconButton
+              disabled={tasks.some(t => !t.title)}
+              iconName="Plus"
+              onClick={addNewTask}
+              primary
+              title="Add a new task"
+            />
+          </AddTaskContainer>
         )}
       </MediumColumn>
     </TaskListContainer>

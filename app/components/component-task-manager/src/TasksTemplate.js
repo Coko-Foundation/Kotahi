@@ -4,9 +4,13 @@ import {
   Container,
   Heading,
   SectionContent,
-  PaddedContent,
   WidthLimiter,
 } from '../../shared'
+import styled from 'styled-components'
+
+const TaskListContainer = styled.div`
+  padding: 18px 8px;
+`
 
 const TasksTemplate = ({
   tasks,
@@ -22,7 +26,7 @@ const TasksTemplate = ({
       <Heading>Task Template Builder</Heading>
       <WidthLimiter>
         <SectionContent>
-          <PaddedContent>
+          <TaskListContainer>
             <TaskList
               deleteTaskNotification={deleteTaskNotification}
               editAsTemplate
@@ -34,7 +38,7 @@ const TasksTemplate = ({
               updateTasks={updateTasks}
               users={users}
             />
-          </PaddedContent>
+          </TaskListContainer>
         </SectionContent>
       </WidthLimiter>
     </Container>
