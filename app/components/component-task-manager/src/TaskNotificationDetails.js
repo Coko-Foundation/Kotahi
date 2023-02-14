@@ -365,8 +365,8 @@ const TaskNotificationDetails = ({
             <CounterFieldWithOptions
               value={taskEmailNotificationDeadline || 'before'}
               options={[
-                {label: 'Before', value: 'before'},
-                {label: 'After', value: 'after'},
+                {label: 'before', value: 'before'},
+                {label: 'after', value: 'after'},
               ]}
               onChange={selected => {
                 // if (selected && selected.value) {

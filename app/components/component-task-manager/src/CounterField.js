@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { ChevronUp, ChevronDown } from 'react-feather'
+import { X as CloseIcon, ChevronUp, ChevronDown } from 'react-feather'
 
 const Container = styled.div`
   display: flex;
@@ -15,7 +15,9 @@ const LabelContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: ${props => props.compact ? '30px' : '60px'}
+  position: relative;
+  padding-right: ${props => props.showResetIcon ? '15px' : '0'};
+  width: ${props => props.compact ? '40px' : '65px'}
 `
 
 const ControlsContainer = styled.div`
@@ -48,20 +50,40 @@ const CounterValueUp = styled(CounterActionContainer)`
 const CounterValueDown = styled(CounterActionContainer)`
   margin-top: -10px;
 `
+const CloseIconContainer = styled(CounterActionContainer)`
+  cursor: pointer;
+  background: #6C6C6C;
+  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
+  border-radius: 500px;
+  height: 13px;
+  width: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: absolute;
+  right: 3px;
+`
 
 const CounterField = ({
-  value: defaultValue,
+  value: propsValue,
   minValue,
   onChange = () => {},
   showNone = false,
   compact = false,
 }) => {
-  const [value, setValue] = useState(defaultValue || 0)
+  const [value, setValue] = useState(propsValue || 0)
+  const [showResetIcon, setShowResetIcon] = useState(false)
   const noneValue = 'None'
+  const defaultValue = showNone ? noneValue : (minValue || 0)
 
   useEffect(() => {
     onChange(value)
+    setShowResetIcon(value !== defaultValue)
   }, [value])
+
+  const resetValue = () => {
+    setValue(defaultValue)
+  }
 
   const increaseCounter = () => {
     let updatedValue = null
@@ -100,8 +122,12 @@ const CounterField = ({
 
   return (
     <Container>
-      <LabelContainer compact={compact}>
-        {value}
+      <LabelContainer compact={compact} showResetIcon={showResetIcon}>
+        <span>{value}</span>
+        {showResetIcon && <CloseIconContainer onClick={() => resetValue()}>
+            <CloseIcon size={10} color="white" />
+          </CloseIconContainer>
+        }
       </LabelContainer>
       <ControlsContainer>
         <CounterValueUp>
