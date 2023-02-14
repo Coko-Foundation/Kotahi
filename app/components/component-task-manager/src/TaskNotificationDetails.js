@@ -1,9 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { TextField } from '@pubsweet/ui'
 import SelectEmailTemplate from '../../component-review/src/components/emailNotifications/SelectEmailTemplate'
 import {
-  GroupedOptionsSelect,
   RoundIconButton,
   Select,
 } from '../../shared'
@@ -132,6 +130,7 @@ const TaskNotificationDetails = ({
   taskEmailNotification: propTaskEmailNotification,
   deleteTaskNotification,
   task,
+  editAsTemplate,
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState('')
 
@@ -384,9 +383,11 @@ const TaskNotificationDetails = ({
           </NotificationDeadlineCell>
         </NotificationDeadlineContainer>
       </ScheduleNotificationFieldContainer>
-      <SendNowActionContainer>
-        <SecondaryActionButton>Send Now</SecondaryActionButton>
-      </SendNowActionContainer>
+      {!editAsTemplate &&
+        <SendNowActionContainer>
+          <SecondaryActionButton>Send Now</SecondaryActionButton>
+        </SendNowActionContainer>
+      }
       <RoundIconButtonContainer>
         <RoundIconButton
           iconName="Minus"

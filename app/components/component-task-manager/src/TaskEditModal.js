@@ -265,6 +265,7 @@ const TaskEditModal = ({
                     task={task}
                     taskEmailNotification={notification}
                     updateTaskNotification={updateTaskNotification}
+                    editAsTemplate={editAsTemplate}
                   />
                 ))}
               </>
