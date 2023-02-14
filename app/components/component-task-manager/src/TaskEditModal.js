@@ -14,6 +14,7 @@ import TextInput from './TextInput'
 import Modal from '../../component-modal/src'
 import CounterField from './CounterField'
 import { X as CloseIcon } from 'react-feather'
+import SecondaryActionButton from '../../shared/SecondaryActionButton'
 
 const TaskMetaModalContainer = styled.div`
   background-color: ${th('colorBackground')};
@@ -270,7 +271,7 @@ const TaskEditModal = ({
             ) : null}
           </TaskRecipientsContainer>
           {!isReadOnly && (
-            <ActionButton
+            <SecondaryActionButton
               disabled={
                 taskEmailNotifications?.length
                   ? taskEmailNotifications.some(t => !t.recipientType)
@@ -280,7 +281,7 @@ const TaskEditModal = ({
               primary
             >
               Add Notification Recipient
-            </ActionButton>
+            </SecondaryActionButton>
           )}
         </TaskRecipientsDetailsContainer>
         <TaskActionsContainer>
