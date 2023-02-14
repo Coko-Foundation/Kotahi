@@ -10,7 +10,7 @@ const styles = th => ({
     backgroundColor: '#F8F8F9',
     border: '1px solid #DEDEDE',
     borderRadius: '6px',
-    boxShadow: 'inset 0px 0px 4px rgba(0, 0, 0, 0.25)',
+    boxShadow: 'inset 0px 0px 4px rgba(0, 0, 0, 0.07)',
 
   }),
   indicatorSeparator: (provided, state) => ({ ...provided, display: 'none' }),

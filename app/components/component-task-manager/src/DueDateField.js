@@ -8,7 +8,7 @@ import { transposeFromLocalToTimezone } from '../../../shared/dateUtils'
 const BaseDueDateCell = styled.div`
   background: #F8F8F9 !important;
   border: 1px solid #DEDEDE;
-  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.07);
   border-radius: 5px;
 
   align-items: center;

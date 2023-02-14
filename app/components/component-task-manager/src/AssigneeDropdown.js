@@ -11,15 +11,12 @@ const AssigneeCellContainer = styled.div`
 `
 
 const BaseAssigneeCell = styled.div`
-  > div {
+  > div > div {
+    font-size: 16px;
+    line-height: 1.25;
 
-    > div {
-      font-size: 16px;
-      line-height: 1.25;
-
-      &:nth-child(2) {
-        height: 45px;
-      }
+    &:nth-child(2) {
+      height: 45px;
     }
   }
 `

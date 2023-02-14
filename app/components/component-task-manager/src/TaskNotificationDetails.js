@@ -5,6 +5,7 @@ import SelectEmailTemplate from '../../component-review/src/components/emailNoti
 import {
   GroupedOptionsSelect,
   RoundIconButton,
+  Select,
 } from '../../shared'
 import CounterFieldWithOptions from './CounterFieldWithOptions'
 import CounterField from './CounterField'
@@ -106,6 +107,15 @@ const NotificationDetailsContainer = styled.div`
 const AssigneeCell = styled.div`
   justify-content: flex-start;
   line-height: 1em;
+
+  > div > div {
+    font-size: 16px;
+    line-height: 1.25;
+
+    &:nth-child(2) {
+      height: 45px;
+    }
+  }
 `
 
 const TaskNotificationDetails = ({
@@ -166,6 +176,20 @@ const TaskNotificationDetails = ({
   function handleRecipientInput(selectedOption, taskNotification) {
     setRecipientDropdownState(selectedOption)
 
+    if (!selectedOption) {
+      setIsNewRecipient(false)
+      updateTaskNotification({
+        ...taskNotification,
+        id: taskNotification.id,
+        taskId: taskNotification.taskId,
+        recipientUserId: null,
+        recipientType: null,
+        recipientEmail: null,
+        recipientName: null,
+      })
+      return
+    }
+
     switch (selectedOption.key) {
       case 'userRole':
         setIsNewRecipient(false)
@@ -212,7 +236,7 @@ const TaskNotificationDetails = ({
           id: taskNotification.id,
           taskId: taskNotification.taskId,
           recipientUserId: null,
-          recipientType: 'assignee',
+          recipientType: 'unregisteredUser',
           recipientEmail: null,
           recipientName: null,
         })
@@ -246,11 +270,10 @@ const TaskNotificationDetails = ({
       <RecipientFieldContainer>
         <TaskTitle>Recipient</TaskTitle>
         <AssigneeCell title={taskEmailNotification.recipientType}>
-          <GroupedOptionsSelect
+          <Select
             aria-label="Recipient"
             data-testid="Recipient_select"
             dropdownState={recipientDropdownState}
-            isClearable
             label="Recipient"
             onChange={selected =>
               handleRecipientInput(selected, taskEmailNotification)
@@ -261,6 +284,7 @@ const TaskNotificationDetails = ({
               taskEmailNotification?.recipientUserId ||
               taskEmailNotification?.recipientType
             }
+            isClearable
           />
         </AssigneeCell>
         {isNewRecipient && (
@@ -306,6 +330,7 @@ const TaskNotificationDetails = ({
           taskEmailNotification={taskEmailNotification}
           updateTaskNotification={updateTaskNotification}
           placeholder="Select email template"
+          isClearable
         />
       </EmailTemplateFieldContainer>
       <ScheduleNotificationFieldContainer>

@@ -4,7 +4,7 @@ import styled from 'styled-components'
 const TextInputField = styled.input`
   background: #F8F8F9;
   border: 1px solid #DEDEDE;
-  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.25);
+  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.07);
   border-radius: 5px;
   height: 45px;
   padding: 13px 10px;
