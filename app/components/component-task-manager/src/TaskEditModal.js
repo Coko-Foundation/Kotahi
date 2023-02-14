@@ -225,6 +225,7 @@ const TaskEditModal = ({
                   transposedDueDate={transposedDueDate}
                   transposedEndOfToday={transposedEndOfToday}
                   updateTask={updateTask}
+                  position="bottom center"
                 />
               </DueDateFieldContainer>
             )}

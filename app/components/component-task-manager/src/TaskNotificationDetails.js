@@ -39,6 +39,10 @@ const EmailTemplateFieldContainer = styled(TaskFieldsContainer)`
   div {
     font-size: 16px;
   }
+
+  > div:nth-child(2) > div:nth-child(2) {
+    height: 45px;
+  }
 `
 
 const ScheduleNotificationFieldContainer = styled(TaskFieldsContainer)`

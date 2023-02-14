@@ -51,6 +51,7 @@ const DueDateField = ({
   transposedEndOfToday,
   transposedDueDate,
   isList = false,
+  position,
 }) => {
   const config = useContext(ConfigContext)
 
@@ -86,7 +87,7 @@ const DueDateField = ({
                   .toDate(),
               })
             }
-            position="top center"
+            position={position || "top center"}
             suppressTodayHighlight
             value={transposedDueDate}
           />
