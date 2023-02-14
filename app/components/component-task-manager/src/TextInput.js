@@ -21,13 +21,7 @@ const TextInputField = styled.input`
 `
 
 const TextInput = props => {
-  const { placeholder, value, onChange, ...rest } = props
-  return <TextInputField
-    onChange={onChange}
-    placeholder={placeholder}
-    value={value}
-    {...rest}
-  />
+  return <TextInputField {...props} />
 }
 
 export default TextInput
