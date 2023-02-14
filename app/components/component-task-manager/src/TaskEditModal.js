@@ -182,6 +182,14 @@ const TaskEditModal = ({
     ])
   }
 
+  const status = {
+    NOT_STARTED: 'Not started',
+    START: 'Start',
+    IN_PROGRESS: 'In progress',
+    PAUSED: 'Paused',
+    DONE: 'Done',
+  }
+
   return (
     <Modal isOpen={isOpen}>
       <TaskMetaModalContainer>
@@ -211,9 +219,9 @@ const TaskEditModal = ({
                 updateTask={updateTask}
               />
             </AssigneeFieldContainer>
-            {!editAsTemplate && (
+            {(!editAsTemplate && task && task.status !== status.NOT_STARTED) ? (
               <DueDateFieldContainer>
-                <TaskTitle>Assign due date</TaskTitle>
+                <TaskTitle>Due date</TaskTitle>
                 <DueDateField
                   displayDefaultDurationDays={displayDefaultDurationDays}
                   dueDateLocalString={dueDateLocalString}
@@ -224,23 +232,24 @@ const TaskEditModal = ({
                   position="bottom center"
                 />
               </DueDateFieldContainer>
+            ) : (
+              <div>
+                <TaskTitle>Duration in days</TaskTitle>
+                <DurationDaysCell>
+                  <CounterField
+                    minValue={0}
+                    value={task.defaultDurationDays || 'None'}
+                    showNone={true}
+                    onChange={val => {
+                      // updateTask(task.id, {
+                      //   ...task,
+                      //   defaultDurationDays: val,
+                      // })
+                    }}
+                  />
+                </DurationDaysCell>
+              </div>
             )}
-            <div>
-              <TaskTitle>Duration in days</TaskTitle>
-              <DurationDaysCell>
-                <CounterField
-                  minValue={0}
-                  value={task.defaultDurationDays || 'None'}
-                  showNone={true}
-                  onChange={val => {
-                    // updateTask(task.id, {
-                    //   ...task,
-                    //   defaultDurationDays: val,
-                    // })
-                  }}
-                />
-              </DurationDaysCell>
-            </div>
           </TaskPrimaryFieldsContainer>
         </TaskDetailsContainer>
         <TaskRecipientsDetailsContainer>
