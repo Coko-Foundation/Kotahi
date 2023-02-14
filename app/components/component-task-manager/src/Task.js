@@ -41,6 +41,8 @@ const TaskRow = styled.div`
 const TaskRowContainer = styled.div`
   padding-top: 10px;
   padding-bottom: 15px;
+  padding-left: 8px;
+  padding-right: 8px;
 
   & + div {
     border-top: 2px solid rgba(191, 191, 191, 0.5);
