@@ -4,7 +4,6 @@ import { Select } from '../../shared'
 import TextInput from './TextInput'
 
 const AssigneeCellContainer = styled.div`
-  flex: 1 1 15em;
   justify-content: flex-start;
   flex-direction: column;
   align-items: start;

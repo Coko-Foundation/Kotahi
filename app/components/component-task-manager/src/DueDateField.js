@@ -29,6 +29,10 @@ const BaseDueDateCell = styled.div`
     line-height: 20px;
     letter-spacing: 0.01em;
     color: #323232;
+
+    svg {
+      margin-right: 6px;
+    }
   }
 `
 
@@ -36,6 +40,7 @@ const TaskListDueDateCell = styled(BaseDueDateCell)`
   flex: 0 0 7.8em;
   justify-content: flex-start;
   position: relative;
+  min-width: 120px;
 `
 
 const TaskMetaDueDateCell = styled(BaseDueDateCell)`
