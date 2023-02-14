@@ -15,7 +15,7 @@ const LabelContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  width: 60px;
+  width: ${props => props.compact ? '30px' : '60px'}
 `
 
 const ControlsContainer = styled.div`
@@ -54,6 +54,7 @@ const CounterField = ({
   minValue,
   onChange = () => {},
   showNone = false,
+  compact = false,
 }) => {
   const [value, setValue] = useState(defaultValue || 0)
   const noneValue = 'None'
@@ -99,7 +100,7 @@ const CounterField = ({
 
   return (
     <Container>
-      <LabelContainer>
+      <LabelContainer compact={compact}>
         {value}
       </LabelContainer>
       <ControlsContainer>

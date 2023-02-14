@@ -350,6 +350,7 @@ const TaskNotificationDetails = ({
             <CounterField
               minValue={0}
               value={taskEmailNotificationElapsedDays || 0}
+              compact={true}
               onChange={val => {
                 // if (val) {
                 //   setTaskEmailNotificationElapsedDays(val)
