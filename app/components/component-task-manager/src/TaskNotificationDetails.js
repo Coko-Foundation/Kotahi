@@ -10,6 +10,7 @@ import {
 import CounterFieldWithOptions from './CounterFieldWithOptions'
 import CounterField from './CounterField'
 import TextInput from './TextInput'
+import SecondaryActionButton from '../../shared/SecondaryActionButton'
 
 const TaskTitle = styled.div`
   font-family: 'Roboto';
@@ -49,6 +50,13 @@ const EmailTemplateFieldContainer = styled(TaskFieldsContainer)`
 
 const ScheduleNotificationFieldContainer = styled(TaskFieldsContainer)`
   flex: 0 0 22em;
+`
+
+const SendNowActionContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 22px;
 `
 
 const RoundIconButtonContainer = styled.div`
@@ -375,6 +383,9 @@ const TaskNotificationDetails = ({
           </NotificationDeadlineCell>
         </NotificationDeadlineContainer>
       </ScheduleNotificationFieldContainer>
+      <SendNowActionContainer>
+        <SecondaryActionButton>Send Now</SecondaryActionButton>
+      </SendNowActionContainer>
       <RoundIconButtonContainer>
         <RoundIconButton
           iconName="Minus"
