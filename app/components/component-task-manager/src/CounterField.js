@@ -52,11 +52,10 @@ const CounterValueDown = styled(CounterActionContainer)`
 const CounterField = ({
   value: defaultValue,
   minValue,
-  maxValue,
   onChange = () => {},
   showNone = false,
 }) => {
-  const [value, setValue] = useState(defaultValue || null)
+  const [value, setValue] = useState(defaultValue || 0)
   const noneValue = 'None'
 
   useEffect(() => {

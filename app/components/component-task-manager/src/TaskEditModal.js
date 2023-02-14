@@ -230,7 +230,7 @@ const TaskEditModal = ({
               <DurationDaysCell>
                 <CounterField
                   minValue={0}
-                  value={task.defaultDurationDays || 0}
+                  value={task.defaultDurationDays || 'None'}
                   showNone={true}
                   onChange={val => {
                     // updateTask(task.id, {

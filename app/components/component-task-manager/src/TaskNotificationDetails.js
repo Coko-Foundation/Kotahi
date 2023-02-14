@@ -78,11 +78,6 @@ const NotificationDeadlineCell = styled.div`
   }
 `
 
-const InputField = styled(TextField)`
-  height: 40px;
-  margin-bottom: 0;
-`
-
 const UnregisteredUserCell = styled.div`
   display: flex;
 
@@ -335,7 +330,7 @@ const TaskNotificationDetails = ({
             />
             <span>days</span>
             <CounterFieldWithOptions
-              value={taskEmailNotificationDeadline}
+              value={taskEmailNotificationDeadline || 'before'}
               options={[
                 {label: 'Before', value: 'before'},
                 {label: 'After', value: 'after'},
