@@ -8,6 +8,7 @@ import {
 } from '../../shared'
 import CounterFieldWithOptions from './CounterFieldWithOptions'
 import CounterField from './CounterField'
+import TextInput from './TextInput'
 
 const TaskTitle = styled.div`
   font-family: 'Roboto';
@@ -84,8 +85,13 @@ const InputField = styled(TextField)`
 
 const UnregisteredUserCell = styled.div`
   display: flex;
-  & > div {
-    margin: 20px 20px 0px 0px;
+
+  > input {
+    margin-top: 10px;
+
+    + input {
+      margin-left: 10px;
+    }
   }
 `
 
@@ -264,8 +270,7 @@ const TaskNotificationDetails = ({
         </AssigneeCell>
         {isNewRecipient && (
           <UnregisteredUserCell>
-            <InputField
-              data-cy="new-user-email"
+            <TextInput
               onChange={e => {
                 setRecipientEmail(e.target.value)
                 updateTaskNotification({
@@ -278,8 +283,7 @@ const TaskNotificationDetails = ({
               placeholder="Email"
               value={recipientEmail}
             />
-            <InputField
-              data-cy="new-user-name"
+            <TextInput
               onChange={e => {
                 setRecipientName(e.target.value)
                 updateTaskNotification({

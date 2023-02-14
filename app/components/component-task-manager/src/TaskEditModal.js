@@ -53,7 +53,6 @@ const TaskRecipientsDetailsContainer = styled(BaseFieldsContainer)`
   border-bottom: 2px solid rgba(191,191,191, 0.5);
   box-shadow: 0 10px 10px -10px #d9d9d9;
   min-height: 260px;
-  padding-left: ${grid(7)}
 `
 
 const TaskRecipientsContainer = styled.div`
@@ -201,9 +200,6 @@ const TaskEditModal = ({
                   placeholder="Give your task a name..."
                   value={task.title}
                   autoFocus={!task.title}
-                  // onCancel={() => {
-                  //   if (!task.title) onCancel()
-                  // }}
                 />
               </TitleCell>
             </TitleFieldContainer>
