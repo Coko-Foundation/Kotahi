@@ -141,14 +141,6 @@ const TaskNotificationDetails = ({
     propTaskEmailNotification,
   )
 
-  // const [disableSendNotificationConfiguration, setDisableSendNotificationConfiguration] = useState(selectedDurationDays === 'None')
-
-  // useEffect(() => {
-  //   console.log('selectedDurationDays changed....', selectedDurationDays)
-  //   console.log('selectedDurationDays === none....', selectedDurationDays === 'None')
-  //   setDisableSendNotificationConfiguration(selectedDurationDays === 'None')
-  // }, [selectedDurationDays])
-
   useEffect(() => {
     setTaskNotification(propTaskEmailNotification)
   }, [propTaskEmailNotification])
@@ -364,14 +356,14 @@ const TaskNotificationDetails = ({
               compact={true}
               disabled={selectedDurationDays === 'None'}
               onChange={val => {
-                // if (val) {
-                //   setTaskEmailNotificationElapsedDays(val)
-                //   handleTaskNotificationDeadline(
-                //     taskEmailNotificationDeadline,
-                //     val,
-                //     taskEmailNotification,
-                //   )
-                // }
+                if (val) {
+                  setTaskEmailNotificationElapsedDays(val)
+                  handleTaskNotificationDeadline(
+                    taskEmailNotificationDeadline,
+                    val,
+                    taskEmailNotification,
+                  )
+                }
               }}
             />
             <span>days</span>
@@ -383,14 +375,14 @@ const TaskNotificationDetails = ({
                 {label: 'after', value: 'after'},
               ]}
               onChange={selected => {
-                // if (selected && selected.value) {
-                //   setTaskEmailNotificationDeadline(selected.value)
-                //   handleTaskNotificationDeadline(
-                //     selected.value,
-                //     taskEmailNotificationElapsedDays,
-                //     taskEmailNotification,
-                //   )
-                // }
+                if (selected && selected.value) {
+                  setTaskEmailNotificationDeadline(selected.value)
+                  handleTaskNotificationDeadline(
+                    selected.value,
+                    taskEmailNotificationElapsedDays,
+                    taskEmailNotification,
+                  )
+                }
               }}
             />
             <span>due date</span>

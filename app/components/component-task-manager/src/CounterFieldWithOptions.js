@@ -1,9 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { ChevronUp, ChevronDown } from 'react-feather'
-import { TextField } from '@pubsweet/ui/dist/atoms'
-import { GroupedOptionsSelect } from '../../shared'
-import TextInput from './TextInput'
 
 const Container = styled.div`
   display: flex;
