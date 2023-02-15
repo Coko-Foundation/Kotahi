@@ -28,17 +28,17 @@ const ControlsContainer = styled.div`
 
 const CounterActionContainer = styled.div`
   button {
-    cursor: pointer;
+    cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
     background: transparent;
     border: none;
 
     svg {
-      color: #6C6C6C;
+      color: ${props => props.disabled ? "#AAA" : "#6C6C6C"};
     }
 
     &:hover {
       svg {
-        stroke: #3AAE2A;
+        stroke: ${props => props.disabled ? "#AAA" : "#3AAE2A"};
       }
     }
   }
@@ -51,7 +51,7 @@ const CounterValueDown = styled(CounterActionContainer)`
   margin-top: -10px;
 `
 const CloseIconContainer = styled(CounterActionContainer)`
-  cursor: pointer;
+  cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
   border-radius: 500px;
   display: flex;
   align-items: center;
@@ -66,6 +66,7 @@ const CounterField = ({
   onChange = () => {},
   showNone = false,
   compact = false,
+  disabled = false,
 }) => {
   const [value, setValue] = useState(propsValue || 0)
   const [showResetIcon, setShowResetIcon] = useState(false)
@@ -78,10 +79,16 @@ const CounterField = ({
   }, [value])
 
   const resetValue = () => {
+    if (disabled) {
+      return;
+    }
     setValue(defaultValue)
   }
 
   const increaseCounter = () => {
+    if (disabled) {
+      return;
+    }
     let updatedValue = null
     if (value === null) {
       if (showNone) {
@@ -98,6 +105,9 @@ const CounterField = ({
   }
 
   const decreaseCounter = () => {
+    if (disabled) {
+      return;
+    }
     let updatedValue = null
     if (value === null) {
       if (showNone) {
@@ -120,18 +130,19 @@ const CounterField = ({
     <Container>
       <LabelContainer compact={compact} showResetIcon={showResetIcon}>
         <span>{value}</span>
-        {showResetIcon && <CloseIconContainer onClick={() => resetValue()}>
-            <CloseIcon size={15} color="black" />
+        {
+          showResetIcon && <CloseIconContainer onClick={() => resetValue()} disabled={disabled}>
+            <CloseIcon size={15} color={disabled ? "#AAA" : "black"} />
           </CloseIconContainer>
         }
       </LabelContainer>
       <ControlsContainer>
-        <CounterValueUp>
+        <CounterValueUp disabled={disabled}>
           <button type="button" onClick={() => increaseCounter()}>
             <ChevronUp size={16} />
           </button>
         </CounterValueUp>
-        <CounterValueDown>
+        <CounterValueDown disabled={disabled}>
           <button type="button" onClick={() => decreaseCounter()}>
             <ChevronDown size={16} />
           </button>

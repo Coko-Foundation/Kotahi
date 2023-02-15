@@ -138,6 +138,7 @@ const TaskEditModal = ({
   const [taskEmailNotifications, setTaskNotifications] = useState(
     task.emailNotifications ?? [],
   )
+  const [selectedDurationDays, setSelectedDurationDays] = useState(task.defaultDurationDays || 'none')
 
   useEffect(() => {
     setTaskNotifications(task.emailNotifications)
@@ -242,6 +243,7 @@ const TaskEditModal = ({
                     value={task.defaultDurationDays || 'None'}
                     showNone={true}
                     onChange={val => {
+                      setSelectedDurationDays(val)
                       // updateTask(task.id, {
                       //   ...task,
                       //   defaultDurationDays: val,
@@ -266,6 +268,7 @@ const TaskEditModal = ({
                     taskEmailNotification={notification}
                     updateTaskNotification={updateTaskNotification}
                     editAsTemplate={editAsTemplate}
+                    selectedDurationDays={selectedDurationDays}
                   />
                 ))}
               </>

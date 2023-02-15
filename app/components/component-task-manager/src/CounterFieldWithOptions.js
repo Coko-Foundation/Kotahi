@@ -29,17 +29,17 @@ const ControlsContainer = styled.div`
 
 const CounterActionContainer = styled.div`
   button {
-    cursor: pointer;
+    cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
     background: transparent;
     border: none;
 
     svg {
-      color: #6C6C6C;
+      color: ${props => props.disabled ? "#AAA" : "#6C6C6C"};
     }
 
     &:hover {
       svg {
-        stroke: #3AAE2A;
+        stroke: ${props => props.disabled ? "#AAA" : "#3AAE2A"};
       }
     }
   }
@@ -56,6 +56,7 @@ const CounterFieldWithOptions = ({
   value,
   options,
   onChange = () => {},
+  disabled = false,
 }) => {
   const [selectedOption, setSelectedOption] = useState(null)
   const [selectedIndex, setSelectedIndex] = useState(options.findIndex(opt => opt.value === value))
@@ -69,6 +70,9 @@ const CounterFieldWithOptions = ({
   }, [selectedIndex])
 
   const increaseCounter = () => {
+    if (disabled) {
+      return;
+    }
     let index = selectedIndex || 0
     index = index + 1
     if (index >= options.length) {
@@ -78,6 +82,9 @@ const CounterFieldWithOptions = ({
   }
 
   const decreaseCounter = () => {
+    if (disabled) {
+      return;
+    }
     let index = selectedIndex || 0
     index = index - 1
     if (index < 0) {
@@ -92,12 +99,12 @@ const CounterFieldWithOptions = ({
         {selectedOption?.label}
       </LabelContainer>
       <ControlsContainer>
-        <CounterValueUp>
+        <CounterValueUp disabled={disabled}>
           <button type="button" onClick={() => increaseCounter()}>
             <ChevronUp size={16} />
           </button>
         </CounterValueUp>
-        <CounterValueDown>
+        <CounterValueDown disabled={disabled}>
           <button type="button" onClick={() => decreaseCounter()}>
             <ChevronDown size={16} />
           </button>

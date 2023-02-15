@@ -83,6 +83,8 @@ const NotificationDeadlineCell = styled.div`
   & > div {
     margin: 0px 10px;
   }
+
+  color: ${props => props.disabled ? "#AAA" : "inherit"};
 `
 
 const UnregisteredUserCell = styled.div`
@@ -131,12 +133,21 @@ const TaskNotificationDetails = ({
   deleteTaskNotification,
   task,
   editAsTemplate,
+  selectedDurationDays,
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState('')
 
   const [taskEmailNotification, setTaskNotification] = useState(
     propTaskEmailNotification,
   )
+
+  // const [disableSendNotificationConfiguration, setDisableSendNotificationConfiguration] = useState(selectedDurationDays === 'None')
+
+  // useEffect(() => {
+  //   console.log('selectedDurationDays changed....', selectedDurationDays)
+  //   console.log('selectedDurationDays === none....', selectedDurationDays === 'None')
+  //   setDisableSendNotificationConfiguration(selectedDurationDays === 'None')
+  // }, [selectedDurationDays])
 
   useEffect(() => {
     setTaskNotification(propTaskEmailNotification)
@@ -344,12 +355,13 @@ const TaskNotificationDetails = ({
         <NotificationDeadlineContainer>
           <TaskTitle>Send notification</TaskTitle>
 
-          <NotificationDeadlineCell>
+          <NotificationDeadlineCell disabled={selectedDurationDays === 'None'}>
             <span>Send</span>
             <CounterField
               minValue={0}
               value={taskEmailNotificationElapsedDays || 0}
               compact={true}
+              disabled={selectedDurationDays === 'None'}
               onChange={val => {
                 // if (val) {
                 //   setTaskEmailNotificationElapsedDays(val)
@@ -364,6 +376,7 @@ const TaskNotificationDetails = ({
             <span>days</span>
             <CounterFieldWithOptions
               value={taskEmailNotificationDeadline || 'before'}
+              disabled={selectedDurationDays === 'None'}
               options={[
                 {label: 'before', value: 'before'},
                 {label: 'after', value: 'after'},
