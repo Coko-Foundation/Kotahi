@@ -356,14 +356,12 @@ const TaskNotificationDetails = ({
               compact={true}
               disabled={selectedDurationDays === 'None'}
               onChange={val => {
-                if (val) {
-                  setTaskEmailNotificationElapsedDays(val)
-                  handleTaskNotificationDeadline(
-                    taskEmailNotificationDeadline,
-                    val,
-                    taskEmailNotification,
-                  )
-                }
+                setTaskEmailNotificationElapsedDays(val)
+                handleTaskNotificationDeadline(
+                  taskEmailNotificationDeadline,
+                  val,
+                  taskEmailNotification,
+                )
               }}
             />
             <span>days</span>
