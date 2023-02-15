@@ -159,7 +159,7 @@ const typeDefs = `
     manuscriptId: ID
     title: String!
     assigneeUserId: ID
-    defaultDurationDays: Int
+    defaultDurationDays: String
     dueDate: DateTime
     reminderPeriodDays: Int
     status: String!
@@ -182,7 +182,7 @@ const typeDefs = `
     title: String!
     assigneeUserId: ID
     assignee: User
-    defaultDurationDays: Int
+    defaultDurationDays: String
     dueDate: DateTime
     reminderPeriodDays: Int
     sequenceIndex: Int!

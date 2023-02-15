@@ -240,14 +240,14 @@ const TaskEditModal = ({
                 <DurationDaysCell>
                   <CounterField
                     minValue={0}
-                    value={task.defaultDurationDays || 'None'}
+                    value={task.defaultDurationDays && task.defaultDurationDays !== 'None' ? parseInt(task.defaultDurationDays) : 'None'}
                     showNone={true}
                     onChange={val => {
                       setSelectedDurationDays(val)
-                      // updateTask(task.id, {
-                      //   ...task,
-                      //   defaultDurationDays: val,
-                      // })
+                      updateTask(task.id, {
+                        ...task,
+                        defaultDurationDays: val.toString(),
+                      })
                     }}
                   />
                 </DurationDaysCell>

@@ -74,7 +74,15 @@ const CounterField = ({
   const defaultValue = showNone ? noneValue : (minValue || 0)
 
   useEffect(() => {
-    onChange(value)
+    setValue(propsValue)
+  }, [propsValue])
+
+  useEffect(() => {
+    // this check is required to avoid infinite loop as `value` change leads to `propsValue`
+    // change via `onChange` and then `propsChange` change leads to `value` change
+    if (value !== propsValue) {
+      onChange(value)
+    }
     setShowResetIcon(value !== defaultValue)
   }, [value])
 

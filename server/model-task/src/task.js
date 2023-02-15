@@ -54,7 +54,7 @@ class Task extends BaseModel {
         manuscriptId: { type: ['string', 'null'], format: 'uuid' },
         title: { type: 'string' },
         assigneeUserId: { type: ['string', 'null'], format: 'uuid' },
-        defaultDurationDays: { type: ['integer', 'null'] },
+        defaultDurationDays: { type: ['string', 'null'] },
         dueDate: { type: ['string', 'object', 'null'], format: 'date-time' },
         reminderPeriodDays: { type: ['integer', 'null'] },
         status: { type: 'string' },

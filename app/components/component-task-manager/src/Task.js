@@ -270,6 +270,7 @@ const Task = ({
   const [task, setTask] = useState(propTask)
 
   useEffect(() => {
+    console.log('proptask updated...', propTask)
     setTask(propTask)
   }, [propTask])
 
@@ -517,13 +518,13 @@ const Task = ({
                   <DurationDaysCell>
                     <CounterField
                       minValue={0}
-                      value={task.defaultDurationDays || 'None'}
+                      value={task.defaultDurationDays && task.defaultDurationDays !== 'None' ? parseInt(task.defaultDurationDays) : 'None'}
                       showNone={true}
                       onChange={val => {
-                        // updateTask(task.id, {
-                        //   ...task,
-                        //   defaultDurationDays: val,
-                        // })
+                        updateTask(task.id, {
+                          ...task,
+                          defaultDurationDays: val.toString(),
+                        })
                       }}
                     />
                   </DurationDaysCell>
