@@ -1,5 +1,9 @@
 const models = require('@pubsweet/models')
+const config = require('config')
 const Team = require('../../model-team/src/team')
+const sendEmailNotification = require('../../email-notifications')
+
+const Invitation = require('../../model-invitations/src/invitations')
 
 const getUsersById = async userIds => models.User.query().findByIds(userIds)
 
@@ -39,4 +43,161 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
   return result
 }
 
-module.exports = { getUsersById, getUserRolesInManuscript }
+const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
+  let inputParsed = input
+
+  if (ctx) {
+    inputParsed = JSON.parse(input)
+  }
+
+  // TODO:
+  // Maybe a better way to make this function less ambigious is by having a simpler object of the structure:
+  // { senderName, senderEmail, recieverName, recieverEmail }
+  // ANd send this as `input` from the Frontend
+  const {
+    manuscript,
+    selectedEmail, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing receiver being selected
+    selectedTemplate,
+    externalEmail, // New User Email
+    externalName, // New User username
+    currentUser,
+  } = inputParsed
+
+  const receiverEmail = externalEmail || selectedEmail
+
+  let receiverName = externalName
+
+  if (selectedEmail) {
+    // If the email of a pre-existing user is selected
+    // Get that user
+    const [userReceiver] = await models.User.query()
+      .where({ email: selectedEmail })
+      .withGraphFetched('[defaultIdentity]')
+
+    /* eslint-disable-next-line */
+        receiverName =
+      userReceiver.username || userReceiver.defaultIdentity.name || ''
+  }
+
+  const manuscriptId = manuscript.id
+
+  const manuscriptObject = await models.Manuscript.query().findById(
+    manuscriptId,
+  )
+
+  const author = await manuscriptObject.getManuscriptAuthor({
+    onlyAccepted: true,
+  })
+
+  const authorName = author ? author.username : ''
+
+  const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/
+  const emailValidationResult = emailValidationRegexp.test(receiverEmail)
+
+  if (!emailValidationResult || !receiverName) {
+    return { success: false }
+  }
+
+  let invitationSender = ''
+
+  if (!ctx) {
+    invitationSender = emailSender
+  } else {
+    invitationSender = await models.User.find(ctx.user)
+  }
+
+  const toEmail = receiverEmail
+  const purpose = 'Inviting an author to accept a manuscript'
+  const status = 'UNANSWERED'
+  const senderId = invitationSender.id
+
+  let invitationId = ''
+
+  const invitationContainingEmailTemplate = [
+    'authorInvitationEmailTemplate',
+    'reviewerInvitationEmailTemplate',
+    'reminderAuthorInvitationTemplate',
+    'reminderReviewerInvitationTemplate',
+  ]
+
+  if (invitationContainingEmailTemplate.includes(selectedTemplate)) {
+    let userId = null
+    let invitedPersonName = ''
+
+    if (selectedEmail) {
+      // If the email of a pre-existing user is selected
+      // Get that user
+      const [userReceiver] = await models.User.query()
+        .where({ email: selectedEmail })
+        .withGraphFetched('[defaultIdentity]')
+
+      userId = userReceiver.id
+      invitedPersonName = userReceiver.username
+    } else {
+      // Use the username provided
+      invitedPersonName = externalName
+    }
+
+    const invitedPersonType =
+      selectedTemplate === 'authorInvitationEmailTemplate'
+        ? 'AUTHOR'
+        : 'REVIEWER'
+
+    const newInvitation = await new Invitation({
+      manuscriptId,
+      toEmail,
+      purpose,
+      status,
+      senderId,
+      invitedPersonType,
+      invitedPersonName,
+      userId,
+    }).saveGraph()
+
+    invitationId = newInvitation.id
+  }
+
+  if (invitationId === '') {
+    console.error(
+      'Invitation Id is not available to be used for this template.',
+    )
+  }
+
+  let instance
+
+  if (config['notification-email'].use_colab) {
+    instance = 'colab'
+  } else {
+    instance = 'generic'
+  }
+
+  try {
+    await sendEmailNotification(receiverEmail, selectedTemplate, {
+      articleTitle: manuscript.meta.title,
+      authorName,
+      currentUser,
+      receiverName,
+      shortId: manuscript.shortId,
+      instance,
+      toEmail,
+      invitationId,
+      submissionLink: ctx
+        ? JSON.parse(manuscript.submission).link
+        : manuscript.submission.link,
+      purpose,
+      status,
+      senderId,
+      appUrl: config['pubsweet-client'].baseUrl,
+    })
+    return { success: true }
+  } catch (e) {
+    console.error(e)
+    return { success: false }
+  }
+}
+
+module.exports = {
+  getUsersById,
+  getUserRolesInManuscript,
+  sendEmailWithPreparedData,
+}

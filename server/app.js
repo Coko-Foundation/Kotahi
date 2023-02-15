@@ -3,7 +3,9 @@ const { app } = require('@coko/server')
 const moment = require('moment')
 const { setConfig } = require('./config/src/configObject')
 const Team = require('./model-team/src/team')
-const sendEmailNotification = require('./email-notifications')
+const { sendEmailWithPreparedData } = require('./model-user/src/userCommsUtils')
+const TaskEmailNotificationLog = require('./model-task/src/taskEmailNotificationLog')
+const Task = require('./model-task/src/task')
 
 // You can modify the app or ensure other things are imported here.
 const schedule = require('../node_modules/node-schedule')
@@ -69,6 +71,11 @@ schedule.scheduleJob(
     rule: `00 00 * * *`,
   },
   async () => {
+    // eslint-disable-next-line no-console
+    console.info(
+      `Running scheduler for sending task email notifications ${new Date().toISOString()}`,
+    )
+
     const taskEmailNotifications = await getTaskEmailNotifications({
       status: config.tasks.status.IN_PROGRESS,
     })
@@ -194,27 +201,57 @@ schedule.scheduleJob(
       }
 
       const { manuscript } = emailNotification.task
-      // eslint-disable-next-line no-await-in-loop
-      const author = await manuscript.getManuscriptAuthor()
-      const authorName = author ? author.username : ''
+
       // eslint-disable-next-line no-await-in-loop
       const editor = await manuscript.getManuscriptEditor()
       const currentUser = editor ? editor.username : ''
 
       // eslint-disable-next-line no-restricted-syntax
       for (const recipient of notificationRecipients) {
-        try {
-          // eslint-disable-next-line no-await-in-loop
-          await sendEmailNotification(
-            recipient.email,
-            emailNotification.emailTemplateKey,
-            {
-              authorName,
+        let logData
+
+        if (emailNotification.emailTemplateKey) {
+          try {
+            // eslint-disable-next-line no-await-in-loop
+            // const emailSender = currentUser
+
+            const notificationInput = {
+              manuscript,
+              // selectedEmail: recipient.email, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing receiver being selected
+              selectedTemplate: emailNotification.emailTemplateKey,
+              externalEmail: recipient.email,
+              externalName: recipient.name, // New User username
               currentUser,
-            },
-          )
-        } catch (error) {
-          console.error(error)
+            }
+
+            const emailTemplateOption = emailNotification.emailTemplateKey.replace(
+              /([A-Z])/g,
+              ' $1',
+            )
+
+            const selectedTemplateValue =
+              emailTemplateOption.charAt(0).toUpperCase() +
+              emailTemplateOption.slice(1)
+
+            const messageBody = `${selectedTemplateValue} sent by Kotahi to ${recipient.name}`
+
+            logData = {
+              taskId: emailNotification.task.id,
+              content: messageBody,
+              emailTemplateKey: emailTemplateOption,
+              senderEmail: editor.email,
+              recipientEmail: recipient.email,
+            }
+
+            const ctx = ''
+            // eslint-disable-next-line no-await-in-loop
+            await sendEmailWithPreparedData(notificationInput, ctx, editor)
+          } catch (error) {
+            console.error(error)
+          }
+
+          // eslint-disable-next-line no-await-in-loop
+          await logTaskEmailNotificationData(logData)
         }
       }
     }
@@ -234,6 +271,20 @@ const getTeamRecipients = async (emailNotification, roles) => {
     email: user.email,
     name: user.username,
   }))
+}
+
+const logTaskEmailNotificationData = async logData => {
+  await TaskEmailNotificationLog.query()
+    .insert(logData)
+    .onConflict('id')
+    .merge()
+
+  const associatedTask = await Task.query()
+    .findById(logData.taskId)
+    .withGraphFetched('emailNotifications.recipientUser')
+    .withGraphFetched('notificationLogs')
+
+  return associatedTask
 }
 
 module.exports = app
