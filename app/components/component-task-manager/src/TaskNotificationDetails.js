@@ -302,6 +302,7 @@ const TaskNotificationDetails = ({
               taskEmailNotification?.recipientUserId ||
               taskEmailNotification?.recipientType
             }
+            hasGroupedOptions
             isClearable
           />
         </AssigneeCell>

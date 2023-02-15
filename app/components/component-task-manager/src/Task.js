@@ -270,7 +270,6 @@ const Task = ({
   const [task, setTask] = useState(propTask)
 
   useEffect(() => {
-    console.log('proptask updated...', propTask)
     setTask(propTask)
   }, [propTask])
 

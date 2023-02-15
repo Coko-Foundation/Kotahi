@@ -140,6 +140,7 @@ const AssigneeDropdown = ({
       options={assigneeGroupedOptions}
       placeholder="Select..."
       value={task.assignee?.id || task.assigneeType}
+      hasGroupedOptions
       isClearable
     />
   )
