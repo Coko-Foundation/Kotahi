@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext, useRef } from 'react'
+import React, { useState, useEffect, useContext, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 import styled, { ThemeContext, css } from 'styled-components'
@@ -26,6 +26,7 @@ import StatusDropdown from './StatusDropdown'
 import TextInput from './TextInput'
 import TaskEditModal from './TaskEditModal'
 import CounterField from './CounterField'
+import { debounce } from 'lodash'
 
 const TaskRow = styled.div`
   align-items: flex-start;
@@ -273,6 +274,18 @@ const Task = ({
     setTask(propTask)
   }, [propTask])
 
+  const [taskTitle, setTaskTitle] = useState(task?.title || '')
+
+  const updateTaskDebounce = useCallback(debounce(
+    updateTask ?? (() => {}),
+    1000,
+  ), [])
+
+  const updateTaskTitle = value => {
+    setTaskTitle(value)
+    updateTaskDebounce(task.id, { ...task, title: value })
+  }
+
   const [transposedDueDate, setTransposedDueDate] = useState(
     transposeFromTimezoneToLocal(
       task.dueDate || new Date(),
@@ -477,9 +490,9 @@ const Task = ({
                     </Handle>
                   )}
                   <TextInput
-                    onChange={event => updateTask(task.id, { ...task, title: event.target.value })}
+                    onChange={event => updateTaskTitle(event.target.value)}
                     placeholder="Give your task a name..."
-                    value={task.title}
+                    value={taskTitle}
                   />
                   <TaskAction ref={taskRef}>
                     <MinimalButton

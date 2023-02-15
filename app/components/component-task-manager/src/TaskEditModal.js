@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
@@ -15,6 +15,7 @@ import Modal from '../../component-modal/src'
 import CounterField from './CounterField'
 import { X as CloseIcon } from 'react-feather'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
+import { debounce } from 'lodash'
 
 const TaskMetaModalContainer = styled.div`
   background-color: ${th('colorBackground')};
@@ -139,6 +140,17 @@ const TaskEditModal = ({
     task.emailNotifications ?? [],
   )
   const [selectedDurationDays, setSelectedDurationDays] = useState(task.defaultDurationDays || 'none')
+  const [taskTitle, setTaskTitle] = useState(task?.title || '')
+
+  const updateTaskDebounce = useCallback(debounce(
+    updateTask ?? (() => {}),
+    1000,
+  ), [])
+
+  const updateTaskTitle = value => {
+    setTaskTitle(value)
+    updateTaskDebounce(task.id, { ...task, title: value })
+  }
 
   useEffect(() => {
     setTaskNotifications(task.emailNotifications)
@@ -206,10 +218,10 @@ const TaskEditModal = ({
               <TaskTitle>Task title</TaskTitle>
               <TitleCell>
                 <TextInput
-                  onChange={event => updateTask(task.id, { ...task, title: event.target.value })}
+                  onChange={event => updateTaskTitle(event.target.value)}
                   placeholder="Give your task a name..."
-                  value={task.title}
-                  autoFocus={!task.title}
+                  value={taskTitle}
+                  autoFocus={!taskTitle}
                 />
               </TitleCell>
             </TitleFieldContainer>
