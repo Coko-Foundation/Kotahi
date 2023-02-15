@@ -17,7 +17,7 @@ const LabelContainer = styled.div`
   align-items: center;
   position: relative;
   padding-right: ${props => props.showResetIcon ? '15px' : '0'};
-  width: ${props => props.compact ? '40px' : '65px'}
+  width: ${props => props.compact ? '50px' : '65px'}
 `
 
 const ControlsContainer = styled.div`
@@ -52,11 +52,7 @@ const CounterValueDown = styled(CounterActionContainer)`
 `
 const CloseIconContainer = styled(CounterActionContainer)`
   cursor: pointer;
-  background: #6C6C6C;
-  box-shadow: 0px 0px 4px rgba(0, 0, 0, 0.25);
   border-radius: 500px;
-  height: 13px;
-  width: 13px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -125,7 +121,7 @@ const CounterField = ({
       <LabelContainer compact={compact} showResetIcon={showResetIcon}>
         <span>{value}</span>
         {showResetIcon && <CloseIconContainer onClick={() => resetValue()}>
-            <CloseIcon size={10} color="white" />
+            <CloseIcon size={15} color="black" />
           </CloseIconContainer>
         }
       </LabelContainer>
