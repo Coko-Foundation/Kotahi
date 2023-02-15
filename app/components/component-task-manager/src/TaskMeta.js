@@ -153,6 +153,7 @@ const TaskMeta = ({
     emailTemplateKey: taskNotification.emailTemplateKey || null,
     recipientName: taskNotification.recipientName || null,
     recipientEmail: taskNotification.recipientEmail || null,
+    sentAt: taskNotification.sentAt || null,
   })
 
   const updateTaskNotification = async updatedTaskNotification => {

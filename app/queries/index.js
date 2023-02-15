@@ -422,6 +422,7 @@ emailNotifications {
     username
     email
   }
+  sentAt
 }
 notificationLogs {
   id

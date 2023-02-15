@@ -112,6 +112,7 @@ const manuscriptFields = `
         username
         email
       }
+      sentAt
     }
     notificationLogs {
       id

@@ -87,6 +87,11 @@ schedule.scheduleJob(
         continue
       }
 
+      if (emailNotification.sentAt) {
+        // eslint-disable-next-line no-continue
+        continue
+      }
+
       const { recipientTypes } = config.tasks.emailNotifications
       let notificationRecipients = []
 
@@ -188,9 +193,11 @@ schedule.scheduleJob(
         default:
       }
 
-      const manuscript = emailNotification.task.manuscript
+      const { manuscript } = emailNotification.task
+      // eslint-disable-next-line no-await-in-loop
       const author = await manuscript.getManuscriptAuthor()
       const authorName = author ? author.username : ''
+      // eslint-disable-next-line no-await-in-loop
       const editor = await manuscript.getManuscriptEditor()
       const currentUser = editor ? editor.username : ''
 

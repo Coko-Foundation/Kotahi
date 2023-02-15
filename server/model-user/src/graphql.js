@@ -220,8 +220,15 @@ const resolvers = {
       }
 
       const manuscriptId = manuscript.id
-      const manuscriptObject = await models.Manuscript.query().findById(manuscriptId)
-      const author = await manuscriptObject.getManuscriptAuthor({onlyAccepted: true})
+
+      const manuscriptObject = await models.Manuscript.query().findById(
+        manuscriptId,
+      )
+
+      const author = await manuscriptObject.getManuscriptAuthor({
+        onlyAccepted: true,
+      })
+
       const authorName = author ? author.username : ''
 
       const emailValidationRegexp = /^[^\s@]+@[^\s@]+$/

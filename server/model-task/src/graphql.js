@@ -239,6 +239,7 @@ const typeDefs = `
     emailTemplateKey: String
     recipientName: String
     recipientEmail: String
+    sentAt: DateTime
   }
 
   input TaskEmailNotificationLogInput {
@@ -272,6 +273,7 @@ const typeDefs = `
     created: DateTime!
     updated: DateTime
     recipientUser: User
+    sentAt: DateTime
   }
 
   extend type Mutation {

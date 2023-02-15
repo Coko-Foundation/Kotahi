@@ -220,7 +220,7 @@ const TaskNotificationDetails = ({
     })
   }
 
-  const handleManuscriptTeamInput = (
+  const handleManuscriptTeamInputForNotification = (
     notificationRecipientType,
     manuscriptTeams,
   ) => {
@@ -299,7 +299,14 @@ const TaskNotificationDetails = ({
     }
 
     return prepareEmailRecipients().then(emailStatus => {
-      if (emailStatus) logTaskNotificationEmails(logsDataArray)
+      if (emailStatus) {
+        updateTaskNotification({
+          ...taskEmailNotification,
+          sentAt: new Date(),
+        })
+        logTaskNotificationEmails(logsDataArray)
+      }
+
       return emailStatus
     })
   }
@@ -332,7 +339,15 @@ const TaskNotificationDetails = ({
           ]
           response = await sendNotifyEmail(input)
           responseStatus = response.data.sendEmail.success
-          if (responseStatus) logTaskNotificationEmails(logsData)
+
+          if (responseStatus) {
+            updateTaskNotification({
+              ...taskEmailNotification,
+              sentAt: new Date(),
+            })
+            logTaskNotificationEmails(logsData)
+          }
+
           setTaskNotificationStatus(responseStatus ? 'success' : 'failure')
           break
         case 'registeredUser':
@@ -352,7 +367,15 @@ const TaskNotificationDetails = ({
           ]
           response = await sendNotifyEmail(input)
           responseStatus = response.data.sendEmail.success
-          if (responseStatus) logTaskNotificationEmails(logsData)
+
+          if (responseStatus) {
+            updateTaskNotification({
+              ...taskEmailNotification,
+              sentAt: new Date(),
+            })
+            logTaskNotificationEmails(logsData)
+          }
+
           setTaskNotificationStatus(responseStatus ? 'success' : 'failure')
           break
         case 'assignee':
@@ -375,7 +398,15 @@ const TaskNotificationDetails = ({
               ]
               response = await sendNotifyEmail(input)
               responseStatus = response.data.sendEmail.success
-              if (responseStatus) logTaskNotificationEmails(logsData)
+
+              if (responseStatus) {
+                updateTaskNotification({
+                  ...taskEmailNotification,
+                  sentAt: new Date(),
+                })
+                logTaskNotificationEmails(logsData)
+              }
+
               setTaskNotificationStatus(responseStatus ? 'success' : 'failure')
               break
             case 'registeredUser':
@@ -396,13 +427,21 @@ const TaskNotificationDetails = ({
               ]
               response = await sendNotifyEmail(input)
               responseStatus = response.data.sendEmail.success
-              if (responseStatus) logTaskNotificationEmails(logsData)
+
+              if (responseStatus) {
+                updateTaskNotification({
+                  ...taskEmailNotification,
+                  sentAt: new Date(),
+                })
+                logTaskNotificationEmails(logsData)
+              }
+
               setTaskNotificationStatus(responseStatus ? 'success' : 'failure')
               break
             case 'editor':
             case 'reviewer':
             case 'author':
-              responseStatus = handleManuscriptTeamInput(
+              responseStatus = handleManuscriptTeamInputForNotification(
                 task.assigneeType,
                 manuscript.teams,
               )
@@ -421,7 +460,7 @@ const TaskNotificationDetails = ({
         case 'editor':
         case 'reviewer':
         case 'author':
-          responseStatus = handleManuscriptTeamInput(
+          responseStatus = handleManuscriptTeamInputForNotification(
             taskEmailNotification.recipientType,
             manuscript.teams,
           )
