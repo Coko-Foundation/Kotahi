@@ -73,8 +73,8 @@ const resolvers = {
       return Task.query()
         .findById(task.id)
         .withGraphFetched('assignee')
-        .withGraphFetched('emailNotifications.recipientUser')
         .withGraphFetched('notificationLogs')
+        .withGraphFetched('emailNotifications(orderByCreated).recipientUser')
     },
 
     updateTaskNotification: async (_, { taskNotification }) => {
@@ -95,8 +95,8 @@ const resolvers = {
 
       const associatedTask = await Task.query()
         .findById(taskNotification.taskId)
-        .withGraphFetched('emailNotifications.recipientUser')
         .withGraphFetched('notificationLogs')
+        .withGraphFetched('emailNotifications(orderByCreated).recipientUser')
 
       return associatedTask
     },
@@ -108,8 +108,8 @@ const resolvers = {
 
       const associatedTask = await Task.query()
         .findById(taskEmailNotification.taskId)
-        .withGraphFetched('emailNotifications.recipientUser')
         .withGraphFetched('notificationLogs')
+        .withGraphFetched('emailNotifications(orderByCreated).recipientUser')
 
       await TaskEmailNotification.query().deleteById(id)
 
@@ -167,8 +167,8 @@ const resolvers = {
         .where({ manuscriptId })
         .orderBy('sequenceIndex')
         .withGraphFetched('assignee')
-        .withGraphFetched('emailNotifications.recipientUser')
         .withGraphFetched('notificationLogs')
+        .withGraphFetched('emailNotifications(orderByCreated).recipientUser')
     },
     userHasTaskAlerts: async (_, __, ctx) => {
       return (
@@ -185,7 +185,7 @@ const typeDefs = `
     manuscriptId: ID
     title: String!
     assigneeUserId: ID
-    defaultDurationDays: Int
+    defaultDurationDays: String
     dueDate: DateTime
     reminderPeriodDays: Int
     status: String!
@@ -208,7 +208,7 @@ const typeDefs = `
     title: String!
     assigneeUserId: ID
     assignee: User
-    defaultDurationDays: Int
+    defaultDurationDays: String
     dueDate: DateTime
     reminderPeriodDays: Int
     sequenceIndex: Int!

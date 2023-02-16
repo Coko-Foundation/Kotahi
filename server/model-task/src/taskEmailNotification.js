@@ -5,6 +5,14 @@ class TaskEmailNotification extends BaseModel {
     return 'task_email_notifications'
   }
 
+  static get modifiers() {
+    return {
+      orderByCreated(builder) {
+        builder.orderBy('created', 'asc')
+      },
+    }
+  }
+
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
     const { User } = require('@pubsweet/models')

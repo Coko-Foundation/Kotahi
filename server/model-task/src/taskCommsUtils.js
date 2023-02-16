@@ -14,8 +14,7 @@ const populateTemplatedTasksForManuscript = async manuscriptId => {
   const newTasks = await Task.query()
     .whereNull('manuscriptId')
     .orderBy('sequenceIndex')
-    .withGraphFetched('emailNotifications')
-    .withGraphFetched('notificationLogs')
+    .withGraphFetched('emailNotifications(orderByCreated)')
 
   const existingTasks = await Task.query()
     .where({ manuscriptId })

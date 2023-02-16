@@ -274,6 +274,8 @@ const SelectEmailTemplate = ({
   selectedEmailTemplate,
   updateTaskNotification,
   taskEmailNotification,
+  placeholder,
+  isClearable,
   task,
 }) => {
   return (
@@ -287,15 +289,15 @@ const SelectEmailTemplate = ({
             ...taskEmailNotification,
             id: taskEmailNotification.id,
             taskId: taskEmailNotification.taskId,
-            emailTemplateKey: selected.value,
+            emailTemplateKey: selected ? selected.value : '',
           })
         }
-
-        onChangeEmailTemplate(selected.value)
+        onChangeEmailTemplate(selected ? selected.value : '')
       }}
       options={emailTemplateOptions}
-      placeholder="Choose notification template"
+      placeholder={placeholder || "Choose notification template"}
       value={selectedEmailTemplate}
+      isClearable={isClearable || false}
     />
   )
 }

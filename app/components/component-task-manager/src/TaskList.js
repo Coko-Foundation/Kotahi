@@ -2,9 +2,18 @@ import React, { useState, useContext, useEffect } from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { v4 as uuid } from 'uuid'
 import moment from 'moment-timezone'
-import Task, { TaskHeader } from './Task'
+import styled from 'styled-components'
+import Task from './Task'
 import { RoundIconButton, TightColumn, MediumColumn } from '../../shared'
 import { ConfigContext } from '../../config/src'
+
+const TaskListContainer = styled.div`
+  -webkit-font-smoothing: antialiased;
+`
+
+const AddTaskContainer = styled.div`
+  padding: 0 8px;
+`
 
 const TaskList = ({
   editAsTemplate,
@@ -40,7 +49,7 @@ const TaskList = ({
     manuscriptId,
     title: task.title,
     assigneeUserId: task.assignee?.id || null,
-    defaultDurationDays: task.defaultDurationDays || 0,
+    defaultDurationDays: task.defaultDurationDays || 'None',
     reminderPeriodDays: task.reminderPeriodDays || 0,
     dueDate: editAsTemplate ? null : new Date(task.dueDate),
     status: editAsTemplate ? 'Not started' : task.status,
@@ -160,56 +169,53 @@ const TaskList = ({
   }
 
   return (
-    <MediumColumn>
-      <DragDropContext onDragEnd={onDragEnd}>
-        <Droppable droppableId="droppable">
-          {(provided, snapshot) => (
-            <TightColumn {...provided.droppableProps} ref={provided.innerRef}>
-              {!tasks.length && 'Add your first task...'}
-              {tasks.length ? (
-                <>
-                  <TaskHeader editAsTemplate={editAsTemplate} />
-                  {tasks.map((task, index) => (
-                    <Task
-                      assigneeGroupedOptions={assigneeGroupedOptions}
-                      createTaskEmailNotificationLog={
-                        createTaskEmailNotificationLog
-                      }
-                      currentUser={currentUser}
-                      deleteTaskNotification={deleteTaskNotification}
-                      editAsTemplate={editAsTemplate}
-                      index={index}
-                      isReadOnly={isReadOnly}
-                      key={task.id}
-                      manuscript={manuscript}
-                      onCancel={() => updateTasks(tasks.filter(t => t.title))}
-                      onDelete={id =>
-                        updateTasks(tasks.filter(t => t.id !== id))
-                      }
-                      recipientGroupedOptions={recipientGroupedOptions}
-                      sendNotifyEmail={sendNotifyEmail}
-                      task={task}
-                      updateTask={updateTask}
-                      updateTaskNotification={updateTaskNotification}
-                    />
-                  ))}
-                </>
-              ) : null}
-              {provided.placeholder}
-            </TightColumn>
-          )}
-        </Droppable>
-      </DragDropContext>
-      {!isReadOnly && (
-        <RoundIconButton
-          disabled={tasks.some(t => !t.title)}
-          iconName="Plus"
-          onClick={addNewTask}
-          primary
-          title="Add a new task"
-        />
-      )}
-    </MediumColumn>
+    <TaskListContainer>
+      <MediumColumn>
+        <DragDropContext onDragEnd={onDragEnd}>
+          <Droppable droppableId="droppable">
+            {(provided, snapshot) => (
+              <TightColumn {...provided.droppableProps} ref={provided.innerRef}>
+                {!tasks.length && 'Add your first task...'}
+                {tasks.length ? (
+                  <>
+                    {tasks.map((task, index) => (
+                      <Task
+                        assigneeGroupedOptions={assigneeGroupedOptions}
+                        deleteTaskNotification={deleteTaskNotification}
+                        editAsTemplate={editAsTemplate}
+                        index={index}
+                        isReadOnly={isReadOnly}
+                        key={task.id}
+                        onCancel={() => updateTasks(tasks.filter(t => t.title))}
+                        onDelete={id =>
+                          updateTasks(tasks.filter(t => t.id !== id))
+                        }
+                        recipientGroupedOptions={recipientGroupedOptions}
+                        task={task}
+                        updateTask={updateTask}
+                        updateTaskNotification={updateTaskNotification}
+                      />
+                    ))}
+                  </>
+                ) : null}
+                {provided.placeholder}
+              </TightColumn>
+            )}
+          </Droppable>
+        </DragDropContext>
+        {!isReadOnly && (
+          <AddTaskContainer>
+            <RoundIconButton
+              disabled={tasks.some(t => !t.title)}
+              iconName="Plus"
+              onClick={addNewTask}
+              primary
+              title="Add a new task"
+            />
+          </AddTaskContainer>
+        )}
+      </MediumColumn>
+    </TaskListContainer>
   )
 }
 
