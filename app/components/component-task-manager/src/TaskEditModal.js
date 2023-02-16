@@ -12,10 +12,10 @@ import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
 import TextInput from './TextInput'
 import Modal from '../../component-modal/src'
-import CounterField from './CounterField'
 import { X as CloseIcon } from 'react-feather'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
 import { debounce } from 'lodash'
+import CounterField from '../../shared/CounterField'
 
 const TaskMetaModalContainer = styled.div`
   background-color: ${th('colorBackground')};

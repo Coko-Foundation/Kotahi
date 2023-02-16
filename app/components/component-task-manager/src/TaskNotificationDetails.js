@@ -5,10 +5,10 @@ import {
   RoundIconButton,
   Select,
 } from '../../shared'
-import CounterFieldWithOptions from './CounterFieldWithOptions'
-import CounterField from './CounterField'
 import TextInput from './TextInput'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
+import CounterFieldWithOptions from '../../shared/CounterFieldWithOptions'
+import CounterField from '../../shared/CounterField'
 
 const TaskTitle = styled.div`
   font-family: 'Roboto';
@@ -347,7 +347,6 @@ const TaskNotificationDetails = ({
       <ScheduleNotificationFieldContainer>
         <NotificationDeadlineContainer>
           <TaskTitle>Send notification</TaskTitle>
-
           <NotificationDeadlineCell disabled={selectedDurationDays === 'None'}>
             <span>Send</span>
             <CounterField

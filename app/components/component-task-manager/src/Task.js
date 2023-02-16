@@ -25,8 +25,8 @@ import DueDateField from './DueDateField'
 import StatusDropdown from './StatusDropdown'
 import TextInput from './TextInput'
 import TaskEditModal from './TaskEditModal'
-import CounterField from './CounterField'
 import { debounce } from 'lodash'
+import CounterField from '../../shared/CounterField'
 
 const TaskRow = styled.div`
   align-items: flex-start;
