@@ -1087,7 +1087,7 @@ const resolvers = {
       const manuscript = await ManuscriptModel.query()
         .findById(id)
         .withGraphFetched(
-          '[teams, channels, files, reviews.user, tasks(orderBySequence).[assignee, emailNotifications]]',
+          '[teams, channels, files, reviews.user, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
         )
 
       const user = ctx.user

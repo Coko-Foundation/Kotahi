@@ -1,42 +1,50 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { TextField } from '@pubsweet/ui/dist/atoms'
-import { GroupedOptionsSelect } from '../../shared'
+import { Select, TextInput } from '../../shared'
+import theme from '../../../theme'
 
-const TaskListAssigneeCell = styled.div`
-  flex: 1 1 15em;
+const AssigneeCellContainer = styled.div`
   justify-content: flex-start;
   flex-direction: column;
   align-items: start;
 `
 
-const TaskMetaAssigneeCell = styled.div`
+const BaseAssigneeCell = styled.div`
+  > div > div {
+    font-size: ${theme.fontSizeBase};
+    line-height: 1.25;
+
+    &:nth-child(2) {
+      height: 45px;
+    }
+  }
+`
+
+const TaskListAssigneeCell = styled(BaseAssigneeCell)`
+  width: 100%;
+`
+
+const TaskMetaAssigneeCell = styled(BaseAssigneeCell)`
   justify-content: flex-start;
+  width: 290px;
 `
 
 const TaskListUnregisteredUserCell = styled.div`
   display: flex;
   flex-direction: column;
-  & > div {
+  & > input {
     margin: 10px 10px 0px 0px;
   }
 `
 
 const TaskMetaUnregisteredUserCell = styled.div`
   display: flex;
-  & > div {
-    margin: 20px 20px 0px 0px;
+  margin-top: 10px;
+  justify-content: space-between;
+
+  > input:first-child {
+    margin-right: 10px;
   }
-`
-
-const TaskListInputField = styled(TextField)`
-  height: 30px;
-  margin-bottom: 0;
-`
-
-const TaskMetaInputField = styled(TextField)`
-  height: 40px;
-  margin-bottom: 0;
 `
 
 const AssigneeDropdown = ({
@@ -118,31 +126,28 @@ const AssigneeDropdown = ({
     }
   }
 
-  const AssigneeCell = isList ? TaskListAssigneeCell : TaskMetaAssigneeCell
-
   const UnregisteredUserCell = isList
     ? TaskListUnregisteredUserCell
     : TaskMetaUnregisteredUserCell
 
-  const InputField = isList ? TaskListInputField : TaskMetaInputField
-
   const groupedOptionsComponent = (
-    <GroupedOptionsSelect
+    <Select
       aria-label="Assignee"
       data-testid="Assignee_select"
       dropdownState={dropdownState}
-      isClearable
       label="Assignee"
       onChange={selected => handleAssigneeInput(selected, task)}
       options={assigneeGroupedOptions}
       placeholder="Select..."
       value={task.assignee?.id || task.assigneeType}
+      hasGroupedOptions
+      isClearable
     />
   )
 
   const newUserComponent = isNewUser && (
     <UnregisteredUserCell>
-      <InputField
+      <TextInput
         data-cy="new-user-email"
         onChange={e => {
           setAssigneeEmail(e.target.value)
@@ -157,7 +162,7 @@ const AssigneeDropdown = ({
         placeholder="Email"
         value={assigneeEmail}
       />
-      <InputField
+      <TextInput
         data-cy="new-user-name"
         onChange={e => {
           setAssigneeName(e.target.value)
@@ -177,18 +182,20 @@ const AssigneeDropdown = ({
 
   if (isList) {
     return (
-      <AssigneeCell title={task.assignee?.username}>
-        {groupedOptionsComponent}
-        {newUserComponent}
-      </AssigneeCell>
+      <AssigneeCellContainer>
+        <TaskListAssigneeCell title={task.assignee?.username}>
+          {groupedOptionsComponent}
+          {newUserComponent}
+        </TaskListAssigneeCell>
+      </AssigneeCellContainer>
     )
   }
 
   return (
     <>
-      <AssigneeCell title={task.assignee?.username}>
+      <TaskMetaAssigneeCell title={task.assignee?.username}>
         {groupedOptionsComponent}
-      </AssigneeCell>
+      </TaskMetaAssigneeCell>
       {newUserComponent}
     </>
   )

@@ -1,26 +1,61 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import { th } from '@pubsweet/ui-toolkit'
-import { TextField } from '@pubsweet/ui'
 import SelectEmailTemplate from '../../component-review/src/components/emailNotifications/SelectEmailTemplate'
 import {
-  MinimalNumericUpDown,
-  GroupedOptionsSelect,
-  MinimalSelect,
   RoundIconButton,
+  Select,
+  TextInput,
 } from '../../shared'
+import SecondaryActionButton from '../../shared/SecondaryActionButton'
+import CounterFieldWithOptions from '../../shared/CounterFieldWithOptions'
+import CounterField from '../../shared/CounterField'
+import theme from '../../../theme'
 
 const TaskTitle = styled.div`
-  text-transform: uppercase;
-  font-size: ${th('fontSizeBaseSmall')};
-  font-variant: all-small-caps;
+  font-family: 'Roboto';
+  font-style: normal;
+  font-weight: 500;
+  font-size: ${theme.fontSizeBase};
+  line-height: 19px;
+  letter-spacing: 0.01em;
+  color: ${theme.colors.neutral.gray20};
+  margin-bottom: 4px;
 `
 
 const TaskFieldsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 25%;
-  margin-right: 20px;
+
+  + div {
+    margin-left: 20px;
+  }
+`
+
+const RecipientFieldContainer = styled(TaskFieldsContainer)`
+  flex: 0 0 20em;
+`
+
+const EmailTemplateFieldContainer = styled(TaskFieldsContainer)`
+  flex: 0 0 15em;
+
+  div {
+    font-size: ${theme.fontSizeBase};
+  }
+
+  > div:nth-child(2) > div:nth-child(2) {
+    height: 45px;
+  }
+`
+
+const ScheduleNotificationFieldContainer = styled(TaskFieldsContainer)`
+  flex: 0 0 22em;
+`
+
+const SendNowActionContainer = styled.div`
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  padding-top: 22px;
 `
 
 const RoundIconButtonContainer = styled.div`
@@ -44,47 +79,62 @@ const RoundIconButtonContainer = styled.div`
 const NotificationDeadlineCell = styled.div`
   display: flex;
   align-items: center;
+  height: 45px;
+
   & > div {
     margin: 0px 10px;
   }
-`
 
-const InputField = styled(TextField)`
-  height: 40px;
-  margin-bottom: 0;
+  color: ${props => props.disabled ? theme.colorBorder : "inherit"};
 `
 
 const UnregisteredUserCell = styled.div`
   display: flex;
-  & > div {
-    margin: 20px 20px 0px 0px;
+
+  > input {
+    margin-top: 10px;
+
+    + input {
+      margin-left: 10px;
+    }
   }
 `
 
 const NotificationDeadlineContainer = styled.div`
   display: flex;
   flex-direction: column;
-  width: 300px;
 `
 
 const NotificationDetailsContainer = styled.div`
   display: flex;
-  margin-top: 40px;
-  margin-bottom: 20px;
   width: 100%;
+  & + div {
+    margin-top: 16px;
+  }
 `
 
 const AssigneeCell = styled.div`
   justify-content: flex-start;
+  line-height: 1em;
+
+  > div > div {
+    font-size: ${theme.fontSizeBase};
+    line-height: 1.25;
+
+    &:nth-child(2) {
+      height: 45px;
+    }
+  }
 `
 
 const TaskNotificationDetails = ({
   updateTaskNotification,
   recipientGroupedOptions,
-  notificationOptions,
   taskEmailNotification: propTaskEmailNotification,
   deleteTaskNotification,
   task,
+  editAsTemplate,
+  selectedDurationDays,
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState('')
 
@@ -137,6 +187,20 @@ const TaskNotificationDetails = ({
   function handleRecipientInput(selectedOption, taskNotification) {
     setRecipientDropdownState(selectedOption)
 
+    if (!selectedOption) {
+      setIsNewRecipient(false)
+      updateTaskNotification({
+        ...taskNotification,
+        id: taskNotification.id,
+        taskId: taskNotification.taskId,
+        recipientUserId: null,
+        recipientType: null,
+        recipientEmail: null,
+        recipientName: null,
+      })
+      return
+    }
+
     switch (selectedOption.key) {
       case 'userRole':
         setIsNewRecipient(false)
@@ -183,7 +247,7 @@ const TaskNotificationDetails = ({
           id: taskNotification.id,
           taskId: taskNotification.taskId,
           recipientUserId: null,
-          recipientType: 'assignee',
+          recipientType: 'unregisteredUser',
           recipientEmail: null,
           recipientName: null,
         })
@@ -214,14 +278,13 @@ const TaskNotificationDetails = ({
 
   return (
     <NotificationDetailsContainer>
-      <TaskFieldsContainer>
+      <RecipientFieldContainer>
         <TaskTitle>Recipient</TaskTitle>
         <AssigneeCell title={taskEmailNotification.recipientType}>
-          <GroupedOptionsSelect
+          <Select
             aria-label="Recipient"
             data-testid="Recipient_select"
             dropdownState={recipientDropdownState}
-            isClearable
             label="Recipient"
             onChange={selected =>
               handleRecipientInput(selected, taskEmailNotification)
@@ -232,12 +295,13 @@ const TaskNotificationDetails = ({
               taskEmailNotification?.recipientUserId ||
               taskEmailNotification?.recipientType
             }
+            hasGroupedOptions
+            isClearable
           />
         </AssigneeCell>
         {isNewRecipient && (
           <UnregisteredUserCell>
-            <InputField
-              data-cy="new-user-email"
+            <TextInput
               onChange={e => {
                 setRecipientEmail(e.target.value)
                 updateTaskNotification({
@@ -250,8 +314,7 @@ const TaskNotificationDetails = ({
               placeholder="Email"
               value={recipientEmail}
             />
-            <InputField
-              data-cy="new-user-name"
+            <TextInput
               onChange={e => {
                 setRecipientName(e.target.value)
                 updateTaskNotification({
@@ -266,9 +329,9 @@ const TaskNotificationDetails = ({
             />
           </UnregisteredUserCell>
         )}
-      </TaskFieldsContainer>
-      <TaskFieldsContainer>
-        <TaskTitle>Email Template</TaskTitle>
+      </RecipientFieldContainer>
+      <EmailTemplateFieldContainer>
+        <TaskTitle>Select email template</TaskTitle>
         <SelectEmailTemplate
           isTaskEmailNotification
           onChangeEmailTemplate={setSelectedTemplate}
@@ -278,15 +341,20 @@ const TaskNotificationDetails = ({
           task={task}
           taskEmailNotification={taskEmailNotification}
           updateTaskNotification={updateTaskNotification}
+          placeholder="Select email template"
+          isClearable
         />
-      </TaskFieldsContainer>
-      <TaskFieldsContainer>
+      </EmailTemplateFieldContainer>
+      <ScheduleNotificationFieldContainer>
         <NotificationDeadlineContainer>
-          <TaskTitle>Set Email Deadline</TaskTitle>
-
-          <NotificationDeadlineCell>
-            Send
-            <MinimalNumericUpDown
+          <TaskTitle>Send notification</TaskTitle>
+          <NotificationDeadlineCell disabled={selectedDurationDays === 'None'}>
+            <span>Send</span>
+            <CounterField
+              minValue={0}
+              value={taskEmailNotificationElapsedDays || 0}
+              compact={true}
+              disabled={selectedDurationDays === 'None'}
               onChange={val => {
                 setTaskEmailNotificationElapsedDays(val)
                 handleTaskNotificationDeadline(
@@ -295,29 +363,35 @@ const TaskNotificationDetails = ({
                   taskEmailNotification,
                 )
               }}
-              value={taskEmailNotificationElapsedDays || 0}
             />
-            Days
-            <MinimalSelect
-              aria-label="Deadline"
-              data-testid="Deadline_select"
-              isClearable
-              label="Deadline"
+            <span>days</span>
+            <CounterFieldWithOptions
+              value={taskEmailNotificationDeadline || 'before'}
+              disabled={selectedDurationDays === 'None'}
+              options={[
+                {label: 'before', value: 'before'},
+                {label: 'after', value: 'after'},
+              ]}
               onChange={selected => {
-                setTaskEmailNotificationDeadline(selected.value)
-                handleTaskNotificationDeadline(
-                  selected.value,
-                  taskEmailNotificationElapsedDays,
-                  taskEmailNotification,
-                )
+                if (selected && selected.value) {
+                  setTaskEmailNotificationDeadline(selected.value)
+                  handleTaskNotificationDeadline(
+                    selected.value,
+                    taskEmailNotificationElapsedDays,
+                    taskEmailNotification,
+                  )
+                }
               }}
-              options={notificationOptions}
-              placeholder="Select.."
-              value={taskEmailNotificationDeadline}
             />
+            <span>due date</span>
           </NotificationDeadlineCell>
         </NotificationDeadlineContainer>
-      </TaskFieldsContainer>
+      </ScheduleNotificationFieldContainer>
+      {!editAsTemplate &&
+        <SendNowActionContainer>
+          <SecondaryActionButton>Send Now</SecondaryActionButton>
+        </SendNowActionContainer>
+      }
       <RoundIconButtonContainer>
         <RoundIconButton
           iconName="Minus"

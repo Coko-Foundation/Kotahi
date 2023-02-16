@@ -4,14 +4,47 @@ import moment from 'moment-timezone'
 import { CompactDetailLabel, MinimalDatePicker } from '../../shared'
 import { ConfigContext } from '../../config/src'
 import { transposeFromLocalToTimezone } from '../../../shared/dateUtils'
+import theme from '../../../theme'
 
-const TaskListDueDateCell = styled.div`
+const BaseDueDateCell = styled.div`
+  background: ${theme.colors.neutral.gray99} !important;
+  border: 1px solid ${theme.colors.neutral.gray80};
+  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.07);
+  border-radius: ${theme.borderRadius};
+
+  align-items: center;
+  display: flex;
+  line-height: 1em;
+  min-height: 45px;
+
+  > div {
+    width: 100%;
+  }
+
+  button {
+    width: 100%;
+    display: flex;
+    flex-direction: row-reverse;
+    justify-content: space-around;
+    font-size: ${theme.fontSizeBase}
+    line-height: {theme.lineHeightBase};
+    letter-spacing: 0.01em;
+    color: ${theme.colors.neutral.gray20};
+
+    svg {
+      margin-right: 6px;
+    }
+  }
+`
+
+const TaskListDueDateCell = styled(BaseDueDateCell)`
   flex: 0 0 7.8em;
   justify-content: flex-start;
   position: relative;
+  min-width: 120px;
 `
 
-const TaskMetaDueDateCell = styled.div`
+const TaskMetaDueDateCell = styled(BaseDueDateCell)`
   justify-content: flex-start;
   position: relative;
 `
@@ -24,6 +57,7 @@ const DueDateField = ({
   transposedEndOfToday,
   transposedDueDate,
   isList = false,
+  position,
 }) => {
   const config = useContext(ConfigContext)
 
@@ -59,7 +93,7 @@ const DueDateField = ({
                   .toDate(),
               })
             }
-            position="top center"
+            position={position || "top center"}
             suppressTodayHighlight
             value={transposedDueDate}
           />

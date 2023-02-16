@@ -10,6 +10,10 @@ const RoundButton = styled(ActionButton)`
   line-height: 0;
   padding: 0;
   width: 40px;
+
+  span {
+    padding: 0;
+  }
 `
 
 const RoundIconButton = ({
