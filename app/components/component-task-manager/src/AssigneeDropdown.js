@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import { Select } from '../../shared'
-import TextInput from './TextInput'
+import { Select, TextInput } from '../../shared'
 
 const AssigneeCellContainer = styled.div`
   justify-content: flex-start;

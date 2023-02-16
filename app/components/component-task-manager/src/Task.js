@@ -14,6 +14,7 @@ import {
   ActionButton,
   LooseColumn,
   MediumRow,
+  TextInput,
 } from '../../shared'
 
 import { DragVerticalIcon, EllipsisIcon } from '../../shared/Icons'
@@ -23,7 +24,6 @@ import { UPDATE_TASK_STATUS } from '../../../queries'
 import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
 import StatusDropdown from './StatusDropdown'
-import TextInput from './TextInput'
 import TaskEditModal from './TaskEditModal'
 import { debounce } from 'lodash'
 import CounterField from '../../shared/CounterField'

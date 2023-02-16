@@ -17,7 +17,7 @@ const styles = th => ({
 
   control: (provided, state) => ({
     ...provided,
-    background: th.colors.neutral.gray97,
+    background: th.colors.neutral.gray99,
     border: !state.selectProps.standalone
       ? state.isFocused
         ? `1px solid ${th.colors.neutral.gray70}`

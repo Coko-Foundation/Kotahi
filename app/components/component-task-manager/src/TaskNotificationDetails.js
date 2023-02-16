@@ -4,8 +4,8 @@ import SelectEmailTemplate from '../../component-review/src/components/emailNoti
 import {
   RoundIconButton,
   Select,
+  TextInput,
 } from '../../shared'
-import TextInput from './TextInput'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
 import CounterFieldWithOptions from '../../shared/CounterFieldWithOptions'
 import CounterField from '../../shared/CounterField'

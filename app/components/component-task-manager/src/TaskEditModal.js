@@ -4,13 +4,12 @@ import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { v4 as uuid } from 'uuid'
 import {
-  ActionButton,
+  ActionButton, TextInput,
 } from '../../shared'
 
 import TaskNotificationDetails from './TaskNotificationDetails'
 import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
-import TextInput from './TextInput'
 import Modal from '../../component-modal/src'
 import { X as CloseIcon } from 'react-feather'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
