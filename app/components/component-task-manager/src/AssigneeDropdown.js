@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Select, TextInput } from '../../shared'
+import theme from '../../../theme'
 
 const AssigneeCellContainer = styled.div`
   justify-content: flex-start;
@@ -10,7 +11,7 @@ const AssigneeCellContainer = styled.div`
 
 const BaseAssigneeCell = styled.div`
   > div > div {
-    font-size: 16px;
+    font-size: ${theme.fontSizeBase};
     line-height: 1.25;
 
     &:nth-child(2) {

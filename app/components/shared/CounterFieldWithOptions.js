@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { ChevronUp, ChevronDown } from 'react-feather'
+import theme from '../../theme'
 
 const Container = styled.div`
   display: flex;
@@ -8,7 +9,7 @@ const Container = styled.div`
 `
 
 const LabelContainer = styled.div`
-  background: #FFFFFF;
+  background: white;
   border: 1.5px solid #BFBFBF;
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
@@ -31,12 +32,12 @@ const CounterActionContainer = styled.div`
     border: none;
 
     svg {
-      color: ${props => props.disabled ? "#AAA" : "#6C6C6C"};
+      color: ${props => props.disabled ? "#AAA" : theme.colorIconPrimary};
     }
 
     &:hover {
       svg {
-        stroke: ${props => props.disabled ? "#AAA" : "#3AAE2A"};
+        stroke: ${props => props.disabled ? "#AAA" : theme.colors.brand1.base};
       }
     }
   }

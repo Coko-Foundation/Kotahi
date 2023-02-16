@@ -15,6 +15,7 @@ import { X as CloseIcon } from 'react-feather'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
 import { debounce } from 'lodash'
 import CounterField from '../../shared/CounterField'
+import theme from '../../../theme'
 
 const TaskMetaModalContainer = styled.div`
   background-color: ${th('colorBackground')};
@@ -93,7 +94,7 @@ const TaskTitle = styled.div`
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 500;
-  font-size: 16px;
+  font-size: ${theme.fontSizeBase};
   line-height: 19px;
   letter-spacing: 0.01em;
   color: #323232;

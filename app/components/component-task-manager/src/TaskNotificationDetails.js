@@ -9,12 +9,13 @@ import {
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
 import CounterFieldWithOptions from '../../shared/CounterFieldWithOptions'
 import CounterField from '../../shared/CounterField'
+import theme from '../../../theme'
 
 const TaskTitle = styled.div`
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 500;
-  font-size: 16px;
+  font-size: ${theme.fontSizeBase};
   line-height: 19px;
   letter-spacing: 0.01em;
   color: #323232;
@@ -38,7 +39,7 @@ const EmailTemplateFieldContainer = styled(TaskFieldsContainer)`
   flex: 0 0 15em;
 
   div {
-    font-size: 16px;
+    font-size: ${theme.fontSizeBase};
   }
 
   > div:nth-child(2) > div:nth-child(2) {
@@ -117,7 +118,7 @@ const AssigneeCell = styled.div`
   line-height: 1em;
 
   > div > div {
-    font-size: 16px;
+    font-size: ${theme.fontSizeBase};
     line-height: 1.25;
 
     &:nth-child(2) {

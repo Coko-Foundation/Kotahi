@@ -4,12 +4,13 @@ import moment from 'moment-timezone'
 import { CompactDetailLabel, MinimalDatePicker } from '../../shared'
 import { ConfigContext } from '../../config/src'
 import { transposeFromLocalToTimezone } from '../../../shared/dateUtils'
+import theme from '../../../theme'
 
 const BaseDueDateCell = styled.div`
-  background: #FCFCFD !important;
-  border: 1px solid #DEDEDE;
+  background: ${theme.colors.neutral.gray99} !important;
+  border: 1px solid ${theme.colors.neutral.gray80};
   box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.07);
-  border-radius: 5px;
+  border-radius: ${theme.borderRadius};
 
   align-items: center;
   display: flex;
@@ -25,8 +26,8 @@ const BaseDueDateCell = styled.div`
     display: flex;
     flex-direction: row-reverse;
     justify-content: space-around;
-    font-size: 16px;
-    line-height: 20px;
+    font-size: ${theme.fontSizeBase}
+    line-height: $t{theme.lineHeightBase};
     letter-spacing: 0.01em;
     color: #323232;
 

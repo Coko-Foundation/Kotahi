@@ -4,9 +4,10 @@ import Dropdown from 'react-dropdown'
 import { UPDATE_TASK_STATUS } from '../../../queries'
 import { useMutation } from '@apollo/client'
 import { Pause as PauseIcon, Check as CheckIcon, ChevronUp, ChevronDown } from 'react-feather'
+import theme from '../../../theme'
 
 const StartButton = styled.button`
-  background: #5DAB41;
+  background: ${theme.colors.brand1.base};
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
   border-radius: 6px;
   width: 111px;
@@ -14,14 +15,14 @@ const StartButton = styled.button`
   font-family: 'Roboto';
   font-style: normal;
   font-weight: 500;
-  font-size: 16px;
+  font-size: ${theme.fontSizeBase};
   line-height: 19px;
   display: flex;
   align-items: center;
   justify-content: center;
   text-align: center;
   letter-spacing: 0.01em;
-  color: #FFFFFF;
+  color: white;
 `
 
 const BaseDropdown = styled(Dropdown)`
@@ -39,7 +40,7 @@ const BaseDropdown = styled(Dropdown)`
   .Dropdown-control {
     border: 0;
     padding: 0;
-    background-color: #FFFFFF;
+    background-color: white;
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -62,14 +63,14 @@ const BaseDropdown = styled(Dropdown)`
 `
 
 const InProgressDropdown = styled(BaseDropdown)`
-  border: 2px solid #6C6C6C;
+  border: 2px solid ${theme.colorIconPrimary};
 
   .Dropdown-placeholder {
-    color: #6C6C6C;
+    color: ${theme.colorIconPrimary};
   }
 
   .Dropdown-arrow-wrapper > svg {
-    stroke: #6C6C6C;
+    stroke: ${theme.colorIconPrimary};
   }
 `
 
@@ -86,14 +87,14 @@ const PausedDropdown = styled(BaseDropdown)`
 `
 
 const DoneDropdown = styled(BaseDropdown)`
-  border: 2px solid #5DAB41;
+  border: 2px solid ${theme.colors.brand1.base};
 
   .Dropdown-placeholder {
-    color: #5DAB41;
+    color: ${theme.colors.brand1.base};
   }
 
   .Dropdown-arrow-wrapper > svg {
-    stroke: #5DAB41;
+    stroke: ${theme.colors.brand1.base};
   }
 `
 

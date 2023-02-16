@@ -154,7 +154,7 @@ const ModalContainer = styled(LooseColumn)`
 `
 
 const ActionDialog = styled.div`
-  background: #ffffff;
+  background: white;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
   left: -80px;
   position: absolute;
