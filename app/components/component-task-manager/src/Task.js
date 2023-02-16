@@ -276,6 +276,10 @@ const Task = ({
 
   const [taskTitle, setTaskTitle] = useState(task?.title || '')
 
+  useEffect(() => {
+    setTaskTitle(task.title)
+  }, [task])
+
   const updateTaskDebounce = useCallback(debounce(
     updateTask ?? (() => {}),
     1000,

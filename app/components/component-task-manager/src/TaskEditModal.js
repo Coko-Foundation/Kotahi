@@ -154,6 +154,7 @@ const TaskEditModal = ({
 
   useEffect(() => {
     setTaskNotifications(task.emailNotifications)
+    setTaskTitle(task.title)
   }, [task])
 
   const repackageTaskNotification = taskNotification => ({
