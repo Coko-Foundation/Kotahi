@@ -93,7 +93,7 @@ const resolvers = {
 
       const associatedTask = await Task.query()
         .findById(taskNotification.taskId)
-        .withGraphFetched('emailNotifications.(orderByCreated)')
+        .withGraphFetched('emailNotifications(orderByCreated)')
 
       return associatedTask
     },
