@@ -18,7 +18,7 @@ const TaskTitle = styled.div`
   font-size: ${theme.fontSizeBase};
   line-height: 19px;
   letter-spacing: 0.01em;
-  color: #323232;
+  color: ${theme.colors.neutral.gray20};
   margin-bottom: 4px;
 `
 
@@ -85,7 +85,7 @@ const NotificationDeadlineCell = styled.div`
     margin: 0px 10px;
   }
 
-  color: ${props => props.disabled ? "#AAA" : "inherit"};
+  color: ${props => props.disabled ? theme.colorBorder : "inherit"};
 `
 
 const UnregisteredUserCell = styled.div`

@@ -10,7 +10,7 @@ const Container = styled.div`
 
 const LabelContainer = styled.div`
   background: white;
-  border: 1.5px solid #BFBFBF;
+  border: 1.5px solid ${theme.colors.neutral.gray70};
   box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
   display: flex;
@@ -34,12 +34,12 @@ const CounterActionContainer = styled.div`
     border: none;
 
     svg {
-      color: ${props => props.disabled ? "#AAA" : theme.colorIconPrimary};
+      color: ${props => props.disabled ? theme.colorBorder : theme.colorIconPrimary};
     }
 
     &:hover {
       svg {
-        stroke: ${props => props.disabled ? "#AAA" : theme.colors.brand1.base};
+        stroke: ${props => props.disabled ? theme.colorBorder : theme.colors.brand1.base};
       }
     }
   }
@@ -141,7 +141,7 @@ const CounterField = ({
         <span>{value}</span>
         {
           showResetIcon && <CloseIconContainer onClick={() => resetValue()} disabled={disabled}>
-            <CloseIcon size={15} color={disabled ? "#AAA" : "black"} />
+            <CloseIcon size={15} color={disabled ? theme.colorBorder : "black"} />
           </CloseIconContainer>
         }
       </LabelContainer>

@@ -27,9 +27,9 @@ const BaseDueDateCell = styled.div`
     flex-direction: row-reverse;
     justify-content: space-around;
     font-size: ${theme.fontSizeBase}
-    line-height: $t{theme.lineHeightBase};
+    line-height: {theme.lineHeightBase};
     letter-spacing: 0.01em;
-    color: #323232;
+    color: ${theme.colors.neutral.gray20};
 
     svg {
       margin-right: 6px;

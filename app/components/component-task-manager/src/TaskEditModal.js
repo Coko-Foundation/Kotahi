@@ -84,7 +84,7 @@ const TaskCloseActionContainer = styled.div`
     border: none;
 
     svg {
-      stroke: #323232
+      stroke: ${theme.colors.neutral.gray20}
     }
   }
 
@@ -97,7 +97,7 @@ const TaskTitle = styled.div`
   font-size: ${theme.fontSizeBase};
   line-height: 19px;
   letter-spacing: 0.01em;
-  color: #323232;
+  color: ${theme.colors.neutral.gray20};
   margin-bottom: 4px;
 `
 
