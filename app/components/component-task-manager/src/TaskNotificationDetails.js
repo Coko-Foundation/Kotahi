@@ -564,7 +564,6 @@ const TaskNotificationDetails = ({
       <TaskFieldsContainer>
         <TaskTitle>Email Template</TaskTitle>
         <SelectEmailTemplate
-          isTaskEmailNotification
           onChangeEmailTemplate={setSelectedTemplate}
           selectedEmailTemplate={
             selectedTemplate || taskEmailNotification.emailTemplateKey
