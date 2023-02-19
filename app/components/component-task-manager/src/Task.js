@@ -11,12 +11,10 @@ import styled, { ThemeContext, css } from 'styled-components'
 import { Draggable } from 'react-beautiful-dnd'
 import { Circle, CheckCircle } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
-// import { useMutation } from '@apollo/client'
 import { debounce } from 'lodash'
 import { transposeFromTimezoneToLocal } from '../../../shared/dateUtils'
 import {
   MinimalButton,
-  // MinimalNumericUpDown,
   CompactDetailLabel,
   ActionButton,
   LooseColumn,
@@ -27,7 +25,6 @@ import {
 import { DragVerticalIcon, EllipsisIcon } from '../../shared/Icons'
 import Modal from '../../component-modal/src'
 import { ConfigContext } from '../../config/src'
-// import { UPDATE_TASK_STATUS } from '../../../queries'
 import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
 import StatusDropdown from './StatusDropdown'
