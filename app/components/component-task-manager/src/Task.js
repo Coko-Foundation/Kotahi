@@ -349,10 +349,16 @@ const Task = ({
       (Math.abs(daysDifference) === 1 ? ' day' : ' days') +
       (daysDifference < 0 ? ' ago' : '')
 
-  const displayDefaultDurationDaysUnit =
-    task.defaultDurationDays && task.defaultDurationDays === 1
-      ? ' day'
-      : ' days'
+  let displayDefaultDurationDaysUnit
+
+  if (task.defaultDurationDays === 'None') {
+    displayDefaultDurationDaysUnit = ''
+  } else {
+    displayDefaultDurationDaysUnit =
+      task.defaultDurationDays && task.defaultDurationDays === 1
+        ? ' day'
+        : ' days'
+  }
 
   const displayDefaultDurationDays = task.defaultDurationDays
     ? `${task.defaultDurationDays}${displayDefaultDurationDaysUnit}`
@@ -366,13 +372,9 @@ const Task = ({
 
   const isOverdue = task.dueDate
     ? Date.now() > new Date(task.dueDate).getTime() &&
-      !isDone &&
+      task.status === 'In progress' &&
       !editAsTemplate
     : false
-
-  // const [updateTaskStatus] = useMutation(UPDATE_TASK_STATUS, {
-  //   refetchQueries: ['getTasksQuery'],
-  // })
 
   const status = {
     NOT_STARTED: 'Not started',
@@ -472,6 +474,7 @@ const Task = ({
             onCancel={setIsEditTaskMetaModal}
             onSave={setIsEditTaskMetaModal}
             recipientGroupedOptions={recipientGroupedOptions}
+            sendNotifyEmail={sendNotifyEmail}
             status={status}
             task={task}
             transposedDueDate={transposedDueDate}

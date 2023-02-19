@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import SelectEmailTemplate from '../../component-review/src/components/emailNotifications/SelectEmailTemplate'
-import { RoundIconButton, ActionButton, Select, TextInput } from '../../shared'
+import { RoundIconButton, Select, TextInput } from '../../shared'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
 import CounterFieldWithOptions from '../../shared/CounterFieldWithOptions'
 import CounterField from '../../shared/CounterField'
@@ -297,6 +297,10 @@ const TaskNotificationDetails = ({
       return new Promise((resolve, reject) => {
         let emailSuccess = true
         let emailCount = 0
+
+        if (teamsOfRecipientType.length === 0) {
+          emailSuccess = false
+        }
 
         const totalEmails = teamsOfRecipientType.reduce(
           (sum, team) => sum + team.members.length,

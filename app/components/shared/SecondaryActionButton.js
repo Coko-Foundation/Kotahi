@@ -1,7 +1,8 @@
-import React from 'react'
-import styled from 'styled-components'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
-import { th, grid } from '@pubsweet/ui-toolkit'
+import styled, { ThemeContext } from 'styled-components'
+import { Check, AlertCircle } from 'react-feather'
+import { th, grid, rotate360 } from '@pubsweet/ui-toolkit'
 
 const BaseButton = styled.button`
   border: 2px solid ${th('colorPrimary')};
@@ -41,7 +42,34 @@ const Button = styled(BaseButton)`
 `
 
 const LabelOnlySpan = styled.span`
-  padding: 0 ${grid(1.5)};
+  padding: 0 ${grid(1)};
+`
+
+const Spinner = styled.div`
+  display: inline-block;
+  padding-left: ${grid(1)};
+  vertical-align: -2px;
+
+  &:after {
+    animation: ${rotate360} 1s linear infinite;
+    border: 2.5px solid ${props => props.fgColor};
+    border-color: ${props => props.fgColor} transparent
+      ${props => props.fgColor} transparent;
+    border-radius: 50%;
+    box-sizing: border-box;
+    content: '';
+    display: block;
+    height: ${grid(2)};
+    width: ${grid(2)};
+  }
+`
+
+const IconContainer = styled.div`
+  display: inline-block;
+  height: ${grid(2)};
+  margin-left: ${grid(1)};
+  vertical-align: -2px;
+  width: ${grid(2)};
 `
 
 const SecondaryActionButton = ({
@@ -50,7 +78,44 @@ const SecondaryActionButton = ({
   children,
   title,
   type,
+  status,
+  secondaryButton,
+  color,
 }) => {
+  const themeContext = useContext(ThemeContext)
+
+  const fgColor =
+    status === 'pending' || status === 'success'
+      ? themeContext.colorPrimary
+      : themeContext.colorError
+
+  let statusIndicator = null
+
+  if (status === 'pending') {
+    statusIndicator = <Spinner fgColor={fgColor} />
+  }
+
+  if (status === 'success') {
+    statusIndicator = (
+      <IconContainer>
+        <Check
+          color={fgColor}
+          data-testid="check-svg"
+          size={16}
+          strokeWidth={3}
+        />
+      </IconContainer>
+    )
+  }
+
+  if (status === 'failure') {
+    statusIndicator = (
+      <IconContainer>
+        <AlertCircle color={fgColor} size={16} strokeWidth={3} />
+      </IconContainer>
+    )
+  }
+
   if (disabled)
     return (
       <DisabledButton disabled>
@@ -60,11 +125,18 @@ const SecondaryActionButton = ({
 
   return (
     <Button
-      onClick={onClick}
+      onClick={status !== 'pending' ? onClick : null}
       title={title}
       type={type || 'button'}
-      >
+    >
+      {statusIndicator ? (
+        <>
+          <LabelOnlySpan>{children}</LabelOnlySpan>
+          {statusIndicator}
+        </>
+      ) : (
         <LabelOnlySpan>{children}</LabelOnlySpan>
+      )}
     </Button>
   )
 }

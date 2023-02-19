@@ -121,41 +121,32 @@ const DueDateFieldContainer = styled(BaseFieldContainer)`
   flex: 0 0 7.8em;
 `
 
-// ToDo: Style of Container, Button, Paragraph yet to be updated as per convention
-const Container = styled.div`
+const TaskNotificationLogsContainer = styled.div`
   display: flex;
   flex-direction: column;
-  align-items: center;
-  justify-content: center;
+  justify-content: flex-end;
+  align-items: flex-end;
 `
 
-const Button = styled.button`
+const NotificationLogsToggle = styled.button`
   padding: 20px 10px;
   background-color: transparent;
   border: none;
-  font-size: 12px;
-  color: green;
-  position: relative;
+  font-size: ${theme.fontSizeBaseSmall};
+  color: ${theme.colorPrimary};
   text-decoration: underline;
-  top: 4px;
-  right: -340px;
-  font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    sans-serif;
 `
 
-const Paragraph = styled.div`
+const NotificationLogs = styled.div`
   margin: 10px 0;
   text-align: left;
-  font-size: 11px;
-  color: green;
-  position: relative;
-  top: 2px;
-  right: -200px;
-  line-height: 20px;
-  font-family: Roboto, -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica,
-    Arial, sans-serif, 'Apple Color Emoji', 'Segoe UI Emoji', 'Segoe UI Symbol',
-    sans-serif;
+  font-size: ${theme.fontSizeBaseSmall};
+  color: ${theme.colorPrimary};
+`
+
+const TaskActionContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
 `
 
 const TaskEditModal = ({
@@ -350,40 +341,46 @@ const TaskEditModal = ({
               </>
             ) : null}
           </TaskRecipientsContainer>
-          {!isReadOnly && (
-            <SecondaryActionButton
-              disabled={
-                taskEmailNotifications?.length
-                  ? taskEmailNotifications.some(t => !t.recipientType)
-                  : false
-              }
-              onClick={addNewTaskNotification}
-              primary
-            >
-              Add Notification Recipient
-            </SecondaryActionButton>
+          <TaskActionContainer>
+            {!isReadOnly && (
+              <SecondaryActionButton
+                disabled={
+                  taskEmailNotifications?.length
+                    ? taskEmailNotifications.some(t => !t.recipientType)
+                    : false
+                }
+                onClick={addNewTaskNotification}
+                primary
+              >
+                Add Notification Recipient
+              </SecondaryActionButton>
+            )}
+          </TaskActionContainer>
+          {!editAsTemplate ? (
+            task.notificationLogs.length !== 0 && (
+              <TaskNotificationLogsContainer>
+                <NotificationLogsToggle onClick={() => setToggled(!isToggled)}>
+                  {isToggled
+                    ? `Hide all notifications sent (${task.notificationLogs.length})`
+                    : `Show all notifications sent (${task.notificationLogs.length})`}
+                </NotificationLogsToggle>
+                {isToggled && (
+                  <NotificationLogs>
+                    {task.notificationLogs.map(log => (
+                      <>
+                        <div>{convertTimestampToDateString(log.created)}</div>
+                        <div>{log.content}</div>
+                        <br />
+                      </>
+                    ))}
+                  </NotificationLogs>
+                )}
+              </TaskNotificationLogsContainer>
+            )
+          ) : (
+            <></>
           )}
         </TaskRecipientsDetailsContainer>
-        {!editAsTemplate && task.notificationLogs && (
-          <Container>
-            <Button onClick={() => setToggled(!isToggled)}>
-              {isToggled
-                ? `Hide all notifications sent (${task.notificationLogs.length})`
-                : `Show all notifications sent (${task.notificationLogs.length})`}
-            </Button>
-            {isToggled && (
-              <Paragraph>
-                {task.notificationLogs.map(log => (
-                  <>
-                    <div>{convertTimestampToDateString(log.created)}</div>
-                    <div>{log.content}</div>
-                    <br />
-                  </>
-                ))}
-              </Paragraph>
-            )}
-          </Container>
-        )}
 
         <TaskActionsContainer>
           <ActionButton onClick={() => onSave(false)} primary>

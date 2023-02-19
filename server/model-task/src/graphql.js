@@ -136,7 +136,11 @@ const resolvers = {
         task.status === status.IN_PROGRESS
       ) {
         const taskDurationDays = dbTask.defaultDurationDays || 0
-        data.dueDate = dateFns.addDays(new Date(), taskDurationDays)
+
+        data.dueDate =
+          taskDurationDays !== 'None'
+            ? dateFns.addDays(new Date(), taskDurationDays)
+            : null
       }
 
       await Task.query().update(data).where({ id: task.id })

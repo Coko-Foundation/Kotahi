@@ -181,16 +181,22 @@ const TaskList = ({
                     {tasks.map((task, index) => (
                       <Task
                         assigneeGroupedOptions={assigneeGroupedOptions}
+                        createTaskEmailNotificationLog={
+                          createTaskEmailNotificationLog
+                        }
+                        currentUser={currentUser}
                         deleteTaskNotification={deleteTaskNotification}
                         editAsTemplate={editAsTemplate}
                         index={index}
                         isReadOnly={isReadOnly}
                         key={task.id}
+                        manuscript={manuscript}
                         onCancel={() => updateTasks(tasks.filter(t => t.title))}
                         onDelete={id =>
                           updateTasks(tasks.filter(t => t.id !== id))
                         }
                         recipientGroupedOptions={recipientGroupedOptions}
+                        sendNotifyEmail={sendNotifyEmail}
                         task={task}
                         updateTask={updateTask}
                         updateTaskNotification={updateTaskNotification}
