@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import config from 'config'
 import { Redirect } from 'react-router-dom'
@@ -264,17 +264,6 @@ const ReviewPage = ({ match, ...props }) => {
     partialRefetch: true,
   })
 
-  if (loading) return <Spinner />
-
-  if (error) {
-    console.warn(error.message)
-    return (
-      <Page>
-        <Heading>This review is no longer accessible.</Heading>
-      </Page>
-    )
-  }
-
   const reviewOrInitial = manuscript =>
     manuscript?.reviews?.find(
       review => review?.user?.id === currentUser?.id && !review.isDecision,
@@ -294,55 +283,6 @@ const ReviewPage = ({ match, ...props }) => {
 
   // Find an existing review or create a placeholder, and hold a ref to it
   const existingReview = reviewOrInitial(latestVersion)
-  const { manuscript, threadedDiscussions } = data
-
-  // We shouldn't arrive at this page with a subsequent/child manuscript ID. If we do, redirect to the parent/original ID
-  if (manuscript.parentId)
-    return <Redirect to={`${urlFrag}/versions/${manuscript.parentId}/review`} />
-
-  if (
-    !latestVersion.reviews?.find(
-      review => review?.user?.id === currentUser?.id && !review.isDecision,
-    )
-  ) {
-    refetch()
-  }
-
-  const submissionForm = data.submissionForm?.structure ?? {
-    name: '',
-    children: [],
-    description: '',
-    haspopup: 'false',
-  }
-
-  const reviewForm = data.reviewForm?.structure ?? {
-    name: '',
-    children: [],
-    description: '',
-    haspopup: 'false',
-  }
-
-  const decisionForm = data.decisionForm?.structure ?? {
-    name: '',
-    children: [],
-    description: '',
-    haspopup: 'false',
-  }
-
-  const channelId = manuscript.channels.find(c => c.type === 'editorial')?.id
-  if (!channelId)
-    console.error(
-      `Malformed channels in manuscript ${manuscript.id}:`,
-      manuscript.channels,
-    )
-
-  const reviewersTeam = latestVersion.teams.find(
-    team => team.role === 'reviewer',
-  ) || { members: [] }
-
-  const reviewerStatus = reviewersTeam.members.find(
-    member => member.user.id === currentUser?.id,
-  )?.status
 
   const updateReviewJsonData = (value, path) => {
     if (!latestVersion.id) {
@@ -397,10 +337,73 @@ const ReviewPage = ({ match, ...props }) => {
     })
   }
 
-  const debouncedUpdateReviewJsonData = debounce(
-    updateReviewJsonData ?? (() => {}),
-    1000,
+  const debouncedUpdateReviewJsonData = useCallback(
+    debounce(updateReviewJsonData ?? (() => {}), 1000),
+    [latestVersion?.id],
   )
+
+  useEffect(() => debouncedUpdateReviewJsonData.flush, [])
+
+  if (loading) return <Spinner />
+
+  if (error) {
+    console.warn(error.message)
+    return (
+      <Page>
+        <Heading>This review is no longer accessible.</Heading>
+      </Page>
+    )
+  }
+
+  const { manuscript, threadedDiscussions } = data
+
+  // We shouldn't arrive at this page with a subsequent/child manuscript ID. If we do, redirect to the parent/original ID
+  if (manuscript.parentId)
+    return <Redirect to={`${urlFrag}/versions/${manuscript.parentId}/review`} />
+
+  if (
+    !latestVersion.reviews?.find(
+      review => review?.user?.id === currentUser?.id && !review.isDecision,
+    )
+  ) {
+    refetch()
+  }
+
+  const submissionForm = data.submissionForm?.structure ?? {
+    name: '',
+    children: [],
+    description: '',
+    haspopup: 'false',
+  }
+
+  const reviewForm = data.reviewForm?.structure ?? {
+    name: '',
+    children: [],
+    description: '',
+    haspopup: 'false',
+  }
+
+  const decisionForm = data.decisionForm?.structure ?? {
+    name: '',
+    children: [],
+    description: '',
+    haspopup: 'false',
+  }
+
+  const channelId = manuscript.channels.find(c => c.type === 'editorial')?.id
+  if (!channelId)
+    console.error(
+      `Malformed channels in manuscript ${manuscript.id}:`,
+      manuscript.channels,
+    )
+
+  const reviewersTeam = latestVersion.teams.find(
+    team => team.role === 'reviewer',
+  ) || { members: [] }
+
+  const reviewerStatus = reviewersTeam.members.find(
+    member => member.user.id === currentUser?.id,
+  )?.status
 
   const updateReview = review => {
     const reviewData = {

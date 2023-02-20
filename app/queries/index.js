@@ -267,6 +267,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
         shortId
         meta {
           manuscriptId
+          abstract
           title
         }
         submission
@@ -291,6 +292,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           shortId
           meta {
             manuscriptId
+            abstract
             title
           }
           submission

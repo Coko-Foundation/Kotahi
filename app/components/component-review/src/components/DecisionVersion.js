@@ -69,15 +69,18 @@ const DecisionVersion = ({
   updateTask,
   updateTasks,
 }) => {
+  const debouncedSave = useCallback(
+    debounce(source => {
+      updateManuscript(version.id, { meta: { source } })
+    }, 2000),
+    [],
+  )
+
+  useEffect(() => debouncedSave.flush, [])
+
   // Hooks from the old world
   const addEditor = (manuscript, label, isCurrent, user) => {
     const isThisReadOnly = !isCurrent
-
-    const handleSave = useCallback(
-      debounce(source => {
-        updateManuscript(manuscript.id, { meta: { source } })
-      }, 2000),
-    )
 
     return {
       content: (
@@ -85,7 +88,7 @@ const DecisionVersion = ({
           currentUser={user}
           manuscript={manuscript}
           readonly={isThisReadOnly}
-          saveSource={isThisReadOnly ? null : handleSave}
+          saveSource={isThisReadOnly ? null : debouncedSave}
         />
       ),
       key: `editor_${manuscript.id}`,
