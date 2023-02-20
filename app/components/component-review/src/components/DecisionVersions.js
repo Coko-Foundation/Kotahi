@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo } from 'react'
 import { v4 as uuid } from 'uuid'
 import DecisionVersion from './DecisionVersion'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
@@ -51,18 +51,17 @@ const DecisionVersions = ({
   updateTask,
   updateTasks,
 }) => {
-  const [initialValue, setInitialValue] = useState(null)
-
   const versions = gatherManuscriptVersions(manuscript)
 
-  if (!initialValue)
-    setInitialValue(
+  const initialValue = useMemo(
+    () =>
       versions[0].manuscript.reviews.find(r => r.isDecision) || {
         id: uuid(),
         isDecision: true,
         userId: currentUser.id,
       },
-    )
+    [],
+  )
 
   // Protect if channels don't exist for whatever reason
   let editorialChannelId, allChannelId

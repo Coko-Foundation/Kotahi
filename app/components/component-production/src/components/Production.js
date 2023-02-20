@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useCallback, useEffect } from 'react'
 import { withRouter } from 'react-router-dom'
 import { debounce } from 'lodash'
 import ProductionWaxEditor from '../../../wax-collab/src/ProductionWaxEditor'
@@ -21,9 +21,14 @@ const Production = ({
   updateManuscript,
   onAssetManager,
 }) => {
-  const handleSave = debounce(source => {
-    updateManuscript(manuscript.id, { meta: { source } })
-  }, 2000)
+  const debouncedSave = useCallback(
+    debounce(source => {
+      updateManuscript(manuscript.id, { meta: { source } })
+    }, 2000),
+    [],
+  )
+
+  useEffect(() => debouncedSave.flush, [])
 
   return (
     <Container>
@@ -47,7 +52,7 @@ const Production = ({
               // }}
               manuscriptId={manuscript.id}
               onAssetManager={onAssetManager}
-              saveSource={handleSave}
+              saveSource={debouncedSave}
               user={currentUser}
               value={manuscript.meta.source}
             />

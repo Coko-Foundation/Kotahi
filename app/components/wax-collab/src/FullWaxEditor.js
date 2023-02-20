@@ -1,6 +1,7 @@
-import React, { useRef, useEffect, useContext } from 'react'
+import React, { useRef, useEffect, useContext, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { ThemeProvider } from 'styled-components'
+import { debounce } from 'lodash'
 import { Wax } from 'wax-prosemirror-core'
 import { JournalContext } from '../../xpub-journal/src'
 import waxTheme from './layout/waxTheme'
@@ -39,6 +40,17 @@ const FullWaxEditor = ({
   const handleAssetManager = () => onAssetManager(manuscriptId)
   const journal = useContext(JournalContext)
 
+  const debouncedSave = useCallback(
+    debounce(source => {
+      if (saveSource) saveSource(source)
+    }, 6000),
+    [],
+  )
+
+  useEffect(() => {
+    return () => debouncedSave.flush()
+  }, [])
+
   const waxUser = {
     userId: user.id || '-',
     userColor: {
@@ -50,14 +62,6 @@ const FullWaxEditor = ({
 
   const editorRef = useRef(null)
 
-  /* eslint-disable jsx-a11y/no-noninteractive-tabindex,  jsx-a11y/tabindex-no-positive */
-  useEffect(() => {
-    return () => {
-      if (editorRef.current && saveSource !== null) {
-        saveSource(editorRef.current.getContent())
-      }
-    }
-  }, [])
   return (
     <ThemeProvider theme={{ textStyles: journal.textStyles, ...waxTheme }}>
       <div className={validationStatus} style={{ width: '100%' }}>
@@ -70,9 +74,7 @@ const FullWaxEditor = ({
               ? FullWaxEditorCommentsLayout(readonly, authorComments)
               : FullWaxEditorLayout(readonly)
           }
-          onChange={source => {
-            saveSource(source)
-          }}
+          onChange={source => debouncedSave(source)}
           placeholder={placeholder}
           readonly={readonly}
           ref={editorRef}

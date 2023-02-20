@@ -82,6 +82,7 @@ const SubmitPage = ({ match, history }) => {
 
   useEffect(() => {
     return () => {
+      Object.values(debouncers).forEach(d => d.flush())
       debouncers = {}
     }
   }, [])
