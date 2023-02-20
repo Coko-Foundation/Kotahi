@@ -542,7 +542,7 @@ const TaskNotificationDetails = ({
   const logTaskNotificationEmails = async logsData => {
     // eslint-disable-next-line no-restricted-syntax
     for (const logData of logsData) {
-      const emailTemplateOption = logData.selectedTemplate.replace(
+      const emailTemplateOption = logData.selectedTemplate.replaceAll(
         /([A-Z])/g,
         ' $1',
       )

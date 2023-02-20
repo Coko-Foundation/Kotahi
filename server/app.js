@@ -224,7 +224,7 @@ schedule.scheduleJob(
               currentUser,
             }
 
-            const emailTemplateOption = emailNotification.emailTemplateKey.replace(
+            const emailTemplateOption = emailNotification.emailTemplateKey.replaceAll(
               /([A-Z])/g,
               ' $1',
             )
@@ -274,15 +274,11 @@ const getTeamRecipients = async (emailNotification, roles) => {
 }
 
 const logTaskEmailNotificationData = async logData => {
-  await TaskEmailNotificationLog.query()
-    .insert(logData)
-    .onConflict('id')
-    .merge()
+  await TaskEmailNotificationLog.query().insert(logData)
 
   const associatedTask = await Task.query()
     .findById(logData.taskId)
-    .withGraphFetched('emailNotifications.recipientUser')
-    .withGraphFetched('notificationLogs')
+    .withGraphFetched('[emailNotifications.recipientUser, notificationLogs]')
 
   return associatedTask
 }

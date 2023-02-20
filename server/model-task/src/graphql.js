@@ -72,9 +72,9 @@ const resolvers = {
 
       return Task.query()
         .findById(task.id)
-        .withGraphFetched('assignee')
-        .withGraphFetched('notificationLogs')
-        .withGraphFetched('emailNotifications(orderByCreated).recipientUser')
+        .withGraphFetched(
+          '[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+        )
     },
 
     updateTaskNotification: async (_, { taskNotification }) => {
@@ -95,8 +95,9 @@ const resolvers = {
 
       const associatedTask = await Task.query()
         .findById(taskNotification.taskId)
-        .withGraphFetched('notificationLogs')
-        .withGraphFetched('emailNotifications(orderByCreated).recipientUser')
+        .withGraphFetched(
+          '[emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+        )
 
       return associatedTask
     },
@@ -108,8 +109,9 @@ const resolvers = {
 
       const associatedTask = await Task.query()
         .findById(taskEmailNotification.taskId)
-        .withGraphFetched('notificationLogs')
-        .withGraphFetched('emailNotifications(orderByCreated).recipientUser')
+        .withGraphFetched(
+          '[emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+        )
 
       await TaskEmailNotification.query().deleteById(id)
 
@@ -152,15 +154,13 @@ const resolvers = {
       { taskEmailNotificationLog },
       ctx,
     ) => {
-      await TaskEmailNotificationLog.query()
-        .insert(taskEmailNotificationLog)
-        .onConflict('id')
-        .merge()
+      await TaskEmailNotificationLog.query().insert(taskEmailNotificationLog)
 
       const associatedTask = await Task.query()
         .findById(taskEmailNotificationLog.taskId)
-        .withGraphFetched('emailNotifications.recipientUser')
-        .withGraphFetched('notificationLogs')
+        .withGraphFetched(
+          '[emailNotifications.recipientUser, notificationLogs]',
+        )
 
       return associatedTask
     },
@@ -170,9 +170,9 @@ const resolvers = {
       return Task.query()
         .where({ manuscriptId })
         .orderBy('sequenceIndex')
-        .withGraphFetched('assignee')
-        .withGraphFetched('notificationLogs')
-        .withGraphFetched('emailNotifications(orderByCreated).recipientUser')
+        .withGraphFetched(
+          '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
+        )
     },
     userHasTaskAlerts: async (_, __, ctx) => {
       return (
