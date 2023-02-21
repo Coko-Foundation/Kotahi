@@ -142,18 +142,18 @@ const TaskEditModal = ({
   const [selectedDurationDays, setSelectedDurationDays] = useState(task.defaultDurationDays || 'none')
   const [taskTitle, setTaskTitle] = useState(task?.title || '')
 
-  const updateTaskDebounce = useCallback(debounce(
+  const updateTaskTitleDebounce = useCallback(debounce(
     updateTask ?? (() => {}),
     1000,
   ), [])
 
   useEffect(() => {
-    return updateTaskDebounce.flush()
+    return updateTaskTitleDebounce.flush()
   }, [])
 
   const updateTaskTitle = value => {
     setTaskTitle(value)
-    updateTaskDebounce(task.id, { ...task, title: value })
+    updateTaskTitleDebounce(task.id, { ...task, title: value })
   }
 
   useEffect(() => {
