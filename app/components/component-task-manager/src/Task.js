@@ -296,6 +296,10 @@ const Task = ({
     [],
   )
 
+  useEffect(() => {
+    return updateTaskDebounce.flush()
+  }, [])
+
   const updateTaskTitle = value => {
     setTaskTitle(value)
     updateTaskDebounce(task.id, { ...task, title: value })

@@ -186,6 +186,10 @@ const TaskEditModal = ({
     [],
   )
 
+  useEffect(() => {
+    return updateTaskDebounce.flush()
+  }, [])
+
   const [isToggled, setToggled] = useState(false)
 
   const updateTaskTitle = value => {
