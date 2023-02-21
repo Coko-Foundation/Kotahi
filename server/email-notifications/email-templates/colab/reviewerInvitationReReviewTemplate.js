@@ -1,4 +1,4 @@
-const ColabReviewerInvitationReReview = ({
+const ColabReviewerInvitationReReviewTemplate = ({
   receiverName,
   currentUser,
   preprintName,
@@ -28,4 +28,4 @@ const ColabReviewerInvitationReReview = ({
   return result
 }
 
-module.exports = ColabReviewerInvitationReReview
+module.exports = ColabReviewerInvitationReReviewTemplate

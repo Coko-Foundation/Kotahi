@@ -1,6 +1,6 @@
-const ColabReportsShared = ({
+const ColabReportPublishedTemplate = ({
   receiverName,
-  reportUrl,
+  authorName,
 }) => {
   const result = {
     cc: '',
@@ -12,7 +12,7 @@ const ColabReportsShared = ({
   result.subject = 'Report(s) for Biophysics Colab available to view'
   result.content = `<p>
       <p>Dear ${receiverName}</p>
-      <p>One or more reports for a preprint to which you are assigned are available to view at ${reportUrl}. Please log in to read these reports and provide your comments using the chat function.</p>
+      <p>The report for the preprint by ${authorName} and colleagues has now been published and can be viewed in the list of <a href="https://sciety.org/lists/ee7e738a-a1f1-465b-807c-132d273ca952" target="_blank">articles evaluated by Biophysics Colab</a>.</p>
       <p>Thank you</p>
       <p>
         On behalf of Biophysics Colab <br>
@@ -23,4 +23,4 @@ const ColabReportsShared = ({
   return result
 }
 
-module.exports = ColabReportsShared
+module.exports = ColabReportPublishedTemplate
