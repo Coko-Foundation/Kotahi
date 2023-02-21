@@ -12,8 +12,10 @@ const BaseDueDateCell = styled.div`
   box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.07);
   border-radius: ${theme.borderRadius};
 
-  align-items: center;
   display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  position: relative;
   line-height: 1em;
   min-height: 45px;
 
@@ -37,16 +39,9 @@ const BaseDueDateCell = styled.div`
   }
 `
 
-const TaskListDueDateCell = styled(BaseDueDateCell)`
+const CompactDueDateCell = styled(BaseDueDateCell)`
   flex: 0 0 7.8em;
-  justify-content: flex-start;
-  position: relative;
   min-width: 120px;
-`
-
-const TaskMetaDueDateCell = styled(BaseDueDateCell)`
-  justify-content: flex-start;
-  position: relative;
 `
 
 const DueDateField = ({
@@ -56,7 +51,7 @@ const DueDateField = ({
   displayDefaultDurationDays,
   transposedEndOfToday,
   transposedDueDate,
-  isList = false,
+  compact = false,
   position,
 }) => {
   const config = useContext(ConfigContext)
@@ -69,7 +64,7 @@ const DueDateField = ({
     DONE: 'Done',
   }
 
-  const DueDateCell = isList ? TaskListDueDateCell : TaskMetaDueDateCell
+  const DueDateCell = compact ? CompactDueDateCell : BaseDueDateCell
 
   return (
     <DueDateCell title={dueDateLocalString}>

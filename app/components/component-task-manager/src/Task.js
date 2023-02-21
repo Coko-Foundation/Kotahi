@@ -556,7 +556,7 @@ const Task = ({
                     <DueDateField
                       displayDefaultDurationDays={displayDefaultDurationDays}
                       dueDateLocalString={dueDateLocalString}
-                      isList
+                      compact
                       task={task}
                       transposedDueDate={transposedDueDate}
                       transposedEndOfToday={transposedEndOfToday}
