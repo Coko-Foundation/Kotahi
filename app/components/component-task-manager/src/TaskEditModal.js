@@ -229,6 +229,7 @@ const TaskEditModal = ({
             <AssigneeFieldContainer>
               <TaskTitle>Assignee</TaskTitle>
               <AssigneeDropdown
+                unregisteredFieldsAlign='row'
                 assigneeGroupedOptions={assigneeGroupedOptions}
                 task={task}
                 updateTask={updateTask}

@@ -523,7 +523,7 @@ const Task = ({
                 <AssigneeHeader>Assignee</AssigneeHeader>
                 <AssigneeDropdown
                   assigneeGroupedOptions={assigneeGroupedOptions}
-                  isList
+                  unregisteredFieldsAlign='column'
                   task={task}
                   updateTask={updateTask}
                 />
