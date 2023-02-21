@@ -4,19 +4,19 @@ const ThanksForAgreeingTemplate = ({ authorName, currentUser }) => {
   result.cc = 'lesley@sciencecolab.org, swartzk@ninds.nih.gov'
   result.subject = 'Thank you for supporting Biophysics Colab'
   result.content = `
-    <p>Thank you for agreeing to review the preprint by ${authorName} and colleagues for Biophysics Colab. We look forward to receiving your report, formatted as described below, by the agreed date. </p>
-     
-    <p>Once all the reports have been received, I’ll begin to consolidate them into a single report that we can discuss as a reviewing group (either electronically or via a video call). You can decide whether to sign this consolidated report after it has been finalized.</p>
-     
+    <p>Thank you for agreeing to review the preprint by ${authorName} and colleagues for Biophysics Colab. I look forward to receiving your report, formatted as described below, by the agreed date.</p>
+
+    <p>When all the reviewers have submitted their feedback, I’ll begin to consolidate the advice into a single report that we can discuss as a reviewing group (either electronically or via a video call). You can decide whether to sign this consolidated report after it has been finalised.</p>
+
     <p>We respectfully ask that you treat the consolidated report as a confidential document until it is publicly associated with the preprint, and we will ask the authors to do the same.</p>
-     
+
     <p>I look forward to receiving your advice.</p>
-     
+
     <p>
       Best regards <br />
       ${currentUser}
     </p>
-     
+
     <p>
       On behalf of Biophysics Colab <br />
       <a href="https://www.sciencecolab.org/" target="_blank">www.sciencecolab.org</a>
