@@ -1,6 +1,5 @@
 const GenericTaskNotificationEmailTemplate = ({
   receiverName,
-  reportUrl,
 }) => {
   const result = {
     cc: '',
