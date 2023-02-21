@@ -147,6 +147,10 @@ const TaskEditModal = ({
     1000,
   ), [])
 
+  useEffect(() => {
+    return updateTaskDebounce.flush()
+  }, [])
+
   const updateTaskTitle = value => {
     setTaskTitle(value)
     updateTaskDebounce(task.id, { ...task, title: value })
