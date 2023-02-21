@@ -29,7 +29,7 @@ const TaskMetaAssigneeCell = styled(BaseAssigneeCell)`
   width: 290px;
 `
 
-const TaskListUnregisteredUserCell = styled.div`
+const UnregisteredFieldsAlignColumn = styled.div`
   display: flex;
   flex-direction: column;
   & > input {
@@ -37,7 +37,7 @@ const TaskListUnregisteredUserCell = styled.div`
   }
 `
 
-const TaskMetaUnregisteredUserCell = styled.div`
+const UnregisteredFieldsAlignRow = styled.div`
   display: flex;
   margin-top: 10px;
   justify-content: space-between;
@@ -51,7 +51,7 @@ const AssigneeDropdown = ({
   assigneeGroupedOptions,
   task,
   updateTask,
-  isList = false,
+  unregisteredFieldsAlign = 'row',
 }) => {
   const [dropdownState, setDropdownState] = useState(false)
 
@@ -126,9 +126,9 @@ const AssigneeDropdown = ({
     }
   }
 
-  const UnregisteredUserCell = isList
-    ? TaskListUnregisteredUserCell
-    : TaskMetaUnregisteredUserCell
+  const UnregisteredUserCell = unregisteredFieldsAlign === 'row'
+    ? UnregisteredFieldsAlignRow
+    : UnregisteredFieldsAlignColumn
 
   const groupedOptionsComponent = (
     <Select
@@ -180,7 +180,7 @@ const AssigneeDropdown = ({
     </UnregisteredUserCell>
   )
 
-  if (isList) {
+  if (unregisteredFieldsAlign !== 'row') {
     return (
       <AssigneeCellContainer>
         <TaskListAssigneeCell title={task.assignee?.username}>

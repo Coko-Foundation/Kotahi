@@ -280,14 +280,18 @@ const Task = ({
     setTaskTitle(task.title)
   }, [task])
 
-  const updateTaskDebounce = useCallback(debounce(
+  const updateTaskTitleDebounce = useCallback(debounce(
     updateTask ?? (() => {}),
     1000,
   ), [])
 
+  useEffect(() => {
+    return updateTaskTitleDebounce.flush()
+  }, [])
+
   const updateTaskTitle = value => {
     setTaskTitle(value)
-    updateTaskDebounce(task.id, { ...task, title: value })
+    updateTaskTitleDebounce(task.id, { ...task, title: value })
   }
 
   const [transposedDueDate, setTransposedDueDate] = useState(
@@ -523,7 +527,7 @@ const Task = ({
                 <AssigneeHeader>Assignee</AssigneeHeader>
                 <AssigneeDropdown
                   assigneeGroupedOptions={assigneeGroupedOptions}
-                  isList
+                  unregisteredFieldsAlign='column'
                   task={task}
                   updateTask={updateTask}
                 />
@@ -552,7 +556,7 @@ const Task = ({
                     <DueDateField
                       displayDefaultDurationDays={displayDefaultDurationDays}
                       dueDateLocalString={dueDateLocalString}
-                      isList
+                      compact
                       task={task}
                       transposedDueDate={transposedDueDate}
                       transposedEndOfToday={transposedEndOfToday}
