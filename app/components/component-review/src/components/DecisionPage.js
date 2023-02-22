@@ -150,16 +150,7 @@ const DecisionPage = ({ match }) => {
 
   const [updateTaskNotification] = useMutation(UPDATE_TASK_NOTIFICATION)
 
-  const [deleteTaskNotification] = useMutation(DELETE_TASK_NOTIFICATION, {
-    update(cache, { data: { id } }) {
-      const notificationId = cache.identify({
-        __typename: 'TaskEmailNotification',
-        id,
-      })
-
-      cache.evict({ notificationId })
-    },
-  })
+  const [deleteTaskNotification] = useMutation(DELETE_TASK_NOTIFICATION)
 
   const [updateTasks] = useMutation(UPDATE_TASKS, {
     update(cache, { data: { updateTasks: updatedTasks } }) {

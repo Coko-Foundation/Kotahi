@@ -1,11 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import SelectEmailTemplate from '../../component-review/src/components/emailNotifications/SelectEmailTemplate'
-import {
-  RoundIconButton,
-  Select,
-  TextInput,
-} from '../../shared'
+import { RoundIconButton, Select, TextInput } from '../../shared'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
 import CounterFieldWithOptions from '../../shared/CounterFieldWithOptions'
 import CounterField from '../../shared/CounterField'
@@ -85,7 +81,7 @@ const NotificationDeadlineCell = styled.div`
     margin: 0px 10px;
   }
 
-  color: ${props => props.disabled ? theme.colorBorder : "inherit"};
+  color: ${props => (props.disabled ? theme.colorBorder : 'inherit')};
 `
 
 const UnregisteredUserCell = styled.div`
@@ -166,11 +162,11 @@ const TaskNotificationDetails = ({
     taskEmailNotification?.notificationElapsedDays,
   )
 
-  if (Math.sign(taskEmailNotification?.notificationElapsedDays) === -1) {
+  if (taskEmailNotification?.notificationElapsedDays < 0) {
     notificationOption = 'before'
   }
 
-  if (Math.sign(taskEmailNotification?.notificationElapsedDays) === 1) {
+  if (taskEmailNotification?.notificationElapsedDays > 0) {
     notificationOption = 'after'
   }
 
@@ -285,6 +281,8 @@ const TaskNotificationDetails = ({
             aria-label="Recipient"
             data-testid="Recipient_select"
             dropdownState={recipientDropdownState}
+            hasGroupedOptions
+            isClearable
             label="Recipient"
             onChange={selected =>
               handleRecipientInput(selected, taskEmailNotification)
@@ -295,8 +293,6 @@ const TaskNotificationDetails = ({
               taskEmailNotification?.recipientUserId ||
               taskEmailNotification?.recipientType
             }
-            hasGroupedOptions
-            isClearable
           />
         </AssigneeCell>
         {isNewRecipient && (
@@ -333,16 +329,16 @@ const TaskNotificationDetails = ({
       <EmailTemplateFieldContainer>
         <TaskTitle>Select email template</TaskTitle>
         <SelectEmailTemplate
+          isClearable
           isTaskEmailNotification
           onChangeEmailTemplate={setSelectedTemplate}
+          placeholder="Select email template"
           selectedEmailTemplate={
             selectedTemplate || taskEmailNotification.emailTemplateKey
           }
           task={task}
           taskEmailNotification={taskEmailNotification}
           updateTaskNotification={updateTaskNotification}
-          placeholder="Select email template"
-          isClearable
         />
       </EmailTemplateFieldContainer>
       <ScheduleNotificationFieldContainer>
@@ -351,10 +347,9 @@ const TaskNotificationDetails = ({
           <NotificationDeadlineCell disabled={selectedDurationDays === 'None'}>
             <span>Send</span>
             <CounterField
-              minValue={0}
-              value={taskEmailNotificationElapsedDays || 0}
-              compact={true}
+              compact
               disabled={selectedDurationDays === 'None'}
+              minValue={0}
               onChange={val => {
                 setTaskEmailNotificationElapsedDays(val)
                 handleTaskNotificationDeadline(
@@ -363,15 +358,11 @@ const TaskNotificationDetails = ({
                   taskEmailNotification,
                 )
               }}
+              value={taskEmailNotificationElapsedDays || 0}
             />
             <span>days</span>
             <CounterFieldWithOptions
-              value={taskEmailNotificationDeadline || 'before'}
               disabled={selectedDurationDays === 'None'}
-              options={[
-                {label: 'before', value: 'before'},
-                {label: 'after', value: 'after'},
-              ]}
               onChange={selected => {
                 if (selected && selected.value) {
                   setTaskEmailNotificationDeadline(selected.value)
@@ -382,16 +373,21 @@ const TaskNotificationDetails = ({
                   )
                 }
               }}
+              options={[
+                { label: 'before', value: 'before' },
+                { label: 'after', value: 'after' },
+              ]}
+              value={taskEmailNotificationDeadline || 'before'}
             />
             <span>due date</span>
           </NotificationDeadlineCell>
         </NotificationDeadlineContainer>
       </ScheduleNotificationFieldContainer>
-      {!editAsTemplate &&
+      {!editAsTemplate && (
         <SendNowActionContainer>
           <SecondaryActionButton>Send Now</SecondaryActionButton>
         </SendNowActionContainer>
-      }
+      )}
       <RoundIconButtonContainer>
         <RoundIconButton
           iconName="Minus"
