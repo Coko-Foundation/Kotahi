@@ -135,8 +135,8 @@ const resolvers = {
         data.dueDate = dateFns.addDays(new Date(), taskDurationDays)
       }
 
-      await Task.query().update(data).where({ id: task.id })
-      return Task.query().findById(task.id)
+      const updatedTask = await Task.query().patchAndFetchById(task.id, data)
+      return updatedTask
     },
   },
   Query: {
