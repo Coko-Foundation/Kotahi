@@ -127,7 +127,10 @@ const resolvers = {
       // get task
       const dbTask = await Task.query().findById(task.id)
 
-      if (dbTask.status === status.NOT_STARTED && task.status === status.IN_PROGRESS) {
+      if (
+        dbTask.status === status.NOT_STARTED &&
+        task.status === status.IN_PROGRESS
+      ) {
         const taskDurationDays = dbTask.defaultDurationDays || 0
         data.dueDate = dateFns.addDays(new Date(), taskDurationDays)
       }
@@ -141,8 +144,7 @@ const resolvers = {
       return Task.query()
         .where({ manuscriptId })
         .orderBy('sequenceIndex')
-        .withGraphFetched('assignee')
-        .withGraphFetched('emailNotifications(orderByCreated)')
+        .withGraphFetched('[assignee, emailNotifications(orderByCreated)]')
     },
     userHasTaskAlerts: async (_, __, ctx) => {
       return (
