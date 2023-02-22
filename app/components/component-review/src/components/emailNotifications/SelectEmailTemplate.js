@@ -253,6 +253,13 @@ switch (
         label: 'Reminder: Review Overdue Template',
         value: 'reminderReviewOverdueTemplate',
       },
+      {label: 'Follow-up with author to submit revised preprint ', value: 'authorFollowUpSubmitRevisedPreprintTemplate'},
+      {label: 'Consolidated report shared with authors', value: 'consolidatedReportWithAuthorsTemplate'},
+      {label: 'Generic task manager update notification', value: 'genericTaskManagerUpdateNotificationTemplate'},
+      {label: 'Report published', value: 'reportPublishedTemplate'},
+      {label: 'Report(s) shared', value: 'reportsSharedTemplate'},
+      {label: 'Reviewer invitation - re-review', value: 'reviewerInvitationReReviewTemplate'},
+      {label: 'Reviewer invitation - new reviewer for a revised preprint', value: 'reviewerInvitationRevisedPreprintTemplate'},
     ]
     break
   default:
