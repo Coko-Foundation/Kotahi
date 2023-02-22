@@ -49,6 +49,7 @@ class TaskEmailNotification extends BaseModel {
         emailTemplateKey: { type: ['string', 'null'] },
         recipientName: { type: ['string', 'null'] },
         recipientEmail: { type: ['string', 'null'] },
+        sentAt: { type: ['string', 'object', 'null'], format: 'date-time' },
       },
     }
   }

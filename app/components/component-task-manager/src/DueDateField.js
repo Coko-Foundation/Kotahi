@@ -68,7 +68,7 @@ const DueDateField = ({
 
   return (
     <DueDateCell title={dueDateLocalString}>
-      {task.status === status.NOT_STARTED ? (
+      {task.status === status.NOT_STARTED || task.dueDate === null ? (
         <CompactDetailLabel>{displayDefaultDurationDays}</CompactDetailLabel>
       ) : (
         <>
@@ -88,7 +88,7 @@ const DueDateField = ({
                   .toDate(),
               })
             }
-            position={position || "top center"}
+            position={position || 'top center'}
             suppressTodayHighlight
             value={transposedDueDate}
           />

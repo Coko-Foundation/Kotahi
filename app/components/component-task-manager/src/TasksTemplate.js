@@ -1,12 +1,7 @@
 import React from 'react'
-import TaskList from './TaskList'
-import {
-  Container,
-  Heading,
-  SectionContent,
-  WidthLimiter,
-} from '../../shared'
 import styled from 'styled-components'
+import TaskList from './TaskList'
+import { Container, Heading, SectionContent, WidthLimiter } from '../../shared'
 
 const TaskListContainer = styled.div`
   padding: 18px 8px;

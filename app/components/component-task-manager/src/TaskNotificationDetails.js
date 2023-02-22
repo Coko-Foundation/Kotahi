@@ -129,7 +129,11 @@ const TaskNotificationDetails = ({
   taskEmailNotification: propTaskEmailNotification,
   deleteTaskNotification,
   task,
+  manuscript,
+  currentUser,
+  sendNotifyEmail,
   editAsTemplate,
+  createTaskEmailNotificationLog,
   selectedDurationDays,
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState('')
@@ -153,6 +157,8 @@ const TaskNotificationDetails = ({
   const [isNewRecipient, setIsNewRecipient] = useState(
     taskEmailNotification.recipientType === 'unregisteredUser',
   )
+
+  const [taskNotificationStatus, setTaskNotificationStatus] = useState(null)
 
   const [recipientDropdownState, setRecipientDropdownState] = useState(false)
 
@@ -272,6 +278,296 @@ const TaskNotificationDetails = ({
     })
   }
 
+  const handleManuscriptTeamInputForNotification = (
+    notificationRecipientType,
+    manuscriptTeams,
+  ) => {
+    const teamsOfRecipientType = manuscriptTeams.filter(team => {
+      if (notificationRecipientType === 'editor') {
+        return ['editor', 'handlingEditor', 'seniorEditor'].includes(team.role)
+      }
+
+      return team.role === notificationRecipientType
+    })
+
+    let logsData
+    const logsDataArray = []
+
+    const prepareEmailRecipients = () => {
+      return new Promise((resolve, reject) => {
+        let emailSuccess = true
+        let emailCount = 0
+
+        if (teamsOfRecipientType.length === 0) {
+          emailSuccess = false
+        }
+
+        const totalEmails = teamsOfRecipientType.reduce(
+          (sum, team) => sum + team.members.length,
+          0,
+        )
+
+        const promises = []
+
+        // eslint-disable-next-line no-restricted-syntax
+        for (const team of teamsOfRecipientType) {
+          // eslint-disable-next-line no-restricted-syntax
+          for (const member of team.members) {
+            const input = {
+              selectedEmail: member.user.email,
+              selectedTemplate: taskEmailNotification.emailTemplateKey,
+              manuscript,
+              currentUser: currentUser.username,
+            }
+
+            logsData = {
+              selectedTemplate: taskEmailNotification.emailTemplateKey,
+              recipientName: member.user.username,
+              recipientEmail: member.user.email,
+              senderEmail: currentUser.email,
+            }
+
+            promises.push(
+              sendNotifyEmail(input)
+                // eslint-disable-next-line no-loop-func
+                .then(response => {
+                  const responseStatus = response.data.sendEmail.success
+
+                  if (!responseStatus) {
+                    emailSuccess = false
+                    reject(new Error('Sending email failed'))
+                    emailCount += 1
+                  } else {
+                    logsDataArray.push(logsData)
+                  }
+
+                  if (emailCount === totalEmails) {
+                    resolve(emailSuccess)
+                  }
+                })
+                // eslint-disable-next-line no-loop-func
+                .catch(error => {
+                  emailSuccess = false
+                  reject(error)
+                }),
+            )
+          }
+        }
+
+        Promise.all(promises).then(() => {
+          resolve(emailSuccess)
+        })
+      })
+    }
+
+    return prepareEmailRecipients().then(emailStatus => {
+      if (emailStatus) {
+        updateTaskNotification({
+          ...taskEmailNotification,
+          sentAt: new Date(),
+        })
+        logTaskNotificationEmails(logsDataArray)
+      }
+
+      return emailStatus
+    })
+  }
+
+  const sendTaskNotificationEmailHandler = async () => {
+    setTaskNotificationStatus('pending')
+
+    if (taskEmailNotification.recipientType) {
+      let input
+      let response
+      let responseStatus
+      let logsData = []
+
+      switch (taskEmailNotification.recipientType) {
+        case 'unregisteredUser':
+          input = {
+            externalEmail: taskEmailNotification.recipientEmail,
+            externalName: taskEmailNotification.recipientName,
+            selectedTemplate: taskEmailNotification.emailTemplateKey,
+            currentUser: currentUser.username,
+            manuscript,
+          }
+          logsData = [
+            {
+              selectedTemplate: taskEmailNotification.emailTemplateKey,
+              recipientName: taskEmailNotification.recipientName,
+              recipientEmail: taskEmailNotification.recipientEmail,
+              senderEmail: currentUser.email,
+            },
+          ]
+          response = await sendNotifyEmail(input)
+          responseStatus = response.data.sendEmail.success
+
+          if (responseStatus) {
+            updateTaskNotification({
+              ...taskEmailNotification,
+              sentAt: new Date(),
+            })
+            logTaskNotificationEmails(logsData)
+          }
+
+          setTaskNotificationStatus(responseStatus ? 'success' : 'failure')
+          break
+        case 'registeredUser':
+          input = {
+            selectedEmail: taskEmailNotification.recipientUser.email,
+            selectedTemplate: taskEmailNotification.emailTemplateKey,
+            manuscript,
+            currentUser: currentUser.username,
+          }
+          logsData = [
+            {
+              selectedTemplate: taskEmailNotification.emailTemplateKey,
+              recipientName: taskEmailNotification.recipientUser.username,
+              recipientEmail: taskEmailNotification.recipientUser.email,
+              senderEmail: currentUser.email,
+            },
+          ]
+          response = await sendNotifyEmail(input)
+          responseStatus = response.data.sendEmail.success
+
+          if (responseStatus) {
+            updateTaskNotification({
+              ...taskEmailNotification,
+              sentAt: new Date(),
+            })
+            logTaskNotificationEmails(logsData)
+          }
+
+          setTaskNotificationStatus(responseStatus ? 'success' : 'failure')
+          break
+        case 'assignee':
+          switch (task.assigneeType) {
+            case 'unregisteredUser':
+              input = {
+                externalEmail: task.assigneeEmail,
+                externalName: task.assigneeName,
+                selectedTemplate: taskEmailNotification.emailTemplateKey,
+                currentUser: currentUser.username,
+                manuscript,
+              }
+              logsData = [
+                {
+                  selectedTemplate: taskEmailNotification.emailTemplateKey,
+                  recipientName: task.assigneeName,
+                  recipientEmail: task.assigneeEmail,
+                  senderEmail: currentUser.email,
+                },
+              ]
+              response = await sendNotifyEmail(input)
+              responseStatus = response.data.sendEmail.success
+
+              if (responseStatus) {
+                updateTaskNotification({
+                  ...taskEmailNotification,
+                  sentAt: new Date(),
+                })
+                logTaskNotificationEmails(logsData)
+              }
+
+              setTaskNotificationStatus(responseStatus ? 'success' : 'failure')
+              break
+            case 'registeredUser':
+              input = {
+                selectedEmail: task.assginee.email,
+                selectedTemplate: taskEmailNotification.emailTemplateKey,
+                manuscript,
+                currentUser: currentUser.username,
+              }
+
+              logsData = [
+                {
+                  selectedTemplate: taskEmailNotification.emailTemplateKey,
+                  recipientName: task.assginee.username,
+                  recipientEmail: task.assginee.email,
+                  senderEmail: currentUser.email,
+                },
+              ]
+              response = await sendNotifyEmail(input)
+              responseStatus = response.data.sendEmail.success
+
+              if (responseStatus) {
+                updateTaskNotification({
+                  ...taskEmailNotification,
+                  sentAt: new Date(),
+                })
+                logTaskNotificationEmails(logsData)
+              }
+
+              setTaskNotificationStatus(responseStatus ? 'success' : 'failure')
+              break
+            case 'editor':
+            case 'reviewer':
+            case 'author':
+              responseStatus = handleManuscriptTeamInputForNotification(
+                task.assigneeType,
+                manuscript.teams,
+              )
+                .then(emailStatus => {
+                  setTaskNotificationStatus(emailStatus ? 'success' : 'failure')
+                })
+                .catch(error => {
+                  console.error(error)
+                  setTaskNotificationStatus('failure')
+                })
+              break
+            default:
+          }
+
+          break
+        case 'editor':
+        case 'reviewer':
+        case 'author':
+          responseStatus = handleManuscriptTeamInputForNotification(
+            taskEmailNotification.recipientType,
+            manuscript.teams,
+          )
+            .then(emailStatus => {
+              setTaskNotificationStatus(emailStatus ? 'success' : 'failure')
+            })
+            .catch(error => {
+              console.error(error)
+              setTaskNotificationStatus('failure')
+            })
+          break
+        default:
+      }
+    }
+  }
+
+  const logTaskNotificationEmails = async logsData => {
+    // eslint-disable-next-line no-restricted-syntax
+    for (const logData of logsData) {
+      const emailTemplateOption = logData.selectedTemplate.replaceAll(
+        /([A-Z])/g,
+        ' $1',
+      )
+
+      const selectedTemplateValue =
+        emailTemplateOption.charAt(0).toUpperCase() +
+        emailTemplateOption.slice(1)
+
+      const messageBody = `${selectedTemplateValue} sent by Kotahi to ${logData.recipientName}`
+
+      // eslint-disable-next-line no-await-in-loop
+      await createTaskEmailNotificationLog({
+        variables: {
+          taskEmailNotificationLog: {
+            taskId: task.id,
+            content: messageBody,
+            emailTemplateKey: emailTemplateOption,
+            senderEmail: logData.senderEmail,
+            recipientEmail: logData.recipientEmail,
+          },
+        },
+      })
+    }
+  }
+
   return (
     <NotificationDetailsContainer>
       <RecipientFieldContainer>
@@ -330,7 +626,6 @@ const TaskNotificationDetails = ({
         <TaskTitle>Select email template</TaskTitle>
         <SelectEmailTemplate
           isClearable
-          isTaskEmailNotification
           onChangeEmailTemplate={setSelectedTemplate}
           placeholder="Select email template"
           selectedEmailTemplate={
@@ -385,7 +680,12 @@ const TaskNotificationDetails = ({
       </ScheduleNotificationFieldContainer>
       {!editAsTemplate && (
         <SendNowActionContainer>
-          <SecondaryActionButton>Send Now</SecondaryActionButton>
+          <SecondaryActionButton
+            onClick={sendTaskNotificationEmailHandler}
+            status={taskNotificationStatus}
+          >
+            Send Now
+          </SecondaryActionButton>
         </SendNowActionContainer>
       )}
       <RoundIconButtonContainer>

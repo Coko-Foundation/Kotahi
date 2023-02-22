@@ -2,14 +2,15 @@ import React, { useState, useContext, useEffect } from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { v4 as uuid } from 'uuid'
 import moment from 'moment-timezone'
+import styled from 'styled-components'
 import Task from './Task'
 import { RoundIconButton, TightColumn, MediumColumn } from '../../shared'
 import { ConfigContext } from '../../config/src'
-import styled from 'styled-components'
 
 const TaskListContainer = styled.div`
   -webkit-font-smoothing: antialiased;
 `
+
 const AddTaskContainer = styled.div`
   padding: 0 8px;
 `
@@ -25,6 +26,10 @@ const TaskList = ({
   isReadOnly,
   updateTaskNotification,
   deleteTaskNotification,
+  currentUser,
+  manuscript,
+  sendNotifyEmail,
+  createTaskEmailNotificationLog,
 }) => {
   const config = useContext(ConfigContext)
 
@@ -44,7 +49,7 @@ const TaskList = ({
     manuscriptId,
     title: task.title,
     assigneeUserId: task.assignee?.id || null,
-    defaultDurationDays: task.defaultDurationDays || "None",
+    defaultDurationDays: task.defaultDurationDays || 'None',
     reminderPeriodDays: task.reminderPeriodDays || 0,
     dueDate: editAsTemplate ? null : new Date(task.dueDate),
     status: editAsTemplate ? 'Not started' : task.status,
@@ -176,16 +181,22 @@ const TaskList = ({
                     {tasks.map((task, index) => (
                       <Task
                         assigneeGroupedOptions={assigneeGroupedOptions}
+                        createTaskEmailNotificationLog={
+                          createTaskEmailNotificationLog
+                        }
+                        currentUser={currentUser}
                         deleteTaskNotification={deleteTaskNotification}
                         editAsTemplate={editAsTemplate}
                         index={index}
                         isReadOnly={isReadOnly}
                         key={task.id}
+                        manuscript={manuscript}
                         onCancel={() => updateTasks(tasks.filter(t => t.title))}
                         onDelete={id =>
                           updateTasks(tasks.filter(t => t.id !== id))
                         }
                         recipientGroupedOptions={recipientGroupedOptions}
+                        sendNotifyEmail={sendNotifyEmail}
                         task={task}
                         updateTask={updateTask}
                         updateTaskNotification={updateTaskNotification}

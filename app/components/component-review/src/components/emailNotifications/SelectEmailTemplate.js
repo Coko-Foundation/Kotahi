@@ -272,29 +272,19 @@ switch (
 const SelectEmailTemplate = ({
   onChangeEmailTemplate,
   selectedEmailTemplate,
-  isTaskEmailNotification,
   updateTaskNotification,
   taskEmailNotification,
   placeholder,
   isClearable,
   task,
 }) => {
-  if (process.env.INSTANCE_NAME === 'colab' && isTaskEmailNotification) {
-    emailTemplateOptions = [
-      {
-        label: 'Thanks for Agreeing to Review Template',
-        value: 'thanksForAgreeingToReviewTemplate',
-      },
-    ]
-  }
-
   return (
     <Select
       aria-label="Notification_email_select"
       data-testid="Notification_email_select"
       label="notification email"
       onChange={selected => {
-        if (isTaskEmailNotification) {
+        if (taskEmailNotification) {
           updateTaskNotification({
             ...taskEmailNotification,
             id: taskEmailNotification.id,

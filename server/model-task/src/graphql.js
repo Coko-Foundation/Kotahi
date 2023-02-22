@@ -6,6 +6,7 @@ const TaskAlert = require('./taskAlert')
 const TaskEmailNotification = require('./taskEmailNotification')
 
 const { createNewTaskAlerts, updateAlertsForTask } = require('./taskCommsUtils')
+const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
 
 const resolvers = {
   Mutation: {
@@ -71,8 +72,9 @@ const resolvers = {
 
       return Task.query()
         .findById(task.id)
-        .withGraphFetched('assignee')
-        .withGraphFetched('emailNotifications(orderByCreated)')
+        .withGraphFetched(
+          '[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+        )
     },
 
     updateTaskNotification: async (_, { taskNotification }) => {
@@ -93,7 +95,9 @@ const resolvers = {
 
       const associatedTask = await Task.query()
         .findById(taskNotification.taskId)
-        .withGraphFetched('emailNotifications(orderByCreated)')
+        .withGraphFetched(
+          '[emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+        )
 
       return associatedTask
     },
@@ -105,7 +109,9 @@ const resolvers = {
 
       const associatedTask = await Task.query()
         .findById(taskEmailNotification.taskId)
-        .withGraphFetched('emailNotifications(orderByCreated)')
+        .withGraphFetched(
+          '[emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+        )
 
       await TaskEmailNotification.query().deleteById(id)
 
@@ -132,11 +138,31 @@ const resolvers = {
         task.status === status.IN_PROGRESS
       ) {
         const taskDurationDays = dbTask.defaultDurationDays || 0
-        data.dueDate = dateFns.addDays(new Date(), taskDurationDays)
+
+        data.dueDate =
+          taskDurationDays !== 'None'
+            ? dateFns.addDays(new Date(), taskDurationDays)
+            : null
       }
 
       const updatedTask = await Task.query().patchAndFetchById(task.id, data)
       return updatedTask
+    },
+
+    createTaskEmailNotificationLog: async (
+      _,
+      { taskEmailNotificationLog },
+      ctx,
+    ) => {
+      await TaskEmailNotificationLog.query().insert(taskEmailNotificationLog)
+
+      const associatedTask = await Task.query()
+        .findById(taskEmailNotificationLog.taskId)
+        .withGraphFetched(
+          '[emailNotifications.recipientUser, notificationLogs]',
+        )
+
+      return associatedTask
     },
   },
   Query: {
@@ -144,7 +170,9 @@ const resolvers = {
       return Task.query()
         .where({ manuscriptId })
         .orderBy('sequenceIndex')
-        .withGraphFetched('[assignee, emailNotifications(orderByCreated)]')
+        .withGraphFetched(
+          '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
+        )
     },
     userHasTaskAlerts: async (_, __, ctx) => {
       return (
@@ -190,6 +218,7 @@ const typeDefs = `
     sequenceIndex: Int!
     status: String!
     emailNotifications: [TaskEmailNotification]
+    notificationLogs: [TaskEmailNotificationLog]
     assigneeType: String
     assigneeName: String
     assigneeEmail: String
@@ -214,6 +243,26 @@ const typeDefs = `
     emailTemplateKey: String
     recipientName: String
     recipientEmail: String
+    sentAt: DateTime
+  }
+
+  input TaskEmailNotificationLogInput {
+    taskId: ID!
+    senderEmail: String!
+    recipientEmail: String!
+    emailTemplateKey: String!
+    content: String!
+  }
+
+  type TaskEmailNotificationLog {
+    id: ID!
+    taskId: ID!
+    senderEmail: String!
+    recipientEmail: String!
+    emailTemplateKey: String!
+    content: String!
+    created: DateTime!
+    updated: DateTime
   }
 
   type TaskEmailNotification {
@@ -227,6 +276,8 @@ const typeDefs = `
     recipientEmail: String
     created: DateTime!
     updated: DateTime
+    recipientUser: User
+    sentAt: DateTime
   }
 
   extend type Mutation {
@@ -237,6 +288,7 @@ const typeDefs = `
     updateTaskStatus(task: UpdateTaskStatusInput!): Task!
     updateTaskNotification(taskNotification: TaskEmailNotificationInput!): Task!
     deleteTaskNotification(id: ID!): Task!
+    createTaskEmailNotificationLog(taskEmailNotificationLog: TaskEmailNotificationLogInput!): Task!
   }
 `
 

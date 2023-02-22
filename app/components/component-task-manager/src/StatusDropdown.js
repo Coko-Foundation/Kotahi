@@ -1,9 +1,14 @@
 import React from 'react'
 import styled from 'styled-components'
 import Dropdown from 'react-dropdown'
-import { UPDATE_TASK_STATUS } from '../../../queries'
 import { useMutation } from '@apollo/client'
-import { Pause as PauseIcon, Check as CheckIcon, ChevronUp, ChevronDown } from 'react-feather'
+import {
+  Pause as PauseIcon,
+  Check as CheckIcon,
+  ChevronUp,
+  ChevronDown,
+} from 'react-feather'
+import { UPDATE_TASK_STATUS } from '../../../queries'
 import theme from '../../../theme'
 
 const StartButton = styled.button`
@@ -75,14 +80,14 @@ const InProgressDropdown = styled(BaseDropdown)`
 `
 
 const PausedDropdown = styled(BaseDropdown)`
-  border: 2px solid #D29435;
+  border: 2px solid #d29435;
 
   .Dropdown-placeholder {
-    color: #D29435;
+    color: #d29435;
   }
 
   .Dropdown-arrow-wrapper > svg {
-    stroke: #D29435;
+    stroke: #d29435;
   }
 `
 
@@ -134,9 +139,7 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
 
   if (task.status === status.NOT_STARTED) {
     return (
-      <StartButton
-        onClick={() => handleStatusUpdate(status.IN_PROGRESS)}
-      >
+      <StartButton onClick={() => handleStatusUpdate(status.IN_PROGRESS)}>
         Start
       </StartButton>
     )
@@ -144,42 +147,59 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
 
   let DropdownComponent = <></>
   let IconComponent = <></>
-  const PauseLabel = <DropdownLabel>
-    <PauseIcon size={15} />
-    <span>{task.status === status.PAUSED ? 'Paused' : 'Pause'}</span>
-  </DropdownLabel>
-  const ContinueLabel = <DropdownLabel>
-    <span>{task.status === status.IN_PROGRESS ? 'In progress' : 'Continue'}</span>
-  </DropdownLabel>
-  const DoneLabel = <DropdownLabel>
-    <CheckIcon size={15} />
-    <span>Done</span>
-  </DropdownLabel>
-  let dropdownOptions = [
+
+  const PauseLabel = (
+    <DropdownLabel>
+      <PauseIcon size={15} />
+      <span>{task.status === status.PAUSED ? 'Paused' : 'Pause'}</span>
+    </DropdownLabel>
+  )
+
+  const ContinueLabel = (
+    <DropdownLabel>
+      <span>
+        {task.status === status.IN_PROGRESS ? 'In progress' : 'Continue'}
+      </span>
+    </DropdownLabel>
+  )
+
+  const DoneLabel = (
+    <DropdownLabel>
+      <CheckIcon size={15} />
+      <span>Done</span>
+    </DropdownLabel>
+  )
+
+  const dropdownOptions = [
     { label: ContinueLabel, value: status.IN_PROGRESS },
     { label: PauseLabel, value: status.PAUSED },
     { label: DoneLabel, value: status.DONE },
   ]
+
   switch (task.status) {
     case status.IN_PROGRESS:
       DropdownComponent = InProgressDropdown
-      break;
+      break
     case status.PAUSED:
       IconComponent = PauseIcon
       DropdownComponent = PausedDropdown
-      break;
+      break
     case status.DONE:
       DropdownComponent = DoneDropdown
-      break;
+      break
+    default:
   }
-  return <DropdownComponent
-    onChange={selected => handleStatusUpdate(selected.value)}
-    options={dropdownOptions}
-    placeholder="Select status"
-    value={task.status}
-    arrowOpen={<ChevronUp size={20} />}
-    arrowClosed={<ChevronDown size={20} />}
-  />
+
+  return (
+    <DropdownComponent
+      arrowClosed={<ChevronDown size={20} />}
+      arrowOpen={<ChevronUp size={20} />}
+      onChange={selected => handleStatusUpdate(selected.value)}
+      options={dropdownOptions}
+      placeholder="Select status"
+      value={task.status}
+    />
+  )
 }
 
 export default StatusDropdown
