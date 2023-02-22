@@ -53,6 +53,7 @@ const DecisionVersions = ({
   updateTasks,
   updateTaskNotification,
   deleteTaskNotification,
+  createTaskEmailNotificationLog,
 }) => {
   const [initialValue, setInitialValue] = useState(null)
 
@@ -91,6 +92,7 @@ const DecisionVersions = ({
                 allUsers={allUsers}
                 canHideReviews={canHideReviews}
                 createFile={createFile}
+                createTaskEmailNotificationLog={createTaskEmailNotificationLog}
                 createTeam={createTeam}
                 currentDecisionData={initialValue}
                 currentUser={currentUser}

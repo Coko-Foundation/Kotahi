@@ -3,19 +3,18 @@ import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { v4 as uuid } from 'uuid'
-import {
-  ActionButton, TextInput,
-} from '../../shared'
+import { X as CloseIcon } from 'react-feather'
+import { debounce } from 'lodash'
+import { ActionButton, TextInput } from '../../shared'
 
 import TaskNotificationDetails from './TaskNotificationDetails'
 import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
 import Modal from '../../component-modal/src'
-import { X as CloseIcon } from 'react-feather'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
-import { debounce } from 'lodash'
 import CounterField from '../../shared/CounterField'
 import theme from '../../../theme'
+import { convertTimestampToDateString } from '../../../shared/dateUtils'
 
 const TaskMetaModalContainer = styled.div`
   background-color: ${th('colorBackground')};
@@ -46,13 +45,14 @@ const DurationDaysCell = styled.div`
 const BaseFieldsContainer = styled.div`
   padding: ${grid(3.5)} ${grid(3)};
 `
+
 const TaskPrimaryFieldsContainer = styled(BaseFieldsContainer)`
   display: flex;
   padding-top: 0;
 `
 
 const TaskRecipientsDetailsContainer = styled(BaseFieldsContainer)`
-  border-bottom: 2px solid rgba(191,191,191, 0.5);
+  border-bottom: 2px solid rgba(191, 191, 191, 0.5);
   box-shadow: 0 10px 10px -10px #d9d9d9;
   min-height: 260px;
 `
@@ -70,7 +70,7 @@ const TaskActionsContainer = styled(BaseFieldsContainer)`
 
 const TaskDetailsContainer = styled.div`
   padding-bottom: 5px;
-  border-bottom: 2px solid rgba(191,191,191, 0.5);
+  border-bottom: 2px solid rgba(191, 191, 191, 0.5);
 `
 
 const TaskCloseActionContainer = styled.div`
@@ -84,10 +84,9 @@ const TaskCloseActionContainer = styled.div`
     border: none;
 
     svg {
-      stroke: ${theme.colors.neutral.gray20}
+      stroke: ${theme.colors.neutral.gray20};
     }
   }
-
 `
 
 const TaskTitle = styled.div`
@@ -109,14 +108,45 @@ const BaseFieldContainer = styled.div`
     margin-left: 20px;
   }
 `
+
 const TitleFieldContainer = styled(BaseFieldContainer)`
   flex: 0 0 34em;
 `
+
 const AssigneeFieldContainer = styled(BaseFieldContainer)`
   flex: 0 0 7.8em;
 `
+
 const DueDateFieldContainer = styled(BaseFieldContainer)`
   flex: 0 0 7.8em;
+`
+
+const TaskNotificationLogsContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: flex-end;
+`
+
+const NotificationLogsToggle = styled.button`
+  padding: 20px 10px;
+  background-color: transparent;
+  border: none;
+  font-size: ${theme.fontSizeBaseSmall};
+  color: ${theme.colorPrimary};
+  text-decoration: underline;
+`
+
+const NotificationLogs = styled.div`
+  margin: 10px 0;
+  text-align: left;
+  font-size: ${theme.fontSizeBaseSmall};
+  color: ${theme.colorPrimary};
+`
+
+const TaskActionContainer = styled.div`
+  display: flex;
+  justify-content: space-between;
 `
 
 const TaskEditModal = ({
@@ -132,6 +162,11 @@ const TaskEditModal = ({
   recipientGroupedOptions,
   deleteTaskNotification,
   displayDefaultDurationDays,
+  createTaskEmailNotificationLog,
+  notificationOptions,
+  manuscript,
+  currentUser,
+  sendNotifyEmail,
   isOpen,
   onSave,
   onCancel,
@@ -139,13 +174,17 @@ const TaskEditModal = ({
   const [taskEmailNotifications, setTaskNotifications] = useState(
     task.emailNotifications ?? [],
   )
-  const [selectedDurationDays, setSelectedDurationDays] = useState(task.defaultDurationDays || 'none')
+
+  const [selectedDurationDays, setSelectedDurationDays] = useState(
+    task.defaultDurationDays || 'none',
+  )
+
   const [taskTitle, setTaskTitle] = useState(task?.title || '')
 
-  const updateTaskTitleDebounce = useCallback(debounce(
-    updateTask ?? (() => {}),
-    1000,
-  ), [])
+  const updateTaskTitleDebounce = useCallback(
+    debounce(updateTask ?? (() => {}), 1000),
+    [],
+  )
 
   useEffect(() => {
     return updateTaskTitleDebounce.flush()
@@ -213,7 +252,7 @@ const TaskEditModal = ({
     <Modal isOpen={isOpen}>
       <TaskMetaModalContainer>
         <TaskCloseActionContainer>
-          <button type="button" onClick={() => onCancel(false)}>
+          <button onClick={() => onCancel(false)} type="button">
             <CloseIcon size={20} />
           </button>
         </TaskCloseActionContainer>
@@ -223,33 +262,33 @@ const TaskEditModal = ({
               <TaskTitle>Task title</TaskTitle>
               <TitleCell>
                 <TextInput
+                  autoFocus={!taskTitle}
                   onChange={event => updateTaskTitle(event.target.value)}
                   placeholder="Give your task a name..."
                   value={taskTitle}
-                  autoFocus={!taskTitle}
                 />
               </TitleCell>
             </TitleFieldContainer>
             <AssigneeFieldContainer>
               <TaskTitle>Assignee</TaskTitle>
               <AssigneeDropdown
-                unregisteredFieldsAlign='row'
                 assigneeGroupedOptions={assigneeGroupedOptions}
                 task={task}
+                unregisteredFieldsAlign="row"
                 updateTask={updateTask}
               />
             </AssigneeFieldContainer>
-            {(!editAsTemplate && task && task.status !== status.NOT_STARTED) ? (
+            {!editAsTemplate && task && task.status !== status.NOT_STARTED ? (
               <DueDateFieldContainer>
                 <TaskTitle>Due date</TaskTitle>
                 <DueDateField
                   displayDefaultDurationDays={displayDefaultDurationDays}
                   dueDateLocalString={dueDateLocalString}
+                  position="bottom center"
                   task={task}
                   transposedDueDate={transposedDueDate}
                   transposedEndOfToday={transposedEndOfToday}
                   updateTask={updateTask}
-                  position="bottom center"
                 />
               </DueDateFieldContainer>
             ) : (
@@ -258,8 +297,6 @@ const TaskEditModal = ({
                 <DurationDaysCell>
                   <CounterField
                     minValue={0}
-                    value={task.defaultDurationDays && task.defaultDurationDays !== 'None' ? parseInt(task.defaultDurationDays) : 'None'}
-                    showNone={true}
                     onChange={val => {
                       setSelectedDurationDays(val)
                       updateTask(task.id, {
@@ -267,6 +304,14 @@ const TaskEditModal = ({
                         defaultDurationDays: val.toString(),
                       })
                     }}
+                    showNone
+                    value={
+                      task.defaultDurationDays &&
+                      task.defaultDurationDays !== 'None'
+                        ? // eslint-disable-next-line radix
+                          parseInt(task.defaultDurationDays)
+                        : 'None'
+                    }
                   />
                 </DurationDaysCell>
               </div>
@@ -279,38 +324,69 @@ const TaskEditModal = ({
               <>
                 {taskEmailNotifications.map((notification, key) => (
                   <TaskNotificationDetails
+                    createTaskEmailNotificationLog={
+                      createTaskEmailNotificationLog
+                    }
+                    currentUser={currentUser}
                     deleteTaskNotification={deleteTaskNotification}
+                    editAsTemplate={editAsTemplate}
                     key={notification.id}
+                    manuscript={manuscript}
+                    notificationOptions={notificationOptions}
                     recipientGroupedOptions={recipientGroupedOptions}
+                    selectedDurationDays={selectedDurationDays}
+                    sendNotifyEmail={sendNotifyEmail}
                     task={task}
                     taskEmailNotification={notification}
                     updateTaskNotification={updateTaskNotification}
-                    editAsTemplate={editAsTemplate}
-                    selectedDurationDays={selectedDurationDays}
                   />
                 ))}
               </>
             ) : null}
           </TaskRecipientsContainer>
-          {!isReadOnly && (
-            <SecondaryActionButton
-              disabled={
-                taskEmailNotifications?.length
-                  ? taskEmailNotifications.some(t => !t.recipientType)
-                  : false
-              }
-              onClick={addNewTaskNotification}
-              primary
-            >
-              Add Notification Recipient
-            </SecondaryActionButton>
+          <TaskActionContainer>
+            {!isReadOnly && (
+              <SecondaryActionButton
+                disabled={
+                  taskEmailNotifications?.length
+                    ? taskEmailNotifications.some(t => !t.recipientType)
+                    : false
+                }
+                onClick={addNewTaskNotification}
+                primary
+              >
+                Add Notification Recipient
+              </SecondaryActionButton>
+            )}
+          </TaskActionContainer>
+          {!editAsTemplate ? (
+            task.notificationLogs.length !== 0 && (
+              <TaskNotificationLogsContainer>
+                <NotificationLogsToggle onClick={() => setToggled(!isToggled)}>
+                  {isToggled
+                    ? `Hide all notifications sent (${task.notificationLogs.length})`
+                    : `Show all notifications sent (${task.notificationLogs.length})`}
+                </NotificationLogsToggle>
+                {isToggled && (
+                  <NotificationLogs>
+                    {task.notificationLogs.map(log => (
+                      <>
+                        <div>{convertTimestampToDateString(log.created)}</div>
+                        <div>{log.content}</div>
+                        <br />
+                      </>
+                    ))}
+                  </NotificationLogs>
+                )}
+              </TaskNotificationLogsContainer>
+            )
+          ) : (
+            <></>
           )}
         </TaskRecipientsDetailsContainer>
+
         <TaskActionsContainer>
-          <ActionButton
-            onClick={() => onSave(false)}
-            primary
-          >
+          <ActionButton onClick={() => onSave(false)} primary>
             Save
           </ActionButton>
         </TaskActionsContainer>

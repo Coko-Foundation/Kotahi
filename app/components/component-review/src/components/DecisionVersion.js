@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { set, debounce } from 'lodash'
+import styled from 'styled-components'
 import DecisionReviews from './decision/DecisionReviews'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
 import AssignEditor from './assignEditors/AssignEditor'
@@ -19,7 +20,6 @@ import {
 import DecisionAndReviews from '../../../component-submit/src/components/DecisionAndReviews'
 import FormTemplate from '../../../component-submit/src/components/FormTemplate'
 import TaskList from '../../../component-task-manager/src/TaskList'
-import styled from 'styled-components'
 
 const TaskSectionRow = styled(SectionRow)`
   padding: 12px 0 18px;
@@ -76,6 +76,7 @@ const DecisionVersion = ({
   updateTasks,
   updateTaskNotification,
   deleteTaskNotification,
+  createTaskEmailNotificationLog,
 }) => {
   // Hooks from the old world
   const addEditor = (manuscript, label, isCurrent, user) => {
@@ -223,10 +224,14 @@ const DecisionVersion = ({
             </SectionHeader>
             <TaskSectionRow>
               <TaskList
+                createTaskEmailNotificationLog={createTaskEmailNotificationLog}
+                currentUser={currentUser}
                 deleteTaskNotification={deleteTaskNotification}
                 isReadOnly={!isCurrentVersion}
+                manuscript={version}
                 manuscriptId={version.id}
                 roles={roles}
+                sendNotifyEmail={sendNotifyEmail}
                 tasks={version.tasks}
                 updateTask={updateTask}
                 updateTaskNotification={updateTaskNotification}

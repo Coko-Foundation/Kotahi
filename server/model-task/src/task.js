@@ -1,4 +1,5 @@
 const { BaseModel } = require('@coko/server')
+const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
 
 class Task extends BaseModel {
   static get tableName() {
@@ -18,6 +19,7 @@ class Task extends BaseModel {
     const { User } = require('@pubsweet/models')
     /* eslint-disable-next-line global-require */
     const TaskEmailNotification = require('./taskEmailNotification')
+    /* eslint-disable-next-line global-require */
     const Manuscript = require('../../model-manuscript/src/manuscript')
 
     return {
@@ -37,6 +39,14 @@ class Task extends BaseModel {
           to: 'task_email_notifications.taskId',
         },
       },
+      notificationLogs: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: TaskEmailNotificationLog,
+        join: {
+          from: 'tasks.id',
+          to: 'task_email_notifications_logs.taskId',
+        },
+      },
       manuscript: {
         relation: BaseModel.BelongsToOneRelation,
         modelClass: Manuscript,
@@ -44,7 +54,7 @@ class Task extends BaseModel {
           from: 'tasks.manuscriptId',
           to: 'manuscripts.id',
         },
-      }
+      },
     }
   }
 

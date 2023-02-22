@@ -27,6 +27,7 @@ import {
   UPDATE_TASKS,
   UPDATE_TASK_NOTIFICATION,
   DELETE_TASK_NOTIFICATION,
+  CREATE_TASK_EMAIL_NOTIFICATION_LOGS,
 } from '../../../../queries'
 import { validateDoi, validateSuffix } from '../../../../shared/commsUtils'
 import {
@@ -129,6 +130,10 @@ const DecisionPage = ({ match }) => {
   const [completeComment] = useMutation(COMPLETE_COMMENT)
   const [deletePendingComment] = useMutation(DELETE_PENDING_COMMENT)
   const [setShouldPublishField] = useMutation(setShouldPublishFieldMutation)
+
+  const [createTaskEmailNotificationLog] = useMutation(
+    CREATE_TASK_EMAIL_NOTIFICATION_LOGS,
+  )
 
   const [updateTask] = useMutation(UPDATE_TASK, {
     update(cache, { data: { updateTask: updatedTask } }) {
@@ -311,6 +316,7 @@ const DecisionPage = ({ match }) => {
       allUsers={users}
       canHideReviews={config.review.hide === 'true'}
       createFile={createFile}
+      createTaskEmailNotificationLog={createTaskEmailNotificationLog}
       createTeam={createTeam}
       currentUser={currentUser}
       decisionForm={decisionForm}

@@ -1,15 +1,20 @@
-import React, { useState, useEffect, useContext, useRef, useCallback } from 'react'
+import React, {
+  useState,
+  useEffect,
+  useContext,
+  useRef,
+  useCallback,
+} from 'react'
 import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 import styled, { ThemeContext, css } from 'styled-components'
 import { Draggable } from 'react-beautiful-dnd'
 import { Circle, CheckCircle } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import { useMutation } from '@apollo/client'
+import { debounce } from 'lodash'
 import { transposeFromTimezoneToLocal } from '../../../shared/dateUtils'
 import {
   MinimalButton,
-  MinimalNumericUpDown,
   CompactDetailLabel,
   ActionButton,
   LooseColumn,
@@ -20,12 +25,10 @@ import {
 import { DragVerticalIcon, EllipsisIcon } from '../../shared/Icons'
 import Modal from '../../component-modal/src'
 import { ConfigContext } from '../../config/src'
-import { UPDATE_TASK_STATUS } from '../../../queries'
 import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
 import StatusDropdown from './StatusDropdown'
 import TaskEditModal from './TaskEditModal'
-import { debounce } from 'lodash'
 import CounterField from '../../shared/CounterField'
 
 const TaskRow = styled.div`
@@ -198,16 +201,20 @@ const BaseFieldContainer = styled.div`
   line-height: 1em;
   /* align-items: flex-start; */
 `
+
 const TitleFieldContainer = styled(BaseFieldContainer)`
   flex: 1 1 40em;
 `
+
 const AssigneeFieldContainer = styled(BaseFieldContainer)`
   flex: 1 1 15em;
 `
+
 const DurationDaysFieldContainer = styled(BaseFieldContainer)`
   flex: 0 0 10em;
   margin-left: 10px;
 `
+
 const DueDateFieldContainer = styled(BaseFieldContainer)`
   flex: 0 0 16em;
   flex-direction: row;
@@ -259,6 +266,10 @@ const Task = ({
   recipientGroupedOptions,
   updateTaskNotification,
   deleteTaskNotification,
+  currentUser,
+  manuscript,
+  sendNotifyEmail,
+  createTaskEmailNotificationLog,
 }) => {
   const config = useContext(ConfigContext)
   const themeContext = useContext(ThemeContext)
@@ -280,10 +291,10 @@ const Task = ({
     setTaskTitle(task.title)
   }, [task])
 
-  const updateTaskTitleDebounce = useCallback(debounce(
-    updateTask ?? (() => {}),
-    1000,
-  ), [])
+  const updateTaskTitleDebounce = useCallback(
+    debounce(updateTask ?? (() => {}), 1000),
+    [],
+  )
 
   useEffect(() => {
     return updateTaskTitleDebounce.flush()
@@ -339,10 +350,16 @@ const Task = ({
       (Math.abs(daysDifference) === 1 ? ' day' : ' days') +
       (daysDifference < 0 ? ' ago' : '')
 
-  const displayDefaultDurationDaysUnit =
-    task.defaultDurationDays && task.defaultDurationDays === 1
-      ? ' day'
-      : ' days'
+  let displayDefaultDurationDaysUnit
+
+  if (task.defaultDurationDays === 'None') {
+    displayDefaultDurationDaysUnit = ''
+  } else {
+    displayDefaultDurationDaysUnit =
+      task.defaultDurationDays && task.defaultDurationDays === 1
+        ? ' day'
+        : ' days'
+  }
 
   const displayDefaultDurationDays = task.defaultDurationDays
     ? `${task.defaultDurationDays}${displayDefaultDurationDaysUnit}`
@@ -356,13 +373,9 @@ const Task = ({
 
   const isOverdue = task.dueDate
     ? Date.now() > new Date(task.dueDate).getTime() &&
-      !isDone &&
+      task.status === 'In progress' &&
       !editAsTemplate
     : false
-
-  const [updateTaskStatus] = useMutation(UPDATE_TASK_STATUS, {
-    refetchQueries: ['getTasksQuery'],
-  })
 
   const status = {
     NOT_STARTED: 'Not started',
@@ -446,25 +459,29 @@ const Task = ({
             </ModalContainer>
           </Modal>
           <TaskEditModal
-            isOpen={isEditTaskMetaModal}
             assigneeGroupedOptions={assigneeGroupedOptions}
             config={config}
+            createTaskEmailNotificationLog={createTaskEmailNotificationLog}
+            currentUser={currentUser}
             daysDifferenceLabel={daysDifferenceLabel}
             deleteTaskNotification={deleteTaskNotification}
             displayDefaultDurationDays={displayDefaultDurationDays}
             dueDateLocalString={dueDateLocalString}
             editAsTemplate={editAsTemplate}
+            isOpen={isEditTaskMetaModal}
             isOverdue={isOverdue}
             isReadOnly={isReadOnly}
+            manuscript={manuscript}
+            onCancel={setIsEditTaskMetaModal}
+            onSave={setIsEditTaskMetaModal}
             recipientGroupedOptions={recipientGroupedOptions}
+            sendNotifyEmail={sendNotifyEmail}
             status={status}
             task={task}
             transposedDueDate={transposedDueDate}
             transposedEndOfToday={transposedEndOfToday}
             updateTask={updateTask}
             updateTaskNotification={updateTaskNotification}
-            onSave={setIsEditTaskMetaModal}
-            onCancel={setIsEditTaskMetaModal}
           />
           <TaskRowContainer>
             <TaskRow
@@ -515,7 +532,9 @@ const Task = ({
                         <EditLabel onClick={() => setIsEditTaskMetaModal(true)}>
                           Edit
                         </EditLabel>
-                        <DeleteLabel onClick={() => setIsConfirmingDelete(true)}>
+                        <DeleteLabel
+                          onClick={() => setIsConfirmingDelete(true)}
+                        >
                           Delete
                         </DeleteLabel>
                       </ActionDialog>
@@ -527,8 +546,8 @@ const Task = ({
                 <AssigneeHeader>Assignee</AssigneeHeader>
                 <AssigneeDropdown
                   assigneeGroupedOptions={assigneeGroupedOptions}
-                  unregisteredFieldsAlign='column'
                   task={task}
+                  unregisteredFieldsAlign="column"
                   updateTask={updateTask}
                 />
               </AssigneeFieldContainer>
@@ -538,14 +557,20 @@ const Task = ({
                   <DurationDaysCell>
                     <CounterField
                       minValue={0}
-                      value={task.defaultDurationDays && task.defaultDurationDays !== 'None' ? parseInt(task.defaultDurationDays) : 'None'}
-                      showNone={true}
                       onChange={val => {
                         updateTask(task.id, {
                           ...task,
                           defaultDurationDays: val.toString(),
                         })
                       }}
+                      showNone
+                      value={
+                        task.defaultDurationDays &&
+                        task.defaultDurationDays !== 'None'
+                          ? // eslint-disable-next-line radix
+                            parseInt(task.defaultDurationDays)
+                          : 'None'
+                      }
                     />
                   </DurationDaysCell>
                 </DurationDaysFieldContainer>
@@ -554,9 +579,9 @@ const Task = ({
                   <div>
                     <DueDateHeader>Due date</DueDateHeader>
                     <DueDateField
+                      compact
                       displayDefaultDurationDays={displayDefaultDurationDays}
                       dueDateLocalString={dueDateLocalString}
-                      compact
                       task={task}
                       transposedDueDate={transposedDueDate}
                       transposedEndOfToday={transposedEndOfToday}
@@ -565,7 +590,7 @@ const Task = ({
                   </div>
                   <div>
                     <StatusActionCell isOverdue={isOverdue}>
-                      <StatusDropdown task={task} onStatusUpdate={setTask} />
+                      <StatusDropdown onStatusUpdate={setTask} task={task} />
                     </StatusActionCell>
                   </div>
                 </DueDateFieldContainer>
