@@ -221,15 +221,15 @@ const sendAutomatedTaskEmailNotifications = async () => {
 
     const today = moment()
 
-    // if (dateOfNotification.diff(today, 'days') !== 0) {
-    //   // eslint-disable-next-line no-continue
-    //   continue
-    // }
+    if (dateOfNotification.diff(today, 'days') !== 0) {
+      // eslint-disable-next-line no-continue
+      continue
+    }
 
-    // if (emailNotification.sentAt) {
-    //   // eslint-disable-next-line no-continue
-    //   continue
-    // }i
+    if (emailNotification.sentAt) {
+      // eslint-disable-next-line no-continue
+      continue
+    }
 
     const { recipientTypes } = config.tasks.emailNotifications
     let notificationRecipients = []

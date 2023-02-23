@@ -63,7 +63,7 @@ schedule.scheduleJob(
 schedule.scheduleJob(
   {
     tz: `${config.manuscripts.teamTimezone || 'Etc/UTC'}`,
-    rule: `*/30 * * * * *`,
+    rule: `00 00 * * *`,
   },
   async () => {
     // eslint-disable-next-line no-console
