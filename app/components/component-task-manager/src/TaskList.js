@@ -1,7 +1,7 @@
 import React, { useState, useContext, useEffect } from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { v4 as uuid } from 'uuid'
-import moment from 'moment-timezone'
+// import moment from 'moment-timezone'
 import styled from 'styled-components'
 import Task from './Task'
 import { RoundIconButton, TightColumn, MediumColumn } from '../../shared'
@@ -71,7 +71,7 @@ const TaskList = ({
   }
 
   const addNewTask = () => {
-    const today = moment.tz(config.teamTimezone).endOf('day').toDate()
+    // const today = moment.tz(config.teamTimezone).endOf('day').toDate()
 
     setTasks([
       ...tasks,
@@ -79,8 +79,9 @@ const TaskList = ({
         id: uuid(),
         title: '',
         assignee: null,
-        dueDate: today,
+        dueDate: null,
         status: 'Not started',
+        defaultDurationDays: 'None',
       },
     ])
   }

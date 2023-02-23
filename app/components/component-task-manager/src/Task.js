@@ -306,10 +306,7 @@ const Task = ({
   }
 
   const [transposedDueDate, setTransposedDueDate] = useState(
-    transposeFromTimezoneToLocal(
-      task.dueDate || new Date(),
-      config.teamTimezone,
-    ),
+    transposeFromTimezoneToLocal(task.dueDate, config.teamTimezone),
   )
 
   const dueDateLocalString = getLocalTimeString(moment(task.dueDate))
@@ -388,10 +385,7 @@ const Task = ({
   useEffect(() => {
     if (task.dueDate) {
       setTransposedDueDate(
-        transposeFromTimezoneToLocal(
-          task.dueDate || new Date(),
-          config.teamTimezone,
-        ),
+        transposeFromTimezoneToLocal(task.dueDate, config.teamTimezone),
       )
     }
   }, [task])
