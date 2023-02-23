@@ -9,7 +9,7 @@ import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 import styled, { ThemeContext, css } from 'styled-components'
 import { Draggable } from 'react-beautiful-dnd'
-import { Circle, CheckCircle } from 'react-feather'
+import { Circle, CheckCircle, MoreVertical } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { debounce } from 'lodash'
 import { transposeFromTimezoneToLocal } from '../../../shared/dateUtils'
@@ -22,7 +22,7 @@ import {
   TextInput,
 } from '../../shared'
 
-import { DragVerticalIcon, EllipsisIcon } from '../../shared/Icons'
+import { DragVerticalIcon } from '../../shared/Icons'
 import Modal from '../../component-modal/src'
 import { ConfigContext } from '../../config/src'
 import AssigneeDropdown from './AssigneeDropdown'
@@ -135,7 +135,7 @@ const DragIcon = styled(DragVerticalIcon)`
   }
 `
 
-const Ellipsis = styled(EllipsisIcon)`
+const Ellipsis = styled(MoreVertical)`
   cursor: pointer;
   height: 20px;
   width: 20px;
