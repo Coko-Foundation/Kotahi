@@ -1,11 +1,10 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useEffect } from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import { v4 as uuid } from 'uuid'
 // import moment from 'moment-timezone'
 import styled from 'styled-components'
 import Task from './Task'
 import { RoundIconButton, TightColumn, MediumColumn } from '../../shared'
-import { ConfigContext } from '../../config/src'
 
 const TaskListContainer = styled.div`
   -webkit-font-smoothing: antialiased;
@@ -31,8 +30,6 @@ const TaskList = ({
   sendNotifyEmail,
   createTaskEmailNotificationLog,
 }) => {
-  const config = useContext(ConfigContext)
-
   // The tasks we keep in state may contain an extra task that hasn't yet received a title.
   // This is treated as temporary and not persisted until it has a title.
   const [tasks, setTasks] = useState(persistedTasks)
@@ -71,8 +68,6 @@ const TaskList = ({
   }
 
   const addNewTask = () => {
-    // const today = moment.tz(config.teamTimezone).endOf('day').toDate()
-
     setTasks([
       ...tasks,
       {

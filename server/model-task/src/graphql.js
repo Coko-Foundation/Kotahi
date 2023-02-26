@@ -96,7 +96,7 @@ const resolvers = {
       const associatedTask = await Task.query()
         .findById(taskNotification.taskId)
         .withGraphFetched(
-          '[emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+          '[emailNotifications(orderByCreated).recipientUser, notificationLogs, assignee]',
         )
 
       return associatedTask
@@ -110,7 +110,7 @@ const resolvers = {
       const associatedTask = await Task.query()
         .findById(taskEmailNotification.taskId)
         .withGraphFetched(
-          '[emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+          '[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]',
         )
 
       await TaskEmailNotification.query().deleteById(id)
@@ -146,6 +146,10 @@ const resolvers = {
       }
 
       const updatedTask = await Task.query().patchAndFetchById(task.id, data)
+        .withGraphFetched[
+        'assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser'
+      ]
+
       return updatedTask
     },
 
@@ -159,7 +163,7 @@ const resolvers = {
       const associatedTask = await Task.query()
         .findById(taskEmailNotificationLog.taskId)
         .withGraphFetched(
-          '[emailNotifications.recipientUser, notificationLogs]',
+          '[assignee, emailNotifications.recipientUser, notificationLogs]',
         )
 
       return associatedTask
