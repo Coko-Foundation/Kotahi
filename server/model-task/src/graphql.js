@@ -98,13 +98,15 @@ const resolvers = {
         id,
       )
 
+      const { taskId } = taskEmailNotification
+
+      await TaskEmailNotification.query().deleteById(id)
+
       const associatedTask = await Task.query()
-        .findById(taskEmailNotification.taskId)
+        .findById(taskId)
         .withGraphFetched(
           '[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]',
         )
-
-      await TaskEmailNotification.query().deleteById(id)
 
       return associatedTask
     },

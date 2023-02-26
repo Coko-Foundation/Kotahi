@@ -175,7 +175,9 @@ const TaskEditModal = ({
     task.emailNotifications ?? [],
   )
 
-  const [selectedDurationDays, setSelectedDurationDays] = useState(task.defaultDurationDays)
+  const [selectedDurationDays, setSelectedDurationDays] = useState(
+    task.defaultDurationDays,
+  )
 
   const [taskTitle, setTaskTitle] = useState(task?.title || '')
 
