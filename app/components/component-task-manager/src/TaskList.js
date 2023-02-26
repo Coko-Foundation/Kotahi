@@ -84,7 +84,7 @@ const TaskList = ({
         assignee: null,
         dueDate: null,
         status: 'Not started',
-        defaultDurationDays: 'None',
+        defaultDurationDays: null,
       },
     ])
   }
