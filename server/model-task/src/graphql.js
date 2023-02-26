@@ -16,7 +16,6 @@ const resolvers = {
         .filter((task, i) => tasks.findIndex(t => t.id === task.id) === i)
         .map(task => ({
           ...task,
-          dueDate: new Date(task.dueDate),
           manuscriptId,
         }))
 
@@ -42,7 +41,9 @@ const resolvers = {
               .onConflict('id')
               .merge()
               .returning('*')
-              .withGraphFetched('assignee'),
+              .withGraphFetched(
+                '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
+              ),
           )
         }
 
@@ -78,25 +79,15 @@ const resolvers = {
     },
 
     updateTaskNotification: async (_, { taskNotification }) => {
-      const existingTaskEmailNotification = await TaskEmailNotification.query().where(
-        { id: taskNotification.id },
+      await TaskEmailNotification.query().upsertGraphAndFetch(
+        taskNotification,
+        { relate: true, insertMissing: true },
       )
-
-      if (existingTaskEmailNotification.length > 0) {
-        await TaskEmailNotification.query()
-          .update(taskNotification)
-          .where({ id: taskNotification.id })
-      } else {
-        await TaskEmailNotification.query()
-          .insert(taskNotification)
-          .onConflict('id')
-          .merge()
-      }
 
       const associatedTask = await Task.query()
         .findById(taskNotification.taskId)
         .withGraphFetched(
-          '[emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+          '[emailNotifications(orderByCreated).recipientUser, notificationLogs, assignee]',
         )
 
       return associatedTask
@@ -110,7 +101,7 @@ const resolvers = {
       const associatedTask = await Task.query()
         .findById(taskEmailNotification.taskId)
         .withGraphFetched(
-          '[emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+          '[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]',
         )
 
       await TaskEmailNotification.query().deleteById(id)
@@ -145,7 +136,12 @@ const resolvers = {
             : null
       }
 
-      const updatedTask = await Task.query().patchAndFetchById(task.id, data)
+      const updatedTask = await Task.query()
+        .patchAndFetchById(task.id, data)
+        .withGraphFetched(
+          '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
+        )
+
       return updatedTask
     },
 
@@ -159,7 +155,7 @@ const resolvers = {
       const associatedTask = await Task.query()
         .findById(taskEmailNotificationLog.taskId)
         .withGraphFetched(
-          '[emailNotifications.recipientUser, notificationLogs]',
+          '[assignee, emailNotifications.recipientUser, notificationLogs]',
         )
 
       return associatedTask

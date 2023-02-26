@@ -238,6 +238,8 @@ const TaskEditModal = ({
     ])
   }
 
+  const [isToggled, setToggled] = useState(false)
+
   const status = {
     NOT_STARTED: 'Not started',
     START: 'Start',
@@ -352,12 +354,13 @@ const TaskEditModal = ({
             )}
           </TaskActionContainer>
           {!editAsTemplate ? (
+            task.notificationLogs &&
             task.notificationLogs.length !== 0 && (
               <TaskNotificationLogsContainer>
                 <NotificationLogsToggle onClick={() => setToggled(!isToggled)}>
                   {isToggled
-                    ? `Hide all notifications sent (${task.notificationLogs.length})`
-                    : `Show all notifications sent (${task.notificationLogs.length})`}
+                    ? `Hide all notifications sent (${task.notificationLogs?.length})`
+                    : `Show all notifications sent (${task.notificationLogs?.length})`}
                 </NotificationLogsToggle>
                 {isToggled && (
                   <NotificationLogs>

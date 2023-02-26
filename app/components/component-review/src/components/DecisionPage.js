@@ -143,10 +143,28 @@ const DecisionPage = ({ match }) => {
           id: updatedTask.manuscriptId,
         }),
         fields: {
-          tasks(existingTaskRefs) {
-            return existingTaskRefs.includes(updatedTask.id)
-              ? existingTaskRefs
-              : [...existingTaskRefs, updatedTask.id]
+          tasks(existingTaskRefs = [], { readField }) {
+            const newTaskRef = cache.writeFragment({
+              data: updatedTask,
+              fragment: gql`
+                fragment NewTask on Task {
+                  id
+                  title
+                  dueDate
+                  defaultDurationDays
+                }
+              `,
+            })
+
+            if (
+              existingTaskRefs.some(
+                ref => readField('id', ref) === updatedTask.id,
+              )
+            ) {
+              return existingTaskRefs
+            }
+
+            return [...existingTaskRefs, newTaskRef]
           },
         },
       })

@@ -2,6 +2,12 @@ const moment = require('moment-timezone')
 const config = require('config')
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
+const Team = require('../../model-team/src/team')
+const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
+
+const {
+  sendEmailWithPreparedData,
+} = require('../../model-user/src/userCommsUtils')
 
 const {
   manuscriptIsActive,
@@ -201,6 +207,212 @@ const getTaskEmailNotifications = async ({ status = null }) => {
     .withGraphFetched('task.manuscript')
 }
 
+const sendAutomatedTaskEmailNotifications = async () => {
+  const taskEmailNotifications = await getTaskEmailNotifications({
+    status: config.tasks.status.IN_PROGRESS,
+  })
+
+  // eslint-disable-next-line no-restricted-syntax
+  for (const emailNotification of taskEmailNotifications) {
+    const dateOfNotification = moment(emailNotification.task.dueDate).add(
+      emailNotification.notificationElapsedDays,
+      'days',
+    )
+
+    const today = moment()
+
+    if (dateOfNotification.diff(today, 'days') !== 0) {
+      // eslint-disable-next-line no-continue
+      continue
+    }
+
+    if (emailNotification.sentAt) {
+      // eslint-disable-next-line no-continue
+      continue
+    }
+
+    const { recipientTypes } = config.tasks.emailNotifications
+    let notificationRecipients = []
+
+    switch (emailNotification.recipientType) {
+      case recipientTypes.UNREGISTERED_USER:
+        if (emailNotification.recipientEmail) {
+          notificationRecipients = [
+            {
+              email: emailNotification.recipientEmail,
+              name: emailNotification.recipientName,
+            },
+          ]
+        }
+
+        break
+
+      case recipientTypes.REGISTERED_USER:
+        if (emailNotification.recipientUser) {
+          notificationRecipients = [
+            {
+              email: emailNotification.recipientUser.email,
+              name: emailNotification.recipientUser.username,
+            },
+          ]
+        }
+
+        break
+
+      case recipientTypes.EDITOR:
+        // eslint-disable-next-line no-await-in-loop
+        notificationRecipients = await getTeamRecipients(emailNotification, [
+          recipientTypes.EDITOR,
+          recipientTypes.SENIOR_EDITOR,
+          recipientTypes.HANDLING_EDITOR,
+        ])
+        break
+
+      case recipientTypes.REVIEWER:
+      case recipientTypes.AUTHOR:
+        // eslint-disable-next-line no-await-in-loop
+        notificationRecipients = await getTeamRecipients(emailNotification, [
+          emailNotification.recipientType,
+        ])
+        break
+
+      case recipientTypes.ASSIGNEE:
+        // eslint-disable-next-line no-case-declarations
+        const { assigneeTypes } = config.tasks
+
+        switch (emailNotification.task.assigneeType) {
+          case assigneeTypes.UNREGISTERED_USER:
+            if (emailNotification.task.assigneeEmail) {
+              notificationRecipients = [
+                {
+                  email: emailNotification.task.assigneeEmail,
+                  name: emailNotification.task.assigneeName,
+                },
+              ]
+            }
+
+            break
+
+          case assigneeTypes.REGISTERED_USER:
+            if (emailNotification.task.assignee) {
+              notificationRecipients = [
+                {
+                  email: emailNotification.task.assignee.email,
+                  name: emailNotification.task.assignee.username,
+                },
+              ]
+            }
+
+            break
+
+          case assigneeTypes.EDITOR:
+            // eslint-disable-next-line no-await-in-loop
+            notificationRecipients = await getTeamRecipients(
+              emailNotification,
+              [
+                assigneeTypes.EDITOR,
+                assigneeTypes.SENIOR_EDITOR,
+                assigneeTypes.HANDLING_EDITOR,
+              ],
+            )
+            break
+
+          case assigneeTypes.REVIEWER:
+          case assigneeTypes.AUTHOR:
+            // eslint-disable-next-line no-await-in-loop
+            notificationRecipients = await getTeamRecipients(
+              emailNotification,
+              [emailNotification.task.assigneeType],
+            )
+            break
+          default:
+        }
+
+        break
+      default:
+    }
+
+    const { manuscript } = emailNotification.task
+
+    // eslint-disable-next-line no-await-in-loop
+    const editor = await manuscript.getManuscriptEditor()
+    const currentUser = editor ? editor.username : ''
+
+    // eslint-disable-next-line no-restricted-syntax
+    for (const recipient of notificationRecipients) {
+      let logData
+
+      if (emailNotification.emailTemplateKey) {
+        try {
+          // eslint-disable-next-line no-await-in-loop
+          // const emailSender = currentUser
+
+          const notificationInput = {
+            manuscript,
+            // selectedEmail: recipient.email, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing receiver being selected
+            selectedTemplate: emailNotification.emailTemplateKey,
+            externalEmail: recipient.email,
+            externalName: recipient.name, // New User username
+            currentUser,
+          }
+
+          const emailTemplateOption = emailNotification.emailTemplateKey.replace(
+            /([A-Z])/g,
+            ' $1',
+          )
+
+          const selectedTemplateValue =
+            emailTemplateOption.charAt(0).toUpperCase() +
+            emailTemplateOption.slice(1)
+
+          const messageBody = `${selectedTemplateValue} sent by Kotahi to ${recipient.name}`
+
+          logData = {
+            taskId: emailNotification.task.id,
+            content: messageBody,
+            emailTemplateKey: emailTemplateOption,
+            senderEmail: editor.email,
+            recipientEmail: recipient.email,
+          }
+
+          const ctx = ''
+          // eslint-disable-next-line no-await-in-loop
+          await sendEmailWithPreparedData(notificationInput, ctx, editor)
+          // eslint-disable-next-line no-await-in-loop
+          await logTaskEmailNotificationData(logData)
+        } catch (error) {
+          console.error(error)
+        }
+      }
+    }
+  }
+}
+
+const getTeamRecipients = async (emailNotification, roles) => {
+  const teamQuery = Team.query()
+    .where({
+      object_type: 'manuscript',
+      object_id: emailNotification.task.manuscriptId,
+    })
+    .whereIn('role', roles) // no await here because it's a sub-query
+
+  const teamMemberUsers = await Team.relatedQuery('users').for(teamQuery)
+  return teamMemberUsers.map(user => ({
+    email: user.email,
+    name: user.username,
+  }))
+}
+
+const logTaskEmailNotificationData = async logData => {
+  await TaskEmailNotificationLog.query().insert(logData)
+
+  const associatedTask = await Task.query()
+    .findById(logData.taskId)
+    .withGraphFetched('[emailNotifications.recipientUser, notificationLogs]')
+
+  return associatedTask
+}
+
 module.exports = {
   populateTemplatedTasksForManuscript,
   updateAlertsForTask,
@@ -208,4 +420,5 @@ module.exports = {
   createNewTaskAlerts,
   deleteAlertsForManuscript,
   getTaskEmailNotifications,
+  sendAutomatedTaskEmailNotifications,
 }

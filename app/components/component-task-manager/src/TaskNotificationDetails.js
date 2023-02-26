@@ -207,6 +207,7 @@ const TaskNotificationDetails = ({
       case 'userRole':
         setIsNewRecipient(false)
         updateTaskNotification({
+          ...taskNotification,
           id: taskNotification.id,
           taskId: taskNotification.taskId,
           recipientUserId: null,
@@ -473,7 +474,7 @@ const TaskNotificationDetails = ({
               break
             case 'registeredUser':
               input = {
-                selectedEmail: task.assginee.email,
+                selectedEmail: task.assignee.email,
                 selectedTemplate: taskEmailNotification.emailTemplateKey,
                 manuscript,
                 currentUser: currentUser.username,
@@ -482,8 +483,8 @@ const TaskNotificationDetails = ({
               logsData = [
                 {
                   selectedTemplate: taskEmailNotification.emailTemplateKey,
-                  recipientName: task.assginee.username,
-                  recipientEmail: task.assginee.email,
+                  recipientName: task.assignee.username,
+                  recipientEmail: task.assignee.email,
                   senderEmail: currentUser.email,
                 },
               ]
@@ -542,7 +543,7 @@ const TaskNotificationDetails = ({
   const logTaskNotificationEmails = async logsData => {
     // eslint-disable-next-line no-restricted-syntax
     for (const logData of logsData) {
-      const emailTemplateOption = logData.selectedTemplate.replaceAll(
+      const emailTemplateOption = logData.selectedTemplate.replace(
         /([A-Z])/g,
         ' $1',
       )

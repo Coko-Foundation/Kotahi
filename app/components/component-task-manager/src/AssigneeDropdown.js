@@ -126,22 +126,23 @@ const AssigneeDropdown = ({
     }
   }
 
-  const UnregisteredUserCell = unregisteredFieldsAlign === 'row'
-    ? UnregisteredFieldsAlignRow
-    : UnregisteredFieldsAlignColumn
+  const UnregisteredUserCell =
+    unregisteredFieldsAlign === 'row'
+      ? UnregisteredFieldsAlignRow
+      : UnregisteredFieldsAlignColumn
 
   const groupedOptionsComponent = (
     <Select
       aria-label="Assignee"
       data-testid="Assignee_select"
       dropdownState={dropdownState}
+      hasGroupedOptions
+      isClearable
       label="Assignee"
       onChange={selected => handleAssigneeInput(selected, task)}
       options={assigneeGroupedOptions}
       placeholder="Select..."
       value={task.assignee?.id || task.assigneeType}
-      hasGroupedOptions
-      isClearable
     />
   )
 
