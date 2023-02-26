@@ -565,7 +565,9 @@ const Task = ({
               ) : (
                 <DueDateFieldContainer>
                   <div>
-                    <DueDateHeader>Due date</DueDateHeader>
+                    <DueDateHeader>
+                      {task.status === status.NOT_STARTED ? 'Duration' : 'Due date'}
+                    </DueDateHeader>
                     <DueDateField
                       compact
                       displayDefaultDurationDays={displayDefaultDurationDays}
