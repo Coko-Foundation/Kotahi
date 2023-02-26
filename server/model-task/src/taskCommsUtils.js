@@ -209,7 +209,7 @@ const getTaskEmailNotifications = async ({ status = null }) => {
 
 const sendAutomatedTaskEmailNotifications = async () => {
   const taskEmailNotifications = await getTaskEmailNotifications({
-    status: config.tasks.status.IN_PROGRESS,
+    status: config.journal.tasks.status.IN_PROGRESS,
   })
 
   // eslint-disable-next-line no-restricted-syntax
@@ -231,7 +231,7 @@ const sendAutomatedTaskEmailNotifications = async () => {
       continue
     }
 
-    const { recipientTypes } = config.tasks.emailNotifications
+    const { recipientTypes } = config.journal.tasks.emailNotifications
     let notificationRecipients = []
 
     switch (emailNotification.recipientType) {

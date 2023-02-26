@@ -115,7 +115,7 @@ const resolvers = {
 
     updateTaskStatus: async (_, { task }) => {
       // eslint-disable-next-line prefer-destructuring
-      const status = config.tasks.status
+      const status = config.journal.tasks.status
 
       const data = {
         status: task.status,

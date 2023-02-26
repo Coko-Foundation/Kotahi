@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { Select, TextInput } from '../../shared'
 import theme from '../../../theme'
+import config from 'config'
 
 const AssigneeCellContainer = styled.div`
   justify-content: flex-start;
@@ -53,10 +54,10 @@ const AssigneeDropdown = ({
   updateTask,
   unregisteredFieldsAlign = 'row',
 }) => {
+  const assigneeTypes = config.journal.tasks.assigneeTypes;
   const [dropdownState, setDropdownState] = useState(false)
-
   const [isNewUser, setIsNewUser] = useState(
-    task.assigneeType === 'unregisteredUser',
+    task.assigneeType === assigneeTypes.UNREGISTERED_USER,
   )
 
   const [assigneeEmail, setAssigneeEmail] = useState(task.assigneeEmail)
@@ -64,12 +65,12 @@ const AssigneeDropdown = ({
 
   useEffect(() => {
     setAssigneeEmail(task.assigneeEmail)
-    setIsNewUser(task.assigneeType === 'unregisteredUser')
+    setIsNewUser(task.assigneeType === assigneeTypes.UNREGISTERED_USER)
     setAssigneeName(task.assigneeName)
   }, [
     task.assigneeEmail,
     task.assigneeName,
-    task.assigneeType === 'unregisteredUser',
+    task.assigneeType === assigneeTypes.UNREGISTERED_USER,
   ])
 
   function handleAssigneeInput(selectedOption, selectedTask) {
@@ -100,7 +101,7 @@ const AssigneeDropdown = ({
           assigneeEmail: null,
         })
         break
-      case 'registeredUser':
+      case assigneeTypes.REGISTERED_USER:
         setIsNewUser(false)
         updateTask(selectedTask.id, {
           ...selectedTask,
@@ -111,7 +112,7 @@ const AssigneeDropdown = ({
           assigneeEmail: null,
         })
         break
-      case 'unregisteredUser':
+      case assigneeTypes.UNREGISTERED_USER:
         setIsNewUser(true)
         updateTask(selectedTask.id, {
           ...selectedTask,
@@ -156,7 +157,7 @@ const AssigneeDropdown = ({
             ...task,
             assigneeUserId: null,
             assignee: null,
-            assigneeType: 'unregisteredUser',
+            assigneeType: assigneeTypes.UNREGISTERED_USER,
             assigneeEmail: e.target.value,
           })
         }}
@@ -171,7 +172,7 @@ const AssigneeDropdown = ({
             ...task,
             assigneeUserId: null,
             assignee: null,
-            assigneeType: 'unregisteredUser',
+            assigneeType: assigneeTypes.UNREGISTERED_USER,
             assigneeName: e.target.value,
           })
         }}
