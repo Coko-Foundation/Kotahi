@@ -16,7 +16,6 @@ const resolvers = {
         .filter((task, i) => tasks.findIndex(t => t.id === task.id) === i)
         .map(task => ({
           ...task,
-          dueDate: new Date(task.dueDate),
           manuscriptId,
         }))
 
@@ -42,7 +41,9 @@ const resolvers = {
               .onConflict('id')
               .merge()
               .returning('*')
-              .withGraphFetched('assignee'),
+              .withGraphFetched(
+                '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
+              ),
           )
         }
 
@@ -137,7 +138,9 @@ const resolvers = {
 
       const updatedTask = await Task.query()
         .patchAndFetchById(task.id, data)
-        .withGraphFetched('assignee')
+        .withGraphFetched(
+          '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
+        )
 
       return updatedTask
     },

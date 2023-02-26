@@ -48,12 +48,20 @@ const TaskList = ({
     assigneeUserId: task.assignee?.id || null,
     defaultDurationDays: task.defaultDurationDays || 'None',
     reminderPeriodDays: task.reminderPeriodDays || 0,
-    dueDate: editAsTemplate ? null : new Date(task.dueDate),
+    dueDate: getDueDate(editAsTemplate, task.dueDate),
     status: editAsTemplate ? 'Not started' : task.status,
     assigneeType: task.assigneeType || null,
     assigneeName: task.assigneeName || null,
     assigneeEmail: task.assigneeEmail || null,
   })
+
+  function getDueDate(isEditAsTemplate, dueDate) {
+    if (isEditAsTemplate) {
+      return null
+    }
+
+    return dueDate ? new Date(dueDate) : null
+  }
 
   const updateTask = (id, updatedTask) => {
     if (updatedTask.title) {
