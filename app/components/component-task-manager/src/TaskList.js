@@ -49,7 +49,7 @@ const TaskList = ({
     manuscriptId,
     title: task.title,
     assigneeUserId: task.assignee?.id || null,
-    defaultDurationDays: task.defaultDurationDays || 'None',
+    defaultDurationDays: task.defaultDurationDays,
     reminderPeriodDays: task.reminderPeriodDays || 0,
     dueDate: editAsTemplate ? null : new Date(task.dueDate),
     status: editAsTemplate ? 'Not started' : task.status,

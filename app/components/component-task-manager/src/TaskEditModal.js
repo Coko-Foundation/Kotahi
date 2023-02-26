@@ -175,9 +175,7 @@ const TaskEditModal = ({
     task.emailNotifications ?? [],
   )
 
-  const [selectedDurationDays, setSelectedDurationDays] = useState(
-    task.defaultDurationDays || 'none',
-  )
+  const [selectedDurationDays, setSelectedDurationDays] = useState(task.defaultDurationDays)
 
   const [taskTitle, setTaskTitle] = useState(task?.title || '')
 
@@ -301,17 +299,11 @@ const TaskEditModal = ({
                       setSelectedDurationDays(val)
                       updateTask(task.id, {
                         ...task,
-                        defaultDurationDays: val.toString(),
+                        defaultDurationDays: val,
                       })
                     }}
                     showNone
-                    value={
-                      task.defaultDurationDays &&
-                      task.defaultDurationDays !== 'None'
-                        ? // eslint-disable-next-line radix
-                          parseInt(task.defaultDurationDays)
-                        : 'None'
-                    }
+                    value={task.defaultDurationDays}
                   />
                 </DurationDaysCell>
               </div>

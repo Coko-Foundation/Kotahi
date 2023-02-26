@@ -140,7 +140,7 @@ const resolvers = {
         const taskDurationDays = dbTask.defaultDurationDays || 0
 
         data.dueDate =
-          taskDurationDays !== 'None'
+          taskDurationDays !== null
             ? dateFns.addDays(new Date(), taskDurationDays)
             : null
       }
@@ -189,7 +189,7 @@ const typeDefs = `
     manuscriptId: ID
     title: String!
     assigneeUserId: ID
-    defaultDurationDays: String
+    defaultDurationDays: Int
     dueDate: DateTime
     reminderPeriodDays: Int
     status: String!
@@ -212,7 +212,7 @@ const typeDefs = `
     title: String!
     assigneeUserId: ID
     assignee: User
-    defaultDurationDays: String
+    defaultDurationDays: Int
     dueDate: DateTime
     reminderPeriodDays: Int
     sequenceIndex: Int!

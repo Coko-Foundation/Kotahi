@@ -352,7 +352,7 @@ const Task = ({
 
   let displayDefaultDurationDaysUnit
 
-  if (task.defaultDurationDays === 'None') {
+  if (task.defaultDurationDays === null) {
     displayDefaultDurationDaysUnit = ''
   } else {
     displayDefaultDurationDaysUnit =
@@ -564,13 +564,7 @@ const Task = ({
                         })
                       }}
                       showNone
-                      value={
-                        task.defaultDurationDays &&
-                        task.defaultDurationDays !== 'None'
-                          ? // eslint-disable-next-line radix
-                            parseInt(task.defaultDurationDays)
-                          : 'None'
-                      }
+                      value={task.defaultDurationDays}
                     />
                   </DurationDaysCell>
                 </DurationDaysFieldContainer>

@@ -639,11 +639,11 @@ const TaskNotificationDetails = ({
       <ScheduleNotificationFieldContainer>
         <NotificationDeadlineContainer>
           <TaskTitle>Send notification</TaskTitle>
-          <NotificationDeadlineCell disabled={selectedDurationDays === 'None'}>
+          <NotificationDeadlineCell disabled={selectedDurationDays === null}>
             <span>Send</span>
             <CounterField
               compact
-              disabled={selectedDurationDays === 'None'}
+              disabled={selectedDurationDays === null}
               minValue={0}
               onChange={val => {
                 setTaskEmailNotificationElapsedDays(val)
@@ -657,7 +657,7 @@ const TaskNotificationDetails = ({
             />
             <span>days</span>
             <CounterFieldWithOptions
-              disabled={selectedDurationDays === 'None'}
+              disabled={selectedDurationDays === null}
               onChange={selected => {
                 if (selected && selected.value) {
                   setTaskEmailNotificationDeadline(selected.value)
