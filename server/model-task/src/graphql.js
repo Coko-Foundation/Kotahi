@@ -135,10 +135,9 @@ const resolvers = {
             : null
       }
 
-      const updatedTask = await Task.query().patchAndFetchById(task.id, data)
-        .withGraphFetched[
-        'assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser'
-      ]
+      const updatedTask = await Task.query()
+        .patchAndFetchById(task.id, data)
+        .withGraphFetched('assignee')
 
       return updatedTask
     },
