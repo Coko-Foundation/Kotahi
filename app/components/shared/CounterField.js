@@ -69,7 +69,7 @@ const CounterField = ({
   compact = false,
   disabled = false,
 }) => {
-  const [value, setValue] = useState(propsValue || 0)
+  const [value, setValue] = useState(propsValue)
   const [displayValue, setDisplayValue] = useState(propsValue === null ? 'None' : propsValue)
   const [showResetIcon, setShowResetIcon] = useState(false)
   const noneValue = null

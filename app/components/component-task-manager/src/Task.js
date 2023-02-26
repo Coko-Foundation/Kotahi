@@ -554,7 +554,7 @@ const Task = ({
                       onChange={val => {
                         updateTask(task.id, {
                           ...task,
-                          defaultDurationDays: val.toString(),
+                          defaultDurationDays: val,
                         })
                       }}
                       showNone
