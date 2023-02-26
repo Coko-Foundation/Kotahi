@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
+import config from 'config'
 import { Select, TextInput } from '../../shared'
 import theme from '../../../theme'
-import config from 'config'
 
 const AssigneeCellContainer = styled.div`
   justify-content: flex-start;
@@ -54,8 +54,9 @@ const AssigneeDropdown = ({
   updateTask,
   unregisteredFieldsAlign = 'row',
 }) => {
-  const assigneeTypes = config.journal.tasks.assigneeTypes;
+  const { assigneeTypes } = config.journal.tasks
   const [dropdownState, setDropdownState] = useState(false)
+
   const [isNewUser, setIsNewUser] = useState(
     task.assigneeType === assigneeTypes.UNREGISTERED_USER,
   )
