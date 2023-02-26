@@ -360,7 +360,7 @@ const Task = ({
 
   const displayDefaultDurationDays = task.defaultDurationDays
     ? `${task.defaultDurationDays}${displayDefaultDurationDaysUnit}`
-    : ''
+    : 'None'
 
   const dueDateLabel = moment
     .tz(task.dueDate, config.teamTimezone)

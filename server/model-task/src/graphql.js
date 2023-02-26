@@ -128,7 +128,7 @@ const resolvers = {
         dbTask.status === status.NOT_STARTED &&
         task.status === status.IN_PROGRESS
       ) {
-        const taskDurationDays = dbTask.defaultDurationDays || 0
+        const taskDurationDays = dbTask.defaultDurationDays
 
         data.dueDate =
           taskDurationDays !== null
