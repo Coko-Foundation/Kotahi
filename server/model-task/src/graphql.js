@@ -78,20 +78,10 @@ const resolvers = {
     },
 
     updateTaskNotification: async (_, { taskNotification }) => {
-      const existingTaskEmailNotification = await TaskEmailNotification.query().where(
-        { id: taskNotification.id },
+      await TaskEmailNotification.query().upsertGraphAndFetch(
+        taskNotification,
+        { relate: true, insertMissing: true },
       )
-
-      if (existingTaskEmailNotification.length > 0) {
-        await TaskEmailNotification.query()
-          .update(taskNotification)
-          .where({ id: taskNotification.id })
-      } else {
-        await TaskEmailNotification.query()
-          .insert(taskNotification)
-          .onConflict('id')
-          .merge()
-      }
 
       const associatedTask = await Task.query()
         .findById(taskNotification.taskId)
