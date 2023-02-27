@@ -4,6 +4,7 @@ const config = require('config')
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
 const TaskEmailNotification = require('./taskEmailNotification')
+const taskConfigs = require('../../../config/journal/tasks.json')
 
 const { createNewTaskAlerts, updateAlertsForTask } = require('./taskCommsUtils')
 const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
@@ -117,7 +118,7 @@ const resolvers = {
 
     updateTaskStatus: async (_, { task }) => {
       // eslint-disable-next-line prefer-destructuring
-      const status = config.journal.tasks.status
+      const status = taskConfigs.status
 
       const data = {
         status: task.status,

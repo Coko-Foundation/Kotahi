@@ -1,12 +1,12 @@
 import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
-import config from 'config'
 import SelectEmailTemplate from '../../component-review/src/components/emailNotifications/SelectEmailTemplate'
 import { RoundIconButton, Select, TextInput } from '../../shared'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
 import CounterFieldWithOptions from '../../shared/CounterFieldWithOptions'
 import CounterField from '../../shared/CounterField'
 import theme from '../../../theme'
+import { emailNotifications } from '../../../../config/journal/tasks.json'
 
 const TaskTitle = styled.div`
   font-family: 'Roboto';
@@ -138,7 +138,7 @@ const TaskNotificationDetails = ({
   selectedDurationDays,
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState('')
-  const { recipientTypes } = config.journal.tasks.emailNotifications
+  const { recipientTypes } = emailNotifications
 
   const [taskEmailNotification, setTaskNotification] = useState(
     propTaskEmailNotification,

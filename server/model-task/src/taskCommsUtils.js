@@ -4,6 +4,7 @@ const Task = require('./task')
 const TaskAlert = require('./taskAlert')
 const Team = require('../../model-team/src/team')
 const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
+const taskConfigs = require('../../../config/journal/tasks.json')
 
 const {
   sendEmailWithPreparedData,
@@ -209,7 +210,7 @@ const getTaskEmailNotifications = async ({ status = null }) => {
 
 const sendAutomatedTaskEmailNotifications = async () => {
   const taskEmailNotifications = await getTaskEmailNotifications({
-    status: config.journal.tasks.status.IN_PROGRESS,
+    status: taskConfigs.status.IN_PROGRESS,
   })
 
   // eslint-disable-next-line no-restricted-syntax
@@ -231,7 +232,7 @@ const sendAutomatedTaskEmailNotifications = async () => {
       continue
     }
 
-    const { recipientTypes } = config.journal.tasks.emailNotifications
+    const { recipientTypes } = taskConfigs.emailNotifications
     let notificationRecipients = []
 
     switch (emailNotification.recipientType) {
@@ -278,7 +279,7 @@ const sendAutomatedTaskEmailNotifications = async () => {
 
       case recipientTypes.ASSIGNEE:
         // eslint-disable-next-line no-case-declarations
-        const { assigneeTypes } = config.tasks
+        const { assigneeTypes } = taskConfigs
 
         switch (emailNotification.task.assigneeType) {
           case assigneeTypes.UNREGISTERED_USER:
