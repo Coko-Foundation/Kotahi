@@ -18,7 +18,7 @@ const ConsolidatedReportWithAuthorsTemplate = ({
 
       <p>Thank you for the opportunity to review your recent preprint “${authorName}”.</p>
 
-      <p>I’m pleased to let you know that experts in the field have now reviewed and discussed the work, and have approved a consolidated report that you can view at ${submissionLink}.</p>
+      <p>I’m pleased to let you know that experts in the field have now reviewed and discussed the work, and have approved a consolidated report that you can view at <a href="${submissionLink}">${submissionLink}</a>.</p>
 
       <p>You’ll see that we have not made any judgements about the suitability of your study for a particular journal, but have articulated its strengths and provided feedback that we believe will tighten its interpretation. I’d be happy to discuss the points we’ve raised, particularly if there’s been a misunderstanding.</p>
 

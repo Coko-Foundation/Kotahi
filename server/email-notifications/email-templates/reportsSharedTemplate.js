@@ -12,7 +12,7 @@ const ReportsSharedTemplate = ({
   result.subject = 'Report(s) for Biophysics Colab available to view'
   result.content = `<p>
       <p>Dear ${receiverName}</p>
-      <p>One or more reports for a preprint to which you are assigned are available to view at ${submissionLink}. Please log in to read these reports and provide your comments using the chat function.</p>
+      <p>One or more reports for a preprint to which you are assigned are available to view at <a href="${submissionLink}">${submissionLink}</a>. Please log in to read these reports and provide your comments using the chat function.</p>
       <p>Thank you</p>
       <p>
         On behalf of Biophysics Colab <br>

@@ -118,6 +118,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
     'reviewerInvitationEmailTemplate',
     'reminderAuthorInvitationTemplate',
     'reminderReviewerInvitationTemplate',
+    'reviewerInvitationRevisedPreprintTemplate'
   ]
 
   if (invitationContainingEmailTemplate.includes(selectedTemplate)) {
