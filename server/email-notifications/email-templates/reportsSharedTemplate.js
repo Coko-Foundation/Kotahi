@@ -1,4 +1,4 @@
-const ColabReportsSharedTemplate = ({
+const ReportsSharedTemplate = ({
   receiverName,
   submissionLink,
 }) => {
@@ -23,4 +23,4 @@ const ColabReportsSharedTemplate = ({
   return result
 }
 
-module.exports = ColabReportsSharedTemplate
+module.exports = ReportsSharedTemplate

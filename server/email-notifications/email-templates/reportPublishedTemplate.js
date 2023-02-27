@@ -1,4 +1,4 @@
-const ColabReportPublishedTemplate = ({
+const ReportPublishedTemplate = ({
   receiverName,
   authorName,
 }) => {
@@ -23,4 +23,4 @@ const ColabReportPublishedTemplate = ({
   return result
 }
 
-module.exports = ColabReportPublishedTemplate
+module.exports = ReportPublishedTemplate

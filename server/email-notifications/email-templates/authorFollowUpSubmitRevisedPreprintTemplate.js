@@ -1,4 +1,4 @@
-const ColabAuthorFollowUpSubmitRevisedPreprintTemplate = ({
+const AuthorFollowUpSubmitRevisedPreprintTemplate = ({
   receiverName,
   currentUser,
 }) => {
@@ -25,4 +25,4 @@ const ColabAuthorFollowUpSubmitRevisedPreprintTemplate = ({
   return result
 }
 
-module.exports = ColabAuthorFollowUpSubmitRevisedPreprintTemplate
+module.exports = AuthorFollowUpSubmitRevisedPreprintTemplate

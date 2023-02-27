@@ -1,4 +1,4 @@
-const ColabConsolidatedReportWithAuthorsTemplate = ({
+const ConsolidatedReportWithAuthorsTemplate = ({
   receiverName,
   currentUser,
   authorName,
@@ -54,4 +54,4 @@ const ColabConsolidatedReportWithAuthorsTemplate = ({
   return result
 }
 
-module.exports = ColabConsolidatedReportWithAuthorsTemplate
+module.exports = ConsolidatedReportWithAuthorsTemplate

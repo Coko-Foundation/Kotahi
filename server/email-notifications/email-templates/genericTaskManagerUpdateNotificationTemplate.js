@@ -1,4 +1,4 @@
-const ColabGenericTaskManagerUpdateNotificationTemplate = ({
+const GenericTaskManagerUpdateNotificationTemplate = ({
   receiverName,
   submissionLink,
 }) => {
@@ -23,4 +23,4 @@ const ColabGenericTaskManagerUpdateNotificationTemplate = ({
   return result
 }
 
-module.exports = ColabGenericTaskManagerUpdateNotificationTemplate
+module.exports = GenericTaskManagerUpdateNotificationTemplate
