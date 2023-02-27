@@ -143,10 +143,28 @@ const DecisionPage = ({ match }) => {
           id: updatedTask.manuscriptId,
         }),
         fields: {
-          tasks(existingTaskRefs) {
-            return existingTaskRefs.includes(updatedTask.id)
-              ? existingTaskRefs
-              : [...existingTaskRefs, updatedTask.id]
+          tasks(existingTaskRefs = [], { readField }) {
+            const newTaskRef = cache.writeFragment({
+              data: updatedTask,
+              fragment: gql`
+                fragment NewTask on Task {
+                  id
+                  title
+                  dueDate
+                  defaultDurationDays
+                }
+              `,
+            })
+
+            if (
+              existingTaskRefs.some(
+                ref => readField('id', ref) === updatedTask.id,
+              )
+            ) {
+              return existingTaskRefs
+            }
+
+            return [...existingTaskRefs, newTaskRef]
           },
         },
       })
@@ -155,16 +173,7 @@ const DecisionPage = ({ match }) => {
 
   const [updateTaskNotification] = useMutation(UPDATE_TASK_NOTIFICATION)
 
-  const [deleteTaskNotification] = useMutation(DELETE_TASK_NOTIFICATION, {
-    update(cache, { data: { id } }) {
-      const notificationId = cache.identify({
-        __typename: 'TaskEmailNotification',
-        id,
-      })
-
-      cache.evict({ notificationId })
-    },
-  })
+  const [deleteTaskNotification] = useMutation(DELETE_TASK_NOTIFICATION)
 
   const [updateTasks] = useMutation(UPDATE_TASKS, {
     update(cache, { data: { updateTasks: updatedTasks } }) {

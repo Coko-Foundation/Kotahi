@@ -6,6 +6,7 @@ import SecondaryActionButton from '../../shared/SecondaryActionButton'
 import CounterFieldWithOptions from '../../shared/CounterFieldWithOptions'
 import CounterField from '../../shared/CounterField'
 import theme from '../../../theme'
+import { emailNotifications } from '../../../../config/journal/tasks.json'
 
 const TaskTitle = styled.div`
   font-family: 'Roboto';
@@ -137,6 +138,7 @@ const TaskNotificationDetails = ({
   selectedDurationDays,
 }) => {
   const [selectedTemplate, setSelectedTemplate] = useState('')
+  const { recipientTypes } = emailNotifications
 
   const [taskEmailNotification, setTaskNotification] = useState(
     propTaskEmailNotification,
@@ -155,7 +157,7 @@ const TaskNotificationDetails = ({
   )
 
   const [isNewRecipient, setIsNewRecipient] = useState(
-    taskEmailNotification.recipientType === 'unregisteredUser',
+    taskEmailNotification.recipientType === recipientTypes.UNREGISTERED_USER,
   )
 
   const [taskNotificationStatus, setTaskNotificationStatus] = useState(null)
@@ -168,11 +170,11 @@ const TaskNotificationDetails = ({
     taskEmailNotification?.notificationElapsedDays,
   )
 
-  if (Math.sign(taskEmailNotification?.notificationElapsedDays) === -1) {
+  if (taskEmailNotification?.notificationElapsedDays < 0) {
     notificationOption = 'before'
   }
 
-  if (Math.sign(taskEmailNotification?.notificationElapsedDays) === 1) {
+  if (taskEmailNotification?.notificationElapsedDays > 0) {
     notificationOption = 'after'
   }
 
@@ -207,6 +209,7 @@ const TaskNotificationDetails = ({
       case 'userRole':
         setIsNewRecipient(false)
         updateTaskNotification({
+          ...taskNotification,
           id: taskNotification.id,
           taskId: taskNotification.taskId,
           recipientUserId: null,
@@ -216,40 +219,40 @@ const TaskNotificationDetails = ({
         })
 
         break
-      case 'registeredUser':
+      case recipientTypes.REGISTERED_USER:
         setIsNewRecipient(false)
         updateTaskNotification({
           ...taskNotification,
           id: taskNotification.id,
           taskId: taskNotification.taskId,
           recipientUserId: selectedOption?.value,
-          recipientType: 'registeredUser',
+          recipientType: recipientTypes.REGISTERED_USER,
           recipientEmail: null,
           recipientName: null,
         })
 
         break
-      case 'assignee':
+      case recipientTypes.ASSIGNEE:
         setIsNewRecipient(false)
         updateTaskNotification({
           ...taskNotification,
           id: taskNotification.id,
           taskId: taskNotification.taskId,
           recipientUserId: null,
-          recipientType: 'assignee',
+          recipientType: recipientTypes.ASSIGNEE,
           recipientEmail: null,
           recipientName: null,
         })
 
         break
-      case 'unregisteredUser':
+      case recipientTypes.UNREGISTERED_USER:
         setIsNewRecipient(true)
         updateTaskNotification({
           ...taskNotification,
           id: taskNotification.id,
           taskId: taskNotification.taskId,
           recipientUserId: null,
-          recipientType: 'unregisteredUser',
+          recipientType: recipientTypes.UNREGISTERED_USER,
           recipientEmail: null,
           recipientName: null,
         })
@@ -383,7 +386,7 @@ const TaskNotificationDetails = ({
       let logsData = []
 
       switch (taskEmailNotification.recipientType) {
-        case 'unregisteredUser':
+        case recipientTypes.UNREGISTERED_USER:
           input = {
             externalEmail: taskEmailNotification.recipientEmail,
             externalName: taskEmailNotification.recipientName,
@@ -412,7 +415,7 @@ const TaskNotificationDetails = ({
 
           setTaskNotificationStatus(responseStatus ? 'success' : 'failure')
           break
-        case 'registeredUser':
+        case recipientTypes.REGISTERED_USER:
           input = {
             selectedEmail: taskEmailNotification.recipientUser.email,
             selectedTemplate: taskEmailNotification.emailTemplateKey,
@@ -440,9 +443,9 @@ const TaskNotificationDetails = ({
 
           setTaskNotificationStatus(responseStatus ? 'success' : 'failure')
           break
-        case 'assignee':
+        case recipientTypes.ASSIGNEE:
           switch (task.assigneeType) {
-            case 'unregisteredUser':
+            case recipientTypes.UNREGISTERED_USER:
               input = {
                 externalEmail: task.assigneeEmail,
                 externalName: task.assigneeName,
@@ -471,9 +474,9 @@ const TaskNotificationDetails = ({
 
               setTaskNotificationStatus(responseStatus ? 'success' : 'failure')
               break
-            case 'registeredUser':
+            case recipientTypes.REGISTERED_USER:
               input = {
-                selectedEmail: task.assginee.email,
+                selectedEmail: task.assignee.email,
                 selectedTemplate: taskEmailNotification.emailTemplateKey,
                 manuscript,
                 currentUser: currentUser.username,
@@ -482,8 +485,8 @@ const TaskNotificationDetails = ({
               logsData = [
                 {
                   selectedTemplate: taskEmailNotification.emailTemplateKey,
-                  recipientName: task.assginee.username,
-                  recipientEmail: task.assginee.email,
+                  recipientName: task.assignee.username,
+                  recipientEmail: task.assignee.email,
                   senderEmail: currentUser.email,
                 },
               ]
@@ -542,7 +545,7 @@ const TaskNotificationDetails = ({
   const logTaskNotificationEmails = async logsData => {
     // eslint-disable-next-line no-restricted-syntax
     for (const logData of logsData) {
-      const emailTemplateOption = logData.selectedTemplate.replaceAll(
+      const emailTemplateOption = logData.selectedTemplate.replace(
         /([A-Z])/g,
         ' $1',
       )
@@ -599,7 +602,7 @@ const TaskNotificationDetails = ({
                 updateTaskNotification({
                   ...taskEmailNotification,
                   recipientUserId: null,
-                  recipientType: 'unregisteredUser',
+                  recipientType: recipientTypes.UNREGISTERED_USER,
                   recipientEmail: e.target.value,
                 })
               }}
@@ -612,7 +615,7 @@ const TaskNotificationDetails = ({
                 updateTaskNotification({
                   ...taskEmailNotification,
                   recipientUserId: null,
-                  recipientType: 'unregisteredUser',
+                  recipientType: recipientTypes.UNREGISTERED_USER,
                   recipientName: e.target.value,
                 })
               }}
@@ -639,11 +642,11 @@ const TaskNotificationDetails = ({
       <ScheduleNotificationFieldContainer>
         <NotificationDeadlineContainer>
           <TaskTitle>Send notification</TaskTitle>
-          <NotificationDeadlineCell disabled={selectedDurationDays === 'None'}>
+          <NotificationDeadlineCell disabled={selectedDurationDays === null}>
             <span>Send</span>
             <CounterField
               compact
-              disabled={selectedDurationDays === 'None'}
+              disabled={selectedDurationDays === null}
               minValue={0}
               onChange={val => {
                 setTaskEmailNotificationElapsedDays(val)
@@ -657,7 +660,7 @@ const TaskNotificationDetails = ({
             />
             <span>days</span>
             <CounterFieldWithOptions
-              disabled={selectedDurationDays === 'None'}
+              disabled={selectedDurationDays === null}
               onChange={selected => {
                 if (selected && selected.value) {
                   setTaskEmailNotificationDeadline(selected.value)

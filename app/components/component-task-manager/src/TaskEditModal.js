@@ -176,25 +176,23 @@ const TaskEditModal = ({
   )
 
   const [selectedDurationDays, setSelectedDurationDays] = useState(
-    task.defaultDurationDays || 'none',
+    task.defaultDurationDays,
   )
 
   const [taskTitle, setTaskTitle] = useState(task?.title || '')
 
-  const updateTaskDebounce = useCallback(
+  const updateTaskTitleDebounce = useCallback(
     debounce(updateTask ?? (() => {}), 1000),
     [],
   )
 
   useEffect(() => {
-    return updateTaskDebounce.flush()
+    return updateTaskTitleDebounce.flush()
   }, [])
-
-  const [isToggled, setToggled] = useState(false)
 
   const updateTaskTitle = value => {
     setTaskTitle(value)
-    updateTaskDebounce(task.id, { ...task, title: value })
+    updateTaskTitleDebounce(task.id, { ...task, title: value })
   }
 
   useEffect(() => {
@@ -242,6 +240,8 @@ const TaskEditModal = ({
     ])
   }
 
+  const [isToggled, setToggled] = useState(false)
+
   const status = {
     NOT_STARTED: 'Not started',
     START: 'Start',
@@ -276,6 +276,7 @@ const TaskEditModal = ({
               <AssigneeDropdown
                 assigneeGroupedOptions={assigneeGroupedOptions}
                 task={task}
+                unregisteredFieldsAlign="row"
                 updateTask={updateTask}
               />
             </AssigneeFieldContainer>
@@ -302,17 +303,11 @@ const TaskEditModal = ({
                       setSelectedDurationDays(val)
                       updateTask(task.id, {
                         ...task,
-                        defaultDurationDays: val.toString(),
+                        defaultDurationDays: val,
                       })
                     }}
                     showNone
-                    value={
-                      task.defaultDurationDays &&
-                      task.defaultDurationDays !== 'None'
-                        ? // eslint-disable-next-line radix
-                          parseInt(task.defaultDurationDays)
-                        : 'None'
-                    }
+                    value={task.defaultDurationDays}
                   />
                 </DurationDaysCell>
               </div>
@@ -361,12 +356,13 @@ const TaskEditModal = ({
             )}
           </TaskActionContainer>
           {!editAsTemplate ? (
+            task.notificationLogs &&
             task.notificationLogs.length !== 0 && (
               <TaskNotificationLogsContainer>
                 <NotificationLogsToggle onClick={() => setToggled(!isToggled)}>
                   {isToggled
-                    ? `Hide all notifications sent (${task.notificationLogs.length})`
-                    : `Show all notifications sent (${task.notificationLogs.length})`}
+                    ? `Hide all notifications sent (${task.notificationLogs?.length})`
+                    : `Show all notifications sent (${task.notificationLogs?.length})`}
                 </NotificationLogsToggle>
                 {isToggled && (
                   <NotificationLogs>

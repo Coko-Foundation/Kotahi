@@ -4,6 +4,7 @@ const config = require('config')
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
 const TaskEmailNotification = require('./taskEmailNotification')
+const taskConfigs = require('../../../config/journal/tasks.json')
 
 const { createNewTaskAlerts, updateAlertsForTask } = require('./taskCommsUtils')
 const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
@@ -16,7 +17,6 @@ const resolvers = {
         .filter((task, i) => tasks.findIndex(t => t.id === task.id) === i)
         .map(task => ({
           ...task,
-          dueDate: new Date(task.dueDate),
           manuscriptId,
         }))
 
@@ -42,7 +42,9 @@ const resolvers = {
               .onConflict('id')
               .merge()
               .returning('*')
-              .withGraphFetched('assignee'),
+              .withGraphFetched(
+                '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
+              ),
           )
         }
 
@@ -78,25 +80,15 @@ const resolvers = {
     },
 
     updateTaskNotification: async (_, { taskNotification }) => {
-      const existingTaskEmailNotification = await TaskEmailNotification.query().where(
-        { id: taskNotification.id },
+      await TaskEmailNotification.query().upsertGraphAndFetch(
+        taskNotification,
+        { relate: true, insertMissing: true },
       )
-
-      if (existingTaskEmailNotification.length > 0) {
-        await TaskEmailNotification.query()
-          .update(taskNotification)
-          .where({ id: taskNotification.id })
-      } else {
-        await TaskEmailNotification.query()
-          .insert(taskNotification)
-          .onConflict('id')
-          .merge()
-      }
 
       const associatedTask = await Task.query()
         .findById(taskNotification.taskId)
         .withGraphFetched(
-          '[emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+          '[emailNotifications(orderByCreated).recipientUser, notificationLogs, assignee]',
         )
 
       return associatedTask
@@ -107,13 +99,15 @@ const resolvers = {
         id,
       )
 
-      const associatedTask = await Task.query()
-        .findById(taskEmailNotification.taskId)
-        .withGraphFetched(
-          '[emailNotifications(orderByCreated).recipientUser, notificationLogs]',
-        )
+      const { taskId } = taskEmailNotification
 
       await TaskEmailNotification.query().deleteById(id)
+
+      const associatedTask = await Task.query()
+        .findById(taskId)
+        .withGraphFetched(
+          '[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+        )
 
       return associatedTask
     },
@@ -124,7 +118,7 @@ const resolvers = {
 
     updateTaskStatus: async (_, { task }) => {
       // eslint-disable-next-line prefer-destructuring
-      const status = config.tasks.status
+      const status = taskConfigs.status
 
       const data = {
         status: task.status,
@@ -137,16 +131,37 @@ const resolvers = {
         dbTask.status === status.NOT_STARTED &&
         task.status === status.IN_PROGRESS
       ) {
-        const taskDurationDays = dbTask.defaultDurationDays || 0
+        const taskDurationDays = dbTask.defaultDurationDays
 
         data.dueDate =
-          taskDurationDays !== 'None'
+          taskDurationDays !== null
             ? dateFns.addDays(new Date(), taskDurationDays)
             : null
       }
 
-      await Task.query().update(data).where({ id: task.id })
-      return Task.query().findById(task.id)
+      const updatedTask = await Task.query()
+        .patchAndFetchById(task.id, data)
+        .withGraphFetched(
+          '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
+        )
+
+      return updatedTask
+    },
+
+    createTaskEmailNotificationLog: async (
+      _,
+      { taskEmailNotificationLog },
+      ctx,
+    ) => {
+      await TaskEmailNotificationLog.query().insert(taskEmailNotificationLog)
+
+      const associatedTask = await Task.query()
+        .findById(taskEmailNotificationLog.taskId)
+        .withGraphFetched(
+          '[assignee, emailNotifications.recipientUser, notificationLogs]',
+        )
+
+      return associatedTask
     },
 
     createTaskEmailNotificationLog: async (
@@ -189,7 +204,7 @@ const typeDefs = `
     manuscriptId: ID
     title: String!
     assigneeUserId: ID
-    defaultDurationDays: String
+    defaultDurationDays: Int
     dueDate: DateTime
     reminderPeriodDays: Int
     status: String!
@@ -212,7 +227,7 @@ const typeDefs = `
     title: String!
     assigneeUserId: ID
     assignee: User
-    defaultDurationDays: String
+    defaultDurationDays: Int
     dueDate: DateTime
     reminderPeriodDays: Int
     sequenceIndex: Int!

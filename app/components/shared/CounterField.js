@@ -69,9 +69,10 @@ const CounterField = ({
   compact = false,
   disabled = false,
 }) => {
-  const [value, setValue] = useState(propsValue || 0)
+  const [value, setValue] = useState(propsValue)
+  const [displayValue, setDisplayValue] = useState(propsValue === null ? 'None' : propsValue)
   const [showResetIcon, setShowResetIcon] = useState(false)
-  const noneValue = 'None'
+  const noneValue = null
   const defaultValue = showNone ? noneValue : (minValue || 0)
 
   useEffect(() => {
@@ -79,6 +80,7 @@ const CounterField = ({
   }, [propsValue])
 
   useEffect(() => {
+    setDisplayValue(value === null ? 'None' : value);
     // this check is required to avoid infinite loop as `value` change leads to `propsValue`
     // change via `onChange` and then `propsChange` change leads to `value` change
     if (value !== propsValue) {
@@ -100,12 +102,6 @@ const CounterField = ({
     }
     let updatedValue = null
     if (value === null) {
-      if (showNone) {
-        updatedValue = noneValue
-      } else {
-        updatedValue = 0
-      }
-    } else if (value === noneValue) {
       updatedValue = 0
     } else {
       updatedValue = value + 1
@@ -119,13 +115,7 @@ const CounterField = ({
     }
     let updatedValue = null
     if (value === null) {
-      if (showNone) {
-        updatedValue = noneValue
-      } else {
-        updatedValue = 0
-      }
-    } else if (value === noneValue) {
-      updatedValue = noneValue
+      updatedValue
     } else {
       updatedValue = value - 1
       if (minValue !== null && updatedValue < minValue) {
@@ -138,7 +128,7 @@ const CounterField = ({
   return (
     <Container>
       <LabelContainer compact={compact} showResetIcon={showResetIcon}>
-        <span>{value}</span>
+        <span>{displayValue}</span>
         {
           showResetIcon && <CloseIconContainer onClick={() => resetValue()} disabled={disabled}>
             <CloseIcon size={15} color={disabled ? theme.colorBorder : "black"} />

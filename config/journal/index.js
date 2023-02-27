@@ -4,4 +4,5 @@ module.exports = {
   metadata: require('./metadata'),
   recommendations: require('./recommendations'),
   roles: require('./roles'),
+  tasks: require('./tasks'),
 }

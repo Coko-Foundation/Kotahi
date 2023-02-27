@@ -9,7 +9,7 @@ import PropTypes from 'prop-types'
 import moment from 'moment-timezone'
 import styled, { ThemeContext, css } from 'styled-components'
 import { Draggable } from 'react-beautiful-dnd'
-import { Circle, CheckCircle } from 'react-feather'
+import { Circle, CheckCircle, MoreVertical } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { debounce } from 'lodash'
 import { transposeFromTimezoneToLocal } from '../../../shared/dateUtils'
@@ -22,7 +22,7 @@ import {
   TextInput,
 } from '../../shared'
 
-import { DragVerticalIcon, EllipsisIcon } from '../../shared/Icons'
+import { DragVerticalIcon } from '../../shared/Icons'
 import Modal from '../../component-modal/src'
 import { ConfigContext } from '../../config/src'
 import AssigneeDropdown from './AssigneeDropdown'
@@ -135,7 +135,7 @@ const DragIcon = styled(DragVerticalIcon)`
   }
 `
 
-const Ellipsis = styled(EllipsisIcon)`
+const Ellipsis = styled(MoreVertical)`
   cursor: pointer;
   height: 20px;
   width: 20px;
@@ -291,25 +291,22 @@ const Task = ({
     setTaskTitle(task.title)
   }, [task])
 
-  const updateTaskDebounce = useCallback(
+  const updateTaskTitleDebounce = useCallback(
     debounce(updateTask ?? (() => {}), 1000),
     [],
   )
 
   useEffect(() => {
-    return updateTaskDebounce.flush()
+    return updateTaskTitleDebounce.flush()
   }, [])
 
   const updateTaskTitle = value => {
     setTaskTitle(value)
-    updateTaskDebounce(task.id, { ...task, title: value })
+    updateTaskTitleDebounce(task.id, { ...task, title: value })
   }
 
   const [transposedDueDate, setTransposedDueDate] = useState(
-    transposeFromTimezoneToLocal(
-      task.dueDate || new Date(),
-      config.teamTimezone,
-    ),
+    transposeFromTimezoneToLocal(task.dueDate, config.teamTimezone),
   )
 
   const dueDateLocalString = getLocalTimeString(moment(task.dueDate))
@@ -352,7 +349,7 @@ const Task = ({
 
   let displayDefaultDurationDaysUnit
 
-  if (task.defaultDurationDays === 'None') {
+  if (task.defaultDurationDays === null) {
     displayDefaultDurationDaysUnit = ''
   } else {
     displayDefaultDurationDaysUnit =
@@ -363,7 +360,7 @@ const Task = ({
 
   const displayDefaultDurationDays = task.defaultDurationDays
     ? `${task.defaultDurationDays}${displayDefaultDurationDaysUnit}`
-    : ''
+    : 'None'
 
   const dueDateLabel = moment
     .tz(task.dueDate, config.teamTimezone)
@@ -388,10 +385,7 @@ const Task = ({
   useEffect(() => {
     if (task.dueDate) {
       setTransposedDueDate(
-        transposeFromTimezoneToLocal(
-          task.dueDate || new Date(),
-          config.teamTimezone,
-        ),
+        transposeFromTimezoneToLocal(task.dueDate, config.teamTimezone),
       )
     }
   }, [task])
@@ -546,8 +540,8 @@ const Task = ({
                 <AssigneeHeader>Assignee</AssigneeHeader>
                 <AssigneeDropdown
                   assigneeGroupedOptions={assigneeGroupedOptions}
-                  isList
                   task={task}
+                  unregisteredFieldsAlign="column"
                   updateTask={updateTask}
                 />
               </AssigneeFieldContainer>
@@ -560,28 +554,26 @@ const Task = ({
                       onChange={val => {
                         updateTask(task.id, {
                           ...task,
-                          defaultDurationDays: val.toString(),
+                          defaultDurationDays: val,
                         })
                       }}
                       showNone
-                      value={
-                        task.defaultDurationDays &&
-                        task.defaultDurationDays !== 'None'
-                          ? // eslint-disable-next-line radix
-                            parseInt(task.defaultDurationDays)
-                          : 'None'
-                      }
+                      value={task.defaultDurationDays}
                     />
                   </DurationDaysCell>
                 </DurationDaysFieldContainer>
               ) : (
                 <DueDateFieldContainer>
                   <div>
-                    <DueDateHeader>Due date</DueDateHeader>
+                    <DueDateHeader>
+                      {task.status === status.NOT_STARTED
+                        ? 'Duration'
+                        : 'Due date'}
+                    </DueDateHeader>
                     <DueDateField
+                      compact
                       displayDefaultDurationDays={displayDefaultDurationDays}
                       dueDateLocalString={dueDateLocalString}
-                      isList
                       task={task}
                       transposedDueDate={transposedDueDate}
                       transposedEndOfToday={transposedEndOfToday}
