@@ -344,9 +344,6 @@ const sendAutomatedTaskEmailNotifications = async () => {
 
       if (emailNotification.emailTemplateKey) {
         try {
-          // eslint-disable-next-line no-await-in-loop
-          // const emailSender = currentUser
-
           const notificationInput = {
             manuscript,
             // selectedEmail: recipient.email, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing receiver being selected
@@ -375,7 +372,7 @@ const sendAutomatedTaskEmailNotifications = async () => {
             recipientEmail: recipient.email,
           }
 
-          const ctx = ''
+          const ctx = {}
           // eslint-disable-next-line no-await-in-loop
           await sendEmailWithPreparedData(notificationInput, ctx, editor)
           // eslint-disable-next-line no-await-in-loop
