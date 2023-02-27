@@ -67,6 +67,11 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
 
   let receiverName = externalName
 
+  const urlFrag = config.journal.metadata.toplevel_urlfragment
+  const baseUrl = config['pubsweet-client'].baseUrl + urlFrag
+  let manuscriptPageUrl =  `${baseUrl}/versions/${manuscript.id}`;
+  let isEditor = false;
+  let isReviewer = false;
   if (selectedEmail) {
     // If the email of a pre-existing user is selected
     // Get that user
@@ -75,8 +80,19 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
       .withGraphFetched('[defaultIdentity]')
 
     /* eslint-disable-next-line */
-        receiverName =
-      userReceiver.username || userReceiver.defaultIdentity.name || ''
+    receiverName = userReceiver.username || userReceiver.defaultIdentity.name || ''
+
+    const userCurrentRoles = await userReceiver.currentRoles(manuscript)
+    const manuscriptRoles = userCurrentRoles.find(data => data.id === manuscript.id)
+    isEditor = manuscriptRoles.roles.some(role => role === 'accepted:editor')
+    isReviewer = manuscriptRoles.roles.some(role => role === 'accepted:reviewer')
+  }
+  if (isEditor) {
+    manuscriptPageUrl += '/decision';
+  } else if (isReviewer) {
+    manuscriptPageUrl += '/review';
+  } else {
+    manuscriptPageUrl += '/submit';
   }
 
   const manuscriptId = manuscript.id
@@ -189,6 +205,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
       status,
       senderId,
       appUrl: config['pubsweet-client'].baseUrl,
+      manuscriptPageUrl,
     })
     return { success: true }
   } catch (e) {

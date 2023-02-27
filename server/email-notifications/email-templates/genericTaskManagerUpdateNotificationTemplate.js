@@ -1,6 +1,6 @@
 const GenericTaskManagerUpdateNotificationTemplate = ({
   receiverName,
-  submissionLink,
+  manuscriptPageUrl,
 }) => {
   const result = {
     cc: '',
@@ -12,7 +12,7 @@ const GenericTaskManagerUpdateNotificationTemplate = ({
   result.subject = 'Biophysics Colab task notification'
   result.content = `<p>
       <p>Dear ${receiverName}</p>
-      <p>A Biophysics Colab task requires your attention. Please visit <a href="${submissionLink}">${submissionLink}</a> to action.</p>
+      <p>A Biophysics Colab task requires your attention. Please visit <a href="${manuscriptPageUrl}">${manuscriptPageUrl}</a> to action.</p>
       <p>Thank you</p>
       <p>
         On behalf of Biophysics Colab <br>
