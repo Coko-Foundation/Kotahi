@@ -16,7 +16,7 @@ const convertFilesToIdsOnly = (reviewDelta, form) => {
     .map(field => field.name)
 
   for (const [key, value] of Object.entries(reviewDelta.jsonData)) {
-    if (fileFieldNames.includes(key)) {
+    if (fileFieldNames.includes(key) && Array.isArray(value)) {
       reviewDelta.jsonData[key] = value.map(file => file.id || file)
     }
   }
@@ -45,7 +45,8 @@ const convertFilesToFullObjects = async (
 
   for (const [key, value] of Object.entries(review.jsonData)) {
     if (fileFieldNames.includes(key)) {
-      const fileIds = (value || []).map(file => file.id || file) // Paranoia, in case some files are already in full object form, or files is null
+      const fileRecords = Array.isArray(value) ? value : []
+      const fileIds = fileRecords.map(file => file.id || file) // Paranoia, in case some files are already in full object form
       const files = await getFilesByIds(fileIds)
       review.jsonData[key] = await getFilesWithUrl(files)
     }
