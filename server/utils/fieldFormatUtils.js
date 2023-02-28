@@ -8,7 +8,7 @@ const hasText = v =>
 
 const getPublishableTextFromValue = (value, field) => {
   if (field.component === 'TextField') {
-    if (!value) return null
+    if (!value || typeof value !== 'string') return null
     return `<p>${escape(value)}</p>`
   }
 
@@ -18,7 +18,7 @@ const getPublishableTextFromValue = (value, field) => {
   }
 
   if (field.component === 'CheckboxGroup') {
-    if (!value) return null
+    if (!Array.isArray(value)) return null
 
     const optionLabels = value.map(
       val => (field.options.find(o => o.value === val) || { label: val }).label,
@@ -56,7 +56,7 @@ const getPublishableTextFromValue = (value, field) => {
   }
 
   if (field.component === 'AuthorsInput') {
-    if (!value || !value.length) return null
+    if (!Array.isArray(value) || !value.length) return null
     return `<p>${escape(field.shortDescription || field.title)}:</p><ul>${value
       .map(author => {
         const escapedName = escape(`${author.firstName} ${author.lastName}`)
