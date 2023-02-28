@@ -85,19 +85,28 @@ const importManuscriptsFromSemanticScholar = ctx => {
 }
 
 const archiveOldManuscripts = async () => {
+  const archivePeriodDays = parseInt(config.manuscripts.archivePeriodDays, 10)
+  if (Number.isNaN(archivePeriodDays) || archivePeriodDays < 1) return
+
   const cutoffDate = new Date(
-    new Date().valueOf() - config.manuscripts.archivePeriodDays * 86400000, // subtracting milliseconds of ARCHIVE_PERIOD_DAYS
+    new Date().valueOf() - archivePeriodDays * 86400000, // subtracting milliseconds of ARCHIVE_PERIOD_DAYS
   )
 
-  await models.Manuscript.query()
+  const archivedCount = await models.Manuscript.query()
     .update({ isHidden: true })
     .where('created', '<', cutoffDate)
     .where('status', 'new')
+    .whereNot('isHidden', true)
     .where(function subcondition() {
       this.whereRaw(`submission->>'labels' = ''`).orWhereRaw(
         `submission->>'labels' IS NULL`,
       )
     })
+
+  // eslint-disable-next-line no-console
+  console.info(
+    `Automatically archived ${archivedCount} new, unlabelled manuscripts older than ${archivePeriodDays} days.`,
+  )
 }
 
 /** Populates hasOverdueTasksForUser field of each manuscript IN PLACE.
