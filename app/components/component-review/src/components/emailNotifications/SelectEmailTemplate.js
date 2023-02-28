@@ -239,7 +239,7 @@ switch (
       },
       {
         label: 'Reviewer Invitation Email Template',
-        value: 'reviewerInvitationEmailTemplate',
+        value: 'reviewInvitationEmailTemplate',
       },
       {
         label: 'Reminder: Author Invitation Template',

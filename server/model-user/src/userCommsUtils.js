@@ -132,6 +132,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   const invitationContainingEmailTemplate = [
     'authorInvitationEmailTemplate',
     'reviewerInvitationEmailTemplate',
+    'reviewInvitationEmailTemplate',
     'reminderAuthorInvitationTemplate',
     'reminderReviewerInvitationTemplate',
     'reviewerInvitationRevisedPreprintTemplate'

@@ -67,18 +67,18 @@ const ReviewInvitationEmailTemplate = ({
           <a href="https://www.sciencecolab.org/" target="_blank">www.sciencecolab.org</a>
         </p>
 
-        <p>Instructions for reviewers</p>
-        <p>Our primary goal is to deliver objective feedback on published preprints that is independent of the criteria applied by conventional journals. Our reports detail three types of recommendation: revisions that we consider to be essential for the results to support the conclusions; optional suggestions for the authors to consider; and minor corrections or presentational issues (see below). All these recommendations should help to strengthen the manuscript, but authors can decide which advice to follow. If a revised preprint addresses the revisions that we define as essential, we offer to publicly endorse the work.<br />
+        <h3 style="margin-bottom: 2px;">Instructions for reviewers</h3>
+        <p style="margin-top: 2px;">Our primary goal is to deliver objective feedback on published preprints that is independent of the criteria applied by conventional journals. Our reports detail three types of recommendation: revisions that we consider to be essential for the results to support the conclusions; optional suggestions for the authors to consider; and minor corrections or presentational issues (see below). All these recommendations should help to strengthen the manuscript, but authors can decide which advice to follow. If a revised preprint addresses the revisions that we define as essential, we offer to publicly endorse the work.<br /> <br />
           <u>General assessment</u>: <br />
           Please provide a paragraph summarising your overall assessment of the study, written for both experts and a general audience. Please mention: <br />
-          -   	The objectives of the study <br />
-          -   	Key findings and major conclusions <br />
-          -   	Your opinion of its strengths and weaknesses <br />
+          &nbsp;&nbsp; -   	The objectives of the study <br />
+          &nbsp;&nbsp; -   	Key findings and major conclusions <br />
+          &nbsp;&nbsp; -   	Your opinion of its strengths and weaknesses <br /> <br />
           <u>Recommendations</u>: <br />
           Please list your recommendations for improving the rigour and credibility of the work under the following three categories: <br />
-          -   	Essential revisions <br />
-          -   	Optional suggestions <br />
-          -   	Minor and presentational issues <br />
+          &nbsp;&nbsp; -   	Essential revisions <br />
+          &nbsp;&nbsp; -   	Optional suggestions <br />
+          &nbsp;&nbsp; -   	Minor and presentational issues <br /> <br />
           <u>Your relevant expertise</u>: <br />
           Please succinctly state your relevant expertise (we will not reveal your name if you prefer to remain anonymous).
         </p>
