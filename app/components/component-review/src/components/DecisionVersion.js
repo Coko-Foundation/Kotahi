@@ -1,6 +1,7 @@
 import React, { useRef, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { set, debounce } from 'lodash'
+import styled from 'styled-components'
 import DecisionReviews from './decision/DecisionReviews'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
 import AssignEditor from './assignEditors/AssignEditor'
@@ -20,6 +21,10 @@ import DecisionAndReviews from '../../../component-submit/src/components/Decisio
 import FormTemplate from '../../../component-submit/src/components/FormTemplate'
 import TaskList from '../../../component-task-manager/src/TaskList'
 
+const TaskSectionRow = styled(SectionRow)`
+  padding: 12px 0 18px;
+`
+
 const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
   const fieldNames = form?.children?.map(field => field.name)
@@ -29,6 +34,7 @@ const createBlankSubmissionBasedOnForm = form => {
 
 const DecisionVersion = ({
   allUsers,
+  roles,
   decisionForm,
   form,
   currentDecisionData,
@@ -68,6 +74,9 @@ const DecisionVersion = ({
   refetch,
   updateTask,
   updateTasks,
+  updateTaskNotification,
+  deleteTaskNotification,
+  createTaskEmailNotificationLog,
 }) => {
   const debouncedSave = useCallback(
     debounce(source => {
@@ -216,16 +225,23 @@ const DecisionVersion = ({
             <SectionHeader>
               <Title>Tasks</Title>
             </SectionHeader>
-            <SectionRow>
+            <TaskSectionRow>
               <TaskList
+                createTaskEmailNotificationLog={createTaskEmailNotificationLog}
+                currentUser={currentUser}
+                deleteTaskNotification={deleteTaskNotification}
                 isReadOnly={!isCurrentVersion}
+                manuscript={version}
                 manuscriptId={version.id}
+                roles={roles}
+                sendNotifyEmail={sendNotifyEmail}
                 tasks={version.tasks}
                 updateTask={updateTask}
+                updateTaskNotification={updateTaskNotification}
                 updateTasks={updateTasks}
                 users={allUsers}
               />
-            </SectionRow>
+            </TaskSectionRow>
           </SectionContent>
         </>
       ),

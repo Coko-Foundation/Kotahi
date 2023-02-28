@@ -272,6 +272,11 @@ switch (
 const SelectEmailTemplate = ({
   onChangeEmailTemplate,
   selectedEmailTemplate,
+  updateTaskNotification,
+  taskEmailNotification,
+  placeholder,
+  isClearable,
+  task,
 }) => {
   return (
     <Select
@@ -279,11 +284,20 @@ const SelectEmailTemplate = ({
       data-testid="Notification_email_select"
       label="notification email"
       onChange={selected => {
-        onChangeEmailTemplate(selected.value)
+        if (taskEmailNotification) {
+          updateTaskNotification({
+            ...taskEmailNotification,
+            id: taskEmailNotification.id,
+            taskId: taskEmailNotification.taskId,
+            emailTemplateKey: selected ? selected.value : '',
+          })
+        }
+        onChangeEmailTemplate(selected ? selected.value : '')
       }}
       options={emailTemplateOptions}
-      placeholder="Choose notification template"
+      placeholder={placeholder || "Choose notification template"}
       value={selectedEmailTemplate}
+      isClearable={isClearable || false}
     />
   )
 }
