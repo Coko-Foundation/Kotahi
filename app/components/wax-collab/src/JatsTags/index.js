@@ -1,4 +1,7 @@
 import { Service } from 'wax-prosemirror-services'
+// import { DocumentHelpers } from 'wax-prosemirror-utilities'
+// import { useContext } from 'react'
+// import { WaxContext } from 'wax-prosemirror-core'
 import Appendix from './Appendix'
 import FrontMatter from './FrontMatter'
 import Abstract from './Abstract'
@@ -23,27 +26,6 @@ import KeywordList from './keywords/KeywordList'
 import Keyword from './keywords/Keyword'
 import GlossarySection from './glossary/GlossarySection'
 import GlossaryTerm from './glossary/GlossaryTerm'
-
-// copied from here: https://gitlab.coko.foundation/wax/wax-prosemirror/-/blob/master/wax-prosemirror-services/src/DisplayBlockLevel/HeadingService/HeadingService.js
-
-// Note that toDOM for a lot of the Wax marks looks like this:
-
-// toDOM(hook, next) {
-// 	hook.value = ['span', hook.node.attrs, 0];
-// 	next();
-// },
-//
-// ( https://gitlab.coko.foundation/wax/wax-prosemirror/-/blob/master/wax-prosemirror-schema/src/marks/smallcapsMark.js )
-//
-// though in prosemirror this tends to look like this:
-//
-// toDOM() {
-// 	return ['span', { class: 'mixed-citation' }, 0]
-// },
-
-// FIGURE OUT:
-//
-// - how can we exclude more than one thing? just an array?
 
 class JatsTagsService extends Service {
   // boot() {}
@@ -364,10 +346,21 @@ class JatsTagsService extends Service {
         excludes: 'mixedCitationSpan', // so we can't embed it inside itself
         parseDOM: [{ tag: 'span.mixed-citation' }],
         toDOM() {
+          // const {
+          //   pmViews: { main },
+          // } = useContext(WaxContext)
+
+          // const citationCount = getMixedCitations()
+          // console.log('Citation count: ', citationCount)
           // TODO: This should send this to Crossref to get back content!
+          // TODO: count how many mixed-citations are in the document and add a number to the end of the ID
           return [
             'span',
-            { class: 'mixed-citation', title: 'Mixed Citation' },
+            {
+              class: 'mixed-citation',
+              title: 'Mixed Citation',
+              // id: `mixed-citation-${citationCount}`, // can we have a function in here
+            },
             0,
           ]
         },

@@ -1,0 +1,104 @@
+import React from 'react'
+import { useQuery } from '@apollo/client'
+import PropTypes from 'prop-types'
+import { sanitize } from 'isomorphic-dompurify'
+import styled from 'styled-components'
+import { th } from '@pubsweet/ui-toolkit'
+import theme from '../../../theme'
+import { Spinner, CommsErrorBanner } from '../../shared'
+import query from './artifactQuery'
+
+const Page = styled.div`
+  background: ${theme.colors.neutral.gray60};
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  width: 100%;
+`
+
+const Container = styled.div`
+  background: ${theme.colors.neutral.gray97};
+  border: 1px solid ${theme.colors.brand1.shade25};
+  border-radius: ${th('borderRadius')};
+  margin: ${theme.spacing.g} auto;
+  max-width: 1000px;
+  padding: ${theme.spacing.h} ${theme.spacing.i} ${theme.spacing.i}
+    ${theme.spacing.i};
+  width: 90%;
+
+  & > h1 {
+    color: ${theme.colors.brand1.shade25};
+    font-size: 180%;
+    margin: ${theme.spacing.e} 0 ${theme.spacing.f} 0;
+  }
+`
+
+const Heading = styled.h1`
+  line-height: 1.2em;
+`
+
+const DetailText = styled.div`
+  font-size: ${th('fontSizeBaseSmall')};
+  line-height: ${th('lineHeightBaseSmall')};
+`
+
+const ArticleArtifactPage = ({ match }) => {
+  const { loading, data, error } = useQuery(query, {
+    variables: { id: match.params.version },
+    fetchPolicy: 'network-only',
+  })
+
+  if (error) return <CommsErrorBanner error={error} />
+  if (loading) return <Spinner />
+
+  const manuscript = { ...data.publishedManuscript }
+  manuscript.submission = JSON.parse(manuscript.submission)
+
+  const artifact = manuscript.publishedArtifacts.find(
+    a => a.id === match.params.artifactId,
+  ) || {
+    title: 'Not found!',
+    content: `<p style="color: red">No published artifact was found with ID ${match.params.artifactId}. Please check the page address.</p>`,
+  }
+
+  const relatedDocumentTitle =
+    manuscript.meta.title ||
+    manuscript.submission.title ||
+    manuscript.submission.description ||
+    (artifact.relatedDocumentUri
+      ? `Click to view the related ${
+          artifact.relatedDocumentType || 'document'
+        }`
+      : '')
+
+  return (
+    <Page>
+      <Container>
+        <p>
+          {artifact.relatedDocumentUri ? (
+            <a href={artifact.relatedDocumentUri}>{relatedDocumentTitle}</a>
+          ) : (
+            relatedDocumentTitle
+          )}
+        </p>
+        {artifact.updated && (
+          <DetailText>{new Date(artifact.updated).toDateString()}</DetailText>
+        )}
+        <Heading>{artifact.title}</Heading>
+        <div
+          // eslint-disable-next-line react/no-danger
+          dangerouslySetInnerHTML={{
+            __html: sanitize(artifact.content),
+          }}
+        />
+      </Container>
+    </Page>
+  )
+}
+
+ArticleArtifactPage.propTypes = {
+  // eslint-disable-next-line
+  match: PropTypes.object.isRequired,
+}
+
+export default ArticleArtifactPage

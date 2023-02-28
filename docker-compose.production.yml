@@ -87,6 +87,11 @@ services:
       - SERVICE_PAGEDJS_PROTOCOL=${SERVICE_PAGEDJS_PROTOCOL}
       - SERVICE_PAGEDJS_HOST=${SERVICE_PAGEDJS_HOST}
       - SERVICE_PAGEDJS_PORT=${SERVICE_PAGEDJS_PORT}
+      - SERVICE_ANYSTYLE_CLIENT_ID=${SERVICE_ANYSTYLE_CLIENT_ID}
+      - SERVICE_ANYSTYLE_SECRET=${SERVICE_ANYSTYLE_SECRET}
+      - SERVICE_ANYSTYLE_PROTOCOL=${SERVICE_ANYSTYLE_PROTOCOL}
+      - SERVICE_ANYSTYLE_HOST=${SERVICE_ANYSTYLE_HOST}
+      - SERVICE_ANYSTYLE_PORT=${SERVICE_ANYSTYLE_PORT}
       - S3_PROTOCOL=${S3_PROTOCOL:-http}
       - S3_HOST=${S3_HOST:-localhost}
       - S3_PORT=${S3_PORT:-}
@@ -101,6 +106,7 @@ services:
 
     volumes:
       - ./uploads:/home/node/app/uploads
+      - ./config:/home/node/app/config
 
   job-xsweet:
     image: pubsweet/job-xsweet:1.5.4

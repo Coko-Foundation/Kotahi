@@ -81,6 +81,7 @@ const DecisionPage = ({ match }) => {
 
   useEffect(() => {
     return () => {
+      Object.values(debouncers).forEach(d => d.flush())
       debouncers = {}
     }
   }, [])

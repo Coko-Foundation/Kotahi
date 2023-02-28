@@ -1,9 +1,9 @@
-import React, { useCallback, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Formik, ErrorMessage } from 'formik'
 import { unescape, get, set, debounce } from 'lodash'
-import { sanitize } from 'dompurify'
+import { sanitize } from 'isomorphic-dompurify'
 import { RadioGroup } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import {
@@ -101,6 +101,7 @@ const FieldHead = styled.div`
   align-items: baseline;
   display: flex;
   width: auto;
+
   & > label {
     /* this is to make "publish" on decision page go flush right */
     margin-left: auto;
@@ -178,6 +179,11 @@ const prepareFieldProps = rawField => ({
     rawField.options.map(e => ({ ...e, color: e.labelColor })),
 })
 
+// This is not being kept as state because we need to access it
+// outside of the render thread. This is a global variable, NOT
+// per component, but that's OK for our purposes.
+let lastChangedField = null
+
 const FormTemplate = ({
   form,
   initialValues,
@@ -237,8 +243,20 @@ const FormTemplate = ({
     ...initialValues,
   }
 
-  const [lastChangedField, setLastChangedField] = useState(null)
-  const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
+  const debounceChange = useCallback(
+    debounce(
+      onChange
+        ? (...params) => {
+            onChange(...params)
+          }
+        : () => {},
+      1000,
+    ),
+    [],
+  )
+
+  useEffect(() => debounceChange.flush, [])
+
   return (
     <Formik
       displayName={form.name}
@@ -263,7 +281,7 @@ const FormTemplate = ({
         const innerOnChange = (value, fieldName) => {
           if (fieldName !== lastChangedField) {
             debounceChange.flush()
-            setLastChangedField(fieldName)
+            lastChangedField = fieldName
           }
 
           debounceChange(value, fieldName)
@@ -575,10 +593,7 @@ FormTemplate.propTypes = {
         placeholder: PropTypes.string,
         validate: PropTypes.arrayOf(PropTypes.object.isRequired),
         validateValue: PropTypes.objectOf(
-          PropTypes.oneOfType([
-            PropTypes.string.isRequired,
-            PropTypes.number.isRequired,
-          ]).isRequired,
+          PropTypes.oneOfType([PropTypes.string, PropTypes.number]),
         ),
         hideFromAuthors: PropTypes.string,
       }).isRequired,

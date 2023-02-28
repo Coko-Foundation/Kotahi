@@ -13,4 +13,7 @@ const getReviewForm = async () =>
 const getDecisionForm = async () =>
   getForm({ category: 'decision', purpose: 'decision' })
 
-module.exports = { getReviewForm, getDecisionForm }
+const getSubmissionForm = async () =>
+  getForm({ category: 'submission', purpose: 'submit' })
+
+module.exports = { getReviewForm, getDecisionForm, getSubmissionForm }

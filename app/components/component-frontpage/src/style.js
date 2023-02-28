@@ -24,11 +24,3 @@ export const VisualAbstract = styled.img`
 `
 
 export const Abstract = styled.div``
-
-export const ReviewLink = styled.a`
-  margin-left: 10px;
-`
-
-export const ReviewWrapper = styled.div`
-  margin: 0 10px;
-`

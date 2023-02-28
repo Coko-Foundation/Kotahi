@@ -17,11 +17,10 @@ config/local*.*
 .DS_Store
 config/*.env
 minio/data/*
-minio\data\*
 .minio.sys
-db-data\*
 db-data/*
 /.idea
+config/journal/docmaps_scheme.json
 .vscode
 
 cypress/videos

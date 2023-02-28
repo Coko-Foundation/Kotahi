@@ -173,7 +173,7 @@ And the following form fields are required:
 | `submission.summary`, `submission.summarydate`, `submission.summarycreator`, `submission.summarysuffix`                                                                              | As above       | (Optional) Fields for a summary of the reviews.          |
 | `submission.description`                                                                                                                                 | TextField      | Title of the article under review, possibly abbreviated. |
 
-### Hypothes.is
+### Hypothesis
 
 [Hypothes.is](https://web.hypothes.is) is a tool for annotating webpages and sharing those annotations. It is powered by the hypothesis browser plugin, which displays annotations (retrieved from Hypothesis's servers) when you visit an annotated webpage. It allows evaluations of articles or other data to be shared (publicly or with a select group) directly on the page where the article lives. Kotahi supports publishing most form data as Hypothesis annotations.
 
@@ -189,19 +189,55 @@ HYPOTHESIS_ALLOW_TAGGING=true
 
 Your submission form must also contain a field with the internal name `submission.biorxivURL` or `submission.link`, which should contain the URL of the page to be annotated.
 
-Now you need to select which fields from your decision or submission forms can be published: in the form-builder, enable the "Include when sharing or publishing" option for each of your chosen fields (currently unavailable for SupplementaryFiles and VisualAbstract field types). If you want Hypothes.is to apply a tag to the annotation, this can be specified in the "Hypothes.is tag" text box.
+Once these preliminaries are in place, there are two approaches to publishing to Hypothesis. Both can be used at the same time:
 
-Editors will still need to manually select which fields to publish for any given manuscript or research object. In the Control page, the editor will see a small "Publish" checkbox next to every field that was chosen in the form-builder (in ThreadedDiscussion fields, each comment has its own separate checkbox). They should select those they wish to publish, then hit the "Publish" button.
+#### Selecting individual fields to publish to Hypothesis
 
-Each selected field or comment (if it is not empty) will be published as a separate Hypothes.is annotation. An annotation can be updated or deleted by modifying the contents of the field or deselecting the "Publish" checkbox, and pressing the "Publish" button again.
+In the form-builder, you can choose fields of the submission and decision forms to be published to Hypothesis, by setting the "Include when sharing or publishing" option for those fields to "Always" (currently unavailable for SupplementaryFiles and VisualAbstract field types). This will cause each of those fields to be published as Hypothesis annotations when a manuscript is published. If you want Hypothesis to apply a tag to the annotation, this can be specified in the "Hypothes.is tag" text box.
 
-#### Ordering of published annotations
+Alternatively, you may choose the "Ad hoc" option for a field, which will cause a "Publish" checkbox to appear next to that field in the Control page (in ThreadedDiscussion fields, each comment has its own separate checkbox). For any given manuscript, an editor must manually select that field (or comment) in order for it to publish to Hypothesis. They should select those they wish to publish, then hit the "Publish" button.
+
+Each selected field or comment (if it is not empty) will be published as a separate Hypothesis annotation. An annotation can be updated or deleted by modifying the contents of the field or deselecting the "Publish" checkbox, and pressing the "Publish" button again.
+
+##### Ordering of published annotations
 
 Threaded discussion comments are published first, in date order; then submission form fields (in the order they appear in the form); then decision form fields (in the order they appear in the form).
 
 This ordering can be overridden by adding `HYPOTHESIS_REVERSE_FIELD_ORDER=true` to the `.env` file. This will not change the ordering of threaded discussion comments, but will reverse the order of all other annotations. This is occasionally useful if you wish fields to appear with a top-to-bottom ordering within the context of a bottom-to-top chronological listing (e.g. if annotations will become TRiP listings).
 
-Note that publishing of review fields to hypothes.is is not yet supported, but is coming soon.
+Note that publishing of review fields to hypothes.is is not yet supported.
+
+#### Publishing Hypothesis annotations with DocMaps
+
+Alternatively (or as well), you can specify one or more Hypothesis annotations to create for each published manuscript, each containing whatever field or combination of fields you choose, by providing a file `config/journal/docmaps_scheme.json` on your server. This mechanism allows more complex selections of data to be published; furthermore, a [DocMap](https://docmaps.knowledgefutures.org/) will also be created at time of publishing, which can be retrieved using kotahi's public API (see below). An example file, [`config/journal/docmaps_scheme.json.example`](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/a3f6620a553ec3f8a6c869a75021b211019280fd/config/journal/docmaps_scheme.json.example), is supplied.
+
+The `docmaps_scheme.json` file specifies the _actions_ to perform when a manuscript is published, complete with participant information and directives to determine how the outputs are generated. Essentially, its structure is copied into the `actions` node of a full DocMap, expanding any templated values and replacing special directives with generated data.
+
+Three special directives (with double-underscore prefix) may be present in each `output` node of the JSON. These are:
+
+- `__contentVenues`: an array of venues to publish to. Currently only 'hypothesis' is supported.
+- `__content`: a template string specifying the content (typically a data field or fields) to publish.
+- `__tag` (optional): a tag (string) to apply to the annotation in Hypothesis.
+
+[Handlebars](https://handlebarsjs.com/guide/) templates can be included in any string value in the `docmaps_scheme.json` file, to allow insertion of manuscript data. All fields from submission and decision forms can be referenced by their internal name, e.g. `{{submission.authors}}` or `{{decision.verdict}}`. Other supported fields are:
+
+- `{{title}}`: The manuscript title, taken from one of several possible fields commonly used to store the title
+- `{{uri}}`: The preprint location, taken from one of several possible fields commonly used to store this location
+- `{{doi}}`: The preprint's DOI, taken from one of several possible fields commonly used to store DOI
+- `{{meta.title}}`,
+- `{{meta.abstract}}`,
+- `{{status}}`
+
+A typical use-case is a follows:
+
+1. An evaluation of a preprint is completed in Kotahi.
+2. An editor hits the 'Publish' button, causing the fields containing the evaluation to be published as a Hypothesis annotation, and a DocMap to be generated.
+3. An automated external service scrapes the new annotation from Hypothesis. This service then queries the `docmap` API in Kotahi, passing the preprint's URI as the parameter.
+4. Kotahi returns the requested docmap, which contains supplementary information needed by the external service, e.g. the participant who authored the evaluation.
+
+##### Annotations can also be viewed in Kotahi
+
+Whenever a Hypothesis annotation is generated by Kotahi, the same content is also duplicated as a publicly-accessible page hosted in Kotahi. DocMaps generated by Kotahi will contain a link to this page, as well as a link to the Hypothesis annotation.
 
 ## API
 
@@ -210,8 +246,9 @@ Kotahi exposes a graphql API for external access. The available queries are:
 - `manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!` returns published manuscripts, with an optional startDate and/or limit.
 - `publishedManuscript(id: ID!): PublishedManuscript` returns a single published manuscript by ID, or null if this manuscript is not published or not found.
 - `unreviewedPreprints(token: String!): [Preprint]` returns a list of manuscripts with the `readyToEvaluate` label.
+- `docmap(externalId: String!): String!` returns a [DocMap](https://docmaps.knowledgefutures.org/) representing the relationship between a given preprint (`externalId` is the preprint's URL) and related artifacts such as evaluations that have been published from Kotahi. See above for how to enable this.
 
-Consult [the code](https://gitlab.coko.foundation/kotahi/kotahi/blob/5b26b92d662e83061b1072afddb7fd319655a940/server/model-manuscript/src/graphql.js) for details, or the graphql playground (typically at http://localhost:4000/graphql, when your dev environment is running).
+Consult the code [here](https://gitlab.coko.foundation/kotahi/kotahi/blob/main/server/model-manuscript/src/graphql.js) and [here](https://gitlab.coko.foundation/kotahi/kotahi/-/blob/a3f6620a553ec3f8a6c869a75021b211019280fd/server/model-docmap/src/graphql.js) for details, or the graphql playground (typically at http://localhost:4000/graphql, when your dev environment is running).
 
 While these queries are publicly exposed and don't need a JWT token, the `unreviewedPreprints` query expects a `token` parameter for authentication; this must match a secret token set in the `KOTAHI_API_TOKENS` environment variable in the `.env` file. Tokens may contain any characters other than commas, and may not start or end with whitespace. Multiple tokens may be stored, separated by commas. We recommend that each token contain a human-readable identifier and a strong random string, e.g.:
 

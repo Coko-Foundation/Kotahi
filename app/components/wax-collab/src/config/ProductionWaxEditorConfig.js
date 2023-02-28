@@ -42,13 +42,18 @@ import {
 import JatsTagsService from '../JatsTags'
 import CharactersList from './CharactersList'
 import KotahiSchema from './KotahiSchema'
+import AnyStyleService from '../CustomWaxToolGroups/AnystyleService/AnyStyleService'
 
 const updateTitle = title => {
   // this gets fired when the title is changed in original version of this—not called now, but might still be needed
   // console.log(`Title changed: ${title}`)
 }
 
-const productionWaxEditorConfig = (readOnlyComments, handleAssetManager) => ({
+const productionWaxEditorConfig = (
+  readOnlyComments,
+  handleAssetManager,
+  updateAnystyle,
+) => ({
   EnableTrackChangeService: {
     enabled: false,
     toggle: true,
@@ -123,6 +128,7 @@ const productionWaxEditorConfig = (readOnlyComments, handleAssetManager) => ({
   SpecialCharactersService: CharactersList,
 
   TitleService: { updateTitle },
+  AnyStyleService: { AnyStyleTransformation: updateAnystyle },
   ImageService: handleAssetManager ? { handleAssetManager } : {},
   services: [
     new AnnotationToolGroupService(),
@@ -165,6 +171,7 @@ const productionWaxEditorConfig = (readOnlyComments, handleAssetManager) => ({
     new JatsTagsService(),
     new JatsSideMenuToolGroupService(),
     new JatsAnnotationListTooolGroupService(),
+    new AnyStyleService(),
   ],
 })
 

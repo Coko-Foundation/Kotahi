@@ -163,22 +163,6 @@ const resolvers = {
 
       return associatedTask
     },
-
-    createTaskEmailNotificationLog: async (
-      _,
-      { taskEmailNotificationLog },
-      ctx,
-    ) => {
-      await TaskEmailNotificationLog.query().insert(taskEmailNotificationLog)
-
-      const associatedTask = await Task.query()
-        .findById(taskEmailNotificationLog.taskId)
-        .withGraphFetched(
-          '[emailNotifications.recipientUser, notificationLogs]',
-        )
-
-      return associatedTask
-    },
   },
   Query: {
     tasks: async (_, { manuscriptId }) => {
