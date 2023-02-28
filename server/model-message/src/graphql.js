@@ -17,12 +17,12 @@ const resolvers = {
         .where({ channelId })
         .withGraphJoined('user')
         .limit(first)
-        .orderBy('created', 'desc')
+        .orderBy('messages.created', 'desc')
 
       if (before) {
         const firstMessage = await Message.query().findById(before)
         messagesQuery = messagesQuery.where(
-          'created',
+          'messages.created',
           '<',
           firstMessage.created,
         )
