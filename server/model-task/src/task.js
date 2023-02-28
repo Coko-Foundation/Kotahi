@@ -1,4 +1,5 @@
 const { BaseModel } = require('@coko/server')
+const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
 
 class Task extends BaseModel {
   static get tableName() {
@@ -16,6 +17,10 @@ class Task extends BaseModel {
   static get relationMappings() {
     /* eslint-disable-next-line global-require */
     const { User } = require('@pubsweet/models')
+    /* eslint-disable-next-line global-require */
+    const TaskEmailNotification = require('./taskEmailNotification')
+    /* eslint-disable-next-line global-require */
+    const Manuscript = require('../../model-manuscript/src/manuscript')
 
     return {
       assignee: {
@@ -24,6 +29,30 @@ class Task extends BaseModel {
         join: {
           from: 'tasks.assigneeUserId',
           to: 'users.id',
+        },
+      },
+      emailNotifications: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: TaskEmailNotification,
+        join: {
+          from: 'tasks.id',
+          to: 'task_email_notifications.taskId',
+        },
+      },
+      notificationLogs: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: TaskEmailNotificationLog,
+        join: {
+          from: 'tasks.id',
+          to: 'task_email_notifications_logs.taskId',
+        },
+      },
+      manuscript: {
+        relation: BaseModel.BelongsToOneRelation,
+        modelClass: Manuscript,
+        join: {
+          from: 'tasks.manuscriptId',
+          to: 'manuscripts.id',
         },
       },
     }
@@ -40,6 +69,9 @@ class Task extends BaseModel {
         reminderPeriodDays: { type: ['integer', 'null'] },
         status: { type: 'string' },
         sequenceIndex: { type: 'integer' },
+        assigneeType: { type: ['string', 'null'] },
+        assigneeName: { type: ['string', 'null'] },
+        assigneeEmail: { type: ['string', 'null'] },
       },
     }
   }

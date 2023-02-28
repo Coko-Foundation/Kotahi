@@ -63,13 +63,24 @@ export const Select = ({
   isMulti,
   options,
   customStyles,
+  hasGroupedOptions = false,
   ...otherProps
 }) => {
   const th = useContext(ThemeContext)
   let selectedOption = value
 
   if (!isMulti && value) {
-    selectedOption = options.find(option => option.value === value)
+    if (hasGroupedOptions) {
+      for (const option of options) {
+        let optionMatched = option.options.find(subOption => subOption.value === value)
+        if (optionMatched) {
+          selectedOption = optionMatched
+          break;
+        }
+      }
+    } else {
+      selectedOption = options.find(option => option.value === value)
+    }
   }
 
   const myStyles = { ...styles(th), ...(customStyles || {}) }

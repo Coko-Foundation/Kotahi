@@ -13,7 +13,10 @@ const {
   archiveOldManuscripts,
 } = require('./model-manuscript/src/manuscriptCommsUtils')
 
-const { createNewTaskAlerts } = require('./model-task/src/taskCommsUtils')
+const {
+  createNewTaskAlerts,
+  sendAutomatedTaskEmailNotifications,
+} = require('./model-task/src/taskCommsUtils')
 
 if (config.manuscripts.autoImportHourUtc) {
   schedule.scheduleJob(
@@ -24,7 +27,7 @@ if (config.manuscripts.autoImportHourUtc) {
     async () => {
       // eslint-disable-next-line no-console
       console.info(
-        `Running scheduled import and archive tasks at ${new Date().toISOString()}`,
+        `Running scheduler for importing and archiving Manuscripts at ${new Date().toISOString()}`,
       )
 
       try {
@@ -51,6 +54,25 @@ schedule.scheduleJob(
 
     try {
       await createNewTaskAlerts()
+    } catch (error) {
+      console.error(error)
+    }
+  },
+)
+
+schedule.scheduleJob(
+  {
+    tz: `${config.manuscripts.teamTimezone || 'Etc/UTC'}`,
+    rule: `00 00 * * *`,
+  },
+  async () => {
+    // eslint-disable-next-line no-console
+    console.info(
+      `Running scheduler for sending task email notifications ${new Date().toISOString()}`,
+    )
+
+    try {
+      await sendAutomatedTaskEmailNotifications()
     } catch (error) {
       console.error(error)
     }

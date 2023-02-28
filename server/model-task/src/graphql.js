@@ -1,7 +1,13 @@
+const dateFns = require('date-fns')
+
+const config = require('config')
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
+const TaskEmailNotification = require('./taskEmailNotification')
+const taskConfigs = require('../../../config/journal/tasks.json')
 
 const { createNewTaskAlerts, updateAlertsForTask } = require('./taskCommsUtils')
+const TaskEmailNotificationLog = require('./taskEmailNotificationLog')
 
 const resolvers = {
   Mutation: {
@@ -11,7 +17,6 @@ const resolvers = {
         .filter((task, i) => tasks.findIndex(t => t.id === task.id) === i)
         .map(task => ({
           ...task,
-          dueDate: new Date(task.dueDate),
           manuscriptId,
         }))
 
@@ -30,13 +35,16 @@ const resolvers = {
 
         for (let i = 0; i < distinctTasks.length; i += 1) {
           const task = { ...distinctTasks[i], manuscriptId, sequenceIndex: i }
+
           promises.push(
             Task.query(trx)
               .insert(task)
               .onConflict('id')
               .merge()
               .returning('*')
-              .withGraphFetched('assignee'),
+              .withGraphFetched(
+                '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
+              ),
           )
         }
 
@@ -62,25 +70,108 @@ const resolvers = {
 
       await updateAlertsForTask(taskRecord)
 
+      await Task.query().insert(taskRecord).onConflict('id').merge()
+
       return Task.query()
-        .insert(taskRecord)
-        .onConflict('id')
-        .merge()
-        .returning('*')
-        .withGraphFetched('assignee')
+        .findById(task.id)
+        .withGraphFetched(
+          '[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+        )
     },
 
+    updateTaskNotification: async (_, { taskNotification }) => {
+      await TaskEmailNotification.query().upsertGraphAndFetch(
+        taskNotification,
+        { relate: true, insertMissing: true },
+      )
+
+      const associatedTask = await Task.query()
+        .findById(taskNotification.taskId)
+        .withGraphFetched(
+          '[emailNotifications(orderByCreated).recipientUser, notificationLogs, assignee]',
+        )
+
+      return associatedTask
+    },
+
+    deleteTaskNotification: async (_, { id }, ctx) => {
+      const taskEmailNotification = await TaskEmailNotification.query().findById(
+        id,
+      )
+
+      const { taskId } = taskEmailNotification
+
+      await TaskEmailNotification.query().deleteById(id)
+
+      const associatedTask = await Task.query()
+        .findById(taskId)
+        .withGraphFetched(
+          '[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]',
+        )
+
+      return associatedTask
+    },
     createNewTaskAlerts: async () => createNewTaskAlerts(), // For testing purposes. Normally initiated by a scheduler on the server.
 
     removeTaskAlertsForCurrentUser: async (_, __, ctx) =>
       TaskAlert.query().delete().where({ userId: ctx.user }),
+
+    updateTaskStatus: async (_, { task }) => {
+      // eslint-disable-next-line prefer-destructuring
+      const status = taskConfigs.status
+
+      const data = {
+        status: task.status,
+      }
+
+      // get task
+      const dbTask = await Task.query().findById(task.id)
+
+      if (
+        dbTask.status === status.NOT_STARTED &&
+        task.status === status.IN_PROGRESS
+      ) {
+        const taskDurationDays = dbTask.defaultDurationDays
+
+        data.dueDate =
+          taskDurationDays !== null
+            ? dateFns.addDays(new Date(), taskDurationDays)
+            : null
+      }
+
+      const updatedTask = await Task.query()
+        .patchAndFetchById(task.id, data)
+        .withGraphFetched(
+          '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
+        )
+
+      return updatedTask
+    },
+
+    createTaskEmailNotificationLog: async (
+      _,
+      { taskEmailNotificationLog },
+      ctx,
+    ) => {
+      await TaskEmailNotificationLog.query().insert(taskEmailNotificationLog)
+
+      const associatedTask = await Task.query()
+        .findById(taskEmailNotificationLog.taskId)
+        .withGraphFetched(
+          '[assignee, emailNotifications.recipientUser, notificationLogs]',
+        )
+
+      return associatedTask
+    },
   },
   Query: {
     tasks: async (_, { manuscriptId }) => {
       return Task.query()
         .where({ manuscriptId })
         .orderBy('sequenceIndex')
-        .withGraphJoined('assignee')
+        .withGraphFetched(
+          '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
+        )
     },
     userHasTaskAlerts: async (_, __, ctx) => {
       return (
@@ -101,6 +192,15 @@ const typeDefs = `
     dueDate: DateTime
     reminderPeriodDays: Int
     status: String!
+    emailNotifications: [TaskEmailNotificationInput]
+    assigneeType: String
+    assigneeName: String
+    assigneeEmail: String
+  }
+
+  input UpdateTaskStatusInput {
+    id: ID!
+    status: String!
   }
 
   type Task {
@@ -116,6 +216,11 @@ const typeDefs = `
     reminderPeriodDays: Int
     sequenceIndex: Int!
     status: String!
+    emailNotifications: [TaskEmailNotification]
+    notificationLogs: [TaskEmailNotificationLog]
+    assigneeType: String
+    assigneeName: String
+    assigneeEmail: String
   }
 
   type TaskAlert {
@@ -128,11 +233,61 @@ const typeDefs = `
     userHasTaskAlerts: Boolean!
   }
 
+  input TaskEmailNotificationInput {
+    id: ID!
+    taskId: ID!
+    recipientUserId: ID
+    recipientType: String
+    notificationElapsedDays: Int
+    emailTemplateKey: String
+    recipientName: String
+    recipientEmail: String
+    sentAt: DateTime
+  }
+
+  input TaskEmailNotificationLogInput {
+    taskId: ID!
+    senderEmail: String!
+    recipientEmail: String!
+    emailTemplateKey: String!
+    content: String!
+  }
+
+  type TaskEmailNotificationLog {
+    id: ID!
+    taskId: ID!
+    senderEmail: String!
+    recipientEmail: String!
+    emailTemplateKey: String!
+    content: String!
+    created: DateTime!
+    updated: DateTime
+  }
+
+  type TaskEmailNotification {
+    id: ID!
+    taskId: ID!
+    recipientUserId: ID
+    recipientType: String
+    notificationElapsedDays: Int
+    emailTemplateKey: String
+    recipientName: String
+    recipientEmail: String
+    created: DateTime!
+    updated: DateTime
+    recipientUser: User
+    sentAt: DateTime
+  }
+
   extend type Mutation {
     updateTasks(manuscriptId: ID, tasks: [TaskInput!]!): [Task!]!
     updateTask(task: TaskInput!): Task!
     createNewTaskAlerts: Boolean
     removeTaskAlertsForCurrentUser: Boolean
+    updateTaskStatus(task: UpdateTaskStatusInput!): Task!
+    updateTaskNotification(taskNotification: TaskEmailNotificationInput!): Task!
+    deleteTaskNotification(id: ID!): Task!
+    createTaskEmailNotificationLog(taskEmailNotificationLog: TaskEmailNotificationLogInput!): Task!
   }
 `
 

@@ -14,6 +14,7 @@ import MessageContainer from '../../../component-chat/src/MessageContainer'
 
 const DecisionVersions = ({
   allUsers,
+  roles,
   currentUser,
   decisionForm,
   form,
@@ -50,6 +51,9 @@ const DecisionVersions = ({
   refetch,
   updateTask,
   updateTasks,
+  updateTaskNotification,
+  deleteTaskNotification,
+  createTaskEmailNotificationLog,
 }) => {
   const versions = gatherManuscriptVersions(manuscript)
 
@@ -87,11 +91,13 @@ const DecisionVersions = ({
                 allUsers={allUsers}
                 canHideReviews={canHideReviews}
                 createFile={createFile}
+                createTaskEmailNotificationLog={createTaskEmailNotificationLog}
                 createTeam={createTeam}
                 currentDecisionData={initialValue}
                 currentUser={currentUser}
                 decisionForm={decisionForm}
                 deleteFile={deleteFile}
+                deleteTaskNotification={deleteTaskNotification}
                 displayShortIdAsIdentifier={displayShortIdAsIdentifier}
                 dois={dois}
                 externalEmail={externalEmail}
@@ -107,6 +113,7 @@ const DecisionVersions = ({
                 refetch={refetch}
                 reviewers={reviewers}
                 reviewForm={reviewForm}
+                roles={roles}
                 selectedEmail={selectedEmail}
                 sendChannelMessageCb={sendChannelMessageCb}
                 sendNotifyEmail={sendNotifyEmail}
@@ -126,6 +133,7 @@ const DecisionVersions = ({
                   )
                 }
                 updateTask={index === 0 ? updateTask : null}
+                updateTaskNotification={updateTaskNotification}
                 updateTasks={index === 0 ? updateTasks : null}
                 updateTeam={updateTeam}
                 urlFrag={urlFrag}
