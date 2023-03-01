@@ -1,13 +1,15 @@
 /* eslint-disable jest/expect-expect */
+import Color from 'color'
 import { Menu } from '../../page-object/page-component/menu'
 import { LoginPage } from '../../page-object/login-page'
 import { manuscripts, login, dashboard } from '../../support/routes'
-import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 
 describe('Login page tests', () => {
   it('page should display colab branding settings', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('branding_settings').then(settings => {
+      const primaryAsRgb = Color(settings.colab.primaryColor).string()
+
       cy.visit(login)
 
       LoginPage.getBackground().should('be.visible')
@@ -16,7 +18,7 @@ describe('Login page tests', () => {
       // assert settings are specific to colab instance
       LoginPage.getBackground()
         .should('have.css', 'background-image')
-        .and('contains', settings.colab.primaryColor)
+        .and('contains', primaryAsRgb)
       LoginPage.getLogo()
         .should('have.attr', 'alt')
         .and('eq', settings.colab.brandName)
@@ -25,7 +27,7 @@ describe('Login page tests', () => {
         .and('eq', settings.colab.logoPath)
       LoginPage.getLoginButton()
         .should('have.css', 'background-color')
-        .and('contains', settings.colab.primaryColor)
+        .and('contains', primaryAsRgb)
     })
   })
 
@@ -44,17 +46,7 @@ describe('Login page tests', () => {
       cy.awaitDisappearSpinner()
       Menu.getBackground()
         .should('have.css', 'background-image')
-        .and('contains', settings.colab.primaryColor)
-
-      ManuscriptsPage.getCreatedCaret(0)
-        .should('have.css', 'color')
-        .and('eq', settings.colab.primaryColor)
-      ManuscriptsPage.getCreatedCaret(1)
-        .should('have.css', 'color')
-        .and('eq', settings.colab.primaryColor)
-      ManuscriptsPage.getRefreshButton()
-        .should('have.css', 'background-color')
-        .should('contain', settings.colab.primaryColor)
+        .and('contains', Color(settings.colab.primaryColor).string())
     })
   })
 

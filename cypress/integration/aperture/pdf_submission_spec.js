@@ -11,7 +11,7 @@ describe('Upload manuscript test', () => {
     cy.task('seedForms')
 
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.author.name, dashboard) // login as author
+      cy.login(name.role.author, dashboard) // login as author
     })
 
     DashboardPage.clickSubmissionButton() // Click on new submission

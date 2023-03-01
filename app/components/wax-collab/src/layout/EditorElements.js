@@ -629,41 +629,6 @@ const EditorStyles = css`
     }
   }
 
-  span.article-title,
-  span.journal-title,
-  span.citation-label,
-  span.author-group,
-  span.author-name,
-  span.volume,
-  span.issue,
-  span.year,
-  span.first-page,
-  span.last-page,
-  a.doi {
-    --citationColorValues: transparent;
-    --citationTextColor: black;
-    --citationOffset: 2px;
-    border-radius: 2px;
-    outline: ${th('colorCitation')} 1px solid;
-    outline-offset: var(--citationOffset);
-    position: relative;
-
-    &:before {
-      background-color: var(--citationColorValues);
-      border-radius: 100%;
-      content: '';
-      display: none;
-      height: 4px;
-      left: -2px;
-      position: absolute;
-      top: -2px;
-      width: 4px;
-    }
-    &:hover {
-      outline-color: var(--citationColorValues);
-    }
-  }
-
   span.citation-label {
     --citationColorValues: ${th('colorCitationLabel')};
     --citationTextColor: white;
@@ -721,9 +686,47 @@ const EditorStyles = css`
     --citationTextColor: white;
   }
 
+  span.article-title,
+  span.journal-title,
+  span.citation-label,
+  span.author-group,
+  span.author-name,
+  span.volume,
+  span.issue,
+  span.year,
+  span.first-page,
+  span.last-page,
+  a.doi {
+    --citationColorValues: transparent;
+    --citationTextColor: black;
+    --citationOffset: 2px;
+    border-radius: 2px;
+    outline: ${th('colorCitation')} 1px solid;
+    outline-offset: var(--citationOffset);
+    position: relative;
+
+    &:before {
+      background-color: var(--citationColorValues);
+      border-radius: 100%;
+      content: '';
+      display: none;
+      height: 4px;
+      left: -2px;
+      position: absolute;
+      top: -2px;
+      width: 4px;
+    }
+
+    &:hover {
+      outline-color: var(--citationColorValues);
+    }
+  }
+
   .hide-citation-spans span,
   .hide-citation-spans a {
+    /* stylelint-disable-next-line declaration-no-important */
     --citationColorValues: transparent !important;
+    /* stylelint-disable-next-line declaration-no-important */
     --citationTextColor: transparent !important;
   }
 
@@ -776,9 +779,9 @@ const EditorStyles = css`
   .keyword-list {
     --keywordColorValues: transparent;
     --keywordOffset: 2px;
+    border-radius: 2px;
     outline: ${th('colorKeyword')} 1px solid;
     outline-offset: var(--fundingOffset);
-    border-radius: 2px;
     transition: 0.25;
   }
 
@@ -786,22 +789,24 @@ const EditorStyles = css`
     --keywordColorValues: transparent;
     --keywordTextColor: black;
     --keywordOffset: 2px;
+    border-radius: 2px;
+    font-weight: bold;
     outline: ${th('colorKeyword')} 1px solid;
     outline-offset: var(--keywordOffset);
     position: relative;
-    border-radius: 2px;
-    font-weight: bold;
+
     &:before {
-      position: absolute;
-      left: -2px;
-      top: -2px;
-      content: '';
-      width: 4px;
-      height: 4px;
       background-color: var(--keywordColorValues);
       border-radius: 100%;
+      content: '';
       display: none;
+      height: 4px;
+      left: -2px;
+      position: absolute;
+      top: -2px;
+      width: 4px;
     }
+
     /* &:hover {
        outline-color: var(--keywordColorValues);
     } */
@@ -812,21 +817,21 @@ const EditorStyles = css`
   section.glossary {
     background-color: #eee;
     border: 1px solid #ccc;
-    margin: 16px 0;
     border-radius: 0 4px 4px 0;
+    margin: 16px 0;
     padding: 4px 8px;
     position: relative;
 
     &:before {
       background-color: ${th('colorGlossary')};
       border: 1px solid #ccc;
+      border-radius: 4px;
       content: '';
+      height: calc(100% + 2px);
       left: -4px;
-      width: 8px;
       position: absolute;
       top: -1px;
-      height: calc(100% + 2px);
-      border-radius: 4px;
+      width: 8px;
     }
 
     & > :last-child {
@@ -840,9 +845,9 @@ const EditorStyles = css`
   .glossary h4,
   .glossary h5,
   .glossary h6 {
-    margin: 0 0 8px 0;
     font-size: 18px;
     font-weight: bold;
+    margin: 0 0 8px 0;
   }
 
   .glossary-term {

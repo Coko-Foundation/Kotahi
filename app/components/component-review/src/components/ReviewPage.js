@@ -287,7 +287,8 @@ const ReviewPage = ({ match, ...props }) => {
   const updateReviewJsonData = (value, path) => {
     if (!latestVersion.id) {
       // we shouldn't need this because of debouncing! But this protects against trying to save while loading is still happening
-      console.error('no version id!')
+      // eslint-disable-next-line no-console
+      console.log('no version id!')
       return false
     }
 

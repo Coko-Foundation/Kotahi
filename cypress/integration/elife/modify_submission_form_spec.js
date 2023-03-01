@@ -15,7 +15,7 @@ describe('validating doi field in submission form', () => {
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
         // login as admin
-        cy.login(name.role.admin.name, dashboard)
+        cy.login(name.role.admin, dashboard)
 
         // select Control on the Manuscripts page
         Menu.clickManuscripts()
@@ -42,7 +42,7 @@ describe('validating doi field in submission form', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
       // login as admin
-      cy.login(name.role.admin.name, dashboard)
+      cy.login(name.role.admin, dashboard)
 
       // select Control on the Manuscripts page
       Menu.clickManuscripts()

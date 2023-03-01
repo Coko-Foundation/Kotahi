@@ -14,18 +14,19 @@ describe('checking manuscript version', () => {
     cy.task('seed', 'three_reviews_completed')
     cy.task('seedForms')
 
-    return cy.fixture('role_names').then(name => {
+    // eslint-disable-next-line jest/valid-expect-in-promise
+    cy.fixture('role_names').then(name => {
       /* login as admin */
-      cy.login(name.role.admin.name, dashboard)
+      cy.login(name.role.admin, dashboard)
       DashboardPage.clickManuscriptNavButton()
       ManuscriptsPage.clickControlButton()
       /* Assign Editor */
       ControlPage.getAssignSeniorEditorDropdown()
         .click({ force: true })
-        .type(`${name.role.seniorEditor.username}{enter}`)
+        .type(`${name.role.seniorEditor}{enter}`)
 
       /* Editor  Submits a decision */
-      cy.login(name.role.seniorEditor.name, dashboard)
+      cy.login(name.role.seniorEditor, dashboard)
       DashboardPage.clickControlPanel()
       /* Verify publish button is disabled */
       ControlPage.getPublishButton().should('be.disabled')
@@ -40,7 +41,7 @@ describe('checking manuscript version', () => {
       ControlPage.checkSvgExists()
 
       /* View Decision as an Author */
-      cy.login(name.role.author.name, dashboard)
+      cy.login(name.role.author, dashboard)
       /* Click on first MySubmission */
       DashboardPage.getSubmittedManuscript().click()
       // Verify Decision Content
@@ -60,7 +61,7 @@ describe('checking manuscript version', () => {
         .should('exist')
 
       /* Login as editor and check the new version submission form */
-      cy.login(name.role.seniorEditor.name, dashboard)
+      cy.login(name.role.seniorEditor, dashboard)
       DashboardPage.clickControlPanel()
       /* Verify publish button is disabled */
       ControlPage.getPublishButton().should('be.disabled')

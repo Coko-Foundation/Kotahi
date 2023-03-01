@@ -21,11 +21,10 @@ describe('tooltip tests', () => {
     DashboardPage.clickSubmit()
     NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
   })
-  it('check empty tooltip', () => {
+  it('check no tooltip for empty abstract', () => {
     Menu.clickManuscriptsAndAssertPageLoad()
     ManuscriptsPage.getTooltipText().should('not.exist')
-    ManuscriptsPage.getTooltipIcon().should('be.visible').trigger('mouseover')
-    ManuscriptsPage.getTooltipText().invoke('text').should('eq', '')
+    ManuscriptsPage.getTooltipIcon().should('not.exist')
   })
   it('check tooltip text', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise

@@ -40,7 +40,7 @@ Cypress.Commands.add('login', (name, page) => {
 })
 
 Cypress.Commands.add('fillInput', { prevSubject: true }, (subject, text) => {
-  return cy.wrap(subject).click().clear().type(text)
+  return cy.wrap(subject).type(`{selectall}${text}`, { force: true })
 })
 
 Cypress.Commands.add('getByDataTestId', dataTestId => {

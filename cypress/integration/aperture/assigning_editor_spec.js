@@ -15,7 +15,7 @@ describe('Assigning senior editor', () => {
     cy.fixture('submission_form_data').then(data => {
       cy.fixture('role_names').then(name => {
         // login as admin
-        cy.login(name.role.admin.name, dashboard)
+        cy.login(name.role.admin, dashboard)
 
         // select Control on the Manuscripts page
         Menu.clickManuscripts()
@@ -24,13 +24,13 @@ describe('Assigning senior editor', () => {
 
         // assign seniorEditor
         ControlPage.clickAssignSeniorEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.username)
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
 
         ControlPage.clickAssignHandlingEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.username)
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
 
         ControlPage.clickAssignEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.admin.username)
+        ControlPage.selectDropdownOptionByName(name.role.admin)
 
         // assert the reviews
         ControlPage.fillInDecision(data.decision)

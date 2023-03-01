@@ -55,20 +55,20 @@ describe('manuscripts page checkboxes tests', () => {
       ManuscriptsPage.getSelectAllCheckbox().click()
       ManuscriptsPage.getSelectedArticlesCount().should('contain', 0)
     })
-    it('click Close to not delete the articles', () => {
+    it('click Close to not Archive the articles', () => {
       ManuscriptsPage.getTableRowsCount().should('eq', 3)
       ManuscriptsPage.getSelectAllCheckbox().click()
       ManuscriptsPage.clickDelete()
       ManuscriptsPage.clickClose()
       ManuscriptsPage.getSelectedArticlesCount().should('contain', 3)
     })
-    it('delete selected article', () => {
+    it('archive selected article', () => {
       ManuscriptsPage.getTableRowsCount().should('eq', 3)
       ManuscriptsPage.getSelectAllCheckbox().click()
       ManuscriptsPage.clickDelete()
       ManuscriptsPage.getConfirmationMessageForBulkDelete().should(
         'contain',
-        'Please confirm you would like to delete selected articles',
+        'Please confirm you would like to archive selected manuscripts',
       )
       ManuscriptsPage.clickConfirm()
       ManuscriptsPage.getTableRow().should('not.exist')
@@ -88,7 +88,7 @@ describe('manuscripts page checkboxes tests', () => {
       NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
-        SubmissionFormPage.fillInDoi(data.doi)
+        SubmissionFormPage.fillInDoiColab(data.doi)
         SubmissionFormPage.getWaxInputBox(0).fillInput(data.abstract)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
         SubmissionFormPage.fillInDatePublished(data.date)
@@ -98,6 +98,8 @@ describe('manuscripts page checkboxes tests', () => {
         SubmissionFormPage.getWaxInputBox(3).fillInput(data.studyStrengths)
         SubmissionFormPage.getWaxInputBox(4).fillInput(data.limitations)
         SubmissionFormPage.fillInKeywords(data.keywords)
+        SubmissionFormPage.clickLabelsDropdown()
+        SubmissionFormPage.selectDropdownOption(0)
         SubmissionFormPage.fillInReviewCreator(data.creator)
         SubmissionFormPage.clickSubmitResearch()
         SubmissionFormPage.clickSubmitManuscriptAndWaitPageLoad()

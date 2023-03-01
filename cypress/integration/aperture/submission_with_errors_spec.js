@@ -15,7 +15,7 @@ describe('Submission with errors test', () => {
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
-        cy.login(name.role.admin.name, dashboard)
+        cy.login(name.role.admin, dashboard)
       })
 
       // enter the from page and assert the fileds
@@ -42,7 +42,7 @@ describe('Submission with errors test', () => {
       // login as author and attempt to submit an incomplete submission form
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
-        cy.login(name.role.author.name, dashboard)
+        cy.login(name.role.author, dashboard)
 
         Menu.clickDashboard()
         // Click on new submission

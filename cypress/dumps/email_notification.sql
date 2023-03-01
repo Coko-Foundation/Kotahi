@@ -346,10 +346,13 @@ CREATE TABLE "public"."manuscripts" (
     "is_imported" bool,
     "import_source" uuid,
     "import_source_server" text,
-    "short_id" int4 NOT NULL DEFAULT nextval('manuscripts_short_id_seq'::regclass),
+    "short_id" SERIAL,
     "submitted_date" timestamptz,
-    "is_hidden" bool,
+    "is_hidden" bool NOT NULL DEFAULT FALSE,
     "form_fields_to_publish" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "searchable_text" TEXT DEFAULT '' NOT NULL,
+    "search_tsvector" tsvector DEFAULT ''::tsvector NOT NULL,
+    "doi" text,
     PRIMARY KEY ("id")
 );
 
@@ -431,6 +434,46 @@ CREATE TABLE "public"."reviews_old" (
     "json_data" jsonb
 );
 
+--
+-- Name: tasks; Type: TABLE; Schema: public; Owner: kotahidev
+--
+
+DROP TABLE IF EXISTS public.tasks;
+
+CREATE TABLE public.tasks (
+  id UUID PRIMARY KEY,
+  created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+  updated TIMESTAMP WITH TIME ZONE,
+--  task_list_id uuid NOT NULL REFERENCES task_lists(id) ON DELETE CASCADE,
+  manuscript_id uuid,
+  title TEXT,
+  assignee_user_id uuid,
+  default_duration_days INTEGER,
+  due_date TIMESTAMP WITH TIME ZONE,
+  reminder_period_days INTEGER,
+  status TEXT,
+  sequence_index INTEGER NOT NULL
+);
+
+ALTER TABLE public.tasks OWNER TO kotahidev;
+
+--
+-- Name: task_alerts; Type: TABLE; Schema: public; Owner: kotahidev
+--
+
+DROP TABLE IF EXISTS public.task_alerts;
+
+CREATE TABLE public.task_alerts (
+  id UUID PRIMARY KEY,
+  task_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+  updated TIMESTAMP WITH TIME ZONE
+);
+
+ALTER TABLE public.task_alerts OWNER TO kotahidev;
+
+
 DROP TABLE IF EXISTS "public"."team_members";
 -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
 
@@ -461,7 +504,8 @@ CREATE TABLE "public"."teams" (
     "owners" jsonb,
     "global" bool,
     "type" text NOT NULL,
-    "manuscript_id" uuid,
+    "object_id" uuid,
+    "object_type" text,
     PRIMARY KEY ("id")
 );
 
@@ -513,11 +557,11 @@ INSERT INTO "public"."forms" ("id", "type", "created", "updated", "purpose", "st
 ('fb57440a-889b-4d9e-a2d9-962d15670ae3', 'Form', '2022-08-10 02:00:11.837+00', '2022-08-10 02:00:11.837+00', 'decision', '{"name": "Decision", "children": [{"id": "1600fcc9-ebf4-42f5-af97-c242ea04ae21", "name": "comment", "title": "Decision", "validate": [{"id": "39796769-23a9-4788-b1f3-78d08b59f97e", "label": "Required", "value": "required"}], "component": "AbstractEditor", "placeholder": "Write/paste your decision letter here, or upload it by dragging it onto the box below."}, {"id": "695a5b2f-a0d7-4b1e-a750-107bff5628bc", "name": "files", "title": " ", "component": "SupplementaryFiles", "shortDescription": "Files"}, {"id": "7423ad09-d01b-49bc-8c2e-807829b86653", "name": "verdict", "title": "Decision Status", "inline": "true", "options": [{"id": "78653e7a-32b3-4283-9a9e-36e79876da28", "label": "Accept", "value": "accept", "labelColor": "#048802"}, {"id": "44c2dad6-8316-42ed-a2b7-3f2e98d49823", "label": "Revise", "value": "revise", "labelColor": "#ebc400"}, {"id": "a8ae5a69-9f34-4e3c-b3d2-c6572ac2e225", "label": "Reject", "value": "reject", "labelColor": "#ea412e"}], "validate": [{"id": "4eb14d13-4d17-40d0-95a1-3e68e9397269", "label": "Required", "value": "required"}], "component": "RadioGroup"}], "haspopup": "false"}', 'decision');
 
 INSERT INTO "public"."identities" ("id", "user_id", "created", "updated", "type", "identifier", "name", "aff", "oauth", "is_default") VALUES
-('8f8afcc8-4da1-4ed1-b760-0d6070498baf', '9160da05-15ce-4836-8cb2-45c6c1855318', '2022-08-10 02:15:11.34+00', '2022-08-10 02:15:11.34+00', 'orcid', '0000-0002-5641-5729', 'Sinead Sullivan', '', '{"accessToken": "f249c0af-fe12-417b-acf2-24049cde3e9f", "refreshToken": "a2069211-47f9-42fc-99af-c6e6e3386a5b"}', 't'),
+('8f8afcc8-4da1-4ed1-b760-0d6070498baf', '9160da05-15ce-4836-8cb2-45c6c1855318', '2022-08-10 02:15:11.34+00', '2022-08-10 02:15:11.34+00', 'orcid', '0000-0002-5641-5729', 'Elaine Barnes', '', '{"accessToken": "f249c0af-fe12-417b-acf2-24049cde3e9f", "refreshToken": "a2069211-47f9-42fc-99af-c6e6e3386a5b"}', 't'),
 ('98f9691c-3138-4fd2-b3de-72bb4cd9b60d', '716a83b2-9749-4933-9418-fca2544f5282', '2022-08-10 02:19:19.129+00', '2022-08-10 02:19:19.129+00', 'orcid','0000-0002-0564-2016', 'Emily Clay', '', '{"accessToken": "0e90d1c2-41bf-4c46-8211-aef6d5a09ee3", "refreshToken": "103bc52b-4ee4-455b-a2ca-7f2cbc5649a8"}', 't');
 
-INSERT INTO "public"."manuscripts" ("id", "created", "updated", "parent_id", "submitter_id", "status", "decision", "authors", "meta", "submission", "published", "type", "evaluations_hypothesis_map", "is_imported", "import_source", "import_source_server", "short_id", "submitted_date", "is_hidden", "form_fields_to_publish") VALUES
-('10bc66ee-dc1a-4ac2-82d1-b37cd8e0fc15', '2022-08-10 02:15:29.046+00', '2022-08-10 02:18:54.218+00', NULL, '9160da05-15ce-4836-8cb2-45c6c1855318', 'submitted', NULL, NULL, '{"title": "Demo Title"}', '{"doi": "", "link": "www.kotahi-test-example.com/doi", "title": "", "labels": "", "topics": [], "journal": "", "ourTake": "<p class=\"paragraph\">luctus vel augue a, fermentum volutpat mauris. Curabitur ultrices purus id mauris gravida aliquet. Quisque scelerisque ut massa eu sollicitudin. Sed egestas nibh ac lacinia facilisis.</p>", "abstract": "<p class=\"paragraph\">ABSTRACT Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eleifend odio et convallis posuere. Aliquam quis porta erat, in hendrerit lorem. Fusce eu mauris tortor ABSTRACT</p>", "editDate": "2022-08-10", "keywords": "In hac habitasse platea dictumst", "firstAuthor": " Nulla enim nulla", "limitations": "<p class=\"paragraph\">Donec aliquam leo vitae est lacinia, non elementum felis tempus</p>", "mainFindings": "<p class=\"paragraph\">Morbi sit amet dolor eget odio interdum efficitur vitae et leo.</p>", "datePublished": "12/12/12", "reviewCreator": "Pellentesque tincidunt ", "studyStrengths": "<p class=\"paragraph\">Curabitur vel fermentum sem.</p>"}', NULL, 'Manuscript', NULL, NULL, NULL, NULL, 1, '2022-08-10 02:18:54.218+00', NULL, '[]');
+INSERT INTO "public"."manuscripts" ("id", "created", "updated", "parent_id", "submitter_id", "status", "decision", "authors", "meta", "submission", "published", "type", "evaluations_hypothesis_map", "is_imported", "import_source", "import_source_server", "short_id", "submitted_date", "form_fields_to_publish") VALUES
+('10bc66ee-dc1a-4ac2-82d1-b37cd8e0fc15', '2022-08-10 02:15:29.046+00', '2022-08-10 02:18:54.218+00', NULL, '9160da05-15ce-4836-8cb2-45c6c1855318', 'submitted', NULL, NULL, '{"title": "Demo Title"}', '{"doi": "", "link": "www.kotahi-test-example.com/doi", "title": "", "labels": "", "topics": [], "journal": "", "ourTake": "<p class=\"paragraph\">luctus vel augue a, fermentum volutpat mauris. Curabitur ultrices purus id mauris gravida aliquet. Quisque scelerisque ut massa eu sollicitudin. Sed egestas nibh ac lacinia facilisis.</p>", "abstract": "<p class=\"paragraph\">ABSTRACT Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eleifend odio et convallis posuere. Aliquam quis porta erat, in hendrerit lorem. Fusce eu mauris tortor ABSTRACT</p>", "editDate": "2022-08-10", "keywords": "In hac habitasse platea dictumst", "firstAuthor": " Nulla enim nulla", "limitations": "<p class=\"paragraph\">Donec aliquam leo vitae est lacinia, non elementum felis tempus</p>", "mainFindings": "<p class=\"paragraph\">Morbi sit amet dolor eget odio interdum efficitur vitae et leo.</p>", "datePublished": "12/12/12", "reviewCreator": "Pellentesque tincidunt ", "studyStrengths": "<p class=\"paragraph\">Curabitur vel fermentum sem.</p>"}', NULL, 'Manuscript', NULL, NULL, NULL, NULL, 1, '2022-08-10 02:18:54.218+00', '[]');
 
 INSERT INTO "public"."migrations" ("id", "run_at") VALUES
 ('1524494862-entities.sql', '2022-08-10 01:59:37.986782+00'),
@@ -576,12 +620,12 @@ INSERT INTO "public"."migrations" ("id", "run_at") VALUES
 INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "alias_id", "is_shared") VALUES
 ('2bf0ba39-16dc-42d1-b9f2-93482baf323d', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '0c00d183-ed7e-4273-b0a2-eb56c75de1f4', '9160da05-15ce-4836-8cb2-45c6c1855318', NULL, NULL);
 
-INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "members", "owners", "global", "type", "manuscript_id") VALUES
-('0c00d183-ed7e-4273-b0a2-eb56c75de1f4', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Author', 'author', NULL, NULL, NULL, 'team', '10bc66ee-dc1a-4ac2-82d1-b37cd8e0fc15');
+INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "members", "owners", "global", "type", "object_id", "object_type") VALUES
+('0c00d183-ed7e-4273-b0a2-eb56c75de1f4', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Author', 'author', NULL, NULL, NULL, 'team', '10bc66ee-dc1a-4ac2-82d1-b37cd8e0fc15', 'manuscript');
 
 INSERT INTO "public"."users" ("id", "created", "updated", "admin", "email", "username", "password_hash", "teams", "password_reset_token", "password_reset_timestamp", "type", "profile_picture", "online", "last_online") VALUES
 ('716a83b2-9749-4933-9418-fca2544f5282', '2022-08-10 02:19:19.125+00', '2022-08-10 02:22:49.437+00', NULL, 'emily@kotahiexample.com', 'Emily Clay', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
-('9160da05-15ce-4836-8cb2-45c6c1855318', '2022-08-10 02:15:11.329+00', '2022-08-10 02:15:29.074+00', 't', 'sinead@example.com', '0000000256415729', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL);
+('9160da05-15ce-4836-8cb2-45c6c1855318', '2022-08-10 02:15:11.329+00', '2022-08-10 02:15:29.074+00', 't', 'elaineb@example.com', 'Elaine Barnes', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL);
 
 ALTER TABLE "public"."article_import_history" ADD FOREIGN KEY ("source_id") REFERENCES "public"."article_import_sources"("id");
 ALTER TABLE "public"."channel_members" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
@@ -602,5 +646,16 @@ ALTER TABLE "public"."reviews" ADD FOREIGN KEY ("manuscript_id") REFERENCES "pub
 ALTER TABLE "public"."team_members" ADD FOREIGN KEY ("team_id") REFERENCES "public"."teams"("id") ON DELETE CASCADE ON UPDATE CASCADE;
 ALTER TABLE "public"."team_members" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."team_members" ADD FOREIGN KEY ("alias_id") REFERENCES "public"."aliases"("id");
-ALTER TABLE "public"."teams" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."threaded_discussions" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
+
+-- tasks and task_alerts
+
+ALTER TABLE public.tasks ADD FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts(id) ON DELETE CASCADE;
+ALTER TABLE public.tasks ADD FOREIGN KEY (assignee_user_id) REFERENCES public.users(id) ON DELETE SET NULL;
+ALTER TABLE public.task_alerts ADD FOREIGN KEY (task_id) REFERENCES public.tasks(id) ON DELETE CASCADE;
+ALTER TABLE public.task_alerts ADD FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+CREATE INDEX tasks_manuscript_id_idx ON public.tasks (manuscript_id);
+CREATE INDEX tasks_user_id_idx ON public.tasks (assignee_user_id);
+CREATE UNIQUE INDEX task_alerts_alerts_task_id_user_id_uniq_idx ON public.task_alerts (task_id, user_id);
+CREATE INDEX task_alerts_task_id_idx ON public.task_alerts (task_id);
+CREATE INDEX task_alerts_user_id_idx ON public.task_alerts (user_id);

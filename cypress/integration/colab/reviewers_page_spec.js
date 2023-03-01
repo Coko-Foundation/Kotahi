@@ -16,7 +16,7 @@ describe('Editor assigning reviewers', () => {
     cy.fixture('role_names').then(name => {
       // login as seniorEditor
       // eslint-disable-next-line no-undef
-      cy.login(name.role.seniorEditor.name, dashboard)
+      cy.login(name.role.seniorEditor, dashboard)
 
       DashboardPage.clickControlPanel() // Navigate to Control Page
       ControlPage.waitThreeSec()
@@ -25,7 +25,7 @@ describe('Editor assigning reviewers', () => {
       // Invite all the reviewers
       name.role.reviewers.forEach((reviewer, index) => {
         ReviewersPage.clickInviteReviewerDropdown()
-        ReviewersPage.inviteReviewer(reviewer.username)
+        ReviewersPage.inviteReviewer(reviewer)
         ReviewersPage.getNumberOfInvitedReviewers().should('eq', index + 1)
       })
 

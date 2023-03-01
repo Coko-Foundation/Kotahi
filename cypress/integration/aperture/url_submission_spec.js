@@ -14,7 +14,7 @@ describe('Upload manuscript test', () => {
 
     // login as author
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.author.name, dashboard) // login as author
+      cy.login(name.role.author, dashboard) // login as author
     })
 
     // Click on new submission

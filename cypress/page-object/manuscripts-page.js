@@ -17,13 +17,14 @@ const CREATED_CARET = 'Carets__Caret'
 const AUTHOR_FIELD = 'UserCombo__Primary'
 const STATUS_FIELD = 'Badge__Status'
 const TABLE_HEADER = '[class*=Table__Header]'
-const MANUSCRIPTS_TABLE_HEAD = '[class*=Table__Header] > tr >th'
+const MANUSCRIPTS_TABLE_HEAD = '[class*=style__ManuscriptsHeaderRow]'
 const ARTICLE_TITLE = '[class*=Table__Row]>td:nth-child(1)'
-const ARTICLE_LABEL = 'style__Cell-cydfzx-13 JXlDr'
+const ARTICLE_LABEL = '[name="submission.labels"]'
 const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 const TABLE_ROW = 'style__ManuscriptsRow-cydfzx-10 NtEio'
 const TABLE_CELL = 'Table__Cell'
-const LABEL = 'style__StyledTableLabel'
+const LABEL = 'DefaultField__CellItem-sc-1xavmaj-0 cwCwGd'
+const BULKBUTTON = 'style__BulkActionModalButton'
 
 const ARTICLE_CHECKBOX =
   '[class*=NewItemCheckbox__StyledCheckboxTable]label > [type*=checkbox]'
@@ -35,7 +36,7 @@ const TOOLTIP_ICON = 'style__InfoIcon'
 const TOOLTIP_TEXT = 'rc-tooltip-inner'
 const ARTICLES_COUNT = '[class*=Pagination] > strong'
 const PAGINATION_PAGE_BUTTON = 'Page '
-const CONFIRMATION_MESSAGE = '[class*=BulkArchiveModalContainer] > p'
+const CONFIRMATION_MESSAGE = '[class*=BulkActionModalContainer] > p'
 const IMPORT_CONFIRMATION_POPUP = '[class*=Toastify] > [role=alert]'
 const CONTROL = '[href*=decision]'
 const DROPDOWN_OPTION_LIST = '[class*=MenuList] > [id*=option]'
@@ -56,7 +57,7 @@ export const ManuscriptsPage = {
     this.getSubmitButton().click()
   },
   getRefreshButton() {
-    return cy.get(BUTTON).contains('Refresh')
+    return cy.contains('Refresh')
   },
   clickRefreshButton() {
     this.getRefreshButton().click()
@@ -134,7 +135,7 @@ export const ManuscriptsPage = {
     this.getStatusField(nth).click()
   },
   getTableHead(nth) {
-    return cy.get(MANUSCRIPTS_TABLE_HEAD).eq(nth)
+    return cy.get(MANUSCRIPTS_TABLE_HEAD)
   },
   getArticleTitleByRow(nth) {
     return cy.get(ARTICLE_TITLE).eq(nth)
@@ -143,7 +144,7 @@ export const ManuscriptsPage = {
     this.getTableHead(nth).click()
   },
   getArticleLabel() {
-    return cy.getByContainsClass(ARTICLE_LABEL)
+    return cy.get(ARTICLE_LABEL)
   },
   clickArticleLabel(nth) {
     this.getArticleLabel().eq(nth).click()
@@ -203,13 +204,13 @@ export const ManuscriptsPage = {
     return cy.getByContainsClass(NUMBER_OF_ARTICLES_SELECTED).invoke('text')
   },
   getDeleteButton() {
-    return cy.get(BUTTON).contains('Delete')
+    return cy.get(BUTTON).contains('Archive')
   },
   clickDelete() {
     this.getDeleteButton().click()
   },
   getConfirmButton() {
-    return cy.get(BUTTON).contains('Confirm')
+    return cy.getByContainsClass(BULKBUTTON).contains('Archive')
   },
   clickConfirm() {
     this.getConfirmButton().click()
@@ -218,7 +219,7 @@ export const ManuscriptsPage = {
     return cy.get(CONFIRMATION_MESSAGE)
   },
   getCloseButton() {
-    return cy.get(BUTTON).contains('Close')
+    return cy.get(BUTTON).contains('Cancel')
   },
   clickClose() {
     this.getCloseButton().click()
