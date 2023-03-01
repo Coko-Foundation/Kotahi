@@ -20,16 +20,17 @@ const STUDY_STRENGTHS = 'submission.studyStrengths'
 const LIMITATIONS_FIELD = 'submission.limitations'
 const DROPDOWN_OPTION_LIST = '[class*=MenuList] > [id*=option]'
 const KEYWORDS_FIELD = 'submission.keywords'
+const LABELS_DROPDOWN = 'Labels'
 const REFERENCES_FIELD = 'submission.references'
 const SUBMIT_RESEARCH_BUTTON = 'form > div > button'
 const SUBMIT_YOUR_MANUSCRIPT_BUTTON = 'button[type=submit]'
-const VALIDATION_ERROR_MESSAGE = 'ValidatedField__MessageWrapper'
+const VALIDATION_ERROR_MESSAGE = 'FormTemplate__MessageWrapper'
 const CONTENT_EDITABLE_VALUE = '[contenteditable="true"]'
-const SUBMISSION_FORM_INPUT_BOX = 'SimpleEditorDiv'
+const SUBMISSION_FORM_INPUT_BOX = 'ProseMirror'
 const WORD_COUNT_INFO = 'Counter Info'
 
 // specific to aperture
-const TYPE_OF_RESEARCH_OBJECT = '.css-1di0wwc-control'
+const TYPE_OF_RESEARCH_OBJECT = '.css-1f7humo-control'
 
 // specific to elife
 const FORM_OPTION_LIST = '[class*=style__Section]'
@@ -63,6 +64,7 @@ const ASSIGN_EDITORS_DROPDOWN = '[class*=General__SectionRow] > [class]'
 // specific to colab
 const DOI_FIELD = 'submission.DOI'
 const LINK_FIELD = 'submission.link'
+const DOI_FILED_C = 'submission.doi'
 
 export const SubmissionFormPage = {
   getPageTitle() {
@@ -125,7 +127,15 @@ export const SubmissionFormPage = {
   fillInLimitations(limitations) {
     this.getWaxInputBox(4).find(CONTENT_EDITABLE_VALUE).fillInput(limitations)
   },
-
+  getLabelsDropdown() {
+    return cy.getByContainsAriaLabel(LABELS_DROPDOWN)
+  },
+  clickLabelsDropdown() {
+    this.getLabelsDropdown().click({ force: true })
+  },
+  selectDropdownOption(nth) {
+    return cy.get(DROPDOWN_OPTION_LIST).eq(nth).click()
+  },
   getAllWaxInputBoxes() {
     return cy.getByContainsClass(SUBMISSION_FORM_INPUT_BOX)
   },
@@ -133,7 +143,7 @@ export const SubmissionFormPage = {
     return this.getAllWaxInputBoxes().eq(nth)
   },
   fillInCover(abstract) {
-    this.getWaxInputBox(0).find(CONTENT_EDITABLE_VALUE).fillInput(abstract)
+    this.getWaxInputBox(0).fillInput(abstract)
   },
 
   fillInDataCode(dataCode) {
@@ -173,7 +183,7 @@ export const SubmissionFormPage = {
     this.getSubmitManuscriptButton().click()
   },
   clickSubmitManuscriptAndWaitPageLoad() {
-    this.clickSubmitManuscript()
+    this.clickSubmitYourManuscript()
     cy.url().should('not.contain', submit)
     cy.awaitDisappearSpinner()
   },
@@ -398,10 +408,14 @@ export const SubmissionFormPage = {
       const date = new Date()
       const year = date.getFullYear()
       let month = date.getMonth() + 1
-      const day = date.getDate()
+      let day = date.getDate()
 
       if (month <= 9) {
         month = `0${month}`
+      }
+
+      if (day <= 9) {
+        day = `0${day}`
       }
 
       return `${year}-${month}-${day}`
@@ -434,6 +448,12 @@ export const SubmissionFormPage = {
   },
   fillInDoi(doi) {
     this.getDoiFiled().fillInput(doi)
+  },
+  getDoiFieldColab() {
+    return cy.getByDataTestId(DOI_FILED_C)
+  },
+  fillInDoiColab(doi) {
+    this.getDoiFieldColab().fillInput(doi)
   },
   getLinkFiled() {
     return cy.getByDataTestId(LINK_FIELD)

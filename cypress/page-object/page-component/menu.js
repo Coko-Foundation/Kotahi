@@ -25,7 +25,7 @@ export const Menu = {
     this.getDashboardButton().click()
   },
   clickDashboardAndVerifyPageLoaded() {
-    this.getDashboardButton().click()
+    this.clickDashboard()
     cy.awaitDisappearSpinner()
     DashboardPage.getHeader().should('contain', 'Dashboard')
   },
@@ -36,7 +36,9 @@ export const Menu = {
     this.getFormsButton().click()
   },
   clickFormsAndVerifyPageLoaded() {
+    this.getSettingsButton().click()
     this.getFormsButton().click()
+    cy.contains('Submission').click()
     cy.awaitDisappearSpinner()
     FormsPage.getNameField().should('be.visible')
   },
@@ -50,6 +52,9 @@ export const Menu = {
     this.getUsersButton().click()
     cy.awaitDisappearSpinner()
     UsersPage.getTitle().should('be.visible')
+  },
+  getSettingsButton() {
+    return this.getMenuContainer().contains('Settings')
   },
   getManuscriptsButton() {
     return this.getMenuContainer().contains('Manuscripts')

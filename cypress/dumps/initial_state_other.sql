@@ -234,8 +234,8 @@ CREATE TABLE public.files (
     mime_type text,
     size integer NOT NULL,
     type text NOT NULL,
-    manuscript_id uuid NOT NULL,
-    review_comment_id uuid,
+    object_id uuid,
+    review_comment_id uuid
 );
 
 
@@ -273,6 +273,7 @@ CREATE TABLE public.forms (
     created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
     updated TIMESTAMP WITH TIME ZONE,
     purpose TEXT NOT NULL,
+    category TEXT NULL,
     structure JSONB NOT NULL,
     CONSTRAINT pkey_forms PRIMARY KEY (id)
 );
@@ -318,18 +319,16 @@ CREATE TABLE public.manuscripts (
     type text NOT NULL,
     evaluations_hypothesis_map jsonb,
     is_imported boolean,
+    is_hidden boolean,
     import_source uuid,
     import_source_server text,
-    short_id integer,
-    submitted_date timestamp with time zone
-
+    short_id SERIAL,
+    submitted_date timestamp with time zone,
+    form_fields_to_publish JSONB DEFAULT '[]'::JSONB NOT NULL,
+    searchable_text TEXT DEFAULT '' NOT NULL,
+    search_tsvector tsvector DEFAULT ''::tsvector NOT NULL,
+    doi text
 );
-
-update manuscripts child
-set short_id=parent.short_id
-from manuscripts parent
-where parent.id = child.parent_id;
-
 
 ALTER TABLE public.manuscripts OWNER TO kotahidev;
 
@@ -387,18 +386,57 @@ CREATE TABLE public.reviews (
     id uuid NOT NULL,
     created timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
     updated timestamp with time zone,
-    recommendation text,
     is_decision boolean DEFAULT false,
     user_id uuid,
     manuscript_id uuid,
     type text NOT NULL,
-    is_hidden_from_author BOOLEAN,
-    is_hidden_reviewer_name BOOLEAN,
-    can_be_published_publicly BOOLEAN
+    is_hidden_from_author boolean,
+    is_hidden_reviewer_name boolean,
+    can_be_published_publicly boolean,
+    json_data JSONB DEFAULT NULL
 );
 
-
 ALTER TABLE public.reviews OWNER TO kotahidev;
+
+--
+-- Name: tasks; Type: TABLE; Schema: public; Owner: kotahidev
+--
+
+DROP TABLE IF EXISTS public.tasks;
+
+CREATE TABLE public.tasks (
+  id UUID PRIMARY KEY,
+  created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+  updated TIMESTAMP WITH TIME ZONE,
+--  task_list_id uuid NOT NULL REFERENCES task_lists(id) ON DELETE CASCADE,
+  manuscript_id uuid,
+  title TEXT,
+  assignee_user_id uuid,
+  default_duration_days INTEGER,
+  due_date TIMESTAMP WITH TIME ZONE,
+  reminder_period_days INTEGER,
+  status TEXT,
+  sequence_index INTEGER NOT NULL
+);
+
+ALTER TABLE public.tasks OWNER TO kotahidev;
+
+--
+-- Name: task_alerts; Type: TABLE; Schema: public; Owner: kotahidev
+--
+
+DROP TABLE IF EXISTS public.task_alerts;
+
+CREATE TABLE public.task_alerts (
+  id UUID PRIMARY KEY,
+  task_id uuid NOT NULL,
+  user_id uuid NOT NULL,
+  created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+  updated TIMESTAMP WITH TIME ZONE
+);
+
+ALTER TABLE public.task_alerts OWNER TO kotahidev;
+
 
 --
 -- Name: team_members; Type: TABLE; Schema: public; Owner: kotahidev
@@ -432,7 +470,8 @@ CREATE TABLE public.teams (
     owners jsonb,
     global boolean,
     type text NOT NULL,
-    manuscript_id uuid
+    object_id uuid,
+    object_type text
 );
 
 
@@ -558,13 +597,13 @@ INSERT INTO pgboss.version (version, maintained_on, cron_on) VALUES (16, '2021-0
 -- Data for Name: identities; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
-INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('d341a633-cdce-4a7f-a9ad-5afc03cd0dd1', '027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.741+02', '2020-07-21 16:17:25.87+02', 'orcid', '0000-0002-0564-2016', 'Emily Clay', NULL, '{"accessToken": "079a1165-31e5-4b59-9a99-d80ff7a21ebf", "refreshToken": "ccadc737-defc-419e-823b-a9f3673848ba"}', true);
-INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('bcda196e-765a-42c8-94da-ca2e43b80f96', '3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.721+02', '2020-07-21 16:33:26.742+02', 'orcid', '0000-0002-5641-5729', 'Sinead Sullivan', NULL, '{"accessToken": "ef1ed3ec-8371-41b2-a136-fd196ae52a72", "refreshToken": "6972dace-d9a6-4cd3-a2ad-ec7eb3e457c7"}', true);
-INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('4af83984-6359-47c5-a075-5ddfa9c555d9', '0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.127+02', '2020-07-21 16:35:07.104+02', 'orcid', '0000-0002-7645-9921', 'Sherry Crofoot', NULL, '{"accessToken": "2ad4e130-0775-4e13-87fb-8e8f5a0570ae", "refreshToken": "159933d9-2020-4c02-bdfb-163af41017dc"}', true);
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('d341a633-cdce-4a7f-a9ad-5afc03cd0dd1', 'ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', '2020-07-21 16:17:24.741+02', '2020-07-21 16:17:25.87+02', 'orcid', '0000-0002-0564-2016', 'Emily Clay', NULL, '{"accessToken": "079a1165-31e5-4b59-9a99-d80ff7a21ebf", "refreshToken": "ccadc737-defc-419e-823b-a9f3673848ba"}', true);
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('bcda196e-765a-42c8-94da-ca2e43b80f96', 'f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '2020-07-21 16:30:45.721+02', '2020-07-21 16:33:26.742+02', 'orcid', '0000-0002-5641-5729', 'Sinead Sullivan', NULL, '{"accessToken": "ef1ed3ec-8371-41b2-a136-fd196ae52a72", "refreshToken": "6972dace-d9a6-4cd3-a2ad-ec7eb3e457c7"}', true);
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('4af83984-6359-47c5-a075-5ddfa9c555d9', '41d52254-a2b8-4ea4-9ded-bfbfe9671578', '2020-07-21 16:35:06.127+02', '2020-07-21 16:35:07.104+02', 'orcid', '0000-0002-7645-9921', 'Sherry Crofoot', NULL, '{"accessToken": "2ad4e130-0775-4e13-87fb-8e8f5a0570ae", "refreshToken": "159933d9-2020-4c02-bdfb-163af41017dc"}', true);
 INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('acfa1777-0aec-4fe1-bc16-92bb9d19e884', '85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.384+02', '2020-07-21 16:35:39.358+02', 'orcid', '0000-0002-9429-4446', 'Elaine Barnes', NULL, '{"accessToken": "dcf07bc7-e59c-41b3-9ce0-924ac20aeeea", "refreshToken": "ae49d6a1-8e62-419d-8767-4a3ec22c1950"}', true);
-INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('88c85115-d83c-42d7-a1a1-0139827977da', '40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.975+02', '2020-07-21 16:36:26.059+02', 'orcid', '0000-0001-5956-7341', 'Gale Davis', NULL, '{"accessToken": "3e9f6f6c-7cc0-4afa-9fdf-6ed377c36aad", "refreshToken": "80b1e911-df97-43f1-9f11-17b61913f6d7"}', true);
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('88c85115-d83c-42d7-a1a1-0139827977da', '7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', '2020-07-21 16:36:24.975+02', '2020-07-21 16:36:26.059+02', 'orcid', '0000-0001-5956-7341', 'Gale Davis', NULL, '{"accessToken": "3e9f6f6c-7cc0-4afa-9fdf-6ed377c36aad", "refreshToken": "80b1e911-df97-43f1-9f11-17b61913f6d7"}', true);
 INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('049f91da-c84e-4b80-be2e-6e0cfca7a136', '231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.611+02', '2020-07-22 14:18:37.745+02', 'orcid', '0000-0003-2536-230X', 'Test Account', NULL, '{"accessToken": "eb551178-79e5-4189-8c5f-0a553092a9b5", "refreshToken": "4506fa5f-bd77-4867-afb4-0b07ea5302d6"}', true);
-INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('2fb8359c-239c-43fa-91f5-1ff2058272a6', '1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.604+02', '2020-07-24 15:21:55.7+02', 'orcid', '0000-0003-1838-2441', 'Joanne Pilger', NULL, '{"accessToken": "842de329-ef16-4461-b83b-e8fe57238904", "refreshToken": "524fbdc5-9c67-4b4c-af17-2ce4cf294e88"}', true);
+INSERT INTO public.identities (id, user_id, created, updated, type, identifier, name, aff, oauth, is_default) VALUES ('2fb8359c-239c-43fa-91f5-1ff2058272a6', '5b861dfb-02df-4be1-bc67-41a21611f5e7', '2020-07-24 15:21:54.604+02', '2020-07-24 15:21:55.7+02', 'orcid', '0000-0003-1838-2441', 'Joane Pilger', NULL, '{"accessToken": "842de329-ef16-4461-b83b-e8fe57238904", "refreshToken": "524fbdc5-9c67-4b4c-af17-2ce4cf294e88"}', true);
 
 
 --
@@ -628,13 +667,13 @@ INSERT INTO public.migrations (id, run_at) VALUES ('1596838897-files.sql', '2020
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: kotahidev
 --
 
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.381+02', '2020-07-24 16:43:03.114+02', NULL, NULL, '0000000294294446', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser1.jpg', false, NULL);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('027afa6a-edbc-486e-bb31-71e12f8ea1c5', '2020-07-21 16:17:24.734+02', '2020-07-24 16:43:15.46+02', NULL, NULL, '0000000205642016', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser2.jpg', false, NULL);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('1d599f2c-d293-4d5e-b6c1-ba34e81e3fc8', '2020-07-24 15:21:54.59+02', '2020-07-24 16:43:26.378+02', NULL, NULL, '0000000318382441', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser3.jpg', false, NULL);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('40e3d054-9ac8-4c0f-84ed-e3c6307662cd', '2020-07-21 16:36:24.973+02', '2020-07-24 16:43:43.943+02', NULL, 'galekotahitestemailaccount@test.com', '0000000159567341', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser4.jpg', true, NULL);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.597+02', '2020-07-24 16:43:54.939+02', true, NULL, '000000032536230X', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser5.jpg', false, NULL);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('0da0bbec-9261-4706-b990-0c10aa3cc6b4', '2020-07-21 16:35:06.125+02', '2020-07-24 16:44:59.306+02', NULL, 'sherrykotahitestemailaccount@test.com', '0000000276459921', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser7.jpg', true, NULL);
-INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('3802b0e7-aadc-45de-9cf9-918fede99b97', '2020-07-21 16:30:45.719+02', '2021-03-10 12:41:10.044+01', true, 'sineadkotahitestemailaccount@test.com', '0000000256415729', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', false, NULL);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 16:35:38.381+02', '2020-07-24 16:43:03.114+02', NULL, NULL, 'Elaine Barnes', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser1.jpg', false, NULL);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', '2020-07-21 16:17:24.734+02', '2020-07-24 16:43:15.46+02', NULL, NULL, 'Emily Clay', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser2.jpg', false, NULL);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('5b861dfb-02df-4be1-bc67-41a21611f5e7', '2020-07-24 15:21:54.59+02', '2020-07-24 16:43:26.378+02', NULL, NULL, 'Joane Pilger', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser3.jpg', false, NULL);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', '2020-07-21 16:36:24.973+02', '2020-07-24 16:43:43.943+02', NULL, 'galekotahitestemailaccount@test.com', 'Gale Davis', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser4.jpg', true, NULL);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('231717dd-ba09-43d4-ac98-9d5542b27a0c', '2020-07-22 14:18:36.597+02', '2020-07-24 16:43:54.939+02', true, NULL, 'Test Account', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser5.jpg', false, NULL);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('41d52254-a2b8-4ea4-9ded-bfbfe9671578', '2020-07-21 16:35:06.125+02', '2020-07-24 16:44:59.306+02', NULL, 'sherrykotahitestemailaccount@test.com', 'Sherry Crofoot', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser7.jpg', true, NULL);
+INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '2020-07-21 16:30:45.719+02', '2021-03-10 12:41:10.044+01', true, 'sineadkotahitestemailaccount@test.com', 'Sinead Sullivan', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', false, NULL);
 
 
 --
@@ -872,7 +911,7 @@ CREATE INDEX team_members_team_id_user_id_idx ON public.team_members USING btree
 -- Name: teams_manuscript_id_idx; Type: INDEX; Schema: public; Owner: kotahidev
 --
 
-CREATE INDEX teams_manuscript_id_idx ON public.teams USING btree (manuscript_id);
+CREATE INDEX teams_object_id_idx ON public.teams USING btree (object_id);
 
 
 --
@@ -897,14 +936,6 @@ ALTER TABLE ONLY public.channel_members
 
 ALTER TABLE ONLY public.channels
     ADD CONSTRAINT channels_manuscript_id_fkey FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts(id) ON DELETE CASCADE;
-
-
---
--- Name: files files_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
---
-
-ALTER TABLE ONLY public.files
-    ADD CONSTRAINT files_manuscript_id_fkey FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts(id) ON DELETE CASCADE;
 
 
 --
@@ -971,6 +1002,19 @@ ALTER TABLE ONLY public.identities
     ADD CONSTRAINT sidentities_user_id_fkey FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
 
 
+-- tasks and task_alerts
+
+ALTER TABLE public.tasks ADD FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts(id) ON DELETE CASCADE;
+ALTER TABLE public.tasks ADD FOREIGN KEY (assignee_user_id) REFERENCES public.users(id) ON DELETE SET NULL;
+ALTER TABLE public.task_alerts ADD FOREIGN KEY (task_id) REFERENCES public.tasks(id) ON DELETE CASCADE;
+ALTER TABLE public.task_alerts ADD FOREIGN KEY (user_id) REFERENCES public.users(id) ON DELETE CASCADE;
+CREATE INDEX tasks_manuscript_id_idx ON public.tasks (manuscript_id);
+CREATE INDEX tasks_user_id_idx ON public.tasks (assignee_user_id);
+CREATE UNIQUE INDEX task_alerts_alerts_task_id_user_id_uniq_idx ON public.task_alerts (task_id, user_id);
+CREATE INDEX task_alerts_task_id_idx ON public.task_alerts (task_id);
+CREATE INDEX task_alerts_user_id_idx ON public.task_alerts (user_id);
+
+
 --
 -- Name: team_members team_members_alias_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
 --
@@ -996,14 +1040,184 @@ ALTER TABLE ONLY public.team_members
 
 
 --
--- Name: teams teams_manuscript_id_fkey; Type: FK CONSTRAINT; Schema: public; Owner: kotahidev
---
-
-ALTER TABLE ONLY public.teams
-    ADD CONSTRAINT teams_manuscript_id_fkey FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts(id) ON DELETE CASCADE;
-
-
---
 -- PostgreSQL database dump complete
 --
 
+DROP table IF EXISTS public.invitations;
+DROP type IF EXISTS public.invitation_status;
+DROP type IF EXISTS public.invitation_declined_reason_type;
+DROP type IF EXISTS public.invitation_type;
+CREATE TYPE public.invitation_status as enum ('UNANSWERED','ACCEPTED','REJECTED');
+CREATE TYPE public.invitation_declined_reason_type AS enum ('UNAVAILABLE','TOPIC','CONFLICT_OF_INTEREST','OTHER','DO_NOT_CONTACT');
+CREATE TYPE public.invitation_type AS enum ('AUTHOR','REVIEWER');
+
+CREATE TABLE public.invitations (
+    id UUID PRIMARY KEY,
+    created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+    updated TIMESTAMP WITH TIME ZONE,
+    manuscript_id UUID NOT NULL,
+        CONSTRAINT fk_man_id FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts (id) ON DELETE CASCADE,
+    purpose TEXT,
+    to_email TEXT NOT NULL,
+    status public.invitation_status NOT NULL,
+    invited_person_type public.invitation_type NOT NULL,
+    invited_person_name TEXT NOT NULL,
+    response_date TIMESTAMP WITH TIME ZONE,
+    response_comment TEXT,
+    declined_reason public.invitation_declined_reason_type ,
+    user_id UUID, 
+        CONSTRAINT fk_user_id FOREIGN KEY (user_id) REFERENCES public.users (id),
+    sender_id UUID NOT NULL,
+        CONSTRAINT fk_sender_id FOREIGN KEY (sender_id) REFERENCES public.users (id)
+);
+
+
+
+CREATE TABLE public.email_blacklist (
+  id UUID PRIMARY KEY,
+  created TIMESTAMP WITH TIME ZONE NOT NULL DEFAULT current_timestamp,
+  updated TIMESTAMP WITH TIME ZONE,
+  email TEXT NOT NULL
+);
+
+
+
+CREATE TABLE IF NOT EXISTS public.threaded_discussions (
+  id uuid NOT NULL,
+  created timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+  updated timestamp with time zone DEFAULT CURRENT_TIMESTAMP,
+  manuscript_id uuid NOT NULL,
+  threads JSONB NOT NULL
+);
+
+ALTER TABLE public.threaded_discussions
+  ADD CONSTRAINT threaded_discussions_manuscript_id_fkey FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts(id) ON DELETE CASCADE;
+
+
+
+
+DROP FUNCTION IF EXISTS public.manuscripts_searchable_text_trigger;
+CREATE FUNCTION public.manuscripts_searchable_text_trigger() RETURNS trigger AS $$
+DECLARE
+  a TEXT;
+  b TEXT;
+  c TEXT;
+  authors JSON;
+  author JSON;
+  authorstext TEXT := '';
+  member RECORD;
+  memberstext TEXT := '';
+  invitee RECORD;
+  inviteestext TEXT := '';
+  submittertext TEXT := '';
+BEGIN
+  authors := COALESCE(NULLIF(new.submission->>'authors',''), NULLIF(new.submission->>'authorNames',''), '[]')::JSON;
+  FOR author IN SELECT * FROM json_array_elements(authors) LOOP
+    authorstext = concat(
+      authorstext,
+      concat_ws(', ',
+        concat_ws(' ', author->>'firstName', author->>'lastName'),
+        author->>'email',
+        author->>'affiliation'
+      ),
+      '; '
+    );
+  END LOOP;
+
+  FOR member IN SELECT username, email
+    FROM public.teams t, public.team_members tm, public.users u
+    WHERE t.object_id = new.id AND tm.team_id = t.id AND u.id = tm.user_id
+  LOOP
+    memberstext := concat(
+      memberstext,
+      member.username, ' ', member.email,
+      '; '
+    );
+  END LOOP;
+
+  FOR invitee IN SELECT invited_person_name, to_email
+    FROM public.invitations i
+    WHERE i.manuscript_id = new.id
+  LOOP
+    inviteestext := concat(
+      inviteestext,
+      invitee.invited_person_name, ' ', invitee.to_email,
+      '; '
+    );
+  END LOOP;
+
+  submittertext := (SELECT concat_ws(', ', username, email)
+    FROM public.users u
+    WHERE u.id = new.submitter_id);
+
+  a := concat_ws(E'\n',
+    new.meta->>'title',
+    new.submission->>'description',
+    new.submission->>'title',
+    new.meta->>'abstract',
+    new.submission->>'abstract',
+    new.submission->>'doi',
+    new.submission->>'DOI',
+    new.submission->>'articleURL'
+  );
+  b := concat_ws(E'\n',
+    authorstext,
+    memberstext,
+    inviteestext,
+    submittertext,
+    new.short_id,
+    new.submission->>'articleId',
+    new.submission->>'link',
+    new.submission->>'biorxivURL'
+  );
+  c := concat(
+    new.meta->>'source'
+  );
+
+  new.search_tsvector :=
+    setweight(to_tsvector('english', a), 'A') ||
+    setweight(to_tsvector('english', b), 'B') ||
+    setweight(to_tsvector('english', c), 'C');
+  new.searchable_text := concat_ws(E'\n', a, b, c);
+
+  RETURN new;
+END
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER searchable_text_update BEFORE INSERT OR UPDATE
+  ON public.manuscripts FOR EACH ROW EXECUTE PROCEDURE public.manuscripts_searchable_text_trigger();
+
+DROP FUNCTION IF EXISTS public.team_members_trigger;
+CREATE FUNCTION public.team_members_trigger() RETURNS trigger AS $$
+BEGIN
+  UPDATE public.manuscripts m SET updated = m.updated -- Cause trigger function to regenerate searchable_text
+    FROM public.teams t
+    WHERE new.team_id = t.id AND t.object_id = m.id;
+  RETURN new;
+END
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER team_member_update AFTER INSERT OR UPDATE
+  ON public.team_members FOR EACH ROW EXECUTE PROCEDURE public.team_members_trigger();
+
+DROP FUNCTION IF EXISTS public.invitations_trigger;
+CREATE FUNCTION public.invitations_trigger() RETURNS trigger AS $$
+BEGIN
+  UPDATE public.manuscripts m SET updated = m.updated -- Cause trigger function to regenerate searchable_text
+    WHERE new.manuscript_id = m.id;
+  RETURN new;
+END
+$$ LANGUAGE plpgsql;
+
+CREATE TRIGGER invitation_update AFTER INSERT OR UPDATE
+  ON public.invitations FOR EACH ROW EXECUTE PROCEDURE public.invitations_trigger();
+
+
+CREATE INDEX IF NOT EXISTS manuscripts_search_idx ON public.manuscripts
+  USING GIN (search_tsvector);
+
+INSERT INTO public.channels ( 
+  id, topic, type 
+) VALUES (  
+  '9fd7774c-11e5-4802-804c-ab64aefd5080', 'System-wide discussion', 'editorial'
+) ON CONFLICT DO NOTHING;

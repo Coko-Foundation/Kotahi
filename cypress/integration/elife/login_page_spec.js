@@ -39,7 +39,7 @@ describe('Login page tests', () => {
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
-        cy.login(name.role.admin.name, manuscripts)
+        cy.login(name.role.admin, manuscripts)
       })
       cy.awaitDisappearSpinner()
       Menu.getBackground()
@@ -59,7 +59,7 @@ describe('Login page tests', () => {
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.admin.name, manuscripts)
+      cy.login(name.role.admin, manuscripts)
     })
     cy.awaitDisappearSpinner()
     Menu.getDashboardButton().should('not.exist')
@@ -73,7 +73,7 @@ describe('Login page tests', () => {
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.admin.name, dashboard)
+      cy.login(name.role.admin, dashboard)
     })
     cy.awaitDisappearSpinner()
     Menu.getReportsButton().should('be.visible')

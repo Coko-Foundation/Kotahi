@@ -37,14 +37,14 @@ describe('Completing a review', () => {
     cy.task('seedForms')
     cy.fixture('role_names').then(name => {
       // Reviewers
-      doReview(name.role.reviewers[0].name, reviewDataList[0])
-      doReview(name.role.reviewers[1].name, reviewDataList[1])
-      doReview(name.role.reviewers[2].name, reviewDataList[2])
-      doReview(name.role.reviewers[3].name, reviewDataList[3])
-      doReview(name.role.reviewers[4].name, reviewDataList[4])
+      doReview(name.role.reviewers[0], reviewDataList[0])
+      doReview(name.role.reviewers[1], reviewDataList[1])
+      doReview(name.role.reviewers[2], reviewDataList[2])
+      doReview(name.role.reviewers[3], reviewDataList[3])
+      doReview(name.role.reviewers[4], reviewDataList[4])
 
       // login as seniorEditor and assert the 3 reviews are completed
-      cy.login(name.role.seniorEditor.name, dashboard)
+      cy.login(name.role.seniorEditor, dashboard)
 
       DashboardPage.getInvitedReviewsStatus().should('have.text', '1 invited')
       DashboardPage.getAcceptedReviewStatus().should('have.text', '1 accepted')

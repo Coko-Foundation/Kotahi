@@ -31,13 +31,12 @@ const PUBLISH_BUTTON =
 const PUBLISH_INFO_MESSAGE = 'General__SectionActionInfo-sc-1chiust-12'
 
 // Review
-const REVIEW_MESSAGE =
-  '[class*=DecisionReview__Root] [class*=SimpleWaxEditor__ReadOnly] > div > [class*=paragraph]'
+const REVIEW_MESSAGE = '[class*=EditorStyles__ReadOnlySimpleEditorDiv]'
 const REVIEW_OPTION_CHECKBOX =
   '[class*=DecisionReview__StyledCheckbox] > [type=checkbox]'
-const REVIEWER_NAME = '[class*=DecisionReview__Name]'
+const REVIEWER_NAME = '[class*=Review__Heading]'
 const NO_REVIEWS_MESSAGE = '[class*=General__SectionRow]'
-const ACCEPTED_TO_PUBLISH_REVIEW_ICON = '[class*=DecisionReview__Name] > svg'
+const ACCEPTED_TO_PUBLISH_REVIEW_ICON = '[class*=DecisionReview__Name] img'
 
 // Chat
 const MESSAGE_CONTAINER = '.General__Chat-sc-1chiust-18'
@@ -57,9 +56,9 @@ const SHOW_BUTTON = '[class*=DecisionReview__Controls]>[type*=button]'
 const DECISION_TEXT_INPUT =
   ':nth-child(1) > :nth-child(2) > :nth-child(1) > :nth-child(1) > .EditorStyles__SimpleGrid-k4rcxo-9 > .EditorStyles__SimpleEditorDiv-k4rcxo-11'
 
-const ACCEPT_RADIO_BUTTON = '.fgnKvm > .sc-dmlrTW'
-const REVISE_RADIO_BUTTON = '.izJvPI > .sc-dmlrTW'
-const REJECT_RADIO_BUTTON = '.dPWuRK > .sc-dmlrTW'
+const ACCEPT_RADIO_BUTTON = '.cLexBK > .sc-dmlrTW'
+const REVISE_RADIO_BUTTON = '.cABLOw > .sc-dmlrTW'
+const REJECT_RADIO_BUTTON = '.hgPkBe > .sc-dmlrTW'
 const DECISION_SUBMIT_BUTTON = 'decision-action-btn'
 const DECISION_FILE_INPUT = 'input[type=file]'
 

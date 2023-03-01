@@ -1,43 +1,16 @@
 {
   "role": {
     "tester": "Test Account",
-    "admin": {
-      "name": "Sinead Sullivan",
-      "username": "sinead729"
-    },
-    "seniorEditor": {
-      "name": "Elaine Barnes",
-      "username": "elaine446"
-    },
-    "author": {
-      "name": "Emily Clay",
-      "username": "emily016"
-    },
+    "admin": "Sinead Sullivan",
+    "seniorEditor": "Elaine Barnes",
+    "author": "Emily Clay",
     "reviewers": [
-      {
-        "name": "Emily Clay",
-        "username": "emily016"
-      },
-      {
-        "name": "Joane Pilger",
-        "username": "joane441"
-      },
-      {
-        "name": "Sinead Sullivan",
-        "username": "sinead729"
-      },
-      {
-        "name": "Sherry Crofoot",
-        "username": "sherry921"
-      },
-      {
-        "name": "Gale Davis",
-        "username": "gale431"
-      },
-      {
-        "name": "David Miller",
-        "username": "david254"
-      }
+      "Emily Clay",
+      "Joane Pilger",
+      "Sinead Sullivan",
+      "Sherry Crofoot",
+      "Gale Davis",
+      "David Miller"
     ]
   }
 }

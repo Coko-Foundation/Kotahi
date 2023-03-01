@@ -15,7 +15,7 @@ describe('Submission with errors test', () => {
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
-        cy.login(name.role.admin.name, dashboard)
+        cy.login(name.role.admin, dashboard)
       })
 
       // enter the from page and assert the fileds
@@ -42,28 +42,28 @@ describe('Submission with errors test', () => {
       // login as author and attempt to submit an incomplete submission form
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('role_names').then(name => {
-        cy.login(name.role.author.name, dashboard)
-
-        Menu.clickDashboard()
-        // Click on new submission
-        cy.get('button').contains('＋ New submission').click()
-
-        // Upload manuscript
-        cy.get('input[type=file]').attachFile('test-pdf.pdf')
-        cy.get('[data-testid="meta.title"]').clear()
-        cy.get('[data-testid="meta.title"]').should('have.length', 1)
-        SubmissionFormPage.clickSubmitResearch()
+        cy.login(name.role.author, dashboard)
       })
+
+      Menu.clickDashboard()
+      // Click on new submission
+      cy.get('button').contains('＋ New submission').click()
+
+      // Upload manuscript
+      cy.get('input[type=file]').attachFile('test-pdf.pdf')
+      cy.get('[data-testid="meta.title"]').clear()
+      cy.get('[data-testid="meta.title"]').should('have.length', 1)
+      SubmissionFormPage.clickSubmitResearch()
 
       // Change the title so that we can look for it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
         SubmissionFormPage.fillInTitle(data.newTitle)
+        SubmissionFormPage.fillInDoiColab(data.doi)
         SubmissionFormPage.fillInAbstractColab(data.abstract)
-        SubmissionFormPage.getWaxInputBox(0).fillInput(data.abstract)
         SubmissionFormPage.fillInFirstAuthor(data.creator)
         SubmissionFormPage.fillInDatePublished(data.date)
-        SubmissionFormPage.fillInLink(data.doi)
+        SubmissionFormPage.fillInLink(data.link)
         SubmissionFormPage.getWaxInputBox(1).fillInput(data.ourTake)
         SubmissionFormPage.getWaxInputBox(2).fillInput(data.mainFindings)
         SubmissionFormPage.getWaxInputBox(3).fillInput(data.studyStrengths)
@@ -73,6 +73,8 @@ describe('Submission with errors test', () => {
         SubmissionFormPage.clickSubmitResearch()
         // Submit the form
         SubmissionFormPage.clickSubmitYourManuscript()
+        // eslint-disable-next-line cypress/no-unnecessary-waiting
+        cy.wait(4000)
         // Contains new title
         DashboardPage.getSubmissionTitle(0).should('contain', data.newTitle)
       })

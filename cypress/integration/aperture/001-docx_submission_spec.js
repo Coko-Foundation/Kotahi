@@ -16,12 +16,13 @@ describe('Upload manuscript test', () => {
 
     // login as author
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.author.name, dashboard)
+      cy.login(name.role.author, dashboard)
     })
 
     DashboardPage.clickSubmissionButton() // Click on new submission
     DashboardPage.getSubmissionFileUploadInput().attachFile('test-docx.docx') // Upload manuscript
-
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(10000)
     // complete the submission form
     cy.fixture('submission_form_data').then(data => {
       SubmissionFormPage.fillInTitle(data.title3)
@@ -47,7 +48,7 @@ describe('Upload manuscript test', () => {
     cy.fixture('submission_form_data').then(data => {
       cy.fixture('role_names').then(name => {
         // login as admin
-        cy.login(name.role.admin.name, dashboard)
+        cy.login(name.role.admin, dashboard)
 
         // select Control on the Manuscripts page
         Menu.clickManuscripts()
@@ -55,11 +56,11 @@ describe('Upload manuscript test', () => {
 
         // assign seniorEditor
         ControlPage.clickAssignSeniorEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.username)
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
         ControlPage.clickAssignHandlingEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.username)
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
         ControlPage.clickAssignEditorDropdown()
-        ControlPage.selectDropdownOptionByName(name.role.seniorEditor.username)
+        ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
         // assert the reviews
         ControlPage.fillInDecision(data.decision)
         ControlPage.clickAccept()

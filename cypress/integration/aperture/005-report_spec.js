@@ -12,7 +12,7 @@ describe('Report Spec', () => {
 
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.admin.name, dashboard)
+      cy.login(name.role.admin, dashboard)
     })
 
     /* Admin can access the Reports */
@@ -20,9 +20,9 @@ describe('Report Spec', () => {
     Menu.clickReports()
 
     /* Apply date range filter */
-    ReportPage.getFromDateInput(1).type('2021')
-    ReportPage.getFromDateInput(2).type('07')
-    ReportPage.getFromDateInput(3).type('01')
+    ReportPage.getFromDateInput(1).clear().type('2021')
+    ReportPage.getFromDateInput(2).clear().type('07')
+    ReportPage.getFromDateInput(3).clear().type('01')
 
     /* Select and View each report table from the dropdown menu */
     ReportPage.getReportTypeDropDown().select('Editor') // Open Editor Report Page

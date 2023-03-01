@@ -28,7 +28,6 @@ build:
       docker push $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
       docker push $IMAGE_ORG/$IMAGE_NAME:latest
 
-
 lint js:
   stage: lint
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
@@ -42,8 +41,6 @@ lint css:
   script:
     - cd $WORKDIR
     - yarn stylelint '{app,ui}/**/*.js'
-
-
 
 .test_template: &run_test_template
   image: $IMAGE_ORG/$IMAGE_NAME:$CI_COMMIT_SHA
@@ -61,7 +58,7 @@ lint css:
 .test_script: &run_test_script
   - cd ${HOME}
   - cp .env.example .env
-  - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM
+  - POSTGRES_HOST=postgres npx test:all:$TEST_ITEM
 
 test-chrome:
   before_script:

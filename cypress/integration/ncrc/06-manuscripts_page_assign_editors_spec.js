@@ -39,7 +39,7 @@ describe('manuscripts page assign editors tests', () => {
       SubmissionFormPage.waitThreeSec()
       SubmissionFormPage.getAssignEditor(0).should(
         'contain',
-        name.role.reviewers.reviewer3,
+        name.role.reviewers[2],
       )
       SubmissionFormPage.getAssignEditor(1).should(
         'contain',
@@ -50,7 +50,7 @@ describe('manuscripts page assign editors tests', () => {
       SubmissionFormPage.waitThreeSec()
       SubmissionFormPage.getAssignEditor(1).should(
         'contain',
-        name.role.reviewers.reviewer3,
+        name.role.reviewers[2],
       )
     })
   })
@@ -61,31 +61,25 @@ describe('manuscripts page assign editors tests', () => {
       ManuscriptsPage.clickEvaluationAndVerifyUrl()
       cy.awaitDisappearSpinner()
       SubmissionFormPage.getAssignEditor(0).click()
-      SubmissionFormPage.selectDropdownOptionWithText(
-        name.role.reviewers.reviewer1,
-      )
+      SubmissionFormPage.selectDropdownOptionWithText(name.role.reviewers[0])
       SubmissionFormPage.getAssignEditor(1).click()
-      SubmissionFormPage.selectDropdownOptionWithText(
-        name.role.reviewers.reviewer2,
-      )
+      SubmissionFormPage.selectDropdownOptionWithText(name.role.reviewers[1])
       SubmissionFormPage.getAssignEditor(2).click()
-      SubmissionFormPage.selectDropdownOptionWithText(
-        name.role.reviewers.reviewer3,
-      )
+      SubmissionFormPage.selectDropdownOptionWithText(name.role.reviewers[2])
       Menu.clickManuscriptsAndAssertPageLoad()
       cy.awaitDisappearSpinner()
       ManuscriptsPage.getEditorName()
         .eq(-3)
         .scrollIntoView()
-        .should('contain', name.role.reviewers.reviewer1)
+        .should('contain', name.role.reviewers[0])
       ManuscriptsPage.getEditorName()
         .eq(-2)
         .scrollIntoView()
-        .should('contain', name.role.reviewers.reviewer2)
+        .should('contain', name.role.reviewers[1])
       ManuscriptsPage.getEditorName()
         .eq(-1)
         .scrollIntoView()
-        .should('contain', name.role.reviewers.reviewer3)
+        .should('contain', name.role.reviewers[2])
     })
   })
   it('assign senior editor only', () => {
@@ -94,18 +88,16 @@ describe('manuscripts page assign editors tests', () => {
       ManuscriptsPage.clickEvaluationAndVerifyUrl()
       cy.awaitDisappearSpinner()
       SubmissionFormPage.getAssignEditor(0).click()
-      SubmissionFormPage.selectDropdownOptionWithText(
-        name.role.reviewers.reviewer3,
-      )
+      SubmissionFormPage.selectDropdownOptionWithText(name.role.reviewers[2])
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getEditorName()
         .eq(-1)
         .scrollIntoView()
-        .should('contain', name.role.reviewers.reviewer3)
+        .should('contain', name.role.reviewers[2])
       ManuscriptsPage.clickEvaluationAndVerifyUrl()
       SubmissionFormPage.getAssignEditor(0).should(
         'contain',
-        name.role.reviewers.reviewer3,
+        name.role.reviewers[2],
       )
       SubmissionFormPage.getAssignEditor(1).should(
         'contain',
@@ -120,14 +112,12 @@ describe('manuscripts page assign editors tests', () => {
       ManuscriptsPage.clickEvaluationAndVerifyUrl()
       cy.awaitDisappearSpinner()
       SubmissionFormPage.getAssignEditor(1).click()
-      SubmissionFormPage.selectDropdownOptionWithText(
-        name.role.reviewers.reviewer1,
-      )
+      SubmissionFormPage.selectDropdownOptionWithText(name.role.reviewers[0])
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getEditorName()
         .eq(-1)
         .scrollIntoView()
-        .should('contain', name.role.reviewers.reviewer1)
+        .should('contain', name.role.reviewers[0])
       ManuscriptsPage.clickEvaluationAndVerifyUrl()
       SubmissionFormPage.getAssignEditor(0).should(
         'contain',
@@ -135,7 +125,7 @@ describe('manuscripts page assign editors tests', () => {
       )
       SubmissionFormPage.getAssignEditor(1).should(
         'contain',
-        name.role.reviewers.reviewer1,
+        name.role.reviewers[0],
       )
       SubmissionFormPage.getAssignEditor(2).should('contain', 'Assign Editor…')
     })
@@ -146,14 +136,12 @@ describe('manuscripts page assign editors tests', () => {
       ManuscriptsPage.clickEvaluationAndVerifyUrl()
       cy.awaitDisappearSpinner()
       SubmissionFormPage.getAssignEditor(2).click()
-      SubmissionFormPage.selectDropdownOptionWithText(
-        name.role.reviewers.reviewer1,
-      )
+      SubmissionFormPage.selectDropdownOptionWithText(name.role.reviewers[0])
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getEditorName()
         .eq(-1)
         .scrollIntoView()
-        .should('contain', name.role.reviewers.reviewer1)
+        .should('contain', name.role.reviewers[0])
       ManuscriptsPage.clickEvaluationAndVerifyUrl()
       SubmissionFormPage.getAssignEditor(0).should(
         'contain',
@@ -165,7 +153,7 @@ describe('manuscripts page assign editors tests', () => {
       )
       SubmissionFormPage.getAssignEditor(2).should(
         'contain',
-        name.role.reviewers.reviewer1,
+        name.role.reviewers[0],
       )
     })
   })
@@ -182,9 +170,9 @@ describe('manuscripts page assign editors tests', () => {
       SubmissionFormPage.waitThreeSec()
       SubmissionFormPage.getAssignEditor(0).should(
         'contain',
-        name.role.reviewers.reviewer3,
+        name.role.reviewers[2],
       )
-      cy.login(name.role.reviewers.reviewer3, dashboard)
+      cy.login(name.role.reviewers[2], dashboard)
       DashboardPage.getVersionTitle().should('contain', '123')
     })
   })
