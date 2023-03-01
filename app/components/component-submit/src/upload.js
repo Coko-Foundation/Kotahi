@@ -28,9 +28,16 @@ const cleanMath = file => {
   // Sometimes math comes in in the form <h4><h4><math-display>...math...</math-display></h4></h4>
   // It should not be coming in like this! If the duplicated <h4>s are replaced by <p>, math processing works correctly
 
-  const dupedH4s = /<h4>\s*<h4>([\s\S]*?)<\/h4>\s*<\/h4>/g
+  // console.log('Coming in:\n\n\n', file, '\n\n\n')
+  const dupedHeaderMathRegex = /<h[1-6]>\s*<\/h[1-6]>\s*<h[1-6]>(<math-(?:inline|display)[^>]*>)([\s\S]*?)(<\/math-(?:inline|display)>)\s*<\/h[1-6]>/g
 
-  const dedupedFile = file.replaceAll(dupedH4s, `<p>$1</p>`)
+  // A second fix: math was coming in like this: <h3></h3><h3><math-display>...math...</math-display></h3>
+
+  const dupedHeaderMathRegex2 = /<h[1-6]>\s*<h[1-6]>(<math-(?:inline|display)[^>]*>)([\s\S]*?)(<\/math-(?:inline|display)>)\s*<\/h[1-6]>\s*<\/h[1-6]>/g
+
+  const dedupedFile = file
+    .replaceAll(dupedHeaderMathRegex, `<p>$1$2$3</p>`)
+    .replaceAll(dupedHeaderMathRegex2, `<p>$1$2$3</p>`)
 
   // Note: both inline and display equations were coming in from xSweet with
   // $$ around them. This code removes them.
@@ -45,6 +52,8 @@ const cleanMath = file => {
     .replaceAll(inlineStart, `<math-inline class="math-node">`)
     .replaceAll(displayEnd, `</math-display>`)
     .replaceAll(inlineEnd, `</math-inline>`)
+
+  // console.log('Coming out:\n\n\n', cleanedFile, '\n\n\n')
 
   return cleanedFile
 }
@@ -236,7 +245,6 @@ const DocxToHTMLPromise = (file, data) => {
   body.append('docx', file)
 
   const url = `${config['pubsweet-client'].baseUrl}/convertDocxToHTML`
-
   return request(url, { method: 'POST', body }).then(response =>
     Promise.resolve({
       fileURL: data.uploadFile.storedObjects[0].url,
