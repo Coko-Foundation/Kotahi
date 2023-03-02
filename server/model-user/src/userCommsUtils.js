@@ -84,8 +84,10 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
 
     const userCurrentRoles = await userReceiver.currentRoles(manuscript)
     const manuscriptRoles = userCurrentRoles.find(data => data.id === manuscript.id)
-    isEditor = manuscriptRoles.roles.some(role => role === 'accepted:editor')
-    isReviewer = manuscriptRoles.roles.some(role => role === 'accepted:reviewer')
+    const editorRoles = ['accepted:editor', 'completed:editor']
+    const reviewerRoles = ['accepted:reviewer', 'completed:reviewer']
+    isEditor = manuscriptRoles.roles.some(role => editorRoles.includes(role))
+    isReviewer = manuscriptRoles.roles.some(role => reviewerRoles.includes(role))
   }
   if (isEditor) {
     manuscriptPageUrl += '/decision';
