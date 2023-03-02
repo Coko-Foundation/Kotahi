@@ -84,8 +84,8 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
 
     const userCurrentRoles = await userReceiver.currentRoles(manuscript)
     const manuscriptRoles = userCurrentRoles.find(data => data.id === manuscript.id)
-    const editorRoles = ['accepted:editor', 'completed:editor']
-    const reviewerRoles = ['accepted:reviewer', 'completed:reviewer']
+    const editorRoles = ['editor', 'handlingEditor', 'seniorEditor']
+    const reviewerRoles = ['accepted:reviewer', 'completed:reviewer', 'invited:reviewer', 'reviewer']
     isEditor = manuscriptRoles.roles.some(role => editorRoles.includes(role))
     isReviewer = manuscriptRoles.roles.some(role => reviewerRoles.includes(role))
   }
