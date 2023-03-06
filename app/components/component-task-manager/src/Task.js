@@ -358,7 +358,7 @@ const Task = ({
         : ' days'
   }
 
-  const displayDefaultDurationDays = task.defaultDurationDays
+  const displayDefaultDurationDays = task.defaultDurationDays !== null
     ? `${task.defaultDurationDays}${displayDefaultDurationDaysUnit}`
     : 'None'
 
