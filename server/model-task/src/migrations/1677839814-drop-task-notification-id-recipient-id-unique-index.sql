@@ -1,0 +1,1 @@
+DROP INDEX IF EXISTS task_email_notifications_task_id_recipient_user_id_uniq_idx;
