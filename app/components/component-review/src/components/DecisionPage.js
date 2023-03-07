@@ -178,17 +178,19 @@ const DecisionPage = ({ match }) => {
 
   const [updateTasks] = useMutation(UPDATE_TASKS, {
     update(cache, { data: { updateTasks: updatedTasks } }) {
-      cache.modify({
-        id: cache.identify({
-          __typename: 'Manuscript',
-          id: updatedTasks.manuscriptId,
-        }),
-        fields: {
-          tasks() {
-            return updatedTasks.tasks.map(t => t.id)
+      if (updatedTasks.length) {
+        cache.modify({
+          id: cache.identify({
+            __typename: 'Manuscript',
+            id: updatedTasks[0].manuscriptId,
+          }),
+          fields: {
+            tasks() {
+              return updatedTasks;
+            },
           },
-        },
-      })
+        })
+      }
     },
   })
 
