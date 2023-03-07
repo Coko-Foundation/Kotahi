@@ -429,8 +429,21 @@ const EditorStyles = css`
     }
 
     & p {
+      --citationColorValues: ${th('colorCitation')};
+      --citationTextColor: black;
+      --citationOffset: 2px;
+      border-radius: 2px;
+      outline: var(--citationColorValues) 1px solid;
+      outline-offset: var(--citationOffset);
+      position: relative;
+      transition: 0.25;
+
+      & .mixed-citation {
+        outline: none;
+      }
+
       &:before {
-        content: '§ ';
+        /* content: '§ '; */
       }
     }
   }
@@ -605,28 +618,11 @@ const EditorStyles = css`
     --citationTextColor: black;
     --citationOffset: 2px;
     border-radius: 2px;
+    display: block;
     outline: var(--citationColorValues) 1px solid;
     outline-offset: var(--citationOffset);
     position: relative;
     transition: 0.25;
-
-    &:hover {
-      &:before {
-        background-color: var(--citationColorValues);
-        border-radius: 4px;
-        color: var(--citationTextColor);
-        content: 'Mixed Citation';
-        display: none;
-        font-size: 12px;
-        left: 16px;
-        letter-spacing: 0.5px;
-        padding: 0 4px;
-        position: absolute;
-        text-transform: uppercase;
-        top: -16px;
-        white-space: nowrap;
-      }
-    }
   }
 
   span.citation-label {
