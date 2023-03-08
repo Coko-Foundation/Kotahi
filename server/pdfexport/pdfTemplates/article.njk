@@ -58,7 +58,7 @@
                                                                                                                                                                                                        <li>{{topic}}</li> 
           {% endfor %}
         </ul>
-        <h1 class="tile">{{article.meta.title}}</h1>
+        <h1 class="title">{{article.meta.title}}</h1>
         <p class="authors">
           <ul class="authors-list">
             {% for author in article.parsedSubmission.authors %}
@@ -77,11 +77,11 @@
         <section class="emailList">
           {# if corresponding: true show email #}
           <h4> <sup>*</sup> For Correspondence:</h4>
-          <p>{{parsedSubmission.AuthorCorrespondence}}</p>
+          <p><br />{{article.articleMetadata.authorCorrespondence}}</p>
         </section>
         <section>
           <h4> Competing Interest:</h4>
-          <p>{{article.parsedSubmission.conflictOfInterest}}</p>
+          <p><br />{{article.articleMetadata.competingInterests}}</p>
         </section>
         {% if article.parsedSubmission.Funding %}
 
@@ -94,15 +94,15 @@
         <section class="date">
           <div>
             <h4>Received:</h4> 
-            <p>{{article.parsedSubmission.dateReceived}}</p>
+            <p>{{article.articleMetadata.dateReceived}}</p>
           </div>
           <div>
-            <h4> Accepted:</h4> 
-            <p>{{article.parsedSubmission.DateAccepted}}</p>
+            <h4>Accepted:</h4> 
+            <p>{{article.articleMetadata.dateAccepted}}</p>
           </div>
           <div>
-            <h4> Published:</h4>
-            <p>{{article.parsedSubmission.DatePublished}}</p>
+            <h4>Published:</h4>
+            <p>{{article.articleMetadata.datePublished}}</p>
           </div>
         </section>
         <section class="copyright">
