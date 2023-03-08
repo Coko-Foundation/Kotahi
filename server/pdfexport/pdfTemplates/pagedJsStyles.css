@@ -464,7 +464,7 @@
     left: calc((var(--pagedjs-margin-left) * -1) + 49px);
     top: 0;
   }
-  .copyright {
+  .copyright { /* stylelint-disable-line */
     string-set: copyright content();
   }
 
@@ -481,3 +481,31 @@
   section.abstractSection {
     display: none;
   }
+
+	/* dealing with references */
+
+	section.reflist  p {
+		text-align: left;
+	}
+
+
+	/* dealing with footnotes */
+	/* from here: https://pagedjs.org/posts/2021-06-newRelease/ */
+
+	footnote {
+		float: footnote;
+	}
+	
+	/* define the position of the footnote on the page (only bottom is possible for now) */
+	
+	@page { /* stylelint-disable-line */
+		@footnote {
+			float: bottom;
+		}
+	}
+
+	/* make dates look better */
+
+	aside .date h4 {
+		margin-right: 8px;
+	}
