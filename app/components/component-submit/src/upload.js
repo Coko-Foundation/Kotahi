@@ -30,12 +30,11 @@ const checkForEmptyBlocks = file => {
 
   for (let i = 0; i < inside.childNodes.length; i += 1) {
     if (!inside.childNodes[i].tagName) {
-      const deLineBreaked = inside.childNodes[i].data.replace(/[\r\n]/gm, '')
+      const text = inside.childNodes[i].data
 
-      if (deLineBreaked.length) {
-        // If we are here, we have a text node that is not just a line break
+      if (/\S/.test(text)) {
+        // We've found unwrapped text! Wrap it in <p></p>
         console.error('Found unwrapped child node: ', inside.childNodes[i].data)
-        // wrap that in a p tag
         const p = doc.createElement('p')
         p.innerHTML = inside.childNodes[i].data
         inside.replaceChild(p, inside.childNodes[i])
