@@ -22,6 +22,32 @@ const stripTags = file => {
   return file.match(reg)[1]
 }
 
+const checkForEmptyBlocks = file => {
+  // what we want is inside container#main
+  const parser = new DOMParser()
+  const doc = parser.parseFromString(file, 'text/html')
+  const inside = doc.querySelector('container#main')
+
+  for (let i = 0; i < inside.childNodes.length; i += 1) {
+    if (!inside.childNodes[i].tagName) {
+      const text = inside.childNodes[i].data
+
+      if (/\S/.test(text)) {
+        // We've found unwrapped text! Wrap it in <p></p>
+        console.error('Found unwrapped child node: ', inside.childNodes[i].data)
+        const p = doc.createElement('p')
+        p.innerHTML = inside.childNodes[i].data
+        inside.replaceChild(p, inside.childNodes[i])
+      }
+    }
+  }
+
+  const out = document.createElement('container')
+  out.appendChild(inside)
+  out.id = 'main'
+  return out.innerHTML
+}
+
 const cleanMath = file => {
   // PROBLEMATIC FIX FOR XSWEET
   //
@@ -365,7 +391,9 @@ export default ({
         }
       } else {
         uploadResponse = await DocxToHTMLPromise(file, data)
-        uploadResponse.response = cleanMath(stripTags(uploadResponse.response))
+        uploadResponse.response = cleanMath(
+          stripTags(checkForEmptyBlocks(uploadResponse.response)),
+        )
 
         images = base64Images(uploadResponse.response)
       }
