@@ -13,7 +13,7 @@ class MixedCitationSpan extends Tools {
   // eslint-disable-next-line class-methods-use-this
   get run() {
     return (state, dispatch) => {
-      removeOrToggleMark(state, dispatch, 'toggleMark')
+      removeOrToggleMark(state, dispatch, 'mixedCitationSpan')
     }
   }
 

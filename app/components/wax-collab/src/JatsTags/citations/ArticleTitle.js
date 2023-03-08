@@ -4,7 +4,7 @@ import { Tools } from 'wax-prosemirror-services'
 import removeOrToggleMark from '../removeOrToggleMark'
 
 class ArticleTitle extends Tools {
-  title = 'Change to article title' // can I make this change dynamcically?
+  title = 'Change to article title' // TODO: can I make this change dynamcically?
   label = 'Article title'
   color = 'colorArticleTitle'
   className = 'article-title'
