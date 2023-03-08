@@ -429,8 +429,21 @@ const EditorStyles = css`
     }
 
     & p {
+      --citationColorValues: ${th('colorCitation')};
+      --citationTextColor: black;
+      --citationOffset: 2px;
+      border-radius: 2px;
+      outline: var(--citationColorValues) 1px solid;
+      outline-offset: var(--citationOffset);
+      position: relative;
+      transition: 0.25;
+
+      & .mixed-citation {
+        outline: none;
+      }
+
       &:before {
-        content: '§ ';
+        /* content: '§ '; */
       }
     }
   }
@@ -605,28 +618,11 @@ const EditorStyles = css`
     --citationTextColor: black;
     --citationOffset: 2px;
     border-radius: 2px;
+    display: block;
     outline: var(--citationColorValues) 1px solid;
     outline-offset: var(--citationOffset);
     position: relative;
     transition: 0.25;
-
-    &:hover {
-      &:before {
-        background-color: var(--citationColorValues);
-        border-radius: 4px;
-        color: var(--citationTextColor);
-        content: 'Mixed Citation';
-        display: none;
-        font-size: 12px;
-        left: 16px;
-        letter-spacing: 0.5px;
-        padding: 0 4px;
-        position: absolute;
-        text-transform: uppercase;
-        top: -16px;
-        white-space: nowrap;
-      }
-    }
   }
 
   span.citation-label {
@@ -731,47 +727,47 @@ const EditorStyles = css`
   }
 
   .show-article-title .article-title {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorArticleTitle')} 2px solid;
   }
 
   .show-journal-title .journal-title {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorJournalTitle')} 2px solid;
   }
 
   .show-citation-label .citation-label {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorCitationLabel')} 2px solid;
   }
 
   .show-author-group .author-group {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorAuthorGroup')} 2px solid;
   }
 
   .show-author-name .author-name {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorAuthorName')} 2px solid;
   }
 
   .show-volume .volume {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorVolume')} 2px solid;
   }
 
   .show-issue .issue {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorIssue')} 2px solid;
   }
 
   .show-year .year {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorYear')} 2px solid;
   }
 
   .show-first-page .first-page {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorFirstPage')} 2px solid;
   }
 
   .show-last-page .last-page {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorLastPage')} 2px solid;
   }
 
   .show-doi a.doi {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorDoi')} 2px solid;
   }
 
   /* keywords */
