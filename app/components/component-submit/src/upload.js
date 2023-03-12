@@ -2,7 +2,7 @@
 import config from 'config'
 import request from 'pubsweet-client/src/helpers/api'
 import { gql } from '@apollo/client'
-import { map } from 'lodash'
+// import { map } from 'lodash'
 import * as cheerio from 'cheerio'
 import currentRolesVar from '../../../shared/currentRolesVar'
 
@@ -46,6 +46,47 @@ const checkForEmptyBlocks = file => {
   out.appendChild(inside)
   out.id = 'main'
   return out.innerHTML
+}
+
+const stripTrackChanges = file => {
+  // PROBLEMATIC FIX FOR XSWEET
+  // This function strips out track changes spans from the HTML returned from xSweet
+  // It would be more efficient to do this on the xSweet side! This is done client-side
+  // and is probably shower than it needs to be.
+
+  const $ = cheerio.load(file)
+  // might be smarter to do this with DOMParser? We were already importing cheerio.
+
+  const stripSpans = () => {
+    $('span').each((index, el) => {
+      if (el.attribs.class && el.attribs.class.indexOf('format-change') > -1) {
+        // console.log('format change: ', $(el).html())
+        $(el).replaceWith($(el).html())
+      }
+
+      if (el.attribs.class && el.attribs.class.indexOf('insertion') > -1) {
+        // console.log('insertion: ', $(el).html())
+        $(el).replaceWith($(el).html())
+      }
+
+      if (el.attribs.class && el.attribs.class.indexOf('deletion') > -1) {
+        // console.log('deletion: ', $(el).html())
+        $(el).replaceWith('')
+      }
+    })
+  }
+
+  if ($('span.format-change,span.insertion,span.deletion').length) {
+    // don't run this if we don't have to.
+    stripSpans()
+  }
+
+  if ($('span.format-change,span.insertion,span.deletion').length) {
+    // Because there may be nested spans, we need to run this function again to make sure we get everything.
+    stripSpans()
+  }
+
+  return $.html()
 }
 
 const cleanMath = file => {
@@ -392,7 +433,9 @@ export default ({
       } else {
         uploadResponse = await DocxToHTMLPromise(file, data)
         uploadResponse.response = cleanMath(
-          stripTags(checkForEmptyBlocks(uploadResponse.response)),
+          stripTags(
+            stripTrackChanges(checkForEmptyBlocks(uploadResponse.response)),
+          ),
         )
 
         images = base64Images(uploadResponse.response)
