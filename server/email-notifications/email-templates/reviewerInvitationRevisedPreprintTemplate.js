@@ -26,8 +26,7 @@ const ReviewerInvitationRevisedPreprintTemplate = ({
 		<p>
 			<a href="${appUrl}/decline/${invitationId}" target="_blank">Decline invitation</a>
 		</p>
-    <p>Please note that you will require an ORCID account in order to log in to our platform. If you don’t already have an ORCID, it takes two minutes to create one <a href="https://orcid.org/register" target="_blank"></a>here.</p>
-		<p>Your invitation id is ‘${invitationId}’</p>
+    <p>Please note that you will require an ORCID account in order to log in to our platform. If you don’t already have an ORCID, it takes two minutes to create one <a href="https://orcid.org/register" target="_blank">here</a>.</p>
     <p>I look forward to hearing from you.</p>
 		<p>Best regards<br/>${currentUser}</p>
     <p>
