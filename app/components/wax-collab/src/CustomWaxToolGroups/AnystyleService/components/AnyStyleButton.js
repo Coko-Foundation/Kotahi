@@ -63,16 +63,29 @@ const AnyStyleButton = ({ view = {}, item, anyStyle }) => {
 
       const content = textSelection.content()
 
-      // This gets all the text out. It's separating the text with a newline;
-      // Anystyle understands this. However: we're not really handling it on the return.
+      const outputArray = []
 
-      const textContent = content.content.content
-        .map(x => x.textContent)
-        .join('\n')
+      content.content.descendants(x => {
+        if (x.type.name === 'paragraph') {
+          outputArray.push(`${x.textContent}\n`)
+        }
+      })
 
-      // TODO: This fails if it is in a footnote
+      if (outputArray.length === 0) {
+        // If we didn't find any paragraph nodes, look for text nodes
+        content.content.descendants(x => {
+          if (x.type.name === 'text') {
+            outputArray.push(x.textContent)
+          }
+        })
+      }
 
-      anyStyle({ content: textContent })
+      // just in case
+      if (outputArray.length) {
+        anyStyle({ content: outputArray.join('') })
+      } else {
+        console.error('No text found in selection')
+      }
     }
   }
 

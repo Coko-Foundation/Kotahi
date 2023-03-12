@@ -91,3 +91,9 @@ export const articleStatuses = {
   new: 'new',
   published: 'published',
 }
+
+export const roles = [
+  { slug: 'reviewer', name: 'Reviewer' },
+  { slug: 'editor', name: 'Editor' },
+  { slug: 'author', name: 'Author' },
+]

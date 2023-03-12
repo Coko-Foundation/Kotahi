@@ -52,7 +52,10 @@ describe('manuscripts page tests', () => {
         SubmissionFormPage.clickTopicsCheckboxWithText(data.topic)
         SubmissionFormPage.clickTopicsCheckboxWithText('Epidemiology')
         Menu.clickManuscriptsAndAssertPageLoad()
-        ManuscriptsPage.getArticleTopic(0).should('contain', data.topic.toLowerCase())
+        ManuscriptsPage.getArticleTopic(0).should(
+          'contain',
+          data.topic.toLowerCase(),
+        )
         ManuscriptsPage.getArticleTopic(1).should('contain', 'epidemiology')
         ManuscriptsPage.getArticleLabel()
           .scrollIntoView()
@@ -304,24 +307,42 @@ describe('manuscripts page tests', () => {
         ManuscriptsPage.clickArticleTopic(-1)
         ManuscriptsPage.getTableRowsCount().should('eq', 1)
         cy.url().should('contain', data.ncrc.topicTypes.vaccines)
-        ManuscriptsPage.getArticleTopic(0).should('contain', data.ncrc.topicTypes.vaccines.toLowerCase())
+        ManuscriptsPage.getArticleTopic(0).should(
+          'contain',
+          data.ncrc.topicTypes.vaccines.toLowerCase(),
+        )
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.clickArticleTopic(1)
         ManuscriptsPage.getTableRowsCount().should('eq', 2)
         cy.url().should('contain', data.ncrc.topicTypes.diagnostics)
-        ManuscriptsPage.getArticleTopic(0).should('contain', data.ncrc.topicTypes.modeling.toLowerCase())
-        ManuscriptsPage.getArticleTopic(1).should('contain', data.ncrc.topicTypes.diagnostics.toLowerCase())
-        ManuscriptsPage.getArticleTopic(2).should(
-            'contain',
-            data.ncrc.topicTypes.ecologyAndSpillover.toLowerCase(),
+        ManuscriptsPage.getArticleTopic(0).should(
+          'contain',
+          data.ncrc.topicTypes.modeling.toLowerCase(),
         )
-        ManuscriptsPage.getArticleTopic(3).should('contain', data.ncrc.topicTypes.diagnostics.toLowerCase())
+        ManuscriptsPage.getArticleTopic(1).should(
+          'contain',
+          data.ncrc.topicTypes.diagnostics.toLowerCase(),
+        )
+        ManuscriptsPage.getArticleTopic(2).should(
+          'contain',
+          data.ncrc.topicTypes.ecologyAndSpillover.toLowerCase(),
+        )
+        ManuscriptsPage.getArticleTopic(3).should(
+          'contain',
+          data.ncrc.topicTypes.diagnostics.toLowerCase(),
+        )
         Menu.clickManuscriptsAndAssertPageLoad()
         ManuscriptsPage.clickArticleTopic(0)
         ManuscriptsPage.getTableRowsCount().should('eq', 1)
         cy.url().should('contain', 'modeling')
-        ManuscriptsPage.getArticleTopic(0).should('contain', data.ncrc.topicTypes.modeling.toLowerCase())
-        ManuscriptsPage.getArticleTopic(1).should('contain', data.ncrc.topicTypes.diagnostics.toLowerCase())
+        ManuscriptsPage.getArticleTopic(0).should(
+          'contain',
+          data.ncrc.topicTypes.modeling.toLowerCase(),
+        )
+        ManuscriptsPage.getArticleTopic(1).should(
+          'contain',
+          data.ncrc.topicTypes.diagnostics.toLowerCase(),
+        )
       })
     })
 
@@ -345,15 +366,26 @@ describe('manuscripts page tests', () => {
       cy.fixture('form_option').then(data => {
         ManuscriptsPage.getTableRowsCount().should('eq', 3)
         ManuscriptsPage.clickTableHead(4)
-        ManuscriptsPage.selectDropdownOptionWithText(data.ncrc.topicTypes.diagnostics.toLowerCase())
-        ManuscriptsPage.getTableRowsCount().should('eq', 2)
-        ManuscriptsPage.getArticleTopic(0).should('contain', data.ncrc.topicTypes.modeling.toLowerCase())
-        ManuscriptsPage.getArticleTopic(1).should('contain', data.ncrc.topicTypes.diagnostics.toLowerCase())
-        ManuscriptsPage.getArticleTopic(2).should(
-            'contain',
-            data.ncrc.topicTypes.ecologyAndSpillover.toLowerCase(),
+        ManuscriptsPage.selectDropdownOptionWithText(
+          data.ncrc.topicTypes.diagnostics.toLowerCase(),
         )
-        ManuscriptsPage.getArticleTopic(3).should('contain', data.ncrc.topicTypes.diagnostics.toLowerCase())
+        ManuscriptsPage.getTableRowsCount().should('eq', 2)
+        ManuscriptsPage.getArticleTopic(0).should(
+          'contain',
+          data.ncrc.topicTypes.modeling.toLowerCase(),
+        )
+        ManuscriptsPage.getArticleTopic(1).should(
+          'contain',
+          data.ncrc.topicTypes.diagnostics.toLowerCase(),
+        )
+        ManuscriptsPage.getArticleTopic(2).should(
+          'contain',
+          data.ncrc.topicTypes.ecologyAndSpillover.toLowerCase(),
+        )
+        ManuscriptsPage.getArticleTopic(3).should(
+          'contain',
+          data.ncrc.topicTypes.diagnostics.toLowerCase(),
+        )
         cy.url().should('contain', data.ncrc.topicTypes.diagnostics)
       })
     })

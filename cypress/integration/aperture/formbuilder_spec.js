@@ -12,11 +12,10 @@ describe('Form builder', () => {
     // login as admin
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
-      cy.login(name.role.admin.name, dashboard)
+      cy.login(name.role.admin, dashboard)
     })
 
     // enter the from page and assert the fileds
-    // Menu.clickForms()
     cy.contains('Settings').click()
     Menu.clickForms()
     cy.contains('Submission').click()

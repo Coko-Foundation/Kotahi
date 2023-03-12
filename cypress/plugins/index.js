@@ -23,18 +23,6 @@ const seedForms = require('../../scripts/seedForms')
 
 const dumpFile = name => path.join(__dirname, '..', 'dumps', `${name}.sql`)
 
-// The values of this object are the usernames of the users
-// TODO: Refactor DBs and Code dependent on testUsers object to use proper usernames than numbers
-const testUsers = {
-  'Sherry Crofoot': 'sherry921',
-  'Elaine Barnes': 'elaine446',
-  'Gale Davis': 'gale431',
-  'Joane Pilger': 'joane441',
-  'Emily Clay': 'emily016', // Author
-  'Sinead Sullivan': 'sinead729', // Admin
-  'Test Account': '000000032536230X',
-}
-
 module.exports = (on, config) => {
   on('task', {
     // 'db:seed': () => seed(),
@@ -57,14 +45,21 @@ module.exports = (on, config) => {
       // Restore without clear
       return seed(readFileSync(dumpFile(name), 'utf-8'), { clear: false })
     },
-    createToken: async name => {
+    createToken: async username => {
       const { User } = require('@pubsweet/models')
 
       const { createJWT } = require('@coko/server')
 
-      const user = await User.query()
-        .where({ username: testUsers[name] })
-        .first()
+      const user = await User.query().where({ username }).first()
+
+      if (!user) {
+        const users = await User.query().select('username')
+        throw new Error(
+          `Could not find ${username} among users [${users
+            .map(u => `'${u.username}'`)
+            .join(', ')}]`,
+        )
+      }
 
       const jwt = createJWT(user)
 

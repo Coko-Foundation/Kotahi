@@ -1,10 +1,10 @@
 import { decorate, injectable } from 'inversify'
-import { toggleMark } from 'prosemirror-commands'
 import { Commands } from 'wax-prosemirror-utilities'
 import { Tools } from 'wax-prosemirror-services'
+import removeOrToggleMark from '../removeOrToggleMark'
 
 class ArticleTitle extends Tools {
-  title = 'Change to article title'
+  title = 'Change to article title' // TODO: can I make this change dynamcically?
   label = 'Article title'
   color = 'colorArticleTitle'
   className = 'article-title'
@@ -14,7 +14,7 @@ class ArticleTitle extends Tools {
   // eslint-disable-next-line class-methods-use-this
   get run() {
     return (state, dispatch) => {
-      toggleMark(state.config.schema.marks.articleTitle)(state, dispatch)
+      removeOrToggleMark(state, dispatch, 'articleTitle')
     }
   }
 

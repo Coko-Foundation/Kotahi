@@ -17,15 +17,15 @@ describe('Completing a review', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
       /* Admin Assigns Editor to Manuscript */
-      cy.login(name.role.admin.name, dashboard)
+      cy.login(name.role.admin, dashboard)
       DashboardPage.clickManuscriptNavButton()
       ManuscriptsPage.clickControlButton()
       ControlPage.getAssignSeniorEditorDropdown()
         .click({ force: true })
-        .type(`${name.role.seniorEditor.username}{enter}`) // Assign Editor
+        .type(`${name.role.seniorEditor}{enter}`) // Assign Editor
 
       /* Ediot Submits a decision */
-      cy.login(name.role.seniorEditor.name, dashboard)
+      cy.login(name.role.seniorEditor, dashboard)
       DashboardPage.clickControlPanel()
       ControlPage.getPublishButton().should('be.disabled') // Verify publish button is disabled
       // Fill the decision form
@@ -37,7 +37,7 @@ describe('Completing a review', () => {
       ControlPage.checkSvgExists() // Check appears in front of button
 
       /* View Decision as an Author */
-      cy.login(name.role.author.name, dashboard) // Login as an Author
+      cy.login(name.role.author, dashboard) // Login as an Author
       DashboardPage.getSubmittedManuscript().click() // Click on first MySubmission
       // Verify Decision Content
       DashboardPage.getDecisionField(0).should('contain', decisionTextContent)
@@ -54,7 +54,7 @@ describe('Completing a review', () => {
         .should('exist') // Verify new submission got created
 
       /* Editor Workflow: Approve the new Manuscript version */
-      cy.login(name.role.seniorEditor.name, dashboard)
+      cy.login(name.role.seniorEditor, dashboard)
       DashboardPage.clickControlPanel()
       ControlPage.getPublishButton().should('be.disabled') // Verify publish button is disabled
       ControlPage.getDecisionTextInput().type('Great Paper!')

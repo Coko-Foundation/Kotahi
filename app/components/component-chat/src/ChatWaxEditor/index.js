@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { Wax } from 'wax-prosemirror-core'
 import { debounce } from 'lodash'
@@ -18,6 +18,8 @@ const ChatWaxEditor = ({
   ...rest
 }) => {
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
+  useEffect(() => debounceChange.flush, [])
+
   return (
     <div className={validationStatus} ref={innerRefProp}>
       <Wax
@@ -26,7 +28,7 @@ const ChatWaxEditor = ({
         config={chatWaxEditorConfig()}
         layout={chatWaxEditorLayout(readonly)}
         onBlur={val => {
-          onChange && onChange(val)
+          debounceChange.flush() // Probably redundant now that we have debounceChange.flush() during component cleanup (the useEffect code above)
           onBlur && onBlur(val)
         }}
         onChange={debounceChange}

@@ -429,8 +429,21 @@ const EditorStyles = css`
     }
 
     & p {
+      --citationColorValues: ${th('colorCitation')};
+      --citationTextColor: black;
+      --citationOffset: 2px;
+      border-radius: 2px;
+      outline: var(--citationColorValues) 1px solid;
+      outline-offset: var(--citationOffset);
+      position: relative;
+      transition: 0.25;
+
+      & .mixed-citation {
+        outline: none;
+      }
+
       &:before {
-        content: '§ ';
+        /* content: '§ '; */
       }
     }
   }
@@ -605,63 +618,11 @@ const EditorStyles = css`
     --citationTextColor: black;
     --citationOffset: 2px;
     border-radius: 2px;
+    display: block;
     outline: var(--citationColorValues) 1px solid;
     outline-offset: var(--citationOffset);
     position: relative;
     transition: 0.25;
-
-    &:hover {
-      &:before {
-        background-color: var(--citationColorValues);
-        border-radius: 4px;
-        color: var(--citationTextColor);
-        content: 'Mixed Citation';
-        display: none;
-        font-size: 12px;
-        left: 16px;
-        letter-spacing: 0.5px;
-        padding: 0 4px;
-        position: absolute;
-        text-transform: uppercase;
-        top: -16px;
-        white-space: nowrap;
-      }
-    }
-  }
-
-  span.article-title,
-  span.journal-title,
-  span.citation-label,
-  span.author-group,
-  span.author-name,
-  span.volume,
-  span.issue,
-  span.year,
-  span.first-page,
-  span.last-page,
-  a.doi {
-    --citationColorValues: transparent;
-    --citationTextColor: black;
-    --citationOffset: 2px;
-    border-radius: 2px;
-    outline: ${th('colorCitation')} 1px solid;
-    outline-offset: var(--citationOffset);
-    position: relative;
-
-    &:before {
-      background-color: var(--citationColorValues);
-      border-radius: 100%;
-      content: '';
-      display: none;
-      height: 4px;
-      left: -2px;
-      position: absolute;
-      top: -2px;
-      width: 4px;
-    }
-    &:hover {
-      outline-color: var(--citationColorValues);
-    }
   }
 
   span.citation-label {
@@ -721,54 +682,92 @@ const EditorStyles = css`
     --citationTextColor: white;
   }
 
+  span.article-title,
+  span.journal-title,
+  span.citation-label,
+  span.author-group,
+  span.author-name,
+  span.volume,
+  span.issue,
+  span.year,
+  span.first-page,
+  span.last-page,
+  a.doi {
+    --citationColorValues: transparent;
+    --citationTextColor: black;
+    --citationOffset: 2px;
+    border-radius: 2px;
+    outline: ${th('colorCitation')} 1px solid;
+    outline-offset: var(--citationOffset);
+    position: relative;
+
+    &:before {
+      background-color: var(--citationColorValues);
+      border-radius: 100%;
+      content: '';
+      display: none;
+      height: 4px;
+      left: -2px;
+      position: absolute;
+      top: -2px;
+      width: 4px;
+    }
+
+    &:hover {
+      outline-color: var(--citationColorValues);
+    }
+  }
+
   .hide-citation-spans span,
   .hide-citation-spans a {
+    /* stylelint-disable-next-line declaration-no-important */
     --citationColorValues: transparent !important;
+    /* stylelint-disable-next-line declaration-no-important */
     --citationTextColor: transparent !important;
   }
 
   .show-article-title .article-title {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorArticleTitle')} 2px solid;
   }
 
   .show-journal-title .journal-title {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorJournalTitle')} 2px solid;
   }
 
   .show-citation-label .citation-label {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorCitationLabel')} 2px solid;
   }
 
   .show-author-group .author-group {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorAuthorGroup')} 2px solid;
   }
 
   .show-author-name .author-name {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorAuthorName')} 2px solid;
   }
 
   .show-volume .volume {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorVolume')} 2px solid;
   }
 
   .show-issue .issue {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorIssue')} 2px solid;
   }
 
   .show-year .year {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorYear')} 2px solid;
   }
 
   .show-first-page .first-page {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorFirstPage')} 2px solid;
   }
 
   .show-last-page .last-page {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorLastPage')} 2px solid;
   }
 
   .show-doi a.doi {
-    outline: var(--citationColorValues) 2px solid;
+    outline: ${th('colorDoi')} 2px solid;
   }
 
   /* keywords */
@@ -776,9 +775,9 @@ const EditorStyles = css`
   .keyword-list {
     --keywordColorValues: transparent;
     --keywordOffset: 2px;
+    border-radius: 2px;
     outline: ${th('colorKeyword')} 1px solid;
     outline-offset: var(--fundingOffset);
-    border-radius: 2px;
     transition: 0.25;
   }
 
@@ -786,22 +785,24 @@ const EditorStyles = css`
     --keywordColorValues: transparent;
     --keywordTextColor: black;
     --keywordOffset: 2px;
+    border-radius: 2px;
+    font-weight: bold;
     outline: ${th('colorKeyword')} 1px solid;
     outline-offset: var(--keywordOffset);
     position: relative;
-    border-radius: 2px;
-    font-weight: bold;
+
     &:before {
-      position: absolute;
-      left: -2px;
-      top: -2px;
-      content: '';
-      width: 4px;
-      height: 4px;
       background-color: var(--keywordColorValues);
       border-radius: 100%;
+      content: '';
       display: none;
+      height: 4px;
+      left: -2px;
+      position: absolute;
+      top: -2px;
+      width: 4px;
     }
+
     /* &:hover {
        outline-color: var(--keywordColorValues);
     } */
@@ -812,21 +813,21 @@ const EditorStyles = css`
   section.glossary {
     background-color: #eee;
     border: 1px solid #ccc;
-    margin: 16px 0;
     border-radius: 0 4px 4px 0;
+    margin: 16px 0;
     padding: 4px 8px;
     position: relative;
 
     &:before {
       background-color: ${th('colorGlossary')};
       border: 1px solid #ccc;
+      border-radius: 4px;
       content: '';
+      height: calc(100% + 2px);
       left: -4px;
-      width: 8px;
       position: absolute;
       top: -1px;
-      height: calc(100% + 2px);
-      border-radius: 4px;
+      width: 8px;
     }
 
     & > :last-child {
@@ -840,9 +841,9 @@ const EditorStyles = css`
   .glossary h4,
   .glossary h5,
   .glossary h6 {
-    margin: 0 0 8px 0;
     font-size: 18px;
     font-weight: bold;
+    margin: 0 0 8px 0;
   }
 
   .glossary-term {

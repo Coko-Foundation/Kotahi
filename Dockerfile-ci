@@ -29,7 +29,7 @@ ENV MANUSCRIPTS_TABLE_COLUMNS $manuscripts_table_columns
 ENV MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH $manuscripts_table_first_column_width
 ENV DISPLAY_SHORTID_AS_IDENTIFIER $display_shortid_as_identifier
 ENV REVIEW_SHARED $review_shared
-ENV REVIEW_HIDE $review_hide
+ENV REVIEW_HIDE "true"
 ENV HYPOTHESIS_ALLOW_TAGGING $hypothesis_allow_tagging
 ENV HOME "/home/simplej"
 ENV ALLOW_MANUAL_IMPORT $allow_manual_import

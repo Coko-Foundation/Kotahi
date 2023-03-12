@@ -89,13 +89,13 @@ class Manuscript extends BaseModel {
     const manuscripts = await Manuscript.query()
       .where('parent_id', id)
       .withGraphFetched(
-        '[teams.members, reviews.user, files, tasks(orderBySequence).assignee]',
+        '[teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
       )
 
     const firstManuscript = await Manuscript.query()
       .findById(id)
       .withGraphFetched(
-        '[teams.members, reviews.user, files, tasks(orderBySequence).assignee]',
+        '[teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
       )
 
     manuscripts.push(firstManuscript)
@@ -110,6 +110,59 @@ class Manuscript extends BaseModel {
     )
 
     return manuscriptVersions
+  }
+
+  async getManuscriptAuthor(params = {}) {
+    if (!this.id) {
+      return null
+    }
+
+    const { onlyAccepted = false } = params
+
+    let relations = '[teams(onlyAuthors).[members(orderByCreatedDesc).[user]]]'
+
+    if (onlyAccepted) {
+      relations =
+        '[teams(onlyAuthors).[members(onlyAccepted, orderByCreatedDesc).[user]]]'
+    }
+
+    const manuscriptWithAuthors = await Manuscript.query()
+      .findById(this.id)
+      .withGraphFetched(relations)
+
+    if (
+      !manuscriptWithAuthors.teams.length ||
+      !manuscriptWithAuthors.teams[0].members.length
+    ) {
+      return null
+    }
+
+    const authorTeam = manuscriptWithAuthors.teams[0]
+    const author = authorTeam.members[0] // picking the author that has latest created date
+    return author.user
+  }
+
+  async getManuscriptEditor() {
+    if (!this.id) {
+      return null
+    }
+
+    const manuscriptWithEditors = await Manuscript.query()
+      .findById(this.id)
+      .withGraphFetched(
+        '[teams(onlyEditors).[members(orderByCreatedDesc).[user]]]',
+      )
+
+    if (
+      !manuscriptWithEditors.teams.length ||
+      !manuscriptWithEditors.teams[0].members.length
+    ) {
+      return null
+    }
+
+    const editorTeam = manuscriptWithEditors.teams[0]
+    const editor = editorTeam.members[0] // picking the editor that has latest created date
+    return editor.user
   }
 
   async createNewVersion() {
@@ -257,6 +310,10 @@ class Manuscript extends BaseModel {
           type: ['array', 'null'],
         },
         teams: {
+          items: { type: 'object' },
+          type: ['array', 'null'],
+        },
+        tasks: {
           items: { type: 'object' },
           type: ['array', 'null'],
         },

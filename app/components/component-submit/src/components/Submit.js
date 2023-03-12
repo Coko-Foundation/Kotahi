@@ -1,4 +1,4 @@
-import React, { useMemo } from 'react'
+import React, { useCallback, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { set, debounce } from 'lodash'
 import DecisionAndReviews from './DecisionAndReviews'
@@ -55,7 +55,11 @@ const Submit = ({
   const handleSave = (source, versionId) =>
     updateManuscript(versionId, { meta: { source } })
 
-  const handleSaveDebouncer = useMemo(() => debounce(handleSave, 2000))
+  const debouncedSave = useCallback(debounce(handleSave, 2000), [])
+  useEffect(() => {
+    debouncedSave.flush()
+    return () => debouncedSave.flush()
+  }, [versions.length])
 
   versions.forEach(({ manuscript: version, label }, index) => {
     const userCanEditManuscriptAndFormData =
@@ -74,7 +78,7 @@ const Submit = ({
           manuscript={version}
           readonly={!userCanEditManuscriptAndFormData}
           saveSource={source => {
-            handleSaveDebouncer(source, version.id)
+            debouncedSave(source, version.id)
           }}
         />
       ),
@@ -175,10 +179,6 @@ const Submit = ({
   if (Array.isArray(parent.channels) && parent.channels.length) {
     channelId = parent.channels.find(c => c.type === 'all').id
   }
-
-  React.useEffect(() => {
-    handleSaveDebouncer.flush()
-  }, [versions.length])
 
   return (
     <Columns>

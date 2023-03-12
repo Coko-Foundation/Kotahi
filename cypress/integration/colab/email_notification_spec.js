@@ -12,11 +12,12 @@ describe('Email Notification Tests', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('role_names').then(name => {
       // login as seniorEditor
-      cy.login(name.role.seniorEditor.name, dashboard)
+      cy.login(name.role.seniorEditor, dashboard)
 
       // select Control on the Manuscripts page
       Menu.clickManuscripts()
       ManuscriptsPage.selectOptionWithText('Control')
+      cy.contains('Tasks & Notifications').click()
 
       /* Existing User */
       // Choose Recievers Dropdown
@@ -35,7 +36,7 @@ describe('Email Notification Tests', () => {
 
       ControlPage.getMessageContainer().should(
         'contain',
-        'Author Invitation Email Template sent by 0000000256415729 to Emily Clay',
+        'Author Invitation Email Template sent by Elaine Barnes to Emily Clay',
       )
 
       /* New User */
@@ -54,7 +55,7 @@ describe('Email Notification Tests', () => {
 
       ControlPage.getMessageContainer().should(
         'contain',
-        'Author Invitation Email Template sent by 0000000256415729 to Jon',
+        'Author Invitation Email Template sent by Elaine Barnes to Jon',
       )
     })
   })

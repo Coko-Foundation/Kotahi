@@ -1,7 +1,7 @@
 import { decorate, injectable } from 'inversify'
-import { toggleMark } from 'prosemirror-commands'
 import { Commands } from 'wax-prosemirror-utilities'
 import { Tools } from 'wax-prosemirror-services'
+import removeOrToggleMark from '../removeOrToggleMark'
 
 class AuthorGroup extends Tools {
   title = 'Change to author group'
@@ -14,7 +14,7 @@ class AuthorGroup extends Tools {
   // eslint-disable-next-line class-methods-use-this
   get run() {
     return (state, dispatch) => {
-      toggleMark(state.config.schema.marks.authorGroup)(state, dispatch)
+      removeOrToggleMark(state, dispatch, 'authorGroup')
     }
   }
 

@@ -95,7 +95,16 @@ const repackageForGraphql = async ms => {
   return result
 }
 
-const updateAndRepackageForGraphql = async ms => {
+/** TODO remove oldMetaAbstract param once bug 1193 is diagnosed/fixed */
+const updateAndRepackageForGraphql = async (ms, oldMetaAbstract) => {
+  if (oldMetaAbstract && ms.meta && !ms.meta.abstract)
+    throw new Error(
+      `Deleting meta.abstract in manuscript ${
+        ms.id
+      }, replacing value ${oldMetaAbstract} with ${typeof ms.meta
+        .abstract}, is illegal!`,
+    )
+
   const updatedMs = await models.Manuscript.query().updateAndFetchById(
     ms.id,
     ms,
@@ -285,10 +294,7 @@ const ManuscriptResolvers = ({ isVersion }) => {
 
   if (!isVersion) {
     resolvers.manuscriptVersions = async (parent, _, ctx) => {
-      if (
-        (parent.manuscriptVersions && !parent.manuscriptVersions.length) ||
-        !parent.manuscriptVersions
-      ) {
+      if (!parent.manuscriptVersions || !parent.manuscriptVersions.length) {
         return models.Manuscript.relatedQuery('manuscriptVersions')
           .for(parent.id)
           .orderBy('created', 'desc')
@@ -352,6 +358,9 @@ const commonUpdateManuscript = async (id, input, ctx) => {
     .findById(id)
     .withGraphFetched('[reviews.user, files, tasks]')
 
+  /** Crude hack to circumvent and help diagnose bug 1193 */
+  const oldMetaAbstract = ms && ms.meta ? ms.meta.abstract : null
+
   // If this manuscript is getting its label set for the first time,
   // we will populate its task list from the template tasks
   const isSettingFirstLabels = ['colab'].includes(process.env.INSTANCE_NAME)
@@ -379,7 +388,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
     updatedMs.tasks = await populateTemplatedTasksForManuscript(id)
 
   await uploadAndConvertBase64ImagesInManuscript(updatedMs)
-  return updateAndRepackageForGraphql(updatedMs)
+  return updateAndRepackageForGraphql(updatedMs, oldMetaAbstract)
 }
 
 /** Send the manuscriptId OR a configured ref; and send token if one is configured */
@@ -651,6 +660,7 @@ const resolvers = {
       const existingReview = await ReviewModel.query().where({
         manuscriptId: team.objectId,
         userId: context.user,
+        isDecision: false,
       })
 
       // modify it to check if there exists a review already
@@ -824,6 +834,10 @@ const resolvers = {
           '[submitter.[defaultIdentity], channels, teams.members.user, reviews.user]',
         )
 
+      /** Crude hack to circumvent and help diagnose bug 1193 */
+      const oldMetaAbstract =
+        manuscript && manuscript.meta ? manuscript.meta.abstract : null
+
       let decision = null
       if (decisionString === 'accept') decision = 'accepted'
       else if (decisionString === 'revise') decision = 'revise'
@@ -890,7 +904,7 @@ const resolvers = {
         }
       }
 
-      return updateAndRepackageForGraphql(manuscript)
+      return updateAndRepackageForGraphql(manuscript, oldMetaAbstract)
     },
     async addReviewer(_, { manuscriptId, userId, invitationId }, ctx) {
       const manuscript = await models.Manuscript.query().findById(manuscriptId)
@@ -1008,6 +1022,10 @@ const resolvers = {
         .findById(id)
         .withGraphFetched('[reviews, publishedArtifacts]')
 
+      /** Crude hack to circumvent and help diagnose bug 1193 */
+      const oldMetaAbstract =
+        manuscript && manuscript.meta ? manuscript.meta.abstract : null
+
       const update = {} // This will collect any properties we may want to update in the DB
       update.published = new Date()
       const steps = []
@@ -1118,6 +1136,13 @@ const resolvers = {
             : 'evaluated'
       }
 
+      // TODO remove this check once bug 1193 is diagnosed/fixed
+      if (oldMetaAbstract && update.meta && !update.meta.abstract)
+        throw new Error(
+          `Deleting meta.abstract from manuscript ${id}, replacing ${oldMetaAbstract} with ${typeof update
+            .meta.abstract}, is illegal!`,
+        )
+
       const updatedManuscript = await models.Manuscript.query().updateAndFetchById(
         id,
         update,
@@ -1143,7 +1168,7 @@ const resolvers = {
       const manuscript = await ManuscriptModel.query()
         .findById(id)
         .withGraphFetched(
-          '[teams, channels, files, reviews.user, tasks(orderBySequence).assignee]',
+          '[teams, channels, files, reviews.user, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]]',
         )
 
       const user = ctx.user

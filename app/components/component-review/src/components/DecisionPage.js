@@ -6,6 +6,7 @@ import config from 'config'
 import DecisionVersions from './DecisionVersions'
 import { Spinner, CommsErrorBanner } from '../../../shared'
 import { fragmentFields } from '../../../component-submit/src/userManuscriptFormQuery'
+import { roles } from '../../../../globals'
 
 import {
   query,
@@ -24,6 +25,9 @@ import {
   GET_BLACKLIST_INFORMATION,
   UPDATE_TASK,
   UPDATE_TASKS,
+  UPDATE_TASK_NOTIFICATION,
+  DELETE_TASK_NOTIFICATION,
+  CREATE_TASK_EMAIL_NOTIFICATION_LOGS,
 } from '../../../../queries'
 import { validateDoi, validateSuffix } from '../../../../shared/commsUtils'
 import {
@@ -77,6 +81,7 @@ const DecisionPage = ({ match }) => {
 
   useEffect(() => {
     return () => {
+      Object.values(debouncers).forEach(d => d.flush())
       debouncers = {}
     }
   }, [])
@@ -127,6 +132,10 @@ const DecisionPage = ({ match }) => {
   const [deletePendingComment] = useMutation(DELETE_PENDING_COMMENT)
   const [setShouldPublishField] = useMutation(setShouldPublishFieldMutation)
 
+  const [createTaskEmailNotificationLog] = useMutation(
+    CREATE_TASK_EMAIL_NOTIFICATION_LOGS,
+  )
+
   const [updateTask] = useMutation(UPDATE_TASK, {
     update(cache, { data: { updateTask: updatedTask } }) {
       cache.modify({
@@ -135,29 +144,53 @@ const DecisionPage = ({ match }) => {
           id: updatedTask.manuscriptId,
         }),
         fields: {
-          tasks(existingTaskRefs) {
-            return existingTaskRefs.includes(updatedTask.id)
-              ? existingTaskRefs
-              : [...existingTaskRefs, updatedTask.id]
+          tasks(existingTaskRefs = [], { readField }) {
+            const newTaskRef = cache.writeFragment({
+              data: updatedTask,
+              fragment: gql`
+                fragment NewTask on Task {
+                  id
+                  title
+                  dueDate
+                  defaultDurationDays
+                }
+              `,
+            })
+
+            if (
+              existingTaskRefs.some(
+                ref => readField('id', ref) === updatedTask.id,
+              )
+            ) {
+              return existingTaskRefs
+            }
+
+            return [...existingTaskRefs, newTaskRef]
           },
         },
       })
     },
   })
 
+  const [updateTaskNotification] = useMutation(UPDATE_TASK_NOTIFICATION)
+
+  const [deleteTaskNotification] = useMutation(DELETE_TASK_NOTIFICATION)
+
   const [updateTasks] = useMutation(UPDATE_TASKS, {
     update(cache, { data: { updateTasks: updatedTasks } }) {
-      cache.modify({
-        id: cache.identify({
-          __typename: 'Manuscript',
-          id: updatedTasks.manuscriptId,
-        }),
-        fields: {
-          tasks() {
-            return updatedTasks.tasks.map(t => t.id)
+      if (updatedTasks.length) {
+        cache.modify({
+          id: cache.identify({
+            __typename: 'Manuscript',
+            id: updatedTasks[0].manuscriptId,
+          }),
+          fields: {
+            tasks() {
+              return updatedTasks;
+            },
           },
-        },
-      })
+        })
+      }
     },
   })
 
@@ -304,10 +337,12 @@ const DecisionPage = ({ match }) => {
       allUsers={users}
       canHideReviews={config.review.hide === 'true'}
       createFile={createFile}
+      createTaskEmailNotificationLog={createTaskEmailNotificationLog}
       createTeam={createTeam}
       currentUser={currentUser}
       decisionForm={decisionForm}
       deleteFile={deleteFile}
+      deleteTaskNotification={deleteTaskNotification}
       displayShortIdAsIdentifier={
         config['client-features'].displayShortIdAsIdentifier &&
         config['client-features'].displayShortIdAsIdentifier.toLowerCase() ===
@@ -325,6 +360,7 @@ const DecisionPage = ({ match }) => {
       refetch={refetch}
       reviewers={data?.manuscript?.reviews}
       reviewForm={reviewForm}
+      roles={roles}
       selectedEmail={selectedEmail}
       sendChannelMessageCb={sendChannelMessageCb}
       sendNotifyEmail={sendNotifyEmail}
@@ -337,6 +373,7 @@ const DecisionPage = ({ match }) => {
       updateReview={updateReview}
       updateReviewJsonData={updateReviewJsonData}
       updateTask={updateTask}
+      updateTaskNotification={updateTaskNotification}
       updateTasks={updateTasks}
       updateTeam={updateTeam}
       urlFrag={urlFrag}

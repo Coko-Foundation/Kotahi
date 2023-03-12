@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useMemo } from 'react'
 import { v4 as uuid } from 'uuid'
 import DecisionVersion from './DecisionVersion'
 import gatherManuscriptVersions from '../../../../shared/manuscript_versions'
@@ -14,6 +14,7 @@ import MessageContainer from '../../../component-chat/src/MessageContainer'
 
 const DecisionVersions = ({
   allUsers,
+  roles,
   currentUser,
   decisionForm,
   form,
@@ -50,19 +51,21 @@ const DecisionVersions = ({
   refetch,
   updateTask,
   updateTasks,
+  updateTaskNotification,
+  deleteTaskNotification,
+  createTaskEmailNotificationLog,
 }) => {
-  const [initialValue, setInitialValue] = useState(null)
-
   const versions = gatherManuscriptVersions(manuscript)
 
-  if (!initialValue)
-    setInitialValue(
+  const initialValue = useMemo(
+    () =>
       versions[0].manuscript.reviews.find(r => r.isDecision) || {
         id: uuid(),
         isDecision: true,
         userId: currentUser.id,
       },
-    )
+    [],
+  )
 
   // Protect if channels don't exist for whatever reason
   let editorialChannelId, allChannelId
@@ -88,11 +91,13 @@ const DecisionVersions = ({
                 allUsers={allUsers}
                 canHideReviews={canHideReviews}
                 createFile={createFile}
+                createTaskEmailNotificationLog={createTaskEmailNotificationLog}
                 createTeam={createTeam}
                 currentDecisionData={initialValue}
                 currentUser={currentUser}
                 decisionForm={decisionForm}
                 deleteFile={deleteFile}
+                deleteTaskNotification={deleteTaskNotification}
                 displayShortIdAsIdentifier={displayShortIdAsIdentifier}
                 dois={dois}
                 externalEmail={externalEmail}
@@ -108,6 +113,7 @@ const DecisionVersions = ({
                 refetch={refetch}
                 reviewers={reviewers}
                 reviewForm={reviewForm}
+                roles={roles}
                 selectedEmail={selectedEmail}
                 sendChannelMessageCb={sendChannelMessageCb}
                 sendNotifyEmail={sendNotifyEmail}
@@ -127,6 +133,7 @@ const DecisionVersions = ({
                   )
                 }
                 updateTask={index === 0 ? updateTask : null}
+                updateTaskNotification={updateTaskNotification}
                 updateTasks={index === 0 ? updateTasks : null}
                 updateTeam={updateTeam}
                 urlFrag={urlFrag}

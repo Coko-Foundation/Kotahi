@@ -267,6 +267,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
         shortId
         meta {
           manuscriptId
+          abstract
           title
         }
         submission
@@ -291,6 +292,7 @@ export const GET_MANUSCRIPTS_AND_FORM = gql`
           shortId
           meta {
             manuscriptId
+            abstract
             title
           }
           submission
@@ -408,6 +410,36 @@ dueDate
 reminderPeriodDays
 sequenceIndex
 status
+emailNotifications {
+  id
+  taskId
+  recipientUserId
+  recipientType
+  notificationElapsedDays
+  emailTemplateKey
+  recipientName
+  recipientEmail
+  recipientUser {
+    id
+    username
+    email
+  }
+  sentAt
+}
+notificationLogs {
+  id
+  taskId
+  senderEmail
+  recipientEmail
+  emailTemplateKey
+  content
+  updated
+  created
+}
+assigneeType
+assigneeName
+assigneeEmail
+
 `
 
 export const UPDATE_TASKS = gql`
@@ -424,4 +456,35 @@ export const UPDATE_TASK = gql`
       ${taskFields}
     }
   }
+`
+
+export const UPDATE_TASK_NOTIFICATION = gql`
+  mutation ($taskNotification: TaskEmailNotificationInput!) {
+    updateTaskNotification(taskNotification: $taskNotification) {
+      ${taskFields}
+    }
+  }
+`
+export const DELETE_TASK_NOTIFICATION = gql`
+  mutation($id: ID!) {
+    deleteTaskNotification(id: $id)
+    {
+      ${taskFields}
+    }
+  }
+`
+export const UPDATE_TASK_STATUS = gql`
+  mutation($task: UpdateTaskStatusInput!) {
+    updateTaskStatus(task: $task) {
+      ${taskFields}
+    }
+  }
+`
+
+export const CREATE_TASK_EMAIL_NOTIFICATION_LOGS = gql`
+mutation($taskEmailNotificationLog: TaskEmailNotificationLogInput!) {
+  createTaskEmailNotificationLog(taskEmailNotificationLog: $taskEmailNotificationLog) {
+    ${taskFields}
+  }
+}
 `

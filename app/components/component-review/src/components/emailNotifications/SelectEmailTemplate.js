@@ -221,6 +221,10 @@ switch (
           'Won Mok Shim - Peer-Review Invitation Assignment notification template',
         value: 'reviewInvitationEmailTemplate12',
       },
+      {
+        label: 'Kotahi task notification',
+        value: 'genericTaskNotificationEmailTemplate'
+      },
     ]
     break
   case 'colab':
@@ -235,7 +239,7 @@ switch (
       },
       {
         label: 'Reviewer Invitation Email Template',
-        value: 'reviewerInvitationEmailTemplate',
+        value: 'reviewInvitationEmailTemplate',
       },
       {
         label: 'Reminder: Author Invitation Template',
@@ -253,10 +257,46 @@ switch (
         label: 'Reminder: Review Overdue Template',
         value: 'reminderReviewOverdueTemplate',
       },
+      {
+        label: 'Kotahi task notification',
+        value: 'genericTaskNotificationEmailTemplate'
+      },
+      {
+        label: 'Generic task manager update notification',
+        value: 'genericTaskManagerUpdateNotificationTemplate'
+      },
+      {
+        label: 'Report(s) shared',
+        value: 'reportsSharedTemplate'
+      },
+      {
+        label: 'Consolidated report shared with authors',
+        value: 'consolidatedReportWithAuthorsTemplate'
+      },
+      {
+        label: 'Report published',
+        value: 'reportPublishedTemplate'
+      },
+      {
+        label: 'Follow-up with author to submit revised preprint ',
+        value: 'authorFollowUpSubmitRevisedPreprintTemplate'
+      },
+      {
+        label: 'Reviewer invitation - re-review',
+        value: 'reviewerInvitationReReviewTemplate'
+      },
+      {
+        label: 'Reviewer invitation - new reviewer for a revised preprint',
+        value: 'reviewerInvitationRevisedPreprintTemplate'
+      },
     ]
     break
   default:
     emailTemplateOptions = [
+      {
+        label: 'Kotahi task notification',
+        value: 'genericTaskNotificationEmailTemplate'
+      },
       {
         label: 'Message notification template',
         value: 'messageNotificationEmailTemplate',
@@ -272,6 +312,11 @@ switch (
 const SelectEmailTemplate = ({
   onChangeEmailTemplate,
   selectedEmailTemplate,
+  updateTaskNotification,
+  taskEmailNotification,
+  placeholder,
+  isClearable,
+  task,
 }) => {
   return (
     <Select
@@ -279,11 +324,20 @@ const SelectEmailTemplate = ({
       data-testid="Notification_email_select"
       label="notification email"
       onChange={selected => {
-        onChangeEmailTemplate(selected.value)
+        if (taskEmailNotification) {
+          updateTaskNotification({
+            ...taskEmailNotification,
+            id: taskEmailNotification.id,
+            taskId: taskEmailNotification.taskId,
+            emailTemplateKey: selected ? selected.value : '',
+          })
+        }
+        onChangeEmailTemplate(selected ? selected.value : '')
       }}
       options={emailTemplateOptions}
-      placeholder="Choose notification template"
+      placeholder={placeholder || "Choose notification template"}
       value={selectedEmailTemplate}
+      isClearable={isClearable || false}
     />
   )
 }
