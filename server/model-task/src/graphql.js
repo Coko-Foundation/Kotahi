@@ -1,6 +1,5 @@
 const dateFns = require('date-fns')
 
-const config = require('config')
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
 const TaskEmailNotification = require('./taskEmailNotification')
@@ -68,9 +67,9 @@ const resolvers = {
       const sequenceIndex = existing ? existing.sequenceIndex : currentCount
       const taskRecord = { ...task, manuscriptId, sequenceIndex }
 
-      await updateAlertsForTask(taskRecord)
-
       await Task.query().insert(taskRecord).onConflict('id').merge()
+
+      await updateAlertsForTask(taskRecord)
 
       return Task.query()
         .findById(task.id)
