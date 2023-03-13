@@ -32,7 +32,7 @@ describe('Update the submission form field', () => {
     FormsPage.getFieldValidate()
 
     cy.get(':nth-child(3) > .sc-dmlrTW').contains('Always').click()
-    cy.get('form > :nth-child(15)').type('test_tag')
+    cy.get('form > :nth-child(16)').type('test_tag')
     cy.contains('Update Field').click({ force: true })
     Menu.clickManuscripts()
     DashboardPage.clickSubmissionButton()
@@ -42,7 +42,6 @@ describe('Update the submission form field', () => {
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.fixture('submission_form_data').then(data => {
       SubmissionFormPage.fillInArticleld(data.articleId)
-      SubmissionFormPage.fillInDoi(data.doi)
       SubmissionFormPage.fillInArticleUrl(data.doi)
       SubmissionFormPage.fillInBioRxivArticleUrl(bioRxivArticleUrl)
       SubmissionFormPage.fillInDescription(data.description)

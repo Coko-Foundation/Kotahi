@@ -176,6 +176,12 @@ export const SubmissionFormPage = {
     cy.awaitDisappearSpinner()
     ManuscriptsPage.getTableHeader().should('be.visible')
   },
+  clickSubmitResearchAndWaitPageLoadElife() {
+    this.clickSubmitResearch()
+    cy.url().should('not.contain', submit).and('not.contain', evaluate)
+    cy.awaitDisappearSpinner()
+    ManuscriptsPage.getTableHead().should('be.visible')
+  },
   getSubmitManuscriptButton() {
     return cy.get(SUBMIT_YOUR_MANUSCRIPT_BUTTON)
   },
@@ -245,7 +251,7 @@ export const SubmissionFormPage = {
     return this.getWaxInputBox(0)
   },
   fillInReview1(review1) {
-    this.getReview1().find(CONTENT_EDITABLE_VALUE).fillInput(review1)
+    this.getReview1().fillInput(review1)
   },
   getReview1Creator() {
     return cy.getByDataTestId(REVIEW_1_CREATOR_FIELD)
@@ -254,10 +260,10 @@ export const SubmissionFormPage = {
     this.getReview1Creator().fillInput(review1Creator)
   },
   getReview2() {
-    return this.getWaxInputBox(1)
+    return cy.getByClass(SUBMISSION_FORM_INPUT_BOX).eq(1)
   },
   fillInReview2(review2) {
-    this.getReview2().find(CONTENT_EDITABLE_VALUE).fillInput(review2)
+    this.getReview2().type(`{selectall}${review2}`, { force: true })
   },
   getReview2Creator() {
     return cy.getByDataTestId(REVIEW_2_CREATOR_FIELD)
@@ -275,7 +281,7 @@ export const SubmissionFormPage = {
     return this.getWaxInputBox(2)
   },
   fillInReview3(review3) {
-    this.getReview3().find(CONTENT_EDITABLE_VALUE).fillInput(review3)
+    this.getReview3().fillInput(review3)
   },
   getReview3Creator() {
     return cy.getByDataTestId(REVIEW_3_CREATOR_FIELD)
@@ -290,10 +296,10 @@ export const SubmissionFormPage = {
     this.getReview3Date().fillInput(review3Date)
   },
   getSummary() {
-    return this.getWaxInputBox(3)
+    return cy.getByClass(SUBMISSION_FORM_INPUT_BOX).eq(3)
   },
   fillInSummary(summary) {
-    this.getSummary().find(CONTENT_EDITABLE_VALUE).fillInput(summary)
+    this.getSummary().fillInput(summary)
   },
   getSummaryCreator() {
     return cy.getByDataTestId(SUMMARY_CREATOR_FIELD)
