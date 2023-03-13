@@ -9,7 +9,7 @@ import { ControlPage } from './control-page'
  */
 const MANUSCRIPTS_OPTIONS_LIST = '[class*=style__UserAction]'
 const BUTTON = 'button'
-const LIVE_CHAT_BUTTON = '[class*=VideoChatButton]'
+const LIVE_CHAT_BUTTON = '[class*=VideoChat__FloatRightButton]'
 const MANUSCRIPTS_PAGE_TITLE = '[class*=General__Heading-sc]'
 const EVALUATION_BUTTON = '[href*=evaluation]'
 const CONTROL_BUTTON = '[href*="/kotahi/versions/"]'
@@ -19,6 +19,7 @@ const STATUS_FIELD = 'Badge__Status'
 const TABLE_HEADER = '[class*=Table__Header]'
 const MANUSCRIPTS_TABLE_HEAD = '[class*=style__ManuscriptsHeaderRow]'
 const ARTICLE_TITLE = '[class*=Table__Row]>td:nth-child(1)'
+const ARTICLE_ID = '[name="submission.articleId"]'
 const ARTICLE_LABEL = '[name="submission.labels"]'
 const ARTICLE_TOPIC = '[class*=Table__Cell] > [title]'
 const TABLE_ROW = 'style__ManuscriptsRow-cydfzx-10 NtEio'
@@ -134,11 +135,17 @@ export const ManuscriptsPage = {
   clickStatus(nth) {
     this.getStatusField(nth).click()
   },
-  getTableHead(nth) {
+  getTableHead() {
     return cy.get(MANUSCRIPTS_TABLE_HEAD)
   },
   getArticleTitleByRow(nth) {
     return cy.get(ARTICLE_TITLE).eq(nth)
+  },
+  getArticleIdByRow(nth) {
+    return cy.get(ARTICLE_ID).eq(nth)
+  },
+  clickArticleId() {
+    return this.getArticleIdByRow(0).click()
   },
   clickTableHead(nth) {
     this.getTableHead(nth).click()

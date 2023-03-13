@@ -324,6 +324,7 @@ CREATE TABLE "public"."invitations" (
     "declined_reason" "public"."invitation_declined_reason_type",
     "user_id" uuid,
     "sender_id" uuid NOT NULL,
+    "is_shared" bool NOT NULL DEFAULT false,
     PRIMARY KEY ("id")
 );
 
@@ -355,6 +356,8 @@ CREATE TABLE "public"."manuscripts" (
     "submitted_date" timestamptz,
     "is_hidden" bool NOT NULL DEFAULT FALSE,
     "form_fields_to_publish" jsonb NOT NULL DEFAULT '[]'::jsonb,
+    "searchable_text" text NOT NULL DEFAULT ''::text,
+    "search_tsvector" tsvector NOT NULL DEFAULT ''::tsvector,
     "doi" text,
     PRIMARY KEY ("id")
 );
@@ -380,6 +383,25 @@ DROP TABLE IF EXISTS "public"."migrations";
 CREATE TABLE "public"."migrations" (
     "id" text NOT NULL,
     "run_at" timestamptz DEFAULT CURRENT_TIMESTAMP,
+    PRIMARY KEY ("id")
+);
+
+-- 
+DROP TABLE IF EXISTS "public"."published_artifacts";
+
+--Table Definition
+CREATE TABLE "public"."published_artifacts"(
+    "id" uuid NOT NULL,
+    "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz,
+    "manuscript_id" uuid NOT NULL,
+    "platform" text NOT NULL,
+    "external_id" text NULL,
+    "title" text NULL,
+    "content" text NULL,
+    "hosted_in_kotahi" bool NOT NULL DEFAULT false,
+    "related_document_uri" text NULL,
+    "related_document_type" text NULL,
     PRIMARY KEY ("id")
 );
 
@@ -476,6 +498,22 @@ CREATE TABLE public.task_alerts (
 
 ALTER TABLE public.task_alerts OWNER TO kotahidev;
 
+DROP TABLE IF EXISTS "public"."task_email_notifications";
+
+-- Table Definition
+CREATE TABLE "public"."task_email_notifications" (
+    "id" uuid NOT NULL,
+    "task_id" uuid NOT NULL,
+    "recipient_user_id" uuid NULL,
+	"recipient_type" text NULL,
+	"recipient_name" text NULL,
+	"recipient_email" text NULL,
+	"notification_elapsed_days" int4 NULL,
+	"email_template_key" text NULL,
+	"created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"updated" timestamptz NULL,
+	PRIMARY KEY ("id")
+);
 
 DROP TABLE IF EXISTS "public"."team_members";
 -- This script only contains the table creation statements and does not fully represent the table in the database. It's still missing: indices, triggers. Do not use it as a backup.
@@ -550,7 +588,7 @@ INSERT INTO "public"."channels" ("id", "manuscript_id", "created", "updated", "t
 ('9fd7774c-11e5-4802-804c-ab64aefd5080', NULL, '2022-09-15 06:17:37.142077+00', NULL, 'System-wide discussion', 'editorial');
 
 INSERT INTO "public"."forms" ("id", "type", "created", "updated", "purpose", "structure", "category") VALUES
-('9f27f699-56b2-4adc-b5c6-f179ff9a5380', 'Form', '2022-09-15 06:18:14.685+00', '2022-09-15 06:18:14.685+00', 'submit', '{"name": "eLife Submission Form", "children": [{"id": "bf66a4ed-427b-4329-b6f7-6c53eeec5ac6", "name": "submission.articleId", "title": "Article ID", "options": [], "validate": [{"id": "48179c76-55b3-41b8-b330-6115dcbd9b2a", "label": "Required", "value": "required"}], "component": "TextField"}, {"id": "1c2e9325-3fa8-41f3-8607-180eb8a25bb3", "name": "submission.DOI", "title": "DOI", "options": [], "validate": [{"id": "48109c76-55b3-41b8-b330-6115dcbd9b4a", "label": "Required", "value": "required"}], "component": "TextField", "placeholder": "Enter the manuscript''s DOI", "doiValidation": "true"}, { "id": "5a22ec26-3885-432c-8c80-b207a62a7b04", "name": "submission.articleURL", "title": "Article URL", "options": [], "validate": [{"id": "15c4e0f8-888e-4c83-b0c6-0f6250eea43a", "label": "Required", "value": "required"}], "component": "TextField", "doiValidation": "true"}, {"id": "b100e6a0-b00e-413c-823b-862351e9690f", "name": "submission.biorxivURL", "title": "bioRxiv article URL", "options": [], "validate": [{"id": "20708da4-7999-49c0-9881-d28f2ce9f825", "label": "Required", "value": "required"}], "component": "TextField"}, {"id": "ec5e5f89-282c-42e9-bde2-d35816152362", "name": "submission.description", "title": "Description", "options": [], "validate": [{"id": "7778fd1c-3e8f-42c8-8e42-71c33ea3daa2", "label": "Required", "value": "required"}], "component": "TextField"}, {"id": "12909732-e675-4270-bb3b-3b4d8d39dace", "name": "submission.review1", "title": "Review 1","component": "AbstractEditor", "placeholder": "Review 1", "doiValidation": "false"}, {"id": "a7cd4965-0741-4b11-aa07-5cf89165a551", "name": "submission.review1creator", "title": "Review 1 creator", "component": "TextField", "doiValidation": "false"}, {"id": "520615da-c193-4722-9509-3d849f3b6dc2", "name": "submission.review1date", "title": "Review 1 date", "component": "TextField", "placeholder": "review 1 date", "doiValidation": "false"}, {"id": "6285b767-66be-4e5f-aa36-b00ec2730177", "name": "submission.review2", "title": "Review 2", "component": "AbstractEditor", "placeholder": "Review 2", "doiValidation": "false"}, {"id": "2fa4f519-5342-4128-ab82-f5e10c4764ee", "name": "submission.review2creator", "title": "Review 2 creator", "component": "TextField", "doiValidation": "false"}, {"id": "ab864ade-bc8c-11eb-8529-0242ac130003", "name": "submission.review2date", "title": "Review 2 date", "component": "TextField", "placeholder": "review 2 date", "doiValidation": "false"}, {"id": "bc3dfe1f-ed4c-40bf-9dff-26dc45af260a", "name": "submission.review3", "title": "Review 3", "component": "AbstractEditor", "doiValidation": "false"}, {"id": "3fc01c57-62b2-422e-b5ae-1e76826050c8", "name": "submission.review3creator", "title": "Review 3 creator", "component": "TextField", "doiValidation": "false"}, {"id": "ab864dc2-bc8c-11eb-8529-0242ac130003", "name": "submission.review3date", "title": "Review 3 date", "component": "TextField", "placeholder": "review 3 date", "doiValidation": "false"}, {"id": "05867f53-ea10-4d3b-8220-48200b92cd4f", "name": "submission.summary", "title": "Summary", "component": "AbstractEditor", "doiValidation": "false"}, {"id": "0a64672c-0fc2-4e99-a023-d89240523a32", "name": "submission.summarycreator", "title": "Summary creator", "component": "TextField", "doiValidation": "false"}, {"id": "ab8654b6-bc8c-11eb-8529-0242ac130003", "name": "submission.summarydate", "title": "Summary date", "component": "TextField", "placeholder": "summary date", "doiValidation": "false"}], "haspopup": "false", "description": "<p>eLife Form</p>"}', 'submission'),
+('9f27f699-56b2-4adc-b5c6-f179ff9a5380', 'Form', '2022-09-15 06:18:14.685+00', '2022-09-15 06:18:14.685+00', 'submit', '{"name": "eLife Submission Form", "children": [{"id": "bf66a4ed-427b-4329-b6f7-6c53eeec5ac6", "name": "submission.articleId", "title": "Article ID", "options": [], "validate": [{"id": "48179c76-55b3-41b8-b330-6115dcbd9b2a", "label": "Required", "value": "required"}], "component": "TextField"}, {"id": "5a22ec26-3885-432c-8c80-b207a62a7b04", "name": "submission.articleURL", "title": "Article URL", "options": [], "validate": [{"id": "15c4e0f8-888e-4c83-b0c6-0f6250eea43a", "label": "Required", "value": "required"}], "component": "TextField", "doiValidation": "true"}, {"id": "b100e6a0-b00e-413c-823b-862351e9690f", "name": "submission.biorxivURL", "title": "bioRxiv article URL", "options": [], "validate": [{"id": "20708da4-7999-49c0-9881-d28f2ce9f825", "label": "Required", "value": "required"}], "component": "TextField"}, {"id": "ec5e5f89-282c-42e9-bde2-d35816152362", "name": "submission.description", "title": "Description", "options": [], "validate": [{"id": "7778fd1c-3e8f-42c8-8e42-71c33ea3daa2", "label": "Required", "value": "required"}], "component": "TextField"}, {"id": "12909732-e675-4270-bb3b-3b4d8d39dace", "name": "submission.review1", "title": "Review 1","component": "AbstractEditor", "placeholder": "Review 1", "doiValidation": "false"}, {"id": "a7cd4965-0741-4b11-aa07-5cf89165a551", "name": "submission.review1creator", "title": "Review 1 creator", "component": "TextField", "doiValidation": "false"}, {"id": "520615da-c193-4722-9509-3d849f3b6dc2", "name": "submission.review1date", "title": "Review 1 date", "component": "TextField", "placeholder": "review 1 date", "doiValidation": "false"}, {"id": "6285b767-66be-4e5f-aa36-b00ec2730177", "name": "submission.review2", "title": "Review 2", "component": "AbstractEditor", "placeholder": "Review 2", "doiValidation": "false"}, {"id": "2fa4f519-5342-4128-ab82-f5e10c4764ee", "name": "submission.review2creator", "title": "Review 2 creator", "component": "TextField", "doiValidation": "false"}, {"id": "ab864ade-bc8c-11eb-8529-0242ac130003", "name": "submission.review2date", "title": "Review 2 date", "component": "TextField", "placeholder": "review 2 date", "doiValidation": "false"}, {"id": "bc3dfe1f-ed4c-40bf-9dff-26dc45af260a", "name": "submission.review3", "title": "Review 3", "component": "AbstractEditor", "doiValidation": "false"}, {"id": "3fc01c57-62b2-422e-b5ae-1e76826050c8", "name": "submission.review3creator", "title": "Review 3 creator", "component": "TextField", "doiValidation": "false"}, {"id": "ab864dc2-bc8c-11eb-8529-0242ac130003", "name": "submission.review3date", "title": "Review 3 date", "component": "TextField", "placeholder": "review 3 date", "doiValidation": "false"}, {"id": "05867f53-ea10-4d3b-8220-48200b92cd4f", "name": "submission.summary", "title": "Summary", "component": "AbstractEditor", "doiValidation": "false"}, {"id": "0a64672c-0fc2-4e99-a023-d89240523a32", "name": "submission.summarycreator", "title": "Summary creator", "component": "TextField", "doiValidation": "false"}, {"id": "ab8654b6-bc8c-11eb-8529-0242ac130003", "name": "submission.summarydate", "title": "Summary date", "component": "TextField", "placeholder": "summary date", "doiValidation": "false"}], "haspopup": "false", "description": "<p>eLife Form</p>"}', 'submission'),
 ('d619d5ba-80e5-4ada-8983-87d1312e5250', 'Form', '2022-09-15 06:18:14.689+00', '2022-09-15 06:18:14.689+00', 'review', '{"name": "Review", "children": [{"id": "1880448f-827a-422a-8ed7-c00f8ce9ccae", "name": "comment", "title": "Comments to the Author", "validate": [{"id": "332253be-dc19-47a8-9bfb-c32fa3fc9b43", "label": "Required", "value": "required"}], "component": "AbstractEditor", "placeholder": "Enter your review..."}, {"id": "4e0ee4a6-57bc-4284-957a-f3e17ac4a24d", "name": "files", "title": " ", "component": "SupplementaryFiles", "shortDescription": "Files"}, {"id": "2a1eab32-3e78-49e1-b0e5-24104a39a06a", "name": "confidentialComment", "title": "Confidential comments to the editor (optional)", "component": "AbstractEditor", "placeholder": "Enter a confidential note to the editor (optional)...", "hideFromAuthors": "true", "shortDescription": "Confidential comments"}, {"id": "21b5de2c-10fd-48cb-a00a-ab2c96b1c242", "name": "confidentialFiles", "title": " ", "component": "SupplementaryFiles", "hideFromAuthors": "true", "shortDescription": "Confidential files"}, {"id": "257d6be0-0832-41fc-b6d2-b1f096342bc2", "name": "verdict", "title": "Recommendation", "inline": "true", "options": [{"id": "da8a08bd-d035-400e-856a-f2c6f8040c27", "label": "Accept", "value": "accept", "labelColor": "#048802"}, {"id": "da75afd9-aeac-4d24-8f5e-8ed00d233543", "label": "Revise", "value": "revise", "labelColor": "#ebc400"}, {"id": "a254f0c1-25e5-45bb-8a8e-8251d2c27f8c", "label": "Reject", "value": "reject", "labelColor": "#ea412e"}], "validate": [{"id": "d970099e-b05e-4fae-891f-1a81d6f46b65", "label": "Required", "value": "required"}], "component": "RadioGroup"}], "haspopup": "true", "popuptitle": "Confirm your review", "description": "<p class=\"paragraph\">By completing this review, you agree that you do not have any conflict of interests to declare. For any questions about what constitutes a conflict of interest, contact the administrator.</p>", "popupdescription": "<p class=\"paragraph\">By submitting this review, you agree that you do not have any conflict of interests to declare. For any questions about what constitutes a conflict of interest, contact the administrator.</p>"}', 'review'),
 ('da70ab01-43ca-4a04-80bb-5fb298dff5e5', 'Form', '2022-09-15 06:18:14.692+00', '2022-09-15 06:18:14.692+00', 'decision', '{"name": "Decision", "children": [{"id": "1600fcc9-ebf4-42f5-af97-c242ea04ae21", "name": "comment", "title": "Decision", "validate": [{"id": "39796769-23a9-4788-b1f3-78d08b59f97e", "label": "Required", "value": "required"}], "component": "AbstractEditor", "placeholder": "Write/paste your decision letter here, or upload it by dragging it onto the box below."}, {"id": "695a5b2f-a0d7-4b1e-a750-107bff5628bc", "name": "files", "title": " ", "component": "SupplementaryFiles", "shortDescription": "Files"}, {"id": "7423ad09-d01b-49bc-8c2e-807829b86653", "name": "verdict", "title": "Decision Status", "inline": "true", "options": [{"id": "78653e7a-32b3-4283-9a9e-36e79876da28", "label": "Accept", "value": "accept", "labelColor": "#048802"}, {"id": "44c2dad6-8316-42ed-a2b7-3f2e98d49823", "label": "Revise", "value": "revise", "labelColor": "#ebc400"}, {"id": "a8ae5a69-9f34-4e3c-b3d2-c6572ac2e225", "label": "Reject", "value": "reject", "labelColor": "#ea412e"}], "validate": [{"id": "4eb14d13-4d17-40d0-95a1-3e68e9397269", "label": "Required", "value": "required"}], "component": "RadioGroup"}], "haspopup": "false"}', 'decision');
 
@@ -631,17 +669,25 @@ ALTER TABLE "public"."team_members" ADD FOREIGN KEY ("team_id") REFERENCES "publ
 ALTER TABLE "public"."team_members" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
 ALTER TABLE "public"."threaded_discussions" ADD FOREIGN KEY ("manuscript_id") REFERENCES "public"."manuscripts"("id") ON DELETE CASCADE;
 
+-- public.published_artifacts foreign keys
+ALTER TABLE public.published_artifacts ADD FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts(id) ON DELETE CASCADE;
+
 -- tasks and task_alerts
 
 ALTER TABLE tasks ADD FOREIGN KEY (manuscript_id) REFERENCES manuscripts(id) ON DELETE CASCADE;
 ALTER TABLE tasks ADD FOREIGN KEY (assignee_user_id) REFERENCES users(id) ON DELETE SET NULL;
 ALTER TABLE task_alerts ADD FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE;
 ALTER TABLE task_alerts ADD FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE CASCADE;
+ALTER TABLE task_email_notifications ADD FOREIGN KEY (recipient_user_id) REFERENCES users(id) ON DELETE CASCADE;
+ALTER TABLE task_email_notifications ADD FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE;
 CREATE INDEX tasks_manuscript_id_idx ON tasks (manuscript_id);
 CREATE INDEX tasks_user_id_idx ON tasks (assignee_user_id);
 CREATE UNIQUE INDEX task_alerts_alerts_task_id_user_id_uniq_idx ON task_alerts(task_id, user_id);
 CREATE INDEX task_alerts_task_id_idx ON task_alerts (task_id);
 CREATE INDEX task_alerts_user_id_idx ON task_alerts (user_id);
+CREATE INDEX task_email_notifications_recipient_user_id_idx ON public.task_email_notifications (recipient_user_id);
+CREATE INDEX task_email_notifications_task_id_idx ON public.task_email_notifications (task_id);
+CREATE UNIQUE INDEX task_email_notifications_task_id_recipient_user_id_uniq_idx ON public.task_email_notifications (task_id, recipient_user_id);
 
 -- -------------------------------------------------------------
 -- Autogenerated Dump Ends 
