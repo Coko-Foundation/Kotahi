@@ -46,7 +46,7 @@ const getUserRolesInManuscript = async (userId, manuscriptId) => {
 const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   let inputParsed = input
 
-  if (ctx) {
+  if (ctx && typeof input === 'string') {
     inputParsed = JSON.parse(input)
   }
 
@@ -69,9 +69,10 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
 
   const urlFrag = config.journal.metadata.toplevel_urlfragment
   const baseUrl = config['pubsweet-client'].baseUrl + urlFrag
-  let manuscriptPageUrl =  `${baseUrl}/versions/${manuscript.id}`;
-  let isEditor = false;
-  let isReviewer = false;
+  let manuscriptPageUrl = `${baseUrl}/versions/${manuscript.id}`
+  let isEditor = false
+  let isReviewer = false
+
   if (selectedEmail) {
     // If the email of a pre-existing user is selected
     // Get that user
@@ -83,18 +84,34 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
     receiverName = userReceiver.username || userReceiver.defaultIdentity.name || ''
 
     const userCurrentRoles = await userReceiver.currentRoles(manuscript)
-    const manuscriptRoles = userCurrentRoles.find(data => data.id === manuscript.id)
+
+    const manuscriptRoles = userCurrentRoles.find(
+      data => data.id === manuscript.id,
+    )
+
     const editorRoles = ['editor', 'handlingEditor', 'seniorEditor']
-    const reviewerRoles = ['accepted:reviewer', 'completed:reviewer', 'invited:reviewer', 'reviewer']
-    isEditor = manuscriptRoles && manuscriptRoles.roles.some(role => editorRoles.includes(role))
-    isReviewer = manuscriptRoles && manuscriptRoles.roles.some(role => reviewerRoles.includes(role))
+
+    const reviewerRoles = [
+      'accepted:reviewer',
+      'completed:reviewer',
+      'invited:reviewer',
+      'reviewer',
+    ]
+
+    isEditor =
+      manuscriptRoles &&
+      manuscriptRoles.roles.some(role => editorRoles.includes(role))
+    isReviewer =
+      manuscriptRoles &&
+      manuscriptRoles.roles.some(role => reviewerRoles.includes(role))
   }
+
   if (isEditor) {
-    manuscriptPageUrl += '/decision';
+    manuscriptPageUrl += '/decision'
   } else if (isReviewer) {
-    manuscriptPageUrl += '/review';
+    manuscriptPageUrl += '/review'
   } else {
-    manuscriptPageUrl += '/submit';
+    manuscriptPageUrl += '/submit'
   }
 
   const manuscriptId = manuscript.id
@@ -137,7 +154,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
     'reviewInvitationEmailTemplate',
     'reminderAuthorInvitationTemplate',
     'reminderReviewerInvitationTemplate',
-    'reviewerInvitationRevisedPreprintTemplate'
+    'reviewerInvitationRevisedPreprintTemplate',
   ]
 
   if (invitationContainingEmailTemplate.includes(selectedTemplate)) {
