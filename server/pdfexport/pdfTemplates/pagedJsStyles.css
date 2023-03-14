@@ -126,39 +126,39 @@ h1.title {
   font-weight: 600;
 }
 
-.authors,
-.affiliations {
+.formattedAuthors,
+.formattedAffiliations {
   font-size: 1em;
   text-align: right;
   margin-top: 0;
   line-height: 1.3;
   margin-bottom: 0;
 }
-.authors {
+.formattedAuthors {
   font-weight: 600;
   margin-bottom: 0.5em;
 }
 
-.affiliations {
+.formattedAffiliations {
   margin-left: 30mm;
 }
 
-.authors sup {
+.formattedAuthors sup {
   color: var(--color-main);
   font-size: 0.8em;
 }
 
-:is(.authors, .affiliations) ul {
+:is(.formattedAuthors, .formattedAffiliations) ul {
   list-style-type: none;
   margin: 0;
   padding: 0;
 }
 
-:is(.authors, .affiliations) ul li {
+:is(.formattedAuthors, .formattedAffiliations) ul li {
   display: inline;
 }
 
-.affiliations {
+.formattedAffiliations {
   margin-top: 0;
   font-size: 0.9em;
   margin-bottom: 1em;
@@ -500,7 +500,7 @@ a {
 		margin-right: 8px;
 	} */
 
-	.formattedAuthors {
+	/* .formattedAuthors {
 		font-weight: 700;
 		color: var(color-main-dark); 
 		margin-bottom: 0;
@@ -510,24 +510,28 @@ a {
 	.formmatedAuthors small {
 		color: black;
 		font-weight: 400;
-	}
+	} */
 
-	.formattedAffiliations {
+ .formattedAffiliations { 
 		list-style-type: none;
 		margin: 0; 
+		margin-left: 30mm;
+		margin-bottom: 1em;
 		padding: 0;
-		text-align: left;
+
+	/*	text-align: left; */
 	}
 
-	.formattedAffiliations li {
-		display: inline-block;
+ 	.formattedAffiliations li {
+		list-style-type: none; 
+		display: inline-block; 
 		margin: 0;
 	}
-
+/*
 	.formattedAffiliations li small {
 		color: black;
 		font-weight: 400;
-	}
+	} */
 
 
 
