@@ -27,6 +27,63 @@ try {
   console.log("userArticleMetadata doesn't exist.")
 }
 
+const makeFormattedAuthors = (authors, correspondingAuthor) => {
+  // authors is an array of objects with firstName, lastName, affiliation, email
+  // correspondingAuthor is an email address
+
+  // This returns something like this:
+  // <p class="formattedAuthors">Bob Aaaaa <sup>a</sup><sup>*</sup>, Bob Bbbbbbb <sup>a</sup>, Bob Ccccccccc <sup>b</sup>, Bob Dddddddd <sup>c</sup></p>
+  // <ul class="formattedAffiliations"><li>a: Affiliation 1</li>,<li>b: Affiliation 2</li>,<li>c: Affiliation 3</li></ul>
+
+  let outHtml = `<p class="formattedAuthors">`
+  const alphabet = 'abcdefghijklmnopqrstuvwxyz'
+
+  const affiliationMemo = [...new Set(authors.map(x => x.affiliation))]
+    .sort()
+    .map((affiliation, index) => ({
+      label: alphabet[index % 26],
+      value: affiliation,
+    }))
+
+  const outAuthors = [] // an array of formatted author names
+
+  for (let i = 0; i < authors.length; i += 1) {
+    let thisAuthor = ''
+
+    // we are assuming that author.affiliation is a single string. We could make this an array?
+    const affliationList = affiliationMemo
+      .filter(x => x.value === authors[i].affiliation)
+      .map(x => x.label)
+
+    thisAuthor += `${authors[i].firstName} ${authors[i].lastName}`
+    // We could include the email address here, but it's not necessary:
+    // thisAuthor += ` <small>(${authors[i].email})</small>`
+
+    if (affliationList.length) {
+      thisAuthor += ` <sup><small>${affliationList.join(', ')}</small></sup>`
+    }
+
+    if (correspondingAuthor && correspondingAuthor === authors[i].email) {
+      // check if there is a corresponding author; if there is one, add a star to the author's name
+      thisAuthor += ` <sup>*</sup>`
+    }
+
+    outAuthors.push(thisAuthor)
+  }
+
+  outHtml += outAuthors.join(', ')
+
+  outHtml += `</p>`
+  outHtml += `<ul class="formattedAffiliations">${affiliationMemo
+    .map(
+      affiliation =>
+        `<li><small>${affiliation.label}:</small> ${affiliation.value}</li>`,
+    )
+    .join(', ')}</ul>`
+  // console.log('\n\n\nFormatted authors: \n\n', outHtml, '\n\n\n')
+  return outHtml
+}
+
 const articleMetadata = manuscript => {
   const meta = {}
 
@@ -46,6 +103,22 @@ const articleMetadata = manuscript => {
   if (manuscript && manuscript.submission) {
     meta.submission = manuscript.submission
 
+    if (manuscript.submission.topic) {
+      meta.topic = manuscript.submission.topic
+    }
+
+    if (manuscript.submission.objectType) {
+      meta.objectType = manuscript.submission.objectType
+    }
+
+    if (manuscript.submission.Funding) {
+      meta.funding = manuscript.submission.Funding
+    }
+
+    if (manuscript.submission.abstract) {
+      meta.abstract = manuscript.submission.abstract
+    }
+
     if (manuscript.submission.AuthorCorrespondence) {
       meta.authorCorrespondence = manuscript.submission.AuthorCorrespondence
     }
@@ -57,18 +130,24 @@ const articleMetadata = manuscript => {
       )
     }
 
-    if (manuscript.submission.authors && manuscript.submission.authors.length) {
+    if (
+      manuscript.submission.authorNames &&
+      manuscript.submission.authorNames.length
+    ) {
       meta.authors = []
 
-      // TODO: maybe make this prettier and a string with affiliations following?
-
-      meta.authors = manuscript.submission.authors.map(author => ({
+      meta.authors = manuscript.submission.authorNames.map(author => ({
         email: author.email || '',
         firstName: author.firstName || '',
         lastName: author.lastName || '',
         affiliation: author.affiliation || '',
         id: author.id || '',
       }))
+
+      meta.formattedAuthors = makeFormattedAuthors(
+        meta.authors,
+        manuscript.submission.AuthorCorrespondence, // does this need to be renamed?
+      )
     }
 
     if (manuscript.submission.dateReceived) {

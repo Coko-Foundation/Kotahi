@@ -132,21 +132,35 @@ const pdfHandler = async manuscriptId => {
 
   // Manually copy the two fonts to the folder that will be zipped. This is a temporary fix!
 
-  const originalFont1 = path.join(
-    __dirname,
-    '../../profiles/Newsreader-Italic-VariableFont-opsz-wght.ttf',
-  )
+  const fonts = [
+    'Reforma2018-Blanca.ttf',
+    'Reforma2018-BlancaItalica.ttf',
+    'Reforma2018-Gris.ttf',
+    'Reforma2018-GrisItalica.ttf',
+    'Reforma2018-Negra.ttf',
+    'Reforma2018-NegraItalica.ttf',
+    // The old fonts:
+    // 'Newsreader-Italic-VariableFont-opsz-wght.ttf',
+    // 'Newsreader-VariableFont-opsz-wght.ttf',
+  ]
 
-  const targetFont1 = `${dirName}/Newsreader-Italic-VariableFont-opsz-wght.ttf`
-  await copyFile(originalFont1, targetFont1)
+  fonts.forEach(async fontPath => {
+    const thisFont = path.join(__dirname, `../../profiles/${fontPath}`)
 
-  const originalFont2 = path.join(
-    __dirname,
-    '../../profiles/Newsreader-VariableFont-opsz-wght.ttf',
-  )
+    const targetFont = `${dirName}/${fontPath}`
+    await copyFile(thisFont, targetFont)
+  })
 
-  const targetFont2 = `${dirName}/Newsreader-VariableFont-opsz-wght.ttf`
-  await copyFile(originalFont2, targetFont2)
+  // const targetFont1 = `${dirName}/Newsreader-Italic-VariableFont-opsz-wght.ttf`
+  // await copyFile(originalFont1, targetFont1)
+
+  // const originalFont2 = path.join(
+  //   __dirname,
+  //   '../../profiles/Newsreader-VariableFont-opsz-wght.ttf',
+  // )
+
+  // const targetFont2 = `${dirName}/Newsreader-VariableFont-opsz-wght.ttf`
+  // await copyFile(originalFont2, targetFont2)
 
   // 2 zip this.
 
