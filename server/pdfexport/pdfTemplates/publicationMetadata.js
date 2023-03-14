@@ -17,13 +17,14 @@ const publicationMetadata = {
     { type: 'publisher', value: 'BR MED J' },
   ],
   journalTitle: 'Journal Title',
+  journalSlug: 'An Open Access Journal, continuously published',
   abbrevJournalTitle: 'Jour.Ti.',
   issn: [
     { type: 'print', value: '1063-777X' },
     { type: 'electronic', value: '1090-6517' },
   ],
   copyright: { name: 'name', description: 'description', year: 'year' },
-  publisher: { publisherName: 'elife' },
+  publisher: { publisherName: 'Publisher Name' },
   articleIdOnWebsite: 'x456789',
   publisherLogo:
     '' ||

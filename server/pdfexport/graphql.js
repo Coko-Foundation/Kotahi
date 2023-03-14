@@ -133,12 +133,12 @@ const pdfHandler = async manuscriptId => {
   // Manually copy the two fonts to the folder that will be zipped. This is a temporary fix!
 
   const fonts = [
-    'Reforma2018-Blanca.ttf',
-    'Reforma2018-BlancaItalica.ttf',
-    'Reforma2018-Gris.ttf',
-    'Reforma2018-GrisItalica.ttf',
-    'Reforma2018-Negra.ttf',
-    'Reforma2018-NegraItalica.ttf',
+    'NotoSans-Black.ttf',
+    'NotoSans-BlackItalic.ttf',
+    'NotoSans-Bold.ttf',
+    'NotoSans-BoldItalic.ttf',
+    'NotoSans-Italic.ttf',
+    'NotoSans-Regular.ttf',
     // The old fonts:
     // 'Newsreader-Italic-VariableFont-opsz-wght.ttf',
     // 'Newsreader-VariableFont-opsz-wght.ttf',

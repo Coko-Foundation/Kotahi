@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>{{article.meta.title}}</title>
+    <title>{{article.articleMetadata.title}}</title>
 				<!-- set mathjax configuration -->
 		<!--<script type="text/x-mathjax-config">
 				MathJax.Hub.Config({
@@ -96,11 +96,22 @@
 					<!-- <p>Copyright Holder,</p> -->
 					<!-- <p>Copyright description</p> -->
 				</section>
+				<p class="url doi">
+						{{article.articleMetadata.doi}}
+				</p>
+				<p id="journalTitle">
+						{{article.publicationMetadata.journalTitle}}
+				</p>
+				<p id="journalSlug">
+						{{article.publicationMetadata.journalSlug}}
+				</p>
       </aside>
     </section>
     <section class="content">
-        {{ article.articleMetadata.abstract | safe }}
-        {{ article.meta.source | safe }}
+			<section class="abstract">
+				{{ article.articleMetadata.abstract | safe }}
+			</section>
+			{{ article.meta.source | safe }}
     </section>
   </body>
 </html>

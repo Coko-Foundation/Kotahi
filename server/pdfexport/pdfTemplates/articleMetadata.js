@@ -107,6 +107,12 @@ const articleMetadata = manuscript => {
       meta.topic = manuscript.submission.topic
     }
 
+    if (manuscript.submission.DOI) {
+      meta.doi = manuscript.submission.DOI
+    } else {
+      meta.doi = 'DOI will be available soon.'
+    }
+
     if (manuscript.submission.objectType) {
       meta.objectType = manuscript.submission.objectType
     }

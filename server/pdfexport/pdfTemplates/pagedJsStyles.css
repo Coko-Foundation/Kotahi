@@ -1,70 +1,73 @@
 	/* variables.css */
 
-:root {
-  --font-content: "Reforma2018";
-  --font-title: "Reforma2018";
-  --color-body: "black";
-  --color-main: #4ce241;
-  --color-main: #0db800;
-  --color-main-dark: #187E49;
-  --color-main-light: #ccfce6;
-  --color-alt: orange;
-}
-/* Webfont: Reforma2018 Blanca */
-@font-face {
-  font-family: 'Reforma2018';
-  src: url('Reforma2018-Blanca.ttf') format('truetype');
-  font-style: normal;
-  font-weight: 300;
-}
+	:root {
+		--font-content: "NotoSans";
+		--font-title: "NotoSans";
+		--color-body: "black";
+		--color-main: rgb(37 61 145);
+		--color-main-light: rgb(231 231 242);
+		--color-grey: #aaa;
+	}
+	
+	@font-face {
+		font-family: 'NotoSans';
+		src: url('NotoSans-Black.ttf') format('truetype');
+		font-style: normal;
+		font-weight: 800;
+	}
+	
+	/* Webfont: NotoSans */
+	@font-face {
+		font-family: 'NotoSans';
+		src: url('NotoSans-BlackItalic.ttf') format('truetype');
+		font-style: italic;
+		font-weight: 800;
+	}
+	/* Webfont: NotoSans */
+	@font-face {
+		font-family: 'NotoSans';
+		src: url('NotoSans-Regular.ttf') format('truetype');
+		font-style: normal;
+		font-weight: 400;
+	}
+	
+	/* Webfont: NotoSans */
+	@font-face {
+		font-family: 'NotoSans';
+		src: url('NotoSans-Italic.ttf') format('truetype');
+		font-style: italic;
+		font-weight: 400;
+	}
+	/* Webfont: NotoSans Gris */
+	@font-face {
+		font-family: 'NotoSans';
+		src: url('NotoSans-Bold.ttf') format('truetype');
+		font-style: normal;
+		font-weight:  600;
+	}
+	
+	/* Webfont: NotoSans GrisItalica */
+	@font-face {
+		font-family: 'NotoSans';
+		src: url('NotoSans-BoldItalic.ttf') format('truetype');
+		font-style: italic;
+		font-weight: 600;
+	}
 
-/* Webfont: Reforma2018 BlancaItalica */
-@font-face {
-  font-family: 'Reforma2018';
-  src: url('Reforma2018-BlancaItalica.ttf') format('truetype');
-  font-style: italic;
-  font-weight: 300;
-}
-/* Webfont: Reforma2018 Gris */
-@font-face {
-  font-family: 'Reforma2018';
-  src: url('Reforma2018-Gris.ttf') format('truetype');
-  font-style: normal;
-  font-weight: 500;
-}
+	body {
+		font-family: var(--font-content);
+		font-size: 12px;
+		font-weight: 300;
+		line-height: 1.3;
+		widows: 1;
+		orphans: 1;
+	}
+	
+/* header */
 
-/* Webfont: Reforma2018 GrisItalica */
-@font-face {
-  font-family: 'Reforma2018';
-  src: url('Reforma2018-GrisItalica.ttf') format('truetype');
-  font-style: italic;
-  font-weight: 500;
-}
-
-/* Webfont: Reforma2018 Negra */
-@font-face {
-  font-family: 'Reforma2018';
-  src: url('Reforma2018-Negra.ttf') format('truetype');
-  font-style: normal;
-  font-weight: 700;
-}
-
-/* Webfont: Reforma2018 NegraItalica */
-@font-face {
-  font-family: 'Reforma2018';
-  src: url('Reforma2018-NegraItalica.ttf') format('truetype');
-  font-style: italic;
-  font-weight: 700;
-}
-
-body {
-  font-family: var(--font-content);
-  font-size: 13px;
-  font-weight: 300;
-  line-height: 1.3;
-  widows: 1;
-  orphans: 1;
-}
+/* header {
+  background: var(--color-main-light);
+} */
 
 p {
   line-height: 1.5;
@@ -73,29 +76,42 @@ p {
 /* // main / */
 
 .content a {
-  color: var(--color-main-dark);
+  color: var(--color-main);
   text-decoration: underline;
   text-underline-offset: 3px;
-  text-decoration-color: var(--color-body);
+  text-decoration-color: var(--color-main-light);
 }
 
 #researchLevel {
   text-transform: uppercase;
-  text-align: right;
-  border-bottom: 1px solid var(--color-main);
+  font-family: serif;
+  font-size: 1.3em;
+  color: var(--color-main);
+  letter-spacing: 0.2ch;
+  width: max-content;
+  display: inline-block;
+  margin-top: 1.4em;
+  margin-bottom: 0.4em;
+  font-size: 1.6em;
 }
 
 #topicList {
+  display: inline;
+  width: max-content;
+  color: var(--color-main);
   list-style-type: none;
-  display: flex;
-  margin-left: 2ch;
-  color: white;
+  text-align: right;
   padding: 0;
   margin-left: 0;
   margin-bottom: 0;
+  margin-left: auto;
+  text-align: right;
 }
+
 #topicList li {
   margin-right: 2ch;
+  margin-left: 3ch;
+  display: inline-block;
   color: var(--color-main-dark);
   /*experimental */
 }
@@ -104,16 +120,32 @@ p {
 }
 h1.title {
   margin-top: 0;
-  font-size: 1.8em;
+  font-size: 1.5em;
+  margin-top: 0;
   line-height: 1.3;
+  font-weight: 600;
 }
 
 .authors,
-.affiliations, .formattedAuthors {
+.affiliations {
   font-size: 1em;
+  text-align: right;
   margin-top: 0;
   line-height: 1.3;
   margin-bottom: 0;
+}
+.authors {
+  font-weight: 600;
+  margin-bottom: 0.5em;
+}
+
+.affiliations {
+  margin-left: 30mm;
+}
+
+.authors sup {
+  color: var(--color-main);
+  font-size: 0.8em;
 }
 
 :is(.authors, .affiliations) ul {
@@ -126,16 +158,7 @@ h1.title {
   display: inline;
 }
 
-:is(.authors, .affiliations) sup {
-  color: var(--color-main-dark);
-}
-
-.affiliations sup, .formattedAffiliations sup {
-  font-size: 1.2em;
-  vertical-align: bottom;
-}
-
-.affiliations, .formattedAffiliations {
+.affiliations {
   margin-top: 0;
   font-size: 0.9em;
   margin-bottom: 1em;
@@ -150,24 +173,20 @@ h6 {
   margin-bottom: 0.3em;
   font-weight: 700;
   break-after: avoid;
+  color: var(--color-main);
 }
 h2 {
   font-size: 1.4em;
   margin-top: 2em;
-  border-bottom: 2px solid var(--color-main);
 }
 
 h3 {
   font-size: 1.4em;
   font-weight: 500;
-  text-decoration: underline;
-  text-underline-offset: 4px;
 }
 
-h4 {
-  font-size: 1.2em;
-  text-decoration: underline;
-}
+/* h4 {
+} */
 
 h5 {
   text-transform: uppercase;
@@ -179,32 +198,38 @@ h6 {
   font-size: 1em;
   text-decoration: underline;
 }
-footnote {
+/* footnote {
   display: none;
-}
+} */
 footnote {
   float: footnote;
-  margin-left: 40mm;
-  margin-top: 1em;
-  font-size: 12px;
+  margin: 1em 10ch 0;
+  /* margin-left: 40mm; */
+  /* margin-top: 1em; */
+  /* font-size: 12px; */
 }
 
 ::footnote-call {
-  color: var(--color-main-dark);
+  color: var(--color-main);
   font-weight: 500;
 }
 
 ::footnote-marker {
   content: counter(footnote) '. ';
-  color: var(--color-main-dark);
+  /* color: var(--color-main-dark); */
   font-weight: 500;
   line-height: 0;
 }
 
+/* footnote debugger */
+/* [data-has-notes] {
+  color: orange;
+} */
 
 table {
   border-collapse: collapse;
   font-size: 0.8em;
+  break-inside: avoid;
 }
 table :is(td, tr) {
   padding: 0;
@@ -223,6 +248,7 @@ table thead th {
 
 table tr {
   border-bottom: 1px solid var(--color-main);
+  /* break-inside: avoid; */
 }
 
 /*figure*/
@@ -232,15 +258,20 @@ main {
 }
 
 figure {
+  break-inside: avoid;
   display: block;
-  position: relative;
   counter-increment: figure;
-  width: 100%;
+  /* width: 100%; */
   display: block;
   height: auto;
-  margin: 0.5em 0;
-  border: 2px solid var(--color-main);
+  margin: 0.5em 8ch;
+  /* border: 2px solid var(--color-main); */
   padding: 1em 2ch;
+  /* column-span: all; */
+}
+
+figure img {
+  margin: auto;
 }
 
 figure[data-split-to] {
@@ -257,163 +288,201 @@ img {
   object-fit: contain;
   object-position: top left;
 }
-figure::before {
-  border-bottom: 2px solid var(--color-main);
-  content: 'figure ' counter(figure);
-  padding-bottom: 0.2em;
-  left: -13ch;
-  width: 10ch;
-  display: block;
-  font-weight:800;
-  position: absolute;
-  font-size: 0.8em;
-  font-style: italic;
-  text-align: right;
-  padding-right: 3ch;
-  color: var(--color-main);
-}
 figcaption {
-  font-style: italic;
   font-size: 0.9em;
   margin-top: 1em;
 }
 figcaption em {
   font-style: normal;
 }
+
+.doi {
+  display: block;
+  string-set: doi content(text);
+  text-align: right;
+  width: 100%;
+  margin-left:auto;
+  margin: 0;
+  line-height: 1;
+  display:none;
+}
+
+
+.marginData {
+  font-size: 10px;
+}
+.marginData h4 {
+  font-weight: 300;
+}
+
+.marginData {
+  /* margin-left: calc(var(--pagedjs-margin-left) * -1); */
+  /* margin-right: calc(var(--pagedjs-margin-right) * -1); */
+  /* padding-right: var(--pagedjs-margin-right); */
+  /* padding-left: var(--pagedjs-margin-left); */
+  /* background: var(--color-main-light); */
+  /* padding-top: 0.4em; */
+  /* padding-bottom: 0.3em; */
+  display: block;
+  margin-top: 2em;
+  padding: 1em 0;
+  line-height: 1.2;
+  border-top: 1px solid var(--color-main);
+}
+.marginData h4 {
+  text-decoration: none;
+  margin: 0;
+}
+.marginData > section {
+  display: grid;
+  align-items: baseline;
+  grid-gap: 0 4ch;
+  grid-template-columns: max-content 1fr;
+}
+.marginData .date {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+}
+
+ol ::marker {
+  color: orange;
+}
+
+.content,
+header,
+.marginData {
+  /* columns: 2; */
+  gap: 4ch;
+  font-size: 0.9em;
+  margin: 0 10ch 0 10ch;
+}
+
+.content p {
+  margin-top: 0;
+}
+
+a {
+  white-space: pre-wrap;
+  overflow-wrap: break-word;
+  color: var(--color-main);
+}
 @page {
   size: letter;
-  margin: 18mm 14mm 16mm 22mm;
+  margin: 18mm 14mm 26mm 14mm;
 
-/* stylelint-disable-line */
   @footnote {
     float: bottom;
-    border-top: 1px dashed var(--color-main);
-  }
-}
-
-.logo {
-  position: fixed;
-  bottom: 3mm;
-  top: unset;
-  left: 10mm;
-  width: 30mm;
-  border-right: 2px solid var(--color-main);
-  border-top: 2px solid var(--color-main);
-  background: white;
-  padding-top: 2em;
-  padding-right: 3ch;
-}
-
-/* // first page // */
-.pagedjs_first_page .logo {
-  width: 30mm;
-  top: 20mm;
-  left: 18mm;
-  padding-right: 2em;
-  border-right: 2px solid var(--color-main);
-  border-bottom: 2px solid var(--color-main);
-  border-top: transparent;
-  display: block;
-}
-
-/* // header */
-header {
-  margin-left: 40mm;
-}
-h1.title {
-  margin-top: 0.3em;
-/* stylelint-disable-line */  
-string-set: articletitle content(text);
-}
-
-@page {
-  border-left: 2px solid var(--color-main);
-
-  @top-right-corner {
-    content: counter(page);
-    border-right: 1px solid var(--color-main);
-    padding-right: 3ch;
-    font-weight: 800;
-    color: var(--color-main-dark);
-    border-right: 30px solid var(--color-main);
-    padding-right: 3ch;
-  }
-
-  @top-left {
-    content: string(articletitle);
-    font-style: italic;
-    text-decoration: underline;
-    text-underline-offset: 3px;
-    text-decoration-color: var(--color-main-dark);
+    font-size: 10px;
+    margin: 0 10ch;
   }
 }
 
 @page :first {
-  margin-top: 10mm;
+  margin-top: 30mm;
+  @top-left-corner {
+    border: 0;
+    content: none;
+  }
   @top-left {
     content: none;
   }
-  @top-right-corner {
+  @top-right {
     content: none;
-    border-right: 1px solid transparent;
-  }
-  @bottom-right-corner {
-    content: counter(page);
-    font-weight: 800;
-    color: var(--color-main-dark);
-    border-right: 30px solid var(--color-main);
-    padding-right: 3ch;
   }
 }
 
-.content {
-  margin-left: 40mm;
+.logo {
+  width: 30mm;
+  top: -28mm;
+  position: absolute;
+  padding-top: 2em;
+  padding-right: 3ch;
+  background: white;
 }
 
-.marginData {
-  margin-left: 40mm;
+.titlepage::before {
+  content: string(journalSlug); 
   font-size: 0.8em;
-  /* padding-left: 7mm; */
+  color: white;
+  margin-left: calc(var(--pagedjs-margin-left) * -1);
+  margin-right: calc(var(--pagedjs-margin-right) * -1);
+  background: var(--color-main);
+  display: block;
+  padding-top: 0.4em;
+  padding-bottom: 0.3em;
+  line-height: 1.2;
+  padding-right: 5ch;
+  text-align: right;
 }
 
-.marginData h4 {
-  text-decoration: none;
-  border-bottom: none;
+.titlepage[data-split-from]::before {
+  content: none;
 }
 
-.emailList {
-  font-style: italic;
-  color: var(--color-main-dark);
-  font-size: 0.8em;
+#researchLevel {
+  string-set: researchLevel content(text);
 }
 
-.emailList h4 span {
-	font-weight: normal;
-	display: inline-block;
+.title {
+  string-set: title content(text);
 }
 
-.emailList + section {
-  font-weight: 400;
-}
-section.competing h4, section.funding h4 {
-  font-weight: 400;
-  display: inline;
+#journalTitle {
+	string-set: journalTitle content(text);
+	display: none;
 }
 
-section.competing p, section.funding p {
-  margin-left: 1ch;
-  display: inline;
-  font-weight: 300;
+#journalSlug {
+	string-set: journalSlug content(text);
+	display: none;
 }
 
-.date {
-  display: grid;
-  grid-template-columns: repeat(6, 1fr);
-}
-.date h4 {
-  font-weight: 400;
-  text-transform: uppercase;
-  font-size: 0.8em;
+@page {
+  @top-left-corner {
+    content: ' ';
+    border-bottom: 3px solid var(--color-main);
+    width: 100%;
+    display: block;
+    width: var(--pagedjs-width);
+    top: 3em;
+    position: absolute;
+  }
+  @top-left {
+    font-size: 10px;
+    color: var(--color-grey);
+    margin-top: -2em;
+    content: string(researchLevel) ' — ' string(title);
+		/* write-space: nowrap; */
+  }
+  @top-right {
+    font-size: 10px;
+    color: var(--color-grey);
+    margin-top: -2em;
+    content: string(journalTitle);
+    color: var(--color-main);
+  }
+  @bottom-left-corner {
+    content: ' ';
+    border-bottom: 3px solid var(--color-main);
+    width: 100%;
+    display: block;
+    width: var(--pagedjs-width);
+    bottom: 5em;
+    position: absolute;
+  }
+  @bottom-left {
+    font-size: 10px;
+    color: var(--color-grey);
+    margin-top: 4em;
+    content: string(doi) ' — ' string(title);
+  }
+  @bottom-right {
+    font-size:10px;
+    margin-top: 4em;
+    content: counter(page) ' of ' counter(pages);
+    color: var(--color-grey);
+    width: 30ch;
+  }
 }
 
 /* MY TWEAKS */

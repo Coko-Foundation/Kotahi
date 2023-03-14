@@ -102,13 +102,14 @@ const applyTemplate = async (articleData, includeFontLinks) => {
 
   const thisArticle = articleData
   // const htmlWithFixedMath = fixMathTags(articleData.meta.source)
-  // TODO: if we're using local MathJax, don't do fix math tags, do run the code through makeSvgsFromLatex is in pdfExport
+  // If we're using non-PagedJS MathJax, don't fix math tags, run the code through makeSvgsFromLatex is in pdfExport
   const { svgedSource } = await makeSvgsFromLatex(articleData.meta.source, true)
 
   thisArticle.meta.source = svgedSource
 
   thisArticle.publicationMetadata = publicationMetadata
   thisArticle.articleMetadata = articleMetadata(thisArticle)
+  // console.log('thisArticle.articleMetadata: ', thisArticle.articleMetadata)
   let renderedHtml = nunjucks.renderString(template.tmplStr, {
     article: thisArticle,
   })
