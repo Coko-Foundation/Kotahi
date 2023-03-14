@@ -373,7 +373,7 @@ const sendAutomatedTaskEmailNotifications = async () => {
             recipientEmail: recipient.email,
           }
 
-          const ctx = {}
+          const ctx = null
           // eslint-disable-next-line no-await-in-loop
           await sendEmailWithPreparedData(notificationInput, ctx, editor)
           // eslint-disable-next-line no-await-in-loop
