@@ -313,7 +313,7 @@ const sendNotification = async n => {
         const notificationInput = {
           manuscript,
           selectedTemplate: n.emailTemplateKey,
-          externalEmail: recipient.email,
+          selectedEmail: recipient.email,
           externalName: recipient.name, // New User username
           currentUser,
         }
