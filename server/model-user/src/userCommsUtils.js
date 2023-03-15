@@ -95,7 +95,6 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
     const reviewerRoles = [
       'accepted:reviewer',
       'completed:reviewer',
-      'invited:reviewer',
       'reviewer',
     ]
 
