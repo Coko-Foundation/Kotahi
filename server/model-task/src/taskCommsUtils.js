@@ -312,7 +312,7 @@ const sendNotification = async n => {
       try {
         const notificationInput = {
           manuscript,
-          // selectedEmail: recipient.email, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing receiver being selected
+          selectedEmail: recipient.email,
           selectedTemplate: n.emailTemplateKey,
           externalEmail: recipient.email,
           externalName: recipient.name, // New User username

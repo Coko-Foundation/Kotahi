@@ -1,6 +1,4 @@
-const GenericTaskNotificationEmailTemplate = ({
-  receiverName,
-}) => {
+const GenericTaskNotificationEmailTemplate = ({ receiverName }) => {
   const result = {
     cc: '',
     subject: 'Kotahi | Task notification',

@@ -14,11 +14,11 @@ class Team extends BaseModel {
   static get modifiers() {
     return {
       onlyAuthors(builder) {
-        builder.where('role', 'author');
+        builder.where('role', 'author')
       },
       onlyEditors(builder) {
-        builder.where('role', 'editor');
-      }
+        builder.where('role', 'editor')
+      },
     }
   }
 
