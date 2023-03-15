@@ -54,7 +54,7 @@
           {{article.articleMetadata.objectType}}
         </p>
 				<ul id="topicList">
-					{% for topic in article.articleMetadata.topic %}<li>{{ topic }}</li>{% endfor %}
+					{% for topic in article.articleMetadata.topics %}<li>{{ topic }}</li>{% endfor %}
 				</ul>
         <h1 class="title">{{article.meta.title}}</h1>
 				{{article.articleMetadata.formattedAuthors | safe}} 

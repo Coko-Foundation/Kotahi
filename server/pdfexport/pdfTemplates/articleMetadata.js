@@ -97,6 +97,10 @@ const articleMetadata = manuscript => {
       meta.topic = manuscript.submission.topic
     }
 
+    if (manuscript.submission.topics) {
+      meta.topics = manuscript.submission.topics
+    }
+
     if (manuscript.submission.DOI) {
       meta.doi = manuscript.submission.DOI
     } else {
@@ -169,6 +173,7 @@ const articleMetadata = manuscript => {
     // Is there a way to make that work while still keeping it JSON?
     if (value) meta[key] = manuscript.submission[value]
     // This might work for basic things on the submission form, but we should have something more elegant.
+    // Make this work like what we're doing in server/publishing/docmaps/index.js
   })
 
   return meta
