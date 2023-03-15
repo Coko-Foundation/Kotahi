@@ -73,11 +73,11 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   let isEditor = false
   let isReviewer = false
 
-  if (selectedEmail) {
+  if (receiverEmail) {
     // If the email of a pre-existing user is selected
     // Get that user
     const [userReceiver] = await models.User.query()
-      .where({ email: selectedEmail })
+      .where({ email: receiverEmail })
       .withGraphFetched('[defaultIdentity]')
 
     /* eslint-disable-next-line */
