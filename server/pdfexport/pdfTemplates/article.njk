@@ -109,7 +109,9 @@
 			<section class="abstract">
 				{{ article.articleMetadata.abstract | safe }}
 			</section>
-			{{ article.meta.source | safe }}
+			<section class="article">
+				{{ article.meta.source | safe }}
+			</section>
     </section>
   </body>
 </html>
