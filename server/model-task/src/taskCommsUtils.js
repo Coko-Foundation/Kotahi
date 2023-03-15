@@ -213,9 +213,12 @@ const sendNotification = async n => {
   const { assigneeTypes } = taskConfigs
   let notificationRecipients = []
 
+  let recipientIsExternal = false
+
   switch (n.recipientType) {
     case recipientTypes.UNREGISTERED_USER:
       if (n.recipientEmail) {
+        recipientIsExternal = true
         notificationRecipients = [
           {
             email: n.recipientEmail,
@@ -255,6 +258,7 @@ const sendNotification = async n => {
       switch (n.task.assigneeType) {
         case assigneeTypes.UNREGISTERED_USER:
           if (n.task.assigneeEmail) {
+            recipientIsExternal = true
             notificationRecipients = [
               {
                 email: n.task.assigneeEmail,
@@ -310,13 +314,23 @@ const sendNotification = async n => {
 
     if (n.emailTemplateKey) {
       try {
-        const notificationInput = {
+        let notificationInput = {
           manuscript,
-          // selectedEmail: recipient.email, // selectedExistingRecieverEmail (TODO?): This is for a pre-existing receiver being selected
           selectedTemplate: n.emailTemplateKey,
-          externalEmail: recipient.email,
           externalName: recipient.name, // New User username
           currentUser,
+        }
+
+        if (recipientIsExternal) {
+          notificationInput = {
+            ...notificationInput,
+            externalEmail: recipient.email,
+          }
+        } else {
+          notificationInput = {
+            ...notificationInput,
+            selectedEmail: recipient.email,
+          }
         }
 
         const emailTemplateOption = n.emailTemplateKey.replace(
@@ -334,7 +348,7 @@ const sendNotification = async n => {
           taskId: n.task.id,
           content: messageBody,
           emailTemplateKey: emailTemplateOption,
-          senderEmail: editor.email,
+          senderEmail: editor ? editor.email : '',
           recipientEmail: recipient.email,
         }
 
@@ -388,10 +402,14 @@ const getTeamRecipients = async (emailNotification, roles) => {
     })
     .whereIn('role', roles) // no await here because it's a sub-query
 
-  const teamMemberUsers = await Team.relatedQuery('users').for(teamQuery)
-  return teamMemberUsers.map(user => ({
-    email: user.email,
-    name: user.username,
+  const teamMembers = await Team.relatedQuery('members')
+    .whereNot('status', 'invited')
+    .for(teamQuery)
+    .withGraphFetched('user')
+
+  return teamMembers.map(member => ({
+    email: member.user.email,
+    name: member.user.username,
   }))
 }
 

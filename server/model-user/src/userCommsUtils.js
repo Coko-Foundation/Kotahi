@@ -144,7 +144,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   const toEmail = receiverEmail
   const purpose = 'Inviting an author to accept a manuscript'
   const status = 'UNANSWERED'
-  const senderId = invitationSender.id
+  const senderId = invitationSender ? invitationSender.id : null
 
   let invitationId = ''
 
