@@ -1,4 +1,7 @@
-const GenericTaskNotificationEmailTemplate = ({ receiverName }) => {
+const GenericTaskNotificationEmailTemplate = ({
+  receiverName,
+  manuscriptPageUrl,
+}) => {
   const result = {
     cc: '',
     subject: 'Kotahi | Task notification',
@@ -7,7 +10,9 @@ const GenericTaskNotificationEmailTemplate = ({ receiverName }) => {
 
   result.content = `<p>
       <p>Dear ${receiverName}</p>
-      <p>A task requires your attention</p>
+      <p>A task requires your attention<br />
+      <a href="${manuscriptPageUrl}" target="_blank">${manuscriptPageUrl}</a>
+      </p>
       <p>
         Regards, <br>
         Kotahi team
