@@ -1,6 +1,5 @@
 const dateFns = require('date-fns')
 
-const config = require('config')
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
 const TaskEmailNotification = require('./taskEmailNotification')

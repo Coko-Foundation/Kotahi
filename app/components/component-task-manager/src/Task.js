@@ -43,10 +43,7 @@ const TaskRow = styled.div`
 `
 
 const TaskRowContainer = styled.div`
-  padding-top: 10px;
-  padding-bottom: 15px;
-  padding-left: 8px;
-  padding-right: 8px;
+  padding: 10px 8px 15px 8px;
 
   & + div {
     border-top: 2px solid rgba(191, 191, 191, 0.5);
@@ -77,9 +74,9 @@ const TitleCell = styled.div`
 `
 
 const AssigneeCell = styled.div`
-  justify-content: flex-start;
-  flex-direction: column;
   align-items: start;
+  flex-direction: column;
+  justify-content: flex-start;
 `
 
 const DueDateCell = styled.div`
@@ -92,11 +89,11 @@ const StatusCell = styled.div`
 `
 
 const StatusActionCell = styled.div`
+  /* stylelint-disable-next-line declaration-no-important */
+  background: none !important;
+  border-right: ${grid(1)} solid transparent;
   flex: 0 1 12em;
   justify-content: flex-start;
-  background: none !important;
-  padding-right: ${grid(1)};
-  border-right: ${grid(1)} solid transparent;
 
   ${props =>
     props.isOverdue
@@ -104,15 +101,17 @@ const StatusActionCell = styled.div`
           border-right-color: ${th('colorError')};
         `
       : ''}
+
+  padding-right: ${grid(1)};
 `
 
 const DurationDaysCell = styled.div`
-  display: flex;
-  justify-content: flex-start;
   align-items: center;
-  position: relative;
+  display: flex;
   height: 45px;
+  justify-content: flex-start;
   line-height: 1.5;
+  position: relative;
 `
 
 const Handle = styled.div`
@@ -158,12 +157,12 @@ const ModalContainer = styled(LooseColumn)`
 
 const ActionDialog = styled.div`
   background: white;
+  border-radius: 6px;
   box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
   left: -80px;
   position: absolute;
   top: 15px;
   z-index: 9999;
-  border-radius: 6px;
 `
 
 const BaseLabel = styled.div`
@@ -174,6 +173,7 @@ const BaseLabel = styled.div`
     border-top-left-radius: 6px;
     border-top-right-radius: 6px;
   }
+
   &:last-child {
     border-bottom-left-radius: 6px;
     border-bottom-right-radius: 6px;
@@ -190,16 +190,16 @@ const DeleteLabel = styled(BaseLabel)``
 
 const TaskAction = styled.div`
   cursor: pointer;
-  position: relative;
   display: flex;
+  position: relative;
 `
 
 const BaseFieldContainer = styled.div`
+  /* align-items: flex-start; */
+  background: transparent;
   display: flex;
   flex-direction: column;
-  background: transparent;
   line-height: 1em;
-  /* align-items: flex-start; */
 `
 
 const TitleFieldContainer = styled(BaseFieldContainer)`
@@ -216,9 +216,9 @@ const DurationDaysFieldContainer = styled(BaseFieldContainer)`
 `
 
 const DueDateFieldContainer = styled(BaseFieldContainer)`
+  align-items: flex-end;
   flex: 0 0 16em;
   flex-direction: row;
-  align-items: flex-end;
 
   > div + div {
     margin-left: ${grid(1)};
@@ -358,9 +358,10 @@ const Task = ({
         : ' days'
   }
 
-  const displayDefaultDurationDays = task.defaultDurationDays !== null
-    ? `${task.defaultDurationDays}${displayDefaultDurationDaysUnit}`
-    : 'None'
+  const displayDefaultDurationDays =
+    task.defaultDurationDays !== null
+      ? `${task.defaultDurationDays}${displayDefaultDurationDaysUnit}`
+      : 'None'
 
   const dueDateLabel = moment
     .tz(task.dueDate, config.teamTimezone)
@@ -565,20 +566,39 @@ const Task = ({
               ) : (
                 <DueDateFieldContainer>
                   <div>
-                    <DueDateHeader>
-                      {task.status === status.NOT_STARTED
-                        ? 'Duration'
-                        : 'Due date'}
-                    </DueDateHeader>
-                    <DueDateField
-                      compact
-                      displayDefaultDurationDays={displayDefaultDurationDays}
-                      dueDateLocalString={dueDateLocalString}
-                      task={task}
-                      transposedDueDate={transposedDueDate}
-                      transposedEndOfToday={transposedEndOfToday}
-                      updateTask={updateTask}
-                    />
+                    {task.status === status.NOT_STARTED ? (
+                      <>
+                        <DueDateHeader>Duration</DueDateHeader>
+                        <DurationDaysCell>
+                          <CounterField
+                            minValue={0}
+                            onChange={val => {
+                              updateTask(task.id, {
+                                ...task,
+                                defaultDurationDays: val,
+                              })
+                            }}
+                            showNone
+                            value={task.defaultDurationDays}
+                          />
+                        </DurationDaysCell>
+                      </>
+                    ) : (
+                      <>
+                        <DueDateHeader>Due date</DueDateHeader>
+                        <DueDateField
+                          compact
+                          displayDefaultDurationDays={
+                            displayDefaultDurationDays
+                          }
+                          dueDateLocalString={dueDateLocalString}
+                          task={task}
+                          transposedDueDate={transposedDueDate}
+                          transposedEndOfToday={transposedEndOfToday}
+                          updateTask={updateTask}
+                        />
+                      </>
+                    )}
                   </div>
                   <div>
                     <StatusActionCell isOverdue={isOverdue}>

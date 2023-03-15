@@ -7,31 +7,31 @@ import { transposeFromLocalToTimezone } from '../../../shared/dateUtils'
 import theme from '../../../theme'
 
 const BaseDueDateCell = styled.div`
+  align-items: center;
+  /* stylelint-disable-next-line declaration-no-important */
   background: ${theme.colors.neutral.gray99} !important;
   border: 1px solid ${theme.colors.neutral.gray80};
-  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.07);
   border-radius: ${theme.borderRadius};
-
+  box-shadow: inset 0px 0px 4px rgba(0, 0, 0, 0.07);
   display: flex;
-  align-items: center;
   justify-content: flex-start;
-  position: relative;
   line-height: 1em;
   min-height: 45px;
+  position: relative;
 
   > div {
     width: 100%;
   }
 
   button {
-    width: 100%;
+    color: ${theme.colors.neutral.gray20};
     display: flex;
     flex-direction: row-reverse;
+    font-size: ${theme.fontSizeBase};
     justify-content: space-around;
-    font-size: ${theme.fontSizeBase}
-    line-height: {theme.lineHeightBase};
     letter-spacing: 0.01em;
-    color: ${theme.colors.neutral.gray20};
+    line-height: ${theme.lineHeightBase};
+    width: 100%;
 
     svg {
       margin-right: 6px;

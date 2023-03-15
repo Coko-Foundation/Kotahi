@@ -81,7 +81,8 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
       .withGraphFetched('[defaultIdentity]')
 
     /* eslint-disable-next-line */
-    receiverName = userReceiver.username || userReceiver.defaultIdentity.name || ''
+    receiverName =
+      userReceiver.username || userReceiver.defaultIdentity.name || ''
 
     const userCurrentRoles = await userReceiver.currentRoles(manuscript)
 
