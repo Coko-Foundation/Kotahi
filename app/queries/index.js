@@ -488,3 +488,24 @@ mutation($taskEmailNotificationLog: TaskEmailNotificationLogInput!) {
   }
 }
 `
+
+export const GET_CONFIG = gql`
+  query config {
+    oldConfig
+    config {
+      id
+      formData
+      active
+    }
+  }
+`
+
+export const UPDATE_CONFIG = gql`
+  mutation($id: ID!, $input: ConfigInput) {
+    updateConfig(id: $id, input: $input) {
+      id
+      formData
+      active
+    }
+  }
+`

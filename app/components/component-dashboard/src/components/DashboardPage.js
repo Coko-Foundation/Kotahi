@@ -1,10 +1,10 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext } from 'react'
 // import Authorize from 'pubsweet-client/src/helpers/Authorize'
 import { useQuery, useMutation } from '@apollo/client'
 
-import config from 'config'
 import ReactRouterPropTypes from 'react-router-prop-types'
 import { Redirect } from 'react-router-dom'
+import { ConfigContext } from '../../../config/src'
 import queries from '../graphql/queries'
 import mutations from '../graphql/mutations'
 import Dashboard from './Dashboard'
@@ -36,6 +36,8 @@ const getManuscriptsUserHasRoleIn = (manuscripts, userId, roles) =>
   )
 
 const DashboardPage = ({ history, ...props }) => {
+  const config = useContext(ConfigContext)
+
   const { loading, data, error } = useQuery(queries.dashboard, {
     fetchPolicy: 'cache-and-network',
   })
@@ -109,12 +111,8 @@ const DashboardPage = ({ history, ...props }) => {
   // Editors are always linked to the parent/original manuscript, not to versions
 
   const urlFrag = config.journal.metadata.toplevel_urlfragment
-  const instanceName = process.env.INSTANCE_NAME
 
-  const shouldShowShortId =
-    config['client-features'].displayShortIdAsIdentifier &&
-    config['client-features'].displayShortIdAsIdentifier.toLowerCase() ===
-      'true'
+  const shouldShowShortId = config?.controlPanel?.displayManuscriptShortId
 
   return (
     <Dashboard
@@ -122,7 +120,7 @@ const DashboardPage = ({ history, ...props }) => {
       createNewTaskAlerts={null /* For testing only: createNewTaskAlerts */}
       currentUser={currentUser}
       editorLatestVersions={editorLatestVersions}
-      instanceName={instanceName}
+      instanceName={config?.instanceName}
       newSubmission={() => history.push(`${urlFrag}/newSubmission`)}
       prettyRoleText={prettyRoleText}
       reviewerLatestVersions={reviewerLatestVersions}

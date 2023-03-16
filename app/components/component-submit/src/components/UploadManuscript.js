@@ -2,6 +2,7 @@ import React, { useContext } from 'react'
 import styled, { css, keyframes, withTheme } from 'styled-components'
 import { Icon, Action } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
+import { ConfigContext } from '../../../config/src'
 import { XpubContext } from '../../../xpub-with-context/src'
 import upload from '../upload'
 import { Dropzone } from '../../../shared'
@@ -147,6 +148,7 @@ const SubInfo = styled.div`
 `
 
 const UploadManuscript = ({ acceptFiles, ...props }) => {
+  const config = useContext(ConfigContext)
   const { client, history, journals, currentUser } = props
 
   // const [error, setError] = useState(false)
@@ -164,6 +166,7 @@ const UploadManuscript = ({ acceptFiles, ...props }) => {
     journals,
     currentUser,
     setConversion,
+    config,
   })
 
   // const status = completed

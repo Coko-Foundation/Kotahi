@@ -36,7 +36,6 @@ const QUERY = gql`
       css
     }
     userHasTaskAlerts
-    config
   }
 `
 

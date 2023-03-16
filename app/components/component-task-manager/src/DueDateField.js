@@ -81,8 +81,11 @@ const DueDateField = ({
                 ...task,
                 dueDate: moment
                   .tz(
-                    transposeFromLocalToTimezone(val, config.teamTimezone),
-                    config.teamTimezone,
+                    transposeFromLocalToTimezone(
+                      val,
+                      config?.taskManager?.teamTimezone,
+                    ),
+                    config?.taskManager?.teamTimezone,
                   )
                   .endOf('day')
                   .toDate(),

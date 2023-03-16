@@ -1,22 +1,20 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Redirect } from 'react-router-dom'
-import config from 'config'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
 import styled from 'styled-components'
 import lightenBy from '../../../shared/lightenBy'
+import { ConfigContext } from '../../config/src'
 
 import getQueryStringByName from '../../../shared/getQueryStringByName'
-import brandConfig from '../../../brandConfig.json'
 
-const getNextUrl = () => {
+const getNextUrl = config => {
   const url = new URL(window.location.href)
 
-  // Where should we redirect after successful login?
-  const redirectLink =
-    (config['pubsweet-component-login'] &&
-      config['pubsweet-component-login'].redirect) ||
-    config['pubsweet-client']['login-redirect']
+  const redirectLink = `${
+    config.journal.metadata.toplevel_urlfragment +
+    config?.dashboard?.loginRedirectUrl
+  }`
 
   return `${url.searchParams.get('next') || redirectLink}`
 }
@@ -111,10 +109,12 @@ const StyledORCIDIcon = styled(ORCIDIcon)`
 `
 
 const Login = ({ logo = null, ...props }) => {
+  const config = useContext(ConfigContext)
   const token = getQueryStringByName('token')
+
   // If a JWT token is supplied as a query param (e.g. from OAuth)
   // go ahead and fetch the redirect URL
-  let redirectLink = token ? getNextUrl() : null
+  let redirectLink = token ? getNextUrl(config) : null
   redirectLink =
     redirectLink && getQueryStringByName('redirectUrl')
       ? getQueryStringByName('redirectUrl')
@@ -135,7 +135,10 @@ const Login = ({ logo = null, ...props }) => {
     <Container>
       <Centered>
         <Content>
-          <img alt={brandConfig.brandName} src={brandConfig.logoPath} />
+          <img
+            alt={config.groupIdentity.brandName}
+            src={config.groupIdentity.logoPath}
+          />
           <RegisterInfoString>
             Kotahi uses ORCID <StyledORCIDIcon /> to identify authors and staff.
           </RegisterInfoString>

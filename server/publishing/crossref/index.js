@@ -15,6 +15,8 @@ const {
   getCrossrefCitationsFromList,
 } = require('../../utils/jatsUtils')
 
+const Config = require('../../config/src/config')
+
 const DOI_PATH_PREFIX = 'https://doi.org/'
 const ABSTRACT_PLACEHOLDER = '‖ABSTRACT‖'
 const CITATIONS_PLACEHOLDER = '‖CITATIONS‖'
@@ -24,13 +26,17 @@ const parser = new xml2js.Parser()
 
 const requestToCrossref = async xmlFiles => {
   const publishPromises = xmlFiles.map(async file => {
+    const activeConfig = await Config.query().first() // To be replaced with group based active config in future
     const formData = new FormData()
-    formData.append('login_id', config.crossref.login)
-    formData.append('login_passwd', config.crossref.password)
+    formData.append('login_id', activeConfig.formData.publishing.crossref.login)
+    formData.append(
+      'login_passwd',
+      activeConfig.formData.publishing.crossref.password,
+    )
     formData.append('fname', fs.createReadStream(file))
 
     const crossrefURL =
-      config.crossref.useSandbox === 'false'
+      activeConfig.formData.publishing.crossref.useSandbox === false
         ? 'https://doi.crossref.org/servlet/deposit'
         : 'https://test.crossref.org/servlet/deposit'
 
@@ -48,16 +54,18 @@ const requestToCrossref = async xmlFiles => {
 
 /** Publish either article or reviews to Crossref, according to config */
 const publishToCrossref = async manuscript => {
-  if (!config.crossref.doiPrefix)
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
+  if (!activeConfig.formData.publishing.crossref.doiPrefix)
     throw new Error(
       'Could not publish to Crossref, as no DOI prefix is configured.',
     )
 
-  if (config.crossref.publicationType === 'article')
+  if (activeConfig.formData.publishing.crossref.publicationType === 'article')
     await publishArticleToCrossref(manuscript).catch(err => {
       throw err
     })
-  // else if (config.crossref.publicationType === 'reviews')
+  // else if (activeConfig.formData.publishing.crossref.publicationType === 'peer review')
   else
     await publishReviewsToCrossref(manuscript).catch(err => {
       throw err
@@ -121,14 +129,17 @@ const getReviewOrSubmissionField = (manuscript, fieldName) => {
 
 /** Get DOI in form 10.12345/<suffix>
  * If the configured prefix includes 'https://doi.org/' and/or a trailing slash, these are dealt with gracefully. */
-const getDoi = suffix => {
-  let prefix = config.crossref.doiPrefix
+const getDoi = async suffix => {
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  let prefix = activeConfig.formData.publishing.crossref.doiPrefix
   if (!prefix) throw new Error('No DOI prefix configured.')
   if (prefix.startsWith(DOI_PATH_PREFIX))
     prefix = prefix.replace(DOI_PATH_PREFIX, '')
   if (prefix.endsWith('/')) prefix = prefix.replace('/', '')
   if (!/^10\.\d{4,9}$/.test(prefix))
-    throw new Error(`Unrecognised DOI prefix "${config.crossref.doiPrefix}"`)
+    throw new Error(
+      `Unrecognised DOI prefix "${activeConfig.formData.publishing.crossref.doiPrefix}"`,
+    )
   return `${prefix}/${suffix}`
 }
 
@@ -220,6 +231,7 @@ const emailRegex = /^[\p{L}\p{N}!/+\-_]+(\.[\p{L}\p{N}!/+\-_]+)*@[\p{L}\p{N}!/+\
 
 /** Send submission to register an article, with appropriate metadata */
 const publishArticleToCrossref = async manuscript => {
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
   if (!manuscript.submission)
     throw new Error('Manuscript has no submission object')
   if (!manuscript.meta.title) throw new Error('Manuscript has no title')
@@ -229,9 +241,11 @@ const publishArticleToCrossref = async manuscript => {
     throw new Error('Manuscript has no submission.authors field')
   if (!Array.isArray(manuscript.submission.authors))
     throw new Error('Manuscript.submission.authors is not an array')
-  if (!emailRegex.test(config.crossref.depositorEmail))
+  if (
+    !emailRegex.test(activeConfig.formData.publishing.crossref.depositorEmail)
+  )
     throw new Error(
-      `Depositor email address "${config.crossref.depositorEmail}" is misconfigured`,
+      `Depositor email address "${activeConfig.formData.publishing.crossref.depositorEmail}" is misconfigured`,
     )
 
   const issueYear = getIssueYear(manuscript)
@@ -244,7 +258,7 @@ const publishArticleToCrossref = async manuscript => {
   const doi = getDoi(doiSuffix)
   if (!(await doiIsAvailable(doi))) throw Error('Custom DOI is not available.')
 
-  const publishedLocation = `${config.crossref.publishedArticleLocationPrefix}${manuscript.shortId}`
+  const publishedLocation = `${activeConfig.formData.publishing.crossref.publishedArticleLocationPrefix}${manuscript.shortId}`
   const batchId = uuid()
   const citations = getCitations(manuscript)
 
@@ -252,11 +266,12 @@ const publishArticleToCrossref = async manuscript => {
 
   const journal = {
     journal_metadata: {
-      full_title: config.crossref.journalName,
-      abbrev_title: config.crossref.journalAbbreviatedName,
+      full_title: activeConfig.formData.publishing.crossref.journalName,
+      abbrev_title:
+        activeConfig.formData.publishing.crossref.journalAbbreviatedName,
       doi_data: {
         doi: journalDoi,
-        resource: config.crossref.journalHomepage,
+        resource: activeConfig.formData.publishing.crossref.journalHomepage,
       },
     },
     journal_issue: {
@@ -296,13 +311,13 @@ const publishArticleToCrossref = async manuscript => {
     journal.journal_issue.issue = manuscript.submission.issueNumber
   }
 
-  if (config.crossref.licenseUrl)
+  if (activeConfig.formData.publishing.crossref.licenseUrl)
     journal.journal_article.program = {
       $: {
         name: 'AccessIndicators',
         xmlns: 'http://www.crossref.org/AccessIndicators.xsd',
       },
-      license_ref: config.crossref.licenseUrl,
+      license_ref: activeConfig.formData.publishing.crossref.licenseUrl,
     }
 
   journal.journal_article.doi_data = {
@@ -326,10 +341,12 @@ const publishArticleToCrossref = async manuscript => {
         doi_batch_id: batchId,
         timestamp: getCurrentCrossrefTimestamp(publishDate),
         depositor: {
-          depositor_name: config.crossref.depositorName,
-          email_address: config.crossref.depositorEmail,
+          depositor_name:
+            activeConfig.formData.publishing.crossref.depositorName,
+          email_address:
+            activeConfig.formData.publishing.crossref.depositorEmail,
         },
-        registrant: config.crossref.registrant,
+        registrant: activeConfig.formData.publishing.crossref.registrant,
       },
       body: {
         journal,
@@ -355,6 +372,7 @@ const publishArticleToCrossref = async manuscript => {
 }
 
 const publishReviewsToCrossref = async manuscript => {
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
   if (
     !manuscript.submission.articleURL ||
     !manuscript.submission.articleURL.startsWith('https://doi.org/')
@@ -426,11 +444,11 @@ const publishReviewsToCrossref = async manuscript => {
         templateCopy.doi_batch.body[0].peer_review[0].review_date[0].month[0] = month
         templateCopy.doi_batch.body[0].peer_review[0].review_date[0].year[0] = year
         templateCopy.doi_batch.head[0].depositor[0].depositor_name[0] =
-          config.crossref.depositorName
+          activeConfig.formData.publishing.crossref.depositorName
         templateCopy.doi_batch.head[0].depositor[0].email_address[0] =
-          config.crossref.depositorEmail
+          activeConfig.formData.publishing.crossref.depositorEmail
         templateCopy.doi_batch.head[0].registrant[0] =
-          config.crossref.registrant
+          activeConfig.formData.publishing.crossref.registrant
         templateCopy.doi_batch.head[0].timestamp[0] = +new Date()
         templateCopy.doi_batch.head[0].doi_batch_id[0] = String(
           +new Date(),

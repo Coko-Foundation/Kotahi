@@ -11,6 +11,8 @@ const orcidBackURL = config['pubsweet-client'].baseUrl
 module.exports = app => {
   // eslint-disable-next-line global-require
   const { User } = require('@pubsweet/models')
+  // eslint-disable-next-line global-require
+  const Config = require('../config/src/config')
 
   // set up OAuth client
   passport.use(
@@ -29,6 +31,7 @@ module.exports = app => {
         // convert oauth response into a user object
         let user
         let firstLogin = false
+        const activeConfig = await Config.query().first() // To be replaced with group based active config in future
 
         try {
           user = await User.query()
@@ -76,12 +79,8 @@ module.exports = app => {
 
             user.email = userDetails.email || null
 
-            if (
-              usersCountString === '0' || // The first ever user is automatically made an admin
-              ['elife'].includes(process.env.INSTANCE_NAME) // TODO temporary feature: all logins to elife are automatically made admin
-            ) {
-              user.admin = true
-            }
+            user.admin =
+              usersCountString === '0' || activeConfig.formData.user.isAdmin
 
             user.saveGraph()
             firstLogin = true
@@ -106,22 +105,19 @@ module.exports = app => {
       failureRedirect: '/login',
       session: false,
     }),
-    (req, res) => {
+    async (req, res) => {
       const jwt = createJWT(req.user)
+      const activeConfig = await Config.query().first() // To be replaced with group based active config in future
 
       let redirectionURL
 
-      if (['aperture', 'colab', 'ncrc'].includes(process.env.INSTANCE_NAME)) {
+      // redirectionURL prefix `/kotahi` to be replaced with value from group based active config in the future
+      if (req.user.firstLogin) {
+        redirectionURL = '/kotahi/profile'
+      } else if (req.user.admin) {
+        redirectionURL = `/kotahi${activeConfig.formData.dashboard.loginRedirectUrl}`
+      } else {
         redirectionURL = '/kotahi/dashboard'
-
-        if (req.user.firstLogin) {
-          redirectionURL = '/kotahi/profile'
-        }
-      }
-
-      if (['elife'].includes(process.env.INSTANCE_NAME)) {
-        // temporary .. because all users are admins - is temporary feature
-        redirectionURL = '/kotahi/admin/manuscripts'
       }
 
       res.redirect(`/login?token=${jwt}&redirectUrl=${redirectionURL}`)

@@ -1,8 +1,9 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { th, override } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../shared/lightenBy'
 import { TabsContainer } from './Tabs'
+import { ConfigContext } from '../config/src'
 
 const Tab = styled.div`
   background: ${({ active, theme }) =>
@@ -73,6 +74,7 @@ const HiddenTabs = ({
   background,
   hideChat,
 }) => {
+  const config = useContext(ConfigContext)
   const [activeKey, setActiveKey] = useState(defaultActiveKey)
 
   useEffect(() => {
@@ -95,6 +97,7 @@ const HiddenTabs = ({
     <>
       <HiddenTabsContainer
         background={background}
+        config={config}
         gridArea={tabsContainerGridArea}
         sticky={false}
       >

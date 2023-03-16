@@ -9,6 +9,8 @@ const {
   getFieldsMapForTemplating,
 } = require('../../model-manuscript/src/manuscriptUtils')
 
+const Config = require('../../config/src/config')
+
 const { getActiveForms } = require('../../model-form/src/formCommsUtils')
 
 let docmapsScheme
@@ -66,6 +68,7 @@ const expandTemplatesAndRemoveDirectivesRecursive = (
 
 const tryPublishDocMaps = async manuscript => {
   if (!docmapsScheme) return false
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
   const { submissionForm, reviewForm, decisionForm } = await getActiveForms()
 
   const fields = getFieldsMapForTemplating(
@@ -137,9 +140,9 @@ const tryPublishDocMaps = async manuscript => {
     id,
     type: 'docmap',
     publisher: {
-      id: config.crossref.journalHomepage,
-      name: config.crossref.journalName,
-      homepage: config.crossref.journalHomepage,
+      id: activeConfig.formData.publishing.crossref.journalHomepage,
+      name: activeConfig.formData.publishing.crossref.journalName,
+      homepage: activeConfig.formData.publishing.crossref.journalHomepage,
     },
     'first-step': '_:b0',
     steps: {

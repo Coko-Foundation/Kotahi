@@ -1,7 +1,6 @@
-const config = require('config')
-
 const models = require('@pubsweet/models')
 const { pubsubManager } = require('@coko/server')
+const Config = require('../../config/src/config')
 const importArticlesFromBiorxiv = require('../../import-articles/biorxiv-import')
 const importArticlesFromBiorxivWithFullTextSearch = require('../../import-articles/biorxiv-full-text-import')
 const importArticlesFromPubmed = require('../../import-articles/pubmed-import')
@@ -32,15 +31,16 @@ let isImportInProgress = false
 let isImportingFromSemanticScholarInProgress = false
 
 const importManuscripts = async ctx => {
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
   if (isImportInProgress) return false
   isImportInProgress = true
 
   const promises = []
 
-  if (process.env.INSTANCE_NAME === 'ncrc') {
+  if (activeConfig.formData.instanceName === 'ncrc') {
     promises.push(importArticlesFromBiorxiv(ctx))
     promises.push(importArticlesFromPubmed(ctx))
-  } else if (process.env.INSTANCE_NAME === 'colab') {
+  } else if (activeConfig.formData.instanceName === 'colab') {
     promises.push(importArticlesFromBiorxivWithFullTextSearch(ctx))
   }
 
@@ -59,13 +59,15 @@ const importManuscripts = async ctx => {
   return true
 }
 
-const importManuscriptsFromSemanticScholar = ctx => {
+const importManuscriptsFromSemanticScholar = async ctx => {
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
   if (isImportingFromSemanticScholarInProgress) return false
   isImportingFromSemanticScholarInProgress = true
 
   const promises = []
 
-  if (process.env.INSTANCE_NAME === 'colab') {
+  if (activeConfig.formData.instanceName === 'colab') {
     promises.push(importArticlesFromSemanticScholar(ctx))
   }
 
@@ -85,7 +87,8 @@ const importManuscriptsFromSemanticScholar = ctx => {
 }
 
 const archiveOldManuscripts = async () => {
-  const archivePeriodDays = parseInt(config.manuscripts.archivePeriodDays, 10)
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+  const { archivePeriodDays } = activeConfig.formData.manuscript
   if (Number.isNaN(archivePeriodDays) || archivePeriodDays < 1) return
 
   const cutoffDate = new Date(

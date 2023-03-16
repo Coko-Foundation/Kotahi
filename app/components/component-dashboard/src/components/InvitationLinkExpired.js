@@ -1,5 +1,5 @@
-import React from 'react'
-import brandConfig from '../../../../brandConfig.json'
+import React, { useContext } from 'react'
+import { ConfigContext } from '../../../config/src'
 
 import {
   Centered,
@@ -10,11 +10,15 @@ import {
 } from '../style'
 
 const InvitationLinkExpired = () => {
+  const config = useContext(ConfigContext)
   return (
     <InvitationContainer>
       <Centered>
         <InvitationContent>
-          <img alt={brandConfig.brandName} src={brandConfig.logoPath} />
+          <img
+            alt={config.groupIdentity.brandName}
+            src={config.groupIdentity.logoPath}
+          />
           <FeedbackForm>
             <DeclinedInfoString>
               This invitation link has expired. Please contact the system

@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import PropTypes from 'prop-types'
 
 import moment from 'moment'
@@ -11,6 +11,7 @@ import { Columns, Manuscript, Chat, SectionContent } from '../../../../shared'
 import MessageContainer from '../../../../component-chat/src/MessageContainer'
 import SharedReviewerGroupReviews from './SharedReviewerGroupReviews'
 import FormTemplate from '../../../../component-submit/src/components/FormTemplate'
+import { ConfigContext } from '../../../../config/src'
 
 const hasManuscriptFile = manuscript =>
   !!manuscript?.files?.find(file => file.tags.includes('manuscript'))
@@ -35,6 +36,7 @@ const ReviewLayout = ({
   decisionForm,
   threadedDiscussionProps,
 }) => {
+  const config = useContext(ConfigContext)
   const reviewSections = []
   const latestVersion = versions[0]
   const priorVersions = versions.slice(1)
@@ -146,7 +148,7 @@ const ReviewLayout = ({
               />
             </SectionContent>
           )}
-          {['colab'].includes(process.env.INSTANCE_NAME) && (
+          {config?.review?.showSummary && (
             <ReadonlyFormTemplate
               form={decisionForm}
               formData={decision.jsonData || {}}

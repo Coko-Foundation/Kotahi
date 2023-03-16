@@ -1,24 +1,26 @@
 const nodemailer = require('nodemailer')
 const config = require('config')
+const Config = require('../config/src/config')
 const createMailOptions = require('./createMailOptions')
 
-const transporter = nodemailer.createTransport({
-  service: 'gmail',
-  auth: {
-    user: process.env.GMAIL_NOTIFICATION_EMAIL_AUTH,
-    pass: process.env.GMAIL_NOTIFICATION_PASSWORD,
-  },
-})
+const sendEmailNotification = async (receiver, template, data) => {
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
 
-const sendEmailNotification = (receiver, template, data) => {
   const mailOptions = createMailOptions(receiver, template, data)
 
   if (config['notification-email'].cc_enabled === 'false') {
     mailOptions.cc = ''
   }
 
-  // Refactor to use config object
-  mailOptions.from = process.env.GMAIL_NOTIFICATION_EMAIL_SENDER
+  mailOptions.from = activeConfig.formData.notification.gmailSenderEmail
+
+  const transporter = nodemailer.createTransport({
+    service: 'gmail',
+    auth: {
+      user: activeConfig.formData.notification.gmailAuthEmail,
+      pass: activeConfig.formData.notification.gmailAuthPassword,
+    },
+  })
 
   return new Promise(resolve => {
     transporter.sendMail(mailOptions, (err, info) => {

@@ -5,7 +5,12 @@ const { setConfig } = require('./config/src/configObject')
 // You can modify the app or ensure other things are imported here.
 const schedule = require('../node_modules/node-schedule')
 
-setConfig({ teamTimezone: config.manuscripts.teamTimezone }) // TODO pass all client config through this structure
+setConfig({
+  journal: config.journal,
+  teams: config.teams,
+  manuscripts: config.manuscripts,
+  baseUrl: config['pubsweet-client'].baseUrl,
+}) // TODO pass all client config that does not come from `Config` table through this structure or append it to config resolver
 
 const {
   importManuscripts,
@@ -18,22 +23,66 @@ const {
   sendAutomatedTaskEmailNotifications,
 } = require('./model-task/src/taskCommsUtils')
 
-if (config.manuscripts.autoImportHourUtc) {
+const Config = require('./config/src/config')
+
+const runSchedule = async () => {
+  const activeConfig = await Config.query().first()
+
+  if (activeConfig.formData.manuscript.autoImportHourUtc) {
+    schedule.scheduleJob(
+      {
+        tz: 'Etc/UTC',
+        rule: `00 ${activeConfig.formData.manuscript.autoImportHourUtc} * * *`,
+      },
+      async () => {
+        // eslint-disable-next-line no-console
+        console.info(
+          `Running scheduler for importing and archiving Manuscripts at ${new Date().toISOString()}`,
+        )
+
+        try {
+          await importManuscripts({ user: null })
+          await importManuscriptsFromSemanticScholar({ user: null })
+          await archiveOldManuscripts()
+        } catch (error) {
+          console.error(error)
+        }
+      },
+    )
+  }
+
   schedule.scheduleJob(
     {
-      tz: 'Etc/UTC',
-      rule: `00 ${config.manuscripts.autoImportHourUtc} * * *`,
+      tz: `${activeConfig.formData.manuscript.teamTimezone || 'Etc/UTC'}`,
+      rule: `00 00 * * *`,
     },
     async () => {
       // eslint-disable-next-line no-console
       console.info(
-        `Running scheduler for importing and archiving Manuscripts at ${new Date().toISOString()}`,
+        `Running scheduler for tracking overdue tasks ${new Date().toISOString()}`,
       )
 
       try {
-        await importManuscripts({ user: null })
-        await importManuscriptsFromSemanticScholar({ user: null })
-        await archiveOldManuscripts()
+        await createNewTaskAlerts()
+      } catch (error) {
+        console.error(error)
+      }
+    },
+  )
+
+  schedule.scheduleJob(
+    {
+      tz: `${activeConfig.formData.manuscript.teamTimezone || 'Etc/UTC'}`,
+      rule: `00 00 * * *`,
+    },
+    async () => {
+      // eslint-disable-next-line no-console
+      console.info(
+        `Running scheduler for sending task email notifications ${new Date().toISOString()}`,
+      )
+
+      try {
+        await sendAutomatedTaskEmailNotifications()
       } catch (error) {
         console.error(error)
       }
@@ -41,42 +90,6 @@ if (config.manuscripts.autoImportHourUtc) {
   )
 }
 
-schedule.scheduleJob(
-  {
-    tz: `${config.manuscripts.teamTimezone || 'Etc/UTC'}`,
-    rule: `00 00 * * *`,
-  },
-  async () => {
-    // eslint-disable-next-line no-console
-    console.info(
-      `Running scheduler for tracking overdue tasks ${new Date().toISOString()}`,
-    )
-
-    try {
-      await createNewTaskAlerts()
-    } catch (error) {
-      console.error(error)
-    }
-  },
-)
-
-schedule.scheduleJob(
-  {
-    tz: `${config.manuscripts.teamTimezone || 'Etc/UTC'}`,
-    rule: `00 00 * * *`,
-  },
-  async () => {
-    // eslint-disable-next-line no-console
-    console.info(
-      `Running scheduler for sending task email notifications ${new Date().toISOString()}`,
-    )
-
-    try {
-      await sendAutomatedTaskEmailNotifications()
-    } catch (error) {
-      console.error(error)
-    }
-  },
-)
+runSchedule()
 
 module.exports = app
