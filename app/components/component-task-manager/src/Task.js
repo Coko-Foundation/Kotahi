@@ -566,39 +566,20 @@ const Task = ({
               ) : (
                 <DueDateFieldContainer>
                   <div>
-                    {task.status === status.NOT_STARTED ? (
-                      <>
-                        <DueDateHeader>Duration</DueDateHeader>
-                        <DurationDaysCell>
-                          <CounterField
-                            minValue={0}
-                            onChange={val => {
-                              updateTask(task.id, {
-                                ...task,
-                                defaultDurationDays: val,
-                              })
-                            }}
-                            showNone
-                            value={task.defaultDurationDays}
-                          />
-                        </DurationDaysCell>
-                      </>
-                    ) : (
-                      <>
-                        <DueDateHeader>Due date</DueDateHeader>
-                        <DueDateField
-                          compact
-                          displayDefaultDurationDays={
-                            displayDefaultDurationDays
-                          }
-                          dueDateLocalString={dueDateLocalString}
-                          task={task}
-                          transposedDueDate={transposedDueDate}
-                          transposedEndOfToday={transposedEndOfToday}
-                          updateTask={updateTask}
-                        />
-                      </>
-                    )}
+                    <DueDateHeader>
+                      {task.status === status.NOT_STARTED
+                        ? 'Duration'
+                        : 'Due date'}
+                    </DueDateHeader>
+                    <DueDateField
+                      compact
+                      displayDefaultDurationDays={displayDefaultDurationDays}
+                      dueDateLocalString={dueDateLocalString}
+                      task={task}
+                      transposedDueDate={transposedDueDate}
+                      transposedEndOfToday={transposedEndOfToday}
+                      updateTask={updateTask}
+                    />
                   </div>
                   <div>
                     <StatusActionCell isOverdue={isOverdue}>
