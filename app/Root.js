@@ -1,8 +1,6 @@
 /* eslint-disable no-param-reassign */
 import React from 'react'
-import { BrowserRouter } from 'react-router-dom'
 import PropTypes from 'prop-types'
-import { ThemeProvider } from 'styled-components'
 import { ApolloProvider, ApolloClient, ApolloLink, split } from '@apollo/client'
 // import { ApolloClient } from 'apollo-client'
 import { WebSocketLink } from '@apollo/client/link/ws'
@@ -12,8 +10,8 @@ import { setContext } from '@apollo/client/link/context'
 import { InMemoryCache } from '@apollo/client/cache'
 import { createUploadLink } from 'apollo-upload-client'
 
-import GlobalStyle from './theme/elements/GlobalStyle'
 import currentRolesVar from './shared/currentRolesVar'
+import Pages from './Pages'
 
 // See https://github.com/apollographql/apollo-feature-requests/issues/6#issuecomment-465305186
 export function stripTypenames(obj) {
@@ -170,25 +168,17 @@ const makeApolloClient = (makeConfig, connectToWebSocket) => {
   return new ApolloClient(makeConfig ? makeConfig(config) : config)
 }
 
-const Root = ({
-  makeApolloConfig,
-  routes,
-  theme,
-  connectToWebSocket = true,
-}) => (
-  <div>
-    <ApolloProvider
-      client={makeApolloClient(makeApolloConfig, connectToWebSocket)}
-    >
-      <BrowserRouter>
-        <ThemeProvider theme={theme}>
-          <GlobalStyle />
-          {routes}
-        </ThemeProvider>
-      </BrowserRouter>
-    </ApolloProvider>
-  </div>
-)
+const Root = ({ makeApolloConfig, routes, connectToWebSocket = true }) => {
+  return (
+    <div>
+      <ApolloProvider
+        client={makeApolloClient(makeApolloConfig, connectToWebSocket)}
+      >
+        <Pages routes={routes} />
+      </ApolloProvider>
+    </div>
+  )
+}
 
 Root.defaultProps = {
   makeApolloConfig: config => config,
@@ -197,8 +187,6 @@ Root.defaultProps = {
 Root.propTypes = {
   makeApolloConfig: PropTypes.func,
   routes: PropTypes.node.isRequired,
-  // eslint-disable-next-line react/forbid-prop-types
-  theme: PropTypes.object.isRequired,
   connectToWebSocket: PropTypes.bool,
 }
 

@@ -1,4 +1,4 @@
-import React, { useRef, useEffect, useCallback } from 'react'
+import React, { useContext, useRef, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { set, debounce } from 'lodash'
 import styled from 'styled-components'
@@ -20,6 +20,7 @@ import {
 import DecisionAndReviews from '../../../component-submit/src/components/DecisionAndReviews'
 import FormTemplate from '../../../component-submit/src/components/FormTemplate'
 import TaskList from '../../../component-task-manager/src/TaskList'
+import { ConfigContext } from '../../../config/src'
 
 const TaskSectionRow = styled(SectionRow)`
   padding: 12px 0 18px;
@@ -78,6 +79,8 @@ const DecisionVersion = ({
   deleteTaskNotification,
   createTaskEmailNotificationLog,
 }) => {
+  const config = useContext(ConfigContext)
+
   const debouncedSave = useCallback(
     debounce(source => {
       updateManuscript(version.id, { meta: { source } })
@@ -207,7 +210,7 @@ const DecisionVersion = ({
       content: (
         <>
           {isCurrentVersion &&
-            ['aperture', 'colab'].includes(process.env.INSTANCE_NAME) && (
+            ['aperture', 'colab'].includes(config.instanceName) && (
               <EmailNotifications
                 allUsers={allUsers}
                 currentUser={currentUser}
@@ -395,16 +398,43 @@ const DecisionVersion = ({
     }
   }
 
+  const sections = []
+  let defaultActiveKey
+
+  if (config?.controlPanel?.showTabs) {
+    if (config?.controlPanel?.showTabs.includes('Workflow'))
+      sections.push(decisionSection())
+    if (config?.controlPanel?.showTabs.includes('Manuscript text'))
+      sections.push(editorSection)
+    if (config?.controlPanel?.showTabs.includes('Metadata'))
+      sections.push(metadataSection())
+    if (config?.controlPanel?.showTabs.includes('Tasks & Notifications'))
+      sections.push(tasksAndNotificationsSection())
+
+    switch (config?.controlPanel?.showTabs[0]) {
+      case 'Workflow':
+        defaultActiveKey = version.id
+        break
+      case 'Manuscript text':
+        defaultActiveKey = `editor_${version.id}`
+        break
+      case 'Metadata':
+        defaultActiveKey = `metadata_${version.id}`
+        break
+      case 'Tasks & Notifications':
+        defaultActiveKey = `tasks_${version.id}`
+        break
+      default:
+        defaultActiveKey = version.id
+        break
+    }
+  }
+
   return (
     <HiddenTabs
-      defaultActiveKey={version.id}
+      defaultActiveKey={defaultActiveKey}
       onChange={refetch}
-      sections={[
-        decisionSection(),
-        editorSection,
-        metadataSection(),
-        tasksAndNotificationsSection(),
-      ]}
+      sections={sections}
     />
   )
 }

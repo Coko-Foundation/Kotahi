@@ -3,9 +3,9 @@ import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
 import { th, grid } from '@pubsweet/ui-toolkit'
-import config from 'config'
 import { sanitize } from 'isomorphic-dompurify'
 import { JournalContext } from '../../xpub-journal/src'
+import { ConfigContext } from '../../config/src'
 import queries from './queries'
 import FullWaxEditor from '../../wax-collab/src/FullWaxEditor'
 import { Container, Placeholder, VisualAbstract, Abstract } from './style'
@@ -22,8 +22,6 @@ import {
 } from '../../shared'
 import { PaginationContainer } from '../../shared/Pagination'
 import PublishedArtifactWithLink from './PublishedArtifactWithLink'
-
-const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const ManuscriptBox = styled.div`
   border: 1px solid ${th('colorBorder')};
@@ -70,6 +68,8 @@ const Frontpage = () => {
   })
 
   const journal = useContext(JournalContext)
+  const config = useContext(ConfigContext)
+  const urlFrag = journal.metadata.toplevel_urlfragment
 
   if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
@@ -112,7 +112,7 @@ const Frontpage = () => {
       {publishedManuscripts.length > 0 ? (
         publishedManuscripts.map(manuscript => {
           const title =
-            process.env.INSTANCE_NAME === 'elife'
+            config.instanceName === 'elife'
               ? manuscript.submission.description
               : manuscript.meta.title
 

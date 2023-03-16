@@ -306,13 +306,16 @@ const Task = ({
   }
 
   const [transposedDueDate, setTransposedDueDate] = useState(
-    transposeFromTimezoneToLocal(task.dueDate, config.teamTimezone),
+    transposeFromTimezoneToLocal(
+      task.dueDate,
+      config?.taskManager?.teamTimezone,
+    ),
   )
 
   const dueDateLocalString = getLocalTimeString(moment(task.dueDate))
 
   const transposedEndOfToday = moment(
-    transposeFromTimezoneToLocal(new Date(), config.teamTimezone),
+    transposeFromTimezoneToLocal(new Date(), config?.taskManager?.teamTimezone),
   )
     .endOf('day')
     .toDate()
@@ -364,7 +367,7 @@ const Task = ({
       : 'None'
 
   const dueDateLabel = moment
-    .tz(task.dueDate, config.teamTimezone)
+    .tz(task.dueDate, config?.taskManager?.teamTimezone)
     .format('YYYY-MM-DD')
 
   const isDone = task.status === 'Done'
@@ -386,7 +389,10 @@ const Task = ({
   useEffect(() => {
     if (task.dueDate) {
       setTransposedDueDate(
-        transposeFromTimezoneToLocal(task.dueDate, config.teamTimezone),
+        transposeFromTimezoneToLocal(
+          task.dueDate,
+          config?.taskManager?.teamTimezone,
+        ),
       )
     }
   }, [task])
@@ -455,7 +461,6 @@ const Task = ({
           </Modal>
           <TaskEditModal
             assigneeGroupedOptions={assigneeGroupedOptions}
-            config={config}
             createTaskEmailNotificationLog={createTaskEmailNotificationLog}
             currentUser={currentUser}
             daysDifferenceLabel={daysDifferenceLabel}
@@ -566,39 +571,20 @@ const Task = ({
               ) : (
                 <DueDateFieldContainer>
                   <div>
-                    {task.status === status.NOT_STARTED ? (
-                      <>
-                        <DueDateHeader>Duration</DueDateHeader>
-                        <DurationDaysCell>
-                          <CounterField
-                            minValue={0}
-                            onChange={val => {
-                              updateTask(task.id, {
-                                ...task,
-                                defaultDurationDays: val,
-                              })
-                            }}
-                            showNone
-                            value={task.defaultDurationDays}
-                          />
-                        </DurationDaysCell>
-                      </>
-                    ) : (
-                      <>
-                        <DueDateHeader>Due date</DueDateHeader>
-                        <DueDateField
-                          compact
-                          displayDefaultDurationDays={
-                            displayDefaultDurationDays
-                          }
-                          dueDateLocalString={dueDateLocalString}
-                          task={task}
-                          transposedDueDate={transposedDueDate}
-                          transposedEndOfToday={transposedEndOfToday}
-                          updateTask={updateTask}
-                        />
-                      </>
-                    )}
+                    <DueDateHeader>
+                      {task.status === status.NOT_STARTED
+                        ? 'Duration'
+                        : 'Due date'}
+                    </DueDateHeader>
+                    <DueDateField
+                      compact
+                      displayDefaultDurationDays={displayDefaultDurationDays}
+                      dueDateLocalString={dueDateLocalString}
+                      task={task}
+                      transposedDueDate={transposedDueDate}
+                      transposedEndOfToday={transposedEndOfToday}
+                      updateTask={updateTask}
+                    />
                   </div>
                   <div>
                     <StatusActionCell isOverdue={isOverdue}>

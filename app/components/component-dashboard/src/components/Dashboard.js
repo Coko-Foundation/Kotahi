@@ -1,6 +1,7 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import { Button } from '@pubsweet/ui'
 import { Container, Placeholder } from '../style'
+import { ConfigContext } from '../../../config/src'
 import EditorItem from './sections/EditorItem'
 import OwnerItem from './sections/OwnerItem'
 import ReviewerItem from './sections/ReviewerItem'
@@ -31,6 +32,7 @@ const Dashboard = ({
   prettyRoleText,
   createNewTaskAlerts, // For testing only. Pass in null to disable.
 }) => {
+  const config = useContext(ConfigContext)
   return (
     <Container>
       <HeadingWithAction>
@@ -42,7 +44,7 @@ const Dashboard = ({
           <Button onClick={createNewTaskAlerts}>New Alerts</Button>
         )}
       </HeadingWithAction>
-      {!['ncrc'].includes(instanceName) && (
+      {config?.dashboard?.showSections.includes('submission') && (
         <SectionContent>
           <SectionHeader>
             <Title>My Submissions</Title>
@@ -71,7 +73,7 @@ const Dashboard = ({
           )}
         </SectionContent>
       )}
-      {!['ncrc'].includes(instanceName) && (
+      {config?.dashboard?.showSections.includes('review') && (
         <SectionContent>
           <SectionHeader>
             <Title>To Review</Title>
@@ -93,32 +95,33 @@ const Dashboard = ({
           )}
         </SectionContent>
       )}
-
-      <SectionContent>
-        <SectionHeader>
-          <Title>Manuscripts I&apos;m editor of</Title>
-        </SectionHeader>
-        {editorLatestVersions.length > 0 ? (
-          editorLatestVersions.map(manuscript => (
-            <SectionRow key={`manuscript-${manuscript.id}`}>
-              <EditorItem
-                currentRoles={getRoles(manuscript, currentUser.id)}
-                instanceName={instanceName}
-                prettyRoleText={prettyRoleText}
-                shouldShowShortId={shouldShowShortId}
-                urlFrag={urlFrag}
-                version={manuscript}
-              />
+      {config?.dashboard?.showSections.includes('editor') && (
+        <SectionContent>
+          <SectionHeader>
+            <Title>Manuscripts I&apos;m editor of</Title>
+          </SectionHeader>
+          {editorLatestVersions.length > 0 ? (
+            editorLatestVersions.map(manuscript => (
+              <SectionRow key={`manuscript-${manuscript.id}`}>
+                <EditorItem
+                  currentRoles={getRoles(manuscript, currentUser.id)}
+                  instanceName={instanceName}
+                  prettyRoleText={prettyRoleText}
+                  shouldShowShortId={shouldShowShortId}
+                  urlFrag={urlFrag}
+                  version={manuscript}
+                />
+              </SectionRow>
+            ))
+          ) : (
+            <SectionRow>
+              <Placeholder>
+                You are not an editor of any manuscript yet
+              </Placeholder>
             </SectionRow>
-          ))
-        ) : (
-          <SectionRow>
-            <Placeholder>
-              You are not an editor of any manuscript yet
-            </Placeholder>
-          </SectionRow>
-        )}
-      </SectionContent>
+          )}
+        </SectionContent>
+      )}
     </Container>
   )
 }

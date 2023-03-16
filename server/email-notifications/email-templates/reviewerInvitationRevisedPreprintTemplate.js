@@ -13,7 +13,8 @@ const ReviewerInvitationRevisedPreprintTemplate = ({
   }
 
   result.cc = 'lesley@sciencecolab.org, swartzk@ninds.nih.gov'
-  result.subject = 'Opportunity to review a preprint for Biophysics Colab (in partnership with eLife)'
+  result.subject =
+    'Opportunity to review a preprint for Biophysics Colab (in partnership with eLife)'
   result.content = `
 		<p>Dear ${receiverName}</p>
 		<p>I’m a member of the launch team for <a href="http://www.sciencecolab.org/" target="_blank">Biophysics Colab</a>, a collaboration of biophysicists working in partnership with eLife to improve how research is evaluated. Later this year, we will launch a ‘publish, review, curate’ service that will support authors to create citeable, indexed versions of their work from published preprints. Until then, we are leveraging the knowledge and expertise of the global biophysics community to provide a <b>free preprint review service</b> that provides constructive, journal-agnostic feedback to authors.</p>

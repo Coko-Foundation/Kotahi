@@ -4,27 +4,31 @@ import { XpubProvider } from '../../app/components/xpub-with-context/src'
 import * as journal from '../../config/journal'
 import DesignEmbed from '../common/utils'
 import SubmissionForm from '../../app/components/component-submit/src/components/SubmissionForm'
+import { ConfigProvider } from '../../app/components/config/src'
+import config from '../../config/sampleConfigFormData'
 
 export const Base = args => (
   <XpubProvider>
     <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
-      <>
-        {args.figmaEmbedLink && (
-          <>
-            <h2 style={{ color: '#333333' }}>Design</h2>
-            <iframe
-              allowFullScreen
-              height={350}
-              src={args.figmaEmbedLink}
-              style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
-              title="figma embed"
-              width="100%"
-            />
-            <h2 style={{ color: '#333333' }}>Component</h2>
-          </>
-        )}
-        <SubmissionForm {...args} />
-      </>
+      <ConfigProvider config={config}>
+        <>
+          {args.figmaEmbedLink && (
+            <>
+              <h2 style={{ color: '#333333' }}>Design</h2>
+              <iframe
+                allowFullScreen
+                height={350}
+                src={args.figmaEmbedLink}
+                style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
+                title="figma embed"
+                width="100%"
+              />
+              <h2 style={{ color: '#333333' }}>Component</h2>
+            </>
+          )}
+          <SubmissionForm {...args} />
+        </>
+      </ConfigProvider>
     </JournalProvider>
   </XpubProvider>
 )

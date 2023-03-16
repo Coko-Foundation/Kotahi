@@ -15,6 +15,7 @@ const {
 
 const Team = require('../../model-team/src/team')
 const TeamMember = require('../../model-team/src/team_member')
+const Config = require('../../config/src/config')
 
 const { getPubsub } = pubsubManager
 const Form = require('../../model-form/src/form')
@@ -354,6 +355,8 @@ const commonUpdateManuscript = async (id, input, ctx) => {
   // ms = manuscript
   const msDelta = JSON.parse(input) // Convert the JSON input to JavaScript object
 
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
   const ms = await models.Manuscript.query()
     .findById(id)
     .withGraphFetched('[reviews.user, files, tasks]')
@@ -363,7 +366,9 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
   // If this manuscript is getting its label set for the first time,
   // we will populate its task list from the template tasks
-  const isSettingFirstLabels = ['colab'].includes(process.env.INSTANCE_NAME)
+  const isSettingFirstLabels = ['colab'].includes(
+    activeConfig.formData.instanceName,
+  )
     ? !ms.submission.labels &&
       !!msDelta.submission &&
       !!msDelta.submission.labels
@@ -380,7 +385,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
     updatedMs.submittedDate = new Date()
   }
 
-  if (['ncrc', 'colab'].includes(process.env.INSTANCE_NAME)) {
+  if (['ncrc', 'colab'].includes(activeConfig.formData.instanceName)) {
     updatedMs.submission.editDate = new Date().toISOString().split('T')[0]
   }
 
@@ -393,11 +398,13 @@ const commonUpdateManuscript = async (id, input, ctx) => {
 
 /** Send the manuscriptId OR a configured ref; and send token if one is configured */
 const tryPublishingWebhook = async manuscriptId => {
-  const publishingWebhookUrl = config['publishing-webhook'].publishingWebhookUrl
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
+  const publishingWebhookUrl = activeConfig.formData.publishing.webhook.url
 
   if (publishingWebhookUrl) {
-    const token = config['publishing-webhook'].publishingWebhookToken
-    const reference = config['publishing-webhook'].publishingWebhookRef
+    const token = activeConfig.formData.publishing.webhook.token
+    const reference = activeConfig.formData.publishing.webhook.ref
     const payload = { ref: reference || manuscriptId }
     if (token) payload.token = token
 
@@ -416,6 +423,8 @@ const resolvers = {
   Mutation: {
     async createManuscript(_, vars, ctx) {
       const submissionForm = await Form.findOneByField('purpose', 'submit')
+
+      const activeConfig = await Config.query().first() // To be replaced with group based active config in future
 
       const { meta, files } = vars.input
 
@@ -482,7 +491,7 @@ const resolvers = {
         ],
       }
 
-      if (['ncrc', 'colab'].includes(process.env.INSTANCE_NAME)) {
+      if (['ncrc', 'colab'].includes(activeConfig.formData.instanceName)) {
         emptyManuscript.submission.editDate = new Date()
           .toISOString()
           .split('T')[0]
@@ -596,6 +605,7 @@ const resolvers = {
     async deleteManuscript(_, { id }, ctx) {
       const toDeleteList = []
       const manuscript = await models.Manuscript.find(id)
+      const activeConfig = await Config.query().first() // To be replaced with group based active config in future
 
       toDeleteList.push(manuscript.id)
 
@@ -613,15 +623,21 @@ const resolvers = {
       // Delete all versions of manuscript
       await Promise.all(
         toDeleteList.map(async toDeleteItem => {
-          if (config.hypothesis.apiKey) {
+          if (activeConfig.formData.publishing.hypothesis.apiKey) {
             const hypothesisArtifacts = models.PublishedArtifact.query().where({
               manuscriptId: toDeleteItem,
               platform: 'Hypothesis',
             })
 
+            const headers = {
+              headers: {
+                Authorization: `Bearer ${activeConfig.formData.publishing.hypothesis.apiKey}`,
+              },
+            }
+
             await Promise.all(
               hypothesisArtifacts.map(async artifact =>
-                deletePublication(artifact.externalId),
+                deletePublication(artifact.externalId, headers),
               ),
             )
           }
@@ -1022,6 +1038,8 @@ const resolvers = {
         .findById(id)
         .withGraphFetched('[reviews, publishedArtifacts]')
 
+      const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
       /** Crude hack to circumvent and help diagnose bug 1193 */
       const oldMetaAbstract =
         manuscript && manuscript.meta ? manuscript.meta.abstract : null
@@ -1031,7 +1049,7 @@ const resolvers = {
       const steps = []
       const containsEvaluations = hasEvaluations(manuscript)
 
-      if (config.crossref.login) {
+      if (activeConfig.formData.publishing.crossref.login) {
         const stepLabel = 'Crossref'
         let succeeded = false
         let errorMessage
@@ -1054,7 +1072,7 @@ const resolvers = {
         })
       }
 
-      if (process.env.INSTANCE_NAME === 'ncrc') {
+      if (activeConfig.formData.instanceName === 'ncrc') {
         let succeeded
         let errorMessage
         let stepLabel
@@ -1076,11 +1094,11 @@ const resolvers = {
         }
 
         steps.push({ succeeded, errorMessage, stepLabel })
-      } else if (['colab'].includes(process.env.INSTANCE_NAME)) {
+      } else if (['colab'].includes(activeConfig.formData.instanceName)) {
         // TODO: A note in the code said that for Colab instance, submission.editDate should be updated. Is this true? (See commonUpdateManuscript() for example code.)
       }
 
-      if (config.hypothesis.apiKey) {
+      if (activeConfig.formData.publishing.hypothesis.apiKey) {
         const stepLabel = 'Hypothesis'
         let succeeded = false
         let errorMessage
@@ -1101,7 +1119,7 @@ const resolvers = {
         steps.push({ stepLabel, succeeded, errorMessage })
       }
 
-      if (config['publishing-webhook'].publishingWebhookUrl) {
+      if (activeConfig.formData.publishing.webhook.url) {
         try {
           await tryPublishingWebhook(manuscript.id)
           steps.push({ stepLabel: 'Publishing webhook', succeeded: true })
@@ -1131,7 +1149,8 @@ const resolvers = {
         // The intention is that an evaluated article should never revert to any state prior to "evaluated",
         // but that only articles with evaluations can be 'published'.
         update.status =
-          !config.crossref.login || containsEvaluations
+          !activeConfig.formData.publishing.crossref.login ||
+          containsEvaluations
             ? 'published'
             : 'evaluated'
       }
@@ -1440,7 +1459,13 @@ const resolvers = {
       }
     },
     async unreviewedPreprints(_, { token }, ctx) {
-      validateApiToken(token, config.api.tokens)
+      const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
+      if (activeConfig.formData.user.kotahiApiTokens) {
+        validateApiToken(token, activeConfig.formData.user.kotahiApiTokens)
+      } else {
+        throw new Error('Kotahi api tokens are not configured!')
+      }
 
       const manuscripts = await models.Manuscript.query()
         .where({ status: 'new' })
@@ -1463,7 +1488,9 @@ const resolvers = {
       }))
     },
     async doisToRegister(_, { id }, ctx) {
-      if (!config.crossref.login) {
+      const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
+      if (!activeConfig.formData.publishing.crossref.login) {
         return null
       }
 
@@ -1473,7 +1500,9 @@ const resolvers = {
 
       const DOIs = []
 
-      if (config.crossref.publicationType === 'article') {
+      if (
+        activeConfig.formData.publishing.crossref.publicationType === 'article'
+      ) {
         const manuscriptDOI = getDoi(
           getReviewOrSubmissionField(manuscript, 'doiSuffix') || manuscript.id,
         )

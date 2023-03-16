@@ -1,8 +1,8 @@
 /* eslint-disable camelcase, consistent-return */
 const axios = require('axios')
-const config = require('config')
 const { map } = require('lodash')
 const models = require('@pubsweet/models')
+const Config = require('../config/src/config')
 const ArticleImportHistory = require('../model-article-import-history/src/articleImportHistory')
 const ArticleImportSources = require('../model-article-import-sources/src/articleImportSources')
 
@@ -15,6 +15,8 @@ const {
 const SAVE_CHUNK_SIZE = 50
 
 const getData = async ctx => {
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
   const [checkIfSourceExists] = await ArticleImportSources.query().where({
     server: 'semantic-scholar',
   })
@@ -92,7 +94,10 @@ const getData = async ctx => {
 
         return (
           diffDays <
-          Number(config.manuscripts.semanticScholarImportsRecencyPeriodDays)
+          Number(
+            activeConfig.formData.manuscript
+              .semanticScholarImportsRecencyPeriodDays,
+          )
         )
       }
 

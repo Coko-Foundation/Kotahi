@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from 'react'
+import React, { useCallback, useContext, useEffect, useState } from 'react'
 import PropTypes from 'prop-types'
 import styled from 'styled-components'
 import { Formik, ErrorMessage } from 'formik'
@@ -26,6 +26,7 @@ import ThreadedDiscussion from '../../../component-formbuilder/src/components/bu
 import ActionButton from '../../../shared/ActionButton'
 import { hasValue } from '../../../../shared/htmlUtils'
 import FormWaxEditor from '../../../component-formbuilder/src/components/FormWaxEditor'
+import { ConfigContext } from '../../../config/src'
 
 const FormContainer = styled(Container)`
   background: white;
@@ -211,6 +212,7 @@ const FormTemplate = ({
   setShouldPublishField,
   shouldShowOptionToPublish = false,
 }) => {
+  const config = useContext(ConfigContext)
   const [confirming, setConfirming] = React.useState(false)
 
   const toggleConfirming = () => {
@@ -355,7 +357,7 @@ const FormTemplate = ({
           submissionButtonText &&
           (isSubmission
             ? !['submitted', 'revise'].includes(values.status) ||
-              (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME) &&
+              (['elife', 'ncrc'].includes(config.instanceName) &&
                 values.status === 'submitted')
             : true)
 

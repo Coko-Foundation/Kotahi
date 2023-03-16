@@ -1,27 +1,21 @@
 /* eslint-disable no-restricted-syntax, no-await-in-loop */
 const TurndownService = require('turndown')
 const axios = require('axios')
-const config = require('config')
 const models = require('@pubsweet/models')
 const { getUsersById } = require('../../model-user/src/userCommsUtils')
 const { getActiveForms } = require('../../model-form/src/formCommsUtils')
 const { getPublishableFields, normalizeUri } = require('./hypothesisTools')
 const { upsertArtifact, deleteArtifact } = require('../publishingCommsUtils')
+const Config = require('../../config/src/config')
 
 const {
   getThreadedDiscussionsForManuscript,
 } = require('../../model-threaded-discussion/src/threadedDiscussionCommsUtils')
 
-const headers = {
-  headers: {
-    Authorization: `Bearer ${process.env.HYPOTHESIS_API_KEY}`,
-  },
-}
-
 const REQUEST_URL = `https://api.hypothes.is/api/annotations`
 
 /** DELETE a publication from Hypothesis via REST */
-const deletePublication = async publicationId => {
+const deletePublication = async (publicationId, headers) => {
   try {
     const response = await axios.delete(`${REQUEST_URL}/${publicationId}`, {
       ...headers,
@@ -35,7 +29,7 @@ const deletePublication = async publicationId => {
 }
 
 /** Check with hypothes.is that this annotation already exists; return true or false. */
-const annotationActuallyExists = async data => {
+const annotationActuallyExists = async (data, headers) => {
   try {
     await axios.get(`${REQUEST_URL}/${data.annotationId}`, {
       ...headers,
@@ -50,6 +44,14 @@ const prepareTurndownService = () =>
   new TurndownService({ bulletListMarker: '*' })
 
 const publishToHypothesis = async manuscript => {
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
+  const headers = {
+    headers: {
+      Authorization: `Bearer ${activeConfig.formData.publishing.hypothesis.apiKey}`,
+    },
+  }
+
   const turndownService = prepareTurndownService()
 
   const uri =
@@ -76,9 +78,15 @@ const publishToHypothesis = async manuscript => {
           'Missing field submission.biorxivURL or submission.link',
         )
 
-      if (d.action === 'update' && !(await annotationActuallyExists(d)))
+      if (
+        d.action === 'update' &&
+        !(await annotationActuallyExists(d, headers))
+      )
         return { ...d, action: 'create' }
-      if (d.action === 'delete' && !(await annotationActuallyExists(d)))
+      if (
+        d.action === 'delete' &&
+        !(await annotationActuallyExists(d, headers))
+      )
         return { ...d, action: null }
 
       if (d.action === null && !uri)
@@ -90,7 +98,8 @@ const publishToHypothesis = async manuscript => {
     }),
   )
 
-  if (config.hypothesis.reverseFieldOrder === 'true') fields.reverse()
+  if (activeConfig.formData.publishing.hypothesis.reverseFieldOrder)
+    fields.reverse()
   // Some fields have dates (e.g. review fields; ThreadedDiscussion comments) and should be published in date order.
   const datedFields = fields.filter(f => f.date).sort((a, b) => a.date - b.date)
   const fieldsWithoutDates = fields.filter(f => !f.date)
@@ -113,8 +122,10 @@ const publishToHypothesis = async manuscript => {
 
     if (['create', 'update'].includes(f.action)) {
       const requestBody = {
-        group: config.hypothesis.group,
-        permissions: { read: [`group:${config.hypothesis.group}`] },
+        group: activeConfig.formData.publishing.hypothesis.group,
+        permissions: {
+          read: [`group:${activeConfig.formData.publishing.hypothesis.group}`],
+        },
         uri: normalizeUri(uri),
         document: { title: [title] },
         text: turndownService.turndown(f.text),
@@ -133,7 +144,7 @@ const publishToHypothesis = async manuscript => {
         await upsertArtifact(artifact)
       }
     } else if (f.action === 'delete') {
-      await deletePublication(f.annotationId)
+      await deletePublication(f.annotationId, headers)
       await deleteArtifact(manuscript.id, f.annotationId)
     }
   }
@@ -147,6 +158,14 @@ const publishSpecificAnnotationToHypothesis = async (
   manuscriptTitle,
   manuscriptId,
 ) => {
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
+  const headers = {
+    headers: {
+      Authorization: `Bearer ${activeConfig.formData.publishing.hypothesis.apiKey}`,
+    },
+  }
+
   const turndownService = prepareTurndownService()
 
   const existingArtifact = await models.PublishedArtifact.query().findOne({
@@ -171,8 +190,10 @@ const publishSpecificAnnotationToHypothesis = async (
   }
 
   const requestBody = {
-    group: config.hypothesis.group,
-    permissions: { read: [`group:${config.hypothesis.group}`] },
+    group: activeConfig.formData.publishing.hypothesis.group,
+    permissions: {
+      read: [`group:${activeConfig.formData.publishing.hypothesis.group}`],
+    },
     uri: normalizeUri(uri),
     document: { title: [manuscriptTitle] },
     text: turndownService.turndown(content),

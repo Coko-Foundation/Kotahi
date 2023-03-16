@@ -1,5 +1,5 @@
 /* eslint-disable no-shadow */
-import React, { useState } from 'react'
+import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
 import { ToastContainer } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
@@ -34,6 +34,7 @@ import getUriQueryParams from './getUriQueryParams'
 import FilterSortHeader from './FilterSortHeader'
 import SearchControl from './SearchControl'
 import { validateManuscriptSubmission } from '../../../shared/manuscriptUtils'
+import { ConfigContext } from '../../config/src'
 
 const URI_SEARCH_PARAM = 'search'
 
@@ -81,6 +82,8 @@ const Manuscripts = ({ history, ...props }) => {
     archiveManuscriptMutations,
     confirmBulkArchive,
   } = props
+
+  const config = useContext(ConfigContext)
 
   const [isOpenBulkArchiveModal, setIsOpenBulkArchiveModal] = useState(false)
 
@@ -168,7 +171,7 @@ const Manuscripts = ({ history, ...props }) => {
     })
   }
 
-  const limit = process.env.INSTANCE_NAME === 'ncrc' ? 100 : 10
+  const limit = config?.manuscript?.paginationCount
 
   const { loading, error, data } = queryObject
 
@@ -265,6 +268,7 @@ const Manuscripts = ({ history, ...props }) => {
   )?.value
 
   const columnsProps = getColumnsProps(
+    config,
     configuredColumnNames,
     fieldDefinitions,
     uriQueryParams,
@@ -290,17 +294,11 @@ const Manuscripts = ({ history, ...props }) => {
 
   const hideChat = () => setIsAdminChatOpen(false)
 
-  const shouldAllowNewSubmission = ['elife', 'ncrc'].includes(
-    process.env.INSTANCE_NAME,
-  )
-
-  const shouldAllowBulkDelete = ['ncrc', 'colab'].includes(
-    process.env.INSTANCE_NAME,
-  )
+  const shouldAllowBulkDelete = ['ncrc', 'colab'].includes(config.instanceName)
 
   const topRightControls = (
     <ControlsContainer>
-      {shouldAllowNewSubmission && (
+      {config?.manuscript?.newSubmission && (
         <ActionButton
           onClick={() => history.push(`${urlFrag}/newSubmission`)}
           primary
@@ -433,7 +431,7 @@ const Manuscripts = ({ history, ...props }) => {
           />
         )}
       </Columns>
-      {['ncrc', 'colab'].includes(process.env.INSTANCE_NAME) && (
+      {['ncrc', 'colab'].includes(config.instanceName) && (
         <Modal
           isOpen={isOpenBulkArchiveModal}
           onRequestClose={closeModalBulkArchiveConfirmation}

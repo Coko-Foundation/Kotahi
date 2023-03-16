@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect } from 'react'
+import React, { useCallback, useContext, useEffect  } from 'react'
 import PropTypes from 'prop-types'
 import { set, debounce } from 'lodash'
 import DecisionAndReviews from './DecisionAndReviews'
@@ -20,6 +20,7 @@ import EditorSection from '../../../component-review/src/components/decision/Edi
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
 import AssignEditor from './assignEditors/AssignEditor'
 import SubmissionForm from './SubmissionForm'
+import { ConfigContext } from '../../../config/src'
 
 export const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
@@ -48,6 +49,7 @@ const Submit = ({
   validateDoi,
   validateSuffix,
 }) => {
+  const config = useContext(ConfigContext)
   const decisionSections = []
 
   const submissionValues = createBlankSubmissionBasedOnForm(submissionForm)
@@ -150,7 +152,7 @@ const Submit = ({
     decisionSections.push({
       content: (
         <>
-          {['ncrc'].includes(process.env.INSTANCE_NAME) && (
+          {['ncrc'].includes(config.instanceName) && (
             <AssignEditorsReviewers
               AssignEditor={AssignEditor}
               manuscript={version}

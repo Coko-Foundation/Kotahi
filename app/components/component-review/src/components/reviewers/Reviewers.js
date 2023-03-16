@@ -1,10 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import styled from 'styled-components'
 import { Send } from 'react-feather'
 import { Action, Button, Checkbox } from '@pubsweet/ui'
 import { grid, th } from '@pubsweet/ui-toolkit'
 import PropTypes from 'prop-types'
-import config from 'config'
+import { ConfigContext } from '../../../../config/src'
 import ReviewerForm from './ReviewerForm'
 import {
   Container,
@@ -55,8 +55,6 @@ const SendIcon = styled(Send)`
 
 const Reviewer = styled.div``
 
-const urlFrag = config.journal.metadata.toplevel_urlfragment
-
 const Reviewers = ({
   isValid,
   reviewers,
@@ -70,6 +68,9 @@ const Reviewers = ({
   updateSharedStatusForInvitedReviewer,
   refetchManuscriptData,
 }) => {
+  const config = useContext(ConfigContext)
+  const urlFrag = config.journal.metadata.toplevel_urlfragment
+
   const toggleReviewerSharedStatus = async (id, delta) => {
     await updateTeamMember({
       variables: {
@@ -155,7 +156,7 @@ const Reviewers = ({
                           <Secondary>
                             {reviewer.user.defaultIdentity.identifier}
                           </Secondary>
-                          {config.review.shared === 'true' && (
+                          {config?.controlPanel?.sharedReview && (
                             <Checkbox
                               checked={reviewer.isShared}
                               label="Shared"
@@ -200,7 +201,7 @@ const Reviewers = ({
                         />
                         <UserAvatar />
                         <Primary>{invitation.invitedPersonName}</Primary>
-                        {config.review.shared === 'true' && (
+                        {config?.controlPanel?.sharedReview && (
                           <Checkbox
                             checked={invitation.isShared}
                             label="Shared"

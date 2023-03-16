@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { debounce, set } from 'lodash'
 import { gql, useQuery, useMutation, useApolloClient } from '@apollo/client'
-import config from 'config'
 import ReactRouterPropTypes from 'react-router-prop-types'
+import { ConfigContext } from '../../../config/src'
 import Submit from './Submit'
 import query, { fragmentFields } from '../userManuscriptFormQuery'
 import { Spinner } from '../../../shared'
@@ -73,11 +73,11 @@ const deleteFileMutation = gql`
   }
 `
 
-const urlFrag = config.journal.metadata.toplevel_urlfragment
-
 let debouncers = {}
 
 const SubmitPage = ({ match, history }) => {
+  const config = useContext(ConfigContext)
+  const urlFrag = config.journal.metadata.toplevel_urlfragment
   const [isPublishingBlocked, setIsPublishingBlocked] = useState(false)
 
   useEffect(() => {
@@ -187,11 +187,11 @@ const SubmitPage = ({ match, history }) => {
       },
     })
 
-    if (['aperture', 'colab'].includes(process.env.INSTANCE_NAME)) {
+    if (['aperture', 'colab'].includes(config.instanceName)) {
       history.push(`${urlFrag}/dashboard`)
     }
 
-    if (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME)) {
+    if (['elife', 'ncrc'].includes(config.instanceName)) {
       history.push(`${urlFrag}/admin/manuscripts`)
     }
   }
@@ -210,11 +210,11 @@ const SubmitPage = ({ match, history }) => {
       },
     })
 
-    if (['aperture', 'colab'].includes(process.env.INSTANCE_NAME)) {
+    if (['aperture', 'colab'].includes(config.instanceName)) {
       history.push(`${urlFrag}/dashboard`)
     }
 
-    if (['elife', 'ncrc'].includes(process.env.INSTANCE_NAME)) {
+    if (['elife', 'ncrc'].includes(config.instanceName)) {
       history.push(`${urlFrag}/admin/manuscripts`)
     }
   }

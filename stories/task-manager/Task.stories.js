@@ -2,35 +2,39 @@ import React from 'react'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
 import Task from '../../app/components/component-task-manager/src/Task'
 import DesignEmbed from '../common/utils'
+import { ConfigProvider } from '../../app/components/config/src'
+import config from '../../config/sampleConfigFormData'
 
 export const Base = args => (
-  <>
-    {args.figmaEmbedLink && (
-      <>
-        <h2 style={{ color: '#333333' }}>Design</h2>
-        <iframe
-          allowFullScreen
-          height={350}
-          src={args.figmaEmbedLink}
-          style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
-          title="figma embed"
-          width="100%"
-        />
-        <h2 style={{ color: '#333333' }}>Component</h2>
-      </>
-    )}
+  <ConfigProvider config={config}>
+    <>
+      {args.figmaEmbedLink && (
+        <>
+          <h2 style={{ color: '#333333' }}>Design</h2>
+          <iframe
+            allowFullScreen
+            height={350}
+            src={args.figmaEmbedLink}
+            style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
+            title="figma embed"
+            width="100%"
+          />
+          <h2 style={{ color: '#333333' }}>Component</h2>
+        </>
+      )}
 
-    <DragDropContext onDragEnd={() => {}}>
-      <Droppable droppableId="droppable">
-        {(provided, snapshot) => (
-          <div {...provided.droppableProps} ref={provided.innerRef}>
-            <Task {...args} />
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
-    </DragDropContext>
-  </>
+      <DragDropContext onDragEnd={() => {}}>
+        <Droppable droppableId="droppable">
+          {(provided, snapshot) => (
+            <div {...provided.droppableProps} ref={provided.innerRef}>
+              <Task {...args} />
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DragDropContext>
+    </>
+  </ConfigProvider>
 )
 
 Base.args = {

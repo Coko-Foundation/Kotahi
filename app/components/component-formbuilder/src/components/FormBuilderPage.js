@@ -1,8 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useContext } from 'react'
 import { useQuery, useMutation, gql } from '@apollo/client'
 import { cloneDeep, omitBy } from 'lodash'
 import { DragDropContext, Droppable } from 'react-beautiful-dnd'
-import config from 'config'
+import { ConfigContext } from '../../../config/src'
 import FormBuilderLayout from './FormBuilderLayout'
 import { Spinner, CommsErrorBanner } from '../../../shared'
 import pruneEmpty from '../../../../shared/pruneEmpty'
@@ -111,6 +111,8 @@ const prepareForSubmit = values => {
 }
 
 const FormBuilderPage = ({ category }) => {
+  const config = useContext(ConfigContext)
+
   const { loading, data, error } = useQuery(query, {
     variables: { category },
   })
@@ -253,7 +255,7 @@ const FormBuilderPage = ({ category }) => {
                 setActiveFieldId={setActiveFieldId}
                 setActiveFormId={setActiveFormId}
                 shouldAllowHypothesisTagging={
-                  config.hypothesis.shouldAllowTagging
+                  config?.publishing?.hypothesis?.shouldAllowTagging
                 }
                 updateField={updateFormElement}
                 updateForm={updateForm}
