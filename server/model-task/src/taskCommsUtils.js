@@ -403,7 +403,7 @@ const getTeamRecipients = async (emailNotification, roles) => {
     .whereIn('role', roles) // no await here because it's a sub-query
 
   const teamMembers = await Team.relatedQuery('members')
-    .whereNot('status', 'invited')
+    .whereNotIn('status', ['invited', 'rejected'])
     .for(teamQuery)
     .withGraphFetched('user')
 
