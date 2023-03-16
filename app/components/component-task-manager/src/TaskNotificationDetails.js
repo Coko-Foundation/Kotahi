@@ -296,7 +296,9 @@ const TaskNotificationDetails = ({
     const teamsOfRecipientType = manuscriptTeams
       .map(team => ({
         ...team,
-        members: team.members.filter(member => member.status !== 'invited'),
+        members: team.members.filter(member =>
+          ['invited', 'rejected'].includes(member.status),
+        ),
       }))
       .filter(team => {
         if (notificationRecipientType === 'editor') {
