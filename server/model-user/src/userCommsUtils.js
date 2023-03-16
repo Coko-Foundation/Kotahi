@@ -72,6 +72,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   let manuscriptPageUrl = `${baseUrl}/versions/${manuscript.id}`
   let isEditor = false
   let isReviewer = false
+  let isAuthor = false
 
   if (selectedEmail) {
     // If the email of a pre-existing user is selected
@@ -98,20 +99,27 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
       'reviewer',
     ]
 
+    const authorRoles = ['author', 'accepted:author']
+
     isEditor =
       manuscriptRoles &&
       manuscriptRoles.roles.some(role => editorRoles.includes(role))
     isReviewer =
       manuscriptRoles &&
       manuscriptRoles.roles.some(role => reviewerRoles.includes(role))
+    isAuthor =
+      manuscriptRoles &&
+      manuscriptRoles.roles.some(role => authorRoles.includes(role))
   }
 
   if (isEditor) {
     manuscriptPageUrl += '/decision'
   } else if (isReviewer) {
     manuscriptPageUrl += '/review'
-  } else {
+  } else if (isAuthor) {
     manuscriptPageUrl += '/submit'
+  } else {
+    manuscriptPageUrl = `${baseUrl}/dashboard`
   }
 
   const manuscriptId = manuscript.id
