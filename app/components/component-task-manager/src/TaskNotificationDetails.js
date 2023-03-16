@@ -9,13 +9,13 @@ import theme from '../../../theme'
 import { emailNotifications } from '../../../../config/journal/tasks.json'
 
 const TaskTitle = styled.div`
-  font-family: 'Roboto';
+  color: ${theme.colors.neutral.gray20};
+  font-family: 'Roboto', sans-serif;
+  font-size: ${theme.fontSizeBase};
   font-style: normal;
   font-weight: 500;
-  font-size: ${theme.fontSizeBase};
-  line-height: 19px;
   letter-spacing: 0.01em;
-  color: ${theme.colors.neutral.gray20};
+  line-height: 19px;
   margin-bottom: 4px;
 `
 
@@ -39,6 +39,7 @@ const EmailTemplateFieldContainer = styled(TaskFieldsContainer)`
     font-size: ${theme.fontSizeBase};
   }
 
+  /* stylelint-disable-next-line no-descending-specificity */
   > div:nth-child(2) > div:nth-child(2) {
     height: 45px;
   }
@@ -49,8 +50,8 @@ const ScheduleNotificationFieldContainer = styled(TaskFieldsContainer)`
 `
 
 const SendNowActionContainer = styled.div`
-  display: flex;
   align-items: flex-start;
+  display: flex;
   justify-content: center;
   padding-top: 22px;
 `
@@ -59,30 +60,33 @@ const RoundIconButtonContainer = styled.div`
   display: flex;
   justify-content: flex-end;
   width: 18%;
+
   & > button > span {
     padding: 0;
   }
+
   & > button {
-    min-width: 0px;
     height: 25px;
-    width: 25px;
     margin-top: 25px;
+    min-width: 0px;
+    width: 25px;
   }
+
   & > button > svg {
     width: 18px;
   }
 `
 
 const NotificationDeadlineCell = styled.div`
-  display: flex;
   align-items: center;
+  color: ${props => (props.disabled ? theme.colorBorder : 'inherit')};
+  display: flex;
   height: 45px;
 
+  /* stylelint-disable-next-line no-descending-specificity */
   & > div {
     margin: 0px 10px;
   }
-
-  color: ${props => (props.disabled ? theme.colorBorder : 'inherit')};
 `
 
 const UnregisteredUserCell = styled.div`
@@ -105,6 +109,8 @@ const NotificationDeadlineContainer = styled.div`
 const NotificationDetailsContainer = styled.div`
   display: flex;
   width: 100%;
+
+  /* stylelint-disable-next-line no-descending-specificity */
   & + div {
     margin-top: 16px;
   }
@@ -114,10 +120,12 @@ const AssigneeCell = styled.div`
   justify-content: flex-start;
   line-height: 1em;
 
+  /* stylelint-disable-next-line no-descending-specificity */
   > div > div {
     font-size: ${theme.fontSizeBase};
     line-height: 1.25;
 
+    /* stylelint-disable-next-line no-descending-specificity */
     &:nth-child(2) {
       height: 45px;
     }
@@ -285,13 +293,22 @@ const TaskNotificationDetails = ({
     notificationRecipientType,
     manuscriptTeams,
   ) => {
-    const teamsOfRecipientType = manuscriptTeams.filter(team => {
-      if (notificationRecipientType === 'editor') {
-        return ['editor', 'handlingEditor', 'seniorEditor'].includes(team.role)
-      }
+    const teamsOfRecipientType = manuscriptTeams
+      .map(team => ({
+        ...team,
+        members: team.members.filter(
+          member => !['invited', 'rejected'].includes(member.status),
+        ),
+      }))
+      .filter(team => {
+        if (notificationRecipientType === 'editor') {
+          return ['editor', 'handlingEditor', 'seniorEditor'].includes(
+            team.role,
+          )
+        }
 
-      return team.role === notificationRecipientType
-    })
+        return team.role === notificationRecipientType && team.members.length
+      })
 
     let logsData
     const logsDataArray = []
