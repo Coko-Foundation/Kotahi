@@ -2,7 +2,7 @@ import React, { useRef, useEffect, useContext } from 'react'
 import PropTypes from 'prop-types'
 import { Wax } from 'wax-prosemirror-core'
 import { ThemeProvider } from 'styled-components'
-import { gql, useApolloClient } from '@apollo/client'
+import { gql } from '@apollo/client'
 import waxTheme from './layout/waxTheme'
 import { JournalContext } from '../../xpub-journal/src'
 
@@ -33,6 +33,7 @@ const renderImage = file => {
 }
 
 const ProductionWaxEditor = ({
+  client,
   value,
   validationStatus,
   readonly,
@@ -58,8 +59,6 @@ const ProductionWaxEditor = ({
     },
     username: user.username || 'demo',
   }
-
-  const client = useApolloClient()
 
   const editorRef = useRef(null)
 

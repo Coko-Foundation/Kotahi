@@ -502,6 +502,21 @@ CREATE TABLE public.users (
 ALTER TABLE public.users OWNER TO kotahidev;
 
 --
+-- Name: configs; Type: TABLE; Schema: public; Owner: kotahidev
+--
+
+CREATE TABLE public.configs (
+    id uuid NOT NULL,
+    created timestamp with time zone DEFAULT CURRENT_TIMESTAMP NOT NULL,
+    updated timestamp with time zone,
+    active boolean,
+    form_data jsonb
+);
+
+
+ALTER TABLE public.configs OWNER TO kotahidev;
+
+--
 -- Name: article_import_sources; Type: TABLE; Schema: public; Owner: kotahidev
 --
 
@@ -675,6 +690,11 @@ INSERT INTO public.users (id, created, updated, admin, email, username, password
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('41d52254-a2b8-4ea4-9ded-bfbfe9671578', '2020-07-21 16:35:06.125+02', '2020-07-24 16:44:59.306+02', NULL, 'sherrykotahitestemailaccount@test.com', 'Sherry Crofoot', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser7.jpg', true, NULL);
 INSERT INTO public.users (id, created, updated, admin, email, username, password_hash, teams, password_reset_token, password_reset_timestamp, type, profile_picture, online, last_online) VALUES ('f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '2020-07-21 16:30:45.719+02', '2021-03-10 12:41:10.044+01', true, 'sineadkotahitestemailaccount@test.com', 'Sinead Sullivan', NULL, NULL, NULL, NULL, 'user', '/static/profiles/testuser6.jpg', false, NULL);
 
+--
+-- Data for Name: configs; Type: TABLE DATA; Schema: public; Owner: kotahidev
+--
+
+INSERT INTO public.configs (id, created, updated, form_data, active) VALUES ('6619a377-c53d-4a5c-885b-b0f41ff5d6ed', '2023-02-23 14:27:54.64+00', '2023-02-23 14:27:54.64+00', '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"showSections": ["submission", "review", "editor"], "loginRedirectUrl": "/dashboard"}, "manuscript": {"tableColumns": "shortId, meta.title, created, updated, status, submission.labels, author", "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": false, "shouldAllowTagging": false}}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Workflow", "Manuscript text", "Metadata", "Tasks & Notifications"], "hideReview": true, "sharedReview": true, "displayManuscriptShortId": true}, "instanceName": "aperture", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/assets/logo-kotahi.png", "brandName": "Kotahi", "primaryColor": "#3AAE2A", "secondaryColor": "#9e9e9e"}}', 't');
 
 --
 -- Name: job job_pkey; Type: CONSTRAINT; Schema: pgboss; Owner: kotahidev

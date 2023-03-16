@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useContext } from 'react'
 import { Checkbox, TextArea } from '@pubsweet/ui/dist/atoms'
 import { Button } from '@pubsweet/ui'
 import { useMutation, useQuery } from '@apollo/client'
@@ -8,7 +8,7 @@ import {
   ADD_EMAIL_TO_BLACKLIST,
   GET_INVITATION_STATUS,
 } from '../../../../queries/index'
-import brandConfig from '../../../../brandConfig.json'
+import { ConfigContext } from '../../../config/src'
 import {
   ButtonWrapper,
   Centered,
@@ -23,6 +23,7 @@ import {
 import InvitationLinkExpired from './InvitationLinkExpired'
 
 const DeclineArticleOwnershipPage = ({ match }) => {
+  const config = useContext(ConfigContext)
   const { invitationId } = match.params
 
   const { data } = useQuery(GET_INVITATION_STATUS, {
@@ -83,7 +84,10 @@ const DeclineArticleOwnershipPage = ({ match }) => {
       <InvitationContainer>
         <Centered>
           <InvitationContent>
-            <img alt={brandConfig.brandName} src={brandConfig.logoPath} />
+            <img
+              alt={config.groupIdentity.brandName}
+              src={config.groupIdentity.logoPath}
+            />
             <ThankYouString>
               Thank you for submitting the feedback.
             </ThankYouString>
@@ -98,7 +102,10 @@ const DeclineArticleOwnershipPage = ({ match }) => {
       <InvitationContainer>
         <Centered>
           <InvitationContent>
-            <img alt={brandConfig.brandName} src={brandConfig.logoPath} />
+            <img
+              alt={config.groupIdentity.brandName}
+              src={config.groupIdentity.logoPath}
+            />
             <FeedbackForm>
               <DeclinedInfoString>
                 You have declined an invitation to participate in a peer review.

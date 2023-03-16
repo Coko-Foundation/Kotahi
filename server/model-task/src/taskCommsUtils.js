@@ -1,5 +1,5 @@
 const moment = require('moment-timezone')
-const config = require('config')
+const Config = require('../../config/src/config')
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
 const Team = require('../../model-team/src/team')
@@ -18,6 +18,8 @@ const {
 const TaskEmailNotification = require('./taskEmailNotification')
 
 const populateTemplatedTasksForManuscript = async manuscriptId => {
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
   const newTasks = await Task.query()
     .whereNull('manuscriptId')
     .orderBy('sequenceIndex')
@@ -28,7 +30,7 @@ const populateTemplatedTasksForManuscript = async manuscriptId => {
     .orderBy('sequenceIndex')
 
   const endOfToday = moment()
-    .tz(config.manuscripts.teamTimezone || 'Etc/UTC')
+    .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')
     .endOf('day')
 
   return Task.transaction(async trx => {
@@ -142,8 +144,10 @@ const updateAlertsForTask = async (task, trx) => {
 /** For all tasks that have gone overdue during the previous calendar day, create alerts as appropriate.
  * Don't look further than yesterday, to avoid regenerating alerts that have already been seen. */
 const createNewTaskAlerts = async () => {
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
   const startOfToday = moment()
-    .tz(config.manuscripts.teamTimezone || 'Etc/UTC')
+    .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')
     .startOf('day')
 
   const startOfYesterday = moment(startOfToday).subtract(1, 'days')
@@ -350,8 +354,10 @@ const sendNotification = async n => {
 }
 
 const sendAutomatedTaskEmailNotifications = async () => {
+  const activeConfig = await Config.query().first() // To be replaced with group based active config in future
+
   const startOfToday = moment()
-    .tz(config.manuscripts.teamTimezone || 'Etc/UTC')
+    .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')
     .startOf('day')
 
   const startOfTomorrow = moment(startOfToday).add(1, 'days')

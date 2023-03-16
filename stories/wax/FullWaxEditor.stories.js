@@ -1,25 +1,29 @@
 import React from 'react'
 import FullWaxEditor from '../../app/components/wax-collab/src/FullWaxEditor'
 import DesignEmbed from '../common/utils'
+import { JournalProvider } from '../../app/components/xpub-journal/src'
+import * as journal from '../../config/journal'
 
 export const Base = args => (
-  <>
-    {args.figmaEmbedLink && (
-      <>
-        <h2 style={{ color: '#333333' }}>Design</h2>
-        <iframe
-          allowFullScreen
-          height={350}
-          src={args.figmaEmbedLink}
-          style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
-          title="figma embed"
-          width="100%"
-        />
-        <h2 style={{ color: '#333333' }}>Component</h2>
-      </>
-    )}
-    <FullWaxEditor {...args} />
-  </>
+  <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
+    <>
+      {args.figmaEmbedLink && (
+        <>
+          <h2 style={{ color: '#333333' }}>Design</h2>
+          <iframe
+            allowFullScreen
+            height={350}
+            src={args.figmaEmbedLink}
+            style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
+            title="figma embed"
+            width="100%"
+          />
+          <h2 style={{ color: '#333333' }}>Component</h2>
+        </>
+      )}
+      <FullWaxEditor {...args} />
+    </>
+  </JournalProvider>
 )
 export const ReadOnly = Base.bind()
 export const Error = Base.bind()

@@ -14,6 +14,7 @@ const fieldCanBeSorted = field => {
 }
 
 const getColumnsProps = (
+  config,
   columnNames,
   fieldDefinitions,
   uriQueryParams,
@@ -52,7 +53,7 @@ const getColumnsProps = (
     },
     status: {
       title: 'Status',
-      filterOptions: ['elife', 'ncrc'].includes(process.env.INSTANCE_NAME)
+      filterOptions: ['elife', 'ncrc'].includes(config?.instanceName)
         ? [
             { label: 'Unsubmitted', value: 'new' },
             { label: 'Submitted', value: 'submitted' },
@@ -77,6 +78,7 @@ const getColumnsProps = (
       flex: '0 1 6em',
       component: Actions,
       extraProps: {
+        config,
         deleteManuscript,
         isManuscriptBlockedFromPublishing,
         tryPublishManuscript,
@@ -93,7 +95,7 @@ const getColumnsProps = (
     'submission.labels': {
       flex: '0 1 10em',
       extraProps: { setReadyToEvaluateLabel },
-      component: ['ncrc', 'colab'].includes(process.env.INSTANCE_NAME)
+      component: config?.manuscript?.labelColumn
         ? LabelsOrSelectButton
         : DefaultField,
     },
@@ -101,13 +103,13 @@ const getColumnsProps = (
     'submission.journal': { flex: '0.2 1 12em' },
     'submission.articleDescription': {
       component:
-        process.env.INSTANCE_NAME === 'ncrc'
+        config?.instanceName === 'ncrc'
           ? TitleWithAbstractAsTooltip
           : DefaultField,
     },
     'meta.title': {
       component:
-        process.env.INSTANCE_NAME === 'colab'
+        config?.instanceName === 'colab'
           ? TitleWithAbstractAsTooltip
           : DefaultField,
     },
@@ -116,7 +118,7 @@ const getColumnsProps = (
   // TODO rather than sneak extra columns in here via adjustedColumnNames, just add the extra columns in the .env config
   const adjustedColumnNames = [...columnNames]
   adjustedColumnNames.push('actions')
-  if (['ncrc', 'colab'].includes(process.env.INSTANCE_NAME))
+  if (['ncrc', 'colab'].includes(config?.instanceName))
     adjustedColumnNames.splice(0, 0, 'newItemCheckbox')
 
   return adjustedColumnNames.map(columnName => {

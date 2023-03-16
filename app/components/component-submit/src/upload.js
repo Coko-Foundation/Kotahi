@@ -1,5 +1,4 @@
 /* eslint-disable no-unused-vars */
-import config from 'config'
 import request from 'pubsweet-client/src/helpers/api'
 import { gql } from '@apollo/client'
 // import { map } from 'lodash'
@@ -13,8 +12,6 @@ const fragmentFields = `
     manuscriptId
   }
 `
-
-const urlFrag = config.journal.metadata.toplevel_urlfragment
 
 const stripTags = file => {
   // eslint-disable-next-line no-useless-escape
@@ -307,11 +304,12 @@ const uploadPromise = (files, client) => {
   })
 }
 
-const DocxToHTMLPromise = (file, data) => {
+const DocxToHTMLPromise = (file, data, config) => {
   const body = new FormData()
   body.append('docx', file)
 
-  const url = `${config['pubsweet-client'].baseUrl}/convertDocxToHTML`
+  const url = `${config.baseUrl}/convertDocxToHTML`
+
   return request(url, { method: 'POST', body }).then(response =>
     Promise.resolve({
       fileURL: data.uploadFile.storedObjects[0].url,
@@ -393,8 +391,16 @@ const createManuscriptPromise = (
   })
 }
 
-const redirectPromise = (setConversionState, journals, history, data) => {
+const redirectPromise = (
+  setConversionState,
+  journals,
+  history,
+  data,
+  config,
+) => {
   setConversionState(() => ({ converting: false, completed: true }))
+  const urlFrag = config.journal.metadata.toplevel_urlfragment
+  // redirect after a new submission path
   const route = `${urlFrag}/versions/${data.createManuscript.id}/submit`
   // redirect after a short delay
   window.setTimeout(() => {
@@ -414,6 +420,7 @@ export default ({
   journals,
   currentUser,
   setConversion,
+  config,
 }) => async files => {
   setConversion({ converting: true })
   let manuscriptData
@@ -431,13 +438,12 @@ export default ({
           response: true,
         }
       } else {
-        uploadResponse = await DocxToHTMLPromise(file, data)
+        uploadResponse = await DocxToHTMLPromise(file, data, config)
         uploadResponse.response = cleanMath(
           stripTags(
             stripTrackChanges(checkForEmptyBlocks(uploadResponse.response)),
           ),
         )
-
         images = base64Images(uploadResponse.response)
       }
 
@@ -523,6 +529,7 @@ export default ({
       journals,
       history,
       manuscriptData.data,
+      config,
     )
   } catch (error) {
     setConversion({ error })

@@ -2,29 +2,33 @@ import React from 'react'
 import Dashboard from '../../app/components/component-dashboard/src/components/Dashboard'
 import { JournalProvider } from '../../app/components/xpub-journal/src'
 import { XpubProvider } from '../../app/components/xpub-with-context/src'
+import { ConfigProvider } from '../../app/components/config/src'
 import * as journal from '../../config/journal'
+import config from '../../config/sampleConfigFormData'
 import DesignEmbed from '../common/utils'
 
 export const Base = args => (
   <XpubProvider>
     <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
-      <>
-        {args.figmaEmbedLink && (
-          <>
-            <h2 style={{ color: '#333333' }}>Design</h2>
-            <iframe
-              allowFullScreen
-              height={350}
-              src={args.figmaEmbedLink}
-              style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
-              title="figma embed"
-              width="100%"
-            />
-            <h2 style={{ color: '#333333' }}>Component</h2>
-          </>
-        )}
-        <Dashboard {...args} />
-      </>
+      <ConfigProvider config={config}>
+        <>
+          {args.figmaEmbedLink && (
+            <>
+              <h2 style={{ color: '#333333' }}>Design</h2>
+              <iframe
+                allowFullScreen
+                height={350}
+                src={args.figmaEmbedLink}
+                style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
+                title="figma embed"
+                width="100%"
+              />
+              <h2 style={{ color: '#333333' }}>Component</h2>
+            </>
+          )}
+          <Dashboard {...args} />
+        </>
+      </ConfigProvider>
     </JournalProvider>
   </XpubProvider>
 )

@@ -13,6 +13,7 @@ import {
 import { Info } from './styles'
 
 const Production = ({
+  client,
   file,
   manuscript,
   currentUser,
@@ -50,6 +51,7 @@ const Production = ({
               // onBlur={source => {
               //   updateManuscript(manuscript.id, { meta: { source } })
               // }}
+              client={client}
               manuscriptId={manuscript.id}
               onAssetManager={onAssetManager}
               saveSource={debouncedSave}

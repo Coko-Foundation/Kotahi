@@ -32,6 +32,7 @@ export const Base = args => (
 export const EmptyReviewMetadaForm = Base.bind()
 
 const baseProps = {
+  formData: {},
   form: {
     __typename: 'FormStructure',
     name: 'Research Object Submission Form',
@@ -656,6 +657,7 @@ const baseProps = {
 Base.args = baseProps
 
 const emptyFormProps = {
+  formData: {},
   form: {
     __typename: 'FormStructure',
     name: 'Research Object Submission Form',

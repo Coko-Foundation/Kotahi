@@ -18,13 +18,6 @@ services:
         - public_client_host=${PUBLIC_CLIENT_HOST}
         - public_client_port=${PUBLIC_CLIENT_PORT}
         - instance_name=${INSTANCE_NAME:-elife}
-        - manuscripts_table_columns=${MANUSCRIPTS_TABLE_COLUMNS}
-        - manuscripts_table_first_column_width=${MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH}
-        - display_shortid_as_identifier=${DISPLAY_SHORTID_AS_IDENTIFIER}
-        - review_shared=${REVIEW_SHARED}
-        - review_hide=${REVIEW_HIDE}
-        - hypothesis_allow_tagging=${HYPOTHESIS_ALLOW_TAGGING}
-        - allow_manual_import=${ALLOW_MANUAL_IMPORT}
 
     ports:
       - ${SERVER_PORT:-3000}:${SERVER_PORT:-3000}
@@ -70,7 +63,6 @@ services:
       - PUBLISHED_ARTICLE_LOCATION_PREFIX=${PUBLISHED_ARTICLE_LOCATION_PREFIX:-}
       - PUBLICATION_LICENSE_URL=${PUBLICATION_LICENSE_URL:-}
       - MANUSCRIPTS_TABLE_COLUMNS=${MANUSCRIPTS_TABLE_COLUMNS}
-      - MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH=${MANUSCRIPTS_TABLE_FIRST_COLUMN_WIDTH}
       - DISPLAY_SHORTID_AS_IDENTIFIER=${DISPLAY_SHORTID_AS_IDENTIFIER:-false}
       - GMAIL_NOTIFICATION_EMAIL_AUTH=${GMAIL_NOTIFICATION_EMAIL_AUTH:-}
       - GMAIL_NOTIFICATION_EMAIL_SENDER=${GMAIL_NOTIFICATION_EMAIL_SENDER:-}

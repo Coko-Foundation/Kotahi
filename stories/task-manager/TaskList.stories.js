@@ -1,26 +1,30 @@
 import React from 'react'
 import TaskList from '../../app/components/component-task-manager/src/TaskList'
 import DesignEmbed from '../common/utils'
+import { ConfigProvider } from '../../app/components/config/src'
+import config from '../../config/sampleConfigFormData'
 
 export const Base = args => (
-  <>
-    {args.figmaEmbedLink && (
-      <>
-        <h2 style={{ color: '#333333' }}>Design</h2>
-        <iframe
-          allowFullScreen
-          height={350}
-          src={args.figmaEmbedLink}
-          style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
-          title="figma embed"
-          width="100%"
-        />
-        <h2 style={{ color: '#333333' }}>Component</h2>
-      </>
-    )}
+  <ConfigProvider config={config}>
+    <>
+      {args.figmaEmbedLink && (
+        <>
+          <h2 style={{ color: '#333333' }}>Design</h2>
+          <iframe
+            allowFullScreen
+            height={350}
+            src={args.figmaEmbedLink}
+            style={{ border: '1px solid rgba(0, 0, 0, 0.1)' }}
+            title="figma embed"
+            width="100%"
+          />
+          <h2 style={{ color: '#333333' }}>Component</h2>
+        </>
+      )}
 
-    <TaskList {...args} />
-  </>
+      <TaskList {...args} />
+    </>
+  </ConfigProvider>
 )
 
 Base.args = {

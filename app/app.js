@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 import { hot } from 'react-hot-loader'
 import { createBrowserHistory } from 'history'
 import Root from './Root'
-import theme from './theme'
+// Theme import has been moved to AdminPage.js for implementing config based theme
 
 // Models
 import AssetManager from './components/asset-manager/src/AssetManagerPage'
@@ -28,7 +28,7 @@ ReactDOM.render(
   <XpubProvider>
     <JournalProvider journal={JSON.parse(JSON.stringify(journal))}>
       <ModalProvider modals={modals}>
-        <Root history={history} routes={routes} theme={theme} />
+        <Root history={history} routes={routes} />
       </ModalProvider>
     </JournalProvider>
   </XpubProvider>,

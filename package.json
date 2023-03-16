@@ -123,6 +123,7 @@
     "@pubsweet/models": "^0.3.15",
     "@pubsweet/ui": "12.6.0",
     "@pubsweet/ui-toolkit": "^2.3.5",
+    "@rjsf/core": "4.2.3",
     "apollo-upload-client": "14.1.2",
     "archiver": "^5.3.0",
     "atob": "^2.1.2",

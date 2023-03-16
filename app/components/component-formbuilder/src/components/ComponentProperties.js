@@ -29,8 +29,7 @@ const getEditableComponentProperties = (
 ) =>
   Object.entries(getComponentProperties(componentType, formCategory)).filter(
     ([key]) =>
-      key !== 'id' &&
-      (key !== 'publishingTag' || shouldAllowHypothesisTagging === 'true'),
+      key !== 'id' && (key !== 'publishingTag' || shouldAllowHypothesisTagging),
   )
 
 const ComponentProperties = ({

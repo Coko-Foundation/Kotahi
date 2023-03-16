@@ -1,7 +1,8 @@
-import React, { useState, useEffect } from 'react'
+import React, { useContext, useState, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { th, override } from '@pubsweet/ui-toolkit'
 import lightenBy from '../../shared/lightenBy'
+import { ConfigContext } from '../config/src'
 
 const Tab = styled.div`
   background-color: ${({ active }) =>
@@ -23,8 +24,12 @@ export const TabsContainer = styled.div`
   display: flex;
   justify-content: space-between;
 
-  margin-top: ${() =>
-    ['ncrc'].includes(process.env.INSTANCE_NAME) ? '16px' : '0'};
+  ${props =>
+    props.config &&
+    css`
+      margin-top: ${() =>
+        ['ncrc'].includes(props.config.instanceName) ? '16px' : '0'};
+    `}
 
   ${props =>
     props.background &&
@@ -67,6 +72,7 @@ const Tabs = ({
   background,
   hideChat,
 }) => {
+  const config = useContext(ConfigContext)
   const [activeKey, setActiveKey] = useState(defaultActiveKey)
 
   useEffect(() => {
@@ -87,7 +93,11 @@ const Tabs = ({
 
   return (
     <>
-      <TabsContainer background={background} gridArea={tabsContainerGridArea}>
+      <TabsContainer
+        background={background}
+        config={config}
+        gridArea={tabsContainerGridArea}
+      >
         <div style={{ display: 'flex' }}>
           {sections.map(({ key, label }) => (
             <TabContainer
