@@ -366,6 +366,22 @@ a {
   overflow-wrap: break-word;
   color: var(--color-main);
 }
+
+.abstract {
+  font-size:1em;
+  font-weight:500;
+  background: var(--color-main-light);
+  margin-left: calc((var(--pagedjs-margin-left) + 10ch) * -1);
+  margin-right: calc((var(--pagedjs-margin-right) + 10ch) * -1);
+  padding: 1em calc(10ch + var(--pagedjs-margin-right)) 1em calc(10ch + var(--pagedjs-margin-left));
+  display: block;
+	margin-bottom: 4ch;
+}
+
+.abstract h2:first-child {
+  margin-top: 0;
+}
+
 @page {
   size: letter;
   margin: 18mm 14mm 26mm 14mm;
@@ -399,6 +415,8 @@ a {
   padding-right: 3ch;
   background: white;
 }
+
+
 
 .titlepage::before {
   content: string(journalSlug); 
