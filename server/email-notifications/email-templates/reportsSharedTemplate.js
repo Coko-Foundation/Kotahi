@@ -1,7 +1,4 @@
-const ReportsSharedTemplate = ({
-  receiverName,
-  manuscriptPageUrl,
-}) => {
+const ReportsSharedTemplate = ({ receiverName, manuscriptPageUrl }) => {
   const result = {
     cc: '',
     subject: '',
