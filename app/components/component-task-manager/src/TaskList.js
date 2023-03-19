@@ -37,7 +37,9 @@ const TaskList = ({
   useEffect(() => {
     setTasks(
       // Reorder required, as optimisticResponse doesn't honour array order, causing jitter with drag-n-drop
-      (persistedTasks || []).slice().sort((a, b) => a.sequenceIndex - b.sequenceIndex),
+      (persistedTasks || [])
+        .slice()
+        .sort((a, b) => a.sequenceIndex - b.sequenceIndex),
     )
   }, [persistedTasks])
 
