@@ -27,12 +27,12 @@ const publicationMetadata = {
   publisher: { publisherName: 'Publisher Name' },
   articleIdOnWebsite: 'x456789',
   fonts: [
-    'NotoSans-Black.ttf',
-    'NotoSans-BlackItalic.ttf',
-    'NotoSans-Bold.ttf',
-    'NotoSans-BoldItalic.ttf',
-    'NotoSans-Italic.ttf',
-    'NotoSans-Regular.ttf',
+    'Reforma2018-Blanca.ttf',
+    'Reforma2018-BlancaItalica.ttf',
+    'Reforma2018-Gris.ttf',
+    'Reforma2018-GrisItalica.ttf',
+    'Reforma2018-Negra.ttf',
+    'Reforma2018-NegraItalica.ttf',
     // The old fonts:
     // 'Newsreader-Italic-VariableFont-opsz-wght.ttf',
     // 'Newsreader-VariableFont-opsz-wght.ttf',

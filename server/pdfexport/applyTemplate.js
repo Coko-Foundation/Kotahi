@@ -52,12 +52,6 @@ const generateCss = async noPagedJs => {
   }
 
   if (!noPagedJs) {
-    const pagedCssBuffer = await fs.readFile(
-      `${defaultTemplatePath}/pagedJsStyles.css`,
-    )
-
-    outputCss += pagedCssBuffer.toString()
-
     try {
       const userCssBuffer = await fs.readFile(
         `${userTemplatePath}/pagedJsStyles.css`,
@@ -67,6 +61,12 @@ const generateCss = async noPagedJs => {
       outputCss += userCssBuffer.toString()
     } catch {
       console.error('No user PagedJS stylesheet found')
+
+      const pagedCssBuffer = await fs.readFile(
+        `${defaultTemplatePath}/pagedJsStyles.css`,
+      )
+
+      outputCss += pagedCssBuffer.toString()
     }
   }
 
