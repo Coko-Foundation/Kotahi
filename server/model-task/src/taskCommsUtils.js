@@ -53,19 +53,39 @@ const populateTemplatedTasksForManuscript = async manuscriptId => {
             .insertAndFetch(task)
             .withGraphFetched('assignee')
             .then(taskObject => {
-              Promise.all(
-                taskObject.emailNotifications.map(emailNotification => {
-                  const taskEmailNotification = {
-                    ...emailNotification,
-                    taskId: taskObject.id,
-                  }
+              const emailNotificationPromises = []
 
-                  delete taskEmailNotification.id
-                  return TaskEmailNotification.query(trx).insertAndFetch(
-                    taskEmailNotification,
-                  )
-                }),
-              )
+              // Start delay at 100ms per notification
+              let delay = 0
+
+              // eslint-disable-next-line no-restricted-syntax
+              for (const emailNotification of taskObject.emailNotifications) {
+                const taskEmailNotification = {
+                  ...emailNotification,
+                  taskId: taskObject.id,
+                }
+
+                delete taskEmailNotification.id
+
+                // Increment the delay by 100ms per notification
+                delay += 100
+
+                const emailNotificationPromise = new Promise(
+                  // eslint-disable-next-line no-loop-func, no-shadow
+                  (resolve, reject) => {
+                    setTimeout(() => {
+                      TaskEmailNotification.query(trx)
+                        .insertAndFetch(taskEmailNotification)
+                        .then(result => resolve(result))
+                        .catch(error => reject(error))
+                    }, delay)
+                  },
+                )
+
+                emailNotificationPromises.push(emailNotificationPromise)
+              }
+
+              Promise.all(emailNotificationPromises)
                 .then(result => resolve(result))
                 .catch(error => reject(error))
             })
