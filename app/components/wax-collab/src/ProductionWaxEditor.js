@@ -72,6 +72,7 @@ const ProductionWaxEditor = ({
 
   const updateAnystyle = async text => {
     const { content } = text
+    // eslint-disable-next-line no-console
     console.log('Coming in: ', content)
     return client
       .query({
@@ -82,6 +83,7 @@ const ProductionWaxEditor = ({
         fetchPolicy: 'network-only',
       })
       .then(result => {
+        // eslint-disable-next-line no-console
         console.log('Result:', result?.data?.buildCitations?.htmlReferences)
 
         if (

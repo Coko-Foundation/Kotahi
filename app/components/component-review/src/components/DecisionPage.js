@@ -186,7 +186,7 @@ const DecisionPage = ({ match }) => {
           }),
           fields: {
             tasks() {
-              return updatedTasks;
+              return updatedTasks
             },
           },
         })

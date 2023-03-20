@@ -1911,9 +1911,11 @@ const uiSchema = {
           <input
             className="form-control"
             onChange={event => props.onChange(event.target.value)}
+            // eslint-disable-next-line react/destructuring-assignment
             required={props.required}
             style={{ width: '10%' }}
             type="color"
+            // eslint-disable-next-line react/destructuring-assignment
             value={props.value}
           />
         )
@@ -1926,9 +1928,11 @@ const uiSchema = {
           <input
             className="form-control"
             onChange={event => props.onChange(event.target.value)}
+            // eslint-disable-next-line react/destructuring-assignment
             required={props.required}
             style={{ width: '10%' }}
             type="color"
+            // eslint-disable-next-line react/destructuring-assignment
             value={props.value}
           />
         )

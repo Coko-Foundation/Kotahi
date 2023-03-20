@@ -9,37 +9,39 @@ const Container = styled.div`
 `
 
 const LabelContainer = styled.div`
+  align-items: center;
   background: white;
   border: 1.5px solid ${theme.colors.neutral.gray70};
-  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
   border-radius: 10px;
+  box-shadow: 0px 1px 1px rgba(0, 0, 0, 0.25);
   display: flex;
   justify-content: center;
-  align-items: center;
+  padding-right: ${props => (props.showResetIcon ? '15px' : '0')};
   position: relative;
-  padding-right: ${props => props.showResetIcon ? '15px' : '0'};
-  width: ${props => props.compact ? '50px' : '65px'}
+  width: ${props => (props.compact ? '50px' : '65px')};
 `
 
 const ControlsContainer = styled.div`
-  margin-left: 4px;
   display: flex;
   flex-direction: column;
+  margin-left: 4px;
 `
 
 const CounterActionContainer = styled.div`
   button {
-    cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
     background: transparent;
     border: none;
+    cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
 
     svg {
-      color: ${props => props.disabled ? theme.colorBorder : theme.colorIconPrimary};
+      color: ${props =>
+        props.disabled ? theme.colorBorder : theme.colorIconPrimary};
     }
 
     &:hover {
       svg {
-        stroke: ${props => props.disabled ? theme.colorBorder : theme.colors.brand1.base};
+        stroke: ${props =>
+          props.disabled ? theme.colorBorder : theme.colors.brand1.base};
       }
     }
   }
@@ -48,14 +50,16 @@ const CounterActionContainer = styled.div`
 const CounterValueUp = styled(CounterActionContainer)`
   margin-top: -3px;
 `
+
 const CounterValueDown = styled(CounterActionContainer)`
   margin-top: -10px;
 `
+
 const CloseIconContainer = styled(CounterActionContainer)`
-  cursor: ${props => props.disabled ? "not-allowed" : "pointer"};
-  border-radius: 500px;
-  display: flex;
   align-items: center;
+  border-radius: 500px;
+  cursor: ${props => (props.disabled ? 'not-allowed' : 'pointer')};
+  display: flex;
   justify-content: center;
   position: absolute;
   right: 3px;
@@ -70,58 +74,73 @@ const CounterField = ({
   disabled = false,
 }) => {
   const [value, setValue] = useState(propsValue)
-  const [displayValue, setDisplayValue] = useState(propsValue === null ? 'None' : propsValue)
+
+  const [displayValue, setDisplayValue] = useState(
+    propsValue === null ? 'None' : propsValue,
+  )
+
   const [showResetIcon, setShowResetIcon] = useState(false)
   const noneValue = null
-  const defaultValue = showNone ? noneValue : (minValue || 0)
+  const defaultValue = showNone ? noneValue : minValue || 0
 
   useEffect(() => {
     setValue(propsValue)
   }, [propsValue])
 
   useEffect(() => {
-    setDisplayValue(value === null ? 'None' : value);
+    setDisplayValue(value === null ? 'None' : value)
+
     // this check is required to avoid infinite loop as `value` change leads to `propsValue`
     // change via `onChange` and then `propsChange` change leads to `value` change
     if (value !== propsValue) {
       onChange(value)
     }
+
     setShowResetIcon(value !== defaultValue)
   }, [value])
 
   const resetValue = () => {
     if (disabled) {
-      return;
+      return
     }
+
     setValue(defaultValue)
   }
 
   const increaseCounter = () => {
     if (disabled) {
-      return;
+      return
     }
+
     let updatedValue = null
+
     if (value === null) {
       updatedValue = 0
     } else {
       updatedValue = value + 1
     }
+
     setValue(updatedValue)
   }
 
   const decreaseCounter = () => {
     if (disabled) {
-      return;
+      return
     }
+
     let updatedValue = null
+
     if (value === null) {
+      // eslint-disable-next-line no-unused-expressions
       updatedValue
     } else {
       updatedValue = value - 1
+
       if (minValue !== null && updatedValue < minValue) {
         updatedValue = showNone ? noneValue : minValue
       }
     }
+
     setValue(updatedValue)
   }
 
@@ -129,20 +148,23 @@ const CounterField = ({
     <Container>
       <LabelContainer compact={compact} showResetIcon={showResetIcon}>
         <span>{displayValue}</span>
-        {
-          showResetIcon && <CloseIconContainer onClick={() => resetValue()} disabled={disabled}>
-            <CloseIcon size={15} color={disabled ? theme.colorBorder : "black"} />
+        {showResetIcon && (
+          <CloseIconContainer disabled={disabled} onClick={() => resetValue()}>
+            <CloseIcon
+              color={disabled ? theme.colorBorder : 'black'}
+              size={15}
+            />
           </CloseIconContainer>
-        }
+        )}
       </LabelContainer>
       <ControlsContainer>
         <CounterValueUp disabled={disabled}>
-          <button type="button" onClick={() => increaseCounter()}>
+          <button onClick={() => increaseCounter()} type="button">
             <ChevronUp size={16} />
           </button>
         </CounterValueUp>
         <CounterValueDown disabled={disabled}>
-          <button type="button" onClick={() => decreaseCounter()}>
+          <button onClick={() => decreaseCounter()} type="button">
             <ChevronDown size={16} />
           </button>
         </CounterValueDown>
