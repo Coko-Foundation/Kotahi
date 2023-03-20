@@ -223,7 +223,7 @@ switch (
       },
       {
         label: 'Kotahi task notification',
-        value: 'genericTaskNotificationEmailTemplate'
+        value: 'genericTaskNotificationEmailTemplate',
       },
     ]
     break
@@ -259,35 +259,35 @@ switch (
       },
       {
         label: 'Kotahi task notification',
-        value: 'genericTaskNotificationEmailTemplate'
+        value: 'genericTaskNotificationEmailTemplate',
       },
       {
         label: 'Generic task manager update notification',
-        value: 'genericTaskManagerUpdateNotificationTemplate'
+        value: 'genericTaskManagerUpdateNotificationTemplate',
       },
       {
         label: 'Report(s) shared',
-        value: 'reportsSharedTemplate'
+        value: 'reportsSharedTemplate',
       },
       {
         label: 'Consolidated report shared with authors',
-        value: 'consolidatedReportWithAuthorsTemplate'
+        value: 'consolidatedReportWithAuthorsTemplate',
       },
       {
         label: 'Report published',
-        value: 'reportPublishedTemplate'
+        value: 'reportPublishedTemplate',
       },
       {
         label: 'Follow-up with author to submit revised preprint ',
-        value: 'authorFollowUpSubmitRevisedPreprintTemplate'
+        value: 'authorFollowUpSubmitRevisedPreprintTemplate',
       },
       {
         label: 'Reviewer invitation - re-review',
-        value: 'reviewerInvitationReReviewTemplate'
+        value: 'reviewerInvitationReReviewTemplate',
       },
       {
         label: 'Reviewer invitation - new reviewer for a revised preprint',
-        value: 'reviewerInvitationRevisedPreprintTemplate'
+        value: 'reviewerInvitationRevisedPreprintTemplate',
       },
     ]
     break
@@ -295,7 +295,7 @@ switch (
     emailTemplateOptions = [
       {
         label: 'Kotahi task notification',
-        value: 'genericTaskNotificationEmailTemplate'
+        value: 'genericTaskNotificationEmailTemplate',
       },
       {
         label: 'Message notification template',
@@ -322,6 +322,7 @@ const SelectEmailTemplate = ({
     <Select
       aria-label="Notification_email_select"
       data-testid="Notification_email_select"
+      isClearable={isClearable || false}
       label="notification email"
       onChange={selected => {
         if (taskEmailNotification) {
@@ -332,12 +333,12 @@ const SelectEmailTemplate = ({
             emailTemplateKey: selected ? selected.value : '',
           })
         }
+
         onChangeEmailTemplate(selected ? selected.value : '')
       }}
       options={emailTemplateOptions}
-      placeholder={placeholder || "Choose notification template"}
+      placeholder={placeholder || 'Choose notification template'}
       value={selectedEmailTemplate}
-      isClearable={isClearable || false}
     />
   )
 }

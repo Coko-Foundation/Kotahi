@@ -12,46 +12,45 @@ import { UPDATE_TASK_STATUS } from '../../../queries'
 import theme from '../../../theme'
 
 const StartButton = styled.button`
+  align-items: center;
   background: ${theme.colors.brand1.base};
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
   border-radius: 6px;
-  width: 111px;
-  height: 45px;
-  font-family: 'Roboto';
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  color: white;
+  display: flex;
+  font-family: ${theme.fontHeading};
+  font-size: ${theme.fontSizeBase};
   font-style: normal;
   font-weight: 500;
-  font-size: ${theme.fontSizeBase};
-  line-height: 19px;
-  display: flex;
-  align-items: center;
+  height: 45px;
   justify-content: center;
-  text-align: center;
   letter-spacing: 0.01em;
-  color: white;
+  line-height: 19px;
+  text-align: center;
+  width: 111px;
 `
 
 const BaseDropdown = styled(Dropdown)`
-  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
   border-radius: 4px;
-  font-family: 'Roboto';
+  box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
+  font-family: ${theme.fontHeading};
+  font-size: 14.5px;
   font-style: normal;
   font-weight: 500;
-  font-size: 14.5px;
-  line-height: 17px;
-  width: 111px;
   height: 45px;
   letter-spacing: 0.01em;
+  line-height: 17px;
+  width: 111px;
 
   .Dropdown-control {
-    border: 0;
-    padding: 0;
-    background-color: white;
-    display: flex;
     align-items: center;
-    justify-content: space-between;
-    text-align: center;
+    background-color: white;
+    border: 0;
+    display: flex;
     height: 100%;
+    justify-content: space-between;
     padding: 6px;
+    text-align: center;
   }
 
   .Dropdown-arrow-wrapper {
@@ -60,10 +59,19 @@ const BaseDropdown = styled(Dropdown)`
 
   .Dropdown-menu {
     border: 2px solid #ccc;
-    width: 111px;
+    border-radius: 2px;
     margin-left: -2px;
     margin-top: 2px;
-    border-radius: 2px;
+    width: 111px;
+  }
+`
+
+const DropdownLabel = styled.div`
+  align-items: center;
+  display: flex;
+
+  svg {
+    margin-right: 4px;
   }
 `
 
@@ -103,14 +111,6 @@ const DoneDropdown = styled(BaseDropdown)`
   }
 `
 
-const DropdownLabel = styled.div`
-  display: flex;
-  align-items: center;
-  svg {
-    margin-right: 4px;
-  }
-`
-
 const StatusDropdown = ({ task, onStatusUpdate }) => {
   const status = {
     NOT_STARTED: 'Not started',
@@ -146,6 +146,7 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
   }
 
   let DropdownComponent = <></>
+  // eslint-disable-next-line no-unused-vars
   let IconComponent = <></>
 
   const PauseLabel = (
