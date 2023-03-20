@@ -1,7 +1,4 @@
-const ReportPublishedTemplate = ({
-  receiverName,
-  authorName,
-}) => {
+const ReportPublishedTemplate = ({ receiverName, authorName }) => {
   const result = {
     cc: '',
     subject: '',
@@ -9,7 +6,7 @@ const ReportPublishedTemplate = ({
   }
 
   result.cc = 'lesley@sciencecolab.org, swartzk@ninds.nih.gov'
-  result.subject = 'Report(s) for Biophysics Colab available to view'
+  result.subject = 'Report from Biophysics Colab now published'
   result.content = `<p>
       <p>Dear ${receiverName}</p>
       <p>The report for the preprint by ${authorName} and colleagues has now been published and can be viewed in the list of <a href="https://sciety.org/lists/ee7e738a-a1f1-465b-807c-132d273ca952" target="_blank">articles evaluated by Biophysics Colab</a>.</p>
