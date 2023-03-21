@@ -17,6 +17,7 @@ const Root = styled.nav`
   grid-area: menu;
   max-height: 100vh;
   padding: ${grid(2)};
+  font-family: ${th('fontInterface')}, sans-serif !important;
 `
 
 const UserName = styled.div`
@@ -85,13 +86,15 @@ export const Item = styled(NavItem)`
   background-color: ${props =>
     props.active ? th('colorBackgroundHue') : 'unset'};
   border-radius: 10px;
-  color: ${props => (props.active ? th('colorText') : th('colorTextReverse'))};
+  color: ${props => (props.active ? th('colorText') : th('colorTextReverse'))} !important;
   display: flex;
   height: ${grid(5)};
   justify-content: space-between;
   line-height: ${grid(3)};
   margin-left: ${props => grid((props.depth || 0) * 2)};
   padding-left: ${grid(1)};
+  text-decoration: none !important;
+  font-size: ${th('fontSizeBase')} !important;
 
   & > span {
     align-items: center;
@@ -106,7 +109,7 @@ export const Item = styled(NavItem)`
 
   &:hover {
     background-color: ${lightenBy('colorPrimary', 0.5)};
-    color: ${th('colorText')};
+    color: ${th('colorText')} !important;
     stroke: ${th('colorText')};
 
     svg {
@@ -119,6 +122,11 @@ const UserItem = styled(Link)`
   color: ${th('colorTextReverse')};
   display: flex;
   padding-bottom: ${grid(2)};
+  text-decoration: none !important;
+
+  &:hover {
+    color: ${th('colorTextReverse')} !important;
+  }
 `
 
 const UserInfo = styled.div`
@@ -126,6 +134,7 @@ const UserInfo = styled.div`
   flex-direction: column;
   justify-content: center;
   margin-left: ${grid(1)};
+  font-size: ${th('fontSizeBase')} !important;
 `
 
 const SubMenu = ({ location, depth = 0, ...navInfo }) => {
@@ -216,7 +225,7 @@ const UserComponent = ({ user, loginLink, profileLink }) => (
         <UserAvatar isClickable={false} size={48} user={user} />
         <UserInfo>
           <UserName>{user.username}</UserName>
-          <p>{user.isOnline ? '' : 'Offline'}</p>
+          <span>{user.isOnline ? '' : 'Offline'}</span>
           {/* ({user.username}) */}
           {user.admin ? ' (admin)' : ''}
         </UserInfo>
