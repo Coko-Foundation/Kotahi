@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from 'react'
+import React, { useCallback, useEffect, useState } from 'react'
 import styled from 'styled-components'
+import { debounce } from 'lodash'
 import SelectEmailTemplate from '../../component-review/src/components/emailNotifications/SelectEmailTemplate'
 import { RoundIconButton, Select, TextInput } from '../../shared'
 import SecondaryActionButton from '../../shared/SecondaryActionButton'
@@ -156,21 +157,62 @@ const TaskNotificationDetails = ({
     setTaskNotification(propTaskEmailNotification)
   }, [propTaskEmailNotification])
 
+  const [taskNotificationStatus, setTaskNotificationStatus] = useState(null)
+
+  const [recipientDropdownState, setRecipientDropdownState] = useState(false)
+
   const [recipientEmail, setRecipientEmail] = useState(
-    taskEmailNotification.recipientEmail,
+    taskEmailNotification?.recipientEmail || '',
   )
 
   const [recipientName, setRecipientName] = useState(
-    taskEmailNotification.recipientName,
+    taskEmailNotification?.recipientName || '',
   )
 
   const [isNewRecipient, setIsNewRecipient] = useState(
     taskEmailNotification.recipientType === recipientTypes.UNREGISTERED_USER,
   )
 
-  const [taskNotificationStatus, setTaskNotificationStatus] = useState(null)
+  useEffect(() => {
+    setRecipientEmail(taskEmailNotification.recipientEmail)
+    setIsNewRecipient(
+      taskEmailNotification.recipientType === recipientTypes.UNREGISTERED_USER,
+    )
+    setRecipientName(taskEmailNotification.recipientName)
+  }, [taskEmailNotification])
 
-  const [recipientDropdownState, setRecipientDropdownState] = useState(false)
+  const updateTaskNotificationDebounced = useCallback(
+    debounce(updateTaskNotification ?? (() => {}), 1000),
+    [],
+  )
+
+  useEffect(() => {
+    return updateTaskNotificationDebounced.flush
+  }, [])
+
+  const updateRecipientName = value => {
+    const updatedTaskNotification = {
+      ...taskEmailNotification,
+      recipientUserId: null,
+      recipientType: recipientTypes.UNREGISTERED_USER,
+      recipientName: value,
+    }
+
+    setRecipientName(value)
+    updateTaskNotificationDebounced(updatedTaskNotification)
+  }
+
+  const updateRecipientEmail = value => {
+    const updatedTaskNotification = {
+      ...taskEmailNotification,
+      recipientUserId: null,
+      recipientType: recipientTypes.UNREGISTERED_USER,
+      recipientEmail: value,
+    }
+
+    setRecipientEmail(value)
+    updateTaskNotificationDebounced(updatedTaskNotification)
+  }
 
   let notificationOption
 
@@ -588,6 +630,11 @@ const TaskNotificationDetails = ({
     }
   }
 
+  const handleEmailTemplateChange = template => {
+    setSelectedTemplate(template)
+    setTaskNotificationStatus('')
+  }
+
   return (
     <NotificationDetailsContainer>
       <RecipientFieldContainer>
@@ -614,28 +661,14 @@ const TaskNotificationDetails = ({
         {isNewRecipient && (
           <UnregisteredUserCell>
             <TextInput
-              onChange={e => {
-                setRecipientEmail(e.target.value)
-                updateTaskNotification({
-                  ...taskEmailNotification,
-                  recipientUserId: null,
-                  recipientType: recipientTypes.UNREGISTERED_USER,
-                  recipientEmail: e.target.value,
-                })
-              }}
+              data-cy="new-recipient-email"
+              onChange={event => updateRecipientEmail(event.target.value)}
               placeholder="Email"
               value={recipientEmail}
             />
             <TextInput
-              onChange={e => {
-                setRecipientName(e.target.value)
-                updateTaskNotification({
-                  ...taskEmailNotification,
-                  recipientUserId: null,
-                  recipientType: recipientTypes.UNREGISTERED_USER,
-                  recipientName: e.target.value,
-                })
-              }}
+              data-cy="new-recipient-name"
+              onChange={event => updateRecipientName(event.target.value)}
               placeholder="Name"
               value={recipientName}
             />
@@ -646,7 +679,7 @@ const TaskNotificationDetails = ({
         <TaskTitle>Select email template</TaskTitle>
         <SelectEmailTemplate
           isClearable
-          onChangeEmailTemplate={setSelectedTemplate}
+          onChangeEmailTemplate={handleEmailTemplateChange}
           placeholder="Select email template"
           selectedEmailTemplate={
             selectedTemplate || taskEmailNotification.emailTemplateKey

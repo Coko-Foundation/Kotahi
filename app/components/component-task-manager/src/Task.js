@@ -297,7 +297,7 @@ const Task = ({
   )
 
   useEffect(() => {
-    return updateTaskTitleDebounce.flush()
+    return updateTaskTitleDebounce.flush
   }, [])
 
   const updateTaskTitle = value => {
