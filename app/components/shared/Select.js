@@ -71,11 +71,15 @@ export const Select = ({
 
   if (!isMulti && value) {
     if (hasGroupedOptions) {
+      // eslint-disable-next-line no-restricted-syntax
       for (const option of options) {
-        let optionMatched = option.options.find(subOption => subOption.value === value)
+        const optionMatched = option.options.find(
+          subOption => subOption.value === value,
+        )
+
         if (optionMatched) {
           selectedOption = optionMatched
-          break;
+          break
         }
       }
     } else {

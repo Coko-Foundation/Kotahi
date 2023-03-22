@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 import { injectable, inject } from 'inversify'
 import { ToolGroup } from 'wax-prosemirror-services'
 

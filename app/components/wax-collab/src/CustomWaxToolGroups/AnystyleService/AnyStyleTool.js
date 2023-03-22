@@ -14,6 +14,7 @@ class AnyStyleTool extends Tools {
   title = 'Convert with Anystyle'
   label = 'Automatic parser'
 
+  // eslint-disable-next-line class-methods-use-this
   get run() {
     return true
   }
@@ -22,6 +23,7 @@ class AnyStyleTool extends Tools {
     return true
   }
 
+  // eslint-disable-next-line class-methods-use-this
   get enable() {
     return state => {
       return true

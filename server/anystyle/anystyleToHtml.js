@@ -88,7 +88,7 @@ const anystyleXmlToHtml = (anystyleXml, startCount = 0) => {
     let isGarbage = false
 
     // Sometimes Anystyle sends back garbage citations that are just citation numbers or author tags; these come before or after a regular citation. Get rid of them.
-    // Test is to see if there is more than one sequence returned – if so, we're in a situation where there might be garbage data; and then
+    // Test is to see if there is more than one sequence returned, if so, we're in a situation where there might be garbage data; and then
     // check if there is only one child in the returned text. If so, it's (probably) garbage.
     //
     // This does not work perfectly! If you select, for example, one citation and then a paragraph after it which is not a citation,
