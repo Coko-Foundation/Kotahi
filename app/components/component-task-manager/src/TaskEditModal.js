@@ -222,8 +222,8 @@ const TaskEditModal = ({
       })
     }
 
-    setTaskNotifications(
-      taskEmailNotifications.map(t =>
+    setTaskNotifications(currentTaskEmailNotifications =>
+      currentTaskEmailNotifications.map(t =>
         t.id === updatedTaskNotification.id ? updatedTaskNotification : t,
       ),
     )

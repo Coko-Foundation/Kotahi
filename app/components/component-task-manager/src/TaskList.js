@@ -74,7 +74,9 @@ const TaskList = ({
       })
     }
 
-    setTasks(tasks.map(t => (t.id === id ? updatedTask : t)))
+    setTasks(currentTasks =>
+      currentTasks.map(t => (t.id === id ? updatedTask : t)),
+    )
   }
 
   const addNewTask = () => {
