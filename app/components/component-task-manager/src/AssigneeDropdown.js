@@ -1,5 +1,6 @@
-import React, { useState, useEffect } from 'react'
+import React, { useState, useEffect, useCallback } from 'react'
 import styled from 'styled-components'
+import { debounce } from 'lodash'
 import { Select, TextInput } from '../../shared'
 import theme from '../../../theme'
 import { assigneeTypes } from '../../../../config/journal/tasks.json'
@@ -60,18 +61,45 @@ const AssigneeDropdown = ({
     task.assigneeType === assigneeTypes.UNREGISTERED_USER,
   )
 
-  const [assigneeEmail, setAssigneeEmail] = useState(task.assigneeEmail)
-  const [assigneeName, setAssigneeName] = useState(task.assigneeName)
+  const [assigneeEmail, setAssigneeEmail] = useState(task?.assigneeEmail || '')
+  const [assigneeName, setAssigneeName] = useState(task?.assigneeName || '')
 
   useEffect(() => {
     setAssigneeEmail(task.assigneeEmail)
     setIsNewUser(task.assigneeType === assigneeTypes.UNREGISTERED_USER)
     setAssigneeName(task.assigneeName)
-  }, [
-    task.assigneeEmail,
-    task.assigneeName,
-    task.assigneeType === assigneeTypes.UNREGISTERED_USER,
-  ])
+  }, [task])
+
+  const updateTaskAssigneeDebounce = useCallback(
+    debounce(updateTask ?? (() => {}), 1000),
+    [],
+  )
+
+  useEffect(() => {
+    return updateTaskAssigneeDebounce.flush
+  }, [])
+
+  const updateTaskAssigneeName = value => {
+    setAssigneeName(value)
+    updateTaskAssigneeDebounce(task.id, {
+      ...task,
+      assigneeUserId: null,
+      assignee: null,
+      assigneeType: assigneeTypes.UNREGISTERED_USER,
+      assigneeName: value,
+    })
+  }
+
+  const updateTaskAssigneeEmail = value => {
+    setAssigneeEmail(value)
+    updateTaskAssigneeDebounce(task.id, {
+      ...task,
+      assigneeUserId: null,
+      assignee: null,
+      assigneeType: assigneeTypes.UNREGISTERED_USER,
+      assigneeEmail: value,
+    })
+  }
 
   function handleAssigneeInput(selectedOption, selectedTask) {
     setDropdownState(selectedOption)
@@ -151,31 +179,13 @@ const AssigneeDropdown = ({
     <UnregisteredUserCell>
       <TextInput
         data-cy="new-user-email"
-        onChange={e => {
-          setAssigneeEmail(e.target.value)
-          updateTask(task.id, {
-            ...task,
-            assigneeUserId: null,
-            assignee: null,
-            assigneeType: assigneeTypes.UNREGISTERED_USER,
-            assigneeEmail: e.target.value,
-          })
-        }}
+        onChange={event => updateTaskAssigneeEmail(event.target.value)}
         placeholder="Email"
         value={assigneeEmail}
       />
       <TextInput
         data-cy="new-user-name"
-        onChange={e => {
-          setAssigneeName(e.target.value)
-          updateTask(task.id, {
-            ...task,
-            assigneeUserId: null,
-            assignee: null,
-            assigneeType: assigneeTypes.UNREGISTERED_USER,
-            assigneeName: e.target.value,
-          })
-        }}
+        onChange={event => updateTaskAssigneeName(event.target.value)}
         placeholder="Name"
         value={assigneeName}
       />
