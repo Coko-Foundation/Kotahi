@@ -1,7 +1,7 @@
 import React from 'react'
 import { get } from 'lodash'
 import { validateFormField } from './formValidation'
-import { convertTimestampToDateString } from './dateUtils'
+import { convertTimestampToRelativeDateString } from './dateUtils'
 import { StatusBadge } from '../components/shared'
 
 /** Validate just manuscript.submission, based on the supplied array of field definitions */
@@ -46,14 +46,14 @@ export const getFieldValueAndDisplayValue = (column, manuscript) => {
     return [
       {
         value: manuscript.created,
-        displayValue: convertTimestampToDateString(manuscript.created),
+        displayValue: convertTimestampToRelativeDateString(manuscript.created),
       },
     ]
   if (column.name === 'updated')
     return [
       {
         value: manuscript.updated,
-        displayValue: convertTimestampToDateString(manuscript.updated),
+        displayValue: convertTimestampToRelativeDateString(manuscript.updated),
       },
     ]
   if (column.name === 'status')
@@ -66,6 +66,13 @@ export const getFieldValueAndDisplayValue = (column, manuscript) => {
             status={manuscript.status}
           />
         ),
+      },
+    ]
+  if (column.name === 'manuscriptVersions')
+    return [
+      {
+        value: manuscript.manuscriptVersions,
+        displayValue: `${manuscript.numVersions}`,
       },
     ]
   // if (column.name === 'shortId')
@@ -89,3 +96,31 @@ export const getFieldValueAndDisplayValue = (column, manuscript) => {
       }
     })
 }
+
+/*
+Get all team members of a manuscript with a specified role
+*/
+export const getMembersOfTeam = (version, role) => {
+  if (!version.teams) return []
+
+  const teams = version.teams.find(team => team.role === role)
+  return teams ? teams.members : []
+}
+
+const getMetadataObject = (version, value) => {
+  const metadata = version.meta || {}
+  return metadata[value] || []
+}
+
+export const getSubmittedDate = version =>
+  getMetadataObject(version, 'history').find(
+    history => history.type === 'submitted',
+  ) || []
+
+/*
+Get all roles of the user in a manuscript
+*/
+export const getRoles = (manuscript, userId) =>
+  manuscript.teams
+    .filter(t => t.members.some(member => member.user.id === userId))
+    .map(t => t.role)

@@ -144,6 +144,7 @@ const typeDefs = `
     status: String
     alias: Alias
     isShared: Boolean
+    updated: DateTime
   }
 
   type Alias {

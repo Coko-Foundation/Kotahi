@@ -8,6 +8,7 @@ const QUERY = gql`
       username
       admin
       email
+      recentTab
       defaultIdentity {
         identifier
         email

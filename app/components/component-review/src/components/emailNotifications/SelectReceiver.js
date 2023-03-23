@@ -23,20 +23,7 @@ const SelectReceiver = ({
   return (
     <>
       <Checkbox checked={isNewUser} label="New User" onChange={setIsNewUser} />
-      {!isNewUser && (
-        <Select
-          aria-label="Choose receiver"
-          label="Choose receiver"
-          onChange={selected => {
-            onChangeReceiver(selected.value)
-          }}
-          options={options}
-          placeholder="Choose receiver"
-          value={selectedReceiver}
-          width="100%"
-        />
-      )}
-      {isNewUser && (
+      {isNewUser ? (
         <>
           <InputField
             data-cy="new-user-email"
@@ -51,6 +38,18 @@ const SelectReceiver = ({
             value={externalName}
           />
         </>
+      ) : (
+        <Select
+          aria-label="Choose receiver"
+          label="Choose receiver"
+          onChange={selected => {
+            onChangeReceiver(selected.value)
+          }}
+          options={options}
+          placeholder="Choose receiver"
+          value={selectedReceiver}
+          width="100%"
+        />
       )}
     </>
   )

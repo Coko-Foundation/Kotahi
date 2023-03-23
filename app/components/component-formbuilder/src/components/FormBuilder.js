@@ -9,7 +9,7 @@ import { Draggable } from 'react-beautiful-dnd'
 import { Page, Heading } from './style'
 import { DragVerticalIcon } from '../../../shared/Icons'
 import lightenBy from '../../../../shared/lightenBy'
-import Modal from '../../../component-modal/src/index'
+import Modal from '../../../component-modal/src/ConfirmationModal'
 
 const ModalContainer = styled.div`
   background: ${th('colorBackground')};

@@ -1,6 +1,6 @@
 /* eslint-disable no-shadow */
 
-import React, { useState, useEffect, useContext } from 'react'
+import React, { useState, useContext } from 'react'
 import { toast } from 'react-toastify'
 import 'react-toastify/dist/ReactToastify.css'
 import {
@@ -22,11 +22,16 @@ import {
 } from '../../../queries'
 import { updateMutation } from '../../component-submit/src/components/SubmitPage'
 import { publishManuscriptMutation } from '../../component-review/src/components/queries'
-import getUriQueryParams from './getUriQueryParams'
 import Manuscripts from './Manuscripts'
+import {
+  extractFilters,
+  extractSortData,
+  URI_PAGENUM_PARAM,
+  useQueryParams,
+} from '../../../shared/urlParamUtils'
 import { validateDoi, validateSuffix } from '../../../shared/commsUtils'
 
-const ManuscriptsPage = ({ history }) => {
+const ManuscriptsPage = ({ currentUser, history }) => {
   const config = useContext(ConfigContext)
   const urlFrag = config.journal.metadata.toplevel_urlfragment
   const chatRoomId = fnv.hash(config.baseUrl).hex()
@@ -37,12 +42,14 @@ const ManuscriptsPage = ({ history }) => {
     .split(',')
     .map(columnName => columnName.trim())
 
-  const [sortName, setSortName] = useState('created')
-  const [sortDirection, setSortDirection] = useState('DESC')
-  const [page, setPage] = useState(1)
   const [isImporting, setIsImporting] = useState(false)
+  const applyQueryParams = useQueryParams()
 
-  const uriQueryParams = getUriQueryParams(window.location)
+  const uriQueryParams = new URLSearchParams(history.location.search)
+  const page = uriQueryParams.get(URI_PAGENUM_PARAM) || 1
+  const sortName = extractSortData(uriQueryParams).name
+  const sortDirection = extractSortData(uriQueryParams).direction
+  const filters = extractFilters(uriQueryParams)
   const limit = config?.manuscript?.paginationCount || 10
 
   const queryObject = useQuery(GET_MANUSCRIPTS_AND_FORM, {
@@ -52,7 +59,7 @@ const ManuscriptsPage = ({ history }) => {
         : null,
       offset: (page - 1) * limit,
       limit,
-      filters: uriQueryParams,
+      filters,
       timezoneOffsetMinutes: new Date().getTimezoneOffset(),
     },
     fetchPolicy: 'network-only',
@@ -63,11 +70,6 @@ const ManuscriptsPage = ({ history }) => {
     GET_SYSTEM_WIDE_DISCUSSION_CHANNEL,
   )
 
-  useEffect(() => {
-    queryObject.refetch()
-    setPage(1)
-  }, [history.location.search])
-
   useSubscription(IMPORTED_MANUSCRIPTS_SUBSCRIPTION, {
     onSubscriptionData: data => {
       const {
@@ -76,9 +78,8 @@ const ManuscriptsPage = ({ history }) => {
         },
       } = data
 
-      queryObject.refetch()
       setIsImporting(false)
-      setPage(1)
+      applyQueryParams({ [URI_PAGENUM_PARAM]: 1 })
 
       toast.success(
         manuscriptsImportStatus && 'Manuscripts successfully imported',
@@ -168,10 +169,12 @@ const ManuscriptsPage = ({ history }) => {
 
   return (
     <Manuscripts
+      applyQueryParams={applyQueryParams}
       archiveManuscriptMutations={archiveManuscriptMutations}
       chatRoomId={chatRoomId}
       configuredColumnNames={configuredColumnNames}
       confirmBulkArchive={confirmBulkArchive}
+      currentUser={currentUser}
       deleteManuscriptMutations={deleteManuscriptMutations}
       history={history}
       importManuscripts={importManuscriptsAndRefetch}
@@ -179,14 +182,12 @@ const ManuscriptsPage = ({ history }) => {
       page={page}
       publishManuscripts={publishManuscripts}
       queryObject={queryObject}
-      setPage={setPage}
       setReadyToEvaluateLabels={setReadyToEvaluateLabels}
-      setSortDirection={setSortDirection}
-      setSortName={setSortName}
       shouldAllowBulkImport={shouldAllowBulkImport}
       sortDirection={sortDirection}
       sortName={sortName}
       systemWideDiscussionChannel={systemWideDiscussionChannel}
+      uriQueryParams={uriQueryParams}
       urlFrag={urlFrag}
       validateDoi={validateDoi(client)}
       validateSuffix={validateSuffix(client)}

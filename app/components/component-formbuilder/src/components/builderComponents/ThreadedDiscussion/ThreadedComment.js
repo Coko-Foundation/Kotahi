@@ -16,7 +16,7 @@ import {
 } from '../../style'
 import { FieldPublishingSelector, Icon } from '../../../../../shared'
 import { UserAvatar } from '../../../../../component-avatar/src'
-import Modal from '../../../../../component-modal/src'
+import Modal from '../../../../../component-modal/src/ConfirmationModal'
 import SimpleWaxEditor from '../../../../../wax-collab/src/SimpleWaxEditor'
 import { hasValue } from '../../../../../../shared/htmlUtils'
 

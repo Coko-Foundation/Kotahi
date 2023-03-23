@@ -1,35 +1,33 @@
-import React, { useContext, useCallback, useRef } from 'react'
-import { throttle } from 'lodash'
-import styled from 'styled-components'
 import { useQuery } from '@apollo/client'
+import { throttle } from 'lodash'
+import PropTypes from 'prop-types'
+import React, { useCallback, useContext, useRef } from 'react'
+import Modal from 'react-modal'
 import {
-  useHistory,
   matchPath,
+  Redirect,
   Route,
   Switch,
-  Redirect,
+  useHistory,
 } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import Modal from 'react-modal'
+import styled from 'styled-components'
 import { JournalContext } from './xpub-journal/src'
 import { XpubContext } from './xpub-with-context/src'
 import { ConfigContext } from './config/src'
 
-import UsersManager from './component-users-manager/src/UsersManager'
-import ManuscriptsPage from './component-manuscripts/src/ManuscriptsPage'
-import DashboardPage from './component-dashboard/src/components/DashboardPage'
-import SubmitPage from './component-submit/src/components/SubmitPage'
+import FormBuilderPage from './component-formbuilder/src/components/FormBuilderPage'
 import ManuscriptPage from './component-manuscript/src/components/ManuscriptPage'
-import ReviewersPage from './component-review/src/components/ReviewersPage'
+import ManuscriptsPage from './component-manuscripts/src/ManuscriptsPage'
+import ProductionPage from './component-production/src/components/ProductionPage'
+import { Profile } from './component-profile/src'
+import ReportPage from './component-reporting/src/ReportPage'
+import DecisionPage from './component-review/src/components/DecisionPage'
 import ReviewPage from './component-review/src/components/ReviewPage'
 import ReviewPreviewPage from './component-review/src/components/ReviewPreviewPage'
-import DecisionPage from './component-review/src/components/DecisionPage'
-import FormBuilderPage from './component-formbuilder/src/components/FormBuilderPage'
 import NewSubmissionPage from './component-submit/src/components/NewSubmissionPage'
-import ReportPage from './component-reporting/src/ReportPage'
-import { Profile } from './component-profile/src'
-import ProductionPage from './component-production/src/components/ProductionPage'
+import SubmitPage from './component-submit/src/components/SubmitPage'
 import TasksTemplatePage from './component-task-manager/src/TasksTemplatePage'
+import UsersManager from './component-users-manager/src/UsersManager'
 import ConfigManagerPage from './component-config-manager/src/ConfigManagerPage'
 
 import QUERY from './adminPageQueries'
@@ -38,6 +36,10 @@ import Menu from './Menu'
 import { Spinner } from './shared'
 
 import currentRolesVar from '../shared/currentRolesVar'
+import DashboardEditsPage from './component-dashboard/src/components/DashboardEditsPage'
+import DashboardLayout from './component-dashboard/src/components/DashboardLayout'
+import DashboardReviewsPage from './component-dashboard/src/components/DashboardReviewsPage'
+import DashboardSubmissionsPage from './component-dashboard/src/components/DashboardSubmissionsPage'
 import RolesUpdater from './RolesUpdater'
 
 const getParams = ({ routerPath, path }) => {
@@ -150,6 +152,9 @@ const AdminPage = () => {
   const decisionFormBuilderLink = `${urlFrag}/admin/decision-form-builder`
   const configurationLink = `${urlFrag}/admin/configuration`
   const homeLink = `${urlFrag}/dashboard`
+  const dashboardSubmissionsLink = `${urlFrag}/dashboard/submissions`
+  const dashboardReviewsLink = `${urlFrag}/dashboard/reviews`
+  const dashboardEditsLink = `${urlFrag}/dashboard/edits`
   const profileLink = `${urlFrag}/profile`
   const manuscriptsLink = `${urlFrag}/admin/manuscripts`
   const reportsLink = `${urlFrag}/admin/reports`
@@ -213,6 +218,23 @@ const AdminPage = () => {
     })
   }
 
+  const invitationId = window.localStorage.getItem('invitationId')
+    ? window.localStorage.getItem('invitationId')
+    : ''
+
+  const dashboardRedirect = () =>
+    invitationId ? (
+      <Redirect to="/invitation/accepted" />
+    ) : (
+      <Redirect
+        to={
+          currentUser.recentTab
+            ? `${urlFrag}/dashboard/${currentUser.recentTab}`
+            : dashboardSubmissionsLink
+        }
+      />
+    )
+
   // Throttled refetch query `currentUser` once every 2mins
   const throttledRefetch = throttle(refetch, 120000, { trailing: false })
 
@@ -252,32 +274,10 @@ const AdminPage = () => {
           redirectLink={redirectLink}
         />
         <PrivateRoute
-          component={DashboardPage}
-          currentUser={currentUser}
-          exact
-          path={homeLink}
-          redirectLink={redirectLink}
-        />
-
-        <PrivateRoute
           component={NewSubmissionPage}
           currentUser={currentUser}
           exact
           path={`${urlFrag}/newSubmission`}
-          redirectLink={redirectLink}
-        />
-        <PrivateRoute
-          component={SubmitPage}
-          currentUser={currentUser}
-          exact
-          path={`${urlFrag}/versions/:version/submit`}
-          redirectLink={redirectLink}
-        />
-        <PrivateRoute
-          component={ReviewersPage}
-          currentUser={currentUser}
-          exact
-          path={`${urlFrag}/versions/:version/reviewers`}
           redirectLink={redirectLink}
         />
         <PrivateRoute
@@ -301,16 +301,58 @@ const AdminPage = () => {
           path={`${urlFrag}/versions/:version/decision`}
           redirectLink={redirectLink}
         />
-
-        {['elife', 'ncrc'].includes(config.instanceName) && (
-          // TODO: remove instance based custom submit page and refactor it to be enabled from config manager after finalizaing the requirements
-          <PrivateRoute
-            component={SubmitPage}
-            exact
-            path={`${urlFrag}/versions/:version/evaluation`}
-            redirectLink={redirectLink}
-          />
-        )}
+        {/* TODO: remove instance based custom submit page and refactor it to be enabled from config manager after finalizaing the requirements */}
+        <PrivateRoute
+          component={SubmitPage}
+          currentUser={currentUser}
+          exact
+          path={`${urlFrag}/versions/:version/${
+            ['elife', 'ncrc'].includes(config.instanceName)
+              ? 'evaluation'
+              : 'submit'
+          }`}
+          redirectLink={redirectLink}
+        />
+        <Route exact path={`${urlFrag}/dashboard/:path?`}>
+          <DashboardLayout urlFrag={urlFrag}>
+            <Switch>
+              <PrivateRoute
+                component={dashboardRedirect}
+                currentUser={currentUser}
+                exact
+                path={homeLink}
+                redirectLink={redirectLink}
+              />
+              {config?.dashboard?.showSections.includes('submission') && (
+                <PrivateRoute
+                  component={DashboardSubmissionsPage}
+                  currentUser={currentUser}
+                  exact
+                  path={dashboardSubmissionsLink}
+                  redirectLink={redirectLink}
+                />
+              )}
+              {config?.dashboard?.showSections.includes('review') && (
+                <PrivateRoute
+                  component={DashboardReviewsPage}
+                  currentUser={currentUser}
+                  exact
+                  path={dashboardReviewsLink}
+                  redirectLink={redirectLink}
+                />
+              )}
+              {config?.dashboard?.showSections.includes('editor') && (
+                <PrivateRoute
+                  component={DashboardEditsPage}
+                  currentUser={currentUser}
+                  exact
+                  path={dashboardEditsLink}
+                  redirectLink={redirectLink}
+                />
+              )}
+            </Switch>
+          </DashboardLayout>
+        </Route>
         {currentUser?.admin && [
           // We use array instead of <></> because of https://stackoverflow.com/a/68637108/6505513
           <PrivateRoute

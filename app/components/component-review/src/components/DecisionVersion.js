@@ -1,6 +1,7 @@
 import React, { useContext, useRef, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { set, debounce } from 'lodash'
+import { useLocation } from 'react-router-dom'
 import styled from 'styled-components'
 import DecisionReviews from './decision/DecisionReviews'
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
@@ -20,6 +21,8 @@ import {
 import DecisionAndReviews from '../../../component-submit/src/components/DecisionAndReviews'
 import FormTemplate from '../../../component-submit/src/components/FormTemplate'
 import TaskList from '../../../component-task-manager/src/TaskList'
+import KanbanBoard from './KanbanBoard'
+import InviteReviewer from './reviewers/InviteReviewer'
 import { ConfigContext } from '../../../config/src'
 
 const TaskSectionRow = styled(SectionRow)`
@@ -35,19 +38,21 @@ const createBlankSubmissionBasedOnForm = form => {
 
 const DecisionVersion = ({
   allUsers,
+  addReviewer,
   roles,
   decisionForm,
   form,
   currentDecisionData,
   currentUser,
   version,
+  versionNumber,
   isCurrentVersion,
   parent,
   updateManuscript, // To handle manuscript editing
   onChange, // To handle form editing
   makeDecision,
   sendNotifyEmail,
-  sendChannelMessageCb,
+  sendChannelMessage,
   publishManuscript,
   updateTeam,
   createTeam,
@@ -70,11 +75,15 @@ const DecisionVersion = ({
   selectedEmail,
   setSelectedEmail,
   setShouldPublishField,
-  isEmailAddressOptedOut,
+  selectedEmailIsBlacklisted,
+  updateSharedStatusForInvitedReviewer,
   dois,
   refetch,
   updateTask,
   updateTasks,
+  teams,
+  removeReviewer,
+  updateTeamMember,
   updateTaskNotification,
   deleteTaskNotification,
   createTaskEmailNotificationLog,
@@ -89,8 +98,8 @@ const DecisionVersion = ({
   )
 
   useEffect(() => debouncedSave.flush, [])
+  const location = useLocation()
 
-  // Hooks from the old world
   const addEditor = (manuscript, label, isCurrent, user) => {
     const isThisReadOnly = !isCurrent
 
@@ -215,10 +224,10 @@ const DecisionVersion = ({
                 allUsers={allUsers}
                 currentUser={currentUser}
                 externalEmail={externalEmail}
-                isEmailAddressOptedOut={isEmailAddressOptedOut}
                 manuscript={version}
                 selectedEmail={selectedEmail}
-                sendChannelMessageCb={sendChannelMessageCb}
+                selectedEmailIsBlacklisted={selectedEmailIsBlacklisted}
+                sendChannelMessage={sendChannelMessage}
                 sendNotifyEmail={sendNotifyEmail}
                 setExternalEmail={setExternalEmail}
                 setSelectedEmail={setSelectedEmail}
@@ -253,21 +262,10 @@ const DecisionVersion = ({
     }
   }
 
-  const decisionSection = () => {
+  const teamSection = () => {
     return {
       content: (
         <>
-          {!isCurrentVersion && (
-            <SectionContent>
-              <SectionHeader>
-                <Title>Archived version</Title>
-              </SectionHeader>
-              <SectionRow>
-                This is not the current, but an archived read-only version of
-                the manuscript.
-              </SectionRow>
-            </SectionContent>
-          )}
           {isCurrentVersion && (
             <AssignEditorsReviewers
               allUsers={allUsers}
@@ -303,29 +301,89 @@ const DecisionVersion = ({
               </SectionRow>
             </SectionContent>
           )}
+          <KanbanBoard
+            invitations={invitations}
+            isCurrentVersion={isCurrentVersion}
+            manuscript={version}
+            removeReviewer={removeReviewer}
+            reviewForm={reviewForm}
+            reviews={reviewers}
+            updateReview={updateReview}
+            updateSharedStatusForInvitedReviewer={
+              updateSharedStatusForInvitedReviewer
+            }
+            updateTeamMember={updateTeamMember}
+            version={version}
+            versionNumber={versionNumber}
+          />
+          {isCurrentVersion && (
+            <AdminSection>
+              <InviteReviewer
+                addReviewer={addReviewer}
+                currentUser={currentUser}
+                manuscript={version}
+                reviewerUsers={allUsers}
+                selectedEmailIsBlacklisted={selectedEmailIsBlacklisted}
+                sendChannelMessage={sendChannelMessage}
+                sendNotifyEmail={sendNotifyEmail}
+                setExternalEmail={setExternalEmail}
+                updateSharedStatusForInvitedReviewer={
+                  updateSharedStatusForInvitedReviewer
+                }
+                updateTeamMember={updateTeamMember}
+              />
+            </AdminSection>
+          )}
+        </>
+      ),
+      key: `team_${version.id}`,
+      label: 'Team',
+    }
+  }
+
+  const decisionSection = () => {
+    return {
+      content: (
+        <>
+          {!isCurrentVersion && (
+            <SectionContent>
+              <SectionHeader>
+                <Title>Archived version</Title>
+              </SectionHeader>
+              <SectionRow>
+                This is not the current, but an archived read-only version of
+                the manuscript.
+              </SectionRow>
+            </SectionContent>
+          )}
           {!isCurrentVersion && (
             <DecisionAndReviews
+              currentUser={currentUser}
               decisionForm={decisionForm}
               isControlPage
               manuscript={version}
+              readOnly
               reviewForm={reviewForm}
               showEditorOnlyFields
               threadedDiscussionProps={threadedDiscussionProps}
             />
           )}
           {isCurrentVersion && (
-            <AdminSection key="decision-review">
-              <DecisionReviews
-                canHideReviews={canHideReviews}
-                invitations={invitations}
-                manuscript={version}
-                reviewers={reviewers}
-                reviewForm={reviewForm}
-                threadedDiscussionProps={threadedDiscussionProps}
-                updateReview={updateReview}
-                urlFrag={urlFrag}
-              />
-            </AdminSection>
+            <DecisionReviews
+              canHideReviews={canHideReviews}
+              currentUser={currentUser}
+              invitations={invitations}
+              manuscript={version}
+              reviewers={reviewers}
+              reviewForm={reviewForm}
+              threadedDiscussionProps={threadedDiscussionProps}
+              updateReview={updateReview}
+              updateSharedStatusForInvitedReviewer={
+                updateSharedStatusForInvitedReviewer
+              }
+              updateTeamMember={updateTeamMember}
+              urlFrag={urlFrag}
+            />
           )}
           {isCurrentVersion && (
             <AdminSection key="decision-form">
@@ -393,46 +451,55 @@ const DecisionVersion = ({
           )}
         </>
       ),
-      key: version.id,
-      label: 'Workflow',
+      key: `decision_${version.id}`,
+      label: 'Decision',
     }
   }
 
-  const sections = []
   let defaultActiveKey
 
+  switch (config?.controlPanel?.showTabs[0]) {
+    case 'Workflow':
+      defaultActiveKey = `team_${version.id}`
+      break
+    case 'Manuscript text':
+      defaultActiveKey = `editor_${version.id}`
+      break
+    case 'Metadata':
+      defaultActiveKey = `metadata_${version.id}`
+      break
+    case 'Tasks & Notifications':
+      defaultActiveKey = `tasks_${version.id}`
+      break
+    default:
+      defaultActiveKey = `team_${version.id}`
+      break
+  }
+
+  const locationState =
+    location.state !== undefined && location.state.tab === 'Decision'
+      ? `decision_${version.id}`
+      : defaultActiveKey
+
+  const sections = []
+
   if (config?.controlPanel?.showTabs) {
-    if (config?.controlPanel?.showTabs.includes('Workflow'))
+    if (config?.controlPanel?.showTabs.includes('Workflow')) {
+      sections.push(teamSection())
       sections.push(decisionSection())
+    }
+
     if (config?.controlPanel?.showTabs.includes('Manuscript text'))
       sections.push(editorSection)
     if (config?.controlPanel?.showTabs.includes('Metadata'))
       sections.push(metadataSection())
     if (config?.controlPanel?.showTabs.includes('Tasks & Notifications'))
       sections.push(tasksAndNotificationsSection())
-
-    switch (config?.controlPanel?.showTabs[0]) {
-      case 'Workflow':
-        defaultActiveKey = version.id
-        break
-      case 'Manuscript text':
-        defaultActiveKey = `editor_${version.id}`
-        break
-      case 'Metadata':
-        defaultActiveKey = `metadata_${version.id}`
-        break
-      case 'Tasks & Notifications':
-        defaultActiveKey = `tasks_${version.id}`
-        break
-      default:
-        defaultActiveKey = version.id
-        break
-    }
   }
 
   return (
     <HiddenTabs
-      defaultActiveKey={defaultActiveKey}
+      defaultActiveKey={locationState}
       onChange={refetch}
       sections={sections}
     />
@@ -440,6 +507,7 @@ const DecisionVersion = ({
 }
 
 DecisionVersion.propTypes = {
+  addReviewer: PropTypes.func.isRequired,
   updateManuscript: PropTypes.func.isRequired,
   form: PropTypes.shape({
     children: PropTypes.arrayOf(
@@ -478,6 +546,7 @@ DecisionVersion.propTypes = {
       }).isRequired,
     ).isRequired,
   }).isRequired,
+  versionNumber: PropTypes.number.isRequired,
   parent: PropTypes.shape({
     id: PropTypes.string.isRequired,
     teams: PropTypes.arrayOf(
@@ -487,8 +556,9 @@ DecisionVersion.propTypes = {
           PropTypes.shape({
             user: PropTypes.shape({
               id: PropTypes.string.isRequired,
+              username: PropTypes.string.isRequired,
               defaultIdentity: PropTypes.shape({
-                name: PropTypes.string,
+                name: PropTypes.string.isRequired,
               }),
             }),
           }).isRequired,

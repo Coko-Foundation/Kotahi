@@ -112,23 +112,16 @@ class Manuscript extends BaseModel {
     return manuscriptVersions
   }
 
-  async getManuscriptAuthor(params = {}) {
+  async getManuscriptAuthor() {
     if (!this.id) {
       return null
     }
 
-    const { onlyAccepted = false } = params
-
-    let relations = '[teams(onlyAuthors).[members(orderByCreatedDesc).[user]]]'
-
-    if (onlyAccepted) {
-      relations =
-        '[teams(onlyAuthors).[members(onlyAccepted, orderByCreatedDesc).[user]]]'
-    }
-
     const manuscriptWithAuthors = await Manuscript.query()
       .findById(this.id)
-      .withGraphFetched(relations)
+      .withGraphFetched(
+        '[teams(onlyAuthors).[members(orderByCreatedDesc).[user]]]',
+      )
 
     if (
       !manuscriptWithAuthors.teams.length ||
@@ -221,6 +214,8 @@ class Manuscript extends BaseModel {
     /* eslint-disable-next-line global-require */
     const Task = require('../../model-task/src/task')
     /* eslint-disable-next-line global-require */
+    const Invitation = require('../../model-invitations/src/invitations')
+    /* eslint-disable-next-line global-require */
     const PublishedArtifact = require('../../model-published-artifact/src/publishedArtifact')
 
     return {
@@ -294,6 +289,14 @@ class Manuscript extends BaseModel {
         join: {
           from: 'manuscripts.id',
           to: 'manuscripts.parentId',
+        },
+      },
+      invitations: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: Invitation,
+        join: {
+          from: 'manuscripts.id',
+          to: 'invitations.manuscriptId',
         },
       },
     }

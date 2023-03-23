@@ -89,37 +89,22 @@ const CounterField = ({
 
   useEffect(() => {
     setDisplayValue(value === null ? 'None' : value)
-
     // this check is required to avoid infinite loop as `value` change leads to `propsValue`
     // change via `onChange` and then `propsChange` change leads to `value` change
-    if (value !== propsValue) {
-      onChange(value)
-    }
-
+    if (value !== propsValue) onChange(value)
     setShowResetIcon(value !== defaultValue)
   }, [value])
 
   const resetValue = () => {
-    if (disabled) {
-      return
-    }
-
+    if (disabled) return
     setValue(defaultValue)
   }
 
   const increaseCounter = () => {
-    if (disabled) {
-      return
-    }
-
+    if (disabled) return
     let updatedValue = null
-
-    if (value === null) {
-      updatedValue = 0
-    } else {
-      updatedValue = value + 1
-    }
-
+    if (value === null) updatedValue = 0
+    else updatedValue = value + 1
     setValue(updatedValue)
   }
 
@@ -130,10 +115,7 @@ const CounterField = ({
 
     let updatedValue = null
 
-    if (value === null) {
-      // eslint-disable-next-line no-unused-expressions
-      updatedValue
-    } else {
+    if (value !== null) {
       updatedValue = value - 1
 
       if (minValue !== null && updatedValue < minValue) {

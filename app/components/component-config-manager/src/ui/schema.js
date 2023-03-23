@@ -510,7 +510,7 @@ const schema = {
                 archivePeriodDays: {
                   type: 'integer',
                   description:
-                    'Number of days a Manuscripts should remain in the Manuscripts page before being automatically archived',
+                    'Number of days a manuscript should remain in the Manuscripts page before being automatically archived',
                   minimum: 1,
                   maximum: 90,
                 },
@@ -885,7 +885,7 @@ const schema = {
                 archivePeriodDays: {
                   type: 'integer',
                   description:
-                    'Number of days a Manuscripts should remain in the Manuscripts page before being automatically archived',
+                    'Number of days a manuscript should remain in the Manuscripts page before being automatically archived',
                   minimum: 1,
                   maximum: 90,
                 },
@@ -1259,7 +1259,7 @@ const schema = {
                 archivePeriodDays: {
                   type: 'integer',
                   description:
-                    'Number of days a Manuscripts should remain in the Manuscripts page before being automatically archived',
+                    'Number of days a manuscript should remain in the Manuscripts page before being automatically archived',
                   minimum: 1,
                   maximum: 90,
                 },
@@ -1628,7 +1628,7 @@ const schema = {
                 archivePeriodDays: {
                   type: 'integer',
                   description:
-                    'Number of days a Manuscripts should remain in the Manuscripts page before being automatically archived',
+                    'Number of days a manuscript should remain in the Manuscripts page before being automatically archived',
                   minimum: 1,
                   maximum: 90,
                 },
