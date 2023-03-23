@@ -146,8 +146,6 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
   }
 
   let DropdownComponent = <></>
-  // eslint-disable-next-line no-unused-vars
-  let IconComponent = <></>
 
   const PauseLabel = (
     <DropdownLabel>
@@ -182,7 +180,6 @@ const StatusDropdown = ({ task, onStatusUpdate }) => {
       DropdownComponent = InProgressDropdown
       break
     case status.PAUSED:
-      IconComponent = PauseIcon
       DropdownComponent = PausedDropdown
       break
     case status.DONE:

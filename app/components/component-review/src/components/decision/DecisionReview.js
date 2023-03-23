@@ -5,12 +5,11 @@ import { Button, Checkbox } from '@pubsweet/ui'
 import { th } from '@pubsweet/ui-toolkit'
 import { JournalContext } from '../../../../xpub-journal/src'
 import { ConfigContext } from '../../../../config/src'
-import Review from '../review/Review'
-import useCurrentUser from '../../../../../hooks/useCurrentUser'
 import ShareIcon from '../../../../../shared/icons/share'
 import { UserCombo, Primary, Secondary, UserInfo } from '../../../../shared'
 import { UserAvatar } from '../../../../component-avatar/src'
 import { ensureJsonIsParsed } from '../../../../../shared/objectUtils'
+import ReviewDetailsModal from '../../../../component-review-detail-modal/src'
 
 export const ToggleReview = ({ open, toggle }) => (
   <Button onClick={toggle} plain>
@@ -89,30 +88,20 @@ const ReviewHeading = ({
     : false
 
   const toggleIsHiddenFromAuthor = (reviewId, reviewHiddenFromAuthor) => {
-    updateReview(
-      reviewId,
-      {
-        isHiddenFromAuthor: reviewHiddenFromAuthor,
-        manuscriptId,
-        userId: reviewUserId,
-      },
+    updateReview(reviewId, {
+      isHiddenFromAuthor: reviewHiddenFromAuthor,
       manuscriptId,
-    )
+    })
   }
 
   const toggleIsHiddenReviewerNameFromPublishedAndAuthor = (
     reviewId,
     reviewerNameHiddenFromPublishedAndAuthor,
   ) => {
-    updateReview(
-      reviewId,
-      {
-        isHiddenReviewerName: reviewerNameHiddenFromPublishedAndAuthor,
-        manuscriptId,
-        userId: reviewUserId,
-      },
+    updateReview(reviewId, {
+      isHiddenReviewerName: reviewerNameHiddenFromPublishedAndAuthor,
       manuscriptId,
-    )
+    })
   }
 
   // TODO: Display user's ORCID
@@ -182,10 +171,6 @@ const Root = styled.div`
   margin-bottom: calc(${th('gridUnit')} * 3);
 `
 
-const ReviewBody = styled.div`
-  margin-left: 1em;
-`
-
 const DecisionReview = ({
   review,
   reviewForm,
@@ -197,9 +182,12 @@ const DecisionReview = ({
   canHideReviews,
   showEditorOnlyFields,
   threadedDiscussionProps,
+  reviewerTeamMember,
+  readOnly,
+  updateSharedStatusForInvitedReviewer,
+  updateTeamMember,
+  currentUser,
 }) => {
-  const currentUser = useCurrentUser()
-
   const {
     isHiddenFromAuthor,
     isHiddenReviewerName,
@@ -239,19 +227,24 @@ const DecisionReview = ({
         updateReview={updateReview}
         user={user}
       />
-
-      {open && (
-        <ReviewBody>
-          <Review
-            review={review}
-            reviewForm={reviewForm}
-            showEditorOnlyFields={showEditorOnlyFields}
-            showUserInfo={false}
-            threadedDiscussionProps={threadedDiscussionProps}
-            user={currentUser}
-          />
-        </ReviewBody>
-      )}
+      <ReviewDetailsModal
+        isControlPage={isControlPage}
+        isOpen={open}
+        manuscriptId={manuscriptId}
+        onClose={toggleOpen}
+        readOnly={readOnly}
+        review={review}
+        reviewerTeamMember={reviewerTeamMember}
+        reviewForm={reviewForm}
+        showEditorOnlyFields={showEditorOnlyFields}
+        showUserInfo
+        threadedDiscussionProps={threadedDiscussionProps}
+        updateReview={updateReview}
+        updateSharedStatusForInvitedReviewer={
+          updateSharedStatusForInvitedReviewer
+        }
+        updateTeamMember={updateTeamMember}
+      />
     </Root>
   )
 }
@@ -261,6 +254,9 @@ DecisionReview.propTypes = {
   review: PropTypes.object,
   // eslint-disable-next-line
   reviewer: PropTypes.object,
+  currentUser: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }).isRequired,
 }
 
 ReviewHeading.propTypes = {

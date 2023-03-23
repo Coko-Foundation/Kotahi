@@ -6,7 +6,7 @@ import gql from 'graphql-tag'
 import { useQuery, useMutation } from '@apollo/client'
 import { useDropzone } from 'react-dropzone'
 import styled from 'styled-components'
-import Modal from '../../component-modal/src/index'
+import Modal from '../../component-modal/src/ConfirmationModal'
 import { version as kotahiVersion } from '../../../../package.json'
 
 import {

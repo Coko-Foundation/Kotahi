@@ -98,6 +98,7 @@ class User extends BaseModel {
           type: ['string', 'object', 'null'],
           format: 'date-time',
         },
+        recentTab: { type: ['string', 'null'] },
       },
     }
   }

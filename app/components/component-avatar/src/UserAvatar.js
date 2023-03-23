@@ -96,7 +96,13 @@ const Avatar = props => {
 }
 
 const AvatarHandler = props => {
-  const { showHoverProfile = true, isClickable, user, username } = props
+  const {
+    showHoverProfile = true,
+    isClickable,
+    user,
+    size = 32,
+    username,
+  } = props
 
   if (user) {
     return (
@@ -104,11 +110,11 @@ const AvatarHandler = props => {
         condition={showHoverProfile}
         wrap={() => (
           <UserHoverProfile username={user.username}>
-            <Avatar {...props} />
+            <Avatar size={size} {...props} />
           </UserHoverProfile>
         )}
       >
-        <Avatar {...props} />
+        <Avatar size={size} {...props} />
       </ConditionalWrap>
     )
   }

@@ -7,7 +7,6 @@ import { NewSubmissionPage } from '../../page-object/new-submission-page'
 import { Menu } from '../../page-object/page-component/menu'
 import { DashboardPage } from '../../page-object/dashboard-page'
 import { ControlPage } from '../../page-object/control-page'
-import { ReviewersPage } from '../../page-object/reviewers-page'
 import { ReviewPage } from '../../page-object/review-page'
 
 describe('review page tests', () => {
@@ -24,10 +23,9 @@ describe('review page tests', () => {
     NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
     Menu.clickManuscriptsAndAssertPageLoad()
     ManuscriptsPage.clickControl()
-    ControlPage.clickManageReviewers()
     cy.fixture('role_names').then(name => {
-      ReviewersPage.inviteReviewer(name.role.reviewers[0])
-      ReviewersPage.inviteReviewer(name.role.reviewers[1])
+      ControlPage.inviteReviewer(name.role.reviewers[0])
+      ControlPage.inviteReviewer(name.role.reviewers[1])
     })
   })
   it('evaluation summary block should be visible to the reviewer', () => {
@@ -46,7 +44,6 @@ describe('review page tests', () => {
     ReviewPage.getDecisionRecommendation().should('be.visible')
   })
   it('saved decision should be visible for the reviewer', () => {
-    ReviewersPage.clickBackToControlPage()
     ControlPage.fillInDecision('the article is ok')
     ReviewPage.clickRevise()
     ControlPage.clickSubmit()

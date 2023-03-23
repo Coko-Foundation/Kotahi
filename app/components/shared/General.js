@@ -42,6 +42,12 @@ export const SectionContent = styled(Section)`
     margin-bottom: calc(${th('gridUnit')} * 3);
     margin-top: 0;
   }
+
+  /* stylelint-disable-next-line */
+  ${TabsContainer} ~ div > div > & {
+    border-top-left-radius: 0;
+    margin: 0;
+  }
 `
 
 export const PaddedContent = styled(Content)`

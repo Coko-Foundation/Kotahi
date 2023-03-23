@@ -32,7 +32,15 @@ const resolvers = {
 
       if (sort) {
         // e.g. 'created_DESC' into 'created' and 'DESC' arguments
-        query.orderBy(...sort.split('_'))
+        const [fieldName, direction] = sort.split('_')
+
+        if (fieldName === 'lastOnline') {
+          query.orderByRaw(
+            `(last_online IS NULL) ${direction === 'DESC' ? 'ASC' : 'DESC'}`,
+          )
+        }
+
+        query.orderBy(fieldName, direction)
       }
 
       if (limit) {
@@ -185,6 +193,13 @@ const resolvers = {
         return { success: false, error: 'Something went wrong', user: null }
       }
     },
+    async updateRecentTab(_, { tab }, ctx) {
+      const user = await models.User.query().updateAndFetchById(ctx.user, {
+        recentTab: tab,
+      })
+
+      return user
+    },
     async sendEmail(_, { input }, ctx) {
       const result = await sendEmailWithPreparedData(input, ctx)
 
@@ -252,10 +267,6 @@ const typeDefs = `
     searchUsers(teamId: ID, query: String): [User]
   }
 
-  type SendEmailResponse {
-    success: Boolean
-  }
-
   type PaginatedUsers {
     totalCount: Int
     users: [User]
@@ -266,8 +277,9 @@ const typeDefs = `
     deleteUser(id: ID): User
     updateUser(id: ID, input: String): User
     updateCurrentUsername(username: String): User
-    sendEmail(input: String): SendEmailResponse
+    sendEmail(input: String): Invitation
     updateCurrentEmail(email: String): UpdateEmailResponse
+    updateRecentTab(tab: String): User
   }
 
   type UpdateEmailResponse {
@@ -307,6 +319,7 @@ const typeDefs = `
     online: Boolean
     lastOnline: DateTime
     isOnline: Boolean
+    recentTab: String
     _currentRoles: [CurrentRole]
     _currentGlobalRoles: [String]
   }

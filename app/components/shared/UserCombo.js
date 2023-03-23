@@ -7,7 +7,7 @@ export const UserCombo = styled.div`
   line-height: ${grid(2.5)};
 `
 
-export const Primary = styled.div`
+export const Primary = styled.b`
   font-weight: 500;
 `
 

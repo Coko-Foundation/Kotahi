@@ -175,7 +175,7 @@ const ReviewLayout = ({
         />
       </Manuscript>
       <Chat>
-        <MessageContainer channelId={channelId} />
+        <MessageContainer channelId={channelId} currentUser={currentUser} />
       </Chat>
     </Columns>
   )

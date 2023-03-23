@@ -1,12 +1,13 @@
-import React from 'react'
-import PropTypes from 'prop-types'
-import { Field } from 'formik'
-import { Button } from '@pubsweet/ui'
-import { required } from 'xpub-validators'
-import styled from 'styled-components'
-// import 'react-select1/dist/react-select.css'
+import { Button, Checkbox } from '@pubsweet/ui'
 import { grid } from '@pubsweet/ui-toolkit'
-import { Select } from '../../../../shared'
+import { TextField } from '@pubsweet/ui/dist/atoms'
+import { Field } from 'formik'
+import PropTypes from 'prop-types'
+import React from 'react'
+import styled from 'styled-components'
+import { required } from 'xpub-validators'
+import { ActionButton, Select } from '../../../../shared'
+import { EmailErrorMessageWrapper } from '../emailNotifications'
 
 const OptionRenderer = option => (
   <div>
@@ -15,10 +16,15 @@ const OptionRenderer = option => (
   </div>
 )
 
-const FieldAndButton = styled.div`
+const RowGridStyled = styled.div`
   display: grid;
-  grid-gap: ${grid(2)};
-  grid-template-columns: ${grid(30)} ${grid(10)};
+  gap: ${grid(2)};
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+`
+
+const InputField = styled(TextField)`
+  height: 40px;
+  margin-bottom: 0;
 `
 
 const ReviewerInput = ({ field, form: { setFieldValue }, reviewerUsers }) => (
@@ -45,19 +51,63 @@ ReviewerInput.propTypes = {
   reviewerUsers: PropTypes.arrayOf(PropTypes.shape({}).isRequired).isRequired,
 }
 
-const ReviewerForm = ({ isValid, handleSubmit, reviewerUsers }) => (
+const ReviewerForm = ({
+  isValid,
+  handleSubmit,
+  reviewerUsers,
+  isNewUser,
+  setIsNewUser,
+  notificationStatus,
+  optedOut,
+  setExternalEmail,
+}) => (
   <form onSubmit={handleSubmit}>
-    <FieldAndButton>
-      <Field
-        component={ReviewerInput}
-        name="user"
-        reviewerUsers={reviewerUsers}
-        validate={required}
+    <RowGridStyled>
+      <Checkbox
+        checked={isNewUser}
+        defaultChecked={false}
+        label="New User"
+        onChange={() => setIsNewUser(!isNewUser)}
+        width={grid(0.75)}
       />
-      <Button disabled={!isValid} primary type="submit">
-        Invite reviewer
-      </Button>
-    </FieldAndButton>
+      {isNewUser ? (
+        <>
+          <Field
+            as={InputField}
+            id="email"
+            name="email"
+            onKeyUp={e => {
+              setExternalEmail(e.target.value)
+            }}
+            placeholder="Email"
+          />
+          <Field as={InputField} id="name" name="name" placeholder="Name" />
+          <ActionButton
+            disabled={!isValid}
+            primary
+            status={notificationStatus}
+            type="submit"
+          >
+            Invite and Notify
+          </ActionButton>
+          <EmailErrorMessageWrapper isVisible={optedOut}>
+            User email address opted out
+          </EmailErrorMessageWrapper>
+        </>
+      ) : (
+        <>
+          <Field
+            component={ReviewerInput}
+            name="user"
+            reviewerUsers={reviewerUsers}
+            validate={required}
+          />
+          <Button disabled={!isValid} primary type="submit">
+            Invite reviewer
+          </Button>
+        </>
+      )}
+    </RowGridStyled>
   </form>
 )
 

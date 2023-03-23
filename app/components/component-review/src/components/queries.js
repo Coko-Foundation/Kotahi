@@ -51,13 +51,18 @@ const manuscriptFields = `
       user {
         id
         username
+        profilePicture
+        isOnline
         email
         defaultIdentity {
           id
           name
+          identifier
         }
       }
       status
+      isShared
+      updated
     }
   }
   status
@@ -167,6 +172,30 @@ const formFields = `
   }
 `
 
+const teamFields = `
+  id
+  role
+  name
+  objectId
+  objectType
+  members {
+    updated
+    id
+    user {
+      id
+      username
+      profilePicture
+      isOnline
+      defaultIdentity {
+        id
+        identifier
+      }
+    }
+    status
+    isShared
+  }
+`
+
 export const query = gql`
   query($id: ID!) {
     currentUser {
@@ -237,15 +266,34 @@ export const query = gql`
     users {
       id
       username
+      profilePicture
+      isOnline
       email
       admin
       defaultIdentity {
         id
+        identifier
       }
     }
 
     doisToRegister(id: $id)
   }
+`
+
+export const addReviewerMutation = gql`
+mutation($manuscriptId: ID!, $userId: ID!) {
+  addReviewer(manuscriptId: $manuscriptId, userId: $userId) {
+    ${teamFields}
+  }
+}
+`
+
+export const removeReviewerMutation = gql`
+mutation($manuscriptId: ID!, $userId: ID!) {
+  removeReviewer(manuscriptId: $manuscriptId, userId: $userId) {
+    ${teamFields}
+  }
+}
 `
 
 export const updateReviewMutation = gql`
@@ -306,7 +354,7 @@ export const getUsers = gql`
 export const sendEmail = gql`
   mutation($input: String) {
     sendEmail(input: $input) {
-      success
+      id
     }
   }
 `

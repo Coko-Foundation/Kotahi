@@ -105,6 +105,14 @@ const RejectedIcon = () => (
   </span>
 )
 
+const InProgressIcon = () => (
+  <span data-testid="inProgress-svg">
+    <Icon color="cornflowerblue" key="edit" size={2} title="In Progress">
+      edit
+    </Icon>
+  </span>
+)
+
 const reportTypes = ['Summary', 'Manuscript', 'Editor', 'Reviewer', 'Author']
 
 const getTableDataWithSparkBars = (rows, labelMapper) => {
@@ -149,6 +157,7 @@ const ReviewerNamesWithStatuses = ({ reviewers }) => {
           {r.status === 'invited' && <InvitedIcon />}
           {r.status === 'accepted' && <AcceptedIcon />}
           {r.status === 'rejected' && <RejectedIcon />}
+          {r.status === 'inProgress' && <InProgressIcon />}
           {r.status === 'completed' && <CompletedIcon />}
         </span>
       ))}

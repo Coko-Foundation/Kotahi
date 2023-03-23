@@ -26,7 +26,7 @@ describe('Completing a review', () => {
 
       /* Ediot Submits a decision */
       cy.login(name.role.seniorEditor, dashboard)
-      DashboardPage.clickControlPanel()
+      DashboardPage.clickControlPanelDecision()
       ControlPage.getPublishButton().should('be.disabled') // Verify publish button is disabled
       // Fill the decision form
       ControlPage.clickDecisionTextInput()
@@ -55,7 +55,7 @@ describe('Completing a review', () => {
 
       /* Editor Workflow: Approve the new Manuscript version */
       cy.login(name.role.seniorEditor, dashboard)
-      DashboardPage.clickControlPanel()
+      DashboardPage.clickControlPanelDecision()
       ControlPage.getPublishButton().should('be.disabled') // Verify publish button is disabled
       ControlPage.getDecisionTextInput().type('Great Paper!')
       ControlPage.getDecisionFileInput().attachFile(decisionFileName)

@@ -5,7 +5,7 @@ import lightenBy from '../../shared/lightenBy'
 import { TabsContainer } from './Tabs'
 import { ConfigContext } from '../config/src'
 
-const Tab = styled.div`
+export const Tab = styled.div`
   background: ${({ active, theme }) =>
     active
       ? theme.colors.neutral.white
@@ -35,7 +35,7 @@ const Tab = styled.div`
   ${override('ui.Tab')}
 `
 
-const HiddenTabsContainer = styled(TabsContainer)`
+export const HiddenTabsContainer = styled(TabsContainer)`
   ${props => props.sticky && `background-color: ${th('colorBackgroundHue')};`}
   ${props => props.sticky && 'position: sticky;'}
   ${props => props.sticky && 'top: -16px;'}
@@ -46,7 +46,7 @@ const HiddenTabsContainer = styled(TabsContainer)`
   }
 `
 
-const TabContainer = styled.div.attrs(props => ({
+export const TabContainer = styled.div.attrs(props => ({
   'data-test-id': props['data-test-id'] || 'tab-container',
 }))``
 

@@ -95,11 +95,12 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
 
     const reviewerRoles = [
       'accepted:reviewer',
+      'inProgress:reviewer',
       'completed:reviewer',
       'reviewer',
     ]
 
-    const authorRoles = ['author', 'accepted:author']
+    const authorRoles = ['author']
 
     isEditor =
       manuscriptRoles &&
@@ -122,15 +123,17 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
     manuscriptPageUrl = `${baseUrl}/dashboard`
   }
 
+  if (isEditor) manuscriptPageUrl += '/decision'
+  else if (isReviewer) manuscriptPageUrl += '/review'
+  else manuscriptPageUrl += '/submit'
+
   const manuscriptId = manuscript.id
 
   const manuscriptObject = await models.Manuscript.query().findById(
     manuscriptId,
   )
 
-  const author = await manuscriptObject.getManuscriptAuthor({
-    onlyAccepted: true,
-  })
+  const author = await manuscriptObject.getManuscriptAuthor()
 
   const authorName = author ? author.username : ''
 

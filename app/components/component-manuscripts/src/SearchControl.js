@@ -1,4 +1,4 @@
-import React, { useState, useRef } from 'react'
+import React, { useState, useRef, useEffect } from 'react'
 import styled, { useTheme } from 'styled-components'
 import { X } from 'react-feather'
 import { th, grid } from '@pubsweet/ui-toolkit'
@@ -46,6 +46,11 @@ const SearchControl = ({ currentSearchQuery, applySearchQuery }) => {
     setSearchText(query || '')
   }
 
+  useEffect(() => {
+    setIsOpen(!!currentSearchQuery)
+    setSearchText(currentSearchQuery || '')
+  }, [currentSearchQuery])
+
   return (
     <SearchContainer isOpen={isOpen}>
       {isOpen && (
@@ -89,9 +94,10 @@ const SearchControl = ({ currentSearchQuery, applySearchQuery }) => {
       <RoundIconButton
         iconName="Search"
         onClick={() => {
-          submitSearch(searchText)
-          if (isOpen) ref.current.focus()
-          else setIsOpen(true)
+          if (isOpen) {
+            submitSearch(searchText)
+            ref.current.focus()
+          } else setIsOpen(true)
         }}
         primary={isOpen}
         title="Search"

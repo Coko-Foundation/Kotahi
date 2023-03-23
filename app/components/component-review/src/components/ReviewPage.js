@@ -1,4 +1,6 @@
 import React, { useCallback, useContext, useEffect } from 'react'
+import PropTypes from 'prop-types'
+import { v4 as uuid } from 'uuid'
 import { useMutation, useQuery, gql } from '@apollo/client'
 import { Redirect } from 'react-router-dom'
 import ReactRouterPropTypes from 'react-router-prop-types'
@@ -6,7 +8,6 @@ import { set, debounce } from 'lodash'
 import { ConfigContext } from '../../../config/src'
 import ReviewLayout from './review/ReviewLayout'
 import { Heading, Page, Spinner } from '../../../shared'
-import useCurrentUser from '../../../../hooks/useCurrentUser'
 import manuscriptVersions from '../../../../shared/manuscript_versions'
 import {
   UPDATE_PENDING_COMMENT,
@@ -14,6 +15,7 @@ import {
   COMPLETE_COMMENT,
   DELETE_PENDING_COMMENT,
 } from '../../../component-formbuilder/src/components/builderComponents/ThreadedDiscussion/queries'
+import { UPDATE_REVIEWER_STATUS_MUTATION } from '../../../../queries/team'
 
 const createFileMutation = gql`
   mutation($file: Upload!, $meta: FileMetaInput!) {
@@ -217,15 +219,6 @@ const query = gql`
   }
 `
 
-const completeReviewMutation = gql`
-  mutation($id: ID!) {
-    completeReview(id: $id) {
-      id
-      status
-    }
-  }
-`
-
 const updateReviewMutationQuery = gql`
   mutation($id: ID, $input: ReviewInput) {
     updateReview(id: $id, input: $input) {
@@ -234,12 +227,11 @@ const updateReviewMutationQuery = gql`
   }
 `
 
-const ReviewPage = ({ match, ...props }) => {
+const ReviewPage = ({ currentUser, history, match }) => {
   const config = useContext(ConfigContext)
   const urlFrag = config.journal.metadata.toplevel_urlfragment
-  const currentUser = useCurrentUser()
   const [updateReviewMutation] = useMutation(updateReviewMutationQuery)
-  const [completeReview] = useMutation(completeReviewMutation)
+  const [updateReviewerStatus] = useMutation(UPDATE_REVIEWER_STATUS_MUTATION)
   const [createFile] = useMutation(createFileMutation)
   const [updatePendingComment] = useMutation(UPDATE_PENDING_COMMENT)
   const [completeComments] = useMutation(COMPLETE_COMMENTS)
@@ -267,7 +259,15 @@ const ReviewPage = ({ match, ...props }) => {
   const reviewOrInitial = manuscript =>
     manuscript?.reviews?.find(
       review => review?.user?.id === currentUser?.id && !review.isDecision,
-    ) || {}
+    ) || {
+      // Usually a blank review is created when the user accepts the review invite.
+      // Creating a new review object here is a fallback for unknown error situations
+      // when the blank review was not created in advance for some reason.
+      id: uuid(),
+      isDecision: false,
+      isHiddenReviewerName: true,
+      jsonData: {},
+    }
 
   const versions = data
     ? manuscriptVersions(data.manuscript).map(v => ({
@@ -345,7 +345,7 @@ const ReviewPage = ({ match, ...props }) => {
 
   useEffect(() => debouncedUpdateReviewJsonData.flush, [])
 
-  if (loading) return <Spinner />
+  if (loading || currentUser === null) return <Spinner />
 
   if (error) {
     console.warn(error.message)
@@ -448,10 +448,11 @@ const ReviewPage = ({ match, ...props }) => {
     })
   }
 
-  const handleSubmit = async ({ reviewId, history }) => {
-    await completeReview({
+  const handleSubmit = async () => {
+    await updateReviewerStatus({
       variables: {
-        id: reviewId,
+        status: 'completed',
+        manuscriptId: latestVersion.id,
       },
     })
 
@@ -475,12 +476,7 @@ const ReviewPage = ({ match, ...props }) => {
       currentUser={currentUser}
       decisionForm={decisionForm}
       deleteFile={deleteFile}
-      onSubmit={values =>
-        handleSubmit({
-          reviewId: existingReview.id,
-          history: props.history,
-        })
-      }
+      onSubmit={handleSubmit}
       review={existingReview}
       reviewForm={reviewForm}
       status={reviewerStatus}
@@ -494,6 +490,9 @@ const ReviewPage = ({ match, ...props }) => {
 }
 
 ReviewPage.propTypes = {
+  currentUser: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }).isRequired,
   match: ReactRouterPropTypes.match.isRequired,
   history: ReactRouterPropTypes.history.isRequired,
 }
