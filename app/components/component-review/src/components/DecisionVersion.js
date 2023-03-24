@@ -100,6 +100,13 @@ const DecisionVersion = ({
   useEffect(() => debouncedSave.flush, [])
   const location = useLocation()
 
+  const useQuery = () => {
+    const { search } = location
+    return React.useMemo(() => new URLSearchParams(search), [search])
+  }
+
+  const query = useQuery()
+
   const addEditor = (manuscript, label, isCurrent, user) => {
     const isThisReadOnly = !isCurrent
 
@@ -459,9 +466,6 @@ const DecisionVersion = ({
   let defaultActiveKey
 
   switch (config?.controlPanel?.showTabs[0]) {
-    case 'Workflow':
-      defaultActiveKey = `team_${version.id}`
-      break
     case 'Manuscript text':
       defaultActiveKey = `editor_${version.id}`
       break
@@ -471,15 +475,25 @@ const DecisionVersion = ({
     case 'Tasks & Notifications':
       defaultActiveKey = `tasks_${version.id}`
       break
+    case 'Workflow':
     default:
       defaultActiveKey = `team_${version.id}`
       break
   }
 
-  const locationState =
+  let locationState =
     location.state !== undefined && location.state.tab === 'Decision'
       ? `decision_${version.id}`
       : defaultActiveKey
+
+  switch (query.get('tab')) {
+    case 'tasks':
+      locationState = `tasks_${version.id}`
+      break
+
+    default:
+      break
+  }
 
   const sections = []
 
