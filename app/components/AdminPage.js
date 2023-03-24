@@ -9,6 +9,7 @@ import {
   Route,
   Switch,
   useHistory,
+  useLocation,
 } from 'react-router-dom'
 import styled from 'styled-components'
 import { JournalContext } from './xpub-journal/src'
@@ -112,6 +113,7 @@ const AdminPage = () => {
   const journal = useContext(JournalContext)
   const [conversion] = useContext(XpubContext)
   const config = useContext(ConfigContext)
+  const location = useLocation()
 
   const { loading, error, data, refetch } = useQuery(QUERY, {
     fetchPolicy: 'network-only',
@@ -132,6 +134,7 @@ const AdminPage = () => {
     if (error.networkError) {
       notice = 'You are offline.'
     } else {
+      localStorage.setItem('intendedPage', location.pathname)
       const redirectlocation = `/login`
       return <Redirect to={redirectlocation} />
     }
