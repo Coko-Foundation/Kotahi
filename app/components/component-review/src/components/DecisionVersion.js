@@ -100,12 +100,13 @@ const DecisionVersion = ({
   useEffect(() => debouncedSave.flush, [])
   const location = useLocation()
 
-  const useQuery = () => {
-    const { search } = location
-    return React.useMemo(() => new URLSearchParams(search), [search])
+  const getActiveTab = loc => {
+    const { search } = loc
+    const searchParams = new URLSearchParams(search)
+    return searchParams.get('tab')
   }
 
-  const query = useQuery()
+  const activeTab = React.useMemo(() => getActiveTab(location), [location])
 
   const addEditor = (manuscript, label, isCurrent, user) => {
     const isThisReadOnly = !isCurrent
@@ -486,14 +487,7 @@ const DecisionVersion = ({
       ? `decision_${version.id}`
       : defaultActiveKey
 
-  switch (query.get('tab')) {
-    case 'tasks':
-      locationState = `tasks_${version.id}`
-      break
-
-    default:
-      break
-  }
+  if (activeTab === 'tasks') locationState = `tasks_${version.id}`
 
   const sections = []
 
