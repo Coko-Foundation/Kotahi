@@ -125,6 +125,7 @@ const Login = ({ logo = null, ...props }) => {
 
     if (intendedPage) {
       redirectLink = intendedPage
+      localStorage.removeItem('intendedPage')
     }
 
     return <Redirect to={redirectLink} />
