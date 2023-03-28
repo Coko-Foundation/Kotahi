@@ -29,6 +29,10 @@ const InlineColorPicker = styled(Inline)`
   }
 `
 
+const OptionsRow = styled.div`
+  display: flex;
+`
+
 const LabelInput = props => (
   <TextField label="Label to display" placeholder="Enter label…" {...props} />
 )
@@ -58,7 +62,7 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
       {(values.options || []).map((option, index) => (
         // a newly-added option doesn't have an id yet, so we fall back on index
         <li key={option?.id ?? index}>
-          <div>
+          <OptionsRow>
             <Inline>
               <ValidatedFieldFormik
                 component={LabelInput}
@@ -100,10 +104,12 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
               />
             </InlineColorPicker>
             <DeleteControl
+              buttonStyle={{ top: 0 }}
+              containerStyle={{ paddingTop: 0 }}
               onClick={() => remove(index)}
               tooltip="Delete this option"
             />
-          </div>
+          </OptionsRow>
         </li>
       ))}
       <li>

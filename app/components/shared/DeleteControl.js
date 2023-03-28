@@ -30,9 +30,14 @@ const DeleteButton = styled.button`
   }
 `
 
-const DeleteControl = ({ onClick, tooltip }) => (
-  <DeleteControlContainer>
-    <DeleteButton onClick={onClick} title={tooltip} type="button">
+const DeleteControl = ({ onClick, tooltip, buttonStyle, containerStyle }) => (
+  <DeleteControlContainer style={containerStyle}>
+    <DeleteButton
+      onClick={onClick}
+      style={buttonStyle}
+      title={tooltip}
+      type="button"
+    >
       <Icon color={theme.colors.neutral.white}>x</Icon>
     </DeleteButton>
   </DeleteControlContainer>
