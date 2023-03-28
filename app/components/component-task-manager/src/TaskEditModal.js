@@ -18,28 +18,28 @@ import { convertTimestampToDateString } from '../../../shared/dateUtils'
 
 const TaskMetaModalContainer = styled.div`
   background-color: ${th('colorBackground')};
-  width: 1200px;
   display: flex;
   flex-direction: column;
-  min-height: 480px;
-  z-index: 10000;
   -webkit-font-smoothing: antialiased;
+  min-height: 480px;
+  width: 1200px;
+  z-index: 10000;
 `
 
 const TitleCell = styled.div`
-  display: flex;
   align-items: center;
   background: transparent;
-  line-height: 1em;
+  display: flex;
   height: 45px;
+  line-height: 1em;
 `
 
 const DurationDaysCell = styled.div`
+  align-items: center;
+  display: flex;
+  height: 45px;
   justify-content: flex-start;
   position: relative;
-  height: 45px;
-  display: flex;
-  align-items: center;
 `
 
 const BaseFieldsContainer = styled.div`
@@ -62,15 +62,15 @@ const TaskRecipientsContainer = styled.div`
 `
 
 const TaskActionsContainer = styled(BaseFieldsContainer)`
-  padding-top: ${grid(2)};
-  padding-bottom: ${grid(2)};
   display: flex;
   justify-content: flex-end;
+  padding-bottom: ${grid(2)};
+  padding-top: ${grid(2)};
 `
 
 const TaskDetailsContainer = styled.div`
-  padding-bottom: 5px;
   border-bottom: 2px solid rgba(191, 191, 191, 0.5);
+  padding-bottom: 5px;
 `
 
 const TaskCloseActionContainer = styled.div`
@@ -79,9 +79,9 @@ const TaskCloseActionContainer = styled.div`
   padding: 14px 14px 24px 14px;
 
   button {
-    cursor: pointer;
     background: transparent;
     border: none;
+    cursor: pointer;
 
     svg {
       stroke: ${theme.colors.neutral.gray20};
@@ -90,13 +90,13 @@ const TaskCloseActionContainer = styled.div`
 `
 
 const TaskTitle = styled.div`
-  font-family: 'Roboto';
+  color: ${theme.colors.neutral.gray20};
+  font-family: 'Roboto', sans-serif;
+  font-size: ${theme.fontSizeBase};
   font-style: normal;
   font-weight: 500;
-  font-size: ${theme.fontSizeBase};
-  line-height: 19px;
   letter-spacing: 0.01em;
-  color: ${theme.colors.neutral.gray20};
+  line-height: 19px;
   margin-bottom: 4px;
 `
 
@@ -122,26 +122,26 @@ const DueDateFieldContainer = styled(BaseFieldContainer)`
 `
 
 const TaskNotificationLogsContainer = styled.div`
+  align-items: flex-end;
   display: flex;
   flex-direction: column;
   justify-content: flex-end;
-  align-items: flex-end;
 `
 
 const NotificationLogsToggle = styled.button`
-  padding: 20px 10px;
   background-color: transparent;
   border: none;
-  font-size: ${theme.fontSizeBaseSmall};
   color: ${theme.colorPrimary};
+  font-size: ${theme.fontSizeBaseSmall};
+  padding: 20px 10px;
   text-decoration: underline;
 `
 
 const NotificationLogs = styled.div`
+  color: ${theme.colorPrimary};
+  font-size: ${theme.fontSizeBaseSmall};
   margin: 10px 0;
   text-align: left;
-  font-size: ${theme.fontSizeBaseSmall};
-  color: ${theme.colorPrimary};
 `
 
 const TaskActionContainer = styled.div`
