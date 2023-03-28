@@ -14,6 +14,7 @@ const Inline = styled.div`
 
 const UnbulletedList = styled.ul`
   list-style-type: none;
+  padding-left: 0;
 `
 
 const InlineColorPicker = styled(Inline)`
