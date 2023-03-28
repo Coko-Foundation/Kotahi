@@ -11,7 +11,7 @@ const BUTTON = 'button'
 const HEADER = 'General__Heading'
 const SECTION_TITLE = 'General__Title'
 const SECTION_PLACEHOLDER = 'style__Placeholder'
-const SUBMISSION_TITLE = 'VersionTitle'
+const SUBMISSION_TITLE = '[name="meta.title"]'
 const SUBMISSION_BUTTON = '+ New submission'
 const SUBMISSION_FILE_UPLOAD_INPUT = 'input[type=file]'
 
@@ -37,6 +37,7 @@ const REJECTED_REVIEWS_STATUS = 'rejected'
 const ACCEPTED_REVIEWS_STATUS = 'accepted'
 const VERSION_TITLE = 'VersionTitle__Root-sc'
 const ARTICLE_LINK = '[class*=General__SectionRow] a[href]'
+const DASHBOARD_TAB = '[data-test-id=tab-container]'
 
 // eslint-disable-next-line import/prefer-default-export
 export const DashboardPage = {
@@ -68,7 +69,7 @@ export const DashboardPage = {
     return cy.getByContainsClass(SECTION_TITLE).contains(title)
   },
   getSubmissionTitle() {
-    return cy.getByContainsClass(SUBMISSION_TITLE)
+    return cy.get(SUBMISSION_TITLE)
   },
   getSubmissionButton() {
     return cy.get('button').should('have.text', '＋ New submission')
@@ -155,5 +156,11 @@ export const DashboardPage = {
   },
   clickCompletedReviewButton() {
     this.getCompletedReviewButton().click()
+  },
+  getDashboardTab() {
+    return cy.get(DASHBOARD_TAB)
+  },
+  clickDashboardTab(nth) {
+    this.getDashboardTab().eq(nth).click()
   },
 }

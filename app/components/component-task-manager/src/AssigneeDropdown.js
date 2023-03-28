@@ -6,9 +6,9 @@ import theme from '../../../theme'
 import { assigneeTypes } from '../../../../config/journal/tasks.json'
 
 const AssigneeCellContainer = styled.div`
-  justify-content: flex-start;
-  flex-direction: column;
   align-items: start;
+  flex-direction: column;
+  justify-content: flex-start;
 `
 
 const BaseAssigneeCell = styled.div`
@@ -34,6 +34,7 @@ const TaskMetaAssigneeCell = styled(BaseAssigneeCell)`
 const UnregisteredFieldsAlignColumn = styled.div`
   display: flex;
   flex-direction: column;
+
   & > input {
     margin: 10px 10px 0px 0px;
   }
@@ -41,8 +42,8 @@ const UnregisteredFieldsAlignColumn = styled.div`
 
 const UnregisteredFieldsAlignRow = styled.div`
   display: flex;
-  margin-top: 10px;
   justify-content: space-between;
+  margin-top: 10px;
 
   > input:first-child {
     margin-right: 10px;
