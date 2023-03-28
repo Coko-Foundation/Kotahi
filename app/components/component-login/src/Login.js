@@ -121,6 +121,13 @@ const Login = ({ logo = null, ...props }) => {
 
   if (token) {
     window.localStorage.setItem('token', token)
+    const intendedPage = localStorage.getItem('intendedPage')
+
+    if (intendedPage) {
+      redirectLink = intendedPage
+      localStorage.removeItem('intendedPage')
+    }
+
     return <Redirect to={redirectLink} />
   }
 

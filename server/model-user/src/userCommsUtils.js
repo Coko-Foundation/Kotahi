@@ -114,7 +114,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   }
 
   if (isEditor) {
-    manuscriptPageUrl += '/decision'
+    manuscriptPageUrl += '/decision?tab=tasks'
   } else if (isReviewer) {
     manuscriptPageUrl += '/review'
   } else if (isAuthor) {
@@ -122,10 +122,6 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   } else {
     manuscriptPageUrl = `${baseUrl}/dashboard`
   }
-
-  if (isEditor) manuscriptPageUrl += '/decision'
-  else if (isReviewer) manuscriptPageUrl += '/review'
-  else manuscriptPageUrl += '/submit'
 
   const manuscriptId = manuscript.id
 
