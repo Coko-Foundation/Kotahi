@@ -46,20 +46,22 @@ exports.up = async knex => {
     .withGraphFetched('reviews')
     .whereNotNull('evaluationsHypothesisMap')
 
-  const submissionForm = await getSubmissionForm()
-  const reviewForm = await getReviewForm()
-  const decisionForm = await getDecisionForm()
-
   logger.info(`Total Manuscripts having hypothesis maps: ${manuscripts.length}`)
 
-  let totalArtifactsCount = 0
+  if (manuscripts.length > 0) {
+    const submissionForm = await getSubmissionForm()
+    const reviewForm = await getReviewForm()
+    const decisionForm = await getDecisionForm()
 
-  await useTransaction(async trx => {
-    for (let i = 0; i < manuscripts.length; i += 1) {
-      const manuscript = manuscripts[i]
+    let totalArtifactsCount = 0
 
-      const artifacts = Object.entries(manuscript.evaluationsHypothesisMap).map(
-        ([key, value]) => ({
+    await useTransaction(async trx => {
+      for (let i = 0; i < manuscripts.length; i += 1) {
+        const manuscript = manuscripts[i]
+
+        const artifacts = Object.entries(
+          manuscript.evaluationsHypothesisMap,
+        ).map(([key, value]) => ({
           manuscriptId: manuscript.id,
           platform: 'Hypothesis',
           externalId: value,
@@ -79,18 +81,18 @@ exports.up = async knex => {
             manuscript.submission.doi ||
             manuscript.submission.DOI,
           relatedDocumentType: 'preprint',
-        }),
-      )
+        }))
 
-      totalArtifactsCount += artifacts.length
+        totalArtifactsCount += artifacts.length
 
-      // Updating one-by-one rather than all in parallel, to avoid exhausting available connections
-      // eslint-disable-next-line no-await-in-loop
-      await PublishedArtifact.query(trx).insert(artifacts)
-    }
-  })
+        // Updating one-by-one rather than all in parallel, to avoid exhausting available connections
+        // eslint-disable-next-line no-await-in-loop
+        await PublishedArtifact.query(trx).insert(artifacts)
+      }
+    })
 
-  logger.info(
-    `Finished populating ${totalArtifactsCount} published_artifacts for ${manuscripts.length} manuscripts.`,
-  )
+    logger.info(
+      `Finished populating ${totalArtifactsCount} published_artifacts for ${manuscripts.length} manuscripts.`,
+    )
+  }
 }

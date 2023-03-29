@@ -46,35 +46,38 @@ const fixFieldsInAllObjects = async (
   trx,
 ) => {
   logger.info(`Total ${formType}s: ${objects.length}`)
-  const chkbxFieldNames = await getCheckboxGroupFieldNames(formType)
-  let convertedCount = 0
-  let totalDeletedOptionsCount = 0
 
-  for (let i = 0; i < objects.length; i += 1) {
-    const obj = objects[i]
-    const formData = obj[formDataName]
-    const deletedOptionsCount = fixFields(formData, chkbxFieldNames)
-    obj[formDataName] = formData
+  if (objects.length > 0) {
+    const chkbxFieldNames = await getCheckboxGroupFieldNames(formType)
+    let convertedCount = 0
+    let totalDeletedOptionsCount = 0
 
-    if (deletedOptionsCount) {
-      logger.info(
-        `${formType} ${
-          obj.shortId || obj.id
-        }: ${deletedOptionsCount} spurious selections deleted.`,
-      )
-      totalDeletedOptionsCount += deletedOptionsCount
-      convertedCount += 1
+    for (let i = 0; i < objects.length; i += 1) {
+      const obj = objects[i]
+      const formData = obj[formDataName]
+      const deletedOptionsCount = fixFields(formData, chkbxFieldNames)
+      obj[formDataName] = formData
+
+      if (deletedOptionsCount) {
+        logger.info(
+          `${formType} ${
+            obj.shortId || obj.id
+          }: ${deletedOptionsCount} spurious selections deleted.`,
+        )
+        totalDeletedOptionsCount += deletedOptionsCount
+        convertedCount += 1
+      }
+
+      // eslint-disable-next-line no-await-in-loop
+      await Model.query(trx)
+        .findById(obj.id)
+        .patch({ [formDataName]: formData })
     }
 
-    // eslint-disable-next-line no-await-in-loop
-    await Model.query(trx)
-      .findById(obj.id)
-      .patch({ [formDataName]: formData })
+    logger.info(
+      `Deleted a total of ${totalDeletedOptionsCount} spurious selections from ${convertedCount} ${formType}s.`,
+    )
   }
-
-  logger.info(
-    `Deleted a total of ${totalDeletedOptionsCount} spurious selections from ${convertedCount} ${formType}s.`,
-  )
 }
 
 exports.up = async knex => {
