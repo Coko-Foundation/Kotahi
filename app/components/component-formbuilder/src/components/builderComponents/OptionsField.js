@@ -34,6 +34,10 @@ const OptionsRow = styled.div`
   display: flex;
 `
 
+const StyledDeleteControl = styled(DeleteControl)`
+  top: 0;
+`
+
 const LabelInput = props => (
   <TextField label="Label to display" placeholder="Enter label…" {...props} />
 )
@@ -104,9 +108,7 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
                 name={`options.${index}.labelColor`}
               />
             </InlineColorPicker>
-            <DeleteControl
-              buttonStyle={{ top: 0 }}
-              containerStyle={{ paddingTop: 0 }}
+            <StyledDeleteControl
               onClick={() => remove(index)}
               tooltip="Delete this option"
             />
