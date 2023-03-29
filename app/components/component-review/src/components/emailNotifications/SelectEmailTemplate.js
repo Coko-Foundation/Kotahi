@@ -107,6 +107,10 @@ switch (
         value: 'reviewInvitationEmailTemplate30',
       },
       {
+        label: 'Kotahi task notification',
+        value: 'genericTaskNotificationEmailTemplate',
+      },
+      {
         label:
           'Lucina Uddin - Peer-Review Invitation Assignment notification template',
         value: 'reviewInvitationEmailTemplate6',
@@ -221,10 +225,6 @@ switch (
           'Won Mok Shim - Peer-Review Invitation Assignment notification template',
         value: 'reviewInvitationEmailTemplate12',
       },
-      {
-        label: 'Kotahi task notification',
-        value: 'genericTaskNotificationEmailTemplate',
-      },
     ]
     break
   case 'colab':
@@ -234,60 +234,60 @@ switch (
         value: 'authorInvitationEmailTemplate',
       },
       {
-        label: 'Evaluation Complete Required Notification Template',
-        value: 'evaluationCompleteEmailTemplate',
-      },
-      {
-        label: 'Reviewer Invitation Email Template',
-        value: 'reviewInvitationEmailTemplate',
-      },
-      {
-        label: 'Reminder: Author Invitation Template',
-        value: 'reminderAuthorInvitationTemplate',
-      },
-      {
-        label: 'Reminder: Reviewer Invitation Template',
-        value: 'reminderReviewerInvitationTemplate',
-      },
-      {
-        label: 'Thanks for Agreeing to Review Template',
-        value: 'thanksForAgreeingToReviewTemplate',
-      },
-      {
-        label: 'Reminder: Review Overdue Template',
-        value: 'reminderReviewOverdueTemplate',
-      },
-      {
-        label: 'Kotahi task notification',
-        value: 'genericTaskNotificationEmailTemplate',
-      },
-      {
-        label: 'Generic task manager update notification',
-        value: 'genericTaskManagerUpdateNotificationTemplate',
-      },
-      {
-        label: 'Report(s) shared',
-        value: 'reportsSharedTemplate',
-      },
-      {
         label: 'Consolidated report shared with authors',
         value: 'consolidatedReportWithAuthorsTemplate',
       },
       {
-        label: 'Report published',
-        value: 'reportPublishedTemplate',
+        label: 'Evaluation Complete Required Notification Template',
+        value: 'evaluationCompleteEmailTemplate',
       },
       {
         label: 'Follow-up with author to submit revised preprint ',
         value: 'authorFollowUpSubmitRevisedPreprintTemplate',
       },
       {
-        label: 'Reviewer invitation - re-review',
-        value: 'reviewerInvitationReReviewTemplate',
+        label: 'Generic task manager update notification',
+        value: 'genericTaskManagerUpdateNotificationTemplate',
+      },
+      {
+        label: 'Kotahi task notification',
+        value: 'genericTaskNotificationEmailTemplate',
+      },
+      {
+        label: 'Reminder: Author Invitation Template',
+        value: 'reminderAuthorInvitationTemplate',
+      },
+      {
+        label: 'Reminder: Review Overdue Template',
+        value: 'reminderReviewOverdueTemplate',
+      },
+      {
+        label: 'Reminder: Reviewer Invitation Template',
+        value: 'reminderReviewerInvitationTemplate',
+      },
+      {
+        label: 'Report published',
+        value: 'reportPublishedTemplate',
+      },
+      {
+        label: 'Report(s) shared',
+        value: 'reportsSharedTemplate',
+      },
+      {
+        label: 'Reviewer Invitation Email Template',
+        value: 'reviewInvitationEmailTemplate',
       },
       {
         label: 'Reviewer invitation - new reviewer for a revised preprint',
         value: 'reviewerInvitationRevisedPreprintTemplate',
+      },
+      {
+        label: 'Reviewer invitation - re-review',
+        value: 'reviewerInvitationReReviewTemplate',
+      },
+      {
+        label: 'Thanks for Agreeing to Review Template',
+        value: 'thanksForAgreeingToReviewTemplate',
       },
     ]
     break
