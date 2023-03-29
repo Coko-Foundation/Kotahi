@@ -94,7 +94,7 @@ const ActionButton = ({
   isCompact,
   children,
   className,
-  'data-test-id': dataTestid,
+  dataTestid,
   title,
   type,
   dataCy,
@@ -150,7 +150,7 @@ const ActionButton = ({
     <Button
       bgColor={bgColor}
       className={className}
-      data-test-id={dataTestid}
+      data-testid={dataTestid}
       fgColor={fgColor}
       isCompact={isCompact}
       onClick={status !== 'pending' ? onClick : null}
