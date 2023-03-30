@@ -4,24 +4,16 @@ import styled from 'styled-components'
 import { Icon } from '@pubsweet/ui'
 import theme from '../../theme'
 
-const DeleteControlContainer = styled.div`
-  display: inline-block;
-  margin-right: 10px;
-  padding: 32px 0 0 1em;
-  position: relative;
-  vertical-align: top;
-`
-
 const DeleteButton = styled.button`
   align-items: center;
   background: ${theme.colors.brand1.base};
   border: none;
   border-radius: 500px;
-  display: flex;
+  display: inline-flex;
   height: 30px;
   justify-content: center;
   position: relative;
-  top: 66px;
+  vertical-align: top;
   width: 30px;
 
   &:hover {
@@ -31,11 +23,9 @@ const DeleteButton = styled.button`
 `
 
 const DeleteControl = ({ onClick, tooltip }) => (
-  <DeleteControlContainer>
-    <DeleteButton onClick={onClick} title={tooltip} type="button">
-      <Icon color={theme.colors.neutral.white}>x</Icon>
-    </DeleteButton>
-  </DeleteControlContainer>
+  <DeleteButton onClick={onClick} title={tooltip} type="button">
+    <Icon color={theme.colors.neutral.white}>x</Icon>
+  </DeleteButton>
 )
 
 DeleteControl.propTypes = {
