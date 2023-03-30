@@ -206,12 +206,18 @@ h6 {
 /* footnote {
   display: none;
 } */
-footnote {
+footnote, .footnote {
 	float: footnote;
-	margin: 1em 10ch 0;
+	font-size: 0.8em;
+	padding-top: 0.5em;
+
 	/* margin-left: 40mm; */
 	/* margin-top: 1em; */
 	/* font-size: 12px; */
+}
+
+footnote a, .footnote a {
+	word-break: break-all;
 }
 
 ::footnote-call {
@@ -220,7 +226,7 @@ footnote {
 }
 
 ::footnote-marker {
-	content: counter(footnote) '. ';
+	content: counter(footnote-marker) '. ';
 	/* color: var(--color-main-dark); */
 	font-weight: 500;
 	line-height: 0;
@@ -302,12 +308,10 @@ figcaption em {
 }
 
 .doi {
-	display: block;
 	string-set: doi content(text);
+	margin: 0;
 	text-align: right;
 	width: 100%;
-	margin-left:auto;
-	margin: 0;
 	line-height: 1;
 	display:none;
 }
@@ -338,6 +342,11 @@ figcaption em {
 	text-decoration: none;
 	margin: 0;
 }
+
+.marginData p {
+	margin: 0.5ch 0;
+}
+
 .marginData > section {
 	display: grid;
 	align-items: baseline;
@@ -348,6 +357,14 @@ figcaption em {
 	display: grid;
 	grid-template-columns: repeat(3, 1fr);
 }
+
+.marginData .date > div :is(h4, p) {
+	margin-right: 1.4ch;
+	display: inline;
+}
+
+
+
 
 ol ::marker {
 	color: orange;
