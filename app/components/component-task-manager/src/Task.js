@@ -52,7 +52,7 @@ const TaskRowContainer = styled.div`
 
 const BaseHeader = styled.div`
   font-weight: 500;
-  margin-bottom: 4px;
+  margin-bottom: 12px;
 `
 
 const TitleHeader = styled(BaseHeader)`
@@ -217,8 +217,12 @@ const DurationDaysFieldContainer = styled(BaseFieldContainer)`
 
 const DueDateFieldContainer = styled(BaseFieldContainer)`
   align-items: flex-end;
-  flex: 0 0 16em;
+  flex: 0 0 18em;
   flex-direction: row;
+
+  > div {
+    flex: 1;
+  }
 
   > div + div {
     margin-left: ${grid(1)};
@@ -401,7 +405,7 @@ const Task = ({
     return (
       <TaskRow isOverdue={isOverdue}>
         <div>
-          <TitleHeader>Task title</TitleHeader>
+          <TitleHeader>Title</TitleHeader>
           <TitleCell>
             <Handle />
             <Handle>
@@ -490,7 +494,7 @@ const Task = ({
               {...provided.draggableProps}
             >
               <TitleFieldContainer>
-                <TitleHeader>Task title</TitleHeader>
+                {!index && <TitleHeader>Title</TitleHeader>}
                 <TitleCell>
                   <Handle {...provided.dragHandleProps}>
                     <DragIcon />
@@ -543,7 +547,7 @@ const Task = ({
                 </TitleCell>
               </TitleFieldContainer>
               <AssigneeFieldContainer>
-                <AssigneeHeader>Assignee</AssigneeHeader>
+                {!index && <AssigneeHeader>Assignee</AssigneeHeader>}
                 <AssigneeDropdown
                   assigneeGroupedOptions={assigneeGroupedOptions}
                   task={task}
@@ -553,7 +557,9 @@ const Task = ({
               </AssigneeFieldContainer>
               {editAsTemplate ? (
                 <DurationDaysFieldContainer>
-                  <DurationDaysHeader>Duration in days</DurationDaysHeader>
+                  {!index && (
+                    <DurationDaysHeader>Duration in days</DurationDaysHeader>
+                  )}
                   <DurationDaysCell>
                     <CounterField
                       minValue={0}
@@ -571,11 +577,7 @@ const Task = ({
               ) : (
                 <DueDateFieldContainer>
                   <div>
-                    <DueDateHeader>
-                      {task.status === status.NOT_STARTED
-                        ? 'Duration'
-                        : 'Due date'}
-                    </DueDateHeader>
+                    {!index && <DueDateHeader>Duration/Due Date</DueDateHeader>}
                     <DueDateField
                       compact
                       displayDefaultDurationDays={displayDefaultDurationDays}
