@@ -205,6 +205,7 @@ const TaskList = ({
                         }
                         recipientGroupedOptions={recipientGroupedOptions}
                         sendNotifyEmail={sendNotifyEmail}
+                        showLabels={!index}
                         task={task}
                         updateTask={updateTask}
                         updateTaskNotification={updateTaskNotification}
