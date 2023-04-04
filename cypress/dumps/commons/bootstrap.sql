@@ -73,7 +73,7 @@ CREATE TABLE "pgboss"."schedule" (
     "options" jsonb,
     "created_on" timestamptz NOT NULL DEFAULT now(),
     "updated_on" timestamptz NOT NULL DEFAULT now(),
-    PRIMARY KEY ("name")
+    CONSTRAINT schedule_pkey PRIMARY KEY ("name")
 );
 
 DROP TABLE IF EXISTS "pgboss"."version";
@@ -84,8 +84,15 @@ CREATE TABLE "pgboss"."version" (
     "version" int4 NOT NULL,
     "maintained_on" timestamptz,
     "cron_on" timestamptz,
-    PRIMARY KEY ("version")
+    CONSTRAINT version_pkey PRIMARY KEY ("version")
 );
+
+
+CREATE INDEX job_name ON pgboss.job USING btree (name text_pattern_ops);
+CREATE UNIQUE INDEX job_singletonkey ON pgboss.job USING btree (name, singletonkey) WHERE ((state < 'completed'::pgboss.job_state) AND (singletonon IS NULL));
+CREATE UNIQUE INDEX job_singletonkeyon ON pgboss.job USING btree (name, singletonon, singletonkey) WHERE (state < 'expired'::pgboss.job_state);
+CREATE UNIQUE INDEX job_singletonon ON pgboss.job USING btree (name, singletonon) WHERE ((state < 'expired'::pgboss.job_state) AND (singletonkey IS NULL));
+
 
 INSERT INTO "pgboss"."job" ("id", "name", "priority", "data", "state", "retrylimit", "retrycount", "retrydelay", "retrybackoff", "startafter", "startedon", "singletonkey", "singletonon", "expirein", "createdon", "completedon", "keepuntil", "on_complete") VALUES
 ('1dc684c0-d2ac-11ec-9bad-d18b77d86d23', '__pgboss__cron', 0, NULL, 'created', 2, 0, 0, 'f', '2022-05-13 11:03:01.742784+00', NULL, NULL, '2022-05-13 11:03:00', '00:15:00', '2022-05-13 11:02:01.742784+00', NULL, '2022-05-13 11:04:01.742784+00', 'f'),

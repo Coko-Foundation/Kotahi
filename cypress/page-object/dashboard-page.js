@@ -16,14 +16,14 @@ const SUBMISSION_BUTTON = '+ New submission'
 const SUBMISSION_FILE_UPLOAD_INPUT = 'input[type=file]'
 
 /* My Submissions */
-const SUBMITTED_MANUSCRIPTS = ':nth-child(2) > a'
+const SUBMITTED_MANUSCRIPTS = '[class*=style__ClickableManuscriptsRow]'
 const CREATE_NEW_VERSION_BUTTON = 'create-new-manuscript-version-button'
 
 /* Submitted Info */
 const DECISION_FIELDS = ':nth-child(1) > .General__Section-sc-1chiust-0 > div'
 
 // 'To Review section'
-const DO_REVIEW_BUTTON = 'a[href*=review]'
+const DO_REVIEW_BUTTON = '[name="reviewerLinks"] button'
 const ACCEPT_REVIEW_BUTTON = 'accept-review'
 const REJECT_REVIEW_BUTTON = 'reject-review'
 

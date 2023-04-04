@@ -62,10 +62,13 @@ function doReview(name, reviewData) {
   cy.login(name, dashboard)
   cy.get('nav').contains('Dashboard').click()
   cy.visit(dashboard)
+  DashboardPage.clickDashboardTab(1)
 
   // Accpet Review Request Workflow
   if (reviewData.verdict === 'accept') {
     DashboardPage.clickAcceptReviewButton()
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(2000)
 
     // Only do the review if there'a  comment present
     if (reviewData.comment) {

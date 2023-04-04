@@ -27,6 +27,7 @@ describe('checking manuscript version', () => {
 
       /* Editor  Submits a decision */
       cy.login(name.role.seniorEditor, dashboard)
+      DashboardPage.clickDashboardTab(2)
       DashboardPage.clickControlPanelDecision()
       /* Verify publish button is disabled */
       ControlPage.getPublishButton().should('be.disabled')
