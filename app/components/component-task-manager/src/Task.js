@@ -50,21 +50,6 @@ const TaskRowContainer = styled.div`
   }
 `
 
-const BaseHeader = styled.div`
-  font-weight: 500;
-  margin-bottom: 12px;
-`
-
-const TitleHeader = styled(BaseHeader)`
-  padding-left: 3.5em;
-`
-
-const AssigneeHeader = styled(BaseHeader)``
-
-const DurationDaysHeader = styled(BaseHeader)``
-
-const DueDateHeader = styled(BaseHeader)``
-
 const TitleCell = styled.div`
   display: flex;
 
@@ -405,7 +390,6 @@ const Task = ({
     return (
       <TaskRow isOverdue={isOverdue}>
         <div>
-          <TitleHeader>Title</TitleHeader>
           <TitleCell>
             <Handle />
             <Handle>
@@ -419,18 +403,14 @@ const Task = ({
           </TitleCell>
         </div>
         <div>
-          <AssigneeHeader>Assignee</AssigneeHeader>
           <AssigneeCell>{task.assignee?.username}</AssigneeCell>
         </div>
-        <AssigneeHeader>Assignee</AssigneeHeader>
         {editAsTemplate ? (
           <div>
-            <DurationDaysHeader>Duration in days</DurationDaysHeader>
             <DurationDaysCell>{task.defaultDurationDays || 0}</DurationDaysCell>
           </div>
         ) : (
           <div>
-            <DueDateHeader>Due date</DueDateHeader>
             <DueDateCell title={dueDateLocalString}>
               <DaysNoteContainer>
                 <CompactDetailLabel isWarning={isOverdue}>
