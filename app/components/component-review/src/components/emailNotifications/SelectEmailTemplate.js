@@ -324,6 +324,7 @@ const SelectEmailTemplate = ({
       data-testid="Notification_email_select"
       isClearable={isClearable || false}
       label="notification email"
+      menuPortalTarget={document.querySelector('body')}
       onChange={selected => {
         if (taskEmailNotification) {
           updateTaskNotification({

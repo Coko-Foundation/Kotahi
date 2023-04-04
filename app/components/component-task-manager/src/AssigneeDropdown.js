@@ -28,7 +28,7 @@ const TaskListAssigneeCell = styled(BaseAssigneeCell)`
 
 const TaskMetaAssigneeCell = styled(BaseAssigneeCell)`
   justify-content: flex-start;
-  width: 290px;
+  width: 100%;
 `
 
 const UnregisteredFieldsAlignColumn = styled.div`
