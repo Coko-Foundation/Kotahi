@@ -48,7 +48,10 @@ export const HiddenTabsContainer = styled(TabsContainer)`
 
 export const TabContainer = styled.div.attrs(props => ({
   'data-test-id': props['data-test-id'] || 'tab-container',
-}))``
+}))`
+  align-items: stretch;
+  display: flex;
+`
 
 const HideChatButton = styled.button`
   align-items: center;
@@ -101,7 +104,7 @@ const HiddenTabs = ({
         gridArea={tabsContainerGridArea}
         sticky={false}
       >
-        <div style={{ display: 'flex' }}>
+        <div style={{ display: 'flex', alignItems: 'stretch' }}>
           {sections.map(({ key, label }) => (
             <TabContainer
               key={key}
