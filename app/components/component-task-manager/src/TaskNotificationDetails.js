@@ -30,11 +30,11 @@ const TaskFieldsContainer = styled.div`
 `
 
 const RecipientFieldContainer = styled(TaskFieldsContainer)`
-  flex: 0 0 20em;
+  flex: 1 1 20em;
 `
 
 const EmailTemplateFieldContainer = styled(TaskFieldsContainer)`
-  flex: 0 0 15em;
+  flex: 1 1 15em;
 
   div {
     font-size: ${theme.fontSizeBase};
@@ -47,7 +47,7 @@ const EmailTemplateFieldContainer = styled(TaskFieldsContainer)`
 `
 
 const ScheduleNotificationFieldContainer = styled(TaskFieldsContainer)`
-  flex: 0 0 22em;
+  flex: 0 0 330px;
 `
 
 const SendNowActionContainer = styled.div`
@@ -59,8 +59,8 @@ const SendNowActionContainer = styled.div`
 
 const RoundIconButtonContainer = styled.div`
   display: flex;
+  flex: 0 0 36px;
   justify-content: flex-end;
-  width: 18%;
 
   & > button > span {
     padding: 0;
@@ -647,6 +647,7 @@ const TaskNotificationDetails = ({
             hasGroupedOptions
             isClearable
             label="Recipient"
+            menuPortalTarget={document.querySelector('body')}
             onChange={selected =>
               handleRecipientInput(selected, taskEmailNotification)
             }

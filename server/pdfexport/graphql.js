@@ -10,6 +10,7 @@ const models = require('@pubsweet/models')
 const { createFile, File } = require('@coko/server')
 const { applyTemplate, generateCss } = require('./applyTemplate')
 const makeZip = require('./ziputils.js')
+const publicationMetadata = require('./pdfTemplates/publicationMetadata')
 
 const {
   getFilesWithUrl,
@@ -96,19 +97,6 @@ const pdfHandler = async manuscriptId => {
 
   await fsPromised.mkdir(dirName, { recursive: true })
 
-  articleData.parsedSubmission = {
-    objectType: articleData.submission.objectType,
-    topic: articleData.submission.topics,
-    authors: articleData.submission.authorNames,
-    AuthorCorrespondence: articleData.submission.AuthorCorrespondence,
-    conflictOfInterest: articleData.submission.competingInterests,
-    Funding: articleData.submission.funding,
-    dateReceived: articleData.submission.dateReceived,
-    DateAccepted: articleData.submission.dateAccepted,
-    DatePublished: articleData.submission.datePublished,
-    abstract: articleData.submission.abstract,
-  }
-
   articleData.files = await getFilesWithUrl(articleData.files)
   articleData.meta.source = await replaceImageSrc(
     articleData.meta.source,
@@ -132,19 +120,7 @@ const pdfHandler = async manuscriptId => {
 
   // Manually copy the two fonts to the folder that will be zipped. This is a temporary fix!
 
-  const fonts = [
-    'Reforma2018-Blanca.ttf',
-    'Reforma2018-BlancaItalica.ttf',
-    'Reforma2018-Gris.ttf',
-    'Reforma2018-GrisItalica.ttf',
-    'Reforma2018-Negra.ttf',
-    'Reforma2018-NegraItalica.ttf',
-    // The old fonts:
-    // 'Newsreader-Italic-VariableFont-opsz-wght.ttf',
-    // 'Newsreader-VariableFont-opsz-wght.ttf',
-  ]
-
-  fonts.forEach(async fontPath => {
+  publicationMetadata.fonts.forEach(async fontPath => {
     const thisFont = path.join(__dirname, `../../profiles/${fontPath}`)
 
     const targetFont = `${dirName}/${fontPath}`
