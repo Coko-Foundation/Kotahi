@@ -261,7 +261,6 @@ const getLocalTimeString = val => {
 const Task = ({
   task: propTask,
   index,
-  showLabels,
   updateTask,
   assigneeGroupedOptions,
   onCancel,
@@ -495,7 +494,6 @@ const Task = ({
               {...provided.draggableProps}
             >
               <TitleFieldContainer>
-                {showLabels && <TitleHeader>Title</TitleHeader>}
                 <TitleCell>
                   <Handle {...provided.dragHandleProps}>
                     <DragIcon />
@@ -548,7 +546,6 @@ const Task = ({
                 </TitleCell>
               </TitleFieldContainer>
               <AssigneeFieldContainer>
-                {showLabels && <AssigneeHeader>Assignee</AssigneeHeader>}
                 <AssigneeDropdown
                   assigneeGroupedOptions={assigneeGroupedOptions}
                   task={task}
@@ -558,9 +555,6 @@ const Task = ({
               </AssigneeFieldContainer>
               {editAsTemplate ? (
                 <DurationDaysFieldContainer>
-                  {showLabels && (
-                    <DurationDaysHeader>Duration in days</DurationDaysHeader>
-                  )}
                   <DurationDaysCell>
                     <CounterField
                       minValue={0}
@@ -578,9 +572,6 @@ const Task = ({
               ) : (
                 <DueDateFieldContainer>
                   <div>
-                    {showLabels && (
-                      <DueDateHeader>Duration/Due Date</DueDateHeader>
-                    )}
                     <DueDateField
                       compact
                       displayDefaultDurationDays={displayDefaultDurationDays}
@@ -622,7 +613,6 @@ Task.propTypes = {
     status: PropTypes.string.isRequired,
   }).isRequired,
   index: PropTypes.number.isRequired,
-  showLabels: PropTypes.bool,
   /** Callback for when a new task is abandoned before receiving a title (e.g. escape was pressed) */
   onCancel: PropTypes.func,
   onDelete: PropTypes.func.isRequired,
@@ -631,7 +621,6 @@ Task.propTypes = {
 
 Task.defaultProps = {
   onCancel: () => {},
-  showLabels: false,
 }
 
 export default Task
