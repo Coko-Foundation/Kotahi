@@ -1,5 +1,5 @@
 # IMAGE FOR BUILDING
-FROM node:12.21-alpine as build
+FROM node:16.19.0-alpine as build
 
 ARG instance_name
 ARG node_env
@@ -45,7 +45,7 @@ COPY . .
 RUN yarn webpack --config webpack/webpack.production.config.js
 
 # IMAGE FOR RUNNING
-FROM node:12.21-alpine as server
+FROM node:16.19.0-alpine as server
 
 WORKDIR /home/node/app
 
