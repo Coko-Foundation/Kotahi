@@ -4,7 +4,6 @@ import { ApolloConsumer } from '@apollo/client'
 import config from 'config'
 import { Container, Content, UploadContainer, Heading } from '../style'
 import UploadManuscript from './UploadManuscript'
-import useCurrentUser from '../../../../hooks/useCurrentUser'
 
 const { acceptUploadFiles } = config['pubsweet-component-xpub-dashboard'] || {}
 
@@ -13,9 +12,7 @@ const acceptFiles =
     ? acceptUploadFiles.join()
     : 'application/vnd.openxmlformats-officedocument.wordprocessingml.document'
 
-const Dashboard = props => {
-  const currentUser = useCurrentUser()
-
+const Dashboard = ({ currentUser, history }) => {
   return (
     <Container>
       <Heading>New submission</Heading>
@@ -27,7 +24,7 @@ const Dashboard = props => {
                 acceptFiles={acceptFiles}
                 client={client}
                 currentUser={currentUser}
-                history={props.history}
+                history={history}
               />
             )}
           </ApolloConsumer>
@@ -38,6 +35,9 @@ const Dashboard = props => {
 }
 
 Dashboard.propTypes = {
+  currentUser: PropTypes.shape({
+    id: PropTypes.string.isRequired,
+  }).isRequired,
   history: PropTypes.shape({
     push: PropTypes.func.isRequired,
   }).isRequired,

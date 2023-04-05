@@ -1235,7 +1235,21 @@ const resolvers = {
 
       return repackageForGraphql(manuscript)
     },
-    async manuscriptsUserHasCurrentRoleIn(_, input, ctx) {
+    async manuscriptsUserHasCurrentRoleIn(
+      _,
+      {
+        reviewerStatus,
+        wantedRoles,
+        sort,
+        offset,
+        limit,
+        filters,
+        timezoneOffsetMinutes,
+      },
+      ctx,
+    ) {
+      const submissionForm = await Form.findOneByField('purpose', 'submit')
+
       // Get IDs of the top-level manuscripts
       const topLevelManuscripts = await models.Manuscript.query()
         .distinct(
@@ -1249,9 +1263,9 @@ const resolvers = {
         .where('is_hidden', false)
 
       // Get those top-level manuscripts with all versions, all with teams and members
-      const manuscripts = await models.Manuscript.query()
+      const allManuscriptsWithInfo = await models.Manuscript.query()
         .withGraphFetched(
-          '[teams.[members], tasks, manuscriptVersions(orderByCreated).[teams.[members], tasks]]',
+          '[teams.[members], tasks, invitations, manuscriptVersions(orderByCreated).[teams.[members], tasks, invitations]]',
         )
         .whereIn(
           'id',
@@ -1259,10 +1273,10 @@ const resolvers = {
         )
         .orderBy('created', 'desc')
 
-      const filteredManuscripts = []
+      // Get the latest version of each manuscript, and check the users role in that version
+      const userManuscriptsWithInfo = {}
 
-      manuscripts.forEach(m => {
-        // picking the first version if present, as the list is sorted by created desc
+      allManuscriptsWithInfo.forEach(m => {
         const latestVersion =
           m.manuscriptVersions && m.manuscriptVersions.length > 0
             ? m.manuscriptVersions[0]
@@ -1270,7 +1284,13 @@ const resolvers = {
 
         if (
           latestVersion.teams.some(t =>
-            t.members.some(member => member.userId === ctx.user),
+            t.members.some(member => {
+              return (
+                member.userId === ctx.user &&
+                wantedRoles.includes(t.role) &&
+                (!reviewerStatus || member.status === reviewerStatus)
+              )
+            }),
           )
         ) {
           // eslint-disable-next-line no-param-reassign
@@ -1279,11 +1299,35 @@ const resolvers = {
             ctx.user,
           )
 
-          filteredManuscripts.push(m)
+          userManuscriptsWithInfo[m.id] = m
         }
       })
 
-      return Promise.all(filteredManuscripts.map(m => repackageForGraphql(m)))
+      // Apply filters to the manuscripts, limiting results to those the user has a role in
+      const [rawQuery, rawParams] = buildQueryForManuscriptSearchFilterAndOrder(
+        sort,
+        offset,
+        limit,
+        filters,
+        submissionForm,
+        timezoneOffsetMinutes || 0,
+        Object.keys(userManuscriptsWithInfo),
+      )
+
+      const knex = models.Manuscript.knex()
+      const rawQResult = await knex.raw(rawQuery, rawParams)
+      let totalCount = 0
+      if (rawQResult.rowCount)
+        totalCount = parseInt(rawQResult.rows[0].full_count, 10)
+
+      // Add in searchRank and searchSnippet
+      const result = rawQResult.rows.map(row => ({
+        ...userManuscriptsWithInfo[row.id],
+        searchRank: row.rank,
+        searchSnippet: row.snippet,
+      }))
+
+      return { totalCount, manuscripts: result }
     },
     async manuscripts(_, { where }, ctx) {
       const manuscripts = models.Manuscript.query()
@@ -1386,6 +1430,7 @@ const resolvers = {
 
       return { totalCount, manuscripts: result }
     },
+
     async manuscriptsPublishedSinceDate(_, { startDate, limit }, ctx) {
       const query = models.Manuscript.query()
         .whereNotNull('published')
@@ -1580,10 +1625,10 @@ const typeDefs = `
     manuscript(id: ID!): Manuscript!
     manuscripts: [Manuscript]!
     paginatedManuscripts(offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int): PaginatedManuscripts
+    manuscriptsUserHasCurrentRoleIn(reviewerStatus: String, wantedRoles: [String]!, offset: Int, limit: Int, sort: ManuscriptsSort, filters: [ManuscriptsFilter!]!, timezoneOffsetMinutes: Int): PaginatedManuscripts
     publishedManuscripts(sort:String, offset: Int, limit: Int): PaginatedManuscripts
     validateDOI(articleURL: String): validateDOIResponse
     validateSuffix(suffix: String): validateDOIResponse
-    manuscriptsUserHasCurrentRoleIn: [Manuscript]
 
     """ Get published manuscripts with irrelevant fields stripped out. Optionally, you can specify a startDate and/or limit. """
     manuscriptsPublishedSinceDate(startDate: DateTime, limit: Int): [PublishedManuscript]!
@@ -1662,6 +1707,7 @@ const typeDefs = `
     importSourceServer: String
     tasks: [Task!]
     hasOverdueTasksForUser: Boolean
+    invitations: [Invitation]
   }
 
   input ManuscriptInput {

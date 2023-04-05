@@ -1,42 +1,40 @@
 /* eslint-disable no-shadow */
 import React, { useContext, useState } from 'react'
 import styled from 'styled-components'
-import { ToastContainer } from 'react-toastify'
-import 'react-toastify/dist/ReactToastify.css'
 import { Checkbox } from '@pubsweet/ui'
 import { grid } from '@pubsweet/ui-toolkit'
-import ManuscriptRow from './ManuscriptRow'
+import { ToastContainer } from 'react-toastify'
+import 'react-toastify/dist/ReactToastify.css'
+import { articleStatuses } from '../../../globals'
+import { validateManuscriptSubmission } from '../../../shared/manuscriptUtils'
 import {
-  ManuscriptsTable,
-  ManuscriptsHeaderRow,
-  SelectAllField,
-  SelectedManuscriptsNumber,
-  ControlsContainer,
-} from './style'
+  URI_PAGENUM_PARAM,
+  URI_SEARCH_PARAM,
+} from '../../../shared/urlParamUtils'
+import MessageContainer from '../../component-chat/src/MessageContainer'
+import ManuscriptsTable from '../../component-manuscripts-table/src/ManuscriptsTable'
+import buildColumnDefinitions from '../../component-manuscripts-table/src/util/buildColumnDefinitions'
+import Modal from '../../component-modal/src/ConfirmationModal'
 import {
-  Container,
-  Spinner,
-  ScrollableContent,
-  Heading,
+  ActionButton,
+  Columns,
   CommsErrorBanner,
+  Container,
+  Heading,
   Pagination,
   PaginationContainerShadowed,
-  Columns,
   RoundIconButton,
-  ActionButton,
+  ScrollableContent,
+  Spinner,
 } from '../../shared'
-import { articleStatuses } from '../../../globals'
-import MessageContainer from '../../component-chat/src/MessageContainer'
-import Modal from '../../component-modal/src'
 import BulkArchiveModal from './BulkArchiveModal'
-import getColumnsProps from './getColumnsProps'
-import getUriQueryParams from './getUriQueryParams'
-import FilterSortHeader from './FilterSortHeader'
 import SearchControl from './SearchControl'
-import { validateManuscriptSubmission } from '../../../shared/manuscriptUtils'
+import {
+  ControlsContainer,
+  SelectAllField,
+  SelectedManuscriptsNumber,
+} from './style'
 import { ConfigContext } from '../../config/src'
-
-const URI_SEARCH_PARAM = 'search'
 
 const OuterContainer = styled(Container)`
   overflow: hidden;
@@ -60,6 +58,7 @@ const FlexRowWithSmallGapAbove = styled(FlexRow)`
 
 const Manuscripts = ({ history, ...props }) => {
   const {
+    applyQueryParams,
     validateDoi,
     validateSuffix,
     setReadyToEvaluateLabels,
@@ -67,9 +66,6 @@ const Manuscripts = ({ history, ...props }) => {
     importManuscripts,
     isImporting,
     publishManuscripts,
-    setSortName,
-    setSortDirection,
-    setPage,
     queryObject,
     sortDirection,
     sortName,
@@ -81,6 +77,8 @@ const Manuscripts = ({ history, ...props }) => {
     shouldAllowBulkImport,
     archiveManuscriptMutations,
     confirmBulkArchive,
+    uriQueryParams,
+    currentUser,
   } = props
 
   const config = useContext(ConfigContext)
@@ -89,42 +87,6 @@ const Manuscripts = ({ history, ...props }) => {
 
   const [selectedNewManuscripts, setSelectedNewManuscripts] = useState([])
   const [isAdminChatOpen, setIsAdminChatOpen] = useState(true)
-
-  const uriQueryParams = getUriQueryParams(window.location)
-
-  const loadPageWithQuery = query => {
-    let newPath = `${urlFrag}/admin/manuscripts`
-
-    if (query.length > 0) {
-      newPath = `${newPath}?${query
-        .filter(x => x.value)
-        .map(
-          param =>
-            `${encodeURIComponent(param.field)}=${encodeURIComponent(
-              param.value,
-            )}`,
-        )
-        .join('&')}`
-    }
-
-    history.replace(newPath)
-  }
-
-  const setFilter = (fieldName, filterValue) => {
-    if (fieldName === URI_SEARCH_PARAM) return // In case a field happens to have the same name as the GET param we use for search
-    const revisedQuery = [...uriQueryParams].filter(x => x.field !== fieldName)
-    revisedQuery.push({ field: fieldName, value: filterValue })
-    loadPageWithQuery(revisedQuery)
-  }
-
-  const applySearchQuery = query => {
-    const revisedQuery = [...uriQueryParams].filter(
-      x => x.field !== URI_SEARCH_PARAM,
-    )
-
-    revisedQuery.push({ field: URI_SEARCH_PARAM, value: query })
-    loadPageWithQuery(revisedQuery)
-  }
 
   const toggleNewManuscriptCheck = id => {
     setSelectedNewManuscripts(s => {
@@ -263,26 +225,40 @@ const Manuscripts = ({ history, ...props }) => {
     closeModalBulkArchiveConfirmation()
   }
 
-  const currentSearchQuery = uriQueryParams.find(
-    x => x.field === URI_SEARCH_PARAM,
-  )?.value
+  const currentSearchQuery = uriQueryParams.get(URI_SEARCH_PARAM)
 
-  const columnsProps = getColumnsProps(
-    config,
-    configuredColumnNames,
-    fieldDefinitions,
-    uriQueryParams,
-    sortName,
-    sortDirection,
+  // Props for instantiating special components
+  const specialComponentValues = {
     deleteManuscript,
+    archiveManuscript,
     isManuscriptBlockedFromPublishing,
     tryPublishManuscript,
     selectedNewManuscripts,
     toggleNewManuscriptCheck,
     setReadyToEvaluateLabel,
     urlFrag,
+  }
+
+  // Props for filtering / sorting
+  const displayProps = {
+    uriQueryParams,
+    columnToSortOn: sortName,
+    sortDirection,
     currentSearchQuery,
-    archiveManuscript,
+  }
+
+  const adjustedColumnNames = [...configuredColumnNames]
+  adjustedColumnNames.push('actions')
+  if (['ncrc', 'colab'].includes(config.instanceName))
+    adjustedColumnNames.splice(0, 0, 'newItemCheckbox')
+
+  // Source of truth for columns
+  const columnsProps = buildColumnDefinitions(
+    config,
+    adjustedColumnNames,
+    fieldDefinitions,
+    specialComponentValues,
+    displayProps,
   )
 
   const channels = [
@@ -316,7 +292,12 @@ const Manuscripts = ({ history, ...props }) => {
       )}
 
       <SearchControl
-        applySearchQuery={applySearchQuery}
+        applySearchQuery={newQuery =>
+          applyQueryParams({
+            [URI_SEARCH_PARAM]: newQuery,
+            [URI_PAGENUM_PARAM]: 1,
+          })
+        }
         currentSearchQuery={currentSearchQuery}
       />
       {!isAdminChatOpen && (
@@ -380,40 +361,21 @@ const Manuscripts = ({ history, ...props }) => {
 
           <div>
             <ScrollableContent>
-              <ManuscriptsTable>
-                <ManuscriptsHeaderRow>
-                  {columnsProps.map(info => (
-                    <FilterSortHeader
-                      columnInfo={info}
-                      key={info.name}
-                      setFilter={setFilter}
-                      setSortDirection={setSortDirection}
-                      setSortName={setSortName}
-                      sortDirection={sortDirection}
-                      sortName={sortName}
-                    />
-                  ))}
-                </ManuscriptsHeaderRow>
-                {manuscripts.map((manuscript, key) => {
-                  const latestVersion =
-                    manuscript.manuscriptVersions?.[0] || manuscript
-
-                  return (
-                    <ManuscriptRow
-                      columnDefinitions={columnsProps}
-                      key={latestVersion.id}
-                      manuscript={latestVersion}
-                      setFilter={setFilter}
-                    />
-                  )
-                })}
-              </ManuscriptsTable>
+              <ManuscriptsTable
+                applyQueryParams={applyQueryParams}
+                columnsProps={columnsProps}
+                manuscripts={manuscripts}
+                sortDirection={sortDirection}
+                sortName={sortName}
+              />
             </ScrollableContent>
             <Pagination
               limit={limit}
               page={page}
               PaginationContainer={PaginationContainerShadowed}
-              setPage={setPage}
+              setPage={newPage =>
+                applyQueryParams({ [URI_PAGENUM_PARAM]: newPage })
+              }
               totalCount={totalCount}
             />
           </div>
@@ -427,6 +389,7 @@ const Manuscripts = ({ history, ...props }) => {
             }
             channels={channels}
             chatRoomId={chatRoomId}
+            currentUser={currentUser}
             hideChat={hideChat}
           />
         )}

@@ -1,7 +1,7 @@
 import React from 'react'
-import { ManuscriptsTable } from '../../app/components/component-manuscripts/src/style'
-import ManuscriptRow from '../../app/components/component-manuscripts/src/ManuscriptRow'
-import DefaultField from '../../app/components/component-manuscripts/src/cell-components/DefaultField'
+import ManuscriptsTable from '../../app/components/component-manuscripts-table/src/ManuscriptsTable'
+import ManuscriptRow from '../../app/components/component-manuscripts-table/src/ManuscriptRow'
+import DefaultField from '../../app/components/component-manuscripts-table/src/cell-components/DefaultField'
 import DesignEmbed from '../common/utils'
 
 const ColumnsProps = [

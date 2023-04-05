@@ -14,6 +14,7 @@ import MessageContainer from '../../../component-chat/src/MessageContainer'
 
 const DecisionVersions = ({
   allUsers,
+  addReviewer,
   roles,
   currentUser,
   decisionForm,
@@ -22,7 +23,7 @@ const DecisionVersions = ({
   updateManuscript,
   manuscript,
   sendNotifyEmail,
-  sendChannelMessageCb,
+  sendChannelMessage,
   makeDecision,
   updateReviewJsonData,
   publishManuscript,
@@ -46,11 +47,15 @@ const DecisionVersions = ({
   selectedEmail,
   setSelectedEmail,
   setShouldPublishField,
-  isEmailAddressOptedOut,
+  selectedEmailIsBlacklisted,
+  updateSharedStatusForInvitedReviewer,
   dois,
   refetch,
   updateTask,
   updateTasks,
+  teams,
+  updateTeamMember,
+  removeReviewer,
   updateTaskNotification,
   deleteTaskNotification,
   createTaskEmailNotificationLog,
@@ -88,6 +93,7 @@ const DecisionVersions = ({
           <VersionSwitcher>
             {versions.map((version, index) => (
               <DecisionVersion
+                addReviewer={addReviewer}
                 allUsers={allUsers}
                 canHideReviews={canHideReviews}
                 createFile={createFile}
@@ -104,23 +110,25 @@ const DecisionVersions = ({
                 form={form}
                 invitations={invitations}
                 isCurrentVersion={index === 0}
-                isEmailAddressOptedOut={isEmailAddressOptedOut}
                 key={version.manuscript.id}
                 makeDecision={makeDecision}
                 onChange={handleChange}
                 parent={manuscript}
                 publishManuscript={publishManuscript}
                 refetch={refetch}
+                removeReviewer={removeReviewer}
                 reviewers={reviewers}
                 reviewForm={reviewForm}
                 roles={roles}
                 selectedEmail={selectedEmail}
-                sendChannelMessageCb={sendChannelMessageCb}
+                selectedEmailIsBlacklisted={selectedEmailIsBlacklisted}
+                sendChannelMessage={sendChannelMessage}
                 sendNotifyEmail={sendNotifyEmail}
                 setExternalEmail={setExternalEmail}
                 setSelectedEmail={setSelectedEmail}
                 setShouldPublishField={setShouldPublishField}
                 teamLabels={teamLabels}
+                teams={teams}
                 threadedDiscussionProps={threadedDiscussionProps}
                 updateManuscript={updateManuscript}
                 updateReview={updateReview}
@@ -132,21 +140,30 @@ const DecisionVersions = ({
                     version.manuscript.id,
                   )
                 }
+                updateSharedStatusForInvitedReviewer={
+                  updateSharedStatusForInvitedReviewer
+                }
                 updateTask={index === 0 ? updateTask : null}
                 updateTaskNotification={updateTaskNotification}
                 updateTasks={index === 0 ? updateTasks : null}
                 updateTeam={updateTeam}
+                updateTeamMember={updateTeamMember}
                 urlFrag={urlFrag}
                 validateDoi={validateDoi}
                 validateSuffix={validateSuffix}
                 version={version.manuscript}
+                versionNumber={versions.length - index}
               />
             ))}
           </VersionSwitcher>
         </ErrorBoundary>
       </Manuscript>
       <Chat>
-        <MessageContainer channels={channels} manuscriptId={manuscript.id} />
+        <MessageContainer
+          channels={channels}
+          currentUser={currentUser}
+          manuscriptId={manuscript.id}
+        />
       </Chat>
     </Columns>
   )

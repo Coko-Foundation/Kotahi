@@ -5,7 +5,7 @@ import { Select } from '../../../../shared'
 import {
   CREATE_TEAM_MUTATION,
   UPDATE_TEAM_MUTATION,
-} from '../../../../../queries'
+} from '../../../../../queries/team'
 import { ConfigContext } from '../../../../config/src'
 
 const editorOption = user => ({

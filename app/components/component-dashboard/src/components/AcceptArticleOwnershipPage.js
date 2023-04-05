@@ -2,7 +2,7 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 import { useQuery } from '@apollo/client'
 import { Container } from '../../../shared'
-import { GET_INVITATION_STATUS } from '../../../../queries/index'
+import { GET_INVITATION_STATUS } from '../../../../queries/invitation'
 import InvitationLinkExpired from './InvitationLinkExpired'
 
 const AcceptArticleOwnershipPage = ({ match }) => {

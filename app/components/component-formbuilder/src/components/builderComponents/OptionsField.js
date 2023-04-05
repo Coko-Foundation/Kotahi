@@ -14,6 +14,7 @@ const Inline = styled.div`
 
 const UnbulletedList = styled.ul`
   list-style-type: none;
+  padding-left: 0;
 `
 
 const InlineColorPicker = styled(Inline)`
@@ -27,6 +28,14 @@ const InlineColorPicker = styled(Inline)`
     height: ${grid(6)};
     width: ${grid(9)};
   }
+`
+
+const OptionsRow = styled.div`
+  display: flex;
+`
+
+const StyledDeleteControl = styled(DeleteControl)`
+  top: 0;
 `
 
 const LabelInput = props => (
@@ -58,7 +67,7 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
       {(values.options || []).map((option, index) => (
         // a newly-added option doesn't have an id yet, so we fall back on index
         <li key={option?.id ?? index}>
-          <div>
+          <OptionsRow>
             <Inline>
               <ValidatedFieldFormik
                 component={LabelInput}
@@ -99,11 +108,11 @@ const RenderOptions = ({ form: { values, setFieldValue }, push, remove }) => {
                 name={`options.${index}.labelColor`}
               />
             </InlineColorPicker>
-            <DeleteControl
+            <StyledDeleteControl
               onClick={() => remove(index)}
               tooltip="Delete this option"
             />
-          </div>
+          </OptionsRow>
         </li>
       ))}
       <li>

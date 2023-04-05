@@ -94,4 +94,12 @@ export default {
       removeTaskAlertsForCurrentUser
     }
   `,
+  updateTab: gql`
+    mutation($tab: String) {
+      updateRecentTab(tab: $tab) {
+        id
+        recentTab
+      }
+    }
+  `,
 }

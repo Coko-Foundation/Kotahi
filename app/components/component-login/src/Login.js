@@ -5,8 +5,7 @@ import { Button } from '@pubsweet/ui'
 import styled from 'styled-components'
 import lightenBy from '../../../shared/lightenBy'
 import { ConfigContext } from '../../config/src'
-
-import getQueryStringByName from '../../../shared/getQueryStringByName'
+import { getQueryStringByName } from '../../../shared/urlUtils'
 
 const getNextUrl = config => {
   const url = new URL(window.location.href)
@@ -122,6 +121,13 @@ const Login = ({ logo = null, ...props }) => {
 
   if (token) {
     window.localStorage.setItem('token', token)
+    const intendedPage = localStorage.getItem('intendedPage')
+
+    if (intendedPage) {
+      redirectLink = intendedPage
+      localStorage.removeItem('intendedPage')
+    }
+
     return <Redirect to={redirectLink} />
   }
 

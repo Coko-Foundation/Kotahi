@@ -77,8 +77,6 @@ export const HeadingWithAction = styled.div`
   grid-template-columns: 1fr auto;
 `
 
-export { StatusBadge } from '../../shared'
-
 export const Placeholder = styled.div`
   color: ${th('colorTextPlaceholder')};
   display: grid;

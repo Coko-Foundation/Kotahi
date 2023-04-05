@@ -186,6 +186,7 @@
     "react-dropdown": "^1.11.0",
     "react-dropzone": "10.2.2",
     "react-feather": "^1.1.6",
+    "react-google-charts": "^4.0.0",
     "react-hot-loader": "^4.13.0",
     "react-image": "4.0.3",
     "react-mentions": "3.3.2",

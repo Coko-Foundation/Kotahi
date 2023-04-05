@@ -14,10 +14,11 @@ const Root = styled.nav`
     ${lightenBy('colorPrimary', 0.3)}
   );
   border-right: 1px solid ${th('colorFurniture')};
+  /* stylelint-disable-next-line declaration-no-important */
+  font-family: ${th('fontInterface')}, sans-serif !important;
   grid-area: menu;
   max-height: 100vh;
   padding: ${grid(2)};
-  font-family: ${th('fontInterface')}, sans-serif !important;
 `
 
 const UserName = styled.div`
@@ -86,15 +87,19 @@ export const Item = styled(NavItem)`
   background-color: ${props =>
     props.active ? th('colorBackgroundHue') : 'unset'};
   border-radius: 10px;
-  color: ${props => (props.active ? th('colorText') : th('colorTextReverse'))} !important;
+  /* stylelint-disable-next-line declaration-no-important */
+  color: ${props =>
+    props.active ? th('colorText') : th('colorTextReverse')} !important;
   display: flex;
+  /* stylelint-disable-next-line declaration-no-important */
+  font-size: ${th('fontSizeBase')} !important;
   height: ${grid(5)};
   justify-content: space-between;
   line-height: ${grid(3)};
   margin-left: ${props => grid((props.depth || 0) * 2)};
   padding-left: ${grid(1)};
+  /* stylelint-disable-next-line declaration-no-important */
   text-decoration: none !important;
-  font-size: ${th('fontSizeBase')} !important;
 
   & > span {
     align-items: center;
@@ -109,6 +114,7 @@ export const Item = styled(NavItem)`
 
   &:hover {
     background-color: ${lightenBy('colorPrimary', 0.5)};
+    /* stylelint-disable-next-line declaration-no-important */
     color: ${th('colorText')} !important;
     stroke: ${th('colorText')};
 
@@ -122,9 +128,11 @@ const UserItem = styled(Link)`
   color: ${th('colorTextReverse')};
   display: flex;
   padding-bottom: ${grid(2)};
+  /* stylelint-disable-next-line declaration-no-important */
   text-decoration: none !important;
 
   &:hover {
+    /* stylelint-disable-next-line declaration-no-important */
     color: ${th('colorTextReverse')} !important;
   }
 `
@@ -132,9 +140,10 @@ const UserItem = styled(Link)`
 const UserInfo = styled.div`
   display: flex;
   flex-direction: column;
+  /* stylelint-disable-next-line declaration-no-important */
+  font-size: ${th('fontSizeBase')} !important;
   justify-content: center;
   margin-left: ${grid(1)};
-  font-size: ${th('fontSizeBase')} !important;
 `
 
 const SubMenu = ({ location, depth = 0, ...navInfo }) => {
@@ -208,7 +217,7 @@ const Menu = ({
             ) : (
               <Item
                 {...navInfo}
-                active={location.pathname === navInfo.link}
+                active={location.pathname.includes(navInfo.link)}
                 key={navInfo.link}
               />
             ),

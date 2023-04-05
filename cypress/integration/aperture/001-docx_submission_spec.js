@@ -62,6 +62,7 @@ describe('Upload manuscript test', () => {
         ControlPage.clickAssignEditorDropdown()
         ControlPage.selectDropdownOptionByName(name.role.seniorEditor)
         // assert the reviews
+        ControlPage.clickDecisionTab(1)
         ControlPage.fillInDecision(data.decision)
         ControlPage.clickAccept()
         ControlPage.clickSubmit()

@@ -186,12 +186,19 @@ const userIsReviewAuthorAndReviewIsNotCompleted = rule({
   if (!ctx.user) return false
   let manuscriptId
 
-  if (args.id) {
+  // updateReviewerTeamMemberStatus
+  if (args.manuscriptId) manuscriptId = args.manuscriptId
+
+  // updateReview
+  if (!manuscriptId && args.id) {
     const review = await ctx.connectors.Review.model.query().findById(args.id)
     if (review) manuscriptId = review.manuscriptId
   }
 
-  if (!manuscriptId) manuscriptId = args.input.manuscriptId
+  // updateReview DecisionForm fallback
+  if (!manuscriptId && args.input && args.input.manuscriptId) {
+    manuscriptId = args.input.manuscriptId
+  }
 
   const manuscript = await ctx.connectors.Manuscript.model
     .query()
@@ -217,12 +224,20 @@ const userIsEditorOfTheManuscriptOfTheReview = rule({
 })(async (parent, args, ctx, info) => {
   let manuscriptId
 
-  if (args.id) {
+  // updateReviewerTeamMemberStatus
+  if (args.manuscriptId) manuscriptId = args.manuscriptId
+
+  // updateReview
+  if (!manuscriptId && args.id) {
     const review = await ctx.connectors.Review.model.query().findById(args.id)
     if (review) manuscriptId = review.manuscriptId
   }
 
-  if (!manuscriptId) manuscriptId = args.input.manuscriptId
+  // updateReview DecisionForm fallback
+  if (!manuscriptId && args.input && args.input.manuscriptId) {
+    manuscriptId = args.input.manuscriptId
+  }
+
   return userIsEditorQuery(ctx, manuscriptId)
 })
 
@@ -246,7 +261,8 @@ const userHasAcceptedInvitation = rule({ cache: 'strict' })(
 
     const teamMember = await ctx.connectors.TeamMember.model
       .query()
-      .where({ userId: ctx.user, teamId: args.teamId, status: 'accepted' })
+      .where({ userId: ctx.user, teamId: args.teamId })
+      .whereIn('status', ['accepted', 'inProgress'])
       .first()
 
     return !!teamMember
@@ -446,10 +462,6 @@ const permissions = {
     changeTopic: deny, // Never used
     completeComment: isAuthenticated,
     completeComments: isAuthenticated,
-    completeReview: or(
-      userIsReviewAuthorAndReviewIsNotCompleted,
-      userIsEditorOfTheManuscriptOfTheReview,
-    ),
     createChannel: deny, // Never used
     createChannelFromDOI: deny, // Never used
     // createDocxToHTMLJob seems to be exposed from xsweet???
@@ -500,6 +512,10 @@ const permissions = {
     updateTaskNotification: or(userIsEditor, userIsAdmin),
     updateTeam: or(userIsEditor, userIsAdmin),
     updateTeamMember: or(userIsEditor, userIsAdmin),
+    updateReviewerTeamMemberStatus: or(
+      userIsReviewAuthorAndReviewIsNotCompleted,
+      userIsEditorOfTheManuscriptOfTheReview,
+    ),
     updateUser: userIsAdmin,
     upload: isAuthenticated,
     uploadFile: isAuthenticated,

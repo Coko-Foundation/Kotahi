@@ -14,6 +14,37 @@ const AddTaskContainer = styled.div`
   padding: 0 8px;
 `
 
+const HeaderRowContainer = styled.div`
+  padding: 10px 8px 0;
+`
+
+const HeaderRow = styled.div`
+  align-items: center;
+  display: flex;
+  gap: calc(8px * 1);
+`
+
+const HeaderLabel = styled.div`
+  font-weight: 500;
+`
+
+const TitleHeader = styled(HeaderLabel)`
+  flex: 1 1 40em;
+`
+
+const TitleLabel = styled.div`
+  padding-left: 3.5em;
+`
+
+const AssigneeHeader = styled(HeaderLabel)`
+  flex: 1 1 15em;
+`
+
+const DurationHeader = styled(HeaderLabel)`
+  flex: ${props => (props.editAsTemplate ? '0 0 10em' : '0 0 18em')};
+  margin-left: ${props => (props.editAsTemplate ? '10px' : 0)};
+`
+
 const TaskList = ({
   editAsTemplate,
   tasks: persistedTasks,
@@ -74,7 +105,9 @@ const TaskList = ({
       })
     }
 
-    setTasks(tasks.map(t => (t.id === id ? updatedTask : t)))
+    setTasks(currentTasks =>
+      currentTasks.map(t => (t.id === id ? updatedTask : t)),
+    )
   }
 
   const addNewTask = () => {
@@ -184,6 +217,17 @@ const TaskList = ({
                 {!tasks.length && 'Add your first task...'}
                 {tasks.length ? (
                   <>
+                    <HeaderRowContainer>
+                      <HeaderRow>
+                        <TitleHeader>
+                          <TitleLabel>Title</TitleLabel>
+                        </TitleHeader>
+                        <AssigneeHeader>Assignee</AssigneeHeader>
+                        <DurationHeader editAsTemplate={editAsTemplate}>
+                          Duration/Due Date
+                        </DurationHeader>
+                      </HeaderRow>
+                    </HeaderRowContainer>
                     {tasks.map((task, index) => (
                       <Task
                         assigneeGroupedOptions={assigneeGroupedOptions}

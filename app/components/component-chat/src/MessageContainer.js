@@ -7,7 +7,6 @@ import { th, grid } from '@pubsweet/ui-toolkit'
 import { gql, useQuery, useMutation, useApolloClient } from '@apollo/client'
 import { HiddenTabs } from '../../shared'
 import { CREATE_MESSAGE, SEARCH_USERS } from '../../../queries'
-import useCurrentUser from '../../../hooks/useCurrentUser'
 import Chat from './Chat'
 
 const GET_MESSAGES = gql`
@@ -138,7 +137,13 @@ const subscribeToNewMessages = (subscribeToMore, channelId) =>
     },
   })
 
-const chatComponent = (channelId, channelName, manuscriptId, chatRoomId) => {
+const chatComponent = (
+  channelId,
+  channelName,
+  manuscriptId,
+  chatRoomId,
+  currentUser,
+) => {
   const client = useApolloClient()
 
   const staticSuggestion = []
@@ -197,8 +202,6 @@ const chatComponent = (channelId, channelName, manuscriptId, chatRoomId) => {
 
     return callback(uniqueResults.slice(0, 8))
   }
-
-  const currentUser = useCurrentUser()
 
   const [sendChannelMessage] = useMutation(CREATE_MESSAGE)
 
@@ -263,6 +266,7 @@ const Container = ({
   chatRoomId,
   hideChat,
   manuscriptId = null,
+  currentUser,
 }) => {
   const channelId = optionalChannelId ?? channels?.[0]?.id
   if (!channelId) return null
@@ -273,7 +277,15 @@ const Container = ({
       label: channel.name,
       key: channel.id,
       content: (
-        <>{chatComponent(channel.id, channel.name, manuscriptId, chatRoomId)}</>
+        <>
+          {chatComponent(
+            channel.id,
+            channel.name,
+            manuscriptId,
+            chatRoomId,
+            currentUser,
+          )}
+        </>
       ),
     }))
 
@@ -335,8 +347,6 @@ const Container = ({
 
     return callback(uniqueResults.slice(0, 8))
   }
-
-  const currentUser = useCurrentUser()
 
   const [sendChannelMessage] = useMutation(CREATE_MESSAGE)
 

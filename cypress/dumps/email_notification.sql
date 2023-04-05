@@ -540,6 +540,7 @@ CREATE TABLE "public"."users" (
     "profile_picture" text,
     "online" bool,
     "last_online" timestamptz,
+    "recent_tab" text,
     PRIMARY KEY ("id")
 );
 
@@ -553,7 +554,8 @@ CREATE TABLE "public"."configs" (
     "created" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "form_data" jsonb NOT NULL,
-    "active" bool NOT NULL DEFAULT false
+    "active" bool NOT NULL DEFAULT false,
+    "type" text NOT NULL
 );
 
 INSERT INTO "public"."channels" ("id", "manuscript_id", "created", "updated", "topic", "type") VALUES
@@ -576,8 +578,8 @@ INSERT INTO "public"."identities" ("id", "user_id", "created", "updated", "type"
 INSERT INTO "public"."manuscripts" ("id", "created", "updated", "parent_id", "submitter_id", "status", "decision", "authors", "meta", "submission", "published", "type", "evaluations_hypothesis_map", "is_imported", "import_source", "import_source_server", "short_id", "submitted_date", "form_fields_to_publish") VALUES
 ('10bc66ee-dc1a-4ac2-82d1-b37cd8e0fc15', '2022-08-10 02:15:29.046+00', '2022-08-10 02:18:54.218+00', NULL, '9160da05-15ce-4836-8cb2-45c6c1855318', 'submitted', NULL, NULL, '{"title": "Demo Title"}', '{"doi": "", "link": "www.kotahi-test-example.com/doi", "title": "", "labels": "", "topics": [], "journal": "", "ourTake": "<p class=\"paragraph\">luctus vel augue a, fermentum volutpat mauris. Curabitur ultrices purus id mauris gravida aliquet. Quisque scelerisque ut massa eu sollicitudin. Sed egestas nibh ac lacinia facilisis.</p>", "abstract": "<p class=\"paragraph\">ABSTRACT Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis eleifend odio et convallis posuere. Aliquam quis porta erat, in hendrerit lorem. Fusce eu mauris tortor ABSTRACT</p>", "editDate": "2022-08-10", "keywords": "In hac habitasse platea dictumst", "firstAuthor": " Nulla enim nulla", "limitations": "<p class=\"paragraph\">Donec aliquam leo vitae est lacinia, non elementum felis tempus</p>", "mainFindings": "<p class=\"paragraph\">Morbi sit amet dolor eget odio interdum efficitur vitae et leo.</p>", "datePublished": "12/12/12", "reviewCreator": "Pellentesque tincidunt ", "studyStrengths": "<p class=\"paragraph\">Curabitur vel fermentum sem.</p>"}', NULL, 'Manuscript', NULL, NULL, NULL, NULL, 1, '2022-08-10 02:18:54.218+00', '[]');
 
-INSERT INTO "public"."configs" ("id", "created", "updated", "form_data", "active") VALUES
-('6619a377-c53d-4a5c-885b-b0f41ff5d6ed', '2023-02-23 14:27:54.64+00', '2023-02-23 14:27:54.64+00', '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"showSections": ["submission", "review", "editor"], "loginRedirectUrl": "/dashboard"}, "manuscript": {"tableColumns": "shortId, meta.title, created, updated, status, submission.labels, author", "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": false, "shouldAllowTagging": false}}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Workflow", "Manuscript text", "Metadata", "Tasks & Notifications"], "hideReview": true, "sharedReview": true, "displayManuscriptShortId": true}, "instanceName": "aperture", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/assets/logo-kotahi.png", "brandName": "Kotahi", "primaryColor": "#3AAE2A", "secondaryColor": "#9e9e9e"}}', 't');
+INSERT INTO "public"."configs" ("id", "created", "updated", "form_data", "active", "type") VALUES
+('6619a377-c53d-4a5c-885b-b0f41ff5d6ed', '2023-02-23 14:27:54.64+00', '2023-02-23 14:27:54.64+00', '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"showSections": ["submission", "review", "editor"], "loginRedirectUrl": "/dashboard"}, "manuscript": {"tableColumns": "shortId, meta.title, created, updated, status, submission.labels, author", "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": false, "shouldAllowTagging": false}}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Workflow", "Manuscript text", "Metadata", "Tasks & Notifications"], "hideReview": true, "sharedReview": true, "displayManuscriptShortId": true}, "instanceName": "aperture", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/assets/logo-kotahi.png", "brandName": "Kotahi", "primaryColor": "#3AAE2A", "secondaryColor": "#9e9e9e"}}', 't', 'Config');
 
 INSERT INTO "public"."migrations" ("id", "run_at") VALUES
 ('1524494862-entities.sql', '2022-08-10 01:59:37.986782+00'),
@@ -632,7 +634,27 @@ INSERT INTO "public"."migrations" ("id", "run_at") VALUES
 ('1657794006-threaded-discussions.sql', '2022-08-10 01:59:38.501413+00'),
 ('1657794007-add_fields_to_publish.sql', '2022-08-10 01:59:38.519361+00'),
 ('1657798114-add-constraints.sql', '2022-08-10 01:59:38.526786+00'),
-('1676497888-config.sql', '2022-09-15 06:17:38.709414+00');
+('1663311093-search-indexing.sql', '2022-09-15 06:17:38.051414+00'),
+('1663566985-add-last-online.sql', '2022-09-15 06:17:38.066414+00'),
+('1663734311-add-task-tables.sql', '2022-09-15 06:17:38.104414+00'),
+('1664542236-add_doi_column.sql', '2022-09-15 06:17:38.120414+00'),
+('1666077648-update-default-value-hide-from-reviewers-submit-form.js', '2022-09-15 06:17:38.136414+00'),
+('1666267733-create-task-alerts-table.sql', '2022-09-15 06:17:38.177414+00'),
+('1667273810-remove-dead-code-fields.sql', '2022-09-15 06:17:38.198414+00'),
+('1667799519-add-is-shared-column-to-invitations-table.sql', '2022-09-15 06:17:38.232414+00'),
+('1669798941-add-tasks-to-selected-manuscripts.js', '2022-09-15 06:17:38.254414+00'),
+('1670414972-create-task-email-notifications-table.sql', '2022-09-15 06:17:38.309414+00'),
+('1670417835-alter_manuscript_is_hidden.sql', '2022-09-15 06:17:38.327414+00'),
+('1670811677-add-published-artifacts-table.sql', '2022-09-15 06:17:38.369414+00'),
+('1670811678-migrate-evaluations-hypothesis-map.js', '2022-09-15 06:17:38.879414+00'),
+('1670998244-add-assignee-columns-to-task-table.sql', '2022-09-15 06:17:38.952414+00'),
+('1673821996-add-docmaps-table.sql', '2022-09-15 06:17:39.110414+00'),
+('1674991816-fix-checkboxgroup-data.js', '2022-09-15 06:17:39.193414+00'),
+('1676179935-create-task-notification-logs-table.sql', '2022-09-15 06:17:39.254414+00'),
+('1676180125-add-sent-at-column-to-task-notifications-table.sql', '2022-09-15 06:17:39.301414+00'),
+('1677839814-drop-task-notification-id-recipient-id-unique-index.sql', '2022-09-15 06:17:39.357414+00'),
+('1676497888-config.sql', '2022-09-15 06:17:39.709414+00'),
+('1678694877-create-config-data-from-env.js', '2022-09-15 06:17:39.789414+00');
 
 INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team_id", "user_id", "alias_id", "is_shared") VALUES
 ('2bf0ba39-16dc-42d1-b9f2-93482baf323d', '2022-08-10 02:15:29.071+00', '2022-08-10 02:15:29.071+00', NULL, '0c00d183-ed7e-4273-b0a2-eb56c75de1f4', '9160da05-15ce-4836-8cb2-45c6c1855318', NULL, NULL);
@@ -640,9 +662,9 @@ INSERT INTO "public"."team_members" ("id", "created", "updated", "status", "team
 INSERT INTO "public"."teams" ("id", "created", "updated", "name", "role", "members", "owners", "global", "type", "object_id", "object_type") VALUES
 ('0c00d183-ed7e-4273-b0a2-eb56c75de1f4', '2022-08-10 02:15:29.063+00', '2022-08-10 02:15:29.063+00', 'Author', 'author', NULL, NULL, NULL, 'team', '10bc66ee-dc1a-4ac2-82d1-b37cd8e0fc15', 'manuscript');
 
-INSERT INTO "public"."users" ("id", "created", "updated", "admin", "email", "username", "password_hash", "teams", "password_reset_token", "password_reset_timestamp", "type", "profile_picture", "online", "last_online") VALUES
-('716a83b2-9749-4933-9418-fca2544f5282', '2022-08-10 02:19:19.125+00', '2022-08-10 02:22:49.437+00', NULL, 'emily@kotahiexample.com', 'Emily Clay', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
-('9160da05-15ce-4836-8cb2-45c6c1855318', '2022-08-10 02:15:11.329+00', '2022-08-10 02:15:29.074+00', 't', 'elaineb@example.com', 'Elaine Barnes', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL);
+INSERT INTO "public"."users" ("id", "created", "updated", "admin", "email", "username", "password_hash", "teams", "password_reset_token", "password_reset_timestamp", "type", "profile_picture", "online", "last_online", "recent_tab") VALUES
+('716a83b2-9749-4933-9418-fca2544f5282', '2022-08-10 02:19:19.125+00', '2022-08-10 02:22:49.437+00', NULL, 'emily@kotahiexample.com', 'Emily Clay', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL, 'submissions'),
+('9160da05-15ce-4836-8cb2-45c6c1855318', '2022-08-10 02:15:11.329+00', '2022-08-10 02:15:29.074+00', 't', 'elaineb@example.com', 'Elaine Barnes', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL, 'submissions');
 
 ALTER TABLE "public"."article_import_history" ADD FOREIGN KEY ("source_id") REFERENCES "public"."article_import_sources"("id");
 ALTER TABLE "public"."channel_members" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;

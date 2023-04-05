@@ -23,7 +23,7 @@ import {
 } from '../../shared'
 
 import { DragVerticalIcon } from '../../shared/Icons'
-import Modal from '../../component-modal/src'
+import Modal from '../../component-modal/src/ConfirmationModal'
 import { ConfigContext } from '../../config/src'
 import AssigneeDropdown from './AssigneeDropdown'
 import DueDateField from './DueDateField'
@@ -49,21 +49,6 @@ const TaskRowContainer = styled.div`
     border-top: 2px solid rgba(191, 191, 191, 0.5);
   }
 `
-
-const BaseHeader = styled.div`
-  font-weight: 500;
-  margin-bottom: 4px;
-`
-
-const TitleHeader = styled(BaseHeader)`
-  padding-left: 3.5em;
-`
-
-const AssigneeHeader = styled(BaseHeader)``
-
-const DurationDaysHeader = styled(BaseHeader)``
-
-const DueDateHeader = styled(BaseHeader)``
 
 const TitleCell = styled.div`
   display: flex;
@@ -217,8 +202,12 @@ const DurationDaysFieldContainer = styled(BaseFieldContainer)`
 
 const DueDateFieldContainer = styled(BaseFieldContainer)`
   align-items: flex-end;
-  flex: 0 0 16em;
+  flex: 0 0 18em;
   flex-direction: row;
+
+  > div {
+    flex: 1;
+  }
 
   > div + div {
     margin-left: ${grid(1)};
@@ -297,7 +286,7 @@ const Task = ({
   )
 
   useEffect(() => {
-    return updateTaskTitleDebounce.flush()
+    return updateTaskTitleDebounce.flush
   }, [])
 
   const updateTaskTitle = value => {
@@ -401,7 +390,6 @@ const Task = ({
     return (
       <TaskRow isOverdue={isOverdue}>
         <div>
-          <TitleHeader>Task title</TitleHeader>
           <TitleCell>
             <Handle />
             <Handle>
@@ -415,18 +403,14 @@ const Task = ({
           </TitleCell>
         </div>
         <div>
-          <AssigneeHeader>Assignee</AssigneeHeader>
           <AssigneeCell>{task.assignee?.username}</AssigneeCell>
         </div>
-        <AssigneeHeader>Assignee</AssigneeHeader>
         {editAsTemplate ? (
           <div>
-            <DurationDaysHeader>Duration in days</DurationDaysHeader>
             <DurationDaysCell>{task.defaultDurationDays || 0}</DurationDaysCell>
           </div>
         ) : (
           <div>
-            <DueDateHeader>Due date</DueDateHeader>
             <DueDateCell title={dueDateLocalString}>
               <DaysNoteContainer>
                 <CompactDetailLabel isWarning={isOverdue}>
@@ -490,7 +474,6 @@ const Task = ({
               {...provided.draggableProps}
             >
               <TitleFieldContainer>
-                <TitleHeader>Task title</TitleHeader>
                 <TitleCell>
                   <Handle {...provided.dragHandleProps}>
                     <DragIcon />
@@ -543,7 +526,6 @@ const Task = ({
                 </TitleCell>
               </TitleFieldContainer>
               <AssigneeFieldContainer>
-                <AssigneeHeader>Assignee</AssigneeHeader>
                 <AssigneeDropdown
                   assigneeGroupedOptions={assigneeGroupedOptions}
                   task={task}
@@ -553,7 +535,6 @@ const Task = ({
               </AssigneeFieldContainer>
               {editAsTemplate ? (
                 <DurationDaysFieldContainer>
-                  <DurationDaysHeader>Duration in days</DurationDaysHeader>
                   <DurationDaysCell>
                     <CounterField
                       minValue={0}
@@ -571,11 +552,6 @@ const Task = ({
               ) : (
                 <DueDateFieldContainer>
                   <div>
-                    <DueDateHeader>
-                      {task.status === status.NOT_STARTED
-                        ? 'Duration'
-                        : 'Due date'}
-                    </DueDateHeader>
                     <DueDateField
                       compact
                       displayDefaultDurationDays={displayDefaultDurationDays}

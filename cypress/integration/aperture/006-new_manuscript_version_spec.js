@@ -27,7 +27,7 @@ describe('checking manuscript version', () => {
 
       /* Editor  Submits a decision */
       cy.login(name.role.seniorEditor, dashboard)
-      DashboardPage.clickControlPanel()
+      DashboardPage.clickControlPanelDecision()
       /* Verify publish button is disabled */
       ControlPage.getPublishButton().should('be.disabled')
       /* Fill the decision form */
@@ -62,7 +62,7 @@ describe('checking manuscript version', () => {
 
       /* Login as editor and check the new version submission form */
       cy.login(name.role.seniorEditor, dashboard)
-      DashboardPage.clickControlPanel()
+      DashboardPage.clickControlPanelDecision()
       /* Verify publish button is disabled */
       ControlPage.getPublishButton().should('be.disabled')
     })

@@ -324,6 +324,7 @@ CREATE TABLE "public"."invitations" (
     "declined_reason" "public"."invitation_declined_reason_type",
     "user_id" uuid,
     "sender_id" uuid NOT NULL,
+    "is_shared" bool NOT NULL DEFAULT false,
     PRIMARY KEY ("id")
 );
 
@@ -355,8 +356,8 @@ CREATE TABLE "public"."manuscripts" (
     "submitted_date" timestamptz,
     "is_hidden" bool not null DEFAULT false,
     "form_fields_to_publish" jsonb NOT NULL DEFAULT '[]'::jsonb,
-    "searchable_text" TEXT DEFAULT '' NOT NULL,
-    "search_tsvector" tsvector DEFAULT ''::tsvector NOT NULL,
+    "searchable_text" text NOT NULL DEFAULT ''::text,
+    "search_tsvector" tsvector NOT NULL DEFAULT ''::tsvector,
     "doi" text,
     PRIMARY KEY ("id")
 );
@@ -457,7 +458,10 @@ CREATE TABLE public.tasks (
   due_date TIMESTAMP WITH TIME ZONE,
   reminder_period_days INTEGER,
   status TEXT,
-  sequence_index INTEGER NOT NULL
+  sequence_index INTEGER NOT NULL,
+  assignee_type TEXT,
+  assignee_name TEXT,
+  assignee_email TEXT
 );
 
 ALTER TABLE public.tasks OWNER TO kotahidev;
@@ -545,6 +549,7 @@ CREATE TABLE "public"."users" (
     "profile_picture" text,
     "online" bool,
     "last_online" timestamptz,
+    "recent_tab" text,
     PRIMARY KEY ("id")
 );
 
@@ -557,8 +562,79 @@ CREATE TABLE "public"."configs" (
     "created" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "updated" timestamptz DEFAULT CURRENT_TIMESTAMP,
     "form_data" jsonb NOT NULL,
-    "active" bool NOT NULL DEFAULT false
+    "active" bool NOT NULL DEFAULT false,
+    "type" text NOT NULL
 );
+
+-- 
+DROP TABLE IF EXISTS "public"."published_artifacts";
+
+--Table Definition
+CREATE TABLE "public"."published_artifacts"(
+    "id" uuid NOT NULL,
+    "created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated" timestamptz,
+    "manuscript_id" uuid NOT NULL,
+    "platform" text NOT NULL,
+    "external_id" text NULL,
+    "title" text NULL,
+    "content" text NULL,
+    "hosted_in_kotahi" bool NOT NULL DEFAULT false,
+    "related_document_uri" text NULL,
+    "related_document_type" text NULL,
+    PRIMARY KEY ("id")
+);
+
+-- public.docmaps definition
+
+-- Drop table
+DROP TABLE IF EXISTS "public"."docmaps";
+-- DROP TABLE public.docmaps;
+
+CREATE TABLE "public"."docmaps" (
+	"id" uuid NOT NULL,
+	"created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"updated" timestamptz NULL,
+	"manuscript_id" uuid NOT NULL,
+	"external_id" text NOT NULL,
+	"content" text NULL,
+	PRIMARY KEY ("id")
+);
+
+
+DROP TABLE IF EXISTS "public"."task_email_notifications";
+
+-- Table Definition
+CREATE TABLE "public"."task_email_notifications" (
+    "id" uuid NOT NULL,
+    "task_id" uuid NOT NULL,
+    "recipient_user_id" uuid NULL,
+	"recipient_type" text NULL,
+	"recipient_name" text NULL,
+	"recipient_email" text NULL,
+	"notification_elapsed_days" int4 NULL,
+	"email_template_key" text NULL,
+	"created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"updated" timestamptz NULL,
+    "sent_at" timestamptz NULL,
+	PRIMARY KEY ("id")
+);
+
+-- DROP TABLE public.task_email_notifications_logs;
+DROP TABLE IF EXISTS "public"."task_email_notifications_logs";
+
+CREATE TABLE "public"."task_email_notifications_logs" (
+	"id" uuid NOT NULL,
+	"task_id" uuid NOT NULL,
+	"sender_email" text,
+	"recipient_email" text NOT NULL,
+	"email_template_key" text NOT NULL,
+	"content" text NOT NULL,
+	"created" timestamptz NOT NULL DEFAULT CURRENT_TIMESTAMP,
+	"updated" timestamptz,
+	PRIMARY KEY ("id")
+);
+
 
 INSERT INTO "public"."channels" ("id", "manuscript_id", "created", "updated", "topic", "type") VALUES
 ('9fd7774c-11e5-4802-804c-ab64aefd5080', NULL, '2022-09-15 06:17:37.142077+00', NULL, 'System-wide discussion', 'editorial');
@@ -568,8 +644,8 @@ INSERT INTO "public"."forms" ("id", "type", "created", "updated", "purpose", "st
 ('d619d5ba-80e5-4ada-8983-87d1312e5250', 'Form', '2022-09-15 06:18:14.689+00', '2022-09-15 06:18:14.689+00', 'review', '{"name": "Review", "children": [{"id": "1880448f-827a-422a-8ed7-c00f8ce9ccae", "name": "comment", "title": "Comments to the Author", "validate": [{"id": "332253be-dc19-47a8-9bfb-c32fa3fc9b43", "label": "Required", "value": "required"}], "component": "AbstractEditor", "placeholder": "Enter your review..."}, {"id": "4e0ee4a6-57bc-4284-957a-f3e17ac4a24d", "name": "files", "title": " ", "component": "SupplementaryFiles", "shortDescription": "Files"}, {"id": "2a1eab32-3e78-49e1-b0e5-24104a39a06a", "name": "confidentialComment", "title": "Confidential comments to the editor (optional)", "component": "AbstractEditor", "placeholder": "Enter a confidential note to the editor (optional)...", "hideFromAuthors": "true", "shortDescription": "Confidential comments"}, {"id": "21b5de2c-10fd-48cb-a00a-ab2c96b1c242", "name": "confidentialFiles", "title": " ", "component": "SupplementaryFiles", "hideFromAuthors": "true", "shortDescription": "Confidential files"}, {"id": "257d6be0-0832-41fc-b6d2-b1f096342bc2", "name": "verdict", "title": "Recommendation", "inline": "true", "options": [{"id": "da8a08bd-d035-400e-856a-f2c6f8040c27", "label": "Accept", "value": "accept", "labelColor": "#048802"}, {"id": "da75afd9-aeac-4d24-8f5e-8ed00d233543", "label": "Revise", "value": "revise", "labelColor": "#ebc400"}, {"id": "a254f0c1-25e5-45bb-8a8e-8251d2c27f8c", "label": "Reject", "value": "reject", "labelColor": "#ea412e"}], "validate": [{"id": "d970099e-b05e-4fae-891f-1a81d6f46b65", "label": "Required", "value": "required"}], "component": "RadioGroup"}], "haspopup": "true", "popuptitle": "Confirm your review", "description": "<p class=\"paragraph\">By completing this review, you agree that you do not have any conflict of interests to declare. For any questions about what constitutes a conflict of interest, contact the administrator.</p>", "popupdescription": "<p class=\"paragraph\">By submitting this review, you agree that you do not have any conflict of interests to declare. For any questions about what constitutes a conflict of interest, contact the administrator.</p>"}', 'review'),
 ('da70ab01-43ca-4a04-80bb-5fb298dff5e5', 'Form', '2022-09-15 06:18:14.692+00', '2022-09-15 06:18:14.692+00', 'decision', '{"name": "Decision", "children": [{"id": "1600fcc9-ebf4-42f5-af97-c242ea04ae21", "name": "comment", "title": "Decision", "validate": [{"id": "39796769-23a9-4788-b1f3-78d08b59f97e", "label": "Required", "value": "required"}], "component": "AbstractEditor", "placeholder": "Write/paste your decision letter here, or upload it by dragging it onto the box below."}, {"id": "695a5b2f-a0d7-4b1e-a750-107bff5628bc", "name": "files", "title": " ", "component": "SupplementaryFiles", "shortDescription": "Files"}, {"id": "7423ad09-d01b-49bc-8c2e-807829b86653", "name": "verdict", "title": "Decision Status", "inline": "true", "options": [{"id": "78653e7a-32b3-4283-9a9e-36e79876da28", "label": "Accept", "value": "accept", "labelColor": "#048802"}, {"id": "44c2dad6-8316-42ed-a2b7-3f2e98d49823", "label": "Revise", "value": "revise", "labelColor": "#ebc400"}, {"id": "a8ae5a69-9f34-4e3c-b3d2-c6572ac2e225", "label": "Reject", "value": "reject", "labelColor": "#ea412e"}], "validate": [{"id": "4eb14d13-4d17-40d0-95a1-3e68e9397269", "label": "Required", "value": "required"}], "component": "RadioGroup"}], "haspopup": "false"}', 'decision');
 
-INSERT INTO "public"."configs" ("id", "created", "updated", "form_data", "active") VALUES
-('6619a377-c53d-4a5c-885b-b0f41ff5d6ed', '2023-02-23 14:27:54.64+00', '2023-02-23 14:27:54.64+00', '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"showSections": ["submission", "review", "editor"], "loginRedirectUrl": "/dashboard"}, "manuscript": {"tableColumns": "shortId, meta.title, created, updated, status, submission.labels, author", "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": false, "shouldAllowTagging": false}}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Workflow", "Manuscript text", "Metadata", "Tasks & Notifications"], "hideReview": true, "sharedReview": true, "displayManuscriptShortId": true}, "instanceName": "aperture", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/assets/logo-kotahi.png", "brandName": "Kotahi", "primaryColor": "#3AAE2A", "secondaryColor": "#9e9e9e"}}', 't');
+INSERT INTO "public"."configs" ("id", "created", "updated", "form_data", "active", "type") VALUES
+('6619a377-c53d-4a5c-885b-b0f41ff5d6ed', '2023-02-23 14:27:54.64+00', '2023-02-23 14:27:54.64+00', '{"user": {"isAdmin": false, "kotahiApiTokens": "test:123456"}, "report": {"showInMenu": true}, "review": {"showSummary": false}, "dashboard": {"showSections": ["submission", "review", "editor"], "loginRedirectUrl": "/dashboard"}, "manuscript": {"tableColumns": "shortId, meta.title, created, updated, status, submission.labels, author", "paginationCount": 10}, "publishing": {"webhook": {"ref": "test", "url": "https://someserver/webhook-address", "token": "test"}, "crossref": {"login": "test", "password": "test", "doiPrefix": "10.12345/", "licenseUrl": "test", "registrant": "test", "useSandbox": true, "journalName": "test", "depositorName": "test", "depositorEmail": "test@coko.foundation", "journalHomepage": "test", "publicationType": "article", "journalAbbreviatedName": "test", "publishedArticleLocationPrefix": "test"}, "hypothesis": {"group": null, "apiKey": null, "reverseFieldOrder": false, "shouldAllowTagging": false}}, "taskManager": {"teamTimezone": "Etc/UTC"}, "controlPanel": {"showTabs": ["Workflow", "Manuscript text", "Metadata", "Tasks & Notifications"], "hideReview": true, "sharedReview": true, "displayManuscriptShortId": true}, "instanceName": "aperture", "notification": {"gmailAuthEmail": null, "gmailSenderEmail": null, "gmailAuthPassword": null}, "groupIdentity": {"logoPath": "/assets/logo-kotahi.png", "brandName": "Kotahi", "primaryColor": "#3AAE2A", "secondaryColor": "#9e9e9e"}}', 't', 'Config');
 
 INSERT INTO "public"."migrations" ("id", "run_at") VALUES
 ('1524494862-entities.sql', '2022-09-15 06:17:35.719777+00'),
@@ -625,7 +701,28 @@ INSERT INTO "public"."migrations" ("id", "run_at") VALUES
 ('1657794007-add_fields_to_publish.sql', '2022-09-15 06:17:37.630959+00'),
 ('1657798114-add-constraints.sql', '2022-09-15 06:17:37.664929+00'),
 ('1660913520-move-manuscript-to-generic-object.js', '2022-09-15 06:17:37.709414+00'),
-('1676497888-config.sql', '2022-09-15 06:17:38.709414+00');
+('1663311093-search-indexing.sql', '2022-09-15 06:17:38.051414+00'),
+('1663566985-add-last-online.sql', '2022-09-15 06:17:38.066414+00'),
+('1663734311-add-task-tables.sql', '2022-09-15 06:17:38.104414+00'),
+('1664542236-add_doi_column.sql', '2022-09-15 06:17:38.120414+00'),
+('1666077648-update-default-value-hide-from-reviewers-submit-form.js', '2022-09-15 06:17:38.136414+00'),
+('1666267733-create-task-alerts-table.sql', '2022-09-15 06:17:38.177414+00'),
+('1667273810-remove-dead-code-fields.sql', '2022-09-15 06:17:38.198414+00'),
+('1667799519-add-is-shared-column-to-invitations-table.sql', '2022-09-15 06:17:38.232414+00'),
+('1669798941-add-tasks-to-selected-manuscripts.js', '2022-09-15 06:17:38.254414+00'),
+('1670414972-create-task-email-notifications-table.sql', '2022-09-15 06:17:38.309414+00'),
+('1670417835-alter_manuscript_is_hidden.sql', '2022-09-15 06:17:38.327414+00'),
+('1670811677-add-published-artifacts-table.sql', '2022-09-15 06:17:38.369414+00'),
+('1670811678-migrate-evaluations-hypothesis-map.js', '2022-09-15 06:17:38.879414+00'),
+('1670998244-add-assignee-columns-to-task-table.sql', '2022-09-15 06:17:38.952414+00'),
+('1673821996-add-docmaps-table.sql', '2022-09-15 06:17:39.110414+00'),
+('1674991816-fix-checkboxgroup-data.js', '2022-09-15 06:17:39.193414+00'),
+('1676179935-create-task-notification-logs-table.sql', '2022-09-15 06:17:39.254414+00'),
+('1676180125-add-sent-at-column-to-task-notifications-table.sql', '2022-09-15 06:17:39.301414+00'),
+('1677839814-drop-task-notification-id-recipient-id-unique-index.sql', '2022-09-15 06:17:39.357414+00'),
+('1676497888-config.sql', '2022-09-15 06:17:39.709414+00'),
+('1678694877-create-config-data-from-env.js', '2022-09-15 06:17:39.789414+00')
+('1679455713-add-last-tab.sql', '2022-09-15 06:17:39.989414+00');
 
 ALTER TABLE "public"."article_import_history" ADD FOREIGN KEY ("source_id") REFERENCES "public"."article_import_sources"("id");
 ALTER TABLE "public"."channel_members" ADD FOREIGN KEY ("user_id") REFERENCES "public"."users"("id") ON DELETE CASCADE;
@@ -660,19 +757,30 @@ CREATE UNIQUE INDEX task_alerts_alerts_task_id_user_id_uniq_idx ON task_alerts(t
 CREATE INDEX task_alerts_task_id_idx ON task_alerts (task_id);
 CREATE INDEX task_alerts_user_id_idx ON task_alerts (user_id);
 
+CREATE INDEX task_email_notifications_recipient_user_id_idx ON public.task_email_notifications (recipient_user_id);
+CREATE INDEX task_email_notifications_task_id_idx ON public.task_email_notifications (task_id);
+CREATE UNIQUE INDEX task_email_notifications_task_id_recipient_user_id_uniq_idx ON public.task_email_notifications (task_id, recipient_user_id);
+
+-- public.docmaps foreign keys
+ALTER TABLE docmaps ADD FOREIGN KEY (manuscript_id) REFERENCES manuscripts(id) ON DELETE CASCADE;
+ALTER TABLE task_email_notifications ADD FOREIGN KEY (recipient_user_id) REFERENCES users(id) ON DELETE CASCADE;
+ALTER TABLE task_email_notifications ADD FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE;
+-- public.published_artifacts foreign keys
+ALTER TABLE public.published_artifacts ADD FOREIGN KEY (manuscript_id) REFERENCES public.manuscripts(id) ON DELETE CASCADE;
+
 -- -------------------------------------------------------------
 -- Autogenerated Dump Ends 
 -- -------------------------------------------------------------
 
 -- Add users to the tests
-INSERT INTO "public"."users" ("id", "created", "updated", "admin", "email", "username", "password_hash", "teams", "password_reset_token", "password_reset_timestamp", "type", "profile_picture", "online", "last_online") VALUES
-('5b861dfb-02df-4be1-bc67-41a21611f5e7', '2022-05-14 10:31:35.715+00', '2022-08-23 14:55:02.854+00', NULL, 'joanep@example.com' , 'Joane Pilger' , NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
-('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 14:35:38.381+00', '2022-08-23 14:55:16.435+00', 't', 'elaineb@example.com', 'Elaine Barnes', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
-('ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', '2022-05-13 10:55:50.523+00', '2022-08-23 14:54:54.91+00' , NULL, 'emilyc@example.com' , 'Emily Clay' , NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
-('f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '2022-05-13 10:54:12.651+00', '2022-08-23 14:55:09.39+00' , 't' , 'sineads@example.com', 'Sinead Sullivan', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
-('41d52254-a2b8-4ea4-9ded-bfbfe9671578', '2022-09-14 02:51:58.817+00', '2022-09-14 02:53:20.544+00', NULL, 'sherry@example.com' , 'Sherry Crofoot', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
-('7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', '2022-09-14 02:50:09.737+00', '2022-09-14 02:50:25.118+00', NULL, 'gale@example.com'   , 'Gale Davis'  , NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL),
-('dcabc94f-eb6e-49bb-97d3-fc1a38f9408c', '2022-09-14 02:51:21.741+00', '2022-09-14 02:51:29.283+00', NULL, 'david@example.com'  , 'David Miller' , NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL);
+INSERT INTO "public"."users" ("id", "created", "updated", "admin", "email", "username", "password_hash", "teams", "password_reset_token", "password_reset_timestamp", "type", "profile_picture", "online", "last_online", "recent_tab") VALUES
+('5b861dfb-02df-4be1-bc67-41a21611f5e7', '2022-05-14 10:31:35.715+00', '2022-08-23 14:55:02.854+00', NULL, 'joanep@example.com' , 'Joane Pilger' , NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL, 'submissions'),
+('85e1300e-003c-4e96-987b-23812f902477', '2020-07-21 14:35:38.381+00', '2022-08-23 14:55:16.435+00', 't', 'elaineb@example.com', 'Elaine Barnes', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL, 'submissions'),
+('ba84de0d-d3d5-49e9-ae1b-e8a265789fbe', '2022-05-13 10:55:50.523+00', '2022-08-23 14:54:54.91+00' , NULL, 'emilyc@example.com' , 'Emily Clay' , NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL, 'submissions'),
+('f9b1ed7f-f288-4c3f-898c-59e84b1c8e69', '2022-05-13 10:54:12.651+00', '2022-08-23 14:55:09.39+00' , 't' , 'sineads@example.com', 'Sinead Sullivan', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL, 'submissions'),
+('41d52254-a2b8-4ea4-9ded-bfbfe9671578', '2022-09-14 02:51:58.817+00', '2022-09-14 02:53:20.544+00', NULL, 'sherry@example.com' , 'Sherry Crofoot', NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL, 'submissions'),
+('7f2fb549-51c0-49d5-844d-8a2fbbbbc0ad', '2022-09-14 02:50:09.737+00', '2022-09-14 02:50:25.118+00', NULL, 'gale@example.com'   , 'Gale Davis'  , NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL, 'submissions'),
+('dcabc94f-eb6e-49bb-97d3-fc1a38f9408c', '2022-09-14 02:51:21.741+00', '2022-09-14 02:51:29.283+00', NULL, 'david@example.com'  , 'David Miller' , NULL, NULL, NULL, NULL, 'user', NULL, NULL, NULL, 'submissions');
 
 INSERT INTO "public"."identities" ("id", "user_id", "created", "updated", "type", "identifier", "name", "aff", "oauth", "is_default") VALUES
 ('434461fc-18b5-43d8-bc46-bca88ea97c4c', '5b861dfb-02df-4be1-bc67-41a21611f5e7', '2022-07-29 05:15:21.654+00', '2022-07-29 05:15:21.624+00', 'orcid', '0000-0003-1838-2441', 'Joane Pilger'   , '', '{"accesstoken": "26fbc6b6-4421-40c5-ba07-d8c665f6704b", "refreshtoken": "4211bbf5-85ae-4980-833a-3f3deabcec6a"}', 't'),

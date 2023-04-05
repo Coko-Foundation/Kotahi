@@ -2,12 +2,12 @@ import React, { useEffect, useState, useContext } from 'react'
 import { Checkbox, TextArea } from '@pubsweet/ui/dist/atoms'
 import { Button } from '@pubsweet/ui'
 import { useMutation, useQuery } from '@apollo/client'
+import { ADD_EMAIL_TO_BLACKLIST } from '../../../../queries/index'
 import {
   UPDATE_INVITATION_RESPONSE,
   UPDATE_INVITATION_STATUS,
-  ADD_EMAIL_TO_BLACKLIST,
   GET_INVITATION_STATUS,
-} from '../../../../queries/index'
+} from '../../../../queries/invitation'
 import { ConfigContext } from '../../../config/src'
 import {
   ButtonWrapper,

@@ -265,7 +265,7 @@ services:
       /usr/bin/mc admin user add cokoServer/ ${S3_ACCESS_KEY_ID:-nonRootUser} ${S3_SECRET_ACCESS_KEY:-nonRootPassword};
       /usr/bin/mc admin user enable cokoServer/ ${S3_ACCESS_KEY_ID:-nonRootUser};
       /usr/bin/mc mb cokoServer/${S3_BUCKET:-uploads};
-      /usr/bin/mc admin policy set cokoServer/ readwrite user=${S3_ACCESS_KEY_ID:-nonRootUser};
+      /usr/bin/mc admin policy attach cokoServer/ readwrite --user=${S3_ACCESS_KEY_ID:-nonRootUser};
       exit 0;
       "
 

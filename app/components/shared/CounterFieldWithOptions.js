@@ -74,32 +74,18 @@ const CounterFieldWithOptions = ({
   }, [selectedIndex])
 
   const increaseCounter = () => {
-    if (disabled) {
-      return
-    }
-
+    if (disabled) return
     let index = selectedIndex || 0
     index += 1
-
-    if (index >= options.length) {
-      index = 0
-    }
-
+    if (index >= options.length) index = 0
     setSelectedIndex(index)
   }
 
   const decreaseCounter = () => {
-    if (disabled) {
-      return
-    }
-
+    if (disabled) return
     let index = selectedIndex || 0
     index -= 1
-
-    if (index < 0) {
-      index = options.length - 1
-    }
-
+    if (index < 0) index = options.length - 1
     setSelectedIndex(index)
   }
 

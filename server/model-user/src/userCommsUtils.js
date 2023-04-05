@@ -95,11 +95,12 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
 
     const reviewerRoles = [
       'accepted:reviewer',
+      'inProgress:reviewer',
       'completed:reviewer',
       'reviewer',
     ]
 
-    const authorRoles = ['author', 'accepted:author']
+    const authorRoles = ['author']
 
     isEditor =
       manuscriptRoles &&
@@ -113,7 +114,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   }
 
   if (isEditor) {
-    manuscriptPageUrl += '/decision'
+    manuscriptPageUrl += '/decision?tab=tasks'
   } else if (isReviewer) {
     manuscriptPageUrl += '/review'
   } else if (isAuthor) {
@@ -128,9 +129,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
     manuscriptId,
   )
 
-  const author = await manuscriptObject.getManuscriptAuthor({
-    onlyAccepted: true,
-  })
+  const author = await manuscriptObject.getManuscriptAuthor()
 
   const authorName = author ? author.username : ''
 

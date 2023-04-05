@@ -15,7 +15,7 @@ import {
   SectionContent,
   SectionRow,
 } from '../../../shared'
-import Modal from '../../../component-modal/src/index'
+import Modal from '../../../component-modal/src/ConfirmationModal'
 
 const ModalContainer = styled.div`
   background: ${th('colorBackground')};
