@@ -107,7 +107,7 @@ lint style:
   - cd ${HOME}
   - sh ./scripts/setupDevServer.sh &
   - node ./startServer.js &
-  - POSTGRES_HOST=postgres npx cypress run --browser chrome --spec 'cypress/integration/aperture/**.js'
+  - POSTGRES_HOST=postgres yarn test:all:$TEST_ITEM --scripts-prepend-node-path=true
 
 test-chrome:
   before_script:
