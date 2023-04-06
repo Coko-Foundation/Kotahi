@@ -5,18 +5,8 @@ const striptags = require('striptags')
 // It takes the manuscript as an argument and returns a frontmatter object that can be sentt to the JATS or PDF processor.
 // Because every form is different, different users will need to make their own versions of this to suit their needs.
 
-// this should pull in (and be replaced by) a user version from config/journal/exportsettings/articleMetadata.js
+// this should pull in (and be replaced by) a user version from config/journal/export/articleMetadata.js
 
-// if (!fs.existsSync('../../../config/journal/export/articleMetadata.json')) {
-//   // If the file doesn't exist, create one.
-//   console.log("User articleMetadata.js doesn't exist, creating one.")
-//   fs.writeFileSync(
-//     '../../../config/journal/export/articleMetadata.json',
-//     `const articleMetadata = {}
-
-// 		module.exports = articleMetadata`,
-//   )
-// }
 let userArticleMetadata = {}
 
 try {
@@ -60,12 +50,12 @@ const makeFormattedAuthors = (authors, correspondingAuthor) => {
     // thisAuthor += ` <small>(${authors[i].email})</small>`
 
     if (affliationList.length) {
-      thisAuthor += ` <sup><small>${affliationList.join(', ')}</small></sup>`
+      thisAuthor += `<sup><small>${affliationList.join(', ')}</small></sup>`
     }
 
     if (correspondingAuthor && correspondingAuthor === authors[i].email) {
       // check if there is a corresponding author; if there is one, add a star to the author's name
-      thisAuthor += ` <sup>*</sup>`
+      thisAuthor += `<sup>*</sup>`
     }
 
     outAuthors.push(thisAuthor)
@@ -105,6 +95,16 @@ const articleMetadata = manuscript => {
 
     if (manuscript.submission.topic) {
       meta.topic = manuscript.submission.topic
+    }
+
+    if (manuscript.submission.topics) {
+      meta.topics = manuscript.submission.topics
+    }
+
+    if (manuscript.submission.DOI) {
+      meta.doi = manuscript.submission.DOI
+    } else {
+      meta.doi = 'DOI will be available soon.'
     }
 
     if (manuscript.submission.objectType) {
@@ -166,7 +166,14 @@ const articleMetadata = manuscript => {
   // replace things by what's in the user version if we need to.
 
   Object.entries(userArticleMetadata).forEach(([key, value]) => {
-    if (value) meta[key] = value
+    // if (value) meta[key] = value
+    // TODO: I'm not 100% sure how this would actually be useful if someone actually had a userMetadata file.
+    // I don't think you'd want to just have raw values in there (like for publisherMetadata).
+    // Rather, I think you'd want to have a function that takes manuscript.submission and returns new values?
+    // Is there a way to make that work while still keeping it JSON?
+    if (value) meta[key] = manuscript.submission[value]
+    // This might work for basic things on the submission form, but we should have something more elegant.
+    // Make this work like what we're doing in server/publishing/docmaps/index.js
   })
 
   return meta

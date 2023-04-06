@@ -1,30 +1,10 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import ReactModal from 'react-modal'
-import styled from 'styled-components'
+import styled, { ThemeContext } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
 import { Icon, ActionButton } from '../../shared'
-
-const styles = {
-  overlay: {
-    backgroundColor: 'rgba(0,0,0,0.4)',
-    display: 'flex',
-    flexDirection: 'column',
-    justifyContent: 'center',
-    alignItems: 'center',
-  },
-  content: {
-    overflow: 'hidden',
-    backgroundColor: 'white',
-    border: 'none',
-    borderRadius: '4px',
-    maxWidth: '60%',
-    maxHeight: '80%',
-    margin: '0px',
-    padding: '0px',
-    inset: 'unset',
-  },
-}
+import theme from '../../../theme'
 
 const MainHeader = styled.div`
   align-items: center;
@@ -77,7 +57,7 @@ const CloseButton = styled(Button)`
   width: 30px;
 
   &:hover {
-    background-color: #d7efd4;
+    background-color: ${theme.colors.brand1.tint25};
 
     svg {
       stroke: white;
@@ -126,14 +106,10 @@ const CheckBoxContainer = styled.div`
 `
 
 const ModalContainer = styled.div`
-  background-color: ${th('colorBackground')};
-  border-radius: 0;
-  margin: 0;
-  max-height: calc(80vh - 10em);
+  flex: 1 1 100%;
   overflow-y: auto;
   padding: ${grid(2.5)} ${grid(3)};
   width: 100%;
-  z-index: 10000;
 `
 
 export const PrimaryButton = ({ onClick, children }) => {
@@ -192,6 +168,33 @@ const Modal = ({
   contentStyles,
   ...props
 }) => {
+  const themeContext = useContext(ThemeContext)
+
+  const styles = {
+    overlay: {
+      backgroundColor: 'rgba(0,0,0,0.4)',
+      display: 'flex',
+      flexDirection: 'column',
+      justifyContent: 'center',
+      alignItems: 'center',
+    },
+    content: {
+      alignItems: 'stretch',
+      backgroundColor: themeContext.colorBackground,
+      border: 'none',
+      borderRadius: '4px',
+      display: 'flex',
+      flexDirection: 'column',
+      inset: 'unset',
+      margin: '0px',
+      maxHeight: '80%',
+      maxWidth: '60%',
+      overflow: 'hidden',
+      padding: '0px',
+      zIndex: 10000,
+    },
+  }
+
   return (
     isOpen && (
       <ReactModal

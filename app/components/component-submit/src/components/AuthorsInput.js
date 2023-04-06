@@ -39,6 +39,11 @@ const InvalidLabel = styled.div`
   font-size: 80%;
 `
 
+const StyledDeleteControl = styled(DeleteControl)`
+  margin: 32px 10px 0 1em;
+  top: 66px;
+`
+
 // TODO This is not following Formik idioms. Improve?
 const AuthorsInput = ({ onChange, value, innerRefProp }) => {
   const cleanedVal = Array.isArray(value) ? value : [] // We're getting momentary mismatches between field and value, so this can momentarily receive e.g. a string from another field, before a rerender corrects it. Not sure why yet.
@@ -69,7 +74,7 @@ const AuthorsInput = ({ onChange, value, innerRefProp }) => {
               )
             })}
           </Author>
-          <DeleteControl
+          <StyledDeleteControl
             onClick={() => {
               onChange(cleanedVal.filter((_, i) => i !== index))
             }}
