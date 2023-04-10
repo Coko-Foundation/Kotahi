@@ -27,5 +27,10 @@ const StyledInput = styled.input`
 
 // eslint-disable-next-line import/prefer-default-export
 export const TextInput = props => {
-  return <StyledInput type="text" {...props} />
+  const { innerRefProp, ...rest } = props
+  return (
+    <div ref={innerRefProp}>
+      <StyledInput type="text" {...rest} />
+    </div>
+  )
 }
