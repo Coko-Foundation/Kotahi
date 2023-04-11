@@ -36,11 +36,20 @@ const checkForEmptyBlocks = file => {
         p.innerHTML = inside.childNodes[i].data
         inside.replaceChild(p, inside.childNodes[i])
       }
-    } else if (inside.childNodes[i].tagName === 'A') {
-      console.error('Found unwrapped <a> tag:', inside.childNodes[i])
-      const p = doc.createElement('p')
-      p.appendChild(inside.childNodes[i])
-      inside.replaceChild(p, inside.childNodes[i])
+    } else {
+      if (inside.childNodes[i].tagName === 'A') {
+        console.error('Found unwrapped <a> tag:', inside.childNodes[i])
+        const p = doc.createElement('p')
+        p.appendChild(inside.childNodes[i])
+        inside.replaceChild(p, inside.childNodes[i])
+      }
+
+      if (inside.childNodes[i].tagName === 'IMG') {
+        console.error('Found unwrapped <img> tag:', inside.childNodes[i])
+        const figure = doc.createElement('figure')
+        figure.appendChild(inside.childNodes[i])
+        inside.replaceChild(figure, inside.childNodes[i])
+      }
     }
   }
 
