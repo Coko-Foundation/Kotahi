@@ -13,11 +13,10 @@ const FormWaxEditor = ({
   onChange,
   placeholder,
   spellCheck,
-  innerRefProp,
   ...rest
 }) => {
   return (
-    <div className={validationStatus} ref={innerRefProp}>
+    <div className={validationStatus}>
       <Wax
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}
