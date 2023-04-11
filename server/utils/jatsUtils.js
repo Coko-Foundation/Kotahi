@@ -383,9 +383,13 @@ const makeJats = (html, articleMeta, journalMeta) => {
     .replace(/ data-xsweet-[^=]+="[^"]+"/g, '')
     .replace(/ type="."/g, '')
 
+  const deNewlinedHtml = deAttributedHtml
+    .replace(/\n\n/g, '\n')
+    .replace(/\n\n/g, '\n')
+
   // 0. deal with footnotes
 
-  const unTrackChangedHtml = removeTrackChanges(deAttributedHtml)
+  const unTrackChangedHtml = removeTrackChanges(deNewlinedHtml)
 
   // 1. deal with funding statements
 
