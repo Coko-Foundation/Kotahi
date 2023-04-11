@@ -203,7 +203,7 @@ const makeArticleMeta = (
 }
 
 const makeFootnotesSection = html => {
-  let deFootnotedHtml = html
+  let deFootnotedHtml = html.replace(/ data-group="notes"/g, '')
   let footnoteCount = 0
   let fnSection = ''
 
