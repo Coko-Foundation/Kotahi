@@ -377,9 +377,15 @@ const makeJats = (html, articleMeta, journalMeta) => {
   // articleMeta is what's needed for front matter (see makeArticleMeta for description)
   // journalMeta is the journal metadata object (see makeJournalMeta for description)
 
+  // 0. strip xsweet attributes out of html
+
+  const deAttributedHtml = html
+    .replace(/ data-xsweet-[^=]+="[^"]+"/g, '')
+    .replace(/ type="."/g, '')
+
   // 0. deal with footnotes
 
-  const unTrackChangedHtml = removeTrackChanges(html)
+  const unTrackChangedHtml = removeTrackChanges(deAttributedHtml)
 
   // 1. deal with funding statements
 
