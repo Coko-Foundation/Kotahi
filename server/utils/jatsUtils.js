@@ -382,6 +382,7 @@ const makeJats = (html, articleMeta, journalMeta) => {
   const deAttributedHtml = html
     .replace(/ data-xsweet-[^=]+="[^"]+"/g, '')
     .replace(/ type="."/g, '')
+    .replace(/ type="none"/g, '')
 
   const deNewlinedHtml = deAttributedHtml
     .replace(/\n\n/g, '\n')
