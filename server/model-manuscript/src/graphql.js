@@ -390,7 +390,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
   }
 
   if (isSettingFirstLabels && !updatedMs.tasks.length)
-    updatedMs.tasks = await populateTemplatedTasksForManuscript(id)
+    await populateTemplatedTasksForManuscript(id)
 
   await uploadAndConvertBase64ImagesInManuscript(updatedMs)
   return updateAndRepackageForGraphql(updatedMs, oldMetaAbstract)
