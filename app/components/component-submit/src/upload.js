@@ -36,6 +36,11 @@ const checkForEmptyBlocks = file => {
         p.innerHTML = inside.childNodes[i].data
         inside.replaceChild(p, inside.childNodes[i])
       }
+    } else if (inside.childNodes[i].tagName === 'A') {
+      console.error('Found unwrapped <a> tag:', inside.childNodes[i])
+      const p = doc.createElement('p')
+      p.appendChild(inside.childNodes[i])
+      inside.replaceChild(p, inside.childNodes[i])
     }
   }
 
