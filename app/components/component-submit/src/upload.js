@@ -414,8 +414,13 @@ const redirectPromise = (
 ) => {
   setConversionState(() => ({ converting: false, completed: true }))
   const urlFrag = config.journal.metadata.toplevel_urlfragment
+
   // redirect after a new submission path
-  const route = `${urlFrag}/versions/${data.createManuscript.id}/submit`
+  // TODO: refactor redirection url values with config manager
+  const route = `${urlFrag}/versions/${data.createManuscript.id}/${
+    ['elife', 'ncrc'].includes(config.instanceName) ? 'evaluation' : 'submit'
+  }`
+
   // redirect after a short delay
   window.setTimeout(() => {
     history.push(route)
