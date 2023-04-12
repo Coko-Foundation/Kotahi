@@ -225,17 +225,23 @@ const AdminPage = () => {
     ? window.localStorage.getItem('invitationId')
     : ''
 
+  let dashboardRedirectUrl = currentUser.recentTab
+    ? `${urlFrag}/dashboard/${currentUser.recentTab}`
+    : dashboardSubmissionsLink
+
+  // TODO: refactor based on roles and update config redirection url default's
+  if (currentUser?.admin) {
+    dashboardRedirectUrl =
+      config.dashboard.loginRedirectUrl === '/dashboard'
+        ? dashboardRedirectUrl
+        : `${urlFrag}${config.dashboard.loginRedirectUrl}`
+  }
+
   const dashboardRedirect = () =>
     invitationId ? (
       <Redirect to="/invitation/accepted" />
     ) : (
-      <Redirect
-        to={
-          currentUser.recentTab
-            ? `${urlFrag}/dashboard/${currentUser.recentTab}`
-            : dashboardSubmissionsLink
-        }
-      />
+      <Redirect to={dashboardRedirectUrl} />
     )
 
   // Throttled refetch query `currentUser` once every 2mins
@@ -326,33 +332,36 @@ const AdminPage = () => {
                 path={homeLink}
                 redirectLink={redirectLink}
               />
-              {config?.dashboard?.showSections.includes('submission') && (
-                <PrivateRoute
-                  component={DashboardSubmissionsPage}
-                  currentUser={currentUser}
-                  exact
-                  path={dashboardSubmissionsLink}
-                  redirectLink={redirectLink}
-                />
-              )}
-              {config?.dashboard?.showSections.includes('review') && (
-                <PrivateRoute
-                  component={DashboardReviewsPage}
-                  currentUser={currentUser}
-                  exact
-                  path={dashboardReviewsLink}
-                  redirectLink={redirectLink}
-                />
-              )}
-              {config?.dashboard?.showSections.includes('editor') && (
-                <PrivateRoute
-                  component={DashboardEditsPage}
-                  currentUser={currentUser}
-                  exact
-                  path={dashboardEditsLink}
-                  redirectLink={redirectLink}
-                />
-              )}
+              {config?.dashboard?.showSections &&
+                config?.dashboard?.showSections.includes('submission') && (
+                  <PrivateRoute
+                    component={DashboardSubmissionsPage}
+                    currentUser={currentUser}
+                    exact
+                    path={dashboardSubmissionsLink}
+                    redirectLink={redirectLink}
+                  />
+                )}
+              {config?.dashboard?.showSections &&
+                config?.dashboard?.showSections.includes('review') && (
+                  <PrivateRoute
+                    component={DashboardReviewsPage}
+                    currentUser={currentUser}
+                    exact
+                    path={dashboardReviewsLink}
+                    redirectLink={redirectLink}
+                  />
+                )}
+              {config?.dashboard?.showSections &&
+                config?.dashboard?.showSections.includes('editor') && (
+                  <PrivateRoute
+                    component={DashboardEditsPage}
+                    currentUser={currentUser}
+                    exact
+                    path={dashboardEditsLink}
+                    redirectLink={redirectLink}
+                  />
+                )}
             </Switch>
           </DashboardLayout>
         </Route>

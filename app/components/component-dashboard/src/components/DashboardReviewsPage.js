@@ -62,7 +62,8 @@ const DashboardReviewsPage = ({ history }) => {
     })
   }, [])
 
-  return config?.dashboard?.showSections.includes('review') ? (
+  return config?.dashboard?.showSections &&
+    config?.dashboard?.showSections.includes('review') ? (
     <ReviewerTable
       applyQueryParams={applyQueryParams}
       query={query}
