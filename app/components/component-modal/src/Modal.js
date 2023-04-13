@@ -3,16 +3,16 @@ import ReactModal from 'react-modal'
 import styled, { ThemeContext } from 'styled-components'
 import { th, grid } from '@pubsweet/ui-toolkit'
 import { Button } from '@pubsweet/ui'
-import { Icon, ActionButton } from '../../shared'
+import {
+  Icon,
+  ActionButton,
+  MediumColumn,
+  LooseRowSpacedAlignTop,
+} from '../../shared'
 import theme from '../../../theme'
 
-const MainHeader = styled.div`
-  align-items: center;
-  border-bottom-width: 1.5px;
-  border-color: #d3d3d3;
-  border-style: solid;
-  display: flex;
-  justify-content: space-between;
+const MainHeader = styled(LooseRowSpacedAlignTop)`
+  border-bottom: 1.5px solid #d3d3d3;
   line-height: 22px;
   padding: ${grid(2)} ${grid(3)};
   z-index: 10000;
@@ -53,6 +53,7 @@ const CloseButton = styled(Button)`
   display: flex;
   height: 30px;
   justify-content: center;
+  margin: -6px -12px 0 0;
   min-width: unset;
   width: 30px;
 
@@ -208,7 +209,10 @@ const Modal = ({
       >
         {title && (
           <MainHeader>
-            <RowHeader subtitle={subtitle} title={title} />
+            <MediumColumn>
+              <Title>{title}</Title>
+              {subtitle && <Subtitle>{subtitle}</Subtitle>}
+            </MediumColumn>
             <CloseButton alignSelf="flex-end" onClick={onClose}>
               <Icon>x</Icon>
             </CloseButton>

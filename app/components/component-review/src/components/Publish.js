@@ -11,6 +11,7 @@ import {
 
 import { SectionContent } from '../../../shared'
 import Alert from './publishing/Alert'
+import PublishingResponse from './publishing/PublishingResponse'
 
 const Publish = ({ manuscript, publishManuscript, dois }) => {
   // Hooks from the old world
@@ -53,26 +54,7 @@ const Publish = ({ manuscript, publishManuscript, dois }) => {
               {doiMessage}
             </div>
           )}
-          {publishResponse &&
-            publishResponse.steps.map(step => {
-              if (step.succeeded) {
-                return (
-                  <Alert key={step.stepLabel} type="success">
-                    Posted to {step.stepLabel}
-                  </Alert>
-                )
-              }
-
-              return (
-                <Alert
-                  detail={step.errorMessage}
-                  key={step.stepLabel}
-                  type="error"
-                >
-                  Error posting to {step.stepLabel}
-                </Alert>
-              )
-            })}
+          {publishResponse && <PublishingResponse response={publishResponse} />}
           {publishingError && <Alert type="error">{publishingError}</Alert>}
         </SectionActionInfo>
         <SectionAction>
