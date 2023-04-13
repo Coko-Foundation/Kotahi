@@ -1,8 +1,10 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { UserAction as Action } from '../style'
+import { Action, LinkAction } from '../../../shared'
 import { articleStatuses } from '../../../../globals'
 import { ConfirmationModal } from '../../../component-modal/src/ConfirmationModal'
+import Modal from '../../../component-modal/src/Modal'
+import PublishingResponse from '../../../component-review/src/components/publishing/PublishingResponse'
 
 const Container = styled.div`
   display: flex;
@@ -13,13 +15,18 @@ const Actions = ({
   config,
   manuscript,
   archiveManuscript,
-  isManuscriptBlockedFromPublishing,
   tryPublishManuscript,
   urlFrag,
 }) => {
   const [confirmArchiveModalIsOpen, setConfirmArchiveModalIsOpen] = useState(
     false,
   )
+
+  const [publishErrorsModalIsOpen, setPublishErrorsModalIsOpen] = useState(
+    false,
+  )
+
+  const [publishingResponse, setPublishingResponse] = useState([])
 
   return (
     <Container>
@@ -30,29 +37,37 @@ const Actions = ({
           articleStatuses.new,
           articleStatuses.published,
         ].includes(manuscript.status) && (
-          <Action to={`${urlFrag}/versions/${manuscript.id}/evaluation`}>
+          <LinkAction to={`${urlFrag}/versions/${manuscript.id}/evaluation`}>
             Evaluation
-          </Action>
+          </LinkAction>
         )}
       {['aperture', 'colab'].includes(config.instanceName) && (
-        <Action to={`${urlFrag}/versions/${manuscript.id}/decision`}>
+        <LinkAction to={`${urlFrag}/versions/${manuscript.id}/decision`}>
           Control
-        </Action>
+        </LinkAction>
       )}
-      <Action to={`${urlFrag}/versions/${manuscript.id}/manuscript`}>
+      <LinkAction to={`${urlFrag}/versions/${manuscript.id}/manuscript`}>
         View
-      </Action>
-      <Action onClick={() => setConfirmArchiveModalIsOpen(true)}>
+      </LinkAction>
+      <LinkAction onClick={() => setConfirmArchiveModalIsOpen(true)}>
         Archive
-      </Action>
-      <Action to={`${urlFrag}/versions/${manuscript.id}/production`}>
+      </LinkAction>
+      <LinkAction to={`${urlFrag}/versions/${manuscript.id}/production`}>
         Production
-      </Action>
+      </LinkAction>
       {['elife', 'ncrc'].includes(config.instanceName) &&
         manuscript.status === articleStatuses.evaluated && (
           <Action
-            isDisabled={isManuscriptBlockedFromPublishing(manuscript.id)}
-            onClick={() => tryPublishManuscript(manuscript)}
+            onActionCompleted={resultSteps => {
+              if (resultSteps.some(step => !step.succeeded)) {
+                setPublishingResponse(resultSteps)
+                setPublishErrorsModalIsOpen(true)
+                return 'failure'
+              }
+
+              return 'success'
+            }}
+            onClick={async () => tryPublishManuscript(manuscript)}
           >
             Publish
           </Action>
@@ -63,6 +78,14 @@ const Actions = ({
         isOpen={confirmArchiveModalIsOpen}
         message="Please confirm you would like to archive this manuscript"
       />
+      <Modal
+        isOpen={publishErrorsModalIsOpen}
+        onClose={() => setPublishErrorsModalIsOpen(false)}
+        subtitle="Some targets failed to publish."
+        title="Publishing error"
+      >
+        <PublishingResponse response={publishingResponse} />
+      </Modal>
     </Container>
   )
 }

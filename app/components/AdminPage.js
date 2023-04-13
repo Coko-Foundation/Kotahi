@@ -332,36 +332,33 @@ const AdminPage = () => {
                 path={homeLink}
                 redirectLink={redirectLink}
               />
-              {config?.dashboard?.showSections &&
-                config?.dashboard?.showSections.includes('submission') && (
-                  <PrivateRoute
-                    component={DashboardSubmissionsPage}
-                    currentUser={currentUser}
-                    exact
-                    path={dashboardSubmissionsLink}
-                    redirectLink={redirectLink}
-                  />
-                )}
-              {config?.dashboard?.showSections &&
-                config?.dashboard?.showSections.includes('review') && (
-                  <PrivateRoute
-                    component={DashboardReviewsPage}
-                    currentUser={currentUser}
-                    exact
-                    path={dashboardReviewsLink}
-                    redirectLink={redirectLink}
-                  />
-                )}
-              {config?.dashboard?.showSections &&
-                config?.dashboard?.showSections.includes('editor') && (
-                  <PrivateRoute
-                    component={DashboardEditsPage}
-                    currentUser={currentUser}
-                    exact
-                    path={dashboardEditsLink}
-                    redirectLink={redirectLink}
-                  />
-                )}
+              {config?.dashboard?.showSections?.includes('submission') && (
+                <PrivateRoute
+                  component={DashboardSubmissionsPage}
+                  currentUser={currentUser}
+                  exact
+                  path={dashboardSubmissionsLink}
+                  redirectLink={redirectLink}
+                />
+              )}
+              {config?.dashboard?.showSections?.includes('review') && (
+                <PrivateRoute
+                  component={DashboardReviewsPage}
+                  currentUser={currentUser}
+                  exact
+                  path={dashboardReviewsLink}
+                  redirectLink={redirectLink}
+                />
+              )}
+              {config?.dashboard?.showSections?.includes('editor') && (
+                <PrivateRoute
+                  component={DashboardEditsPage}
+                  currentUser={currentUser}
+                  exact
+                  path={dashboardEditsLink}
+                  redirectLink={redirectLink}
+                />
+              )}
             </Switch>
           </DashboardLayout>
         </Route>
