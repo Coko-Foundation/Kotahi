@@ -17,6 +17,7 @@ export const NotesAreaContainer = styled.div`
   &.productionnotes {
     grid-column-start: initial;
     grid-row-start: initial;
+    position: relative;
   }
 
   .ProseMirror {
@@ -49,6 +50,10 @@ export const NotesContainer = styled.div`
   padding-bottom: ${grid(4)};
   padding-left: 32px;
   width: calc(100% - ${grid(4)});
+
+  & > div > div > div:first-child {
+    margin-top: 4px; /* fix alignment of numbers */
+  }
 `
 
 export const NotesHeading = styled.div`
