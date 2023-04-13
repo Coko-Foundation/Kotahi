@@ -176,15 +176,13 @@ const TaskEditModal = ({
   })
 
   const updateTaskNotification = async updatedTaskNotification => {
-    if (updatedTaskNotification.recipientType) {
-      persistTaskNotification({
-        variables: {
-          taskNotification: repackageTaskNotification({
-            ...updatedTaskNotification,
-          }),
-        },
-      })
-    }
+    persistTaskNotification({
+      variables: {
+        taskNotification: repackageTaskNotification({
+          ...updatedTaskNotification,
+        }),
+      },
+    })
 
     setTaskNotifications(currentTaskEmailNotifications =>
       currentTaskEmailNotifications.map(t =>
@@ -316,15 +314,7 @@ const TaskEditModal = ({
         </TaskRecipientsContainer>
         <TaskActionContainer>
           {!isReadOnly && (
-            <SecondaryActionButton
-              disabled={
-                taskEmailNotifications?.length
-                  ? taskEmailNotifications.some(t => !t.recipientType)
-                  : false
-              }
-              onClick={addNewTaskNotification}
-              primary
-            >
+            <SecondaryActionButton onClick={addNewTaskNotification} primary>
               Add Notification Recipient
             </SecondaryActionButton>
           )}
