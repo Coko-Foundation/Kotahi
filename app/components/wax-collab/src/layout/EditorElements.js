@@ -547,6 +547,7 @@ const EditorStyles = css`
   figcaption {
     border: 1px solid ${darken('colorPrimary', 1)};
     margin-top: 1rem;
+    min-width: 600px; /* in case there's no image, so the caption doesn't get squished */
     padding: 1rem;
     position: relative;
   }
