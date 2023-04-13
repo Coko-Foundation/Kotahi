@@ -120,7 +120,7 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
 
               <EditorArea className="editorArea">
                 <div>
-                  <WaxSurfaceScroll>
+                  <WaxSurfaceScroll className="panelWrapper">
                     <EditorContainer>{editor}</EditorContainer>
                     <CommentsContainer>
                       <CommentTrackToolsContainer>
@@ -136,7 +136,7 @@ const ProductionWaxEditorLayout = (readOnly, readOnlyComments) => ({
                     </CommentsContainer>
                   </WaxSurfaceScroll>
                   {hasNotes && (
-                    <NotesAreaContainer className="productionnotes">
+                    <NotesAreaContainer className="productionnotes panelWrapper">
                       <NotesContainer id="notes-container">
                         <NotesHeading>Notes</NotesHeading>
                         <NotesArea view={main} />
