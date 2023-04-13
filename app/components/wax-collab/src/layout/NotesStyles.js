@@ -47,12 +47,12 @@ export const NotesContainer = styled.div`
   display: flex;
   flex-direction: column;
   padding-bottom: ${grid(4)};
-  width: calc(100% - ${grid(4)});
   padding-left: 32px;
+  width: calc(100% - ${grid(4)});
 `
 
 export const NotesHeading = styled.div`
   color: ${th('colorPrimary')};
-  margin: 3px 7px 3px -32px;
+  margin: 3px 7px 3px -25px;
   text-transform: uppercase;
 `
