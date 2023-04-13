@@ -29,7 +29,6 @@ import {
   DELETE_TASK_NOTIFICATION,
   CREATE_TASK_EMAIL_NOTIFICATION_LOGS,
 } from '../../../../queries'
-import { GET_INVITATIONS_FOR_MANUSCRIPT } from '../../../../queries/invitation'
 import {
   CREATE_TEAM_MUTATION,
   updateTeamMemberMutation,
@@ -126,12 +125,7 @@ const DecisionPage = ({ match }) => {
   const selectedEmailIsBlacklisted = !!blacklistInfoQuery.data
     ?.getBlacklistInformation?.length
 
-  const [sendEmailMutation] = useMutation(sendEmail, {
-    refetchQueries: [
-      { query: GET_INVITATIONS_FOR_MANUSCRIPT },
-      'getInvitationsForManuscript',
-    ],
-  })
+  const [sendEmailMutation] = useMutation(sendEmail)
 
   const [doUpdateManuscript] = useMutation(updateManuscriptMutation)
   const [doSendChannelMessage] = useMutation(CREATE_MESSAGE)
@@ -259,15 +253,7 @@ const DecisionPage = ({ match }) => {
     },
   })
 
-  const {
-    loading: invitationLoading,
-    data: invitations,
-    refetch: refetchInvitations,
-  } = useQuery(GET_INVITATIONS_FOR_MANUSCRIPT, {
-    variables: { id: data?.manuscript?.id },
-  })
-
-  if (loading || invitationLoading) return <Spinner />
+  if (loading) return <Spinner />
   if (error) return <CommsErrorBanner error={error} />
 
   const updateManuscript = (versionId, manuscriptDelta) =>
@@ -353,6 +339,8 @@ const DecisionPage = ({ match }) => {
       },
     })
 
+    await refetchManuscript()
+
     return response
   }
 
@@ -409,13 +397,11 @@ const DecisionPage = ({ match }) => {
       externalEmail={externalEmail}
       form={form}
       handleChange={handleChange}
-      invitations={invitations?.getInvitationsForManuscript}
       makeDecision={makeDecision}
       manuscript={manuscript}
       publishManuscript={publishManuscript}
       refetch={() => {
         refetchManuscript()
-        refetchInvitations()
       }}
       removeReviewer={removeReviewer}
       reviewers={data?.manuscript?.reviews}
