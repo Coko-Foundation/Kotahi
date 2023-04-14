@@ -1,5 +1,5 @@
 /// <reference types="Cypress" />
-import { submit } from '../support/routes'
+import { submit, evaluate } from '../support/routes'
 import { SubmissionFormPage } from './submission-form-page'
 
 /**
@@ -27,6 +27,12 @@ export const NewSubmissionPage = {
   clickSubmitUrlAndWaitPageLoad() {
     this.clickSubmitURL()
     cy.url({ timeout: 30000 }).should('contain', submit)
+    cy.awaitDisappearSpinner()
+    SubmissionFormPage.getPageTitle().should('be.visible')
+  },
+  clickSubmitUrlAndWaitPageLoadElife() {
+    this.clickSubmitURL()
+    cy.url({ timeout: 30000 }).should('contain', evaluate)
     cy.awaitDisappearSpinner()
     SubmissionFormPage.getPageTitle().should('be.visible')
   },
