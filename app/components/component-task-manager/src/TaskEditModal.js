@@ -160,6 +160,10 @@ const TaskEditModal = ({
   }
 
   useEffect(() => {
+    if (!editAsTemplate) {
+      setTaskNotifications(task.emailNotifications)
+    }
+
     setTaskTitle(task.title)
   }, [task])
 
@@ -175,10 +179,13 @@ const TaskEditModal = ({
   })
 
   const updateTaskNotification = async updatedTaskNotification => {
-    if (
-      updatedTaskNotification.recipientType ||
-      updatedTaskNotification.emailTemplateKey
-    ) {
+    const shouldPersistTaskNotification =
+      (!editAsTemplate && updatedTaskNotification.recipientType) ||
+      (editAsTemplate &&
+        (updatedTaskNotification.recipientType ||
+          updatedTaskNotification.emailTemplateKey))
+
+    if (shouldPersistTaskNotification) {
       persistTaskNotification({
         variables: {
           taskNotification: repackageTaskNotification({
@@ -187,6 +194,7 @@ const TaskEditModal = ({
         },
       })
     } else if (
+      editAsTemplate &&
       (task.emailNotifications ?? []).some(
         emailNotification =>
           emailNotification.id === updatedTaskNotification.id,
@@ -331,7 +339,15 @@ const TaskEditModal = ({
         </TaskRecipientsContainer>
         <TaskActionContainer>
           {!isReadOnly && (
-            <SecondaryActionButton onClick={addNewTaskNotification} primary>
+            <SecondaryActionButton
+              disabled={
+                !editAsTemplate && taskEmailNotifications?.length
+                  ? taskEmailNotifications.some(t => !t.recipientType)
+                  : false
+              }
+              onClick={addNewTaskNotification}
+              primary
+            >
               Add Notification Recipient
             </SecondaryActionButton>
           )}
