@@ -160,10 +160,6 @@ const TaskEditModal = ({
   }
 
   useEffect(() => {
-    if (!editAsTemplate) {
-      setTaskNotifications(task.emailNotifications)
-    }
-
     setTaskTitle(task.title)
   }, [task])
 
