@@ -160,7 +160,6 @@ const TaskEditModal = ({
   }
 
   useEffect(() => {
-    setTaskNotifications(task.emailNotifications)
     setTaskTitle(task.title)
   }, [task])
 
@@ -176,13 +175,29 @@ const TaskEditModal = ({
   })
 
   const updateTaskNotification = async updatedTaskNotification => {
-    if (updatedTaskNotification.recipientType) {
+    if (
+      updatedTaskNotification.recipientType ||
+      updatedTaskNotification.emailTemplateKey
+    ) {
       persistTaskNotification({
         variables: {
           taskNotification: repackageTaskNotification({
             ...updatedTaskNotification,
           }),
         },
+      })
+    } else if (
+      (task.emailNotifications ?? []).some(
+        emailNotification =>
+          emailNotification.id === updatedTaskNotification.id,
+      )
+    ) {
+      // if updatedTaskNotification is in task.emailNotifications then it's
+      // an existing task without valid recipient and email template and
+      // it needs to be deleted. Else, it's a new task without valid
+      // recipient and email template so no deletion required
+      deleteTaskNotification({
+        variables: { id: updatedTaskNotification.id },
       })
     }
 
@@ -318,8 +333,10 @@ const TaskEditModal = ({
           {!isReadOnly && (
             <SecondaryActionButton
               disabled={
-                taskEmailNotifications?.length
-                  ? taskEmailNotifications.some(t => !t.recipientType)
+                !editAsTemplate && taskEmailNotifications?.length
+                  ? taskEmailNotifications.some(
+                      t => !t.recipientType && !t.emailTemplateKey,
+                    )
                   : false
               }
               onClick={addNewTaskNotification}
