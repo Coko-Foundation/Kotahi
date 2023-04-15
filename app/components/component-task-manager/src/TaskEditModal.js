@@ -179,13 +179,10 @@ const TaskEditModal = ({
   })
 
   const updateTaskNotification = async updatedTaskNotification => {
-    const shouldPersistTaskNotification =
-      (!editAsTemplate && updatedTaskNotification.recipientType) ||
-      (editAsTemplate &&
-        (updatedTaskNotification.recipientType ||
-          updatedTaskNotification.emailTemplateKey))
-
-    if (shouldPersistTaskNotification) {
+    if (
+      updatedTaskNotification.recipientType ||
+      updatedTaskNotification.emailTemplateKey
+    ) {
       persistTaskNotification({
         variables: {
           taskNotification: repackageTaskNotification({
