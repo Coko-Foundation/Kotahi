@@ -191,7 +191,6 @@ const TaskEditModal = ({
         },
       })
     } else if (
-      editAsTemplate &&
       (task.emailNotifications ?? []).some(
         emailNotification =>
           emailNotification.id === updatedTaskNotification.id,
