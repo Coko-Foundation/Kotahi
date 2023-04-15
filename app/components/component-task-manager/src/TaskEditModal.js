@@ -342,7 +342,9 @@ const TaskEditModal = ({
             <SecondaryActionButton
               disabled={
                 !editAsTemplate && taskEmailNotifications?.length
-                  ? taskEmailNotifications.some(t => !t.recipientType)
+                  ? taskEmailNotifications.some(
+                      t => !t.recipientType && !t.emailTemplateKey,
+                    )
                   : false
               }
               onClick={addNewTaskNotification}
