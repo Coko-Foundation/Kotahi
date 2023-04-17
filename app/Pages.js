@@ -9,6 +9,7 @@ import GlobalStyle from './theme/elements/GlobalStyle'
 import { Spinner, CommsErrorBanner } from './components/shared'
 
 import { GET_CONFIG } from './queries'
+import getColors from './theme/colors'
 
 const Pages = ({ routes }) => {
   const { loading, error, data } = useQuery(GET_CONFIG, {
@@ -32,6 +33,10 @@ const Pages = ({ routes }) => {
     ...theme,
     colorPrimary: config?.groupIdentity?.primaryColor,
     colorSecondary: config?.groupIdentity?.secondaryColor,
+    colors: getColors(
+      config?.groupIdentity?.primaryColor,
+      config?.groupIdentity?.secondaryColor,
+    ),
   }
 
   return (

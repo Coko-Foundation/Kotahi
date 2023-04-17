@@ -238,7 +238,7 @@ export const SimpleEditorDiv = styled.div`
   }
 
   &:focus-within {
-    border: 1px solid ${th('colorSuccess')};
+    border: 1px solid ${th('colors.brand1.base')};
   }
 
   .error & {

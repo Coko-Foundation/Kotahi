@@ -18,7 +18,7 @@ const Page = styled.div`
 
 const Container = styled.div`
   background: ${theme.colors.neutral.gray97};
-  border: 1px solid ${theme.colors.brand1.shade25};
+  border: 1px solid ${th('colors.brand1.shade25')};
   border-radius: ${th('borderRadius')};
   margin: ${theme.spacing.g} auto;
   max-width: 1000px;
@@ -27,7 +27,7 @@ const Container = styled.div`
   width: 90%;
 
   & > h1 {
-    color: ${theme.colors.brand1.shade25};
+    color: ${th('colors.brand1.shade25')};
     font-size: 180%;
     margin: ${theme.spacing.e} 0 ${theme.spacing.f} 0;
   }
