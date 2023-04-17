@@ -745,11 +745,7 @@ const TaskNotificationDetails = ({
       <RoundIconButtonContainer>
         <RoundIconButton
           iconName="Minus"
-          onClick={() =>
-            deleteTaskNotification({
-              variables: { id: taskEmailNotification.id },
-            })
-          }
+          onClick={() => deleteTaskNotification(taskEmailNotification.id)}
           secondary
           title="Delete Notification"
         />
