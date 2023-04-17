@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { th } from '@pubsweet/ui-toolkit'
 import theme from '../../theme'
 
 const StyledInput = styled.input`
@@ -19,7 +20,7 @@ const StyledInput = styled.input`
 
   &:active,
   &:focus-visible {
-    border: 1px solid ${theme.colors.brand1.base};
+    border: 1px solid ${th('colors.brand1.base')};
     outline: none;
     transition: ${theme.transitionDuration};
   }

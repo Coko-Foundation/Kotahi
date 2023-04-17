@@ -13,7 +13,7 @@ import {
   Logo,
 } from './elements'
 import lightenBy from '../shared/lightenBy'
-import colors from './colors'
+import getColors from './colors'
 import spacing from './spacing'
 import typography from './typography'
 
@@ -23,6 +23,8 @@ import '@fontsource/roboto/500.css'
 import '@fontsource/roboto/700.css'
 import '@fontsource/roboto/900.css'
 import '@fontsource/roboto/400-italic.css'
+
+const colors = getColors()
 
 const cokoTheme = {
   colors,
