@@ -213,7 +213,7 @@ export const SimpleEditorDiv = styled.div`
   position: relative;
 
   &:focus-within {
-    border: 1px solid ${theme.colors.brand1.base};
+    border: 1px solid ${th('colors.brand1.base')};
   }
 
   .error & {

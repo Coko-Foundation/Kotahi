@@ -5,6 +5,7 @@ import { ThemeUpdateContext } from '../../theme/src'
 import { GET_CONFIG, UPDATE_CONFIG } from '../../../queries'
 import { CommsErrorBanner, Spinner } from '../../shared'
 import ConfigManagerForm from './ConfigManagerForm'
+import getColors from '../../../theme/colors'
 
 const ConfigManagerPage = ({ match, ...props }) => {
   const currentTheme = useContext(ThemeContext)
@@ -22,6 +23,10 @@ const ConfigManagerPage = ({ match, ...props }) => {
       ...currentTheme,
       colorPrimary: formData.groupIdentity.primaryColor,
       colorSecondary: formData.groupIdentity.secondaryColor,
+      colors: getColors(
+        formData.groupIdentity.primaryColor,
+        formData.groupIdentity.secondaryColor,
+      ),
     })
 
     const response = await update({

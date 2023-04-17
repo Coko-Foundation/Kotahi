@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
 import { X as CloseIcon, ChevronUp, ChevronDown } from 'react-feather'
+import { th } from '@pubsweet/ui-toolkit'
 import theme from '../../theme'
 
 const Container = styled.div`
@@ -41,7 +42,7 @@ const CounterActionContainer = styled.div`
     &:hover {
       svg {
         stroke: ${props =>
-          props.disabled ? theme.colorBorder : theme.colors.brand1.base};
+          props.disabled ? theme.colorBorder : th('colors.brand1.base')};
       }
     }
   }

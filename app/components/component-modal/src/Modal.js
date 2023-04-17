@@ -9,7 +9,6 @@ import {
   MediumColumn,
   LooseRowSpacedAlignTop,
 } from '../../shared'
-import theme from '../../../theme'
 
 const MainHeader = styled(LooseRowSpacedAlignTop)`
   border-bottom: 1.5px solid #d3d3d3;
@@ -58,7 +57,7 @@ const CloseButton = styled(Button)`
   width: 30px;
 
   &:hover {
-    background-color: ${theme.colors.brand1.tint25};
+    background-color: ${th('colors.brand1.tint25')};
 
     svg {
       stroke: white;
