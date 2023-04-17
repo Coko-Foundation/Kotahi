@@ -219,6 +219,17 @@ const TaskEditModal = ({
     ])
   }
 
+  const handleDeleteTaskNotification = taskNotificationId => {
+    const updatedTaskNotifications = taskEmailNotifications.filter(
+      notification => notification.id !== taskNotificationId,
+    )
+
+    setTaskNotifications(updatedTaskNotifications)
+    deleteTaskNotification({
+      variables: { id: taskNotificationId },
+    })
+  }
+
   const [isToggled, setToggled] = useState(false)
 
   const status = {
@@ -313,7 +324,7 @@ const TaskEditModal = ({
                     createTaskEmailNotificationLog
                   }
                   currentUser={currentUser}
-                  deleteTaskNotification={deleteTaskNotification}
+                  deleteTaskNotification={handleDeleteTaskNotification}
                   editAsTemplate={editAsTemplate}
                   key={notification.id}
                   manuscript={manuscript}
