@@ -154,6 +154,10 @@ const TaskEditModal = ({
     return updateTaskTitleDebounce.flush()
   }, [])
 
+  useEffect(() => {
+    setTaskNotifications(task.emailNotifications ?? [])
+  }, [isOpen])
+
   const updateTaskTitle = value => {
     setTaskTitle(value)
     updateTaskTitleDebounce(task.id, { ...task, title: value })
