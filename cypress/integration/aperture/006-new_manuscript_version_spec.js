@@ -19,7 +19,7 @@ describe('checking manuscript version', () => {
       /* login as admin */
       cy.login(name.role.admin, dashboard)
       DashboardPage.clickManuscriptNavButton()
-      ManuscriptsPage.clickControlButton()
+      ManuscriptsPage.selectOptionWithText('Control')
       /* Assign Editor */
       ControlPage.getAssignSeniorEditorDropdown()
         .click({ force: true })

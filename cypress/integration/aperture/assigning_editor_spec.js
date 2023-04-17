@@ -33,6 +33,7 @@ describe('Assigning senior editor', () => {
         ControlPage.selectDropdownOptionByName(name.role.admin)
 
         // assert the reviews
+        ControlPage.clickDecisionTab(1)
         ControlPage.fillInDecision(data.decision)
         ControlPage.clickAccept()
         ControlPage.clickSubmit()

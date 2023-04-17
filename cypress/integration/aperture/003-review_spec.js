@@ -46,6 +46,7 @@ describe('Completing a review', () => {
       // login as seniorEditor and assert the 3 reviews are completed
       cy.login(name.role.seniorEditor, dashboard)
 
+      DashboardPage.clickDashboardTab(2)
       DashboardPage.getInvitedReviewsStatus().should('have.text', '1 invited')
       DashboardPage.getAcceptedReviewStatus().should('have.text', '1 accepted')
       DashboardPage.getCompletedReviewsStatus().should(

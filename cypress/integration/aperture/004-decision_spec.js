@@ -19,7 +19,7 @@ describe('Completing a review', () => {
       /* Admin Assigns Editor to Manuscript */
       cy.login(name.role.admin, dashboard)
       DashboardPage.clickManuscriptNavButton()
-      ManuscriptsPage.clickControlButton()
+      ManuscriptsPage.selectOptionWithText('Control')
       ControlPage.getAssignSeniorEditorDropdown()
         .click({ force: true })
         .type(`${name.role.seniorEditor}{enter}`) // Assign Editor

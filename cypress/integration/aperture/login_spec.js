@@ -28,7 +28,7 @@ describe('Login test', () => {
       Menu.getLoggedUserButton().should('contain', 'admin')
       DashboardPage.getSectionPlaceholder(0).should(
         'contain',
-        'You have not submitted any manuscripts yet',
+        'No matching manuscripts were found',
       )
     })
   })
