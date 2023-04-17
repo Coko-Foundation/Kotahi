@@ -14,14 +14,13 @@ const SimpleWaxEditor = ({
   onChange,
   placeholder,
   spellCheck,
-  innerRefProp,
   ...rest
 }) => {
   const debounceChange = useCallback(debounce(onChange ?? (() => {}), 1000), [])
   useEffect(() => debounceChange.flush, [])
 
   return (
-    <div className={validationStatus} ref={innerRefProp}>
+    <div className={validationStatus}>
       <Wax
         autoFocus={autoFocus}
         browserSpellCheck={spellCheck}

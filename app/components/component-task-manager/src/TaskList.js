@@ -224,7 +224,7 @@ const TaskList = ({
                         </TitleHeader>
                         <AssigneeHeader>Assignee</AssigneeHeader>
                         <DurationHeader editAsTemplate={editAsTemplate}>
-                          Duration/Due Date
+                          Duration in days
                         </DurationHeader>
                       </HeaderRow>
                     </HeaderRowContainer>

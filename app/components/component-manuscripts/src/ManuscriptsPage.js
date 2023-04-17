@@ -156,11 +156,11 @@ const ManuscriptsPage = ({ currentUser, history }) => {
   }
 
   const [update] = useMutation(updateMutation)
-  const [publishManuscript] = useMutation(publishManuscriptMutation)
+  const [doPublishManuscript] = useMutation(publishManuscriptMutation)
   const client = useApolloClient()
 
-  const publishManuscripts = manuscriptId => {
-    publishManuscript({
+  const publishManuscript = async manuscriptId => {
+    return doPublishManuscript({
       variables: { id: manuscriptId },
     })
   }
@@ -180,7 +180,7 @@ const ManuscriptsPage = ({ currentUser, history }) => {
       importManuscripts={importManuscriptsAndRefetch}
       isImporting={isImporting}
       page={page}
-      publishManuscripts={publishManuscripts}
+      publishManuscript={publishManuscript}
       queryObject={queryObject}
       setReadyToEvaluateLabels={setReadyToEvaluateLabels}
       shouldAllowBulkImport={shouldAllowBulkImport}

@@ -178,7 +178,8 @@ exports.up = async knex => {
                 },
                 controlPanel: {
                   showTabs: [
-                    'Workflow',
+                    'Team',
+                    'Decision',
                     'Manuscript text',
                     'Metadata',
                     'Tasks & Notifications',
@@ -218,7 +219,8 @@ exports.up = async knex => {
                 },
                 controlPanel: {
                   showTabs: [
-                    'Workflow',
+                    'Team',
+                    'Decision',
                     'Manuscript text',
                     'Metadata',
                     'Tasks & Notifications',

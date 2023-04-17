@@ -45,12 +45,12 @@ const StyledDeleteControl = styled(DeleteControl)`
 `
 
 // TODO This is not following Formik idioms. Improve?
-const AuthorsInput = ({ onChange, value, innerRefProp }) => {
+const AuthorsInput = ({ onChange, value }) => {
   const cleanedVal = Array.isArray(value) ? value : [] // We're getting momentary mismatches between field and value, so this can momentarily receive e.g. a string from another field, before a rerender corrects it. Not sure why yet.
   if (value && !Array.isArray(value))
     console.error('Illegal AuthorsInput value:', value)
   return (
-    <div ref={innerRefProp}>
+    <div>
       {cleanedVal.map((author, index) => (
         <AuthorContainer key={author.id}>
           <Author>

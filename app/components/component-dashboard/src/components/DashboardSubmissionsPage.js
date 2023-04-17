@@ -50,7 +50,8 @@ const DashboardSubmissionsPage = ({ history }) => {
     })
   }, [])
 
-  return config?.dashboard?.showSections.includes('submission') ? (
+  return config?.dashboard?.showSections &&
+    config?.dashboard?.showSections.includes('submission') ? (
     <SubmissionsTable
       applyQueryParams={applyQueryParams}
       query={query}

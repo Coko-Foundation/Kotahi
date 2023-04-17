@@ -1,7 +1,6 @@
 /* eslint-disable jest/expect-expect */
 import { FormsPage } from '../../page-object/forms-page'
 import { Menu } from '../../page-object/page-component/menu'
-import { DashboardPage } from '../../page-object/dashboard-page'
 import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { dashboard } from '../../support/routes'
@@ -35,7 +34,7 @@ describe('Update the submission form field', () => {
     cy.get('form > :nth-child(16)').type('test_tag')
     cy.contains('Update Field').click({ force: true })
     Menu.clickManuscripts()
-    DashboardPage.clickSubmissionButton()
+    ManuscriptsPage.clickSubmit()
     // Upload manuscript
     // eslint-disable-next-line jest/valid-expect-in-promise
     cy.get('button').contains('Submit a URL instead').click()
@@ -48,11 +47,11 @@ describe('Update the submission form field', () => {
       SubmissionFormPage.waitThreeSec()
       SubmissionFormPage.clickSubmitResearch()
       cy.awaitDisappearSpinner()
-      ManuscriptsPage.selectOptionWithText('Evaluation')
+      ManuscriptsPage.getOptionsElifeText('Evaluation').click()
       SubmissionFormPage.clickSubmitResearch()
       cy.awaitDisappearSpinner()
       cy.intercept('/graphql').as('getResponse')
-      ManuscriptsPage.getOptionWithText('Publish').click()
+      ManuscriptsPage.getOptionsElifeText('Publish').click()
       cy.wait('@getResponse').its('response').should('deep.include', {
         statusCode: 200,
         statusMessage: 'OK',

@@ -213,7 +213,7 @@ export const SimpleEditorDiv = styled.div`
   position: relative;
 
   &:focus-within {
-    border: 1px solid ${theme.colors.brand1.base};
+    border: 1px solid ${th('colors.brand1.base')};
   }
 
   .error & {
@@ -308,6 +308,8 @@ export const ProductionEditorDiv = styled.div`
 `
 export const EditorArea = styled.div`
   flex-grow: 1;
+  height: calc(100vh - 108px);
+  overflow-y: scroll;
 `
 
 export const SideMenu = styled.div`
@@ -321,7 +323,7 @@ export const WaxSurfaceScroll = styled.div`
   display: flex;
   height: 100%;
   overflow-y: auto;
-  position: absolute;
+  position: relative;
   width: 100%;
 
   /* stylelint-disable-next-line order/properties-alphabetical-order */

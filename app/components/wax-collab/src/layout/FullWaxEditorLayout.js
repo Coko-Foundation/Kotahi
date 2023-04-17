@@ -59,15 +59,15 @@ const FullWaxEditorLayout = readOnly => ({ editor }) => {
   }
 
   return (
-    <div style={fullScreenStyles}>
+    <div id="wax-container" style={fullScreenStyles}>
       <Grid readonly={readOnly} readOnlyComments>
         {readOnly ? (
           <FullWaxEditorGrid useComments={false}>
-            <ReadOnlyEditorDiv className="wax-surface-scroll">
+            <ReadOnlyEditorDiv className="wax-surface-scroll panelWrapper">
               {editor}
             </ReadOnlyEditorDiv>
             {notes.length > 0 && (
-              <ReadOnlyNotesAreaContainer>
+              <ReadOnlyNotesAreaContainer className="panelWrapper">
                 <NotesContainer id="notes-container">
                   <NotesHeading>Notes</NotesHeading>
                   <NotesArea view={main} />
@@ -84,11 +84,14 @@ const FullWaxEditorLayout = readOnly => ({ editor }) => {
               <TopBar />
             </Menu>
             <FullWaxEditorGrid useComments={false}>
-              <EditorDiv className="wax-surface-scroll" hideComments>
+              <EditorDiv
+                className="wax-surface-scroll panelWrapper"
+                hideComments
+              >
                 {editor}
               </EditorDiv>
               {notes.length > 0 && (
-                <NotesAreaContainer>
+                <NotesAreaContainer className="panelWrapper">
                   <NotesContainer id="notes-container">
                     <NotesHeading>Notes</NotesHeading>
                     <NotesArea view={main} />

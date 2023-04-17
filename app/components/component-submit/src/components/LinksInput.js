@@ -28,15 +28,7 @@ const URLInput = input => (
   <TextField label="URL" placeholder="Enter a URL" {...input} />
 )
 
-const LinksInput = ({
-  form,
-  remove,
-  push,
-  value,
-  name,
-  onChange,
-  innerRefProp,
-}) => {
+const LinksInput = ({ form, remove, push, value, name, onChange }) => {
   const valuesRef = useRef(form.values)
 
   useEffect(() => {
@@ -52,7 +44,7 @@ const LinksInput = ({
   }
 
   return (
-    <ul ref={innerRefProp}>
+    <ul>
       <UnbulletedList>
         <li>
           <Button

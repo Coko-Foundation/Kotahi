@@ -27,6 +27,8 @@ import ActionButton from '../../../shared/ActionButton'
 import { hasValue } from '../../../../shared/htmlUtils'
 import FormWaxEditor from '../../../component-formbuilder/src/components/FormWaxEditor'
 import { ConfigContext } from '../../../config/src'
+import Modal from '../../../component-modal/src/Modal'
+import PublishingResponse from '../../../component-review/src/components/publishing/PublishingResponse'
 
 const FormContainer = styled(Container)`
   background: white;
@@ -290,7 +292,13 @@ const FormTemplate = ({
         }
 
         const [submitSucceeded, setSubmitSucceeded] = useState(false)
-        const [disabled, setButtonDisabled] = useState(false)
+        const [isPublishing, setIsPublishing] = useState(false)
+        const [publishingResponse, setPublishingResponse] = useState([])
+
+        const [
+          publishErrorsModalIsOpen,
+          setPublishErrorsModalIsOpen,
+        ] = useState(false)
 
         const submitButton = (text, haspopup = false) => {
           return (
@@ -300,13 +308,15 @@ const FormTemplate = ({
                   .toLowerCase()
                   .replace(/ /g, '-')
                   .replace(/[^\w-]+/g, '')}-action-btn`}
-                disabled={disabled}
                 onClick={async () => {
                   // TODO shouldn't this come after error checking and submission?
                   if (republish) {
-                    setButtonDisabled(true)
-                    await republish(manuscriptId)
-                    setButtonDisabled(false)
+                    setIsPublishing(true)
+                    const response = (await republish(manuscriptId)) || []
+                    setIsPublishing(false)
+                    setPublishingResponse(response)
+                    if (response.some(step => !step.succeeded))
+                      setPublishErrorsModalIsOpen(true)
                     return
                   }
 
@@ -330,8 +340,10 @@ const FormTemplate = ({
                 primary
                 status={
                   /* eslint-disable no-nested-ternary */
-                  isSubmitting
+                  isSubmitting || isPublishing
                     ? 'pending'
+                    : publishingResponse.some(step => !step.succeeded)
+                    ? 'failure'
                     : Object.keys(errors).length && submitCount
                     ? '' // TODO Make this case 'failure', once we've fixed the validation delays in the form
                     : submitSucceeded
@@ -572,6 +584,14 @@ const FormTemplate = ({
                   />
                 </ModalWrapper>
               )}
+              <Modal
+                isOpen={publishErrorsModalIsOpen}
+                onClose={() => setPublishErrorsModalIsOpen(false)}
+                subtitle="Some targets failed to publish."
+                title="Publishing error"
+              >
+                <PublishingResponse response={publishingResponse} />
+              </Modal>
             </form>
           </FormContainer>
         )

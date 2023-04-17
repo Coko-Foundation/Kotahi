@@ -45,19 +45,28 @@ const DashboardLayout = ({
   const currentSearchQuery = uriQueryParams.get(URI_SEARCH_PARAM)
   const dashboardPages = []
 
-  if (config.dashboard?.showSections.includes('submission'))
+  if (
+    config.dashboard?.showSections &&
+    config.dashboard?.showSections.includes('submission')
+  )
     dashboardPages.push({
       href: '/dashboard/submissions',
       label: 'My Submissions',
     })
 
-  if (config.dashboard?.showSections.includes('review'))
+  if (
+    config.dashboard?.showSections &&
+    config.dashboard?.showSections.includes('review')
+  )
     dashboardPages.push({
       href: '/dashboard/reviews',
       label: 'To Review',
     })
 
-  if (config.dashboard?.showSections.includes('editor'))
+  if (
+    config.dashboard?.showSections &&
+    config.dashboard?.showSections.includes('editor')
+  )
     dashboardPages.push({
       href: '/dashboard/edits',
       label: "Manuscripts I'm Editor of",

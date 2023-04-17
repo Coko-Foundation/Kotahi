@@ -467,6 +467,12 @@ const DecisionVersion = ({
   let defaultActiveKey
 
   switch (config?.controlPanel?.showTabs[0]) {
+    case 'Team':
+      defaultActiveKey = `team_${version.id}`
+      break
+    case 'Decision':
+      defaultActiveKey = `decision_${version.id}`
+      break
     case 'Manuscript text':
       defaultActiveKey = `editor_${version.id}`
       break
@@ -476,7 +482,6 @@ const DecisionVersion = ({
     case 'Tasks & Notifications':
       defaultActiveKey = `tasks_${version.id}`
       break
-    case 'Workflow':
     default:
       defaultActiveKey = `team_${version.id}`
       break
@@ -492,11 +497,10 @@ const DecisionVersion = ({
   const sections = []
 
   if (config?.controlPanel?.showTabs) {
-    if (config?.controlPanel?.showTabs.includes('Workflow')) {
+    if (config?.controlPanel?.showTabs.includes('Team'))
       sections.push(teamSection())
+    if (config?.controlPanel?.showTabs.includes('Decision'))
       sections.push(decisionSection())
-    }
-
     if (config?.controlPanel?.showTabs.includes('Manuscript text'))
       sections.push(editorSection)
     if (config?.controlPanel?.showTabs.includes('Metadata'))

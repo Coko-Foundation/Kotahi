@@ -36,6 +36,20 @@ const checkForEmptyBlocks = file => {
         p.innerHTML = inside.childNodes[i].data
         inside.replaceChild(p, inside.childNodes[i])
       }
+    } else {
+      if (inside.childNodes[i].tagName === 'A') {
+        console.error('Found unwrapped <a> tag:', inside.childNodes[i])
+        const p = doc.createElement('p')
+        p.appendChild(inside.childNodes[i])
+        inside.replaceChild(p, inside.childNodes[i])
+      }
+
+      if (inside.childNodes[i].tagName === 'IMG') {
+        console.error('Found unwrapped <img> tag:', inside.childNodes[i])
+        const figure = doc.createElement('figure')
+        figure.appendChild(inside.childNodes[i])
+        inside.replaceChild(figure, inside.childNodes[i])
+      }
     }
   }
 
@@ -400,8 +414,13 @@ const redirectPromise = (
 ) => {
   setConversionState(() => ({ converting: false, completed: true }))
   const urlFrag = config.journal.metadata.toplevel_urlfragment
+
   // redirect after a new submission path
-  const route = `${urlFrag}/versions/${data.createManuscript.id}/submit`
+  // TODO: refactor redirection url values with config manager
+  const route = `${urlFrag}/versions/${data.createManuscript.id}/${
+    ['elife', 'ncrc'].includes(config.instanceName) ? 'evaluation' : 'submit'
+  }`
+
   // redirect after a short delay
   window.setTimeout(() => {
     history.push(route)

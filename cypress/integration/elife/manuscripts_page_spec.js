@@ -30,7 +30,7 @@ describe('Manuscripts page tests', () => {
     // eslint-disable-next-line jest/no-focused-tests
     it('evaluation button is visible and publish button is not visible on unsubmited status article', () => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoadElife()
       // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -40,7 +40,7 @@ describe('Manuscripts page tests', () => {
       ManuscriptsPage.getEvaluationButton()
         .scrollIntoView()
         .should('be.visible')
-      ManuscriptsPage.getOptionWithText('Publish').should('not.exist')
+      ManuscriptsPage.getOptionsElifeText('Publish').should('not.exist')
     })
   })
 
@@ -58,7 +58,7 @@ describe('Manuscripts page tests', () => {
       cy.awaitDisappearSpinner()
       ManuscriptsPage.getTableHead().should('be.visible')
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoadElife()
       // fill the submit form and submit it
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -131,15 +131,15 @@ describe('Manuscripts page tests', () => {
 
     it('sort article after Article id', () => {
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoadElife()
       SubmissionFormPage.fillInArticleld('456')
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoadElife()
       SubmissionFormPage.fillInArticleld('abc')
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.clickSubmit()
-      NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+      NewSubmissionPage.clickSubmitUrlAndWaitPageLoadElife()
       SubmissionFormPage.fillInArticleld('def')
       Menu.clickManuscriptsAndAssertPageLoad()
       ManuscriptsPage.getArticleIdByRow(1).should('contain', 'def')
@@ -169,7 +169,7 @@ describe('Manuscripts page tests', () => {
         ManuscriptsPage.getEvaluationButton().should('not.exist')
         ManuscriptsPage.clickSubmit()
 
-        NewSubmissionPage.clickSubmitUrlAndWaitPageLoad()
+        NewSubmissionPage.clickSubmitUrlAndWaitPageLoadElife()
 
         // fill the submit form and submit it
         // eslint-disable-next-line jest/valid-expect-in-promise
@@ -202,11 +202,11 @@ describe('Manuscripts page tests', () => {
       ManuscriptsPage.getEvaluationButton()
         .scrollIntoView()
         .should('be.visible')
-      ManuscriptsPage.getControlButton().should('not.contain', 'Control')
-      ManuscriptsPage.getOptionWithText('Publish').should('not.exist')
+      ManuscriptsPage.getOptionsElife().should('not.contain', 'Control')
+      ManuscriptsPage.getOptionsElife().should('contain', 'Publish')
     })
     it('submission details should be visible', () => {
-      ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
+      ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
       ManuscriptsPage.clickEvaluation()
       // eslint-disable-next-line jest/valid-expect-in-promise
       cy.fixture('submission_form_data').then(data => {
@@ -269,7 +269,7 @@ describe('Manuscripts page tests', () => {
         // eslint-disable-next-line jest/valid-expect-in-promise
         cy.fixture('role_names').then(name => {
           ManuscriptsPage.getAuthor(0).should('eq', name.role.admin)
-          ManuscriptsPage.getStatus(0).should('eq', 'Submitted')
+          ManuscriptsPage.getStatus(0).should('eq', 'evaluated')
         })
         ManuscriptsPage.clickEvaluation()
         SubmissionFormPage.fillInArticleld('123 - Evaluated')

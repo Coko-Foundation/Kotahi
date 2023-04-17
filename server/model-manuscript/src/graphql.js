@@ -390,7 +390,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
   }
 
   if (isSettingFirstLabels && !updatedMs.tasks.length)
-    updatedMs.tasks = await populateTemplatedTasksForManuscript(id)
+    await populateTemplatedTasksForManuscript(id)
 
   await uploadAndConvertBase64ImagesInManuscript(updatedMs)
   return updateAndRepackageForGraphql(updatedMs, oldMetaAbstract)
@@ -1045,7 +1045,6 @@ const resolvers = {
         manuscript && manuscript.meta ? manuscript.meta.abstract : null
 
       const update = {} // This will collect any properties we may want to update in the DB
-      update.published = new Date()
       const steps = []
       const containsEvaluations = hasEvaluations(manuscript)
 
@@ -1145,6 +1144,8 @@ const resolvers = {
       }
 
       if (!steps.length || steps.some(step => step.succeeded)) {
+        update.published = new Date()
+
         // A 'published' article without evaluations will become 'evaluated'.
         // The intention is that an evaluated article should never revert to any state prior to "evaluated",
         // but that only articles with evaluations can be 'published'.
