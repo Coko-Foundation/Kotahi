@@ -126,7 +126,7 @@ const manuscriptHasOverdueTasksForUser = (manuscript, userId) => {
 
     if (
       (isEditor || task.assigneeUserId === userId) &&
-      ['In progress', 'Paused'].includes(task.status) &&
+      task.status === 'In progress' &&
       task.dueDate &&
       new Date(task.dueDate) < now
     ) {
