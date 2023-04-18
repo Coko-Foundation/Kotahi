@@ -143,6 +143,8 @@ const resolvers = {
           '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
         )
 
+      await updateAlertsForTask(updatedTask)
+
       return updatedTask
     },
 
