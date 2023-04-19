@@ -42,12 +42,17 @@ const DashboardEditsPage = ({ history }) => {
 
   const [updateTab] = useMutation(mutations.updateTab)
 
+  const [removeTaskAlertsForCurrentUser] = useMutation(
+    mutations.removeTaskAlertsForCurrentUserMutation,
+  )
+
   useEffect(() => {
     updateTab({
       variables: {
         tab: 'edits',
       },
     })
+    removeTaskAlertsForCurrentUser()
   }, [])
 
   return (
