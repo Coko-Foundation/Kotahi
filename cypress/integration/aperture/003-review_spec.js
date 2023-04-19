@@ -46,6 +46,7 @@ describe('Completing a review', () => {
       // login as seniorEditor and assert the 3 reviews are completed
       cy.login(name.role.seniorEditor, dashboard)
 
+      DashboardPage.clickDashboardTab(2)
       DashboardPage.getInvitedReviewsStatus().should('have.text', '1 invited')
       DashboardPage.getAcceptedReviewStatus().should('have.text', '1 accepted')
       DashboardPage.getCompletedReviewsStatus().should(
@@ -62,10 +63,13 @@ function doReview(name, reviewData) {
   cy.login(name, dashboard)
   cy.get('nav').contains('Dashboard').click()
   cy.visit(dashboard)
+  DashboardPage.clickDashboardTab(1)
 
   // Accpet Review Request Workflow
   if (reviewData.verdict === 'accept') {
     DashboardPage.clickAcceptReviewButton()
+    // eslint-disable-next-line cypress/no-unnecessary-waiting
+    cy.wait(2000)
 
     // Only do the review if there'a  comment present
     if (reviewData.comment) {

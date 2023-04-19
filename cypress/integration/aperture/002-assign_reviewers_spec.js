@@ -2,7 +2,7 @@
 import { seniorEditor } from '../../fixtures/role_names'
 import { ControlPage } from '../../page-object/control-page'
 import { DashboardPage } from '../../page-object/dashboard-page'
-import { Menu } from '../../page-object/page-component/menu'
+// import { Menu } from '../../page-object/page-component/menu'
 import { dashboard } from '../../support/routes'
 
 describe('Editor assigning reviewers', () => {
@@ -38,7 +38,9 @@ describe('Editor assigning reviewers', () => {
       })
     })
     // Go to dashboard and verify number of invited reviewer
-    Menu.clickDashboard()
-    DashboardPage.getInvitedReviewersButton().should('have.text', '6 invited')
+    // commented out because with the new updates it is a chart and not a text, the below check is not valid
+    // maybe we can add an alt atribute to the chart so we can check what info is being sent to it.
+    // Menu.clickDashboard()
+    // DashboardPage.getInvitedReviewersButton().should('have.text', '6 invited')
   })
 })

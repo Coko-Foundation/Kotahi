@@ -7,7 +7,7 @@ import { ControlPage } from './control-page'
  * where users can see the list of submitted manuscripts & select Control,
  * View or Delete.
  */
-const MANUSCRIPTS_OPTIONS_LIST = '[class*=style__UserAction]'
+const MANUSCRIPTS_OPTIONS_LIST = '[class*=Action__ActionLink]'
 const MANUSCRIPTS_OPTIONS_E = '[class*=Action__ActionLink]'
 const BUTTON = 'button'
 const LIVE_CHAT_BUTTON = '[class*=VideoChat__FloatRightButton]'
