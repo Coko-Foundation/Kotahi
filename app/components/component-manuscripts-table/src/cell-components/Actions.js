@@ -49,9 +49,9 @@ const Actions = ({
       <LinkAction to={`${urlFrag}/versions/${manuscript.id}/manuscript`}>
         View
       </LinkAction>
-      <LinkAction onClick={() => setConfirmArchiveModalIsOpen(true)}>
+      <Action onClick={() => setConfirmArchiveModalIsOpen(true)}>
         Archive
-      </LinkAction>
+      </Action>
       <LinkAction to={`${urlFrag}/versions/${manuscript.id}/production`}>
         Production
       </LinkAction>
