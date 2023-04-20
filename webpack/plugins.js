@@ -52,6 +52,7 @@ module.exports = (opts = {}) => {
       'PUBLIC_CLIENT_HOST',
       'PUBLIC_CLIENT_PORT',
       'INSTANCE_NAME',
+      'USE_COLAB_EMAIL',
     ]),
   )
 

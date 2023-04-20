@@ -290,6 +290,26 @@ switch (
         value: 'thanksForAgreeingToReviewTemplate',
       },
     ]
+
+    if(!process.env.USE_COLAB_EMAIL || process.env.USE_COLAB_EMAIL.toLowerCase() == 'false') {
+      emailTemplateOptions = [
+        {
+          label: 'Kotahi task notification',
+          value: 'genericTaskNotificationEmailTemplate',
+        },
+
+        {
+          label: 'Reviewer Invitation Email Template',
+          value: 'reviewInvitationEmailTemplate',
+        },
+
+        {
+          label: 'Author Invitation Email Template',
+          value: 'authorInvitationEmailTemplate',
+        },
+      ]
+    }
+
     break
   default:
     emailTemplateOptions = [
