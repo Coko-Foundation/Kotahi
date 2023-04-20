@@ -40,6 +40,29 @@ const manuscriptFields = `
     ${reviewFields}
   }
   decision
+  invitations {
+    id
+    declinedReason
+    responseComment
+    responseDate
+    toEmail
+    invitedPersonName
+    updated
+    status
+    invitedPersonType
+    userId
+    isShared
+    user {
+      id
+      username
+      profilePicture
+      isOnline
+      defaultIdentity {
+        id
+        identifier
+      }
+    }
+  }
   teams {
     id
     name

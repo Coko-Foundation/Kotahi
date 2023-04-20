@@ -90,13 +90,13 @@ class Manuscript extends BaseModel {
     const manuscripts = await Manuscript.query()
       .where('parent_id', id)
       .withGraphFetched(
-        '[teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
+        '[invitations.[user], teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
       )
 
     const firstManuscript = await Manuscript.query()
       .findById(id)
       .withGraphFetched(
-        '[teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
+        '[invitations.[user], teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
       )
 
     manuscripts.push(firstManuscript)

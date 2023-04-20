@@ -41,7 +41,6 @@ const DecisionVersions = ({
   threadedDiscussionProps,
   validateDoi,
   validateSuffix,
-  invitations,
   setExternalEmail,
   externalEmail,
   selectedEmail,
@@ -110,7 +109,7 @@ const DecisionVersions = ({
                 dois={dois}
                 externalEmail={externalEmail}
                 form={form}
-                invitations={invitations}
+                invitations={version.manuscript.invitations || []}
                 isCurrentVersion={index === 0}
                 key={version.manuscript.id}
                 makeDecision={makeDecision}
