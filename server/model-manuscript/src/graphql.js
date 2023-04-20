@@ -786,6 +786,7 @@ const resolvers = {
 
     async createNewVersion(_, { id }, ctx) {
       const manuscript = await models.Manuscript.query().findById(id)
+
       const newVersion = await manuscript.createNewVersion()
       return repackageForGraphql(newVersion)
     },
@@ -850,18 +851,43 @@ const resolvers = {
           '[submitter.[defaultIdentity], channels, teams.members.user, reviews.user]',
         )
 
+      const activeConfig = await Config.query().first()
+
       /** Crude hack to circumvent and help diagnose bug 1193 */
       const oldMetaAbstract =
         manuscript && manuscript.meta ? manuscript.meta.abstract : null
 
-      let decision = null
-      if (decisionString === 'accept') decision = 'accepted'
-      else if (decisionString === 'revise') decision = 'revise'
-      else if (decisionString === 'reject') decision = 'rejected'
-      if (!decision)
-        throw new Error(`Unknown decision type "${decisionString}" received.`)
-      manuscript.decision = decision
-      manuscript.status = decision
+      switch (decisionString) {
+        case 'accept':
+          manuscript.decision = 'accepted'
+          manuscript.status = 'accepted'
+          break
+        case 'revise':
+          manuscript.decision = 'revised'
+          manuscript.status = 'revised'
+          break
+        case 'reject':
+          manuscript.decision = 'rejected'
+          manuscript.status = 'rejected'
+          break
+
+        default:
+          if (
+            ['colab', 'aperture'].includes(activeConfig.formData.instanceName)
+          ) {
+            manuscript.decision = 'accepted'
+            manuscript.status = 'accepted'
+          } else if (
+            ['elife', 'ncrc'].includes(activeConfig.formData.instanceName)
+          ) {
+            manuscript.decision = 'evaluated'
+            manuscript.status = 'evaluated'
+          } else {
+            throw new Error(
+              `Unknown decision type "${decisionString}" received.`,
+            )
+          }
+      }
 
       if (
         manuscript.decision &&

@@ -86,6 +86,8 @@ const DecisionVersions = ({
     { id: editorialChannelId, name: 'Editorial discussion' },
   ]
 
+  const manuscriptLatestVersionId = versions[0].manuscript.id
+
   return (
     <Columns>
       <Manuscript>
@@ -112,6 +114,7 @@ const DecisionVersions = ({
                 isCurrentVersion={index === 0}
                 key={version.manuscript.id}
                 makeDecision={makeDecision}
+                manuscriptLatestVersionId={manuscriptLatestVersionId}
                 onChange={handleChange}
                 parent={manuscript}
                 publishManuscript={publishManuscript}

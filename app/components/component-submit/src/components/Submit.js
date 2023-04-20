@@ -1,6 +1,7 @@
 import React, { useCallback, useContext, useEffect } from 'react'
 import PropTypes from 'prop-types'
 import { set, debounce } from 'lodash'
+import { ConfigContext } from '../../../config/src'
 import DecisionAndReviews from './DecisionAndReviews'
 import CreateANewVersion from './CreateANewVersion'
 import ReadonlyFormTemplate from '../../../component-review/src/components/metadata/ReadonlyFormTemplate'
@@ -20,7 +21,6 @@ import EditorSection from '../../../component-review/src/components/decision/Edi
 import AssignEditorsReviewers from './assignEditors/AssignEditorsReviewers'
 import AssignEditor from './assignEditors/AssignEditor'
 import SubmissionForm from './SubmissionForm'
-import { ConfigContext } from '../../../config/src'
 
 export const createBlankSubmissionBasedOnForm = form => {
   const allBlankedFields = {}
@@ -46,10 +46,14 @@ const Submit = ({
   deleteFile,
   setShouldPublishField,
   threadedDiscussionProps,
+  manuscriptLatestVersionId,
   validateDoi,
   validateSuffix,
 }) => {
   const config = useContext(ConfigContext)
+
+  const { allowAuthorsSubmitNewVersion } = config.submission
+
   const decisionSections = []
 
   const submissionValues = createBlankSubmissionBasedOnForm(submissionForm)
@@ -69,10 +73,6 @@ const Submit = ({
       (['new', 'revising'].includes(version.status) ||
         (currentUser.admin && version.status !== 'rejected'))
 
-    const hasDecision = !['new', 'submitted', 'revising'].includes(
-      version.status,
-    )
-
     const editorSection = {
       content: (
         <EditorSection
@@ -89,6 +89,14 @@ const Submit = ({
     }
 
     let decisionSection
+
+    const selectedManuscriptVersionId = version.id
+
+    const threadedDiscussionExtendedProps = {
+      ...threadedDiscussionProps,
+      manuscriptLatestVersionId,
+      selectedManuscriptVersionId,
+    }
 
     if (userCanEditManuscriptAndFormData) {
       Object.assign(submissionValues, JSON.parse(version.submission))
@@ -109,7 +117,7 @@ const Submit = ({
         createFile,
         deleteFile,
         setShouldPublishField,
-        threadedDiscussionProps,
+        threadedDiscussionExtendedProps,
         validateDoi,
         validateSuffix,
       }
@@ -123,15 +131,14 @@ const Submit = ({
       decisionSection = {
         content: (
           <>
-            {hasDecision && (
-              <DecisionAndReviews
-                currentUser={currentUser}
-                decisionForm={decisionForm}
-                manuscript={version}
-                reviewForm={reviewForm}
-                threadedDiscussionProps={threadedDiscussionProps}
-              />
-            )}
+            <DecisionAndReviews
+              allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}
+              currentUser={currentUser}
+              decisionForm={decisionForm}
+              manuscript={version}
+              reviewForm={reviewForm}
+              threadedDiscussionProps={threadedDiscussionExtendedProps}
+            />
             <ReadonlyFormTemplate
               form={submissionForm}
               formData={{
@@ -140,7 +147,7 @@ const Submit = ({
               }}
               manuscript={version}
               showEditorOnlyFields={false}
-              threadedDiscussionProps={threadedDiscussionProps}
+              threadedDiscussionProps={threadedDiscussionExtendedProps}
               title="Metadata"
             />
           </>
@@ -159,12 +166,14 @@ const Submit = ({
               manuscript={version}
             />
           )}
-          {index === 0 && version.status === 'revise' && (
-            <CreateANewVersion
-              createNewVersion={createNewVersion}
-              manuscript={version}
-            />
-          )}
+          {index === 0 &&
+            (allowAuthorsSubmitNewVersion || version.status === 'revise') && (
+              <CreateANewVersion
+                allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}
+                createNewVersion={createNewVersion}
+                manuscript={version}
+              />
+            )}
           <HiddenTabs
             defaultActiveKey={version.id}
             sections={[decisionSection, editorSection]}

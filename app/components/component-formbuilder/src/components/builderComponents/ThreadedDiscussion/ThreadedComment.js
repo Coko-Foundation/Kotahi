@@ -31,6 +31,8 @@ const ThreadedComment = ({
   onSubmit,
   shouldPublish,
   setShouldPublish,
+  selectedManuscriptVersionId,
+  manuscriptLatestVersionId,
 }) => {
   const {
     comment: value,
@@ -47,6 +49,25 @@ const ThreadedComment = ({
     existingComment?.comment || '',
   )
 
+  const commentBelongsToDifferentManuscriptVersion =
+    selectedManuscriptVersionId !== comment.manuscriptVersionId
+
+  const isLatestVersionOfManuscript =
+    selectedManuscriptVersionId === manuscriptLatestVersionId
+
+  const canEditComment =
+    userCanEditAnyComment ||
+    (userCanEditOwnComment && author.id === currentUser.id)
+
+  const canEditThisComment = comment.manuscriptVersionId
+    ? isLatestVersionOfManuscript &&
+      selectedManuscriptVersionId === comment.manuscriptVersionId &&
+      canEditComment
+    : canEditComment
+
+  const shouldShowEditIcon =
+    (!comment.manuscriptVersionId && canEditComment) || canEditThisComment
+
   const [modalFieldValue, setModalFieldValue] = useState(value)
   const [counter, setCounter] = useState(1)
   const [collapse, setCollapse] = useState(!shouldExpandByDefault)
@@ -60,8 +81,17 @@ const ThreadedComment = ({
 
   return (
     <>
-      <CommentContainer>
-        <CommentWrapper key={comment.id}>
+      <CommentContainer
+        commentBelongsToDifferentManuscriptVersion={
+          commentBelongsToDifferentManuscriptVersion
+        }
+      >
+        <CommentWrapper
+          commentBelongsToDifferentManuscriptVersion={
+            commentBelongsToDifferentManuscriptVersion
+          }
+          key={comment.id}
+        >
           <CommentMetaWrapper>
             <UserMetaWrapper>
               <UserAvatar user={author} />
@@ -83,23 +113,18 @@ const ThreadedComment = ({
                 }
               />
             </div>
-            {setShouldPublish && (
+            {setShouldPublish && isLatestVersionOfManuscript && (
               <FieldPublishingSelector
                 onChange={setShouldPublish}
                 value={shouldPublish}
               />
             )}
-            {(userCanEditAnyComment ||
-              (userCanEditOwnComment && author.id === currentUser.id)) && (
-              <Icon
-                noPadding
-                onClick={event => {
-                  setOpenModal(true)
-                }}
-              >
+            {shouldShowEditIcon && (
+              <Icon noPadding onClick={() => setOpenModal(true)}>
                 edit
               </Icon>
             )}
+
             <Collapse
               onClick={event => {
                 setCollapse(!collapse)

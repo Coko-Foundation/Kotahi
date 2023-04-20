@@ -225,6 +225,8 @@ const SubmitPage = ({ match, history }) => {
 
   const versions = gatherManuscriptVersions(manuscript)
 
+  const manuscriptLatestVersionId = versions[0].manuscript.id
+
   const threadedDiscussionProps = {
     threadedDiscussions: data.threadedDiscussions,
     updatePendingComment,
@@ -233,6 +235,8 @@ const SubmitPage = ({ match, history }) => {
     deletePendingComment,
     currentUser,
     firstVersionManuscriptId: manuscript.parentId || manuscript.id,
+    versions,
+    currentVersion: manuscript,
   }
 
   return (
@@ -242,6 +246,7 @@ const SubmitPage = ({ match, history }) => {
       currentUser={currentUser}
       decisionForm={decisionForm}
       deleteFile={deleteFile}
+      manuscriptLatestVersionId={manuscriptLatestVersionId}
       match={match}
       onChange={handleChange}
       onSubmit={onSubmit}

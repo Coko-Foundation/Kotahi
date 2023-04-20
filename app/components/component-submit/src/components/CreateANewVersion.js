@@ -14,21 +14,29 @@ import {
   HeadingWithAction,
 } from '../../../shared'
 
-const CreateANewVersion = ({ manuscript, createNewVersion }) => {
+const CreateANewVersion = ({
+  manuscript,
+  createNewVersion,
+  allowAuthorsSubmitNewVersion,
+}) => {
   const [newVerButtonIsEnabled, setNewVerButtonIsEnabled] = useState(true)
 
   return (
     <SectionContent>
       <SectionHeader>
-        <Title>Create a new version</Title>
+        <Title>Submit a new version</Title>
       </SectionHeader>
       <SectionRow>
         <HeadingWithAction>
-          <p>
-            You have been asked to <strong>revise</strong> your manuscript; see
-            the reviews and decision below. You may modify and resubmit a new
-            version of your manuscript.
-          </p>
+          {allowAuthorsSubmitNewVersion ? (
+            <p>You can modify and resubmit a new version of your manuscript.</p>
+          ) : (
+            <p>
+              You have been asked to <strong>revise</strong> your manuscript;
+              see the reviews and decision below. You may modify and resubmit a
+              new version of your manuscript.
+            </p>
+          )}
           <Button
             data-testid="create-new-manuscript-version-button"
             disabled={!newVerButtonIsEnabled}
@@ -77,7 +85,7 @@ const CreateANewVersion = ({ manuscript, createNewVersion }) => {
             }}
             primary
           >
-            Create a new version...
+            Submit a new version...
           </Button>
         </HeadingWithAction>
       </SectionRow>

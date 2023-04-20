@@ -226,6 +226,7 @@ export const query = gql`
         id
         comments {
           id
+          manuscriptVersionId
           commentVersions {
             id
             author {
