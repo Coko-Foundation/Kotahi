@@ -25,6 +25,7 @@ services:
       - SERVER_PORT=3000
       - PUBLIC_CLIENT_HOST=${PUBLIC_CLIENT_HOST:-0.0.0.0}
       - INSTANCE_NAME=${INSTANCE_NAME:-elife}
+      - USE_COLAB_EMAIL=${USE_COLAB_EMAIL:-false}
 
     volumes:
       - ./app:/home/node/app/app

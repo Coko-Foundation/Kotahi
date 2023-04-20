@@ -1,6 +1,7 @@
 FROM node:12.21-alpine
 
 ARG instance_name
+ARG use_colab_email
 ARG node_env
 ARG server_protocol
 ARG server_host
@@ -12,7 +13,9 @@ ARG public_client_host
 ARG public_client_protocol
 ARG public_client_port
 
+
 ENV INSTANCE_NAME $instance_name
+ENV USE_COLAB_EMAIL $use_colab_email
 ENV NODE_ENV "production"
 ENV SERVER_PROTOCOL "http"
 ENV SERVER_HOST "localhost"
@@ -23,6 +26,7 @@ ENV CLIENT_PORT "4000"
 ENV PUBLIC_CLIENT_HOST $public_client_host
 ENV PUBLIC_CLIENT_PORT $public_client_port
 ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
+
 
 RUN apk add --no-cache git python make g++ bash tar
 
