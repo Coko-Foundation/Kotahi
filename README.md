@@ -3,6 +3,18 @@
 Kotahi is a manuscript submission system, based on the discontinued [xpub-collabra](https://gitlab.coko.foundation/xpub/xpub) project.
 It is currently under development by the [Coko Foundation](https://coko.foundation/) and is being built with [PubSweet](https://gitlab.coko.foundation/pubsweet/pubsweet).
 
+## Project roadmap
+
+[The Kotahi project roadmap](https://miro.com/app/board/uXjVP7jNtBs=/?share_link_id=747477817280) is available to view on Miro.
+
+## Contribute
+
+Contributions are welcome! Please read our [Community Products Collaboration Guidelines](https://docs.coko.foundation/s/community-collab) and join our [chat channel](https://mattermost.coko.foundation/coko/channels/kotahi).  
+
+## Bug reporting
+
+To report a bug, [open a GitLab issue](https://gitlab.coko.foundation/kotahi/kotahi/-/issues/new) and use the bug-report template contained in the issue. 
+
 ## Getting started: the quick guide
 
 To install Kotahi locally, you'll need these things:
