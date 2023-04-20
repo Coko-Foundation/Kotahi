@@ -3,6 +3,10 @@ const BlacklistEmail = require('./blacklist_email')
 const Team = require('../../model-team/src/team')
 const TeamMember = require('../../model-team/src/team_member')
 
+const {
+  isLatestVersionOfManuscript,
+} = require('../../model-manuscript/src/manuscriptCommsUtils')
+
 const resolvers = {
   Query: {
     async invitationManuscriptId(_, { id }, ctx) {
@@ -11,6 +15,15 @@ const resolvers = {
     },
     async invitationStatus(_, { id }, ctx) {
       const invitation = await models.Invitation.query().findById(id)
+
+      const isLatestVersion = await isLatestVersionOfManuscript(
+        invitation.manuscriptId,
+      )
+
+      if (!isLatestVersion) {
+        invitation.status = 'EXPIRED'
+      }
+
       return invitation
     },
     async getInvitationsForManuscript(_, { id }, ctx) {

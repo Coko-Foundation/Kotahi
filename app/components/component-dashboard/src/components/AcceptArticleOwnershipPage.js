@@ -8,8 +8,6 @@ import InvitationLinkExpired from './InvitationLinkExpired'
 const AcceptArticleOwnershipPage = ({ match }) => {
   const { invitationId } = match.params
 
-  window.localStorage.setItem('invitationId', invitationId)
-
   const { loading, data, error } = useQuery(GET_INVITATION_STATUS, {
     variables: { id: invitationId },
   })
@@ -19,6 +17,7 @@ const AcceptArticleOwnershipPage = ({ match }) => {
   }
 
   if (data.invitationStatus.status === 'UNANSWERED') {
+    window.localStorage.setItem('invitationId', invitationId)
     return (
       <Container>
         ACCEPTING ownership of article using invitation: {invitationId}
