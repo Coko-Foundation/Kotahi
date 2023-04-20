@@ -365,6 +365,7 @@ const FormTemplate = ({
         const showPopup = hasPopup && values.status !== 'revise'
 
         // this is whether or not to show a submit button
+
         const showSubmitButton =
           submissionButtonText &&
           (isSubmission

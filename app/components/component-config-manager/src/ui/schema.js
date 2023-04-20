@@ -629,6 +629,18 @@ const schema = {
                 // },
               },
             },
+            submission: {
+              type: 'object',
+              title: 'Submission',
+              properties: {
+                allowAuthorsSubmitNewVersion: {
+                  type: 'boolean',
+                  title:
+                    'Allow an author to submit a new version of their manuscript at any time',
+                  default: false,
+                },
+              },
+            },
             review: {
               type: 'object',
               title: 'Review page',
@@ -1005,6 +1017,18 @@ const schema = {
                 // },
               },
             },
+            submission: {
+              type: 'object',
+              title: 'Submission',
+              properties: {
+                allowAuthorsSubmitNewVersion: {
+                  type: 'boolean',
+                  title:
+                    'Allow an author to submit a new version of their manuscript at any time',
+                  default: false,
+                },
+              },
+            },
             review: {
               type: 'object',
               title: 'Review page',
@@ -1376,6 +1400,18 @@ const schema = {
                 // },
               },
             },
+            submission: {
+              type: 'object',
+              title: 'Submission',
+              properties: {
+                allowAuthorsSubmitNewVersion: {
+                  type: 'boolean',
+                  title:
+                    'Allow an author to submit a new version of their manuscript at any time',
+                  default: true,
+                },
+              },
+            },
             review: {
               type: 'object',
               title: 'Review page',
@@ -1745,6 +1781,18 @@ const schema = {
                 //   },
                 //   uniqueItems: true,
                 // },
+              },
+            },
+            submission: {
+              type: 'object',
+              title: 'Submission',
+              properties: {
+                allowAuthorsSubmitNewVersion: {
+                  type: 'boolean',
+                  title:
+                    'Allow an author to submit a new version of their manuscript at any time',
+                  default: false,
+                },
               },
             },
             review: {

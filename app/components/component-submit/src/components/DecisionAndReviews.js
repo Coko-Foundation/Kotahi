@@ -16,6 +16,7 @@ const Decision = ({
   manuscript,
   showEditorOnlyFields,
   threadedDiscussionProps,
+  allowAuthorsSubmitNewVersion,
 }) => {
   const decisionDataString = manuscript.reviews.find(r => r.isDecision)
     ?.jsonData
@@ -24,9 +25,19 @@ const Decision = ({
     ? JSON.parse(decisionDataString)
     : null
 
+  const filteredChildren = !manuscript.decision
+    ? {
+        ...decisionForm,
+        children: decisionForm.children.filter(
+          formComponent => formComponent.component === 'ThreadedDiscussion',
+        ),
+      }
+    : decisionForm
+
   return decisionData ? (
     <ReadonlyFormTemplate
-      form={decisionForm}
+      allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}
+      form={filteredChildren}
       formData={decisionData}
       hideSpecialInstructions
       manuscript={manuscript}
@@ -46,6 +57,7 @@ const DecisionAndReviews = ({
   showEditorOnlyFields,
   threadedDiscussionProps,
   currentUser,
+  allowAuthorsSubmitNewVersion,
 }) => {
   const decision =
     manuscript.reviews &&
@@ -83,6 +95,7 @@ const DecisionAndReviews = ({
           <Title>Decision</Title>
         </SectionHeader>
         <Decision
+          allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}
           decisionForm={decisionForm}
           editor={decision?.user}
           manuscript={manuscript}

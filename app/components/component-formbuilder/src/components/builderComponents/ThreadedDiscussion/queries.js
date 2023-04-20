@@ -9,6 +9,7 @@ const discussionFields = `
     id
     comments {
       id
+      manuscriptVersionId
       commentVersions {
         id
         author {
@@ -49,6 +50,7 @@ export const UPDATE_PENDING_COMMENT = gql`
     $threadId: ID!
     $commentId: ID!
     $comment: String
+    $manuscriptVersionId: ID
   ) {
     updatePendingComment(
       manuscriptId: $manuscriptId
@@ -56,6 +58,7 @@ export const UPDATE_PENDING_COMMENT = gql`
       threadId: $threadId
       commentId: $commentId
       comment: $comment
+      manuscriptVersionId: $manuscriptVersionId
     ) {
       ${discussionFields}
     }

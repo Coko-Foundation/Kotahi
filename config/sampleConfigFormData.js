@@ -18,6 +18,9 @@ module.exports = {
     archivePeriodDays: 60,
     semanticScholarImportsRecencyPeriodDays: 42,
   },
+  submission: {
+    allowAuthorsSubmitNewVersion: true,
+  },
   publishing: {
     hypothesis: {
       group: 'test',

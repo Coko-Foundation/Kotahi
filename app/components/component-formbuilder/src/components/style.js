@@ -144,6 +144,21 @@ const CommentWrapper = styled.div`
   display: flex;
   justify-content: space-between;
   margin-top: 20px;
+  ${props =>
+    props.commentBelongsToDifferentManuscriptVersion
+      ? css`
+          color: ${darken('colorFurniture', 0.3)};
+        `
+      : ``}
+
+  svg {
+    ${props =>
+      props.commentBelongsToDifferentManuscriptVersion
+        ? css`
+            stroke: ${darken('colorFurniture', 0.3)} !important;
+          `
+        : ``}
+  }
 `
 
 const Collapse = styled.div`
@@ -174,6 +189,16 @@ const CancelButton = styled(Button)`
 const CommentContainer = styled.div`
   border-bottom: 1px ${th('borderStyle')} ${th('colorContainerBorder')};
   padding-bottom: 25px;
+
+  p {
+    ${props =>
+      props.commentBelongsToDifferentManuscriptVersion
+        ? css`
+            color: ${darken('colorFurniture', 0.3)};
+            background-color: ${th('colorBackground')};
+          `
+        : ``}
+  }
 `
 
 export {

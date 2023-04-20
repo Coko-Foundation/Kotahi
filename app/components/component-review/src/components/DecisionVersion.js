@@ -87,8 +87,15 @@ const DecisionVersion = ({
   updateTaskNotification,
   deleteTaskNotification,
   createTaskEmailNotificationLog,
+  manuscriptLatestVersionId,
 }) => {
   const config = useContext(ConfigContext)
+
+  const threadedDiscussionExtendedProps = {
+    ...threadedDiscussionProps,
+    manuscriptLatestVersionId,
+    selectedManuscriptVersionId: version.id,
+  }
 
   const debouncedSave = useCallback(
     debounce(source => {
@@ -172,7 +179,7 @@ const DecisionVersion = ({
               }}
               manuscript={version}
               showEditorOnlyFields
-              threadedDiscussionProps={threadedDiscussionProps}
+              threadedDiscussionProps={threadedDiscussionExtendedProps}
             />
           ) : (
             <SectionContent>
@@ -208,7 +215,7 @@ const DecisionVersion = ({
                 }
                 shouldShowOptionToPublish
                 showEditorOnlyFields
-                threadedDiscussionProps={threadedDiscussionProps}
+                threadedDiscussionProps={threadedDiscussionExtendedProps}
                 urlFrag={urlFrag}
                 validateDoi={validateDoi}
                 validateSuffix={validateSuffix}
@@ -373,7 +380,7 @@ const DecisionVersion = ({
               readOnly
               reviewForm={reviewForm}
               showEditorOnlyFields
-              threadedDiscussionProps={threadedDiscussionProps}
+              threadedDiscussionProps={threadedDiscussionExtendedProps}
             />
           )}
           {isCurrentVersion && (
@@ -384,7 +391,7 @@ const DecisionVersion = ({
               manuscript={version}
               reviewers={reviewers}
               reviewForm={reviewForm}
-              threadedDiscussionProps={threadedDiscussionProps}
+              threadedDiscussionProps={threadedDiscussionExtendedProps}
               updateReview={updateReview}
               updateSharedStatusForInvitedReviewer={
                 updateSharedStatusForInvitedReviewer
@@ -440,7 +447,7 @@ const DecisionVersion = ({
                   showEditorOnlyFields
                   submissionButtonText="Submit"
                   tagForFiles="decision"
-                  threadedDiscussionProps={threadedDiscussionProps}
+                  threadedDiscussionProps={threadedDiscussionExtendedProps}
                   urlFrag={urlFrag}
                   validateDoi={validateDoi}
                   validateSuffix={validateSuffix}
