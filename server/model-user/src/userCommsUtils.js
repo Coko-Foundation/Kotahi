@@ -101,7 +101,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
       'reviewer',
     ]
 
-    const authorRoles = ['accepted:author', 'author']
+    const authorRoles = ['author']
 
     isAdmin = userReceiver.admin
     isEditor =
