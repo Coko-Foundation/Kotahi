@@ -8,12 +8,13 @@ import {
   ChevronUp,
   ChevronDown,
 } from 'react-feather'
+import { th } from '@pubsweet/ui-toolkit'
 import { UPDATE_TASK_STATUS } from '../../../queries'
 import theme from '../../../theme'
 
 const StartButton = styled.button`
   align-items: center;
-  background: ${theme.colors.brand1.base};
+  background: ${th('colors.brand1.base')};
   border-radius: 6px;
   box-shadow: 0px 2px 2px rgba(0, 0, 0, 0.25);
   color: white;
@@ -100,14 +101,14 @@ const PausedDropdown = styled(BaseDropdown)`
 `
 
 const DoneDropdown = styled(BaseDropdown)`
-  border: 2px solid ${theme.colors.brand1.base};
+  border: 2px solid ${th('colors.brand1.base')};
 
   .Dropdown-placeholder {
-    color: ${theme.colors.brand1.base};
+    color: ${th('colors.brand1.base')};
   }
 
   .Dropdown-arrow-wrapper > svg {
-    stroke: ${theme.colors.brand1.base};
+    stroke: ${th('colors.brand1.base')};
   }
 `
 

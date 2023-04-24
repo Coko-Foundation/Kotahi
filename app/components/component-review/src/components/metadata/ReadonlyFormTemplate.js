@@ -13,6 +13,7 @@ const ReadonlyFormTemplate = ({
   title,
   displayShortIdAsIdentifier,
   threadedDiscussionProps,
+  allowAuthorsSubmitNewVersion,
 }) => {
   return (
     <SectionContent>
@@ -37,19 +38,22 @@ const ReadonlyFormTemplate = ({
             element.hideFromReviewers !== 'true'
           )
         })
-        .map(element => (
-          <SectionRowGrid key={element.id}>
-            <Heading>{element.shortDescription || element.title}</Heading>
-            <Cell>
-              <ReadonlyFieldData
-                fieldName={element.name}
-                form={form}
-                formData={formData}
-                threadedDiscussionProps={threadedDiscussionProps}
-              />
-            </Cell>
-          </SectionRowGrid>
-        ))}
+        .map(element => {
+          return (
+            <SectionRowGrid key={element.id}>
+              <Heading>{element.shortDescription || element.title}</Heading>
+              <Cell>
+                <ReadonlyFieldData
+                  allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}
+                  fieldName={element.name}
+                  form={form}
+                  formData={formData}
+                  threadedDiscussionProps={threadedDiscussionProps}
+                />
+              </Cell>
+            </SectionRowGrid>
+          )
+        })}
     </SectionContent>
   )
 }

@@ -2,6 +2,7 @@ const { BaseModel } = require('@coko/server')
 const omit = require('lodash/omit')
 const cloneDeep = require('lodash/cloneDeep')
 const sortBy = require('lodash/sortBy')
+const Config = require('../../config/src/config')
 
 const {
   populateTemplatedTasksForManuscript,
@@ -89,13 +90,13 @@ class Manuscript extends BaseModel {
     const manuscripts = await Manuscript.query()
       .where('parent_id', id)
       .withGraphFetched(
-        '[teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
+        '[invitations.[user], teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
       )
 
     const firstManuscript = await Manuscript.query()
       .findById(id)
       .withGraphFetched(
-        '[teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
+        '[invitations.[user], teams.members, reviews.user, files, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated)]]',
       )
 
     manuscripts.push(firstManuscript)
@@ -176,9 +177,26 @@ class Manuscript extends BaseModel {
     // eslint-disable-next-line
     files.forEach(f => delete f.id)
 
+    const decisions = await this.$relatedQuery('reviews').where({
+      isDecision: true,
+    })
+
+    const clonedDecisions = decisions.map(review => {
+      const clonedDecision = cloneDeep(review)
+      delete clonedDecision.id
+      clonedDecision.jsonData = {
+        ...clonedDecision.jsonData,
+        comment: '',
+        verdict: '',
+        files: '',
+      }
+      return clonedDecision
+    })
+
     const newVersion = cloneDeep(this)
     newVersion.teams = teams
     // eslint-disable-next-line
+    newVersion.reviews = clonedDecisions
     newVersion.files = files
     // Copy channels as well
     const channels = await this.$relatedQuery('channels')
@@ -187,7 +205,12 @@ class Manuscript extends BaseModel {
 
     newVersion.channels = channels
 
-    if (this.decision === 'revise') {
+    const activeConfig = await Config.query().first()
+
+    if (
+      activeConfig.formData.submission.allowAuthorsSubmitNewVersion ||
+      this.decision === 'revise'
+    ) {
       newVersion.status = 'revising'
     }
 
@@ -217,6 +240,8 @@ class Manuscript extends BaseModel {
     const Invitation = require('../../model-invitations/src/invitations')
     /* eslint-disable-next-line global-require */
     const PublishedArtifact = require('../../model-published-artifact/src/publishedArtifact')
+    /* eslint-disable-next-line global-require */
+    const ThreadedDiscussion = require('../../model-threaded-discussion/src/threadedDiscussion')
 
     return {
       submitter: {
@@ -298,6 +323,10 @@ class Manuscript extends BaseModel {
           from: 'manuscripts.id',
           to: 'invitations.manuscriptId',
         },
+      },
+      threadedDiscussions: {
+        relation: BaseModel.HasManyRelation,
+        modelClass: ThreadedDiscussion,
       },
     }
   }

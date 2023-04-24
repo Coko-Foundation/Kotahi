@@ -27,6 +27,11 @@ const getIdOfLatestVersionOfManuscript = async versionId => {
   )[0].id
 }
 
+const isLatestVersionOfManuscript = async versionId => {
+  const latestVersionId = await getIdOfLatestVersionOfManuscript(versionId)
+  return versionId === latestVersionId
+}
+
 let isImportInProgress = false
 let isImportingFromSemanticScholarInProgress = false
 
@@ -126,7 +131,7 @@ const manuscriptHasOverdueTasksForUser = (manuscript, userId) => {
 
     if (
       (isEditor || task.assigneeUserId === userId) &&
-      ['In progress', 'Paused'].includes(task.status) &&
+      task.status === 'In progress' &&
       task.dueDate &&
       new Date(task.dueDate) < now
     ) {
@@ -170,4 +175,5 @@ module.exports = {
   manuscriptHasOverdueTasksForUser,
   manuscriptIsActive,
   getEditorIdsForManuscript,
+  isLatestVersionOfManuscript,
 }

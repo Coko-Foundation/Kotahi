@@ -9,6 +9,7 @@ ARG server_port
 ARG client_protocol
 ARG client_host
 ARG client_port
+ARG use_colab_email
 
 ENV NODE_ENV "development"
 ENV SERVER_PROTOCOL "http"
@@ -19,6 +20,7 @@ ENV CLIENT_HOST "0.0.0.0"
 ENV CLIENT_PORT "4000"
 ENV INSTANCE_NAME $instance_name
 ENV HOME "/home/simplej"
+ENV USE_COLAB_EMAIL $use_colab_email
 
 RUN mkdir -p ${HOME}
 WORKDIR ${HOME}

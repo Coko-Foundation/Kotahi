@@ -7,7 +7,8 @@ import { ControlPage } from './control-page'
  * where users can see the list of submitted manuscripts & select Control,
  * View or Delete.
  */
-const MANUSCRIPTS_OPTIONS_LIST = '[class*=style__UserAction]'
+const MANUSCRIPTS_OPTIONS_LIST = '[class*=Action__ActionLink]'
+const MANUSCRIPTS_OPTIONS_E = '[class*=Action__ActionLink]'
 const BUTTON = 'button'
 const LIVE_CHAT_BUTTON = '[class*=VideoChat__FloatRightButton]'
 const MANUSCRIPTS_PAGE_TITLE = '[class*=General__Heading-sc]'
@@ -51,6 +52,12 @@ export const ManuscriptsPage = {
   getOptionWithText(text) {
     return this.getManuscriptsOptionsList().contains(text)
   },
+  getOptionsElife() {
+    return cy.get(MANUSCRIPTS_OPTIONS_E)
+  },
+  getOptionsElifeText(text) {
+    return cy.get(MANUSCRIPTS_OPTIONS_E).contains(text)
+  },
   getSubmitButton() {
     return cy.get(BUTTON).contains('New submission')
   },
@@ -73,7 +80,7 @@ export const ManuscriptsPage = {
     return cy.get(MANUSCRIPTS_PAGE_TITLE)
   },
   getEvaluationButton() {
-    return cy.get(EVALUATION_BUTTON)
+    return cy.contains('button', 'Evaluation')
   },
   getNthEvaluationButton(nth) {
     return cy.get(EVALUATION_BUTTON).eq(nth)

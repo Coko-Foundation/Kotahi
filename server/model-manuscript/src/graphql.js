@@ -390,7 +390,7 @@ const commonUpdateManuscript = async (id, input, ctx) => {
   }
 
   if (isSettingFirstLabels && !updatedMs.tasks.length)
-    updatedMs.tasks = await populateTemplatedTasksForManuscript(id)
+    await populateTemplatedTasksForManuscript(id)
 
   await uploadAndConvertBase64ImagesInManuscript(updatedMs)
   return updateAndRepackageForGraphql(updatedMs, oldMetaAbstract)
@@ -786,6 +786,7 @@ const resolvers = {
 
     async createNewVersion(_, { id }, ctx) {
       const manuscript = await models.Manuscript.query().findById(id)
+
       const newVersion = await manuscript.createNewVersion()
       return repackageForGraphql(newVersion)
     },
@@ -850,18 +851,43 @@ const resolvers = {
           '[submitter.[defaultIdentity], channels, teams.members.user, reviews.user]',
         )
 
+      const activeConfig = await Config.query().first()
+
       /** Crude hack to circumvent and help diagnose bug 1193 */
       const oldMetaAbstract =
         manuscript && manuscript.meta ? manuscript.meta.abstract : null
 
-      let decision = null
-      if (decisionString === 'accept') decision = 'accepted'
-      else if (decisionString === 'revise') decision = 'revise'
-      else if (decisionString === 'reject') decision = 'rejected'
-      if (!decision)
-        throw new Error(`Unknown decision type "${decisionString}" received.`)
-      manuscript.decision = decision
-      manuscript.status = decision
+      switch (decisionString) {
+        case 'accept':
+          manuscript.decision = 'accepted'
+          manuscript.status = 'accepted'
+          break
+        case 'revise':
+          manuscript.decision = 'revised'
+          manuscript.status = 'revised'
+          break
+        case 'reject':
+          manuscript.decision = 'rejected'
+          manuscript.status = 'rejected'
+          break
+
+        default:
+          if (
+            ['colab', 'aperture'].includes(activeConfig.formData.instanceName)
+          ) {
+            manuscript.decision = 'accepted'
+            manuscript.status = 'accepted'
+          } else if (
+            ['elife', 'ncrc'].includes(activeConfig.formData.instanceName)
+          ) {
+            manuscript.decision = 'evaluated'
+            manuscript.status = 'evaluated'
+          } else {
+            throw new Error(
+              `Unknown decision type "${decisionString}" received.`,
+            )
+          }
+      }
 
       if (
         manuscript.decision &&
@@ -1045,7 +1071,6 @@ const resolvers = {
         manuscript && manuscript.meta ? manuscript.meta.abstract : null
 
       const update = {} // This will collect any properties we may want to update in the DB
-      update.published = new Date()
       const steps = []
       const containsEvaluations = hasEvaluations(manuscript)
 
@@ -1145,6 +1170,8 @@ const resolvers = {
       }
 
       if (!steps.length || steps.some(step => step.succeeded)) {
+        update.published = new Date()
+
         // A 'published' article without evaluations will become 'evaluated'.
         // The intention is that an evaluated article should never revert to any state prior to "evaluated",
         // but that only articles with evaluations can be 'published'.
@@ -1187,7 +1214,7 @@ const resolvers = {
       const manuscript = await ManuscriptModel.query()
         .findById(id)
         .withGraphFetched(
-          '[teams, channels, files, reviews.user, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]]',
+          '[invitations.[user], teams, channels, files, reviews.user, tasks(orderBySequence).[assignee, emailNotifications(orderByCreated).recipientUser, notificationLogs]]',
         )
 
       const user = ctx.user

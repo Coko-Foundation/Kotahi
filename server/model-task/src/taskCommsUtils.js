@@ -113,7 +113,10 @@ const updateAlertsUponTeamUpdate = async (
   const tasks = await Task.query().where({ manuscriptId })
 
   const overdueTaskIds = tasks
-    .filter(task => task.dueDate < now && task.status !== 'Done')
+    .filter(
+      task =>
+        task.dueDate && task.dueDate < now && task.status === 'In progress',
+    )
     .map(task => task.id)
 
   await Promise.all(
@@ -144,7 +147,8 @@ const updateAlertsForTask = async (task, trx) => {
 
   const needsAlert =
     isActive &&
-    task.status !== 'Done' &&
+    task.status === 'In progress' &&
+    task.dueDate &&
     new Date(task.dueDate).getTime() < Date.now()
 
   // TODO once we start creating alerts for assignees, we need to address that here.
@@ -173,9 +177,10 @@ const createNewTaskAlerts = async () => {
   const startOfYesterday = moment(startOfToday).subtract(1, 'days')
 
   const overdueTasks = await Task.query()
+    .whereNotNull('dueDate')
     .where('dueDate', '<', startOfToday.toDate())
     .where('dueDate', '>=', startOfYesterday.toDate()) // Don't look earlier than yesterday, so we don't recreate alerts that are already dismissed.
-    .whereNot({ status: 'Done' })
+    .where({ status: 'In progress' })
 
   const manuscriptIds = [...new Set(overdueTasks.map(t => t.manuscriptId))]
   const manuscriptMap = {}

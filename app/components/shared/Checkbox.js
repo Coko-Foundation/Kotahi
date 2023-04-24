@@ -1,5 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
+import { th } from '@pubsweet/ui-toolkit'
 import theme from '../../theme'
 
 const CheckboxContainer = styled.div`
@@ -8,7 +9,7 @@ const CheckboxContainer = styled.div`
   margin-bottom: 4px;
 
   input[type='checkbox'] {
-    accent-color: ${theme.colors.brand1.shade25};
+    accent-color: ${th('colors.brand1.shade25')};
     background: #f8f8f9;
     border: 1px solid ${theme.colors.neutral.gray80};
     border-radius: 5px;
@@ -22,7 +23,7 @@ const CheckboxContainer = styled.div`
     }
 
     &:hover {
-      accent-color: ${theme.colors.brand1.shade25};
+      accent-color: ${th('colors.brand1.shade25')};
       border: none;
     }
   }

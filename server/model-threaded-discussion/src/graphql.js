@@ -78,6 +78,7 @@ const resolvers = {
         threadId,
         commentId,
         comment,
+        manuscriptVersionId: msCurrentVersionId,
       },
       ctx,
     ) {
@@ -108,6 +109,7 @@ const resolvers = {
       if (!commnt) {
         commnt = {
           id: commentId,
+          manuscriptVersionId: msCurrentVersionId,
           commentVersions: [],
           pendingVersions: [],
           created: now,
@@ -251,7 +253,7 @@ extend type Query {
   threadedDiscussions(manuscriptId: ID!): [ThreadedDiscussion!]!
 }
 extend type Mutation {
-  updatePendingComment(manuscriptId: ID!, threadedDiscussionId: ID!, threadId: ID!, commentId: ID!, comment: String): ThreadedDiscussion!
+  updatePendingComment(manuscriptId: ID!, threadedDiscussionId: ID!, threadId: ID!, commentId: ID!, comment: String, manuscriptVersionId: ID): ThreadedDiscussion!
   completeComments(threadedDiscussionId: ID!): ThreadedDiscussion!
   completeComment(threadedDiscussionId: ID!, threadId: ID!, commentId: ID!): ThreadedDiscussion!
   deletePendingComment(threadedDiscussionId: ID!, threadId: ID!, commentId: ID!): ThreadedDiscussion!
@@ -279,6 +281,7 @@ type ThreadComment {
   id: ID!
   created: DateTime!
   updated: DateTime
+  manuscriptVersionId: ID
   commentVersions: [ThreadedCommentVersion!]!
   pendingVersion: PendingThreadComment
 }

@@ -78,7 +78,6 @@ let debouncers = {}
 const SubmitPage = ({ match, history }) => {
   const config = useContext(ConfigContext)
   const urlFrag = config.journal.metadata.toplevel_urlfragment
-  const [isPublishingBlocked, setIsPublishingBlocked] = useState(false)
 
   useEffect(() => {
     return () => {
@@ -160,12 +159,6 @@ const SubmitPage = ({ match, history }) => {
   }
 
   const republish = async manuscriptId => {
-    if (isPublishingBlocked) {
-      return
-    }
-
-    setIsPublishingBlocked(true)
-
     const fieldErrors = await validateManuscriptSubmission(
       {
         ...JSON.parse(manuscript.submission),
@@ -176,24 +169,35 @@ const SubmitPage = ({ match, history }) => {
       validateSuffix(client),
     )
 
-    if (fieldErrors.filter(Boolean).length !== 0) {
-      return
+    if (fieldErrors.filter(Boolean).length) {
+      return [
+        {
+          stepLabel: 'publishing',
+          errorMessage:
+            'This manuscript has incomplete or invalid fields. Please correct these and try again.',
+        },
+      ]
     }
 
     await updateManuscript(manuscriptId, manuscriptChangedFields)
-    await publishManuscript({
-      variables: {
-        id: manuscriptId,
-      },
-    })
+
+    const resultSteps = (
+      await publishManuscript({
+        variables: {
+          id: manuscriptId,
+        },
+      })
+    )?.data?.publishManuscript?.steps
+
+    if (resultSteps.some(step => !step.succeeded)) return resultSteps
 
     if (['aperture', 'colab'].includes(config.instanceName)) {
       history.push(`${urlFrag}/dashboard`)
-    }
-
-    if (['elife', 'ncrc'].includes(config.instanceName)) {
+    } else if (['elife', 'ncrc'].includes(config.instanceName)) {
       history.push(`${urlFrag}/admin/manuscripts`)
     }
+
+    return null
   }
 
   const onSubmit = async versionId => {
@@ -221,6 +225,8 @@ const SubmitPage = ({ match, history }) => {
 
   const versions = gatherManuscriptVersions(manuscript)
 
+  const manuscriptLatestVersionId = versions[0].manuscript.id
+
   const threadedDiscussionProps = {
     threadedDiscussions: data.threadedDiscussions,
     updatePendingComment,
@@ -229,6 +235,8 @@ const SubmitPage = ({ match, history }) => {
     deletePendingComment,
     currentUser,
     firstVersionManuscriptId: manuscript.parentId || manuscript.id,
+    versions,
+    currentVersion: manuscript,
   }
 
   return (
@@ -238,6 +246,7 @@ const SubmitPage = ({ match, history }) => {
       currentUser={currentUser}
       decisionForm={decisionForm}
       deleteFile={deleteFile}
+      manuscriptLatestVersionId={manuscriptLatestVersionId}
       match={match}
       onChange={handleChange}
       onSubmit={onSubmit}

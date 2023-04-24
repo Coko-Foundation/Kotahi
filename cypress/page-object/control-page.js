@@ -26,7 +26,7 @@ const INVITE_REVIEWER_DROPDOWN = 'Invite reviewers'
 const INVITE_REVIEWER_OPTION_LIST = 'react-select'
 const INVITE_REVIEWER_SUBMIT_BUTTON = 'button[type="submit"]'
 const INVITED_REVIEWERS = '[class*=KanbanCard__Card]'
-const INVITE_REVIEWER_SUBMIT_MODAL_BUTTON = '[data-test-id="submit-modal"]'
+const INVITE_REVIEWER_SUBMIT_MODAL_BUTTON = 'submit-modal'
 const REVIEWER_MODAL_SHARED_CHECKBOX = 'input[type="checkbox"]'
 
 // Decision + Publishing
@@ -204,7 +204,7 @@ export const ControlPage = {
     cy.wait(2000)
   },
   getReviewerSubmitModalButton() {
-    return cy.get(INVITE_REVIEWER_SUBMIT_MODAL_BUTTON)
+    return cy.getByDataTestId(INVITE_REVIEWER_SUBMIT_MODAL_BUTTON)
   },
   clickReviewerSubmitModalButton() {
     return this.getReviewerSubmitModalButton().click()

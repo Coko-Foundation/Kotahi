@@ -41,7 +41,6 @@ const DecisionVersions = ({
   threadedDiscussionProps,
   validateDoi,
   validateSuffix,
-  invitations,
   setExternalEmail,
   externalEmail,
   selectedEmail,
@@ -86,6 +85,8 @@ const DecisionVersions = ({
     { id: editorialChannelId, name: 'Editorial discussion' },
   ]
 
+  const manuscriptLatestVersionId = versions[0].manuscript.id
+
   return (
     <Columns>
       <Manuscript>
@@ -108,10 +109,11 @@ const DecisionVersions = ({
                 dois={dois}
                 externalEmail={externalEmail}
                 form={form}
-                invitations={invitations}
+                invitations={version.manuscript.invitations || []}
                 isCurrentVersion={index === 0}
                 key={version.manuscript.id}
                 makeDecision={makeDecision}
+                manuscriptLatestVersionId={manuscriptLatestVersionId}
                 onChange={handleChange}
                 parent={manuscript}
                 publishManuscript={publishManuscript}

@@ -88,6 +88,9 @@ exports.up = async knex => {
                   newSubmission: true,
                   paginationCount: 10,
                 },
+                submission: {
+                  allowAuthorsSubmitNewVersion: false,
+                },
                 publishing,
                 taskManager: {
                   teamTimezone: process.env.TEAM_TIMEZONE || 'Etc/UTC',
@@ -123,6 +126,9 @@ exports.up = async knex => {
                   manualImport: process.env.ALLOW_MANUAL_IMPORT === 'true',
                   newSubmission: true,
                   paginationCount: 100,
+                },
+                submission: {
+                  allowAuthorsSubmitNewVersion: false,
                 },
                 publishing,
                 taskManager: {
@@ -172,13 +178,17 @@ exports.up = async knex => {
                       )
                     : 42,
                 },
+                submission: {
+                  allowAuthorsSubmitNewVersion: true,
+                },
                 publishing,
                 taskManager: {
                   teamTimezone: process.env.TEAM_TIMEZONE || 'Etc/UTC',
                 },
                 controlPanel: {
                   showTabs: [
-                    'Workflow',
+                    'Team',
+                    'Decision',
                     'Manuscript text',
                     'Metadata',
                     'Tasks & Notifications',
@@ -212,13 +222,17 @@ exports.up = async knex => {
                   tableColumns: process.env.MANUSCRIPTS_TABLE_COLUMNS,
                   paginationCount: 10,
                 },
+                submission: {
+                  allowAuthorsSubmitNewVersion: false,
+                },
                 publishing,
                 taskManager: {
                   teamTimezone: process.env.TEAM_TIMEZONE || 'Etc/UTC',
                 },
                 controlPanel: {
                   showTabs: [
-                    'Workflow',
+                    'Team',
+                    'Decision',
                     'Manuscript text',
                     'Metadata',
                     'Tasks & Notifications',

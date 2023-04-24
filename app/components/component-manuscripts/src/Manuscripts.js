@@ -65,7 +65,7 @@ const Manuscripts = ({ history, ...props }) => {
     deleteManuscriptMutations,
     importManuscripts,
     isImporting,
-    publishManuscripts,
+    publishManuscript,
     queryObject,
     sortDirection,
     sortName,
@@ -141,20 +141,8 @@ const Manuscripts = ({ history, ...props }) => {
 
   const archiveManuscript = id => archiveManuscriptMutations(id)
 
-  const [
-    manuscriptsBlockedFromPublishing,
-    setManuscriptsBlockedFromPublishing,
-  ] = useState([])
-
-  const isManuscriptBlockedFromPublishing = id =>
-    manuscriptsBlockedFromPublishing.includes(id)
-
-  /** Put a block on the ID while validating and publishing; then unblock it. If the ID is already blocked, do nothing. */
   const tryPublishManuscript = async manuscript => {
-    if (isManuscriptBlockedFromPublishing(manuscript.id)) return
-    setManuscriptsBlockedFromPublishing(
-      manuscriptsBlockedFromPublishing.concat([manuscript.id]),
-    )
+    let result = null
 
     const hasInvalidFields = await validateManuscriptSubmission(
       manuscript.submission,
@@ -163,12 +151,20 @@ const Manuscripts = ({ history, ...props }) => {
       validateSuffix,
     )
 
-    if (hasInvalidFields.filter(Boolean).length === 0) {
-      await publishManuscripts(manuscript.id)
-      setManuscriptsBlockedFromPublishing(
-        manuscriptsBlockedFromPublishing.filter(id => id !== manuscript.id),
-      )
+    if (hasInvalidFields.filter(Boolean).length) {
+      result = [
+        {
+          stepLabel: 'publishing',
+          errorMessage:
+            'This manuscript has incomplete or invalid fields. Please correct these and try again.',
+        },
+      ]
+    } else {
+      result = (await publishManuscript(manuscript.id)).data.publishManuscript
+        .steps
     }
+
+    return result
   }
 
   if (loading) return <Spinner />
@@ -231,7 +227,6 @@ const Manuscripts = ({ history, ...props }) => {
   const specialComponentValues = {
     deleteManuscript,
     archiveManuscript,
-    isManuscriptBlockedFromPublishing,
     tryPublishManuscript,
     selectedNewManuscripts,
     toggleNewManuscriptCheck,

@@ -18,6 +18,9 @@ module.exports = {
     archivePeriodDays: 60,
     semanticScholarImportsRecencyPeriodDays: 42,
   },
+  submission: {
+    allowAuthorsSubmitNewVersion: true,
+  },
   publishing: {
     hypothesis: {
       group: 'test',
@@ -32,7 +35,7 @@ module.exports = {
     },
     crossref: {
       login: 'test',
-      password: '****',
+      password: 'test',
       doiPrefix: '10.12345',
       licenseUrl: 'test',
       registrant: 'test',
@@ -51,7 +54,8 @@ module.exports = {
   },
   controlPanel: {
     showTabs: [
-      'Workflow',
+      'Team',
+      'Decision',
       'Manuscript text',
       'Metadata',
       'Tasks & Notifications',
@@ -64,7 +68,7 @@ module.exports = {
   notification: {
     gmailAuthEmail: 'test@coko.foundation',
     gmailSenderEmail: 'test@coko.foundation',
-    gmailAuthPassword: '****',
+    gmailAuthPassword: 'test',
   },
   groupIdentity: {
     brandName: 'Kotahi',

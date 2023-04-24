@@ -25,7 +25,6 @@ import reviewFilterOptions from '../../../../../config/journal/review-status'
 const buildSpecialColumnProps = (specialComponentValues, config) => {
   const {
     deleteManuscript,
-    isManuscriptBlockedFromPublishing,
     tryPublishManuscript,
     urlFrag,
     selectedNewManuscripts,
@@ -99,7 +98,6 @@ const buildSpecialColumnProps = (specialComponentValues, config) => {
       extraProps: {
         config,
         deleteManuscript,
-        isManuscriptBlockedFromPublishing,
         tryPublishManuscript,
         urlFrag,
         archiveManuscript,

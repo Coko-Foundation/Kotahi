@@ -1,7 +1,8 @@
-const dateFns = require('date-fns')
+const moment = require('moment-timezone')
 const Task = require('./task')
 const TaskAlert = require('./taskAlert')
 const TaskEmailNotification = require('./taskEmailNotification')
+const Config = require('../../config/src/config')
 const taskConfigs = require('../../../config/journal/tasks.json')
 
 const { createNewTaskAlerts, updateAlertsForTask } = require('./taskCommsUtils')
@@ -131,9 +132,14 @@ const resolvers = {
       ) {
         const taskDurationDays = dbTask.defaultDurationDays
 
+        const activeConfig = await Config.query().first()
+
         data.dueDate =
           taskDurationDays !== null
-            ? dateFns.addDays(new Date(), taskDurationDays)
+            ? moment()
+                .tz(activeConfig.formData.taskManager.teamTimezone || 'Etc/UTC')
+                .endOf('day')
+                .add(taskDurationDays, 'days')
             : null
       }
 
@@ -142,6 +148,8 @@ const resolvers = {
         .withGraphFetched(
           '[assignee, notificationLogs, emailNotifications(orderByCreated).recipientUser]',
         )
+
+      await updateAlertsForTask(updatedTask)
 
       return updatedTask
     },

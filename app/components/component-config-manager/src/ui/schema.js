@@ -394,6 +394,35 @@ const schema = {
         'WET',
       ],
     },
+    hours: {
+      type: 'integer',
+      enum: [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7,
+        8,
+        9,
+        10,
+        11,
+        12,
+        13,
+        14,
+        15,
+        16,
+        17,
+        18,
+        19,
+        20,
+        21,
+        22,
+        23,
+      ],
+    },
   },
   type: 'object',
   title: 'Instance Type',
@@ -503,9 +532,8 @@ const schema = {
                 },
                 autoImportHourUtc: {
                   type: 'integer',
-                  description: 'Set time for manuscripts to be imported daily',
-                  minimum: 1,
-                  maximum: 24,
+                  description: 'Hour when manuscripts are imported daily (UTC)',
+                  $ref: '#/definitions/hours',
                 },
                 archivePeriodDays: {
                   type: 'integer',
@@ -529,7 +557,8 @@ const schema = {
                 },
                 labelColumn: {
                   type: 'boolean',
-                  title: 'Add freeform label column to Manuscripts page',
+                  title:
+                    'Display action to ‘Select’ manuscripts for review from the Manuscripts page',
                   default: false,
                 },
                 manualImport: {
@@ -567,7 +596,8 @@ const schema = {
                   items: {
                     type: 'string',
                     enum: [
-                      'Workflow',
+                      'Team',
+                      'Decision',
                       'Manuscript text',
                       'Metadata',
                       'Tasks & Notifications',
@@ -597,6 +627,18 @@ const schema = {
                 //   },
                 //   uniqueItems: true,
                 // },
+              },
+            },
+            submission: {
+              type: 'object',
+              title: 'Submission',
+              properties: {
+                allowAuthorsSubmitNewVersion: {
+                  type: 'boolean',
+                  title:
+                    'Allow an author to submit a new version of their manuscript at any time',
+                  default: false,
+                },
               },
             },
             review: {
@@ -878,9 +920,8 @@ const schema = {
                 },
                 autoImportHourUtc: {
                   type: 'integer',
-                  description: 'Set time for manuscripts to be imported daily',
-                  minimum: 1,
-                  maximum: 24,
+                  description: 'Hour when manuscripts are imported daily (UTC)',
+                  $ref: '#/definitions/hours',
                 },
                 archivePeriodDays: {
                   type: 'integer',
@@ -904,7 +945,8 @@ const schema = {
                 },
                 labelColumn: {
                   type: 'boolean',
-                  title: 'Add freeform label column to Manuscripts page',
+                  title:
+                    'Display action to ‘Select’ manuscripts for review from the Manuscripts page',
                   default: false,
                 },
                 manualImport: {
@@ -942,7 +984,8 @@ const schema = {
                   items: {
                     type: 'string',
                     enum: [
-                      'Workflow',
+                      'Team',
+                      'Decision',
                       'Manuscript text',
                       'Metadata',
                       'Tasks & Notifications',
@@ -972,6 +1015,18 @@ const schema = {
                 //   },
                 //   uniqueItems: true,
                 // },
+              },
+            },
+            submission: {
+              type: 'object',
+              title: 'Submission',
+              properties: {
+                allowAuthorsSubmitNewVersion: {
+                  type: 'boolean',
+                  title:
+                    'Allow an author to submit a new version of their manuscript at any time',
+                  default: false,
+                },
               },
             },
             review: {
@@ -1252,9 +1307,8 @@ const schema = {
                 },
                 autoImportHourUtc: {
                   type: 'integer',
-                  description: 'Set time for manuscripts to be imported daily',
-                  minimum: 1,
-                  maximum: 24,
+                  description: 'Hour when manuscripts are imported daily (UTC)',
+                  $ref: '#/definitions/hours',
                 },
                 archivePeriodDays: {
                   type: 'integer',
@@ -1278,7 +1332,8 @@ const schema = {
                 },
                 labelColumn: {
                   type: 'boolean',
-                  title: 'Add freeform label column to Manuscripts page',
+                  title:
+                    'Display action to ‘Select’ manuscripts for review from the Manuscripts page',
                   default: false,
                 },
                 manualImport: {
@@ -1313,7 +1368,8 @@ const schema = {
                   description: 'Control pages visible to editors',
                   minItems: 1,
                   default: [
-                    'Workflow',
+                    'Team',
+                    'Decision',
                     'Manuscript text',
                     'Metadata',
                     'Tasks & Notifications',
@@ -1321,7 +1377,8 @@ const schema = {
                   items: {
                     type: 'string',
                     enum: [
-                      'Workflow',
+                      'Team',
+                      'Decision',
                       'Manuscript text',
                       'Metadata',
                       'Tasks & Notifications',
@@ -1341,6 +1398,18 @@ const schema = {
                 //   },
                 //   uniqueItems: true,
                 // },
+              },
+            },
+            submission: {
+              type: 'object',
+              title: 'Submission',
+              properties: {
+                allowAuthorsSubmitNewVersion: {
+                  type: 'boolean',
+                  title:
+                    'Allow an author to submit a new version of their manuscript at any time',
+                  default: true,
+                },
               },
             },
             review: {
@@ -1621,9 +1690,8 @@ const schema = {
                 },
                 autoImportHourUtc: {
                   type: 'integer',
-                  description: 'Set time for manuscripts to be imported daily',
-                  minimum: 1,
-                  maximum: 24,
+                  description: 'Hour when manuscripts are imported daily (UTC)',
+                  $ref: '#/definitions/hours',
                 },
                 archivePeriodDays: {
                   type: 'integer',
@@ -1647,7 +1715,8 @@ const schema = {
                 },
                 labelColumn: {
                   type: 'boolean',
-                  title: 'Add freeform label column to Manuscripts page',
+                  title:
+                    'Display action to ‘Select’ manuscripts for review from the Manuscripts page',
                   default: false,
                 },
                 manualImport: {
@@ -1682,7 +1751,8 @@ const schema = {
                   description: 'Control pages visible to editors',
                   minItems: 1,
                   default: [
-                    'Workflow',
+                    'Team',
+                    'Decision',
                     'Manuscript text',
                     'Metadata',
                     'Tasks & Notifications',
@@ -1690,7 +1760,8 @@ const schema = {
                   items: {
                     type: 'string',
                     enum: [
-                      'Workflow',
+                      'Team',
+                      'Decision',
                       'Manuscript text',
                       'Metadata',
                       'Tasks & Notifications',
@@ -1710,6 +1781,18 @@ const schema = {
                 //   },
                 //   uniqueItems: true,
                 // },
+              },
+            },
+            submission: {
+              type: 'object',
+              title: 'Submission',
+              properties: {
+                allowAuthorsSubmitNewVersion: {
+                  type: 'boolean',
+                  title:
+                    'Allow an author to submit a new version of their manuscript at any time',
+                  default: false,
+                },
               },
             },
             review: {

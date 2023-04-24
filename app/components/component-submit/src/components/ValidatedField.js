@@ -42,11 +42,10 @@ const ValidatedField = ({ component: Component, ...props }) => {
         if (get(touched, name)) validationStatus = 'success'
         if (get(touched, name) && get(errors, name)) validationStatus = 'error'
         return (
-          <div>
+          <div ref={fieldRef}>
             <Component
               {...field}
               {...props}
-              innerRefProp={fieldRef}
               validationStatus={validationStatus}
             />
           </div>

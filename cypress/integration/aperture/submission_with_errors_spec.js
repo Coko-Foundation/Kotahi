@@ -3,6 +3,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 import { SubmissionFormPage } from '../../page-object/submission-form-page'
 import { dashboard } from '../../support/routes'
 import { Menu } from '../../page-object/page-component/menu'
+import { ManuscriptsPage } from '../../page-object/manuscripts-page'
 import { FormsPage } from '../../page-object/forms-page'
 
 describe('Submission with errors test', () => {
@@ -46,7 +47,7 @@ describe('Submission with errors test', () => {
 
         Menu.clickDashboard()
         // Click on new submission
-        cy.get('button').contains('＋ New submission').click()
+        ManuscriptsPage.clickSubmit()
 
         // Upload manuscript
         cy.get('input[type=file]').attachFile('test-pdf.pdf')
