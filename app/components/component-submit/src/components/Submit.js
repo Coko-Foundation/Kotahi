@@ -52,7 +52,8 @@ const Submit = ({
 }) => {
   const config = useContext(ConfigContext)
 
-  const { allowAuthorsSubmitNewVersion } = config.submission
+  const allowAuthorsSubmitNewVersion =
+    config?.submission?.allowAuthorsSubmitNewVersion
 
   const decisionSections = []
 
