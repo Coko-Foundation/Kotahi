@@ -863,8 +863,8 @@ const resolvers = {
           manuscript.status = 'accepted'
           break
         case 'revise':
-          manuscript.decision = 'revised'
-          manuscript.status = 'revised'
+          manuscript.decision = 'revise'
+          manuscript.status = 'revise'
           break
         case 'reject':
           manuscript.decision = 'rejected'
@@ -1238,8 +1238,6 @@ const resolvers = {
           'medium',
         )
       }
-
-      manuscript.decision = ''
 
       manuscript.manuscriptVersions = await manuscript.getManuscriptVersions()
 
