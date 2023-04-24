@@ -1,4 +1,4 @@
-FROM node:12.22-bullseye
+FROM node:16.19.0-bullseye
 RUN apt-get update && apt-get -y install curl vim bash nano
 
 WORKDIR /home/node/app

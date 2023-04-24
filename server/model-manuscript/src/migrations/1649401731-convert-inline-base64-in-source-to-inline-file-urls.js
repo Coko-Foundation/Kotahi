@@ -2,10 +2,11 @@
 const { useTransaction, logger } = require('@coko/server')
 const { createFile } = require('@coko/server')
 const cheerio = require('cheerio')
-const Blob = require('node-blob')
 const { map } = require('lodash')
 const atob = require('atob')
 const { Duplex } = require('stream')
+/* eslint-disable-next-line import/no-unresolved */
+const { Blob } = require('../server/utils/fileStorageUtils')
 
 // Paths are relative to the generated migrations folder
 /* eslint-disable-next-line import/no-unresolved */
