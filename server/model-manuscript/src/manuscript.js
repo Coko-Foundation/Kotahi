@@ -209,7 +209,7 @@ class Manuscript extends BaseModel {
 
     if (
       activeConfig.formData.submission.allowAuthorsSubmitNewVersion ||
-      this.decision === 'revise'
+      this.status === 'revise'
     ) {
       newVersion.status = 'revising'
     }
