@@ -28,7 +28,7 @@ ENV PUBLIC_CLIENT_PORT $public_client_port
 ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
 
 
-RUN apk add --no-cache git python make g++ bash tar
+RUN apk add --no-cache git python3 make g++ bash tar
 
 WORKDIR /home/node/app
 
@@ -38,7 +38,7 @@ COPY . .
 RUN chown -R node:node .
 ADD ./node_modules_dev.tar.gz .
 RUN mv ./node_modules_dev ./node_modules && \
-    yarn webpack --config webpack/webpack.production.config.js
+	yarn webpack --config webpack/webpack.production.config.js
 
 RUN cp -r /home/node/app/_build/assets/* /home/node/app/_build
 
