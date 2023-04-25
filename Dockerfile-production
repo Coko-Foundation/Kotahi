@@ -27,7 +27,7 @@ ENV PUBLIC_CLIENT_PORT $public_client_port
 ENV PUBLIC_CLIENT_PROTOCOL $public_client_protocol
 ENV USE_COLAB_EMAIL $use_colab_email
 
-RUN apk add --no-cache git python make g++ bash 
+RUN apk add --no-cache git python3 make g++ bash 
 
 WORKDIR /home/node/app
 
