@@ -70,6 +70,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
   const urlFrag = config.journal.metadata.toplevel_urlfragment
   const baseUrl = config['pubsweet-client'].baseUrl + urlFrag
   let manuscriptPageUrl = `${baseUrl}/versions/${manuscript.id}`
+  let isAdmin = false
   let isEditor = false
   let isReviewer = false
   let isAuthor = false
@@ -102,6 +103,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
 
     const authorRoles = ['author']
 
+    isAdmin = userReceiver.admin
     isEditor =
       manuscriptRoles &&
       manuscriptRoles.roles.some(role => editorRoles.includes(role))
@@ -113,7 +115,7 @@ const sendEmailWithPreparedData = async (input, ctx, emailSender) => {
       manuscriptRoles.roles.some(role => authorRoles.includes(role))
   }
 
-  if (isEditor) {
+  if (isAdmin || isEditor) {
     manuscriptPageUrl += '/decision?tab=tasks'
   } else if (isReviewer) {
     manuscriptPageUrl += '/review'

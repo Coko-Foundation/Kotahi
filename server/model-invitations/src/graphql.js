@@ -102,7 +102,6 @@ const resolvers = {
         if (!authorExists) {
           await new TeamMember({
             teamId: existingTeam.id,
-            status: 'accepted',
             userId,
           }).save()
         }
@@ -114,7 +113,7 @@ const resolvers = {
       const newTeam = await new Team({
         objectId: manuscriptId,
         objectType: 'manuscript',
-        members: [{ status: 'accepted', userId }],
+        members: [{ userId }],
         role: 'author',
         name: 'Authors',
       }).saveGraph()
