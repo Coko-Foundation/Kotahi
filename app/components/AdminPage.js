@@ -134,7 +134,7 @@ const AdminPage = () => {
     if (error.networkError) {
       notice = 'You are offline.'
     } else {
-      localStorage.setItem('intendedPage', location.pathname)
+      localStorage.setItem('intendedPage', location.pathname + location.search)
       const redirectlocation = `/login`
       return <Redirect to={redirectlocation} />
     }
