@@ -393,7 +393,8 @@ const TaskNotificationDetails = ({
               sendNotifyEmail(input)
                 // eslint-disable-next-line no-loop-func
                 .then(response => {
-                  const responseStatus = response.data.sendEmail.success
+                  const responseStatus =
+                    response.data.sendEmail.response.success
 
                   if (!responseStatus) {
                     emailSuccess = false
@@ -462,7 +463,7 @@ const TaskNotificationDetails = ({
             },
           ]
           response = await sendNotifyEmail(input)
-          responseStatus = response.data.sendEmail.success
+          responseStatus = response.data.sendEmail.response.success
 
           if (responseStatus) {
             updateTaskNotification({
@@ -490,7 +491,7 @@ const TaskNotificationDetails = ({
             },
           ]
           response = await sendNotifyEmail(input)
-          responseStatus = response.data.sendEmail.success
+          responseStatus = response.data.sendEmail.response.success
 
           if (responseStatus) {
             updateTaskNotification({
@@ -521,7 +522,7 @@ const TaskNotificationDetails = ({
                 },
               ]
               response = await sendNotifyEmail(input)
-              responseStatus = response.data.sendEmail.success
+              responseStatus = response.data.sendEmail.response.success
 
               if (responseStatus) {
                 updateTaskNotification({
@@ -550,7 +551,7 @@ const TaskNotificationDetails = ({
                 },
               ]
               response = await sendNotifyEmail(input)
-              responseStatus = response.data.sendEmail.success
+              responseStatus = response.data.sendEmail.response.success
 
               if (responseStatus) {
                 updateTaskNotification({

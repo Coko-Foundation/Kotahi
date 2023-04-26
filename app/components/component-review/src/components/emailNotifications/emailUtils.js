@@ -252,7 +252,7 @@ export const sendEmail = async (
   if (!isNewUser && !selectedEmail) return undefined
 
   const response = await sendNotifyEmail(input)
-  const invitation = response.data.sendEmail
+  const { invitation } = response.data.sendEmail
   if (invitation) return { invitation, input }
   return undefined
 }
