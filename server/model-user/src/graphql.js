@@ -201,9 +201,24 @@ const resolvers = {
       return user
     },
     async sendEmail(_, { input }, ctx) {
-      const result = await sendEmailWithPreparedData(input, ctx)
-
-      return result
+      try {
+        const result = await sendEmailWithPreparedData(input, ctx)
+        return {
+          invitation: result,
+          response: {
+            success: true,
+          },
+        }
+      } catch (error) {
+        // Return SendEmailPayload object with success=false and error message
+        return {
+          invitation: null,
+          response: {
+            success: false,
+            errorMessage: error.message,
+          },
+        }
+      }
     },
   },
   User: {
@@ -272,12 +287,22 @@ const typeDefs = `
     users: [User]
   }
 
+  type SendEmailResponse {
+    success: Boolean!
+    errorMessage: String
+  }
+
+  type SendEmailPayload {
+    invitation: Invitation
+    response: SendEmailResponse!
+  }
+
   extend type Mutation {
     createUser(input: UserInput): User
     deleteUser(id: ID): User
     updateUser(id: ID, input: String): User
     updateCurrentUsername(username: String): User
-    sendEmail(input: String): Invitation
+    sendEmail(input: String!): SendEmailPayload!
     updateCurrentEmail(email: String): UpdateEmailResponse
     updateRecentTab(tab: String): User
   }

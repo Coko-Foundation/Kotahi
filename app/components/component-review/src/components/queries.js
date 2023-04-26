@@ -376,9 +376,14 @@ export const getUsers = gql`
 `
 
 export const sendEmail = gql`
-  mutation($input: String) {
+  mutation($input: String!) {
     sendEmail(input: $input) {
-      id
+      invitation {
+        id
+      }
+      response {
+        success
+      }
     }
   }
 `
