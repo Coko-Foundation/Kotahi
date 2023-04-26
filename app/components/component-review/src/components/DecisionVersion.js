@@ -127,7 +127,7 @@ const DecisionVersion = ({
           saveSource={isThisReadOnly ? null : debouncedSave}
         />
       ),
-      key: `editor_${manuscript.id}`,
+      key: `editor`,
       label,
     }
   }
@@ -224,7 +224,7 @@ const DecisionVersion = ({
           )}
         </>
       ),
-      key: `metadata_${version.id}`,
+      key: `metadata`,
       label: 'Metadata',
     }
   }
@@ -272,7 +272,7 @@ const DecisionVersion = ({
           </SectionContent>
         </>
       ),
-      key: `tasks_${version.id}`,
+      key: `tasks`,
       label: 'Tasks & Notifications',
     }
   }
@@ -351,7 +351,7 @@ const DecisionVersion = ({
           )}
         </>
       ),
-      key: `team_${version.id}`,
+      key: `team`,
       label: 'Team',
     }
   }
@@ -466,7 +466,7 @@ const DecisionVersion = ({
           )}
         </>
       ),
-      key: `decision_${version.id}`,
+      key: `decision`,
       label: 'Decision',
     }
   }
@@ -475,31 +475,31 @@ const DecisionVersion = ({
 
   switch (config?.controlPanel?.showTabs[0]) {
     case 'Team':
-      defaultActiveKey = `team_${version.id}`
+      defaultActiveKey = `team`
       break
     case 'Decision':
-      defaultActiveKey = `decision_${version.id}`
+      defaultActiveKey = `decision`
       break
     case 'Manuscript text':
-      defaultActiveKey = `editor_${version.id}`
+      defaultActiveKey = `editor`
       break
     case 'Metadata':
-      defaultActiveKey = `metadata_${version.id}`
+      defaultActiveKey = `metadata`
       break
     case 'Tasks & Notifications':
-      defaultActiveKey = `tasks_${version.id}`
+      defaultActiveKey = `tasks`
       break
     default:
-      defaultActiveKey = `team_${version.id}`
+      defaultActiveKey = `team`
       break
   }
 
   let locationState =
     location.state !== undefined && location.state.tab === 'Decision'
-      ? `decision_${version.id}`
+      ? `decision`
       : defaultActiveKey
 
-  if (activeTab === 'tasks') locationState = `tasks_${version.id}`
+  if (activeTab) locationState = activeTab
 
   const sections = []
 

@@ -85,7 +85,7 @@ const Submit = ({
           }}
         />
       ),
-      key: `editor_${version.id}`,
+      key: `editor`,
       label: 'Manuscript text',
     }
 
