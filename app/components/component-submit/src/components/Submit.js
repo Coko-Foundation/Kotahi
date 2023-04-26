@@ -168,7 +168,7 @@ const Submit = ({
             />
           )}
           {index === 0 &&
-            version.status !== 'revising' &&
+            !['revising', 'new'].includes(version.status) &&
             (allowAuthorsSubmitNewVersion || version.status === 'revise') && (
               <CreateANewVersion
                 allowAuthorsSubmitNewVersion={allowAuthorsSubmitNewVersion}

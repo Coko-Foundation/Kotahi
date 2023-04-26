@@ -156,7 +156,7 @@ const TaskEditModal = ({
 
   useEffect(() => {
     setTaskNotifications(task.emailNotifications ?? [])
-  }, [isOpen])
+  }, [isOpen, task])
 
   const updateTaskTitle = value => {
     setTaskTitle(value)
