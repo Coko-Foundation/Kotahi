@@ -10,7 +10,7 @@ import { DashboardPage } from '../../page-object/dashboard-page'
 describe('manuscripts page checkboxes tests', () => {
   context('unsubmitted manuscripts checkbox tests', () => {
     before(() => {
-      cy.task('restore', 'initial_state_other')
+      cy.task('restore', 'commons/colab_bootstrap')
       cy.task('seedForms')
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise
@@ -56,14 +56,14 @@ describe('manuscripts page checkboxes tests', () => {
       ManuscriptsPage.getSelectedArticlesCount().should('contain', 0)
     })
     it('click Close to not Archive the articles', () => {
-      ManuscriptsPage.getTableRowsCount().should('eq', 3)
+      ManuscriptsPage.getTableRowsCount().should('eq', 4)
       ManuscriptsPage.getSelectAllCheckbox().click()
       ManuscriptsPage.clickDelete()
       ManuscriptsPage.clickClose()
       ManuscriptsPage.getSelectedArticlesCount().should('contain', 3)
     })
     it('archive selected article', () => {
-      ManuscriptsPage.getTableRowsCount().should('eq', 3)
+      ManuscriptsPage.getTableRowsCount().should('eq', 4)
       ManuscriptsPage.getSelectAllCheckbox().click()
       ManuscriptsPage.clickDelete()
       ManuscriptsPage.getConfirmationMessageForBulkDelete().should(
@@ -71,12 +71,14 @@ describe('manuscripts page checkboxes tests', () => {
         'Please confirm you would like to archive selected manuscripts',
       )
       ManuscriptsPage.clickConfirm()
-      ManuscriptsPage.getTableRow().should('not.exist')
+      ManuscriptsPage.getConfirmationMessageForBulkDelete().should('not.exist')
+      cy.reload()
+      ManuscriptsPage.getTableRowsCount().should('eq', 1)
     })
   })
   context('submitted manuscripts checkbox tests', () => {
     it('checkbox should not be visible for submitted manuscripts', () => {
-      cy.task('restore', 'initial_state_other')
+      cy.task('restore', 'commons/colab_bootstrap')
       cy.task('seedForms')
       // login as admin
       // eslint-disable-next-line jest/valid-expect-in-promise

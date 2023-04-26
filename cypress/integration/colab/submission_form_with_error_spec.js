@@ -47,7 +47,7 @@ describe('Submission with errors test', () => {
 
       Menu.clickDashboard()
       // Click on new submission
-      cy.get('button').contains('＋ New submission').click()
+      DashboardPage.clickSubmissionButton()
 
       // Upload manuscript
       cy.get('input[type=file]').attachFile('test-pdf.pdf')
